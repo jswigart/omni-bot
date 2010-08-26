@@ -604,7 +604,19 @@ void RTCW_Game::StartGame()
 
 	// Get Goals from the game.
 	GoalManager::GetInstance()->Reset();
+
+	ErrorObj err;
+	const bool goalsLoaded = GoalManager::GetInstance()->Load(String(g_EngineFuncs->GetMapName()),err);
+	err.PrintToConsole();
+
+	if(!goalsLoaded)
+	{
+		// register nav system goals
+		IGameManager::GetInstance()->GetNavSystem()->RegisterGameGoals();
+	}
 	
+	GoalManager::GetInstance()->InitGameGoals();
+
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	DisableGCInScope gcEn(pMachine);
 

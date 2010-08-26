@@ -568,16 +568,18 @@ Cmd_Kill_f
 =================
 */
 void Cmd_Kill_f( gentity_t *ent ) {
-	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
+	if( ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
+		( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
 		return;
 	}
 
-	if ( g_gametype.integer >= GT_WOLF && ent->client->ps.pm_flags & PMF_LIMBO ) {
-		return;
-	}
+	// bots always need to go to limbo or it causes problems
+	// since we use latchedPlayerClass in GetEntityClass
+	if ( ent->health <= 0 ) {
+		if (ent->r.svFlags & SVF_BOT) {
+			limbo(ent,qtrue);
+		}
 
-	// the /kill gib exploit
-	if ( ent->client->ps.stats[STAT_HEALTH] < 0 ) {
 		return;
 	}
 

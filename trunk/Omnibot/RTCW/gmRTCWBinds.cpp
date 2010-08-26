@@ -477,6 +477,27 @@ static int GM_CDECL gmfGetExplosiveState(gmThread *a_thread)
 	return GM_OK;
 }
 
+// function: GetDestroyableState
+//		Return if the target is destroyable.
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		destroyable state
+static int GM_CDECL gmfGetDestroyableState(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+	a_thread->PushInt(InterfaceFuncs::IsDestroyable(native,gameEnt));
+	return GM_OK;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 // function: IsWaitingForMedic
@@ -520,6 +541,7 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"Suicide",					gmfSetSuicide},
 	{"DisableBotPush",			gmfDisableBotPush},
 	{"GetExplosiveState",		gmfGetExplosiveState},
+	{"GetDestroyableState",		gmfGetDestroyableState},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =

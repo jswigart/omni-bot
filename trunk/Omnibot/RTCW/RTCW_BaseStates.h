@@ -15,50 +15,6 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	class PlantExplosive : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
-
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
-
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
-
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
-
-		PlantExplosive();
-	private:
-		typedef enum
-		{
-			LAY_EXPLOSIVE,
-			ARM_EXPLOSIVE
-		} GoalState;
-
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-
-		GoalState			m_GoalState;
-		Vector3f			m_TargetPosition;
-		GameEntity			m_ExplosiveEntity;
-		Vector3f			m_ExplosivePosition;
-		bool				m_AdjustedPosition;
-		bool				m_IgnoreTargets;
-
-		State::StateStatus _UpdateDynamite();
-		bool _IsGoalAchievable(MapGoalPtr _g, int _weaponId);
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-
 	class MountMg42 : public StateChild, public FollowPathUser, public AimerUser
 	{
 	public:
