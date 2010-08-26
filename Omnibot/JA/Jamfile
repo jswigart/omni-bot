@@ -1,0 +1,19 @@
+# $LastChangedBy: drevil $
+# $LastChangedDate: 2008-07-05 03:18:03 -0700 (Sat, 05 Jul 2008) $
+# $LastChangedRevision: 3023 $
+
+# The JA Library.
+
+project JA
+	: requirements <include>./
+	: requirements <include>../Common
+   	;
+
+# Declare an alias to the common library
+alias common_lib : ..//Common : <link>static ;
+
+# Compile ALL .cpp files and link to Common.lib to create our dll
+
+SOURCES = [ glob *.cpp ] ../Common/BotExports.cpp ..//boost_fs ..//boost_regx ..//boost_th common_lib ;
+
+lib omnibot_ja : $(SOURCES) : <toolset>gcc:<cflags>-w <cflags>-pthread ;
