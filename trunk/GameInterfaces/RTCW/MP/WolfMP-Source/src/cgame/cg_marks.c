@@ -10,10 +10,9 @@ MARK POLYS
 ===================================================================
 */
 
-
-markPoly_t	cg_activeMarkPolys;			// double linked list
-markPoly_t	*cg_freeMarkPolys;			// single linked list
-markPoly_t	cg_markPolys[MAX_MARK_POLYS];
+markPoly_t cg_activeMarkPolys;          // double linked list
+markPoly_t  *cg_freeMarkPolys;          // single linked list
+markPoly_t cg_markPolys[MAX_MARK_POLYS];
 
 /*
 ===================
@@ -22,21 +21,20 @@ CG_InitMarkPolys
 This is called at startup and for tournement restarts
 ===================
 */
-void	CG_InitMarkPolys( void ) {
-	int		i;
+void    CG_InitMarkPolys( void ) {
+	int i;
 	markPoly_t *trav, *lasttrav;
 
-	memset( cg_markPolys, 0, sizeof(cg_markPolys) );
+	memset( cg_markPolys, 0, sizeof( cg_markPolys ) );
 
 	cg_activeMarkPolys.nextMark = &cg_activeMarkPolys;
 	cg_activeMarkPolys.prevMark = &cg_activeMarkPolys;
 	cg_freeMarkPolys = cg_markPolys;
-	for ( i = 0, trav = cg_markPolys+1, lasttrav = cg_markPolys ; i < MAX_MARK_POLYS - 1 ; i++, trav++ ) {
+	for ( i = 0, trav = cg_markPolys + 1, lasttrav = cg_markPolys ; i < MAX_MARK_POLYS - 1 ; i++, trav++ ) {
 		lasttrav->nextMark = trav;
 		lasttrav = trav;
 	}
 }
-
 
 /*
 ==================
@@ -64,15 +62,14 @@ CG_AllocMark
 Will allways succeed, even if it requires freeing an old active mark
 ===================
 */
-markPoly_t	*CG_AllocMark( int endTime ) {
-	markPoly_t	*le;//, *trav, *lastTrav;
-	int time;
+markPoly_t  *CG_AllocMark( int endTime ) {
+	markPoly_t  *le; //, *trav, *lastTrav;
 
 	if ( !cg_freeMarkPolys ) {
 		// no free entities, so free the one at the end of the chain
 		// remove the oldest active entity
-		time = cg_activeMarkPolys.prevMark->time;
-		while (cg_activeMarkPolys.prevMark && time == cg_activeMarkPolys.prevMark->time) {
+		int time = cg_activeMarkPolys.prevMark->time;
+		while ( cg_activeMarkPolys.prevMark && time == cg_activeMarkPolys.prevMark->time ) {
 			CG_FreeMarkPoly( cg_activeMarkPolys.prevMark );
 		}
 	}
@@ -82,12 +79,6 @@ markPoly_t	*CG_AllocMark( int endTime ) {
 
 	memset( le, 0, sizeof( *le ) );
 
-	// Ridah, TODO: sort this, so the list is always sorted by longest duration -> shortest duration,
-	// this way the shortest duration mark will always get overwritten first
-	//for (trav = cg_activeMarkPolys.nextMark; (trav->duration + trav->time > endTime) && (trav != cg_activeMarkPolys.prevMark) ; lastTrav = trav, trav++ ) {
-		// Respect the FOR loop
-	//}
-
 	// link into the active list
 	le->nextMark = cg_activeMarkPolys.nextMark;
 	le->prevMark = &cg_activeMarkPolys;
@@ -95,7 +86,6 @@ markPoly_t	*CG_AllocMark( int endTime ) {
 	cg_activeMarkPolys.nextMark = le;
 	return le;
 }
-
 
 
 /*
@@ -110,28 +100,26 @@ passed to the renderer.
 =================
 */
 // Ridah, increased this since we leave them around for longer
-#define	MAX_MARK_FRAGMENTS	384
-#define	MAX_MARK_POINTS		1024
-//#define	MAX_MARK_FRAGMENTS	128
-//#define	MAX_MARK_POINTS		384
+#define MAX_MARK_FRAGMENTS  384
+#define MAX_MARK_POINTS     1024
 
 // these are ignored now for the most part
 //#define	MARK_TOTAL_TIME		20000	// (SA) made this a cvar: cg_markTime  (we could cap the time or remove marks quicker if too long a time starts to cause new marks to not appear)
-#define	MARK_FADE_TIME		10000
+#define MARK_FADE_TIME      10000
 
-void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir, 
-				   float orientation, float red, float green, float blue, float alpha,
-				   qboolean alphaFade, float radius, qboolean temporary, int duration ) {
-	vec3_t			axis[3];
-	float			texCoordScale;
-	vec3_t			originalPoints[4];
-	byte			colors[4];
-	int				i, j;
-	int				numFragments;
-	markFragment_t	markFragments[MAX_MARK_FRAGMENTS], *mf;
-	vec5_t			markPoints[MAX_MARK_POINTS];	// Ridah, made it vec5_t so it includes S/T
-	vec3_t			projection;
-	int				multMaxFragments=1;
+void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
+					float orientation, float red, float green, float blue, float alpha,
+					qboolean alphaFade, float radius, qboolean temporary, int duration ) {
+	vec3_t axis[3];
+	float texCoordScale;
+	vec3_t originalPoints[4];
+	byte colors[4];
+	int i, j;
+	int numFragments;
+	markFragment_t markFragments[MAX_MARK_FRAGMENTS], *mf;
+	vec5_t markPoints[MAX_MARK_POINTS];             // Ridah, made it vec5_t so it includes S/T
+	vec3_t projection;
+	int multMaxFragments = 1;
 
 	if ( !cg_markTime.integer ) {
 		return;
@@ -142,9 +130,9 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	}
 
 	// Ridah, if no duration, use the default
-	if (duration < 0) {
-		if (duration == -2) {
-			multMaxFragments = -1;	// use original mapping
+	if ( duration < 0 ) {
+		if ( duration == -2 ) {
+			multMaxFragments = -1;  // use original mapping
 		}
 
 //		duration = MARK_TOTAL_TIME;
@@ -168,11 +156,10 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	}
 
 	// get the fragments
-	//VectorScale( dir, -20, projection );
-	VectorScale( dir, radius*2, projection );
+	VectorScale( dir, radius * 2, projection );
 	numFragments = trap_CM_MarkFragments( (int)orientation, (void *)originalPoints,
-					projection, MAX_MARK_POINTS, (float *)&markPoints[0],
-					MAX_MARK_FRAGMENTS*multMaxFragments, markFragments );
+										  projection, MAX_MARK_POINTS, (float *)&markPoints[0],
+										  MAX_MARK_FRAGMENTS * multMaxFragments, markFragments );
 
 	colors[0] = red * 255;
 	colors[1] = green * 255;
@@ -180,28 +167,28 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	colors[3] = alpha * 255;
 
 	for ( i = 0, mf = markFragments ; i < numFragments ; i++, mf++ ) {
-		polyVert_t	*v;
-		polyVert_t	verts[MAX_VERTS_ON_POLY];
-		markPoly_t	*mark;
-		qboolean	hasST;
+		polyVert_t  *v;
+		polyVert_t verts[MAX_VERTS_ON_POLY];
+		markPoly_t  *mark;
+		qboolean hasST;
 
 		// we have an upper limit on the complexity of polygons
 		// that we store persistantly
 		if ( mf->numPoints > MAX_VERTS_ON_POLY ) {
 			mf->numPoints = MAX_VERTS_ON_POLY;
 		}
-		if (mf->numPoints < 0) {
+		if ( mf->numPoints < 0 ) {
 			hasST = qtrue;
 			mf->numPoints *= -1;
 		} else {
 			hasST = qfalse;
 		}
 		for ( j = 0, v = verts ; j < mf->numPoints ; j++, v++ ) {
-			vec3_t		delta;
+			vec3_t delta;
 
 			VectorCopy( markPoints[mf->firstPoint + j], v->xyz );
 
-			if (!hasST) {
+			if ( !hasST ) {
 				VectorSubtract( v->xyz, origin, delta );
 				v->st[0] = 0.5 + DotProduct( delta, axis[1] ) * texCoordScale;
 				v->st[1] = 0.5 + DotProduct( delta, axis[2] ) * texCoordScale;
@@ -220,7 +207,7 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		}
 
 		// otherwise save it persistantly
-		mark = CG_AllocMark(cg.time + duration);
+		mark = CG_AllocMark( cg.time + duration );
 		mark->time = cg.time;
 		mark->alphaFade = alphaFade;
 		mark->markShader = markShader;
@@ -242,10 +229,10 @@ CG_AddMarks
 */
 
 void CG_AddMarks( void ) {
-	int			j;
-	markPoly_t	*mp, *next;
-	int			t;
-	int			fade;
+	int j;
+	markPoly_t  *mp, *next;
+	int t;
+	int fade;
 
 	if ( !cg_markTime.integer ) {
 		return;
@@ -266,25 +253,7 @@ void CG_AddMarks( void ) {
 		// fade out the energy bursts
 		if ( mp->markShader == cgs.media.energyMarkShader ) {
 
-			fade = 450 - 450 * ( (cg.time - mp->time ) / 3000.0 );
-			if ( fade < 255 ) {
-				if ( fade < 0 ) {
-					fade = 0;
-				}
-				if ( mp->verts[0].modulate[0] != 0 ) {
-					for ( j = 0 ; j < mp->poly.numVerts ; j++ ) {
-						mp->verts[j].modulate[0] = mp->color[0] * fade;
-						mp->verts[j].modulate[1] = mp->color[1] * fade;
-						mp->verts[j].modulate[2] = mp->color[2] * fade;
-					}
-				}
-			}
-		}
-
-		// fade in the zombie spirit marks
-		if ( mp->markShader == cgs.media.zombieSpiritWallShader ) {
-
-			fade = 255 * ( (cg.time - mp->time ) / 2000.0 );
+			fade = 450 - 450 * ( ( cg.time - mp->time ) / 3000.0 );
 			if ( fade < 255 ) {
 				if ( fade < 0 ) {
 					fade = 0;
@@ -301,8 +270,8 @@ void CG_AddMarks( void ) {
 
 		// fade all marks out with time
 		t = mp->time + mp->duration - cg.time;
-		if ( t < (float)mp->duration/2.0 ) {
-			fade = (int)(255.0 * (float)t / ((float)mp->duration/2.0));
+		if ( t < (float)mp->duration / 2.0 ) {
+			fade = (int)( 255.0 * (float)t / ( (float)mp->duration / 2.0 ) );
 			if ( mp->alphaFade ) {
 				for ( j = 0 ; j < mp->poly.numVerts ; j++ ) {
 					mp->verts[j].modulate[3] = fade;

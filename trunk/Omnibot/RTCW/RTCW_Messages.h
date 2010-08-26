@@ -18,6 +18,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+struct RTCW_GetPlayerClass
+{
+	GameEntity	m_Entity;
+	int			m_PlayerClass;
+};
+
 struct RTCW_WeaponOverheated
 {
 	RTCW_Weapon	m_Weapon;

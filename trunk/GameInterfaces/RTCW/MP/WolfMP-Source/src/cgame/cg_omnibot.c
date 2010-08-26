@@ -4,7 +4,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-extern vmCvar_t	cg_omnibotdrawing;
+extern vmCvar_t cg_omnibotdrawing;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -23,66 +23,66 @@ typedef enum
 
 typedef struct
 {
-	vec3_t			start, end;	
-	unsigned char	r,g,b,a;
+	vec3_t start, end;
+	unsigned char r,g,b,a;
 } UdpDebugLineMessage;
 
 typedef struct
 {
-	vec3_t			pos;
-	float			radius;
-	unsigned char	r,g,b,a;
+	vec3_t pos;
+	float radius;
+	unsigned char r,g,b,a;
 } UdpDebugRadiusMessage;
 
 typedef struct
 {
-	vec3_t			mins, maxs;
-	unsigned char	r,g,b,a;
-	int				side;
+	vec3_t mins, maxs;
+	unsigned char r,g,b,a;
+	int side;
 } UdpDebugAABBMessage;
 
 typedef struct
 {
-	vec3_t			verts[64];
-	int				numverts;
-	unsigned char	r,g,b,a;
+	vec3_t verts[64];
+	int numverts;
+	unsigned char r,g,b,a;
 } UdpDebugPolygonMessage;
 
 typedef struct
 {
 	union
 	{
-		UdpDebugLineMessage	line;
+		UdpDebugLineMessage line;
 		UdpDebugRadiusMessage radius;
 		UdpDebugAABBMessage aabb;
 		UdpDebugPolygonMessage poly;
 	} info;
 
-	int		expiretime;
-	int		debugtype;
+	int expiretime;
+	int debugtype;
 } UdpDebugLines_t;
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef struct 
+typedef struct
 {
-	UdpDebugLines_t		*m_pDebugLines;
-	int					m_NumDebugLines;
-	int					m_MaxDebugLines;
+	UdpDebugLines_t     *m_pDebugLines;
+	int m_NumDebugLines;
+	int m_MaxDebugLines;
 } LineList;
 
-void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo);
-void CG_DrawDebugRadius(UdpDebugRadiusMessage *_lineinfo);
-void CG_DrawDebugAABB(UdpDebugAABBMessage *_aabb);
-void CG_DrawDebugPolygon(UdpDebugPolygonMessage *_poly);
+void CG_DrawDebugLine( UdpDebugLineMessage *_lineinfo );
+void CG_DrawDebugRadius( UdpDebugRadiusMessage *_lineinfo );
+void CG_DrawDebugAABB( UdpDebugAABBMessage *_aabb );
+void CG_DrawDebugPolygon( UdpDebugPolygonMessage *_poly );
 
 // Utility functions to manage the line list.
-void AddToLineList(LineList *_list, const UdpDebugLines_t *_line);
-void ClearLineList(LineList *_list, qboolean _freememory);
-void InitLineList(LineList *_list, int _initialsize);
+void AddToLineList( LineList *_list, const UdpDebugLines_t *_line );
+void ClearLineList( LineList *_list, qboolean _freememory );
+void InitLineList( LineList *_list, int _initialsize );
 
-int				g_LastRenderTime = 0;
-LineList		g_DebugLines = { 0,0,0 };
+int g_LastRenderTime = 0;
+LineList g_DebugLines = { 0,0,0 };
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -91,73 +91,63 @@ extern InterProcessError InterProcessInitialize();
 extern void InterProcessShutdown();
 extern void InterProcessUpdate();
 
-void OmnibotDisableDrawing()
-{
+void OmnibotDisableDrawing() {
 	cg_omnibotdrawing.integer = 0;
-	ClearLineList(&g_DebugLines, qtrue);
+	ClearLineList( &g_DebugLines, qtrue );
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void OmnibotRenderDebugLines()
-{
-	int i;
-
-	if(cg_omnibotdrawing.integer)
-	{
+void OmnibotRenderDebugLines() {
+	if ( cg_omnibotdrawing.integer ) {
+		int i;
 		// get the latest messages from the bot.
-		if(InterProcessIsInitialized() == 0)
-		{
+		if ( InterProcessIsInitialized() == 0 ) {
 			InterProcessInitialize();
-		}
-		else
+		} else
 		{
 			InterProcessUpdate();
 		}
 
-		for(i = 0; i < g_DebugLines.m_NumDebugLines; ++i)
+		for ( i = 0; i < g_DebugLines.m_NumDebugLines; ++i )
 		{
-			if(g_DebugLines.m_pDebugLines[i].expiretime >= cg.time)
-			{
-				switch(g_DebugLines.m_pDebugLines[i].debugtype)
+			if ( g_DebugLines.m_pDebugLines[i].expiretime >= cg.time ) {
+				switch ( g_DebugLines.m_pDebugLines[i].debugtype )
 				{
 				case DBG_LINE:
-					CG_DrawDebugLine(&g_DebugLines.m_pDebugLines[i].info.line);
+					CG_DrawDebugLine( &g_DebugLines.m_pDebugLines[i].info.line );
 					break;
 				case DBG_RADIUS:
-					CG_DrawDebugRadius(&g_DebugLines.m_pDebugLines[i].info.radius);
+					CG_DrawDebugRadius( &g_DebugLines.m_pDebugLines[i].info.radius );
 					break;
 				case DBG_AABB:
-					CG_DrawDebugAABB(&g_DebugLines.m_pDebugLines[i].info.aabb);
+					CG_DrawDebugAABB( &g_DebugLines.m_pDebugLines[i].info.aabb );
 					break;
 				case DBG_POLYGON:
-					CG_DrawDebugPolygon(&g_DebugLines.m_pDebugLines[i].info.poly);
+					CG_DrawDebugPolygon( &g_DebugLines.m_pDebugLines[i].info.poly );
 					break;
 				}
 
 				g_LastRenderTime = cg.time + 10000;
-			}
-			else
+			} else
 			{
 				// swap with the last and reduce the num
-				g_DebugLines.m_pDebugLines[i] = g_DebugLines.m_pDebugLines[g_DebugLines.m_NumDebugLines-1];
+				g_DebugLines.m_pDebugLines[i] = g_DebugLines.m_pDebugLines[g_DebugLines.m_NumDebugLines - 1];
 				--g_DebugLines.m_NumDebugLines;
 			}
 		}
 
 		// After a timeout, free the memory.
-		if(g_LastRenderTime < cg.time && g_DebugLines.m_pDebugLines)
-		{
-			ClearLineList(&g_DebugLines, qtrue);
+		if ( g_LastRenderTime < cg.time && g_DebugLines.m_pDebugLines ) {
+			ClearLineList( &g_DebugLines, qtrue );
 		}
 	}
 }
 
-void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo) 
-{
-	vec3_t		forward, right;
-	polyVert_t	verts[4];
-	vec3_t		line;
+void CG_DrawDebugLine( UdpDebugLineMessage *_lineinfo ) {
+	vec3_t forward, right;
+	polyVert_t verts[4];
+	vec3_t line;
 
 	float fLineWidth = 2.0f;
 
@@ -167,13 +157,14 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 		const float fRenderDistanceSq = 2048.f * 2048.f;
 		float fLen1, fLen2;
 		vec3_t toline1, toline2;
-		VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->start, toline1);
-		VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->end, toline2);
-		fLen1 = VectorLengthSquared(toline1);
-		fLen2 = VectorLengthSquared(toline2);
-		if(fLen1 > fRenderDistanceSq && 
-			fLen2 > fRenderDistanceSq)
+		VectorSubtract( cg_entities[0].currentState.pos.trBase, _lineinfo->start, toline1 );
+		VectorSubtract( cg_entities[0].currentState.pos.trBase, _lineinfo->end, toline2 );
+		fLen1 = VectorLengthSquared( toline1 );
+		fLen2 = VectorLengthSquared( toline2 );
+		if ( fLen1 > fRenderDistanceSq &&
+			 fLen2 > fRenderDistanceSq ) {
 			return;
+		}
 	}
 	//////////////////////////////////////////////////////////////////////////
 
@@ -190,10 +181,8 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	// Why can't this POS draw black?
 	{
 		static int iFixBlack = 0;
-		if(iFixBlack)
-		{
-			if(_lineinfo->r == 0 && _lineinfo->g == 0 && _lineinfo->b == 0)
-			{
+		if ( iFixBlack ) {
+			if ( _lineinfo->r == 0 && _lineinfo->g == 0 && _lineinfo->b == 0 ) {
 				_lineinfo->r = 65;
 				_lineinfo->g = 65;
 				_lineinfo->b = 65;
@@ -237,37 +226,36 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	trap_R_AddPolyToScene( cgs.media.railCoreShader, 4, verts );
 }
 
-void CG_DrawDebugRadius(UdpDebugRadiusMessage *_lineinfo) 
-{	
+void CG_DrawDebugRadius( UdpDebugRadiusMessage *_lineinfo ) {
 	UdpDebugLineMessage lne;
 	const int iNumSteps = 8;
 	float fStepSize = 180.0f / (float)iNumSteps;
 	int i;
 
-	if (!cgs.media.railCoreShader)
-		cgs.media.railCoreShader = trap_R_RegisterShader("railCore");
+	if ( !cgs.media.railCoreShader ) {
+		cgs.media.railCoreShader = trap_R_RegisterShader( "railCore" );
+	}
 
 	lne.r = _lineinfo->r;
 	lne.g = _lineinfo->g;
 	lne.b = _lineinfo->b;
 	lne.a = _lineinfo->a;
 
-	VectorCopy(_lineinfo->pos, lne.start);
-	VectorCopy(_lineinfo->pos, lne.end);
+	VectorCopy( _lineinfo->pos, lne.start );
+	VectorCopy( _lineinfo->pos, lne.end );
 	lne.start[1] += _lineinfo->radius;
 	lne.end[1] -= _lineinfo->radius;
 
-	for(i = 0; i < iNumSteps; ++i)
+	for ( i = 0; i < iNumSteps; ++i )
 	{
-		CG_DrawDebugLine(&lne);
+		CG_DrawDebugLine( &lne );
 
-		RotatePointAroundVertex(lne.start, 0.0f, 0.0f, fStepSize, _lineinfo->pos);
-		RotatePointAroundVertex(lne.end, 0.0f, 0.0f, fStepSize, _lineinfo->pos);
+		RotatePointAroundVertex( lne.start, 0.0f, 0.0f, fStepSize, _lineinfo->pos );
+		RotatePointAroundVertex( lne.end, 0.0f, 0.0f, fStepSize, _lineinfo->pos );
 	}
 }
 
-void CG_DrawDebugAABB(UdpDebugAABBMessage *_aabbinfo)
-{
+void CG_DrawDebugAABB( UdpDebugAABBMessage *_aabbinfo ) {
 	UdpDebugLineMessage l;
 	vec3_t vVertex[8];
 
@@ -303,97 +291,93 @@ void CG_DrawDebugAABB(UdpDebugAABBMessage *_aabbinfo)
 	vVertex[7][1] = _aabbinfo->maxs[1];
 	vVertex[7][2] = _aabbinfo->maxs[2];
 
-	l.r = _aabbinfo->r; 
-	l.g = _aabbinfo->g; 
-	l.b = _aabbinfo->b; 
+	l.r = _aabbinfo->r;
+	l.g = _aabbinfo->g;
+	l.b = _aabbinfo->b;
 	l.a = _aabbinfo->a;
 
 	// Top
-	if(_aabbinfo->side == 4 || _aabbinfo->side == 6)
-	{
-		{			
-			VectorCopy(vVertex[4], l.start);
-			VectorCopy(vVertex[5], l.end);			
-			CG_DrawDebugLine(&l);
+	if ( _aabbinfo->side == 4 || _aabbinfo->side == 6 ) {
+		{
+			VectorCopy( vVertex[4], l.start );
+			VectorCopy( vVertex[5], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[5], l.start);
-			VectorCopy(vVertex[6], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[5], l.start );
+			VectorCopy( vVertex[6], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[6], l.start);
-			VectorCopy(vVertex[7], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[6], l.start );
+			VectorCopy( vVertex[7], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[7], l.start);
-			VectorCopy(vVertex[4], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[7], l.start );
+			VectorCopy( vVertex[4], l.end );
+			CG_DrawDebugLine( &l );
 		}
-	}		
+	}
 
 	// Bottom
-	if(_aabbinfo->side == 5 || _aabbinfo->side == 6)
-	{
+	if ( _aabbinfo->side == 5 || _aabbinfo->side == 6 ) {
 		{
-			VectorCopy(vVertex[0], l.start);
-			VectorCopy(vVertex[1], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[0], l.start );
+			VectorCopy( vVertex[1], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[1], l.start);
-			VectorCopy(vVertex[2], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[1], l.start );
+			VectorCopy( vVertex[2], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[2], l.start);
-			VectorCopy(vVertex[3], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[2], l.start );
+			VectorCopy( vVertex[3], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[3], l.start);
-			VectorCopy(vVertex[0], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[3], l.start );
+			VectorCopy( vVertex[0], l.end );
+			CG_DrawDebugLine( &l );
 		}
 	}
 
 	// Sides
-	if(_aabbinfo->side == 6)
-	{
+	if ( _aabbinfo->side == 6 ) {
 		{
-			VectorCopy(vVertex[4], l.start);
-			VectorCopy(vVertex[0], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[4], l.start );
+			VectorCopy( vVertex[0], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[5], l.start);
-			VectorCopy(vVertex[1], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[5], l.start );
+			VectorCopy( vVertex[1], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[6], l.start);
-			VectorCopy(vVertex[2], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[6], l.start );
+			VectorCopy( vVertex[2], l.end );
+			CG_DrawDebugLine( &l );
 		}
 		{
-			VectorCopy(vVertex[7], l.start);
-			VectorCopy(vVertex[3], l.end);
-			CG_DrawDebugLine(&l);
+			VectorCopy( vVertex[7], l.start );
+			VectorCopy( vVertex[3], l.end );
+			CG_DrawDebugLine( &l );
 		}
 	}
 }
 
-void CG_DrawDebugPolygon(UdpDebugPolygonMessage *_polyinfo)
-{
+void CG_DrawDebugPolygon( UdpDebugPolygonMessage *_polyinfo ) {
 	int i = 0;
-	polyVert_t	verts[65];
+	polyVert_t verts[65];
 
-	for(; i < _polyinfo->numverts; ++i)
+	for (; i < _polyinfo->numverts; ++i )
 	{
-		verts[i].xyz[0] = _polyinfo->verts[_polyinfo->numverts-i-1][0];
-		verts[i].xyz[1] = _polyinfo->verts[_polyinfo->numverts-i-1][1];
-		verts[i].xyz[2] = _polyinfo->verts[_polyinfo->numverts-i-1][2];
+		verts[i].xyz[0] = _polyinfo->verts[_polyinfo->numverts - i - 1][0];
+		verts[i].xyz[1] = _polyinfo->verts[_polyinfo->numverts - i - 1][1];
+		verts[i].xyz[2] = _polyinfo->verts[_polyinfo->numverts - i - 1][2];
 
 		verts[i].st[0] = 0;
 		verts[i].st[1] = 0;
@@ -402,11 +386,11 @@ void CG_DrawDebugPolygon(UdpDebugPolygonMessage *_polyinfo)
 		verts[i].modulate[2] = _polyinfo->b;
 		verts[i].modulate[3] = _polyinfo->a;
 	}
-	verts[i].xyz[0] = _polyinfo->verts[_polyinfo->numverts-1][0];
-	verts[i].xyz[1] = _polyinfo->verts[_polyinfo->numverts-1][1];
-	verts[i].xyz[2] = _polyinfo->verts[_polyinfo->numverts-1][2];
+	verts[i].xyz[0] = _polyinfo->verts[_polyinfo->numverts - 1][0];
+	verts[i].xyz[1] = _polyinfo->verts[_polyinfo->numverts - 1][1];
+	verts[i].xyz[2] = _polyinfo->verts[_polyinfo->numverts - 1][2];
 
-	for(; i < _polyinfo->numverts; ++i)
+	for (; i < _polyinfo->numverts; ++i )
 	{
 		verts[i].xyz[0] = _polyinfo->verts[i][0];
 		verts[i].xyz[1] = _polyinfo->verts[i][1];
@@ -428,38 +412,34 @@ void CG_DrawDebugPolygon(UdpDebugPolygonMessage *_polyinfo)
 
 //////////////////////////////////////////////////////////////////////////
 
-void InitLineList(LineList *_list, int _initialsize)
-{
-	if(_list->m_pDebugLines)
-	{
-		free(_list->m_pDebugLines);
+void InitLineList( LineList *_list, int _initialsize ) {
+	if ( _list->m_pDebugLines ) {
+		free( _list->m_pDebugLines );
 		_list->m_pDebugLines = 0;
 	}
 
 	_list->m_NumDebugLines = 0;
 	_list->m_MaxDebugLines = _initialsize;
-	_list->m_pDebugLines = (UdpDebugLines_t*)calloc(_list->m_MaxDebugLines, sizeof(UdpDebugLines_t));
+	_list->m_pDebugLines = (UdpDebugLines_t*)calloc( _list->m_MaxDebugLines, sizeof( UdpDebugLines_t ) );
 }
 
-void AddToLineList(LineList *_list, const UdpDebugLines_t *_line)
-{
-	if(_list->m_NumDebugLines >= _list->m_MaxDebugLines)
-	{
+void AddToLineList( LineList *_list, const UdpDebugLines_t *_line ) {
+	if ( _list->m_NumDebugLines >= _list->m_MaxDebugLines ) {
 		// We've gone over, so we need to reallocate.
 		int iNewBufferSize = _list->m_MaxDebugLines + OMNIBOT_LINES_INCREASE_SIZE;
-		UdpDebugLines_t *pNewBuffer = (UdpDebugLines_t*)calloc(iNewBufferSize, sizeof(UdpDebugLines_t));
+		UdpDebugLines_t *pNewBuffer = (UdpDebugLines_t*)calloc( iNewBufferSize, sizeof( UdpDebugLines_t ) );
 
 		// Copy the old buffer to the new.
-		memcpy(pNewBuffer, _list->m_pDebugLines, sizeof(UdpDebugLines_t) * _list->m_MaxDebugLines);
+		memcpy( pNewBuffer, _list->m_pDebugLines, sizeof( UdpDebugLines_t ) * _list->m_MaxDebugLines );
 
 		// Free the old buffer.
-		free(_list->m_pDebugLines);
+		free( _list->m_pDebugLines );
 
 		// Update the pointer to the new buffer.
 		_list->m_pDebugLines = pNewBuffer;
 
 		// Save the new size.
-		_list->m_MaxDebugLines = iNewBufferSize;		
+		_list->m_MaxDebugLines = iNewBufferSize;
 	}
 
 	// Add it to the list.
@@ -467,18 +447,12 @@ void AddToLineList(LineList *_list, const UdpDebugLines_t *_line)
 	++_list->m_NumDebugLines;
 }
 
-void ClearLineList(LineList *_list, qboolean _freememory)
-{
-	if(_freememory == qfalse)
-	{
+void ClearLineList( LineList *_list, qboolean _freememory ) {
+	if ( _freememory == qfalse ) {
 		_list->m_NumDebugLines = 0;
-	}
-	else
+	} else
 	{
-		if(_list->m_pDebugLines)
-		{
-			free(_list->m_pDebugLines);
-		}
+		free( _list->m_pDebugLines );
 		_list->m_pDebugLines = 0;
 		_list->m_NumDebugLines = 0;
 		_list->m_MaxDebugLines = 0;
@@ -492,13 +466,12 @@ typedef struct
 {
 	union cdatatype
 	{
-		unsigned char	m_RGBA[4];
-		int				m_RGBAi;
+		unsigned char m_RGBA[4];
+		int m_RGBAi;
 	} cdata;
 } ColorStruct;
 
-void DrawDebugLine(float *_start, float *_end, int _duration, int _color)
-{
+void DrawDebugLine( float *_start, float *_end, int _duration, int _color ) {
 	int i;
 	UdpDebugLines_t lne;
 
@@ -508,7 +481,7 @@ void DrawDebugLine(float *_start, float *_end, int _duration, int _color)
 	lne.debugtype = DBG_LINE;
 	lne.expiretime = cg.time + _duration;
 
-	for(i = 0; i < 3; ++i)
+	for ( i = 0; i < 3; ++i )
 	{
 		lne.info.line.start[i] = _start[i];
 		lne.info.line.end[i] = _end[i];
@@ -519,11 +492,10 @@ void DrawDebugLine(float *_start, float *_end, int _duration, int _color)
 	lne.info.line.b = c.cdata.m_RGBA[2];
 	lne.info.line.a = c.cdata.m_RGBA[3];
 
-	AddToLineList(&g_DebugLines, &lne);
+	AddToLineList( &g_DebugLines, &lne );
 }
 
-void DrawDebugRadius(float *_start, float _radius, int _duration, int _color)
-{
+void DrawDebugRadius( float *_start, float _radius, int _duration, int _color ) {
 	int i;
 	UdpDebugLines_t lne;
 
@@ -533,7 +505,7 @@ void DrawDebugRadius(float *_start, float _radius, int _duration, int _color)
 	lne.debugtype = DBG_RADIUS;
 	lne.expiretime = cg.time + _duration;
 
-	for(i = 0; i < 3; ++i)
+	for ( i = 0; i < 3; ++i )
 		lne.info.radius.pos[i] = _start[i];
 	lne.info.radius.radius = _radius;
 
@@ -542,11 +514,10 @@ void DrawDebugRadius(float *_start, float _radius, int _duration, int _color)
 	lne.info.radius.b = c.cdata.m_RGBA[2];
 	lne.info.radius.a = c.cdata.m_RGBA[3];
 
-	AddToLineList(&g_DebugLines, &lne);
+	AddToLineList( &g_DebugLines, &lne );
 }
 
-void DrawDebugAABB(float *mins, float *_maxs, int _duration, int _color, int _side)
-{
+void DrawDebugAABB( float *mins, float *_maxs, int _duration, int _color, int _side ) {
 	int i;
 	UdpDebugLines_t lne;
 
@@ -556,7 +527,7 @@ void DrawDebugAABB(float *mins, float *_maxs, int _duration, int _color, int _si
 	lne.debugtype = DBG_AABB;
 	lne.expiretime = cg.time + _duration;
 
-	for(i = 0; i < 3; ++i)
+	for ( i = 0; i < 3; ++i )
 	{
 		lne.info.aabb.mins[i] = mins[i];
 		lne.info.aabb.maxs[i] = _maxs[i];
@@ -568,11 +539,10 @@ void DrawDebugAABB(float *mins, float *_maxs, int _duration, int _color, int _si
 	lne.info.aabb.a = c.cdata.m_RGBA[3];
 	lne.info.aabb.side = _side;
 
-	AddToLineList(&g_DebugLines, &lne);
+	AddToLineList( &g_DebugLines, &lne );
 }
 
-void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, int _color)
-{
+void DrawDebugPolygon( vec3_t *verts, int _numverts, int _duration, int _color ) {
 	int i;
 	UdpDebugLines_t lne;
 
@@ -583,7 +553,7 @@ void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, int _color)
 	lne.expiretime = cg.time + _duration;
 
 	lne.info.poly.numverts = _numverts;
-	for(i = 0; i < _numverts; ++i)
+	for ( i = 0; i < _numverts; ++i )
 	{
 		lne.info.poly.verts[i][0] = verts[i][0];
 		lne.info.poly.verts[i][1] = verts[i][1];
@@ -595,7 +565,7 @@ void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, int _color)
 	lne.info.poly.b = c.cdata.m_RGBA[2];
 	lne.info.poly.a = c.cdata.m_RGBA[3];
 
-	AddToLineList(&g_DebugLines, &lne);
+	AddToLineList( &g_DebugLines, &lne );
 }
 
 qboolean CG_AddOnScreenText( const char *text, vec3_t origin, int _color, float duration );
@@ -605,3 +575,4 @@ void DrawDebugText(const float *_start, const char *_msg, int _duration, int _co
 	VectorCopy(_start,v3);
 	CG_AddOnScreenText(_msg,v3,_color,(float)_duration/1000.f);
 }
+

@@ -730,6 +730,12 @@ namespace AiState
 			bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
 			if(!bBroken)
 				continue;
+			else
+			{
+				float fDistToRepair = SquaredLength2d(qry.m_List[i]->GetPosition(), GetClient()->GetPosition());
+				if ( fDistToRepair > 4000000 ) // 2000 squared
+					continue;
+			}
 
 			m_MapGoal = qry.m_List[i];
 			break;
@@ -948,7 +954,32 @@ namespace AiState
 		GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
 		GoalManager::GetInstance()->GetGoals(qry);
 		//qry.GetBest(m_MapGoal);
-		
+
+		//qry.FilterList();
+
+		float fDistToRevive;
+		float fClosestRevive = 0.f;
+		MapGoalList::iterator mIt = qry.m_List.begin();
+		for(; mIt != qry.m_List.end(); )
+		{
+			fDistToRevive = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
+			if ( fDistToRevive > 4000000 ) // 2000 squared
+			{
+				BlackboardDelay(5.f, (*mIt)->GetSerialNum()); // ignore it for a while so dist calcs aren't done every frame
+				mIt = qry.m_List.erase(mIt);
+				continue;
+			}
+
+			// use the closest one or the first one found within 200 units
+			if ( fClosestRevive == 0.f || (fDistToRevive < fClosestRevive && fDistToRevive > 40000.f) )
+			{
+				fClosestRevive = fDistToRevive;
+				m_MapGoal = (*mIt);
+			}
+
+			++mIt;
+		}
+
 		m_List = qry.m_List;
 		m_MapGoal.reset();
 		// TODO: check weapon capability vs target underwater?
@@ -1041,33 +1072,52 @@ namespace AiState
 			case REVIVING:
 				{
 					if(InterfaceFuncs::IsAlive(reviveEnt))
+					{
 						m_GoalState = HEALING;
+					}
+					else
+					{
+						GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
+						FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), RTCW_WP_SYRINGE));
+					}
 
-					GetClient()->PressButton(BOT_BUTTON_CROUCH);
+					// if the height differences are significant, jump/crouch
+					const Vector3f eyePos = GetClient()->GetEyePosition();
+					Vector3f aimPos;
+					GetAimPosition( aimPos );
+					const float heightDiff = aimPos.z - eyePos.z;
+					if ( heightDiff > 20.f ) {
+						if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
+							GetClient()->PressButton(BOT_BUTTON_JUMP);
+						}
+					} else if ( heightDiff > 20.f ) {
+						BitFlag64 btns;
+						btns.SetFlag(BOT_BUTTON_CROUCH);
+						GetClient()->HoldButton(btns,IGame::GetDeltaTime()*2);
+					}
 
-					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_SYRINGE));					
 					break;
 				}				
 			case HEALING:
 				{
+					// cs: bb delay any time the goal needs interrupted here
+					// otherwise it's a loop of goto and then finish which causes them
+					// to just 'stick' to the target without doing anything useful 
+
 					if(GetClient()->GetTargetingSystem()->HasTarget())
+					{
+						BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
 						return State_Finished;
+					}
 
 					if(!InterfaceFuncs::IsWeaponCharged(GetClient(), RTCW_WP_MEDKIT, Primary))
+					{
+						BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
 						return State_Finished;
-
-					//CS: TODO: need a better solution for this
-					/*const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-
-					//step back a little so revivee can stand
-					if (fDistanceToTarget < Mathf::Sqr(36.0f))
-						GetClient()->PressButton(BOT_BUTTON_BACK);
-					else if (fDistanceToTarget > Mathf::Sqr(144.0f))
-						return State_Finished;*/ 
+					}
 
 					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_MEDKIT));
+					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), RTCW_WP_MEDKIT));
 					break;
 				}
 			}

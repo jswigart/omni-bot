@@ -49,6 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\detours"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -75,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib ..\detours\detours.lib"
 				OutputFile="../Debug/ui_mp_x86.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -113,7 +114,8 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="copy to RTCW"
-				CommandLine="del /q &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot;&#x0D;&#x0A;..\..\..\..\..\..\Tools\zip\zip -9j &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 		<Configuration
@@ -149,9 +151,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\detours"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -176,7 +178,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib ..\detours\detours.lib"
 				OutputFile="../Release/ui_mp_x86.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -213,7 +215,8 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="del /q &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot;&#x0D;&#x0A;..\..\..\..\..\..\Tools\zip\zip -9j &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(OMNIBOT_INST)\rtcw\game&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 	</Configurations>
@@ -264,6 +267,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\downlib\downlib.c"
+				>
 			</File>
 			<File
 				RelativePath="..\game\q_math.c"
@@ -459,6 +466,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\downlib\downlib.h"
+				>
+			</File>
+			<File
 				RelativePath="keycodes.h"
 				>
 			</File>
@@ -495,6 +506,186 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+		</Filter>
+		<Filter
+			Name="Menu Files"
+			>
+			<File
+				RelativePath="..\..\main\ui_mp\auto_update.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\cdkey.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\connect.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\controls.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\createfavorite.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\createserver.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\credit.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\default.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\error.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\filter.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\hud.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\hud.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\in_rec_restart.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame_callvote.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame_controls.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame_leave.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame_options.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\ingame_system.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\joinserver.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\main.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\menudef.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\menus.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\mods.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\multi.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\multi_setup.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\nerve_credit.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\options.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\password.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\pbinfo.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\quit.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\quitcredit.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\rec_restart.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\serverinfo.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\setup.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\single_player.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\system.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\vid_restart.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\wm_limbo.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\wm_pickplayer.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\wm_pickteam.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\wm_quickmessage.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\main\ui_mp\wm_quickmessageAlt.menu"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\Jamfile"

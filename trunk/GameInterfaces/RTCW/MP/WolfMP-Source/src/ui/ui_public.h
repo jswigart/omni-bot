@@ -1,15 +1,15 @@
 #ifndef __UI_PUBLIC_H__
 #define __UI_PUBLIC_H__
 
-#define UI_API_VERSION	4
+#define UI_API_VERSION  4
 
 typedef struct {
-	connstate_t		connState;
-	int				connectPacketCount;
-	int				clientNum;
-	char			servername[MAX_STRING_CHARS];
-	char			updateInfoString[MAX_STRING_CHARS];
-	char			messageString[MAX_STRING_CHARS];
+	connstate_t connState;
+	int connectPacketCount;
+	int clientNum;
+	char servername[MAX_STRING_CHARS];
+	char updateInfoString[MAX_STRING_CHARS];
+	char messageString[MAX_STRING_CHARS];
 } uiClientState_t;
 
 typedef enum {
@@ -42,13 +42,13 @@ typedef enum {
 	// JOSEPH 12-6-99
 	UI_R_ADDLIGHTTOSCENE,
 	// END JOSEPH
-	//----(SA)	
+	//----(SA)
 	UI_R_ADDCORONATOSCENE,
 	//----(SA)
 	UI_R_RENDERSCENE,
 	UI_R_SETCOLOR,
 	UI_R_DRAWSTRETCHPIC,
-	UI_UPDATESCREEN,		// 30
+	UI_UPDATESCREEN,        // 30
 	UI_CM_LERPTAG,
 	UI_CM_LOADMODEL,
 	UI_S_REGISTERSOUND,
@@ -68,7 +68,7 @@ typedef enum {
 	UI_GETCONFIGSTRING,
 	UI_LAN_GETLOCALSERVERCOUNT,
 	UI_LAN_GETLOCALSERVERADDRESSSTRING,
-	UI_LAN_GETGLOBALSERVERCOUNT,		// 50
+	UI_LAN_GETGLOBALSERVERCOUNT,        // 50
 	UI_LAN_GETGLOBALSERVERADDRESSSTRING,
 	UI_LAN_GETPINGQUEUECOUNT,
 	UI_LAN_CLEARPING,
@@ -111,13 +111,13 @@ typedef enum {
 	UI_LAN_GETSERVERPING,
 	UI_LAN_SERVERISVISIBLE,
 	UI_LAN_COMPARESERVERS,
-	UI_CL_GETLIMBOSTRING,			// NERVE - SMF
-	UI_SET_PBCLSTATUS,				// DHM - Nerve
-	UI_CHECKAUTOUPDATE,				// DHM - Nerve
-	UI_GET_AUTOUPDATE,				// DHM - Nerve
+	UI_CL_GETLIMBOSTRING,           // NERVE - SMF
+	UI_SET_PBCLSTATUS,              // DHM - Nerve
+	UI_CHECKAUTOUPDATE,             // DHM - Nerve
+	UI_GET_AUTOUPDATE,              // DHM - Nerve
 	UI_CL_TRANSLATE_STRING,
 	UI_OPENURL,
-	UI_SET_PBSVSTATUS,				// TTimo
+	UI_SET_PBSVSTATUS,              // TTimo
 
 	UI_MEMSET = 100,
 	UI_MEMCPY,
@@ -142,29 +142,29 @@ typedef enum {
 	UIMENU_NOTEBOOK,
 	UIMENU_CLIPBOARD,
 	UIMENU_HELP,
-	UIMENU_BOOK1,			//----(SA)	added
-	UIMENU_BOOK2,			//----(SA)	added
-	UIMENU_BOOK3,			//----(SA)	added
-	UIMENU_WM_PICKTEAM,			// NERVE - SMF
-	UIMENU_WM_PICKPLAYER,		// NERVE - SMF
-	UIMENU_WM_QUICKMESSAGE,		// NERVE - SMF
-	UIMENU_WM_QUICKMESSAGEALT,	// NERVE - SMF
-	UIMENU_WM_LIMBO,			// NERVE - SMF
-	UIMENU_WM_AUTOUPDATE		// NERVE - DHM
+	UIMENU_BOOK1,           //----(SA)	added
+	UIMENU_BOOK2,           //----(SA)	added
+	UIMENU_BOOK3,           //----(SA)	added
+	UIMENU_WM_PICKTEAM,         // NERVE - SMF
+	UIMENU_WM_PICKPLAYER,       // NERVE - SMF
+	UIMENU_WM_QUICKMESSAGE,     // NERVE - SMF
+	UIMENU_WM_QUICKMESSAGEALT,  // NERVE - SMF
+	UIMENU_WM_LIMBO,            // NERVE - SMF
+	UIMENU_WM_AUTOUPDATE        // NERVE - DHM
 } uiMenuCommand_t;
 
-#define SORT_HOST			0
-#define SORT_MAP			1
-#define SORT_CLIENTS		2
-#define SORT_GAME			3
-#define SORT_PING			4
-#define SORT_PUNKBUSTER		5
+#define SORT_HOST           0
+#define SORT_MAP            1
+#define SORT_CLIENTS        2
+#define SORT_GAME           3
+#define SORT_PING           4
+#define SORT_PUNKBUSTER     5
 
 // Crosshair support
-void BG_setCrosshair(char *colString, float *col, float alpha, char *cvarName);
+void BG_setCrosshair( char *colString, float *col, float alpha, char *cvarName );
 
 typedef enum {
-	UI_GETAPIVERSION = 0,	// system reserved
+	UI_GETAPIVERSION = 0,   // system reserved
 
 	UI_INIT,
 //	void	UI_Init( void );
@@ -199,7 +199,7 @@ typedef enum {
 // if !overlay, the background will be drawn, otherwise it will be
 // overlayed over whatever the cgame has drawn.
 // a GetClientState syscall will be made to get the current strings
-	UI_CHECKEXECKEY		// NERVE - SMF
+	UI_CHECKEXECKEY     // NERVE - SMF
 } uiExport_t;
 
 #endif

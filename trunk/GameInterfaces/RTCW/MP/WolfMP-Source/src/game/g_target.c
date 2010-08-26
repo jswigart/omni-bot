@@ -1,7 +1,7 @@
 /*
  * name:		g_target.c
  *
- * desc:		
+ * desc:
  *
 */
 
@@ -14,8 +14,8 @@
 Gives the activator all the items pointed to.
 */
 void Use_Target_Give( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
-	gentity_t	*t;
-	trace_t		trace;
+	gentity_t   *t;
+	trace_t trace;
 
 	if ( !activator->client ) {
 		return;
@@ -27,11 +27,11 @@ void Use_Target_Give( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 
 	memset( &trace, 0, sizeof( trace ) );
 	t = NULL;
-	while ( (t = G_Find (t, FOFS(targetname), ent->target)) != NULL ) {
+	while ( ( t = G_Find( t, FOFS( targetname ), ent->target ) ) != NULL ) {
 		if ( !t->item ) {
 			continue;
 		}
-		Touch_Item( t, activator, &trace);
+		Touch_Item( t, activator, &trace );
 
 		// make sure it isn't going to respawn or show any events
 		t->nextthink = 0;
@@ -56,9 +56,9 @@ void Use_target_remove_powerups( gentity_t *ent, gentity_t *other, gentity_t *ac
 	}
 
 	if ( activator->client->ps.powerups[PW_REDFLAG] ) {
-		Team_ReturnFlag(TEAM_RED);
+		Team_ReturnFlag( TEAM_RED );
 	} else if ( activator->client->ps.powerups[PW_BLUEFLAG] ) {
-		Team_ReturnFlag(TEAM_BLUE);
+		Team_ReturnFlag( TEAM_BLUE );
 	}
 
 	memset( activator->client->ps.powerups, 0, sizeof( activator->client->ps.powerups ) );
@@ -105,7 +105,7 @@ void SP_target_delay( gentity_t *ent ) {
 
 The activator is given this many points.
 */
-void Use_Target_Score (gentity_t *ent, gentity_t *other, gentity_t *activator) {
+void Use_Target_Score( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	AddScore( activator, ent->count );
 }
 
@@ -124,23 +124,23 @@ void SP_target_score( gentity_t *ent ) {
 "message"	text to print
 If "private", only the activator gets the message.  If no checks, all clients get the message.
 */
-void Use_Target_Print (gentity_t *ent, gentity_t *other, gentity_t *activator) {
+void Use_Target_Print( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	if ( activator->client && ( ent->spawnflags & 4 ) ) {
-		trap_SendServerCommand( activator-g_entities, va("cp \"%s\"", ent->message ));
+		trap_SendServerCommand( activator - g_entities, va( "cp \"%s\"", ent->message ) );
 		return;
 	}
 
 	if ( ent->spawnflags & 3 ) {
 		if ( ent->spawnflags & 1 ) {
-			G_TeamCommand( TEAM_RED, va("cp \"%s\"", ent->message) );
+			G_TeamCommand( TEAM_RED, va( "cp \"%s\"", ent->message ) );
 		}
 		if ( ent->spawnflags & 2 ) {
-			G_TeamCommand( TEAM_BLUE, va("cp \"%s\"", ent->message) );
+			G_TeamCommand( TEAM_BLUE, va( "cp \"%s\"", ent->message ) );
 		}
 		return;
 	}
 
-	trap_SendServerCommand( -1, va("cp \"%s\"", ent->message ));
+	trap_SendServerCommand( -1, va( "cp \"%s\"", ent->message ) );
 }
 
 void SP_target_print( gentity_t *ent ) {
@@ -164,16 +164,17 @@ NO_PVS - this sound will not turn off when not in the player's PVS
 "wait" : Seconds between auto triggerings, 0 = don't auto trigger
 "random" : wait variance, default is 0
 */
-void Use_Target_Speaker (gentity_t *ent, gentity_t *other, gentity_t *activator) {
-	if (ent->spawnflags & 3) {	// looping sound toggles
-		if (ent->s.loopSound)
-			ent->s.loopSound = 0;	// turn it off
-		else
-			ent->s.loopSound = ent->noise_index;	// start it
-	}else {	// normal sound
+void Use_Target_Speaker( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+	if ( ent->spawnflags & 3 ) {  // looping sound toggles
+		if ( ent->s.loopSound ) {
+			ent->s.loopSound = 0;   // turn it off
+		} else {
+			ent->s.loopSound = ent->noise_index;    // start it
+		}
+	} else { // normal sound
 		if ( ent->spawnflags & 8 ) {
 			G_AddEvent( activator, EV_GENERAL_SOUND, ent->noise_index );
-		} else if (ent->spawnflags & 4) {
+		} else if ( ent->spawnflags & 4 ) {
 			G_AddEvent( ent, EV_GLOBAL_SOUND, ent->noise_index );
 		} else {
 			G_AddEvent( ent, EV_GENERAL_SOUND, ent->noise_index );
@@ -181,29 +182,26 @@ void Use_Target_Speaker (gentity_t *ent, gentity_t *other, gentity_t *activator)
 	}
 }
 
-void target_speaker_multiple (gentity_t *ent)
-{
+void target_speaker_multiple( gentity_t *ent ) {
 	gentity_t *vis_dummy = NULL;
 
-	if (!(ent->target))
-	{
-		G_Error( "target_speaker missing target at pos %s", vtos( ent->s.origin ) );	
+	if ( !( ent->target ) ) {
+		G_Error( "target_speaker missing target at pos %s", vtos( ent->s.origin ) );
 	}
 
-	vis_dummy = G_Find (NULL, FOFS(targetname), ent->target);
+	vis_dummy = G_Find( NULL, FOFS( targetname ), ent->target );
 
-	if(vis_dummy)
-	{
+	if ( vis_dummy ) {
 		ent->s.otherEntityNum = vis_dummy->s.number;
+	} else {
+		G_Error( "target_speaker cant find vis_dummy_multiple %s", vtos( ent->s.origin ) );
 	}
-	else
-		G_Error( "target_speaker cant find vis_dummy_multiple %s", vtos( ent->s.origin ) );	
-	
+
 }
 
 void SP_target_speaker( gentity_t *ent ) {
-	char	buffer[MAX_QPATH];
-	char	*s;
+	char buffer[MAX_QPATH];
+	char    *s;
 
 	G_SpawnFloat( "wait", "0", &ent->wait );
 	G_SpawnFloat( "random", "0", &ent->random );
@@ -211,22 +209,15 @@ void SP_target_speaker( gentity_t *ent ) {
 	if ( !G_SpawnString( "noise", "NOSOUND", &s ) ) {
 		G_Error( "target_speaker without a noise key at %s", vtos( ent->s.origin ) );
 	}
-	
+
 	// force all client reletive sounds to be "activator" speakers that
 	// play on the entity that activates it
 	if ( s[0] == '*' ) {
 		ent->spawnflags |= 8;
 	}
 
-	// Ridah, had to disable this so we can use sound scripts
-	// don't worry, if the script isn't found, it'll default back to
-	// .wav on the client-side
-	//if (!strstr( s, ".wav" )) {
-	//	Com_sprintf (buffer, sizeof(buffer), "%s.wav", s );
-	//} else {
-		Q_strncpyz( buffer, s, sizeof(buffer) );
-	//}
-	ent->noise_index = G_SoundIndex(buffer);
+	Q_strncpyz( buffer, s, sizeof( buffer ) );
+	ent->noise_index = G_SoundIndex( buffer );
 
 	// a repeating speaker can be done completely client side
 	ent->s.eType = ET_SPEAKER;
@@ -243,28 +234,29 @@ void SP_target_speaker( gentity_t *ent ) {
 	ent->use = Use_Target_Speaker;
 
 	// GLOBAL
-	if (ent->spawnflags & (4|32)) {
+	if ( ent->spawnflags & ( 4 | 32 ) ) {
 		ent->r.svFlags |= SVF_BROADCAST;
 	}
 
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
 
-	if (ent->spawnflags & 16)
-	{
+	if ( ent->spawnflags & 16 ) {
 		ent->think = target_speaker_multiple;
 		ent->nextthink = level.time + 50;
 	}
 
 	// NO_PVS
-	if(ent->spawnflags & 32)
+	if ( ent->spawnflags & 32 ) {
 		ent->s.density = 1;
-	else
+	} else {
 		ent->s.density = 0;
+	}
 
-	if(ent->radius)
-		ent->s.dmgFlags = ent->radius;	// store radius in dmgflags
-	else
+	if ( ent->radius ) {
+		ent->s.dmgFlags = ent->radius;  // store radius in dmgflags
+	} else {
 		ent->s.dmgFlags = 0;
+	}
 
 
 	// must link the entity so we get areas and clusters so
@@ -273,78 +265,75 @@ void SP_target_speaker( gentity_t *ent ) {
 }
 
 
-
 //==========================================================
 
 /*QUAKED target_laser (0 .5 .8) (-8 -8 -8) (8 8 8) START_ON
 When triggered, fires a laser.  You can either set a target or a direction.
 */
-void target_laser_think (gentity_t *self) {
-	vec3_t	end;
-	trace_t	tr;
-	vec3_t	point;
+void target_laser_think( gentity_t *self ) {
+	vec3_t end;
+	trace_t tr;
+	vec3_t point;
 
 	// if pointed at another entity, set movedir to point at it
 	if ( self->enemy ) {
-		VectorMA (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
-		VectorMA (point, 0.5, self->enemy->r.maxs, point);
-		VectorSubtract (point, self->s.origin, self->movedir);
-		VectorNormalize (self->movedir);
+		VectorMA( self->enemy->s.origin, 0.5, self->enemy->r.mins, point );
+		VectorMA( point, 0.5, self->enemy->r.maxs, point );
+		VectorSubtract( point, self->s.origin, self->movedir );
+		VectorNormalize( self->movedir );
 	}
 
 	// fire forward and see what we hit
-	VectorMA (self->s.origin, 2048, self->movedir, end);
+	VectorMA( self->s.origin, 2048, self->movedir, end );
 
-	trap_Trace( &tr, self->s.origin, NULL, NULL, end, self->s.number, CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE);
+	trap_Trace( &tr, self->s.origin, NULL, NULL, end, self->s.number, CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE );
 
 	if ( tr.entityNum ) {
 		// hurt it if we can
-		G_Damage ( &g_entities[tr.entityNum], self, self->activator, self->movedir, 
-			tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER);
+		G_Damage( &g_entities[tr.entityNum], self, self->activator, self->movedir,
+				  tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER );
 	}
 
-	VectorCopy (tr.endpos, self->s.origin2);
+	VectorCopy( tr.endpos, self->s.origin2 );
 
 	trap_LinkEntity( self );
 	self->nextthink = level.time + FRAMETIME;
 }
 
-void target_laser_on (gentity_t *self)
-{
-	if (!self->activator)
+void target_laser_on( gentity_t *self ) {
+	if ( !self->activator ) {
 		self->activator = self;
-	target_laser_think (self);
+	}
+	target_laser_think( self );
 }
 
-void target_laser_off (gentity_t *self)
-{
+void target_laser_off( gentity_t *self ) {
 	trap_UnlinkEntity( self );
 	self->nextthink = 0;
 }
 
-void target_laser_use (gentity_t *self, gentity_t *other, gentity_t *activator)
-{
+void target_laser_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	self->activator = activator;
-	if ( self->nextthink > 0 )
-		target_laser_off (self);
-	else
-		target_laser_on (self);
+	if ( self->nextthink > 0 ) {
+		target_laser_off( self );
+	} else {
+		target_laser_on( self );
+	}
 }
 
-void target_laser_start (gentity_t *self)
-{
+void target_laser_start( gentity_t *self ) {
 	gentity_t *ent;
 
 	self->s.eType = ET_BEAM;
 
-	if (self->target) {
-		ent = G_Find (NULL, FOFS(targetname), self->target);
-		if (!ent) {
-			G_Printf ("%s at %s: %s is a bad target\n", self->classname, vtos(self->s.origin), self->target);
+	if ( self->target ) {
+		ent = G_Find( NULL, FOFS( targetname ), self->target );
+		if ( !ent ) {
+			G_Printf( "%s at %s: %s is a bad target\n", self->classname, vtos( self->s.origin ), self->target );
 		}
 		self->enemy = ent;
 	} else {
-		G_SetMovedir (self->s.angles, self->movedir);
+		G_SetMovedir( self->s.angles, self->movedir );
 	}
 
 	self->use = target_laser_use;
@@ -354,14 +343,14 @@ void target_laser_start (gentity_t *self)
 		self->damage = 1;
 	}
 
-	if (self->spawnflags & 1)
-		target_laser_on (self);
-	else
-		target_laser_off (self);
+	if ( self->spawnflags & 1 ) {
+		target_laser_on( self );
+	} else {
+		target_laser_off( self );
+	}
 }
 
-void SP_target_laser (gentity_t *self)
-{
+void SP_target_laser( gentity_t *self ) {
 	// let everything else get spawned before we start firing
 	self->think = target_laser_start;
 	self->nextthink = level.time + FRAMETIME;
@@ -371,13 +360,14 @@ void SP_target_laser (gentity_t *self)
 //==========================================================
 
 void target_teleporter_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
-	gentity_t	*dest;
+	gentity_t   *dest;
 
-	if (!activator->client)
+	if ( !activator->client ) {
 		return;
-	dest = 	G_PickTarget( self->target );
-	if (!dest) {
-		G_Printf ("Couldn't find teleporter destination\n");
+	}
+	dest =  G_PickTarget( self->target );
+	if ( !dest ) {
+		G_Printf( "Couldn't find teleporter destination\n" );
 		return;
 	}
 
@@ -388,8 +378,9 @@ void target_teleporter_use( gentity_t *self, gentity_t *other, gentity_t *activa
 The activator will be teleported away.
 */
 void SP_target_teleporter( gentity_t *self ) {
-	if (!self->targetname)
-		G_Printf("untargeted %s at %s\n", self->classname, vtos(self->s.origin));
+	if ( !self->targetname ) {
+		G_Printf( "untargeted %s at %s\n", self->classname, vtos( self->s.origin ) );
+	}
 
 	self->use = target_teleporter_use;
 }
@@ -409,18 +400,18 @@ TAKE_KEY removes the key from the players inventory
 By default this sound is "sound/movers/doors/default_door_locked.wav"
 NO_LOCKED_NOISE specifies that it will be silent if activated without proper key
 */
-void target_relay_use (gentity_t *self, gentity_t *other, gentity_t *activator) {
-	if ( ( self->spawnflags & 1 ) && activator && activator->client 
-		&& activator->client->sess.sessionTeam != TEAM_RED ) {
+void target_relay_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
+	if ( ( self->spawnflags & 1 ) && activator && activator->client
+		 && activator->client->sess.sessionTeam != TEAM_RED ) {
 		return;
 	}
-	if ( ( self->spawnflags & 2 ) && activator && activator->client 
-		&& activator->client->sess.sessionTeam != TEAM_BLUE ) {
+	if ( ( self->spawnflags & 2 ) && activator && activator->client
+		 && activator->client->sess.sessionTeam != TEAM_BLUE ) {
 		return;
 	}
 
 	if ( self->spawnflags & 4 ) {
-		gentity_t	*ent;
+		gentity_t   *ent;
 
 		ent = G_PickTarget( self->target );
 		if ( ent && ent->use ) {
@@ -429,55 +420,51 @@ void target_relay_use (gentity_t *self, gentity_t *other, gentity_t *activator) 
 		return;
 	}
 
-	if(activator) {	// activator can be NULL if called from script
-		if(self->key)
-		{
+	if ( activator ) { // activator can be NULL if called from script
+		if ( self->key ) {
 			gitem_t *item;
 
-			if(self->key == -1)	// relay permanently locked
-			{
-				if (self->soundPos1)
-					G_Sound( self, self->soundPos1);	//----(SA)	added
+			if ( self->key == -1 ) { // relay permanently locked
+				if ( self->soundPos1 ) {
+					G_Sound( self, self->soundPos1 );    //----(SA)	added
+				}
 				return;
 			}
 
-			item = BG_FindItemForKey(self->key, 0);
+			item = BG_FindItemForKey( self->key, 0 );
 
-			if(item)
-			{
-				if(activator->client->ps.stats[STAT_KEYS] & (1<<item->giTag))	// user has key
-				{
-					if (self->spawnflags & 8 ) {	// relay is NOKEY_ONLY and player has key
-						if (self->soundPos1)
-							G_Sound( self, self->soundPos1);	//----(SA)	added
+			if ( item ) {
+				if ( activator->client->ps.stats[STAT_KEYS] & ( 1 << item->giTag ) ) { // user has key
+					if ( self->spawnflags & 8 ) {    // relay is NOKEY_ONLY and player has key
+						if ( self->soundPos1 ) {
+							G_Sound( self, self->soundPos1 );    //----(SA)	added
+						}
 						return;
 					}
-				}
-				else							// user does not have key
+				} else                            // user does not have key
 				{
-					if (!(self->spawnflags & 8) )
-					{
-						if (self->soundPos1)
-							G_Sound( self, self->soundPos1);	//----(SA)	added
+					if ( !( self->spawnflags & 8 ) ) {
+						if ( self->soundPos1 ) {
+							G_Sound( self, self->soundPos1 );    //----(SA)	added
+						}
 						return;
 					}
 				}
 			}
 
-			if(self->spawnflags & 16) {	// (SA) take key
-				activator->client->ps.stats[STAT_KEYS] &= ~(1<<item->giTag);
+			if ( self->spawnflags & 16 ) { // (SA) take key
+				activator->client->ps.stats[STAT_KEYS] &= ~( 1 << item->giTag );
 				// (SA) TODO: "took inventory item" sound
 			}
 		}
 	}
 
-	G_UseTargets (self, activator);
+	G_UseTargets( self, activator );
 }
 
 
-void relay_AIScript_AlertEntity( gentity_t *self ) 
-{
-	self->use ( self, NULL, NULL);
+void relay_AIScript_AlertEntity( gentity_t *self ) {
+	self->use( self, NULL, NULL );
 }
 
 
@@ -486,20 +473,19 @@ void relay_AIScript_AlertEntity( gentity_t *self )
 SP_target_relay
 ==============
 */
-void SP_target_relay (gentity_t *self) {
-	char		*sound;
+void SP_target_relay( gentity_t *self ) {
+	char        *sound;
 
 	self->use = target_relay_use;
 	self->AIScript_AlertEntity = relay_AIScript_AlertEntity;
 
-	if(!(self->spawnflags & 32)) {	// !NO_LOCKED_NOISE
+	if ( !( self->spawnflags & 32 ) ) {  // !NO_LOCKED_NOISE
 		if ( G_SpawnString( "lockednoise", "0", &sound ) ) {
 			self->soundPos1 = G_SoundIndex( sound );
 		} else {
-			self->soundPos1 = G_SoundIndex( "sound/movers/doors/default_door_locked.wav");
+			self->soundPos1 = G_SoundIndex( "sound/movers/doors/default_door_locked.wav" );
 		}
 	}
-
 }
 
 
@@ -513,22 +499,24 @@ If targets, they will be killed when this is fired
 void target_kill_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	gentity_t *targ = NULL;
 
-	if(self->spawnflags & 1)	// kill usertoo
-		G_Damage ( activator, NULL, NULL, NULL, NULL, 100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG);
+	if ( self->spawnflags & 1 ) {  // kill usertoo
+		G_Damage( activator, NULL, NULL, NULL, NULL, 100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG );
+	}
 
-	while ( (targ = G_Find (targ, FOFS(targetname), self->target)) != NULL ) {
-		if(	targ->aiCharacter )			// (SA) if it's an ai character, free it nicely
+	while ( ( targ = G_Find( targ, FOFS( targetname ), self->target ) ) != NULL ) {
+		if ( targ->aiCharacter ) {       // (SA) if it's an ai character, free it nicely
 			targ->aiInactive = qtrue;
-		else
+		} else
 		{
 			// make sure it isn't going to respawn or show any events
 			targ->nextthink = 0;
-			if(targ == activator)
+			if ( targ == activator ) {
 				continue;
+			}
 
 			// RF, script_movers should die!
-			if (!Q_stricmp(targ->classname, "script_mover") && targ->die) {
-				targ->die(targ, self, self, targ->health, 0);
+			if ( !Q_stricmp( targ->classname, "script_mover" ) && targ->die ) {
+				targ->die( targ, self, self, targ->health, 0 );
 				continue;
 			}
 
@@ -548,7 +536,7 @@ void SP_target_kill( gentity_t *self ) {
 /*DEFUNCT target_position (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for in-game calculation, like jumppad targets.
 */
-void SP_target_position( gentity_t *self ){
+void SP_target_position( gentity_t *self ) {
 	G_SetOrigin( self, self->s.origin );
 }
 
@@ -556,13 +544,13 @@ void SP_target_position( gentity_t *self ){
 // using them unless necessary. if that function is then assigned to an entity, client or cast field,
 // the game will not save.
 //static void target_location_linkup(gentity_t *ent)
-void target_location_linkup(gentity_t *ent)
-{
+void target_location_linkup( gentity_t *ent ) {
 	int i;
 	int n;
 
-	if (level.locationLinked) 
+	if ( level.locationLinked ) {
 		return;
+	}
 
 	level.locationLinked = qtrue;
 
@@ -570,10 +558,10 @@ void target_location_linkup(gentity_t *ent)
 
 	trap_SetConfigstring( CS_LOCATIONS, "unknown" );
 
-	for (i = 0, ent = g_entities, n = 1;
-			i < level.num_entities;
-			i++, ent++) {
-		if (ent->classname && !Q_stricmp(ent->classname, "target_location")) {
+	for ( i = 0, ent = g_entities, n = 1;
+		  i < level.num_entities;
+		  i++, ent++ ) {
+		if ( ent->classname && !Q_stricmp( ent->classname, "target_location" ) ) {
 			// lets overload some variables!
 			ent->health = n; // use for location marking
 			trap_SetConfigstring( CS_LOCATIONS + n, ent->message );
@@ -582,8 +570,6 @@ void target_location_linkup(gentity_t *ent)
 			level.locationHead = ent;
 		}
 	}
-
-	// All linked together now
 }
 
 /*QUAKED target_location (0 0.5 0) (-8 -8 -8) (8 8 8)
@@ -594,30 +580,31 @@ Set "count" to 0-7 for color.
 Closest target_location in sight used for the location, if none
 in site, closest in distance
 */
-void SP_target_location( gentity_t *self ){
+void SP_target_location( gentity_t *self ) {
 	self->think = target_location_linkup;
 	self->nextthink = level.time + 200;  // Let them all spawn first
 
 	G_SetOrigin( self, self->s.origin );
 }
 
+//---- (SA) Wolf targets
+
+
 /*
 ==============
 Use_Target_Counter
 ==============
 */
-void Use_Target_Counter( gentity_t *ent, gentity_t *other, gentity_t *activator )
-{
-	if(ent->count < 0)	// if the count has already been hit, ignore this
+void Use_Target_Counter( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+	if ( ent->count < 0 ) { // if the count has already been hit, ignore this
 		return;
+	}
 
-	ent->count -= 1;	// dec count
+	ent->count -= 1;    // dec count
 
-//	G_Printf("count at: %d\n", ent->count);
-
-	if(!ent->count)		// specified count is now hit
-//		G_Printf("firing!!\n");
-		G_UseTargets(ent, other);
+	if ( !ent->count ) {   // specified count is now hit
+		G_UseTargets( ent, other );
+	}
 }
 
 /*
@@ -625,17 +612,14 @@ void Use_Target_Counter( gentity_t *ent, gentity_t *other, gentity_t *activator 
 Use_Target_Lock
 ==============
 */
-void Use_Target_Lock( gentity_t *ent, gentity_t *other, gentity_t *activator )
-{
-	gentity_t	*t = 0;
+void Use_Target_Lock( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+	gentity_t   *t = 0;
 
-	while ( (t = G_Find (t, FOFS(targetname), ent->target)) != NULL )
+	while ( ( t = G_Find( t, FOFS( targetname ), ent->target ) ) != NULL )
 	{
-//		G_Printf("target_lock locking entity with key: %d\n", ent->count);
 		t->key = ent->key;
 		G_SetAASBlockingEntity( t, t->key != 0 );
 	}
-
 }
 
 //==========================================================
@@ -645,15 +629,14 @@ void Use_Target_Lock( gentity_t *ent, gentity_t *other, gentity_t *activator )
 Use_target_fog
 ==============
 */
-void Use_target_fog( gentity_t *ent, gentity_t *other, gentity_t *activator)
-{
+void Use_target_fog( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 //	CS_FOGVARS reads:
 //		near
 //		far
 //		density
 //		r,g,b
 //		time to complete
-	trap_SetConfigstring( CS_FOGVARS, va("%f %f %f %f %f %f %i", 1.0f, (float)ent->s.density, 1.0f, (float)ent->dl_color[0], (float)ent->dl_color[1], (float)ent->dl_color[2], ent->s.time) );
+	trap_SetConfigstring( CS_FOGVARS, va( "%f %f %f %f %f %f %i", 1.0f, (float)ent->s.density, 1.0f, (float)ent->dl_color[0], (float)ent->dl_color[1], (float)ent->dl_color[2], ent->s.time ) );
 }
 
 /*QUAKED target_fog (1 1 0) (-8 -8 -8) (8 8 8)
@@ -668,17 +651,17 @@ void SP_target_fog( gentity_t *ent ) {
 	ent->use = Use_target_fog;
 
 	// ent->s.density will carry the 'distance' value
-	if(G_SpawnInt( "distance", "0", &dist ))
-	{
-		if(dist >=0)
+	if ( G_SpawnInt( "distance", "0", &dist ) ) {
+		if ( dist >= 0 ) {
 			ent->s.density = dist;
+		}
 	}
 
 	// ent->s.time will carry the 'time' value
-	if(G_SpawnFloat( "time", "0.5", &ftime ))
-	{
-		if(ftime>=0)
-			ent->s.time = ftime * 1000;	// sec to ms
+	if ( G_SpawnFloat( "time", "0.5", &ftime ) ) {
+		if ( ftime >= 0 ) {
+			ent->s.time = ftime * 1000; // sec to ms
+		}
 	}
 }
 
@@ -689,17 +672,14 @@ Increments the counter pointed to.
 "count" is the key for the count value
 */
 void SP_target_counter( gentity_t *ent ) {
-//	G_Printf("target counter created with val of: %d\n", ent->count);
 	ent->use = Use_Target_Counter;
 }
-
 
 
 /*QUAKED target_autosave (1 1 0) (-8 -8 -8) (8 8 8)
 saves game to 'autosave.svg' when triggered then dies.
 */
 void SP_target_autosave( gentity_t *ent ) {
-	//ent->use = Use_Target_Autosave;
 	G_FreeEntity( ent );
 }
 
@@ -719,189 +699,130 @@ void SP_target_lock( gentity_t *ent ) {
 
 
 
-void Use_Target_Alarm( gentity_t *ent, gentity_t *other, gentity_t *activator )
-{
-	G_UseTargets(ent, other);
+void Use_Target_Alarm( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+	G_UseTargets( ent, other );
 }
 
 /*QUAKED target_alarm (1 1 0) (-4 -4 -4) (4 4 4)
 does nothing yet (effectively a relay right now)
 */
-void SP_target_alarm( gentity_t *ent)
-{
+void SP_target_alarm( gentity_t *ent ) {
 	ent->use = Use_Target_Alarm;
 }
 
-//---- end
-
-/*QUAKED target_smoke (1 0 0) (-32 -32 -16) (32 32 16) Black White SmokeON Gravity
-1 second = 1000
-1 FRAME = 100
-delay = 100 = one millisecond default this is the maximum smoke that will show up
-time = 5000 default before the smoke disipates
-duration = 2000 before the smoke starts to alpha
-start_size = 24 default
-end_size = 96 default
-wait	= default is 50 the rate at which it will travel up
-*/
-
-/*void smoke_think (gentity_t *ent)
-{
-	gentity_t	*tent;
-
-	ent->nextthink = level.time + ent->delay;
-
-	if (!(ent->spawnflags & 4))
-		return;
-
-	if (ent->health)
-	{
-		ent->health --;
-		if (!ent->health)
-		{
-			ent->think = G_FreeEntity;
-			ent->nextthink = level.time + FRAMETIME;
-		}
-	}
-
-	tent = G_TempEntity (ent->r.currentOrigin, EV_SMOKE);
-	VectorCopy (ent->r.currentOrigin, tent->s.origin);
-	tent->s.time = ent->speed;
-	tent->s.time2 = ent->duration;
-	tent->s.density = ent->s.density;
-
-	// this is used to set the size of the smoke particle
-	tent->s.angles2[0] = ent->start_size;
-	tent->s.angles2[1] = ent->end_size;
-	tent->s.angles2[2] = ent->wait;
-
-	VectorCopy (ent->pos3, tent->s.origin2);
-
-	if (ent->s.frame) // denotes reverse gravity effect
-		tent->s.frame = 1;
-
-}*/
-
-void smoke_think (gentity_t *ent) {
+void smoke_think( gentity_t *ent ) {
 	ent->nextthink = level.time + ent->s.constantLight;
 
-	if (!(ent->spawnflags & 4))
+	if ( !( ent->spawnflags & 4 ) ) {
 		return;
+	}
 
-	if (ent->s.dl_intensity)
-	{
-		ent->s.dl_intensity --;
-		if (!ent->s.dl_intensity)
-		{
+	if ( ent->s.dl_intensity ) {
+		ent->s.dl_intensity--;
+		if ( !ent->s.dl_intensity ) {
 			ent->think = G_FreeEntity;
 			ent->nextthink = level.time + FRAMETIME;
 		}
 	}
 }
 
-void smoke_toggle (gentity_t *ent, gentity_t *self, gentity_t *activator )
-{
-	if (ent->spawnflags & 4) // smoke is on turn it off
-	{
+void smoke_toggle( gentity_t *ent, gentity_t *self, gentity_t *activator ) {
+	if ( ent->spawnflags & 4 ) { // smoke is on turn it off
 		ent->spawnflags &= ~4;
-		trap_UnlinkEntity (ent);
-	}
-	else
+		trap_UnlinkEntity( ent );
+	} else
 	{
 		ent->spawnflags |= 4;
-		trap_LinkEntity (ent);
+		trap_LinkEntity( ent );
 	}
 }
 
-void smoke_init (gentity_t *ent)
-{
+void smoke_init( gentity_t *ent ) {
 	gentity_t *target;
-	vec3_t		vec;
+	vec3_t vec;
 
 	ent->think = smoke_think;
 	ent->nextthink = level.time + FRAMETIME;
 
-	if (ent->target)
-	{
-		target = G_Find (NULL, FOFS (targetname), ent->target);	
-		if (target)
-		{
-			VectorSubtract (target->s.origin, ent->s.origin, vec);
-			VectorCopy (vec, ent->pos3);
+	if ( ent->target ) {
+		target = G_Find( NULL, FOFS( targetname ), ent->target );
+		if ( target ) {
+			VectorSubtract( target->s.origin, ent->s.origin, vec );
+			VectorCopy( vec, ent->pos3 );
+		} else {
+			VectorSet( ent->s.origin2, 0, 0, 1 );
 		}
-		else
-			VectorSet (ent->s.origin2, 0, 0, 1);
-	}
-	else
+	} else
 	{
-		VectorSet (ent->s.origin2, 0, 0, 1);
+		VectorSet( ent->s.origin2, 0, 0, 1 );
 	}
 
-	if( ent->spawnflags & 4 )
-		trap_LinkEntity (ent);
+	if ( ent->spawnflags & 4 ) {
+		trap_LinkEntity( ent );
+	}
 }
 
-void SP_target_smoke (gentity_t *ent)
-{
-
-  	// (SA) don't use in multiplayer right now since it makes decyphering net messages almost impossible
-//	ent->think = G_FreeEntity;
-//	return;
-	// Arnout - modified this a lot to be sent to the client as one entity and then is shown at the client
-
-	if (!ent->delay)
+void SP_target_smoke( gentity_t *ent ) {
+	if ( !ent->delay ) {
 		ent->delay = 100;
-		
+	}
+
 	ent->use = smoke_toggle;
-	
+
 	ent->think = smoke_init;
 	ent->nextthink = level.time + FRAMETIME;
 
-	G_SetOrigin (ent, ent->s.origin); 
+	G_SetOrigin( ent, ent->s.origin );
 	ent->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	ent->s.eType = ET_SMOKER;
 
-	if (ent->spawnflags & 2)
+	if ( ent->spawnflags & 2 ) {
 		ent->s.density = 4;
-	else
+	} else {
 		ent->s.density = 0;
+	}
 
 	// using "time"
 	ent->s.time = ent->speed;
-	if (!ent->s.time)
+	if ( !ent->s.time ) {
 		ent->s.time = 5000; // 5 seconds
 
+	}
 	ent->s.time2 = ent->duration;
-	if (!ent->s.time2)
+	if ( !ent->s.time2 ) {
 		ent->s.time2 = 2000;
+	}
 
 	ent->s.angles2[0] = ent->start_size;
-	if (!ent->s.angles2[0]) {
+	if ( !ent->s.angles2[0] ) {
 		ent->s.angles2[0] = 24;
 	}
 
 	ent->s.angles2[1] = ent->end_size;
-	if (!ent->s.angles2[1]) {
+	if ( !ent->s.angles2[1] ) {
 		ent->s.angles2[1] = 96;
 	}
-	
+
 	ent->s.angles2[2] = ent->wait;
-	if (!ent->s.angles2[2])
+	if ( !ent->s.angles2[2] ) {
 		ent->s.angles2[2] = 50;
+	}
 
 	// idiot check
-	if (ent->s.time < ent->s.time2)
+	if ( ent->s.time < ent->s.time2 ) {
 		ent->s.time = ent->s.time2 + 100;
+	}
 
-	if (ent->spawnflags & 8)
+	if ( ent->spawnflags & 8 ) {
 		ent->s.frame = 1;
+	}
 
 	ent->s.dl_intensity = ent->health;
 	ent->s.constantLight = ent->delay;
 
-	if( ent->spawnflags & 4 )
-		trap_LinkEntity (ent);
-	
+	if ( ent->spawnflags & 4 ) {
+		trap_LinkEntity( ent );
+	}
 }
 
 
@@ -909,31 +830,28 @@ void SP_target_smoke (gentity_t *ent)
 must have an aiName
 must have a target
 
-when used it will fire its targets 
+when used it will fire its targets
 */
-void target_script_trigger_use (gentity_t *ent, gentity_t *other, gentity_t *activator )
-{
+void target_script_trigger_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	// DHM - Nerve :: In multiplayer, we use the brush scripting only
 	if ( g_gametype.integer >= GT_WOLF && ent->scriptName ) {
 
-		Bot_Util_SendTrigger(ent, NULL, ent->scriptName, ent->target );
+		Bot_Util_SendTrigger( ent, NULL, ent->scriptName, ent->target );
 		G_Script_ScriptEvent( ent, "trigger", ent->target );
 	}
 
-	G_UseTargets ( ent, other);	
-
+	G_UseTargets( ent, other );
 }
 
-void SP_target_script_trigger (gentity_t *ent)
-{
-	G_SetOrigin (ent, ent->s.origin); 
+void SP_target_script_trigger( gentity_t *ent ) {
+	G_SetOrigin( ent, ent->s.origin );
 	ent->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	ent->s.eType = ET_GENERAL;
 	ent->use = target_script_trigger_use;
 }
 
 
-/*QUAKED target_rumble (0 0.75 0.8) (-8 -8 -8) (8 8 8) STARTOFF 
+/*QUAKED target_rumble (0 0.75 0.8) (-8 -8 -8) (8 8 8) STARTOFF
 wait = default is 2 seconds = time the entity will enable rumble effect
 "pitch" value from 1 to 10 default is 5
 "yaw"   value from 1 to 10 default is 5
@@ -949,23 +867,20 @@ wait = default is 2 seconds = time the entity will enable rumble effect
 */
 int rumble_snd;
 
-void target_rumble_think (gentity_t * ent)
-{
-	gentity_t	*tent;
-	float	ratio;
-	float	time, time2;
-	float	dapitch, dayaw;
-	qboolean	validrumble = qtrue;
+void target_rumble_think( gentity_t * ent ) {
+	gentity_t   *tent;
+	float ratio;
+	float dapitch, dayaw;
+	qboolean validrumble = qtrue;
 
-	if (!(ent->count))
-	{
+	if ( !( ent->count ) ) {
 		ent->timestamp = level.time;
-		ent->count ++;
+		ent->count++;
 		// start sound here
-		if (ent->soundPos1)
-			G_AddEvent( ent, EV_GENERAL_SOUND, ent->soundPos1);
-	}
-	else
+		if ( ent->soundPos1 ) {
+			G_AddEvent( ent, EV_GENERAL_SOUND, ent->soundPos1 );
+		}
+	} else
 	{
 		// looping sound
 		ent->s.loopSound = ent->soundLoop;
@@ -974,59 +889,51 @@ void target_rumble_think (gentity_t * ent)
 	dapitch = ent->delay;
 	dayaw = ent->random;
 	ratio = 1.0f;
-	
-	if (ent->start_size)
-	{
-		if (level.time < (ent->timestamp + ent->start_size))
-		{
-			time = level.time - ent->timestamp;
-			time2 = (ent->timestamp + ent->start_size) - ent->timestamp;
-			ratio = time / time2;
-		}
-		else if (level.time < (ent->timestamp + ent->end_size + ent->start_size)) 
-		{
-			time = level.time - ent->timestamp;
-			time2 = (ent->timestamp + ent->start_size + ent->end_size) - ent->timestamp;
-			ratio = time2 / time;
-		}
-		else
-			validrumble = qfalse;
-	}
-	
-	if (validrumble)
-	{
-		tent = G_TempEntity (ent->r.currentOrigin, EV_RUMBLE_EFX);
 
-		tent->s.angles[0] = dapitch * ratio; 
-		tent->s.angles[1] = dayaw * ratio; 
+	if ( ent->start_size ) {
+		float time, time2;
+
+		if ( level.time < ( ent->timestamp + ent->start_size ) ) {
+			time = level.time - ent->timestamp;
+			time2 = ( ent->timestamp + ent->start_size ) - ent->timestamp;
+			ratio = time / time2;
+		} else if ( level.time < ( ent->timestamp + ent->end_size + ent->start_size ) ) {
+			time = level.time - ent->timestamp;
+			time2 = ( ent->timestamp + ent->start_size + ent->end_size ) - ent->timestamp;
+			ratio = time2 / time;
+		} else {
+			validrumble = qfalse;
+		}
+	}
+
+	if ( validrumble ) {
+		tent = G_TempEntity( ent->r.currentOrigin, EV_RUMBLE_EFX );
+
+		tent->s.angles[0] = dapitch * ratio;
+		tent->s.angles[1] = dayaw * ratio;
 	}
 
 	// end sound
-	if (level.time > ent->duration + ent->timestamp)
-	{
-		if (ent->soundPos2)
-		{
+	if ( level.time > ent->duration + ent->timestamp ) {
+		if ( ent->soundPos2 ) {
 			G_AddEvent( ent, EV_GENERAL_SOUND, ent->soundPos2 );
 			ent->s.loopSound = 0;
 		}
 
 		ent->nextthink = 0;
-	}
-	else
+	} else {
 		ent->nextthink = level.time + 50;
+	}
 
 }
 
-void target_rumble_use (gentity_t *ent, gentity_t *other, gentity_t *activator ) 
-{
-	if (ent->spawnflags & 1)
-	{
-		ent->spawnflags &=~1;
+void target_rumble_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+	if ( ent->spawnflags & 1 ) {
+		ent->spawnflags &= ~1;
 		ent->think = target_rumble_think;
 		ent->count = 0;
 		ent->nextthink = level.time + 50;
-	}
-	else
+	} else
 	{
 		ent->spawnflags |= 1;
 		ent->think = NULL;
@@ -1034,17 +941,16 @@ void target_rumble_use (gentity_t *ent, gentity_t *other, gentity_t *activator )
 	}
 }
 
-void SP_target_rumble (gentity_t *self)
-{
-	char		*pitch;
-	char		*yaw;
-	char		*rampup;
-	char		*rampdown;
-	float		dapitch;
-	float		dayaw;
-	char		*sound;
-	char		*startsound;
-	char		*endsound;
+void SP_target_rumble( gentity_t *self ) {
+	char        *pitch;
+	char        *yaw;
+	char        *rampup;
+	char        *rampdown;
+	float dapitch;
+	float dayaw;
+	char        *sound;
+	char        *startsound;
+	char        *endsound;
 
 	if ( G_SpawnString( "noise", "100", &sound ) ) {
 		self->soundLoop = G_SoundIndex( sound );
@@ -1059,33 +965,38 @@ void SP_target_rumble (gentity_t *self)
 	}
 
 	self->use = target_rumble_use;
-	
-	G_SpawnString ("pitch", "0", &pitch);
-	dapitch = atof (pitch);
+
+	G_SpawnString( "pitch", "0", &pitch );
+	dapitch = atof( pitch );
 	self->delay = dapitch;
-	if (!(self->delay))
+	if ( !( self->delay ) ) {
 		self->delay = 5;
-	
-	G_SpawnString ("yaw", "0", &yaw);
-	dayaw = atof (yaw);
+	}
+
+	G_SpawnString( "yaw", "0", &yaw );
+	dayaw = atof( yaw );
 	self->random = dayaw;
-	if (!(self->random))
+	if ( !( self->random ) ) {
 		self->random = 5;
+	}
 
-	G_SpawnString ("rampup", "0", &rampup);
-	self->start_size = atoi (rampup) * 1000;
-	if (!(self->start_size))
+	G_SpawnString( "rampup", "0", &rampup );
+	self->start_size = atoi( rampup ) * 1000;
+	if ( !( self->start_size ) ) {
 		self->start_size = 1000;
-	
-	G_SpawnString ("rampdown", "0", &rampdown);
-	self->end_size = atoi (rampdown) * 1000;
-	if (!(self->end_size))
+	}
+
+	G_SpawnString( "rampdown", "0", &rampdown );
+	self->end_size = atoi( rampdown ) * 1000;
+	if ( !( self->end_size ) ) {
 		self->end_size = 1000;
+	}
 
-	if (!(self->duration))
+	if ( !( self->duration ) ) {
 		self->duration = 1000;
-	else 
+	} else {
 		self->duration *= 1000;
+	}
 
-	trap_LinkEntity (self);
+	trap_LinkEntity( self );
 }

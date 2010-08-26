@@ -1,11 +1,11 @@
 #include "g_local.h"
 
-#define IS_ACTIVE(x) ( \
-					  x->r.linked == qtrue && \
-					  x->client->ps.stats[STAT_HEALTH] > 0 && \
-					  x->client->sess.sessionTeam != TEAM_SPECTATOR && \
-					  (x->client->ps.pm_flags & PMF_LIMBO) == 0 \
-					 )
+#define IS_ACTIVE( x ) ( \
+		x->r.linked == qtrue &&	\
+		x->client->ps.stats[STAT_HEALTH] > 0 &&	\
+		x->client->sess.sessionTeam != TEAM_SPECTATOR && \
+		( x->client->ps.pm_flags & PMF_LIMBO ) == 0	\
+		)
 
 // OSP -
 //	Aside from the inline edits, I also changed the client loops to poll only
@@ -16,73 +16,75 @@
 void G_StoreClientPosition( gentity_t* ent ) {
 	int top, currentTime;
 
-	if(!IS_ACTIVE(ent)) return;
-	
+	if ( !IS_ACTIVE( ent ) ) {
+		return;
+	}
+
 	top = ent->client->topMarker;
 
 	// new frame, mark the old marker's time as the end of the last frame
-	if( ent->client->clientMarkers[top].time < level.time) {
+	if ( ent->client->clientMarkers[top].time < level.time ) {
 		ent->client->clientMarkers[top].time = level.previousTime;
 		top = ent->client->topMarker = ent->client->topMarker == MAX_CLIENT_MARKERS - 1 ? 0 : ent->client->topMarker + 1;
 	}
 
 	currentTime = level.previousTime + trap_Milliseconds() - level.frameTime;
 
-	if(currentTime > level.time) {
+	if ( currentTime > level.time ) {
 		// owwie, we just went into the next frame... let's push them back
 		currentTime = level.time;
 	}
 
-	VectorCopy( ent->r.mins,						ent->client->clientMarkers[top].mins );
-	VectorCopy( ent->r.maxs,						ent->client->clientMarkers[top].maxs );
-	VectorCopy( ent->r.currentOrigin,				ent->client->clientMarkers[top].origin );
+	VectorCopy( ent->r.mins,                        ent->client->clientMarkers[top].mins );
+	VectorCopy( ent->r.maxs,                        ent->client->clientMarkers[top].maxs );
+	VectorCopy( ent->r.currentOrigin,               ent->client->clientMarkers[top].origin );
 
 	// OSP - these timers appear to be questionable
-	ent->client->clientMarkers[top].servertime =	level.time;
-	ent->client->clientMarkers[top].time =			currentTime;
+	ent->client->clientMarkers[top].servertime =    level.time;
+	ent->client->clientMarkers[top].time =          currentTime;
 }
 
 static void G_AdjustSingleClientPosition( gentity_t* ent, int time ) {
 	int i, j;
 
-	if( time > level.time) {
+	if ( time > level.time ) {
 		time = level.time;
 	} // no lerping forward....
 
 	i = j = ent->client->topMarker;
 	do {
-		if(ent->client->clientMarkers[i].time <= time) {
+		if ( ent->client->clientMarkers[i].time <= time ) {
 			break;
 		}
 
 		j = i;
-		i = (i > 0) ? i - 1 : MAX_CLIENT_MARKERS;
-	} while(i != ent->client->topMarker);
+		i = ( i > 0 ) ? i - 1 : MAX_CLIENT_MARKERS;
+	} while ( i != ent->client->topMarker );
 
-	if(i == j) { // oops, no valid stored markers
+	if ( i == j ) { // oops, no valid stored markers
 		return;
 	}
 
-	// OSP - I don't trust this caching, as the "warped" player's position updates potentially 
+	// OSP - I don't trust this caching, as the "warped" player's position updates potentially
 	//       wont be counted after his think until the next server frame, which will result
 	//       in a bad backupMarker
 //	if( ent->client->backupMarker.time != level.time ) {
 //		ent->client->backupMarker.time = level.time;
-		VectorCopy(ent->r.currentOrigin,	ent->client->backupMarker.origin);
-		VectorCopy(ent->r.mins,				ent->client->backupMarker.mins);
-		VectorCopy(ent->r.maxs,				ent->client->backupMarker.maxs);
+	VectorCopy( ent->r.currentOrigin,    ent->client->backupMarker.origin );
+	VectorCopy( ent->r.mins,             ent->client->backupMarker.mins );
+	VectorCopy( ent->r.maxs,             ent->client->backupMarker.maxs );
 //	}
 
-	if(i != ent->client->topMarker) {
-		float frac = ((float)(ent->client->clientMarkers[j].time - time)) / (ent->client->clientMarkers[j].time - ent->client->clientMarkers[i].time);
+	if ( i != ent->client->topMarker ) {
+		float frac = ( (float)( ent->client->clientMarkers[j].time - time ) ) / ( ent->client->clientMarkers[j].time - ent->client->clientMarkers[i].time );
 
-		LerpPosition(ent->client->clientMarkers[j].origin,		ent->client->clientMarkers[i].origin,	frac,	ent->r.currentOrigin);
-		LerpPosition(ent->client->clientMarkers[j].mins,		ent->client->clientMarkers[i].mins,		frac,	ent->r.mins);
-		LerpPosition(ent->client->clientMarkers[j].maxs,		ent->client->clientMarkers[i].maxs,		frac,	ent->r.maxs);
+		LerpPosition( ent->client->clientMarkers[j].origin,      ent->client->clientMarkers[i].origin,   frac,   ent->r.currentOrigin );
+		LerpPosition( ent->client->clientMarkers[j].mins,        ent->client->clientMarkers[i].mins,     frac,   ent->r.mins );
+		LerpPosition( ent->client->clientMarkers[j].maxs,        ent->client->clientMarkers[i].maxs,     frac,   ent->r.maxs );
 	} else {
-		VectorCopy( ent->client->clientMarkers[j].origin,		ent->r.currentOrigin );
-		VectorCopy( ent->client->clientMarkers[j].mins,			ent->r.mins );
-		VectorCopy( ent->client->clientMarkers[j].maxs,			ent->r.maxs );
+		VectorCopy( ent->client->clientMarkers[j].origin,       ent->r.currentOrigin );
+		VectorCopy( ent->client->clientMarkers[j].mins,         ent->r.mins );
+		VectorCopy( ent->client->clientMarkers[j].maxs,         ent->r.maxs );
 	}
 
 	trap_LinkEntity( ent );
@@ -90,87 +92,90 @@ static void G_AdjustSingleClientPosition( gentity_t* ent, int time ) {
 
 static void G_ReAdjustSingleClientPosition( gentity_t* ent ) {
 
-	// OSP - I don't trust this caching, as the "warped" player's position updates potentially 
+	// OSP - I don't trust this caching, as the "warped" player's position updates potentially
 	//       wont be counted after his think until the next server frame
 //	if( ent->client->backupMarker.time == level.time) {
-		VectorCopy( ent->client->backupMarker.origin,		ent->r.currentOrigin );
-		VectorCopy( ent->client->backupMarker.mins,			ent->r.mins );
-		VectorCopy( ent->client->backupMarker.maxs,			ent->r.maxs );
-					ent->client->backupMarker.servertime =	0;
+	VectorCopy( ent->client->backupMarker.origin,       ent->r.currentOrigin );
+	VectorCopy( ent->client->backupMarker.mins,         ent->r.mins );
+	VectorCopy( ent->client->backupMarker.maxs,         ent->r.maxs );
+	ent->client->backupMarker.servertime =  0;
 
-		trap_LinkEntity( ent );
+	trap_LinkEntity( ent );
 //	}
 }
 
-void G_AdjustClientPositions( gentity_t* ent, int time, qboolean forward) {
-	int			i;
-	gentity_t	*list;
+void G_AdjustClientPositions( gentity_t* ent, int time, qboolean forward ) {
+	int i;
+	gentity_t   *list;
 
-	for(i=0; i<level.numConnectedClients; i++) {
+	for ( i = 0; i < level.numConnectedClients; i++ ) {
 		list = g_entities + level.sortedClients[i];
-		if(list != ent && IS_ACTIVE(list)) {
-			if(forward) G_AdjustSingleClientPosition(list, time);
-			else G_ReAdjustSingleClientPosition(list);
+		if ( list != ent && IS_ACTIVE( list ) ) {
+			if ( forward ) {
+				G_AdjustSingleClientPosition( list, time );
+			} else { G_ReAdjustSingleClientPosition( list ); }
 		}
 	}
 }
 
 void G_ResetMarkers( gentity_t* ent ) {
-	int		i, time;
-	char	buffer[256];
-	float	period;
+	int i, time;
+	char buffer[256];
+	float period;
 
-	trap_Cvar_VariableStringBuffer("sv_fps", buffer, sizeof(buffer)-1);
+	trap_Cvar_VariableStringBuffer( "sv_fps", buffer, sizeof( buffer ) - 1 );
 
-	period = atoi(buffer);
-	period = (period == 0) ? 50.0f : 1000.f/period;
+	period = atoi( buffer );
+	period = ( period == 0 ) ? 50.0f : 1000.f / period;
 
 	ent->client->topMarker = MAX_CLIENT_MARKERS - 1;
 	for ( i = MAX_CLIENT_MARKERS, time = level.time; i >= 0; i--, time -= period ) {
-		ent->client->clientMarkers[i].servertime =	time;
-		ent->client->clientMarkers[i].time =		time;
+		ent->client->clientMarkers[i].servertime =  time;
+		ent->client->clientMarkers[i].time =        time;
 
-		VectorCopy( ent->r.mins,			ent->client->clientMarkers[i].mins );
-		VectorCopy( ent->r.maxs,			ent->client->clientMarkers[i].maxs );
-		VectorCopy( ent->r.currentOrigin,	ent->client->clientMarkers[i].origin );
+		VectorCopy( ent->r.mins,            ent->client->clientMarkers[i].mins );
+		VectorCopy( ent->r.maxs,            ent->client->clientMarkers[i].maxs );
+		VectorCopy( ent->r.currentOrigin,   ent->client->clientMarkers[i].origin );
 	}
 }
 
-void G_AttachBodyParts(gentity_t* ent) {
-	int			i;
-	gentity_t	*list;
+void G_AttachBodyParts( gentity_t* ent ) {
+	int i;
+	gentity_t   *list;
 
-	for(i=0; i<level.numConnectedClients; i++) {
+	for ( i = 0; i < level.numConnectedClients; i++ ) {
 		list = g_entities + level.sortedClients[i];
-		list->client->tempHead = (list != ent && IS_ACTIVE(list)) ? G_BuildHead(list) : NULL;
+		list->client->tempHead = ( list != ent && IS_ACTIVE( list ) ) ? G_BuildHead( list ) : NULL;
 	}
 }
 
 void G_DettachBodyParts() {
-	int			i;
-	gentity_t	*list;
+	int i;
+	gentity_t   *list;
 
-	for(i=0; i<level.numConnectedClients; i++) {
+	for ( i = 0; i < level.numConnectedClients; i++ ) {
 		list = g_entities + level.sortedClients[i];
-		if(list->client->tempHead != NULL) G_FreeEntity(list->client->tempHead);
+		if ( list->client->tempHead != NULL ) {
+			G_FreeEntity( list->client->tempHead );
+		}
 	}
 }
 
-int G_SwitchBodyPartEntity(gentity_t* ent) {
-	if(ent->s.eType == ET_TEMPHEAD) {
-		return ent->parent-g_entities;
+int G_SwitchBodyPartEntity( gentity_t* ent ) {
+	if ( ent->s.eType == ET_TEMPHEAD ) {
+		return ent->parent - g_entities;
 	}
-	return ent-g_entities;
+	return ent - g_entities;
 }
 
 #define POSITION_READJUST											\
-		if(res != results->entityNum) {								\
-			VectorSubtract(end, start, dir);						\
-			VectorNormalizeFast(dir);								\
+	if ( res != results->entityNum ) {							   \
+		VectorSubtract( end, start, dir );						  \
+		VectorNormalizeFast( dir );								  \
 																	\
-			VectorMA(results->endpos, -1, dir, results->endpos);	\
-			results->entityNum = res;								\
-		}
+		VectorMA( results->endpos, -1, dir, results->endpos );	  \
+		results->entityNum = res;								\
+	}
 
 // Run a trace with players in historical positions.
 void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask ) {
@@ -179,12 +184,12 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 	int res;
 	vec3_t dir;
 
-	if( (!g_antilag.integer || !ent->client) || ent->r.svFlags & SVF_BOT){ //no antilag for bots
+	if ( ( !g_antilag.integer || !ent->client ) || ent->r.svFlags & SVF_BOT ) { //no antilag for bots
 		G_AttachBodyParts( ent ) ;
 
 		trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
 
-		res = G_SwitchBodyPartEntity(&g_entities[results->entityNum]);
+		res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 		POSITION_READJUST
 
 		G_DettachBodyParts();
@@ -197,23 +202,23 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 
 	trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
 
-	res = G_SwitchBodyPartEntity(&g_entities[results->entityNum]);
+	res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 	POSITION_READJUST
 
 	G_DettachBodyParts();
 
 	G_AdjustClientPositions( ent, 0, qfalse );
 
-	if( results->entityNum >= 0 && results->entityNum < MAX_CLIENTS && (other = &g_entities[results->entityNum])->inuse ) {
+	if ( results->entityNum >= 0 && results->entityNum < MAX_CLIENTS && ( other = &g_entities[results->entityNum] )->inuse ) {
 		G_AttachBodyParts( ent ) ;
 
 		trap_Trace( &tr, start, mins, maxs, other->client->ps.origin, passEntityNum, contentmask );
-		res = G_SwitchBodyPartEntity(&g_entities[results->entityNum]);
+		res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 		POSITION_READJUST
 
-		if( tr.entityNum != results->entityNum ) {
+		if ( tr.entityNum != results->entityNum ) {
 			trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
-			res = G_SwitchBodyPartEntity(&g_entities[results->entityNum]);
+			res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 			POSITION_READJUST
 		}
 
