@@ -3075,19 +3075,8 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 			gentity_t *pDestroyable = EntityFromHandle( pMsg->m_Entity );
 			if ( pEnt && pEnt->inuse && pDestroyable && pDestroyable->inuse ) {
 				if ( pDestroyable->s.eType == ET_OID_TRIGGER ) {
-					pDestroyable = pDestroyable->target_ent;
+					pMsg->m_State = CONST_DESTROYABLE;
 				}
-
-/*						if (pDestroyable->s.eType == ET_EXPLOSIVE && pDestroyable->parent && pDestroyable->parent->s.eType == ET_OID_TRIGGER &&
-                            (((pDestroyable->parent->spawnflags & ALLIED_OBJECTIVE) && pEnt->client->sess.sessionTeam == TEAM_RED) ||
-                            ((pDestroyable->parent->spawnflags & AXIS_OBJECTIVE) && pEnt->client->sess.sessionTeam == TEAM_BLUE)))
-                        {
-                            if (pDestroyable->health > 0)
-                                pMsg->m_State = CONST_DESTROYABLE;
-                            else
-                                //pMsg->m_State = CONST_NOTDESTROYABLE;
-                                pMsg->m_State = CONST_DESTROYABLE;
-                        }*/
 			}
 		}
 		break;
