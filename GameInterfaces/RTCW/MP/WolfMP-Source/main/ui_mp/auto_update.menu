@@ -1,0 +1,157 @@
+#include "ui_mp/menudef.h"
+
+
+{
+\\ CREATE AUTO-UPDATE POPUP MENU \\
+menuDef {
+	name				"wm_autoupdate"
+   	visible 0
+   	fullscreen 0
+	rect 30 15 150 50
+	focusColor 1 .75 0 1
+   	style 1
+   	border 1
+
+	itemDef 
+	{
+		name auwindow
+		rect 0 2 146 45
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .5 .5 .5 .5
+		forecolor 1 1 1 1
+		backcolor 0 0 0 0
+		visible 1
+		decoration
+	}
+
+	itemDef 
+	{
+		name auwindow2
+		rect 2 4 142 41	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .2
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .55
+		visible 1
+		decoration
+	}
+	itemDef 
+	{
+		name auconfirm
+		type 1
+		text "Click for Auto-Update" 
+		style WINDOW_STYLE_FILLED
+		textscale .25 
+		textstyle 3
+		rect 2 4 141 41	
+		textalign 1
+		textalignx 73
+		textaligny 25
+		textfont UI_FONT_NORMAL
+		//decoration
+		forecolor 1 1 1 1
+		visible 1
+		action { close wm_autoupdate ; open wm_auconfirm }	
+	}
+}
+
+\\ CREATE AUTO-UPDATE CONFIRMATION POPUP MENU \\
+menuDef {
+	name				"wm_auconfirm"
+   	visible 1
+   	fullscreen 0
+	rect 204 160 235 135
+	focusColor 1 .75 0 1
+   	style 1
+   	border 1
+	popup
+
+	itemDef 
+	{
+		name acwindow
+		group grpControlbutton
+		rect 0 2 235 135
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .5 .5 .5 .5
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .85
+		visible 1
+		decoration
+	}
+
+	itemDef 
+	{
+		name acwindow2
+		group grpControlbutton
+		rect 2 4 231 20	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .2
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .55
+		visible 1
+		decoration
+	}
+
+
+	itemDef 
+	{
+		name acconfirm
+		text "Auto-Update?" 
+		style 0
+		textscale .25 
+		textstyle 3
+		rect 116 20 110 20
+		textalign 1
+		textalignx 0
+		textaligny 0
+		textfont UI_FONT_NORMAL
+		decoration
+		forecolor 1 1 1 1
+		visible 1
+	}
+
+	itemDef 
+	{
+		name yes
+		text "YES"
+		type 1
+		textscale .3
+		style WINDOW_STYLE_FILLED
+		rect 45 60 50 20
+		textalign 1
+		textalignx 25
+		textaligny 15
+		textfont UI_FONT_NORMAL
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .55
+		border 1	
+		bordercolor .1 .1 .1 .3
+		visible 1
+		action { getautoupdate ; close wm_auconfirm }	
+	}
+
+	itemDef 
+	{
+		name no
+		text "NO"
+		type 1
+		textscale .3
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .3
+		rect 142 60 50 20
+		textalign 1
+		textalignx 25
+		textaligny 15
+		textfont UI_FONT_NORMAL
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .55
+		visible 1
+		action { open wm_autoupdate ; close wm_auconfirm } 		
+	}
+}
+}

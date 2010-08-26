@@ -1,0 +1,1516 @@
+#include "ui_mp/menudef.h"
+
+#define ORIGIN_WINDOW1		20 8
+#define ORIGIN_WINDOW2		20 8
+#define HELP_ORIGIN		0 5
+#define GLOBAL_TEXTSCALE	0.25
+#define GLOBAL_TEXTSCALE3	0.25
+
+{
+\\ Server Creation \\
+
+  menuDef {
+    	name			"createserver"
+    	visible			0
+    	fullscreen		0    	
+	rect			20 125 600 480	
+	focusColor		1 .75 0 1
+    	style			1
+    	border			1
+
+	onEsc  {
+			close createserver ;
+			close multi_menu ; 
+			open main
+		}
+
+	onOpen {
+			setitemcolor backcolor 0 0 0 1 ;		 
+			uiScript loadArenas ;		 
+			hide accept_alt ; 
+			show accept ;
+			hide back_alt ;
+			show back ;
+			hide grpmessage ;
+			hide grpAdvanced;
+			show grpsettings
+	}
+
+itemDef 
+	{
+	name window
+	group grpSystembutton
+	rect 0 0 600 300	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+	}
+
+
+
+// GLOBAL SETTINGS
+
+// map selection
+
+// ROQ
+itemDef {
+      	name mappreview
+      	style 0	
+ 	ownerdraw UI_STARTMAPCINEMATIC
+      	rect 10 9 191 142
+      	border 0
+      	bordercolor .5 .5 .5 .5
+      	visible 1
+    	}
+
+itemDef {
+      	name mappreview
+	style 0
+     	style WINDOW_STYLE_FILLED
+      	rect 8 8 192 142
+      	border 1
+      	bordercolor .5 .5 .5 .5
+      	visible 1
+    }
+
+// bottom left map selection border image
+
+ itemDef {
+	name			maplist
+      	rect			8 158 192 136
+	type			ITEM_TYPE_LISTBOX
+	style			WINDOW_STYLE_FILLED
+	elementwidth		119
+	elementheight		20
+	textfont	UI_FONT_NORMAL
+	textscale		GLOBAL_TEXTSCALE
+	elementtype		LISTBOX_TEXT
+	feeder			FEEDER_ALLMAPS
+	textstyle		6
+//	textalign		3
+	textaligny		-5
+	border			1
+	bordercolor		.5 .5 .5 .5
+	forecolor		1 1 1 1
+	backcolor		0 0 .5 0
+	outlinecolor		.1 .1 .7 .5
+	visible			1
+	columns			1 2 190 25
+	mouseEnter {
+		fadein message_arena ;		
+	}
+
+	mouseExit {
+		fadeout message_arena ; 
+		setitemcolor maplist bordercolor .5 .5 .5 .5
+	} 
+  }
+
+//	SETTINGS	//
+
+
+
+// 	NORMAL	//
+
+/*
+    itemDef {
+      	name normal
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_NUMERICFIELD
+	text "Time Limit:  "
+	cvar "timelimit"
+	maxchars 4	
+        rect 260 8 256 12
+	origin	ORIGIN_WINDOW1
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+    }
+*/
+
+    itemDef {
+      	name normal
+	group grpsettings
+      	type ITEM_TYPE_YESNO
+	textfont	UI_FONT_NORMAL
+	text "Friendly Fire:  "
+	cvar "g_friendlyFire"
+        rect 260 53 256 12
+	origin	ORIGIN_WINDOW1
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_friendly_fire }
+	mouseexit	{ hide message_friendly_fire }
+    }
+
+    itemDef {
+  	name normal
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_YESNO
+	text "Pure Server:  "
+	cvar "sv_pure"
+        rect 260 203 256 12
+	origin	ORIGIN_WINDOW1
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_pure_server }
+	mouseexit	{ hide message_pure_server }
+    }
+
+    itemDef {
+      	name normal
+	group grpsettings
+      	type ITEM_TYPE_MULTI
+	textfont	UI_FONT_NORMAL
+	text "Dedicated:  "
+	// syntax for this is cvar name followed by a semicolan separated list of choices first choice equals 0
+	// dedicated is a special cvar in that as soon as it is set, the game goes to console only so the ui catches this one specifically
+	cvar "ui_dedicated"
+	cvarFloatList { "No" 0 "LAN" 1 "Internet" 2 }
+        rect 260 23 256 12
+	origin	ORIGIN_WINDOW1
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_dedicated }
+	mouseexit	{ hide message_dedicated }
+    }
+
+
+// 	EXPERT	//	
+
+    itemDef {
+      	name expert
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_EDITFIELD
+	text "Host Name:  "
+	cvar "sv_hostname"
+	maxChars 32
+	maxPaintChars 10
+        rect 260 38 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_hostname }
+	mouseexit	{ hide message_hostname }
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_YESNO
+	text "Enable Voting:  "
+	cvar "g_allowvote"
+       rect 260 188 256 12
+	origin	ORIGIN_WINDOW2
+	textfont	UI_FONT_NORMAL
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_enable_voting }
+	mouseexit	{ hide message_enable_voting }
+    }
+
+
+    
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_NUMERICFIELD
+	textfont	UI_FONT_NORMAL
+	text "Maximum Players:  "
+	cvar "sv_maxclients"
+	maxchars 3
+        rect 260 68 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_maximum_players }
+	mouseexit	{ hide message_maximum_players }
+    }
+
+
+
+
+    itemDef {
+      	name expert
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_NUMERICFIELD
+	text "Minimum Ping:  "
+	cvar "sv_minping"
+	maxchars 4
+        rect 260 83 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_minimum_ping }
+	mouseexit	{ hide message_minimum_ping }
+    }
+
+
+    itemDef {
+	name expert
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_NUMERICFIELD
+	text "Maximum Ping:  "
+	maxchars 4
+	cvar "sv_maxping"
+        rect 260 98 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_maximum_ping }
+	mouseexit	{ hide message_maximum_ping }
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+      	type ITEM_TYPE_YESNO
+	text "Even Teams:  "
+	cvar "g_teamforcebalance"
+        rect 260 113 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_even_teams }
+	mouseexit	{ hide message_even_teams }
+    }
+/*
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_YESNO
+	text "Do Warmup:  "
+	textfont	UI_FONT_NORMAL
+	cvar "g_dowarmup"
+        rect 260 158 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+    }
+*/
+//    itemDef {
+//	name expert
+//	group grpsettings
+//      	type ITEM_TYPE_NUMERICFIELD
+//	text "Warmup time:  "
+//	cvar "g_warmup"
+//        rect 260 128 256 12
+//	origin	ORIGIN_WINDOW2
+//	style WINDOW_STYLE_FILLED
+//      	textalign ITEM_ALIGN_RIGHT
+//      	textalignx 160	
+//      	textaligny 10
+//	textscale GLOBAL_TEXTSCALE
+//	backcolor 1 1 1 .07       
+//      	forecolor 1 1 1 1
+//      	visible 1 
+//    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_YESNO
+	textfont	UI_FONT_NORMAL
+	text "Synchronous Client:  "
+	cvar "g_syncronousclients"
+        rect 260 128 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_synchronous_client }
+	mouseexit	{ hide message_synchronous_client } 
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_NUMERICFIELD
+	textfont	UI_FONT_NORMAL
+	text "Max Rate:  "
+	cvar "sv_maxrate"
+        rect 260 143 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_max_rate }
+	mouseexit	{ hide message_max_rate }
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_NUMERICFIELD
+	textfont	UI_FONT_NORMAL
+	text "Zombie Time:  "
+	cvar "sv_zombietime"
+        rect 260 158 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_zombie_time }
+	mouseexit	{ hide message_zombie_time }
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type ITEM_TYPE_NUMERICFIELD
+	textfont	UI_FONT_NORMAL
+	text "Reconnect Limit:  "
+	cvar "sv_reconnectlimit"
+	maxchars 4
+        rect 260 173 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_reconnect_limit }
+	mouseexit	{ hide message_reconnect_limit }
+    }
+
+    itemDef {
+      	name expert
+	group grpsettings
+	type ITEM_TYPE_MULTI
+	textfont	UI_FONT_NORMAL
+	text "Game Type:  "
+//	cvar "g_subGameType"
+//	cvarfloatlist	{ "Normal" 0 "Stopwatch" 1 "Capture Flag" 2 }
+	ownerdraw UI_NETGAMETYPE
+        rect 260 8 256 12
+	origin	ORIGIN_WINDOW2
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseenter	{ show message_game_type }
+	mouseexit	{ hide message_game_type }
+    }
+
+//    itemDef {
+//     	name expert
+//	group grpsettings
+// 	type ITEM_TYPE_YESNO
+//	textfont	UI_FONT_NORMAL
+//	text "Require Password:  "
+//	cvar "g_needpassword"
+//       rect 260 203 256 12
+//	origin	ORIGIN_WINDOW2
+//	style WINDOW_STYLE_FILLED
+//      	textalign ITEM_ALIGN_RIGHT
+//      	textalignx 160	
+//      	textaligny 10
+//	textscale GLOBAL_TEXTSCALE
+//	backcolor 1 1 1 .07
+//      	forecolor 1 1 1 1
+//      	visible 1 
+//	mouseenter	{ show message_require_password }
+//	mouseexit	{ hide message_require_password }
+//    }
+
+itemDef {
+	name normal
+	group grpsettings
+	textfont	UI_FONT_NORMAL
+	type ITEM_TYPE_YESNO
+	text "Punkbuster:  "
+	cvar "sv_punkbuster"
+	rect 260 218 256 12
+	origin	ORIGIN_WINDOW1
+	style WINDOW_STYLE_FILLED
+	textalign ITEM_ALIGN_RIGHT
+	textalignx 160	
+	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+	forecolor 1 1 1 1
+	visible 1
+	mouseenter	{ show message_punkbuster_server }
+	mouseexit	{ hide message_punkbuster_server }
+}
+
+
+    itemDef {
+      	name expert
+	group grpsettings
+      	type 4
+	text "Password:  "
+	textfont	UI_FONT_NORMAL
+	cvar "g_password"
+        rect 260 233 256 12
+	origin	ORIGIN_WINDOW2
+	maxchars 25
+	maxpaintchars 10
+	style WINDOW_STYLE_FILLED
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 160	
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE
+	backcolor 1 1 1 .07       
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter	{ show message_password }
+	mouseexit	{ hide message_password } 
+    }
+
+
+itemDef {
+	name csv_shoot_advanced
+	text "Advanced..."
+	type 1
+	textfont UI_FONT_NORMAL
+	textscale .252
+	group grpsettings
+	style WINDOW_STYLE_FILLED
+	background "ui_mp/assets/button_back.tga"
+	rect 355 270 80 18
+	origin ORIGIN_WINDOW2
+	textalign 1
+	textalignx 36
+	textaligny 12
+	forecolor 1 1 1 1
+	backcolor .1 .1 .1 0 
+	visible 1
+	action { play "sound/misc/kcaction.wav" ; 
+	hide grpsettings ; show grpAdvanced }
+	mouseEnter { setitemcolor csv_shoot_advanced backcolor .3 .3 .3 0 } 
+	mouseExit { setitemcolor csv_shoot_advanced backcolor .1 .1 .1 0 } 
+	}
+
+	// --------------------------
+	// ADVANCED SETTINGS
+	// --------------------------
+
+itemDef {
+	name csv_shoot_advanced
+	text "Basic..."
+	type 1
+	textfont UI_FONT_NORMAL
+	textscale .252
+	group grpAdvanced
+	style WINDOW_STYLE_FILLED
+	background "ui_mp/assets/button_back.tga"
+	rect 355 270 80 18
+	origin ORIGIN_WINDOW2
+	textalign 1
+	textalignx 36
+	textaligny 12
+	forecolor 1 1 1 1
+	backcolor .1 .1 .1 0 
+	visible 0
+	action { play "sound/misc/kcaction.wav" ; 
+	hide grpAdvanced ; show grpsettings }
+	mouseEnter { setitemcolor csv_shoot_advanced backcolor .3 .3 .3 0 } 
+	mouseExit { setitemcolor csv_shoot_advanced backcolor .1 .1 .1 0 } 
+	}
+
+    itemDef {
+      	name				window
+	group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+	textfont			UI_FONT_NORMAL
+	text				"Time Limit (min):  "
+	cvar				"ui_userTimeLimit"
+        rect				228 8 320 12
+	origin				ORIGIN_WINDOW1
+	style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+	textscale			GLOBAL_TEXTSCALE
+	backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	maxchars			6
+	mouseenter	{ show message_timelimit }
+	mouseexit	{ hide message_timelimit }
+    }
+
+    itemDef {
+      	name				window
+	group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+	textfont			UI_FONT_NORMAL
+	text				"Allied Respawn (sec):  "
+	cvar				"ui_userAlliedRespawnTime"
+        rect				228 23 320 12
+	origin				ORIGIN_WINDOW1
+	style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+	textscale			GLOBAL_TEXTSCALE
+	backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	maxchars			6
+	mouseenter	{ show message_allied_respawn }
+	mouseexit	{ hide message_allied_respawn }
+    }
+
+    itemDef {
+      	name				window
+		group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+		textfont			UI_FONT_NORMAL
+		text				"Axis Respawn (sec):  "
+		cvar				"ui_userAxisRespawnTime"
+        rect				228 38 320 12
+		origin				ORIGIN_WINDOW1
+		style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+		textscale			GLOBAL_TEXTSCALE
+		backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+		maxchars			6
+	mouseenter	{ show message_axis_respawn }
+	mouseexit	{ hide message_axis_respawn }
+    }
+
+    itemDef {
+      	name				window
+	group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+	textfont			UI_FONT_NORMAL
+	text				"Max lives (0 = unlimited):  "
+	cvar				"g_maxLives"
+        rect				228 53 320 12
+	origin				ORIGIN_WINDOW1
+	style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+	textscale			GLOBAL_TEXTSCALE
+	backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	maxchars			6
+	mouseenter	{ show message_max_lives }
+	mouseexit	{ hide message_max_lives }
+    }
+
+    itemDef {
+      	name				window
+		group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+		textfont			UI_FONT_NORMAL
+		text				"TK Complaint Limit:  "
+		cvar				"g_complaintlimit"
+        rect				228 68 320 12
+		origin				ORIGIN_WINDOW1
+		style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+		textscale			GLOBAL_TEXTSCALE
+		backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	mouseenter	{ show message_complaint_limit }
+	mouseexit	{ hide message_complaint_limit }
+    }
+
+    itemDef {
+      	name				window
+		group				grpAdvanced
+      	type				ITEM_TYPE_MULTI
+		textfont			UI_FONT_NORMAL
+		text				"Stopwatch Round Mode:  "
+		cvar				"g_altStopwatchMode"
+		cvarfloatlist		{ "ABBA" 0 "ABAB" 1 }
+        rect				228 83 320 12
+		origin				ORIGIN_WINDOW1
+		style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+		textscale			GLOBAL_TEXTSCALE
+		backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	mouseenter	{ show message_stopwatch_round_mode }
+	mouseexit	{ hide message_stopwatch_round_mode }
+    }
+
+    itemDef {
+      	name				window
+		group				grpAdvanced
+      	type				ITEM_TYPE_YESNO
+		textfont			UI_FONT_NORMAL
+		text				"Enable Tourney Mode:  "
+//		cvarfloatlist		{ "No" 0 "Yes" 1 }
+		cvar				"g_noTeamSwitching"
+        rect				228 98 320 12
+		origin				ORIGIN_WINDOW1
+		style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+		textscale			GLOBAL_TEXTSCALE
+		backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+	mouseenter	{ show message_enable_tourney_mode }
+	mouseexit	{ hide message_enable_tourney_mode }
+    }
+
+//    itemDef {
+//      	name				window
+//		group				grpAdvanced
+//		textfont			UI_FONT_NORMAL
+//		text				"- this will restrict switching/joining teams to warmup -"
+//        rect				228 128 320 12
+//		origin				ORIGIN_WINDOW1
+//		style				WINDOW_STYLE_FILLED
+//      	textalign			ITEM_ALIGN_RIGHT
+//      	textalignx			315
+//      	textaligny			10
+//		textscale			GLOBAL_TEXTSCALE
+//		backcolor			1 1 1 .07
+//      	forecolor			1 1 1 1
+//      	visible				0
+//		maxchars			6
+//    }
+
+    itemDef {
+      	name				window
+		group				grpAdvanced
+      	type				ITEM_TYPE_NUMERICFIELD
+		textfont			UI_FONT_NORMAL
+		text				"Min clients before Tourney starts:  "
+		cvar				"g_minGameClients"
+        rect				228 113 320 12
+		origin				ORIGIN_WINDOW1
+		style				WINDOW_STYLE_FILLED
+      	textalign			ITEM_ALIGN_RIGHT
+      	textalignx			224
+      	textaligny			10
+		textscale			GLOBAL_TEXTSCALE
+		backcolor			1 1 1 .07
+      	forecolor			1 1 1 1
+      	visible				0
+		maxchars			6
+	mouseenter	{ show message_min_clients }
+	mouseexit	{ hide message_min_clients }
+    }
+
+//	BACK AND NEXT BUTTONS	//
+
+
+itemDef {
+	name back
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 325 40 14 
+	textfont	UI_FONT_NORMAL
+	textalign 0
+	textscale GLOBAL_TEXTSCALE		
+	textalignx 6
+	textaligny 12
+	forecolor .9 .9 .9 .9
+	visible 1
+	//border 1
+	//bordercolor 1 1 1 1
+
+     	action {
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		open main
+	}	
+    }
+
+itemDef {
+	name back_alt
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 325 40 14 
+	textfont	UI_FONT_NORMAL
+	textalign 0
+	textscale GLOBAL_TEXTSCALE		
+	textalignx 6
+	textaligny 12
+	forecolor .6 .6 .6 .6
+	visible 1
+	type ITEM_TYPE_BUTTON
+	//border 1
+	//bordercolor 1 1 1 1
+
+	action {		
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		open main
+	}  	  
+    }
+
+//	next	//
+
+
+itemDef {
+	name accept
+	text "ACCEPT"
+ 	type 1
+	textfont	UI_FONT_NORMAL
+	style 0	
+	textstyle 6
+	rect 535 325 60 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE		
+	textalignx 5
+	textaligny 12
+	forecolor .9 .9 .9 .9
+	visible 1
+	//border 1
+	//bordercolor 1 1 1 1
+	
+	
+	mouseEnter {
+		hide accept ;
+		show accept_alt		
+	}
+
+     	action {
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		uiScript StartServer
+	}	
+    }
+
+itemDef {
+	name accept_alt
+	textfont	UI_FONT_NORMAL
+	text "ACCEPT"
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 535 325 60 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE		
+	textalignx 5
+	textaligny 12
+	forecolor .6 .6 .6 .6
+	visible 1 
+	type ITEM_TYPE_BUTTON
+	//border 1
+	//bordercolor 1 1 1 1
+
+	mouseExit {
+		hide accept_alt ;
+		show accept		
+	}
+
+	action {
+		hide grpControls ;
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		uiScript StartServer
+	}  	  
+    }
+
+//	MESSAGES	//
+
+itemDef {
+	name message_back
+	group grpmessage
+	style 0 
+	textfont	UI_FONT_NORMAL
+	rect 320 325 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Exit to Main Menu"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_accept
+	group grpmessage
+	style 0 
+	textfont	UI_FONT_NORMAL
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale .416
+	text "Start Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_gametype
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Set GameType"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_skill
+	group grpmessage
+	style 0 
+	textfont	UI_FONT_NORMAL
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Set Skill Level"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_arena
+	textfont	UI_FONT_NORMAL
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Choose Your Map"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_clan
+	group grpmessage
+	textfont	UI_FONT_NORMAL
+	style 0 
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Click to toggle through clan list"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_slot
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textfont	UI_FONT_NORMAL
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Click to toggle botnames, human, or closed slots"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_normal
+	group grpmessage
+	textfont	UI_FONT_NORMAL
+	style 0 
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Select to Modify Normal Server Settings"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_expert
+	group grpmessage
+	style 0 
+	textfont	UI_FONT_NORMAL
+	rect 320 430 128 30
+	origin HELP_ORIGIN
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale .416
+	text "Select to Modify Expert Server Settings"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+//messages
+
+itemDef {
+	name message_friendly_fire
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Yes: Can Damage Teammates, No: No  Team Damage"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_dedicated
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "If set to Internet, Server is Broadcast over the Internet"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_hostname
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "The Name of the Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_enable_voting
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Enable Votes to be Called In-Game"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_maximum_players
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "How Many Players can join the Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_minimum_ping
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Minimum Ping Allowed to Connecting Players"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_maximum_ping
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Setting to 0 Means No Limit"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_even_teams
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Forces Teams to be as Even as Possible"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_synchronous_client
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Turn on When Recording a Demo"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_max_rate
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Maximum Rate the Server Will Send Out Information"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_zombie_time
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Number of Seconds Before an Inactive Client is Dropped"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_reconnect_limit
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "In Seconds, Delay Before Clients Can Try to Reconnect"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_game_type
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Select the Game Mode for the Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_require_password
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Only Those With the Proper Password Can Connect"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_punkbuster_server
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Server will use Punkbuster Anti-Cheating Technology"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_password
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Set the Password Needed to Connect to the Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_timelimit
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "How Long One Round Lasts"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_allied_respawn
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "How Long the Allies Take to Deploy"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_axis_respawn
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "How Long the Axis Take to Deploy"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_max_lives
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Number of Deployments Per Player in One Round"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_complaint_limit
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "How Many Complaints Must be Filed Before a Player is Kicked"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_stopwatch_round_mode
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Round Structure for Stopwatch Games"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_enable_tourney_mode
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Yes: Infinite Warmup, No Team Switching Once Game Begins"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_min_clients
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Number of Clients Needed to Join Before Automatic Match Start"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_pure_server
+	group grpmessage
+	style 0 
+	rect 315 313 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Server Doesn't Allow Modifications"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+
+}
+
+}
