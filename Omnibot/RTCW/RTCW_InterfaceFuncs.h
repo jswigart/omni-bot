@@ -41,6 +41,7 @@ namespace InterfaceFuncs
 	int GetSpawnPoint(Client *_bot);
 	void SetSuicide(Client *_bot, int _sui, int _pers);
 	void DisableBotPush(Client *_bot, int _push);
+	int GetPlayerClass(GameEntity _ent);
 };
 
 #endif

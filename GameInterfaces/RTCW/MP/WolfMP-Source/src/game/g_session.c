@@ -19,26 +19,26 @@ Called on game shutdown
 ================
 */
 void G_WriteClientSessionData( gclient_t *client ) {
-	const char	*s;
-	const char	*var;
+	const char  *s;
+	const char  *var;
 
-	s = va("%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",		// DHM - Nerve
-		client->sess.sessionTeam,
-		client->sess.spectatorTime,
-		client->sess.spectatorState,
-		client->sess.spectatorClient,
-		client->sess.wins,
-		client->sess.losses,
-		client->sess.playerType,			// DHM - Nerve
-		client->sess.playerWeapon,			// DHM - Nerve
-		client->sess.playerItem,			// DHM - Nerve
-		client->sess.playerSkin,			// DHM - Nerve
-		client->sess.spawnObjectiveIndex,	// DHM - Nerve
-		client->sess.latchPlayerType,		// DHM - Nerve
-		client->sess.latchPlayerWeapon,		// DHM - Nerve
-		client->sess.latchPlayerItem,		// DHM - Nerve
-		client->sess.latchPlayerSkin		// DHM - Nerve
-		);
+	s = va( "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",      // DHM - Nerve
+			client->sess.sessionTeam,
+			client->sess.spectatorTime,
+			client->sess.spectatorState,
+			client->sess.spectatorClient,
+			client->sess.wins,
+			client->sess.losses,
+			client->sess.playerType,        // DHM - Nerve
+			client->sess.playerWeapon,      // DHM - Nerve
+			client->sess.playerItem,        // DHM - Nerve
+			client->sess.playerSkin,        // DHM - Nerve
+			client->sess.spawnObjectiveIndex, // DHM - Nerve
+			client->sess.latchPlayerType,   // DHM - Nerve
+			client->sess.latchPlayerWeapon, // DHM - Nerve
+			client->sess.latchPlayerItem,   // DHM - Nerve
+			client->sess.latchPlayerSkin    // DHM - Nerve
+			);
 
 	var = va( "session%i", client - level.clients );
 
@@ -53,42 +53,42 @@ Called on a reconnect
 ================
 */
 void G_ReadSessionData( gclient_t *client ) {
-	char	s[MAX_STRING_CHARS];
-	const char	*var;
+	char s[MAX_STRING_CHARS];
+	const char  *var;
 	qboolean test;
 
 	var = va( "session%i", client - level.clients );
-	trap_Cvar_VariableStringBuffer( var, s, sizeof(s) );
+	trap_Cvar_VariableStringBuffer( var, s, sizeof( s ) );
 
-	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",		// DHM - Nerve
-		(int *)&client->sess.sessionTeam,
-		&client->sess.spectatorTime,
-		(int *)&client->sess.spectatorState,
-		&client->sess.spectatorClient,
-		&client->sess.wins,
-		&client->sess.losses,
-		&client->sess.playerType,			// DHM - Nerve
-		&client->sess.playerWeapon,			// DHM - Nerve
-		&client->sess.playerItem,			// DHM - Nerve
-		&client->sess.playerSkin,			// DHM - Nerve
-		&client->sess.spawnObjectiveIndex,	// DHM - Nerve
-		&client->sess.latchPlayerType,		// DHM - Nerve
-		&client->sess.latchPlayerWeapon,	// DHM - Nerve
-		&client->sess.latchPlayerItem,		// DHM - Nerve
-		&client->sess.latchPlayerSkin		// DHM - Nerve
-		);
+	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",      // DHM - Nerve
+			(int *)&client->sess.sessionTeam,
+			&client->sess.spectatorTime,
+			(int *)&client->sess.spectatorState,
+			&client->sess.spectatorClient,
+			&client->sess.wins,
+			&client->sess.losses,
+			&client->sess.playerType,       // DHM - Nerve
+			&client->sess.playerWeapon,     // DHM - Nerve
+			&client->sess.playerItem,       // DHM - Nerve
+			&client->sess.playerSkin,       // DHM - Nerve
+			&client->sess.spawnObjectiveIndex, // DHM - Nerve
+			&client->sess.latchPlayerType,  // DHM - Nerve
+			&client->sess.latchPlayerWeapon, // DHM - Nerve
+			&client->sess.latchPlayerItem,  // DHM - Nerve
+			&client->sess.latchPlayerSkin   // DHM - Nerve
+			);
 
 	// NERVE - SMF
-	if ( g_altStopwatchMode.integer )	
+	if ( g_altStopwatchMode.integer ) {
 		test = qtrue;
-	else
+	} else {
 		test = g_currentRound.integer == 1;
+	}
 
 	if ( g_gametype.integer == GT_WOLF_STOPWATCH && level.warmupTime > 0 && test ) {
 		if ( client->sess.sessionTeam == TEAM_RED ) {
 			client->sess.sessionTeam = TEAM_BLUE;
-		}
-		else if ( client->sess.sessionTeam == TEAM_BLUE ) {
+		} else if ( client->sess.sessionTeam == TEAM_BLUE ) {
 			client->sess.sessionTeam = TEAM_RED;
 		}
 	}
@@ -98,8 +98,7 @@ void G_ReadSessionData( gclient_t *client ) {
 
 		if ( client->sess.sessionTeam == TEAM_RED ) {
 			client->sess.sessionTeam = TEAM_BLUE;
-		}
-		else if ( client->sess.sessionTeam == TEAM_BLUE ) {
+		} else if ( client->sess.sessionTeam == TEAM_BLUE ) {
 			client->sess.sessionTeam = TEAM_RED;
 		}
 	}
@@ -114,40 +113,26 @@ Called on a first-time connect
 ================
 */
 void G_InitSessionData( gclient_t *client, char *userinfo ) {
-	clientSession_t	*sess;
-	const char		*value;
+	clientSession_t *sess;
+	const char      *value;
 
 	sess = &client->sess;
 
 	// initial team determination
 	if ( g_gametype.integer >= GT_TEAM ) {
 		// always spawn as spectator in team games
-		sess->sessionTeam = TEAM_SPECTATOR;	
+		sess->sessionTeam = TEAM_SPECTATOR;
 	} else {
 		value = Info_ValueForKey( userinfo, "team" );
 		if ( value[0] == 's' ) {
 			// a willing spectator, not a waiting-in-line
 			sess->sessionTeam = TEAM_SPECTATOR;
 		} else {
-			switch ( g_gametype.integer ) {
-			default:
-			case GT_FFA:
-			case GT_SINGLE_PLAYER:
-				if ( g_maxGameClients.integer > 0 && 
-					level.numNonSpectatorClients >= g_maxGameClients.integer ) {
-					sess->sessionTeam = TEAM_SPECTATOR;
-				} else {
-					sess->sessionTeam = TEAM_FREE;
-				}
-				break;
-			case GT_TOURNAMENT:
-				// if the game is full, go into a waiting mode
-				if ( level.numNonSpectatorClients >= 2 ) {
-					sess->sessionTeam = TEAM_SPECTATOR;
-				} else {
-					sess->sessionTeam = TEAM_FREE;
-				}
-				break;
+			if ( g_maxGameClients.integer > 0 &&
+				 level.numNonSpectatorClients >= g_maxGameClients.integer ) {
+				sess->sessionTeam = TEAM_SPECTATOR;
+			} else {
+				sess->sessionTeam = TEAM_FREE;
 			}
 		}
 	}
@@ -177,12 +162,12 @@ G_InitWorldSession
 ==================
 */
 void G_InitWorldSession( void ) {
-	char	s[MAX_STRING_CHARS];
-	int			gt;
+	char s[MAX_STRING_CHARS];
+	int gt;
 
-	trap_Cvar_VariableStringBuffer( "session", s, sizeof(s) );
+	trap_Cvar_VariableStringBuffer( "session", s, sizeof( s ) );
 	gt = atoi( s );
-	
+
 	// if the gametype changed since the last session, don't use any
 	// client sessions
 	if ( g_gametype.integer != gt ) {
@@ -198,9 +183,9 @@ G_WriteSessionData
 ==================
 */
 void G_WriteSessionData( void ) {
-	int		i;
+	int i;
 
-	trap_Cvar_Set( "session", va("%i", g_gametype.integer) );
+	trap_Cvar_Set( "session", va( "%i", g_gametype.integer ) );
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].pers.connected == CON_CONNECTED ) {

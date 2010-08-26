@@ -8,13 +8,13 @@
 // Ridah, increased this (fixes Dan's crash)
 //#define POOLSIZE	(256 * 1024)
 //#define POOLSIZE	(2048 * 1024)
-#define POOLSIZE	(4096 * 1024)	//----(SA)	upped to try to get assault_34 going
+#define POOLSIZE    ( 4096 * 1024 )   //----(SA)	upped to try to get assault_34 going
 
-static char		memoryPool[POOLSIZE];
-static int		allocPoint;
+static char memoryPool[POOLSIZE];
+static int allocPoint;
 
 void *G_Alloc( int size ) {
-	char	*p;
+	char    *p;
 
 	if ( g_debugAlloc.integer ) {
 		G_Printf( "G_Alloc of %i bytes (%i left)\n", size, POOLSIZE - allocPoint - ( ( size + 31 ) & ~31 ) );

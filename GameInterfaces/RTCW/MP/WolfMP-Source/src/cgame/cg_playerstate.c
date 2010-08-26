@@ -15,57 +15,53 @@ If the ammo has gone low enough to generate the warning, play a sound
 ==============
 */
 void CG_CheckAmmo( void ) {
-	int		i;
-	int		total;
-	int		weapons[MAX_WEAPONS/(sizeof(int)*8)];
+	int i;
+	int total;
+	int weapons[MAX_WEAPONS / ( sizeof( int ) * 8 )];
 
 	// see about how many seconds of ammo we have remaining
-	memcpy( weapons, cg.snap->ps.weapons, sizeof(weapons) );
+	memcpy( weapons, cg.snap->ps.weapons, sizeof( weapons ) );
 
-	if(!weapons[0] && !weapons[1])	// (SA) we start out with no weapons, so don't make a click on startup
+	if ( !weapons[0] && !weapons[1] ) { // (SA) we start out with no weapons, so don't make a click on startup
 		return;
+	}
 
 	total = 0;
 
 	// first weap now WP_LUGER
 	for ( i = WP_FIRST ; i < WP_NUM_WEAPONS ; i++ )
 	{
-		if ( ! ( weapons[0] & ( 1 << i ) ) )
-		{
+		if ( !( weapons[0] & ( 1 << i ) ) ) {
 			continue;
 		}
 		switch ( i )
 		{
-			case WP_ROCKET_LAUNCHER:
-			case WP_PANZERFAUST:
-			case WP_GRENADE_LAUNCHER:
-			case WP_GRENADE_PINEAPPLE:
-			case WP_LUGER:
-			case WP_COLT:
-			case WP_AKIMBO:
-			case WP_SILENCER:
-			case WP_FG42:
-			case WP_FG42SCOPE:
-			case WP_BAR:	//----(SA)	added
-			case WP_BAR2:	//----(SA)	added
-			case WP_MP40:
-			case WP_THOMPSON:
-			case WP_STEN:
-			case WP_VENOM:
-			case WP_CROSS:
-			case WP_TESLA:
-			case WP_MAUSER:
-			case WP_GARAND:
-			default:
-				total += cg.snap->ps.ammo[BG_FindAmmoForWeapon(i)] * 1000;
-//				break;
-//			default:
-//				total += cg.snap->ps.ammo[BG_FindAmmoForWeapon(i)] * 200;
-//				break;
+		case WP_ROCKET_LAUNCHER:
+		case WP_PANZERFAUST:
+		case WP_GRENADE_LAUNCHER:
+		case WP_GRENADE_PINEAPPLE:
+		case WP_LUGER:
+		case WP_COLT:
+		case WP_AKIMBO:
+		case WP_SILENCER:
+		case WP_FG42:
+		case WP_FG42SCOPE:
+		case WP_BAR:        //----(SA)	added
+		case WP_BAR2:       //----(SA)	added
+		case WP_MP40:
+		case WP_THOMPSON:
+		case WP_STEN:
+		case WP_VENOM:
+		case WP_CROSS:
+		case WP_TESLA:
+		case WP_MAUSER:
+		case WP_GARAND:
+		default:
+			total += cg.snap->ps.ammo[BG_FindAmmoForWeapon( i )] * 1000;
+			break;
 		}
 
-		if ( total >= 5000 )
-		{
+		if ( total >= 5000 ) {
 			cg.lowAmmoWarning = 0;
 			return;
 		}
@@ -89,15 +85,12 @@ CG_DamageFeedback
 ==============
 */
 void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
-	float		left, front, up;
-	float		kick;
-	int			health;
-	float		scale;
-	vec3_t		dir;
-	vec3_t		angles;
-	float		dist;
-	float		yaw, pitch;
-	int			slot;
+	float kick;
+	int health;
+	float scale;
+	vec3_t dir;
+	vec3_t angles;
+	int slot;
 	viewDamage_t *vd;
 
 	// show the attacking player's head and name in corner
@@ -112,20 +105,24 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	}
 	kick = damage * scale;
 
-	if (kick < 5)
+	if ( kick < 5 ) {
 		kick = 5;
-	if (kick > 10)
+	}
+	if ( kick > 10 ) {
 		kick = 10;
-
-	// find a free slot
-	for (slot=0; slot<MAX_VIEWDAMAGE; slot++) {
-		if (cg.viewDamage[slot].damageTime + cg.viewDamage[slot].damageDuration < cg.time)
-			break;
 	}
 
-	if (slot==MAX_VIEWDAMAGE)
-		return;		// no free slots, never override or splats will suddenly disappear
+	// find a free slot
+	for ( slot = 0; slot < MAX_VIEWDAMAGE; slot++ ) {
+		if ( cg.viewDamage[slot].damageTime + cg.viewDamage[slot].damageDuration < cg.time ) {
+			break;
+		}
+	}
 
+	if ( slot == MAX_VIEWDAMAGE ) {
+		return;     // no free slots, never override or splats will suddenly disappear
+
+	}
 	vd = &cg.viewDamage[slot];
 
 	// if yaw and pitch are both 255, make the damage always centered (falling, etc)
@@ -135,6 +132,7 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 		cg.v_dmg_roll = 0;
 		cg.v_dmg_pitch = -kick;
 	} else {
+		float left, front, up, dist, yaw, pitch;
 		// positional
 		pitch = pitchByte / 255.0 * 360;
 		yaw = yawByte / 255.0 * 360;
@@ -146,9 +144,9 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 		AngleVectors( angles, dir, NULL, NULL );
 		VectorSubtract( vec3_origin, dir, dir );
 
-		front = DotProduct (dir, cg.refdef.viewaxis[0] );
-		left = DotProduct (dir, cg.refdef.viewaxis[1] );
-		up = DotProduct (dir, cg.refdef.viewaxis[2] );
+		front = DotProduct( dir, cg.refdef.viewaxis[0] );
+		left = DotProduct( dir, cg.refdef.viewaxis[1] );
+		up = DotProduct( dir, cg.refdef.viewaxis[2] );
 
 		dir[0] = front;
 		dir[1] = left;
@@ -159,28 +157,28 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 		}
 
 		cg.v_dmg_roll = kick * left;
-		
+
 		cg.v_dmg_pitch = -kick * front;
 
 		if ( front <= 0.1 ) {
 			front = 0.1;
 		}
-		vd->damageX = crandom()*0.3 + -left / front;
-		vd->damageY = crandom()*0.3 + up / dist;
+		vd->damageX = crandom() * 0.3 + - left / front;
+		vd->damageY = crandom() * 0.3 + up / dist;
 	}
 
 	// clamp the position
 	if ( vd->damageX > 1.0 ) {
 		vd->damageX = 1.0;
 	}
-	if ( vd->damageX < - 1.0 ) {
+	if ( vd->damageX < -1.0 ) {
 		vd->damageX = -1.0;
 	}
 
 	if ( vd->damageY > 1.0 ) {
 		vd->damageY = 1.0;
 	}
-	if ( vd->damageY < - 1.0 ) {
+	if ( vd->damageY < -1.0 ) {
 		vd->damageY = -1.0;
 	}
 
@@ -191,13 +189,10 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	vd->damageValue = kick;
 	cg.v_dmg_time = cg.time + DAMAGE_TIME;
 	vd->damageTime = cg.snap->serverTime;
-	vd->damageDuration = kick * 50 * (1 + 2*(!vd->damageX && !vd->damageY));
+	vd->damageDuration = kick * 50 * ( 1 + 2 * ( !vd->damageX && !vd->damageY ) );
 	cg.damageTime = cg.snap->serverTime;
 	cg.damageIndex = slot;
 }
-
-
-
 
 /*
 ================
@@ -211,22 +206,17 @@ void CG_Respawn( void ) {
 	cg.thisFrameTeleport = qtrue;
 
 	// need to reset client-side weapon animations
-	cg.predictedPlayerState.weapAnim = WEAP_IDLE1;	// reset weapon animations
-	cg.predictedPlayerState.weapAnimTimer = 0;		// allow other animations to happen right away
-	cg.predictedPlayerState.weaponstate = WEAPON_RAISING;	// hmm, set this?  what to?
+	cg.predictedPlayerState.weapAnim = WEAP_IDLE1;  // reset weapon animations
+	cg.predictedPlayerState.weapAnimTimer = 0;      // allow other animations to happen right away
+	cg.predictedPlayerState.weaponstate = WEAPON_RAISING;   // hmm, set this?  what to?
 
 	// display weapons available
 	cg.weaponSelectTime = cg.time;
 
-	cg.holdableSelectTime = 0;	//----(SA) reset holdable timer
-
-	if ( cgs.gametype == GT_SINGLE_PLAYER )
-		cg.centerPrintTime = 0;		//----(SA)	reset centerprint counter so previous messages don't re-appear
-
+	cg.holdableSelectTime = 0;  //----(SA) reset holdable timer
 	cg.cursorHintIcon = 0;
 	cg.cursorHintTime = 0;
-
-	cg.cameraMode = 0;	//----(SA)	get out of camera for sure
+	cg.cameraMode = 0;  //----(SA)	get out of camera for sure
 
 	// select the weapon the server says we are using
 	cg.weaponSelect = cg.snap->ps.weapon;
@@ -237,10 +227,9 @@ void CG_Respawn( void ) {
 	cg.zoomval = 0;
 
 	// clear pmext
-	memset( &cg.pmext, 0, sizeof(cg.pmext) );
-	
-	if (cg_autoReload.integer)
-	{
+	memset( &cg.pmext, 0, sizeof( cg.pmext ) );
+
+	if ( cg_autoReload.integer ) {
 		cg.pmext.bAutoReload = qtrue;
 	}
 
@@ -250,13 +239,11 @@ void CG_Respawn( void ) {
 	}
 
 	// reset fog to world fog (if present)
-	trap_R_SetFog(FOG_CMD_SWITCHFOG, FOG_MAP,20,0,0,0,0);
+	trap_R_SetFog( FOG_CMD_SWITCHFOG, FOG_MAP,20,0,0,0,0 );
 	// dhm - end
 
-	trap_Cvar_Set("cg_notebookpages", "3");			// (SA) TEMP: clear notebook pages on spawn (cept for page 1)  this is temporary
-	trap_Cvar_Set("ui_notebookCurrentPage", "0");	// (SA) TEMP: clear notebook pages on spawn (cept for page 1)  this is temporary
-	
-
+	trap_Cvar_Set( "cg_notebookpages", "3" );         // (SA) TEMP: clear notebook pages on spawn (cept for page 1)  this is temporary
+	trap_Cvar_Set( "ui_notebookCurrentPage", "0" );   // (SA) TEMP: clear notebook pages on spawn (cept for page 1)  this is temporary
 }
 
 extern char *eventnames[];
@@ -267,35 +254,28 @@ CG_CheckPlayerstateEvents
 ==============
 */
 void CG_CheckPlayerstateEvents_wolf( playerState_t *ps, playerState_t *ops ) {
-	int			i;
-	int			event;
-	centity_t	*cent;
-/*
-	if ( ps->externalEvent && ps->externalEvent != ops->externalEvent ) {
-		cent = &cg_entities[ ps->clientNum ];
-		cent->currentState.event = ps->externalEvent;
-		cent->currentState.eventParm = ps->externalEventParm;
-		CG_EntityEvent( cent, cent->lerpOrigin );
-	}
-*/
+	int i;
+	int event;
+	centity_t   *cent;
+
 	cent = &cg.predictedPlayerEntity; // cg_entities[ ps->clientNum ];
 	// go through the predictable events buffer
 	for ( i = ps->eventSequence - MAX_EVENTS ; i < ps->eventSequence ; i++ ) {
-		if ( ps->events[i & (MAX_EVENTS-1)] != ops->events[i & (MAX_EVENTS-1)]
-			|| i >= ops->eventSequence ) {
-			event = ps->events[ i & (MAX_EVENTS-1) ];
+		if ( ps->events[i & ( MAX_EVENTS - 1 )] != ops->events[i & ( MAX_EVENTS - 1 )]
+			 || i >= ops->eventSequence ) {
+			event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
 
 			cent->currentState.event = event;
-			cent->currentState.eventParm = ps->eventParms[ i & (MAX_EVENTS-1) ];
+			cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
 			CG_EntityEvent( cent, cent->lerpOrigin );
 		}
 	}
 }
 
 void CG_CheckPlayerstateEvents( playerState_t *ps, playerState_t *ops ) {
-	int			i;
-	int			event;
-	centity_t	*cent;
+	int i;
+	int event;
+	centity_t   *cent;
 
 	if ( ps->externalEvent && ps->externalEvent != ops->externalEvent ) {
 		cent = &cg_entities[ ps->clientNum ];
@@ -309,16 +289,16 @@ void CG_CheckPlayerstateEvents( playerState_t *ps, playerState_t *ops ) {
 	for ( i = ps->eventSequence - MAX_EVENTS ; i < ps->eventSequence ; i++ ) {
 		// if we have a new predictable event
 		if ( i >= ops->eventSequence
-			// or the server told us to play another event instead of a predicted event we already issued
-			// or something the server told us changed our prediction causing a different event
-			|| (i > ops->eventSequence - MAX_EVENTS && ps->events[i & (MAX_EVENTS-1)] != ops->events[i & (MAX_EVENTS-1)]) ) {
+		     // or the server told us to play another event instead of a predicted event we already issued
+		     // or something the server told us changed our prediction causing a different event
+			 || ( i > ops->eventSequence - MAX_EVENTS && ps->events[i & ( MAX_EVENTS - 1 )] != ops->events[i & ( MAX_EVENTS - 1 )] ) ) {
 
-			event = ps->events[ i & (MAX_EVENTS-1) ];
+			event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
 			cent->currentState.event = event;
-			cent->currentState.eventParm = ps->eventParms[ i & (MAX_EVENTS-1) ];
+			cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
 			CG_EntityEvent( cent, cent->lerpOrigin );
 
-			cg.predictableEvents[ i & (MAX_PREDICTED_EVENTS-1) ] = event;
+			cg.predictableEvents[ i & ( MAX_PREDICTED_EVENTS - 1 ) ] = event;
 
 			cg.eventSequence++;
 		}
@@ -333,34 +313,33 @@ CG_CheckChangedPredictableEvents
 void CG_CheckChangedPredictableEvents( playerState_t *ps ) {
 	int i;
 	int event;
-	centity_t	*cent;
+	centity_t   *cent;
 
 	cent = &cg.predictedPlayerEntity;
 	for ( i = ps->eventSequence - MAX_EVENTS ; i < ps->eventSequence ; i++ ) {
 		//
-		if (i >= cg.eventSequence) {
+		if ( i >= cg.eventSequence ) {
 			continue;
 		}
 		// if this event is not further back in than the maximum predictable events we remember
-		if (i > cg.eventSequence - MAX_PREDICTED_EVENTS) {
+		if ( i > cg.eventSequence - MAX_PREDICTED_EVENTS ) {
 			// if the new playerstate event is different from a previously predicted one
-			if ( ps->events[i & (MAX_EVENTS-1)] != cg.predictableEvents[i & (MAX_PREDICTED_EVENTS-1) ] ) {
+			if ( ps->events[i & ( MAX_EVENTS - 1 )] != cg.predictableEvents[i & ( MAX_PREDICTED_EVENTS - 1 ) ] ) {
 
-				event = ps->events[ i & (MAX_EVENTS-1) ];
+				event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
 				cent->currentState.event = event;
-				cent->currentState.eventParm = ps->eventParms[ i & (MAX_EVENTS-1) ];
+				cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
 				CG_EntityEvent( cent, cent->lerpOrigin );
 
-				cg.predictableEvents[ i & (MAX_PREDICTED_EVENTS-1) ] = event;
+				cg.predictableEvents[ i & ( MAX_PREDICTED_EVENTS - 1 ) ] = event;
 
 				if ( cg_showmiss.integer ) {
-					CG_Printf("WARNING: changed predicted event\n");
+					CG_Printf( "WARNING: changed predicted event\n" );
 				}
 			}
 		}
 	}
 }
-
 
 /*
 ==================
@@ -368,22 +347,18 @@ CG_CheckLocalSounds
 ==================
 */
 void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
-//	const char	*s;
-//	int			highScore;
-
-	if(ps->persistant[PERS_TEAM] == ops->persistant[PERS_TEAM])
-	{
+	if ( ps->persistant[PERS_TEAM] == ops->persistant[PERS_TEAM] ) {
 		if ( cg_hitsounds.integer ) {
-			if ( ps->persistant[PERS_BLEH_2] > ops->persistant[PERS_BLEH_2] ){ 
+			if ( ps->persistant[PERS_BLEH_2] > ops->persistant[PERS_BLEH_2] ) {
 				trap_S_StartLocalSound( cgs.media.hitSoundHead, CHAN_LOCAL_SOUND );
 			}
 		}
 
 		if ( cg_hitsounds.integer ) {
-			if ( ps->persistant[PERS_HITS] > ops->persistant[PERS_HITS] ){
-				trap_S_StartLocalSound( cgs.media.hitSoundDefault, CHAN_LOCAL_SOUND ); 
-			} else if ( ps->persistant[PERS_HITS] < ops->persistant[PERS_HITS] ) { 
-				trap_S_StartLocalSound( cgs.media.hitSoundTeammate, CHAN_LOCAL_SOUND ); 
+			if ( ps->persistant[PERS_HITS] > ops->persistant[PERS_HITS] ) {
+				trap_S_StartLocalSound( cgs.media.hitSoundDefault, CHAN_LOCAL_SOUND );
+			} else if ( ps->persistant[PERS_HITS] < ops->persistant[PERS_HITS] ) {
+				trap_S_StartLocalSound( cgs.media.hitSoundTeammate, CHAN_LOCAL_SOUND );
 			}
 		}
 	}
@@ -396,25 +371,27 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 
 	// timelimit warnings
 	if ( cgs.timelimit > 0 ) {
-		int		msec;
+		int msec;
 
 		msec = cg.time - cgs.levelStartTime;
 
-		if ( cgs.timelimit > 2 && !( cg.timelimitWarnings & 1 ) && (msec > (cgs.timelimit - 2) * 60 * 1000) &&
-			( msec < (cgs.timelimit-2)*60*1000+1000 ) ) {
+		if ( cgs.timelimit > 2 && !( cg.timelimitWarnings & 1 ) && ( msec > ( cgs.timelimit - 2 ) * 60 * 1000 ) &&
+			 ( msec < ( cgs.timelimit - 2 ) * 60 * 1000 + 1000 ) ) {
 			cg.timelimitWarnings |= 1;
-			if (ps->persistant[PERS_TEAM] == TEAM_RED && cg.twoMinuteSound_g[0] != '0' )
+			if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.twoMinuteSound_g[0] != '0' ) {
 				trap_S_StartLocalSound( cgs.media.twoMinuteSound_g, CHAN_ANNOUNCER );
-			else if (ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.twoMinuteSound_a[0] != '0' )
+			} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.twoMinuteSound_a[0] != '0' ) {
 				trap_S_StartLocalSound( cgs.media.twoMinuteSound_a, CHAN_ANNOUNCER );
+			}
 		}
-		if ( !( cg.timelimitWarnings & 2 ) && (msec > (cgs.timelimit) * 60 * 1000 - 30000) && 
-			(msec < (cgs.timelimit) * 60 * 1000 - 29000 ) ) {
+		if ( !( cg.timelimitWarnings & 2 ) && ( msec > ( cgs.timelimit ) * 60 * 1000 - 30000 ) &&
+			 ( msec < ( cgs.timelimit ) * 60 * 1000 - 29000 ) ) {
 			cg.timelimitWarnings |= 2;
-			if (ps->persistant[PERS_TEAM] == TEAM_RED && cg.thirtySecondSound_g[0] != '0' )
+			if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.thirtySecondSound_g[0] != '0' ) {
 				trap_S_StartLocalSound( cgs.media.thirtySecondSound_g, CHAN_ANNOUNCER );
-			else if (ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.thirtySecondSound_a[0] != '0' )
+			} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.thirtySecondSound_a[0] != '0' ) {
 				trap_S_StartLocalSound( cgs.media.thirtySecondSound_a, CHAN_ANNOUNCER );
+			}
 		}
 	}
 }
@@ -432,8 +409,9 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 		*ops = *ps;
 
 		// DHM - Nerve :: After Limbo, make sure and do a CG_Respawn
-		if ( ps->clientNum == cg.clientNum )
+		if ( ps->clientNum == cg.clientNum ) {
 			ops->persistant[PERS_SPAWN_COUNT]--;
+		}
 	}
 
 	// damage events (player is getting wounded)
@@ -451,8 +429,8 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 		cg.mapRestart = qfalse;
 	}
 
-	if ( cg.snap->ps.pm_type != PM_INTERMISSION 
-		&& ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
+	if ( cg.snap->ps.pm_type != PM_INTERMISSION
+		 && ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 		CG_CheckLocalSounds( ps, ops );
 	}
 

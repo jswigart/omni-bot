@@ -244,4 +244,12 @@ namespace InterfaceFuncs
 		MessageHelper msg(RTCW_MSG_DISABLEBOTPUSH, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
 	}
+
+	int GetPlayerClass(GameEntity _ent)
+	{
+		RTCW_GetPlayerClass data = { _ent, 0 };
+		MessageHelper msg(RTCW_MSG_GETPLAYERCLASS, &data, sizeof(data));
+		InterfaceMsg(msg, _ent);
+		return data.m_PlayerClass;
+	}
 };
