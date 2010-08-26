@@ -1,0 +1,414 @@
+#include "ui_mp/menudef.h"
+
+#define GLOBAL_TEXTSCALE1	0.25
+
+{
+\\ PASSWORD POPUP MENU \\
+
+menuDef {
+	name				"serverinfo_popmenu"
+	visible 			0
+	fullscreen			0
+	rect				120 70 350 300
+	focusColor			1 .75 0 1
+	style				1
+	border				1
+	popup
+	onClose				{ }
+	onOpen				{ uiScript ServerStatus }
+	onESC				{ close serverinfo_popmenu ; open joinserver }
+
+	itemDef
+	{
+		name			window
+		group			grpControlbutton
+		rect			0 40 350 300
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.5 .5 .5 .5
+		forecolor		1 1 1 1
+		backcolor		.1 .1 .1 1
+		visible			1
+		decoration
+	}
+
+	itemDef 
+	{
+		name			window2
+		group			grpControlbutton
+		rect			2 42 346 20 
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .2
+		forecolor		1 1 1 1
+		backcolor		.3 0.5 0.2 0.5
+		visible			1
+		decoration
+	}
+
+	itemDef {
+		name			window_title
+		text			"Server Info"
+		style			0
+		decoration
+		textscale		.3
+		rect			1 44 210 20
+		textalign		1
+		textalignx		180
+		textaligny		16
+		forecolor		1 1 1 1
+		visible			1
+		textfont		UI_FONT_NORMAL
+	}
+
+	itemDef {
+		name			serverinfo
+		rect			20 70 310 230
+		type			ITEM_TYPE_LISTBOX
+		style			WINDOW_STYLE_FILLED
+		elementwidth	120
+		elementheight	16
+		textfont		UI_FONT_NORMAL
+		textscale		.25
+		backcolor		0 0 0 1
+		border			1
+		bordersize		1
+		bordercolor		.5 .5 .5 1
+		elementtype		LISTBOX_TEXT
+		feeder			FEEDER_SERVERSTATUS
+		notselectable
+		visible			1
+		columns			4	2 40 20
+							40 40 10
+							90 40 10
+							135 40 20
+	 	}
+
+
+	itemDef {
+		name			yes
+		text			"Exit"
+		type			ITEM_TYPE_BUTTON
+		textfont		UI_FONT_NORMAL
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			60 310 100 15
+		textalign		1
+		textalignx		51		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play	"sound/misc/nomenu.wav" ;
+			close	serverinfo_popmenu ;
+			open	joinserver
+		}
+
+		mouseEnter		{ setitemcolor yes backcolor .1 .2 .37 1 }
+		mouseExit		{ setitemcolor yes backcolor .3 .5 .2 .3 }
+	}
+
+	itemDef {
+		name			refresh
+		text			"Refresh"
+		type			ITEM_TYPE_BUTTON
+		textfont		UI_FONT_NORMAL
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			170 310 100 15
+		textalign		1
+		textalignx		51		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play		"sound/misc/nomenu.wav" ;
+			uiScript	ServerStatus
+		}
+
+		mouseEnter		{ setitemcolor refresh backcolor .1 .2 .37 1 }
+		mouseExit		{ setitemcolor refresh backcolor .3 .5 .2 .3 }
+	}
+}
+}
+
+/*
+#include "ui_mp/menudef.h"
+
+{
+\\ Server Information Popup Menu \\
+
+menuDef {
+	name "serverinfo_popmenu"
+   	visible 0
+   	fullscreen 0
+   	rect 158 80 320 340
+	focusColor 1 .75 0 1
+   	style 1
+   	border 1
+	popup
+	onClose { }
+	onOpen { uiScript ServerStatus }
+	onESC { close serverinfo_popmenu ; open joinserver }
+
+	itemDef {
+		name window
+		rect 10 15 310 330
+		style 1
+		backcolor 0 0 0 .5
+		forecolor 0 0 0 1
+		visible 1
+		decoration
+		}
+
+	itemDef {
+		name window
+		rect 10 15 320 340
+		style 1
+		backcolor 0 0 0 .25
+		forecolor 0 0 0 1
+		visible 1
+		decoration
+		}
+
+//	itemDef {
+//		name window
+//		rect 10 15 300 320
+//		style 1
+//		backcolor .1 .1 .37 1
+//		forecolor 0 0 0 1
+//		visible 1
+//		decoration
+//		}
+
+	itemDef
+	{
+		name			window
+		group			grpControlbutton
+		rect			10 15 300 320
+//		rect			0 40 235 135
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.5 .5 .5 .5
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0.8
+		visible			1
+		decoration
+	}
+
+	itemDef 
+	{
+		name			window2
+		group			grpControlbutton
+		rect			2 42 231 20 
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .2
+		forecolor		1 1 1 1
+		backcolor		.3 0.5 0.2 0.5
+		visible			1
+		decoration
+	}
+
+
+	itemDef {
+		name window
+		rect 10 15 300 10
+		style 1
+		backcolor 0 0 0 .25
+		forecolor 0 0 0 1
+		visible 1
+		decoration
+		}
+
+	itemDef {
+		name serverinfo
+		rect 0 20 320 20	
+		text "Server Information" 
+		textstyle 3
+		textalign 1
+		textscale .333
+		textalignx 160
+		textaligny 20
+		forecolor 1 1 1 1
+		visible 1
+		decoration
+		}
+
+
+
+
+	itemDef {
+		name serverinfo
+		rect 20 55 280 230
+		type ITEM_TYPE_LISTBOX
+		style WINDOW_STYLE_FILLED
+		elementwidth 120
+		elementheight 16
+		textscale .225
+		backcolor 0 0 0 1
+		border 1
+		bordersize 1
+		bordercolor .5 .5 .5 1
+		elementtype LISTBOX_TEXT
+		feeder FEEDER_SERVERSTATUS
+		notselectable
+		visible 1
+		columns 4	2 40 20
+				40 40 10
+				90 40 10
+				135 40 20
+	 	}
+
+	itemDef {
+		name window
+		rect 20 55 264 230
+		style 1
+		backcolor 0 0 0 0
+		forecolor 0 0 0 0
+		border 1
+		bordersize 1
+		bordercolor .5 .5 .5 1
+		visible 1
+		decoration
+		}
+
+
+
+
+
+
+
+
+
+
+//	BUTTON	//
+
+	itemDef {
+		name exit
+		text "Exit"
+		type 1
+		textscale .23
+		group grpControlbutton
+		type ITEM_TYPE_BUTTON
+		style WINDOW_STYLE_FILLED
+		background "ui/assets/button_back.tga"
+		rect 95 295 45 26
+		textalign 1
+		textalignx 23
+		textaligny 20
+		forecolor 1 1 1 1
+		backcolor .37 .1 .1 1
+		visible 1
+		action { play "sound/misc/nomenu.wav" ; 
+		close serverinfo_popmenu ; 
+		open joinserver }
+		mouseEnter { setitemcolor exit backcolor .1 .37 .1 1 } 
+		mouseExit { setitemcolor exit backcolor .37 .1 .1 1 } 
+		}
+
+	itemDef {
+		name exit
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/framebutton.tga"
+ 		rect 95 295 45 26
+		visible 1 
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+	itemDef {
+		name exit
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/leftbutton.tga"
+		rect 83 295 13 26
+		visible 1
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+	itemDef {
+		name exit
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/rightbutton.tga"
+		rect 139 295 13 26
+		visible 1 
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+
+	itemDef {
+		name refresh
+		text "Refresh"
+		type 1
+		textscale .23
+		group grpControlbutton
+		type ITEM_TYPE_BUTTON
+		style WINDOW_STYLE_FILLED
+		background "ui/assets/button_back.tga"
+		rect 180 295 45 26
+		textalign 1
+		textalignx 23
+		textaligny 20
+		forecolor 1 1 1 1
+		backcolor .37 .1 .1 1
+		visible 1
+		action { uiScript ServerStatus }
+		mouseEnter { setitemcolor refresh backcolor .1 .37 .1 1 } 
+		mouseExit { setitemcolor refresh backcolor .37 .1 .1 1 } 
+		}
+
+	itemDef {
+		name refresh
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/framebutton.tga"
+ 		rect 180 295 45 26
+		visible 1 
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+	itemDef {
+		name refresh
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/leftbutton.tga"
+		rect 168 295 13 26
+		visible 1
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+	itemDef {
+		name refresh
+		group grpControlbutton
+		style WINDOW_STYLE_SHADER
+		background "ui/assets/rightbutton.tga"
+		rect 224 295 13 26
+		visible 1 
+		forecolor 1 1 1 1
+		decoration  	  
+		}
+
+
+	
+}
+
+
+}
+
+
+*/
