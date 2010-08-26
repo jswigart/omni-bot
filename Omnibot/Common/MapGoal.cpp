@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2010-05-01 12:23:57 -0500 (Sat, 01 May 2010) $
+// $LastChangedDate: 2010-05-01 10:23:57 -0700 (Sat, 01 May 2010) $
 // $LastChangedRevision: 4840 $
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1927,7 +1927,7 @@ static int gmfGetPriorityForClient(gmThread *a_thread)
 	else if(a_thread->GetNumParams()==2)
 	{
 		GM_CHECK_INT_PARAM(teamId,0);
-		GM_CHECK_INT_PARAM(classId,0);
+		GM_CHECK_INT_PARAM(classId,1);
 		a_thread->PushFloat(NativePtr->GetPriorityForClass(teamId,classId));
 	}
 	else
