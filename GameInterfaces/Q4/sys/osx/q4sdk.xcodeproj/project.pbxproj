@@ -1,0 +1,231 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		251B05430C186CC600504968 /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 251B05440C186CEA00504968 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				251B05480C186CF700504968 /* PBXTargetDependency */,
+				251B054A0C186CFB00504968 /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		25136BA80A473DEA00D3D311 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 25136B9B0A473DEA00D3D311 /* game.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81114DFB093E117D00A5C91A;
+			remoteInfo = "game bundle";
+		};
+		25136BAC0A473DEA00D3D311 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 25136B9E0A473DEA00D3D311 /* idlib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = idlib_pic;
+		};
+		251B05410C186CBA00504968 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 251B05360C186CBA00504968 /* mpgame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81114DFB093E117D00A5C91A;
+			remoteInfo = "game bundle";
+		};
+		251B05470C186CF700504968 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 251B05360C186CBA00504968 /* mpgame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81114DFA093E117D00A5C91A;
+			remoteInfo = "game bundle";
+		};
+		251B05490C186CFB00504968 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 25136B9B0A473DEA00D3D311 /* game.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81114DFA093E117D00A5C91A;
+			remoteInfo = "game bundle";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		25136B9B0A473DEA00D3D311 /* game.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = game.xcodeproj; path = Subprojects/game.xcodeproj; sourceTree = "<group>"; };
+		25136B9E0A473DEA00D3D311 /* idlib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = idlib.xcodeproj; path = Subprojects/idlib.xcodeproj; sourceTree = "<group>"; };
+		251B05360C186CBA00504968 /* mpgame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mpgame.xcodeproj; path = Subprojects/mpgame.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		25136B850A473D9D00D3D311 = {
+			isa = PBXGroup;
+			children = (
+				251B05360C186CBA00504968 /* mpgame.xcodeproj */,
+				25136B9B0A473DEA00D3D311 /* game.xcodeproj */,
+				25136B9E0A473DEA00D3D311 /* idlib.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		25136B9C0A473DEA00D3D311 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				25136BA90A473DEA00D3D311 /* game.so.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		25136B9F0A473DEA00D3D311 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				25136BAD0A473DEA00D3D311 /* libidlib_pic.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		251B05370C186CBA00504968 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				251B05420C186CBA00504968 /* game.so.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		25136B870A473D9D00D3D311 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 25136B880A473D9D00D3D311 /* Build configuration list for PBXProject "q4sdk" */;
+			hasScannedForEncodings = 0;
+			mainGroup = 25136B850A473D9D00D3D311;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 25136B9C0A473DEA00D3D311 /* Products */;
+					ProjectRef = 25136B9B0A473DEA00D3D311 /* game.xcodeproj */;
+				},
+				{
+					ProductGroup = 25136B9F0A473DEA00D3D311 /* Products */;
+					ProjectRef = 25136B9E0A473DEA00D3D311 /* idlib.xcodeproj */;
+				},
+				{
+					ProductGroup = 251B05370C186CBA00504968 /* Products */;
+					ProjectRef = 251B05360C186CBA00504968 /* mpgame.xcodeproj */;
+				},
+			);
+			targets = (
+				251B05430C186CC600504968 /* All */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		25136BA90A473DEA00D3D311 /* game.so.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = game.so.bundle;
+			remoteRef = 25136BA80A473DEA00D3D311 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		25136BAD0A473DEA00D3D311 /* libidlib_pic.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libidlib_pic.a;
+			remoteRef = 25136BAC0A473DEA00D3D311 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		251B05420C186CBA00504968 /* game.so.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = game.so.bundle;
+			remoteRef = 251B05410C186CBA00504968 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXTargetDependency section */
+		251B05480C186CF700504968 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "game bundle";
+			targetProxy = 251B05470C186CF700504968 /* PBXContainerItemProxy */;
+		};
+		251B054A0C186CFB00504968 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "game bundle";
+			targetProxy = 251B05490C186CFB00504968 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		25136B890A473D9D00D3D311 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		25136B8A0A473D9D00D3D311 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		251B05450C186CEA00504968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = All;
+			};
+			name = Debug;
+		};
+		251B05460C186CEA00504968 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = All;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		25136B880A473D9D00D3D311 /* Build configuration list for PBXProject "q4sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				25136B890A473D9D00D3D311 /* Debug */,
+				25136B8A0A473D9D00D3D311 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		251B05440C186CEA00504968 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				251B05450C186CEA00504968 /* Debug */,
+				251B05460C186CEA00504968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 25136B870A473D9D00D3D311 /* Project object */;
+}

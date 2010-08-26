@@ -1,0 +1,41 @@
+# -*- mode: python -*-
+# Quake4 build script
+# TTimo <ttimo@idsoftware.com>
+# http://scons.sourceforge.net
+
+import os.path, scons_utils
+
+Import( 'GLOBALS' )
+Import( GLOBALS )
+
+idlib_list = scons_utils.ExtractSource( File( '#idlib.vcproj' ).abspath )
+asm_files = [ 'idlib/math/Simd_MMX.cpp' ]
+
+for i in asm_files:
+	idlib_list.remove( i )
+
+local_env = g_env.Copy()
+if ( local_smp == 1 and local_idlibpic == 0 ):
+	# idlib compiled for SMP engine code needs the define
+	local_env.Append( CPPDEFINES = [ 'ENABLE_INTEL_SMP' ] )
+if ( GCC_X86_ASM == '1' ):
+	local_env.Append( CPPDEFINES = [ 'ID_GCC_X86_ASM' ] )
+
+with_asm_env = g_env_noopt.Copy()
+with_asm_env.Append( CPPFLAGS = [ '-masm=intel' ] )
+
+ret_list = []
+for f in idlib_list:
+	if ( local_idlibpic == 0 ):
+		ret_list += local_env.StaticObject( source = os.path.join( '../..', f ) )
+	else:
+		ret_list += local_env.SharedObject( source = os.path.join( '../..', f ) )
+
+if ( GCC_X86_ASM == '1' ):
+	for f in asm_files:
+		if ( local_idlibpic == 0 ):
+			ret_list += with_asm_env.StaticObject( source = os.path.join( '../..', f ) )
+		else:
+			ret_list += with_asm_env.SharedObject( source = os.path.join( '../..', f ) )
+
+Return( 'ret_list' )

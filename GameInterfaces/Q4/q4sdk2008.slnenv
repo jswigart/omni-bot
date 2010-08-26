@@ -1,0 +1,5 @@
+# Omni-bot paths
+OMNIBOT_INST=C:\projects\omnibot-main\head\Installer\Files
+
+# Game Specific paths
+Q4DIR=C:\games\Quake 4
