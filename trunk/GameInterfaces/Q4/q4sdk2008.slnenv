@@ -1,5 +1,5 @@
 # Omni-bot paths
-OMNIBOT_INST=C:\projects\omnibot-main\head\Installer\Files
+OMNIBOT_INST=D:\CVS\Omnibot\head\Installer\Files
 
 # Game Specific paths
-Q4DIR=C:\games\Quake 4
+Q4DIR=E:\games\Quake 4

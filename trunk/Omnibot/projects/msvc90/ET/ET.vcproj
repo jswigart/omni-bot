@@ -95,6 +95,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et debug noaddpkfile nogame&#x0D;&#x0A;"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -175,6 +176,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et release noaddpkfile nogame $(TargetDir)$(TargetName)_$(ConfigurationName).pdb&#x0D;&#x0A;"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -235,7 +237,7 @@
 					>
 					<Tool
 						Name="BuildExternal"
-						Solution="$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2008.sln"
+						Solution="$(InterfaceDir)\ET\2.60\src\wolf_2008.sln"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -245,7 +247,7 @@
 					<Tool
 						Name="BuildExternal"
 						Config="1"
-						Solution="$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2008.sln"
+						Solution="$(InterfaceDir)\ET\2.60\src\wolf_2008.sln"
 					/>
 				</FileConfiguration>
 			</File>

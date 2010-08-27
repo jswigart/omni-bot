@@ -20,7 +20,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -92,7 +92,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>

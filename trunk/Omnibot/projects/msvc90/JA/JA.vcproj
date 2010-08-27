@@ -89,7 +89,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Post Build ..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="false"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -164,7 +164,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Post Build ..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="false"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
