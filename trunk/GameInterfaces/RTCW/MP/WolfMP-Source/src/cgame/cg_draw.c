@@ -311,7 +311,7 @@ void CG_Text_Paint_Ext( float x, float y, float scalex, float scaley, vec4_t col
 					colorBlack[3] = 1.0;
 					trap_R_SetColor( newColor );
 				}
-				CG_Text_PaintChar_Ext(x + (glyph->pitch * scalex), y - yadj, glyph->imageWidth, glyph->imageHeight, scalex, scaley, glyph->s, glyph->t, glyph->s2, glyph->t2, glyph->glyph);
+				CG_Text_PaintChar_Ext(x + (/*glyph->pitch **/ scalex), y - yadj, glyph->imageWidth, glyph->imageHeight, scalex, scaley, glyph->s, glyph->t, glyph->s2, glyph->t2, glyph->glyph);
 				x += (glyph->xSkip * scalex) + adjust;
 				s++;
 				count++;
@@ -3653,6 +3653,7 @@ static void CG_DrawCompass( void ) {
 CG_Draw2D
 =================
 */
+void CG_DrawOnScreenText(void);
 static void CG_Draw2D( void ) {
 	// if we are taking a levelshot for the menu, don't draw anything
 	if ( cg.levelShot ) {
@@ -3675,6 +3676,7 @@ static void CG_Draw2D( void ) {
 	}
 
 	CG_DrawFlashBlendBehindHUD();
+	CG_DrawOnScreenText();
 
 #ifndef PRE_RELEASE_DEMO
 	if ( cg_uselessNostalgia.integer ) {
@@ -3951,7 +3953,7 @@ void CG_DrawOnScreenText(void) {
 	onsText_t *worldtext;
 	onsText_t * * whereworldtext;
 	//trace_t	tr;
-	const float fTxtScale = 0.27f;
+	const float fTxtScale = 0.17f;
 	float x,y;
 	union 
 	{

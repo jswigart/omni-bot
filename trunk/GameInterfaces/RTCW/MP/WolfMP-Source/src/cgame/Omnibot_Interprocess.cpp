@@ -92,7 +92,7 @@ extern "C" void InterProcessUpdate() {
 						(float*)&msg.data.m_Radius.m_Pos, 
 						msg.data.m_Text.m_Buffer, 
 						msg.m_Duration, 
-						msg.data.m_Text.m_Color);
+						msg.data.m_Text.m_Color );
 					continue;
 				}
 				default:
