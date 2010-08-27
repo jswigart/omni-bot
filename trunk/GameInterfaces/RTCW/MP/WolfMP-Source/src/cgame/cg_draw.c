@@ -3865,6 +3865,7 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 
 #define MAX_WORLDTEXT 64
 #define MAX_TEXTLENGTH 128
+#define MAX_RENDERDIST 2500
 
 typedef struct onsText_s 
 {
@@ -3979,7 +3980,7 @@ void CG_DrawOnScreenText(void) {
 			continue;
 		}
 		
-		if(CG_WorldToScreen(worldtext->origin, &x, &y) /*&& trap_R_inPVS(cg.refdef.vieworg, worldtext->origin)*/)
+		if( CG_WorldToScreen(worldtext->origin, &x, &y) && DistanceSquared(cg.refdef.vieworg, worldtext->origin) < MAX_RENDERDIST * MAX_RENDERDIST )
 		{
 			//CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, worldtext->origin, -1, CONTENTS_SOLID);
 
