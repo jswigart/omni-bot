@@ -381,11 +381,4 @@ void RTCW_Client::SetupBehaviorTree()
 	GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);
 	GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
 	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
-	GetStateRoot()->AppendTo("HighLevel", new Panzer);
-	GetStateRoot()->AppendTo("HighLevel", new Venom);
-	GetStateRoot()->AppendTo("HighLevel", new Flamethrower);
-
-	FINDSTATEIF(Panzer,GetStateRoot(),LimitToClass().SetFlag(RTCW_CLASS_SOLDIER));
-	FINDSTATEIF(Venom,GetStateRoot(),LimitToClass().SetFlag(RTCW_CLASS_SOLDIER));
-	FINDSTATEIF(Flamethrower,GetStateRoot(),LimitToClass().SetFlag(RTCW_CLASS_SOLDIER));
 }
