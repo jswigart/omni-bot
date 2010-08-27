@@ -568,11 +568,48 @@ void DrawDebugPolygon( vec3_t *verts, int _numverts, int _duration, int _color )
 	AddToLineList( &g_DebugLines, &lne );
 }
 
-qboolean CG_AddOnScreenText( const char *text, vec3_t origin, int _color, float duration );
-void DrawDebugText(const float *_start, const char *_msg, int _duration, int _color)
-{
-	vec3_t v3;// = { _start[0],_start[1],_start[2] };
-	VectorCopy(_start,v3);
-	CG_AddOnScreenText(_msg,v3,_color,(float)_duration/1000.f);
-}
+int             cg_LastScreenMessageTime = 0; // ensiform's fix for fpinfo render
 
+qboolean CG_AddOnScreenText( const char *text, vec3_t origin, int _color, float duration );
+//void DrawDebugText(const float *_start, const char *_msg, int _duration, int _color)
+//{
+//	vec3_t v3;// = { _start[0],_start[1],_start[2] };
+//	VectorCopy(_start,v3);
+//	CG_AddOnScreenText(_msg,v3,_color,(float)_duration/1000.f);
+//}
+
+// ensiform's updated func to fix fpinfo
+void DrawDebugText(float *_start, const char *_msg, int _duration, int _color)
+{
+	union 
+	{
+		char		m_RGBA[4];
+		int			m_RGBAi;
+	} ColorUnion;
+	ColorUnion.m_RGBAi = 0xFFFFFFFF;
+	if(_start && !VectorCompare(_start, vec3_origin))
+	{
+		vec3_t v3;
+		VectorCopy(_start,v3);
+		CG_AddOnScreenText(_msg,v3,_color,(float)_duration/1000.f);
+	}
+	else
+	{
+		if(cg_LastScreenMessageTime != cg.time)
+		{
+			vec4_t          v4Color = { 0.f, 0.f, 0.f, 0.f };
+
+			ColorUnion.m_RGBAi = _color;
+
+			Vector4Set(v4Color, (float)ColorUnion.m_RGBA[0]/255.f,
+				(float)ColorUnion.m_RGBA[1]/255.f,
+				(float)ColorUnion.m_RGBA[2]/255.f,
+				(float)ColorUnion.m_RGBA[3]/255.f);
+
+			trap_R_SetColor(v4Color);
+			CPri(_msg);
+			cg_LastScreenMessageTime = cg.time;
+			trap_R_SetColor(NULL);
+		}
+	}
+}
