@@ -95,6 +95,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(ModularCombat)/omni-bot&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(ModularCombat)/omni-bot&quot;&#x0D;&#x0A;copy &quot;..\..\..\MC\MC_Config.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\MC\MC_Messages.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Base_Messages.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\BotExports.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\MessageHelper.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Functions_Bot.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\IEngineInterface.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-bot.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Types.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Events.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_BasicTypes.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_BitFlags.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Color.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\BotLoadLibrary.cpp&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -172,6 +173,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(ModularCombat)/omni-bot&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(ModularCombat)/omni-bot&quot;&#x0D;&#x0A;copy &quot;..\..\..\MC\MC_Config.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\MC\MC_Messages.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Base_Messages.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\BotExports.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\MessageHelper.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Functions_Bot.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\IEngineInterface.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-bot.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Types.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Events.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_BasicTypes.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_BitFlags.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\Omni-Bot_Color.h&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;copy &quot;..\..\..\Common\BotLoadLibrary.cpp&quot; &quot;$(ModularCombatSource)/omnibot&quot;&#x0D;&#x0A;"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -228,6 +230,7 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="BuildExternal"
@@ -236,6 +239,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="BuildExternal"

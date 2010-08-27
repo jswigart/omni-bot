@@ -21,7 +21,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\Common"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -87,7 +87,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops"
+			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -108,7 +108,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\Common"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="0"

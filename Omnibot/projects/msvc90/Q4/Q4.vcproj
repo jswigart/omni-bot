@@ -95,7 +95,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="false"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -173,7 +173,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to Bot Folder..."
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="false"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -434,6 +434,7 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="BuildExternal"
@@ -443,6 +444,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="BuildExternal"
