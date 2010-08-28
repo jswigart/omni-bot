@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Grenade Axis";
 this.WeaponId = WEAPON.AXIS_GRENADE;
-this.PrimaryFire.AmmoType = WEAPON.AXIS_GRENADE;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

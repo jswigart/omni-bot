@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Syringe";
 this.WeaponId = WEAPON.SYRINGE;
-this.PrimaryFire.AmmoType = WEAPON.SYRINGE;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

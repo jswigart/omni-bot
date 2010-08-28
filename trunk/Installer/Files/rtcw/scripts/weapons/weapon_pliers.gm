@@ -5,14 +5,13 @@
 // Overall weapon properties.
 this.Name = "Pliers";
 this.WeaponId = WEAPON.PLIERS;
-this.PrimaryFire.AmmoType = WEAPON.PLIERS;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
 this.PrimaryFire.WeaponType = "melee";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
-this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.SplashDamage = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;

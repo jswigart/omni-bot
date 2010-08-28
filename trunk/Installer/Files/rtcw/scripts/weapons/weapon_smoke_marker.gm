@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Smoke Marker";
 this.WeaponId = WEAPON.SMOKE_MARKER;
-this.PrimaryFire.AmmoType = WEAPON.SMOKE_MARKER;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

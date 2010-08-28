@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Binoculars";
 this.WeaponId = WEAPON.BINOCULARS;
-this.PrimaryFire.AmmoType = WEAPON.BINOCULARS;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

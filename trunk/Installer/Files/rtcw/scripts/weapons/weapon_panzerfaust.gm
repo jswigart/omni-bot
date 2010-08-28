@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Panzerfaust";
 this.WeaponId = WEAPON.PANZERFAUST;
-this.PrimaryFire.AmmoType = WEAPON.PANZERFAUST;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
