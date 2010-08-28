@@ -74,6 +74,7 @@ extern "C" const char *_GetEntityName( gentity_t *_ent ) {
 
 		name = newentname;
 
+		//Q_CleanStr(name);
 		if ( name ) {
 			char undschar[] = { '-', NULL };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`',
@@ -842,11 +843,15 @@ static int _GetEntityClass( gentity_t *_ent ) {
 		// Register certain weapons as threats to avoid or whatever.
 		switch ( _ent->s.weapon )
 		{
+		case WP_GRENADE_LAUNCHER:
 		case WP_GRENADE_PINEAPPLE:
 			return RTCW_CLASSEX_GRENADE;
 		case WP_PANZERFAUST:
 			return RTCW_CLASSEX_ROCKET;
 		case WP_ARTY:
+			if ( !Q_strncmp( _ent->classname, "air strike", sizeof( "air strike" ) ) ) {
+				return RTCW_CLASSEX_AIRSTRIKE;
+			}
 			return RTCW_CLASSEX_ARTY;
 		case WP_DYNAMITE:
 			return RTCW_CLASSEX_DYNAMITE;
@@ -1699,6 +1704,7 @@ obResult GetEntityCategory( const GameEntity _ent, BitFlag32 &_category ) {
 		// Register certain weapons as threats to avoid or whatever.
 		switch ( pEnt->s.weapon )
 		{
+		case WP_GRENADE_LAUNCHER:
 		case WP_GRENADE_PINEAPPLE:
 		case WP_PANZERFAUST:
 		case WP_ARTY:
@@ -1836,7 +1842,7 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			_flags.SetFlag( ENT_FLAG_PRONED );
 			_flags.SetFlag( ENT_FLAG_VISTEST );
 		} else if ( pEnt->health <= 0 )      {
-			_flags.SetFlag( ENT_FLAG_DEAD );
+			//_flags.SetFlag( ENT_FLAG_DEAD );
 		}
 		if ( pEnt->client && !IsBot( pEnt ) ) {
 			_flags.SetFlag( ENT_FLAG_HUMANCONTROLLED );
@@ -1948,6 +1954,7 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			// Register certain weapons as threats to avoid or whatever.
 			switch ( pEnt->s.weapon )
 			{
+			case WP_GRENADE_LAUNCHER:
 			case WP_GRENADE_PINEAPPLE:
 			case WP_PANZERFAUST:
 			case WP_ARTY:

@@ -17,7 +17,7 @@ this.Initialize = function()
 	this.WatchForEntityCategory(watchParams);
 
 	if ( tableCount(this.AvoidRadius) == 0 ) {
-		this.AvoidRadius[ CLASS.SMOKEMARKER ] = 470;
+		this.AvoidRadius[ CLASS.AIRSTRIKE ] = 470;
 		this.AvoidRadius[ CLASS.GRENADE ] = 320;
 	}
 
@@ -113,10 +113,14 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
 	if ( ent ) {
 		this.AvoidEntClass = GetEntClass(ent);
+		
+		if ( this.Debug ) {
+			this.Bot.Say(Util.ClassName(this.AvoidEntClass));
+		}
 
 		// cs: ignore arty for now. the problem is that repeated spam of arty can have an entire team
 		// locked down in avoid mode. especially noticeable on poorly routed maps
-		if ( this.AvoidEntClass == CLASS.SMOKEMARKER || /*entClass == CLASS.ARTY ||*/ this.AvoidEntClass == CLASS.GRENADE ) {
+		if ( this.AvoidEntClass == CLASS.AIRSTRIKE || /*entClass == CLASS.ARTY ||*/ this.AvoidEntClass == CLASS.GRENADE ) {
 			if ( GetEntOwner(ent) != this.Bot.GetGameEntity() ) {
 				this.Bot.AvoidEnt = ent;
 				this.Priority = 0.91;
