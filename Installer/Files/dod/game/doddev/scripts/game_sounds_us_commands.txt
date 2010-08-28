@@ -1,0 +1,747 @@
+// VOL_NORM		1.0f
+
+// Channels
+//	CHAN_AUTO		= 0,
+//	CHAN_WEAPON		= 1,
+//	CHAN_VOICE		= 2,
+//	CHAN_ITEM		= 3,
+//	CHAN_BODY		= 4,
+//	CHAN_STREAM		= 5,		// allocate stream channel from the static or dynamic area
+//	CHAN_STATIC		= 6,		// allocate channel from the static area 
+// these can be set with "channel" "2" or "channel" "chan_voice"
+
+//-----------------------------------------------------------------------------
+// common attenuation values
+//-----------------------------------------------------------------------------
+
+// DON'T USE THESE - USE SNDLVL_ INSTEAD!!!
+//	ATTN_NONE		0.0f	
+//	ATTN_NORM		0.8f
+//	ATTN_IDLE		2.0f
+//	ATTN_STATIC		1.25f 
+//	ATTN_RICOCHET	1.5f
+//	ATTN_GUNFIRE	0.27f
+
+//	SNDLVL_NONE		= 0,
+//	SNDLVL_25dB		= 25,
+//	SNDLVL_30dB		= 30,
+//	SNDLVL_35dB		= 35,
+//	SNDLVL_40dB		= 40,
+//	SNDLVL_45dB		= 45,
+//	SNDLVL_50dB		= 50,	// 3.9
+//	SNDLVL_55dB		= 55,	// 3.0
+//	SNDLVL_IDLE		= 60,	// 2.0
+//	SNDLVL_TALKING	= 60,	// 2.0
+//	SNDLVL_60dB		= 60,	// 2.0
+//	SNDLVL_65dB		= 65,	// 1.5
+//	SNDLVL_STATIC	= 66,	// 1.25
+//	SNDLVL_70dB		= 70,	// 1.0
+//	SNDLVL_NORM		= 75,
+//	SNDLVL_75dB		= 75,	// 0.8
+//	SNDLVL_80dB		= 80,	// 0.7
+//	SNDLVL_85dB		= 85,	// 0.6
+//	SNDLVL_90dB		= 90,	// 0.5
+//	SNDLVL_95dB		= 95,
+//	SNDLVL_100dB	= 100,	// 0.4
+//	SNDLVL_105dB	= 105,
+//	SNDLVL_120dB	= 120,
+//	SNDLVL_130dB	= 130,
+//	SNDLVL_GUNFIRE	= 140,	// 0.27
+//	SNDLVL_140dB	= 140,	// 0.2
+//	SNDLVL_150dB	= 150,	// 0.2
+
+"Voice.US_Clear"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_areaclear.wav"
+}
+
+"Voice.US_BackUp"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_backup.wav"
+		wave "player/american/us_backup2.wav"
+		wave "player/american/us_backup3.wav"
+	}
+}
+
+"Voice.US_BehindUs"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_enemybehind.wav"
+}
+
+"Voice.US_CeaseFire"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_ceasefire.wav"
+		wave "player/american/us_ceasefire2.wav"
+	}
+}
+
+"Voice.US_CoveringFire"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_coveringfire.wav"
+}
+
+"Voice.US_CoverFlanks"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_coverflanks.wav"
+}
+
+"Voice.US_Displace"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_changeposition.wav"
+}
+
+"Voice.US_DropWeapons"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_dropweapons.wav"
+		wave "player/american/us_dropweapons2.wav"
+	}
+}
+
+"Voice.US_EnemyAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_enemyahead.wav"
+}
+
+"Voice.US_FallBack"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_fallback.wav"
+}
+
+"Voice.US_FireInHole"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_grenadeout.wav"
+}
+
+"Voice.US_FlankLeft"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_flankleft.wav"
+}
+
+"Voice.US_FlankRight"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_flankright.wav"
+}
+
+"Voice.US_Go"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_gogogo.wav"
+}
+
+"Voice.US_Grenade"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_grenadein.wav"
+		wave "player/american/us_grenadein2.wav"
+		wave "player/american/us_grenadein3.wav"
+		wave "player/american/us_grenadein4.wav"
+		wave "player/american/us_grenadein5.wav"
+	}
+}
+
+"Voice.US_Hold"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_holdposition.wav"
+}
+
+"Voice.US_Left"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_left.wav"
+}
+
+"Voice.US_Medic"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_medic.wav"
+		wave "player/american/us_medic2.wav"
+	}
+}
+
+"Voice.US_MgAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_mgahead.wav"
+}
+
+"Voice.US_Moveout"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_gogogo2.wav"
+		wave "player/american/us_gogogo.wav"
+	}
+		
+}
+
+"Voice.US_MoveUpMg"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_moveupmg2.wav"
+		wave "player/american/us_moveupmg3.wav"
+		wave "player/american/us_moveupmg4.wav"
+	}
+}
+
+"Voice.US_NeedAmmo"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_needammo.wav"
+		wave "player/american/us_needammo2.wav"
+		wave "player/american/us_needammo3.wav"
+	}
+}
+
+"Voice.US_Negative"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_negative.wav"
+}
+
+"Voice.US_RocketSpotted"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_panzerschreck.wav"
+}
+
+"Voice.US_Prepare"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_prepare.wav"
+}
+
+"Voice.US_Right"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_right.wav"
+}
+
+"Voice.US_Sniper"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_sniper.wav"
+		wave "player/american/us_sniper2.wav"
+		wave "player/american/us_sniper3.wav"
+	}
+}
+
+"Voice.US_SpreadOut"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_spreadout.wav"
+}
+
+"Voice.US_StartRound"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/startround/us_flags.wav"
+		wave "player/american/startround/us_flags3.wav"
+		wave "player/american/startround/us_flags6.wav"
+		wave "player/american/startround/us_flags7.wav"
+	}
+}
+
+"Voice.US_StickTogether"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_sticktogether.wav"
+		wave "player/american/us_sticktogether2.wav"
+	}
+	
+}
+
+"Voice.US_TakeCover"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_takecover.wav"
+}
+
+"Voice.US_TakingFireLeft"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_incomingfireleft.wav"
+}
+
+"Voice.US_TakingFireRight"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_incomingfireright.wav"
+}
+
+"Voice.US_TankAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_tankahead.wav"
+}
+
+"Voice.US_UseGrenades"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_usegrenades.wav"
+		wave "player/american/us_usegrenades2.wav"
+		wave "player/american/us_usegrenades3.wav"
+	}
+}
+
+"Voice.US_UseSmoke"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".75"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_smoke.wav"
+		wave "player/american/us_smoke3.wav"
+	}
+}
+
+"Voice.US_UseRocket"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_usebazooka.wav"
+		wave "player/american/us_usebazooka2.wav"
+		wave "player/american/us_usebazooka3.wav"
+	}
+}
+
+"Voice.US_YesSir"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_yessir.wav"
+}
+
+"Voice.US_NiceShot"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_niceshot.wav"
+		wave "player/american/us_niceshot2.wav"
+	}
+}
+
+"Voice.US_Thanks"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/american/us_thanks.wav"
+}
+
+"Voice.US_TakeAmmo"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_takeammo.wav"
+		wave "player/american/us_takeammo2.wav"
+	}
+}
+
+"Voice.US_WeGotHim"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_wegothim.wav"
+		wave "player/american/us_wegothim2.wav"
+	}
+}
+
+"Voice.US_MoveWithTank"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/american/us_movewithtank.wav"
+		wave "player/american/us_movewithtank2.wav"
+		wave "player/american/us_movewithtank3.wav"
+	}
+}
+
+"Voice.US_WhiskeyTangoFoxtrot"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		 "player/jester.wav"
+}
+
+"Voice.US_FlagCapture"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_140dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/flagcaptured/us_areasecure.wav"
+		"wave"	"player/american/flagcaptured/us_objectivesecure.wav"
+		"wave"	"player/american/flagcaptured/us_pointsecure.wav"
+	}
+}
+
+"Voice.US_Flags"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+		"wave"	"player/american/startround/us_defense.wav"
+		"wave"	"player/american/startround/us_defense2.wav"
+		"wave"	"player/american/startround/us_defense3.wav"
+		"wave"	"player/american/startround/us_defense4.wav"
+		"wave"	"player/american/startround/us_defense5.wav"
+	}
+}
+
+"Voice.US_ObjectivesAttack"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+		"wave"	"player/american/startround/us_defense.wav"
+		"wave"	"player/american/startround/us_defense2.wav"
+		"wave"	"player/american/startround/us_defense3.wav"
+		"wave"	"player/american/startround/us_defense4.wav"
+		"wave"	"player/american/startround/us_defense5.wav"
+	}
+}
+
+"Voice.US_ObjectivesAttackTimed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+		"wave"	"player/american/startround/us_defense.wav"
+		"wave"	"player/american/startround/us_defense2.wav"
+		"wave"	"player/american/startround/us_defense3.wav"
+		"wave"	"player/american/startround/us_defense4.wav"
+		"wave"	"player/american/startround/us_defense5.wav"
+	}
+}
+
+"Voice.US_ObjectivesDefend"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+		"wave"	"player/american/startround/us_defense.wav"
+		"wave"	"player/american/startround/us_defense2.wav"
+		"wave"	"player/american/startround/us_defense3.wav"
+		"wave"	"player/american/startround/us_defense4.wav"
+		"wave"	"player/american/startround/us_defense5.wav"
+	}
+}
+
+"Voice.US_ObjectivesDefendTimed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+		"wave"	"player/american/startround/us_defense.wav"
+		"wave"	"player/american/startround/us_defense2.wav"
+		"wave"	"player/american/startround/us_defense3.wav"
+		"wave"	"player/american/startround/us_defense4.wav"
+		"wave"	"player/american/startround/us_defense5.wav"
+	}
+}
+
+"Voice.US_Beach"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/startround/us_beach.wav"
+		"wave"	"player/american/startround/us_beach3.wav"
+		"wave"	"player/american/startround/us_beach4.wav"
+		"wave"	"player/american/startround/us_beach5.wav"
+		"wave"	"player/american/startround/us_flags.wav"
+		"wave"	"player/american/startround/us_flags3.wav"
+		"wave"	"player/american/startround/us_flags6.wav"
+		"wave"	"player/american/startround/us_flags7.wav"
+		"wave"	"player/american/startround/us_attacktimed2.wav"
+		"wave"	"player/american/startround/us_attacktimed3.wav"
+	}
+}
+
+"Voice.US_C4EnemyPlanted"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/us_c4enemyplanted.wav"
+		"wave"	"player/american/us_c4enemyplanted2.wav"
+		"wave"	"player/american/us_c4enemyplanted3.wav"
+	}
+}
+
+"Voice.US_C4TeamPlanted"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/us_c4teamplanted.wav"
+		"wave"	"player/american/us_c4teamplanted2.wav"
+		"wave"	"player/american/us_c4teamplanted3.wav"
+	}
+}
+
+"Voice.US_OneMinute"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/us_oneminute1.wav"
+		"wave"	"player/american/us_oneminute2.wav"
+		"wave"	"player/american/us_oneminute3.wav"
+	}
+}
+
+"Voice.US_TwoMinute"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/us_twominute1.wav"
+		"wave"	"player/american/us_twominute2.wav"
+		"wave"	"player/american/us_twominute3.wav"
+	}
+}
+
+"Voice.US_C4Defused"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/american/us_c4defused1.wav"
+		"wave"	"player/american/us_c4defused2.wav"
+	}
+}

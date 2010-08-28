@@ -1,0 +1,843 @@
+// --------------------------------------------------------------
+// TITLES FOR HALF-LIFE
+//   Position command $position x y
+//     x & y are from 0 to 1 to be screen resolution independent
+//     -1 means center in each dimension
+//   Effect command $effect <effect number>
+//     effect 0 is fade in/fade out
+//     effect 1 is flickery credits
+//     effect 2 is write out (training room)
+//   Text color r g b command $color
+//   fadein time fadeout time / hold time
+//   $fadein (message fade in time - per character in effect 2)
+//   $fadeout (message fade out time)
+//   $holdtime (stay on the screen for this long)
+
+
+//INTRO TITLES
+// All centered for now
+$position -1 -1
+$effect 0
+// This is the final color
+$color 100 100 100
+// This is the highlight color
+$color2 240 110 0
+// This is the time it takes to fade each character
+$fadein 0.01
+// This is the amount of time the highlight lags behind the leading edge of the text
+$fxtime 5.0
+// How long to hold the message on the screen (after it scans out)
+$holdtime 2.5
+// How long it takes to fade out the message after holding
+$fadeout 0.5
+
+Menu_Spectate
+{
+#Menu_Spectate
+}
+
+Spec_Mode_Inset0
+{
+#Spec_Mode_Inset0
+}
+
+Spec_Mode_Inset1
+{
+#Spec_Mode_Inset1
+}
+
+Spec_Mode_Inset2
+{
+#Spec_Mode_Inset2
+}
+
+Spec_Mode_Inset3
+{
+#Spec_Mode_Inset3
+}
+
+Spec_Mode1
+{
+#Spec_Mode1
+}
+
+Spec_Mode2
+{
+#Spec_Mode2
+}
+
+Spec_Mode3
+{
+#Spec_Mode3
+}
+
+Spec_Mode4
+{
+#Spec_Mode4
+}
+
+Spec_Mode5
+{
+#Spec_Mode5
+}
+
+Spec_Mode6
+{
+#Spec_Mode6
+}
+
+Spec_NoTarget
+{
+#Spec_NoTarget
+}
+
+Spec_Only_Help
+{
+#Spec_Only_Help
+}
+
+Spec_Help
+{
+#Spec_Help
+}
+
+Spec_Help_Title
+{
+#Spec_Help_Title
+}
+
+Spec_Help_Text
+{
+#Spec_Help_Text
+}
+
+Spec_Slow_Motion
+{
+#Spec_Slow_Motion
+}
+
+Spec_Replay
+{
+#Spec_Replay
+}
+
+Spec_Auto
+{
+#Spec_Auto
+}
+
+Spec_Time
+{
+#Spec_Time
+}
+
+Spec_Map
+{
+#Spec_Map
+}
+
+Spectators
+{
+#Spectators
+}
+
+Unassigned
+{
+#Unassigned
+}
+
+Directed
+{
+#Directed
+}
+
+Muted
+{
+#Muted
+}
+
+Unmuted
+{
+#Unmuted
+}
+
+OBS_NONE
+{
+#OBS_NONE
+}
+
+OBS_CHASE_LOCKED
+{
+#OBS_CHASE_LOCKED
+}
+
+OBS_CHASE_FREE
+{
+#OBS_CHASE_FREE
+}
+
+OBS_ROAMING
+{
+#OBS_ROAMING
+}
+
+OBS_IN_EYE
+{
+#OBS_IN_EYE
+}
+
+OBS_MAP_FREE
+{
+#OBS_MAP_FREE
+}
+
+OBS_MAP_CHASE
+{
+#OBS_MAP_CHASE
+}
+
+SPECT_OPTIONS
+{
+#SPECT_OPTIONS
+}
+
+CAM_OPTIONS
+{
+#CAM_OPTIONS
+}
+
+Spec_Duck
+{
+#Spec_Duck
+}
+
+// ==========
+// Voice Menus
+// ==========
+
+Menu_AmerVoiceA
+{
+#Menu_AmerVoiceA
+}
+
+Menu_AmerVoiceB
+{
+#Menu_AmerVoiceB
+}
+
+Menu_AmerVoiceC
+{
+#Menu_AmerVoiceC
+}
+
+Menu_BritVoiceA
+{
+#Menu_BritVoiceA
+}
+
+Menu_BritVoiceB
+{
+#Menu_BritVoiceB
+}
+
+Menu_BritVoiceC
+{
+#Menu_BritVoiceC
+}
+
+Menu_GerVoiceA
+{
+#Menu_GerVoiceA
+}
+
+Menu_GerVoiceB
+{
+#Menu_GerVoiceB
+}
+
+Menu_GerVoiceC
+{
+#Menu_GerVoiceC
+}
+
+$position -1 0.65
+// Fade in text effect
+$effect 0
+// This is the final color
+$color 100 100 100
+
+// This is the highlight color
+$color2 0 200 50
+
+// This is the time it takes to fade each character
+$fadein 0.005
+
+// This is the amount of time the highlight lags behind the leading edge of the text
+// $fxtime 1.5
+
+// How long to hold the message on the screen (after it scans out)
+$holdtime 5.0
+
+// How long it takes to fade out the message after holding
+$fadeout 0.5
+
+$position -1.0 0.1
+
+
+// ==============================================================
+// === GENERIC MAP TEXT
+// ==============================================================
+MAP_SPAWN_WARNING
+{
+#MAP_SPAWN_WARNING
+}
+
+MAP_ALLIED_VICTORY1
+{
+#MAP_ALLIED_VICTORY1
+}
+
+MAP_ALLIED_VICTORY2
+{
+#MAP_ALLIED_VICTORY2
+}
+
+MAP_AXIS_VICTORY1
+{
+#MAP_AXIS_VICTORY1
+}
+
+MAP_AXIS_VICTORY2
+{
+#MAP_AXIS_VICTORY2
+}
+
+MAP_NULL_MSG
+{
+#MAP_NULL_MSG
+}
+
+// ----------------------------------------------------------------
+// --- %p = players name
+// --- %n = name of the location
+// --- %t = name of team capturing location
+// --- Example "Waldo has captured the Plaza for the Allies"
+// ----------------------------------------------------------------
+MAP_PLAYER_CAP
+{
+#MAP_PLAYER_CAP
+}
+
+MAP_GROUP_CAP
+{
+#MAP_GROUP_CAP
+}
+
+THE_ALLIES
+{
+#THE_ALLIES
+}
+
+THE_AXIS
+{
+#THE_AXIS
+}
+
+Health		//USED?
+{
+#Health
+}
+
+
+MAP_USE_BAZOOKA_HINT
+{
+#MAP_USE_BAZOOKA_HINT
+}
+
+MAP_USE_PSCHREK_HINT
+{
+#MAP_USE_PSCHREK_HINT
+}
+
+MAP_USE_PIAT_HINT
+{
+#MAP_USE_PIAT_HINT
+}
+
+//Keep these in titles.txt as well as in dod_english
+
+Teamname_Allies
+{
+Allies
+}
+
+Teamname_Brit
+{
+British
+}
+
+Teamname_Axis
+{
+Axis
+}
+
+Teamname_Spectators
+{
+Spectators
+}
+
+// ==============================================================
+// === MAP BRIEFINGS
+// ==============================================================
+$position -1.0 0.1
+$holdtime 10
+
+// ==============================================================
+// === AXIS MAP BRIEFINGS
+// ==============================================================
+$color 170 15 15
+CHARLIE_AXISBRIEFING
+{
+#CHARLIE_AXISBRIEFING
+}
+
+vic_axis_obj_text
+{
+#vic_axis_obj_text
+}
+
+glider_axis_brief
+{
+#glider_axis_brief
+}
+
+jagd_axisbriefing
+{
+#jagd_axisbriefing
+}
+
+ZALEC_AXISBRIEFING1
+{
+#ZALEC_AXISBRIEFING1
+}
+
+ZALEC_AXISBRIEFING2
+{
+#ZALEC_AXISBRIEFING2
+}
+
+// ==============================================================
+// === US ALLIED MAP BRIEFINGS
+// ==============================================================
+$color 15 80 15
+ZALEC_ALLIEDBRIEFING1
+{
+#ZALEC_ALLIEDBRIEFING1
+}
+
+ZALEC_ALLIEDBRIEFING2
+{
+#ZALEC_ALLIEDBRIEFING2
+}
+
+ZALEC_AIRSTRIKE
+{
+#ZALEC_AIRSTRIKE
+}
+
+vic_allies_obj_text
+{
+#vic_allies_obj_text
+}
+
+CHARLIE_ALLIEDBRIEFING
+{
+#CHARLIE_ALLIEDBRIEFING
+}
+
+glider_allied_brief
+{
+#glider_allied_brief
+}
+
+// ==============================================================
+// === BRITISH ALLIED MAP BRIEFINGS
+// ==============================================================
+// $color 15 15 250 
+$color 255 255 255
+jagd_alliedbriefing
+{
+#jagd_alliedbriefing
+}
+
+// ==============================================================
+// === TEAM SPECIFIC HINTS 
+// ==============================================================
+$position -1.0 0.3
+$holdtime 5
+
+// ==============================================================
+// === AXIS SPECIFIC MESSAGES
+// ==============================================================
+$color 170 15 15
+ESCAPE_MRTNT_AXIS
+{
+#ESCAPE_MRTNT_AXIS
+}
+
+ESCAPE_TNT_HINT
+{
+#ESCAPE_TNT_HINT
+}
+
+jagd_camp_axis
+{
+#jagd_camp_axis
+}
+
+jagd_allied_documents_msg
+{
+#jagd_allied_documents_msg
+}
+
+jagd_bazookamsg
+{
+#jagd_bazookamsg
+}
+
+glider_snipers
+{
+#glider_snipers
+}
+
+glider_allied_warning_zone
+{
+#glider_allied_warning_zone
+}
+
+CHARLIE_BEACH_WARNING
+{
+#CHARLIE_BEACH_WARNING
+}
+
+CHARLIE_MIDBREACH
+{
+#CHARLIE_MIDBREACH
+}
+
+CHARLIE_SHINGLE_BREACH
+{
+#CHARLIE_SHINGLE_BREACH
+}
+
+CHARLIE_WESTERN_BREACH
+{
+#CHARLIE_WESTERN_BREACH
+}
+
+ANZIO_ALLIES_MSG
+{
+#ANZIO_ALLIES_MSG
+}
+
+vic_tnt_msg
+{
+#vic_tnt_msg
+}
+
+vic_allies_spawn_warning
+{
+#vic_allies_spawn_warning
+}
+
+vic_allies_sniper_wall_text
+{
+#vic_allies_sniper_wall_text
+}
+
+vic_allies_defense_text
+{
+#vic_allies_defense_text
+}
+
+
+
+// ==============================================================
+// === US ALLIED SPECIFIC MESSAGES
+// ==============================================================
+$color 15 80 15 
+glider_allies_blow_wall
+{
+#glider_allies_blow_wall
+}
+
+ESCAPE_MRTNT_ALLIES
+{
+#ESCAPE_MRTNT_ALLIES
+}
+
+ESCAPE_SATCHEL_HINT
+{
+#ESCAPE_SATCHEL_HINT
+}
+
+ZALEC_ZOOKAHINT
+{
+#ZALEC_ZOOKAHINT
+}
+
+glider_glider_shooters
+{
+#glider_glider_shooters
+}
+
+glider_glider_bust_crates
+{
+#glider_glider_bust_crates
+}
+
+glider_bunkeratry
+{
+#glider_bunkeratry
+}
+
+glider_tanker_sequence2
+{
+#glider_tanker_sequence2
+}
+
+glider_wallpatchtext5
+{
+#glider_wallpatchtext5
+}
+
+CHARLIE_MIDNEST_HINT
+{
+#CHARLIE_MIDNEST_HINT
+}
+
+CHARLIE_SATCHEL_HINT
+{
+#CHARLIE_SATCHEL_HINT
+}
+
+CHARLIE_INTRUDER_WARN
+{
+#CHARLIE_INTRUDER_WARN
+}
+
+CHARLIE_ALLIED_88_HINT
+{
+#CHARLIE_ALLIED_88_HINT
+}
+
+CHARLIE_ALLIED_RADIO_HINT
+{
+#CHARLIE_ALLIED_RADIO_HINT
+}
+
+CHARLIE_ALLIED_CP4_HINT
+{
+#CHARLIE_ALLIED_CP4_HINT
+}
+
+ANZIO_AXIS_MSG
+{
+#ANZIO_AXIS_MSG
+}
+
+vic_satchel_msg
+{
+#vic_satchel_msg
+}
+
+vic_defend_barrier_text
+{
+#vic_defend_barrier_text
+}
+
+vic_defend_jeep_text
+{
+#vic_defend_jeep_text
+}
+
+vic_axis_sniper_wall_text
+{
+#vic_axis_sniper_wall_text
+}
+
+vic_axis_spawn_warning
+{
+#vic_axis_spawn_warning
+}
+
+vic_axis_defense_text
+{
+#vic_axis_defense_text
+}
+
+// ==============================================================
+// === BRITISH ALLIED SPECIFIC MESSAGES
+// ==============================================================
+// $color 15 15 170
+$color 255 255 255
+jagd_foundglider_hint
+{
+#jagd_foundglider_hint
+}
+
+jagd_allied_protect_hint
+{
+#jagd_allied_protect_hint
+}
+
+jagd_camp
+{
+#jagd_camp
+}
+
+jagd_allied_cap_area
+{
+#jagd_allied_cap_area
+}
+
+
+// ==============================================================
+// === NEUTRAL MESSAGES
+// ==============================================================
+$color 100 100 100
+$position -1 0.6
+FLUG_GAS1
+{
+#FLUG_GAS1
+}
+
+FLUG_GAS1A
+{
+#FLUG_GAS1A
+}
+ZALEC_DESTTANK
+{
+#ZALEC_DESTTANK
+}
+
+jagd_tank1_offmsg
+{
+#jagd_tank1_offmsg
+}
+
+jagd_tank2_offmsg
+{
+#jagd_tank2_offmsg
+}
+
+glider_wallpatchtext3
+{
+#glider_wallpatchtext3
+}
+
+glider_mortar2Boff
+{
+#glider_mortar2Boff
+}
+
+glider_cannon_flag_relay
+{
+#glider_cannon_flag_relay
+}
+
+glider_bridgesmall
+{
+#glider_bridgesmall
+}
+
+glider_bunkerblow_txt
+{
+#glider_bunkerblow_txt
+}
+
+glider_wallpatchtext2
+{
+#glider_wallpatchtext2
+}
+
+glider_wallpatchtext
+{
+#glider_wallpatchtext
+}
+
+CHARLIE_881_DESTROY
+{
+#CHARLIE_881_DESTROY
+}
+
+CHARLIE_882_DESTROY
+{
+#CHARLIE_882_DESTROY
+}
+
+CHARLIE_RADIO_DESTROY
+{
+#CHARLIE_RADIO_DESTROY
+}
+
+CHARLIE_COASTAL_DESTROY
+{
+#CHARLIE_COASTAL_DESTROY
+}
+
+CHARLIE_MORT_LEFT_DESTROY
+{
+#CHARLIE_MORT_LEFT_DESTROY
+}
+
+CHARLIE_MORT_MID_DESTROY
+{
+#CHARLIE_MORT_MID_DESTROY
+}
+
+CHARLIE_MORT_RIGHT_DESTROY
+{
+#CHARLIE_MORT_RIGHT_DESTROY
+}
+
+vic_axis_wall_text
+{
+#vic_axis_wall_text
+}
+
+vic_axis_block_text
+{
+#vic_axis_block_text
+}
+
+vic_jeep1_text
+{
+#vic_jeep1_text
+}
+
+vic_jeep2_text
+{
+#vic_jeep2_text
+}
+
+vic_allies_block_text
+{
+#vic_allies_block_text
+}
+
+vic_axis_door_text
+{
+#vic_axis_door_text
+}
+
+falaise_axisbrief
+{
+#falaise_axisbrief
+}
+
+falaise_alliedbrief
+{
+#falaise_alliedbrief
+}
+

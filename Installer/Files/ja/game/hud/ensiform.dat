@@ -1,0 +1,100 @@
+[healthbar]
+x       = 8
+y       = 348
+width   = 12
+bgalpha = dark
+
+[shieldbar]
+x       = 28
+y       = 348
+width   = 12
+bgalpha = dark
+
+[ammobar]
+x       = 620
+y       = 348
+width   = 12
+bgalpha = dark
+
+[forcebar]
+x       = 600
+y       = 348
+width   = 12
+bgalpha = dark
+
+[healthtext]
+x       = 48
+y       = 422
+scale   = 70
+
+[shieldtext]
+x       = 48
+y       = 433
+scale   = 70
+
+[ammotext]
+x       = 632
+y       = 433
+scale   = 70
+
+[forcetext]
+x       = 632
+y       = 422
+scale   = 70
+
+[scoretext]
+x       = 632
+y       = 444
+scale   = 70
+color   = 8
+
+[roundtime]
+x       = 48
+y       = 235
+scale   = 70
+color1  = 2
+color2  = 3
+color3  = 5
+
+[deathtime]
+x       = 48
+y       = 246
+scale   = 70
+color   = 22
+
+[chattext]
+x       = 30
+y       = 350
+scale   = 65
+
+[upperright]
+y       = 0
+
+[timer]
+color   = 26
+scale   = 100
+
+[fps]
+color   = 22
+scale   = 100
+
+[speed]
+color   = 30
+scale   = 100
+
+[clock]
+color   = 3
+scale   = 100
+
+[msb]
+color   = 7
+scale   = 70
+
+[lagometer]
+x       = 592
+y       = 300
+
+[pickupicon]
+x       = 536
+y       = 300
+

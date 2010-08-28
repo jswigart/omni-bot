@@ -1,0 +1,48 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "AskForAmmo";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	this.AmmoDesirThreshold = 0.5;
+	this.DelayBetweenCalls = 30.0;
+	this.AmmoInfo = {}; // so we re-use the same table
+	
+	print(this.Name, " Initialized");
+};
+
+this.OnSpawn = function()
+{
+	while(1)
+	{
+		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
+		if(this.AmmoInfo.Desir > this.AmmoDesirThreshold)
+		{
+			this.Priority = 1;
+		}
+		sleep(10);
+	};
+};
+
+//this.GetPriority = function()
+//{
+//};
+
+//this.Enter = function()
+//{
+//};
+
+//this.Exit = function()
+//{
+//};
+
+this.Update = function()
+{
+	this.Bot.SayVoice(VOICE.NEED_AMMO);
+	sleep(this.DelayBetweenCalls);
+	this.Finished();	
+};

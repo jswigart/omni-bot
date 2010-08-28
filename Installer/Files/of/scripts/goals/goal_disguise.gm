@@ -1,0 +1,39 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "Disguise";			// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// possible options
+this.LimitToClass(CLASS.SPY);
+
+this.Initialize = function()
+{
+	// Internal variables
+		
+	//print(this.Name, " Initialized");
+};
+
+// this.OnSpawn = function()
+// {
+// };
+
+//this.GetPriority = function()
+//{
+//};
+
+this.Enter = function()
+{
+	this.AddAimRequest(1.0, "movedirection");
+};
+
+this.Exit = function()
+{
+	this.ReleaseAimRequest();
+};
+
+this.Update = function()
+{
+	//this.Bot.PressButton(BTN.DETDISPENSER);
+	this.Finished();	
+};

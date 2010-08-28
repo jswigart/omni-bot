@@ -1,0 +1,243 @@
+// This script contains functionality to provide dodging while in combat
+
+// These parameters are required
+this.Name = "CombatMovement";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// These parameters are optional
+this.LimitToTargetClass(CLASS.ANYPLAYER); //only valid if targeting a client (player)
+this.Difficulty = 4;  // 0 - off, 1 - easy, 2 - medium, 3 - hard, 4 - random
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.DelayBetweenCalls = 0.4;
+	
+	if ( this.Difficulty == 4 && !this.Bot.moveskill )
+	{
+		r = RandInt(0, 3);
+		this.Bot.moveskill = r;
+	}
+	else if ( !this.Bot.moveskill )
+	{
+		this.Bot.moveskill = this.Difficulty;
+	}
+	
+	this.Bot.hadtarget = false;
+	
+	if (!Map || !Map.Quiet)
+		{ print(this.Name, " Initialized"); }
+};
+
+this.GetPriority = function()
+{
+	if( this.ShouldCombatMovement() )
+	{
+		this.Bot.ResetStuckTime();	
+		tEnt = this.Bot.GetTarget();
+
+		ti = this.Bot.GetTargetInfo(tEnt); 
+		tDist = ti.Distance;
+		tPos = ti.Position;
+		
+		 if (!this.Bot.InFieldOfView(Vector3(tPos)) )
+		{
+			sleep(this.DelayBetweenCalls);
+			return;
+		}
+
+		this.Priority = 0.1;
+	
+		if (!this.Bot.hadtarget)
+		{
+			sleep(this.Bot.ReactionTime - (this.DelayBetweenCalls * 2) );
+			this.Bot.hadtarget = true;
+		}		
+              
+		if (this.Bot.moveskill == 0)
+			{ this.Finished(); }
+		else if (this.Bot.moveskill == 1)
+			{ this.easy(tDist); }
+		else if (this.Bot.moveskill == 2)
+			{ this.medium(tDist); }
+		else if (this.Bot.moveskill == 3)
+			{ this.hard(tDist); }
+		else
+		{ 
+			if (!Map || !Map.Quiet)
+				{ print("Invalid Combat Movement Difficulty"); }
+				
+			this.Finished(); 
+		}		              
+	}
+	this.Bot.hadtarget = false;
+	sleep(this.DelayBetweenCalls);
+};
+
+this.ShouldCombatMovement = function()
+{	
+	if ( !this.EntFlagCheck() )
+		{ return false; }
+
+	if ( !this.WeaponCheck() )
+		{ return false; }
+	
+	//if ( this.Bot.GetHighLevelGoalName() == "ReviveTeammate" )
+	//	{ return false; }
+	
+	if ( this.Bot.GetHighLevelGoalName() == "Sentry" || this.Bot.GetHighLevelGoalName() == "Dispenser" || this.Bot.GetHighLevelGoalName() == "Detpack" )
+		{ return false; }
+
+	//add more if needed...
+		
+	return true;
+};
+
+this.WeaponCheck = function()
+{	
+	w = this.Bot.GetCurrentWeapon();
+
+	if ( w == WEAPON.ASSAULTCANNON || w == WEAPON.SNIPERRIFLE )		
+	{
+		return false;
+	}
+
+	return true;
+};
+
+this.EntFlagCheck = function()
+{
+	if (this.Bot.HasAnyEntityFlag(ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER,ENTFLAG.SNIPE_AIMING,ENTFLAG.AC_FIRING))
+	{
+		return false;
+	}
+	return true;                                 
+};
+
+this.hard = function(dist)
+{
+	rf = RandFloat(this.DelayBetweenCalls - 0.2, this.DelayBetweenCalls );
+	if ( dist <= 1000 )
+	{			
+		r = RandInt(0,10);
+		if ( r < 4 )
+		{
+			if ( RandInt(0,1) < 1 )
+			{ 
+				this.Bot.HoldButton(BTN.STRAFE_R, rf * 0.5f);
+				sleep(rf * 0.5);
+				this.Bot.HoldButton(BTN.STRAFE_L, rf * 0.5f);
+			}
+			else
+			{ 
+				this.Bot.HoldButton(BTN.STRAFE_L, rf * 0.5f);
+				sleep(rf * 0.5);
+				this.Bot.HoldButton(BTN.STRAFE_R, rf * 0.5f); 
+			}	
+		}
+		else if ( r < 8 )
+		{										
+			if ( RandInt(0,1) < 1 )
+				{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+			else
+				{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }						
+		}	
+		else if ( r < 9)
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);
+		}	
+	}
+	else if ( dist <= 1600 )
+	{				
+		this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);
+		if ( RandInt(0,1) < 1 )
+			{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+		else
+			{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }		
+	}
+	else if ( dist <= 3000 )
+	{
+		this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);    
+	}
+	else
+	{
+		sleep(this.DelayBetweenCalls + 0.2f);
+	}          
+};
+
+this.medium = function(dist)
+{
+	rf = RandFloat(this.DelayBetweenCalls - 0.2, this.DelayBetweenCalls);
+	if ( dist <= 500 )
+	{			
+		r = RandInt(0,10);		
+		if ( r < 3 )
+		{										
+			if ( RandInt(0,1) < 1 )
+				{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+			else
+				{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }		
+		}
+		else if ( r < 8 )
+		{
+			if ( RandInt(0,1) < 1 )
+				{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+			else
+				{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }			
+		}	
+		else if ( r < 9 )
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);
+		}	
+	}
+	else if ( dist <= 800 )
+	{				
+		if ( RandInt(0,1) < 1 )
+			{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+		else
+			{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }	
+	}
+	else if ( dist <= 1500 )
+	{
+		this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);    
+	}            
+	else
+	{
+		sleep(this.DelayBetweenCalls + 0.2f);
+	}           
+};
+
+this.easy = function(dist)
+{
+	rf = RandFloat(this.DelayBetweenCalls - 0.2, this.DelayBetweenCalls);
+	if ( dist <= 250 )
+	{			
+		r = RandInt(0,10);		
+		if ( r < 5 )
+		{										
+			if ( RandInt(0,1) < 1 )
+				{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+			else
+				{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }			
+		}	
+		else if ( r < 7 ) 
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);
+		}		
+	}
+	else if ( dist <= 400 )
+	{				
+		if ( RandInt(0,1) < 1 )
+			{ this.Bot.HoldButton(BTN.STRAFE_R, rf); }
+		else
+			{ this.Bot.HoldButton(BTN.STRAFE_L, rf); }	
+	} 
+	else if ( dist <= 800 )
+	{
+		this.Bot.HoldButton(BTN.CROUCH, this.DelayBetweenCalls + 0.2f);    
+	}  
+	else
+	{
+		sleep(this.DelayBetweenCalls + 0.2f);
+	}     	
+};

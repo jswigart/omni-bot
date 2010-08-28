@@ -1,0 +1,108 @@
+global Map =
+{
+	Flag_blueflag = "FLAG_blueflag",
+	Flag_redflag = "FLAG_redflag",
+	Cappoint_121 = "CAPPOINT_121",
+	Cappoint_60 = "CAPPOINT_60",
+	Snipe_243 = "SNIPE_243",
+	Snipe_244 = "SNIPE_244",
+	Snipe_245 = "SNIPE_245",
+	Snipe_246 = "SNIPE_246",
+	Sentry_234 = "SENTRY_234",
+	Sentry_235 = "SENTRY_235",
+	Sentry_237 = "SENTRY_237",
+	Sentry_238 = "SENTRY_238",
+	Sentry_239 = "SENTRY_239",
+	Sentry_242 = "SENTRY_242",
+	Sentry_247 = "SENTRY_247",
+	Sentry_249 = "SENTRY_249",
+	Sentry_251 = "SENTRY_251",
+	Sentry_252 = "SENTRY_252",
+	Sentry_253 = "SENTRY_253",
+	Sentry_254 = "SENTRY_254",
+	Sentry_257 = "SENTRY_257",
+	Sentry_258 = "SENTRY_258",
+	Sentry_263 = "SENTRY_263",
+	Sentry_264 = "SENTRY_264",
+
+	blueflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Taken" );
+	},
+
+	blueflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Returned" );
+	},
+
+	blueflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Dropped" );
+	},
+
+	redflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Taken" );
+	},
+
+	redflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Returned" );
+	},
+
+	redflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Dropped" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Flag blueflag pickedup", Map.blueflag_Taken );
+	OnTrigger( "Flag blueflag returned", Map.blueflag_Returned );
+	OnTrigger( "Flag blueflag dropped", Map.blueflag_Dropped );
+	OnTrigger( "Flag redflag pickedup", Map.redflag_Taken );
+	OnTrigger( "Flag redflag returned", Map.redflag_Returned );
+	OnTrigger( "Flag redflag dropped", Map.redflag_Dropped );
+	
+	//SetMapGoalProperties( "ATTACK_.*", {mincamptime=9999, maxcamptime=9999});
+	//SetMapGoalProperties( "DEFEND_.*", {mincamptime=9999, maxcamptime=9999});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=120, maxcamptime=120});
+
+	//~SetAvailableMapGoals( TEAM.BLUE, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.RED, false, ".*" );
+	
+	SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.SNIPER );
+	SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.HWGUY );
+	//SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.ENGINEER );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};
