@@ -280,3 +280,103 @@ Commands["say"] =
 		}
 	},
 };
+
+Commands["fgs"] =
+{
+	Func = function( _params )
+	{
+		wpTable = table();
+
+		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nPANZER.*\nVENOM.*\nFLAME.*");
+
+		foreach ( id and goal in goalTable )
+		{
+			oldtag = goal.GetTagName();
+			type = goal.GetGoalType();
+			pos = goal.GetPosition();
+			tag = oldtag.ReplaceCharsInSet().TrimRight(); // replaces spaces with _
+
+			if ( Wp.GetWaypointByName(oldtag, wpTable) )
+			{
+				foreach( flag and set in wpTable.flags )
+				{
+					stanceChanged = false;
+					if ( !flag.CompareNoCase(type) )
+					{
+						foreach ( ptype and value in wpTable.property )
+						{
+							if ( ptype == "stance" )
+							{
+								goal.SetProperty("Stance", value);
+								stanceChanged = true;
+								goal.RenderGoal = true;
+								print(goal.GetName(), "stance changed to", value);
+							}
+						}
+					}
+
+					if ( _params[0] == 1 && set == 1 && (flag == "crouch" || flag == "prone" ) )
+					{
+						// can we remove the flag?
+						removeFlag = false;
+						offset = Vector3(0,0,200);
+						tr = TraceLine( wpTable.position, wpTable.position + offset, 0, TRACE.SHOT, 0, false );
+
+						if ( !tr.end )
+						{
+							dist = 200;
+						}
+						else
+						{
+							dist = DistanceBetween(wpTable.position, tr.end);
+						}
+
+						if ( dist > 70 )
+						{
+							removeFlag = true;
+						}
+						else if ( dist > 40 && flag == "prone" )
+						{
+							removeFlag = true;
+						}
+
+						if ( removeFlag )
+						{
+							Wp.SetWaypointFlag(oldtag, flag, false);
+
+							// set the property too so it works without a goals file
+							Wp.SetWaypointProperty(oldtag, "stance", flag);
+
+							print( "waypoint flag", flag, "removed from", tag );
+						}
+
+						// default to property setting
+						if ( !stanceChanged )
+						{
+							goal.SetProperty("Stance", flag);
+							stanceChanged = true;
+							goal.RenderGoal = true;
+							print(goal.GetName(), "stance changed to", flag);
+						}
+					}
+				}
+			}
+
+			tableClear(wpTable);
+		}
+
+		if ( _params[0] == 1) {
+			print("all stances fixed based on waypoint properties and waypoint flags");
+		}
+		else {
+			print("all stances fixed based on waypoint properties. note: use /bot fgs 1 to fix based on flags and properties");
+		}
+		
+		ExecCommand("goal_save");
+	},
+
+	Help =
+	{
+		" fix waypoint based goal stances. optionally use /bot fgs 1 to check for waypoint flags",
+	},
+};
