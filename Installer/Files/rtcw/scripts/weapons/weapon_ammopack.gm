@@ -5,6 +5,7 @@
 // Overall weapon properties.
 this.Name = "Ammo Pack";
 this.WeaponId = WEAPON.AMMO_PACK;
+this.PrimaryFire.AmmoType = WEAPON.AMMO_PACK;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
@@ -12,10 +13,14 @@ this.PrimaryFire.WeaponType = "grenade";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
 this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.SplashDamage = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;
+this.PrimaryFire.NeedsInRange = false;
+this.PrimaryFire.MinRange = 0.0;
+this.PrimaryFire.MaxRange = 1000.0;
 
-this.PrimaryFire.MaxAimError = Vector2(0, 0);
-this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
+this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );
 
 this.PrimaryFire.DefaultDesirability = 0.0;
