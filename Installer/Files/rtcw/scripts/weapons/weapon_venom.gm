@@ -7,7 +7,6 @@
 
 this.Name = "Venom";
 this.WeaponId = WEAPON.VENOM;
-this.PrimaryFire.AmmoType = WEAPON.VENOM;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Dynamite";
 this.WeaponId = WEAPON.DYNAMITE;
-this.PrimaryFire.AmmoType = WEAPON.DYNAMITE;
 this.MinUseTime = 0.0;
 
 //////////////////////////////////////////////////////////////////////////
@@ -13,7 +12,7 @@ this.MinUseTime = 0.0;
 this.PrimaryFire.WeaponType = "grenade";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
-this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.SplashDamage = true;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 1.0;

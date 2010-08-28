@@ -5,14 +5,13 @@
 // Overall weapon properties.
 this.Name = "Health Pack";
 this.WeaponId = WEAPON.MEDKIT;
-this.PrimaryFire.AmmoType = WEAPON.MEDKIT;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
 this.PrimaryFire.WeaponType = "grenade";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.NeedsAmmo = true;
-this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.SplashDamage = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;

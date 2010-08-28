@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Mountable MG42";
 this.WeaponId = WEAPON.MOUNTABLE_MG42;
-this.PrimaryFire.AmmoType = WEAPON.MOUNTABLE_MG42;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

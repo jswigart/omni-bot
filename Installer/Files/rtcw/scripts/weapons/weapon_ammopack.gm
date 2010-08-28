@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Ammo Pack";
 this.WeaponId = WEAPON.AMMO_PACK;
-this.PrimaryFire.AmmoType = WEAPON.AMMO_PACK;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

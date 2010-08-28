@@ -5,14 +5,13 @@
 // Overall weapon properties.
 this.Name = "Flamethrower";
 this.WeaponId = WEAPON.FLAMETHROWER;
-this.PrimaryFire.AmmoType = WEAPON.FLAMETHROWER;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
 this.PrimaryFire.WeaponType = "projectile";
 this.PrimaryFire.ProjectileSpeed = 1200;
 this.PrimaryFire.RequiresAmmo = true;
-this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.SplashDamage = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;

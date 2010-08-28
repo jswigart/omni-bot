@@ -5,7 +5,6 @@
 // Overall weapon properties.
 this.Name = "Sniper";
 this.WeaponId = WEAPON.SNIPER;
-this.PrimaryFire.AmmoType = WEAPON.SNIPER;
 this.MinUseTime = 0.0;
 
 //////////////////////////////////////////////////////////////////////////
