@@ -1,0 +1,456 @@
+// cs: needs routing and possibly more detailed attack / defend goals
+
+//Pathing & Script by >M@t3o$<
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Basement_Bridge_Dyno = 0,
+	Crypt_Gate_Dyno = 0,
+	Dock_Dyno = 0,
+	catacomb_door_Dyno = 0,
+	main_gate_power_Dyno = 0,
+	waterway_door_Dyno = 0,
+
+	Ammo_Cabinet_basement_ammocabinet = "AMMOCAB_basement_ammocabinet",
+	Ammo_Cabinet_main_ammocabinet = "AMMOCAB_main_ammocabinet",
+	Health_Cabinet_basement_healthcabinet = "HEALTHCAB_basement_healthcabinet",
+	Health_Cabinet_main_healthcabinet = "HEALTHCAB_main_healthcabinet",
+	Checkpoint_room_flag = "CHECKPOINT_room_flag",
+	Flag_Book_of_the_Resurrection = "FLAG_Book_of_the_Resurrection",
+	Cappoint_459 = "CAPPOINT_459",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Basement_Bridge = "BUILD_Basement_Bridge",
+	Build_Crypt_Gate = "BUILD_Crypt_Gate",
+	Build_Dock = "BUILD_Dock",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Basement_Bridge = "PLANT_Basement_Bridge",
+	Plant_Crypt_Gate = "PLANT_Crypt_Gate",
+	Plant_Dock = "PLANT_Dock",
+	Plant_catacomb_door = "PLANT_catacomb_door",
+	Plant_main_gate_power = "PLANT_main_gate_power",
+	Plant_waterway_door = "PLANT_waterway_door",
+	Mount_HouseMG42 = "MOUNTMG42_HouseMG42",
+	Mount_StartMG42 = "MOUNTMG42_StartMG42",
+	Repair_HouseMG42 = "REPAIRMG42_HouseMG42",
+	Repair_StartMG42 = "REPAIRMG42_StartMG42",
+	Mobile_MG42_416 = "MOBILEMG42_416",
+	Mobile_MG42_417 = "MOBILEMG42_417",
+	Snipe_430 = "SNIPE_430",
+	Snipe_465 = "SNIPE_465",
+	Snipe_470 = "SNIPE_470",
+	Snipe_474 = "SNIPE_474",
+	Snipe_607 = "SNIPE_607",
+	Snipe_848 = "SNIPE_848",
+	Mover_train2 = "MOVER_train2",
+	
+	EscortVehicle =
+	{
+		Boat =
+		{
+			EscortVehicleGoalName = "MOVER_train2",
+			Enabled = false,
+			ButtonPress = BTN.JUMP,
+			LimitBots = 2,
+		},
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Basement_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Basement_Bridge_Built" );
+	},
+
+	Crypt_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Crypt_Gate_Built" );
+	},
+
+	Dock_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Dock_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Allied_Command_Post );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Command_Post );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Basement_Bridge_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Basement_Bridge_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Basement_Bridge );
+
+		Util.MapDebugPrint( "Basement_Bridge_Planted" );
+	},
+
+	Crypt_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Crypt_Gate_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Crypt_Gate );
+
+		Util.MapDebugPrint( "Crypt_Gate_Planted" );
+	},
+
+	Dock_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Dock_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Dock );
+
+		Util.MapDebugPrint( "Dock_Planted" );
+	},
+
+	catacomb_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.catacomb_door_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_catacomb_door );
+
+		Util.MapDebugPrint( "catacomb_door_Planted" );
+	},
+
+	main_gate_power_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_gate_power_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_main_gate_power );
+
+		Util.MapDebugPrint( "main_gate_power_Planted" );
+	},
+
+	waterway_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.waterway_door_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_waterway_door );
+
+		Util.MapDebugPrint( "waterway_door_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		if ( Map.Allied_Command_Post_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post ); }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		if ( Map.Axis_Command_Post_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post ); }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Basement_Bridge_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Basement_Bridge_Dyno -= 1;
+		if ( Map.Basement_Bridge_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Basement_Bridge ); }
+
+		Util.MapDebugPrint( "Basement_Bridge_Defused" );
+	},
+
+	Crypt_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Crypt_Gate_Dyno -= 1;
+		if ( Map.Crypt_Gate_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt_Gate ); }
+
+		Util.MapDebugPrint( "Crypt_Gate_Defused" );
+	},
+
+	Dock_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Dock_Dyno -= 1;
+		if ( Map.Dock_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Dock ); }
+
+		Util.MapDebugPrint( "Dock_Defused" );
+	},
+
+	catacomb_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.catacomb_door_Dyno -= 1;
+		if ( Map.catacomb_door_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_catacomb_door ); }
+
+		Util.MapDebugPrint( "catacomb_door_Defused" );
+	},
+
+	main_gate_power_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_gate_power_Dyno -= 1;
+		if ( Map.main_gate_power_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_main_gate_power ); }
+
+		Util.MapDebugPrint( "main_gate_power_Defused" );
+	},
+
+	waterway_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.waterway_door_Dyno -= 1;
+		if ( Map.waterway_door_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_waterway_door ); }
+
+		Util.MapDebugPrint( "waterway_door_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Basement_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Basement_Bridge_Destroyed" );
+	},
+
+	Crypt_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Crypt_Gate_Destroyed" );
+	},
+
+	Dock_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Dock_Destroyed" );
+	},
+
+	catacomb_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "catacomb_door_Destroyed" );
+	},
+
+	main_gate_power_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+                SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_HouseMG42 );
+                SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Crypt_Gate );
+                SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Command_Post );
+                SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_StartMG42 );
+                SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_start.*" );
+
+		Util.MapDebugPrint( "main_gate_power_Destroyed" );
+	},
+
+	waterway_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "waterway_door_Destroyed" );
+	},
+
+	Book_of_the_Resurrection_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.EscortVehicle.Boat.Enabled = true;
+		
+		Util.MapDebugPrint( "Book_of_the_Resurrection_Secured" );
+	},
+
+	room_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "room_flag_Axis_Captured" );
+	},
+
+	room_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "room_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Basement Bridge has been constructed.", Map.Basement_Bridge_Built );
+	OnTrigger( "Gate to Crypt has been constructed.", Map.Crypt_Gate_Built );
+	OnTrigger( "Dock to waterway door has been constructed.", Map.Dock_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Basement Bridge.", Map.Basement_Bridge_Planted );
+	OnTrigger( "Planted at the Crypt Gate.", Map.Crypt_Gate_Planted );
+	OnTrigger( "Planted at the Dock.", Map.Dock_Planted );
+	OnTrigger( "Planted at the Catacomb Door.", Map.catacomb_door_Planted );
+	OnTrigger( "Planted at the Main Gate Power.", Map.main_gate_power_Planted );
+	OnTrigger( "Planted at the Waterway Door.", Map.waterway_door_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Basement Bridge.", Map.Basement_Bridge_Defused );
+	OnTrigger( "Defused at the Crypt gate.", Map.Crypt_Gate_Defused );
+	OnTrigger( "Defused at the Dock.", Map.Dock_Defused );
+	OnTrigger( "Defused at the Catacomb Door.", Map.catacomb_door_Defused );
+	OnTrigger( "Defused at the Main Gate Power.", Map.main_gate_power_Defused );
+	OnTrigger( "Defused at the Waterway Door.", Map.waterway_door_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Basement Bridge has been destroyed.", Map.Basement_Bridge_Destroyed );
+	OnTrigger( "Gate to Crypt has been destroyed.", Map.Crypt_Gate_Destroyed );
+	OnTrigger( "Dock to waterway door has been destroyed.", Map.Dock_Destroyed );
+	OnTrigger( "Allies Breached the catacomb tunnel entrance", Map.catacomb_door_Destroyed );
+	OnTrigger( "The Main Gate has been breached!", Map.main_gate_power_Destroyed );
+	OnTrigger( "Allies Breached the waterway entrance", Map.waterway_door_Destroyed );
+	OnTrigger( "Allied team is escaping with the Book!", Map.Book_of_the_Resurrection_Secured );
+	OnTrigger( "Axis reclaims the Forward room!", Map.room_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward room!", Map.room_flag_Allies_Captured );
+	
+	// *** INITIAL AVAILABILITY OF MAP GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_StartMG42 );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_start.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_HouseMG42 );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Crypt_Gate );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Command_Post );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_start.*" );
+	
+	// *** PRIORITY ***
+	SetGoalPriority(Map.Plant_main_gate_power, 0.9);
+	SetGoalPriority(Map.Build_Dock, 0.8);
+	
+	// *** MAX USERS PER GOAL ***
+	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
+	Util.SetMaxUsersInUse( 1, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120});
+	
+	Util.MapDebugPrint( "Omni-bot map script for", GetMapName(), "executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	
+	// Only set on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

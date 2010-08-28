@@ -1,0 +1,82 @@
+// This script contains functionality to ignore disguised enemies if they arent close enough
+
+// These parameters are required
+this.Name = "CheckDisguise";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.LimitToTargetEntityFlag( ENTFLAG.DISGUISED );
+this.Debug = false;
+
+this.Initialize = function()
+{
+	if (!Map )
+		{ global Map = table(); }
+
+	// get a table of the primary goals in the current map
+	// and then cache their positions if the table hasn't been set up yet
+	if (!Map.PrimaryGoalPositions )
+	{
+		Map.PrimaryGoalPositions = table();
+		gt = Util.GoalTable("PLANT_.*\nCHECKPOINT_.*\nFLAG_.*");
+
+		foreach ( id and goal in gt ) {
+			i = tableCount( Map.PrimaryGoalPositions );
+			p = goal.GetPosition();
+			Map.PrimaryGoalPositions[i] = goal.GetPosition();
+			if ( this.Debug ) {
+				print("caching goal position for ", goal.GetName());
+			}
+		}
+	}
+};
+
+this.GetPriority = function()
+{
+	nearObj = false;
+	t = this.Bot.GetTarget();
+
+	while(1)
+	{
+		// if they are close to a primary goal, just have the bots shoot them
+		foreach ( id and position in Map.PrimaryGoalPositions )
+		{
+			if ( DistanceBetween(t, position) < 250 ) {
+				nearObj = true;
+				break;
+			}
+		}
+
+		// map scripts can also define specific areas to always detect them
+		// key = position, value = radius
+		if ( Map && Map.CovertDetectionSpots ) {
+			foreach ( location in Map.CovertDetectionSpots ) {
+				if ( DistanceBetween(t, location[0]) <= location[1] ) {
+					nearObj = true;
+					break;
+				}
+			}
+		}
+
+		// increase odds of shooting with decreased distance to target
+		if (this.Debug) { shootingDisguised = true; }
+		dist = this.Bot.DistanceTo(t);
+
+		// if not near an objective, calculate odds to 'detect' based on distance, bot difficulty, and number of players
+		// f.e. if target is 300 units away and difficulty is 4 and there are 8 total players there is a 22% chance to shoot
+		// while 20 total players would equal a 10% chance ...
+		if ( !nearObj && ((dist > 1500) || (RandInt(0, ToInt(dist) > (50 + (10 * this.Bot.aimskill) - (3 * Server.NumPlayersNoSpec))))) ) {
+			if (this.Debug) { shootingDisguised = false; }
+			this.Bot.IgnoreTarget( t, 10 - this.Bot.MemorySpan );
+		}
+
+		if ( this.Debug ) {
+			if(shootingDisguised) {
+				this.Bot.Say("I'm shooting a disguised target: nearObj = " + nearObj + " dist = " + this.Bot.DistanceTo(t));
+			}
+			else {
+				this.Bot.Say("I'm ignoring a disguised target: nearObj = " + nearObj + " dist = " + this.Bot.DistanceTo(t));
+			}
+		}
+
+		yield();
+	}
+};

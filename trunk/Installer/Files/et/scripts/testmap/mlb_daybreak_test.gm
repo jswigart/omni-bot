@@ -1,0 +1,126 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Build_tank_construct = "MAP_CONSTRUCTION_tank_construct",
+	Build_barrier2 = "MAP_CONSTRUCTION_barrier2",
+	Build_net = "MAP_CONSTRUCTION_net",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_barrier1 = "MAP_CONSTRUCTION_barrier1",
+	Destroy_barrier2 = "MAP_DYNAMITE_TARGET_barrier2",
+	Destroy_barrier1 = "MAP_DYNAMITE_TARGET_barrier1",
+	Destroy_rockgate = "MAP_DYNAMITE_TARGET_rockgate",
+	Destroy_boxdoor = "MAP_DYNAMITE_TARGET_boxdoor",
+	Destroy_gategen = "MAP_DYNAMITE_TARGET_gategen",
+	Destroy_net = "MAP_DYNAMITE_TARGET_net",
+	Destroy_castlewall = "MAP_DYNAMITE_TARGET_castlewall",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Mount_895 = "MAP_MOUNTABLE_MG42_895",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Mount_t382 = "MAP_MOUNTABLE_MG42_t382",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Repair_895 = "MAP_REPAIR_MG42_895",
+	Repair_t382 = "MAP_REPAIR_MG42_t382",
+	Vehicle_tank = "MAP_MOVER_tank",
+	Flag_gold2 = "MAP_FLAG_gold2",
+	Flag_gold = "MAP_FLAG_gold",
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been constructed.", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been constructed.", TestMap.Pass );
+		OnTrigger( "^3Axis have built the supply hangar spawn location", TestMap.Pass );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "The Tank has been repaired!", TestMap.Pass );
+		//~ OnTrigger( "MISSING_STRING", Map.net_Destroyed );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "Axis have breached the rocket base gate!!!!", TestMap.Pass );
+		//~ OnTrigger( "^6Time Extended: ^3+5 min", TestMap.Pass );
+		OnTrigger( "Axis have blown the dam access gate!!!!", TestMap.Pass );
+		OnTrigger( "Axis have breached the ancient castle wall!!!!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been destroyed.", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been destroyed.", TestMap.Pass );
+		OnTrigger( "the tank has reached the ancient castle", TestMap.Pass );
+		OnTrigger( "^5The tank has destroyed base entrance gate!!!!!!", TestMap.Pass );
+		OnTrigger( "Axis have blown the generator!!!!", TestMap.Pass );
+//~ 		OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+//~ 		OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_tank_construct, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_tank, 480 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_tank_construct, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_tank, 480 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_net, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_gategen, 180 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_boxdoor, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_rockgate, 4800 );
+		
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_barrier2, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_barrier1, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_barrier2, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_barrier1, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_net, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_castlewall, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_895, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_895, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t382, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_gold2, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_gold, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+};

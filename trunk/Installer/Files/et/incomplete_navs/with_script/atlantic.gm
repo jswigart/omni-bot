@@ -1,0 +1,163 @@
+//==========================================================================================
+//
+//	atlantic.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//	jaskot			02/04/09	Updated script to allow unopposed offense
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Call_Artillery_242 = "CALLARTILLERY_242",
+	Checkpoint_oldcityflag = "CHECKPOINT_oldcityflag",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Radio_door = "BUILD_Radio_door",
+	Plant_Atlantic_Wall = "PLANT_Atlantic_Wall",
+	Plant_Axis_ammo_storage = "PLANT_Axis_ammo_storage",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Radio_door = "PLANT_Radio_door",
+	Plant_axis_radio_room = "PLANT_axis_radio_room",
+	Plant_broken_wall = "PLANT_broken_wall",
+	Plant_bunker_wall = "PLANT_bunker_wall",
+	Mount_113 = "MOUNTMG42_113",
+	Mount_114 = "MOUNTMG42_114",
+	Mount_207 = "MOUNTMG42_207",
+	Mount_73 = "MOUNTMG42_73",
+	Mount_74 = "MOUNTMG42_74",
+	Mount_78 = "MOUNTMG42_78",
+	Repair_113 = "REPAIRMG42_113",
+	Repair_114 = "REPAIRMG42_114",
+	Repair_207 = "REPAIRMG42_207",
+	Repair_73 = "REPAIRMG42_73",
+	Repair_74 = "REPAIRMG42_74",
+	Repair_78 = "REPAIRMG42_78",
+	Mobile_MG42_109 = "MOBILEMG42_109",
+	Snipe_109 = "SNIPE_109",
+	Snipe_119 = "SNIPE_119",
+	Snipe_94 = "SNIPE_94",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Radio_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Radio_door_Built" );
+	},
+
+	Atlantic_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Atlantic_Wall_Destroyed" );
+	},
+
+	Axis_ammo_storage_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_ammo_storage_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Radio_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Radio_door_Destroyed" );
+	},
+
+	axis_radio_room_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_radio_room_Destroyed" );
+	},
+
+	broken_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "broken_wall_Destroyed" );
+	},
+
+	bunker_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bunker_wall_Destroyed" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "oldcityflag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Radio_door_Built );
+	OnTrigger( "Allies have destroyed the Seawall!", Map.Atlantic_Wall_Destroyed );
+	OnTrigger( "Allied team has destroyed ammonution storage", Map.Axis_ammo_storage_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Radio_door_Destroyed );
+	OnTrigger( "Allies have destroyed the radio room!", Map.axis_radio_room_Destroyed );
+	OnTrigger( "East bunker wall destroyed", Map.broken_wall_Destroyed );
+	OnTrigger( "Beach entrance to east bunker destroyed!", Map.bunker_wall_Destroyed );
+	OnTrigger( "Axis capture the forward bunker", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "Allies capture the forward bunker", Map.oldcityflag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

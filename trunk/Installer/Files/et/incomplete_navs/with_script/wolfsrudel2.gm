@@ -1,0 +1,181 @@
+// Omni-bot 0.7 script for Wolfsrudel2, by d00d
+// Mon, 19 May 2008 15:50:08 GMT
+// Waypoints by Blindman
+
+global OnMapLoad = function()
+{
+  Util.SetGoalOffset( 0, -10, 0, "PLANT_Forwardbunkerdoor" );
+  Util.SetGoalOffset( -10, 0, 0, "PLANT_Woodenbarrier" );
+  SetGoalPriority( "PLANT_Forwardbunkerdoor", 1.0 );
+  SetGoalPriority( "DEFEND_radarparts.*", 0.7 );
+  SetGoalPriority( "PLANTMINE_radiomast1", 0.95 );
+  SetGoalPriority( "PLANTMINE_radiomast2", 0.93 );
+  SetGoalPriority( "PLANTMINE_radiomast3", 0.91 );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_.*" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_475" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_475" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+  SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_compost" );
+
+  SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
+  SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_475" );
+  SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_136" );
+  SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_136" );
+  SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+  SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_start.*" );
+  SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_forwardbunker.*" );
+  
+  Util.SetMaxUsersInProgress( 1, "PLANTMINE_.*" );
+  Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+  Util.SetMaxUsersInProgress( 1, "SNIPE_.*" );
+
+  Map.bunker_secured = false;
+  Map.radars_stolen = 0;
+  Map.radars_secured = 0;
+  Map.radars_left = 0;
+
+  OnTrigger( "wr_axis_entrance1_destroyed", Map.onBunkerSecured );
+  //OnTrigger( "^1The Allies breach the Forwardbunkerdoor!", Map.onMaindoorBreached );
+  OnTrigger( "^1The Allies have breached the Sidewall!", Map.onSideWallBreached );
+  OnTrigger( "^1The Allies have breached the Bunkersidewall!", Map.onSideWallBreached );
+  OnTrigger( "^1Allies have destroyed the Main Radio Mast!", Map.onMastDestroyed );
+  OnTrigger( "Allies have stolen the First Radarparts!", Map.onRadarStolen );
+  OnTrigger( "Allies have stolen the Second Radarparts!", Map.onRadarStolen );
+  OnTrigger( "Flag returned emitterbox1!", Map.onRadarReturned );
+  OnTrigger( "Flag returned emitterbox2!", Map.onRadarReturned );
+  OnTrigger( "^1Allies have secured the Second Radar Parts!", Map.onRadarSecured );
+  OnTrigger( "^1Allies have secured the First Radar Parts!", Map.onRadarSecured );
+  //print("OnMapLoad");
+};
+
+global OnBotJoin = function( bot )
+{
+  // half of the allies should spawn at the water tower
+  if ( bot.GetTeam() == TEAM.ALLIES && !Map.bunker_secured )
+  {
+    if ( RandInt(0,1) == 1 )
+    {
+      bot.ChangeSpawnPoint(4);
+    }
+    else
+    {
+      bot.ChangeSpawnPoint(0);
+    }
+  }
+};
+
+global Map =
+{
+  onBunkerSecured = function( trigger )
+  {
+    Map.bunker_secured = true;
+    SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_fort.*" );
+    SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_136" );
+    SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_136" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_forwardbunker.*" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "HEALTH_154" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "AMMO_153" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "HEALTH_CABINET_t10.*" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "AMMO_CABINET_t10.*" );
+    foreach ( bot in BotTable )
+    {
+      if ( bot.GetTeam() == TEAM.ALLIES )
+      {
+        bot.ChangeSpawnPoint(0);
+      }
+    }
+    //print("onBunkerSecured");
+  },
+
+  onMaindoorBreached = function( trigger )
+  {
+    Map.enableInsideDefense();
+    //print("onMaindoorBreached");
+  },
+
+  onSideWallBreached = function( trigger )
+  {
+    Map.enableInsideDefense();
+    //print("onSideWallBreached");
+  },
+
+  onMastDestroyed = function( trigger )
+  {
+    SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_fort4" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_fort5" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_fort6" );
+    SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_radiomast.*");
+    SetAvailableMapGoals(TEAM.AXIS, false, "PLANTMINE_radiomast.*");
+    SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_defense");
+    SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_defense");
+    //print("onMastDestroyed");
+  },
+  
+  onRadarStolen = function( trigger )
+  {
+    Map.radars_stolen = Map.radars_stolen + 1;
+    Map.radars_left = Map.radars_left - 1;
+    if (Map.radars_stolen > 0)
+    {
+      SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_cappoint.*");
+      SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_cappoint.*");
+      SetGoalPriority( "DEFEND_cappoint.*", 0.8 );
+      Util.ResetGoals();
+    }
+    if (Map.radars_left == 0)
+    {
+      SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_radarpart.*");
+      Util.ResetGoals();
+    }
+    //print("onRadarStolen; Map.radars_stolen = ",Map.radars_stolen);
+  },
+
+  onRadarSecured = function( trigger )
+  {
+    Map.radars_stolen = Map.radars_stolen - 1;
+    Map.radars_secured = Map.radars_secured + 1;
+    if (Map.radars_stolen < 1)
+    {
+      SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_cappoint.*");
+      SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_cappoint.*");
+    }
+    if (Map.radars_secured == 2)
+    {
+      SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_compost" );
+      SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_radarpart.*");
+      SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_cappoint.*");
+      SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_cappoint.*");
+      SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_woodenbarrier");
+      Util.ResetGoals();
+    }   
+    //print("onRadarSecured; Map.radars_stolen = ",Map.radars_stolen);
+  },
+
+  onRadarReturned = function( trigger )
+  {
+    Map.radars_stolen = Map.radars_stolen - 1;
+    Map.radars_left = Map.radars_left + 1;
+    if (Map.radars_stolen < 1)
+    {
+      SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_cappoint.*");
+      SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_cappoint.*");
+    }
+
+    if (Map.radars_left > 0)
+    {
+      SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_radarpart.*");
+    }   
+    //print("onRadarReturned; Map.radars_stolen = ",Map.radars_stolen);
+  },
+
+  enableInsideDefense = function()
+  {
+    SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_fort.*");
+    SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_radiomast.*");
+    SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_radarparts.*");
+    SetAvailableMapGoals(TEAM.AXIS, true, "MOUNTMG42_475");
+  },
+  
+};

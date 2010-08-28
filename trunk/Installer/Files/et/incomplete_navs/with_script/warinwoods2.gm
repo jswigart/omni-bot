@@ -1,0 +1,69 @@
+global Map =
+{
+	Ammo_Cabinet_ammocabinet = "AMMOCAB_ammocabinet",
+	Ammo_Cabinet_ammocabinet_1 = "AMMOCAB_ammocabinet_1",
+	Ammo_Cabinet_ammocabinet_2 = "AMMOCAB_ammocabinet_2",
+	Health_Cabinet_healthcabinet = "HEALTHCAB_healthcabinet",
+	Health_Cabinet_healthcabinet_1 = "HEALTHCAB_healthcabinet_1",
+	Health_Cabinet_healthcabinet_2 = "HEALTHCAB_healthcabinet_2",
+	Flag_documents = "FLAG_documents",
+	Build_beach_mg = "BUILD_beach_mg",
+	Plant_beach_mg = "PLANT_beach_mg",
+	Mount_beach_mg = "MOUNTMG42_beach_mg",
+	Repair_beach_mg = "REPAIRMG42_beach_mg",
+	Mobile_MG42_297 = "MOBILEMG42_297",
+	Snipe_267 = "SNIPE_267",
+	Snipe_272 = "SNIPE_272",
+	Snipe_278 = "SNIPE_278",
+	Snipe_281 = "SNIPE_281",
+	Snipe_286 = "SNIPE_286",
+	Snipe_288 = "SNIPE_288",
+
+	beach_mg_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "beach_mg_Built" );
+	},
+
+	beach_mg_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "beach_mg_Destroyed" );
+	},
+
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "documents_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.beach_mg_Built );
+	OnTrigger( "MISSING_STRING", Map.beach_mg_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.documents_Taken );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	bot.MaxViewDistance = 1600.0;
+};

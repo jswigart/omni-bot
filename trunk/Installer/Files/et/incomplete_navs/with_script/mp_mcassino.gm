@@ -1,0 +1,76 @@
+global Map =
+{
+  Switches =
+  {
+    Door =
+    {
+      Enabled = true,
+      Priority = 0.7,
+      WaypointName = "door_switch",
+      LimitTeam = (1<<TEAM.ALLIES),
+      LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.ENGINEER),
+      LimitBots = 1,
+      LimitDistance = 2000,
+    },
+  },
+
+  gate_Breached = function( trigger )
+  {
+    //print( "gate_Breached" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_phase2.*" );
+  },
+
+  docs_Stolen = function( trigger )
+  {
+    //print( "docs_Stolen" );
+    Map.Switches.Door.LimitTeam = 0;
+    SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_cappoint" );
+  },
+
+  docs_Returned = function( trigger )
+  {
+    //print( "docs_Returned" );
+    Map.Switches.Door.LimitTeam = (1<<TEAM.ALLIES);
+    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_phase1.*" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_cappoint" );
+  },
+
+  Allies_Capture_Flag = function( trigger )
+  {
+    //print( "Allies_Capture_Flag" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR.*" );
+    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_phase1.*" );
+    Map.Switches.Door.LimitTeam = (1<<TEAM.ALLIES);
+  },
+
+  Axis_Capture_Flag = function( trigger )
+  {
+    //print( "Axis_Capture_Flag" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_phase1.*" );
+  },
+};
+
+global OnMapLoad = function()
+{
+  if ( TestMapOn )
+    { ETUtil.AutoTestMap(); }
+
+  OnTrigger( "The Main Entrance has been breached!", Map.gate_Breached );
+  OnTrigger( "Allies have stolen Die Dokumente!", Map.docs_Stolen );
+  OnTrigger( "Flag returned Die Dokumente!", Map.docs_Returned );
+  OnTrigger( "Allies captured the Flag!", Map.Allies_Capture_Flag );
+  OnTrigger( "Axis captured the Flag!", Map.Axis_Capture_Flag );
+
+  SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_axis_.*" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR.*" );
+  SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_axis_.*" );
+  SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_phase2.*" );
+
+  Util.UpdateSwitchData();
+  Map.Switches.Door.LimitTeam = 0;
+  print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+};

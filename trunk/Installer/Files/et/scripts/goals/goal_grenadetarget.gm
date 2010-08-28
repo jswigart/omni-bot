@@ -1,0 +1,238 @@
+// This script contains functionality to allow bots to target goals with grenades
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.GRENADESLOT)
+{
+	BB.GRENADESLOT = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "GrenadeTarget";	// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent.
+this.GetPriorityDelay = 3;		// Delay between calls to GetPriority
+this.SkipGetPriorityWhenActive = true;
+this.LimitToWeapon( WEAPON.AXIS_GRENADE, WEAPON.ALLY_GRENADE );
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Timeout = 30;
+
+	if(!Map || !Map.Target)
+	{
+		this.Disable = true;
+	}
+	else
+	{
+		// Set default values if not defined
+		foreach ( targetTable in Map.Target )
+		{
+			if ( typeId( targetTable.Priority ) == 0 )
+				{ targetTable.Priority = 0.65; }
+
+			if ( typeId( targetTable.LimitBots ) == 0 )
+				{ targetTable.LimitBots = Util.AllTeamPlayers; }
+
+			if ( typeId( targetTable.LimitTeam ) == 0 )
+				{ targetTable.LimitTeam = Util.AllTeams; }
+
+			if ( typeId( targetTable.LimitClass ) == 0 )
+				{ targetTable.LimitClass = Util.AllClasses; }
+
+			if ( typeId( targetTable.TargetOffset ) == 0 )
+				{ targetTable.TargetOffset = Vector3( 0, 0, 0 ); }
+		}
+
+		Util.MapDebugPrint(this.Name + " Initialized", true);
+	}
+
+	if ( Map and Map.EvalGrenadeTarget )
+	{
+		if ( Map.DelayGrenadeTarget )
+			{ delay =  Map.DelayGrenadeTarget; }
+		else
+			{ delay = 1; }
+
+		this.LimitTo( Map.EvalGrenadeTarget, delay );
+	}
+};
+
+this.OnSpawn = function()
+{
+	// don't consider this goal right away, because ET takes a few frame to initialize entities
+	// so targets will be alive temporarily at the start of the map for a few frames
+	this.DelayGetPriority(3);
+};
+
+this.GetPriority = function()
+{
+	myTeamMask = (1<<this.Bot.GetTeam());
+	myClassMask = (1<<this.Bot.GetClass());
+
+	this.CurrentPriority = 0;
+	targetNum = 0;
+	foreach ( i and targetTable in Map.Target )
+	{
+		if ( !targetTable.Enabled )
+			{ continue; }
+
+		targetGoal = GetGoal(targetTable.GrenadeTargetGoalName);
+
+		if ( targetGoal == null )
+		{
+			targetTable.Enabled = false;
+			continue;
+		}
+
+		targetEnt = targetGoal.GetEntity();
+
+		if ( targetTable.Debug || this.Debug )
+		{
+			this.Debugging = true;
+			print(" -----------Debug Info-------------");
+			print( this.Name, targetTable.GrenadeTargetGoalName );
+			print( "Enabled = ", targetTable.Enabled );
+			print( "Target Entity = ", targetEnt );
+			print( "LimitTeam = ", targetTable.LimitTeam );
+			print( "LimitClass = ", targetTable.LimitClass );
+		}
+
+		if (
+			( targetTable.Enabled && targetEnt ) &&
+			( targetTable.LimitTeam & myTeamMask ) &&
+			( targetTable.LimitClass & myClassMask)
+								)
+		{
+			// find grenade slot
+			offsetNum = 0;
+
+			foreach ( offset in targetTable.Offset )
+			{
+				bbId = Util.Mash(targetNum, offsetNum);
+				numBotsWithGoal = Blackboard.GetNumRecords(
+					BB.GRENADESLOT, bbId);
+
+				if ( targetTable.Debug || this.Debug )
+				{
+					print( "bots with goal = ", numBotsWithGoal );
+					print( "LimitBots = ", targetTable.LimitBots );
+					print( "Priority = ", targetTable.Priority );
+					print( "Current Priority = ", this.CurrentPriority );
+				}
+
+				if( numBotsWithGoal <  targetTable.LimitBots
+					&& this.CurrentPriority < targetTable.Priority )
+				{
+					this.BlackboardId = bbId;
+					this.Target = i;
+					this.TargetEntity = targetEnt;
+					this.Offset = offset;
+					this.TargetOffset = targetTable.TargetOffset;
+
+					if ( GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) )
+					{
+						if ( targetTable.Debug || this.Debug )
+						{
+							print( "IsDead = true" );
+						}
+
+						this.Finished();
+					}
+
+					this.CurrentPriority = targetTable.Priority;
+					this.DebugString =
+						targetTable.GrenadeTargetGoalName;
+				}
+				offsetNum = offsetNum+1;
+			}
+		}
+		targetNum = targetNum+1;
+	}
+
+	if ( targetTable.Debug || this.Debug )
+	{
+		print( "Final Priority = ", this.CurrentPriority );
+	}
+
+	this.Priority = this.CurrentPriority;
+};
+
+this.Enter = function()
+{
+	if ( this.Debugging )
+	{
+		print( this.Name, this.DebugString, "Enter" );
+	}
+
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = this.BlackboardId,
+	};
+	Blackboard.PostRecord(BB.GRENADESLOT, bbRecord);
+
+	if ( this.Bot.GetTeam() == TEAM.ALLIES )
+		{ this.weapon = WEAPON.ALLY_GRENADE; }
+	else if ( this.Bot.GetTeam() == TEAM.AXIS )
+		{ this.weapon = WEAPON.AXIS_GRENADE; }
+
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
+};
+
+this.Exit = function()
+{
+	if ( this.Debugging )
+	{
+		print( this.Name, this.DebugString, "Exit" );
+	}
+
+	this.TargetOffset = null;
+	this.Target = null;
+	this.TargetEntity = null;
+	this.Offset = null;
+	this.BlackboardId = null;
+	this.CurrentPriority = 0;
+
+	// Remove myself from the blackboard for using this grenade
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.GRENADESLOT);
+};
+
+this.Update = function()
+{
+	if ( this.Debugging )
+	{
+		print( this.Name, this.DebugString, "Update" );
+	}
+
+	grenadePos = GetEntityWorldSpace( this.TargetEntity, this.Offset );
+
+	if ( this.Debugging )
+	{
+		print( this.Name, this.DebugString, "Grenade Position", grenadePos );
+	}
+
+	if ( grenadePos && this.Goto( grenadePos ) == EVENT.PATH_SUCCESS )
+	{
+		targetPos = GetEntPosition( this.TargetEntity ) + this.TargetOffset;
+		this.AddAimRequest( Priority.High, "position", targetPos );
+		this.Bot.MoveTowards( grenadePos, 8, MoveMode.Walk );
+		this.AddWeaponRequest( Priority.High, this.weapon );
+		this.BlockForWeaponChange( this.weapon );
+		sleep( .25 );
+
+		while ( !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) )
+		{
+			this.Bot.PressButton( BTN.ATTACK1 );
+			sleep( 4 );
+		}
+	}
+	else
+	{
+		if ( this.Debugging )
+		{
+			print( this.Name, "Path Failed" );
+		}
+	}
+
+	this.Finished();
+};

@@ -1,0 +1,82 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMO_CABINET_south_ammocabinet",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Health_Cabinet_south_healthcabinet = "HEALTH_CABINET_south_healthcabinet",
+	Build_construction_script = "MAP_CONSTRUCTION_construction_script",
+	Build_allied_mg1 = "MAP_CONSTRUCTION_allied_mg1",
+	Build_allied_radio_built = "MAP_CONSTRUCTION_allied_radio_built",
+	Build_axis_radio_built = "MAP_CONSTRUCTION_axis_radio_built",
+	Build_allied_mg2 = "MAP_CONSTRUCTION_allied_mg2",
+	Destroy_axis_radio_built = "MAP_DYNAMITE_TARGET_axis_radio_built",
+	Destroy_allied_radio_built = "MAP_DYNAMITE_TARGET_allied_radio_built",
+	Destroy_basewall = "MAP_DYNAMITE_TARGET_basewall",
+	Destroy_construction_script = "MAP_DYNAMITE_TARGET_construction_script",
+	Destroy_allied_mg2 = "MAP_DYNAMITE_TARGET_allied_mg2",
+	Destroy_storagewall = "MAP_DYNAMITE_TARGET_storagewall",
+	Destroy_allied_mg1 = "MAP_DYNAMITE_TARGET_allied_mg1",
+	Mount_almg3 = "MAP_MOUNTABLE_MG42_almg3",
+	Mount_266 = "MAP_MOUNTABLE_MG42_266",
+	Mount_construction_mg42 = "MAP_MOUNTABLE_MG42_construction_mg42",
+	Mount_267 = "MAP_MOUNTABLE_MG42_267",
+	Repair_construction_mg42 = "MAP_REPAIR_MG42_construction_mg42",
+	Repair_267 = "MAP_REPAIR_MG42_267",
+	Repair_almg3 = "MAP_REPAIR_MG42_almg3",
+	Repair_266 = "MAP_REPAIR_MG42_266",
+	Flag_the_War_Documents = "MAP_FLAG_the_War_Documents",
+	Cappoint_Transmitter = "MAP_CAPPOINT_Transmitter",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "The Field MG42 has been constructed.", TestMap.Pass );
+		OnTrigger( "Allied team has constructed the Spawn MG42!", TestMap.Pass );
+		OnTrigger( "The fortress Ladder has been constructed.", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Spawn MG42!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Base Wall!", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Storage Wall!", TestMap.Pass );
+		OnTrigger( "The Field MG42 has been destroyed.", TestMap.Pass );
+		OnTrigger( "The fortress Ladder has been destroyed.", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "Allies captures the Tower!", TestMap.Pass );
+		OnTrigger( "Axis captures the Tower!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_mg1, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_construction_script, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_mg2, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_storagewall, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_mg1, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_mg2, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_basewall, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_construction_script, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_266, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_266, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_almg3, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_almg3, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_267, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_267, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_construction_mg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_construction_mg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_the_War_Documents, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Transmitter, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_Transmitter, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,79 @@
+global Map =
+{
+	Switches =
+	{
+		MainGateSwitch =
+		{
+			WaypointName = "Main Gate Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.ENGINEER),
+		},
+	},
+
+	Ammo_Cabinet_south_ammocabinet = "AMMO_CABINET_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTH_CABINET_south_healthcabinet",
+	Build_spawnpost_built = "MAP_CONSTRUCTION_spawnpost_built",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Build_platformmg42_script = "MAP_CONSTRUCTION_platformmg42_script",
+	Destroy_service_door = "MAP_DYNAMITE_TARGET_service_door",
+	Destroy_platformmg42_script = "MAP_DYNAMITE_TARGET_platformmg42_script",
+	Destroy_axis_compost_built = "MAP_DYNAMITE_TARGET_axis_compost_built",
+	Destroy_wall = "MAP_DYNAMITE_TARGET_wall",
+	Destroy_spawnpost_built = "MAP_DYNAMITE_TARGET_spawnpost_built",
+	Destroy_main_door = "MAP_DYNAMITE_TARGET_main_door",
+	Mount_platformmg42 = "MAP_MOUNTABLE_MG42_platformmg42",
+	Repair_platformmg42 = "MAP_REPAIR_MG42_platformmg42",
+	Flag_docs = "MAP_FLAG_docs",
+	Cappoint_Transmitter = "MAP_CAPPOINT_Transmitter",
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Axis team has constructed the Platform MG Nest!", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "The Service Door has been breached!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Platform MG Nest!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "The Main Door has been breached!", TestMap.Pass );
+		OnTrigger( "Storage Wall destroyed!", TestMap.Pass );
+		OnTrigger( "Allies have stolen the Supply Documents!", TestMap.Pass );
+		OnTrigger( "The Allies have transmitted the Supply Documents!", TestMap.Pass );
+		OnTrigger( "storage_button", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.UpdateSwitchData();
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_spawnpost_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.MainGateSwitch, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_spawnpost_built, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.MainGateSwitch, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_platformmg42_script, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_platformmg42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_main_door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_service_door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_platformmg42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_platformmg42_script, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_wall, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_compost_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_docs, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Transmitter, 120, true );
+		
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_Transmitter, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

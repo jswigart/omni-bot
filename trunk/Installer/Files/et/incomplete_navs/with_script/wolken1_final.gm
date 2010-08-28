@@ -1,0 +1,215 @@
+global Map =
+{
+	Checkpoint_forwardspawn1_flag = "CHECKPOINT_forwardspawn1_flag",
+	Build_axis_cp_open = "BUILD_Command_Post",
+	Build_allied_cp_open = "BUILD_Command_Post",
+	Destroy_mainentrance = "PLANT_Main_Entrance",
+	Destroy_allied_cp_open = "PLANT_Command_Post",
+	Destroy_axis_cp_open = "PLANT_Command_Post",
+	Destroy_sideentrance = "PLANT_Side_Entrance",
+	Destroy_turmcannon = "PLANT_Turmfaust",
+
+	axis_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_axis_cp_open );
+
+		Util.ResetGoals();
+
+		print( "axis_cp_open_Built" );
+	},
+
+	allied_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Destroy_allies_cp_open );
+
+		Util.ResetGoals();
+
+		print( "allied_cp_open_Built" );
+	},
+
+	mainentrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_turmcannon );
+
+		print( "mainentrance_Destroyed" );
+	},
+
+	allied_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_cp_open );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_allied_cp_open );
+
+		print( "allied_cp_open_Destroyed" );
+	},
+
+	axis_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_allied_cp_open );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_cp_open );
+
+		Util.ResetGoals();
+
+		print( "axis_cp_open_Destroyed" );
+	},
+
+	turmcannon_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "turmcannon_Destroyed" );
+	},
+
+	sideentrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "sideentrance_Destroyed" );
+	},
+
+//~ 	Allies_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		print( "Allies_Capture_Flag" );
+//~ 	},
+
+//~ 	Axis_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		print( "Axis_Capture_Flag" );
+//~ 	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_cp_open_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_cp_open_Built );
+	OnTrigger( "Allies have destroyed the Turmfaust test cannon!", Map.turmcannon_Destroyed );
+	OnTrigger( "Allies have destroyed the Main Entrance!", Map.mainentrance_Destroyed );
+	OnTrigger( "Allies have destroyed the Side Entrance!", Map.sideentrance_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_cp_open_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_cp_open_Destroyed );
+//~ 	OnTrigger( "Allies have captured the Forward Spawn!", Map.Allies_Capture_Flag );
+//~ 	OnTrigger( "Axis have reclaimed the Forward Spawn!", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	//move the sideentrance so can be dyno'd outside properly
+  	Util.SetGoalPosition( 260, 1312, 542, "PLANT_Side_Entrance" );
+
+
+	// Allies Goals
+
+	SetGoalPriority( Map.Destroy_mainentrance, 2.0 );
+	SetGoalPriority( Map.Destroy_sideentrance, 1.9 );
+	SetGoalPriority( Map.Build_allied_cp_open, 1.1 );
+	SetGoalPriority( Map.Destroy_axis_cp_open, 1.1 );
+	SetGoalPriority( Map.Destroy_turmcannon, 1.8 );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_mainentrance );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_sideentrance );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_turmcannon );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_allied_cp_open );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_axis_cp_open );
+
+	// Axis Goals
+
+	SetGoalPriority( Map.Build_axis_cp_open, 2.0 );
+	SetGoalPriority( Map.Destroy_allied_cp_open, 2.0 );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_cp_open );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Destroy_allied_cp_open );
+	
+
+	// Allies Map Routing
+	
+	MapRoutes =
+	{
+		PLANT_Main_Entrance =
+		{
+			ROUTE_allies_spawn =
+			{
+				ROUTE_spawnoute_right =
+				{
+					ROUTE_main_entrance = {},
+					ROUTE_main_entrance_left = {},
+					ROUTE_main_entrance_right = {},
+				},
+				ROUTE_spawnrouteleft =
+				{
+					ROUTE_main_entrance = {},
+					ROUTE_main_entrance_left = {},
+					ROUTE_main_entrance_right = {},
+				},
+			},
+		},
+		PLANT_Side_Entrance =
+		{
+			ROUTE_allies_spawn =
+			{
+				ROUTE_side_entrance =
+				{
+					ROUTE_side_entrance_left = {},
+					ROUTE_side_entrance_right = {},
+				},
+			},
+			ROUTE_flag_spawn =
+			{
+				ROUTE_side_entrance =
+				{
+					ROUTE_side_entrance_left = {},
+					ROUTE_side_entrance_right = {},
+				},
+			},
+		},
+		PLANT_Turmfaust =
+		{
+			ROUTE_flag_spawn =
+			{
+				ROUTE_turm_right =
+				{
+					ROUTE_turm_topway = {},
+					ROUTE_turm_backway = {},
+				},
+				ROUTE_turm_left =
+				{
+					ROUTE_turm_topway = {},
+					ROUTE_turm_backway = {},
+				},
+			},
+		},
+	};
+				
+	
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

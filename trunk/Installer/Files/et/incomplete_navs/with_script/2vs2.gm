@@ -1,0 +1,40 @@
+//==========================================================================================
+//
+//	2vs2.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Snipe_allied_1 = "SNIPE_allied_1",
+	Snipe_axis_1 = "SNIPE_axis_1",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_allied.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_axis.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

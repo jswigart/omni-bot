@@ -1,0 +1,326 @@
+global Map =
+{
+	Ammo_Cabinet_supply1 = "AMMOCAB_supply1",
+	Ammo_Cabinet_supply2 = "AMMOCAB_supply2",
+	Ammo_Cabinet_supply3 = "AMMOCAB_supply3",
+	Health_Cabinet_health1 = "HEALTHCAB_health1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Flag_ammoBox1 = "FLAG_ammoBox1",
+	Flag_ammoBox2 = "FLAG_ammoBox2",
+	Flag_ammoBox3 = "FLAG_ammoBox3",
+	Cappoint_Ammo_Dropoff_2 = "CAPPOINT_Ammo_Dropoff_2",
+	Build_Neutral_Command_Post = "BUILD_Neutral_Command_Post",
+	Build_allies_assault_boat = "BUILD_allies_assault_boat",
+	Plant_Neutral_Command_Post = "PLANT_Neutral_Command_Post",
+	Plant_Side_Wall = "PLANT_Side_Wall",
+	Plant_Submarine = "PLANT_Submarine",
+	Mount_341 = "MOUNTMG42_341",
+	Mount_342 = "MOUNTMG42_342",
+	Mount_343 = "MOUNTMG42_343",
+	Mount_344 = "MOUNTMG42_344",
+	Mount_345 = "MOUNTMG42_345",
+	Repair_341 = "REPAIRMG42_341",
+	Repair_342 = "REPAIRMG42_342",
+	Repair_343 = "REPAIRMG42_343",
+	Repair_344 = "REPAIRMG42_344",
+	Repair_345 = "REPAIRMG42_345",
+	Mobile_MG42_101 = "MOBILEMG42_101",
+	Mobile_MG42_1028 = "MOBILEMG42_1028",
+	Mobile_MG42_1031 = "MOBILEMG42_1031",
+	Mobile_MG42_1037 = "MOBILEMG42_1037",
+	Mobile_MG42_1038 = "MOBILEMG42_1038",
+	Mobile_MG42_1039 = "MOBILEMG42_1039",
+	Mobile_MG42_104 = "MOBILEMG42_104",
+	Mobile_MG42_1048 = "MOBILEMG42_1048",
+	Mobile_MG42_1049 = "MOBILEMG42_1049",
+	Mobile_MG42_1054 = "MOBILEMG42_1054",
+	Mobile_MG42_1056 = "MOBILEMG42_1056",
+	Mobile_MG42_1081 = "MOBILEMG42_1081",
+	Mobile_MG42_1086 = "MOBILEMG42_1086",
+	Mobile_MG42_1099 = "MOBILEMG42_1099",
+	Mobile_MG42_1108 = "MOBILEMG42_1108",
+	Mobile_MG42_1164 = "MOBILEMG42_1164",
+	Mobile_MG42_1245 = "MOBILEMG42_1245",
+	Mobile_MG42_1327 = "MOBILEMG42_1327",
+	Mobile_MG42_1345 = "MOBILEMG42_1345",
+	Mobile_MG42_1346 = "MOBILEMG42_1346",
+	Mobile_MG42_1348 = "MOBILEMG42_1348",
+	Mobile_MG42_1353 = "MOBILEMG42_1353",
+	Mobile_MG42_1359 = "MOBILEMG42_1359",
+	Mobile_MG42_1410 = "MOBILEMG42_1410",
+	Mobile_MG42_1415 = "MOBILEMG42_1415",
+	Mobile_MG42_1418 = "MOBILEMG42_1418",
+	Mobile_MG42_1447 = "MOBILEMG42_1447",
+	Mobile_MG42_1448 = "MOBILEMG42_1448",
+	Mobile_MG42_1451 = "MOBILEMG42_1451",
+	Mobile_MG42_1455 = "MOBILEMG42_1455",
+	Mobile_MG42_1487 = "MOBILEMG42_1487",
+	Mobile_MG42_1493 = "MOBILEMG42_1493",
+	Mobile_MG42_1494 = "MOBILEMG42_1494",
+	Mobile_MG42_1497 = "MOBILEMG42_1497",
+	Mobile_MG42_1508 = "MOBILEMG42_1508",
+	Mobile_MG42_1522 = "MOBILEMG42_1522",
+	Mobile_MG42_1523 = "MOBILEMG42_1523",
+	Mobile_MG42_1526 = "MOBILEMG42_1526",
+	Mobile_MG42_1527 = "MOBILEMG42_1527",
+	Mobile_MG42_1529 = "MOBILEMG42_1529",
+	Mobile_MG42_1532 = "MOBILEMG42_1532",
+	Mobile_MG42_1534 = "MOBILEMG42_1534",
+	Mobile_MG42_1535 = "MOBILEMG42_1535",
+	Mobile_MG42_1537 = "MOBILEMG42_1537",
+	Mobile_MG42_1540 = "MOBILEMG42_1540",
+	Mobile_MG42_1556 = "MOBILEMG42_1556",
+	Mobile_MG42_1559 = "MOBILEMG42_1559",
+	Mobile_MG42_1560 = "MOBILEMG42_1560",
+	Mobile_MG42_1565 = "MOBILEMG42_1565",
+	Mobile_MG42_1566 = "MOBILEMG42_1566",
+	Mobile_MG42_159 = "MOBILEMG42_159",
+	Mobile_MG42_172 = "MOBILEMG42_172",
+	Mobile_MG42_184 = "MOBILEMG42_184",
+	Mobile_MG42_265 = "MOBILEMG42_265",
+	Mobile_MG42_310 = "MOBILEMG42_310",
+	Mobile_MG42_313 = "MOBILEMG42_313",
+	Mobile_MG42_371 = "MOBILEMG42_371",
+	Mobile_MG42_425 = "MOBILEMG42_425",
+	Mobile_MG42_458 = "MOBILEMG42_458",
+	Mobile_MG42_477 = "MOBILEMG42_477",
+	Mobile_MG42_484 = "MOBILEMG42_484",
+	Mobile_MG42_49 = "MOBILEMG42_49",
+	Mobile_MG42_517 = "MOBILEMG42_517",
+	Mobile_MG42_537 = "MOBILEMG42_537",
+	Mobile_MG42_548 = "MOBILEMG42_548",
+	Mobile_MG42_57 = "MOBILEMG42_57",
+	Mobile_MG42_602 = "MOBILEMG42_602",
+	Mobile_MG42_625 = "MOBILEMG42_625",
+	Mobile_MG42_631 = "MOBILEMG42_631",
+	Mobile_MG42_636 = "MOBILEMG42_636",
+	Mobile_MG42_639 = "MOBILEMG42_639",
+	Mobile_MG42_640 = "MOBILEMG42_640",
+	Mobile_MG42_644 = "MOBILEMG42_644",
+	Mobile_MG42_712 = "MOBILEMG42_712",
+	Mobile_MG42_753 = "MOBILEMG42_753",
+	Mobile_MG42_767 = "MOBILEMG42_767",
+	Mobile_MG42_768 = "MOBILEMG42_768",
+	Mobile_MG42_777 = "MOBILEMG42_777",
+	Mobile_MG42_787 = "MOBILEMG42_787",
+	Mobile_MG42_800 = "MOBILEMG42_800",
+	Mobile_MG42_918 = "MOBILEMG42_918",
+	Mobile_MG42_93 = "MOBILEMG42_93",
+	Mobile_MG42_985 = "MOBILEMG42_985",
+	Mobile_MG42_994 = "MOBILEMG42_994",
+	Mobile_MG42_axisbase1 = "MOBILEMG42_axisbase1",
+	Mobile_MG42_axisbunker = "MOBILEMG42_axisbunker",
+	Snipe_101 = "SNIPE_101",
+	Snipe_1028 = "SNIPE_1028",
+	Snipe_1031 = "SNIPE_1031",
+	Snipe_1037 = "SNIPE_1037",
+	Snipe_1038 = "SNIPE_1038",
+	Snipe_1039 = "SNIPE_1039",
+	Snipe_104 = "SNIPE_104",
+	Snipe_1048 = "SNIPE_1048",
+	Snipe_1049 = "SNIPE_1049",
+	Snipe_1054 = "SNIPE_1054",
+	Snipe_1056 = "SNIPE_1056",
+	Snipe_1081 = "SNIPE_1081",
+	Snipe_1086 = "SNIPE_1086",
+	Snipe_1099 = "SNIPE_1099",
+	Snipe_1108 = "SNIPE_1108",
+	Snipe_1164 = "SNIPE_1164",
+	Snipe_121 = "SNIPE_121",
+	Snipe_1210 = "SNIPE_1210",
+	Snipe_1245 = "SNIPE_1245",
+	Snipe_1327 = "SNIPE_1327",
+	Snipe_1345 = "SNIPE_1345",
+	Snipe_1346 = "SNIPE_1346",
+	Snipe_1348 = "SNIPE_1348",
+	Snipe_1353 = "SNIPE_1353",
+	Snipe_1359 = "SNIPE_1359",
+	Snipe_1410 = "SNIPE_1410",
+	Snipe_1415 = "SNIPE_1415",
+	Snipe_1418 = "SNIPE_1418",
+	Snipe_1429 = "SNIPE_1429",
+	Snipe_1433 = "SNIPE_1433",
+	Snipe_1447 = "SNIPE_1447",
+	Snipe_1448 = "SNIPE_1448",
+	Snipe_1451 = "SNIPE_1451",
+	Snipe_1455 = "SNIPE_1455",
+	Snipe_1487 = "SNIPE_1487",
+	Snipe_1493 = "SNIPE_1493",
+	Snipe_1494 = "SNIPE_1494",
+	Snipe_1497 = "SNIPE_1497",
+	Snipe_1508 = "SNIPE_1508",
+	Snipe_1522 = "SNIPE_1522",
+	Snipe_1523 = "SNIPE_1523",
+	Snipe_1525 = "SNIPE_1525",
+	Snipe_1526 = "SNIPE_1526",
+	Snipe_1527 = "SNIPE_1527",
+	Snipe_1529 = "SNIPE_1529",
+	Snipe_1532 = "SNIPE_1532",
+	Snipe_1534 = "SNIPE_1534",
+	Snipe_1535 = "SNIPE_1535",
+	Snipe_1537 = "SNIPE_1537",
+	Snipe_1540 = "SNIPE_1540",
+	Snipe_1556 = "SNIPE_1556",
+	Snipe_1559 = "SNIPE_1559",
+	Snipe_1560 = "SNIPE_1560",
+	Snipe_1564 = "SNIPE_1564",
+	Snipe_1565 = "SNIPE_1565",
+	Snipe_1566 = "SNIPE_1566",
+	Snipe_1569 = "SNIPE_1569",
+	Snipe_159 = "SNIPE_159",
+	Snipe_16 = "SNIPE_16",
+	Snipe_17 = "SNIPE_17",
+	Snipe_172 = "SNIPE_172",
+	Snipe_184 = "SNIPE_184",
+	Snipe_191 = "SNIPE_191",
+	Snipe_21 = "SNIPE_21",
+	Snipe_24 = "SNIPE_24",
+	Snipe_265 = "SNIPE_265",
+	Snipe_310 = "SNIPE_310",
+	Snipe_313 = "SNIPE_313",
+	Snipe_314 = "SNIPE_314",
+	Snipe_371 = "SNIPE_371",
+	Snipe_425 = "SNIPE_425",
+	Snipe_429 = "SNIPE_429",
+	Snipe_452 = "SNIPE_452",
+	Snipe_458 = "SNIPE_458",
+	Snipe_477 = "SNIPE_477",
+	Snipe_484 = "SNIPE_484",
+	Snipe_49 = "SNIPE_49",
+	Snipe_517 = "SNIPE_517",
+	Snipe_537 = "SNIPE_537",
+	Snipe_548 = "SNIPE_548",
+	Snipe_56 = "SNIPE_56",
+	Snipe_57 = "SNIPE_57",
+	Snipe_602 = "SNIPE_602",
+	Snipe_606 = "SNIPE_606",
+	Snipe_618 = "SNIPE_618",
+	Snipe_625 = "SNIPE_625",
+	Snipe_631 = "SNIPE_631",
+	Snipe_636 = "SNIPE_636",
+	Snipe_639 = "SNIPE_639",
+	Snipe_640 = "SNIPE_640",
+	Snipe_644 = "SNIPE_644",
+	Snipe_662 = "SNIPE_662",
+	Snipe_665 = "SNIPE_665",
+	Snipe_686 = "SNIPE_686",
+	Snipe_712 = "SNIPE_712",
+	Snipe_753 = "SNIPE_753",
+	Snipe_767 = "SNIPE_767",
+	Snipe_768 = "SNIPE_768",
+	Snipe_769 = "SNIPE_769",
+	Snipe_777 = "SNIPE_777",
+	Snipe_787 = "SNIPE_787",
+	Snipe_800 = "SNIPE_800",
+	Snipe_828 = "SNIPE_828",
+	Snipe_918 = "SNIPE_918",
+	Snipe_93 = "SNIPE_93",
+	Snipe_985 = "SNIPE_985",
+	Snipe_994 = "SNIPE_994",
+	Snipe_alliesbunker = "SNIPE_alliesbunker",
+	Snipe_axisbase1 = "SNIPE_axisbase1",
+	Snipe_axisbase2 = "SNIPE_axisbase2",
+	Snipe_axisbase3 = "SNIPE_axisbase3",
+	Snipe_axisbunker = "SNIPE_axisbunker",
+
+	Neutral_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Neutral_Command_Post_Built" );
+	},
+
+	allies_assault_boat_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allies_assault_boat_Built" );
+	},
+
+	Neutral_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Neutral_Command_Post_Destroyed" );
+	},
+
+	Side_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Wall_Destroyed" );
+	},
+
+	Submarine_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Submarine_Destroyed" );
+	},
+
+	ammoBox1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "ammoBox1_Taken" );
+	},
+
+	ammoBox2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "ammoBox2_Taken" );
+	},
+
+	ammoBox3_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "ammoBox3_Taken" );
+	},
+
+	Ammo_Dropoff_2_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Ammo_Dropoff_2_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Neutral_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.allies_assault_boat_Built );
+	OnTrigger( "MISSING_STRING", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Submarine_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.ammoBox1_Taken );
+	OnTrigger( "MISSING_STRING", Map.ammoBox2_Taken );
+	OnTrigger( "MISSING_STRING", Map.ammoBox3_Taken );
+	OnTrigger( "MISSING_STRING", Map.Ammo_Dropoff_2_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

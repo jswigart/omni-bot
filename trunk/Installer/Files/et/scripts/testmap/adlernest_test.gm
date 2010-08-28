@@ -1,0 +1,70 @@
+global Map =
+{
+	Switches =
+	{
+		BlastDoorSwitch1 =
+		{
+			WaypointName = "Blast Door Switch 1",
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.ENGINEER),
+		},
+		
+		BlastDoorSwitch2 =
+		{
+			WaypointName = "Blast Door Switch 2",
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.ENGINEER),
+		},
+	},
+	
+	Ammo_Cabinet_hutammocab = "AMMO_CABINET_hutammocab",
+	Health_Cabinet_huthpcab = "HEALTH_CABINET_huthpcab",
+	Build_allied_radio_built = "MAP_CONSTRUCTION_allied_radio_built",
+	Destroy_allied_radio_built = "MAP_DYNAMITE_TARGET_allied_radio_built",
+	Destroy_doorcontrols = "MAP_DYNAMITE_TARGET_doorcontrols",
+	Mount_91 = "MAP_MOUNTABLE_MG42_91",
+	Repair_91 = "MAP_REPAIR_MG42_91",
+	Flag_documents = "MAP_FLAG_documents",
+	Cappoint_399 = "MAP_CAPPOINT_399",
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "The Doors are opening!!", TestMap.Pass );
+		OnTrigger( "Allies have stolen the documents!", TestMap.Pass );
+		OnTrigger( "Allied team has transmitted the documents!", TestMap.Pass );
+		OnTrigger( "Main blast door opening!", TestMap.Pass );
+		OnTrigger( "Main blast door closing!", TestMap.Pass );
+
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.UpdateSwitchData();
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_hutammocab, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_hutammocab, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_huthpcab, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_huthpcab, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_91, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_doorcontrols, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.BlastDoorSwitch1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_radio_built, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_radio_built, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_91, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.BlastDoorSwitch2, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_documents, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_399, 120, true );
+		
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_399, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

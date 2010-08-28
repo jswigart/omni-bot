@@ -1,0 +1,288 @@
+//==========================================================================================
+//
+//	110_factory.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	//~ ShowMovers = true,
+	Movers =
+	{
+		"MOVER_plane1_engine1",
+		"MOVER_plane1_engine2",
+		"MOVER_plane2_engine1",
+		"MOVER_plane2_engine2",
+		"MOVER_plane3_engine1",
+		"MOVER_plane3_engine2",
+		"MOVER_plane4_engine1",
+		"MOVER_plane4_engine2",
+		"MOVER_plane5_engine1",
+		"MOVER_plane5_engine2",
+	},
+	
+	Ammo_Cabinet_first_ammocabinet = "AMMOCAB_first_ammocabinet",
+	Ammo_Cabinet_second_ammocabinet = "AMMOCAB_second_ammocabinet",
+	Health_Cabinet_first_healthcabinet = "HEALTHCAB_first_healthcabinet",
+	Health_Cabinet_second_healthcabinet = "HEALTHCAB_second_healthcabinet",
+	Checkpoint_forward_bunker_flag = "CHECKPOINT_forward_bunker_flag",
+	Flag_radar_pickup = "FLAG_radar_pickup",
+	Cappoint_453 = "CAPPOINT_453",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Compound_Door = "BUILD_Compound_Door",
+	Build_Escape_Ladder = "BUILD_Escape_Ladder",
+	Build_Island_MG42 = "BUILD_Island_MG42",
+	Build_Side_Entrance = "BUILD_Side_Entrance",
+	Build_front_barbed_wire = "BUILD_front_barbed_wire",
+	Build_side_barbed_wire = "BUILD_side_barbed_wire",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Compound_Door = "PLANT_Compound_Door",
+	Plant_Escape_Ladder = "PLANT_Escape_Ladder",
+	Plant_Island_MG42 = "PLANT_Island_MG42",
+	Plant_Main_Entrance = "PLANT_Main_Entrance",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Plant_front_barbed_wire = "PLANT_front_barbed_wire",
+	Plant_side_barbed_wire = "PLANT_side_barbed_wire",
+	Mount_Island_MG42 = "MOUNTMG42_Island_MG42",
+	Repair_Island_MG42 = "REPAIRMG42_Island_MG42",
+	Snipe_443 = "SNIPE_443",
+	Mover_truck = "MOVER_truck",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Built" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Compound_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Compound_Door_Built" );
+	},
+
+	Escape_Ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Escape_Ladder_Built" );
+	},
+
+	Island_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Island_MG42_Built" );
+	},
+
+	Side_Entrance_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Entrance_Built" );
+	},
+
+	front_barbed_wire_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "front_barbed_wire_Built" );
+	},
+
+	side_barbed_wire_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "side_barbed_wire_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Compound_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Compound_Door_Destroyed" );
+	},
+
+	Escape_Ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Escape_Ladder_Destroyed" );
+	},
+
+	Island_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Island_MG42_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Entrance_Destroyed" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Entrance_Destroyed" );
+	},
+
+	front_barbed_wire_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "front_barbed_wire_Destroyed" );
+	},
+
+	side_barbed_wire_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "side_barbed_wire_Destroyed" );
+	},
+
+	radar_pickup_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radar_pickup_Taken" );
+	},
+
+	CAPPOINT_453_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_453_Captured" );
+	},
+
+	forward_bunker_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_bunker_flag_Axis_Captured" );
+	},
+
+	forward_bunker_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_bunker_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Compound_Door_Built );
+	OnTrigger( "MISSING_STRING", Map.Escape_Ladder_Built );
+	OnTrigger( "MISSING_STRING", Map.Island_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Side_Entrance_Built );
+	OnTrigger( "MISSING_STRING", Map.front_barbed_wire_Built );
+	OnTrigger( "MISSING_STRING", Map.side_barbed_wire_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Compound_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Escape_Ladder_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Island_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.front_barbed_wire_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.side_barbed_wire_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.radar_pickup_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_453_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_bunker_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_bunker_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	
+	Util.IgnoreTargetGoalTable( bot, Map.Movers );
+};

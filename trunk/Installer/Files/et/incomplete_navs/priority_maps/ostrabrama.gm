@@ -1,0 +1,543 @@
+// 2009 IRATA [*]
+// Did use the 0.66 wps which comes which the map.
+// TODO:
+// Check routes
+// Enable 'small' wall break, looks like cops don't fine the goal (me2)
+// 
+global Map =
+{
+	Checkpoint_house_spawn_flag 	= "CHECKPOINT_house_spawn_flag",
+	
+	Build_Broken_Wall	 	= "BUILD_broken_wall",
+	Destroy_Broken_Wall 		= "PLANT_Broken_wall",
+	// Build_Broken_Wall_Defence	= "BUILD_broken_wall_planks",
+	// Destroy_Broken_Wall_Defence 	= "PLANT_broken_wall_planks",
+
+	TankStatus = 0,
+	HouseFlagStatus = 0,
+	Broken_Wall_Dyna = 0,
+	Broken_Wall_Defence_Dyna = 0,
+	
+	MainGateStatus = 0,
+	DocumentsStatus = 0,
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		Map.HouseFlagStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.AXIS  , true , Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Tent.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "ATTACK_Town.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_Tent.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANTMINE_TentMine.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "SNIPE_TentSnipe1" );
+                
+		Util.MapDebugPrint( "Allies_Capture_Flag" );
+	},
+	Axis_Capture_Flag = function( trigger )
+	{
+		Map.HouseFlagStatus = 2;
+		SetAvailableMapGoals( TEAM.ALLIES, true , Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.AXIS  , false, Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "ATTACK_Tent.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Town.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_Tent.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANTMINE_TentMine.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "SNIPE_TentSnipe1" );
+                
+		Util.MapDebugPrint( "Axis_Capture_Flag" );
+	},
+
+	
+	Tank_Repaired = function( trigger )
+	{
+		Map.TankStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
+		if( Map.MainGateStatus == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true , "MOVER_tank" );
+		}
+                
+		Util.MapDebugPrint( "Tank_Repaired" );
+	},
+        
+	Tank_Destroyed = function( trigger )
+	{
+		Map.TankStatus = 0;
+		SetAvailableMapGoals( TEAM.ALLIES, true , "BUILD_tank" );
+		if( Map.MainGateStatus == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+		}
+		Util.MapDebugPrint("Tank_Destroyed");
+	},
+        
+	Tank_Passed_Tent = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS  , true , "MOVER_tank" );
+                
+		Util.MapDebugPrint( "Tank_Passed_Tent" );
+	},
+
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		Map.MainGateStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.AXIS  , false, Map.Checkpoint_house_spawn_flag );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank_construct" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOVER_tank" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "MAP_MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , Map.Destroy_Broken_Wall );
+		// SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_Broken_Wall_Defence );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "FLAG_tower_docs" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "ATTACK_Tower.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "AMMO_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "AMMO_TownAmmo" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "HEALTH_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "HEALTH_TownHealth" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_Tower.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANTMINE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANTMINE_MainGateMine1" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANTMINE_BrokenWallMine1" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANTMINE_TowerMine1" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "SNIPE_SnipeTower.*" );
+
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+
+	Broken_Wall_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_Broken_Wall );
+		// SetAvailableMapGoals( TEAM.AXIS  , true , Map.Build_Broken_Wall_Defence );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_BrokenWall.*" );
+
+		Util.MapDebugPrint( "Broken_Wall_Destroyed" );
+	},
+	Broken_Wall_Defence_Built = function( trigger )
+	{
+		// SetAvailableMapGoals( TEAM.ALLIES, true , Map.Destroy_Broken_Wall_Defence );
+		// SetAvailableMapGoals( TEAM.AXIS  , false, Map.Build_Broken_Wall_Defence );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_BrokenWall.*" );
+
+		Util.MapDebugPrint( "Broken_Wall_Defence_Built" );
+	},
+        
+	Broken_Wall_Defence_Destroyed = function( trigger )
+	{
+		// SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_Broken_Wall_Defence );
+		// SetAvailableMapGoals( TEAM.AXIS  , true , Map.Build_Broken_Wall_Defence );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_BrokenWall.*" );
+
+		Util.MapDebugPrint( "Broken_Wall_Defence_Destroyed" );
+	},
+
+	Broken_Wall_Plant = function( trigger )
+	{
+		Map.Broken_Wall_Dyna += 1;
+                
+		Util.MapDebugPrint( "Broken_Wall_Plant" );
+	},
+        
+	Broken_Wall_Defuse = function( trigger )
+	{
+		Map.Broken_Wall_Dyna -= 1;
+                
+		Util.MapDebugPrint( "Broken_Wall_Defuse" );
+	},
+        
+	Broken_Wall_Defence_Plant = function( trigger )
+	{
+		Map.Broken_Wall_Defence_Dyna += 1;
+                
+		Util.MapDebugPrint( "Broken_Wall_Defence_Plant" );
+	},
+        
+	Broken_Wall_Defence_Defuse = function( trigger )
+	{
+		Map.Broken_Wall_Defence_Dyna -= 1;
+                
+		Util.MapDebugPrint( "Broken_Wall_Defence_Defuse" );
+	},
+	
+	Documents_Stolen = function( trigger )
+	{
+		Map.DocumentsStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_Tower.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_Radio.*" );
+
+		Util.MapDebugPrint( "Documents_Stolen" );
+	},
+	Documents_Returned = function( trigger )
+	{
+		Map.DocumentsStatus = 0;
+		SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_Tower.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_Radio.*" );
+
+		Util.MapDebugPrint( "Documents_Returned" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Allies captured House!", Map.Allies_Capture_Flag );
+	OnTrigger( "Axis reclaimed House!", Map.Axis_Capture_Flag );
+
+	OnTrigger( "Broken wall has been destroyed!", Map.Broken_Wall_Destroyed );
+	OnTrigger( "Broken wall defence has been built!", Map.Broken_Wall_Defence_Built );
+	OnTrigger( "Broken wall defence has been destroyed!", Map.Broken_Wall_Defence_Destroyed );
+
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Repaired );
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+
+	OnTrigger( "Tank passed tent!", Map.Tank_Passed_Tent );
+	
+	OnTrigger( "Main gate has been destroyed!", Map.Main_Gate_Destroyed );
+	
+	OnTrigger( "Allies have stolen Axis Secret Documents!", Map.Documents_Stolen );
+	OnTrigger( "Axis have returned Axis Secret Documents!", Map.Documents_Returned );
+
+	Util.SetMaxUsers( 1, "ATTACK.*" );
+	Util.SetMaxUsers( 1, "DEFEND.*" );
+        Util.SetMaxUsers( 1, "SNIPE.*" ); 
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=15, MaxCampTime=30});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=60});
+        SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120}); 
+	
+	// Allied goals
+	SetGoalPriority( "MOVER_tank", 0.8 );
+	SetGoalPriority( "BUILD_tank", 0.8 );
+	// SetGoalPriority( "MAP_CONSTRUCTION_tank_construct", 1.3 );
+	SetGoalPriority( Map.Checkpoint_house_spawn_flag, 0.75 );
+	SetGoalPriority( "FLAG_tower_docs", 0.8 );
+	SetGoalPriority( Map.Destroy_Broken_Wall, 0.75 );
+	// SetGoalPriority( Map.Destroy_Broken_Wall_Defence, 1.2 );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMO_CABINET_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTH_CABINET_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ARTY_.*" ); // TODO: check !
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOBILE_MG42_SPOT_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true , Map.Checkpoint_house_spawn_flag );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "ATTACK_Tent.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "BUILD_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_Broken_Wall );
+	// SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_Broken_Wall_Defence );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_tower_docs" );
+	
+	// Axis goals
+	SetGoalPriority( Map.Checkpoint_house_spawn_flag, 1.3 );
+	SetGoalPriority( "DEFEND_DefendTower.*", 1.2 );
+	SetGoalPriority( "DEFEND_DefendBrokenWall.*", 1.1 );
+	
+	SetAvailableMapGoals( TEAM.AXIS  , false, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "ARTY_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "REPAIRMG42_.*" );
+	// SetAvailableMapGoals( TEAM.AXIS  , false, "MAP_MOBILE_MG42_SPOT_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "PLANT_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "AMMO_AlSpawnAmmo" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "HEALTH_AlSpawnHealth" );
+	
+	SetAvailableMapGoals( TEAM.AXIS  , true , "DEFEND_Tent.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, Map.Build_Broken_Wall );
+	// SetAvailableMapGoals( TEAM.AXIS  , false, Map.Build_Broken_Wall_Defence );
+	SetAvailableMapGoals( TEAM.AXIS  , false, Map.Checkpoint_house_spawn_flag );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "PLANTMINE_TentMine.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "SNIPE_TentSnipe1" );
+
+        MapRoutes =
+        {
+		CHECKPOINT_house_spawn_flag =
+		{
+			ROUTE_AlSpawn1 =
+			{
+				ROUTE_AlSpawnExit1 =
+				{
+					ROUTE_TankRoute1 =
+					{
+						ROUTE_TankRoute2 =
+						{
+						},
+					},
+					ROUTE_AlSpawnFront =
+					{
+						ROUTE_ShortCut1 =
+						{
+							ROUTE_TentFarLeft =
+							{
+							},
+							ROUTE_TankRoute2 =
+							{
+							},
+						},
+					},
+					ROUTE_AlSpawnBack =
+					{
+						ROUTE_AlSpawnExit2 =
+						{
+							ROUTE_ShortCut1 =
+							{
+								ROUTE_TentFarLeft =
+								{
+								},
+								ROUTE_TankRoute2 =
+								{
+								},
+							},
+							ROUTE_AlSpawnFront =
+							{
+								ROUTE_TankRoute1 =
+								{
+									ROUTE_TankRoute2 =
+									{
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			ROUTE_AlSpawn2 =
+			{
+				ROUTE_AlSpawnExit2 =
+				{
+					ROUTE_ShortCut1 =
+					{
+						ROUTE_TentFarLeft =
+						{
+						},
+						ROUTE_TankRoute2 =
+						{
+						},
+					},
+					ROUTE_AlSpawnFront =
+					{
+						ROUTE_TankRoute1 =
+						{
+							ROUTE_TankRoute2 =
+							{
+							},
+						},
+					},
+					ROUTE_AlSpawnBack =
+					{
+						ROUTE_AlSpawnExit1 =
+						{
+							ROUTE_AlSpawnFront =
+							{
+								ROUTE_ShortCut1 =
+								{
+									ROUTE_TentFarLeft =
+									{
+									},
+									ROUTE_TankRoute2 =
+									{
+									},
+								},
+							},
+							ROUTE_TankRoute1 =
+							{
+								ROUTE_TankRoute2 =
+								{
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		PLANT_Broken_wall =
+		{
+			ROUTE_TentSpawn1 =
+			{
+				ROUTE_TentSpawnExit1 =
+				{
+					ROUTE_TankRoute3 =
+					{
+						ROUTE_RiverRoute1 =
+						{
+						},
+						ROUTE_RiverRoute2 =
+						{
+						},
+					},
+					ROUTE_FarRight =
+					{
+						ROUTE_RiverRoute3 =
+						{
+						},
+						ROUTE_Bridge =
+						{
+						},
+					},
+				},
+			},
+			ROUTE_TentSpawn2 =
+			{
+				ROUTE_TentSpawnExit2 =
+				{
+					ROUTE_TentSpawnFront =
+					{
+						ROUTE_TankRoute3 =
+						{
+							ROUTE_RiverRoute1 =
+							{
+							},
+							ROUTE_RiverRoute2 =
+							{
+							},
+						},
+						ROUTE_FarRight =
+						{
+							ROUTE_RiverRoute3 =
+							{
+							},
+							ROUTE_Bridge =
+							{
+							},
+						},
+					},
+				},
+			},
+		},
+		CAPPOINT_Radio =
+		{
+			ROUTE_Documents =
+			{
+				ROUTE_MainGate =
+				{
+				},
+				ROUTE_Roof =
+				{
+					ROUTE_RoofFall =
+					{
+					},
+					ROUTE_Ropes =
+					{
+					},
+				},
+			},
+		},
+		FLAG_tower_docs =
+		{
+			ROUTE_TentSpawn1 =
+			{
+				ROUTE_TentSpawnExit1 =
+				{
+					ROUTE_TankRoute3 =
+					{
+						ROUTE_RiverRoute1 =
+						{
+						},
+						ROUTE_RiverRoute2 =
+						{
+						},
+					},
+					ROUTE_FarRight =
+					{
+						ROUTE_RiverRoute3 =
+						{
+						},
+						ROUTE_Bridge =
+						{
+						},
+					},
+				},
+			},
+			ROUTE_TentSpawn2 =
+			{
+				ROUTE_TentSpawnExit2 =
+				{
+					ROUTE_TentSpawnFront =
+					{
+						ROUTE_TankRoute3 =
+						{
+							ROUTE_RiverRoute1 =
+							{
+								ROUTE_Ropes =
+								{
+									ROUTE_Roof =
+									{
+									},
+								},
+								ROUTE_MainGate =
+								{
+								},
+							},
+							ROUTE_RiverRoute2 =
+							{
+								ROUTE_Ropes =
+								{
+									ROUTE_Roof =
+									{
+									},
+								},
+								ROUTE_MainGate =
+								{
+								},
+							},
+						},
+						ROUTE_FarRight =
+						{
+							ROUTE_RiverRoute3 =
+							{
+								ROUTE_MainGate =
+								{
+								},
+							},
+							ROUTE_Bridge =
+							{
+								ROUTE_MainGate =
+								{
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+        };
+        
+	MapRoutes.ATTACK_Tent1 = MapRoutes.CHECKPOINT_house_spawn_flag;
+	MapRoutes.ATTACK_Tent2 = MapRoutes.CHECKPOINT_house_spawn_flag;
+	MapRoutes.ATTACK_Tent3 = MapRoutes.CHECKPOINT_house_spawn_flag;
+	// MapRoutes.PLANT_broken_wall_planks = MapRoutes.PLANT_Broken_wall;
+	MapRoutes.ATTACK_Tower1 = MapRoutes.MAP_FLAG_tower_docs;
+	MapRoutes.ATTACK_Tower2 = MapRoutes.MAP_FLAG_tower_docs;
+	MapRoutes.ATTACK_Tower3 = MapRoutes.MAP_FLAG_tower_docs;
+
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint("OnMapLoad");
+}; 
+
+global OnBotJoin = function( bot )
+{
+	//bot.TargetBreakableDist = 200.0;
+	// limit: we have wide areas - it's unplayable for humans if we don't set this
+	bot.MaxViewDistance = 2800;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+	
+	if(team==TEAM.ALLIES && class!=CLASS.ENGINEER)
+	{
+		if(RandInt(0,1)<1)
+		{
+			bot.ChangeSpawnPoint(4); //River spawn
+		}
+	}
+};

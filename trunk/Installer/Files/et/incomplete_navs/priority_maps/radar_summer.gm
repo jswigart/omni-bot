@@ -1,0 +1,1043 @@
+global Map =
+{
+    Debug = true,
+    ShowMovers = false,
+    
+    EscortVehicle =
+    {
+        Tank = 
+        {
+            Enabled = true,
+            Priority = 0.75,
+            EscortVehicleGoalName = "MOVER_tank",
+            LimitTeam = (1<<TEAM.AXIS),
+            LimitClass = (1<<CLASS.ENGINEER) | (1<<CLASS.SOLDIER),
+            LimitBots = 1,
+            //~MaxDistance = 256,
+            Offset =
+            {
+        	Vector3(0,-220,-50),        // Rear, left
+        	Vector3(0,-220,50),         // Rear, right
+        	Vector3(-105,-50,0),        // Left
+        	Vector3(105,-50,0),         // Right
+            },
+        },  
+    },
+    
+    MountVehicle = 
+    {
+        Enabled = true,
+        Priority = 0.55,
+        LimitClass = (1<<CLASS.ENGINEER) | (1<<CLASS.SOLDIER),
+        LimitTeam = Util.AllTeams,
+        LimitBots = 1,
+    },
+
+    // Dyno Counters
+    Axis_Road_MG_Nest_Dyno = 0,
+    Axis_Watchtower_MG_Nest_Dyno = 0,
+    Bunker_MG_Nest_Dyno = 0,
+    Command_Post_Dyno = 0,
+    Generator_Dyno = 0,
+    Inner_Side_Entrance_Dyno = 0,
+    Main_Entrance_Dyno = 0,
+    North_Radar_Station_Dyno = 0,
+    Outer_Side_Entrance_Dyno = 0,
+    South_Radar_Station_Dyno = 0,
+    
+    // Conditionals
+    MainEntrance_Destroyed = false,             // Still there
+    Outer_SideEntrance_Destroyed = false,       // Still there
+    Inner_SideEntrance_Destroyed = false,       // Still there
+    EastParts_Secured = false,                 // Still in place
+    WestParts_Secured = false,                 // Still in place
+    EastParts_Stolen = false,
+    WestParts_Stolen = false,
+    Tank_Repaired = false,                      // Initially not repaired
+    Tank_In_Position = false,                   // Once there, disable Escort Goal
+    Command_Post = 0,                           // 0 = Neutral, 1 = Axis, 2 = Allies
+    
+    Ammo_Cabinet_objhacab2 = "AMMOCAB_objhacab2",
+    Ammo_Cabinet_objhacab3 = "AMMOCAB_objhacab3",
+    Health_Cabinet_objhacab1 = "HEALTHCAB_objhacab1",
+    Health_Cabinet_objhacab4 = "HEALTHCAB_objhacab4",
+    Checkpoint_roadbunker = "CHECKPOINT_roadbunker",
+    Flag_radarbox1 = "FLAG_radarbox1",
+    Flag_radarbox2 = "FLAG_radarbox2",
+    Build_Axis_Road_MG_Nest = "BUILD_Axis_Road_MG_Nest",
+    Build_Axis_Watchtower_MG_Nest = "BUILD_Axis_Watchtower_MG_Nest",
+    Build_Bunker_MG_Nest = "BUILD_Bunker_MG_Nest",
+    Build_Command_Post = "BUILD_Command_Post",
+    //~Build_Generator = "BUILD_Generator", // No script routine
+    Build_Tank = "BUILD_Tank",
+    Plant_Axis_Road_MG_Nest = "PLANT_Axis_Road_MG_Nest",
+    Plant_Axis_Watchtower_MG_Nest = "PLANT_Axis_Watchtower_MG_Nest",
+    Plant_Bunker_MG_Nest = "PLANT_Bunker_MG_Nest",
+    Plant_Command_Post = "PLANT_Command_Post",
+    Plant_Generator = "PLANT_Generator",
+    Plant_Inner_Side_Entrance = "PLANT_Inner_Side_Entrance",
+    Plant_Main_Entrance = "PLANT_Main_Entrance",
+    Plant_North_Radar_Station = "PLANT_North_Radar_Station",
+    Plant_Outer_Side_Entrance = "PLANT_Outer_Side_Entrance",
+    Plant_South_Radar_Station = "PLANT_South_Radar_Station",
+    Mount_398 = "MOUNTMG42_398",
+    Mount_618 = "MOUNTMG42_618",
+    Mount_Axis_Road_MG_Nest = "MOUNTMG42_Axis_Road_MG_Nest",
+    Mount_Axis_Watchtower_MG_Nest = "MOUNTMG42_Axis_Watchtower_MG_Nest",
+    Mount_Bunker_MG_Nest = "MOUNTMG42_Bunker_MG_Nest",
+    Repair_398 = "REPAIRMG42_398",
+    Repair_618 = "REPAIRMG42_618",
+    Repair_Axis_Road_MG_Nest = "REPAIRMG42_Axis_Road_MG_Nest",
+    Repair_Axis_Watchtower_MG_Nest = "REPAIRMG42_Axis_Watchtower_MG_Nest",
+    Repair_Bunker_MG_Nest = "REPAIRMG42_Bunker_MG_Nest",
+    Mover_tank = "MOVER_tank",
+
+    Axis_Road_MG_Nest_Built = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+        
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Road_MG_Nest );
+
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Road_MG_Nest );
+        
+        if ( Map.Debug )
+            { print( "Axis_Road_MG_Nest_Built" ); }
+    },
+
+    Axis_Watchtower_MG_Nest_Built = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+    
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Watchtower_MG_Nest );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Watchtower_MG_Nest );
+    
+        if ( Map.Debug )
+            { print( "Axis_Watchtower_MG_Nest_Built" ); }
+    },
+
+    Bunker_MG_Nest_Built = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        // Allies Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Bunker_MG_Nest );
+
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Bunker_MG_Nest );
+                
+    	if ( Map.Debug )
+            { print( "Bunker_MG_Nest_Built" ); }
+    },
+
+    Allied_Command_Post_Built = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.Command_Post = 2;
+
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_post );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
+        SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Command_Post );
+                
+    	if ( Map.Debug )
+            { print( "Allied_Command_Post_Built" ); }
+    },
+
+    Axis_Command_Post_Built = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+    
+        Map.Command_Post = 1;
+
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
+            
+        if ( Map.Debug )
+            { print( "Axis_Command_Post_Built" ); }
+    },
+ 
+    Tank_Built = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank );
+        if ( !Tank_In_Position )
+            { SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_tank" ); }
+    
+    	if ( Map.Debug )
+            { print( "Tank_Built" ); }
+    },
+
+    Axis_Road_MG_Nest_Planted = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+    	Map.Axis_Road_MG_Nest_Dyno += 1;
+    
+    	if ( Map.Debug )
+            { print( "Axis_Road_MG_Nest_Planted" ); }
+    },
+
+	Axis_Watchtower_MG_Nest_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Watchtower_MG_Nest_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "Axis_Watchtower_MG_Nest_Planted" ); }
+	},
+
+	Bunker_MG_Nest_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Bunker_MG_Nest_Planted" ); }
+	},
+
+	Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "Command_Post_Planted" ); }
+	},
+
+	Generator_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "Generator_Planted" ); }
+	},
+
+	Inner_Side_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Inner_Side_Entrance_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "Inner_Side_Entrance_Planted" ); }
+	},
+
+	Main_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Entrance_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "Main_Entrance_Planted" ); }
+	},
+
+	North_Radar_Station_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Radar_Station_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "North_Radar_Station_Planted" ); }
+	},
+
+	Outer_Side_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Outer_Side_Entrance_Dyno += 1;
+		
+		if ( Map.Debug )
+			{ print( "Outer_Side_Entrance_Planted" ); }
+	},
+
+	South_Radar_Station_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.South_Radar_Station_Dyno += 1;
+
+		if ( Map.Debug )
+			{ print( "South_Radar_Station_Planted" ); }
+	},
+
+	Axis_Road_MG_Nest_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Road_MG_Nest_Defused" ); }
+	},
+
+	Axis_Watchtower_MG_Nest_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Watchtower_MG_Nest_Defused" ); }
+	},
+
+	Bunker_MG_Nest_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Bunker_MG_Nest_Defused" ); }
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+
+		if ( Map.Debug )
+			{ print( "Command_Post_Defused" ); }
+	},
+
+	Generator_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno -= 1;
+
+		if ( Map.Debug )
+			{ print( "Generator_Defused" ); }
+	},
+
+	Inner_Side_Entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Inner_Side_Entrance_Dyno -= 1;
+
+		if ( Map.Debug )
+			{ print( "Inner_Side_Entrance_Defused" ); }
+	},
+
+	Main_Entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Entrance_Dyno -= 1;
+
+		if ( Map.Debug )
+			{ print( "Main_Entrance_Defused" ); }
+	},
+
+	North_Radar_Station_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Radar_Station_Dyno -= 1;
+
+		if ( Map.Debug )
+			{ print( "North_Radar_Station_Defused" ); }
+	},
+
+	Outer_Side_Entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Outer_Side_Entrance_Dyno -= 1;
+		
+		if ( Map.Debug )
+			{ print( "Outer_Side_Entrance_Defused" ); }
+	},
+
+	South_Radar_Station_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.South_Radar_Station_Dyno -= 1;
+		
+		if ( Map.Debug )
+			{ print( "South_Radar_Station_Defused" ); }
+	},
+
+	Axis_Road_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+                // Allied Goals
+                SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Road_MG_Nest );
+
+                // Axis Goals
+                if ( Map.Main_Entrance_Destroyed )
+                        { SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Road_MG_Nest ); }
+
+		if ( Map.Debug )
+			{ print( "Axis_Road_MG_Nest_Destroyed" ); }
+	},
+
+    Axis_Watchtower_MG_Nest_Destroyed = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+        
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Watchtower_MG_Nest );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Watchtower_MG_Nest );
+        
+        if ( Map.Debug )
+            { print( "Axis_Watchtower_MG_Nest_Destroyed" ); }
+    },
+
+    Bunker_MG_Nest_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+    	if ( Map.Debug )
+            { print( "Bunker_MG_Nest_Destroyed" ); }
+    },
+
+    Command_Post_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.Command_Post = 0; // Neutral again
+    	
+    	// Allied Goals
+    	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
+    	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
+    	
+    	// Axis Goals
+    	SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
+    	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Command_Post );
+    
+    	if ( Map.Debug )
+            { print( "Command_Post_Destroyed" ); }
+    },
+
+    Generator_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Generator );
+    
+    	if ( Map.Debug )
+            { print( "Generator_Destroyed" ); }
+    },
+
+    Inner_Side_Entrance_Destroyed = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+    
+        Map.Inner_SideEntrance_Destroyed = true;
+        
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Inner_Side_Entrance );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_Side.*" );
+        SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_EastRadar.*" ); 
+    
+        if ( Map.Debug )
+            { print( "Inner_Side_Entrance_Destroyed" ); }
+    },
+
+    Main_Entrance_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.MainEntrance_Destroyed = true;
+        
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Main_Entrance );
+        SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allies_MainGate.*" );
+        SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Bunker_In.*" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Generator );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_North_Radar_Station );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South_Radar_Station );
+        SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allies_Cover.*" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox2" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_deliver_Parts" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_objhacab2" );
+        SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_objhacab1" );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Bunker_MG_Nest );
+        SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Road_MG_Nest );
+        SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_Bunker.*" );
+        SetAvailableMapGoals( TEAM.AXIS, false, ".*_Bunker_In.*" );
+        SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_objhacab2" );
+        SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_objhacab1" );
+        SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank );
+        SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Watchtower_MG_Nest );
+        SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_MainGate.*" );
+        SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_NorthRadar.*" );
+        SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_SouthRadar.*" );
+        SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_objhacab3" );
+        SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_objhacab4" );
+    
+    	if ( Map.Debug )
+            { print( "Main_Entrance_Destroyed" ); }
+    },
+
+    North_Radar_Station_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    	
+    	// Allied Goals
+    	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_North_Radar_Station );
+    
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NorthRadar.*" );
+        if ( Map.Eastparts_Secured && Map.WestParts_Secured ) {         // Only South Radar left, fall back and concentrate defense there
+                SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_MainGate.*" );
+        }
+    
+    	if ( Map.Debug )
+            { print( "North_Radar_Station_Destroyed" ); }
+    },
+
+    Outer_Side_Entrance_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.Outer_SideEntrance_Destroyed = true;
+
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Outer_Side_Entrance );
+        SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Inner_Side_Entrance );
+    
+    	if ( Map.Debug )
+            { print( "Outer_Side_Entrance_Destroyed" ); }
+    },
+
+    South_Radar_Station_Destroyed = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_South_Radar_Station );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_SouthRadar.*" );
+    
+    	if ( Map.Debug )
+            { print( "South_Radar_Station_Destroyed" ); }
+    },
+
+    radarbox1_Taken = function( trigger ) // West Radar
+    {
+    	if ( TestMap )
+            { return; }
+        
+        Map.WestParts_Stolen = true;
+    
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_Truck.*" );
+    
+    	if ( Map.Debug )
+            { print( "radarbox1_Taken" ); }
+    },
+
+    radarbox2_Taken = function( trigger ) // East Radar
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.EastParts_Stolen = true;
+    
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_Truck.*" );
+    
+    	if ( Map.Debug )
+            { print( "radarbox2_Taken" ); }
+    },
+
+    radarbox1_Returned = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+    	if ( Map.Debug )
+            { print( "radarbox1_Returned" ); }
+    },
+
+    radarbox2_Returned = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+    	if ( Map.Debug )
+            { print( "radarbox2_Returned" ); }
+    },
+
+    radarbox1_Secured = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.WestParts_Secured = true;
+
+        if ( Map.East_Parts_Secured ) { 
+            SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_deliver_Parts" ); 
+            SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_Truck.*" );
+        }
+    
+    	if ( Map.Debug )
+            { print( "radarbox1_Secured" ); }
+    },
+
+    radarbox2_Secured = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        Map.EastParts_Secured = true;
+
+        if ( Map.West_Parts_Secured ) { 
+                SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_deliver_Parts" ); 
+                SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_Truck.*" );
+        }
+    
+    	if ( Map.Debug )
+            { print( "radarbox2_Secured" ); }
+    },
+
+    roadbunker_Axis_Captured = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+    
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_roadbunker" );
+
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_roadbunker" );
+    
+    	if ( Map.Debug )
+            { print( "roadbunker_Axis_Captured" ); }
+    },
+
+    roadbunker_Allies_Captured = function( trigger )
+    {
+    	if ( TestMap )
+            { return; }
+                
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_roadbunker" );
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_roadbunker" );
+                
+    	if ( Map.Debug )
+            { print( "roadbunker_Allies_Captured" ); }
+    },
+    
+    Tank_Damaged = function( trigger )
+    {
+        if ( TestMap )
+            { return; }
+
+        Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
+        SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank );
+
+        if ( Map.Debug )
+            { print( "Tank_Damaged" ); }
+    },
+
+    tank_Final_Position = function()
+    {
+        if ( TestMap )
+            { return; }
+
+        Map.Tank_In_Position = true;
+        Map.EscortVehicle.Tank.LimitTeam = 0;
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
+            
+        if ( Map.Debug )
+            { print( "tank_Final_Position" ); }
+    },
+};
+
+global OnMapLoad = function()
+{
+    if ( TestMapOn )
+    	{ Util.AutoTestMap(); }
+
+    OnTrigger( "The Axis Road MG Nest has been constructed.", Map.Axis_Road_MG_Nest_Built );
+    OnTrigger( "The Axis Watchtower MG Nest has been constructed.", Map.Axis_Watchtower_MG_Nest_Built );
+    OnTrigger( "The Bunker MG Nest has been constructed.", Map.Bunker_MG_Nest_Built );
+    OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+    OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+    //~OnTrigger( "MISSING_STRING", Map.Generator_Built ); // No script routine
+    OnTrigger( "axis_our_tank_repaired", Map.Tank_Built );
+    OnTrigger( "Planted at the Axis Road MG Nest.", Map.Axis_Road_MG_Nest_Planted );
+    OnTrigger( "Planted at the Axis Watchtower MG Nest.", Map.Axis_Watchtower_MG_Nest_Planted );
+    OnTrigger( "Planted at the Bunker MG Nest.", Map.Bunker_MG_Nest_Planted );
+    OnTrigger( "Planted at the Command Post.", Map.Command_Post_Planted );
+    OnTrigger( "Planted at the Generator.", Map.Generator_Planted );
+    OnTrigger( "Planted at the Inner Side Entrance.", Map.Inner_Side_Entrance_Planted );
+    OnTrigger( "Planted at the Main Entrance.", Map.Main_Entrance_Planted );
+    OnTrigger( "Planted at the North Radar Station.", Map.North_Radar_Station_Planted );
+    OnTrigger( "Planted at the Outer Side Entrance.", Map.Outer_Side_Entrance_Planted );
+    OnTrigger( "Planted at the South Radar Station.", Map.South_Radar_Station_Planted );
+    OnTrigger( "Defused at the Axis Road MG Nest.", Map.Axis_Road_MG_Nest_Defused );
+    OnTrigger( "Defused at the Axis Watchtower MG Nest.", Map.Axis_Watchtower_MG_Nest_Defused );
+    OnTrigger( "Defused at the Bunker MG Nest.", Map.Bunker_MG_Nest_Defused );
+    OnTrigger( "Defused at the Command Post.", Map.Command_Post_Defused );
+    OnTrigger( "Defused at the Generator.", Map.Generator_Defused );
+    OnTrigger( "Defused at the Inner Side Entrance.", Map.Inner_Side_Entrance_Defused );
+    OnTrigger( "Defused at the Main Entrance.", Map.Main_Entrance_Defused );
+    OnTrigger( "Defused at the North Radar Station.", Map.North_Radar_Station_Defused );
+    OnTrigger( "Defused at the Outer Side Entrance.", Map.Outer_Side_Entrance_Defused );
+    OnTrigger( "Defused at the South Radar Station.", Map.South_Radar_Station_Defused );
+    OnTrigger( "The Axis Road MG Nest has been destroyed.", Map.Axis_Road_MG_Nest_Destroyed );
+    OnTrigger( "The Axis Watchtower MG Nest has been destroyed.", Map.Axis_Watchtower_MG_Nest_Destroyed );
+    OnTrigger( "The Bunker MG Nest has been destroyed.", Map.Bunker_MG_Nest_Destroyed );
+    OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+    OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+    OnTrigger( "The Allies have destroyed the generator, the bunker security doors are ", Map.Generator_Destroyed );
+    OnTrigger( "Allies have breached the Inner Side Entrance!", Map.Inner_Side_Entrance_Destroyed );
+    OnTrigger( "Allies have breached the Main Entrance and secured the Forward Bunker!", Map.Main_Entrance_Destroyed );
+    OnTrigger( "The Allies have destroyed the North Radar Station!", Map.North_Radar_Station_Destroyed );
+    OnTrigger( "Allies have breached the Outer Side Entrance!", Map.Outer_Side_Entrance_Destroyed );
+    OnTrigger( "The Allies have destroyed the South Radar Station!", Map.South_Radar_Station_Destroyed );
+    OnTrigger( "The tank has been damaged!", Map.Tank_Damaged );
+    OnTrigger( "Allies have stolen the West Radar Parts!", Map.radarbox1_Taken );
+    OnTrigger( "Allies have stolen the East Radar Parts!", Map.radarbox2_Taken );
+    OnTrigger( "Àxis have returned the West Radar Parts!", Map.radarbox1_Returned );
+    OnTrigger( "Axis have returned the East Radar Parts!", Map.radarbox2_Returned );
+    OnTrigger( "Allies have secured the West Radar Parts!", Map.radarbox1_Secured );
+    OnTrigger( "Allies have secured the East Radar Parts!", Map.radarbox2_Secured );
+    OnTrigger( "Allies capture the Forward Bunker!", Map.roadbunker_Allies_Captured );
+    OnTrigger( "Axis reclaim the Forward Bunker!", Map.roadbunker_Axis_Captured );
+
+    Util.SetMaxUsersInProgress( 1, "ATTACK*" );
+    Util.SetMaxUsersInProgress( 1, "DEFEND*" );
+    Util.SetMaxUsersInProgress( 1, "MOBILEMG42*" );
+    Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+    Util.SetMaxUsersInProgress( 2, "BUILD*" );
+    Util.SetMaxUsersInProgress( 2, "PLANT*" );
+    Util.SetMaxUsersInProgress( 5, "FLAG*" );
+    Util.SetMaxUsersInUse( 1, "ATTACK.*" );
+    Util.SetMaxUsersInUse( 1, "DEFEND.*" );
+    Util.SetMaxUsersInUse( 1, "MOBILEMG42.*" );
+    Util.SetMaxUsersInUse( 1, "SNIPE.*" );
+    Util.SetMaxUsersInUse( 1, "BUILD.*" );
+    Util.SetMaxUsersInUse( 1, "PLANT.*" );
+    
+    Util.OnTriggerPosition( "MOVER_tank", "endPosition", 200, Map.tank_Final_Position );
+     
+    SetMapGoalProperties( "ATTACK.*", {mincamptime=15, maxcamptime=20} );
+    SetMapGoalProperties( "DEFEND*", {mincamptime=30, maxcamptime=45} );
+    SetMapGoalProperties( "MOBILEMG42.*", {mincamptime=120, maxcamptime=180} );
+    SetMapGoalProperties( "SNIPE.*", {mincamptime=20, maxcamptime=30} );
+    
+    SetGoalPriority( ".*_Axis_NorthRadar.*", 0.6 );
+    SetGoalPriority( ".*_Axis_SouthRadar.*", 0.6 );
+    
+    // Allied Goals
+    SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+    SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
+    SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Outer_Side_Entrance );
+    SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_roadbunker" );
+    SetAvailableMapGoals( TEAM.ALLIES, true, ".*Bunker_In.*" );
+    SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allies_MainGate.*" );
+    
+    // Axis Goals
+    SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+    SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Bunker_MG_Nest );
+    SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Road_MG_Nest );
+    SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_Bunker_Out.*" );
+    SetAvailableMapGoals( TEAM.AXIS, true, ".*_Bunker_In.*" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_roadbunker" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_objhacab2" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_objhacab1" );
+    
+    ETUtil.EnableGoal( "ROUTE.*" );
+    
+    ETUtil.DisableGoal( "ROUTE_Bunker_Security_Exit" );
+    ETUtil.DisableGoal( "ROUTE_Main_Gate_Left" );
+
+    // Set up Routing
+    MapRoutes =
+    {
+        CHECKPOINT_roadbunker =
+        {
+            ROUTE_Allied_House_Spawn1 =
+            {
+                ROUTE_frontGate = 
+                {
+                    ROUTE_Bunker_Road_Exit = {},
+                    ROUTE_Bunker_Side_Exit = { Weight = 2, },
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+                ROUTE_Tunnel_Exit =
+                {
+                    ROUTE_Bunker_Road_Exit = { Weight = 2, },
+                    ROUTE_Bunker_Side_Exit = {},
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+            },
+            ROUTE_Allied_House_Spawn2 =
+            {
+                ROUTE_frontGate = 
+                {
+                    ROUTE_Bunker_Road_Exit = {},
+                    ROUTE_Bunker_Side_Exit = { Weight = 2, },
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+                ROUTE_Tunnel_Exit =
+                {
+                    ROUTE_Bunker_Road_Exit = { Weight = 2, },
+                    ROUTE_Bunker_Side_Exit = {},
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+            },                    
+            ROUTE_Allied_House_Exit =
+            {
+                ROUTE_frontGate = 
+                {
+                    ROUTE_Bunker_Road_Exit = {},
+                    ROUTE_Bunker_Side_Exit = { Weight = 2, },
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+                ROUTE_Tunnel_Exit =
+                {
+                    ROUTE_Bunker_Road_Exit = { Weight = 2, },
+                    ROUTE_Bunker_Side_Exit = {},
+                    ROUTE_Archway =
+                    {
+                        ROUTE_Bunker_Gate_Exit = {},
+                    },
+                },
+            },
+        },
+            
+        PLANT_South_Radar_Station =
+        {
+            ROUTE_Bunker_Spawn =
+            {
+                ROUTE_Bunker_Gate_Exit =
+                {
+                    ROUTE_flankRight =
+                    {
+                        ROUTE_breakLeft = {},
+                        ROUTE_breakRight = {},  
+                    },
+                },
+                ROUTE_Bunker_Security_Exit = 
+                {
+                    ROUTE_mainGate_breakLeft =
+                    {
+                        ROUTE_flankRight =
+                        {
+                            ROUTE_breakLeft = {},
+                            ROUTE_breakRight = {},  
+                        },
+                    },
+                    ROUTE_generatorRoute =
+                    {
+                            
+                    },
+                },
+                ROUTE_Bunker_Side_Exit =
+                {
+                    ROUTE_cpSpawn =
+                    {
+                            
+                    },        
+                },      
+            },
+            ROUTE_mainGate =
+            {
+                ROUTE_mainGate_breakLeft = 
+                {
+                    ROUTE_generatorRoute = 
+                    {
+                            
+                    },
+                },
+                ROUTE_flankRight =
+                {
+                    ROUTE_breakLeft = {},
+                    ROUTE_breakRight = {},  
+                },
+            },        
+        },
+            
+        PLANT_North_Radar_Station =
+        {
+            ROUTE_Bunker_Spawn =
+            {
+                ROUTE_Bunker_Gate_Exit =
+                {
+                    ROUTE_flankRight =
+                    {
+                        ROUTE_breakLeft = 
+                        {
+                                ROUTE_Wooden_Bridge = {},  
+                        },
+                        ROUTE_breakRight = 
+                        {
+                                ROUTE_Wooden_Bridge = {},
+                        },              
+                    },
+                },
+                ROUTE_Bunker_Security_Exit = 
+                {
+                    ROUTE_mainGate_breakLeft =
+                    {
+                            ROUTE_flankRight =
+                            {
+                                    ROUTE_breakLeft = 
+                                    {
+                                            ROUTE_Wooden_Bridge = {},  
+                                    },
+                                    ROUTE_breakRight = 
+                                    {
+                                            ROUTE_Wooden_Bridge = {},
+                                    },    
+                            },
+                    },
+                    ROUTE_generatorRoute =
+                    {
+                            ROUTE_eastApproach =
+                            {
+                                    ROUTE_as_Left = {},
+                                    ROUTE_as_Right = {},
+                            },
+                    },
+                },
+                ROUTE_Bunker_Side_Exit =
+                {
+                    ROUTE_cpSpawn =
+                    {
+                            ROUTE_eastApproach =
+                            {
+                                    ROUTE_as_Left = {},
+                                    ROUTE_as_Right = {},
+                            },
+                    },        
+                },      
+            },
+            ROUTE_mainGate =
+            {
+                ROUTE_mainGate_breakLeft = 
+                {
+                    ROUTE_generatorRoute = 
+                    {
+                            ROUTE_eastApproach =
+                            {
+                                    ROUTE_as_Left = {},
+                                    ROUTE_as_Right = {},
+                            },
+                    },
+                },
+                ROUTE_flankRight =
+                {
+                    ROUTE_breakLeft = 
+                    {
+                            ROUTE_Wooden_Bridge = {},  
+                    },
+                    ROUTE_breakRight = 
+                    {
+                            ROUTE_Wooden_Bridge = {},
+                    },    
+                },
+            },        
+        },
+    };
+
+    MapRoutes.ATTACK_Allies_MainGate_1 = MapRoutes.CHECKPOINT_roadbunker;
+    MapRoutes.ATTACK_Allies_MainGate_2 = MapRoutes.CHECKPOINT_roadbunker;
+    MapRoutes.ATTACK_Allies_MainGate_3 = MapRoutes.CHECKPOINT_roadbunker;
+    MapRoutes.ATTACK_Allies_MainGate_4 = MapRoutes.CHECKPOINT_roadbunker;
+    MapRoutes.ATTACK_Allies_MainGate_5 = MapRoutes.CHECKPOINT_roadbunker;
+
+    Util.Routes(MapRoutes);
+    
+    print( "Omni-bot map script for", GetMapName(), "executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+    // Uncomment for shootable breakables
+    bot.TargetBreakableDist = 80.0;
+    // Only set on maps with limited sight (e.g. fog)
+    //~bot.MaxViewDistance = 2400;
+};

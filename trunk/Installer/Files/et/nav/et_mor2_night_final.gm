@@ -1,0 +1,614 @@
+/****************************************************
+Pathing updated and script by **PCZ** >M@t3o$<
+Correspondant WAY file size : 58,4 Ko (59 865 octets)
+Last Update : 2 November 2009
+****************************************************/
+
+global Map =
+{
+	Ammo_Cabinet_ammo1 = "AMMOCAB_ammo1",
+	Ammo_Cabinet_ammo2 = "AMMOCAB_ammo2",
+	Health_Cabinet_health1 = "HEALTHCAB_health1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Flag_case1 = "FLAG_case1",
+	Cappoint_TRUCKGOAL = "CAPPOINT_TRUCKGOAL",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_MG2 = "BUILD_MG2",
+	Build_Neutral_Barricades = "BUILD_Neutral_Barricades",
+	Build_North_market_MG_nest = "BUILD_North_market_MG_nest",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_defences_bridge = "BUILD_Tank_defences_bridge",
+	Build_barricade_materials = "BUILD_barricade_materials",
+	Build_lab_barricade_materials = "BUILD_lab_barricade_materials",
+	Build_villa_courtyard_gate = "BUILD_villa_courtyard_gate",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Laboratory_Entrance = "PLANT_Laboratory_Entrance",
+	Plant_MG2 = "PLANT_MG2",
+	Plant_Neutral_Barricades = "PLANT_Neutral_Barricades",
+	Plant_North_market_MG_nest = "PLANT_North_market_MG_nest",
+	Plant_Tank_defences_bridge = "PLANT_Tank_defences_bridge",
+	Plant_back_door = "PLANT_back_door",
+	Plant_barricade_materials = "PLANT_barricade_materials",
+	Plant_lab_barricade_materials = "PLANT_lab_barricade_materials",
+	Plant_villa_courtyard_gate = "PLANT_villa_courtyard_gate",
+	Mount_MG2 = "MOUNTMG42_MG2",
+	Mount_North_market_MG_nest = "MOUNTMG42_North_market_MG_nest",
+	Repair_MG2 = "REPAIRMG42_MG2",
+	Repair_North_market_MG_nest = "REPAIRMG42_North_market_MG_nest",
+	Mover_tank = "MOVER_tank",
+
+	MountVehicle =
+	{
+		Enabled = false,
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	MG2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG2_Built" );
+	},
+
+	MG2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG2_Destroyed" );
+	},
+
+	Tank_defences_bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_defences_bridge_Built" );
+	},
+
+	Tank_defences_bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_defences_bridge_Destroyed" );
+	},
+
+	Tank_at_Gate = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_at_Gate" );
+	},
+
+	Town_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+//~		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_objective.*" );
+		Util.EnableGroup( "axis_obj", TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Command_Post );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_villa_courtyard_gate );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Neutral_Barricades );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_MG2 );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_MG2 );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_North_market_MG_nest );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Tank_defences_bridge );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_MG2 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Tank_defences_bridge );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+		Util.EnableGroup( "def", TEAM.AXIS);
+
+		Util.MapDebugPrint( "Town_Gate_Destroyed" );
+	},
+
+	North_market_MG_nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_North_market_MG_nest );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_North_market_MG_nest );
+
+		Util.MapDebugPrint( "North_market_MG_nest_Built" );
+	},
+
+	North_market_MG_nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "North_market_MG_nest_Destroyed" );
+	},
+
+	villa_courtyard_gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "villa_courtyard_gate_Built" );
+	},
+
+	villa_courtyard_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "villa_courtyard_gate_Destroyed" );
+	},
+
+	Barbwire_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Barbwire_Built" );
+	},
+
+	Barbwire_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Barbwire_Destroyed" );
+	},
+
+	Wooden_Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wooden_Wall_Built" );
+	},
+
+	Wooden_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wooden_Wall_Destroyed" );
+	},
+
+	back_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_barricade_materials );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_backdoor );
+
+		Util.MapDebugPrint( "back_door_Destroyed" );
+	},
+
+	backdoor_barricade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_barricade_materials );
+
+		Util.MapDebugPrint( "backdoor_barricade_Built" );
+	},
+
+	backdoor_barricade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_barricade_materials );
+
+		Util.MapDebugPrint( "backdoor_barricade_Destroyed" );
+	},
+
+	Laboratory_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Laboratory_Entrance_Destroyed" );
+	},
+
+	lab_barricade_materials_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag("labdoor2", "closed", false);
+
+		Util.MapDebugPrint( "lab_barricade_materials_Built" );
+	},
+
+	lab_barricade_materials_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag("labdoor2", "closed", true);
+
+		Util.MapDebugPrint( "lab_barricade_materials_Destroyed" );
+	},
+
+	case1_Taken = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_truck.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_ally.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
+		Util.DisableGroup( "def", TEAM.AXIS);
+		Util.DisableGroup( "plant", TEAM.AXIS);
+		Util.DisableGroup( "build", TEAM.AXIS);
+		Util.DisableGroup( "plant", TEAM.ALLIES);
+		Util.DisableGroup( "build", TEAM.ALLIES);
+		Util.DisableGroup( "axis_obj", TEAM.AXIS);
+
+
+
+		Util.MapDebugPrint( "case1_Taken" );
+	},
+
+	case1_Returned = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_truck.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_ally.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
+		Util.EnableGroup( "plant", TEAM.AXIS);
+		Util.EnableGroup( "build", TEAM.AXIS);
+		Util.EnableGroup( "plant", TEAM.ALLIES);
+		Util.EnableGroup( "build", TEAM.ALLIES);
+		Util.EnableGroup( "axis_obj", TEAM.AXIS);
+		Util.EnableGroup( "def", TEAM.AXIS);
+
+		Util.MapDebugPrint( "case1_Returned" );
+	},
+
+	case1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS )
+			{
+				r = RandRange(0,10);
+				if( r < 2 )
+				{
+					bot.SayVoice(VOICE.G_NEGATIVE);
+				}
+				else if( r > 8 )
+				{
+					bot.Say("Verdammt!");
+				}
+			}
+			if ( bot.GetTeam() == TEAM.ALLIES )
+			{
+				r = RandRange(0,10);
+				if( r < 2 )
+				{
+					bot.SayVoice(VOICE.G_GOODGAME);
+				}
+				else if( r > 8 )
+				{
+					sleep(1.2);
+					bot.SayVoice(VOICE.G_CHEER);
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "case1_Secured" );
+	},
+	
+	tank_at_location = function(trigger)
+	{
+		switch(Map.VehicleLocation)
+		{
+			case 1:
+			{
+				// clear the exlude indexes
+				ETUtil.SetExcludeIndexes( "ESCORT_tank" );				
+			}
+		}
+		Util.MapDebugPrint("tank at location " + Map.VehicleLocation, true);
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// The announcements for both command post built events are trimmed to 71 chars,
+	// the maximum supported by Omni-bot.
+	OnTrigger( "^D***^WAllied team have constructed a command post.  Charge speed incre", Map.Allied_Command_Post_Built );
+	OnTrigger( "^J***^WAxis team have destroyed the Allied Commmand Post^J***", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "^J***^WAxis team have constructed a command post. Charge speed increase", Map.Axis_Command_Post_Built );
+	OnTrigger( "^D***^WAllied team have destroyed the Axis Commmand Post^D***", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "^D***^WAllied team have constructed the Tank defences bridge^D***", Map.Tank_defences_bridge_Built );
+	OnTrigger( "^J***^WAxis team have destroyed the Tank defences bridge^J***", Map.Tank_defences_bridge_Destroyed );
+	OnTrigger( "^J***^WAxis team have constructed the MG2 nest^J***", Map.MG2_Built );
+	OnTrigger( "^D***^WAllied team has destroyed the MG2 nest^D***", Map.MG2_Destroyed );
+	OnTrigger( "^D***^WThe Allied Tank is nearly at the town gate!^D***", Map.Tank_at_Gate );
+	OnTrigger( "^D***^WAllies have destroyed the Main town gate!^D***", Map.Town_Gate_Destroyed );
+	OnTrigger( "^J***^WAxis team have constructed the North market MG nest^J***", Map.North_market_MG_nest_Built );
+	OnTrigger( "^D***^WAllied team has destroyed the North market MG nest^D***", Map.North_market_MG_nest_Destroyed );
+	OnTrigger( "^D***^WAllied team have constructed the wooden wall barricade!^D***", Map.Wooden_Wall_Built );
+	OnTrigger( "^J***^WAxis team have destroyed the wooden wall barricade!^J***", Map.Wooden_Wall_Destroyed );
+	OnTrigger( "^J***^WAxis team have constructed the barbWire barricade!^J***", Map.Barbwire_Built );
+	OnTrigger( "^D***^WAllied team have destroyed the barbwire barricade!^D***", Map.Barbwire_Destroyed );
+	OnTrigger( "^J***^WAxis team have constructed the villa courtyard gate^J***", Map.villa_courtyard_gate_Built );
+	OnTrigger( "^D***^WAllied team have destroyed the villa courtyard gate^D***", Map.villa_courtyard_gate_Destroyed );
+	OnTrigger( "^D***^WAllies have destroyed the back door!^D***", Map.back_door_Destroyed );
+	OnTrigger( "^J***^WAxis have built the backdoor barricade!^J***", Map.backdoor_barricade_Built );
+	OnTrigger( "^D***^WAllies have destroyed the backdoor barricade!^D***", Map.backdoor_barricade_Destroyed );
+	OnTrigger( "^D***^WAllies have destroyed the Laboratory Entrance!^D***", Map.Laboratory_Entrance_Destroyed );
+	OnTrigger( "^J***^WAxis have built the Laboratory barricade!^J***", Map.lab_barricade_materials_Built );
+	OnTrigger( "^D***^WAllies have destroyed the Laboratory barricade!^D***", Map.lab_barricade_materials_Destroyed );
+	OnTrigger( "Allies have stolen the Document Case!", Map.case1_Taken );
+	OnTrigger( "Flag returned case1!", Map.case1_Returned ); // case returned by Axis or timeout when dropped
+	OnTrigger( "^D***^WAllies have secured the Documents Case!^D***", Map.case1_Secured );
+	OnTrigger( "tank at location", Map.tank_at_location );
+	
+	location1 = OnTriggerRegion(AABB(8921.123,2633.979,-303.442,9025.499,2959.243,-213.347),RegionTrigger.VehicleTrigger);
+
+	// misc
+
+	Util.SetGroup( "DEFEND_784", "def");
+	Util.SetGroup( "DEFEND_806", "def");
+	Util.SetGroup( "DEFEND_807", "def");
+	Util.SetGroup( "PLANT_.*", "plant");
+	Util.SetGroup( "BUILD_.*", "build");
+	Util.SetGroup( "CAMP_ally.*", "camp");
+	Util.SetGroup( "CAMP_truck.*", "axis_camp");
+	Util.SetGroup( "DEFEND_axis_objective.*", "axis_obj");
+	Util.RemoveGoal( "BUILD_Tank" ); // it's invulnerable
+	ETUtil.SetExcludeIndexes( "ESCORT_tank", { 0,1,2,4 } ); // can't escort from the back at start
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_objective.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_barricade_materials );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Command_Post );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_North_market_MG_nest );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_villa_courtyard_gate );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Neutral_Barricades );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_tank" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank" );
+	Util.DisableGroup( "def", TEAM.AXIS);
+
+	// *** ALLIED GOALS ***
+	Util.AddInvVehicle("MOVER_tank");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_MG2 );
+	Util.DisableGroup( "def", TEAM.ALLIES);
+
+	// *** PRIORITIES ***
+	SetGoalPriority( "ATTACK_.*", 0.6 );
+	SetGoalPriority( "DEFEND_.*", 0.6 );
+	SetGoalPriority( "CAMP_.*", 0.65 );
+	SetGoalPriority( Map.Plant_Axis_Command_Post, 0.7 );
+	SetGoalPriority( Map.Plant_Neutral_Barricades, 0.7 );
+	SetGoalPriority( Map.Plant_back_door, 0.8 );
+	SetGoalPriority( Map.Plant_barricade_materials, 0.8) ;
+	SetGoalPriority( Map.Plant_villa_courtyard_gate, 0.8) ;
+	SetGoalPriority( Map.Plant_lab_barricade_materials, 0.9 );
+	SetGoalPriority( Map.Plant_Laboratory_Entrance, 0.9 );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "PLANT.*" );
+	Util.SetMaxUsers( 1, "CAMP_.*" );
+	Util.SetMaxUsers( 2, "BUILD.*" );
+	Util.SetMaxUsers( 1, "PLANT.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "REPAIR.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOUNT_" );
+	Util.SetMaxUsers( 1, "ESCORT_" );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=60, MaxCampTime=120});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120});
+
+	// *** MOVING FEW PLANT GOALS ***
+	Util.SetGoalPosition( 30, 50, 0, "PLANT_Barbwire" );
+	Util.SetGoalPosition( -328, -1953, 62, "PLANT_back_door" );
+	Util.SetGoalPosition( -1020, -1100, 0, "PLANT_villa_courtyard_gate" );
+	Util.SetGoalPosition( 5500, -450, -50, "PLANT_Tank_defences_bridge" );
+
+	Wp.SetWaypointFlag("labdoor2", "closed", true);
+
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		//Allied Goals
+		ATTACK_Bravo1 =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_Tunnel = {},
+			},
+		},
+
+		ATTACK_Bravo3 =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_TankPath = {},
+			},
+		},
+
+		PLANT_villa_courtyard_gate =
+		{
+			ROUTE_AlliedSpawn2 =
+			{
+				ROUTE_AlliedDoors =
+				{
+					ROUTE_Middle1 =
+					{
+						ROUTE_Middle1_1 ={},
+						ROUTE_Middle1_2 ={},
+					},
+				},
+				ROUTE_AlliedLeft1 =
+				{
+					ROUTE_Middle1 =
+					{
+						ROUTE_Middle1_1 ={},
+						ROUTE_Middle1_2 ={},
+					},
+				},
+			},
+		},
+
+		PLANT_backdoor =
+		{
+			ROUTE_AlliedSpawn2 =
+			{
+				ROUTE_AlliedLeft1 =
+				{
+					ROUTE_Backdoor1 = {},
+				},
+			},
+		},
+
+		PLANT_Neutral_Barricades =
+		{
+			ROUTE_AlliedSpawn2 =
+			{
+				ROUTE_AlliedDoors =
+				{
+					ROUTE_Middle1 =
+					{
+						ROUTE_Barbwire = {},
+					},
+				},
+				ROUTE_AlliedLeft1 =
+				{
+					ROUTE_AlliedLeft2 =
+					{
+						ROUTE_Barbwire = {},
+					},
+				},
+			},
+		},
+
+		CAPPOINT_TRUCKGOAL =
+		{
+			ROUTE_Docs =
+			{
+				ROUTE_BackDoor2 =
+				{
+					ROUTE_Escape =
+					{
+						ROUTE_AlliedLeft1 = {},
+					},
+					ROUTE_BackDoor1 =
+					{
+						ROUTE_AlliedLeft1 ={},
+					},
+				},
+			},
+		},
+
+		//Axis Goals
+		PLANT_Allied_Command_Post =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_AlliedCP1 =
+				{
+					ROUTE_AlliedCP2 =
+					{
+						ROUTE_AlliedCP3 =
+						{
+							ROUTE_AlliedCP4 =
+							{
+								ROUTE_AlliedCP5 = {},
+							},
+						},
+					},
+				},
+			},
+		},
+
+		BUILD_lab_barricade_materials =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Lab1 =
+				{
+					ROUTE_Lab2 =
+					{
+						ROUTE_Lab3 = {},
+					},
+				},
+			},
+		},
+	};
+
+	MapRoutes.ATTACK_Bravo1 = MapRoutes.ATTACK_Bravo2;
+	MapRoutes.ATTACK_Bravo1 = MapRoutes.ATTACK_Bravo4;
+	MapRoutes.ATTACK_Bravo1 = MapRoutes.ATTACK_Bravo5;
+	MapRoutes.ATTACK_Bravo3 = MapRoutes.ATTACK_Bravo6;
+	MapRoutes.PLANT_backdoor = MapRoutes.PLANT_backdoor_barricade;
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for Marrakesh Streets 2 By Night Final by **PCZ** >M@t3o$<." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100;
+};

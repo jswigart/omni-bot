@@ -1,0 +1,59 @@
+//==========================================================================================
+//
+//	aim_map.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Snipe_100 = "SNIPE_100",
+	Snipe_101 = "SNIPE_101",
+	Snipe_102 = "SNIPE_102",
+	Snipe_103 = "SNIPE_103",
+	Snipe_104 = "SNIPE_104",
+	Snipe_105 = "SNIPE_105",
+	Snipe_80 = "SNIPE_80",
+	Snipe_81 = "SNIPE_81",
+	Snipe_83 = "SNIPE_83",
+	Snipe_84 = "SNIPE_84",
+	Snipe_85 = "SNIPE_85",
+	Snipe_86 = "SNIPE_86",
+	Snipe_87 = "SNIPE_87",
+	Snipe_88 = "SNIPE_88",
+	Snipe_89 = "SNIPE_89",
+	Snipe_90 = "SNIPE_90",
+	Snipe_91 = "SNIPE_91",
+	Snipe_92 = "SNIPE_92",
+	Snipe_93 = "SNIPE_93",
+	Snipe_94 = "SNIPE_94",
+	Snipe_95 = "SNIPE_95",
+	Snipe_96 = "SNIPE_96",
+	Snipe_97 = "SNIPE_97",
+	Snipe_98 = "SNIPE_98",
+	Snipe_99 = "SNIPE_99",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

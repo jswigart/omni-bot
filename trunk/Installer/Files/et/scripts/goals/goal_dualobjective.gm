@@ -1,0 +1,217 @@
+// This script contains functionality to allow bots to use scripted defend spots for dual objective maps
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.DUALOBJECTIVE)
+{
+	BB.DUALOBJECTIVE = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "DualObjective";
+this.Parent = "HighLevel";
+this.AutoAdd = false;
+this.SkipGetPriorityWhenActive = true;
+
+this.Initialize = function()
+{
+	team = this.Bot.GetTeam();
+
+	this.TimeCounter = 0;
+
+	if (!Map || !Map.Defend
+		|| (team == TEAM.AXIS && !Map.Defend.Axis)
+		|| (team == TEAM.ALLIES && !Map.Defend.Allies))
+	{
+		this.Disable = true;
+		return;
+	}
+
+	if ( Map.Defend.EvalDefend )
+		{ this.EvalDefend = Map.Defend.EvalDefend; }
+
+	this.LimitTo(this.EvalDefend, 1);
+
+	if( !Map.DefendCacheTable )
+		{ Map.DefendCacheTable = table(); }
+
+	if ( typeId( Map.Defend.CampTime ) == 0 )
+		{ this.CampTime = 30; }
+	else
+		{ this.CampTime = Map.Defend.CampTime; }
+
+	if ( typeId( Map.Defend.MaxUsers ) == 0 )
+		{ this.MaxUsers = 1; }
+	else
+		{ this.MaxUsers = Map.Defend.MaxUsers; }
+
+	if ( typeId( Map.Defend.Priority) == 0 )
+		{ Map.Defend.Priority = 0.95; }
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
+};
+
+this.EvalDefend = function()
+{
+	if ( this.Bot.GetTeam() == TEAM.AXIS && Map.Defend.AxisUsers[ this.Bot.GetGameId() ] == true
+		&& tableCount( Map.Defend.Axis) > 0 )
+	{
+		return true;
+	}
+
+	if ( this.Bot.GetTeam() == TEAM.ALLIES && Map.Defend.AlliesUsers[ this.Bot.GetGameId() ] == true
+		&& tableCount( Map.Defend.Allies) > 0 )
+	{
+		return true;
+	}
+
+	return false;
+};
+
+this.Enter = function()
+{
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = this.BlackboardId,
+	};
+	Blackboard.PostRecord(BB.DUALOBJECTIVE, bbRecord);
+};
+
+this.Exit = function()
+{
+	// Remove myself from the blackboard for using this switch
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.DUALOBJECTIVE);
+
+	this.TimeCounter = 0;
+	this.wpName = null;
+	this.ReleaseWeaponRequest();
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		if ( Map.Defend.Axis && this.Bot.GetTeam() == TEAM.AXIS )
+		{
+			if ( tableCount(Map.Defend.Axis) > 0 )
+				{ this.CacheHelper(Map.Defend.Axis); }
+		}
+		else if ( Map.Defend.Allies && this.Bot.GetTeam() == TEAM.ALLIES )
+		{
+			if ( tableCount(Map.Defend.Allies) > 0 )
+				{ this.CacheHelper(Map.Defend.Allies);}
+		}
+		else
+		{
+			block(0);
+		}
+
+		if (this.wpName)
+		{
+			this.DebugString = this.wpName;
+			this.Priority = Map.Defend.Priority;
+		}
+
+		sleep(1.0);
+	}
+};
+
+this.CacheHelper = function(defendTable)
+{
+	tmp = {};
+	foreach ( id and wp in defendTable )
+	{
+		if(!Map.DefendCacheTable[wp] )
+			{ Map.DefendCacheTable[wp] = table(); }
+
+		//don't use the same one twice in a row
+		if ( this.Guid && this.Guid == Map.DefendCacheTable[wp].Guid )
+			{ continue; }
+
+		if ( !Map.DefendCacheTable[wp].Pos  )
+		{
+			wpTable = table();
+			Wp.GetWaypointByName(wp, wpTable);
+			this.Pos = wpTable.position;
+			this.Facing = wpTable.facing * 1024;
+			this.Guid = wpTable.guid;
+			this.wpgoal = GetGoal("UGOAL_" + wp);
+
+			Map.DefendCacheTable[wp].Pos = this.Pos;
+			Map.DefendCacheTable[wp].Facing = this.Facing;
+			Map.DefendCacheTable[wp].Guid = this.Guid;
+			if ( this.wpgoal )
+				{ Map.DefendCacheTable[wp].wpgoal = this.wpgoal; }
+			else
+				{ Map.DefendCacheTable[wp].wpgoal = null; }
+
+			this.BlackboardId = this.Guid;
+		}
+		else
+		{
+			this.Pos = Map.DefendCacheTable[wp].Pos;
+			this.Facing = Map.DefendCacheTable[wp].Facing;
+			this.Guid = Map.DefendCacheTable[wp].Guid;
+
+			if ( Map.DefendCacheTable[wp].wpgoal )
+				{ this.wpgoal = Map.DefendCacheTable[wp].wpgoal; }
+
+			this.BlackboardId = this.Guid;
+		}
+
+		if ( Blackboard.GetNumRecords(BB.DUALOBJECTIVE, this.Guid) < this.MaxUsers )
+		{
+			i = tableCount(tmp);
+			tmp[ i ] = wp;
+		}
+	}
+
+	// pick a random one from all available
+	tmpCount = tableCount(tmp);
+	if ( tmpCount > 0 )
+	{
+		useWp = RandInt(0, tmpCount - 1);
+		this.wpName = tmp[ useWp ];
+		this.Pos = Map.DefendCacheTable[this.wpName].Pos;
+		this.Facing = Map.DefendCacheTable[this.wpName].Facing;
+		this.Guid = Map.DefendCacheTable[this.wpName].Guid;
+		this.BlackboardId = this.Guid;
+	}
+};
+
+this.Update = function()
+{
+	if ( !this.wpgoal )
+	{
+		if ( !this.Pos || this.Goto(this.Pos) == EVENT.PATH_FAILED )
+			{ this.Finished(); }
+	}
+	else
+	{
+		if ( this.RouteTo(this.wpgoal) == EVENT.PATH_FAILED )
+			{ this.Finished(); }
+	}
+
+	this.AddAimRequest(Priority.Low, "facing", this.Facing);
+
+	if ( this.Bot.GetClass() == CLASS.SOLDIER )
+	{
+		this.CheckSoldierWeap();
+	}
+
+	this.TimeCounter += 1;
+	if ( this.TimeCounter >= this.CampTime )
+	{
+		this.Finished();
+	}
+	sleep(1);
+};
+
+this.CheckSoldierWeap = function()
+{
+	if ( this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)  )
+		{ this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST ); }
+
+	// add more if needed
+};
+

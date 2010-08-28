@@ -1,0 +1,291 @@
+/*******************************************************************************
+  Filename: chartwell.gm
+
+  Created by: Advieszeur
+
+  Last Updated: Thu, 14 June 2007 14:29:21 GMT
+  Updated by: Advieszeur
+
+  Change log:
+
+--------------------------------------------------------------------------------
+Map description:
+
+- Scenario 1943, Chartwell, England. Axis paratroops attack the home of Churchill to steal the D-Day plans.
+
+- Axis must steal the D-Day Plans from the safe in the study-room, and bring this to the CommandPost outside the house.
+- The safe is in the locked study-room on the second floor and has 2 blowable doors (studydooreast and studydoorsouth)
+- The safe can only opened with the keys from the Dining Room, wich Axis must grab.
+- To enter the house Axis must destroy the Main door or either of the side doors.
+
+Goals Axis:
+1. Dyno the main door, and Enter the house
+2. Destroy at least one door from the study-room so the key-carrier can get in.
+3. Grab the key from the Dinning room and open the safe with it.
+4. Steal the Documents out the safe and transmit it at the commandpost.
+
+Goals Allies:
+1. Defend the 3 entrances of the house (construct the side doors)
+2. Defend the 2 doors from the study-room
+3. Prevent stealing the keys and the plans
+4. Prevent bringing the plans to the commandpost
+
+
+---  DEFEND SPOTS  Allies :  -----
+
+  DEFEND_studydoors_allies	//Defend the study-doors	        (Toggle by stealing and returning docs)
+  DEFEND_studydoors_allies2	//Defend the study-doors		(Toggle by stealing and returning docs)
+  DEFEND_keys_allies		//Defend the keys			(Disable at start and steal keys, Enable at destroy studydoor)
+  DEFEND_keys_allies2		//Defend the keys and a side door	(Disable at start and steal keys, Enable at destroy studydoor)
+  DEFEND_plans_allies		//Defend the safe			(Disable at start, toggle by stealing and returning docs)
+  DEFEND_compost_allies		//Defend the CommandPost		(Disable at start, toggle by stealing and returning docs)
+  DEFEND_compost_allies2	//Defend the CommandPost		(Disable at start, toggle by stealing and returning docs)
+  DEFEND_maindoor_mg_allies	//Defend the Maindoor			(Enable at start, Disable when maindoor is destroyed)
+
+************************************************************************************************************************************/
+
+
+global Map =
+{
+
+  MainDoorStatus = 0,       // Not destroyed
+  Maindoor_MgStatus = 0,    // not build
+  StudyDoorStatus   = 0,    // Not Destroyed
+ 
+
+  maindoor_Destroyed = function( trigger )
+     {
+	map.MainDoorStatus = 1;
+
+	// Reset defond spot Allies  (keys and plan defend spots are more important)
+ 	// SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+
+	print( "maindoor_Destroyed" );
+     }, 
+
+
+  MgSet = function( trigger )
+     {
+	Maindoor_MgStatus  = 1;
+	print( "maindoor_MG Available" );
+     }, 
+
+
+  MgReset = function( trigger )
+     {
+	Maindoor_MgStatus  = 0;
+	print( "maindoor_MG Disabled" );
+     }, 
+
+
+
+  //Phase 1: Destroy Doors to Study
+
+  StudydoorSouth = function(trigger)
+     {
+	// Add goal keys for Axis
+       	SetAvailableMapGoals(TEAM.AXIS, true, "FLAG_keyondesk");
+
+    	//Add defend spot Allies from outside to inside study (easy access)
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_plans_allies");
+
+
+    	//Add defendspot extra at the keys for Allies
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_keys_allies");
+
+		map.StudyDoorStatus   = 1;      //Studydoor destroyed
+    	print("Study South");
+     },
+
+
+  StudydoorEast = function(trigger)
+     {
+	// Add goal keys for Axis
+    	SetAvailableMapGoals(TEAM.AXIS, true, "FLAG_keyondesk");
+
+	//Add defendspot extra at the keys for Allies
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_keys_allies");
+
+	// If the studydoor is open, defending the key become more important
+    	if ( map.StudyDoorStatus == 1 )
+      	   {
+		// change bias of defending key
+ 		SetBiasGoals( 1.5, "DEFEND_keys_allies2" );  
+ 	   } 
+
+	map.StudyDoorStatus   = 1;      //Studydoor destroyed
+    	print("Study East");
+     },
+
+
+  KeysStolen = function(trigger)
+     {
+	// Disable one key defend spot (the other defends the door also
+    	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_keys_allies");
+    
+	// If the studydoor is open, defending the study become more important
+    	if ( map.StudyDoorStatus == 1 )
+      	   {
+		// change bias of defending study
+ 		SetBiasGoals( 1.5, "DEFEND_studydoors_allies" );  
+ 		SetBiasGoals( 1.5, "DEFEND_studydoors_allies2" );  
+ 		SetBiasGoals( 1.5, "DEFEND_studydoors_plans" );  
+ 	   }
+
+	print("Keys_stolen");	
+     },
+
+
+  KeysReturned = function(trigger)
+     {
+	// Enable one key defend spot (the other defends the door also
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_keys_allies");
+
+	// change bias of defending study to normal
+ 	SetBiasGoals( 1.0, "DEFEND_studydoors_allies" );  
+ 	SetBiasGoals( 1.0, "DEFEND_studydoors_allies2" );  
+ 	SetBiasGoals( 1.0, "DEFEND_studydoors_plans" ); 
+
+    	print("Keys_returned"); 	
+     },
+
+
+
+
+ //Phase 2: Get keys to safe
+
+  SafeOpened = function(trigger)
+     {
+    	// Move cappoint and add goal Axis
+    	SetAvailableMapGoals(TEAM.AXIS, true, "CAPPOINT_compost");
+    	SetAvailableMapGoals(TEAM.AXIS, true, "FLAG_plans");
+    	SetAvailableMapGoals(TEAM.AXIS, false, "CAPPOINT_safe");
+
+    	//Disable key defend spots for Allies
+    	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_keys_allies");
+    	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_keys_allies2");
+
+	// Add Commandpost destroy en repair as goal  for Allies
+  	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_Neutral_Command_Post");
+  	SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_Neutral_Command_Post");
+
+	print("Safe Opened");
+     },
+
+
+  //Phase 3: Get Plans to CommandPost
+
+  PlansStolen = function(trigger)
+     {
+
+	// Disable the plan defend spots  (outside and inside the study-room)
+  	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_studydoors_allies");
+  	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_studydoors_allies2");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_plans_allies");
+	
+	// Enable the commandpost defend spots and the maindoor defend
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_compost_allies");
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_compost_allies2");
+
+
+	// If the maindoor is not an escape route, or the MG is not available
+	// The defendspot can be disabled
+    	if ( Map.MainDoorStatus != 1 && Maindoor_MgStatus != 1)
+      	   {
+ 		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+ 	   }
+	
+	print("Plans Stolen");
+     },
+
+
+ 
+  PlansReturned = function(trigger)
+     {
+
+	// changing goals
+    	SetAvailableMapGoals(TEAM.AXIS, true, "FLAG_plans");
+    	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_compost_allies");
+    	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_compost_allies2");
+    	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_plans_allies");
+
+	// The defendspot for guard the maindoor must be enabled when MG is available
+    	if ( Map.Maindoor_MgStatus == 1)
+      	   {
+ 		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+ 	   }
+
+	print("Plans Returned to the study");
+     },
+
+};
+
+
+global OnMapLoad = function()
+{
+  
+  //Disable unusable capture objectives and capture spots  AXIS:
+  SetAvailableMapGoals(TEAM.AXIS, false, "CAPPOINT_compost");
+  SetAvailableMapGoals(TEAM.AXIS, false, "FLAG_plans");
+  SetAvailableMapGoals(TEAM.AXIS, false, "FLAG_keyondesk");
+
+  // Disable MG42 and repair for both teams, exept at the maindoor for Allies
+  ETUtil.DisableGoal("MOUNTMG42.*");   //disable mount all mg for both teams
+  ETUtil.DisableGoal("REPAIRMG42.*");      //repair disable  all mg for both teams
+  SetAvailableMapGoals(TEAM.ALLIES, true, "MOUNTMG42_allied_MG_track");    //Maindoor MG for Allies
+  SetAvailableMapGoals(TEAM.ALLIES, true, "REPAIRMG42_allied_MG_track");    //Maindoor MG for Allies
+
+  //Captional checkpoint disable
+  ETUtil.DisableGoal("CHECKPOINT_pavilion_flag");
+
+  //Disable Defend spots Allies not important at start:
+  SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_keys_allies");
+  SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_plans_allies");
+  SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_compost_allies");
+  SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_compost_allies2");
+
+  // Commandpost is not important at start, reset after safe is opened
+  SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_Neutral_Command_Post");
+  SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_Neutral_Command_Post");
+
+
+  //offset goals for reachability
+  Util.SetGoalOffset( 0, 0, -60, "BUILD_East_Stairwell_Door" );          //Construct spot is too high
+  Util.SetGoalOffset( 200, 60, -40, "REPAIRMG42_allied_MG_track" );   //repairspot MG is at the boxes
+
+  //set max users for goals
+  Util.SetMaxUsersInProgress( 1, "DEFEND_key.*" );    //Only one bot for defending the keys
+
+
+  // =========    Triggers for the map events   =====================
+
+  // Destroy events
+  OnTrigger("studydoorsouth", Map.StudydoorSouth);
+  OnTrigger("studydooreast", Map.StudydoorEast);
+  OnTrigger("^3*** ^7Axis have destroyed the Main Door! ^3***", Map.maindoor_Destroyed);
+  OnTrigger("^3*** ^7Allies have built the MG emplacement! ^3***", Map.MgSet);
+  OnTrigger("^3*** ^7Axis have destroyed the MG emplacement ^3***!", Map.MgReset);
+
+  // Key events:
+  OnTrigger("^3*** ^7Axis have stolen the Key to the Safe! ^3***", Map.KeysStolen);
+  OnTrigger("^3*** ^7The Allies have returned the Safe Key to the Dining Room! ^3***", Map.KeysReturned);
+
+
+  // Safe event:
+  OnTrigger("^3*** ^7Axis got the Key to the Safe - the Safe is opening! ^3***", Map.SafeOpened);
+
+
+  // Document events
+  OnTrigger("^3*** ^7Axis have stolen the D-Day Plans! ^3***", Map.PlansStolen);
+  OnTrigger("^3*** ^7The D-Day Plans have been returned to the Study! ^3***", Map.PlansReturned);
+
+  print( "OnMapLoad" );
+
+};
+
+// Much windows for better deffend spots must be broken
+global OnBotJoin = function( bot )
+   {
+	bot.TargetBreakableDist = 100.0;
+   };
+

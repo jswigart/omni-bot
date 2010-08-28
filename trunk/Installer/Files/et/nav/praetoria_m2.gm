@@ -1,0 +1,473 @@
+//script created by palota, updated for 0.8 by crapshoot and d00d
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_tank_ammotrgr = "AMMOCAB_tank_ammotrgr",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_tank_healthtrgr = "HEALTHCAB_tank_healthtrgr",
+	Flag_fuel_tank = "FLAG_fuel_tank",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Gun_Controls = "BUILD_Gun_Controls",
+	Build_Hell_on_Wheels = "BUILD_Hell_on_Wheels",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Plant_Side_Wall = "PLANT_Side_Wall",
+	Mount_MG_South = "MOUNTMG42_118",
+	Mount_MG_North = "MOUNTMG42_29",
+	Repair_MG_South = "REPAIRMG42_118",
+	Repair_MG_North = "REPAIRMG42_29",
+	Mover_Tank = "MOVER_tank1",
+	Defend_class_need = "DEFEND_class_need",
+	Cappoint_Fuel = "CAPPOINT_299",
+
+	tankDamaged = false,
+	phase = 0,
+	alliesCloseDepot = false,
+	depotDoor = "closed",
+
+	Movers = { "MOVER_tank1" },
+
+	MountVehicle = { Enabled = false },
+
+	Switches =
+	{
+		// cs: updated to new goal since it's routed to
+		// Gate_Depot =
+		// {
+			// Enabled = true,
+			// Priority = 0.7,
+			// WaypointName = "gate_depot",
+			// LimitTeam = (1<<TEAM.ALLIES),
+		// },
+		Repair_Lock =
+		{
+			Enabled = false,
+			Priority = 0.9,
+			WaypointName = "switch_repair_lock",
+			LimitTeam = (1<<TEAM.ALLIES),
+			AimPosition = Vector3(2373.685,1025.125,64.256),
+		},
+		Repair_Activate =
+		{
+			Enabled = false,
+			Priority = 0.99,
+			WaypointName = "switch_repair_activate",
+			LimitTeam = (1<<TEAM.ALLIES),
+			AimPosition = Vector3(2366.039,1185.291,29.468),
+		},
+		Gun =
+		{
+			Enabled = false,
+			Priority = 1.1,
+			WaypointName = "gun",
+			LimitTeam = (1<<TEAM.AXIS),
+			AimPosition = Vector3(5445.969,3318.594,116.384),
+		},
+	},
+
+	Invert_Gate_Depot = function()
+	{
+		Map.alliesCloseDepot = !Map.alliesCloseDepot;
+
+		mg = GetGoal("SWITCH_gate_depot");
+		if (mg.IsAvailable(TEAM.ALLIES))
+		{
+			Util.LimitToTeam(TEAM.AXIS, "SWITCH_gate_depot");
+			//Map.Switches.Gate_Depot.LimitTeam = (1<<TEAM.AXIS);
+			Util.MapDebugPrint("Axis will close door", true);
+		}
+		else
+		{
+			Util.LimitToTeam(TEAM.ALLIES, "SWITCH_gate_depot");
+			//Map.Switches.Gate_Depot.LimitTeam = (1<<TEAM.ALLIES);
+			Util.MapDebugPrint("Allies will close door", true);
+		}
+	},
+
+	gate_depot_trigger = function( trigger )
+	{
+		Util.DisableGoal("SWITCH_gate_depot");
+		vel = ToVector(trigger.Action);
+		if (vel.z < 0)
+		{
+			Map.depotDoor = "closed";
+			Util.MapDebugPrint("Door closed", true);
+		}
+		else
+		{
+			Map.depotDoor = "open";
+			Util.MapDebugPrint("Door opened", true);
+		}
+		if ((vel.z < 0 && !Map.alliesCloseDepot) || (vel.z >= 0 && Map.alliesCloseDepot))
+		{
+			Util.LimitToTeam(TEAM.ALLIES, "SWITCH_gate_depot");
+			//Map.Switches.Gate_Depot.LimitTeam = (1<<TEAM.ALLIES);
+		}
+		else
+		{
+			Util.LimitToTeam(TEAM.AXIS, "SWITCH_gate_depot");
+			//Map.Switches.Gate_Depot.LimitTeam = (1<<TEAM.AXIS);
+		}
+	},
+
+	Repair_Activated = function( trigger )
+	{
+		vel = ToVector(trigger.Action);
+		if ( vel.z <= 0 )
+		{
+			Map.Switches.Repair_Activate.LimitTeam = (1<<TEAM.AXIS);
+			Util.MapDebugPrint( "Repair_Activated", true );
+		}
+		else
+		{
+			Map.Switches.Repair_Activate.LimitTeam = (1<<TEAM.ALLIES);
+			Util.MapDebugPrint( "Repair_Deactivated", true );
+		}
+	},
+
+	Tank_Bunker = function( trigger )
+	{
+		Map.Set_Class(CLASS.ENGINEER);
+		Util.MapDebugPrint( "Tank_Bunker", true );
+	},
+
+	Gun_Spotted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_Tank );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+		Util.MapDebugPrint( "Gun_Spotted" );
+	},
+
+	Tank_Burning = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_Tank );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
+		Util.OnTriggerPosition( Map.Mover_Tank, "before_gate", 180.0, Map.Tank_At_Gate );
+		Util.MapDebugPrint( "Tank_Burning" );
+	},
+
+	Tank_At_Gate = function( trigger )
+	{
+		Util.OnTriggerPosition( Map.Mover_Tank, "depot", 190.0, Map.Tank_In_Depot );
+		SetGoalPriority( "SWITCH_gate_depot", 2.0 );
+		//Map.Switches.Gate_Depot.Priority = 2.0;
+		Util.MapDebugPrint( "Tank_At_Gate" );
+	},
+
+ 	Tank_In_Depot = function( trigger )
+	{
+		Map.phase = 10;
+		Map.Invert_Gate_Depot();
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_Tank );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+		SetGoalPriority( "SWITCH_gate_depot", 0.51 );
+		//Map.Switches.Gate_Depot.Priority = 0.51;
+		Map.Switches.Repair_Lock.Enabled=true;
+		Util.EnableGoal("DEFEND_depot.*");
+		Util.MapDebugPrint( "Tank_In_Depot" );
+	},
+
+	Repair_Locked = function( trigger )
+	{
+		Map.Switches.Repair_Lock.Enabled=false;
+		Util.MapDebugPrint( "Repair_Locked" );
+	},
+
+	Repair_Start = function( trigger )
+	{
+		Map.Switches.Repair_Activate.Enabled=true;
+		Util.MapDebugPrint( "Repair_Start" );
+	},
+
+	Set_Class = function(class)
+	{
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES && bot.GetClass() == class ){
+				return;
+			}
+		}
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES)
+			{
+				Util.MapDebugPrint("Change class " + bot.GetClass() + " to " + class, true);
+				bot.ChangeClass(class);
+				return;
+			}
+		}
+	},
+
+	Class_Need = function(class)
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Defend_class_need );
+		SetMapGoalProperties( Map.Defend_class_need, {mincamptime=12, maxcamptime=40} );
+		SetGoalPriority( Map.Defend_class_need, 0.0, TEAM.ALLIES, 0 );
+		Map.Set_Class(class);
+		SetGoalPriority( Map.Defend_class_need, 2.0, TEAM.ALLIES, class, true );
+	},
+
+	COVERTOPS_Need = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+		Map.Class_Need(CLASS.COVERTOPS);
+		Util.MapDebugPrint( "COVERTOPS_Need" );
+	},
+	FIELDOPS_Need = function( trigger )
+	{
+		Map.Class_Need(CLASS.FIELDOPS);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE.*" );
+		Util.MapDebugPrint( "FIELDOPS_Need" );
+	},
+	MEDIC_Need = function( trigger )
+	{
+		Map.Class_Need(CLASS.MEDIC);
+		Util.MapDebugPrint( "MEDIC_Need" );
+	},
+	SOLDIER_Need = function( trigger )
+	{
+		Map.Class_Need(CLASS.SOLDIER);
+		Util.MapDebugPrint( "SOLDIER_Need");
+	},
+	ENGINEER_Need = function( trigger )
+	{
+		Map.Class_Need(CLASS.ENGINEER);
+		Util.MapDebugPrint( "ENGINEER_Need" );
+	},
+
+	Tank_Installed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Defend_class_need );
+		Map.Switches.Repair_Activate.LimitTeam = (1<<TEAM.ALLIES);
+		Util.MapDebugPrint( "Tank_Installed" );
+	},
+
+	Check_Switch = function()
+	{
+		if(Map.phase==20) { Map.Switches.Repair_Lock.Enabled=!Map.tankDamaged; }
+	},
+
+	Tank_Upgraded = function( trigger )
+	{
+		Map.phase = 20;
+		Map.Invert_Gate_Depot();
+		if ( Map.depotDoor == "closed" )
+		{
+			Util.LimitToTeam(TEAM.ALLIES, "SWITCH_gate_depot");
+			Map.alliesCloseDepot = false;
+		}
+		Map.Switches.Repair_Activate.Enabled=false;
+		Util.DisableGoal(Map.Defend_class_need);
+		Map.Check_Switch();
+		Util.MapDebugPrint( "Tank_Upgraded", true );
+	},
+
+	Attack_Gun = function(enable)
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, enable, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, enable, "ATTACK_gun.*" );
+	},
+
+	Tank_Unlocked = function( trigger )
+	{
+		Map.phase = 25;
+		Map.Switches.Repair_Lock.Enabled=false;
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_Tank );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
+		Map.Attack_Gun(true);
+		Util.EnableGoal("DEFEND_depot.*");
+		Util.OnTriggerPosition( Map.Mover_Tank, "before_gate", 180.0, Map.Tank_At_Gate2 );
+		SetGoalPriority( "SWITCH_gate_depot", 2.0 );
+		//Map.Switches.Gate_Depot.Priority = 2.0;
+		Util.MapDebugPrint( "Tank_Unlocked" );
+	},
+
+	Tank_At_Gate2 = function( trigger )
+	{
+		SetGoalPriority( "SWITCH_gate_depot", 0.1 );
+		//Map.Switches.Gate_Depot.Priority = 0.1;
+		Util.MapDebugPrint( "Tank_At_Gate2" );
+	},
+
+	Fire_Gun = function( trigger )
+	{
+		Map.Switches.Gun.Enabled=true;
+		Map.Switches.Gun.LimitBots=3;
+		Map.Switches.Gun.Priority=1.1;
+		Map.Attack_Gun(true);
+		Util.MapDebugPrint( "Fire_Gun" );
+	},
+
+	Tank_Past_Gun = function( trigger )
+	{
+		Map.Switches.Gun.Enabled=false;
+		Map.Attack_Gun(false);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard*" );
+		Util.MapDebugPrint( "Tank_Past_Gun" );
+	},
+
+	Gun_Damaged = function( trigger )
+	{
+		Map.Switches.Gun.Enabled=false;
+		Util.MapDebugPrint( "Gun_Damaged" );
+	},
+
+	Tank_Damaged = function( trigger )
+	{
+		Map.Switches.Gun.LimitBots=1;
+		Map.Switches.Gun.Priority=0.7;
+		Map.tankDamaged=true;
+		Util.SetPositionGoal( Map.Build_Hell_on_Wheels, Map.Mover_Tank );
+		Map.Check_Switch();
+		Util.MapDebugPrint( "Tank_Damaged" );
+	},
+
+	Tank_Repaired = function( trigger )
+	{
+		Map.tankDamaged=false;
+		Map.Check_Switch();
+		Util.MapDebugPrint( "Tank_Repaired" );
+	},
+
+	Set_Fuel_Goals = function( enable )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, enable, "DEFEND_fuel.*" );
+		SetAvailableMapGoals( TEAM.AXIS, !enable, Map.Ammo_Cabinet_south_ammocabinet );
+		SetAvailableMapGoals( TEAM.AXIS, !enable, Map.Health_Cabinet_south_healthcabinet );
+		SetAvailableMapGoals( TEAM.ALLIES, enable, Map.Flag_fuel_tank );
+		SetAvailableMapGoals( TEAM.ALLIES, enable, Map.Cappoint_Fuel );
+		SetAvailableMapGoals( TEAM.ALLIES, !enable, Map.Mover_Tank );
+		SetAvailableMapGoals( TEAM.ALLIES, !enable, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, !enable, "SNIPE.*" );
+	},
+
+	Get_Fuel = function( trigger )
+	{
+		Map.Set_Fuel_Goals(true);
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
+		SetGoalPriority( Map.Plant_Command_Post, 1.2, TEAM.ALLIES, 0 );
+		SetGoalPriority( Map.Build_Command_Post, 1.2, TEAM.ALLIES, 0 );
+		SetGoalPriority( Map.Plant_Side_Wall, 1.1, TEAM.ALLIES, 0 );
+		SetGoalPriority( Map.Build_Hell_on_Wheels, 0.1, TEAM.ALLIES, 0 );
+		Util.MapDebugPrint( "Get_Fuel" );
+	},
+
+	Allies_Escape = function( trigger )
+	{
+		Map.Set_Fuel_Goals(false);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Entrance );
+		SetGoalPriority( Map.Plant_Side_Wall, 0.5, TEAM.ALLIES, 0 );
+		SetGoalPriority( Map.Build_Hell_on_Wheels, 1.9, TEAM.ALLIES, 0 );
+		Util.MapDebugPrint( "Allies_Escape" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "The Tank has breached the Bunker Tunnel Doors!", Map.Tank_Bunker );
+	OnTrigger( "^1WARNING: ^3AT Gun spotted! ^1FIRE AT WILL!!!", Map.Gun_Spotted );
+	OnTrigger( "^3Escort the Tank to the Repair Depot!", Map.Tank_Burning );
+	OnTrigger( "repair_door_goto", Map.gate_depot_trigger );
+	OnTrigger( "^1Tank Repair Locks Engaged!", Map.Repair_Locked );
+	OnTrigger( "^3Upgrade the Tank", Map.Repair_Start );
+	OnTrigger( "hint_arrow_white_goto", Map.Repair_Activated );
+	OnTrigger( "tank_covops_need", Map.COVERTOPS_Need );
+	OnTrigger( "^2Jamming Transmitter Installed!", Map.Tank_Installed );
+	OnTrigger( "tank_sol_need", Map.SOLDIER_Need );
+	OnTrigger( "^2First Aid Kit Installed!", Map.Tank_Installed );
+	OnTrigger( "tank_medic_need", Map.MEDIC_Need );
+	OnTrigger( "^2Ammo Supply Kit Installed!", Map.Tank_Installed );
+	OnTrigger( "tank_eng_need", Map.ENGINEER_Need );
+	OnTrigger( "^2Six-Shooter Cannon Installed!", Map.Tank_Installed );
+	OnTrigger( "tank_fops_need", Map.FIELDOPS_Need );
+	OnTrigger( "^2Armour Upgrade Installed!", Map.Tank_Installed );
+	OnTrigger( "^2Tank Upgrade Complete!!!", Map.Tank_Upgraded );
+	OnTrigger( "The Tank is Returning to Battle!", Map.Tank_Unlocked );
+
+	OnTrigger( "^1WARNING: ^3Fire the AT Gun!!", Map.Fire_Gun);
+	OnTrigger( "^1WARNING: ^3Manual Fire Control Damaged!!!", Map.Gun_Damaged);
+	OnTrigger( "The Tank is past the Anti Tank Gun!", Map.Tank_Past_Gun);
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Damaged);
+	OnTrigger( "The Tank has been Repaired!", Map.Tank_Repaired);
+	OnTrigger( "^3Get the Fuel Tanks!", Map.Get_Fuel);
+	OnTrigger( "The Allies are escaping with the Fuel!", Map.Allies_Escape);
+
+	Util.EnableGoal("ATTACK.*");
+	Util.EnableGoal("DEFEND.*");
+	Util.EnableGoal("CALLARTILLERY.*");
+	Util.EnableGoal(Map.Flag_fuel_tank);
+	Util.EnableGoal(Map.Cappoint_Fuel);
+	Util.SetMaxUsersInProgress( 4, "ESCORT_tank" );
+	Util.SetMaxUsersInUse( 2, "ESCORT_tank" );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_Tank );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42.*" );
+
+	SetGoalPriority( Map.Build_Gun_Controls, 1.9, TEAM.AXIS, 0 );
+	SetGoalPriority( Map.Build_Hell_on_Wheels, 1.5, TEAM.ALLIES, 0 );
+	SetGoalPriority( Map.Mover_Tank, 0.95, TEAM.ALLIES, 0 );
+	SetGoalPriority( Map.Mover_Tank, 0.6, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "ESCORT_tank", 0.97, TEAM.ALLIES, 0 );
+	SetGoalPriority( "MOUNT_Tank", 0.98, TEAM.ALLIES, 0 );
+	SetGoalPriority( Map.Mount_MG_North, 0.7, TEAM.AXIS, 0 );
+
+	MapRoutes =
+	{
+		BUILD_Command_Post =
+		{
+			ROUTE_allies_spawn =
+			{
+				ROUTE_allies_west =
+				{
+					ROUTE_allies_south = {},
+				},
+			},
+			ROUTE_allies_front =
+			{
+					ROUTE_allies_south = {},
+			},
+		},
+		PLANT_Side_Entrance =
+		{
+			ROUTE_allies_spawn =
+			{
+				ROUTE_allies_down = {},
+			},
+		},
+		SWITCH_gate_depot =
+		{
+			ROUTE_allies_front =
+			{
+				ROUTE_allies_south =
+				{
+					ROUTE_depot_up = {},
+				},
+			},
+		},
+		FLAG_fuel_tank =
+		{
+			ROUTE_allies_spawn =
+			{
+				ROUTE_tunnel = {},
+				ROUTE_yard2 = {},
+			},
+		},
+	};
+	MapRoutes.DEFEND_class_need=MapRoutes.BUILD_Command_Post;
+	MapRoutes.PLANT_Command_Post=MapRoutes.BUILD_Command_Post;
+	Util.Routes(MapRoutes);
+	Util.UpdateSwitchData();
+
+	Util.MapDebugPrint( "Map script for " + GetMapName() + " loaded" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 70.0;
+};

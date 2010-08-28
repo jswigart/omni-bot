@@ -1,0 +1,434 @@
+global Map =
+{
+	Ammo_Cabinet_t3 = "AMMOCAB_t3",
+	Ammo_Cabinet_t5 = "AMMOCAB_t5",
+	Ammo_Cabinet_t7 = "AMMOCAB_t7",
+	Health_Cabinet_t2 = "HEALTHCAB_t2",
+	Health_Cabinet_t4 = "HEALTHCAB_t4",
+	Health_Cabinet_t6 = "HEALTHCAB_t6",
+	
+	Flag_Naquada = "FLAG_Naquada",
+	
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Depogate = "BUILD_Depogate",
+	Build_South_base_MG = "BUILD_South_base_MG",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Build_Truck = "BUILD_Truck",
+	Build_Truck_Barrier_1 = "BUILD_Truck_Barrier_1",
+	
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Depogate = "PLANT_Depogate",
+	Plant_South_base_MG = "PLANT_South_base_MG",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_Truck_Barrier_1 = "PLANT_Truck_Barrier_1",
+	
+	Mount_South_base_MG = "MOUNTMG42_South_base_MG",
+	Mount_east = "MOUNTMG42_east",
+	Mount_t1 = "MOUNTMG42_t1",
+	Mount_t1_1 = "MOUNTMG42_t1_1",
+	Mount_west = "MOUNTMG42_west",
+	Repair_South_base_MG = "REPAIRMG42_South_base_MG",
+	Repair_east = "REPAIRMG42_east",
+	Repair_t1 = "REPAIRMG42_t1",
+	Repair_t1_1 = "REPAIRMG42_t1_1",
+	Repair_west = "REPAIRMG42_west",
+	
+	Mover_tank = "MOVER_tank",
+	Mover_truck = "MOVER_truck",
+	
+	Switches = 
+    { 
+        Right =  
+        { 
+            Enabled = true, 
+            Priority = 0.6, 
+            WaypointName = "DOORRIGHT", 
+            LimitTeam = 0, 
+            LimitClass = Util.AllClasses,
+			LimitBots = 2,
+        },
+		
+		Left =  
+        { 
+            Enabled = true, 
+            Priority = 0.6, 
+            WaypointName = "DOORLEFT", 
+            LimitTeam = 0, 
+            LimitClass = Util.AllClasses,
+			LimitBots = 2,
+        },
+    },
+	
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			LimitBots = 2,
+			Offset =
+			{
+				Vector3(0,-40,0),
+			},
+		},
+	},
+	
+	Naquada_on_truck = false,
+	
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Depogate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "depot_door_plant", "closed", true );
+	
+		Util.MapDebugPrint( "Depogate_Destroyed" );
+	},
+
+	Depogate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Wp.SetWaypointFlag( "depot_door_plant", "closed", false );
+		
+		Util.MapDebugPrint( "Depogate_Built" );
+	},
+
+	South_base_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "South_base_MG_Built" );
+	},
+	
+	South_base_MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "South_base_MG_Destroyed" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	Tank_Stolen = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_base_MG" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_t3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_t2" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_west" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_west" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_east" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_east" );
+		
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Depogate" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_South_base_MG" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_South_base_MG" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_South_base_MG" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_t1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_t1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_t1_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_t1_1" );
+		
+		Util.MapDebugPrint( "Tank_Stolen" );
+	},
+	
+	Tank_Damaged = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+//		Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+//		Util.SetGoalOffset( 0, -50, 0, "BUILD_Tank" );
+			
+		Util.MapDebugPrint( "Tank_Damaged" );
+	},
+	
+	
+	
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Destroyed" );
+	},	
+	
+	Elevator_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Naquada" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
+		Map.Switches.Right.LimitTeam = (1<<TEAM.ALLIES);
+		Map.Switches.Left.LimitTeam = (1<<TEAM.ALLIES);
+			
+		Util.MapDebugPrint( "Elevator_Wall_Destroyed" );
+	},
+
+	Left_Door_Open = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.Switches.Left.LimitTeam = 0;
+
+		Util.MapDebugPrint( "Left_Door_Open" );
+	},
+	
+	Left_Door_Closed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Naquada_on_truck == false ) { 
+            Map.Switches.Left.LimitTeam = (1<<TEAM.ALLIES);
+			Util.MapDebugPrint( "Left_Door_Closed" );
+			return; 
+        }
+		
+		Util.MapDebugPrint( "Left_Door_Closed" );
+	},
+	
+	Right_Door_Open = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.Switches.Right.LimitTeam = 0;
+
+		Util.MapDebugPrint( "Right_Door_Open" );
+	},
+	
+	Right_Door_Closed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		if ( Map.Naquada_on_truck == false ) { 
+            Map.Switches.Right.LimitTeam = (1<<TEAM.ALLIES);
+			Util.MapDebugPrint( "Right_Door_Closed" );
+			return; 
+        }
+
+		Util.MapDebugPrint( "Right_Door_Closed" );
+	},
+
+	Naquada_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Naquada_Taken" );
+	},
+	
+	Naquada_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Naquada_Returned" );
+	},
+
+	Objectives_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.Switches.Right.LimitTeam = 0;
+		Map.Switches.Left.LimitTeam = 0;
+		Map.Naquada_on_truck = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_truck );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_Naquada" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT.*" );
+
+		Util.MapDebugPrint( "Objectives_Secured" );
+	},
+	
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Built" );
+	},
+	
+	Truck_Damaged = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck );
+		Util.SetGoalOffset( 30, -150, 0, "BUILD_Truck" ); // move it south		
+		
+		Util.MapDebugPrint( "Truck_Damaged" );
+	},
+
+	Truck_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_1_Built" );
+	},	
+	
+	Truck_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_1_Destroyed" );
+	},
+
+	truck_past_barrier1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Depogate" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_west" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_west" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_east" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_east" );
+
+		Util.MapDebugPrint( "truck_past_barrier1" );
+	},
+	
+	truck_past_barrier2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Depogate" );
+
+		Util.MapDebugPrint( "truck_past_barrier2" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	
+	OnTrigger( "The Depo Defensive has been destroyed.", Map.Depogate_Destroyed );
+	OnTrigger( "Depodevensives has been constructed.", Map.Depogate_Built );
+	
+	
+	OnTrigger( "Allied team has built the the south base MG!", Map.South_base_MG_Built ); // More like AXIS have
+	OnTrigger( "Axis team has destroyed the south base MG!", Map.South_base_MG_Destroyed ); // More like ALLIES have
+	
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
+	OnTrigger( "Allied team has stolen the Tank!", Map.Tank_Stolen );
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Damaged );
+	
+	OnTrigger( "The Tank Barrier has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "The Tank Barrier has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+	
+	OnTrigger( "Allied team has destroyed the Elevator Wall!", Map.Elevator_Wall_Destroyed );
+	
+	OnTrigger( "The left Securitydoor has been opended", Map.Left_Door_Open );
+	OnTrigger( "The left Securitydoor has been closed", Map.Left_Door_Closed );
+	OnTrigger( "The right Securitydoor has been opended", Map.Right_Door_Open );
+	OnTrigger( "The right Securitydoor has been closed", Map.Right_Door_Closed );
+	
+	OnTrigger( "Allies have stolen The Naquada!", Map.Naquada_Taken );
+	OnTrigger( "Flag returned Naquada!", Map.Naquada_Returned );
+	OnTrigger( "Allied team is escaping with the Naquada!", Map.Objectives_Secured );
+	
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "The Truck has been damaged!", Map.Truck_Damaged );
+	
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_1_Built );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_1_Destroyed );
+	OnTrigger( "goldrush_allies_truck_barrier1", Map.truck_past_barrier1 );
+	OnTrigger( "goldrush_allies_truck_barrier2", Map.truck_past_barrier2 );
+	
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	ETUtil.DisableGoal(".*");
+	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Depogate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_t3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_t2" );
+	
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Depogate" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_South_base_MG" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_South_base_MG" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_South_base_MG" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_t1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t1_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_t1_1" );
+	
+//	Util.SetGoalOffset( 0, -50, 0, "BUILD_Tank" );
+	
+	Wp.SetWaypointFlag( "depot_door_plant", "closed", false );
+	
+	Util.UpdateSwitchData(); 
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 200.0;
+};

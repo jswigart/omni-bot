@@ -1,0 +1,141 @@
+//==========================================================================================
+//
+//	alleys.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/07/09	Coverted to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Checkpoint_flag1 = "CHECKPOINT_flag1",
+	Checkpoint_flag2 = "CHECKPOINT_flag2",
+	Checkpoint_flag3 = "CHECKPOINT_flag3",
+	Checkpoint_flag4 = "CHECKPOINT_flag4",
+	Checkpoint_flag5 = "CHECKPOINT_flag5",
+	Mount_102 = "MOUNTMG42_102",
+	Mount_11 = "MOUNTMG42_11",
+	Mount_19 = "MOUNTMG42_19",
+	Mount_67 = "MOUNTMG42_67",
+	Repair_102 = "REPAIRMG42_102",
+	Repair_11 = "REPAIRMG42_11",
+	Repair_19 = "REPAIRMG42_19",
+	Repair_67 = "REPAIRMG42_67",
+
+	flag1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag1_Axis_Captured" );
+	},
+
+	flag1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag1_Allies_Captured" );
+	},
+
+	flag2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag2_Axis_Captured" );
+	},
+
+	flag2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag2_Allies_Captured" );
+	},
+
+	flag3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag3_Axis_Captured" );
+	},
+
+	flag3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag3_Allies_Captured" );
+	},
+
+	flag4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag4_Axis_Captured" );
+	},
+
+	flag4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag4_Allies_Captured" );
+	},
+
+	flag5_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag5_Axis_Captured" );
+	},
+
+	flag5_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag5_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.flag1_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag1_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag2_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag2_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag3_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag3_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag4_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag4_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag5_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag5_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

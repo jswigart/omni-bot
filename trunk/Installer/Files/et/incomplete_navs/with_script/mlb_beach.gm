@@ -1,0 +1,270 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Ammo_Cabinet_north_ammocabinet_2 = "AMMOCAB_north_ammocabinet_2",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
+	Health_Cabinet_north_healthcabinet_2 = "HEALTHCAB_north_healthcabinet_2",
+	Checkpoint_flag1 = "CHECKPOINT_flag1",
+	Checkpoint_flag2 = "CHECKPOINT_flag2",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Generator_Protection_Net = "BUILD_Generator_Protection_Net",
+	Build_Metal_Staircase = "BUILD_Metal_Staircase",
+	Build_Radar_base_MG_Nest = "BUILD_Radar_base_MG_Nest",
+	Build_Staircase_MG_Nest = "BUILD_Staircase_MG_Nest",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Axis_staircase_access_doors = "PLANT_Axis_staircase_access_doors",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Front_Bunker_Door = "PLANT_Front_Bunker_Door",
+	Plant_Generator_Protection_Net = "PLANT_Generator_Protection_Net",
+	Plant_Lower_Bunker_Door = "PLANT_Lower_Bunker_Door",
+	Plant_Metal_Staircase = "PLANT_Metal_Staircase",
+	Plant_Radar_base_MG_Nest = "PLANT_Radar_base_MG_Nest",
+	Plant_Ventilation_Generator = "PLANT_Ventilation_Generator",
+	Plant_main_base_wall_breach = "PLANT_main_base_wall_breach",
+	Plant_radar_door = "PLANT_radar_door",
+	Plant_radar_equipment = "PLANT_radar_equipment",
+	Mount_802 = "MOUNTMG42_802",
+	Mount_Radar_base_MG_Nest = "MOUNTMG42_Radar_base_MG_Nest",
+	Mount_stairmg_gun = "MOUNTMG42_stairmg_gun",
+	Mount_t364 = "MOUNTMG42_t364",
+	Mount_t378 = "MOUNTMG42_t378",
+	Mount_t380 = "MOUNTMG42_t380",
+	Mount_t381 = "MOUNTMG42_t381",
+	Mount_t382 = "MOUNTMG42_t382",
+	Mount_t436 = "MOUNTMG42_t436",
+	Repair_802 = "REPAIRMG42_802",
+	Repair_Radar_base_MG_Nest = "REPAIRMG42_Radar_base_MG_Nest",
+	Repair_stairmg_gun = "REPAIRMG42_stairmg_gun",
+	Repair_t364 = "REPAIRMG42_t364",
+	Repair_t378 = "REPAIRMG42_t378",
+	Repair_t380 = "REPAIRMG42_t380",
+	Repair_t381 = "REPAIRMG42_t381",
+	Repair_t382 = "REPAIRMG42_t382",
+	Repair_t436 = "REPAIRMG42_t436",
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Generator_Protection_Net_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Protection_Net_Built" );
+	},
+
+	Metal_Staircase_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Metal_Staircase_Built" );
+	},
+
+	Radar_base_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Radar_base_MG_Nest_Built" );
+	},
+
+	Staircase_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Staircase_MG_Nest_Built" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_staircase_access_doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_staircase_access_doors_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Front_Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Front_Bunker_Door_Destroyed" );
+	},
+
+	Generator_Protection_Net_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Protection_Net_Destroyed" );
+	},
+
+	Lower_Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Lower_Bunker_Door_Destroyed" );
+	},
+
+	Metal_Staircase_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Metal_Staircase_Destroyed" );
+	},
+
+	Radar_base_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Radar_base_MG_Nest_Destroyed" );
+	},
+
+	Ventilation_Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Ventilation_Generator_Destroyed" );
+	},
+
+	main_base_wall_breach_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "main_base_wall_breach_Destroyed" );
+	},
+
+	radar_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radar_door_Destroyed" );
+	},
+
+	radar_equipment_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radar_equipment_Destroyed" );
+	},
+
+	flag1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag1_Axis_Captured" );
+	},
+
+	flag1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag1_Allies_Captured" );
+	},
+
+	flag2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag2_Axis_Captured" );
+	},
+
+	flag2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag2_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition( 2402, 2394, 1088, "PLANT_main_base_wall_breach" );
+	Util.SetGoalPosition( 6456, 3691, 1256, "PLANT_radar_door" );
+	Util.SetGoalPosition( 6456, 3691, 1256, "PLANT_Axis_staircase_access_doors" );
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Assault Ramp constructed.", Map.Assault_Ramp_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Generator protection contructed", Map.Generator_Protection_Net_Built );
+	OnTrigger( "Metal Staircase constructed.", Map.Metal_Staircase_Built );
+	OnTrigger( "Radar Base MG42 Nest constructed.", Map.Radar_base_MG_Nest_Built );
+	OnTrigger( "Axis Staircase MG42 Nest constructed.", Map.Staircase_MG_Nest_Built );
+	OnTrigger( "Assault Ramp destroyed.", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_staircase_access_doors_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have breached the front beach bunker door!!!!", Map.Front_Bunker_Door_Destroyed );
+	OnTrigger( "^1WARNING: ^3Generator protection destroyed", Map.Generator_Protection_Net_Destroyed );
+	OnTrigger( "Allies have destroyed the basement doors!!!!", Map.Lower_Bunker_Door_Destroyed );
+	OnTrigger( "Metal staircase destroyed.", Map.Metal_Staircase_Destroyed );
+	OnTrigger( "Radar Base MG42 Nest destroyed.", Map.Radar_base_MG_Nest_Destroyed );
+	OnTrigger( "Allies have destroyed the ventilation power generator!!!!", Map.Ventilation_Generator_Destroyed );
+	OnTrigger( "Allies have breached the main base wall!!!!", Map.main_base_wall_breach_Destroyed );
+	OnTrigger( "Allies has destroyed the radar door!", Map.radar_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.radar_equipment_Destroyed );
+	OnTrigger( "^3Allies have captured the beach bunkers", Map.flag1_Axis_Captured );
+	OnTrigger( "^3Axis have reclaimed the beach bunkers", Map.flag1_Allies_Captured );
+	OnTrigger( "^3Axis have reclaimed the battery bunkers", Map.flag2_Axis_Captured );
+	OnTrigger( "^3Allies have captured the battery bunker", Map.flag2_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};
