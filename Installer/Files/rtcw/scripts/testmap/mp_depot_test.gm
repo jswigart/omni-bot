@@ -1,0 +1,10 @@
+global Map =
+{
+	MapName = "mp_depot",
+	
+	Scripts =
+	{
+		"mp_depot_test_allies",
+		"mp_depot_test_axis",
+	},
+};

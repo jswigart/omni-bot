@@ -1,0 +1,136 @@
+global Map =
+{
+	MapName = "mp_ice",
+	Quiet = true,
+	Call_Artillery_spot_allied_nearspawn = "CALLARTILLERY_spot_allied_nearspawn",
+	Call_Artillery_spot_allied_stronghold = "CALLARTILLERY_spot_allied_stronghold",
+	Call_Artillery_spot_axis_nearspawn = "CALLARTILLERY_spot_axis_nearspawn",
+	Artillery_S_target_allied_farspawn = "ARTILLERY_S_target_allied_farspawn",
+	Artillery_S_target_allied_nearspawn_1 = "ARTILLERY_S_target_allied_nearspawn_1",
+	Artillery_S_target_allied_nearspawn_2 = "ARTILLERY_S_target_allied_nearspawn_2",
+	Artillery_S_target_allied_sidewall = "ARTILLERY_S_target_allied_sidewall",
+	Artillery_S_target_axis_nearspawn_1 = "ARTILLERY_S_target_axis_nearspawn_1",
+	Artillery_S_target_axis_nearspawn_2 = "ARTILLERY_S_target_axis_nearspawn_2",
+	Artillery_S_target_south_service = "ARTILLERY_S_target_south_service",
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Flag_axis_obj01 = "FLAG_axis_obj01",
+	Cappoint_130 = "CAPPOINT_130",
+	Plant_Fortress_Wall = "PLANT_Fortress_Wall",
+	Plant_Service_Door = "PLANT_Service_Door",
+	Mount_tower_mg = "MOUNTMG42_tower_mg",
+	Mount_truck_mg = "MOUNTMG42_truck_mg",
+	Repair_tower_mg = "REPAIRMG42_tower_mg",
+	Repair_truck_mg = "REPAIRMG42_truck_mg",
+	Snipe_allied_nearspawn = "SNIPE_allied_nearspawn",
+
+	Fortress_Wall_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Fortress_Wall_Destroyed" );
+	},
+
+	Service_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Service_Door_Destroyed" );
+	},
+
+	axis_obj01_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "axis_obj01_Taken" );
+	},
+
+	CAPPOINT_130_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "CAPPOINT_130_Captured" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Service Door breached!", Map.Service_Door_Destroyed );
+		OnTrigger( "the Fortress Wall Destroyed.", Map.Fortress_Wall_Destroyed );
+ 		OnTrigger( "Allies reclaim the Shipping Halls!", Map.flag_respawn_obj_Allies_Captured );
+ 		OnTrigger( "Axis captures the Shipping Halls!", Map.flag_respawn_obj_Axis_Captured );
+		OnTrigger( "Axis have stolen Allied Documents!", Map.axis_obj01_Taken );
+		OnTrigger( "Axis transmitted the documents!", Map.CAPPOINT_130_Captured );
+
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_truck_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Service_Door, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Fortress_Wall, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_tower_mg, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_tower_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_truck_mg, 120 );
+		
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_tower_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_truck_mg, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_truck_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_tower_mg, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_axis_obj01, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_130, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

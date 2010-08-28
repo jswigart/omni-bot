@@ -1,0 +1,10 @@
+global Map =
+{
+	MapName = "mp_ice",
+
+	Scripts =
+	{
+		"mp_ice_cp_test_allies",
+		"mp_ice_cp_test_axis",
+	},	
+};

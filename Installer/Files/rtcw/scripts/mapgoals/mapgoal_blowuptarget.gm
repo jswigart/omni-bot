@@ -1,0 +1,121 @@
+this.GoalType = "PLANT";
+this.Version = 1;
+this.DefaultPriority = 0.8;
+this.Region = null;
+
+//////////////////////////////////////////////////////////////////////////
+
+this.Render = function(editMode)
+{
+	this.RenderDefault();
+	
+	foreach(dyn and v in this.Dynamites)
+	{
+		DrawEntityAABB(dyn,2,COLOR.GREEN);
+	}
+	
+	sleep(2);	
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.SaveToTable = function(SaveTable)
+{
+	// save the goal specific properties
+	SaveTable.ExplosiveType = this.ExplosiveType;
+	SaveTable.IgnoreTargets = this.IgnoreTargets;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.UpgradeVersion = function(Props)
+{
+	ExplosiveTypeDynamite = 1<<0;
+	ExplosiveTypeSatchel = 1<<1;
+
+	// version 0 is string,string key/values from the old waypoint format
+	if(Props.Version==0)
+	{
+		// Version 1 Schema, upgrade from waypoint format
+		Props.Version = 1;		
+		Props.ExplosiveType = ToInt(Props.ExplosiveType,ExplosiveTypeDynamite);
+		Props.IgnoreTargets = ToBool(Props.IgnoreTargets,false);
+	}
+	else if(Props.Version == this.Version)
+	{
+		// Disable for everyone!
+		this.SetGoalPriority(0,0,0);
+		this.SetGoalPriority(0,0,0);
+		
+		// Explosive type determines what classes can use the goal.
+		if(Props.ExplosiveType & ExplosiveTypeDynamite)
+		{
+			this.SetGoalPriority(0,CLASS.ENGINEER,this.DefaultPriority);
+		}
+		if(Props.ExplosiveType & ExplosiveTypeSatchel)
+		{
+			this.SetGoalPriority(0,CLASS.COVERTOPS,this.DefaultPriority);
+		}
+			
+		this.ExplosiveType = Props.ExplosiveType;
+		this.IgnoreTargets = Props.IgnoreTargets;
+		
+		// verify fields and types.
+		assert(IsInt(this.ExplosiveType));
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.Update = function()
+{
+	// note: successful region trigger creation blocks thread, remove block if anything else is needed in update
+	
+	if ( !this.Region && this.GetEntity() )
+	{
+		// Create a Trigger Region for marking this goal disabled when a dynamite has been planted
+		this.Dynamites = {};
+		bounds = GetEntWorldAABB(this.GetEntity());
+		
+		trig =
+		{
+			Name = this.GetName(),
+			TriggerOnClass = CLASS.DYNAMITE,
+			UpdateDelay = 1,
+			CallbackObject = this,
+			OnEnter = function(ent)
+			{
+				// keep track of all the dynamites in the region
+				this.Dynamites[ent] = true;
+				this.InUse = true;
+			},
+			OnExit = function(ent)
+			{
+				this.Dynamites[ent] = null;
+				
+				// if no dynamite left in region, take off the inuse flag
+				if(tableCount(this.Dynamites)==0)
+				{
+					this.InUse = false;
+				}
+			},
+		};
+		this.Region = OnTriggerRegion(bounds,trig);
+		
+		if ( this.Debug )
+		{
+			if ( this.Region )
+			{
+				print( this.GetName() + ": Region trigger created" );
+			}
+			else
+			{
+				print( this.GetName() + ": ^1Unable to create Region trigger" );
+			}
+		}
+		
+		block(0);
+	}
+
+	sleep(5);
+};

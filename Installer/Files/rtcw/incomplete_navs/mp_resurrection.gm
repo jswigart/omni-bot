@@ -1,0 +1,86 @@
+global Map =
+{
+	Checkpoint_room_flag = "CHECKPOINT_room_flag",
+	Flag_Book_of_the_Resurrection = "FLAG_Book_of_the_Resurrection",
+	Plant_catacomb_door = "PLANT_catacomb_door",
+	Plant_main_gate_power = "PLANT_main_gate_power",
+	Plant_waterway_door = "PLANT_waterway_door",
+	Mount_224 = "MOUNTMG42_224",
+	Mount_226 = "MOUNTMG42_226",
+	Repair_224 = "REPAIRMG42_224",
+	Repair_226 = "REPAIRMG42_226",
+
+	catacomb_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "catacomb_door_Destroyed" );
+	},
+
+	main_gate_power_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "main_gate_power_Destroyed" );
+	},
+
+	waterway_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "waterway_door_Destroyed" );
+	},
+
+	Book_of_the_Resurrection_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Book_of_the_Resurrection_Taken" );
+	},
+
+	room_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "room_flag_Axis_Captured" );
+	},
+
+	room_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "room_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.catacomb_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.main_gate_power_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.waterway_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Book_of_the_Resurrection_Taken );
+	OnTrigger( "MISSING_STRING", Map.room_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.room_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

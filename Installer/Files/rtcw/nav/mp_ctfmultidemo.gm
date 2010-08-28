@@ -1,0 +1,267 @@
+global Map =
+{
+	Quiet = true,
+	Defend =
+	{
+		AxisDefenders = 0, // a variable to keep a count of defenders
+		MaxAxisDefenders = 5, // maximum defenders for this team
+		AlliesDefenders = 0,
+		MaxAlliesDefenders = 5,
+		Priority = 0.94, // less than dropped docs
+		
+		// initialize some tables for adding waypoints for them to use
+		Axis = {}, 
+		Allies = {},		
+	},
+	
+	axis_defend = { "rDefend_1", "rDefend_2", "rDefend_3", "rDefend_4", "rDefend_5", },
+	allies_defend = { "bDefend_1", "bDefend_2", "bDefend_3", "bDefend_4", "bDefend_5", },
+
+	Allies_locknar_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	Axis_locknar_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	bCappoint1_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	bCappoint2_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	bCappoint3_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	rCappoint1_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	rCappoint2_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+
+	rCappoint3_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allies_locknar_Taken );
+	OnTrigger( "MISSING_STRING", Map.Axis_locknar_Taken );
+	OnTrigger( "MISSING_STRING", Map.bCappoint1_Captured );
+	OnTrigger( "MISSING_STRING", Map.bCappoint2_Captured );
+	OnTrigger( "MISSING_STRING", Map.bCappoint3_Captured );
+	OnTrigger( "MISSING_STRING", Map.rCappoint1_Captured );
+	OnTrigger( "MISSING_STRING", Map.rCappoint2_Captured );
+	OnTrigger( "MISSING_STRING", Map.rCappoint3_Captured );
+	
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});
+	
+	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	RTCWUtil.SetPrimaryGoals(1.0);
+	
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	
+	SetGoalPriority("ARTILLERY.*", 1.0);
+	
+	RTCWUtil.EnableGoal("FLAG_.*", true);
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bCappoint.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rCappoint.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bProtect.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rProtect.*" );	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );	
+
+	Map.Defend.Axis = Map.axis_defend;
+	Map.Defend.Allies = Map.allies_defend;
+	
+	MapRoutes =
+	{
+		FLAG_Axis_locknar = 
+		{
+			ROUTE_bspawn  = 
+			{
+				ROUTE_blower  = 
+				{
+					ROUTE_rlower  = 
+					{
+						ROUTE_rladdar  = 
+						{
+						},
+					},
+				},
+				ROUTE_bbuilding  = 
+				{
+					ROUTE_rramp  = 
+					{
+					},
+				},
+				ROUTE_binside  = 
+				{
+					ROUTE_rinside  = 
+					{
+						ROUTE_rramp  = 
+						{
+						},
+						ROUTE_rladdar  = 
+						{
+						},
+					},
+				},
+			},
+		},
+
+		FLAG_Allies_locknar = 
+		{
+			ROUTE_rspawn  = 
+			{
+				ROUTE_rlower  = 
+				{
+					ROUTE_blower  = 
+					{
+						ROUTE_bladdar  = 
+						{
+						},
+					},
+				},
+				ROUTE_rbuilding  = 
+				{
+					ROUTE_bramp  = 
+					{
+					},
+				},
+				ROUTE_rinside  = 
+				{
+					ROUTE_binside  = 
+					{
+						ROUTE_bramp  = 
+						{
+						},
+						ROUTE_bladdar  = 
+						{
+						},
+					},
+				},
+			},
+		},
+		
+		CAPPOINT_bCappoint1 = 
+		{
+			ROUTE_bGrab  = 
+			{
+				ROUTE_rlower  = 
+				{
+					ROUTE_blower  = 
+					{
+						ROUTE_bladdar  = 
+						{
+						},
+					},
+				},
+				ROUTE_rbuilding  = 
+				{
+					ROUTE_bramp  = 
+					{
+					},
+				},
+				ROUTE_rinside  = 
+				{
+					ROUTE_binside  = 
+					{
+						ROUTE_bramp  = 
+						{
+						},
+						ROUTE_bladdar  = 
+						{
+						},
+					},
+				},
+			},
+		},
+
+		CAPPOINT_rCappoint1 = 
+		{
+			ROUTE_rGrab  = 
+			{
+				ROUTE_blower  = 
+				{
+					ROUTE_rlower  = 
+					{
+						ROUTE_rladdar  = 
+						{
+						},
+					},
+				},
+				ROUTE_bbuilding  = 
+				{
+					ROUTE_rramp  = 
+					{
+					},
+				},
+				ROUTE_binside  = 
+				{
+					ROUTE_rinside  = 
+					{
+						ROUTE_rramp  = 
+						{
+						},
+						ROUTE_rladdar  = 
+						{
+						},
+					},
+				},
+			},
+		},		
+	};
+	
+	MapRoutes.CAPPOINT_rCappoint2 = MapRoutes.CAPPOINT_rCappoint1;
+	MapRoutes.CAPPOINT_rCappoint3 = MapRoutes.CAPPOINT_rCappoint1;
+	MapRoutes.CAPPOINT_bCappoint2 = MapRoutes.CAPPOINT_bCappoint1;
+	MapRoutes.CAPPOINT_bCappoint2 = MapRoutes.CAPPOINT_bCappoint1;
+
+	Util.Routes(MapRoutes);
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	
+	//select spawn point and change class if necessary
+	RTCWUtil.SetDualObjective(bot);
+};

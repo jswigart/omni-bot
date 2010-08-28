@@ -1,0 +1,90 @@
+global Map =
+{
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Plant_Allied_Packing_Case = "PLANT_Allied_Packing_Case",
+	Plant_Axis_Packing_Case = "PLANT_Axis_Packing_Case",
+	Plant_Central_Foundry_Door = "PLANT_Central_Foundry_Door",
+	Plant_Central_Foundry_Door_1 = "PLANT_Central_Foundry_Door_1",
+	Mount_566 = "MOUNTMG42_566",
+	Mount_567 = "MOUNTMG42_567",
+	Mount_568 = "MOUNTMG42_568",
+	Mount_569 = "MOUNTMG42_569",
+	Repair_566 = "REPAIRMG42_566",
+	Repair_567 = "REPAIRMG42_567",
+	Repair_568 = "REPAIRMG42_568",
+	Repair_569 = "REPAIRMG42_569",
+
+	Allied_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Packing_Case_Destroyed" );
+	},
+
+	Axis_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Packing_Case_Destroyed" );
+	},
+
+	Central_Foundry_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_Destroyed" );
+	},
+
+	Central_Foundry_Door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_1_Destroyed" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Packing_Case_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Central_Foundry_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Central_Foundry_Door_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.flag_respawn_obj_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

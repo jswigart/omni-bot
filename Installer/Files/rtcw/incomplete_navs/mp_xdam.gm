@@ -1,0 +1,86 @@
+global Map =
+{
+	Checkpoint_the_flag = "CHECKPOINT_the_flag",
+	Flag_Research_Documents = "FLAG_Research_Documents",
+	Plant_Blocked_Dam_Door = "PLANT_Blocked_Dam_Door",
+	Plant_Service_Entrance = "PLANT_Service_Entrance",
+	Plant_X_Lab_equipment = "PLANT_X_Lab_equipment",
+	Mount_193 = "MOUNTMG42_193",
+	Mount_5 = "MOUNTMG42_5",
+	Repair_193 = "REPAIRMG42_193",
+	Repair_5 = "REPAIRMG42_5",
+
+	Blocked_Dam_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Blocked_Dam_Door_Destroyed" );
+	},
+
+	Service_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Service_Entrance_Destroyed" );
+	},
+
+	X_Lab_equipment_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "X_Lab_equipment_Destroyed" );
+	},
+
+	Research_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Research_Documents_Taken" );
+	},
+
+	the_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "the_flag_Axis_Captured" );
+	},
+
+	the_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "the_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Blocked_Dam_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Service_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.X_Lab_equipment_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Research_Documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.the_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.the_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

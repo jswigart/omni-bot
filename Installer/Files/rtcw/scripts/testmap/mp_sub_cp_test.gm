@@ -1,0 +1,10 @@
+global Map =
+{
+	MapName = "mp_sub",
+
+	Scripts =
+	{
+		"mp_sub_cp_test_allies",
+		"mp_sub_cp_test_axis",
+	},	
+};
