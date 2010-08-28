@@ -1,0 +1,190 @@
+// Load any other scripts that we will need.
+ExecScript("d3_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("difficulty.gm");
+ExecScript("server_manager.gm");
+ExecScript("d3_commands.gm");
+
+// New module format
+global Util = import("utilities");
+global D3Util = import("d3_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// Set up a list of Names, optionally associated with a script.
+Names["[BOT]Walter"] = "def_bot.gm";
+Names["[BOT]Fred"] = "def_bot.gm";
+Names["[BOT]Morgan"] = "def_bot.gm";
+Names["[BOT]Lawrence"] = "def_bot.gm";
+Names["[BOT]Richard"] = "def_bot.gm";
+Names["[BOT]Michael"] = "def_bot.gm";
+Names["[BOT]Brad"] = "def_bot.gm";
+Names["[BOT]George"] = "def_bot.gm";
+Names["[BOT]Anton"] = "def_bot.gm";
+Names["[BOT]Monty"] = "def_bot.gm";
+Names["[BOT]Bean"] = "def_bot.gm";
+Names["[BOT]Sean"] = "def_bot.gm";
+Names["[BOT]Backfire"] = "def_bot.gm";
+Names["[BOT]Halfwit"] = "def_bot.gm";
+Names["[BOT]Halfbaked"] = "def_bot.gm";
+Names["[BOT]Fullmonty"] = "def_bot.gm";
+Names["[BOT]Nohope"] = "def_bot.gm";
+Names["[BOT]Hitnrun"] = "def_bot.gm";
+Names["[BOT]Missnrun"] = "def_bot.gm";
+Names["[BOT]Oysterhead"] = "def_bot.gm";
+Names["[BOT]Fullthrottle"] = "def_bot.gm";
+Names["[BOT]Noammo"] = "def_bot.gm";
+Names["[BOT]Bullseye"] = "def_bot.gm";
+Names["[BOT]Aimless"] = "def_bot.gm";
+Names["[BOT]Blackadder"] = "def_bot.gm";
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+//Names["samplebot"] = "sample.gm";
+
+/////////////////////////////////////////////////////////////////////
+
+// Set minbots/maxbots on map start
+//MinBots(18);
+//MaxBots(20);
+
+// This is optional for ET. By default breakable objects won't be targeted, because this 
+// distance defaults to 0. Set this to some low value to allow bots to target breakable objects.
+// This number is the distance that bots are allowed to target breakable entities at.
+// It must be a global variable.
+// global TargetBreakableDist = 10.0;
+
+print("D3 Script Executed");
+
+// Uncomment this line to dump a list of all global function Names and constants
+// to a file called globals.txt in the game directory
+//DumpGlobals("globals.txt");
+
+// This function runs an infinite loop of adding and kicking bots. It is used to illustrate
+// how custom script functions can be run continuously to provide custom control over
+// things like the number of bots. Additional behaviors like forcing bots to 1 team can be 
+// implemented by starting a similar function to this from a custom command.
+global stresstest = function()
+{
+	sleep(10.0);
+	dowhile(1)
+	{
+		//DumpGlobals("globals.txt");
+   
+		ran = UnitRandom();
+		if(ran > 0.98)
+		{
+			//KickAll();
+		}
+		else if(ran < 0.5)
+		{
+			AddBot();
+		}
+		else
+		{
+			foreach ( gameId and bot in BotTable )
+			{
+				if(bot)
+				{
+					print(bot);
+					KickBot(bot.Name);
+					break;
+				}                     
+			}      
+		}      
+	      // Pause for 10 seconds between loop iterations.
+	      sleep(RandRange(0.0, 3.0));      
+	}
+};
+
+// This is a Game Monkey Script function that creates a thread using the function we defined above.
+// Uncomment the following line if you want to run the function above.
+//thread(stresstest); 
+
+global D3ChatIcons =
+{
+	// Weapons
+	Gauntlet 			= "^iw00",
+	Machinegun 		= "^iw01",
+	Shotgun 			= "^iw02",
+	Hyperblaster 		= "^iw03",
+	GrenadeLauncher 	= "^iw04",
+	Nailgun 			= "^iw05",
+	RocketLauncher	 	= "^iw06",	
+	Railgun 			= "^iw07",
+	LightningGun 		= "^iw08",
+	DarkMatterGun 		= "^iw09",
+
+	// Player
+	VoiceDisabled		= "^ivcd",
+	VoiceEnabled		= "^ivce",
+	FriendDisabled		= "^ifdd",
+	FriendEnabled		= "^ifde",
+	SelfKill			= "^idm0",
+	Telefrag			= "^idm1",
+
+	// CTF
+	StroggFlag			= "^ifls",
+	MarineFlag			= "^iflm",
+	AmmoRegen		= "^irgn",
+	Doubler			= "^idbl",
+	Guard			= "^igrd",
+	Scout			= "^isct",
+
+	// Server
+	PunkbusterEnabled	= "^ipbe",
+	DedServerEnabled	= "^idse",
+	PadlockEnabled		= "^ipse",
+	FavoriteEnabled		= "^ifve",
+
+	// Misc
+	RightArrow			= "^iarr",
+};
+
+// The method of death string sent with EVENT.DEATH is somewhat detailed, so this function will convert it to a chat icon.
+global D3ModToIcon = function(_mod)
+{
+	if(_mod.Find("pellet") != -1)
+	{
+		return Q4ChatIcons.Shotgun;
+	}
+	if(_mod.Find("machinegun") != -1)
+	{
+		return Q4ChatIcons.Machinegun;
+	}
+	if(_mod.Find("gauntlet") != -1)
+	{
+		return Q4ChatIcons.Gauntlet;
+	}
+	if(_mod.Find("hyperblaster") != -1)
+	{
+		return Q4ChatIcons.Hyperblaster;
+	}
+	if(_mod.Find("grenade") != -1)
+	{
+		return Q4ChatIcons.GrenadeLauncher;
+	}
+	if(_mod.Find("rocket") != -1)
+	{
+		return Q4ChatIcons.RocketLauncher;
+	}
+	if(_mod.Find("nail") != -1)
+	{
+		return Q4ChatIcons.Nailgun;
+	}
+	if(_mod.Find("rail") != -1)
+	{
+		return Q4ChatIcons.Railgun;
+	}
+	if(_mod.Find("lightning") != -1)
+	{
+		return Q4ChatIcons.LightningGun;
+	}
+	if(_mod.Find("dmg") != -1)
+	{
+		return Q4ChatIcons.DarkMatterGun;
+	}
+	print("no match for", _mod);
+	return "";
+};

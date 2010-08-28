@@ -1,0 +1,17 @@
+d3ctf1.way
+d3ctf1_half.way
+d3ctf2.way
+d3ctf2_half.way
+d3ctf3.way
+d3ctf3_half.way
+d3ctf4.way
+d3ctf4_half.way
+d3dm1.way
+d3dm2.way
+d3dm3.way
+d3dm4.way
+d3dm5.way
+d3xpdm1.way
+d3xpdm2.way
+d3xpdm3.way
+d3xpdm4.way
