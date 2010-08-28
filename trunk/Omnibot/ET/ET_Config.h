@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2010-03-31 23:38:18 -0500 (Wed, 31 Mar 2010) $
-// $LastChangedRevision: 4776 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // Title: ET Config
 //

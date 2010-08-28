@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: crapshoot $
-// $LastChangedDate: 2008-10-08 18:50:58 -0700 (Wed, 08 Oct 2008) $
-// $LastChangedRevision: 3599 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // File: RTCW Navigation Flags
 //

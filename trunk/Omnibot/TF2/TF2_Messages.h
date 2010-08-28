@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2008-09-19 23:14:16 -0700 (Fri, 19 Sep 2008) $
-// $LastChangedRevision: 3453 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // Title: TF2 Message Structure Definitions
 //

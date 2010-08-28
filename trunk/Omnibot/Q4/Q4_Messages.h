@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: crapshoot $
-// $LastChangedDate: 2009-01-12 17:18:20 -0800 (Mon, 12 Jan 2009) $
-// $LastChangedRevision: 3857 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // Title: Q4 Message Structure Definitions
 //

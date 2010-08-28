@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: crapshoot $
-// $LastChangedDate: 2008-09-30 15:30:54 -0700 (Tue, 30 Sep 2008) $
-// $LastChangedRevision: 3513 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // Title: ET Navigation Flags
 // 

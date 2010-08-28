@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2009-02-08 23:38:11 -0800 (Sun, 08 Feb 2009) $
-// $LastChangedRevision: 3917 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // about: Exported function definitions
 //		In order for the game to call functions from the bot, we must export
