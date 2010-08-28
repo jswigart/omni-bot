@@ -1,7 +1,17 @@
-<?xml version="1.0"?>
-<VisualStudioPropertySheet 
-	ProjectType="Visual C++" 
-	Version="8.00" 
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
 	Name="Paths"
 	>
+	<UserMacro
+		Name="BOOST"
+		Value="$(SolutionDir)..\..\..\libs\boost\boost_1_44"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="InterfaceDir"
+		Value="$(SolutionDir)..\..\..\GameInterfaces"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>

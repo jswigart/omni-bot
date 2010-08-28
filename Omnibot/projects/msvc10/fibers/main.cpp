@@ -11,6 +11,8 @@
 class Fiber
 {
 public:	
+	friend class FiberManager;
+
 	static void __stdcall FiberWork( void * data )
 	{
 		Fiber * thisFiber = static_cast<Fiber*>( data );

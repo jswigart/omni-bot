@@ -1,32 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Label="UserMacros">
-    <BotRootFolder>$(SolutionDir)..\..\..\..\</BotRootFolder>
-    <InterfaceDir>$(SolutionDir)..\..\..\</InterfaceDir>
-    <BOOST_VERSION>boost_1_42_0</BOOST_VERSION>
-    <BOOST>$(BotRootFolder)SDK\libs\boost\$(BOOST_VERSION)</BOOST>
-  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir>..\build\$(ProjectName)\$(Configuration)\</OutDir>
     <IntDir>..\build\$(ProjectName)\$(Configuration)\</IntDir>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
-  <ItemGroup>
-    <BuildMacro Include="BotRootFolder">
-      <Value>$(BotRootFolder)</Value>
-    </BuildMacro>
-    <BuildMacro Include="InterfaceDir">
-      <Value>$(InterfaceDir)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BOOST_VERSION">
-      <Value>$(BOOST_VERSION)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BOOST">
-      <Value>$(BOOST)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-  </ItemGroup>
+  <ItemGroup />
   <ItemDefinitionGroup>
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -37,7 +19,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

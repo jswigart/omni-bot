@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\SDK\libs\boost\$(BOOST_VERSION);..\..\..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST);..\..\..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Common.lib;comctl32.lib;winmm.lib;ws2_32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
