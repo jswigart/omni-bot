@@ -1,0 +1,420 @@
+if( TestMap == null )
+{
+	// Store it neatly under a global table.
+	global TestMap = table();
+	
+	///////////////////////////////////////////////////////////////////////////////
+	TestMap.Debug = false;
+	TestMap.On = true;
+	TestMap.Time = 0;
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Output = function( params )
+	{
+		print( params );
+		assert( TestMap.LogFile.Write( params, System.NewLine() ) );
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.RunTests = function( _params )
+	{
+		if ( _params && _params[ 0 ] != null)
+		{
+			filename = _params[ 0 ].GetFilenameNoExt();
+			testname = "testmap/" + filename + ".gm";
+			logname = filename +".log";
+		}
+		else
+		{
+			testname = "testmap/" + GetMapName() +"_test.gm";
+			logname = GetMapName() +"_test.log";
+		}
+		
+		if ( !ExecScript( testname ) )
+		{
+			print( "Can't find test:", testname );
+			return;
+		}
+
+		//~ sleep( 2 );
+
+		TestMap.LogFile = File();
+		assert( TestMap.LogFile.Open( logname, "text", false ) );
+
+		TestMap.Output( "Running " + testname );
+		Map.Tests();
+		TestMap.LogFile.Close();
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.RunTest = function( team, class, goal, timeout, kickbots, delay )
+	{
+		mapgoal = false;
+		mountgoal = false;
+		atgoal = false;
+		switchgoal = false;
+		vehiclegoal = false;
+		goalvartype = typeId( goal );
+		
+		if ( goalvartype == 5 )
+		{ 
+			// Goal as a string
+			goalname = goal;
+			mapgoal = true;
+			
+			if ( goal.Mid( 4, 9 ) == "MOUNTABLE" )
+				{ mountgoal = true; }
+			
+			if ( goal.Mid( 4, 6 ) == "SNIPER" )
+				{ atgoal = true; }
+		}
+		else if ( goalvartype == 6 )
+		{
+			if ( typeId( goal.WaypointName ) == 5 )
+			{
+				goalname = goal.WaypointName;
+				switchgoal = true;
+			}
+			
+			if ( typeId( goal.VehicleName ) == 5 )
+			{
+				goalname = goal.VehicleName;
+				vehiclegoal = true;
+			}
+		}
+		
+		if ( TestMap.Debug )
+			{ print("Processing goal:", goalname ); }
+			
+		
+		if ( typeId( delay ) == 0 )
+			{ delay = 2; }
+			
+		if ( team == TEAM.ALLIES )
+		{
+			teamname = "ALLIES ";
+			name = ETUtil.AlliedNames[ class ];
+		}
+		
+		if ( team == TEAM.AXIS )
+		{
+			teamname = "AXIS ";
+			name = ETUtil.AxisNames[ class ];
+		}
+			
+		numbots = tableCount( BotTable );
+		
+		if ( numbots == 0 || numbots > 1 )
+		{
+			if ( TestMap.Debug && numbots == 0 )
+				{ print("No bots, add one"); }
+				
+			if ( numbots > 1 )
+			{
+				if ( TestMap.Debug )
+					{ print("More than 1 bot, kick all and add a bot"); }
+					
+				//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesExit();
+				//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesExit();
+				KickAll();
+				sleep( 2 );
+				//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesReset();
+				//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesReset();
+				sleep( 2 );
+			}
+			
+			bot = ETUtil.AddBotTester( team, class, name );
+		}
+		else
+		{
+			if ( TestMap.Debug )
+				{ print("Have one bot, check if right one");}
+				
+			foreach ( id and bot in BotTable )
+			{
+				if ( bot )
+					{ break; }
+			}
+			
+			//~ if ( team != bot.GetTeam() || class != bot.GetClass() ||
+				//~ bot.Name != name )
+			if ( class != bot.GetClass() || bot.Name != name )
+			{
+				if ( TestMap.Debug )
+				{
+					print("Wrong bot:", bot.GetTeam(), bot.GetClass(), bot.Name );
+					print("kick all and add a bot");
+				}
+				
+				//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesExit();
+				//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesExit();
+				KickAll();
+				sleep( 2 );
+				//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesReset();
+				//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesReset();
+				bot = ETUtil.AddBotTester( team, class, name );
+			}
+		}
+		
+		if ( TestMap.Debug )
+			{ print("Setting goal:", goal); }
+			
+		if ( mapgoal )
+		{
+			SetAvailableMapGoals( team, true, goal );
+			Util.ResetGoals();
+		}
+		
+		if ( switchgoal )
+			{ goal.LimitTeam = ( 1 << team ); }
+			
+		if ( vehiclegoal )
+			{ Map.FocusOnVehicle = goal.VehicleName; }
+		
+		timeitthread = thread( TestMap.Timeit, timeout );
+		
+		if ( mountgoal )
+			{ mountitthread = thread( TestMap.Mountit, goal ); }
+		
+		if ( atgoal )
+			{ atitthread = thread( TestMap.Atit, goal ); }
+			
+		if ( TestMap.Debug )
+			{ print("Waiting for goal:", goalname); }
+			
+		if ( block( "pass", "fail" ) == "pass" )
+			{ statusstring = " passed "; }
+		else
+			{ statusstring = " failed "; }
+					
+		threadKill( timeitthread );
+		
+		if ( TestMap.Debug )
+			{ print("goal:", goalname, statusstring); }
+			
+		if ( mountgoal )
+			{ threadKill( mountitthread ); }
+		
+		if ( atgoal )
+			{ threadKill( atitthread ); }
+			
+		TestMap.Output( teamname + goalname + statusstring + 
+			( TestMap.Time / 1000 ) );
+			
+		if ( TestMap.Debug )
+			{ print("Clearing goal:", goalname); }
+			
+		if ( mapgoal )
+		{
+			SetAvailableMapGoals( team, false, goal );
+			Util.ResetGoals();
+		}
+		
+		if ( switchgoal )
+			{ goal.LimitTeam = 0; }
+			
+		if ( vehiclegoal )
+			{ Map.FocusOnVehicle = -1; }
+		
+		if ( kickbots )
+		{
+			if ( TestMap.Debug )
+				{ print("Kicking bot for goal:", goal); }
+				
+			//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesExit();
+			//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesExit();
+			KickAll();
+			sleep( 2 );
+			//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesReset();
+			//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesReset();
+		}
+		
+		if ( delay > 0 )
+			{ sleep( delay ); }
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.RunTest2 = function( team, classtable, goaltable, timeout, kickbots )
+	{
+		lastgoal = goaltable[ tableCount( goaltable ) - 1 ];
+		
+		mountgoal = false;
+		
+		foreach ( index and class in classtable )
+		{
+			if ( team == TEAM.ALLIES )
+			{
+				teamname = "ALLIES ";
+				name = ETUtil.AlliedNames[ class ];
+			}
+			
+			if ( team == TEAM.AXIS )
+			{
+				teamname = "AXIS ";
+				name = ETUtil.AxisNames[ class ];
+			}
+			
+			bot = Util.GetBotPointer( name );
+			
+			if ( bot && bot.GetTeam() == team and bot.GetClass() == class )
+				{ continue; }
+			
+			AddBot( team, class, name );
+		}
+
+		if ( lastgoal.Mid( 4, 9 ) == "MOUNTABLE" )
+			{ mountgoal = true; }
+		
+		if ( lastgoal.Mid( 4, 6 ) == "SNIPER" )
+			{ atgoal = true; }
+		
+		foreach ( index and goal in goaltable )
+			{ SetAvailableMapGoals( team, true, goal ); }
+		
+		Util.ResetGoals();
+		timeitthread = thread( TestMap.Timeit, timeout );
+		
+		if ( mountgoal )
+			{ mountitthread = thread( TestMap.Mountit, lastgoal ); }
+		
+		if ( atgoal )
+			{ atitthread = thread( TestMap.Atit, goal ); }
+		
+		if ( block( "pass", "fail" ) == "pass" )
+			{ statusstring = " passed "; }
+		else
+			{ statusstring = " failed "; }
+					
+		threadKill( timeitthread );
+		
+		if ( mountgoal )
+			{ threadKill( mountitthread ); }
+			
+		if ( atgoal )
+			{ threadKill( atitthread ); }
+			
+		TestMap.Output( teamname + lastgoal + statusstring + 
+			( TestMap.Time / 1000 ) );
+		
+		foreach ( index and goal in goaltable )
+			{ SetAvailableMapGoals( team, false, goal ); }
+			
+		Util.ResetGoals();
+		
+		if ( kickbots )
+		{
+			//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesExit();
+			//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesExit();
+			KickAll();
+			sleep( 2 );
+			//~ ScriptGoals.mount_vehicle.watchForMountableVehiclesReset();
+			//~ ScriptGoals.escort_vehicle.watchForEscortableVehiclesReset();
+		}
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Timeit = function( timeout )
+	{
+		TestMap.Time = 0;
+		endtime = timeout * 1000;
+		
+		while ( true )
+		{
+			TestMap.Time = TestMap.Time + 50;
+			
+			if ( TestMap.Time == endtime )
+			{
+				TestMap.Fail();
+				break;
+			}
+			
+			yield();
+		}
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Mountit = function( goal )
+	{
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot )
+				{ break; }
+		}
+		
+		while ( !GetEntFlags(bot.GetGameEntity(), ENTFLAG.MOUNTED) )
+			{ yield(); }
+		
+		sleep( 2 );
+		TestMap.Pass();
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Atit = function( goal )
+	{
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot )
+				{ break; }
+		}
+		
+		timeAtSpot = 0;
+		goalPos = Util.GetMapGoalPosition( goal );
+		
+		while ( true )
+		{ 
+			distance = bot.DistanceTo( goalPos );
+			
+			if ( distance <= 32 )
+			{
+				timeAtSpot = timeAtSpot + 1;
+				
+				if ( timeAtSpot > 5 )
+					{ break; }
+			}
+			else
+				{ timeAtSpot = 0; }
+			
+			sleep( 1 );
+		}
+		
+		sleep( 2 );
+		TestMap.Pass();
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.AtPosition = function( goalname, signalname, tolerance )
+	{
+		thread( TestMap.AtPositionThread, goalname, signalname, tolerance );
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.AtPositionThread = function( goalname, signalname, tolerance )
+	{
+		Util.OnTriggerPosition( goalname, signalname, tolerance );
+		block( signalname );
+		TestMap.Pass();
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Pass = function()
+	{
+		signal( "pass" );
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	TestMap.Fail = function()
+	{
+		signal( "fail" );
+	};
+};

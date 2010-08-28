@@ -1,0 +1,403 @@
+global Map =
+{
+	WallBreached = false,	// closed
+	IonControl = true,	// locked
+	BridgeExtended = false,	// not extended
+	ShieldGenerator = true,	// active
+	HangarDoors = true,	// locked
+	Infirmary = false,	// not breached
+	HangarSideDoor = true,	// locked
+	InfirmaryElevatorLock = true,	// not destroyed
+	CCDestroyed = false,	// not destroyed
+
+	Switches =
+	{
+		BridgeControls =
+		{
+			Enabled = false,
+			Priority = 0.9,
+			WaypointName = "Bridge Controls",
+			LimitTeam = (1<<TEAM.RED),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		/*Lift1Lwr =
+		{
+			Priority = 0.3,
+			WaypointName = "L1LS",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift1Upr =
+		{
+			Priority = 0.3,
+			WaypointName = "L1US",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift2Lwr =
+		{
+			Priority = 0.3,
+			WaypointName = "L2LS",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift2Upr =
+		{
+			Priority = 0.3,
+			WaypointName = "L2US",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		CodesCapture =
+		{
+			Priority = 1.0,
+			WaypointName = "Access Codes Capture",
+			LimitTeam = (1<<TEAM.RED),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift3Lwr =
+		{
+			Priority = 0.3,
+			WaypointName = "L3LS",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift3Upr =
+		{
+			Priority = 0.3,
+			WaypointName = "L3US",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift4LwrRed =
+		{
+			Priority = 0.3,
+			WaypointName = "L4LSR",
+			LimitTeam = (1<<TEAM.RED),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift4LwrBlue =
+		{
+			Priority = 0.3,
+			WaypointName = "L4LSB",
+			LimitTeam = (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},
+		
+		Lift4Upr =
+		{
+			Priority = 0.3,
+			WaypointName = "L4US",
+			LimitTeam = (1<<TEAM.RED) | (1<<TEAM.BLUE),
+			LimitClass = (1<<CLASS.ASSAULT) | 
+						(1<<CLASS.SCOUT) | 
+						(1<<CLASS.TECH) | 
+						(1<<CLASS.JEDI) | 
+						(1<<CLASS.DEMO) | 
+						(1<<CLASS.HW),
+		},*/
+	},
+	
+	CodesStatus = 0,	// 0 = home, 1 = taken, 2 = secure/done (don't care about dropped for now)
+	NumCodeTouch = 0,	// number of times codes have been taken (could be used to stop bots from going somewhere after its been taken > 0 times for instance.)
+	
+	// Called when ATST reaches the wall/gate and causes big door to open.
+	Wall_Breached = function( trigger )
+	{
+		Map.WallBreached = true;
+		
+		Map.Switches.BridgeControls.Enabled = true;
+		
+		// Remove These When Goals Are Ready
+		//Wp.SetWaypointFlag("Gate_1", "closed", false);
+		Wp.SetWaypointFlag("Gate_2", "closed", false);
+		
+		//SetAvailableMapGoals( TEAM.RED, false, "ATTACK_Gate.*" );
+		//SetAvailableMapGoals( TEAM.BLUE, false, "DEFEND_Gate.*" );
+		SetAvailableMapGoals( TEAM.RED, true, "ATTACK_Bridge_Def_.*" );
+		SetAvailableMapGoals( TEAM.BLUE, true, "DEFEND_Bridge_Def_.*" );
+		SetAvailableMapGoals( TEAM.BLUE, true, "ATTACK_Cave" );
+		SetAvailableMapGoals( TEAM.RED, true, "DEFEND_Cave" );
+		
+		Util.MapDebugPrint( "Wall_Breached" );
+	},
+	
+	// Called when bridge controls have triggered the bridge to extend.
+	Bridge_Extended = function( trigger )
+	{
+		Map.BridgeExtended = true;
+		
+		Map.Switches.BridgeControls.Enabled = false;
+		
+		Util.MapDebugPrint( "Bridge_Extended" );
+	},
+	
+	// Called when an Imperial Tech hacks the Ion Control Room Side Door.
+	Ion_Control_Hacked = function( trigger )
+	{
+		Map.IonControl = false;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("Ion_1", "closed", false);
+		Wp.SetWaypointFlag("Ion_2", "closed", false);
+		Wp.SetWaypointFlag("Ion_3", "closed", false);
+		Wp.SetWaypointFlag("Ion_4", "closed", false);
+		Wp.SetWaypointFlag("Ion_5", "closed", false);
+
+		Util.MapDebugPrint( "Ion_Control_Hacked" );
+	},
+	
+	// Called when the Shield Generator is destroyed.
+	Shield_Generator_Destroyed = function( trigger )
+	{
+		Map.ShieldGenerator = false;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("Shield_1", "closed", false);
+		Wp.SetWaypointFlag("Shield_2", "closed", false);
+		
+		// Remove These When Goals Are Ready
+		// Fixme: Stop defenders from going to spawn for now?
+		Wp.SetWaypointFlag("HangarControlRespawn1", "closed", false);
+		Wp.SetWaypointFlag("HangarControlRespawn2", "closed", false);
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("BridgeFar", "closed", true);
+		Wp.SetWaypointFlag("BridgeBack", "closed", true);
+		Wp.SetWaypointFlag("Cave", "closed", true);
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("Ion_1", "closed", true);
+		Wp.SetWaypointFlag("Ion_6", "closed", true);
+		
+		SetAvailableMapGoals( TEAM.RED, true, "ATTACK_HDCR_.*" );
+		SetAvailableMapGoals( TEAM.BLUE, true, "DEFEND_HDCR_.*" );
+
+		Util.MapDebugPrint( "Shield_Generator_Destroyed" );
+	},
+	
+	// Called everytime the access codes are picked up by a player.
+	Codes_Stolen = function( trigger )
+	{
+		Map.NumCodeTouch += 1;
+		Map.CodesStatus = 1;
+		
+		Util.MapDebugPrint( "Codes_Stolen " + Map.NumCodeTouch + " times." );
+	},
+	
+	// Called everytime the access codes return to the original spot.
+	Codes_Returned = function( trigger )
+	{
+		Map.CodesStatus = 0;
+		
+		Util.MapDebugPrint( "Codes_Returned" );
+	},
+	
+	// Called when the access codes have been captured at the trigger.
+	Codes_Secured = function( trigger )
+	{
+		Map.CodesStatus = 2;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("Shield_1", "closed", true);
+		Wp.SetWaypointFlag("Shield_2", "closed", true);
+		
+		Util.MapDebugPrint( "Codes_Secured" );
+	},
+	
+	// Called when the hangar doors open after the access codes have been captured.
+	Hangar_Doors_Unlocked = function( trigger )
+	{
+		Map.HangarDoors = false;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("To_Hangar_1", "closed", false);
+		Wp.SetWaypointFlag("To_Hangar_2", "closed", false);
+		Wp.SetWaypointFlag("To_Hangar_3", "closed", false);
+		Wp.SetWaypointFlag("To_Hangar_4", "closed", false);
+		
+		SetAvailableMapGoals( TEAM.RED, true, "ATTACK_Hangar_.*" );
+		SetAvailableMapGoals( TEAM.BLUE, true, "DEFEND_Hangar_.*" );
+		
+		Util.MapDebugPrint( "Hangar_Doors_Unlocked" );
+	},
+	
+	// Called when an Imperial player reaches the Infirmary.
+	Infirmary_Breached = function( trigger )
+	{
+		Map.Infirmary = true;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("HangarBack1", "closed", true);
+		Wp.SetWaypointFlag("HangarBack2", "closed", true);
+		Wp.SetWaypointFlag("HangarBack3", "closed", true);
+		Wp.SetWaypointFlag("HangarBack4", "closed", true);
+		Wp.SetWaypointFlag("HangarBack5", "closed", true);
+		Wp.SetWaypointFlag("HangarBack6", "closed", true);
+		Wp.SetWaypointFlag("HangarBack7", "closed", true);
+		Wp.SetWaypointFlag("HangarBack8", "closed", true);
+		
+		Util.MapDebugPrint( "Infirmary_Breached" );
+	},
+	
+	// Called when an Imperial Tech hacks the Hangar Side Door to Infirmary.
+	Hangar_Side_Door_Hacked = function( trigger )
+	{
+		Map.HangarSideDoor = false;
+		
+		// Remove These When Goals Are Ready
+		Wp.SetWaypointFlag("Hangar_Hack1", "closed", false);
+		Wp.SetWaypointFlag("Hangar_Hack2", "closed", false);
+		Wp.SetWaypointFlag("Hangar_Hack3", "closed", false);
+		Wp.SetWaypointFlag("Hangar_Hack4", "closed", false);
+
+		Util.MapDebugPrint( "Hangar_Side_Door_Hacked" );
+	},
+	
+	// Called when the lock at the elevator door in the Infirmary is destroyed.
+	Infirmary_Elevator_Lock_Destroyed = function( trigger )
+	{
+		Map.InfirmaryElevatorLock = false;
+		
+		//Wp.SetWaypointFlag("IELD", "closed", false);	// unneeded
+		//Wp.SetWaypointFlag("L4LSR", "closed", false);	// enable this when elevators are fixed
+
+		Util.MapDebugPrint( "Infirmary_Elevator_Lock_Destroyed" );
+	},
+	
+	// Called when all Command Center computers have been destroyed. (End of Map)
+	CC_Destroyed = function( trigger )
+	{
+		Map.CCDestroyed = true;
+
+		Util.MapDebugPrint( "Communications_Center_Destroyed");
+	}
+};
+
+global OnMapLoad = function()
+{
+	// Set the default closed states
+	//Wp.SetWaypointFlag("Gate_1", "closed", true);
+	Wp.SetWaypointFlag("Gate_2", "closed", true);
+	Wp.SetWaypointFlag("Ion_1", "closed", true);
+	Wp.SetWaypointFlag("Ion_2", "closed", true);
+	Wp.SetWaypointFlag("Ion_3", "closed", true);
+	Wp.SetWaypointFlag("Ion_4", "closed", true);
+	Wp.SetWaypointFlag("Ion_5", "closed", true);
+	Wp.SetWaypointFlag("HangarControlRespawn1", "closed", true);
+	Wp.SetWaypointFlag("HangarControlRespawn2", "closed", true);
+	Wp.SetWaypointFlag("Cave", "closed", false);
+	Wp.SetWaypointFlag("Shield_1", "closed", true);
+	Wp.SetWaypointFlag("Shield_2", "closed", true);
+	Wp.SetWaypointFlag("To_Hangar_1", "closed", true);
+	Wp.SetWaypointFlag("To_Hangar_2", "closed", true);
+	Wp.SetWaypointFlag("To_Hangar_3", "closed", true);
+	Wp.SetWaypointFlag("To_Hangar_4", "closed", true);
+	Wp.SetWaypointFlag("HangarBack1", "closed", false);
+	Wp.SetWaypointFlag("HangarBack2", "closed", false);
+	Wp.SetWaypointFlag("HangarBack3", "closed", false);
+	Wp.SetWaypointFlag("HangarBack4", "closed", false);
+	Wp.SetWaypointFlag("HangarBack5", "closed", false);
+	Wp.SetWaypointFlag("HangarBack6", "closed", false);
+	Wp.SetWaypointFlag("HangarBack7", "closed", false);
+	Wp.SetWaypointFlag("HangarBack8", "closed", false);
+	Wp.SetWaypointFlag("Hangar_Hack1", "closed", true);
+	Wp.SetWaypointFlag("Hangar_Hack2", "closed", true);
+	Wp.SetWaypointFlag("Hangar_Hack3", "closed", true);
+	Wp.SetWaypointFlag("Hangar_Hack4", "closed", true);
+	Wp.SetWaypointFlag("IELD", "closed", true);
+	Wp.SetWaypointFlag("L4LSR", "closed", true);
+	Wp.SetWaypointFlag("BridgeFar", "closed", false);
+	Wp.SetWaypointFlag("BridgeBack", "closed", false);
+	Wp.SetWaypointFlag("Ion_6", "closed", false);
+
+	Util.UpdateSwitchData();
+
+	Util.SetMaxUsersInProgress( 3, "ATTACK_Gate_.*" );
+	Util.SetMaxUsersInProgress( 3, "DEFEND_Gate_.*" );
+
+	SetAvailableMapGoals( TEAM.RED, false, "ATTACK.*" );
+	SetAvailableMapGoals( TEAM.RED, false, "DEFEND.*" );
+	SetAvailableMapGoals( TEAM.BLUE, false, "ATTACK.*" );
+	SetAvailableMapGoals( TEAM.BLUE, false, "DEFEND.*" );
+	SetAvailableMapGoals( TEAM.RED, true, "ATTACK_Gate_.*" );
+	SetAvailableMapGoals( TEAM.BLUE, true, "DEFEND_Gate_.*" );
+	SetAvailableMapGoals( TEAM.RED, false, "ATTACK_Gate_2" );
+	SetAvailableMapGoals( TEAM.BLUE, false, "DEFEND_Gate_2" );
+
+	// Set up some triggered events
+	OnTrigger( "Objective 1 Completed @siege_hoth_obj_1_new_imp_final.", Map.Wall_Breached );
+	OnTrigger( "Hacked trigger_once_321.", Map.Ion_Control_Hacked );
+	OnTrigger( "Objective 2 Completed @SIEGE_HOTH_OBJ_1_FINAL.", Map.Bridge_Extended );
+	OnTrigger( "Destroyed func_breakable_361.", Map.Shield_Generator_Destroyed );
+	//OnTrigger( "Objective 3 Completed @SIEGE_HOTH_OBJ_2_IMP_FINAL.", Map.Shield_Generator_Destroyed );
+	OnTrigger( "Red has stolen misc_siege_item_296!", Map.Codes_Stolen );
+	OnTrigger( "Flag returned misc_siege_item_296!", Map.Codes_Returned );
+	OnTrigger( "Red secured misc_siege_item_296!", Map.Codes_Secured );
+	OnTrigger( "Objective 4 Completed @SIEGE_HOTH_OBJ_3_IMP_FINAL.", Map.Hangar_Doors_Unlocked );
+	OnTrigger( "Objective 5 Completed @SIEGE_HOTH_OBJ_4_IMP_FINAL.", Map.Infirmary_Breached );
+	OnTrigger( "Hacked trigger_once_312.", Map.Hangar_Side_Door_Hacked );
+	OnTrigger( "Destroyed func_breakable_291.", Map.Infirmary_Elevator_Lock_Destroyed );
+	OnTrigger( "Objective 6 Completed @SIEGE_HOTH_OBJ_5_FINAL.", Map.CC_Destroyed );
+	
+	Util.MapDebugPrint( "OnMapLoad" );
+};

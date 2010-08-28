@@ -1,0 +1,66 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "AskForHealth";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.AlwaysRecieveEvents = true;	// Recieve events even when not active. Normally events are only called when goal is active.
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	this.HealthThreshold = 25.0;
+	this.DelayBetweenCalls = 30.0;
+	
+	print(this.Name, " Initialized");
+};
+
+// this.OnSpawn = function()
+// {
+	// while(1)
+	// {
+		// if(this.Bot.Health <this.HealthThreshold)
+		// {
+			// this.Priority = 1;
+		// }
+		// else
+		// {
+			// this.Priority = 0;
+		// }
+		// sleep(2);
+	// };
+// };
+
+//this.GetPriority = function()
+//{
+//};
+
+this.Enter = function()
+{
+};
+
+this.Exit = function()
+{
+};
+
+this.Update = function()
+{
+	while(1)
+	{
+		this.Bot.SayVoice(VOICE.NEED_MEDIC);
+		sleep(this.DelayBetweenCalls);
+	}
+	this.Finished();
+};
+
+this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
+{
+	whoDoneIt = GetEntName(Inflictor);
+	print( format("%s: %s Hurt me: Was %d, now %d", this.Bot.Name, whoDoneIt, PreviousHealth, CurrentHealth) );
+	// commented out for now since goal doesnt get passed to callback. wip
+	if(CurrentHealth < this.HealthThreshold)
+	{
+		this.Priority = 1;
+	}
+};

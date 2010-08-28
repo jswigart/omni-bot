@@ -1,0 +1,128 @@
+// Load any other scripts that we will need.
+ExecScript("etqw_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("etqw_commands.gm");
+ExecScript("difficulty.gm");
+ExecScript("server_manager.gm");
+
+// New module format
+global Util = import("utilities");
+global ETQWUtil = import("etqw_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+/////////////////////////////////////////////////////////////////////
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.FIELDOPS, "def_bot.gm");
+RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
+
+/////////////////////////////////////////////////////////////////////
+
+// Set up a list of Names, optionally associated with a script.
+
+// Color key for ETQW
+// ^0 = Black
+// ^1 = Red
+// ^2 = Green
+// ^3 = Yellow
+// ^4 = Blue
+// ^5 = Light blue
+// ^6 = Pink
+// ^7 = White 
+
+Names["^4^4[BOT]^7^7Walter"] = "";
+Names["^4[BOT]^7Fred"] = "";
+Names["^4[BOT]^7Morgan"] = "";
+Names["^4[BOT]^7Lawrence"] = "";
+Names["^4[BOT]^7Richard"] = "";
+Names["^4[BOT]^7Michael"] = "";
+Names["^4[BOT]^7Brad"] = "";
+Names["^4[BOT]^7George"] = "";
+Names["^4[BOT]^7Anton"] = "";
+Names["^4[BOT]^7Monty"] = "";
+Names["^4[BOT]^7Bean"] = "";
+Names["^4[BOT]^7Sean"] = "";
+Names["^4[BOT]^7Backfire"] = "";
+Names["^4[BOT]^7Halfwit"] = "";
+Names["^4[BOT]^7Halfbaked"] = "";
+Names["^4[BOT]^7Fullmonty"] = "";
+Names["^4[BOT]^7Nohope"] = "";
+Names["^4[BOT]^7Hitnrun"] = "";
+Names["^4[BOT]^7Missnrun"] = "";
+Names["^4[BOT]^7Oysterhead"] = "";
+Names["^4[BOT]^7Fullthrottle"] = "";
+Names["^4[BOT]^7Noammo"] = "";
+Names["^4[BOT]^7Bullseye"] = "";
+Names["^4[BOT]^7Aimless"] = "";
+Names["^4[BOT]^7Blackadder"] = "";
+Names["^4[BOT]^7Cledus"] = "";
+Names["^4[BOT]^7Newbie"] = "";
+Names["^4[BOT]^7Chimichanga"] = "";
+Names["^4[BOT]^7Razor"] = "";
+Names["^4[BOT]^7Tanz"] = "";
+Names["^4[BOT]^7Vic"] = "";
+Names["^4[BOT]^7Malin"] = "";
+Names["^4[BOT]^7Thor"] = "";
+Names["^4[BOT]^7Grog"] = "";
+Names["^4[BOT]^7Drago"] = "";
+Names["^4[BOT]^7Stinger"] = "";
+Names["^4[BOT]^7Tarnok"] = "";
+Names["^4[BOT]^7Wens"] = "";
+Names["^4[BOT]^7Brohn"] = "";
+Names["^4[BOT]^7Ivor"] = "";
+Names["^4[BOT]^7Gordac"] = "";
+Names["^4[BOT]^7Bortack"] = "";
+Names["^4[BOT]^7Morgriff"] = "";
+Names["^4[BOT]^7Kole"] = "";
+Names["^4[BOT]^7Garbok"] = "";
+Names["^4[BOT]^7Korv"] = "";
+Names["^4[BOT]^7Vokur"] = "";
+Names["^4[BOT]^7Gali"] = "";
+Names["^4[BOT]^7Beelz"] = "";
+Names["^4[BOT]^7CraigChrist"] = "";
+Names["^4[BOT]^7WhittlinMan"] = "";
+Names["^4[BOT]^7SpecialEd"] = "";
+Names["^4[BOT]^7Flint"] = "";
+Names["^4[BOT]^7Argo"] = "";
+Names["^4[BOT]^7Milius"] = "";
+Names["^4[BOT]^7Vera"] = "";
+Names["^4[BOT]^7Merki"] = "";
+Names["^4[BOT]^7Tarnen"] = "";
+Names["^4[BOT]^7Royen"] = "";
+Names["^4[BOT]^7Kaolin"] = "";
+Names["^4[BOT]^7Nandet"] = "";
+Names["^4[BOT]^7Nundak"] = "";
+Names["^4[BOT]^7Ryver"] = "";
+Names["^4[BOT]^7Mungri"] = "";
+Names["^4[BOT]^7Chan"] = "";
+Names["^4[BOT]^7Phi"] = "";
+Names["^4[BOT]^7Amadi"] = "";
+Names["^4[BOT]^7Zarna"] = "";
+
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+//Names["samplebot"] = "sample.gm";
+
+// Set minbots/maxbots on map start
+//MinBots(30);
+//MaxBots(12);
+
+// This is optional for ET. By default breakable objects won't be targeted, because this 
+// distance defaults to 0. Set this to some low value to allow bots to target breakable objects.
+// This number is the distance that bots are allowed to target breakable entities at.
+// It must be a global variable.
+// global TargetBreakableDist = 10.0;
+
+//~ global TestMapOn = true;
+
+global PostMapLoad = function()
+{
+	Util.ProcessMovers();
+};
+
+print("ETQW Script Executed");

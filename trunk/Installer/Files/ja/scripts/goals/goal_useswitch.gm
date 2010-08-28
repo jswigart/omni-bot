@@ -1,0 +1,134 @@
+// This script contains functionality to trigger any available switches as set up in the global map table.
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.SWITCHUSER)
+{
+	BB.SWITCHUSER = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "UseSwitch";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.GetPriorityDelay = 5;		// Delay between calls to GetPriority
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	
+	// If there is no global map or switches table this script goal is useless, 
+	// so lets disable it from consideration.
+	if(!Map || !Map.Switches)
+	{
+		this.Disable = true;
+	}
+	else
+	{
+		// If not otherwise defined, set a high bot limit for the switches.
+		foreach ( switchTable in Map.Switches )
+		{
+			if ( !switchTable.LimitBots )
+			{ 
+				switchTable.LimitBots = 64; 
+			}
+		}
+	}
+	
+	print(this.Name, " Initialized");
+};
+
+//this.OnSpawn = function()
+//{
+//};
+
+this.GetPriority = function()
+{
+	myTeamMask = (1<<this.Bot.GetTeam());
+	myClassMask = (1<<this.Bot.GetClass());
+	
+	if(!this.IsActive())
+	{
+		// Look for a switch we can go for.
+		foreach ( i and switch in Map.Switches )
+		{
+			//numBotsOnSwitch = Blackboard.GetNumRecords(BB.SWITCHUSER, switch.Serial);
+			
+			if( 	( switch.Enabled ) &&
+				( switch.LimitTeam & myTeamMask ) && 
+				( switch.LimitClass & myClassMask) &&
+				( !this.BlackboardIsDelayed(switch.Serial) ))
+			{
+				this.CurrentSwitch = i;
+				this.Priority = switch.Priority;
+				return;
+			}
+			sleep(0.2);
+		}
+	}
+	else
+	{
+		// Abort if the goal disabled
+		switch = Map.Switches[this.CurrentSwitch];
+		if(switch && !switch.Enabled)
+		{
+			this.Priority = 0;
+		}
+	}
+};
+
+this.Enter = function()
+{
+	//switch = Map.Switches[this.CurrentSwitch];
+	
+	//bbRecord =
+	//{
+		//Owner = this.Bot.GetGameId(),
+		//Target = switch.Serial,
+	//};
+	//Blackboard.PostRecord(BB.SWITCHUSER, bbRecord);
+};
+
+this.Exit = function()
+{
+	// Remove myself from the blackboard for using this switch
+	//Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.SWITCHUSER);
+};
+
+this.Update = function()
+{
+	switch = Map.Switches[this.CurrentSwitch];
+        	
+	wpPos = switch.Waypoint.position;
+	radius = switch.Waypoint.radius;
+	wpFacing = switch.Waypoint.facing;
+	
+	if( this.Goto(wpPos, radius) == EVENT.PATH_SUCCESS )
+	{		
+		switch = Map.Switches[this.CurrentSwitch];
+		pos = switch.Waypoint.position;
+		facing = switch.Waypoint.facing;
+		
+		assert(pos && facing);
+		this.AddAimRequest(Priority.High, "facing", facing);
+				
+		myTeamMask = (1<<this.Bot.GetTeam());
+		myClassMask = (1<<this.Bot.GetClass()) ;                        
+		counter = 0;
+		while( ( switch.LimitTeam & myTeamMask ) && ( switch.LimitClass & myClassMask) )
+		{
+			if(counter & 2)
+			{
+				this.Bot.PressButton( BTN.USE); 
+			}
+			counter += 1;
+                        yield();
+                }                  
+	}
+	else
+	{
+		this.BlackboardDelay(30, switch.Serial);
+	}
+	
+        // Finish the state.
+	this.Finished();
+};

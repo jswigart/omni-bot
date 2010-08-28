@@ -1,0 +1,101 @@
+global Map =
+{
+	Flag_blueflag = "FLAG_blueflag",
+	Flag_redflag = "FLAG_redflag",
+	Cappoint_18 = "CAPPOINT_18",
+	Cappoint_78 = "CAPPOINT_78",
+	Snipe_187 = "SNIPE_187",
+	Snipe_188 = "SNIPE_188",
+	Snipe_198 = "SNIPE_198",
+	Snipe_207 = "SNIPE_207",
+	Snipe_61 = "SNIPE_61",
+	Sentry_184 = "SENTRY_184",
+	Sentry_189 = "SENTRY_189",
+	Sentry_192 = "SENTRY_192",
+	Sentry_193 = "SENTRY_193",
+	Sentry_199 = "SENTRY_199",
+	Sentry_200 = "SENTRY_200",
+	Sentry_203 = "SENTRY_203",
+	Sentry_205 = "SENTRY_205",
+
+	blueflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Taken" );
+	},
+
+	blueflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Returned" );
+	},
+
+	blueflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Dropped" );
+	},
+
+	redflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Taken" );
+	},
+
+	redflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Returned" );
+	},
+
+	redflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Dropped" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Flag blueflag pickedup", Map.blueflag_Taken );
+	OnTrigger( "Flag blueflag returned", Map.blueflag_Returned );
+	OnTrigger( "Flag blueflag dropped", Map.blueflag_Dropped );
+	OnTrigger( "Flag redflag pickedup", Map.redflag_Taken );
+	OnTrigger( "Flag redflag returned", Map.redflag_Returned );
+	OnTrigger( "Flag redflag dropped", Map.redflag_Dropped );
+
+	//SetMapGoalProperties( "ATTACK_.*", {mincamptime=9999, maxcamptime=9999});
+	//SetMapGoalProperties( "DEFEND_.*", {mincamptime=9999, maxcamptime=9999});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=120, maxcamptime=120});
+
+	//~SetAvailableMapGoals( TEAM.BLUE, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.RED, false, ".*" );
+
+	SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.SNIPER );
+	SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.HWGUY );
+	//SetGoalPriority( "FLAG_.*", 0.0, 0, CLASS.ENGINEER );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

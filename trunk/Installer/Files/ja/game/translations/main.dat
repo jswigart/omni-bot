@@ -1,0 +1,306 @@
+languageScript
+{
+	translationDef {
+		reference "MENUS_JEDI_MASTER"
+		english "Jedi Master"
+		french "Maître Jedi"
+		german "Jedi-Meister"
+		spanish "Maestro jedi"
+	}
+
+	translationDef {
+		reference "SP_INGAME_ITEM_JETPACK"
+		english "Jetpack"
+		french "#same"
+		german "#same"
+		spanish "#same"
+	}
+
+	translationDef {
+		reference "SP_INGAME_ITEM_HEALTHDISP"
+		english "Usable Health Dispenser"
+		french "Distributeur utilisable de santé"
+		german "Verwendbare Gesundheit Zufuhr"
+		spanish "Fuente usable de la salud"
+	}
+
+	translationDef {
+		reference "SP_INGAME_ITEM_AMMODISP"
+		english "Usable Ammo Dispenser"
+		french "Distributeur utilisable de munitions"
+		german "Verwendbare Munition Zufuhr"
+		spanish "Fuente usable de las municiones"
+	}
+
+	translationDef {
+		reference "MENUS_MUTANT"
+		english "Mutant"
+		french "#same"
+		german "#same"
+		spanish "Mutante"
+	}
+	
+	translationDef {
+		reference "EM_INGAME_KILLED_TK_MESSAGE"
+		english "You killed ^1TEAMMATE^7"
+		french "Vous avez fraggé ^1ÉQUIPIER^7"
+		german "#same"
+		spanish "Has matado al ^1COMPAÑERO DE EQUIPO^7"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_CONC"
+		english "was pulverized by"
+		french "a pulvérisés grâce à"
+		german "wurde pulverisiert von"
+		spanish "ha sido pulverizado por"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_RANCOR"
+		english "ended up being dinner for"
+		french "#same"
+		german "#same"
+		spanish "#same"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_NPC_CRUSH"
+		english "was squished by"
+		french "#same"
+		german "#same"
+		spanish "#same"
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_SPACE"
+		english "could not handle zero gravity."
+		french "n'a pas pu manipuler la pesanteur nulle."
+		german "entdeckt, daß der flüssige Felsen heiß ist"
+		spanish "no podía manejar la gravedad cero."
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_LAVATOSS"
+		english "was thrown into a pit of lava by"
+		french "#same"
+		german "#same"
+		spanish "#same"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_SLIMETOSS"
+		english "was thrown into a pit of slime by"
+		french "#same"
+		german "#same"
+		spanish "#same"
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_CRUSH"
+		english "was pressed flat."
+		french "a été écrasé dans million de morceaux."
+		german "wurde in Million Stücke zerquetscht."
+		spanish "fue machacado en millón de pedazos."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_WATER1"
+		english "sleeps in Davy Jones' locker."
+		french "dort dans le cabinet de Davy Jones."
+		german "schläft im Schrank von Davy Jones."
+		spanish "duerma en el armario de Davy Jones."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_WATER2"
+		english "thought he could evolve gills"
+		french "dort dans le cabinet de Davy Jones."
+		german "schläft im Schrank von Davy Jones."		
+		spanish "pensado él podría desarrollar branquias."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_WATER2F"
+		english "thought she could evolve gills."
+		french "dort dans le cabinet de Davy Jones."
+		german "schläft im Schrank von Davy Jones."		
+		spanish "pensado ella podría desarrollar branquias."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_WATER2F"
+		english "tried to find Nemo."
+		french "dort dans le cabinet de Davy Jones."
+		german "schläft im Schrank von Davy Jones."		
+		spanish "pensado ella podría desarrollar branquias."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_LAVA1"
+		english "found out molten rock is hot."
+		french "découvert que la roche fondue est chaude."
+		german "entdeckt, daß der flüssige Felsen heiß ist."
+		spanish "descubierta eso la roca fundida es caliente."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_LAVA2"
+		english "sacrificed himself to the lava god."
+		french "découvert que la roche fondue est chaude."
+		german "entdeckt, daß der flüssige Felsen heiß ist."
+		spanish "descubierta eso la roca fundida es caliente."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_LAVA2F"
+		english "sacrificed herself to the lava god."
+		french "découvert que la roche fondue est chaude."
+		german "entdeckt, daß der flüssige Felsen heiß ist."
+		spanish "descubierta eso la roca fundida es caliente."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_SLIME"
+		english "dissolved into nothingness."
+		french "est tombée dans un puits de boue l'ébullition."
+		german "in eine Grube fiel das Kochen des Schlamms."
+		spanish "cayó en un hoyo del limo."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_TURBOLASER"
+		english "was obliterated by a Turbolaser!"
+		french "#same"
+		german "wurde von einem Turbolaser durchsiebt!"
+		spanish "ha sido obliterado por un Turbolaser!"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_TURRET1"
+		english "was obliterated by a Turbolaser!"
+		french "#same"
+		german "wurde von einem Turbolaser durchsiebt!"
+		spanish "ha sido obliterado por un Turbolaser!"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_TURRET2"
+		english "was shot down by a Turbolaser!"
+		french "#same"
+		german "wurde von einem Turbolaser niedergeschossen!"
+		spanish "ha sido abatido por un Turbolaser!"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_BLASTER1"
+		english "was blasted into oblivion by"
+		french "#same"
+		german "wurde ins Jenseits befördert von"
+		spanish "ha sido enviado al olvido por"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_BLASTER2"
+		english "was mowed down by"
+		french "#same"
+		german "wurde nieder gemäht von"
+		spanish "ha sido atropellado por"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_BLASTER3"
+		english "was blasted out of the sky by"
+		french "#same"
+		german "wurde auf den Mond geschossen von"
+		spanish "ha sido abatido a tiros por"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_MISSILE1"
+		english "was blown to smithereens by"
+		french "#same"
+		german "wurde in Stücke gesprengt von"
+		spanish "ha sido despedazado en cachitos por"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_MISSILE2"
+		english "was rocketed by"
+		french "#same"
+		german "spürte die Rakete von"
+		spanish "ha sido alcanzado por el cohete de"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_BOMB"
+		english "was bombed by"
+		french "#same"
+		german "spüre die Bombe von"
+		spanish "ha sido destruido por la bomba de"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_ION"
+		english "was ion-blasted by"
+		french "#same"
+		german "spürte den Ionen-Blaster von"
+		spanish "ha sido alcanzado por el blaster de iones de"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_TURRET"
+		english "was blasted by a turret from"
+		french "#same"
+		german "spürte den Geschützturm von"
+		spanish "ha sido alcanzado por una torreta de"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_COLLISION1"
+		english "crashed into"
+		french "#same"
+		german "krachte in"
+		spanish "se ha estrellado contra"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_COLLISION2"
+		english "collided with"
+		french "#same"
+		german "kollidierte mit"
+		spanish "ha colisionado con"
+	}
+
+	translationDef {
+		reference "EM_INGAME_KILLED_VEH_COLLISION3"
+		english "has become one with"
+		french "#same"
+		german "wurde eins mit"
+		spanish "se ha vuelto uno con"
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_ASTEROID1"
+		english "smashed into an asteroid."
+		french "#same"
+		german "raste in einem Asteroid."
+		spanish "se ha estrellado contra un asteroide."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_ASTEROID2"
+		english "zigged when they should have zagged."
+		french "#same"
+		german "hat Bekanntschaft mit einem Asteroid gmacht."
+		spanish "hizo zig cuando debia hacer zag."
+	}
+
+	translationDef {
+		reference "EM_INGAME_DIED_ASTEROID3"
+		english "failed Navigation 101."
+		french "#same"
+		german "verließ die vorgeschriebene Flugrute."
+		spanish "suspendio Navegacion 101."
+	}
+}
