@@ -502,7 +502,7 @@ member LimitToClass = function( goalname, team, class1, class2, class3 )
 //
 member ExcludeClass = function( goalname, team, class1, class2, class3, class4 )
 {
-	foreach( id and class in RTCWUtil.PlayerClassTable )
+	foreach( id and class in Util.PlayerClassTable )
 	{
 		if ( class == class1 || class == class2 || class == class3 || class == class4 ) {
 			SetGoalPriority( goalname, 0.0, team, class );
