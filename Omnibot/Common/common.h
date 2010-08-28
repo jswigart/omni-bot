@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2010-04-24 22:51:13 -0500 (Sat, 24 Apr 2010) $
-// $LastChangedRevision: 4828 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // file: Commonly included headers
 //		In order to reduce the clutter in every file that commonly includes
@@ -16,6 +16,7 @@
 #define __COMMON_H__
 
 #include "CodeAnalysis.h"
+
 
 // Disable some compiler warnings.
 #pragma warning(   error: 4002 )	// Too many actual parameters for macro: promoted to be an error
