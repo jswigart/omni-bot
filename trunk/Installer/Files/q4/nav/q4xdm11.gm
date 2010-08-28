@@ -1,0 +1,23 @@
+global Map =
+{
+	Rune_1 = "DEADZONE_RUNE_powerup_deadzone_3",
+	Rune_2 = "DEADZONE_RUNE_powerup_deadzone_4",
+	Rune_3 = "DEADZONE_RUNE_powerup_deadzone_5",
+
+	Zone_1 = "DEADZONE_trigger_controlzone_1",
+};
+
+global OnMapLoad = function()
+{
+	if (GetModName() == "DeadZone")
+	{
+		Util.AddUsePtFromWp(Map.Zone_1, "deadzone1");
+	}
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.MapDebugPrint("OnBotJoin", true);
+};

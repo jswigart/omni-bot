@@ -1,0 +1,186 @@
+global Map =
+{
+	Cap_Strogg = "CAPPOINT_marine_flag",
+	Cap_Marine = "CAPPOINT_strogg_flag",
+	Flag_Strogg = "FLAG_strogg_flag",
+	Flag_Marine = "FLAG_marine_flag",
+	
+	strogg_flag_pickedup = function(trigger)
+	{
+		Util.DisableGroup( "stroggDefends", TEAM.STROGG );
+		Util.MapDebugPrint("strogg_flag_pickedup");
+	},
+
+	strogg_flag_returned = function(trigger)
+	{
+		Util.EnableGroup( "stroggDefends", TEAM.STROGG );
+		Util.MapDebugPrint("strogg_flag_returned");
+	},
+
+	strogg_flag_dropped = function(trigger)
+	{
+		Util.MapDebugPrint("strogg_flag_dropped");
+	},
+
+	marine_flag_pickedup = function(trigger)
+	{
+		Util.DisableGroup( "marineDefends", TEAM.MARINE );
+		Util.MapDebugPrint("marine_flag_pickedup");
+	},
+
+	marine_flag_returned = function(trigger)
+	{
+		Util.EnableGroup( "marineDefends", TEAM.MARINE );
+		Util.MapDebugPrint("marine_flag_returned");
+	},
+
+	marine_flag_dropped = function(trigger)
+	{
+		Util.MapDebugPrint("marine_flag_dropped");
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Flag strogg_flag pickedup", Map.strogg_flag_pickedup );
+	OnTrigger( "Flag strogg_flag returned", Map.strogg_flag_returned );
+	OnTrigger( "Flag strogg_flag dropped", Map.strogg_flag_dropped );
+	OnTrigger( "Flag marine_flag pickedup", Map.marine_flag_pickedup );
+	OnTrigger( "Flag marine_flag returned", Map.marine_flag_returned );
+	OnTrigger( "Flag marine_flag dropped", Map.marine_flag_dropped );	
+
+	//set up some routing
+	MapRoutes =
+	{
+		FLAG_strogg_flag =
+		{
+			ROUTE_ms_1 = 
+			{
+				ROUTE_mid1 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},
+				ROUTE_mid2 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},
+				ROUTE_mid3 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},						
+			},
+		},
+		FLAG_marine_flag =
+		{
+			ROUTE_ss_1 = 
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},			
+			},
+		},	
+		CAPPOINT_strogg_flag =
+		{
+			ROUTE_mFlag =
+			{
+				ROUTE_mid1 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},
+				ROUTE_mid2 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},
+				ROUTE_mid3 =
+				{
+					ROUTE_strogg1 = {},
+					ROUTE_strogg2 = {},
+					ROUTE_strogg3 = {},
+				},
+			},
+		},
+		CAPPOINT_marine_flag =
+		{
+			ROUTE_sFlag =
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_marine1 = {},
+					ROUTE_marine2 = {},
+					ROUTE_marine3 = {},
+				},	
+			},
+		},
+	};
+
+	//copy some routes
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_2 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_3 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_4 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_5 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_6 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_7 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_8 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_9 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_ms_10 = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+	MapRoutes.FLAG_strogg_flag.ROUTE_mFlag = MapRoutes.FLAG_strogg_flag.ROUTE_ms_1;
+
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_2 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_3 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_4 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_5 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_6 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_7 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_8 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_9 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_ss_10 = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+	MapRoutes.FLAG_marine_flag.ROUTE_sFlag = MapRoutes.FLAG_marine_flag.ROUTE_ss_1;
+
+	QUtil.InitDualObjective(); 
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint("OnMapLoad");
+};
+
+global OnBotJoin = function( bot )
+{
+	QUtil.SetDualObjective(bot);
+	Util.MapDebugPrint("OnBotJoin", true);
+};
+
