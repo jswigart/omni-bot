@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\common"
+		AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\Common"
 	/>
 	<Tool
 		Name="VCLinkerTool"
