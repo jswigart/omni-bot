@@ -175,16 +175,24 @@ void AddDeferredGoal( gentity_t *ent ) {
 	}
 
 	MapGoalDef &goaldef = g_DeferredGoals[g_NumDeferredGoals++];
+	MapGoalDef &goaldef2 = g_DeferredGoals[g_NumDeferredGoals++];
 
 	switch ( ent->s.eType )
 	{
 	case ET_MG42_BARREL:
 	{
-		goaldef.Props.SetString( "Type","mg42mount" );
+		goaldef.Props.SetString( "Type","mountmg42" );
 		goaldef.Props.SetEntity( "Entity",HandleFromEntity( ent ) );
 		goaldef.Props.SetInt( "Team",( 1 << RTCW_TEAM_ALLIES ) | ( 1 << RTCW_TEAM_AXIS ) );
 		goaldef.Props.SetString( "TagName",_GetEntityName( ent ) );
 		goaldef.Props.SetInt( "InterfaceGoal",1 );
+
+		// cs: this was done in et_goalmanager before
+		goaldef2.Props.SetString("Type","repairmg42");
+		goaldef2.Props.SetEntity("Entity",HandleFromEntity(ent));
+		goaldef2.Props.SetInt("Team",(1 << RTCW_TEAM_ALLIES)|(1 << RTCW_TEAM_AXIS));
+		goaldef2.Props.SetString("TagName",_GetEntityName(ent));
+		goaldef2.Props.SetInt("InterfaceGoal",1);
 		break;
 	}
 	}
