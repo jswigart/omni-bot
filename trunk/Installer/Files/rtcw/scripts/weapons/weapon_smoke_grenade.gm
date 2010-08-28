@@ -11,15 +11,13 @@ this.WeaponId = WEAPON.SMOKE_GRENADE;
 this.PrimaryFire.WeaponType = "grenade";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
-this.PrimaryFire.WaterProof = false;
+this.PrimaryFire.WaterProof = true;
 this.PrimaryFire.InheritsVelocity = false;
-this.PrimaryFire.ProjectileGravity = 1.0;
+this.PrimaryFire.ProjectileGravity = 0.0;
 this.PrimaryFire.FireOnRelease = true;
+this.PrimaryFire.IgnoreReload = true;
 
 this.PrimaryFire.MaxAimError = Vector2(0, 0);
 this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
-this.PrimaryFire.DefaultDesirability = 0.0;
-this.PrimaryFire.SetDesirabilityRange(1000, 1500, 0.8);
 
-this.PrimaryFire.RequiresTargetOutside = true;
-this.PrimaryFire.RequiresShooterOutside = false;
+this.PrimaryFire.DefaultDesirability = 0.0;

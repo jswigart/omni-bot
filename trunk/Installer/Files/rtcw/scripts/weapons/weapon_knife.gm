@@ -16,15 +16,15 @@ this.PrimaryFire.NeedsInRange = true;
 this.PrimaryFire.MinRange = 0.0;
 this.PrimaryFire.MaxRange = 128.0;
 
-this.PrimaryFire.MaxAimError = Vector2(0, 0);
-this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
+this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );
 
 this.PrimaryFire.DefaultDesirability = 0.1;
 
-this.PrimaryFire.SetTargetBias(CLASS.LIEUTENANT, 0);
-this.PrimaryFire.SetTargetBias(CLASS.MEDIC, 0);
-this.PrimaryFire.SetTargetBias(CLASS.ENGINEER, 0);
-this.PrimaryFire.SetTargetBias(CLASS.SOLDIER, 0);
+this.PrimaryFire.SetTargetBias( CLASS.LIEUTENANT, 0 );
+this.PrimaryFire.SetTargetBias( CLASS.MEDIC, 0 );
+this.PrimaryFire.SetTargetBias( CLASS.ENGINEER, 0 );
+this.PrimaryFire.SetTargetBias( CLASS.SOLDIER, 0 );
 
-this.PrimaryFire.SetDesirabilityRange(0, 48, 1.0);
-this.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.1);
+this.PrimaryFire.SetDesirabilityRange( 0, 48, 1.0 );
+this.PrimaryFire.SetTargetBias( CLASS.BREAKABLE, 1.1 );

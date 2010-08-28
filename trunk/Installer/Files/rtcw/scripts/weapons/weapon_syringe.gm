@@ -5,6 +5,7 @@
 // Overall weapon properties.
 this.Name = "Syringe";
 this.WeaponId = WEAPON.SYRINGE;
+this.PrimaryFire.AmmoType = WEAPON.SYRINGE;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
@@ -12,9 +13,12 @@ this.PrimaryFire.WeaponType = "melee";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
 this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.NeedsInRange = true;
+this.PrimaryFire.MinRange = 0.0;
+this.PrimaryFire.MaxRange = 1000.0;
 
-this.PrimaryFire.MaxAimError = Vector2(0, 0);
-this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
+this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );
 
 this.PrimaryFire.DefaultDesirability = 0.0;
 //~ this.PrimaryFire.SetDesirabilityRange(0, 64, 0.8);
