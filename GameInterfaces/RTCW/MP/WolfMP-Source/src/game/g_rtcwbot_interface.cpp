@@ -187,7 +187,7 @@ void AddDeferredGoal( gentity_t *ent ) {
 		goaldef.Props.SetString( "TagName",_GetEntityName( ent ) );
 		goaldef.Props.SetInt( "InterfaceGoal",1 );
 
-		// cs: this was done in et_goalmanager before
+		// cs: this was done in rtcw_goalmanager before
 		goaldef2.Props.SetString("Type","repairmg42");
 		goaldef2.Props.SetEntity("Entity",HandleFromEntity(ent));
 		goaldef2.Props.SetInt("Team",(1 << RTCW_TEAM_ALLIES)|(1 << RTCW_TEAM_AXIS));

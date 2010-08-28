@@ -1,14 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["aim_debug"] = 
+Commands["aim_debug"] =
 {
 	Func = function( _params )
 	{
-		print( "Executing aim debugging script." );	
+		print( "Executing aim debugging script." );
 		RTCWUtil.DebugBotAim( _params[0] );
 	},
 
-	Help = 
+	Help =
 	{
 		"Aim Debug, an aim debugging tool",
 		"Usage: /bot aim_debug",
@@ -20,31 +20,33 @@ Commands["aim_debug"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["aim_debug_reload"] = 
+Commands["aim_debug_reload"] =
 {
 	Func = function( _params )
 	{
-		foreach ( gameId and bot in BotTable )
-			{ bot.ReloadProfile(); }
+		foreach( gameId and bot in BotTable )
+		{
+			bot.ReloadProfile();
+		}
 	},
 
-	Help = 
+	Help =
 	{
 		"Aim Debug Reload, reloads each bots profile",
 		"Usage: /bot aim_debug_reload",
-	},	
+	},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["warpto"] = 
+Commands["warpto"] =
 {
 	Func = function( _params )
 	{
 		RTCWUtil.WarpTo( _params );
 	},
 
-	Help = 
+	Help =
 	{
 		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
 		"Usage: /bot warpto <goalname|wpname>",
@@ -53,14 +55,14 @@ Commands["warpto"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["wt"] = 
+Commands["wt"] =
 {
 	Func = function( _params )
 	{
 		RTCWUtil.WarpTo( _params );
 	},
 
-	Help = 
+	Help =
 	{
 		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
 		"Usage: /bot wt <goalname|wpname>",
@@ -69,14 +71,14 @@ Commands["wt"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["wb"] = 
+Commands["wb"] =
 {
 	Func = function( _params )
 	{
 		RTCWUtil.WarpTestBot( _params );
 	},
 
-	Help = 
+	Help =
 	{
 		"Warp Test Bot, will teleport testbot to given waypoint name if cheats are enabled",
 		"Usage: /bot wt <goalname|wpname>",
@@ -85,14 +87,14 @@ Commands["wb"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["rollcall"] = 
+Commands["rollcall"] =
 {
 	Func = function( _params )
 	{
 		RTCWUtil.RollCall();
 	},
 
-	Help = 
+	Help =
 	{
 		"Roll Call, lists each bots name, team, class, and entity",
 		"Usage: /bot rollcall",
@@ -101,17 +103,33 @@ Commands["rollcall"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["dstats"] = 
+Commands["dstats"] =
 {
 	Func = function( _params )
 	{
 		Stats.DumpStats();
 	},
 
-	Help = 
+	Help =
 	{
 		"Dump Stats, writes each bots current round stats to ~\user\<mapname>_stats.gm",
 		"Usage: /bot dstats",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["sag"] =
+{
+	Func = function( _params )
+	{
+		Util.ShowActiveGoals();
+	},
+
+	Help =
+	{
+		"Show Active Goals, lists each currently active goal by team",
+		"Usage: /bot sag",
 	},
 };
 
@@ -121,10 +139,10 @@ Commands["convert"] =
 {
 	Func = function( _params )
 	{
-		ExecScript("filename.gm");
+		ExecScript( "filename.gm" );
 	},
 
-	Help = 
+	Help =
 	{
 		"Convert, this command is for developers only",
 		"Usage: /bot convert",
@@ -135,14 +153,14 @@ Commands["convert"] =
 
 Commands["testsuicide"] =
 {
-	Func = function(_params)
+	Func = function( _params )
 	{
-		foreach ( id and bot in BotTable )
+		foreach( id and bot in BotTable )
 		{
-			bot.Suicide(_params[0], _params[1]);
+			bot.Suicide( _params[0], _params[1] );
 		}
 	},
-	
+
 	Help =
 	{
 		"Set Suicide, sets botSuicide session variable to given param",
@@ -154,38 +172,35 @@ Commands["testsuicide"] =
 
 Commands["moveskill"] =
 {
-	Func = function(_params)
+	Func = function( _params )
 	{
-		if ( !_params[0] )
-		{
-			ms = ConfigGet("CombatMovement","moveskill", ms);
+		if ( !_params[0] ) {
+			ms = ConfigGet( "CombatMovement","moveskill", ms );
 			print( "Combat Movement Difficulty is", ms );
 			return;
 		}
-		
-		if ( _params[0] < 0 || _params[0] > 4 )
-		{
+
+		if ( _params[0] < 0 || _params[0] > 4 ) {
 			print( "^1ERROR: Invalid moveskill. Valid values are from 0 to 4 " );
 			return;
 		}
-		
-		ConfigSet("CombatMovement","moveskill", _params[0] );
-		
-		foreach ( id and bot in BotTable )
+
+		ConfigSet( "CombatMovement","moveskill", _params[0] );
+
+		foreach( id and bot in BotTable )
 		{
-			if ( _params[0] == 4 )
-			{
-				r = RandInt(0, 3);
+			if ( _params[0] == 4 ) {
+				r = RandInt( 0, 3 );
 				bot.moveskill = r;
 				continue;
-			}	
-			
-			bot.moveskill = _params[0]; 
+			}
+
+			bot.moveskill = _params[0];
 		}
-			
+
 		print( "Combat Movement difficulty set to ", _params[0] );
 	},
-	
+
 	Help =
 	{
 		"Combat Difficulty, sets persistent combat movement difficulty",
@@ -199,13 +214,69 @@ Commands["tracearty"] =
 {
 	Func = function( _params )
 	{
-		RTCWUtil.TraceArty(_params[ 0 ]);
+		RTCWUtil.TraceArty( _params[ 0 ] );
 	},
 
-	Help = 
+	Help =
 	{
 		"Runs a trace to find arty targets from closest arty goal",
 	},
 };
 
+///////////////////////////////////////////////////////////////////////////////
 
+Commands["wp_check"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.FindDuplicateWaypoints( _params[0] );
+	},
+
+	Help =
+	{
+		"Finds any waypoints that have the same position as others",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["checkbots"] =
+{
+	Func = function( _params )
+	{
+		foreach( id and bot in BotTable )
+		{
+			print( bot.Name, bot.GetTeam(), bot.GetClass() );
+		}
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// /bot say <partial name> <string1> <string2> ...
+Commands["say"] =
+{
+	Func = function( _params )
+	{
+		n = "";
+		// find the bot
+		foreach( id and bot in BotTable )
+		{
+			n = bot.Name;
+			if ( n.Find( _params[0] ) != -1 ) {
+				foundMatch = true;
+				break;
+			}
+		}
+
+		if ( foundMatch ) {
+			// build the string with remaining params
+			length = tableCount( _params );
+			s = "";
+			for ( i = 1; i < length; i += 1 ) {
+				s += ( _params[i] + " " );
+			}
+			b = Util.GetBotByName( n );
+			b.Say( s.TrimRight() );
+		}
+	},
+};

@@ -1,10 +1,10 @@
-// This script contains functionality to allow medic bots to dispense health at spawn
+// This script contains functionality to allow medic and field op bots to give themselves packs
 
 // These parameters are required
 this.Name = "SupplySelf";		// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.LimitToClass( CLASS.LIEUTENANT, CLASS.MEDIC );
-this.LimitToNoTarget(); 
+this.LimitToNoTarget();
 
 this.AlwaysRecieveEvents = true;	// Recieve events even when not active. Normally events are only called when goal is active.
 
@@ -12,12 +12,11 @@ this.Initialize = function()
 {
 	// Internal variables
 	this.AmmoInfo = {};
-	this.AmmoDesirThreshold = 0.5;
+	this.AmmoDesireThreshold = 0.5;
 	this.HealthThreshold = 50.0;
-	this.DelayBetweenCalls = 1.0;
-	this.Timeout = 1000;
-	
-	Util.MapDebugPrint(this.Name + " Initialized");
+	this.DelayBetweenCalls = 15.0;
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.Enter = function()
@@ -33,20 +32,23 @@ this.Exit = function()
 
 this.GetPriority = function()
 {
-	if ( this.Bot.GetClass() == CLASS.LIEUTENANT )
+	while(1)
 	{
-		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-
-		if(this.AmmoInfo.Desire > this.AmmoDesirThreshold)
+		if ( this.Bot.GetClass() == CLASS.LIEUTENANT )
 		{
-			this.Supply = WEAPON.AMMO_PACK;
-			this.Priority = 1;
+			this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
+
+			if(this.AmmoInfo.Desire > this.AmmoDesireThreshold)
+			{
+				this.Supply = WEAPON.AMMO_PACK;
+				this.Priority = 1;
+			}
+			sleep(this.DelayBetweenCalls);
 		}
-		sleep(this.DelayBetweenCalls);
-	}
-	else
-	{
-		block(0);
+		else
+		{
+			block(0);
+		}
 	}
 };
 
@@ -55,45 +57,23 @@ this.Update = function()
 	if ( !this.Bot.IsWeaponCharged(this.Supply) )
 	{
 		sleep(this.DelayBetweenCalls);
-		this.Finished();	
+		this.Finished();
 	}
 
-	this.AddWeaponRequest(Priority.Low, this.Supply);
+	this.AddWeaponRequest(Priority.High, this.Supply);
 	this.BlockForWeaponChange(this.Supply);
+
+	if ( this.Bot.GetVelocity().IsZero() )
+	{
+		feetpos = GroundPoint( GetEntPosition( this.Bot.GetGameEntity() ) );
+		this.AddAimRequest( Priority.High, "position", feetpos );
+	}
 
 	this.PacksThrown = 0;
 	while( this.PacksThrown < 2 && this.Bot.IsWeaponCharged(this.Supply) )
 	{
 		this.Bot.HoldButton(BTN.ATTACK1, 0.5);
 		sleep(0.5);
-	}
-	
-	/*if ( this.PackEnt )
-	{ 
-		pos = GetEntPosition(this.PackEnt);
-		if ( !pos || this.Goto(pos) == EVENT.PATH_FAILED)
-		{
-			this.Finished();
-		}
-	}*/
-
-	timeout = 0;
-	while ( this.PackEnt && timeout < this.Timeout )
-	{
-		pos = GetEntPosition(this.PackEnt);
-			
-		if ( pos )
-		{
-			this.AddAimRequest( Priority.High, "position", pos );
-			this.Bot.MoveTowards( pos );
-		}
-		else
-		{
-			this.Finished();
-		}
-
-		timeout += 50;
-		yield();
 	}
 
 	this.Finished();
@@ -108,14 +88,14 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	}
 };
 
-this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity) 
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 {
 	if(weaponId == this.Supply )
 	{
 		if ( projectileEntity )
 		{
 			this.PacksThrown += 1;
-			this.PackEnt = projectileEntity; 
+			this.PackEnt = projectileEntity;
 		}
 	}
- };
+};

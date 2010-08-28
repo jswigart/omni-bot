@@ -11,64 +11,72 @@ global Map =
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint01_Axis_Captured" );
 	},
 
 	checkpoint01_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint01_Allies_Captured" );
 	},
 
 	checkpoint02_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint02_Axis_Captured" );
 	},
 
 	checkpoint02_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint02_Allies_Captured" );
 	},
 
 	checkpoint03_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint03_Axis_Captured" );
 	},
 
 	checkpoint03_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint03_Allies_Captured" );
 	},
 
 	checkpoint04_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint04_Axis_Captured" );
 	},
 
 	checkpoint04_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint04_Allies_Captured" );
 	},
@@ -77,8 +85,9 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
 
 	OnTrigger( "MISSING_STRING", Map.checkpoint01_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint01_Allies_Captured );
@@ -89,8 +98,8 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.checkpoint04_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint04_Allies_Captured );
 
-	RTCWUtil.DisableGoal(".*");
-	RTCWUtil.EnableGoal("CHECKPOINT.*");
+	RTCWUtil.DisableGoal( ".*" );
+	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

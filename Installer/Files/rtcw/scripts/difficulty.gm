@@ -4,133 +4,156 @@
 global CurrentDifficulty = 3;
 global AdjustAim = true;
 
-CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", CurrentDifficulty);
-AdjustAim = ConfigGet("Difficulty","AdjustAim", AdjustAim);
+CurrentDifficulty = ConfigGet( "Difficulty","CurrentDifficulty", CurrentDifficulty );
+AdjustAim = ConfigGet( "Difficulty","AdjustAim", AdjustAim );
 
 // This script only defines 6 total difficulty levels (0-5). It isn't limited to 6 though, and can be easily set up with more.
-global difficulties = 
+global difficulties =
 {
 	// Difficulty 0
 	{
 		FieldOfView = 90.0,
-		ReactionTime = 1.5,
-		MemorySpan = 3.0,
-		AimPersistance = 3.0,
-		MaxTurnSpeed = 360.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
-		AimErrorX = 40,
-		AimErrorY = 40,
-		AimOffsetX = 5,
-		AimOffsetY = 5,
-		AimOffsetZ = -5,
+		ReactionTime = 2.0,
+		MemorySpan = 1.5,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 60.0,
+		AimDamping = 20.0,
+		AimTolerance = 125,
+		AimErrorX = 25,
+		AimErrorY = 25,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = -15,
 		SniperOffset = -20,
 	},
 	// Difficulty 1
 	{
 		FieldOfView = 90.0,
-		ReactionTime = 1.0,
-		MemorySpan = 3.0,
-		AimPersistance = 3.0,
+		ReactionTime = 2.0,
+		MemorySpan = 1.5,
+		AimPersistance = 1.0,
 		MaxTurnSpeed = 720.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
-		AimErrorX = 35,
-		AimErrorY = 35,
-		AimOffsetX = 5,
-		AimOffsetY = 5,
-		AimOffsetZ = -5,
+		AimStiffness = 60.0,
+		AimDamping = 20.0,
+		AimTolerance = 125,
+		AimErrorX = 25,
+		AimErrorY = 25,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = -15,
 		SniperOffset = -20,
 	},
 	// Difficulty 2
 	{
-		FieldOfView = 90.0,
-		ReactionTime = 0.75,
-		MemorySpan = 3.0,
-		AimPersistance = 3.0,
+		FieldOfView = 100.0,
+		ReactionTime = 2.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
 		MaxTurnSpeed = 720.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
-		AimErrorX = 30,
-		AimErrorY = 30,
-		AimOffsetX = 5,
-		AimOffsetY = 5,
-		AimOffsetZ = -5,
+		AimStiffness = 50.0,
+		AimDamping = 15.0,
+		AimTolerance = 110,
+		AimErrorX = 20,
+		AimErrorY = 20,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = -15,
 		SniperOffset = -20,
 	},
 	//Difficulty 3
 	{
 		FieldOfView = 105.0,
-		ReactionTime = 0.5,
-		MemorySpan = 3.0,
-		AimPersistance = 3.0,
+		ReactionTime = 1.0,
+		MemorySpan = 2.5,
+		AimPersistance = 2.0,
 		MaxTurnSpeed = 720.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
-		AimErrorX = 25,
-		AimErrorY = 25,
+		AimStiffness = 60.0,
+		AimDamping = 15.0,
+		AimTolerance = 100,
+		AimErrorX = 15,
+		AimErrorY = 15,
 		AimOffsetX = 0,
 		AimOffsetY = 0,
-		AimOffsetZ = -3,
+		AimOffsetZ = -12,
 		SniperOffset = -15,
 	},
 	//Difficulty 4
 	{
-		FieldOfView = 105.0,
-		ReactionTime = 0.5,
+		FieldOfView = 110.0,
+		ReactionTime = 0.75,
 		MemorySpan = 3.0,
-		AimPersistance = 3.0,
+		AimPersistance = 2.0,
 		MaxTurnSpeed = 720.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
-		AimErrorX = 20,
-		AimErrorY = 20,
-		AimOffsetX = 0,
-		AimOffsetY = 0,
-		AimOffsetZ = -1,
-		SniperOffset = -15,
-	},
-	//Difficulty 5
-	{
-		FieldOfView = 120.0,
-		ReactionTime = 0.5,
-		MemorySpan = 3.5,
-		AimPersistance = 4.0,
-		MaxTurnSpeed = 720.0,
-		AimStiffness = 75.0,
-		AimDamping = 10.0,
+		AimStiffness = 65.0,
+		AimDamping = 15.0,
+		AimTolerance = 90,
 		AimErrorX = 10,
 		AimErrorY = 10,
 		AimOffsetX = 0,
 		AimOffsetY = 0,
-		AimOffsetZ = 0,
-		SniperOffset = -5,
+		AimOffsetZ = -10,
+		SniperOffset = -15,
+	},
+	//Difficulty 5
+	{
+		FieldOfView = 115.0,
+		ReactionTime = 0.5,
+		MemorySpan = 3.0,
+		AimPersistance = 2.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 70.0,
+		AimDamping = 12.5,
+		AimTolerance = 70,
+		AimErrorX = 10,
+		AimErrorY = 10,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = -10,
+		SniperOffset = -10,
 	},
 	//Difficulty 6
 	{
-		FieldOfView = 140.0,
-		ReactionTime = 0.1,
-		MemorySpan = 4.0,
-		AimPersistance = 4.0,
+		FieldOfView = 120.0,
+		ReactionTime = 0.5,
+		MemorySpan = 3.0,
+		AimPersistance = 2.0,
 		MaxTurnSpeed = 720.0,
 		AimStiffness = 75.0,
 		AimDamping = 10.0,
+		AimTolerance = 48,
+		AimErrorX = 5,
+		AimErrorY = 5,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = -5,
+		SniperOffset = -5,
+	},
+	//Difficulty 7
+	{
+		FieldOfView = 180.0,
+		ReactionTime = 0.0,
+		MemorySpan = 4.0,
+		AimPersistance = 2.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimTolerance = 48,
 		AimErrorX = 0,
 		AimErrorY = 0,
 		AimOffsetX = 0,
 		AimOffsetY = 0,
 		AimOffsetZ = 0,
 		SniperOffset = 0,
-	},	
+	},
 };
 
 // A helper function that sets a bot up with the current difficulty settings.
-difficulties.InitBotDifficultyProperties = function(bot)
+difficulties.InitBotDifficultyProperties = function( bot )
 {
 	Debug = false;
-	
-	if(difficulties[CurrentDifficulty])
-	{
+
+	if ( difficulties[CurrentDifficulty] ) {
 		bot.FieldOfView = difficulties[CurrentDifficulty].FieldOfView;
 		bot.ReactionTime = difficulties[CurrentDifficulty].ReactionTime;
 		bot.MemorySpan = difficulties[CurrentDifficulty].MemorySpan;
@@ -138,34 +161,35 @@ difficulties.InitBotDifficultyProperties = function(bot)
 		bot.MaxTurnSpeed = difficulties[CurrentDifficulty].MaxTurnSpeed;
 		bot.AimStiffness = difficulties[CurrentDifficulty].AimStiffness;
 		bot.AimDamping = difficulties[CurrentDifficulty].AimDamping;
+		bot.AimTolerance = difficulties[CurrentDifficulty].AimTolerance;
 
-		if ( AdjustAim )
-			{ difficulties.AdjustWeaponProperties(bot); }
-		
-		if ( Debug )
-		{
-			print("Current Difficulty", CurrentDifficulty);
-			print("Difficulty FOV", bot.FieldOfView);
-			print("Difficulty ReactionTime", bot.ReactionTime);
-			print("Difficulty MemorySpan", bot.MemorySpan);
-			print("Difficulty AimPersistance", bot.AimPersistance);
-			print("Difficulty MaxTurnSpeed", bot.MaxTurnSpeed);
-			print("Difficulty AimStiffness", bot.AimStiffness);
-			print("Difficulty AimDamping", bot.AimDamping);
+		if ( AdjustAim ) {
+			difficulties.AdjustWeaponProperties( bot );
 		}
-	}
-	else
+
+		if ( Debug ) {
+			print( "Current Difficulty", CurrentDifficulty );
+			print( "Difficulty FOV", bot.FieldOfView );
+			print( "Difficulty ReactionTime", bot.ReactionTime );
+			print( "Difficulty MemorySpan", bot.MemorySpan );
+			print( "Difficulty AimPersistance", bot.AimPersistance );
+			print( "Difficulty MaxTurnSpeed", bot.MaxTurnSpeed );
+			print( "Difficulty AimStiffness", bot.AimStiffness );
+			print( "Difficulty AimDamping", bot.AimDamping );
+			print( "Difficulty AimTolerance", bot.AimTolerance );
+		}
+	} else
 	{
-		print("Invalid Current Difficulty", CurrentDifficulty);	
+		print( "Invalid Current Difficulty", CurrentDifficulty );
 	}
 };
 
 // A helper function that sets aim offsets for weapons
-difficulties.AdjustWeaponProperties = function(bot, clear)
-{	
+difficulties.AdjustWeaponProperties = function( bot, clear )
+{
 	Debug_weaps = false;
 
-	AdjustableWeapons = 
+	AdjustableWeapons =
 	{
 		WEAPON.THOMPSON,
 		WEAPON.MP40,
@@ -177,47 +201,41 @@ difficulties.AdjustWeaponProperties = function(bot, clear)
 		WEAPON.SNIPER,
 		WEAPON.SNIPERRIFLE,
 	};
-	 
-	foreach ( id and weap in AdjustableWeapons )
+
+	foreach( id and weap in AdjustableWeapons )
 	{
-		w = bot.GetWeapon(weap);
-		if ( w ) 
-		{
-			if ( !clear )
-			{
+		w = bot.GetWeapon( weap );
+		if ( w ) {
+			if ( !clear ) {
 				errorX = difficulties[CurrentDifficulty].AimErrorX;
 				errorY = difficulties[CurrentDifficulty].AimErrorY;
 				offsetX = difficulties[CurrentDifficulty].AimOffsetX;
 				offsetY = difficulties[CurrentDifficulty].AimOffsetY;
-				
-				if ( weap != WEAPON.MAUSER && weap != WEAPON.SNIPER && weap != WEAPON.SNIPERRIFLE )
-				{
+
+				if ( weap != WEAPON.MAUSER && weap != WEAPON.SNIPER && weap != WEAPON.SNIPERRIFLE ) {
 					offsetZ = difficulties[CurrentDifficulty].AimOffsetZ;
-				}
-				else
+				} else
 				{
 					offsetZ = difficulties[CurrentDifficulty].SniperOffset;
 				}
-			}
-			else
+			} else
 			{
 				errorX = 0;
 				errorY = 0;
 				offsetX = 0;
 				offsetY = 0;
-				offsetZ = 0;		
+				offsetZ = 0;
 			}
 
-			w.PrimaryFire.MaxAimError = Vector2(errorX, errorY);
-			w.PrimaryFire.AimOffset = Vector3(offsetX, offsetY, offsetZ);
-			
-			if ( Debug_weaps )
-			{
-				print(w.Name, "weapon properties set");
-				print("offset:", w.PrimaryFire.AimOffset);
-				print("error:", w.PrimaryFire.MaxAimError);
+			w.PrimaryFire.MaxAimError = Vector2( errorX, errorY );
+			w.PrimaryFire.AimOffset = Vector3( offsetX, offsetY, offsetZ );
+
+			if ( Debug_weaps ) {
+				print( w.Name, "weapon properties set" );
+				print( "offset:", w.PrimaryFire.AimOffset );
+				print( "error:", w.PrimaryFire.MaxAimError );
 			}
-			
+
 		}
 	}
 };
@@ -225,33 +243,34 @@ difficulties.AdjustWeaponProperties = function(bot, clear)
 // Register a command that can be used to change the difficulty in-game
 // Example usage:
 //	bot difficulty 1
-Commands["difficulty"] = function(_params)
+Commands["difficulty"] = function( _params )
 {
-	if(typeId(_params[0]) != 0)
-	{
+	if ( typeId( _params[0] ) != 0 ) {
 		// Check if this difficulty level exists.
-		if(difficulties[_params[0]])
-		{
+		if ( difficulties[_params[0]] ) {
 			global CurrentDifficulty = _params[0];
-			
-			foreach ( gameId and bot in BotTable )
-			{
-				if(bot)
-				{
-					difficulties.InitBotDifficultyProperties(bot);
-				}                     
+
+			// set min to 1 since 0 doesn't work ...
+			if ( CurrentDifficulty == 0 ) {
+				global CurrentDifficulty = 1;
 			}
-			
-			ConfigSet("Difficulty","CurrentDifficulty", CurrentDifficulty);
-			print("Difficulty Changed", CurrentDifficulty);
-		}
-		else
+
+			foreach( gameId and bot in BotTable )
+			{
+				if ( bot ) {
+					difficulties.InitBotDifficultyProperties( bot );
+				}
+			}
+
+			ConfigSet( "Difficulty","CurrentDifficulty", CurrentDifficulty );
+			print( "Difficulty Changed", CurrentDifficulty );
+		} else
 		{
-			print("Difficulty level not found", _params[0]);
+			print( "Difficulty level not found", _params[0] );
 		}
 	}
-	
-	print("Difficulty:", CurrentDifficulty);
+
+	print( "Difficulty:", CurrentDifficulty );
 };
 
 //print( "Initializing Difficulties Complete" );

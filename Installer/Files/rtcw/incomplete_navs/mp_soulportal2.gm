@@ -2,6 +2,27 @@ global Map =
 {
 	Quiet = true,
 	FocusPrimary = true,
+	
+	//scripted defend spots for dual objective support
+	Defend =
+	{
+		AxisSpawnPt = 1, // axis defenders will choose this spawn point
+		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
+		//the first bot joining defending team will switch to crucial class
+		CrucialClass = CLASS.ENGINEER,
+		AxisDefenders = 0, // a variable to keep a count of defenders
+		MaxAxisDefenders = 5, // maximum defenders for this team
+		AlliesDefenders = 0,
+		MaxAlliesDefenders = 5,
+		
+		// initialize some tables for adding waypoints for them to use
+		Axis = {}, 
+		Allies = {},		
+	},
+	
+	portal = { "dual_portal_1", "dual_portal_2", "dual_portal_3", "dual_portal_4", "dual_portal_5", },
+	church = { "dual_church_1", "dual_church_2", "dual_church_3", "dual_church_4", "dual_church_5", },
+	
 
 	Switches =
 	{
@@ -372,4 +393,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
+	
+	//select spawn point and change class if necessary
+	RTCWUtil.SetDualObjective(bot);
 };

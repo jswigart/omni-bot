@@ -15,12 +15,12 @@ global Map =
 	Explode_678 = "EXPLODE_678",
 	Explode_685 = "EXPLODE_685",
 	Explode_t543 = "EXPLODE_t543",
-	Mount_219 = "MOUNTMG42_219",		// Inside axis gate (sandbaged)
-	Mount_597 = "MOUNTMG42_597",		// On Flag Bunker
-	Mount_mg42_1 = "MOUNTMG42_mg42_1",	// Back Bunker 1
-	Mount_t364 = "MOUNTMG42_t364",		// Back Bunker 2
-	Mount_t382 = "MOUNTMG42_t382",		// Front bunker - forwards
-	Mount_t383 = "MOUNTMG42_t383",		// Front bunker - side
+	Mount_219 = "MOUNTMG42_219",        // Inside axis gate (sandbaged)
+	Mount_597 = "MOUNTMG42_597",        // On Flag Bunker
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",  // Back Bunker 1
+	Mount_t364 = "MOUNTMG42_t364",      // Back Bunker 2
+	Mount_t382 = "MOUNTMG42_t382",      // Front bunker - forwards
+	Mount_t383 = "MOUNTMG42_t383",      // Front bunker - side
 	GateStatus = false,
 	StairStatus = false,
 	TrenchStatus = false,
@@ -46,18 +46,19 @@ global Map =
 			Enabled = false,
 			GrenadeTargetGoalName = "EXPLODE_trenchbarricade",
 			LimitBots = 1,
-			LimitTeam = (1<<TEAM.ALLIES),
-			Offset = 
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			Offset =
 			{
-				Vector3(340, -100, -15),
+				Vector3( 340, -100, -15 ),
 			}
 		},
 	},
-	
+
 	Axis_Transmission_Radio_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "Axis_Transmission_Radio_Destroyed" );
 		Map.RadioStatus = true;
@@ -72,41 +73,42 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorEng.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGenerator.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGenerator.*" );
-		foreach ( id and bot in BotTable )	// Axis should spawn closer to generator
+		foreach( id and bot in BotTable )   // Axis should spawn closer to generator
 		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-			{
-				bot.ChangeSpawnPoint( 2 );				
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 2 );
 			}
 		}
 	},
-	
+
 	Axis_Transmission_Radio_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	Axis_base_gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	Axis_base_gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.GateStatus = true;
 
-		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, false);		// Let axis use smarter combat techniques
+		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, false );        // Let axis use smarter combat techniques
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 
-		if (Map.RadioStatus == false)
-		{
+		if ( Map.RadioStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWall.*" );
@@ -114,21 +116,20 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_219" );
 			Map.AxisASTable = {"rRadioAS_1", "rRadioAS_2",};
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
-			print("here");
+			print( "here" );
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );	// Forget about the flag
-		Map.AlliesASTable = {};	// Stop spamming over wall
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
+		Map.AlliesASTable = {}; // Stop spamming over wall
 
 		//switch from sniper to other soldier weap
 		RTCWUtil.StopSniping();
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
-		RTCWUtil.EnableGoal("ROUTE_basegate");
+		RTCWUtil.EnableGoal( "ROUTE_basegate" );
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 
-		if (Map.GeneratorStatus == true)
-		{
+		if ( Map.GeneratorStatus == true ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
 		}
 
@@ -137,28 +138,31 @@ global Map =
 
 	Axis_staircase_gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Axis_staircase_gate.*" );
 	},
 
 	Axis_staircase_gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.StairStatus = true;
-		RTCWUtil.EnableGoal("ROUTE_steps");
+		RTCWUtil.EnableGoal( "ROUTE_steps" );
 	},
 
 	Sea_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.WallStatus = true;
-		
+
 		Map.Target.trenchbarricade.Enabled = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
@@ -169,33 +173,34 @@ global Map =
 		Map.AxisASTable = {"rTrenchAS",};
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
-		RTCWUtil.EnableGoal("ROUTE_sBeach");
-		RTCWUtil.EnableGoal("ROUTE_nBeach");
+		RTCWUtil.EnableGoal( "ROUTE_sBeach" );
+		RTCWUtil.EnableGoal( "ROUTE_nBeach" );
 		Map.DontDispenseAmmo = false;
 	},
 
 	Sea_Wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall.*" );
 	},
 
 	bunker_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.BunkerDoorStatus = true;
 
-		RTCWUtil.EnableGoal("ROUTE_bunkerdoor");
-		
-		if (Map.GeneratorStatus == false)
-		{
+		RTCWUtil.EnableGoal( "ROUTE_bunkerdoor" );
+
+		if ( Map.GeneratorStatus == false ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGenerator.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTrenches.*" );
-		}	
+		}
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
 		RTCWUtil.StopSniping();
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
@@ -207,22 +212,23 @@ global Map =
 
 	bunker_door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_bunker_door.*" );
 	},
 
 	power_generator_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.GeneratorStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGenerator.*" );
-		if (Map.GateStatus == true)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );	// Blow the wall first
+		if ( Map.GateStatus == true ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" ); // Blow the wall first
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
@@ -231,7 +237,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSteps.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rGenerator.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGate.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bAxisSpawn.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_RadioEng.*" );
@@ -239,48 +245,47 @@ global Map =
 
 	power_generator_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
-		if (Map.RadioStatus == false)
-		{
+		if ( Map.RadioStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_power_generator.*" );
 		}
 	},
 
-	trench_door_Destroyed = function ( trigger )
+	trench_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.TrenchStatus = true;
-		RTCWUtil.StopSniping();		// Push on OBJs now
+		RTCWUtil.StopSniping();     // Push on OBJs now
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_staircase_gate" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_base_gate" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEngGate.*" );
 
-		if (Map.RadioStatus == false)
-		{
+		if ( Map.RadioStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSteps.*" );
 		}
-		if (Map.GateStatus == false)
-		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWall.*" );	// Fallback to the wall to protect
+		if ( Map.GateStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWall.*" );  // Fallback to the wall to protect
 		}
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );	// Forget about the flag
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beach_flag" );
 		Map.AxisASTable = {"rTrenchSpam_1", "rTrenchSpam_2",};
 	},
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
-		if (Map.GateStatus == false && Map.BunkerStatus == false && Map.WallStatus == true)
-		{
+		if ( Map.GateStatus == false && Map.BunkerStatus == false && Map.WallStatus == true ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
 		}
@@ -292,22 +297,22 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_597" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTrenches.*" );
 		Map.AlliesASTable = {};
-		if (Map.WallStatus == false)
-		{
+		if ( Map.WallStatus == false ) {
 			Map.AxisASTable = {};
 		}
 	},
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 		Map.AxisASTable = {};
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_597" );	// On top of FB
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_597" ); // On top of FB
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_t543" );
 
-		if (Map.GateStatus == false){
+		if ( Map.GateStatus == false ) {
 			Map.AlliesASTable = {"bGate_1", "bGate_2",};
 		}
 
@@ -318,26 +323,25 @@ global Map =
 		//disable crouching in combatmovement for axis
 		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, true );
 
-		if ( Map.BunkerDoorStatus == false && Map.GateStatus == false )
-		{
+		if ( Map.BunkerDoorStatus == false && Map.GateStatus == false ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTrenches.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrenches.*" );
 		}
 
-		if ( Map.TrenchStatus == true )
-		{
+		if ( Map.TrenchStatus == true ) {
 			Map.AxisASTable = {"rTrenchSpam_1", "rTrenchSpam_2",};
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTrenches.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTrenches.*" );	
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTrenches.*" );
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
 
 	OnTrigger( "Allies have disabled the axis radio equipment", Map.Axis_Transmission_Radio_Destroyed );
 	OnTrigger( "Planted at the Axis Transmission Radio.", Map.Axis_Transmission_Radio_Planted );
@@ -355,14 +359,14 @@ global OnMapLoad = function()
 	OnTrigger( "Allies capture the trenches flag!", Map.beach_flag_Allies_Captured );
 	OnTrigger( "Explode_t543 Exploded.", Map.trench_door_Destroyed );
 
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=20, maxcamptime=40});
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "PANZER_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=45, maxcamptime=60});
-	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=45, maxcamptime=60});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal(".*", true); //all but routes
-	RTCWUtil.SetPrimaryGoals(1.0);
+	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
@@ -380,12 +384,12 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
-	SetGoalPriority( "PLANT_t543", 1.0 );		// trench door
-	SetGoalPriority( "DEFEND_rGenerator.*", 0.6 );	// Higher priority on defending our main obj
+	SetGoalPriority( "PLANT_t543", 1.0 );       // trench door
+	SetGoalPriority( "DEFEND_rGenerator.*", 0.6 );  // Higher priority on defending our main obj
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_219" );	// Inside gate
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_219" );  // Inside gate
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beach_flag" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_Wall" );
@@ -394,12 +398,12 @@ global OnMapLoad = function()
 	Map.AlliesASTable = {"bSeawall_1", "bSeawall_2", "bSeawall_3",};
 	Map.AxisASTable = {"rWallAS_1", "rWallAS_2", "rWallAS_3",};
 
-	Util.AddUseWp("PLANT_power_generator", "plant_gen1");
-	Util.AddUseWp("PLANT_power_generator", "plant_gen2");
+	Util.AddUseWp( "PLANT_power_generator", "plant_gen1" );
+	Util.AddUseWp( "PLANT_power_generator", "plant_gen2" );
 
-	RTCWUtil.DisableGoal("ROUTE_basegate");
-	RTCWUtil.DisableGoal("ROUTE_steps");
-	RTCWUtil.DisableGoal("ROUTE_bunkerdoor");
+	RTCWUtil.DisableGoal( "ROUTE_basegate" );
+	RTCWUtil.DisableGoal( "ROUTE_steps" );
+	RTCWUtil.DisableGoal( "ROUTE_bunkerdoor" );
 
 	MapRoutes =
 	{
@@ -407,18 +411,18 @@ global OnMapLoad = function()
 		{
 			ROUTE_bSpawn =
 			{
-				ROUTE_nBeach = 
+				ROUTE_nBeach =
 				{
 					ROUTE_frontdoor = {},
-					ROUTE_nforwardbunker = 
+					ROUTE_nforwardbunker =
 					{
 						ROUTE_backdoor = {},
 					},
 				},
-				ROUTE_sBeach = 
+				ROUTE_sBeach =
 				{
 					ROUTE_frontdoor = {},
-					ROUTE_sforwardbunker = 
+					ROUTE_sforwardbunker =
 					{
 						ROUTE_backdoor = {},
 					},
@@ -457,14 +461,14 @@ global OnMapLoad = function()
 		},
 		ATTACK_bGenerator_1 =
 		{
-			ROUTE_flagspawn = 
+			ROUTE_flagspawn =
 			{
-				ROUTE_basegate = 
+				ROUTE_basegate =
 				{
 					ROUTE_sgenerator = {},
 					ROUTE_ngenerator = {},
 				},
-				ROUTE_steps = 
+				ROUTE_steps =
 				{
 					ROUTE_sgenerator = {},
 					ROUTE_ngenerator = {},
@@ -490,7 +494,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bGenerator_4 = MapRoutes.ATTACK_bGenerator_1;
 	MapRoutes.ATTACK_bGenerator_5 = MapRoutes.ATTACK_bGenerator_1;
 	MapRoutes.ATTACK_bGenerator_6 = MapRoutes.ATTACK_bGenerator_1;
-	Util.Routes(MapRoutes);
+	Util.Routes( MapRoutes );
 	print( "OnMapLoad" );
 };
 
@@ -500,30 +504,23 @@ global OnBotJoin = function( bot )
 
 	class = bot.GetClass();
 
-	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER) 
-	{
-		if (Map.bPanzers == 1 )
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
+		if ( Map.bPanzers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+		} else
 		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.bPanzers += 1;
 		}
-		else
-		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-			Map.bPanzers +=1;
-		}
-	}
-	else	// Axis
+	} else    // Axis
 	{
-		if (class == CLASS.SOLDIER)
-		{
-			if (Map.rFlamers == 1)
+		if ( class == CLASS.SOLDIER ) {
+			if ( Map.rFlamers == 1 ) {
+				RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			} else
 			{
-				RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
-			}
-			else
-			{
-				RTCWUtil.SelectWeapon(bot, WEAPON.FLAMETHROWER);	
-				Map.rFlamers +=1;
+				RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+				Map.rFlamers += 1;
 			}
 		}
 	}

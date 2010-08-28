@@ -7,62 +7,63 @@ if(!BB.DUALOBJECTIVE)
 }
 
 // These parameters are required
-this.Name = "DualObjective";		
+this.Name = "DualObjective";
 this.Parent = "HighLevel";
 this.AutoAdd = false;
+this.SkipGetPriorityWhenActive = true;
 
 this.Initialize = function()
 {
 	team = this.Bot.GetTeam();
-		
+
 	this.TimeCounter = 0;
-	
-	if (!Map || !Map.Defend 
+
+	if (!Map || !Map.Defend
 		|| (team == TEAM.AXIS && !Map.Defend.Axis)
 		|| (team == TEAM.ALLIES && !Map.Defend.Allies))
-	{ 
+	{
 		this.Disable = true;
-		return; 
+		return;
 	}
-	
+
 	if ( Map.Defend.EvalDefend )
 		{ this.EvalDefend = Map.Defend.EvalDefend; }
-		
-	this.LimitTo(this.EvalDefend, 1); 	
-	
-	if( !Map.DefendCacheTable ) 
+
+	this.LimitTo(this.EvalDefend, 1);
+
+	if( !Map.DefendCacheTable )
 		{ Map.DefendCacheTable = table(); }
-		
+
 	if ( typeId( Map.Defend.CampTime ) == 0 )
 		{ this.CampTime = 30; }
 	else
 		{ this.CampTime = Map.Defend.CampTime; }
-		
+
 	if ( typeId( Map.Defend.MaxUsers ) == 0 )
 		{ this.MaxUsers = 1; }
 	else
-		{ this.MaxUsers = Map.Defend.MaxUsers; }	
+		{ this.MaxUsers = Map.Defend.MaxUsers; }
 
 	if ( typeId( Map.Defend.Priority) == 0 )
 		{ Map.Defend.Priority = 0.95; }
-		
-	Util.MapDebugPrint(this.Name + " Initialized"); 
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.EvalDefend = function()
-{	
+{
 	if ( this.Bot.GetTeam() == TEAM.AXIS && Map.Defend.AxisUsers[ this.Bot.GetGameId() ] == true
 		&& tableCount( Map.Defend.Axis) > 0 )
 	{
 		return true;
 	}
-	
+
 	if ( this.Bot.GetTeam() == TEAM.ALLIES && Map.Defend.AlliesUsers[ this.Bot.GetGameId() ] == true
 		&& tableCount( Map.Defend.Allies) > 0 )
 	{
 		return true;
-	}			
-	
+	}
+
 	return false;
 };
 
@@ -80,17 +81,15 @@ this.Exit = function()
 {
 	// Remove myself from the blackboard for using this switch
 	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.DUALOBJECTIVE);
-	
+
 	this.TimeCounter = 0;
 	this.wpName = null;
-	this.LastGuid = this.Guid;
-	this.Guid = null;	
 	this.ReleaseWeaponRequest();
 };
 
 this.GetPriority = function()
 {
-	if(!this.IsActive())
+	while(1)
 	{
 		if ( Map.Defend.Axis && this.Bot.GetTeam() == TEAM.AXIS )
 		{
@@ -99,21 +98,22 @@ this.GetPriority = function()
 		}
 		else if ( Map.Defend.Allies && this.Bot.GetTeam() == TEAM.ALLIES )
 		{
-			if ( tableCount(Map.Defend.Allies) > 0 ) 
+			if ( tableCount(Map.Defend.Allies) > 0 )
 				{ this.CacheHelper(Map.Defend.Allies);}
 		}
-		else 
+		else
 		{
 			block(0);
 		}
-		
+
 		if (this.wpName)
 		{
 			this.DebugString = this.wpName;
-			this.Priority = Map.Defend.Priority; 
+			this.Priority = Map.Defend.Priority;
 		}
-	}	
-	sleep(1.0);
+
+		sleep(1.0);
+	}
 };
 
 this.CacheHelper = function(defendTable)
@@ -123,20 +123,20 @@ this.CacheHelper = function(defendTable)
 	{
 		if(!Map.DefendCacheTable[wp] )
 			{ Map.DefendCacheTable[wp] = table(); }
-		
+
 		//don't use the same one twice in a row
-		if ( this.LastGuid && this.LastGuid == Map.DefendCacheTable[wp].Guid )
-			{ continue; }	
-			
+		if ( this.Guid && this.Guid == Map.DefendCacheTable[wp].Guid )
+			{ continue; }
+
 		if ( !Map.DefendCacheTable[wp].Pos  )
-		{		
+		{
 			wpTable = table();
 			Wp.GetWaypointByName(wp, wpTable);
-			this.Pos = wpTable.position; 
+			this.Pos = wpTable.position;
 			this.Facing = wpTable.facing * 1024;
 			this.Guid = wpTable.guid;
 			this.wpgoal = GetGoal("UGOAL_" + wp);
-			
+
 			Map.DefendCacheTable[wp].Pos = this.Pos;
 			Map.DefendCacheTable[wp].Facing = this.Facing;
 			Map.DefendCacheTable[wp].Guid = this.Guid;
@@ -144,28 +144,28 @@ this.CacheHelper = function(defendTable)
 				{ Map.DefendCacheTable[wp].wpgoal = this.wpgoal; }
 			else
 				{ Map.DefendCacheTable[wp].wpgoal = null; }
-				
+
 			this.BlackboardId = this.Guid;
 		}
 		else
-		{		
+		{
 			this.Pos = Map.DefendCacheTable[wp].Pos;
 			this.Facing = Map.DefendCacheTable[wp].Facing;
 			this.Guid = Map.DefendCacheTable[wp].Guid;
-			
+
 			if ( Map.DefendCacheTable[wp].wpgoal )
 				{ this.wpgoal = Map.DefendCacheTable[wp].wpgoal; }
-				
-			this.BlackboardId = this.Guid;						
+
+			this.BlackboardId = this.Guid;
 		}
-		
+
 		if ( Blackboard.GetNumRecords(BB.DUALOBJECTIVE, this.Guid) < this.MaxUsers )
 		{
 			i = tableCount(tmp);
-			tmp[ i ] = wp;	
+			tmp[ i ] = wp;
 		}
 	}
-	
+
 	// pick a random one from all available
 	tmpCount = tableCount(tmp);
 	if ( tmpCount > 0 )
@@ -176,11 +176,7 @@ this.CacheHelper = function(defendTable)
 		this.Facing = Map.DefendCacheTable[this.wpName].Facing;
 		this.Guid = Map.DefendCacheTable[this.wpName].Guid;
 		this.BlackboardId = this.Guid;
-		
-		if ( Map.DefendCacheTable[this.wpName].wpgoal ) {
-			this.wpgoal = Map.DefendCacheTable[this.wpName].wpgoal;
-		}		
-	}	
+	}
 };
 
 this.Update = function()
@@ -193,16 +189,16 @@ this.Update = function()
 	else
 	{
 		if ( this.RouteTo(this.wpgoal) == EVENT.PATH_FAILED )
-			{ this.Finished(); }		
+			{ this.Finished(); }
 	}
-	
+
 	this.AddAimRequest(Priority.Low, "facing", this.Facing);
-	
+
 	if ( this.Bot.GetClass() == CLASS.SOLDIER )
 	{
 		this.CheckSoldierWeap();
 	}
-	
+
 	this.TimeCounter += 1;
 	if ( this.TimeCounter >= this.CampTime )
 	{
@@ -215,10 +211,7 @@ this.CheckSoldierWeap = function()
 {
 	if ( this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)  )
 		{ this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST ); }
-	else if ( this.Bot.HasWeapon(WEAPON.VENOM) )	
-		{ this.AddWeaponRequest(Priority.Low, WEAPON.VENOM ); }	
-	else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) )	
-		{ this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER ); }
-	else if ( this.Bot.HasWeapon(WEAPON.MAUSER) )	
-		{ this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER ); }
+
+	// add more if needed
 };
+

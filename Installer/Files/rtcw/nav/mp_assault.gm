@@ -5,6 +5,7 @@ global Map =
 	Debug = false,
 	DispenseAmmoTime = 10,
 	TowerMg = false,
+	Suicide = true,
 
 	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
 	Plant_Communications_Tower = "PLANT_Communications_Tower",
@@ -30,22 +31,22 @@ global Map =
 	GateHatchStatus = false,
 	FirstTimeCheck = true,
 	FriendlyFire,
-	
+
 	bPanzers = 0,
 	rPanzers = 0,
 
-    //tables to hold current AS goals	
+	//tables to hold current AS goals
 	AxisASTable = {},
 	AlliesASTable = {},
-	
+
 	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin	
-	
+	AlliesASPriority = 0.94, // less than Defend's. thx Martin
+
 	//tables to copy to current AS goal tables
 	AlliesASGate = { "blue_as1_gate", "blue_as2_gate", "blue_as3_gate", },
 	AxisASGate = { "red_as1_gate", "red_as2_gate", },
 	AlliesASFlag = { "bFlagAS_1", },
-	
+
 	//scripted defend spots for dual objective support
 	Defend =
 	{
@@ -57,59 +58,91 @@ global Map =
 		MaxAxisDefenders = 2, // maximum defenders for this team
 		AlliesDefenders = 0,
 		MaxAlliesDefenders = 2,
-		
+
 		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		Axis = {},
+		Allies = {},
 	},
-	
+
 	spawn_boxes = { "box1", "box2", },
 	warehouse = { "wh1", "wh2", },
-	
+
 	Airstrike =
 	{
 		stepsas =
 		{
 			Enabled = false,
-			Team = (1<<TEAM.AXIS), 
-			Waypoint = "rstepsas_1", 
+			Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "rstepsas_1",
+		},
+		stepstop =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bStepsAS",
 		},
 	},
-	
+
 	Navigation =
 	{
 		midladder =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 1);
-				sleep(1);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 1 );
+			},
 		},
 	},
-	
+
 	ViewDistance = 5300,
 	LadderTrigger =
 	{
 		Name = "LadderTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
+		OnEnter = function( ent )
 		{
-			b = Util.GetBotByName(GetEntName(ent));
-			if (b)
-			{		
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
 				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
 			}
 		},
-		OnExit = function(ent)
+		OnExit = function( ent )
 		{
-			b = Util.GetBotByName(GetEntName(ent));
-			if (b)
-			{		
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
 				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
 			}
 		},
-	},		
+	},
+
+	TarmacLadderTrigger =
+	{
+		Name = "TarmacLadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				//b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				//b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
 
 	Target =
 	{
@@ -117,10 +150,10 @@ global Map =
 		{
 			Enabled = false,
 			GrenadeTargetGoalName = "EXPLODE_obj_block01",
-			LimitTeam = (1<<TEAM.AXIS),
-			Offset = 
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			Offset =
 			{
-				Vector3(300, -350, 0),
+				Vector3( 300, -350, 0 ),
 			}
 		},
 	},
@@ -132,7 +165,7 @@ global Map =
 			Enabled = true,
 			Priority = 0.65,
 			WaypointName = "gate1",
-			LimitTeam = 0, //wait for gate hatch 
+			LimitTeam = 0, //wait for gate hatch
 			LimitBots = 1,
 			LimitClass = Util.AllClasses,
 		},
@@ -142,7 +175,7 @@ global Map =
 			Enabled = true,
 			Priority = 0.9,
 			WaypointName = "gate2",
-			LimitTeam = (1<<TEAM.ALLIES), 
+			LimitTeam = ( 1 << TEAM.ALLIES ),
 			LimitBots = 1,
 			LimitClass = Util.AllClasses,
 		},
@@ -151,7 +184,7 @@ global Map =
 			Enabled = false,
 			Priority = 0.65,
 			WaypointName = "hangardoor1",
-			LimitTeam = 0, //wait for gate hatch 
+			LimitTeam = 0, //wait for gate hatch
 			LimitBots = 1,
 			LimitClass = Util.AllClasses,
 		},
@@ -161,31 +194,37 @@ global Map =
 	{
 		Name = "TowerTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
+		OnEnter = function( ent )
 		{
-			if ( TestMap )
-				{ return; }
+			if ( TestMap ) {
+				return;
+			}
 
-			if( GetEntTeam(ent) == TEAM.AXIS )
-			{ 
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.AxisAtTower = true;
 
-				//TODO: implement a method for them to eventually rotate 
+				//TODO: implement a method for them to eventually rotate
 				//back to less conservative defense
 				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTower.*" );
+				Map.Airstrike.stepstop.Enabled = true;
 				Map.Defend.Allies = {};
+				Map.AlliesASTable = {};
 			}
 		},
-		OnExit = function(ent)
+		OnExit = function( ent )
 		{
 		},
 	},
 
 	Communications_Tower_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.TowerDyno = 0;
 
@@ -193,8 +232,9 @@ global Map =
 
 	Warehouse_Entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 		Map.WarehouseStatus = true;
 		Map.AlliesPushedForward = false;
 
@@ -204,49 +244,51 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rDoor.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSpawn" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_above_boxes_hill" );
-		
-		if (Map.FriendlyFire == 0)
-		{
+
+		if ( Map.FriendlyFire == 0 ) {
 			Map.Airstrike.stepsas.Enabled = true;
 		}
-		
+
+		//Map.Airstrike.stepstop.Enabled = true;
+		Map.AlliesASTable = { "bStepsAS",};
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 	},
 
 	Gate_Hatch_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.AlliesPushedForward = false;
 		Map.GateHatchStatus = true;
-			
-		RTCWUtil.EnableGoal("ROUTE_mwh.*");
-		if (!Map.GateStatus)
-			{ Map.Switches.Gate1.LimitTeam = (1<<TEAM.AXIS); }
+		Map.DontDispenseAmmo = true;
+
+		RTCWUtil.EnableGoal( "ROUTE_mwh.*" );
+		if ( !Map.GateStatus ) {
+			Map.Switches.Gate1.LimitTeam = ( 1 << TEAM.AXIS );
+		}
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Gate_Hatch );
-		
+
 		// Support fire time
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rArty.*" );
-		
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_allied_spawn_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_allied_spawn_2" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_allied_tower" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_ladder" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_gate_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_gate_2" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_tarmac" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_warehouse_ladder" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bArty" );	// First spawn location
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );	// First spawn location
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // First spawn location
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bGate.*" );
-		
+
 		if ( Map.TowerMg ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_tower_mg" );
 		}
@@ -254,89 +296,107 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzDoor.*" );
-		
+
 		Map.AlliesASTable = {};
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-		RTCWUtil.EnableGoal("CHECKPOINT.*");
-		
+		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+
 		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 		Map.AxisASTable = {};
 
-		if ( !Map.FocusPrimary )
-		{ 
+		if ( !Map.FocusPrimary ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Warehouse_Entrance );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDoor.*" ); 
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDoor.*" );
 			Map.Defend.Allies = Map.warehouse;
 
-      		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rDoor.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rDoor.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rDoor.*" );
-      		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rGate.*" );
 		}
 	},
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+
+		if ( Map.GateHatchStatus == false ) {
+			if ( Map.Suicide ) {
+				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+			}
+		}
 	},
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 	},
 
 	gate_planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		//don't bother trying to defuse this.
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_the_Gate.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );	// only arty tower
-		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // only arty tower
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 	},
 
 	gate_defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	door_planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-	
+		if ( TestMap ) {
+			return;
+		}
+
 		//don't bother trying to defuse this.
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_the_Warehouse.*" );
 
 		//shift allies early
-		if ( !Map.AxisAtTower )
-		{ 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" ); 
+		if ( !Map.AxisAtTower ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
 			Map.Defend.Allies = Map.spawn_boxes;
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDoor.*" ); 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDoor.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTarmac_2" );
 	},
 
 	door_defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	tower_planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.TowerDyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_flag_respawn_obj" );
@@ -344,16 +404,18 @@ global Map =
 
 	tower_defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.TowerDyno -= 1;
 	},
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.Gate1.LimitTeam = 0;
 		Map.Switches.Gate2.Enabled = false;
@@ -361,24 +423,23 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
-		vel = ToVector(trigger.Action);
+		vel = ToVector( trigger.Action );
 
-		if ( vel.y < 0 )
-		{
+		if ( vel.y < 0 ) {
 			Wp.SetWaypointFlag( "gatehack", "closed", true );
 			Map.GateStatus = false;
-			Map.Switches.Gate1.LimitTeam = (1<<TEAM.AXIS);
+			Map.Switches.Gate1.LimitTeam = ( 1 << TEAM.AXIS );
 			Map.Switches.Gate2.Enabled = true;
-		}
-		else if ( vel.y > 0 )
-		{  
+		} else if ( vel.y > 0 )   {
 			Map.Switches.Gate1.LimitTeam = 0;
 
-			if ( !Map.BarrierStatus )
-				{ Map.Target.Barricade1.Enabled = true; }
+			if ( !Map.BarrierStatus ) {
+				Map.Target.Barricade1.Enabled = true;
+			}
 
 			//open up the node so they can pathfind through gate
 			Wp.SetWaypointFlag( "gatehack", "closed", false );
@@ -386,30 +447,29 @@ global Map =
 			Map.GateStatus = true;
 		}
 	},
-	
+
 	hangardoor_lever = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.HangarDoor1.LimitTeam = 0;
 	},
 
 	hangardoor_trigger = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		vel = ToVector(trigger.Action);
-
-		if ( vel.y < 0 )
-		{
-			Map.HangarDoorStatus = false;
-			Map.Switches.HangarDoor1.LimitTeam = (1<<TEAM.AXIS); 
+		if ( TestMap ) {
+			return;
 		}
-		else if ( vel.y > 0 )
-		{  
-			Map.Switches.HangarDoor1.LimitTeam = (1<<TEAM.ALLIES);
+
+		vel = ToVector( trigger.Action );
+
+		if ( vel.y < 0 ) {
+			Map.HangarDoorStatus = false;
+			Map.Switches.HangarDoor1.LimitTeam = ( 1 << TEAM.AXIS );
+		} else if ( vel.y > 0 )   {
+			Map.Switches.HangarDoor1.LimitTeam = ( 1 << TEAM.ALLIES );
 
 			Map.HangarDoorStatus = true;
 		}
@@ -417,8 +477,9 @@ global Map =
 
 	barrier_gone = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.BarrierStatus = true;
 
@@ -429,16 +490,17 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
-		
+
 		RTCWUtil.SwitchSoldierWeapons( TEAM.AXIS, WEAPON.PANZERFAUST );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rDoor.*" );		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rDoor.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Communications_Tower );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rTower.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDoor.*" );
@@ -446,74 +508,127 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_flag_respawn_obj" );
 
-		if ( !Map.AxisAtTower )
-		{ 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" ); 
+		if ( !Map.AxisAtTower ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
 			Map.Defend.Allies = Map.spawn_boxes;
 		}
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		if ( Map.TowerDyno > 1 ) { return; }
+		if ( TestMap ) {
+			return;
+		}
 
-		foreach ( id and bot in BotTable )
+		if ( Map.TowerDyno > 1 ) {
+			return;
+		}
+
+		foreach( id and bot in BotTable )
 		{
-			if (RandInt(0,10) < 2)
-			{
-				bot.SayVoice(VOICE.G_GOODGAME);
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
 			}
-			sleep(0.5);
-		}		
+			sleep( 0.5 );
+		}
 	},
-	
+
 	FlagSpawnkill = function()
 	{
-		if (Map.Debug) {print("FlagSpawnkill");}
+		if ( Map.Debug ) {
+			print( "FlagSpawnkill" );
+		}
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		Map.AlliesASTable = Map.AlliesASFlag;
 	},
-	
+
 	check_flagPush = function()
 	{
-		while (1)
+		while ( 1 )
 		{
-			if (Map.FirstTimeCheck == true)
-			{
+			if ( Map.FirstTimeCheck == true ) {
 				Map.FirstTimeCheck = false;
-				sleep(3);
+				sleep( 3 );
 			}
-			if (RTCWUtil.IsTeamClassDead(TEAM.AXIS, CLASS.ENGINEER))
-			{
-				if (Map.GateStatus == true)
-				{
-					if (Map.AxisAtTower == false && Map.WarehouseStatus == false && Map.GateHatchStatus == false && !Map.AlliesPushedForward)
-					{
+			if ( RTCWUtil.IsTeamClassDead( TEAM.AXIS, CLASS.ENGINEER ) ) {
+				if ( Map.GateStatus == true ) {
+					if ( Map.AxisAtTower == false && Map.WarehouseStatus == false && Map.GateHatchStatus == false && !Map.AlliesPushedForward ) {
 						Map.AlliesPushedForward = true;
-						RTCWUtil.OneBotSayTeam(TEAM.ALLIES, "push forward!");
+						RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Rush the flag!" );
 						Map.FlagSpawnkill();
-						RTCWUtil.OneBotVSayTeam(TEAM.ALLIES, VOICE.NEED_BACKUP);
+						RTCWUtil.OneBotVSayTeam( TEAM.ALLIES, VOICE.NEED_BACKUP );
 					}
 				}
 			}
-			sleep(1);
+			sleep( 1 );
 		}
+	},
+	Tower =
+	{
+		Name = "Tower",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.ALLIES ) {
+						bot.SayTeam( "Axis are planting at Tower!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
 	},
 };
 
 global OnMapLoad = function()
 {
 	//Set the waypoint as a position for the bots to plant hatch
-	Util.AddUseWp("PLANT_Gate_Hatch", "hatch");
-	
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	Util.AddUseWp( "PLANT_Gate_Hatch", "hatch" );
+
+	tOne = OnTriggerRegion( AABB( 2595.000,3267.000,767.000,3068.000,3740.000,841.000 ), Map.Tower );
+
+	//some triggers to help bots know when to aggressively defend tower
+	tTwo = OnTriggerRegion( AABB( 1855.000,2943.000,283.000,1978.000,3200.000,357.000 ), Map.TowerTrigger );    //Garage Steps
+	tThree = OnTriggerRegion( AABB( 3462.000,3327.000,391.000,3586.000,3456.000,465.000 ), Map.TowerTrigger );  //Garage ladder
+	tFour = OnTriggerRegion( Vector3( 3540,3398,112 ), 200, Map.TowerTrigger ); // Spawn Ladder
+
+	//tThree = OnTriggerRegion(Vector3(3704,1662,444), 200, Map.TowerTrigger);
+	//tFour = OnTriggerRegion(Vector3(2235,3082,264), 200, Map.TowerTrigger);
+
+	//focus bots on getting up the allied spawn ladder
+	ladder = OnTriggerRegion( AABB( 3694,1474,31,3732,1539,492 ), Map.LadderTrigger );
+	tarmacladder = OnTriggerRegion( AABB( 767.000,1743.000,-560.000,992.000,1968.000,122.000 ), Map.TarmacLadderTrigger );
+	gateladder = OnTriggerRegion( AABB( -1806.000,719.000,-560.000,-1581.000,944.000,115.000 ), Map.TarmacLadderTrigger );
+	garagedoor = OnTriggerRegion( AABB( 2879.000,2815.000,31.000,2944.000,2895.000,105.000 ), Map.LadderTrigger );
+
+
+
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Wp.SetWaypointFlag( "tarmacladder", "closed", false );
+	Wp.SetWaypointFlag( "tarmacladder2", "closed", false );
 
 	OnTrigger( "Axis team destroyed the Communications Tower!", Map.Communications_Tower_Destroyed );
 	OnTrigger( "Planted at The Communications Tower.", Map.tower_planted );
@@ -534,35 +649,36 @@ global OnMapLoad = function()
 	OnTrigger( "two minute warning.", Map.two_minute );
 	OnTrigger( "thirty second warning.", Map.thirty_second );
 
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=15, maxcamptime=30});
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
-	SetMapGoalProperties( "PANZER_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "MOUNT.*", {mincamptime=45, maxcamptime=60});
-	RTCWUtil.SetPrimaryGoals(1.0);
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 0.7 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "MOUNT.*", 0.71 );
-	
-	thread(Map.check_flagPush);
+	SetGoalPriority( "DEFEND_bGarage_[236]", 0.55 );
+
+	thread( Map.check_flagPush );
 	//open up some airstrike goals if ff is off
-	Map.FriendlyFire = GetCvar("g_friendlyfire");
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
-	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	//Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	//Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	
+
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
-	RTCWUtil.DisableGoal("ROUTE_mwh.*");
-      
-   	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rGate.*" );
+	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	RTCWUtil.DisableGoal( "ROUTE_mwh.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rGate.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rGate.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Gate_Hatch );
@@ -572,8 +688,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGate.*" );
 
 	// Artillery
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );	// First spawn location
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );	// First spawn location
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );    // First spawn location
 	// end artillery
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_flag_tower" );
@@ -589,13 +705,7 @@ global OnMapLoad = function()
 	Map.AlliesASTable = Map.AlliesASGate;
 	Map.AxisASTable = Map.AxisASGate;
 
-	//some triggers to help bots know when to aggressively defend tower
-	tOne = OnTriggerRegion(Vector3(3540,3398,112), 200, Map.TowerTrigger);
-	tThree = OnTriggerRegion(Vector3(3704,1662,444), 200, Map.TowerTrigger);
-	tTwo = OnTriggerRegion(Vector3(2235,3082,264), 200, Map.TowerTrigger);
-	
-	//focus bots on getting up the allied spawn ladder 
-	ladder = OnTriggerRegion(AABB(3694,1474,31,3732,1539,492), Map.LadderTrigger);
+
 
 	MapRoutes =
 	{
@@ -619,7 +729,7 @@ global OnMapLoad = function()
 				ROUTE_wTmac_1 = {},
 			},
 		},
-		
+
 		SNIPE_rGate_s1 =
 		{
 			ROUTE_rSpawn_1 =
@@ -629,146 +739,167 @@ global OnMapLoad = function()
 			ROUTE_rSpawn_2 =
 			{
 				ROUTE_rSnipe = {},
-			},		
+			},
 		},
 
 		PLANT_Warehouse_Entrance =
 		{
 			//always go lower
-			ROUTE_flagspawn = 
+			ROUTE_flagspawn =
 			{
 				ROUTE_mwh_1 = { ROUTE_mwh_2 = {}, },
 			},
-			ROUTE_rSpawn_1 = 
+			ROUTE_rSpawn_1 =
 			{
 				ROUTE_mwh_1 = { ROUTE_mwh_2 = {}, },
 			},
-			ROUTE_rSpawn_2 = 
+			ROUTE_rSpawn_2 =
 			{
 				ROUTE_mwh_1 = { ROUTE_mwh_2 = {}, },
 			},
 		},
-		
+
 		PLANT_Communications_Tower =
 		{
-			ROUTE_flagspawn = 
+			ROUTE_flagspawn =
 			{
-				ROUTE_mwh_1 = 
-				{ 
-					ROUTE_mwh_2 = 
-					{ 
-						ROUTE_bwh_1 = 
-						{
-							ROUTE_bwh_2 = {},
-							ROUTE_bwh_3 = {},
-						}, 
-					}, 
-				},
-				ROUTE_eTmac_1 =
+				ROUTE_mwh_1 =
 				{
-					ROUTE_wTmac_2 =
+					ROUTE_mwh_2 =
 					{
 						ROUTE_bwh_1 =
 						{
-							Weight = 2,
 							ROUTE_bwh_2 = {},
 							ROUTE_bwh_3 = {},
 						},
-						ROUTE_wTmac_3 =
+					},
+				},
+				ROUTE_eTmac_1 =
+				{
+					ROUTE_eTmac_2 =
+					{
+						ROUTE_bwh_1 =
 						{
-							ROUTE_wTmac_4 = 
-							{ 
+							ROUTE_bwh_2 = {},
+							ROUTE_bwh_3 = {},
+						},
+						ROUTE_eTmac_3 =
+						{
+							ROUTE_eTmac_4 =
+							{
 								ROUTE_bwh_2 = {},
-								ROUTE_bwh_3 = {}, 
+								ROUTE_bwh_3 = {},
 							},
 						},
 					},
 				},
-			},
-			ROUTE_rSpawn_1 = 
-			{
-				ROUTE_mwh_1 = 
-				{ 
-					ROUTE_mwh_2 = 
-					{ 
-						ROUTE_bwh_1 = 
-						{
-							ROUTE_bwh_2 = {},
-							ROUTE_bwh_3 = {},
-						}, 
-					}, 
-				},
-				ROUTE_eTmac_1 =
+				ROUTE_mTmac =
 				{
-					ROUTE_wTmac_2 =
+					ROUTE_whdoor =
+					{
+						ROUTE_bwh_2 = {},
+						ROUTE_bwh_3 = {},
+					},
+				},
+			},
+			ROUTE_rSpawn_1 =
+			{
+				ROUTE_mwh_1 =
+				{
+					ROUTE_mwh_2 =
 					{
 						ROUTE_bwh_1 =
 						{
-							Weight = 2,
 							ROUTE_bwh_2 = {},
 							ROUTE_bwh_3 = {},
 						},
-						ROUTE_wTmac_3 =
+					},
+				},
+				ROUTE_eTmac_1 =
+				{
+					ROUTE_eTmac_2 =
+					{
+						ROUTE_bwh_1 =
 						{
-							ROUTE_wTmac_4 = 
-							{ 
+							ROUTE_bwh_2 = {},
+							ROUTE_bwh_3 = {},
+						},
+						ROUTE_eTmac_3 =
+						{
+							ROUTE_eTmac_4 =
+							{
 								ROUTE_bwh_2 = {},
-								ROUTE_bwh_3 = {}, 
+								ROUTE_bwh_3 = {},
 							},
 						},
 					},
 				},
-			},
-			ROUTE_rSpawn_2 = 
-			{
-				ROUTE_mwh_1 = 
-				{ 
-					ROUTE_mwh_2 = 
-					{ 
-						ROUTE_bwh_1 = 
-						{
-							ROUTE_bwh_2 = {},
-							ROUTE_bwh_3 = {},
-						}, 
-					}, 
-				},
-				ROUTE_eTmac_1 =
+				ROUTE_mTmac =
 				{
-					ROUTE_wTmac_2 =
+					ROUTE_whdoor =
+					{
+						ROUTE_bwh_2 = {},
+						ROUTE_bwh_3 = {},
+					},
+				},
+			},
+			ROUTE_rSpawn_2 =
+			{
+				ROUTE_mwh_1 =
+				{
+					ROUTE_mwh_2 =
 					{
 						ROUTE_bwh_1 =
 						{
-							Weight = 2,
 							ROUTE_bwh_2 = {},
 							ROUTE_bwh_3 = {},
 						},
-						ROUTE_wTmac_3 =
+					},
+				},
+				ROUTE_eTmac_1 =
+				{
+					ROUTE_eTmac_2 =
+					{
+						ROUTE_bwh_1 =
 						{
-							ROUTE_wTmac_4 = 
-							{ 
+							ROUTE_bwh_2 = {},
+							ROUTE_bwh_3 = {},
+						},
+						ROUTE_eTmac_3 =
+						{
+							ROUTE_eTmac_4 =
+							{
 								ROUTE_bwh_2 = {},
-								ROUTE_bwh_3 = {}, 
+								ROUTE_bwh_3 = {},
 							},
 						},
+					},
+				},
+				ROUTE_mTmac =
+				{
+					ROUTE_whdoor =
+					{
+						ROUTE_bwh_2 = {},
+						ROUTE_bwh_3 = {},
 					},
 				},
 			},
 		},
-		
-		ATTACK_rTower_1 = 
+
+		ATTACK_rTower_1 =
 		{
-			ROUTE_flagspawn = 
+			ROUTE_flagspawn =
 			{
-				ROUTE_mwh_1 = 
-				{ 
-					ROUTE_mwh_2 = 
-					{ 
-						ROUTE_bwh_1 = 
+				ROUTE_mwh_1 =
+				{
+					ROUTE_mwh_2 =
+					{
+						ROUTE_bwh_1 =
 						{
 							ROUTE_bwh_2 = {},
 							ROUTE_bwh_3 = {},
-						}, 
-					}, 
+						},
+					},
 				},
 				ROUTE_wTmac_1 =
 				{
@@ -782,31 +913,39 @@ global OnMapLoad = function()
 				},
 				ROUTE_eTmac_1 =
 				{
-					ROUTE_wTmac_2 =
+					ROUTE_eTmac_2 =
 					{
 						ROUTE_bwh_1 =
 						{
 							ROUTE_bwh_2 = {},
 							ROUTE_bwh_3 = {},
 						},
-						ROUTE_wTmac_3 =
+						ROUTE_eTmac_3 =
 						{
-							ROUTE_wTmac_4 = 
-							{ 
+							ROUTE_eTmac_4 =
+							{
 								ROUTE_bwh_2 = {},
-								ROUTE_bwh_3 = {}, 
+								ROUTE_bwh_3 = {},
 							},
 						},
 					},
 				},
-			},			
+				ROUTE_mTmac =
+				{
+					ROUTE_whdoor =
+					{
+						ROUTE_bwh_2 = {},
+						ROUTE_bwh_3 = {},
+					},
+				},
+			},
 		},
 
 		DEFEND_bTower_1 =
 		{
 			ROUTE_bSpawn =
 			{
-				ROUTE_whdoor = 
+				ROUTE_whdoor =
 				{
 					ROUTE_bwh_2 = {},
 					ROUTE_bwh_3 = {},
@@ -824,7 +963,7 @@ global OnMapLoad = function()
 				ROUTE_mTmac = {},
 			},
 		},
-		
+
 		DEFEND_bFlag_1 =
 		{
 			ROUTE_bSpawn =
@@ -833,7 +972,7 @@ global OnMapLoad = function()
 				ROUTE_wTmac_3 = {},
 				ROUTE_mTmac = {},
 				ROUTE_wall = {},
-			},		
+			},
 		},
 	};
 
@@ -862,8 +1001,6 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_bGate_4 = MapRoutes.DEFEND_bGate_1;
 	MapRoutes.DEFEND_bGate_5 = MapRoutes.DEFEND_bGate_1;
 	MapRoutes.DEFEND_bGate_6 = MapRoutes.DEFEND_bGate_1;
-	MapRoutes.DEFEND_bDoor_2 = MapRoutes.DEFEND_bGate_1;
-	MapRoutes.DEFEND_bDoor_3 = MapRoutes.DEFEND_bGate_1;
 	MapRoutes.DEFEND_bDoor_4 = MapRoutes.DEFEND_bGate_1;
 	MapRoutes.DEFEND_bDoor_5 = MapRoutes.DEFEND_bGate_1;
 	MapRoutes.DEFEND_bDoor_6 = MapRoutes.DEFEND_bGate_1;
@@ -873,9 +1010,9 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_bFlag_4 = MapRoutes.DEFEND_bFlag_1;
 	MapRoutes.DEFEND_bFlag_5 = MapRoutes.DEFEND_bFlag_1;
 	MapRoutes.DEFEND_bFlag_6 = MapRoutes.DEFEND_bFlag_1;
-	MapRoutes.SNIPE_rGate_s2 = MapRoutes.SNIPE_rGate_s1;
-	
-	Util.Routes(MapRoutes);
+	//MapRoutes.SNIPE_rGate_s2 = MapRoutes.SNIPE_rGate_s1;
+
+	Util.Routes( MapRoutes );
 	Util.UpdateSwitchData();
 
 	print( "OnMapLoad" );
@@ -885,34 +1022,27 @@ global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 200.0;
 	bot.MaxViewDistance = Map.ViewDistance;
-	
-	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER  ) 
-	{
-		if (Map.bPanzers == 0 )
-		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
+
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER  ) {
+		if ( Map.bPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 			Map.bPanzers += 1;
-		}
-		else
+		} else
 		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);			
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
 		}
-	}
-	else if (bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER )
-	{ 
-		if ( Map.rPanzers == 0 )
-		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
+	} else if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER )    {
+		if ( Map.rPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 			Map.rPanzers += 1;
-		}
-		else
+		} else
 		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
 		}
 	}
-	
+
 	//default spawn
-//	bot.ChangeSpawnPoint( 0 );
+	bot.ChangeSpawnPoint( 0 );
 	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
+	RTCWUtil.SetDualObjective( bot );
 };

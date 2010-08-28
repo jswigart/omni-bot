@@ -1,7 +1,8 @@
 global Map =
 {
 	Quiet = true,
-	DispenseAmmoTime = 10,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
 	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
 	Plant_Field_Ops = "PLANT_Allied_Field_Operations",
 	Plant_AA_Gun = "PLANT_Anti_Aircraft_Gun",
@@ -11,7 +12,7 @@ global Map =
 	Mount_opsmg = "MOUNTMG42_opsmg",
 	Repair_cymg = "REPAIRMG42_cymg",
 	Repair_opsmg = "REPAIRMG42_opsmg",
-	
+
 	FlagStatus = 0,
 	EastGateStatus = false,
 	WestGateStatus = false,
@@ -19,7 +20,7 @@ global Map =
 	WarehouseASTimer = 0,
 	AxisInRuins = false,
 	AxisInWarehouse = false,
-	
+
 	AADyno = 0,
 	OpsDyno = 0,
 	WestDyno = 0,
@@ -30,7 +31,7 @@ global Map =
 		ascoal =
 		{
 			Enabled = false,
-			Team = (1<<TEAM.AXIS),
+			Team = ( 1 << TEAM.AXIS ),
 			Waypoint = "ascoalflag",
 		},
 	},
@@ -46,25 +47,25 @@ global Map =
 		MaxAxisDefenders = 5, // maximum defenders for this team
 		AlliesDefenders = 0,
 		MaxAlliesDefenders = 5,
-		
+
 		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		Axis = {},
+		Allies = {},
 	},
-	
+
 	FriendlyFire,
-	
+
 	// tables of waypoint names to be copied to the teams Defend tables
 	aa_conservative = { "aad1", "aad2", "aad3", "aad4", "aad5", "aad6", },
 	aa_flex = { "aaflex1", "aaflex2", "aaflex3", "aaflex4", "aaflex5", "aaflex6", },
 	ops_default = { "opsd1", "opsd2", "opsd3", "opsd4", "opsd5", "opsd6", },
 	ops_flex = { "opsflex1", "opsflex2", "opsflex3", "opsflex4", "opsflex5", "opsflex6", },
-	
-	//tables to hold current AS goals	
+
+	//tables to hold current AS goals
 	AxisASTable = {},
 	AlliesASTable = {},
 	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin	
+	AlliesASPriority = 0.94, // less than Defend's. thx Martin
 
 	ruinsas = { "ruinsas1", "ruinsas2", },
 	opsas = { "as_ops1", "as_ops2", "as_ops3", },
@@ -73,123 +74,137 @@ global Map =
 	ruinsallied = { "bruinsas1", "bruinsas2",},
 	warehouseallied = { "bwhas1", },
 	ruinswhallied = { "bruinsas1", "bruinsas2", "bwhas1", },
-	
+
 	Navigation =
 	{
 		trainyardele =
 		{
 			gotowp = "tyeletop",
 
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 3);
-				sleep(3);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
 		},
-		
+
 		tyelemid =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 4);
-				sleep(4);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 4 );
+				sleep( 4 );
+			},
 		},
-		
+
 		elejump =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.PressButton(BTN.JUMP);
+				_this.Bot.PressButton( BTN.JUMP );
 				yield(); yield();
-			},			
+			},
 		},
-		
+
 		aaele2 =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 5);
-				sleep(5);
-			},			
-		},		
-		
+				_this.Bot.HoldButton( BTN.FORWARD, 5 );
+				sleep( 5 );
+			},
+		},
+
 		aaele =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 3);
-				sleep(3);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
 		},
 
 		cyladder =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 1.5);
-				sleep(1.5);
-			},			
-		},			
-		
-		trainbox =
-		{
-			navigate = function(_this)
-			{
-				_this.Bot.PressButton(BTN.JUMP);
-				sleep(0.25);
-				_this.Bot.HoldButton(BTN.SPRINT, 3);
-				_this.Bot.HoldButton(BTN.CROUCH, 1);
-				sleep(3);
+				_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+				sleep( 1.5 );
 			},
 		},
-		
+
+		trainbox =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				_this.Bot.HoldButton( BTN.CROUCH, 1 );
+				sleep( 3 );
+			},
+		},
+
 		roofjump =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
 				_this.Bot.HoldButton( BTN.STRAFE_L, 0.5 );
-				_this.Bot.HoldButton(BTN.FORWARD, 2.5);
-				_this.Bot.HoldButton(BTN.SPRINT, 3);
-				sleep(3);
+				_this.Bot.HoldButton( BTN.FORWARD, 2.5 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				sleep( 3 );
 				_this.Bot.SayVoice( VOICE.G_CHEER );
-			},			
+			},
+		},
+
+		onroof =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 3 );
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
 		},
 
 		quickjump =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.PressButton(BTN.JUMP);
-				sleep(0.25);
-			},			
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+			},
 		},
 
 		strafeljump =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.PressButton(BTN.JUMP);
+				_this.Bot.PressButton( BTN.JUMP );
 				yield();
-				_this.Bot.HoldButton(BTN.STRAFE_L, 1);
-				sleep(1);
-			},			
-		},			
+				_this.Bot.HoldButton( BTN.STRAFE_L, 1 );
+				sleep( 1 );
+			},
+		},
 	},
 
 	Ops_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
-	
+
 	Ops_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.OpsDyno += 1;
-		
+
 		Map.AxisASTable = Map.opsas;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_opscover.*" );
@@ -197,143 +212,154 @@ global Map =
 
 	Ops_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.OpsDyno -= 1;
 
-		if ( Map.OpsDyno < 1 && Map.FlagStatus == 1 )
-		{
+		if ( Map.OpsDyno < 1 && Map.FlagStatus == 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_opscover.*" );
-			
-			if ( Map.FlagStatus == 1 )
-			{
+
+			if ( Map.FlagStatus == 1 ) {
 				Map.AxisASTable = Map.ruinsas;
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
-			}
-			else
+			} else
 			{
 				Map.AxisASTable = {};
 			}
 		}
-	},	
+	},
 
 	AA_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
-	
+
 	AA_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.AADyno += 1;
-		
-		if ( Map.FriendlyFire < 1 )
-			{ Map.AlliesASTable = Map.aaas; }
-			
+
+		if ( Map.FriendlyFire < 1 ) {
+			Map.AlliesASTable = Map.aaas;
+		}
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_aacover.*" );
 	},
 
 	AA_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.AADyno -= 1;
 
-		if ( Map.AADyno < 1 )
-		{
+		if ( Map.AADyno < 1 ) {
 			Map.AlliesASTable = {};
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_aacover.*" );
 		}
-	},	
+	},
 
 	West_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.WestGateStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Field_Ops );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
 		Map.Defend.Axis = Map.aa_conservative;
 	},
-	
+
 	West_Gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.WestDyno += 1;
-		
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_westgate.*");
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_westgate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_West.*" );
 	},
 
 	West_Gate_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		Map.WestDyno -= 1;	
-		
-		if ( Map.WestDyno < 1 )
-			{ SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*"); }
-	},	
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestDyno -= 1;
+
+		if ( Map.WestDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
+		}
+	},
 
 	East_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.EastGateStatus = true;
-		
+
 		//path through gate instead of over boxes
 		Wp.SetWaypointFlag( "spawnboxes", "closed", true );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_AA_Gun );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
 		Map.Defend.Allies = Map.ops_default;
 	},
-	
+
 	East_Gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.EastDyno += 1;
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_eng_eastgate.*");
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_eng_eastgate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_East.*" );
 	},
 
 	East_Gate_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.EastDyno -= 1;
 
-		if ( Map.WestDyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*"); }		
-	},	
+		if ( Map.WestDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
+		}
+	},
 
 	CP_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		Map.FlagStatus = 1;
+		if ( TestMap ) {
+			return;
+		}
 
-		Wp.SetWaypointFlag( "ruinsdrop", "closed", true);	//Dont allow axis to drop down	
-		
-		//axis 
+		Map.FlagStatus = TEAM.AXIS;
+		Map.DontDispenseAmmo = true;
+
+		Wp.SetWaypointFlag( "ruinsdrop", "closed", true );   //Dont allow axis to drop down
+
+		//axis
 		Map.AxisASTable = Map.ruinsas;
 		Map.Airstrike.ascoal.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
@@ -344,8 +370,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rcypanz.*" );
-		
-		//allies 
+
+		//allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_btrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_opsmg );
@@ -360,14 +386,16 @@ global Map =
 
 	CP_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
-		Map.FlagStatus = 2;
-		
-		Wp.SetWaypointFlag( "ruinsdrop", "closed", false);	//Let them drop to fallback faster
-		
-		//axis 
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = TEAM.ALLIES;
+		Map.DontDispenseAmmo = true;
+
+		Wp.SetWaypointFlag( "ruinsdrop", "closed", false );  //Let them drop to fallback faster
+
+		//axis
 		Map.AxisASTable = Map.asspawn;
 		Map.Airstrike.ascoal.Enabled = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
@@ -380,12 +408,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rcypanz.*" );
-		if ( Map.FriendlyFire < 1 ){
+		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
 		}
-		
-		//allies 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_btrain.*" );	
+
+		//allies
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_btrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
@@ -393,136 +421,172 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRockpath.*" );
-		if ( Map.FriendlyFire < 1 ){
+		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCommand.*" );
 		}
 	},
-	
-	toggle_flag = function()
-	{
-		count = 1;
-		//swap availablilty every 5 minutes
-		while ( 1 )
-		{
-			if ( TestMap )
-				{ return; }
 
-			count += 1;
-			if ( count % 300 == 0 )
-			{
-				//print("toggling");
-				if ( Map.FlagStatus == 1 )
-				{
-					SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
-					SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
-				}
-				else
-				{
-					SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag_respawn_obj );
-					SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );				
-				}
-				
-				count = 1;
-			}
-			sleep(1);
-		}
-	},
-	RuinsTrigger = 
+	RuinsTrigger =
 	{
 		Name = "RuinsTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
+		OnEnter = function( ent )
 		{
-			if ( TestMap )
-				{ return; }	
-				
-			if( GetEntTeam(ent) == TEAM.AXIS )   
-			{ 
-				if (Map.FlagStatus == 2)   
-				   { return; }
-				Map.AxisInRuins = true;
-				
-				if (Map.AxisInWarehouse == true){
-					Map.AlliesASTable = Map.ruinswhallied;
-				}else{
-					Map.AlliesASTable = Map.ruinsallied; 
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				if ( Map.FlagStatus == 2 ) {
+					return;
 				}
-				Map.RuinsASTimer = GetTime() + 30; 	//Martin - GetTime is in SECONDS.
-				while ((GetTime() < Map.RuinsASTimer) && (Map.FlagStatus != 2) ) 
-				{ 
-				   sleep(1); 
-				} 
-				
+				Map.AxisInRuins = true;
+
+				if ( Map.AxisInWarehouse == true ) {
+					Map.AlliesASTable = Map.ruinswhallied;
+				} else {
+					Map.AlliesASTable = Map.ruinsallied;
+				}
+				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
+				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
+				{
+					sleep( 1 );
+				}
+
 				Map.AxisInRuins = false;
-				if (Map.AxisInWarehouse == true){
+				if ( Map.AxisInWarehouse == true ) {
 					Map.AlliesASTable = Map.warehouseallied;
-				}else{
-					Map.AlliesASTable = {}; 
-				} 
+				} else {
+					Map.AlliesASTable = {};
+				}
 			}
 		},
-		OnExit = function(ent)
+		OnExit = function( ent )
 		{
-			if ( TestMap )
-				{ return; }			
-		},	
+			if ( TestMap ) {
+				return;
+			}
+		},
 	},
-	
-	WarehouseTrigger = 
+
+	WarehouseTrigger =
 	{
 		Name = "WarehouseTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
+		OnEnter = function( ent )
 		{
-			if ( TestMap )
-				{ return; }	
-				
-			if( GetEntTeam(ent) == TEAM.AXIS )   
-			{ 
-				if (Map.FlagStatus == 2)   
-				   { return; } 
-				Map.AxisInWarehouse = true;
-				
-				if (Map.AxisInRuins == true){
-					Map.AlliesASTable = Map.ruinswhallied;
-				}else{
-					Map.AlliesASTable = Map.warehouseallied; 
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				if ( Map.FlagStatus == 2 ) {
+					return;
 				}
-				Map.WarehouseASTimer = GetTime() + 30; 	//Martin - GetTime is in SECONDS.
-				while ((GetTime() < Map.WarehouseASTimer) && (Map.FlagStatus != 2) ) 
-				{ 
-				   sleep(1); 
+				Map.AxisInWarehouse = true;
+
+				if ( Map.AxisInRuins == true ) {
+					Map.AlliesASTable = Map.ruinswhallied;
+				} else {
+					Map.AlliesASTable = Map.warehouseallied;
+				}
+				Map.WarehouseASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
+				while ( ( GetTime() < Map.WarehouseASTimer ) && ( Map.FlagStatus != 2 ) )
+				{
+					sleep( 1 );
 				}
 				Map.AxisInWarehouse = false;
-				if (Map.AxisInRuins == true){
+				if ( Map.AxisInRuins == true ) {
 					Map.AlliesASTable = Map.ruinsallied;
-				}else{
-					Map.AlliesASTable = {}; 
-				} 
+				} else {
+					Map.AlliesASTable = {};
+				}
 			}
 		},
-		OnExit = function(ent)
+		OnExit = function( ent )
 		{
-			if ( TestMap )
-				{ return; }			
-		},	
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	Ops =
+	{
+		Name = "Ops",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.ALLIES ) {
+						bot.SayTeam( "Axis are planting at Ops!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	AA =
+	{
+		Name = "AA",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at AA Gun!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
 	},
 };
 
 global OnMapLoad = function()
 {
-	Util.AddUseWp("PLANT_Anti_Aircraft_Gun", "aa1");
-	Util.AddUseWp("PLANT_Anti_Aircraft_Gun", "aa2");
-	Util.AddUseWp("PLANT_Allied_Field_Operations", "ops1");
-	Util.AddUseWp("PLANT_Allied_Field_Operations", "ops2");
-	Util.AddUseWp("PLANT_Allied_Field_Operations", "ops3");
-	
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aa1" );
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aa2" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops1" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops2" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops3" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
 
 	OnTrigger( "Allied team destoyed the Anti-Aircraft gun!", Map.AA_Destroyed );
 	OnTrigger( "Planted at the Anti-Aircraft Gun.", Map.AA_Planted );
-	OnTrigger( "Defused at the Anti-Aircraft Gun.", Map.AA_Defused );	
+	OnTrigger( "Defused at the Anti-Aircraft Gun.", Map.AA_Defused );
 	OnTrigger( "Axis team destroyed the Allied Field Operations!", Map.Ops_Destroyed );
 	OnTrigger( "Planted at the Allied Field Operations.", Map.Ops_Planted );
 	OnTrigger( "Defused at the Allied Field Operations.", Map.Ops_Defused );
@@ -531,41 +595,43 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at the West Gate.", Map.West_Gate_Defused );
 	OnTrigger( "Allies have breached the East Gate!", Map.East_Gate_Destroyed );
 	OnTrigger( "Planted at the East Gate.", Map.East_Gate_Planted );
-	OnTrigger( "Defused at the East Gate.", Map.East_Gate_Defused );	
+	OnTrigger( "Defused at the East Gate.", Map.East_Gate_Defused );
 	OnTrigger( "Axis captures the Forward Deployment Area!", Map.CP_Axis_Captured );
 	OnTrigger( "Allies capture the Forward Deployment Area!", Map.CP_Allies_Captured );
-	
-	tOne = OnTriggerRegion(AABB(-8514,3503,287,-8496,3638,392), Map.RuinsTrigger);
-	tTwo = OnTriggerRegion(AABB(-8072,1535,-366,-8032,1728,-245), Map.WarehouseTrigger);
-	tThree = OnTriggerRegion(AABB(-8032.000,3701.000,287.000,-7855.000,3741.000,409.000), Map.RuinsTrigger);
 
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
-	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});	
-	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+	tOne = OnTriggerRegion( AABB( -8514,3503,287,-8496,3638,392 ), Map.RuinsTrigger );
+	tTwo = OnTriggerRegion( AABB( -8072,1535,-366,-8032,1728,-245 ), Map.WarehouseTrigger );
+	tThree = OnTriggerRegion( AABB( -8032.000,3701.000,287.000,-7855.000,3741.000,409.000 ), Map.RuinsTrigger );
+	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
+	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 
 	//open up some airstrike goals if ff is off
-	Map.FriendlyFire = GetCvar("g_friendlyfire");
-	
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
-	RTCWUtil.LimitToClass("DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER);
-	RTCWUtil.LimitToClass("DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER);
-	RTCWUtil.LimitToClass("DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT);
-	RTCWUtil.LimitToClass("DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER);
-	RTCWUtil.LimitToClass("DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER);
-	SetGoalPriority("DEFEND_eng_westgate.*", 0.7, TEAM.AXIS, CLASS.ENGINEER);
-	SetGoalPriority("DEFEND_eng_opscover.*", 0.7, TEAM.AXIS, CLASS.ENGINEER);
-	SetGoalPriority("DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT);
-	SetGoalPriority("DEFEND_eng_eastgate.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER);
-	SetGoalPriority("DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER);
-	
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	RTCWUtil.LimitToClass( "DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_eng_westgate.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_eng_opscover.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
+	SetGoalPriority( "DEFEND_eng_eastgate.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
+
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
-	SetGoalPriority("ATTACK.*", 0.45);
-	SetGoalPriority("DEFEND_bAA.*", 0.48);
-	SetGoalPriority("ARTILLERY.*", 1.0);
-	
+	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "DEFEND_bAA.*", 0.48 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
 	Map.Defend.Axis = Map.aa_flex;
 	Map.Defend.Allies = Map.ops_flex;
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
@@ -573,16 +639,16 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );	
-	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
-	
-	//run a thread to toggle flag availability
-	thread(Map.toggle_flag);
-	
+
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
+
 	Wp.SetWaypointFlag( "spawnboxes", "closed", false );
-	
+
 	Util.SetMaxUsersInProgress( 2, Map.Checkpoint_flag_respawn_obj );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
@@ -596,7 +662,7 @@ global OnMapLoad = function()
 		{
 			ROUTE_axisrearspawn =
 			{
-				ROUTE_ltwest = 
+				ROUTE_ltwest =
 				{
 					ROUTE_ltsouth =
 					{
@@ -614,13 +680,13 @@ global OnMapLoad = function()
 			{
 				ROUTE_ruins = {},
 				ROUTE_rearwh = { ROUTE_wh = {}, },
-				ROUTE_shorttrain = 
+				ROUTE_shorttrain =
 				{
 					ROUTE_office = { ROUTE_whexit = {}, },
 				},
 				ROUTE_westlongtrain = {},
-				ROUTE_cyconnect = 
-				{ 
+				ROUTE_cyconnect =
+				{
 					ROUTE_ltsouth =
 					{
 						ROUTE_ruins = {},
@@ -633,113 +699,113 @@ global OnMapLoad = function()
 		{
 			ROUTE_adspawn1 =
 			{
-				ROUTE_ltsouth = 
+				ROUTE_ltsouth =
 				{
 					ROUTE_cyconnect = {},
-					ROUTE_ltnorth = 
-					{ 
-						ROUTE_aaele = 
+					ROUTE_ltnorth =
+					{
+						ROUTE_aaele =
 						{
 							ROUTE_aaele2 = {},
 							ROUTE_ducts = {},
-						}, 
+						},
 					},
 				},
 				ROUTE_westlongtrain =
 				{
-					ROUTE_tgarage1 = 
+					ROUTE_tgarage1 =
 					{
-						ROUTE_cargo = 
-						{ 
-							ROUTE_radioroom = 
+						ROUTE_cargo =
+						{
+							ROUTE_radioroom =
 							{
 								ROUTE_aaele2 = {},
-								ROUTE_ducts = {},								
-							}, 
+								ROUTE_ducts = {},
+							},
 						},
 						ROUTE_rockpath = { Weight = 2, },
-						ROUTE_lcargo = 
-						{ 
-							ROUTE_radioroom = 
+						ROUTE_lcargo =
+						{
+							ROUTE_radioroom =
 							{
 								ROUTE_aaele2 = {},
-								ROUTE_ducts = {},							
-							}, 
+								ROUTE_ducts = {},
+							},
 						},
 					},
-					ROUTE_tgarage2 = 
-					{ 
-						ROUTE_cargo = 
-						{ 
-							ROUTE_radioroom = 
+					ROUTE_tgarage2 =
+					{
+						ROUTE_cargo =
+						{
+							ROUTE_radioroom =
 							{
 								ROUTE_aaele2 = {},
-								ROUTE_ducts = {},							
-							}, 
+								ROUTE_ducts = {},
+							},
 						},
 						ROUTE_rockpath = { Weight = 2, },
-						ROUTE_lcargo = 
-						{ 
-							ROUTE_radioroom = 
+						ROUTE_lcargo =
+						{
+							ROUTE_radioroom =
 							{
 								ROUTE_aaele2 = {},
-								ROUTE_ducts = {},							
-							}, 
+								ROUTE_ducts = {},
+							},
 						},
 					},
 				},
 			},
 			ROUTE_forwardspawn1 =
 			{
-				ROUTE_flagspawnunstuck = 
+				ROUTE_flagspawnunstuck =
 				{
 					Weight = 2,
-					ROUTE_midlongtrain = 
+					ROUTE_midlongtrain =
 					{
 						ROUTE_eastlongtrain =
 						{
 							ROUTE_tgarage2 =
 							{
-								ROUTE_cargo = 
-								{ 
-									ROUTE_radioroom = 
+								ROUTE_cargo =
+								{
+									ROUTE_radioroom =
 									{
 										ROUTE_aaele2 = {},
-										ROUTE_ducts = {},									
-									}, 
+										ROUTE_ducts = {},
+									},
 								},
-								ROUTE_rockpath = {},								
+								ROUTE_rockpath = {},
 							},
 						},
 					},
-					ROUTE_ltsouth = 
+					ROUTE_ltsouth =
 					{
 						ROUTE_cyconnect = {},
 						ROUTE_ltnorth = { ROUTE_aaele = {}, },
-					},						
-				},				
+					},
+				},
 				ROUTE_tgarage1 =
 				{
 					Weight = 2,
-					ROUTE_cargo = 
-					{ 
-						ROUTE_radioroom = 
+					ROUTE_cargo =
+					{
+						ROUTE_radioroom =
 						{
 							ROUTE_aaele2 = {},
-							ROUTE_ducts = {},						
-						}, 
+							ROUTE_ducts = {},
+						},
 					},
-					ROUTE_tgaragemid = 
+					ROUTE_tgaragemid =
 					{
-						ROUTE_tgarage2 = 
+						ROUTE_tgarage2 =
 						{
-							ROUTE_cargo = 
-							{ 
-								ROUTE_radioroom = 
+							ROUTE_cargo =
+							{
+								ROUTE_radioroom =
 								{
 									ROUTE_aaele2 = {},
-									ROUTE_ducts = {},								
-								}, 
+									ROUTE_ducts = {},
+								},
 							},
 							ROUTE_rockpath = {},
 						},
@@ -747,75 +813,75 @@ global OnMapLoad = function()
 				},
 				ROUTE_cynw =
 				{
-					ROUTE_lcargo = 
-					{ 
-						ROUTE_radioroom = 
+					ROUTE_lcargo =
+					{
+						ROUTE_radioroom =
 						{
 							ROUTE_aaele2 = {},
-							ROUTE_ducts = {},						
-						}, 
+							ROUTE_ducts = {},
+						},
 					},
 					ROUTE_rockpath = {},
-				},				
-			},	
+				},
+			},
 			ROUTE_forwardspawn2 =
 			{
-				ROUTE_flagspawnunstuck = 
+				ROUTE_flagspawnunstuck =
 				{
 					Weight = 2,
-					ROUTE_midlongtrain = 
+					ROUTE_midlongtrain =
 					{
 						ROUTE_eastlongtrain =
 						{
 							ROUTE_tgarage2 =
 							{
-								ROUTE_cargo = 
-								{ 
-									ROUTE_radioroom = 
+								ROUTE_cargo =
+								{
+									ROUTE_radioroom =
 									{
 										ROUTE_aaele2 = {},
-										ROUTE_ducts = {},									
-									}, 
+										ROUTE_ducts = {},
+									},
 								},
-								ROUTE_rockpath = {},								
+								ROUTE_rockpath = {},
 							},
 						},
 					},
-					ROUTE_ltsouth = 
+					ROUTE_ltsouth =
 					{
 						ROUTE_cyconnect = {},
-						ROUTE_ltnorth = 
-						{ 
-							ROUTE_aaele = 
+						ROUTE_ltnorth =
+						{
+							ROUTE_aaele =
 							{
 								ROUTE_aaele2 = {},
-								ROUTE_ducts = {},							
-							}, 
+								ROUTE_ducts = {},
+							},
 						},
-					},						
-				},				
+					},
+				},
 				ROUTE_tgarage1 =
 				{
 					Weight = 2,
-					ROUTE_cargo = 
-					{ 
-						ROUTE_radioroom = 
+					ROUTE_cargo =
+					{
+						ROUTE_radioroom =
 						{
 							ROUTE_aaele2 = {},
-							ROUTE_ducts = {},						
-						}, 
+							ROUTE_ducts = {},
+						},
 					},
-					ROUTE_tgaragemid = 
+					ROUTE_tgaragemid =
 					{
-						ROUTE_tgarage2 = 
+						ROUTE_tgarage2 =
 						{
-							ROUTE_cargo = 
-							{ 
-								ROUTE_radioroom = 
+							ROUTE_cargo =
+							{
+								ROUTE_radioroom =
 								{
 									ROUTE_aaele2 = {},
-									ROUTE_ducts = {},								
-								}, 
+									ROUTE_ducts = {},
+								},
 							},
 							ROUTE_rockpath = {},
 						},
@@ -823,17 +889,17 @@ global OnMapLoad = function()
 				},
 				ROUTE_cynw =
 				{
-					ROUTE_lcargo = 
-					{ 
-						ROUTE_radioroom = 
+					ROUTE_lcargo =
+					{
+						ROUTE_radioroom =
 						{
 							ROUTE_aaele2 = {},
-							ROUTE_ducts = {},						
-						}, 
+							ROUTE_ducts = {},
+						},
 					},
 					ROUTE_rockpath = {},
-				},			
-			},			
+				},
+			},
 		},
 		DEFEND_btrain1 =
 		{
@@ -850,21 +916,21 @@ global OnMapLoad = function()
 			ROUTE_arspawn1 =
 			{
 				ROUTE_shorttrain2 = {},
-				ROUTE_wh = {}, 
-			},	
+				ROUTE_wh = {},
+			},
 			ROUTE_arspawn2 =
 			{
 				ROUTE_shorttrain2 = {},
-				ROUTE_wh = {}, 
-			},	
+				ROUTE_wh = {},
+			},
 			ROUTE_arspawn3 =
 			{
 				ROUTE_shorttrain2 = {},
-				ROUTE_wh = {}, 
-			},				
+				ROUTE_wh = {},
+			},
 		},
 	};
-	
+
 	MapRoutes.DEFEND_rOps1.ROUTE_depotspawn = MapRoutes.DEFEND_rOps1.ROUTE_axisrearspawn;
 	MapRoutes.DEFEND_rOps2 = MapRoutes.DEFEND_rOps1;
 	MapRoutes.DEFEND_rOps3 = MapRoutes.DEFEND_rOps1;
@@ -896,15 +962,15 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_btrain5 = MapRoutes_DEFEND_btrain1;
 	MapRoutes.DEFEND_btrain6 = MapRoutes_DEFEND_btrain1;
 
-	Util.Routes(MapRoutes);
+	Util.Routes( MapRoutes );
 	print( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-	
+
 	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
-	
+	RTCWUtil.SetDualObjective( bot );
+
 };

@@ -9,58 +9,45 @@ this.LimitToTargetClass(CLASS.ANYPLAYER);
 
 this.Initialize = function()
 {
-	this.HuntPriority = 1.0;
-
-	this.IsHunting = false;
-	
-	if (!Map || !Map.Quiet)
-		{ print(this.Name, " Initialized"); }
+	this.HuntPriority = 0.2;
+	this.DistanceTolerance = 200.f;
 };
 
 this.Enter = function()
-{	
-	this.AddFinishCriteria(this.TargetEntity,"deleted");	
+{
+	// Set up some finish criteria
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
 	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);	
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 };
 
 this.Exit = function()
 {
 	this.TargetEntity = null;
 	this.TargetPosition = null;
-	this.IsHunting = false;
 };
 
 this.GetPriority = function()
 {
-	while ( this.IsHunting == true )
+	this.TargetEntity = this.Bot.GetTarget();
+
+	if ( this.TargetEntity )
 	{
-		sleep(1);
-	}
-	if (!this.IsActive() && this.IsHunting == false )
-	{
-		this.TargetEntity = this.Bot.GetTarget();
 		this.TargetPosition = GetEntPosition(this.TargetEntity);
-		this.IsHunting = true;
-		this.Priority = this.HuntPriority;
+
+		if ( this.TargetPosition && this.Bot.DistanceTo(this.TargetPosition) > this.DistanceTolerance )
+		{
+			this.Priority = this.HuntPriority;
+			block(0);
+		}
 	}
+
+	sleep(1);
 };
 
 this.Update = function()
 {
-	if(this.Goto(this.TargetPosition, 200.f) == EVENT.PATH_FAILED)
-	{
-		this.Finished();
-	}
-	
-	// finish it and repath if target has moved outside of 200 units
-	if( this.Bot.DistanceTo(this.TargetEntity) > 200)
-	{
-		this.Finished();
-	}
-	
-	sleep(1);
+	this.GotoAsync(this.TargetPosition, this.DistanceTolerance);
+	sleep(this.Bot.MemorySpan);
+	this.Finished();
 };
-
-
- 

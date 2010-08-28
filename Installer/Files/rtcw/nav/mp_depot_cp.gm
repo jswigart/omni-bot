@@ -21,116 +21,124 @@ global Map =
 		{
 			gotowp = "tyeletop",
 
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 3);
-				sleep(3);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
 		},
-		
+
 		tyelemid =
 		{
 			//gotowp = "tyelemid",
 
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 4);
-				sleep(4);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 4 );
+				sleep( 4 );
+			},
 		},
-		
+
 		aaele =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 3);
-				sleep(3);
-			},			
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
 		},
 
 		cyladder =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 1.5);
-				sleep(1.5);
-			},			
-		},			
-		
-		trainbox =
-		{
-			navigate = function(_this)
-			{
-				_this.Bot.PressButton(BTN.JUMP);
-				sleep(0.25);
-				_this.Bot.HoldButton(BTN.SPRINT, 3);
-				_this.Bot.HoldButton(BTN.CROUCH, 1);
-				sleep(3);
+				_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+				sleep( 1.5 );
 			},
 		},
-		
+
+		trainbox =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				_this.Bot.HoldButton( BTN.CROUCH, 1 );
+				sleep( 3 );
+			},
+		},
+
 	},
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint01_Axis_Captured" );
 	},
 
 	checkpoint01_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint01_Allies_Captured" );
 	},
 
 	checkpoint03_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint03_Axis_Captured" );
 	},
 
 	checkpoint03_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint03_Allies_Captured" );
 	},
 
 	checkpoint04_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint04_Axis_Captured" );
 	},
 
 	checkpoint04_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint04_Allies_Captured" );
 	},
 
 	checkpoint05_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint05_Axis_Captured" );
 	},
 
 	checkpoint05_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		print( "checkpoint05_Allies_Captured" );
 	},
@@ -139,8 +147,9 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
 
 	OnTrigger( "Axis captures the Rooftop!", Map.checkpoint01_Axis_Captured );
 	OnTrigger( "Allies capture the Rooftop!", Map.checkpoint01_Allies_Captured );
@@ -151,8 +160,8 @@ global OnMapLoad = function()
 	OnTrigger( "Axis captures the Trainyard!", Map.checkpoint05_Axis_Captured );
 	OnTrigger( "Allies capture the Trainyard!", Map.checkpoint05_Allies_Captured );
 
-	RTCWUtil.DisableGoal(".*");
-	RTCWUtil.EnableGoal("CHECKPOINT.*");
+	RTCWUtil.DisableGoal( ".*" );
+	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

@@ -1,96 +1,97 @@
 // These parameters are required
 this.Name = "CAMP";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
 
 this.Initialize = function()
 {
+	this.Bot.QueryGoalsTable = table();
 };
 
 this.Enter = function()
 {
-	this.MarkInProgress(this.MapGoal);
+	this.WeaponRestricted = 0;
+
+	// this should always return true, but in case it doesn't we'll have to finish it
+	// also blackboard delay it so they don't get the goal again right away
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+
+	this.CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
+
+	if ( this.MapGoal.Weapons )
+	{
+		this.WeaponRestricted = tableCount(this.MapGoal.Weapons);
+	}
+	else
+	{
+		Util.MapDebugPrint(this.MapGoal.GetName() + " has no Weapons Table", true);
+	}
+
+	if ( this.WeaponRestricted > 0 )
+	{
+		this.IsSniper = this.Bot.CanSnipe();
+		this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
+	}
 };
 
 this.Exit = function()
 {
-	this.BlackboardDelay(20, this.MapGoal);
+	this.UsingWeapon = null;
+	this.Bot.ReleaseButton(BTN.CROUCH, BTN.PRONE);
 };
 
 this.GetPriority = function()
 {
-	if(!this.IsActive())
+	while(1)
 	{
-		tbl = {};
-		this.QueryGoals(tbl,"CAMP.*");
-		
-		if ( tableCount(tbl) > 0 ) 
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,"CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nPANZER.*\nVENOM.*\nFLAME.*");
+		if ( count > 0 )
 		{
-			this.GetRandomFromBest(tbl);
-		}
-		else
-		{
-			print("no goals in query");
-		}
-	}
-	
-	sleep(2);
-};
-
-this.GetRandomFromBest = function(query)
-{
-
-	print("getting random");
-	tmp = {};
-	i = 0;
-	bias = 0;
-	evalbias = 0;
-	
-	foreach ( id and goal in query )
-	{
-		if(tableCount(goal.Weapons) > 0)
-		{
-			if(!this.Bot.HasAnyWeapon(goal.Weapons))
+			foreach ( id and goal in this.Bot.QueryGoalsTable )
 			{
-				continue;
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
 			}
 		}
-		
-		// TODO: need to make sure first one in table has highest priority
-		evalbias = goal.GetGoalPriority(this.Bot.GetTeam(), this.Bot.GetClass());
-		if ( evalbias != 0 && evalbias >= bias )
-		{
-			bias = evalbias;
-			i = tableCount(tmp);
-			tmp[ i ] = goal;
-		}
-	}
-	
-	tmpCount = tableCount(tmp);
-	// randomly pick from best available
-	if ( tmpCount > 0 )
-	{
-		r = RandInt(0, tmpCount - 1);
-		this.MapGoal = tmp[ r ];
-		this.Priority = bias;
-	}
-	else
-	{
-		print("no goals");
+
+		tableClear(this.Bot.QueryGoalsTable);
+
+		sleep(2);
 	}
 };
 
-// TODO: account for different weapon behaviors
 this.Update = function()
 {
-	print(this.MapgGoal.mincamptime);
+	if(this.Debug)
+	{
+		print("camp goal update", this.WeaponRestricted, Util.WeaponName(this.UsingWeapon), this.UsingWeapon, this.IsSniper);
+	}
+
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
-		this.MarkInUse(this.MapGoal);
-		
-		//TODO: use camptime properties. hardcoded for test
-		timeout = 0;
-		while( timeout < 30 )
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		if ( this.WeaponRestricted > 0 && this.UsingWeapon )
 		{
+			this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
+		}
+
+		timeout = 0;
+		while( timeout < this.CampTime )
+		{
+			if ( this.UsingWeapon && !this.Bot.HasAmmo(this.UsingWeapon) )
+			{
+				this.Finished();
+			}
+
 			switch (this.MapGoal.Stance)
 			{
 				case "crouch":
@@ -100,18 +101,29 @@ this.Update = function()
 				case "prone":
 				{
 					this.Bot.HoldButton(BTN.PRONE, 1.1);
-				}				
+				}
 			}
-			
-			n = tableCount(this.MapGoal.AimVectors);
-			r = RandInt(0, n-1);
+
+			if ( this.WeaponRestricted > 0 && this.IsSniper )
+			{
+				this.Bot.HoldButton(BTN.AIM,1.1);
+			}
+
+			r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
 			this.AddAimRequest(Priority.Low, "facing", this.MapGoal.AimVectors[ r ]);
 			timeout += 1;
-			
+
 			sleep(1);
 		}
 	}
-	
+	else
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+	}
+
+	// don't choose the same camp spot
+	this.BlackboardDelay(5, this.MapGoal);
 	this.Finished();
 };
 

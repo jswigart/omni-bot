@@ -5,11 +5,15 @@ this.Name = "AskForAmmo";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 
 // These parameters are optional
-this.GetPriorityDelay = 1;		// Delay between calls to GetPriority
-this.LimitToClass( CLASS.MEDIC, CLASS.ENGINEER, CLASS.SOLDIER ); //Lieutenants shouldn't call for ammo
+this.LimitToClass( CLASS.MEDIC, CLASS.ENGINEER, CLASS.SOLDIER );
+this.SkipGetPriorityWhenActive = true;
 
 this.Initialize = function()
 {
+	if ( GetGameState() != "Playing" ) {
+		this.Disable = true;
+	}
+	
 	// Internal variables
 	this.AmmoDesirThreshold = 0.5;
 	this.RangeForPickup = 2000.0;
@@ -17,10 +21,9 @@ this.Initialize = function()
 	this.AmmoInfo = {}; // so we re-use the same table
 	this.DroppedWeapon = null;
 	this.Class = null;
-	this.Timeout = 1000;
-	
-	if (!Map || !Map.Quiet)
-		{ print(this.Name, " Initialized"); }
+	this.Timeout = 1500;
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.OnSpawn = function()
@@ -31,92 +34,119 @@ this.OnSpawn = function()
 
 this.GetPriority = function()
 {
-	this.Counter += 1;
-	this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-	
-	if(!this.IsActive() && this.AmmoInfo.Desire > this.AmmoDesirThreshold)
+	while(1)
 	{
-		this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
+		this.Counter += 1;
 		
-		// also look for a weapon
-		if ( !this.Pack && this.Class != CLASS.SOLDIER )
+		// look for any packs or weapons laying around before calling for ammo
+		// note that goal_pickupitems handles a much shorter range pickup while this goal
+		// activates when the bot is desperate for ammo
+		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
+		if(this.AmmoInfo.Desire > this.AmmoDesirThreshold)
 		{
-			weap = this.Bot.GetNearest( CAT.PICKUP, CLASS.WEAPON );
-			
-			if ( weap && GetEntPosition(weap) && this.Bot.DistanceTo(weap) <= this.RangeForPickup )
+			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
+
+			// also look for a weapon
+			if ( !this.Pack && this.Class != CLASS.SOLDIER )
 			{
-				tag = GetWeaponTag(weap);
-				
-				if ( tag == WEAPON.MP40 || tag == WEAPON.THOMPSON || tag == WEAPON.STEN )
+				weap = this.Bot.GetNearest( CAT.PICKUP_WEAPON );
+
+				if ( weap )
 				{
-					this.Pack = weap;
-					this.DroppedWeapon = tag;
+					weapClass = GetEntClass(weap);
+					if ( weapClass ) {
+						weaponId = GetWeaponIdFromClassId( weapClass );
+					}
+					else {
+						Util.MapDebugPrint("No weapon class for id: ", weap);
+					}
+
+					if ( weaponId == WEAPON.MP40 || weaponId == WEAPON.THOMPSON || weaponId == WEAPON.STEN )
+					{
+						this.Pack = weap;
+						this.DroppedWeapon = weaponId;
+					}
 				}
 			}
-		}
 
-		if ( this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup )
-			{ this.Priority = 0.8; }
-		else
-		{
-			if ( (this.Counter % 60 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.LIEUTENANT) > 0) ) 
-				{ this.Bot.SayVoice(VOICE.NEED_AMMO); } 
+			if ( this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup )
+				{ this.Priority = 0.8; }
+			else
+			{
+				if ( (this.Counter % 30 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.LIEUTENANT) > 0) && GetGameState() == "Playing" )
+					{ this.Bot.SayVoice(VOICE.NEED_AMMO); }
+			}
 		}
+		
+		sleep(2);
 	}
 };
 
 this.Enter = function()
 {
 	this.AddFinishCriteria(this.Pack, "deleted");
+	this.AddFinishCriteria(this.Pack,"hasentflag",ENTFLAG.DISABLED);
 };
 
 this.Exit = function()
 {
 	this.Pack = null;
-	this.DroppedWeapon = null;
 	this.ReleaseAimRequest();
+	this.Counter = 0;
 };
 
 this.Update = function()
 {
 	if ( this.Pack )
 	{
-		//print( this.Bot.Name, " is going for an ammo pack");
 		pos = GetEntPosition(this.Pack);
-		if ( !pos || this.Goto(pos) == EVENT.PATH_FAILED )
+
+		//offset pos if they need to swap weapon
+		if ( pos && this.DroppedWeapon && !this.Bot.HasWeapon(this.DroppedWeapon) )
+		{
+				offsetpos = pos + Vector3(24,24,0);
+				if ( this.Goto(offsetpos) == EVENT.PATH_FAILED )
+				{
+					this.Pack = null;
+					this.Finished();
+				}
+		}
+		else  if ( !pos || this.Goto(pos) == EVENT.PATH_FAILED )
 		{
 			this.Pack = null;
 			this.Finished();
 		}
-		
-		// drop current weapon if it's different than the one on ground
-		if ( this.DroppedWeapon != null )
-		{
-			if ( !this.Bot.HasWeapon(this.DroppedWeapon) )
-			{
-				this.Bot.HoldButton(BTN.DROP, 0.5);
-			}
-		}
-		
+
 		timeout = 0;
 		while ( this.Pack && timeout < this.Timeout )
 		{
 			pos = GetEntPosition(this.Pack);
-			
+
 			if ( pos )
 			{
 				this.AddAimRequest( Priority.High, "position", pos );
+
+				if ( this.DroppedWeapon && !this.Bot.HasWeapon(this.DroppedWeapon) )
+				{
+					this.Bot.PressButton(BTN.CROUCH);
+
+					// every other frame, improves pickup ability
+					if(timeout % 100 == 0) {
+						this.Bot.PressButton(BTN.USE);
+					}
+				}
+
 				this.Bot.MoveTowards( pos );
 			}
 			else
 			{
 				this.Finished();
 			}
-			
+
 			timeout += 50;
 			yield();
 		}
 	}
 
-	this.Finished();	
+	this.Finished();
 };

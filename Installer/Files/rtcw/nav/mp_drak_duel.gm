@@ -14,8 +14,7 @@ global Map =
 	{
 		SetCvar( "g_botGib", Map.StoredBotGib );
 
-		if ( Map.DumpStats )
-		{
+		if ( Map.DumpStats ) {
 			ExecCommand( "dstats" );
 		}
 	},
@@ -25,34 +24,31 @@ global OnMapLoad = function()
 {
 	Map.StoredBotGib = GetCvar( "g_botGib" );
 
-	if ( Map.NoGib )
-		{ SetCvar( "g_botGib", "0" ); }
+	if ( Map.NoGib ) {
+		SetCvar( "g_botGib", "0" );
+	}
 
-	if ( Map.NavMesh )
-	{
+	if ( Map.NavMesh ) {
 		ExecCommand( "navsystem navmesh" );
 		ExecCommand( "nav_load" );
 		ExecCommand( "nav_view 0" );
 		ExecCommand( "sector_createconnections" );
 	}
-	
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=30, maxcamptime=60});
-	
-	RTCWUtil.DisableGoal(".*");
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	RTCWUtil.DisableGoal( ".*" );
 	OnTrigger( "Round End.", Map.Round_End );
-	
-	if ( Map.TestMemRecord )
-	{
+
+	if ( Map.TestMemRecord ) {
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND.*" );
 	}
 
-	if ( Map.SpecBots )
-	{
+	if ( Map.SpecBots ) {
 		sleep( 1 );
-		if ( tableCount(BotTable) < 1 )
-		{
+		if ( tableCount( BotTable ) < 1 ) {
 			ExecCommand( "addbot 1 4" );
 			ExecCommand( "addbot 2 4" );
 		}
@@ -64,15 +60,13 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = 2000;
-	
-	if ( Map.TestMemRecord )
-	{
+
+	if ( Map.TestMemRecord ) {
 		bot.AimPersistance = 30.0;
 		bot.MemorySpan = 30.0;
 	}
 
-	if ( Map.AddHuntGoal )
-	{
-		bot.AddScriptGoal("Hunt");
+	if ( Map.AddHuntGoal ) {
+		bot.AddScriptGoal( "Hunt" );
 	}
 };
