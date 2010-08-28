@@ -1,0 +1,128 @@
+global Map =
+{
+	MapName = "mp_chateau",
+	Quiet = true,
+	Call_Artillery_spot_cellar = "CALLARTILLERY_spot_cellar",
+	Call_Artillery_spot_cellar_door = "CALLARTILLERY_spot_cellar_door",
+	Call_Artillery_spot_door_1 = "CALLARTILLERY_spot_door_1",
+	Call_Artillery_spot_door_2 = "CALLARTILLERY_spot_door_2",
+	Artillery_S_target_allied_spawn = "ARTILLERY_S_target_allied_spawn",
+	Artillery_S_target_allies_cellar = "ARTILLERY_S_target_allies_cellar",
+	Artillery_S_target_axis_door = "ARTILLERY_S_target_axis_door",
+	Artillery_S_target_door_2 = "ARTILLERY_S_target_door_2",
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Flag_allied_obj1 = "FLAG_allied_obj1",
+	Cappoint_cap1 = "CAPPOINT_cap1",
+	Cappoint_cap2 = "CAPPOINT_cap2",
+	Plant_Cellar_Door = "PLANT_Cellar_Door",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Explode_t330 = "EXPLODE_t330",
+	Explode_t332 = "EXPLODE_t332",
+
+	Cellar_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Cellar_Door_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	allied_obj1_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allied_obj1_Taken" );
+	},
+
+	cap1_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "cap1_Captured" );
+	},
+
+	cap2_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "cap2_Captured" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "the Cellar Door Destroyed.", Map.Cellar_Door_Destroyed );
+		OnTrigger( "the Main Door Destroyed.", Map.Main_Door_Destroyed );
+		OnTrigger( "Allies have stolen the War Documents!", Map.allied_obj1_Taken );
+		OnTrigger( "Allies have transmitted the Top Secret Documents!", Map.cap1_Captured );
+		OnTrigger( "Allies have transmitted the Top Secret Documents!", Map.cap2_Captured );
+		OnTrigger( "Axis reclaims the Grand Staircase!", Map.flag_respawn_obj_Axis_Captured );
+		OnTrigger( "Allies capture the Grand Staircase!", Map.flag_respawn_obj_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Main_Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Cellar_Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_allied_obj1, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_cap1, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

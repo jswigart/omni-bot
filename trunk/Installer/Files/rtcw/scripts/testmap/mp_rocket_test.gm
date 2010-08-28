@@ -1,0 +1,183 @@
+global Map =
+{
+	MapName = "mp_rocket",
+	Quiet = true,
+	Checkpoint_caveone_flag = "CHECKPOINT_caveone_flag",
+	Flag_Override_Key = "FLAG_Override_Key",
+	Cappoint_92 = "CAPPOINT_92",
+	Plant_Rocket_Bay_Emergency_Exit = "PLANT_Rocket_Bay_Emergency_Exit",
+	Plant_Tunnel_Rubble = "PLANT_Tunnel_Rubble",
+	Plant_Upper_Rocket_Bay_Door = "PLANT_Upper_Rocket_Bay_Door",
+	Explode_t490 = "EXPLODE_t490",
+	Explode_t490_1 = "EXPLODE_t490_1",
+	Explode_t490_2 = "EXPLODE_t490_2",
+	Explode_t501 = "EXPLODE_t501",
+	Explode_t509 = "EXPLODE_t509",
+	Explode_t509_1 = "EXPLODE_t509_1",
+	Explode_t509_2 = "EXPLODE_t509_2",
+
+	Switches =
+	{
+		Door =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Door Switch",
+			LimitTeam = (1<<TEAM.ALLIES), // disabled initially.
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+		},
+		
+		Controls =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Controls Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+		},
+	},
+
+	Navigation =
+	{
+		bridgeladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 5);
+				sleep(6);
+			},			
+		},					
+	},	
+
+	Rocket_Bay_Emergency_Exit_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Rocket_Bay_Emergency_Exit_Destroyed" );
+	},
+
+	Tunnel_Rubble_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tunnel_Rubble_Destroyed" );
+	},
+
+	Upper_Rocket_Bay_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Upper_Rocket_Bay_Door_Destroyed" );
+	},
+
+	Override_Key_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Override_Key_Taken" );
+	},
+
+	Override_Key_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Override_Key_Captured" );
+	},
+
+	CAPPOINT_92_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "CAPPOINT_92_Captured" );
+	},
+
+	caveone_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "caveone_flag_Axis_Captured" );
+	},
+
+	caveone_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "caveone_flag_Allies_Captured" );
+	},
+
+ 	door_lever = function( trigger )
+ 	{
+		TestMap.Pass();
+
+		print( "door_lever" );		
+ 	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Upper Rocket Bay Door Destroyed.", Map.Upper_Rocket_Bay_Door_Destroyed );
+		OnTrigger( "The Rocket Bay Emergency Exit Destroyed.", Map.Rocket_Bay_Emergency_Exit_Destroyed );
+		OnTrigger( "Tunnel Rubble Destroyed.", Map.Tunnel_Rubble_Destroyed );
+ 		OnTrigger( "Allies capture the First Cave!", Map.caveone_flag_Allies_Captured );
+ 		OnTrigger( "Axis reclaims the First Cave!", Map.caveone_flag_Axis_Captured );
+		OnTrigger( "Allies have stolen Override Key!", Map.Override_Key_Taken );
+		OnTrigger( "Override console been used, rocket launch aborted!", Map.Override_Key_Captured );
+		OnTrigger( "rocdoor_lever1_goto", Map.door_lever );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		Util.UpdateSwitchData();
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_caveone_flag, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_caveone_flag, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Tunnel_Rubble, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Rocket_Bay_Emergency_Exit, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Upper_Rocket_Bay_Door, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.Controls, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_Override_Key, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_92, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

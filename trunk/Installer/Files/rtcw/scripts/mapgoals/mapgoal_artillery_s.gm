@@ -1,0 +1,22 @@
+this.GoalType = "ARTILLERY_S";
+this.Version = 1;
+this.DefaultPriority = 1.0;
+
+//////////////////////////////////////////////////////////////////////////
+
+this.UpgradeVersion = function(Props)
+{
+	// version 0 is string,string key/values from the old waypoint format
+	if(Props.Version==0)
+	{
+		// Version 1 Schema, upgrade from waypoint format
+		Props.Version = 1;
+
+		this.SetPosition( GroundPoint(this.GetPosition()) );
+		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));		
+	}
+	else if(Props.Version == this.Version)
+	{
+		
+	}
+};

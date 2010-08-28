@@ -1,0 +1,66 @@
+// This script provides functionality for the bots to 'hunt' their targets
+
+// These parameters are required
+this.Name = "Hunt";	// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AutoAdd = false;
+
+this.LimitToTargetClass(CLASS.ANYPLAYER);
+
+this.Initialize = function()
+{
+	this.HuntPriority = 1.0;
+
+	this.IsHunting = false;
+	
+	if (!Map || !Map.Quiet)
+		{ print(this.Name, " Initialized"); }
+};
+
+this.Enter = function()
+{	
+	this.AddFinishCriteria(this.TargetEntity,"deleted");	
+	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);	
+};
+
+this.Exit = function()
+{
+	this.TargetEntity = null;
+	this.TargetPosition = null;
+	this.IsHunting = false;
+};
+
+this.GetPriority = function()
+{
+	while ( this.IsHunting == true )
+	{
+		sleep(1);
+	}
+	if (!this.IsActive() && this.IsHunting == false )
+	{
+		this.TargetEntity = this.Bot.GetTarget();
+		this.TargetPosition = GetEntPosition(this.TargetEntity);
+		this.IsHunting = true;
+		this.Priority = this.HuntPriority;
+	}
+};
+
+this.Update = function()
+{
+	if(this.Goto(this.TargetPosition, 200.f) == EVENT.PATH_FAILED)
+	{
+		this.Finished();
+	}
+	
+	// finish it and repath if target has moved outside of 200 units
+	if( this.Bot.DistanceTo(this.TargetEntity) > 200)
+	{
+		this.Finished();
+	}
+	
+	sleep(1);
+};
+
+
+ 

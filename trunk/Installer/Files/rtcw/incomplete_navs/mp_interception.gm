@@ -1,0 +1,236 @@
+global Map =
+{
+	Quiet = true,
+
+	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
+	Plant_Axis_data_center = "PLANT_Axis_data_center",
+	Plant_Axis_radar_room = "PLANT_Axis_radar_room",
+	Plant_Axis_transmitter = "PLANT_Axis_transmitter",
+	Plant_dock = "PLANT_dock",
+	Plant_outer_defense_controls = "PLANT_outer_defense_controls",
+	Mount_249 = "MOUNTMG42_249",
+	Mount_29 = "MOUNTMG42_29",
+	Mount_307 = "MOUNTMG42_307",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_1_1 = "MOUNTMG42_mg42_1_1",
+	Mount_mg42_1_2 = "MOUNTMG42_mg42_1_2",
+	Mount_mg42_1_3 = "MOUNTMG42_mg42_1_3",
+	Mount_t364 = "MOUNTMG42_t364",
+	Mount_t364_1 = "MOUNTMG42_t364_1",
+	Mount_t364_2 = "MOUNTMG42_t364_2",
+	Mount_t364_3 = "MOUNTMG42_t364_3",
+	Repair_249 = "REPAIRMG42_249",
+	Repair_29 = "REPAIRMG42_29",
+	Repair_307 = "REPAIRMG42_307",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_1_1 = "REPAIRMG42_mg42_1_1",
+	Repair_mg42_1_2 = "REPAIRMG42_mg42_1_2",
+	Repair_mg42_1_3 = "REPAIRMG42_mg42_1_3",
+	Repair_t364 = "REPAIRMG42_t364",
+	Repair_t364_1 = "REPAIRMG42_t364_1",
+	Repair_t364_2 = "REPAIRMG42_t364_2",
+	Repair_t364_3 = "REPAIRMG42_t364_3",
+	DontDispenseAmmo = true,
+
+	ElevatorStatus = "Bottom", 
+
+	Switches =
+	{
+		eletop =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "eletop",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Bottom" )
+					{ return true; }
+				return false;
+			},
+		},
+		
+		elebottom =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "elebottom",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Top" )
+					{ return true; }
+				return false;
+			},
+		},
+
+	},
+
+	Axis_data_center_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_data_center_Destroyed" );
+	},
+
+	Axis_radar_room_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_data.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_transmitter.*" );
+
+		print( "Axis_radar_room_Destroyed" );
+	},
+
+	Axis_transmitter_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_transmitter_Destroyed" );
+	},
+
+	dock_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "dock_Destroyed" );
+	},
+
+	outer_defense_controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "ladderhack", "closed", false );
+
+		print( "outer_defense_controls_Destroyed" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "beach_flag_Axis_Captured" );
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "beach_flag_Allies_Captured" );
+	},
+
+	elevator_trigger = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+
+			Wp.SetWaypointFlag( "bottom1", "closed", false );
+			Wp.SetWaypointFlag( "bottom2", "closed", false );
+			Wp.SetWaypointFlag( "bottom3", "closed", false );
+			Wp.SetWaypointFlag( "bottom4", "closed", false );
+			Wp.SetWaypointFlag( "bottom5", "closed", false );
+			//sleep(10.5);
+			Map.ElevatorStatus = "Top";
+			Wp.SetWaypointFlag( "laddertoggle1", "closed", false );
+			Wp.SetWaypointFlag( "laddertoggle2", "closed", true );
+			
+			Map.Switches.eletop.Enabled = true;
+
+			print("elevator up");
+
+		}
+		else if ( vel.z < 0 )
+		{
+			//sleep(10.5);
+			Map.ElevatorStatus = "Bottom"; 
+			Wp.SetWaypointFlag( "laddertoggle1", "closed", true );
+			Wp.SetWaypointFlag( "laddertoggle2", "closed", false );
+			Wp.SetWaypointFlag( "bottom1", "closed", true );
+			Wp.SetWaypointFlag( "bottom2", "closed", true );
+			Wp.SetWaypointFlag( "bottom3", "closed", true );
+			Wp.SetWaypointFlag( "bottom4", "closed", true );
+			Wp.SetWaypointFlag( "bottom5", "closed", true );
+			
+			Map.Switches.eletop.Enabled = false;
+
+			print("elevator down");
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allies have destroyed the data center!", Map.Axis_data_center_Destroyed );
+	OnTrigger( "Allies have destroyed the radar room!", Map.Axis_radar_room_Destroyed );
+	OnTrigger( "Allies have destroyed the transmitter!", Map.Axis_transmitter_Destroyed );
+	OnTrigger( "Axis has destroyed the dock!", Map.dock_Destroyed );
+	OnTrigger( "Outer defenses have been shut down!", Map.outer_defense_controls_Destroyed );
+	OnTrigger( "Axis reclaims the forward installation!", Map.beach_flag_Axis_Captured );
+	OnTrigger( "Allies capture the forward installation!", Map.beach_flag_Allies_Captured );
+	OnTrigger( "base_gate2_goto", Map.elevator_trigger );
+
+	RTCWUtil.SetPrimaryGoals(1.0);
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=40, maxcamptime=70});
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=40, maxcamptime=70});
+
+	//disable all goals at start
+	RTCWUtil.DisableGoal(".*", true); //all but routes
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+
+	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_dock" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axupper.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_3" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rInitial.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rInitial.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_outer.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_radar.*" );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+	Wp.SetWaypointFlag( "ladderhack", "closed", true );
+	Wp.SetWaypointFlag( "laddertoggle1", "closed", true );
+	Wp.SetWaypointFlag( "bottom1", "closed", true );
+	Wp.SetWaypointFlag( "bottom2", "closed", true );
+	Wp.SetWaypointFlag( "bottom3", "closed", true );
+	Wp.SetWaypointFlag( "bottom4", "closed", true );
+	Wp.SetWaypointFlag( "bottom5", "closed", true );
+	
+	Util.UpdateSwitchData();
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	bot.MaxViewDistance = 2500;
+};
+

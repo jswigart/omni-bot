@@ -1,0 +1,152 @@
+global Map =
+{
+	MapName = "mp_dam_cp",
+	Quiet = true,
+	Call_Artillery_bRoad_1 = "CALLARTILLERY_bRoad_1",
+	Call_Artillery_bRoad_2 = "CALLARTILLERY_bRoad_2",
+	Call_Artillery_bSpawn = "CALLARTILLERY_bSpawn",
+	Call_Artillery_rRoad_1 = "CALLARTILLERY_rRoad_1",
+	Artillery_S_bRoad_1 = "ARTILLERY_S_bRoad_1",
+	Artillery_S_bRoad_2 = "ARTILLERY_S_bRoad_2",
+	Artillery_S_bRoad_3 = "ARTILLERY_S_bRoad_3",
+	Artillery_S_bRoad_4 = "ARTILLERY_S_bRoad_4",
+	Artillery_S_lowerfrontdoor = "ARTILLERY_S_lowerfrontdoor",
+	Artillery_S_rNorthroad_1 = "ARTILLERY_S_rNorthroad_1",
+	Artillery_S_rNorthroad_2 = "ARTILLERY_S_rNorthroad_2",
+	Artillery_S_rNorthroad_3 = "ARTILLERY_S_rNorthroad_3",
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Explode_Access_Duct = "EXPLODE_Access_Duct",
+	Explode_Generator_Duct = "EXPLODE_Generator_Duct",
+	Explode_Hall_Duct = "EXPLODE_Hall_Duct",
+	Explode_Yard_Duct = "EXPLODE_Yard_Duct",
+	Explode_bRadio_2 = "EXPLODE_bRadio_2",
+	Explode_ducts = "EXPLODE_ducts",
+	Explode_ducts_1 = "EXPLODE_ducts_1",
+	Mount_bRoad = "MOUNTMG42_bRoad",
+	Mount_rRoad = "MOUNTMG42_rRoad",
+	Repair_bRoad = "REPAIRMG42_bRoad",
+	Repair_rRoad = "REPAIRMG42_rRoad",
+	Snipe_bRadio_1 = "SNIPE_bRadio_1",
+	Snipe_bRadio_2 = "SNIPE_bRadio_2",
+	Snipe_bRoad_1 = "SNIPE_bRoad_1",
+	Snipe_bRoad_2 = "SNIPE_bRoad_2",
+	Snipe_bRoad_3 = "SNIPE_bRoad_3",
+	Snipe_bRoad_4 = "SNIPE_bRoad_4",
+	Snipe_rRoad_1 = "SNIPE_rRoad_1",
+	Snipe_rRoad_2 = "SNIPE_rRoad_2",
+	Snipe_rRoad_3 = "SNIPE_rRoad_3",
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Axis takes the Main Tunnel!", Map.checkpoint01_Axis_Captured );
+		OnTrigger( "Allies take the Main Tunnel!", Map.checkpoint01_Allies_Captured );
+		OnTrigger( "Axis takes the Generator Controls!", Map.checkpoint02_Axis_Captured );
+		OnTrigger( "Allies take the Generator Controls!", Map.checkpoint02_Allies_Captured );
+		OnTrigger( "Axis takes the Radio Room!", Map.checkpoint03_Axis_Captured );
+		OnTrigger( "Allies take the Radio Room!", Map.checkpoint03_Allies_Captured );
+		OnTrigger( "Axis takes the Observation Tower!", Map.checkpoint04_Axis_Captured );
+		OnTrigger( "Allies take the Observation Tower!", Map.checkpoint04_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_checkpoint01, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_checkpoint02, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_checkpoint03, 120 );	
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_checkpoint04, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

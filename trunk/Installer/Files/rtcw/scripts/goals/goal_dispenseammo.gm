@@ -1,0 +1,83 @@
+// This script contains functionality to allow medic bots to dispense ammo at spawn
+
+// These parameters are required
+this.Name = "DispenseAmmo";	// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// possible options
+this.Debug = false;
+this.LimitToClass(CLASS.LIEUTENANT);
+this.LimitToNoTarget();
+this.LimitToNoEntityFlag(ENTFLAG.MNT_MG42);
+
+this.Initialize = function()
+{
+	Util.MapDebugPrint(this.Name + " Initialized"); 
+};
+
+// This callback is called when the bot spawns into the game. You may run this function as a thread,
+// however it should be kept in mind that the goal tracks the thread, and will kill the thread and re-run
+// this callback upon each spawn. If you need a persistant thread, you should spawn one yourself.
+// NOTE: This function won't be called if the bot doesn't match the allowed classes set up above.
+this.OnSpawn = function()
+{
+	if ( Map && Map.DispenseAmmoTime )
+		{ sleep(Map.DispenseAmmoTime); }
+	else
+		{ sleep(5); }
+
+	this.Priority = 1;
+};
+
+this.Enter = function()
+{
+	// This goal is going to be manipulating the bots aim, so create an aim request to do so.
+	this.AddAimRequest(Priority.High, "movedirection");
+	this.PacksThrown = 0;	
+};
+
+this.Update = function()
+{
+	if ( Map )
+	{
+		finish = false;
+		
+		if ( Map.DontDispenseAmmo ) {
+			finish = true;
+		} else if ( Map.AxisDontDispenseAmmo && this.Bot.GetTeam() == TEAM.AXIS ) {
+			finish = true;
+		} else if ( Map.AlliesDontDispenseAmmo && this.Bot.GetTeam() == TEAM.ALLIES ) {
+			finish = true;
+		}
+		
+		if ( finish ) {
+			this.Finished();
+		}
+	}
+	
+	if ( this.Debug )
+		{ this.Bot.SayTeam("Ammo for everyone!"); }
+	
+	this.AddWeaponRequest(Priority.High, WEAPON.AMMO_PACK );
+	this.BlockForWeaponChange(WEAPON.AMMO_PACK );
+	
+	while(this.PacksThrown < 3 && 
+		this.Bot.GetCurrentWeapon() == WEAPON.AMMO_PACK &&
+		this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
+	{
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		sleep(0.5);
+	}
+	
+	// This is needed in order to finish the goal. Without it, the goal will continue to have Update called on it.
+	this.Finished();
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity) 
+{
+	if(weaponId == WEAPON.AMMO_PACK)
+	{
+		this.PacksThrown += 1; 
+	}
+};
+ 

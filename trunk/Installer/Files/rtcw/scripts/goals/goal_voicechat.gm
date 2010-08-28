@@ -1,0 +1,142 @@
+// This script contains functionality to allow bots respond to miscelaneous events 
+
+// These parameters are required
+this.Name = "VoiceChat";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AlwaysRecieveEvents = true;
+
+this.Initialize = function()
+{
+	// set this to 0 to disable and / or set AlwaysRecieveEvents to false 
+	// valid values are from 1 to 10, each representing a 10% chance of responding
+	// a value of 4 means a 40% chance to respond for example
+	this.Frequency = 0;
+	
+	this.LastKiller = null;
+	this.responded_to_teamdamage = false;
+};
+
+this.Randomize = function()
+{
+	if ( this.Frequency > 0 && RandInt(1, 10) <= this.Frequency  )
+	{ 
+		sleep(0.5); 
+		return true; 
+	}
+
+	return false; 
+};
+
+this.Events[EVENT.TEAM_VOICE] = function(source, id) 
+{
+	cls = this.Bot.GetClass();
+
+	if ( id == VOICE.THANKS && (cls == CLASS.MEDIC || cls == CLASS.LIEUTENANT) 
+			&& this.Randomize() == true )
+	{
+		pos = GetEntPosition(source);
+		if ( pos && this.Bot.DistanceTo( pos ) < 80 )
+			{ this.Bot.SayVoice(VOICE.WELCOME); }
+			
+		return;
+	}
+};
+
+this.Events[EVENT.REVIVED] = function(whoDoneIt) 
+{
+	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt) && this.Randomize() == true )
+		{ this.Bot.SayVoice(VOICE.THANKS); }
+};
+
+this.Events[EVENT.HEALED] = function(whoDoneIt)
+{
+	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt) && this.Randomize() == true )
+		{ this.Bot.SayVoice(VOICE.THANKS); }
+};
+
+this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
+{
+	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Randomize() == true )
+		{ this.Bot.SayVoice(VOICE.THANKS); }
+};
+
+this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod) 
+{
+	if ( this.Bot.IsAllied( victim ) && victim != this.Bot.GetGameEntity() )
+	{
+		if( this.Randomize() == true )
+			{ this.Bot.SayVoice( VOICE.SORRY ); }
+		else if ( this.Randomize() == true )
+			{ this.Bot.SayVoice( VOICE.OOPS ); }
+		
+		return;
+	}
+	
+	// cheer the revenge
+	if ( this.LastKiller == victim )
+	{
+		if ( this.Randomize() == true )
+		{
+			this.LastKiller = null; 
+			this.Bot.SayVoice( VOICE.G_CHEER ); 
+		}
+		
+		return;
+	}
+	
+	if ( mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN" )
+	{
+		if ( this.Randomize() == true )
+		{ 
+			this.Bot.SayVoice( VOICE.G_CHEER ); 
+			
+			//send them a pm to remind them that they just got knifed by a bot; some players have a short memory
+			if ( GetCvar( "g_privatemessages" ) == 1 )
+				{ this.Bot.SendPrivateMessage(GetEntName(victim), "cold steel!"); }
+		}
+		
+		return;
+	}
+};
+
+this.Events[EVENT.DEATH] = function(attacker, mod) 
+{	
+	if ( GetGameIdFromEntity(attacker) > 63 )
+		{ return;}
+		
+	if ( !this.Bot.IsAllied( attacker ) )
+	{
+		this.LastKiller = attacker;
+		
+		if ( (mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN") )
+		{
+			if ( this.Randomize() == true )
+				{ this.Bot.SayVoice( VOICE.G_GREATSHOT ); }
+			else if ( this.Randomize() == true )
+				{ this.Bot.SayVoice( VOICE.G_NEGATIVE ); }	
+
+			return;
+		}
+	}
+};
+
+this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth) 
+{
+	if ( GetGameIdFromEntity(Inflictor) > 63 )
+		{ return;}
+		
+	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)  && Inflictor != this.Bot.GetGameEntity()  )
+	{ 
+		if ( this.Randomize() == true )
+		{ 
+			this.Bot.SayVoice( VOICE.HOLD_FIRE );
+			this.responded_to_teamdamage = true;
+		} 
+		else
+		{
+			this.responded_to_teamdamage = false;
+		}
+	}
+};
+
+

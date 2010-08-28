@@ -1,0 +1,247 @@
+global Map =
+{
+	Target =
+	{
+		YardDuct =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_Yard_Duct",
+			Offset = 
+			{
+				Vector3(13, 501, -24),
+			}
+		},
+		HallDuct =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_Hall_Duct",
+			TargetOffset = Vector3( 0, 0, -32 ),
+			Offset = 
+			{
+				Vector3(13, 358, -24),
+			}
+		},
+		GeneratorDuct =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_Generator_Duct",
+			Offset = 
+			{
+				Vector3(35, 412, -200),
+			}
+		},
+		AccessDuct =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_Access_Duct",
+			TargetOffset = Vector3( 0, 0, -32 ),
+			Offset = 
+			{
+				Vector3(145, 233, -52),
+			}
+		},
+		Ducts =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_ducts",
+			Offset = 
+			{
+				Vector3(0, 217, -100),
+			}
+		},
+		SnipeWindow =
+		{
+			Priority = 0.66,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_bRadio_2",
+			Offset = 
+			{
+				Vector3(-116.495, -286.905, -39.635),
+			}
+		},	
+	},
+	
+	MapName = "mp_dam",
+	Quiet = true,
+	Call_Artillery_bRoad_1 = "CALLARTILLERY_bRoad_1",
+	Call_Artillery_bRoad_2 = "CALLARTILLERY_bRoad_2",
+	Call_Artillery_bSpawn = "CALLARTILLERY_bSpawn",
+	Call_Artillery_rRoad_1 = "CALLARTILLERY_rRoad_1",
+	Artillery_S_bRoad_1 = "ARTILLERY_S_bRoad_1",
+	Artillery_S_bRoad_2 = "ARTILLERY_S_bRoad_2",
+	Artillery_S_bRoad_3 = "ARTILLERY_S_bRoad_3",
+	Artillery_S_bRoad_4 = "ARTILLERY_S_bRoad_4",
+	Artillery_S_lowerfrontdoor = "ARTILLERY_S_lowerfrontdoor",
+	Artillery_S_rNorthroad_1 = "ARTILLERY_S_rNorthroad_1",
+	Artillery_S_rNorthroad_2 = "ARTILLERY_S_rNorthroad_2",
+	Artillery_S_rNorthroad_3 = "ARTILLERY_S_rNorthroad_3",
+	Checkpoint_dam_flag = "CHECKPOINT_dam_flag",
+	Plant_Dam_Stairwell_Door = "PLANT_Dam_Stairwell_Door",
+	Plant_Lower_Dam_Door = "PLANT_Lower_Dam_Door",
+	Plant_Main_Doors = "PLANT_Main_Doors",
+	Plant_Main_Water_Regulator = "PLANT_Main_Water_Regulator",
+	Plant_lower_front_door = "PLANT_lower_front_door",
+	Plant_upper_front_door = "PLANT_upper_front_door",
+	Explode_207 = "EXPLODE_207",
+	Explode_408 = "EXPLODE_408",
+	Explode_410 = "EXPLODE_410",
+	Explode_418 = "EXPLODE_418",
+	Explode_bRadio_2 = "EXPLODE_bRadio_2",
+	Explode_ducts = "EXPLODE_ducts",
+	Explode_ducts_1 = "EXPLODE_ducts_1",
+	Mount_bRoad = "MOUNTMG42_bRoad",
+	Mount_rRoad = "MOUNTMG42_rRoad",
+	Repair_bRoad = "REPAIRMG42_bRoad",
+	Repair_rRoad = "REPAIRMG42_rRoad",
+	Snipe_bRadio_1 = "SNIPE_bRadio_1",
+	Snipe_bRadio_2 = "SNIPE_bRadio_2",
+	Snipe_bRoad_1 = "SNIPE_bRoad_1",
+	Snipe_bRoad_2 = "SNIPE_bRoad_2",
+	Snipe_bRoad_3 = "SNIPE_bRoad_3",
+	Snipe_bRoad_4 = "SNIPE_bRoad_4",
+	Snipe_rRoad_1 = "SNIPE_rRoad_1",
+	Snipe_rRoad_2 = "SNIPE_rRoad_2",
+	Snipe_rRoad_3 = "SNIPE_rRoad_3",
+
+	Dam_Stairwell_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Dam_Stairwell_Door_Destroyed" );
+	},
+
+	Lower_Dam_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Lower_Dam_Door_Destroyed" );
+	},
+
+	Main_Doors_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Main_Doors_Destroyed" );
+	},
+
+	Main_Water_Regulator_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Main_Water_Regulator_Destroyed" );
+	},
+
+	lower_front_door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "lower_front_door_Destroyed" );
+	},
+
+	upper_front_door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "upper_front_door_Destroyed" );
+	},
+
+	dam_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "dam_flag_Axis_Captured" );
+	},
+
+	dam_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "dam_flag_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Allies breached the Upper Dam Stairwell!", Map.Dam_Stairwell_Door_Destroyed );
+		OnTrigger( "Allies breached the Lower Dam Tunnels!", Map.Lower_Dam_Door_Destroyed );
+		OnTrigger( "Allies destroyed the Main Dam Road Doors!", Map.Main_Doors_Destroyed );
+		OnTrigger( "The Main Water Regulator has been destroyed!", Map.Main_Water_Regulator_Destroyed );
+		OnTrigger( "the lower front door Destroyed.", Map.lower_front_door_Destroyed );
+		OnTrigger( "the upper front door Destroyed.", Map.upper_front_door_Destroyed );
+		OnTrigger( "Axis capture the Generator Controls Room!", Map.dam_flag_Axis_Captured );
+		OnTrigger( "Allies capture the Generator Controls Room!", Map.dam_flag_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Target.HallDuct, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Target.YardDuct, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_upper_front_door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_lower_front_door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_dam_flag, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_rRoad, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_bRoad, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_dam_flag, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Main_Doors, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.GeneratorDuct, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.Ducts, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.SnipeWindow, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_bRoad, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_rRoad, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_rRoad, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_bRoad, 120 );
+		
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_rRoad, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_bRoad, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Dam_Stairwell_Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Lower_Dam_Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.AccessDuct, 120 );
+		
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Main_Water_Regulator, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

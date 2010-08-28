@@ -1,0 +1,366 @@
+global Map =
+{
+	MapName = "se_bunker_v2",
+	Quiet = true,
+	Call_Artillery_osart1_1 = "CALLARTILLERY_osart1_1",
+	Call_Artillery_osart1_2 = "CALLARTILLERY_osart1_2",
+	Call_Artillery_osart2_1 = "CALLARTILLERY_osart2_1",
+	Artillery_S_gate = "ARTILLERY_S_gate",
+	Artillery_S_main = "ARTILLERY_S_main",
+	Artillery_S_tunnel = "ARTILLERY_S_tunnel",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Flag_Enigma_Machine = "FLAG_Enigma_Machine",
+	Cappoint_423 = "CAPPOINT_423",
+	Plant_Vault_Door = "PLANT_Vault_Door",
+	Plant_bunker_entrance = "PLANT_bunker_entrance",
+	Explode_barrier1 = "EXPLODE_barrier1",
+	Mount_332 = "MOUNTMG42_332",
+	Mount_339 = "MOUNTMG42_339",
+	Mount_340 = "MOUNTMG42_340",
+	Mount_outsidenest = "MOUNTMG42_outsidenest",
+	Mount_tunnelnest = "MOUNTMG42_tunnelnest",
+	Repair_332 = "REPAIRMG42_332",
+	Repair_339 = "REPAIRMG42_339",
+	Repair_340 = "REPAIRMG42_340",
+	Repair_outsidenest = "REPAIRMG42_outsidenest",
+	Repair_tunnelnest = "REPAIRMG42_tunnelnest",
+	Snipe_axsn_1 = "SNIPE_axsn_1",
+	Snipe_axsn_2 = "SNIPE_axsn_2",
+
+	AxisInLower = {},
+	AlliesInLower = {},
+	NumAxisInLower = 0,
+	NumAlliesInLower = 0,
+
+	ElevatorStatus = "Top", 
+	FlagStatus = false, //false axis, true allies
+	DoorStatus = false, //closed
+
+	WatchLower = function()
+	{
+		while ( true )
+		{
+			Map.NumAxisInLower = tableCount(Map.AxisInLower);
+			Map.NumAlliesInLower = tableCount(Map.AlliesInLower);
+			
+			foreach ( entTable in Map.AxisInLower )
+			{
+				ha = GetEntHealthAndArmor(entTable.entity);
+				if ( ha.Health < 1 || entTable.toggle == 0 ) 
+					{ Map.NumAxisInLower -= 1; }
+			}
+			
+			foreach ( entTable in Map.AlliesInLower )
+			{
+				ha = GetEntHealthAndArmor(entTable.entity);
+				if ( ha.Health < 1 || entTable.toggle == 0 )
+					{ Map.NumAlliesInLower -= 1; }					
+			}
+			
+			//put the shift stuff here
+			if ( !Map.EnigmaStatus && Map.NumAlliesInLower > 0 )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+			}
+			else if ( !Map.FlagStatus )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng2_.*" );	
+			}
+		
+			//testing
+			/*if ( Map.NumAxisInLower > 0 )
+				{ print("Number of Axis in Lower = ", Map.NumAxisInLower); }
+			if ( Map.NumAlliesInLower > 0 )				
+				{ print("Number of Allies in Lower = ", Map.NumAlliesInLower); }*/
+				
+			sleep(1);
+		}
+	},
+
+	Navigation =
+	{
+		bunkersnipe =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 1);
+				_this.Bot.HoldButton(BTN.STRAFE_L, 1);
+				sleep(1);
+			},			
+		},	
+		
+		vententrance =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.PressButton(BTN.JUMP);
+				sleep(0.25);
+			},			
+		},
+
+		accessladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 1);
+				sleep(1);
+			},			
+		},
+
+		accessladder2 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 1);
+				sleep(1);
+			},			
+		},					
+	},
+
+	Switches =
+	{
+		lever1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever1",
+			LimitTeam = (1<<TEAM.ALLIES),
+			//LimitBots = 1,
+			LimitClass = Util.AllClasses,
+		},
+		
+		lever2 =
+		{
+			Enabled = true,
+			Priority = 0.65,
+			WaypointName = "lever2",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			LimitClass = (1<<CLASS.MEDIC) |
+					(1<<CLASS.LIEUTENANT),
+		},
+
+		lever3 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever3",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Bottom" )
+					{ return true; }
+				return false;
+			},
+		},
+		
+		lever4 =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "lever4",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Top" )
+					{ return true; }
+				return false;
+			},
+		},
+
+		lever5 =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "lever5",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Top" )
+					{ return true; }
+				return false;
+			},
+		},
+		
+		lever6 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever6",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Bottom" )
+					{ return true; }
+				return false;
+			},
+		},
+
+	},
+
+	FrontGates = function( trigger )
+	{
+		print("front gate");
+		Map.Switches.lever1.Enabled = false;
+		Map.Switches.lever2.Enabled = false;
+	},
+
+	elevator_buttons = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		//disable all the ele switches while it's moving
+		Map.Switches.lever3.Enabled = false;
+		Map.Switches.lever6.Enabled = false;
+		Map.Switches.lever4.Enabled = false;
+		Map.Switches.lever5.Enabled = false;
+		Map.ElevatorStatus = "Moving";
+		
+		//don't let them path through
+		Wp.SetWaypointFlag( "eletoggle", "closed", true );
+	},
+
+	elevator_trigger = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+			sleep(6);
+			Map.Switches.lever3.Enabled = true;
+			Map.Switches.lever6.Enabled = true;
+			sleep(1);
+			Map.ElevatorStatus = "Top";
+			Wp.SetWaypointFlag( "eletoggle", "closed", false );
+			print("elevator up");
+
+		}
+		else if ( vel.z < 0 )
+		{
+			sleep(6);
+			Map.Switches.lever4.Enabled = true;
+			Map.Switches.lever5.Enabled = true;
+			sleep(1);
+			Map.ElevatorStatus = "Bottom"; 
+			Wp.SetWaypointFlag( "eletoggle", "closed", false );
+			print("elevator down");
+		}
+	},
+
+	Vault_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Vault_Door_Destroyed" );
+	},
+
+	bunker_entrance_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "bunker_entrance_Destroyed" );
+	},
+
+	Enigma_Machine_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Enigma_Machine_Taken" );
+	},
+
+	CAPPOINT_423_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "CAPPOINT_423_Captured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "forward_spawn_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		Util.UpdateSwitchData();
+		Wp.SetWaypointFlag( "eletoggle", "closed", true );
+		OnTrigger( "The vault door has been destroyed!", Map.Vault_Door_Destroyed );
+		OnTrigger( "The bunker entrance has been breached!", Map.bunker_entrance_Destroyed );
+		OnTrigger( "Allies have stolen the Enigma Machine!", Map.Enigma_Machine_Taken );
+		OnTrigger( "Axis have secured the bunker entrance!", Map.forward_spawn_Axis_Captured );
+		OnTrigger( "Allies captured the bunker entrance!", Map.forward_spawn_Allies_Captured );
+		OnTrigger( "gate_right_door_faceangle", Map.FrontGates );
+		OnTrigger( "elevator_body_goto", Map.elevator_trigger );
+		OnTrigger( "elevator_body_Opening", Map.elevator_buttons );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_outsidenest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_tunnelnest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_bunker_entrance, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_forward_spawn, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Vault_Door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_Enigma_Machine, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_423, 120 );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

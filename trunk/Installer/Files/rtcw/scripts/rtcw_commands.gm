@@ -1,0 +1,211 @@
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug"] = 
+{
+	Func = function( _params )
+	{
+		print( "Executing aim debugging script." );	
+		RTCWUtil.DebugBotAim( _params[0] );
+	},
+
+	Help = 
+	{
+		"Aim Debug, an aim debugging tool",
+		"Usage: /bot aim_debug",
+		"Note: adds two bots to the game and positions them on both",
+		"       sides of the player at the given range",
+		"       shooting is disabled and the AIM debug flag is set",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug_reload"] = 
+{
+	Func = function( _params )
+	{
+		foreach ( gameId and bot in BotTable )
+			{ bot.ReloadProfile(); }
+	},
+
+	Help = 
+	{
+		"Aim Debug Reload, reloads each bots profile",
+		"Usage: /bot aim_debug_reload",
+	},	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["warpto"] = 
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTo( _params );
+	},
+
+	Help = 
+	{
+		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
+		"Usage: /bot warpto <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wt"] = 
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTo( _params );
+	},
+
+	Help = 
+	{
+		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
+		"Usage: /bot wt <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wb"] = 
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTestBot( _params );
+	},
+
+	Help = 
+	{
+		"Warp Test Bot, will teleport testbot to given waypoint name if cheats are enabled",
+		"Usage: /bot wt <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["rollcall"] = 
+{
+	Func = function( _params )
+	{
+		RTCWUtil.RollCall();
+	},
+
+	Help = 
+	{
+		"Roll Call, lists each bots name, team, class, and entity",
+		"Usage: /bot rollcall",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["dstats"] = 
+{
+	Func = function( _params )
+	{
+		Stats.DumpStats();
+	},
+
+	Help = 
+	{
+		"Dump Stats, writes each bots current round stats to ~\user\<mapname>_stats.gm",
+		"Usage: /bot dstats",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["convert"] =
+{
+	Func = function( _params )
+	{
+		ExecScript("filename.gm");
+	},
+
+	Help = 
+	{
+		"Convert, this command is for developers only",
+		"Usage: /bot convert",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["testsuicide"] =
+{
+	Func = function(_params)
+	{
+		foreach ( id and bot in BotTable )
+		{
+			bot.Suicide(_params[0], _params[1]);
+		}
+	},
+	
+	Help =
+	{
+		"Set Suicide, sets botSuicide session variable to given param",
+		"Bots will /kill 2 seconds before next spawn",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["moveskill"] =
+{
+	Func = function(_params)
+	{
+		if ( !_params[0] )
+		{
+			ms = ConfigGet("CombatMovement","moveskill", ms);
+			print( "Combat Movement Difficulty is", ms );
+			return;
+		}
+		
+		if ( _params[0] < 0 || _params[0] > 4 )
+		{
+			print( "^1ERROR: Invalid moveskill. Valid values are from 0 to 4 " );
+			return;
+		}
+		
+		ConfigSet("CombatMovement","moveskill", _params[0] );
+		
+		foreach ( id and bot in BotTable )
+		{
+			if ( _params[0] == 4 )
+			{
+				r = RandInt(0, 3);
+				bot.moveskill = r;
+				continue;
+			}	
+			
+			bot.moveskill = _params[0]; 
+		}
+			
+		print( "Combat Movement difficulty set to ", _params[0] );
+	},
+	
+	Help =
+	{
+		"Combat Difficulty, sets persistent combat movement difficulty",
+		"0 = off, 1 = easy, 2 = medium, 3 = hard, 4 = random",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["tracearty"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.TraceArty(_params[ 0 ]);
+	},
+
+	Help = 
+	{
+		"Runs a trace to find arty targets from closest arty goal",
+	},
+};
+
+

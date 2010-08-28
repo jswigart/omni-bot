@@ -1,0 +1,55 @@
+// This script contains functionality to prioritize living targets over injured targets and ignore invulnerable ones
+
+// These parameters are required
+this.Name = "PrioritizeTarget";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.LimitToTargetClass( CLASS.ANYPLAYER, CLASS.INJUREDPLAYER );
+
+this.GetPriority = function()
+{
+	ignore = false;
+	t = this.Bot.GetTarget();
+
+	if ( GetEntClass(t) == CLASS.INJUREDPLAYER ) {
+		if ( this.Bot.GetNearestEnemy(CAT.PLAYER, CLASS.ANYPLAYER) || this.Bot.DistanceTo(t) > 2000 ) {
+			ignore = true;
+		}
+		else
+		{
+			this.Priority = 1.0; // so it can enter and exit
+		}
+	}
+	else if ( GetEntPowerups(t, POWERUP.INVINCIBLE) ) {
+		ignore = true;
+	}
+	
+	if (ignore) {
+		this.Bot.IgnoreTarget(t , this.Bot.AimPersistance); 
+	}
+};
+
+this.Enter = function()
+{
+	this.target = this.Bot.GetTarget();
+	
+	// hack the offsets for now so they can actually gib
+	difficulties.AdjustWeaponProperties( this.Bot, true );
+};
+
+this.Exit = function()
+{
+	difficulties.AdjustWeaponProperties( this.Bot, false );
+};
+
+this.Update = function()
+{
+	while (this.Bot.GetTarget() == this.target)
+	{
+		sleep(0.5);
+	}
+	
+	this.Finished();
+};
+
+

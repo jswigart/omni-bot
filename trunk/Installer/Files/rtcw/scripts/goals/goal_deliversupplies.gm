@@ -1,0 +1,206 @@
+// This script contains functionality to allow medic bots to deliver ammo to people that request it.
+
+if(!BB.DELIVERUSER)
+{
+	BB.DELIVERUSER = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "DeliverSupplies";	// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.AlwaysRecieveEvents = true;
+
+// possible options
+this.Debug = false;
+this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
+this.LimitDistance = 2500;
+
+this.Initialize = function()
+{
+	this.Respond = false;
+	Util.MapDebugPrint(this.Name + " Initialized"); 
+};
+
+this.Enter = function()
+{
+	this.PacksThrown = 0;	
+	this.TargetPosition = GetEntPosition(this.TargetEntity);
+	this.DeliverySuccessful = false;
+	this.OnTarget = false;	
+	
+	targetName = GetEntName(this.TargetEntity);
+	
+	if(this.Respond && this.Supply == WEAPON.AMMO_PACK)
+	{
+		this.Bot.SayTeam("Coming with Ammo, ^7", targetName, "^5!^2");
+	}
+	else if(this.Respond && this.Supply == WEAPON.MEDKIT)
+	{
+		this.Bot.SayTeam("Coming with Health, ^7", targetName, "^5!^2");
+	}
+			
+	// Set up some finish criteria
+	this.AddFinishCriteria(this.TargetEntity,"deleted");	
+	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", this.Supply);
+	
+	this.DynamicGotoThread = this:thread(this.DynamicGoto);	
+};
+
+this.Exit = function()
+{
+	if ( this.DynamicGotoThread )
+		{ threadKill(this.DynamicGotoThread); }
+		
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.DELIVERUSER);
+
+	this.TargetEntity = null;
+	this.TargetPosition = null;
+	this.DelayNextResponse = false;
+	this.OnTarget = false;
+};
+
+this.DynamicGoto = function()
+{
+	if(this.Goto(this.TargetPosition, 128.f) == EVENT.PATH_SUCCESS)
+	{
+		this.OnTarget = true;
+	}
+	else
+	{
+		this.Finished();
+	}
+};
+
+this.Update = function()
+{
+	entPos = GetEntPosition(this.TargetEntity);
+	
+	if ( entPos.IsZero() ) 
+		{ this.Finished(); }
+		
+	d = DistanceBetween(entPos,this.TargetPosition);
+	if( d > 128 && d < 500)
+	{
+		threadKill(this.DynamicGotoThread);
+		this.TargetPosition = entPos;
+		this.DynamicGotoThread = this:thread(this.DynamicGoto);
+	}
+	else if ( d > 500 )
+	{
+		//stop chasing
+		this.Finished();
+	}
+	
+	if ( this.OnTarget )
+	{
+		// aim at target while waiting for weapon change 
+		pos = GetEntEyePosition(this.TargetEntity);
+		this.AddAimRequest(Priority.High, "position",pos);
+		this.AddWeaponRequest(Priority.High, this.Supply);
+		this.BlockForWeaponChange(this.Supply);
+	
+		while(this.PacksThrown < 2 && this.Bot.IsWeaponCharged(this.Supply)) 
+		{		
+			pos = GetEntEyePosition(this.TargetEntity);
+			if (pos)
+			{
+				//move towards them while giving packs
+				this.AddAimRequest(Priority.High, "position",pos);
+				this.Bot.MoveTowards(pos);
+				this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+			}
+			else
+			{
+				this.Finished();
+			}
+			sleep(0.25);
+		}
+
+		// This is needed in order to finish the goal. Without it, the goal will continue to have Update called on it.
+		this.Finished();
+	}
+	
+	sleep(0.25);
+};
+
+this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
+{
+	if (this.Bot.DistanceTo(this.TargetPosition) > this.LimitDistance )
+	{
+		this.Finished();
+	}
+	
+	if(this.IsActive() || this.DelayNextResponse)
+	{
+		return;
+	}
+	
+	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) )
+	{
+		return;
+	}
+
+	if(macroId == VOICE.NEED_AMMO && 
+	   this.Bot.GetClass() == CLASS.LIEUTENANT &&
+	   this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
+	{
+		this.BlackboardId = GetGameIdFromEntity(whoSaidIt);
+		
+		bbRecord =
+		{
+			Owner = this.Bot.GetGameId(),
+			Target = this.BlackboardId,
+		};
+		
+		Blackboard.PostRecord(BB.DELIVERUSER, bbRecord);
+		
+		numBotsOnDeliver = Blackboard.GetNumRecords(BB.DELIVERUSER, this.BlackboardId);
+		
+		if( numBotsOnDeliver <= this.MaxUsers )
+		{
+			this.Supply = WEAPON.AMMO_PACK;
+			this.TargetEntity = whoSaidIt;
+
+			this.Priority = 1.2; // 
+			this.DelayNextResponse = true;
+			sleep(10);
+			this.DelayNextResponse = false;			
+			
+			// if we haven't activated by now, don't bother
+			if(!this.IsActive())
+			{
+				this.Priority = 0;
+			}
+		}
+	}
+	else if(macroId == VOICE.NEED_MEDIC && 
+		 this.Bot.GetClass() == CLASS.MEDIC &&
+	         this.Bot.IsWeaponCharged(WEAPON.MEDKIT))
+	{
+		this.Supply = WEAPON.MEDKIT;
+		this.TargetEntity = whoSaidIt;
+
+		this.Priority = 0.7;
+		this.DelayNextResponse = true;
+		sleep(10);
+		this.DelayNextResponse = false;			
+		
+		// if we haven't activated by now, don't bother
+		if(!this.IsActive())
+		{
+			this.Priority = 0;
+		}
+	}
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity) 
+{
+	if(weaponId == this.Supply)
+	{
+		this.PacksThrown += 1; 
+	}
+ };
+ 

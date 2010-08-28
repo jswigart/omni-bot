@@ -1,0 +1,119 @@
+global Map =
+{
+	MapName = "te_ufo",
+	Quiet = true,
+	Checkpoint_south_flag = "CHECKPOINT_south_flag",
+	Flag_The_UFO_Documents = "FLAG_UFO_Documents",
+	Cappoint_transmitter = "CAPPOINT_transmitter",
+	Plant_allied_obj1 = "PLANT_Main_Gate",
+	Plant_allied_obj1a = "PLANT_South_Gate",
+	Mount_304 = "MOUNTMG42_304",
+	Repair_304 = "REPAIRMG42_304",
+	Snipe_phase1_blue_snipe1 = "SNIPE_phase1_blue_snipe1",
+	Snipe_phase1_red_snipe1 = "SNIPE_phase1_red_snipe1",
+
+	allied_obj1_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allied_obj1_Destroyed" );
+	},
+
+	allied_obj1a_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allied_obj1a_Destroyed" );
+	},
+
+	The_UFO_Documents_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "The_UFO_Documents_Taken" );
+	},
+
+	transmitter_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "transmitter_Captured" );
+	},
+
+	south_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "south_flag_Axis_Captured" );
+	},
+
+	south_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "south_flag_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Main Gate Destroyed.", Map.allied_obj1_Destroyed );
+		OnTrigger( "The South Gate Destroyed.", Map.allied_obj1a_Destroyed );
+		OnTrigger( "Allies have stolen The UFO Documents!", Map.The_UFO_Documents_Taken );
+		OnTrigger( "Allies Transmitted the UFO Documents!", Map.transmitter_Captured );
+		OnTrigger( "Axis Regain Control of The Reinforcement Point!", Map.south_flag_Axis_Captured );
+		OnTrigger( "Allies Capture The Reinforcement Point!", Map.south_flag_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_allied_obj1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_allied_obj1a, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_south_flag, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_304, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_south_flag, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_The_UFO_Documents, 120 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_phase1_red_snipe1, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_phase1_blue_snipe1, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_transmitter, 120 );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

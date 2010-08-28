@@ -1,0 +1,68 @@
+if ( Stats == null )
+{
+	global Stats = table();
+		
+	///////////////////////////////////////////////////////////////////////////////
+
+	Stats.DumpStats = function()
+	{
+
+		db = sqlite();
+		db.Open("stats.db");
+
+		if ( db.Query("CREATE TABLE stats(
+						name TEXT, 
+						kills INT,
+						deaths INT,
+						kill_ratio FLOAT,
+						shots INT,
+						hits INT,
+						accuracy FLOAT,
+						headshots INT,
+						headshot_percent FLOAT,
+						gibs INT,
+						health_given INT,
+						ammo_given INT );") 
+			)
+		{
+			print("Stats Table Created");
+		}
+
+		foreach( index and bot in BotTable )
+		{
+			ent = bot.GetGameEntity();
+									       
+			name = "'"+bot.Name+"',";
+			kills = "'"+GetEntityStat( ent, "kills" )+"',";
+			deaths = "'"+GetEntityStat( ent, "deaths" )+"',";
+			kr = "'"+GetEntityStat( ent, "killratio" )+"',";       
+			shots = "'"+GetEntityStat( ent, "shots" )+"',";
+			hits = "'"+GetEntityStat( ent, "hits" )+"',";
+			acc = "'"+GetEntityStat( ent, "accuracy" )+"',";
+			hs = "'"+GetEntityStat( ent, "headshots" )+"',";
+			hspercent = "'"+GetEntityStat( ent, "hspercent" )+"',";                     
+			gibs = "'"+GetEntityStat( ent, "gibs" )+"',";
+			health = "'"+GetEntityStat( ent, "health" )+"',";
+			ammo = "'"+GetEntityStat( ent, "ammo")+"'";
+
+			s = "INSERT INTO stats VALUES(" 
+				+ name 
+				+ kills 
+				+ deaths 
+				+ kr 
+				+ shots 
+				+ hits 
+				+ acc 
+				+ hs 
+				+ hspercent 
+				+ gibs 
+				+ health 
+				+ ammo
+				+ ");";
+	
+			db.Query(s);
+		}
+		
+		db.Close();	
+	};	
+}

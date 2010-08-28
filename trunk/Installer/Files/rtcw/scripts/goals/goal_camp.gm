@@ -1,0 +1,117 @@
+// These parameters are required
+this.Name = "CAMP";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.Initialize = function()
+{
+};
+
+this.Enter = function()
+{
+	this.MarkInProgress(this.MapGoal);
+};
+
+this.Exit = function()
+{
+	this.BlackboardDelay(20, this.MapGoal);
+};
+
+this.GetPriority = function()
+{
+	if(!this.IsActive())
+	{
+		tbl = {};
+		this.QueryGoals(tbl,"CAMP.*");
+		
+		if ( tableCount(tbl) > 0 ) 
+		{
+			this.GetRandomFromBest(tbl);
+		}
+		else
+		{
+			print("no goals in query");
+		}
+	}
+	
+	sleep(2);
+};
+
+this.GetRandomFromBest = function(query)
+{
+
+	print("getting random");
+	tmp = {};
+	i = 0;
+	bias = 0;
+	evalbias = 0;
+	
+	foreach ( id and goal in query )
+	{
+		if(tableCount(goal.Weapons) > 0)
+		{
+			if(!this.Bot.HasAnyWeapon(goal.Weapons))
+			{
+				continue;
+			}
+		}
+		
+		// TODO: need to make sure first one in table has highest priority
+		evalbias = goal.GetGoalPriority(this.Bot.GetTeam(), this.Bot.GetClass());
+		if ( evalbias != 0 && evalbias >= bias )
+		{
+			bias = evalbias;
+			i = tableCount(tmp);
+			tmp[ i ] = goal;
+		}
+	}
+	
+	tmpCount = tableCount(tmp);
+	// randomly pick from best available
+	if ( tmpCount > 0 )
+	{
+		r = RandInt(0, tmpCount - 1);
+		this.MapGoal = tmp[ r ];
+		this.Priority = bias;
+	}
+	else
+	{
+		print("no goals");
+	}
+};
+
+// TODO: account for different weapon behaviors
+this.Update = function()
+{
+	print(this.MapgGoal.mincamptime);
+	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	{
+		this.MarkInUse(this.MapGoal);
+		
+		//TODO: use camptime properties. hardcoded for test
+		timeout = 0;
+		while( timeout < 30 )
+		{
+			switch (this.MapGoal.Stance)
+			{
+				case "crouch":
+				{
+					this.Bot.HoldButton(BTN.CROUCH, 1.1);
+				}
+				case "prone":
+				{
+					this.Bot.HoldButton(BTN.PRONE, 1.1);
+				}				
+			}
+			
+			n = tableCount(this.MapGoal.AimVectors);
+			r = RandInt(0, n-1);
+			this.AddAimRequest(Priority.Low, "facing", this.MapGoal.AimVectors[ r ]);
+			timeout += 1;
+			
+			sleep(1);
+		}
+	}
+	
+	this.Finished();
+};
+

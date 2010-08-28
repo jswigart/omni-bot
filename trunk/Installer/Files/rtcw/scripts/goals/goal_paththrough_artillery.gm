@@ -1,0 +1,129 @@
+// This script contains functionality to trigger any available movers as set up in the global map table.
+
+// These parameters are required
+this.Name = "Artillery_PT";		// The name of the goal.
+this.Parent = "LowLevel";		// PathThrough states must be low level or they will not be used.
+this.Debug = false;
+
+this.Initialize = function()
+{
+};
+
+this.OnPathThrough = function(data)
+{
+	if ( this.Bot.GetClass() != CLASS.LIEUTENANT ){
+		return false;
+	}
+	
+	if ( !this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) ){
+		return false;
+	}
+	
+	this.WpInfo = null;
+	
+	if ( data ) {
+		this.WpInfo = Util.WpNameInfo(data);
+	}
+	
+	if (this.FindTarget() == false) {
+		return false;
+	}
+
+	return true;  
+};
+
+this.FindTarget = function()
+{
+	team = this.Bot.GetTeam();
+	artyGoals = {};
+	GetGoals(artyGoals, team, "Artillery_S.*" );
+	
+	// loop through and find available candidates
+	temp = {};
+	i = 0;
+	foreach ( id and mg in artyGoals )
+	{
+		if ( !mg.IsAvailable(team) ){
+			continue;
+		}
+		
+		pos = mg.GetPosition();
+		
+		
+		if ( !this.WpInfo || !this.WpInfo.facing )
+		{
+			if ( !this.Bot.InFieldOfView(pos, 180) ){
+				continue;
+			}
+		
+			if ( !this.Bot.HasLineOfSightTo(pos) ){
+				continue;
+			}			
+		}
+		else // evaluate from the goto wp
+		{
+			tr = TraceLine(this.WpInfo.position + Vector3(0,0,42), pos, null, TRACE.SHOT, this.Bot.GetGameId(), false);
+			if ( tr.fraction < 1 ) {
+				if ( this.Debug ) {
+					DrawDebugLine(this.WpInfo.position + Vector3(0,0,42), pos, COLOR.RED, 30);
+				}
+				continue;
+			}
+		}
+		
+		i += 1;
+		temp[ i - 1 ] = mg;
+	}
+	
+	tc = tableCount(temp);
+	x = 0;
+	if ( tc > 0 ){
+		x = RandInt( 0, tc - 1 );
+	} else {
+		return false; 
+	}
+	
+	this.TargetGoalName = temp[ x ].GetName();
+	this.TargetGoalPosition = temp[ x ].GetPosition();
+	
+	return true;
+};
+
+this.Exit = function()
+{
+	this.TargetGoalName = null;
+	this.TargetGoalPosition = null;
+};
+
+this.Update = function()
+{
+	if ( this.WpInfo && this.WpInfo.position ) {
+		if( this.Goto(this.WpInfo.position) == EVENT.PATH_FAILED) {
+			this.Finished();
+		}
+	}
+	
+	if ( Map && Map.Debug ){
+		this.Bot.Say( "CallArtillery_PT: I'm targeting ", this.TargetGoalName );
+	}
+	
+	// call the artillery
+	this.AddAimRequest(Priority.High, "position", this.TargetGoalPosition);
+	this.AddWeaponRequest(Priority.High, WEAPON.BINOCULARS );
+	this.BlockForWeaponChange( WEAPON.BINOCULARS );
+
+	timeout = 0;
+	while( timeout < 5 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
+	{
+		timeout += 1;
+		this.AddAimRequest(Priority.High, "position", this.TargetGoalPosition);
+		this.Bot.HoldButton(BTN.AIM, 1);
+		this.Bot.HoldButton(BTN.ATTACK1, 1);
+		this.Goto(this.Bot.GetPosition());
+		yield();
+	}
+
+	// Finish the state.
+	this.Finished();
+};
+

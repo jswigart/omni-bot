@@ -1,0 +1,127 @@
+// This script contains functionality to allow bots to toss airstrikes from given waypoints
+
+// These parameters are required
+this.Name = "GRENADE";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// These parameters are optional
+this.LimitToWeapon( WEAPON.ALLY_GRENADE, WEAPON.AXIS_GRENADE );
+
+this.Initialize = function()
+{
+};
+
+this.Enter = function()
+{
+	this.TargetEntity = GetGoal(this.MapGoal.TargetGoal).GetEntity();
+
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
+	this.MarkInProgress(this.MapGoal);
+	
+	if ( this.Bot.GetTeam() == TEAM.ALLIES )
+	{ 
+		this.weapon = WEAPON.ALLY_GRENADE; 
+	}
+	else if ( this.Bot.GetTeam() == TEAM.AXIS )
+	{ 
+		this.weapon = WEAPON.AXIS_GRENADE; 
+	}	
+};
+
+this.Exit = function()
+{
+	if ( this.MapGoal.Stance == "crouch" )
+	{
+		this.Bot.ReleaseButton(BTN.CROUCH);
+	}
+	
+	this.BlackboardDelay(5, this.MapGoal);
+};
+
+this.GetPriority = function()
+{
+	if(!this.IsActive())
+	{
+		tbl = {};
+		this.QueryGoals(tbl,"GRENADE.*");
+		
+		if ( tableCount(tbl) > 0 )
+		{
+			this.GetRandomFromBest(tbl);
+		}
+	}
+	
+	sleep(2);
+};
+
+this.GetRandomFromBest = function(query)
+{
+	tmp = {};
+	i = 0;
+	bias = 0;
+	evalbias = 0;
+	
+	foreach ( id and goal in query )
+	{
+		// skip if the target goal is dead
+		//targetEnt = GetGoal(goal.TargetGoal).GetEntity();
+		if( GetEntFlags(GetGoal(goal.TargetGoal).GetEntity(), ENTFLAG.DEAD) )
+		{
+			continue;
+		}
+		
+		// TODO: need to make sure first one in table has highest priority
+		evalbias = goal.GetGoalPriority(this.Bot.GetTeam(), this.Bot.GetClass());
+		if ( evalbias != 0 && evalbias >= bias )
+		{
+			bias = evalbias;
+			i = tableCount(tmp);
+			tmp[ i ] = goal;
+		}
+	}
+	
+	tmpCount = tableCount(tmp);
+	// randomly pick from best available
+	if ( tmpCount > 0 )
+	{
+		r = RandInt(0, tmpCount - 1);
+		this.MapGoal = tmp[ r ];
+		this.Priority = bias;
+	}	
+};
+
+this.Update = function()
+{	
+	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	{
+		this.MarkInUse(this.MapGoal);
+		
+		if ( this.MapGoal.Stance == "crouch" )
+		{
+			this.Bot.HoldButton(BTN.CROUCH, 5);
+		}
+		
+		this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);
+		this.AddWeaponRequest(Priority.High, this.weapon);
+		this.BlockForWeaponChange( this.weapon );
+		sleep( .25 );
+		while ( !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) )
+		{
+			if ( this.MapGoal.PrimeGrenade == 1 )
+			{
+				this.Bot.HoldButton( BTN.ATTACK1, 3 ); // configurable?
+			}
+			else
+			{
+				this.Bot.PressButton( BTN.ATTACK1 );
+			}
+			
+			sleep( 4.5 ); // enough time so they dont hit the attack button after its dead
+		}
+		
+		sleep(1);	
+	}
+	
+	this.Finished();
+};
+
