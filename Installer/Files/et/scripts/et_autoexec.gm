@@ -1,0 +1,83 @@
+// Load any other scripts that we will need.
+ExecScript("et_botnames.gm");
+ExecScript("et_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("et_commands.gm");
+ExecScript("server_manager.gm");
+//ExecScript("autowaypoint.gm");
+
+// New module format
+global Util = import("utilities");
+global ETUtil = import("et_utilities");
+global RegionTrigger = import("et_regiontriggers");
+
+// testmap mode
+global TestMapOn = false;
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = false;
+global DEBUG_GOAL_AVAILABILITY = false;
+
+// global flag to turn off bot chat in supported maps
+global MAP_TALK = true;
+
+// enable / disable the class manager
+global DisableClassManager = 0;
+
+global PostMapLoad = function()
+{
+	Util.ProcessMovers();
+
+	// set up the minimum class counts for the game
+	if ( !Util.ClassTablesInitialized )
+	{
+		Util.InitializeClassTables();
+	}
+
+	if ( Map && Map.SnipeMap )
+	{
+		Util.SnipeMap();
+	}
+	else if ( Map && Map.PanzerMap )
+	{
+		Map.DontSelectWeapons = true; // disable select weapons goal
+		ETUtil.PanzerMap();
+	}
+	else if ( Map && Map.Classes )
+	{
+		Map.Classes();
+	}
+	else
+	{
+		if ( Server.MaxBots < 10 && Server.MaxBots > 0 )
+		{
+			Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 0;
+			Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
+			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
+			Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
+			Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 1;
+
+			Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 0;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 1;
+		}
+		else
+		{
+			Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
+			Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
+			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
+			Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
+			Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
+
+			Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
+			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
+		}
+	}
+};
+
+print("ET Script Executed");

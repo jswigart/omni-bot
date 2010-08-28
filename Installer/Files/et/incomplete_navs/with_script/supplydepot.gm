@@ -1,0 +1,734 @@
+// cs: this one needs work. move global vars to map table, use class manager for covert ops change. waypoints appear to be a mess
+
+global FirstGate = 0;
+global AllCommand = 0;
+global truckReady = 0;
+global East = 0;
+global West = 0;
+global MainGateDyno = 0;
+global Flag = 0;
+
+global Map =
+{
+	Truck = "MOVER_truck",
+	Build_axis_compost_built = "BUILD_Command_Post",
+	Build_allies_compost_built = "BUILD_Command_Post",
+	dyno_allied_compost = "BUILD_Command_Post",
+	dyno_gate_foward = "PLANT_Forward_Bunker_Gate",	
+	dyno_gate_foward_2 = "PLANT_Forward_spawn_rear_exit",	
+	dyno_depot_gate = "PLANT_Depot_Gate",
+	dyno_depot_east = "PLANT_East_Depot_Wall",
+	dyno_depot_west = "PLANT_West_Depot_Wall",
+	built_fence = "BUILD_Depot_Fence",
+	dyno_fence = "PLANT_Depot_Fence",
+	built_controls = "BUILD_Crane_Controls",
+	dyno_controls = "PLANT_Crane_Controls",
+	Checkpoint_flag = "CHECKPOINT_forwardflag",
+	
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			Enabled = true,
+			LimitBots = 1,
+		},
+	},	
+	
+	start_of_map = true,
+	Escorting = false,
+    ShouldEscort = false,
+    Flag = 0,
+    MainGateDyno = 0,
+    East = 0,
+    West = 0,
+    truckReady = 0,
+    AllCommand = 0,
+    FirstGate = 0,
+    Depot = 0,
+    AXCP = 0,
+ 
+    OnFlagTake = function( trigger )
+    {
+	     if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+			
+         Map.ShouldEscort = true;
+ 
+         if ( tableCount(BotTable) > 0 )
+         {
+             //bots present, safe to enable
+             Map.Escorting = true;
+             //~ ScriptGoals.escort_vehicle.On();
+         }
+         
+        global Flag = Flag + 1;
+	
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_DynoDefe.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Flag.*");
+		
+		//Attack
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Truck );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward_2 );
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Flag.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_DynoDefe.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_AFlag.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_first.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_first.*");
+		SetGoalPriority( Map.Truck, 2.5 );
+		SetGoalPriority( Map.dyno_gate_foward, 5.0 );
+		SetGoalPriority( Map.dyno_gate_foward_2, 0.5 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_AllySpawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high0" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_low" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_split" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_normalroute" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit_high" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_0" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_11" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_21" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_2Spawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Cage2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Low2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP3" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_north" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_short" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_south" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_wide" );
+    },
+     
+     ///////////////////////////////////////////////////
+     
+     OnFlagRet = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_DynoDefe.*");
+	
+		global Flag = Flag - 1;
+
+        Map.EscortVehicle.Truck.Enabled = true;
+		
+		if (FirstGate == 0)
+		{
+			SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Flag.*");
+			SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_first.*");
+			SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_first.*");
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_AFlag.*");
+		}
+	
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward_2 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Truck );
+		//Routes setup
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_AllySpawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high0" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_low" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_split" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_normalroute" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit_high" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_0" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_11" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_21" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_2Spawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Cage2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Low2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP3" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_north" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_short" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_south" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_wide" );
+     },
+     
+     //////////////////////////////////////////////////////////////////
+     
+     OnFlagSec = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+			
+		global FirstGate = FirstGate + 1;
+		global MainGateDyno = 0;
+		global Flag = 1;
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.dyno_gate_foward );
+	
+		Map.EscortVehicle.Truck.Enabled = true;
+	         
+		Util.OnTriggerPosition( Map.Truck, "TruckPosition_2", 200.0, 
+			Map.OnTruckSecondBarrier );
+	         
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward_2 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Truck );
+		//Axis CP-Defense
+		
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_CP.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_CP.*");
+		
+		//ALLIes CP-AttAck
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_compost_built);
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_allies_compost_built );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_allied_compost );
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_CPA.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_GateAttack.*");
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_depot_gate );
+		
+		SetGoalPriority( Map.dyno_gate_foward_2, 4.5 );
+		SetGoalPriority( Map.Build_axis_compost_built, 5.0 );
+		SetGoalPriority( Map.Build_allies_compost_built, 30.0 );
+		SetGoalPriority( Map.dyno_allied_compost, 1.0 );
+		SetGoalPriority( Map.dyno_depot_gate, 3.0 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CageSplit2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_2Spawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Cage2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Low2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP3" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_north" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_short" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_south" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_wide" );
+		
+		if (AXCP == 1)
+		{
+			if ( ETUtil.CountClass(TEAM.AXIS, CLASS.COVERTOPS) < 1 )
+			{
+				ETUtil.ChangeClass( TEAM.AXIS, CLASS.MEDIC, CLASS.COVERTOPS, false, 2 );
+			}
+		}
+	},
+     
+     OnCPBuilt = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+		global AXCP = 0;
+
+		Map.EscortVehicle.Truck.Enabled = true;
+		
+		foreach ( gameId and bot in BotTable )
+  		{
+    		//ensure the bot is set
+    		if (bot)
+    		{
+				if(bot.GetTeam() == TEAM.ALLIES)
+				{
+					bot.ChangeSpawnPoint(4);
+				}
+			}
+		}
+			
+		if ( ETUtil.CountClass(TEAM.AXIS, CLASS.COVERTOPS) < 1 )
+		{
+			ETUtil.ChangeClass( TEAM.AXIS, CLASS.MEDIC, CLASS.COVERTOPS, true, 2 );
+		}
+		//Axis CP-Defense
+	
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_CP.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, "PLANTMINE_CP.*");
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_axis_compost_built);
+		
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_East.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_West.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_CPA.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Depotgate.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_GateAttack.*");
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_depot_gate );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_depot_east );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_depot_west );
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.built_fence);
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.dyno_controls);
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Truck );
+    },
+     
+     OnCPDes = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+			
+		Map.EscortVehicle.Truck.Enabled = true;
+	         
+     },
+     
+     OnDepotBreached = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+			Map.ShouldEscort = true;
+       
+        global Depot = Depot + 1;
+         
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_Depotgate.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Inner.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Innerinner.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_GateAttack.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_AlliesIn.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_EastGate.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_WestGate.*");
+		SetGoalPriority( "ATTACK_Innerinner.*", 2.5 );
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.built_fence);
+		
+		if (truckReady == 1)
+		{
+		
+			Map.EscortVehicle.Truck.Enabled = true;
+			SetAvailableMapGoals(TEAM.ALLIES, true, Map.built_controls);
+			SetGoalPriority( Map.built_controls, 5.0 );	
+		}
+	
+		if (East == 1)
+		{
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_EastGate.*");
+		}
+	
+		if (West == 1)
+		{
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_WestGate.*");
+		}
+    },
+     
+    OnEastBreached = function( trigger )
+    {
+	     if ( TestMap )
+			{ return; }
+			
+			global East = East + 1;
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_EastGate.*");
+	         
+    },
+     
+     OnWestBreached = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+		global West = West + 1;
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_WestGate.*");
+     },
+     
+    OnTruckReady = function( trigger )
+    {
+	     if ( TestMap )
+			{ return; }
+			
+		Map.EscortVehicle.Truck.Enabled = true;
+		
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_Inner.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Innerinner.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Controls.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_AlliesIn.*");
+	
+		global truckReady = truckReady + 1;
+	
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.built_controls);
+		
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.dyno_fence);
+	
+		SetGoalPriority( Map.built_controls, 5.0 );
+		SetGoalPriority( Map.dyno_fence, 0.5 );
+    },
+     
+     OnGoldStolen = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+			
+			
+		Map.EscortVehicle.Truck.Enabled = true;
+			
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Inner.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_Innerinner.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_Controls.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_Depotgate.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_AlliesIn.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_ControlB.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.dyno_fence);
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.dyno_controls);
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisSpawn" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisSpawn_back" );
+		Util.SetMaxUsersInUse( 5, Map.Truck );
+	         
+    },
+     
+     OnControlsBuilt = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+	
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_Controls.*");
+			SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_ControlB.*");
+			SetGoalPriority( "ATTACK_ControlB.*", 10.0 );
+     },
+    
+      
+     OnControlsDestroyed = function( trigger )
+     {
+	     if ( TestMap )
+			{ return; }
+	
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Controls.*");
+	        
+     },
+     
+     OnMainGatePlanted = function( trigger)
+     {
+	     if ( TestMap )
+			{ return; }
+			global MainGateDyno = MainGateDyno + 1;
+			
+			while (Map.MainGateDyno != 0 && Map.Flag != 0)
+			{
+				
+				if ( Util.AliveCount(TEAM.AXIS, CLASS.ENGINEER) < 1 )
+				{
+					//shift the defense
+					SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_CP.*");
+					SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_CP.*");
+					SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_compost_built);
+					SetAvailableMapGoals(TEAM.AXIS, false, "PLANTMINE_first.*");
+					SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_first.*");
+					
+					SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_Flag.*");
+					SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_DynoDefe.*");
+					SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_AFlag.*");
+					
+					break;
+				}
+				yield();
+			}
+			
+	},
+	
+	OnMainGateDefused = function( trigger)
+     {
+	     if ( TestMap )
+			{ return; }
+			global MainGateDyno = MainGateDyno - 1;
+			
+			while (Map.MainGateDyno != 0 && Map.Flag != 0)
+			{
+				if ( Util.AliveCount(TEAM.AXIS, CLASS.ENGINEER) < 1 )
+				{
+					//shift the defense
+					SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_CP.*");
+					SetAvailableMapGoals(TEAM.AXIS, false, "PLANTMINE_CP.*");
+					SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_compost_built);
+					SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_first.*");
+					SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_first.*");
+					
+					SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Flag.*");
+					SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_DynoDefe.*");
+					SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_AFlag.*");
+					
+					break;
+				}
+				yield();
+			}	
+	},
+	
+	OnTruckFirstBarrier = function (trigger)
+	{
+		if ( TestMap )
+			{ return; }
+			if (FirstGate == 0)
+			{
+				Map.EscortVehicle.Truck.Enabled = false;
+        	}
+			Util.ResetGoals();
+	},
+	
+	OnTruckSecondBarrier = function (trigger)
+	{
+		if ( TestMap )
+			{ return; }
+			if (Depot == 0)
+			{
+				Map.EscortVehicle.Truck.Enabled = false;
+			}
+	},
+	
+	OnRearSpawn = function (trigger)
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward_2 );
+	},	
+	
+	OnAxisCP = function (trigger)
+	{
+		global AXCP = AXCP + 1;
+		
+		if (FirstGate == 1)
+		{
+			if ( ETUtil.CountClass(TEAM.AXIS, CLASS.COVERTOPS) < 1 )
+			{
+				ETUtil.ChangeClass( TEAM.AXIS, CLASS.MEDIC, CLASS.COVERTOPS, false, 2 );
+			}
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	
+	OnTrigger("The Allies have opened up the Forward spawn rear exit!", Map.OnRearSpawn);
+	OnTrigger("The Allies have captured the forward bunker!", Map.OnFlagTake);
+	OnTrigger("The Axis have captured the forward bunker!", Map.OnFlagRet);
+	OnTrigger("The Allies have breached the Forward Bunker Gate!", Map.OnFlagSec);
+	OnTrigger("Allied Command Post constructed. Charge speed increased!",Map.OnCPBuilt);
+	OnTrigger("Axis team has destroyed the Allied Command Post!",Map.OnCPDes);
+	OnTrigger("The Allies have breached the Depot Gate!",Map.OnDepotBreached);
+	OnTrigger("The Allies have breached the Depot's east wall!",Map.OnEastBreached);
+	OnTrigger("The Allies have breached the Depot's west wall!",Map.OnWestBreached);
+	OnTrigger("The Allied Truck is in position!",Map.OnTruckReady);
+	OnTrigger("The Allies have activated the crane!",Map.OnGoldStolen);
+	OnTrigger("The Crane Controls have been constructed.", Map.OnControlsBuilt);
+	OnTrigger("The Crane Controls have been destroyed.", Map.OnControlsDestroyed);
+	OnTrigger("Planted at the Forward Bunker Gate.", Map.OnMainGatePlanted);
+	OnTrigger("Defused at the Forward Bunker Gate.", Map.OnMainGateDefused);
+	OnTrigger("Axis Command Post constructed. Charge speed increased!", Map.OnAxisCP);
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	//Attack
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Truck );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.dyno_gate_foward_2 );
+	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_Flag.*");
+	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_DynoDefe.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_axis_compost_built);
+	
+	SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE_first.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_first.*");
+	
+	//Routes setup
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_AllySpawn" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_high0" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_low" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstCage_split" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_normalroute" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FirstSplit_high" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_0" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_11" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_First_highroute_21" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_2Spawn" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Cage2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CageSplit2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Low2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_north" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_short" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_south" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP_wide" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisSpawn" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisSpawn_back" );
+	
+    Util.SetMaxUsersInUse( 1, Map.Build_axis_compost_built );
+    Util.SetMaxUsersInUse( 1, Map.Truck );
+    Util.OnTriggerPosition( Map.Truck, "TruckPosition_1", 200.0, Map.OnTruckFirstBarrier );
+	
+	MapRoutes =
+	{
+		PLANT_Forward_Bunker_Gate =
+		{
+			ROUTE_AllySpawn = 
+			{
+				
+				ROUTE_FirstSplit =
+				{
+					ROUTE_FirstCage_split = 
+					{
+						ROUTE_FirstCage_low = {},
+						ROUTE_FirstCage_high0 = {ROUTE_FirstCage_high = {}, },					
+					},
+					ROUTE_First_normalroute = {},
+				
+				},
+			},
+		},
+		
+		ATTACK_Flag1 =
+		{
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_FirstSplit =
+				{
+					ROUTE_FirstSplit_high = 
+					{
+						ROUTE_First_highroute = 
+						{
+							ROUTE_First_highroute_0 =
+							{
+								ROUTE_First_highroute_1 = {	ROUTE_First_highroute_11 = { ROUTE_First_highroute_2 = {ROUTE_First_highroute_21 = {}, }, }, },
+							},
+						},
+					},
+					ROUTE_First_normalroute = {},
+				},
+			},
+		},
+		ATTACK_Flag2 =
+		{
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_FirstSplit =
+				{
+				ROUTE_FirstCage_split = 
+				{
+					ROUTE_FirstCage_low = {},
+					ROUTE_FirstCage_high0 = { ROUTE_FirstCage_high = {},},
+				},
+				
+				ROUTE_First_normalroute = {},
+				
+				
+				ROUTE_FirstSplit_high = 
+				{
+					ROUTE_First_highroute = 
+					{
+						ROUTE_First_highroute_0 =
+						{
+							ROUTE_First_highroute_1 = 
+							{
+								ROUTE_First_highroute_11 = 
+								{
+									ROUTE_First_highroute_2 =
+									{
+										ROUTE_First_highroute_21 = {},
+									}, 
+								},	
+							},
+						},
+					},
+				},
+				},
+			},
+		},
+		
+		PLANT_Depot_Gate =
+		{
+			ROUTE_2Spawn =
+			{
+				ROUTE_CageSplit2 = {ROUTE_Cage2 = {}, },
+			},
+			
+			ROUTE_CP3 =
+			{
+				ROUTE_CP_north =
+				{
+					ROUTE_CP_short = {},
+					ROUTE_CP_wide = {},
+				},
+				ROUTE_CP_south =
+				{
+					ROUTE_CP_short = {},
+				}, 
+			},
+		},
+		
+		BUILD_Command_Post = 
+		{
+			ROUTE_2Spawn =
+			{
+				ROUTE_CageSplit2 = {},
+				ROUTE_Low2 = {},
+			},
+		},
+		
+		ATTACK_Inner1 = 
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_AxisSpawn_back = {},
+			},
+		},
+		
+	};
+	
+	//Copying the Routes
+	MapRoutes.PLANT_Forward_spawn_rear_exit = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Dynodefense1 = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Dynodefense2 = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Dynodefense3 = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Dynodefense4 = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Dynodefense5 = MapRoutes.PLANT_Forward_Bunker_Gate;
+	MapRoutes.ATTACK_Inner2 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_Inner3 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_Inner4 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_Inner5 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_Inner6 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_Inner7 = MapRoutes.ATTACK_Inner1;
+	MapRoutes.ATTACK_GateAttack1 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_GateAttack2 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_GateAttack3 = MapRoutes.PLANT_Depot_Gate;
+		
+	MapRoutes.ATTACK_AlliesIn1 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn2 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn3 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn4 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn5 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn6 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_AlliesIn7 = MapRoutes.PLANT_Depot_Gate;
+	
+	MapRoutes.ATTACK_Controls1 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_Controls2 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_Controls3 = MapRoutes.PLANT_Depot_Gate;
+	MapRoutes.ATTACK_Controls4 = MapRoutes.PLANT_Depot_Gate;
+	
+	MapRoutes.ATTACK_CPA1 = MapRoutes.BUILD_Command_Post;
+	MapRoutes.ATTACK_CPA2 = MapRoutes.BUILD_Command_Post;
+	MapRoutes.ATTACK_CPA3 = MapRoutes.BUILD_Command_Post;
+	
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint("Dyno Routes done");
+};
+
+
+global OnBotJoin = function (bot)
+{ 
+    if(bot.GetTeam() == TEAM.AXIS)
+	{
+			bot.ChangeSpawnPoint(3);
+	}
+	
+	if ( bot.GetClass() == CLASS.SOLDIER )
+     {
+        if ( bot.HasWeapon(WEAPON.FLAMETHROWER) )
+        {
+         	bot.ChangePrimaryWeapon(WEAPON.PANZERFAUST);
+        }
+   	 }
+
+};

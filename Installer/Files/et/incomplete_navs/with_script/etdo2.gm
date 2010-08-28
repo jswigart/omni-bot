@@ -1,0 +1,186 @@
+global Map =
+{
+	Ammo_Cabinet_t1075 = "AMMOCAB_t1075",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Checkpoint_twc_forward_bunker = "CHECKPOINT_twc_forward_bunker",
+	Flag_tcr_radar_parts_east = "FLAG_tcr_radar_parts_east",
+	Flag_tcr_radar_parts_west = "FLAG_tcr_radar_parts_west",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_MG42 = "BUILD_MG42",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_MG42 = "PLANT_MG42",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Mount_MG42 = "MOUNTMG42_MG42",
+	Repair_MG42 = "REPAIRMG42_MG42",
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Built" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	tcr_radar_parts_east_Taken = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_east" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );
+
+		print( "tcr_radar_parts_east_Taken" );
+	},
+
+	tcr_radar_parts_west_Taken = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_west" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );
+		print( "tcr_radar_parts_west_Taken" );
+	},
+	
+	tcr_radar_parts_west = function( trigger )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_west" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_radar2" );
+	
+			print( "tcr_radar_parts_west_returned" );
+	},
+	
+	tcr_radar_parts_east = function( trigger )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_east" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_radar2" );
+		
+				print( "tcr_radar_parts_east_returned" );
+	},
+	
+	east_secured = function( trigger )
+				{
+					
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );
+					print( "east secured" );
+	},
+	
+	west_secured = function( trigger )
+					{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );			
+				
+						print( "west secured" );
+	},
+
+	twc_forward_bunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Axis_Captured" );
+	},
+
+	twc_forward_bunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "The Assault Ramp has been constructed.", Map.Assault_Ramp_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "The Axis MG42 has been constructed.", Map.MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "The Axis MG42 has been destroyed.", Map.MG42_Destroyed );
+	OnTrigger( "The Main Door destroyed!", Map.Main_Door_Destroyed );
+	OnTrigger( "allies_radare_taken", Map.tcr_radar_parts_east_Taken );
+	OnTrigger( "allies_radarw_taken", Map.tcr_radar_parts_west_Taken );
+	OnTrigger( "allies_radarw_returned", Map.tcr_radar_parts_west );
+	OnTrigger( "allies_radare_returned", Map.tcr_radar_parts_east );
+	OnTrigger( "Allies have secured the East Radar Parts!", Map.east_secured );
+	OnTrigger( "Allies have secured the West Radar Parts!", Map.west_secured );
+	OnTrigger( "Axis reclaim the Forward Bunker!", Map.twc_forward_bunker_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.twc_forward_bunker_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck" );
+	SetGoalPriority( "PLANT_Main_Door", 0.65);
+	SetGoalPriority( "BUILD_Command_Post", 0.54);
+	SetGoalPriority( "DEFEND_east", 0.7);
+	SetGoalPriority( "DEFEND_west", 0.7);
+	SetGoalPriority( "DEFEND_truck", 0.75);
+	SetGoalPriority( "BUILD_Assault_Ramp", 0.8);
+	SetGoalPriority( "FLAG_tcr_radar_parts_east", 0.7);
+	SetGoalPriority( "FLAG_tcr_radar_parts_west", 0.7);
+	
+	SetMapGoalProperties( "DEFEND_east", {mincamptime=30, maxcamptime=90});
+	SetMapGoalProperties( "DEFEND_west", {mincamptime=30, maxcamptime=90});
+	SetMapGoalProperties( "DEFEND_truck", {mincamptime=30, maxcamptime=90});
+	SetMapGoalProperties( "MOBILEMG42_mg1", {mincamptime=30, maxcamptime=60});
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 300.0;
+};

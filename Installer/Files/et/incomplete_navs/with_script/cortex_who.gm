@@ -1,0 +1,284 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Command_Post_(2eme_etage)_Dyno = 0,
+	porte_de_minus_(2eme_etage)_Dyno = 0,
+
+	Ammo_Cabinet_north_cabinet_ammo_model = "AMMOCAB_north_cabinet_ammo_model",
+	Ammo_Cabinet_north_cabinet_ammo_model_1 = "AMMOCAB_north_cabinet_ammo_model_1",
+	Ammo_Cabinet_north_cabinet_ammo_model_2 = "AMMOCAB_north_cabinet_ammo_model_2",
+	Ammo_Cabinet_north_cabinet_ammo_model_3 = "AMMOCAB_north_cabinet_ammo_model_3",
+	Health_Cabinet_north_cabinet_health_model = "HEALTHCAB_north_cabinet_health_model",
+	Health_Cabinet_north_cabinet_health_model_1 = "HEALTHCAB_north_cabinet_health_model_1",
+	Health_Cabinet_north_cabinet_health_model_2 = "HEALTHCAB_north_cabinet_health_model_2",
+	Health_Cabinet_north_cabinet_health_model_3 = "HEALTHCAB_north_cabinet_health_model_3",
+	Health_Cabinet_north_cabinet_health_model_4 = "HEALTHCAB_north_cabinet_health_model_4",
+	Checkpoint_roadbunker = "CHECKPOINT_roadbunker",
+	Flag_cd1 = "FLAG_cd1",
+	Flag_cd2 = "FLAG_cd2",
+	Flag_cd3 = "FLAG_cd3",
+	Flag_cd4 = "FLAG_cd4",
+	Cappoint_Graveur = "CAPPOINT_Graveur",
+	Build_Command_Post_(2eme_etage) = "BUILD_Command_Post_(2eme_etage)",
+	Plant_Command_Post_(2eme_etage) = "PLANT_Command_Post_(2eme_etage)",
+	Plant_porte_de_minus_(2eme_etage) = "PLANT_porte_de_minus_(2eme_etage)",
+	Mount_589 = "MOUNTMG42_589",
+	Mount_MG42_du_PC = "MOUNTMG42_MG42_du_PC",
+	Mount_MG42_du_telepherique = "MOUNTMG42_MG42_du_telepherique",
+	Repair_589 = "REPAIRMG42_589",
+	Repair_MG42_du_PC = "REPAIRMG42_MG42_du_PC",
+	Repair_MG42_du_telepherique = "REPAIRMG42_MG42_du_telepherique",
+
+	Command_Post_(2eme_etage)_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Command_Post_(2eme_etage)_Built" ); }
+	},
+
+	Command_Post_(2eme_etage)_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_(2eme_etage)_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post_(2eme_etage) );
+
+		// CHECK! Is this a valid goal for both teams?
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post_(2eme_etage) );
+
+		if ( Map.Debug )
+			{ print( "Command_Post_(2eme_etage)_Planted" ); }
+	},
+
+	porte_de_minus_(2eme_etage)_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.porte_de_minus_(2eme_etage)_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_porte_de_minus_(2eme_etage) );
+
+		if ( Map.Debug )
+			{ print( "porte_de_minus_(2eme_etage)_Planted" ); }
+	},
+
+	Command_Post_(2eme_etage)_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_(2eme_etage)_Dyno -= 1;
+		if ( Map.Command_Post_(2eme_etage)_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Command_Post_(2eme_etage) ); }
+
+		// CHECK! Is this a valid goal for both teams?
+		if ( Map.Command_Post_(2eme_etage)_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post_(2eme_etage) ); }
+
+		if ( Map.Debug )
+			{ print( "Command_Post_(2eme_etage)_Defused" ); }
+	},
+
+	porte_de_minus_(2eme_etage)_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.porte_de_minus_(2eme_etage)_Dyno -= 1;
+		if ( Map.porte_de_minus_(2eme_etage)_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_porte_de_minus_(2eme_etage) ); }
+
+		if ( Map.Debug )
+			{ print( "porte_de_minus_(2eme_etage)_Defused" ); }
+	},
+
+	Command_Post_(2eme_etage)_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Command_Post_(2eme_etage)_Destroyed" ); }
+	},
+
+	porte_de_minus_(2eme_etage)_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "porte_de_minus_(2eme_etage)_Destroyed" ); }
+	},
+
+	cd1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd1_Taken" ); }
+	},
+
+	cd2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd2_Taken" ); }
+	},
+
+	cd3_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd3_Taken" ); }
+	},
+
+	cd4_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd4_Taken" ); }
+	},
+
+	cd1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd1_Returned" ); }
+	},
+
+	cd2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd2_Returned" ); }
+	},
+
+	cd3_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd3_Returned" ); }
+	},
+
+	cd4_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd4_Returned" ); }
+	},
+
+	cd1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd1_Secured" ); }
+	},
+
+	cd2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd2_Secured" ); }
+	},
+
+	cd3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd3_Secured" ); }
+	},
+
+	cd4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cd4_Secured" ); }
+	},
+
+	roadbunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "roadbunker_Axis_Captured" ); }
+	},
+
+	roadbunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "roadbunker_Allies_Captured" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_(2eme_etage)_Built );
+	OnTrigger( "Planted at the Command Post (2eme etage).", Map.Command_Post_(2eme_etage)_Planted );
+	OnTrigger( "Planted at the porte de minus (2eme etage).", Map.porte_de_minus_(2eme_etage)_Planted );
+	OnTrigger( "Defused at the Command Post (2eme etage).", Map.Command_Post_(2eme_etage)_Defused );
+	OnTrigger( "Defused at the porte de minus (2eme etage).", Map.porte_de_minus_(2eme_etage)_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_(2eme_etage)_Destroyed );
+	OnTrigger( "La porte de Minus à été ouverte", Map.porte_de_minus_(2eme_etage)_Destroyed );
+	OnTrigger( "Axis have stolen !", Map.cd1_Taken );
+	OnTrigger( "Axis have stolen !", Map.cd2_Taken );
+	OnTrigger( "Axis have stolen !", Map.cd3_Taken );
+	OnTrigger( "Axis have stolen !", Map.cd4_Taken );
+	OnTrigger( "Allies have returned !", Map.cd1_Returned );
+	OnTrigger( "Allies have returned !", Map.cd2_Returned );
+	OnTrigger( "Allies have returned !", Map.cd3_Returned );
+	OnTrigger( "Allies have returned !", Map.cd4_Returned );
+	OnTrigger( "Les axes on le cd 1", Map.cd1_Secured );
+	OnTrigger( "Les axes on le cd 2", Map.cd2_Secured );
+	OnTrigger( "Les axes on le cd 3", Map.cd3_Secured );
+	OnTrigger( "Les axes on le cd 4", Map.cd4_Secured );
+	OnTrigger( "Axis reclaim the Forward Bunker!", Map.roadbunker_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.roadbunker_Allies_Captured );
+
+	//~ETUtil.DisableGoal( ".*", true ); // all but routes
+
+	print( "Omni-bot map script for", GetMapName(), "executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

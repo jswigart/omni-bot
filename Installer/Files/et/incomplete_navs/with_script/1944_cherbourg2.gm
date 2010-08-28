@@ -1,0 +1,331 @@
+//==========================================================================================
+//
+//	1944_cherbourg2.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Movers =
+	{
+		"MOVER_allywall_1",
+		"MOVER_apt_door_1",
+		"MOVER_apt_door_2_1",
+		"MOVER_axis_outer_blockade_1",
+		"MOVER_church_alley_door",
+		"MOVER_fueltanks_1",
+		"MOVER_tank",
+		"MOVER_tower_base",
+		"MOVER_yardwall",
+	},
+	
+	IgnoreGoals =
+	{
+		"MOVER_yardwall",
+	},
+	
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Build_Axis_Bunker_Controlpanel = "BUILD_Axis_Bunker_Controlpanel",
+	Build_Axis_Bunker_Sewer_Grate = "BUILD_Axis_Bunker_Sewer_Grate",
+	Build_Axis_Inner_Blockade = "BUILD_Axis_Inner_Blockade",
+	Build_Axis_Main_Gates = "BUILD_Axis_Main_Gates",
+	Build_Axis_Outer_Blockade = "BUILD_Axis_Outer_Blockade",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Courtyard_Sewer_Grate = "BUILD_Courtyard_Sewer_Grate",
+	Build_Hotel_Gate = "BUILD_Hotel_Gate",
+	Build_Tank = "BUILD_Tank",
+	Build_tower = "BUILD_tower",
+	Plant_Axis_Bunker_Sewer_Grate = "PLANT_Axis_Bunker_Sewer_Grate",
+	Plant_Axis_Inner_Blockade = "PLANT_Axis_Inner_Blockade",
+	Plant_Axis_Main_Gates = "PLANT_Axis_Main_Gates",
+	Plant_Axis_Outer_Blockade = "PLANT_Axis_Outer_Blockade",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Courtyard_Sewer_Grate = "PLANT_Courtyard_Sewer_Grate",
+	Plant_Dock_AA_Gun = "PLANT_Dock_AA_Gun",
+	Plant_East_AA_Gun = "PLANT_East_AA_Gun",
+	Plant_Hotel_Gate = "PLANT_Hotel_Gate",
+	Plant_West_AA_Gun = "PLANT_West_AA_Gun",
+	Plant_tower = "PLANT_tower",
+	Explode_Axis_Bunker_Controlpanel = "EXPLODE_Axis_Bunker_Controlpanel",
+	Mount_axis_inner_blockade_mg42 = "MOUNTMG42_axis_inner_blockade_mg42",
+	Mount_tower = "MOUNTMG42_tower",
+	Repair_axis_inner_blockade_mg42 = "REPAIRMG42_axis_inner_blockade_mg42",
+	Repair_tower = "REPAIRMG42_tower",
+	Snipe_173 = "SNIPE_173",
+	Snipe_174 = "SNIPE_174",
+	Mover_aagun_1_clip = "MOVER_aagun_1_clip",
+	Mover_aagun_2_clip = "MOVER_aagun_2_clip",
+	Mover_aagun_3_clip = "MOVER_aagun_3_clip",
+	Mover_allywall = "MOVER_allywall",
+	Mover_allywall_1 = "MOVER_allywall_1",
+	Mover_apt_door_1 = "MOVER_apt_door_1",
+	Mover_apt_door_1_1 = "MOVER_apt_door_1_1",
+	Mover_apt_door_2 = "MOVER_apt_door_2",
+	Mover_apt_door_2_1 = "MOVER_apt_door_2_1",
+	Mover_axis_doors_control = "MOVER_axis_doors_control",
+	Mover_axis_doors_control_1 = "MOVER_axis_doors_control_1",
+	Mover_axis_gates = "MOVER_axis_gates",
+	Mover_axis_outer_blockade = "MOVER_axis_outer_blockade",
+	Mover_axis_outer_blockade_1 = "MOVER_axis_outer_blockade_1",
+	Mover_axis_outer_blockade_2 = "MOVER_axis_outer_blockade_2",
+	Mover_church_alley_door = "MOVER_church_alley_door",
+	Mover_church_alley_door_1 = "MOVER_church_alley_door_1",
+	Mover_fueltanks = "MOVER_fueltanks",
+	Mover_fueltanks_1 = "MOVER_fueltanks_1",
+	Mover_fueltanks_2 = "MOVER_fueltanks_2",
+	Mover_fueltanks_3 = "MOVER_fueltanks_3",
+	Mover_hotelgate = "MOVER_hotelgate",
+	Mover_neutral_compost_clip = "MOVER_neutral_compost_clip",
+	Mover_neutral_compost_closed_clip = "MOVER_neutral_compost_closed_clip",
+	Mover_sewer_grate = "MOVER_sewer_grate",
+	Mover_south_ammocabinet_clip = "MOVER_south_ammocabinet_clip",
+	Mover_south_ammocabinet_clip_1 = "MOVER_south_ammocabinet_clip_1",
+	Mover_south_healthcabinet_clip = "MOVER_south_healthcabinet_clip",
+	Mover_south_healthcabinet_clip_1 = "MOVER_south_healthcabinet_clip_1",
+	Mover_tank = "MOVER_tank",
+	Mover_tankbay_commandpost_wires = "MOVER_tankbay_commandpost_wires",
+	Mover_tower = "MOVER_tower",
+	Mover_tower_base = "MOVER_tower_base",
+	Mover_yardwall = "MOVER_yardwall",
+	Mover_yardwall_1 = "MOVER_yardwall_1",
+
+	Axis_Bunker_Controlpanel_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Bunker_Controlpanel_Built" );
+	},
+
+	Axis_Bunker_Sewer_Grate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Bunker_Sewer_Grate_Built" );
+	},
+
+	Axis_Inner_Blockade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Inner_Blockade_Built" );
+	},
+
+	Axis_Main_Gates_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Main_Gates_Built" );
+	},
+
+	Axis_Outer_Blockade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Outer_Blockade_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Courtyard_Sewer_Grate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Courtyard_Sewer_Grate_Built" );
+	},
+
+	Hotel_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Hotel_Gate_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Built" );
+	},
+
+	tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tower_Built" );
+	},
+
+	Axis_Bunker_Sewer_Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Bunker_Sewer_Grate_Destroyed" );
+	},
+
+	Axis_Inner_Blockade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Inner_Blockade_Destroyed" );
+	},
+
+	Axis_Main_Gates_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Main_Gates_Destroyed" );
+	},
+
+	Axis_Outer_Blockade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Outer_Blockade_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Courtyard_Sewer_Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Sewer Entrance 1", "closed", false );
+		DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+		
+		print( "Courtyard_Sewer_Grate_Destroyed" );
+	},
+
+	Dock_AA_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Dock_AA_Gun_Destroyed" );
+	},
+
+	East_AA_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_AA_Gun_Destroyed" );
+	},
+
+	Hotel_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Hotel_Gate_Destroyed" );
+	},
+
+	West_AA_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_AA_Gun_Destroyed" );
+	},
+
+	tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tower_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Axis_Bunker_Controlpanel_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Bunker_Sewer_Grate_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Inner_Blockade_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Main_Gates_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Outer_Blockade_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Courtyard_Sewer_Grate_Built );
+	OnTrigger( "MISSING_STRING", Map.Hotel_Gate_Built );
+	OnTrigger( "MISSING_STRING", Map.Tank_Built );
+	OnTrigger( "MISSING_STRING", Map.tower_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Bunker_Sewer_Grate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Inner_Blockade_Destroyed );
+	OnTrigger( "the Axis Road Gates have been destroyed.", Map.Axis_Main_Gates_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Outer_Blockade_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "the Courtyard Sewer Grate has been destroyed.", Map.Courtyard_Sewer_Grate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Dock_AA_Gun_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.East_AA_Gun_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Hotel_Gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_AA_Gun_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.tower_Destroyed );
+
+	//~ SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~ SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	sleep( 2 );
+	DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Outer_Blockade );
+	
+	//~ SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.ENGINEER )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.THOMPSON ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.MP40 ); }
+	}
+		
+	//~ bot.RemoveState( "LookAround" );
+	Util.IgnoreTargetGoalTable( bot, Map.IgnoreGoals );
+};

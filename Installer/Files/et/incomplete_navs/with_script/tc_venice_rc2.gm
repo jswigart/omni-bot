@@ -1,0 +1,203 @@
+global Map =
+{
+	Ammo_Cabinet_campo_ammocabinet = "AMMOCAB_campo_ammocabinet",
+	Ammo_Cabinet_island_ammocabinet = "AMMOCAB_island_ammocabinet",
+	Health_Cabinet_campo_healthcabinet = "HEALTHCAB_campo_healthcabinet",
+	Health_Cabinet_island_healthcabinet = "HEALTHCAB_island_healthcabinet",
+	Checkpoint_endcanal = "CHECKPOINT_endcanal",
+	Flag_relic = "FLAG_relic",
+	Cappoint_relic_cap = "CAPPOINT_relic_cap",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Foot_Bridge = "BUILD_Foot_Bridge",
+	Build_Library_MG = "BUILD_Library_MG",
+	Build_Library_Side_Wall = "BUILD_Library_Side_Wall",
+	Build_Side_Entrance = "BUILD_Side_Entrance",
+	Build_Speedboat = "BUILD_Speedboat",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Foot_Bridge = "PLANT_Foot_Bridge",
+	Plant_Library_MG = "PLANT_Library_MG",
+	Plant_Library_Side_Wall = "PLANT_Library_Side_Wall",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Plant_Tank_Crate = "PLANT_Tank_Crate",
+	Mount_Library_MG = "MOUNTMG42_Library_MG",
+	Mount_axischurchmg42 = "MOUNTMG42_axischurchmg42",
+	Repair_Library_MG = "REPAIRMG42_Library_MG",
+	Repair_axischurchmg42 = "REPAIRMG42_axischurchmg42",
+	Mover_boat = "MOVER_boat",
+	Mover_tank = "MOVER_tank",
+	Mover_truck = "MOVER_truck",
+
+	allied_radio_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_radio_built_Built" );
+	},
+
+	footbridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "footbridge_Built" );
+	},
+
+	axis_radio_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_radio_built_Built" );
+	},
+
+	boat_construct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "boat_construct_Built" );
+	},
+
+	lib_side_wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "lib_side_wall_Built" );
+	},
+
+	axislibmg42nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axislibmg42nest_Built" );
+	},
+
+	side_entrance_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "side_entrance_Built" );
+	},
+
+	footbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "footbridge_Destroyed" );
+	},
+
+	boat_construct_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "boat_construct_Destroyed" );
+	},
+
+	axis_radio_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_radio_built_Destroyed" );
+	},
+
+	axislibmg42nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axislibmg42nest_Destroyed" );
+	},
+
+	lib_side_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "lib_side_wall_Destroyed" );
+	},
+
+	tank_crate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tank_crate_Destroyed" );
+	},
+
+	side_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "side_entrance_Destroyed" );
+	},
+
+	allied_radio_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_radio_built_Destroyed" );
+	},
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Capture_Flag" );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Capture_Flag" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	//~ OnTrigger( "MISSING_STRING", Map.boat_construct_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_radio_built_Built );
+	//~ OnTrigger( "MISSING_STRING", Map.side_entrance_Built );
+	//~ OnTrigger( "MISSING_STRING", Map.lib_side_wall_Built );
+	OnTrigger( "Allied team has constructed the Foot Bridge!", Map.footbridge_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_radio_built_Built );
+	OnTrigger( "Axis team has constructed the Library MG Nest!", Map.axislibmg42nest_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_radio_built_Destroyed );
+	//~ OnTrigger( "MISSING_STRING", Map.boat_construct_Destroyed );
+	OnTrigger( "Axis team has destroyed the Foot Bridge!", Map.footbridge_Destroyed );
+	OnTrigger( "Allies have destroyed the Tank crate", Map.tank_crate_Destroyed );
+	OnTrigger( "Allied team has destroyed the Library MG Nest!", Map.axislibmg42nest_Destroyed );
+	OnTrigger( "Allies have destroyed the Side Entrance!", Map.side_entrance_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_radio_built_Destroyed );
+	OnTrigger( "Allies have destroyed the Library Side Wall!", Map.lib_side_wall_Destroyed );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.Allies_Capture_Flag );
+	OnTrigger( "Axis reclaim the Forward Bunker!", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,92 @@
+global Map =
+{
+
+   Switches =
+   {
+       fladder_switch =
+       {
+          WaypointName = "fladder_switch",
+          LimitTeam = (1<<TEAM.ALLIES), //only Allies can use it initially
+          LimitClass = (1<<CLASS.FIELDOPS) | (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS),
+          LimitBots = 1,
+          LimitDistance = 2000,
+       },
+   },
+
+   ladder_trigger = function( trigger )
+   {
+       //turn the trigger action string into a vector for referencing
+       vec = ToVector(trigger.Action);
+ 
+       //reference the changing value to determine movement direction
+       if ( vec.z > 0 )
+       {
+           //positive z value; ladder moving up
+           Wp.SetWaypointFlag( "ladder1", "closed", true );
+           Map.Switches.fladder_switch.LimitTeam = (1<<TEAM.ALLIES); // enable for Allies
+           //print("ladder going up");
+       }
+       else if ( vec.z < 0 )
+       {
+           //negative z value; ladder moving down
+           Wp.SetWaypointFlag( "ladder1", "closed", false );
+           Map.Switches.fladder_switch.LimitTeam = (1<<TEAM.AXIS); // enable for Axis
+           //print("ladder going down");
+       }
+   },
+
+   sidewall_Destroyed = function( trigger )
+   {
+      if ( TestMap )
+         { return; }
+
+      SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_wall" );
+      //print( "sidewall_Destroyed" );
+   },
+
+   sidedoor_Destroyed = function( trigger )
+   {
+      if ( TestMap )
+         { return; }
+
+      SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_door" );
+      //print( "sidedoor_Destroyed" );
+   },
+
+   forward_Bunker = function( trigger )
+   {
+      if ( TestMap )
+         { return; }
+   },
+};
+
+global OnMapLoad = function()
+{
+   if ( TestMapOn )
+      { ETUtil.AutoTestMap(); }
+
+   OnTrigger( "The Side Door has been destroyed !", Map.sidedoor_Destroyed );
+   OnTrigger( "Allies captured the Forward Bunker!", Map.forward_Bunker );
+   OnTrigger( "The Sea Wall has been breached!", Map.sidewall_Destroyed );
+   OnTrigger( "fladder_goto", Map.ladder_trigger );
+
+   SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+   SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+   SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg42_4" );
+   SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg42_5" );
+
+   // The ladder isn't lowered at map start, so the bots shan't consider this path
+   Wp.SetWaypointFlag( "ladder1", "closed", true );
+
+   SetGoalPriority( "DEFEND.*", 0.54 );
+   SetGoalPriority( "DEFEND_axis_wall", 0.6 );
+   SetGoalPriority( "DEFEND_axis_door", 0.6 );
+   Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+   Util.UpdateSwitchData();
+
+   print( "Omni-bot script for Axis Rail Checkpoint loaded." );
+};
+
+global OnBotJoin = function( bot )
+{
+};

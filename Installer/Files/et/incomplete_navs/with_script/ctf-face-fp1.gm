@@ -1,0 +1,30 @@
+global OnMapLoad = function()
+{
+	ETUtil.DisableGoal("HEALTH.*");
+	ETUtil.DisableGoal("AMMO.*");
+
+	SetGoalPriority("Flag.*", 5.0);		
+};
+
+
+global OnBotJoin = function( _param )
+{
+	team = bot.GetTeam();
+	class = bot.GetClass();
+	     
+      if ( team == TEAM.AXIS && class == CLASS.COVERTOPS  && bot.HasWeapon(WEAPON.STEN) )
+      {
+        bot.ChangePrimaryWeapon(WEAPON.K43);
+      }
+      
+      if ( team == TEAM.ALLIES && class == CLASS.COVERTOPS  && bot.HasWeapon(WEAPON.STEN) )
+      {
+        bot.ChangePrimaryWeapon(WEAPON.GARAND);
+      }
+      
+      if ( class == CLASS.COVERTOPS )
+      {
+	      bot.MaxViewDistance = 8700.0;
+      }
+};
+

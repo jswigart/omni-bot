@@ -1,0 +1,50 @@
+global Map =
+{
+	Ammo_Cabinet_t24 = "AMMO_CABINET_t24",
+	Health_Cabinet_t22 = "HEALTH_CABINET_t22",
+	Build_axisconstruct_script = "MAP_CONSTRUCTION_axisconstruct_script",
+	Build_dock_platform_script = "MAP_CONSTRUCTION_dock_platform_script",
+	Destroy_axisconstruct_script = "MAP_DYNAMITE_TARGET_axisconstruct_script",
+	Destroy_dock_platform_script = "MAP_DYNAMITE_TARGET_dock_platform_script",
+	Flag_access_codes = "MAP_FLAG_access_codes",
+	Flag_gold = "MAP_FLAG_gold",
+	Cappoint_Generator = "MAP_CAPPOINT_Generator",
+	Cappoint_Boat_Gold_Dropoff = "MAP_CAPPOINT_Boat_Gold_Dropoff",
+
+	Tests = function()
+	{
+		OnTrigger( "The Dock Staircase has been constructed", TestMap.Pass );
+		OnTrigger( "The Church Doors has been repaired", TestMap.Pass );
+		OnTrigger( "The Dock Staircase has been destroyed", TestMap.Pass );
+		OnTrigger( "The Church doors has been destroyed", TestMap.Pass );
+		OnTrigger( "The Allies have stolen the Key Card", TestMap.Pass );
+		OnTrigger( "The Allies have disabled power to the security doors", TestMap.Pass );
+		OnTrigger( "The Allies have stolen the gold", TestMap.Pass );
+		OnTrigger( "The Allies have secured the gold", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_t24, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_t24, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_t22, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_t22, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_dock_platform_script, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axisconstruct_script, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axisconstruct_script, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_dock_platform_script, 120, true );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_access_codes, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Generator, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axisconstruct_script, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_gold, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Boat_Gold_Dropoff, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+};

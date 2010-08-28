@@ -1,0 +1,57 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMO_CABINET_south_ammocabinet",
+	Checkpoint_oldcityflag = "CHECKPOINT_oldcityflag",
+	Health_Cabinet_south_healthcabinet = "HEALTH_CABINET_south_healthcabinet",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Destroy_oldcitywall = "MAP_DYNAMITE_TARGET_oldcitywall",
+	Destroy_dynamitetest = "MAP_DYNAMITE_TARGET_dynamitetest",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Flag_radarbox1 = "MAP_FLAG_radarbox1",
+	Flag_radarbox2 = "MAP_FLAG_radarbox2",
+	Cappoint_423 = "MAP_CAPPOINT_423",
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allies have blown open the Side Door!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "Allies have breached the Main Gate", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "Allies have stolen West Radar Parts!", TestMap.Pass );
+		OnTrigger( "Allies have secured the West Radar Parts!", TestMap.Pass );
+		OnTrigger( "Allies have stolen East Radar Parts!", TestMap.Pass );
+		OnTrigger( "Allies have secured the East Radar Parts!", TestMap.Pass );
+		//~ OnTrigger( "Allies capture the Cathedral!", TestMap.Pass );
+		//~ OnTrigger( "Axis reclaim the Cathedral!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_oldcitywall, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_dynamitetest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120, true );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_radarbox1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_423, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_radarbox2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_423, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_423, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

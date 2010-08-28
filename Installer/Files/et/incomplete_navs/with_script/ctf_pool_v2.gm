@@ -1,0 +1,65 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Flag_allies_gold_crate = "FLAG_allies_gold_crate",
+	Flag_axis_gold_crate = "FLAG_axis_gold_crate",
+	
+	ShowMovers = false,
+	Movers = 
+	{
+		"MOVER_bullseye",
+		"MOVER_dogs",
+		"MOVER_coi",
+		"MOVER_telly",
+	},
+
+	allies_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allies_gold_crate_Taken" );
+	},
+
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_gold_crate_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.allies_gold_crate_Taken );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Taken );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_ally_cap" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_axis_cap" );
+	ETUtil.DisableGoal( "AMMOCAB.*" );
+	ETUtil.DisableGoal( "HEALTHCAB.*");
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//bot.TargetBreakableDist = 100.0;
+	bot.MaxViewDistance = 700;
+	
+	Util.IgnoreTargetGoal( bot, "MOVER_bullseye" );
+	Util.IgnoreTargetGoal( bot, "MOVER_dogs" );
+	Util.IgnoreTargetGoal( bot, "MOVER_coi" );
+	Util.IgnoreTargetGoal( bot, "MOVER_telly" );
+};

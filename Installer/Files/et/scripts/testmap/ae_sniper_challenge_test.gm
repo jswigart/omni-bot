@@ -1,0 +1,67 @@
+global Map =
+{
+	Switches =
+	{
+		AlliedPowerSwitch =
+		{
+			WaypointName = "Allied Power Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.COVERTOPS),
+		},
+		
+		AxisPowerSwitch = 
+		{
+			WaypointName = "Axis Power Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.COVERTOPS),
+		},
+	},
+	
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	
+	Tests = function()
+	{
+		OnTrigger( "allied_lever", TestMap.Pass );
+		OnTrigger( "axis_lever", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.UpdateSwitchData();
+		
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Switches.AlliedPowerSwitch, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, "MAP_SNIPER_SPOT_341", 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Switches.AxisPowerSwitch, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, "MAP_SNIPER_SPOT_152", 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class != CLASS.COVERTOPS )
+		{ bot.ChangeClass( CLASS.COVERTOPS ); }
+
+	if ( team == TEAM.ALLIES )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.GARAND );
+		weapon = bot.GetWeapon( WEAPON.GARAND );
+		weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+	else if ( team == TEAM.AXIS )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.K43 );
+		weapon = bot.GetWeapon( WEAPON.K43 );
+		weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+};

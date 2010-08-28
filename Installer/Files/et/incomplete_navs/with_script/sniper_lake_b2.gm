@@ -1,0 +1,77 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Ammo_Cabinet_south_ammocabinet_2 = "AMMOCAB_south_ammocabinet_2",
+	Ammo_Cabinet_south_ammocabinet_3 = "AMMOCAB_south_ammocabinet_3",
+	Ammo_Cabinet_south_ammocabinet_4 = "AMMOCAB_south_ammocabinet_4",
+	Ammo_Cabinet_south_ammocabinet_5 = "AMMOCAB_south_ammocabinet_5",
+	Ammo_Cabinet_south_ammocabinet_6 = "AMMOCAB_south_ammocabinet_6",
+	Ammo_Cabinet_south_ammocabinet_7 = "AMMOCAB_south_ammocabinet_7",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Health_Cabinet_south_healthcabinet_2 = "HEALTHCAB_south_healthcabinet_2",
+	Health_Cabinet_south_healthcabinet_3 = "HEALTHCAB_south_healthcabinet_3",
+	Health_Cabinet_south_healthcabinet_4 = "HEALTHCAB_south_healthcabinet_4",
+	Health_Cabinet_south_healthcabinet_5 = "HEALTHCAB_south_healthcabinet_5",
+	Health_Cabinet_south_healthcabinet_6 = "HEALTHCAB_south_healthcabinet_6",
+	Health_Cabinet_south_healthcabinet_7 = "HEALTHCAB_south_healthcabinet_7",
+	Checkpoint_westbunker_flag = "CHECKPOINT_westbunker_flag",
+
+	westbunker_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "westbunker_flag_Axis_Captured" );
+	},
+
+	westbunker_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "westbunker_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.westbunker_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.westbunker_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class != CLASS.COVERTOPS )
+		{ bot.ChangeClass( CLASS.COVERTOPS ); }
+
+	if ( team == TEAM.ALLIES )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.GARAND );
+		weapon = bot.GetWeapon( WEAPON.GARAND );
+		weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+	else if ( team == TEAM.AXIS )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.K43 );
+		weapon = bot.GetWeapon( WEAPON.K43 );
+		weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+};

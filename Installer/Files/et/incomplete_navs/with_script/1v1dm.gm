@@ -1,0 +1,18 @@
+//waypoint & scripting by C3R14L.K1L4 
+//version of Mon Sep 08 03:25:02 2008
+//OB 0.7
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+	{
+		Util.AutoTestMap();
+	}
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=3, maxcamptime=6});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=20, maxcamptime=30});
+};
+
+global OnBotJoin = function( bot )
+{
+	//bot.MaxViewDistance = 10000;
+};

@@ -1,0 +1,194 @@
+global Map =
+{
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			Offset = 
+			{
+				Vector3(-22,-202,0),
+			},
+		},
+	},
+	
+	EscortVehicle =
+	{
+		Tank =
+		{
+			Enabled = true,
+			Priority = 0.5,
+			EscortVehicleGoalName = "MOVER_tank",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset = 
+			{
+				Vector3(-22,-202,0),
+			}
+		},
+	},
+	
+	TankAABB = AABB( -818, -230, 40, -732, -15, 104 ),
+	tanktriggerInfo =
+	{
+		Name="TankTrigger",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			print(GetEntName(ent),"entered aabb trigger");
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_tank );
+			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_truck.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_start.*" );
+
+		},
+		OnExit = function(ent)
+		{
+			print(GetEntName(ent),"exited aabb trigger");
+		},
+	},
+	
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
+	Flag_Gold_Bars = "FLAG_Gold_Bars",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Tank = "BUILD_Tank",
+	Build_Truck = "BUILD_Truck",
+	Build_Truck_Barrier = "BUILD_Truck_Barrier",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Truck_Barrier = "PLANT_Truck_Barrier",
+	Plant_Warehouse_Door = "PLANT_Warehouse_Door",
+	Snipe_127 = "SNIPE_127",
+	Snipe_128 = "SNIPE_128",
+	Snipe_130 = "SNIPE_130",
+	Mover_tank = "MOVER_tank",
+	Mover_truck = "MOVER_truck",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+			print( "Command_Post_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Built" );
+	},
+
+	Truck_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Truck_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_Destroyed" );
+	},
+
+	Warehouse_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		ETUtil.ChangeSpawn(TEAM.AXIS, 4);
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Warehouse_Door );
+		
+		print( "Warehouse_Door_Destroyed" );
+	},
+
+	Gold_Bars_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Gold_Bars_Taken" );
+	},
+	
+	Axis_Taking_Gold = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mover_Truck );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Truck_Barrier );
+		
+		print( "Axis_Taking_Gold" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	
+	// *** TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!, Allies Contro", Map.Command_Post_Built );
+	OnTrigger( "Axis team has repaired the Tank!", Map.Tank_Built );
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_Destroyed );
+	OnTrigger( "The Warehouse Door Destroyed.", Map.Warehouse_Door_Destroyed );
+	OnTrigger( "Axis team has secured the second Gold Crate!", Map.Gold_Bars_Taken );
+	OnTrigger( "Axis team is escaping with the Gold Crates!", Map.Axis_Taking_Gold );
+	
+	OnTriggerRegion( Map.TankAABB, Map.tanktriggerInfo );
+
+	// *** INITIAL AVAILABILITY OF MAP GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Warehouse_Door );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mover_Tank );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_Truck );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_start.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_truck.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_allies_.*" );
+	
+	// *** PRIORITY ***
+	SetGoalPriority(Map.Plant_Truck_Barrier, 0.4);
+	SetGoalPriority(Map.Build_Tank, 0.5);
+	SetGoalPriority(Map.Mover_Tank, 0.5);
+	SetGoalPriority(Map.Plant_Warehouse_Door, 0.7);
+	
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=3, maxcamptime=35});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=3, maxcamptime=35});
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

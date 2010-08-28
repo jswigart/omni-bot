@@ -1,0 +1,106 @@
+global Map =
+{
+	Ammo_Cabinet_t24 = "AMMOCAB_t24",
+	Ammo_Cabinet_t26 = "AMMOCAB_t26",
+	Health_Cabinet_t22 = "HEALTHCAB_t22",
+	Health_Cabinet_t25 = "HEALTHCAB_t25",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Flag_access_codes = "FLAG_access_codes",
+	Cappoint_gate = "CAPPOINT_gate",
+	Build_Command_Post = "BUILD_Command_Post",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_East_Gate = "PLANT_East_Gate",
+	Plant_West_Gate = "PLANT_West_Gate",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	East_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Gate_Destroyed" );
+	},
+
+	West_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Gate_Destroyed" );
+	},
+
+	access_codes_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "access_codes_Taken" );
+	},
+
+	gate_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "gate_Captured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_spawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have breached the East Gate", Map.East_Gate_Destroyed );
+	OnTrigger( "Allies have breached the West Gate", Map.West_Gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.access_codes_Taken );
+	OnTrigger( "MISSING_STRING", Map.gate_Captured );
+	OnTrigger( "Axis capture the Forward spawn!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies capture the Forward spawn!", Map.forward_spawn_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

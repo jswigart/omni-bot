@@ -1,0 +1,145 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Checkpoint_oldcityflag = "CHECKPOINT_oldcityflag",
+	Flag_radarbox1 = "FLAG_radarbox1",
+	Flag_radarbox2 = "FLAG_radarbox2",
+	Cappoint_423 = "CAPPOINT_423",
+	Build_Command_Post = "BUILD_Command_Post",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Plant_Side_Door = "PLANT_Side_Door",
+	Snipe_560 = "SNIPE_560",
+	Snipe_756 = "SNIPE_756",
+	Snipe_811 = "SNIPE_811",
+	Snipe_859 = "SNIPE_859",
+	Snipe_860 = "SNIPE_860",
+	Snipe_862 = "SNIPE_862",
+	Snipe_864 = "SNIPE_864",
+	Snipe_865 = "SNIPE_865",
+	Snipe_866 = "SNIPE_866",
+	Snipe_868 = "SNIPE_868",
+	Snipe_869 = "SNIPE_869",
+	Snipe_870 = "SNIPE_870",
+	Snipe_872 = "SNIPE_872",
+	Snipe_873 = "SNIPE_873",
+	Snipe_874 = "SNIPE_874",
+	Snipe_875 = "SNIPE_875",
+	Snipe_876 = "SNIPE_876",
+	Snipe_878 = "SNIPE_878",
+	Snipe_880 = "SNIPE_880",
+	Snipe_881 = "SNIPE_881",
+	Snipe_882 = "SNIPE_882",
+	Snipe_883 = "SNIPE_883",
+	Snipe_884 = "SNIPE_884",
+	Snipe_885 = "SNIPE_885",
+	Snipe_886 = "SNIPE_886",
+	Snipe_888 = "SNIPE_888",
+	Snipe_920 = "SNIPE_920",
+	Snipe_922 = "SNIPE_922",
+	Snipe_923 = "SNIPE_923",
+	Snipe_925 = "SNIPE_925",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	Side_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Door_Destroyed" );
+	},
+
+	radarbox1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radarbox1_Taken" );
+	},
+
+	radarbox2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radarbox2_Taken" );
+	},
+
+	CAPPOINT_423_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_423_Captured" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "oldcityflag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have breached the Main Gate", Map.Main_Door_Destroyed );
+	OnTrigger( "Allies have blown open the Side Door!", Map.Side_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.radarbox1_Taken );
+	OnTrigger( "MISSING_STRING", Map.radarbox2_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_423_Captured );
+	OnTrigger( "Axis reclaim the Cathedral!", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "Allies capture the Cathedral!", Map.oldcityflag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,218 @@
+// This script contains functionality to allow bots to escort vehicles
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.ESCORTSLOT)
+{
+	BB.ESCORTSLOT = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "EscortVehicle";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.GetPriorityDelay = 3;		// Delay between calls to GetPriority
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Timeout = 30;
+	//this.GoalTimeout = 15;
+
+	if(!Map || !Map.EscortVehicle)
+	{
+		this.Disable = true;
+	}
+	else
+	{
+		// Set default values if not defined
+		foreach ( escortTable in Map.EscortVehicle )
+		{
+			if ( typeId( escortTable.Enabled ) == 0 )
+				{ escortTable.Enabled = true; }
+
+			if ( typeId( escortTable.Priority ) == 0 )
+				{ escortTable.Priority = 0.79; }
+
+			if ( typeId( escortTable.LimitBots ) == 0 )
+				{ escortTable.LimitBots = Util.AllTeamPlayers; }
+
+			if ( typeId( escortTable.LimitTeam ) == 0 )
+				{ escortTable.LimitTeam = Util.AllTeams; }
+
+			if ( typeId( escortTable.LimitClass ) == 0 )
+				{ escortTable.LimitClass = Util.AllClasses; }
+
+			if ( typeId( escortTable.Offset ) == 0 )
+				{ escortTable.Offset = { Vector3( 0, 0, 0 ), }; }
+
+			if ( typeId( escortTable.MaxDistance ) == 0 )
+				{ escortTable.MaxDistance = 256; }
+		}
+
+		Util.MapDebugPrint(this.Name + " Initialized", true);
+	}
+};
+
+this.OnSpawn = function()
+{
+	// don't consider this goal right away, because ET takes a few frame to initialize entities
+	// so vehicles will be alive temporarily at the start of the map for a few frames
+	this.DelayGetPriority(3);
+};
+
+this.GetPriority = function()
+{
+	myTeamMask = ( 1 << this.Bot.GetTeam() );
+	myClassMask = ( 1 << this.Bot.GetClass() );
+
+	if(!this.IsActive())
+	{
+		vehNum = 0;
+		foreach ( i and vehTable in Map.EscortVehicle )
+		{
+			vehGoal = GetGoal(vehTable.EscortVehicleGoalName);
+			vehicleEnt = vehGoal.GetEntity();
+			if ( vehicleEnt )
+			{
+				if (
+					vehTable.Enabled  &&
+					( vehTable.LimitTeam & myTeamMask ) &&
+					( vehTable.LimitClass & myClassMask ) &&
+					Util.IsVehicleAvailable( this.Bot, vehicleEnt ) &&
+					!Util.IsVehicleDead( vehicleEnt )
+													)
+				{
+					if ( vehTable.Debug )
+						{ print("EscortVehicleGoalName", vehTable.EscortVehicleGoalName);}
+
+					// find escort slot
+					offsetNum = 0;
+					foreach ( offset in vehTable.Offset )
+					{
+						bbId = Util.Mash(vehNum, offsetNum);
+						numBotsWithGoal = Blackboard.GetNumRecords(BB.ESCORTSLOT, bbId);
+						if( numBotsWithGoal <  vehTable.LimitBots )
+						{
+							this.BlackboardId = bbId;
+							this.Vehicle = i;
+							this.VehicleEntity = vehicleEnt;
+							this.Offset = offset;
+							this.MaxDistance = vehTable.MaxDistance;
+							this.Priority = vehTable.Priority;
+							this.DebugString = vehTable.EscortVehicleGoalName;
+
+							if ( vehTable.ButtonPress )
+								{ this.Button = vehTable.ButtonPress; }
+
+							//print("using vehicle", vehNum, "offset", offsetNum);
+							return;
+						}
+						offsetNum = offsetNum+1;
+					}
+				}
+			}
+			vehNum = vehNum+1;
+		}
+	}
+	else
+	{
+		if(!Util.IsVehicleAvailable(this.Bot, this.VehicleEntity) || Util.IsVehicleDead(this.VehicleEntity))
+		{
+			this.Finished();
+		}
+
+		// if the vehicle has moved too much from when we pathed to it, finish the goal so we can re-enter to get a new path
+		if(this.PathPosition)
+		{
+			escortPos = GetEntPosition( this.VehicleEntity );
+
+			if ( DistanceBetween( this.PathPosition, escortPos ) > this.MaxDistance )
+			{
+				this.Finished();
+			}
+		}
+	}
+};
+
+this.Enter = function()
+{
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = this.BlackboardId,
+	};
+	Blackboard.PostRecord(BB.ESCORTSLOT, bbRecord);
+};
+
+this.Exit = function()
+{
+	this.Vehicle = null;
+	this.VehicleEntity = null;
+	this.Offset = null;
+	this.MaxDistance = null;
+	this.BlackboardId = null;
+	this.PathPosition = null;
+
+	// Remove myself from the blackboard for using this switch
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.ESCORTSLOT);
+};
+
+this.Update = function()
+{
+	escortPos = this.EscortPosition();
+
+	if(this.Goto(escortPos, 32.0) == EVENT.PATH_FAILED)
+	{
+		this.Finished();
+	}
+
+	while(!this.Bot.IsStuck(1.8))
+	{
+		this.GetNewVehicleLookPosition();
+		if ( this.Button )
+			{ this.Bot.PressButton(this.Button); }
+		escortPos = this.EscortPosition();
+		if ( escortPos ) {
+			dist = this.Bot.DistanceTo(escortPos);
+			if ( dist < 128 ) {
+				this.Bot.MoveTowards(escortPos, 8, MoveMode.Walk);
+			}
+			else if ( dist > 128 && dist < 512 ){
+				this.Bot.MoveTowards(escortPos, 8, MoveMode.Run);
+			}
+			else {
+				// repath
+				this.ReleaseAimRequest();
+				if ( this.Goto(escortPos) == EVENT.PATH_FAILED ) {
+					this.Finished();
+				}
+			}
+		}
+		else {
+			break;
+		}
+		yield();
+	}
+
+	this.Finished();
+};
+
+this.EscortPosition = function()
+{
+	escortPos = GetEntityWorldSpace( this.VehicleEntity, this.Offset );
+	return escortPos;
+};
+
+this.GetNewVehicleLookPosition = function()
+{
+	vehicleVelocity = GetEntVelocity(this.VehicleEntity);
+
+	if(vehicleVelocity && !vehicleVelocity.IsZero())
+	{
+		this.AddAimRequest(Priority.Low, "facing", vehicleVelocity);
+	}
+	else
+	{
+		vehFacing = GetEntFacing( this.VehicleEntity );
+		this.AddAimRequest(Priority.Low, "facing", vehFacing);
+	}
+};

@@ -1,0 +1,151 @@
+global Map =
+{
+	Ammo_Cabinet_supply1 = "AMMOCAB_supply1",
+	Ammo_Cabinet_supply2 = "AMMOCAB_supply2",
+	Health_Cabinet_health1 = "HEALTHCAB_health1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Flag_e_radar_part = "FLAG_e_radar_part",
+	Flag_w_radar_part = "FLAG_w_radar_part",
+	Cappoint_Radar = "CAPPOINT_Radar",
+	Build_allies_shortcut_ladder = "BUILD_allies_shortcut_ladder",
+	Build_falcon_airlock = "BUILD_falcon_airlock",
+	Build_obelisk = "BUILD_obelisk",
+	Build_sarlac_gate = "BUILD_sarlac_gate",
+	Plant_allies_shortcut_ladder = "PLANT_allies_shortcut_ladder",
+	Plant_falcon_airlock = "PLANT_falcon_airlock",
+	Plant_obelisk = "PLANT_obelisk",
+	Plant_sarlac_gate = "PLANT_sarlac_gate",
+	Mount_459 = "MOUNTMG42_459",
+	Mount_576 = "MOUNTMG42_576",
+	Mount_585 = "MOUNTMG42_585",
+	Repair_459 = "REPAIRMG42_459",
+	Repair_576 = "REPAIRMG42_576",
+	Repair_585 = "REPAIRMG42_585",
+	Snipe_396 = "SNIPE_396",
+	Snipe_397 = "SNIPE_397",
+	Snipe_418 = "SNIPE_418",
+	Snipe_419 = "SNIPE_419",
+	Snipe_420 = "SNIPE_420",
+	Snipe_421 = "SNIPE_421",
+	Snipe_422 = "SNIPE_422",
+	Snipe_473 = "SNIPE_473",
+	Snipe_477 = "SNIPE_477",
+	Snipe_481 = "SNIPE_481",
+	Snipe_495 = "SNIPE_495",
+	Snipe_499 = "SNIPE_499",
+
+	ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "ladder_Built" );
+	},
+
+	bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bridge_Built" );
+	},
+
+	falcon_airlock_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "falcon_airlock_Built" );
+	},
+
+	obelisk_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "obelisk_Built" );
+	},
+
+	bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bridge_Destroyed" );
+	},
+
+	obelisk_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "obelisk_Destroyed" );
+	},
+
+	falcon_airlock_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "falcon_airlock_Destroyed" );
+	},
+
+	ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "ladder_Destroyed" );
+	},
+
+//~ 	Allies_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMap )
+//~ 			{ return; }
+//~ 
+//~ 		print( "Allies_Capture_Flag" );
+//~ 	},
+
+//~ 	Axis_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMap )
+//~ 			{ return; }
+//~ 
+//~ 		print( "Axis_Capture_Flag" );
+//~ 	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Axis have built the Falcon airlock defense!", Map.falcon_airlock_Built );
+	OnTrigger( "MISSING_STRING", Map.obelisk_Built );
+	OnTrigger( "Allies have built the shortcut ladder!", Map.ladder_Built );
+	OnTrigger( "Allies have built the bridge!", Map.bridge_Built );
+	OnTrigger( "Axis have damaged the shortcut ladder!", Map.ladder_Destroyed );
+	OnTrigger( "Allies have damaged the Falcon airlock defense!", Map.falcon_airlock_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.obelisk_Destroyed );
+	OnTrigger( "Axis have damaged the bridge!", Map.bridge_Destroyed );
+//~ 	OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+//~ 	OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+	// disable mg , bots can't reach it
+	SetAvailableMapGoals( TEAM.ALLIES, false, Repair_459 );
+	SetAvailableMapGoals( TEAM.AXIS, false, Repair_459 );
+	SetAvailableMapGoals( TEAM.AXIS, false, Mount_459 );
+ 	SetAvailableMapGoals( TEAM.ALLIES, false, Mount_459 );
+
+	SetGoalPriority( Plant_obelisk,  TEAM.AXIS, CLASS.ENGINEER, 0 );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+        bot.MaxViewDistance = 2000;
+};

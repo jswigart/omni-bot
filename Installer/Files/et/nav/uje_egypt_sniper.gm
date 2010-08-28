@@ -1,0 +1,77 @@
+// Map script by [UJE]Niek
+global Map =
+{
+	SnipeMap = true,
+	ShowMovers = false,
+
+	Movers =
+	{
+		"MOVER_elevator2",
+		"MOVER_elevator3",
+		"MOVER_elevator4",
+		"MOVER_elevator5",
+	},
+
+	Ele2Ent = GetGoal("MOVER_elevator2").GetEntity(),
+	Ele3Ent = GetGoal("MOVER_elevator3").GetEntity(),
+	Ele4Ent = GetGoal("MOVER_elevator4").GetEntity(),
+	Ele5Ent = GetGoal("MOVER_elevator5").GetEntity(),
+	EleOffset = Vector3(40.643,-2.533,28.125),
+
+	RideCarpet = function(_this, eleEnt)
+	{
+		timeout = 240;
+		while( timeout > 0 ) {
+			absPos = GetEntityWorldSpace(eleEnt,Map.EleOffset);
+			_this.Bot.HoldButton(BTN.CROUCH, 0.1);
+			_this.Bot.MoveTowards(absPos);
+			_this.GotoAsync(absPos, 16);
+			yield();
+			timeout -= 1;
+		}
+	},
+
+	Navigation =
+	{
+		elevator2 =
+		{
+			navigate = function(_this)
+			{
+				Map.RideCarpet(_this, Map.Ele2Ent);
+			},
+		},
+		elevator3 =
+		{
+			navigate = function(_this)
+			{
+				Map.RideCarpet(_this, Map.Ele3Ent);
+			},
+		},
+		elevator4 =
+		{
+			navigate = function(_this)
+			{
+				Map.RideCarpet(_this, Map.Ele4Ent);
+			},
+		},
+		elevator5 =
+		{
+			navigate = function(_this)
+			{
+				Map.RideCarpet(_this, Map.Ele5Ent);
+			},
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.LimitToTeam( TEAM.AXIS, "SNIPE_axis.*" );
+	Util.LimitToTeam( TEAM.ALLIES, "SNIPE_allied.*" );
+	Util.MapDebugPrint( "OnMapLoad", true );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.ChangeToSniperWeapons(bot);
+};

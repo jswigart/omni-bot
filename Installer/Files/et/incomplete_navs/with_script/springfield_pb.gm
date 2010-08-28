@@ -1,0 +1,177 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Flag_plutoniumcase = "FLAG_plutoniumcase",
+	Cappoint_1061 = "CAPPOINT_1061",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Moes_wall = "BUILD_Moes_wall",
+	Build_Truck = "BUILD_Truck",
+	Build_Truck_Barrier_1 = "BUILD_Truck_Barrier_1",
+	Build_Truck_Barrier_2 = "BUILD_Truck_Barrier_2",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Moes_wall = "PLANT_Moes_wall",
+	Plant_Schoolbus = "PLANT_Schoolbus",
+	Plant_Truck_Barrier_1 = "PLANT_Truck_Barrier_1",
+	Plant_Truck_Barrier_2 = "PLANT_Truck_Barrier_2",
+	Mount_mg42_bank = "MOUNTMG42_mg42_bank",
+	Repair_mg42_bank = "REPAIRMG42_mg42_bank",
+	Mover_truck = "MOVER_truck",
+	
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			Enabled = true,
+			LimitBots = 2,
+		},
+	},		
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Moes_wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Moes_wall_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Built" );
+	},
+
+	Truck_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_1_Built" );
+	},
+
+	Truck_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_2_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Moes_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Moes_wall_Destroyed" );
+	},
+
+	Schoolbus_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Schoolbus_Destroyed" );
+	},
+
+	Truck_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_1_Destroyed" );
+	},
+
+	Truck_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_2_Destroyed" );
+	},
+
+	plutoniumcase_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "plutoniumcase_Taken" );
+	},
+
+	CAPPOINT_1061_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.EscortVehicle.Truck.Enabled = true;
+		print( "CAPPOINT_1061_Captured" );
+	},
+	
+	TruckAtBus =
+	{
+		Name = "BusTrigger",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Schoolbus" );
+			Map.EscortVehicle.Truck.Enabled = false;
+			print("truck at bus");
+		},
+		OnExit = function(ent)
+		{
+		},	
+	}
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition(-6385,-2644,16, "PLANT_Schoolbus");
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Moes_wall_Built );
+	OnTrigger( "MISSING_STRING", Map.Truck_Built );
+	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_1_Built );
+	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_2_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Moes_wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Schoolbus_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.plutoniumcase_Taken );
+	OnTrigger( "Allied team has secured the Plutonium!", Map.CAPPOINT_1061_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Schoolbus" );
+	bustrigger = OnTriggerRegion(AABB(-6368,-2333,-9,-6220,-2218,65), Map.TruckAtBus);
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

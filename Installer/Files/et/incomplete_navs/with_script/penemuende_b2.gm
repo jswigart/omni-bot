@@ -1,0 +1,192 @@
+//==========================================================================================
+//
+//	penemuende_b2.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//      crapshoot               Nov 9th 2009    skeleton script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_cabinet_ammo_model = "AMMOCAB_cabinet_ammo_model",
+	Ammo_Cabinet_cabinet_ammo_model2 = "AMMOCAB_cabinet_ammo_model2",
+	Health_Cabinet_cabinet_health_model = "HEALTHCAB_cabinet_health_model",
+	Health_Cabinet_cabinet_health_model2 = "HEALTHCAB_cabinet_health_model2",
+	Checkpoint_forward_flag = "CHECKPOINT_forward_flag",
+	Flag_Enigma = "FLAG_Enigma",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Depotdefenses = "BUILD_Depotdefenses",
+	Build_MG_42 = "BUILD_MG_42",
+	Build_MG_42_Nest = "BUILD_MG_42_Nest",
+	Plant_88mm_Flak = "PLANT_88mm_Flak",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Depotdefenses = "PLANT_Depotdefenses",
+	Plant_MG_42 = "PLANT_MG_42",
+	Plant_MG_42_Nest = "PLANT_MG_42_Nest",
+	Plant_Maingate = "PLANT_Maingate",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Plant_Vehicledepotdoor = "PLANT_Vehicledepotdoor",
+	Mount_MG_42 = "MOUNTMG42_MG_42",
+	Mount_MG_42_Nest = "MOUNTMG42_MG_42_Nest",
+	Repair_MG_42 = "REPAIRMG42_MG_42",
+	Repair_MG_42_Nest = "REPAIRMG42_MG_42_Nest",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Depotdefenses_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Depotdefenses_Built" );
+	},
+
+	MG_42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_42_Built" );
+	},
+
+	MG_42_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_42_Nest_Built" );
+	},
+
+	PLANT_88mm_Flak_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_88mm_Flak_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Depotdefenses_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Depotdefenses_Destroyed" );
+	},
+
+	MG_42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_42_Destroyed" );
+	},
+
+	MG_42_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_42_Nest_Destroyed" );
+	},
+
+	Maingate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Maingate_Destroyed" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
+	},
+
+	Vehicledepotdoor_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Vehicledepotdoor_Destroyed" );
+	},
+
+	Enigma_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Enigma_Taken" );
+	},
+
+	forward_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_flag_Axis_Captured" );
+	},
+
+	forward_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+        Util.SetGoalPosition(-1827, -2637, 276, "PLANT_Vehicledepotdoor");
+        
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Depotdefenses_Built );
+	OnTrigger( "MISSING_STRING", Map.MG_42_Built );
+	OnTrigger( "MISSING_STRING", Map.MG_42_Nest_Built );
+	OnTrigger( "MISSING_STRING", Map.PLANT_88mm_Flak_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Depotdefenses_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.MG_42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.MG_42_Nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Maingate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Vehicledepotdoor_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Enigma_Taken );
+	OnTrigger( "MISSING_STRING", Map.forward_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+global OnBotJoin = function( bot )
+{
+
+	// Uncomment for shootable breakables
+	//~ bot.TargetBreakableDist = 300.0;
+};

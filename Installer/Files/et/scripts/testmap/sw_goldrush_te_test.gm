@@ -1,0 +1,72 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet = "AMMO_CABINET_south_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTH_CABINET_south_healthcabinet",
+	Build_defense1 = "MAP_CONSTRUCTION_defense1",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Build_defense3 = "MAP_CONSTRUCTION_defense3",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_tank_construct = "MAP_CONSTRUCTION_tank_construct",
+	Build_truck_construct = "MAP_CONSTRUCTION_truck_construct",
+	Destroy_defense3 = "MAP_DYNAMITE_TARGET_defense3",
+	Destroy_defense1 = "MAP_DYNAMITE_TARGET_defense1",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Destroy_truck_construct = "MAP_DYNAMITE_TARGET_truck_construct",
+	Mount_mg42_allied = "MAP_MOUNTABLE_MG42_mg42_allied",
+	Repair_mg42_allied = "MAP_REPAIR_MG42_mg42_allied",
+	Vehicle_tank = "MAP_MOVER_tank",
+	Flag_The_Gold_Bars = "MAP_FLAG_The_Gold_Bars",
+	Cappoint_PUTTRUCKGOAL = "MAP_CAPPOINT_PUTTRUCKGOAL",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Truck Barrier #1 has been constructed.", TestMap.Pass );
+		OnTrigger( "Tank Barrier #1 has been constructed.", TestMap.Pass );
+		OnTrigger( "The Tank has been repaired!", TestMap.Pass );
+		OnTrigger( "The Truck has been repaired!", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Truck Barrier #1 has been destroyed.", TestMap.Pass );
+		OnTrigger( "Tank Barrier #1 has been destroyed.", TestMap.Pass );
+		OnTrigger( "The Truck has been damaged!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+//~ 		OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+//~ 		OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_south_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_south_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_defense3, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_defense1, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_truck_construct, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_tank_construct, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_truck_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_defense1, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_defense3, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_allied, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_allied, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_tank, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_The_Gold_Bars, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_PUTTRUCKGOAL, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_PUTTRUCKGOAL, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

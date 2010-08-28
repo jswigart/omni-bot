@@ -1,0 +1,88 @@
+global Map =
+{
+	Ammo_Cabinet_ammo01 = "AMMOCAB_ammo01",
+	Ammo_Cabinet_t2 = "AMMOCAB_t2",
+	Health_Cabinet_health01 = "HEALTHCAB_health01",
+	Health_Cabinet_t1 = "HEALTHCAB_t1",
+	Call_Artillery_Aarty2 = "CALLARTILLERY_Aarty2",
+	Artillery_S_Aarty1 = "ARTILLERY_S_Aarty1",
+	Checkpoint_spawnflag = "CHECKPOINT_spawnflag",
+	Flag_northdocs = "FLAG_northdocs",
+	Flag_southdocs = "FLAG_southdocs",
+	Cappoint_65 = "CAPPOINT_65",
+	Plant_Old_City_Door = "PLANT_Old_City_Door",
+
+	Old_City_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Old_City_Door_Destroyed" );
+	},
+
+	northdocs_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "northdocs_Taken" );
+	},
+
+	southdocs_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "southdocs_Taken" );
+	},
+
+	CAPPOINT_65_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_65_Captured" );
+	},
+
+	spawnflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawnflag_Axis_Captured" );
+	},
+
+	spawnflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawnflag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allies have destroyed the Old City Door!", Map.Old_City_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.northdocs_Taken );
+	OnTrigger( "MISSING_STRING", Map.southdocs_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_65_Captured );
+	OnTrigger( "Axis reclaimed the Old City!", Map.spawnflag_Axis_Captured );
+	OnTrigger( "Allies capture the Old City!", Map.spawnflag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

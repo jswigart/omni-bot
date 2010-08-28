@@ -1,0 +1,151 @@
+global Map =
+{
+	Ammo_Cabinet_north_cabinet_ammo_model = "AMMOCAB_north_cabinet_ammo_model",
+	Ammo_Cabinet_north_cabinet_ammo_model_1 = "AMMOCAB_north_cabinet_ammo_model_1",
+	Ammo_Cabinet_north_cabinet_ammo_model_2 = "AMMOCAB_north_cabinet_ammo_model_2",
+	Ammo_Cabinet_north_cabinet_ammo_model_3 = "AMMOCAB_north_cabinet_ammo_model_3",
+	Health_Cabinet_north_cabinet_health_model = "HEALTHCAB_north_cabinet_health_model",
+	Health_Cabinet_north_cabinet_health_model_1 = "HEALTHCAB_north_cabinet_health_model_1",
+	Health_Cabinet_north_cabinet_health_model_2 = "HEALTHCAB_north_cabinet_health_model_2",
+	Health_Cabinet_north_cabinet_health_model_3 = "HEALTHCAB_north_cabinet_health_model_3",
+	Health_Cabinet_north_cabinet_health_model_4 = "HEALTHCAB_north_cabinet_health_model_4",
+	Checkpoint_roadbunker = "CHECKPOINT_roadbunker",
+	Flag_cd1 = "FLAG_cd1",
+	Flag_cd2 = "FLAG_cd2",
+	Flag_cd3 = "FLAG_cd3",
+	Flag_cd4 = "FLAG_cd4",
+	Build_Command_Post_(2eme_etage) = "BUILD_Command_Post_(2eme_etage)",
+	Plant_Command_Post_(2eme_etage) = "PLANT_Command_Post_(2eme_etage)",
+	Plant_porte_de_minus_(2eme_etage) = "PLANT_porte_de_minus_(2eme_etage)",
+	Explode_131 = "EXPLODE_131",
+	Explode_166 = "EXPLODE_166",
+	Explode_167 = "EXPLODE_167",
+	Explode_239 = "EXPLODE_239",
+	Explode_336 = "EXPLODE_336",
+	Explode_337 = "EXPLODE_337",
+	Explode_340 = "EXPLODE_340",
+	Explode_341 = "EXPLODE_341",
+	Explode_342 = "EXPLODE_342",
+	Explode_343 = "EXPLODE_343",
+	Explode_344 = "EXPLODE_344",
+	Explode_356 = "EXPLODE_356",
+	Explode_363 = "EXPLODE_363",
+	Explode_369 = "EXPLODE_369",
+	Explode_370 = "EXPLODE_370",
+	Explode_371 = "EXPLODE_371",
+	Explode_372 = "EXPLODE_372",
+	Explode_391 = "EXPLODE_391",
+	Mount_416 = "MOUNTMG42_416",
+	Mount_417 = "MOUNTMG42_417",
+	Mount_418 = "MOUNTMG42_418",
+	Repair_416 = "REPAIRMG42_416",
+	Repair_417 = "REPAIRMG42_417",
+	Repair_418 = "REPAIRMG42_418",
+
+	Command_Post_(2eme_etage)_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_(2eme_etage)_Built" );
+	},
+
+	Command_Post_(2eme_etage)_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_(2eme_etage)_Destroyed" );
+	},
+
+	porte_de_minus_(2eme_etage)_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "porte_de_minus_(2eme_etage)_Destroyed" );
+	},
+
+	cd1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cd1_Taken" );
+	},
+
+	cd2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cd2_Taken" );
+	},
+
+	cd3_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cd3_Taken" );
+	},
+
+	cd4_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cd4_Taken" );
+	},
+
+	roadbunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "roadbunker_Axis_Captured" );
+	},
+
+	roadbunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "roadbunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_(2eme_etage)_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_(2eme_etage)_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.porte_de_minus_(2eme_etage)_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.cd1_Taken );
+	OnTrigger( "MISSING_STRING", Map.cd2_Taken );
+	OnTrigger( "MISSING_STRING", Map.cd3_Taken );
+	OnTrigger( "MISSING_STRING", Map.cd4_Taken );
+	OnTrigger( "MISSING_STRING", Map.roadbunker_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.roadbunker_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	SetGoalPriority("PLANT_Command_Post.*", 0.1); 
+	SetGoalPriority("BUILD_Command_Post.*", 0.1);
+	SetGoalPriority("MOUNT.*", 0.1);
+	SetGoalPriority("FLAG.*", 1.5);
+	SetGoalPriority("PLANT_porte.*", 1.7);
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

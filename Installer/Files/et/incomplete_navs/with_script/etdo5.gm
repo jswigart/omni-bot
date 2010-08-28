@@ -1,0 +1,162 @@
+global Map =
+{
+	Ammo_Cabinet_t1075 = "AMMOCAB_t1075",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Checkpoint_twc_forward_bunker = "CHECKPOINT_twc_forward_bunker",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Bridge = "BUILD_Bridge",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_MG42 = "BUILD_MG42",
+	Build_Truck = "BUILD_Truck",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_MG42 = "PLANT_MG42",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Plant_Refinery = "PLANT_Refinery",
+	Mount_MG42 = "MOUNTMG42_MG42",
+	Repair_MG42 = "REPAIRMG42_MG42",
+	Mover_truck = "MOVER_truck",
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Built" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	Refinery_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Refinery_Destroyed" );
+	},
+
+	twc_forward_bunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Axis_Captured" );
+	},
+
+	twc_forward_bunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Truck_Built );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Refinery_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.twc_forward_bunker_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.twc_forward_bunker_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetMapGoalProperties( "DEFEND_def1", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_def2", {mincamptime=30, maxcamptime=200});
+	Util.SetGoalOffset( 0, -60, -20, "PLANT_Bridge" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 600.0;
+};

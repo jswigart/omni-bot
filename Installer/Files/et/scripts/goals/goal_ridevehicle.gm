@@ -1,0 +1,258 @@
+// This script contains functionality to allow medic bots to ride vehicles
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.RIDEVEHICLE)
+{
+	BB.RIDEVEHICLE = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "RideVehicle";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.GetPriorityDelay = 5;		// Delay between calls to GetPriority
+
+this.Initialize = function()
+{
+	// Internal variables
+	// If there is no global map or switches table this script goal is useless,
+	// so lets disable it from consideration.
+	if(!Map || !Map.RideVehicle)
+	{
+		this.Disable = true;
+	}
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
+};
+
+this.OnSpawn = function()
+{
+	// don't consider this goal right away, because ET takes a few frame to initialize entities
+	// so vehicles will be alive temporarily at the start of the map for a few frames
+	this.DelayGetPriority(3);
+};
+
+this.GetPriority = function()
+{
+	myTeamMask = (1<<this.Bot.GetTeam());
+	myClassMask = (1<<this.Bot.GetClass());
+
+	if(!this.IsActive())
+	{
+		// Look for a switch we can go for.
+		vehicleIndex = 0;
+		seatIndex = 0;
+
+		foreach ( i and vehTable in Map.RideVehicle )
+		{
+			if(	( vehTable.Enabled ) &&
+				( vehTable.LimitTeam & myTeamMask ) &&
+				( vehTable.LimitClass & myClassMask) )
+			{
+				vehGoal = GetGoal(vehTable.RideVehicleGoalName);
+				vehicleEnt = vehGoal.GetEntity();
+
+				if(vehicleEnt && GetEntVelocity(vehicleEnt).IsZero())
+				{
+					// check the seats
+					foreach ( s and seatTable in vehTable.Seat )
+					{
+						bbId = Util.Mash(vehicleIndex, seatIndex);
+
+						numBotsWithGoal = Blackboard.GetNumRecords(BB.RIDEVEHICLE, bbId);
+						if( numBotsWithGoal == 0 )
+						{
+							this.CurrentVehicle = i;
+							this.CurrentVehicleEntity = vehicleEnt;
+							this.Seat = s;
+
+							this.BlackboardId = bbId;
+
+							this.Priority = vehTable.Priority;
+							this.DebugString =
+								vehTable.RideVehicleGoalName;
+
+							//print(this.Bot.Name, "going for vehicle", i, "seat", s);
+
+							return;
+						}
+						seatIndex = seatIndex + 1;
+					}
+				}
+			}
+			vehicleIndex = vehicleIndex+1;
+		}
+	}
+	else
+	{
+		// Abort if the goal disabled
+		vehicle = Map.RideVehicle[ this.CurrentVehicle ];
+		if(vehicle && !vehicle.Enabled)
+		{
+			this.Priority = 0;
+		}
+	}
+};
+
+this.Enter = function()
+{
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = this.BlackboardId,
+	};
+	Blackboard.PostRecord(BB.RIDEVEHICLE, bbRecord);
+};
+
+this.Exit = function()
+{
+	this.CurrentVehicle = null;
+	this.CurrentVehicleEntity = null;
+	this.Seat = null;
+	this.BoardPosition = null;
+	this.RidePosition = null;
+	this.BlackboardId = null;
+
+	if (this.Stance)
+		{ this.Bot.ReleaseButton(this.Stance); }
+	this.Stance = null;
+
+	// Remove myself from the blackboard for using this switch
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.RIDEVEHICLE);
+};
+
+this.Update = function()
+{
+	vehicle = Map.RideVehicle[ this.CurrentVehicle ];
+
+	this.BoardPosition = this.GetVehicleBoardPosition(this.CurrentVehicle, this.Seat);
+	this.RidePosition = this.GetVehicleRidePosition(this.CurrentVehicle, this.Seat);
+
+	if( this.Goto(this.BoardPosition) == EVENT.PATH_SUCCESS )
+	{
+		timeout = 0;
+		boardingfailed = false;
+
+		// Attempt to board the vehicle
+		while( !this.Bot.MoveTowards( this.RidePosition ) )
+		{
+			this.AddAimRequest( Priority.High, "position", this.RidePosition );
+			this.RidePosition = this.GetVehicleRidePosition(this.CurrentVehicle, this.Seat);
+			if ( timeout == 5000 )
+			{
+				boardingfailed = true;
+				break;
+			}
+
+			timeout = timeout + 50;
+
+			myPos = this.Bot.GetPosition();
+			if(timeout > 200 && myPos.z < this.RidePosition.z)
+			{
+				this.Bot.HoldButton(BTN.JUMP, 0.1);
+			}
+
+			yield();
+		}
+
+		if(boardingfailed)
+		{
+			// Finish the state.
+			this.Finished();
+		}
+
+		// Aim someplace logical
+		this.AddAimRequest(Priority.Low);
+
+		buttonHeld = false;
+
+		// Ride cowboy ride
+		while(true)
+		{
+			if(!this.Bot.HasTarget())
+			{
+				this.RidePosition = this.GetVehicleRidePosition(this.CurrentVehicle, this.Seat);
+				this.Bot.MoveTowards(this.RidePosition);
+
+				if ( vehicle.Stance && !buttonHeld )
+				{
+					this.Bot.HoldButton(vehicle.Stance, 999);
+					this.Stance = vehicle.Stance;
+					buttonHeld = true;
+				}
+
+				if ( this.Bot.DistanceTo(this.RidePosition) > vehicle.SeatRadius )
+					{ this.Finished(); }
+
+				this.AimVector = this.GetNewVehicleLookPosition(this.CurrentVehicle, this.Seat);
+			}
+			yield();
+		}
+	}
+	else
+	{
+		// Finish the state.
+		this.Finished();
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.GetVehicleRidePosition = function(vehNum, seatNum)
+{
+	vehicle = Map.RideVehicle[vehNum];
+	seatPos = vehicle.Seat[seatNum].RidePosition;
+	if(vehicle && !seatPos.IsZero())
+	{
+		vehGoal = GetGoal(vehicle.RideVehicleGoalName);
+		absPos = GetEntityWorldSpace(vehGoal.GetEntity(),seatPos);
+		return absPos;
+	}
+};
+
+this.GetVehicleBoardPosition = function(vehNum, seatNum)
+{
+	vehicle = Map.RideVehicle[vehNum];
+	seatPos = vehicle.Seat[seatNum].BoardPosition;
+	if(vehicle && !seatPos.IsZero())
+	{
+		vehGoal = GetGoal(vehicle.RideVehicleGoalName);
+		absPos = GetEntityWorldSpace(vehGoal.GetEntity(),seatPos);
+		return absPos;
+	}
+};
+
+this.GetNewVehicleLookPosition = function(vehNum, seatNum)
+{
+	vehicle = Map.RideVehicle[vehNum];
+	seatPos = vehicle.Seat[seatNum].FacePosition;
+	if(vehicle && !seatPos.IsZero())
+	{
+		vehGoal = GetGoal(vehicle.RideVehicleGoalName);
+		absPos = GetEntityWorldSpace(vehGoal.GetEntity(),seatPos);
+		return absPos;
+	}
+};
+
+this.DrawVehicleRidePositions = function(duration)
+{
+	for(t = 0; t < tableCount(Map.RideVehicle); t+=1)
+	{
+		for(p = 0; p < tableCount(Map.RideVehicle[t].RidePosition); p+=1)
+		{
+			rpos = this.GetVehicleRidePosition(t, p);
+			DrawDebugLine(rpos, rpos + Vector3(0,0,64), COLOR.RED, duration);
+			bpos = this.GetVehicleBoardPosition(t, p);
+			DrawDebugLine(bpos, bpos + Vector3(0,0,64), COLOR.GREEN, duration);
+		}
+	}
+};
+
+this.DrawVehiclePositionThread = function()
+{
+	Map.DrawThread = threadId();
+	while(true)
+	{
+		Map.DrawVehicleRidePositions(0.1);
+		sleep(0.1);
+	}
+};

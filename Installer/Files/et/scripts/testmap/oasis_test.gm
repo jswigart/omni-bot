@@ -1,0 +1,388 @@
+global Map =
+{
+	Target =
+	{
+		OldCityMG =
+		{
+			Enabled = false,
+			
+			GrenadeTargetGoalName = "MOUNTMG42_Old_City_MG_Nest",
+			Offset = 
+			{
+				Vector3(-90,-260,0),
+			},
+		},
+		GarrisonMG =
+		{
+			Enabled = false,
+			
+			GrenadeTargetGoalName = "MOUNTMG42_Garrison_MG_Nest",
+			TargetOffset = Vector3( 0, 0, -32 ),
+			Offset = 
+			{
+				Vector3(0,-350,0),
+			},
+		},
+	},
+	
+	Debug = true,
+	MapName = "oasis",
+	Quiet = true,
+	DontSelectWeapons = true,
+	oasis_water_pump,
+	old_city_water_pump,
+	old_city_wall = false,
+	Ammo_Cabinet_cabinet_ammo = "AMMOCAB_cabinet_ammo",
+	Health_Cabinet_cabinet_health = "HEALTHCAB_cabinet_health",
+	Call_Artillery_Flag_13 = "CALLARTILLERY_Flag_13",
+	Artillery_D_894 = "ARTILLERY_D_894",
+	Checkpoint_oldcityflag = "CHECKPOINT_oldcityflag",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Axis_Command_Post_1 = "BUILD_Axis_Command_Post_1",
+	Build_Garrison_MG_Nest = "BUILD_Garrison_MG_Nest",
+	Build_Oasis_Water_Pump = "BUILD_Oasis_Water_Pump",
+	Build_Old_City_MG_Nest = "BUILD_Old_City_MG_Nest",
+	Build_Old_City_Water_Pump = "BUILD_Old_City_Water_Pump",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_Command_Post_1 = "PLANT_Axis_Command_Post_1",
+	Plant_Garrison_MG_Nest = "PLANT_Garrison_MG_Nest",
+	Plant_North_Anti_Tank_Gun = "PLANT_North_Anti_Tank_Gun",
+	Plant_Oasis_Water_Pump = "PLANT_Oasis_Water_Pump",
+	Plant_Old_City_MG_Nest = "PLANT_Old_City_MG_Nest",
+	Plant_Old_City_Wall = "PLANT_Old_City_Wall",
+	Plant_Old_City_Water_Pump = "PLANT_Old_City_Water_Pump",
+	Plant_South_Anti_Tank_Gun = "PLANT_South_Anti_Tank_Gun",
+	Mount_Garrison_MG_Nest = "MOUNTMG42_Garrison_MG_Nest",
+	Mount_Old_City_MG_Nest = "MOUNTMG42_Old_City_MG_Nest",
+	Repair_Garrison_MG_Nest = "REPAIRMG42_Garrison_MG_Nest",
+	Repair_Old_City_MG_Nest = "REPAIRMG42_Old_City_MG_Nest",
+	Mobile_MG42_p1axis_west_courtyard = "MOBILEMG42_p1axis_west_courtyard",
+	Mobile_MG42_p2axis_north_garrison_entrance_1 = "MOBILEMG42_p2axis_north_garrison_entrance_1",
+	Mobile_Mortar_1690 = "MOBILEMORTAR_1690",
+	Snipe_p1axis_behindflagroom = "SNIPE_p1axis_behindflagroom",
+	Snipe_p1axis_supplyroom = "SNIPE_p1axis_supplyroom",
+	Snipe_p1axis_valleyledge_1 = "SNIPE_p1axis_valleyledge_1",
+	Snipe_p1axis_valleyledge_2 = "SNIPE_p1axis_valleyledge_2",
+	Snipe_p2axis_garrison_barracks = "SNIPE_p2axis_garrison_barracks",
+	Snipe_p2axis_garrison_canopy = "SNIPE_p2axis_garrison_canopy",
+	Snipe_p2axis_garrison_southwest_corner = "SNIPE_p2axis_garrison_southwest_corner",
+	Snipe_p2axis_old_city_oasis = "SNIPE_p2axis_old_city_oasis",
+	Plant_Mine_p1axis_courtyard_middle = "PLANTMINE_p1axis_courtyard_middle",
+	Plant_Mine_p1axis_west_of_flagroom = "PLANTMINE_p1axis_west_of_flagroom",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_1_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Axis_Command_Post_1_Built" );
+	},
+
+	Garrison_MG_Nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Garrison_MG_Nest_Built" );
+	},
+
+	Oasis_Water_Pump_Built = function( trigger )
+	{
+		Map.oasis_water_pump = true;
+		
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
+	},
+
+	Old_City_MG_Nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Old_City_MG_Nest_Built" );
+	},
+
+	Old_City_Water_Pump_Built = function( trigger )
+	{
+		Map.old_city_water_pump = true;
+		
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Old_City_Water_Pump_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_1_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Axis_Command_Post_1_Destroyed" );
+	},
+
+	Garrison_MG_Nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Garrison_MG_Nest_Destroyed" );
+	},
+
+	North_Anti_Tank_Gun_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "North_Anti_Tank_Gun_Destroyed" );
+	},
+
+	Oasis_Water_Pump_Destroyed = function( trigger )
+	{
+		Map.oasis_water_pump = false;
+		
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Destroyed" );
+	},
+
+	Old_City_MG_Nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Old_City_MG_Nest_Destroyed" );
+	},
+
+	Old_City_Wall_Destroyed = function( trigger )
+	{
+		Map.old_city_wall = true;
+		
+		TestMap.Pass();
+		
+		Util.MapDebugPrint( "Old_City_Wall_Destroyed" );
+	},
+
+	Old_City_Water_Pump_Destroyed = function( trigger )
+	{
+		Map.old_city_water_pump = false;
+		
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "Old_City_Water_Pump_Destroyed" );
+	},
+
+	South_Anti_Tank_Gun_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "South_Anti_Tank_Gun_Destroyed" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+		OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_1_Built );
+		OnTrigger( "The Garrison MG Nest has been constructed!", Map.Garrison_MG_Nest_Built );
+		OnTrigger( "Allies have built the Oasis Water Pump!", Map.Oasis_Water_Pump_Built );
+		OnTrigger( "The Old City MG Nest has been constructed!", Map.Old_City_MG_Nest_Built );
+		OnTrigger( "Allies have built the Old City Water Pump!", Map.Old_City_Water_Pump_Built );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+		OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_1_Destroyed );
+		OnTrigger( "The Garrison MG Nest has been damaged!", Map.Garrison_MG_Nest_Destroyed );
+		OnTrigger( "Allies have destroyed the North Anti-Tank Gun!", Map.North_Anti_Tank_Gun_Destroyed );
+		OnTrigger( "Axis have damaged the Oasis Water Pump!", Map.Oasis_Water_Pump_Destroyed );
+		OnTrigger( "The Old City MG Nest has been damaged!", Map.Old_City_MG_Nest_Destroyed );
+		OnTrigger( "Allies have breached the Old City wall", Map.Old_City_Wall_Destroyed );
+		OnTrigger( "Axis have damaged the Old City Water Pump!", Map.Old_City_Water_Pump_Destroyed );
+		OnTrigger( "Allied team has destroyed the South Anti-Tank Gun!", Map.South_Anti_Tank_Gun_Destroyed );
+		OnTrigger( "Axis reclaim the Old City!", Map.oldcityflag_Axis_Captured );
+		OnTrigger( "Allies capture the Old City!", Map.oldcityflag_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoMG42 )
+			 { Map.MobileMG42Tests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		Wp.SetWaypointFlag( "Old City Flag Room 1", "axis", true );
+		Wp.SetWaypointFlag( "Old City Flag Room 2", "axis", true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Oasis_Water_Pump, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Old_City_Water_Pump, 120 );
+		Wp.SetWaypointFlag( "Old City Flag Room 1", "axis", false );
+		Wp.SetWaypointFlag( "Old City Flag Room 2", "axis", false );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_oldcityflag, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_oldcityflag, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Oasis_Water_Pump, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Old_City_Water_Pump, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Command_Post, 120 );
+		// TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Command_Post_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Garrison_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Garrison_MG_Nest, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_oldcityflag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Old_City_Wall, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_Command_Post, 120 );
+		// TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_Command_Post_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Garrison_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Garrison_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_North_Anti_Tank_Gun, 120 );
+		
+		// Covert ops tests
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Garrison_MG_Nest, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Axis_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Garrison_MG_Nest, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Allied_Command_Post, 120 );
+		
+		// Repair tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Old_City_MG_Nest, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Garrison_MG_Nest, 120 );
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Garrison_MG_Nest, 120 );
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Garrison_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Old_City_MG_Nest, 120 );
+		
+		// Target tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.OldCityMG, 120, false, 4 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Old_City_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.GarrisonMG, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Garrison_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Target.GarrisonMG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Target.OldCityMG, 120 );
+		
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p1axis_behindflagroom, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p1axis_supplyroom, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p1axis_valleyledge_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p1axis_valleyledge_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p2axis_garrison_barracks, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p2axis_garrison_canopy, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p2axis_garrison_southwest_corner, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_p2axis_old_city_oasis, 120 );
+
+	},
+
+	MobileMG42Tests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_p1axis_west_courtyard, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_p2axis_north_garrison_entrance_1, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_South_Anti_Tank_Gun, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+		if ( !Map.oasis_water_pump )
+			{ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Oasis_Water_Pump, 120 ); }
+		
+		if ( !Map.old_city_water_pump )
+			{ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Old_City_Water_Pump, 120 ); }
+		
+		if ( !Map.old_city_wall )
+			{ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Old_City_Wall, 120 ); }
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.SOLDIER )
+		{ bot.ChangePrimaryWeapon( WEAPON.MOBILE_MG42 ); }
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 ); }
+	};
+};
