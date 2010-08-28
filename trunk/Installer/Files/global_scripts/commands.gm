@@ -1235,13 +1235,13 @@ Commands["sag"] =
 {
 	Func = function( _params )
 	{
-		Util.ShowActiveGoals( _params[0], _params[1] );
+		Util.ShowActiveGoals( _params[0], _params[1], _params[2] );
 	},
 
 	Help =
 	{
 		"Show Active Goals, lists and optionally renders each currently active goal by team",
-		"Usage: /bot sag <optional render teamId>, <optional bool routes>",
+		"Usage: /bot sag <optional render teamId>, <optional bool routes>, <optional bool showserial>",
 	},
 };
 
