@@ -14,8 +14,8 @@ this.GetPriorityDelay = 5;		// Delay between calls to GetPriority
 this.Initialize = function()
 {
 	// Internal variables
-	
-	// If there is no global map or switches table this script goal is useless, 
+
+	// If there is no global map or switches table this script goal is useless,
 	// so lets disable it from consideration.
 	if(!Map || !Map.Switches)
 	{
@@ -31,33 +31,26 @@ this.Initialize = function()
 
 			if ( typeId( switchTable.LimitBots ) == 0 )
 				{ switchTable.LimitBots = Util.AllTeamPlayers; }
-			
+
 			if ( typeId( switchTable.LimitTeam ) == 0 )
 				{ switchTable.LimitTeam = Util.AllTeams; }
-			
+
 			if ( typeId( switchTable.LimitClass ) == 0 )
 				{ switchTable.LimitClass = Util.AllClasses; }
-				
-			if ( typeId( switchTable.LimitDistance ) == 0 )
-				{ switchTable.LimitDistance = 10000; }
 
 			if ( typeId( switchTable.Timeout ) == 0 )
-				{ switchTable.Timeout = 2000; }				
+				{ switchTable.Timeout = 2000; }
 		}
 	}
-	
-	Util.MapDebugPrint(this.Name + " Initialized");
-};
 
-//this.OnSpawn = function()
-//{
-//};
+	Util.MapDebugPrint(this.Name + " Initialized", true);
+};
 
 this.GetPriority = function()
 {
 	myTeamMask = (1<<this.Bot.GetTeam());
 	myClassMask = (1<<this.Bot.GetClass());
-	
+
 	if(!this.IsActive())
 	{
 		this.CurrentPriority = 0;
@@ -65,7 +58,7 @@ this.GetPriority = function()
 		foreach ( i and currentswitch in Map.Switches )
 		{
 			numBotsOnSwitch = Blackboard.GetNumRecords(BB.SWITCHUSER, currentswitch.Serial);
-			
+
 			if ( currentswitch.Debug )
 			{
 				print("currentswitch.Enabled:", currentswitch.Enabled);
@@ -74,10 +67,26 @@ this.GetPriority = function()
 				print("numBotsOnSwitch:", numBotsOnSwitch);
 				print("currentswitch.LimitBots:", currentswitch.LimitBots);
 				print("!this.BlackboardIsDelayed:", !this.BlackboardIsDelayed(currentswitch.Serial) );
-			}			
-			
+
+				if ( currentswitch.AimPosition )
+				{
+					print("AimPosition", currentswitch.AimPosition );
+				}
+			}
+
+			if ( currentswitch.LimitDistance && currentswitch.LimitDistance > 0  )
+			{
+				dist = this.Bot.DistanceTo(currentswitch.Waypoint.position);
+
+				if ( currentswitch.Debug )
+					{ print(this.Bot.Name, "^2is", dist, "away from", currentswitch.WaypointName); }
+
+				if ( dist > currentswitch.LimitDistance )
+					{ continue; }
+			}
+
 			if( 	( currentswitch.Enabled ) &&
-				( currentswitch.LimitTeam & myTeamMask ) && 
+				( currentswitch.LimitTeam & myTeamMask ) &&
 				( currentswitch.LimitClass & myClassMask ) &&
 				( numBotsOnSwitch < currentswitch.LimitBots ) &&
 				( !this.BlackboardIsDelayed(currentswitch.Serial) ))
@@ -87,14 +96,12 @@ this.GetPriority = function()
 					this.CurrentSwitch = i;
 					this.CurrentPriority = currentswitch.Priority;
 					this.DebugString = currentswitch.WaypointName;
-					this.BlackboardId = currentswitch.Serial;					
+					this.BlackboardId = currentswitch.Serial;
 				}
-				//return;
 			}
-			//sleep(0.2);
 		}
-		
-		this.Priority = this.CurrentPriority; 
+
+		this.Priority = this.CurrentPriority;
 	}
 	else
 	{
@@ -125,67 +132,55 @@ this.Exit = function()
 
 this.Update = function()
 {
-	//print(this.Bot.Name, "UseSwitch Update", threadId());
-
 	currentswitch = Map.Switches[this.CurrentSwitch];
-        	
-	wpPos = currentswitch.Waypoint.position;
-	radius = currentswitch.Waypoint.radius;
-	wpFacing = currentswitch.Waypoint.facing;
 
-	if ( currentswitch.LimitDistance > 0  )
-	{
-		dist = this.Bot.DistanceTo(wpPos);
-							
-		if ( currentswitch.Debug )
-			{ print(this.Bot.Name, "^2is", dist, "away from", currentswitch.WaypointName); }
-
-		if ( dist > currentswitch.LimitDistance )
-			{ this.Finished(); }
-		else if ( currentswitch.Debug )
+	 if ( currentswitch.Debug )
 			{ print( this.Bot.Name, " heading to ", currentswitch.WaypointName ); }
-	}
+
+	pSuccess = false;
 	
-	pSuccess = false; 
-	ugoal = GetGoal("UGOAL_" + currentswitch.WaypointName );
-	
-	if ( ugoal )
-	{
-		if ( this.RouteTo(ugoal) == EVENT.PATH_SUCCESS )
-			{ pSuccess = true; }
-	}
-	else if( this.Goto(wpPos, radius) == EVENT.PATH_SUCCESS )
+	if( this.Goto(currentswitch.Waypoint.position, currentswitch.Waypoint.radius) == EVENT.PATH_SUCCESS )
 		{ pSuccess = true; }
-	
+
 	if ( pSuccess )
 		{ this.RunSwitch(); }
 	else
 		{ this.BlackboardDelay(30, currentswitch.Serial); }
-	
-        // Finish the state.
+
+    // Finish the state.
 	this.Finished();
 };
 
 this.RunSwitch = function()
 {
 	currentswitch = Map.Switches[this.CurrentSwitch];
-	pos = currentswitch.Waypoint.position;
-	facing = currentswitch.Waypoint.facing;
-	
-	assert(pos && facing);
-	this.AddAimRequest(Priority.High, "facing", facing);
-			
+
+	if ( !currentswitch.AimPosition )
+	{
+		this.AddAimRequest(Priority.High, "facing", currentswitch.Waypoint.facing);
+	}
+	else
+	{
+		this.AddAimRequest(Priority.High, "position", currentswitch.AimPosition);
+	}
+
+	if( !currentswitch.Timeout )
+	{
+		currentswitch.Timeout = 2000;
+	}
+
 	myTeamMask = (1<<this.Bot.GetTeam());
 	myClassMask = (1<<this.Bot.GetClass());
 
 	exitCondition = false;
 	timeout = 0;
 
-	while( !exitCondition && currentswitch.Enabled && ( currentswitch.LimitTeam & myTeamMask ) 
+	while( !exitCondition && currentswitch.Enabled && ( currentswitch.LimitTeam & myTeamMask )
 		&& ( currentswitch.LimitClass & myClassMask) && timeout < currentswitch.Timeout )
 	{
 		timeout += 250;
-		//print(this.Bot.Name, "BTN.USE(", threadId(), ") t(", sysTime(),") LimitTeam", currentswitch.LimitTeam);
+
+		this.Bot.MoveTowards(currentswitch.Waypoint.position);
 		this.Bot.PressButton( BTN.USE);
 
 		if ( currentswitch.ExitConditions )
@@ -193,14 +188,14 @@ this.RunSwitch = function()
 			foreach ( id and func in currentswitch.ExitConditions )
 			{
 				if ( func(this.Bot) == true )
-				{ 
+				{
 					if ( currentswitch.Debug )
 						{ print(this.Bot.Name, "^2exit condition met for", currentswitch.WaypointName); }
 
 					exitCondition = true;
 					break;
 				}
-			}				
+			}
 		}
 
 		sleep(0.25);

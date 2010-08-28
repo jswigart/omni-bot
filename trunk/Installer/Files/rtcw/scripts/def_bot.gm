@@ -15,12 +15,15 @@ this.MaxTurnSpeed = 720.0; // degree's / second
 this.AimStiffness = 75.0;
 this.AimDamping = 10.0;
 
+// default max view distance. map scripts can override this
+this.MaxViewDistance = 4500;
+
 //////////////////////////////////////////////////////////////////////////
 // Utility Callbacks
 
 this.SelectClass = function()
 {
-	sleep(1);
+	sleep( 1 );
 	return null;
 };
 
@@ -31,14 +34,13 @@ this.SelectTeam = function()
 
 //////////////////////////////////////////////////////////////////////////
 
-global ClassPrimaryWeaponChoice = function(bot)
+global ClassPrimaryWeaponChoice = function( bot )
 {
 	myteam = bot.GetTeam();
 	myclass = bot.GetClass();
-	
-	if ( myclass == CLASS.SOLDIER )
-	{
-		wpns = 
+
+	if ( myclass == CLASS.SOLDIER ) {
+		wpns =
 		{
 			WEAPON.MAUSER,
 			WEAPON.PANZERFAUST,
@@ -51,28 +53,30 @@ global ClassPrimaryWeaponChoice = function(bot)
 	return null;
 };
 
-global ClassSecondaryWeaponChoice = function(bot)
+global ClassSecondaryWeaponChoice = function( bot )
 {
 	return null;
 };
 
 this.SelectWeapons = function()
-{	
+{
 	myteam = this.GetTeam();
 	myclass = this.GetClass();
-	
+
 	//print("SelectWeapons: Class", myclass, "Team", myteam);
-		
+
 	weaponSelection = {};
-	weaponSelection.Primary = ClassPrimaryWeaponChoice(this);
-	weaponSelection.Secondary = ClassSecondaryWeaponChoice(this);
-	
-	if ( weaponSelection.Primary )
-		{ this.ChangePrimaryWeapon( weaponSelection.Primary ); }
-		
-	if ( weaponSelection.Secondary )
-		{ this.ChangeSecondaryWeapon( weaponSelection.Secondary ); }
+	weaponSelection.Primary = ClassPrimaryWeaponChoice( this );
+	weaponSelection.Secondary = ClassSecondaryWeaponChoice( this );
+
+	if ( weaponSelection.Primary ) {
+		this.ChangePrimaryWeapon( weaponSelection.Primary );
+	}
+
+	if ( weaponSelection.Secondary ) {
+		this.ChangeSecondaryWeapon( weaponSelection.Secondary );
+	}
 };
 
 
-difficulties.InitBotDifficultyProperties(this);
+difficulties.InitBotDifficultyProperties( this );

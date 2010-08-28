@@ -37,7 +37,7 @@ global Map =
 	Duct_Destroyed = false,
 	Duct_Bot_Count = 0,
 
-	//tables to hold current AS goals	
+	//tables to hold current AS goals
 	AxisASTable = {},
 	AlliesASTable = {},
 
@@ -45,63 +45,56 @@ global Map =
 	{
 		ducts =
 		{
-			navigate = function(_this) 
-			{ 
-				_this.Bot.PressButton(BTN.JUMP); 
-				sleep(0.25);
-				_this.Bot.HoldButton(BTN.CROUCH, 1);
-				sleep(1);
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.CROUCH, 1 );
+				sleep( 1 );
 			},
 		},
 		grenade_duct =
 		{
-			navigate = function(_this)
+			navigate = function( _this )
 			{
-				if ( !Map.Duct_Destroyed && Map.Duct_Bot_Count == 0 )
-				{
-					if (_this.Bot.HasWeapon(WEAPON.ALLY_GRENADE) || _this.Bot.HasWeapon(WEAPON.AXIS_GRENADE))
-					{
-						wpTable = Util.WpNameInfo("grenade_duct");
+				if ( !Map.Duct_Destroyed && Map.Duct_Bot_Count == 0 ) {
+					if ( _this.Bot.HasWeapon( WEAPON.ALLY_GRENADE ) || _this.Bot.HasWeapon( WEAPON.AXIS_GRENADE ) ) {
+						wpTable = Util.WpNameInfo( "grenade_duct" );
 						Map.Duct_Bot_Count += 1;
-						if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
-						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
-							
-							if( _this.Bot.GetTeam() == TEAM.ALLIES )
-							{
-								_this.AddWeaponRequest(Priority.High, WEAPON.ALLY_GRENADE );
+						if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+
+							if ( _this.Bot.GetTeam() == TEAM.ALLIES ) {
+								_this.AddWeaponRequest( Priority.High, WEAPON.ALLY_GRENADE );
 								_this.BlockForWeaponChange( WEAPON.ALLY_GRENADE );
-							}
-							else
+							} else
 							{
-								_this.AddWeaponRequest(Priority.High, WEAPON.AXIS_GRENADE );
+								_this.AddWeaponRequest( Priority.High, WEAPON.AXIS_GRENADE );
 								_this.BlockForWeaponChange( WEAPON.AXIS_GRENADE );
-							}						
-							
-							_this.Bot.HoldButton(BTN.ATTACK1, 3.5); // cs: prime it a bit
-							sleep(4.5);
+							}
+
+							_this.Bot.HoldButton( BTN.ATTACK1, 3.5 ); // cs: prime it a bit
+							sleep( 4.5 );
 						}
 						Map.Duct_Bot_Count -= 1;
-					}
-					else // knife it
+					} else // knife it
 					{
-						wpTable = Util.WpNameInfo("duct_1");
+						wpTable = Util.WpNameInfo( "duct_1" );
 						Map.Duct_Bot_Count += 1;
-						if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
-						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
-							_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+						if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.KNIFE );
 							_this.BlockForWeaponChange( WEAPON.KNIFE );
-							
-							while(!Map.Duct_Destroyed)
-							{ 
-								_this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+
+							while ( !Map.Duct_Destroyed )
+							{
+								_this.Bot.HoldButton( BTN.ATTACK1, 0.25 );
 								yield();
-							}; 
-							
+							};
+
 							yield();
 						}
-						Map.Duct_Bot_Count -= 1;						
+						Map.Duct_Bot_Count -= 1;
 					}
 				}
 				yield();
@@ -117,32 +110,34 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "button1",
-			LimitTeam = (1<<TEAM.AXIS),
+			LimitTeam = ( 1 << TEAM.AXIS ),
 			LimitBots = 1,
 			LimitClass = Util.AllClasses,
 			TimeOut = 1500, // this is in milliseconds; the amount of time to wait for the first bot to hit switch
 			WaitForSwitch = function()
 			{
-				if ( Map.WestDoorStatus == "Opened" )
-					{ return true; }
+				if ( Map.WestDoorStatus == "Opened" ) {
+					return true;
+				}
 				return false;
 			},
 		},
-		
+
 		button2 =
 		{
 			Debug = false,
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "button2",
-			LimitTeam = (1<<TEAM.AXIS),
+			LimitTeam = ( 1 << TEAM.AXIS ),
 			LimitBots = 1,
 			LimitClass = Util.AllClasses,
 			TimeOut = 1500,
 			WaitForSwitch = function()
 			{
-				if ( Map.EastDoorStatus == "Opened" )
-					{ return true; }
+				if ( Map.EastDoorStatus == "Opened" ) {
+					return true;
+				}
 				return false;
 			},
 		},
@@ -159,11 +154,11 @@ global Map =
 			Enabled = true,
 			GrenadeTargetGoalName = "EXPLODE_barrier1",
 			LimitBots = 2,
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = (1<<CLASS.LIEUTENANT) | (1<<CLASS.SOLDIER) ,
-			Offset = 
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
+			Offset =
 			{
-				Vector3(150, 350, 0),
+				Vector3( 150, 350, 0 ),
 			}
 		},
 
@@ -173,11 +168,11 @@ global Map =
 			Enabled = false,
 			GrenadeTargetGoalName = "EXPLODE_barrier2",
 			LimitBots = 1,
-			LimitTeam = (1<<TEAM.ALLIES),
+			LimitTeam = ( 1 << TEAM.ALLIES ),
 			//LimitClass = (1<<CLASS.LIEUTENANT) | (1<<CLASS.SOLDIER) ,
-			Offset = 
+			Offset =
 			{
-				Vector3(170, 120, 0),
+				Vector3( 170, 120, 0 ),
 			}
 		},
 
@@ -187,11 +182,11 @@ global Map =
 			Enabled = false,
 			GrenadeTargetGoalName = "EXPLODE_barrier3",
 			LimitBots = 1,
-			LimitTeam = (1<<TEAM.ALLIES),
+			LimitTeam = ( 1 << TEAM.ALLIES ),
 			//LimitClass = (1<<CLASS.LIEUTENANT) | (1<<CLASS.SOLDIER) ,
-			Offset = 
+			Offset =
 			{
-				Vector3(250, 20, 0),
+				Vector3( 250, 20, 0 ),
 			}
 		},
 	},
@@ -199,50 +194,51 @@ global Map =
 	{
 		wpOne = {};
 		wpTwo = {};
-		Wp.GetWaypointByName("duct_1", wpOne);
-		Wp.GetWaypointByName("ducts", wpTwo);
-		offset = Vector3(0,0,10);
-		
-		while( !Map.Duct_Destroyed )
+		Wp.GetWaypointByName( "duct_1", wpOne );
+		Wp.GetWaypointByName( "ducts", wpTwo );
+		offset = Vector3( 0,0,10 );
+
+		while ( !Map.Duct_Destroyed )
 		{
-			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false ); 
-			
-			 if ( tr.fraction < 1 )
-			 {
+			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false );
+
+			if ( tr.fraction < 1 ) {
 				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.RED, 0.25);
-			 }
-			 else 
-			 {
+			} else
+			{
 				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25);
 				Map.Duct_Destroyed = true;
-				
-				RTCWUtil.EnableGoal("ROUTE_ducts");
-			 }
-			 
-			 sleep(0.25);
+
+				RTCWUtil.EnableGoal( "ROUTE_ducts" );
+			}
+
+			sleep( 0.25 );
 		}
 	},
 
 	East_Station_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_ME262" );
 	},
 
 	East_Station_Door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_East_Station_Door.*" );
 	},
 
 	Footbridge_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.FootbridgeStatus = true;
 
@@ -252,16 +248,15 @@ global Map =
 
 	ME262_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.PlaneStatus = true;
 
-		if (Map.DocStatus == true)
-		{
+		if ( Map.DocStatus == true ) {
 			Map.DeliverDefense();
-		}
-		else
+		} else
 		{
 			Map.DocDefense();
 		}
@@ -269,75 +264,75 @@ global Map =
 
 	Station_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	Station_Door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Station_Door.*" );
 	},
 
 	Plans_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.DocStatus = true;
-		if (Map.PlaneStatus == true)
-		{
+		if ( Map.PlaneStatus == true ) {
 			Map.DeliverDefense();
 		}
 	},
 
 	Plans_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
+		if ( TestMap ) {
+			return;
+		}
+
 		Map.DocStatus = false;
-		foreach ( id and bot in BotTable )
+		foreach( id and bot in BotTable )
 		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-			{
-				bot.ChangeSpawnPoint( 0 ); 
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
 			}
 		}
-		if (Map.PlaneStatus == true)
-		{
+		if ( Map.PlaneStatus == true ) {
 			Map.DocDefense();
-		}
-		else
+		} else
 		{
 			Map.PlaneDefense();
 		}
-		foreach ( id and bot in BotTable )
+		foreach( id and bot in BotTable )
 		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-			{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
 				bot.ChangeSpawnPoint( 0 );
-				
-				if ( bot.GetReinforceTime() < 8 )
-				{
+
+				if ( bot.GetReinforceTime() < 8 ) {
 					bot.ExecCommand( "kill" );
-				} 
+				}
 			}
 		}
 	},
 
 	mine_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 	},
 
 	mine_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Target.Barricade2.Enabled = true;
 		Map.Target.Barricade3.Enabled = true;
@@ -352,15 +347,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT.*" );
 
-		if (Map.PlaneStatus == true)
-		{
+		if ( Map.PlaneStatus == true ) {
 			Map.DocDefense();
-		}
-		else if (Map.DocStatus ==false)	// Plane isnt blown...protect it
-		{
+		} else if ( Map.DocStatus == false )      { // Plane isnt blown...protect it
 			Map.PlaneDefense();
-		}
-		else 
+		} else
 		{
 			Map.DeliverDefense();
 		}
@@ -368,8 +359,9 @@ global Map =
 
 	east_door_opening = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.button2.Enabled = false;
 		Map.EastDoorStatus = "Opened";
@@ -377,8 +369,9 @@ global Map =
 
 	east_door_closing = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.button2.Enabled = true;
 		Map.EastDoorStatus = "Closed";
@@ -386,8 +379,9 @@ global Map =
 
 	west_door_opening = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.button1.Enabled = false;
 		Map.WestDoorStatus = "Opened";
@@ -395,8 +389,9 @@ global Map =
 
 	west_door_closing = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		Map.Switches.button1.Enabled = true;
 		Map.WestDoorStatus = "Closed";
@@ -404,31 +399,35 @@ global Map =
 
 	barrier1_destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	},
 
 	barrier2_destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	},
 
 	barrier3_destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	},
-	DocDefense = function ()	// Sets up defend/attacks for documents ONLY (aka once plane is blown)
+	DocDefense = function()     // Sets up defend/attacks for documents ONLY (aka once plane is blown)
 	{
-		if ( TestMap )
-			{ return; }
+		if ( TestMap ) {
+			return;
+		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
@@ -439,8 +438,7 @@ global Map =
 		Map.AxisASTable = {};
 		Map.AxisASTable = { "rDocsAS_1", };
 
-		if (Map.FootbridgeStatus == false)
-		{
+		if ( Map.FootbridgeStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Footbridge" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEngFootbridge.*" );
 		}
@@ -451,7 +449,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bFlag.*" );
 	},
-	PlaneDefense = function ()
+	PlaneDefense = function()
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
@@ -472,7 +470,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bFlag.*" );
 	},
-	DeliverDefense = function ()
+	DeliverDefense = function()
 	{
 		RTCWUtil.ChangeSpawn( TEAM.AXIS, 2 );
 
@@ -492,62 +490,53 @@ global Map =
 	},
 	round_end = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
-		foreach ( id and bot in BotTable )
+		if ( TestMap ) {
+			return;
+		}
+
+		foreach( id and bot in BotTable )
 		{
-			if (RandInt(0,10) < 2)
-			{
-				bot.SayVoice(VOICE.G_GOODGAME);
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
 			}
-			if (Map.DocStatus == true && Map.PlaneStatus == true)	// Allies win
+			if ( Map.DocStatus == true && Map.PlaneStatus == true ) { // Allies win
+				if ( bot.GetTeam() == TEAM.ALLIES ) {
+					if ( RandInt( 0,10 ) < 5 ) {
+						bot.SayVoice( VOICE.G_CHEER );
+					}
+					sleep( 0.5 );
+				}
+				if ( bot.GetTeam() == TEAM.AXIS ) {
+					if ( RandInt( 0,10 ) < 5 ) {
+						bot.SayVoice( VOICE.G_NEGATIVE );
+					}
+					sleep( 0.5 );
+				}
+			} else                // Axis win
 			{
-				if (bot.GetTeam() == TEAM.ALLIES)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}					
-					sleep(0.5);
+				if ( bot.GetTeam() == TEAM.AXIS ) {
+					if ( RandInt( 0,10 ) < 5 ) {
+						bot.SayVoice( VOICE.G_CHEER );
+					}
+					sleep( 0.5 );
 				}
-				if (bot.GetTeam() == TEAM.AXIS)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_NEGATIVE);
-					}					
-					sleep(0.5);
-				}
-			}
-			else				// Axis win
-			{
-				if (bot.GetTeam() == TEAM.AXIS)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}					
-					sleep(0.5);
-				}
-				if (bot.GetTeam() == TEAM.ALLIES)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_NEGATIVE);
-					}					
-					sleep(0.5);
+				if ( bot.GetTeam() == TEAM.ALLIES ) {
+					if ( RandInt( 0,10 ) < 5 ) {
+						bot.SayVoice( VOICE.G_NEGATIVE );
+					}
+					sleep( 0.5 );
 				}
 			}
-		}	
+		}
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-	thread(Map.check_grate);
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+	thread( Map.check_grate );
 
 	OnTrigger( "The East Station Door Destroyed.", Map.East_Station_Door_Destroyed );
 	OnTrigger( "Planted at The East Station Door.", Map.East_Station_Door_Planted );
@@ -568,29 +557,29 @@ global OnMapLoad = function()
 	OnTrigger( "Explode_122 Exploded", Map.barrier3_destroyed );
 	OnTrigger( "Round End.", Map.round_end );
 
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=15, maxcamptime=30});
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=25, maxcamptime=40});
-	SetMapGoalProperties( "PANZER_.*", {mincamptime=45, maxcamptime=60});
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=45, maxcamptime=60});
-	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime=0, maxcamptime=1});
-	SetMapGoalProperties( "ATTACK_deliver.*", {mincamptime=10, maxcamptime=20});
-	SetMapGoalProperties( "DEFEND_deliver.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 25, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
+	SetMapGoalProperties( "ATTACK_deliver.*", {mincamptime = 10, maxcamptime = 20} );
+	SetMapGoalProperties( "DEFEND_deliver.*", {mincamptime = 15, maxcamptime = 30} );
 
-	RTCWUtil.SetPrimaryGoals(1.0);
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	//disable all goals at start
-	RTCWUtil.DisableGoal(".*", true); //all but routes
+	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 
-	RTCWUtil.EnableGoal("CAPPOINT_.*");
-	RTCWUtil.EnableGoal("CHECKPOINT_.*");
+	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	RTCWUtil.EnableGoal( "CHECKPOINT_.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
-	SetGoalPriority( "CHECKPOINT.*", 0.9 );	// So only one player goes for flag
+	SetGoalPriority( "CHECKPOINT.*", 0.9 ); // So only one player goes for flag
 	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
-	SetGoalPriority( "PANZER_bSpawnkill.*", 0.7 );	// Above regular attacks
-	SetGoalPriority( "SNIPE_bFlag.*", 0.7 );	// Above regular attacks
+	SetGoalPriority( "PANZER_bSpawnkill.*", 0.7 );  // Above regular attacks
+	SetGoalPriority( "SNIPE_bFlag.*", 0.7 );    // Above regular attacks
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
@@ -606,15 +595,15 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
 
-	Util.AddUseWp("PLANT_ME262", "plane_1");
-	Util.AddUseWp("PLANT_ME262", "plane_2");
+	Util.AddUseWp( "PLANT_ME262", "plane_1" );
+	Util.AddUseWp( "PLANT_ME262", "plane_2" );
 
 	Wp.SetWaypointFlag( "bridgehack", "closed", false );
 	Util.UpdateSwitchData();
 
 	MapRoutes =
 	{
-		PLANT_ME262 = 
+		PLANT_ME262 =
 		{
 			ROUTE_flagspawn =
 			{
@@ -652,7 +641,7 @@ global OnMapLoad = function()
 		{
 			ROUTE_docgrab =
 			{
-				ROUTE_bunkerroof = 
+				ROUTE_bunkerroof =
 				{
 					Weight = 3,
 					ROUTE_minenorth =
@@ -665,33 +654,33 @@ global OnMapLoad = function()
 					Weight = 2,
 					ROUTE_eaststation = {},
 				},
-			},	
+			},
 		},
 		PLANT_Footbridge =
 		{
 			ROUTE_rearaxis =
 			{
-				ROUTE_bunkerdoor = {},	// Martin - just as long as they dont try going via spawn flag route
+				ROUTE_bunkerdoor = {},  // Martin - just as long as they dont try going via spawn flag route
 			},
 		},
 		CHECKPOINT_mine_flag =
 		{
 			ROUTE_rearaxis =
 			{
-				ROUTE_bunkerdoor = 
+				ROUTE_bunkerdoor =
 				{
 					ROUTE_eaststation = {},
 					ROUTE_weststation = {},
 				},
-			},	
-		},			
+			},
+		},
 	};
 	MapRoutes.ATTACK_bPlane_1 = MapRoutes.PLANT_ME262;
 	MapRoutes.ATTACK_bPlane_2 = MapRoutes.PLANT_ME262;
 	MapRoutes.ATTACK_bPlane_3 = MapRoutes.PLANT_ME262;
 	MapRoutes.ATTACK_bPlane_4 = MapRoutes.PLANT_ME262;
 	MapRoutes.ATTACK_bPlane_5 = MapRoutes.PLANT_ME262;
-	Util.Routes(MapRoutes);
+	Util.Routes( MapRoutes );
 
 	print( "OnMapLoad" );
 };
@@ -703,20 +692,16 @@ global OnBotJoin = function( bot )
 	bot.ChangeSpawnPoint( 0 );
 	class = bot.GetClass();
 
-	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER) 
-	{
-		if (Map.bPanzers == 0 )
-		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-			Map.bPanzers +=1;
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
+		if ( Map.bPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.bPanzers += 1;
 		}
 	}
-	if (bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER) 
-	{
-		if (Map.rPanzers == 0)
-		{
-			RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-			Map.rPanzers +=1;
+	if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER ) {
+		if ( Map.rPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.rPanzers += 1;
 		}
 	}
 };

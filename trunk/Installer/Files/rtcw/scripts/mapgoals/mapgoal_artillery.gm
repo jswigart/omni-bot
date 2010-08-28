@@ -3,10 +3,11 @@ this.Version = 1;
 this.DefaultPriority = 0.8;
 this.DefaultMinCampTime = 1.0;
 this.DefaultMaxCamptime = 2.0;
+this.RolePriorityBonus = 0.1;
 
 //////////////////////////////////////////////////////////////////////////
 // Couple callbacks to enforce additional constraints on property values.
-CheckMinCamp = function(var) 
+CheckMinCamp = function(var)
 {
 	if(var <= this.MaxCampTime)
 	{
@@ -15,8 +16,8 @@ CheckMinCamp = function(var)
 	// returning any string is an error string
 	return "MinCampTime must be <= MaxCampTime";
 };
-CheckMaxCamp = function(var) 
-{ 
+CheckMaxCamp = function(var)
+{
 	if(var >= this.MinCampTime)
 	{
 		return true;
@@ -50,10 +51,10 @@ this.UpgradeVersion = function(Props)
 		this.Schema.Check(Props);
 		Props.Version = 1;
 		Props.mincamptime = this.DefaultMinCampTime;
-		Props.maxcamptime = this.DefaultMaxCampTime;			
+		Props.maxcamptime = this.DefaultMaxCampTime;
 
-		this.SetPosition( GroundPoint(this.GetPosition()) );
-		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));			
+		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
 	}
 	else if(Props.Version == this.Version)
 	{
@@ -66,7 +67,7 @@ this.UpgradeVersion = function(Props)
 		if(!this.Schema.Check(this))
 		{
 			this.DisableGoal(true);
-		}			
+		}
 	}
 };
 
@@ -74,39 +75,42 @@ this.UpgradeVersion = function(Props)
 
 this.Render = function(editMode)
 {
-	if(this.ExtraDebugText==null)
-	{
-		this.ExtraDebugText = "";
-		this.ExtraDebugText += format("CampTime: %g to %g secs.",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
-	}
-	
 	offset2 = Vector3(0,0,64);
 	stanceOffset = Vector3(0,0,0);
-	
-	if ( this.Stance == "crouch" )
-	{
-		stanceOffset = Vector3(0,0,-20);
-	}	
-	
-	goalBasePos = this.GetPosition();
-	goalPos = this.GetPosition() + offset2;
 
-	this.RenderDefault();
-	
-	if(this.IsDisabled())
+	while(this.RenderGoal == true)
 	{
-		DrawLine(goalPos,goalBasePos,COLOR.RED,2);
+		goalBasePos = this.GetPosition();
+		goalPos = goalBasePos + offset2;
+
+		if(this.ExtraDebugText==null)
+		{
+			this.ExtraDebugText = "";
+			this.ExtraDebugText += format("CampTime: %g to %g secs.",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
+		}
+
+		if ( this.Stance == "crouch" )
+		{
+			stanceOffset = Vector3(0,0,-20);
+		}
+
+		this.RenderDefault();
+
+		if(this.IsDisabled())
+		{
+			DrawLine(goalPos,goalBasePos,COLOR.RED,2);
+		}
+		else
+		{
+			DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
+		}
+
+		if ( this.Facing )
+		{
+			DrawArrow(goalPos+stanceOffset,goalPos+this.Facing*32,COLOR.BLUE,2);
+		}
+		sleep(2);
 	}
-	else
-	{
-		DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
-	}
-	
-	if ( this.Facing )
-	{
-		DrawArrow(goalPos+stanceOffset,goalPos+this.Facing*32,COLOR.BLUE,2);
-	}
-	sleep(2);	
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,7 +129,7 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		facing - Direction the bot should face");	
+	print("		facing - Direction the bot should face");
 	print("Optional:");
 	print("		mincamptime - minimum time a bot should camp at the goal");
 	print("		maxcamptime - maximum time a bot should camp at the goal");
@@ -139,13 +143,19 @@ this.SetProperty = function(property, value)
 	{
 		case "facing":
 		{
-			if ( value == "clear" )
+			if ( value == "clearall" || value == "clear" )
 			{
 				this.Facing = Vector3(0,0,0);
 				print("Facing cleared");
 			}
 			else
 			{
+				i = ToInt(value);
+				if ( typeId(i) == 1 ) {
+					print("Multiple aim positions not supported, index values are ignored");
+					print("/bot goal_setproperty facing is all that is required");
+				}
+				
 				playerFace = GetLocalFacing();
 				this.Facing = playerFace;
 				print("Facing set to",playerFace);
@@ -154,7 +164,7 @@ this.SetProperty = function(property, value)
 		case "stance": // crouch, stand, default stand
 		{
 			this.Stance = value;
-		}		
+		}
 		case "mincamptime":
 		{
 			v = ToFloat(value);
@@ -170,7 +180,7 @@ this.SetProperty = function(property, value)
 			{
 				this.MaxCampTime = v;
 			}
-		}		
+		}
 		default:
 		{
 			print(this.GoalType, ": Invalid property:", property);

@@ -1,23 +1,26 @@
-// This script contains functionality to allow bots to look for packs or ask for health
+// This script contains functionality to allow bots to call for health when they need it
 
 // These parameters are required
 this.Name = "AskForHealth";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
 
-// The parameters are optional
-this.GetPriorityDelay = 10;
-this.LimitToClass( CLASS.LIEUTENANT, CLASS.ENGINEER, CLASS.SOLDIER ); //Medics shouldn't call for health
+// These parameters are optional
+this.LimitToClass( CLASS.LIEUTENANT, CLASS.ENGINEER, CLASS.SOLDIER );
 
 this.Initialize = function()
 {
+	if ( GetGameState() != "Playing" ) {
+		this.Disable = true;
+	}
+	
 	// Internal variables
 	this.HealthThreshold = 50.0;
 	this.RangeForPack = 1000.0;
 	this.Counter = 0;
 	this.Timeout = 1000;
-	
-	if (!Map || !Map.Quiet)
-		{ print(this.Name, " Initialized"); }
+
+	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.Enter = function()
@@ -34,19 +37,24 @@ this.Exit = function()
 
 this.GetPriority = function()
 {
-	this.Counter += 1;
-
-	if( !this.IsActive() && this.Bot.Health < this.HealthThreshold && this.Bot.Health > 0 )
+	while(1)
 	{
-		this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.HEALTH );
-		
-		if ( this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPack )
-			{ this.Priority = 0.6; }
-		else
+		this.Counter += 1;
+
+		if( this.Bot.Health < this.HealthThreshold && this.Bot.Health > 0 )
 		{
-			if ( (this.Counter % 3 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.MEDIC) > 0) ) 
-				{ this.Bot.SayVoice(VOICE.NEED_MEDIC); } 
+			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.HEALTH );
+
+			if ( this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPack )
+				{ this.Priority = 0.6; }
+			else
+			{
+				if ( (this.Counter % 3 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.MEDIC) > 0) && GetGameState() == "Playing" )
+					{ this.Bot.SayVoice(VOICE.NEED_MEDIC); }
+			}
 		}
+		
+		sleep(10);
 	}
 };
 
@@ -54,19 +62,18 @@ this.Update = function()
 {
 	if ( this.Pack )
 	{
-		//print( this.Bot.Name, " is going for an health pack");
 		pos = GetEntPosition(this.Pack);
 		if ( !pos || this.Goto(pos) == EVENT.PATH_FAILED )
 		{
 			this.Pack = null;
 			this.Finished();
 		}
-		
+
 		timeout = 0;
 		while ( this.Pack && timeout < this.Timeout )
 		{
 			pos = GetEntPosition(this.Pack);
-			
+
 			if ( pos )
 			{
 				this.AddAimRequest( Priority.High, "position", pos );

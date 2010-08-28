@@ -1,6 +1,8 @@
 global Map =
 {
 	Quiet = true,
+	SnipeMap = true,
+
 	Mount_mg42_1 = "MOUNTMG42_mg42_1",
 	Mount_mg42_1_1 = "MOUNTMG42_mg42_1_1",
 	Mount_mg42_1_2 = "MOUNTMG42_mg42_1_2",
@@ -54,29 +56,27 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
 
 	RTCWUtil.DisableGoal( ".*", true );
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=45, maxcamptime=90});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 90} );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
-	
+
 	print( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
-	bot.ChangeClass(CLASS.SOLDIER);
-	RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
-	bot.MaxViewDistance = 8500;	// no visual hinderences
-	
-	if (bot.GetTeam() == TEAM.ALLIES)
-	{
+	Util.ChangeToSniperWeapons( bot );
+	bot.MaxViewDistance = 6500; // no visual hinderences
+
+	if ( bot.GetTeam() == TEAM.ALLIES ) {
 		bot.ChangeSpawnPoint( 2 );
-	}
-	else
+	} else
 	{
 		bot.ChangeSpawnPoint( 0 );
 	}
