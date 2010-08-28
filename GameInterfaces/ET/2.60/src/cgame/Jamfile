@@ -13,7 +13,7 @@ project cgame
 	;
 
 # define external libs
-lib boost_datetime : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-1_40.a ;
+lib boost_datetime : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-1_44.a ;
 
 # define aliases for convenience and to force static linking
 alias boost_dt : boost_datetime : <link>static ;
