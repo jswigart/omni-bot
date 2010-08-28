@@ -74,7 +74,6 @@ extern "C" const char *_GetEntityName( gentity_t *_ent ) {
 
 		name = newentname;
 
-		//Q_CleanStr(name);
 		if ( name ) {
 			char undschar[] = { '-', NULL };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`',
@@ -1842,7 +1841,7 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			_flags.SetFlag( ENT_FLAG_PRONED );
 			_flags.SetFlag( ENT_FLAG_VISTEST );
 		} else if ( pEnt->health <= 0 )      {
-			//_flags.SetFlag( ENT_FLAG_DEAD );
+			_flags.SetFlag( ENT_FLAG_DEAD );
 		}
 		if ( pEnt->client && !IsBot( pEnt ) ) {
 			_flags.SetFlag( ENT_FLAG_HUMANCONTROLLED );
