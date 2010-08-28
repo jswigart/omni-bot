@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2008-09-21 21:24:27 -0700 (Sun, 21 Sep 2008) $
-// $LastChangedRevision: 3468 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // Title: TF Navigation Flags
 //

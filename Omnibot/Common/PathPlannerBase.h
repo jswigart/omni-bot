@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2010-02-10 23:38:20 -0600 (Wed, 10 Feb 2010) $
-// $LastChangedRevision: 4682 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // title: Path Planner Interface
 //

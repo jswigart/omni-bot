@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2009-07-30 00:41:04 -0500 (Thu, 30 Jul 2009) $
-// $LastChangedRevision: 4367 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // about: HL2DM definitions
 //

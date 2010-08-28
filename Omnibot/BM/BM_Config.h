@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2010-01-18 22:17:46 -0600 (Mon, 18 Jan 2010) $
-// $LastChangedRevision: 4597 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // about: WOLF definitions
 //

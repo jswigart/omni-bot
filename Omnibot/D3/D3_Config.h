@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2009-11-24 23:34:44 -0600 (Tue, 24 Nov 2009) $
-// $LastChangedRevision: 4538 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 // about: D3 game definitions
 //
