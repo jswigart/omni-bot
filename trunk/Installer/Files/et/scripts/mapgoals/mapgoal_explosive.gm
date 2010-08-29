@@ -1,6 +1,7 @@
 this.GoalType = "EXPLODE";
 this.Version = 1;
 this.DefaultPriority = 0.3;
+this.CreateOnLoad = false;
 
 //////////////////////////////////////////////////////////////////////////
 
