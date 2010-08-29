@@ -1697,6 +1697,7 @@ obResult GetEntityCategory( const GameEntity _ent, BitFlag32 &_category ) {
 			_category.SetFlag( ENT_CAT_PICKUP_HEALTH );
 		} else if ( !Q_strncmp( pEnt->classname, "weapon_magicammo", strlen( "weapon_magicammo" ) ) )          {
 			_category.SetFlag( ENT_CAT_PICKUP );
+			_category.SetFlag( ENT_CAT_PICKUP_AMMO );
 		} else if ( !Q_stricmp( pEnt->classname, "item_treasure" ) )        {
 			_category.SetFlag( ENT_CAT_PICKUP );
 		} else if ( pEnt->item && pEnt->item->giType == IT_WEAPON )      {
