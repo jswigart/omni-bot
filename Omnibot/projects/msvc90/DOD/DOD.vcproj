@@ -98,9 +98,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copy to Bot Folder..."
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="true"
+				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -180,9 +179,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copy to Bot Folder..."
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="true"
+				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
 			/>
 		</Configuration>
 	</Configurations>

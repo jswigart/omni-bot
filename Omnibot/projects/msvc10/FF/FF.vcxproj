@@ -56,8 +56,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">omnibot_ff</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">omnibot_ff</TargetName>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,27 +78,10 @@
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(OMNIBOT_INST)"
-copy "$(TargetPath)" "$(FortressForever)/omni-bot"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(FortressForever)/omni-bot"
-copy "..\..\..\FF\FF_Config.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\TeamFortressLib\TF_Config.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\TeamFortressLib\TF_Messages.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Base_Messages.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\BotExports.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\MessageHelper.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Functions_Bot.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\IEngineInterface.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-bot.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Types.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Events.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BasicTypes.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BitFlags.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Color.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\BotLoadLibrary.cpp" "$(FortressForeverSource)/omnibot"
-</Command>
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,26 +102,10 @@ copy "..\..\..\Common\BotLoadLibrary.cpp" "$(FortressForeverSource)/omnibot"
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
-      <Command>copy "$(TargetPath)" "$(FortressForever)/omni-bot"
-copy "$(TargetPath)" "$(OMNIBOT_INST)"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(OMNIBOT_INST)"
-copy "..\..\..\FF\FF_Config.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\TeamFortressLib\TF_Config.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\TeamFortressLib\TF_Messages.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Base_Messages.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\BotExports.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\MessageHelper.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Functions_Bot.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\IEngineInterface.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-bot.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Types.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Events.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BasicTypes.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BitFlags.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Color.h" "$(FortressForeverSource)/omnibot"
-copy "..\..\..\Common\BotLoadLibrary.cpp" "$(FortressForeverSource)/omnibot"
-</Command>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
+      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <BOOST>$(SolutionDir)..\..\..\libs\boost\boost_1_44</BOOST>
     <InterfaceDir>$(SolutionDir)..\..\..\GameInterfaces</InterfaceDir>
+    <OMNIBOT_INST>$(SolutionDir)..\..\..\Installer\Files</OMNIBOT_INST>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -14,6 +15,10 @@
     </BuildMacro>
     <BuildMacro Include="InterfaceDir">
       <Value>$(InterfaceDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="OMNIBOT_INST">
+      <Value>$(OMNIBOT_INST)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>
