@@ -520,6 +520,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall_door.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rGrenadeDoor" );
 		Util.MapDebugPrint( "door_planted" );
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
@@ -542,6 +543,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall_breach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rGrenadeBreach" );
 		Util.MapDebugPrint( "breach_planted" );
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
@@ -712,6 +714,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rGrenade.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
