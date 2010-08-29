@@ -845,7 +845,8 @@ member TraceArty = function( usePlayer )
 	foundGoal = null;
 	spots = table();
 	targets = table();
-	sourceOffset = Vector3( 0,0,64 );
+	sourceOffset = Vector3( 0,0,60 );
+	targetOffset = Vector3( 0,0,20 );
 
 	if ( !usePlayer ) {
 		GetGoals( spots, 0, "CALLART.*" );
@@ -883,14 +884,14 @@ member TraceArty = function( usePlayer )
 				targetPos = targetgoal.GetPosition();
 				targetName = targetgoal.GetName();
 
-				tr = TraceLine( sourcePos + sourceOffset, targetPos, null, TRACE.SHOT, playerEnt, false );
+				tr = TraceLine( sourcePos + sourceOffset, targetPos + targetOffset, null, TRACE.SHOT, playerEnt, false );
 				if ( tr.fraction < 1 ) {
 					print( "RTCWUtil.TraceArty: ^1No line of sight to", targetName, "^2" );
-					DrawDebugLine( sourcePos + sourceOffset, targetPos, COLOR.RED, 30 );
+					DrawDebugLine( sourcePos + sourceOffset, targetPos + targetOffset, COLOR.RED, 30 );
 				} else
 				{
 					print( "RTCWUtil.TraceArty: ^2Has line of sight to", targetName );
-					DrawDebugLine( sourcePos + sourceOffset, targetPos, COLOR.GREEN, 30 );
+					DrawDebugLine( sourcePos + sourceOffset, targetPos + targetOffset, COLOR.GREEN, 30 );
 				}
 			}
 		} else

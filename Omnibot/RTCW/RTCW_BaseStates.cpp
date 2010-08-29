@@ -1055,8 +1055,12 @@ namespace AiState
 				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 					continue;
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
-					continue;
+				{
+					Vector3f vTarget = qry.m_List[i]->GetPosition();
+					vTarget.z = vTarget.z + 20;
+					if(!Client::HasLineOfSightTo(vSource,vTarget))
+						continue;
+				}
 
 				m_MapGoalTarget = qry.m_List[i];
 				break;
@@ -1075,8 +1079,12 @@ namespace AiState
 				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 					continue;
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
-					continue;
+				{
+					Vector3f vTarget = qry.m_List[i]->GetPosition();
+					vTarget.z = vTarget.z + 20;
+					if(!Client::HasLineOfSightTo(vSource,vTarget))
+						continue;
+				}
 
 				m_MapGoalTarget = qry.m_List[i];
 				break;
