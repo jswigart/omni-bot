@@ -3864,7 +3864,7 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 }
 
 #define MAX_WORLDTEXT 64
-#define MAX_TEXTLENGTH 128
+#define MAX_TEXTLENGTH 256 // fix for 3d waypoint text
 #define MAX_RENDERDIST 2500
 
 typedef struct onsText_s 

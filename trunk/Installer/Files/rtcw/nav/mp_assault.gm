@@ -276,8 +276,8 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Gate_Hatch );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rGateSpam.*" );
 
-		// Support fire time
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rArty.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_gate_1" );
@@ -658,6 +658,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "MOUNT.*", 0.71 );
 	SetGoalPriority( "DEFEND_bGarage_[236]", 0.55 );
+	SetGoalPriority( "GRENADE_gatebarrier", 0.81 );
 
 	thread( Map.check_flagPush );
 	//open up some airstrike goals if ff is off
@@ -683,6 +684,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Gate_Hatch );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tarmac_nest_2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_gatebarrier" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rGateSpam.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGate.*" );
