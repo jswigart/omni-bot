@@ -6,8 +6,12 @@
 
 #include "Interprocess.h"
 
-//#include <boost/interprocess/ipc/message_queue.hpp>
-//using namespace boost::interprocess;
+#define INTERPROCESS
+
+#ifdef INTERPROCESS
+#include <boost/interprocess/ipc/message_queue.hpp>
+using namespace boost::interprocess;
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -15,42 +19,43 @@ Prof_Define(InterProcess);
 
 //////////////////////////////////////////////////////////////////////////
 
-//template <typename MsgType>
-//class InterProcessMessageQueue
-//{
-//public:
-//
-//	void Send(const MsgType &_message, obuint32 _priority = 0)
-//	{
-//		Prof(InterProcessMessageQueue_Send);
-//		m_MessageQueue.send(&_message, sizeof(MsgType), _priority);
-//	}
-//
-//	bool TrySend(const MsgType &_message, obuint32 _priority = 0)
-//	{
-//		Prof(InterProcessMessageQueue_TrySend);
-//		return m_MessageQueue.try_send(&_message, sizeof(MsgType), _priority);
-//	}
-//
-//	InterProcessMessageQueue(const char *_name, obuint32 _msgs) :
-//		m_MessageQueue(open_or_create, _name, _msgs, sizeof(MsgType)),
-//		m_Name(_name)
-//	{
-//	}
-//	~InterProcessMessageQueue()
-//	{
-//		message_queue::remove(m_Name.c_str());
-//	}
-//private:
-//	const String	m_Name;
-//	message_queue	m_MessageQueue;
-//
-//	InterProcessMessageQueue();
-//};
-//
-//typedef boost::shared_ptr< InterProcessMessageQueue<IPC_DebugDrawMsg> > MessageQueuePtr;
-//MessageQueuePtr g_MessageQueue;
+#ifdef INTERPROCESS
+template <typename MsgType>
+class InterProcessMessageQueue
+{
+public:
 
+	void Send(const MsgType &_message, obuint32 _priority = 0)
+	{
+		Prof(InterProcessMessageQueue_Send);
+		m_MessageQueue.send(&_message, sizeof(MsgType), _priority);
+	}
+
+	bool TrySend(const MsgType &_message, obuint32 _priority = 0)
+	{
+		Prof(InterProcessMessageQueue_TrySend);
+		return m_MessageQueue.try_send(&_message, sizeof(MsgType), _priority);
+	}
+
+	InterProcessMessageQueue(const char *_name, obuint32 _msgs) :
+		m_MessageQueue(open_or_create, _name, _msgs, sizeof(MsgType)),
+		m_Name(_name)
+	{
+	}
+	~InterProcessMessageQueue()
+	{
+		message_queue::remove(m_Name.c_str());
+	}
+private:
+	const String	m_Name;
+	message_queue	m_MessageQueue;
+
+	InterProcessMessageQueue();
+};
+
+typedef boost::shared_ptr< InterProcessMessageQueue<IPC_DebugDrawMsg> > MessageQueuePtr;
+MessageQueuePtr g_MessageQueue;
+#endif // INTERPROCESS
 //////////////////////////////////////////////////////////////////////////
 namespace InterProcess
 {
@@ -64,7 +69,8 @@ namespace InterProcess
 		if(!g_EngineFuncs->DebugLine(v1,v1,COLOR::GREEN,0.f) && 
 			!g_EngineFuncs->DebugRadius(v1,0.f,COLOR::GREEN, 0.f))
 		{
-			/*try
+#ifdef INTERPROCESS
+			try
 			{
 				message_queue::remove("debug_draw_queue");
 				g_MessageQueue.reset(new InterProcessMessageQueue<IPC_DebugDrawMsg>("debug_draw_queue", 8192));
@@ -74,7 +80,8 @@ namespace InterProcess
 			{
 				g_MessageQueue.reset();
 				LOGERR_BASIC(ex.what());				
-			}*/			
+			}
+#endif // INTERPROCESS
 		}
 		else
 		{
@@ -84,7 +91,9 @@ namespace InterProcess
 	
 	void Shutdown()
 	{
-		//g_MessageQueue.reset();
+#ifdef INTERPROCESS
+		g_MessageQueue.reset();
+#endif
 	}
 
 	void Update()
@@ -92,19 +101,23 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(Update);
-			//if(g_MessageQueue)
-			//{
-			//	// todo: process incoming messages?
-			//}
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
+			{
+				// todo: process incoming messages?
+			}
+#endif
 		}
 	}
 
 	void Enable(bool _en)
 	{
-		/*if(!_en)
+#ifdef INTERPROCESS
+		if(!_en)
 			g_MessageQueue.reset();
 		if(_en && !g_MessageQueue)
-			Init();*/
+			Init();
+#endif
 	}
 
 	void DrawLine(const Vector3f &_a, const Vector3f &_b, obColor _color, float _time)
@@ -112,7 +125,8 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(DrawLine);
-			/*if(g_MessageQueue)
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
 			{
 				IPC_DebugDrawMsg msg;
 				msg.m_Debugtype = DRAW_LINE;
@@ -128,7 +142,8 @@ namespace InterProcess
 
 				msg.data.m_Line.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
-			}*/
+			}
+#endif // INTERPROCESS
 		}
 	}
 
@@ -137,7 +152,8 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(DrawRadius);
-			/*if(g_MessageQueue)
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
 			{
 				IPC_DebugDrawMsg msg;
 				msg.m_Debugtype = DRAW_RADIUS;
@@ -150,7 +166,8 @@ namespace InterProcess
 				msg.data.m_Radius.m_Radius = _radius;
 				msg.data.m_Radius.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
-			}*/
+			}
+#endif // INTERPROCESS
 		}
 	}
 
@@ -159,7 +176,8 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(DrawBounds);
-			/*if(g_MessageQueue)
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
 			{
 				IPC_DebugDrawMsg msg;
 				msg.m_Debugtype = DRAW_BOUNDS;
@@ -176,7 +194,8 @@ namespace InterProcess
 				msg.data.m_AABB.m_Color = _color.rgba();
 				msg.data.m_AABB.m_Sides = _dir;
 				g_MessageQueue->TrySend(msg);
-			}*/
+			}
+#endif // INTERPROCESS
 		}
 	}
 
@@ -185,7 +204,8 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(DrawPolygon);
-			/*if(g_MessageQueue)
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
 			{
 				IPC_DebugDrawMsg msg;
 				msg.m_Debugtype = DRAW_POLYGON;
@@ -204,7 +224,8 @@ namespace InterProcess
 
 				msg.data.m_Polygon.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
-			}*/
+			}
+#endif // INTERPROCESS
 		}
 	}
 
@@ -213,7 +234,8 @@ namespace InterProcess
 		Prof_Scope(InterProcess);
 		{
 			Prof(DrawText);
-			/*if(g_MessageQueue)
+#ifdef INTERPROCESS
+			if(g_MessageQueue)
 			{
 				IPC_DebugDrawMsg msg;
 				msg.m_Debugtype = DRAW_TEXT;
@@ -226,7 +248,8 @@ namespace InterProcess
 
 				Utils::StringCopy(msg.data.m_Text.m_Buffer,_txt,IPC_DebugTextMessage::BufferSize);
 				g_MessageQueue->TrySend(msg);
-			}*/
+			}
+#endif // INTERPROCESS
 		}
 	}
 };
