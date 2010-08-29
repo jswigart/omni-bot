@@ -24,6 +24,7 @@ this.PrimaryFire.SetTargetBias( CLASS.LIEUTENANT, 0 );
 this.PrimaryFire.SetTargetBias( CLASS.MEDIC, 0 );
 this.PrimaryFire.SetTargetBias( CLASS.ENGINEER, 0 );
 this.PrimaryFire.SetTargetBias( CLASS.SOLDIER, 0 );
+this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
 
 this.PrimaryFire.SetDesirabilityRange( 0, 48, 1.0 );
 this.PrimaryFire.SetTargetBias( CLASS.BREAKABLE, 1.1 );
