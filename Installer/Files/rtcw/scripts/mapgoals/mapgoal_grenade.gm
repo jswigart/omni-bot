@@ -224,6 +224,7 @@ this.SetProperty = function(property, value)
 		}
 		case "ignoredead":
 		{
+			value = ToInt(value);
 			if ( typeId(value) != 1 ) {
 				print("ignoredead expecting int, got " + typeName(value));
 				return;

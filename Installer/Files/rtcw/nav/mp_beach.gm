@@ -703,6 +703,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bMG.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBeach.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 ); // Upper Bunker
@@ -716,6 +717,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 );
 	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
+	
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.ENGINEER, CLASS.LIEUTENANT );
 
 	Wp.SetWaypointFlag( "ladder", "closed", true ); // close up the ladder
 	Wp.SetWaypointFlag( "pt_nav_towerjump", "closed", true );   // close up the towerjump
