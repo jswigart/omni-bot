@@ -840,7 +840,7 @@ member TraceArty = function( usePlayer )
 {
 	dist = null;
 	radius = 200;
-	playerEnt = Util.GetPlayerEntity();
+	playerEnt = GetLocalEntity();
 	playerPos = GetEntPosition( playerEnt );
 	foundGoal = null;
 	spots = table();
@@ -872,7 +872,7 @@ member TraceArty = function( usePlayer )
 
 		if ( tableCount( targets ) > 0 ) {
 			if ( !usePlayer ) {
-				sourcePos = foundGoal.GetPosition() - Vector3( 0,0,24 );
+				sourcePos = foundGoal.GetPosition();
 			} else
 			{
 				sourcePos = GetEntPosition( playerEnt ) - Vector3( 0,0,24 );

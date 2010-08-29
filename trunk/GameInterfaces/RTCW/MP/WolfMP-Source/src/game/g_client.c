@@ -1725,6 +1725,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
+#ifdef WITH_LUA
+	if ( !isBot && !( ent->r.svFlags & SVF_BOT ) && G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
+		return va( "%s\n", reason );
+	}
+#endif
+
 	// they can connect
 	ent->client = level.clients + clientNum;
 	client = ent->client;
@@ -1756,12 +1762,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	ClientUserinfoChanged( clientNum );
 
 	Bot_Event_ClientConnected( clientNum, isBot );
-
-#ifdef WITH_LUA
-	if ( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
-		return va( "%s\n", reason );
-	}
-#endif
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if ( firstTime ) {

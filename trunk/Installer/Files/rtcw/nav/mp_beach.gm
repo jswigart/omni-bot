@@ -568,18 +568,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Flag_War_Documents );
 		Util.MapDebugPrint( "two_minute" );
 	},
-	alive_watch = function()
-	{
-		while ( 1 )
-		{
-			if ( !Map.DocStatus && !Map.WarRoomShift && RTCWUtil.IsTeamDead( TEAM.ALLIES ) ) {
-				// guess there should be a spawn time check too ...
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE.*" );
-			}
 
-			sleep( 1 );
-		}
-	},
 	TowerTrigger =
 	{
 		Name = "TowerTrigger",
@@ -683,8 +672,6 @@ global OnMapLoad = function()
 
 	fbpush = OnTriggerRegion( AABB( 1351.000,3084.000,583.000,1520.000,3484.000,729.000 ), RegionTrigger.DisableBotPush );
 	DocsGone = OnTriggerRegion( AABB( 3071.000,2142.000,511.000,3456.000,2181.000,585.000 ), Map.DocsTrigger );
-
-	thread( Map.alive_watch );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );

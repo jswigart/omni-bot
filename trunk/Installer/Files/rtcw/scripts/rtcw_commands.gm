@@ -365,6 +365,49 @@ Commands["fgs"] =
 	},
 };
 
+Commands["fgp"] =
+{
+	Func = function( _params )
+	{
+		wpTable = table();
+
+		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nROUTE.*\nCAPPOINT.*\n.*ART.*");
+
+		foreach ( id and goal in goalTable )
+		{
+			tag = goal.GetTagName();
+			type = goal.GetGoalType();
+			pos = goal.GetPosition();
+
+			if ( Wp.GetWaypointByName(tag, wpTable) )
+			{
+				foreach( flag and set in wpTable.flags )
+				{
+					if ( !flag.CompareNoCase(type) )
+					{
+						// tagname == wp name and goal type == wp flag. woot
+						// so it's a match. now check z coord for the fubar ones
+						if ( wpTable.position.z - pos.z > 54 )
+						{
+							goal.SetPosition(wpTable.position + Util.WaypointGoalOffset);
+							goal.RenderGoal = true;
+							print ( goal.GetName(), "needs checked. it was detected as being too low and moved" );
+						}
+					}
+				}
+			}
+
+			tableClear(wpTable);
+		}
+
+	},
+
+	Help =
+	{
+		" fix waypoint based goal positions that were incorectly set to ground position",
+	},
+};
+
 Commands["draw_spawns"] =
 {
 	Func = function( _params )
