@@ -21,6 +21,7 @@ this.InitNewGoal = function()
 	this.TargetGoal = null;
 	this.TraceInfo = {};
 	this.TraceEntity = null;
+	this.IgnoreDead = false;
 
 	this.Schema.Check(this);
 };
@@ -44,6 +45,7 @@ this.UpgradeVersion = function(Props)
 		this.Stance = Props.Stance;
 		this.PrimeGrenade = Props.PrimeGrenade;
 		this.TraceInfo = Props.TraceInfo;
+		this.IgnoreDead = Props.IgnoreDead;
 
 		if(!this.Schema.Check(this) || (!this.TargetGoal && tableCount(this.TraceInfo) < 1))
 		{
@@ -83,6 +85,7 @@ this.Render = function(editMode)
 			}
 			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
 			this.ExtraDebugText += format("PrimeGrenade: %d\n",this.PrimeGrenade);
+			this.ExtraDebugText += format("IgnoreDead: %d\n",this.IgnoreDead);
 		}
 
 		if ( this.Stance == "crouch" )
@@ -139,6 +142,7 @@ this.SaveToTable = function(SaveTable)
 	SaveTable.TraceInfo = this.TraceInfo;
 	SaveTable.TraceEntity = this.TraceEntity;
 	SaveTable.PrimeGrenade = this.PrimeGrenade;
+	SaveTable.IgnoreDead = this.IgnoreDead;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,6 +155,7 @@ this.Help = function()
 	print("		facing - Direction the bot should face");
 	print("Optional:");
 	print("		stance - stand, crouch");
+	print("		ignoredead - instruct the goal to ignore the dead flag");
 	print("		prime - time in seconds the bot should prime the grenade. default 1, max 3");
 };
 
@@ -215,6 +220,19 @@ this.SetProperty = function(property, value)
 					this.TraceInfo = targetinfo;
 					this.TraceEntity = targetinfo.id; // for render update
 				}
+			}
+		}
+		case "ignoredead":
+		{
+			if ( typeId(value) != 1 ) {
+				print("ignoredead expecting int, got " + typeName(value));
+				return;
+			}
+			if ( value > 0 ) {
+				this.IgnoreDead = true;
+			}
+			else {
+				this.IgnoreDead = false;
 			}
 		}
 		default:

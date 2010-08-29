@@ -39,7 +39,12 @@ this.Enter = function()
 		this.MapGoal.PrimeGrenade = 3;
 	}
 
-	this.AddFinishCriteria(this.TargetEntity,"deleted");
+	if ( this.MapGoal.IgnoreDead ) {
+		this.AddFinishCriteria(this.TargetEntity,"deleted");
+	}
+	else {
+		this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
+	}
 
 	if(!this.MarkInProgress(this.MapGoal)) {
 		this.BlackboardDelay(5, this.MapGoal);
@@ -83,8 +88,9 @@ this.GetPriority = function()
 					}
 					else if( !goal.TraceEntity && goal.TargetGoal )
 					{
-						g = GetGoal(goal.TargetGoal);
-						if (!g || (g && !EntityIsValid(g.GetEntity())))
+						g = GetGoal(goal.TargetGoal);						
+						if ( !g || (goal.IgnoreDead && g && !EntityIsValid(g.GetEntity()))
+							|| (!goal.IgnoreDead && GetEntFlags(g.GetEntity(), ENTFLAG.DEAD)) )
 						{
 							continue;
 						}
