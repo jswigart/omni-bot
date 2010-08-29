@@ -794,6 +794,13 @@ static int _GetEntityClass( gentity_t *_ent ) {
 		} else if ( !Q_stricmp( _ent->classname, "props_chair_side" ) ) {
 			return RTCW_CLASSEX_BROKENCHAIR;
 		}
+		else if(!Q_stricmp(_ent->classname, "info_player_deathmatch") ||
+			!Q_stricmp(_ent->classname, "team_CTF_redspawn") ||
+			!Q_stricmp(_ent->classname, "team_CTF_bluespawn") ||
+			!Q_stricmp(_ent->classname, "info_player_spawn"))
+		{
+			return ENT_CLASS_GENERIC_PLAYERSTART;
+		}
 		break;
 	}
 	case ET_INVISIBLE:
@@ -1640,11 +1647,18 @@ obResult GetEntityCategory( const GameEntity _ent, BitFlag32 &_category ) {
 				_category.SetFlag( ENT_CAT_STATIC );
 				break;
 			}
-		} else if ( !Q_stricmp( pEnt->classname, "func_button" ) )        {
+		} else if ( !Q_stricmp( pEnt->classname, "func_button" ) ) {
 			_category.SetFlag( ENT_CAT_TRIGGER );
 			_category.SetFlag( ENT_CAT_STATIC );
 			// continue for now so it doesnt get regged
 			//continue;
+		} else if(!Q_stricmp(pEnt->classname, "info_player_deathmatch") ||
+			!Q_stricmp(pEnt->classname, "team_CTF_redspawn") ||
+			!Q_stricmp(pEnt->classname, "team_CTF_bluespawn") ||
+			!Q_stricmp(pEnt->classname, "info_player_spawn"))
+		{
+			// don't fill up the bots sensory mem at start with these
+			_category.SetFlag(ENT_CAT_INTERNAL);
 		} else {
 			res = InvalidEntity;
 		}
@@ -2435,7 +2449,7 @@ void GetGoals() {
 			pGoalName = _GetEntityName( e );
 			if ( !Q_stricmp( e->classname, "func_explosive" ) ) {
 				if ( e->spawnflags & 32 || ( e->spawnflags & 16 && e->health > 50 ) ) {
-					Bot_Util_AddGoal( "explosive",e,0,pGoalName );
+					Bot_Util_AddGoal( "explode",e,0,pGoalName );
 				}
 
 				// bridge in mp_tank has 2 extra dynamite actions which both teams

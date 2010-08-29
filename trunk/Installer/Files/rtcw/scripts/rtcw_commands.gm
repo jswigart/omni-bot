@@ -355,7 +355,7 @@ Commands["fgs"] =
 		else {
 			print("all stances fixed based on waypoint properties. note: use /bot fgs 1 to fix based on flags and properties");
 		}
-		
+
 		ExecCommand("goal_save");
 	},
 
@@ -364,3 +364,57 @@ Commands["fgs"] =
 		" fix waypoint based goal stances. optionally use /bot fgs 1 to check for waypoint flags",
 	},
 };
+
+Commands["draw_spawns"] =
+{
+	Func = function( _params )
+	{
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (GetEntClass(i) == CLASS.PLAYERSTART)
+			{
+				pos = GroundPoint(GetEntPosition(i));
+				DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Draw spawn points, waypoint tool. draws the bounds of all spawn points in the map",
+		"Usage: /bot draw_spawns",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// dump goal definitions from a passed table of waypoints
+Commands["goaldef"] =
+{
+	Func = function( _params )
+	{
+		if ( typeId(_params[0]) == 6 )
+		{
+			switch(_params[1])
+			{
+			case "defend":
+			{
+			}
+			case "as":
+			{
+			}
+			case "grenade":
+			{
+			}
+			default:
+			{
+				print( "invalid goal type for param 1. expecting \"defend\", \"as\" or \"grenade\"" );
+			}
+			}
+		}
+		else
+		{
+			print( format("expecting param 1 as table got %s", typeName(_params[0])) );
+		}
+	},
+};
+
