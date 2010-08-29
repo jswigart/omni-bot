@@ -25,4 +25,9 @@
 		GenerateMapFile="true"
 		MapFileName="$(TargetDir)$(TargetName)_$(ConfigurationName).map"
 	/>
+	<Tool
+		Name="VCPostBuildEventTool"
+		Description=""
+		CommandLine=""
+	/>
 </VisualStudioPropertySheet>

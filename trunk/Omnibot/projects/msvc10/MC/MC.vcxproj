@@ -57,8 +57,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">omnibot_mc</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">omnibot_mc</TargetName>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,26 +78,10 @@
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(OMNIBOT_INST)"
-copy "$(TargetPath)" "$(ModularCombat)/omni-bot"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(ModularCombat)/omni-bot"
-copy "..\..\..\MC\MC_Config.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\MC\MC_Messages.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Base_Messages.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\BotExports.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\MessageHelper.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Functions_Bot.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\IEngineInterface.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-bot.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Types.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Events.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BasicTypes.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BitFlags.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Color.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\BotLoadLibrary.cpp" "$(ModularCombatSource)/omnibot"
-</Command>
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,26 +101,10 @@ copy "..\..\..\Common\BotLoadLibrary.cpp" "$(ModularCombatSource)/omnibot"
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(OMNIBOT_INST)"
-copy "$(TargetPath)" "$(ModularCombat)/omni-bot"
-copy "$(TargetDir)$(TargetName)_$(Configuration).pdb" "$(ModularCombat)/omni-bot"
-copy "..\..\..\MC\MC_Config.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\MC\MC_Messages.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Base_Messages.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\BotExports.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\MessageHelper.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Functions_Bot.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\IEngineInterface.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-bot.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Types.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Events.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BasicTypes.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_BitFlags.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\Omni-Bot_Color.h" "$(ModularCombatSource)/omnibot"
-copy "..\..\..\Common\BotLoadLibrary.cpp" "$(ModularCombatSource)/omnibot"
-</Command>
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

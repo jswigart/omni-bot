@@ -57,8 +57,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">omnibot_et</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">omnibot_et</TargetName>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,9 +78,10 @@
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
-      <Command>..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et debug noaddpkfile nogame
-</Command>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
+      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,9 +104,10 @@
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Message>Copy to Bot Folder...</Message>
-      <Command>..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et release noaddpkfile nogame $(TargetDir)$(TargetName)_$(Configuration).pdb
-</Command>
+      <Message>Copying to "$(OMNIBOT_INST)"</Message>
+      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

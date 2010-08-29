@@ -14,4 +14,9 @@
 		Value="$(SolutionDir)..\..\..\GameInterfaces"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="OMNIBOT_INST"
+		Value="$(SolutionDir)..\..\..\Installer\Files"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>
