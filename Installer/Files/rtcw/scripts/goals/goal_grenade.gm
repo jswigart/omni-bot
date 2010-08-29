@@ -39,7 +39,7 @@ this.Enter = function()
 		this.MapGoal.PrimeGrenade = 3;
 	}
 
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
 
 	if(!this.MarkInProgress(this.MapGoal)) {
 		this.BlackboardDelay(5, this.MapGoal);
@@ -84,7 +84,7 @@ this.GetPriority = function()
 					else if( !goal.TraceEntity && goal.TargetGoal )
 					{
 						g = GetGoal(goal.TargetGoal);
-						if (!g || (g && GetEntFlags(g.GetEntity(), ENTFLAG.DEAD)))
+						if (!g || (g && !EntityIsValid(g.GetEntity())))
 						{
 							continue;
 						}
@@ -126,7 +126,7 @@ this.Update = function()
 		this.BlockForWeaponChange( this.weapon );
 		sleep( .25 );
 		this.Priority = 2.0; // don't let other goals interrupt it
-		while ( !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) && Util.HasAmmoForWeapon(this.Bot,this.weapon) )
+		while ( EntityIsValid( this.TargetEntity ) && Util.HasAmmoForWeapon(this.Bot,this.weapon) )
 		{
 			if ( this.MapGoal.PrimeGrenade > 1 )
 			{
