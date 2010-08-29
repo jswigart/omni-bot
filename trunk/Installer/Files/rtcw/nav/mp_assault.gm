@@ -144,7 +144,7 @@ global Map =
 		},
 	},
 
-	Target =
+	/*Target =
 	{
 		Barricade1 =
 		{
@@ -156,7 +156,7 @@ global Map =
 				Vector3( 300, -350, 0 ),
 			}
 		},
-	},
+	},*/
 
 	Switches =
 	{
@@ -438,9 +438,9 @@ global Map =
 		} else if ( vel.y > 0 )   {
 			Map.Switches.Gate1.LimitTeam = 0;
 
-			if ( !Map.BarrierStatus ) {
+			/*if ( !Map.BarrierStatus ) {
 				Map.Target.Barricade1.Enabled = true;
-			}
+			}*/
 
 			//open up the node so they can pathfind through gate
 			Wp.SetWaypointFlag( "gatehack", "closed", false );
@@ -682,6 +682,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Gate_Hatch );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tarmac_nest_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_gatebarrier" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGate.*" );
