@@ -353,6 +353,7 @@ global Map =
 		//don't bother trying to defuse this.
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_the_Gate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // only arty tower
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_hatch" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 	},
@@ -620,9 +621,6 @@ global OnMapLoad = function()
 	gateladder = OnTriggerRegion( AABB( -1806.000,719.000,-560.000,-1581.000,944.000,115.000 ), Map.TarmacLadderTrigger );
 	garagedoor = OnTriggerRegion( AABB( 2879.000,2815.000,31.000,2944.000,2895.000,105.000 ), Map.LadderTrigger );
 
-
-
-
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
@@ -674,6 +672,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.DisableGoal( "ROUTE_mwh.*" );
@@ -686,6 +685,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_hatch" );
 
 	// Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
