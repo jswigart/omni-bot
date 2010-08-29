@@ -2017,6 +2017,52 @@ global _MG =
 		},
 		Version = 1,
 	},
+	GRENADE_rGrenadeBreach = 
+	{
+		CreateOnLoad = 1,
+		Facing = Vec3(0.042, -0.308, 0.950),
+		GoalType = "GRENADE",
+		GroupName = "",
+		IgnoreDead = 1,
+		MinRadius = 32,
+		Name = "GRENADE_rGrenadeBreach",
+		Orientation = Vec3(3.125, 1.116, -0.000),
+		Position = Vec3(1458.000, 1849.000, 689.000),
+		PrimeGrenade = 1,
+		Radius = 0,
+		SerialNum = 32,
+		Stance = "stand",
+		TagName = "rGrenadeBreach",
+		TargetGoal = "CHECKPOINT_beach_flag",
+		TeamAvailability = 30,
+		TraceInfo = 
+		{
+		},
+		Version = 1,
+	},
+	GRENADE_rGrenadeDoor = 
+	{
+		CreateOnLoad = 1,
+		Facing = Vec3(-0.152, 0.618, 0.771),
+		GoalType = "GRENADE",
+		GroupName = "",
+		IgnoreDead = 1,
+		MinRadius = 32,
+		Name = "GRENADE_rGrenadeDoor",
+		Orientation = Vec3(0.167, -0.162, -0.000),
+		Position = Vec3(1511.000, 2645.000, 719.000),
+		PrimeGrenade = 1,
+		Radius = 0,
+		SerialNum = 40,
+		Stance = "stand",
+		TagName = "rGrenadeDoor",
+		TargetGoal = "CHECKPOINT_beach_flag",
+		TeamAvailability = 30,
+		TraceInfo = 
+		{
+		},
+		Version = 1,
+	},	
 	MOUNTMG42_mg42_1 = 
 	{
 		CreateOnLoad = 0,
