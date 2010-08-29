@@ -1817,7 +1817,7 @@ global _MG =
 	},
 	EXPLODE_obj_block01 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
 		GroupName = "",
 		MinRadius = 0,

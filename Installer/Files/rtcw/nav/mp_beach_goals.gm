@@ -1868,7 +1868,7 @@ global _MG =
 	},
 	EXPLODE_barrier1 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
 		GroupName = "",
 		MinRadius = 0,
@@ -1881,24 +1881,9 @@ global _MG =
 		TeamAvailability = 30,
 		Version = 1,
 	},
-	EXPLODE_barrier1_1 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_barrier1_1",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
-		Position = Vec3(-740.000, 2375.999, 232.000),
-		Radius = 0,
-		SerialNum = 304,
-		TagName = "barrier1",
-		TeamAvailability = 30,
-		Version = 1,
-	},
 	EXPLODE_barrier2 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
 		GroupName = "",
 		MinRadius = 0,
@@ -1911,24 +1896,9 @@ global _MG =
 		TeamAvailability = 30,
 		Version = 1,
 	},
-	EXPLODE_barrier2_1 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_barrier2_1",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
-		Position = Vec3(516.000, 3576.000, 384.000),
-		Radius = 0,
-		SerialNum = 306,
-		TagName = "barrier2",
-		TeamAvailability = 30,
-		Version = 1,
-	},
 	EXPLODE_barrier3 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
 		GroupName = "",
 		MinRadius = 0,
@@ -1937,21 +1907,6 @@ global _MG =
 		Position = Vec3(323.999, 1048.000, 360.000),
 		Radius = 0,
 		SerialNum = 274,
-		TagName = "barrier3",
-		TeamAvailability = 30,
-		Version = 1,
-	},
-	EXPLODE_barrier3_1 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_barrier3_1",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
-		Position = Vec3(323.999, 1048.000, 360.000),
-		Radius = 0,
-		SerialNum = 308,
 		TagName = "barrier3",
 		TeamAvailability = 30,
 		Version = 1,
