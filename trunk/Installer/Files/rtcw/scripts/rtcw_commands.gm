@@ -444,11 +444,42 @@ Commands["goaldef"] =
 			{
 				case "defend":
 				{
-					// todo
+					foreach ( id and wpName in Map[ _params[ 0 ] ] ) {
+						wpTable = table();
+						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
+
+						goals[ id ] = table();
+						goals[ id ].GoalType = "CAMP";
+						goals[ id ].Name = format("CAMP_%s", wpName);
+						goals[ id ].TagName = wpName;
+						goals[ id ].Radius = wpTable.radius;
+						goals[ id ].MinRadius = wpTable.radius;
+						goals[ id ].Stance = "crouch";
+						goals[ id ].AimVectors = table();
+						goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+						goals[ id ].Roles = table();
+						goals[ id ].Roles[ 0 ] = "DEFENDER";
+						goals[ id ].Position = GroundPoint(wpTable.position);
+						goals[ id ].Weapons = table();
+					}
 				}
 				case "as":
 				{
-					// todo
+					foreach ( id and wpName in Map[ _params[ 0 ] ] ) {
+						wpTable = table();
+						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
+
+						goals[ id ] = table();
+						goals[ id ].GoalType = "AIRSTRIKE";
+						goals[ id ].Name = format("AIRSTRIKE_%s", wpName);
+						goals[ id ].TagName = wpName;
+						goals[ id ].Radius = wpTable.radius;
+						goals[ id ].MinRadius = wpTable.radius;
+						goals[ id ].Stance = "stand";
+						goals[ id ].AimVectors = table();
+						goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+						goals[ id ].Position = GroundPoint(wpTable.position);
+					}
 				}
 				case "grenade":
 				{
@@ -466,7 +497,8 @@ Commands["goaldef"] =
 						goals[ id ].Radius = 32;
 						goals[ id ].MinRadius = 32;
 						goals[ id ].Stance = "stand";
-						
+						goals[ id ].TagName = id;
+
 						if ( def.PrimeGrenade ) {
 							goals[ id ].PrimeGrenade = def.PrimeGrenade;
 						} else {
@@ -482,7 +514,7 @@ Commands["goaldef"] =
 					print( "invalid goal type for param 1. expecting \"defend\", \"as\" or \"grenade\"" );
 				}
 			}
-			
+
 			Commands["goaldef"].writeGoalDefs(goals, _params[0]);
 		}
 		else
@@ -490,7 +522,7 @@ Commands["goaldef"] =
 			print( format("map table %s does not exist", _params[ 0 ]) );
 		}
 	},
-	
+
 	writeGoalDefs = function(goals, type)
 	{
 		print("writing goal defs");
@@ -498,20 +530,19 @@ Commands["goaldef"] =
 		gmfile = File();
 		fileName = format("%s_%s_converted.gm", GetMapName(), type);
 		assert( gmfile.Open( fileName, "text", false ) );
-		
+
 		foreach( id and goal in goals ) {
 			str = format("\t%s =", goal.Name);
 			assert( gmfile.Write( str, System.NewLine ) );
 			assert( gmfile.Write( "\t{", System.NewLine ) );
-			
+
 			// add some common props
 			goal.CreateOnLoad = 1;
 			goal.GroupName = "";
 			goal.Orientation = Vector3(0,0,0);
 			goal.TeamAvailability = 0;
-			goal.TagName = id;
 			goal.Version = 1;
-			
+
 			foreach ( property and value in goal ) {
 
 				switch(typeName(value))
@@ -519,33 +550,56 @@ Commands["goaldef"] =
 					case "int":
 					{
 						str = format("\t\t%s = %d,", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
 					}
 					case "float":
 					{
 						str = format("\t\t%s = %f,", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
 					}
 					case "string":
 					{
 						str = format("\t\t%s = \"%s\",", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
 					}
 					case "vector3":
 					{
 						str = format("\t\t%s = Vec3(%f,%f,%f),", property, value.x, value.y, value.z);
+						assert( gmfile.Write( str, System.NewLine ) );
 					}
 					case "table":
 					{
-						//todo
+						str = format("\t\t%s = ", property);
+						assert( gmfile.Write( str, System.NewLine ) );
+						assert( gmfile.Write( "\t\t{", System.NewLine ) );
+
+						foreach( xid and val in value ) {
+
+							switch(typeName(val))
+							{
+								case "vector3":
+								{
+									str = format("\t\t\t[%d] = Vec3(%f,%f,%f),", xid, val.x, val.y, val.z);
+									assert( gmfile.Write( str, System.NewLine ) );
+								}
+								case "string":
+								{
+									str = format("\t\t\t[%d] = \"%s\",", xid, val);
+									assert( gmfile.Write( str, System.NewLine ) );
+								}
+							};
+						}
+
+						assert( gmfile.Write( "\t\t},", System.NewLine ) );
 					}
 				};
-				
-				assert( gmfile.Write( str, System.NewLine ) );
 			}
-			
+
 			assert( gmfile.Write( "\t},", System.NewLine ) );
 		}
-		
+
 		gmfile.Close();
-		
+
 		print("finished writing goal defs");
 	},
 };
