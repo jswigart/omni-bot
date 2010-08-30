@@ -245,10 +245,11 @@ difficulties.AdjustWeaponProperties = function( bot, clear )
 //	bot difficulty 1
 Commands["difficulty"] = function( _params )
 {
+	diff = ToInt(_params[0]);
 	if ( typeId( _params[0] ) != 0 ) {
 		// Check if this difficulty level exists.
-		if ( difficulties[_params[0]] ) {
-			global CurrentDifficulty = _params[0];
+		if ( difficulties[diff] ) {
+			global CurrentDifficulty = diff;
 
 			// set min to 1 since 0 doesn't work ...
 			if ( CurrentDifficulty == 0 ) {
@@ -266,7 +267,7 @@ Commands["difficulty"] = function( _params )
 			print( "Difficulty Changed", CurrentDifficulty );
 		} else
 		{
-			print( "Difficulty level not found", _params[0] );
+			print( "Difficulty level not found", diff );
 		}
 	}
 
