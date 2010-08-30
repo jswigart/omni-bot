@@ -53,8 +53,8 @@ namespace AiState
 
 		TrackTargetZone		m_TargetZone;
 
-		int					m_MinCampTime;
-		int					m_MaxCampTime;
+		Seconds				m_MinCampTime;
+		Seconds				m_MaxCampTime;
 		int					m_Stance;
 
 		//////////////////////////////////////////////////////////////////////////
@@ -240,8 +240,8 @@ namespace AiState
 		FilterPtr			m_WatchFilter;
 
 		bool				m_Fired;
-		int					m_MinCampTime;
-		int					m_MaxCampTime;
+		Seconds				m_MinCampTime;
+		Seconds				m_MaxCampTime;
 		int					m_Stance;
 
 		int					m_ExpireTime;

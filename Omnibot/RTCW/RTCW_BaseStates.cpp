@@ -197,7 +197,7 @@ namespace AiState
 				// Only hang around here for a certain amount of time
 				if(m_ExpireTime==0)
 				{
-					m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime,m_MaxCampTime);
+					m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
 					Tracker.InUse = m_MapGoal;
 				}
 				else if(IGame::GetTime() > m_ExpireTime)
@@ -1010,7 +1010,7 @@ namespace AiState
 		m_MapGoalTarget.reset();
 
 		//////////////////////////////////////////////////////////////////////////
-		/*RTCW_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
+		RTCW_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
 		filter.AddCategory(ENT_CAT_SHOOTABLE);
 		FINDSTATE(sensory,SensoryMemory,GetRootState());
 		if(sensory)
@@ -1019,7 +1019,7 @@ namespace AiState
 			m_TargetEntity = filter.GetBestEntity();
 			if(m_TargetEntity.IsValid())
 				return GetLastPriority();
-		}*/
+		}
 		//////////////////////////////////////////////////////////////////////////
 		{
 			GoalManager::Query qry(0x312ad48d /* CALLARTILLERY */, GetClient());
@@ -1160,7 +1160,7 @@ namespace AiState
 
 			if(m_ExpireTime==0)
 			{
-				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime,m_MaxCampTime);
+				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
 				Tracker.InUse = m_MapGoal;
 			}
 			else if(IGame::GetTime() > m_ExpireTime)
@@ -1174,9 +1174,7 @@ namespace AiState
 			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
 			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_BINOCULARS));
 
-			if (m_Stance==StanceProne)
-				GetClient()->PressButton(BOT_BUTTON_PRONE);
-			else if (m_Stance==StanceCrouch)
+			if (m_Stance==StanceCrouch)
 				GetClient()->PressButton(BOT_BUTTON_CROUCH);
 		}
 		return State_Busy;
