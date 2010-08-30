@@ -430,34 +430,123 @@ Commands["draw_spawns"] =
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// dump goal definitions from a passed table of waypoints
+// dump goal definitions from a passed map table
+// /bot goaldef <table> <goal type>
 Commands["goaldef"] =
 {
 	Func = function( _params )
 	{
-		if ( typeId(_params[0]) == 6 )
+		goals = table();
+
+		if ( Map && Map[ _params[0] ] )
 		{
 			switch(_params[1])
 			{
-			case "defend":
-			{
+				case "defend":
+				{
+					// todo
+				}
+				case "as":
+				{
+					// todo
+				}
+				case "grenade":
+				{
+					if ( !Map.Target ) {
+						print( "expecting Map.Target table for grenade goal type" );
+						return;
+					}
+
+					foreach( id and def in Map.Target ) {
+						goals[ id ] = table();
+						goals[ id ].GoalType = "GRENADE";
+						goals[ id ].IgnoreDead = 0;
+						goals[ id ].Name = format("GRENADE_%s", id);
+						goals[ id ].TargetGoal = def.GrenadeTargetGoalName;
+						goals[ id ].Radius = 32;
+						goals[ id ].MinRadius = 32;
+						goals[ id ].Stance = "stand";
+						
+						if ( def.PrimeGrenade ) {
+							goals[ id ].PrimeGrenade = def.PrimeGrenade;
+						} else {
+							goals[ id ].PrimeGrenade = 1;
+						}
+
+						goals[ id ].Position = GroundPoint(GetEntityWorldSpace( GetGoal(goals[ id ].TargetGoal).GetEntity(), def.Offset[ 0 ] ));
+						goals[ id ].Facing = (GetGoal(def.GrenadeTargetGoalName).GetPosition() - goals[ id ].Position).Normalize();
+					}
+				}
+				default:
+				{
+					print( "invalid goal type for param 1. expecting \"defend\", \"as\" or \"grenade\"" );
+				}
 			}
-			case "as":
-			{
-			}
-			case "grenade":
-			{
-			}
-			default:
-			{
-				print( "invalid goal type for param 1. expecting \"defend\", \"as\" or \"grenade\"" );
-			}
-			}
+			
+			Commands["goaldef"].writeGoalDefs(goals, _params[0]);
 		}
 		else
 		{
-			print( format("expecting param 1 as table got %s", typeName(_params[0])) );
+			print( format("map table %s does not exist", _params[ 0 ]) );
 		}
+	},
+	
+	writeGoalDefs = function(goals, type)
+	{
+		print("writing goal defs");
+
+		gmfile = File();
+		fileName = format("%s_%s_converted.gm", GetMapName(), type);
+		assert( gmfile.Open( fileName, "text", false ) );
+		
+		foreach( id and goal in goals ) {
+			str = format("\t%s =", goal.Name);
+			assert( gmfile.Write( str, System.NewLine ) );
+			assert( gmfile.Write( "\t{", System.NewLine ) );
+			
+			// add some common props
+			goal.CreateOnLoad = 1;
+			goal.GroupName = "";
+			goal.Orientation = Vector3(0,0,0);
+			goal.TeamAvailability = 0;
+			goal.TagName = id;
+			goal.Version = 1;
+			
+			foreach ( property and value in goal ) {
+
+				switch(typeName(value))
+				{
+					case "int":
+					{
+						str = format("\t\t%s = %d,", property, value);
+					}
+					case "float":
+					{
+						str = format("\t\t%s = %f,", property, value);
+					}
+					case "string":
+					{
+						str = format("\t\t%s = \"%s\",", property, value);
+					}
+					case "vector3":
+					{
+						str = format("\t\t%s = Vec3(%f,%f,%f),", property, value.x, value.y, value.z);
+					}
+					case "table":
+					{
+						//todo
+					}
+				};
+				
+				assert( gmfile.Write( str, System.NewLine ) );
+			}
+			
+			assert( gmfile.Write( "\t},", System.NewLine ) );
+		}
+		
+		gmfile.Close();
+		
+		print("finished writing goal defs");
 	},
 };
 
