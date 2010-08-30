@@ -13,35 +13,26 @@ global Map =
 	DontDispenseAmmo = true,
 	FriendlyFire,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 2, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 3, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
-
-	ammo_default = { "dual_ammo_1", "dual_ammo_2", "dual_ammo_3", "dual_ammo_4", "dual_ammo_5", "dual_ammo_6", "dual_ammo_7", "dual_ammo_8", },
-	radar_default = { "dual_radar_1", "dual_radar_2", "dual_radar_3", "dual_radar_4", "dual_radar_5", "dual_radar_6", "dual_radar_7", "dual_radar_8", },
-
-	//Airstrikes
-	ammo_as = { "rAmmoAS_1", "rAmmoAS_2", },
-	radar_as = { "bRadarAS_1", "bRadarAS_2" },
 
 	Navigation =
 	{
@@ -139,9 +130,8 @@ global Map =
 			{ return; }
 
 		Map.FlagStatus = TEAM.AXIS;
-
-		Map.AxisASTable = Map.ammo_as;
-
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAmmoAS_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rCourtyard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMGCourtyard.*" );
@@ -152,7 +142,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rRadar.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRadar.*" );
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bRadarAS_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGCourtyard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGAmmo.*" );
@@ -176,8 +166,8 @@ global Map =
 
 		Map.FlagStatus = TEAM.ALLIES;
 
-		Map.AxisASTable = {};
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rAmmoAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rCourtyard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBarn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRadar.*" );
@@ -191,7 +181,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRadar.*" );
 		}
 
-		//Map.AlliesASTable = Map.radar_as;
+		// cs: this is supposed to be commented out?
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRadarAS_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
@@ -243,16 +234,16 @@ global OnMapLoad = function()
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*");
 
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBarn.*" );
-	Map.Defend.Axis = Map.radar_default;
 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ammo_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equip" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMGAmmo_1" ); // This is very helpful in defending the barnyard
-	Map.Defend.Allies = Map.ammo_default;
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
@@ -262,8 +253,10 @@ global OnMapLoad = function()
 	SetGoalPriority("DEFEND_r_lt_barn.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT);
 	SetGoalPriority("DEFEND_b_lt_radar.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT);
 	SetGoalPriority("ATTACK.*", 0.45); //roams
+	SetGoalPriority("CAMP.*", 0.95); // dedicated defends
 	SetGoalPriority("ARTILLERY.*", 1.0);
 	SetGoalPriority("CALLARTILLERY.*", 0.94);
+	SetGoalPriority("AIRSTRIKE.*", 0.94);
 	SetGoalPriority("REPAIRMG42.*", 0.93); // Higher than plant, so they actually get repaired
 
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
@@ -292,8 +285,6 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 100.0;
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
 };
 
 global InitializeRoutes = function()
