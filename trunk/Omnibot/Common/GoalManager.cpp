@@ -1236,7 +1236,9 @@ void GoalManager::Update()
 			OnGoalDelete((*it));
 
 			(*it)->SetAvailabilityTeams(0);
+#ifdef _DEBUG
 			LOG("Goal Deleted: %s, %s", (*it)->GetGoalType().c_str(), (*it)->GetName().c_str());
+#endif
 			it = m_MapGoalList.erase(it);
 		}
 		else
@@ -1411,7 +1413,9 @@ MapGoalPtr GoalManager::AddGoal(const MapGoalDef &_goaldef)
 			ErrorObj err;
 			if(newGoal->LoadFromTable(pMachine,Props,err))
 			{
+#ifdef _DEBUG
 				LOG("Goal Created: %s, partially loaded from script",newGoal->GetName().c_str());
+#endif
 				AddGoal(newGoal);
 			}
 			else
@@ -1421,7 +1425,9 @@ MapGoalPtr GoalManager::AddGoal(const MapGoalDef &_goaldef)
 		}
 		else if(newGoal->InternalInit(Props, New!=0))
 		{
+#ifdef _DEBUG
 			LOG("Goal Created: %s",newGoal->GetName().c_str());
+#endif
 			AddGoal(newGoal);
 		}
 		else
@@ -1457,7 +1463,9 @@ void GoalManager::RemoveGoalByName(const char *_goalname)
 		if((*it)->GetName() == _goalname)
 		{
 			OnGoalDelete((*it));
+#ifdef _DEBUG
 			LOG("Goal Deleted: %s, %s",(*it)->GetGoalType().c_str(),(*it)->GetName().c_str());
+#endif
 			it = m_MapGoalList.erase(it);
 		}
 		else
@@ -1474,7 +1482,9 @@ void GoalManager::RemoveGoalsByType(const char *_goaltype)
 		{
 			OnGoalDelete((*it));
 			(*it)->SetAvailabilityTeams(0);
+#ifdef _DEBUG
 			LOG("Goal Deleted: %s, %s",(*it)->GetGoalType().c_str(),(*it)->GetName().c_str());
+#endif
 			it = m_MapGoalList.erase(it);
 		}
 		else
@@ -1495,7 +1505,9 @@ void GoalManager::RemoveGoalByEntity(GameEntity _ent)
 			OnGoalDelete((*it));
 			(*it)->SetDeleteMe(true);
 			(*it)->SetAvailabilityTeams(0);
+#ifdef _DEBUG
 			LOG("Goal Deleted: %s, %s",(*it)->GetGoalType().c_str(),(*it)->GetName().c_str());
+#endif
 			it = m_MapGoalList.erase(it);
 		}
 		else
