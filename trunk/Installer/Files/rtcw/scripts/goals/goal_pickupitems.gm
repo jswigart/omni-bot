@@ -4,7 +4,7 @@ this.Name = "PickupItems";
 this.Parent = "HighLevel";
 this.AlwaysRecieveEvents = true;
 this.AutoAdd = true;
-this.PickupPriority = 0.9;
+this.PickupPriority = 0.98;
 this.Range = 200;
 this.Frequency = 5; // 1 to 10, 0 to disable
 
