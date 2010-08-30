@@ -1,5 +1,100 @@
 global _MG = 
 {
+	AIRSTRIKE_bFlagAS_1 =
+	{
+		Name = "AIRSTRIKE_bFlagAS_1",
+		AimVectors = 
+		{
+			[0] = Vec3(0.026318,0.698155,0.715463),
+		},
+		Radius = 35.000000,
+		Version = 1,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "bFlagAS_1",
+		Position = Vec3(2620.857422,-2206.430420,128.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_rFlagAS_1 =
+	{
+		Name = "AIRSTRIKE_rFlagAS_1",
+		AimVectors = 
+		{
+			[0] = Vec3(0.046700,-0.934153,0.353805),
+		},
+		Radius = 50.000000,
+		Version = 1,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rFlagAS_1",
+		Position = Vec3(3393.860596,-2822.588623,144.125000),
+		MinRadius = 50.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_rFlagAS_2 =
+	{
+		Name = "AIRSTRIKE_rFlagAS_2",
+		AimVectors = 
+		{
+			[0] = Vec3(-0.035773,-0.715573,0.697621),
+		},
+		Radius = 100.000000,
+		Version = 1,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rFlagAS_2",
+		Position = Vec3(2412.628662,-2841.310303,128.125000),
+		MinRadius = 100.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_rGateAS_1 =
+	{
+		Name = "AIRSTRIKE_rGateAS_1",
+		AimVectors = 
+		{
+			[0] = Vec3(-0.001119,-0.778455,0.627700),
+		},
+		Radius = 100.000000,
+		Version = 1,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rGateAS_1",
+		Position = Vec3(2815.377686,-1733.966675,128.125000),
+		MinRadius = 100.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_rGateAS_2 =
+	{
+		Name = "AIRSTRIKE_rGateAS_2",
+		AimVectors = 
+		{
+			[0] = Vec3(0.075073,-0.995617,-0.055770),
+		},
+		Radius = 35.000000,
+		Version = 1,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rGateAS_2",
+		Position = Vec3(2631.133545,-1953.821289,256.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
 	ARTILLERY_S_rFlag_1 = 
 	{
 		CreateOnLoad = 1,

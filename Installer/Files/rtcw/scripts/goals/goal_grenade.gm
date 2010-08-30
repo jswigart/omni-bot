@@ -92,6 +92,7 @@ this.GetPriority = function()
 						if ( !g || (goal.IgnoreDead && g && !EntityIsValid(g.GetEntity()))
 							|| (!goal.IgnoreDead && GetEntFlags(g.GetEntity(), ENTFLAG.DEAD)) )
 						{
+							goal.DisableGoal(true);
 							continue;
 						}
 					}

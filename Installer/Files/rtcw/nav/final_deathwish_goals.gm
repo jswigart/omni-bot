@@ -1,5 +1,81 @@
 global _MG = 
 {
+	AIRSTRIKE_rBeachAS_east =
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.011807,-0.597737,0.801606),
+		},
+		Version = 1,
+		Radius = 35.000000,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		Name = "AIRSTRIKE_rBeachAS_east",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rBeachAS_east",
+		Position = Vec3(1974.222290,1360.307983,800.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_rBeachAS_west =
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.417685,-0.493322,0.763003),
+		},
+		Version = 1,
+		Radius = 35.000000,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		Name = "AIRSTRIKE_rBeachAS_west",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "rBeachAS_west",
+		Position = Vec3(-772.842346,1375.817017,800.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_barbAS_1 =
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.367239,-0.479705,0.796881),
+		},
+		Version = 1,
+		Radius = 35.000000,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		Name = "AIRSTRIKE_barbAS_1",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "barbAS_1",
+		Position = Vec3(-416.192871,1426.158447,800.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
+	AIRSTRIKE_barbAS_2 =
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.233737,-0.533921,0.812586),
+		},
+		Version = 1,
+		Radius = 35.000000,
+		TeamAvailability = 0,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GroupName = "",
+		Name = "AIRSTRIKE_barbAS_2",
+		CreateOnLoad = 1,
+		Stance = "stand",
+		TagName = "barbAS_2",
+		Position = Vec3(1690.010010,1711.441406,800.125000),
+		MinRadius = 35.000000,
+		GoalType = "AIRSTRIKE",
+	},
 	ARTILLERY_S_bBeach_1 = 
 	{
 		CreateOnLoad = 1,

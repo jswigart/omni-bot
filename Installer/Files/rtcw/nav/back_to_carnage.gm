@@ -35,25 +35,6 @@ global Map =
 	rSnipers = 0,
 	rFlamers = 0,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	Target =
-	{
-		trenchbarricade =
-		{
-			Priority = 0.67,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_trenchbarricade",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			Offset =
-			{
-				Vector3( 340, -100, -15 ),
-			}
-		},
-	},
-
 	Axis_Transmission_Radio_Destroyed = function( trigger )
 	{
 		if ( TestMap ) {
@@ -114,13 +95,13 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWall.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_219" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_219" );
-			Map.AxisASTable = {"rRadioAS_1", "rRadioAS_2",};
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRadioAS_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
 			print( "here" );
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
-		Map.AlliesASTable = {}; // Stop spamming over wall
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		//switch from sniper to other soldier weap
 		RTCWUtil.StopSniping();
@@ -163,14 +144,14 @@ global Map =
 
 		Map.WallStatus = true;
 
-		Map.Target.trenchbarricade.Enabled = true;
-
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_trenchbarricade" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beach_flag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSeawall.*" );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		Map.AxisASTable = {"rTrenchAS",};
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
 		RTCWUtil.EnableGoal( "ROUTE_sBeach" );
@@ -276,7 +257,7 @@ global Map =
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beach_flag" );
-		Map.AxisASTable = {"rTrenchSpam_1", "rTrenchSpam_2",};
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
 	},
 
 	beach_flag_Axis_Captured = function( trigger )
@@ -296,9 +277,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_t543" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_597" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTrenches.*" );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		if ( Map.WallStatus == false ) {
-			Map.AxisASTable = {};
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		}
 	},
 
@@ -307,13 +288,13 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_597" ); // On top of FB
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_t543" );
 
 		if ( Map.GateStatus == false ) {
-			Map.AlliesASTable = {"bGate_1", "bGate_2",};
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate_.*" );
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
@@ -330,7 +311,7 @@ global Map =
 		}
 
 		if ( Map.TrenchStatus == true ) {
-			Map.AxisASTable = {"rTrenchSpam_1", "rTrenchSpam_2",};
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTrenches.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTrenches.*" );
@@ -374,6 +355,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_RadioEng.*", 0.8 );
 	SetGoalPriority( "DEFEND_rGeneratorEng.*", 0.8 );
 	SetGoalPriority( "ATTACK_bEngGate.*", 0.8 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	RTCWUtil.LimitToClass( "DEFEND_rGeneratorEng.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_RadioEng.*", TEAM.AXIS, CLASS.ENGINEER );
@@ -395,8 +377,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_Wall" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	Map.AlliesASTable = {"bSeawall_1", "bSeawall_2", "bSeawall_3",};
-	Map.AxisASTable = {"rWallAS_1", "rWallAS_2", "rWallAS_3",};
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSeawall_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rWallAS_.*" );
 
 	Util.AddUseWp( "PLANT_power_generator", "plant_gen1" );
 	Util.AddUseWp( "PLANT_power_generator", "plant_gen2" );
