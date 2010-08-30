@@ -64,6 +64,7 @@ global Map =
 
 		Map.CoffinDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Let eng defuse!
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rCoffinSpam.*" );
 
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
@@ -82,6 +83,7 @@ global Map =
 		Map.CoffinDyno -= 1;
 		if ( Map.CoffinDyno == 0 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" ); // Let it rain again
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
 			if ( Map.Suicide ) {
 				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 			}
@@ -170,6 +172,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Focus on obelisk
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rCoffinSpam.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );      // Get to transmitter FAST
 
@@ -195,6 +198,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rHallway.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
@@ -245,6 +249,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rsealtar.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCoffin.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCoffin.*" );
 			Map.DisableAxisCoffinAccess();
