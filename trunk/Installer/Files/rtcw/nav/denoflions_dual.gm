@@ -609,7 +609,7 @@ global InitializeRoutes = function()
 			},
 		},
 // axis camps
-		UGOAL_dual_radar_1 =
+		CAMP_dual_radar_1 =
 		{
 			ROUTE_axisSpawn =
 			{
@@ -647,7 +647,7 @@ global InitializeRoutes = function()
 		},
 
 // allied camps
-		UGOAL_dual_ammo_1 =
+		CAMP_dual_ammo_1 =
 		{
 			ROUTE_alliedSpawn =
 			{
@@ -736,22 +736,22 @@ global InitializeRoutes = function()
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;	
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder.Weight = 1;
 
-// UGOAL_dual_radar
-	MapRoutes.UGOAL_dual_radar_2 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_3 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_4 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_5 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_6 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_7 = MapRoutes.UGOAL_dual_radar_1;
-	MapRoutes.UGOAL_dual_radar_8 = MapRoutes.UGOAL_dual_radar_1;
-// UGOAL_dual_ammo
-	MapRoutes.UGOAL_dual_ammo_2 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_3 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_4 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_5 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_6 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_7 = MapRoutes.UGOAL_dual_ammo_1;
-	MapRoutes.UGOAL_dual_ammo_8 = MapRoutes.UGOAL_dual_ammo_1;
+// CAMP_dual_radar
+	MapRoutes.CAMP_dual_radar_2 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_3 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_4 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_5 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_6 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_7 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_8 = MapRoutes.CAMP_dual_radar_1;
+// CAMP_dual_ammo
+	MapRoutes.CAMP_dual_ammo_2 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_3 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_4 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_5 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_6 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_7 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_8 = MapRoutes.CAMP_dual_ammo_1;
 // DEFEND_rBarn
 	MapRoutes.DEFEND_rBarn_1 = MapRoutes.PLANT_Allied_munitions;
 	MapRoutes.DEFEND_rBarn_2 = MapRoutes.PLANT_Allied_munitions;
