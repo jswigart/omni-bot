@@ -35,12 +35,6 @@ global Map =
 	PanzHitlerBots = 0,
 	PanzLowerBots = 0,
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	ladderAS = { "door_as_2", "door_as_3", },
-
 	//set to false if you don't want axis /killing when docs are returned
 	Suicide = true,
 
@@ -50,8 +44,6 @@ global Map =
 		{
 			Enabled = true,
 			Team = ( 1 << TEAM.AXIS ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
-			//Facing = Vector3(-0.593,-0.392,0.703), // use this if no goto waypoint. /bot mypos shows facing
-			//NoPause = true, // optional: set this if you want them throw while running
 			Waypoint = "door_as_1", // optional: defining this will have them go to given waypoint and then throw a/s
 		},
 	},
@@ -166,25 +158,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
 
 		//focus the action on the documents
-		//SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Cp_Attack.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlagArt.*" );
 
-		/*if ( Map.DocStatus == 0 )
-		{
-		    SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
-		    SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
-		    SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
-		    //SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
-		}
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_flag" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
-
-		*/
-		//Map.AxisPushedForward = false;
-		//SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
 		Map.Airstrike.garageas.Enabled = false;
 
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
@@ -203,7 +179,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_2" );
 		}
-		//SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCourtyard.*" );
 
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	},
@@ -222,15 +197,6 @@ global Map =
 		if ( Map.DocStatus == 0 && Map.AxisPushedForward == true ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_CP_Lower.*" );
 		}
-
-		//some axis should start defending docs
-		/*if ( Map.DocStatus == 0 )
-		{
-		    SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
-		    SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
-		}*/
-
-		//Map.AxisASTable = {};		// Turn off axis airstrikes*/
 	},
 
 	Dyno_Plant_Main = function( trigger )
@@ -269,7 +235,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
 		Wp.SetWaypointFlag( "WallJump","closed",true );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 	},
 
@@ -356,7 +322,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bGarage" );
 
 		Map.AxisPushedForward = false;
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		//axis should spawn at garage
 		foreach( id and bot in BotTable )
@@ -427,7 +393,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Cp_Defense.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint );
 				Map.AxisPushedForward = true;
-				Map.AxisASTable = Map.ladderAS;
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
 			}
 
 			sleep( 1 );
@@ -451,15 +417,13 @@ global Map =
 				if ( Map.DocStatus == 0 ) {
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
-					//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
 				}
 
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Lower.*" );
-				//SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_flag" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
-				Map.AxisASTable = {};
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
 
 
@@ -539,6 +503,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	SetGoalPriority( "DEFEND_Doc_Defense_4", 0.65 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.DisableGoal( "ROUTE_lowercp" );
@@ -555,15 +520,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_bGarage" );
 
 	// Artillery
-	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_flag" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_1" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlagArty.*" );
 
 	SetGoalPriority( "CALL.*", 0.7 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 
-	Map.AxisASTable = Map.ladderAS;
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
 
 	// Special defend points
 	SetGoalPriority( "DEFEND_CP_Defense_[368]", 0.55 );

@@ -4,18 +4,6 @@ global Map =
 	Debug = false,
 	DebugAvailability = false,
 
-
-	//this function is called from goal_grenadetarget
-	EvalGrenadeTarget = function()
-	{
-		if ( Map.DoorStatus || Map.WallStatus ) {
-			//turn it off for the rest of the round
-			this.Disable = true;
-			return false;
-		}
-
-		return true;
-	},
 	Airstrike =
 	{
 		bridge =
@@ -82,57 +70,6 @@ global Map =
 	DoorStatus = false, //intact
 	WallStatus = false, //intact
 	WarRoomShift = false,
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	//tables to copy to current AS goal tables
-	AxisASWall = { /*"red_as1_p1",*/ "red_as2_p1", "red_as3_p1", },
-	AlliesASWall = { /*"blue_as1_p1",*/ "blue_as2_p1", "blue_as3_p1", },
-
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.91,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier1",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( 0, -400, 0 ),
-			}
-		},
-		Barricade2 =
-		{
-			Priority = 0.91,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier2",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( 0, -500, 0 ),
-			}
-		},
-		Barricade3 =
-		{
-			Priority = 0.91,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier3",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( -300, -300, 0 ),
-			}
-		},
-	},
 
 	BackStairsTrigger =
 	{
@@ -281,23 +218,25 @@ global Map =
 			RTCWUtil.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
 
 			//no more a/s here
-			Map.AxisASTable = {};
-			Map.AlliesASTable = {};
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		} else if ( Map.WallStatus && !Map.DoorStatus )   { //wall destroyed, door intact
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWall.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_t367 );
 
 			//shift a/s focus
-			Map.AxisASTable = { "red_as1_p1", "red_as3_p1", };
-			Map.AlliesASTable = { "blue_as3_p1", };
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as3_p1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_p1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as3_p1" );
 		} else if ( !Map.WallStatus && Map.DoorStatus )   { //door destroyed, wall intact
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDoor.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_2 );
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_1 );
 
 			//shift a/s focus`
-			Map.AxisASTable = { "red_as2_p1", };
-			Map.AlliesASTable = { "blue_as1_p1", "blue_as2_p1", };
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p1" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as1_p1" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as2_p1" );
 		}
 
 		//switch from sniper to other soldier weap
@@ -328,12 +267,12 @@ global Map =
 		Map.FlagStatus = 2;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_FF_Christmas_List );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		Map.EvalArty();
 
 		if ( Map.DocStatus == false ) {
-			Map.AxisASTable = {"rTrenchAS_1", "rTrenchAS_2",};
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 		}
 		Map.Airstrike.bridge.Enabled = true;
 		SetGoalPriority( "CALL.*", 0.6 );
@@ -352,7 +291,7 @@ global Map =
 		}
 
 		Map.FlagStatus = 1;
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		Map.EvalArty();
 
 		Map.Airstrike.bridge.Enabled = false;
@@ -397,7 +336,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_beach_flag );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWar.*" ); //make sure
-			Map.AxisASTable = {};
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 			// cs: just exit right away if docs are returned
 			timeout = 0;
@@ -477,7 +416,7 @@ global Map =
 		SetGoalPriority( "DEFEND_rTransmit.*", 0.5 );
 		//if(Map.FlagStatus == 2)
 		//{
-		Map.AxisASTable = {"rTrenchAS_1","rTrenchAS_2",};
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 		//}
 
 		if ( Map.CompSettings ) {
@@ -554,18 +493,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.FLAG_FF_Christmas_List );
 		Util.MapDebugPrint( "two_minute" );
 	},
-	alive_watch = function()
-	{
-		while ( 1 )
-		{
-			if ( !Map.DocStatus && !Map.WarRoomShift && RTCWUtil.IsTeamDead( TEAM.ALLIES ) ) {
-				// guess there should be a spawn time check too ...
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE.*" );
-			}
 
-			sleep( 1 );
-		}
-	},
 	TowerTrigger =
 	{
 		Name = "TowerTrigger",
@@ -624,8 +552,6 @@ global OnMapLoad = function()
 	//tLongOne = OnTriggerRegion(AABB(3935.000,1660.000,671.000,4016.000,1699.000,780.000), Map.BackStairsTrigger);
 	//tShortOne = OnTriggerRegion(AABB(3516.000,2953.000,511.000,3554.000,3078.000,604.000), Map.RadioStairsTrigger);
 
-	thread( Map.alive_watch );
-
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "ATTACK_bTransmit.*", {mincamptime = 5, maxcamptime = 10} );
@@ -636,13 +562,24 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.2 );
+	SetGoalPriority( "ARTILLERY.*", 1.2 );
+	SetGoalPriority( "CHECKPOINT.*", 0.9 );
+	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
+	SetGoalPriority( "ATTACK_bUpper.*", 0.55 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+	SetGoalPriority( "GRENADE_.*", 0.91 );	
+	
 	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE.*", 0, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_t367 );
@@ -652,12 +589,13 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rUpper.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "VENOM_rUpper.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 	Map.Airstrike.bridge.Enabled = true;
 
 	// *** Artillery
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_steps" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_steps" );
 
 	// Now some targets...
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBeach.*" );
@@ -667,23 +605,12 @@ global OnMapLoad = function()
 	RTCWUtil.StopSniping();
 	// *** End Arty
 
-	SetGoalPriority( "CALL.*", 1.2 );
-	SetGoalPriority( "ARTILLERY.*", 1.2 );
-	SetGoalPriority( "CHECKPOINT.*", 0.9 );
-	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
-	SetGoalPriority( "ATTACK_bUpper.*", 0.55 );
-
 	//Wp.SetWaypointFlag( "ladder", "closed", true );	// close up the ladder
 	//Wp.SetWaypointFlag( "pt_nav_towerjump", "closed", true );	// close up the towerjump
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_bUpper.*" );
-
-	//copy the wall AS goal tables to the AS goal table to make them active
-	//Map.AxisASTable = Map.AxisASWall;
-	Map.AxisASTable = {"rTrenchAS_1", "rTrenchAS_2",};
-	//Map.AlliesASTable = Map.AlliesASWall;
 
 	MapRoutes =
 	{

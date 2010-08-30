@@ -18,10 +18,6 @@ global Map =
 	MainGateDyno = 0,
 	ControlsDyno = 0,
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
 	side_door_script_Destroyed = function( trigger )
 	{
 		if ( TestMap ) {
@@ -104,7 +100,7 @@ global Map =
 		} else
 		{
 			Map.FlagDefense();
-			Map.AlliesASTable = { "bFlagAS_1",};
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_1" );
 		}
 	},
 
@@ -210,7 +206,7 @@ global Map =
 
 	FlagDefense = function()
 	{
-		Map.AxisASTable = { "rFlagAS_1", "rFlagAS_2", };
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
@@ -225,7 +221,7 @@ global Map =
 
 	GateDefense = function()
 	{
-		Map.AxisASTable = { "rGateAS_1", "rGateAS_2",};
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
@@ -233,14 +229,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Controls_Attack.*" );
 	},
 
 	BaseDefense = function()
 	{
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
@@ -251,14 +247,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Flex.*" );
 		}
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Controls_Attack.*" );
 	},
 
 	BaseFlex = function()
 	{
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
@@ -267,7 +263,7 @@ global Map =
 		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Base.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Flex.*" );
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Controls_Attack.*" );
 	},
@@ -286,7 +282,7 @@ global Map =
 				{
 					if ( bot.GetTeam() == TEAM.AXIS ) {
 						bot.SayTeam( "Allies are planting at Controls!" );
-						Map.AxisASTable = {};
+						SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
@@ -356,6 +352,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_Flag_Defense_[46].*", 0.51 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	// Max users per goal
 	if ( RTCWUtil.CountTeam( TEAM.AXIS ) < 8 ) {
@@ -370,7 +367,7 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "CHECKPOINT.*", 0.8 );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
-	Map.AlliesASTable = {};
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 	// Default Status'
 	Map.SideGateStatus = 0; //intact

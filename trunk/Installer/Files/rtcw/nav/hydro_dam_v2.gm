@@ -8,92 +8,28 @@ global Map =
 	Plant_allied_door = "PLANT_allied_door",
 	Plant_axis_door = "PLANT_axis_door",
 
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
-	},
-
-	AlliesASTable = {},
-	AxisASTable = {},
-	AxisASPriority = 0.94,
-	AlliesASPriority = 0.94,
-
-	axis_dyno = { "dual_axis_1", "dual_axis_2", "dual_axis_3", "dual_axis_4", "dual_axis_5", },
-	allies_dyno = { "dual_allies_1", "dual_allies_2", "dual_allies_3", "dual_allies_4", "dual_allies_5", },
-	axis_docs = { "axis_docs_1", "axis_docs_2", "axis_docs_3", "axis_docs_4", "axis_docs_5", },
-	allies_docs = { "allies_docs_1", "allies_docs_2", "allies_docs_3", "allies_docs_4", "allies_docs_5", },
-	Target =
-	{
-		AxisSide =
+		ALLIES =
 		{
-			Priority = 0.93,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_axis_side",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
-			PrimeGrenade = 3,
-			Offset =
+			DEFENDER =
 			{
-				Vector3( -230, 2, -227 ),
-			}
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
 		},
-		AxisFlag =
-		{
-			Priority = 0.94,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_axis_flag",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
-			PrimeGrenade = 3,
-			Offset =
-			{
-				Vector3( -230, 9, -227 ),
-			}
-		},
-		AlliesSide =
-		{
-			Priority = 0.93,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_allies_side",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
-			PrimeGrenade = 3,
-			Offset =
-			{
-				Vector3( 209, -249, -227 ),
-			}
-		},
-		AlliesFlag =
-		{
-			Priority = 0.94,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_allies_flag",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
-			PrimeGrenade = 3,
-			Offset =
-			{
-				Vector3( 257, 138, -228 ),
-			}
-		},
-	},
+	},	
 
 	Navigation =
 	{
@@ -112,9 +48,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Gold" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_gold_cap" );
 
-		Map.Defend.Allies = Map.allies_docs;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_allies_docs.*" );
 
-		print( "allied_door_Destroyed" );
+		Util.MapDebugPrint( "allied_door_Destroyed" );
 	},
 
 	axis_door_Destroyed = function( trigger )
@@ -122,9 +58,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Secret_Documents" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_btransmit" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
-		Map.Defend.Axis = Map.axis_docs;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_axis_docs.*" );
 
-		print( "axis_door_Destroyed" );
+		Util.MapDebugPrint( "axis_door_Destroyed" );
 	},
 
 	gold_box_Taken = function( trigger )
@@ -138,12 +75,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_s1" );
 
-		print( "gold_box_Taken" );
+		Util.MapDebugPrint( "gold_box_Taken" );
 	},
 
 	docs_taken = function( trigger )
 	{
-		print( "docs_taken" );
+		Util.MapDebugPrint( "docs_taken" );
 	},
 
 	cap_parts_Captured = function( trigger )
@@ -152,7 +89,7 @@ global Map =
 			return;
 		}
 
-		print( "cap_parts_Captured" );
+		Util.MapDebugPrint( "cap_parts_Captured" );
 	},
 
 	gold_cap_Captured = function( trigger )
@@ -161,7 +98,7 @@ global Map =
 			return;
 		}
 
-		print( "gold_cap_Captured" );
+		Util.MapDebugPrint( "gold_cap_Captured" );
 	},
 
 	allied_flag1_Axis_Captured = function( trigger )
@@ -170,7 +107,7 @@ global Map =
 			return;
 		}
 
-		print( "allied_flag1_Axis_Captured" );
+		Util.MapDebugPrint( "allied_flag1_Axis_Captured" );
 	},
 
 	allied_flag1_Allies_Captured = function( trigger )
@@ -179,7 +116,7 @@ global Map =
 			return;
 		}
 
-		print( "allied_flag1_Allies_Captured" );
+		Util.MapDebugPrint( "allied_flag1_Allies_Captured" );
 	},
 
 	axis_flag1_Axis_Captured = function( trigger )
@@ -188,10 +125,11 @@ global Map =
 			return;
 		}
 
-		print( "axis_flag1_Axis_Captured" );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+
+		Util.MapDebugPrint( "axis_flag1_Axis_Captured" );
 	},
 
 	axis_flag1_Allies_Captured = function( trigger )
@@ -200,15 +138,16 @@ global Map =
 			return;
 		}
 
-		print( "axis_flag1_Allies_Captured" );
-		Map.AlliesASTable = { "bSpawnkill_as_1", "bSpawnkill_as_2", };
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_as.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bAltSpawnkill.*" );
+
+		Util.MapDebugPrint( "axis_flag1_Allies_Captured" );
 	},
 
 	docs_returned = function( trigger )
 	{
-		print( "docs_returned" );
+		Util.MapDebugPrint( "docs_returned" );
 	},
 
 	gold_returned = function( trigger )
@@ -220,17 +159,17 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_s1" );
 
-		print( "gold returned" );
+		Util.MapDebugPrint( "gold returned" );
 	},
 
 	Ally_plant = function( trigger )
 	{
-		print( "Planted at axis door" );
+		Util.MapDebugPrint( "Planted at axis door" );
 	},
 
 	Axis_plant = function( trigger )
 	{
-		print( "Planted at allied door" );
+		Util.MapDebugPrint( "Planted at allied door" );
 	},
 
 	//Documents are leaving the room
@@ -290,11 +229,23 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
+	SetGoalPriority( "SNIPE.*", 0.92 );
+	SetGoalPriority( "MOUNTMG42.*", 0.92 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "ATTACK_bDocs.*", 0.55, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_axis_flag1", 0.91, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_allied_flag1", 0.91, TEAM.ALLIES );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "CAMP.*", 0.95); // dedicated defends
+	SetGoalPriority( "GRENADE.*", 0.92);
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_ally_snipe.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_AxisSide" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_AxisFlag" );		
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_sidemg" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIR42_sidemg" );
 
@@ -303,6 +254,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_door" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_AlliesSide" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_AlliesFlag" );	
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_sidemg" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "REPAIR42_sidemg" );
 
@@ -312,22 +265,17 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 
-	SetGoalPriority( "SNIPE.*", 0.92 );
-	SetGoalPriority( "MOUNTMG42.*", 0.92 );
-	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	SetGoalPriority( "ATTACK_bDocs.*", 0.55, TEAM.ALLIES );
-	SetGoalPriority( "CHECKPOINT_axis_flag1", 0.91, TEAM.AXIS );
-	SetGoalPriority( "CHECKPOINT_allied_flag1", 0.91, TEAM.ALLIES );
-
 	//RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.ENGINEER );
 	//RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "FLAG_Secret_Documents", TEAM.AXIS, CLASS.MEDIC, CLASS.ENGINEER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "FLAG_Gold", TEAM.ALLIES, CLASS.MEDIC, CLASS.ENGINEER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.SOLDIER );	
 
-	Map.Defend.Axis = Map.axis_dyno;
-	Map.Defend.Allies = Map.allies_dyno;
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_allies.*" );
 
 	MapRoutes =
 	{
@@ -509,15 +457,12 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
 	bot.MaxViewDistance = 3000.0;
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };
 

@@ -10,16 +10,6 @@ global Map =
 	ShiftAvailable = true,
 	LastFlakAttacked = 0,
 
-
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	westAS = { "rBeachAS_west", },
-	eastAS = { "rBeachAS_east", },
-	bothAS = { "rBeachAS_east", "rBeachAS_west",},
-	barbwireAS = { "barbAS_1", "barbAS_2", },
-
-
 	Axis_Barracks_Destroyed = function( trigger )
 	{
 		if ( TestMap ) {
@@ -173,7 +163,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMid.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBeach.*" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	},
 
 	BarbwireDefense = function()
@@ -188,7 +178,7 @@ global Map =
 			return;
 		}
 
-		Map.AxisASTable = Map.barbwireAS;
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_barbAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_ropemg" );
 	},
@@ -409,6 +399,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "MOUNT.*", 0.7 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Foward_Barricade" );    // Martin - Map maker needs spelling lessons
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Barrier" );
@@ -416,7 +407,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 
-	Map.AxisASTable = Map.bothAS;
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_east" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_west" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rear.*" );
