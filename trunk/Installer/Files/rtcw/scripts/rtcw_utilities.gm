@@ -969,9 +969,21 @@ member FindDuplicateWaypoints = function( connect )
 
 member KillEntities = function(ents)
 {
-	foreach ( id and ent in ents ) {
-		EntityKill(ent);
+	x = 0;
+	foreach ( id and obj in ents ) {
+		if ( typeId(obj) == 6 ) {
+			for ( i = obj[0]; i <= obj[1]; i += 1 ) {
+				EntityKill(i);
+				x += 1;
+			}
+		}
+		else {
+			EntityKill(obj);
+			x += 1;
+		}
 	}
+	
+	Util.MapDebugPrint(format("attempted to remove %d entities", x), true);
 };
 
 // thread to toggle goal availability. note that it relies on Map.FlagStatus

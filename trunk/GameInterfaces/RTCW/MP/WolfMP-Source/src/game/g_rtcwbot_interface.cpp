@@ -928,6 +928,7 @@ static int _GetEntityClass( gentity_t *_ent ) {
 		{
 			return ENT_CLASS_GENERIC_GOAL;
 		}
+		break;
 	default:
 		break;
 	};
@@ -2688,6 +2689,9 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 				}
 				else if ( pWho->takedamage ) {
 					G_Damage( pWho, NULL, NULL, NULL, NULL, 100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG );
+				}
+				else if (!pWho->neverFree ) {
+					G_FreeEntity(pWho);
 				}
 				else {
 					G_Printf("^1EntityKill failed for %d\n", pWho->s.number);

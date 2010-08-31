@@ -57,7 +57,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_munitions_Destroyed" );
 	},
-	
+
 	Allied_munitions_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -65,7 +65,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_munitions_Planted" );
 	},
-	
+
 	Allied_munitions_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -105,7 +105,7 @@ global Map =
 
 		Util.MapDebugPrint( "sewer_bars_Destroyed" );
 	},
-	
+
 
 	sewer_bars_Planted = function( trigger )
 	{
@@ -132,7 +132,7 @@ global Map =
 			{ return; }
 
 		Map.FlagStatus = TEAM.AXIS;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAmmoAS_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rCourtyard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
@@ -178,7 +178,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_lt_barn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBarn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
-		if ( Map.FriendlyFire < 1 ) 
+		if ( Map.FriendlyFire < 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRadar.*" );
 		}
@@ -268,14 +268,27 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_sewer_bars" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
-	
+
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
 	//run a thread to toggle flag availability every 5 minutes
 	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
 
-	// kill the wooden barriers and other misc ents ( barrels, chairs, etc )
-	RTCWUtil.KillEntities( { 369, 370, 300, 301, 448, 287, 380, 381, 382, 383, 384, 385, 450 } );
+	// this map spawns a ton of entities. remove some so it is less likely G_Spawn no free entities errors occur
+	killEnts =
+	{
+		// wooden barriers, barrels, and chairs
+		369, 370, 300, 301, 448, 287, 380, 381, 382, 383, 384, 385, 450,
+
+		// speakers and coronas
+		563, 452, 453, 367, 368, 210, 211, 151, 152,
+
+		// a table represents a range of entity numbers. these should only have a start and end entity in them.
+		{568,578}, {556,559}, {543,554}, {528,541}, {460,526},
+		{386,407}, {349,364}, {302,310}, {272,297}, {162,169},
+
+	};
+	RTCWUtil.KillEntities( killEnts );
 
 	InitializeRoutes();
 
@@ -302,7 +315,7 @@ global InitializeRoutes = function()
 				{
 					Weight = 3,
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -337,15 +350,15 @@ global InitializeRoutes = function()
 						ROUTE_FlagExitNW = {},
 						ROUTE_FlagExitNorth = {},
 					},
-				},			
+				},
 			},
 
 			ROUTE_axisSpawn =
 			{
 				ROUTE_rSpawnNE =
 				{
-					ROUTE_lion = 
-					{ 
+					ROUTE_lion =
+					{
 						ROUTE_MidFloorNorth = {},
 						ROUTE_UpperFloorNorth =
 						{
@@ -361,7 +374,7 @@ global InitializeRoutes = function()
 				},
 				ROUTE_rSpawnSE =
 				{
-					ROUTE_MidFloorSouth = 
+					ROUTE_MidFloorSouth =
 					{
 						ROUTE_FlagExitSW = {},
 						ROUTE_FlagExitSouth = {},
@@ -370,7 +383,7 @@ global InitializeRoutes = function()
 				ROUTE_rSpawnSW =
 				{
 					Weight = 2,
-					ROUTE_MidFloorSouth = 
+					ROUTE_MidFloorSouth =
 					{
 						ROUTE_FlagExitSW = {},
 						ROUTE_FlagExitSouth = {},
@@ -385,8 +398,8 @@ global InitializeRoutes = function()
 			{
 				ROUTE_rSpawnNE =
 				{
-					ROUTE_lion = 
-					{ 
+					ROUTE_lion =
+					{
 						ROUTE_MidFloorNorth = {},
 						ROUTE_UpperFloorNorth =
 						{
@@ -403,7 +416,7 @@ global InitializeRoutes = function()
 				{
 					Weight = 2,
 					ROUTE_MidFloorSouth = {},
-				},			
+				},
 			},
 
 			ROUTE_flagSpawn =
@@ -415,7 +428,7 @@ global InitializeRoutes = function()
 						ROUTE_FarmYardMidEntrance = {},
 					},
 				},
-				ROUTE_FlagExitSW = 
+				ROUTE_FlagExitSW =
 				{
 					ROUTE_CYBldgSE = {ROUTE_FarmYardMidEntrance = {},},
 					ROUTE_CYBldgNE = {ROUTE_FarmYardMidEntrance = {},},
@@ -497,7 +510,7 @@ global InitializeRoutes = function()
 				{
 					Weight = 3,
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -517,7 +530,7 @@ global InitializeRoutes = function()
 				{
 					Weight = 2,
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -531,12 +544,12 @@ global InitializeRoutes = function()
 					},
 					ROUTE_FarmYardSouthRope =
 					{
-					},					
+					},
 				},
 				ROUTE_FarmSpawnExitLadder =
 				{
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -550,8 +563,8 @@ global InitializeRoutes = function()
 					},
 					ROUTE_FarmYardSouthRope =
 					{
-					},			
-				},			
+					},
+				},
 			},
 
 			ROUTE_flagSpawn =
@@ -617,7 +630,7 @@ global InitializeRoutes = function()
 			{
 				ROUTE_rSpawnNE = {},
 				ROUTE_rSpawnSE = {},
-				ROUTE_rSpawnSW = {},	
+				ROUTE_rSpawnSW = {},
 			},
 		},
 
@@ -627,7 +640,7 @@ global InitializeRoutes = function()
 			{
 				ROUTE_rSpawnNE = {},
 				ROUTE_rSpawnSE = {},
-				ROUTE_rSpawnSW = {},			
+				ROUTE_rSpawnSW = {},
 			},
 		},
 
@@ -655,19 +668,19 @@ global InitializeRoutes = function()
 			{
 				ROUTE_FarmSpawnExitWest = {},
 				ROUTE_FarmSpawnExitEast = {},
-				ROUTE_FarmSpawnExitLadder = {},			
+				ROUTE_FarmSpawnExitLadder = {},
 			},
 		},
 
 		DEFEND_bCourtyard_1 =
 		{
-			ROUTE_alliedSpawn = 
+			ROUTE_alliedSpawn =
 			{
 				ROUTE_FarmSpawnExitWest =
 				{
 					Weight = 3,
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -687,7 +700,7 @@ global InitializeRoutes = function()
 				{
 					Weight = 2,
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -701,12 +714,12 @@ global InitializeRoutes = function()
 					},
 					ROUTE_FarmYardSouthRope =
 					{
-					},					
+					},
 				},
 				ROUTE_FarmSpawnExitLadder =
 				{
 					ROUTE_FarmYardMidEntrance =
-					{ 
+					{
 						Weight = 4,
 						ROUTE_CYBldgNorth =
 						{
@@ -720,8 +733,8 @@ global InitializeRoutes = function()
 					},
 					ROUTE_FarmYardSouthRope =
 					{
-					},			
-				},			
+					},
+				},
 			},
 		},
 
@@ -735,7 +748,7 @@ global InitializeRoutes = function()
 // CHECKPOINT_building_flag
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitEast = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitEast.Weight = 2;
-	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;	
+	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder.Weight = 1;
 
 // CAMP_dual_radar
