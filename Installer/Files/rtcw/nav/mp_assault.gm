@@ -35,37 +35,16 @@ global Map =
 	bPanzers = 0,
 	rPanzers = 0,
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
-
-	//tables to copy to current AS goal tables
-	AlliesASGate = { "blue_as1_gate", "blue_as2_gate", "blue_as3_gate", },
-	AxisASGate = { "red_as1_gate", "red_as2_gate", },
-	AlliesASFlag = { "bFlagAS_1", },
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 0, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 0, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		//CrucialClass = CLASS.ENGINEER,	//Martin - It doesnt matter who
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 2, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 2,
-
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 2,
+			},
+		},
 	},
-
-	spawn_boxes = { "box1", "box2", },
-	warehouse = { "wh1", "wh2", },
 
 	Airstrike =
 	{
@@ -144,20 +123,6 @@ global Map =
 		},
 	},
 
-	/*Target =
-	{
-		Barricade1 =
-		{
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_obj_block01",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( 300, -350, 0 ),
-			}
-		},
-	},*/
-
 	Switches =
 	{
 		Gate1 =
@@ -211,8 +176,9 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTower.*" );
 				Map.Airstrike.stepstop.Enabled = true;
-				Map.Defend.Allies = {};
-				Map.AlliesASTable = {};
+				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_box.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_wh.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			}
 		},
 		OnExit = function( ent )
@@ -250,7 +216,7 @@ global Map =
 		}
 
 		//Map.Airstrike.stepstop.Enabled = true;
-		Map.AlliesASTable = { "bStepsAS",};
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bStepsAS" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
@@ -298,19 +264,19 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzDoor.*" );
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
 
 		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		if ( !Map.FocusPrimary ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Warehouse_Entrance );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDoor.*" );
-			Map.Defend.Allies = Map.warehouse;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_wh.*" );
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rDoor.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rDoor.*" );
@@ -378,7 +344,7 @@ global Map =
 		//shift allies early
 		if ( !Map.AxisAtTower ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
-			Map.Defend.Allies = Map.spawn_boxes;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_box.*" );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDoor.*" );
@@ -438,10 +404,6 @@ global Map =
 			Map.Switches.Gate2.Enabled = true;
 		} else if ( vel.y > 0 )   {
 			Map.Switches.Gate1.LimitTeam = 0;
-
-			/*if ( !Map.BarrierStatus ) {
-				Map.Target.Barricade1.Enabled = true;
-			}*/
 
 			//open up the node so they can pathfind through gate
 			Wp.SetWaypointFlag( "gatehack", "closed", false );
@@ -512,7 +474,7 @@ global Map =
 
 		if ( !Map.AxisAtTower ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
-			Map.Defend.Allies = Map.spawn_boxes;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_box.*" );
 		}
 	},
 
@@ -546,7 +508,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bGateSpam.*" );
-		Map.AlliesASTable = Map.AlliesASFlag;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_.*" );
 	},
 
 	check_flagPush = function()
@@ -662,6 +624,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_bGarage_[236]", 0.55 );
 	SetGoalPriority( "GRENADE_gatebarrier", 0.81 );
 	SetGoalPriority( "GRENADE_hatch", 0.81 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
 
 	thread( Map.check_flagPush );
 	//open up some airstrike goals if ff is off
@@ -708,11 +672,9 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "barb1", "closed", false );
 	Wp.SetWaypointFlag( "barb2", "closed", false );
 
-	//allies should throw airstrikes over gate
-	Map.AlliesASTable = Map.AlliesASGate;
-	Map.AxisASTable = Map.AxisASGate;
-
-
+	//teams should throw airstrikes over gate
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
 
 	MapRoutes =
 	{
@@ -1022,7 +984,7 @@ global OnMapLoad = function()
 	Util.Routes( MapRoutes );
 	Util.UpdateSwitchData();
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
@@ -1050,6 +1012,4 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

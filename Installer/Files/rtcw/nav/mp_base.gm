@@ -13,8 +13,6 @@ global Map =
 	SouthDyno = 0,
 	Friendlyfire,
 
-	AxisASTable = {},
-
 	DispenseAmmoTime = 10, // give axis time to go call the arty
 	DontDispenseAmmo = true,
 
