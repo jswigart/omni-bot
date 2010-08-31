@@ -285,7 +285,9 @@ global OnMapLoad = function()
 
 		// a table represents a range of entity numbers. these should only have a start and end entity in them.
 		{568,578}, {556,559}, {543,554}, {528,541}, {460,526},
-		{386,407}, {349,364}, {302,310}, {272,297}, {162,169},
+		{386,407}, {349,364}, {302,310}, {272,297}, {235,264},
+		{214,233}, {162,169}, {132,150}, {127,130}, {123,125},
+		{112,119},
 
 	};
 	RTCWUtil.KillEntities( killEnts );
