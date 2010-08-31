@@ -924,6 +924,10 @@ static int _GetEntityClass( gentity_t *_ent ) {
 		}
 		break;
 	}
+	case ET_OID_TRIGGER:
+		{
+			return ENT_CLASS_GENERIC_GOAL;
+		}
 	default:
 		break;
 	};
@@ -3103,7 +3107,10 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 		if ( pMsg ) {
 			gentity_t *pDestroyable = EntityFromHandle( pMsg->m_Entity );
 			if ( pEnt && pEnt->inuse && pDestroyable && pDestroyable->inuse ) {
-				if ( pDestroyable->s.eType == ET_OID_TRIGGER ) {
+				if ( pDestroyable->s.eType == ET_OID_TRIGGER
+					|| pDestroyable->spawnflags == 77 ||  pDestroyable->spawnflags == 104 
+					|| ( pDestroyable->spawnflags == 76 && !pDestroyable->scriptName ) )
+				{
 					pMsg->m_State = CONST_DESTROYABLE;
 				}
 			}

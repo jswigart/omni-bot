@@ -5,15 +5,12 @@ this.Name = "PLANT";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.SkipGetPriorityWhenActive = true;
 this.LimitToClass(CLASS.ENGINEER);
-this.LogExternal = false;
 
 
 // define some goal states
 this.LAY_EXPLOSIVE = 0;
 this.ARM_EXPLOSIVE = 1;
-this.RUNAWAY = 2;
-this.DETONATE_EXPLOSIVE = 3;
-this.COVER_DYNAMITE = 4;
+this.COVER_DYNAMITE = 2;
 
 this.Initialize = function()
 {
@@ -50,7 +47,6 @@ this.GetPriority = function()
 
 						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 )
 						{
-							print("skipping destroyable");
 							continue;
 						}
 					}
@@ -104,8 +100,7 @@ this.Update = function()
 {
 	// cs: no idea how it could get here without being charged, but it happens sometimes
 	botClass = this.Bot.GetClass();
-	if ( (botClass == CLASS.ENGINEER && !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
-		|| (botClass == CLASS.COVERTOPS && !this.Bot.IsWeaponCharged(WEAPON.SATCHEL, 0)) )
+	if ( (botClass == CLASS.ENGINEER && !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0)) )
 	{
 		Util.MapDebugPrint( this.MapGoal.GetName() + " aborting, no charge", true );
 		this.Finished();
@@ -164,7 +159,7 @@ this.Update = function()
 
 this.Exit = function()
 {
-	this.Bot.ReleaseButton(BTN.PRONE, BTN.CROUCH);
+	this.Bot.ReleaseButton(BTN.CROUCH);
 	this.ReleaseAimRequest();
 	this.ReleaseWeaponRequest();
 
@@ -283,16 +278,8 @@ this.UpdateDynamite = function()
 
 					this.Goto(this.MapGoal.CoverSpots[ spotIndex ].position, 32.0);
 
-					switch (this.MapGoal.CoverSpots[ spotIndex ].stance)
-					{
-						case "crouch":
-						{
-							this.Bot.HoldButton(BTN.CROUCH, 99);
-						}
-						case "prone":
-						{
-							this.Bot.HoldButton(BTN.PRONE, 99);
-						}
+					if ( this.MapGoal.CoverSpots[ spotIndex ].stance == "crouch" ) {
+						this.Bot.HoldButton(BTN.CROUCH, 99);
 					}
 				}
 
@@ -313,8 +300,6 @@ this.UpdateDynamite = function()
 
 this.UpdateDebugString = function()
 {
-	stateString = "";
-
 	switch(this.GoalState)
 	{
 		case this.LAY_EXPLOSIVE:
@@ -324,14 +309,6 @@ this.UpdateDebugString = function()
 		case this.ARM_EXPLOSIVE:
 		{
 			stateString = "ARM_EXPLOSIVE";
-		}
-		case this.RUNAWAY:
-		{
-			stateString = "RUNAWAY";
-		}
-		case this.DETONATE_EXPLOSIVE:
-		{
-			stateString = "DETONATE_EXPLOSIVE";
 		}
 		case this.COVER_DYNAMITE:
 		{
