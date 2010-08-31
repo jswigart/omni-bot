@@ -5,9 +5,6 @@ global Map =
 	DispenseAmmoTime = 6,   // Time to call arty
 	DontDispenseAmmo = false,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
 	Airstrike =
 	{
 		stepsas =
@@ -87,8 +84,7 @@ global Map =
 
 	axis_wh = function()
 	{
-		print( "Axis - Warehouse" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_wh.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
@@ -98,8 +94,7 @@ global Map =
 
 	axis_flag = function()
 	{
-		print( "Axis - Flag" );
-		Map.AxisASTable = { "red_as1_gate",};
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_gate" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tarmac_nest_2" );
@@ -108,8 +103,7 @@ global Map =
 
 	allies_wh = function()
 	{
-		print( "Allies - Warehouse" );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_wh.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
@@ -119,8 +113,7 @@ global Map =
 
 	allies_flag = function()
 	{
-		print( "Allies - Flag" );
-		Map.AlliesASTable = { "bFlagAS_1", };
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" ); // Use regular objective points.
@@ -182,6 +175,7 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
@@ -190,11 +184,7 @@ global OnMapLoad = function()
 	yield(); yield();
 	RTCWUtil.StopSniping();
 	thread( Map.toggle_attack );
-
-	print( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

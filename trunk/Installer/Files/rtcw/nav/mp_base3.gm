@@ -12,8 +12,6 @@ global Map =
 	NorthDyno = 0,
 	SouthDyno = 0,
 
-	AxisASTable = {},
-
 	DispenseAmmoTime = 10, // give axis time to go call the arty
 
 	Airstrike =
