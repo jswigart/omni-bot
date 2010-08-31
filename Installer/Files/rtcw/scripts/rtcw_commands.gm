@@ -429,6 +429,28 @@ Commands["draw_spawns"] =
 	},
 };
 
+Commands["draw_oids"] =
+{
+	Func = function( _params )
+	{
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (GetEntClass(i) == CLASS.GOAL)
+			{
+				DrawEntityAABB( i, 60, COLOR.RED );
+				center = GetEntWorldAABB(i).CenterPoint();
+				DrawText3d(center, i + " : " + GetEntName(i) ,COLOR.WHITE,60,textDrawRadius);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Draw Objective Info Displays, waypoint tool. draws the bounds of all OID's in the map",
+		"Usage: /bot draw_oids",
+	},
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // dump goal definitions from a passed map table
 // /bot goaldef <table> <goal type>
