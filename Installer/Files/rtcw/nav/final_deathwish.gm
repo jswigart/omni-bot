@@ -178,6 +178,7 @@ global Map =
 			return;
 		}
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_barbAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_ropemg" );

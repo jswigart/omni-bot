@@ -225,6 +225,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_t367 );
 
 			//shift a/s focus
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as3_p1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_p1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as3_p1" );
@@ -234,6 +236,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_1 );
 
 			//shift a/s focus`
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p1" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as1_p1" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as2_p1" );
@@ -272,6 +276,7 @@ global Map =
 		Map.EvalArty();
 
 		if ( Map.DocStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 		}
 		Map.Airstrike.bridge.Enabled = true;
@@ -416,6 +421,7 @@ global Map =
 		SetGoalPriority( "DEFEND_rTransmit.*", 0.5 );
 		//if(Map.FlagStatus == 2)
 		//{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 		//}
 
@@ -490,7 +496,7 @@ global Map =
 			return;
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.FLAG_FF_Christmas_List );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_FF_Christmas_List );
 		Util.MapDebugPrint( "two_minute" );
 	},
 

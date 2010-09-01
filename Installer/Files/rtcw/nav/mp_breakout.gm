@@ -11,33 +11,31 @@ global Map =
 	GateStatus = false, // closed
 	DispenseAmmoTime = 1, //Start passing it out right away
 
-	AxisASTable = {},
-	AlliesASTable = {},
-	AxisASPriority = 0.94,  // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
-
 	FriendlyFire,
 
-	opsas = { "rSpawnkillAS_1", "rSpawnkillAS_2",},
-	aa_as = { "bHouseAS_1", "bHouseAS_2", },
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 2, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 1, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
-
+	
 	Switches =
 	{
 		gate1 =
@@ -65,27 +63,6 @@ global Map =
 
 		},
 	},
-
-	Target =
-	{
-		Door =
-		{
-			Priority = 1.2, // just do this first ...
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_360",
-			LimitBots = 2,
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			//LimitClass = (1<<CLASS.ENGINEER),
-			Offset =
-			{
-				Vector3( -397.370, 0.538, -45.875 ),
-			}
-		},
-	},
-
-	aa_tight = { "dual_aa_1", "dual_aa_2", "dual_aa_3", "dual_aa_4", "dual_aa_5", "dual_aa_6", },
-	ops_tight = { "dual_ops_1", "dual_ops_2", "dual_ops_3", "dual_ops_4", "dual_ops_5", },
-	ops_conservative = { "bOutsideOps_1", "bOutsideOps_2", "bOutsideOps_3", "bOutsideOps_4", "bOutsideOps_5", "bOutsideOps_6", },
 
 	Allied_Field_Communications_Destroyed = function( trigger )
 	{
@@ -129,7 +106,6 @@ global Map =
 		Util.MapDebugPrint( "Allied_Field_Communications_Planted" );
 		Map.OpsDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Ops.*" );
-		Map.AlliedDualDefend();
 	},
 
 	Back_Alley_Wall_Destroyed = function( trigger )
@@ -143,7 +119,6 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Field_Communications" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_BackWall.*" );
-		Map.AlliedDualDefend();
 	},
 	Back_Alley_Wall_Planted = function( trigger )
 	{
@@ -268,7 +243,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA_LT.*" );
-		Map.AlliedDualDefend();
 		Map.SupportFire();
 
 		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 101 ); // Martin - Don't spawn in the house
@@ -294,7 +268,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA_LT.*" );
-		Map.AlliedDualDefend();
 		Map.SupportFire();
 
 		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 0 ); // Martin - spawn default
@@ -337,82 +310,67 @@ global Map =
 	{
 		if ( Map.FriendlyFire < 1 ) {
 			if ( Map.FlagStatus == 1 ) {  // Axis own flag
-				Map.AxisASTable = Map.opsas;
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkillAS_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rChurch.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rChurch.*" );
 
-				Map.AlliesASTable = { "bOpsAS_1", "bOpsAS_2",};
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 			}
 			if ( Map.FlagStatus == 2 ) {  // Allies own flag
-				Map.AxisASTable = {"rCarAS_1",};
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCarAS_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rChurch.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rChurch.*" );
 
-				Map.AlliesASTable = Map.aa_as;
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bHouseAS_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 			}
 		} else // FF is ON
-		{
+		{		
 			//Spawnkill Supportfire - Based on flag owner
 			if ( Map.FlagStatus == 1 ) {  // Axis own flag
-				Map.AxisASTable = Map.opsas;
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnKillAS_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rChurch.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rChurch.*" );
 
-				Map.AlliesASTable = {};
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 			}
 			if ( Map.FlagStatus == 2 ) {  // Allies own flag
-				Map.AxisASTable = {};
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
 
-				Map.AlliesASTable = Map.aa_as;
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bHouseAS_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 			}
 			if ( Map.FlagAttacker == 1 && Map.FlagStatus == 1 ) { // Axis own it and Allies NOT going for it
-				Map.AlliesASTable = { "bOpsAS_1", "bOpsAS_2",}; // Allies spam attacking Axis
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );			
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 			}
 			if ( Map.FlagAttacker == 2 && Map.FlagStatus == 2 ) { // Allies own it and Axis NOT going for it
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rChurch.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rChurch.*" );
-				Map.AxisASTable = {"rCarAS_1",};
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCarAS_.*" );
 			}
 		}
-	},
-	AlliedDualDefend = function()
-	{
-		//Martin - 12/27/09 - Allies always play tight to prevent sneak attacks (testing)
-		Map.Defend.Allies = Map.ops_tight;
-		/*
-		if (Map.FlagStatus == 1)
-		{
-		    if (Map.BackAlley == true)
-		    {
-		        Map.Defend.Allies = Map.ops_tight;
-		    }else{	//Wall isnt blown
-		        Map.Defend.Allies = Map.ops_conservative;
-		    }
-		}
-		else
-		{
-		    Map.Defend.Allies = Map.ops_conservative;
-		}
-		if (Map.OpsDyno > 0)
-		{
-		    Map.Defend.Allies = Map.ops_tight;
-		}*/
 	},
 
 	gate_lever = function( trigger )
@@ -575,6 +533,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rOpsLT.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_bAA_LT.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT );
 	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "GRENADE_Door.*", 1.2 );
 
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
@@ -587,17 +548,17 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_obj_flag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_aa_.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Church_Alley_Gate" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_obj_flag" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ops_.*" );
 
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
-
-	Map.Defend.Axis = Map.aa_tight;
-	Map.Defend.Allies = Map.ops_tight;
 
 	Util.AddUseWp( "PLANT_Church_Alley_Gate", "churchgate_1" );
 	Util.AddUseWp( "PLANT_Allied_Field_Communications", "ops1" );
@@ -868,9 +829,8 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rChurch_5 = MapRoutes.DEFEND_rChurch_2;
 	MapRoutes.PLANT_German_88.ROUTE_flagspawn.ROUTE_tunnelwest = MapRoutes.PLANT_German_88.ROUTE_flagspawn.ROUTE_car;
 	MapRoutes.PLANT_Back_Alley_Wall = MapRoutes.PLANT_Allied_Field_Communications;
-	MapRoutes.UGOAL_rSpawnkillAS_1 = MapRoutes.DEFEND_rOps_1;
-	MapRoutes.UGOAL_rSpawnkillAS_2 = MapRoutes.DEFEND_rOps_1;
-	MapRoutes.UGOAL_bSpawnkillAS_1 = MapRoutes.DEFEND_bAA_1;
+	MapRoutes.AIRSTRIKE_rSpawnkillAS_1 = MapRoutes.DEFEND_rOps_1;
+	MapRoutes.AIRSTRIKE_rSpawnkillAS_2 = MapRoutes.DEFEND_rOps_1;
 
 	Util.UpdateSwitchData();
 	Util.Routes( MapRoutes );
@@ -884,7 +844,4 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

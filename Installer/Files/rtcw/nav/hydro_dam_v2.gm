@@ -138,6 +138,7 @@ global Map =
 			return;
 		}
 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_as.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bAltSpawnkill.*" );

@@ -100,6 +100,7 @@ global Map =
 		} else
 		{
 			Map.FlagDefense();
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_1" );
 		}
 	},
@@ -206,6 +207,7 @@ global Map =
 
 	FlagDefense = function()
 	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
@@ -221,6 +223,7 @@ global Map =
 
 	GateDefense = function()
 	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );

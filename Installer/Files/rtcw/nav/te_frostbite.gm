@@ -393,6 +393,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Cp_Defense.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint );
 				Map.AxisPushedForward = true;
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
 			}
 
