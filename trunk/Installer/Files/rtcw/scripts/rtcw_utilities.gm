@@ -276,8 +276,9 @@ member WarpTestBot = function( _params )
 		wp = Util.WpNameInfo(_params[0]);
 		if ( wp.position )
 		{
-			wp.position += Vector3(0,0,24);
 			s = "setviewpos " + wp.position[0] + " " + wp.position[1] + " " + wp.position[2] + " " + " 0";
+			wp.position += Vector3(100,0,24);
+			sbot = "setviewpos " + wp.position[0] + " " + wp.position[1] + " " + wp.position[2] + " " + " 0";
 		}
 		else
 		{
@@ -289,8 +290,9 @@ member WarpTestBot = function( _params )
 		pos = GetEntPosition(GetLocalEntity());
 		if ( pos )
 		{
-			pos = pos + Vector3(100,0,24);
 			s = "setviewpos " + pos[0] + " " + pos[1] + " " + pos[2] + " " + " 0";
+			pos = pos + Vector3(100,0,24);
+			sbot = "setviewpos " + pos[0] + " " + pos[1] + " " + pos[2] + " " + " 0";
 		}
 		else
 		{
@@ -303,8 +305,10 @@ member WarpTestBot = function( _params )
 		print(s);
 		ExecCommandOnClient(localEnt, s);
 		yield();
-		ExecCommandOnClient(b.GetGameEntity(), s);
-		yield();yield();
+		b.Enable(false);
+		ExecCommandOnClient(b.GetGameEntity(), sbot);
+		sleep(1);
+		b.Enable(true);
 		ExecCommandOnClient(localEnt, "say_team bot come");
 	}
 };
@@ -982,7 +986,7 @@ member KillEntities = function(ents)
 			x += 1;
 		}
 	}
-	
+
 	Util.MapDebugPrint(format("attempted to remove %d entities", x), true);
 };
 

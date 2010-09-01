@@ -216,6 +216,7 @@ global Map =
 		}
 
 		//Map.Airstrike.stepstop.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bStepsAS" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
@@ -508,6 +509,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bGateSpam.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_.*" );
 	},
 

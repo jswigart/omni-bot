@@ -133,6 +133,7 @@ global Map =
 
 		Map.FlagStatus = TEAM.AXIS;
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAmmoAS_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rCourtyard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );

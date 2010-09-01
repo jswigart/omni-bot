@@ -208,6 +208,7 @@ global Map =
 		}
 
 		if ( Map.DocsAtHome ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_1" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_NET_Door.*" ); // Don't try to defuse
@@ -231,6 +232,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_engSouth.*" );
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" ); //Martin - save for airstrikes at bunker
 
 		Util.MapDebugPrint( "net_destroyed" );
@@ -246,8 +248,8 @@ global Map =
 
 		SetGoalPriority( "SWITCH_officegate", 0.4 ); // low
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_transmit" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_transmit" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit" );
 
@@ -280,6 +282,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit" );
 
 		if ( !Map.DocsTransmitted ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_2" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
@@ -360,6 +363,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_engBunker.*" );
 
 		if ( Map.DocsAtHome ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_2" );
 		}
 

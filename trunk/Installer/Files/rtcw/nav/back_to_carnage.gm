@@ -95,6 +95,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWall.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_219" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_219" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRadioAS_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
 			print( "here" );
@@ -150,7 +151,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSeawall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
-		Map.AxisASTable = {"rTrenchAS",};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
@@ -257,6 +258,7 @@ global Map =
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beach_flag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
 	},
 
@@ -294,6 +296,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_t543" );
 
 		if ( Map.GateStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate_.*" );
 		}
 
@@ -311,6 +314,7 @@ global Map =
 		}
 
 		if ( Map.TrenchStatus == true ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTrenches.*" );
