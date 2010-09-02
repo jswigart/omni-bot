@@ -17,18 +17,6 @@ global Map =
 	//set to false if you don't want allies /killing
 	Suicide = true,
 
-	Switches =
-	{
-		Alarm =
-		{
-			Enabled = true,
-			Priority = 0.87,    // More than relic
-			WaypointName = "alarm",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-		},
-	},
-
 	gratebot = 0,
 	Navigation =
 	{
@@ -129,8 +117,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRoamDeliver" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
 
-		//Map.Switches.Alarm.LimitTeam = null;	// No one should go for it once obj is taken
-		Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.ALLIES ); // Allies should still try to get it (shorter spawn time)
+		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 	},
 	Holy_Relic_Returned = function( trigger )
 	{
@@ -168,10 +155,11 @@ global Map =
 		}
 
 		if ( Map.AlarmStatus == true ) {  // Allies own it
-			Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.AXIS );
-		} else
+			Util.LimitToTeam( TEAM.AXIS, "SWITCH_Alarm" );
+		}
+		else
 		{
-			Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.ALLIES );
+			Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 		}
 	},
 	two_minute = function( trigger )
@@ -220,7 +208,7 @@ global Map =
 		}
 
 		Map.AlarmStatus = true;
-		Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.AXIS );
+		Util.LimitToTeam( TEAM.AXIS, "SWITCH_Alarm" );
 	},
 	alarm_off = function( trigger )
 	{
@@ -229,7 +217,7 @@ global Map =
 		}
 
 		Map.AlarmStatus = false;
-		Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.ALLIES );    // Allies go for alarm first
+		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 	},
 	round_end = function( trigger )
 	{
@@ -495,6 +483,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_bRoam.*", 0.49 );
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "SWITCH_Alarm", 0.87 );
 
 	RTCWUtil.LimitToClass( "DEFEND_bEngPlant.*", TEAM.ALLIES, CLASS.ENGINEER );
 
@@ -510,9 +499,7 @@ global OnMapLoad = function()
 	RTCWUtil.EnableGoal( "FLAG_Holy_Relic" );
 	RTCWUtil.EnableGoal( "CAPPOINT_truck" );
 
-	Map.Switches.Alarm.LimitTeam = ( 1 << TEAM.ALLIES );    // Allies go for alarm first
-
-	Util.UpdateSwitchData();
+	Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 
 	// Triggers to know where relic is going
 	tOne = OnTriggerRegion( AABB( -360,-636,-344,-248,-459,-175 ), Map.SewerTrigger );
@@ -655,7 +642,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rPlant_2 = MapRoutes.ATTACK_rPlant_1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

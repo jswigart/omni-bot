@@ -10,16 +10,13 @@ global Map =
 	IdolStatus = false,
 	FlexDefense = true,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
 	Ark_of_the_Covenant_Planted = function( trigger )
 	{
 		if ( TestMap ) {
 			return;
 		}
 
-		print( "Ark_of_the_Covenant_Planted" );
+		Util.MapDebugPrint( "Ark_of_the_Covenant_Planted" );
 	},
 
 	Ark_of_the_Covenant_Destroyed = function( trigger )
@@ -28,9 +25,9 @@ global Map =
 			return;
 		}
 
-		print( "Ark_of_the_Covenant_Destroyed" );
-
 		RTCWUtil.EnableGoal( "FLAG.*", true ); // all but routes
+		
+		Util.MapDebugPrint( "Ark_of_the_Covenant_Destroyed" );
 	},
 
 	Idol_Taken = function( trigger )
@@ -39,13 +36,14 @@ global Map =
 			return;
 		}
 
-		print( "Idol_Taken" );
 		Map.IdolStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzTransmit.*" );
+		
+		Util.MapDebugPrint( "Idol_Taken" );
 	},
 
 	Idol_Secured = function( trigger )
@@ -54,7 +52,6 @@ global Map =
 			return;
 		}
 
-		print( "Idol_Secured" );
 		Map.IdolStatus = false;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
@@ -62,6 +59,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPreCrypt.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bPnzTransmit.*" );
+		
+		Util.MapDebugPrint( "Idol_Secured" );
 	},
 
 	the_flag_Axis_Captured = function( trigger )
@@ -70,7 +69,7 @@ global Map =
 			return;
 		}
 
-		print( "the_flag_Axis_Captured" );
+		Util.MapDebugPrint( "the_flag_Axis_Captured" );
 	},
 
 	the_flag_Allies_Captured = function( trigger )
@@ -79,9 +78,10 @@ global Map =
 			return;
 		}
 
-		print( "the_flag_Allies_Captured" );
-		Map.AlliesASTable = { "bCryptAS_1", "bCryptAS_2",};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCryptAS_.*" );
 
+		Util.MapDebugPrint( "the_flag_Allies_Captured" );
 	},
 
 	CheckAlliesThread = null, // for thread id
@@ -243,14 +243,12 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bCrypt_5 = MapRoutes.PLANT_Ark_of_the_Covenant;
 	MapRoutes.ATTACK_bCrypt_6 = MapRoutes.PLANT_Ark_of_the_Covenant;
 	MapRoutes.ATTACK_bCrypt_7 = MapRoutes.PLANT_Ark_of_the_Covenant;
-	MapRoutes.UGOAL_bCryptAS_1 = MapRoutes.PLANT_Ark_of_the_Covenant;
-	MapRoutes.UGOAL_bCryptAS_2 = MapRoutes.PLANT_Ark_of_the_Covenant;
+	MapRoutes.AIRSTRIKE_bCryptAS_1 = MapRoutes.PLANT_Ark_of_the_Covenant;
+	MapRoutes.AIRSTRIKE_bCryptAS_2 = MapRoutes.PLANT_Ark_of_the_Covenant;
 	MapRoutes.FLAG_Idol = MapRoutes.PLANT_Ark_of_the_Covenant;
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

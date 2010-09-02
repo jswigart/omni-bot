@@ -46,36 +46,27 @@ global Map =
 	BarrierOne = false,
 	BarrierTwo = false,
 
-	//DontDispenseAmmo = true,
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		CrucialClass = CLASS.SOLDIER, //the first bot joining defending team will switch to crucial class
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 3, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 3,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.SOLDIER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
-	},
-
-	bRear = { "bRear_1", "bRear_2", "bRear_3", "bRear_4", "bRear_5", },
-	rRear = { "rRear_1", "rRear_2", "rRear_3", "rRear_4", "rRear_5", },
-
-	EvalGrenadeTarget = function()
-	{
-		if ( Map.BarrierOne && Map.BarrierTwo ) {
-			//turn it off for the rest of the round
-			this.Disable = true;
-			return false;
-		}
-
-		return true;
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.SOLDIER,
+			},
+		},
 	},
 
 	Navigation =
@@ -88,34 +79,6 @@ global Map =
 				_this.Bot.HoldButton( BTN.FORWARD, 4 );
 				sleep( 4 );
 			},
-		},
-	},
-
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.65,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier1",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( -292, -3, -23 ),
-			}
-		},
-		Barricade2 =
-		{
-			Priority = 0.65,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier2",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			Offset =
-			{
-				Vector3( 386, -4, -23 ),
-			}
 		},
 	},
 
@@ -322,6 +285,7 @@ global Map =
 		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.ALLIES, CLASS.SOLDIER );
 		RTCWUtil.DisableGoal( "MOUNT.*" );
 		RTCWUtil.DisableGoal( "CALL.*" );
+		RTCWUtil.DisableGoal( "CAMP.*" );
 	},
 
 	barrier1 = function( trigger )
@@ -391,15 +355,14 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	RTCWUtil.DisableGoal( ".*", true ); // all but routes
 
-	Map.Defend.Allies = Map.bRear;
-	Map.Defend.Axis = Map.rRear;
-
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "GRENADE_Barricade.*", 0.65 );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 
@@ -408,12 +371,16 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.cp5 );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.cp4 );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_void_1 );     // Axis spawn flag
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rRear.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Barricade1" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.cp3 );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.cp2 );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.cp1 );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_void );     // Allies spawn flag
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bRear.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade2" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFirstspawn" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFirstspawn_.*" );
@@ -460,35 +427,5 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = 2500;
 
 	RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER, true );    // True means there is fog
-
-/*	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER  )
-    {
-        if (Map.bPanzers == 0 )
-        {
-            RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-            Map.bPanzers += 1;
-        }
-        else
-        {
-            RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER, true);
-        }
-    }
-    else if (bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER )
-    {
-        if ( Map.rPanzers == 0 )
-        {
-            RTCWUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-            Map.rPanzers += 1;
-        }
-        else
-        {
-            RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER, true);
-        }
-    }*/
-
-	//default spawn
-	//bot.ChangeSpawnPoint( 0 );
-
-	RTCWUtil.SetDualObjective( bot );
 };
 

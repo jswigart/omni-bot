@@ -15,9 +15,6 @@ global Map =
 	WallStatus = false,
 	SpawnPlanted = false,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
 	Navigation =
 	{
 		tablejump =
@@ -27,24 +24,6 @@ global Map =
 				_this.Bot.HoldButton( BTN.JUMP, 0.25 );
 				sleep( 0.25 );
 			},
-		},
-	},
-
-	// cs: DepotTrigger2 and 3 are copied in OnMapload
-	DepotTrigger1 =
-	{
-		Name = "DepotTrigger1",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
-		{
-			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
-				if ( !Map.DocStatus ) {
-					// shift or something i guess
-				}
-			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 
@@ -67,7 +46,8 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
 		if ( Map.DepotStatus == false ) {
-			Map.AlliesASTable = { "bGateAS_1", "bGateAS_2", "bGateAS_3", };
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGateAS_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bGate.*" );
 		}
 		if ( Map.SpawnPlanted == true ) {
@@ -140,7 +120,7 @@ global Map =
 		RTCWUtil.EnableGoal( "ROUTE_depotgate" );
 		Map.DepotStatus = true;
 
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bGate.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
@@ -222,7 +202,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
 
-		Map.AxisASTable = { "rDocsAS_1", "rDocsAS_2",};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocsAS_.*" );
 	},
 	FlagSK = function()
 	{
@@ -231,7 +212,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlagSK.*" );
-		Map.AxisASTable = { "rFlagSKAS_1",};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagSKAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 	},
 	GateDefense = function()
@@ -243,7 +225,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEngWall.*" );
-		Map.AxisASTable = { "rGateAS_1", "rGateAS_2", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
@@ -254,7 +237,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit_.*" );
@@ -269,19 +252,15 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rInner.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
-		Map.AxisASTable = { "rGateAS_1", "rGateAS_2", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
 	},
 	EvalFallback = function()
 	{
-		if ( Map.DocStatus == true ) {
+		if ( Map.DocStatus == true || Map.DepotStatus == true || Map.WallStatus == true ) {
 			return;
 		}
-		if ( Map.DepotStatus == true ) {
-			return;
-		}
-		if ( Map.WallStatus == true ) {
-			return;
-		}
+
 		Map.GateDefense();
 	},
 	DepotTrigger1 =
@@ -337,19 +316,13 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have stolen the Supply Documents!", Map.Supply_Documents_Taken );
 	OnTrigger( "Flag returned Supply Documents!", Map.Supply_Documents_Returned );
 
-	// note these must be copied before the regions are defined
-	Map.DepotTrigger2 = Map.DepotTrigger1;
-	Map.DepotTrigger3 = Map.DepotTrigger1;
-	Map.DepotTrigger4 = Map.DepotTrigger1;
-	Map.FallbackTrigger2 = Map.FallbackTrigger1;
-
 	t1 = OnTriggerRegion( AABB( 1028.000,-1152.000,15.000,1152.000,-1025.000,89.000 ), Map.DepotTrigger1 );
-	t2 = OnTriggerRegion( AABB( 374.000,-1045.000,15.000,543.000,-998.000,89.000 ), Map.DepotTrigger2 );
-	t3 = OnTriggerRegion( AABB( 192.000,-1646.000,-1.000,370.000,-1575.000,73.000 ), Map.DepotTrigger3 );
-	t4 = OnTriggerRegion( AABB( 794.000,-1839.000,15.000,832.000,-1701.000,89.000 ), Map.DepotTrigger4 );
+	t2 = OnTriggerRegion( AABB( 374.000,-1045.000,15.000,543.000,-998.000,89.000 ), Map.DepotTrigger1 );
+	t3 = OnTriggerRegion( AABB( 192.000,-1646.000,-1.000,370.000,-1575.000,73.000 ), Map.DepotTrigger1 );
+	t4 = OnTriggerRegion( AABB( 794.000,-1839.000,15.000,832.000,-1701.000,89.000 ), Map.DepotTrigger1 );
 
 	g1 = OnTriggerRegion( AABB( -143.000,1231.000,129.000,-99.000,1424.000,247.000 ), Map.FallbackTrigger1 );
-	g2 = OnTriggerRegion( AABB( 831.000,1159.000,175.000,1736.000,1205.000,316.000 ), Map.FallbackTrigger2 );
+	g2 = OnTriggerRegion( AABB( 831.000,1159.000,175.000,1736.000,1205.000,316.000 ), Map.FallbackTrigger1 );
 
 	// if debugging, draw the triggers
 	if ( Map.Debug ) {
@@ -374,7 +347,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-	Map.AxisASTable = { "rFlagAS_1", "rFlagAS_2", };
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 
 	RTCWUtil.EnableGoal( "CHECKPOINT_forwardflag" );
 	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
@@ -557,7 +530,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 100.0;
 	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 	//ignore the retarded radio for targeting

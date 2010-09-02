@@ -37,11 +37,6 @@ global Map =
 	Duct_Destroyed = false,
 	Duct_Bot_Count = 0,
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-	as = {"rDocsAS_1","rPlaneAS_1",},
-
 	Navigation =
 	{
 		ducts =
@@ -147,50 +142,6 @@ global Map =
 
 	mapstart = true,
 
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.9,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier1",
-			LimitBots = 2,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.SOLDIER ),
-			Offset =
-			{
-				Vector3( 150, 350, 0 ),
-			}
-		},
-
-		Barricade2 =
-		{
-			Priority = 0.9,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_barrier2",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitClass = (1<<CLASS.LIEUTENANT) | (1<<CLASS.SOLDIER) ,
-			Offset =
-			{
-				Vector3( 170, 120, 0 ),
-			}
-		},
-
-		Barricade3 =
-		{
-			Priority = 0.9,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_barrier3",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitClass = (1<<CLASS.LIEUTENANT) | (1<<CLASS.SOLDIER) ,
-			Offset =
-			{
-				Vector3( 250, 20, 0 ),
-			}
-		},
-	},
 	check_grate = function()
 	{
 		wpOne = {};

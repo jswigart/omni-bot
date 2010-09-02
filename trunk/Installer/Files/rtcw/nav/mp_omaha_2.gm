@@ -175,7 +175,6 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		Map.AxisASTable = {"rGateAS_1",};
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );

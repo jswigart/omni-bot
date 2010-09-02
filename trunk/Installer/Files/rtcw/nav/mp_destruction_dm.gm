@@ -4,8 +4,6 @@ global Map =
 	Debug = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = false,
-	AxisASTable = {},
-	AlliesASTable = {},
 
 	Navigation =
 	{
@@ -60,12 +58,12 @@ global OnMapLoad = function()
 	/*SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );
-	Map.AlliesASTable = { "bSpawnkill", };
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );
-	Map.AxisASTable = { "rSpawnkill", };*/
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill" );*/
 
 	MapRoutes =
 	{
@@ -87,8 +85,8 @@ global OnMapLoad = function()
 		},
 	};
 
-	MapRoutes.UGOAL_rCourtyard_1 = MapRoutes.DEFEND_rCheckpoint3_1;
-	MapRoutes.UGOAL_rCourtyard_2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.AIRSTRIKE_rCourtyard_1 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.AIRSTRIKE_rCourtyard_2 = MapRoutes.DEFEND_rCheckpoint3_1;
 	MapRoutes.CALLARTILLERY_rCourtyard = MapRoutes.DEFEND_rCheckpoint3_1;
 	MapRoutes.MOUNTMG42_rCourtyard = MapRoutes.DEFEND_rCheckpoint3_1;
 	MapRoutes.DEFEND_rCheckpoint3_2 = MapRoutes.DEFEND_rCheckpoint3_1;
@@ -97,7 +95,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rCheckpoint3_5 = MapRoutes.DEFEND_rCheckpoint3_1;
 	MapRoutes.DEFEND_rCheckpoint3_6 = MapRoutes.DEFEND_rCheckpoint3_1;
 
-	MapRoutes.UGOAL_bCourtyard_1 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.AIRSTRIKE_bCourtyard_1 = MapRoutes.DEFEND_bCheckpoint4_1;
 	MapRoutes.CALLARTILLERY_bCourtyard = MapRoutes.DEFEND_bCheckpoint4_1;
 	MapRoutes.MOUNTMG42_bCourtyard = MapRoutes.DEFEND_bCheckpoint4_1;
 	MapRoutes.DEFEND_bCheckpoint4_2 = MapRoutes.DEFEND_bCheckpoint4_1;

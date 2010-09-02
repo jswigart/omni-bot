@@ -20,15 +20,7 @@ global Map =
 	MainStatus = true,
 	SouthStatus = true,
 	DocStatus = true,
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	//tables to copy to current AS goal tables
-	AxisASFence = { "red_as1_phase1", "red_as2_phase1", "red_as3_phase1", },
-	AlliesASFence = { "blue_as1_phase1", "blue_as2_phase1", "blue_as3_phase1", },
-	AxisASTrans = { "red_as1_trans", "red_as2_trans", },
+	Suicide = true,
 
 	Navigation =
 	{
@@ -67,8 +59,7 @@ global Map =
 			return;
 		}
 
-		//clear the AxisASTable
-		Map.AxisASTable = table();
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.south.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.main.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.d.*" );
@@ -80,8 +71,10 @@ global Map =
 		if ( Map.DocStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ufo.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof.*" );
 		}
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof.*" );
+
 	},
 
 	south_flag_Axis_Captured = function( trigger )
@@ -102,8 +95,7 @@ global Map =
 
 		Map.SouthStatus = false;
 
-		//clear the AS goals for allies
-		Map.AlliesASTable = table();
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_UFO_Documents );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_south_flag );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_doc_attack.*" );
@@ -131,6 +123,10 @@ global Map =
 
 		//soldiers should switch to panzer
 		RTCWUtil.SwitchWeapon( WEAPON.PANZERFAUST );
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 	},
 
 	allied_obj1_Destroyed = function( trigger )
@@ -144,8 +140,7 @@ global Map =
 		Map.DontDispenseAmmo = false;
 		RTCWUtil.EnableGoal( "ROUTE_main_gate_defense" );
 
-		//clear the AS goals for allies
-		Map.AlliesASTable = table();
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_UFO_Documents );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_south_flag );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_doc_attack.*" );
@@ -174,6 +169,10 @@ global Map =
 
 		//soldiers should switch to panzer
 		RTCWUtil.SwitchWeapon( WEAPON.PANZERFAUST );
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 	},
 
 
@@ -241,7 +240,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rRoof" );
 
 		//activate some AS goals for Axis
-		Map.AxisASTable = Map.AxisASTrans;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as[12]_trans" );
 	},
 
 	docs_returned = function( trigger )
@@ -280,7 +280,7 @@ global Map =
 		}
 
 		//clear the AS goals
-		Map.AxisASTable = table();
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_axis_spawn_north" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof" );
 	},
@@ -336,10 +336,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
 
-	//copy the fence AS goal tables to the AS goal table to make them active
-	Map.AxisASTable = Map.AxisASFence;
-	Map.AlliesASTable = Map.AlliesASFence;
-
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 999, maxcamptime = 999} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
@@ -359,12 +355,18 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Cappoint_transmitter );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_phase1_blue.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_phase1.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as[123]_phase1.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_sentry_MG  );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_sentry_MG  );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_phase1_red.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_phase1.d.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_phase1_d.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as[123]_phase1.*" );
+
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
 
 	MapRoutes =
 	{
@@ -552,7 +554,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

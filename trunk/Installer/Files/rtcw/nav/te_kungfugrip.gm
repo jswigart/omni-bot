@@ -16,28 +16,6 @@ global Map =
 		},
 	},
 
-	Switches =
-	{
-		Nerf =
-		{
-			Enabled = true,
-			Priority = 0.70,
-			WaypointName = "lever1",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			LimitBots = 2,
-			LimitClass = Util.AllClasses,
-		},
-		Wheel =
-		{
-			Enabled = true,
-			Priority = 0.70,
-			WaypointName = "wheel",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			LimitBots = 2,
-			LimitClass = Util.AllClasses,
-		},
-	},
-
 	Cappoint_89 = "CAPPOINT_89",
 	Checkpoint_toy_flag = "CHECKPOINT_toy_flag",
 	Flag_hose_head = "FLAG_hose_head",
@@ -54,7 +32,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_East_Vent_1" );
 		Util.SetMaxUsersInProgress( 1, Map.Defuse_East_Vent_1 );
 
-		print( "East_Vent_Planted" );
+		Util.MapDebugPrint( "East_Vent_Planted" );
 	},
 
 	North_Vent_Planted = function( trigger )
@@ -65,7 +43,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
 
-		print( "North_Vent_Planted" );
+		Util.MapDebugPrint( "North_Vent_Planted" );
 	},
 
 	South_Vent_Planted = function( trigger )
@@ -76,7 +54,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
 
-		print( "South_Vent_Planted" );
+		Util.MapDebugPrint( "South_Vent_Planted" );
 	},
 
 	East_Vent_Defused = function( trigger )
@@ -85,7 +63,7 @@ global Map =
 			return;
 		}
 
-		print( "East_Vent_Defused" );
+		Util.MapDebugPrint( "East_Vent_Defused" );
 	},
 
 	North_Vent_Defused = function( trigger )
@@ -94,7 +72,7 @@ global Map =
 			return;
 		}
 
-		print( "North_Vent_Defused" );
+		Util.MapDebugPrint( "North_Vent_Defused" );
 	},
 
 	South_Vent_Defused = function( trigger )
@@ -103,7 +81,7 @@ global Map =
 			return;
 		}
 
-		print( "South_Vent_Defused" );
+		Util.MapDebugPrint( "South_Vent_Defused" );
 	},
 
 	East_Vent_Destroyed = function( trigger )
@@ -116,7 +94,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_South_Vent" );
 
-		print( "East_Vent_Destroyed" );
+		Util.MapDebugPrint( "East_Vent_Destroyed" );
 	},
 
 	North_Vent_Destroyed = function( trigger )
@@ -127,7 +105,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_East_Vent" );
 
-		print( "North_Vent_Destroyed" );
+		Util.MapDebugPrint( "North_Vent_Destroyed" );
 	},
 
 	South_Vent_Destroyed = function( trigger )
@@ -138,7 +116,7 @@ global Map =
 
 		RTCWUtil.EnableGoal( "ROUTE_southvent" );
 
-		print( "South_Vent_Destroyed" );
+		Util.MapDebugPrint( "South_Vent_Destroyed" );
 	},
 
 	hose_head_Taken = function( trigger )
@@ -162,7 +140,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alpcroom.*" );
 
-		print( "hose_head_Taken" );
+		Util.MapDebugPrint( "hose_head_Taken" );
 	},
 
 	hose_head_Returned = function( trigger )
@@ -176,7 +154,7 @@ global Map =
 		RTCWUtil.ChangeSpawn( TEAM.AXIS, 1 );
 
 		//enable the wheel again
-		Map.Switches.Wheel.Enabled = true;
+		SetAvailableMapGoals( TEAM.AXIS, tree, "SWITCH_wheel" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_hose.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axpcroom.*" );
@@ -189,7 +167,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
 
-		print( "hose_head_Returned" );
+		Util.MapDebugPrint( "hose_head_Returned" );
 	},
 
 	toy_flag_Axis_Captured = function( trigger )
@@ -204,7 +182,7 @@ global Map =
 
 		Util.SetGoalPosition( 3429, -141, -291, "PLANT_East_Vent" );
 
-		print( "toy_flag_Axis_Captured" );
+		Util.MapDebugPrint( "toy_flag_Axis_Captured" );
 	},
 
 	toy_flag_Allies_Captured = function( trigger )
@@ -215,7 +193,7 @@ global Map =
 
 		Util.SetGoalPosition( 3436, -118, -429, "PLANT_East_Vent" );
 
-		print( "toy_flag_Allies_Captured" );
+		Util.MapDebugPrint( "toy_flag_Allies_Captured" );
 	},
 
 	Nerf_Gun = function( trigger )
@@ -224,9 +202,9 @@ global Map =
 
 
 		if ( vel.z < 0 ) {
-			Map.Switches.Nerf.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_nerf" );
 
-			print( "Nerf gun Fired" );
+			Util.MapDebugPrint( "Nerf gun Fired" );
 		}
 
 	},
@@ -234,11 +212,11 @@ global Map =
 	tank_lid = function( trigger )
 	{
 		//just disable it as soon as triggered
-		Map.Switches.Wheel.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_wheel" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_hose.*" );
 
-		print( "Tank Open" );
+		Util.MapDebugPrint( "Tank Open" );
 	},
 
 };
@@ -274,11 +252,15 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( "ROUTE_eastvent" );
 	RTCWUtil.DisableGoal( "ROUTE_southvent" );
 	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	
+	SetGoalPriority( "SWITCH.*", 0.7 );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Vent" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axhall.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_wheel" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_nerf" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alsnipe.*" );
@@ -328,7 +310,7 @@ global OnMapLoad = function()
 			},
 		},
 
-		UGOAL_wheel =
+		SWITCH_wheel =
 		{
 			ROUTE_axspawn2 =
 			{
@@ -338,7 +320,6 @@ global OnMapLoad = function()
 		},
 	};
 
-	//MapRoutes.UGOAL_wheel = MapRoutes.CHECKPOINT_toy_flag;
 	MapRoutes.FLAG_hose_head = MapRoutes.CHECKPOINT_toy_flag;
 	MapRoutes.ATTACK_axroom1 = MapRoutes.CHECKPOINT_toy_flag;
 	MapRoutes.ATTACK_axroom2 = MapRoutes.CHECKPOINT_toy_flag;
@@ -349,17 +330,14 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_axpcroom6 = MapRoutes.ATTACK_axpcroom1;
 
 	Util.Routes( MapRoutes );
-	Util.UpdateSwitchData();
 
 	timelimit = GetCvar( "timelimit" );
 	if ( timelimit > 15 ) {
 		SetCvar( "timelimit", "15" );
 	}
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

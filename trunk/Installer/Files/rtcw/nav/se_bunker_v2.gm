@@ -330,7 +330,7 @@ global Map =
 		RTCWUtil.EnableGoal( "ROUTE_mainent" );
 		RTCWUtil.EnableGoal( "ROUTE_mainent2" );
 		RTCWUtil.EnableGoal( "ROUTE_mainent3" );
-		Map.Switches.lever2.Enabled = false;
+		Util.DisableGoal( "SWITCH_lever2" );
 
 		if ( !Map.EnigmaStatus && !Map.FlagStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axmain_.*" );
@@ -430,7 +430,7 @@ global Map =
 		Map.FlagStatus = false;
 
 		if ( !Map.BunkerStatus && Map.DoorStatus ) {
-			Map.Switches.lever2.Enabled = true;
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_lever2" );
 		}
 
 		if ( !Map.BunkerStatus ) {
@@ -491,7 +491,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
 		}
 
-		Map.Switches.lever2.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
+		
 		Util.SetMaxUsersInProgress( 1, Map.Checkpoint_forward_spawn );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_osatt_.*" );
@@ -514,13 +515,13 @@ global Map =
 			//axis should close it
 			if ( !Map.BunkerStatus ) {
 				Map.Switches.lever1.Enabled = false;
-				Map.Switches.lever2.Enabled = true;
+				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_lever2" );
 			} else if ( Map.BunkerStatus )   {
 				Map.Switches.lever1.Enabled = false;
 			}
 		} else if ( !Map.DoorStatus )   { //only allies should open
 			Map.Switches.lever1.Enabled = true;
-			Map.Switches.lever2.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
 		}
 	},
 
@@ -642,6 +643,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT.*", 1.0 );
 	SetGoalPriority( "PANZER_.*", 0.65 );
 	SetGoalPriority( "FLAME_.*", 0.65 );
+	SetGoalPriority( "SWITCH_lever2", 0.65 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_spawn" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_entrance" );
@@ -664,7 +666,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 15, Map.Checkpoint_forward_spawn );
 	Util.SetMaxUsersInProgress( 15, Map.Flag_Enigma_Machine );
 	Util.UpdateSwitchData();
-	Map.Switches.lever2.Enabled = false;
 
 	//while ele is moving, don't let them path through it
 	Wp.SetWaypointFlag( "eletoggle", "closed", false );

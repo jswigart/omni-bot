@@ -283,7 +283,7 @@ global Map =
 		//did humans wall boost?
 		if ( Map.DoorStatus || Map.WallStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_War_Documents );
-			Map.AlliesASTable = {};
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		}
 
 		Map.EvalArty();
