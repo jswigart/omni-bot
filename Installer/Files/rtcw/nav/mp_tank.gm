@@ -862,10 +862,10 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_bTank_4 = MapRoutes.PLANT_Prototype_Tank;
 	MapRoutes.DEFEND_bTank_5 = MapRoutes.PLANT_Prototype_Tank;
 	MapRoutes.DEFEND_bTank_6 = MapRoutes.PLANT_Prototype_Tank;
-	MapRoutes.CAMP_dual_tank_2 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.CAMP_dual_tank_3 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.CAMP_dual_tank_4 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.CAMP_dual_tank_5 = MapRoutes.UGOAL_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_2 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_3 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_4 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_5 = MapRoutes.CAMP_dual_tank_1;
 
 	Util.Routes( MapRoutes );
 

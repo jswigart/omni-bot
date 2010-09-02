@@ -123,38 +123,6 @@ global Map =
 		},
 	},
 
-	Switches =
-	{
-		Gate1 =
-		{
-			Enabled = true,
-			Priority = 0.65,
-			WaypointName = "gate1",
-			LimitTeam = 0, //wait for gate hatch
-			LimitBots = 1,
-			LimitClass = Util.AllClasses,
-		},
-		Gate2 =
-		{
-			//Enabled = false,	// Martin - Removed
-			Enabled = true,
-			Priority = 0.9,
-			WaypointName = "gate2",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitBots = 1,
-			LimitClass = Util.AllClasses,
-		},
-		HangarDoor1 =
-		{
-			Enabled = false,
-			Priority = 0.65,
-			WaypointName = "hangardoor1",
-			LimitTeam = 0, //wait for gate hatch
-			LimitBots = 1,
-			LimitClass = Util.AllClasses,
-		},
-	},
-
 	TowerTrigger =
 	{
 		Name = "TowerTrigger",
@@ -235,7 +203,7 @@ global Map =
 
 		RTCWUtil.EnableGoal( "ROUTE_mwh.*" );
 		if ( !Map.GateStatus ) {
-			Map.Switches.Gate1.LimitTeam = ( 1 << TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate1" );
 		}
 
 		if ( Map.Suicide ) {
@@ -386,8 +354,8 @@ global Map =
 			return;
 		}
 
-		Map.Switches.Gate1.LimitTeam = 0;
-		Map.Switches.Gate2.Enabled = false;
+		Util.DisableGoal( "SWITCH_Gate1" );
+		Util.DisableGoal( "SWITCH_Gate2" );
 	},
 
 	gate_trigger = function( trigger )
@@ -401,11 +369,12 @@ global Map =
 		if ( vel.y < 0 ) {
 			Wp.SetWaypointFlag( "gatehack", "closed", true );
 			Map.GateStatus = false;
-			Map.Switches.Gate1.LimitTeam = ( 1 << TEAM.AXIS );
-			Map.Switches.Gate2.Enabled = true;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_Gate2" );
 		} else if ( vel.y > 0 )   {
-			Map.Switches.Gate1.LimitTeam = 0;
-
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Gate1" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Gate2" );
+			
 			//open up the node so they can pathfind through gate
 			Wp.SetWaypointFlag( "gatehack", "closed", false );
 
@@ -419,7 +388,7 @@ global Map =
 			return;
 		}
 
-		Map.Switches.HangarDoor1.LimitTeam = 0;
+		Util.DisableGoal( "SWITCH_HangarDoor1" );
 	},
 
 	hangardoor_trigger = function( trigger )
@@ -431,12 +400,12 @@ global Map =
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
+			
 			Map.HangarDoorStatus = false;
-			Map.Switches.HangarDoor1.LimitTeam = ( 1 << TEAM.AXIS );
+			Util.LimitToTeaam( TEAM.AXIS, "SWITCH_HangarDoor1" );
 		} else if ( vel.y > 0 )   {
-			Map.Switches.HangarDoor1.LimitTeam = ( 1 << TEAM.ALLIES );
-
 			Map.HangarDoorStatus = true;
+			Util.LimitToTeaam( TEAM.ALLIES, "SWITCH_HangarDoor1" );
 		}
 	},
 
@@ -628,6 +597,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_hatch", 0.81 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "SWITCH_Gate1", 0.65 );
+	SetGoalPriority( "SWITCH_Gate2", 0.9 );
+	SetGoalPriority( "SWITCH_HangarDoor1", 0.65 );
 
 	thread( Map.check_flagPush );
 	//open up some airstrike goals if ff is off
@@ -659,6 +631,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGate.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_hatch" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bGateSpam.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate2" );
 
 	// Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
@@ -984,7 +957,6 @@ global OnMapLoad = function()
 	//MapRoutes.SNIPE_rGate_s2 = MapRoutes.SNIPE_rGate_s1;
 
 	Util.Routes( MapRoutes );
-	Util.UpdateSwitchData();
 
 	Util.MapDebugPrint( "OnMapLoad" );
 };

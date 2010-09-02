@@ -8,12 +8,6 @@ global Map =
 	BridgeASBots = 0,
 	ViewDistance = 3750,
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	AxisASTavern = { "rTavernAS_1", },
-
 	Airstrike =
 	{
 		sladder =
@@ -118,36 +112,35 @@ global Map =
 
 	allies_swc = function()
 	{
-		print( "Allies - SWC" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_rcyd.*" ); // Use regular objective points.
 		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Southwest Courtyard" );
+		Util.MapDebugPrint( "Allies - SWC" );
 	},
 
 	allies_tavern = function()
 	{
-		print( "Allies - Tavern" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_tavern.*" );
 		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Tavern" );
+		Util.MapDebugPrint( "Allies - Tavern" );
 	},
 
 	axis_swc = function()
 	{
-		print( "Axis - SWC" );
-		Map.AxisASTable = {};
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcyd.*" ); // Use regular objective points.
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Southwest Courtyard" );
+		Util.MapDebugPrint( "Axis - SWC" );
 	},
 
 	axis_tavern = function()
 	{
-		print( "Axis - Tavern" );
-		Map.AxisASTable = { "rTavernAS_1", };
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );		
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Tavern" );
+		Util.MapDebugPrint( "Axis - Tavern" );
 	},
 
 	toggle_attack = function()
@@ -162,7 +155,7 @@ global Map =
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,2 );
-				//print(attackPoint);
+				//Util.MapDebugPrint(attackPoint);
 				if ( attackPoint == 0 ) {
 					Map.allies_swc();
 					Map.axis_swc();
@@ -212,9 +205,7 @@ global OnMapLoad = function()
 	yield(); yield();
 	RTCWUtil.StopSniping();
 	thread( Map.toggle_attack );
-	print( "OnMapLoad" );
-
-
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

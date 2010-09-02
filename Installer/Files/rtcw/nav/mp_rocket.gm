@@ -16,16 +16,6 @@ global Map =
 			Priority = 0, // paththrough
 			WaypointName = "Door Switch",
 		},
-
-		controls =
-		{
-			Enabled = false,
-			Priority = 0.65,
-			WaypointName = "Controls Switch",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			LimitBots = 2,
-			LimitClass = Util.AllClasses,
-		},
 	},
 
 	Navigation =
@@ -279,13 +269,12 @@ global Map =
 	// called from the switch triggers
 	evaluate_door = function()
 	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_controls" );
+
 		if ( Map.DoorStatus && !Map.AxisOpenDoor ) { //door is open and axis want it shut
-			Map.Switches.controls.Enabled = true;
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_controls" );
 		} else if ( !Map.DoorStatus && Map.AxisOpenDoor )   { //axis can open now
-			Map.Switches.controls.Enabled  = true; //doors closed, nobody should use this
-		} else // leave it open
-		{
-			Map.Switches.controls.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_controls" );
 		}
 	},
 
@@ -301,7 +290,7 @@ global Map =
 		}
 
 		Map.Switches.door.Enabled = false;
-		Map.Switches.controls.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_controls" );
 	},
 
 	door_trigger = function( trigger )
@@ -377,6 +366,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_bEng.*", {mincamptime = 30, maxcamptime = 60} );
 	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "SWITCH_controls", 0.9 );
 
 	RTCWUtil.DisableGoal( "ROUTE_keydel[45]" );
 
@@ -434,7 +424,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Allies_Key_Attack_6 = MapRoutes.FLAG_Override_Key;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

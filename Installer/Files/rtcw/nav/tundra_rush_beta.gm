@@ -24,15 +24,17 @@ global Map =
 	FlagStatus = 0, //no team owns it
 	GateStatus = false, //intact
 	DocStatus = false, //home
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	//tables to copy to current AS goal tables
-	AxisASFlag = { "rflag_as1", "rflag_as2", },
-	AxisASGate = { "rgate_as1", "rgate_as2", },
-	AxisASTransmit = { "rTransmitAS_1", },
+	
+	Roles =
+	{
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 3,
+			},
+		},
+	},	
 
 	Navigation =
 	{
@@ -104,28 +106,6 @@ global Map =
 		},
 	},
 
-	gatecover = { "bGate1", "bGate2", "bGate3", "bGate4", },
-	Defend =
-	{
-		Disable = false,
-		MaxBots = 3,
-		Users = {},
-		Allies = {},
-
-		EvalDefend = function()
-		{
-			if ( Map.Defend.Disable ) {
-				this.Disable;
-			}
-
-			if ( Map.Defend.Users[ this.Bot.GetGameId() ] == true && tableCount( Map.Defend.Allies ) > 0 ) {
-				return true;
-			}
-
-			return false;
-		},
-	},
-
 	Radio_Destroyed = function( trigger )
 	{
 		if ( TestMap ) {
@@ -145,8 +125,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_barrack_mg );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		Map.Defend.Allies = {};
-		Map.Defend.Disable = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
 
 		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
 		sleep( 1 );
@@ -178,7 +157,6 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		Util.MapDebugPrint( "Docs_Taken" );
 
 		if ( !Map.DocStatus ) {
 			Map.DocStatus = true;
@@ -187,7 +165,8 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
 			Util.DisableGroup( "gatemgs" );
-			Map.AxisASTable = Map.AxisASTransmit;
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmitAS.*" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzTransmit.*" );
@@ -205,6 +184,8 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
 			}
 		}
+		
+		Util.MapDebugPrint( "Docs_Taken" );
 	},
 
 	Docs_Returned = function( trigger )
@@ -212,7 +193,6 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		Util.MapDebugPrint( "Docs_Returned" );
 
 		Map.DocStatus = false;
 
@@ -222,7 +202,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBackhall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
-		Map.AxisASTable = Map.AxisASGate;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
+		
+		Util.MapDebugPrint( "Docs_Returned" );
 	},
 
 	tunnelflag_Axis_Captured = function( trigger )
@@ -232,7 +215,7 @@ global Map =
 		}
 
 		Map.FlagStatus = 1;
-		Map.Defend.Allies = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
 		RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
 	},
 
@@ -243,7 +226,6 @@ global Map =
 		}
 
 		Map.FlagStatus = 2;
-		Map.AxisASTable = {};
 		Map.DontDispenseAmmo = false;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Docs );
@@ -253,7 +235,7 @@ global Map =
 		if ( !Map.GateStatus && !Map.DocStatus ) {
 			RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.MAUSER );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bHouse.*" );
-			Map.Defend.Allies = Map.gatecover;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
 
 			if ( !Map.AxisShift ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_tunnelflag );
@@ -267,6 +249,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 
 	},
@@ -304,7 +287,8 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
 					Util.EnableGroup( "gatemgs", TEAM.AXIS );
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-					Map.AxisASTable = Map.AxisASGate;
+					SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
 				}
 			}
 		},
@@ -395,17 +379,19 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rDocs5", 0.45 );
 	SetGoalPriority( "DEFEND_rDocs6", 0.45 );
 	SetGoalPriority( "DEFEND_rBackhall", 0.6 );
+	SetGoalPriority( "CAMP_bGate.*", 0.95 );
+
 	RTCWUtil.ExcludeClass( "FLAG_Docs", TEAM.ALLIES, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_tunnelflag );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadio" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_barrack_mg );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-
-	Map.AxisASTable = Map.AxisASFlag;
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rflag_as.*" );
 
 	MapRoutes =
 	{
@@ -418,7 +404,7 @@ global OnMapLoad = function()
 		{
 			ROUTE_asroutemg = { ROUTE_antenna = {}, },
 		},
-		UGOAL_rgate_as1 =
+		AIRSTRIKE_rgate_as1 =
 		{
 			ROUTE_mgrouteas = { ROUTE_antenna = {}, },
 		},
@@ -476,14 +462,14 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rFlag4 = MapRoutes.DEFEND_rFlag1;
 	MapRoutes.DEFEND_rFlag5 = MapRoutes.DEFEND_rFlag1;
 	MapRoutes.DEFEND_rFlag6 = MapRoutes.DEFEND_rFlag1;
-	MapRoutes.UGOAL_rgate_as2 = MapRoutes.UGOAL_rgate_as1;
+	MapRoutes.AIRSTRIKE_rgate_as2 = MapRoutes.AIRSTRIKE_rgate_as1;
 	MapRoutes.ATTACK_bDocs1 = MapRoutes.FLAG_Docs;
 	MapRoutes.ATTACK_bDocs2 = MapRoutes.FLAG_Docs;
 	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_Docs;
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
@@ -493,20 +479,4 @@ global OnBotJoin = function( bot )
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-
-	if ( TestMap ) {
-		return;
-	}
-
-	if ( bot.GetTeam() == TEAM.ALLIES ) {
-		RTCWUtil.numallies += 1;
-
-		if ( tableCount( Map.Defend.Users ) < Map.Defend.MaxBots
-			 && !bot.HasWeapon( WEAPON.MAUSER ) ) {
-			if ( RTCWUtil.numallies % 2 == 0 ) {
-				Map.Defend.Users[ bot.GetGameId() ] = true;
-				bot.AddScriptGoal( "DualObjective" );
-			}
-		}
-	}
 };

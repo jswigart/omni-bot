@@ -2,17 +2,14 @@ global Map =
 {
 	Quiet = true,
 
-	Switches =
-	{
-		lever1 =
-		{
-			Enabled = true,
-			Priority = 0.40,
-			WaypointName = "lever1",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = Util.AllClasses,
-		},
-	},
+	Plant_allied_communication_ops = "PLANT_allied_communication_ops",
+	Plant_axis_communication_ops = "PLANT_axis_communication_ops",
+	Plant_central_access_door = "PLANT_central_access_door",
+	Plant_lower_access_door_1 = "PLANT_lower_access_door_1",
+	Plant_lower_access_door_2 = "PLANT_lower_access_door_2",
+	Plant_rear_access_door = "PLANT_rear_access_door",
+	Mount_199 = "MOUNTMG42_199",
+	Repair_199 = "REPAIRMG42_199",
 
 	KillZone =
 	{
@@ -55,39 +52,26 @@ global Map =
 		},
 	},
 
-	Plant_allied_communication_ops = "PLANT_allied_communication_ops",
-	Plant_axis_communication_ops = "PLANT_axis_communication_ops",
-	Plant_central_access_door = "PLANT_central_access_door",
-	Plant_lower_access_door_1 = "PLANT_lower_access_door_1",
-	Plant_lower_access_door_2 = "PLANT_lower_access_door_2",
-	Plant_rear_access_door = "PLANT_rear_access_door",
-	Mount_199 = "MOUNTMG42_199",
-	Repair_199 = "REPAIRMG42_199",
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-
-	//tables to copy to current AS goal tables
-	AxisAS = { "red_as1", "red_as2", },
-
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 6, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 6,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
-
-	// tables of waypoint names to be copied to the teams Defend tables
-	axopscover = { "axd1", "axd2", "axd3", "axd4", "axd5", "axd6", },
-	alopscover = { "ald1", "ald2", "ald3", "ald4", "ald5", "ald6", },
 
 	allied_communication_ops_Destroyed = function( trigger )
 	{
@@ -190,10 +174,11 @@ global Map =
 
 		vel = ToVector( trigger.Action );
 		if ( vel.z > 0 ) {
-			Map.Switches.lever1.Enabled = false;
-		} else
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
+		}
+		else
 		{
-			Map.Switches.lever1.Enabled = true;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
 		}
 	},
 };
@@ -232,12 +217,9 @@ global OnMapLoad = function()
 
 	kz = OnTriggerRegion( AABB( -203,-1535,-370,60,-1326,-96 ), Map.KillZone );
 
-	SetGoalPriority( "REPAIRMG42_.*", 6.0 );
-
-	Map.AxisASTable = Map.AxisAS;
-	Map.AxisASPriority = 0.55;
-	Map.Defend.Axis = Map.axopscover;
-	Map.Defend.Allies = Map.alopscover;
+	SetGoalPriority( "REPAIRMG42_.*", 0.96 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "SWITCH_lever1", 0.4 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_central_access_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_rear_access_door" );
@@ -245,6 +227,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alatt.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_alPanz.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_ald.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_lower_access_door_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_communication_ops" );
@@ -252,10 +236,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axPanz.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_axmg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_axd.*" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
-	Util.UpdateSwitchData();
 
 	MapRoutes =
 	{
@@ -352,13 +337,11 @@ global OnMapLoad = function()
 	MapRoutes.PLANT_axis_communication_ops = MapRoutes.ATTACK_alatt1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.MAUSER );
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

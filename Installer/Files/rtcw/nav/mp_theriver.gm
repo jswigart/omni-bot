@@ -20,8 +20,6 @@ global Map =
 	ElePosition = "Top",
 	EleMoving = false,
 
-	AxisASTable = {},
-
 	Bridge_Controls_Planted = function( trigger )
 	{
 		if ( TestMap ) {
@@ -80,7 +78,7 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-			Map.AxisASTable = {};
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_2_1" );
@@ -132,7 +130,7 @@ global Map =
 		Map.FlagStatus = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		if ( Map.WallStatus == true && Map.DocStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
 		}
@@ -151,7 +149,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rWall" );
-		Map.AxisASTable = {"rFlagAS_1", "rFlagAS_2", "rFlagAS_3", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag_1" );

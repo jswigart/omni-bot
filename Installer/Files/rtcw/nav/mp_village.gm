@@ -41,9 +41,6 @@ global Map =
 	RoundStart = true,
 	IncomingCalled = false,
 
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
-
 	FriendlyFire,
 
 	PanzGateBots = 0,
@@ -122,12 +119,18 @@ global Map =
 			},
 		},
 	},
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	AxisASTavern = { "rTavernAS_1", },
+	
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 1,
+				crucialClass = CLASS.LIEUTENANT,
+			},
+		},
+	},	
 
 	Airstrike =
 	{
@@ -156,57 +159,6 @@ global Map =
 		},
 	},
 
-	//this function is called from goal_grenadetarget
-	EvalGrenadeTarget = function()
-	{
-		if ( Map.b1_status && Map.b2_status && Map.b3_status ) {
-			//turn it off for the rest of the round
-			this.Disable = true;
-			return false;
-		}
-
-		return true;
-	},
-
-	Target =
-	{
-		Barricade1 =
-		{
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_obj_block01",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( 350,-40,0 ),
-			}
-		},
-		Barricade2 =
-		{
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_obj_block02",
-			Priority = 0.95,
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			Offset =
-			{
-				Vector3( 350,-20,0 ),
-			}
-		},
-		Barricade3 =
-		{
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_obj_block03",
-			Priority = 1.0,
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			Offset =
-			{
-				Vector3( 0,300,0 ),
-			}
-		},
-	},
-
 	CryptTrigger =
 	{
 		Name = "StairsTrigger",
@@ -226,7 +178,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCellar.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-					Map.Defend.Axis = {};
+					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cd.*" );
 
 					foreach( id and bot in BotTable )
 					{
@@ -253,24 +205,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-		},
-	},
-
-	Defend =
-	{
-		Priority = 1.1,
-		Disable = false,
-		MaxBots = 1,
-		Users = {},
-		Axis = {  "cd1", "cd2" },
-
-		EvalDefend = function()
-		{
-			if ( Map.Defend.Users[ this.Bot.GetGameId() ] == true && tableCount( Map.Defend.Axis ) > 0 ) {
-				return true;
-			}
-
-			return false;
 		},
 	},
 
@@ -343,11 +277,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDeliverArt.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTruckAS_.*" );		
 
 		Map.Airstrike.sladder.Enabled = false;
 		Map.Airstrike.cottage.Enabled = false;
-
-		Map.AxisASTable = { "rTruckAS_1",};
 	},
 
 	obj_item01_Returned = function( trigger )
@@ -376,6 +311,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCemetary_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCemetary_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rDeliverArt.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );		
 
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
@@ -383,7 +319,6 @@ global Map =
 
 		Map.Airstrike.sladder.Enabled = true;
 		Map.Airstrike.cottage.Enabled = true;
-		Map.AxisASTable = {};
 	},
 
 	truck_Captured = function( trigger )
@@ -440,7 +375,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 		if ( !Map.GoldStatus ) {
-			Map.AxisASTable = {};
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		}
 		Map.Airstrike.bridge.Enabled = false;
 	},
@@ -471,7 +406,6 @@ global Map =
 		}
 
 		Map.b1_status = true;
-		Map.Target.Barricade1.Enabled = false;
 	},
 
 	block2 = function( trigger )
@@ -481,7 +415,6 @@ global Map =
 		}
 
 		Map.b2_status = true;
-		Map.Target.Barricade2.Enabled = false;
 		RTCWUtil.EnableGoal( "ROUTE_block2" );
 	},
 
@@ -492,7 +425,6 @@ global Map =
 		}
 
 		Map.b3_status = true;
-		Map.Target.Barricade3.Enabled = false;
 		RTCWUtil.EnableGoal( "ROUTE_block3" );
 	},
 	spawnkill = function()
@@ -501,8 +433,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
-
-		Map.AxisASTable = {"rSpawnkill_1",};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill_.*" );
 	},
 	CryptPlant =
 	{
@@ -585,6 +517,10 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bDeliver7", 0.6 );
 	SetGoalPriority( "DEFEND_rDeliver[12]", 0.6 );
 	SetGoalPriority( "DEFEND_rFlag.*", 0.6 );
+	SetGoalPriority( "GRENADE_Barricade2", 0.96 );
+	SetGoalPriority( "GRENADE_Barricade3", 0.97 );
+	SetGoalPriority( "CAMP_cd.*", 0.95 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
 
 	RTCWUtil.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
@@ -599,15 +535,15 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLLERY.*", 0.7 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCottage.*" );
 	//SetMapGoalProperties( "ATTACK_rtest.*", {mincamptime=1, maxcamptime=1});
 
 	//SetGoalPriority( "ATTACK_rtest.*", 0.8 );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rtest.*" );
-
-	Map.AxisASTable = Map.AxisASTavern;
 
 	//Martin Testing
 	//Map.spawnkill();
@@ -710,7 +646,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rDeliver4 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.DEFEND_rDeliver5 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.DEFEND_rDeliver6 = MapRoutes.DEFEND_rDeliver1;
-	MapRoutes.UGOAL_rTruckAS_1 = MapRoutes.DEFEND_rDeliver1;
+	MapRoutes.AIRSTRIKE_rTruckAS_1 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.ATTACK_bCemetary1 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.ATTACK_bCemetary2 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.ATTACK_bCemetary3 = MapRoutes.FLAG_obj_item01;
@@ -735,15 +671,4 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-
-	if ( TestMap ) {
-		return;
-	}
-
-	if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.LIEUTENANT ) {
-		if ( tableCount( Map.Defend.Users ) < Map.Defend.MaxBots ) {
-			Map.Defend.Users[ bot.GetGameId() ] = true;
-			bot.AddScriptGoal( "DualObjective" );
-		}
-	}
 };

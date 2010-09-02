@@ -4,24 +4,11 @@ global Map =
 	FocusPrimary = false,
 	ViewDistance = 5000,
 
-	//this function is called from goal_grenadetarget
-	EvalGrenadeTarget = function()
-	{
-		if ( Map.DoorStatus ) {
-			//turn it off for the rest of the round
-			this.Disable = true;
-			//this.LimitTo( Map.EvalGrenadeTarget, GetGameTimeLeft() );
-			return false;
-		}
-
-		return true;
-	},
-
 	Checkpoint_beacheadspawn = "CHECKPOINT_beacheadspawn",
 	Plant_Trench = "PLANT_Trench_Grate",
 	Plant_Wall = "PLANT_Beach_Head_Wall",
 	Plant_Breach = "PLANT_Bunker_Breach",
-	Plant_Cyanide = "PLANT_Cyanide_Drums",
+	Plant_Cyanide = "PLANT_Cyanide_Drums",	
 
 	//set status' for conditionals
 	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
@@ -29,6 +16,8 @@ global Map =
 	TrenchStatus = false, //intact
 	WallStatus = false, //intact
 	BunkerStatus = false, // intact
+	DocStatus = false, //at home
+	DoorStatus = false, // intact
 	TwoMinWarn = false,
 	CyanideDyno = 0,
 	rPanzers = 0,
@@ -36,58 +25,6 @@ global Map =
 	bPanzers = 0,
 	bSnipers = 0,
 	DontDispenseAmmo = true,
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-
-	//tables to copy to current AS goal tables
-	AxisASWall = { "red_as1_p1", "red_as1_p2", "red_as1_p3","red_as1_p4","red_as1_p5","red_as1_p6", },
-	AlliesASWall = { "blue_as1_p1", "blue_as1_p2", "blue_as1_p3", "blue_as1_p4",},
-
-
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.67,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_Barricade1",
-			LimitBots = 2,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ) | ( 1 << CLASS.ENGINEER ),
-			Offset =
-			{
-				Vector3( 265, 0, -48 ),
-			}
-		},
-		Barricade2 =
-		{
-			Priority = 0.66,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_Barricade2",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( 232, 119, 4 ),
-			}
-		},
-		Barricade3 =
-		{
-			Priority = 0.65,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_Barricade3",
-			LimitBots = 2,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( 346, -97, -11 ),
-			}
-		},
-	},
 
 	Trench_Destroyed = function( trigger )
 	{
@@ -111,7 +48,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBase.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
-		Map.AlliesASTable = {};
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bunker_Breach" );
 		RTCWUtil.EnableGoal( Map.Checkpoint_beach_flag );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beacheadspawn" );
@@ -146,7 +83,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
-		Map.AxisASTable = {"red_as2_p1", "red_as2_p2", };       // Spam the entrance
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p[12]" );
 	},
 
 	Allies_Capture_Flag = function( trigger )
@@ -227,7 +165,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBunker.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCyanide.*" );
-		Map.AxisASTable = {"red_as2_p1", "red_as2_p2", };       // Spam the entrance
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p[12]" );
 		Map.CyanideDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_beacheadspawn );
 		SetGoalPriority( "CALL.*", 0.4 );
@@ -241,7 +180,9 @@ global Map =
 			return;
 		}
 
-		Map.AxisASTable = { "red_as2_p1", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p1" );
+
 		Map.CyanideDyno -= 1;
 		if ( Map.CyanideDyno == 0 ) {
 			if ( Map.WallStatus == true ) {
@@ -353,19 +294,44 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	//RTCWUtil.LimitToClass("MOUNT.*", TEAM_AXIS, CLASS.MEDIC, CLASS.SOLDIER);
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "CHECKPOINT.*", 0.9 );
+	SetGoalPriority( "DEFEND_rCyanide_[346]", 0.6 );
+	SetGoalPriority( "ATTACK_bCyanide_[7]", 0.6 );
+	SetGoalPriority( "ATTACK_bRoamCyanide", 0.59 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.67 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.66 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.65 );
+	
+	RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade2", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );	
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Trench_Grate" );        // Plant here then wall
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as1_p.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBunker.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_eastbunker" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mainbunker1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mainbunker_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_p.*" );
 
 	// *** Artillery
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bBeach.*" );
@@ -377,36 +343,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
 	// *** End Arty
-
-	//copy the wall AS goal tables to the AS goal table to make them active
-	Map.AxisASTable = Map.AxisASWall;
-	Map.AlliesASTable = Map.AlliesASWall;
-
-	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
-	SetGoalPriority( "CHECKPOINT.*", 0.9 );
-	SetGoalPriority( "DEFEND_rCyanide_[346]", 0.6 );
-	SetGoalPriority( "ATTACK_bCyanide_[7]", 0.6 );
-	SetGoalPriority( "ATTACK_bRoamCyanide", 0.59 );
-
-	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
-	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
-
-	//copy the wall AS goal tables to the AS goal table to make them active
-	Map.AxisASTable = Map.AxisASWall;
-	Map.AlliesASTable = Map.AlliesASWall;
-
-	// Default Status'
-	Map.FlagStatus = 0; //nobody owns it
-	Map.DocStatus = false; //at home
-	Map.DoorStatus = false; //intact
-	Map.WallStatus = false; //intact
-
-	RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
-
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	MapRoutes =
 	{
@@ -469,7 +405,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

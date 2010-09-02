@@ -10,42 +10,6 @@ global Map =
 	Plant_Loose_Lumber = "PLANT_Loose_Lumber",
 	Plant_Weak_Train_Roof = "PLANT_Weak_Train_Roof",
 
-	Switches =
-	{
-		coalcar =
-		{
-			Enabled = true,
-			Priority = 0.8,
-			WaypointName = "coalcar",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitBots = 2,
-		},
-		boxcar1 =
-		{
-			Enabled = true,
-			Priority = 0.8,
-			WaypointName = "boxcar1",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitBots = 2,
-		},
-		boxcar2 =
-		{
-			Enabled = true,
-			Priority = 0.8,
-			WaypointName = "boxcar2",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitBots = 2,
-		},
-		boxcar3 =
-		{
-			Enabled = true,
-			Priority = 0.8,
-			WaypointName = "boxcar3",
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			//LimitBots = 2,
-		},
-	},
-
 	Navigation =
 	{
 		traindoor =
@@ -68,7 +32,6 @@ global Map =
 			return;
 		}
 
-		print( "Loose_Lumber_Destroyed" );
 		Wp.SetWaypointFlag( "woodbridge", "closed", false );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
@@ -82,6 +45,8 @@ global Map =
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
+		
+		Util.MapDebugPrint( "Loose_Lumber_Destroyed" );
 	},
 
 	Loose_Lumber_Planted = function( trigger )
@@ -90,7 +55,7 @@ global Map =
 			return;
 		}
 
-		print( "Loose_Lumber_Planted" );
+		Util.MapDebugPrint( "Loose_Lumber_Planted" );
 	},
 
 	Weak_Train_Roof_Destroyed = function( trigger )
@@ -98,8 +63,6 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-
-		print( "Weak_Train_Roof_Destroyed" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 
@@ -112,6 +75,8 @@ global Map =
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
+		
+		Util.MapDebugPrint( "Weak_Train_Roof_Destroyed" );
 	},
 
 	Weak_Train_Roof_Planted = function( trigger )
@@ -120,39 +85,39 @@ global Map =
 			return;
 		}
 
-		print( "Weak_Train_Roof_Planted" );
+		Util.MapDebugPrint( "Weak_Train_Roof_Planted" );
 	},
 
 	coalcar_switched = function( trigger )
 	{
-		Util.MapDebugPrint( "coalcar_switched" );
-		Map.Switches.coalcar.Enabled = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_coalcar" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCoalcar.*" );
+		Util.MapDebugPrint( "coalcar_switched" );
 	},
 
 	boxcar1_switched = function( trigger )
 	{
-		Util.MapDebugPrint( "boxcar1_switched" );
-		Map.Switches.boxcar1.Enabled = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar1" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar1.*" );
+		Util.MapDebugPrint( "boxcar1_switched" );
 	},
 
 	boxcar2_switched = function( trigger )
 	{
-		Util.MapDebugPrint( "boxcar2_switched" );
-		Map.Switches.boxcar2.Enabled = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar2" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar2.*" );
+		Util.MapDebugPrint( "boxcar2_switched" );
 	},
 
 	boxcar3_switched = function( trigger )
 	{
-		Util.MapDebugPrint( "boxcar3_switched" );
-		Map.Switches.boxcar3.Enabled = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar3" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar3.*" );
+		Util.MapDebugPrint( "boxcar3_switched" );
 	},
 
 };
@@ -178,11 +143,14 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 25, maxcamptime = 45} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "SWITCH_.*", 0.8 );
+
 	RTCWUtil.DisableGoal( ".*", true ); // all but routes
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_.*" );
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rPlant.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTest.*" );
@@ -205,7 +173,7 @@ global OnMapLoad = function()
 
 	MapRoutes =
 	{
-		UGOAL_coalcar =
+		SWITCH_coalcar =
 		{
 			ROUTE_bspawn1 =
 			{
@@ -213,7 +181,7 @@ global OnMapLoad = function()
 				ROUTE_wood = {},
 			},
 		},
-		UGOAL_boxcar1 =
+		SWITCH_boxcar1 =
 		{
 			ROUTE_bspawn1 =
 			{
@@ -221,7 +189,7 @@ global OnMapLoad = function()
 				ROUTE_wood = {Weight = 3,},
 			},
 		},
-		UGOAL_boxcar2 =
+		SWITCH_boxcar2 =
 		{
 			ROUTE_bspawn1 =
 			{
@@ -229,7 +197,7 @@ global OnMapLoad = function()
 				ROUTE_wood = {Weight = 3,},
 			},
 		},
-		UGOAL_boxcar3 =
+		SWITCH_boxcar3 =
 		{
 			ROUTE_bspawn1 =
 			{
@@ -239,20 +207,17 @@ global OnMapLoad = function()
 		},
 	};
 
-	MapRoutes.UGOAL_coalcar.ROUTE_bspawn2 = MapRoutes.UGOAL_coalcar.ROUTE_bspawn1;
-	MapRoutes.UGOAL_coalcar.ROUTE_bspawn3 = MapRoutes.UGOAL_coalcar.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar1.ROUTE_bspawn2 = MapRoutes.UGOAL_boxcar1.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar1.ROUTE_bspawn3 = MapRoutes.UGOAL_boxcar1.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar2.ROUTE_bspawn2 = MapRoutes.UGOAL_boxcar2.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar2.ROUTE_bspawn3 = MapRoutes.UGOAL_boxcar2.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar3.ROUTE_bspawn2 = MapRoutes.UGOAL_boxcar3.ROUTE_bspawn1;
-	MapRoutes.UGOAL_boxcar3.ROUTE_bspawn3 = MapRoutes.UGOAL_boxcar3.ROUTE_bspawn1;
+	MapRoutes.SWITCH_coalcar.ROUTE_bspawn2 = MapRoutes.SWITCH_coalcar.ROUTE_bspawn1;
+	MapRoutes.SWITCH_coalcar.ROUTE_bspawn3 = MapRoutes.SWITCH_coalcar.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar1.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar1.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar1.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar1.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar2.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar2.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar2.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar2.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar3.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar3.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar3.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar3.ROUTE_bspawn1;
 	Util.Routes( MapRoutes );
-	Util.UpdateSwitchData();
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

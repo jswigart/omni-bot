@@ -470,19 +470,25 @@ Commands["goaldef"] =
 						wpTable = table();
 						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
 
-						goals[ id ] = table();
-						goals[ id ].GoalType = "CAMP";
-						goals[ id ].Name = format("CAMP_%s", wpName);
-						goals[ id ].TagName = wpName;
-						goals[ id ].Radius = wpTable.radius;
-						goals[ id ].MinRadius = wpTable.radius;
-						goals[ id ].Stance = "crouch";
-						goals[ id ].AimVectors = table();
-						goals[ id ].AimVectors[ 0 ] = wpTable.facing;
-						goals[ id ].Roles = table();
-						goals[ id ].Roles[ 0 ] = "DEFENDER";
-						goals[ id ].Position = GroundPoint(wpTable.position);
-						goals[ id ].Weapons = table();
+						if ( tableCount(wpTable) > 0 ) {
+							goals[ id ] = table();
+							goals[ id ].GoalType = "CAMP";
+							goals[ id ].Name = format("CAMP_%s", wpName);
+							goals[ id ].TagName = wpName;
+							goals[ id ].Radius = wpTable.radius;
+							goals[ id ].MinRadius = wpTable.radius;
+							goals[ id ].Stance = "crouch";
+							goals[ id ].AimVectors = table();
+							goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+							goals[ id ].Roles = table();
+							goals[ id ].Roles[ 0 ] = "DEFENDER";
+							goals[ id ].Position = GroundPoint(wpTable.position);
+							goals[ id ].Weapons = table();
+						}
+						else {
+							print(format("Cannot find waypoint %s, aborting", wpName));
+							return;
+						}
 					}
 				}
 				case "as":
@@ -491,16 +497,22 @@ Commands["goaldef"] =
 						wpTable = table();
 						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
 
-						goals[ id ] = table();
-						goals[ id ].GoalType = "AIRSTRIKE";
-						goals[ id ].Name = format("AIRSTRIKE_%s", wpName);
-						goals[ id ].TagName = wpName;
-						goals[ id ].Radius = wpTable.radius;
-						goals[ id ].MinRadius = wpTable.radius;
-						goals[ id ].Stance = "stand";
-						goals[ id ].AimVectors = table();
-						goals[ id ].AimVectors[ 0 ] = wpTable.facing;
-						goals[ id ].Position = GroundPoint(wpTable.position);
+						if ( tableCount(wpTable) > 0 ) {
+							goals[ id ] = table();
+							goals[ id ].GoalType = "AIRSTRIKE";
+							goals[ id ].Name = format("AIRSTRIKE_%s", wpName);
+							goals[ id ].TagName = wpName;
+							goals[ id ].Radius = wpTable.radius;
+							goals[ id ].MinRadius = wpTable.radius;
+							goals[ id ].Stance = "stand";
+							goals[ id ].AimVectors = table();
+							goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+							goals[ id ].Position = GroundPoint(wpTable.position);
+						}
+						else {
+							print(format("Cannot find waypoint %s, aborting", wpName));
+							return;
+						}
 					}
 				}
 				case "grenade":

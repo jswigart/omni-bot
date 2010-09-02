@@ -17,56 +17,6 @@ global Map =
 	SewerStatus = false,
 	BridgeDyno = 0,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-	AxisASPriority = 0.94,
-	AlliesASPriority = 0.94,
-
-	as = {"streetAS","gateAS","rBridgeAS_1","bPreBridgeAS_1",},
-	StreetAS = { "streetAS",},
-	GateAS = { "gateAS",},
-	AxisBridgeAS = { "rBridgeAS_1",},
-
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.67,
-			Enabled = true,
-			LimitBots = 1,
-			GrenadeTargetGoalName = "EXPLODE_flagbarricade_1",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( -461, -23, -40 ),
-			}
-		},
-		Barricade2 =
-		{
-			Priority = 0.66,
-			Enabled = true,
-			LimitBots = 1,
-			GrenadeTargetGoalName = "EXPLODE_flagbarricade_2",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( -50, 304, -40 ),
-			}
-		},
-		Barricade3 =
-		{
-			Priority = 0.68,
-			Enabled = true,
-			LimitBots = 1,
-			GrenadeTargetGoalName = "EXPLODE_spawnbarricade",
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
-			{
-				Vector3( -315, 161, -15 ),
-			}
-		},
-	},
-
 	Alley_Gate_Planted = function( trigger )
 	{
 		if ( TestMap ) {

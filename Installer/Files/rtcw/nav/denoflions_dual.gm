@@ -1,7 +1,7 @@
 global Map =
 {
 	Quiet = true,
-	Debug = true,
+	Debug = false,
 	Checkpoint_building_flag = "CHECKPOINT_building_flag",
 	Plant_Allied_munitions = "PLANT_Allied_munitions",
 	Plant_radar_equip = "PLANT_radar_equip",
