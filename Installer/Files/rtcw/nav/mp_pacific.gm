@@ -12,9 +12,6 @@ global Map =
 	SecurityDyno = 0,
 	RadarDyno = 0,
 
-	AxisASTable = {"rForest_1", "rForest_2",},
-	AlliesASTable = {"bSpawnkill_1",},
-
 	DontDispenseAmmo = true,
 
 	Navigation =
@@ -75,7 +72,6 @@ global Map =
 		}
 		Map.SecurityStatus = true;
 
-		print( "Security_Wall_Destroyed" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Array" );
 
 		RTCWUtil.EnableGoal( "ROUTE_security" );
@@ -192,10 +188,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rForest_.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzer.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Security_Wall" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
@@ -289,7 +287,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bRadar_5 = MapRoutes.ATTACK_bRadar_1;
 	MapRoutes.ATTACK_bRadar_6 = MapRoutes.ATTACK_bRadar_1;
 	MapRoutes.ATTACK_bRadar_7 = MapRoutes.ATTACK_bRadar_1;
-	MapRoutes.UGOAL_bSpawnkill_1 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.AIRSTRIKE_bSpawnkill_1 = MapRoutes.ATTACK_bRadar_1;
 	MapRoutes.PLANT_Radar_Array = MapRoutes.ATTACK_bRadar_1;
 	MapRoutes.DEFEND_rRadar_2 = MapRoutes.DEFEND_rRadar_1;
 	MapRoutes.DEFEND_rRadar_3 = MapRoutes.DEFEND_rRadar_1;
@@ -303,10 +301,8 @@ global OnMapLoad = function()
 	Util.Routes( MapRoutes );
 
 	RTCWUtil.DisableGoal( "ROUTE_security" );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

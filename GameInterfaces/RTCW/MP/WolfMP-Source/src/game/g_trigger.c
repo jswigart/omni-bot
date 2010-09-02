@@ -642,7 +642,7 @@ void trigger_aidoor_stayopen( gentity_t * ent, gentity_t * other, trace_t * trac
 
 void SP_trigger_aidoor( gentity_t *ent ) {
 	if ( !ent->targetname ) {
-		G_Printf( "trigger_aidoor at loc %s does not have a targetname for ai_marker assignments\n", vtos( ent->s.origin ) );
+		G_DPrintf( "trigger_aidoor at loc %s does not have a targetname for ai_marker assignments\n", vtos( ent->s.origin ) );
 	}
 
 	ent->touch = trigger_aidoor_stayopen;

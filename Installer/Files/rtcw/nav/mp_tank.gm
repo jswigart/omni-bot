@@ -41,16 +41,35 @@ global Map =
 
 	ViewDistance = 5300, // region trigger uses this, so use Map.ViewDistance for val if setting in OnBotJoin
 
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-	AxisASPriority = 0.94,  // Martin
-	AlliesASPriority = 0.94, // Martin
+	def = { "dual_tank_1", "dual_tank_2", "dual_tank_3", "dual_tank_4", "dual_tank_5","dual_docs_1", "dual_docs_2", "dual_docs_3", "dual_docs_4", "dual_docs_5","dual_flag_1", "dual_flag_2", "dual_flag_3", "dual_flag_4", "dual_flag_5","dual_transmit_1", "dual_transmit_2", "dual_transmit_3", "dual_transmit_4", "dual_transmit_5",},
 
 	tank = { "dual_tank_1", "dual_tank_2", "dual_tank_3", "dual_tank_4", "dual_tank_5",},
 	docs = { "dual_docs_1", "dual_docs_2", "dual_docs_3", "dual_docs_4", "dual_docs_5", },
 	flag = { "dual_flag_1", "dual_flag_2", "dual_flag_3", "dual_flag_4", "dual_flag_5", },
 	transmit = { "dual_transmit_1", "dual_transmit_2", "dual_transmit_3", "dual_transmit_4", "dual_transmit_5", },
+	
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},	
 
 	//scripted defend spots for dual objective support
 	Defend =
@@ -293,7 +312,8 @@ global Map =
 			return;
 		}
 
-		Map.Defend.Allies = Map.transmit;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_transmit.*" );
 	},
 
 	Allies_War_Documents_Returned = function( trigger )
@@ -302,7 +322,8 @@ global Map =
 			return;
 		}
 
-		Map.Defend.Allies = Map.docs;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs.*" );
 
 	},
 
@@ -334,7 +355,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
 		}
 
-		Map.Defend.Axis = Map.tank;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCP.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_cpmg.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
@@ -384,7 +406,8 @@ global Map =
 				return;
 			}
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
-				Map.Defend.Axis = Map.tank;
+				SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
 			}
 		},
 		OnExit = function( ent )
@@ -504,6 +527,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_bEng.*", 0.9 );
 	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
@@ -520,8 +544,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "VENOM.*" );
 
-	Map.Defend.Axis = Map.flag;
-	Map.Defend.Allies = Map.docs;
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_flag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );    //Martin - This is the first one to die
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCP.*" );
@@ -531,6 +554,7 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Prototype_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_valleymg" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs_.*" );
 
 	MapRoutes =
 	{
@@ -808,7 +832,7 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		UGOAL_dual_tank_1 =
+		CAMP_dual_tank_1 =
 		{
 			ROUTE_rfrontspawn =
 			{
@@ -838,14 +862,14 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_bTank_4 = MapRoutes.PLANT_Prototype_Tank;
 	MapRoutes.DEFEND_bTank_5 = MapRoutes.PLANT_Prototype_Tank;
 	MapRoutes.DEFEND_bTank_6 = MapRoutes.PLANT_Prototype_Tank;
-	MapRoutes.UGOAL_dual_tank_2 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.UGOAL_dual_tank_3 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.UGOAL_dual_tank_4 = MapRoutes.UGOAL_dual_tank_1;
-	MapRoutes.UGOAL_dual_tank_5 = MapRoutes.UGOAL_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_2 = MapRoutes.UGOAL_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_3 = MapRoutes.UGOAL_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_4 = MapRoutes.UGOAL_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_5 = MapRoutes.UGOAL_dual_tank_1;
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
@@ -854,7 +878,4 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = Map.ViewDistance;
 
 	//RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

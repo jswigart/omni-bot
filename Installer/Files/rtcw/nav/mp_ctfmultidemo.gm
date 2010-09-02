@@ -1,21 +1,25 @@
 global Map =
 {
 	Quiet = true,
-	Defend =
+	
+	Roles =
 	{
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-		Priority = 0.94, // less than dropped docs
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+			},
+		},
 	},
-
-	axis_defend = { "rDefend_1", "rDefend_2", "rDefend_3", "rDefend_4", "rDefend_5", },
-	allies_defend = { "bDefend_1", "bDefend_2", "bDefend_3", "bDefend_4", "bDefend_5", },
 
 	Allies_locknar_Taken = function( trigger )
 	{
@@ -103,20 +107,21 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CAMP_.*", 0.94 );
 
 	RTCWUtil.EnableGoal( "FLAG_.*", true );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bCappoint.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rCappoint.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bProtect.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rProtect.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDefend.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rCappoint.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rProtect.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
-
-	Map.Defend.Axis = Map.axis_defend;
-	Map.Defend.Allies = Map.allies_defend;
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_rDefend.*" );
 
 	MapRoutes =
 	{
@@ -263,14 +268,11 @@ global OnMapLoad = function()
 	MapRoutes.CAPPOINT_bCappoint2 = MapRoutes.CAPPOINT_bCappoint1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

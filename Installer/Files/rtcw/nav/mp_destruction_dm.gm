@@ -44,13 +44,13 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	Map.AlliesASTable = {"bCourtyard_1",};
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCourtyard_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCourtyard" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCheckpoint4.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCheckpoint4_2" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bCourtyard" );
 
-	Map.AxisASTable = { /*"rCourtyard_1",*/ "rCourtyard_2",};
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCourtyard_2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCheckpoint3.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCheckpoint3_2" );
@@ -111,13 +111,13 @@ global OnMapLoad = function()
 	yield(); yield();
 	RTCWUtil.StopSniping();
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	RTCWUtil.NoSnipe( bot );
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 100.0;
 	bot.MaxViewDistance = 3500;
 
 	//default spawn

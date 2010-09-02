@@ -8,25 +8,15 @@ global Map =
 	SideStatus = false,
 	FlagStatus = 0, // 0 = axis / no one, 1 = allies
 
-	AxisASPriority = 0.89, // less than Checkpoint
-	AlliesASPriority = 0.89, // less than Checkpoint
-
-	AlliesASTable = {},
-	AxisASTable = {},
-	AlliesGateAS = { "b_as_gate_1", "b_as_gate_2", },
-	AlliesSideAS = { "b_as_side_1",},
-	AlliesWallAS = {"b_as_gate_1", "b_as_gate_2", "b_as_side_1",},
-	AxisBothAS = { "r_as_main_1", "r_as_side_1", "r_as_main_2", },
-
 	Fueldump_Destroyed = function( trigger )
 	{
 		if ( TestMap ) {
 			return;
 		}
 
-		print( "Fueldump_Destroyed" );
-
 		Map.FuelDyno = 0;
+
+		Util.MapDebugPrint( "Fueldump_Destroyed" );
 	},
 
 	Fueldump_Defused = function( trigger )
@@ -36,9 +26,6 @@ global Map =
 		}
 
 		Map.FuelDyno -= 1;
-		print( Map.FuelDyno );
-
-		print( "Fueldump_Defused" );
 
 		if ( Map.FuelDyno == 0 ) {
 			foreach( id and bot in BotTable )
@@ -50,8 +37,12 @@ global Map =
 			}
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
-			Map.AxisASTable = Map.AxisBothAS;
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
 		}
+
+		Util.MapDebugPrint( "Fueldump_Defused" );
 	},
 
 	Fueldump_Planted = function( trigger )
@@ -61,9 +52,8 @@ global Map =
 		}
 
 		Map.FuelDyno += 1;
-		print( Map.FuelDyno );
 
-		print( "Fueldump_Planted" );
+		Util.MapDebugPrint( "Fueldump_Planted" );
 	},
 
 	Main_Gate_Destroyed = function( trigger )
@@ -74,13 +64,13 @@ global Map =
 
 		Map.GateStatus = true;
 
-		print( "Main_Gate_Destroyed" );
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFueldump.*" );
 
 		Map.EvalAlliesSupportFire();
 		Map.EvalBaseShift();
+
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
 	},
 
 	Main_Gate_Planted = function( trigger )
@@ -89,7 +79,7 @@ global Map =
 			return;
 		}
 
-		print( "Main_Gate_Planted" );
+		Util.MapDebugPrint( "Main_Gate_Planted" );
 	},
 
 	Side_Wall_Destroyed = function( trigger )
@@ -100,13 +90,13 @@ global Map =
 
 		Map.SideStatus = true;
 
-		print( "Side_Wall_Destroyed" );
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSide.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFueldump.*" );
 
 		Map.EvalAlliesSupportFire();
 		Map.EvalBaseShift();
+
+		Util.MapDebugPrint( "Side_Wall_Destroyed" );
 	},
 
 	Side_Wall_Planted = function( trigger )
@@ -115,7 +105,7 @@ global Map =
 			return;
 		}
 
-		print( "Side_Wall_Planted" );
+		Util.MapDebugPrint( "Side_Wall_Planted" );
 	},
 
 	hill_flag_Axis_Captured = function( trigger )
@@ -126,10 +116,10 @@ global Map =
 
 		Map.FlagStatus = 0;
 
-		print( "hill_flag_Axis_Captured" );
-
 		Map.EvalAlliesSupportFire();
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "hill_flag_Axis_Captured" );
 	},
 
 	hill_flag_Allies_Captured = function( trigger )
@@ -139,8 +129,6 @@ global Map =
 		}
 
 		Map.FlagStatus = 1;
-
-		print( "hill_flag_Allies_Captured" );
 
 		if ( Map.GateStatus == false && Map.SideStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
@@ -153,28 +141,34 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTunnel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-		Map.AxisASTable = Map.AxisBothAS;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
+
+		Util.MapDebugPrint( "hill_flag_Allies_Captured" );
 	},
+
 	EvalAlliesSupportFire = function()
 	{
-		if ( Map.SideStatus == true && Map.GateStatus == true ) {
-			Map.AlliesASTable = {};
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-		} else if ( Map.SideStatus == true )     {
-			Map.AlliesASTable = Map.AlliesGateAS;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-		} else if ( Map.GateStatus == true )     {
-			Map.AlliesASTable = Map.AlliesSideAS;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-		} else
-		{
-			Map.AlliesASTable = Map.AlliesWallAS;
-		}
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		// Get the flag is more important than spam.
 		if ( Map.FlagStatus == 0 ) {
-			Map.AlliesASTable = {};
+			return;
+		}
+
+		if ( Map.SideStatus == true && Map.GateStatus == true ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		} else if ( Map.SideStatus == true )     {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_gate_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		} else if ( Map.GateStatus == true )     {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_side_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		} else {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_side_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_gate_.*" );
 		}
 	},
 
@@ -226,7 +220,7 @@ global Map =
 						RTCWUtil.OneBotVSayTeam( TEAM.AXIS, VOICE.DEFEND_OBJECTIVE );
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_fueldump.*" );
-						Map.AxisASTable = {};
+						SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 						sleep( 15 );
 						if ( Map.FuelDyno == 0 ) {
 							foreach( id and bot in BotTable )
@@ -238,7 +232,9 @@ global Map =
 							}
 							SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
 							SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
-							Map.AxisASTable = Map.AxisBothAS;
+							SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+							SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
+							SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
 							break;
 						}
 						break;
@@ -296,6 +292,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bSide.*", 0.51 );
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_rEng.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.89 );
+	SetGoalPriority( "GRENADE_.*", 0.91 );
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
@@ -427,10 +425,8 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

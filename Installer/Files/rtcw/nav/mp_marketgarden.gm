@@ -3,32 +3,34 @@ global Map =
 	Quiet = true,
 	Debug = false,
 	FlagStatus = 0,
-	AxisASTable = {},
-	AlliesASTable = {},
+
 	DispenseAmmoTime = 1, //Start passing it out right away
 	DontDispenseAmmo = true,
 
 	FirstSpawn = true,
 
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
-
-	ops_tight = { "dual_ops_1", "dual_ops_2", "dual_ops_3", "dual_ops_4", "dual_ops_5", "dual_ops_6", "dual_ops_7", },
-	bridge_tight = { "dual_bridge_1", "dual_bridge_2", "dual_bridge_3", "dual_bridge_4", "dual_bridge_5", },
 
 	Allied_Command_Center_Destroyed = function( trigger )
 	{
@@ -36,7 +38,7 @@ global Map =
 			return;
 		}
 
-		print( "Allied_Command_Center_Destroyed" );
+		Util.MapDebugPrint( "Allied_Command_Center_Destroyed" );
 	},
 
 	Bridge_Detonator_Destroyed = function( trigger )
@@ -45,7 +47,7 @@ global Map =
 			return;
 		}
 
-		print( "Bridge_Detonator_Destroyed" );
+		Util.MapDebugPrint( "Bridge_Detonator_Destroyed" );
 	},
 
 	Water_Tower_Door_Destroyed = function( trigger )
@@ -54,9 +56,9 @@ global Map =
 			return;
 		}
 
-		print( "Water_Tower_Door_Destroyed" );
-
 		RTCWUtil.EnableGoal( "FLAG.*" );  //Enable the flag goal
+
+		Util.MapDebugPrint( "Water_Tower_Door_Destroyed" );
 	},
 
 	Water_Tower_Door_Planted = function( trigger )
@@ -65,7 +67,7 @@ global Map =
 			return;
 		}
 
-		print( "Water_Tower_Door_Planted" );
+		Util.MapDebugPrint( "Water_Tower_Door_Planted" );
 	},
 
 	obj_trigger01_Taken = function( trigger )
@@ -74,7 +76,7 @@ global Map =
 			return;
 		}
 
-		print( "obj_trigger01_Taken" );
+		Util.MapDebugPrint( "obj_trigger01_Taken" );
 	},
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
@@ -83,7 +85,6 @@ global Map =
 			return;
 		}
 
-		print( "flag_respawn_obj_Axis_Captured" );
 		Map.FlagStatus = 1;
 
 		/*if (Map.FirstSpawn == true)
@@ -119,6 +120,8 @@ global Map =
 			Util.MapDebugPrint( "Disabling CHECKPOINT for ALLIES" );
 		}
 		//}
+
+		Util.MapDebugPrint( "flag_respawn_obj_Axis_Captured" );
 	},
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
@@ -127,7 +130,6 @@ global Map =
 			return;
 		}
 
-		print( "flag_respawn_obj_Allies_Captured" );
 		Map.FlagStatus = 2;
 
 		/*if (Map.FirstSpawn == true)
@@ -167,6 +169,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 		//}
+
+		Util.MapDebugPrint( "flag_respawn_obj_Allies_Captured" );
 	},
 
 	toggle_flag = function()
@@ -207,27 +211,6 @@ global Map =
 			sleep( 1 );
 		}
 	},
-
-	DisableCombatMove =
-	{
-		Name = "DisableCombatMove",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableCombatMovement = true;
-			}
-		},
-		OnExit = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableCombatMovement = false;
-			}
-		},
-	},
-
 };
 
 global OnMapLoad = function()
@@ -244,7 +227,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis capture the Forward Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
 	OnTrigger( "Allies capture the Forward Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
 
-	WaterTower = OnTriggerRegion( AABB( 7549.000,-2061.000,1375.000,7788.000,-1782.000,1449.000 ), Map.DisableCombatMove );
+	WaterTower = OnTriggerRegion( AABB( 7549.000,-2061.000,1375.000,7788.000,-1782.000,1449.000 ), RegionTrigger.DisableCombatMovement );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
@@ -256,21 +239,24 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
+	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Water_Tower_Door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag_respawn_obj" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBridge.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBridge.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ops_.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Center" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag_respawn_obj" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
-
-	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( "ATTACK.*", 0.45 );
-
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_bridge_.*" );
 
 	Util.SetMaxUsersInProgress( 64, "CHECKPOINT_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
@@ -278,14 +264,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
-	Map.Defend.Axis = Map.bridge_tight;
-	Map.Defend.Allies = Map.ops_tight;
-
 	//run a thread to toggle flag availability
 	thread( Map.toggle_flag );
-
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
 	MapRoutes =
 	{
@@ -462,7 +442,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 // Uncomment for shootable breakables
@@ -473,7 +453,4 @@ global OnBotJoin = function( bot )
 		bot.ChangeSpawnPoint( 2 );
 	}
 	bot.TargetBreakableDist = 100.0;
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

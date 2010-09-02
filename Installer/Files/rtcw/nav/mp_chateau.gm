@@ -21,11 +21,6 @@ global Map =
 
 	MainDyno = 0,
 
-	AxisASTable = {},
-	AxisASMain = { "red_as1_main", "red_as2_main", },
-	AxisASDoor = { "red_as1_door",},
-	//AxisASSide = { "rAS_side_1" ,},
-
 	Navigation =
 	{
 		railjump =
@@ -59,7 +54,7 @@ global Map =
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.DefenseShifted = true;
 
-				Map.AxisASTable = {};
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
@@ -99,7 +94,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCellar.*" );
 		} else if ( !Map.DocStatus && !Map.DefenseShifted )                                                                                                                {
 			Map.DefenseShifted = true;
-			Map.AxisASTable = {};
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
@@ -145,9 +140,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_target_allies_cellar" );
 		RTCWUtil.EnableGoal( Map.Checkpoint );
 
-		//enable the main door airstrikes
-		//Map.AxisASTable = Map.AxisASMain;
-
 		// Artillery
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_2" );
@@ -175,8 +167,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rFlag.*" );
 
-		Map.AxisASTable = {};
-		//Map.AxisASTable = Map.AxisASSide;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT_side.*" );
 	},
 
@@ -215,7 +206,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
 
 		//disable the main door airstrikes
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
 	},
@@ -331,8 +322,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
-
-	Map.AxisASTable = Map.AxisASDoor;
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_door.*" );
 
 	// Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_cellar" );
@@ -488,11 +478,11 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rDocs6 = MapRoutes.DEFEND_rDocs1;
 	MapRoutes.DEFEND_rDocs7 = MapRoutes.DEFEND_rDocs1;
 	MapRoutes.DEFEND_rRoam_1 = MapRoutes.DEFEND_rDocs1;
-	MapRoutes.UGOAL_red_as1_door = MapRoutes.DEFEND_rMain1;
+	MapRoutes.AIRSTRIKE_red_as1_door = MapRoutes.DEFEND_rMain1;
 	MapRoutes.CALLARTILLERY_spot_cellar_door = MapRoutes.DEFEND_rMain1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

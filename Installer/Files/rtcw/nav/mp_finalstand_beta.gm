@@ -22,6 +22,7 @@ global Map =
 	AxisASPriority = 0.94,
 	AlliesASPriority = 0.94,
 
+	as = {"streetAS","gateAS","rBridgeAS_1","bPreBridgeAS_1",},
 	StreetAS = { "streetAS",},
 	GateAS = { "gateAS",},
 	AxisBridgeAS = { "rBridgeAS_1",},
@@ -88,7 +89,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_Gate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBridge.*" );
-		Map.AxisASTable = Map.AxisBridgeAS;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
 
 		Map.EvalDefense();
 
@@ -174,40 +176,23 @@ global Map =
 
 	EvalDefense = function()
 	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+
 		if ( Map.GateStatus == true ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bPreBridge.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
-			Map.AlliesASTable = {"bPreBridgeAS_1",};
-		} else    //Bridge defense
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bPreBridgeAS_.*" );
+		}
+		else    //Bridge defense
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRear.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
-			Map.AlliesASTable = {};
 		}
 	},
-
-	//cs: commenting out. its not doing anything. 
-	// SewerTrigger =
-	// {
-		// Name = "SewerTrigger",
-		// TriggerOnClass = CLASS.ANYPLAYER,
-		// OnEnter = function( ent )
-		// {
-			// if ( TestMap ) {
-				// return;
-			// }
-
-			// if ( GetEntTeam( ent ) == TEAM.AXIS ) {
-
-			// }
-		// },
-		// OnExit = function( ent ) {
-		// },
-	// },
 };
 
 global OnMapLoad = function()
@@ -229,8 +214,6 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Bridge", "bridge1" );
 	Util.AddUseWp( "PLANT_Bridge", "bridge2" );
 
-	// cs: this one does nothing at all
-	//tOne = OnTriggerRegion( AABB( -2384,-4927,-464,-2183,-4889,-351 ), Map.SewerTrigger );
 	botpush = OnTriggerRegion( AABB( -1824.000,-2455.000,-392.000,-1473.000,-1942.000,10.000 ), RegionTrigger.DisableBotPush );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
@@ -246,11 +229,14 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "DEFEND_bLTGate.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "GRENADE_Barricade1", 0.67 );
+	SetGoalPriority( "GRENADE_Barricade", 0.68 );
+	SetGoalPriority( "GRENADE_Barricade", 0.68 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
 
 	RTCWUtil.LimitToClass( "DEFEND_bLTGate.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
@@ -259,10 +245,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Sewer_Hatch" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Barricade.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bStreet.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_streetAS" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLTGate.*" );
-	Map.AlliesASTable = Map.StreetAS;
 
 	MapRoutes =
 	{
@@ -310,10 +297,8 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rBridge_5 = MapRoutes.PLANT_Bridge;
 	MapRoutes.ATTACK_rBridge_6 = MapRoutes.PLANT_Bridge;
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

@@ -26,111 +26,16 @@ global Map =
 	LowerFrontDyno = 0,
 	UpperFrontDyno = 0,
 	DefenseShifted = false,
-	AxisASTable = {},
 
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
 
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 0, // axis defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
-	},
-
-	flag = { "rEastpreflag_1", "rEastpreflag_2", "rEastpreflag_3", "rEastpreflag_4", "rEastpreflag_5", },
-	lowerdam = {"rLowerDam_1",},
-
-	Target =
-	{
-		YardDuct =
+		AXIS =
 		{
-			Priority = 0.67,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_Yard_Duct",
-			LimitBots = 1,
-			LimitClass = ( 1 << CLASS.SOLDIER ),
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			Offset =
+			DEFENDER =
 			{
-				Vector3( 13, 501, -24 ),
-			}
-		},
-		HallDuct =
-		{
-			Priority = 0.67,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_Hall_Duct",
-			LimitBots = 1,
-			LimitClass = ( 1 << CLASS.SOLDIER ),
-			LimitTeam = ( 1 << TEAM.AXIS ),
-			TargetOffset = Vector3( 0, 0, -32 ),
-			Offset =
-			{
-				Vector3( 13, 358, -24 ),
-			}
-		},
-		GeneratorDuct =
-		{
-			Priority = 0.71,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_Generator_Duct",
-			LimitBots = 1,
-			LimitClass = ( 1 << CLASS.SOLDIER ),
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			Offset =
-			{
-				Vector3( 35, 412, -200 ),
-			}
-		},
-		AccessDuct =
-		{
-			Priority = 0.67,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_Access_Duct",
-			LimitBots = 1,
-			LimitClass = ( 1 << CLASS.SOLDIER ),
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			TargetOffset = Vector3( 0, 0, -32 ),
-			Offset =
-			{
-				Vector3( 145, 233, -52 ),
-			}
-		},
-		//Martin - Dont explode this
-		/*	Ducts =
-		    {
-		        Priority = 0.67,
-		        Enabled = false,
-		        GrenadeTargetGoalName = "EXPLODE_ducts",
-		        LimitBots = 1,
-		        LimitClass = (1<<CLASS.SOLDIER),
-		        LimitTeam = (1<<TEAM.ALLIES),
-		        Offset =
-		        {
-		            Vector3(0, 217, -100),
-		        }
-		    },*/
-		SnipeWindow =
-		{
-			Priority = 0.71,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_bRadio_2",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.SOLDIER ),
-			Offset =
-			{
-				Vector3( -116.495, -286.905, -39.635 ),
-			}
+				numbots = 3,
+			},
 		},
 	},
 
@@ -155,7 +60,6 @@ global Map =
 		Map.LowerStatus = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_northsteps_.*" );
-		//SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLowerDam.*" );	//Martin - Dual Defend
 		Map.regulator_plant_check();
 	},
 
@@ -236,11 +140,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_lowerfrontdoor" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPreflag_.*" );
 
-		/*	if( !Map.DefenseShifted ) {
-		        SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLowerDam.*" );	//Martin - Dual Defend
-		    }*/
-		//Map.Defend.Axis = {};
-
 		if ( Map.UpperFrontDyno > 0 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
@@ -248,7 +147,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT_Door.*" );
 
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	},
 
 	upper_front_door_Destroyed = function( trigger )
@@ -263,18 +162,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_lowerfrontdoor" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPreflag_.*" );
 
-		/*	if( !Map.DefenseShifted ) {	//Martin - Going to use a dual defend goal now.
-		        SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLowerDam.*" );
-		    }	*/
-
 		if ( Map.LowerFrontDyno > 0 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
 		}
 
-		Map.AxisASTable = {};
-
-		//Map.Target.Ducts.Enabled = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	},
 
 	dam_flag_Axis_Captured = function( trigger )
@@ -306,13 +199,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoad_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRoad_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRadio_.*" );
-		Map.Target.SnipeWindow.Enabled = true;
-		Map.Target.GeneratorDuct.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_SnipeWindow" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_GeneratorDuct" );
 		Map.flag_check();
 
-		Map.Defend.Axis = {};
-		Map.Defend.Axis = Map.lowerdam;
-		Map.Defend.MaxAxisDefenders = 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rLowerDam_1" );
 
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	},
@@ -406,10 +298,6 @@ global Map =
 			return;
 		}
 
-		if ( Map.Debug ) {
-			print( "Checking..." );
-		}
-
 		if ( Map.MainStatus == 1 && Map.FlagStatus == 2 ) {
 			SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWestpreflag_.*" );
@@ -459,41 +347,12 @@ global Map =
 
 			RTCWUtil.StopSniping();
 
-			Map.Target.AccessDuct.Enabled = true;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_AccessDuct" );
 		}
 
 		if ( Map.LowerStatus > 0 || Map.DamStatus > 0 || Map.AccessDuctStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_regulator_.*" );
 		}
-	},
-
-	bradio2_exploded = function()
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		Map.Target.SnipeWindow.Enabled = false;
-	},
-
-	ducts_exploded = function()
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		Map.Target.Ducts.Enabled = false;
-	},
-
-	AccessDuct_Exploded = function()
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		Map.Target.AccessDuct.Enabled = false;
-		Map.AccessDuctStatus = true;
-		Map.regulator_plant_check();
 	},
 
 	LowerTrigger =
@@ -545,10 +404,6 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at the Dam Stairwell Door.", Map.Dam_Stairwell_Planted );
 	OnTrigger( "Planted at the Main Water Regulator.", Map.Main_Water_Regulator_Planted );
 	OnTrigger( "Defused at the Main Water Regulator.", Map.Main_Water_Regulator_Defused );
-	OnTrigger( "Explode_173 Exploded", Map.bradio2_exploded );
-	OnTrigger( "Explode_174 Exploded", Map.ducts_exploded );
-	OnTrigger( "Explode_175 Exploded", Map.ducts_exploded );
-	OnTrigger( "Explode_396 Exploded", Map.AccessDuct_Exploded );
 
 	lower1 = OnTriggerRegion( AABB( -1213.000,-3240.000,1663.000,-1157.000,-3155.000,1737.000 ), Map.LowerTrigger );
 	lower2 = OnTriggerRegion( AABB( -1474.000,-240.000,1511.000,-1417.000,-135.000,1585.000 ), Map.LowerTrigger );
@@ -561,27 +416,37 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	//eng camp spots to wait for recharge
+	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
+
+	SetGoalPriority( "PLANT_Main_Door", 0.93 );
+	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_regulator.*", 0.6 );
+	SetGoalPriority( "DEFEND_rLT.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "GRENADE_YardDuct", 0.67 );
+	SetGoalPriority( "GRENADE_HallDuct", 0.67 );
+	SetGoalPriority( "GRENADE_GeneratorDuct", 0.71 );
+	SetGoalPriority( "GRENADE_AccessDuct", 0.67 );
+	SetGoalPriority( "GRENADE_SnipeWindow", 0.71 );
+
 	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.LIEUTENANT, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.SetPrimaryGoals( 1.0 );
+	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_YardDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_HallDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_GeneratorDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_AccessDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_SnipeWindow", TEAM.ALLIES, CLASS.SOLDIER );
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.DisableGoal( "ROUTE_main" );
 	RTCWUtil.DisableGoal( "ROUTE_northstairwell" );
 
-	//Util.SetMaxUsersInProgress( 1, "DEFEND_rLowerDam.*" );	//Martin - Dual Defense now
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-
-	//eng camp spots to wait for recharge
-	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( "PLANT_Main_Door", 0.93 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
-	SetGoalPriority( "DEFEND_regulator.*", 0.6 );
-	//SetGoalPriority( "DEFEND_rLowerDam.*", 0.56 );
-	SetGoalPriority( "DEFEND_rLT.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
-
-	Map.Defend.Axis = Map.flag;
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_upper_front_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_lower_front_door" );
@@ -590,10 +455,9 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestpreflag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT_Door.*" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastpreflag_.*" );	//Martin - Dual goals now
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rEastpreflag.*" );
 
-	//Map.AxisASTable = { "lowerfront", };
-	Map.AxisASTable = { "dooras", };
+	SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_dooras" );
 
 	MapRoutes =
 	{
@@ -752,7 +616,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rRoadrear_3 = MapRoutes.DEFEND_rRoadrear_1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
@@ -761,6 +625,4 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
 };

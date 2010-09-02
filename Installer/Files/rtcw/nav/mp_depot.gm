@@ -25,6 +25,8 @@ global Map =
 	OpsDyno = 0,
 	WestDyno = 0,
 	EastDyno = 0,
+	
+	FriendlyFire,
 
 	Airstrike =
 	{
@@ -35,45 +37,29 @@ global Map =
 			Waypoint = "ascoalflag",
 		},
 	},
-
-	//scripted defend spots for dual objective support
-	Defend =
+	
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
-
-	FriendlyFire,
-
-	// tables of waypoint names to be copied to the teams Defend tables
-	aa_conservative = { "aad1", "aad2", "aad3", "aad4", "aad5", "aad6", },
-	aa_flex = { "aaflex1", "aaflex2", "aaflex3", "aaflex4", "aaflex5", "aaflex6", },
-	ops_default = { "opsd1", "opsd2", "opsd3", "opsd4", "opsd5", "opsd6", },
-	ops_flex = { "opsflex1", "opsflex2", "opsflex3", "opsflex4", "opsflex5", "opsflex6", },
-
-	//tables to hold current AS goals
-	AxisASTable = {},
-	AlliesASTable = {},
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin
-
-	ruinsas = { "ruinsas1", "ruinsas2", },
-	opsas = { "as_ops1", "as_ops2", "as_ops3", },
-	aaas = { "as_aa1", "as_aa2", },
-	asspawn = { "rasspawn1", "rasspawn2", },
-	ruinsallied = { "bruinsas1", "bruinsas2",},
-	warehouseallied = { "bwhas1", },
-	ruinswhallied = { "bruinsas1", "bruinsas2", "bwhas1", },
 
 	Navigation =
 	{
@@ -205,7 +191,8 @@ global Map =
 
 		Map.OpsDyno += 1;
 
-		Map.AxisASTable = Map.opsas;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_ops.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_opscover.*" );
 	},
@@ -220,13 +207,10 @@ global Map =
 
 		if ( Map.OpsDyno < 1 && Map.FlagStatus == 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_opscover.*" );
-
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			if ( Map.FlagStatus == 1 ) {
-				Map.AxisASTable = Map.ruinsas;
+				SetAvailableMapGoals( TEAM.AXIS, ture, "AIRSTRIKE_ruinsas.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
-			} else
-			{
-				Map.AxisASTable = {};
 			}
 		}
 	},
@@ -247,7 +231,8 @@ global Map =
 		Map.AADyno += 1;
 
 		if ( Map.FriendlyFire < 1 ) {
-			Map.AlliesASTable = Map.aaas;
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_as_aa.*" );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_aacover.*" );
@@ -262,7 +247,7 @@ global Map =
 		Map.AADyno -= 1;
 
 		if ( Map.AADyno < 1 ) {
-			Map.AlliesASTable = {};
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_aacover.*" );
 		}
 	},
@@ -278,7 +263,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Field_Ops );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
-		Map.Defend.Axis = Map.aa_conservative;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 	},
 
 	West_Gate_Planted = function( trigger )
@@ -320,7 +306,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_AA_Gun );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
-		Map.Defend.Allies = Map.ops_default;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_opsd.*" );
 	},
 
 	East_Gate_Planted = function( trigger )
@@ -360,8 +347,9 @@ global Map =
 		Wp.SetWaypointFlag( "ruinsdrop", "closed", true );   //Dont allow axis to drop down
 
 		//axis
-		Map.AxisASTable = Map.ruinsas;
 		Map.Airstrike.ascoal.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rcy.*" );
@@ -396,11 +384,13 @@ global Map =
 		Wp.SetWaypointFlag( "ruinsdrop", "closed", false );  //Let them drop to fallback faster
 
 		//axis
-		Map.AxisASTable = Map.asspawn;
 		Map.Airstrike.ascoal.Enabled = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rasspawn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rOps.*" );
-		Map.Defend.Axis = Map.aa_conservative;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_cymg );
@@ -442,11 +432,13 @@ global Map =
 				}
 				Map.AxisInRuins = true;
 
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
+
 				if ( Map.AxisInWarehouse == true ) {
-					Map.AlliesASTable = Map.ruinswhallied;
-				} else {
-					Map.AlliesASTable = Map.ruinsallied;
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
 				}
+				
 				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
 				{
@@ -454,10 +446,10 @@ global Map =
 				}
 
 				Map.AxisInRuins = false;
+
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				if ( Map.AxisInWarehouse == true ) {
-					Map.AlliesASTable = Map.warehouseallied;
-				} else {
-					Map.AlliesASTable = {};
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
 				}
 			}
 		},
@@ -485,21 +477,22 @@ global Map =
 				}
 				Map.AxisInWarehouse = true;
 
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
 				if ( Map.AxisInRuins == true ) {
-					Map.AlliesASTable = Map.ruinswhallied;
-				} else {
-					Map.AlliesASTable = Map.warehouseallied;
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
 				}
+				
 				Map.WarehouseASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.WarehouseASTimer ) && ( Map.FlagStatus != 2 ) )
 				{
 					sleep( 1 );
 				}
+
 				Map.AxisInWarehouse = false;
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				if ( Map.AxisInRuins == true ) {
-					Map.AlliesASTable = Map.ruinsallied;
-				} else {
-					Map.AlliesASTable = {};
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
 				}
 			}
 		},
@@ -626,17 +619,19 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_eng_eastgate.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
 
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
 	SetGoalPriority( "ATTACK.*", 0.45 );
 	SetGoalPriority( "DEFEND_bAA.*", 0.48 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	Map.Defend.Axis = Map.aa_flex;
-	Map.Defend.Allies = Map.ops_flex;
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
@@ -963,14 +958,10 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_btrain6 = MapRoutes_DEFEND_btrain1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective( bot );
-
 };

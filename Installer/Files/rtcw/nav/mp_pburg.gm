@@ -5,26 +5,6 @@ global Map =
 	DontDispenseAmmo = true,
 	Suicide = true,
 
-	Target =
-	{
-		Barricade1 =
-		{
-			Priority = 0.86,
-			Enabled = true,
-			GrenadeTargetGoalName = "EXPLODE_barrier1",
-			LimitBots = 1,
-			LimitTeam = ( 1 << TEAM.ALLIES ),
-			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.SOLDIER ) | ( 1 << CLASS.LIEUTENANT ),
-			Offset =
-			{
-				Vector3( 60, -290, 0 ),
-			}
-		},
-
-	},
-
-	AxisASTable = {},
-
 	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
 	Flag_Secret_Documents = "FLAG_Secret_Documents",
 	Plant_Courtyard_Wall = "PLANT_Courtyard_Wall",
@@ -83,7 +63,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
-			Map.AxisASTable = { "hq1", "hq2", };
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_hq.*" );
 		}
 	},
 
@@ -109,7 +90,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_capdef_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axroam1_.*" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	},
 
 	Secret_Documents_Returned = function( trigger )
@@ -133,7 +114,8 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
-			Map.AxisASTable = { "hq1", "hq2", };
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_hq.*" );
 		}
 
 		if ( Map.FlagStatus ) {
@@ -266,16 +248,19 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bEng.*", 0.9 );
 	SetGoalPriority( "CALLARTILLERY.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "GRENADE_Barricade1.*", 0.86 );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alos1_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEng.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade1" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axos1_.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axroam1_.*" );
@@ -283,7 +268,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsnipe_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mainstnest" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_.*" );
-	Map.AxisASTable = {"firstspawnas",};
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_firstspawnas" );
 
 	// Artillery
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_axart1_.*" );
