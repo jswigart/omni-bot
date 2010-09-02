@@ -377,8 +377,10 @@ namespace AiState
 			else
 			{
 				float fDistToRepair = SquaredLength2d(qry.m_List[i]->GetPosition(), GetClient()->GetPosition());
-				if ( fDistToRepair > 4000000 ) // 2000 squared
+				if ( fDistToRepair > 4000000 ) { // 2000 squared
+					BlackboardDelay(10.f, qry.m_List[i]->GetSerialNum());
 					continue;
+				}
 			}
 
 			m_MapGoal = qry.m_List[i];
