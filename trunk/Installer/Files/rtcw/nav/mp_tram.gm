@@ -46,9 +46,6 @@ global Map =
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 
-	AxisASTable = {},
-	AlliesASTable = {},
-
 	Navigation =
 	{
 		opladder =
@@ -260,8 +257,6 @@ global Map =
 			RTCWUtil.ExcludeClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER );
 		}
 
-		Map.AxisASTable = {};
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Radio_Codes );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Castle_Basement_Door );
@@ -351,7 +346,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSupply.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bSnipe_Supply.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSnipe_Supply.*" );
-		Map.AxisASTable = {};
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_artyflag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_supplycall.*" );
 	},
@@ -377,7 +371,6 @@ global Map =
 			} else
 			{ SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLowerInside.*" ); }
 
-			//Map.AxisASTable = {"rFlag_1" , "rFlag_2" , "rFlag_3" , "rFlag_4",};
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );

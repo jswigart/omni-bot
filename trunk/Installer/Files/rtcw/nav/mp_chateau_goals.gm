@@ -1,5 +1,62 @@
 global _MG = 
 {
+	AIRSTRIKE_red_as1_main =
+	{
+		GroupName = "",
+		Position = Vec3(-2798.865723,1271.880371,-15.875000),
+		Version = 1,
+		TeamAvailability = 0,
+		Stance = "stand",
+		CreateOnLoad = 1,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GoalType = "AIRSTRIKE",
+		Radius = 35.000000,
+		TagName = "red_as1_main",
+		Name = "AIRSTRIKE_red_as1_main",
+		MinRadius = 35.000000,
+		AimVectors = 
+		{
+			[0] = Vec3(-0.496860,-0.864666,-0.074043),
+		},
+	},
+	AIRSTRIKE_red_as2_main =
+	{
+		GroupName = "",
+		Position = Vec3(-3055.180664,1244.594116,-15.875000),
+		Version = 1,
+		TeamAvailability = 0,
+		Stance = "stand",
+		CreateOnLoad = 1,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GoalType = "AIRSTRIKE",
+		Radius = 35.000000,
+		TagName = "red_as2_main",
+		Name = "AIRSTRIKE_red_as2_main",
+		MinRadius = 35.000000,
+		AimVectors = 
+		{
+			[0] = Vec3(0.521476,-0.850862,-0.064000),
+		},
+	},
+	AIRSTRIKE_red_as1_door =
+	{
+		GroupName = "",
+		Position = Vec3(-1818.928223,1202.126099,-47.875000),
+		Version = 1,
+		TeamAvailability = 0,
+		Stance = "stand",
+		CreateOnLoad = 1,
+		Orientation = Vec3(0.000000,0.000000,0.000000),
+		GoalType = "AIRSTRIKE",
+		Radius = 35.000000,
+		TagName = "red_as1_door",
+		Name = "AIRSTRIKE_red_as1_door",
+		MinRadius = 35.000000,
+		AimVectors = 
+		{
+			[0] = Vec3(-0.545692,-0.514084,0.661769),
+		},
+	},
 	ARTILLERY_S_rFlag_1 = 
 	{
 		CreateOnLoad = 1,

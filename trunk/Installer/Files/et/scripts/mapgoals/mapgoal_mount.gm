@@ -173,7 +173,7 @@ this.Help = function()
 	print("		vehicle - The goal name of the vehicle to mount");
 	print("Optional:");
 	print("		offset - recommended for better pathing results");
-	print("		aim - specify if they should face vehicle direction (velocity) or random, default velocity");
+	print("		aim - velocity (default), random, opposite, or position");
 };
 
 //////////////////////////////////////////////////////////////////////////

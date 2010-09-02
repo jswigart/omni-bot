@@ -40,6 +40,7 @@ global Map =
 	//tables to hold current AS goals
 	AxisASTable = {},
 	AlliesASTable = {},
+	as = {"rDocsAS_1","rPlaneAS_1",},
 
 	Navigation =
 	{
@@ -334,8 +335,7 @@ global Map =
 			return;
 		}
 
-		Map.Target.Barricade2.Enabled = true;
-		Map.Target.Barricade3.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade[23]" );
 		Map.DontDispenseAmmo = false;
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
@@ -435,8 +435,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocsArty.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42.*" );
-		Map.AxisASTable = {};
-		Map.AxisASTable = { "rDocsAS_1", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocsAS_.*" );
 
 		if ( Map.FootbridgeStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Footbridge" );
@@ -460,8 +460,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_me626mg" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_me626mg" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Footbridge" );
-		Map.AxisASTable = {};
-		Map.AxisASTable = { "rPlaneAS_1", };
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rPlaneAS_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_Plans" );
@@ -481,7 +481,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_deliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Footbridge" );
-		Map.AxisASTable = {};
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_deliver.*" );
@@ -580,17 +580,19 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
 	SetGoalPriority( "PANZER_bSpawnkill.*", 0.7 );  // Above regular attacks
 	SetGoalPriority( "SNIPE_bFlag.*", 0.7 );    // Above regular attacks
+	SetGoalPriority( "GRENADE_Barricade.*", 0.9 );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Station_Door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Station_Door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bStation.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bStation.*" );
-	Map.Target.Barricade1.Enabled = true;
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade1" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );

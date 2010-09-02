@@ -496,11 +496,7 @@ member ChangeSpawnNoDefenders = function( team, spawn, numbots )
 	c = 0;
 	foreach( id and bot in BotTable )
 	{
-		if ( team == TEAM.AXIS && Map.Defend.AxisUsers[ bot.GetGameId() ] == true ) {
-			continue;
-		}
-
-		if ( team == TEAM.ALLIES && Map.Defend.AlliesUsers[ bot.GetGameId() ] == true ) {
+		if ( bot.HasRole(ROLE.DEFENDER) ) {
 			continue;
 		}
 

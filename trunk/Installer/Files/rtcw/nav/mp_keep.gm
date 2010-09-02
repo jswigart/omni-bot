@@ -23,7 +23,6 @@ global Map =
 		Map.SEStatus = true;
 		Map.SEDyno = 0;
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
-		//Map.AlliesASTable = {};
 	},
 
 	Southeast_Gate_Planted = function( trigger )
@@ -54,7 +53,6 @@ global Map =
 		Map.SWDyno = 0;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
-		//Map.AlliesASTable = {};
 	},
 
 	Southwest_Gate_Planted = function( trigger )
@@ -94,7 +92,9 @@ global Map =
 
 		// Roof Allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLTDocs.*" );
-		Map.AlliesASTable = { "broofAS_1", "bRoofASDocs_1", };
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRoofASDocs_.*" );
 	},
 
 	obj_item01_Returned = function( trigger )
@@ -115,8 +115,10 @@ global Map =
 
 		// Roof Allies
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bLTDocs.*" );
-		Map.AlliesASTable = { "broofAS_1", "broofAS_2", };
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_.*" );
 	},
+
 	LadderTrigger =
 	{
 		Name = "LadderTrigger",
@@ -212,7 +214,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLTMain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Southeast_Gate );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Southwest_Gate );
-
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower" );
 
 	SetGoalPriority( "ATTACK_bLTMain.*", 0.55 );
@@ -220,8 +222,6 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bLTMain[14]", 0.56 );
 	RTCWUtil.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
-
-	Map.AlliesASTable = { "broofAS_1", "broofAS_2", };
 
 	MapRoutes =
 	{
@@ -319,9 +319,9 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bLTDocs_1 = MapRoutes.PLANT_Southeast_Gate;
 	MapRoutes.ATTACK_bLTDocs_2 = MapRoutes.PLANT_Southeast_Gate;
 	MapRoutes.ATTACK_bLTDocs_3 = MapRoutes.PLANT_Southeast_Gate;
-	MapRoutes.UGOAL_broofAS_1 = MapRoutes.PLANT_Southeast_Gate;
-	MapRoutes.UGOAL_bRoofASDocs_1 = MapRoutes.PLANT_Southeast_Gate;
-	MapRoutes.UGOAL_broofAS_2 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_broofAS_1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_bRoofASDocs_1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_broofAS_2 = MapRoutes.PLANT_Southeast_Gate;
 	MapRoutes.ATTACK_bTruck2 = MapRoutes.ATTACK_bTruck1;
 	MapRoutes.ATTACK_bTruck3 = MapRoutes.ATTACK_bTruck1;
 	MapRoutes.ATTACK_bTruck4 = MapRoutes.ATTACK_bTruck1;
@@ -336,7 +336,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rRoof_1 = MapRoutes.DEFEND_rMain1;
 
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
