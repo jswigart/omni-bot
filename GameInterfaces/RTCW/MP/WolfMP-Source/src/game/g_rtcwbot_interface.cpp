@@ -2177,6 +2177,13 @@ obResult GetEntityWorldAABB( const GameEntity _ent, AABB &_aabb ) {
 		_aabb.m_Maxs[1] = pEnt->r.absmax[1];
 		_aabb.m_Maxs[2] = pEnt->r.absmax[2];
 
+		// raise player bounds slightly since it appears to be in the ground a bit
+		if ( pEnt->client )
+		{
+			_aabb.m_Mins[2] += 2.f;
+			_aabb.m_Maxs[2] += 2.f;
+		}
+
 		// hack for bad abs bounds
 		if ( !Q_stricmp( pEnt->classname, "misc_mg42" ) ) {
 			if ( _aabb.IsZero() || !_aabb.Contains( pEnt->r.currentOrigin ) ) {
