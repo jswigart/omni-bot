@@ -2,7 +2,7 @@
 #define Prof_INC_PROF_H
 
 #ifdef WIN32
-#define Prof_ENABLED
+//#define Prof_ENABLED
 #endif
 
 #include "prof_gather.h"
