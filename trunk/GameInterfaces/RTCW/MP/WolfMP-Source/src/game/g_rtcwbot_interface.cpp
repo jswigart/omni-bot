@@ -2366,8 +2366,7 @@ obResult GetCurrentAmmo( const GameEntity _ent, int _weaponId, FireMode _mode, i
 			maxclip = GetAmmoTableData( ammoIndex )->maxclip;
 		}
 
-		//hmm, fixme..
-		_max = maxclip + GetAmmoTableData( bot->client->ps.weapon )->maxammo;
+		_max = GetAmmoTableData( ammoIndex )->maxclip * GetAmmoTableData( ammoIndex )->numClips;
 
 		return Success;
 	}

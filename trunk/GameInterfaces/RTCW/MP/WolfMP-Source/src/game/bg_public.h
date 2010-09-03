@@ -565,6 +565,7 @@ typedef struct ammotable_s {
 	int coolRate;           // how fast the weapon cools down. (per second)
 //----(SA)	end
 	int mod;                // means of death
+	int numClips;			// cs: added for correct ammo limits
 } ammotable_t;
 
 extern ammotable_t ammoTable[];     // defined in bg_misc.c
