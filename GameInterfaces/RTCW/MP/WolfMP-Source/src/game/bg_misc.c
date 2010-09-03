@@ -27,7 +27,6 @@ extern vmCvar_t g_gametype;
 #define MAX_AMMO_FG42   500
 #define MAX_AMMO_BAR    500
 
-
 // these defines are matched with the character torso animations
 #define DELAY_LOW       100 // machineguns, tesla, spear, flame
 #define DELAY_HIGH      100 // mauser, garand
@@ -70,67 +69,67 @@ int weapBanksMultiPlayer[MAX_WEAP_BANKS_MP][MAX_WEAPS_IN_BANK_MP] = {
 //
 
 ammotable_t ammoTable[] = {
-	//	MAX				USES	MAX		RELOAD	FIRE			NEXT	HEAT,	COOL,	MOD,	...
-	//	AMMO			AMT.	CLIP	TIME	DELAY			SHOT
-	{   0,              0,      0,      0,      50,             0,      0,      0,      0                       },  //	WP_NONE					// 0
+	//	MAX				USES	MAX		RELOAD	FIRE			NEXT	HEAT,	COOL,	MOD,	...				NUM
+	//	AMMO			AMT.	CLIP	TIME	DELAY			SHOT											CLIPS
+	{   0,              0,      0,      0,      50,             0,      0,      0,      0								},  //	WP_NONE					// 0
 
-	{   999,            0,      999,    0,      50,             200,    0,      0,      MOD_KNIFE               },  //	WP_KNIFE				// 1
+	{   999,            0,      999,    0,      50,             200,    0,      0,      MOD_KNIFE,				1		},  //	WP_KNIFE				// 1
 
-	{   MAX_AMMO_9MM,   1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_LUGER               },  //	WP_LUGER				// 2	// NOTE: also 32 round 'snail' magazine
-	{   MAX_AMMO_9MM,   1,      32,     2600,   DELAY_LOW,      100,    0,      0,      MOD_MP40                },  //	WP_MP40					// 3
-	{   MAX_AMMO_MAUSER,1,      10,     2500,   DELAY_HIGH,     1200,   0,      0,      MOD_MAUSER              },  //	WP_MAUSER				// 4	// NOTE: authentic clips are 5/10/25 rounds
-	{   MAX_AMMO_FG42,  1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_FG42                },  //	WP_FG42					// 5
-	{   15,             1,      15,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_GRENADE_LAUNCHER    },  //	WP_GRENADE_LAUNCHER		// 6
-	{   5,              1,      1,      1000,   750,           2000,   0,      0,      MOD_PANZERFAUST         },   //	WP_PANZERFAUST			// 7	// DHM - Nerve :: updated delay so prediction is correct
-//	{	MAX_AMMO_VENOM,	1,		500,	3000,	750,			30,		5000,	200,	MOD_VENOM				},	//	WP_VENOM				// -
-	{   MAX_AMMO_VENOM, 1,      500,    3000,   750,            45,     5000,   200,    MOD_VENOM               },  //	WP_VENOM				// 8	// JPW NOTE: changed next_shot 50->45 to genlock firing to every server frame (fire rate shouldn't be framerate dependent now)
-	{   200,            1,      200,    1000,   DELAY_LOW,      50,     0,      0,      MOD_FLAMETHROWER        },  //	WP_FLAMETHROWER			// 9 // JPW NOTE: changed maxclip for MP 500->150
-	{   300,            1,      300,    1000,   DELAY_LOW,      0,      0,      0,      MOD_TESLA               },  //	WP_TESLA				// 10
-	{   50,             1,      50,     1000,   DELAY_LOW,      1200,   0,      0,      MOD_SPEARGUN            },  //	WP_SPEARGUN				// 11
+	{   MAX_AMMO_9MM,   1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_LUGER,				5		},  //	WP_LUGER				// 2	// NOTE: also 32 round 'snail' magazine
+	{   MAX_AMMO_9MM,   1,      32,     2600,   DELAY_LOW,      100,    0,      0,      MOD_MP40,				4		},  //	WP_MP40					// 3
+	{   MAX_AMMO_MAUSER,1,      10,     2500,   DELAY_HIGH,     1200,   0,      0,      MOD_MAUSER,				4		},  //	WP_MAUSER				// 4	// NOTE: authentic clips are 5/10/25 rounds
+	{   MAX_AMMO_FG42,  1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_FG42,				4		},  //	WP_FG42					// 5
+	{   15,             1,      15,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_GRENADE_LAUNCHER,	1		},  //	WP_GRENADE_LAUNCHER		// 6
+	{   5,              1,      1,      1000,   750,			2000,   0,      0,		MOD_PANZERFAUST,		4		},  //	WP_PANZERFAUST			// 7	// DHM - Nerve :: updated delay so prediction is correct
+//	{	MAX_AMMO_VENOM,	1,		500,	3000,	750,			30,		5000,	200,	MOD_VENOM,				4		},	//	WP_VENOM				// -
+	{   MAX_AMMO_VENOM, 1,      500,    3000,   750,            45,     5000,   200,    MOD_VENOM,				4		},  //	WP_VENOM				// 8	// JPW NOTE: changed next_shot 50->45 to genlock firing to every server frame (fire rate shouldn't be framerate dependent now)
+	{   200,            1,      200,    1000,   DELAY_LOW,      50,     0,      0,      MOD_FLAMETHROWER,		1		},  //	WP_FLAMETHROWER			// 9 // JPW NOTE: changed maxclip for MP 500->150
+	{   300,            1,      300,    1000,   DELAY_LOW,      0,      0,      0,      MOD_TESLA,				1		},  //	WP_TESLA				// 10
+	{   50,             1,      50,     1000,   DELAY_LOW,      1200,   0,      0,      MOD_SPEARGUN,			4		},  //	WP_SPEARGUN				// 11
 
-	{   999,            0,      999,    0,      50,             200,    0,      0,      MOD_KNIFE2              },  //	WP_KNIFE2				// 12
-	{   MAX_AMMO_45,    1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_COLT                },  //	WP_COLT					// 13
-	{   MAX_AMMO_45,    1,      30,     2400,   DELAY_LOW,      120,    0,      0,      MOD_THOMPSON            },  //	WP_THOMPSON				// 14	// NOTE: also 50 round drum magazine
-	{   MAX_AMMO_GARAND,1,      5,      2500,   DELAY_HIGH,     1200,   0,      0,      MOD_GARAND              },  //	WP_GARAND				// 15	// NOTE: always 5 round clips
-	{   MAX_AMMO_BAR,   1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_BAR                 },  //	WP_BAR					// 16
-	{   15,             1,      15,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_GRENADE_PINEAPPLE   },  //	WP_GRENADE_PINEAPPLE	// 17
-	{   5,              1,      5,      1000,   DELAY_SHOULDER, 1200,   0,      0,      MOD_ROCKET_LAUNCHER     },  //	WP_ROCKET_LAUNCHER		// 18
+	{   999,            0,      999,    0,      50,             200,    0,      0,      MOD_KNIFE2,				1		},  //	WP_KNIFE2				// 12
+	{   MAX_AMMO_45,    1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_COLT,				5		},  //	WP_COLT					// 13
+	{   MAX_AMMO_45,    1,      30,     2400,   DELAY_LOW,      120,    0,      0,      MOD_THOMPSON,			4		},  //	WP_THOMPSON				// 14	// NOTE: also 50 round drum magazine
+	{   MAX_AMMO_GARAND,1,      5,      2500,   DELAY_HIGH,     1200,   0,      0,      MOD_GARAND,				4		},  //	WP_GARAND				// 15	// NOTE: always 5 round clips
+	{   MAX_AMMO_BAR,   1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_BAR,				4		},  //	WP_BAR					// 16
+	{   15,             1,      15,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_GRENADE_PINEAPPLE,	1		},  //	WP_GRENADE_PINEAPPLE	// 17
+	{   5,              1,      5,      1000,   DELAY_SHOULDER, 1200,   0,      0,      MOD_ROCKET_LAUNCHER,	4		},  //	WP_ROCKET_LAUNCHER		// 18
 
-	{   MAX_AMMO_MAUSER,1,      10,     3000,   0,              1700,   0,      0,      MOD_SNIPERRIFLE         },  //	WP_SNIPER_GER			// 19
-	{   MAX_AMMO_GARAND,1,      5,      3000,   0,              1200,   0,      0,      MOD_SNOOPERSCOPE        },  //	WP_SNIPER_AM			// 20
-//	{	MAX_AMMO_VENOM,	10,		300,	3000,	1200,			1200,	0,		0,		MOD_VENOM_FULL			},	//	WP_VENOM_FULL			// -
-	{   MAX_AMMO_VENOM, 10,     300,    3000,   1000,           1000,   0,      0,      MOD_VENOM_FULL          },  //	WP_VENOM_FULL			// 21
-	{   20,             1,      20,     1000,   DELAY_LOW,      1200,   0,      0,      MOD_SPEARGUN_CO2        },  //	WP_SPEARGUN_CO2			// 22
+	{   MAX_AMMO_MAUSER,1,      10,     3000,   0,              1700,   0,      0,      MOD_SNIPERRIFLE,		4		},  //	WP_SNIPER_GER			// 19
+	{   MAX_AMMO_GARAND,1,      5,      3000,   0,              1200,   0,      0,      MOD_SNOOPERSCOPE,		4		},  //	WP_SNIPER_AM			// 20
+//	{	MAX_AMMO_VENOM,	10,		300,	3000,	1200,			1200,	0,		0,		MOD_VENOM_FULL,			4		},	//	WP_VENOM_FULL			// -
+	{   MAX_AMMO_VENOM, 10,     300,    3000,   1000,           1000,   0,      0,      MOD_VENOM_FULL,			4		},  //	WP_VENOM_FULL			// 21
+	{   20,             1,      20,     1000,   DELAY_LOW,      1200,   0,      0,      MOD_SPEARGUN_CO2,		4		},  //	WP_SPEARGUN_CO2			// 22
 
-	{   MAX_AMMO_FG42,  1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_FG42SCOPE           },  //	WP_FG42SCOPE			// 23
-	{   MAX_AMMO_BAR,   1,      20,     2000,   DELAY_LOW,      90,     0,      0,      MOD_BAR                 },  //	WP_BAR2					// 24
-	{   MAX_AMMO_9MM,   1,      32,     3100,   DELAY_LOW,      110,    700,    300,    MOD_STEN                },  //	WP_STEN					// 25
-	{   3,              1,      1,      1500,   50,             1000,   0,      0,      MOD_SYRINGE             },  //	WP_MEDIC_SYRINGE		// 26 // JPW NERVE
-	{   1,              0,      1,      3000,   50,             1000,   0,      0,      MOD_AMMO,               },  //	WP_AMMO					// 27 // JPW NERVE
-	{   1,              0,      1,      3000,   50,             1000,   0,      0,      MOD_ARTY,               },  //	WP_ARTY
-	{   MAX_AMMO_9MM,   1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_SILENCER            },  //	WP_SILENCER				// 28
-	{   30,             1,      8,      1850,   DELAY_PISTOL,   200,    0,      0,      MOD_AKIMBO              },  //	WP_AKIMBO				// 29
+	{   MAX_AMMO_FG42,  1,      20,     2000,   DELAY_LOW,      200,    0,      0,      MOD_FG42SCOPE,			4		},  //	WP_FG42SCOPE			// 23
+	{   MAX_AMMO_BAR,   1,      20,     2000,   DELAY_LOW,      90,     0,      0,      MOD_BAR,				4		},  //	WP_BAR2					// 24
+	{   MAX_AMMO_9MM,   1,      32,     3100,   DELAY_LOW,      110,    700,    300,    MOD_STEN,				4		},  //	WP_STEN					// 25
+	{   3,              1,      1,      1500,   50,             1000,   0,      0,      MOD_SYRINGE,			1		},  //	WP_MEDIC_SYRINGE		// 26 // JPW NERVE
+	{   1,              0,      1,      3000,   50,             1000,   0,      0,      MOD_AMMO,				1		},  //	WP_AMMO					// 27 // JPW NERVE
+	{   1,              0,      1,      3000,   50,             1000,   0,      0,      MOD_ARTY,				1		},  //	WP_ARTY
+	{   MAX_AMMO_9MM,   1,      8,      1500,   DELAY_PISTOL,   400,    0,      0,      MOD_SILENCER,			1		},  //	WP_SILENCER				// 28
+	{   30,             1,      8,      1850,   DELAY_PISTOL,   200,    0,      0,      MOD_AKIMBO,				1		},  //	WP_AKIMBO				// 29
 
-	{   100,            1,      100,    1000,   DELAY_PISTOL,   900,    0,      0,      MOD_CROSS               },  //	WP_CROSS				// 31
-	{   10,             0,      10,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_DYNAMITE            },  //	WP_DYNAMITE				// 32 // JPW NERVE used 1
-	{   10,             1,      10,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_DYNAMITE            },  //	WP_DYNAMITE2			// 33
+	{   100,            1,      100,    1000,   DELAY_PISTOL,   900,    0,      0,      MOD_CROSS,				1		},  //	WP_CROSS				// 31
+	{   10,             0,      10,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_DYNAMITE,			1		},  //	WP_DYNAMITE				// 32 // JPW NERVE used 1
+	{   10,             1,      10,     1000,   DELAY_THROW,    1600,   0,      0,      MOD_DYNAMITE,			1		},  //	WP_DYNAMITE2			// 33
 
 // stubs for some "not-real" weapons (so they always return "yes, you have enough ammo for that gauntlet", etc.)
-	{   5,              1,      5,      1000,   DELAY_SHOULDER, 1200,   0,      0,      0 /*mod_prox*/          },  //	WP_PROX					// 34
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_MONSTER_ATTACK1		// 35
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_MONSTER_ATTACK2		// 36
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_MONSTER_ATTACK3		// 37
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_GAUNTLET				// 38
+	{   5,              1,      5,      1000,   DELAY_SHOULDER, 1200,   0,      0,      0,		1 /*mod_prox*/		},  //	WP_PROX					// 34
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_MONSTER_ATTACK1		// 35
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_MONSTER_ATTACK2		// 36
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_MONSTER_ATTACK3		// 37
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_GAUNTLET				// 38
 
 	// NERVE - SMF
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_SNIPER				// 39
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_MORTAR				// 40
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	VERYBIGEXPLOSION		// 41
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_SNIPER				// 39
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_MORTAR				// 40
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	VERYBIGEXPLOSION		// 41
 
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_MEDKIT				// 42
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_PLIERS				// 43
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_SMOKE_GRENADE		// 44
-	{   999,            0,      999,    0,      50,             0,      0,      0,      0                       },  //	WP_SMOKE_GRENADE		// 44
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_MEDKIT				// 42
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1					},  //	WP_PLIERS				// 43
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1                   },  //	WP_SMOKE_GRENADE		// 44
+	{   999,            0,      999,    0,      50,             0,      0,      0,      0,		1                   },  //	WP_SMOKE_GRENADE		// 44
 	// -NERVE - SMF
 };
 
