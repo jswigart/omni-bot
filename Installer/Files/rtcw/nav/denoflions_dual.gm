@@ -19,6 +19,7 @@ global Map =
 		{
 			DEFENDER =
 			{
+				voice = "defend",
 				spawnpt = 2,
 				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
@@ -29,6 +30,7 @@ global Map =
 		{
 			DEFENDER =
 			{
+				voice = "defend",
 				spawnpt = 3,
 				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
