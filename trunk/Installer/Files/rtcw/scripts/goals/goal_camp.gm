@@ -41,7 +41,7 @@ this.Enter = function()
 this.Exit = function()
 {
 	this.UsingWeapon = null;
-	this.Bot.ReleaseButton(BTN.CROUCH, BTN.PRONE);
+	this.Bot.ReleaseButton(BTN.CROUCH);
 };
 
 this.GetPriority = function()
@@ -92,16 +92,9 @@ this.Update = function()
 				this.Finished();
 			}
 
-			switch (this.MapGoal.Stance)
+			if( this.MapGoal.Stance == "crouch" )
 			{
-				case "crouch":
-				{
-					this.Bot.HoldButton(BTN.CROUCH, 1.1);
-				}
-				case "prone":
-				{
-					this.Bot.HoldButton(BTN.PRONE, 1.1);
-				}
+				this.Bot.HoldButton(BTN.CROUCH, 1.1);
 			}
 
 			if ( this.WeaponRestricted > 0 && this.IsSniper )
