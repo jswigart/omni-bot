@@ -346,27 +346,7 @@ global Map =
 
 	barrierOne = function()
 	{
-		tracept = Vector3( -4162.359, 3502.326, -162.592 );
-		offsetpos = tracept + Vector3( 0,0,32 );
-
-		while ( !Map.Barrier1 )
-		{
-			tr = TraceLine( tracept, offsetpos, null, TRACE.SHOT, 0, false );
-			if ( tr.fraction < 1 ) {
-				if ( Map.Debug ) {
-					DrawDebugLine( tracept, offsetpos, COLOR.RED, 0.25 );
-				}
-			} else
-			{
-				if ( Map.Debug ) {
-					DrawDebugLine( tracept, offsetpos, COLOR.GREEN, 0.25 );
-				}
-
-				Map.Barrier1 = true;
-			}
-
-			sleep( 0.25 );
-		}
+		Map.Barrier1 = true;
 	},
 
 	WaterTrigger =
@@ -411,8 +391,6 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "bluejump", "closed", false );
 	Wp.SetWaypointFlag( "redjump", "closed", true );
 
-	thread( Map.barrierOne );
-
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
@@ -434,6 +412,7 @@ global OnMapLoad = function()
 	OnTrigger( "axis_capture_flag_respawn_obj", Map.flag_respawn_obj_Axis_Captured );
 	OnTrigger( "allies_reclaims_flag_respawn_obj", Map.flag_respawn_obj_Allies_Captured );
 	OnTrigger( "allies_capture_flag_respawn_obj", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "GRENADE_barrier Exploded.", Map.barrierOne );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
@@ -444,7 +423,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_cpmg", {mincamptime = 300, maxcamptime = 300} );
 
 	tOne = OnTriggerRegion( AABB( -1643.000,2831.000,-973.000,-1567.000,2869.000,-855.000 ), Map.WaterTrigger );
-	bridgejump = OnTriggerRegion( AABB( -4314.000,1937.000,-307.000,-4133.000,3050.000,-72.000 ), RegionTrigger.DisableCombatMovement);
+	bridgejump = OnTriggerRegion( AABB( -4314.000,1937.000,-307.000,-4133.000,3050.000,-72.000 ), RegionTrigger.DisableCombatMovement );
+	tunnelentrance = OnTriggerRegion( AABB( -1117.000,-884.000,-538.000,-915.000,-755.000,83.000 ), RegionTrigger.DisableCombatMovement );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 

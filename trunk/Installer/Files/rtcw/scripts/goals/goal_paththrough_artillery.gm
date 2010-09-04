@@ -163,7 +163,7 @@ this.Update = function()
 
 		this.Bot.HoldButton( BTN.AIM, 1 );
 		// give time to aim
-		if ( timeout > 20 ) {
+		if ( timeout > 10 ) {
 			this.Bot.HoldButton( BTN.ATTACK1, 1 );
 		}
 
