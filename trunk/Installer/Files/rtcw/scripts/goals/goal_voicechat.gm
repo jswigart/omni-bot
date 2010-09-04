@@ -38,6 +38,8 @@ this.Initialize = function()
 	this.NEEDOPS_SAYOPS		= this.Frequency;
 	this.BUILD_SAYBUILD		= this.Frequency;
 	this.PLANT_SAYCOVER		= this.Frequency;
+	this.DEFEND_SAYDEFEND		= this.Frequency;
+	this.ATTACK_SAYATTACK		= this.Frequency;
 };
 
 this.Randomize = function(frequency, isBot)
@@ -73,14 +75,23 @@ this.IsBot = function(ent)
 
 this.GetPriority = function()
 {
-	// special case for some engineer goals. note: disabled if only response is for humans
-	// signals are sent from goal_build and goal_plant once they start the goal
-	t = block(this.Bot.Name + "_plant");
+	// special case for some external signals.
+	t = block(this.Bot.Name + "_plant", this.Bot.Name + "_defend", this.Bot.Name + "_attack");
 
 	if ( t == this.Bot.Name + "_plant"
 		&& this.Randomize(this.PLANT_SAYCOVER, true) == true )
 	{
 		this.Bot.SayVoice(VOICE.COVER_ME);
+	}
+	else if ( t == this.Bot.Name + "_defend"
+		&& this.Randomize(this.DEFEND_SAYDEFEND, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.ON_DEFENSE);
+	}
+	else if ( t == this.Bot.Name + "_attack"
+		&& this.Randomize(this.ATTACK_SAYATTACK, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.ON_OFFENSE);
 	}
 
 	// force a delay
