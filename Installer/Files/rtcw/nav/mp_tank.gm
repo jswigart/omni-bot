@@ -41,13 +41,6 @@ global Map =
 
 	ViewDistance = 5300, // region trigger uses this, so use Map.ViewDistance for val if setting in OnBotJoin
 
-	def = { "dual_tank_1", "dual_tank_2", "dual_tank_3", "dual_tank_4", "dual_tank_5","dual_docs_1", "dual_docs_2", "dual_docs_3", "dual_docs_4", "dual_docs_5","dual_flag_1", "dual_flag_2", "dual_flag_3", "dual_flag_4", "dual_flag_5","dual_transmit_1", "dual_transmit_2", "dual_transmit_3", "dual_transmit_4", "dual_transmit_5",},
-
-	tank = { "dual_tank_1", "dual_tank_2", "dual_tank_3", "dual_tank_4", "dual_tank_5",},
-	docs = { "dual_docs_1", "dual_docs_2", "dual_docs_3", "dual_docs_4", "dual_docs_5", },
-	flag = { "dual_flag_1", "dual_flag_2", "dual_flag_3", "dual_flag_4", "dual_flag_5", },
-	transmit = { "dual_transmit_1", "dual_transmit_2", "dual_transmit_3", "dual_transmit_4", "dual_transmit_5", },
-	
 	Roles =
 	{
 		AXIS =
@@ -69,23 +62,6 @@ global Map =
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
-	},	
-
-	//scripted defend spots for dual objective support
-	Defend =
-	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-
-		// initialize some tables for adding waypoints for them to use
-		Axis = {},
-		Allies = {},
 	},
 
 	Navigation =
@@ -392,6 +368,7 @@ global Map =
 			sleep( 0.25 );
 		}
 	},
+
 	WaterTrigger =
 	{
 		Name = "WaterTrigger",
@@ -417,52 +394,6 @@ global Map =
 			}
 		},
 	},
-
-	ReduceVis =
-	{
-		Name = "ReduceVis",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
-		{
-			if ( Map.Bridge3 ) {
-				b = Util.GetBotByName( GetEntName( ent ) );
-				if ( b ) {
-					b.MaxViewDistance = 0;
-				}
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( Map.Bridge3 ) {
-				b = Util.GetBotByName( GetEntName( ent ) );
-				if ( b ) {
-					b.MaxViewDistance = Map.ViewDistance;
-				}
-			}
-		},
-	},
-	bridgejump =
-	{
-		Name = "bridgejump",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableBotPush( true );
-				b.DisableCombatMovement = true;
-			}
-		},
-		OnExit = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableBotPush( false );
-				b.DisableCombatMovement = false;
-			}
-		},
-	},
-
 };
 
 global OnMapLoad = function()
@@ -513,9 +444,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_cpmg", {mincamptime = 300, maxcamptime = 300} );
 
 	tOne = OnTriggerRegion( AABB( -1643.000,2831.000,-973.000,-1567.000,2869.000,-855.000 ), Map.WaterTrigger );
-	//tTwo = OnTriggerRegion(AABB(-4269.000,2225.000,-147.000,-4200.000,2263.000,-72.000), Map.ReduceVis);
-	bridgejump = OnTriggerRegion( AABB( -4314.000,1937.000,-307.000,-4133.000,3050.000,-72.000 ), Map.bridgejump );
-
+	bridgejump = OnTriggerRegion( AABB( -4314.000,1937.000,-307.000,-4133.000,3050.000,-72.000 ), RegionTrigger.DisableCombatMovement);
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 

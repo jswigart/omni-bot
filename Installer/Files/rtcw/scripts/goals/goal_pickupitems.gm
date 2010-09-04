@@ -6,7 +6,7 @@ this.AlwaysRecieveEvents = true;
 this.AutoAdd = true;
 this.PickupPriority = 0.98;
 this.Range = 200;
-this.Frequency = 5; // 1 to 10, 0 to disable
+this.Frequency = 10; // 1 to 10, 0 to disable
 
 this.LimitToNoEntityFlag(ENTFLAG.INWATER, ENTFLAG.UNDERWATER);
 
@@ -46,7 +46,7 @@ this.Exit = function()
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
-	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
+	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) > this.Frequency ) {
 		return;
 	}
 
@@ -55,7 +55,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 		entCat = this.GetPickupCategory(ent);
 		if ( entCat != -1 ) {
 			pos = GetEntPosition(ent);
-			if ( !pos || !this.Bot.HasLineOfSightTo(pos) || this.Bot.DistanceTo(pos) > this.Range ) {
+			if ( !pos ) {
 				return;
 			}
 

@@ -5,7 +5,7 @@ this.MinRadius = 30;
 this.DefaultRenderRadius = 1024;
 this.MaxUsers_InUse(1);
 this.MaxUsers_InProgress(2);
-this.RolePriorityBonus = 0.1;
+this.RolePriorityBonus = 0.01;
 
 //////////////////////////////////////////////////////////////////////////
 // Couple callbacks to enforce additional constraints on property values.
