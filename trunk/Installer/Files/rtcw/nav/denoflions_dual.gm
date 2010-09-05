@@ -17,6 +17,7 @@ global Map =
 	{
 		AXIS =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				voice = "defend",
@@ -24,10 +25,24 @@ global Map =
 				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
 			},
+
+			// focus on the Barn
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			
+			// an empty role for the other bots to make sure all are not attack / defend
+			ATTACKER1 =
+			{
+				numbots = 3,
+			},
 		},
 
 		ALLIES =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				voice = "defend",
@@ -35,6 +50,19 @@ global Map =
 				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
 			},
+
+			// focus on the Radar Equipment
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			
+			// an empty role for the other bots to make sure all are not attack / defend
+			ATTACKER1 =
+			{
+				numbots = 3,
+			},			
 		},
 	},
 
@@ -237,19 +265,6 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal(".*", true); //all but the routes
 	RTCWUtil.SetPrimaryGoals(1.0);
 
-	RTCWUtil.EnableGoal("CHECKPOINT.*");
-
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBarn.*" );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ammo_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equip" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMGAmmo_1" ); // This is very helpful in defending the barnyard
-
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass("DEFEND_r_lt_barn.*", TEAM.AXIS, CLASS.LIEUTENANT);
@@ -258,7 +273,8 @@ global OnMapLoad = function()
 	SetGoalPriority("DEFEND_r_lt_barn.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT);
 	SetGoalPriority("DEFEND_b_lt_radar.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT);
 	SetGoalPriority("ATTACK.*", 0.45); //roams
-	SetGoalPriority("CAMP.*", 0.95); // dedicated defends
+	SetGoalPriority("CAMP_dual.*", 0.95); // dedicated defends
+	SetGoalPriority("CAMP_att_.*", 0.91); // dedicated attackers. less than plant, more than flag.
 	SetGoalPriority("ARTILLERY.*", 1.0);
 	SetGoalPriority("CALLARTILLERY.*", 0.94);
 	SetGoalPriority("AIRSTRIKE.*", 0.94);
@@ -271,6 +287,22 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_sewer_bars" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
+
+	RTCWUtil.EnableGoal("CHECKPOINT.*");
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBarn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_att_rBarn.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ammo_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equip" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_att_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMGAmmo_1" ); // This is very helpful in defending the barnyard
+
 
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
@@ -665,6 +697,17 @@ global InitializeRoutes = function()
 				ROUTE_FlagExitNorth = {ROUTE_CYLadderNorth = {},},
 			},
 		},
+		
+		CAMP_att_rBarn1 =
+		{
+			ROUTE_flagSpawn =
+			{
+			},
+			
+			ROUTE_axisSpawn =
+			{
+			},
+		},		
 
 // allied camps
 		CAMP_dual_ammo_1 =
@@ -749,6 +792,17 @@ global InitializeRoutes = function()
 			{
 			},
 		},
+		
+		CAMP_att_bRadar1 =
+		{
+			ROUTE_flagSpawn =
+			{
+			},
+			
+			ROUTE_alliedSpawn =
+			{
+			},
+		},
 	};
 // CHECKPOINT_building_flag
 	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitEast = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;
@@ -816,6 +870,20 @@ global InitializeRoutes = function()
 	MapRoutes.DEFEND_r_lt_barn_8 = MapRoutes.DEFEND_r_lt_barn_1;
 	MapRoutes.DEFEND_r_lt_barn_9 = MapRoutes.DEFEND_r_lt_barn_1;
 	MapRoutes.DEFEND_r_lt_barn_10 = MapRoutes.DEFEND_r_lt_barn_1;
+// CAMP_att_bRadar
+	MapRoutes.CAMP_att_bRadar_1 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar_2 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar_3 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar_4 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar_5 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar_6 = MapRoutes.PLANT_radar_equip;
+// CAMP_att_rBarn
+	MapRoutes.CAMP_att_rBarn_1 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn_2 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn_3 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn_4 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn_5 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn_6 = MapRoutes.PLANT_Allied_munitions;
 
 	Util.Routes(MapRoutes);
 };

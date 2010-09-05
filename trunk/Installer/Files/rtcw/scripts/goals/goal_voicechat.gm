@@ -40,6 +40,10 @@ this.Initialize = function()
 	this.PLANT_SAYCOVER		= this.Frequency;
 	this.DEFEND_SAYDEFEND		= this.Frequency;
 	this.ATTACK_SAYATTACK		= this.Frequency;
+	
+	if ( GetGameState() != "Playing" ) {
+		this.Disable = true;
+	}	
 };
 
 this.Randomize = function(frequency, isBot)
@@ -52,6 +56,7 @@ this.Randomize = function(frequency, isBot)
 
 	// scale it based on bot count
 	frequency = frequency - ( tableCount(BotTable) * this.FrequencyReductionPerBot );
+	if ( frequency < 1 && this.Frequency > 0 ) { frequency = 1; }
 
 	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
 	{
@@ -78,17 +83,17 @@ this.GetPriority = function()
 	// special case for some external signals.
 	t = block(this.Bot.Name + "_plant", this.Bot.Name + "_defend", this.Bot.Name + "_attack");
 
-	if ( t == this.Bot.Name + "_plant"
+	if ( t == this.Bot.Name + "_plant"  // from goal_plant.gm
 		&& this.Randomize(this.PLANT_SAYCOVER, true) == true )
 	{
 		this.Bot.SayVoice(VOICE.COVER_ME);
 	}
-	else if ( t == this.Bot.Name + "_defend"
+	else if ( t == this.Bot.Name + "_defend" // from goal_rolemanager.gm
 		&& this.Randomize(this.DEFEND_SAYDEFEND, true) == true )
 	{
 		this.Bot.SayVoice(VOICE.ON_DEFENSE);
 	}
-	else if ( t == this.Bot.Name + "_attack"
+	else if ( t == this.Bot.Name + "_attack" // from goal_rolemanager.gm
 		&& this.Randomize(this.ATTACK_SAYATTACK, true) == true )
 	{
 		this.Bot.SayVoice(VOICE.ON_OFFENSE);
