@@ -76,7 +76,8 @@ this.Update = function()
 				print( "found target" );
 			}
 
-			if ( botClass == CLASS.LIEUTENANT && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
+			// cs: scaling airstrikes. large numbers of bots lag the server
+			if ( RandInt(1, 10) < 2 ) && botClass == CLASS.LIEUTENANT && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
 				if ( this.Debug ) {
 					print( "airstrike" );
 				}

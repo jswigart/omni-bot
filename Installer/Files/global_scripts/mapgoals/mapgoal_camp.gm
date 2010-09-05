@@ -57,6 +57,8 @@ this.InitNewGoal = function()
 	{
 		this.Stance = "prone";
 	}
+	
+	this.Radius = 32;
 };
 
 //////////////////////////////////////////////////////////////////////////

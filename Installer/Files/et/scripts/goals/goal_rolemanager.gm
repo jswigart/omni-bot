@@ -70,7 +70,7 @@ this.FindFreeRoleSlot = function()
 			}
 
 			// store it in the table and set the role
-			if ( newRole ) {
+			if ( typeId(newRole) != 0 ) {
 				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole));}
 				Map.Roles[ team ][ roleIndex ].bots[ this.Bot ] = true;
 				this.Bot.SetRoles(newRole);

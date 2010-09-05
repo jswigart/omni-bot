@@ -56,7 +56,7 @@ this.FindFreeRoleSlot = function()
 				numFree =  Map.Roles[ team ][ id ].numbots - currentBots;
 
 				if ( this.Debug ) {
-					print( Util.GetTableKey(ROLE, ROLE[id]), "current:", currentBots, "free:", numFree );
+					print( Util.GetTableKey(ROLE, ROLE[id]), "current:", currentBots, "free:", numFree, "evalnum:" + evalNum );
 				}
 
 				// see which one needs a bot the most
@@ -80,8 +80,8 @@ this.FindFreeRoleSlot = function()
 			}
 
 			// store it in the table and set the role
-			if ( newRole ) {
-				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole));}
+			if ( typeId(newRole) != 0 ) {
+				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole)); }
 				Map.Roles[ team ][ roleIndex ].bots[ this.Bot ] = true;
 				this.Bot.SetRoles(newRole);
 
