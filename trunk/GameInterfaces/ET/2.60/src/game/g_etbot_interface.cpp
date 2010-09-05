@@ -4585,9 +4585,21 @@ public:
 				OB_GETMSG(WeaponCharged);
 				if (pMsg && pEnt && pEnt->inuse && pEnt->client)
 				{
-					pMsg->m_IsCharged =
-						(weaponCharged(&pEnt->client->ps,pEnt->client->sess.sessionTeam,
-						_weaponBotToGame(pMsg->m_Weapon), pEnt->client->sess.skill) == qtrue) ? True : False;
+#ifdef NOQUARTER
+					if ( pMsg->m_Weapon == ET_WP_BINOCULARS && (pEnt->client->ps.ammo[WP_ARTY] & NO_ARTY) ) {
+						pMsg->m_IsCharged = False;
+					}
+					else if ( pMsg->m_Weapon == ET_WP_SMOKE_MARKER && (pEnt->client->ps.ammo[WP_ARTY] & NO_AIRSTRIKE) ) {
+						pMsg->m_IsCharged = False;
+					}
+					else {
+#endif
+						pMsg->m_IsCharged =
+							(weaponCharged(&pEnt->client->ps,pEnt->client->sess.sessionTeam,
+							_weaponBotToGame(pMsg->m_Weapon), pEnt->client->sess.skill) == qtrue) ? True : False;
+#ifdef NOQUARTER
+					}
+#endif
 				}
 				break;
 			}
