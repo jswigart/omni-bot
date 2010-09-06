@@ -22,7 +22,10 @@ this.GetPriority = function()
 	if (t && t != this.PainInflictor) {
 		entClass = GetEntClass(t);
 		if ( entClass & CLASS.ANYPLAYER || entClass == 1 || entClass == CLASS.BREAKABLE ) {
-			this.Bot.IgnoreTarget(t, this.Bot.ReactionTime + 0.2);
+			// cs: don't ignore if at a camp spot
+			if ( this.Bot.GetVelocity() > 0 ) {
+				this.Bot.IgnoreTarget(t, this.Bot.ReactionTime + 0.2);
+			}
 			
 			if ( this.Debug ) {
 				this.Bot.Say("ignoring: " + GetEntName(t) + " Last Inflictor: " + this.PainInflictor);

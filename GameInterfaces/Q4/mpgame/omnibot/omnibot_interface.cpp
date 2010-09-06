@@ -968,6 +968,22 @@ public:
 			{
 				//weapons, ammo, health, armor
 				_category.SetFlag(ENT_CAT_PICKUP);
+
+				idStr entClassName = pEnt->spawnArgs.GetString("classname");
+				entClassName.StripTrailing("_mp");
+
+				if(!idStr::Cmpn(entClassName.c_str(), "ammo", 4)) {
+					_category.SetFlag(ENT_CAT_PICKUP_AMMO);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "item_armor", 10)) {
+					_category.SetFlag(ENT_CAT_PICKUP_ARMOR);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "item_health", 11)) {
+					_category.SetFlag(ENT_CAT_PICKUP_HEALTH);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "weap", 4)) {
+					_category.SetFlag(ENT_CAT_PICKUP_WEAPON);
+				}
 			}
 			else if(!pEnt->IsType(idProjectile::GetClassType()) && 
 				!pEnt->IsType(idMoveableItem::GetClassType()))
@@ -1028,6 +1044,12 @@ public:
 			else if(pEnt->IsType(idMoveableItem::GetClassType())) 
 			{
 				_flags.SetFlag(ENT_FLAG_VISTEST);
+			}
+			else if(pEnt->IsType(idItem::GetClassType()))
+			{
+				idItem *pItem = static_cast<idItem*>(pEnt);
+				if (pItem && pItem->pickedUp)
+					_flags.SetFlag(ENT_FLAG_DISABLED);
 			}
 			return Success;
 		}

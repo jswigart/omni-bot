@@ -1661,7 +1661,21 @@ member ClassName = function(classId)
 			return name;
 		}
 	}
-	return "UnknownClass";
+	return "UnknownClass for id "+ classId;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CatName = function(catId)
+{
+	foreach ( name and Id in CAT )
+	{
+		if(catId == Id)
+		{
+			return name;
+		}
+	}
+	return "UnknownCategory for id "+ catId;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
