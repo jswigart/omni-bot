@@ -1487,6 +1487,7 @@ qboolean trap_GetTag( int clientNum, char *tagName, orientation_t *ori );
 
 int     trap_DebugPolygonCreate( int color, int numPoints, vec3_t *points );
 void    trap_DebugPolygonDelete( int id );
+int     trap_RealTime( qtime_t *qtime );
 
 // bot lib
 void    trap_BotUserCommand( int client, usercmd_t *ucmd );

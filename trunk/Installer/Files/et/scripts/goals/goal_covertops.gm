@@ -244,7 +244,11 @@ this.UpdateStealth = function()
 {
 	// reduce priority so they can go do regular goals while in disguise
 	// but keep it a bit higher priority than typical camp goals
-	this.Priority = 0.62;
+	// cs: testing a lower priority per Palota's request.
+	// so let's have it lower than camp goals. goal_indisguise is now changed
+	// to have them only ignore targets if they are not at a camp spot ( velocity > 0 ).
+	//this.Priority = 0.62;
+	this.Priority = 0.4;
 
 	botEnt = this.Bot.GetGameEntity();
 	while( this.State == this.STEALTH ) {
