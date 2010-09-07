@@ -767,6 +767,27 @@ public:
 			{
 				_category.SetFlag(ENT_CAT_MISC);
 			}
+			else if(pEnt->IsType(idItem::Type) || pEnt->IsType(idMoveableItem::Type))
+			{
+				idStr entClassName = pEnt->spawnArgs.GetString("classname");
+				entClassName.StripTrailing("_mp");
+
+				//weapons, ammo, health, armor
+				_category.SetFlag(ENT_CAT_PICKUP);
+
+				if(!idStr::Cmpn(entClassName.c_str(), "ammo", 4)) {
+					_category.SetFlag(ENT_CAT_PICKUP_AMMO);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "item_armor", 10)) {
+					_category.SetFlag(ENT_CAT_PICKUP_ARMOR);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "item_medkit", 11)) {
+					_category.SetFlag(ENT_CAT_PICKUP_HEALTH);
+				}
+				else if(!idStr::Cmpn(entClassName.c_str(), "weap", 4)) {
+					_category.SetFlag(ENT_CAT_PICKUP_WEAPON);
+				}
+			}
 			else if(!pEnt->IsType(idProjectile::Type) && 
 				!pEnt->IsType(idMoveableItem::Type))
 			{
