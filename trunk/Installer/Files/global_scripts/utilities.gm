@@ -2791,18 +2791,25 @@ member SnipeMap = function()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member ChangeToSniperWeapons = function(bot)
+member ChangeToSniperWeapons = function(bot, viewDistance)
 {
 	yield(); yield();
 	teamName = this.TeamName(bot.GetTeam());
+
+	if ( !viewDistance ) { viewDistance = 10000; }
 
 	if ( Util.TeamSniperWeapons[teamName] )
 	{
 		if ( !bot.CanSnipe() )
 		{
+			if ( bot.GetClass() != Util.SniperClass ) {
+				bot.ChangeClass(Util.SniperClass);
+				yield();
+			}
 			n = tableCount(Util.TeamSniperWeapons[teamName]);
 			r = RandInt(0, n-1);
 			bot.ChangePrimaryWeapon(Util.TeamSniperWeapons[teamName][r]);
+			bot.MaxViewDistance = viewDistance;
 		}
 	}
 };

@@ -2,7 +2,7 @@ this.Name = "CheckStuck";
 this.Parent = "LowLevel";
 this.AutoAdd = true;
 this.KillWhenStuck = true;
-this.LogStuckage = false;
+this.LogStuckage = true;
 this.Interval = 0.6;
 this.KillTime = 5.0; // time before /killing
 this.Debug = false;
@@ -66,7 +66,7 @@ this.GetPriority = function()
 						// write it to the omni-bot log
 						pos = this.Bot.GetPosition();
 						yield();
-						Log("STUCKAGE:" + "Vector3("+pos.x +","+pos.y+","+pos.z+")");
+						this.StuckageLog(pos);
 					}
 
 					yield();
@@ -96,4 +96,24 @@ this.GetPriority = function()
 this.OnSpawn = function()
 {
 	this.JustSpawned = true;
+};
+
+// Note: this will write to ~/omni-bot/et/user. the file will need to be copied to ~/omni-bot/et/scripts
+this.StuckageLog = function(pos)
+{
+	gmfile = File();
+	fileName = GetMapName() + "_stuckages.gm";
+
+	if ( !System.FileExists(fileName) ) {
+		assert( gmfile.Open( fileName, "text", false ) );
+		head = "global Stuckages = {};";
+		assert( gmfile.Write( head, System.NewLine ) );
+	}
+	else {
+		assert( gmfile.Open( fileName, "text", false, true ) );
+	}
+
+	str = "Stuckages[ tableCount(Stuckages) ] = Vector3("+pos.x +","+pos.y+","+pos.z+");";
+	assert( gmfile.Write( str, System.NewLine ) );
+	gmfile.Close();	
 };
