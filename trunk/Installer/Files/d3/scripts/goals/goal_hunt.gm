@@ -10,7 +10,7 @@ this.LimitToTargetClass(CLASS.ANYPLAYER);
 this.Initialize = function()
 {
 	this.HuntPriority = 0.4;
-	this.HuntFlagPriority = 1.0
+	this.HuntFlagPriority = 1.0;
 	this.DistanceTolerance = 200.f;
 };
 
