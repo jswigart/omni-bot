@@ -3,80 +3,59 @@
 // These parameters are required
 this.Name = "Hunt";	// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
-this.AutoAdd = false;
+this.SkipGetPriorityWhenActive = true;
 
-this.LimitToTargetClass(CLASS.PLAYER);
+this.LimitToTargetClass(CLASS.ANYPLAYER);
 
 this.Initialize = function()
 {
-	this.Debug = false;
-	
-	//keep this lower than cappoint goals at least
 	this.HuntPriority = 0.4;
-	
-	//focus on the flag carrier
-	this.HuntFlagPriority = 1.0;
-
-	this.IsHunting = false;
-	
-	if (DEBUG_SCRIPTS || this.Debug)
-		{ print(this.Name, " Initialized"); }
+	this.HuntFlagPriority = 1.0
+	this.DistanceTolerance = 200.f;
 };
 
 this.Enter = function()
-{	
+{
 	// Set up some finish criteria
-	this.AddFinishCriteria("EntDeleted",this.TargetEntity);	
-	this.AddFinishCriteria("EntHealthLessThan",this.TargetEntity,1);
-	this.AddFinishCriteria("EntHasEntFlag",this.TargetEntity,ENTFLAG.LIMBO);	
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
+	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 };
 
 this.Exit = function()
 {
 	this.TargetEntity = null;
 	this.TargetPosition = null;
-	this.IsHunting = false;
 };
 
 this.GetPriority = function()
 {
-	while ( this.IsHunting == true )
-	{
-		sleep(1);
-	}
-	if (!this.IsActive() && this.IsHunting == false )
-	{
-		this.TargetEntity = this.Bot.GetTarget();
-		this.TargetPosition = GetEntPosition(this.TargetEntity);
-		this.IsHunting = true;
+	this.TargetEntity = this.Bot.GetTarget();
 
-		if ( (GetEntPowerups(this.TargetEntity, POWERUP.BLUEFLAG)) ||
-			(GetEntPowerups(this.TargetEntity, POWERUP.REDFLAG)) )
-		{
-			this.Priority = this.HuntFlagPriority;
-		}
-		else
-		{
-			this.Priority = this.HuntPriority;
-		}
-	}
+        if ( this.TargetEntity )
+        {
+                this.TargetPosition = GetEntPosition(this.TargetEntity);
+
+                if ( this.TargetPosition && this.Bot.DistanceTo(this.TargetPosition) > this.DistanceTolerance )
+                {
+			if ( (GetEntPowerups(this.TargetEntity, POWERUP.BLUEFLAG)) ||
+				(GetEntPowerups(this.TargetEntity, POWERUP.REDFLAG)) )
+			{
+				this.Priority = this.HuntFlagPriority;
+			}
+			else
+			{
+				this.Priority = this.HuntPriority;
+			}
+                }
+        }
+
+	sleep(1);
 };
 
 this.Update = function()
 {
-	if(this.Goto(this.TargetPosition, 200.f) == EVENT.PATH_FAILED)
-	{
-		this.Finished();
-	}
-	
-	// finish it and repath if target has moved outside of 200 units
-	if( this.Bot.DistanceTo(this.TargetEntity) > 200)
-	{
-		this.Finished();
-	}
-	
-	sleep(1);
+	this.GotoAsync(this.TargetPosition, this.DistanceTolerance);
+	sleep(this.Bot.MemorySpan);
+	this.Finished();
 };
-
-
- 
