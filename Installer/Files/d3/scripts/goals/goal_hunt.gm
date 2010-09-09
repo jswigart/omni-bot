@@ -19,7 +19,7 @@ this.Enter = function()
 	// Set up some finish criteria
 	this.AddFinishCriteria(this.TargetEntity,"deleted");
 	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	//this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 };
 
 this.Exit = function()

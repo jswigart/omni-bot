@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -217,7 +217,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et debug"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
