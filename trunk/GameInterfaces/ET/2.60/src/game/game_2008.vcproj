@@ -111,7 +111,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et debug noaddpkfile"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -216,7 +216,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et release noaddpkfile&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;"
 			/>
 		</Configuration>
 	</Configurations>
