@@ -1590,7 +1590,6 @@
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\rectangle.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sdl.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\valuewatcher.h" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widget.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\x.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglgraphics.hpp" />

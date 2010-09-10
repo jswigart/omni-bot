@@ -1433,9 +1433,6 @@
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml.hpp">
       <Filter>3rdParty\guichan</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\valuewatcher.h">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widget.hpp">
       <Filter>3rdParty\guichan</Filter>
     </ClInclude>
