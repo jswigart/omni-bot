@@ -4300,10 +4300,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\dependencies\guichan-0.7.1\include\guichan\valuewatcher.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\dependencies\guichan-0.7.1\src\widget.cpp"
 					>
 					<FileConfiguration
