@@ -15,15 +15,15 @@ global Map =
 
 	Roles =
 	{
-		AXIS =
+		AXIS = // Team
 		{
-			AllBots = true,
-			DEFENDER =
+			AllBots = true, // each bot is considered for a role
+			DEFENDER = // the DEFENDER role
 			{
-				voice = "defend",
-				spawnpt = 2,
-				numbots = 5,
-				crucialClass = CLASS.ENGINEER,
+				voice = "defend", 		// signals voice chat to randomly announce
+				spawnpt = 2,			// users of this role will choose spawnpt 2		
+				numbots = 5,			// maximum of 5 bots
+				crucialClass = CLASS.ENGINEER,	// first bot 
 			},
 
 			// focus on the Barn
@@ -32,8 +32,7 @@ global Map =
 				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
-			
-			// an empty role for the other bots to make sure all are not attack / defend
+
 			ATTACKER1 =
 			{
 				numbots = 3,

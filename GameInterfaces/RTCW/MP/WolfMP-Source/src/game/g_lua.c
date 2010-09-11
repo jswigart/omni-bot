@@ -871,6 +871,17 @@ static int _et_G_AddEvent( lua_State *L ) {
 }
 // }}}
 
+// et.GetTimeStamp()
+static int _et_GetTimeStamp( lua_State *L ) {
+	unsigned long long timestamp;
+	qtime_t q;
+	trap_RealTime( &q );
+	timestamp = ((q.tm_year * 31556926) + (q.tm_yday * 86400 ) + (q.tm_hour * 3600) + (q.tm_min * 60) + q.tm_sec) - 2208932660;
+	lua_pushinteger( L, timestamp );
+	return 1;
+}
+// }}}
+
 // et library initialisation array
 static const luaL_Reg etlib[] = {
 	// ET Library Calls
@@ -930,6 +941,7 @@ static const luaL_Reg etlib[] = {
 	{ "gentity_get",                _et_gentity_get             },
 	{ "gentity_set",                _et_gentity_set             },
 	{ "G_AddEvent",                 _et_G_AddEvent              },
+	{ "GetTimeStamp",               _et_GetTimeStamp            },
 
 	{ NULL },
 };
