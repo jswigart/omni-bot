@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -19,7 +19,25 @@
 #ifndef RECAST_DUMP_H
 #define RECAST_DUMP_H
 
-bool duDumpPolyMeshToObj(struct rcPolyMesh& pmesh, const char* filepath);
-bool duDumpPolyMeshDetailToObj(struct rcPolyMeshDetail& dmesh, const char* filepath);
+struct duFileIO
+{
+	virtual ~duFileIO() = 0;
+	virtual bool isWriting() const = 0;
+	virtual bool isReading() const = 0;
+	virtual bool write(const void* ptr, const size_t size) = 0;
+	virtual bool read(void* ptr, const size_t size) = 0;
+};
+
+bool duDumpPolyMeshToObj(struct rcPolyMesh& pmesh, duFileIO* io);
+bool duDumpPolyMeshDetailToObj(struct rcPolyMeshDetail& dmesh, duFileIO* io);
+
+bool duDumpContourSet(struct rcContourSet& cset, duFileIO* io);
+bool duReadContourSet(struct rcContourSet& cset, duFileIO* io);
+
+bool duDumpCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io);
+bool duReadCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io);
+
+void duLogBuildTimes(rcContext& ctx, const int totalTileUsec);
+
 
 #endif // RECAST_DUMP_H

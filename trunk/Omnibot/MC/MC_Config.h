@@ -17,7 +17,7 @@
 typedef enum eMC_Version
 {
 	MC_VERSION_CURRENT = 1,
-	MC_VERSION_ALPHA1 = 4,
+	MC_VERSION_ALPHA1 = 5,
 	MC_VERSION_LATEST,
 } MC_Version;
 

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -181,8 +181,15 @@ bool rcMeshLoaderObj::load(const char* filename)
 		{
 			// Faces
 			nv = parseFace(row+1, face, 32, m_vertCount);
-			for (int  i = 2; i < nv; ++i)
-				addTriangle(face[0], face[i-1], face[i], tcap);
+			for (int i = 2; i < nv; ++i)
+			{
+				const int a = face[0];
+				const int b = face[i-1];
+				const int c = face[i];
+				if (a < 0 || a >= m_vertCount || b < 0 || b >= m_vertCount || c < 0 || c >= m_vertCount)
+					continue;
+				addTriangle(a, b, c, tcap);
+			}
 		}
 	}
 

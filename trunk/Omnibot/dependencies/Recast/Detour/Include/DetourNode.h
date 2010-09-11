@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -25,8 +25,11 @@ enum dtNodeFlags
 	DT_NODE_CLOSED = 0x02,
 };
 
+static const unsigned short DT_NULL_IDX = 0xffff;
+
 struct dtNode
 {
+	float pos[3];
 	float cost;
 	float total;
 	unsigned int id;
@@ -55,6 +58,12 @@ public:
 		if (!idx) return 0;
 		return &m_nodes[idx-1];
 	}
+
+	inline const dtNode* getNodeAtIdx(unsigned int idx) const
+	{
+		if (!idx) return 0;
+		return &m_nodes[idx-1];
+	}
 	
 	inline int getMemUsed() const
 	{
@@ -64,17 +73,13 @@ public:
 		sizeof(unsigned short)*m_hashSize;
 	}
 	
+	inline int getMaxNodes() const { return m_maxNodes; }
+	
+	inline int getHashSize() const { return m_hashSize; }
+	inline unsigned short getFirst(int bucket) const { return m_first[bucket]; }
+	inline unsigned short getNext(int i) const { return m_next[i]; }
+	
 private:
-	inline unsigned int hashint(unsigned int a) const
-	{
-		a += ~(a<<15);
-		a ^=  (a>>10);
-		a +=  (a<<3);
-		a ^=  (a>>6);
-		a += ~(a<<11);
-		a ^=  (a>>16);
-		return a;
-	}
 	
 	dtNode* m_nodes;
 	unsigned short* m_first;
@@ -135,6 +140,7 @@ public:
 		sizeof(dtNode*)*(m_capacity+1);
 	}
 	
+	inline int getCapacity() const { return m_capacity; }
 	
 private:
 	void bubbleUp(int i, dtNode* node);

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -20,15 +20,18 @@
 #define DETOURDEBUGDRAW_H
 
 #include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
 
 enum DrawNavMeshFlags
 {
-	DU_DRAWNAVMESH_CLOSEDLIST = 0x01,
-	DU_DRAWNAVMESH_OFFMESHCONS = 0x02
+	DU_DRAWNAVMESH_OFFMESHCONS = 0x01,
 };
 
-void duDebugDrawNavMesh(struct duDebugDraw* dd, const dtNavMesh* mesh, unsigned char flags);
-void duDebugDrawNavMeshBVTree(struct duDebugDraw* dd, const dtNavMesh* mesh);
-void duDebugDrawNavMeshPoly(struct duDebugDraw* dd, const dtNavMesh* mesh, dtPolyRef ref, const unsigned int col);
+void duDebugDrawNavMesh(struct duDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags);
+void duDebugDrawNavMeshWithClosedList(struct duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags);
+void duDebugDrawNavMeshNodes(struct duDebugDraw* dd, const dtNavMeshQuery& query);
+void duDebugDrawNavMeshBVTree(struct duDebugDraw* dd, const dtNavMesh& mesh);
+void duDebugDrawNavMeshPortals(struct duDebugDraw* dd, const dtNavMesh& mesh);
+void duDebugDrawNavMeshPoly(struct duDebugDraw* dd, const dtNavMesh& mesh, dtPolyRef ref, const unsigned int col);
 
 #endif // DETOURDEBUGDRAW_H

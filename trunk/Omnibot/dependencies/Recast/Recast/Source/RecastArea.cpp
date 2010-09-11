@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -23,20 +23,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Recast.h"
-#include "RecastLog.h"
-#include "RecastTimer.h"
+#include "RecastAlloc.h"
+#include "RecastAssert.h"
 
 
-bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
+bool rcErodeWalkableArea(rcContext* ctx, int radius, rcCompactHeightfield& chf)
 {
+	rcAssert(ctx);
+	
 	const int w = chf.width;
 	const int h = chf.height;
 	
-	rcTimeVal startTime = rcGetPerformanceTimer();
+	ctx->startTimer(RC_TIMER_ERODE_AREA);
 	
-	unsigned char* dist = new unsigned char[chf.spanCount];
+	unsigned char* dist = (unsigned char*)rcAlloc(sizeof(unsigned char)*chf.spanCount, RC_ALLOC_TEMP);
 	if (!dist)
+	{
+		ctx->log(RC_LOG_ERROR, "erodeWalkableArea: Out of memory 'dist' (%d).", chf.spanCount);
 		return false;
+	}
 	
 	// Init distance.
 	memset(dist, 0xff, sizeof(unsigned char)*chf.spanCount);
@@ -55,14 +60,8 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 					int nc = 0;
 					for (int dir = 0; dir < 4; ++dir)
 					{
-						if (rcGetCon(s, dir) != 0xf)
-						{
-							const int ax = x + rcGetDirOffsetX(dir);
-							const int ay = y + rcGetDirOffsetY(dir);
-							const int ai = (int)chf.cells[ax+ay*w].index + rcGetCon(s, dir);
-							if (chf.areas[ai] == areaId)
-								nc++;
-						}
+						if (rcGetCon(s, dir) != RC_NOT_CONNECTED)
+							nc++;
 					}
 					// At least one missing neighbour.
 					if (nc != 4)
@@ -84,7 +83,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 			{
 				const rcCompactSpan& s = chf.spans[i];
 				
-				if (rcGetCon(s, 0) != 0xf)
+				if (rcGetCon(s, 0) != RC_NOT_CONNECTED)
 				{
 					// (-1,0)
 					const int ax = x + rcGetDirOffsetX(0);
@@ -96,7 +95,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 						dist[i] = nd;
 					
 					// (-1,-1)
-					if (rcGetCon(as, 3) != 0xf)
+					if (rcGetCon(as, 3) != RC_NOT_CONNECTED)
 					{
 						const int aax = ax + rcGetDirOffsetX(3);
 						const int aay = ay + rcGetDirOffsetY(3);
@@ -106,7 +105,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 							dist[i] = nd;
 					}
 				}
-				if (rcGetCon(s, 3) != 0xf)
+				if (rcGetCon(s, 3) != RC_NOT_CONNECTED)
 				{
 					// (0,-1)
 					const int ax = x + rcGetDirOffsetX(3);
@@ -118,7 +117,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 						dist[i] = nd;
 					
 					// (1,-1)
-					if (rcGetCon(as, 2) != 0xf)
+					if (rcGetCon(as, 2) != RC_NOT_CONNECTED)
 					{
 						const int aax = ax + rcGetDirOffsetX(2);
 						const int aay = ay + rcGetDirOffsetY(2);
@@ -142,7 +141,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 			{
 				const rcCompactSpan& s = chf.spans[i];
 				
-				if (rcGetCon(s, 2) != 0xf)
+				if (rcGetCon(s, 2) != RC_NOT_CONNECTED)
 				{
 					// (1,0)
 					const int ax = x + rcGetDirOffsetX(2);
@@ -154,7 +153,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 						dist[i] = nd;
 					
 					// (1,1)
-					if (rcGetCon(as, 1) != 0xf)
+					if (rcGetCon(as, 1) != RC_NOT_CONNECTED)
 					{
 						const int aax = ax + rcGetDirOffsetX(1);
 						const int aay = ay + rcGetDirOffsetY(1);
@@ -164,7 +163,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 							dist[i] = nd;
 					}
 				}
-				if (rcGetCon(s, 1) != 0xf)
+				if (rcGetCon(s, 1) != RC_NOT_CONNECTED)
 				{
 					// (0,1)
 					const int ax = x + rcGetDirOffsetX(1);
@@ -176,7 +175,7 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 						dist[i] = nd;
 					
 					// (-1,1)
-					if (rcGetCon(as, 0) != 0xf)
+					if (rcGetCon(as, 0) != RC_NOT_CONNECTED)
 					{
 						const int aax = ax + rcGetDirOffsetX(0);
 						const int aay = ay + rcGetDirOffsetY(0);
@@ -193,23 +192,109 @@ bool rcErodeArea(unsigned char areaId, int radius, rcCompactHeightfield& chf)
 	const unsigned char thr = (unsigned char)(radius*2);
 	for (int i = 0; i < chf.spanCount; ++i)
 		if (dist[i] < thr)
-			chf.areas[i] = 0;
+			chf.areas[i] = RC_NULL_AREA;
 	
-	delete [] dist;
+	rcFree(dist);
 	
-	rcTimeVal endTime = rcGetPerformanceTimer();
-	
-	if (rcGetBuildTimes())
-	{
-		rcGetBuildTimes()->erodeArea += rcGetDeltaTimeUsec(startTime, endTime);
-	}
+	ctx->stopTimer(RC_TIMER_ERODE_AREA);
 	
 	return true;
 }
 
-void rcMarkBoxArea(const float* bmin, const float* bmax, unsigned char areaId,
+static void insertSort(unsigned char* a, const int n)
+{
+	int i, j;
+	for (i = 1; i < n; i++)
+	{
+		const unsigned char value = a[i];
+		for (j = i - 1; j >= 0 && a[j] > value; j--)
+			a[j+1] = a[j];
+		a[j+1] = value;
+	}
+}
+
+
+bool rcMedianFilterWalkableArea(rcContext* ctx, rcCompactHeightfield& chf)
+{
+	rcAssert(ctx);
+	
+	const int w = chf.width;
+	const int h = chf.height;
+	
+	ctx->startTimer(RC_TIMER_MEDIAN_AREA);
+	
+	unsigned char* areas = (unsigned char*)rcAlloc(sizeof(unsigned char)*chf.spanCount, RC_ALLOC_TEMP);
+	if (!areas)
+	{
+		ctx->log(RC_LOG_ERROR, "medianFilterWalkableArea: Out of memory 'areas' (%d).", chf.spanCount);
+		return false;
+	}
+	
+	// Init distance.
+	memset(areas, 0xff, sizeof(unsigned char)*chf.spanCount);
+	
+	for (int y = 0; y < h; ++y)
+	{
+		for (int x = 0; x < w; ++x)
+		{
+			const rcCompactCell& c = chf.cells[x+y*w];
+			for (int i = (int)c.index, ni = (int)(c.index+c.count); i < ni; ++i)
+			{
+				const rcCompactSpan& s = chf.spans[i];
+				if (chf.areas[i] == RC_NULL_AREA)
+				{
+					areas[i] = chf.areas[i];
+					continue;
+				}
+				
+				unsigned char nei[9];
+				for (int j = 0; j < 9; ++j)
+					nei[j] = chf.areas[i];
+				
+				for (int dir = 0; dir < 4; ++dir)
+				{
+					if (rcGetCon(s, dir) != RC_NOT_CONNECTED)
+					{
+						const int ax = x + rcGetDirOffsetX(dir);
+						const int ay = y + rcGetDirOffsetY(dir);
+						const int ai = (int)chf.cells[ax+ay*w].index + rcGetCon(s, dir);
+						if (chf.areas[ai] != RC_NULL_AREA)
+							nei[dir*2+0] = chf.areas[ai];
+						
+						const rcCompactSpan& as = chf.spans[ai];
+						const int dir2 = (dir+1) & 0x3;
+						if (rcGetCon(as, dir2) != RC_NOT_CONNECTED)
+						{
+							const int ax2 = ax + rcGetDirOffsetX(dir2);
+							const int ay2 = ay + rcGetDirOffsetY(dir2);
+							const int ai2 = (int)chf.cells[ax2+ay2*w].index + rcGetCon(as, dir2);
+							if (chf.areas[ai2] != RC_NULL_AREA)
+								nei[dir*2+1] = chf.areas[ai2];
+						}
+					}
+				}
+				insertSort(nei, 9);
+				areas[i] = nei[4];
+			}
+		}
+	}
+	
+	memcpy(chf.areas, areas, sizeof(unsigned char)*chf.spanCount);
+	
+	rcFree(areas);
+
+	ctx->stopTimer(RC_TIMER_MEDIAN_AREA);
+	
+	return true;
+}
+
+void rcMarkBoxArea(rcContext* ctx, const float* bmin, const float* bmax, unsigned char areaId,
 				   rcCompactHeightfield& chf)
 {
+	rcAssert(ctx);
+	
+	ctx->startTimer(RC_TIMER_MARK_BOX_AREA);
+
 	int minx = (int)((bmin[0]-chf.bmin[0])/chf.cs);
 	int miny = (int)((bmin[1]-chf.bmin[1])/chf.ch);
 	int minz = (int)((bmin[2]-chf.bmin[2])/chf.cs);
@@ -243,6 +328,9 @@ void rcMarkBoxArea(const float* bmin, const float* bmax, unsigned char areaId,
 			}
 		}
 	}
+
+	ctx->stopTimer(RC_TIMER_MARK_BOX_AREA);
+
 }
 
 
@@ -260,17 +348,21 @@ static int pointInPoly(int nvert, const float* verts, const float* p)
 	return c;
 }
 
-void rcMarkConvexPolyArea(const float* verts, const int nverts,
+void rcMarkConvexPolyArea(rcContext* ctx, const float* verts, const int nverts,
 						  const float hmin, const float hmax, unsigned char areaId,
 						  rcCompactHeightfield& chf)
 {
+	rcAssert(ctx);
+	
+	ctx->startTimer(RC_TIMER_MARK_CONVEXPOLY_AREA);
+
 	float bmin[3], bmax[3];
-	vcopy(bmin, verts);
-	vcopy(bmax, verts);
+	rcVcopy(bmin, verts);
+	rcVcopy(bmax, verts);
 	for (int i = 1; i < nverts; ++i)
 	{
-		vmin(bmin, &verts[i*3]);
-		vmax(bmax, &verts[i*3]);
+		rcVmin(bmin, &verts[i*3]);
+		rcVmax(bmax, &verts[i*3]);
 	}
 	bmin[1] = hmin;
 	bmax[1] = hmax;
@@ -320,7 +412,6 @@ void rcMarkConvexPolyArea(const float* verts, const int nverts,
 			}
 		}
 	}
-	
 
+	ctx->stopTimer(RC_TIMER_MARK_CONVEXPOLY_AREA);
 }
-

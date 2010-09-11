@@ -19,4 +19,14 @@
 		Value="$(SolutionDir)..\..\..\Installer\Files"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="MC_GAMEDIR"
+		Value="E:\Games\Steam\steamapps\SourceMods\modularcombat_svn"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="MC_SOURCE"
+		Value="D:\CVS\ModularCombat\SourceCode\src\game\server"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>

@@ -198,6 +198,11 @@ public:
 				if(EngineFuncs::EntityWorldAABB(m_InTrigger[i].m_Entity,bounds))
 				{
 					Utils::OutlineAABB(bounds,COLOR::ORANGE,2.f);
+					
+					Vector3f center;
+					bounds.CenterPoint( center );
+					String name = Utils::HashToString(GetNameHash());
+					Utils::PrintText( center, COLOR::ORANGE, 2.0f, "%s", name.c_str() );
 				}
 			}
 		}

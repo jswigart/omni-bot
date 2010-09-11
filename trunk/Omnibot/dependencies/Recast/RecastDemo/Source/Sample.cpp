@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,8 @@
 #include "Recast.h"
 #include "RecastDebugDraw.h"
 #include "DetourDebugDraw.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
 #include "imgui.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
@@ -32,65 +34,22 @@
 #	define snprintf _snprintf
 #endif
 
-
-void DebugDrawGL::depthMask(bool state)
-{
-	glDepthMask(state ? GL_TRUE : GL_FALSE);
-}
-
-void DebugDrawGL::begin(duDebugDrawPrimitives prim, float size)
-{
-	switch (prim)
-	{
-		case DU_DRAW_POINTS:
-			glPointSize(size);
-			glBegin(GL_POINTS);
-			break;
-		case DU_DRAW_LINES:
-			glLineWidth(size);
-			glBegin(GL_LINES);
-			break;
-		case DU_DRAW_TRIS:
-			glBegin(GL_TRIANGLES);
-			break;
-		case DU_DRAW_QUADS:
-			glBegin(GL_QUADS);
-			break;
-	};
-}
-	
-void DebugDrawGL::vertex(const float* pos, unsigned int color)
-{
-	glColor4ubv((GLubyte*)&color);
-	glVertex3fv(pos);
-}
-	
-void DebugDrawGL::vertex(const float x, const float y, const float z, unsigned int color)
-{
-	glColor4ubv((GLubyte*)&color);
-	glVertex3f(x,y,z);
-}
-	
-void DebugDrawGL::end()
-{
-	glEnd();
-	glLineWidth(1.0f);
-	glPointSize(1.0f);
-}
-
-
 Sample::Sample() :
 	m_geom(0),
 	m_navMesh(0),
-	m_navMeshDrawFlags(DU_DRAWNAVMESH_CLOSEDLIST|DU_DRAWNAVMESH_OFFMESHCONS),
-	m_tool(0)
+	m_navQuery(0),
+	m_navMeshDrawFlags(DU_DRAWNAVMESH_OFFMESHCONS),
+	m_tool(0),
+	m_ctx(0)
 {
 	resetCommonSettings();
+	m_navQuery = dtAllocNavMeshQuery();
 }
 
 Sample::~Sample()
 {
-	delete m_navMesh;
+	dtFreeNavMeshQuery(m_navQuery);
+	dtFreeNavMesh(m_navMesh);
 	delete m_tool;
 }
 
@@ -130,13 +89,25 @@ void Sample::handleRender()
 	duDebugDrawBoxWire(&dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duRGBA(255,255,255,128), 1.0f);
 }
 
-void Sample::handleRenderOverlay(double* proj, double* model, int* view)
+void Sample::handleRenderOverlay(double* /*proj*/, double* /*model*/, int* /*view*/)
 {
 }
 
 void Sample::handleMeshChanged(InputGeom* geom)
 {
 	m_geom = geom;
+}
+
+const float* Sample::getBoundsMin()
+{
+	if (!m_geom) return 0;
+	return m_geom->getMeshBoundsMin();
+}
+
+const float* Sample::getBoundsMax()
+{
+	if (!m_geom) return 0;
+	return m_geom->getMeshBoundsMax();
 }
 
 void Sample::resetCommonSettings()
@@ -199,10 +170,16 @@ void Sample::handleCommonSettings()
 	imguiSeparator();
 }
 
-void Sample::handleClick(const float* p, bool shift)
+void Sample::handleClick(const float* s, const float* p, bool shift)
 {
 	if (m_tool)
-		m_tool->handleClick(p, shift);
+		m_tool->handleClick(s, p, shift);
+}
+
+void Sample::handleStep()
+{
+	if (m_tool)
+		m_tool->handleStep();
 }
 
 bool Sample::handleBuild()
@@ -210,10 +187,9 @@ bool Sample::handleBuild()
 	return true;
 }
 
-/*
-void Sample::handleNavMeshChanged()
+void Sample::handleUpdate(const float dt)
 {
-	if (m_geom)
-		m_geom->updateOffMeshConnectionVisibility(m_navMesh);
+	if (m_tool)
+		m_tool->handleUpdate(dt);
 }
-*/
+

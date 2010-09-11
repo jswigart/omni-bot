@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -83,7 +83,7 @@ void OffMeshConnectionTool::handleMenu()
 	}
 }
 
-void OffMeshConnectionTool::handleClick(const float* p, bool shift)
+void OffMeshConnectionTool::handleClick(const float* /*s*/, const float* p, bool shift)
 {
 	if (!m_sample) return;
 	InputGeom* geom = m_sample->getInputGeom();
@@ -99,7 +99,7 @@ void OffMeshConnectionTool::handleClick(const float* p, bool shift)
 		for (int i = 0; i < geom->getOffMeshConnectionCount()*2; ++i)
 		{
 			const float* v = &verts[i*3];
-			float d = vdistSqr(p, v);
+			float d = rcVdistSqr(p, v);
 			if (d < nearestDist)
 			{
 				nearestDist = d;
@@ -118,7 +118,7 @@ void OffMeshConnectionTool::handleClick(const float* p, bool shift)
 		// Create	
 		if (!m_hitPosSet)
 		{
-			vcopy(m_hitPos, p);
+			rcVcopy(m_hitPos, p);
 			m_hitPosSet = true;
 		}
 		else
@@ -130,6 +130,14 @@ void OffMeshConnectionTool::handleClick(const float* p, bool shift)
 		}
 	}
 	
+}
+
+void OffMeshConnectionTool::handleStep()
+{
+}
+
+void OffMeshConnectionTool::handleUpdate(const float /*dt*/)
+{
 }
 
 void OffMeshConnectionTool::handleRender()

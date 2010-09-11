@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -49,7 +49,8 @@ static int compareItemY(const void* va, const void* vb)
 	return 0;
 }
 
-static void calcExtends(BoundsItem* items, int nitems, int imin, int imax,
+static void calcExtends(const BoundsItem* items, const int /*nitems*/,
+						const int imin, const int imax,
 						float* bmin, float* bmax)
 {
 	bmin[0] = items[imin].bmin[0];
