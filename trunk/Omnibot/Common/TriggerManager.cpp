@@ -417,6 +417,11 @@ public:
 	{
 		TriggerShape::RenderDebug();
 		Utils::OutlineAABB(m_Bounds,COLOR::GREEN,2.f);
+
+		Vector3f center;
+		m_Bounds.CenterPoint( center );
+		String name = Utils::HashToString(GetNameHash());
+		Utils::PrintText( center, COLOR::GREEN, 2.0f, "%s", name.c_str() );
 	}
 	TriggerShapeAABB(const AABB &aabb)
 		: m_Bounds(aabb) 
