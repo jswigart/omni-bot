@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -27,7 +27,6 @@
 #include "Sample.h"
 #include "Sample_SoloMeshTiled.h"
 #include "Recast.h"
-#include "RecastTimer.h"
 #include "RecastDebugDraw.h"
 #include "DetourNavMesh.h"
 #include "DetourNavMeshBuilder.h"
@@ -35,6 +34,7 @@
 #include "NavMeshTesterTool.h"
 #include "OffMeshConnectionTool.h"
 #include "ConvexVolumeTool.h"
+#include "CrowdTool.h"
 
 #ifdef WIN32
 #	define snprintf _snprintf
@@ -55,6 +55,7 @@ public:
 		m_hitPosSet(false),
 		m_agentRadius(0)
 	{
+		m_hitPos[0] = m_hitPos[1] = m_hitPos[2] = 0;
 	}
 	
 	virtual ~TileHighlightTool()
@@ -77,14 +78,18 @@ public:
 		imguiValue("Click LMB to highlight a tile.");
 	}
 	
-	virtual void handleClick(const float* p, bool shift)
+	virtual void handleClick(const float* /*s*/, const float* p, bool /*shift*/)
 	{
 		m_hitPosSet = true;
-		vcopy(m_hitPos,p);
+		rcVcopy(m_hitPos,p);
 		if (m_sample)
 			m_sample->setHighlightedTile(m_hitPos);
 	}
 	
+	virtual void handleStep() {}
+	
+	virtual void handleUpdate(const float /*dt*/) {}
+
 	virtual void handleRender()
 	{
 		if (m_hitPosSet)
@@ -106,6 +111,20 @@ public:
 	
 	virtual void handleRenderOverlay(double* proj, double* model, int* view)
 	{
+		GLdouble x, y, z;
+
+		
+		// Draw start and end point labels
+		if (m_hitPosSet && gluProject((GLdouble)m_hitPos[0], (GLdouble)m_hitPos[1], (GLdouble)m_hitPos[2],
+												 model, proj, view, &x, &y, &z))
+		{
+			const int tx = m_sample->getHilightedTileX();
+			const int ty = m_sample->getHilightedTileY();
+			char text[32];
+			snprintf(text,32,"Tile: (%d, %d)", tx, ty);
+			imguiDrawText((int)x, (int)y-25, IMGUI_ALIGN_CENTER, text, imguiRGBA(0,0,0,220));
+		}
+		
 	}
 };
 
@@ -114,6 +133,7 @@ Sample_SoloMeshTiled::Sample_SoloMeshTiled() :
 	m_measurePerTileTimings(false),
 	m_keepInterResults(false),
 	m_tileSize(64),
+	m_totalBuildTimeMs(0),
 	m_pmesh(0),
 	m_dmesh(0),
 	m_tileSet(0),
@@ -135,11 +155,11 @@ void Sample_SoloMeshTiled::cleanup()
 {
 	delete m_tileSet;
 	m_tileSet = 0;
-	delete m_pmesh;
+	rcFreePolyMesh(m_pmesh);
 	m_pmesh = 0;
-	delete m_dmesh;
+	rcFreePolyMeshDetail(m_dmesh);
 	m_dmesh = 0;
-	delete m_navMesh;
+	dtFreeNavMesh(m_navMesh);
 	m_navMesh = 0;
 	m_statTimePerTileSamples = 0;
 	m_statPolysPerTileSamples = 0;
@@ -173,6 +193,12 @@ void Sample_SoloMeshTiled::handleSettings()
 		m_measurePerTileTimings = !m_measurePerTileTimings;
 	
 	imguiSeparator();
+
+	char msg[64];
+	snprintf(msg, 64, "Build Time: %.1fms", m_totalBuildTimeMs);
+	imguiLabel(msg);
+	
+	imguiSeparator();
 }
 
 void Sample_SoloMeshTiled::handleTools()
@@ -191,15 +217,23 @@ void Sample_SoloMeshTiled::handleTools()
 	{
 		setTool(new ConvexVolumeTool);
 	}
+	if (imguiCheck("Create Crowds", type == TOOL_CROWD))
+	{
+		setTool(new CrowdTool);
+	}
 	if (imguiCheck("Highlight Tile", type == TOOL_TILE_HIGHLIGHT))
 	{
 		setTool(new TileHighlightTool);
 	}
 	
-	imguiSeparator();
-	
+	imguiSeparatorLine();
+
+	imguiIndent();
+
 	if (m_tool)
 		m_tool->handleMenu();
+
+	imguiUnindent();
 }
 
 void Sample_SoloMeshTiled::handleDebugMode()
@@ -233,6 +267,7 @@ void Sample_SoloMeshTiled::handleDebugMode()
 		valid[DRAWMODE_NAVMESH] = m_navMesh != 0;
 		valid[DRAWMODE_NAVMESH_TRANS] = m_navMesh != 0;
 		valid[DRAWMODE_NAVMESH_BVTREE] = m_navMesh != 0;
+		valid[DRAWMODE_NAVMESH_NODES] = m_navQuery != 0;
 		valid[DRAWMODE_NAVMESH_INVIS] = m_navMesh != 0;
 		valid[DRAWMODE_MESH] = true;
 		valid[DRAWMODE_VOXELS] = hasSolid;
@@ -266,6 +301,8 @@ void Sample_SoloMeshTiled::handleDebugMode()
 		m_drawMode = DRAWMODE_NAVMESH_TRANS;
 	if (imguiCheck("Navmesh BVTree", m_drawMode == DRAWMODE_NAVMESH_BVTREE, valid[DRAWMODE_NAVMESH_BVTREE]))
 		m_drawMode = DRAWMODE_NAVMESH_BVTREE;
+	if (imguiCheck("Navmesh Nodes", m_drawMode == DRAWMODE_NAVMESH_NODES, valid[DRAWMODE_NAVMESH_NODES]))
+		m_drawMode = DRAWMODE_NAVMESH_NODES;
 	if (imguiCheck("Voxels", m_drawMode == DRAWMODE_VOXELS, valid[DRAWMODE_VOXELS]))
 		m_drawMode = DRAWMODE_VOXELS;
 	if (imguiCheck("Walkable Voxels", m_drawMode == DRAWMODE_VOXELS_WALKABLE, valid[DRAWMODE_VOXELS_WALKABLE]))
@@ -338,16 +375,19 @@ void Sample_SoloMeshTiled::handleRender()
 	const float s = m_tileSize*m_cellSize;
 	duDebugDrawGridXZ(&dd, bmin[0],bmin[1],bmin[2], tw,th, s, duRGBA(0,0,0,64), 1.0f);
 	
-	if (m_navMesh &&
+	if (m_navMesh && m_navQuery &&
 		(m_drawMode == DRAWMODE_NAVMESH ||
 		 m_drawMode == DRAWMODE_NAVMESH_TRANS ||
 		 m_drawMode == DRAWMODE_NAVMESH_BVTREE ||
+		 m_drawMode == DRAWMODE_NAVMESH_NODES ||
 		 m_drawMode == DRAWMODE_NAVMESH_INVIS))
 	{
 		if (m_drawMode != DRAWMODE_NAVMESH_INVIS)
-			duDebugDrawNavMesh(&dd, m_navMesh, m_navMeshDrawFlags);
+			duDebugDrawNavMeshWithClosedList(&dd, *m_navMesh, *m_navQuery, m_navMeshDrawFlags);
 		if (m_drawMode == DRAWMODE_NAVMESH_BVTREE)
-			duDebugDrawNavMeshBVTree(&dd, m_navMesh);
+			duDebugDrawNavMeshBVTree(&dd, *m_navMesh);
+		if (m_drawMode == DRAWMODE_NAVMESH_NODES)
+			duDebugDrawNavMeshNodes(&dd, *m_navQuery);
 	}
 	
 	glDepthMask(GL_TRUE);
@@ -544,7 +584,7 @@ static void drawLabels(int x, int y, int w, int h,
 }
 
 static void drawGraph(const char* name, int x, int y, int w, int h, float sd,
-					  const int* samples, int n, int nsamples, const char* unit)
+					  const int* samples, int n, int /*nsamples*/, const char* unit)
 {
 	char text[64];
 	int first, last, maxval;
@@ -632,7 +672,7 @@ void Sample_SoloMeshTiled::handleMeshChanged(class InputGeom* geom)
 {
 	Sample::handleMeshChanged(geom);
 
-	delete m_navMesh;
+	dtFreeNavMesh(m_navMesh);
 	m_navMesh = 0;
 	
 	m_statTimePerTileSamples = 0;
@@ -649,8 +689,7 @@ bool Sample_SoloMeshTiled::handleBuild()
 {
 	if (!m_geom || !m_geom->getMesh() || !m_geom->getChunkyMesh())
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildNavigation: Input mesh is not specified.");
+		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Input mesh is not specified.");
 		return false;
 	}
 
@@ -685,34 +724,32 @@ bool Sample_SoloMeshTiled::handleBuild()
 	m_cfg.mergeRegionSize = (int)rcSqr(m_regionMergeSize);
 	m_cfg.maxVertsPerPoly = (int)m_vertsPerPoly;
 	m_cfg.tileSize = (int)m_tileSize;
-	m_cfg.borderSize = m_cfg.walkableRadius + 4; // Reserve enough padding.
+	m_cfg.borderSize = m_cfg.walkableRadius + 3; // Reserve enough padding.
 	m_cfg.detailSampleDist = m_detailSampleDist < 0.9f ? 0 : m_cellSize * m_detailSampleDist;
 	m_cfg.detailSampleMaxError = m_cellHeight * m_detailSampleMaxError;
 		
 	// Set the area where the navigation will be build.
 	// Here the bounds of the input mesh are used, but the
 	// area could be specified by an user defined box, etc.
-	vcopy(m_cfg.bmin, bmin);
-	vcopy(m_cfg.bmax, bmax);
+	rcVcopy(m_cfg.bmin, bmin);
+	rcVcopy(m_cfg.bmax, bmax);
 	rcCalcGridSize(m_cfg.bmin, m_cfg.bmax, m_cfg.cs, &m_cfg.width, &m_cfg.height);
 	
 	// Reset build times gathering.
-	memset(&m_buildTimes, 0, sizeof(m_buildTimes));
-	rcSetBuildTimes(&m_buildTimes);
+	m_ctx->resetTimers();
 	
 	// Start the build process.	
-	rcTimeVal totStartTime = rcGetPerformanceTimer();
+	m_ctx->startTimer(RC_TIMER_TOTAL);
 
 	// Calculate the number of tiles in the output and initialize tiles.
 	m_tileSet = new TileSet;
 	if (!m_tileSet)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'tileSet'.");
+		m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'tileSet'.");
 		return false;
 	}
-	vcopy(m_tileSet->bmin, m_cfg.bmin);
-	vcopy(m_tileSet->bmax, m_cfg.bmax);
+	rcVcopy(m_tileSet->bmin, m_cfg.bmin);
+	rcVcopy(m_tileSet->bmax, m_cfg.bmax);
 	m_tileSet->cs = m_cfg.cs;
 	m_tileSet->ch = m_cfg.ch;
 	m_tileSet->width = (m_cfg.width + m_cfg.tileSize-1) / m_cfg.tileSize;
@@ -720,18 +757,14 @@ bool Sample_SoloMeshTiled::handleBuild()
 	m_tileSet->tiles = new Tile[m_tileSet->height * m_tileSet->width];
 	if (!m_tileSet->tiles)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'tileSet->tiles' (%d).", m_tileSet->height * m_tileSet->width);
+		m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'tileSet->tiles' (%d).", m_tileSet->height * m_tileSet->width);
 		return false;
 	}
 	
-	if (rcGetLog())
-	{
-		rcGetLog()->log(RC_LOG_PROGRESS, "Building navigation:");
-		rcGetLog()->log(RC_LOG_PROGRESS, " - %d x %d cells", m_cfg.width, m_cfg.height);
-		rcGetLog()->log(RC_LOG_PROGRESS, " - %d x %d tiles", m_tileSet->width, m_tileSet->height);
-		rcGetLog()->log(RC_LOG_PROGRESS, " - %.1f verts, %.1f tris", nverts/1000.0f, ntris/1000.0f);
-	}
+	m_ctx->log(RC_LOG_PROGRESS, "Building navigation:");
+	m_ctx->log(RC_LOG_PROGRESS, " - %d x %d cells", m_cfg.width, m_cfg.height);
+	m_ctx->log(RC_LOG_PROGRESS, " - %d x %d tiles", m_tileSet->width, m_tileSet->height);
+	m_ctx->log(RC_LOG_PROGRESS, " - %.1f verts, %.1f tris", nverts/1000.0f, ntris/1000.0f);
 		
 	// Initialize per tile config.
 	rcConfig tileCfg;
@@ -740,26 +773,19 @@ bool Sample_SoloMeshTiled::handleBuild()
 	tileCfg.height = m_cfg.tileSize + m_cfg.borderSize*2;
 		
 	// Allocate array that can hold triangle flags for all geom chunks.
-	unsigned char* triangleFlags = new unsigned char[chunkyMesh->maxTrisPerChunk];
-	if (!triangleFlags)
+	unsigned char* triangleAreas = new unsigned char[chunkyMesh->maxTrisPerChunk];
+	if (!triangleAreas)
 	{
-		if (rcGetLog())
-		{
-			rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'triangleFlags' (%d).",
-							chunkyMesh->maxTrisPerChunk);
-		}
+		m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'triangleAreas' (%d).",
+				   chunkyMesh->maxTrisPerChunk);
 		return false;
 	}
-		
-	rcHeightfield* solid = 0;
-	rcCompactHeightfield* chf = 0;
-	rcContourSet* cset = 0;
-		
+
 	for (int y = 0; y < m_tileSet->height; ++y)
 	{
 		for (int x = 0; x < m_tileSet->width; ++x)
 		{
-			rcTimeVal startTime = rcGetPerformanceTimer();
+			m_ctx->startTimer(RC_TIMER_TEMP);
 			
 			Tile& tile = m_tileSet->tiles[x + y*m_tileSet->width];
 			tile.x = x;
@@ -771,32 +797,25 @@ bool Sample_SoloMeshTiled::handleBuild()
 			tileCfg.bmax[0] = m_cfg.bmin[0] + ((x+1)*m_cfg.tileSize + m_cfg.borderSize)*m_cfg.cs;
 			tileCfg.bmax[2] = m_cfg.bmin[2] + ((y+1)*m_cfg.tileSize + m_cfg.borderSize)*m_cfg.cs;
 			
-			delete solid;
-			delete chf;
-			solid = 0;
-			chf = 0;
-			
 			float tbmin[2], tbmax[2];
 			tbmin[0] = tileCfg.bmin[0];
 			tbmin[1] = tileCfg.bmin[2];
 			tbmax[0] = tileCfg.bmax[0];
 			tbmax[1] = tileCfg.bmax[2];
-			int cid[256];// TODO: Make grow when returning too many items.
-			const int ncid = rcGetChunksInRect(chunkyMesh, tbmin, tbmax, cid, 256);
+			int cid[512];// TODO: Make grow when returning too many items.
+			const int ncid = rcGetChunksInRect(chunkyMesh, tbmin, tbmax, cid, 512);
 			if (!ncid)
 				continue;
 			
-			solid = new rcHeightfield;
-			if (!solid)
+			tile.solid = rcAllocHeightfield();
+			if (!tile.solid)
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'solid'.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'solid'.", x, y);
 				continue;
 			}
-			if (!rcCreateHeightfield(*solid, tileCfg.width, tileCfg.height, tileCfg.bmin, tileCfg.bmax, tileCfg.cs, tileCfg.ch))
+			if (!rcCreateHeightfield(m_ctx, *tile.solid, tileCfg.width, tileCfg.height, tileCfg.bmin, tileCfg.bmax, tileCfg.cs, tileCfg.ch))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create solid heightfield.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create solid heightfield.", x, y);
 				continue;
 			}
 			
@@ -806,121 +825,104 @@ bool Sample_SoloMeshTiled::handleBuild()
 				const int* tris = &chunkyMesh->tris[node.i*3];
 				const int ntris = node.n;
 				
-				memset(triangleFlags, 0, ntris*sizeof(unsigned char));
-				rcMarkWalkableTriangles(tileCfg.walkableSlopeAngle,
-										verts, nverts, tris, ntris, triangleFlags);
+				memset(triangleAreas, 0, ntris*sizeof(unsigned char));
+				rcMarkWalkableTriangles(m_ctx, tileCfg.walkableSlopeAngle,
+										verts, nverts, tris, ntris, triangleAreas);
 				
-				rcRasterizeTriangles(verts, nverts, tris, triangleFlags, ntris, *solid, m_cfg.walkableClimb);
+				rcRasterizeTriangles(m_ctx, verts, nverts, tris, triangleAreas, ntris, *tile.solid, m_cfg.walkableClimb);
 			}	
 			
-			rcFilterLowHangingWalkableObstacles(m_cfg.walkableClimb, *solid);
-			rcFilterLedgeSpans(tileCfg.walkableHeight, tileCfg.walkableClimb, *solid);
-			rcFilterWalkableLowHeightSpans(tileCfg.walkableHeight, *solid);
+			rcFilterLowHangingWalkableObstacles(m_ctx, m_cfg.walkableClimb, *tile.solid);
+			rcFilterLedgeSpans(m_ctx, tileCfg.walkableHeight, tileCfg.walkableClimb, *tile.solid);
+			rcFilterWalkableLowHeightSpans(m_ctx, tileCfg.walkableHeight, *tile.solid);
 			
-			chf = new rcCompactHeightfield;
-			if (!chf)
+			tile.chf = rcAllocCompactHeightfield();
+			if (!tile.chf)
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'chf'.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'chf'.", x, y);
 				continue;
 			}
-			if (!rcBuildCompactHeightfield(tileCfg.walkableHeight, tileCfg.walkableClimb,
-										   RC_WALKABLE, *solid, *chf))
+			if (!rcBuildCompactHeightfield(m_ctx, tileCfg.walkableHeight, tileCfg.walkableClimb,
+										   *tile.solid, *tile.chf))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build compact data.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build compact data.", x, y);
 				continue;
 			}
 			
 			// Erode the walkable area by agent radius.
-			if (!rcErodeArea(RC_WALKABLE_AREA, m_cfg.walkableRadius, *chf))
+			if (!rcErodeWalkableArea(m_ctx, m_cfg.walkableRadius, *tile.chf))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Could not erode.");
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Could not erode.");
 				continue;
 			}
 			
 			// (Optional) Mark areas.
 			const ConvexVolume* vols = m_geom->getConvexVolumes();
 			for (int i  = 0; i < m_geom->getConvexVolumeCount(); ++i)
-				rcMarkConvexPolyArea(vols[i].verts, vols[i].nverts, vols[i].hmin, vols[i].hmax, (unsigned char)vols[i].area, *chf);
+				rcMarkConvexPolyArea(m_ctx, vols[i].verts, vols[i].nverts, vols[i].hmin, vols[i].hmax, (unsigned char)vols[i].area, *tile.chf);
 			
-			if (!rcBuildDistanceField(*chf))
+			if (!rcBuildDistanceField(m_ctx, *tile.chf))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build distance fields.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build distance fields.", x, y);
 				continue;
 			}
 			
-			if (!rcBuildRegions(*chf, tileCfg.borderSize, tileCfg.minRegionSize, tileCfg.mergeRegionSize))
+			if (!rcBuildRegions(m_ctx, *tile.chf, tileCfg.borderSize, tileCfg.minRegionSize, tileCfg.mergeRegionSize))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build regions.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build regions.", x, y);
 				continue;
 			}
 			
-			cset = new rcContourSet;
-			if (!cset)
+			tile.cset = rcAllocContourSet();
+			if (!tile.cset)
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'cset'.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'cset'.", x, y);
 				continue;
 			}
-			if (!rcBuildContours(*chf, tileCfg.maxSimplificationError, tileCfg.maxEdgeLen, *cset))
+			if (!rcBuildContours(m_ctx, *tile.chf, tileCfg.maxSimplificationError, tileCfg.maxEdgeLen, *tile.cset))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create contours.", x, y);
-				continue;
-			}
-			
-			if (!cset->nconts)
-			{
-				delete cset;
-				cset = 0;
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create contours.", x, y);
 				continue;
 			}
 			
-			tile.pmesh = new rcPolyMesh;
+			tile.pmesh = rcAllocPolyMesh();
 			if (!tile.pmesh)
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'pmesh'.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'pmesh'.", x, y);
 				continue;
 			}
-			if (!rcBuildPolyMesh(*cset, tileCfg.maxVertsPerPoly, *tile.pmesh))
+			if (!rcBuildPolyMesh(m_ctx, *tile.cset, tileCfg.maxVertsPerPoly, *tile.pmesh))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create poly mesh.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not create poly mesh.", x, y);
 				continue;
 			}
 
-			tile.dmesh = new rcPolyMeshDetail;
+			tile.dmesh = rcAllocPolyMeshDetail();
 			if (!tile.dmesh)
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'dmesh'.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Out of memory 'dmesh'.", x, y);
 				continue;
 			}
 			
-			if (!rcBuildPolyMeshDetail(*tile.pmesh, *chf, tileCfg.detailSampleDist, tileCfg	.detailSampleMaxError, *tile.dmesh))
+			if (!rcBuildPolyMeshDetail(m_ctx, *tile.pmesh, *tile.chf, tileCfg.detailSampleDist, tileCfg	.detailSampleMaxError, *tile.dmesh))
 			{
-				if (rcGetLog())
-					rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build detail mesh.", x, y);
+				m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: [%d,%d] Could not build detail mesh.", x, y);
 				continue;
 			}
 
-			if (m_keepInterResults)
+			if (!m_keepInterResults)
 			{
-				tile.solid = solid;
-				solid = 0;
-				tile.chf = chf;
-				chf = 0;
-				tile.cset = cset;
-				cset = 0;
+				rcFreeHeightField(tile.solid);
+				tile.solid = 0;
+				rcFreeCompactHeightfield(tile.chf);
+				tile.chf = 0;
+				rcFreeContourSet(tile.cset);
+				tile.cset = 0;
 			}
 			
-			rcTimeVal endTime = rcGetPerformanceTimer();
-			tile.buildTime += rcGetDeltaTimeUsec(startTime, endTime);
+			m_ctx->stopTimer(RC_TIMER_TOTAL);
+
+			tile.buildTime += m_ctx->getAccumulatedTime(RC_TIMER_TOTAL);
 			
 			// Some extra code to measure some per tile statistics,
 			// such as build time and how many polygons there are per tile.
@@ -940,24 +942,20 @@ bool Sample_SoloMeshTiled::handleBuild()
 		}
 	}
 	
-	delete [] triangleFlags;
-	delete solid;
-	delete chf;
+	delete [] triangleAreas;
 	
 	// Merge per tile poly and detail meshes.
 	rcPolyMesh** pmmerge = new rcPolyMesh*[m_tileSet->width*m_tileSet->height];
 	if (!pmmerge)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'pmmerge' (%d).", m_tileSet->width*m_tileSet->height);
+		m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'pmmerge' (%d).", m_tileSet->width*m_tileSet->height);
 		return false;
 	}
 	
 	rcPolyMeshDetail** dmmerge = new rcPolyMeshDetail*[m_tileSet->width*m_tileSet->height];
 	if (!dmmerge)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'dmmerge' (%d).", m_tileSet->width*m_tileSet->height);
+		m_ctx->log(RC_LOG_ERROR, "buildTiledNavigation: Out of memory 'dmmerge' (%d).", m_tileSet->width*m_tileSet->height);
 		return false;
 	}
 	
@@ -976,23 +974,21 @@ bool Sample_SoloMeshTiled::handleBuild()
 		}
 	}
 	
-	m_pmesh = new rcPolyMesh;
+	m_pmesh = rcAllocPolyMesh();
 	if (!m_pmesh)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'pmesh'.");
+		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'pmesh'.");
 		return false;
 	}
-	rcMergePolyMeshes(pmmerge, nmerge, *m_pmesh);
+	rcMergePolyMeshes(m_ctx, pmmerge, nmerge, *m_pmesh);
 
-	m_dmesh = new rcPolyMeshDetail;
+	m_dmesh = rcAllocPolyMeshDetail();
 	if (!m_dmesh)
 	{
-		if (rcGetLog())
-			rcGetLog()->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'dmesh'.");
+		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'dmesh'.");
 		return false;
 	}
-	rcMergePolyMeshDetails(dmmerge, nmerge, *m_dmesh);
+	rcMergePolyMeshDetails(m_ctx, dmmerge, nmerge, *m_dmesh);
 	
 	delete [] pmmerge;
 	delete [] dmmerge;
@@ -1004,11 +1000,11 @@ bool Sample_SoloMeshTiled::handleBuild()
 			for (int x = 0; x < m_tileSet->width; ++x)
 			{
 				Tile& tile = m_tileSet->tiles[x + y*m_tileSet->width]; 
-				delete tile.cset;
+				rcFreeContourSet(tile.cset);
 				tile.cset = 0;
-				delete tile.pmesh;
+				rcFreePolyMesh(tile.pmesh);
 				tile.pmesh = 0;
-				delete tile.dmesh;
+				rcFreePolyMeshDetail(tile.dmesh);
 				tile.dmesh = 0;
 			}
 		}
@@ -1064,76 +1060,45 @@ bool Sample_SoloMeshTiled::handleBuild()
 		params.walkableHeight = m_agentHeight;
 		params.walkableRadius = m_agentRadius;
 		params.walkableClimb = m_agentMaxClimb;
-		vcopy(params.bmin, m_pmesh->bmin);
-		vcopy(params.bmax, m_pmesh->bmax);
+		rcVcopy(params.bmin, m_pmesh->bmin);
+		rcVcopy(params.bmax, m_pmesh->bmax);
 		params.cs = m_cfg.cs;
 		params.ch = m_cfg.ch;
 		
 		if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
 		{
-			if (rcGetLog())
-				rcGetLog()->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
+			m_ctx->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
 			return false;
 		}
 		
-		m_navMesh = new dtNavMesh;
+		m_navMesh = dtAllocNavMesh();
 		if (!m_navMesh)
 		{
-			delete [] navData;
-			if (rcGetLog())
-				rcGetLog()->log(RC_LOG_ERROR, "Could not create Detour navmesh");
+			dtFree(navData);
+			m_ctx->log(RC_LOG_ERROR, "Could not create Detour navmesh");
 			return false;
 		}
 		
-		if (!m_navMesh->init(navData, navDataSize, true, 2048))
+		if (!m_navMesh->init(navData, navDataSize, DT_TILE_FREE_DATA))
 		{
-			delete [] navData;
-			if (rcGetLog())
-				rcGetLog()->log(RC_LOG_ERROR, "Could not init Detour navmesh");
+			dtFree(navData);
+			m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh");
+			return false;
+		}
+
+		if (!m_navQuery->init(m_navMesh, 2048))
+		{
+			m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh query");
 			return false;
 		}
 	}
 		
-	rcTimeVal totEndTime = rcGetPerformanceTimer();
+	m_ctx->stopTimer(RC_TIMER_TOTAL);
 	
-	if (rcGetLog())
-	{
-		const float pc = 100.0f / rcGetDeltaTimeUsec(totStartTime, totEndTime);
+	duLogBuildTimes(*m_ctx, m_ctx->getAccumulatedTime(RC_TIMER_TOTAL));
+	m_ctx->log(RC_LOG_PROGRESS, ">> Polymesh: %d vertices  %d polygons", m_pmesh->nverts, m_pmesh->npolys);
 
-		rcGetLog()->log(RC_LOG_PROGRESS, "Rasterize: %.1fms (%.1f%%)", m_buildTimes.rasterizeTriangles/1000.0f, m_buildTimes.rasterizeTriangles*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Compact: %.1fms (%.1f%%)", m_buildTimes.buildCompact/1000.0f, m_buildTimes.buildCompact*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Filter Border: %.1fms (%.1f%%)", m_buildTimes.filterBorder/1000.0f, m_buildTimes.filterBorder*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "Filter Walkable: %.1fms (%.1f%%)", m_buildTimes.filterWalkable/1000.0f, m_buildTimes.filterWalkable*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "Filter Reachable: %.1fms (%.1f%%)", m_buildTimes.filterMarkReachable/1000.0f, m_buildTimes.filterMarkReachable*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Erode walkable area: %.1fms (%.1f%%)", m_buildTimes.erodeArea/1000.0f, m_buildTimes.erodeArea*pc);
-
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Distancefield: %.1fms (%.1f%%)", m_buildTimes.buildDistanceField/1000.0f, m_buildTimes.buildDistanceField*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - distance: %.1fms (%.1f%%)", m_buildTimes.buildDistanceFieldDist/1000.0f, m_buildTimes.buildDistanceFieldDist*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - blur: %.1fms (%.1f%%)", m_buildTimes.buildDistanceFieldBlur/1000.0f, m_buildTimes.buildDistanceFieldBlur*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Regions: %.1fms (%.1f%%)", m_buildTimes.buildRegions/1000.0f, m_buildTimes.buildRegions*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - watershed: %.1fms (%.1f%%)", m_buildTimes.buildRegionsReg/1000.0f, m_buildTimes.buildRegionsReg*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "    - expand: %.1fms (%.1f%%)", m_buildTimes.buildRegionsExp/1000.0f, m_buildTimes.buildRegionsExp*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "    - find catchment basins: %.1fms (%.1f%%)", m_buildTimes.buildRegionsFlood/1000.0f, m_buildTimes.buildRegionsFlood*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - filter: %.1fms (%.1f%%)", m_buildTimes.buildRegionsFilter/1000.0f, m_buildTimes.buildRegionsFilter*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Contours: %.1fms (%.1f%%)", m_buildTimes.buildContours/1000.0f, m_buildTimes.buildContours*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - trace: %.1fms (%.1f%%)", m_buildTimes.buildContoursTrace/1000.0f, m_buildTimes.buildContoursTrace*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "  - simplify: %.1fms (%.1f%%)", m_buildTimes.buildContoursSimplify/1000.0f, m_buildTimes.buildContoursSimplify*pc);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Polymesh: %.1fms (%.1f%%)", m_buildTimes.buildPolymesh/1000.0f, m_buildTimes.buildPolymesh*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "Build Polymesh Detail: %.1fms (%.1f%%)", m_buildTimes.buildDetailMesh/1000.0f, m_buildTimes.buildDetailMesh*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "Merge Polymeshes: %.1fms (%.1f%%)", m_buildTimes.mergePolyMesh/1000.0f, m_buildTimes.mergePolyMesh*pc);
-		rcGetLog()->log(RC_LOG_PROGRESS, "Merge Polymesh Details: %.1fms (%.1f%%)", m_buildTimes.mergePolyMeshDetail/1000.0f, m_buildTimes.mergePolyMeshDetail*pc);
-		
-		if (m_pmesh)
-			rcGetLog()->log(RC_LOG_PROGRESS, "Polymesh: Verts:%d  Polys:%d", m_pmesh->nverts, m_pmesh->npolys);
-		
-		rcGetLog()->log(RC_LOG_PROGRESS, "TOTAL: %.1fms", rcGetDeltaTimeUsec(totStartTime, totEndTime)/1000.0f);
-	}
+	m_totalBuildTimeMs = m_ctx->getAccumulatedTime(RC_TIMER_TOTAL)/1000.0f;
 
 	if (m_tool)
 		m_tool->init(this);

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -22,15 +22,14 @@
 #include "Sample.h"
 #include "DetourNavMesh.h"
 #include "Recast.h"
-#include "RecastLog.h"
 
-class Sample_SoloMeshSimple : public Sample //Sample_SoloMesh
+class Sample_SoloMeshSimple : public Sample
 {
 protected:
 	bool m_keepInterResults;
-	rcBuildTimes m_buildTimes; 
+	float m_totalBuildTimeMs;
 
-	unsigned char* m_triflags;
+	unsigned char* m_triareas;
 	rcHeightfield* m_solid;
 	rcCompactHeightfield* m_chf;
 	rcContourSet* m_cset;
@@ -43,6 +42,7 @@ protected:
 		DRAWMODE_NAVMESH,
 		DRAWMODE_NAVMESH_TRANS,
 		DRAWMODE_NAVMESH_BVTREE,
+		DRAWMODE_NAVMESH_NODES,
 		DRAWMODE_NAVMESH_INVIS,
 		DRAWMODE_MESH,
 		DRAWMODE_VOXELS,

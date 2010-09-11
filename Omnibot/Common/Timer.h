@@ -9,6 +9,8 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
+#include "Omni-Bot_BasicTypes.h"
+
 // class: Timer
 //		High performance timer class for timing functions, with
 //		implementations for windows and linux.

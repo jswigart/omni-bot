@@ -37,6 +37,8 @@ public:
 
 	const Vector3<Real> GetCenterBottom() const;
 
+	void Clear();
+
     Vector3<Real> Center;
     Vector3<Real> Axis[3];  // must be an orthonormal set of vectors
     Real Extent[3];         // must be nonnegative

@@ -1163,7 +1163,6 @@
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1171,7 +1170,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release|Win32"
-							ExcludedFromBuild="true"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1221,6 +1219,30 @@
 								Name="VCCLCompilerTool"
 							/>
 						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\Common\RecastInterfaces.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\Common\RecastInterfaces.h"
+						>
 					</File>
 				</Filter>
 			</Filter>
@@ -5125,6 +5147,30 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\dependencies\Recast\Recast\Source\RecastArea.cpp"
 						>
 						<FileConfiguration
@@ -5143,6 +5189,10 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Recast\Include\RecastAssert.h"
+						>
 					</File>
 					<File
 						RelativePath="..\..\..\dependencies\Recast\Recast\Source\RecastContour.cpp"
@@ -5183,30 +5233,6 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
-					</File>
-					<File
-						RelativePath="..\..\..\dependencies\Recast\Recast\Source\RecastLog.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								UsePrecompiledHeader="0"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								UsePrecompiledHeader="0"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath="..\..\..\dependencies\Recast\Recast\Include\RecastLog.h"
-						>
 					</File>
 					<File
 						RelativePath="..\..\..\dependencies\Recast\Recast\Source\RecastMesh.cpp"
@@ -5317,6 +5343,34 @@
 					Name="Detour"
 					>
 					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Include\DetourAssert.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\dependencies\Recast\Detour\Source\DetourCommon.cpp"
 						>
 						<FileConfiguration
@@ -5385,6 +5439,30 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\dependencies\Recast\Detour\Source\DetourNode.cpp"
 						>
 						<FileConfiguration
@@ -5406,6 +5484,30 @@
 					</File>
 					<File
 						RelativePath="..\..\..\dependencies\Recast\Detour\Include\DetourNode.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Source\DetourObstacleAvoidance.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\dependencies\Recast\Detour\Include\DetourObstacleAvoidance.h"
 						>
 					</File>
 				</Filter>

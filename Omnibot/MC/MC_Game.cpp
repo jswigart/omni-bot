@@ -31,6 +31,11 @@ Client *MC_Game::CreateGameClient()
 	return new MC_Client;
 }
 
+eNavigatorID MC_Game::GetDefaultNavigator() const 
+{
+	return NAVID_RECAST;
+}
+
 const char *MC_Game::GetDLLName() const
 {
 #ifdef WIN32

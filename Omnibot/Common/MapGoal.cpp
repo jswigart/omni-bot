@@ -699,8 +699,10 @@ Vec3 MapGoal::GetBoundsCenter_Script()
 Box3f MapGoal::GetWorldBounds()
 {
 	Box3f obb;
+	obb.Clear();
 	obb.Center = GetPosition();
 	obb.Extent[0] = obb.Extent[1] = obb.Extent[2] = 8.f;
+	EngineFuncs::EntityOrientation(GetEntity(), obb.Axis[0], obb.Axis[1], obb.Axis[2]);
 	EngineFuncs::EntityWorldOBB( GetEntity(), obb );
 	return obb;
 }

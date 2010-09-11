@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,6 @@
 #include "Sample.h"
 #include "DetourNavMesh.h"
 #include "Recast.h"
-#include "RecastLog.h"
 #include "ChunkyTriMesh.h"
 
 class Sample_SoloMeshTiled : public Sample
@@ -31,7 +30,14 @@ protected:
 	struct Tile
 	{
 		inline Tile() : chf(0), solid(0), cset(0), pmesh(0), dmesh(0), buildTime(0) {}
-		inline ~Tile() { delete chf; delete cset; delete solid; delete pmesh; delete dmesh; }
+		inline ~Tile()
+		{
+			rcFreeCompactHeightfield(chf);
+			rcFreeContourSet(cset);
+			rcFreeHeightField(solid);
+			rcFreePolyMesh(pmesh);
+			rcFreePolyMeshDetail(dmesh);
+		}
 		int x, y;
 		rcCompactHeightfield* chf;
 		rcHeightfield* solid;
@@ -54,7 +60,7 @@ protected:
 	bool m_measurePerTileTimings;
 	bool m_keepInterResults;
 	float m_tileSize;
-	rcBuildTimes m_buildTimes; 
+	float m_totalBuildTimeMs;
 	
 	rcPolyMesh* m_pmesh;
 	rcPolyMeshDetail* m_dmesh;
@@ -74,6 +80,7 @@ protected:
 		DRAWMODE_NAVMESH,
 		DRAWMODE_NAVMESH_TRANS,
 		DRAWMODE_NAVMESH_BVTREE,
+		DRAWMODE_NAVMESH_NODES,
 		DRAWMODE_NAVMESH_INVIS,
 		DRAWMODE_MESH,
 		DRAWMODE_VOXELS,
@@ -109,6 +116,8 @@ public:
 	virtual bool handleBuild();
 	
 	void setHighlightedTile(const float* pos);
+	inline int getHilightedTileX() const { return m_highLightedTileX; }
+	inline int getHilightedTileY() const { return m_highLightedTileY; }
 };
 
 

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2009 Mikko Mononen memon@inside.org
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -21,10 +21,24 @@
 #include "imgui.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
-#define STBTT_malloc(x,y)    malloc(x)
-#define STBTT_free(x,y)      free(x)
+
+void imguifree(void* ptr, void* userptr);
+void* imguimalloc(size_t size, void* userptr);
+
+#define STBTT_malloc(x,y)    imguimalloc(x,y)
+#define STBTT_free(x,y)      imguifree(x,y)
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
+
+void imguifree(void* ptr, void* /*userptr*/)
+{
+	free(ptr);
+}
+
+void* imguimalloc(size_t size, void* /*userptr*/)
+{
+	return malloc(size);
+}
 
 static const unsigned TEMP_COORD_COUNT = 100;
 static float g_tempCoords[TEMP_COORD_COUNT*2];
@@ -117,10 +131,10 @@ static void drawRect(float x, float y, float w, float h, float fth, unsigned int
 {
 	float verts[4*2] =
 	{
-		x, y,
-		x+w, y,
-		x+w, y+h,
-		x, y+h,
+		x+0.5f, y+0.5f,
+		x+w-0.5f, y+0.5f,
+		x+w-0.5f, y+h-0.5f,
+		x+0.5f, y+h-0.5f,
 	};
 	drawPolygon(verts, 4, fth, col);
 }
@@ -178,7 +192,7 @@ static void drawRoundedRect(float x, float y, float w, float h, float r, float f
 	drawPolygon(verts, (n+1)*4, fth, col);
 }
 
-/*
+
 static void drawLine(float x0, float y0, float x1, float y1, float r, float fth, unsigned int col)
 {
 	float dx = x1-x0;
@@ -190,31 +204,32 @@ static void drawLine(float x0, float y0, float x1, float y1, float r, float fth,
 		dx *= d;
 		dy *= d;
 	}
-	float t = dx;
-	dx = dy;
-	dy = -t;
+	float nx = dy;
+	float ny = -dx;
 	float verts[4*2];
 	r -= fth;
 	r *= 0.5f;
 	if (r < 0.01f) r = 0.01f;
 	dx *= r;
 	dy *= r;
+	nx *= r;
+	ny *= r;
 	
-	verts[0] = x0-dx;
-	verts[1] = y0-dy;
+	verts[0] = x0-dx-nx;
+	verts[1] = y0-dy-ny;
 	
-	verts[2] = x0+dx;
-	verts[3] = y0+dy;
+	verts[2] = x0-dx+nx;
+	verts[3] = y0-dy+ny;
 	
-	verts[4] = x1+dx;
-	verts[5] = y1+dy;
+	verts[4] = x1+dx+nx;
+	verts[5] = y1+dy+ny;
 	
-	verts[6] = x1-dx;
-	verts[7] = y1-dy;
+	verts[6] = x1+dx-nx;
+	verts[7] = y1+dy-ny;
 	
 	drawPolygon(verts, 4, fth, col);
 }
-*/
+
 
 bool imguiRenderGLInit(const char* fontpath)
 {
@@ -259,10 +274,8 @@ bool imguiRenderGLInit(const char* fontpath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (ttfBuffer)
-		free(ttfBuffer);
-	if (bmap)
-		free(bmap);
+	free(ttfBuffer);
+	free(bmap);
 
 	return true;
 }
@@ -296,6 +309,8 @@ static void getBakedQuad(stbtt_bakedchar *chardata, int pw, int ph, int char_ind
 	*xpos += b->xadvance;
 }
 
+static const float g_tabStops[4] = {150, 210, 270, 330};
+
 static float getTextLength(stbtt_bakedchar *chardata, const char* text)
 {
 	float xpos = 0;
@@ -303,7 +318,18 @@ static float getTextLength(stbtt_bakedchar *chardata, const char* text)
 	while (*text)
 	{
 		int c = (unsigned char)*text;
-		if (c >= 32 && c < 128)
+		if (c == '\t')
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				if (xpos < g_tabStops[i])
+				{
+					xpos = g_tabStops[i];
+					break;
+				}
+			}
+		}
+		else if (c >= 32 && c < 128)
 		{
 			stbtt_bakedchar *b = chardata + c-32;
 			int round_x = STBTT_ifloor((xpos + b->xoff) + 0.5);
@@ -318,6 +344,7 @@ static float getTextLength(stbtt_bakedchar *chardata, const char* text)
 static void drawText(float x, float y, const char *text, int align, unsigned int col)
 {
 	if (!g_ftex) return;
+	if (!text) return;
 	
 	if (align == IMGUI_ALIGN_CENTER)
 		x -= getTextLength(g_cdata, text)/2;
@@ -333,10 +360,23 @@ static void drawText(float x, float y, const char *text, int align, unsigned int
 	
 	glBegin(GL_TRIANGLES);
 	
+	const float ox = x;
+	
 	while (*text)
 	{
 		int c = (unsigned char)*text;
-		if (c >= 32 && c < 128)
+		if (c == '\t')
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				if (x < g_tabStops[i]+ox)
+				{
+					x = g_tabStops[i]+ox;
+					break;
+				}
+			}
+		}
+		else if (c >= 32 && c < 128)
 		{			
 			stbtt_aligned_quad q;
 			getBakedQuad(g_cdata, 512,512, c-32, &x,&y,&q);
@@ -368,6 +408,8 @@ void imguiRenderGLDraw()
 	const imguiGfxCmd* q = imguiGetRenderQueue();
 	int nq = imguiGetRenderQueueSize();
 
+	const float s = 1.0f/8.0f;
+
 	glDisable(GL_SCISSOR_TEST);
 	for (int i = 0; i < nq; ++i)
 	{
@@ -376,16 +418,20 @@ void imguiRenderGLDraw()
 		{
 			if (cmd.rect.r == 0)
 			{
-				drawRect((float)cmd.rect.x+0.5f, (float)cmd.rect.y+0.5f,
-						 (float)cmd.rect.w-1, (float)cmd.rect.h-1,
+				drawRect((float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+0.5f,
+						 (float)cmd.rect.w*s-1, (float)cmd.rect.h*s-1,
 						 1.0f, cmd.col);
 			}
 			else
 			{
-				drawRoundedRect((float)cmd.rect.x+0.5f, (float)cmd.rect.y+0.5f,
-								(float)cmd.rect.w-1, (float)cmd.rect.h-1,
-								(float)cmd.rect.r, 1.0f, cmd.col);
+				drawRoundedRect((float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+0.5f,
+								(float)cmd.rect.w*s-1, (float)cmd.rect.h*s-1,
+								(float)cmd.rect.r*s, 1.0f, cmd.col);
 			}
+		}
+		else if (cmd.type == IMGUI_GFXCMD_LINE)
+		{
+			drawLine(cmd.line.x0*s, cmd.line.y0*s, cmd.line.x1*s, cmd.line.y1*s, cmd.line.r*s, 1.0f, cmd.col);
 		}
 		else if (cmd.type == IMGUI_GFXCMD_TRIANGLE)
 		{
@@ -393,9 +439,9 @@ void imguiRenderGLDraw()
 			{
 				const float verts[3*2] =
 				{
-					(float)cmd.rect.x+0.5f, (float)cmd.rect.y+0.5f,
-					(float)cmd.rect.x+0.5f+(float)cmd.rect.w-1, (float)cmd.rect.y+0.5f+(float)cmd.rect.h/2-0.5f,
-					(float)cmd.rect.x+0.5f, (float)cmd.rect.y+0.5f+(float)cmd.rect.h-1,
+					(float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+0.5f,
+					(float)cmd.rect.x*s+0.5f+(float)cmd.rect.w*s-1, (float)cmd.rect.y*s+0.5f+(float)cmd.rect.h*s/2-0.5f,
+					(float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+0.5f+(float)cmd.rect.h*s-1,
 				};
 				drawPolygon(verts, 3, 1.0f, cmd.col);
 			}
@@ -403,9 +449,9 @@ void imguiRenderGLDraw()
 			{
 				const float verts[3*2] =
 				{
-					(float)cmd.rect.x+0.5f, (float)cmd.rect.y+(float)cmd.rect.h-1,
-					(float)cmd.rect.x+0.5f+(float)cmd.rect.w/2-0.5f, (float)cmd.rect.y+0.5f,
-					(float)cmd.rect.x+0.5f+(float)cmd.rect.w-1, (float)cmd.rect.y+0.5f+(float)cmd.rect.h-1,
+					(float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+(float)cmd.rect.h*s-1,
+					(float)cmd.rect.x*s+0.5f+(float)cmd.rect.w*s/2-0.5f, (float)cmd.rect.y*s+0.5f,
+					(float)cmd.rect.x*s+0.5f+(float)cmd.rect.w*s-1, (float)cmd.rect.y*s+0.5f+(float)cmd.rect.h*s-1,
 				};
 				drawPolygon(verts, 3, 1.0f, cmd.col);
 			}

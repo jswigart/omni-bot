@@ -30,6 +30,8 @@ public:
 
 	virtual Client *CreateGameClient();
 
+	eNavigatorID GetDefaultNavigator() const ;
+
 	int GetVersionNum() const;
 	const char *GetDLLName() const;
 	const char *GetGameName() const;

@@ -69,4 +69,18 @@ const Vector3<Real> Box3<Real>::GetCenterBottom() const
 	return Center - Axis[2] * Extent[2];
 
 }
+
 //----------------------------------------------------------------------------
+template <class Real>
+void Box3<Real>::Clear()
+{
+	Center = Vector3<Real>::ZERO;
+	Axis[0] = Vector3<Real>::ZERO;
+	Axis[1] = Vector3<Real>::ZERO;
+	Axis[2] = Vector3<Real>::ZERO;
+	Extent[0] = 0.0f;
+	Extent[1] = 0.0f;
+	Extent[2] = 0.0f;
+}
+//----------------------------------------------------------------------------
+void Clear();
