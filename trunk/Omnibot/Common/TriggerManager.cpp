@@ -388,6 +388,9 @@ public:
 	{
 		TriggerShape::RenderDebug();
 		Utils::DrawRadius(m_Position,m_Radius,COLOR::GREEN,2.f);
+
+		String name = Utils::HashToString(GetNameHash());
+		Utils::PrintText( m_Position, COLOR::GREEN, 2.0f, "%s", name.c_str() );
 	}
 	TriggerShapeSphere(const Vector3f &p, float r) 
 		: m_Position(p)
