@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -95,7 +95,7 @@
 			Name="Release|Win32"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
