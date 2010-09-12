@@ -561,9 +561,9 @@ public:
 		else if(m_TextField)
 		{
 			if(Check(Prop::PF_MS_TO_SECONDS))
-				m_TextField->setText(Utils::VA("%g",(float)m_Value / 1000.f));
+				m_TextField->setText((String)va("%g",(float)m_Value / 1000.f));
 			else
-				m_TextField->setText(Utils::VA("%d",m_Value));
+				m_TextField->setText((String)va("%d",m_Value));
 			//m_TextField->adjustSize();
 		}
 	}
@@ -696,7 +696,7 @@ public:
 		for(int i = 0; i < m_EnumNum; ++i)
 		{
 			gcn::CheckBox *cb = new gcn::CheckBox(m_Enum[i].m_Key,m_Value.CheckFlag(i));
-			cb->setId(Utils::VA("%d",i));
+			cb->setId((String)va("%d",i));
 			m_Container->add(cb);
 		}
 		_propsheet->addProperty(GetName(),m_Container);
@@ -774,7 +774,7 @@ public:
 	{
 		if(m_TextField)
 		{
-			m_TextField->setText(Utils::VA("%g",m_Value));
+			m_TextField->setText((String)va("%g",m_Value));
 		}
 	}
 #endif

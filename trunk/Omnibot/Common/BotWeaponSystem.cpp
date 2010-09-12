@@ -497,7 +497,7 @@ namespace AiState
 						break;
 					}
 				}
-				//OBASSERT(bFound, Utils::VA("Unknown Weapon: %d", currentWeapon.m_WeaponId));
+				//OBASSERT(bFound, va("Unknown Weapon: %d", currentWeapon.m_WeaponId));
 			}
 		}
 

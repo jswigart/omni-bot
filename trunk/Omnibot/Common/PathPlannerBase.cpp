@@ -41,7 +41,7 @@ void PathPlannerBase::cmdLogFailedPaths(const StringVector &_args)
 
 	m_PlannerFlags.SetFlag(NAV_SAVEFAILEDPATHS, bEnable);
 
-	EngineFuncs::ConsoleMessagef("nav_logfailedpath %s", bEnable ? "enabled" : "disabled");
+	EngineFuncs::ConsoleMessage(va("nav_logfailedpath %s", bEnable ? "enabled" : "disabled"));
 }
 
 void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
@@ -69,7 +69,7 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 		{
 			FailedPath &fp = (*it);
 			EngineFuncs::ConsoleMessage(
-				Utils::VA("%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s", 
+				va("%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s", 
 				iIndex,
 				fp.m_Start.x, fp.m_Start.y, fp.m_Start.z,
 				fp.m_End.x, fp.m_End.y, fp.m_End.z,
@@ -84,7 +84,7 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 	if(index >= (int)m_FailedPathList.size() || index < 0)
 	{
 		if(!m_FailedPathList.empty())
-			EngineFuncs::ConsoleMessagef("Invalid Index, must be 0-%d", m_FailedPathList.size());
+			EngineFuncs::ConsoleMessage(va("Invalid Index, must be 0-%d", m_FailedPathList.size()));
 		else
 			EngineFuncs::ConsoleMessage("No failed paths to render.");
 		return;
@@ -97,11 +97,11 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 
 void PathPlannerBase::_BenchmarkPathFinder(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessagef("Benchmark Not Implemented!");
+	EngineFuncs::ConsoleMessage("Benchmark Not Implemented!");
 }
 void PathPlannerBase::_BenchmarkGetNavPoint(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessagef("Benchmark Not Implemented!");
+	EngineFuncs::ConsoleMessage("Benchmark Not Implemented!");
 }
 
 void PathPlannerBase::cmdBenchmarkPathFind(const StringVector &_args)
@@ -139,7 +139,7 @@ void PathPlannerBase::cmdResaveNav(const StringVector &_args)
 			Save(mapname);
 		}
 
-		EngineFuncs::ConsoleMessagef("Resaving %s, %s", mapname.c_str(),bGood?"success":"failed");
+		EngineFuncs::ConsoleMessage(va("Resaving %s, %s", mapname.c_str(),bGood?"success":"failed"));
 	}	
 
 	// reload current map wps
@@ -155,8 +155,8 @@ void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end
 	fp.m_NextRenderTime = 0;
 	fp.m_Render = false;
 	m_FailedPathList.push_back(fp);
-	EngineFuncs::ConsoleMessagef("Added failed path to log, view with nav_showfailedpath %d", 
-		m_FailedPathList.size());
+	EngineFuncs::ConsoleMessage(va("Added failed path to log, view with nav_showfailedpath %d", 
+		m_FailedPathList.size()));
 }
 
 bool PathPlannerBase::Load(bool _dl)

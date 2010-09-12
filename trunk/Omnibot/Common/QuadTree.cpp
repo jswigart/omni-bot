@@ -42,8 +42,8 @@ QuadTree::QuadTree(const AABB &_aabb, float _minNodeSize)
 		tmp = tmp->m_NorthE;
 	}
 
-	EngineFuncs::ConsoleMessagef("Quadtree Generated %d node, %d deep.", 
-		QuadTree::m_NumNodes, QuadTree::m_QuadDepth);
+	EngineFuncs::ConsoleMessage(va("Quadtree Generated %d node, %d deep.", 
+		QuadTree::m_NumNodes, QuadTree::m_QuadDepth));
 }
 
 QuadTree::~QuadTree()

@@ -35,9 +35,9 @@ public:
 	static fs::path GetRealPath(const String &_file);
 
 	static bool MakeDirectory(const char *_folder);
-	static bool FileDelete(const fs::path &_file);
-	static bool FileExists(const fs::path &_file);
-	static obint64 FileModifiedTime(const fs::path &_file);
+	static bool FileDelete(const filePath &_file);
+	static bool FileExists(const filePath &_file);
+	static obint64 FileModifiedTime(const filePath &_file);
 
 	enum MountOrder { MountFirst,MountLast };
 	static bool Mount(const fs::path &_path, const char *_mountpoint = 0, MountOrder _order = MountFirst);
@@ -48,7 +48,7 @@ public:
 private:
 	FileSystem() {}
 
-	//static fs::path _FindFile(const String &_file, const fs::path &_directory, bool _recurse);
+	static void LogAvailableArchives();
 };
 
 class File_Private;

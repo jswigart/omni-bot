@@ -195,8 +195,8 @@ void BlackBoard::DumpBlackBoardContentsToGame(int _type /*= bbk_All*/)
 	{
 		if(it->first == bbk_All || it->first == _type)
 		{
-			EngineFuncs::ConsoleMessagef("Type: %d, Poster: %d, Target: %d", 
-				it->first, it->second->m_Owner, it->second->m_Target);
+			EngineFuncs::ConsoleMessage(va("Type: %d, Poster: %d, Target: %d", 
+				it->first, it->second->m_Owner, it->second->m_Target));
 		}
 	}
 	EngineFuncs::ConsoleMessage("-= End Global Blackboard =-");

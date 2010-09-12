@@ -5583,6 +5583,11 @@ int Bot_Interface_Init()
 		return 1;
 	}
 
+#ifdef _DEBUG
+	trap_Cvar_Set( "sv_cheats", "1" );
+	trap_Cvar_Update(&g_cheats);
+#endif
+
 	g_GoalSubmitReady = false;
 
 	g_InterfaceFunctions = new ETInterface;

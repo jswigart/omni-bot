@@ -139,7 +139,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 		// Write the number of properties.
 		if(pCurrentWp->GetPropertyMap().GetProperties().size() > std::numeric_limits<obuint8>::max())
 		{
-			LOGERR_BASIC("> 256 Properties on waypoint");
+			LOGERR("> 256 Properties on waypoint");
 			return false;
 		}
 		CHECK_WRITE(_file.WriteInt8((obuint8)pCurrentWp->GetPropertyMap().GetProperties().size()));
@@ -153,7 +153,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 			// Write the string length, and string
 			if(strName.length() > std::numeric_limits<obuint8>::max())
 			{
-				LOGERR_BASIC("> 256 characters in property name");
+				LOGERR("> 256 characters in property name");
 				return false;
 			}
 			obuint8 iPropNameLength = (obuint8)strName.length();
@@ -163,7 +163,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 			// Write the data string length, and string
 			if(strData.length() > std::numeric_limits<obuint8>::max())
 			{
-				LOGERR_BASIC("> 256 characters in property name");
+				LOGERR("> 256 characters in property name");
 				return false;
 			}
 			obuint8 iPropValueLength = static_cast<obuint8>(strData.length());

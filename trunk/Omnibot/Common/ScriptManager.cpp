@@ -50,10 +50,10 @@ bool ScriptLiveUpdate = false;
 
 struct LiveUpdateEntry
 {
-	fs::path		File;
+	filePath		File;
 	obint64			FileModTime;
 
-	LiveUpdateEntry(const fs::path &_path, obint64 _mod)
+	LiveUpdateEntry(const filePath &_path, obint64 _mod)
 		: File(_path)
 		, FileModTime(_mod)
 	{
@@ -126,7 +126,7 @@ const int GM_DEBUGGER_PORT = 49001;
 //	if(destructFile.IsOpen())
 //	{
 //		const char *pTypeName = ScriptManager::GetInstance()->GetMachine()->GetTypeName((gmType)_type);
-//		destructFile.WriteString(Utils::VA("%x, %s", _addr, pTypeName));
+//		destructFile.WriteString(va("%x, %s", _addr, pTypeName));
 //		destructFile.WriteNewLine();
 //	}
 //}
@@ -146,7 +146,7 @@ const int GM_DEBUGGER_PORT = 49001;
 //	if(allocFile.IsOpen())
 //	{
 //		const char *pTypeName = ScriptManager::GetInstance()->GetMachine()->GetTypeName((gmType)_type);
-//		allocFile.WriteString(Utils::VA("%x, %s", _addr, pTypeName));
+//		allocFile.WriteString(va("%x, %s", _addr, pTypeName));
 //		allocFile.WriteNewLine();
 //	}
 //}
@@ -160,9 +160,8 @@ int ImportModuleImpl(gmThread *a_thread, const char *a_filename, gmVariable &a_t
 	try
 	{
 		int ThreadId = GM_INVALID_THREAD;
-		String filename = String(a_filename) + ".gm";
-		fs::path filepath = fs::path(filename);
-		if(ScriptManager::GetInstance()->ExecuteFile(filepath,ThreadId,&a_this))
+		filePath script("%s.gm",a_filename);
+		if(ScriptManager::GetInstance()->ExecuteFile(script,ThreadId,&a_this))
 		{
 			return GM_OK;
 		}
@@ -217,7 +216,7 @@ void ScriptManager::Init()
 {
 	LOGFUNCBLOCK;
 	InitCommands();
-	LOG_BASIC("Initializing Scripting System...");
+	LOG("Initializing Scripting System...");
 	// Set machine callbacks
 	m_ScriptEngine = new gmMachine;
 	m_ScriptEngine->SetDebugMode(true);
@@ -235,7 +234,7 @@ void ScriptManager::Init()
 	m_ScriptEngine->SetDesiredByteMemoryUsageSoft(HARD_MEM_USAGE * 9 / 10);
 
 	//////////////////////////////////////////////////////////////////////////
-	LOG("Hard Memory Limit: %s",Utils::FormatByteString(HARD_MEM_USAGE).c_str());
+	LOG("Hard Memory Limit: " << Utils::FormatByteString(HARD_MEM_USAGE));
 
 	// Allocate some permanent strings for properties that will be used alot.
 	m_ScriptEngine->AllocPermanantStringObject("CurrentHealth");
@@ -247,54 +246,52 @@ void ScriptManager::Init()
 	gmImportExecuteFile = ImportModuleImpl;
 
 	// Bind libraries.
-	LOG_BASIC("Binding Script Libraries...");
+	LOG("Binding Script Libraries...");
 	gmBindSystemLib(m_ScriptEngine);
-	LOG_BASIC("+ System Library Bound.");
+	LOG("+ System Library Bound.");
 	gmBindMathLibrary(m_ScriptEngine);
-	LOG_BASIC("+ Math Library Bound.");
+	LOG("+ Math Library Bound.");
 	gmBindStringLib(m_ScriptEngine);
-	LOG_BASIC("+ String Library Bound.");
+	LOG("+ String Library Bound.");
 	gmBindBotLib(m_ScriptEngine);	
-	LOG_BASIC("+ Bot System Library Bound.");
+	LOG("+ Bot System Library Bound.");
 	BlackBoard::Bind(m_ScriptEngine);
-	LOG_BASIC("+ Blackboard Library Bound.");
+	LOG("+ Blackboard Library Bound.");
 	gmBindNamesListLib(m_ScriptEngine);
 	gmBot::Initialise(m_ScriptEngine, true);
-	LOG_BASIC("+ Bot Library Bound.");
+	LOG("+ Bot Library Bound.");
 	/*gmMapGoal::Initialise(m_ScriptEngine, true);
-	LOG_BASIC("+ MapGoal Library Bound.");*/
+	LOG("+ MapGoal Library Bound.");*/
 	gmTargetInfo::Initialise(m_ScriptEngine, true);
-	LOG_BASIC("+ TargetInfo Library Bound.");
+	LOG("+ TargetInfo Library Bound.");
 	gmTriggerInfo::Initialise(m_ScriptEngine, true);
-	LOG_BASIC("+ TriggerInfo Library Bound.");
+	LOG("+ TriggerInfo Library Bound.");
 	gmTimer::Initialise(m_ScriptEngine, false);
-	LOG_BASIC("+ Timer Library Bound.");
+	LOG("+ Timer Library Bound.");
 	//BindAABB(m_ScriptEngine);
 	gmAABB::Initialise(m_ScriptEngine, false);
 
-	LOG_BASIC("+ AABB Library Bound.");	
+	LOG("+ AABB Library Bound.");	
 	gmMatrix3::Initialise(m_ScriptEngine, false);
-	LOG_BASIC("+ Matrix3 Library Bound.");
+	LOG("+ Matrix3 Library Bound.");
 	gmScriptGoal::Initialise(m_ScriptEngine, true);
-	LOG_BASIC("+ Script Goal Library Bound.");
+	LOG("+ Script Goal Library Bound.");
 	gmBindUtilityLib(m_ScriptEngine);
-	LOG_BASIC("+ Utility Library Bound.");
-	//gmBindSqliteLib(m_ScriptEngine);
-	//LOG_BASIC("+ SqLite Library Bound.");
+	LOG("+ Utility Library Bound.");
 	gmSchema::BindLib(m_ScriptEngine);
-	LOG_BASIC("+ Schema Library Bound.");
+	LOG("+ Schema Library Bound.");
 
 	BindEntityStackCustom(m_ScriptEngine);
 	
 	// New Bindings
 	MapGoal::Bind(m_ScriptEngine);
-	LOG_BASIC("+ MapGoal Library Bound.");
+	LOG("+ MapGoal Library Bound.");
 	Weapon::Bind(m_ScriptEngine);
-	LOG_BASIC("+ Weapon Library Bound.");
+	LOG("+ Weapon Library Bound.");
 
 #ifdef ENABLE_DEBUG_WINDOW
 	gmBindDebugWindowLibrary(m_ScriptEngine);
-	LOG_BASIC("+ Gui Library Bound.");
+	LOG("+ Gui Library Bound.");
 #endif
 
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
@@ -307,7 +304,7 @@ void ScriptManager::Init()
 	m_ScriptEngine->GetGlobals()->Set(m_ScriptEngine, "Commands", gmVariable(m_ScriptEngine->AllocTableObject()));
 	m_ScriptEngine->GetGlobals()->Set(m_ScriptEngine, "GOALS",gmVariable(m_ScriptEngine->AllocTableObject()));
 
-	LOG_BASIC("+ Name List Created");
+	LOG("+ Name List Created");
 
 	gmBind2::Global(m_ScriptEngine, "COLOR")
 		.var(COLOR::BLACK.rgba(),		"BLACK")
@@ -345,7 +342,7 @@ void ScriptManager::Init()
 	ScriptLiveUpdate = false;
 	Options::GetValue("Script","LiveUpdate",ScriptLiveUpdate);
 
-	LOG_BASIC("done.");
+	LOG("done.");
 }
 
 void ScriptManager::Shutdown()
@@ -364,7 +361,7 @@ void ScriptManager::Shutdown()
 	LOGFUNCBLOCK;
 	ShowGMStats();
 	OB_DELETE(m_ScriptEngine);
-	LOG_BASIC("Script System Shut Down.");
+	LOG("Script System Shut Down.");
 }
 
 struct ThreadStatus 
@@ -515,57 +512,53 @@ gmVariable ScriptManager::ExecBotCallback(Client *_client, const char *_func)
 	return gmVariable::s_null;
 }
 
-bool ScriptManager::ExecuteFile(const fs::path &_file, int &_threadId, gmVariable *_this/* = NULL*/)
+bool ScriptManager::ExecuteFile(const filePath &_file, int &_threadId, gmVariable *_this/* = NULL*/)
 {
-	//Utils::OutputDebug(kScript,"ExecuteFile: %s",_file.string().c_str());
+	//Utils::OutputDebug(kScript,"ExecuteFile: %s",_file.c_str());
 
 	GM_ASSERT(m_ScriptEngine);
 	if ( m_ScriptEngine != NULL ) {
 		_threadId = GM_INVALID_THREAD;
 
-		char strbuffer[1024] = {};
 		// Find the file
-		if(!_file.empty())
-		{
-			File InFile;
+		File InFile;
 
-			sprintf(strbuffer, "%s", _file.string().c_str());
-			InFile.OpenForRead(strbuffer, File::Binary);
+		filePath localFilePath = _file;
+		InFile.OpenForRead(localFilePath, File::Binary);
+		if(!InFile.IsOpen())
+		{
+			localFilePath = filePath( "scripts/%s", _file.c_str() );
+			InFile.OpenForRead(localFilePath, File::Binary);
 			if(!InFile.IsOpen())
 			{
-				sprintf(strbuffer, "scripts/%s", _file.string().c_str());
-				InFile.OpenForRead(strbuffer, File::Binary);
-				if(!InFile.IsOpen())
-				{
-					sprintf(strbuffer, "global_scripts/%s", _file.string().c_str());
-					InFile.OpenForRead(strbuffer, File::Binary);
-				}
+				localFilePath = filePath( "global_scripts/%s", _file.c_str() );
+				InFile.OpenForRead(localFilePath, File::Binary);
 			}
+		}
 
-			if(InFile.IsOpen())
+		if(InFile.IsOpen())
+		{
+			obuint32 fileSize = (obuint32)InFile.FileLength();
+			boost::shared_array<char> pBuffer(new char[fileSize+1]);
+
+			InFile.Read(pBuffer.get(), fileSize);
+			pBuffer[fileSize] = 0;
+			InFile.Close();
+
+			LOG("Running script: " << _file)
+			if(fileSize>0)
 			{
-				obuint32 fileSize = (obuint32)InFile.FileLength();
-				boost::shared_array<char> pBuffer(new char[fileSize+1]);
-
-				InFile.Read(pBuffer.get(), fileSize);
-				pBuffer[fileSize] = 0;
-				InFile.Close();
-
-				LOG("Running script: %s",_file.string().c_str());
-				if(fileSize>0)
+				int errors = m_ScriptEngine->ExecuteString(pBuffer.get(), &_threadId, true, _file, _this);
+				if(errors)
 				{
-					int errors = m_ScriptEngine->ExecuteString(pBuffer.get(), &_threadId, true, _file.string().c_str(), _this);
-					if(errors)
-					{
-						bool b = IsScriptDebugEnabled();
-						SetScriptDebugEnabled(true);
-						LogAnyMachineErrorMessages(m_ScriptEngine);
-						SetScriptDebugEnabled(b);
-					} 
-					else
-					{
-						return true;
-					}
+					bool b = IsScriptDebugEnabled();
+					SetScriptDebugEnabled(true);
+					LogAnyMachineErrorMessages(m_ScriptEngine);
+					SetScriptDebugEnabled(b);
+				} 
+				else
+				{
+					return true;
 				}
 			}
 		}
@@ -597,7 +590,7 @@ bool ScriptManager::ExecuteStringLogged(const String &_string)
 		bool b = f.WriteString(_string) && f.WriteNewLine();
 		OBASSERT(b, "Problem logging script string!");
 	}
-	EngineFuncs::ConsoleMessagef("ExecString: %s", _string.c_str());
+	EngineFuncs::ConsoleMessage(va("ExecString: %s", _string.c_str()));
 
 	return ExecuteString(_string);
 }
@@ -610,7 +603,7 @@ void ScriptManager::LogAnyMachineErrorMessages(gmMachine *_machine)
 	{
 		Utils::OutputDebugBasic(kError, "Script Error:");
 		Utils::OutputDebugBasic(kError, pMessage);
-		LOGERR_BASIC(pMessage);
+		LOGERR(pMessage);
 
 #ifdef ENABLE_DEBUG_WINDOW
 		String s = pMessage;
@@ -676,7 +669,7 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine(gmMachine* a_machine, gmM
 					a_machine->GetSourceCode(pFn->GetSourceId(), pSource, pFileName);
 				}
 
-				String errMsg = Utils::VA("Thread Created <%s>: %s : %s Id: %d time: %d",
+				String errMsg = va("Thread Created <%s>: %s : %s Id: %d time: %d",
 					(pClient ? pClient->GetName() : ""),
 					(pFileName ? pFileName : "<unknown file>"),
 					(pFuncName ? pFuncName : "<noname>"),
@@ -736,14 +729,14 @@ void ScriptManager::ShowGMStats()
 		ThreadStatus st = {0,0,0};
 		m_ScriptEngine->ForEachThread(countThreadStatus, &st);
 
-		String fmtMemUsage = Utils::VA("Current Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetCurrentMemoryUsage()).c_str());
-		String fmtSoftMemLimit = Utils::VA("Soft Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageSoft()).c_str());
-		String fmtHardMemLimit = Utils::VA("Hard Memory Limit %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageHard()).c_str());
-		String fmtSysMemUsage = Utils::VA("System Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetSystemMemUsed()).c_str());
-		String fmtFullCollects = Utils::VA("Full Collects %d",m_ScriptEngine->GetStatsGCNumFullCollects());
-		String fmtIncCollects = Utils::VA("Inc Collects %d",m_ScriptEngine->GetStatsGCNumIncCollects());
-		String fmtGCWarnings = Utils::VA("GC Warnings %d",m_ScriptEngine->GetStatsGCNumWarnings());
-		String fmtThreadInfo = Utils::VA("Threads: %d, %d Running, %d Blocked, %d Sleeping",
+		String fmtMemUsage = va("Current Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetCurrentMemoryUsage()).c_str());
+		String fmtSoftMemLimit = va("Soft Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageSoft()).c_str());
+		String fmtHardMemLimit = va("Hard Memory Limit %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageHard()).c_str());
+		String fmtSysMemUsage = va("System Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetSystemMemUsed()).c_str());
+		String fmtFullCollects = va("Full Collects %d",m_ScriptEngine->GetStatsGCNumFullCollects());
+		String fmtIncCollects = va("Inc Collects %d",m_ScriptEngine->GetStatsGCNumIncCollects());
+		String fmtGCWarnings = va("GC Warnings %d",m_ScriptEngine->GetStatsGCNumWarnings());
+		String fmtThreadInfo = va("Threads: %d, %d Running, %d Blocked, %d Sleeping",
 			(st.m_Blocked+st.m_Running+st.m_Sleeping),
 			st.m_Running,
 			st.m_Blocked,
@@ -759,13 +752,13 @@ void ScriptManager::ShowGMStats()
 		EngineFuncs::ConsoleMessage(fmtGCWarnings.c_str());
 		EngineFuncs::ConsoleMessage(fmtThreadInfo.c_str());
 
-		LOG_BASIC(fmtMemUsage.c_str());
-		LOG_BASIC(fmtSoftMemLimit.c_str());
-		LOG_BASIC(fmtHardMemLimit.c_str());
-		LOG_BASIC(fmtSysMemUsage.c_str());
-		LOG_BASIC(fmtFullCollects.c_str());
-		LOG_BASIC(fmtIncCollects.c_str());
-		LOG_BASIC(fmtGCWarnings.c_str());
+		LOG(fmtMemUsage.c_str());
+		LOG(fmtSoftMemLimit.c_str());
+		LOG(fmtHardMemLimit.c_str());
+		LOG(fmtSysMemUsage.c_str());
+		LOG(fmtFullCollects.c_str());
+		LOG(fmtIncCollects.c_str());
+		LOG(fmtGCWarnings.c_str());
 	}
 	else
 	{
@@ -814,7 +807,7 @@ void ScriptManager::GetAutoCompleteList(const String &_string, StringVector &_co
 					_completions.push_back(prefix + pName);
 					break;
 				case GM_INT:
-					_completions.push_back(Utils::VA("%s[%s]", prefix.c_str(), pName));
+					_completions.push_back((String)va("%s[%s]", prefix.c_str(), pName));
 					break;
 				default:
 					_completions.push_back(prefix + pName);
@@ -897,7 +890,8 @@ void ScriptManager::cmdScriptRunFile(const StringVector &_args)
 		}
 		catch(const std::exception & ex)
 		{
-			LOGCRIT("Filesystem Exception: %s",ex.what());
+			ex;
+			LOGCRIT("Filesystem Exception: "<<ex.what());
 		}
 	}
 
@@ -932,7 +926,8 @@ void ScriptManager::cmdScriptExecute(const StringVector &_args)
 		}
 		catch(const std::exception & ex)
 		{
-			LOGCRIT("Filesystem Exception: %s",ex.what());
+			ex;
+			LOGCRIT("Filesystem Exception: " << ex.what());
 		}
 	}
 
@@ -977,14 +972,14 @@ ScriptResource & ScriptResource::operator=(const ScriptResource &_rh)
 	m_Script = _rh.m_Script;
 	return *this;
 }
-bool ScriptResource::InitScriptSource(const fs::path &_path)
+bool ScriptResource::InitScriptSource(const filePath &_path)
 {
 	m_Script = _path;
 	m_Key = ScriptManager::GetInstance()->RegisterLiveUpdate(_path);
 	return true;
 }
 
-LiveUpdateKey ScriptManager::RegisterLiveUpdate(const fs::path &_file)
+LiveUpdateKey ScriptManager::RegisterLiveUpdate(const filePath &_file)
 {
 	// check if it already exists.
 	for(obuint32 i = 0; i < g_LiveUpdate.size(); ++i)
@@ -1066,7 +1061,7 @@ const void * ScriptManager::PumpDebuggerMessage(int &a_len) {
 	{
 		if(g_DebugClient.Receive(inBuffer,BufferSize,inSize)==sf::Socket::Done)
 		{
-			Utils::OutputDebug(kScript, Utils::VA("%d recieved", inSize));
+			Utils::OutputDebug(kScript, va("%d recieved", inSize));
 			if(inSize>0)
 				g_RecieveBuffer.append(inBuffer, inSize);
 		}

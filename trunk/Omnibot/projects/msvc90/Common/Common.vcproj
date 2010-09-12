@@ -318,32 +318,6 @@
 				Name="DebugConsole"
 				>
 				<File
-					RelativePath="..\..\..\Common\DebugConsole.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\Common\DebugConsole.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\Common\DebugWindow.cpp"
 					>
 					<FileConfiguration
@@ -1161,20 +1135,6 @@
 					<File
 						RelativePath="..\..\..\Common\PathPlannerRecast.cpp"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\..\Common\PathPlannerRecast.h"
@@ -1244,6 +1204,10 @@
 						RelativePath="..\..\..\Common\RecastInterfaces.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="PathPlannerGrid"
+					>
 				</Filter>
 			</Filter>
 			<Filter

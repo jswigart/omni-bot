@@ -665,7 +665,7 @@ namespace AiState
 	//		AiState::WeaponSystem *wsys = GetClient()->GetWeaponSystem();
 	//		for(int i = 0; i < AttackGoal::MaxUseWeapon; ++i)
 	//		{
-	//			m_MapGoal->GetProperty(Utils::VA("UseWeapon%d",i),UseWeapon[i]);
+	//			m_MapGoal->GetProperty(va("UseWeapon%d",i),UseWeapon[i]);
 	//			if(UseWeapon[i])
 	//			{
 	//				bNeedsWeapon = true;
@@ -829,7 +829,7 @@ namespace AiState
 	//		AiState::WeaponSystem *wsys = GetClient()->GetWeaponSystem();
 	//		for(int i = 0; i < AttackGoal::MaxUseWeapon; ++i)
 	//		{
-	//			m_MapGoal->GetProperty(Utils::VA("UseWeapon%d",i),UseWeapon[i]);
+	//			m_MapGoal->GetProperty(va("UseWeapon%d",i),UseWeapon[i]);
 	//			if(UseWeapon[i])
 	//			{
 	//				bNeedsWeapon = true;
@@ -1354,7 +1354,7 @@ namespace AiState
 			if(FailType)
 			{
 				File f;
-				f.OpenForWrite(Utils::VA("user/failedpaths.txt"), File::Text, true);
+				f.OpenForWrite(va("user/failedpaths.txt"), File::Text, true);
 				if(f.IsOpen())
 				{
 					Vector3f Position = GetClient()->GetPosition();
@@ -1367,9 +1367,8 @@ namespace AiState
 					f.WriteString("{"); 
 					f.WriteNewLine();
 					
-					f.WriteString(Utils::VA("\tType = \"%s\",",FailType)); f.WriteNewLine();
-					f.WriteString(Utils::VA("\tP = Vector3(%f,%f,%f),",
-						Position.x,Position.y,Position.z));
+					f.Printf("\tType = \"%s\",",FailType); f.WriteNewLine();
+					f.Printf("\tP = Vector3(%f,%f,%f),",Position.x,Position.y,Position.z);
 					f.WriteNewLine();
 					
 					if(_how == FollowPathUser::NoPath)
@@ -1377,18 +1376,18 @@ namespace AiState
 						f.WriteString("\tDest = {"); f.WriteNewLine();
 						for(obuint32 i = 0; i < m_LastDestination.size(); ++i)
 						{
-							f.WriteString(Utils::VA("\t\tVector3(%f,%f,%f),",
+							f.Printf("\t\tVector3(%f,%f,%f),",
 								m_LastDestination[i].m_Position.x,
 								m_LastDestination[i].m_Position.y,
-								m_LastDestination[i].m_Position.z));
+								m_LastDestination[i].m_Position.z);
 							f.WriteNewLine();
 						}
 						f.WriteString("\t},"); f.WriteNewLine();
 					}
 					else
 					{
-						f.WriteString(Utils::VA("\tDest = Vector3(%f,%f,%f),",
-							pt.m_Pt.x,pt.m_Pt.y,pt.m_Pt.z));
+						f.Printf("\tDest = Vector3(%f,%f,%f),",
+							pt.m_Pt.x,pt.m_Pt.y,pt.m_Pt.z);
 						f.WriteNewLine();
 					}
 

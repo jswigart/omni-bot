@@ -624,17 +624,16 @@ void RTCW_Game::StartGame()
 	DisableGCInScope gcEn(pMachine);
 
 	// Load the script for the current map.
-	int iThreadId;
-	String strMapName = String("nav/") + g_EngineFuncs->GetMapName();
+	int iThreadId = GM_INVALID_THREAD;
 
+	const char * mapName = g_EngineFuncs->GetMapName();
+	filePath script( "nav/%s.gm", mapName );
 	if ( InterfaceFuncs::GetCvar("g_deathmatch") != 0 )
-		strMapName += "_dm.gm";
+		script = filePath( "nav/%s_dm.gm", mapName );
 	else if( InterfaceFuncs::GetGameType() == 7 )
-		strMapName += "_cp.gm";
-	else
-		strMapName += ".gm";
+		script = filePath( "nav/%s_cp.gm", mapName );
 
-	if(ScriptManager::GetInstance()->ExecuteFile(strMapName, iThreadId))
+	if(ScriptManager::GetInstance()->ExecuteFile(script, iThreadId))
 	{
 		MapLoad();
 	}

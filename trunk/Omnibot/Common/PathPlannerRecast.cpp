@@ -32,6 +32,8 @@ duDebugDraw * gDDraw = 0;
 static const int NAVMESH_MAGIC = 'OMNI';
 static const int NAVMESH_VERSION = 2;
 
+static const bool DUMP_OBJS = true;
+
 RecastBuildContext buildContext;
 
 void calcPolyCenter(float* tc, const unsigned short* idx, int nidx, const float* verts);
@@ -137,10 +139,10 @@ struct rcBuildData
 	}
 	~rcBuildData()
 	{
-		OB_DELETE(Chf);
-		OB_DELETE(Contour);
-		OB_DELETE(PolyMesh);
-		OB_DELETE(PolyMeshDetail);
+		rcFreeCompactHeightfield( Chf ); Chf = NULL;
+		rcFreeContourSet( Contour ); Contour = NULL;
+		rcFreePolyMesh( PolyMesh ); PolyMesh = NULL;
+		rcFreePolyMeshDetail( PolyMeshDetail ); PolyMeshDetail = NULL;
 	}
 };
 typedef std::list<rcBuildData> BuildDataList;
@@ -276,7 +278,8 @@ bool PathPlannerRecast::Load(const String &_mapname, bool _dl)
 	String navPath	= String("nav/") + waypointName;
 	String error;
 
-	OB_DELETE(DetourNavmesh);
+	dtFreeNavMesh( DetourNavmesh ); 
+	DetourNavmesh = NULL;
 
 	File f;
 	if(f.OpenForRead(navPath.c_str(),File::Binary))
@@ -321,7 +324,8 @@ bool PathPlannerRecast::Load(const String &_mapname, bool _dl)
 	}
 
 errorLabel:
-	OB_DELETE(DetourNavmesh);
+	dtFreeNavMesh( DetourNavmesh );
+	DetourNavmesh = NULL;
 	return false;
 }
 
@@ -503,8 +507,10 @@ void PathPlannerRecast::Unload()
 
 	BuildData.clear();
 
-	OB_DELETE(FloodHeightField);
-	OB_DELETE(DetourNavmesh);
+	rcFreeHeightField( FloodHeightField );
+	FloodHeightField = NULL;
+	dtFreeNavMesh( DetourNavmesh );
+	DetourNavmesh = NULL;
 }
 
 void PathPlannerRecast::RegisterGameGoals()
@@ -554,8 +560,10 @@ int PathPlannerRecast::Process_FloodFill()
 			RecastSolidList.clear();
 			RecastOpenList.clear();
 
-			OB_DELETE(FloodHeightField);
-			OB_DELETE(DetourNavmesh);
+			rcFreeHeightField( FloodHeightField );
+			FloodHeightField = NULL;
+			dtFreeNavMesh( DetourNavmesh );
+			DetourNavmesh = NULL;
 
 			FloodHeightField = rcAllocHeightfield();
 			DetourNavmesh = dtAllocNavMesh();
@@ -737,10 +745,9 @@ int PathPlannerRecast::Process_FloodFill()
 
 						do 
 						{
-							rcRasterizeVertex(
-								&buildContext,
-								ToRecast(vWall),
-								0, // non walkable
+							rcRasterizeVertex( &buildContext,
+								ToRecast( vWall ),
+								RC_NULL_AREA,
 								*FloodHeightField);
 
 							vWall.z += RecastCfg.ch;
@@ -773,14 +780,13 @@ int PathPlannerRecast::Process_FloodFill()
 					continue;
 				}
 
-				obuint8 flags = 0;
+				obuint8 area = RC_NULL_AREA;
 				if(trFloor.m_Normal[2] > walkableThr)
-					flags |= (obuint8)RC_WALKABLE_AREA;
+					area |= (obuint8)RC_WALKABLE_AREA;
 				//if(trFloor.m_Contents & CONT_WATER)
 
-				const Vector3f floorPos(trFloor.m_Endpos);
-
-				if(!rcRasterizeVertex(&buildContext,ToRecast(floorPos),flags,*FloodHeightField))
+				const Vector3f floorPos(trFloor.m_Endpos);				
+				if( !rcRasterizeVertex( &buildContext, ToRecast(floorPos), area, *FloodHeightField ) )
 					continue;
 
 				// get the ceiling height
@@ -799,7 +805,7 @@ int PathPlannerRecast::Process_FloodFill()
 					if(trCeiling.m_Fraction < 1.f)
 					{
 						const Vector3f ceilPos(trCeiling.m_Endpos);
-						rcRasterizeVertex(&buildContext,ToRecast(ceilPos),0,*FloodHeightField);
+						rcRasterizeVertex(&buildContext,ToRecast(ceilPos),RC_NULL_AREA,*FloodHeightField);
 					}
 				}				
 
@@ -849,7 +855,9 @@ int PathPlannerRecast::Process_FloodFill()
 		}
 	case Process_BuildStaticMesh:
 		{
-			OB_DELETE(DetourNavmesh);
+			dtFreeNavMesh( DetourNavmesh );
+			DetourNavmesh = NULL;
+			
 			DetourNavmesh = dtAllocNavMesh();
 
 			BuildData.push_back(rcBuildData());
@@ -877,6 +885,30 @@ int PathPlannerRecast::Process_FloodFill()
 					*FloodHeightField);
 			}			
 
+			rcFilterLowHangingWalkableObstacles( &buildContext, 
+				RecastCfg.walkableClimb, 
+				*FloodHeightField );
+
+			rcFilterLedgeSpans( &buildContext, 
+				RecastCfg.walkableHeight,
+				RecastCfg.walkableClimb, 
+				*FloodHeightField );
+
+			rcFilterWalkableLowHeightSpans( &buildContext,
+				RecastCfg.walkableHeight,
+				*FloodHeightField );
+
+			if ( DUMP_OBJS ) {
+				const char * mapName = g_EngineFuncs->GetMapName();
+				FileIO obj, mat;
+				const char * objFileName = va( "%s_walkhf.obj", mapName );
+				const char * matFileName = va( "%s_walkhf.mat", mapName );
+				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
+					duDebugDrawDump dmp( &obj, &mat, matFileName );
+					duDebugDrawHeightfieldWalkable( &dmp, *FloodHeightField );
+				}
+			}
+
 			if(!rcBuildCompactHeightfield(
 				&buildContext,
 				RecastCfg.walkableHeight,
@@ -888,17 +920,21 @@ int PathPlannerRecast::Process_FloodFill()
 				break;
 			}
 
-			// Erode the walkable area by agent radius.
-			/*if (!rcErodeArea(RC_WALKABLE_AREA, RecastCfg.walkableRadius, *build.Chf))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}*/
-
 			if(!rcBuildDistanceField(&buildContext,*build.Chf))
 			{
 				gFloodStatus = Process_FinishedNavMesh;
 				break;
+			}
+
+			if ( DUMP_OBJS ) {
+				const char * mapName = g_EngineFuncs->GetMapName();
+				FileIO obj, mat;
+				const char * objFileName = va( "%s_disthf.obj", mapName );
+				const char * matFileName = va( "%s_disthf.mat", mapName );
+				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
+					duDebugDrawDump dmp( &obj, &mat, matFileName );
+					duDebugDrawCompactHeightfieldDistance( &dmp, *build.Chf );
+				}
 			}
 
 			if(!rcBuildRegions(&buildContext,
@@ -930,6 +966,12 @@ int PathPlannerRecast::Process_FloodFill()
 				break;
 			}
 
+			if ( DUMP_OBJS ) {
+				FileIO obj;			
+				if ( obj.openForWrite( va( "%s_pm.obj", g_EngineFuncs->GetMapName() ) ) )
+					duDumpPolyMeshToObj( *build.PolyMesh, &obj );
+			}
+
 			if(!rcBuildPolyMeshDetail(&buildContext,
 				*build.PolyMesh,
 				*build.Chf,
@@ -939,6 +981,12 @@ int PathPlannerRecast::Process_FloodFill()
 			{
 				gFloodStatus = Process_FinishedNavMesh;
 				break;
+			}
+
+			if ( DUMP_OBJS ) {
+				FileIO obj;			
+				if ( obj.openForWrite( va( "%s_pmd.obj", g_EngineFuncs->GetMapName() ) ) )
+					duDumpPolyMeshDetailToObj( *build.PolyMeshDetail, &obj );
 			}
 
 			dtNavMeshCreateParams params;
@@ -987,16 +1035,16 @@ int PathPlannerRecast::Process_FloodFill()
 				break;
 			}
 
-			EngineFuncs::ConsoleMessagef("Navigation Mesh Generation.");
-			/*EngineFuncs::ConsoleMessagef("Heightfield Memory: %s",
+			EngineFuncs::ConsoleMessage("Navigation Mesh Generation.");
+			/*EngineFuncs::ConsoleMessage("Heightfield Memory: %s",
 			Utils::FormatByteString(FloodHeightField->getMemUsed()).c_str());
-			EngineFuncs::ConsoleMessagef("Compact Heightfield Memory: %s",
+			EngineFuncs::ConsoleMessage("Compact Heightfield Memory: %s",
 			Utils::FormatByteString(build.Chf->getMemUsed()).c_str());*/
 
-			EngineFuncs::ConsoleMessagef("Navigation Mesh Generated.");
-			EngineFuncs::ConsoleMessagef("Size: %s",Utils::FormatByteString(navDataSize).c_str());
-			//EngineFuncs::ConsoleMessagef("# Polygons: %d",DetourNavmesh.getPolyCount());
-			//EngineFuncs::ConsoleMessagef("# Vertices: %d",DetourNavmesh.getVertexCount());
+			EngineFuncs::ConsoleMessage("Navigation Mesh Generated.");
+			EngineFuncs::ConsoleMessage(va("Size: %s",Utils::FormatByteString(navDataSize).c_str()));
+			//EngineFuncs::ConsoleMessage("# Polygons: %d",DetourNavmesh.getPolyCount());
+			//EngineFuncs::ConsoleMessage("# Vertices: %d",DetourNavmesh.getVertexCount());
 			gFloodStatus = Process_FinishedNavMesh;
 			break;
 		}
@@ -1289,7 +1337,7 @@ void PathPlannerRecast::_BenchmarkPathFinder(const StringVector &_args)
 		}
 	}
 	double dTimeTaken = tme.GetElapsedSeconds();
-	EngineFuncs::ConsoleMessagef("generated %d paths in %f seconds: %f paths/sec", 
+	EngineFuncs::ConsoleMessage("generated %d paths in %f seconds: %f paths/sec", 
 		NumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)NumPaths / dTimeTaken : 0.0f);*/
 }
 
@@ -1332,7 +1380,7 @@ void PathPlannerRecast::_BenchmarkGetNavPoint(const StringVector &_args)
 
 		dTimeTaken = tme.GetElapsedSeconds();
 
-		EngineFuncs::ConsoleMessagef("findNearestPoly() %d calls, %d hits, %d misses : avg %f per second", 
+		EngineFuncs::ConsoleMessage("findNearestPoly() %d calls, %d hits, %d misses : avg %f per second", 
 		NumPolys * iNumIterations, 
 		iHits, 
 		iMisses, 
@@ -1884,12 +1932,14 @@ void PathPlannerRecast::UpdateGui()
 	gcn::TextBox *stats = static_cast<gcn::TextBox*>(ps->findWidgetById("stats"));
 	if(stats)
 	{
-		String str;
-		str += Utils::VA("Explored Cells: %d\n",RecastStats.ExploredCells);
-		str += Utils::VA("Border Cells: %d\n",RecastStats.BorderCells);
-		str += Utils::VA("Cells/Sec: %.2f\n",(double)RecastStats.ExploredCells/(RecastStats.FloodTime+Mathf::EPSILON));
-		str += Utils::VA("Open Nodes: %d\n",RecastOpenList.size());
-		//str += Utils::VA("Memory (Hf): %s\n",Utils::FormatByteString(FloodHeightField.getMemUsed()).c_str());
+		String str = va(
+			"Explored Cells: %d\nBorder Cells: %d\nCells/Sec: %.2f\nOpen Nodes: %d\n",
+			RecastStats.ExploredCells,
+			RecastStats.BorderCells,
+			(double)RecastStats.ExploredCells/(RecastStats.FloodTime+Mathf::EPSILON),
+			RecastOpenList.size()
+			);
+		//str += va("Memory (Hf): %s\n",Utils::FormatByteString(FloodHeightField.getMemUsed()).c_str());
 
 		/*int chfMem = 0;
 		for(BuildDataList::iterator it = BuildData.begin();
@@ -1898,11 +1948,11 @@ void PathPlannerRecast::UpdateGui()
 		{
 		chfMem += it->Chf.getMemUsed();
 		}
-		str += Utils::VA("Memory (CHf): %s\n",Utils::FormatByteString(chfMem).c_str());
+		str += va("Memory (CHf): %s\n",Utils::FormatByteString(chfMem).c_str());
 
 		if(CurrentNavMeshType == NavMeshStatic)
 		{
-		str += Utils::VA("NavMesh Size: %s\n",Utils::FormatByteString(DetourNavmesh->getMemUsed()).c_str());
+		str += va("NavMesh Size: %s\n",Utils::FormatByteString(DetourNavmesh->getMemUsed()).c_str());
 		}*/
 		stats->setText(str);
 	}

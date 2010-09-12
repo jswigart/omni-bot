@@ -18,6 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -87,11 +88,12 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -160,7 +162,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

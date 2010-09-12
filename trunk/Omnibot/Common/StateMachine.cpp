@@ -545,7 +545,7 @@ void State::SetEnable(bool _enable, const char *_error)
 	if(_error)
 	{
 		OBASSERT(0, _error);
-		LOGERR_BASIC(_error);
+		LOGERR(_error);
 	}
 	m_StateFlags.SetFlag(State_UserDisabled, !_enable); 
 }
@@ -799,7 +799,7 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 		StringStr s;
 		GetDebugString(s);
 
-		drawinfo.m_Graphics->drawText(Utils::VA("%s %s (%.2f) - %s:",
+		drawinfo.m_Graphics->drawText((String)va("%s %s (%.2f) - %s:",
 			prefix,GetName().c_str(),
 			GetLastPriority(),
 			s.str().c_str()),iX,iY);

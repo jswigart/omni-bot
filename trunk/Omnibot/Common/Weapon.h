@@ -28,7 +28,7 @@ class gmTableObject;
 class WeaponScriptResource : public ScriptResource
 {
 public:
-	virtual bool InitScriptSource(const fs::path &_path);
+	virtual bool InitScriptSource(const filePath &_path);
 };
 
 //////////////////////////////////////////////////////////////////////////

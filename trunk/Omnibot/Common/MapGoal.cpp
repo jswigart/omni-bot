@@ -243,7 +243,7 @@ void MapGoal::SetSmartPtr(MapGoalPtr ptr)
 	m_WeakPtr = ptr;
 }
 
-bool MapGoal::LoadFromFile(const fs::path &_file)
+bool MapGoal::LoadFromFile( const filePath & _file )
 {
 	gmGCRoot<gmUserObject> mgref = GetScriptObject(ScriptManager::GetInstance()->GetMachine());
 	gmVariable varThis(mgref);
@@ -275,10 +275,10 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 	std::transform(gtype.begin(),gtype.end(),gtype.begin(),toUpper());
 
 	if(!m_TagName.empty())
-		m_Name = Utils::VA("%s_%s",gtype.c_str(),m_TagName.c_str());
+		m_Name = va("%s_%s",gtype.c_str(),m_TagName.c_str());
 	else
 	{
-		m_Name = Utils::VA("%s_%d",gtype.c_str(),iNavId); 
+		m_Name = va("%s_%d",gtype.c_str(),iNavId); 
 	}
 	boost::replace_all(m_Name, " ", "_");
 
@@ -286,7 +286,7 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 	// Dupe name handling, append an instance number
 	if(_instance > 0)
 	{ 
-		m_Name += Utils::VA("_%d",_instance);
+		m_Name += va("_%d",_instance);
 	}
 
 	// see if it already exists
@@ -470,7 +470,7 @@ void MapGoal::_UpdateFlagState()
 //			TriggerInfo ti;
 //			ti.m_Entity = GetEntity();
 //			ti.m_Activator = GameEntity();
-//			Utils::VarArgs(ti.m_TagName, 
+//			varArgs(ti.m_TagName, 
 //				TriggerBufferSize, 
 //				"%s to team %d", 
 //				GetName().c_str(), 
@@ -579,26 +579,26 @@ bool MapGoal::InternalInit(gmGCRoot<gmTableObject> &_propmap, bool _newgoal)
 						!gmVersionAfter.IsInt() ||
 						ThreadState==gmThread::EXCEPTION)
 					{
-						EngineFuncs::ConsoleMessagef("%s goal could not upgrade properly, disabling",
-							GetName().c_str());
+						EngineFuncs::ConsoleMessage(va("%s goal could not upgrade properly, disabling",
+							GetName().c_str()));
 						SetDisabled(true);
 						return false;
 					}
 					else if(gmVersionBefore.GetInt() != gmVersionAfter.GetInt())
 					{
-						//EngineFuncs::ConsoleMessagef("%s goal updated, version %d to %d",
+						//EngineFuncs::ConsoleMessage("%s goal updated, version %d to %d",
 						//	GetName().c_str(),gmVersionBefore.GetInt(),gmVersionAfter.GetInt());
 					}
 					else if(gmVersionAfter.GetInt() == m_Version)
 					{
-						//EngineFuncs::ConsoleMessagef("%s goal up to date, version %d",
+						//EngineFuncs::ConsoleMessage("%s goal up to date, version %d",
 						//	GetName().c_str(),gmVersionAfter.GetInt());
 						break;
 					}
 					else
 					{
-						EngineFuncs::ConsoleMessagef("%s goal could not upgrade properly, disabling",
-							GetName().c_str());
+						EngineFuncs::ConsoleMessage(va("%s goal could not upgrade properly, disabling",
+							GetName().c_str()));
 						SetDisabled(true);
 						return false;
 					}
@@ -699,9 +699,8 @@ Vec3 MapGoal::GetBoundsCenter_Script()
 Box3f MapGoal::GetWorldBounds()
 {
 	Box3f obb;
-	obb.Clear();
+	obb.Identity( 8.f );
 	obb.Center = GetPosition();
-	obb.Extent[0] = obb.Extent[1] = obb.Extent[2] = 8.f;
 	EngineFuncs::EntityOrientation(GetEntity(), obb.Axis[0], obb.Axis[1], obb.Axis[2]);
 	EngineFuncs::EntityWorldOBB( GetEntity(), obb );
 	return obb;
@@ -890,7 +889,7 @@ void MapGoal::SetProperty(const String &_propname, const obUserData &_val)
 	GenerateName(0);
 
 	if(!Processed && !err.str().empty())
-		EngineFuncs::ConsoleErrorf("%s",err.str().c_str());
+		EngineFuncs::ConsoleError(va("%s",err.str().c_str()));
 }
 
 extern int NextDrawTime;
@@ -923,7 +922,7 @@ void MapGoal::RenderDebug(bool _editing, bool _highlighted)
 						call.AddParamInt(_highlighted?1:0);
 						if(call.End() == gmThread::EXCEPTION)
 						{
-							/*SetEnable(false, Utils::VA("Error in Update Callback in Goal: %s", GetName().c_str()));
+							/*SetEnable(false, va("Error in Update Callback in Goal: %s", GetName().c_str()));
 							return State_Finished;*/
 						}/**/
 
@@ -1285,7 +1284,7 @@ void MapGoal::ClassPriority::GetPriorityText(std::string &_txtout) const
 			_txtout += " ";
 			_txtout += Utils::GetClassString(Summary[i].m_ClassId);
 			_txtout += " ";
-			_txtout += Utils::VA(" %.2f",Summary[i].m_Priority);
+			_txtout += va(" %.2f",Summary[i].m_Priority);
 			EngineFuncs::ConsoleMessage(_txtout.c_str());
 		}
 	}
@@ -2017,12 +2016,12 @@ static int gmfSetBaseGoalType(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_STRING_PARAM(basetype,0);
 
+	filePath script( "scripts/mapgoals/%s", basetype );
+
 	bool Good = false;
 	try
 	{
-		fs::path goalPath("scripts/mapgoals",fs::native);
-		goalPath /= basetype;
-		if(NativePtr->LoadFromFile(goalPath))
+		if(NativePtr->LoadFromFile( script ) )
 		{
 			Good = true;
 		}
@@ -2033,7 +2032,7 @@ static int gmfSetBaseGoalType(gmThread *a_thread)
 
 	if(!Good)
 	{
-		GM_EXCEPTION_MSG("Unable to set base goal type: %s",basetype); 
+		GM_EXCEPTION_MSG( "Unable to set base goal type: %s", script ); 
 		return GM_EXCEPTION;
 	}
 

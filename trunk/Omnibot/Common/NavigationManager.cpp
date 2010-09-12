@@ -45,7 +45,7 @@ bool NavigationManager::CreatePathPlanner(NavigatorID _navid)
 		m_PathPlanner = new PathPlannerRecast;
 		break;
 	default:
-		LOGERR_BASIC("Unknown Path Planner!");
+		LOGERR("Unknown Path Planner!");
 	};
 
 	OBASSERT(m_PathPlanner, "No Path Planner!");

@@ -165,7 +165,7 @@ using namespace Wm3;
 
 #ifdef WIN32
 	//#define ENABLE_REMOTE_DEBUGGER
-	//#define ENABLE_DEBUG_WINDOW
+	#define ENABLE_DEBUG_WINDOW
 	//#define ENABLE_FILE_DOWNLOADER
 #endif
 

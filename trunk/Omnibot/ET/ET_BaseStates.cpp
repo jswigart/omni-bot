@@ -1019,7 +1019,7 @@ namespace AiState
 
 		for(int i = 0; i < MaxMortarAims; ++i)
 		{
-			if(m_MapGoal->GetProperty(Utils::VA("MortarAim[%d]",i),m_MortarAim[m_NumMortarAims]))
+			if(m_MapGoal->GetProperty(va("MortarAim[%d]",i),m_MortarAim[m_NumMortarAims]))
 			{
 				if(!m_MortarAim[m_NumMortarAims].IsZero())
 				{

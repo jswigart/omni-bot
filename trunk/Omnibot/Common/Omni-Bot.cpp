@@ -69,7 +69,7 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 #endif
 	
 	g_Logger.Start(
-		Utils::VA("%s/omnibot_%s.log", 
+		(String)va("%s/omnibot_%s.log", 
 		_pEngineFuncs->GetLogPath(),
 		_pEngineFuncs->GetMapName()), true);
 

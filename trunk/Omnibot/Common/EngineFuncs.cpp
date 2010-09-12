@@ -233,34 +233,4 @@ namespace EngineFuncs
 		g_EngineFuncs->PrintError(_msg);
 		//ThreadAddError(_msg);
 	}
-
-	void ConsoleMessagef(const char* _msg, ...)
-	{
-		const int iBufferSize = 1024;
-		char buffer[iBufferSize] = {0};
-		va_list list;
-		va_start(list, _msg);
-#ifdef WIN32
-		_vsnprintf(buffer, iBufferSize, _msg, list);	
-#else
-		vsnprintf(buffer, iBufferSize, _msg, list);
-#endif
-		va_end(list);
-		ConsoleMessage(buffer);
-	}
-
-	void ConsoleErrorf(const char* _msg, ...)
-	{
-		const int iBufferSize = 1024;
-		char buffer[iBufferSize] = {0};
-		va_list list;
-		va_start(list, _msg);
-#ifdef WIN32
-		_vsnprintf(buffer, iBufferSize, _msg, list);	
-#else
-		vsnprintf(buffer, iBufferSize, _msg, list);
-#endif
-		va_end(list);
-		ConsoleError(buffer);
-	}
 };

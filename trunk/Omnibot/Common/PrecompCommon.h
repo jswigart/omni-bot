@@ -41,7 +41,6 @@
 #include "InterfaceFuncs.h"
 
 #include "RenderOverlay.h"
-#include "DebugConsole.h"
 
 // Fuck you windows
 #undef min

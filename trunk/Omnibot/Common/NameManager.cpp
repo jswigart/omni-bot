@@ -126,7 +126,7 @@ void NameManager::SetProfileForClass(const int _class, const String &_name)
 {
 	m_ProfileMap.insert(std::make_pair(_class, _name));
 	const char *clsname = Utils::FindClassName(_class);
-	LOG("Class %s : using profile %s",clsname?clsname:"unknown",_name.c_str());
+	LOG("Class " << (clsname?clsname:"unknown") << " : using profile " << _name.c_str());
 }
 
 /*void NameManager::LoadBotNames()

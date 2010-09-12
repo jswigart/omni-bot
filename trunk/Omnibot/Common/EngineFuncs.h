@@ -36,9 +36,6 @@ namespace EngineFuncs
 
 	void FlushAsyncMessages();
 
-	void ConsoleMessagef(CHECK_PRINTF_ARGS const char* _msg, ...);
-	void ConsoleErrorf(CHECK_PRINTF_ARGS const char* _msg, ...);
-
 	void ConsoleMessage(const char* _msg);
 	void ConsoleError(const char* _msg);
 };

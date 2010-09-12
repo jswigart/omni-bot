@@ -31,7 +31,7 @@ void WeaponDatabase::RegisterWeapon(int _weaponId, const WeaponPtr &_wpn)
 	}
 	else
 	{
-		Utils::OutputDebug(kError, Utils::VA("Duplicate Weapon Id: %d", _weaponId));
+		Utils::OutputDebug(kError, va("Duplicate Weapon Id: %d", _weaponId));
 	}
 }
 
@@ -85,7 +85,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 	DirectoryList wpnFiles;
 	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, ex);
 
-	LOG("Loading %d weapon scripts from: scripts/weapons",wpnFiles.size());
+	LOG("Loading " << wpnFiles.size() << " weapon scripts from: scripts/weapons");
 	DirectoryList::const_iterator cIt = wpnFiles.begin(), cItEnd = wpnFiles.end();
 	for(; cIt != cItEnd; ++cIt)
 	{
@@ -95,8 +95,10 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 
 		WeaponPtr wpn(new Weapon);
 
-		LOG("Loading Weapon Definition: %s",(*cIt).string().c_str());
-		if(wpn->InitScriptSource(*cIt))
+		LOG("Loading Weapon Definition: " << (*cIt).string());
+
+		filePath script( (*cIt).string().c_str() );
+		if(wpn->InitScriptSource(script))
 		{
 			if(wpn->GetWeaponID() != 0 && wpn->GetWeaponNameHash())
 			{
@@ -105,7 +107,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 		}
 		else
 		{
-			LOGERR("Error Running Weapon Script: %s",(*cIt).string().c_str());
+			LOGERR("Error Running Weapon Script: " << (*cIt).string());
 			OBASSERT(0, "Error Running Weapon Script");
 		}
 	}
@@ -124,8 +126,8 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 		WeaponPtr wpn = (*it).second;
 		if(wpn->GetLiveUpdateKey() == _key)
 		{
-			EngineFuncs::ConsoleMessagef("File changed, reloading %s",wpn->GetScriptPath().string().c_str());
-			LOG("Re-Loading Weapon Definition: %s",wpn->GetScriptPath().string().c_str());
+			EngineFuncs::ConsoleMessage(va("File changed, reloading %s",wpn->GetScriptPath()));
+			LOG("Re-Loading Weapon Definition: "<<wpn->GetScriptPath());
 			
 			WeaponPtr newwpn(new Weapon);
 
@@ -146,7 +148,7 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool WeaponScriptResource::InitScriptSource(const fs::path &_path)
+bool WeaponScriptResource::InitScriptSource(const filePath &_path)
 {
 	gmMachine * pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -161,8 +163,9 @@ bool WeaponScriptResource::InitScriptSource(const fs::path &_path)
 		weaponTable->CopyTo(pMachine,weaponTableOld);
 	}
 
-	const bool a = ScriptManager::GetInstance()->ExecuteFile("scripts/weapons/weapon_defaults.gm", iThreadId, &varThis);
-	const bool b = ScriptManager::GetInstance()->ExecuteFile(_path, iThreadId, &varThis);
+	const filePath wpnDefault( "scripts/weapons/weapon_defaults.gm" );
+	const bool a = ScriptManager::GetInstance()->ExecuteFile( wpnDefault, iThreadId, &varThis );
+	const bool b = ScriptManager::GetInstance()->ExecuteFile( _path, iThreadId, &varThis );
 	const bool c = ScriptResource::InitScriptSource(_path);
 
 	if(a && b && c)
@@ -181,11 +184,11 @@ bool WeaponScriptResource::InitScriptSource(const fs::path &_path)
 					{
 						if(IGameManager::GetInstance()->GetGame()->AddWeaponId(weaponName,pNode->m_value.GetInt()))
 						{
-							LOG("Adding new weapon enumeration: %s (%d)",weaponName,pNode->m_value.GetInt());
+							LOG("Adding new weapon enumeration: "<<weaponName<<"("<<pNode->m_value.GetInt()<<")");
 						}
 						else
 						{
-							LOGERR("Can't add new weapon enumeration: %s (%d)",weaponName,pNode->m_value.GetInt());
+							LOG("Can't add new weapon enumeration: "<<weaponName<<"("<<pNode->m_value.GetInt()<<")");
 						}
 					}
 				}

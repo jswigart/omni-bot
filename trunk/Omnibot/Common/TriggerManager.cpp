@@ -595,7 +595,7 @@ void TriggerManager::HandleTrigger(const TriggerInfo &_triggerInfo)
 		StringStr msg;
 		msg << "<" << (bScriptCallback ? "+++" : "---") << ">" << (_triggerInfo);
 		EngineFuncs::ConsoleMessage(msg.str().c_str());
-		LOG_BASIC(msg.str().c_str());
+		LOG(msg.str().c_str());
 		
 		Utils::OutputDebug(kInfo, msg.str().c_str());
 	}

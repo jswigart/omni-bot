@@ -102,7 +102,6 @@ void OmnibotDisableDrawing()
 void OmnibotRenderDebugLines()
 {
 	int i;
-
 	if(cg_omnibotdrawing.integer)
 	{
 		// get the latest messages from the bot.

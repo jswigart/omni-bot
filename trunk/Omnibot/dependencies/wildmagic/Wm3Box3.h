@@ -38,6 +38,7 @@ public:
 	const Vector3<Real> GetCenterBottom() const;
 
 	void Clear();
+	void Identity( float defaultSize = 0.f );
 
     Vector3<Real> Center;
     Vector3<Real> Axis[3];  // must be an orthonormal set of vectors

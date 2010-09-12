@@ -126,38 +126,19 @@ namespace Utils
 
 	String FormatEntityString(GameEntity _e)
 	{
-		return Utils::VA("%d:%d", _e.GetIndex(), _e.GetSerial());
+		return String(va("%d:%d", _e.GetIndex(), _e.GetSerial()));
 	}
 	String FormatVectorString(const Vector3f &v)
 	{
-		return Utils::VA(Utils::VA("(%.3f, %.3f, %.3f)",
-			v.x,
-			v.y,
-			v.z));
+		return String(va("(%.3f, %.3f, %.3f)",v.x,v.y,v.z));
 	}
 
 	String FormatMatrixString(const Matrix3f &m)
 	{
-		return Utils::VA(Utils::VA("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
+		return String(va("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
 			m.GetColumn(0).x,m.GetColumn(0).y,m.GetColumn(0).z,
 			m.GetColumn(1).x,m.GetColumn(1).y,m.GetColumn(1).z,
 			m.GetColumn(2).x,m.GetColumn(2).y,m.GetColumn(2).z));
-	}
-
-	bool ConvertStringToHex(const String &_str, obuint32 &_var)
-	{
-		StringStr st;
-		st << _str;
-		st >> std::hex >> _var;
-		return !st.bad();
-	}
-
-	bool ConvertStringToHex(const String &_str, obuint64 &_var)
-	{
-		StringStr st;
-		st << _str;
-		st >> std::hex >> _var;
-		return !st.bad();
 	}
 
 	/*
@@ -219,7 +200,7 @@ namespace Utils
 				return &g_StringRepository[it->second];
 			}
 		}
-		return Utils::VA("%x", _hash);
+		return String(va("%x", _hash));
 	}
 
 	bool IsWhiteSpace(const char _ch)
@@ -259,20 +240,6 @@ namespace Utils
 			}
 			_tokens.push_back(_s.substr(pos_start, pos_end - pos_start));
 		}
-	}
-
-	const char *VA(const char* _msg, ...)
-	{
-		static char buffer[8192] = {0};
-		va_list list;
-		va_start(list, _msg);
-#ifdef WIN32
-		_vsnprintf(buffer, 8192, _msg, list);	
-#else
-		vsnprintf(buffer, 8192, _msg, list);
-#endif
-		va_end(list);
-		return buffer;
 	}
 
 	const char *VarArgs(char *_outbuffer, int _buffsize, const char* _msg, ...)
@@ -353,14 +320,14 @@ namespace Utils
 					catch(const std::exception & ex)
 					{
 						const char *pErr = ex.what();
-						LOG("Filesystem Exception: %s",pErr);
+						LOG("Filesystem Exception: " << pErr);
 					}
 				}
 			}
 		catch(const std::exception & ex)
 		{
 			const char *pErr = ex.what();
-			LOG("Filesystem Exception: %s",pErr);
+			LOG("Filesystem Exception: " << pErr);
 		}
 
 		// Not found, give back an empty path.
@@ -432,7 +399,7 @@ namespace Utils
 		}
 		catch(const std::exception & ex)
 		{
-			LOG("Bad Override Path: %s",ex.what());				
+			LOG("Bad Override Path: " << ex.what());
 		}
 		return basePath;
 	}
@@ -1045,7 +1012,7 @@ namespace Utils
 	{
 		// FIX THIS! CHECK WITH ENGINE
 		static int nextIndex = 0;
-		return Utils::VA("OmniBot[%i]", nextIndex++);
+		return String(va("OmniBot[%i]", nextIndex++));
 	}
 
 	bool TestSegmentForOcclusion(const Segment3f &seg)
@@ -1572,11 +1539,84 @@ namespace Utils
 
 };
 
+//////////////////////////////////////////////////////////////////////////
+
+va::va(const char* msg, ...)
+{
+	va_list list;
+	va_start(list, msg);
+#ifdef WIN32
+	_vsnprintf(buffer, BufferSize, msg, list);	
+#else
+	vsnprintf(buffer, BufferSize, msg, list);
+#endif
+	va_end(list);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+filePath::filePath()
+{
+	buffer[ 0 ] = 0;
+}
+
+filePath::filePath(const char* msg, ...)
+{
+	va_list list;
+	va_start(list, msg);
+#ifdef WIN32
+	_vsnprintf(buffer, BufferSize, msg, list);	
+#else
+	vsnprintf(buffer, BufferSize, msg, list);
+#endif
+	va_end(list);
+	FixPath();
+}
+
+String filePath::FileName() const
+{
+	const char * fileName = buffer;
+	const char *pC = buffer;
+	while(*pC != '\0')
+	{
+		if(*pC == '\\' || *pC == '/')
+			fileName = pC+1;
+		++pC;
+	}
+	return fileName;
+}
+
+void filePath::FixPath()
+{
+	// unixify the path slashes
+	char *pC = buffer;
+	while(*pC != '\0')
+	{
+		if(*pC == '\\')
+			*pC = '/';
+		++pC;
+	}
+
+	// trim any trailing slash
+	while(*pC == '/' && pC > buffer)
+	{
+		*pC = NULL;
+		--pC;
+	}
+}
+
+std::ostream& operator <<(std::ostream& _o, const filePath& _filePath) {
+	_o << _filePath.c_str();
+	return _o;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 bool PropertyMap::AddProperty(const String &_name, const String &_data)
 {
 	if(_name.empty())
 	{
-		LOGERR_BASIC("Invalid Waypoint Property Name or Data");
+		LOGERR("Invalid Waypoint Property Name or Data");
 		return false;
 	}
 
