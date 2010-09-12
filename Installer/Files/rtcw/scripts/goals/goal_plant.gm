@@ -99,18 +99,7 @@ this.Update = function()
 			this.Finished();
 		}
 
-		switch(botClass)
-		{
-			case CLASS.ENGINEER:
-			{
-				this.UpdateDynamite();
-			}
-			default:
-			{
-				this.BlackboardDelay(10, this.MapGoal);
-				this.Finished();
-			}
-		}
+		this.UpdateDynamite();
 	}
 	else {
 		this.BlackboardDelay(10, this.MapGoal);

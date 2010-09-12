@@ -82,6 +82,26 @@ global Map =
 				sleep( 4 );
 			},
 		},
+		
+		tyelebotfull =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.STRAFE_R, 0.5 );
+				sleep(0.5);
+				_this.Bot.HoldButton( BTN.FORWARD, 9 );
+				sleep( 9 );
+			},
+		},
+
+		tyelebothalf =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 4.5 );
+				sleep( 4.5 );
+			},
+		},		
 
 		elejump =
 		{
@@ -106,9 +126,19 @@ global Map =
 			navigate = function( _this )
 			{
 				_this.Bot.HoldButton( BTN.FORWARD, 3 );
-				sleep( 3 );
+				sleep( 2 );
 			},
 		},
+		
+		aaeledown =
+		{
+			navigate = function( _this )
+			{
+				_this.AddAimRequest(Priority.High, "position", Vector3(-12403, 6133, -271));
+				sleep( 2 );
+				_this.ReleaseAimRequest();
+			},
+		},		
 
 		cyladder =
 		{
@@ -209,7 +239,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_opscover.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			if ( Map.FlagStatus == 1 ) {
-				SetAvailableMapGoals( TEAM.AXIS, ture, "AIRSTRIKE_ruinsas.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
 			}
 		}
@@ -307,7 +337,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_opsd.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
 	},
 
 	East_Gate_Planted = function( trigger )
@@ -597,6 +627,7 @@ global OnMapLoad = function()
 	tThree = OnTriggerRegion( AABB( -8032.000,3701.000,287.000,-7855.000,3741.000,409.000 ), Map.RuinsTrigger );
 	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
 	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
+	tyele = OnTriggerRegion(AABB(-10204.000,1679.000,-822.000,-9874.000,1832.000,330.000),RegionTrigger.DisableBotPush);
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'

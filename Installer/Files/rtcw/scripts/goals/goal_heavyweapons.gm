@@ -6,6 +6,7 @@ this.Parent = "LowLevel";		// The name of the parent. This setting determines wh
 
 this.LimitToClass(CLASS.SOLDIER);
 this.LimitToNoTarget(); // let weapon system take over when they have a target
+this.LimitToNoEntityFlag(ENTFLAG.ON_LADDER, ENTFLAG.MNT_MG42);
 
 this.Initialize = function()
 {
@@ -15,7 +16,7 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
-	if (this.Bot.GetVelocity().IsZero()){
+	if (this.Bot.GetVelocity().IsZero() && !this.Bot.IsStuck()){
 		this.Priority = 0.5;
 	}
 	
