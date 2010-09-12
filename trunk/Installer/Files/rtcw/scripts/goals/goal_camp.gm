@@ -42,6 +42,7 @@ this.Exit = function()
 {
 	this.UsingWeapon = null;
 	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.ReleaseWeaponRequest();
 };
 
 this.GetPriority = function()
@@ -81,7 +82,12 @@ this.Update = function()
 
 		if ( this.WeaponRestricted > 0 && this.UsingWeapon )
 		{
-			this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
+			if ( this.IsSniper ) {
+				this.AddWeaponRequest( Priority.Medium, WEAPON.SNIPERRIFLE );
+			}
+			else {
+				this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
+			}
 		}
 
 		timeout = 0;
@@ -97,10 +103,10 @@ this.Update = function()
 				this.Bot.HoldButton(BTN.CROUCH, 1.1);
 			}
 
-			if ( this.WeaponRestricted > 0 && this.IsSniper )
-			{
-				this.Bot.HoldButton(BTN.AIM,1.1);
-			}
+			//if ( this.WeaponRestricted > 0 && this.IsSniper )
+			//{
+			//	this.Bot.HoldButton(BTN.AIM,1.1);
+			//}
 
 			r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
 			this.AddAimRequest(Priority.Low, "facing", this.MapGoal.AimVectors[ r ]);

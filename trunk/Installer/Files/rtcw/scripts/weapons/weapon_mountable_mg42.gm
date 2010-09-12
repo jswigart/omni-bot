@@ -20,4 +20,4 @@ this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
 this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );
 
 this.PrimaryFire.DefaultDesirability = 0.0;
-this.PrimaryFire.SetDesirabilityRange( 0, 10000, 0.8 );
+this.PrimaryFire.SetDesirabilityRange( 0, 10000, 2.0 );
