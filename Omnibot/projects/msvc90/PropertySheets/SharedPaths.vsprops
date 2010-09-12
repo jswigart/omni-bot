@@ -2,7 +2,7 @@
 <VisualStudioPropertySheet
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="Paths"
+	Name="SharedPaths"
 	>
 	<UserMacro
 		Name="BOOST"
@@ -32,6 +32,11 @@
 	<UserMacro
 		Name="ETDIR"
 		Value="E:\Games\WET"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="REPO_ROOT"
+		Value="$(SolutionDir)..\..\..\"
 		PerformEnvironmentSet="true"
 	/>
 </VisualStudioPropertySheet>

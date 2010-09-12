@@ -21,7 +21,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -87,7 +87,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>

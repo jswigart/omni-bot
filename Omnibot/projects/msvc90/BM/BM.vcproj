@@ -21,7 +21,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -88,7 +88,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -96,7 +96,7 @@
 			OutputDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="..\build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\Paths.vsprops"
+			InheritedPropertySheets="..\PropertySheets\ReleaseProperties.vsprops;..\PropertySheets\BaseDllProperties.vsprops;..\PropertySheets\BaseBuildProperties.vsprops;..\PropertySheets\SharedPaths.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -162,7 +162,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying to &quot;$(OMNIBOT_INST)&quot;"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).pdb&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName)_$(ConfigurationName).map&quot; &quot;$(OMNIBOT_INST)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
