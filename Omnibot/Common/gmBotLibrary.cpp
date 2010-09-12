@@ -135,7 +135,7 @@ static int GM_CDECL gmfLog(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_STRING_PARAM(msg, 0);
-	LOG_BASIC(msg);
+	LOG(msg);
 	return GM_OK;
 }
 
@@ -160,7 +160,8 @@ static int gmfRegisterTriggerCallback(gmThread *a_thread)
 	{
 		TriggerManager::GetInstance()->SetScriptCallback(triggername, 
 			gmGCRoot<gmFunctionObject>(callbackfunction, a_thread->GetMachine()));
-		LOG("Trigger Callback: %s : For Function: %s Set.",callbackfunction->GetDebugName(),triggername);
+		LOG("Trigger Callback: " << callbackfunction->GetDebugName() << 
+			" : For Function: " << triggername << " Set.");
 	}
 	return GM_OK;
 }
@@ -223,7 +224,7 @@ static int GM_CDECL gmfRunScript(gmThread *a_thread)
 static int GM_CDECL gmfAddBot(gmThread *a_thread)
 {
 	Msg_Addbot b;
-	Utils::ZeroMem(b);
+	memset(&b,0,sizeof(b));
 
 	if(a_thread->ParamType(0) == GM_TABLE)
 	{
@@ -502,7 +503,7 @@ static int GM_CDECL gmfGetMapGoal(gmThread *a_thread)
 		else
 		{
 			a_thread->PushNull();
-			LOGWARN("Map Goal %s not found", name);
+			LOGWARN("Map Goal not found: " << name);
 		}
 	}	
 	return GM_OK;
@@ -647,8 +648,9 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 		a_thread->PushInt(1);
 	else
 	{
-		EngineFuncs::ConsoleMessagef("SetAvailableMapGoals: goal query for %s has no results!", pExpression );
-		LOG("SetAvailableMapGoals: goal query for %s has no results!", pExpression);
+		EngineFuncs::ConsoleMessage(va("SetAvailableMapGoals: goal query for %s has no results!", 
+			pExpression ));
+		LOG("SetAvailableMapGoals: goal query for " << pExpression << " has no results!");
 		a_thread->PushInt(0);
 	}
 
@@ -2331,14 +2333,14 @@ static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 	if(pGame)
 	{
-		EngineFuncs::ConsoleMessagef("Omni-bot %s, Revision %s, %s", 
+		EngineFuncs::ConsoleMessage(va("Omni-bot %s, Revision %s, %s", 
 			pGame->GetVersion(),
 			Revision::Number().c_str(),
-			Revision::Date().c_str());
-		EngineFuncs::ConsoleMessagef("Game: %s", pGame->GetGameName());
-		EngineFuncs::ConsoleMessagef("Mod Folder: %s", Utils::GetModFolder().string().c_str());
-		EngineFuncs::ConsoleMessagef("Nav Folder: %s", Utils::GetNavFolder().string().c_str());
-		EngineFuncs::ConsoleMessagef("Script Folder: %s", Utils::GetScriptFolder().string().c_str());
+			Revision::Date().c_str()));
+		EngineFuncs::ConsoleMessage(va("Game: %s", pGame->GetGameName()));
+		EngineFuncs::ConsoleMessage(va("Mod Folder: %s", Utils::GetModFolder().string().c_str()));
+		EngineFuncs::ConsoleMessage(va("Nav Folder: %s", Utils::GetNavFolder().string().c_str()));
+		EngineFuncs::ConsoleMessage(va("Script Folder: %s", Utils::GetScriptFolder().string().c_str()));
 	}
 	return GM_OK;
 }
@@ -2707,7 +2709,7 @@ static int GM_CDECL gmfGetWeapon(gmThread *a_thread)
 		a_thread->PushUser(wp->GetScriptObject(a_thread->GetMachine()));
 	else
 	{
-		OBASSERT(0, Utils::VA("No Weapon of Type: %d", weaponId));
+		OBASSERT(0, va("No Weapon of Type: %d", weaponId));
 		a_thread->PushNull();
 	}
 	return GM_OK;

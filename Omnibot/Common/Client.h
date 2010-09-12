@@ -143,7 +143,7 @@ public:
 	Vector3f ToLocalSpace(const Vector3f &_worldpos);
 	Vector3f ToWorldSpace(const Vector3f &_localpos);
 
-	void OutputDebug(MessageType _type, const String &_str);
+	void OutputDebug(MessageType _type, const char * _str);
 	
 	// Property Accessors
 

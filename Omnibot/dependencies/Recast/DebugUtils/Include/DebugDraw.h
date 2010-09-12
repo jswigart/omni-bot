@@ -62,6 +62,14 @@ inline unsigned int duRGBA(int r, int g, int b, int a)
 	return ((unsigned int)r) | ((unsigned int)g << 8) | ((unsigned int)b << 16) | ((unsigned int)a << 24);
 }
 
+inline void duDecodeRGBA( unsigned int col, float & r, float & g, float & b, float & a )
+{
+	r = (float)( (col) & 0xFF ) / 255.f;
+	g = (float)( (col>>8) & 0xFF ) / 255.f;
+	b = (float)( (col>>16) & 0xFF ) / 255.f;
+	a = (float)( (col>>24) & 0xFF ) / 255.f;
+}
+
 inline unsigned int duRGBAf(float fr, float fg, float fb, float fa)
 {
 	unsigned char r = (unsigned char)(fr*255.0f);
@@ -194,6 +202,5 @@ public:
 	void clear();
 	void draw(struct duDebugDraw* dd);
 };
-
 
 #endif // DEBUGDRAW_H

@@ -72,13 +72,13 @@ public:
 
 	bool ExecuteString(const String& _string, gmVariable* _this = NULL, bool _now = true);
 	bool ExecuteStringLogged(const String &_string);
-	bool ExecuteFile(const fs::path& _file, int &_threadId, gmVariable* _this = NULL);
+	bool ExecuteFile(const filePath& _file, int &_threadId, gmVariable* _this = NULL);
 
 	void ShowGMStats();
 
 	void GetAutoCompleteList(const String &_string, StringVector &_completions);
 
-	LiveUpdateKey RegisterLiveUpdate(const fs::path &_file);
+	LiveUpdateKey RegisterLiveUpdate(const filePath &_file);
 
 	// Helper functions.
 	gmTableObject *GetGlobalBotsTable();
@@ -132,11 +132,10 @@ protected:
 class ScriptResource
 {
 public:
-
-	virtual bool InitScriptSource(const fs::path &_path);
+	virtual bool InitScriptSource(const filePath &_path);
 
 	LiveUpdateKey GetLiveUpdateKey() const { return m_Key; }
-	const fs::path GetScriptPath() const { return m_Script; }
+	const filePath GetScriptPath() const { return m_Script; }
 
 	virtual gmGCRoot<gmUserObject> GetScriptObject(gmMachine *_machine) const = 0;
 
@@ -144,7 +143,7 @@ public:
 	ScriptResource();
 	virtual ~ScriptResource();
 private:
-	fs::path		m_Script;
+	filePath		m_Script;
 	LiveUpdateKey	m_Key;
 };
 

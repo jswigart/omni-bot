@@ -105,10 +105,6 @@ namespace Utils
 	//		Splits a string into tokens using provided seperators. Stores in <StringVector>
 	void Tokenize(const String &_s, const String &_separators, StringVector &_tokens);
 
-	// function: VA
-	//		Wrapper around sprintf using a static character buffer.
-	const char *VA(CHECK_PRINTF_ARGS const char* _msg, ...);
-
 	const char *VarArgs(CHECK_VALID_BYTES(_buffsize) char *_outbuffer, int _buffsize, CHECK_PRINTF_ARGS const char* _msg, ...);
 
 	void OutputDebugBasic(eMessageType _type, const char* _msg);
@@ -259,15 +255,6 @@ namespace Utils
 		return !st.fail();
 	}
 
-	template <typename T>
-	void ZeroMem(T &_var)
-	{
-		memset(&_var,0,sizeof(T));
-	}
-
-	bool ConvertStringToHex(const String &_str, obuint32 &_var);
-	bool ConvertStringToHex(const String &_str, obuint64 &_var);
-
 	String FindOpenPlayerName();
 
 	enum AssertMode
@@ -354,7 +341,39 @@ public:
 private:
 	ValueMap m_Properties;
 };
+
 //////////////////////////////////////////////////////////////////////////
+
+class va {
+public:
+	const char * c_str() const { return buffer; }
+	operator const char *() const { return buffer; }
+
+	va(CHECK_PRINTF_ARGS const char* msg, ...);
+protected:
+	enum { BufferSize = 1024 };
+	char buffer[BufferSize];
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class filePath {
+public:
+	const char * c_str() const { return buffer; }
+	operator const char *() const { return buffer; }
+
+	String FileName() const;
+
+	filePath();
+	filePath( const char* msg, ... );
+private:
+	enum { BufferSize = 1024 };
+	char buffer[BufferSize];
+
+	void FixPath();
+};
+
+std::ostream& operator <<(std::ostream& _o, const filePath& _filePath);
 
 //////////////////////////////////////////////////////////////////////////
 

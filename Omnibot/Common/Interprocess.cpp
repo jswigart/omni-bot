@@ -74,18 +74,18 @@ namespace InterProcess
 			{
 				message_queue::remove("debug_draw_queue");
 				g_MessageQueue.reset(new InterProcessMessageQueue<IPC_DebugDrawMsg>("debug_draw_queue", 8192));
-				LOG_BASIC("InterProcess Initialized");
+				LOG("InterProcess Initialized");
 			}
 			catch(interprocess_exception &ex)
 			{
 				g_MessageQueue.reset();
-				LOGERR_BASIC(ex.what());				
+				LOGERR(ex.what());				
 			}
 #endif // INTERPROCESS
 		}
 		else
 		{
-			LOG_BASIC("InterProcess Not Required, interface callbacks defined.");
+			LOG("InterProcess Not Required, interface callbacks defined.");
 		}
 	}
 	

@@ -19,7 +19,6 @@
 #include "BlackBoard.cpp"
 #include "BlackBoardItems.cpp"
 
-#include "DebugConsole.cpp"
 #include "DebugWindow.cpp"
 
 //#include "BotExports.cpp"

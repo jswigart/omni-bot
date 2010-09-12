@@ -1186,10 +1186,10 @@ namespace AiState
 				m_SentryStatus.m_Level			= m->m_Level;
 
 				/*DBG_MSG(0, GetClient(), kNormal, "Sentry Stats");
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Level: %d", m_SentryStatus.m_Level));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Health: %d/%d", m_SentryStatus.m_Health, m_SentryStatus.m_MaxHealth));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Shells: %d/%d", m_SentryStatus.m_Shells[0], m_SentryStatus.m_Shells[1]));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Rockets: %d/%d", m_SentryStatus.m_Rockets[0], m_SentryStatus.m_Rockets[1]));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Level: %d", m_SentryStatus.m_Level));
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d/%d", m_SentryStatus.m_Health, m_SentryStatus.m_MaxHealth));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d/%d", m_SentryStatus.m_Shells[0], m_SentryStatus.m_Shells[1]));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d/%d", m_SentryStatus.m_Rockets[0], m_SentryStatus.m_Rockets[1]));*/
 				break;
 			}
 		}
@@ -1304,12 +1304,12 @@ namespace AiState
 				m_DispenserStatus.m_Armor		= m->m_Armor;
 
 				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Health: %d", m_DispenserStatus.m_Health));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Shells: %d", m_DispenserStatus.m_Shells));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Nails: %d", m_DispenserStatus.m_Nails));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Rockets: %d", m_DispenserStatus.m_Rockets));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Cells: %d", m_DispenserStatus.m_Cells));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Armor: %d", m_DispenserStatus.m_Armor));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", m_DispenserStatus.m_Health));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", m_DispenserStatus.m_Shells));
+				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", m_DispenserStatus.m_Nails));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", m_DispenserStatus.m_Rockets));
+				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", m_DispenserStatus.m_Cells));
+				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", m_DispenserStatus.m_Armor));*/
 				break;
 			}
 		}
@@ -1643,8 +1643,8 @@ namespace AiState
 		for(int i = 0; i < MaxPlacementPts; ++i)
 		{
 			m_Traps[m_NumTraps].Reset();
-			if(mg->GetProperty(Utils::VA("Place[%d].Position",i),m_Traps[m_NumTraps].m_Source) &&
-				mg->GetProperty(Utils::VA("Place[%d].Facing",i),m_Traps[m_NumTraps].m_Facing))
+			if(mg->GetProperty(va("Place[%d].Position",i),m_Traps[m_NumTraps].m_Source) &&
+				mg->GetProperty(va("Place[%d].Facing",i),m_Traps[m_NumTraps].m_Facing))
 			{
 				if(!m_Traps[m_NumTraps].m_Facing.IsZero())
 				{
@@ -1657,8 +1657,8 @@ namespace AiState
 		{
 			m_Wait[m_NumWaits].Reset();
 
-			mg->GetProperty(Utils::VA("Wait[%d].Position",i),m_Wait[m_NumWaits].m_Position);
-			mg->GetProperty(Utils::VA("Wait[%d].Facing",i),m_Wait[m_NumWaits].m_Facing);
+			mg->GetProperty(va("Wait[%d].Position",i),m_Wait[m_NumWaits].m_Position);
+			mg->GetProperty(va("Wait[%d].Facing",i),m_Wait[m_NumWaits].m_Facing);
 			/*mg->GetProperty("MinWaitTime",m_MinWaitTime);
 			mg->GetProperty("MaxWaitTime",m_MaxWaitTime);*/
 
@@ -2504,12 +2504,12 @@ namespace AiState
 				const Event_TeleporterStatus_TF	*m = _message.Get<Event_TeleporterStatus_TF>();
 				m;
 				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Health: %d", m_DispenserStatus.m_Health));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Shells: %d", m_DispenserStatus.m_Shells));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Nails: %d", m_DispenserStatus.m_Nails));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Rockets: %d", m_DispenserStatus.m_Rockets));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Cells: %d", m_DispenserStatus.m_Cells));
-				DBG_MSG(0, GetClient(), kNormal, Utils::VA("Armor: %d", m_DispenserStatus.m_Armor));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", m_DispenserStatus.m_Health));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", m_DispenserStatus.m_Shells));
+				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", m_DispenserStatus.m_Nails));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", m_DispenserStatus.m_Rockets));
+				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", m_DispenserStatus.m_Cells));
+				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", m_DispenserStatus.m_Armor));*/
 				break;
 			}
 		}

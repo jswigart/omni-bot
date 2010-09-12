@@ -84,7 +84,7 @@ bool BM_Game::Init()
 
 void BM_Game::InitScriptBinds(gmMachine *_machine)
 {
-	LOG_BASIC("Binding BM Library...");
+	LOG("Binding BM Library...");
 	gmBindBMLibrary(_machine);
 }
 

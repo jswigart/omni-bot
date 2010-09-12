@@ -1822,7 +1822,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 				// Out of nodes!
 				if(iDeepestNode == -1)
 				{
-					EngineFuncs::ConsoleMessagef("%d Sectors Merged.", m_Sectors.size());
+					EngineFuncs::ConsoleMessage(va("%d Sectors Merged.", m_Sectors.size()));
 					status = Process_ConnectSectors;
 					EngineFuncs::ConsoleMessage("Connecting Sectors.");
 					break;
@@ -1893,8 +1893,8 @@ int PathPlannerFloodFill::Process_FloodFill()
 			for(obuint32 s = 0; s < m_Sectors.size(); ++s)
 				iSize += m_Sectors[s].m_SectorLinks.size() * sizeof(NavigationMeshFF::NavLink);
 
-			EngineFuncs::ConsoleMessagef("Approx size of stored Navigation Mesh: %s", 
-				Utils::FormatByteString(iSize).c_str());
+			EngineFuncs::ConsoleMessage(va("Approx size of stored Navigation Mesh: %s", 
+				Utils::FormatByteString(iSize).c_str()));
 
 			status = Process_Cleanup;
 			break;
@@ -1911,10 +1911,10 @@ int PathPlannerFloodFill::Process_FloodFill()
 					iNumBad++;
 			}
 
-			EngineFuncs::ConsoleMessagef("%d good nodes, %d bad nodes, in %f seconds", 
+			EngineFuncs::ConsoleMessage(va("%d good nodes, %d bad nodes, in %f seconds", 
 				iNumGood, 
 				iNumBad, 
-				m_FloodFillData->m_Stats.m_TotalTime);
+				m_FloodFillData->m_Stats.m_TotalTime));
 
 			// Release the node data.
 			//m_FloodFillData.reset();
@@ -1978,7 +1978,7 @@ void PathPlannerFloodFill::AddFloodStart(const Vector3f &_vec)
 
 void PathPlannerFloodFill::ClearFloodStarts()
 {
-	EngineFuncs::ConsoleMessagef("Clearing %d flood start nodes.", m_StartPositions.size());
+	EngineFuncs::ConsoleMessage(va("Clearing %d flood start nodes.", m_StartPositions.size()));
 	m_StartPositions.clear();
 }
 
@@ -2005,8 +2005,8 @@ void PathPlannerFloodFill::SaveFloodStarts()
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessagef("Saved %d nav starts from %s", 
-		m_StartPositions.size(), strMap.c_str());
+	EngineFuncs::ConsoleMessage(va("Saved %d nav starts from %s", 
+		m_StartPositions.size(), strMap.c_str()));
 }
 
 void PathPlannerFloodFill::LoadFloodStarts()
@@ -2037,8 +2037,8 @@ void PathPlannerFloodFill::LoadFloodStarts()
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessagef("Loaded %d nav starts from %s", 
-		m_StartPositions.size(), strMap.c_str());
+	EngineFuncs::ConsoleMessage(va("Loaded %d nav starts from %s", 
+		m_StartPositions.size(), strMap.c_str()));
 }
 
 void PathPlannerFloodFill::FloodFill(const FloodFillOptions &_options)

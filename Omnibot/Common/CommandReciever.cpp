@@ -46,7 +46,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 					const char *pHelpString = vHelp.GetCStringSafe(0);
 					if(pHelpString)
 					{
-						EngineFuncs::ConsoleMessagef(pHelpString);
+						EngineFuncs::ConsoleMessage(pHelpString);
 					}
 					else
 					{
@@ -59,7 +59,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 							{
 								const char *pHelp = pNode->m_value.GetCStringSafe(0);
 								if(pHelp)
-									EngineFuncs::ConsoleMessagef(pHelp);
+									EngineFuncs::ConsoleMessage(pHelp);
 								pNode = pUsageTbl->GetNext(tIt);
 							}
 						}
@@ -70,7 +70,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 		}
 		if(bPrintUsage)
 		{
-			EngineFuncs::ConsoleErrorf("No Usage Info For Command: %s", _args[0].c_str());
+			EngineFuncs::ConsoleError(va("No Usage Info For Command: %s", _args[0].c_str()));
 			return true;
 		}
 
@@ -199,20 +199,20 @@ void CommandReciever::Remove(const String _name)
 
 void CommandReciever::cmdHelp(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessagef("---- Omni-bot Command Help ----");
+	EngineFuncs::ConsoleMessage("---- Omni-bot Command Help ----");
 	CommandMap::const_iterator it = m_CommandMap.begin();
 	for( ; it != m_CommandMap.end(); ++it)
 	{
 		if(it->first == "help")
 			continue;
-		EngineFuncs::ConsoleMessagef("%s : %s", it->first.c_str(), it->second.first.c_str());
+		EngineFuncs::ConsoleMessage(va("%s : %s", it->first.c_str(), it->second.first.c_str()));
 	}
 
 	gmMachine *m_Machine = ScriptManager::GetInstance()->GetMachine();
 	gmTableObject *pCommandsTable = ScriptManager::GetInstance()->GetGlobalCommandsTable();
 	if(pCommandsTable)
 	{
-		EngineFuncs::ConsoleMessagef("---- Script Commands ----");
+		EngineFuncs::ConsoleMessage("---- Script Commands ----");
 		gmTableIterator tIt;
 		gmTableNode *pNode = pCommandsTable->GetFirst(tIt);
 		while(pNode)
@@ -227,7 +227,7 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 					const char *pHelpString = vHelp.GetCStringSafe(0);
 					if(pHelpString)
 					{
-						EngineFuncs::ConsoleMessagef("%s : %s", pCommandName, pHelpString);
+						EngineFuncs::ConsoleMessage(va("%s : %s", pCommandName, pHelpString));
 					}
 					else
 					{
@@ -237,7 +237,7 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 							pHelpString = pUsageTbl->Get(0).GetCStringSafe(0);
 							if(pHelpString)
 							{
-								EngineFuncs::ConsoleMessagef("%s : %s", pCommandName, pHelpString);
+								EngineFuncs::ConsoleMessage(va("%s : %s", pCommandName, pHelpString));
 							}
 						}
 					}
@@ -245,8 +245,8 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 			}
 			pNode = pCommandsTable->GetNext(tIt);
 		}
-		EngineFuncs::ConsoleMessagef("---- End Script Commands ----");
+		EngineFuncs::ConsoleMessage("---- End Script Commands ----");
 	}
 
-	EngineFuncs::ConsoleMessagef("---- End Omni-bot Command Help ----");
+	EngineFuncs::ConsoleMessage("---- End Omni-bot Command Help ----");
 }

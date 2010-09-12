@@ -29,4 +29,9 @@
 		Value="D:\CVS\ModularCombat\SourceCode\src\game\server"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="ETDIR"
+		Value="E:\Games\WET"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>

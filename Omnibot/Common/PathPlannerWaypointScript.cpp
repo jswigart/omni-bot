@@ -449,10 +449,10 @@ static int GM_CDECL gmfWaypointColor(gmThread *a_thread)
 	StringVector v;
 	v.push_back("waypoint_color");
 	v.push_back(wptype);
-	v.push_back(Utils::VA("%d", color.r()));
-	v.push_back(Utils::VA("%d", color.g()));
-	v.push_back(Utils::VA("%d", color.b()));
-	v.push_back(Utils::VA("%d", color.a()));
+	v.push_back((String)va("%d", color.r()));
+	v.push_back((String)va("%d", color.g()));
+	v.push_back((String)va("%d", color.b()));
+	v.push_back((String)va("%d", color.a()));
 	CommandReciever::DispatchCommand(v);
 	return GM_OK;
 }

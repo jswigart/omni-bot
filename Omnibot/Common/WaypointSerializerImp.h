@@ -11,8 +11,8 @@
 
 #include "PathPlannerWaypoint.h"
 
-#define CHECK_READ(x) if(!(x)) { LOGERR_BASIC("Error Reading from Waypoint"); delete pCurrentWp; return false; };
-#define CHECK_WRITE(x) if(!(x)) { LOGERR_BASIC("Error Writing from Waypoint"); return false; };
+#define CHECK_READ(x) if(!(x)) { LOGERR("Error Reading from Waypoint"); delete pCurrentWp; return false; };
+#define CHECK_WRITE(x) if(!(x)) { LOGERR("Error Writing from Waypoint"); return false; };
 
 // class: WaypointSerializerImp
 //		In order to support all the versions of waypoint file formats that

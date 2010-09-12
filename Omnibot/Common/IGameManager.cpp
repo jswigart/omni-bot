@@ -147,11 +147,11 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	{
 		m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
 		m_PathPlanner->RegisterScriptFunctions(m_ScriptManager->GetMachine());
-		LOG("Created Nav System : %s",m_PathPlanner->GetPlannerName());
+		LOG("Created Nav System : " << m_PathPlanner->GetPlannerName());
 	}
 	else
 	{
-		LOG_BASIC("Unable to Create Nav System");
+		LOG("Unable to Create Nav System");
 		return BOT_ERROR_CANTINITBOT;
 	}
 
@@ -160,11 +160,11 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	if(m_GoalManager)
 	{
 		m_GoalManager->Init();
-		LOG_BASIC("Goal Manager Created.");
+		LOG("Goal Manager Created.");
 	}
 	else
 	{
-		LOGERR_BASIC("ERROR: Creating Goal Manager.");
+		LOGERR("ERROR: Creating Goal Manager.");
 		return BOT_ERROR_CANTINITBOT;
 	}
 
@@ -173,13 +173,13 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	// Initialize the game.
 	if(m_Game && m_Game->Init())
 	{
-		LOG("Created Game Interface : %s",m_Game->GetGameName());
-		LOG("Game Interface : %s",g_EngineFuncs->GetGameName());
-		LOG("Mod Interface : %s",g_EngineFuncs->GetModName());
+		LOG("Created Game Interface : " << m_Game->GetGameName());
+		LOG("Game Interface : " << g_EngineFuncs->GetGameName());
+		LOG("Mod Interface : " << g_EngineFuncs->GetModName());
 	} 
 	else
 	{
-		LOGERR("Unable to CreateGame() : %s", m_Game->GetGameName());
+		LOGERR("Unable to CreateGame() : " << m_Game->GetGameName());
 		return BOT_ERROR_CANTINITBOT;
 	}
 
@@ -195,8 +195,8 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
 
-	EngineFuncs::ConsoleMessagef("Bot Initialized in %.2f seconds.",loadTime.GetElapsedSeconds());
-	LOG("Bot Initialized in %.2f seconds.",loadTime.GetElapsedSeconds());
+	EngineFuncs::ConsoleMessage(va("Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds()));
+	LOG("Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds.");
 
 	m_Game->LoadGoalScripts(true);
 
@@ -229,7 +229,7 @@ void IGameManager::UpdateGame()
 			{
 				if((*(*it).second)() == Function_Finished)
 				{
-					EngineFuncs::ConsoleMessagef("Finished Process: %s", (*it).first.c_str());
+					EngineFuncs::ConsoleMessage(va("Finished Process: %s", (*it).first.c_str()));
 					m_UpdateMap.erase(it++);
 				}
 				else
@@ -279,7 +279,7 @@ void IGameManager::Shutdown()
 
 	// Shutdown and clean up the game.
 	OB_DELETE(m_Game);
-	LOG_BASIC("Successfully Shut down Game Interface");
+	LOG("Successfully Shut down Game Interface");
 
 	g_WeaponDatabase.Unload();
 
@@ -333,22 +333,22 @@ void IGameManager::cmdVersion(const StringVector &_args)
 	if(m_Game)
 	{
 #ifdef _DEBUG
-		EngineFuncs::ConsoleMessagef("Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__);
+		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__));
 #else
-		EngineFuncs::ConsoleMessagef("Omni-Bot : %s %s", __DATE__, __TIME__);
+		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
-		EngineFuncs::ConsoleMessagef("Version : %s", m_Game->GetVersion());
-		EngineFuncs::ConsoleMessagef("Interface # : %d", m_Game->GetVersionNum());
+		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
+		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_Game->GetVersionNum()));
 	}
 }
 
 void IGameManager::cmdShowProcesses(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessagef("# Processes: %d!", m_UpdateMap.size());
+	EngineFuncs::ConsoleMessage(va("# Processes: %d!", m_UpdateMap.size()));
 	FunctorMap::iterator it = m_UpdateMap.begin(), itEnd = m_UpdateMap.end();
 	for(; it != itEnd; ++it)
 	{
-		EngineFuncs::ConsoleMessagef("Process: %s!", (*it).first.c_str());
+		EngineFuncs::ConsoleMessage(va("Process: %s!", (*it).first.c_str()));
 	}
 }
 
@@ -439,7 +439,7 @@ bool IGameManager::AddUpdateFunction(const String &_name, FunctorPtr _func)
 		EngineFuncs::ConsoleError("That process is already running!");
 		return false;
 	}
-	EngineFuncs::ConsoleMessagef("Process %s has been started! ", _name.c_str());
+	EngineFuncs::ConsoleMessage(va("Process %s has been started! ", _name.c_str()));
 	m_UpdateMap.insert(std::make_pair(_name, _func));
 	return true;
 }
@@ -449,7 +449,7 @@ bool IGameManager::RemoveUpdateFunction(const String &_name)
 	FunctorMap::iterator it = m_UpdateMap.find(_name);
 	if(it != m_UpdateMap.end())
 	{
-		EngineFuncs::ConsoleMessagef("Process %s has been stopped! ", _name.c_str());
+		EngineFuncs::ConsoleMessage(va("Process %s has been stopped! ", _name.c_str()));
 		m_UpdateMap.erase(_name.c_str());
 		return true;
 	}

@@ -437,3 +437,162 @@ void duLogBuildTimes(rcContext& ctx, const int totalTimeUsec)
 	ctx.log(RC_LOG_PROGRESS, "=== TOTAL:\t%.2fms", totalTimeUsec/1000.0f);
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+duDebugDrawDump::duDebugDrawDump( duFileIO* objFile, duFileIO* matFile, const char * matname )
+{
+	objectFile = objFile;
+	materialFile = matFile;
+
+	currentVert = 0;
+	currentFace = 0;
+	cacheIndex = 0;
+	numMaterials = 0;
+
+	ioprintf(objectFile, "# Recast Navmesh\n");
+	ioprintf(objectFile, "o NavMesh\n");
+	ioprintf(objectFile, "\n");
+	ioprintf(objectFile, "mltlib %s\n",matname);
+	ioprintf(objectFile, "\n");
+}
+
+void duDebugDrawDump::depthMask(bool state)
+{
+	state;
+}
+
+void duDebugDrawDump::begin(duDebugDrawPrimitives prim, float size)
+{
+	updateDump();
+
+	currentPrimitive = prim;
+	currentSize = size;
+	cacheIndex = 0;
+}
+
+void duDebugDrawDump::vertex(const float* pos, unsigned int color)
+{
+	cache[cacheIndex].x = pos[0];
+	cache[cacheIndex].y = pos[1];
+	cache[cacheIndex].z = pos[2];
+	cache[cacheIndex].color = color;
+	cacheIndex++;
+
+	updateDump();
+}
+
+void duDebugDrawDump::vertex(const float x, const float y, const float z, unsigned int color)
+{
+	cache[cacheIndex].x = x;
+	cache[cacheIndex].y = y;
+	cache[cacheIndex].z = z;
+	cache[cacheIndex].color = color;
+	cacheIndex++;
+
+	updateDump();
+}
+
+void duDebugDrawDump::end()
+{
+	updateDump();
+}
+
+void duDebugDrawDump::addMaterial(unsigned int color)
+{
+	for(int i = 0; i < numMaterials; ++i)
+	{
+		if(materials[i] == color)
+			return;
+	}
+
+	if(numMaterials < NumMaterials)
+	{
+		materials[numMaterials++] = color;
+
+		float r = 0.f,g = 0.f,b = 0.f,a = 0.f;
+		duDecodeRGBA( color, r, g, b, a );
+
+		ioprintf(materialFile, "newmtl %X\n", color);
+		ioprintf(materialFile, "Ka %.3f %.3f %.3f\n", r, g, b, a );
+		ioprintf(materialFile, "Kd %.3f %.3f %.3f\n", r, g, b, a );
+		ioprintf(materialFile, "illum 1\n", color);
+		ioprintf(materialFile, "\n");
+
+	}
+}
+
+void duDebugDrawDump::updateDump()
+{
+	switch (currentPrimitive)
+	{
+	case DU_DRAW_POINTS:
+		if(cacheIndex == 1)
+		{
+			const int firstVert = currentVert;
+			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
+				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
+
+			addMaterial(cache[firstVert].color);
+			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
+
+			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+1); 
+
+			ioprintf(objectFile, "\n");
+
+			cacheIndex = 0;
+		}
+		break;
+	case DU_DRAW_LINES:
+		if(cacheIndex == 2)
+		{
+			const int firstVert = currentVert;
+			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
+				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
+
+			addMaterial(cache[firstVert].color);
+			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
+
+			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+1); 
+
+			ioprintf(objectFile, "\n");
+
+			cacheIndex = 0;
+		}
+		break;
+	case DU_DRAW_TRIS:
+		if(cacheIndex == 3)
+		{
+			const int firstVert = currentVert;
+			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
+				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
+
+			addMaterial(cache[firstVert].color);
+			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
+
+			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+2); 
+
+			ioprintf(objectFile, "\n");
+
+			cacheIndex = 0;
+		}
+		break;
+	case DU_DRAW_QUADS:
+		if(cacheIndex == 4)
+		{
+			const int firstVert = currentVert;
+			for(int i = 0; i < cacheIndex; ++i)
+				ioprintf(objectFile, "v %f %f %f\n", cache->x, cache->y, cache->z);
+
+			addMaterial(cache[firstVert].color);
+			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
+
+			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+2);
+			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert+2, 1+firstVert+1, 1+firstVert+3);
+
+			ioprintf(objectFile, "\n");
+
+			cacheIndex = 0;
+		}
+		break;
+	}
+}

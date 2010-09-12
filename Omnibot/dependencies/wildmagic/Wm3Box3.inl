@@ -82,5 +82,18 @@ void Box3<Real>::Clear()
 	Extent[1] = 0.0f;
 	Extent[2] = 0.0f;
 }
+
 //----------------------------------------------------------------------------
-void Clear();
+template <class Real>
+void Box3<Real>::Identity( float defaultSize )
+{
+	Center = Vector3<Real>::ZERO;
+	Axis[0] = Vector3<Real>( 1.f, 0.f, 0.f );
+	Axis[1] = Vector3<Real>( 0.f, 1.f, 0.f );
+	Axis[2] = Vector3<Real>( 0.f, 0.f, 1.f );
+	Extent[0] = defaultSize;
+	Extent[1] = defaultSize;
+	Extent[2] = defaultSize;
+}
+
+//----------------------------------------------------------------------------

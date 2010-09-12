@@ -100,7 +100,7 @@ PathPlannerWaypoint::PathPlannerWaypoint()
 	m_WaypointSerializer[7] = WpSerializerPtr(new WaypointSerializer_V7);
 	m_WaypointSerializer[8] = m_WaypointSerializer[7]; // same format, diff version for 0.7
 
-	LOG("Waypoint Nav System Initialized (%d Serializers)",m_WaypointSerializer.size());
+	LOG("Waypoint Nav System Initialized (" << m_WaypointSerializer.size() << " Serializers)");
 
 	m_CreatingSector.m_Normal = Vector3f::UNIT_Z;
 	m_CreatingSector.m_SectorBounds = AABB(Vector3f::ZERO);
@@ -148,7 +148,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 		GameEntity ge = Utils::GetLocalEntity();
 		if(ge.IsValid())
 		{
-			String flagString = Utils::VA("Waypoint %d, Radius %.2f, UID %d\n", 
+			String flagString = va("Waypoint %d, Radius %.2f, UID %d\n", 
 				m_SelectedWaypoint, pWaypoint->GetRadius(), pWaypoint->GetUID());
 
 			if(!pWaypoint->m_WaypointName.empty())
@@ -168,7 +168,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 			PropertyMap::ValueMap::const_iterator cIt = pm.begin();
 			for(; cIt != pm.end(); ++cIt)
 			{
-				flagString += Utils::VA("\n%s %s", (*cIt).first.c_str(), (*cIt).second.c_str());
+				flagString += va("\n%s %s", (*cIt).first.c_str(), (*cIt).second.c_str());
 			}
 
 			if(!flagString.empty())
@@ -1290,7 +1290,7 @@ bool PathPlannerWaypoint::Load(const String &_mapname, bool _dl)
 	// Loose files always take priority over archived files
 	if(!waypointPath.empty())
 	{
-		LOG("Loading waypoint: %s",waypointPath.c_str());
+		LOG("Loading waypoint: " << waypointPath.c_str());
 		bLoaded = LoadFromFile(waypointPath);
 	}
 
@@ -1333,9 +1333,7 @@ bool PathPlannerWaypoint::Load(const String &_mapname, bool _dl)
 	if(_dl)
 		FileDownloader::NavigationMissing(_mapname);		
 #endif
-
-	LOGERR("Waypoint %s not found in file or archives.",waypointName.c_str());
-
+	LOGERR("Waypoint " << waypointName.c_str() << "%s not found in file or archives.");
 	return false;
 }
 
@@ -1367,11 +1365,12 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 			WaypointSerializers::reverse_iterator rIt = m_WaypointSerializer.rbegin();
 			if(it->first < rIt->first)
 			{
-				LOGWARN("Loaded %s with old serializer v(%d), latest v(%d)",
-					_file.c_str(),(int)it->first,(int)rIt->first);
+				LOGWARN("Loaded " << _file.c_str() << 
+					" with old serializer v(" << (int)it->first << 
+					"), latest v(%d)" << (int)rIt->first);
 			}
 
-			LOG("%d Waypoints Loaded from file %s",m_WaypointList.size(),_file.c_str());
+			LOG(m_WaypointList.size() << " Waypoints Loaded from file " << _file.c_str());
 
 			// delete bad wps
 			for(obuint32 i = 0; i < m_WaypointList.size(); ++i)
@@ -1386,14 +1385,14 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 		} 
 		else
 		{
-			LOGERR("Unable to Load Waypoint: %s",_file.c_str());
+			LOGERR(va("Unable to Load Waypoint: %s",_file.c_str()));
 		}
 	} 
 	else
 	{
 		// No Serializer!
-		LOGERR("No Serializer for waypoint %s : expected version %d",
-			_file.c_str(),m_WaypointHeader.m_WaypointVersion);
+		LOGERR(va("No Serializer for waypoint %s : expected version %d",
+			_file.c_str(),m_WaypointHeader.m_WaypointVersion));
 	}
 	return false;
 }
@@ -1446,19 +1445,20 @@ bool PathPlannerWaypoint::Save(const String &_mapname)
 		if(rIt->second->Save(OutFile, m_WaypointList))
 		{
 			// Successful
-			LOG("%d Waypoints Saved to %s using version #%d format",
-				m_WaypointList.size(),waypointName.c_str(),rIt->first);
+			LOG(m_WaypointList.size() << " Waypoints Saved to " <<
+				waypointName << " using version #" << 
+				rIt->first << " format");
 			return true;
 		} 
 		else
 		{
-			LOGERR("Unable to Load Waypoint: %s",waypointName.c_str());
+			LOGERR(va("Unable to Load Waypoint: %s",waypointName.c_str()));
 		}
 	} 
 	else
 	{
 		// No Serializer!
-		LOGCRIT_BASIC("No Serializers!");
+		LOGCRIT("No Serializers!");
 	}
 	return true;
 }
@@ -1776,7 +1776,7 @@ void PathPlannerWaypoint::BuildBlockableList()
 		}
 	}
 
-	LOG("Found %d blockable paths",iNumBlockablePaths);
+	LOG("Found " << iNumBlockablePaths << " blockable paths");
 }
 
 void PathPlannerWaypoint::BuildFlagMap()
@@ -1834,7 +1834,7 @@ void PathPlannerWaypoint::BuildFlagMap()
 //			float fPc = (float)(iCurrentTest / iNumTests);
 //			if(fPc >= fTarget)
 //			{
-//				EngineFuncs::ConsoleMessagef("Building Vis Table: %d / %d : %f", 
+//				EngineFuncs::ConsoleMessage("Building Vis Table: %d / %d : %f", 
 //					iCurrentTest, iNumTests, fTarget * 10.f);
 //				fTarget += 0.1f;
 //			}
@@ -1846,15 +1846,13 @@ void PathPlannerWaypoint::BuildFlagMap()
 
 void PathPlannerWaypoint::BuildSpatialDatabase()
 {
-	LOG_BASIC("Generating Spacial Database.");
-
-	LOG("World Extents: Center: %.2fx,%.2fy,%.2fz Extents: %.2fx,%.2fy,%.2fz",
-		m_WaypointHeader.m_WorldAABB.m_Mins[0],
-		m_WaypointHeader.m_WorldAABB.m_Mins[1],
-		m_WaypointHeader.m_WorldAABB.m_Mins[2],
-		m_WaypointHeader.m_WorldAABB.m_Maxs[0],
-		m_WaypointHeader.m_WorldAABB.m_Maxs[1],
-		m_WaypointHeader.m_WorldAABB.m_Maxs[2]);
+	LOG("Generating Spacial Database.");
+	Vector3f center;
+	m_WaypointHeader.m_WorldAABB.CenterPoint(center);
+	LOG("World Extents: Center: " << center << " Size: " << 
+		m_WaypointHeader.m_WorldAABB.GetAxisLength(0) << "x " <<
+		m_WaypointHeader.m_WorldAABB.GetAxisLength(1) << "y " <<
+		m_WaypointHeader.m_WorldAABB.GetAxisLength(2) << "z");
 
 	// TODO: generate spacial db
 }
@@ -1954,7 +1952,7 @@ bool PathPlannerWaypoint::DeleteWaypoint(const Vector3f &_pos)
 
 void PathPlannerWaypoint::RegisterNavFlag(const String &_name, const NavFlags &_bits)
 {
-	LOG("Registered Waypoint Flag: %s",_name.c_str());
+	LOG("Registered Waypoint Flag: " << _name);
 
 	String flagName = _name;
 	std::transform(flagName.begin(), flagName.end(), flagName.begin(), toLower());

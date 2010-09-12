@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Paths"
+	>
+	<UserMacro
+		Name="ETDIR"
+		Value="E:\Games\WET"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="OMNIBOT_INST"
+		Value="$(SolutionDir)..\..\..\..\Installer\Files"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="BOOST"
+		Value="$(SolutionDir)..\..\..\..\libs\boost\boost_1_44"
+	/>
+</VisualStudioPropertySheet>

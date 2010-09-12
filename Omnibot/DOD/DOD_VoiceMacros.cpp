@@ -36,6 +36,6 @@ void DOD_VoiceMacros::SendVoiceMacro(Client *_bot, int _msg)
 			macro = _msg - VCHAT_MENU2_START;
 			menu = 2;
 		}
-		g_EngineFuncs->BotCommand(_bot->GetGameID(), Utils::VA("voicemenu %d %d",menu,macro));
+		g_EngineFuncs->BotCommand(_bot->GetGameID(), va("voicemenu %d %d",menu,macro));
 	}
 }

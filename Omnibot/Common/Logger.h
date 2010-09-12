@@ -49,15 +49,33 @@ extern Logger g_Logger;
 // Macros (necessary evil to take advantage of __LINE__ and __FILE__)
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-#define	LOG(_s,...)		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTex(g_Logger.LOG_INFO,(_s),__VA_ARGS__)
-#define	LOGERR(_s,...)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTex(g_Logger.LOG_ERR,(_s),__VA_ARGS__)
-#define	LOGWARN(_s,...)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTex(g_Logger.LOG_WARN,(_s),__VA_ARGS__)
-#define	LOGCRIT(_s,...)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTex(g_Logger.LOG_CRIT,(_s),__VA_ARGS__)
+#define	LOG(_s) if(g_Logger.LogStarted()) {	\
+	g_Logger.LimitFileSize(); \
+	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_INFO); \
+	g_Logger.SourceLine() = __LINE__; \
+	g_Logger.SourceFile() = __FILE__; \
+	g_Logger.Stream() << _s << std::endl; }
 
-#define	LOG_BASIC(_s)		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTexBasic(g_Logger.LOG_INFO,(_s))
-#define	LOGERR_BASIC(_s)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTexBasic(g_Logger.LOG_ERR,(_s))
-#define	LOGWARN_BASIC(_s)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTexBasic(g_Logger.LOG_WARN,(_s))
-#define	LOGCRIT_BASIC(_s)	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogTexBasic(g_Logger.LOG_CRIT,(_s))
+#define	LOGERR(_s) if(g_Logger.LogStarted() && g_Logger.LogMask() & Logger::LOG_ERR) {	\
+	g_Logger.LimitFileSize(); \
+	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_ERR); \
+	g_Logger.SourceLine() = __LINE__; \
+	g_Logger.SourceFile() = __FILE__; \
+	g_Logger.Stream() << _s << std::endl; }
+
+#define	LOGWARN(_s) if(g_Logger.LogStarted() && g_Logger.LogMask() & Logger::LOG_WARN) {	\
+	g_Logger.LimitFileSize(); \
+	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_WARN); \
+	g_Logger.SourceLine() = __LINE__; \
+	g_Logger.SourceFile() = __FILE__; \
+	g_Logger.Stream() << _s << std::endl; }
+
+#define	LOGCRIT(_s) if(g_Logger.LogStarted() && g_Logger.LogMask() & Logger::LOG_CRIT) {	\
+	g_Logger.LimitFileSize(); \
+	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_CRIT); \
+	g_Logger.SourceLine() = __LINE__; \
+	g_Logger.SourceFile() = __FILE__; \
+	g_Logger.Stream() << _s << std::endl; }
 
 #define	HEX			g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogHex
 #define	RAW			g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.LogRaw
@@ -125,22 +143,22 @@ public:
 	inline const std::string&	SourceFile() const		{return m_SourceFile;}
 	inline std::string&			SourceFile()			{return m_SourceFile;}
 
+	inline std::fstream &		Stream()				{return m_LogFile;}
+
 	bool						LogStarted();
 
 	// Utilitarian (public)
 	void		Start(const std::string &_filename, const bool reset);
 	void		Stop();
-	void		LogTex(const LogFlags logBits, CHECK_PRINTF_ARGS const char *s, ...);
-	void		LogTexBasic(const LogFlags logBits, const char *s);
+	void		LogTex(const LogFlags logBits, CHECK_PRINTF_ARGS const char *s);
 	void		LogRaw(const std::string &s);
 	void		LogHex(const char *buffer, const unsigned int count, const LogFlags logBits = LOG_INFO);
 	void		Indent(const std::string &s, const LogFlags logBits = LOG_INDENT);
 	void		Undent(const std::string &s, const LogFlags logBits = LOG_UNDENT);
 
+	void		LimitFileSize();
+	const std::string&	HeaderString(const LogFlags logBits) const;
 private:
-	// Utilitarian (private)
-	virtual		void		LimitFileSize();
-	virtual	const std::string&	HeaderString(const LogFlags logBits) const;
 
 	// Data
 	std::fstream	m_LogFile;

@@ -417,7 +417,7 @@ namespace gmUtility
 			while(pNode)
 			{
 				EngineFuncs::ConsoleMessage(
-					Utils::VA("%s = %s",
+					va("%s = %s",
 					pNode->m_key.AsString(pMachine, buffer, BUF_SIZE),
 					pNode->m_value.AsString(pMachine, buffer2, BUF_SIZE)));
 				pNode = pTable->GetNext(tIt);

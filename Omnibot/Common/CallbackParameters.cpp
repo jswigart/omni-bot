@@ -43,52 +43,51 @@ void CallbackParameters::PrintDebug()
 		{
 		case GM_NULL:
 			{
-				EngineFuncs::ConsoleMessagef("	+ Null: %s\n", m_DebugNames[i]);
+				EngineFuncs::ConsoleMessage(va("	+ Null: %s\n", m_DebugNames[i]));
 				break;
 			}
 		case GM_INT:
 			{
-				EngineFuncs::ConsoleMessagef("	+ Int: %s, %d\n", m_DebugNames[i], m_Variables[i].GetInt());
+				EngineFuncs::ConsoleMessage(va("	+ Int: %s, %d\n", m_DebugNames[i], m_Variables[i].GetInt()));
 				break;
 			}
 		case GM_FLOAT:
 			{
-				EngineFuncs::ConsoleMessagef("	+ Float: %s, %f\n", m_DebugNames[i], m_Variables[i].GetFloat());
+				EngineFuncs::ConsoleMessage(va("	+ Float: %s, %f\n", m_DebugNames[i], m_Variables[i].GetFloat()));
 				break;
 			}
 		case GM_VECTOR:
 			{
 				float x,y,z;
 				m_Variables[i].GetVector(x,y,z);
-				EngineFuncs::ConsoleMessagef("	+ Vector: %s, (%f, %f, %f)\n", m_DebugNames[i], x,y,z);
+				EngineFuncs::ConsoleMessage(va("	+ Vector: %s, (%f, %f, %f)\n", m_DebugNames[i], x,y,z));
 				break;
 			}
 		case GM_ENTITY:
 			{
-				EngineFuncs::ConsoleMessagef("	+ Entity: %s, %X\n", m_DebugNames[i], m_Variables[i].GetEntity());
+				EngineFuncs::ConsoleMessage(va("	+ Entity: %s, %X\n", m_DebugNames[i], m_Variables[i].GetEntity()));
 				break;
 			}
 		case GM_STRING:
 			{
 				gmStringObject *pStr = m_Variables[i].GetStringObjectSafe();
-				EngineFuncs::ConsoleMessagef("	+ String: %s, \"%s\"\n", m_DebugNames[i], pStr->GetString());
+				EngineFuncs::ConsoleMessage(va("	+ String: %s, \"%s\"\n", m_DebugNames[i], pStr->GetString()));
 				break;
 			}
 		case GM_TABLE:
 			{
-				EngineFuncs::ConsoleMessagef("	+ Table: %s, %X\n", m_DebugNames[i], m_Variables[i].GetTableObjectSafe());
+				EngineFuncs::ConsoleMessage(va("	+ Table: %s, %X\n", m_DebugNames[i], m_Variables[i].GetTableObjectSafe()));
 				break;
 			}
 		case GM_FUNCTION:
 			{
 				gmFunctionObject *pFunc = m_Variables[i].GetFunctionObjectSafe();
-				EngineFuncs::ConsoleMessagef("	+ Func: %s, %s\n", m_DebugNames[i], 
-					pFunc->GetDebugName());
+				EngineFuncs::ConsoleMessage(va("	+ Func: %s, %s\n", m_DebugNames[i], pFunc->GetDebugName()));
 				break;
 			}
 		default:
 			{				
-				EngineFuncs::ConsoleMessagef("	+ UserObj: %s, %X\n", m_DebugNames[i], m_Variables[i].m_value.m_ref);
+				EngineFuncs::ConsoleMessage(va("	+ UserObj: %s, %X\n", m_DebugNames[i], m_Variables[i].m_value.m_ref));
 			}
 		}
 	}

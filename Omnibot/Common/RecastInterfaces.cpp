@@ -130,13 +130,13 @@ FileIO::~FileIO()
 bool FileIO::openForWrite(const char* path)
 {
 	m_mode = 1;
-	return m_file.OpenForWrite( path, File::Binary, false );
+	return m_file.OpenForWrite( path, File::Text, false );
 }
 
 bool FileIO::openForRead(const char* path)
 {
 	m_mode = 2;
-	return m_file.OpenForRead( path, File::Binary );
+	return m_file.OpenForRead( path, File::Text );
 }
 
 bool FileIO::isWriting() const

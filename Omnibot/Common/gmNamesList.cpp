@@ -67,7 +67,7 @@ static int GM_CDECL gmfNameListSetInd(gmThread * a_thread, gmVariable * a_operan
 		{
 			if(!NameManager::GetInstance()->AddName(pName, pProfileName))
 			{
-				EngineFuncs::ConsoleErrorf("%s : name already registered", pName);
+				EngineFuncs::ConsoleError(va("%s : name already registered", pName));
 			}
 		}
 		return GM_OK;

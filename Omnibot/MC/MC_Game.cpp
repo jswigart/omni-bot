@@ -89,7 +89,7 @@ bool MC_Game::Init()
 
 void MC_Game::InitScriptBinds(gmMachine *_machine)
 {
-	LOG_BASIC("Binding MC Library...");
+	LOG("Binding MC Library...");
 	gmBindMCLibrary(_machine);
 
 	{

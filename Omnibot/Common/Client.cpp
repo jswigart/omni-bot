@@ -705,7 +705,7 @@ void Client::EnableDebug(const int _flag, bool _enable)
 	{
 		if(IsDebugEnabled(BOT_DEBUG_LOG))
 		{
-			m_DebugLog.OpenForWrite(Utils::VA("user/log_%s.rtf", GetName()), File::Text);
+			m_DebugLog.OpenForWrite(va("user/log_%s.rtf", GetName()), File::Text);
 
 			if(m_DebugLog.IsOpen())
 			{
@@ -720,19 +720,19 @@ void Client::EnableDebug(const int _flag, bool _enable)
 		}
 	}	
 
-	EngineFuncs::ConsoleMessagef("debugging for %s: %s.", 
+	EngineFuncs::ConsoleMessage(va("debugging for %s: %s.", 
 		GetName(), 
-		IsDebugEnabled(_flag) ? "enabled" : "disabled");
+		IsDebugEnabled(_flag) ? "enabled" : "disabled"));
 }
 
-void Client::OutputDebug(MessageType _type, const String &_str)
+void Client::OutputDebug(MessageType _type, const char * _str)
 {
 #ifndef _DEBUG
 	if(_type == kDebug)
 		return;
 #endif
 
-	EngineFuncs::ConsoleMessage((String(GetName()) + String(": ") +_str).c_str());
+	EngineFuncs::ConsoleMessage( va( "%s: %s", GetName(true), _str ) );
 
 	if(IsDebugEnabled(BOT_DEBUG_LOG))
 	{
@@ -776,14 +776,14 @@ void Client::LoadProfile(ProfileType _type)
 		{
 			int threadId;
 			gmVariable thisVar(m_ScriptObject);
-			if(ScriptManager::GetInstance()->ExecuteFile(Utils::VA("scripts/%s", strProfileName.c_str()), threadId, &thisVar) ||
-				ScriptManager::GetInstance()->ExecuteFile(Utils::VA("global_scripts/%s", strProfileName.c_str()), threadId, &thisVar))
+			if(ScriptManager::GetInstance()->ExecuteFile(filePath("scripts/%s", strProfileName.c_str()), threadId, &thisVar) ||
+				ScriptManager::GetInstance()->ExecuteFile(filePath("global_scripts/%s", strProfileName.c_str()), threadId, &thisVar))
 			{
-				DBG_MSG(BOT_DEBUG_SCRIPT, this, kNormal, Utils::VA("Profile Loaded: %s", strProfileName.c_str()));
+				DBG_MSG(BOT_DEBUG_SCRIPT, this, kNormal, va("Profile Loaded: %s", strProfileName.c_str()));
 			} 
 			else
 			{
-				DBG_MSG(BOT_DEBUG_SCRIPT, this, kError, Utils::VA("Unable to load profile: %s", strProfileName.c_str()));
+				DBG_MSG(BOT_DEBUG_SCRIPT, this, kError, va("Unable to load profile: %s", strProfileName.c_str()));
 			}
 
 			m_ProfileType = _type;

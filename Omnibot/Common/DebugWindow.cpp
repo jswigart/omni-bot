@@ -1510,7 +1510,7 @@ namespace ScriptThreads
 #if(GM_USE_THREAD_TIMERS)
 			case ThreadTime:
 				{
-					return Utils::VA("%.3f / %.3f", Threads[i].mTime, Threads[i].mPeakTime);
+					return va("%.3f / %.3f", Threads[i].mTime, Threads[i].mPeakTime).c_str();
 				}
 #endif
 			}
@@ -1963,7 +1963,7 @@ void DebugWindow_s::Console_s::Update()
 void DebugWindow_s::Console_s::DumpConsoleToFile(const char *filename)
 {
 	File f;
-	if(f.OpenForWrite(Utils::VA("user/%s",filename),File::Text))
+	if(f.OpenForWrite(va("user/%s",filename),File::Text))
 	{
 		String s = mOutput->getText();
 		f.WriteString(s);		
@@ -2814,7 +2814,7 @@ public:
 				{
 				case WeaponName:
 					{
-						return Utils::VA("%s (%d)", wpn->GetWeaponName().c_str(),wpn->GetWeaponID());
+						return String(va("%s (%d)", wpn->GetWeaponName().c_str(),wpn->GetWeaponID()));
 					}
 				case WeaponClipPrimary:
 					{
@@ -2823,20 +2823,20 @@ public:
 							return "-";
 						if(!m.CheckFlag(Weapon::RequiresAmmo))
 							return "NA";
-						return Utils::VA("%d/%d", m.GetCurrentClip(), m.GetMaxClip());
+						return String(va("%d/%d", m.GetCurrentClip(), m.GetMaxClip()));
 					}
 				case WeaponAmmoPrimary:
 					{
 						const Weapon::WeaponFireMode &m = wpn->GetFireMode(Primary);
 						if(!m.CheckFlag(Weapon::RequiresAmmo))
 							return "NA";
-						return Utils::VA("%d/%d", m.GetCurrentAmmo(), m.GetMaxAmmo());
+						return String(va("%d/%d", m.GetCurrentAmmo(), m.GetMaxAmmo()));
 					}
 				case WeaponChargePrimary:
 					{
 						const Weapon::WeaponFireMode &m = wpn->GetFireMode(Primary);
 						if(m.IsCharging())
-							return Utils::VA("%.1f", Utils::MillisecondsToSeconds(m.GetChargeTime()-IGame::GetTime()));
+							return String(va("%.1f", Utils::MillisecondsToSeconds(m.GetChargeTime()-IGame::GetTime())));
 						else
 							return "-";
 					}
@@ -2847,9 +2847,9 @@ public:
 						if(bw.m_BurstRounds)
 						{
 							if(m.IsBurstDelaying())
-								return Utils::VA("%.1f", Utils::MillisecondsToSeconds(m.GetBurstTime()-IGame::GetTime()));
+								return String(va("%.1f", Utils::MillisecondsToSeconds(m.GetBurstTime()-IGame::GetTime())));
 							else
-								return Utils::VA("%d/%d", m.GetBurstRound(),bw.m_BurstRounds);
+								return String(va("%d/%d", m.GetBurstRound(),bw.m_BurstRounds));
 						}
 						else
 							return "-";
@@ -2980,7 +2980,7 @@ public:
 		case EntTypeName:
 			{
 				const char *pName = Utils::FindClassName(mRecords[i].m_TargetInfo.m_EntityClass);
-				return Utils::VA("%s", pName?pName:"<UNKNOWN>");
+				return String(va("%s", pName?pName:"<UNKNOWN>"));
 			}
 		case EntId:
 			{
@@ -2994,14 +2994,14 @@ public:
 			{
 				Msg_HealthArmor m;
 				if(InterfaceFuncs::GetHealthAndArmor(mRecords[i].GetEntity(),m))
-					return Utils::VA("%d/%d", m.m_CurrentHealth, m.m_MaxHealth);
+					return String(va("%d/%d", m.m_CurrentHealth, m.m_MaxHealth));
 				else
-					return Utils::VA("-ERR-");
+					return "-ERR-";
 			}
 		case EntState:
 			{
 				const BitFlag64 &bf = mRecords[i].m_TargetInfo.m_EntityFlags;
-				return Utils::VA("%s%s%s%s%s%s%s%s%s%s%s%s"
+				return String(va("%s%s%s%s%s%s%s%s%s%s%s%s"
 					, bf.CheckFlag(ENT_FLAG_DEAD)||bf.CheckFlag(ENT_FLAG_DISABLED)?"Dead":"Alive"
 					, bf.CheckFlag(ENT_FLAG_HUMANCONTROLLED)?" Human":""
 					, bf.CheckFlag(ENT_FLAG_CROUCHED)?" Crouch":""
@@ -3014,7 +3014,7 @@ public:
 					, bf.CheckFlag(ENT_FLAG_INWATER)?" InWater":""
 					, bf.CheckFlag(ENT_FLAG_UNDERWATER)?" UnderWater":""
 					, bf.CheckFlag(ENT_FLAG_INVEHICLE)?" Vehicle":""
-					);
+					));
 			}
 		}
 		return std::string("");
@@ -3143,13 +3143,13 @@ public:
 		{
 		case AimerPriority:
 			{
-				return Utils::VA("%s(%d)", 
+				return String(va("%s(%d)", 
 					Priority::AsString(mAimRequests[i].m_Priority), 
-					mAimRequests[i].m_Priority);
+					mAimRequests[i].m_Priority));
 			}
 		case AimerOwner:
 			{
-				return Utils::VA("%s", Utils::HashToString(mAimRequests[i].m_Owner).c_str());
+				return String(va("%s", Utils::HashToString(mAimRequests[i].m_Owner)));
 			}
 		case AimerType:
 			{
@@ -3168,7 +3168,7 @@ public:
 		case AimerVec:
 			{
 				Vector3f v = mAimRequests[i].m_AimVector;
-				return Utils::VA("( %.1f, %.1f, %.1f )", v.x, v.y, v.z);
+				return String(va("( %.1f, %.1f, %.1f )", v.x, v.y, v.z));
 			}
 		}
 		return std::string("");

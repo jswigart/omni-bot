@@ -143,12 +143,12 @@ void IGame::InitScriptSupport()
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 	// Bind scripts
-	LOG_BASIC("Initializing Game Bindings...");
+	LOG("Initializing Game Bindings...");
 	InitScriptBinds(pMachine);
-	LOG_BASIC("done.");
+	LOG("done.");
 
 	// Register Script Constants.
-	LOG_BASIC("Registering Script Constants...");
+	LOG("Registering Script Constants...");
 
 	DisableGCInScope gcEn(pMachine);
 
@@ -246,7 +246,7 @@ void IGame::InitScriptSupport()
 	pProfileTable->Set(pMachine, "CUSTOM", gmVariable(Client::PROFILE_CUSTOM));
 	pMachine->GetGlobals()->Set(pMachine, "PROFILE", gmVariable(pProfileTable));
 
-	LOG_BASIC("done.");
+	LOG("done.");
 }
 
 void IGame::InitScriptTeams(gmMachine *_machine, gmTableObject *_table)
@@ -969,14 +969,12 @@ void IGame::StartTraining()
 	const char *pMapName = g_EngineFuncs->GetMapName();
 	if(pMapName)
 	{
-		String strScript = String("scripts/");
-		strScript += pMapName;
-		strScript += "_train.gm";
+		filePath script("scripts/%s_train.gm",pMapName);
 
 		int iThreadId;
-		if(!ScriptManager::GetInstance()->ExecuteFile(strScript, iThreadId))
+		if(!ScriptManager::GetInstance()->ExecuteFile(script, iThreadId))
 		{
-			EngineFuncs::ConsoleErrorf("Error Running Training Script: %s", strScript.c_str());
+			EngineFuncs::ConsoleError(va("Error Running Training Script: %s", script));
 		}
 	}
 }
@@ -1001,10 +999,11 @@ void IGame::InitMapScript()
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	DisableGCInScope gcEn(pMachine);
 
+	filePath script( "nav/%s.gm", g_EngineFuncs->GetMapName() );
+
 	// Load the script for the current map.
-	int iThreadId;
-	String strMapName = String("nav/") + g_EngineFuncs->GetMapName();
-	if(ScriptManager::GetInstance()->ExecuteFile(strMapName + ".gm", iThreadId))
+	int iThreadId = GM_INVALID_THREAD;
+	if(ScriptManager::GetInstance()->ExecuteFile( script, iThreadId ))
 	{
 		{
 			gmCall call;
@@ -1133,9 +1132,9 @@ bool IGame::UnhandledCommand(const StringVector &_args)
 
 void IGame::cmdRevision(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessagef("Omni-bot: Revision %s : %s", 
+	EngineFuncs::ConsoleMessage(va("Omni-bot: Revision %s : %s", 
 		Revision::Number().c_str(), 
-		Revision::Date().c_str());
+		Revision::Date().c_str()));
 }
 
 void IGame::cmdBotDontShoot(const StringVector &_args)
@@ -1156,9 +1155,9 @@ void IGame::cmdBotDontShoot(const StringVector &_args)
 				{
 					m_ClientList[i]->SetUserFlag(Client::FL_SHOOTINGDISABLED, bDontShoot==True);
 					
-					EngineFuncs::ConsoleMessagef("%s: shooting %s", 
+					EngineFuncs::ConsoleMessage(va("%s: shooting %s", 
 						m_ClientList[i]->GetName(), 
-						bDontShoot?"disabled":"enabled");
+						bDontShoot?"disabled":"enabled"));
 				}
 			}
 		}
@@ -1246,7 +1245,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 
 	if(!bAll)
 	{
-		EngineFuncs::ConsoleErrorf("no bot found named %s", botname.c_str());
+		EngineFuncs::ConsoleError(va("no bot found named %s", botname.c_str()));
 	}
 }
 
@@ -1259,7 +1258,7 @@ void IGame::cmdKickAll(const StringVector &_args)
 		{
 			StringVector tl;
 			tl.push_back("kickbot");
-			tl.push_back(Utils::VA("%i", m_ClientList[i]->GetGameID()));
+			tl.push_back((String)va("%i", m_ClientList[i]->GetGameID()));
 			CommandReciever::DispatchCommand(tl);
 		}
 	}
@@ -1269,7 +1268,7 @@ void IGame::cmdAddbot(const StringVector &_args)
 {
 	if(!NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
 	{
-		EngineFuncs::ConsoleError("No navigation file loaded, unable to add bots.");
+		EngineFuncs::ConsoleError(va("No navigation file loaded, unable to add bots."));
 		return;
 	}
 
@@ -1359,13 +1358,13 @@ void IGame::cmdPrintFileSystem(const StringVector &_args)
 	DirectoryList dlist;
 	FileSystem::FindAllFiles(pth, dlist, ex);
 
-	EngineFuncs::ConsoleMessagef("------------------------------------");
-	EngineFuncs::ConsoleMessagef("%d Files %s, in %s", dlist.size(), ex.str().c_str(), pth.c_str());
+	EngineFuncs::ConsoleMessage("------------------------------------");
+	EngineFuncs::ConsoleMessage(va("%d Files %s, in %s", dlist.size(), ex.str().c_str(), pth.c_str()));
 	for(obuint32 i = 0; i < dlist.size(); ++i)
 	{
 		EngineFuncs::ConsoleMessage(dlist[i].string().c_str());		
 	}
-	EngineFuncs::ConsoleMessagef("------------------------------------");
+	EngineFuncs::ConsoleMessage("------------------------------------");
 }
 
 void IGame::cmdReloadWeaponDatabase(const StringVector &_args)
@@ -1674,7 +1673,7 @@ argError:
 
 void IGame::LoadGoalScripts(bool _clearold)
 {
-	LOG_BASIC("Loading Script Goals");
+	LOG("Loading Script Goals");
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 	gmTableObject *pScriptGoalTable = pMachine->GetGlobals()->Get(pMachine, "ScriptGoals").GetTableObjectSafe();
@@ -1689,7 +1688,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 	FileSystem::FindAllFiles("global_scripts/goals", goalFiles, ex);
 	FileSystem::FindAllFiles("scripts/goals", goalFiles, ex);
 
-	LOG("Loading %d goal scripts from: scripts/goals", goalFiles.size());
+	LOG("Loading " << goalFiles.size() << " goal scripts from: scripts/goals");
 	DirectoryList::const_iterator cIt = goalFiles.begin(), cItEnd = goalFiles.end();
 	for(; cIt != cItEnd; ++cIt)
 	{
@@ -1699,8 +1698,9 @@ void IGame::LoadGoalScripts(bool _clearold)
 		gmUserObject *pUserObj = ptr->GetScriptObject(pMachine);
 		gmVariable varThis(pUserObj);
 
-		LOG("Loading Goal Definition: %s", (*cIt).string().c_str());
-		if(ScriptManager::GetInstance()->ExecuteFile(*cIt, iThreadId, &varThis) && ptr->GetName()[0])
+		filePath script( (*cIt).string().c_str() );
+		LOG("Loading Goal Definition: " << script);
+		if(ScriptManager::GetInstance()->ExecuteFile(script, iThreadId, &varThis) && ptr->GetName()[0])
 		{
 			g_ScriptGoalList.push_back(ptr);
 
@@ -1709,7 +1709,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 		}
 		else
 		{
-			LOG("Error Running Goal Script: %s", (*cIt).string().c_str());
+			LOG("Error Running Goal Script: " << (*cIt).string());
 			OBASSERT(0, "Error Running Goal Script: %s", (*cIt).string().c_str());
 		}
 	}

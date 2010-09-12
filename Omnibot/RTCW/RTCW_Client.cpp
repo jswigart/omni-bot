@@ -351,11 +351,11 @@ float RTCW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *
 		{
 			gn = Utils::StringToLower(hl->GetActiveState()->GetName());
 
-			//EngineFuncs::ConsoleMessagef("current goal: %s", gn.c_str());
+			//EngineFuncs::ConsoleMessage("current goal: %s", gn.c_str());
 			
 			for(; cIt != pm.end(); ++cIt)
 			{
-			//	EngineFuncs::ConsoleMessagef("property: %s = %s", 
+			//	EngineFuncs::ConsoleMessage("property: %s = %s", 
 			//		(*cIt).first.c_str(), (*cIt).second.c_str());
 
 				if ( gn == (*cIt).first && (*cIt).second == "true" )

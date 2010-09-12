@@ -507,7 +507,7 @@ int gmBot::gmfSay(gmThread *a_thread)
 			}
 		}
 
-		g_EngineFuncs->BotCommand(native->GetGameID(), Utils::VA("say \"%s\"", chatMsg));
+		g_EngineFuncs->BotCommand(native->GetGameID(), va("say \"%s\"", chatMsg));
 		return GM_OK;
 	}
 
@@ -551,7 +551,7 @@ int gmBot::gmfSayTeam(gmThread *a_thread)
 			}
 		}
 
-		g_EngineFuncs->BotCommand(native->GetGameID(), Utils::VA("say_team \"%s\"", chatMsg));
+		g_EngineFuncs->BotCommand(native->GetGameID(), va("say_team \"%s\"", chatMsg));
 		return GM_OK;
 	}
 
@@ -953,7 +953,7 @@ int gmBot::gmfGetWeapon(gmThread *a_thread)
 		a_thread->PushUser(wp->GetScriptObject(a_thread->GetMachine()));
 	else
 	{
-		OBASSERT(0, Utils::VA("No Weapon of Type: %d", weaponId));
+		OBASSERT(0, va("No Weapon of Type: %d", weaponId));
 		a_thread->PushNull();
 	}
 	return GM_OK;

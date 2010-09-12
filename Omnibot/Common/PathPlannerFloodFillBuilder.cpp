@@ -47,7 +47,7 @@ void PathPlannerFloodFill::_InitFloodFillData()
 	m_Sectors.clear();
 
 	String strDataSize = Utils::FormatByteString(sizeof(FloodFillData));
-	EngineFuncs::ConsoleMessagef("FloodFill Data Pool: %s", strDataSize.c_str());
+	EngineFuncs::ConsoleMessage(va("FloodFill Data Pool: %s", strDataSize.c_str()));
 }
 
 bool PathPlannerFloodFill::_IsNodeGood(NavNode *_navnode, const AABB &bounds)

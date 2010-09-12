@@ -132,32 +132,7 @@ void Logger::Stop()
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-void Logger::LogTex(const LogFlags logBits, const char *s, ...)
-{
-	if (!LogStarted()) 
-		return;
-
-	// If the bits don't match the mask, then bail
-	if (!(logBits & LogMask())) 
-		return;
-
-	char msg[8192] = {0};
-	va_list list;
-	va_start(list, s);
-#ifdef WIN32
-	_vsnprintf(msg, 8192, s, list);	
-#else
-	vsnprintf(msg, 8192, s, list);
-#endif
-	va_end(list);
-
-	LimitFileSize();
-	m_LogFile << HeaderString(logBits) << msg << std::endl;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------------
-
-void Logger::LogTexBasic(const LogFlags logBits, const char *s)
+void Logger::LogTex(const LogFlags logBits, const char *s)
 {
 	if (!LogStarted()) 
 		return;

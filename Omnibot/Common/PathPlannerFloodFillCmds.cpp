@@ -111,7 +111,7 @@ void PathPlannerFloodFill::cmdNavView(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableView( %s );", 
+		(String)va("Nav.EnableView( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -126,7 +126,7 @@ void PathPlannerFloodFill::cmdNavViewConnections(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableViewConnection( %s );", 
+		(String)va("Nav.EnableViewConnection( %s );", 
 		bEnable ? "true" : "false"));
 }
 
@@ -144,7 +144,7 @@ void PathPlannerFloodFill::cmdNavEnableStep(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableStep( %s );", 
+		(String)va("Nav.EnableStep( %s );", 
 		bEnable ? "true" : "false"));
 }
 
@@ -152,7 +152,7 @@ void PathPlannerFloodFill::cmdNavStep(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged(Utils::VA("Nav.Step();"));
+	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.Step();");
 }
 
 void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
@@ -164,7 +164,7 @@ void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
 	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition)))
 	{
 		ScriptManager::GetInstance()->ExecuteStringLogged(
-			Utils::VA("Nav.AddFloodStart( Vector3(%f, %f, %f) );", 
+			(String)va("Nav.AddFloodStart( Vector3(%f, %f, %f) );", 
 			vPosition.x, vPosition.y, vPosition.z));
 	}
 }
@@ -173,21 +173,21 @@ void PathPlannerFloodFill::cmdClearFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged(Utils::VA("Nav.ClearFloodStarts();"));
+	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.ClearFloodStarts();");
 }
 
 void PathPlannerFloodFill::cmdSaveFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged(Utils::VA("Nav.SaveFloodStarts();"));
+	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.SaveFloodStarts();");
 }
 
 void PathPlannerFloodFill::cmdLoadFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged(Utils::VA("Nav.LoadFloodStarts();"));
+	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.LoadFloodStarts();");
 }
 
 void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
@@ -214,7 +214,7 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, m_FloodFillOptions.m_CharacterHeight);
 	
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.FloodFill( %f, %f, %f, %f, %f );", 
+		(String)va("Nav.FloodFill( %f, %f, %f, %f, %f );", 
 		fGridRadius, 
 		fStepHeight, 
 		fJumpHeight,
@@ -236,7 +236,7 @@ void PathPlannerFloodFill::cmdNavMeshTrimSectors(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 5, strUsage);
 	CHECK_FLOAT_PARAM(fTrimArea, 1, strUsage);
 		ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.TrimSectors( %f );", fTrimArea));
+		(String)va("Nav.TrimSectors( %f );", fTrimArea));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -286,7 +286,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 		Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
 		//////////////////////////////////////////////////////////////////////////
 	}
-	EngineFuncs::ConsoleMessagef("Found %d nav features.", iNumFeatures);
+	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
 }
 
 //void PathPlannerFloodFill::cmdLoadObj(const StringVector &_args)
@@ -606,8 +606,8 @@ void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("generated %d paths in %f seconds: %f paths/sec", 
-		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f);	/**/
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
 void PathPlannerFloodFill::_BenchmarkGetNavPoint(const StringVector &_args)
@@ -644,7 +644,7 @@ void PathPlannerFloodFill::_BenchmarkGetNavPoint(const StringVector &_args)
 
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
+	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
 		iNumWaypoints * iNumIterations, 
 		iHits, 
 		iMisses, 

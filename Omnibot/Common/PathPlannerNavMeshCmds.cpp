@@ -141,7 +141,7 @@ void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableView( %s );", 
+		(String)va("Nav.EnableView( %s );", 
 		bEnable ? "true" : "false"));
 }
 
@@ -156,7 +156,7 @@ void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableViewConnection( %s );", 
+		(String)va("Nav.EnableViewConnection( %s );", 
 		bEnable ? "true" : "false"));
 }
 
@@ -174,7 +174,7 @@ void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Nav.EnableStep( %s );", 
+		(String)va("Nav.EnableStep( %s );", 
 		bEnable ? "true" : "false"));
 }
 
@@ -182,7 +182,7 @@ void PathPlannerNavMesh::cmdNavStep(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged(Utils::VA("Nav.Step();"));
+	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.Step();");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 		Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
 		//////////////////////////////////////////////////////////////////////////
 	}
-	EngineFuncs::ConsoleMessagef("Found %d nav features.", iNumFeatures);
+	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
 }
 
 Vector3f PathPlannerNavMesh::_SectorVertWithin(const Vector3f &_pos1, const Vector3f &_pos2, float _range, bool *_snapped)
@@ -896,8 +896,8 @@ void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("generated %d paths in %f seconds: %f paths/sec", 
-		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f);	/**/
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
 void PathPlannerNavMesh::_BenchmarkGetNavPoint(const StringVector &_args)
@@ -934,7 +934,7 @@ void PathPlannerNavMesh::_BenchmarkGetNavPoint(const StringVector &_args)
 
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
+	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
 		iNumWaypoints * iNumIterations, 
 		iHits, 
 		iMisses, 
@@ -1010,7 +1010,7 @@ STATE_ENTER(PathPlannerNavMesh, SliceSector)
 {
 	if(m_WorkingSector.empty())
 	{
-		EngineFuncs::ConsoleErrorf("No Active Sector");
+		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
 	}
 
@@ -1061,7 +1061,7 @@ STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
 {
 	if(m_WorkingSector.empty())
 	{
-		EngineFuncs::ConsoleErrorf("No Active Sector");
+		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
 		return;
 	}
@@ -1124,7 +1124,7 @@ STATE_UPDATE(PathPlannerNavMesh, EditSector)
 	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
 	if(!nc.DidHit() && !nc.HitAttrib().Fields.Mirrored)
 	{
-		EngineFuncs::ConsoleErrorf("No Nav Sector Found");
+		EngineFuncs::ConsoleError("No Nav Sector Found");
 		SetNextState(NoOp);
 		return;
 	}
@@ -1148,7 +1148,7 @@ STATE_ENTER(PathPlannerNavMesh, SplitSector)
 {
 	if(m_WorkingSector.empty())
 	{
-		EngineFuncs::ConsoleErrorf("No Active Sector");
+		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
 	}
 
@@ -1296,7 +1296,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
 	if(!nc.DidHit() && !nc.HitAttrib().Fields.Mirrored)
 	{
-		EngineFuncs::ConsoleErrorf("No Nav Sector Found");
+		EngineFuncs::ConsoleError("No Nav Sector Found");
 		SetNextState(NoOp);
 		return;
 	}

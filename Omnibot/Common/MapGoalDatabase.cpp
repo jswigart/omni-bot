@@ -59,7 +59,7 @@ void MapGoalDatabase::RegisterMapGoal(const String &_type, const MapGoalPtr &_mg
 	}
 	else
 	{
-		Utils::OutputDebug(kError, Utils::VA("Duplicate MapGoal Id: %s", _type.c_str()));
+		Utils::OutputDebug(kError, va("Duplicate MapGoal Id: %s", _type.c_str()));
 	}
 }
 
@@ -72,14 +72,16 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 	DirectoryList mapgoalFiles;
 	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, ex);
 
-	LOG("Loading %d MapGoals from: global_scripts/mapgoals & scripts/mapgoals",mapgoalFiles.size());
+	LOG("Loading " << mapgoalFiles.size() << 
+		" MapGoals from: global_scripts/mapgoals & scripts/mapgoals");
 	DirectoryList::const_iterator cIt = mapgoalFiles.begin(), cItEnd = mapgoalFiles.end();
 	for(; cIt != cItEnd; ++cIt)
 	{
 		MapGoalPtr mg(new MapGoal(""));
 
-		LOG("Loading MapGoal Definition: %s",(*cIt).string().c_str());
-		if(mg->LoadFromFile(*cIt) && !mg->GetGoalType().empty())
+		filePath script( (*cIt).string().c_str() );
+		LOG("Loading MapGoal Definition: " << script);
+		if(mg->LoadFromFile(script) && !mg->GetGoalType().empty())
 		{
 			RegisterMapGoal(mg->GetGoalType(),mg);
 		}

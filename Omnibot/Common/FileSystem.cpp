@@ -76,11 +76,14 @@ bool FileSystem::InitFileSystem()
 {
 	PHYSFS_Version compiled;
 	PHYSFS_VERSION(&compiled);
-	LOG("Initializing PhysFS: Version %d.%d.%d", (int)compiled.major, (int)compiled.minor, (int)compiled.patch);
+	LOG("Initializing PhysFS: Version " << 
+		(int)compiled.major << "." <<
+		(int)compiled.minor << "." <<
+		(int)compiled.patch);
 	
 	LOGFUNC;
 	fs::path basePath = Utils::GetBaseFolder();
-	LOG("Your base directory is: %s", basePath.string().c_str());
+	LOG("Your base directory is: "<<basePath.string().c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
 	{
 		OBASSERT(0, "PhysFS: Error Initializing: %s", PHYSFS_getLastError());
@@ -93,12 +96,12 @@ bool FileSystem::InitFileSystem()
 	fs::path globalMapGoalPath = basePath / "global_scripts/mapgoals";
 	PHYSFS_mount(globalMapGoalPath.string().c_str(), "scripts/mapgoals", 0);
 
-	LOG("Your user directory is: %s", PHYSFS_getUserDir());
+	LOG("Your user directory is: "<<PHYSFS_getUserDir());
 	fs::path modPath = Utils::GetModFolder();
-	LOG("Your mod directory is: %s", modPath.string().c_str());
+	LOG("Your mod directory is: %s"<<modPath.string().c_str());
 	if(!PHYSFS_mount(modPath.string().c_str(), NULL, 1))
 	{
-		LOGERR("Can't mount folder: %s", modPath.string().c_str());
+		LOGERR("Can't mount folder: " << modPath.string().c_str());
 		OBASSERT(0, "PhysFS: Error Mounting Directory: %s", PHYSFS_getLastError());
 		PHYSFS_deinit();
 		return false;
@@ -113,21 +116,7 @@ bool FileSystem::InitFileSystem()
 	fs::path configPath = basePath / "config";
 	PHYSFS_mount(configPath.string().c_str(), "config", 0);
 
-	// Log the archivers available
-	const PHYSFS_ArchiveInfo **rc = PHYSFS_supportedArchiveTypes();
-	LOG_BASIC("Supported Archive Types");
-	if (*rc == NULL)
-	{
-		LOG_BASIC("None!");
-	}
-	else
-	{
-		for(const PHYSFS_ArchiveInfo **i = rc; *i != NULL; i++)
-		{
-			LOG(" * %s: %s", (*i)->extension, (*i)->description);
-			LOG("Written by %s, %s", (*i)->author, (*i)->url);
-		}
-	}
+	LogAvailableArchives();
 
 	CrcGenerateTable();
 	g_FileSystemInitialized = true;
@@ -140,11 +129,14 @@ bool FileSystem::InitRawFileSystem(const String &folder)
 {
 	PHYSFS_Version compiled;
 	PHYSFS_VERSION(&compiled);
-	LOG("Initializing PhysFS: Version %d.%d.%d", (int)compiled.major, (int)compiled.minor, (int)compiled.patch);
+	LOG("Initializing PhysFS: Version " << 
+		(int)compiled.major << "." <<
+		(int)compiled.minor << "." <<
+		(int)compiled.patch);
 
 	LOGFUNC;
 	fs::path basePath = fs::path(folder.c_str(),fs::native);
-	LOG("Your base directory is: %s", folder.c_str());
+	LOG("Your base directory is: " << folder.c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
 	{
 		OBASSERT(0, "PhysFS: Error Initializing: %s", PHYSFS_getLastError());
@@ -155,21 +147,7 @@ bool FileSystem::InitRawFileSystem(const String &folder)
 
 	//////////////////////////////////////////////////////////////////////////
 	
-	// Log the archivers available
-	const PHYSFS_ArchiveInfo **rc = PHYSFS_supportedArchiveTypes();
-	LOG_BASIC("Supported Archive Types");
-	if (*rc == NULL)
-	{
-		LOG_BASIC("None!");
-	}
-	else
-	{
-		for(const PHYSFS_ArchiveInfo **i = rc; *i != NULL; i++)
-		{
-			LOG(" * %s: %s", (*i)->extension, (*i)->description);
-			LOG("Written by %s, %s", (*i)->author, (*i)->url);
-		}
-	}
+	LogAvailableArchives();
 
 	CrcGenerateTable();
 	g_FileSystemInitialized = true;
@@ -178,16 +156,36 @@ bool FileSystem::InitRawFileSystem(const String &folder)
 
 //////////////////////////////////////////////////////////////////////////
 
+void FileSystem::LogAvailableArchives()
+{
+	const PHYSFS_ArchiveInfo **rc = PHYSFS_supportedArchiveTypes();
+	LOG("Supported Archive Types");
+	if (*rc == NULL)
+	{
+		LOG("None!");
+	}
+	else
+	{
+		for(const PHYSFS_ArchiveInfo **i = rc; *i != NULL; i++)
+		{
+			LOG(" * " << (*i)->extension << " : " << (*i)->description);
+			LOG("Written by " << (*i)->author << " @ " << (*i)->url );
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void FileSystem::ShutdownFileSystem()
 {
 	if(PHYSFS_deinit())
 	{
-		LOG_BASIC("PhysFS shut down successfully.");
+		LOG("PhysFS shut down successfully.");
 	}
 	else
 	{
 		OBASSERT(0, "Error Shutting Down PhysFS: %s", PHYSFS_getLastError());
-		LOG("Error Shutting Down PhysFS: %s", PHYSFS_getLastError());
+		LOG("Error Shutting Down PhysFS: "<<PHYSFS_getLastError());
 	}
 }
 
@@ -204,7 +202,7 @@ bool FileSystem::Mount(const fs::path &_path, const char *_mountpoint, MountOrde
 {
 	if(!PHYSFS_mount(_path.string().c_str(), _mountpoint, _order==MountLast))
 	{
-		LOG("Error Mounting %s: %s", _path.string().c_str(), PHYSFS_getLastError());
+		LOG("Error Mounting " << _path.string().c_str() << " : " << PHYSFS_getLastError());
 		return false;
 	}
 	return true;
@@ -214,7 +212,7 @@ bool FileSystem::UnMount(const fs::path &_path)
 {
 	if(!PHYSFS_removeFromSearchPath(_path.string().c_str()))
 	{
-		LOG("Error UnMounting %s: %s", _path.string().c_str(), PHYSFS_getLastError());
+		LOG("Error UnMounting " << _path.string().c_str() << " : " << PHYSFS_getLastError());
 		return false;
 	}
 	return true;
@@ -226,7 +224,7 @@ bool FileSystem::SetWriteDirectory(const fs::path &_dir)
 {
 	if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
 	{
-		LOG("PhysFS: Error Setting Write Directory: %s", PHYSFS_getLastError());
+		LOG("PhysFS: Error Setting Write Directory: " << PHYSFS_getLastError());
 		return false;
 	}
 	return true;
@@ -238,7 +236,7 @@ bool FileSystem::MakeDirectory(const char *_folder)
 {
 	if(!PHYSFS_mkdir(_folder))
 	{
-		LOG("Error Creating Directory %s: %s", _folder, PHYSFS_getLastError());
+		LOG("Error Creating Directory " << _folder << " : " << PHYSFS_getLastError());
 		return false;
 	}
 	return true;
@@ -246,23 +244,23 @@ bool FileSystem::MakeDirectory(const char *_folder)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool FileSystem::FileExists(const fs::path &_file)
+bool FileSystem::FileExists(const filePath &_file)
 {
-	return PHYSFS_exists(_file.string().c_str()) != 0;
+	return PHYSFS_exists(_file) != 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-obint64 FileSystem::FileModifiedTime(const fs::path &_file)
+obint64 FileSystem::FileModifiedTime(const filePath &_file)
 {
-	return PHYSFS_getLastModTime(_file.string().c_str());
+	return PHYSFS_getLastModTime(_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-bool FileSystem::FileDelete(const fs::path &_file)
+bool FileSystem::FileDelete(const filePath &_file)
 {
-	return PHYSFS_delete(_file.string().c_str()) != 0;
+	return PHYSFS_delete(_file) != 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -409,7 +407,7 @@ void FileSystem::MountArchives(const char *_folder, const char *_mountpoint)
 		{
 			if(PHYSFS_mount(cIt->FilePath.string().c_str(), _mountpoint?_mountpoint:cIt->OrigDir.c_str(), 1))
 			{
-				LOG("Mounted: %s to %s\n", cIt->FilePath.string().c_str(), cIt->OrigDir.c_str());
+				LOG("Mounted: " << cIt->FilePath.string().c_str() << " to " << cIt->OrigDir.c_str());
 			}
 			else
 			{
@@ -421,7 +419,7 @@ void FileSystem::MountArchives(const char *_folder, const char *_mountpoint)
 	catch(const std::exception & ex)
 	{
 		ex;
-		SOFTASSERTALWAYS(0, "Filesystem: %s", ex.what());
+		SOFTASSERTALWAYS(0, "Filesystem: ", ex.what());
 	}
 }
 
@@ -437,7 +435,7 @@ void EchoFileCallback(void *data, const char *origdir, const char *filename)
 		sprintf(fullname, "%s/%s", origdir, filename);
 		const char *pDir = PHYSFS_getRealDir(fullname);
 
-		EngineFuncs::ConsoleMessagef("%s/%s : %s", origdir, filename, pDir?pDir:"<->");
+		EngineFuncs::ConsoleMessage(va("%s/%s : %s", origdir, filename, pDir?pDir:"<->"));
 		Utils::OutputDebug(kInfo,"%s/%s : %s", origdir, filename, pDir?pDir:"<->");
 	}
 }

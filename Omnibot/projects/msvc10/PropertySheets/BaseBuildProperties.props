@@ -5,7 +5,7 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir>..\build\$(ProjectName)\$(Configuration)\</OutDir>
     <IntDir>..\build\$(ProjectName)\$(Configuration)\</IntDir>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup />
@@ -19,7 +19,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <EnablePREfast>false</EnablePREfast>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName)_$(ConfigurationName).pdb</ProgramDatabaseFile>

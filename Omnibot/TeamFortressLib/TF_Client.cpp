@@ -243,10 +243,10 @@ void TF_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			m_SentryStatus.m_Level			= m->m_Level;
 
 			DBG_MSG(0, m_Client, kNormal, "Sentry Stats");
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Level: %d/%d", m_SentryStatus.m_Level, 3));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Health: %d/%d", m_SentryStatus.m_Health, m_SentryStatus.m_MaxHealth));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Shells: %d/%d", m_SentryStatus.m_Shells[0], m_SentryStatus.m_Shells[1]));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Rockets: %d/%d", m_SentryStatus.m_Rockets[0], m_SentryStatus.m_Rockets[1]));*/
+			DBG_MSG(0, m_Client, kNormal, va("Level: %d/%d", m_SentryStatus.m_Level, 3));
+			DBG_MSG(0, m_Client, kNormal, va("Health: %d/%d", m_SentryStatus.m_Health, m_SentryStatus.m_MaxHealth));
+			DBG_MSG(0, m_Client, kNormal, va("Shells: %d/%d", m_SentryStatus.m_Shells[0], m_SentryStatus.m_Shells[1]));
+			DBG_MSG(0, m_Client, kNormal, va("Rockets: %d/%d", m_SentryStatus.m_Rockets[0], m_SentryStatus.m_Rockets[1]));*/
 			break;
 		}
 		HANDLER(TF_MSG_SENTRY_UPGRADED)
@@ -353,12 +353,12 @@ void TF_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			m_DispenserStatus.m_Armor	= m->m_Armor;
 
 			DBG_MSG(0, m_Client, kNormal, "Dispenser Stats");
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Health: %d", m_DispenserStatus.m_Health));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Shells: %d", m_DispenserStatus.m_Shells));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Nails: %d", m_DispenserStatus.m_Nails));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Rockets: %d", m_DispenserStatus.m_Rockets));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Cells: %d", m_DispenserStatus.m_Cells));
-			DBG_MSG(0, m_Client, kNormal, Utils::VA("Armor: %d", m_DispenserStatus.m_Armor));*/
+			DBG_MSG(0, m_Client, kNormal, va("Health: %d", m_DispenserStatus.m_Health));
+			DBG_MSG(0, m_Client, kNormal, va("Shells: %d", m_DispenserStatus.m_Shells));
+			DBG_MSG(0, m_Client, kNormal, va("Nails: %d", m_DispenserStatus.m_Nails));
+			DBG_MSG(0, m_Client, kNormal, va("Rockets: %d", m_DispenserStatus.m_Rockets));
+			DBG_MSG(0, m_Client, kNormal, va("Cells: %d", m_DispenserStatus.m_Cells));
+			DBG_MSG(0, m_Client, kNormal, va("Armor: %d", m_DispenserStatus.m_Armor));*/
 			break;
 		}
 		HANDLER(TF_MSG_DISPENSER_DETONATED)

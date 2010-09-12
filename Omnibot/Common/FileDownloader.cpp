@@ -67,7 +67,7 @@ public:
 			DlScript = DlScriptOverride;
 		//////////////////////////////////////////////////////////////////////////
 
-		String sFilePath = Utils::VA("user/download/%s.zip",mQuery._MapName.c_str());
+		String sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
 		mQuery._MapCrc = FileSystem::GetFileCrc(sFilePath);
 
 		StringStr script,args;
@@ -78,7 +78,7 @@ public:
 			;
 		script << DlScript << args.str();
 
-		EngineFuncs::ConsoleErrorf("Attempting Download wpstream.php%s",args.str().c_str());
+		EngineFuncs::ConsoleError(va("Attempting Download wpstream.php%s",args.str().c_str()));
 		
 		// Form the request. We specify the "Connection: close" header so that the
 		// server will close the socket after transmitting the response. This will
@@ -119,7 +119,7 @@ private:
 		}
 		else
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	void handle_connect(const errorcode& err,tcp::resolver::iterator endpoint_iterator)
@@ -142,7 +142,7 @@ private:
 		}
 		else
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	void handle_write_request(const errorcode& err)
@@ -156,7 +156,7 @@ private:
 		}
 		else
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	void handle_read_status_line(const errorcode& err)
@@ -173,20 +173,20 @@ private:
 			std::getline(response_stream, status_message);
 			if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 			{
-				EngineFuncs::ConsoleErrorf("DownloadFile Error: Invalid Response");
+				EngineFuncs::ConsoleError("DownloadFile Error: Invalid Response");
 				return;
 			}
 
 			switch(status_code)
 			{
 			case QueryFileMatches:
-				EngineFuncs::ConsoleErrorf("Map up to date %s",mQuery._MapName.c_str());
+				EngineFuncs::ConsoleError(va("Map up to date %s",mQuery._MapName.c_str()));
 				break;
 			case QueryBadUrl:
-				EngineFuncs::ConsoleErrorf("Bad Url requesting map %s",mQuery._MapName.c_str());
+				EngineFuncs::ConsoleError(va("Bad Url requesting map %s",mQuery._MapName.c_str()));
 				break;
 			case QueryFileNotInDatabase:
-				EngineFuncs::ConsoleErrorf("File not available for %s",mQuery._MapName.c_str());
+				EngineFuncs::ConsoleError(va("File not available for %s",mQuery._MapName.c_str()));
 				break;
 			case QuerySuccess:
 				{
@@ -197,13 +197,13 @@ private:
 					break;
 				}
 			default:
-				EngineFuncs::ConsoleErrorf("DownloadFile Error: Error code %d",status_code);
+				EngineFuncs::ConsoleError(va("DownloadFile Error: Error code %d",status_code));
 				break;
 			}
 		}
 		else
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	void handle_read_headers(const errorcode& err)
@@ -230,7 +230,7 @@ private:
 		}
 		else
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	void handle_read_content(const errorcode& err)
@@ -251,11 +251,11 @@ private:
 			const int size = mContent.str().length();
 			if(size > 0)
 			{
-				String sFilePath = Utils::VA("user/download/%s.zip",mQuery._MapName.c_str());
+				String sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
 
 				fs::path sFilePathReal = FileSystem::GetRealDir(sFilePath)/sFilePath;
 				if(FileSystem::UnMount(sFilePathReal))
-					EngineFuncs::ConsoleMessagef("UnMounted Archive: %s", sFilePath.c_str());
+					EngineFuncs::ConsoleMessage(va("UnMounted Archive: %s", sFilePath.c_str()));
 
 				File f;
 				f.OpenForWrite(sFilePath.c_str(),File::Binary);
@@ -264,29 +264,29 @@ private:
 					f.Write(mContent.str().c_str(),size);
 					f.Close();
 
-					EngineFuncs::ConsoleMessagef("Downloaded %s, %s : crc 0x%08X", 
+					EngineFuncs::ConsoleMessage(va("Downloaded %s, %s : crc 0x%08X", 
 						mQuery._MapName.c_str(), 
 						Utils::FormatByteString(size).c_str(),
-						FileSystem::CalculateCrc(mContent.str().c_str(),size));
+						FileSystem::CalculateCrc(mContent.str().c_str(),size)));
 					
 					sFilePathReal = FileSystem::GetRealDir(sFilePath)/sFilePath;
 					if(FileSystem::Mount(sFilePathReal,"nav",FileSystem::MountFirst))
-						EngineFuncs::ConsoleMessagef("Mounted Archive: %s", sFilePath.c_str());
+						EngineFuncs::ConsoleMessage(va("Mounted Archive: %s", sFilePath.c_str()));
 				}
 				else
 				{
-					EngineFuncs::ConsoleErrorf("Unable to open file for writing: %s.",
-						sFilePathReal.string().c_str());
+					EngineFuncs::ConsoleError(va("Unable to open file for writing: %s.",
+						sFilePathReal.string().c_str()));
 				}
 			}
 			else
 			{
-				EngineFuncs::ConsoleErrorf("Map %s not available from database.",mQuery._MapName.c_str());
+				EngineFuncs::ConsoleError(va("Map %s not available from database.",mQuery._MapName.c_str()));
 			}
 		}
 		else if (err != boost::asio::error::eof)
 		{
-			EngineFuncs::ConsoleErrorf("DownloadFile Error: %s",err.message().c_str());
+			EngineFuncs::ConsoleError(va("DownloadFile Error: %s",err.message().c_str()));
 		}
 	}
 	tcp::resolver			mResolver;
@@ -398,11 +398,11 @@ bool FileDownloader::NavigationMissing(const String &_name)
 	Options::GetValue("Downloader","DownloadMissingNav",DownloadMissingNavigation);
 	if(DownloadMissingNavigation)
 	{
-		EngineFuncs::ConsoleErrorf("No nav for %s, attempting to download...", _name.c_str());
+		EngineFuncs::ConsoleError(va("No nav for %s, attempting to download...", _name.c_str()));
 		UpdateWaypoints(_name,true);
 		return true;
 	}
-	EngineFuncs::ConsoleErrorf("No nav for %s, auto-download disabled.", _name.c_str());
+	EngineFuncs::ConsoleError(va("No nav for %s, auto-download disabled.", _name.c_str()));
 	return false;
 }
 

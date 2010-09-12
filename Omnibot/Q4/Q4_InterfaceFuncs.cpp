@@ -45,7 +45,7 @@ namespace InterfaceFuncs
 		MessageHelper msg(Q4_MSG_BUYSOMETHING, &data, sizeof(data));
 		if(!SUCCESS(InterfaceMsg(msg, _player)))
 		{
-			LOGERR("Invalid Item specified: %d",_item);
+			LOGERR("Invalid Item specified: "<<_item);
 		}
 		return data.m_Success == True;
 	}

@@ -134,7 +134,7 @@ void PathPlannerWaypoint::cmdWaypointAdd(const StringVector &_args)
 
 	// Add this waypoint to the list.
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		Utils::VA("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );", 
+		(String)va("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );", 
 		vPosition.x, vPosition.y, vPosition.z,
 		vFacing.x, vFacing.y, vFacing.z));
 }
@@ -217,10 +217,10 @@ void PathPlannerWaypoint::cmdWaypointStats(const StringVector &_args)
 		return;
 
 	EngineFuncs::ConsoleMessage("-= Waypoint Stats =-");
-	EngineFuncs::ConsoleMessagef("Map : %s", g_EngineFuncs->GetMapName());
-	EngineFuncs::ConsoleMessagef("# Waypoints : %d", m_WaypointList.size());		
-	EngineFuncs::ConsoleMessagef("A* Open List : %d", m_OpenList.size());
-	EngineFuncs::ConsoleMessagef("A* Closed List : %d", m_ClosedList.size());
+	EngineFuncs::ConsoleMessage(va("Map : %s", g_EngineFuncs->GetMapName()));
+	EngineFuncs::ConsoleMessage(va("# Waypoints : %d", m_WaypointList.size()));		
+	EngineFuncs::ConsoleMessage(va("A* Open List : %d", m_OpenList.size()));
+	EngineFuncs::ConsoleMessage(va("A* Closed List : %d", m_ClosedList.size()));
 }
 
 void PathPlannerWaypoint::cmdWaypointSave(const StringVector &_args)
@@ -286,7 +286,7 @@ void PathPlannerWaypoint::cmdWaypointSetName(const StringVector &_args)
 			newName += _args[i];
 		}
 		SetWaypointName(pWaypoint, newName);
-		EngineFuncs::ConsoleMessagef("Waypoint name set to \"%s\"", newName.c_str());
+		EngineFuncs::ConsoleMessage(va("Waypoint name set to \"%s\"", newName.c_str()));
 	} 
 	else
 	{
@@ -347,11 +347,11 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 		return;
 	};
 
-	EngineFuncs::ConsoleMessagef("autoradius: %s height[%f] minradius[%f] maxradius[%f]",
+	EngineFuncs::ConsoleMessage(va("autoradius: %s height[%f] minradius[%f] maxradius[%f]",
 		mode == All_Wp ? "all wps" : "current wp", 
 		fTestHeight,
 		fMinRadius, 
-		fMaxRadius);
+		fMaxRadius));
 
 	Waypoint *pClosestWp = 0;
 
@@ -412,10 +412,10 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 		}
 
 		float fNewRadius = Mathf::Max(fMaxRadius, fClosestHit);
-		EngineFuncs::ConsoleMessagef("#%d Changed Radius from %f to %f", 
+		EngineFuncs::ConsoleMessage(va("#%d Changed Radius from %f to %f", 
 			(*it)->GetUID(), 
 			(*it)->GetRadius(), 
-			fNewRadius);
+			fNewRadius));
 		(*it)->SetRadius(fNewRadius);
 	}
 }
@@ -537,7 +537,7 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 		}
 	}
 
-	EngineFuncs::ConsoleMessagef("Generated %d Paths, %d ray casts", iNumConnected, iNumRayCasts);
+	EngineFuncs::ConsoleMessage(va("Generated %d Paths, %d ray casts", iNumConnected, iNumRayCasts));
 
 	BuildBlockableList();
 	BuildFlagMap();
@@ -573,8 +573,8 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 			m_PlannerFlags.ClearFlag(NAV_VIEW);
 		}
 
-		EngineFuncs::ConsoleMessagef("Waypoint Visible %s",
-			m_PlannerFlags.CheckFlag(NAV_VIEW) ? "on." : "off.");
+		EngineFuncs::ConsoleMessage(va("Waypoint Visible %s",
+			m_PlannerFlags.CheckFlag(NAV_VIEW) ? "on." : "off."));
 	}
 }
 
@@ -591,8 +591,8 @@ void PathPlannerWaypoint::cmdWaypointAutoFlag(const StringVector &_args)
 			m_PlannerFlags.ClearFlag(NAV_AUTODETECTFLAGS);
 		}
 
-		EngineFuncs::ConsoleMessagef("Waypoint Autoflag %s",
-			m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) ? "on." : "off.");
+		EngineFuncs::ConsoleMessage(va("Waypoint Autoflag %s",
+			m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) ? "on." : "off."));
 	}
 }
 
@@ -609,8 +609,8 @@ void PathPlannerWaypoint::cmdWaypointViewFacing(const StringVector &_args)
 			m_PlannerFlags.ClearFlag(WAYPOINT_VIEW_FACING);
 		}
 
-		EngineFuncs::ConsoleMessagef("Waypoint Facing Visible %s",
-			m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) ? "on." : "off.");
+		EngineFuncs::ConsoleMessage(va("Waypoint Facing Visible %s",
+			m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) ? "on." : "off."));
 	}
 }
 
@@ -657,8 +657,8 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 
 			if(pClosest->GetPropertyMap().AddProperty(propertyName, propertyValue))
 			{
-				EngineFuncs::ConsoleMessagef("property set: %s, %s", 
-					propertyName.c_str(), propertyValue.c_str());
+				EngineFuncs::ConsoleMessage(va("property set: %s, %s", 
+					propertyName.c_str(), propertyValue.c_str()));
 			}
 			return;
 		}
@@ -685,8 +685,8 @@ void PathPlannerWaypoint::cmdWaypointShowProperty(const StringVector &_args)
 			PropertyMap::ValueMap::const_iterator cIt = pm.begin();
 			for(; cIt != pm.end(); ++cIt)
 			{
-				EngineFuncs::ConsoleMessagef("property: %s = %s", 
-					(*cIt).first.c_str(), (*cIt).second.c_str());
+				EngineFuncs::ConsoleMessage(va("property: %s = %s", 
+					(*cIt).first.c_str(), (*cIt).second.c_str()));
 			}
 			return;
 		}
@@ -762,8 +762,8 @@ void PathPlannerWaypoint::cmdWaypointSetRadius(const StringVector &_args)
 				if(pClosest)
 				{
 					pClosest->m_Radius = fWaypointRadius;
-					EngineFuncs::ConsoleMessagef("Waypoint %d radius changed to %f", 
-						pClosest->GetUID(), fWaypointRadius);
+					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+						pClosest->GetUID(), fWaypointRadius));
 				}
 			}
 			else
@@ -771,8 +771,8 @@ void PathPlannerWaypoint::cmdWaypointSetRadius(const StringVector &_args)
 				for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 				{
 					m_SelectedWaypoints[i]->m_Radius = fWaypointRadius;
-					EngineFuncs::ConsoleMessagef("Waypoint %d radius changed to %f", 
-						m_SelectedWaypoints[i]->GetUID(), fWaypointRadius);
+					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+						m_SelectedWaypoints[i]->GetUID(), fWaypointRadius));
 				}
 			}
 			m_SelectedWaypoint = -1;
@@ -806,8 +806,8 @@ void PathPlannerWaypoint::cmdWaypointChangeRadius(const StringVector &_args)
 		if(pClosest)
 		{
 			pClosest->m_Radius += fChangeBy;
-			EngineFuncs::ConsoleMessagef("Waypoint %d radius changed to %f", 
-				pClosest->GetUID(), pClosest->m_Radius);
+			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+				pClosest->GetUID(), pClosest->m_Radius));
 		}	
 	}
 	else
@@ -815,8 +815,8 @@ void PathPlannerWaypoint::cmdWaypointChangeRadius(const StringVector &_args)
 		for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 		{
 			m_SelectedWaypoints[i]->m_Radius += fChangeBy;
-			EngineFuncs::ConsoleMessagef("Waypoint %d radius changed to %f", 
-				m_SelectedWaypoints[i]->GetUID(), m_SelectedWaypoints[i]->m_Radius);
+			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+				m_SelectedWaypoints[i]->GetUID(), m_SelectedWaypoints[i]->m_Radius));
 		}
 	}
 	m_SelectedWaypoint = -1;
@@ -840,8 +840,8 @@ void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
 			if(pClosest)
 			{
 				pClosest->m_Facing = vFacing;
-				EngineFuncs::ConsoleMessagef("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
-					pClosest->GetUID(), vFacing[0], vFacing[1], vFacing[2]);
+				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
+					pClosest->GetUID(), vFacing[0], vFacing[1], vFacing[2]));
 			}
 		}
 		else
@@ -849,8 +849,8 @@ void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
 			for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 			{
 				m_SelectedWaypoints[i]->m_Facing += vFacing;
-				EngineFuncs::ConsoleMessagef("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
-					m_SelectedWaypoints[i]->GetUID(), vFacing[0], vFacing[1], vFacing[2]);
+				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
+					m_SelectedWaypoints[i]->GetUID(), vFacing[0], vFacing[1], vFacing[2]));
 			}
 		}
 	}
@@ -870,7 +870,7 @@ void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
 	// Print the info for this waypoint.
 	if(pClosest)
 	{
-		String flagString = Utils::VA("Waypoint #%d, radius %f, #connections %d\n", 
+		String flagString = va("Waypoint #%d, radius %f, #connections %d\n", 
 			pClosest->GetUID(), pClosest->m_Radius, (unsigned int)pClosest->m_Connections.size());
 
 		// Build a string with the flags
@@ -919,14 +919,14 @@ void PathPlannerWaypoint::cmdWaypointGoto(const StringVector &_args)
 	}
 	else
 	{
-		m_Message = Utils::VA(" UID: %i", pTravelTo->GetUID());
+		m_Message = va(" UID: %i", pTravelTo->GetUID());
 	}
 
 	if(pTravelTo)
 	{
 		if(!InterfaceFuncs::GotoWaypoint(m_Message.c_str(), pTravelTo->GetPosition()))
 		{
-			EngineFuncs::ConsoleErrorf("Failed to Teleport to Waypoint %s", _args[1].c_str());
+			EngineFuncs::ConsoleError(va("Failed to Teleport to Waypoint %s", _args[1].c_str()));
 			return;
 		}
 	}
@@ -949,15 +949,15 @@ void PathPlannerWaypoint::cmdWaypointMove(const StringVector &_args)
 	{
 		Waypoint *pWp = _GetClosestWaypoint(vLocalPos, 0, NOFILTER, &m_MovingWaypointIndex);
 		if( pWp )
-			EngineFuncs::ConsoleMessagef("Moving waypoint : %d", pWp->GetUID());
+			EngineFuncs::ConsoleMessage(va("Moving waypoint : %d", pWp->GetUID()));
 		else
-			EngineFuncs::ConsoleMessagef("waypoint_move: no waypoint found");
+			EngineFuncs::ConsoleMessage("waypoint_move: no waypoint found");
 	}
 	else
 	{
 		if(m_MovingWaypointIndex < (int)m_WaypointList.size() && m_MovingWaypointIndex >= 0)
 		{
-			EngineFuncs::ConsoleMessagef("Placed waypoint : %d", m_WaypointList[m_MovingWaypointIndex]->GetUID());
+			EngineFuncs::ConsoleMessage(va("Placed waypoint : %d", m_WaypointList[m_MovingWaypointIndex]->GetUID()));
 			m_WaypointList[m_MovingWaypointIndex]->m_Position = vLocalPos;
 			m_MovingWaypointIndex = -1;
 		}
@@ -1002,8 +1002,8 @@ void PathPlannerWaypoint::cmdWaypointTranslate(const StringVector &_args)
 			if(!pWp->m_Locked)
 				pWp->m_Position += Vector3f((float)dX, (float)dY, (float)dZ);
 		}
-		EngineFuncs::ConsoleMessagef("translated %d waypoints by (%.2f, %.2f, %.2f)",
-			iNum, dX, dY, dZ);
+		EngineFuncs::ConsoleMessage(va("translated %d waypoints by (%.2f, %.2f, %.2f)",
+			iNum, dX, dY, dZ));
 	}
 	else
 	{
@@ -1044,11 +1044,11 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 		return;
 	}
 
-	EngineFuncs::ConsoleMessagef("mirroring waypoints around %s",
-		Utils::VA("%s %s %s", 
+	EngineFuncs::ConsoleMessage(va("mirroring waypoints around %s",
+		va("%s %s %s", 
 		(bAxis[0] ? "x" : ""), 
 		(bAxis[1] ? "y" : ""), 
-		(bAxis[2] ? "z" : "")));
+		(bAxis[2] ? "z" : ""))));
 	
 	WaypointList mirroredWaypoints;
 
@@ -1242,7 +1242,7 @@ void PathPlannerWaypoint::cmdWaypointDeleteAxis(const StringVector &_args)
 			++it;
 	}
 	
-	EngineFuncs::ConsoleMessagef("deleted %d waypoints around axis: %s",iDeleted,_args[1].c_str());
+	EngineFuncs::ConsoleMessage(va("deleted %d waypoints around axis: %s",iDeleted,_args[1].c_str()));
 }
 
 void PathPlannerWaypoint::cmdWaypointConnect(const StringVector &_args)
@@ -1278,20 +1278,20 @@ void PathPlannerWaypoint::cmdWaypointConnect_Helper(const StringVector &_args, W
 		if(!m_ConnectWp)
 		{
 			m_ConnectWp = _waypoint;
-			EngineFuncs::ConsoleMessagef("Waypoint Selected: %d", m_ConnectWp->GetUID());
+			EngineFuncs::ConsoleMessage(va("Waypoint Selected: %d", m_ConnectWp->GetUID()));
 		}
 		else
 		{
 			// See if the first waypoint is already connected to this one.
 			if(_DisConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Disconnected: %d-%d", 
-					m_ConnectWp->GetUID(), _waypoint->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 			else if(_ConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Connected: %d-%d", 
-					m_ConnectWp->GetUID(), _waypoint->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 
 			// Clear the first selection.
@@ -1329,30 +1329,30 @@ void PathPlannerWaypoint::cmdWaypointConnect2Way_Helper(const StringVector &_arg
 		if(!m_ConnectWp)
 		{
 			m_ConnectWp = _waypoint;
-			EngineFuncs::ConsoleMessagef("Waypoint Selected: %d", m_ConnectWp->GetUID());
+			EngineFuncs::ConsoleMessage(va("Waypoint Selected: %d", m_ConnectWp->GetUID()));
 		}
 		else
 		{
 			if(_DisConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Disconnected: %d-%d", 
-					m_ConnectWp->GetUID(), _waypoint->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 			else if(_ConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Connected: %d-%d", 
-					m_ConnectWp->GetUID(), _waypoint->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 
 			if(_DisConnectWaypoints(_waypoint, m_ConnectWp))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Disconnected: %d-%d", 
-					_waypoint->GetUID(), m_ConnectWp->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+					_waypoint->GetUID(), m_ConnectWp->GetUID()));
 			}
 			else if(_ConnectWaypoints(_waypoint, m_ConnectWp))
 			{
-				EngineFuncs::ConsoleMessagef("Waypoint Connected: %d-%d", 
-					_waypoint->GetUID(), m_ConnectWp->GetUID());
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+					_waypoint->GetUID(), m_ConnectWp->GetUID()));
 			}
 
 			// Clear the first selection.
@@ -1380,8 +1380,8 @@ void PathPlannerWaypoint::_BenchmarkPathFinder(const StringVector &_args)
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("generated %d paths in %f seconds: %f paths/sec", 
-		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f);	
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
 void PathPlannerWaypoint::_BenchmarkGetNavPoint(const StringVector &_args)
@@ -1418,11 +1418,11 @@ void PathPlannerWaypoint::_BenchmarkGetNavPoint(const StringVector &_args)
 	
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessagef("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
+	EngineFuncs::ConsoleMessage(va("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
 		iNumWaypoints * iNumIterations, 
 		iHits, 
 		iMisses, 
-		dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	
+		dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f));
 }
 
 void PathPlannerWaypoint::cmdWaypointAddFlag(const StringVector &_args)
@@ -1489,12 +1489,12 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 					if(!_waypoint->IsFlagOn(it->second))
 					{
 						_waypoint->AddFlag(it->second);
-						EngineFuncs::ConsoleMessagef("%s Flag added to waypoint.", _args[iToken].c_str());
+						EngineFuncs::ConsoleMessage(va("%s Flag added to waypoint.", _args[iToken].c_str()));
 					} 
 					else
 					{
 						_waypoint->RemoveFlag(it->second);
-						EngineFuncs::ConsoleMessagef("%s Flag removed from waypoint.", _args[iToken].c_str());
+						EngineFuncs::ConsoleMessage(va("%s Flag removed from waypoint.", _args[iToken].c_str()));
 					}
 
 					// Team flags have a somewhat special case.
@@ -1521,7 +1521,7 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 			} 
 			else
 			{
-				EngineFuncs::ConsoleErrorf("Invalid flag: %s.", _args[iToken].c_str());
+				EngineFuncs::ConsoleError(va("Invalid flag: %s.", _args[iToken].c_str()));
 			}
 		}		
 	} else
@@ -1532,10 +1532,10 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 	// Print out the available flags.
 	if(bPrintFlagList && !m_WaypointFlags.empty())
 	{
-		EngineFuncs::ConsoleMessagef("Waypoint Flag List.");
+		EngineFuncs::ConsoleMessage("Waypoint Flag List.");
 		FlagMap::const_iterator it = m_WaypointFlags.begin();
 		for( ; it != m_WaypointFlags.end(); ++it)
-			EngineFuncs::ConsoleMessagef("%s", it->first.c_str());
+			EngineFuncs::ConsoleMessage(va("%s", it->first.c_str()));
 	}
 }
 
@@ -1553,8 +1553,8 @@ void PathPlannerWaypoint::cmdWaypointClearConnections(const StringVector &_args)
 		if(pWaypoint)
 		{
 			pWaypoint->m_Connections.clear();
-			EngineFuncs::ConsoleMessagef("Waypoint %d Connections Cleared.",
-				pWaypoint->GetUID());
+			EngineFuncs::ConsoleMessage(va("Waypoint %d Connections Cleared.",
+				pWaypoint->GetUID()));
 		}
 	}
 	else
@@ -1562,8 +1562,8 @@ void PathPlannerWaypoint::cmdWaypointClearConnections(const StringVector &_args)
 		for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 		{
 			m_SelectedWaypoints[i]->m_Connections.clear();
-			EngineFuncs::ConsoleMessagef("Waypoint %d Connections Cleared.",
-				m_SelectedWaypoints[i]->GetUID());
+			EngineFuncs::ConsoleMessage(va("Waypoint %d Connections Cleared.",
+				m_SelectedWaypoints[i]->GetUID()));
 		}
 	}
 }
@@ -1604,8 +1604,8 @@ void PathPlannerWaypoint::cmdWaypointClearAllFlags(const StringVector &_args)
 						(*it)->RemoveFlag(flagIt->second);
 					}
 				}
-				EngineFuncs::ConsoleMessagef("Removed flag %s from %d waypoints.", 
-					_args[iToken].c_str(), iNumWps);
+				EngineFuncs::ConsoleMessage(va("Removed flag %s from %d waypoints.", 
+					_args[iToken].c_str(), iNumWps));
 			}
 		}		
 	}
@@ -1631,7 +1631,7 @@ void PathPlannerWaypoint::cmdWaypointClearAllFlags(const StringVector &_args)
 			++iNum;
 			(*it)->ClearFlags();
 		}
-		EngineFuncs::ConsoleMessagef("Cleared all flags from %d waypoints.", iNum);
+		EngineFuncs::ConsoleMessage(va("Cleared all flags from %d waypoints.", iNum));
 	}	
 }
 
@@ -1664,7 +1664,7 @@ void PathPlannerWaypoint::cmdWaypointGetWpNames(const StringVector &_args)
 
 	for(obuint32 i = 0; i < wl.size(); ++i)
 	{
-		EngineFuncs::ConsoleMessagef("%s : uid # %d: ", wl[i]->GetName().c_str(), wl[i]->GetUID());
+		EngineFuncs::ConsoleMessage(va("%s : uid # %d: ", wl[i]->GetName().c_str(), wl[i]->GetUID()));
 	}
 }
 
@@ -1766,7 +1766,7 @@ void PathPlannerWaypoint::cmdSelectWaypoints_Helper(const Vector3f &_pos, float 
 	{
 		if((m_WaypointList[i]->GetPosition() - _pos).Length() <= _radius)
 		{
-			EngineFuncs::ConsoleMessagef("Added waypoint %d to selection.", m_WaypointList[i]->GetUID());
+			EngineFuncs::ConsoleMessage(va("Added waypoint %d to selection.", m_WaypointList[i]->GetUID()));
 
 			if(std::find(m_SelectedWaypoints.begin(), m_SelectedWaypoints.end(), m_WaypointList[i])==m_SelectedWaypoints.end())
 				m_SelectedWaypoints.push_back(m_WaypointList[i]);
@@ -1809,7 +1809,7 @@ void PathPlannerWaypoint::cmdLockSelected(const StringVector &_args)
 	{
 		m_SelectedWaypoints[i]->m_Locked = true;
 	}
-	EngineFuncs::ConsoleMessagef("Locked %d waypoints.", m_SelectedWaypoints.size());
+	EngineFuncs::ConsoleMessage(va("Locked %d waypoints.", m_SelectedWaypoints.size()));
 }
 
 void PathPlannerWaypoint::cmdUnlockAll(const StringVector &_args)
@@ -1826,7 +1826,7 @@ void PathPlannerWaypoint::cmdUnlockAll(const StringVector &_args)
 			iNum++;
 		}
 	}
-	EngineFuncs::ConsoleMessagef("Unlocked %d waypoints.", iNum);
+	EngineFuncs::ConsoleMessage(va("Unlocked %d waypoints.", iNum));
 }
 
 void PathPlannerWaypoint::cmdMinRadius(const StringVector &_args)
@@ -1851,7 +1851,7 @@ void PathPlannerWaypoint::cmdMinRadius(const StringVector &_args)
 			iNum++;
 		}
 	}
-	EngineFuncs::ConsoleMessagef("Changed Radius of %d waypoints to %f.", iNum, fRadius);
+	EngineFuncs::ConsoleMessage(va("Changed Radius of %d waypoints to %f.", iNum, fRadius));
 }
 
 void PathPlannerWaypoint::cmdMaxRadius(const StringVector &_args)
@@ -1876,7 +1876,7 @@ void PathPlannerWaypoint::cmdMaxRadius(const StringVector &_args)
 			iNum++;
 		}
 	}
-	EngineFuncs::ConsoleMessagef("Changed Radius of %d waypoints to %f.", iNum, fRadius);
+	EngineFuncs::ConsoleMessage(va("Changed Radius of %d waypoints to %f.", iNum, fRadius));
 }
 
 void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
@@ -1931,7 +1931,7 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 			Utils::OutlineAABB(features[i].m_TargetBounds, COLOR::ORANGE, fTime);
 		//////////////////////////////////////////////////////////////////////////
 	}
-	EngineFuncs::ConsoleMessagef("Found %d nav features.", iNumFeatures);
+	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
 }
 
 void PathPlannerWaypoint::cmdBoxSelect(const StringVector &_args)
@@ -1945,7 +1945,7 @@ void PathPlannerWaypoint::cmdBoxSelect(const StringVector &_args)
 		if(m_BoxStart == Vector3f::ZERO)
 		{
 			m_BoxStart = vAimPos;
-			EngineFuncs::ConsoleMessagef("Started Box Select.");
+			EngineFuncs::ConsoleMessage("Started Box Select.");
 		}
 		else
 		{
@@ -1957,7 +1957,7 @@ void PathPlannerWaypoint::cmdBoxSelect(const StringVector &_args)
 
 			obuint32 iNumSelected = SelectWaypoints(boxselect);
 			m_BoxStart = Vector3f::ZERO;
-			EngineFuncs::ConsoleMessagef("Selected %d waypoints.", iNumSelected);
+			EngineFuncs::ConsoleMessage(va("Selected %d waypoints.", iNumSelected));
 		}
 	}
 }
@@ -1971,7 +1971,7 @@ void PathPlannerWaypoint::cmdBoxSelectRoom(const StringVector &_args)
 	if(m_CreatingSector.m_SectorBounds.IsZero() && Utils::GetLocalAimPoint(vAimPos))
 	{
 		m_CreatingSector.m_SectorBounds.Set(vAimPos);
-		EngineFuncs::ConsoleMessagef("Started Sector.");
+		EngineFuncs::ConsoleMessage("Started Sector.");
 	}
 	else
 	{
@@ -1980,10 +1980,10 @@ void PathPlannerWaypoint::cmdBoxSelectRoom(const StringVector &_args)
 		Utils::OutlineAABB(m_CreatingSector.m_SectorBounds, COLOR::GREEN, 10.f, AABB::DIR_BOTTOM);
 
 		/*obuint32 iNumSelected = SelectWaypoints(boxselect);
-		EngineFuncs::ConsoleMessagef("Selected %d waypoints.", iNumSelected);*/
+		EngineFuncs::ConsoleMessage("Selected %d waypoints.", iNumSelected);*/
 
 		m_CreatingSector.m_SectorBounds.Set(Vector3f::ZERO);
-		EngineFuncs::ConsoleMessagef("End Sector.");
+		EngineFuncs::ConsoleMessage("End Sector.");
 	}
 }
 

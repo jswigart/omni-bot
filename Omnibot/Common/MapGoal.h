@@ -383,7 +383,7 @@ public:
 	void ShowHelp();
 
 	void CopyFrom(MapGoal *_other);
-	bool LoadFromFile(const fs::path &_file);
+	bool LoadFromFile( const filePath & _file );
 
 	void SetProfilerZone(const String &_name);
 
