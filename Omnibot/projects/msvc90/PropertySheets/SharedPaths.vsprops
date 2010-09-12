@@ -5,18 +5,23 @@
 	Name="SharedPaths"
 	>
 	<UserMacro
+		Name="REPO_ROOT"
+		Value="$(SolutionDir)..\..\..\"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
 		Name="BOOST"
-		Value="$(SolutionDir)..\..\..\libs\boost\boost_1_44"
+		Value="$(REPO_ROOT)libs\boost\boost_1_44"
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro
 		Name="InterfaceDir"
-		Value="$(SolutionDir)..\..\..\GameInterfaces"
+		Value="$(REPO_ROOT)GameInterfaces"
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro
 		Name="OMNIBOT_INST"
-		Value="$(SolutionDir)..\..\..\Installer\Files"
+		Value="$(REPO_ROOT)Installer\Files"
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro
@@ -32,11 +37,6 @@
 	<UserMacro
 		Name="ETDIR"
 		Value="E:\Games\WET"
-		PerformEnvironmentSet="true"
-	/>
-	<UserMacro
-		Name="REPO_ROOT"
-		Value="$(SolutionDir)..\..\..\"
 		PerformEnvironmentSet="true"
 	/>
 </VisualStudioPropertySheet>
