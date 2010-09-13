@@ -49,4 +49,9 @@
 		Value="E:\Games\Quake 4"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="D3DIR"
+		Value="E:\Games\Doom 3"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>
