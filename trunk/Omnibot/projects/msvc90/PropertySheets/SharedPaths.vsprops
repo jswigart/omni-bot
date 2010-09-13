@@ -39,4 +39,9 @@
 		Value="E:\Games\WET"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="RTCWDIR"
+		Value="E:\Games\RTCW"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>
