@@ -5049,38 +5049,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="sqlite"
-				>
-				<File
-					RelativePath="..\..\..\dependencies\sqlite3\sqlite3.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\dependencies\sqlite3\sqlite3.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\dependencies\sqlite3\sqlite3ext.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Recast"
 				>
 				<Filter
