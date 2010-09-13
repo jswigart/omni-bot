@@ -9,7 +9,11 @@ this.AlwaysRecieveEvents = true;
 this.Initialize = function()
 {
 	// the default frequency based on a 1 to 10 scale. setting to 0 will disable
-	this.Frequency = 4; // 40% chance to respond
+	if ( GetGameState() == "Playing" ) {
+		this.Frequency = 4; // 40% chance to respond
+	} else {
+		this.Frequency = 0; // disabled
+	}
 
 	// allow or disallow bots to respond to other bots
 	this.OnlyRespondToHumans = false;
@@ -40,10 +44,6 @@ this.Initialize = function()
 	this.PLANT_SAYCOVER		= this.Frequency;
 	this.DEFEND_SAYDEFEND		= this.Frequency;
 	this.ATTACK_SAYATTACK		= this.Frequency;
-	
-	if ( GetGameState() != "Playing" ) {
-		this.Disable = true;
-	}	
 };
 
 this.Randomize = function(frequency, isBot)
