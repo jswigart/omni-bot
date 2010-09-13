@@ -17,10 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -48,14 +48,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\..\..\..\Omnibot\Common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REPO_ROOT)Omnibot\Common&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/cgame.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -75,20 +75,20 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="..\Debug/cgame_mp_x86.dll"
+				OutputFile="$(IntDir)/cgame_mp_x86.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(BOOST)\lib&quot;"
 				ModuleDefinitionFile=".\cgame.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/cgame_mp_x86.pdb"
+				ProgramDatabaseFile="$(IntDir)/cgame_mp_x86.pdb"
 				GenerateMapFile="true"
-				MapFileName=".\Debug/cgame_mp_x86.map"
+				MapFileName="$(IntDir)/cgame_mp_x86.map"
 				SubSystem="2"
 				BaseAddress="0x30000000"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Debug/cgame_mp_x86.lib"
+				ImportLibrary="$(IntDir)/cgame_mp_x86.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -113,16 +113,16 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="copy to RTCW"
-				CommandLine="..\..\..\..\..\..\Tools\zip\zip -9j &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;"
+				Description="Copy To RTCW"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -152,15 +152,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\..\..\..\Omnibot\Common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REPO_ROOT)Omnibot\Common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/cgame.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -178,19 +178,19 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="../Release/cgame_mp_x86.dll"
+				OutputFile="$(IntDir)/cgame_mp_x86.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(BOOST)\lib&quot;"
 				ModuleDefinitionFile=".\cgame.def"
-				ProgramDatabaseFile=".\Release/cgame_mp_x86.pdb"
+				ProgramDatabaseFile="$(IntDir)/cgame_mp_x86.pdb"
 				GenerateMapFile="true"
-				MapFileName=".\Release/cgame_mp_x86.map"
+				MapFileName="$(IntDir)/cgame_mp_x86.map"
 				SubSystem="2"
 				BaseAddress="0x30000000"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Release/cgame_mp_x86.lib"
+				ImportLibrary="$(IntDir)/cgame_mp_x86.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -216,7 +216,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="..\..\..\..\..\..\Tools\zip\zip -9j &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(RTCWDIR)\omnibot\omnibot_rtcw.pk3&quot; &quot;$(OMNIBOT_INST)\rtcw\game&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
 			/>
 		</Configuration>
 	</Configurations>
