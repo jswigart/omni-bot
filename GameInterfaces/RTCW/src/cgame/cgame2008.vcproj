@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -103,7 +103,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/cgame.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -114,7 +113,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -122,7 +121,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -216,7 +215,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

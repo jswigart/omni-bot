@@ -17,10 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug -Lua|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -52,7 +52,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;_CRT_SECURE_NO_DEPRECATE;WITH_LUA"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/game.pch"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
@@ -103,7 +103,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/game.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -114,15 +113,15 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="copy to RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release - Lua|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -156,7 +155,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/game.pch"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
@@ -203,7 +202,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/game.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -214,7 +212,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -222,7 +220,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -256,7 +254,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/game.pch"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
@@ -303,7 +301,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/game.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -314,7 +311,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -322,7 +319,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -354,7 +351,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/game.pch"
+				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
@@ -405,7 +402,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/game.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -416,7 +412,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy To RTCW"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3&quot; &quot;$(RTCWDIR)\omnibot&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\rtcw\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(RTCWDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
