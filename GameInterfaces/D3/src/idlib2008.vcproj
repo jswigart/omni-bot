@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="idLib"
 	ProjectGUID="{49BEC5C6-B964-417A-851E-808886B57400}"
+	RootNamespace="idLib"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="idLib/DebugDLL"
-			IntermediateDirectory="idLib/DebugDLL"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			CharacterSet="2"
@@ -91,8 +92,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="idLib/ReleaseDLL"
-			IntermediateDirectory="idLib/ReleaseDLL"
+			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			CharacterSet="2"

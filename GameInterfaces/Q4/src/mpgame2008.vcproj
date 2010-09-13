@@ -115,7 +115,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;"
+				Description="Copy To Q4"
+				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -219,7 +220,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;"
+				Description="Copy To Q4"
+				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -327,7 +329,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;"
+				Description="Copy To Q4"
+				CommandLine="$(REPO_ROOT)\Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(TargetPath)&quot; binary.conf&#x0D;&#x0A;$(REPO_ROOT)\Tools\zip\zip -9 &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; guis\omnibot\omnibot.gui&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\q4\game\omnibot_q4.pk4&quot; &quot;$(Q4DIR)\omnibot&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

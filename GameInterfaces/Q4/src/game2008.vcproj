@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			CharacterSet="2"
 			>
@@ -122,7 +122,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			CharacterSet="2"
 			>
@@ -225,7 +225,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			CharacterSet="2"
 			>
