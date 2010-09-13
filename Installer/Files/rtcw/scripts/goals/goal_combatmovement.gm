@@ -19,7 +19,7 @@ this.Initialize = function()
 	if ( this.Bot.moveskill == null )
 	{
 		if ( this.Difficulty == 4 ) {
-			r = RandInt(0, 4);
+			r = RandInt(0, 3);
 			this.Bot.moveskill = r;
 		}
 		else {
