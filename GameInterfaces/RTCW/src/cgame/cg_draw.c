@@ -10,7 +10,7 @@ vec4_t alliesRectFill = { 0.25f, 0.5f, 0.25f, 0.25f };
 
 //cs: right aligned overlays; fps, local time, etc
 #define RAO_X 560
-#define RAO_H 18
+#define RAO_H TINYCHAR_HEIGHT+3
 #define RAO_W 74
 #define RAO_O 125 // offset from team overlay
 
@@ -631,6 +631,16 @@ void CG_DrawTeamBackground( int x, int y, int w, int h, float alpha, int team ) 
 
 /*
 ==================
+CG_RightOverlayText
+==================
+*/
+void CG_DrawRightOverlayText( int y, const char *s, float alpha ) {
+	//CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+	CG_DrawTinyString( RAO_X,y+2,s,cg_hudAlpha.value );
+}
+
+/*
+==================
 CG_DrawSnapshot
 ==================
 */
@@ -691,7 +701,7 @@ static float CG_DrawLocalTime( float y ) {
 
 	s = va( "%s:%s.%s", hour, min, sec );
 
-	CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+	CG_DrawRightOverlayText( y,s,cg_hudAlpha.value );
 
 	return y + RAO_H;
 }
@@ -715,7 +725,7 @@ static float CG_DrawPing( float y ) {
 	VectorSet( hcolor, 0.4f, 0.4f, 0.4f );
 	CG_DrawRect( RAO_X - 1, y, RAO_W + 2, RAO_H, 1, hcolor );
 
-	CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+	CG_DrawRightOverlayText( y,s,cg_hudAlpha.value );
 
 	return y + RAO_H;
 }
@@ -745,7 +755,7 @@ static float CG_DrawKillCount( float y ) {
 		s = va( "s: %d", spree );
 	}
 
-	CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+	CG_DrawRightOverlayText( y,s,cg_hudAlpha.value );
 
 	return y + RAO_H;
 }
@@ -795,7 +805,7 @@ static float CG_DrawFPS( float y ) {
 
 		s = va( "%i fps", fps );
 
-		CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+		CG_DrawRightOverlayText( y,s,cg_hudAlpha.value );
 	}
 
 	CG_FillRect( RAO_X,y,RAO_W,RAO_H,hcolor );
@@ -845,7 +855,7 @@ static float CG_DrawSpeedometer( float y ) {
 	VectorSet( hcolor, 0.4f, 0.4f, 0.4f );
 	CG_DrawRect( RAO_X - 1, y, RAO_W + 2, RAO_H, 1, hcolor );
 
-	CG_DrawSmallString( RAO_X,y,s,cg_hudAlpha.value );
+	CG_DrawRightOverlayText( y,s,cg_hudAlpha.value );
 
 	return y + RAO_H;
 }
@@ -1244,12 +1254,12 @@ static float CG_DrawLagometer( float y ) {
 	ax = RAO_X;
 	ay = y;
 	aw = RAO_W;
-	ah = RAO_H * 3;
+	ah = RAO_W;
 	CG_AdjustFrom640( &ax, &ay, &aw, &ah );
 
-	CG_FillRect( RAO_X,y,RAO_W,RAO_H * 3,hcolor );
+	CG_FillRect( RAO_X,y,RAO_W,RAO_W,hcolor );
 	VectorSet( hcolor, 0.4f, 0.4f, 0.4f );
-	CG_DrawRect( RAO_X - 1, y, RAO_W + 2, RAO_H * 3, 1, hcolor );
+	CG_DrawRect( RAO_X - 1, y, RAO_W + 2, RAO_W + 2, 1, hcolor );
 
 	color = -1;
 	range = ah / 3;

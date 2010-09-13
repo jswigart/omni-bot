@@ -2,12 +2,9 @@
 ExecScript( "rtcw_navconfig.gm" );
 ExecScript( "commands.gm" );
 ExecScript( "rtcw_commands.gm" );
-ExecScript( "difficulty.gm" );
 ExecScript( "server_manager.gm" );
 ExecScript( "rtcw_regiontriggers.gm" );
 ExecScript( "rtcw_botnames.gm" );
-//ExecScript("dumpstats.gm");
-//ExecScript("autowaypoint.gm");
 
 // New module format
 global Util = import("utilities");

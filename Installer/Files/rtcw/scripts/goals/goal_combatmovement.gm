@@ -15,12 +15,16 @@ this.Initialize = function()
 	// Internal variables
 	this.DelayBetweenCalls = 0.4;
 
-	if ( this.Difficulty == 4 ) {
-		r = RandInt( 0, 3 );
-		this.Bot.moveskill = r;
-	} else
+	// if a moveskill is not previously defined in the profile, assign one
+	if ( this.Bot.moveskill == null )
 	{
-		this.Bot.moveskill = this.Difficulty;
+		if ( this.Difficulty == 4 ) {
+			r = RandInt(0, 4);
+			this.Bot.moveskill = r;
+		}
+		else {
+			this.Bot.moveskill = this.Difficulty;
+		}
 	}
 
 	this.Bot.hadtarget = false;
