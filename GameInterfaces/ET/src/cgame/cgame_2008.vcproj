@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="1"
@@ -52,7 +52,7 @@
 				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="2"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\..\..\Omnibot\Common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REPO_ROOT)Omnibot\Common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -117,7 +117,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\et\game\omnibot_et.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\et\game\omnibot_et.pk3&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -125,7 +125,7 @@
 			OutputDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)/build/msvc9/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\..\..\..\Omnibot\projects\msvc90\PropertySheets\SharedPaths.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -153,7 +153,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;..\..\..\..\..\Omnibot\Common"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REPO_ROOT)Omnibot\Common&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
@@ -218,7 +218,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(OMNIBOT_INST)\et\game\&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;$(REPO_ROOT)Tools\zip\zip -9j &quot;$(OMNIBOT_INST)\et\game\omnibot_et.pk3&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;copy &quot;$(OMNIBOT_INST)\et\game\omnibot_et.pk3&quot; &quot;$(ETDIR)\omnibot&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
