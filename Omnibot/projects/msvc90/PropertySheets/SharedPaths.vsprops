@@ -44,4 +44,9 @@
 		Value="E:\Games\RTCW"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="Q4DIR"
+		Value="E:\Games\Quake 4"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>
