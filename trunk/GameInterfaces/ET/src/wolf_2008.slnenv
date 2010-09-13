@@ -1,8 +1,0 @@
-# Omni-bot dependencies
-BOOST=D:\CVS\Omnibot\SDK\libs\boost\boost_1_40_0
-
-# Omni-bot paths
-OMNIBOT_INST=D:\CVS\Omnibot\head\Installer\Files
-
-# Game Specific paths
-ETDIR=E:\games\WET
