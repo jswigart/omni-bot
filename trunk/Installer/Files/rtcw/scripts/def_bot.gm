@@ -18,6 +18,16 @@ this.AimDamping = 10.0;
 // default max view distance. map scripts can override this
 this.MaxViewDistance = 4500;
 
+// optionally set a fixed skill level for this bot
+// this will ensure that any global difficulty changes will not effect it
+// default difficulty levels are between 1 and 6 with 1 being the easiest
+// this.ProfileSkill = 3;
+
+// optionally set a moveskill for the bot. this will effect how they react when in combat (i.e. strafing and crouching)
+// setting this will over-ride and value set in goal_combatmovement
+// 0 - off, 1 - easy, 2 - medium, 3 - hard, 4 - random
+// this.moveskill = 3;
+
 //////////////////////////////////////////////////////////////////////////
 // Utility Callbacks
 
@@ -77,6 +87,3 @@ this.SelectWeapons = function()
 		this.ChangeSecondaryWeapon( weaponSelection.Secondary );
 	}
 };
-
-
-difficulties.InitBotDifficultyProperties( this );

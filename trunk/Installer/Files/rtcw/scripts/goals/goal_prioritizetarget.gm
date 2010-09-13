@@ -32,14 +32,6 @@ this.GetPriority = function()
 this.Enter = function()
 {
 	this.target = this.Bot.GetTarget();
-	
-	// hack the offsets for now so they can actually gib
-	difficulties.AdjustWeaponProperties( this.Bot, true );
-};
-
-this.Exit = function()
-{
-	difficulties.AdjustWeaponProperties( this.Bot, false );
 };
 
 this.Update = function()
