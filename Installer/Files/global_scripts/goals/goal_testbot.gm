@@ -174,7 +174,7 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
 				this.BlockForWeaponChange(WEAPON.DYNAMITE);
 				this.Bot.HoldButton(BTN.ATTACK1, 1);
 				sleep(2);
-				ent = this.Bot.GetNearest(CAT.MISC, CLASS.DYNAMITE);
+				ent = this.Bot.GetNearest(CAT.AVOID, CLASS.DYNAMITE);
 				if ( ent ) {
 					this.Bot.Say("i see dyno");
 				} else {
@@ -186,7 +186,7 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
 		{
 			this.SearchDyno = !this.SearchDyno;
 			while( this.SearchDyno ) {
-				ent = this.Bot.GetNearest(CAT.MISC, CLASS.DYNAMITE);
+				ent = this.Bot.GetNearest(CAT.AVOID, CLASS.DYNAMITE);
 				if ( ent ) {
 					this.Bot.Say("Found it!");
 					break;
