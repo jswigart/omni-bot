@@ -23,7 +23,7 @@ this.GetPriority = function()
 		entClass = GetEntClass(t);
 		if ( entClass & CLASS.ANYPLAYER || entClass == 1 || entClass == CLASS.BREAKABLE ) {
 			// cs: don't ignore if at a camp spot
-			if ( this.Bot.GetVelocity() > 0 ) {
+			if ( !this.Bot.GetVelocity().IsZero() ) {
 				this.Bot.IgnoreTarget(t, this.Bot.ReactionTime + 0.2);
 			}
 			
