@@ -140,7 +140,7 @@ this.SetProperty = function(property, value)
 		{
 			if ( value == "clearall" || value == "clear" )
 			{
-				tableClear(AimVectors);
+				tableClear(this.AimVectors);
 			}
 			else
 			{

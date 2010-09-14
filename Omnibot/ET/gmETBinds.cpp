@@ -553,6 +553,48 @@ static int GM_CDECL gmfIsWaitingForMedic(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: GetMG42Info
+//		Returns currently mounted mg42 info for the bot
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//		Table
+//
+// Returns:
+//		MG42 Info
+static int gmfGetMG42Info(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	
+	GM_CHECK_TABLE_PARAM(tbl,0);
+
+	DisableGCInScope gcEn(a_thread->GetMachine());
+
+	if(!tbl)
+		tbl = a_thread->GetMachine()->AllocTableObject();
+
+	ET_MG42Info mg42Info;
+	if(tbl != NULL && InterfaceFuncs::GetMg42Properties(native, mg42Info))
+	{
+		tbl->Set(a_thread->GetMachine(),"CenterFacing",gmVariable(mg42Info.m_CenterFacing));
+		tbl->Set(a_thread->GetMachine(),"MinHorizontal",gmVariable(mg42Info.m_MinHorizontalArc));
+		tbl->Set(a_thread->GetMachine(),"MaxHorizontal",gmVariable(mg42Info.m_MaxHorizontalArc));
+		tbl->Set(a_thread->GetMachine(),"MinVertical",gmVariable(mg42Info.m_MinVerticalArc));
+		tbl->Set(a_thread->GetMachine(),"MaxVertical",gmVariable(mg42Info.m_MaxVerticalArc));
+		a_thread->PushInt(1);
+	}
+	else
+	{
+		a_thread->PushNull();
+	}
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 { 
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon},
@@ -583,6 +625,8 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"GetExplosiveState",		gmfGetExplosiveState},
 	{"GetConstructableState",	gmfGetConstructableState},
 	{"GetDestroyableState",		gmfGetDestroyableState},
+
+	{"GetMG42Info",				gmfGetMG42Info},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =

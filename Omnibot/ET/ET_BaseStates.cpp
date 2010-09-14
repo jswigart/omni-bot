@@ -13,299 +13,6 @@
 
 namespace AiState
 {
-	MountMg42::MountMg42()
-		: StateChild("MountMg42")
-		, FollowPathUser("MountMg42")
-		, m_MinCampTime(6.f)
-		, m_MaxCampTime(10.f)
-		, m_ExpireTime(0)
-		, m_StartTime(0)
-		, m_ScanDirection(SCAN_DEFAULT)
-		, m_NextScanTime(0)
-		, m_IgnoreTargets(false)
-	{
-	}
-
-	void MountMg42::GetDebugString(StringStr &out)
-	{
-		if(IsActive())
-		{
-			if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
-				out << "Mounting ";
-			else
-			{
-				switch(m_ScanDirection)
-				{
-				case SCAN_DEFAULT:
-					out << "Scan Facing ";
-					break;
-				case SCAN_MIDDLE:
-					out << "Scan Middle ";
-					break;
-				case SCAN_LEFT:
-					out << "Scan Left ";
-					break;
-				case SCAN_RIGHT:
-					out << "Scan Right ";
-					break;
-				}
-			}
-
-			if(m_MapGoal)
-				out << m_MapGoal->GetName();
-		}
-	}
-
-	void MountMg42::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			m_TargetZone.RenderDebug();
-		}
-	}
-
-	// FollowPathUser functions.
-	bool MountMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
-
-	// AimerUser functions.
-	bool MountMg42::GetAimPosition(Vector3f &_aimpos)
-	{
-		_aimpos = m_AimPoint;
-		return true;
-	}
-
-	void MountMg42::OnTarget()
-	{
-		if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED) && (IGame::GetFrameNumber()&1))
-			GetClient()->PressButton(BOT_BUTTON_USE);
-	}
-
-	obReal MountMg42::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
-		
-		BitFlag64 entFlags;
-
-		GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-				continue;
-
-			if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
-				continue;
-
-			GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.m_List[i]->GetEntity());
-			int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.m_List[i]->GetEntity());
-			bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
-
-			if(bBroken)
-				continue;
-
-			if(!InterfaceFuncs::GetEntityFlags(qry.m_List[i]->GetEntity(), entFlags) ||
-				!entFlags.CheckFlag(ET_ENT_FLAG_ISMOUNTABLE))
-				continue;
-
-			// Make sure nobody has it mounted.
-			if((!gunOwner.IsValid() || !GetClient()->IsAllied(gunOwner)) && (gunHealth > 0))
-			{
-				m_MapGoal = qry.m_List[i];
-				break;
-			}
-		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
-
-	void MountMg42::Enter()
-	{
-		m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-		m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
-		m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
-
-		m_ExpireTime = 0;
-
-		m_ScanDirection = SCAN_MIDDLE;
-		m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
-		m_AimPoint = m_MapGoal->GetPosition();
-		m_MG42Position = m_AimPoint;
-		m_ScanLeft = Vector3f::ZERO;
-		m_ScanRight = Vector3f::ZERO;
-		m_GotGunProperties = false;
-		Tracker.InProgress = m_MapGoal;
-		m_TargetZone.Restart(256.f);
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
-	}
-
-	void MountMg42::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
-
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-
-		if(GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
-			GetClient()->PressButton(BOT_BUTTON_USE);
-
-		Tracker.Reset();
-	}
-
-	State::StateStatus MountMg42::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
-
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
-
-		//////////////////////////////////////////////////////////////////////////
-		// Only fail if a friendly player is on this gun or gun has been destroyed in the meantime
-		//int gunHealth = InterfaceFuncs::GetGunHealth(m_Client, m_MG42Goal->GetEntity());
-		GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), m_MapGoal->GetEntity());
-		if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity()) ||
-			(mounter.IsValid() && (mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
-		{
-			return State_Finished;
-		}
-		//////////////////////////////////////////////////////////////////////////
-
-		if(DidPathSucceed())
-		{
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
-
-			const bool bMounted = GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED);
-			const int currentTime = IGame::GetTime();
-
-			Priority::ePriority pri = m_IgnoreTargets && !bMounted ? Priority::High : Priority::Low;
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
-
-			// Only hang around here for a certain amount of time. 3 seconds max if they don't get mounted.
-			if(m_ExpireTime==0)
-			{
-				m_ExpireTime = currentTime+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				m_StartTime = currentTime;
-				Tracker.InUse = m_MapGoal;
-			}
-			else if(currentTime > m_ExpireTime || (!bMounted && currentTime - m_StartTime > 3000))
-			{
-				// Delay it from being used for a while.
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-				return State_Finished;
-			}
-
-			if(bMounted)
-			{
-				m_TargetZone.Update(GetClient());
-
-				if(!m_GotGunProperties)
-				{
-					m_GotGunProperties = true;
-					_GetMG42Properties();
-					m_AimPoint = m_MapGoal->GetPosition() + m_GunCenterArc * 512.f;
-				}
-
-				if(m_NextScanTime < IGame::GetTime())
-				{
-					m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
-					m_ScanDirection = (int)Mathf::IntervalRandom(0.0f, (float)NUM_SCAN_TYPES);
-
-					// we're mounted, so lets look around mid view.
-					m_TargetZone.UpdateAimPosition();
-				}
-
-				if(m_TargetZone.HasAim())
-					m_ScanDirection = SCAN_ZONES;
-
-				switch(m_ScanDirection)
-				{
-				case SCAN_DEFAULT:
-					if(m_MapGoal->GetFacing() != Vector3f::ZERO)
-					{
-						m_AimPoint = m_MG42Position + m_MapGoal->GetFacing() * 1024.f;
-						break;
-					}
-				case SCAN_MIDDLE:
-					{
-						m_AimPoint = m_MG42Position + m_GunCenterArc * 1024.f;
-						break;
-					}
-				case SCAN_LEFT:
-					if(m_ScanLeft != Vector3f::ZERO)
-					{
-						m_AimPoint = m_MG42Position + m_ScanLeft * 1024.f;
-						break;
-					}						
-				case SCAN_RIGHT:
-					if(m_ScanRight != Vector3f::ZERO)
-					{
-						m_AimPoint = m_MG42Position + m_ScanRight * 1024.f;
-						break;
-					}
-				case SCAN_ZONES:
-					{
-						m_AimPoint = m_TargetZone.GetAimPosition();
-						break;
-					}
-				default:
-					break;
-				}
-			}
-		}
-		return State_Busy;
-	}
-
-	bool MountMg42::_GetMG42Properties()
-	{
-		ET_MG42Info data;
-		if(!InterfaceFuncs::GetMg42Properties(GetClient(), data))
-			return false;
-
-		m_GunCenterArc = Vector3f(data.m_CenterFacing);
-
-		m_MinHorizontalArc = data.m_MinHorizontalArc;
-		m_MaxHorizontalArc = data.m_MaxHorizontalArc;
-		m_MinVerticalArc = data.m_MinVerticalArc;
-		m_MaxVerticalArc = data.m_MaxVerticalArc;
-
-		// Calculate the planes for the MG42
-
-		/*Matrix3f planeMatrices[4];
-		planeMatrices[0].FromEulerAnglesXYZ(m_MinHorizontalArc, 0.0f, 0.0f);
-		planeMatrices[1].FromEulerAnglesXYZ(m_MaxHorizontalArc, 0.0f, 0.0f);
-		planeMatrices[2].FromEulerAnglesXYZ(0.0f, m_MinHorizontalArc, 0.0f);
-		planeMatrices[3].FromEulerAnglesXYZ(0.0f, m_MaxHorizontalArc, 0.0f);
-
-		m_GunArcPlanes[0] = Plane3f(m_GunCenterArc * planeMatrices[0], m_MG42Position);
-		m_GunArcPlanes[1] = Plane3f(m_GunCenterArc * planeMatrices[1], m_MG42Position);
-		m_GunArcPlanes[2] = Plane3f(m_GunCenterArc * planeMatrices[2], m_MG42Position);
-		m_GunArcPlanes[3] = Plane3f(m_GunCenterArc * planeMatrices[3], m_MG42Position);*/
-
-		const float fScanPc = 0.4f;
-
-		Quaternionf ql;
-		ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MinHorizontalArc * fScanPc));
-		m_ScanLeft = ql.Rotate(m_GunCenterArc);
-
-		Quaternionf qr;
-		qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MaxHorizontalArc * fScanPc));
-		m_ScanRight = qr.Rotate(m_GunCenterArc);
-
-		return true;
-	}
-
 	//////////////////////////////////////////////////////////////////////////
 
 	RepairMg42::RepairMg42()
@@ -2965,5 +2672,300 @@ namespace AiState
 	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 	//	}
 	//	return State_Busy;
+	//}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	//MountMg42::MountMg42()
+	//	: StateChild("MountMg42")
+	//	, FollowPathUser("MountMg42")
+	//	, m_MinCampTime(6.f)
+	//	, m_MaxCampTime(10.f)
+	//	, m_ExpireTime(0)
+	//	, m_StartTime(0)
+	//	, m_ScanDirection(SCAN_DEFAULT)
+	//	, m_NextScanTime(0)
+	//	, m_IgnoreTargets(false)
+	//{
+	//}
+
+	//void MountMg42::GetDebugString(StringStr &out)
+	//{
+	//	if(IsActive())
+	//	{
+	//		if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
+	//			out << "Mounting ";
+	//		else
+	//		{
+	//			switch(m_ScanDirection)
+	//			{
+	//			case SCAN_DEFAULT:
+	//				out << "Scan Facing ";
+	//				break;
+	//			case SCAN_MIDDLE:
+	//				out << "Scan Middle ";
+	//				break;
+	//			case SCAN_LEFT:
+	//				out << "Scan Left ";
+	//				break;
+	//			case SCAN_RIGHT:
+	//				out << "Scan Right ";
+	//				break;
+	//			}
+	//		}
+
+	//		if(m_MapGoal)
+	//			out << m_MapGoal->GetName();
+	//	}
+	//}
+
+	//void MountMg42::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		m_TargetZone.RenderDebug();
+	//	}
+	//}
+
+	//// FollowPathUser functions.
+	//bool MountMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
+
+	//// AimerUser functions.
+	//bool MountMg42::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	_aimpos = m_AimPoint;
+	//	return true;
+	//}
+
+	//void MountMg42::OnTarget()
+	//{
+	//	if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED) && (IGame::GetFrameNumber()&1))
+	//		GetClient()->PressButton(BOT_BUTTON_USE);
+	//}
+
+	//obReal MountMg42::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
+	//	
+	//	BitFlag64 entFlags;
+
+	//	GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	{
+	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//			continue;
+
+	//		if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//			continue;
+
+	//		GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.m_List[i]->GetEntity());
+	//		int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.m_List[i]->GetEntity());
+	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
+
+	//		if(bBroken)
+	//			continue;
+
+	//		if(!InterfaceFuncs::GetEntityFlags(qry.m_List[i]->GetEntity(), entFlags) ||
+	//			!entFlags.CheckFlag(ET_ENT_FLAG_ISMOUNTABLE))
+	//			continue;
+
+	//		// Make sure nobody has it mounted.
+	//		if((!gunOwner.IsValid() || !GetClient()->IsAllied(gunOwner)) && (gunHealth > 0))
+	//		{
+	//			m_MapGoal = qry.m_List[i];
+	//			break;
+	//		}
+	//	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
+
+	//void MountMg42::Enter()
+	//{
+	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
+	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+
+	//	m_ExpireTime = 0;
+
+	//	m_ScanDirection = SCAN_MIDDLE;
+	//	m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
+	//	m_AimPoint = m_MapGoal->GetPosition();
+	//	m_MG42Position = m_AimPoint;
+	//	m_ScanLeft = Vector3f::ZERO;
+	//	m_ScanRight = Vector3f::ZERO;
+	//	m_GotGunProperties = false;
+	//	Tracker.InProgress = m_MapGoal;
+	//	m_TargetZone.Restart(256.f);
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+	//}
+
+	//void MountMg42::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+
+	//	m_MapGoal.reset();
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+
+	//	if(GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
+	//		GetClient()->PressButton(BOT_BUTTON_USE);
+
+	//	Tracker.Reset();
+	//}
+
+	//State::StateStatus MountMg42::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
+
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
+
+	//	//////////////////////////////////////////////////////////////////////////
+	//	// Only fail if a friendly player is on this gun or gun has been destroyed in the meantime
+	//	//int gunHealth = InterfaceFuncs::GetGunHealth(m_Client, m_MG42Goal->GetEntity());
+	//	GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), m_MapGoal->GetEntity());
+	//	if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity()) ||
+	//		(mounter.IsValid() && (mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
+	//	{
+	//		return State_Finished;
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
+
+	//	if(DidPathSucceed())
+	//	{
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+
+	//		const bool bMounted = GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED);
+	//		const int currentTime = IGame::GetTime();
+
+	//		Priority::ePriority pri = m_IgnoreTargets && !bMounted ? Priority::High : Priority::Low;
+	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
+
+	//		// Only hang around here for a certain amount of time. 3 seconds max if they don't get mounted.
+	//		if(m_ExpireTime==0)
+	//		{
+	//			m_ExpireTime = currentTime+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
+	//			m_StartTime = currentTime;
+	//			Tracker.InUse = m_MapGoal;
+	//		}
+	//		else if(currentTime > m_ExpireTime || (!bMounted && currentTime - m_StartTime > 3000))
+	//		{
+	//			// Delay it from being used for a while.
+	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			return State_Finished;
+	//		}
+
+	//		if(bMounted)
+	//		{
+	//			m_TargetZone.Update(GetClient());
+
+	//			if(!m_GotGunProperties)
+	//			{
+	//				m_GotGunProperties = true;
+	//				_GetMG42Properties();
+	//				m_AimPoint = m_MapGoal->GetPosition() + m_GunCenterArc * 512.f;
+	//			}
+
+	//			if(m_NextScanTime < IGame::GetTime())
+	//			{
+	//				m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
+	//				m_ScanDirection = (int)Mathf::IntervalRandom(0.0f, (float)NUM_SCAN_TYPES);
+
+	//				// we're mounted, so lets look around mid view.
+	//				m_TargetZone.UpdateAimPosition();
+	//			}
+
+	//			if(m_TargetZone.HasAim())
+	//				m_ScanDirection = SCAN_ZONES;
+
+	//			switch(m_ScanDirection)
+	//			{
+	//			case SCAN_DEFAULT:
+	//				if(m_MapGoal->GetFacing() != Vector3f::ZERO)
+	//				{
+	//					m_AimPoint = m_MG42Position + m_MapGoal->GetFacing() * 1024.f;
+	//					break;
+	//				}
+	//			case SCAN_MIDDLE:
+	//				{
+	//					m_AimPoint = m_MG42Position + m_GunCenterArc * 1024.f;
+	//					break;
+	//				}
+	//			case SCAN_LEFT:
+	//				if(m_ScanLeft != Vector3f::ZERO)
+	//				{
+	//					m_AimPoint = m_MG42Position + m_ScanLeft * 1024.f;
+	//					break;
+	//				}						
+	//			case SCAN_RIGHT:
+	//				if(m_ScanRight != Vector3f::ZERO)
+	//				{
+	//					m_AimPoint = m_MG42Position + m_ScanRight * 1024.f;
+	//					break;
+	//				}
+	//			case SCAN_ZONES:
+	//				{
+	//					m_AimPoint = m_TargetZone.GetAimPosition();
+	//					break;
+	//				}
+	//			default:
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	return State_Busy;
+	//}
+
+	//bool MountMg42::_GetMG42Properties()
+	//{
+	//	ET_MG42Info data;
+	//	if(!InterfaceFuncs::GetMg42Properties(GetClient(), data))
+	//		return false;
+
+	//	m_GunCenterArc = Vector3f(data.m_CenterFacing);
+
+	//	m_MinHorizontalArc = data.m_MinHorizontalArc;
+	//	m_MaxHorizontalArc = data.m_MaxHorizontalArc;
+	//	m_MinVerticalArc = data.m_MinVerticalArc;
+	//	m_MaxVerticalArc = data.m_MaxVerticalArc;
+
+	//	// Calculate the planes for the MG42
+
+	//	/*Matrix3f planeMatrices[4];
+	//	planeMatrices[0].FromEulerAnglesXYZ(m_MinHorizontalArc, 0.0f, 0.0f);
+	//	planeMatrices[1].FromEulerAnglesXYZ(m_MaxHorizontalArc, 0.0f, 0.0f);
+	//	planeMatrices[2].FromEulerAnglesXYZ(0.0f, m_MinHorizontalArc, 0.0f);
+	//	planeMatrices[3].FromEulerAnglesXYZ(0.0f, m_MaxHorizontalArc, 0.0f);
+
+	//	m_GunArcPlanes[0] = Plane3f(m_GunCenterArc * planeMatrices[0], m_MG42Position);
+	//	m_GunArcPlanes[1] = Plane3f(m_GunCenterArc * planeMatrices[1], m_MG42Position);
+	//	m_GunArcPlanes[2] = Plane3f(m_GunCenterArc * planeMatrices[2], m_MG42Position);
+	//	m_GunArcPlanes[3] = Plane3f(m_GunCenterArc * planeMatrices[3], m_MG42Position);*/
+
+	//	const float fScanPc = 0.4f;
+
+	//	Quaternionf ql;
+	//	ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MinHorizontalArc * fScanPc));
+	//	m_ScanLeft = ql.Rotate(m_GunCenterArc);
+
+	//	Quaternionf qr;
+	//	qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MaxHorizontalArc * fScanPc));
+	//	m_ScanRight = qr.Rotate(m_GunCenterArc);
+
+	//	return true;
 	//}
 };

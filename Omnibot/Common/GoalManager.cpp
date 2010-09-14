@@ -980,12 +980,12 @@ void GoalManager::_SetActiveGoal(MapGoalPtr _mg)
 	m_EditMode = EditNone;
 
 	if(m_ActiveGoal)
-		EngineFuncs::ConsoleMessage(va("Unselected Goal :%s", m_ActiveGoal->GetName()));
+		EngineFuncs::ConsoleMessage(va("Unselected Goal :%s", m_ActiveGoal->GetName().c_str()));
 
 	m_ActiveGoal = _mg;
 
 	if(m_ActiveGoal)
-		EngineFuncs::ConsoleMessage(va("Selected Goal :%s", m_ActiveGoal->GetName()));
+		EngineFuncs::ConsoleMessage(va("Selected Goal :%s", m_ActiveGoal->GetName().c_str()));
 	else
 		EngineFuncs::ConsoleMessage("No Goal Selected");
 }

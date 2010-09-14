@@ -176,6 +176,9 @@ typedef enum eRTCW_EntityFlags
 	// bit: RTCW_ENT_FLAG_POISONED
 	//		This entity is poisoned.
 	RTCW_ENT_FLAG_POISONED,
+	// bit: ET_ENT_MOUNTED
+	//		This entity is mounted
+	RTCW_ENT_FLAG_MOUNTED,
 } RTCW_EntityFlags;
 
 //////////////////////////////////////////////////////////////////////////
