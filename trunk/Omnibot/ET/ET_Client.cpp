@@ -468,7 +468,7 @@ void ET_Client::SetupBehaviorTree()
 
 	//GetStateRoot()->AppendTo("HighLevel", new BuildConstruction);
 	//GetStateRoot()->AppendTo("HighLevel", new PlantExplosive);
-	GetStateRoot()->AppendTo("HighLevel", new MountMg42);
+	//GetStateRoot()->AppendTo("HighLevel", new MountMg42);
 	GetStateRoot()->AppendTo("HighLevel", new RepairMg42);
 	GetStateRoot()->AppendTo("HighLevel", new TakeCheckPoint);
 	GetStateRoot()->AppendTo("HighLevel", new MobileMg42);

@@ -379,6 +379,7 @@ void RTCW_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table
 	_table->Set(_machine, "MOUNTABLE",		gmVariable(RTCW_ENT_FLAG_ISMOUNTABLE));
 	_table->Set(_machine, "POISONED",		gmVariable(RTCW_ENT_FLAG_POISONED));
 	_table->Set(_machine, "DISGUISED",		gmVariable(RTCW_ENT_FLAG_DISGUISED));
+	_table->Set(_machine, "MOUNTED",		gmVariable(RTCW_ENT_FLAG_MOUNTED));
 }
 
 void RTCW_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)

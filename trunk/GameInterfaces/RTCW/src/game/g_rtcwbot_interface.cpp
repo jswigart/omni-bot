@@ -1989,6 +1989,13 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 				 ( pEnt->entstate == STATE_INVISIBLE ) ) {
 				_flags.SetFlag( ENT_FLAG_DEAD );
 			}
+
+			if(pEnt->r.ownerNum != pEnt->s.number)
+			{
+				gentity_t *owner = &g_entities[pEnt->r.ownerNum];
+				if(owner && owner->active && owner->client && owner->s.eFlags & EF_MG42_ACTIVE)
+					_flags.SetFlag(RTCW_ENT_FLAG_MOUNTED);
+			}
 			break;
 		}
 			//default:

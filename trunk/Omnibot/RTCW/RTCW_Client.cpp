@@ -375,7 +375,6 @@ void RTCW_Client::SetupBehaviorTree()
 	delete GetStateRoot()->ReplaceState("Dead", new Limbo);
 	GetStateRoot()->InsertAfter("Limbo", new Incapacitated);
 
-	GetStateRoot()->AppendTo("HighLevel", new MountMg42);
 	GetStateRoot()->AppendTo("HighLevel", new RepairMg42);
 	GetStateRoot()->AppendTo("HighLevel", new TakeCheckPoint);
 	GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);

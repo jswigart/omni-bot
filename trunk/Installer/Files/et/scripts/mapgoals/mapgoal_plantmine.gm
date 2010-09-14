@@ -30,7 +30,7 @@ this.UpgradeVersion = function(Props)
 	{
 		this.CloseMines = {};
 		tbl = {
-			Name=this.Name,
+			Name=this.GetName(),
 			OnEnter = this.MineEntered,
 			OnExit = this.MineExited,
 			UpdateDelay = 0.5,

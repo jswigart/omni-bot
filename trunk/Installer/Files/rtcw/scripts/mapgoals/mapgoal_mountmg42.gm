@@ -32,6 +32,7 @@ CheckMaxCamp = function(var)
 this.Schema = Schema();
 this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(2).CheckCallback(CheckMinCamp);
 this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(6).CheckCallback(CheckMaxCamp);
+this.Schema.AimVectors = Validate.TableOf("vector3").Default({});
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -59,6 +60,7 @@ this.UpgradeVersion = function(Props)
 		this.Schema.Check(Props);
 		this.MinCampTime = ToFloat(Props.MinCampTime,this.DefaultMinCamptime);
 		this.MaxCampTime = ToFloat(Props.MaxCampTime,this.DefaultMaxCamptime);
+		this.AimVectors = Props.AimVectors;
 
 		if(!this.Schema.Check(this))
 		{
@@ -71,6 +73,7 @@ this.UpgradeVersion = function(Props)
 
 this.Render = function(editMode)
 {
+	goalPos = this.GetPosition() + Vector3(0,0,8);
 	while(this.RenderGoal == true)
 	{
 		if(this.ExtraDebugText==null)
@@ -81,6 +84,19 @@ this.Render = function(editMode)
 
 		this.RenderDefault();
 
+		if ( typeId(this.AimVectors) != 6 )
+		{
+			print(this.GetName(), "no aim vector table" );
+			block(0);
+		}
+		else
+		{
+			foreach ( id and face in this.AimVectors )
+			{
+				DrawArrow(goalPos,goalPos+face*64,COLOR.BLUE,2);
+				DrawText3d(goalPos+face*64,ToString(id),COLOR.WHITE,2,512);
+			}
+		}
 		sleep(2);
 	}
 };
@@ -92,6 +108,7 @@ this.SaveToTable = function(SaveTable)
 	// save the goal specific properties
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
+	SaveTable.AimVectors = this.AimVectors;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,6 +119,7 @@ this.Help = function()
 	print("Optional:");
 	print("		mincamptime - minimum time a bot should camp at the goal");
 	print("		maxcamptime - maximum time a bot should camp at the goal");
+	print("		facing - direction(s) the bot should face while mounted");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,6 +142,34 @@ this.SetProperty = function(property, value)
 			if(this.Schema.MaxCampTime.CheckPrintErrors(this,v))
 			{
 				this.MaxCampTime = v;
+			}
+		}
+		case "facing":
+		{
+			if ( value == "clearall" || value == "clear" )
+			{
+				tableClear(this.AimVectors);
+			}
+			else
+			{
+				i = ToInt(value);
+				if ( typeId(i) == 1)
+				{
+					// make em add sequentially
+					n = tableCount(this.AimVectors);
+					if ( i < 0 || i > n )
+					{
+						i = n;
+					}
+
+					playerFace = GetLocalFacing();
+					this.AimVectors[ i ] = playerFace;
+					print("Facing",i,"set to",playerFace);
+				}
+				else
+				{
+					print(this.GoalType, ": Invalid facing index, expecting int");
+				}
 			}
 		}
 		default:
