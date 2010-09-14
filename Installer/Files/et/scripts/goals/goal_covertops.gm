@@ -78,6 +78,13 @@ this.GetPriority = function()
 	}
 };
 
+this.Enter = function()
+{
+	// Set up some finish criteria
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+};
+
 this.Update = function()
 {
 	while(1)
@@ -141,6 +148,11 @@ this.UpdateGotoTarget = function()
 
 			offsetPos = this.TargetPosition + Vector3(24,24,0);
 			if (this.Goto(offsetPos, 64.0) == EVENT.PATH_SUCCESS) {
+				// sanity check ent and target ...
+				if ( !this.TargetEntity || !this.TargetPosition ) {
+					this.Finished();
+					return;
+				}
 				// can't do this dynamically. bad waypoints break it. repath if its too far
 				if ( DistanceBetween(this.TargetEntity, this.TargetPosition) > 64 ) {
 					return;
