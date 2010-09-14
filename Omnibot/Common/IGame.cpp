@@ -471,6 +471,7 @@ void IGame::InitScriptWeaponClasses(gmMachine *_machine, gmTableObject *_table, 
 	GetWeaponEnumeration(wpnEnum,numWpns);
 	for(int i = 0; i < numWpns; ++i)
 	{
+		OBASSERT(_table->Get(_machine,wpnEnum[i].m_Key).IsNull(),"Weapon class overwrite!");
 		_table->Set(_machine, wpnEnum[i].m_Key, gmVariable(m_WeaponClassIdStart+wpnEnum[i].m_Value));
 	}
 }
