@@ -166,6 +166,35 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
 			this.Exit();
 			this.Finished();
 		}
+		else if(cmd == "dyno")
+		{
+			if ( this.Bot.HasWeapon(WEAPON.DYNAMITE) )
+			{
+				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE);
+				this.BlockForWeaponChange(WEAPON.DYNAMITE);
+				this.Bot.HoldButton(BTN.ATTACK1, 1);
+				sleep(2);
+				ent = this.Bot.GetNearest(CAT.MISC, CLASS.DYNAMITE);
+				if ( ent ) {
+					this.Bot.Say("i see dyno");
+				} else {
+					this.Bot.Say("i'm blind!");
+				}
+			}
+		}
+		else if(cmd == "searchdyno")
+		{
+			this.SearchDyno = !this.SearchDyno;
+			while( this.SearchDyno ) {
+				ent = this.Bot.GetNearest(CAT.MISC, CLASS.DYNAMITE);
+				if ( ent ) {
+					this.Bot.Say("Found it!");
+					break;
+				}
+				this.Bot.Say("still searching");
+				sleep(1);
+			}
+		}		
 		else if(cmd == "stop")
 		{
 			this.Bot.Say("stopping.");
