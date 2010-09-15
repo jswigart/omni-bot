@@ -41,6 +41,9 @@ this.FindFreeRoleSlot = function()
 			}
 
 			evalNum = 0;
+			newClass = null;
+			spawnPoint = null;
+			voiceMacro = null;
 			foreach ( id and role in Map.Roles[ team ] ) {
 				if ( id == "AllBots"  ) { continue; }
 				if ( !Map.Roles[ team ][ id ].bots ) { Map.Roles[ team ][ id ].bots = table(); }
@@ -49,12 +52,11 @@ this.FindFreeRoleSlot = function()
 					continue;
 				}
 
-				changeClass = null;
 				currentBots = tableCount(Map.Roles[ team ][ id ].bots);
 				numFree =  Map.Roles[ team ][ id ].numbots - currentBots;
 
 				if ( this.Debug ) {
-					print( Util.GetTableKey(ROLE, ROLE[id]), "current:", currentBots, "free:", numFree );
+					print( Util.GetTableKey(ROLE, ROLE[id]), "current:", currentBots, "free:", numFree, "evalnum:" + evalNum );
 				}
 
 				// see which one needs a bot the most
@@ -65,19 +67,43 @@ this.FindFreeRoleSlot = function()
 
 					if ( currentBots == 0 && role.crucialClass ) {
 						newClass = role.crucialClass;
+					} else {
+						newClass = null;
+					}
+
+					if ( role.spawnpt ) {
+						spawnPoint = role.spawnpt;
+					} else {
+						spawnPoint = null;
+					}
+
+					if ( role.voice ) {
+						voiceMacro = role.voice;
+					} else {
+						voiceMacro = null;
 					}
 				}
 			}
 
 			// store it in the table and set the role
 			if ( typeId(newRole) != 0 ) {
-				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole));}
+				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole)); }
 				Map.Roles[ team ][ roleIndex ].bots[ this.Bot ] = true;
 				this.Bot.SetRoles(newRole);
 
 				// and change class if necessary
 				if ( newClass ) {
 					this.Bot.ChangeClass(newClass);
+				}
+
+				// spawnpoint too
+				if ( spawnPoint ) {
+					this.Bot.ChangeSpawnPoint(spawnPoint);
+				}
+
+				// signal a voice macro
+				if ( voiceMacro ) {
+					signal( format("%s_%s", this.Bot.Name, voiceMacro) );
 				}
 			}
 		}

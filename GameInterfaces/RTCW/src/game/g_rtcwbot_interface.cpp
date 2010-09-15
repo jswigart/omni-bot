@@ -2110,12 +2110,12 @@ obResult GetEntityPosition( const GameEntity _ent, float _pos[3] ) {
 		}
 
 		//ungibbed players, center / bottom
-		if ( pEnt->client && pEnt->health > GIB_HEALTH && pEnt->health < 1 ) {
-			_pos[0] = pEnt->r.currentOrigin[0] + ( ( pEnt->r.maxs[0] + pEnt->r.mins[0] ) * 0.5f );
-			_pos[1] = pEnt->r.currentOrigin[1] + ( ( pEnt->r.maxs[1] + pEnt->r.mins[1] ) * 0.5f );
-			_pos[2] = pEnt->r.currentOrigin[2] + pEnt->r.mins[2];
-			return Success;
-		}
+		//if ( pEnt->client && pEnt->health > GIB_HEALTH && pEnt->health < 1 ) {
+		//	_pos[0] = pEnt->r.currentOrigin[0] + ( ( pEnt->r.maxs[0] + pEnt->r.mins[0] ) * 0.5f );
+		//	_pos[1] = pEnt->r.currentOrigin[1] + ( ( pEnt->r.maxs[1] + pEnt->r.mins[1] ) * 0.5f );
+		//	_pos[2] = pEnt->r.currentOrigin[2] + pEnt->r.mins[2];
+		//	return Success;
+		//}
 
 		// Clients and entities not caught above will return normal position.
 		_pos[0] = pEnt->r.currentOrigin[0];
