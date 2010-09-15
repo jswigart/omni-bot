@@ -9,7 +9,7 @@ project cgame
 	: requirements <define>CGAMEDLL
 	: requirements <include>../game
 	: requirements <include>../ui
-	: requirements <include>../../../../../Omnibot/Common
+	: requirements <include>../../../../Omnibot/Common
 	;
 
 # define external libs

@@ -4,8 +4,8 @@ project game
 	: requirements <define>GAMEDLL 
 	: requirements <define>WITH_LUA
 	: requirements <variant>debug:<define>DEBUG
-	: requirements <include>../../../botlib/Omnibot_073/Common
-	: requirements <include>../../../botlib/Omnibot_073/RTCW
+	: requirements <include>../../../../Omnibot/Common
+	: requirements <include>../../../../Omnibot/RTCW
 	: requirements <include>../lua
 	: requirements <include>../sha-1
 	;
@@ -14,7 +14,7 @@ SOURCES = [ glob bg_*.c ]
 		  [ glob g_*.c ]
                   [ glob et-*.c ]
 		  [ glob g_*.cpp ]
-		  [ glob ../../../botlib/Omnibot_073/Common/BotLoadLibrary.cpp ]
+		  [ glob ../../../../Omnibot/Common/BotLoadLibrary.cpp ]
 		  q_math.c
 		  q_shared.c
 		;
