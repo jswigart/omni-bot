@@ -68,9 +68,8 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 	if(_clearall)
 		Unload();
 
-	boost::regex ex("mapgoal_.*.gm");
 	DirectoryList mapgoalFiles;
-	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, ex);
+	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, "mapgoal_.*.gm");
 
 	LOG("Loading " << mapgoalFiles.size() << 
 		" MapGoals from: global_scripts/mapgoals & scripts/mapgoals");

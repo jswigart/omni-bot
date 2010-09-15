@@ -8,6 +8,8 @@
 
 #include "PrecompCommon.h"
 
+#include <pcrecpp.h>
+
 #include "Interprocess.h"
 #include "IGame.h"
 #include "IGameManager.h"
@@ -56,6 +58,14 @@ namespace Priority
 
 namespace Utils
 {
+	bool RegexMatch( const char * exp, const char * str ) {
+		pcrecpp::RE_Options opt;
+		opt.set_caseless(true);
+
+		pcrecpp::RE regex( exp, opt );
+		return regex.FullMatch( str );
+	}
+
 	float FloatMax = std::numeric_limits<float>::max();
 
 	void StringCopy(char *_destination, const char *_source, int _buffersize)
@@ -1536,7 +1546,6 @@ namespace Utils
 		};
 		return gmVariable::s_null;
 	}
-
 };
 
 //////////////////////////////////////////////////////////////////////////

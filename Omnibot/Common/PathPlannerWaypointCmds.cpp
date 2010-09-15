@@ -871,7 +871,7 @@ void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
 	if(pClosest)
 	{
 		String flagString = va("Waypoint #%d, radius %f, #connections %d\n", 
-			pClosest->GetUID(), pClosest->m_Radius, (unsigned int)pClosest->m_Connections.size());
+			pClosest->GetUID(), pClosest->m_Radius, (unsigned int)pClosest->m_Connections.size()).c_str();
 
 		// Build a string with the flags
 		FlagMap::const_iterator flagIt = m_WaypointFlags.begin();
@@ -1651,11 +1651,10 @@ void PathPlannerWaypoint::cmdWaypointGetWpNames(const StringVector &_args)
 
 	WaypointList wl;
 
-	boost::regex expression(exp.c_str(), REGEX_OPTIONS);
 	for(obuint32 i = 0; i < m_WaypointList.size(); ++i)
 	{
 		Waypoint *pWp = m_WaypointList[i];
-		if(!pWp->GetName().empty() && !boost::regex_match(pWp->GetName(), expression))
+		if(!pWp->GetName().empty() && !Utils::RegexMatch( exp.c_str(), pWp->GetName().c_str() ) )
 			continue;
 		wl.push_back(pWp);
 	}

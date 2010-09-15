@@ -243,7 +243,7 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 //		filepath /= relpath;
 //
 //		DirectoryList lst;
-//		FileSystem::FindAllFiles(filepath, lst, boost::regex(fileextension), true);
+//		FileSystem::FindAllFiles(filepath, lst, Utils::RegexMatch(fileextension), true);
 //
 //		gmMachine *pMachine = a_thread->GetMachine();
 //		pMachine->EnableGC(false);

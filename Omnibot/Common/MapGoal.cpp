@@ -1315,10 +1315,7 @@ void MapGoal::CheckForPersistentPriority()
 {
 	for(obuint32 i = 0; i < gPriorityList.size(); ++i)
 	{
-		boost::regex expression(gPriorityList[i].m_Expression, REGEX_OPTIONS);
-
-		if(boost::regex_match(GetName(), expression))
-		{
+		if( Utils::RegexMatch( gPriorityList[i].m_Expression.c_str(), GetName().c_str() ) ) {
 			SetPriorityForClass(
 				gPriorityList[i].m_Team,
 				gPriorityList[i].m_Class,

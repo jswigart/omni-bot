@@ -16,7 +16,9 @@ project Common
 	 <include>../dependencies/physfs/lzma/C/Archive/7z
 	 <include>../dependencies/physfs/lzma/C/Compress/Lzma
 	 <include>../dependencies/physfs/lzma/C/Compress/Branch
-#	 <include>../dependencies/sqlite3
+	 <include>../dependencies/pcre-8.10
+	 <define>HAVE_CONFIG_H
+	 <define>PCRE_STATIC
 	;
 
 SOURCES = [ glob ../dependencies/gmsrc_ex/src/gm/*.cpp ] 
@@ -38,6 +40,8 @@ SOURCES = [ glob ../dependencies/gmsrc_ex/src/gm/*.cpp ]
 		  [ glob ../dependencies/Recast/Detour/Source/*.cpp ]
 		  [ glob ../dependencies/Recast/DebugUtils/Source/*.cpp ]
 		  [ glob ../dependencies/iprof/*.c ] 
+		  [ glob ../dependencies/pcre-8.10/*.c ] 
+		  [ glob ../dependencies/pcre-8.10/*.cpp ] 		  
 #		  [ glob ../dependencies/sqlite3/*.c ]
 		  [ glob ObstacleManager.cpp ]
 		  [ glob BatchBuild.cpp ] 

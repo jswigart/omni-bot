@@ -48,6 +48,8 @@ namespace Utils
 	//////////////////////////////////////////////////////////////////////////
 	extern float FloatMax;
 	//////////////////////////////////////////////////////////////////////////
+	bool RegexMatch( const char * exp, const char * str );
+
 	void StringCopy(char *_destination, const char *_source, int _buffersize);
 
 	obint32 StringCompare(const char *_s1, const char *_s2);
@@ -515,4 +517,5 @@ private:
 	const obuint32 m_BufferSize;
 	const obuint32 m_MaxStrings;
 };
+
 #endif

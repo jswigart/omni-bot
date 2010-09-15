@@ -1354,13 +1354,13 @@ void IGame::cmdDrawBlockableTests(const StringVector &_args)
 void IGame::cmdPrintFileSystem(const StringVector &_args)
 {
 	String pth = "";
-	boost::regex ex(".*");
+	String ex = ".*";
 
 	DirectoryList dlist;
 	FileSystem::FindAllFiles(pth, dlist, ex);
 
 	EngineFuncs::ConsoleMessage("------------------------------------");
-	EngineFuncs::ConsoleMessage(va("%d Files %s, in %s", dlist.size(), ex.str().c_str(), pth.c_str()));
+	EngineFuncs::ConsoleMessage(va("%d Files %s, in %s", dlist.size(), ex.c_str(), pth.c_str()));
 	for(obuint32 i = 0; i < dlist.size(); ++i)
 	{
 		EngineFuncs::ConsoleMessage(dlist[i].string().c_str());		
@@ -1684,10 +1684,9 @@ void IGame::LoadGoalScripts(bool _clearold)
 		pMachine->GetGlobals()->Set(pMachine, "ScriptGoals", gmVariable(pScriptGoalTable));
 	}
 
-	boost::regex ex("goal_.*.gm");
 	DirectoryList goalFiles;
-	FileSystem::FindAllFiles("global_scripts/goals", goalFiles, ex);
-	FileSystem::FindAllFiles("scripts/goals", goalFiles, ex);
+	FileSystem::FindAllFiles("global_scripts/goals", goalFiles, "goal_.*.gm");
+	FileSystem::FindAllFiles("scripts/goals", goalFiles, "goal_.*.gm");
 
 	LOG("Loading " << goalFiles.size() << " goal scripts from: scripts/goals");
 	DirectoryList::const_iterator cIt = goalFiles.begin(), cItEnd = goalFiles.end();

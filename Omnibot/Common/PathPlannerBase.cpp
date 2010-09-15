@@ -125,9 +125,8 @@ void PathPlannerBase::cmdResaveNav(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	boost::regex ex(String(".*")+_GetNavFileExtension());
 	DirectoryList wpFiles;
-	FileSystem::FindAllFiles("nav/", wpFiles, ex);
+	FileSystem::FindAllFiles("nav/", wpFiles, va( ".*%s", _GetNavFileExtension().c_str() ).c_str() );
 	for(obuint32 i = 0; i < wpFiles.size(); ++i)
 	{
 		const String &mapname = fs::basename(wpFiles[i]);

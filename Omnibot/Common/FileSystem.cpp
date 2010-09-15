@@ -26,10 +26,10 @@ namespace IOAssertions
 struct FindInfo
 {
 	DirectoryList	&m_DirList;
-	boost::regex	m_Expression;
+	String			m_Expression;
 	bool			m_Recursive;
 
-	FindInfo(DirectoryList &_list, boost::regex _exp, bool recurse) :
+	FindInfo(DirectoryList &_list, const String & _exp, bool recurse) :
 		m_DirList(_list),
 		m_Expression(_exp),
 		m_Recursive(recurse)
@@ -53,7 +53,7 @@ void _FindAllCallback(void *data, const char *origdir, const char *filename)
 			return;
 		}
 
-		if(boost::regex_match(filename, pInfo->m_Expression))
+		if( Utils::RegexMatch( pInfo->m_Expression.c_str(),filename ) )
 		{
 			if(std::find(pInfo->m_DirList.begin(), pInfo->m_DirList.end(), fullname) == pInfo->m_DirList.end())
 				pInfo->m_DirList.push_back(fullname);
@@ -64,7 +64,7 @@ void _FindAllCallback(void *data, const char *origdir, const char *filename)
 	}
 }
 
-void FileSystem::FindAllFiles(const String &_path, DirectoryList &_list, const boost::regex &_expression, bool recurse)
+void FileSystem::FindAllFiles(const String &_path, DirectoryList &_list, const String &_expression, bool recurse)
 {
 	FindInfo inf(_list, _expression, recurse);
 	PHYSFS_enumerateFilesCallback(_path.c_str(), _FindAllCallback, &inf);

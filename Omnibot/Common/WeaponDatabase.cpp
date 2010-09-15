@@ -81,9 +81,8 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 	if(_clearall)
 		m_WeaponMap.clear();
 
-	boost::regex ex("weapon_.*.gm");
 	DirectoryList wpnFiles;
-	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, ex);
+	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, "weapon_.*.gm");
 
 	LOG("Loading " << wpnFiles.size() << " weapon scripts from: scripts/weapons");
 	DirectoryList::const_iterator cIt = wpnFiles.begin(), cItEnd = wpnFiles.end();
