@@ -674,7 +674,7 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine(gmMachine* a_machine, gmM
 					(pFileName ? pFileName : "<unknown file>"),
 					(pFuncName ? pFuncName : "<noname>"),
 					pThread->GetId(),
-					IGame::GetTime());
+					IGame::GetTime()).c_str();
 			
 				if(bScriptDebugEnabled)
 				{
@@ -729,18 +729,18 @@ void ScriptManager::ShowGMStats()
 		ThreadStatus st = {0,0,0};
 		m_ScriptEngine->ForEachThread(countThreadStatus, &st);
 
-		String fmtMemUsage = va("Current Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetCurrentMemoryUsage()).c_str());
-		String fmtSoftMemLimit = va("Soft Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageSoft()).c_str());
-		String fmtHardMemLimit = va("Hard Memory Limit %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageHard()).c_str());
-		String fmtSysMemUsage = va("System Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetSystemMemUsed()).c_str());
-		String fmtFullCollects = va("Full Collects %d",m_ScriptEngine->GetStatsGCNumFullCollects());
-		String fmtIncCollects = va("Inc Collects %d",m_ScriptEngine->GetStatsGCNumIncCollects());
-		String fmtGCWarnings = va("GC Warnings %d",m_ScriptEngine->GetStatsGCNumWarnings());
+		String fmtMemUsage = va("Current Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetCurrentMemoryUsage()).c_str()).c_str();
+		String fmtSoftMemLimit = va("Soft Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageSoft()).c_str()).c_str();
+		String fmtHardMemLimit = va("Hard Memory Limit %s",Utils::FormatByteString(m_ScriptEngine->GetDesiredByteMemoryUsageHard()).c_str()).c_str();
+		String fmtSysMemUsage = va("System Memory Usage %s",Utils::FormatByteString(m_ScriptEngine->GetSystemMemUsed()).c_str()).c_str();
+		String fmtFullCollects = va("Full Collects %d",m_ScriptEngine->GetStatsGCNumFullCollects()).c_str();
+		String fmtIncCollects = va("Inc Collects %d",m_ScriptEngine->GetStatsGCNumIncCollects()).c_str();
+		String fmtGCWarnings = va("GC Warnings %d",m_ScriptEngine->GetStatsGCNumWarnings()).c_str();
 		String fmtThreadInfo = va("Threads: %d, %d Running, %d Blocked, %d Sleeping",
 			(st.m_Blocked+st.m_Running+st.m_Sleeping),
 			st.m_Running,
 			st.m_Blocked,
-			st.m_Sleeping);
+			st.m_Sleeping).c_str();
 
 		EngineFuncs::ConsoleMessage("-- Script System Info --");
 		EngineFuncs::ConsoleMessage(fmtMemUsage.c_str());
@@ -768,60 +768,60 @@ void ScriptManager::ShowGMStats()
 
 void ScriptManager::GetAutoCompleteList(const String &_string, StringVector &_completions)
 {
-	try
-	{
-		String strCopy = _string;
-		Utils::StringTrimCharacters(strCopy, "[]");
+	//try
+	//{
+	//	String strCopy = _string;
+	//	Utils::StringTrimCharacters(strCopy, "[]");
 
-		boost::regex exp(strCopy + ".*", REGEX_OPTIONS);
+	//	boost::regex exp(strCopy + ".*", REGEX_OPTIONS);
 
-		gmTableObject *pTable = m_ScriptEngine->GetGlobals();
+	//	gmTableObject *pTable = m_ScriptEngine->GetGlobals();
 
-		// Look into tables if the string contains them.
-		String prefix, entry;
-		obuint32 iLastDot = strCopy.find_last_of(".");
-		if(iLastDot != strCopy.npos)
-		{
-			gmVariable v = m_ScriptEngine->Lookup(strCopy.substr(0,iLastDot).c_str());
-			if(v.GetTableObjectSafe())
-			{
-				prefix = strCopy.substr(0,iLastDot+1);
-				pTable = v.GetTableObjectSafe();
-				exp = boost::regex(strCopy.substr(iLastDot+1) + ".*", REGEX_OPTIONS);
-			}
-		}
+	//	// Look into tables if the string contains them.
+	//	String prefix, entry;
+	//	obuint32 iLastDot = strCopy.find_last_of(".");
+	//	if(iLastDot != strCopy.npos)
+	//	{
+	//		gmVariable v = m_ScriptEngine->Lookup(strCopy.substr(0,iLastDot).c_str());
+	//		if(v.GetTableObjectSafe())
+	//		{
+	//			prefix = strCopy.substr(0,iLastDot+1);
+	//			pTable = v.GetTableObjectSafe();
+	//			exp = boost::regex(strCopy.substr(iLastDot+1) + ".*", REGEX_OPTIONS);
+	//		}
+	//	}
 
-		const int bufsize = 256;
-		char buffer[bufsize];
+	//	const int bufsize = 256;
+	//	char buffer[bufsize];
 
-		gmTableIterator tIt;
-		gmTableNode *pNode = pTable->GetFirst(tIt);
-		while(pNode)
-		{
-			const char *pName = pNode->m_key.AsString(m_ScriptEngine, buffer, 1024);
-			if(boost::regex_match(pName, exp))
-			{
-				switch(pNode->m_key.m_type)
-				{
-				case GM_STRING:
-					_completions.push_back(prefix + pName);
-					break;
-				case GM_INT:
-					_completions.push_back((String)va("%s[%s]", prefix.c_str(), pName));
-					break;
-				default:
-					_completions.push_back(prefix + pName);
-					break;
-				}
-			}
-			pNode = pTable->GetNext(tIt);
-		}
-	}
-	catch(const std::exception&e)
-	{
-		e;
-		OBASSERT(0, e.what());
-	}
+	//	gmTableIterator tIt;
+	//	gmTableNode *pNode = pTable->GetFirst(tIt);
+	//	while(pNode)
+	//	{
+	//		const char *pName = pNode->m_key.AsString(m_ScriptEngine, buffer, 1024);
+	//		if(boost::regex_match(pName, exp))
+	//		{
+	//			switch(pNode->m_key.m_type)
+	//			{
+	//			case GM_STRING:
+	//				_completions.push_back(prefix + pName);
+	//				break;
+	//			case GM_INT:
+	//				_completions.push_back((String)va("%s[%s]", prefix.c_str(), pName));
+	//				break;
+	//			default:
+	//				_completions.push_back(prefix + pName);
+	//				break;
+	//			}
+	//		}
+	//		pNode = pTable->GetNext(tIt);
+	//	}
+	//}
+	//catch(const std::exception&e)
+	//{
+	//	e;
+	//	OBASSERT(0, e.what());
+	//}
 }
 
 void ScriptManager::InitCommands()

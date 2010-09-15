@@ -149,7 +149,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 		if(ge.IsValid())
 		{
 			String flagString = va("Waypoint %d, Radius %.2f, UID %d\n", 
-				m_SelectedWaypoint, pWaypoint->GetRadius(), pWaypoint->GetUID());
+				m_SelectedWaypoint, pWaypoint->GetRadius(), pWaypoint->GetUID()).c_str();
 
 			if(!pWaypoint->m_WaypointName.empty())
 				flagString += "Name: " + pWaypoint->m_WaypointName + "\n";

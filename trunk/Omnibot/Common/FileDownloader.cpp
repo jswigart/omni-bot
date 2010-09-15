@@ -415,9 +415,8 @@ void FileDownloader::UpdateAllWaypoints(bool _getnew)
 {
 	StringList maplist;
 
-	boost::regex ex(".*.way");
 	DirectoryList navFiles;
-	FileSystem::FindAllFiles("nav/", navFiles, ex);
+	FileSystem::FindAllFiles("nav/", navFiles, ".*.way");
 	for(obuint32 i = 0; i < navFiles.size(); ++i)
 	{
 		const String &mapname = fs::basename(navFiles[i]);

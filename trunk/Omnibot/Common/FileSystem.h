@@ -17,7 +17,7 @@ public:
 	
 	// function: FindAllFiles
 	//		Searches for files matching an extension in the list of search paths, returns the path if found.
-	static void FindAllFiles(const String &_path, DirectoryList &_list, const boost::regex &_expression = boost::regex(".*"), bool recurse = false);
+	static void FindAllFiles(const String &_path, DirectoryList &_list, const String &_expression = ".*", bool recurse = false);
 	//////////////////////////////////////////////////////////////////////////
 
 	static bool InitFileSystem();

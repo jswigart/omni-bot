@@ -132,35 +132,13 @@ GoalManager::Query &GoalManager::Query::Sort(SortType _sort)
 
 GoalManager::Query &GoalManager::Query::Expression(const char *_exp) 
 {
-	if(_exp)
-	{
-		try
-		{
-			m_NameExp = boost::regex(_exp, REGEX_OPTIONS);
-		}
-		catch(const std::exception&e)
-		{
-			e;
-			m_Error = QueryBadNameExpression;
-		}
-	}
+	m_NameExp = _exp ? _exp : "";
 	return *this; 
 }
 
 GoalManager::Query &GoalManager::Query::Group(const char *_group) 
 {
-	if(_group)
-	{
-		try
-		{
-			m_GroupExp = boost::regex(_group, REGEX_OPTIONS);
-		}
-		catch(const std::exception&e)
-		{
-			e;
-			m_Error = QueryBadGroupExpression;
-		}
-	}
+	m_GroupExp = _group ? _group : "";
 	return *this; 
 }
 
@@ -336,10 +314,10 @@ bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 			return false;
 	}
 
-	if(!m_NameExp.empty() && !boost::regex_match(mg->GetName(), m_NameExp))
+	if(!m_NameExp.empty() && !Utils::RegexMatch( m_NameExp.c_str(), mg->GetName().c_str() ) )
 		return false;
 
-	if(!m_GroupExp.empty() && !boost::regex_match(mg->GetGroupName(), m_GroupExp))
+	if(!m_GroupExp.empty() && !Utils::RegexMatch( m_GroupExp.c_str(), mg->GetGroupName().c_str() ) )
 		return false;
 
 	if(m_SkipDelayed && m_Client)
@@ -686,25 +664,18 @@ void GoalManager::cmdGoalDraw(const StringVector &_args)
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
-	boost::regex NameExp;
-	try
-	{
-		NameExp = boost::regex(pExpression ? pExpression : ".*", REGEX_OPTIONS);
-	}
-	catch(const std::exception&e)
-	{
-		EngineFuncs::ConsoleError(va("Bad expression: %s",e.what()));
-		return;
-	}
 
 	int NumSet = 0;
 	for(MapGoalList::iterator it = m_MapGoalList.begin();
 		it != m_MapGoalList.end();
 		++it)
 	{
-		if(pExpression && !boost::regex_match((*it)->GetName(), NameExp))
-			continue;
-
+		if ( pExpression ) {
+			if ( !Utils::RegexMatch(pExpression, (*it)->GetName().c_str() ) ) {
+				continue;
+			}
+		}
+		
 		(*it)->SetRenderGoal(DrawGoals);
 		++NumSet;
 	}
@@ -737,23 +708,12 @@ void GoalManager::cmdGoalDrawRoutes(const StringVector &_args)
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
-	boost::regex NameExp;
-	try
-	{
-		NameExp = boost::regex(pExpression ? pExpression : ".*", REGEX_OPTIONS);
-	}
-	catch(const std::exception&e)
-	{
-		EngineFuncs::ConsoleError(va("Bad expression: %s",e.what()));
-		return;
-	}
-
 	int NumSet = 0;
 	for(MapGoalList::iterator it = m_MapGoalList.begin();
 		it != m_MapGoalList.end();
 		++it)
 	{
-		if(pExpression && !boost::regex_match((*it)->GetName(), NameExp))
+		if(pExpression && !Utils::RegexMatch( pExpression, (*it)->GetName().c_str() ) )
 			continue;
 
 		(*it)->SetRenderRoutes(DrawRoutes);

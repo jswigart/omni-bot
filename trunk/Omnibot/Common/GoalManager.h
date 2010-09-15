@@ -103,8 +103,8 @@ public:
 		Vector3f		m_Position;
 		float			m_Radius;
 
-		boost::regex	m_NameExp;
-		boost::regex	m_GroupExp;
+		String			m_NameExp;
+		String			m_GroupExp;
 
 		QueryError		m_Error;
 
