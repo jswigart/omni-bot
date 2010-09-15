@@ -59,8 +59,8 @@ namespace Utils
 	bool RegexMatch( const char * exp, const char * str ) {		
 		try
 		{
-			boost::regex exp( exp, REGEX_OPTIONS );
-			return boost::regex_match( str, exp );
+			boost::regex expression( exp, REGEX_OPTIONS );
+			return boost::regex_match( str, expression );
 		}
 		catch(const std::exception&e)
 		{
