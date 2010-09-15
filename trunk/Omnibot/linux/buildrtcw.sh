@@ -5,4 +5,4 @@ export BOOST=/boost/boost_1_44_0
 
 cd /mnt/omnibot_svn_root/GameInterfaces/RTCW/MP/WolfMP-Source/src/
 
-bjam -a -q release
+bjam -q release
