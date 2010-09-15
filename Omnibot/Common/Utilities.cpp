@@ -8,8 +8,6 @@
 
 #include "PrecompCommon.h"
 
-#include <pcrecpp.h>
-
 #include "Interprocess.h"
 #include "IGame.h"
 #include "IGameManager.h"
@@ -58,12 +56,18 @@ namespace Priority
 
 namespace Utils
 {
-	bool RegexMatch( const char * exp, const char * str ) {
-		pcrecpp::RE_Options opt;
-		opt.set_caseless(true);
-
-		pcrecpp::RE regex( exp, opt );
-		return regex.FullMatch( str );
+	bool RegexMatch( const char * exp, const char * str ) {		
+		try
+		{
+			boost::regex exp( exp, REGEX_OPTIONS );
+			return boost::regex_match( str, exp );
+		}
+		catch(const std::exception&e)
+		{
+			e;
+			OBASSERT(0, e.what());
+		}
+		return false;
 	}
 
 	float FloatMax = std::numeric_limits<float>::max();
