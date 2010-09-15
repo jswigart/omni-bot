@@ -22,13 +22,14 @@ global Map =
 			{
 				voice = "defend", 		// signals voice chat to randomly announce
 				spawnpt = 2,			// users of this role will choose spawnpt 2
-				numbots = 5,			// maximum of 5 bots
+				numbots = 4,			// maximum of 5 bots
 				crucialClass = CLASS.ENGINEER,	// first bot
 			},
 
 			// focus on the Barn
 			ATTACKER =
 			{
+				voice = "attack",
 				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
@@ -46,13 +47,14 @@ global Map =
 			{
 				voice = "defend",
 				spawnpt = 3,
-				numbots = 5,
+				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
 
 			// focus on the Radar Equipment
 			ATTACKER =
 			{
+				voice = "attack",
 				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},

@@ -41,6 +41,9 @@ this.FindFreeRoleSlot = function()
 			}
 
 			evalNum = 0;
+			newClass = null;
+			spawnPoint = null;
+			voiceMacro = null;
 			foreach ( id and role in Map.Roles[ team ] ) {
 				if ( id == "AllBots"  ) { continue; }
 				if ( !Map.Roles[ team ][ id ].bots ) { Map.Roles[ team ][ id ].bots = table(); }
@@ -49,9 +52,6 @@ this.FindFreeRoleSlot = function()
 					continue;
 				}
 
-				newClass = null;
-				spawnPoint = null;
-				voiceMacro = null;
 				currentBots = tableCount(Map.Roles[ team ][ id ].bots);
 				numFree =  Map.Roles[ team ][ id ].numbots - currentBots;
 
@@ -67,14 +67,20 @@ this.FindFreeRoleSlot = function()
 
 					if ( currentBots == 0 && role.crucialClass ) {
 						newClass = role.crucialClass;
+					} else {
+						newClass = null;
 					}
 
 					if ( role.spawnpt ) {
 						spawnPoint = role.spawnpt;
+					} else {
+						spawnPoint = null;
 					}
 
 					if ( role.voice ) {
 						voiceMacro = role.voice;
+					} else {
+						voiceMacro = null;
 					}
 				}
 			}

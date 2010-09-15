@@ -42,8 +42,8 @@ this.Initialize = function()
 	this.NEEDOPS_SAYOPS		= this.Frequency;
 	this.BUILD_SAYBUILD		= this.Frequency;
 	this.PLANT_SAYCOVER		= this.Frequency;
-	this.DEFEND_SAYDEFEND		= this.Frequency;
-	this.ATTACK_SAYATTACK		= this.Frequency;
+	this.DEFEND_SAYDEFEND		= this.Frequency * 0.5;
+	this.ATTACK_SAYATTACK		= this.Frequency * 0.5;
 };
 
 this.Randomize = function(frequency, isBot)

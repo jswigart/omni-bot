@@ -12,7 +12,7 @@ this.GetPriority = function()
 	t = this.Bot.GetTarget();
 
 	if ( GetEntClass(t) == CLASS.INJUREDPLAYER ) {
-		if ( this.Bot.GetNearestEnemy(CAT.PLAYER, CLASS.ANYPLAYER) || this.Bot.DistanceTo(t) > 2000 ) {
+		if ( this.Bot.GetNearestEnemy(CAT.PLAYER, CLASS.ANYPLAYER) || this.Bot.DistanceTo(t) > 400 ) {
 			ignore = true;
 		}
 		else
@@ -36,12 +36,18 @@ this.Enter = function()
 
 this.Update = function()
 {
+	this.Bot.HoldButton(BTN.CROUCH, 3);
 	while (this.Bot.GetTarget() == this.target)
 	{
 		sleep(0.5);
 	}
 	
 	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.CROUCH);
 };
 
 
