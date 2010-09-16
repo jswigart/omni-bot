@@ -258,7 +258,7 @@ member CheckVehiclePath = function( _params )
 //
 member CheckVehiclePathOff = function()
 {
-	this.CheckVehiclePathFlag = false;
+	Util.CheckVehiclePathFlag = false;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1155,6 +1155,10 @@ member PanzerMap = function( )
 //
 member ChangeToPanzer = function( bot )
 {
+	if ( bot.GetClass() != CLASS.SOLDIER ) {
+		bot.ChangeClass(CLASS.SOLDIER);
+		yield();
+	}
 	if ( bot.GetTeam() == TEAM.ALLIES && GetModName() == "noquarter" ) {
 		bot.ChangePrimaryWeapon(WEAPON.BAZOOKA);
 		return;

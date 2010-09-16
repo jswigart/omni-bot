@@ -17,7 +17,7 @@ this.GetPriority = function()
 	if ( !this.Bot.ViewDistInitialized ) {
 		this.Bot.OldMaxView = this.Bot.MaxViewDistance;
 		zoomDist = 2 * this.Bot.OldMaxView;
-		this.Bot.ZoomViewDistance = Clamp(zoomDist, 8000, 10000);
+		this.Bot.ZoomViewDistance = Clamp(zoomDist, 8000, 15000);
 		this.Bot.ViewDistInitialized = true;		
 	}
 

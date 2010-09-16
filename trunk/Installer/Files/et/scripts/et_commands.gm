@@ -475,28 +475,38 @@ Commands["stuckstart"] =
 			return;
 		}
 
-		ExecScript("stuckages.gm");
-		// replace - with _ and prepend Map_
-		s = GetMapName();
-		mapName = "";
-		tokens = s.Tokenize("-");
-		foreach (t in tokens) { mapName = mapName + t + "_"; }
-		mapName = mapName.Left(mapName.Length()-1);
-		mapName = "Map_" + mapName;
+		ExecScript(GetMapName() + "_stuckages.gm");
 
-		ind = 0;
-
-		if ( Stuckages[ mapName ] )
-		{
-			total = tableCount(Stuckages[ mapName ]);
-			foreach ( id and pos in Stuckages[ mapName ] ) {
-				ind += 1;
-				EchoToScreen(2.0, "^1at stuckage pos "+ ind + " of " + total);
-				s = "setviewpos " + pos.x + " " + pos.y + " " + pos.z + " " + " 0";
-				ExecCommandOnClient(GetLocalEntity(), s);
-				block("nextstuck");
+		// copy all non-dupes to a temp table
+		temp = {};
+		dupeCount = 0;
+		foreach ( id and pos in Stuckages ) {
+			dupe = false;
+			foreach ( tempId and tempPos in temp ) {
+				if ( DistanceBetween(pos, tempPos) < 150 ) {
+					dupe = true;
+				}
+			}
+			if (!dupe) {
+				temp[ tableCount(temp) ] = pos;
+			}
+			else {
+				dupeCount += 1;
 			}
 		}
+
+		print(format("^3omitted %d duplicates", dupeCount));
+
+		ind = 0;
+		total = tableCount(temp);
+		foreach ( id and pos in temp ) {
+			ind += 1;
+			EchoToScreen(2.0, "^1at stuckage pos "+ ind + " of " + total);
+			s = "setviewpos " + pos.x + " " + pos.y + " " + pos.z + " " + " 0";
+			ExecCommandOnClient(GetLocalEntity(), s);
+			block("nextstuck");
+		}
+
 
 		if ( ind == 0 ) {
 			print("no stuckage vectors defined for this map");

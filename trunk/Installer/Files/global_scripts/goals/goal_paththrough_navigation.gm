@@ -15,6 +15,13 @@ this.Initialize = function()
 	}
 };
 
+this.OnSpawn = function()
+{
+	// hack to clear any persisting Goto's ...
+	this.Goto(this.Bot.GetPosition());
+	sleep(1);
+};
+
 this.OnPathThrough = function(data)
 {
 	navigation = Map.Navigation[data];

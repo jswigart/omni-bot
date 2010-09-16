@@ -1,8 +1,8 @@
 this.GoalType = "MOBILEMG42";
 this.Version = 1;
 this.DefaultPriority = 1.0;
-this.DefaultMinCampTime = 15.0;
-this.DefaultMaxCamptime = 30.0;
+this.DefaultMinCampTime = 30.0;
+this.DefaultMaxCamptime = 60.0;
 this.RolePriorityBonus = 0.1;
 this.MaxUsers_InUse(1);
 
@@ -29,8 +29,8 @@ CheckMaxCamp = function(var)
 
 this.Schema = Schema();
 this.Schema.AimVectors = Validate.TableOf("vector3").Default({});
-this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(2).CheckCallback(CheckMinCamp);
-this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(6).CheckCallback(CheckMaxCamp);
+this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(this.DefaultMinCampTime).CheckCallback(CheckMinCamp);
+this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(this.DefaultMaxCamptime).CheckCallback(CheckMaxCamp);
 
 //////////////////////////////////////////////////////////////////////////
 

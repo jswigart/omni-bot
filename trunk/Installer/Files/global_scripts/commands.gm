@@ -1447,8 +1447,8 @@ Commands["dbg_goalavailability"] =
 {
 	Func = function(_params)
 	{
-		global DEBUG_GOAL_AVAILABLITY = !DEBUG_GOAL_AVAILABLITY;
-		if ( DEBUG_GOAL_AVAILABLITY == 1 ) {
+		global DEBUG_GOAL_AVAILABILITY = !DEBUG_GOAL_AVAILABILITY;
+		if ( DEBUG_GOAL_AVAILABILITY == 1 ) {
 			print("goal availability debugging enabled");
 		}
 		else {
