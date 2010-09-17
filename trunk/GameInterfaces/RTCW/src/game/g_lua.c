@@ -1107,6 +1107,9 @@ qboolean G_LuaStartVM( lua_vm_t *vm ) {
 	// Initialise the lua state
 	luaL_openlibs( vm->L );
 
+	// sqlite3
+	luaopen_lsqlite3(vm->L);
+
 	// set LUA_PATH and LUA_CPATH
 	trap_Cvar_VariableStringBuffer( "fs_basepath", basepath, sizeof( basepath ) );
 	trap_Cvar_VariableStringBuffer( "fs_homepath", homepath, sizeof( homepath ) );
