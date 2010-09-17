@@ -1949,6 +1949,10 @@ void LogExit( const char *string ) {
 		return;
 	}
 
+#ifdef WITH_LUA
+	G_LuaHook_LogExit();
+#endif
+
 	G_LogPrintf( "Exit: %s\n", string );
 
 	level.intermissionQueued = level.time;

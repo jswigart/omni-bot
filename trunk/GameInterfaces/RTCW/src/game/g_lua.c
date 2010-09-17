@@ -1332,6 +1332,32 @@ void G_LuaHook_ShutdownGame( int restart ) {
 	}
 }
 
+/** G_LuaHook_LogExit
+ * et_LogExit()  callback
+ */
+void G_LuaHook_LogExit() {
+	int i;
+	lua_vm_t *vm;
+	for ( i = 0; i < LUA_NUM_VM; i++ ) {
+		vm = lVM[i];
+		if ( vm ) {
+			if ( vm->id < 0 /*|| vm->err*/ ) {
+				continue;
+			}
+			if ( !G_LuaGetNamedFunction( vm, "et_LogExit" ) ) {
+				continue;
+			}
+
+			// Call
+			if ( !G_LuaCall( vm, "et_LogExit", 0, 0 ) ) {
+				//G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
 /** G_LuaHook_RunFrame
  * et_RunFrame( levelTime )  callback
  */
