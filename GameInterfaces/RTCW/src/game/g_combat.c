@@ -77,6 +77,13 @@ static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death
 	// Set spree to zero if the player dies, unless it's already zero or less, in which case decrement it
 	spree = death ? ( old_spree > 0 ? 0 : old_spree - 1 ) : ( ( old_spree < 0 ) ? 1 : old_spree + 1 );
 
+	// set max kill / death sprees
+	if ( spree < ent->client->pers.deathSpreeMax ) {
+		ent->client->pers.deathSpreeMax = spree;
+	} else if ( spree > ent->client->pers.killSpreeMax ) {
+		ent->client->pers.killSpreeMax = spree;
+	}
+
 	// end of killing spree
 	if ( old_spree >= 5 && death ) {
 		if ( g_announcer.integer & ANNOUNCE_KILLINGSPREES ) {
@@ -121,11 +128,6 @@ static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death
 	}
 
 	ent->client->ps.persistant[PERS_KILLSPREE] = spree;
-}
-
-// only called on map end (before intermission starts)
-void G_UpdateKillingSpreeForMapEnd( gentity_t *ent ) {
-	ent->client->ps.persistant[PERS_KILLSPREE] = 0;
 }
 
 

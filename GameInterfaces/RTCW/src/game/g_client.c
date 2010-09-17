@@ -1849,9 +1849,10 @@ void ClientBegin( int clientNum ) {
 	client->pers.damage_given = 0;
 	client->pers.damage_received = 0;
 	client->pers.team_damage = 0;
-	client->pers.headshots = 0;
 	client->pers.goomba = 0;
 	client->pers.poison = 0;
+	client->pers.killSpreeMax = 0;
+	client->pers.deathSpreeMax = 0;
 
 	//CS: make sure this isn't set
 	client->sess.botSuicide = qfalse;
