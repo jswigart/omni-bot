@@ -50,6 +50,14 @@ void ExtendWarmup( qboolean adjust ) {
 		roundAwards.highRevAnnounce = qtrue;
 		extend++;
 	}
+	if ( roundAwards.highKillSpreeValue > 0 ) {
+		roundAwards.highKillSpreeAnnounce = qtrue;
+		extend++;
+	}
+	if ( roundAwards.highDeathSpreeValue < 0 ) {
+		roundAwards.highDeathSpreeAnnounce = qtrue;
+		extend++;
+	}
 
 	// set the number of awards that will be printed
 	if ( extend > 0 ) {
@@ -126,6 +134,16 @@ void SetAwards( gclient_t *cl ) {
 		roundAwards.highRevValue = cl->pers.revives;
 		Q_strncpyz( roundAwards.highRevName, cl->pers.netname, sizeof( roundAwards.highRevName ) );
 	}
+
+	if ( cl->pers.killSpreeMax > roundAwards.highKillSpreeValue ) {
+		roundAwards.highKillSpreeValue = cl->pers.killSpreeMax;
+		Q_strncpyz( roundAwards.highKillSpreeName, cl->pers.netname, sizeof( roundAwards.highKillSpreeName ) );
+	}
+
+	if ( cl->pers.deathSpreeMax < roundAwards.highDeathSpreeValue ) {
+		roundAwards.highDeathSpreeValue = cl->pers.deathSpreeMax;
+		Q_strncpyz( roundAwards.highDeathSpreeName, cl->pers.netname, sizeof( roundAwards.highDeathSpreeName ) );
+	}
 }
 
 void ClearAwards() {
@@ -142,6 +160,8 @@ void ClearAwards() {
 	roundAwards.highKillValue = 0;
 	roundAwards.highMedValue = 0;
 	roundAwards.highRevValue = 0;
+	roundAwards.highKillSpreeValue = 0;
+	roundAwards.highDeathSpreeValue = 0;
 }
 
 void FormatName( char *in ) {
@@ -237,6 +257,21 @@ void ListAwards() {
 										,roundAwards.highPoisonName ) );
 	}
 
+	if ( roundAwards.highKillSpreeValue > 0 ) {
+		FormatName( roundAwards.highKillSpreeName );
+		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
+										,"^3KillSpree:^7"
+										,roundAwards.highKillSpreeValue
+										,roundAwards.highKillSpreeName ) );
+	}
+
+	if ( roundAwards.highDeathSpreeValue < 0 ) {
+		FormatName( roundAwards.highDeathSpreeName );
+		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
+										,"^3DeathSpree:^7"
+										,roundAwards.highDeathSpreeValue
+										,roundAwards.highDeathSpreeName ) );
+	}
 	ClearAwards();
 }
 
@@ -326,6 +361,18 @@ void PrintAwards() {
 		return;
 	}
 
+	if ( roundAwards.highKillSpreeAnnounce ) {
+		trap_SendServerCommand( -1, va( "cp \"^3Kill Spree: ^7%i\n%s\" 3",roundAwards.highKillSpreeValue,roundAwards.highKillSpreeName ) );
+		roundAwards.highKillSpreeAnnounce = qfalse;
+		return;
+	}
+
+	if ( roundAwards.highDeathSpreeAnnounce ) {
+		trap_SendServerCommand( -1, va( "cp \"^3Death Spree: ^7%i\n%s\" 3",roundAwards.highDeathSpreeValue,roundAwards.highDeathSpreeName ) );
+		roundAwards.highDeathSpreeAnnounce = qfalse;
+		return;
+	}
+
 	ListAwards();
 }
 
@@ -394,6 +441,16 @@ void WriteAwards() {
 	if ( roundAwards.highPoisonValue > 0 ) {
 		strcat( buf, va( "PoisonValue %i \n", roundAwards.highPoisonValue ) );
 		strcat( buf, va( "PoisonName %s \n", roundAwards.highPoisonName ) );
+	}
+
+	if ( roundAwards.highKillSpreeValue > 0 ) {
+		strcat( buf, va( "KillSpreeValue %i \n", roundAwards.highKillSpreeValue ) );
+		strcat( buf, va( "KillSpreeName %s \n", roundAwards.highKillSpreeName ) );
+	}
+
+	if ( roundAwards.highDeathSpreeValue < 0 ) {
+		strcat( buf, va( "DeathSpreeValue %i \n", roundAwards.highDeathSpreeValue ) );
+		strcat( buf, va( "DeathSpreeName %s \n", roundAwards.highDeathSpreeName ) );
 	}
 
 	fputs( buf,awards );
@@ -509,6 +566,18 @@ void ReadAwards() {
 			break;
 		case 133419: /*PoisonName*/
 			Q_strncpyz( roundAwards.highPoisonName, arg, sizeof( roundAwards.highPoisonName ) );
+			break;
+		case 201937: /*DeathSpreeValue*/
+			roundAwards.highDeathSpreeValue = atoi( arg );
+			break;
+		case 185491: /*DeathSpreeName*/
+			Q_strncpyz( roundAwards.highDeathSpreeName, arg, sizeof( roundAwards.highDeathSpreeName ) );
+			break;
+		case 189729: /*KillSpreeValue*/
+			roundAwards.highKillSpreeValue = atoi( arg );
+			break;
+		case 173407: /*KillSpreeName*/
+			Q_strncpyz( roundAwards.highKillSpreeName, arg, sizeof( roundAwards.highKillSpreeName ) );
 			break;
 		}
 	}

@@ -510,6 +510,9 @@ typedef struct {
 	int team_damage;
 	int goomba;
 	int poison;
+	int killSpreeMax;
+	int deathSpreeMax;
+
 	int seedPing;           //Martin - for fakeping
 
 	// g_shortcuts
@@ -708,6 +711,16 @@ typedef struct
 	char highPoisonName[MAX_NETNAME];
 	int highPoisonValue;
 	qboolean highPoisonAnnounce;
+
+	// high kill spree
+	char highKillSpreeName[MAX_NETNAME];
+	int highKillSpreeValue;
+	qboolean highKillSpreeAnnounce;
+
+	// high death spree
+	char highDeathSpreeName[MAX_NETNAME];
+	int highDeathSpreeValue;
+	qboolean highDeathSpreeAnnounce;
 }round_awards_t;
 
 //

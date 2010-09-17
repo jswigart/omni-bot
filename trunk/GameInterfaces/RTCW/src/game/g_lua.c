@@ -426,6 +426,7 @@ static const gentity_field_t gclient_fields[] = {
 //								NAME							ALIAS						TYPE				FLAGS
 	_et_gclient_addfield(       inactivityTime,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       inactivityWarning,                                          FIELD_INT,          0                                       ),
+
 	_et_gclient_addfield(       pers.connected,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.netname,                                               FIELD_STRING,       FIELD_FLAG_NOPTR                        ),
 	_et_gclient_addfield(       pers.localClient,                                           FIELD_INT,          0                                       ),
@@ -445,6 +446,19 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       pers.suicides,                                              FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.teamKills,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.team_damage,                                           FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.gibs,                                                  FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.teamGibs,                                              FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.revives,                                               FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.medPacks,                                              FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.ammoPacks,                                             FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.acc_hits,                                              FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.acc_shots,                                             FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.headshots,                                             FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.goomba,                                                FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.poison,                                                FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.killSpreeMax,                                          FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.deathSpreeMax,                                         FIELD_INT,          0                                       ),
+
 	_et_gclient_addfield(       ps.stats,                                                   FIELD_INT_ARRAY,    0                                       ),
 	_et_gclient_addfield(       ps.persistant,                                              FIELD_INT_ARRAY,    0                                       ),
 	_et_gclient_addfield(       ps.ping,                                                    FIELD_INT,          0                                       ),
@@ -454,6 +468,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       ps.ammoclip,                                                FIELD_INT_ARRAY,    0                                       ),
 	_et_gclient_addfield(       ps.persistant[PERS_KILLED],                                 FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       ps.persistant[PERS_SCORE],                                  FIELD_INT,          0                                       ),
+
 	_et_gclient_addfield(       sess.sessionTeam,                                           FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       sess.spectatorTime,                                         FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       sess.spectatorState,                                        FIELD_INT,          0                                       ),
