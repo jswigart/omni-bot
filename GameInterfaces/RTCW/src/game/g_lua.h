@@ -81,6 +81,7 @@ lua_vm_t * G_LuaGetVM( lua_State *L );
 // Callbacks
 void G_LuaHook_InitGame( int levelTime, int randomSeed, int restart );
 void G_LuaHook_ShutdownGame( int restart );
+void G_LuaHook_LogExit();
 void G_LuaHook_RunFrame( int levelTime );
 qboolean G_LuaHook_ClientConnect( int clientNum, qboolean firstTime, qboolean isBot, char *reason );
 void G_LuaHook_ClientDisconnect( int clientNum );
