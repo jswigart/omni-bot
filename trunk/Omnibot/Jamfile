@@ -46,7 +46,7 @@ alias boost_sys : boost_system : <link>static ;
 
 build-project Common ; 
 #build-project MC ;
-#build-project ET ;
+build-project ET ;
 build-project RTCW ; 
 #build-project TeamFortressLib ; 
 #build-project FF ; 
