@@ -6,8 +6,6 @@
 #include <QTcpSocket>
 #include <QSystemTrayIcon>
 
-#include "messageQueue.h"
-
 class QStandardItemModel;
 
 class RemoteDebugWindow : public QMainWindow

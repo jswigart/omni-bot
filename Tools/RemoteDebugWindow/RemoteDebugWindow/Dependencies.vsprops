@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REMOTEDEBUGLIB)&quot;"
+		AdditionalIncludeDirectories="&quot;$(REMOTEDEBUGLIB)&quot;"
 	/>
 	<Tool
 		Name="VCLibrarianTool"
@@ -15,12 +15,7 @@
 	<Tool
 		Name="VCLinkerTool"
 		AdditionalDependencies="Ws2_32.lib Winmm.lib"
-		AdditionalLibraryDirectories="$(BOOST)\lib"
-	/>
-	<UserMacro
-		Name="BOOST"
-		Value="$(SolutionDir)..\..\libs\boost\boost_1_44"
-		PerformEnvironmentSet="true"
+		AdditionalLibraryDirectories=""
 	/>
 	<UserMacro
 		Name="REMOTEDEBUGLIB"

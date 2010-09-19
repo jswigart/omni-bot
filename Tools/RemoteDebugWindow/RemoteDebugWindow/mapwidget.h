@@ -2,8 +2,6 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QGraphicsView>
 
-#include "messageQueue.h"
-
 #ifndef __MAPWIDGET_H__
 #define __MAPWIDGET_H__
 
