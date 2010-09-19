@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Dependencies"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(REMOTEDEBUGLIB)&quot;"
+	/>
+	<Tool
+		Name="VCLibrarianTool"
+		AdditionalLibraryDirectories="$(BOOST)"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="Ws2_32.lib Winmm.lib"
+		AdditionalLibraryDirectories="$(BOOST)\lib"
+	/>
+	<UserMacro
+		Name="BOOST"
+		Value="$(SolutionDir)..\..\libs\boost\boost_1_44"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="REMOTEDEBUGLIB"
+		Value="$(SolutionDir)RemoteDebugLib"
+		PerformEnvironmentSet="true"
+	/>
+</VisualStudioPropertySheet>
