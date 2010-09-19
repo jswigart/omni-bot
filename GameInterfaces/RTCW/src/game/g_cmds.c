@@ -2236,7 +2236,7 @@ void Cmd_Stats_f( gentity_t *ent ) {
 	char message[MAX_STRING_CHARS];
 	gclient_t *client = ent->client;
 
-	int deaths = client->ps.persistant[PERS_KILLED];
+	int deaths = client->pers.deaths;
 	//float killRatio = client->pers.kills;
 	float killRatio = client->pers.kills;
 

@@ -2791,9 +2791,9 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 		OB_GETMSG( Msg_EntityStat );
 		if ( pMsg ) {
 			if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "kills" ) ) {
-				pMsg->m_Result = obUserData( pEnt->client->ps.persistant[PERS_KILLS] );
+				pMsg->m_Result = obUserData( pEnt->client->pers.kills );
 			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "deaths" ) ) {
-				pMsg->m_Result = obUserData( pEnt->client->ps.persistant[PERS_KILLED] );
+				pMsg->m_Result = obUserData( pEnt->client->pers.deaths );
 			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "gibs" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.gibs );
 			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "shots" ) ) {
@@ -2820,8 +2820,8 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 				pMsg->m_Result = obUserData( p );
 			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "killratio" ) )        {
 				float kr = pEnt->client->pers.kills;
-				if ( pEnt->client->ps.persistant[PERS_KILLED] > 0 ) {
-					kr = (float)pEnt->client->ps.persistant[PERS_KILLS] / (float)pEnt->client->ps.persistant[PERS_KILLED];
+				if ( pEnt->client->pers.deaths > 0 ) {
+					kr = (float)pEnt->client->pers.kills / (float)pEnt->client->pers.deaths;
 				}
 				pMsg->m_Result = obUserData( kr );
 			}

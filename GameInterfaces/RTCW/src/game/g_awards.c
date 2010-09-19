@@ -95,8 +95,8 @@ void SetAwards( gclient_t *cl ) {
 		Q_strncpyz( roundAwards.highAmmoName, cl->pers.netname, sizeof( roundAwards.highAmmoName ) );
 	}
 
-	if ( cl->ps.persistant[PERS_KILLED] > roundAwards.highDeathValue ) {
-		roundAwards.highDeathValue = cl->ps.persistant[PERS_KILLED];
+	if ( cl->pers.deaths > roundAwards.highDeathValue ) {
+		roundAwards.highDeathValue = cl->pers.deaths;
 		Q_strncpyz( roundAwards.highDeathName, cl->pers.netname, sizeof( roundAwards.highDeathName ) );
 	}
 

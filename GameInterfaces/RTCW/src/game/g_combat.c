@@ -490,7 +490,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 	self->enemy = attacker;
 
-	self->client->ps.persistant[PERS_KILLED]++;
+	self->client->pers.deaths++;
 
 	if ( ( self->client->ps.grenadeTimeLeft ) && ( self->s.weapon != WP_DYNAMITE ) ) {
 		vec3_t launchspot;

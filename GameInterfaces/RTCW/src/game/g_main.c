@@ -1874,7 +1874,7 @@ void RoundStats( void ) {
 			ref = "^7";
 
 			tot_kills += cl->pers.kills;
-			tot_deaths += cl->ps.persistant[PERS_KILLED];
+			tot_deaths += cl->pers.deaths;
 			tot_sui += cl->pers.suicides;
 			tot_tk += cl->pers.teamKills;
 			tot_dg += cl->pers.damage_given;
@@ -1883,7 +1883,7 @@ void RoundStats( void ) {
 			tot_gibs += cl->pers.gibs;
 			tot_gp += cl->ps.persistant[PERS_SCORE];
 
-			eff = ( cl->ps.persistant[PERS_KILLED] + cl->pers.kills == 0 ) ? 0 : 100 * cl->pers.kills / ( cl->ps.persistant[PERS_KILLED] + cl->pers.kills );
+			eff = ( cl->pers.deaths + cl->pers.kills == 0 ) ? 0 : 100 * cl->pers.kills / ( cl->pers.deaths + cl->pers.kills );
 			if ( eff < 0 ) {
 				eff = 0;
 			}
@@ -1897,7 +1897,7 @@ void RoundStats( void ) {
 											ref,
 											n2,
 											cl->pers.kills,
-											cl->ps.persistant[PERS_KILLED],
+											cl->pers.deaths,
 											cl->pers.suicides,
 											cl->pers.teamKills,
 											ref,
