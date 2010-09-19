@@ -338,7 +338,7 @@ typedef enum {
 	PERS_REWARD_COUNT,              // incremented for each reward sound
 	PERS_REWARD,                    // a reward_t
 	PERS_ATTACKER,                  // clientnum of last damage inflicter
-	PERS_KILLED,                    // count of the number of times you died
+	PERS_KILLED,                    // count of the number of times you died cs: moved to pers.deaths so clients
 	// these were added for single player awards tracking
 	PERS_RESPAWNS_LEFT,             // DHM - Nerve :: number of remaining respawns
 

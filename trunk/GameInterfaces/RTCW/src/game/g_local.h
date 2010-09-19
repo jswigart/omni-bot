@@ -495,6 +495,7 @@ typedef struct {
 	qboolean bAutoReloadAux; // TTimo - auxiliary storage for pmoveExt_t::bAutoReload, to achieve persistance
 
 	int kills;                  //stats
+	int deaths;
 	int teamKills;
 	int suicides;
 	int gibs;

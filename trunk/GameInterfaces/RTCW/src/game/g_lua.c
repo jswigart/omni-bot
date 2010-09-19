@@ -443,6 +443,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       pers.damage_given,                                          FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.damage_received,                                       FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.kills,                                                 FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.deaths,                                                FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.suicides,                                              FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.teamKills,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.team_damage,                                           FIELD_INT,          0                                       ),
@@ -466,7 +467,6 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       ps.origin,                                                  FIELD_VEC3,         0                                       ),
 	_et_gclient_addfield(       ps.ammo,                                                    FIELD_INT_ARRAY,    0                                       ),
 	_et_gclient_addfield(       ps.ammoclip,                                                FIELD_INT_ARRAY,    0                                       ),
-	_et_gclient_addfield(       ps.persistant[PERS_KILLED],                                 FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       ps.persistant[PERS_SCORE],                                  FIELD_INT,          0                                       ),
 
 	_et_gclient_addfield(       sess.sessionTeam,                                           FIELD_INT,          0                                       ),
