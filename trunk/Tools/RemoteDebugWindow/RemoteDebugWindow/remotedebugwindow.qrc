@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="RemoteDebugWindow">
+    <file>Resources/connected.png</file>
+    <file>Resources/disabled.png</file>
+    <file>Resources/disconnected.png</file>
+  </qresource>
+</RCC>
