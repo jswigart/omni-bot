@@ -10,8 +10,23 @@
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro
+		Name="DEPENDS"
+		Value="$(REPO_ROOT)/Omnibot/dependencies"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
 		Name="BOOST"
 		Value="$(REPO_ROOT)libs\boost\boost_1_44"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="TOOLS"
+		Value="$(REPO_ROOT)Tools"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="REMOTEDEBUGLIB"
+		Value="$(TOOLS)\RemoteDebugWindow\RemoteDebugLib"
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro

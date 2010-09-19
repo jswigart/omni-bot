@@ -472,12 +472,14 @@ void PathPlannerWaypoint::Update()
 				if ((*it).second->m_ConnectionFlags & F_LNK_CLOSED)
 				{
 					(*it).second->m_ConnectionFlags &= ~F_LNK_CLOSED;
+					(*it).second->m_ConnectionFlags |= F_LNK_NEEDSYNC;
 				}
 				break;
 			case B_PATH_CLOSED:
 				if (!((*it).second->m_ConnectionFlags & F_LNK_CLOSED))
 				{
 					(*it).second->m_ConnectionFlags |= F_LNK_CLOSED;
+					(*it).second->m_ConnectionFlags |= F_LNK_NEEDSYNC;
 
 					//////////////////////////////////////////////////////////////////////////
 					Event_DynamicPathsChanged m(0xFFFF, (*it).second->m_Connection->GetUID());
@@ -600,7 +602,7 @@ bool PathPlannerWaypoint::SetWaypointName(Waypoint *_wp, const String &_name)
 {
 	if(_wp)
 	{
-		_wp->m_WaypointName = _name;
+		_wp->SetName(_name);
 		return true;
 	}
 	return false;
@@ -2257,12 +2259,19 @@ Vector3f PathPlannerWaypoint::GetDisplayPosition(const Vector3f &_pos)
 void PathPlannerWaypoint::EntityCreated(const EntityInstance &ei)
 {
 	if(ei.m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE))
-	{
-		
+	{		
 	}
 }
 
 void PathPlannerWaypoint::EntityDeleted(const EntityInstance &ei)
 {
-
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void PathPlannerWaypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) { 
+	for(obuint32 i = 0; i < m_WaypointList.size(); ++i) {
+		Waypoint *wp = m_WaypointList[i];
+		wp->Sync( db, fullSync );
+	}
+}
+#endif

@@ -11,7 +11,7 @@
 	<Tool
 		Name="VCLinkerTool"
 		AdditionalDependencies="Common.lib comctl32.lib winmm.lib ws2_32.lib glu32.lib"
-		AdditionalLibraryDirectories="&quot;$(BOOST)\lib&quot;;&quot;..\build\Common\$(ConfigurationName)&quot;;..\..\..\dependencies\VisualLeakDetector\lib;&quot;..\..\..\dependencies\sfml\lib\vc2008\static\$(ConfigurationName)&quot;;&quot;..\..\..\dependencies\sfml\extlibs\libs-vc2005&quot;"
+		AdditionalLibraryDirectories="&quot;$(BOOST)\lib&quot;;&quot;..\build\Common\$(ConfigurationName)&quot;;&quot;$(DEPENDS)\VisualLeakDetector\lib&quot;;&quot;$(DEPENDS)\sfml\lib\vc2008\static\$(ConfigurationName)&quot;;&quot;$(DEPENDS)\sfml\extlibs\libs-vc2005&quot;"
 	/>
 	<UserMacro
 		Name="InterfaceDir"

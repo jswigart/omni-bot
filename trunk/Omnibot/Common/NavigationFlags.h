@@ -70,6 +70,7 @@ typedef enum
 	F_LNK_NOSHORT	= (1<<10),
 	F_LNK_OUTOFRANGE= (1<<11),
 	F_LNK_DONTSAVE	= (1<<12),
+	F_LNK_NEEDSYNC	= (1<<13),
 
 	F_LNK_NEXT		= (1<<16),
 	

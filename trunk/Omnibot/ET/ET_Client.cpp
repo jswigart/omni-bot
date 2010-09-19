@@ -484,3 +484,44 @@ void ET_Client::SetupBehaviorTree()
 	//FINDSTATEIF(Flamethrower,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));
 	//FINDSTATEIF(Panzer,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void ET_Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	const char * classImg = "";
+	switch ( GetClass() )
+	{
+	case ET_CLASS_SOLDIER:
+		classImg = "et/class_soldier.png";
+		break;
+	case ET_CLASS_MEDIC:
+		classImg = "et/class_medic.png";
+		break;
+	case ET_CLASS_ENGINEER:
+		classImg = "et/class_engineer.png";
+		break;
+	case ET_CLASS_FIELDOPS:
+		classImg = "et/class_fieldops.png";
+		break;
+	case ET_CLASS_COVERTOPS:
+		classImg = "et/class_covertops.png";
+		break;
+	}
+
+	Box3f obb;
+	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
+
+	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	db.startSizeHeader();
+	db.writeInt32( RemoteLib::ID_image );	
+	db.writeString( va( "client/%s", GetName( true ) ) );
+	db.writeString( classImg );
+	db.writeFloat16( obb.Center.x, 0 );
+	db.writeFloat16( obb.Center.y, 0 );
+	db.writeFloat16( obb.Extent[0] * 2.0f, 0 );
+	db.writeFloat16( obb.Extent[1] * 2.0f, 0 );
+	db.endSizeHeader();
+	db.endWrite();
+
+	Client::Sync( db, fullSync );
+}
+#endif

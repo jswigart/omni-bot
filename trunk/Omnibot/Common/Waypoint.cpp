@@ -57,7 +57,50 @@ void Waypoint::Reset()
 
 	m_OnPathThrough = 0;
 	m_OnPathThroughParam = 0;
+
+	m_NeedsSynced = true;
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	if ( fullSync || m_NeedsSynced ) {
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_circle );
+		db.writeString( va( "wp/wp_%d", GetUID() ) );
+		db.writeFloat16( GetPosition().x, 0 );
+		db.writeFloat16( GetPosition().y, 0 );
+		db.writeFloat16( GetRadius(), 0 );
+		db.writeInt32( obColor(255, 255, 255) );
+		db.endSizeHeader();
+		m_NeedsSynced = ( db.endWrite() > 0 );
+	}
+
+	Waypoint::ConnectionList::iterator it = m_Connections.begin();
+	for ( ; it != m_Connections.end(); ++it )
+	{
+		ConnectionInfo & ci = (*it);
+
+		if ( fullSync || ci.CheckFlag( F_LNK_NEEDSYNC ) ) {
+			db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+			db.startSizeHeader();
+			db.writeInt32( RemoteLib::ID_line );
+			db.writeString( va( "wpc/wp_%d_to%d", GetUID(), ci.m_Connection->GetUID() ) );
+			db.writeFloat16( GetPosition().x, 0 );
+			db.writeFloat16( GetPosition().y, 0 );
+			db.writeFloat16( ci.m_Connection->GetPosition().x, 0 );
+			db.writeFloat16( ci.m_Connection->GetPosition().y, 0 );
+			db.writeInt32( obColor(0, 255, 255) ); // color blockables?
+			db.endSizeHeader();
+			if ( db.endWrite() > 0 ) {
+				ci.SetFlag( F_LNK_NEEDSYNC );
+			} else {
+				ci.ClearFlag( F_LNK_NEEDSYNC );
+			}
+		}
+	}
+}
+#endif
 
 Segment3f Waypoint::GetSegment()
 {
@@ -106,6 +149,8 @@ bool Waypoint::ConnectTo(Waypoint *_wp, obuint32 _flags)
 		info.m_Connection = _wp;
 		info.m_ConnectionFlags = _flags;
 		m_Connections.push_back(info);
+
+		m_NeedsSynced = true;
 		return true;
 	}
 	return false;
@@ -116,9 +161,10 @@ void Waypoint::DisconnectFrom(const Waypoint *_wp)
 	ConnectionList::iterator it = m_Connections.begin(), itEnd = m_Connections.end();
 	for(; it != itEnd; )
 	{
-		if((*it).m_Connection == _wp)
+		if((*it).m_Connection == _wp) {
 			m_Connections.erase(it++);
-		else
+			m_NeedsSynced = true;
+		} else
 			++it;
 	}
 }

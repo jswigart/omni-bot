@@ -68,6 +68,10 @@ protected:
 
 	FunctorMap							m_UpdateMap;
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	RemoteLib::ConnectionManagerServer	m_Remote;
+#endif
+
 	virtual void InitCommands();
 	void cmdVersion(const StringVector &_args);
 	void cmdNavSystem(const StringVector &_args);

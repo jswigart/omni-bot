@@ -958,7 +958,7 @@ void PathPlannerWaypoint::cmdWaypointMove(const StringVector &_args)
 		if(m_MovingWaypointIndex < (int)m_WaypointList.size() && m_MovingWaypointIndex >= 0)
 		{
 			EngineFuncs::ConsoleMessage(va("Placed waypoint : %d", m_WaypointList[m_MovingWaypointIndex]->GetUID()));
-			m_WaypointList[m_MovingWaypointIndex]->m_Position = vLocalPos;
+			m_WaypointList[m_MovingWaypointIndex]->SetPosition( vLocalPos );
 			m_MovingWaypointIndex = -1;
 		}
 	}

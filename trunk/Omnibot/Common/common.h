@@ -169,6 +169,13 @@ using namespace Wm3;
 	//#define ENABLE_REMOTE_DEBUGGER
 	#define ENABLE_DEBUG_WINDOW
 	//#define ENABLE_FILE_DOWNLOADER
+	#define ENABLE_REMOTE_DEBUGGING
+#endif
+
+// remote debug
+#ifdef ENABLE_REMOTE_DEBUGGING
+#include "connection.h"
+#include "messageTags.h"
 #endif
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality

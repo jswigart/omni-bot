@@ -111,7 +111,7 @@ public:
 
 	void LoadGoalScripts(bool _clearold);
 
-	enum Options { MAX_PLAYERS = 64, };
+	enum Internal { MAX_PLAYERS = 64, };
 
 	virtual ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 
@@ -148,6 +148,10 @@ public:
 	virtual void InitGlobalStates() {}
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId) { return false; }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
 
 	IGame();
 	virtual ~IGame();
@@ -228,7 +232,7 @@ protected:
 	// Misc
 	bool			m_bDrawBlockableTests;
 
-	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);	
+	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 };
 
 #endif

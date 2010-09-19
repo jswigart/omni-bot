@@ -263,6 +263,10 @@ public:
 
 	bool DistributeUnhandledCommand(const StringVector &_args);
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
+
 	Client();
 	virtual ~Client();
 protected:

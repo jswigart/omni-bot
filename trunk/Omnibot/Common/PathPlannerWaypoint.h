@@ -208,6 +208,10 @@ public:
 	const char *GetPlannerName() const { return "Waypoint Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_WP; };
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
+
 	PathPlannerWaypoint();
 	virtual ~PathPlannerWaypoint();
 protected:

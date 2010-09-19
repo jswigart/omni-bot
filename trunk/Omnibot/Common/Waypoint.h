@@ -52,13 +52,16 @@ public:
 
 	inline const NavFlags &GetNavigationFlags() const { return m_NavigationFlags; }
 
-	inline void AddFlag(const NavFlags _flag) { m_NavigationFlags |= _flag; }
-	inline void RemoveFlag(const NavFlags _flag) { m_NavigationFlags &= ~_flag; }
-	inline void ClearFlags() { m_NavigationFlags = 0; }
+	inline void AddFlag(const NavFlags _flag) { m_NavigationFlags |= _flag; m_NeedsSynced = true; }
+	inline void RemoveFlag(const NavFlags _flag) { m_NavigationFlags &= ~_flag; m_NeedsSynced = true; }
+	inline void ClearFlags() { m_NavigationFlags = 0; m_NeedsSynced = true; }
 	inline bool IsFlagOn(const NavFlags _flag) const { return (m_NavigationFlags & _flag) ? true : false; }
 	inline bool IsAnyFlagOn(const NavFlags _flag) const { return (m_NavigationFlags & _flag) ? true : false; }
+	inline void SetPosition( const Vector3f & v ) { m_Position = v; m_NeedsSynced = true; }
 	inline float GetRadius() const { return m_Radius; }
-	inline void SetRadius(float _rad) { m_Radius = _rad; }
+	inline void SetRadius(float _rad) { m_Radius = _rad; m_NeedsSynced = true; }
+
+	inline void SetName( const String & s ) { m_WaypointName = s; m_NeedsSynced = true; }
 	inline const String &GetName() const { return m_WaypointName; }
 	inline int GetUID() const { return m_UID; }
 	inline int GetHash() const { return (unsigned int)this; }
@@ -80,6 +83,8 @@ public:
 	obuint32 OnPathThroughParam() const { return m_OnPathThroughParam; }
 
 	void PostLoad();
+
+	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
 
 	Waypoint();
 	Waypoint(const Vector3f &_pos, float _radius, const Vector3f &_face = Vector3f::ZERO);
@@ -111,7 +116,9 @@ protected:
 	ConnectionList		m_Connections;
 	PropertyMap			m_PropertyList;
 
-	bool				m_Locked;
+	bool				m_Locked : 1;
+
+	bool				m_NeedsSynced : 1;
 
 	static obuint32		m_NextUID;
 private:

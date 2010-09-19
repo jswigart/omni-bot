@@ -111,6 +111,7 @@ bool IGame::Init()
 	m_StateRoot->FixRoot();
 	m_StateRoot->InitializeStates();*/
 	//////////////////////////////////////////////////////////////////////////
+	
 	return true;
 }
 
@@ -669,6 +670,16 @@ void IGame::UpdateGame()
 	// Increment the game frame.
 	++m_GameFrame;
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	for(int i = 0; i < MAX_PLAYERS; ++i) {
+		if(m_ClientList[i]) {
+			m_ClientList[i]->Sync( db, fullSync );
+		}
+	}
+}
+#endif
 
 void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 {

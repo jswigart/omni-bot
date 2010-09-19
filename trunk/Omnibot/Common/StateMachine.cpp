@@ -26,6 +26,7 @@ State::State(const char * _name, const UpdateDelay &_ur)
 	, m_LastPriority(0.f)
 	, m_LastPriorityTime(0)
 	, m_UpdateRate(_ur)
+	, m_SyncCrc( 0 )
 {
 	SetName(_name);
 	DebugExpand(true);
@@ -819,6 +820,46 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 		for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 			pState->RenderDebugWindow(drawinfo.indent());
 	}
+}
+#endif
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath ) {
+	String pth = va( "%s/%s", statePath, GetName().c_str() );
+
+	StringStr s;
+	GetDebugString(s);
+	obColor renderColor = IsActive()||m_LastUpdateTime==IGame::GetTime() ? obColor( 0, 160, 0) : obColor(0,0,0);
+	if(m_StateFlags.CheckFlag(State_UnSelectable))
+		renderColor = obColor(255,255,255);
+	if(IsDisabled())
+		renderColor = obColor(255,0,0);
+
+	enum { LocalBufferSize = 256 };
+	char localBuffer[ LocalBufferSize ] = {};
+	RemoteLib::DataBuffer localDb( localBuffer, LocalBufferSize );
+	localDb.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	localDb.startSizeHeader();
+	localDb.writeInt32( RemoteLib::ID_treeNode );
+	localDb.writeString( pth.c_str() );
+	localDb.writeString( va( "%s (%.2f)", GetName().c_str(), GetLastPriority() ) );
+	localDb.writeString( s.str().c_str() );
+	localDb.writeInt32( renderColor );
+	localDb.endSizeHeader();
+	localDb.endWrite();
+		
+	const obuint32 crc = FileSystem::CalculateCrc( localBuffer, localDb.getBytesWritten() );
+	if ( fullSync || crc != m_SyncCrc ) {
+		if ( db.append( localDb ) ) {
+			m_SyncCrc = crc;
+		} else {
+			m_SyncCrc = 0;
+		}
+	}
+
+	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+		pState->Sync( db, fullSync, pth.c_str() );
+
 }
 #endif
 

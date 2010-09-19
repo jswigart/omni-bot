@@ -117,6 +117,10 @@ public:
 	virtual void EntityCreated(const EntityInstance &ei) {}
 	virtual void EntityDeleted(const EntityInstance &ei) {}
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync ) { }
+#endif
+
 	PathPlannerBase() {};
 	virtual ~PathPlannerBase() {};
 protected:
