@@ -5700,6 +5700,110 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
+			<Filter
+				Name="RemoteDebugLib"
+				>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\primitives.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Miscellaneous"
@@ -6486,6 +6590,10 @@
 				RelativePath="..\..\..\Common\BatchBuild.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="RemoteWindow"
+			>
 		</Filter>
 		<File
 			RelativePath="..\..\..\Common\Jamfile"

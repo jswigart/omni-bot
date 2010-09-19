@@ -25,6 +25,22 @@
 #include "ChunkedFile.h"
 
 //////////////////////////////////////////////////////////////////////////
+#ifdef ENABLE_REMOTE_DEBUGGING
+class OverlayConnectionCallbacks : public RemoteLib::ConnectionCallbacks
+{
+public:
+	void OnConnect( RemoteLib::Connection * conn ) {
+		EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
+	}
+	void OnDisConnect( RemoteLib::Connection * conn ) {
+		EngineFuncs::ConsoleMessage( va( "Disconnected %s", conn->getIp() ) );
+	}
+	void OnAcceptConnection( RemoteLib::Connection * conn ) {
+		EngineFuncs::ConsoleMessage( va( "Connected to %s", conn->getIp() ) );
+	}
+} connectionCallbacks;
+#endif
+//////////////////////////////////////////////////////////////////////////
 
 IGameManager *IGameManager::m_Instance = 0;
 
@@ -35,6 +51,9 @@ IGameManager::IGameManager()
 	, m_PathPlanner(0)
 	, m_GoalManager(0)
 	, m_Game(0)
+#ifdef ENABLE_REMOTE_DEBUGGING
+	, m_Remote( 0 )
+#endif
 {
 	memset(&g_EngineFuncs, 0, sizeof(g_EngineFuncs));
 }
@@ -115,6 +134,11 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("Log","LogErrors","true",false);
 	Options::SetValue("Log","LogCriticalErrors","true",false);
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	Options::SetValue("RemoteWindow","Enabled",0,false);
+	Options::SetValue("RemoteWindow","Port",m_Remote.getPort(),false);
+#endif
+	
 	//////////////////////////////////////////////////////////////////////////
 	// logging options
 	g_Logger.LogMask() = 0;
@@ -134,12 +158,19 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
 	InterProcess::Enable(EnableIpc);
 
-	/*ChunkedFile cf;
-	if(cf.OpenForWrite("user/chunkedfile.cf"))
+#ifdef ENABLE_REMOTE_DEBUGGING
 	{
-		const obuint32 CF_MASTER_HEADER = Utils::MakeId32("NVhd");
-		cf.Close();
-	}*/
+		int numConnections = 0;
+		if(Options::GetValue("RemoteWindow","Enabled",numConnections)) {
+			m_Remote.setMaxConnections( numConnections );
+		}
+		int remotePort = m_Remote.getPort();
+		if(Options::GetValue("RemoteWindow","Port",remotePort)) {
+			m_Remote.setPort( (uint16)remotePort );
+		}
+		m_Remote.init( true );
+	}
+#endif
 
 	// Create the requested path planner.
 	//if(NavigationManager::GetInstance()->CreatePathPlanner(NAVID_RECAST))
@@ -236,6 +267,31 @@ void IGameManager::UpdateGame()
 					++it;
 			}
 		}
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+		{
+			Prof(RemoteSync);
+			m_Remote.updateConnections( &connectionCallbacks );
+			for( int i = 0; i < m_Remote.getNumConnections(); ++i ) {
+				RemoteLib::Connection * conn = m_Remote.getConnection( i );
+				if ( conn->isConnected() ) {
+					RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
+					if ( IGame::GetTime() > conn->getUserData() ) {
+						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+						sendBuffer.startSizeHeader();
+						sendBuffer.writeInt32( RemoteLib::ID_ack );
+						sendBuffer.endSizeHeader();
+						sendBuffer.endWrite();
+						conn->setUserData( IGame::GetTime() + 5000 );
+					}
+
+					m_Game->Sync( sendBuffer, conn->isNewConnection() );
+					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
+					conn->clearNewConnection();
+				}
+			}
+		}
+#endif
 	}
 
 	Options::SaveConfigFileIfChanged("user/omni-bot.cfg");
@@ -255,6 +311,9 @@ void IGameManager::Shutdown()
 
 #ifdef ENABLE_DEBUG_WINDOW
 	DebugWindow::Destroy();
+#endif
+#ifdef ENABLE_REMOTE_DEBUGGING
+	m_Remote.shutdown();
 #endif
 
 	m_Game->Shutdown();

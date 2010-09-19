@@ -9,8 +9,8 @@
 	<Tool
 		Name="VCCLCompilerTool"
 		InlineFunctionExpansion="2"
-		AdditionalIncludeDirectories="&quot;..\..\..\dependencies\pcre-8.10&quot;;&quot;..\..\..\dependencies\guichan-0.7.1\include&quot;;&quot;..\..\..\dependencies\guichan-0.7.1\addons&quot;;..\..\..\dependencies\iprof;..\..\..\dependencies\wildmagic;..\..\..\dependencies\gmsrc_ex\src\3rdParty\mathlib;..\..\..\dependencies\gmsrc_ex\src\3rdParty\gmbinder2;..\..\..\dependencies\gmsrc_ex\src\gm;..\..\..\dependencies\gmsrc_ex\src\binds;..\..\..\dependencies\gmsrc_ex\src\platform\win32msvc;..\..\..\dependencies\VisualLeakDetector\include;..\..\..\dependencies\sqlite3;&quot;..\..\..\dependencies\Detours Express 2.1\src&quot;;..\..\..\dependencies\Recast\Recast\Include;..\..\..\dependencies\Recast\Detour\Include;..\..\..\dependencies\Recast\DebugUtils\Include"
-		PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;NOWINRES;NOSERVICE;NOMCX;NOIME;NOMINMAX;DETOURS_X86;_WIN32_WINNT=0x0501"
+		AdditionalIncludeDirectories="&quot;$(DEPENDS)\guichan-0.7.1\include&quot;;&quot;$(DEPENDS)\guichan-0.7.1\addons&quot;;&quot;$(DEPENDS)\iprof&quot;;&quot;$(DEPENDS)\wildmagic&quot;;&quot;$(DEPENDS)\gmsrc_ex\src\3rdParty\mathlib&quot;;&quot;$(DEPENDS)\gmsrc_ex\src\3rdParty\gmbinder2&quot;;&quot;$(DEPENDS)\gmsrc_ex\src\gm&quot;;&quot;$(DEPENDS)\gmsrc_ex\src\binds&quot;;&quot;$(DEPENDS)\gmsrc_ex\src\platform\win32msvc&quot;;&quot;$(DEPENDS)\VisualLeakDetector\include&quot;;&quot;$(DEPENDS)\Detours Express 2.1\src&quot;;&quot;$(DEPENDS)\Recast\Recast\Include&quot;;&quot;$(DEPENDS)\Recast\Detour\Include&quot;;&quot;$(DEPENDS)\Recast\DebugUtils\Include&quot;;&quot;$(REMOTEDEBUGLIB)&quot;"
+		PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;NOWINRES;NOSERVICE;NOMCX;NOIME;NOMINMAX;DETOURS_X86;_WIN32_WINNT=0x0501"
 		StringPooling="true"
 		MinimalRebuild="true"
 		RuntimeTypeInfo="true"

@@ -45,6 +45,10 @@ public:
 
 	void SetupBehaviorTree();
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
+
 	ET_Client();
 	virtual ~ET_Client();
 protected:

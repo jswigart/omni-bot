@@ -225,6 +225,10 @@ public:
 	virtual void RenderDebugWindow(gcn::DrawInfo drawinfo);
 #endif
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath );
+#endif
+
 	//////////////////////////////////////////////////////////////////////////
 	struct LimitToCallback
 	{
@@ -319,9 +323,9 @@ private:
 
 	obuint32		m_NameHash;
 
-	
-
 	DebugIcon		m_DebugIcon;
+
+	obuint32		m_SyncCrc;
 
 	State();
 };

@@ -190,6 +190,14 @@ void Client::Update()
 	m_ButtonFlags.ClearAll();
 }
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+void Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	if ( m_StateRoot ) {
+		m_StateRoot->Sync( db, fullSync, GetName( true ) );
+	}
+}
+#endif
+
 const char *Client::GetName(bool _clean) const
 {
 	return g_EngineFuncs->GetEntityName(GetGameEntity());
