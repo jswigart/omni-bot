@@ -18,7 +18,7 @@ void M_think( gentity_t *ent );
 void Shaker_think( gentity_t *ent ) {
 	vec3_t vec;      // muzzlebounce, JPW NERVE no longer used
 	gentity_t   *player;
-	float len, radius = ent->splashDamage, bounceamt;
+	float len, radius = ent->splashDamage, bounceamt = 0.25;
 	int i;
 
 	// NERVE - SMF - we only want to call this once now
@@ -38,20 +38,21 @@ void Shaker_think( gentity_t *ent ) {
 		if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
 		}
+		// skip bots
+		if ( (&g_entities[i])->r.svFlags & SVF_BOT ) {
+			continue;
+		}
 
 		// found a live one
 		player = &g_entities[i];
 		VectorSubtract( player->r.currentOrigin, ent->s.origin, vec );
-		len = VectorLength( vec );
+		len = VectorLengthSquared( vec );
 
-		if ( len > radius ) { // largest bomb blast = 600
+		if ( len > SQR(radius) ) { // largest bomb blast = 600
 			continue;
 		}
 
-		bounceamt = 1.0f - ( len / radius );
-
-		// NERVE - SMF - client side camera shake
-		trap_SendServerCommand( player->s.clientNum, va( "shake %f", min( 1.f, bounceamt ) ) );
+		trap_SendServerCommand( player->s.clientNum, va( "shake %f", bounceamt ) );
 	}
 }
 // jpw
@@ -414,11 +415,11 @@ void G_ExplodeMissile( gentity_t *ent ) {
 		}
 
 		// give big weapons the shakey shakey
-		if ( ent->s.weapon == WP_DYNAMITE || ent->s.weapon == WP_PANZERFAUST || ent->s.weapon == WP_GRENADE_LAUNCHER ||
-			 ent->s.weapon == WP_GRENADE_PINEAPPLE || ent->s.weapon == WP_ARTY
-			 ) {
-			Ground_Shaker( ent->r.currentOrigin, ent->splashDamage * 4 );
-		}
+		//if ( ent->s.weapon == WP_DYNAMITE || ent->s.weapon == WP_PANZERFAUST || ent->s.weapon == WP_GRENADE_LAUNCHER ||
+		//	 ent->s.weapon == WP_GRENADE_PINEAPPLE || ent->s.weapon == WP_ARTY
+		//	 ) {
+		//	Ground_Shaker( ent->r.currentOrigin, ent->splashDamage * 4 );
+		//}
 	}
 }
 
@@ -526,7 +527,7 @@ void G_RunMissile( gentity_t *ent ) {
 
 		if ( ent->s.eType != ET_MISSILE ) {
 // JPW NERVE
-			Ground_Shaker( ent->r.currentOrigin, ent->splashDamage * 4 );
+			//Ground_Shaker( ent->r.currentOrigin, ent->splashDamage * 4 );
 // jpw
 			return;     // exploded
 		}
