@@ -162,21 +162,6 @@ vec3_t bytedirs[NUMVERTEXNORMALS] =
 };
 
 //==============================================================
-float fastSqrt(const float x)
-{
-  union	
-  {	
-    int i;
-    float x;
-  } u;
-  u.x = x;
-  u.i = (1<<29) + (u.i >> 1) - (1<<22);
-  u.x = u.x + x/u.x;
-  u.x = 0.25f*u.x + x/u.x;
-  return u.x;
-}
-
-//==============================================================
 
 int     Q_rand( int *seed ) {
 	*seed = ( 69069 * *seed + 1 );
@@ -456,7 +441,7 @@ void vectoangles( const vec3_t value1, vec3_t angles ) {
 			yaw += 360;
 		}
 
-		forward = fastSqrt( value1[0] * value1[0] + value1[1] * value1[1] );
+		forward = sqrt( value1[0] * value1[0] + value1[1] * value1[1] );
 		pitch = ( atan2( value1[2], forward ) * 180 / M_PI );
 		if ( pitch < 0 ) {
 			pitch += 360;
@@ -1071,7 +1056,7 @@ vec_t VectorNormalize( vec3_t v ) {
 	float length;
 
 	length = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
-	length = fastSqrt( length );
+	length = sqrt( length );
 
 	if ( length ) {
 		float ilength = 1 / length;
@@ -1101,7 +1086,7 @@ vec_t VectorNormalize2( const vec3_t v, vec3_t out ) {
 	float length;
 
 	length = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
-	length = fastSqrt( length );
+	length = sqrt( length );
 
 	if ( length ) {
 		float ilength = 1 / length;
@@ -1157,7 +1142,7 @@ void CrossProduct( const vec3_t v1, const vec3_t v2, vec3_t cross ) {
 }
 
 vec_t VectorLength( const vec3_t v ) {
-	return fastSqrt( v[0] * v[0] + v[1] * v[1] + v[2] * v[2] );
+	return sqrt( v[0] * v[0] + v[1] * v[1] + v[2] * v[2] );
 }
 
 vec_t VectorLengthSquared( const vec3_t v ) {
