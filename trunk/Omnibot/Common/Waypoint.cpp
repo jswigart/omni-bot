@@ -81,6 +81,17 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	{
 		ConnectionInfo & ci = (*it);
 
+		obColor linkColor = obColor(0, 255, 255);
+		if(IsAnyFlagOn(PathPlannerWaypoint::m_BlockableMask)) {
+			if(ci.m_Connection->IsAnyFlagOn(PathPlannerWaypoint::m_BlockableMask)) {
+				if ( ci.m_ConnectionFlags & F_LNK_CLOSED ) {
+					linkColor = COLOR::RED;
+				} else {
+					linkColor = COLOR::GREEN;
+				}
+			}
+		}
+
 		if ( fullSync || ci.CheckFlag( F_LNK_NEEDSYNC ) ) {
 			db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 			db.startSizeHeader();
@@ -90,7 +101,7 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 			db.writeFloat16( GetPosition().y, 0 );
 			db.writeFloat16( ci.m_Connection->GetPosition().x, 0 );
 			db.writeFloat16( ci.m_Connection->GetPosition().y, 0 );
-			db.writeInt32( obColor(0, 255, 255) ); // color blockables?
+			db.writeInt32( linkColor );
 			db.endSizeHeader();
 			if ( db.endWrite() > 0 ) {
 				ci.SetFlag( F_LNK_NEEDSYNC );

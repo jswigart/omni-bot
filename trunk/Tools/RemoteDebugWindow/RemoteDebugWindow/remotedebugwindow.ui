@@ -96,7 +96,17 @@
          <number>1</number>
         </property>
         <item>
-         <widget class="MapWidget" name="graphics2d"/>
+         <widget class="MapWidget" name="graphics2d">
+          <property name="backgroundBrush">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>200</red>
+             <green>200</green>
+             <blue>200</blue>
+            </color>
+           </brush>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
