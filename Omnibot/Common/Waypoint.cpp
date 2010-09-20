@@ -71,7 +71,10 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 		db.writeFloat16( GetPosition().x, 0 );
 		db.writeFloat16( GetPosition().y, 0 );
 		db.writeFloat16( GetRadius(), 0 );
-		db.writeInt32( obColor(255, 255, 255) );
+		db.writeInt8( COLOR::WHITE.r() );
+		db.writeInt8( COLOR::WHITE.g() );
+		db.writeInt8( COLOR::WHITE.b() );
+		db.writeInt8( COLOR::WHITE.a() );
 		db.endSizeHeader();
 		m_NeedsSynced = ( db.endWrite() > 0 );
 	}
@@ -81,7 +84,7 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	{
 		ConnectionInfo & ci = (*it);
 
-		obColor linkColor = obColor(0, 255, 255);
+		obColor linkColor = COLOR::YELLOW;
 		if(IsAnyFlagOn(PathPlannerWaypoint::m_BlockableMask)) {
 			if(ci.m_Connection->IsAnyFlagOn(PathPlannerWaypoint::m_BlockableMask)) {
 				if ( ci.m_ConnectionFlags & F_LNK_CLOSED ) {
@@ -101,7 +104,10 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 			db.writeFloat16( GetPosition().y, 0 );
 			db.writeFloat16( ci.m_Connection->GetPosition().x, 0 );
 			db.writeFloat16( ci.m_Connection->GetPosition().y, 0 );
-			db.writeInt32( linkColor );
+			db.writeInt8( linkColor.r() );
+			db.writeInt8( linkColor.g() );
+			db.writeInt8( linkColor.b() );
+			db.writeInt8( linkColor.a() );
 			db.endSizeHeader();
 			if ( db.endWrite() > 0 ) {
 				ci.SetFlag( F_LNK_NEEDSYNC );

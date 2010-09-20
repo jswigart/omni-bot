@@ -15,7 +15,7 @@ MapWidget::MapWidget( QWidget *parent )
 	setScene( &world );
 
 	rootGroup = new QGraphicsItemGroup();
-	scene()->addItem( rootGroup );	
+	scene()->addItem( rootGroup );
 }
 
 void MapWidget::resizeEvent( QResizeEvent * event ) {
@@ -34,28 +34,6 @@ void MapWidget::resizeEvent( QResizeEvent * event ) {
 	verticalScrollBar()->setMaximum( sceneRect.height() );	
 	verticalScrollBar()->setPageStep( newSize.height() );
 	verticalScrollBar()->setSingleStep( 1 );
-}
-
-void MapWidget::mousePressEvent( QMouseEvent *event ) {	
-	/*if ( event->button() == Qt::LeftButton ) {
-		QList<QGraphicsItem *> selection = items( event->x(), event->y() );
-		if ( selection.size() > 0 ) {
-			QGraphicsPixmapItem *dragItem = qgraphicsitem_cast<QGraphicsPixmapItem*>( selection[ 0 ] );
-			if ( dragItem ) {
-				dragItems.clear();
-				dragItems.push_back( dragItem );
-
-				QDrag *drag = new QDrag(this);
-				QMimeData *mimeData = new QMimeData;
-
-				mimeData->setText( "dragLocal" );
-				drag->setMimeData( mimeData );
-				drag->setPixmap( dragItem->pixmap() );
-
-				Qt::DropAction dropAction = drag->exec();
-			}
-		}
-	}*/
 }
 
 void MapWidget::dragEnterEvent( QDragEnterEvent *event ) {
@@ -116,11 +94,10 @@ void MapWidget::dragMoveEvent ( QDragMoveEvent * event ) {
 }
 
 void MapWidget::wheelEvent( QWheelEvent * event ) {
-	if ( event->delta() > 0 ) {
-		scale( 1.1f, 1.1f );
-	} else {
-		scale( 0.9f, 0.9f );
-	}
+	float scrollAmount = 0.05f;
+	float scaleX = 1.0f + ((event->delta() > 0) ? 1.0f : -1.0f) * scrollAmount;
+	float scaleY = 1.0f + ((event->delta() > 0) ? 1.0f : -1.0f) * scrollAmount;
+	scale( scaleX, scaleY );
 	event->accept();
 }
 enum UserDataKeys { PathKey = 1 };
@@ -177,14 +154,17 @@ bool MapWidget::msgCircle( RemoteLib::DataBuffer & db ) {
 	enum { BufferSz = 512 };
 	char buffer[ BufferSz ] = {};
 
-	float x = 0.0f, y = 0.0f, r = 0.0f;
-	int32 clr = 0;
+	float x = 0.0f, y = 0.0f, rad = 0.0f;
+	int8 r = 0, g = 0, b = 0, a = 0;
 	QString path;
 	db.readString( buffer, BufferSz ); path = buffer;
 	db.readFloat16( x, 0 );
 	db.readFloat16( y, 0 );
-	db.readFloat16( r, 0 );
-	db.readInt32( clr );
+	db.readFloat16( rad, 0 );
+	db.readInt8( r );
+	db.readInt8( g );
+	db.readInt8( b );
+	db.readInt8( a );
 
 	QGraphicsItemGroup * itemGroup = findGroupForPath( path );
 
@@ -193,12 +173,12 @@ bool MapWidget::msgCircle( RemoteLib::DataBuffer & db ) {
 
 	QGraphicsEllipseItem * item = qgraphicsitem_cast<QGraphicsEllipseItem*>( existingItem );
 	if ( !item ) {
-		item = scene()->addEllipse( x - r * 0.5, y - r * 0.5, r, r );
+		item = scene()->addEllipse( x - rad * 0.5, y - rad * 0.5, rad, rad );
 		item->setData( PathKey, name );
 	} else {
-		item->setRect( x - r * 0.5, y - r * 0.5, r, r );
+		item->setRect( x - rad * 0.5, y - rad * 0.5, rad, rad );
 	}
-	QPen pen( clr );
+	QPen pen( qRgba( r, g, b, a ) );
 	item->setPen( pen );
 	item->setParentItem( itemGroup );
 	return false;
@@ -209,14 +189,17 @@ bool MapWidget::msgLine( RemoteLib::DataBuffer & db ) {
 	char buffer[ BufferSz ] = {};
 
 	float x0 = 0.0f, y0 = 0.0f, x1 = 0.0f, y1 = 0.0f;
-	int32 clr = 0;
+	int8 r = 0, g = 0, b = 0, a = 0;
 	QString path;
 	db.readString( buffer, BufferSz ); path = buffer;
 	db.readFloat16( x0, 0 );
 	db.readFloat16( y0, 0 );
 	db.readFloat16( x1, 0 );
 	db.readFloat16( y1, 0 );
-	db.readInt32( clr );
+	db.readInt8( r );
+	db.readInt8( g );
+	db.readInt8( b );
+	db.readInt8( a );
 
 	QGraphicsItemGroup * itemGroup = findGroupForPath( path );
 
@@ -230,7 +213,7 @@ bool MapWidget::msgLine( RemoteLib::DataBuffer & db ) {
 	} else {
 		item->setLine( x0, y0, x1, y1 );
 	}
-	QPen pen( clr );
+	QPen pen( qRgba( r, g, b, a ) );
 	item->setPen( pen );
 	item->setParentItem( itemGroup );
 	return false;

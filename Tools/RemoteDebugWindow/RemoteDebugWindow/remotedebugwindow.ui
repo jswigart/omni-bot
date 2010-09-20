@@ -106,6 +106,9 @@
             </color>
            </brush>
           </property>
+          <property name="dragMode">
+           <enum>QGraphicsView::ScrollHandDrag</enum>
+          </property>
          </widget>
         </item>
        </layout>

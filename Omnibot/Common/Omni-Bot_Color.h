@@ -60,6 +60,7 @@ public:
 	inline obColor fade(obuint8 _a) const { obColor c(cdata.m_RGBAi); c.cdata.m_RGBA[3]=_a; return c; }
 
 	inline obint32 rgba() const { return cdata.m_RGBAi; }
+	inline obint32 argb() const { return obColor( a(), r(), g(), b() ); }
 private:
 	union cdatatype
 	{

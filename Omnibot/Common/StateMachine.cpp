@@ -844,7 +844,10 @@ void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * stateP
 	localDb.writeString( pth.c_str() );
 	localDb.writeString( va( "%s (%.2f)", GetName().c_str(), GetLastPriority() ) );
 	localDb.writeString( s.str().c_str() );
-	localDb.writeInt32( renderColor );
+	localDb.writeInt8( renderColor.r() );
+	localDb.writeInt8( renderColor.g() );
+	localDb.writeInt8( renderColor.b() );
+	localDb.writeInt8( renderColor.a() );
 	localDb.endSizeHeader();
 	localDb.endWrite();
 		
