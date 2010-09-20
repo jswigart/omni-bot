@@ -150,7 +150,7 @@ public:
 	virtual bool AddWeaponId(const char * weaponName, int weaponId) { return false; }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
 #endif
 
 	IGame();

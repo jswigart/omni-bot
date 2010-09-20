@@ -5,11 +5,41 @@
 
 #include "dataBuffer.h"
 
-static const int tileSize = 64;
+//////////////////////////////////////////////////////////////////////////
+
+MapScene::MapScene() {
+	setItemIndexMethod( QGraphicsScene::BspTreeIndex );
+}
+
+void MapScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * contextMenuEvent ) {
+}
+
+void MapScene::keyPressEvent( QKeyEvent * keyEvent ) {
+	if ( keyEvent->key() == Qt::Key_Tab ) {
+
+	}
+}
+
+void MapScene::keyReleaseEvent( QKeyEvent * keyEvent ) {
+}
+
+void MapScene::mouseDoubleClickEvent( QGraphicsSceneMouseEvent * mouseEvent ) {
+}
+
+void MapScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent ) {
+}
+
+void MapScene::mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent ) {
+}
+
+void MapScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent ) {
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 MapWidget::MapWidget( QWidget *parent )
 : QGraphicsView( parent ) {
-	setViewport( new QGLWidget ); 
+	//setViewport( new QGLWidget ); 
 	setRenderHints( QPainter::HighQualityAntialiasing | QPainter::Antialiasing | QPainter::SmoothPixmapTransform );
 	
 	setScene( &world );
@@ -37,60 +67,15 @@ void MapWidget::resizeEvent( QResizeEvent * event ) {
 }
 
 void MapWidget::dragEnterEvent( QDragEnterEvent *event ) {
-	/*if ( event->mimeData()->hasUrls() ) {
-		event->acceptProposedAction();
-
-		for( int i = 0; i < event->mimeData()->urls().size(); ++i ) {
-			QDir dragFilePath = event->mimeData()->urls()[ i ].toLocalFile();
-			QPixmap newImage( dragFilePath.path() );
-			
-			QFileInfo dragFileInfo( dragFilePath.path() );
-			QFile dragFile( dragFilePath.path() );
-
-			QString copyToFile = QString( "data/scenarios/" ) + dragFileInfo.fileName();
-			dragFile.copy( copyToFile );
-
-			dragItems.push_back( scene()->addPixmap( newImage ) );
-			
-			QSize imageSize = newImage.size();
-			dragItems.back()->setOffset( -imageSize.width() * 0.5f, -imageSize.height() * 0.5f );
-			SnapToGrid( event->pos(), dragItems.back() );
-		}		
-	}
-	if ( event->mimeData()->hasText() ) {
-		if ( event->mimeData()->text() == "dragLocal" ) {
-			event->acceptProposedAction();
-
-			for( int i = 0; i < dragItems.size(); ++i ) {
-				SnapToGrid( event->pos(), dragItems[ i ] );
-			}
-		}
-	}*/
 }
 
 void MapWidget::dragLeaveEvent( QDragLeaveEvent * event ) {
-	/*for( int i = 0; i < dragItems.size(); ++i ) {
-		scene()->removeItem( dragItems[ i ] );
-		delete dragItems[ i ];
-		dragItems[ i ] = NULL;
-	}
-	dragItems.clear();
-	event->accept();*/	
 }
 
 void MapWidget::dropEvent( QDropEvent *event ) {
-	/*for( int i = 0; i < dragItems.size(); ++i ) {
-		SnapToGrid( event->pos(), dragItems[ i ] );
-	}
-	dragItems.clear();
-	event->acceptProposedAction();*/
 }
 
 void MapWidget::dragMoveEvent ( QDragMoveEvent * event ) {
-	/*for( int i = 0; i < dragItems.size(); ++i ) {
-		SnapToGrid( event->pos(), dragItems[ i ] );
-	}	
-	event->acceptProposedAction();*/
 }
 
 void MapWidget::wheelEvent( QWheelEvent * event ) {
@@ -213,8 +198,52 @@ bool MapWidget::msgLine( RemoteLib::DataBuffer & db ) {
 	} else {
 		item->setLine( x0, y0, x1, y1 );
 	}
-	QPen pen( qRgba( r, g, b, a ) );
-	item->setPen( pen );
+	
+	const QRgb color = qRgba( r, g, b, a );
+	if ( item->pen().color() != color ) {
+		item->setPen( QPen( color ) );
+	}
+
+	item->setParentItem( itemGroup );
+	return false;
+}
+
+bool MapWidget::msgObb( RemoteLib::DataBuffer & db ) {
+	enum { BufferSz = 512 };
+	char buffer[ BufferSz ] = {};
+
+	float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f, yaw = 0.0f;
+	int8 r = 0, g = 0, b = 0, a = 0;
+	QString path;
+	db.readString( buffer, BufferSz ); path = buffer;
+	db.readFloat16( x, 0 );
+	db.readFloat16( y, 0 );
+	db.readFloat16( w, 0 );
+	db.readFloat16( h, 0 );
+	db.readFloat16( yaw, 0 );
+	db.readInt8( r );
+	db.readInt8( g );
+	db.readInt8( b );
+	db.readInt8( a );
+
+	QGraphicsItemGroup * itemGroup = findGroupForPath( path );
+
+	QString name;
+	QGraphicsItem * existingItem = findItemInGroup( path, name, itemGroup );
+
+	QGraphicsRectItem * item = qgraphicsitem_cast<QGraphicsRectItem *>( existingItem );
+	if ( !item ) {
+		item = scene()->addRect( x, y, w, h );
+		item->setData( PathKey, name );
+	} else {
+		item->setRect( x, y, w, h );
+	}
+
+	const QRgb color = qRgba( r, g, b, a );
+	if ( item->pen().color() != color ) {
+		item->setPen( QPen( color ) );
+	}
+	
 	item->setParentItem( itemGroup );
 	return false;
 }
@@ -223,7 +252,7 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 	enum { BufferSz = 512 };
 	char buffer[ BufferSz ] = {};
 
-	float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f;
+	float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f, yaw = 0.0f;
 	int32 clr = 0;
 	QString path, imageFile;
 	db.readString( buffer, BufferSz ); path = buffer;
@@ -232,6 +261,7 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 	db.readFloat16( y, 0 );
 	db.readFloat16( w, 0 );
 	db.readFloat16( h, 0 );
+	db.readFloat16( yaw, 0 );
 
 	QGraphicsItemGroup * itemGroup = findGroupForPath( path );
 
@@ -247,9 +277,17 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 		item = scene()->addPixmap( pix );
 		item->setOffset( -w*0.5f, -h*0.5f );
 		item->setData( PathKey, name );
+		item->setToolTip( name );
+		item->setCursor( Qt::CrossCursor );
+		item->setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable );
 	} else {		
 		// todo:
 	}
+
+	/*QTransform trans;
+	trans.translate( x, y );
+	trans.rotateRadians( yaw );*/
+
 	item->setPos( x, y );
 	item->setParentItem( itemGroup );
 	return !db.hasReadError();

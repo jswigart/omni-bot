@@ -284,7 +284,6 @@ void IGameManager::UpdateGame()
 						sendBuffer.endWrite();
 						conn->setUserData( IGame::GetTime() + 5000 );
 					}
-
 					m_Game->Sync( sendBuffer, conn->isNewConnection() );
 					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
 					conn->clearNewConnection();

@@ -506,7 +506,7 @@ void ET_Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 		classImg = "et/class_covertops.png";
 		break;
 	}
-
+	
 	Box3f obb;
 	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
 
@@ -519,6 +519,7 @@ void ET_Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	db.writeFloat16( obb.Center.y, 0 );
 	db.writeFloat16( obb.Extent[0] * 2.0f, 0 );
 	db.writeFloat16( obb.Extent[1] * 2.0f, 0 );
+	db.writeFloat16( GetFacingVector().XYHeading(), 0 );
 	db.endSizeHeader();
 	db.endWrite();
 
