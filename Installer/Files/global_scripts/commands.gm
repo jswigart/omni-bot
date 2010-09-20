@@ -1461,3 +1461,18 @@ Commands["dbg_goalavailability"] =
 		"toggle goal availability debugging",
 	},
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["draw_paththrough"] =
+{
+	Func = function(_params)
+	{
+		Util.RenderPaththroughNodes(_params[0]);
+	},
+
+	Help =
+	{
+		"render 3d text over paththrough node locations",
+	},
+};

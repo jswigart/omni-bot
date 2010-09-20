@@ -25,7 +25,7 @@ global Map =
 	OpsDyno = 0,
 	WestDyno = 0,
 	EastDyno = 0,
-	
+
 	FriendlyFire,
 
 	Airstrike =
@@ -37,7 +37,7 @@ global Map =
 			Waypoint = "ascoalflag",
 		},
 	},
-	
+
 	Roles =
 	{
 		AXIS =
@@ -82,7 +82,7 @@ global Map =
 				sleep( 4 );
 			},
 		},
-		
+
 		tyelebotfull =
 		{
 			navigate = function( _this )
@@ -101,7 +101,7 @@ global Map =
 				_this.Bot.HoldButton( BTN.FORWARD, 4.5 );
 				sleep( 4.5 );
 			},
-		},		
+		},
 
 		elejump =
 		{
@@ -129,7 +129,7 @@ global Map =
 				sleep( 2 );
 			},
 		},
-		
+
 		aaeledown =
 		{
 			navigate = function( _this )
@@ -138,7 +138,7 @@ global Map =
 				sleep( 2 );
 				_this.ReleaseAimRequest();
 			},
-		},		
+		},
 
 		cyladder =
 		{
@@ -468,7 +468,7 @@ global Map =
 				if ( Map.AxisInWarehouse == true ) {
 					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
 				}
-				
+
 				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
 				{
@@ -512,7 +512,7 @@ global Map =
 				if ( Map.AxisInRuins == true ) {
 					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
 				}
-				
+
 				Map.WarehouseASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.WarehouseASTimer ) && ( Map.FlagStatus != 2 ) )
 				{

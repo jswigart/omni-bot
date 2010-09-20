@@ -268,7 +268,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_t364 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_Barricade.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_.*" );
 
 		Wp.SetWaypointFlag( "ladder", "closed", false );    // Open up the ladder
 		Util.MapDebugPrint( "eval_beach_shift" );
