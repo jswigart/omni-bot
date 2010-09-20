@@ -2971,3 +2971,46 @@ member SetAllRoles = function(obj)
 		print("Util.SetAllRoles: expected MapGoal or Bot, got " + type );
 	}
 };
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member FindPaththroughNodes = function()
+{
+	if (!Map) { global Map = table(); }
+	if (!Map.PTNodes) { Map.PTNodes = table(); }
+
+	// repeated calls refresh the list
+	tableClear(Map.PTNodes);
+
+	wpTable = {};
+	Wp.GetAllWaypoints( wpTable );
+
+	foreach( id and waypoint in wpTable ) {
+		foreach( ptype and value in waypoint.property ) {
+			if ( ptype == "paththrough" ) {
+				Map.PTNodes[ id ] = table();
+				Map.PTNodes[ id ].position = waypoint.position;
+				Map.PTNodes[ id ].name = value;
+			}
+		}
+	}
+};
+///////////////////////////////////////////////////////////////////////////////
+//
+member RenderPaththroughNodes = function(param)
+{
+	if ( param == 1 ) {
+		Util.FindPaththroughNodes();
+		Map.RenderPT = true;
+	}
+	else {
+		Map.RenderPT = false;
+	}
+
+	while( Map.RenderPT ) {
+		foreach ( id and ptnode in Map.PTNodes ) {
+			DrawText3d(ptnode.position+Vector3(0,0,48),ptnode.name,COLOR.YELLOW,2,1000);
+		}
+		sleep(2);
+	}
+};

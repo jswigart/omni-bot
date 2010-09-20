@@ -24,6 +24,7 @@ this.OnPathThrough = function( data )
 	}
 
 	if ( !this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) ) {
+		sleep( 1 );
 		return false;
 	}
 
