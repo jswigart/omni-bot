@@ -84,7 +84,9 @@ public:
 
 	void PostLoad();
 
+#ifdef ENABLE_REMOTE_DEBUGGING
 	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
 
 	Waypoint();
 	Waypoint(const Vector3f &_pos, float _radius, const Vector3f &_face = Vector3f::ZERO);
