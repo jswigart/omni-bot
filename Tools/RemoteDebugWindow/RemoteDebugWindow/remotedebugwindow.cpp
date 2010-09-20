@@ -222,8 +222,6 @@ void RemoteDebugWindow::processMessages() {
 		recvdData.size(),
 		RemoteLib::DataBuffer::ModeRead );
 
-	const char * lastTagProcessed = "";
-
 	db.setAssertOnError();
 	while( db.getReadBytesLeft() >= 4 ) {
 		const uint32 baseBytes = db.getBytesRead();
@@ -241,9 +239,13 @@ void RemoteDebugWindow::processMessages() {
 		
 		switch( tagId )
 		{
+		case RemoteLib::ID_renderHints:
+			{
+				msgRenderHints( db );
+				break;
+			}			
 		case RemoteLib::ID_ack:
 			{
-				lastTagProcessed = "ack";
 				int sz = 4;
 				// keepalive
 				tcpSocket->write( (char*)&sz, 4 );
@@ -252,25 +254,26 @@ void RemoteDebugWindow::processMessages() {
 			}
 		case RemoteLib::ID_treeNode:
 			{
-				lastTagProcessed = "treeNode";
 				msgTreeNode( db );
 				break;
 			}
 		case RemoteLib::ID_circle:
 			{
-				lastTagProcessed = "circle";
 				ui.graphics2d->msgCircle( db );
 				break;
 			}
 		case RemoteLib::ID_line:
 			{
-				lastTagProcessed = "line";
 				ui.graphics2d->msgLine( db );
+				break;
+			}
+		case RemoteLib::ID_obb:
+			{
+				ui.graphics2d->msgObb( db );
 				break;
 			}
 		case RemoteLib::ID_image:
 			{
-				lastTagProcessed = "image";
 				ui.graphics2d->msgImage( db );
 				break;
 			}
@@ -281,6 +284,24 @@ void RemoteDebugWindow::processMessages() {
 		db.endRead();
 	}
 	recvdData.remove( 0, db.getBytesRead() );
+}
+
+bool RemoteDebugWindow::msgRenderHints( RemoteLib::DataBuffer & db ) {
+	QString configName;
+
+	enum { BufferSz = 512 };
+	char buffer[ BufferSz ] = {};
+	db.readString( buffer, BufferSz ); configName = buffer;
+
+	QSettings settings("settings.ini", QSettings::IniFormat);
+
+	settings.beginGroup( configName );
+	const float viewScaleX = settings.value( "scaleX", QVariant( 1.0f ) ).toFloat();
+	const float viewScaleY = settings.value( "scaleY", QVariant( 1.0f ) ).toFloat();
+	ui.graphics2d->scale( viewScaleX, viewScaleY );
+	settings.endGroup();
+
+	return !db.hasReadError();
 }
 
 bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {

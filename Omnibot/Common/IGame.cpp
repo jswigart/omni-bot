@@ -673,6 +673,15 @@ void IGame::UpdateGame()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	if ( fullSync ) {
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_renderHints );
+		db.writeString( va( "Omnibot" ) );
+		db.endSizeHeader();
+		db.endWrite();
+	}
+
 	for(int i = 0; i < MAX_PLAYERS; ++i) {
 		if(m_ClientList[i]) {
 			m_ClientList[i]->Sync( db, fullSync );
