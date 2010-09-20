@@ -1316,11 +1316,7 @@ qboolean CanDamage( gentity_t *targ, vec3_t origin ) {
 	}
 
 	trap_Trace( &tr, origin, vec3_origin, vec3_origin, midpoint, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1.0 ) {
-		return qtrue;
-	}
-
-	if ( &g_entities[tr.entityNum] == targ ) {
+	if ( tr.fraction == 1.0 || &g_entities[tr.entityNum] == targ ) {
 		return qtrue;
 	}
 
@@ -1329,81 +1325,92 @@ qboolean CanDamage( gentity_t *targ, vec3_t origin ) {
 		VectorCopy( targ->client->ps.maxs, offsetmaxs );
 	}
 
+	// cs: test. send one trace with the bounds rather than 8 separate. seems fine so far
+	VectorCopy( midpoint, dest );
+	trap_Trace( &tr, origin, offsetmins, offsetmaxs, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		//G_Printf("CanDamage: bounds trace success\n");
+		return qtrue;
+	}
+	//else {
+	//	G_Printf("CanDamage: bounds trace fail\n");
+	//}
+
 	// this should probably check in the plane of projection,
 	// rather than in world coordinate
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmaxs[0];
-	dest[1] += offsetmaxs[1];
-	dest[2] += offsetmaxs[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmaxs[0];
+	//dest[1] += offsetmaxs[1];
+	//dest[2] += offsetmaxs[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmaxs[0];
-	dest[1] += offsetmins[1];
-	dest[2] += offsetmaxs[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmaxs[0];
+	//dest[1] += offsetmins[1];
+	//dest[2] += offsetmaxs[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmins[0];
-	dest[1] += offsetmaxs[1];
-	dest[2] += offsetmaxs[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmins[0];
+	//dest[1] += offsetmaxs[1];
+	//dest[2] += offsetmaxs[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmins[0];
-	dest[1] += offsetmins[1];
-	dest[2] += offsetmaxs[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmins[0];
+	//dest[1] += offsetmins[1];
+	//dest[2] += offsetmaxs[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	// =========================
+	//// =========================
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmaxs[0];
-	dest[1] += offsetmaxs[1];
-	dest[2] += offsetmins[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmaxs[0];
+	//dest[1] += offsetmaxs[1];
+	//dest[2] += offsetmins[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmaxs[0];
-	dest[1] += offsetmins[1];
-	dest[2] += offsetmins[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmaxs[0];
+	//dest[1] += offsetmins[1];
+	//dest[2] += offsetmins[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmins[0];
-	dest[1] += offsetmaxs[1];
-	dest[2] += offsetmins[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmins[0];
+	//dest[1] += offsetmaxs[1];
+	//dest[2] += offsetmins[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
-	VectorCopy( midpoint, dest );
-	dest[0] += offsetmins[0];
-	dest[1] += offsetmins[2];
-	dest[2] += offsetmins[2];
-	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-		return qtrue;
-	}
+	//VectorCopy( midpoint, dest );
+	//dest[0] += offsetmins[0];
+	//dest[1] += offsetmins[1];
+	//dest[2] += offsetmins[2];
+	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	//	return qtrue;
+	//}
 
 	return qfalse;
 }
@@ -1426,9 +1433,6 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 	qboolean hitClient = qfalse;
 // JPW NERVE
 	float boxradius;
-	vec3_t dest;
-	trace_t tr;
-	vec3_t midpoint;
 // jpw
 
 
@@ -1479,8 +1483,6 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 			continue;
 		}
 
-		points = damage * ( 1.0 - dist / radius );
-
 // JPW NERVE -- different radiusdmg behavior for MP -- big explosions should do less damage (over less distance) through failed traces
 		if ( CanDamage( ent, origin ) ) {
 			if ( LogAccuracyHit( ent, attacker ) ) {
@@ -1490,27 +1492,8 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 			// push the center of mass higher than the origin so players
 			// get knocked into the air more
 			dir[2] += 24;
+			points = damage * ( 1.0 - dist / radius );
 			G_Damage( ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod );
-		}
-// JPW NERVE --  MP weapons should do 1/8 damage through walls over 1/8th distance
-		else {
-			VectorAdd( ent->r.absmin, ent->r.absmax, midpoint );
-			VectorScale( midpoint, 0.5, midpoint );
-			VectorCopy( midpoint, dest );
-
-			trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-			if ( tr.fraction < 1.0 ) {
-				VectorSubtract( dest,origin,dest );
-				dist = VectorLength( dest );
-				if ( dist < radius * 0.2f ) { // closer than 1/4 dist
-					if ( LogAccuracyHit( ent, attacker ) ) {
-						hitClient = qtrue;
-					}
-					VectorSubtract( ent->r.currentOrigin, origin, dir );
-					dir[2] += 24;
-					G_Damage( ent, NULL, attacker, dir, origin, (int)( points * 0.1f ), DAMAGE_RADIUS, mod );
-				}
-			}
 		}
 // jpw
 	}
@@ -1560,9 +1543,6 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 	int i, e;
 	qboolean hitClient = qfalse;
 	float boxradius;
-	vec3_t dest;
-	trace_t tr;
-	vec3_t midpoint;
 	int flags = DAMAGE_RADIUS;
 
 	if ( radius < 1 ) {
@@ -1604,8 +1584,6 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 			continue;
 		}
 
-		points = damage * ( 1.0 - dist / radius );
-
 		if ( CanDamage( ent, origin ) ) {
 			if ( ent->dmgparent ) {
 				ent = ent->dmgparent;
@@ -1623,34 +1601,8 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 			// get knocked into the air more
 			dir[2] += 24;
 
-
+			points = damage * ( 1.0 - dist / radius );
 			G_Damage( ent, inflictor, attacker, dir, origin, (int)points, flags, mod );
-		} else {
-			VectorAdd( ent->r.absmin, ent->r.absmax, midpoint );
-			VectorScale( midpoint, 0.5, midpoint );
-			VectorCopy( midpoint, dest );
-
-			trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-			if ( tr.fraction < 1.0 ) {
-				VectorSubtract( dest, origin, dest );
-				dist = VectorLength( dest );
-				if ( dist < radius * 0.2f ) { // closer than 1/4 dist
-					if ( ent->dmgparent ) {
-						ent = ent->dmgparent;
-					}
-
-					if ( ent->dmginloop ) {
-						continue;
-					}
-
-					if ( LogAccuracyHit( ent, attacker ) ) {
-						hitClient = qtrue;
-					}
-					VectorSubtract( ent->r.currentOrigin, origin, dir );
-					dir[2] += 24;
-					G_Damage( ent, inflictor, attacker, dir, origin, (int)( points * 0.1f ), flags, mod );
-				}
-			}
 		}
 	}
 	return hitClient;
