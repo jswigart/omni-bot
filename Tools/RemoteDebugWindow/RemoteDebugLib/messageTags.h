@@ -6,7 +6,7 @@ namespace RemoteLib
 {
 	enum MsgTagId 
 	{
-		ID_renderHints = REMOTELIB_MAKE_ID32('R','H','N','T'),
+		ID_configName = REMOTELIB_MAKE_ID32('C','O','N','F'),
 		ID_ack = REMOTELIB_MAKE_ID32('A','C','K','0'),
 		ID_treeNode = REMOTELIB_MAKE_ID32('T','R','E','N'),
 		ID_circle = REMOTELIB_MAKE_ID32('C','I','R','C'),

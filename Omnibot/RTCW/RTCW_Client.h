@@ -44,7 +44,7 @@ public:
 	void SetupBehaviorTree();
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+	void UpdateSyncImage( SyncImage & syncImage );
 #endif
 
 	RTCW_Client();

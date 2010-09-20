@@ -239,11 +239,11 @@ void RemoteDebugWindow::processMessages() {
 		
 		switch( tagId )
 		{
-		case RemoteLib::ID_renderHints:
+		case RemoteLib::ID_configName:
 			{
-				msgRenderHints( db );
+				msgConfigName( db );
 				break;
-			}			
+			}
 		case RemoteLib::ID_ack:
 			{
 				int sz = 4;
@@ -286,7 +286,7 @@ void RemoteDebugWindow::processMessages() {
 	recvdData.remove( 0, db.getBytesRead() );
 }
 
-bool RemoteDebugWindow::msgRenderHints( RemoteLib::DataBuffer & db ) {
+bool RemoteDebugWindow::msgConfigName( RemoteLib::DataBuffer & db ) {
 	QString configName;
 
 	enum { BufferSz = 512 };

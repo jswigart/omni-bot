@@ -252,16 +252,21 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 	enum { BufferSz = 512 };
 	char buffer[ BufferSz ] = {};
 
+	int8 r = 0, g = 0, b = 0;
 	float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f, yaw = 0.0f;
 	int32 clr = 0;
-	QString path, imageFile;
+	QString path, imageFile, imageOverlay;
 	db.readString( buffer, BufferSz ); path = buffer;
 	db.readString( buffer, BufferSz ); imageFile = buffer;
+	db.readString( buffer, BufferSz ); imageOverlay = buffer;
 	db.readFloat16( x, 0 );
 	db.readFloat16( y, 0 );
 	db.readFloat16( w, 0 );
 	db.readFloat16( h, 0 );
 	db.readFloat16( yaw, 0 );
+	db.readInt8( r );
+	db.readInt8( g );
+	db.readInt8( b );
 
 	QGraphicsItemGroup * itemGroup = findGroupForPath( path );
 
@@ -280,13 +285,18 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 		item->setToolTip( name );
 		item->setCursor( Qt::CrossCursor );
 		item->setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable );
+	
+		/*QGraphicsColorizeEffect * colorize = ;
+		colorize->setColor( qRgb( r,g,b ) );*/
+		item->setGraphicsEffect( new QGraphicsColorizeEffect() );
 	} else {		
 		// todo:
 	}
 
-	/*QTransform trans;
-	trans.translate( x, y );
-	trans.rotateRadians( yaw );*/
+	QGraphicsColorizeEffect *colorize = static_cast<QGraphicsColorizeEffect*>( item->graphicsEffect() );
+	if ( colorize ) {
+		colorize->setColor( qRgb( r,g,b ) );
+	}
 
 	item->setPos( x, y );
 	item->setParentItem( itemGroup );

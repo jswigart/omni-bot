@@ -34,6 +34,15 @@ typedef boost::weak_ptr<Client> ClientWPtr;
 typedef MessageDepot<Event_Sound,1024> SoundDepot;
 extern SoundDepot g_SoundDepot;
 
+struct SyncImage {
+	String		imageName;
+	String		imageOverlayName;
+	Vector2f	imagePosition;
+	Vector2f	imageSize;
+	obColor		imageColor;
+	float		imageHeading;
+};
+
 // class: IGame
 //		This class provides common functionality for various game types.
 //		Specific games will derive from this class to expand and implement
@@ -148,6 +157,8 @@ public:
 	virtual void InitGlobalStates() {}
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId) { return false; }
+
+	virtual const char * RemoteConfigName() const { return "Omnibot"; }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );

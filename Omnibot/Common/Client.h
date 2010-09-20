@@ -265,6 +265,7 @@ public:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+	virtual void UpdateSyncImage( SyncImage & syncImage ) {}
 #endif
 
 	Client();

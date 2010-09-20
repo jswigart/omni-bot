@@ -44,7 +44,7 @@ private:
 private slots:
 	void processMessages();
 
-	bool msgRenderHints( RemoteLib::DataBuffer & db );
+	bool msgConfigName( RemoteLib::DataBuffer & db );
 	bool msgTreeNode( RemoteLib::DataBuffer & db );
 
 	// actions

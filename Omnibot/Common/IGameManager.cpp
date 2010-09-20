@@ -284,6 +284,16 @@ void IGameManager::UpdateGame()
 						sendBuffer.endWrite();
 						conn->setUserData( IGame::GetTime() + 5000 );
 					}
+
+					if ( conn->isNewConnection() ) {
+						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+						sendBuffer.startSizeHeader();
+						sendBuffer.writeInt32( RemoteLib::ID_configName );
+						sendBuffer.writeString( m_Game->RemoteConfigName() );
+						sendBuffer.endSizeHeader();
+						sendBuffer.endWrite();
+					}
+
 					m_Game->Sync( sendBuffer, conn->isNewConnection() );
 					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
 					conn->clearNewConnection();

@@ -383,40 +383,35 @@ void RTCW_Client::SetupBehaviorTree()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void RTCW_Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	const char * classImg = "";
+void RTCW_Client::UpdateSyncImage( SyncImage & syncImage ) { 
 	switch ( GetClass() )
 	{
 	case RTCW_CLASS_SOLDIER:
-		classImg = "et/class_soldier.png";
+		syncImage.imageName = "et/class_soldier.png";
 		break;
 	case RTCW_CLASS_MEDIC:
-		classImg = "et/class_medic.png";
+		syncImage.imageName = "et/class_medic.png";
 		break;
 	case RTCW_CLASS_ENGINEER:
-		classImg = "et/class_engineer.png";
+		syncImage.imageName = "et/class_engineer.png";
 		break;
 	case RTCW_CLASS_LIEUTENANT:
-		classImg = "et/class_fieldops.png";
+		syncImage.imageName = "et/class_fieldops.png";
+		break;
+	}
+	switch ( GetTeam() )
+	{
+	case RTCW_TEAM_ALLIES:
+		syncImage.imageColor = COLOR::BLUE;
+		break;
+	case RTCW_TEAM_AXIS:
+		syncImage.imageColor = COLOR::RED;
 		break;
 	}
 
-	Box3f obb;
-	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
-
-	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_image );	
-	db.writeString( va( "client/%s", GetName( true ) ) );
-	db.writeString( classImg );
-	db.writeFloat16( obb.Center.x, 0 );
-	db.writeFloat16( obb.Center.y, 0 );
-	db.writeFloat16( obb.Extent[0] * 2.0f, 0 );
-	db.writeFloat16( obb.Extent[1] * 2.0f, 0 );
-	db.writeFloat16( GetFacingVector().XYHeading(), 0 );
-	db.endSizeHeader();
-	db.endWrite();
-
-	Client::Sync( db, fullSync );
+	if ( GetHealthPercent() <= 0.0f ) {
+		syncImage.imageColor = COLOR::GREY;
+	}
 }
+
 #endif
