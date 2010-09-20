@@ -542,12 +542,18 @@ void TriggerManager::cmdDrawTriggers(const StringVector &_args)
 
 void TriggerManager::cmdDebugTriggers(const StringVector &_args)
 {
-	if(_args.size() >= 2)
+	int numArgs = _args.size();
+	m_DebugTriggersExpr = ".*";
+
+	if(numArgs >= 2)
 	{
 		if(!m_DebugTriggers && Utils::StringToTrue(_args[1]))
 			m_DebugTriggers = true;
 		else if(m_DebugTriggers && Utils::StringToFalse(_args[1]))
 			m_DebugTriggers = false;
+
+		if (numArgs >= 3)
+			m_DebugTriggersExpr = va("%s",_args[2].c_str());
 	}
 	else
 		m_DebugTriggers = !m_DebugTriggers;
@@ -592,12 +598,15 @@ void TriggerManager::HandleTrigger(const TriggerInfo &_triggerInfo)
 
 	if(m_DebugTriggers)
 	{
-		StringStr msg;
-		msg << "<" << (bScriptCallback ? "+++" : "---") << ">" << (_triggerInfo);
-		EngineFuncs::ConsoleMessage(msg.str().c_str());
-		LOG(msg.str().c_str());
-		
-		Utils::OutputDebug(kInfo, msg.str().c_str());
+		if ( _triggerInfo.m_TagName[0] && Utils::RegexMatch(m_DebugTriggersExpr.c_str(), va("%s",_triggerInfo.m_TagName)) )
+		{
+			StringStr msg;
+			msg << "<" << (bScriptCallback ? "+++" : "---") << ">" << (_triggerInfo);
+			EngineFuncs::ConsoleMessage(msg.str().c_str());
+			LOG(msg.str().c_str());
+			
+			Utils::OutputDebug(kInfo, msg.str().c_str());
+		}
 	}
 }
 

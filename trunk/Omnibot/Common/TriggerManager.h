@@ -61,6 +61,8 @@ protected:
 
 	int		m_NextDrawTime;
 
+	String 	m_DebugTriggersExpr;
+
 	bool	m_DebugTriggers;
 	bool	m_DrawTriggers;
 
