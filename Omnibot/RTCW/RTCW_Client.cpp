@@ -381,3 +381,41 @@ void RTCW_Client::SetupBehaviorTree()
 	GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
 	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void RTCW_Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	const char * classImg = "";
+	switch ( GetClass() )
+	{
+	case RTCW_CLASS_SOLDIER:
+		classImg = "et/class_soldier.png";
+		break;
+	case RTCW_CLASS_MEDIC:
+		classImg = "et/class_medic.png";
+		break;
+	case RTCW_CLASS_ENGINEER:
+		classImg = "et/class_engineer.png";
+		break;
+	case RTCW_CLASS_LIEUTENANT:
+		classImg = "et/class_fieldops.png";
+		break;
+	}
+
+	Box3f obb;
+	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
+
+	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	db.startSizeHeader();
+	db.writeInt32( RemoteLib::ID_image );	
+	db.writeString( va( "client/%s", GetName( true ) ) );
+	db.writeString( classImg );
+	db.writeFloat16( obb.Center.x, 0 );
+	db.writeFloat16( obb.Center.y, 0 );
+	db.writeFloat16( obb.Extent[0] * 2.0f, 0 );
+	db.writeFloat16( obb.Extent[1] * 2.0f, 0 );
+	db.endSizeHeader();
+	db.endWrite();
+
+	Client::Sync( db, fullSync );
+}
+#endif
