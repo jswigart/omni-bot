@@ -284,7 +284,7 @@ void RemoteDebugWindow::processMessages() {
 }
 
 bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {
-	int32 clr = 0;
+	int8 r = 0, g = 0, b = 0, a = 0;
 	QString path, name, dbgInfo;
 	enum { BufferSz = 512 };
 	char buffer[ BufferSz ] = {};
@@ -292,14 +292,17 @@ bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {
 	db.readString( buffer, BufferSz ); path = buffer;
 	db.readString( buffer, BufferSz ); name = buffer;
 	db.readString( buffer, BufferSz ); dbgInfo = buffer;
-	db.readInt32( clr );
+	db.readInt8( r );
+	db.readInt8( g );
+	db.readInt8( b );
+	db.readInt8( a );
 
 	if ( !db.hasReadError() ) {
 		QModelIndex n0 = findNodeForPath( path );
 		QModelIndex n1 = model->index( n0.row(), 1, n0.parent() );
 		model->setData( n0, name, Qt::DisplayRole);
 		model->setData( n1, dbgInfo, Qt::DisplayRole);
-		model->setData( n0, QColor((unsigned int)clr), Qt::TextColorRole );
+		model->setData( n0, QColor( qRgba( r, g, b, a ) ), Qt::TextColorRole );
 	} else {
 		Q_ASSERT_X( !db.hasReadError(), __FUNCTION__, "databuffer read error" );
 	}

@@ -26,10 +26,10 @@ protected:
 	void dropEvent( QDropEvent *event );
 
 	void wheelEvent( QWheelEvent * event );
-
-	void mousePressEvent( QMouseEvent *event );
 private:
 	QGraphicsScene			world;
+
+	QPointF					sceneLeftClickPos;
 
 	QGraphicsItemGroup *	rootGroup;
 

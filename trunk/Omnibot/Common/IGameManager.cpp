@@ -33,10 +33,10 @@ public:
 		EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
 	}
 	void OnDisConnect( RemoteLib::Connection * conn ) {
-		EngineFuncs::ConsoleMessage( va( "Disconnected %s", conn->getIp() ) );
+		EngineFuncs::ConsoleMessage( va( "Remote disconnected %s", conn->getIp() ) );
 	}
 	void OnAcceptConnection( RemoteLib::Connection * conn ) {
-		EngineFuncs::ConsoleMessage( va( "Connected to %s", conn->getIp() ) );
+		EngineFuncs::ConsoleMessage( va( "Remote connected to %s", conn->getIp() ) );
 	}
 } connectionCallbacks;
 #endif
