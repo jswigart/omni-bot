@@ -192,10 +192,41 @@ void Client::Update()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	SyncImage image;
+
+	// update shared base properties
+	Box3f obb;
+	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
+	image.imageColor = COLOR::WHITE;
+	image.imageName = "global/noimage";
+	image.imagePosition = obb.Center.As2d();
+	image.imageHeading = GetFacingVector().XYHeading();
+	image.imageSize = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
+
+	UpdateSyncImage( image );
+
 	if ( m_StateRoot ) {
-		m_StateRoot->Sync( db, fullSync, GetName( true ) );
+		m_StateRoot->Sync( db, fullSync, GetName( true ), image );
 	}
+
+	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	db.startSizeHeader();
+	db.writeInt32( RemoteLib::ID_image );	
+	db.writeString( va( "client/%s", GetName( true ) ) );
+	db.writeString( image.imageName.c_str() );
+	db.writeString( image.imageOverlayName.c_str() );
+	db.writeFloat16( image.imagePosition.x, 0 );
+	db.writeFloat16( image.imagePosition.y, 0 );
+	db.writeFloat16( image.imageSize.x, 0 );
+	db.writeFloat16( image.imageSize.y, 0 );
+	db.writeFloat16( image.imageHeading, 0 );
+	db.writeInt8( image.imageColor.r() );
+	db.writeInt8( image.imageColor.g() );
+	db.writeInt8( image.imageColor.b() );
+	db.endSizeHeader();
+	db.endWrite();
 }
+
 #endif
 
 const char *Client::GetName(bool _clean) const
