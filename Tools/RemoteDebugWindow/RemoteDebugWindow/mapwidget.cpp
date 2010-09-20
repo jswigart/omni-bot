@@ -198,7 +198,8 @@ bool MapWidget::msgCircle( RemoteLib::DataBuffer & db ) {
 	} else {
 		item->setRect( x - r * 0.5, y - r * 0.5, r, r );
 	}
-	item->pen().setColor( clr );
+	QPen pen( clr );
+	item->setPen( pen );
 	item->setParentItem( itemGroup );
 	return false;
 }
@@ -229,7 +230,8 @@ bool MapWidget::msgLine( RemoteLib::DataBuffer & db ) {
 	} else {
 		item->setLine( x0, y0, x1, y1 );
 	}
-	item->pen().setColor( clr );
+	QPen pen( clr );
+	item->setPen( pen );
 	item->setParentItem( itemGroup );
 	return false;
 }
@@ -269,73 +271,3 @@ bool MapWidget::msgImage( RemoteLib::DataBuffer & db ) {
 	item->setParentItem( itemGroup );
 	return !db.hasReadError();
 }
-
-/*
-void MapWidget::processMessageMap( const Ipc::GraphicsMsg & msg ) {
-	QGraphicsItemGroup * itemGroup = findGroupForPath( msg.path );
-
-	QString itemName = msg.path;
-	const int lastSlash = itemName.lastIndexOf( "/" );
-	if ( lastSlash != -1 ) {
-		itemName = itemName.midRef( lastSlash+1 ).toString();
-	}
-
-	QGraphicsItem * existingItem = NULL;
-
-	// look for the item in this group
-	QList<QGraphicsItem *>::iterator it;
-	for ( it = itemGroup->children().begin(); it != itemGroup->children().end(); ++it ) {
-		if ( (*it)->data( PathKey ).toString() == itemName ) {
-			existingItem = (*it);
-		}
-	}
-
-	QColor itemColor( msg.color );
-
-	switch( msg.type )
-	{
-	case Ipc::GraphicsMsg::PrimCircle:
-		{
-			QGraphicsEllipseItem * item = qgraphicsitem_cast<QGraphicsEllipseItem*>( existingItem );
-			if ( !item ) {
-				item = scene()->addEllipse( msg.x - msg.sx * 0.5, msg.y - msg.sy * 0.5, msg.sx, msg.sy );
-				item->setData( PathKey, itemName );
-			} else {
-				item->setRect( msg.x - msg.sx * 0.5, msg.y - msg.sy * 0.5, msg.sx, msg.sy );
-			}
-			item->pen().setColor( itemColor );
-
-			item->setParentItem( itemGroup );
-			break;
-		}
-	case Ipc::GraphicsMsg::PrimLine:
-		{
-			QGraphicsLineItem  * item = qgraphicsitem_cast<QGraphicsLineItem *>( existingItem );
-			if ( !item ) {
-				item = scene()->addLine( msg.x, msg.y, msg.sx, msg.sy );
-				item->setData( PathKey, itemName );
-			} else {
-				item->setLine( msg.x, msg.y, msg.sx, msg.sy );
-			}
-			item->pen().setColor( itemColor );
-
-			item->setParentItem( itemGroup );
-			break;
-		}
-	case Ipc::GraphicsMsg::PrimBox:
-		{
-			QGraphicsRectItem * item = qgraphicsitem_cast<QGraphicsRectItem *>( existingItem );
-			if ( !item ) {
-				item = scene()->addRect( msg.x - msg.sx * 0.5, msg.y - msg.sy * 0.5, msg.sx, msg.sy );
-				item->setData( PathKey, itemName );
-			} else {
-				item->setRect( msg.x - msg.sx * 0.5, msg.y - msg.sy * 0.5, msg.sx, msg.sy );
-			}
-			item->pen().setColor( itemColor );
-
-			item->setParentItem( itemGroup );
-			break;
-		}
-	}
-}
-*/
