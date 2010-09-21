@@ -44,12 +44,16 @@ this.GetPriority = function()
 			{ block(0); }
 
 		tEnt = this.Bot.GetTarget();
+		tDist = 9999; // init in case GetTargetInfo doesn't return anything
 
 		if( tEnt && this.ShouldCombatMovement() )
 		{
 			this.Bot.ResetStuckTime();
 			ti = this.Bot.GetTargetInfo(tEnt);
-			tDist = ti.Distance;
+			if ( ti && ti.Distance )
+			{
+				tDist = ti.Distance;
+			}
 
 			this.Priority = 0.1;
 
