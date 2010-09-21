@@ -1894,7 +1894,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\lsqlite3.h"
+				RelativePath="..\sqlite\lsqlite3.h"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
