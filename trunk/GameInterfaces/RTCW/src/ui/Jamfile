@@ -12,5 +12,5 @@ SOURCES = [ glob ui_*.c ]
 		  ../game/q_shared.c
 		;
 
-lib ui.mp.i386.so : $(SOURCES) : <toolset>gcc:<cflags>-w <cflags>-DNO_BOT_SUPPORT <cflags>-fno-strict-aliasing ;
+lib ui.mp.i386.so : $(SOURCES) : <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing ;
 
