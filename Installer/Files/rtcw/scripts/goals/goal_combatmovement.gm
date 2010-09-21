@@ -34,39 +34,47 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
-	if ( this.Bot.moveskill < 1 || this.Bot.moveskill > 3 ) {
-		block( 0 );
-	}
+	while(1)
+	{
+		if (this.Bot.moveskill < 1 || this.Bot.moveskill > 3 )
+			{ block(0); }
 
-	if ( this.ShouldCombatMovement() ) {
-		this.Bot.ResetStuckTime();
 		tEnt = this.Bot.GetTarget();
+		tDist = 9999; // init in case GetTargetInfo doesn't return anything
 
-		ti = this.Bot.GetTargetInfo( tEnt );
-		tDist = ti.Distance;
-		tPos = ti.Position;
+		if( tEnt && this.ShouldCombatMovement() )
+		{
+			this.Bot.ResetStuckTime();
+			ti = this.Bot.GetTargetInfo(tEnt);
+			if ( ti && ti.Distance )
+			{
+				tDist = ti.Distance;
+			}
 
-		this.Priority = 0.1;
+			this.Priority = 0.1;
 
-		if ( !this.Bot.hadtarget ) {
-			sleep( this.Bot.ReactionTime - ( this.DelayBetweenCalls * 2 ) );
-			this.Bot.hadtarget = true;
+			if (tEnt != this.Bot.LastTarget)
+			{
+				this.Bot.LastTarget = tEnt;
+				sleep(this.Bot.ReactionTime);
+			}
+
+			if (this.Bot.moveskill == 1)
+				{ this.easy(tDist); }
+			else if (this.Bot.moveskill == 2)
+				{ this.medium(tDist); }
+			else if (this.Bot.moveskill == 3)
+				{ this.hard(tDist); }
+			else
+			{
+				//shouldn't get here
+				this.Priority = 0;
+				block(0);
+			}
 		}
 
-		if ( this.Bot.moveskill == 1 ) {
-			this.easy( tDist );
-		} else if ( this.Bot.moveskill == 2 ) {
-			this.medium( tDist );
-		} else if ( this.Bot.moveskill == 3 ) {
-			this.hard( tDist );
-		} else {
-			//shouldn't get here
-			this.Priority = 0;
-			block( 0 );
-		}
+		sleep(this.DelayBetweenCalls);
 	}
-	this.Bot.hadtarget = false;
-	sleep( this.DelayBetweenCalls );
 };
 
 this.ShouldCombatMovement = function()
