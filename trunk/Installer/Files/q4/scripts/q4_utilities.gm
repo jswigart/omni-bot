@@ -92,6 +92,9 @@ member WarpTestBot = function( _params )
 
 member InitDualObjective = function()
 {
+	if(GetModName() != "CTF")
+		{ return; }
+
 	Util.SetRoleForGroup("stroggDefends", ROLE.DEFENDER);
 	Util.SetRoleForGroup("marineDefends", ROLE.DEFENDER);
 	Util.DisableGroup( "stroggDefends", TEAM.MARINE );

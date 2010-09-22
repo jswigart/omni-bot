@@ -17,7 +17,7 @@ this.Initialize = function()
 		this.Disable = true;
 	}
 	
-	print(this.Name, " Initialized");
+	Util.MapDebugPrint( this.Name + " Initialized", true );
 };
 
 this.OnSpawn = function()

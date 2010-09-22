@@ -254,6 +254,7 @@ void Q4_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "GUARD",				gmVariable(Q4_PWR_GUARD));
 	_table->Set(_machine, "DOUBLER",			gmVariable(Q4_PWR_DOUBLER));
 	_table->Set(_machine, "SCOUT",				gmVariable(Q4_PWR_SCOUT));
+	_table->Set(_machine, "DEADZONE",			gmVariable(Q4_PWR_DEADZONE));
 	_table->Set(_machine, "TEAM_AMMOREGEN",		gmVariable(Q4_PWR_TEAM_AMMO_REGEN));
 	_table->Set(_machine, "TEAM_HEALTHREGEN",	gmVariable(Q4_PWR_TEAM_HEALTH_REGEN));
 	_table->Set(_machine, "TEAM_DAMAGEMOD",		gmVariable(Q4_PWR_TEAM_DAMAGE_MOD));

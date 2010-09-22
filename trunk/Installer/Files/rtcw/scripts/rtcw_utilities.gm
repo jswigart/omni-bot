@@ -586,12 +586,7 @@ member SelectSoldierWeapons = function( team, bot, weap1, weap2, weap3 )
 		Util.AddToTable( wt, weap3 );
 	}
 
-	weap = RandInt( 0, tableCount( wt ) );
-
-	// hack it
-	if ( weap != 0 && weap != 1 ) {
-		weap -= 1;
-	}
+	weap = Util.GetRandomFromTable(wt);
 
 	// no weap request if they already have
 	if ( !bot.HasWeapon( wt[weap] ) ) {
