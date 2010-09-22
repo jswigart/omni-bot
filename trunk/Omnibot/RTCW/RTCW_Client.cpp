@@ -413,5 +413,4 @@ void RTCW_Client::UpdateSyncImage( SyncImage & syncImage ) {
 		syncImage.imageColor = COLOR::GREY;
 	}
 }
-
 #endif

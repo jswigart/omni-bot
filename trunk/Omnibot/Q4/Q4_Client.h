@@ -30,6 +30,10 @@ public:
 
 	void SetupBehaviorTree();
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	void UpdateSyncImage( SyncImage & syncImage );
+#endif
+
 	Q4_Client();
 	virtual ~Q4_Client();
 protected:
