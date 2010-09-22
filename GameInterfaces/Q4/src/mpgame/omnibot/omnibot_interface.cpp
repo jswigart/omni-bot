@@ -1290,8 +1290,9 @@ public:
 			const idMat3 axis = angles.ToMat3();
 			const idBounds bounds = pEnt->GetPhysics()->GetBounds();
 			const idVec3 boundsCenter = bounds.GetCenter();
-			const idVec3 boundsCenterWorld = axis * boundsCenter;
-			VectorCopy( boundsCenterWorld.ToFloatPtr(), _center );
+			idVec3 boundsCenterWorld = axis * boundsCenter;
+			//VectorCopy( boundsCenterWorld.ToFloatPtr(), _center );
+			_center = boundsCenterWorld.ToFloatPtr();
 			_extents[0] = (bounds.b[1][0] - bounds.b[0][0]) * 0.5f;
 			_extents[1] = (bounds.b[1][1] - bounds.b[0][1]) * 0.5f;
 			_extents[2] = (bounds.b[1][2] - bounds.b[0][2]) * 0.5f;
