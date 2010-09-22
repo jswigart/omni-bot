@@ -887,6 +887,7 @@ static int _et_G_AddEvent( lua_State *L ) {
 // }}}
 
 // et.GetTimeStamp()
+// note that this is not a true unix timestamp, but close. should only be used to calc differences of points in 'time'
 static int _et_GetTimeStamp( lua_State *L ) {
 	unsigned long long timestamp;
 	qtime_t q;
@@ -896,6 +897,13 @@ static int _et_GetTimeStamp( lua_State *L ) {
 	return 1;
 }
 // }}}
+
+// et.IsBot
+static int _et_IsBot( lua_State *L ) {
+	gentity_t *ent = g_entities + luaL_checkint( L, 1 );
+	int bot = ent->client && ent->r.svFlags & SVF_BOT ? 1 : 0;
+	return bot;
+}
 
 // et library initialisation array
 static const luaL_Reg etlib[] = {
@@ -957,6 +965,7 @@ static const luaL_Reg etlib[] = {
 	{ "gentity_set",                _et_gentity_set             },
 	{ "G_AddEvent",                 _et_G_AddEvent              },
 	{ "GetTimeStamp",               _et_GetTimeStamp            },
+	{ "IsBot",                      _et_IsBot                   },
 
 	{ NULL },
 };

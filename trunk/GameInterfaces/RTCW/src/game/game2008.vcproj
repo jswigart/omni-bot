@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(REPO_ROOT)Omnibot\Common&quot;;&quot;$(REPO_ROOT)Omnibot\RTCW&quot;;..\lua;&quot;..\sha-1&quot;"
+				AdditionalIncludeDirectories="&quot;$(REPO_ROOT)Omnibot\Common&quot;;&quot;$(REPO_ROOT)Omnibot\RTCW&quot;;..\lua;&quot;..\sha-1&quot;;..\sqlite"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;_CRT_SECURE_NO_DEPRECATE;WITH_LUA"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
@@ -150,7 +150,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(REPO_ROOT)Omnibot\Common&quot;;&quot;$(REPO_ROOT)Omnibot\RTCW&quot;;..\lua;&quot;..\sha-1&quot;"
+				AdditionalIncludeDirectories="&quot;$(REPO_ROOT)Omnibot\Common&quot;;&quot;$(REPO_ROOT)Omnibot\RTCW&quot;;..\lua;&quot;..\sha-1&quot;;..\sqlite"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;GAMEDLL;_CRT_SECURE_NO_DEPRECATE;WITH_LUA"
 				StringPooling="true"
 				RuntimeLibrary="0"
