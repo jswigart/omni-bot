@@ -1,10 +1,10 @@
 global Map =
 {
 	//DeadZone
-	Rune_1 = "DEADZONE_RUNE_powerup_deadzone_1",
-	Rune_2 = "DEADZONE_RUNE_powerup_deadzone_2",
-	Rune_3 = "DEADZONE_RUNE_powerup_deadzone_3",
-	Rune_4 = "DEADZONE_RUNE_powerup_deadzone_4",
+	Rune_1 = "FLAG_powerup_deadzone_1",
+	Rune_2 = "FLAG_powerup_deadzone_2",
+	Rune_3 = "FLAG_powerup_deadzone_3",
+	Rune_4 = "FLAG_powerup_deadzone_4",
 
 	Zone_1 = "DEADZONE_trigger_controlzone_2",
 
@@ -61,11 +61,9 @@ global OnMapLoad = function()
 	if (GetModName() == "DeadZone")
 	{
 		Util.AddUsePtFromWp(Map.Zone_1, "deadzone1");
-
-		SetAvailableMapGoals( TEAM.STROGG, false, Map.Cap_Marine );
-		SetAvailableMapGoals( TEAM.MARINE, false, Map.Cap_Strogg );
-		SetAvailableMapGoals( TEAM.STROGG, false, Map.Cap_Strogg );
-		SetAvailableMapGoals( TEAM.MARINE, false, Map.Cap_Marine );
+		Util.DisableGoal("CAPPOINT_.*");
+		Util.DisableGoal("CAMP_.*");
+		Util.EnableGoal("CAMP_dz.*");
 	}
 
 	//set up some routing

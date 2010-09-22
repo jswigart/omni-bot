@@ -5,7 +5,7 @@ global Map =
 	Rune_3 = "FLAG_powerup_deadzone_4",
 	Rune_4 = "FLAG_powerup_deadzone_5",
 
-	Zone_1 = "CAPHOLD_trigger_controlzone_2",
+	Zone_1 = "DEADZONE_trigger_controlzone_2",
 };
 
 global OnMapLoad = function()

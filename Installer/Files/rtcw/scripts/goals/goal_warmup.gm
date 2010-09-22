@@ -2,6 +2,7 @@
 this.Name = "Warmup";       // The name of the goal.
 this.Parent = "HighLevel";  // The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.Debug = false;
+this.AutoAdd = false; // too much lag
 
 this.Initialize = function()
 {

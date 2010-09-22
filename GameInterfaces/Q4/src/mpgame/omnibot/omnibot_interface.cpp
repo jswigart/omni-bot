@@ -1059,47 +1059,6 @@ public:
 
 	obResult GetEntityPowerups(const GameEntity _ent, BitFlag64 &_flags)
 	{
-		/*idEntity *pEnt = EntityFromHandle(_ent);
-		if(pEnt)
-		{
-			idPlayer *pPlayer = pEnt->IsType(idPlayer::GetClassType()) ? static_cast<idPlayer*>(pEnt) : 0;
-			if(pPlayer)
-			{
-				if(pPlayer->PowerUpActive(POWERUP_QUADDAMAGE))
-					_flags.SetFlag(Q4_PWR_QUAD);
-				if(pPlayer->PowerUpActive(POWERUP_HASTE))
-					_flags.SetFlag(Q4_PWR_HASTE);
-				if(pPlayer->PowerUpActive(POWERUP_REGENERATION))
-					_flags.SetFlag(Q4_PWR_REGEN);
-				if(pPlayer->PowerUpActive(POWERUP_INVISIBILITY))
-					_flags.SetFlag(Q4_PWR_INVIS);
-				if(pPlayer->PowerUpActive(POWERUP_CTF_MARINEFLAG))
-					_flags.SetFlag(Q4_PWR_MARINEFLAG);
-				if(pPlayer->PowerUpActive(POWERUP_CTF_STROGGFLAG))
-					_flags.SetFlag(Q4_PWR_STROGGFLAG);
-				if(pPlayer->PowerUpActive(POWERUP_CTF_ONEFLAG))
-					_flags.SetFlag(Q4_PWR_ONEFLAG);
-				if(pPlayer->PowerUpActive(POWERUP_AMMOREGEN))
-					_flags.SetFlag(Q4_PWR_AMMOREGEN);
-				if(pPlayer->PowerUpActive(POWERUP_GUARD))
-					_flags.SetFlag(Q4_PWR_GUARD);
-				if(pPlayer->PowerUpActive(POWERUP_DOUBLER))
-					_flags.SetFlag(Q4_PWR_DOUBLER);
-				if(pPlayer->PowerUpActive(POWERUP_SCOUT))
-					_flags.SetFlag(Q4_PWR_SCOUT);
-				if(pPlayer->PowerUpActive(POWERUP_DEADZONE))
-					_flags.SetFlag(Q4_PWR_DEADZONE);			
-				if(pPlayer->PowerUpActive(POWERUP_TEAM_AMMO_REGEN))
-					_flags.SetFlag(Q4_PWR_TEAM_AMMO_REGEN);
-				if(pPlayer->PowerUpActive(POWERUP_TEAM_HEALTH_REGEN))
-					_flags.SetFlag(Q4_PWR_TEAM_HEALTH_REGEN);
-				if(pPlayer->PowerUpActive(POWERUP_TEAM_DAMAGE_MOD))
-					_flags.SetFlag(Q4_PWR_TEAM_DAMAGE_MOD);
-			}		
-			return Success;
-		}
-		return InvalidEntity;*/
-
 		idEntity *pEnt = EntityFromHandle(_ent);
 		if(pEnt)
 		{
@@ -1473,7 +1432,7 @@ public:
 					{
 						const char *pName = pEdict->GetName();
 						int iGoalTeam = (1<<Q4_TEAM_MARINE) | (1<<Q4_TEAM_STROGG);
-						Bot_Util_AddGoal("caphold", pEdict, iGoalTeam, pName);
+						Bot_Util_AddGoal("deadzone", pEdict, iGoalTeam, pName);
 					}
 				}
 				/*else if(pEdict->IsType(idItemPowerup::GetClassType()))

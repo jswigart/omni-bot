@@ -1,8 +1,8 @@
 global Map =
 {
-	Rune_1 = "DEADZONE_RUNE_powerup_deadzone_3",
-	Rune_2 = "DEADZONE_RUNE_powerup_deadzone_4",
-	Rune_3 = "DEADZONE_RUNE_powerup_deadzone_6",
+	Rune_1 = "FLAG_powerup_deadzone_3",
+	Rune_2 = "FLAG_powerup_deadzone_4",
+	Rune_3 = "FLAG_powerup_deadzone_6",
 
 	Zone_1 = "DEADZONE_trigger_controlzone_3",
 };
@@ -35,5 +35,3 @@ global OnBotJoin = function( bot )
 {
 	Util.MapDebugPrint("OnBotJoin", true);
 };
-
-
