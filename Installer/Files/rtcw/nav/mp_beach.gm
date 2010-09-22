@@ -215,7 +215,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rUpper.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "VENOM_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBeach.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bBeach.*" );
@@ -390,7 +389,7 @@ global Map =
 		}
 
 		if ( !Map.DocStatus && Map.FlagStatus == 1 ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
+			//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
 		}
 
@@ -405,9 +404,9 @@ global Map =
 		if ( !Map.DocStatus && Map.FlagStatus == 2 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTower.*" );
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_trenches_spot_allies" );	//Martin - This should be paththrough
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_spot_beach_[12345678]" );
+			//SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_spot_beach_[12345678]" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bBeach.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
+			//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBeach.*" );
 		}
@@ -625,7 +624,6 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_bTransmit.*", {mincamptime = 5, maxcamptime = 10} );
 	SetMapGoalProperties( "DEFEND_rTransmit.*", {mincamptime = 5, maxcamptime = 10} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
-	SetMapGoalProperties( "FLAME_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "VENOM_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );

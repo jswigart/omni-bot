@@ -136,7 +136,7 @@ this.UpdateGotoTarget = function()
 	{
 		// did it move?
 		checkPosition = GetEntPosition(this.TargetEntity);
-		
+
 		// oops, it's not valid anymore so bail
 		if ( !checkPosition ) {
 			this.Finished();
@@ -175,37 +175,46 @@ this.UpdateGib = function()
 {
 	yield();
 
-	if ( this.Bot.HasTarget() ) {
-		this.Finished();
-	}
+	if ( this.TargetPosition )
+	{
+		//cache the position because for some reason its getting destroyed in rare cases
+		tPos = this.TargetPosition;
+		
+		if ( this.Bot.HasTarget() ) {
+			this.Finished();
+		}
 
-	// already gibbed?
-	if (GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO)) {
-		this.State = this.STEAL_UNIFORM;
-		return;
-	}
+		// already gibbed?
+		if (GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO)) {
+			this.State = this.STEAL_UNIFORM;
+			return;
+		}
 
-	this.Bot.HoldButton(BTN.CROUCH, 99);
-	this.AddAimRequest(Priority.High, "position", this.TargetPosition + Vector3(0,0,-12));
+		this.Bot.HoldButton(BTN.CROUCH, 99);
+		this.AddAimRequest(Priority.High, "position", tPos + Vector3(0,0,-12));
 
-	this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
-	//this.BlockForWeaponChange( WEAPON.KNIFE );
+		this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+		//this.BlockForWeaponChange( WEAPON.KNIFE );
 
-	// cs: weapon request for knife appears to be failing in some cases
-	sleep(0.25);
+		// cs: weapon request for knife appears to be failing in some cases
+		sleep(0.25);
 
-	timeout = 0;
-	while( timeout < 70 && !GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO) ) {
-		this.Bot.MoveTowards(this.TargetPosition + Vector3(12,12,0));
-		this.Bot.HoldButton(BTN.ATTACK1, 0.5 );
-		yield();
-		timeout += 1;
-	}
+		timeout = 0;
+		while( timeout < 70 && !GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO) ) {
+			this.Bot.MoveTowards(tPos + Vector3(12,12,0));
+			this.Bot.HoldButton(BTN.ATTACK1, 0.5 );
+			yield();
+			timeout += 1;
+		}
 
-	this.ReleaseWeaponRequest();
+		this.ReleaseWeaponRequest();
 
-	if (GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO)) {
-		this.State = this.STEAL_UNIFORM;
+		if (GetEntFlags(this.TargetEntity, ENTFLAG.LIMBO)) {
+			this.State = this.STEAL_UNIFORM;
+		}
+		else {
+			this.Finished();
+		}
 	}
 	else {
 		this.Finished();
@@ -217,19 +226,22 @@ this.UpdateStealUniform = function()
 	yield();
 	if ( this.TargetPosition )
 	{
+		//cache the position because for some reason its getting destroyed in rare cases
+		tPos = this.TargetPosition;
+
 		if ( this.Bot.HasTarget() ) {
 			this.Finished();
 		}
 
 		this.Bot.HoldButton(BTN.CROUCH, 99);
-		this.AddAimRequest(Priority.High, "position", this.TargetPosition + Vector3(0,0,-12));
+		this.AddAimRequest(Priority.High, "position", tPos + Vector3(0,0,-12));
 
 		this.Bot.HoldButton(BTN.USE, 99);
 
 		botEnt = this.Bot.GetGameEntity();
 		timeout = 0;
-		while(timeout <= 180 && !GetEntFlags(botEnt, ENTFLAG.DISGUISED)){
-			this.Bot.MoveTowards(this.TargetPosition + Vector3(24,24,0));
+		while(timeout <= 180 && !GetEntFlags(botEnt, ENTFLAG.DISGUISED)) {
+			this.Bot.MoveTowards(tPos + Vector3(24,24,0));
 			yield();
 			timeout += 1;
 		}
