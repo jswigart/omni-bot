@@ -2447,6 +2447,7 @@ member GetRandomFromTable = function(tbl)
 //
 member OneBotSay = function(msg)
 {
+	Util.MapDeprecateMessage( "Util.OneBotSay", "Util.BotChat" );
 	foreach (id and bot in BotTable)
 	{
 		bot.Say(msg);
@@ -2467,6 +2468,7 @@ member BotSay = function(bot, msg)
 //
 member OneBotSayTeam = function(team, msg)
 {
+	Util.MapDeprecateMessage( "Util.OneBotSayTeam", "Util.BotChat" );
 	foreach (id and bot in BotTable)
 	{
 		if ( bot.GetTeam() == team )
@@ -2481,12 +2483,70 @@ member OneBotSayTeam = function(team, msg)
 //
 member OneBotVSayTeam = function(team, vchat)
 {
+	Util.MapDeprecateMessage( "Util.OneBotVSayTeam", "Util.BotChat" );
 	foreach (id and bot in BotTable)
 	{
 		if ( bot.GetTeam() == team )
 		{
 			bot.SayVoice(vchat);
 			return;
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// types - "say", "sayteam", "vsay"
+// team 0 = all teams
+member BotChat = function(team, msgType, msg, numBots)
+{
+	if ( MAP_TALK || (Map && Map.Talk) )
+	{
+		bots = 0;
+		foreach ( id and bot in BotTable )
+		{
+			if ( numBots && bots > numBots ) {
+				return;
+			}
+			if ( team != 0 && bot.GetTeam() != team ) {
+				continue;
+			}
+
+			switch(msgType)
+			{
+				case "say":
+				{
+					if ( typeName(msg) != "string" ) {
+						Util.MapDebugPrint("Util.BotChat: expecting string for say", true);
+						return;
+					}
+
+					bot.Say(msg);
+				}
+				case "sayteam":
+				{
+					if ( typeName(msg) != "string" ) {
+						Util.MapDebugPrint("Util.BotChat: expecting string for sayteam", true);
+						return;
+					}
+
+					bot.SayTeam(msg);
+				}
+				case "vsay":
+				{
+					if ( typeName(msg) != "int" ) {
+						Util.MapDebugPrint("Util.BotChat: expecting voiceid for vsay", true);
+						return;
+					}
+
+					bot.SayVoice(msg);
+				}
+				default:
+				{
+					Util.MapDebugPrint("Util.BotChat: Invalide message type!", true);
+				}
+			}
+
+			bots += 1;
 		}
 	}
 };
