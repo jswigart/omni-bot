@@ -226,11 +226,11 @@ namespace RemoteLib
 		shutdown();
 	}
 
-	bool ConnectionManagerServer::init( bool dontInitSockets ) {
+	bool ConnectionManagerServer::init( int sendBufSize, int recvBufSize, bool dontInitSockets ) {
 		ConnectionManager::init( dontInitSockets );
 		server.init();
 		server.setNonBlocking( true );
-		server.setBufferSizes( 1024 * 1024, 1024 * 1024 );
+		server.setBufferSizes( sendBufSize, recvBufSize );
 		return server.listen( listenPort );
 	}
 

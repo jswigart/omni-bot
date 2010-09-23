@@ -43,10 +43,12 @@ class MapWidget : public QGraphicsView {
 public:
 	MapWidget( QWidget *parent = 0 );
 
+	bool msgDelete( const QString & group, const QString & name );
 	bool msgCircle( RemoteLib::DataBuffer & db );
 	bool msgLine( RemoteLib::DataBuffer & db );
-	bool msgObb( RemoteLib::DataBuffer & db );
+	bool msgRect( RemoteLib::DataBuffer & db );
 	bool msgImage( RemoteLib::DataBuffer & db );
+	bool msgToken( RemoteLib::DataBuffer & db );
 protected:
 	void resizeEvent( QResizeEvent * event );
 	void dragEnterEvent( QDragEnterEvent *event );
@@ -62,8 +64,37 @@ private:
 
 	QGraphicsItemGroup *	rootGroup;
 
-	QGraphicsItemGroup * findGroupForPath( const QString & path );
-	QGraphicsItem * findItemInGroup( const QString & path, QString & name, QGraphicsItemGroup * group );
+	void splitPath( const QString & fullPath, QString & subPath, QString & name );
+
+	QGraphicsItem * findItemInGroup( const QString & name, QGraphicsItemGroup * group );
+	QGraphicsItemGroup * findGroup( const QString & path, QGraphicsItemGroup * group = NULL );
+
+	bool msgCirleInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
+	bool msgLineInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
+	bool msgRectInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
+	bool msgImageInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
+
+	enum UserDataKeys { PathKey = 1, TagName = 2 };
+
+	template< typename T >
+	T *	findItem( const QString & tag, QGraphicsItemGroup * group ) {
+		Q_ASSERT_X( group, __FUNCTION__, "no group provided!" );
+
+		QList<QGraphicsItem *> & children = group->children();
+		for ( QList<QGraphicsItem *>::iterator it = children.begin();
+			it != children.end(); 
+			++it ) {
+				QGraphicsItem * item = (*it);
+				if ( item->data( TagName ) == tag ) {
+					T *group = qgraphicsitem_cast<T *>((*it));
+					Q_ASSERT_X( group, __FUNCTION__, "unable to item name" );
+					if ( group ) {
+						return group;
+					}
+				}
+		}
+		return NULL;
+	}
 };
 
 #endif

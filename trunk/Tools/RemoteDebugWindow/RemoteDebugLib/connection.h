@@ -110,7 +110,7 @@ namespace RemoteLib
 	class ConnectionManagerServer : public ConnectionManager
 	{
 	public:
-		virtual bool init( bool dontInitSockets = false );
+		virtual bool init( int sendBufSize, int recvBufSize, bool dontInitSockets = false );
 		virtual void shutdown();
 		virtual void updateConnections( ConnectionCallbacks * cb = NULL );
 
