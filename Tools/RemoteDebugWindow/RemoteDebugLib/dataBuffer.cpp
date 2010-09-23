@@ -248,16 +248,29 @@ namespace RemoteLib
 	}
 
 	bool DataBuffer::writeString( const char * str ) {
-		const int32 len = strlen( str ) + 1;
-		if ( !checkWrite( len + sizeof( int32 ) ) ) { return false; }
+		const int16 len =(int16)strlen( str ) + 1;
+		if ( !checkWrite( len + sizeof( int16 ) ) ) { return false; }
 		
-		return writeInt32( len ) && write( str, len );
+		return writeInt16( len ) && write( str, len );
 	}
 
 	bool DataBuffer::readString( char * buffer, int maxSize ) {
-		int32 len = 0;
+		int16 len = 0;
 		assert( maxSize >= len );
-		return readInt32( len ) && read( buffer, len );
+		return readInt16( len ) && read( buffer, len );
+	}
+
+	bool DataBuffer::writeSmallString( const char * str ) {
+		const int8 len =(int8)strlen( str ) + 1;
+		if ( !checkWrite( len + sizeof( int8 ) ) ) { return false; }
+
+		return writeInt8( len ) && write( str, len );
+	}
+
+	bool DataBuffer::readSmallString( char * buffer, int maxSize ) {
+		int8 len = 0;
+		assert( maxSize >= len );
+		return readInt8( len ) && read( buffer, len );
 	}
 
 	bool DataBuffer::write( const char * data, uint32 numBytes ) {

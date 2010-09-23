@@ -70,8 +70,8 @@ void RemoteDebugWindow::closeEvent(QCloseEvent *event) {
 	if(tcpSocket->state() != QAbstractSocket::UnconnectedState)
 	{
 		QMessageBox msgBox(this);
-		msgBox.setText("You are connected to a debug session.");
-		msgBox.setInformativeText("Do you really want to close the debugger?");
+		msgBox.setText("You are connected to a remote session.");
+		msgBox.setInformativeText("Do you really want to close the viewer?");
 		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		msgBox.setDefaultButton(QMessageBox::No);
 		switch( msgBox.exec() )
@@ -161,19 +161,19 @@ void RemoteDebugWindow::socketDisplayError(QAbstractSocket::SocketError socketEr
 	case QAbstractSocket::RemoteHostClosedError:
 		break;
 	case QAbstractSocket::HostNotFoundError:
-		QMessageBox::information(this, tr("GM Debugger"),
+		QMessageBox::information(this, tr("Remote Viewer"),
 			tr("The host was not found. Please check the "
 			"host name and port settings."));
 		break;
 	case QAbstractSocket::ConnectionRefusedError:
-		QMessageBox::information(this, tr("GM Debugger"),
+		QMessageBox::information(this, tr("Remote Viewer"),
 			tr("The connection was refused by the peer. "
-			"Make sure the GM application is running, "
+			"Make sure the remote application is running, "
 			"and check that the host name and port "
 			"settings are correct."));
 		break;
 	default:
-		QMessageBox::information(this, tr("GM Debugger"),
+		QMessageBox::information(this, tr("Remote Viewer"),
 			tr("The following error occurred: %1.")
 			.arg(tcpSocket->errorString()));
 	}
@@ -198,6 +198,10 @@ QModelIndex RemoteDebugWindow::findNodeForPath( const QString & path ) {
 			QString parentPath = path.leftRef( lastSlash ).toString();
 			nodeName = path.midRef( lastSlash+1 ).toString();
 			parent = findNodeForPath( parentPath );
+		} else {
+			ui.debugWidgets->insertTopLevelItem( 
+				ui.debugWidgets->topLevelItemCount(),
+				new QTreeWidgetItem( (QTreeWidgetItem*)0, QStringList( QString( path ) ) ) );
 		}
 
 		const int row = model->rowCount( parent );
@@ -252,6 +256,18 @@ void RemoteDebugWindow::processMessages() {
 				tcpSocket->write( (char*)&tagId, 4 );
 				break;
 			}
+		case RemoteLib::ID_delete:
+			{
+				enum { BufferSz = 256 };
+				char groupBuf[ BufferSz ] = {};
+				char nameBuf[ BufferSz ] = {};
+
+				QString group, name;
+				db.readSmallString( groupBuf, BufferSz ); group = groupBuf;
+				db.readSmallString( nameBuf, BufferSz ); name = nameBuf;
+				ui.graphics2d->msgDelete( group, name );
+				break;
+			}
 		case RemoteLib::ID_treeNode:
 			{
 				msgTreeNode( db );
@@ -269,7 +285,7 @@ void RemoteDebugWindow::processMessages() {
 			}
 		case RemoteLib::ID_obb:
 			{
-				ui.graphics2d->msgObb( db );
+				ui.graphics2d->msgRect( db );
 				break;
 			}
 		case RemoteLib::ID_image:
@@ -277,6 +293,14 @@ void RemoteDebugWindow::processMessages() {
 				ui.graphics2d->msgImage( db );
 				break;
 			}
+		case RemoteLib::ID_token:
+			{
+				ui.graphics2d->msgToken( db );
+				break;
+			}
+		default:
+			Q_ASSERT_X( 0, __FUNCTION__, "unhandled message type" );
+			break;
 		}
 
 		const uint32 blockBytesRead = db.getBytesRead() - baseBytes;

@@ -144,22 +144,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Gui"
-			>
-			<File
-				RelativePath=".\gui.h"
-				>
-			</File>
-			<File
-				RelativePath=".\stateTree.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\stateTree.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Messages"
 			>
 			<File
@@ -211,6 +195,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\messageTags.cpp"
+			>
+		</File>
 		<File
 			RelativePath=".\messageTags.h"
 			>

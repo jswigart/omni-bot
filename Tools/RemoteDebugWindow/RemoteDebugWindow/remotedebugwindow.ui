@@ -21,7 +21,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="categories">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabStateTree">
        <attribute name="title">
@@ -86,6 +86,31 @@
        <attribute name="title">
         <string>Script Console</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="margin">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QTextBrowser" name="scriptOutput">
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="scriptInput">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tabMap">
        <attribute name="title">
@@ -137,6 +162,7 @@
      <string>Connect</string>
     </property>
     <addaction name="actionConnect_LocalHost"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">

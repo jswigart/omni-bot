@@ -62,6 +62,9 @@ namespace RemoteLib
 		bool writeString( const char * str );
 		bool readString( char * buffer, int maxSize );
 
+		bool writeSmallString( const char * str );
+		bool readSmallString( char * buffer, int maxSize );
+
 		bool write( const char * data, uint32 numBytes );
 		bool read( char * data, uint32 numBytes );
 
