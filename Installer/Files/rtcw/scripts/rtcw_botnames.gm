@@ -11,15 +11,6 @@ RegisterDefaultProfile( CLASS.LIEUTENANT, "def_bot.gm" );
 
 
 // Set up a list of Names, optionally associated with a script.
-Names["^0d^7.^0mystic"] = "uber.gm";
-Names["^0d^7.^0mAus"] = "uber.gm";
-Names["^0d^7.^0butchji"] = "uber.gm";
-Names["^0d^7.^0frag"] = "uber.gm";
-Names["^0d^7.^0reload"] = "uber.gm";
-Names["^1R^7emedy^1^^0Inc^1."] = "uber.gm";
-Names["^1W^7arRiOR^1^^0Inc^1."] = "uber.gm";
-Names["^1S^7erbian^1^^0Inc^1."] = "uber.gm";
-Names["^1S^7laya^1^^0Inc^1."] = "uber.gm";
 Names["^4[BOT]^0Hobb^7i^0t"] = "";
 Names["^4[BOT]^0RaZor"] = "";
 Names["^4[BOT]S^7pa^4Z"] = "";
