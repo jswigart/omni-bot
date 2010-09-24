@@ -1218,6 +1218,16 @@ void GoalManager::Update()
 	_UpdateEditModes();
 }
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+void GoalManager::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	for( MapGoalList::iterator it = m_MapGoalList.begin();
+		it != m_MapGoalList.end(); 
+		++it ) {
+		(*it)->Sync( db, fullSync );
+	}
+}
+#endif
+
 void GoalManager::AddGoal(MapGoalPtr newGoal)
 {
 	m_MapGoalList.push_back(newGoal);
@@ -1499,11 +1509,10 @@ MapGoalPtr GoalManager::GetGoal(const String &_goalname)
 		}
 		++it;
 	}
-
 	return ptr;
 }
 
-MapGoalPtr  GoalManager::GetGoal(int _serialNum)
+MapGoalPtr GoalManager::GetGoal(int _serialNum)
 {
 	MapGoalPtr ptr;
 

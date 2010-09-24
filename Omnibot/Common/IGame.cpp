@@ -673,11 +673,25 @@ void IGame::UpdateGame()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+
+	// draw the clients
 	for(int i = 0; i < MAX_PLAYERS; ++i) {
 		if(m_ClientList[i]) {
 			m_ClientList[i]->Sync( db, fullSync );
 		}
 	}
+
+	// draw the entities registered with the system
+	/*IGame::EntityIterator ent;
+	while( IGame::IterateEntity( ent ) ) {
+		Vector3f vPos;
+		if( EngineFuncs::EntityPosition( ent.GetEnt().m_Entity, vPos) ) {
+			if(Length(Vector3f((float)g_MapMouse.X, (float)g_MapMouse.Y, 0.f), vViewPortPos) < 3.f)
+			{
+
+			}
+		}
+	}*/
 }
 #endif
 

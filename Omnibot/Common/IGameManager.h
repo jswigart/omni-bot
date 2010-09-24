@@ -56,6 +56,8 @@ public:
 	bool AddUpdateFunction(const String &_name, FunctorPtr _func);
 	bool RemoveUpdateFunction(const String &_name);
 
+	void SyncRemoteDelete( const char * path );
+
 	// Singleton Accessors
 	static IGameManager *GetInstance();
 	static void DeleteInstance();	

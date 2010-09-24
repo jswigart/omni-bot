@@ -168,12 +168,12 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		if(Options::GetValue("RemoteWindow","Port",remotePort)) {
 			m_Remote.setPort( (uint16)remotePort );
 		}
-		m_Remote.init( true );
+
+		m_Remote.init( 8192, 4096, true );
 	}
 #endif
 
 	// Create the requested path planner.
-	//if(NavigationManager::GetInstance()->CreatePathPlanner(NAVID_RECAST))
 	if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game->GetDefaultNavigator()))
 	{
 		m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
@@ -296,6 +296,7 @@ void IGameManager::UpdateGame()
 
 					m_Game->Sync( sendBuffer, conn->isNewConnection() );
 					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
+					m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
 					conn->clearNewConnection();
 				}
 			}
@@ -522,4 +523,23 @@ bool IGameManager::RemoveUpdateFunction(const String &_name)
 		return true;
 	}
 	return false;
+}
+
+void IGameManager::SyncRemoteDelete( const char * path ) 
+{
+#ifdef ENABLE_REMOTE_DEBUGGING
+	if ( m_Remote.getNumConnections() > 0 ) {
+		enum { BufferSize = 128 };
+		char buffer[BufferSize] = {};
+		RemoteLib::DataBuffer db( buffer, BufferSize );
+
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_delete );
+		db.writeString( path );
+		db.endSizeHeader();
+		db.endWrite();
+		m_Remote.sendToAll( db );
+	}
+#endif
 }

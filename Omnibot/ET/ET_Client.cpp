@@ -490,35 +490,35 @@ void ET_Client::UpdateSyncImage( SyncImage & syncImage ) {
 	switch ( GetClass() )
 	{
 	case ET_CLASS_SOLDIER:
-		syncImage.imageName = "et/class_soldier.png";
+		syncImage.image = "et/class_soldier.png";
 		break;
 	case ET_CLASS_MEDIC:
-		syncImage.imageName = "et/class_medic.png";
+		syncImage.image = "et/class_medic.png";
 		break;
 	case ET_CLASS_ENGINEER:
-		syncImage.imageName = "et/class_engineer.png";
+		syncImage.image = "et/class_engineer.png";
 		break;
 	case ET_CLASS_FIELDOPS:
-		syncImage.imageName = "et/class_fieldops.png";
+		syncImage.image = "et/class_fieldops.png";
 		break;
 	case ET_CLASS_COVERTOPS:
-		syncImage.imageName = "et/class_covertops.png";
+		syncImage.image = "et/class_covertops.png";
 		break;
 	}
 
-	syncImage.imageColor = COLOR::WHITE;
+	syncImage.color = COLOR::WHITE;
 	switch ( GetTeam() )
 	{
 	case ET_TEAM_ALLIES:
-		syncImage.imageColor = COLOR::BLUE;
+		syncImage.color = COLOR::BLUE;
 		break;
 	case ET_TEAM_AXIS:
-		syncImage.imageColor = COLOR::RED;
+		syncImage.color = COLOR::RED;
 		break;
 	}
 
 	if ( GetHealthPercent() <= 0.0f ) {
-		syncImage.imageColor = COLOR::GREY;
+		syncImage.color = COLOR::GREY;
 	}
 }
 

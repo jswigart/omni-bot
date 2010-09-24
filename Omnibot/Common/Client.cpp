@@ -52,7 +52,6 @@ Client::Client()
 	, m_AimTolerance		(48.0f)
 	, m_ProfileType			(PROFILE_NONE)
 	, m_StateRoot			(NULL)
-	//, m_SoundSubscriber		(-1)
 	, m_RoleMask			(0)
 {
 	memset(&m_ClientInput, 0, sizeof(m_ClientInput));
@@ -197,32 +196,56 @@ void Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	// update shared base properties
 	Box3f obb;
 	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
-	image.imageColor = COLOR::WHITE;
-	image.imageName = "global/noimage";
-	image.imagePosition = obb.Center.As2d();
-	image.imageHeading = GetFacingVector().XYHeading();
-	image.imageSize = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
+	image.color = COLOR::WHITE;
+	image.image = "global/noimage";
+	image.pos = obb.Center.As2d();
+	image.yaw = GetFacingVector().XYHeading();
+	image.size = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
 
+	// let subclasses alter images, etc
 	UpdateSyncImage( image );
 
+	const char * name = GetName( true );
+	
 	if ( m_StateRoot ) {
-		m_StateRoot->Sync( db, fullSync, GetName( true ), image );
-	}
+		m_StateRoot->Sync( db, fullSync, name, image );
+	}	
 
 	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_image );	
-	db.writeString( va( "client/%s", GetName( true ) ) );
-	db.writeString( image.imageName.c_str() );
-	db.writeString( image.imageOverlayName.c_str() );
-	db.writeFloat16( image.imagePosition.x, 0 );
-	db.writeFloat16( image.imagePosition.y, 0 );
-	db.writeFloat16( image.imageSize.x, 0 );
-	db.writeFloat16( image.imageSize.y, 0 );
-	db.writeFloat16( image.imageHeading, 0 );
-	db.writeInt8( image.imageColor.r() );
-	db.writeInt8( image.imageColor.g() );
-	db.writeInt8( image.imageColor.b() );
+	db.writeInt32( RemoteLib::ID_token );
+	db.writeSmallString( "Clients" );
+	db.writeSmallString( name );
+	
+	/*RemoteLib::PackEllipse( db,
+		"fov", 
+		image.pos.x, image.pos.y,
+		image.size.x * 2.0f, image.size.y * 2.0f,
+		GetFieldOfView(),
+		Mathf::RadToDeg( image.yaw ),
+		image.color.r(), image.color.g(), image.color.b(), image.color.a() );*/
+	
+	obColor dirColor = COLOR::WHITE;
+	Vector2f face2d = GetFacingVector().As2d();
+	face2d.Normalize();
+	Vector2f endLine = image.pos + face2d * image.size.Normalize() * 1.5f;
+	RemoteLib::PackLine( db,
+		"",
+		"dir", 
+		image.pos.x, image.pos.y,
+		endLine.x, endLine.y, 
+		dirColor.r(), dirColor.g(), dirColor.b(), dirColor.a() );
+
+	RemoteLib::PackImage( db, 
+		"",
+		name,
+		image.image.c_str(),
+		image.pos.x, image.pos.y,
+		image.size.x, image.size.y,
+		Mathf::RadToDeg( image.yaw ),
+		image.color.r(), image.color.g(), image.color.b(), image.color.a() );
+
+	db.writeInt32( RemoteLib::ID_tokenEnd );
 	db.endSizeHeader();
 	db.endWrite();
 }
@@ -604,6 +627,8 @@ void Client::Init(int _gameid)
 
 void Client::Shutdown()
 {
+	IGameManager::GetInstance()->SyncRemoteDelete( GetName( true ) );
+
 	//////////////////////////////////////////////////////////////////////////	
 	// Call any map callbacks.
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
@@ -620,8 +645,6 @@ void Client::Shutdown()
 		m_StateRoot->ExitAll();
 	}
 	OB_DELETE(m_StateRoot);
-
-	//g_SoundDepot.UnSubscribe(m_SoundSubscriber);
 
 	ScriptManager::GetInstance()->RemoveFromGlobalTable(this);
 }
