@@ -262,12 +262,13 @@ bool MapWidget::msgRectInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup 
 
 	QGraphicsRectItem * item = qgraphicsitem_cast<QGraphicsRectItem *>( existingItem );
 	if ( !item ) {
-		item = scene()->addRect( x-w*0.5f, y-h*0.5f, w, h );
+		item = scene()->addRect( -w*0.5f, -h*0.5f, w, h );
+		item->setTransformOriginPoint( w*0.5f, h*0.5f );
 		item->setData( PathKey, nameBuf );
 		item->setToolTip( nameBuf );
 	} else {
 		item->resetTransform();
-		item->setRect( -w*0.5f, -h*0.5f, w*0.5f, h*0.5f );
+		item->setRect( -w*0.5f, -h*0.5f, w, h );
 		item->rotate( 90-yaw );
 	}
 

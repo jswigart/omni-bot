@@ -1795,8 +1795,8 @@ void MapGoal::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 			"dir", 
 			worldbounds.Center.x, 
 			worldbounds.Center.y,
-			worldbounds.Center.x+worldbounds.Extent[ 0 ]*32.0f, 
-			worldbounds.Center.y+worldbounds.Extent[ 0 ]*32.0f,
+			worldbounds.Center.x+worldbounds.Axis[0].x*32.0f, 
+			worldbounds.Center.y+worldbounds.Axis[0].y*32.0f,
 			col.r(), col.g(), col.b(), col.a() );
 		db.endSizeHeader();
 		db.endWrite();
