@@ -521,16 +521,21 @@ obReal Weapon::WeaponFireMode::GetTargetBias(int _targetclass, const BitFlag64 &
 	return 1.f;
 }
 
-int Weapon::WeaponFireMode::SetIgnoreEntFlags(gmThread * a_thread)
-{
-	m_TargetEntFlagIgnore.ClearAll();
+static int GM_CDECL gmfSetIgnoreEntFlags(gmThread *a_thread) {
+	Weapon::WeaponFireMode *NativePtr = 0;
+	if(!gmBind2::Class<Weapon::WeaponFireMode>::FromThis(a_thread,NativePtr) || !NativePtr)
+	{
+		GM_EXCEPTION_MSG("Script Function on NULL MapGoal"); 
+		return GM_EXCEPTION;
+	}
+
+	NativePtr->GetIgnoreEntFlags().ClearAll();
 	for( int i = 0; i < a_thread->GetNumParams(); ++i ) {
 		GM_CHECK_INT_PARAM( flg, i );
-		m_TargetEntFlagIgnore.SetFlag( flg, true );
+		NativePtr->GetIgnoreEntFlags().SetFlag( flg, true );
 	}
 	return GM_OK;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Utilities
@@ -1208,7 +1213,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.func(&WeaponFireMode::SetDesirabilityWindow,		"SetDesirabilityRange","Set the desirability for a target within a certain min/max range.")
 		.func(&WeaponFireMode::SetBurstWindow,				"SetBurstRange","Set a burst shot behavior for a target within a certain min/max range.")
 		.func(&WeaponFireMode::SetTargetBias,				"SetTargetBias","Set a desirability multiplier versus a target class.")
-		.func(&WeaponFireMode::SetIgnoreEntFlags,			"SetIgnoreEntFlags","Sets one or more entity flags that should be ignored for this weapon.")
+		.func(gmfSetIgnoreEntFlags,							"SetIgnoreEntFlags","Sets one or more entity flags that should be ignored for this weapon.")
 
 		.var(getType,setType,								"WeaponType","string","melee, instant, projectile, or grenade")
 		
