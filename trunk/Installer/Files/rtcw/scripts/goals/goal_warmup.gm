@@ -71,7 +71,7 @@ this.Update = function()
 		this.Finished();
 	} else
 	{
-		while ( !GetEntFlags( nearest, ENTFLAG.DEAD ) /*&& !GetEntClass(nearest, CLASS.INJUREDPLAYER)*/ )
+		while ( !GetEntFlags( nearest, ENTFLAG.DEAD ) )
 		{
 			if ( this.Debug ) {
 				print( "found target" );

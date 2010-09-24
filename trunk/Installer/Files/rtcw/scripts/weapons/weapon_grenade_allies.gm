@@ -29,4 +29,5 @@ this.PrimaryFire.DefaultDesirability = 0.0;
 this.PrimaryFire.SetDesirabilityRange( 0, 512, 0.2 );
 
 // don't use grenade to gib
-this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
+this.PrimaryFire.SetIgnoreEntFlags( ENTFLAG.INJURED );
+//this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );

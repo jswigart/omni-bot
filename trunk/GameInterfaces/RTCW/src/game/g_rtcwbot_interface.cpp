@@ -1853,6 +1853,7 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			//ungibbed players are proned
 			_flags.SetFlag( ENT_FLAG_PRONED );
 			_flags.SetFlag( ENT_FLAG_VISTEST );
+			_flags.SetFlag( RTCW_ENT_FLAG_INJURED );
 		} else if ( pEnt->health <= 0 )      {
 			_flags.SetFlag( ENT_FLAG_DEAD );
 		}
