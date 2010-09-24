@@ -5,6 +5,12 @@ this.Name = "PrioritizeTarget";		// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 
 this.LimitToTargetClass( CLASS.ANYPLAYER );
+this.DontGibWeapons = ( (1<<WEAPON.PANZERFAUST) |
+			(1<<WEAPON.AXIS_GRENADE) |
+			(1<<WEAPON.ALLY_GRENADE) |
+			(1<<WEAPON.LUGER) |
+			(1<<WEAPON.COLT) |
+			(1<<WEAPON.KNIFE) );
 
 this.GetPriority = function()
 {
@@ -12,7 +18,7 @@ this.GetPriority = function()
 	t = this.Bot.GetTarget();
 
 	if ( GetEntFlags(t, ENTFLAG.INJURED) ) {
-		if ( this.Bot.GetNearestEnemy(CAT.PLAYER, CLASS.ANYPLAYER) || this.Bot.DistanceTo(t) > 400 ) {
+		if ( this.DontGibWeapons & (1<<this.Bot.GetCurrentWeapon()) || this.Bot.DistanceTo(t) > 400 ) {
 			ignore = true;
 		}
 		else
@@ -23,9 +29,9 @@ this.GetPriority = function()
 	else if ( GetEntPowerups(t, POWERUP.INVINCIBLE) ) {
 		ignore = true;
 	}
-	
+
 	if (ignore) {
-		this.Bot.IgnoreTarget(t , this.Bot.AimPersistance); 
+		this.Bot.IgnoreTarget(t , this.Bot.AimPersistance);
 	}
 };
 
@@ -41,7 +47,7 @@ this.Update = function()
 	{
 		sleep(0.5);
 	}
-	
+
 	this.Finished();
 };
 
@@ -49,5 +55,3 @@ this.Exit = function()
 {
 	this.Bot.ReleaseButton(BTN.CROUCH);
 };
-
-
