@@ -93,17 +93,17 @@ void Q4_Client::UpdateSyncImage( SyncImage & syncImage ) {
 	switch ( GetTeam() )
 	{
 	case Q4_TEAM_MARINE:
-		syncImage.imageName = "q4/marine_icon.png";
-		syncImage.imageColor = COLOR::GREEN;
+		syncImage.image = "q4/marine_icon.png";
+		syncImage.color = COLOR::GREEN;
 		break;
 	case Q4_TEAM_STROGG:
-		syncImage.imageName = "q4/strogg_icon.png";
-		syncImage.imageColor = COLOR::ORANGE;
+		syncImage.image = "q4/strogg_icon.png";
+		syncImage.color = COLOR::ORANGE;
 		break;
 	}
 
 	if ( GetHealthPercent() <= 0.0f ) {
-		syncImage.imageColor = COLOR::GREY;
+		syncImage.color = COLOR::GREY;
 	}
 }
 #endif
