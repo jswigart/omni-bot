@@ -335,11 +335,7 @@ member CountClass = function( team, class )
 	count = 0;
 	foreach( id and bot in BotTable )
 	{
-		// added injuredplayer check as a hack until there is a good method for
-		// getting ungibbed players real class. this is basically
-		// preventing multiple engineers being added with the
-		// manageengineers thread. sigh
-		if ( bot.GetTeam() == team && bot.GetClass() == class || bot.GetClass() == CLASS.INJUREDPLAYER  ) {
+		if ( bot.GetTeam() == team && bot.GetClass() == class ) {
 			count += 1;
 		}
 	}
@@ -693,7 +689,7 @@ member IsTeamDead = function( team, minbots )
 	// loop through the reserved player ents since there is no team table stored
 	for ( i = 0; i < 64; i = i + 1 )
 	{
-		if ( GetEntTeam( i ) == team && !GetEntFlags( i, ENTFLAG.DEAD, ENTFLAG.LIMBO ) && GetEntClass( i ) != CLASS.INJUREDPLAYER ) {
+		if ( GetEntTeam( i ) == team && !GetEntFlags( i, ENTFLAG.DEAD, ENTFLAG.LIMBO ) ) {
 			numalive += 1;
 			if ( !minbots ) {
 				return false;
@@ -720,7 +716,7 @@ member IsTeamClassDead = function( team, class )
 			continue;
 		}
 
-		if ( GetEntTeam( i ) == team && !GetEntFlags( i, ENTFLAG.DEAD ) && cls != CLASS.INJUREDPLAYER ) {
+		if ( GetEntTeam( i ) == team && !GetEntFlags( i, ENTFLAG.DEAD ) ) {
 			return false;
 		}
 	}

@@ -21,7 +21,8 @@ this.PrimaryFire.NeedsCharged = true;
 //~ this.PrimaryFire.MaxRange = 1000.0;
 
 // don't use panzer to gib
-this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
+this.PrimaryFire.SetIgnoreEntFlags( ENTFLAG.INJURED );
+//this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
 
 this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
 this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );

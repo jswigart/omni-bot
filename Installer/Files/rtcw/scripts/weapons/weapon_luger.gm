@@ -15,7 +15,8 @@ this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.SetTargetBias( CLASS.BREAKABLE, 1.0 );
 
 // don't use luger to gib
-this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
+this.PrimaryFire.SetIgnoreEntFlags( ENTFLAG.INJURED );
+//this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );
 
 this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
 this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );

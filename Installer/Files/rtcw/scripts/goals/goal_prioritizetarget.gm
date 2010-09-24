@@ -4,14 +4,14 @@
 this.Name = "PrioritizeTarget";		// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 
-this.LimitToTargetClass( CLASS.ANYPLAYER, CLASS.INJUREDPLAYER );
+this.LimitToTargetClass( CLASS.ANYPLAYER );
 
 this.GetPriority = function()
 {
 	ignore = false;
 	t = this.Bot.GetTarget();
 
-	if ( GetEntClass(t) == CLASS.INJUREDPLAYER ) {
+	if ( GetEntFlags(t, ENTFLAG.INJURED) ) {
 		if ( this.Bot.GetNearestEnemy(CAT.PLAYER, CLASS.ANYPLAYER) || this.Bot.DistanceTo(t) > 400 ) {
 			ignore = true;
 		}
