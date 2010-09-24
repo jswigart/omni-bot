@@ -287,7 +287,7 @@ class Weapon : public WeaponScriptResource
 
 			void SetTargetBias(int _targetclass, obReal _bias);
 
-			int SetIgnoreEntFlags(gmThread * a_thread);
+			BitFlag64 & GetIgnoreEntFlags() { return m_TargetEntFlagIgnore; }
 
 			bool IsCharging() const;
 			bool HasChargeTimes() const;
