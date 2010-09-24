@@ -818,13 +818,6 @@ static int _GetEntityClass( gentity_t *_ent ) {
 			return ENT_CLASS_GENERIC_SPECTATOR;
 		}
 
-		// Special case for dead players that haven't respawned
-		// cs: this sucks when counting classes on a team. ungibbed players won't return real class
-		// but some things depend on class.injuredplayer; like target priorities ...
-		if ( _ent->client->ps.pm_type >= PM_DEAD && !( _ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-			return RTCW_CLASSEX_INJUREDPLAYER;
-		}
-
 		return Bot_PlayerClassGameToBot( _ent->client->sess.latchPlayerType );
 	}
 	case ET_ITEM:
