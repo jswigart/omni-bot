@@ -850,7 +850,7 @@ void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * stateP
 	localDb.writeInt8( renderColor.a() );
 	localDb.endSizeHeader();
 	localDb.endWrite();
-		
+
 	const obuint32 crc = FileSystem::CalculateCrc( localBuffer, localDb.getBytesWritten() );
 	if ( fullSync || crc != m_SyncCrc ) {
 		if ( db.append( localDb ) ) {

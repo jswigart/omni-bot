@@ -283,9 +283,11 @@ class Weapon : public WeaponScriptResource
 
 			obReal GetWeaponBias() const { return m_WeaponBias; }
 
-			obReal GetTargetBias(int _targetclass);
+			obReal GetTargetBias(int _targetclass, const BitFlag64 & entFlags);
 
 			void SetTargetBias(int _targetclass, obReal _bias);
+
+			int SetIgnoreEntFlags(gmThread * a_thread);
 
 			bool IsCharging() const;
 			bool HasChargeTimes() const;
@@ -418,6 +420,10 @@ class Weapon : public WeaponScriptResource
 			// var: m_WeaponBias
 			//		The m_Client's current bias for this weapon.
 			obReal			m_WeaponBias;
+
+			// var: m_TargetEntFlagIgnore
+			//		If any entity flags exist on a target, this weapon should ignore it
+			BitFlag64		m_TargetEntFlagIgnore;
 
 			// For scripting
 			mutable gmGCRoot<gmUserObject> m_ScriptObject;

@@ -33,8 +33,7 @@ typedef std::set<MapGoalPtr> MapGoalSet;
 //		the needs of the game, and optionally the bot properties
 class GoalManager : public CommandReciever
 {
-public:
-	
+public:	
 	//////////////////////////////////////////////////////////////////////////
 	class Query
 	{
@@ -145,6 +144,10 @@ public:
 	static void DeleteInstance();
 	void UpdateGoalEntity( GameEntity oldent, GameEntity newent );
 	void RemoveGoalByName( const char *_goalname );
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
 
 	GoalManager();
 	virtual ~GoalManager();

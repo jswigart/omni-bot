@@ -35,12 +35,12 @@ typedef MessageDepot<Event_Sound,1024> SoundDepot;
 extern SoundDepot g_SoundDepot;
 
 struct SyncImage {
-	String		imageName;
-	String		imageOverlayName;
-	Vector2f	imagePosition;
-	Vector2f	imageSize;
-	obColor		imageColor;
-	float		imageHeading;
+	String		image;
+	String		overlay;
+	Vector2f	pos;
+	Vector2f	size;
+	obColor		color;
+	float		yaw;
 };
 
 // class: IGame

@@ -240,7 +240,7 @@ obReal Weapon::WeaponFireMode::CalculateDesirability(Client *_bot, const TargetI
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	obReal fTargetBias = GetTargetBias(_targetinfo.m_EntityClass);
+	obReal fTargetBias = GetTargetBias(_targetinfo.m_EntityClass, _targetinfo.m_EntityFlags);
 	if(fTargetBias == 0.f)
 	{
 		m_LastDesirability = 0.0;
@@ -512,12 +512,25 @@ void Weapon::WeaponFireMode::SetTargetBias(int _targetclass, obReal _bias)
 	}
 }
 
-obReal Weapon::WeaponFireMode::GetTargetBias(int _targetclass)
+obReal Weapon::WeaponFireMode::GetTargetBias(int _targetclass, const BitFlag64 & entFlags)
 {
+	if ( (entFlags & m_TargetEntFlagIgnore).AnyFlagSet() )
+		return 0.0f;
 	if(_targetclass >= 0 && _targetclass < (int)m_TargetBias.size())
 		return m_TargetBias[_targetclass];
 	return 1.f;
 }
+
+int Weapon::WeaponFireMode::SetIgnoreEntFlags(gmThread * a_thread)
+{
+	m_TargetEntFlagIgnore.ClearAll();
+	for( int i = 0; i < a_thread->GetNumParams(); ++i ) {
+		GM_CHECK_INT_PARAM( flg, i );
+		m_TargetEntFlagIgnore.SetFlag( flg, true );
+	}
+	return GM_OK;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Utilities
@@ -1195,6 +1208,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.func(&WeaponFireMode::SetDesirabilityWindow,		"SetDesirabilityRange","Set the desirability for a target within a certain min/max range.")
 		.func(&WeaponFireMode::SetBurstWindow,				"SetBurstRange","Set a burst shot behavior for a target within a certain min/max range.")
 		.func(&WeaponFireMode::SetTargetBias,				"SetTargetBias","Set a desirability multiplier versus a target class.")
+		.func(&WeaponFireMode::SetIgnoreEntFlags,			"SetIgnoreEntFlags","Sets one or more entity flags that should be ignored for this weapon.")
 
 		.var(getType,setType,								"WeaponType","string","melee, instant, projectile, or grenade")
 		

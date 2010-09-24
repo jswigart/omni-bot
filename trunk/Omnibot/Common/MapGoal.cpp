@@ -188,6 +188,8 @@ void MapGoal::_Init()
 
 	m_ControllingTeam = 0;
 
+	m_NeedsSynced = false;
+
 #ifdef Prof_ENABLED
 	m_ProfZone = 0;
 #endif
@@ -214,6 +216,8 @@ void MapGoal::_Init()
 
 MapGoal::~MapGoal() 
 {
+	IGameManager::GetInstance()->SyncRemoteDelete( va( "MapGoal:%s", GetName().c_str() ) );
+
 	gmBind2::Class<MapGoal>::NullifyUserObject(m_ScriptObject);
 }
 
@@ -1757,7 +1761,46 @@ void MapGoal::CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema)
 #ifdef ENABLE_DEBUG_WINDOW
 void MapGoal::action(const gcn::ActionEvent& actionEvent)
 {
+}
+#endif
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+void MapGoal::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+	if ( fullSync || m_NeedsSynced || GetDynamicPosition() || GetDynamicOrientation() ) {
+		m_NeedsSynced = false;
+
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+
+		obColor col = COLOR::ORANGE;
+		const Box3f worldbounds = GetWorldBounds();
+		RemoteLib::PackRect( db, 
+			"MapGoal",
+			GetName().c_str(),
+			worldbounds.Center.x, 
+			worldbounds.Center.y,
+			worldbounds.Extent[ 0 ]*2.0f,
+			worldbounds.Extent[ 1 ]*2.0f,
+			Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() ),
+			col.r(), col.g(), col.b(), col.a() );
+
+		db.endSizeHeader();
+		db.endWrite();
+
+
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		RemoteLib::PackLine( db,
+			"",
+			"dir", 
+			worldbounds.Center.x, 
+			worldbounds.Center.y,
+			worldbounds.Center.x+worldbounds.Extent[ 0 ]*32.0f, 
+			worldbounds.Center.y+worldbounds.Extent[ 0 ]*32.0f,
+			col.r(), col.g(), col.b(), col.a() );
+		db.endSizeHeader();
+		db.endWrite();
+	}	
 }
 #endif
 

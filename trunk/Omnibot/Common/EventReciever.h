@@ -24,7 +24,6 @@ public:
 	EventReciever();
 	virtual ~EventReciever();
 protected:
-
 	virtual void ProcessEventImpl(const MessageHelper &_message, obuint32 _targetState);
 	virtual void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb) {}
 };

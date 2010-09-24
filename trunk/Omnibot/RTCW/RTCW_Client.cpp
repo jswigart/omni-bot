@@ -387,30 +387,30 @@ void RTCW_Client::UpdateSyncImage( SyncImage & syncImage ) {
 	switch ( GetClass() )
 	{
 	case RTCW_CLASS_SOLDIER:
-		syncImage.imageName = "et/class_soldier.png";
+		syncImage.image = "et/class_soldier.png";
 		break;
 	case RTCW_CLASS_MEDIC:
-		syncImage.imageName = "et/class_medic.png";
+		syncImage.image = "et/class_medic.png";
 		break;
 	case RTCW_CLASS_ENGINEER:
-		syncImage.imageName = "et/class_engineer.png";
+		syncImage.image = "et/class_engineer.png";
 		break;
 	case RTCW_CLASS_LIEUTENANT:
-		syncImage.imageName = "et/class_fieldops.png";
+		syncImage.image = "et/class_fieldops.png";
 		break;
 	}
 	switch ( GetTeam() )
 	{
 	case RTCW_TEAM_ALLIES:
-		syncImage.imageColor = COLOR::BLUE;
+		syncImage.color = COLOR::BLUE;
 		break;
 	case RTCW_TEAM_AXIS:
-		syncImage.imageColor = COLOR::RED;
+		syncImage.color = COLOR::RED;
 		break;
 	}
 
 	if ( GetHealthPercent() <= 0.0f ) {
-		syncImage.imageColor = COLOR::GREY;
+		syncImage.color = COLOR::GREY;
 	}
 }
 #endif

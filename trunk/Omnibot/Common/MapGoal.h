@@ -86,13 +86,6 @@ public:
 	PROPERTY_BOOL(RenderRoutes);
 	PROPERTY_BOOL(CreateOnLoad);
 	
-	enum DrawFlags
-	{
-		DrawGoal		= (1<<0),
-		DrawRoutes		= (1<<1),
-		DrawHighlighted	= (1<<2),
-	};
-
 	enum DefaultDrawFlags
 	{
 		DrawName,
@@ -104,6 +97,7 @@ public:
 		DrawCurrentAvail,
 		DrawCenterBounds,
 		DrawDisabled,
+		DrawSynced,
 		DrawAll = -1,
 	};
 
@@ -396,6 +390,10 @@ public:
 #endif
 	void CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema);
 
+#ifdef ENABLE_REMOTE_DEBUGGING
+	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+#endif
+
 	MapGoal(const char *_goaltype);
 	~MapGoal();
 private:
@@ -441,6 +439,8 @@ private:
 	int				m_GoalState;
 
 	int				m_Version;
+
+	bool			m_NeedsSynced;
 
 	// var: m_ScriptObject
 	//		This objects script instance, so that the object can clear its script
