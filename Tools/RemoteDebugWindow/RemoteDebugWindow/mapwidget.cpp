@@ -44,27 +44,13 @@ MapWidget::MapWidget( QWidget *parent )
 	setRenderHints( QPainter::HighQualityAntialiasing | QPainter::Antialiasing | QPainter::SmoothPixmapTransform );
 	
 	setScene( &world );
+	setResizeAnchor( QGraphicsView::AnchorViewCenter );
 
 	rootGroup = new QGraphicsItemGroup();
 	scene()->addItem( rootGroup );
 }
 
 void MapWidget::resizeEvent( QResizeEvent * event ) {
-	const QRect newSize = rect();
-	QRectF sceneRect = scene()->sceneRect();
-
-	setSceneRect( sceneRect );
-	setResizeAnchor( QGraphicsView::AnchorViewCenter );
-	
-	horizontalScrollBar()->setMinimum( sceneRect.x() );
-	horizontalScrollBar()->setMaximum( sceneRect.width() );
-	horizontalScrollBar()->setPageStep( newSize.width() );
-	horizontalScrollBar()->setSingleStep( 1 );
-
-	verticalScrollBar()->setMinimum( sceneRect.y() );
-	verticalScrollBar()->setMaximum( sceneRect.height() );	
-	verticalScrollBar()->setPageStep( newSize.height() );
-	verticalScrollBar()->setSingleStep( 1 );
 }
 
 void MapWidget::dragEnterEvent( QDragEnterEvent *event ) {
