@@ -125,8 +125,8 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 		WeaponPtr wpn = (*it).second;
 		if(wpn->GetLiveUpdateKey() == _key)
 		{
-			EngineFuncs::ConsoleMessage(va("File changed, reloading %s",wpn->GetScriptPath()));
-			LOG("Re-Loading Weapon Definition: "<<wpn->GetScriptPath());
+			EngineFuncs::ConsoleMessage(va("File changed, reloading %s",wpn->GetScriptPath().c_str()));
+			LOG("Re-Loading Weapon Definition: "<<wpn->GetScriptPath().c_str());
 			
 			WeaponPtr newwpn(new Weapon);
 
