@@ -447,6 +447,7 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( "ROUTE_northstairwell" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "AIRSTRIKE.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_upper_front_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_lower_front_door" );
@@ -457,7 +458,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT_Door.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rEastpreflag.*" );
 
-	SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_dooras" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_dooras" );
 
 	MapRoutes =
 	{
@@ -622,6 +623,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
+	RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
