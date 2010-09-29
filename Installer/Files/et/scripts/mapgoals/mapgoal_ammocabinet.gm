@@ -8,6 +8,13 @@ this.Range = 1250.f;
 
 //////////////////////////////////////////////////////////////////////////
 
+this.InitNewGoal = function()
+{
+	this.CreateOnLoad = true; // user created goals need this
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 this.UpgradeVersion = function(Props)
 {
 	// version 0 is string,string key/values from the old waypoint format
@@ -35,7 +42,7 @@ this.Render = function()
 			this.ExtraDebugText = "";
 			this.ExtraDebugText += format("Range: %g", ToFloat(this.Range));
 		}
-		
+
 		this.RenderDefault();
 
 		sleep(2);

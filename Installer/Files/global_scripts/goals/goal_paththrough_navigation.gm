@@ -27,6 +27,10 @@ this.OnPathThrough = function(data)
 	navigation = Map.Navigation[data];
 	if(navigation)
 	{
+		if ( navigation.EvalFunc && navigation.EvalFunc() == false ) {
+			return false;
+		}
+
 		this.CurrentNavigation = data;
 		return true;
 	}
@@ -54,6 +58,12 @@ this.Exit = function()
 
 this.Update = function()
 {
+	if ( this.wpinfo ) {
+		if ( this.Goto(this.wpinfo.position) == EVENT.PATH_FAILED ) {
+			yield();
+			this.Finished();
+		}
+	}
 	if ( this.navigation.navigate )
 		{ this.navigation.navigate(this); }
 

@@ -504,7 +504,7 @@ static int GM_CDECL gmfGetConstructableState(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: GetDestroyableState
-//		Return if the target is destroyable.
+//		Return the state of the destroyable; exploded, not exploded, invalid.
 //		
 //
 // Parameters:
@@ -595,6 +595,40 @@ static int gmfGetMG42Info(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: GetMountedPlayerOnMG42
+//		Returns entity currently mounted on the given mg42 entity
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		MG42 Info
+static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);	
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	GameEntity owner = InterfaceFuncs::GetMountedPlayerOnMG42(native, gameEnt);
+	if (owner.IsValid())
+	{
+		gmVariable v;
+		v.SetEntity(owner.AsInt());
+		a_thread->Push(v);
+	}
+	else
+	{
+		a_thread->PushNull();
+	}
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 { 
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon},
@@ -626,7 +660,9 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"GetConstructableState",	gmfGetConstructableState},
 	{"GetDestroyableState",		gmfGetDestroyableState},
 
+	// TODO: add owner to MG42Info table when breaking mod compat doesn't matter?
 	{"GetMG42Info",				gmfGetMG42Info},
+	{"GetMountedPlayerOnMG42",	gmfGetMountedPlayerOnMG42},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =
