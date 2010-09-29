@@ -327,6 +327,10 @@ private:
 
 	obuint32		m_SyncCrc;
 
+#ifdef _DEBUG
+	String			m_DebugName;
+#endif
+
 	State();
 };
 
