@@ -26,13 +26,21 @@ this.GetPriority = function()
 					continue;
 				}
 				
-				if ( GetEntFlags(ent, ENTFLAG.MOUNTED, ENTFLAG.DEAD) ) {
+				if ( GetEntFlags(ent, ENTFLAG.DEAD) ) {
 					continue;
 				}
-
-				this.MapGoal = goal;
-				this.Priority = goal.GetGoalPriority(this.Bot);
-				break;
+				
+				owner = this.Bot.GetMountedPlayerOnMG42(goal.GetEntity());
+				
+				if ( this.Debug && owner) {
+					this.Bot.Say(format("%s is mounted on %s",GetEntName(owner), goal.GetName()));
+				}
+				
+				if ( !owner || GetEntTeam(owner) != this.Bot.GetTeam() ) {
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
 			}
 		}
 
@@ -69,7 +77,7 @@ this.Update = function()
 {
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
-		if(!this.MarkInUse(this.MapGoal) || GetEntFlags(this.GoalEnt, ENTFLAG.MOUNTED)) {
+		if(!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
@@ -86,6 +94,7 @@ this.Update = function()
 				else {
 					// try to mount it
 					this.AddAimRequest(Priority.High, "position", this.MapGoal.GetPosition());
+					this.Bot.HoldButton(BTN.BACKWARD, 0.5); // sometimes if they are too close it's unmountable
 					this.Bot.PressButton(BTN.USE);
 				}
 			}
