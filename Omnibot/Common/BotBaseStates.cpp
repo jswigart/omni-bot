@@ -2131,8 +2131,8 @@ namespace AiState
 	Main::Main() 
 		: StateSimultaneous("Main") 
 	{
-		AppendState(new HighLevel);
 		AppendState(new LowLevel);
+		AppendState(new HighLevel);		
 	}
 
 	obReal Main::GetPriority()

@@ -48,6 +48,9 @@ State::~State()
 void State::SetName(const char *_name)
 {
 	m_NameHash = Utils::MakeHash32(_name);
+#ifdef _DEBUG
+	m_DebugName = _name ? _name : "";
+#endif
 }
 
 String State::GetName() const
