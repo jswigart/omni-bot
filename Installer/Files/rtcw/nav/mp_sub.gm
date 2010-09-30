@@ -59,6 +59,7 @@ global Map =
 		Map.FiltStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_flag" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
@@ -270,11 +271,13 @@ global OnMapLoad = function()
 	//eng camp spots to wait for recharge
 	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_flag", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_flag" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSub.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn );
