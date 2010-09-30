@@ -113,6 +113,7 @@ Weapon::WeaponFireMode &Weapon::WeaponFireMode::operator=(const WeaponFireMode &
 
 	m_HeatController = _rh.m_HeatController;
 	m_TargetBias = _rh.m_TargetBias;
+	m_TargetEntFlagIgnore = _rh.m_TargetEntFlagIgnore;
 
 	for(int i = 0; i < MaxDesirabilities; ++i)
 		m_Desirabilities[i] = _rh.m_Desirabilities[i];
