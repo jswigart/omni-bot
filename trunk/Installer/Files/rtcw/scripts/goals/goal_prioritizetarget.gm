@@ -3,6 +3,7 @@
 // These parameters are required
 this.Name = "PrioritizeTarget";		// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AutoAdd = false;
 
 this.LimitToTargetClass( CLASS.ANYPLAYER );
 this.DontGibWeapons = ( (1<<WEAPON.PANZERFAUST) |
