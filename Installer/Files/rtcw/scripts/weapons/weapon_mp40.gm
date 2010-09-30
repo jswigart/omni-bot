@@ -21,3 +21,5 @@ this.PrimaryFire.SetDesirabilityRange( 0, 2600, 0.7 );
 
 this.PrimaryFire.LowAmmoThreshold = 5;
 this.PrimaryFire.LowAmmoPriority = 0.8;
+
+this.PrimaryFire.SetIgnoreEntFlags( ENTFLAG.INJURED );
