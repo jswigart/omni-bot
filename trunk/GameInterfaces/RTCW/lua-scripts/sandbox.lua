@@ -47,7 +47,7 @@ local function initRevengeArray( clientNum )
 end
 
 local function updateRevenge( killer, victim )
-	if killer == victim or killer < MAX_CLIENTS then
+	if killer == victim or killer > MAX_CLIENTS-1 then
 		return
 	end
 

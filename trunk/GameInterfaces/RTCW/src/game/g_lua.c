@@ -14,9 +14,9 @@ void QDECL LOG( const char *fmt, ... ) {
 	Q_vsnprintf( buff, sizeof( buff ), fmt, argptr );
 	va_end( argptr );
 
-	if ( g_dedicated.integer ) {
+	//if ( g_dedicated.integer ) {
 		trap_Printf( buff );
-	}
+	//}
 
 	if ( level.logFile ) {
 		int tens;
@@ -904,6 +904,26 @@ static int _et_IsBot( lua_State *L ) {
 	int bot = ent->client && ent->r.svFlags & SVF_BOT ? 1 : 0;
 	return bot;
 }
+// }}}
+
+// et.SetTeam( clientNum, team )
+static int _et_SetTeam( lua_State *L ) {
+	int clientNum = luaL_checkint( L, 1 );
+	const char *team = luaL_checkstring( L, 2 );
+
+	if ( (g_entities + clientNum)->client && ((g_entities + clientNum)->client->pers.connected == CON_CONNECTED) ) {
+		SetTeam(g_entities + clientNum, (char *)team);
+	}
+	return 0;
+}
+// }}}
+
+// et.GetLevelTime()
+static int _et_GetLevelTime( lua_State *L ) {
+	lua_pushinteger( L, level.time );
+	return 1;
+}
+// }}}
 
 // et library initialisation array
 static const luaL_Reg etlib[] = {
@@ -966,6 +986,8 @@ static const luaL_Reg etlib[] = {
 	{ "G_AddEvent",                 _et_G_AddEvent              },
 	{ "GetTimeStamp",               _et_GetTimeStamp            },
 	{ "IsBot",                      _et_IsBot                   },
+	{ "SetTeam",                    _et_SetTeam                 },
+	{ "GetLevelTime",               _et_GetLevelTime            },
 
 	{ NULL },
 };
