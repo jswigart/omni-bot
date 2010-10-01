@@ -3055,6 +3055,7 @@ member FindPaththroughNodes = function()
 		}
 	}
 };
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 member RenderPaththroughNodes = function(param)
@@ -3072,5 +3073,18 @@ member RenderPaththroughNodes = function(param)
 			DrawText3d(ptnode.position+Vector3(0,0,48),ptnode.name,COLOR.YELLOW,2,1000);
 		}
 		sleep(2);
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ForceRouting = function(goalname, set)
+{
+	mg = GetGoal(goalname);
+	if (mg) {
+		mg.ForceRouting = set;
+	}
+	else {
+		Util.MapDebugPrint("Util.ForceRouting: Invalid goal name " + goalname, true);
 	}
 };

@@ -154,6 +154,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDepot.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rTank.*" );
 
+		// use build offsets instead of forced routing
+		Util.ForceRouting( "BUILD_Tank", false );
+
 		Util.MapDebugPrint( "allies_steal_tank" );
 	},
 
@@ -911,6 +914,9 @@ global OnMapLoad = function()
 	//routes for tank build at barrier 2
 	Util.DisableGoal("ROUTE_repair_route.*");
 
+	// force routing for the tank build
+	Util.ForceRouting( "BUILD_Tank", true );
+
 	//set up some routing
 	MapRoutes =
 	{
@@ -1183,7 +1189,7 @@ global OnMapLoad = function()
 					ROUTE_bridgeroute2 = {},
 				},
 				ROUTE_cp_stairs = { Weight = 2,},
-			},			
+			},
 		},
 	};
 
