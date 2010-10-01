@@ -105,7 +105,7 @@ this.Update = function()
 	offsetCount = 0;
 
 	// are offsets set up for this goal?
-	if ( this.MapGoal.Offsets && this.MapGoal.Vehicle ) {
+	if ( !this.MapGoal.ForceRouting && this.MapGoal.Offsets && this.MapGoal.Vehicle ) {
 		offsetCount = tableCount(this.MapGoal.Offsets);
 
 		if ( offsetCount > 0) {
