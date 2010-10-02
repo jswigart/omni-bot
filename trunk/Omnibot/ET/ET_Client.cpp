@@ -302,12 +302,11 @@ void ET_Client::ProcessGotoNode(const Path &_path)
 		PressButton(BOT_BUTTON_SPRINT);
 	}
 
-	//fix some ladder stuckages ...
-	//if they miss the node, they keep pressing
-	/*if(pt.m_NavFlags & F_NAV_CLIMB)
+	// test for inwater / jump to move to surface
+	if(pt.m_NavFlags & F_NAV_INWATER)
 	{
-		PressButton(BOT_BUTTON_FWD);
-	}*/
+		PressButton(BOT_BUTTON_JUMP);
+	}
 
 	if(pt.m_NavFlags & F_ET_NAV_STRAFE_L)
 	{		

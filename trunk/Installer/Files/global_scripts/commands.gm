@@ -1476,3 +1476,29 @@ Commands["draw_paththrough"] =
 		"render 3d text over paththrough node locations",
 	},
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["fix_waterwps"] =
+{
+	Func = function(_params)
+	{
+		wpTable = {};
+		Wp.GetAllWaypoints(wpTable);
+		
+		foreach ( id && wp in wpTable ) {
+			foreach ( flag && set in wp.flags ) {
+				if ( flag == "underwater" && set == 1 ) {
+					if ( !(GetPointContents(wp.position + Vector3(0,0,128)) & CONTENT.WATER) ) {
+						Wp.SetWaypointFlag(wp.guid, "inwater", true);
+					}
+				}
+			}
+		}		
+	},
+
+	Help =
+	{
+		"adds inwater flag to waypoints close to the water surface",
+	},
+};
