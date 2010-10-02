@@ -1887,6 +1887,9 @@ Waypoint *PathPlannerWaypoint::AddWaypoint(const Vector3f &_pos, const Vector3f 
 	{
 		if(entFlags.CheckFlag(ENT_FLAG_CROUCHED))
 			pNewWaypoint->AddFlag(F_NAV_CROUCH);
+
+		if(entFlags.CheckFlag(ENT_FLAG_INWATER))
+			pNewWaypoint->AddFlag(F_NAV_INWATER);
 	}
 
 	m_WaypointList.push_back(pNewWaypoint);

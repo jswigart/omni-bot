@@ -1726,7 +1726,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
 #ifdef WITH_LUA
-	if ( !isBot && !( ent->r.svFlags & SVF_BOT ) && G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
+	if ( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) && !isBot && !( ent->r.svFlags & SVF_BOT ) ) {
 		return va( "%s\n", reason );
 	}
 #endif

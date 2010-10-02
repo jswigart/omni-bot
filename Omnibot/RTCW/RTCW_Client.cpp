@@ -144,46 +144,21 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
 	
 	int iVoiceId = RTCW_VoiceMacros::GetVChatId(m->m_MacroString);
-	switch(iVoiceId)
+	/*switch(iVoiceId)
 	{
-		/*case VCHAT_TEAM_PATHCLEARED:
+		case VCHAT_TEAM_PATHCLEARED:
 		case VCHAT_TEAM_ENEMYWEAK:
 		case VCHAT_TEAM_ALLCLEAR:
-		case VCHAT_TEAM_INCOMING:*/
-	case VCHAT_TEAM_FIREINTHEHOLE:
-		{
-			break;
-		}
-		/*case VCHAT_TEAM_ONDEFENSE:
+		case VCHAT_TEAM_INCOMING:
+		case VCHAT_TEAM_FIREINTHEHOLE:
+		case VCHAT_TEAM_ONDEFENSE:
 		case VCHAT_TEAM_ONOFFENSE:
 		case VCHAT_TEAM_TAKINGFIRE:
 		case VCHAT_TEAM_MINESCLEARED:
-		case VCHAT_TEAM_ENEMYDISGUISED:*/
-	case VCHAT_TEAM_MEDIC:
-		{
-			if(m->m_WhoSaidIt.IsValid() && (GetClass() == RTCW_CLASS_MEDIC))
-			{
-				//FIXME
-				/*
-				BotBrain::EvaluatorPtr eval(new RTCW_Evaluator_RequestGiveHealth(this, m->m_WhoSaidIt));
-				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
-			}
-			break;
-		}
-	case VCHAT_TEAM_NEEDAMMO:
-		{
-			if(m->m_WhoSaidIt.IsValid() && (GetClass() == RTCW_CLASS_LIEUTENANT))
-			{
-				//FIXME
-				/*
-				BotBrain::EvaluatorPtr eval(new RTCW_Evaluator_RequestGiveAmmo(this, m->m_WhoSaidIt));
-				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
-			}
-			break;
-		}
-		/*case VCHAT_TEAM_NEEDBACKUP:
+		case VCHAT_TEAM_ENEMYDISGUISED:
+		case VCHAT_TEAM_MEDIC:
+		case VCHAT_TEAM_NEEDAMMO:
+		case VCHAT_TEAM_NEEDBACKUP:
 		case VCHAT_TEAM_NEEDENGINEER:
 		case VCHAT_TEAM_COVERME:
 		case VCHAT_TEAM_HOLDFIRE:
@@ -203,10 +178,10 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 		case VCHAT_TEAM_THANKS:
 		case VCHAT_TEAM_WELCOME:
 		case VCHAT_TEAM_SORRY:
-		case VCHAT_TEAM_OOPS:*/
+		case VCHAT_TEAM_OOPS:
 
 		// Command related
-		/*case VCHAT_TEAM_COMMANDACKNOWLEDGED:
+		case VCHAT_TEAM_COMMANDACKNOWLEDGED:
 		case VCHAT_TEAM_COMMANDDECLINED:
 		case VCHAT_TEAM_COMMANDCOMPLETED:
 		case VCHAT_TEAM_DESTROYPRIMARY:
@@ -215,10 +190,10 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 		case VCHAT_TEAM_CONSTRUCTIONCOMMENCING:
 		case VCHAT_TEAM_REPAIRVEHICLE:
 		case VCHAT_TEAM_DESTROYVEHICLE:
-		case VCHAT_TEAM_ESCORTVEHICLE:*/
+		case VCHAT_TEAM_ESCORTVEHICLE:
 
 		// Global messages
-		/*case VCHAT_GLOBAL_AFFIRMATIVE:
+		case VCHAT_GLOBAL_AFFIRMATIVE:
 		case VCHAT_GLOBAL_NEGATIVE:
 		case VCHAT_GLOBAL_ENEMYWEAK:
 		case VCHAT_GLOBAL_HI:
@@ -230,8 +205,8 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 		case VCHAT_GLOBAL_OOPS:
 		case VCHAT_GLOBAL_SORRY:
 		case VCHAT_GLOBAL_HOLDFIRE:
-		case VCHAT_GLOBAL_GOODGAME:*/
-	}
+		case VCHAT_GLOBAL_GOODGAME:
+	}*/
 	return iVoiceId;
 }
 
@@ -245,12 +220,11 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 		PressButton(BOT_BUTTON_SPRINT);
 	}
 
-	//fix some ladder stuckages ...
-	//if they miss the node, they keep pressing
-	/*if(pt.m_NavFlags & F_NAV_CLIMB)
+	// test for inwater / jump to move to surface
+	if(pt.m_NavFlags & F_NAV_INWATER)
 	{
-		PressButton(BOT_BUTTON_FWD);
-	}*/
+		PressButton(BOT_BUTTON_JUMP);
+	}
 
 	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_L)
 	{		
