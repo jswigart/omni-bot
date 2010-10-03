@@ -1,7 +1,63 @@
-function test()
-	local i = 2
-	et.G_Print("test \n")
-	et.G_Print("---" .. string.find(string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(i), "cl_guid" )),"omnibot") .. "---\n")
+function test(clientNum, params)
+	-- reload db from admins.cfg
+	global_admin_table = {} -- reset
+	local fd,len = et.trap_FS_FOpenFile('mmod/admins.cfg', et.FS_READ)
+
+	if len <= 0 then
+		et.G_Print("WARNING: No Admins Defined! \n")
+		et.G_LogPrint("WARNING: No Admins Defined! \n")
+	else
+		local filestr = et.trap_FS_Read(fd, len)
+		global_admin_table = {} -- reset
+		
+	    for name,guid,level in string.gfind(filestr, "%s*name%s*=%s*([^%\n]*)%s*guid%s*=%s*(%w+)%s*level%s*=%s*(-?%d+)%s*") do
+		    global_admin_table[guid] = {}
+		    global_admin_table[guid]["level"] = tonumber(level)
+		    global_admin_table[guid]["name"] = name
+		end
+	end
+	et.trap_FS_FCloseFile(fd) 
+	
+	-- reload db from bans.cfg
+	global_ban_table = {} -- reset
+	local fd,len = et.trap_FS_FOpenFile('mmod/bans.cfg', et.FS_READ)
+
+	if len <= 0 then
+		et.G_Print("No Bans Defined! \n")
+		et.G_LogPrint("No Bans Defined! \n")
+	else
+		local filestr = et.trap_FS_Read(fd, len)
+
+		
+	    for name,guid,reason,made,expires,banner in string.gfind(filestr, "%s*name%s*=%s*([^%\n]*)%s*guid%s*=%s*(%w+)%s*reason%s*=%s*([^%\n]*)%s*made%s*=%s*([^%\n]*)%s*expires%s*=%s*(-?%d+)%s*banner%s*=%s*([^%\n]*)%s*") do
+		    global_ban_table[guid] = {}
+		    global_ban_table[guid]["reason"] = reason
+		    global_ban_table[guid]["name"] = name
+		    global_ban_table[guid]["made"] = made
+		    global_ban_table[guid]["expires"] = expires
+		    global_ban_table[guid]["banner"] = banner
+		end
+	end
+	et.trap_FS_FCloseFile(fd)
+
+	mmodDB = sqlite3.open(dbname)
+	
+	for guid in pairs(global_admin_table) do	
+		mmodDB:exec('insert into tblAdmins (guid,level,name) values("' .. string.lower(guid) ..
+			'", ' .. tonumber(global_admin_table[guid]["level"]) ..
+			', "' .. global_admin_table[guid]["name"] .. '")' )
+	end	
+	
+	for guid in pairs(global_ban_table) do	
+		mmodDB:exec('insert into tblBans (guid,name,reason,expires,made,banner) values("' .. string.lower(guid) ..
+			'", "' .. global_ban_table[guid]["name"] ..
+			'", "' .. global_ban_table[guid]["reason"] ..
+			'", ' ..  global_ban_table[guid]["expires"] ..
+			', "' ..  global_ban_table[guid]["made"] ..
+			'", "' .. global_ban_table[guid]["banner"] .. '")' )
+	end	
+	mmodDB:close()
+	mmodDB = nil
 end
 
 function admintest(clientNum, params)
@@ -91,37 +147,31 @@ function ban(clientNum, params)
 		local expires = tban
 		local banner = ""
 		
-		if string.find(guid,"omnibot") then
+		if et.IsBot(victim) then
 			userprint(clientNum, "chat", header .. "cannot ban bots")
 			return 
 		end
-		global_ban_table[guid] = {}
-		global_ban_table[guid]["name"] = name
-		global_ban_table[guid]["reason"] = reason
-		global_ban_table[guid]["made"] = made
-		global_ban_table[guid]["expires"] = expires
 		if clientNum==rconclient then
 			banner = rconclient
 		else
 			banner = et.gentity_get(clientNum,"pers.netname")
 		end
-		global_ban_table[guid]["banner"] = banner
-		if expires == 0 then
-			bmsg = "(Perm Ban) "
-		else
-			bmsg = "(Temp Ban) "
-		end
-        et.trap_DropClient(victim, bmsg .. reason, 0)
-		writeBans()
+		mmodDB = sqlite3.open(dbname)
+		mmodDB:exec('insert into tblBans (guid,name,reason,expires,made,banner) values("'.. guid ..'", "'.. name ..'", "'.. reason ..'", '.. expires ..', "'.. made ..'", "'.. banner .. '")' )
+		mmodDB:close()
+		mmodDB = nil	
+		bmsg = "\n\nYou have been banned: \n"
+		bmsg = bmsg .. "Reason: " .. reason .. "\n"
+		bmsg = bmsg .. "Expires: " .. expiremsg(expires)
+        et.trap_DropClient(victim, bmsg, 0)
         reason = " ^3reason: ^7" .. reason
         local tmpMsg = header .. name .. " ^7was banned!" .. reason
 	    userprint(-1, "chat", tmpMsg)
 	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
-    else
+   else
         userprint(clientNum, "chat", commandhelp["ban"])
     end
     return
-
 end
 
 function botplayers(clientNum, params)
@@ -132,8 +182,8 @@ function botplayers(clientNum, params)
     if bplayer ~= nil then
 		if isNumeric(bplayer) then
 			bplayer = tonumber(bplayer)
-            if (bplayer < 0) or  (bplayer > (maxclients - 1)) then 
-				userprint(clientNum, "chat", header .. "must be between 0 and " .. tostring(maxclients - 1))
+            if (bplayer < 1) or  (bplayer > (maxclients - 1)) then 
+				userprint(clientNum, "chat", header .. "must be between 1 and " .. tostring(maxclients - 1))
                 return
             end
 			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot maxbots " .. bplayer)		
@@ -149,6 +199,49 @@ end
 function date(clientNum)
 	local date = os.date("%A, %B %d, %Y")
 	userprint(-1, "chat", "^3date: ^7The server date is " .. date)
+    return
+end
+
+function gib(clientNum, params)
+    local header = "^3gib: ^7"
+    local reason = ""
+    local victim = ReadyCommand(clientNum, "gib", params)
+    
+    if victim == 99 then
+        return
+    end
+ 
+    if table.getn(params) >= 2 then
+        reason = " ^3reason: ^7"
+        for i = 2, table.getn(params) do
+            reason = reason .. tostring(params[i]) .. " "
+        end
+    end
+    
+    if victim ~= -1 then
+        local victim_health = et.gentity_get(victim, "health")
+        local name = et.gentity_get(victim,"pers.netname")
+        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
+        
+        if team == 3 then -- spec
+	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team")
+	        return
+        end
+        if victim_health <= 0 then 
+	        userprint(clientNum, "chat", header .. name .. " ^7must be alive")
+	        return
+        end
+
+		-- explanation -  et.G_Damage(target, inflictor, attacker, damage, dflags, mod), mod 0 = unknown
+		et.G_Damage(victim, 80, 1022, 667, 8, 34)
+		et.gentity_set(victim, "ps.persistant[PERS_SCORE]", (et.gentity_get(victim,"ps.persistant[PERS_SCORE]") + 1))
+		local tmpMsg = header .. name .. " ^7was gibbed!" .. reason
+		et.trap_SendServerCommand(victim, "cp \"" .. reason .. " \"\n")
+	    userprint(-1, "chat", tmpMsg)
+	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    else
+        userprint(clientNum, "chat", commandhelp["gib"])
+    end
     return
 end
 
@@ -186,7 +279,7 @@ function help(clientNum, params)
 	    
         userprint(clientNum, "print", header .. "help for '" .. command .. "' \n")
         userprint(clientNum, "print", commandhelp[command] .. "\n")
-        userprint(clientNum, "chat", header .. "commands help has been printed in console")
+        userprint(clientNum, "chat", header .. "commands help have been printed in console")
     else
         -- list commands
         local counter = 0
@@ -216,49 +309,6 @@ function help(clientNum, params)
     end
 end
 
-function gib(clientNum, params)
-    local header = "^3gib: ^7"
-    local reason = ""
-    local victim = ReadyCommand(clientNum, "gib", params)
-    
-    if victim == 99 then
-        return
-    end
- 
-    if table.getn(params) >= 2 then
-        reason = " ^3reason: ^7"
-        for i = 2, table.getn(params) do
-            reason = reason .. tostring(params[i]) .. " "
-        end
-    end
-    
-    if victim ~= -1 then
-        local victim_health = et.gentity_get(victim, "health")
-        local name = et.gentity_get(victim,"pers.netname")
-        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
-        
-        if team == 3 then -- spec
-	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team")
-	        return
-        end
-        if victim_health <= 0 then 
-	        userprint(clientNum, "chat", header .. name .. " ^7must be alive")
-	        return
-        end
-
-        et.gentity_set(victim, "health", -600)
-        local tmpMsg = header .. name .. " ^7was gibbed!" .. reason
-	    userprint(-1, "chat", tmpMsg)
-	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
-        local sound = 'sound/multiplayer/hurt_barbwire.wav'
-        soundindex = et.G_SoundIndex(sound)
-        et.G_Sound(victim,  soundindex)
-    else
-        userprint(clientNum, "chat", commandhelp["gib"])
-    end
-    return
-end
-
 function kick(clientNum, params)
     local header = "^3kick: ^7"
     local reason = ""
@@ -280,7 +330,23 @@ function kick(clientNum, params)
 				
     if victim ~= -1 then
         local name = et.gentity_get(victim,"pers.netname")
-        -- et.trap_SendConsoleCommand( et.EXEC_INSERT, "clientkick " .. victim)
+		local guid = string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(victim), "cl_guid" ))
+		local banner = ""
+		local expires = (kicktime * 60) + et.GetTimeStamp()
+		
+		if et.IsBot(victim) then
+			userprint(clientNum, "chat", header .. "cannot kick bots")
+			return 
+		end
+		if clientNum==rconclient then
+			banner = rconclient
+		else
+			banner = et.gentity_get(clientNum,"pers.netname")
+		end
+		mmodDB = sqlite3.open(dbname)
+		mmodDB:exec('insert into tblBans (guid,name,reason,expires,made,banner) values("'.. guid ..'", "'.. name ..'", "'.. reason ..'", '.. expires ..', "'.. os.date("%c") ..'", "'.. banner .. '")' )
+		mmodDB:close()
+		mmodDB = nil	
         et.trap_DropClient(victim, reason, 0)
         reason = " ^3reason: ^7" .. reason
         local tmpMsg = header .. name .. " ^7was kicked!" .. reason
@@ -329,7 +395,7 @@ function listplayers(clientNum)
 	        end
 			levelname = chop(global_level_table[level]["name"])
 			levelname = crop_text(levelname, 20)
-			if string.find(string.lower(guid),"omnibot") then
+			if et.IsBot(slot) then
 			    guid = " ( OmniBot ) "
 			else
 			    guid = " (*" .. string.sub(guid, 25) .. ") "
@@ -369,7 +435,7 @@ function putteam(clientNum, params)
     end
     
     if victim ~= -1 then
-	    local newteam
+	    local newteam = ""
 	    local fullteam = ""
         local name = et.gentity_get(victim,"pers.netname")
         local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
@@ -380,13 +446,13 @@ function putteam(clientNum, params)
         end
 	    
 	    if ( params[2] == "r" or params[2] == "axis" ) then
-		    newteam = 1
+		    newteam = "r"
 		    fullteam = "^1axis"
 	    elseif ( params[2] == "b" or params[2] == "allies" ) then
-		    newteam = 2
+		    newteam = "b"
 		    fullteam = "^4allies"
 	    elseif ( params[2] == "s" or params[2] == "spec" ) then
-		    newteam = 3
+		    newteam = "s"
 		    fullteam = "^3spectators"
 	    else
             userprint(clientNum, "chat", header .. "unknown team ^5" ..params[2])
@@ -396,9 +462,7 @@ function putteam(clientNum, params)
             userprint(clientNum, "chat", header .. name .. " ^7is already on team " .. fullteam)
 	        return
 	    end
-        et.gentity_set(victim, "health", -600)
-        et.gentity_set(victim, "sess.sessionTeam", newteam)
-        et.ClientUserinfoChanged(victim)
+		et.SetTeam(victim, newteam)
         local tmpMsg = header .. name .. " ^7joined the " .. fullteam
 	    userprint(-1, "chat", tmpMsg)
 	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
@@ -442,14 +506,14 @@ function rename(clientNum, params)
     return
 end
 
-function setlevel(clientNum, params)  -- invalid lvl check not working 
+function setlevel(clientNum, params) 
     local header = "^3setlevel: ^7"
     local victim = ReadyCommand(clientNum, "setlevel", params)
     
     if victim == 99 then
         return
     end
-
+	
     if victim ~= -1 then
         local level = tostring(params[2])
 		local name = et.Q_CleanStr(et.Info_ValueForKey(et.trap_GetUserinfo(victim), "name" ))
@@ -466,25 +530,30 @@ function setlevel(clientNum, params)  -- invalid lvl check not working
 		    local clientlvl = global_admin_table[clientguid]["level"]
             if tonumber(level) > clientlvl then
                 userprint(clientNum, "chat", header .. "can not setlevel higher then yours")
-                return
+				return
             end
         end
         if global_admin_table[guid] == nil then -- new admin
             if level == "0" then 
                 userprint(clientNum, "chat", header .. "can not set new admin to level 0")
-                return
+				return
             end
-            global_admin_table[guid] = {}
-            global_admin_table[guid]["name"] = name
-            global_admin_table[guid]["level"] = level
+			mmodDB = sqlite3.open(dbname)
+			mmodDB:exec('insert into tblAdmins (guid,level,name) values("' .. guid .. '", ' .. tonumber(level) .. ', "' .. name .. '")' )
+			mmodDB:close()
+			mmodDB = nil	
         else 
             if level == "0" then 
-                global_admin_table[guid] = nil
+				mmodDB = sqlite3.open(dbname)
+				mmodDB:exec('delete from tblAdmins where guid = "' .. guid .. '"' )
+				mmodDB:close()
             else
-                global_admin_table[guid]["level"] = level
+				mmodDB = sqlite3.open(dbname)
+				mmodDB:exec('update tblAdmins set level=' .. level .. ' where guid = "' .. guid .. '"' )
+				mmodDB:close()
             end
         end
-        writeAdmins()
+		loadAdmins()
         local tmpMsg = header .. colorname .. " ^7was set to level " .. level
 	    userprint(-1, "chat", tmpMsg)
 	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
@@ -494,31 +563,75 @@ function setlevel(clientNum, params)  -- invalid lvl check not working
     return
 end
 
-function showbans(clientNum)
+function showbans(clientNum, params)
     local header = "^3showbans: ^7"
+	local num = params[1]
 	local counter = 0
+	local maxind = 0
+	local count = 0
 	
-	for guid in pairs (global_ban_table) do 
-		local name = global_ban_table[guid]["name"]
-		local made = global_ban_table[guid]["made"]
-		local banner = global_ban_table[guid]["banner"]
-		local expires = global_ban_table[guid]["expires"]
-		local reason = global_ban_table[guid]["reason"]
-		local message = ""
-		
-		counter = counter + 1
-		if counter < 10 then
-			message = "^5 " .. tostring(counter) .. " "
+    if num ~= nil then
+		if isNumeric(num) then
+			num = tonumber(num)
 		else
-			message = "^5" .. tostring(counter) .. " "
+			userprint(clientNum, "chat", "^3showbans: ^5" .. num .. " ^7is not a number")
+			return
 		end
+    else
+        num = 0
+    end
+
+	mmodDB = sqlite3.open(dbname)
+	
+	mmodDB:exec('DELETE FROM tblBans WHERE (expires - ' .. et.GetTimeStamp() .. ') <= 0 and expires <> 0') --delete expired bans
+	
+	for row in mmodDB:nrows('SELECT count(*) as count FROM tblBans') do
+		count = row.count
+	end
+	
+	if count == 0 then
+		mmodDB:close()
+		mmodDB = nil
+		userprint(clientNum, "chat", header .. "there are no bans")
+		return
+	end	
+	
+	for row in mmodDB:nrows('SELECT MAX(ind) as maxind FROM tblBans') do
+		maxind = row.maxind
+	end
+	
+	if num > maxind then
+		mmodDB:close()
+		mmodDB = nil
+		userprint(clientNum, "chat", "^3showbans: ^5" .. num .. " ^7is invalid. There are only " .. maxind .. " bans.")
+		return
+	end
+	
+	for row in mmodDB:nrows("SELECT * FROM tblBans WHERE ind >= " .. num .. " LIMIT 15") do
+		local ind = row.ind
+		local guid = row.guid
+		local name = row.name
+		local reason = row.reason
+		local expires = row.expires
+		local made = crop_text(row.made, 8)
+		local banner = row.banner
+		
+		if ind < 10 then
+			message = "^5 " .. tostring(ind) .. " "
+		else
+			message = "^5" .. tostring(ind) .. " "
+		end
+		emsg = expiremsg(expires)
 		message = message .. " ^7" .. name .. string.rep(" ", (20 - string.len(et.Q_CleanStr(name))))
 		message = message .. " ^5" .. made
 		message = message .. " ^7" .. banner .. string.rep(" ", (20 - string.len(et.Q_CleanStr(banner))))
-		message = message .. " ^5" .. expires .. string.rep(" ", (4 - string.len(et.Q_CleanStr(expires))))
-		message = message .. " ^7" .. reason
+		message = message .. " ^5" .. emsg .. string.rep(" ", (20 - string.len(et.Q_CleanStr(emsg))))
+		message = message .. "\n" .. string.rep(" ", 5) .. "^3Reason: " .. "^7" .. reason
 		userprint(clientNum, "print", message .. " \n")
 	end
+	userprint(clientNum, "chat", header .. "^7bans have been listed in console")
+	mmodDB:close()
+	mmodDB = nil
 end
 
 function slap(clientNum, params)
@@ -557,6 +670,7 @@ function slap(clientNum, params)
 	        et.gentity_set(victim, "health", victim_health - slapdamage)
         end
         local tmpMsg = header .. name .. " ^7was slapped!" .. reason
+		et.trap_SendServerCommand(victim, "cp \"" .. reason .. " \"\n")
 	    userprint(-1, "chat", tmpMsg)
 	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
         local sound = 'sound/multiplayer/hurt_barbwire.wav'
@@ -640,7 +754,7 @@ function stats(clientNum, params)
 	userprint(clientNum, "print", header .. "Revives: " .. et.gentity_get(i,"pers.revives") .. "\n" )
 	userprint(clientNum, "print", header .. "Med Packs: " .. et.gentity_get(i,"pers.medPacks") .. "\n" )
 	userprint(clientNum, "print", header .. "Ammo Packs: " .. et.gentity_get(i,"pers.ammoPacks") .. "\n" )
-	userprint(clientNum, "chat", header .. "player stats has been printed in console")
+	userprint(clientNum, "chat", header .. "player stats have been printed in console")
 end
 
 function swap(clientNum)
@@ -650,13 +764,9 @@ function swap(clientNum)
 		local team = tonumber(et.gentity_get(i,"sess.sessionTeam"))
 		if team ~= 3 and team ~= 0 then
 			if team == 1 then
-			    et.gentity_set(i, "health", -600)
-                et.gentity_set(i, "sess.sessionTeam", 2)
-                et.ClientUserinfoChanged(i)	
+				et.SetTeam(i, "b")
             else
-                et.gentity_set(i, "health", -600)
-                et.gentity_set(i, "sess.sessionTeam", 1)
-                et.ClientUserinfoChanged(i)	
+				et.SetTeam(i, "r")
 			end
 		end
 	end
@@ -677,13 +787,51 @@ function timelimit(clientNum, params)
     if tlimit ~= nil then
 		if isNumeric(tlimit) then
 			tlimit = tonumber(tlimit)
-			et.trap_SendConsoleCommand( et.EXEC_INSERT, "timelimit " .. tlimit)		
+			if tlimit < 1 then
+				userprint(clientNum, "chat", header .. "time limit must be greater than 1")
+				return
+			end
+			et.trap_SendConsoleCommand( et.EXEC_INSERT, "timelimit " .. tlimit)	
+			userprint(-1, "chat", header .. "time limit was changed to " .. tlimit)			
 		else
 			userprint(clientNum, "chat", "^3timelimit: ^5" .. tlimit .. " ^7is not a number")
 			return
 		end
     else
         userprint(clientNum, "chat", commandhelp["timelimit"])
+    end
+end
+
+function unban(clientNum, params)
+    local header = "^3unban: ^7"
+	local bannum = params[1]
+	
+    if bannum ~= nil then
+		if isNumeric(bannum) then
+			bannum = tonumber(bannum)
+			local counter = 0
+			local name = ""
+			
+			mmodDB = sqlite3.open(dbname)
+			for row in mmodDB:nrows('SELECT * FROM tblBans WHERE ind=' .. bannum) do
+				counter = counter + 1
+				name = row.name
+			end
+
+			if counter ~= 0 then
+				mmodDB:exec('DELETE FROM tblBans WHERE ind=' .. bannum)
+				userprint(-1, "chat", header .. name .. " was unbanned")			
+			else
+				userprint(-1, "chat", "^3unban: ^5" .. bannum .. " is an invalid ban number")			
+			end
+			mmodDB:close()
+			mmodDB = nil	
+		else
+			userprint(clientNum, "chat", "^3unban: ^5" .. bannum .. " ^7is not a number")
+			return
+		end
+    else
+        userprint(clientNum, "chat", commandhelp["unban"])
     end
 end
 
@@ -706,6 +854,7 @@ function warn(clientNum, params)
     if victim ~= -1 then
         local name = et.gentity_get(victim,"pers.netname")
         local tmpMsg = header .. name .. " ^7was warned!" .. reason
+		et.trap_SendServerCommand(victim, "cp \"" .. reason .. " \"\n")
 	    userprint(-1, "chat", tmpMsg)
 	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
         local sound = 'sound/multiplayer/hurt_barbwire.wav'
