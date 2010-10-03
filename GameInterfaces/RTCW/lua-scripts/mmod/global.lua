@@ -1,11 +1,9 @@
-slapdamage = 15
-bantime = 0
 commandprefix = "!"
 rconclient = "console"
 modname = "mmod"
+dbname = et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/mmod.db'
 
 global_admin_table = {}
-global_ban_table = {}
 global_level_table = {}
 
 -- command flags are the same as etpub shrubbot flags
@@ -30,6 +28,7 @@ commandflags["stats"] = "t"
 commandflags["swap"] = "w"
 commandflags["time"] = "C"
 commandflags["timelimit"] = "T"
+commandflags["unban"] = "b"
 commandflags["warn"] = "R"
 
 commandhelp = {}
@@ -53,4 +52,5 @@ commandhelp["stats"] = "^3usage: ^7!stats or !stats [name|slot]\n^3function: ^7p
 commandhelp["swap"] = "^3usage: ^7!swap \n^3function: ^7swaps the players to the opposite team"
 commandhelp["time"] = "^3usage: ^7!time \n^3function: ^7prints out local time of the server"
 commandhelp["timelimit"] = "^3usage: ^7!timelimit [minutes] \n^3function: ^7change timelimit of current map"
+commandhelp["unban"] = "^3usage: ^7!unban [ban number] \n^3function: ^7removes the ban that !showbans lists as ban number"
 commandhelp["warn"] = "^3usage: ^7!warn [name|slot] [reason] \n^3function: ^7gives a player a warning"
