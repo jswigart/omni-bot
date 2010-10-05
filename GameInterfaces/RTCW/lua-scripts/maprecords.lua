@@ -60,17 +60,17 @@ function CreateRecordsDB()
 		ind			INTEGER PRIMARY KEY,
 		name		VARCHAR(50)
 	  );
-	  
+
 	  CREATE TABLE RecordTypes (
 		ind			INTEGER PRIMARY KEY,
 		name		VARCHAR(50)
 	  );
-	  
+
 	  CREATE TABLE Players (
 		ind			INTEGER PRIMARY KEY,
 		name		VARCHAR(50)
 	  );
-	  
+
 	  CREATE TABLE Records (
 		ind					INTEGER PRIMARY KEY,
 		recordTypeId		INTEGER,
@@ -78,9 +78,9 @@ function CreateRecordsDB()
 		mapId				INTEGER,
 		value				INTEGER,
 		recordDate			VARCHAR(50)
-	  );	  	   
+	  );
 	]]
-	
+
 	for ind, typeName in ipairs(recordTypes) do
 		RecordsDB:exec('INSERT INTO RecordTypes(name) VALUES("' .. typeName .. '")')
 	end
@@ -91,18 +91,26 @@ local function getMapId(mapName)
 	for row in RecordsDB:nrows('SELECT * FROM Maps WHERE name="' .. mapName .. '"') do
 		return row.ind
 	end
-	
+
 	-- insert then recursively call to get the id if it doesn't exist
 	RecordsDB:exec('INSERT INTO Maps(name) VALUES("' .. mapName .. '")')
 	local ind = getMapId(mapName)
 	return ind
 end
 
+local function getMapName(mapId)
+	for row in RecordsDB:nrows('SELECT * FROM Maps WHERE ind="' .. mapId .. '"') do
+		return row.name
+	end
+
+	return "unknown"
+end
+
 local function getPlayerId(playerName)
 	for row in RecordsDB:nrows('SELECT * FROM Players WHERE name="' .. playerName .. '"') do
 		return row.ind
 	end
-	
+
 	-- insert then recursively call to get the id if it doesn't exist
 	RecordsDB:exec('INSERT INTO Players(name) VALUES("' .. playerName .. '")')
 	local ind = getPlayerId(playerName)
@@ -113,7 +121,7 @@ local function getPlayerName(playerId)
 	for row in RecordsDB:nrows('SELECT * FROM Players WHERE ind="' .. playerId .. '"') do
 		return row.name
 	end
-	
+
 	return "unknown"
 end
 
@@ -125,7 +133,7 @@ end
 
 local function insertNewMapRecord( mapId, playerName, recordType, value )
 	playerId = getPlayerId(playerName)
-	
+
 	-- update the record if it exists
 	for row in RecordsDB:nrows('SELECT * FROM Records WHERE mapId=' .. mapId .. ' AND recordTypeId=' .. recordType) do
 		RecordsDB:exec('UPDATE Records SET playerId=' .. playerId .. ', value=' .. value .. ', recordDate="' .. os.date("%x") .. '" WHERE mapId=' .. mapId .. ' AND recordTypeId=' .. recordType)
@@ -143,7 +151,7 @@ end
 local function checkForMapRecords()
 	mapId = getMapId(et.GetMapName())
 	getCurrentMapRecords(mapId)
-	
+
 	for i=0, tonumber(et.trap_Cvar_Get("sv_maxclients"))-1, 1 do
 		playerName = et.gentity_get(i,"pers.netname")
 		if playerName ~= "" and et.gentity_get(i,"pers.connected") == 2 then
@@ -163,8 +171,8 @@ local function listMapRecords(clientNum)
 	mapId = getMapId(et.GetMapName())
 	x = 0
 	header = "^3----------------------------------------------------------\n^3Record          Value      Date            Player\n^3----------------------------------------------------------\n"
-	
-	et.trap_SendServerCommand(clientNum, string.format('print \"%s\"',header))	
+
+	et.trap_SendServerCommand(clientNum, string.format('print \"%s\"',header))
 	for row in RecordsDB:nrows('SELECT * FROM Records WHERE mapId=' .. mapId) do
 		et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^7%-15s %-36s\n\"',recordTypes[row.recordTypeId],row.value,row.recordDate,getPlayerName(row.playerId)))
 		x=x+1
@@ -172,6 +180,26 @@ local function listMapRecords(clientNum)
 	CloseDB()
 	if x < 1 then
 		et.trap_SendServerCommand(clientNum,string.format('print \"^1No Records for this map yet\n\"'))
+	end
+end
+
+local function listServerRecords(clientNum)
+	OpenDB()
+	x = 0
+	header = "^3----------------------------------------------------------\n^3Record          Value      Map             Player\n^3----------------------------------------------------------\n"
+
+	et.trap_SendServerCommand(clientNum, string.format('print \"%s\"',header))
+	for ind, val in ipairs(recordTypes) do
+		for row in RecordsDB:nrows('SELECT MAX(value) AS highest, playerId, mapId FROM Records WHERE recordTypeId=' .. ind) do
+			if row.highest then
+				et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^2%-15s %-36s\n\"',val,row.highest,getMapName(row.mapId),getPlayerName(row.playerId)))
+				x=x+1
+			end
+		end
+	end
+	CloseDB()
+	if x < 1 then
+		et.trap_SendServerCommand(clientNum,string.format('print \"^1No Records for this server yet\n\"'))
 	end
 end
 
@@ -187,8 +215,11 @@ end
 
 function et_ClientCommand(clientNum)
 	local cmd = et.trap_Argv(0)
-	if cmd == "records" then
+	if cmd == "maprecords" then
 		listMapRecords(clientNum)
+		return 1
+	elseif cmd == "serverrecords" then
+		listServerRecords(clientNum)
 		return 1
 	end
 end
