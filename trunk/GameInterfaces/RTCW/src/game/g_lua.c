@@ -925,6 +925,13 @@ static int _et_GetLevelTime( lua_State *L ) {
 }
 // }}}
 
+// et.GetMapName()
+static int _et_GetMapName( lua_State *L ) {
+	lua_pushstring( L, level.rawmapname );
+	return 1;
+}
+// }}}
+
 // et library initialisation array
 static const luaL_Reg etlib[] = {
 	// ET Library Calls
@@ -988,6 +995,7 @@ static const luaL_Reg etlib[] = {
 	{ "IsBot",                      _et_IsBot                   },
 	{ "SetTeam",                    _et_SetTeam                 },
 	{ "GetLevelTime",               _et_GetLevelTime            },
+	{ "GetMapName",                 _et_GetMapName              },
 
 	{ NULL },
 };
