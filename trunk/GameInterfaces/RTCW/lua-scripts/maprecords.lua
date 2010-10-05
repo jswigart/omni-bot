@@ -189,14 +189,14 @@ local function listServerRecords(clientNum)
 	header = "^3----------------------------------------------------------\n^3Record          Value      Map             Player\n^3----------------------------------------------------------\n"
 
 	et.trap_SendServerCommand(clientNum, string.format('print \"%s\"',header))
-	for ind, val in ipairs(recordTypes) do
-		for row in RecordsDB:nrows('SELECT MAX(value) AS highest, playerId, mapId FROM Records WHERE recordTypeId=' .. ind) do
-			if row.highest then
-				et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^2%-15s %-36s\n\"',val,row.highest,getMapName(row.mapId),getPlayerName(row.playerId)))
-				x=x+1
-			end
+
+	for row in RecordsDB:nrows('SELECT r.mapId, r.playerId, r.recordTypeId, r.value FROM (SELECT mapId, playerId, recordTypeId, MAX(value) AS highest FROM Records GROUP BY recordTypeId) AS x INNER JOIN Records AS r ON r.recordTypeId = x.recordTypeId AND r.Value = x.highest') do
+		if row.value then
+			et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^2%-15s %-36s\n\"',recordTypes[row.recordTypeId],row.value,getMapName(row.mapId),getPlayerName(row.playerId)))
+			x=x+1
 		end
 	end
+
 	CloseDB()
 	if x < 1 then
 		et.trap_SendServerCommand(clientNum,string.format('print \"^1No Records for this server yet\n\"'))
