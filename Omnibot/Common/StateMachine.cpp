@@ -320,7 +320,8 @@ obReal State::InternalGetPriority()
 {
 	if(m_LastPriorityTime < IGame::GetTime())
 	{
-		SetSelectable(CanBeSelected());
+		const noSelectReason_t rsn = CanBeSelected();
+		SetSelectable( rsn == NoSelectReasonNone );
 		m_LastPriority = 
 			!IsDisabled() //&&
 			/*IsSelectable() && 
@@ -356,7 +357,7 @@ void State::InternalExit()
 			pState->InternalExit();
 
 	m_StateTime = m_StateTimeUser = 0.f;
-	m_LastPriority = -1.f;
+	SetLastPriority( 0.0f );
 	m_StateFlags.SetFlag(State_Active, false);
 	
 	InternalParentExit();
@@ -534,6 +535,8 @@ bool State::StateCommand(const StringVector &_args)
 
 void State::OnSpawn()
 {
+	SetLastPriority( 0.0f );
+
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 		if(!pState->IsUserDisabled())
 			pState->OnSpawn();
@@ -554,22 +557,22 @@ void State::SetEnable(bool _enable, const char *_error)
 	m_StateFlags.SetFlag(State_UserDisabled, !_enable); 
 }
 
-bool State::CanBeSelected()
+State::noSelectReason_t State::CanBeSelected()
 {
 	if(m_OnlyClass.AnyFlagSet() && !m_OnlyClass.CheckFlag(GetClient()->GetClass()))
-		return false;
+		return NoSelectReason_OnlyClass;
 	if(m_OnlyTeam.AnyFlagSet() && !m_OnlyTeam.CheckFlag(GetClient()->GetTeam()))
-		return false;
+		return NoSelectReason_OnlyTeam;
 	if(m_OnlyPowerUp.AnyFlagSet() && !(m_OnlyPowerUp & GetClient()->GetPowerUpFlags()).AnyFlagSet())
-		return false;
+		return NoSelectReason_OnlyPowerup;
 	if(m_OnlyNoPowerUp.AnyFlagSet() && (m_OnlyNoPowerUp & GetClient()->GetEntityFlags()).AnyFlagSet())
-		return false;
+		return NoSelectReason_OnlyNoPowerup;
 	if(m_OnlyEntFlag.AnyFlagSet() && !(m_OnlyEntFlag & GetClient()->GetEntityFlags()).AnyFlagSet())
-		return false;
+		return NoSelectReason_OnlyEntFlag;
 	if(m_OnlyNoEntFlag.AnyFlagSet() && (m_OnlyNoEntFlag & GetClient()->GetEntityFlags()).AnyFlagSet())
-		return false;
+		return NoSelectReason_OnlyNoEntFlag;
 	if(m_OnlyRole.AnyFlagSet() && !(m_OnlyRole & GetClient()->GetRoleMask()).AnyFlagSet())
-		return false;
+		return NoSelectReason_OnlyRole;
 	
 	if(m_OnlyWeapon.AnyFlagSet())
 	{
@@ -577,7 +580,7 @@ bool State::CanBeSelected()
 
 		BitFlag64 hasWeapons = (m_OnlyWeapon & ws->GetWeaponMask());
 		if(!hasWeapons.AnyFlagSet())
-			return false;
+			return NoSelectReason_OnlyWeapon;
 
 		bool bOutOfAmmo = true;
 		for(int i = 0; i < 64; ++i)
@@ -598,7 +601,7 @@ bool State::CanBeSelected()
 			}
 		}
 		if(bOutOfAmmo)
-			return false;
+			return NoSelectReason_OnlyWeaponNoAmmo;
 	}
 	
 	if(m_OnlyTargetClass.AnyFlagSet() || 
@@ -620,7 +623,7 @@ bool State::CanBeSelected()
 				// noop
 			}
 			else if(!target)
-				return false;
+				return NoSelectReason_OnlyTarget;
 			else
 			{
 				if(m_OnlyTargetClass.AnyFlagSet())
@@ -631,13 +634,13 @@ bool State::CanBeSelected()
 						// success
 					}
 					else if(!m_OnlyTargetClass.CheckFlag(target->m_TargetInfo.m_EntityClass))
-						return false;
+						return NoSelectReason_OnlyTargetClass;
 				}
 
 				if(m_OnlyTargetTeam.AnyFlagSet())
 				{
 					if(!m_OnlyTargetTeam.CheckFlag(InterfaceFuncs::GetEntityTeam(target->GetEntity())))
-						return false;
+						return NoSelectReason_OnlyTargetTeam;
 				}
 
 				// only if target has powerup
@@ -645,7 +648,7 @@ bool State::CanBeSelected()
 				{
 					if((target->m_TargetInfo.m_EntityPowerups & m_OnlyTargetPowerUp) != m_OnlyTargetPowerUp)
 					{
-						return false;
+						return NoSelectReason_OnlyTargetPowerup;
 					}
 				}
 
@@ -654,7 +657,7 @@ bool State::CanBeSelected()
 				{
 					if((target->m_TargetInfo.m_EntityPowerups & m_OnlyTargetNoPowerUp).AnyFlagSet())
 					{
-						return false;
+						return NoSelectReason_OnlyTargetNoPowerup;
 					}
 				}
 
@@ -663,7 +666,7 @@ bool State::CanBeSelected()
 				{
 					if((target->m_TargetInfo.m_EntityFlags & m_OnlyTargetEntFlag) != m_OnlyTargetEntFlag)
 					{
-						return false;
+						return NoSelectReason_OnlyTargetEntFlag;
 					}
 				}
 
@@ -672,7 +675,7 @@ bool State::CanBeSelected()
 				{
 					if((target->m_TargetInfo.m_EntityFlags & m_OnlyTargetNoEntFlag).AnyFlagSet())
 					{
-						return false;
+						return NoSelectReason_OnlyTargetNoEntFlag;
 					}
 				}
 
@@ -680,7 +683,7 @@ bool State::CanBeSelected()
 				if(m_OnlyTargetWeapon.AnyFlagSet())
 				{
 					if(!m_OnlyTargetWeapon.CheckFlag(target->m_TargetInfo.m_CurrentWeapon))
-						return false;
+						return NoSelectReason_OnlyTargetWeapon;
 				}
 			}
 		}
@@ -707,11 +710,11 @@ bool State::CanBeSelected()
 			}
 
 			if(!m_LimitCallback.m_Result)
-				return false;
+				return NoSelectReason_LimitCallback;
 		}
 	}
 
-	return true;
+	return NoSelectReasonNone;
 }
 
 void State::LimitTo(const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, int _delay, bool _onlywhenactive)
@@ -1063,6 +1066,7 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 
 #ifdef _DEBUG
 	const int N = 64; // cs: was 32
+	float STATES_PRIO[N] = {};
 	State *STATES_P[N] = {}; int NumPriorities = 0;
 	State *STATES_X[N] = {}; int NumExited = 0;
 	State *OLD_BEST = m_CurrentState; OLD_BEST;
@@ -1077,7 +1081,9 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		float fPriority = pState->InternalGetPriority();
 
 #ifdef _DEBUG
-		STATES_P[NumPriorities++] = pState;
+		STATES_PRIO[NumPriorities] = fPriority;
+		STATES_P[NumPriorities] = pState;
+		NumPriorities++;
 #endif
 
 		if(fPriority > fBestPriority)

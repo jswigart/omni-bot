@@ -383,7 +383,10 @@ namespace AiState
 			Prof(OnSpawn);
 
 			m_NextGetPriorityUpdate = 0;
-			m_ScriptPriority = 0.f;
+			SetScriptPriority( 0.0f );
+			SetLastPriority( 0.0f );
+
+			KillAllGoalThreads();
 
 			if(m_Callbacks[ON_SPAWN])
 			{
@@ -561,7 +564,8 @@ namespace AiState
 		{
 			Prof(Exit);
 
-			m_ScriptPriority = 0.f;
+			SetScriptPriority( 0.0f );
+
 			if(m_Callbacks[ON_EXIT])
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
