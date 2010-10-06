@@ -4,6 +4,7 @@
 this.Name = "Artillery_PT";     // The name of the goal.
 this.Parent = "LowLevel";       // PathThrough states must be low level or they will not be used.
 this.Debug = false;
+this.DebugLos = false;
 
 this.OnPathThrough = function( data )
 {
@@ -113,7 +114,7 @@ this.CacheTraceResults = function()
 		{
 			tr = TraceLine( Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3( 0,0,42 ), pos, null, TRACE.SHOT, this.Bot.GetGameId(), false );
 			if ( tr.fraction < 1 ) {
-				if ( this.Debug ) {
+				if ( this.DebugLos ) {
 					DrawDebugLine( Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3( 0,0,42 ), pos, COLOR.RED, 30 );
 				}
 				continue;
@@ -142,9 +143,10 @@ this.Update = function()
 	}
 
 	if ( !this.Bot.HasLineOfSightTo( this.TargetGoalPosition ) ) {
-		if ( this.Debug ) {
+		if ( this.DebugLos ) {
 			this.Bot.Say( "aborting pt arty, no los" );
 		}
+		sleep(1);
 		this.Finished();
 	}
 
