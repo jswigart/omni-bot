@@ -1093,6 +1093,16 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		}
 	}
 
+	// if the current state has an equal priority to the 'best', the current
+	// state has the edge, to prevent order dependency causing goals to override
+	// on equal priorities
+	if ( m_CurrentState ) {
+		if ( m_CurrentState->GetLastPriority() >= fBestPriority ) {
+			fBestPriority = m_CurrentState->GetLastPriority();
+			pBestState = m_CurrentState;
+		}
+	}	
+
 	// Exit active states that are not our best
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 	{
