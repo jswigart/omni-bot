@@ -21,15 +21,24 @@ this.OnPathThrough = function(data)
 		return false;
 	}
 
-	if ( !this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) ){
+	if ( !this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) ) {
+		sleep(1);
 		return false;
 	}
 
 	// cache info about this pt spot
-	if ( !Map.PTArtyInfo ) { Map.PTArtyInfo = {}; }
-	if ( !Map.PTArtyInfo[ data ] ) { Map.PTArtyInfo[ data ] = {}; }
-	if ( !Map.PTArtyInfo[ data ].WpInfo ) { Map.PTArtyInfo[ data ].WpInfo = Util.WpNameInfo(data); }
-	if ( !Map.PTArtyInfo[ data ].TraceSuccess ) { Map.PTArtyInfo[ data ].TraceSuccess = {}; } // cache successful traces in the form of a list of map goals
+	if ( !Map.PTArtyInfo ) {
+		Map.PTArtyInfo = {};
+	}
+	if ( !Map.PTArtyInfo[ data ] ) {
+		Map.PTArtyInfo[ data ] = {};
+	}
+	if ( !Map.PTArtyInfo[ data ].WpInfo ) {
+		Map.PTArtyInfo[ data ].WpInfo = Util.WpNameInfo( data );
+	}
+	if ( !Map.PTArtyInfo[ data ].TraceSuccess ) {
+		Map.PTArtyInfo[ data ].TraceSuccess = {};
+	}
 
 	this.Data = data;
 	if (this.FindTarget() == false) {
@@ -129,7 +138,17 @@ this.Update = function()
 		}
 	}
 
-	Util.MapDebugPrint( this.Name + " : " + this.Bot.Name + " is targeting " + this.TargetGoalName, true );
+	if ( !this.Bot.HasLineOfSightTo( this.TargetGoalPosition ) ) {
+		if ( this.Debug ) {
+			this.Bot.Say( "aborting pt arty, no los" );
+		}
+		sleep(1);
+		this.Finished();
+	}
+	
+	if ( this.Debug ) {
+		this.Bot.Say( "CallArtillery_PT: I'm targeting ", this.TargetGoalName );
+	}
 
 	// call the artillery
 	this.AddAimRequest(Priority.High, "position", this.TargetGoalPosition);
