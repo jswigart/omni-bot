@@ -125,7 +125,29 @@ public:
 
 	void ExitAll();
 
-	bool CanBeSelected();
+	enum noSelectReason_t {
+		NoSelectReasonNone,
+
+		NoSelectReason_OnlyClass,
+		NoSelectReason_OnlyTeam,
+		NoSelectReason_OnlyPowerup,
+		NoSelectReason_OnlyNoPowerup,
+		NoSelectReason_OnlyEntFlag,
+		NoSelectReason_OnlyNoEntFlag,
+		NoSelectReason_OnlyRole,
+		NoSelectReason_OnlyWeapon,
+		NoSelectReason_OnlyWeaponNoAmmo,
+		NoSelectReason_OnlyTarget,
+		NoSelectReason_OnlyTargetClass,
+		NoSelectReason_OnlyTargetTeam,
+		NoSelectReason_OnlyTargetWeapon,
+		NoSelectReason_OnlyTargetPowerup,
+		NoSelectReason_OnlyTargetNoPowerup,
+		NoSelectReason_OnlyTargetEntFlag,
+		NoSelectReason_OnlyTargetNoEntFlag,
+		NoSelectReason_LimitCallback,
+	};
+	noSelectReason_t CanBeSelected();
 
 	virtual StateStatus UpdateState(float fDt) = 0;
 
