@@ -1,5 +1,14 @@
-// cs: this map needs routing 
-//MickyP: MISSING STRINGS defined.
+/********************************************************
+Waypoints and Script by BubbaG1, Crapshoot & MickyP
+
+  Filename: italyfp2.gm
+
+  Last Updated: Sunday, 18 July 2010 8:46 CDT
+  Updated by: BubbaG1 (Scott Ward)
+
+  Change log:
+  - Upgraded ways/script from 0.71
+********************************************************************************/
 
 global Map =
 {
@@ -36,59 +45,18 @@ global Map =
 	{
 		"MOVER_jeep_mover",
 	},
-
-	RideVehicle =
+	
+	JeepAtMarketGate = 
 	{
-		Jeep =
+		Name="JeepAtMarketGate",
+		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
+		OnEnter = function(ent)
 		{
-			Enabled = true,
-			Priority = 0.8,
-			Stance = BTN.CROUCH,
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			RideVehicleGoalName = "MOVER_jeep_mover",
-			SeatRadius = 50,
-			Seat =
-			{
-				{
-					BoardPosition = Vector3(0,100,20),
-					FacePosition = Vector3(0,100,90),
-					RidePosition = Vector3(0,35,72),
-				},
-			},
 		},
-	},
-
-	EscortVehicle =
-	{
-		Jeep =
+		OnExit = function(ent)
 		{
-			Enabled = false,
-			EscortVehicleGoalName = "MOVER_jeep_mover",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitBots = 2,
-			Priority = 0.65,
-			Offset =
-			{
-				Vector3(-20,-160,20),
-				Vector3(20,-160,20),
-			}
+			Util.MapDebugPrint(GetEntName(ent),"exited JeepAtMarketGate aabb trigger");
 		},
-	},
-
-	JeepAtMarketGate =
- 	{
- 		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
- 		OnEnter = function(ent)
- 		{
- 			Util.MapDebugPrint(GetEntName(ent),"entered JeepAtMarketGate trigger");
-			Map.RideVehicle.Jeep.Enabled = false;
-			Util.MapDebugPrint( "JeepAtMarketGate" );
- 		},
- 		OnExit = function(ent)
- 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited JeepAtMarketGate trigger");
- 		},
 	},
 
 	MarketGatePassed =
@@ -97,14 +65,13 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
+ 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Market_Gate" );
+			
  			Util.MapDebugPrint(GetEntName(ent),"MarketGatePassed");
-			Map.RideVehicle.Jeep.Enabled = true;
-			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Market_Gate" );
- 		},
+		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
-
+			Util.MapDebugPrint(GetEntName(ent),"exited MargetGatePassed aabb trigger");
  		},
 	},
 
@@ -114,10 +81,10 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"BarrierPassed");
-			Map.RideVehicle.Jeep.Enabled = true;
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Jeep_Barrier" );
- 		},
+			
+  			Util.MapDebugPrint(GetEntName(ent),"BarrierPassed");
+		},
  		OnExit = function(ent)
  		{
 			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
@@ -130,17 +97,19 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"Ramp1Passed");
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_1st_Ramp" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_1st_Ramp" );
+			
+ 			Util.MapDebugPrint(GetEntName(ent),"Ramp1Passed");
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_Gold_MG );
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_Gold_MG );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_gold.*" );
+			
+			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
 		},
 	},
 
@@ -150,11 +119,12 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"Ramp2Passed");
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_2nd_Ramp" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Barrier_MG );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_2nd_Ramp" );
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Barrier_MG );
+			
+ 			Util.MapDebugPrint(GetEntName(ent),"Ramp2Passed");
  		},
  		OnExit = function(ent)
  		{
@@ -167,11 +137,12 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"Escape2");
-			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+ 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_escape2.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape2.*" );
+			
+			Util.MapDebugPrint(GetEntName(ent),"Escape2");
  		},
  		OnExit = function(ent)
  		{
@@ -184,11 +155,12 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"Escape3");
-			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+ 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_escape3.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape3.*" );
+			
+			Util.MapDebugPrint(GetEntName(ent),"Escape3");
  		},
  		OnExit = function(ent)
  		{
@@ -201,13 +173,14 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			Util.MapDebugPrint(GetEntName(ent),"Escape4");
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Barrier_MG );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_escape4.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Barrier_MG );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape4.*" );
+			
+ 			Util.MapDebugPrint(GetEntName(ent),"Escape4");
  		},
  		OnExit = function(ent)
  		{
@@ -245,21 +218,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		// Set pos. of plant goal to one of three predefined map positions
-		// so bots won't get killed by the barbed wire
-		rnd = RandInt(1,3);
-		if ( rnd == 1 )
-		{
-			Util.SetGoalPosition( -235, 1938, -200, Map.Plant_Jeep_Barrier );
-		}
-		else if ( rnd == 2 )
-		{
-			Util.SetGoalPosition( -38, 1962, -200, Map.Plant_Jeep_Barrier );
-		}
-		else
-		{
-			Util.SetGoalPosition( -45, 2080, -200, Map.Plant_Jeep_Barrier );
-		}
 		Util.MapDebugPrint( "BUILD_Jeep_Barrier_Built" );
 	},
 
@@ -332,7 +290,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.RideVehicle.Jeep.Enabled = true;
 		Util.MapDebugPrint( "PLANT_Market_Gate_Destroyed" );
 	},
 
@@ -408,7 +365,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Ramp_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_gold.*" );
-		Map.RideVehicle.Jeep.Enabled = false;
 		Util.MapDebugPrint( "GoldAccessible" );
 	},
 
@@ -418,7 +374,6 @@ global Map =
 			{ return; }
 
 		//Map.EscortVehicle.Jeep.Enabled = true;
-		Map.RideVehicle.Jeep.Enabled = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_Barrier_MG );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Gold_MG );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape1_.*" );
@@ -471,9 +426,13 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_supply" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_health" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );
 	// Don't plant as position is not updated from mapscript
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Jeep" );
 
+	SetGoalPriority( "BUILD_jeep", 0.1, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_1st_Ramp", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_2nd_Ramp", 1.1, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "CHECKPOINT_flag", 0.7 );
 	SetGoalPriority( "PLANT_Market_Gate", 0.92 );
 	SetGoalPriority( "PLANT_Jeep_Barrier", 0.91 );
@@ -488,6 +447,9 @@ global OnMapLoad = function()
 	jeep2 = OnTriggerRegion(AABB(-273.875,2080.943,-210.875,21.875,2193.165,-125.875), Map.BarrierPassed);
 	jeep3 = OnTriggerRegion(AABB(-231.874,3144.365,-84.875,-19.279,3216.411,0.125), Map.Ramp1Passed);
 	jeep4 = OnTriggerRegion(AABB(255.253,3112.707,-0.875,338.375,3360.874,73.125), Map.Ramp2Passed);
+	
+	InitializeMapRoutes();
+	
 	Util.MapDebugPrint( "Omni-bot map script for Streets of Italy loaded" );
 };
 
@@ -495,4 +457,133 @@ global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 200.0;
 	bot.MaxViewDistance = 2500;
+};
+
+global InitializeMapRoutes = function()
+{
+	// the route tables
+	MapRoutes =
+	{
+		BUILD_Command_Post = 
+		{
+			ROUTE_allies_start = 
+			{
+				ROUTE_allies_cp_window =
+				{
+					Weight = 3,
+					ROUTE_allies_cp_window_1 = 
+					{
+						ROUTE_allies_cp_windows_2 = 
+						{
+						},
+					},
+				},
+				ROUTE_allies_cp_back = 
+				{
+					ROUTE_allies_cp_back_1 = 
+					{
+					},
+				},
+			},
+			ROUTE_axis_start =
+			{
+				ROUTE_axis_cp =
+				{
+					Weight = 3,
+					ROUTE_axis_cp_2 =
+					{
+					},
+				},
+				ROUTE_axis_objladder =
+				{
+					ROUTE_axis_objroof =
+					{
+						ROUTE_axis_barrierroof =
+						{
+							ROUTE_axis_cp_2 = 
+							{
+							},
+						},
+					},
+				},
+			},
+		},
+		CHECKPOINT_flag = 
+		{
+			ROUTE_allies_start = 
+			{
+				ROUTE_allies_market = 
+				{
+				},
+				ROUTE_allies_cp_back = 
+				{
+					ROUTE_allies_cp_back_1 = 
+					{
+					},
+				},
+			},
+			ROUTE_axis_start = 
+			{
+				ROUTE_axis_objladder = 
+				{
+					ROUTE_axis_market_split =
+					{
+						Weight = 3,
+						ROUTE_axis_market_left =
+						{
+							Weight = 2,
+						},
+						ROUTE_axis_market_right =
+						{
+						},
+					},
+					ROUTE_axis_objstairs = 
+					{
+						ROUTE_axis_objroof =
+						{
+							ROUTE_axis_mgroof =
+							{								
+							},
+							ROUTE_axis_objroof_lower =
+							{
+								ROUTE_axis_market_left =
+								{
+									Weight = 3,
+								},
+								ROUTE_axis_market_right =
+								{
+								},
+							},
+						},
+					},
+				},
+				ROUTE_axis_ramps = 
+				{
+					ROUTE_axis_market_right = 
+					{
+					},
+					ROUTE_axis_market_split = 
+					{
+						ROUTE_axis_market_left = 
+						{
+						},
+					},
+				},
+				ROUTE_axis_cp = 
+				{
+					ROUTE_axis_cp_2 =
+					{
+					},
+				},
+			},
+		},			
+	};
+
+	// copy some routes
+	MapRoutes.BUILD_1st_Ramp = MapRoutes.BUILD_Command_Post;
+	MapRoutes.BUILD_2nd_Ramp = MapRoutes.BUILD_Command_Post;
+	MapRoutes.Plant_Command_Post = MapRoutes.BUILD_Command_Post;
+		
+	// register the routes
+	Util.Routes(MapRoutes);
 };

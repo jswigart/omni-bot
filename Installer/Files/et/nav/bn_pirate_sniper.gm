@@ -15,4 +15,5 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	Util.ChangeToSniperWeapons(bot);
+	bot.MaxViewDistance=10000;
 };

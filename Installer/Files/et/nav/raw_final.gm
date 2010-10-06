@@ -100,10 +100,6 @@ global Map =
 			{ return; }
 			
 		
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 2;
-		
-		
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Charlie.*" );
 		
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allied.*" );
@@ -160,10 +156,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 			
-		
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 2;
-		
 		
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Charlie.*" );
 		

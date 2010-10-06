@@ -93,7 +93,7 @@ global Map =
 			{ return; }
 			
 		Groups.DisableAllies(Groups.group1);
-		Groups.DisableAxis(Groups.group2);
+//		Groups.DisableAxis(Groups.group2);
 		Groups.EnableAllies(Groups.group3);
 		Groups.EnableAxis(Groups.group4);
 		
@@ -151,6 +151,8 @@ global Map =
 		Groups.EnableAllies(Groups.group5);
 		Groups.EnableAxis(Groups.group6);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_al100" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_card_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_card_.*" );
 		
 		if ( Map.Talk && MAP_TALK )
 		{
@@ -255,6 +257,9 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 3, "FLAG_access_codes" );
+	
+	Util.SetGroup( Map.Flag_access_codes, "group1");
+	Util.SetGroup( Map.Cappoint_Dropoff, "group1");
 	
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120});
@@ -422,6 +427,12 @@ global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = 2500;
 	bot.TargetBreakableDist = 100.0;
+	
+	w = bot.GetWeapon(WEAPON.ALLY_GRENADE);
+        w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	
+	w = bot.GetWeapon(WEAPON.AXIS_GRENADE);
+        w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
 //~	bot.ProfileSkill = 5;	
 };
 
@@ -434,7 +445,7 @@ global Groups =
 		Map.Cappoint_Dropoff,
 		//Map.Build_Dock_Staircase,
 		"GRENADE_box",
-		"ATTACK_a_start_.*",
+		"ATTACK_a_card_.*",
 		"MOBILEMG42_al100" ,
 		
 		
@@ -446,7 +457,7 @@ global Groups =
 		Map.Build_Church_Doors,
 		Map.Mobile_MG42_mg_ax_start,
 		//Map.Plant_Dock_Staircase,
-		"DEFEND_d_start_.*",
+		"DEFEND_d_card_.*",
                 "CALLARTILLERY_d_start_.*",
                 "ARTILLERY_d_start_.*",
 		"MOBILEMG42_ax99",
@@ -459,7 +470,7 @@ global Groups =
 		Map.Cappoint_Dropoff,
 		Map.Build_Dock_Staircase,
 		Map.Plant_Church_Doors,
-		"ATTACK_a_card_.*",
+		
 	},
 	
 	//Axis part 2
@@ -468,7 +479,7 @@ global Groups =
 		Map.Build_Church_Doors,
 		Map.Mobile_MG42_mg_ax_start,
 		Map.Plant_Dock_Staircase,
-		"DEFEND_d_card_.*",
+		
 	},
 	
 	//Allies part 3
@@ -485,6 +496,7 @@ global Groups =
 		Map.Build_Church_Doors,
 		Map.Plant_Dock_Staircase,
 		"DEFEND_d_church_.*",
+		"DEFEND_d_church10",
                 "CALLARTILLERY_d_church_.*",
                 "ARTILLERY_d_church_.*",                
 	},

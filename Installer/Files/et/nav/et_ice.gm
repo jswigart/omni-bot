@@ -1,11 +1,11 @@
 global Map =
 {
-	Quiet = true,	
+	Quiet = true,
 	CHECKPOINT_forwardflag = "CHECKPOINT_forwardflag",
 	Plant_Main_Entrance = "PLANT_Main_Entrance",
 	Plant_Side_Wall = "PLANT_Side_Wall",
-	Mount_tower_mg = "MOUNTMG42_tower_mg", 
-	Mount_truck_mg = "MOUNTMG42_truck_mg", 
+	Mount_tower_mg = "MOUNTMG42_tower_mg",
+	Mount_truck_mg = "MOUNTMG42_truck_mg",
 	Repair_tower_mg = "REPAIRMG42_tower_mg",
 	Repair_truck_mg = "REPAIRMG42_truck_mg",
 	Flag_axis_obj01 = "FLAG_axis_obj01",
@@ -14,24 +14,24 @@ global Map =
 
 	//time running out?
 	FocusPrimary = false,
-	
+
 	//set status' for conditionals
 	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
 	DocStatus = false, //home
 	MainDoorStatus = false, //intact
 	SideWallStatus = false, //intact
-	
-	// Dyno counters - used to determine defensive shifts 
+
+	// Dyno counters - used to determine defensive shifts
 	SideWallDyno = 0,
 	MainDoorDyno = 0,
-	
+
 	bPanzFlagBots = 0,
 	rPanzSouthBots = 0,
 	rPanzNorthBots = 0,
-	
+
 	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin	
-	
+	AlliesASPriority = 0.94, // less than Defend's. thx Martin
+
 	Defend =
 	{
                 MaxBots = 2,
@@ -40,11 +40,11 @@ global Map =
 		AxisDefenders = 0, // a variable to keep a count of defenders
 		AlliesDefenders = 0,
 		MaxAlliesDefenders = 2,
-		
+
 		// initialize some tables for adding waypoints for them to use
-		Allies = {},		
+		Allies = {},
 	},
-	
+
 	Navigation =
 	{
 		southladder =
@@ -53,7 +53,7 @@ global Map =
 			{
 				_this.Bot.HoldButton(BTN.FORWARD, 3);
 				sleep(3);
-			},			
+			},
 		},
 		bpnzflag =
 		{
@@ -61,22 +61,25 @@ global Map =
 			{
 				if ( Map.bPanzFlagBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
 				{
-					wpTable = Util.WpNameInfo("bPnzFlag");
+					if ( !Map.PanzFlagInfo ) {
+						Map.PanzFlagInfo = Util.WpNameInfo("bPnzFlag");
+					}
+
 					Map.bPanzFlagBots += 1;
-					
+
 					_this.Bot.MaxViewDistance = 10;
-					
+
 					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.PanzFlagInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.Bot.ReleaseButton(BTN.SPRINT);
 						if (_this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0) )
 						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+							_this.AddAimRequest(Priority.High, "facing", Map.PanzFlagInfo.facing);
 							_this.AddWeaponRequest(Priority.High, WEAPON.PANZERFAUST );
 							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
 							sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 2);					
+							_this.Bot.HoldButton(BTN.ATTACK1, 2);
 							sleep(5);
 							_this.Bot.MaxViewDistance = 10000;
 						}
@@ -91,22 +94,25 @@ global Map =
 			{
 				if ( Map.FlagStatus != 1 && Map.rPanzSouthBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
 				{
-					wpTable = Util.WpNameInfo("rPnzSouth");
+					if ( !Map.PanzSouthInfo ) {
+						Map.PanzSouthInfo = Util.WpNameInfo("rPnzSouth");
+					}
+
 					Map.rPanzSouthBots += 1;
-					
+
 					_this.Bot.MaxViewDistance = 10;
-					
+
 					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.PanzSouthInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.Bot.ReleaseButton(BTN.SPRINT);
 						if ( Map.FlagStatus != 1 && _this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0) )
 						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+							_this.AddAimRequest(Priority.High, "facing", Map.PanzSouthInfo.facing);
 							_this.AddWeaponRequest(Priority.High, WEAPON.PANZERFAUST );
 							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
 							sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 2);					
+							_this.Bot.HoldButton(BTN.ATTACK1, 2);
 							sleep(5);
 							_this.Bot.MaxViewDistance = 10000;
 						}
@@ -121,22 +127,25 @@ global Map =
 			{
 				if ( Map.FlagStatus != 1 && Map.rPanzNorthBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
 				{
-					wpTable = Util.WpNameInfo("rPnzNorth");
+					if ( !Map.PanzNorthInfo ) {
+						Map.PanzNorthInfo = Util.WpNameInfo("rPnzNorth");
+					}
+
 					Map.rPanzNorthBots += 1;
-					
+
 					_this.Bot.MaxViewDistance = 10;
-					
+
 					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.PanzNorthInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.Bot.ReleaseButton(BTN.SPRINT);
 						if ( Map.FlagStatus != 1 && _this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0) )
 						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+							_this.AddAimRequest(Priority.High, "facing", Map.PanzNorthInfo.facing);
 							_this.AddWeaponRequest(Priority.High, WEAPON.PANZERFAUST );
 							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
 							sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 2);					
+							_this.Bot.HoldButton(BTN.ATTACK1, 2);
 							sleep(5);
 							_this.Bot.MaxViewDistance = 10000;
 						}
@@ -145,13 +154,13 @@ global Map =
 				yield();
 			},
 		},
-	},	
+	},
 
 	Fortress_Wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.SideWallStatus = true;
 
 		//toggle on the side wall route
@@ -162,14 +171,14 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.MainDoorStatus = true;
-		
+
 		if ( !Map.FocusPrimary )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Side_Wall );
 		}
-		
+
 		//shift the action
 		if ( Map.FlagStatus == 1 )
 		{
@@ -202,12 +211,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allied_nearspawn" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
 	},
-	
+
 	axis_obj01_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		if ( !Map.DocStatus )
 		{
 			Map.DocStatus = true;
@@ -215,15 +224,15 @@ global Map =
 			SetGoalPriority( "CALL.*", 0.0 );
 			SetGoalPriority( "ARTILLERY.*", 0.0 );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
-			
+
 			//teams should head for transmitter
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Deliver_Defend.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Deliver_Support_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Flag_Defense_.*" );
 			Util.DisableGoal("DEFUSE.*");
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_hill.*" );
-			
+
 			//some bots should wait a bit for the doc carrier to get down
 			timeout = 0;
 			while ( timeout <= 6 && Map.DocStatus == true )
@@ -231,19 +240,19 @@ global Map =
 				timeout += 1;
 				sleep(1);
 			}
-			
+
                         SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Doc_Attack_.*" );
                         SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Doc_Defense_.*" );
                         SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Side_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Command_Post" );
 		}
 	},
-	
+
 	axis_obj01_Returned = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.DocStatus = false;
 
 		//move back to the doc grab phase
@@ -262,9 +271,9 @@ global Map =
  	{
  		if ( TestMap )
 			{ return; }
-		
+
 		Map.FlagStatus = 2;
-		
+
 		if ( !Map.FocusPrimary  || !Map.MainDoorStatus )
 			{ SetAvailableMapGoals( TEAM.AXIS, false, Map.Flag_axis_obj01 ); }
 
@@ -283,7 +292,7 @@ global Map =
  	{
  		if ( TestMap )
 			{ return; }
-			
+
 		Map.FlagStatus = 1;
 
 		if ( !Map.MainDoorStatus )
@@ -304,7 +313,7 @@ global Map =
 		// *** Artillery
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
-               
+
                 SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
  	},
 
@@ -312,41 +321,41 @@ global Map =
  	{
  		if ( TestMap )
 			{ return; }
-			
+
 		Map.MainDoorDyno += 1;
-		
+
 		if ( Map.DocStatus )
 		{
 			Util.DisableGoal("DEFUSE.*");
-		}		
+		}
  	},
-	
+
  	Service_Door_Defused = function( trigger )
  	{
  		if ( TestMap )
 			{ return; }
-			
+
 		Map.MainDoorDyno -= 1;
  	},
-	
+
  	Fortress_Wall_Planted = function( trigger )
  	{
  		if ( TestMap )
 			{ return; }
-			
+
 		Map.SideWallDyno += 1;
-		
+
 		if ( Map.DocStatus )
 		{
 			Util.DisableGoal("DEFUSE.*");
-		}		
+		}
  	},
-	
+
  	Fortress_Wall_Defused = function( trigger )
  	{
  		if ( TestMap )
 			{ return; }
-			
+
 		Map.SideWallDyno -= 1;
  	},
 
@@ -354,24 +363,24 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Flag_axis_obj01 );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Side_Wall );
 	},
-        
+
         side_MG_Built = function( trigger )
         {
 		if ( TestMap )
-			{ return; }        
+			{ return; }
         },
-        
+
         side_MG_Destroyed = function( trigger )
         {
 		if ( TestMap )
-			{ return; }        
+			{ return; }
         },
 };
 
@@ -380,7 +389,7 @@ global OnMapLoad = function()
 	//add use points so the bots can plant both sides
 	Util.AddUsePoint(Map.Plant_Side_Wall, Vector3(-5472,710,362));
 	Util.AddUsePoint(Map.Plant_Side_Wall, Vector3(-5475,864,346));
-	
+
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
@@ -411,7 +420,7 @@ global OnMapLoad = function()
 
 	ETUtil.LimitToClass( "ATTACK_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
         ETUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER);
-        
+
         Util.SetRoleForGoals( "CAMP_hill.*", ROLE.DEFENDER );
 
 	Util.DisableGoal(".*", true); //all but routes
@@ -419,19 +428,19 @@ global OnMapLoad = function()
 	Util.DisableGoal("ROUTE_servicehalls");
 
 	Util.EnableGoal("CAPPOINT.*");
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Flag_Attack_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Main_Entrance" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.CHECKPOINT_forwardflag );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Flag_Defense_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.CHECKPOINT_forwardflag ); 
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.CHECKPOINT_forwardflag );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rEngDoor.*" );
         SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Side_MG" );
 
 	// *** Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
-	
+
 	SetGoalPriority( "CALL.*", 0.7 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
@@ -446,7 +455,7 @@ global OnMapLoad = function()
 		{
 			ROUTE_AxisSpawn1 =
 			{
-				ROUTE_southhalls = 
+				ROUTE_southhalls =
 				{
 					ROUTE_southhalls2 = {},
 					ROUTE_southhalls3 = {},
@@ -455,7 +464,7 @@ global OnMapLoad = function()
 			},
 			ROUTE_AxisSpawn2 =
 			{
-				ROUTE_southhalls = 
+				ROUTE_southhalls =
 				{
 					ROUTE_southhalls2 = {},
 					ROUTE_southhalls3 = {},
@@ -467,25 +476,25 @@ global OnMapLoad = function()
 		{
 			ROUTE_FlagSpawn =
 			{
-				ROUTE_topbunker = 
+				ROUTE_topbunker =
 				{
-					ROUTE_sidewall = 
+					ROUTE_sidewall =
 					{
 						ROUTE_farladder = {},
 						ROUTE_coveredladder = {},
 					},
 				},
-				ROUTE_servicehalls = 
+				ROUTE_servicehalls =
 				{
 					Weight = 3,
 					ROUTE_farladder = { Weight = 2, },
 					ROUTE_coveredladder = {},
 					ROUTE_longladder = {},
 				},
-				ROUTE_mainhall = 
+				ROUTE_mainhall =
 				{
 					Weight = 2,
-					ROUTE_sidewall = 
+					ROUTE_sidewall =
 					{
 						ROUTE_farladder = { Weight = 2, },
 						ROUTE_coveredladder = {},
@@ -526,10 +535,10 @@ global OnMapLoad = function()
 			},
 			ROUTE_AllySpawn2 =
 			{
-				ROUTE_hallpatrol = 
-				{ 
-					ROUTE_farladder = {}, 
-					ROUTE_coveredladder = {}, 
+				ROUTE_hallpatrol =
+				{
+					ROUTE_farladder = {},
+					ROUTE_coveredladder = {},
 					ROUTE_longladder = {},
 				},
 			},
@@ -554,7 +563,7 @@ global OnMapLoad = function()
 			ROUTE_mainhall = {},
 		},
 	};
-	
+
 	//copy some routes
 	MapRoutes.DEFEND_Doc_Defense_4 = MapRoutes.DEFEND_Doc_Defense_3;
 	MapRoutes.DEFEND_Doc_Defense_5 = MapRoutes.DEFEND_Doc_Defense_3;
@@ -576,16 +585,16 @@ global OnMapLoad = function()
 	MapRoutes.FLAG_axis_obj01.ROUTE_AxisSpawn1 = MapRoutes.FLAG_axis_obj01.ROUTE_FlagSpawn;
 	MapRoutes.FLAG_axis_obj01.ROUTE_AxisSpawn2 = MapRoutes.FLAG_axis_obj01.ROUTE_FlagSpawn;
 
-	Util.Routes(MapRoutes);	
+	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
-{			
+{
 	team = bot.GetTeam();
 
 	ETUtil.NoSnipe(bot);
-        
+
         // two allies will camp the hill
 	ETUtil.SetDualObjective(bot);
 };

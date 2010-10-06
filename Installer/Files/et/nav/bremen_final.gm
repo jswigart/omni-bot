@@ -149,21 +149,6 @@ global Map =
 		},
 	},
 
-	Classes = function()
-	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
-
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-	},
-
 	Neutral_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -185,8 +170,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 3;
 		Util.DisableGroup("axis2", TEAM.AXIS);
 		Util.EnableGroup("axis3", TEAM.AXIS);
 		Util.DisableGroup("garage", TEAM.ALLIES);
@@ -355,8 +338,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
 
 		Util.MapDebugPrint( "Truck_Barrier_2_Destroyed" );
 	},

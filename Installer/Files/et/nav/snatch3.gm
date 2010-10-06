@@ -438,6 +438,7 @@ global OnMapLoad = function()
 	Util.SetGroup("ATTACK_p.*", "group1");
 	Util.SetGroup("BUILD_Allied_Command_Post", "group1");
 	Util.SetGroup("MOBILEMORTAR_mrt1", "group1");
+	Util.SetGroup("AIRSTRIKE_ally.*", "group1");
 	
 //~g2
 	Util.SetGroup("DEFEND_PARTS_.*", "group2");
@@ -505,6 +506,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
 	Util.SetMaxUsers( 1, "PLANT_Bridge" );
 	Util.SetMaxUsers( 1, "REVIVE_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 5, "FLAG_gold_crate" );
 	
 //~	SetGoalPriority( "MOBILEMORTAR_.*", 0.85, 0, CLASS.SOLDIER );

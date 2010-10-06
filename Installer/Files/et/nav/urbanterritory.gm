@@ -3,7 +3,8 @@ global Map =
 {
 	safeIsDestroyed=false,
 	safePlantedTime=null,
-	threadid_Safe=null,
+
+	IgnoreEntPositions = { Vector3(-1441, 799, 30), Vector3(-835, -255, 66), Vector3(-798, -273, 65), Vector3(-874, -275, 65) },
 
 	IsSafePlanted = function()
 	{
@@ -21,46 +22,61 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				if (!Map.safeIsDestroyed)
+				bot = _this.Bot;
+				if( Map.safeIsDestroyed
+					|| bot.GetTeam()!=TEAM.AXIS
+					|| bot.GetClass()!=CLASS.ENGINEER
+					|| !bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
 				{
-					bot = _this.Bot;
-					if(bot.GetTeam()==TEAM.AXIS && bot.GetClass()==CLASS.ENGINEER)
+					yield();
+					return;
+				}
+
+				// once the bot throws the dynamite, store the entity
+				_this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity) {
+					if(weaponId == WEAPON.DYNAMITE) {
+						this.Bot.ExplosiveEntity = projectileEntity;
+					}
+				};
+
+				if ( !Map.SafeWpInfo ) {
+					Map.SafeWpInfo = Util.WpNameInfo("safe");
+				}
+
+				_this.Goto(Map.SafeWpInfo.position); // cs: may want to ensure successful pathing
+				_this.AddAimRequest(Priority.High, "facing", Map.SafeWpInfo.facing);
+				_this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
+				_this.BlockForWeaponChange( WEAPON.DYNAMITE );
+
+				// wait till the event gives an entity. may want to add a timeout here
+				while(!_this.Bot.ExplosiveEntity) {
+					bot.FireWeapon();
+					yield();
+				}
+
+				if ( _this.Bot.ExplosiveEntity ) {
+					_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
+					_this.BlockForWeaponChange( WEAPON.PLIERS );
+
+					// either it gets armed or the entity sinks into the world. may want a shorter timeout
+					while ( EntityIsValid(_this.Bot.ExplosiveEntity) && _this.Bot.GetExplosiveState(_this.Bot.ExplosiveEntity) == 1 )
 					{
-						wpinfo = Util.WpNameInfo("safe");
-						bot.RemoveState("PlantExplosive"); //to prevent bot endlessly arming dynamite
-						for(i=0; i<9 && !Map.IsSafePlanted(); i+=1)
-						{
-							dyn = bot.GetNearest(CAT.PROJECTILE, CLASS.DYNAMITE);
-							if(dyn==null){
-								//print("plant");
-								_this.Goto(wpinfo.position);
-								_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
-								_this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
-								_this.BlockForWeaponChange( WEAPON.DYNAMITE );
-								sleep(0.5);
-								bot.FireWeapon(); //plant dynamite
-								sleep(2);
-							}else{
-								//print("fuse");
-								bot.HoldButton(BTN.CROUCH, 20);
-								sleep(0.1);
-								botPos = bot.GetPosition();
-								_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
-								_this.BlockForWeaponChange( WEAPON.PLIERS );
-								bot.MoveTowards(botPos);
-								_this.AddAimRequest(Priority.High, "facing", GetEntPosition(dyn) - botPos);
-								bot.HoldButton(BTN.ATTACK1, 15);
-								for(j=0; j<60 && !Map.IsSafePlanted(); i+=1){ //wait until it's armed
-									sleep(0.25);
-								}
-								bot.ReleaseButton(BTN.ATTACK1,BTN.CROUCH);
-								//print("done");
-							}
-						}
-						_this.ReleaseWeaponRequest();
-						_this.Goto(Util.WpNameInfo("safe2").position); //escape from the dynamite
+						dynoPosition = GetEntPosition(_this.Bot.ExplosiveEntity);
+						_this.AddAimRequest(Priority.High, "position", dynoPosition);
+						bot.MoveTowards(dynoPosition);
+						bot.PressButton(BTN.ATTACK1);
+						yield();
 					}
 				}
+
+				_this.Bot.ExplosiveEntity = null;
+				_this.ReleaseWeaponRequest();
+
+				if ( !Map.Safe2WpPosition ) {
+					Map.Safe2WpPosition = Util.WpNameInfo("safe2").position;
+				}
+
+				_this.Goto(Map.Safe2WpPosition); //escape from the dynamite
 			},
 		},
 
@@ -68,11 +84,47 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				wpinfo = Util.WpNameInfo("ladder_roof");
-				_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
-				_this.Bot.HoldButton(BTN.CROUCH, BTN.FORWARD, 3.5);
-				sleep(3.5);
+				// at top of ladder, turn completely around
+				_this.AddAimRequest(Priority.High, "position", Vector3(392.873, -519.284, 288.125));
+				_this.Bot.HoldButton(BTN.CROUCH, 1.5);
+				sleep(1.5);
 			}
+		},
+
+		ladder_sewer = //route from the axis spawn to sewerage
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vector3(-0.3,0,-0.9));
+				_this.Bot.HoldButton(BTN.FORWARD,BTN.CROUCH, 1.5);
+				sleep(0.3);
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.3,0,-0.9));
+				sleep(2);
+			}
+		},
+
+		ductfan = // waypoint uid 193
+		{
+			navigate = function(_this)
+			{
+				if(!Map.gratebot){ Map.gratebot=0; }
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(1);
+				if (Map.gratebot < 1 && !Map.ductFanDestroyed)
+				{
+					Map.gratebot += 1;
+					_this.AddAimRequest(Priority.High, "position", Vector3(1203.604,-1093.651,6.875));
+					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+					_this.BlockForWeaponChange(WEAPON.KNIFE);
+
+					while(!Map.ductFanDestroyed) {
+						_this.Bot.PressButton(BTN.ATTACK1);
+						yield();
+					}
+				}
+
+				Map.gratebot -= 1;
+			},
 		},
 	},
 
@@ -92,32 +144,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_safe.*");
 	},
 
-	//this map has no trigger for destroying the safe
-	Watch_Safe = function()
-	{
-		pos1 = Util.WpNameInfo("safe").position;
-		pos2 = Util.WpNameInfo("gold").position;
-
-		while(!Map.safeIsDestroyed)
-		{
-			if(!Map.IsSafePlanted())
-			{
-				//dynamite has been defused
-				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_safe");
-			}
-			//print("Watch_Safe");
-			sleep(18);
-			tr = TraceLine(pos1, pos2, null, TRACE.SOLID, 0, true);
-			if(tr.fraction == 1){ Map.Safe_Destroyed(); }
-		}
-	},
-
 	Safe_Planted = function( trigger )
 	{
 		Map.safePlantedTime = GetGameTimeLeft();
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_safe"); //there is a dynamite
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_safe8");
-		if(Map.threadid_Safe==null){ Map.threadid_Safe=thread(Map.Watch_Safe); }
 	},
 
 	Safe_Destroyed = function()
@@ -127,6 +158,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_safe.*");
 		Util.MapDebugPrint( "Safe_Destroyed" );
 	},
+
+	DuctFan_Destroyed = function()
+	{
+		Map.ductFanDestroyed = true;
+		Util.MapDebugPrint("DuctFan_Destroyed", true);
+	},
 };
 
 global OnMapLoad = function()
@@ -135,23 +172,34 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned Gold!", Map.Gold_Returned );
 	OnTrigger( "Planted at The Safe.", Map.Safe_Planted );
 
+	// grenade goals send a trigger when the target entity is destroyed
+	// replacing the Watch_Safe thread with this as an example since this is a lot easier
+	// /bot goal_create grenade safetrigger    /bot goal_setproperty trace while pointing at the explosive ent
+	// feel free to remove these comments.
+	OnTrigger( "GRENADE_safetrigger Exploded.", Map.Safe_Destroyed );
+	OnTrigger( "GRENADE_ductfan Exploded.", Map.DuctFan_Destroyed );
+
+	// a re-usable region trigger to disable bot pushing and combat movement. this one is around the rooftop ladder
+	nopush = OnTriggerRegion(AABB(135.125,-640.875,265.125,476.875,-407.125,469.125),RegionTrigger.DisableBotPush);
+
+	Util.DisableGoal("GRENADE.*");
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG.*");
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT.*");
 	Util.DisableGoal("DEFEND_truck.*");
- 	SetGoalPriority("ATTACK_safe", 0, TEAM.AXIS);
- 	SetGoalPriority("ATTACK_safe.*", 0.2, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("ATTACK_safe", 0.9, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("ATTACK_safe", 0, TEAM.AXIS);
+	SetGoalPriority("ATTACK_safe.*", 0.2, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("ATTACK_safe", 0.9, TEAM.AXIS, CLASS.ENGINEER);
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_Gold");
- 	SetGoalPriority("MOUNTMG42.*", 0, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("MOBILEMG.*", 0.6, TEAM.AXIS);
+	SetGoalPriority("MOUNTMG42.*", 0, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("MOBILEMG.*", 0.6, TEAM.AXIS);
 
 	Util.SetMaxUsersInProgress(1, "SNIPE.*");
 	Util.SetMaxUsersInProgress(1, "MOUNTMG42.*");
 
 	SetMapGoalProperties( "DEFEND.*", {mincamptime=40, maxcamptime=150} );
- 	SetMapGoalProperties( "FLAME_.*", {mincamptime=30, maxcamptime=150} );
- 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=90, maxcamptime=300} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=90, maxcamptime=300} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=90, maxcamptime=300} );
 
 	MapRoutes =
 	{
@@ -160,9 +208,12 @@ global OnMapLoad = function()
 				ROUTE_north1 = { ROUTE_floor1 = {}},
 				ROUTE_north3 = { ROUTE_floor2 = {}},
 				ROUTE_north4 = { ROUTE_floor2 = {}},
-				ROUTE_sewer_south = { Weight=3,
-					ROUTE_shaft1 = {},
-					ROUTE_shaft2 = {},
+				ROUTE_sewer_center = { Weight=4,
+					ROUTE_xxx = {},
+					ROUTE_sewer_south = { Weight=3,
+						ROUTE_shaft1 = {},
+						ROUTE_shaft2 = {},
+					},
 				},
 				ROUTE_roof = {},
 				ROUTE_south_west = { ROUTE_marijuana = { ROUTE_floor1 = {}}},
@@ -205,4 +256,22 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 200.0;
+
+	if (!Map.IgnoreEnt)
+	{
+		Map.IgnoreEnt = table();
+		foreach(i and pos in Map.IgnoreEntPositions)
+		{
+			ent = TraceLine( pos, pos + Vector3(10,10,0), 0, TRACE.SHOT, 0, false ).entity;
+			if(ent)
+			{
+				Map.IgnoreEnt[i] = ent;
+				Util.MapDebugPrint("Ignoring entity " + GetGameIdFromEntity(ent), true);
+			}
+		}
+	}
+	foreach(ent in Map.IgnoreEnt)
+	{
+		bot.IgnoreTarget(ent, 99999);
+	}
 };

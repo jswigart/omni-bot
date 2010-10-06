@@ -50,7 +50,7 @@ global Map =
 		Repair_Activate =
 		{
 			Enabled = false,
-			Priority = 0.99,
+			Priority = 0.92,
 			WaypointName = "switch_repair_activate",
 			LimitTeam = (1<<TEAM.ALLIES),
 			AimPosition = Vector3(2366.039,1185.291,29.468),
@@ -149,7 +149,7 @@ global Map =
 	Tank_At_Gate = function( trigger )
 	{
 		Util.OnTriggerPosition( Map.Mover_Tank, "depot", 190.0, Map.Tank_In_Depot );
-		SetGoalPriority( "SWITCH_gate_depot", 2.0 );
+		Map.Set_Gate_Switch( "Tank_At_Gate", 1.2 );
 		//Map.Switches.Gate_Depot.Priority = 2.0;
 		Util.MapDebugPrint( "Tank_At_Gate" );
 	},
@@ -160,7 +160,7 @@ global Map =
 		Map.Invert_Gate_Depot();
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_Tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
-		SetGoalPriority( "SWITCH_gate_depot", 0.51 );
+		Map.Set_Gate_Switch( "Tank_In_Depot", 0.51);
 		//Map.Switches.Gate_Depot.Priority = 0.51;
 		Map.Switches.Repair_Lock.Enabled=true;
 		Util.EnableGoal("DEFEND_depot.*");
@@ -175,6 +175,7 @@ global Map =
 
 	Repair_Start = function( trigger )
 	{
+		SetGoalPriority(".*Command_Post", 0.95, TEAM.AXIS); 
 		Map.Switches.Repair_Activate.Enabled=true;
 		Util.MapDebugPrint( "Repair_Start" );
 	},
@@ -276,16 +277,17 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
 		Map.Attack_Gun(true);
-		Util.EnableGoal("DEFEND_depot.*");
+		Util.DisableGoal("DEFEND_depot.*");
 		Util.OnTriggerPosition( Map.Mover_Tank, "before_gate", 180.0, Map.Tank_At_Gate2 );
-		SetGoalPriority( "SWITCH_gate_depot", 2.0 );
+		Map.Set_Gate_Switch( "Tank_Unlocked", 1.2 );
 		//Map.Switches.Gate_Depot.Priority = 2.0;
+		SetGoalPriority(".*Command_Post", 0.85, TEAM.AXIS); 
 		Util.MapDebugPrint( "Tank_Unlocked" );
 	},
 
 	Tank_At_Gate2 = function( trigger )
 	{
-		SetGoalPriority( "SWITCH_gate_depot", 0.1 );
+		Map.Set_Gate_Switch( "Tank_At_Gate2", 0.1 );
 		//Map.Switches.Gate_Depot.Priority = 0.1;
 		Util.MapDebugPrint( "Tank_At_Gate2" );
 	},
@@ -303,7 +305,8 @@ global Map =
 	{
 		Map.Switches.Gun.Enabled=false;
 		Map.Attack_Gun(false);
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard.*" );
+		Map.Set_Gate_Switch( "Tank_Past_Gun", 0.1 );
 		Util.MapDebugPrint( "Tank_Past_Gun" );
 	},
 
@@ -362,6 +365,26 @@ global Map =
 		SetGoalPriority( Map.Build_Hell_on_Wheels, 1.9, TEAM.ALLIES, 0 );
 		Util.MapDebugPrint( "Allies_Escape" );
 	},
+	
+	// centralized for easier debugging
+	dbg_gateSwitch = false,
+	Set_Gate_Switch = function( source, priority )
+	{
+		SetGoalPriority( "SWITCH_gate_depot", priority );
+
+		if ( Map.dbg_gateSwitch ) {
+			yield();
+			// keep a running list of calls to see if some are unexpected (or don't work)
+			if(!Map.gateSwitchCalls) { Map.gateSwitchCalls = {}; }
+			if(!Map.gateSwitchGoal ) { Map.gateSwitchGoal = GetGoal("SWITCH_gate_depot"); }
+			currentPriority = Map.gateSwitchGoal.GetGoalPriority(1,1); // returns <class> <priority>
+			Map.gateSwitchCalls[ tableCount(Map.gateSwitchCalls) ] = { source, priority, currentPriority };
+			print(" --------------------- switch log ---------------------- ");
+			foreach ( id and entry in Map.gateSwitchCalls ) {
+				print( format("[%d] - %s -----> %f     | %d", id, entry[0], entry[1]), entry[2] );
+			}
+		}
+	},
 };
 
 global OnMapLoad = function()
@@ -397,11 +420,11 @@ global OnMapLoad = function()
 	OnTrigger( "^3Get the Fuel Tanks!", Map.Get_Fuel);
 	OnTrigger( "The Allies are escaping with the Fuel!", Map.Allies_Escape);
 
-	Util.EnableGoal("ATTACK.*");
-	Util.EnableGoal("DEFEND.*");
-	Util.EnableGoal("CALLARTILLERY.*");
-	Util.EnableGoal(Map.Flag_fuel_tank);
-	Util.EnableGoal(Map.Cappoint_Fuel);
+	Util.DisableGoal("ATTACK.*");
+	Util.DisableGoal("DEFEND.*");
+	Util.DisableGoal("CALLARTILLERY.*");
+	Util.DisableGoal(Map.Flag_fuel_tank);
+	Util.DisableGoal(Map.Cappoint_Fuel);
 	Util.SetMaxUsersInProgress( 4, "ESCORT_tank" );
 	Util.SetMaxUsersInUse( 2, "ESCORT_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_Tank );
@@ -416,6 +439,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "ESCORT_tank", 0.97, TEAM.ALLIES, 0 );
 	SetGoalPriority( "MOUNT_Tank", 0.98, TEAM.ALLIES, 0 );
 	SetGoalPriority( Map.Mount_MG_North, 0.7, TEAM.AXIS, 0 );
+
+ 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=30, maxcamptime=90} );
 
 	MapRoutes =
 	{
@@ -442,7 +467,7 @@ global OnMapLoad = function()
 		},
 		SWITCH_gate_depot =
 		{
-			ROUTE_allies_front =
+			ROUTE_allies_spawn =
 			{
 				ROUTE_allies_south =
 				{

@@ -1,20 +1,5 @@
 global Map =
 {
-	Classes = function()
-	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
-
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;	
-	},
-
 	Call_Artillery_571 = "CALLARTILLERY_571",
 	Call_Artillery_589 = "CALLARTILLERY_589",
 	Call_Artillery_604 = "CALLARTILLERY_604",
@@ -73,11 +58,6 @@ global Map =
 		 SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_*" );
 		 SetGoalPriority( "DEFEND_.*", 0.8, TEAM.ALLIES, CLASS.SOLDIER );
 		
-//~		 ETUtil.ChangeClass( TEAM.ALLIES, CLASS.ENGINEER, CLASS.FIELDOPS, false, 2 );
-		 ETUtil.ChangeClass( TEAM.AXIS, CLASS.ENGINEER, CLASS.FIELDOPS, false, 1 );
-//~		ETUtil.ChangeClass( TEAM.AXIS, CLASS.ENGINEER, CLASS.COVERTOPS, false, 1 );
-//~		ETUtil.ChangeClass( TEAM.ALLIES, CLASS.ENGINEER, CLASS.COVERTOPS, false, 1 );
-
 		Util.MapDebugPrint( "allied_door_Destroyed" );
 	},
 
@@ -93,10 +73,6 @@ global Map =
 		 SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_*" );
 		 SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_*" );
 		 SetGoalPriority( "DEFEND_.*", 0.8, TEAM.AXIS, CLASS.SOLDIER );
-//~		ETUtil.ChangeClass( TEAM.ALLIES, CLASS.ENGINEER, CLASS.FIELDOPS, false, 1 );
-//~		ETUtil.ChangeClass( TEAM.AXIS, CLASS.ENGINEER, CLASS.FIELDOPS, false, 2 );
-//~		ETUtil.ChangeClass( TEAM.AXIS, CLASS.ENGINEER, CLASS.COVERTOPS, false, 1 );
-//~		ETUtil.ChangeClass( TEAM.ALLIES, CLASS.ENGINEER, CLASS.COVERTOPS, false, 1 );
 	
 		Util.MapDebugPrint( "axis_door_Destroyed" );
 	},

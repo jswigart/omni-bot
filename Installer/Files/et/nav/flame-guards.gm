@@ -97,8 +97,11 @@ global Map =
 			{
 				if ( !Map.Hole )
 				{
-					wpinfo = Util.WpNameInfo("hole");
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					if ( !Map.HoleInfo ) {
+						Map.HoleInfo  = Util.WpNameInfo("hole");
+					}
+
+					_this.AddAimRequest(Priority.High, "facing", Map.HoleInfo .facing);
 					sleep(0.5);
 
 					if (_this.Bot.HasWeapon(WEAPON.LUGER) && _this.Bot.HasAmmo(WEAPON.LUGER))
@@ -129,8 +132,11 @@ global Map =
 			{
 				if ( !Map.Hole )
 				{
-					wpinfo = Util.WpNameInfo("flaghole");
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					if ( !Map.FlagHoleInfo ) {
+						Map.FlagHoleInfo = Util.WpNameInfo("flaghole");
+					}
+
+					_this.AddAimRequest(Priority.High, "facing", Map.FlagHoleInfo.facing);
 					sleep(0.5);
 
 					if (_this.Bot.HasWeapon(WEAPON.LUGER) && _this.Bot.HasAmmo(WEAPON.LUGER))
@@ -162,8 +168,11 @@ global Map =
 			{
 				if ( !Map.BreakableFence1 )
 				{
-					wpinfo = Util.WpNameInfo("fence1");
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					if ( !Map.Fence1Info ) {
+						Map.Fence1Info = Util.WpNameInfo("fence1");
+					}
+
+					_this.AddAimRequest(Priority.High, "facing", Map.Fence1Info.facing);
 					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
 					_this.BlockForWeaponChange( WEAPON.KNIFE );
 
@@ -182,10 +191,13 @@ global Map =
 			{
 				if ( !Map.BreakableFence2 )
 				{
-					wpinfo = Util.WpNameInfo("fence2");
-					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					if ( !Map.Fence2Info ) {
+						Map.Fence2Info = Util.WpNameInfo("fence2");
+					}
+
+					if ( _this.Goto(Map.Fence2Info.position) == EVENT.PATH_SUCCESS )
 					{
-						_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+						_this.AddAimRequest(Priority.High, "facing", Map.Fence2Info.facing);
 						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
 						_this.BlockForWeaponChange( WEAPON.KNIFE );
 
@@ -206,8 +218,11 @@ global Map =
 			{
 				if ( !Map.Barbwire )
 				{
-					wpinfo = Util.WpNameInfo("barbwire");
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					if ( !Map.BarbwireInfo ) {
+						Map.BarbwireInfo= Util.WpNameInfo("barbwire");
+					}
+
+					_this.AddAimRequest(Priority.High, "facing", Map.BarbwireInfo.facing);
 					sleep(0.5);
 
 					if (_this.Bot.HasWeapon(WEAPON.LUGER) && _this.Bot.HasAmmo(WEAPON.LUGER))
