@@ -604,7 +604,7 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Build_Oasis_Water_Pump, 0.94, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Build_Allied_Command_Post, 0.93, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Checkpoint_oldcityflag, 0.92, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( Map.Plant_Old_City_Wall, 0.94, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( Map.Plant_Old_City_Wall, 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Build_Old_City_Water_Pump, 0.90, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Build_Old_City_MG_Nest, 0.89, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_North_Anti_Tank_Gun, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
@@ -630,6 +630,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Old_City_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Oasis_Water_Pump" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Old_City_Wall" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Garrison_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Old_City_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_oldcityflag" );
@@ -970,9 +971,6 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );
-	
-	sleep(3);
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Old_City_Wall" );
 };
 
 global OnBotJoin = function( bot )
