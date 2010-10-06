@@ -152,7 +152,7 @@ this.Enter = function()
 
 this.Update = function()
 {
-	// cs: no idea how it could get here without being charged, but it happens sometimes
+	// cs: if they fired a rifle nade on the way, they lose charge
 	botClass = this.Bot.GetClass();
 	if ( (botClass == CLASS.ENGINEER && !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		|| (botClass == CLASS.COVERTOPS && !this.Bot.IsWeaponCharged(WEAPON.SATCHEL, 0)) )

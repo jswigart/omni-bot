@@ -1,20 +1,5 @@
 global Map =
 {
-	Classes = function()
-	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
-
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-	},
-
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
@@ -141,9 +126,6 @@ global Map =
 
 	CAPPOINT_290_Captured = function( trigger )
 	{
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 3;
-
 		Groups.EnableAllies(Groups.group9);
 		Groups.EnableAxis(Groups.group10);
 		Groups.DisableAllies(Groups.group7);
@@ -157,6 +139,7 @@ global Map =
 		Util.DisableGoal("AMMOCAB_south_ammocabinet"); //enables for both teams
 		Util.EnableGoal("HEALTHCAB_north_healthcabinet"); //enables for both teams
 		Util.EnableGoal("AMMOCAB_north_ammocabinet"); //enables for both teams
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rock*.*" );
 
 		Util.MapDebugPrint( "CAPPOINT_290_Captured" );
 	},
@@ -188,8 +171,6 @@ global Map =
 
 	rocket_plant = function( trigger )
  	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 3;
 		
  		Groups.DisableAxis(Groups.group10);
 		Groups.EnableAxis(Groups.group11);
@@ -199,8 +180,6 @@ global Map =
 
 	rocket_defused = function( trigger )
  	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
 		Groups.DisableAxis(Groups.group11);
 		Groups.EnableAxis(Groups.group10);
 
@@ -237,6 +216,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rock*.*" );
 
 //~ Initial Axis goals
 	Groups.EnableAxis(Groups.group2);
@@ -563,6 +543,7 @@ global Groups =
 		"ARTILLERY_S_rocketarty",
 		"CALLARTILLERY_call99",
 		"CALLARTILLERY_rocket_arty",
+		"MOBILEMG42_axis99",
 	},
 
 	// Axis rocket plant

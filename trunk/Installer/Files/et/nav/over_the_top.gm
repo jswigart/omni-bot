@@ -133,10 +133,13 @@ global Map =
 		{
 			navigate = function (_this)
 			{
-				wpinfo = Util.WpNameInfo("r_lift_up");
-				if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+				if ( !Map.RLiftUpInfo ) {
+					Map.RLiftUpInfo= Util.WpNameInfo("r_lift_up");
+				}
+
+				if ( _this.Goto(Map.RLiftUpInfo.position) == EVENT.PATH_SUCCESS )
 				{
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					_this.AddAimRequest(Priority.High, "facing", Map.RLiftUpInfo.facing);
 					sleep (2);
 					_this.Bot.HoldButton(BTN.USE, 1);
 					sleep(16);
@@ -147,11 +150,13 @@ global Map =
 		{
 			navigate = function (_this)
 			{
+				if ( !Map.LiftSwitch2Info ) {
+					Map.LiftSwitch2Info = Util.WpNameInfo("Liftswitch_2");
+				}
 
-				wpinfo = Util.WpNameInfo("Liftswitch_2");
-				if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+				if ( _this.Goto(Map.LiftSwitch2Info.position) == EVENT.PATH_SUCCESS )
 				{
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					_this.AddAimRequest(Priority.High, "facing", Map.LiftSwitch2Info.facing);
 					sleep(2);
 					_this.Bot.HoldButton(BTN.USE, 0.3);
 					sleep (1);
@@ -490,7 +495,7 @@ global Map =
 			Map.Gateclosed = true;
 			Map.GateDoor = "closed";
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_mg_al_1" );
-			
+
 			if ( Map.TruckAtGate )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );

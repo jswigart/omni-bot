@@ -134,21 +134,6 @@ global Map =
 		},
 	},
 
-	Classes = function()
-	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
-
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-	},
-
 	Defence_Door_Built = function( trigger )
 	{
 		if ( TestMap )

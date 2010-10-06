@@ -185,15 +185,15 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_wall.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axismg1" );
 	
-	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
 	
-	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=90} ); 
+//	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=90} ); 
 	SetMapGoalProperties( "MOUNT_.*", {MinCampTime=15, MaxCampTime=40} ); 
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=90} ); 
-	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=25, MaxCampTime=60} ); 
+//	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=25, MaxCampTime=60} ); 
 	
 	Util.EnableGoal("ROUTE.*"); //enables for both teams
 	

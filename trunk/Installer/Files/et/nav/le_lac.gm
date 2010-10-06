@@ -1,5 +1,4 @@
 //script created by palota
-// cs: for 0.8 you might consider manually creating build goals rather than using paththrough
 global Map =
 {
 	phase = 0,
@@ -10,6 +9,26 @@ global Map =
 
 	ShowMovers = false,
 	Movers = { "MOVER_ship", "MOVER_boat_sm" },
+
+	BUILD_Canal_Boat_Stuffs_Construction = "BUILD_Canal_Boat_Stuffs_Construction", 
+	EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_Canal_Boat_Stuffs_Construction", 
+	BUILD_Anti_Ship_Gun = "BUILD_Anti_Ship_Gun", 
+	PLANT_Missile_Prototype = "PLANT_Missile_Prototype", 
+	BUILD_Command_Post = "BUILD_Command_Post", 
+	PLANT_Command_Post = "PLANT_Command_Post", 
+	BUILD_Axis_South_East_MG_nest = "BUILD_Axis_South_East_MG_nest", 
+	PLANT_Axis_South_East_MG_nest = "PLANT_Axis_South_East_MG_nest", 
+	BUILD_Allied_Islands_MG42 = "BUILD_Allied_Islands_MG42", 
+	MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_Allied_Islands_MG42", 
+	REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_Allied_Islands_MG42", 
+	PLANT_Allied_Islands_MG42 = "PLANT_Allied_Islands_MG42", 
+	BUILD_Axis_MG42_Beach = "BUILD_Axis_MG42_Beach", 
+	MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_Axis_MG42_Beach", 
+	REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_Axis_MG42_Beach", 
+	PLANT_Axis_MG42_Beach = "PLANT_Axis_MG42_Beach",
+	PLANT_Sewer_Grate = "PLANT_Sewer_Grate",
+	PLANT_Side_Door = "PLANT_Side_Door",
+	PLANT_Back_Door = "PLANT_Back_Door",  
 
 	Switches =
 	{
@@ -27,9 +46,10 @@ global Map =
 			LimitTeam = (1<<TEAM.ALLIES),
 			LimitBots = 1,
 			LimitDistance = 500,
+			AimPosition = Vector3(-6086.3, 2167.9, -450),  
 			ExitConditions =
 			{
-				someFunc = function(bot){ return true; }
+				someFunc = function(bot){ sleep(3); return true; }
 			},
 		},
 		Helicopter_Gun2 =
@@ -39,10 +59,17 @@ global Map =
 			LimitTeam = (1<<TEAM.ALLIES),
 			LimitBots = 1,
 			LimitDistance = 500,
+			AimPosition = Vector3(-5941.9, 2167.9, -450),  
 			ExitConditions =
 			{
-				someFunc = function(bot){ return true; }
+				someFunc = function(bot){ sleep(3); return true; }
 			},
+		},
+		asgun_hatch =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "ASgun_hatch",
 		},
 		elevator_up_call =
 		{
@@ -114,71 +141,143 @@ global Map =
 		}
 	},
 
-	EscortVehicle =
+	DestroyBreakable = function(_this, position, facing)
 	{
-		Ship =
-		{
-			Enabled = false,
-			Priority = 0.5,
-			EscortVehicleGoalName = "MOVER_ship",
-			LimitBots = 4,
-		},
-	},
-
-	//custom build goal
-	NavBuild = function(_this, Enabled)
-	{
-		//print("NavBuild");
-		if (Enabled())
-		{
-			bot = _this.Bot;
-			if(bot.GetTeam()==TEAM.AXIS && bot.GetClass()==CLASS.ENGINEER)
+		name = "breakable" + _this.CurrentNavigation;
+		if (!Map[name]){
+			Map[name] = true;
+			ent = TraceLine( position, position + 200*facing, 0, TRACE.SHOT, _this.Bot.GetGameId(), false ).entity;
+			if(ent)
 			{
-				_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS);
-				_this.BlockForWeaponChange(WEAPON.PLIERS);
-				wp = _this.CurrentNavigation;
-				wpinfo = Util.WpNameInfo(wp);
-
-				for(i=0; i<60 && Enabled(); i+=1)
-				{
-					bot.MoveTowards(wpinfo.position);
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
-					bot.HoldButton(BTN.ATTACK1, 0.5);
-					sleep(0.4);
+				id = GetGameIdFromEntity(ent);
+				Util.MapDebugPrint("destroying breakable " + id, true);
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				_this.AddAimRequest(Priority.High, "facing", facing);
+				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+				_this.BlockForWeaponChange(WEAPON.KNIFE);
+				for(j=0; j<30; j+=1) {
+					if (!EntityIsValid(id)){ return; }
+					_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+					if(facing.z < -0.7){ _this.Bot.HoldButton(BTN.CROUCH, 0.4); }
+					sleep(0.5);
 				}
-				_this.ReleaseWeaponRequest();
+				Map[name] = null;
 			}
 		}
-		sleep(6);
+		sleep(3);
 	},
 
 	Navigation =
 	{
-		side_door_build =
-		{
-			navigate = function(_this) {
-				Map.NavBuild(_this, function(){ return Map.sideDestroyed; });
-			},
+		ship = {
+			navigate = function(_this)
+			{
+				if (Map.shipDamaged && Map.phase>=5){
+					bot = _this.Bot;
+					if (bot.GetHighLevelGoalName() == "BUILD" && bot.GetTeam()==TEAM.ALLIES)
+					{
+						//swim to the ship
+						Util.MapDebugPrint("Engineer is going to repair ship", true);
+						ent = GetGoal("MOVER_ship").GetEntity();
+						if (_this.Goto(GetEntityWorldSpace(ent, Vector3(140,-391,-180))) == EVENT.PATH_SUCCESS )
+						{
+							//climb up the ship ladder
+							v = GetEntFacing(ent);
+							_this.AddAimRequest(Priority.High, "facing", Vector3(-v.y, v.x, 3));
+							sleep(0.3);
+							bot.HoldButton(BTN.FORWARD, 2.3);
+							sleep(2.3);
+							//go to the repair point
+							bot.MoveTowards(GetEntityWorldSpace(ent, Vector3(0,-221,-70)));
+							_this.AddAimRequest(Priority.High, "facing", v);
+							//get pliers and repair
+							_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS);
+							_this.BlockForWeaponChange(WEAPON.PLIERS);
+							for (j=0; j<30 && bot.GetConstructableState(ent) != 0; j+=1)
+							{
+								bot.HoldButton(BTN.ATTACK1,BTN.CROUCH, 9);
+								sleep(1);
+							}
+						}
+					}				
+				}
+				sleep(10);
+			}
 		},
-		back_door_build =
-		{
-			navigate = function(_this) {
-				Map.NavBuild(_this, function(){ return Map.backDestroyed; });
-			},
+		dam_door = {
+			navigate = function(_this)
+			{
+				if (_this.Bot.GetVelocity().y < 10)
+				{
+					_this.AddAimRequest(Priority.High, "facing", Vector3(0,-1,0));
+					sleep(1.5);
+				}
+			}
 		},
+		sewer_hatch = {
+			navigate = function(_this)
+			{
+				Map.DestroyBreakable(_this, Vector3(-2235.844, -1241.875, 807.015), Vector3(0, -0.184, 0.983));
+			}
+		},
+		hatch_fuel1 = {
+			navigate = function(_this)
+			{
+				Map.DestroyBreakable(_this, Vector3(-154.126, 2071.415, 659.089), Vector3(0.214, 0, 0.977));
+			}
+		},
+		hatch_fuel2 = {
+			navigate = function(_this)
+			{
+				Map.DestroyBreakable(_this, Vector3(-160.332, 2882.322, 648.125), Vector3(0.215, 0.015, 0.976));
+			}
+		},
+		hatch_fuel2top = {
+			navigate = function(_this)
+			{
+				Map.DestroyBreakable(_this, Vector3(-169.874, 2889.875, 764.247), Vector3(-0.029, 0.022, -0.999));
+			}
+		},
+	},
+	
+	ASgun_hatch_trigger = function( trigger )
+	{
+		Map.Switches.asgun_hatch.Enabled =  ToVector(trigger.Action).x > 0;
+	},
+
+	SetSpawn1 = function(bot)
+	{
+		if (Map.phase>=10 && bot.GetTeam()==TEAM.AXIS)
+		{
+			if (Map.phase<20 || Map.phase<30 && RandInt(0,1)==0)
+			{ 
+				bot.ChangeSpawnPoint(4);
+			}else{
+				bot.ChangeSpawnPoint(2);
+			}
+		}
+	},
+	
+	SetSpawn = function()
+	{
+		foreach(bot in BotTable)
+		{
+			Map.SetSpawn1(bot);
+		}
 	},
 
 	Wait_For_Plane = function(trigger)
 	{
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_ship1");
-		//print("Wait_For_Plane");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_ship1");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "MOUNT_ship");
+		Util.MapDebugPrint("Wait_For_Plane");
 	},
 
 	Get_Explosives_To_Ship = function(trigger)
 	{
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_box_obj2");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_ship1");
-		//print("Get_Explosives_To_Ship");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_box_obj2");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_ship1");
+		Util.MapDebugPrint("Get_Explosives_To_Ship");
 	},
 
 	SetGun = function()
@@ -186,150 +285,161 @@ global Map =
 		if(Map.phase<20)
 		{
 			Map.Switches.AS_Gun.Enabled = Map.phase>=5 && Map.phase<10 && !Map.gunDamaged && !Map.shipDamaged;
-			Map.Switches.Helicopter_Gun1.Enabled = Map.phase<10 && !Map.gunDamaged;
+			Map.Switches.Helicopter_Gun1.Enabled = Map.phase<5 || Map.phase<10 && !Map.gunDamaged;
 			Map.Switches.Helicopter_Gun2.Enabled = Map.Switches.Helicopter_Gun1.Enabled;
 		}
 	},
 
 	SetDoor = function(trigger)
 	{
-	 	SetAvailableMapGoals(TEAM.AXIS, Map.sideDestroyed && Map.phase>=5 && Map.phase<30, "ATTACK_side_door_build");
-	 	SetAvailableMapGoals(TEAM.AXIS, Map.backDestroyed && Map.phase>=20, "ATTACK_back_door_build");
+		SetAvailableMapGoals(TEAM.AXIS, Map.sideDestroyed && Map.phase>=5 && Map.phase<30, "BUILD_side_door");
+		SetAvailableMapGoals(TEAM.AXIS, Map.backDestroyed && Map.phase>=20, "BUILD_back_door");
 
-	 	b = !Map.sideDestroyed && Map.phase>=10 && Map.phase<20;
-	 	SetAvailableMapGoals(TEAM.ALLIES, b, "ATTACK_side_door_out");
-	 	if(b){ Util.SetPercentInProgress(70, "FLAG_bomb_pickup"); }
+		b = !Map.sideDestroyed && Map.phase>=10 && Map.phase<20;
+		SetAvailableMapGoals(TEAM.ALLIES, b, "ATTACK_side_door_out");
+		if(b){ Util.SetPercentInProgress(70, "FLAG_bomb_pickup"); }
 		else { Util.SetMaxUsersInProgress(99, "FLAG_bomb_pickup"); }
 
-	 	b = !Map.backDestroyed && Map.phase>=30;
-	 	SetAvailableMapGoals(TEAM.ALLIES, b, "ATTACK_back_door_out");
-	 	if(b){ Util.SetPercentInProgress(70, "FLAG_gold"); }
+		b = !Map.backDestroyed && Map.phase>=30;
+		SetAvailableMapGoals(TEAM.ALLIES, b, "ATTACK_back_door_out");
+		if(b){ Util.SetPercentInProgress(70, "FLAG_gold"); }
 		else { Util.SetMaxUsersInProgress(99, "FLAG_gold"); }
 	},
 
 	Escort_Ship = function(trigger)
 	{
-	 	Map.phase = 5;
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "FLAG_box_obj2");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_ship1");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "AMMOCAB_side1");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "HEALTHCAB_side2");
-	 	Map.SetGun();
+		Map.phase = 5;
+		SetAvailableMapGoals(TEAM.ALLIES, false, "FLAG_box_obj2");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_ship1");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "AMMOCAB_side1");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "HEALTHCAB_side2");
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.BUILD_Anti_Ship_Gun);
+		Map.SetGun();
 		Map.SetDoor();
-		Map.EscortVehicle.Ship.Enabled = true;
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ESCORT_ship");
 		if(ETUtil.CountClass(TEAM.AXIS, CLASS.SOLDIER) == 0)
 		{
-		 	ETUtil.ChangeClass(TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, false, 1);
+			ETUtil.ChangeClass(TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, false, 1);
 		}
-		//print("Escort_Ship");
+		Util.MapDebugPrint("Escort_Ship");
 	},
 
 	Gun_Damaged = function(trigger)
 	{
 		Map.gunDamaged = true;
 		Map.SetGun();
-		//print("Gun_Damaged");
+		Util.MapDebugPrint("Gun_Damaged");
 	},
 
 	Gun_Repaired = function(trigger)
 	{
 		Map.gunDamaged = false;
 		Map.SetGun();
-		//print("Gun_Repaired");
+		Util.MapDebugPrint("Gun_Repaired");
 	},
 
 	Ship_Damaged = function(trigger)
 	{
 		Map.shipDamaged = true;
 		Map.SetGun();
-		//print("Ship_Damaged");
+		Util.MapDebugPrint("Ship_Damaged");
 	},
 
 	Ship_Repaired = function(trigger)
 	{
 		Map.shipDamaged = false;
 		Map.SetGun();
-		//print("Ship_Repaired");
+		Util.MapDebugPrint("Ship_Repaired");
 	},
 
 	SetFuel = function(b)
 	{
-	 	SetAvailableMapGoals(TEAM.ALLIES, b, "FLAG_bomb_pickup");
-	 	SetAvailableMapGoals(TEAM.ALLIES, b, "CAPPOINT_port_fuel");
-	 	SetAvailableMapGoals(TEAM.AXIS, b, "DEFEND_fuel.*");
+		SetAvailableMapGoals(TEAM.ALLIES, b, "FLAG_bomb_pickup");
+		SetAvailableMapGoals(TEAM.ALLIES, b, "CAPPOINT_port_fuel");
+		SetAvailableMapGoals(TEAM.AXIS, b, "DEFEND_fuel.*");
 	},
 
 	Get_Fuel = function(trigger)
 	{
-		Map.EscortVehicle.Ship.Enabled = false;
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ESCORT_ship");
 		Map.SetFuel(true);
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_2Allied_Islands_MG42");
- 		SetAvailableMapGoals(TEAM.ALLIES, false, "REPAIRMG42_2Allied_Islands_MG42");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2The_Sewer_Grate");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2The_Side_Door");
-	 	SetGoalPriority("MOUNTMG42_2Allied_Islands_MG42", 0.51, TEAM.ALLIES);
-		//print("Get_Fuel");
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.BUILD_Allied_Islands_MG42);
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.REPAIRMG42_Allied_Islands_MG42);
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Sewer_Grate);
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Side_Door); //dynamite
+		SetGoalPriority(Map.MOUNTMG42_Allied_Islands_MG42, 0.51, TEAM.ALLIES);
+		Wp.SetWaypointFlag("ship2", "closed", false);
+		Util.MapDebugPrint("Get_Fuel");
 	},
 
 	Sewer_Grate_Destroyed = function(trigger)
 	{
-	 	Util.EnableGoal("ROUTE_sewer_grate");
-		//print("Sewer_Grate_Destroyed");
+		Util.EnableGoal("ROUTE_sewer_grate");
+		Util.MapDebugPrint("Sewer_Grate_Destroyed");
 	},
 
 	Dam_Lost = function(trigger)
 	{
-	 	Map.phase = 10;
-	 	Map.SetGun();
+		Map.phase = 10;
+		Map.SetGun();
 		Map.SetDoor();
+		Map.SetSpawn();
 		Wp.SetWaypointFlag("gun_in1", "closed", true);
 		Wp.SetWaypointFlag("gun_in2", "closed", true);
-	 	Util.EnableGoal("AMMOCAB_cp1");
-	 	Util.EnableGoal("HEALTHCAB_cp2");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_side1");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "HEALTHCAB_side2");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_south.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_east_mg2");
-		SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_2The_Anti_Ship_Gun");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_dam.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE_dam.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "AMMOCAB_dam1");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, ".*MG42_bunker_mg");
+		Wp.SetWaypointFlag("gun_prone", "closed", false);
+		Util.EnableGoal("AMMOCAB_cp1");
+		Util.EnableGoal("HEALTHCAB_cp2");
+		SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_side1");
+		SetAvailableMapGoals(TEAM.AXIS, true, "HEALTHCAB_side2");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_south.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_east_mg2");
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.BUILD_Anti_Ship_Gun);
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_dam.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE_dam.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, "AMMOCAB_dam1");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_allies_assault_boat");
+		SetAvailableMapGoals(TEAM.ALLIES, true, ".*MG42_bunker_mg");
 		ETUtil.ChangeClass(TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, true, 1);
-		//print("Dam_Lost");
+		Util.MapDebugPrint("Dam_Lost");
 	},
 
 	Side_Door_Destroyed = function(trigger)
 	{
 		Map.sideDestroyed = true;
 		Map.SetDoor();
-	 	Util.EnableGoal("ROUTE_side_door");
-	 	Util.EnableGoal("ROUTE_fuel_door");
-	 	Util.EnableGoal("ROUTE_fuel_shaft");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, ".*Command_Post");
-		//print("Side_Door_Destroyed");
+		Util.EnableGoal("ROUTE_side_door");
+		Util.EnableGoal("ROUTE_fuel_door");
+		Util.EnableGoal("ROUTE_fuel_shaft");
+		SetAvailableMapGoals(TEAM.ALLIES, true, ".*Command_Post");
+		Util.MapDebugPrint("Side_Door_Destroyed");
 	},
 
 	Side_Door_Built = function(trigger)
 	{
 		Map.sideDestroyed = false;
 		Map.SetDoor();
-	 	Util.DisableGoal("ROUTE_side_door");
-	 	Util.DisableGoal("ROUTE_fuel_door");
-	 	Util.DisableGoal("ROUTE_fuel_shaft");
-		//print("Side_Door_Built");
+		Util.DisableGoal("ROUTE_side_door");
+		Util.DisableGoal("ROUTE_fuel_door");
+		Util.DisableGoal("ROUTE_fuel_shaft");
+		
+		goal=GetGoal("PLANT_side_door");
+		if(goal.TraceEntity==null){
+			goal.TraceEntity = Util.TraceForEntityInfo(goal.TraceInfo.eyePos, goal.TraceInfo.endPos, TRACE.ALL);
+		}
+		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_side_door");
+		Util.MapDebugPrint("Side_Door_Built");
 	},
 
 	Fuel_Taken = function(trigger)
 	{
-	 	SetGoalPriority("DEFEND_fuel9", 0.55, TEAM.AXIS);
-		//print("Fuel_Taken");
+		SetGoalPriority("DEFEND_fuel9", 0.55, TEAM.AXIS);
+		Util.MapDebugPrint("Fuel_Taken");
 	},
 
 	Fuel_Returned = function(trigger)
 	{
-	 	SetGoalPriority("DEFEND_fuel9", 0.49, TEAM.AXIS);
-		//print("Fuel_Returned");
+		SetGoalPriority("DEFEND_fuel9", 0.49, TEAM.AXIS);
+		Util.MapDebugPrint("Fuel_Returned");
 	},
 
 	Fuel_Captured = function(trigger)
@@ -339,37 +449,39 @@ global Map =
 			Map.phase=20;
 			Map.SetFuel(false);
 			Map.SetDoor();
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "PLANT_2Allied_Islands_MG42");
-		 	SetAvailableMapGoals(TEAM.ALLIES, false, "MOUNTMG42_2Allied_Islands_MG42");
-			SetAvailableMapGoals(TEAM.AXIS, true, "BUILD_2Axis_MG42_Beach");
-			SetAvailableMapGoals(TEAM.AXIS, true, "REPAIRMG42_2Axis_MG42_Beach");
-			SetAvailableMapGoals(TEAM.AXIS, true, "EXPLODE_2Canal_Boat_Stuffs_Construction");
-		 	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_boat1.*");
-		 	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_2Canal_Boat_Stuffs_Construction");
-		 	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_boat1.*");
-			//print("Fuel_Captured");
+			Map.SetSpawn();
+			SetGoalPriority("BUILD_side_door", 0.6, TEAM.AXIS);
+			SetAvailableMapGoals(TEAM.AXIS, false, Map.PLANT_Allied_Islands_MG42);
+			SetAvailableMapGoals(TEAM.ALLIES, false, Map.MOUNTMG42_Allied_Islands_MG42);
+			SetAvailableMapGoals(TEAM.AXIS, true, Map.BUILD_Axis_MG42_Beach);
+			SetAvailableMapGoals(TEAM.AXIS, true, Map.REPAIRMG42_Axis_MG42_Beach);
+			SetAvailableMapGoals(TEAM.AXIS, true, Map.EXPLODE_Canal_Boat_Stuffs_Construction);
+			SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_boat1.*");
+			SetAvailableMapGoals(TEAM.ALLIES, true, Map.BUILD_Canal_Boat_Stuffs_Construction);
+			SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_boat1.*");
+			Util.MapDebugPrint("Fuel_Captured");
 		}
 	},
 
- 	Boat_Moving =
+	Boat_Moving =
 	{
 		TriggerOnEntity = GetGoal("MOVER_boat_sm").GetEntity(),
 		OnEnter = function(ent)
 		{
-		 	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_boat");
-			print("Boat_Moving");
+			SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_boat");
+			Util.MapDebugPrint("Boat_Moving");
 		},
 		OnExit = function(ent) {},
 	},
 
- 	Boat_Under_Bridge =
+	Boat_Under_Bridge =
 	{
 		TriggerOnEntity = GetGoal("MOVER_boat_sm").GetEntity(),
 		OnEnter = function(ent)
 		{
-		 	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_boat2.*");
-		 	SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_boat2.*");
-			print("Boat_Under_Bridge");
+			SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_boat2.*");
+			SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_boat2.*");
+			Util.MapDebugPrint("Boat_Under_Bridge");
 		},
 		OnExit = function(ent) {},
 	},
@@ -377,21 +489,21 @@ global Map =
 	Boat_Built = function(trigger)
 	{
 		if(Map.triggerBoat1==null){
-			Map.triggerBoat1 = OnTriggerRegion(Util.WpNameInfo("boat1").position, 200, Map.Boat_Moving);
+			Map.triggerBoat1 = OnTriggerRegion(Util.WpNameInfo("boat1").position, 250, Map.Boat_Moving);
 			Map.triggerBoat2 = OnTriggerRegion(Util.WpNameInfo("boat2").position, 200, Map.Boat_Under_Bridge);
 		}
-		SetAvailableMapGoals(TEAM.AXIS, true, "BUILD_2the_Axis_South_East_MG_nest");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "MOUNTMG42_2Axis_MG42_Beach.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_boat");
-		//print("Boat_Built");
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.BUILD_Axis_South_East_MG_nest);
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.MOUNTMG42_Axis_MG42_Beach);
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_boat");
+		Util.MapDebugPrint("Boat_Built");
 	},
 
 	Boat_Destroyed = function(trigger)
 	{
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42_2Axis_MG42_Beach.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_boat2.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_boat2.*");
-		//print("Boat_Destroyed");
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.MOUNTMG42_Axis_MG42_Beach);
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_boat2.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_boat2.*");
+		Util.MapDebugPrint("Boat_Destroyed");
 	},
 
 	Get_Explosives_To_Missile = function(trigger)
@@ -401,68 +513,98 @@ global Map =
 		DeleteTriggerRegion(Map.triggerBoat2);
 		//Util.AddInvVehicle("MOVER_boat_sm");
 		Map.SetDoor();
-	 	Util.DisableGoal("AMMOCAB_side1");
-	 	Util.DisableGoal("HEALTHCAB_side2");
-	 	Util.EnableGoal("AMMOCAB_missile_ammo");
-	 	Util.EnableGoal("HEALTHCAB_missile_health");
-	 	Util.EnableGoal("AMMOCAB_bunker1");
-	 	Util.EnableGoal("HEALTHCAB_bunker2");
-	 	Util.EnableGoal("AMMOCAB_back1");
-	 	Util.EnableGoal("HEALTHCAB_back2");
-		SetAvailableMapGoals(TEAM.AXIS, false, "EXPLODE_2Canal_Boat_Stuffs_Construction");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_east_mg1");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_boat.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_boat.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_2The_Side_Door");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "MOVER_ship");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_allies_assault_boat");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_2Canal_Boat_Stuffs_Construction");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, ".*MG42_bunker_mg");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_missile.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_door_back.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, Map.backDestroyed, "DEFEND_back.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, "MOUNTMG42_2Axis_MG42_Beach.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2");
-	 	SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2_1");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_gold");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_missile.*");
-		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2The_Back_Door");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2Axis_MG42_Beach");
-		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2the_Axis_South_East_MG_nest");
-		//print("Get_Explosives_To_Missile");
+		Map.SetSpawn();
+		Util.DisableGoal("AMMOCAB_side1");
+		Util.DisableGoal("HEALTHCAB_side2");
+		Util.EnableGoal("AMMOCAB_missile_ammo");
+		Util.EnableGoal("HEALTHCAB_missile_health");
+		Util.EnableGoal("AMMOCAB_bunker1");
+		Util.EnableGoal("HEALTHCAB_bunker2");
+		Util.EnableGoal("AMMOCAB_back1");
+		Util.EnableGoal("HEALTHCAB_back2");
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.EXPLODE_Canal_Boat_Stuffs_Construction);
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_dam_east_mg1");
+		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_boat.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_boat.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.PLANT_Side_Door);
+		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_side_door");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "MOUNT_ship");
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.BUILD_Canal_Boat_Stuffs_Construction);
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*MG42_bunker_mg");
+		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_missile.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_door_back.*");
+		SetAvailableMapGoals(TEAM.AXIS, Map.backDestroyed, "DEFEND_back.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.MOUNTMG42_Axis_MG42_Beach);
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2_1");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_gold");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_missile.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Back_Door);
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Axis_MG42_Beach);
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Axis_South_East_MG_nest);
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_missile.*");
+		Util.MapDebugPrint("Get_Explosives_To_Missile");
 	},
 
 	Back_Door_Destroyed = function(trigger)
 	{
 		Map.backDestroyed=true;
 		Map.SetDoor();
-	 	Util.EnableGoal("ROUTE_back_door");
+		Util.EnableGoal("ROUTE_back_door");
 		Wp.SetWaypointFlag("back_door_axis", "closed", true);
-	 	SetAvailableMapGoals(TEAM.AXIS, Map.phase>=30, "DEFEND_back.*");
-		//print("Back_Door_Destroyed");
+		SetAvailableMapGoals(TEAM.AXIS, Map.phase>=30, "DEFEND_back.*");
+		Util.MapDebugPrint("Back_Door_Destroyed");
 	},
 
 	Back_Door_Built = function(trigger)
 	{
 		Map.backDestroyed=false;
 		Map.SetDoor();
-	 	Util.DisableGoal("ROUTE_back_door");
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_back.*");
-		//print("Back_Door_Built");
+		Util.DisableGoal("ROUTE_back_door");
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_back.*");
+
+		goal=GetGoal("PLANT_back_door");
+		if(goal.TraceEntity==null){
+			goal.TraceEntity = Util.TraceForEntityInfo(goal.TraceInfo.eyePos, goal.TraceInfo.endPos, TRACE.ALL);
+		}
+		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_back_door");
+		Util.MapDebugPrint("Back_Door_Built");
 	},
 
 	Arm_Bomb = function(trigger)
 	{
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "FLAG_gold");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_missile.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_2The_Missile_Prototype");
-	 	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_missile.*");
-		//print("Arm_Bomb");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "FLAG_gold");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_missile.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Missile_Prototype);
+		Util.MapDebugPrint("Arm_Bomb");
 	},
 };
 
 global OnMapLoad = function()
 {
+	if (GetGoal("BUILD_6The_Command_Post")!=null)
+	{
+		Map.BUILD_Canal_Boat_Stuffs_Construction = "BUILD_2Canal_Boat_Stuffs_Construction"; 
+		Map.EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_2Canal_Boat_Stuffs_Construction"; 
+		Map.BUILD_Anti_Ship_Gun = "BUILD_2The_Anti_Ship_Gun"; 
+		Map.PLANT_Missile_Prototype = "PLANT_2The_Missile_Prototype"; 
+		Map.BUILD_Command_Post = "BUILD_6The_Command_Post"; 
+		Map.PLANT_Command_Post = "PLANT_6The_Command_Post"; 
+		Map.BUILD_Axis_South_East_MG_nest = "BUILD_2the_Axis_South_East_MG_nest"; 
+		Map.PLANT_Axis_South_East_MG_nest = "PLANT_2the_Axis_South_East_MG_nest"; 
+		Map.BUILD_Allied_Islands_MG42 = "BUILD_2Allied_Islands_MG42"; 
+		Map.MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_2Allied_Islands_MG42"; 
+		Map.REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_2Allied_Islands_MG42"; 
+		Map.PLANT_Allied_Islands_MG42 = "PLANT_2Allied_Islands_MG42"; 
+		Map.BUILD_Axis_MG42_Beach = "BUILD_2Axis_MG42_Beach"; 
+		Map.MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_2Axis_MG42_Beach"; 
+		Map.REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_2Axis_MG42_Beach"; 
+		Map.PLANT_Axis_MG42_Beach = "PLANT_2Axis_MG42_Beach";
+		Map.PLANT_Sewer_Grate = "PLANT_2The_Sewer_Grate";
+		Map.PLANT_Side_Door = "PLANT_2The_Side_Door";
+		Map.PLANT_Back_Door = "PLANT_2The_Back_Door";
+	}
+
 	OnTrigger("^6Plane was on his way whit ^3The Explosives", Map.Wait_For_Plane);
 	OnTrigger("^3The Explosives ^6landed safely on the Center Island !!!!", Map.Get_Explosives_To_Ship);
 	OnTrigger("^3The Anti-Ship Gun ^2has been damaged!", Map.Gun_Damaged);
@@ -495,64 +637,66 @@ global OnMapLoad = function()
 	//OnTrigger("^6The 4th Explosive charge has been placed!!!!", Map.);
 	OnTrigger("elevatordoor_up_goto", Map.Elevator_Up);
 	OnTrigger("elevatordoor_down_goto", Map.Elevator_Down);
+	OnTrigger("hatch2_start", Map.ASgun_hatch_trigger);
 
 	Util.DisableGoal(".*", true);
- 	Util.DisableGoal("ROUTE_sewer_grate");
- 	Util.DisableGoal("ROUTE_side_door");
- 	Util.DisableGoal("ROUTE_fuel_door");
- 	Util.DisableGoal("ROUTE_fuel_shaft");
- 	SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_back_door");
-
- 	SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_dam.*");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "BUILD_2The_Anti_Ship_Gun");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_2Allied_Islands_MG42");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "EXPLODE_2Canal_Boat_Stuffs_Construction");
- 	SetAvailableMapGoals(TEAM.AXIS, true, ".*Command_Post");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_dam.*");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "SNIPE_dam.*");
- 	SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_dam1");
-
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "MOVER_ship");
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_ship1");
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_2Allied_Islands_MG42");
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "MOUNTMG42_2Allied_Islands_MG42");
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "REPAIRMG42_2Allied_Islands_MG42");
- 	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_allies_assault_boat");
-
- 	SetGoalPriority("BUILD_6The_Command_Post", 0.85, TEAM.AXIS);
- 	SetGoalPriority("BUILD_6The_Command_Post", 0.7, TEAM.ALLIES);
- 	SetGoalPriority("PLANT_6The_Command_Post", 0.555, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("PLANT_6The_Command_Post", 0.7, TEAM.ALLIES, CLASS.ENGINEER);
- 	SetGoalPriority("MOUNTMG42_2Allied_Islands_MG42", 0.69, TEAM.ALLIES);
- 	SetGoalPriority("CAPPOINT_missile.*", 0.69, TEAM.ALLIES);
- 	SetGoalPriority("ATTACK_boat", 0.65, TEAM.ALLIES);
- 	SetGoalPriority("PLANT_2The_Back_Door", 0.85, TEAM.ALLIES);
-
- 	SetGoalPriority("ATTACK_side_door_build", 0, TEAM.AXIS);
- 	SetGoalPriority("ATTACK_side_door_build", 0.9, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("ATTACK_back_door_build", 0, TEAM.AXIS);
- 	SetGoalPriority("ATTACK_back_door_build", 0.9, TEAM.AXIS, CLASS.ENGINEER);
+	Util.DisableGoal("ROUTE_sewer_grate");
+	Util.DisableGoal("ROUTE_side_door");
+	Util.DisableGoal("ROUTE_fuel_door");
+	Util.DisableGoal("ROUTE_fuel_shaft");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_back_door");
+	
+	SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_dam.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, Map.PLANT_Allied_Islands_MG42);
+	SetAvailableMapGoals(TEAM.AXIS, true, Map.EXPLODE_Canal_Boat_Stuffs_Construction);
+	SetAvailableMapGoals(TEAM.AXIS, true, ".*Command_Post");
+	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_dam.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, "SNIPE_dam.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_dam1");
+	
+	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_ship1");
+	SetAvailableMapGoals(TEAM.ALLIES, true, Map.BUILD_Allied_Islands_MG42);
+	SetAvailableMapGoals(TEAM.ALLIES, true, Map.MOUNTMG42_Allied_Islands_MG42);
+	SetAvailableMapGoals(TEAM.ALLIES, true, Map.REPAIRMG42_Allied_Islands_MG42);
+	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_allies_assault_boat");
+	
+	SetGoalPriority(Map.BUILD_Command_Post, 0.85, TEAM.AXIS);
+	SetGoalPriority(Map.BUILD_Command_Post, 0.7, TEAM.ALLIES);
+	SetGoalPriority(Map.PLANT_Command_Post, 0.555, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority(Map.PLANT_Command_Post, 0.7, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority(Map.PLANT_Axis_South_East_MG_nest, 0.6, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority(Map.MOUNTMG42_Allied_Islands_MG42, 0.69, TEAM.ALLIES);
+	SetGoalPriority("ESCORT_ship", 0.5, TEAM.ALLIES);
+	SetGoalPriority(Map.PLANT_Allied_Islands_MG42, 0.5, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("CAPPOINT_missile.*", 0.69, TEAM.ALLIES);
+	SetGoalPriority("ATTACK_boat", 0.65, TEAM.ALLIES);
+	SetGoalPriority(Map.PLANT_Back_Door, 0.85, TEAM.ALLIES);
+	SetGoalPriority("PLANT_back_door", 0.85, TEAM.ALLIES);
+	SetGoalPriority("REPAIRMG42.*", 0.8);
+	SetGoalPriority("FLAG.*", 0.49, TEAM.AXIS, 0, true);
 
 	Map.SetGun();
 
-	foreach (id and goal in { ".*MG42.*", "PLANT_Command_Post" }){
+	foreach (id and goal in { ".*MG42.*", Map.PLANT_Command_Post, Map.BUILD_Command_Post }){
 		Util.SetMaxUsersInProgress(1, goal);
 	}
 
- 	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
+	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
 
 	Wp.SetWaypointFlag("gun_in1", "closed", false);
 	Wp.SetWaypointFlag("gun_in2", "closed", false);
+	Wp.SetWaypointFlag("gun_prone", "closed", true);
 	Wp.SetWaypointFlag("back_door_axis", "closed", false);
+	Wp.SetWaypointFlag("ship2", "closed", true);
 
-	Util.SetGoalOffset(10, -10, 0, "BUILD_2Axis_MG42_Beach");
+	Util.SetGoalOffset(10, -10, 0, Map.BUILD_Axis_MG42_Beach);
 	Util.SetGoalOffset(0, -15, 0, "MOUNTMG42_dam_east_mg1");
 	Util.SetGoalOffset(15, 0, 0, "MOUNTMG42_dam_east_mg2");
-	Util.SetGoalOffset(0, 60, 0, "PLANT_2the_Axis_South_East_MG_nest");
-	Util.AddUseWp("PLANT_2The_Side_Door", "side_door");
-	Util.AddUseWp("PLANT_2The_Side_Door", "side_door_in");
-	Util.AddUseWp("PLANT_2The_Back_Door", "back_door");
-	Util.AddUseWp("PLANT_2The_Back_Door", "back_door_in");
+	Util.SetGoalOffset(0, 60, 0, Map.PLANT_Axis_South_East_MG_nest);
+	Util.AddUseWp(Map.PLANT_Side_Door, "side_door");
+	Util.AddUseWp(Map.PLANT_Side_Door, "side_door_in");
+	Util.AddUseWp(Map.PLANT_Back_Door, "back_door");
+	Util.AddUseWp(Map.PLANT_Back_Door, "back_door_in");
 
 	MapRoutes =
 	{
@@ -571,7 +715,6 @@ global OnMapLoad = function()
 				ROUTE_sewer_grate = {
 					ROUTE_bunker_bridge = {
 						ROUTE_fuel_stairs = {},
-						ROUTE_fuel_up1 = {},
 						ROUTE_fuel_up2 = {},
 					}
 				},
@@ -579,16 +722,11 @@ global OnMapLoad = function()
 		},
 		CAPPOINT_port_fuel = {
 			ROUTE_fuel = {
-				ROUTE_fuel_door = { Weight=6 },
-				ROUTE_fuel_shaft = { Weight=6 },
+				ROUTE_fuel_door = { Weight=4 },
+				ROUTE_fuel_shaft = { Weight=4 },
 				ROUTE_fuel_stairs = {},
-				ROUTE_fuel_up1 = {},
-				ROUTE_fuel_up2 = {},
-			},
-		},
-		BUILD_6The_Command_Post = {
-			ROUTE_beach_spawn = {
-				ROUTE_sewer = {},
+				ROUTE_fuel_up1 = { ROUTE_command_post = {}},
+				ROUTE_fuel_up2 = { ROUTE_command_post = {}},
 			},
 		},
 		CAPPOINT_missile1 = {
@@ -609,18 +747,45 @@ global OnMapLoad = function()
 				},
 			},
 		},
+		DEFEND_fuel6 = {
+			ROUTE_bunker_spawn = { 
+				ROUTE_fuel_stairs = {}, 
+			},
+			ROUTE_command_post = { 
+				ROUTE_fuel_stairs = {}, 
+			},
+		},
+		DEFEND_back6 = {
+			ROUTE_bunker_spawn = {
+				ROUTE_missile_west = {},
+			}
+		},					
 	};
+	MapRoutes[Map.BUILD_Command_Post] = {
+			ROUTE_beach_spawn = {
+				ROUTE_sewer = {},
+			},
+	};
+		 
 	MapRoutes.CAPPOINT_missile2 = MapRoutes.CAPPOINT_missile1;
-	MapRoutes.PLANT_2The_Missile_Prototype = MapRoutes.CAPPOINT_missile1;
+	MapRoutes[Map.PLANT_Missile_Prototype] = MapRoutes.CAPPOINT_missile1;
 	MapRoutes.ATTACK_missile5 = MapRoutes.CAPPOINT_missile1;
 	MapRoutes.ATTACK_missile6 = MapRoutes.CAPPOINT_missile1;
-	MapRoutes.PLANT_6The_Command_Post = MapRoutes.BUILD_6The_Command_Post;
+	MapRoutes[Map.PLANT_Command_Post] = MapRoutes[Map.BUILD_Command_Post];
+	MapRoutes.DEFEND_fuel7 = MapRoutes.DEFEND_fuel6;
+	MapRoutes.DEFEND_fuel8 = MapRoutes.DEFEND_fuel6;
+	MapRoutes.DEFEND_back7 = MapRoutes.DEFEND_back6;
+	MapRoutes.DEFEND_missile8 = MapRoutes.DEFEND_back6;
+	MapRoutes.DEFEND_back4 = MapRoutes.DEFEND_back6;
+	MapRoutes.DEFEND_back8 = MapRoutes.DEFEND_back6;
 
 	Util.Routes(MapRoutes);
 	Util.UpdateSwitchData();
+	print( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
+	Map.SetSpawn1(bot);
 };

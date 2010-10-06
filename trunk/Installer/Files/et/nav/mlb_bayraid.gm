@@ -149,8 +149,12 @@ global Map =
 			{
 				if ( Map.SouthDoorStatus == "Axis" )
 				{
-					wpinfo = Util.WpNameInfo("SouthDoor");
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					// cache the info
+					if ( !Map.SouthDoorInfo ) {
+						Map.SouthDoorInfo = Util.WpNameInfo("SouthDoor");
+					}
+
+					_this.AddAimRequest(Priority.High, "facing", Map.SouthDoorInfo.facing);
 					_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
 					_this.BlockForWeaponChange( WEAPON.PLIERS );
 

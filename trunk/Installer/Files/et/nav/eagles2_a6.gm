@@ -92,17 +92,25 @@ global Map =
 				if ( Map.Mover1Position == 1 )
 				{
 					_this.mover.movergoal = "MOVER_cablecar2";
-					wpinfo = Util.WpNameInfo("start_c2");
-					_this.Pos = wpinfo.position;
-					_this.Facing = wpinfo.facing * 1024;
+
+					if ( !Map.Start_c2Info ) {
+						Map.Start_c2Info = Util.WpNameInfo("start_c2");
+					}
+
+					_this.Pos = Map.Start_c2Info.position;
+					_this.Facing = Map.Start_c2Info.facing * 1024;
 					return true;
 				}
 				if ( Map.Mover1Position == 0 )
 				{
 					_this.mover.movergoal = "MOVER_cablecar1";
-					wpinfo = Util.WpNameInfo("start_c1");
-					_this.Pos = wpinfo.position;
-					_this.Facing = wpinfo.facing * 1024;
+
+					if ( !Map.Start_c1Info ) {
+						Map.Start_c1Info = Util.WpNameInfo("start_c1");
+					}
+
+					_this.Pos = Map.Start_c1Info.position;
+					_this.Facing = Map.Start_c1Info.facing * 1024;
 					return true;
 				}
 				return false;
@@ -122,10 +130,13 @@ global Map =
 	{
 		if ( Map.Talk && MAP_TALK )
 		{
-			wppos = Util.GetWpNamePosition( "start_axis2" );
+			if ( !Map.StartAxis2Position ) {
+				Map.StartAxis2Position = Util.GetWpNamePosition( "start_axis2" );
+			}
+
 			foreach ( id and bot in BotTable )
 			{
-				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(wppos)<1000 )
+				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(Map.StartAxis2Position)<1000 )
 				{
 					ran = RandRange(0,10);
 					if( ran < 4 && !bot.GetNearestAlly(CAT.PLAYER,CLASS.ENGINEER))
@@ -197,10 +208,13 @@ global Map =
 	{
 		if ( Map.Talk && MAP_TALK )
 		{
-			wppos = Util.GetWpNamePosition( "tramdoor1" );
+			if ( !Map.TramDoor1Position ) {
+				Map.TramDoor1Position = Util.GetWpNamePosition( "tramdoor1" );
+			}
+
 			foreach ( id and bot in BotTable )
 			{
-				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(wppos)<1000 )
+				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(Map.TramDoor1Position)<1000 )
 				{
 					ran = RandRange(0,10);
 					if( ran < 4 )
@@ -469,10 +483,13 @@ global Map =
 	{
 		if ( Map.Talk && MAP_TALK )
 		{
-			wppos = Util.GetWpNamePosition( "radio5" );
+			if ( !Map.Radio5Position ) {
+				Map.Radio5Position = Util.GetWpNamePosition( "radio5" );
+			}
+
 			foreach ( id and bot in BotTable )
 			{
-				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(wppos)<800 )
+				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && bot.DistanceTo(Map.Radio5Position)<800 )
 				{
 					ran = RandRange(0,10);
 					if( ran < 3 )

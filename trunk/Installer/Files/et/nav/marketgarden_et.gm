@@ -237,8 +237,6 @@ global Map =
 	{
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_pillbox_mg42" );
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 3;
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_380" );
 		
 		foreach ( id and bot in BotTable )
@@ -263,8 +261,6 @@ global Map =
 	{
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_pillbox_mg42" );
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_380" );
 		
 		foreach ( id and bot in BotTable )
@@ -288,8 +284,6 @@ global Map =
 	center_plant = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_wt.*" );
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 3;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_canal_mg42" );
 	//~	ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, false, 2 );
 		
@@ -317,8 +311,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_wt.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_wt3" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_canal_mg42" );
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
 		
 		foreach ( id and bot in BotTable )
 		{
@@ -405,14 +397,14 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_mrt3" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_380" );
 	
-	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
-	Util.SetMaxUsersInProgress( 1, "BUILD_Pill_Box_MG_42" );
-	Util.SetMaxUsersInProgress( 1, "BUILD_Command_Center_MG42" );
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "BUILD_Axis_Re_Supply_Cabinate" );
-	Util.SetMaxUsersInProgress( 1, "BUILD_Allied_Re_Supply_Cabinate" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "BUILD_Pill_Box_MG_42" );
+	Util.SetMaxUsers( 1, "BUILD_Command_Center_MG42" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "BUILD_Axis_Re_Supply_Cabinate" );
+	Util.SetMaxUsers( 1, "BUILD_Allied_Re_Supply_Cabinate" );
 	Util.SetGoalPosition( 2870.125, -2312.5, 1112.125, "BUILD_Axis_Re_Supply_Cabinate" ) ;	
 	Util.SetGoalPosition( -4417.9, -1769.7, 1136.125, "BUILD_Allied_Re_Supply_Cabinate" ) ;	
 	Util.SetGoalPosition( -5468.626, -3097, 1112.125, "PLANT_Command_Center_Gates" ) ;

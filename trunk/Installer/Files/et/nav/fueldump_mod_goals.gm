@@ -1071,8 +1071,8 @@ global _MG =
 		Offsets = 
 		{
 		},
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-10326.000, -6988.000, 210.000),
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-10230.000, -6755.000, 210.000),
 		Radius = 0,
 		SerialNum = 433,
 		Stance = "crouch",

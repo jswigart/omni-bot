@@ -76,10 +76,14 @@ global Map =
 			{
 				if ( !Map.BreakableGate )
 				{
-					wpinfo = Util.WpNameInfo("r_spawnexit_5");
+					// cache the info
+					if ( !Map.BreakableGateInfo ) {
+						Map.BreakableGateInfo = Util.WpNameInfo("r_spawnexit_5");
+					}
+
 					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
 					{
-						_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+						_this.AddAimRequest(Priority.High, "facing", Map.BreakableGateInfo.facing);
 						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
 						_this.BlockForWeaponChange( WEAPON.KNIFE );
 
@@ -99,10 +103,14 @@ global Map =
 			{
 				if ( !Map.BreakableDoor )
 				{
-					wpinfo = Util.WpNameInfo("breakdoorpt");
+					// cache the info
+					if ( !Map.BreakableDoorInfo ) {
+						Map.BreakableDoorInfo = Util.WpNameInfo("breakdoorpt");
+					}
+
 					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
 					{
-						_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+						_this.AddAimRequest(Priority.High, "facing", Map.BreakableDoorInfo.facing);
 						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
 						_this.BlockForWeaponChange( WEAPON.KNIFE );
 
@@ -507,7 +515,7 @@ global Map =
 		Util.MapDebugPrint( "Bunkerdoor is now: " + Map.Bunkerdoor, true);
 	},
 
-    AxisWon = function( trigger )
+	AxisWon = function( trigger )
 	{
 		Util.MapDebugPrint("AxisWon");
 

@@ -45,25 +45,11 @@ global Map =
 		},
 	},
 
-	Classes = function()
-	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 2;
-		Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 1;
-
-		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 3;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-	},
-
 	Allied_Assault_Ramp_Built = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Escape_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_acontrols.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_ally99" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Door_Controls" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
@@ -119,8 +105,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_a2" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_ally3" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_ally2" );
-		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 3;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_ally99" );
 		Util.DisableGoal("CHECKPOINT_spawnflag");
 		Util.DisableGoal("PLANT_Allied_Assault_Ramp");
 

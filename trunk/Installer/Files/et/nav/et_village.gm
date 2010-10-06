@@ -3,11 +3,11 @@ global Map =
 	Quiet = true,
 	FocusPrimary = false,
 	DispenseAmmoTime = 15,
-	
+
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
 	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
-	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",	
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
 	Call_Artillery_bCemetary_1 = "CALLARTILLERY_bCemetary_1",
 	Call_Artillery_rCemetary_1 = "CALLARTILLERY_rCemetary_1",
 	Call_Artillery_rCemetary_2 = "CALLARTILLERY_rCemetary_2",
@@ -17,7 +17,7 @@ global Map =
 	Flag_obj_item01 = "FLAG_obj_item01",
 	Cappoint_truck = "CAPPOINT_truck",
 	Build_Command_Post = "BUILD_Command_Post",
-	Plant_Command_Post = "PLANT_Command_Post",	
+	Plant_Command_Post = "PLANT_Command_Post",
 	Plant_Gold_Storage_Crypt = "PLANT_Gold_Storage_Crypt",
 	Mount_cemetary_mg = "MOUNTMG42_cemetary_mg",
 	Mount_central_cyd_mg = "MOUNTMG42_central_cyd_mg",
@@ -27,17 +27,17 @@ global Map =
 	Repair_central_cyd_mg = "REPAIRMG42_central_cyd_mg",
 	Repair_cottage_mg = "REPAIRMG42_cottage_mg",
 	Repair_west_cyd_mg = "REPAIRMG42_west_cyd_mg",
-	
+
 	CryptStatus = false, //intact
 	CryptDyno = 0, //counter
 	GoldStatus = false, //home
-	AlliesNearCrypt = false, 
-	
+	AlliesNearCrypt = false,
+
 	RoundStart = true,
 	IncomingCalled = false,
-	
+
 	FriendlyFire,
-	
+
 	PanzGateBots = 0,
 	BridgeASBots = 0,
 	Navigation =
@@ -50,20 +50,23 @@ global Map =
 				// others will need to eval other map vars
 				if ( Map.PanzGateBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
 				{
-					wpTable = Util.WpNameInfo("rPanzGate");
+					if ( !Map.PanzGateInfo ) {
+						Map.PanzGateInfo = Util.WpNameInfo("rPanzGate");
+					}
+
 					Map.PanzGateBots += 1;
-					
+
 					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.PanzGateInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.Bot.ReleaseButton(BTN.SPRINT);
 						if (_this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0) )
 						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+							_this.AddAimRequest(Priority.High, "facing", Map.PanzGateInfo.facing);
 							_this.AddWeaponRequest(Priority.High, WEAPON.PANZERFAUST );
 							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
 							sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 2);					
+							_this.Bot.HoldButton(BTN.ATTACK1, 2);
 							sleep(5);
 						}
 					}
@@ -78,21 +81,24 @@ global Map =
 			{
 				if ( Map.BridgeASBots == 0 && _this.Bot.HasWeapon( WEAPON.SMOKE_GRENADE ) )
 				{
-					wpTable = Util.WpNameInfo("bridge_as");
+					if ( !Map.BridgeASInfo ) {
+						Map.BridgeASInfo = Util.WpNameInfo("bridge_as");
+					}
+
 					Map.BridgeASBots += 1;
-					
+
 					_this.Bot.MaxViewDistance = 10;	//Martin - Don't let bots see enemies when they throw smoke
 					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.BridgeASInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.Bot.ReleaseButton(BTN.SPRINT);
 						if (_this.Bot.IsWeaponCharged(WEAPON.SMOKE_GRENADE, 0) )
 						{
-							_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+							_this.AddAimRequest(Priority.High, "facing", Map.BridgeASInfo.facing);
 							_this.AddWeaponRequest(Priority.High, WEAPON.SMOKE_GRENADE );
 							_this.BlockForWeaponChange( WEAPON.SMOKE_GRENADE );
 							//sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);					
+							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
 							sleep(1);
 							_this.Bot.MaxViewDistance = 10000;	//Martin - Extra strength glasses
 						}
@@ -101,7 +107,7 @@ global Map =
 				yield();
 			},
 		},
-		
+
 		// cs: from ledge by destroyed cottage to boxes
 		tjump =
 		{
@@ -116,10 +122,10 @@ global Map =
 				_this.Bot.HoldButton(BTN.JUMP, 2);
 				_this.Bot.HoldButton(BTN.FORWARD, 1);
 				sleep(3);
-			},			
-		},		
+			},
+		},
 	},
-	
+
 	Airstrike =
 	{
 		sladder =
@@ -144,10 +150,10 @@ global Map =
 		OnEnter = function(ent)
 		{
 			if ( TestMap )
-				{ return; }		
-				
+				{ return; }
+
 			if( !Map.AlliesNearCrypt && GetEntTeam(ent) == TEAM.ALLIES && !Map.CryptStatus )
-			{ 
+			{
 				if ( GetEntClass(ent) == CLASS.ENGINEER )
 				{
 					Map.AlliesNearCrypt = true;
@@ -155,7 +161,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rCottage.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTavernAS_1" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" ); 
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rCellar.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cd.*" );
@@ -165,7 +171,7 @@ global Map =
 				else if ( Map.RoundStart )
 				{
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-					
+
 					if ( !Map.IncomingCalled ) // heard you the first time noob
 					{
 						Map.IncomingCalled = true;
@@ -178,12 +184,12 @@ global Map =
 		{
 		},
 	},
-	
-	Defend = 
+
+	Defend =
 	{
 		MaxBots = 1,
 		Users = {},
-	},		
+	},
 
 	Gold_Storage_Crypt_Destroyed= function( trigger )
 	{
@@ -195,9 +201,9 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
 	},
 
 	Gold_Storage_Crypt_Planted = function( trigger )
@@ -215,19 +221,19 @@ global Map =
 
 		Map.CryptDyno -= 1;
 	},
-    
+
 	obj_item01_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.GoldStatus = true;
-		
+
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );	//Martin - Ok Ken, at least let only 1 axis go for it instead of all the soldiers.
-		
+
 		//spawn back
 		Util.ChangeSpawn( TEAM.ALLIES, 1);
-		
+
 		// axis soldier will grab flag if a minimum of 5 axis are alive
 		if ( !ETUtil.IsTeamDead( TEAM.AXIS, 5 ) )
 		{
@@ -249,25 +255,25 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTruckAS.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDeliverArt.*" );
 		Util.DisableGoal("PLANT_Command_Post");
-		
+
 		Map.Airstrike.sladder.Enabled = false;
 	},
 
 	obj_item01_Returned = function ( trigger )
 	{
 		if ( TestMap )
-			{ return; }		
+			{ return; }
 
 		Map.GoldStatus = false;
-		
+
 		Util.SetMaxUsersInProgress( 64, "CHECKPOINT.*" );	//Martin - Anyone can go for it now...
-		
+
 		//spawn default
 		Util.ChangeSpawn( TEAM.ALLIES, 0);
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
@@ -288,21 +294,21 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
 		}
-		
+
 		Map.Airstrike.sladder.Enabled = true;
 	},
-	
+
 	truck_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-	},	
+	},
 
 	allied_flag01_Axis_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
@@ -315,17 +321,17 @@ global Map =
 			{ return; }
 
 		Map.RoundStart = false;
-		
+
 		if ( !Map.CryptStatus && !Map.GoldStatus)
-		{ 
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt ); 
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		}
-		
+
 		if ( !Map.GoldStatus )
-		{ 
+		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rCellar.*" ); 
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rCellar.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTavern.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rCottage.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTavernAS_1" );
@@ -347,7 +353,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
 			}
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 		Map.Airstrike.bridge.Enabled = false;
 	},
@@ -359,15 +365,15 @@ global Map =
 
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
-		
+
 		if ( !Map.CryptStatus )
-		{ 
+		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bSpawnCamp.*" ); 
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bSpawnCamp.*" );
 		}
 	},
 
@@ -377,7 +383,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rSpawnkill.*" );
-		
+
 		//Map.AxisASTable = {"rSpawnkill_1",};
 	},
 };
@@ -392,7 +398,7 @@ global OnMapLoad = function()
 	}
 
 	Util.SetGoalPosition( -382, 4726, -19, "PLANT_Gold_Storage_Crypt" );
-	
+
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
@@ -407,10 +413,10 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at Gold Storage Crypt.", Map.Gold_Storage_Crypt_Defused );
 	OnTrigger( " The Allies have escaped with the Gold!", Map.truck_Captured );
 	OnTrigger( "two minute warning.", Map.two_minute );
-	
+
 	//some triggers to help bots know when to aggressively defend crypt
 	tOne = OnTriggerRegion(Vector3(67,3056,-110), 200, Map.CryptTrigger);
-	tTwo = OnTriggerRegion(Vector3(-1050,3674,-247), 275, Map.CryptTrigger);	
+	tTwo = OnTriggerRegion(Vector3(-1050,3674,-247), 275, Map.CryptTrigger);
 
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=15, MaxCampTime=30});
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=60});
@@ -421,7 +427,7 @@ global OnMapLoad = function()
 	Util.DisableGoal(".*", true);
 	ETUtil.SetPrimaryGoals(1.0);
 	Util.EnableGoal("CAPPOINT.*");
-	
+
 	SetGoalPriority( "DEFEND_rCrypt[1234]", 0.6 );
 	SetGoalPriority( "ATTACK_bDeliver7", 0.6 );
 	SetGoalPriority( "DEFEND_rDeliver[12]", 0.6 );
@@ -430,7 +436,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_cd.*", 0.85 );
 	ETUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.FIELDOPS );
 	ETUtil.LimitToClass( "PLANT_Command_Post.*", TEAM.ALLIES, CLASS.COVERTOPS);
-	ETUtil.LimitToClass( "PLANT_Command_Post.*", TEAM.AXIS, CLASS.COVERTOPS);	
+	ETUtil.LimitToClass( "PLANT_Command_Post.*", TEAM.AXIS, CLASS.COVERTOPS);
 
 	Util.SetMaxUsers( 1, "MOUNT.*" );
 	Util.SetMaxUsers( 1, "CAMP.*" );
@@ -438,9 +444,9 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "DEFEND.*" );
 	Util.SetMaxUsers( 1, "GRENADE.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE.*" );
-	
+
 	Util.SetRoleForGoals( "CAMP_cd.*", ROLE.DEFENDER );
-	
+
 	SetGoalPriority( "CALL.*", 0.7 );
 	SetGoalPriority( "ARTILLLERY.*", 0.7 );
 
@@ -452,7 +458,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_cd.*" );
-	
+
 	Map.AxisASTable = Map.AxisASTavern;
 
 	MapRoutes =
@@ -479,14 +485,14 @@ global OnMapLoad = function()
 				{
 					ROUTE_block3 = {},
 					ROUTE_bridge2 = {},
-					
+
 				},
 				ROUTE_bridge =
 				{
 					ROUTE_block2 = { ROUTE_cottage = {}, },
 					ROUTE_closet = { ROUTE_ccyd = { ROUTE_cottage = {}, }, },
 				},
-			},			
+			},
 		},
 		FLAG_obj_item01 =
 		{
@@ -509,7 +515,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_block3 = { ROUTE_tavern = {}, },
 					ROUTE_bridge2 = { ROUTE_tavern = {}, },
-					
+
 				},
 				ROUTE_bridge =
 				{
@@ -520,11 +526,11 @@ global OnMapLoad = function()
 		},
 		CAPPOINT_truck =
 		{
-			ROUTE_gold = 
+			ROUTE_gold =
 			{
 				ROUTE_nLadder =
 				{
-					ROUTE_tavern = 
+					ROUTE_tavern =
 					{
 						ROUTE_tower =
 						{
@@ -549,7 +555,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.DEFEND_rDeliver2 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.DEFEND_rDeliver3 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.DEFEND_rDeliver4 = MapRoutes.DEFEND_rDeliver1;
@@ -567,7 +573,7 @@ global OnMapLoad = function()
 	MapRoutes.CALLARTILLERY_bCemetary_1 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.MOUNTMG42_cemetary_mg = MapRoutes.FLAG_obj_item01;
 	MapRoutes.PLANT_Gold_Storage_Crypt = MapRoutes.FLAG_obj_item01;
-	
+
 	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );
 };
@@ -578,7 +584,7 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-		
+
 	if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.FIELDOPS )
 	{
 		if ( tableCount(Map.Defend.Users) < Map.Defend.MaxBots )
@@ -586,5 +592,5 @@ global OnBotJoin = function( bot )
 			Map.Defend.Users[ bot.GetGameId() ] = true;
 			bot.SetRoles(ROLE.DEFENDER);
 		}
-	}	
+	}
 };

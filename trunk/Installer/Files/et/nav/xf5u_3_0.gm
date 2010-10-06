@@ -86,10 +86,13 @@ global Map =
 			{
 				if ( !Map.BigDoor )
 				{
-					wpinfo = Util.WpNameInfo("bigdoorpt");
-					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					if ( !Map.BigDoorInfo ) {
+						Map.BigDoorInfo = Util.WpNameInfo("bigdoorpt");
+					}
+
+					if ( _this.Goto(Map.BigDoorInfo.position) == EVENT.PATH_SUCCESS )
 					{
-						_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+						_this.AddAimRequest(Priority.High, "facing", Map.BigDoorInfo.facing);
 
 						while( !Map.BigDoor )
 						{
@@ -107,10 +110,13 @@ global Map =
 			{
 				if (!Map.NoWay)
 				{
-					wpinfo = Util.WpNameInfo("tunnel");
-					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					if ( !Map.TunnelWpInfo ) {
+						Map.TunnelWpInfo = Util.WpNameInfo("tunnel");
+					}
+
+					if ( _this.Goto(Map.TunnelWpInfo.position) == EVENT.PATH_SUCCESS )
 					{
-						_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+						_this.AddAimRequest(Priority.High, "facing", Map.TunnelWpInfo.facing);
 						_this.Bot.HoldButton(BTN.FORWARD, 0.5);
 					}
 				}
@@ -137,10 +143,13 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				wpinfo = Util.WpNameInfo("breakout_2");
-				if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+				if ( !Map.Breakout2Info ) {
+					Map.Breakout2Info = Util.WpNameInfo("breakout_2");
+				}
+
+				if ( _this.Goto(Map.Breakout2Info.position) == EVENT.PATH_SUCCESS )
 				{
-					_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
+					_this.AddAimRequest(Priority.High, "facing", Map.Breakout2Info.facing);
 					_this.Bot.HoldButton(BTN.FORWARD, 4);
 					sleep(3);
 				}
