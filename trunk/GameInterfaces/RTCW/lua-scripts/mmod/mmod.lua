@@ -1,4 +1,4 @@
-dofile(et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/config.lua')
+--dofile(et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/config.lua')
 dofile(et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/commands.lua')
 dofile(et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/global.lua')
 
@@ -16,8 +16,10 @@ function et_InitGame(levelTime, randomSeed, restart)
 	et.G_Print("^5" .. modname .. " has been initialized...\n")
 	et.G_Print("^5" .. modname .. " created by (LuNaTiC)*Marcus...\n")
 	et.G_Print("^5" .. modname .. " url: www.thelunaticfam.com...\n")
-	loadLevels()
 	loadAdmins()
+	loadConfig()
+	loadLevels()
+	loadMutes()
 	return
 end
 
@@ -50,15 +52,19 @@ function et_ClientConnect(clientNum, firstTime, isBot)
 end
 
 function et_Obituary(victimnum, killernum, meansofdeath)
+	local showkillerhp = tonumber(global_config_table["showkillerhp"])
+
 	if showkillerhp == 1 then
-		local victimteam = tonumber(et.gentity_get(victimnum, "sess.sessionTeam"))
-		local killerteam = tonumber(et.gentity_get(killernum, "sess.sessionTeam"))
+		if not et.IsBot(victimnum) then
+			local victimteam = tonumber(et.gentity_get(victimnum, "sess.sessionTeam"))
+			local killerteam = tonumber(et.gentity_get(killernum, "sess.sessionTeam"))
 
-		if victimteam ~= killerteam and killernum ~= 1022 then
-			local killername = string.gsub(et.gentity_get(killernum, "pers.netname"), "%^$", "^^ ")
-			local killerhp = et.gentity_get(killernum, "health")
+			if victimteam ~= killerteam and killernum ~= 1022 then
+				local killername = string.gsub(et.gentity_get(killernum, "pers.netname"), "%^$", "^^ ")
+				local killerhp = et.gentity_get(killernum, "health")
 
-			et.trap_SendServerCommand(victimnum, string.format("cp \"^7%s ^7had ^o%d ^7HP left.\" 3", killername, killerhp))
+				et.trap_SendServerCommand(victimnum, string.format("cp \"^7%s ^7had ^o%d ^7HP left.\" 2", killername, killerhp))
+			end
 		end
 	end
 end
@@ -97,6 +103,11 @@ function et_ClientCommand(clientNum)
     local clientguid = string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(clientNum), "cl_guid"))
     local clientlvl = "0"
     local clientflags = global_level_table[clientlvl]["flags"]
+	
+	if global_mute_table[clientguid] ~= nil and (argv0 == "say" or argv0 == "say_team" or argv0 == "vsay" or argv0 == "vsay_team") then -- is player muted
+		userprint(clientNum, "cp", "^1You are muted")
+		return 1
+	end
 	
 	if (string.find(text, commandprefix) == 1) then -- we got a command!
 		s,e,command,temp = string.find(text, commandprefix .. "(%w+)%s+(.*)")
@@ -178,6 +189,14 @@ function CreateDB()
 		  );
 		]]
 		
+		mmodDB:exec[[
+		  CREATE TABLE tblMutes (
+			ind			INTEGER PRIMARY KEY,
+			guid		VARCHAR(50),
+			name		VARCHAR(50)
+		  );
+		]]
+		
 		mmodDB:close()
 		mmodDB = nil
 end
@@ -197,6 +216,8 @@ end
 function execcommand(command, clientNum, params)
     if command == "test" then
         test(clientNum, params)
+    elseif command == "admindel" then
+        admindel(clientNum, params)
     elseif command == "admintest" then
         admintest(clientNum, params)
     elseif command == "ban" then
@@ -211,14 +232,22 @@ function execcommand(command, clientNum, params)
         gib(clientNum, params)
     elseif command == "kick" then
         kick(clientNum, params)
+    elseif command == "listadmins" then
+		listadmins(clientNum, params)
     elseif command == "listplayers" then
         listplayers(clientNum)
+    elseif command == "maprecords" then
+        maprecords(clientNum)
+    elseif command == "mute" then
+		mute(clientNum, params)
     elseif command == "nextmap" then
         nextmap(clientNum)
     elseif command == "putteam" then
         putteam(clientNum, params)
     elseif command == "rename" then
         rename(clientNum, params)
+    elseif command == "serverrecords" then
+        serverrecords(clientNum)
     elseif command == "setlevel" then
         setlevel(clientNum, params)
     elseif command == "showbans" then
@@ -237,6 +266,8 @@ function execcommand(command, clientNum, params)
         timelimit(clientNum, params)
     elseif command == "unban" then
         unban(clientNum, params)
+    elseif command == "unmute" then
+		unmute(clientNum, params)
     elseif command == "warn" then
         warn(clientNum, params)
     else
@@ -291,6 +322,22 @@ function loadAdmins()
 	mmodDB = nil
 end
 
+function loadConfig()
+	local fd,len = et.trap_FS_FOpenFile('mmod/config.cfg', et.FS_READ)
+
+	if len <= 0 then
+		et.G_Print("WARNING: No Config Defined! \n")
+		et.G_LogPrint("WARNING: No Config Defined! \n")
+	else
+		local filestr = et.trap_FS_Read(fd, len)
+		
+	    for name,value in string.gfind(filestr, "([^%\n]*)%s*=%s*(-?%d+)") do
+			global_config_table[chop(tostring(name))] = tonumber(value)
+		end
+	end
+	et.trap_FS_FCloseFile(fd) 
+end
+
 function loadLevels()
 	local name
 	local flags 
@@ -306,11 +353,25 @@ function loadLevels()
 		
 	    for level,name,flags in string.gfind(filestr, "%s*level%s*=%s*(-?%d+)%s*name%s*=%s*([^%\n]*)%s*flags%s*=%s*([^%\n]*)%s*") do
 		    global_level_table[level] = {}
-		    global_level_table[level]["name"] = name
-		    global_level_table[level]["flags"] = flags
+		    global_level_table[level]["name"] = chop(name)
+		    global_level_table[level]["flags"] = chop(flags)
 		end
 	end
 	et.trap_FS_FCloseFile(fd) 
+end
+
+function loadMutes()
+	global_mute_table = {} -- reset
+	
+	mmodDB = sqlite3.open(dbname)
+	
+	for row in mmodDB:nrows("SELECT * FROM tblMutes") do
+		global_mute_table[row.guid] = {}
+		global_mute_table[row.guid]["name"] = row.name
+	end
+	
+	mmodDB:close()
+	mmodDB = nil
 end
 
 function NameToSlot(name) 
@@ -428,8 +489,151 @@ function userprint(clientNum, area, text)
     if clientNum == rconclient then
         et.G_Print(et.Q_CleanStr(text) .. "\n")
     else
-        et.G_Print(et.Q_CleanStr(text) .. "\n")  -- questionable if im gonna leave this line in
+        -- et.G_Print(et.Q_CleanStr(text) .. "\n")  -- questionable if im gonna leave this line in
         -- et.trap_SendServerCommand(clientNum, area .. "\"" .. text .. " \"")
         et.trap_SendServerCommand(clientNum, string.format('%s \"%s\"',area,text))
     end
+end
+
+------ map records stuff
+function OpenDB()
+	local dbExists = io.open(RecordsDBName)
+	if not dbExists then
+		CreateRecordsDB()
+	else
+		io.close(dbExists)
+	end
+
+	RecordsDB = sqlite3.open(RecordsDBName)
+end
+
+function CloseDB()
+	RecordsDB:close()
+end
+
+function updateCurrentRecords(ind, value)
+	currentMapRecords[ ind ] = value
+end
+
+function CreateRecordsDB()
+	RecordsDB = sqlite3.open(RecordsDBName)
+	RecordsDB:exec[[
+	  CREATE TABLE Maps (
+		ind			INTEGER PRIMARY KEY,
+		name		VARCHAR(50)
+	  );
+
+	  CREATE TABLE RecordTypes (
+		ind			INTEGER PRIMARY KEY,
+		name		VARCHAR(50)
+	  );
+
+	  CREATE TABLE Players (
+		ind			INTEGER PRIMARY KEY,
+		name		VARCHAR(50)
+	  );
+
+	  CREATE TABLE Records (
+		ind					INTEGER PRIMARY KEY,
+		recordTypeId		INTEGER,
+		playerId			INTEGER,
+		mapId				INTEGER,
+		value				INTEGER,
+		recordDate			VARCHAR(50)
+	  );
+	]]
+
+	for ind, typeName in ipairs(recordTypes) do
+		RecordsDB:exec('INSERT INTO RecordTypes(name) VALUES("' .. typeName .. '")')
+	end
+	RecordsDB:close()
+end
+
+function getMapId(mapName)
+	for row in RecordsDB:nrows('SELECT * FROM Maps WHERE name="' .. mapName .. '"') do
+		return row.ind
+	end
+
+	-- insert then recursively call to get the id if it doesn't exist
+	RecordsDB:exec('INSERT INTO Maps(name) VALUES("' .. mapName .. '")')
+	local ind = getMapId(mapName)
+	return ind
+end
+
+function getMapName(mapId)
+	for row in RecordsDB:nrows('SELECT * FROM Maps WHERE ind="' .. mapId .. '"') do
+		return row.name
+	end
+
+	return "unknown"
+end
+
+function getPlayerId(playerName)
+	for row in RecordsDB:nrows('SELECT * FROM Players WHERE name="' .. playerName .. '"') do
+		return row.ind
+	end
+
+	-- insert then recursively call to get the id if it doesn't exist
+	RecordsDB:exec('INSERT INTO Players(name) VALUES("' .. playerName .. '")')
+	local ind = getPlayerId(playerName)
+	return ind
+end
+
+function getPlayerName(playerId)
+	for row in RecordsDB:nrows('SELECT * FROM Players WHERE ind="' .. playerId .. '"') do
+		return row.name
+	end
+
+	return "unknown"
+end
+
+function getCurrentMapRecords(mapId)
+	for row in RecordsDB:nrows('SELECT * FROM Records WHERE mapId=' .. mapId) do
+		currentMapRecords[ row.ind ] = row.value
+	end
+end
+
+function insertNewMapRecord( mapId, playerName, recordType, value )
+	playerId = getPlayerId(playerName)
+
+	-- update the record if it exists
+	for row in RecordsDB:nrows('SELECT * FROM Records WHERE mapId=' .. mapId .. ' AND recordTypeId=' .. recordType) do
+		RecordsDB:exec('UPDATE Records SET playerId=' .. playerId .. ', value=' .. value .. ', recordDate="' .. os.date("%x") .. '" WHERE mapId=' .. mapId .. ' AND recordTypeId=' .. recordType)
+		return
+	end
+
+	-- new record
+	RecordsDB:exec('INSERT INTO Records(recordTypeId,playerId,mapId,value,recordDate) VALUES(' .. recordType ..
+					', '.. playerId ..
+					', '.. mapId ..
+					', '.. value ..
+					', "'.. os.date("%x") .. '")' )
+end
+
+function checkForMapRecords()
+	mapId = getMapId(et.GetMapName())
+	getCurrentMapRecords(mapId)
+
+	for i=0, tonumber(et.trap_Cvar_Get("sv_maxclients"))-1, 1 do
+		playerName = et.gentity_get(i,"pers.netname")
+		if playerName ~= "" and et.gentity_get(i,"pers.connected") == 2 then
+			for ind, val in ipairs(currentMapRecords) do
+				testVal = et.gentity_get(i,recordTypeMap[ind])
+				if testVal  > val then
+					updateCurrentRecords(ind, testVal)
+					insertNewMapRecord(mapId, playerName, ind, testVal)
+				end
+			end
+		end
+	end
+end
+
+function et_LogExit()
+	-- open up the database
+	OpenDB()
+
+	checkForMapRecords()
+
+	-- close the database
+	CloseDB()
 end
