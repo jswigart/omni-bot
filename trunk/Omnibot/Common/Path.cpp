@@ -25,7 +25,7 @@ Path::PathPoint &Path::AddPt(const Vector3f &_pt, float _radius)
 {
 	static PathPoint s_pp;
 
-	if(m_CurrentPt < MAX_PATH_PTS-1)
+	if(m_NumPts < MAX_PATH_PTS-1)
 	{
 		m_Pts[m_NumPts].m_Pt = _pt;
 		m_Pts[m_NumPts].m_Radius = _radius;
@@ -44,6 +44,7 @@ Path::PathPoint &Path::AddPt(const Vector3f &_pt, float _radius)
 		}
 		return m_Pts[m_NumPts++];
 	}
+
 	return s_pp;
 }
 

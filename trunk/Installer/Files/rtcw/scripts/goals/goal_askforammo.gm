@@ -13,7 +13,7 @@ this.Initialize = function()
 	if ( GetGameState() != "Playing" ) {
 		this.Disable = true;
 	}
-	
+
 	// Internal variables
 	this.AmmoDesirThreshold = 0.5;
 	this.RangeForPickup = 2000.0;
@@ -37,7 +37,7 @@ this.GetPriority = function()
 	while(1)
 	{
 		this.Counter += 1;
-		
+
 		// look for any packs or weapons laying around before calling for ammo
 		// note that goal_pickupitems handles a much shorter range pickup while this goal
 		// activates when the bot is desperate for ammo
@@ -77,7 +77,7 @@ this.GetPriority = function()
 					{ this.Bot.SayVoice(VOICE.NEED_AMMO); }
 			}
 		}
-		
+
 		sleep(2);
 	}
 };
@@ -99,22 +99,17 @@ this.Update = function()
 {
 	if ( this.Pack )
 	{
-		pos = GetEntPosition(this.Pack);
-
-		//offset pos if they need to swap weapon
-		if ( pos && this.DroppedWeapon && !this.Bot.HasWeapon(this.DroppedWeapon) )
-		{
-				offsetpos = pos + Vector3(24,24,0);
-				if ( this.Goto(offsetpos) == EVENT.PATH_FAILED )
-				{
-					this.Pack = null;
-					this.Finished();
-				}
-		}
-		else  if ( !pos || this.Goto(pos) == EVENT.PATH_FAILED )
-		{
+		pos = GetEntPosition( this.Pack );
+		if ( !pos || this.Goto( pos ) == EVENT.PATH_FAILED ) {
 			this.Pack = null;
 			this.Finished();
+		}
+
+		// drop current weapon if it's different than the one on ground
+		if ( this.DroppedWeapon != null ) {
+			if ( !this.Bot.HasWeapon( this.DroppedWeapon ) ) {
+				this.Bot.HoldButton( BTN.DROP, 0.5 );
+			}
 		}
 
 		timeout = 0;

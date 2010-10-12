@@ -74,7 +74,7 @@ public:
 
 	Path();
 private:
-	static const int MAX_PATH_PTS = 256;
+	static const int MAX_PATH_PTS = 512;
 	PathPoint	m_Pts[MAX_PATH_PTS];
 	PathLink	m_Links[MAX_PATH_PTS]; // store total distance at the end [MAX_PATH_PTS-1]
 
