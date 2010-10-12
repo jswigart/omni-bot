@@ -67,8 +67,8 @@ this.GetPriority = function()
 	if(!Util.VehiclesInMap())
 	{
 		this.Disable = true;
-	}	
-	
+	}
+
 	myTeamMask = ( 1 << this.Bot.GetTeam() );
 	myClassMask = ( 1 << this.Bot.GetClass() );
 
@@ -267,17 +267,14 @@ this.AimModes =
 	},
 
 	// random360 will allow the bot to aim in random directions in a 360 degree arc, changing direction at defined intervals.
-	// see ScriptGoals.mount_vehicle.aimAdjustDelay
 	random360 = function()
 	{
 		// Is it time to adjust our aim?
 		currentTime = GetTime();
 		if(this.AimAdjust <= currentTime)
 		{
-			v = this.Bot.GetFacing();
-			v = AngleAxis(RandRange(0.0, 360.0),v);
-			v = v.Normalize();
-			v = Vector3(v.x, v.y, 0);
+			rand = RandRange(0.0, 360.0);
+			v = Vec3FromSpherical(rand, 0, rand);
 
 			this.AddAimRequest(Priority.Low, "facing", v);
 
