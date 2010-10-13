@@ -82,11 +82,19 @@ this.Render = function()
 		}
 	}
 
+	this.RenderAimMode = this.AimMode;
+
 	while(this.RenderGoal == true)
 	{
 		goalName = this.GetName();
 		goalBasePos = this.GetPosition();
 		goalPos = goalBasePos + offset2;
+
+		// update the aim mode rendering if it was changed externally ( in map script )
+		if ( this.RenderAimMode != this.AimMode ) {
+			this.ExtraDebugText = null;
+			this.RenderAimMode = this.AimMode;
+		}
 
 		if(this.ExtraDebugText==null)
 		{

@@ -101,7 +101,20 @@ this.Enter = function()
 
 	this.AimPosition = null;
 	this.AimOpposite = false;
+};
 
+this.Exit = function()
+{
+	this.Bot.PressButton(BTN.USE); // dismount
+
+	// stop ignoring it as a target
+	if ( this.VehicleEnt ) {
+		this.Bot.IgnoreTarget(this.VehicleEnt, 0.1);
+	}
+};
+
+this.SetAimMode = function()
+{
 	// set the aim mode
 	if ( this.MapGoal.AimMode )
 	{
@@ -131,16 +144,6 @@ this.Enter = function()
 				}
 			}
 		}
-	}
-};
-
-this.Exit = function()
-{
-	this.Bot.PressButton(BTN.USE); // dismount
-
-	// stop ignoring it as a target
-	if ( this.VehicleEnt ) {
-		this.Bot.IgnoreTarget(this.VehicleEnt, 0.1);
 	}
 };
 
@@ -277,6 +280,8 @@ this.Update = function()
 
 			while(true)
 			{
+				this.SetAimMode();
+
 				// Allow the current aim mode to do any processing to change the aimDirection
 				if ( !this.AimPosition )
 				{

@@ -3088,3 +3088,16 @@ member ForceRouting = function(goalname, set)
 		Util.MapDebugPrint("Util.ForceRouting: Invalid goal name " + goalname, true);
 	}
 };
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetCustomProperty = function(goalname, property, value)
+{
+	mg = GetGoal(goalname);
+	if (mg) {
+		mg.SetProperty(property, value);
+	}
+	else {
+		Util.MapDebugPrint("Util.SetCustomProperty: Invalid goal name " + goalname, true);
+	}
+};
