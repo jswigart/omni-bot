@@ -43,7 +43,7 @@ this.CanReviveUnderWater = function()
 this.Update = function()
 {
 	sleep(0.25); // give it some time to update internally
-	if ( this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER)
+	if ( (this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER))
 			|| !IsWaitingForMedic(this.GetEntity()) )
 	{
 		this.SetAvailable(0, false);
