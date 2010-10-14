@@ -7,7 +7,7 @@
 #include "keycodes.h"
 
 // TTimo case sensitivity
-#include "../../MAIN/ui_mp/menudef.h"
+#include "../../main/ui_mp/menudef.h"
 
 #define MAX_MENUNAME 32
 #define MAX_ITEMTEXT 64
