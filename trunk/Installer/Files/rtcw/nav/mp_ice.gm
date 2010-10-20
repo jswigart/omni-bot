@@ -236,6 +236,8 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Doc_Attack_.*" );
 			}
 		}
+		
+		Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" ); // On large sided teams, not everyone should make a u-turn for the flag
 
 		RTCWUtil.EnableGoal( "ROUTE_servicehalls" );
 
@@ -254,6 +256,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allied_sidewall" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bStronghold.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_stronghold.*" );
 		}
 	},
 
@@ -278,6 +281,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
 			RTCWUtil.DisableGoal( "DEFUSE.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_stronghold.*" );
 
 			//some bots should wait a bit for the doc carrier to get down
 			timeout = 0;
@@ -307,6 +311,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bStronghold.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_south_service" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allied_sidewall" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_stronghold.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Doc_Attack_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Deliver_Defend.*" );
@@ -490,6 +495,7 @@ global OnMapLoad = function()
 
 	//Util.SetMaxUsersInProgress( 15, "FLAG_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "AIRSTRIKE.*" );
 
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
 
