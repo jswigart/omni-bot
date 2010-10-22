@@ -100,6 +100,7 @@ vmCvar_t g_allowGiveAmmo;
 // from etpub
 vmCvar_t g_privateMessages;
 vmCvar_t g_shortcuts;
+vmCvar_t g_mapConfigs;
 // end
 
 #ifdef WITH_LUA
@@ -384,6 +385,7 @@ cvarTable_t gameCvarTable[] = {
 	// from etpub
 	{ &g_privateMessages,           "g_privateMessages",            "0",                    0,                  0,      qtrue },
 	{ &g_shortcuts,                 "g_shortcuts",                  "0",                    0,                  0,      qtrue },
+	{ &g_mapConfigs,                "g_mapConfigs",                 "",                     0 },
 	// end etpub
 
 	//http downloads - if no server is given client will try s4ndmod.com/downloads
@@ -1251,6 +1253,22 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		}
 	} else {
 		G_Printf( "Not logging to disk.\n" );
+	}
+
+	if(g_mapConfigs.string[0]) {
+		char mapConfig[MAX_STRING_CHARS];
+
+		Q_strncpyz(mapConfig, "exec ", sizeof(mapConfig));
+		Q_strcat(mapConfig, sizeof(mapConfig), g_mapConfigs.string);
+		Q_strcat(mapConfig, sizeof(mapConfig), "/default.cfg\n");
+		trap_SendConsoleCommand(EXEC_APPEND, mapConfig);
+
+		Q_strncpyz(mapConfig, "exec ", sizeof(mapConfig));
+		Q_strcat(mapConfig, sizeof(mapConfig), g_mapConfigs.string);
+		Q_strcat(mapConfig, sizeof(mapConfig), "/");
+		Q_strcat(mapConfig, sizeof(mapConfig), level.rawmapname);
+		Q_strcat(mapConfig, sizeof(mapConfig), ".cfg\n");
+		trap_SendConsoleCommand(EXEC_APPEND, mapConfig);
 	}
 
 	G_InitWorldSession();
