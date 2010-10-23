@@ -1,5 +1,5 @@
 // Omni-bot script for "Wacht Am Rhein beta 1" (bulge_beta1) by d00d.
-// Version 4.0 for Omni-bot 0.8.
+// Version 4.1 for Omni-bot 0.81.
 // Set Map.Talk below to false if you don't want the bots to use voice chats.
 
 global Map =
@@ -7,7 +7,7 @@ global Map =
 	// Set Talk to false if you don't want the bots to talk.
 	Talk = true,
 	ShowMovers = false,
-	Debug = false,
+	Debug = 0,
 
 	// Status for conditionals
 	SideDoorOpen = false,
@@ -87,9 +87,9 @@ global Map =
 
 	TankAtBridge = function()
 	{
-		//print("TankAtBridge");
 		SetGoalPriority( "PLANT_Fallen_Tree", 0.9 );
 		Map.TankIsAtBridge = true;
+		Util.MapDebugPrint( "TankAtBridge" );
 	},
 
 	TankOverBridge = function()
@@ -101,17 +101,19 @@ global Map =
 		Map.TankIsAtBridge = false;
 		SetGoalPriority( "PLANT_Fallen_Tree", 0.9 );
 		SetGoalPriority( "PLANT_Damaged_Tree", 0.9 );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier1.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_barrier2_allies.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_barrier1_axis.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_barrier2_allies.*" );
-		Util.SetMaxUsersInProgress( 1, "DEFEND_barrier2_allies.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_mortar_bridge_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bridge_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_mortar_bridge_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_barrier2_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_barrier2_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_barrier2_allies.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_mortar_bridge_axis.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SMOKEBOMB_axis_bridge_build.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier1.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_mortar_bridge_axis4" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_barrier1_axis.*" );
+		Util.SetMaxUsersInProgress( 1, "DEFEND_barrier2_allies.*" );
+		Util.MapDebugPrint( "TankOverBridge" );
 	},
 
 	TankPastBunker = function()
@@ -150,6 +152,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Window_Defenses" );
 		}
+		Util.MapDebugPrint( "TankPastBunker" );
 	},
 
 	TankAtBarrier = function()
@@ -160,6 +163,7 @@ global Map =
 
 		Map.TankIsAtBarrier = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank_Barrier" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank_allies" );
 
 		//Disable health and ammo stand
 		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB.*" );
@@ -191,6 +195,7 @@ global Map =
 				}
 			}
 		}
+		Util.MapDebugPrint( "TankAtBarrier" );
 	},
 
 	Barrier1Built = function()
@@ -231,6 +236,7 @@ global Map =
 				}
 			}
 		}
+		Util.MapDebugPrint( "Barrier1Destroyed" );
 	},
 
 	TankPastBarrier1 = function()
@@ -299,14 +305,16 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Window_Defenses" );
 		}
+
+		Util.MapDebugPrint( "TankPastBarrier1" );
 	},
 
 	TankPastCorner1 = function()
 	{
-		//print("Tank past corner1");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_bunker_mg_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_bunker_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_barrier2_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank_allies" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_after_barrier2_allies.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_after_barrier2_allies.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_second_barrier.*" );
@@ -331,11 +339,11 @@ global Map =
 				}
 			}
 		}
+		Util.MapDebugPrint( "TankPastCorner1" );
 	},
 
 	TankPastCorner2 = function()
 	{
-		//print("Tank past corner2");
 		Map.grenade_bunker_mg_active = false;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bunker_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Window_Defenses" );
@@ -376,11 +384,12 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Window_Defenses" );
 		}
+		Util.MapDebugPrint( "TankPastCorner2" );
 	},
 
 	Barrier2Built = function()
 	{
-		//print("Bar2 built");
+		Util.MapDebugPrint( "Barrier2Built" );
 	},
 
 	Barrier2Destroyed = function()
@@ -490,17 +499,18 @@ global Map =
 				}
 			}
 		}
+		Util.MapDebugPrint( "TankPastBarrier2" );
 	},
 
 	TankAtChurch = function()
 	{
-		//print("Tank at church!");
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_second_barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_second_barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_second_barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_second_barrier4" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_second_barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_church_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank_allies" );
 		SetGoalPriority( "DEFEND_church_allies13", 0.7 );
 		Util.SetMaxUsersInProgress( 1, "DEFEND_church_allies13" );
 		if ( GetGameTimeLeft() < 90 )
@@ -512,6 +522,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Window_Defenses" );
 		}
+		Util.MapDebugPrint( "TankAtChurch" );
+	},
+
+	TankPastChurch = function( trigger )
+	{
+		Util.MapDebugPrint( "TankPastChurch" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank_allies" );
+		Util.MapDebugPrint( "TankPastChurch" );
 	},
 
 	MainDoorDestroyed = function()
@@ -812,7 +830,7 @@ global Map =
 
 	tank_at_location = function( trigger )
 	{
-		switch(Map.VehicleLocation)
+		switch( Map.VehicleLocation )
 		{
 			case 1:
 			{
@@ -838,8 +856,12 @@ global Map =
 			{
 				Map.TankAtChurch();
 			}
+			case 7:
+			{
+				Map.TankPastChurch();
+			}
 		}
-		Util.MapDebugPrint("tank at location " + Map.VehicleLocation, true);
+		Util.MapDebugPrint( "tank at location " + Map.VehicleLocation, true );
 	},
 
 };
@@ -850,50 +872,50 @@ global OnMapLoad = function()
 	/*** REGION TRIGGERS ***/
 	bmg = OnTriggerRegion( AABB(960,-1555,130, 1130,-1250,250), Map.bunker_mg_trigger );
 	// these region triggers disable bot pushing and combat movement in some places
-	house1 = OnTriggerRegion(AABB(-2490,-3815,100, -2880,-3610,300), RegionTrigger.DisableBotPush);
-	house2 = OnTriggerRegion(AABB(-2470,-3140,100, -2020,-2760,300), RegionTrigger.DisableBotPush);
-	wall = OnTriggerRegion(AABB(-2660,-2035,100, -2540,-1760,200), RegionTrigger.DisableBotPush);
+	house1 = OnTriggerRegion( AABB(-2490,-3815,100, -2880,-3610,300), RegionTrigger.DisableBotPush );
+	house2 = OnTriggerRegion( AABB(-2470,-3140,100, -2020,-2760,300), RegionTrigger.DisableBotPush );
+	wall = OnTriggerRegion( AABB(-2660,-2035,100, -2540,-1760,200), RegionTrigger.DisableBotPush );
 	// vehicle locations
-	location1 = OnTriggerRegion(AABB(1549.421,-4547.822,217.012,1943.938,-4328.008,308.280),RegionTrigger.VehicleTrigger);
-	location2 = OnTriggerRegion(AABB(1775.430,-2745.835,217.300,2111.522,-2478.304,305.038),RegionTrigger.VehicleTrigger);
-	location3 = OnTriggerRegion(AABB(4051.828,-1777.384,217.125,4361.241,-1521.905,318.503),RegionTrigger.VehicleTrigger);
-	location4 = OnTriggerRegion(AABB(2452.436,-801.326,244.693,2830.719,-490.467,393.125),RegionTrigger.VehicleTrigger);
-	location5 = OnTriggerRegion(AABB(178.646,-1211.715,81.125,499.843,-689.152,194.137),RegionTrigger.VehicleTrigger);
-	location6 = OnTriggerRegion(AABB(-2902.575,-3228.470,78.687,-2636.793,-2965.396,155.125),RegionTrigger.VehicleTrigger);
+	location1 = OnTriggerRegion( AABB(1549.421,-4547.822,217.012, 1943.938,-4328.008,308.280), RegionTrigger.VehicleTrigger );
+	location2 = OnTriggerRegion( AABB(1775.430,-2745.835,217.300, 2111.522,-2478.304,305.038), RegionTrigger.VehicleTrigger );
+	location3 = OnTriggerRegion( AABB(4051.828,-1777.384,217.125, 4361.241,-1521.905,318.503), RegionTrigger.VehicleTrigger );
+	location4 = OnTriggerRegion( AABB(2452.436,-801.326,244.693, 2830.719,-490.467,393.125), RegionTrigger.VehicleTrigger );
+	location5 = OnTriggerRegion( AABB(178.646,-1211.715,81.125, 499.843,-689.152,194.137), RegionTrigger.VehicleTrigger );
+	location6 = OnTriggerRegion( AABB(-2902.575,-3228.470,78.687, -2636.793,-2965.396,155.125), RegionTrigger.VehicleTrigger );
+	location7 = OnTriggerRegion( AABB(-2484.187,-2125.717,79.368, -2183.409,-1955.981,277.809), RegionTrigger.VehicleTrigger );
 
 	// Triggers
-	OnTrigger("Axis team has contructed the Bridge!", Map.BridgeBuilt);
-	OnTrigger("Allied team has destroyed the Bridge!", Map.BridgeDestroyed);
-	OnTrigger("bulge_axis_tank_across_bridge", Map.TankOverBridge);
-	OnTrigger("Tank Barrier #1 has been placed.", Map.Barrier1Built);
-	OnTrigger("Tank Barrier #1 has been destroyed.", Map.Barrier1Destroyed);
-	OnTrigger("bulge_axis_past_tankbar1", Map.TankPastBarrier1);
-	OnTrigger("Tank Barrier #2 has been constructed.", Map.Barrier2Built);
-	OnTrigger("Tank Barrier #2 has been destroyed.", Map.Barrier2Destroyed);
-	OnTrigger("bulge_axis_past_tankbar2", Map.TankPastBarrier2);
-	OnTrigger("Window Defenses have been constructed.", Map.WindowDefenseBuilt);
-	OnTrigger("Window Defenses have been destroyed.", Map.WindowDefenseDestroyed);
-	OnTrigger("Axis team has destroyed the Church Doors!", Map.MainDoorDestroyed);
-	OnTrigger("Axis team has destroyed the Church side Door!", Map.SideDoorDestroyed);
-	//OnTrigger("The plane has damaged the tank", Map.TankDamaged); //not needed ATM
-	OnTrigger("The Tank has been damaged", Map.TankDamaged);
-	OnTrigger("The Tank has been repaired", Map.TankRepaired);
-	OnTrigger("Planted at The Allied Command and Control.", Map.OnDynoRadio);
-	OnTrigger("Defused at The Allied Command and Control.", Map.OnDefusedRadio);
-	OnTrigger("Axis team has destroyed the Allied command and control!", Map.AxisWon);
+	OnTrigger( "Axis team has contructed the Bridge!", Map.BridgeBuilt );
+	OnTrigger( "Allied team has destroyed the Bridge!", Map.BridgeDestroyed );
+	OnTrigger( "bulge_axis_tank_across_bridge", Map.TankOverBridge );
+	OnTrigger( "Tank Barrier #1 has been placed.", Map.Barrier1Built );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Barrier1Destroyed );
+	OnTrigger( "bulge_axis_past_tankbar1", Map.TankPastBarrier1 );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.Barrier2Built );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Barrier2Destroyed );
+	OnTrigger( "bulge_axis_past_tankbar2", Map.TankPastBarrier2 );
+	OnTrigger( "Window Defenses have been constructed.", Map.WindowDefenseBuilt );
+	OnTrigger( "Window Defenses have been destroyed.", Map.WindowDefenseDestroyed );
+	OnTrigger( "Axis team has destroyed the Church Doors!", Map.MainDoorDestroyed );
+	OnTrigger( "Axis team has destroyed the Church side Door!", Map.SideDoorDestroyed );
+	//OnTrigger( "The plane has damaged the tank", Map.TankDamaged ); //not needed ATM
+	OnTrigger( "The Tank has been damaged", Map.TankDamaged );
+	OnTrigger( "The Tank has been repaired", Map.TankRepaired );
+	OnTrigger( "Planted at The Allied Command and Control.", Map.OnDynoRadio );
+	OnTrigger( "Defused at The Allied Command and Control.", Map.OnDefusedRadio );
+	OnTrigger( "Axis team has destroyed the Allied command and control!", Map.AxisWon );
 	OnTrigger( "tank at location", Map.tank_at_location );
 
 	// Clear bogus goals
-	Util.RemoveGoal("BUILD_Damaged_Tree");
-	Util.RemoveGoal("BUILD_Fallen_Tree");
+	Util.RemoveGoal( "BUILD_Damaged_Tree" );
+	Util.RemoveGoal( "BUILD_Fallen_Tree" );
 
 	// Set Map Goal Properties
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=2, MaxCampTime=15} );
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=3, MaxCampTime=35} );
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=10, MaxCampTime=60} );
-	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=5, MaxCampTime=60} );
-	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=10, MaxCampTime=60} );
-	SetMapGoalProperties( "BUILD_Bridge", {Stance="prone"} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=70} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=10, MaxCampTime=120} );
 
 	// Flag bridge waypoints blocked
 	Wp.SetWaypointFlag( "bridge_mg_axis1", "closed", true );
@@ -909,12 +931,15 @@ global OnMapLoad = function()
 	//Util.SetGoalOffset( 20, 0, -20, "PLANT_Window_Defenses" );
 	Util.SetGoalOffset( 0, 0, 220, "PLANT_Bridge" );
 	Util.SetGoalOffset( 15, 0, -40, "PLANT_Damaged_Tree" );
-	Util.AddUsePoint("PLANT_Window_Defenses", { Vector3(-723,-2059,130), Vector3(-802,-2059,140) });
+ 	Util.AddUsePoint( "PLANT_Window_Defenses", {Vector3(-723,-2059,130), Vector3(-802,-2059,140)} );
 
 	//Set max users for some goals
 	Util.SetMaxUsersInProgress( 1, "PLANT_Command_Post" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE_.*" );
 	Util.SetMaxUsersInProgress( 2, "MOBILEMG42.*" );
+	Util.SetMaxUsersInProgress( 2, "DEFUSE_.*" );
+	Util.SetMaxUsersInProgress( 4, "DEFUSE_Allied_Command_and_Control_.*" );
+	Util.SetMaxUsersInUse( 1, "DEFUSE_.*" );
 	Util.SetMaxUsersInProgress( 3, "MOUNT_.*" );
 	Util.SetMaxUsersInUse( 1, "MOUNT_.*" );
 	Util.SetMaxUsersInUse( 1, "MOBILEMG42.*" );
@@ -937,15 +962,19 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Fallen_Tree" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_and_Control" );
 
-	// Bias for engi stuff
+	// Priorities
+	SetGoalPriority( "DEFUSE_Damaged_Tree.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 	SetGoalPriority( "DEFUSE_Allied_Command_and_Control_.*", 1.5, TEAM.ALLIES, CLASS.ENGINEER, true );
-	SetGoalPriority( "PLANT_Fallen_Tree", 0.7 );
+	SetGoalPriority( "PLANT_Fallen_Tree", 0.6, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Fallen_Tree", 0.8, TEAM.AXIS, CLASS.COVERTOPS );
 	SetGoalPriority( "SMOKEBOMB_church.*", 0.75 );
 	SetGoalPriority( "BUILD_Bridge", 0.9 );
 	SetGoalPriority( "BUILD_Tank", 0.8 );
+	SetGoalPriority( "MOUNTMG42_.*", 0.8 );
 
 	// Tank mount
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank_allies" );
 
 	// Mines
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
@@ -1483,7 +1512,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_church_axis4" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_church_axis7" );
 
-	Util.MapDebugPrint("Loaded Omni-bot map script for bulge_beta1.");
+	Util.MapDebugPrint( "Loaded Omni-bot map script for bulge_beta1." );
 };
 
 global OnBotJoin = function(bot)

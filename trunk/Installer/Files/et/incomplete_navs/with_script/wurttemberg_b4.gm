@@ -1,0 +1,140 @@
+global Map =
+{
+	Ammo_Cabinet_t24 = "AMMOCAB_t24",
+	Health_Cabinet_t22 = "HEALTHCAB_t22",
+	Call_Artillery_404 = "CALLARTILLERY_404",
+	Flag_docs = "FLAG_docs",
+	Cappoint_325 = "CAPPOINT_325",
+	Build_Bridge = "BUILD_Bridge",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Tank = "BUILD_Tank",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Mover_tank = "MOVER_tank",
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Bridge_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	Util.DisableGoal("BUILD_Bridge");
+	Util.DisableGoal("PLANT_Bridge");
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_base.*" );
+
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+	
+	Side_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+	Util.DisableGoal("BUILD_Tank");
+	Util.DisableGoal("PLANT_Command_Post");
+
+		Util.MapDebugPrint( "Side_Wall_Destroyed" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_base" );
+		
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Bridge_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	docs_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_base.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_capdef.*" );			
+		Util.MapDebugPrint( "docs_Taken" );
+	},
+
+	docs_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_base.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_capdef.*" );			
+		Util.MapDebugPrint( "docs_Returned" );
+	},	
+
+	Documents_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Documents_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "The Bridge has been constructed.", Map.Bridge_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Allied team has destroyed the Main gate!", Map.Main_Gate_Destroyed );
+	OnTrigger( "Allied team has destroyed the Side Wall!", Map.Side_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the tank", Map.Tank_Built );
+	OnTrigger( "The Bridge has been destroyed.", Map.Bridge_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have stolen the Supply Documents!", Map.docs_Taken );
+	OnTrigger( "Axis have returned the Supply Documents!", Map.docs_Returned );
+	OnTrigger( "The Allies have transmitted the Supply Documents!", Map.Documents_Captured );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_404" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_404" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

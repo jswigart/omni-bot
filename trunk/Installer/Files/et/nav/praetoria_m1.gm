@@ -40,6 +40,7 @@ global Map =
 	Repair_axis_MG_south_def = "REPAIRMG42_axis_MG_south_def",
 	Repair_axis_MG_town = "REPAIRMG42_axis_MG_town",
 
+	Debug = 0,
 	Talk = true,
 	MainDoorOpen = false,
 	TankIsPast1stBarrier = false,
@@ -385,14 +386,18 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_allied_MG_base );
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_allied_MG_base );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_barrier_mg" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_bunker_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_bunker_mg_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bunker_mg_.*" );
 
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_axis_MG_town );
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_axis_MG_town );
 			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_axis_start.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_axis_bridge.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_axis_bridge.*" );
 			//Util.MapDebugPrint(GetEntName(ent), "entered 2");
 		},
@@ -497,6 +502,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_axis_MG_south_def );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
@@ -565,6 +571,8 @@ global Map =
 
 		Map.MainDoorOpen = true;
 
+		SetMapGoalProperties( "MOUNT_tank", {AimMode = "random", TeamAvailability = 6} );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_southdefense.*" );
@@ -873,6 +881,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Bunker2 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Bunker3 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Bunker4 );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
@@ -883,7 +892,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_axis_start.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_axis_start.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_axis_start.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_axis_start.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_start.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_start.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_church.*" );
@@ -917,7 +926,10 @@ global OnMapLoad = function()
 
 	/*** MAX USERS ***/
 	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "SMOKEBOMB_.*" );
+	Util.SetMaxUsersInProgress( 1, "GRENADE_.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANTMINE_.*" );
 	Util.SetMaxUsersInProgress( 1, "BUILD_.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
@@ -931,10 +943,13 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=3, MaxCampTime=35} );
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=90} );
 
 	/*** PRIORITY ***/
 	SetGoalPriority( Map.Plant_First_Tank_Barrier, 0.91 );
 	SetGoalPriority( Map.Build_First_Tank_Barrier, 0.91 );
+
+	SetMapGoalProperties( "MOUNT_tank", {AimMode = "velocity", TeamAvailability = 4} );
 
 	/*** ROUTES ***/
 	MapRoutes =
@@ -970,6 +985,7 @@ global OnMapLoad = function()
 		},
 	};
 	MapRoutes.CHECKPOINT_garrison_check = MapRoutes.PLANT_Side_Entrance;
+	MapRoutes.GRENADE_barrier_mg = MapRoutes.PLANT_Side_Entrance;
 	MapRoutes.PLANT_First_Tank_Barrier = MapRoutes.PLANT_Side_Entrance;
 	MapRoutes.PLANT_Axis_Command_Post = MapRoutes.PLANT_Side_Entrance;
 	MapRoutes.BUILD_Allied_Command_Post = MapRoutes.PLANT_Side_Entrance;
@@ -977,6 +993,7 @@ global OnMapLoad = function()
 	Util.Routes(MapRoutes);
 
 	Util.UpdateSwitchData();
+	Util.SetGoalPosition( -5034,3373,-160, Map.Build_First_Tank_Barrier );
 	Util.SetGoalPosition( 1612,5116,238, Map.Plant_Generator );
 	Util.SetGoalPosition( 1612,5116,238, Map.Build_Generator );
 

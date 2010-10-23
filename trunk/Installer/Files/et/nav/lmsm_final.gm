@@ -58,110 +58,110 @@ global Map =
 	{
 		if(Map.abbeySpawn){
 			Util.SetMaxUsersInProgress(1, "CHECKPOINT_cityflag");
-		 	SetGoalPriority("BUILD_Church_Defences", 0.1, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Abbey_Defences", 0.1, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Hillside_Defences", 0.95, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_hill_defences", 0.8, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Command_Post", 0.6, TEAM.AXIS);
-		 	SetGoalPriority("PLANT_Command_Post", 0.51, TEAM.AXIS, CLASS.ENGINEER);
-		 	SetGoalPriority("PLANT_Command_Post", 0.81, TEAM.AXIS, CLASS.COVERTOPS);
-		 	SetGoalPriority("BUILD_Axis_MG", 0.6, TEAM.AXIS);
-		 	SetGoalPriority("REPAIRMG42_Axis_MG", 0.6, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_docs.*", 0.5, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_abbey_door.*", 0.1, TEAM.AXIS);
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42_Axis_MG");
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_town.*");
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE.*");
+			SetGoalPriority("BUILD_Church_Defences", 0.1, TEAM.AXIS);
+			SetGoalPriority("BUILD_Abbey_Defences", 0.1, TEAM.AXIS);
+			SetGoalPriority("BUILD_Hillside_Defences", 0.95, TEAM.AXIS);
+			SetGoalPriority("BUILD_hill_defences", 0.8, TEAM.AXIS);
+			SetGoalPriority("BUILD_Command_Post", 0.6, TEAM.AXIS);
+			SetGoalPriority("PLANT_Command_Post", 0.51, TEAM.AXIS, CLASS.ENGINEER);
+			SetGoalPriority("PLANT_Command_Post", 0.81, TEAM.AXIS, CLASS.COVERTOPS);
+			SetGoalPriority("BUILD_Axis_MG", 0.6, TEAM.AXIS);
+			SetGoalPriority("REPAIRMG42_Axis_MG", 0.6, TEAM.AXIS);
+			SetGoalPriority("DEFEND_docs.*", 0.5, TEAM.AXIS);
+			SetGoalPriority("DEFEND_abbey_door.*", 0.1, TEAM.AXIS);
+			SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42_Axis_MG");
+			SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_town.*");
+			SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE.*");
 			SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE.*");
-		 	SetGoalPriority("PLANT_Church_Defences", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Abbey_Defences", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Hillside_Defences", 0.95, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_hill_defences", 0.85, TEAM.ALLIES);
-		 	SetGoalPriority("BUILD_Command_Post", 0.8, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Command_Post", 0.5, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Axis_MG", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("DEFEND_hillside.*", 0.5, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Church_Defences", 0.1, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Abbey_Defences", 0.1, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Hillside_Defences", 0.95, TEAM.ALLIES);
+			SetGoalPriority("PLANT_hill_defences", 0.85, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Command_Post", 0.8, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Command_Post", 0.5, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Axis_MG", 0.1, TEAM.ALLIES);
+			SetGoalPriority("DEFEND_hillside.*", 0.5, TEAM.ALLIES);
 			Util.SetPercentInProgress(70, "FLAG_docs");
-		 	SetAvailableMapGoals(TEAM.ALLIES, false, "CHECKPOINT_cityflag");
+			SetAvailableMapGoals(TEAM.ALLIES, false, "CHECKPOINT_cityflag");
 		}
 		else if(Map.townSpawn){
-		 	SetGoalPriority("BUILD_Hillside_Defences", 0.8, TEAM.AXIS);
-		 	if(Map.abbeyDoorDestroyed){
-			 	SetGoalPriority("BUILD_Abbey_Defences", 0.65, TEAM.AXIS);
-			 	SetGoalPriority("PLANT_Abbey_Defences", 0.7, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Hillside_Defences", 0.8, TEAM.AXIS);
+			if(Map.abbeyDoorDestroyed){
+				SetGoalPriority("BUILD_Abbey_Defences", 0.65, TEAM.AXIS);
+				SetGoalPriority("PLANT_Abbey_Defences", 0.7, TEAM.ALLIES);
 			}else if(Map.sideDoorDestroyed){
-			 	SetGoalPriority("BUILD_Abbey_Defences", 0.7, TEAM.AXIS);
-			 	SetGoalPriority("PLANT_Abbey_Defences", 0.85, TEAM.ALLIES);
+				SetGoalPriority("BUILD_Abbey_Defences", 0.7, TEAM.AXIS);
+				SetGoalPriority("PLANT_Abbey_Defences", 0.85, TEAM.ALLIES);
 			}else{
-			 	SetGoalPriority("BUILD_Hillside_Defences", 0.58, TEAM.AXIS);
-			 	SetGoalPriority("BUILD_Abbey_Defences", 0.8, TEAM.AXIS);
-			 	SetGoalPriority("PLANT_Abbey_Defences", 0.86, TEAM.ALLIES);
+				SetGoalPriority("BUILD_Hillside_Defences", 0.58, TEAM.AXIS);
+				SetGoalPriority("BUILD_Abbey_Defences", 0.8, TEAM.AXIS);
+				SetGoalPriority("PLANT_Abbey_Defences", 0.86, TEAM.ALLIES);
 			}
 			Util.SetPercentInProgress(20, "CHECKPOINT_cityflag");
-		 	SetGoalPriority("BUILD_Church_Defences", 0.1, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_hill_defences", 0.7, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Command_Post", 0.3, TEAM.AXIS);
-		 	SetGoalPriority("PLANT_Command_Post", 0.3, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Axis_MG", 0.8, TEAM.AXIS);
-		 	SetGoalPriority("REPAIRMG42_Axis_MG", 0.65, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_docs.*", 0.5, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_abbey_door.*", 0.5, TEAM.AXIS);
-		 	SetAvailableMapGoals(TEAM.AXIS, true, "MOUNTMG42_Axis_MG");
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_town.*");
-		 	SetAvailableMapGoals(TEAM.AXIS, !Map.docsTaken, "SNIPE.*");
+			SetGoalPriority("BUILD_Church_Defences", 0.1, TEAM.AXIS);
+			SetGoalPriority("BUILD_hill_defences", 0.7, TEAM.AXIS);
+			SetGoalPriority("BUILD_Command_Post", 0.3, TEAM.AXIS);
+			SetGoalPriority("PLANT_Command_Post", 0.3, TEAM.AXIS);
+			SetGoalPriority("BUILD_Axis_MG", 0.8, TEAM.AXIS);
+			SetGoalPriority("REPAIRMG42_Axis_MG", 0.65, TEAM.AXIS);
+			SetGoalPriority("DEFEND_docs.*", 0.5, TEAM.AXIS);
+			SetGoalPriority("DEFEND_abbey_door.*", 0.5, TEAM.AXIS);
+			SetAvailableMapGoals(TEAM.AXIS, true, "MOUNTMG42_Axis_MG");
+			SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_town.*");
+			SetAvailableMapGoals(TEAM.AXIS, !Map.docsTaken, "SNIPE.*");
 			SetAvailableMapGoals(TEAM.AXIS, true, "PLANTMINE.*");
-		 	SetGoalPriority("PLANT_Church_Defences", 0.6, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Hillside_Defences", 0.3, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_hill_defences", 0.6, TEAM.ALLIES);
-		 	SetGoalPriority("BUILD_Command_Post", 0.85, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Command_Post", 0.7, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Axis_MG", 0.51, TEAM.ALLIES);
-		 	SetGoalPriority("BUILD_Abbey_Command_Post", 0.84, TEAM.ALLIES);
-		 	SetGoalPriority("DEFEND_hillside.*", 0.5, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Church_Defences", 0.6, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Hillside_Defences", 0.3, TEAM.ALLIES);
+			SetGoalPriority("PLANT_hill_defences", 0.6, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Command_Post", 0.85, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Command_Post", 0.7, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Axis_MG", 0.51, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Abbey_Command_Post", 0.84, TEAM.ALLIES);
+			SetGoalPriority("DEFEND_hillside.*", 0.5, TEAM.ALLIES);
 			Util.SetPercentInProgress(60, "FLAG_docs");
 		}else{
 			Util.SetMaxUsersInProgress(99, "CHECKPOINT_cityflag");
-		 	SetGoalPriority("BUILD_Church_Defences", 0.9, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Abbey_Defences", 0.95, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Hillside_Defences", 0.6, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_hill_defences", 0.52, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Command_Post", 0.85, TEAM.AXIS);
-		 	SetGoalPriority("PLANT_Command_Post", 0.8, TEAM.AXIS);
-		 	SetGoalPriority("BUILD_Axis_MG", 0.61, TEAM.AXIS);
-		 	SetGoalPriority("REPAIRMG42_Axis_MG", 0.55, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_docs.*", 0.1, TEAM.AXIS);
-		 	SetGoalPriority("DEFEND_abbey_door.*", 0.5, TEAM.AXIS);
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42_Axis_MG");
-		 	SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_town.*");
-		 	SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE.*");
+			SetGoalPriority("BUILD_Church_Defences", 0.9, TEAM.AXIS);
+			SetGoalPriority("BUILD_Abbey_Defences", 0.95, TEAM.AXIS);
+			SetGoalPriority("BUILD_Hillside_Defences", 0.6, TEAM.AXIS);
+			SetGoalPriority("BUILD_hill_defences", 0.52, TEAM.AXIS);
+			SetGoalPriority("BUILD_Command_Post", 0.85, TEAM.AXIS);
+			SetGoalPriority("PLANT_Command_Post", 0.8, TEAM.AXIS);
+			SetGoalPriority("BUILD_Axis_MG", 0.61, TEAM.AXIS);
+			SetGoalPriority("REPAIRMG42_Axis_MG", 0.55, TEAM.AXIS);
+			SetGoalPriority("DEFEND_docs.*", 0.1, TEAM.AXIS);
+			SetGoalPriority("DEFEND_abbey_door.*", 0.5, TEAM.AXIS);
+			SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42_Axis_MG");
+			SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_town.*");
+			SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE.*");
 			SetAvailableMapGoals(TEAM.AXIS, false, "PLANTMINE.*");
-		 	SetGoalPriority("PLANT_Church_Defences", 0.9, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Abbey_Defences", 0.9, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Hillside_Defences", 0, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_hill_defences", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("BUILD_Command_Post", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Command_Post", 0.3, TEAM.ALLIES);
-		 	SetGoalPriority("PLANT_Axis_MG", 0.1, TEAM.ALLIES);
-		 	SetGoalPriority("BUILD_Abbey_Command_Post", 0.7, TEAM.ALLIES);
-		 	SetGoalPriority("DEFEND_hillside.*", 0.1, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Church_Defences", 0.9, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Abbey_Defences", 0.9, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Hillside_Defences", 0, TEAM.ALLIES);
+			SetGoalPriority("PLANT_hill_defences", 0.1, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Command_Post", 0.1, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Command_Post", 0.3, TEAM.ALLIES);
+			SetGoalPriority("PLANT_Axis_MG", 0.1, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Abbey_Command_Post", 0.7, TEAM.ALLIES);
+			SetGoalPriority("DEFEND_hillside.*", 0.1, TEAM.ALLIES);
 			Util.SetMaxUsersInProgress(1, "FLAG_docs");
-		 	SetAvailableMapGoals(TEAM.ALLIES, true, "CHECKPOINT_cityflag");
+			SetAvailableMapGoals(TEAM.ALLIES, true, "CHECKPOINT_cityflag");
 		}
 		if(Map.docsTaken){
-		 	SetGoalPriority("BUILD_Hillside_Defences", 0.99, TEAM.AXIS);
-		 	SetGoalPriority("PLANT_Hillside_Defences", 0.99, TEAM.ALLIES);
+			SetGoalPriority("BUILD_Hillside_Defences", 0.99, TEAM.AXIS);
+			SetGoalPriority("PLANT_Hillside_Defences", 0.99, TEAM.ALLIES);
 		}
 	},
 
 	Abbey_Defences_Built = function( trigger )
 	{
-	 	Util.DisableGoal("ROUTE_abbey_defences_south");
+		Util.DisableGoal("ROUTE_abbey_defences_south");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_abbey_defences_east");
 		//print( "Abbey_Defences_Built" );
 	},
 	Abbey_Defences_Destroyed = function( trigger )
 	{
-	 	Util.EnableGoal("ROUTE_abbey_defences_south");
+		Util.EnableGoal("ROUTE_abbey_defences_south");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_abbey_defences_east");
 		//print( "Abbey_Defences_Destroyed" );
 	},
@@ -184,14 +184,14 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, b && Map.docsTaken, "DEFEND_boat_down.*");
 		SetAvailableMapGoals(TEAM.AXIS, b && (Map.docsTaken || Map.sideDoorDestroyed), "MOUNTMG42_boat_mg");
 		SetAvailableMapGoals(TEAM.AXIS, b, "REPAIRMG42_boat_mg");
-	 	SetAvailableMapGoals(TEAM.AXIS, b || Map.docsTaken, "MOBILEMG42_side_door.*");
+		SetAvailableMapGoals(TEAM.AXIS, b || Map.docsTaken, "MOBILEMG42_side_door.*");
 	},
 	
 	Hillside_Defences_Built = function( trigger )
 	{
 		Map.SetHillside(false);
 		if(!Map.classRevert){
-		 	ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, true, 1);
+			ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, true, 1);
 			Map.classRevert=true;
 		}
 		wp="hillside"; 
@@ -207,12 +207,12 @@ global Map =
 
 	hill_defences_Built = function( trigger )
 	{
-	 	Util.DisableGoal("ROUTE_hill_east");
+		Util.DisableGoal("ROUTE_hill_east");
 		//print( "hill_defences_Built" );
 	},
 	hill_defences_Destroyed = function( trigger )
 	{
-	 	Util.EnableGoal("ROUTE_hill_east");
+		Util.EnableGoal("ROUTE_hill_east");
 		//print( "hill_defences_Destroyed" );
 	},
 
@@ -242,7 +242,7 @@ global Map =
 		Map.SetPriorities();
 		//print( "cityflag_Axis_Captured" );
 	},
-                 
+
 	Door_Destroyed = function(b)
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, b, "BUILD_Abbey_Command_Post");
@@ -263,9 +263,9 @@ global Map =
 	{
 		Map.abbeyDoorDestroyed=true;
 		Map.Door_Destroyed(true);
-	 	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_abbey_door.*");
-	 	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_abbey_door.*");
-	 	Util.EnableGoal("ROUTE_abbey_door");
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_abbey_door.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_abbey_door.*");
+		Util.EnableGoal("ROUTE_abbey_door");
 		//print( "Abbey_Door_Destroyed" );
 	},
 
@@ -288,7 +288,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, !b, "CHECKPOINT_cityflag");
 		SetAvailableMapGoals(TEAM.ALLIES, !b, "CHECKPOINT_cityflag");
 		SetAvailableMapGoals(TEAM.ALLIES, b, "ATTACK_boat.*");
-	 	SetAvailableMapGoals(TEAM.AXIS, b || Map.boatAccessible, "MOBILEMG42_side_door.*");
+		SetAvailableMapGoals(TEAM.AXIS, b || Map.boatAccessible, "MOBILEMG42_side_door.*");
 		Map.SetPriorities();
 	},
 
@@ -337,15 +337,15 @@ global OnMapLoad = function()
 	SetAvailableMapGoals(TEAM.ALLIES, false, "REPAIRMG.*");
 
 	SetGoalPriority("PLANT_Abbey_Command_Post", 0.59, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("MOUNTMG42_Axis_MG", 0.65, TEAM.AXIS);
- 	SetGoalPriority("MOUNTMG42_boat_mg", 0.66, TEAM.AXIS);
- 	SetGoalPriority("DEFEND_boat.*", 0.53, TEAM.AXIS);
+	SetGoalPriority("MOUNTMG42_Axis_MG", 0.65, TEAM.AXIS);
+	SetGoalPriority("MOUNTMG42_boat_mg", 0.66, TEAM.AXIS);
+	SetGoalPriority("DEFEND_boat.*", 0.53, TEAM.AXIS);
 	SetGoalPriority("PLANTMINE_side.*", 0.71, TEAM.AXIS);
 	SetGoalPriority("DEFUSE_Abbey_Defences.*", 0.51, TEAM.AXIS, CLASS.ENGINEER, true);
- 	SetGoalPriority("PLANT_Abbey_Door", 0.85, TEAM.ALLIES);
- 	SetGoalPriority("PLANT_Side_Door", 0.75, TEAM.ALLIES);
- 	SetGoalPriority("CHECKPOINT_cityflag", 0.6, TEAM.ALLIES);
- 	SetGoalPriority("ATTACK_boat.*", 0.49, TEAM.ALLIES);
+	SetGoalPriority("PLANT_Abbey_Door", 0.85, TEAM.ALLIES);
+	SetGoalPriority("PLANT_Side_Door", 0.75, TEAM.ALLIES);
+	SetGoalPriority("CHECKPOINT_cityflag", 0.6, TEAM.ALLIES);
+	SetGoalPriority("ATTACK_boat.*", 0.49, TEAM.ALLIES);
 
 	Map.Defend_Boat(false);
 	Map.Door_Destroyed(false);
@@ -359,21 +359,21 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress(5, "DEFEND_docs5");
 	Util.SetMaxUsersInProgress(5, "DEFEND_boat3");
 	
- 	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
- 	SetMapGoalProperties("MOUNTMG42_Axis_MG", {mincamptime=50, maxcamptime=200} );
- 	SetMapGoalProperties("MOUNTMG42_boat_mg", {mincamptime=900, maxcamptime=900} );
- 	SetMapGoalProperties("MOBILEMG.*", {mincamptime=50, maxcamptime=300} );
- 	SetMapGoalProperties("SNIPE.*", {mincamptime=60, maxcamptime=200} );
- 	
+	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
+	SetMapGoalProperties("MOUNTMG42_Axis_MG", {mincamptime=50, maxcamptime=200} );
+	SetMapGoalProperties("MOUNTMG42_boat_mg", {mincamptime=900, maxcamptime=900} );
+	SetMapGoalProperties("MOBILEMG.*", {mincamptime=50, maxcamptime=300} );
+	SetMapGoalProperties("SNIPE.*", {mincamptime=60, maxcamptime=200} );
+	
 	Map.SetGoalPos("BUILD_Hillside_Defences", "hillside1");
 	Map.SetGoalPos("PLANT_hill_defences", "hill_defences");
- 	Map.SetGoalPos("PLANT_Abbey_Defences", "abbey_defences_south");
+	Map.SetGoalPos("PLANT_Abbey_Defences", "abbey_defences_south");
 	Util.AddUseWp("PLANT_Abbey_Door", "abbey_door_out");
 	Util.AddUseWp("PLANT_Abbey_Door", "abbey_door");
 	Util.SetGoalOffset(-10, 10, -10, "MOUNTMG42_boat_mg");
 	
- 	Util.DisableGoal("ROUTE_side_door.*");
- 	Util.DisableGoal("ROUTE_abbey_door");
+	Util.DisableGoal("ROUTE_side_door.*");
+	Util.DisableGoal("ROUTE_abbey_door");
 
 	MapRoutes =
 	{
@@ -484,6 +484,6 @@ global OnMapLoad = function()
 	yield(); yield();
 	if(ETUtil.CountClass(TEAM.AXIS,CLASS.ENGINEER) < 3)
 	{ 
-	 	ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, false, 1);
+		ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, false, 1);
 	}
 };

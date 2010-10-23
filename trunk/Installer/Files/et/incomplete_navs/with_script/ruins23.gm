@@ -84,7 +84,7 @@ global Map =
 				Map.Switches.GateAxis.LimitTeam = (1<<TEAM.AXIS);
 			}
 		}
-		print( "axisonly_radio_built_Built" );
+		Util.MapDebugPrint( "axisonly_radio_built_Built" );
 	},
 	
 	axisonly_radio_built_Destroyed = function( trigger )
@@ -93,14 +93,14 @@ global Map =
 			{ return; }
 		Map.Switches.GateAxis.LimitTeam = 0;
 		Map.Switches.GateAllies.LimitTeam = 0;
-		print( "axisonly_radio_built_Destroyed" );
+		Util.MapDebugPrint( "axisonly_radio_built_Destroyed" );
 	},
 	ramp_obj_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "ramp_obj_Built" );
+		Util.MapDebugPrint( "ramp_obj_Built" );
 	},
 
 	steps_obj_Built = function( trigger )
@@ -108,7 +108,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "steps_obj_Built" );
+		Util.MapDebugPrint( "steps_obj_Built" );
 	},
 
 	tank_repaired = function( trigger )
@@ -125,7 +125,7 @@ global Map =
 				//~ ScriptGoals.escort_vehicle.On();
 			}
 		}
-		print( "tank_repaired" );
+		Util.MapDebugPrint( "tank_repaired" );
 	},
 
 	tank_damaged = function( trigger )
@@ -142,14 +142,14 @@ global Map =
 				//~ ScriptGoals.escort_vehicle.Off();
 			}
 		}
-		print( "tank_damaged" );
+		Util.MapDebugPrint( "tank_damaged" );
 	},
 	B_Spawn = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.phase = 2;
-		print( "B spawn" );
+		Util.MapDebugPrint( "B spawn" );
 	},
 	C_Spawn = function( trigger )
 	{
@@ -167,7 +167,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_tank_construct );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
-		print( "C spawn" );
+		Util.MapDebugPrint( "C spawn" );
 		Map.Switches.GateAxis.LimitTeam = 0;
 		Map.Switches.GateAllies.LimitTeam = 0;
 	},
@@ -176,7 +176,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "allied_compost_built_Built" );
+		Util.MapDebugPrint( "allied_compost_built_Built" );
 	},
 
 	axis_compost_built_Built = function( trigger )
@@ -184,7 +184,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "axis_compost_built_Built" );
+		Util.MapDebugPrint( "axis_compost_built_Built" );
 	},
 
 	well_door_Destroyed = function( trigger )
@@ -192,7 +192,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "well_door_Destroyed" );
+		Util.MapDebugPrint( "well_door_Destroyed" );
 	},
 
 	garage_wall_Destroyed = function( trigger )
@@ -200,7 +200,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		print( "garage_wall_Destroyed" );
+		Util.MapDebugPrint( "garage_wall_Destroyed" );
 	},
 
 	main_door_Destroyed = function( trigger )
@@ -208,7 +208,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		Map.phase = 4;
-		print( "main_door_Destroyed" );
+		Util.MapDebugPrint( "main_door_Destroyed" );
 					//kill tse allies
 			//change spawn
 			// half the allies should spawn at the cp
@@ -228,7 +228,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "ramp_obj_Destroyed" );
+		Util.MapDebugPrint( "ramp_obj_Destroyed" );
 	},
 
 
@@ -238,7 +238,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "tower_wall_Destroyed" );
+		Util.MapDebugPrint( "tower_wall_Destroyed" );
 	},
 
 	steps_obj_Destroyed = function( trigger )
@@ -246,7 +246,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "steps_obj_Destroyed" );
+		Util.MapDebugPrint( "steps_obj_Destroyed" );
 	},
 
 	weak_closet_Destroyed = function( trigger )
@@ -254,7 +254,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "weak_closet_Destroyed" );
+		Util.MapDebugPrint( "weak_closet_Destroyed" );
 	},
 
 	stair_door_Destroyed = function( trigger )
@@ -265,7 +265,7 @@ global Map =
 		SetGoalPriority( Map.Destroy_axis_compost_built, 1.0 );
 		SetGoalPriority( Map.Build_allied_compost_built, 1.0 );
 		SetGoalPriority( Map.Build_axis_compost_built, 1.0 );
-		print( "stair_door_Destroyed" );
+		Util.MapDebugPrint( "stair_door_Destroyed" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseKeyCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseKey );
 		SetGoalPriority( Map.DefenseKey, 2.0 );
@@ -278,21 +278,21 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "allied_compost_built_Destroyed" );
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
 	},
 	axis_compost_built_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "axis_compost_built_Destroyed" );
+		Util.MapDebugPrint( "axis_compost_built_Destroyed" );
 	},
 	trench_wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "trench_wall_Destroyed" );
+		Util.MapDebugPrint( "trench_wall_Destroyed" );
 	},
 
 	well_grate_Destroyed = function( trigger )
@@ -300,28 +300,28 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "well_grate_Destroyed" );
+		Util.MapDebugPrint( "well_grate_Destroyed" );
 	},
 	palace_gate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "palace_gate_Destroyed" );
+		Util.MapDebugPrint( "palace_gate_Destroyed" );
 	},
 	garage_wall2_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "garage_wall2_Destroyed " );
+		Util.MapDebugPrint( "garage_wall2_Destroyed " );
 	},
  	Allies_Capture_Flag = function( trigger )
  	{
  		if ( TestMapOn )
  			{ ETUtil.AutoTestMap(); }
  
- 		print( "Allies_Capture_Flag" );
+ 		Util.MapDebugPrint( "Allies_Capture_Flag" );
  	},
 
  	Axis_Capture_Flag = function( trigger )
@@ -329,14 +329,14 @@ global Map =
  		if ( TestMapOn )
 			{ ETUtil.AutoTestMap(); }
  
- 		print( "Axis_Capture_Flag" );
+ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
  	},
 	 Axis_Flag = function( trigger )
  	{
  		if ( TestMapOn )
 			{ ETUtil.AutoTestMap(); }
  
- 		print( "Axis_Capture_Flag" );
+ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
  	},
 	Key_Stolen = function( trigger )
  	{
@@ -360,7 +360,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseKeyCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseKey );
 		SetGoalPriority( Map.DefenseKey, 10.0 );
- 		print( "Key_Stolen" );
+ 		Util.MapDebugPrint( "Key_Stolen" );
  	},
 	Key_Returned = function( trigger )
  	{
@@ -368,7 +368,7 @@ global Map =
 			{ ETUtil.AutoTestMap(); }
  		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseKeyCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseKey );
- 		print( "Key_Returned" );
+ 		Util.MapDebugPrint( "Key_Returned" );
  	},
 	
 	Key_Captured = function( trigger )
@@ -381,7 +381,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseKey );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseDaggerCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseDagger );
- 		print( "Key_Captured" );
+ 		Util.MapDebugPrint( "Key_Captured" );
  	},
 	
 	// Game lost for allies
@@ -390,7 +390,7 @@ global Map =
  		if ( TestMapOn )
 			{ ETUtil.AutoTestMap(); }
 	
- 		print( "Dagger_Captured" );
+ 		Util.MapDebugPrint( "Dagger_Captured" );
  	},
 	Dagger_Stolen = function( trigger )
  	{
@@ -401,7 +401,7 @@ global Map =
  		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseDaggerCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseDagger );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.AttackDagger );
- 		print( "Dagger_Stolen" );
+ 		Util.MapDebugPrint( "Dagger_Stolen" );
  	},
 	Dagger_Returned = function( trigger )
  	{
@@ -412,7 +412,7 @@ global Map =
  		SetAvailableMapGoals( TEAM.ALLIES, false, Map.DefenseDaggerCapture );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.DefenseDagger );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.AttackDagger );
- 		print( "Dagger_Returned" );
+ 		Util.MapDebugPrint( "Dagger_Returned" );
  	},
 	Gate = function( trigger )
 	{
@@ -501,6 +501,9 @@ global OnMapLoad = function()
 //"*^6The timelimit has been extended by 5 minutes!^7" - palace gate
 
 
+	Util.SetGoalOffset( 150, 0, 0, "PLANT_damaged_Tank_Side_Wall" );
+
+
 	SetGoalPriority( Map.AMMOCAB_ammocabinet, 0.5 );
 //	SetGoalPriority( Map.Checkpoint_forward_spawn, 2.0 );
 	SetGoalPriority( Map.HEALTHCAB_healthcabinet, 0.3 );
@@ -548,7 +551,9 @@ global OnMapLoad = function()
 
 	SetGoalPriority( Map.DefenseDagger, 10.0 );
 	SetGoalPriority( Map.AttackDagger, 10.0 );
-	print( "OnMapLoad" );
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint( "OnMapLoad" );
+	Print( "Omni-bot map script for", GetMapName(), "executed." );
 };
 
 global OnBotJoin = function( bot )

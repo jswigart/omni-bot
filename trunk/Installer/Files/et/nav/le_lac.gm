@@ -1,6 +1,16 @@
-//script created by palota
+//==========================================================================================
+//
+//	le_lac.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	5 may 2010	Initial Script
+//	palota	22 October 2010	BUILD_allies_assault_boat paththrough
+//==========================================================================================
+//
 global Map =
 {
+	Debug = 0,
 	phase = 0,
 	gunDamaged = false,
 	shipDamaged = false,
@@ -10,25 +20,25 @@ global Map =
 	ShowMovers = false,
 	Movers = { "MOVER_ship", "MOVER_boat_sm" },
 
-	BUILD_Canal_Boat_Stuffs_Construction = "BUILD_Canal_Boat_Stuffs_Construction", 
-	EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_Canal_Boat_Stuffs_Construction", 
-	BUILD_Anti_Ship_Gun = "BUILD_Anti_Ship_Gun", 
-	PLANT_Missile_Prototype = "PLANT_Missile_Prototype", 
-	BUILD_Command_Post = "BUILD_Command_Post", 
-	PLANT_Command_Post = "PLANT_Command_Post", 
-	BUILD_Axis_South_East_MG_nest = "BUILD_Axis_South_East_MG_nest", 
-	PLANT_Axis_South_East_MG_nest = "PLANT_Axis_South_East_MG_nest", 
-	BUILD_Allied_Islands_MG42 = "BUILD_Allied_Islands_MG42", 
-	MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_Allied_Islands_MG42", 
-	REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_Allied_Islands_MG42", 
-	PLANT_Allied_Islands_MG42 = "PLANT_Allied_Islands_MG42", 
-	BUILD_Axis_MG42_Beach = "BUILD_Axis_MG42_Beach", 
-	MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_Axis_MG42_Beach", 
-	REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_Axis_MG42_Beach", 
+	BUILD_Canal_Boat_Stuffs_Construction = "BUILD_Canal_Boat_Stuffs_Construction",
+	EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_Canal_Boat_Stuffs_Construction",
+	BUILD_Anti_Ship_Gun = "BUILD_Anti_Ship_Gun",
+	PLANT_Missile_Prototype = "PLANT_Missile_Prototype",
+	BUILD_Command_Post = "BUILD_Command_Post",
+	PLANT_Command_Post = "PLANT_Command_Post",
+	BUILD_Axis_South_East_MG_nest = "BUILD_Axis_South_East_MG_nest",
+	PLANT_Axis_South_East_MG_nest = "PLANT_Axis_South_East_MG_nest",
+	BUILD_Allied_Islands_MG42 = "BUILD_Allied_Islands_MG42",
+	MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_Allied_Islands_MG42",
+	REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_Allied_Islands_MG42",
+	PLANT_Allied_Islands_MG42 = "PLANT_Allied_Islands_MG42",
+	BUILD_Axis_MG42_Beach = "BUILD_Axis_MG42_Beach",
+	MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_Axis_MG42_Beach",
+	REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_Axis_MG42_Beach",
 	PLANT_Axis_MG42_Beach = "PLANT_Axis_MG42_Beach",
 	PLANT_Sewer_Grate = "PLANT_Sewer_Grate",
 	PLANT_Side_Door = "PLANT_Side_Door",
-	PLANT_Back_Door = "PLANT_Back_Door",  
+	PLANT_Back_Door = "PLANT_Back_Door",
 
 	Switches =
 	{
@@ -46,7 +56,7 @@ global Map =
 			LimitTeam = (1<<TEAM.ALLIES),
 			LimitBots = 1,
 			LimitDistance = 500,
-			AimPosition = Vector3(-6086.3, 2167.9, -450),  
+			AimPosition = Vector3(-6086.3, 2167.9, -450),
 			ExitConditions =
 			{
 				someFunc = function(bot){ sleep(3); return true; }
@@ -59,7 +69,7 @@ global Map =
 			LimitTeam = (1<<TEAM.ALLIES),
 			LimitBots = 1,
 			LimitDistance = 500,
-			AimPosition = Vector3(-5941.9, 2167.9, -450),  
+			AimPosition = Vector3(-5941.9, 2167.9, -450),
 			ExitConditions =
 			{
 				someFunc = function(bot){ sleep(3); return true; }
@@ -169,41 +179,6 @@ global Map =
 
 	Navigation =
 	{
-		ship = {
-			navigate = function(_this)
-			{
-				if (Map.shipDamaged && Map.phase>=5){
-					bot = _this.Bot;
-					if (bot.GetHighLevelGoalName() == "BUILD" && bot.GetTeam()==TEAM.ALLIES)
-					{
-						//swim to the ship
-						Util.MapDebugPrint("Engineer is going to repair ship", true);
-						ent = GetGoal("MOVER_ship").GetEntity();
-						if (_this.Goto(GetEntityWorldSpace(ent, Vector3(140,-391,-180))) == EVENT.PATH_SUCCESS )
-						{
-							//climb up the ship ladder
-							v = GetEntFacing(ent);
-							_this.AddAimRequest(Priority.High, "facing", Vector3(-v.y, v.x, 3));
-							sleep(0.3);
-							bot.HoldButton(BTN.FORWARD, 2.3);
-							sleep(2.3);
-							//go to the repair point
-							bot.MoveTowards(GetEntityWorldSpace(ent, Vector3(0,-221,-70)));
-							_this.AddAimRequest(Priority.High, "facing", v);
-							//get pliers and repair
-							_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS);
-							_this.BlockForWeaponChange(WEAPON.PLIERS);
-							for (j=0; j<30 && bot.GetConstructableState(ent) != 0; j+=1)
-							{
-								bot.HoldButton(BTN.ATTACK1,BTN.CROUCH, 9);
-								sleep(1);
-							}
-						}
-					}				
-				}
-				sleep(10);
-			}
-		},
 		dam_door = {
 			navigate = function(_this)
 			{
@@ -239,7 +214,7 @@ global Map =
 			}
 		},
 	},
-	
+
 	ASgun_hatch_trigger = function( trigger )
 	{
 		Map.Switches.asgun_hatch.Enabled =  ToVector(trigger.Action).x > 0;
@@ -250,14 +225,14 @@ global Map =
 		if (Map.phase>=10 && bot.GetTeam()==TEAM.AXIS)
 		{
 			if (Map.phase<20 || Map.phase<30 && RandInt(0,1)==0)
-			{ 
+			{
 				bot.ChangeSpawnPoint(4);
 			}else{
 				bot.ChangeSpawnPoint(2);
 			}
 		}
 	},
-	
+
 	SetSpawn = function()
 	{
 		foreach(bot in BotTable)
@@ -321,6 +296,7 @@ global Map =
 		{
 			ETUtil.ChangeClass(TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, false, 1);
 		}
+		ETUtil.SetStartIndex("BUILD_allies_assault_boat", 1);
 		Util.MapDebugPrint("Escort_Ship");
 	},
 
@@ -369,6 +345,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Side_Door); //dynamite
 		SetGoalPriority(Map.MOUNTMG42_Allied_Islands_MG42, 0.51, TEAM.ALLIES);
 		Wp.SetWaypointFlag("ship2", "closed", false);
+		ETUtil.SetStartIndex("BUILD_allies_assault_boat", 0);
 		Util.MapDebugPrint("Get_Fuel");
 	},
 
@@ -421,7 +398,7 @@ global Map =
 		Util.DisableGoal("ROUTE_side_door");
 		Util.DisableGoal("ROUTE_fuel_door");
 		Util.DisableGoal("ROUTE_fuel_shaft");
-		
+
 		goal=GetGoal("PLANT_side_door");
 		if(goal.TraceEntity==null){
 			goal.TraceEntity = Util.TraceForEntityInfo(goal.TraceInfo.eyePos, goal.TraceInfo.endPos, TRACE.ALL);
@@ -584,21 +561,21 @@ global OnMapLoad = function()
 {
 	if (GetGoal("BUILD_6The_Command_Post")!=null)
 	{
-		Map.BUILD_Canal_Boat_Stuffs_Construction = "BUILD_2Canal_Boat_Stuffs_Construction"; 
-		Map.EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_2Canal_Boat_Stuffs_Construction"; 
-		Map.BUILD_Anti_Ship_Gun = "BUILD_2The_Anti_Ship_Gun"; 
-		Map.PLANT_Missile_Prototype = "PLANT_2The_Missile_Prototype"; 
-		Map.BUILD_Command_Post = "BUILD_6The_Command_Post"; 
-		Map.PLANT_Command_Post = "PLANT_6The_Command_Post"; 
-		Map.BUILD_Axis_South_East_MG_nest = "BUILD_2the_Axis_South_East_MG_nest"; 
-		Map.PLANT_Axis_South_East_MG_nest = "PLANT_2the_Axis_South_East_MG_nest"; 
-		Map.BUILD_Allied_Islands_MG42 = "BUILD_2Allied_Islands_MG42"; 
-		Map.MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_2Allied_Islands_MG42"; 
-		Map.REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_2Allied_Islands_MG42"; 
-		Map.PLANT_Allied_Islands_MG42 = "PLANT_2Allied_Islands_MG42"; 
-		Map.BUILD_Axis_MG42_Beach = "BUILD_2Axis_MG42_Beach"; 
-		Map.MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_2Axis_MG42_Beach"; 
-		Map.REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_2Axis_MG42_Beach"; 
+		Map.BUILD_Canal_Boat_Stuffs_Construction = "BUILD_2Canal_Boat_Stuffs_Construction";
+		Map.EXPLODE_Canal_Boat_Stuffs_Construction = "EXPLODE_2Canal_Boat_Stuffs_Construction";
+		Map.BUILD_Anti_Ship_Gun = "BUILD_2The_Anti_Ship_Gun";
+		Map.PLANT_Missile_Prototype = "PLANT_2The_Missile_Prototype";
+		Map.BUILD_Command_Post = "BUILD_6The_Command_Post";
+		Map.PLANT_Command_Post = "PLANT_6The_Command_Post";
+		Map.BUILD_Axis_South_East_MG_nest = "BUILD_2the_Axis_South_East_MG_nest";
+		Map.PLANT_Axis_South_East_MG_nest = "PLANT_2the_Axis_South_East_MG_nest";
+		Map.BUILD_Allied_Islands_MG42 = "BUILD_2Allied_Islands_MG42";
+		Map.MOUNTMG42_Allied_Islands_MG42 = "MOUNTMG42_2Allied_Islands_MG42";
+		Map.REPAIRMG42_Allied_Islands_MG42 = "REPAIRMG42_2Allied_Islands_MG42";
+		Map.PLANT_Allied_Islands_MG42 = "PLANT_2Allied_Islands_MG42";
+		Map.BUILD_Axis_MG42_Beach = "BUILD_2Axis_MG42_Beach";
+		Map.MOUNTMG42_Axis_MG42_Beach = "MOUNTMG42_2Axis_MG42_Beach";
+		Map.REPAIRMG42_Axis_MG42_Beach = "REPAIRMG42_2Axis_MG42_Beach";
 		Map.PLANT_Axis_MG42_Beach = "PLANT_2Axis_MG42_Beach";
 		Map.PLANT_Sewer_Grate = "PLANT_2The_Sewer_Grate";
 		Map.PLANT_Side_Door = "PLANT_2The_Side_Door";
@@ -645,7 +622,7 @@ global OnMapLoad = function()
 	Util.DisableGoal("ROUTE_fuel_door");
 	Util.DisableGoal("ROUTE_fuel_shaft");
 	SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_back_door");
-	
+
 	SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_dam.*");
 	SetAvailableMapGoals(TEAM.AXIS, true, Map.PLANT_Allied_Islands_MG42);
 	SetAvailableMapGoals(TEAM.AXIS, true, Map.EXPLODE_Canal_Boat_Stuffs_Construction);
@@ -653,13 +630,13 @@ global OnMapLoad = function()
 	SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_dam.*");
 	SetAvailableMapGoals(TEAM.AXIS, true, "SNIPE_dam.*");
 	SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_dam1");
-	
+
 	SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_ship1");
 	SetAvailableMapGoals(TEAM.ALLIES, true, Map.BUILD_Allied_Islands_MG42);
 	SetAvailableMapGoals(TEAM.ALLIES, true, Map.MOUNTMG42_Allied_Islands_MG42);
 	SetAvailableMapGoals(TEAM.ALLIES, true, Map.REPAIRMG42_Allied_Islands_MG42);
 	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_allies_assault_boat");
-	
+
 	SetGoalPriority(Map.BUILD_Command_Post, 0.85, TEAM.AXIS);
 	SetGoalPriority(Map.BUILD_Command_Post, 0.7, TEAM.ALLIES);
 	SetGoalPriority(Map.PLANT_Command_Post, 0.555, TEAM.AXIS, CLASS.ENGINEER);
@@ -697,6 +674,31 @@ global OnMapLoad = function()
 	Util.AddUseWp(Map.PLANT_Side_Door, "side_door_in");
 	Util.AddUseWp(Map.PLANT_Back_Door, "back_door");
 	Util.AddUseWp(Map.PLANT_Back_Door, "back_door_in");
+
+	ETUtil.SetStartIndex("BUILD_allies_assault_boat", 0);
+
+	GetGoal("BUILD_allies_assault_boat").PaththroughFunction = function(_this)
+	{
+		bot = _this.Bot;
+		if (bot.GetPosition().z < 390){
+			ent = GetGoal("MOVER_ship").GetEntity();
+			//climb up the ship ladder
+			v = GetEntFacing(ent);
+			_this.AddAimRequest(Priority.High, "facing", Vector3(-v.y, v.x, 3));
+			sleep(0.3);
+			bot.HoldButton(BTN.FORWARD, 4);
+			pos = GetEntityWorldSpace(ent, Vector3(0,-360,-70));
+			for(i=0; i<=40 && bot.DistanceTo(pos) > 110; i+=1)
+			{
+				sleep(0.1);
+			}
+			bot.ReleaseButton(BTN.FORWARD);
+			//go to the repair point
+			bot.MoveTowards(GetEntityWorldSpace(ent, Vector3(0,-221,-70)));
+			_this.AddAimRequest(Priority.High, "facing", v);
+			sleep(1);
+		}
+	};
 
 	MapRoutes =
 	{
@@ -748,25 +750,25 @@ global OnMapLoad = function()
 			},
 		},
 		DEFEND_fuel6 = {
-			ROUTE_bunker_spawn = { 
-				ROUTE_fuel_stairs = {}, 
+			ROUTE_bunker_spawn = {
+				ROUTE_fuel_stairs = {},
 			},
-			ROUTE_command_post = { 
-				ROUTE_fuel_stairs = {}, 
+			ROUTE_command_post = {
+				ROUTE_fuel_stairs = {},
 			},
 		},
 		DEFEND_back6 = {
 			ROUTE_bunker_spawn = {
 				ROUTE_missile_west = {},
 			}
-		},					
+		},
 	};
 	MapRoutes[Map.BUILD_Command_Post] = {
 			ROUTE_beach_spawn = {
 				ROUTE_sewer = {},
 			},
 	};
-		 
+
 	MapRoutes.CAPPOINT_missile2 = MapRoutes.CAPPOINT_missile1;
 	MapRoutes[Map.PLANT_Missile_Prototype] = MapRoutes.CAPPOINT_missile1;
 	MapRoutes.ATTACK_missile5 = MapRoutes.CAPPOINT_missile1;

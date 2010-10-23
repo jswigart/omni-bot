@@ -1,4 +1,8 @@
-//Pathing updated and script by **PCZ** >M@t3o$<
+/****************************************************
+Pathing updated and script by **PC** >M@t3o$<
+Correspondant WAY file size : -
+Last Update : 19th October 2010
+****************************************************/
 
 global Map =
 {
@@ -14,17 +18,19 @@ global Map =
 	Side_Gate_Dyno = 0,
 	Truck_Barrier_Dyno = 0,
 
+	TruckStatus = 0,	//Not Damaged
+
 	Ammo_Cabinet_alliedammorack = "AMMOCAB_alliedammorack",
 	Ammo_Cabinet_ammorack1 = "AMMOCAB_ammorack1",
 	Ammo_Cabinet_ammorack2 = "AMMOCAB_ammorack2",
 	Health_Cabinet_alliedhealthrack = "HEALTHCAB_alliedhealthrack",
 	Health_Cabinet_healthrack1 = "HEALTHCAB_healthrack1",
 	Health_Cabinet_kitchenhealthrack = "HEALTHCAB_kitchenhealthrack",
-	
+
 	Checkpoint_courtyardflag = "CHECKPOINT_courtyardflag",
 	Flag_radarpart = "FLAG_radarpart",
 	Cappoint_Truck = "CAPPOINT_Truck",
-	
+
 	Build_Assault_Ramp = "BUILD_Assault_Ramp",
 	Build_Command_Post = "BUILD_Command_Post",
 	Build_Courtyard_MG = "BUILD_Courtyard_MG",
@@ -40,7 +46,7 @@ global Map =
 	Plant_Main_Entrance = "PLANT_Main_Entrance",
 	Plant_Side_Gate = "PLANT_Side_Gate",
 	Plant_Truck_Barrier = "PLANT_Truck_Barrier",
-	
+
 	Mount_240 = "MOUNTMG42_240",
 	Mount_Courtyard_MG = "MOUNTMG42_Courtyard_MG",
 	Repair_240 = "REPAIRMG42_240",
@@ -60,9 +66,9 @@ global Map =
 	Snipe_CastleFrontRight = "SNIPE_CastleFrontRight",
 	Snipe_CastleLeft = "SNIPE_CastleLeft",
 	Snipe_MainDoor = "SNIPE_MainDoor",
-	
+
 	Mover_truck = "MOVER_truck",
-	
+
 	EscortVehicle =
 	{
 		Truck =
@@ -70,15 +76,15 @@ global Map =
 			EscortVehicleGoalName = "MOVER_truck",
 			Enabled = false,
 			LimitBots = 2,
-			Offset = 
+			Offset =
 			{
 				Vector3(15,-40,0),
 				Vector3(-15,-40,0),
 			}
 		},
 	},
-	
-	Switches =
+
+	/*Switches =
 	{
 		e1_top1 =
 		{
@@ -86,16 +92,16 @@ global Map =
 			Priority = 0.0,
 			WaypointName = "e1_top1",
 			Timeout = 8000,
-			
+
 			Wait = function()
 			{
 				if ( Map.Elevator1Pos == "top" )
 				{
 					sleep(1);
-					return true; 
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		e1_top2 =
 		{
@@ -103,16 +109,16 @@ global Map =
 			Priority = 0.0,
 			WaypointName = "e1_top2",
 			Timeout = 8000,
-			
+
 			Wait = function()
 			{
 				if ( Map.Elevator1Pos == "bottom" )
 				{
 					sleep(1);
-					return true; 
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		e1_bot1 =
 		{
@@ -120,16 +126,16 @@ global Map =
 			Priority = 0.0,
 			WaypointName = "e1_bot1",
 			Timeout = 8000,
-			
+
 			Wait = function()
 			{
 				if ( Map.Elevator1Pos == "bottom" )
 				{
 					sleep(1);
-					return true; 
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		e1_bot2 =
 		{
@@ -137,34 +143,34 @@ global Map =
 			Priority = 0.0,
 			WaypointName = "e1_bot2",
 			Timeout = 8000,
-			
+
 			Wait = function()
 			{
 				if ( Map.Elevator1Pos == "top" )
 				{
 					sleep(1);
-					return true; 
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 	},
-	
+
 	Elevator1Pos = "top",
 	Elevator1 = function(trigger)
 	{
 		Map.Elevator1Pos = "moving";
 		if (Map.Debug) { print("Elevator1 moving"); }
-		
+
 		Map.Switches.e1_top1.Enabled = false;
 		Map.Switches.e1_top2.Enabled = false;
 		Map.Switches.e1_bot1.Enabled = false;
 		Map.Switches.e1_bot2.Enabled = false;
-		
+
 		sleep(7);
-		
+
 		vel = ToVector(trigger.Action);
-		
+
 		if (vel.z < 0)
 		{
 			Map.Elevator1Pos = "bottom";
@@ -176,17 +182,20 @@ global Map =
 		{
 			Map.Elevator1Pos = "top";
 			Map.Switches.e1_bot1.Enabled = true;
-			Map.Switches.e1_top2.Enabled = true;			
+			Map.Switches.e1_top2.Enabled = true;
 			if (Map.Debug) { print("Elevator1 at top"); }
 		}
-	},
+	},*/
 
 	Assault_Ramp_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
+
+		Groups.EnableAxis(Groups.group3);
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Assault_Ramp );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
 
 		if ( Map.Debug )
 			{ print( "Assault_Ramp_Built" ); }
@@ -233,8 +242,21 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.TruckStatus = 0;		//Not Damaged
+
 		if ( Map.Debug )
 			{ print( "Truck_Built" ); }
+	},
+
+	Truck_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TruckStatus = 1;		//Damaged
+
+		if ( Map.Debug )
+			{ print( "Truck_Destroyed" ); }
 	},
 
 	Truck_Barrier_Built = function( trigger )
@@ -278,6 +300,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Courtyard_MG_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Courtyard_MG );
+
 		if ( Map.Debug )
 			{ print( "Courtyard_MG_Planted" ); }
 	},
@@ -287,6 +312,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Electric_Floor_Controls_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Electric_Floor_Controls );
+
 		if ( Map.Debug )
 			{ print( "Electric_Floor_Controls_Planted" ); }
 	},
@@ -295,8 +323,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		
+		Map.Generator_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Dyna.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Generator );
 
 		if ( Map.Debug )
 			{ print( "Generator_Planted" ); }
@@ -307,6 +337,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Main_Entrance_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Main_Entrance );
+
 		if ( Map.Debug )
 			{ print( "Main_Entrance_Planted" ); }
 	},
@@ -315,6 +348,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		Map.Side_Gate_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
 
 		if ( Map.Debug )
 			{ print( "Side_Gate_Planted" ); }
@@ -324,6 +360,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		Map.Truck_Barrier_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier );
 
 		if ( Map.Debug )
 			{ print( "Truck_Barrier_Planted" ); }
@@ -376,6 +415,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		Map.Electric_Floor_Controls_Dyno -= 1;
+		if ( Map.Electric_Floor_Controls_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls ); }
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls );
 
@@ -440,6 +483,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Groups.DisableAxis(Groups.group3);
+
 		if ( Map.Debug )
 			{ print( "Assault_Ramp_Destroyed" ); }
 	},
@@ -466,6 +511,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Electric_Floor_Controls );
 
 		if ( Map.Debug )
 			{ print( "Electric_Floor_Controls_Destroyed" ); }
@@ -475,34 +522,34 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-			Groups.EnableAxis(Groups.group4);
-			Groups.DisableAxis(Groups.group2);
-			Groups.DisableAxis(Groups.group3);
-			
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Courtyard_MG );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Assault_Ramp );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Courtyard_MG );			
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_courtyardflag );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Dyna.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Courtyard_MG );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Assault_Ramp );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_courtyardflag );
-			
-			SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_.*" );
-			
-			Groups.DisableAllies(Groups.group1);
-			Groups.DisableAxis(Groups.group1);
-			
-			//Buggy comportement
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
+
+		Groups.EnableAxis(Groups.group4);
+		Groups.DisableAxis(Groups.group2);
+		Groups.DisableAxis(Groups.group3);
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Courtyard_MG );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Assault_Ramp );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Courtyard_MG );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_courtyardflag );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Dyna.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Courtyard_MG );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Assault_Ramp );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_courtyardflag );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_.*" );
+
+		Groups.DisableAllies(Groups.group1);
+		Groups.DisableAxis(Groups.group1);
+
+		//Buggy comportement
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
 
 		if ( Map.Debug )
 			{ print( "Generator_Destroyed" ); }
@@ -512,12 +559,13 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-			Groups.EnableAxis(Groups.group3);
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
-			
+
+		Groups.DisableAxis(Groups.group2);
+		Groups.EnableAxis(Groups.group3);
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
+
 		if ( Map.Debug )
 			{ print( "Main_Entrance_Destroyed" ); }
 	},
@@ -526,6 +574,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Side_Gate );
 
 		if ( Map.Debug )
 			{ print( "Side_Gate_Destroyed" ); }
@@ -562,18 +612,21 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-			Map.EscortVehicle.Truck.Enabled = true;
-			
-			Groups.DisableAxis(Groups.group4);
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck_Barrier );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Electric_Floor_Controls );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood2" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Electric_Floor_Controls );
+
+		Groups.DisableAxis(Groups.group4);
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck_Barrier );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Electric_Floor_Controls );
+
+		Map.EscortVehicle.Truck.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Electric_Floor_Controls );
+
+		if ( Map.TruckStatus == 1 )	//If Truck is damaged
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck );
+		}
 
 		if ( Map.Debug )
 			{ print( "radarpart_Secured" ); }
@@ -584,6 +637,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetGoalPriority( Map.Plant_Generator, 0.85 );
+
 		if ( Map.Debug )
 			{ print( "courtyardflag_Axis_Captured" ); }
 	},
@@ -592,35 +647,38 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_courtyardflag );
+
+		SetGoalPriority( Map.Plant_Generator, 1.0 );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_courtyardflag );
 
 		if ( Map.Debug )
 			{ print( "courtyardflag_Allies_Captured" ); }
 	},
-	
+
 	truck_region_1 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_240 );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_End.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Delta.*" );
-			
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_240 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_End.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Delta.*" );
+
 		print( "truck_region_1" );
 	},
-		
+
 	truck_region_2 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier );
-			
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood2" );
+
 		print( "truck_region_2" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -635,6 +693,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis have repaired the Electric Floor Controls!", Map.Electric_Floor_Controls_Built );
 	OnTrigger( "Axis have constructed the Side Gate!", Map.Side_Gate_Built );
 	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "The Truck has been damaged!", Map.Truck_Destroyed );
 	OnTrigger( "Axis have built the Truck Barrier!", Map.Truck_Barrier_Built );
 	OnTrigger( "Planted at the Assault Ramp.", Map.Assault_Ramp_Planted );
 	OnTrigger( "Planted at the Axis Command Post.", Map.Command_Post_Planted );
@@ -665,31 +724,29 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have secured the Radar Parts to the Truck!", Map.radarpart_Secured );
 	OnTrigger( "Axis reclaim the Courtyard!", Map.courtyardflag_Axis_Captured );
 	OnTrigger( "Allies capture the Courtyard!", Map.courtyardflag_Allies_Captured );
-	OnTrigger( "elevator_goto", Map.Elevator1 );
-	
+
 	// *** INITIAL AVAILABILITY OF GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Assault_Ramp );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Gate );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Charlie.*" );
+	Groups.DisableAllies(Groups.group1);
+	Groups.DisableAllies(Groups.group2);
 	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_AxisEnd" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_AxisHood" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_MainDoor" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_AlliedHood2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Truck );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Courtyard_MG );
-	
+
+	Groups.EnableAxis(Groups.group1);
 	Groups.EnableAxis(Groups.group2);
-	Groups.DisableAxis(Groups.group3);
-	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_240 );
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Delta.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_End.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Courtyard_MG );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_courtyardflag );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEGM42_AxisBunker1" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEGM42_AxisBunker2" );
-	
+
 	// ** PRIORITY ***
 	SetGoalPriority( Map.Plant_Main_Entrance, 0.9 );
 	SetGoalPriority( Map.Build_Electric_Floor_Controls, 0.9 );
@@ -699,32 +756,188 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Plant_Command_Post, 0.8 );
 	SetGoalPriority( Map.Build_Assault_Ramp, 0.7 );
 	SetGoalPriority( Map.Plant_Side_Gate, 0.7 );
-	
+	SetGoalPriority( Map.Checkpoint_courtyardflag, 0.6 );
+	SetGoalPriority( "MOUNTMG42_.*", 0.5 );
+
 	// *** MAX USERS PER GOAL ***
-	Util.SetMaxUsersInProgress( 3, "FLAG.*" );
-	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
-	Util.SetMaxUsersInProgress( 2, "PLANT.*" );
-	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
+	Util.SetMaxUsersInUse( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInUse( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 2, "FLAG_.*" );
+	Util.SetMaxUsersInProgress( 2, "BUILD_.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT_.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIR_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
-	
-	Util.UpdateSwitchData();
-	
+
+	//Elevator Stuff (Disabled)
+	//Util.UpdateSwitchData();
+	//OnTrigger( "elevator_goto", Map.Elevator1 );
+
+	Util.SetGoalOffset( -100, 0, 250, "PLANT_Assault_Ramp" );
 	Util.SetGoalOffset( -30, -100, 0, "PLANT_Truck_Barrier" );
-	
+
 	Util.OnTriggerPosition( Map.Mover_truck, "region1", 200.0, Map.truck_region_1 );
 	Util.OnTriggerPosition( Map.Mover_truck, "region2", 200.0, Map.truck_region_2 );
-	
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=120, maxcamptime=120});
 	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=120, maxcamptime=120});
 
-	print( "Omni-bot map script for Chateau Voilegarde Beta 3 by **PCZ** >M@t3o$<." );
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		BUILD_Assault_Ramp =
+		{
+			ROUTE_GuestHouse1 =
+			{
+				ROUTE_GuestHouseEast1 =
+				{
+					ROUTE_GuestHouseEast2 = {},
+				},
+			},
+			ROUTE_GuestHouse2 =
+			{
+				ROUTE_GuestHouseEast1 =
+				{
+					ROUTE_GuestHouseEast2 = {},
+				},
+			},
+			ROUTE_GuestHouse3 =
+			{
+				ROUTE_GuestHouseEast1 =
+				{
+					ROUTE_GuestHouseEast2 = {},
+				},
+			},
+		},
+
+		CAPPOINT_Truck =
+		{
+			ROUTE_PartTaken  =
+			{
+				ROUTE_Escape1  =
+				{
+					ROUTE_Escape2  =
+					{
+						ROUTE_BunkerWay1  = {},
+					},
+					ROUTE_BunkerBis2  =
+					{
+						ROUTE_BunkerBis1  =
+						{
+							ROUTE_BunkerWay1  = {},
+						},
+					},
+				},
+			},
+		},
+
+		CHECKPOINT_courtyardflag =
+		{
+			ROUTE_Laboratory  =
+			{
+				Weight = 5,
+				ROUTE_FlagRecovery1  =
+				{
+					ROUTE_FlagRecovery2  =
+					{
+						ROUTE_FlagRecovery3  = {},
+					},
+					ROUTE_FlagRecoveryD1  =
+					{
+						ROUTE_FlagRecoveryD2  = {},
+					},
+				},
+			},
+		},
+
+		PLANT_Electric_Floor_Controls =
+		{
+			ROUTE_Courtyard =
+			{
+				Weight = 1,
+				ROUTE_BunkerWay1 =
+				{
+					Weight = 1,
+					ROUTE_BunkerStairs1 =
+					{
+						ROUTE_BunkerStairs2 = {},
+					},
+					Weight = 4,
+					ROUTE_BunkerBis1 =
+					{
+						ROUTE_BunkerBis2 = {},
+					},
+				},
+				Weight = 4,
+				ROUTE_HouseWay1 =
+				{
+					ROUTE_HouseWay2 =
+					{
+						ROUTE_HouseWay3 = {},
+					},
+				},
+
+			},
+		},
+
+		PLANT_Side_Gate =
+		{
+			ROUTE_GuestHouse1 =
+			{
+				ROUTE_GuestHouseWest1 =
+				{
+					ROUTE_GuestHouseWest2 = {},
+				},
+			},
+			ROUTE_GuestHouse2 =
+			{
+				ROUTE_GuestHouseWest1 =
+				{
+					ROUTE_GuestHouseWest2 = {},
+				},
+			},
+			ROUTE_GuestHouse3 =
+			{
+				ROUTE_GuestHouseWest1 =
+				{
+					ROUTE_GuestHouseWest2 = {},
+				},
+			},
+		},
+	};
+
+	//Copy routes
+	MapRoutes.CHECKPOINT_courtyardflag = MapRoutes.BUILD_Assault_Ramp;
+	MapRoutes.ATTACK_Bravo1 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo2 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo3 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo4 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo5 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo6 = MapRoutes.PLANT_Electric_Floor_Controls;
+	MapRoutes.ATTACK_Bravo7 = MapRoutes.PLANT_Electric_Floor_Controls;
+
+	Util.Routes(MapRoutes);
+
+	print( "Omni-bot map script for Chateau Voilegarde Beta 3 by **PC** >M@t3o$<." );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 90.0;
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.BAR };
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
 };
 
 global Groups =
@@ -735,7 +948,7 @@ global Groups =
 		Map.Build_Command_Post,
 		Map.Plant_Command_Post,
 	},
-	
+
 	//Axis Part 1 : Map startin'
 	group2 =
 	{
@@ -747,25 +960,27 @@ global Groups =
 		"MOBILEMG42_AxisOut1",
 		"MOBILEMG42_AxisOut2",
 		"MOBILEMG42_AxisOut3",
+		Map.Build_Courtyard_MG,
 	},
-	
+
 	//Axis Part 2 : Main Entrance Destroyed
 	group3 =
 	{
+		"DEFEND_Foxtrot.*",
 		"SNIPE_MainDoor",
-		"MOBILEGM42_AxisIn1",
-		"MOBILEGM42_AxisIn2",
+		"MOBILEMG42_AxisIn1",
+		"MOBILEMG42_AxisIn2",
 		Map.Mount_Courtyard_MG,
 	},
-	
+
 	//Axis Part 3 : Generator Destroyed
 	group4 =
 	{
 		"DEFEND_Alpha.*",
-		"MOBILEGM42_AxisBunker1",
-		"MOBILEGM42_AxisBunker2",
+		"MOBILEMG42_AxisBunker1",
+		"MOBILEMG42_AxisBunker2",
 	},
-	
+
 	EnableAllies = function(group)
 	{
 		foreach (id and goal in group)
@@ -776,7 +991,7 @@ global Groups =
 				{ print("EnableAllies: enabling", goal); }
 		}
 	},
-	
+
 	EnableAxis = function(group)
 	{
 		foreach (id and goal in group)

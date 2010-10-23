@@ -91,13 +91,18 @@ this.Exit = function()
 
 	this.GoalState = this.LAY_EXPLOSIVE;
 	this.ExplosiveEntity = null;
+	
+	// clear the occupied flag
+	if ( typeId(this.spotIndex) != 0 ) {
+		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+	}	
 };
 
 this.UpdateDynamite = function()
 {
 	hasCoverSpot = false;
 	aimVectors = null;
-	spotIndex = null;
+	this.spotIndex = null;
 
 	while(1)
 	{
@@ -163,9 +168,6 @@ this.UpdateDynamite = function()
 
 				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
-					if (hasCoverSpot) {
-						this.MapGoal.CoverSpots[ spotIndex ].occupied = false;
-					}
 					this.Finished();
 				}
 
@@ -174,20 +176,20 @@ this.UpdateDynamite = function()
 
 					// only one per spot. iterate through all since 'break' exits the while loop
 					foreach ( id and spot in this.MapGoal.CoverSpots ) {
-						if ( typeId(spotIndex) != 0 || spot.occupied ) {
+						if ( typeId(this.spotIndex) != 0 || spot.occupied ) {
 							continue;
 						}
 						else {
 							spot.occupied = true;
-							spotIndex = id;
+							this.spotIndex = id;
 						}
 					}
 
 					// no more cover spots available
-					if (typeId(spotIndex) == 0) { this.Finished(); }
+					if (typeId(this.spotIndex) == 0) { this.Finished(); }
 
-					if ( this.MapGoal.CoverSpots[ spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ spotIndex ].AimVectors) > 0 ) {
-						aimVectors = this.MapGoal.CoverSpots[ spotIndex ].AimVectors;
+					if ( this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors) > 0 ) {
+						aimVectors = this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors;
 						hasCoverSpot = true;
 					}
 					else {
@@ -195,9 +197,9 @@ this.UpdateDynamite = function()
 						this.Finished();
 					}
 
-					this.Goto(this.MapGoal.CoverSpots[ spotIndex ].position, 32.0);
+					this.Goto(this.MapGoal.CoverSpots[ this.spotIndex ].position, 32.0);
 
-					switch (this.MapGoal.CoverSpots[ spotIndex ].stance)
+					switch (this.MapGoal.CoverSpots[ this.spotIndex ].stance)
 					{
 						case "crouch":
 						{

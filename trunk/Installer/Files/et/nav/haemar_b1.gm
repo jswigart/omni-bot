@@ -271,6 +271,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=30, MaxCampTime=90} );
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=40, MaxCampTime=60} );
 
+	SetGoalPriority("BUILD_Allied_Assault_Ramp", 0.85, TEAM.ALLIES);
+	SetGoalPriority("PLANT_City_Gate", 0.85, TEAM.ALLIES);
 	SetGoalPriority( "CAPPOINT_*", 1.0, TEAM.ALLIES, 0 );
 	SetGoalPriority( "BUILD_Escape_Truck", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Escape_Truck", 1.0, TEAM.AXIS,0  );
@@ -284,6 +286,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "PLANT_City_Gate" );
 	Util.SetGoalPosition( -586.5, -2239, 160.125, "BUILD_Escape_Truck" ) ;
 	Util.SetGoalPosition( -668.222, -2248.1, 160.245, "PLANT_Escape_Truck" ) ;
 	Util.SetGoalPosition( 2195, 1077, 112.125, "PLANT_City_Gate" ) ;
