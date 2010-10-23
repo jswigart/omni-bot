@@ -463,7 +463,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 3000.0;
 };
 

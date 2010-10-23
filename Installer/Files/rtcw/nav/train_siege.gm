@@ -45,7 +45,7 @@ global Map =
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
-		
+
 		Util.MapDebugPrint( "Loose_Lumber_Destroyed" );
 	},
 
@@ -75,7 +75,7 @@ global Map =
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
-		
+
 		Util.MapDebugPrint( "Weak_Train_Roof_Destroyed" );
 	},
 
@@ -222,7 +222,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.ChangeSpawnPoint( 0 );
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 1500;
 
 	RTCWUtil.NoSnipe( bot );

@@ -26,7 +26,7 @@ global Map =
 		}
 
 		RTCWUtil.EnableGoal( "FLAG.*", true ); // all but routes
-		
+
 		Util.MapDebugPrint( "Ark_of_the_Covenant_Destroyed" );
 	},
 
@@ -42,7 +42,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit_.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzTransmit.*" );
-		
+
 		Util.MapDebugPrint( "Idol_Taken" );
 	},
 
@@ -59,7 +59,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPreCrypt.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bPnzTransmit.*" );
-		
+
 		Util.MapDebugPrint( "Idol_Secured" );
 	},
 
@@ -252,7 +252,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 80.0;
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );

@@ -452,5 +452,5 @@ global OnBotJoin = function( bot )
 	if ( bot.GetTeam() == TEAM.AXIS ) {
 		bot.ChangeSpawnPoint( 2 );
 	}
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 80.0;
 };

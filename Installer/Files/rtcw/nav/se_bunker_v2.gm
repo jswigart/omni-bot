@@ -492,7 +492,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
-		
+
 		Util.SetMaxUsersInProgress( 1, Map.Checkpoint_forward_spawn );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_osatt_.*" );
@@ -906,7 +906,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = Map.ViewDistance;
-	bot.TargetBreakableDist = 150.0;
+	bot.TargetBreakableDist = 80.0;
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.FLAMETHROWER );
 
 	//default spawn
