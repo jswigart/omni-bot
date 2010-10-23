@@ -15,7 +15,7 @@
 //ROUTE_footbridgeRoute rename to ROUTE_AntennabridgeRoute - Tardis
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = false,
 
 	Allied_Command_Post_Dyno = 0,

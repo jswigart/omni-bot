@@ -186,7 +186,9 @@ this.Update = function()
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
-
+		
+		if (this.MapGoal.PaththroughFunction){ this.MapGoal.PaththroughFunction(this); }
+		
 		if ( this.MapGoal.Stance == "crouch" )
 		{
 			this.Bot.HoldButton(BTN.CROUCH, 99);

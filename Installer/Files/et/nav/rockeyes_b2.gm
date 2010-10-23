@@ -5,6 +5,7 @@
 //	Who	When		What
 //------------------------------------------------------------------------------------------
 //	MickyP	10 August 2010	Initial Script
+// palota	19 October 2010	routes availability, emergency control availability, PLANT_Side_Wall priority, ATTACK_side_wall, ATTACK_ramp
 //
 //==========================================================================================
 //
@@ -98,7 +99,7 @@ global Map =
 
 	garage_Changed = function()
 	{
-		Util.DisableGoal( "SWITCH_Garage_Door", true );
+		Util.DisableGoal( "SWITCH_Garage_Door" );
 		if ( Map.Depot_Door_Blown == 1 )
 			{return;}
 		
@@ -140,7 +141,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		Util.DisableGoal( "SWITCH_Garage_Door", true );
+		Util.DisableGoal( "SWITCH_Garage_Door" );
 		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_gate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_twc_forward_bunker" );
@@ -148,13 +149,16 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_health_mountain_cave" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Outer_Side_Wall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Main.*" );
-		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Emergency_Close_Control" );
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_a_gate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Side_Wall" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_side_wall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ramp.*" );
+
 		Map.Depot_Door_Blown = 1;
 		Map.Forward_Bunker_Gate_Dyno = 0;
 
@@ -177,13 +181,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ramp.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_supply_mountain_cave" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_health_mountain_cave" );
 		
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Ramp" );
 				
-		Util.EnableGoal( "Route_Side_Wall", true );
+		Util.EnableGoal( "Route_Ramp" );
 	
 		if (Map.North_Radar_Blown == 0)
 		{
@@ -201,7 +206,7 @@ global Map =
 		
 		if ( Map.Emergency_Control_Built == 0 )
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Close_Control" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Open_Control" );
 		}
 		Util.MapDebugPrint( "Ramp_Built" );
 	},
@@ -241,7 +246,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Util.DisableGoal( "Route_Side_Wall", true );
+		Util.DisableGoal( "Route_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ramp.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Ramp" );
 		Map.Ramp_Dyno = 0;
 
@@ -273,10 +279,11 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Outer_Side_Wall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Side_Wall.*" );			
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_side_wall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Side_Wall" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_supply_mountain_cave" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_health_mountain_cave" );
-		Util.EnableGoal( "Route_Side_Wall", true );
+		Util.EnableGoal( "Route_Side_Wall" );
 	
 		if (Map.North_Radar_Blown == 0)
 		{
@@ -294,7 +301,7 @@ global Map =
 
 		if ( Map.Emergency_Control_Built == 0 )
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Close_Control" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Open_Control" );
 		}
 		Map.Side_Wall_Dyno = 0;
 
@@ -307,7 +314,7 @@ global Map =
 			{ return; }
 		
 		Map.Emergency_Control_Built = 0;
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Close_Control" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Emergency_Open_Control" );
 		// not sure if needed
 		Util.MapDebugPrint( "Emergency_Close_Control_Built" );
 	},
@@ -318,9 +325,10 @@ global Map =
 			{ return; }
 		
 		Map.Emergency_Control_Built = 1;
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Emergency_Close_Control" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Emergency_Open_Control" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Emergency_Close_Control" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Gate_Control.*" );
-		Util.EnableGoal( "Route_Gate_Control", true );
+		Util.EnableGoal( "Route_Gate_Control" );
 		Util.MapDebugPrint( "Emergency_Open_Control_Built" );
 	},
 
@@ -452,9 +460,9 @@ global OnMapLoad = function()
 	Wood_Door = OnTriggerRegion(AABB(-376.875,-1733.125,1.125,-287.125,-1533.088,75.125), RegionTrigger.BreakableDistance);
 	
 	Util.DisableGoal( ".*", true ); // all but routes
-	Util.DisableGoal( "Route_Side_Wall", true );
-	Util.DisableGoal( "Route_Ramp", true );	
-	Util.DisableGoal( "Route_Gate_Control", true );
+	Util.DisableGoal( "Route_Side_Wall" );
+	Util.DisableGoal( "Route_Ramp" );
+	Util.DisableGoal( "Route_Gate_Control" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_d_gate.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_twc_forward_bunker" );
@@ -465,8 +473,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_Garage_Door" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_gate.*" );
-	
+
+	SetGoalPriority("PLANT_Side_Wall", 0.9);
+
 	// Max users per goal
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "PLANT_Side_Wall" );
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
@@ -585,7 +597,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_South_Radar_2 = MapRoutes.PLANT_North_Radar;
 	MapRoutes.ATTACK_North_Radar_1 = MapRoutes.PLANT_North_Radar;
 	MapRoutes.ATTACK_North_Radar_2 = MapRoutes.PLANT_North_Radar;
-	MapRoutes.BUILD_Emergency_Close_Control = MapRoutes.PLANT_North_Radar;
+	MapRoutes.BUILD_Emergency_Open_Control = MapRoutes.PLANT_North_Radar;
 	
 	Util.Routes(MapRoutes);
 	

@@ -1,29 +1,24 @@
-//Waypoints and script by Mateos.
+/****************************************************
+Pathing updated and script by **PCZ** >M@t3o$<
+Correspondant WAY file size : -
+Last Update : 23 September 2010
+****************************************************/
 
 global Map =
 {
 	Debug = 1,
 	ShowMovers = false,
 
-	Allied_Command_Post_Dyno = 0,
-	Axis_Command_Post_Dyno = 0,
-	Generator_Dyno = 0,
-	Guardpost_MG42_Dyno = 0,
-	Hopper_Pump_Dyno = 0,
-	Outpost_MG42_Dyno = 0,
-	Tank_Barrier_1_Dyno = 0,
-	Tank_Barrier_2_Dyno = 0,
-
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_second_ammocabinet = "AMMOCAB_second_ammocabinet",
 	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
 	Health_Cabinet_second_healthcabinet = "HEALTHCAB_second_healthcabinet",
-	
+
 	Checkpoint_garage_flag = "CHECKPOINT_garage_flag",
 	Checkpoint_guardpost_flag = "CHECKPOINT_guardpost_flag",
 	Checkpoint_island_flag = "CHECKPOINT_island_flag",
 	Checkpoint_outpost_flag = "CHECKPOINT_outpost_flag",
-	
+
 	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
 	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
 	Build_Generator = "BUILD_Generator",
@@ -34,7 +29,7 @@ global Map =
 	Build_Tank = "BUILD_Tank",
 	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
 	Build_Tank_Barrier_2 = "BUILD_Tank_Barrier_2",
-	
+
 	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
 	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
 	Plant_Generator = "PLANT_Generator",
@@ -43,24 +38,22 @@ global Map =
 	Plant_Outpost_MG42 = "PLANT_Outpost_MG42",
 	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
 	Plant_Tank_Barrier_2 = "PLANT_Tank_Barrier_2",
-	
+
 	Explode_Glider_crates = "EXPLODE_Glider_crates",
-	
+
 	Mount_339 = "MOUNTMG42_339",
 	Mount_546 = "MOUNTMG42_546",
 	Mount_Compound_MG42 = "MOUNTMG42_Compound_MG42",
 	Mount_Guardpost_MG42 = "MOUNTMG42_Guardpost_MG42",
 	Mount_Outpost_MG42 = "MOUNTMG42_Outpost_MG42",
-	
 	Repair_339 = "REPAIRMG42_339",
 	Repair_546 = "REPAIRMG42_546",
 	Repair_Compound_MG42 = "REPAIRMG42_Compound_MG42",
 	Repair_Guardpost_MG42 = "REPAIRMG42_Guardpost_MG42",
 	Repair_Outpost_MG42 = "REPAIRMG42_Outpost_MG42",
-	
+
 	Mobile_MG42_274 = "MOBILEMG42_274",
 	Mobile_MG42_50 = "MOBILEMG42_50",
-	
 	Snipe_133 = "SNIPE_133",
 	Snipe_134 = "SNIPE_134",
 	Snipe_189 = "SNIPE_189",
@@ -70,10 +63,10 @@ global Map =
 	Snipe_275 = "SNIPE_275",
 	Snipe_277 = "SNIPE_277",
 	Snipe_50 = "SNIPE_50",
-	
+
 	Mover_tank = "MOVER_tank",
 	Mover_train1 = "MOVER_train1",
-	
+
 	// Keep these movers
 	Movers =
 	{
@@ -81,13 +74,14 @@ global Map =
 		"MOVER_train1",
 		"MOVER_glider_sm",
 	},
-	
+
 	MountVehicle =
 	{
-		LimitBots = 2,
 		Enabled = false,
+		Priority = 1.1,
+		LimitBots = 1,
 	},
-	
+
 	// The Assault Ramp
 	CustomBuildGoals =
 	{
@@ -103,64 +97,42 @@ global Map =
 		},
 	},
 
-	EscortVehicle =
+	Target =
 	{
-		Tank =
+		Glider_crates =
 		{
+			Priority = 0.9,
 			Enabled = false,
-			Priority = 0.5,
-			EscortVehicleGoalName = "MOVER_tank",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitBots = 1,
+			GrenadeTargetGoalName = "EXPLODE_Glider_crates",
+			LimitBots = 2,
+			LimitTeam = (1<<TEAM.AXIS),
 			Offset =
 			{
-				Vector3(-0.437, -177.252, 24.127),
+				Vector3(-90.457, 195.817, -39.875),
 			}
 		},
 	},
-	
-	Target = 
-     {
-         Glider_crates =
-         {
-             Priority = 0.9,
-             Enabled = false,
-             GrenadeTargetGoalName = "EXPLODE_Glider_crates",
-             LimitBots = 2,
-             LimitTeam = (1<<TEAM.AXIS),
-             Offset = 
-             {
-                 Vector3(-90.457, 195.817, -39.875),
-             }
-         },
-     },
 
 	// *** TRIGGER CALLBACKS ***
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-			Map.CustomBuildGoals.Ramp.Enabled = true;
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_GA.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_1 );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisOutpost.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Outpost_MG42 );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Outpost_MG42 );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Command_Post );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_outpost_flag );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_CP.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Outpost_MG42 );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Outpost_MG42 );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Command_Post );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_outpost_flag );
-			
-			SetGoalPriority(Map.Plant_Allied_Command_Post, 0.90);
-			
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		Map.CustomBuildGoals.Ramp.Enabled = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_GA.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_1 );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_CP.*" );
+
+		SetGoalPriority(Map.Plant_Allied_Command_Post, 0.90);
+
 		if ( Map.Debug )
 			{ print( "Allied_Command_Post_Built" ); }
 	},
@@ -170,6 +142,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post );
+
 		if ( Map.Debug )
 			{ print( "Axis_Command_Post_Built" ); }
 	},
@@ -178,7 +152,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Target.Glider_crates.Enabled = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Allied_Command_Post );
 
@@ -191,6 +165,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Guardpost_MG42 );
+
 		if ( Map.Debug )
 			{ print( "Guardpost_MG42_Built" ); }
 	},
@@ -199,10 +175,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Hopper_Pump );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Glider_crates );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Hopper_Pump );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Glider_crates );
 
 		if ( Map.Debug )
 			{ print( "Hopper_Pump_Built" ); }
@@ -212,6 +188,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Outpost_MG42 );
 
 		if ( Map.Debug )
 			{ print( "Outpost_MG42_Built" ); }
@@ -249,9 +227,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Allied_Command_Post_Dyno += 1;
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Allied_Command_Post );
-
 		if ( Map.Debug )
 			{ print( "Allied_Command_Post_Planted" ); }
 	},
@@ -260,9 +235,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Axis_Command_Post_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Command_Post );
 
 		if ( Map.Debug )
 			{ print( "Axis_Command_Post_Planted" ); }
@@ -273,9 +245,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Generator_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Generator );
-
 		if ( Map.Debug )
 			{ print( "Generator_Planted" ); }
 	},
@@ -284,9 +253,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Guardpost_MG42_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Guardpost_MG42 );
 
 		if ( Map.Debug )
 			{ print( "Guardpost_MG42_Planted" ); }
@@ -297,9 +263,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Hopper_Pump_Dyno += 1;
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Hopper_Pump );
-
 		if ( Map.Debug )
 			{ print( "Hopper_Pump_Planted" ); }
 	},
@@ -308,9 +271,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Outpost_MG42_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Outpost_MG42 );
 
 		if ( Map.Debug )
 			{ print( "Outpost_MG42_Planted" ); }
@@ -321,9 +281,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Tank_Barrier_1_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_1 );
-
 		if ( Map.Debug )
 			{ print( "Tank_Barrier_1_Planted" ); }
 	},
@@ -332,9 +289,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Tank_Barrier_2_Dyno += 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_2 );
 
 		if ( Map.Debug )
 			{ print( "Tank_Barrier_2_Planted" ); }
@@ -345,10 +299,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Allied_Command_Post_Dyno -= 1;
-		if ( Map.Allied_Command_Post_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post ); }
-
 		if ( Map.Debug )
 			{ print( "Allied_Command_Post_Defused" ); }
 	},
@@ -357,10 +307,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Axis_Command_Post_Dyno -= 1;
-		if ( Map.Axis_Command_Post_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post ); }
 
 		if ( Map.Debug )
 			{ print( "Axis_Command_Post_Defused" ); }
@@ -371,10 +317,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Generator_Dyno -= 1;
-		if ( Map.Generator_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Generator ); }
-
 		if ( Map.Debug )
 			{ print( "Generator_Defused" ); }
 	},
@@ -383,10 +325,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Guardpost_MG42_Dyno -= 1;
-		if ( Map.Guardpost_MG42_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Guardpost_MG42 ); }
 
 		if ( Map.Debug )
 			{ print( "Guardpost_MG42_Defused" ); }
@@ -397,10 +335,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Hopper_Pump_Dyno -= 1;
-		if ( Map.Hopper_Pump_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Hopper_Pump ); }
-
 		if ( Map.Debug )
 			{ print( "Hopper_Pump_Defused" ); }
 	},
@@ -409,10 +343,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Outpost_MG42_Dyno -= 1;
-		if ( Map.Outpost_MG42_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Outpost_MG42 ); }
 
 		if ( Map.Debug )
 			{ print( "Outpost_MG42_Defused" ); }
@@ -423,10 +353,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Tank_Barrier_1_Dyno -= 1;
-		if ( Map.Tank_Barrier_1_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_1 ); }
-
 		if ( Map.Debug )
 			{ print( "Tank_Barrier_1_Defused" ); }
 	},
@@ -435,10 +361,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
-		Map.Tank_Barrier_2_Dyno -= 1;
-		if ( Map.Tank_Barrier_2_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_2 ); }
 
 		if ( Map.Debug )
 			{ print( "Tank_Barrier_2_Defused" ); }
@@ -467,9 +389,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.EscortVehicle.Tank.Enabled = true;
 		Map.MountVehicle.Enabled = true;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_C.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_garage_flag );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_island_flag );
@@ -478,7 +399,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Hopper_Pump );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Allied_Command_Post );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_1 );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_garage_flag );
@@ -486,18 +407,18 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_guardpost_flag );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_CP.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_glider_crates );
-		
+
 		//Open the falling ways near Ruins
 		Wp.SetWaypointFlag("ruins1", "closed", false);
 		Wp.SetWaypointFlag("ruins2", "closed", false);
 		Wp.SetWaypointFlag("ruins3", "closed", false);
-		
+
 		//Close the Generator room and the Glider pathing
 		Wp.SetWaypointFlag("GD1", "closed", true);
 		Wp.SetWaypointFlag("GD2", "closed", true);
 		Wp.SetWaypointFlag("GD3", "closed", true);
 		Wp.SetWaypointFlag("Glider1", "closed", true);
-		
+
 		if ( Map.Debug )
 			{ print( "Generator_Destroyed" ); }
 	},
@@ -508,7 +429,7 @@ global Map =
 			{ return; }
 
 		Map.CustomBuildGoals.Ramp.Enabled = true;
-		
+
 		if ( Map.Debug )
 			{ print( "Build_Assault_Ramp" ); }
 	},
@@ -520,7 +441,7 @@ global Map =
 
 		Map.CustomBuildGoals.Ramp.Enabled = false;
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Generator );
-		
+
 		if ( Map.Debug )
 			{ print( "Assault_Ramp_Built" ); }
 	},
@@ -529,6 +450,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		Map.CustomBuildGoals.Ramp.Enabled = true;
 
 		if ( Map.Debug )
 			{ print( "Assault_Ramp_Destroyed" ); }
@@ -650,15 +573,15 @@ global Map =
 		if ( Map.Debug )
 			{ print( "outpost_flag_Allies_Captured" ); }
 	},
-	
+
 	Guardpost_Reached = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_2 );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_garage_flag );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_garage_flag );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_2 );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_garage_flag );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_garage_flag );
 
 		if ( Map.Debug )
 			{ print( "Guardpost_Reached" ); }
@@ -671,6 +594,7 @@ global OnMapLoad = function()
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
+	// *** TRIGGERS ***
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
 	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
 	OnTrigger( "^3The Allies have built a Glider!", Map.Glider_crates_Built );
@@ -717,28 +641,21 @@ global OnMapLoad = function()
 	OnTrigger( "battery_allies_dest_ramp", Map.Assault_Ramp_Destroyed );
 	OnTrigger( "Allies have ^3permanently ^7claimed the Guardpost!", Map.Guardpost_Reached );
 
-	// *** INITIAL AVAILABILITY OF MAP GOALS ***
-
+	// *** AXIS GOALS ***
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_outpost_flag );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Command_Post );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisOutpost.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_1 );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_2 );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_guardpost_flag );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_island_flag );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Outpost_MG42 );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Outpost_MG42"  );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Outpost_MG42" );
 
+	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Hopper_Pump );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_outpost_flag );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Glider_crates );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_guardpost_flag );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_island_flag );
 
-	// *** PRIORITY ***
+	// *** GOALS PRIORITY ***
 	SetGoalPriority(Map.Checkpoint_guardpost_flag, 0.65);
 	SetGoalPriority(Map.Checkpoint_garage_flag, 0.65);
 	SetGoalPriority(Map.Checkpoint_island_flag, 0.65);
@@ -750,24 +667,25 @@ global OnMapLoad = function()
 	SetGoalPriority(Map.Build_Tank, 0.9);
 	SetGoalPriority(Map.Plant_Tank_Barrier_1, 0.95);
 	SetGoalPriority(Map.Plant_Tank_Barrier_2, 0.95);
-	
+
+	// *** GOALS PROPERTIES ***
+	Util.AddInvVehicle("MOVER_glider_sm");
 	Wp.SetWaypointFlag("ruins1", "closed", true);
 	Wp.SetWaypointFlag("ruins2", "closed", true);
 	Wp.SetWaypointFlag("ruins3", "closed", true);
-	
+	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=120});
-
-	Util.AddInvVehicle("MOVER_glider_sm");
-	
-	// *** MAX USERS PER GOAL ***
-	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
-	Util.SetMaxUsersInUse( 1, "BUILD.*" );
-	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-	Util.SetMaxUsersInUse( 1, "CHECKPOINT.*" );
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
 
 	// A utility that is required for the custom build goal
 	if(Util.UpdateConstrData)
@@ -775,13 +693,5 @@ global OnMapLoad = function()
 		Util.UpdateConstrData();
 	}
 
-	print( "Omni-bot map script for", GetMapName(), "executed." );
-};
-
-global OnBotJoin = function( bot )
-{
-	// Uncomment for shootable breakables
-	//~bot.TargetBreakableDist = 90.0;
-	// Only set on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
+	print( "Omni-bot map script for Glider 3.0.2 by **PCZ** >M@t3o$<." );
 };

@@ -188,6 +188,11 @@ this.Update = function()
 		// else {
 			// this.Finished();
 		// }
+		
+		this.WatchForEntityCategory({
+			Radius = 350,
+			Category = CAT.PROJECTILE,
+		});		
 
 		switch(botClass)
 		{
@@ -223,22 +228,23 @@ this.Exit = function()
 	this.GoalState = this.LAY_EXPLOSIVE;
 	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
+	
+	// clear the occupied flag
+	if ( typeId(this.spotIndex) != 0 ) {
+		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+	}	
 };
 
 this.UpdateDynamite = function()
 {
 	hasCoverSpot = false;
 	aimVectors = null;
-	spotIndex = null;
+	this.spotIndex = null;
 
 	while(1)
 	{
 		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 )
 		{
-			// clear the occupied flag
-			if ( typeId(spotIndex) != 0 ) {
-				this.MapGoal.CoverSpots[ spotIndex ].occupied = null;
-			}
 			this.Finished();
 		}
 
@@ -312,20 +318,20 @@ this.UpdateDynamite = function()
 
 					// only one per spot. iterate through all since 'break' exits the while loop
 					foreach ( id and spot in this.MapGoal.CoverSpots ) {
-						if ( typeId(spotIndex) != 0 || spot.occupied ) {
+						if ( typeId(this.spotIndex) != 0 || spot.occupied ) {
 							continue;
 						}
 						else {
 							spot.occupied = true;
-							spotIndex = id;
+							this.spotIndex = id;
 						}
 					}
 
 					// no more cover spots available
-					if (typeId(spotIndex) == 0) { this.Finished(); }
+					if (typeId(this.spotIndex) == 0) { this.Finished(); }
 
-					if ( this.MapGoal.CoverSpots[ spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ spotIndex ].AimVectors) > 0 ) {
-						aimVectors = this.MapGoal.CoverSpots[ spotIndex ].AimVectors;
+					if ( this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors) > 0 ) {
+						aimVectors = this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors;
 						hasCoverSpot = true;
 					}
 					else {
@@ -333,9 +339,9 @@ this.UpdateDynamite = function()
 						this.Finished();
 					}
 
-					this.Goto(this.MapGoal.CoverSpots[ spotIndex ].position, 32.0);
+					this.Goto(this.MapGoal.CoverSpots[ this.spotIndex ].position, 32.0);
 
-					switch (this.MapGoal.CoverSpots[ spotIndex ].stance)
+					switch (this.MapGoal.CoverSpots[ this.spotIndex ].stance)
 					{
 						case "crouch":
 						{
@@ -499,3 +505,12 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 	}
 };
 
+this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
+{
+	if ( ent && GetEntClass(ent) == CLASS.SATCHEL_ENT && this.Bot.GetClass() == CLASS.ENGINEER
+		&& this.Bot.IsAllied(ent) && this.GoalState != this.COVER_DYNAMITE)
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		this.Finished();
+	}
+};

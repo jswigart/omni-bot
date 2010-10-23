@@ -257,7 +257,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		return;
 	}
 
-	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) )
+	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) || this.Bot.DistanceTo(whoSaidIt) > 1500 )
 	{
 		return;
 	}
@@ -269,7 +269,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.Supply = WEAPON.AMMO_PACK;
 		this.TargetEntity = whoSaidIt;
 
-		this.Priority = 0.7;
+		this.Priority = 1.5;
 		this.DelayNextResponse = true;
 		sleep(10);
 		this.DelayNextResponse = false;
@@ -287,7 +287,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.Supply = WEAPON.MEDKIT;
 		this.TargetEntity = whoSaidIt;
 
-		this.Priority = 0.7;
+		this.Priority = 1.5;
 		this.DelayNextResponse = true;
 		sleep(10);
 		this.DelayNextResponse = false;

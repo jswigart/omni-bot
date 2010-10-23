@@ -1,4 +1,14 @@
-//script created by palota
+//==========================================================================================
+//
+//	UrbanTerritory.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	20 April 2010	Initial Script
+//	palota	23 October 2010	DYNAMITE_safe, ROUTE_allies_passage, mg42 aim vectors
+//
+//==========================================================================================
+//
 global Map =
 {
 	safeIsDestroyed=false,
@@ -6,80 +16,8 @@ global Map =
 
 	IgnoreEntPositions = { Vector3(-1441, 799, 30), Vector3(-835, -255, 66), Vector3(-798, -273, 65), Vector3(-874, -275, 65) },
 
-	IsSafePlanted = function()
-	{
-		if(Map.safePlantedTime==null || (Map.safePlantedTime - GetGameTimeLeft() > 30)){
-			Map.safePlantedTime=null;
-			return false;
-		}
-		return true;
-	},
-
 	Navigation =
 	{
-		// cs: note: a user defined plant goal will NOT work in 0.8 because the OID does not define a targetEnt
-		safe =
-		{
-			navigate = function(_this)
-			{
-				bot = _this.Bot;
-				if( Map.safeIsDestroyed
-					|| bot.GetTeam()!=TEAM.AXIS
-					|| bot.GetClass()!=CLASS.ENGINEER
-					|| !bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
-				{
-					yield();
-					return;
-				}
-
-				// once the bot throws the dynamite, store the entity
-				_this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity) {
-					if(weaponId == WEAPON.DYNAMITE) {
-						this.Bot.ExplosiveEntity = projectileEntity;
-					}
-				};
-
-				if ( !Map.SafeWpInfo ) {
-					Map.SafeWpInfo = Util.WpNameInfo("safe");
-				}
-
-				_this.Goto(Map.SafeWpInfo.position); // cs: may want to ensure successful pathing
-				_this.AddAimRequest(Priority.High, "facing", Map.SafeWpInfo.facing);
-				_this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
-				_this.BlockForWeaponChange( WEAPON.DYNAMITE );
-
-				// wait till the event gives an entity. may want to add a timeout here
-				while(!_this.Bot.ExplosiveEntity) {
-					bot.FireWeapon();
-					yield();
-				}
-
-				if ( _this.Bot.ExplosiveEntity ) {
-					_this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
-					_this.BlockForWeaponChange( WEAPON.PLIERS );
-
-					// either it gets armed or the entity sinks into the world. may want a shorter timeout
-					while ( EntityIsValid(_this.Bot.ExplosiveEntity) && _this.Bot.GetExplosiveState(_this.Bot.ExplosiveEntity) == 1 )
-					{
-						dynoPosition = GetEntPosition(_this.Bot.ExplosiveEntity);
-						_this.AddAimRequest(Priority.High, "position", dynoPosition);
-						bot.MoveTowards(dynoPosition);
-						bot.PressButton(BTN.ATTACK1);
-						yield();
-					}
-				}
-
-				_this.Bot.ExplosiveEntity = null;
-				_this.ReleaseWeaponRequest();
-
-				if ( !Map.Safe2WpPosition ) {
-					Map.Safe2WpPosition = Util.WpNameInfo("safe2").position;
-				}
-
-				_this.Goto(Map.Safe2WpPosition); //escape from the dynamite
-			},
-		},
-
 		ladder_down =  //roof
 		{
 			navigate = function(_this)
@@ -146,8 +84,6 @@ global Map =
 
 	Safe_Planted = function( trigger )
 	{
-		Map.safePlantedTime = GetGameTimeLeft();
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_safe"); //there is a dynamite
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_safe8");
 	},
 
@@ -156,6 +92,7 @@ global Map =
 		Map.safeIsDestroyed = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Gold");
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_safe.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DYNAMITE_safe");
 		Util.MapDebugPrint( "Safe_Destroyed" );
 	},
 
@@ -186,9 +123,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG.*");
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT.*");
 	Util.DisableGoal("DEFEND_truck.*");
-	SetGoalPriority("ATTACK_safe", 0, TEAM.AXIS);
-	SetGoalPriority("ATTACK_safe.*", 0.2, TEAM.AXIS, CLASS.ENGINEER);
-	SetGoalPriority("ATTACK_safe", 0.9, TEAM.AXIS, CLASS.ENGINEER);
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_Gold");
 	SetGoalPriority("MOUNTMG42.*", 0, TEAM.AXIS, CLASS.ENGINEER);
@@ -236,14 +170,16 @@ global OnMapLoad = function()
 			}
 		},
 		DEFEND_truck1 = {
-			ROUTE_allies_passage = {},
-			ROUTE_north1 = {},
-			ROUTE_north3 = {},
+			ROUTE_allied_spawn = {
+				ROUTE_allies_passage = {},
+				ROUTE_north1 = {},
+				ROUTE_north3 = {},
+			}
 		},
 	};
-	MapRoutes.ATTACK_safe = MapRoutes.FLAG_Gold;
-	MapRoutes.ATTACK_safe3 = MapRoutes.ATTACK_safe;
-	MapRoutes.ATTACK_safe4 = MapRoutes.ATTACK_safe;
+	MapRoutes.DYNAMITE_safe = MapRoutes.FLAG_Gold;
+	MapRoutes.ATTACK_safe3 = MapRoutes.FLAG_Gold;
+	MapRoutes.ATTACK_safe4 = MapRoutes.ATTACK_safe3;
 	MapRoutes.DEFEND_safe2 = MapRoutes.DEFEND_safe1;
 	MapRoutes.DEFEND_safe5 = MapRoutes.DEFEND_safe1;
 	MapRoutes.DEFEND_safe7 = MapRoutes.DEFEND_safe1;
@@ -255,7 +191,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 200.0;
+	bot.TargetBreakableDist = 250.0;
 
 	if (!Map.IgnoreEnt)
 	{

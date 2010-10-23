@@ -131,6 +131,7 @@ this.SetAimMode = function()
 			}
 			case "velocity":
 			{
+				this.AimOpposite = false;
 				this.UseAimMode = this.AimModes.vehicleVelocity;
 			}
 			default:
@@ -138,6 +139,7 @@ this.SetAimMode = function()
 				// is it a position?
 				if ( typeId(this.MapGoal.AimMode) == 3 ) {
 					this.AimPosition = this.MapGoal.AimMode;
+					this.UseAimMode = null;
 				}
 				else {
 					this.UseAimMode = this.AimModes.vehicleVelocity;
@@ -274,19 +276,19 @@ this.Update = function()
 		}
 		else
 		{
-			if ( this.AimPosition ) {
-				this.AddAimRequest(Priority.Low, "position", this.AimPosition);
-			}
-
 			while(true)
 			{
 				this.SetAimMode();
 
 				// Allow the current aim mode to do any processing to change the aimDirection
-				if ( !this.AimPosition )
+				if ( this.UseAimMode )
 				{
 					aimFunc = this.UseAimMode;
 					this:aimFunc();
+				}
+				else
+				{
+					this.AddAimRequest(Priority.Low, "position", this.AimPosition);
 				}
 
 				if ( GetEntVelocity( this.VehicleEnt ).IsZero() )

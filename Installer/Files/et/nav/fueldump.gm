@@ -181,6 +181,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Util.SetMaxUsersInProgress( 9, Map.Plant_Fuel_Dump);
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
@@ -189,6 +190,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Util.SetMaxUsersInProgress( 1, Map.Plant_Fuel_Dump);
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
@@ -1012,6 +1014,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bridge_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_rBridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rFootbridge.*" );
+	
+	Util.SetMaxUsersInProgress( 1, "BUILD_Allied_Command_Post");
+	Util.SetMaxUsersInProgress( 1, Map.Plant_Fuel_Dump);
+	SetGoalPriority("BUILD_Allied_Command_Post", 0.85);
 
 	//set up some routing
 	MapRoutes =

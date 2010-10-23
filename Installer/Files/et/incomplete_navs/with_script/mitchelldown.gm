@@ -1,0 +1,189 @@
+global Map =
+{
+	Ammo_Cabinet_ammocab_office = "AMMOCAB_ammocab_office",
+	Ammo_Cabinet_t1110 = "AMMOCAB_t1110",
+	Health_Cabinet_healthcab_office = "HEALTHCAB_healthcab_office",
+	Health_Cabinet_t1111 = "HEALTHCAB_t1111",
+	Checkpoint_axis_gate_flag = "CHECKPOINT_axis_gate_flag",
+	Flag_Little_Boy_Bomb = "FLAG_Little_Boy_Bomb",
+	Cappoint_truck = "CAPPOINT_truck",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Church_MG = "BUILD_Church_MG",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Church_MG = "PLANT_Church_MG",
+	Plant_North_Factory_Door = "PLANT_North_Factory_Door",
+	Plant_Sewer_Grate = "PLANT_Sewer_Grate",
+	Plant_South_Factory_Door = "PLANT_South_Factory_Door",
+	Mount_Church_MG = "MOUNTMG42_Church_MG",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_1_1 = "MOUNTMG42_mg42_1_1",
+	Mount_mg42_1_2 = "MOUNTMG42_mg42_1_2",
+	Mount_mg42_1_3 = "MOUNTMG42_mg42_1_3",
+	Mount_mg42_1_4 = "MOUNTMG42_mg42_1_4",
+	Mount_mg42_1_5 = "MOUNTMG42_mg42_1_5",
+	Repair_Church_MG = "REPAIRMG42_Church_MG",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_1_1 = "REPAIRMG42_mg42_1_1",
+	Repair_mg42_1_2 = "REPAIRMG42_mg42_1_2",
+	Repair_mg42_1_3 = "REPAIRMG42_mg42_1_3",
+	Repair_mg42_1_4 = "REPAIRMG42_mg42_1_4",
+	Repair_mg42_1_5 = "REPAIRMG42_mg42_1_5",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Church_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Church_MG_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Church_MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Church_MG_Destroyed" );
+	},
+
+	North_Factory_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "North_Factory_Door_Destroyed" );
+	},
+
+	Sewer_Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Sewer_Grate_Destroyed" );
+	},
+
+	South_Factory_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "South_Factory_Door_Destroyed" );
+	},
+
+	Little_Boy_Bomb_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Little_Boy_Bomb_Taken" );
+	},
+
+	truck_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "truck_Captured" );
+	},
+
+	axis_gate_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gate_flag_Axis_Captured" );
+	},
+
+	axis_gate_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gate_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "The Church MG has been constructed!", Map.Church_MG_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "The Church MG has been destroyed!", Map.Church_MG_Destroyed );
+	OnTrigger( "Allied forces have destroyed the North Factory Doors!", Map.North_Factory_Door_Destroyed );
+	OnTrigger( "Allied forces have destroyed the Sewer Grate!", Map.Sewer_Grate_Destroyed );
+	OnTrigger( "Allied forces have destroyed the South Factory Doors!", Map.South_Factory_Door_Destroyed );
+	OnTrigger( "The Allies have Stolen the Little Boy Bomb!", Map.Little_Boy_Bomb_Taken );
+	OnTrigger( "The Allies have Secured the Little Boy Bomb!", Map.truck_Captured );
+	OnTrigger( "The Axis have Captured the Gate Flag!", Map.axis_gate_flag_Axis_Captured );
+	OnTrigger( "The Allies have Captured the Gate Flag!", Map.axis_gate_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Church_MG" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Church_MG" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Church_MG" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Little_Boy_Bomb" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB.*" );
+
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_t1110" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_t1111" );
+	
+	Util.SetGoalOffset( 0, -20, 0, "PLANT_South_Factory_Door" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 300.0;
+};

@@ -63,7 +63,7 @@ global Map =
 		cargo_west =
 		{
 			movergoal = "MOVER_cargo_rail",
-			rideposition = Vector3(0,-100,-50),
+			rideposition = Vector3(0,125,-50),
 			startwp = "cargo_west_in",
 			exitwp = "cargo_east_out",
 			board = function(_this)
@@ -78,7 +78,7 @@ global Map =
 		cargo_east =
 		{
 			movergoal = "MOVER_cargo_rail",
-			rideposition = Vector3(0,-100,-50),
+			rideposition = Vector3(0,125,-50),
 			startwp = "cargo_east_in",
 			exitwp = "cargo_west_out",
 			board = function(_this)
@@ -112,7 +112,7 @@ global Map =
 
 	OnWallBlown = function(trigger)
 	{
-	    SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_wall.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_wall.*");
 	},
 
 	OnStolen = function(which)
