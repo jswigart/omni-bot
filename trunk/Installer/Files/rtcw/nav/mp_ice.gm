@@ -680,4 +680,9 @@ global OnBotJoin = function( bot )
 
 	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	
+	//default spawn for axis
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		bot.ChangeSpawnPoint( 0 );
+	}
 };
