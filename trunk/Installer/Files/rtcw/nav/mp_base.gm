@@ -303,7 +303,7 @@ global OnMapLoad = function()
 	tTwo = OnTriggerRegion( AABB( 63.000,2271.000,335.000,192.000,2480.000,409.000 ), Map.North );
 	r1push = OnTriggerRegion( AABB( 498.000,1791.000,327.000,720.000,2178.000,417.000 ), RegionTrigger.DisableBotPush );
 	spawnCombat = OnTriggerRegion( AABB( 2304.000,1855.000,-1.000,2944.000,2368.000,113.000 ), RegionTrigger.DisableBotPush );
-	bspawn = OnTriggerRegion(AABB(-2816.000,-1536.000,113.000,-2431.000,-48.000,427.000),RegionTrigger.DisableBotPush);	
+	bspawn = OnTriggerRegion(AABB(-2816.000,-1536.000,113.000,-2431.000,-48.000,427.000),RegionTrigger.DisableBotPush);
 
 	OnTrigger( "Allied team has disabled the North Radar!", Map.North_Destroyed );
 	OnTrigger( "Planted at the North Radar [01].", Map.north_planted );
@@ -491,7 +491,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 120.0;
+	bot.TargetBreakableDist = 80.0;
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );

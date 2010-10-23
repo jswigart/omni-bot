@@ -347,7 +347,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = 4000;
-	bot.TargetBreakableDist = 150.0;
+	bot.TargetBreakableDist = 80.0;
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.MAUSER );
 
 	//default spawn

@@ -8,7 +8,7 @@ global Map =
 	Plant_Trench = "PLANT_Trench_Grate",
 	Plant_Wall = "PLANT_Beach_Head_Wall",
 	Plant_Breach = "PLANT_Bunker_Breach",
-	Plant_Cyanide = "PLANT_Cyanide_Drums",	
+	Plant_Cyanide = "PLANT_Cyanide_Drums",
 
 	//set status' for conditionals
 	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
@@ -294,7 +294,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 );
@@ -304,19 +304,19 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_Barricade1", 0.67 );
 	SetGoalPriority( "GRENADE_Barricade1", 0.66 );
 	SetGoalPriority( "GRENADE_Barricade1", 0.65 );
-	
+
 	RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade2", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );	
+	RTCWUtil.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
-	
+
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
@@ -411,7 +411,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = Map.ViewDistance;
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 80.0;
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 

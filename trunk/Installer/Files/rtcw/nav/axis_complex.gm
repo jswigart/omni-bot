@@ -332,7 +332,7 @@ global OnBotJoin = function( bot )
 {
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 
-	//~ bot.TargetBreakableDist = 300.0;
+	//~ bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 2000.0;
 
 	//default spawn

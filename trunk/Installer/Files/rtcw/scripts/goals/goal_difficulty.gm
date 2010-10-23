@@ -219,21 +219,21 @@ this.difficulties =
 	},
 	//Difficulty 7
 	{
-		FieldOfView = 180.0,
-		ReactionTime = 0.0,
-		MemorySpan = 4.0,
+		FieldOfView = 360.0,
+		ReactionTime = 0.1,
+		MemorySpan = 3.0,
 		AimPersistance = 2.0,
 		MaxTurnSpeed = 720.0,
 		AimStiffness = 75.0,
 		AimDamping = 10.0,
-		AimTolerance = 48,
+		AimTolerance = 0,
 		AimErrorX = 0,
 		AimErrorY = 0,
 		AimOffsetX = 0,
 		AimOffsetY = 0,
 		AimOffsetZ = 0,
 		SniperOffset = 0,
-		MaxViewPercent = 110,
+		MaxViewPercent = 150,
 	},
 };
 

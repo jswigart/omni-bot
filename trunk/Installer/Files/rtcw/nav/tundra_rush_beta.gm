@@ -24,7 +24,7 @@ global Map =
 	FlagStatus = 0, //no team owns it
 	GateStatus = false, //intact
 	DocStatus = false, //home
-	
+
 	Roles =
 	{
 		ALLIES =
@@ -34,7 +34,7 @@ global Map =
 				numbots = 3,
 			},
 		},
-	},	
+	},
 
 	Navigation =
 	{
@@ -184,7 +184,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
 			}
 		}
-		
+
 		Util.MapDebugPrint( "Docs_Taken" );
 	},
 
@@ -204,7 +204,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
-		
+
 		Util.MapDebugPrint( "Docs_Returned" );
 	},
 
@@ -474,7 +474,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 150.0;
+	bot.TargetBreakableDist = 80.0;
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );

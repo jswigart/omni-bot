@@ -530,7 +530,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 80.0;
 	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 	//ignore the retarded radio for targeting

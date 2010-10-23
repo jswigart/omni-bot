@@ -675,7 +675,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 300.0;
+	//bot.TargetBreakableDist = 80.0;
 	//team = bot.GetTeam();
 
 	RTCWUtil.NoSnipe( bot );

@@ -374,7 +374,7 @@ global Map =
 		} else if ( vel.y > 0 )   {
 			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Gate1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Gate2" );
-			
+
 			//open up the node so they can pathfind through gate
 			Wp.SetWaypointFlag( "gatehack", "closed", false );
 
@@ -400,7 +400,7 @@ global Map =
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
-			
+
 			Map.HangarDoorStatus = false;
 			Util.LimitToTeaam( TEAM.AXIS, "SWITCH_HangarDoor1" );
 		} else if ( vel.y > 0 )   {
@@ -963,7 +963,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 200.0;
+	bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = Map.ViewDistance;
 
 	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER  ) {

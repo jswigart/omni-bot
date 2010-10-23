@@ -252,7 +252,7 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( "ROUTE_eastvent" );
 	RTCWUtil.DisableGoal( "ROUTE_southvent" );
 	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
-	
+
 	SetGoalPriority( "SWITCH.*", 0.7 );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Vent" );
@@ -341,7 +341,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 300.0;
+	//~ bot.TargetBreakableDist = 80.0;
 
 	class = bot.GetClass();
 

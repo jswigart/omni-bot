@@ -575,8 +575,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
 	SetGoalPriority( "ATTACK_bUpper.*", 0.55 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
-	SetGoalPriority( "GRENADE_.*", 0.91 );	
-	
+	SetGoalPriority( "GRENADE_.*", 0.91 );
+
 	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE.*", 0, CLASS.MEDIC, CLASS.LIEUTENANT );
 
@@ -734,7 +734,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = 3500;
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 80.0;
 
 	//RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
 	RTCWUtil.StopSniping();
