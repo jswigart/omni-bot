@@ -680,6 +680,7 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
 	
 	GoalManager::Query qry;
 	qry.Expression(exp);
+	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals(qry);
 	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
 	{
@@ -732,6 +733,7 @@ static int GM_CDECL gmfSetGoalGroup(gmThread *a_thread)
 		GM_STRING_PARAM(exp,0,0);
 		GoalManager::Query qry;
 		qry.Expression(exp);
+		qry.NoFilters();
 		GoalManager::GetInstance()->GetGoals(qry);
 		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
 		{
