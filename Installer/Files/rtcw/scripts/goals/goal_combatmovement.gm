@@ -42,7 +42,7 @@ this.GetPriority = function()
 		tEnt = this.Bot.GetTarget();
 		tDist = 9999; // init in case GetTargetInfo doesn't return anything
 
-		if( tEnt && this.ShouldCombatMovement() )
+		if( tEnt && !GetEntFlags(tEnt, ENTFLAG.INJURED) && this.ShouldCombatMovement() )
 		{
 			this.Bot.ResetStuckTime();
 			ti = this.Bot.GetTargetInfo(tEnt);
