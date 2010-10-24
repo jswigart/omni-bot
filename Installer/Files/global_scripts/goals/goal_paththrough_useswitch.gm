@@ -101,7 +101,8 @@ this.Update = function()
 		}
 
 		this.ReleaseAimRequest();
-		if ( !exitCondition && currentswitch.Wait && this.counter < currentswitch.Timeout)
+		//cs: wait function now overrides exitConditions
+		if ( /*!exitCondition &&*/ currentswitch.Wait && this.counter < currentswitch.Timeout)
 		{
 			while ( currentswitch.Wait() != true )
 			{
