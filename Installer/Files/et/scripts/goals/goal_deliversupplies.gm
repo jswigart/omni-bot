@@ -15,10 +15,12 @@ this.DELIVER_PACKS = 1;
 this.KILL_TARGET = 2;
 this.SWITCH_TO_SYRINGE = 3;
 this.REVIVE_TARGET = 4;
+this.CURE_POISON_WITH_NEEDLE = 5;
 
 this.Initialize = function()
 {
 	this.Respond = false;
+	this.CuringPoisonWithNeedle = false;
 	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
@@ -78,6 +80,7 @@ this.Exit = function()
 	this.DelayNextResponse = false;
 	this.OnTarget = false;
 	this.Bot.KillingForRevive = false; // allow appropriate voice chats again
+	this.CuringPoisonWithNeedle = false;
 };
 
 this.DynamicGoto = function()
@@ -90,6 +93,34 @@ this.DynamicGoto = function()
 	{
 		this.Finished();
 	}
+};
+
+this.CurePoisonWithNeedle = function()
+{
+	if ( !this.TargetEntity || !GetEntFlags(this.TargetEntity, ENTFLAG.POISONED) ) {
+		return false;
+	}
+
+	mod = GetModName();
+	switch(mod)
+	{
+		case "nitmod":
+		{
+			if ( GetCvar("g_poison") == 1 ) {
+				return true;
+			}
+		}
+		case "noquarter":
+		{
+			return true;
+		}
+		default:
+		{
+			return false;
+		}
+	}
+
+	return false;
 };
 
 this.Update = function()
@@ -123,7 +154,11 @@ this.Update = function()
 			pos = GetEntEyePosition(this.TargetEntity);
 			this.AddAimRequest(Priority.High, "position",pos);
 
-			if ( !this.KillTarget ) {
+			if ( this.CurePoisonWithNeedle() ) {
+				this.State = this.SWITCH_TO_SYRINGE;
+				this.CuringPoisonWithNeedle = true;
+			}
+			else if ( !this.KillTarget ) {
 				this.State = this.DELIVER_PACKS;
 				this.AddWeaponRequest(Priority.High, this.Supply);
 				this.BlockForWeaponChange(this.Supply);
@@ -151,6 +186,10 @@ this.Update = function()
 					case this.REVIVE_TARGET:
 					{
 						this.UpdateReviveTarget();
+					}
+					case this.CURE_POISON_WITH_NEEDLE:
+					{
+						this.UpdateCurePoisonWithNeedle();
 					}
 				}
 				yield();
@@ -213,7 +252,13 @@ this.UpdateSwitchToSyringe = function()
 {
 	this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
 	this.BlockForWeaponChange(WEAPON.SYRINGE);
-	this.State = this.REVIVE_TARGET;
+
+	if ( this.CuringPoisonWithNeedle ) {
+		this.State = this.CURE_POISON_WITH_NEEDLE;
+	}
+	else {
+		this.State = this.REVIVE_TARGET;
+	}
 };
 
 this.UpdateReviveTarget = function()
@@ -247,6 +292,23 @@ this.UpdateReviveTarget = function()
 	{
 		this.Finished();
 	}
+	yield();
+};
+
+this.UpdateCurePoisonWithNeedle = function()
+{
+	pos = GetEntEyePosition(this.TargetEntity);
+	if (pos && this.TargetEntity && GetEntFlags(this.TargetEntity, ENTFLAG.POISONED))
+	{
+		this.AddAimRequest(Priority.High, "position",pos);
+		this.Bot.MoveTowards(pos);
+		this.Bot.PressButton(BTN.ATTACK1);
+	}
+	else
+	{
+		this.Finished();
+	}
+
 	yield();
 };
 
