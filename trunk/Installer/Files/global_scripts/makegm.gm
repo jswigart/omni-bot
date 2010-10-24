@@ -822,7 +822,7 @@ if ( Mapgm == null )
 		Mapgm.MakeRevisionHeader( MapScript, gmName );
 		Util.AddToTable( MapScript, "global Map =" );
 		Util.AddToTable( MapScript, "{" );
-		Util.AddToTable( MapScript, "\tDebug = 1," );
+		Util.AddToTable( MapScript, "\tDebug = 1, \/\/ please set to zero before distributing your script" );
 		Util.AddToTable( MapScript, "\tShowMovers = false," );
 		Util.AddToTable( MapScript, "" );
 

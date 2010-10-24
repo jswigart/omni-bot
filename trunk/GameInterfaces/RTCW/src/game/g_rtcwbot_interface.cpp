@@ -847,10 +847,12 @@ static int _GetEntityClass( gentity_t *_ent ) {
 			return RTCW_CLASSEX_GRENADE;
 		case WP_PANZERFAUST:
 			return RTCW_CLASSEX_ROCKET;
-		case WP_ARTY:
-			if ( !Q_strncmp( _ent->classname, "air strike", sizeof( "air strike" ) ) ) {
+		case WP_SMOKE_GRENADE:
+			// smoke grenade without server flags is an a/s cannister ...
+			if ( !(_ent->r.svFlags & SVF_SMOKEGRENADE) ) {
 				return RTCW_CLASSEX_AIRSTRIKE;
 			}
+		case WP_ARTY:
 			return RTCW_CLASSEX_ARTY;
 		case WP_DYNAMITE:
 			return RTCW_CLASSEX_DYNAMITE;
@@ -1719,6 +1721,7 @@ obResult GetEntityCategory( const GameEntity _ent, BitFlag32 &_category ) {
 		case WP_GRENADE_LAUNCHER:
 		case WP_GRENADE_PINEAPPLE:
 		case WP_PANZERFAUST:
+		case WP_SMOKE_GRENADE:
 		case WP_ARTY:
 		case WP_DYNAMITE:
 			_category.SetFlag( ENT_CAT_AVOID );
@@ -1971,6 +1974,7 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			case WP_GRENADE_PINEAPPLE:
 			case WP_PANZERFAUST:
 			case WP_ARTY:
+			case WP_SMOKE_GRENADE:
 			case WP_DYNAMITE:
 			default:
 				_flags.SetFlag( ENT_FLAG_VISTEST );
