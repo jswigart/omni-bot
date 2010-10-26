@@ -47,7 +47,7 @@ global Map =
 			{
 				voice = "defend",
 				spawnpt = 3,
-				numbots = 4,
+				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
 			},
 

@@ -2201,27 +2201,26 @@ member TestGoalPriorities = function(allgoals)
 
 	foreach ( id and mg in  mgt )
 	{
-		mg.SetGoalPriority(1.0, 1, 1);
-		print( mg.GetGoalPriority(1, 1) );
+		mg.SetGoalPriority( 1, 1, 1.0 );
 		assert( mg.GetGoalPriority(1, 1) == 1.0 );
 		print( "TestPriorities: Test 1 Pass" );
 		yield();
 
-		mg.SetGoalPriority(0.9, 2, 1);
+		mg.SetGoalPriority( 2, 1, 0.9 );
 		assert( mg.GetGoalPriority(1, 1) == 1.0 );
 		assert( mg.GetGoalPriority(2, 1) == 0.9 );
 		print( "TestPriorities: Test 2 Pass" );
 		yield();
 
-		mg.SetGoalPriority(0.8, 1, 1 );
-		mg.SetGoalPriority(0.8, 1, 2 );
+		mg.SetGoalPriority( 1, 1, 0.8 );
+		mg.SetGoalPriority( 1, 2, 0.8 );
 		assert( mg.GetGoalPriority(1, 1) == 0.8 );
 		assert( mg.GetGoalPriority(1, 2) == 0.8 );
 		assert( mg.GetGoalPriority(2, 1) == 0.9 );
 		print( "TestPriorities: Test 3 Pass" );
 		yield();
 
-		mg.SetGoalPriority( 0.7, 2, 2 );
+		mg.SetGoalPriority( 2, 2, 0.7 );
 		assert( mg.GetGoalPriority(1, 1) == 0.8 );
 		assert( mg.GetGoalPriority(1, 2) == 0.8 );
 		assert( mg.GetGoalPriority(2, 1) == 0.9 );
@@ -2229,7 +2228,7 @@ member TestGoalPriorities = function(allgoals)
 		print( "TestPriorities: Test 4 Pass" );
 		yield();
 
-		mg.SetGoalPriority( 0.6 );
+		mg.SetGoalPriority( 0, 0, 0.6 );
 		assert( mg.GetGoalPriority(1, 1) == 0.6 );
 		assert( mg.GetGoalPriority(1, 2) == 0.6 );
 		assert( mg.GetGoalPriority(2, 1) == 0.6 );
@@ -2237,7 +2236,7 @@ member TestGoalPriorities = function(allgoals)
 		print( "TestPriorities: Test 5 Pass" );
 		yield();
 
-		mg.SetGoalPriority( 0.0, 1, 1 );
+		mg.SetGoalPriority( 1, 1, 0.0 );
 		assert( mg.GetGoalPriority(1, 1) == 0.0 );
 		assert( mg.GetGoalPriority(1, 2) == 0.6 );
 		assert( mg.GetGoalPriority(2, 1) == 0.6 );
@@ -2245,9 +2244,9 @@ member TestGoalPriorities = function(allgoals)
 		print( "TestPriorities: Test 6 Pass" );
 		yield();
 
-		mg.SetGoalPriority( 0.5, 1, 2 );
-		mg.SetGoalPriority( 0.4, 2, 1 );
-		mg.SetGoalPriority( 0.3, 2, 2 );
+		mg.SetGoalPriority( 1, 2, 0.5 );
+		mg.SetGoalPriority( 2, 1, 0.4 );
+		mg.SetGoalPriority( 2, 2, 0.3 );
 		assert( mg.GetGoalPriority(1, 1) == 0.0 );
 		assert( mg.GetGoalPriority(1, 2) == 0.5 );
 		assert( mg.GetGoalPriority(2, 1) == 0.4 );
@@ -2504,7 +2503,7 @@ member BotChat = function(team, msgType, msg, numBots)
 		bots = 0;
 		foreach ( id and bot in BotTable )
 		{
-			if ( numBots && bots > numBots ) {
+			if ( numBots && bots >= numBots ) {
 				return;
 			}
 			if ( team != 0 && bot.GetTeam() != team ) {
@@ -2542,7 +2541,7 @@ member BotChat = function(team, msgType, msg, numBots)
 				}
 				default:
 				{
-					Util.MapDebugPrint("Util.BotChat: Invalide message type!", true);
+					Util.MapDebugPrint("Util.BotChat: Invalid message type!", true);
 				}
 			}
 

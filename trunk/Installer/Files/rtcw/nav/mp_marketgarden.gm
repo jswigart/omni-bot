@@ -16,7 +16,7 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 1,
-				numbots = 5,
+				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
@@ -26,7 +26,7 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 2,
-				numbots = 5,
+				numbots = 3,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
@@ -444,8 +444,6 @@ global OnMapLoad = function()
 
 	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
