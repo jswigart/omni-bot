@@ -188,11 +188,11 @@ this.Update = function()
 		// else {
 			// this.Finished();
 		// }
-		
+
 		this.WatchForEntityCategory({
 			Radius = 350,
 			Category = CAT.PROJECTILE,
-		});		
+		});
 
 		switch(botClass)
 		{
@@ -228,11 +228,11 @@ this.Exit = function()
 	this.GoalState = this.LAY_EXPLOSIVE;
 	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
-	
+
 	// clear the occupied flag
-	if ( typeId(this.spotIndex) != 0 ) {
+	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
-	}	
+	}
 };
 
 this.UpdateDynamite = function()

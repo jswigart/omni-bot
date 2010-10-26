@@ -1,219 +1,63 @@
-note: work in progress, far from complete
-
-TODO: 	blurb about release here
-	release highlights
-	-- goal separation from nav
-	-- scripted map goals
-	-- waypoint package
-	-- class manager
-	-- bot roles
-	beta team credits / thanks
+0.81 ET Change Log
 
 
 === BOT ===
+Fixed kickbot crash in older Windows versions
+Fixed pathfinder crash
+Fixed SetAvailableMapGoals
+Fixed SetGoalPriority
+Fixed SetGoalGroup
+Fixed goals being interrupted by other goal types with same priority as current goal
+Fixed script goals being activated too early when bots spawned
+Fixed InWater flag not being auto added to waypoints
+Fixed issues with GetNearest related to entities that shared a classname with weapons
+Added bots will press jump when headed towards waypoints with the InWater flag
+Added SetIgnoreEntFlags weapon property
+Added rendering of RegionTrigger names
+Updated boost libraries to version 1_44_0
 
-fixed GameMonkey Garbage Collection bug that was causing serious performance issues
-fixed paththrough crash when no data is passed from wp property
-fixed bots field of view for close objects
-fixed OmnibotRenderDebugLines to not run on remote servers
-fixed lookaround timer
-fixed initialization of powerups (all games)
-fixed GetEntityPowerUps
-fixed a gui exception with no delta in mouse wheel event
-fixed fov check to use trace offsets
-fixed null bot goal issue with flagreturn goal,
-fixed crash when tableRandom was called on an empty table
-fixed gm string tokenize binding
-fixed AddUsePoint mapgoal binding
-fixed ExecFile script function to support 'this' pass through
-fixed mapgoal.getentity so it returns null if entity is invalid
-fixed bot drawgoalroutes command
-fixed some loops that weren't going through all team indexes
-fixed crash when script exception contains printf formatted text
-fixed bot.IsStuck only return true if bot is actively trying to move
-fixed download support on initial map startup
-fixed boost::thread crash for some linux distributions
-fixed bug where event threads were not tracked and cleaned up properly
-fixed disguise nav callback
-fixed finish criteria and mapgoal auto completion checks to come before the call to update in script goal
-fixed several memory leaks
-fixed gm debugger to work again
-fixed gm debugger to show file/line in thread start messages
-fixed ConfigGet function not setting a value of 0
-added switch / case support to GameMonkey script
-added script function SendTrigger to fire triggers from script
-added bot.GetConstructableState
-added bot.GetDestroyableState
-added bot.GetExplosiveState
-added bot.IsWaitingForMedic
-added bot.HasAnyWeapon
-added bot.SetRoles
-added bot.ClearRoles
-added mapgoal.roles so mapgoals can be set up to be restricted to certain roles
-added mapgoal.DisableIfEntityFlag
-added mapgoal.DeleteIfEntityFlag
-added mapgoal.GetOwner accessor
-added mapgoal.GetCenterBounds
-added mapgoal.SetBaseGoalType
-added mapgoal.RolePriorityBonus
-added mapgoal.SetRoles
-added mapgoal.ClearRoles
-added scriptgoal.SkipGetPriorityWhenActive
-added scriptgoal.LimitToRole
-added scriptgoal.AutoFinishOnUnAvailable
-added scriptgoal.GotoRandom
-added scriptgoal.GotoRandomAsync
-added scriptgoal.WatchForEntityCategory
-added ability to create custom map goals
-added ability to pass bot as 'this' to GetGoals
-added import functionality for loading scripts
-added better script goal error message in routeto
-added GetEntityVisDistance callback in BotSensoryMemory,
-added DrawGoals, DrawRoutes, DrawTriggers, DebugTriggers to omni-bot.cfg
-added support for customizing how much ammo the bot will attempt to get when resupplying
-added rolemask field to client class
-added table argument support to mapgoal.LimitWeapon
-added weaponhasammo finish criteria
-added debug config options for logging specific log categories(info, errors, warnings, critical)
-added optimizations to goal query
-added support for profiling data per scriptgoal type and mapgoal type
-added regex grep for goalname expressions
-added support for refreshing specific weapons from the weapon database
-added script live update support, currently only for weapon scripts
-added bool EntityIsValid script bound function
-added rendering of waypoint properties
-added opengl overlay with 2d and 3d support
-added DebugBox interface function for drawing more optimized debug boxes
-added GetEntityLocalAABB interface func
-added console and log message when SetAvailableMapGoals passes invalid goal expression
-added TRACE.VISIBLE and TRACE.GRATE to common lib
-added this.Debug to internal debug drawing state, so it can be toggled via bot debugbot all statename 1
-added schema library for data validation
-added System.Time() script bound function
-added CAT.MINE
-added DrawEntityOBB script bound function for rendering real bounds rather than axis aligned bounds
-added CheckEntityBoundsIntersect script bound function
-changed System.Newline to be a variable rather than a function
-removed usage of boost::format and replaced with printf style logging
-removed trueaxis dependency from build, drops dll size significantly
-updated to boost 1_40_0 libraries
-implemented render interface so recast can render via opengl or game render interface
-replaced parameter 2 of scriptgoal.Goto, GotoAsync, RouteTo with an optional table of parameters
-minor optimization to WeaponSystem::GetWeapon
 
-=== mod ===
+=== GOALS ===
+Moved MountMg42 goal to script and added support for user defined facings
+Fixed version number in mapgoal_capturehold
+Fixed random aim mode for mount goal
+Fixed goal_paththrough_artillery to abort if no line of sight to an arty target
+Fixed gotowp support in goal_paththrough_navigation
+Fixed goal_combatmovement to ensure that GetTargetInfo returns valid data
+Fixed velocity check in goal_indisguise
+Fixed mapgoal_explosive to not create on load
+Fixed manually added health and ammo cabinet goals to create on load
+Fixed region trigger name in mapgoal_plantmine
+Fixed plant goal coverspot occupied flag not being cleared on bot death
+Added paththrough function to goal_build for custom behavior scripting (thx palota)
+Added bots planting dynamite will abort if a teammate drops a satchel (thx palota)
+Added mapgoal_dynamite for use when target has no usable OID
+Added cure poison with needle support to goal_deliversupplies
+Added caching of trace results in goal_paththrough_artillery
+Added ability to force routing to build goals with offsets defined
+Added missing finish criteria in goal_covertops
+Changed stuckage check goal to write separate logs for each map
+Changed paththrough_useswitch goal so that the wait function overrides any exit conditions
+Improved bots ability to mount mg42's
+Increased priority of deliver supplies goal and limited distance to 1500 units
 
-fixed interface functions GetCvar and SetCvar
-fixed GetReinforceTime function
-fixed fireteam events
-fixed mover class identification
-fixed bot pushing
-fixed GetEntityClass() while bot is in limbo
-fixed movement vector math in et interface
-fixed client connect event to be called before clientuserinfochanged
-fixed NQ mobile mg42 goal usage for allies and mobile mortar for axis
-fixed axis grenades not being in cat projectile or class grenade
-fixed crash when mods don't correctly report failed connections
-fixed GetEntityInSphere to only return usable corpse entities
-added weapon classes
-added weapons to CAT.PICKUP
-added BUTTON.DROP
-added weapon events for picked up / dropped
-added print error on bot console commands if bot isn't loaded
-added additional triggers for cappoints
-added ET_OID_TRIGGER returns CLASS.GOAL from interface
-added vistest for axis grenade
-added command omnibotmenu
-added et command /oidlist for reference with build goal traces
-added support for NoQuarter private voice macros (fireteam voice chats)
-added rendering of spawn point numbers on the command map ( omnibot mod only )
-added omnibot_flags 16 for enabling g_shove for bots ( default off )
-added omnibot_flags 32 for bots tripping mines that they can see ( default off )
-disabled call to OmnibotRenderDebugLines if not a local server (et and rtcw)
-altered ET min class check to make sure one of each is added
-implemented waypoint_goto in et
-merged NQ updates and fixes to etbot interface
+=== SCRIPT ===
+Fixed MapGoal.GetPriority
+Fixed role manager to auto increment class manager minclass counts when crucialClass is set
+Fixed role manager crucialClass 
+Added Util.BotChat function
+Added Util.CatName function
+Added Util.SetCustomProperty function
+Added EvalFunc support to goal_paththrough_navigation
+Added spawn point and voice macro support to role manager
+Added optional viewDistance parameter to Util.ChangeToSniperWeapons
+Added CLASS.DYNAMITE_ENT, CLASS.MORTAR_ENT, CLASS.SATCHEL_ENT, and CLASS.LANDMINE_ENT
 
-=== goals ===
+=== COMMANDS ===
+Added optional filter param for debugtriggers
+Added fix_waterwps to add InWater flag to waypoints near water surface
+Added draw_paththrough 0|1 for rendering 3D text over paththrough waypoints
 
-moved most of the mapgoals to script
-fixed mount goal so bots could actually dismount at exit
-fixed useswitch goal to check for distance limits prior to recieving a priority
-added goal_covertops for disguise and spot mines behavior
-added a smoke bomb goal for covert ops
-added cover spots for dynamite goals
-added an airstrike goal for fieldops to call targeted airstrikes
-added ability to create user defined plant and build goals
-added weapon restriction ability to camp type goals
-added paththrough goals for callartillery and airstrike
-added a pickup items goal that makes the bots more responsive to packs / weapons laying around
-added a range limit for health and ammo cabinets; default 1250
-added a sample goal_demo that is heavily documented for tutorial purposes
-added goal_zooming that auto increases max view for bots while scoped
-added goal_watchforprojectile so bots avoid airstrikes and grenades
-added kill / revive behavior to deliver supplies goal
-added goal_resetxp and commands /bot resetxp /bot maxxp
-added simple hunt goal to et for deathmatch maps ( autoadd = false )
-added bots will look for and pickup weapons in goal_askforammo
-added support for an AimPosition as an alternative to facing for improved reliability in switch goals
-added goal_voicechat with completely customizeable response probabilities
-added goal_rolemanager that keeps Map script defined role slots occupied
-added goal_checkstuck
--- bots will sidestep if blocked by players
--- bots will attempt to jump out of stuckages
--- optionally log stuckage positions to the omnibot log
--- optionally have the bots /kill if stuck too long
-replaced difficulty.gm with goal_difficulty
--- makes it easier for bots to have individual profiles
--- bots can now be set up to use random difficulty settings
--- difficulty settings have been completely reworked to be more realistic
--- added several more weapons to the adjustable weapon table
-improved bots ability to path to mover related goals
-improved escort goal to detect a movemode based on mover speed
-improved supplyself goal
-improved combat movement behaviors in goal_combatmovement
-improved revive goal
--- bots will jump to revive elevated targets
--- bots will prefer closest target
--- range limited to distance the revive icon shows on compass
+=== WAYPOINTS ===
+Several fixes, updates, and new maps supported. See the Assembla repository logs for details.
 
-=== script ===
-
-moved bot name definitions out of et_autoexec and into et_botnames
-fixed distance limit for weapon pickups in askforammo goal
-fixed /bot balanceteams 0 not working after it was set to 1
-fixed exitCondition and added timeout to goal_useswitch
-fixed threadId for waypoint autosave. also kill original thread if active on repeated calls
-fixed showOffset to require entity in /bot sgn true
-fixed script error when trying to warp to an invalid wp name
-fixed scripts unnecessarily creating a high number of threads
-fixed several incorrect property settings in weapon scripts
-fixed infinite loop bug in ChoosePrimaryWeapon
-added waypoint property access to script
-added timeout to switchtable of paththrough_useswitch
-added several useful utility functions
-added some bot controls via fireteam chat (camp, follow, release, etc)
-added optional team param to ETUtil.SwitchWeapon
-added optional teamId param to ShowActiveGoals for rendering only active goals by team
-added a class management system
-added /bot autosave as an alternative to mywpmode
-added /bot draw_spawns for rendering of spawn points
-added global debug flags for disabling debug messages in all scripts
-added global MAP_TALK var for simple disabling of map script initiated bot chat spam
-added LowAmmoGetAmmoAmount to weapon scripts to set amount of ammo bots should get at cabinets
-added several re-usable region triggers (et_regiontriggers.gm)
-disabled bots targeting player classes with knife,
-disabled bots targeting player classes with airstrike cannisters
-added Util.HasAmmoForWeapon(bot, wpnID)
-exposed mapgoal.SetBounds to script
-
-=== waypoints ===
-
-separated waypoints based on level of completion
--- fully supported maps are the only ones in the nav folder now
--- incomplete navs are located in a separate folder and divided into categories based on completion level
-too many individual waypoints and scripts were improved to mention. well over 100 maps were improved and tested at various levels
-
-=== tools ===
-updated version of Notepad++ with autocompletion info for omnibot (thx d00d!)
-added popup menu with all kinds of useful shortcuts for waypointers (thx MickyP!)

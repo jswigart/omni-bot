@@ -48,7 +48,9 @@ global OnMapLoad = function()
 	// if (g)
 	// {
 		// g.SetRoles(ROLE.DEFENDER,ROLE.ATTACKER,ROLE.ATTACKER2);
-	// }	
+	// }
+	
+	Util.EnableGoal("DYNAMITE_.*");
 
 	if( Map.debug_decel)
 	{
