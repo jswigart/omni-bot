@@ -448,10 +448,10 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
-	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
-	Util.SetMaxUsersInProgress( 1, "VENOM.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsers( 1, "SNIPE.*" );
+	Util.SetMaxUsers( 1, "PANZER.*" );
+	Util.SetMaxUsers( 1, "VENOM.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_flag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );    //Martin - This is the first one to die
@@ -464,6 +464,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_valleymg" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs_.*" );
+	
+	// remove some func_explosives
+	RTCWUtil.KillEntities( {460, 461, 475, 476, 477, 79, 80, 81, 349} );
 
 	MapRoutes =
 	{
