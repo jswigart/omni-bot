@@ -119,6 +119,11 @@ this.Exit = function()
 	this.GoalState = this.LAY_EXPLOSIVE;
 	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
+	
+	// clear the occupied flag
+	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
+		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+	}	
 };
 
 this.UpdateDynamite = function()
@@ -130,10 +135,6 @@ this.UpdateDynamite = function()
 	while(1)
 	{
 		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 ) {
-			// clear the occupied flag
-			if ( typeId(spotIndex) != 0 ) {
-				this.MapGoal.CoverSpots[ spotIndex ].occupied = null;
-			}
 			this.Finished();
 		}
 

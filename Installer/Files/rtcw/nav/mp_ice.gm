@@ -48,8 +48,7 @@ global Map =
 		{
 			Enabled = true,
 			Team = ( 1 << TEAM.AXIS ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
-			//Facing = Vector3(-0.794, -0.027, 0.607), // use this if no goto waypoint. /bot mypos shows facing
-			Facing = Vector3( -0.450, 0.020, 0.893 ), // use this if no goto waypoint. /bot mypos shows facing
+			Facing = Vector3( -0.724, -0.177, 0.666 ), // use this if no goto waypoint. /bot mypos shows facing
 			NoPause = true, // optional: set this if you want them throw while running
 		},
 	},
@@ -66,6 +65,14 @@ global Map =
 				sleep( 3 );
 			},
 		},
+		coveredladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 4 );
+				sleep( 4 );
+			},
+		},		
 		bpnzflag =
 		{
 			navigate = function( _this )
@@ -279,6 +286,7 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Flag_Defense_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Fortress_Wall" );
 			RTCWUtil.DisableGoal( "DEFUSE.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_stronghold.*" );
@@ -317,6 +325,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Deliver_Defend.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Deliver_Support_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_hill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Fortress_Wall" );
 		SetGoalPriority( "CALL.*", 0.6 );
 		SetGoalPriority( "ARTILLERY.*", 1.0 );
 	},
