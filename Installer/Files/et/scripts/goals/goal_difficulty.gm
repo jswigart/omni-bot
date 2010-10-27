@@ -14,7 +14,17 @@ this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
 this.Initialize = function()
 {
 	// run it once at start
-	this.Priority = 1.0;
+	this.FirstRun = true;
+};
+
+this.GetPriority = function()
+{
+	yield();
+	if ( this.FirstRun ) {
+		this.FirstRun = false;
+		this.Priority = 1.0;
+	}
+	block(0);
 };
 
 this.Update = function()

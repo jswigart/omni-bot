@@ -5,7 +5,7 @@ this.Debug = false;
 this.AutoAdd = true;
 
 // initialize defaults in case the entry isn't in omni-bot.cfg
-this.CurrentDifficulty = 4;
+this.CurrentDifficulty = 3;
 this.AdjustAim = true;
 
 this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
@@ -14,7 +14,17 @@ this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
 this.Initialize = function()
 {
 	// run it once at start
-	this.Priority = 1.0;
+	this.FirstRun = true;
+};
+
+this.GetPriority = function()
+{
+	yield();
+	if ( this.FirstRun ) {
+		this.FirstRun = false;
+		this.Priority = 1.0;
+	}
+	block(0);
 };
 
 this.Update = function()
@@ -29,9 +39,6 @@ this.Update = function()
 		else
 		{
 			this.Bot.aimskill = this.Bot.ProfileSkill;
-			if ( this.Debug ) {
-				this.Bot.Say("Custom Skill");
-			}
 			this.Bot.LockSkill = true;
 		}
 
@@ -48,7 +55,7 @@ this.Update = function()
 
 		if ( !this.difficulties[useDiff] )
 		{
-			useDiff = 4; // use original default
+			useDiff = 3; // use original default
 		}
 
 		this.Bot.FieldOfView = this.difficulties[useDiff].FieldOfView;
@@ -303,7 +310,7 @@ this.Commands["difficulty"] =
 		}
 
 		diff = ConfigGet("Difficulty","CurrentDifficulty", diff);
-		
+
 		if ( this.Debug ) {
 			print("Current difficulty is", diff);
 		}
