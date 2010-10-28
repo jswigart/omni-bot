@@ -39,7 +39,7 @@ global Map =
 	FlagStatus = 0,
 	Bridge3 = false,
 
-	ViewDistance = 5300, // region trigger uses this, so use Map.ViewDistance for val if setting in OnBotJoin
+	ViewDistance = 3400, // region trigger uses this, so use Map.ViewDistance for val if setting in OnBotJoin
 
 	Roles =
 	{

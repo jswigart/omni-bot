@@ -226,7 +226,7 @@ this.difficulties =
 	},
 	//Difficulty 7
 	{
-		FieldOfView = 360.0,
+		FieldOfView = 180.0,
 		ReactionTime = 0.1,
 		MemorySpan = 3.0,
 		AimPersistance = 2.0,
