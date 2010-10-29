@@ -147,6 +147,9 @@ this.Enter = function()
 		this.Finished();
 	}
 
+	// disable the rifle nade while the goal is active
+	ETUtil.DisableRifleNade(this.Bot, true);
+
 	this.UpdateDebugString();
 };
 
@@ -233,6 +236,9 @@ this.Exit = function()
 	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
 	}
+
+	// re-enable the rifle nade
+	ETUtil.DisableRifleNade(this.Bot, false);
 };
 
 this.UpdateDynamite = function()

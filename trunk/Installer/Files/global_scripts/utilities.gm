@@ -2684,7 +2684,7 @@ member DoClassChanges = function()
 		{
 			foreach ( botId and bot in BotTable )
 			{
-				if ( bot.GetTeam() == id && bot.GetClass() == this.HeavyClass )
+				if ( bot.HasEntityFlag(ENTFLAG.LIMBO) && bot.GetTeam() == id && bot.GetClass() == this.HeavyClass )
 				{
 					bot.ChangeClass(this.LightClass);
 					break;
