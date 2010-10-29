@@ -167,7 +167,7 @@ global Map =
 			}
 		},
 	},
-	
+
 	// cover truck ladder if docs are being returned along outer wall
 	DocCarrier =
 	{
@@ -187,7 +187,7 @@ global Map =
 		OnExit = function( ent )
 		{
 		},
-	},	
+	},
 
 };
 
@@ -209,9 +209,11 @@ global OnMapLoad = function()
 	Ledge2 = OnTriggerRegion( AABB( -9676.000,-893.000,351.000,-9507.000,-824.000,441.000 ), Map.LedgeTrigger );
 	Ledge3 = OnTriggerRegion( AABB( -9456.000,-1168.000,351.000,-9309.000,-980.000,425.000 ), Map.LedgeTrigger );
 	Ledge4 = OnTriggerRegion( AABB( -8502.000,-764.000,351.000,-8433.000,-515.000,425.000 ), Map.LedgeTrigger );
-	
+
 	outerwall2 = OnTriggerRegion(AABB( -8104.000,655.000,65.000,-7936.000,768.000,139.000),Map.DocCarrier );
-	outerwall3 = OnTriggerRegion(AABB( -7534.000,-1971.000,65.000,-7345.000,-1854.000,139.000),Map.DocCarrier );	
+	outerwall3 = OnTriggerRegion(AABB( -7534.000,-1971.000,65.000,-7345.000,-1854.000,139.000),Map.DocCarrier );
+
+	push = OnTriggerRegion(AABB(-9088.000,-2176.000,-222.000,-8703.000,-1879.000,-84.000),RegionTrigger.DisableBotPush);
 
 	OnTrigger( "the Southeast Gate Destroyed.", Map.Southeast_Gate_Destroyed );
 	OnTrigger( "Planted at the Southeast Gate.", Map.Southeast_Gate_Planted );

@@ -1184,23 +1184,23 @@ member DisableRifleNade = function( bot, disable )
 	// defined settings.
 	if ( disable ) {
 		if ( m7.PrimaryFire.DefaultDesirability > 0.1 ) {
-			m7.PrimaryFire.DefaultDesirability = 0.0;
+			m7.PrimaryFire.Bias = 0.0;
 			m7.PrimaryFire.SetDesirabilityRange(0, 2600, 0.0);
 		}
 
 		if ( gpg.PrimaryFire.DefaultDesirability > 0.1 ) {
-			gpg.PrimaryFire.DefaultDesirability = 0.0;
+			gpg.PrimaryFire.Bias = 0.0;
 			gpg.PrimaryFire.SetDesirabilityRange(0, 2600, 0.0);
 		}
 	}
 	else {
-		if ( m7.PrimaryFire.DefaultDesirability < 0.1 ) {
-			m7.PrimaryFire.DefaultDesirability = 1.0;
+		if ( m7.PrimaryFire.Bias < 0.1 ) {
+			m7.PrimaryFire.Bias = 1.0;
 			m7.PrimaryFire.SetDesirabilityRange(0, 2600, 0.8);
 		}
 
-		if ( gpg.PrimaryFire.DefaultDesirability < 0.1 ) {
-			gpg.PrimaryFire.DefaultDesirability = 1.0;
+		if ( gpg.PrimaryFire.Bias < 0.1 ) {
+			gpg.PrimaryFire.Bias = 1.0;
 			gpg.PrimaryFire.SetDesirabilityRange(0, 2600, 0.8);
 		}
 	}
