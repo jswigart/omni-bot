@@ -29,6 +29,7 @@ Fixed mapgoal_explosive to not create on load
 Fixed manually added health and ammo cabinet goals to create on load
 Fixed region trigger name in mapgoal_plantmine
 Fixed plant goal coverspot occupied flag not being cleared on bot death
+Fixed bots to not use rifle nades when they have a plant goal active
 Added paththrough function to goal_build for custom behavior scripting (thx palota)
 Added bots planting dynamite will abort if a teammate drops a satchel (thx palota)
 Added mapgoal_dynamite for use when target has no usable OID
@@ -52,6 +53,7 @@ Added EvalFunc support to goal_paththrough_navigation
 Added spawn point and voice macro support to role manager
 Added optional viewDistance parameter to Util.ChangeToSniperWeapons
 Added CLASS.DYNAMITE_ENT, CLASS.MORTAR_ENT, CLASS.SATCHEL_ENT, and CLASS.LANDMINE_ENT
+Changed class manager to only select bots that are in limbo
 
 === COMMANDS ===
 Added optional filter param for debugtriggers

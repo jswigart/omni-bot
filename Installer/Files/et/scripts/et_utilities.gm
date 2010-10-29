@@ -118,7 +118,7 @@ Util.BotNames =
 // class management stuff
 Util.ManageClasses = true;
 
-// debug string color 
+// debug string color
 Util.DebugColorString = "^b";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1165,6 +1165,45 @@ member ChangeToPanzer = function( bot )
 	}
 
 	bot.ChangePrimaryWeapon(WEAPON.PANZERFAUST);
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member DisableRifleNade = function( bot, disable )
+{
+	if (!bot ) { return; }
+
+	// get the weapon objects
+	m7 = bot.GetWeapon(WEAPON.M7);
+	if (!m7 ) { Util.MapDebugPrint("ETUtil.DisableRifleNade: no m7 weapon object", true); return; }
+	gpg = bot.GetWeapon(WEAPON.GPG40);
+	if( !gpg ) { Util.MapDebugPrint("ETUtil.DisableRifleNade: no gpg40 weapon object", true); return; }
+
+	// note: this will do nothing if weapon script sets default to 0.0
+	// this is to avoid scripts like the plant goal stomping on user
+	// defined settings.
+	if ( disable ) {
+		if ( m7.PrimaryFire.DefaultDesirability > 0.1 ) {
+			m7.PrimaryFire.DefaultDesirability = 0.0;
+			m7.PrimaryFire.SetDesirabilityRange(0, 2600, 0.0);
+		}
+
+		if ( gpg.PrimaryFire.DefaultDesirability > 0.1 ) {
+			gpg.PrimaryFire.DefaultDesirability = 0.0;
+			gpg.PrimaryFire.SetDesirabilityRange(0, 2600, 0.0);
+		}
+	}
+	else {
+		if ( m7.PrimaryFire.DefaultDesirability < 0.1 ) {
+			m7.PrimaryFire.DefaultDesirability = 1.0;
+			m7.PrimaryFire.SetDesirabilityRange(0, 2600, 0.8);
+		}
+
+		if ( gpg.PrimaryFire.DefaultDesirability < 0.1 ) {
+			gpg.PrimaryFire.DefaultDesirability = 1.0;
+			gpg.PrimaryFire.SetDesirabilityRange(0, 2600, 0.8);
+		}
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
