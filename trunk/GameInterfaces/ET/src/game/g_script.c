@@ -8,7 +8,9 @@
 
 #include "../game/g_local.h"
 #include "../game/q_shared.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 /*
 Scripting that allows the designers to control the behaviour of entities
 according to each different scenario.
@@ -799,6 +801,7 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 	if (i>=0)
 		G_Script_ScriptChange( ent, i );
 
+	// omnibot
 	//////////////////////////////////////////////////////////////////////////
 	// skip these
 	if(!Q_stricmp(eventStr, "trigger") ||
@@ -832,6 +835,7 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 		Bot_Util_SendTrigger(ent, NULL,
 			va("Explode_%s Exploded.", _GetEntityName(ent) ),eventStr);
 	}
+	// end omnibot
 }
 
 /*

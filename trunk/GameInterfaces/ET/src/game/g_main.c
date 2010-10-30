@@ -2,7 +2,9 @@
 
 // Include the "External"/"Public" components of AI_Team
 #include "../botai/ai_teamX.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 level_locals_t	level;
 
@@ -25,10 +27,12 @@ int				saveGamePending;	// 0 = no, 1 = check, 2 = loading
 
 mapEntityData_Team_t mapEntityData[2];
 
+// omnibot
 vmCvar_t	g_OmniBotPath;
 vmCvar_t	g_OmniBotEnable;
 vmCvar_t	g_OmniBotFlags;
 vmCvar_t	g_OmniBotPlaying;
+// end omnibot
 
 //CS: Waypointing Tool only, not for other mods
 vmCvar_t	g_stopMovers;
@@ -434,11 +438,12 @@ cvarTable_t		gameCvarTable[] = {
 
 	{ &g_disableComplaints, "g_disableComplaints", "0", CVAR_ARCHIVE },
 
-	// Omni-bot user defined path to load bot library from.
+	// omnibot
 	{ &g_OmniBotPath, "omnibot_path", "", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },	
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
+	// end omnibot
 
 	//CS: Waypointing Tool only, not for other mods
 	{ &g_stopMovers, "g_stopMovers", "0", CVAR_CHEAT, 0, qfalse},
@@ -490,14 +495,21 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 #endif
 	switch ( command ) {
 	case GAME_INIT:
+		// omnibot
 		Bot_Interface_InitHandles();
+		// end omnibot
 		G_InitGame( arg0, arg1, arg2 );
+
+		// omnibot
 		if (!Bot_Interface_Init())
 			G_Printf(S_COLOR_RED "Unable to Initialize Omni-Bot.\n");
+		// end omnibot
 		return 0;
 	case GAME_SHUTDOWN:
+		// omnibot
 		if (!Bot_Interface_Shutdown())
 			G_Printf(S_COLOR_RED "Error shutting down Omni-Bot.\n");
+		// end omnibot
 		G_ShutdownGame( arg0 );
 		return 0;
 	case GAME_CLIENT_CONNECT:
@@ -519,7 +531,9 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 		return 0;
 	case GAME_RUN_FRAME:
 		G_RunFrame( arg0 );
+		// omnibot
 		Bot_Interface_Update();
+		// end omnibot
 		return 0;
 	case GAME_CONSOLE_COMMAND:
  		return ConsoleCommand();
@@ -2735,7 +2749,9 @@ void LogExit( const char *string ) {
 		bani_storemapxp();
 	}
 
+	// omnibot
 	Bot_Util_SendTrigger(NULL, NULL, "Round End.", "roundend");
+	// end omnibot
 	G_BuildEndgameStats();
 }
 

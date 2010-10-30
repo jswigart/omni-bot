@@ -7,7 +7,9 @@
 
 
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 vec3_t	forward, right, up;
 vec3_t	muzzleEffect;
@@ -247,8 +249,9 @@ void Weapon_Medic( gentity_t *ent ) {
 	ent2->parent = ent; // JPW NERVE so we can score properly later
 	//ent2->count = 20;
 
-	// Omni-bot - Send a fire event.
+	// omnibot
 	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
+	// end omnibot
 }
 
 /*
@@ -416,8 +419,9 @@ void Weapon_MagicAmmo( gentity_t *ent )  {
 		ent2->s.density = 1;
 	}
 
-	// Omni-bot - Send a fire event.
+	// omnibot
 	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
+	// end omnibot
 }
 // jpw
 
@@ -460,7 +464,9 @@ qboolean ReviveEntity(gentity_t *ent, gentity_t *traceEnt)
 
 	ClientSpawn(traceEnt, qtrue);
 
+	// omnibot
 	Bot_Event_Revived(traceEnt-g_entities, ent);
+	// end omnibot
 
 	traceEnt->client->ps.stats[STAT_PLAYER_CLASS] = traceEnt->client->sess.playerType;
 	memcpy(traceEnt->client->ps.ammo,ammo,sizeof(int)*MAX_WEAPONS);
@@ -1920,7 +1926,9 @@ evilbanigoto:
 						if (!(hit->spawnflags & 128) && (((hit->spawnflags & AXIS_OBJECTIVE) && (ent->client->sess.sessionTeam == TEAM_ALLIES)) ||
 							 ((hit->spawnflags & ALLIED_OBJECTIVE) && (ent->client->sess.sessionTeam == TEAM_AXIS))) ) 
 						{
+							// omnibot
 							const char *Goalname = _GetEntityName( hit );
+							// end omnibot
 							gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 							pm->s.effect2Time = 0;
 							pm->s.effect3Time = hit->s.teamNum;
@@ -1928,9 +1936,10 @@ evilbanigoto:
 
 							G_Script_ScriptEvent( hit, "dynamited", "" );
 
-							// notify omni-bot framework of planted dynamite
+							// omnibot
 							hit->numPlanted += 1;							
 							Bot_AddDynamiteGoal(traceEnt, traceEnt->s.teamNum, va("%s_%i", Goalname, hit->numPlanted));
+							// end omnibot
 
 							if ( !(hit->spawnflags & OBJECTIVE_DESTROYED) ) {
 								AddScore(traceEnt->parent, WOLF_DYNAMITE_PLANT); // give drop score to guy who dropped it
@@ -1993,7 +2002,9 @@ evilbanigoto:
 
 						if( hit->parent ) 
 						{
+							// omnibot
 							const char *Goalname = _GetEntityName( hit->parent );
+							// end omnibot
 							gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 							pm->s.effect2Time = 0; // 0 = planted
 							pm->s.effect3Time = hit->parent->s.teamNum;
@@ -2001,9 +2012,10 @@ evilbanigoto:
 
 							G_Script_ScriptEvent( hit, "dynamited", "" );
 
-							// notify omni-bot framework of planted dynamite
+							// omnibot
 							hit->numPlanted += 1;							
 							Bot_AddDynamiteGoal(traceEnt, traceEnt->s.teamNum, va("%s_%i", Goalname, hit->numPlanted));
+							// end omnibot
 								
 							if( (!(hit->parent->spawnflags & OBJECTIVE_DESTROYED)) && 
 								hit->s.teamNum && (hit->s.teamNum == ent->client->sess.sessionTeam) ) {	// ==, as it's inverse
@@ -2795,8 +2807,9 @@ void Weapon_Artillery(gentity_t *ent) {
 #endif
 		ent->client->sess.aWeaponStats[WS_ARTILLERY].atts++;
 
-	// Omni-bot - Send a fire event.
+	// omnibot
 	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(WP_ARTY), 0);
+	// end omnibot
 }
 
 
@@ -3908,8 +3921,10 @@ FireWeapon
 void FireWeapon( gentity_t *ent ) {
 	float	aimSpreadScale;
 	int		shots = 1;
-	gentity_t *pFiredShot = 0; // Omni-bot To tell bots about projectiles
+	// omnibot
+	gentity_t *pFiredShot = 0; // tell bots about projectiles
 	qboolean callEvent = qtrue;
+	// end omnibot
 	
 	// ydnar: dead guys don't fire guns
 	if( ent->client->ps.pm_type == PM_DEAD )
@@ -3976,7 +3991,9 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	// NERVE - SMF
 	case WP_MEDKIT:
+		// omnibot
 		callEvent = qfalse;
+		// end omnibot
 		Weapon_Medic( ent );
 		break;
 	case WP_PLIERS:
@@ -3993,7 +4010,9 @@ void FireWeapon( gentity_t *ent ) {
 		} else {
 			ent->client->ps.classWeaponTime = level.time;
 		}
+		// omnibot - add pFiredShot =
 		pFiredShot = weapon_grenadelauncher_fire(ent, WP_SMOKE_MARKER);
+		// end omnibot
 		break;
 	// -NERVE - SMF
 	case WP_MEDIC_SYRINGE:
@@ -4004,7 +4023,9 @@ void FireWeapon( gentity_t *ent ) {
 		Weapon_AdrenalineSyringe(ent);
 		break;
 	case WP_AMMO:
+		// omnibot
 		callEvent = qfalse;
+		// end omnibot
 		Weapon_MagicAmmo( ent );
 		break;
 	case WP_LUGER:
@@ -4102,7 +4123,9 @@ void FireWeapon( gentity_t *ent ) {
 			ent->client->ps.classWeaponTime = level.time;
 		}
 
+		// omnibot - add pFiredShot =
 		pFiredShot = Weapon_Panzerfaust_Fire(ent);
+		// end omnibot
 		if( ent->client ) {
 			vec3_t forward;
 			AngleVectors (ent->client->ps.viewangles, forward, NULL, NULL);
@@ -4116,7 +4139,10 @@ void FireWeapon( gentity_t *ent ) {
 		}
 
 		ent->client->ps.classWeaponTime += .5f * level.engineerChargeTime[ent->client->sess.sessionTeam-1];
+
+		// omnibot - add pFiredShot =
 		pFiredShot = weapon_gpg40_fire( ent, ent->s.weapon );
+		// end omnibot
 		break;
 	case WP_MORTAR_SET:
 		if( level.time - ent->client->ps.classWeaponTime > level.soldierChargeTime[ent->client->sess.sessionTeam-1] ) {
@@ -4128,7 +4154,10 @@ void FireWeapon( gentity_t *ent ) {
 		} else {
 			ent->client->ps.classWeaponTime += .5f * level.soldierChargeTime[ent->client->sess.sessionTeam-1];
 		}
+
+		// omnibot - add pFiredShot =
 		pFiredShot = weapon_mortar_fire( ent, ent->s.weapon );
+		// end omnibot
 		break;
 	case WP_GRENADE_LAUNCHER:
 	case WP_GRENADE_PINEAPPLE:
@@ -4173,12 +4202,17 @@ void FireWeapon( gentity_t *ent ) {
 				ent->client->ps.classWeaponTime = level.time;
 			}
 		}
+
+		// omnibot - add pFiredShot =
 		pFiredShot = weapon_grenadelauncher_fire( ent, ent->s.weapon );
+		// end omnibot
 		break;
 	case WP_FLAMETHROWER:
 		// RF, this is done client-side only now
 		// Gordon: um, no it isnt?
+		// omnibot - add pFiredShot =
 		pFiredShot = Weapon_FlamethrowerFire( ent );
+		// end omnibot
 		break;
 	case WP_MAPMORTAR:
 		break;
@@ -4186,9 +4220,11 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	}
 
-	// Omni-bot - Send a fire event.
-	if(callEvent)
+	// omnibot
+	if(callEvent) {
 		Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), pFiredShot);
+	}
+	// end omnibot
 
 	// OSP
 #ifndef DEBUG_STATS

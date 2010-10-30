@@ -1,6 +1,8 @@
 #include "g_local.h"
 #include "../../etmain/ui/menudef.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 // g_client.c -- client functions that don't happen every frame
 
@@ -787,7 +789,9 @@ qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int am
 	// skill handling
 	AddExtraSpawnAmmo( client, weapon );
 
+	// omnibot
 	Bot_Event_AddWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
+	// end omnibot
 	return qtrue;
 }
 
@@ -801,16 +805,20 @@ SetWolfSpawnWeapons
 void SetWolfSpawnWeapons( gclient_t *client ) 
 {
 	int		pc = client->sess.playerType;
+	// omnibot
 	qboolean	isBot = (g_entities[client->ps.clientNum].r.svFlags & SVF_BOT) ? qtrue : qfalse;
+	// end omnibot
 	
 
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR )
 		return;
 
+	// omnibot
 	if (isBot)
 	{
 		Bot_Event_ResetWeapons(client->ps.clientNum);
 	}
+	// end omnibot
 
 	// Reset special weapon time
 	client->ps.classWeaponTime = -999999;
@@ -1619,7 +1627,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// get and distribute relevent paramters
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 	G_UpdateCharacter( client );
+
+	// omnibot
 	Bot_Event_ClientConnected(clientNum, isBot);
+	// end omnibot
 
 	ClientUserinfoChanged( clientNum );
 
@@ -1728,13 +1739,14 @@ void ClientBegin( int clientNum )
 	client->pers.complaintClient = -1;
 	client->pers.complaintEndTime = -1;
 
-	//Omni-bot
+	// omnibot
 	client->sess.botSuicide = qfalse; // make sure this is not set
 
 	if ( ent->r.svFlags & SVF_BOT )
 		client->sess.botPush = qtrue; // make sure this is set for bots
 	else
 		client->sess.botPush = qfalse;
+	// end omnibot
 
 	// locate ent at a spawn point
 	ClientSpawn( ent, qfalse );
@@ -2284,9 +2296,9 @@ void ClientDisconnect( int clientNum ) {
 		return;
 	}
 
-	//////////////////////////////////////////////////////////////////////////
+	// omnibot
 	Bot_Event_ClientDisConnected(clientNum);
-	//////////////////////////////////////////////////////////////////////////
+	// end omnibot
 
 #ifdef USEXPSTORAGE
 	G_AddXPBackup( ent );

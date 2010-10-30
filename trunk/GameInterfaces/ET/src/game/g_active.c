@@ -1,6 +1,8 @@
 
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 /*
 ===============
@@ -189,12 +191,14 @@ void PushBot( gentity_t *ent, gentity_t *other ) {
 	vec3_t dir, ang, f, r;
 	float oldspeed;
 
+	// omnibot
 	// dont push when mounted in certain stationary weapons or scripted not to be pushed
 	if(other->client)
 	{
 		if (Bot_Util_AllowPush(other->client->ps.weapon) == qfalse || !other->client->sess.botPush)	
 			return;
 	}
+	// end omnibot
 
 	oldspeed = VectorLength( other->client->ps.velocity );
 	if (oldspeed < 200)
@@ -1283,8 +1287,9 @@ void ClientThink_real( gentity_t *ent ) {
 		ent->client->ps.identifyClientHealth = 0;
 	}
 
-	// Omni-bot: used for class changes, bot will /kill 2 seconds before spawn
+	// omnibot
 	Bot_Util_CheckForSuicide(ent);
+	// end omnibot
 
 	// check for respawning
 	if( client->ps.stats[STAT_HEALTH] <= 0 ) {

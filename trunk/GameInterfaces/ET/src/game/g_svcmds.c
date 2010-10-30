@@ -4,7 +4,9 @@
 // this file holds commands that can be executed by the server console, but not remote clients
 
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 /*
 ==============================================================================
@@ -1260,7 +1262,8 @@ qboolean	ConsoleCommand( void ) {
 		Svcmd_GameMem_f();
 		return qtrue;
 	}
-
+	
+	// omnibot
 	/*if (Q_stricmp (cmd, "addbot") == 0) {
 		Svcmd_AddBot_f();
 		return qtrue;
@@ -1269,6 +1272,8 @@ qboolean	ConsoleCommand( void ) {
 		Svcmd_AddBot_f();
 		return qtrue;
 	}*/
+	// end omnibot
+
 	if (Q_stricmp (cmd, "addip") == 0) {
 		Svcmd_AddIP_f();
 		return qtrue;
@@ -1363,10 +1368,12 @@ qboolean	ConsoleCommand( void ) {
 	}
 // END - Mad Doc - TDF
 
+	// omnibot
 	if (Q_stricmp (cmd, "bot") == 0) {
 		Bot_Interface_ConsoleCommand();
 		return qtrue;
 	}
+	// end omnibot
 
 	// fretn - moved from engine
 	if (!Q_stricmp(cmd, "kick")) {

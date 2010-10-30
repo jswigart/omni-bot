@@ -8,7 +8,9 @@
 
 #include "../game/g_local.h"
 #include "../game/q_shared.h"
+// omnibot
 #include "../game/g_etbot_interface.h"
+// end omnibot
 
 /*
 Contains the code to handle the various commands available with an event script.
@@ -1189,7 +1191,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params )
 			}
 			ent->reached = NULL;
 
-			// Send a trigger to omni-bot
+			// omnibot
 			{
 				const char *pName = _GetEntityName(ent);
 				Bot_Util_SendTrigger(ent, 
@@ -1197,6 +1199,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params )
 					va("%s_goto", pName ? pName : "<unknown>"),
 					va("%.2f %.2f %.2f", ent->s.pos.trDelta[0], ent->s.pos.trDelta[1], ent->s.pos.trDelta[2]));
 			}
+			// end omnibot
 
 			if (turntotarget && !pPathCorner) {
 				duration = ent->s.pos.trDuration;
@@ -2427,11 +2430,13 @@ qboolean G_ScriptAction_FaceAngles( gentity_t *ent, char *params )
 			ent->s.apos.trType = trType;
 		}
 
+		// omnibot
 		{
 			const char *pName = _GetEntityName(ent);
 			Bot_Util_SendTrigger(ent, NULL, va("%s_start", pName ? pName : "<unknown>"),
 				va("%.2f %.2f %.2f", ent->s.apos.trDelta[0], ent->s.apos.trDelta[1], ent->s.apos.trDelta[2]));
 		}
+		// end omnibot
 
 	} else if (ent->s.apos.trTime + ent->s.apos.trDuration <= level.time) {
 		// finished turning
@@ -2442,11 +2447,13 @@ qboolean G_ScriptAction_FaceAngles( gentity_t *ent, char *params )
 		ent->s.apos.trDuration = 0;
 		ent->s.apos.trType = TR_STATIONARY;
 		VectorClear( ent->s.apos.trDelta );
+		// omnibot
 		{
 			const char *pName = _GetEntityName(ent);
 			Bot_Util_SendTrigger(ent, NULL, va("%s_stop", pName ? pName : "<unknown>"),
 				va("%.2f %.2f %.2f", ent->s.apos.trDelta[0], ent->s.apos.trDelta[1], ent->s.apos.trDelta[2]));
 		}
+		// end omnibot
 
 		script_linkentity( ent );
 
@@ -3061,9 +3068,11 @@ qboolean G_ScriptAction_TeamVoiceAnnounce( gentity_t *ent, char *params ) {
 	tent->s.eventParm = G_SoundIndex( token );
 	tent->r.svFlags = SVF_BROADCAST;
 	
+	// omnibot
 	{
 		Bot_Util_SendTrigger(ent, NULL, token, "team_announce");
 	}
+	// end omnibot
 
 	return qtrue;
 }
@@ -3101,9 +3110,11 @@ qboolean G_ScriptAction_Announce_Icon( gentity_t *ent, char *params ) {
 
 	trap_SendServerCommand( -1, va("cpmi %i \"%s\"", iconnumber, token ));
 
+	// omnibot
 	{
 		Bot_Util_SendTrigger(ent, NULL, token, "announce_icon");
 	}
+	// end omnibot
 
 	return qtrue;
 }
@@ -3132,9 +3143,11 @@ qboolean G_ScriptAction_Announce( gentity_t *ent, char *params )
 	trap_SendServerCommand( -1, va("cpm \"%s\"", token ));
 //	trap_SendServerCommand( -1, va("cp \"%s\" 2", token ));
 
+	// omnibot
 	{
 		Bot_Util_SendTrigger(ent, NULL, token, "announce");
 	}
+	// end omnibot
 
 	return qtrue;
 }
@@ -3439,9 +3452,11 @@ qboolean G_ScriptAction_RepairMG42( gentity_t *ent, char *params ) {
 		target->takedamage = qtrue;
 		target->s.eFlags &= ~EF_SMOKING;
 
+		// omnibot
 		{
 			Bot_Util_SendTrigger(ent, NULL, name, "repair_mg42");
 		}
+		// end omnibot
 	}
 
 	return qtrue;

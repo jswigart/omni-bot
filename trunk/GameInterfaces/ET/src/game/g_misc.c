@@ -1830,9 +1830,10 @@ void mg42_use (gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 
 	trap_LinkEntity (ent);
 }
-
-void AddDeferredGoal(gentity_t *ent);
+// omnibot
+//void AddDeferredGoal(gentity_t *ent);
 void UpdateGoalEntity(gentity_t *oldent, gentity_t *newent);
+// end omnibot
 void mg42_spawn (gentity_t *ent) {
 	gentity_t *base, *gun;
 	vec3_t	offset;
@@ -1950,8 +1951,10 @@ void mg42_spawn (gentity_t *ent) {
 
 		trap_LinkEntity (gun);
 
+		// omnibot
 		UpdateGoalEntity( ent, gun );
 		//AddDeferredGoal(gun);
+		// end omnibot
 	} 
 
 	G_FreeEntity (ent);
