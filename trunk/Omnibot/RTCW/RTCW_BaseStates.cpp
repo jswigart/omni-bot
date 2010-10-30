@@ -444,7 +444,7 @@ namespace AiState
 						if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
 							GetClient()->PressButton(BOT_BUTTON_JUMP);
 						}
-					} else if ( heightDiff > 20.f ) {
+					} else /*if ( heightDiff > 20.f )*/ {
 						BitFlag64 btns;
 						btns.SetFlag(BOT_BUTTON_CROUCH);
 						GetClient()->HoldButton(btns,IGame::GetDeltaTime()*2);
