@@ -7,8 +7,10 @@
 
 #include "g_local.h"
 
+// omnibot
 void Bot_Queue_EntityCreated(gentity_t *pEnt);
 void Bot_Event_EntityDeleted(gentity_t *pEnt);
+// end omnibot
 
 typedef struct {
   char oldShader[MAX_QPATH];
@@ -484,8 +486,9 @@ void G_InitGentity( gentity_t *e ) {
 	// mark the time
 	e->spawnTime = level.time;
 
-	// Notify omni-bot
+	// omnibot
 	Bot_Queue_EntityCreated(e);
+	// end omnibot
 }
 
 /*
@@ -580,7 +583,9 @@ Marks the entity as free
 void G_FreeEntity( gentity_t *ed ) {
 	int spawnCount;
 
+	// omnibot
 	Bot_Event_EntityDeleted(ed);
+	// end omnibot
 
 	if(ed->free) {
 		ed->free( ed );

@@ -11,7 +11,9 @@
 */
 
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 
 #define RESPAWN_SP			-1
@@ -492,7 +494,9 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 //	ent2->item->quantity = client->ps.ammoclip[BG_FindClipForWeapon(weapon)]; // Gordon: um, modifying an item is not a good idea
 	client->ps.ammoclip[BG_FindClipForWeapon(weapon)] = 0;
 
+	// omnibot
 	Bot_Event_RemoveWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
+	// end omnibot
 }
 
 // TAT 1/6/2003 - Bot picks up a new weapon
@@ -546,9 +550,11 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 				G_AddSkillPoints( ent->parent, SK_SIGNALS, 1.f );
 				G_DebugAddSkillPoints( ent->parent, SK_SIGNALS, 1.f, "ammo pack picked up" ); 
 
-				//omni-bot event
-				if ( ent->parent )
+				// omnibot
+				if ( ent->parent ) {
 					Bot_Event_RecievedAmmo(other-g_entities, ent->parent);
+				}
+				// end omnibot
 
 				// extracted code originally here into AddMagicAmmo -xkan, 9/18/2002
 				// add 1 clip of magic ammo for any two-handed weapon
@@ -645,7 +651,9 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		BotPickupWeapon( other->s.number, ent->item->giTag, alreadyHave );
 #endif
 
+	// omnibot
 	Bot_Event_AddWeapon(other->client->ps.clientNum, Bot_WeaponGameToBot(ent->item->giTag));
+	// end omnibot
 	return -1;
 }
 
@@ -680,9 +688,11 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	}
 	other->client->ps.stats[STAT_HEALTH] = other->health;
 
-	//omni-bot event
-	if ( ent->parent )
+	// omnibot
+	if ( ent->parent ) {
 		Bot_Event_Healed(other-g_entities, ent->parent);
+	}
+	// end omnibot
 
 	return -1;
 }

@@ -1,5 +1,7 @@
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 void BotDebug(int clientNum);
 void GetBotAutonomies(int clientNum, int *weapAutonomy, int *moveAutonomy);	
@@ -631,12 +633,14 @@ void Cmd_Kill_f( gentity_t *ent )
 		return;
 	}
 
-	// bots always need to go to limbo or it causes problems
-	// since we use latchedPlayerClass in GetEntityClass
 	if (ent->health <= 0) {
+		// omnibot
+		// bots always need to go to limbo or it causes problems
+		// since we use latchedPlayerClass in GetEntityClass
 		if (ent->r.svFlags & SVF_BOT) {
 			limbo(ent,qtrue);
 		}
+		// end omnibot
 
 		return;
 	}
@@ -1450,8 +1454,9 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 
 		trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\" %i %i", mode == SAY_TEAM || mode == SAY_BUDDY ? "tchat" : "chat", name, Q_COLOR_ESCAPE, color, message, ent-g_entities, localize ));
 
-		// Omni-bot: Tell the bot about the chat message
+		// omnibot
 		Bot_Event_ChatMessage(other-g_entities, ent, mode, message);
+		// end omnibot
 	}
 }
 
@@ -1587,8 +1592,9 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 	BotRecordVoiceChat( ent->s.number, other->s.number, id, mode, voiceonly == 2 );
 #endif
 
-	// Omni-bot Send this voice macro to the bot as an event.
+	// omnibot
 	Bot_Event_VoiceMacro(other-g_entities, ent, mode, id);
+	// end omnibot
 
 
 	if (voiceonly == 2) {

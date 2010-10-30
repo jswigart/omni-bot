@@ -18,8 +18,9 @@
 #include "../botai/chars.h"
 #include "../botai/ai_team.h"
 #include "../botai/ai_dmq3.h"
-
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 extern void BotRecordKill( int client, int enemy );
 extern void BotRecordPain( int client, int enemy, int mod );
@@ -468,11 +469,10 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			obit = modNames[meansOfDeath];
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		// send the events
-
+		// omnibot
 		Bot_Event_Death(self-g_entities, &g_entities[attacker-g_entities], obit);
 		Bot_Event_KilledSomeone(attacker-g_entities, &g_entities[self-g_entities], obit);
+		// end omnibot
 
 		G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", killer, self->s.number, meansOfDeath, killerName, self->client->pers.netname, obit );
 	}
@@ -607,11 +607,13 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		if( self->health > GIB_HEALTH && meansOfDeath != MOD_SUICIDE && meansOfDeath != MOD_SWITCHTEAM ) {
 			G_AddEvent( self, EV_MEDIC_CALL, 0 );
 
+			// omnibot
 			// ATM: only register the goal if the target isn't in water.
-			//if(self->waterlevel <= 1)
-			//{
+			if(self->waterlevel <= 1)
+			{
 				Bot_AddFallenTeammateGoals(self, self->client->sess.sessionTeam);
-			//}			
+			}
+			// end omnibot
 		}
 	}
 
@@ -1691,8 +1693,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 #ifndef NO_BOT_SUPPORT
 			BotRecordPain( targ->s.number, attacker->s.number, mod );
 #endif
-			// notify omni-bot framework
+			// omnibot
 			Bot_Event_TakeDamage(targ-g_entities, attacker);
+			// end omnibot
 		}
 	}
 }

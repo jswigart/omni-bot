@@ -489,8 +489,9 @@ struct gentity_s {
 	//bani
 	int	etpro_misc_1;
 
-	//Omni-bot increment dyno count
+	// omnibot
 	int numPlanted;
+	// end omnibot
 };
 
 // Ridah
@@ -596,9 +597,10 @@ typedef struct {
 	int			team_damage;
 	int			team_kills;
 
-	//Omni-bot
+	// omnibot
 	qboolean	botSuicide;			// /kill before next spawn
 	qboolean	botPush;			// allow for disabling of bot pushing via script
+	// end omnibot
 
 	weapon_stat_t aWeaponStats[WS_MAX+1];	// Weapon stats.  +1 to avoid invalid weapon check
 	// OSP
@@ -1100,9 +1102,10 @@ typedef struct {
 
 	qboolean	tempTraceIgnoreEnts[ MAX_GENTITIES ];
 
-	//Omni-bot time triggers
+	// omnibot
 	qboolean	twoMinute;
 	qboolean	thirtySecond;
+	// end omnibot
 
 } level_locals_t;
 
@@ -1618,10 +1621,12 @@ extern int				saveGamePending;
 
 #define	FOFS(x) ((int)&(((gentity_t *)0)->x))
 
+// omnibot
 extern	vmCvar_t	g_OmniBotPath;
 extern	vmCvar_t	g_OmniBotEnable;
 extern  vmCvar_t	g_OmniBotFlags;
 extern	vmCvar_t	g_OmniBotPlaying;
+// end omnibot
 
 //CS: Waypointing Tool only, not for other mods
 extern  vmCvar_t	g_stopMovers;

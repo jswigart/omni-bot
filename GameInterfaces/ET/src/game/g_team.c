@@ -308,8 +308,11 @@ void Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 
 	return rent;
 }*/
+
+// omnibot
 const char *_GetEntityName(gentity_t *_ent);
 void Bot_Util_SendTrigger(gentity_t *_ent, gentity_t *_activator, const char *_tagname, const char *_action);
+// end omnibot
 void Team_ResetFlag( gentity_t *ent )
 {
 	if (ent->flags & FL_DROPPED_ITEM) {
@@ -322,9 +325,11 @@ void Team_ResetFlag( gentity_t *ent )
 		if( ent->s.density == 1 )
 			RespawnItem(ent);
 
+		// omnibot
 		{
 			Bot_Util_SendTrigger(ent, NULL, va("Flag returned %s!", _GetEntityName(ent)), "returned");
 		}
+		// end omnibot
 	}
 }
 
@@ -471,10 +476,12 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
 
+			// omnibot
 			{
 				const char *pName = ent->message?ent->message:_GetEntityName(ent);
 				Bot_Util_SendTrigger(ent, NULL, va("Axis have returned %s!", pName ? pName : ""), "returned");
 			}
+			// end omnibot
 		} else {
 //			te->s.eventParm = G_SoundIndex( "sound/chat/allies/a-objective_secure.wav" );
 
@@ -485,10 +492,12 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
 
+			// omnibot
 			{
 				const char *pName = ent->message?ent->message:_GetEntityName(ent);
 				Bot_Util_SendTrigger(ent, NULL, va("Allies have returned %s!", pName ? pName : ""), "returned");
 			}
+			// end omnibot
 		}
 		// dhm
 // jpw 800 672 2420
@@ -537,9 +546,12 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		}
 		G_Script_ScriptEvent( ent, "trigger", "stolen" );
 		Bot_TeamScriptEvent( TEAM_ALLIES, "objective", "stolen" );
+
+		// omnibot
 		{
 			Bot_Util_SendTrigger(ent, NULL, va("Axis have stolen %s!", ent->message), "stolen");
 		}
+		// end omnibot
 	} else {
 		gentity_t* pm = G_PopupMessage( PM_OBJECTIVE );
 		pm->s.effect3Time = G_StringIndex( ent->message );
@@ -555,9 +567,12 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		}
 		G_Script_ScriptEvent( ent, "trigger", "stolen" );
 		Bot_TeamScriptEvent( TEAM_AXIS, "objective", "stolen" );
+
+		// omnibot
 		{
 			Bot_Util_SendTrigger(ent, NULL, va("Allies have stolen %s!", ent->message), "stolen");
 		}
+		// end omnibot
 	}
 	// dhm
 // jpw
@@ -1359,7 +1374,9 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	gentity_t	*ent = NULL;
 	qboolean	playsound = qtrue;
 	qboolean	firsttime = qfalse;
+	// omnibot
 	char		*flagAction = "touch";
+	// end omnibot
 
 	if ( self->count == other->client->sess.sessionTeam )
 		return;
@@ -1385,7 +1402,9 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 		if ( self->s.frame == WCP_ANIM_NOFLAG && !(self->spawnflags & ALLIED_ONLY) )
 		{
 			self->s.frame = WCP_ANIM_RAISE_AXIS;
+			// omnibot
 			flagAction = "capture";
+			// end omnibot
 		}
 		else if ( self->s.frame == WCP_ANIM_NOFLAG )
 		{
@@ -1395,12 +1414,16 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 		else if ( self->s.frame == WCP_ANIM_AMERICAN_RAISED && !(self->spawnflags & ALLIED_ONLY) )
 		{
 			self->s.frame = WCP_ANIM_AMERICAN_TO_AXIS;
+			// omnibot
 			flagAction = "reclaims";
+			// end omnibot
 		}
 		else if ( self->s.frame == WCP_ANIM_AMERICAN_RAISED )
 		{
 			self->s.frame = WCP_ANIM_AMERICAN_FALLING;
+			// omnibot
 			flagAction = "neutralized";
+			// end omnibot
 		}
 		else 
 			self->s.frame = WCP_ANIM_AXIS_RAISED;
@@ -1409,7 +1432,9 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 		if ( self->s.frame == WCP_ANIM_NOFLAG && !(self->spawnflags & AXIS_ONLY) )
 		{
 			self->s.frame = WCP_ANIM_RAISE_AMERICAN;
+			// omnibot
 			flagAction = "capture";
+			// end omnibot
 		}
 		else if ( self->s.frame == WCP_ANIM_NOFLAG )
 		{
@@ -1419,12 +1444,16 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 		else if ( self->s.frame == WCP_ANIM_AXIS_RAISED && !(self->spawnflags & AXIS_ONLY) )
 		{
 			self->s.frame = WCP_ANIM_AXIS_TO_AMERICAN;
+			// omnibot
 			flagAction = "reclaims";
+			// end omnibot
 		}
 		else if ( self->s.frame == WCP_ANIM_AXIS_RAISED )
 		{
 			self->s.frame = WCP_ANIM_AXIS_FALLING;
+			// omnibot
 			flagAction = "neutralized";
+			// end omnibot
 		}
 		else
 			self->s.frame = WCP_ANIM_AMERICAN_RAISED;
@@ -1447,12 +1476,16 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	if ( self->count == TEAM_AXIS )
 	{
 		G_Script_ScriptEvent( self, "trigger", "axis_capture" );
+		// omnibot
 		Bot_Util_SendTrigger(self, NULL, va("axis_%s_%s", flagAction, _GetEntityName(self)), flagAction);
+		// end omnibot
 	}
 	else
 	{
 		G_Script_ScriptEvent( self, "trigger", "allied_capture" );
+		// omnibot
 		Bot_Util_SendTrigger(self, NULL, va("allies_%s_%s", flagAction, _GetEntityName(self)), flagAction);
+		// end omnibot
 	}
 
 	// Don't allow touch again until animation is finished

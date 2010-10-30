@@ -1,5 +1,7 @@
 #include "g_local.h"
+// omnibot
 #include "g_etbot_interface.h"
+// end omnibot
 
 #define	MISSILE_PRESTEP_TIME	50
 
@@ -430,7 +432,9 @@ void G_ExplodeMissile( gentity_t *ent ) {
 					hit->think = G_FreeEntity;
 					hit->nextthink = level.time + FRAMETIME;
 
+					// omnibot
 					G_Script_ScriptEvent( hit, "destroyed", "" );
+					// end omnibot
 				}
 			}
 		}
@@ -1589,6 +1593,7 @@ void G_LandmineThink( gentity_t *self ) {
 			continue;
 		}
 
+		// omnibot
 		if( !(g_OmniBotFlags.integer & OBF_TRIGGER_MINES) && ent->r.svFlags & SVF_BOT ) { 
 			if (G_LandmineTeam( self ) == ent->client->sess.sessionTeam ) 
 				continue;
@@ -1596,6 +1601,7 @@ void G_LandmineThink( gentity_t *self ) {
 			if ( G_LandmineSpotted(self) )
 				continue;
 		}
+		// end omnibot
 
 		// TAT 11/20/2002 use the unified trigger check to see if we are close enough to prime the mine
 		if( sEntWillTriggerMine( ent, self ) ) {
@@ -1606,8 +1612,9 @@ void G_LandmineThink( gentity_t *self ) {
 
 	if( trigger && ent ) 
 	{
-		// Omni-bot
+		// omnibot
 		Bot_Event_PreTriggerMine(ent-g_entities, self);
+		// end omnibot
 
 		LandMineTrigger( self );
 	}
@@ -1645,8 +1652,9 @@ void LandminePostThink( gentity_t *self ) {
 
 	if(!trigger && ent) 
 	{
-		// Omni-bot
+		// omnibot
 		Bot_Event_PostTriggerMine(ent-g_entities, self);
+		// end omnibot
 
 		LandMinePostTrigger(self);
 	}

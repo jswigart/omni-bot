@@ -973,7 +973,9 @@ void SP_gas (gentity_t *self) {
 #define RED_FLAG 1
 #define BLUE_FLAG 2
 
+// omnibot
 void Bot_Util_SendTrigger(gentity_t *_ent, gentity_t *_activator, const char *_tagname, const char *_action);
+// end omnibot
 void Touch_flagonly (gentity_t *ent, gentity_t *other, trace_t *trace) {
 	gentity_t* tmp;
 
@@ -998,8 +1000,9 @@ void Touch_flagonly (gentity_t *ent, gentity_t *other, trace_t *trace) {
 
 		G_Script_ScriptEvent( &g_entities[other->client->flagParent], "trigger", "captured" );
 
-		Bot_Util_SendTrigger(ent, NULL,
-			va("Allies captured %s", ent->scriptName), "");
+		// omnibot
+		Bot_Util_SendTrigger(ent, NULL, va("Allies captured %s", ent->scriptName), "");
+		// end omnibot
 
 		ent->parent = tmp;
 
@@ -1025,8 +1028,9 @@ void Touch_flagonly (gentity_t *ent, gentity_t *other, trace_t *trace) {
 
 		G_Script_ScriptEvent( &g_entities[other->client->flagParent], "trigger", "captured" );
 
-		Bot_Util_SendTrigger(ent, NULL,
-			va("Axis captured %s", ent->scriptName), "");
+		// omnibot
+		Bot_Util_SendTrigger(ent, NULL, va("Axis captured %s", ent->scriptName), "");
+		// end omnibot
 
 		ent->parent = tmp;
 
@@ -1058,10 +1062,10 @@ void Touch_flagonly_multiple (gentity_t *ent, gentity_t *other, trace_t *trace) 
 
 		G_Script_ScriptEvent( &g_entities[other->client->flagParent], "trigger", "captured" );
 
-		Bot_Util_SendTrigger(ent, NULL,
-			va("Allies captured %s", ent->scriptName), "");
+		// omnibot
+		Bot_Util_SendTrigger(ent, NULL, va("Allies captured %s", ent->scriptName), "");
+		// end omnibot
 		
-
 		ent->parent = tmp;
 	} else if ( ent->spawnflags & BLUE_FLAG && other->client->ps.powerups[ PW_BLUEFLAG ] ) {
 
@@ -1079,8 +1083,9 @@ void Touch_flagonly_multiple (gentity_t *ent, gentity_t *other, trace_t *trace) 
 
 		G_Script_ScriptEvent( &g_entities[other->client->flagParent], "trigger", "captured" );
 
-		Bot_Util_SendTrigger(ent, NULL,
-			va("Axis captured %s", ent->scriptName), "");
+		// omnibot
+		Bot_Util_SendTrigger(ent, NULL, va("Axis captured %s", ent->scriptName), "");
+		// end omnibot
 
 		ent->parent = tmp;
 	}
