@@ -102,7 +102,7 @@ bool g_GoalSubmitReady = false;
 
 void AddDeferredGoal(gentity_t *ent)
 {
-	if(g_NumDeferredGoals >= MaxDeferredGoals)
+	if(g_NumDeferredGoals >= MaxDeferredGoals - 1)
 	{
 		G_Error("Deferred Goal Buffer Full!");
 		return;
