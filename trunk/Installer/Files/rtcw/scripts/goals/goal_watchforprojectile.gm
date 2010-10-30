@@ -58,6 +58,14 @@ this.Update = function()
 	eyePos = this.Bot.GetEyePosition();
 	traceNum = 0;
 	interval = 64;
+	
+	// cache these locally
+	face = this.NewFacing;
+	radius = this.AvoidRadius[ this.AvoidEntClass ];
+	
+	if ( !face || !radius ) {
+		this.Finished();
+	}
 
 	while(this.Bot.AvoidEnt && traceNum <= 8)
 	{
@@ -71,7 +79,7 @@ this.Update = function()
 		}
 		side = CrossProduct(this.NewFacing,Vec3(0,0,1));
 
-		end = this.Bot.GetEyePosition() + this.NewFacing * this.AvoidRadius[ this.AvoidEntClass ];
+		end = this.Bot.GetEyePosition() + face * radius;
 		end += (side * (traceNum * interval));
 		end -= (side * 0.5 * 8 * interval);
 
@@ -84,7 +92,7 @@ this.Update = function()
 		if ( tr.fraction && tr.fraction > 0 ) {
 
 			if ( this.Bot.AvoidPos ) {
-				if ( DistanceBetween(this.Bot.AvoidPos, end) >= this.AvoidRadius[ this.AvoidEntClass ] ) {
+				if ( DistanceBetween(this.Bot.AvoidPos, end) >= radius ) {
 					this.Bot.HoldButton(BTN.SPRINT, 99);
 					this.Goto(end,64.0);
 					newFacing = this.Bot.AvoidPos - this.Bot.GetEyePosition();
