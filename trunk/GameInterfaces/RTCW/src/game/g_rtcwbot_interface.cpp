@@ -169,7 +169,7 @@ int g_NumDeferredGoals = 0;
 bool g_GoalSubmitReady = false;
 
 void AddDeferredGoal( gentity_t *ent ) {
-	if ( g_NumDeferredGoals >= MaxDeferredGoals ) {
+	if ( g_NumDeferredGoals >= MaxDeferredGoals - 1 ) {
 		G_Error( "Deferred Goal Buffer Full!" );
 		return;
 	}
@@ -639,7 +639,7 @@ static int _choosePriWeap( int playerClass, int team ) {
 			{
 				// add shit as needed
 				RTCW_WP_THOMPSON,
-				RTCW_WP_STEN,
+				//RTCW_WP_STEN,
 				RTCW_WP_MP40,
 			};
 			int rInt = rand() % ( sizeof( wpns ) / sizeof( wpns[0] ) );
@@ -650,7 +650,7 @@ static int _choosePriWeap( int playerClass, int team ) {
 			{
 				// add shit as needed
 				RTCW_WP_MP40,
-				RTCW_WP_STEN,
+				//RTCW_WP_STEN,
 				RTCW_WP_THOMPSON,
 			};
 			int rInt = rand() % ( sizeof( wpns ) / sizeof( wpns[0] ) );
