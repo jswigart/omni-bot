@@ -33,7 +33,8 @@ this.Enter = function()
 		if ( this.Bot.AvoidPos ) {
 			// flatten and invert the facing for tracing purposes
 			newFacing = this.Bot.AvoidPos - this.Bot.GetEyePosition();
-			this.NewFacing = Vector3(newFacing.x * -1, newFacing.y * -1, 0);
+			d = newFacing.Normalize();
+			this.NewFacing = Vector3(d.x * -1, d.y * -1, 0);
 		}
 		else {
 			this.Finished();
@@ -70,21 +71,22 @@ this.Update = function()
 		}
 		side = CrossProduct(this.NewFacing,Vec3(0,0,1));
 
-		end = this.Bot.GetPosition() + this.NewFacing * 150;
+		end = this.Bot.GetEyePosition() + this.NewFacing * this.AvoidRadius[ this.AvoidEntClass ];
 		end += (side * (traceNum * interval));
 		end -= (side * 0.5 * 8 * interval);
 
 		tr = TraceLine( eyePos, end, 0, TRACE.SHOT, botId, false );
+		
+		if ( this.Debug ) {
+			DrawDebugLine( eyePos, end, COLOR.GREEN, 5 );
+		}		
 
-		if ( tr.end && !tr.end.IsZero() ) {
-			if ( this.Debug ) {
-				DrawDebugLine( eyePos, tr.end, COLOR.GREEN, 5 );
-			}
+		if ( tr.fraction && tr.fraction > 0 ) {
 
 			if ( this.Bot.AvoidPos ) {
-				if ( DistanceBetween(this.Bot.AvoidPos, tr.end) >= this.AvoidRadius[ this.AvoidEntClass ] ) {
+				if ( DistanceBetween(this.Bot.AvoidPos, end) >= this.AvoidRadius[ this.AvoidEntClass ] ) {
 					this.Bot.HoldButton(BTN.SPRINT, 99);
-					this.Goto(tr.end,64.0);
+					this.Goto(end,64.0);
 					newFacing = this.Bot.AvoidPos - this.Bot.GetEyePosition();
 					this.AddAimRequest(Priority.Low, "facing", Vector3(newFacing.x, newFacing.y, 0));
 					this.Bot.HoldButton(BTN.CROUCH, 99);
