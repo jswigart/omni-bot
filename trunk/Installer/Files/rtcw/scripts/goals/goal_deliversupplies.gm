@@ -49,7 +49,8 @@ this.Enter = function()
 	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 
 	this.KillTarget = false;
-	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true && this.Bot.HasAmmo(WEAPON.SYRINGE) )
+	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true 
+		&& this.Bot.HasAmmo(WEAPON.SYRINGE) && this.TargetEntity && !GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) )
 	{
 		// are they low enough on health?
 		hlth = Util.GetEntHealth(this.TargetEntity);
