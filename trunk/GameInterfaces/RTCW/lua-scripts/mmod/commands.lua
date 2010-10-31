@@ -1,12 +1,3 @@
-function test(clientNum, params)
-    testvar = et.gentity_get (clientNum, "origin", 0)
-    for k, v in pairs (testvar) do 
-        et.G_Print("key = " .. k .. " value = " .. v .. "\n" )
-    end
-    testvar[3] = testvar[3] + 250
-    et.gentity_set(clientNum, "origin", 0, testvar)
-end
-
 function admindel(clientNum, params)
     local header = "^3admindel: ^7"
 	local adminnum = params[1]
@@ -178,7 +169,8 @@ function botplayers(clientNum, params)
 				userprint(clientNum, "chat", header .. "must be between 1 and " .. tostring(maxclients - 1))
                 return
             end
-			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot maxbots " .. bplayer)		
+			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot maxbots " .. bplayer)	
+			userprint(-1, "chat", header .. "maxbots changed to " .. bplayer)
 		else
 			userprint(clientNum, "chat", "^3botplayers: ^5" .. bplayer .. " ^7is not a number")
 			return
@@ -497,7 +489,6 @@ function maprecords(clientNum)
 	end	
 	
 	mapId = getMapId(et.GetMapName())
-	x = 0
 	tblheader = "^3----------------------------------------------------------\n^3Record          Value      Date            Player\n^3----------------------------------------------------------\n"
 
 	if clientNum == rconclient then
@@ -511,7 +502,6 @@ function maprecords(clientNum)
 		else
 			et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^7%-15s %-36s\n\"',recordTypes[row.recordTypeId],row.value,row.recordDate,getPlayerName(row.playerId)))
 		end
-		x=x+1
 	end
 	CloseDB()
 	userprint(clientNum, "chat", header .. "map records have been printed in console")
@@ -669,7 +659,6 @@ function serverrecords(clientNum)
 		return
 	end	
 	
-	x = 0
 	tblheader = "^3----------------------------------------------------------\n^3Record          Value      Map             Player\n^3----------------------------------------------------------\n"
 
 	if clientNum == rconclient then
@@ -685,7 +674,6 @@ function serverrecords(clientNum)
 			else
 				et.trap_SendServerCommand(clientNum,string.format('print \"^3%-15s ^5%-10d ^2%-15s %-36s\n\"',recordTypes[row.recordTypeId],row.value,getMapName(row.mapId),getPlayerName(row.playerId)))
 			end
-			x=x+1
 		end
 	end
 
@@ -708,8 +696,13 @@ function setlevel(clientNum, params)
 		local guid = string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(victim), "cl_guid" ))
         
         loadAdmins()
+        if not isNumeric(tonumber(level)) then
+            userprint(clientNum, "chat", header .. "^5" .. level .. " ^7is not a number")
+            return
+        end
+
         if global_level_table[level] == nil then
-            userprint(clientNum, "chat", header .. "admin level " .. level .. " is invalid")
+            userprint(clientNum, "chat", header .. "admin level ^5" .. level .. " ^7is invalid")
             return
         end
         if clientNum ~= rconclient then
@@ -881,9 +874,7 @@ function spec999(clientNum)
 		if team ~= 3 and team ~= 0 then
 			if ping >= 999 then
 				matches = matches + 1
-                et.gentity_set(i, "health", -600)
-                et.gentity_set(i, "sess.sessionTeam", 3)
-                et.ClientUserinfoChanged(i)	
+				et.SetTeam(i, "s")
                 userprint(-1, "chat", header .. name .. " ^7moved to spectator")			
 			end
 		end

@@ -11,7 +11,6 @@ global_mute_table = {}
 
 -- command flags are the same as etpub shrubbot flags
 commandflags = {}
-commandflags["test"] = "z"
 commandflags["admindel"] = "Q"
 commandflags["admintest"] = "a"
 commandflags["ban"] = "b"
@@ -41,7 +40,6 @@ commandflags["unmute"] = "m"
 commandflags["warn"] = "R"
 
 commandhelp = {}
-commandhelp["test"] = "^3usage: ^7!test \n^3function: ^7test stuff"
 commandhelp["admindel"] = "^3usage: ^7!admindel [admin number] \n^3function: ^7removes the admin that !listadmins lists as admin number"
 commandhelp["admintest"] = "^3usage: ^7!admintest or !admintest [name|slot] \n^3function: ^7prints out player's current mmod admin level in global chat. When the NAME or SLOT are added and the user has the right mmod permission, the level of another player will be shown"
 commandhelp["ban"] = "^3usage: ^7!ban [name|slot] [reason] \n^3function: ^7bans the player and gives them a reason"

@@ -55,11 +55,11 @@ function et_Obituary(victimnum, killernum, meansofdeath)
 	local showkillerhp = tonumber(global_config_table["showkillerhp"])
 
 	if showkillerhp == 1 then
-		if not et.IsBot(victimnum) then
+		if not et.IsBot(victimnum) and killernum ~= 1022 then
 			local victimteam = tonumber(et.gentity_get(victimnum, "sess.sessionTeam"))
 			local killerteam = tonumber(et.gentity_get(killernum, "sess.sessionTeam"))
 
-			if victimteam ~= killerteam and killernum ~= 1022 then
+			if victimteam ~= killerteam then
 				local killername = string.gsub(et.gentity_get(killernum, "pers.netname"), "%^$", "^^ ")
 				local killerhp = et.gentity_get(killernum, "health")
 
@@ -214,9 +214,7 @@ function crop_text(text,len)
 end
 
 function execcommand(command, clientNum, params)
-    if command == "test" then
-        test(clientNum, params)
-    elseif command == "admindel" then
+	if command == "admindel" then
         admindel(clientNum, params)
     elseif command == "admintest" then
         admintest(clientNum, params)
