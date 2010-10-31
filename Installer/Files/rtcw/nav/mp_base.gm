@@ -487,6 +487,7 @@ global OnMapLoad = function()
 	// destroy the windows out of axis spawn since bots suck at breaking them
 	EntityKill( 278 );
 	EntityKill( 313 );
+	EntityKill( 314 );
 };
 
 global OnBotJoin = function( bot )
