@@ -14,11 +14,25 @@ global Map =
 	CoffinStatus = false,
 	HallwayStatus = false,
 	WestStatus = false,
+	CoffinDefense = false,
 
 	CoffinDyno = 0,
 	HallwayDyno = 0,
 	WestDyno = 0,
 	FriendlyFire,
+
+	Roles =
+	{
+		AXIS =
+		{
+			// courtyard defense
+			DEFENDER =
+			{
+				numbots = 7,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
 
 	Airstrike =
 	{
@@ -54,6 +68,9 @@ global Map =
 		Map.CoffinStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Sacred_Obelisk" );
 		Map.checkCoffinFallback();
+
+		// make sure these are off
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDefuseAssist.*" );
 	},
 
 	Coffin_Planted = function( trigger )
@@ -70,8 +87,13 @@ global Map =
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
 
-		SetGoalPriority( "DEFUSE_Coffin.*", 1.0 );
 		Map.EnableAxisCoffinAccess();
+
+		// if the d hasn't fallen back already, send the courtyard defense
+		if ( !Map.CoffinDefense ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtYard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDefuseAssist.*" );
+		}
 	},
 
 	Coffin_Defused = function( trigger )
@@ -81,7 +103,7 @@ global Map =
 		}
 
 		Map.CoffinDyno -= 1;
-		if ( Map.CoffinDyno == 0 ) {
+		if ( Map.CoffinDyno < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" ); // Let it rain again
 			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
 			if ( Map.Suicide ) {
@@ -89,6 +111,11 @@ global Map =
 			}
 
 			Map.DisableAxisCoffinAccess();
+		}
+		else if ( !Map.CoffinDefense ) {
+			// push back out to courtyard
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtYard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDefuseAssist.*" );
 		}
 	},
 
@@ -226,11 +253,11 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		
+
 		// better just focus on the coffin now
 		SetGoalPriority( "ATTACK_bHallway.*", 0.49 );
 		SetGoalPriority( "ATTACK_bGate.*", 0.49 );
-		SetGoalPriority( "PLANT_Coffin", 0.93 );	
+		SetGoalPriority( "PLANT_Coffin", 0.93 );
 	},
 
 	thirty_second = function( trigger )
@@ -247,6 +274,7 @@ global Map =
 		}
 
 		if ( Map.HallwayStatus == true || Map.CryptDyno > 0 || Map.CryptStatus == true ) { // Fallback since hallway is gone
+			Map.CoffinDefense = true;
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtyard.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rsealtar.*" );
@@ -367,7 +395,10 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 45} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
-	
+
+	// these ones roam around looking for the engineer(s) that planted
+	SetMapGoalProperties( "DEFEND_rDefuseAssist.*", {mincamptime = 1, maxcamptime = 2} );
+
 	Util.SetMaxUsers( 1, "ATTACK_bGate.*" );
 	Util.SetMaxUsers( 1, "ATTACK_bHallway.*" );
 	Util.SetMaxUsers( 1, "PLANT_West_Gate" );
