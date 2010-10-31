@@ -649,16 +649,12 @@ member TeamDisableCombatCrouch = function( team, crouch )
 
 member IsPlantGoalAvailable = function()
 {
-	goals = Util.GoalTable();
+	goals = Util.GoalTable("PLANT_.*");
 
 	foreach( id and goal in goals )
 	{
-		n = goal.GetName();
-
-		if ( n.Find( "PLANT" ) == 0 ) {
-			if ( goal.IsAvailable( TEAM.AXIS ) || goal.IsAvailable( TEAM.ALLIES ) ) {
-				return true;
-			}
+		if ( goal.IsAvailable( TEAM.AXIS ) || goal.IsAvailable( TEAM.ALLIES ) ) {
+			return true;
 		}
 	}
 
