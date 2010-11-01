@@ -51,6 +51,13 @@ global Map =
 			Facing = Vector3( -0.724, -0.177, 0.666 ), // use this if no goto waypoint. /bot mypos shows facing
 			NoPause = true, // optional: set this if you want them throw while running
 		},
+		docgrab =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
+			Waypoint = "docgrab_as",
+			NoPause = false, // optional: set this if you want them throw while running
+		},
 	},
 
 	hill = { "hill1", "hill2", },
@@ -471,7 +478,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "SNIPE.*", {mincamptime = 60, maxcamptime = 90} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	SetGoalPriority( "DEFEND_Doc_Defense_[427]", 0.59 );
+	SetGoalPriority( "DEFEND_Doc_Defense_[421]", 0.59 );
 	SetGoalPriority( "ATTACK_rEng.*", 0.91 );
 	SetGoalPriority( "MOUNT.*", 0.69 );
 	SetGoalPriority( "CAMP_hill.*", 0.95 );
