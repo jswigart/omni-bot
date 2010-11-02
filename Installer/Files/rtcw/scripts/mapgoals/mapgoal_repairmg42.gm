@@ -1,6 +1,6 @@
 this.GoalType = "REPAIRMG42";
 this.Version = 1;
-this.DefaultPriority = 1.0;
+this.DefaultPriority = 0.71;
 this.CreateOnLoad = false;
 this.RolePriorityBonus = 0.1;
 
