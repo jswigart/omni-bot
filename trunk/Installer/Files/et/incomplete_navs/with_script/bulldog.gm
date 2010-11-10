@@ -1,0 +1,210 @@
+//==========================================================================================
+//
+//	bulldog.gm
+//
+//	Who          When			What
+//------------------------------------------------------------------------------------------
+//	MickyP		4 November 2010		0.66 - 0.81 Script Conversion
+//
+//==========================================================================================
+//
+// To Do
+//
+// Defence Spots
+// Routing
+//
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	MOVERS = 
+	{
+		"MOVER_snowman",
+		"MOVER_sleigh_sm",
+	},
+	
+	allied_pickup1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_West_Vault" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allied_East_Vault" );
+		Util.MapDebugPrint( "allied_pickup1_Secured" );
+	},
+
+	allied_pickup2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_East_Vault" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allied_West_Vault" );
+		Util.MapDebugPrint( "allied_pickup2_Secured" );
+	},
+
+	allied_pickup3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_West_Vault" ); 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allied_East_Vault" );
+		Util.MapDebugPrint( "allied_pickup3_Secured" );
+	},
+
+	allied_pickup4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_East_Vault" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allied_West_Vault" );
+		Util.MapDebugPrint( "allied_pickup4_Secured" );
+	},
+
+	allied_pickup5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_West_Vault" ); 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allied_East_Vault" );
+		Util.MapDebugPrint( "allied_pickup5_Secured" );
+	},
+
+	allied_pickup6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_pickup6_Secured" );
+	},
+
+	axis_pickup1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_North_Vault" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_South_Vault" );
+		Util.MapDebugPrint( "axis_pickup1_Secured" );
+	},
+
+	axis_pickup2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_North_Vault" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_South_Vault" );
+		Util.MapDebugPrint( "axis_pickup2_Secured" );
+	},
+
+	axis_pickup3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_North_Vault" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_South_Vault" );
+		Util.MapDebugPrint( "axis_pickup3_Secured" );
+	},
+
+	axis_pickup4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_North_Vault" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_South_Vault" );
+		Util.MapDebugPrint( "axis_pickup4_Secured" );
+	},
+
+	axis_pickup5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_North_Vault" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_South_Vault" );
+		Util.MapDebugPrint( "axis_pickup5_Secured" );
+	},
+
+	axis_pickup6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_pickup6_Secured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	
+	OnTrigger( "Allies have captured their 1st gold crate!", Map.allied_pickup1_Secured );
+	OnTrigger( "Allies have captured their 2nd gold crate!", Map.allied_pickup2_Secured );
+	OnTrigger( "Allies have captured their 3rd gold crate!", Map.allied_pickup3_Secured );
+	OnTrigger( "Allies have captured their 4th gold crate!", Map.allied_pickup4_Secured );
+	OnTrigger( "Allies have captured their 5th gold crate!", Map.allied_pickup5_Secured );
+	OnTrigger( "Allies have captured their 6th gold crate!", Map.allied_pickup6_Secured );
+	OnTrigger( "Axis have captured their 1st gold crate!", Map.axis_pickup1_Secured );
+	OnTrigger( "Axis have captured their 2nd gold crate!", Map.axis_pickup2_Secured );
+	OnTrigger( "Axis have captured their 3rd gold crate!", Map.axis_pickup3_Secured );
+	OnTrigger( "Axis have captured their 4th gold crate!", Map.axis_pickup4_Secured );
+	OnTrigger( "Axis have captured their 5th gold crate!", Map.axis_pickup5_Secured );
+	OnTrigger( "Axis have captured their 6th gold crate!", Map.axis_pickup6_Secured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	Util.DisableGoal( "CAPPOINT.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_South_Vault" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_allied_mg42" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_allied_mg42" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_East_Vault" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_axis_mg42" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_axis_mg42" );
+	
+	
+	
+	
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
+};

@@ -20,7 +20,7 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = true,
+	ShowMovers = false,
 
 	Allied_Command_Post_Dyno = 0,
 	Assault_Ramp_Dyno = 0,
@@ -32,10 +32,10 @@ global Map =
 	Sewer_Entrance_Dyno = 0,
 	Tank_Barrier_Dyno = 0,
 	bridge_Dyno = 0,
-	Switches_e1_top1_Enabled = false,
-	Switches_e1_top2_Enabled = false,
-	Switches_e1_bot1_Enabled = false,
-	Switches_e1_bot2_Enabled = false,
+	Switches_callup_Enabled = false,
+	Switches_in_top_Enabled = false,
+	Switches_calldown_Enabled = false,
+	Switches_in_bot_Enabled = false,
 	bridge_Built = false,
 	Tank_Barrier_Built = false,
 	tankzoneTrigger = false,
@@ -44,7 +44,6 @@ global Map =
 	barrierTrigger = false,
 	tankendTrigger = false,
 	Plant_Tank_Barrier = "PLANT_Tank_Barrier",
-	Mover_lift1 = "MOVER_lift1",
 	Door_to_the_Stairs_Destroyed = false,
 	Bunker_Wall_Destroyed = false,
 	doortopstatus = false, //closed
@@ -52,8 +51,16 @@ global Map =
 	lift1Pos = "bottom", //lift at bottom
 	docs_Taken = false,
 	docs_Reurned = false,
+	doortopstatus = false, //closed
+	doorbotstatus = false, //closed
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
-
+	Movers =
+	{
+		"MOVER_lift1",
+		"MOVER_tank",
+		"MOVER_chains",
+		"MOVER_turret",
+	},	
 //Bubba
 	BunkerLadderFacing = null,
 	StairsLadderFacing = null,
@@ -99,116 +106,105 @@ global Map =
 //lift switches	
  Switches =
 	{
-		e1_top1 =
+		callup =
 		{
 			Enabled = true,
 			Priority = 0,
-			WaypointName = "e1_top1",
+			WaypointName = "callup",
 			LimitBots = 1,
 			PressOnce = true,
 			Timeout = 1500,
 			AimPosition = Vec3(-4476.618, -7115.125 ,4064.090),
-			
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:callup
 			Wait = function()
 			{
 				if ( Map.doortopstatus == true && Map.lift1Pos == "top")
 				{
 					sleep(0.5);
+					return true; 
 				}
 				if ( Map.doortopstatus == false && Map.lift1Pos == "top")
 				{
 					sleep(1);
-					Map.Switches.e1_top1.Enabled = true;
+					return true; 
 				}
-				if (Map.lift1Pos == "moving")
-				{
-					sleep(16);
-					Map.Switches.e1_top1.Enabled = false;
-				}
+				return false;
 			},				
 		},
-		e1_top2 =
+		in_top =
 		{
 			Enabled = true,
 			Priority = 0,
-			WaypointName = "e1_top2",
+			WaypointName = "in_top",
 			LimitBots = 1,
 			PressOnce = true,
 			Timeout = 1500,
 			AimPosition = Vec3(-4552.427, -6960.125, 4064.761),
-			
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:in_top
 			Wait = function()
 			{
 				if ( Map.doortopstatus == true && Map.lift1Pos == "top" )
 				{
 					sleep(0.5); 
+					return true; 
 				}
 				if ( Map.doortopstatus == false && Map.lift1Pos == "top" )
 				{
 					sleep(1);
-					Map.Switches.e1_top2.Enabled = true;
+					return true; 
 				}
-				if (Map.lift1Pos == "moving")
-				{
-					sleep(16);
-					Map.Switches.e1_top2.Enabled = false;
-				}
+				return false;
 			},				
 		},
-		e1_bot1 =
+		calldown =
 		{
 			Enabled = true,
 			Priority = 0,
-			WaypointName = "e1_bot1",
+			WaypointName = "calldown",
 			LimitBots = 1,
 			PressOnce = true,
 			Timeout = 1500,
 			AimPosition = Vec3(-4601.875, -6887.567, 1216.112),
-			
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:calldown
 			Wait = function()
 			{
 				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom")
 				{
 					sleep(0.5);
+					return true; 
 				}
 				if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom")
 				{
 					sleep(1);
-					Map.Switches.e1_bot1.Enabled = true;
+					return true; 
 				}
-				if (Map.lift1Pos == "moving")
-				{
-					sleep(16);
-					Map.Switches.e1_bot1.Enabled = false;
-				}
+				return false;
 			},				
 		},
-		e1_bot2 =
+		in_bot =
 		{
 			Enabled = true,
 			Priority = 0,
-			WaypointName = "e1_bot2",
+			WaypointName = "in_bot",
 			LimitBots = 1,
 			PressOnce = true,
 			Timeout = 1500,
 			AimPosition = Vec3(-4552.246, 7063.875, 1216.423),
-			
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:in_bot
 			Wait = function()
 			{
 				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom" )
 				{
 					sleep(0.5);
+					return true; 
+					
 				}
 				if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom" )
 				{
 					sleep(1);
-					Map.Switches.e1_bot2.Enabled = true;
+					return true; 
 				}
-				if (Map.lift1Pos == "moving")
-				{
-					Map.Switches.e1_bot2.Enabled = false;
-					sleep(16);
-				}
+				return false;
 			},				
 		},
 	},
@@ -219,10 +215,10 @@ global Map =
 		Map.lift1Pos = "moving";
 		Util.MapDebugPrint("lift moving"); 
 		
-		Map.Switches.e1_top1.Enabled = false;
-		Map.Switches.e1_top2.Enabled = false;
-		Map.Switches.e1_bot1.Enabled = false;
-		Map.Switches.e1_bot2.Enabled = false;
+		Map.Switches.callup.Enabled = false;
+		Map.Switches.in_top.Enabled = false;
+		Map.Switches.calldown.Enabled = false;
+		Map.Switches.in_bot.Enabled = false;
 		doortopstatus = false; //closed
 		doorbotstatus = false; //closed
 		
@@ -233,55 +229,55 @@ global Map =
 		if (vel.z < 0)
 		{
 			Map.lift1Pos = "bottom";
-			Map.Switches.e1_bot1.Enabled = true;
-			Map.Switches.e1_bot2.Enabled = true;
+			Map.Switches.calldown.Enabled = true;
+			Map.Switches.in_bot.Enabled = true;
 			
 			Util.MapDebugPrint("lift at bottom"); 
 		}
 		else 
 		{
 			Map.lift1Pos = "top";
-			Map.Switches.e1_top1.Enabled = true;
-			Map.Switches.e1_top2.Enabled = true;
+			Map.Switches.callup.Enabled = true;
+			Map.Switches.in_top.Enabled = true;
 
 			Util.MapDebugPrint("lift at top"); 
 		}
 	},
-	
 //lift doors	
 	lowerliftdoor = function( trigger )
 	{	
 		if ( trigger.Action == "opening" )
 		{
 			Map.doorbotstatus = true; //open
-			Map.Switches.e1_bot1.Enabled = false;
-
+			Map.Switches.calldown.Enabled = false;
+			Map.Switches.in_bot.Enabled = false;
+			
 			Util.MapDebugPrint("Bottom Door Open");
 		}
 		else
 		{
 			Map.doorbotstatus = false; //closed
-			Map.Switches.e1_bot1.Enabled = true;
-			Map.Switches.e1_bot2.Enabled = true;
+			Map.Switches.calldown.Enabled = true;
+			Map.Switches.in_bot.Enabled = true;
 	
 			Util.MapDebugPrint("Bottom Door Closed");
 		}
 	},
-	
 	upperliftdoor = function( trigger )
 	{	
 		if ( trigger.Action == "opening" )
 		{
 			Map.doortopstatus = true; //open
-			Map.Switches.e1_top1.Enabled = false;
+			Map.Switches.callup.Enabled = false;
+			Map.Switches.in_top.Enabled = false;
 			
 			Util.MapDebugPrint("Top Door Open");
 		}
 		else
 		{
 			Map.doortopstatus = false; //closed
-			Map.Switches.e1_top1.Enabled = true;
-			Map.Switches.e1_top2.Enabled = true;
+			Map.Switches.callup.Enabled = true;
+			Map.Switches.in_top.Enabled = true;
 			
 			Util.MapDebugPrint("Top Door Closed");
 		}
@@ -304,7 +300,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ZONE.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank_ZONE" );
-		
 		Util.MapDebugPrint( "Tank_Entered_Zone" ); 
 		},
 		OnExit = function(ent)
@@ -318,7 +313,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ZONE.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
-		
 		Util.MapDebugPrint( "Tank_Exited_Zone" ); 
 		},
         }, 
@@ -338,7 +332,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge");
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank_ZONE" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		
 		Util.DisableGoal ( "MOUNT_Tank_ZONE" );
 		}
 		else if ( Map.bridge_Built == false ) {
@@ -368,6 +361,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_AF_Bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_BF_Bridge.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
 		Util.MapDebugPrint( "Tank_Exited_before_bridge" ); 
 		},
         }, 
@@ -381,11 +375,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AFbridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AFbridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AF_Bridge.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_AF_Bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
 		Util.MapDebugPrint( "Tank_Entered_after_bridge" ); 
 		},
 		OnExit = function(ent)
@@ -394,10 +387,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AF_Bridge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AF_Bridge.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		
 		Util.MapDebugPrint( "Tank_Exited_after_bridge" ); 
 		},
         }, 
@@ -409,7 +400,7 @@ global Map =
 		{ 
 		Map.barrierTrigger = true;
 		if ( Map.Tank_Barrier_Built == true && Tank_Built == true ) { 
-
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AF_Bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
@@ -475,12 +466,11 @@ global Map =
 		Util.DisableGoal ( "MOUNT_AF_bridge" );
 		Util.DisableGoal ( "MOUNT_Tank_ZONE" );
 		Util.DisableGoal ( "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_AF_bridge" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank_ZONE");
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_AF_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank_ZONE");
+		Util.DisableGoal ( "MOVER_tank" );
+		Util.DisableGoal ( "MOVER_chains" );
+		Util.DisableGoal ( "MOVER_turret" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Gate_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
@@ -488,6 +478,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Door.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
 		
 		Util.MapDebugPrint( "Tank_Entered_End_Trip" ); 
@@ -509,7 +500,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
@@ -519,10 +510,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.e1_top1.Enabled = false;
-			Map.Switches.e1_top2.Enabled = false;
-			Map.Switches.e1_bot1.Enabled = false;
-			Map.Switches.e1_bot2.Enabled = false;
+			Map.Switches.callup.Enabled = false;
+			Map.Switches.in_top.Enabled = false;
+			Map.Switches.calldown.Enabled = false;
+			Map.Switches.in_bot.Enabled = false;
 		
 			Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Sewer With The Documents!");
 			}
@@ -553,6 +544,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 		
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
@@ -703,10 +695,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 			  
-	Map.Switches.e1_top1.Enabled = true;
-	Map.Switches.e1_top2.Enabled = true;
-	Map.Switches.e1_bot1.Enabled = true;
-	Map.Switches.e1_bot2.Enabled = true;	
+	Map.Switches.callup.Enabled = false;
+	Map.Switches.in_top.Enabled = false;
+	Map.Switches.calldown.Enabled = false;
+	Map.Switches.in_bot.Enabled = false;
 	
 	Wp.SetWaypointFlag("LIFT_A","closed",false); //open the way to the lift 
 	//Bots dont use lift till controls built
@@ -747,10 +739,10 @@ global Map =
 	 
 		Map.Elevator_Controls_Dyno = 0;
 		
-	 Map.Switches.e1_top1.Enabled = false;
-	 Map.Switches.e1_top2.Enabled = false;
-	 Map.Switches.e1_bot1.Enabled = false;
-	 Map.Switches.e1_bot2.Enabled = false;	
+		Map.Switches.callup.Enabled = false;
+		Map.Switches.in_top.Enabled = false;
+		Map.Switches.calldown.Enabled = false;
+		Map.Switches.in_bot.Enabled = false;
 	 
 	 Wp.SetWaypointFlag("LIFT_A","closed",true); //close the way to the lift 
 	 SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
@@ -1099,6 +1091,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
@@ -1153,6 +1146,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
@@ -1210,7 +1204,9 @@ global Map =
 			
 		Util.DisableGoal ( "MOUNT_tank" );
 		Util.DisableGoal ( "BUILD_Tank" );
-		
+		Util.DisableGoal ( "MOVER_tank" );
+		Util.DisableGoal ( "MOVER_chains" );
+		Util.DisableGoal ( "MOVER_turret" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
@@ -1222,12 +1218,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sewer_Entrance" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_docs" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
-		
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bunker" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Door.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
 		
 		if ( Map.Gate_MG42_Built == true && Map.Assault_Ramp_Built == true ){
@@ -1240,7 +1236,6 @@ global Map =
 		if ( Map.Gate_MG42_Built == true && Map.Assault_Ramp_Built == false ){
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		}
-		
 		Util.MapDebugPrint( "Gate_Destroyed" );
 	},
 	
@@ -1253,9 +1248,9 @@ global Map =
 		{	
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 			
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" ); //to go false when past gate
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); //to go false when past gate	
-			
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" ); //false when past gate
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); //false when past gate	
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" ); //false when past gate
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
@@ -1266,10 +1261,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.e1_top1.Enabled = false;
-			Map.Switches.e1_top2.Enabled = false;
-			Map.Switches.e1_bot1.Enabled = false;
-			Map.Switches.e1_bot2.Enabled = false;	
+			Map.Switches.callup.Enabled = false;
+			Map.Switches.in_top.Enabled = false;
+			Map.Switches.calldown.Enabled = false;
+			Map.Switches.in_bot.Enabled = false;
 		}	
 		if ( Map.Bunker_Wall_Destroyed == false )
 		{
@@ -1277,7 +1272,7 @@ global Map =
 			
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" ); //false when past gate
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); // false when past gate	
-			
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" ); // false when past gate
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
@@ -1288,17 +1283,17 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.e1_top1.Enabled = false;
-			Map.Switches.e1_top2.Enabled = false;
-			Map.Switches.e1_bot1.Enabled = false;
-			Map.Switches.e1_bot2.Enabled = false;			
+			Map.Switches.callup.Enabled = false;
+			Map.Switches.in_top.Enabled = false;
+			Map.Switches.calldown.Enabled = false;
+			Map.Switches.in_bot.Enabled = false;		
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
@@ -1309,12 +1304,11 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.e1_top1.Enabled = false;
-			Map.Switches.e1_top2.Enabled = false;
-			Map.Switches.e1_bot1.Enabled = false;
-			Map.Switches.e1_bot2.Enabled = false;	
+			Map.Switches.callup.Enabled = false;
+			Map.Switches.in_top.Enabled = false;
+			Map.Switches.calldown.Enabled = false;
+			Map.Switches.in_bot.Enabled = false;
 		}	
-		
 		Util.MapDebugPrint( "docs_Taken" );
 	},
 
@@ -1328,18 +1322,19 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
 			Map.Switches.e1_bot1.Enabled = true;
 			Map.Switches.e1_bot2.Enabled = true;
-		
 		}
 		if ( Map.Bunker_Wall_Destroyed == false )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );			
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
@@ -1351,7 +1346,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
@@ -1367,7 +1362,6 @@ global Map =
 			Map.Switches.e1_bot2.Enabled = true;		
 			Util.DisableGoal( "MOUNTMG42_Gate_MG42" );
 		}
-		
 		Util.MapDebugPrint( "docs_Returned" );
 	},
 
@@ -1458,9 +1452,14 @@ global OnMapLoad = function()
 //SetGoalPriority	
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.MEDIC, true  );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+	
 	SetGoalPriority( "PLANT_bridge*", 0.82, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.MEDIC, true  );
+	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
 //Util.DisableGoal
 	Util.DisableGoal( ".*", true ); // all but routes
 //SetAvailableMapGoals
@@ -1869,7 +1868,522 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		
+		CAPPOINT_Radio = 
+		{
+			ROUTE_ROOF  = 
+			{
+				ROUTE_Sewer_A  = 
+				{
+					ROUTE_Sewer_B  = 
+					{
+						ROUTE_bridge  = 
+						{
+							ROUTE_HILL_1  = 
+							{
+								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_OUTSIDE_HUT_BACK  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_GATE  = 
+				{
+					ROUTE_Bridge_River  = 
+					{
+						ROUTE_bridge  = 
+						{
+							ROUTE_HILL_1  = 
+							{
+								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_OUTSIDE_HUT_BACK  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+							},
+						},
+					},
+					ROUTE_Bridge_River_B  = 
+					{
+						ROUTE_bridge  = 
+						{
+							ROUTE_HILL_1  = 
+							{
+								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_OUTSIDE_HUT_BACK  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+							},
+						},
+					},
+					ROUTE_trans  = 
+					{
+						ROUTE_Radio  = 
+						{
+						},
+					},
+					ROUTE_Con_BRIDGE_A  = 
+					{
+						ROUTE_Con_BRIDGE  = 
+						{
+							ROUTE_HILL_1  = 
+							{
+								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_OUTSIDE_HUT_BACK  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			ROUTE_Documents  = 
+			{
+				ROUTE_LIFT_Top  = 
+				{
+					ROUTE_LIFT_Bot  = 
+					{
+						ROUTE_Sewer_A  = 
+						{
+							ROUTE_Sewer_B  = 
+							{
+								ROUTE_bridge  = 
+								{
+									ROUTE_HILL_1  = 
+									{
+										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+										ROUTE_OUTSIDE_HUT_BACK  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+									},
+								},
+							},
+						},
+						ROUTE_GATE  = 
+						{
+							ROUTE_Bridge_River  = 
+							{
+								ROUTE_bridge  = 
+								{
+									ROUTE_HILL_1  = 
+									{
+										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+										ROUTE_OUTSIDE_HUT_BACK  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+									},
+								},
+							},
+							ROUTE_Bridge_River_B  = 
+							{
+								ROUTE_bridge  = 
+								{
+									ROUTE_HILL_1  = 
+									{
+										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+										ROUTE_OUTSIDE_HUT_BACK  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+									},
+								},
+							},
+							ROUTE_trans  = 
+							{
+								ROUTE_Radio  = 
+								{
+								},
+							},
+							ROUTE_Con_BRIDGE_A  = 
+							{
+								ROUTE_Con_BRIDGE  = 
+								{
+									ROUTE_HILL_1  = 
+									{
+										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+										ROUTE_OUTSIDE_HUT_BACK  = 
+										{
+											ROUTE_Radio  = 
+											{
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_door_to_the_stairs_top  = 
+				{
+					ROUTE_Door_to_the_Stairs  = 
+					{
+						ROUTE_Door_to_the_stairs_A  = 
+						{
+							ROUTE_Sewer_A  = 
+							{
+								ROUTE_Sewer_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+							ROUTE_GATE  = 
+							{
+								ROUTE_Bridge_River  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_Bridge_River_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_trans  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_Con_BRIDGE_A  = 
+								{
+									ROUTE_Con_BRIDGE  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						ROUTE_Door_to_the_stairs_B  = 
+						{
+							ROUTE_Sewer_A  = 
+							{
+								ROUTE_Sewer_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+							ROUTE_GATE  = 
+							{
+								ROUTE_Bridge_River  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_Bridge_River_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_trans  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_Con_BRIDGE_A  = 
+								{
+									ROUTE_Con_BRIDGE  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_Bunker_Wall_TOP  = 
+				{
+					ROUTE_Bunker_Wall_BOTTOM  = 
+					{
+						ROUTE_The_Bunker_Wall  = 
+						{
+							ROUTE_Sewer_A  = 
+							{
+								ROUTE_Sewer_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+							ROUTE_GATE  = 
+							{
+								ROUTE_Bridge_River  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_Bridge_River_B  = 
+								{
+									ROUTE_bridge  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+								ROUTE_trans  = 
+								{
+									ROUTE_Radio  = 
+									{
+									},
+								},
+								ROUTE_Con_BRIDGE_A  = 
+								{
+									ROUTE_Con_BRIDGE  = 
+									{
+										ROUTE_HILL_1  = 
+										{
+											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+											ROUTE_OUTSIDE_HUT_BACK  = 
+											{
+												ROUTE_Radio  = 
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},			
 	};
 
 	Util.Routes(MapRoutes);

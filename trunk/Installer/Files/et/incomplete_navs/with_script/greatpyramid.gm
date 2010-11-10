@@ -1,0 +1,502 @@
+//==========================================================================================
+//
+//	greatpyramid.gm
+//
+//	Who                      	When			What
+//------------------------------------------------------------------------------------------
+//	MickyP				30 September 2010	0.8 Script Update
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+	axis_radar_counter = 0,
+	alies_radar_counter = 0,
+
+
+	Allies_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Bridge_Built" );
+	},
+
+	Allies_wall2_Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Allies_Ladder_1", "closed", false );
+		Wp.SetWaypointFlag( "Allies_Ladder_2", "closed", false );
+		Util.MapDebugPrint( "Allies_wall2_Assault_Ramp_Built" );
+	},
+
+	Allies_wall_Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_wall_Assault_Ramp_Built" );
+	},
+
+	Axis_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bridge_Built" );
+	},
+
+	Axis_wall2_Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Axis_Ladder_1", "closed", false );
+		Wp.SetWaypointFlag( "Axis_Ladder_2", "closed", false );
+		Util.MapDebugPrint( "Axis_wall2_Assault_Ramp_Built" );
+	},
+
+	Axis_wall_Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_wall_Assault_Ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	East_Axis_Radar_Parts_Fortification_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_radarbox2" );
+		Util.MapDebugPrint( "East_Axis_Radar_Parts_Fortification_Built" );
+	},
+
+	East_Axis_Radar_Parts_Fortification_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox2" );
+		Util.MapDebugPrint( "East_Axis_Radar_Parts_Fortification_Destroyed" );
+	},
+	
+	West_Allies_Radar_Parts_Fortification_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_radarbox3" );
+		Util.MapDebugPrint( "West_Allies_Radar_Parts_Fortification_Built" );
+	},
+
+	West_Allies_Radar_Parts_Fortification_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_radarbox3" );
+		Util.MapDebugPrint( "West_Allies_Radar_Parts_Fortification_Destroyed" );
+	},
+	
+	Allies_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Bridge_Destroyed" );
+	},
+
+	Allies_Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Main_Entrance_Destroyed" );
+	},
+
+	Allies_wall2_Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Allies_Ladder_1", "closed", true );
+		Wp.SetWaypointFlag( "Allies_Ladder_2", "closed", true );
+		Util.MapDebugPrint( "Allies_wall2_Assault_Ramp_Destroyed" );
+	},
+
+	Allies_wall_Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_wall_Assault_Ramp_Destroyed" );
+	},
+
+	Axis_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_Bridge_Destroyed" );
+	},
+
+	Axis_Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_Main_Entrance_Destroyed" );
+	},
+
+	Axis_wall2_Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Axis_Ladder_1", "closed", true );
+		Wp.SetWaypointFlag( "Axis_Ladder_2", "closed", true );
+		Util.MapDebugPrint( "Axis_wall2_Assault_Ramp_Destroyed" );
+	},
+
+	Axis_wall_Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_wall_Assault_Ramp_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Gold2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold2_Taken" );
+	},
+
+	gold1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold1_Taken" );
+	},
+
+	allies_radar_west_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_radar_west_Taken" );
+	},
+
+	allies_radar_east_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_radar_east_Taken" );
+	},
+
+	axis_radar_west_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radar_west_Taken" );
+	},
+
+	axis_radar_east_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radar_east_Taken" );
+	},
+
+	Gold2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold2_Returned" );
+	},
+
+	gold1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold1_Returned" );
+	},
+
+	allies_radar_west_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_radar_west_Returned" );
+	},
+
+	allies_radar_east_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_radar_east_Returned" );
+	},
+
+	axis_radar_west_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radar_west_Returned" );
+	},
+
+	axis_radar_east_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radar_east_Returned" );
+	},
+
+	Gold2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold2_Secured" );
+	},
+
+	gold1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold1_Secured" );
+	},
+
+	allies_radar_west_secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_radar_west_secured" );
+	},
+
+	allies_radar_east_secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_East_Axis_Radar_Parts_Fortification" );
+		Util.MapDebugPrint( "allies_radar_east_secured" );
+	},
+
+	axis_radar_west_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radar_west_Secured" );
+	},
+
+	axis_radar_east_secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_West_Allies_Radar_Parts_Fortification" );
+		Util.MapDebugPrint( "axis_radar_east_secured" );
+	},
+
+	FlagPyramid_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "FlagPyramid_Axis_Captured" );
+	},
+
+	FlagPyramid_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "FlagPyramid_Allies_Captured" );
+	},
+	
+	Allies_Gold_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_Gold" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Radar" );
+		Util.MapDebugPrint( "Allies_Gold_Ready" );
+	},
+	
+	Axis_Gold_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_gold2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_Gold" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Radar" );
+		Util.MapDebugPrint( "Axis_Gold_Ready" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allies Team have built the Bridge nest!!", Map.Allies_Bridge_Built );
+	OnTrigger( "Axis have destroyed the Allies Bridge Nest!!", Map.Allies_Bridge_Destroyed );
+			
+	OnTrigger( "Allies have breached the Axis Main Entrance!", Map.Allies_Main_Entrance_Destroyed );
+	
+	OnTrigger( "The Allies Wall Assault Ramp has been constructed.", Map.Allies_wall_Assault_Ramp_Built );
+	OnTrigger( "Axis have destroyed the Allies Wall Assault Ramp.", Map.Allies_wall_Assault_Ramp_Destroyed );
+	
+	OnTrigger( "The Allies Wall2 Assault Ramp has been constructed.", Map.Allies_wall2_Assault_Ramp_Built );
+	OnTrigger( "Axis have destroyed the Allies Wall2 Assault Ramp.", Map.Allies_wall2_Assault_Ramp_Destroyed );
+	
+	OnTrigger( "Axis have breached the Allies Main Entrance!", Map.Axis_Main_Entrance_Destroyed );
+	
+	OnTrigger( "Axis Team have built the Bridge nest!!", Map.Axis_Bridge_Built );
+	OnTrigger( "Allies have destroyed the Axis Bridge Nest!!", Map.Axis_Bridge_Destroyed );
+	
+	OnTrigger( "The axis Wall Assault Ramp has been constructed.", Map.Axis_wall_Assault_Ramp_Built );
+	OnTrigger( "Allied have destroyed the Axis Wall Assault Ramp.", Map.Axis_wall_Assault_Ramp_Destroyed );
+	OnTrigger( "The Axis Wall2 Assault Ramp has been constructed.", Map.Axis_wall2_Assault_Ramp_Built );
+	OnTrigger( "Allied have destroyed the Axis Wall2 Assault Ramp.", Map.Axis_wall2_Assault_Ramp_Destroyed );
+	
+	OnTrigger( "Allies Team has Construted the West Allies Radar Parts Fortification.", Map.West_Allies_Radar_Parts_Fortification_Built );
+	OnTrigger( "Axis Team has destroyed the West Allies Radar Parts Fortification.", Map.West_Allies_Radar_Parts_Fortification_Destroyed );
+		
+	
+	OnTrigger( "Axis Team has Construted the East Axis Radar Parts Fortification.", Map.East_Axis_Radar_Parts_Fortification_Built );
+	OnTrigger( "Allies Team has destroyed the East Axis Radar Parts Fortification.", Map.East_Axis_Radar_Parts_Fortification_Destroyed );
+	
+	OnTrigger( "axis capture the Pyramid Area!", Map.FlagPyramid_Axis_Captured );
+	OnTrigger( "Allies capture the Pyramid Area!", Map.FlagPyramid_Allies_Captured );
+	
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	
+	OnTrigger( "radar_allies_radare_taken", Map.allies_radar_east_Taken );
+	OnTrigger( "radar_allies_radare_returned", Map.allies_radar_east_Returned );
+	OnTrigger( "Allies have secured the East Radar Parts!", Map.allies_radar_east_secured );
+
+	OnTrigger( "radar_allies_radarw_taken", Map.allies_radar_west_Taken );
+	OnTrigger( "radar_allies_radarw_returned", Map.allies_radar_west_Returned );
+	OnTrigger( "Allies have secured the West Radar Parts!", Map.allies_radar_west_secured );
+	
+	OnTrigger( "radar_axis_radare_taken", Map.axis_radar_east_Taken );
+	OnTrigger( "radar_axis_radare_returned", Map.axis_radar_east_Returned );
+	OnTrigger( "Axis have secured the East Radar Parts!", Map.axis_radar_east_secured );
+	
+	OnTrigger( "radar_axis_radarw_taken", Map.axis_radar_west_Taken );
+	OnTrigger( "radar_axis_radarw_returned", Map.axis_radar_west_Returned );
+	OnTrigger( "Axis have secured the West Radar Parts!", Map.axis_radar_west_Secured );
+	
+	OnTrigger( "goldrush_allies_gold1_taken", Map.gold1_Taken );
+	OnTrigger( "goldrush_allies_gold1_returned", Map.gold1_Returned );
+	OnTrigger( "Allies have secured the Gold!", Map.gold1_Secured );
+	
+	OnTrigger( "goldrush_axis_gold1_taken", Map.Gold2_Taken );
+	OnTrigger( "goldrush_axis_gold1_returned", Map.Gold2_Returned );
+	OnTrigger( "Axis have secured the Gold!", Map.Gold2_Secured );
+	
+	OnTrigger( "yeehaaa_allies", Map.Allies_Gold_Ready );
+	OnTrigger( "yeehaaa_axis", Map.Axis_Gold_Ready );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_gold2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_gold1" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Allies_Gold" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Allies_Radar" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Gold" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Axis_Radar" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Gold" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Axis_Gold" );
+	
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "CHECKPOINT_FlagPyramid" );
+	
+	// closed flags
+	
+	Wp.SetWaypointFlag( "Allies_Ladder_1", "closed", true );
+	Wp.SetWaypointFlag( "Allies_Ladder_2", "closed", true );
+	Wp.SetWaypointFlag( "Axis_Ladder_1", "closed", true );
+	Wp.SetWaypointFlag( "Axis_Ladder_2", "closed", true );
+	
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

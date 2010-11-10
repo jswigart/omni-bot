@@ -1,0 +1,226 @@
+global Map =
+{
+	crate1_secured = 0,
+	crate2_secured = 0,
+
+	allied_compost_built_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+	
+	axis_compost_built_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+	},
+
+	truck_construct_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "truck_construct_Built" );
+	},
+
+	gondel_c_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gondel_c_Built" );
+	},
+
+	defense3_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "defense3_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	defense4_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "defense4_Built" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+	
+	axis_compost_built_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "axis_compost_built_Destroyed" );
+	},
+
+	door2_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold_crate2" );
+
+		Util.MapDebugPrint( "door2_Destroyed" );
+	},
+
+	gondel_c_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gondel_c_Destroyed" );
+	},
+
+	door1_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold_crate1" );
+
+		Util.MapDebugPrint( "door1_Destroyed" );
+	},
+
+	defense3_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "defense3_Destroyed" );
+	},
+
+	defense4_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "defense4_Destroyed" );
+	},
+	
+	secured_crate1 = function( trigger )
+	{
+		Map.crate1_secured = 1;
+		
+		if( Map.crate1_secured == 1 && Map.crate2_secured == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
+		}
+	},
+	
+	secured_crate2 = function( trigger )
+	{
+		Map.crate2_secured = 1;
+	
+		if( Map.crate1_secured == 1 && Map.crate2_secured == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_compost_built_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_compost_built_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_compost_built_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_compost_built_Destroyed );
+	OnTrigger( "The Truck has been repaired!", Map.truck_construct_Built );
+	OnTrigger( "The Gondel Generator has been repaired!", Map.gondel_c_Built );
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.defense3_Built );
+	OnTrigger( "Truck Barrier #2 has been constructed.", Map.defense4_Built );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.defense3_Destroyed );
+	OnTrigger( "Truck Barrier #2 has been destroyed.", Map.defense4_Destroyed );
+	OnTrigger( "The Gondel Generator has been destroyed!", Map.gondel_c_Destroyed );
+	OnTrigger( "Documents Defense #1 Destroyed.", Map.door1_Destroyed );
+	OnTrigger( "Document Defense #2 Destroyed.", Map.door2_Destroyed );
+	OnTrigger( "Allied team has secured the Documents!", Map.secured_crate1 );
+	OnTrigger( "Allied team has secured the Gold Crate!", Map.secured_crate2 );
+	
+	Util.DisableGoal ( "BUILD_Truck" );
+	Util.DisableGoal ( "ESCORT_Truck" );
+	Util.DisableGoal ( "FLAG_gold_crate.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42.*" );
+	
+	MapRoutes = 
+	{
+		CAPPOINT_Truck = 
+		{
+			ROUTE_documents = 
+			{
+				ROUTE_docsplit1 = 
+				{
+					ROUTE_doctunnelentrance = 
+					{
+						Weight = 2,
+						ROUTE_doctun1 = 
+						{
+							ROUTE_doctun2 = 
+							{
+								ROUTE_doctun3 = 
+								{
+									ROUTE_doctun4 = 
+									{
+										ROUTE_doctun5 = 
+										{
+											ROUTE_doctun6 = 
+											{
+												ROUTE_doctun7 = 
+												{
+													ROUTE_doctun8 = 
+													{
+														ROUTE_doctun9 = 
+														{
+															ROUTE_doctun10 = 
+															{
+																ROUTE_doctun11 = 
+																{
+																	ROUTE_doctun12 = 
+																	{
+																		ROUTE_doctun12break = 
+																		{
+																			ROUTE_doctunnelexit = 
+																			{
+																				ROUTE_docbackaxis = {},
+																				ROUTE_docfrontaxis = {},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					ROUTE_docbackway = 
+					{
+						ROUTE_docbackstairs = 
+						{
+							ROUTE_docbackaxis = {},
+							ROUTE_docfrontaxis = {},
+						},
+					},
+				},
+			},
+		},
+	};
+	
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+};

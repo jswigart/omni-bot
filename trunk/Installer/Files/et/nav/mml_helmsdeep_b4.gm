@@ -249,6 +249,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_cave_.*" );
 
 		//sleep(60); ///Why??? It was stopping the bots defending for 1 minute
+		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_hall_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_mg_al_hall_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_mg_al_hall_2" );

@@ -553,7 +553,7 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.AttackDagger, 10.0 );
 	Util.UpdateSwitchData();
 	Util.MapDebugPrint( "OnMapLoad" );
-	Print( "Omni-bot map script for", GetMapName(), "executed." );
+	print( "Omni-bot map script for", GetMapName(), "executed." );
 };
 
 global OnBotJoin = function( bot )

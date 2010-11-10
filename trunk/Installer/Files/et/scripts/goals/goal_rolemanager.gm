@@ -94,7 +94,7 @@ this.FindFreeRoleSlot = function()
 				// and change class if necessary
 				if ( newClass ) {
 					// increase class manager slots for this class
-					Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] = Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] + 1;				
+					Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] = Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] + 1;
 					this.Bot.ChangeClass(newClass);
 				}
 

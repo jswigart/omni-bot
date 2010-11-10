@@ -1,0 +1,118 @@
+global Map =
+{
+	barrier_defenses1_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_defenses1_Built" );
+	},
+
+	tunnelbarrier_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "tunnelbarrier_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	water_pump_1_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "water_pump_1_Built" );
+	},
+
+	barrier_defenses_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_defenses_Built" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+	
+	axis_compost_built_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "axis_compost_built_Destroyed" );
+	},
+
+	barrier_defenses_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_defenses_Destroyed" );
+	},
+
+	water_pump_1_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "water_pump_1_Destroyed" );
+	},
+
+	secretdoor_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "secretdoor_Destroyed" );
+	},
+
+	dynoteamdoor2_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "dynoteamdoor2_Destroyed" );
+	},
+
+	tunnelbarrier_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "tunnelbarrier_Destroyed" );
+	},
+
+	dynoteamdoor1_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "dynoteamdoor1_Destroyed" );
+	},
+
+	barrier_defenses1_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_defenses1_Destroyed" );
+	},
+
+ 	Allies_Capture_Flag = function( trigger )
+ 	{
+ 		Util.MapDebugPrint( "Allies_Capture_Flag" );
+ 	},
+
+ 	Axis_Capture_Flag = function( trigger )
+ 	{
+ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
+ 	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Axis team has built the tunnel barrier!", Map.tunnelbarrier_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_compost_built_Built );
+	OnTrigger( "Axis team has built the barrier defenses!", Map.barrier_defenses1_Built );
+	OnTrigger( "Axis team has built the barrier defenses!", Map.barrier_defenses_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_compost_built_Built );
+	OnTrigger( "Allies have built the Oasis Water Pump!", Map.water_pump_1_Built );
+	OnTrigger( "Allied team has destroyed the tunnel barrier!", Map.tunnelbarrier_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_compost_built_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_compost_built_Destroyed );
+	OnTrigger( "Allied team has destroyed the barrier defenses!", Map.barrier_defenses1_Destroyed );
+	OnTrigger( "Allied team has destroyed the barrier defenses!", Map.barrier_defenses_Destroyed );
+	OnTrigger( "Axis have damaged the Oasis Water Pump!", Map.water_pump_1_Destroyed );
+	OnTrigger( "Allies have destroyed the Axis team door!!", Map.dynoteamdoor2_Destroyed );
+	OnTrigger( "Allies have destroyed the Axis team door!!", Map.dynoteamdoor1_Destroyed );
+	OnTrigger( "the secret door has been destroyed", Map.secretdoor_Destroyed );
+ 	OnTrigger( "Allies capture the forward spawn!", Map.Allies_Capture_Flag );
+ 	OnTrigger( "Allies lose the forward spawn!", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+};

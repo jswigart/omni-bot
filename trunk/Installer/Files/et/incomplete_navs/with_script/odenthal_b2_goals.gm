@@ -1,0 +1,173 @@
+global _MG = 
+{
+	BUILD_Allied_Command_Post = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "BUILD",
+		GroupName = "",
+		IgnoreTargets = 0,
+		MinRadius = 0,
+		Mobile = 0,
+		Name = "BUILD_Allied_Command_Post",
+		Offsets = 
+		{
+		},
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-768.000, 1976.000, 60.000),
+		Radius = 0,
+		SerialNum = 65,
+		Stance = "crouch",
+		TagName = "Allied Command Post",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	BUILD_Tank = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "BUILD",
+		GroupName = "",
+		IgnoreTargets = 0,
+		MinRadius = 0,
+		Mobile = 1,
+		Name = "BUILD_Tank",
+		Offsets = 
+		{
+			[0] = Vec3(98.125, 2.321, -37.779),
+			[1] = Vec3(98.125, -121.829, -39.314),
+			[2] = Vec3(18.208, -192.812, -39.620),
+			[3] = Vec3(-98.125, -116.571, -39.291),
+			[4] = Vec3(-98.125, 68.646, -39.493),
+		},
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(2294.000, -3036.000, 71.000),
+		Radius = 0,
+		SerialNum = 57,
+		Stance = "crouch",
+		TagName = "Tank",
+		TeamAvailability = 4,
+		Vehicle = "MOVER_tank",
+		Version = 1,
+	},
+	CAPPOINT_391 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_391",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(629.347, -291.872, 8.175),
+		Radius = 35,
+		SerialNum = 35,
+		TagName = "391",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	FLAG_documents = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_documents",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(344.000, -1708.000, 41.125),
+		Radius = 0,
+		SerialNum = 39,
+		TagName = "documents",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	MOVER_tank = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "MOVER",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "MOVER_tank",
+		Orientation = Vec3(0.000, 0.005, 0.000),
+		Position = Vec3(2360.000, -3052.310, 62.099),
+		Radius = 0,
+		SerialNum = 59,
+		TagName = "tank",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Allied_Command_Post = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 3,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Allied_Command_Post",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-769.000, 2043.499, 60.000),
+		Radius = 0,
+		SerialNum = 67,
+		TagName = "Allied Command Post",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	PLANT_Generator = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Generator",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-932.000, 460.000, 416.000),
+		Radius = 0,
+		SerialNum = 41,
+		TagName = "Generator",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Main_Entrance = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Main_Entrance",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-768.000, 120.000, 76.500),
+		Radius = 0,
+		SerialNum = 37,
+		TagName = "Main Entrance",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Sidedoor = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Sidedoor",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-2252.000, 684.000, 68.000),
+		Radius = 0,
+		SerialNum = 61,
+		TagName = "Sidedoor",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	Version = 1,
+};

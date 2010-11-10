@@ -133,6 +133,21 @@ global Map =
 
 		},
 	},
+	
+	alspawn =
+	{
+		Name = "alspawn",
+		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
+		OnEnter = function(ent)
+		{
+			Util.ChangeSpawn(TEAM.ALLIES, 2, 9);
+			Util.MapDebugPrint( "allies spawn back" );
+		},
+		OnExit = function(ent)
+		{
+
+		},
+	},
 
 	Defence_Door_Built = function( trigger )
 	{
@@ -382,6 +397,7 @@ global OnMapLoad = function()
 	ax3 = OnTriggerRegion(AABB(9820.930,-5729.719,-256.875,9899.950,-5390.941,-179.875),Map.axismove3);
 	axs = OnTriggerRegion(AABB(7475.192,-5727.833,-256.875,7529.048,-5365.951,-179.875),Map.axisstart);
 	ax4 = OnTriggerRegion(AABB(4283.083,-2519.155,-0.875,4882.948,-2450.586,77.330),Map.mid);
+	alspawn = OnTriggerRegion(AABB(7146.3,-5718-9,-254.875,7193.74,-5357.127,-177.67),Map.alspawn);
 	Util.SetGoalPosition( 936.025,-5423.23,192.125, "PLANT_Defence_Door" ) ;
 	Util.SetGoalPosition( 4952.605,-4241.878,28.125, "PLANT_Road_Barrier" ) ;
 	Util.SetRoleForGoals(Map.Flag_Design_Plans, ROLE.INFILTRATOR);

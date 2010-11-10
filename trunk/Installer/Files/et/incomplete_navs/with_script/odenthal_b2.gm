@@ -1,0 +1,155 @@
+//==========================================================================================
+//
+//	odenthal_b2.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	03 November 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno = 0;
+
+		Util.MapDebugPrint( "Generator_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Entrance_Dyno = 0;
+
+		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
+	},
+
+	Sidedoor_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Sidedoor_Dyno = 0;
+
+		Util.MapDebugPrint( "Sidedoor_Destroyed" );
+	},
+
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Taken" );
+	},
+
+	documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Returned" );
+	},
+
+	documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Secured" );
+	},
+
+	Tank_Stop =
+	{
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(), // Change the mover name to the mover of the Vehicle
+		OnEnter = function(ent)
+		{
+			Util.DisableGoal( "BUILD_Tank" );
+			Util.DisableGoal( "MOVER_tank" );
+			Util.MapDebugPrint( "Tank_Stop" );					
+		},
+		OnExit = function(ent)
+		{
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Magnetic seal deactivated - Doors opening!", Map.Generator_Destroyed );
+	OnTrigger( "The Main Entrance has been breached!", Map.Main_Entrance_Destroyed );
+	OnTrigger( "The Side Entrance has been breached!", Map.Sidedoor_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.documents_Returned );
+	OnTrigger( "Allies have secured the documents!", Map.documents_Secured );
+
+	Tankstop = OnTriggerRegion(AABB(1262.436,605.065,9.125,1352.875,867.070,83.125),Map.Tank_Stop);
+	
+	Util.SetGoalOffset( 0, 75, 0, "PLANT_Generator" );
+	
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
