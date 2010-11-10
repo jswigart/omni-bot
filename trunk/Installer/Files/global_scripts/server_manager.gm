@@ -223,9 +223,9 @@ global ManagePlayers = function( playerinfo )
 	}
 
 	// class manager
-	if ( Util.ManageClasses ) {
-		Util.UpdateClasses();
-	}
+	//if ( Util.ManageClasses ) {
+	//	Util.UpdateClasses();
+	//}
 };
 
 global MinAndMaxBots = function(NumPlayers)

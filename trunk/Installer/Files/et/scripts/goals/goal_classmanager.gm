@@ -1,0 +1,50 @@
+// This script determines if a bot needs to change classes
+
+// These parameters are required
+this.Name = "ClassManager";
+this.Parent = "Limbo";
+this.AutoAdd = true;
+
+this.GetPriority = function()
+{
+	// need to wait a bit for map starts.
+	sleep(1);
+
+	// init vars
+	botclass = this.Bot.GetClass();
+	team = this.Bot.GetTeam();
+	Util.LightClass = null;
+	Util.HeavyClass = null;
+	
+	// update class counts
+	Util.UpdateClasses();
+	Util.TeamLightClass(team);
+	Util.TeamHeavyClass(team);
+
+	// palota's logic for moving bots to 0 count classes regardless of min class counts
+	if ( Util.LightClass && Util.HeavyClass == null && Server.ClassCount[team][Util.LightClass] == 0 )
+	{
+		foreach ( class and num in Server.ClassCount[team] )
+		{
+			if ( num > 1 )
+			{
+				Util.HeavyClass = class;
+			}
+		}
+	}
+
+	// hoops to jump through before actually changing class ...
+	if ( Util.LightClass && Util.HeavyClass
+			&& (Util.LightClass != Util.HeavyClass) // don't change to same class
+			&& ( Server.ClassCount[team][Util.HeavyClass] - 1 !=  Server.ClassCount[team][Util.LightClass] // don't change if it would just reverse the problem
+					|| Server.ClassCount[team][Util.LightClass] < Server.MinClassCount[team][Util.LightClass] || Server.MinClassCount[team][Util.HeavyClass] == 0 )
+		)
+	{
+		if ( this.Bot.GetClass() == Util.HeavyClass ) {
+			this.Bot.ChangeClass(Util.LightClass);
+		}
+	}
+	
+	// only run it once (each time they go to limbo)
+	block(0);
+};
