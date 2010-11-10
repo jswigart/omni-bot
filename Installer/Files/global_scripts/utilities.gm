@@ -2666,6 +2666,7 @@ member ResetClassCounters = function()
 	}
 };
 
+// cs: todo: remove this. moved to goal_classmanager
 member LightClass = null;
 member HeavyClass = null;
 member DoClassChanges = function()
@@ -2674,6 +2675,17 @@ member DoClassChanges = function()
 	{
 		this.TeamLightClass(id);
 		this.TeamHeavyClass(id);
+
+		if ( this.LightClass && this.HeavyClass == null && Server.ClassCount[id][this.LightClass] == 0 )
+		{
+			foreach ( class and num in Server.ClassCount[id] )
+			{
+				if ( num > 1 )
+				{
+					this.HeavyClass = class;
+				}
+			}
+		}
 
 		// slit your wrist logic
 		if ( this.LightClass && this.HeavyClass
@@ -2713,7 +2725,7 @@ member UpdateClasses = function()
 	}
 
 	this.TeamClassCounter();
-	this.DoClassChanges();
+	//this.DoClassChanges();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2746,9 +2758,15 @@ member TeamLightClass = function(_team)
 				}
 				else
 				{
-					// change these first
-					num = -99;
-					numNeeded = 99;
+					// prioritize classes that have no players
+					if ( num == 0 ) {
+						num = -99;
+						numNeeded = 99;
+					}
+					else {
+						num = -98;
+						numNeeded = 98;
+					}
 				}
 			}
 			else
@@ -2767,7 +2785,7 @@ member TeamLightClass = function(_team)
 			}
 		}
 
-		yield();
+		//yield();
 	}
 
 	this.LightClass = lightClass;
@@ -2782,17 +2800,17 @@ member TeamHeavyClass = function(_team)
 		return null;
 	}
 
-	heavyClassNum = 0;
+	heavyClassNum = -99;
 	heavyClass = null;
 
 	foreach ( class and num in Server.ClassCount[_team] )
 	{
-		if ( num <= Server.MinClassCount[_team][class] )
-		{
-			continue;
-		}
-		else
-		{
+		//if ( num <= Server.MinClassCount[_team][class] )
+		//{
+		//	continue;
+		//}
+		//else
+		//{
 			// get rid of 0 min count classes first
 			if ( Server.MinClassCount[_team][class] == 0 && Server.ClassCount[_team][class] > 0 )
 			{
@@ -2802,7 +2820,7 @@ member TeamHeavyClass = function(_team)
 			{
 				numExtra = num - Server.MinClassCount[_team][class];
 			}
-		}
+		//}
 
 		if ( numExtra > heavyClassNum )
 		{
@@ -2810,7 +2828,7 @@ member TeamHeavyClass = function(_team)
 			heavyClass = class;
 		}
 
-		yield();
+		//yield();
 	}
 
 	this.HeavyClass = heavyClass;
