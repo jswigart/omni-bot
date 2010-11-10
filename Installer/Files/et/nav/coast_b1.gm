@@ -21,7 +21,7 @@ global Map =
 		Enabled = false,
 	},
 
-	Suicide = 0,
+	Suicide = 1,
 
 	EscortVehicle =
 	{
@@ -42,7 +42,7 @@ global Map =
 
 	Classes = function()
 	{
-		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 2;
 		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
 		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
 		Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
@@ -57,13 +57,10 @@ global Map =
 
 	Command_Post_Built = function( trigger )
 	{
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.ALLIES )
-			{
-				bot.ChangeSpawnPoint( 2 );
-			}
-		}
+		
+			Util.ChangeSpawn(TEAM.ALLIES, 5, 9);
+			
+		
 
 		Util.MapDebugPrint( "Command_Post_Built" );
 	},
@@ -102,8 +99,7 @@ global Map =
 
 	Command_Post_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		Util.ChangeSpawn(TEAM.ALLIES, 0, 9);
 
 		Util.MapDebugPrint( "Command_Post_Destroyed" );
 	},
@@ -136,7 +132,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_raft.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_aobj.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_araft.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
 
+		
 		foreach ( id and bot in BotTable )
 		{
 			if ( bot.GetTeam() == TEAM.AXIS )
@@ -150,6 +148,7 @@ global Map =
 				}
 			}
 		}
+		Util.ChangeSpawn(TEAM.ALLIES, 0, 9);
 
 		Util.MapDebugPrint( "obj_Taken" );
 	},
@@ -160,20 +159,15 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_raft.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_aobj.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_araft.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_cp.*" );
 
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-			{
-				bot.ChangeSpawnPoint( 0 );
+		Util.ChangeSpawn(TEAM.AXIS, 0, 9);
+		Util.ChangeSpawn(TEAM.ALLIES, 5, 9);
 
 				//distance check instead?
-				if ( Map.Suicide && bot.GetReinforceTime() < 5 )
-				{
-					bot.ExecCommand( "kill" );
-				}
-			}
-		}
+				
+			
+	
 
 		Util.MapDebugPrint( "obj_returned" );
 	},
@@ -185,15 +179,19 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_aobj.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_h.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bar.*" );
 		Util.EnableGoal("PLANT_Wooden_Gate");
 		Util.EnableGoal("BUILD_Command_Post");
-		Util.EnableGoal("MOUNTMG42.*");
-		Util.EnableGoal("REPAIRMG42.*");
+		Util.EnableGoal("MOUNTMG42.*", TEAM.AXIS);
+		Util.EnableGoal("REPAIRMG42.*", TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_allies1" );
 
 		Util.DisableGroup( "path", TEAM.AXIS);
 		Util.DisableGroup( "2", TEAM.AXIS);
 		Util.EnableGoal("FLAG_obj");
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bar.*" );
+		
 		Wp.SetWaypointFlag( "wall1", "closed", false );
 		Wp.SetWaypointFlag( "wall2", "closed", false );
 		Util.MapDebugPrint( "main_gate" );
@@ -222,6 +220,7 @@ global Map =
 
 			Util.EnableGroup( "path", TEAM.AXIS);
 			Util.EnableGroup( "2", TEAM.AXIS);
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_allies1" );
 			Util.MapDebugPrint( "tank_past gate" );
 		},
 		OnExit = function(ent) { },
@@ -244,7 +243,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Tank_Built );
 	OnTrigger( "MISSING_STRING", Map.Tank_Barrier_1_Built );
 	OnTrigger( "MISSING_STRING", Map.Wooden_Gate_Built );
-	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
 	OnTrigger( "The Sidegate has been destroyed!", Map.Sidegate_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Tank_Barrier_1_Destroyed );
 	OnTrigger( "The Wooden Gate has been destroyed!", Map.Wooden_Gate_Destroyed );
@@ -265,13 +264,16 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_aobj.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_araft.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bar.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_path.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_raft.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_ally1" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_allies1" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
 
 	Wp.SetWaypointFlag( "wall1", "closed", true );
 	Wp.SetWaypointFlag( "wall2", "closed", true );
@@ -279,14 +281,11 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( 1860, -428.6, 600.125, "PLANT_Sidegate" ) ;
 	Util.SetGoalPosition( 1786, 1487, 611.825, "PLANT_Tank_Barrier_1" ) ;
 	Util.SetGoalPosition( 297.35, 4913, 819, "PLANT_Wooden_Gate" ) ;
-//~	Util.SetGoalPosition( 1049.7, -1089, 552.145, Map.Build_Tank ) ;
-//~	ETUtil.LimitToClass("PLANT_Sidegate" , TEAM.ALLIES, CLASS.COVERTOPS);
-//~	ETUtil.LimitToClass("PLANT_Wooden_Gate" , TEAM.ALLIES, CLASS.COVERTOPS);
+
 
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=90} );
 	SetMapGoalProperties( "DEFEND_start.*", {MinCampTime=60, MaxCampTime=90} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=30, MaxCampTime=90} );
-//~	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=90} );
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=25, MaxCampTime=60} );
 //~	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=40, MaxCampTime=60} );
 
@@ -297,6 +296,7 @@ global OnMapLoad = function()
 	Util.DisableGoal("REPAIRMG42.*");
 	Util.DisableGoal("PLANT_Wooden_Gate");
 	Util.DisableGoal("FLAG_obj");
+	Util.DisableGoal("MOBILEMG42_allies1");
 	Util.DisableGroup( "1", TEAM.ALLIES);
 	Util.DisableGroup( "2", TEAM.ALLIES);
 	Util.DisableGroup( "2", TEAM.AXIS);
@@ -310,10 +310,93 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 	Util.SetMaxUsers( 1, "ESCORT_tank" );
-	Util.SetMaxUsersInProgress( 3, "MOUNT_tank" );
-	Util.SetMaxUsersInUse( 1, "MOUNT_tank" );
+	Util.SetMaxUsers( 1, "PLANT_Command_Post" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 3, "MOUNT_tank" );
+	
 
-	Util.MapDebugPrint( "OnMapLoad" );
+	
+	
+	MapRoutes =
+	{
+		FLAG_obj = 
+		{
+			ROUTE_spawn0  = 
+			{
+				ROUTE_spawn1  = 
+				{
+					ROUTE_spawn2  = 
+					{
+						ROUTE_spawn3  = 
+						{
+							ROUTE_spawn9  = 
+							{
+								ROUTE_spawn8  = 
+								{
+									ROUTE_spawn13  = 
+									{
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_spawn12  = 
+				{
+					ROUTE_spawn13  = 
+					{
+					},
+				},
+			},
+		},
+	};
+	
+	BUILD_Command_Post = 
+		{
+			ROUTE_spawn0  = 
+			{
+				ROUTE_spawn1  = 
+				{
+					ROUTE_spawn2  = 
+					{
+						ROUTE_spawn3  = 
+						{
+							ROUTE_spawn4  = 
+							{
+								ROUTE_spawn5  = 
+								{
+								},
+							},
+						},
+					},
+				},
+				ROUTE_spawn12  = 
+				{
+					ROUTE_spawn11  = 
+					{
+						ROUTE_spawn10  = 
+						{
+							ROUTE_spawn9  = 
+							{
+								ROUTE_spawn6  = 
+								{
+									ROUTE_spawn5  = 
+									{
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		};
+	
+
+	MapRoutes.PLANT_Command_Post = MapRoutes.BUILD_Command_Post;
+	MapRoutes.PLANT_Wooden_Gate = MapRoutes.Flag_obj;
+	Util.Routes(MapRoutes);
+	Util.Routes(MapRoutes);
+
 };
 
 global OnBotJoin = function( bot )

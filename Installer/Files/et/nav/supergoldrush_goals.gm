@@ -1496,7 +1496,10 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.983, -0.176, 0.057),
+			[0] = Vec3(-0.188, 0.982, 0.011),
+			[1] = Vec3(-0.362, 0.931, 0.041),
+			[2] = Vec3(-0.678, 0.735, 0.013),
+			[3] = Vec3(-0.975, 0.220, 0.022),
 		},
 		CreateOnLoad = 1,
 		GoalType = "Defend",
@@ -1506,10 +1509,10 @@ global _MG =
 		MinRadius = 32,
 		Name = "DEFEND_Bank_11",
 		Orientation = Vec3(1.748, 0.058, -0.000),
-		Position = Vec3(2409.478, -387.722, -412.875),
+		Position = Vec3(2022.306, -1731.106, -415.681),
 		Radius = 0,
 		SerialNum = 353,
-		Stance = "crouch",
+		Stance = "stand",
 		TagName = "Bank_11",
 		TeamAvailability = 30,
 		Version = 1,
@@ -2300,6 +2303,8 @@ global _MG =
 		AimVectors = 
 		{
 			[0] = Vec3(-0.407, 0.914, -0.008),
+			[1] = Vec3(0.057, 0.998, -0.038),
+			[2] = Vec3(-0.971, 0.234, -0.047),
 		},
 		CreateOnLoad = 1,
 		GoalType = "Defend",
@@ -2309,7 +2314,7 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_Tank_Barrier2_10",
 		Orientation = Vec3(0.419, -0.008, -0.000),
-		Position = Vec3(2101.881, -497.950, -415.875),
+		Position = Vec3(1878.316, -941.698, -383.449),
 		Radius = 35,
 		SerialNum = 395,
 		Stance = "stand",

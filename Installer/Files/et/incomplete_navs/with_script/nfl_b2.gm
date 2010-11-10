@@ -1,0 +1,310 @@
+//==========================================================================================
+//
+//	nfl_b2.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	09 September 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Navigation =
+	{
+		wait =
+		{
+			navigate = function(_this)
+			{
+				timeout = 1;
+				while ( timeout > 0 ) {
+					_this.Goto(_this.Bot.GetPosition());
+					sleep(1);
+					timeout -= 1;
+				}
+			},
+		},
+	},
+	
+	Allied_Catapult_Kicker_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies" );
+
+		Util.MapDebugPrint( "Allied_Catapult_Kicker_Built" );
+	},
+
+	Allied_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_MG42_Construction_Built" );
+	},
+
+	Allied_Safety_FieldGoal_Net_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Safety_FieldGoal_Net_Built" );
+	},
+
+	Axis_Catapult_Kicker_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis" );
+		Util.MapDebugPrint( "Axis_Catapult_Kicker_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Built" );
+	},
+
+	Axis_Safety_FieldGoal_Net_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Safety_FieldGoal_Net_Built" );
+	},
+
+	Allied_Catapult_Kicker_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies" );
+
+		Util.MapDebugPrint( "Allied_Catapult_Kicker_Destroyed" );
+	},
+
+	Allied_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+
+		Util.MapDebugPrint( "Allied_MG42_Construction_Destroyed" );
+	},
+
+	Allied_Safety_FieldGoal_Net_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Allied_Safety_FieldGoal_Net_Destroyed" );
+	},
+
+	Axis_Catapult_Kicker_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis" );
+
+		Util.MapDebugPrint( "Axis_Catapult_Kicker_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Axis_Safety_FieldGoal_Net_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_Safety_FieldGoal_Net_Destroyed" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+	
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	allies_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Taken" );
+	},
+
+	allies_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Returned" );
+	},
+
+	allies_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured" );
+	},
+	
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Taken" );
+	},
+	
+	axis_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Returned" );
+	},
+
+	axis_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured" );
+	},
+	
+/*	dropped_obj =
+	{
+        Name = "dropped_obj",
+	TriggerOnEntity = GetEntity(),
+        OnEnter = function(ent)
+        {
+            SetAvailableMapGoals( 0, false, format("FLAG_%s", GetEntName(ent)) );
+
+        },
+        OnExit = function(ent)
+        {
+
+        },
+	},
+*/
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "^4AlliedTeam ^3have built the Catapult then Ready to use it!!", Map.Allied_Catapult_Kicker_Built );
+	OnTrigger( "^1AxisTeam ^3have destroyed ^4Allied Catapult!!", Map.Allied_Catapult_Kicker_Destroyed );
+	OnTrigger( "^4Allied Team ^3have built the MG42 nest!!", Map.Allied_MG42_Construction_Built );
+	OnTrigger( "^1Axis Team ^3have destroyed the MG42 Nest!!", Map.Allied_MG42_Construction_Destroyed );
+	OnTrigger( "^4Allied Team ^3have built the FieldGoal Net!!", Map.Allied_Safety_FieldGoal_Net_Built );
+	OnTrigger( "^1Axis Team ^3have destroyed the ^4Allied FieldGoal Net!!", Map.Allied_Safety_FieldGoal_Net_Destroyed );
+	
+	OnTrigger( "^1axisTeam ^3have built the Catapult then Ready to use it!!", Map.Axis_Catapult_Kicker_Built );
+	OnTrigger( "^4AlliedTeam ^3have destroyed ^4Allied Catapult!!", Map.Axis_Catapult_Kicker_Destroyed );
+	OnTrigger( "^1Axis Team ^3have built the MG42 nest!!", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "^4Allied Team ^3have destroyed the MG42 Nest!!", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "^1Axis Team ^3have built the FieldGoal Net!!", Map.Axis_Safety_FieldGoal_Net_Built );
+	OnTrigger( "^4Allied Team ^3have destroyed the ^1Axis FieldGoal Net!!", Map.Axis_Safety_FieldGoal_Net_Destroyed );
+	
+	OnTrigger( "^4Allied ^3Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "^1Axis ^3Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "^1Axis team ^3has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "^4Allied team ^3has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	
+	
+	
+	OnTrigger( "MISSING_STRING", Map.allies_gold_crate_Taken );
+	OnTrigger( "MISSING_STRING", Map.allies_gold_crate_Returned );
+	OnTrigger( "MISSING_STRING", Map.allies_gold_crate_Secured );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Taken );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Returned );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Secured );
+	
+//	Trigger2 = OnTriggerRegion(AABB(1803.998,494.894,-106.875,1841.998,532.894,-56.875),Map.dropped_obj);
+//	Trigger3 = OnTriggerRegion(AABB(-1588.124,492.066,-110.875,-1550.124,530.066,-60.875),Map.dropped_obj);
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	Util.EnableGoal( "AMMOCAB.*", true );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allies_gold_crate" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold_crate" );
+	
+	SetGoalPriority( "BUILD_Allied_Catapult_Kicker", 0.92, 0, 0 );
+	SetGoalPriority( "BUILD_Axis_Catapult_Kicker", 0.92, 0, 0 );
+	SetGoalPriority( "BUILD_Allied_Safety_FieldGoal_Net", 0.91, 0, 0 );
+	SetGoalPriority( "BUILD_Axis_Safety_FieldGoal_Net", 0.91, 0, 0 );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "CAPPOINT.*" );
+	Util.SetMaxUsers( 1, "PLANT.*" );
+	Util.SetMaxUsers( 2, "BUILD.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

@@ -1,0 +1,233 @@
+global Map =
+{
+	Switches =
+	{
+		platform2_switch =
+		{
+			Debug = true,
+			WaypointName = "platform2_switch",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			//LimitDistance = 1000,
+		},
+
+		platform2_call_switch =
+		{
+			Debug = true,
+			WaypointName = "platform2_call_switch",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			//LimitDistance = 1000,
+		},
+	},
+
+	towerfence_01_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "towerfence_01_Built" );
+	},
+
+	allied_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_cp_open_Built" );
+	},
+
+	axis_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_cp_open_Built" );
+	},
+
+	towerfence_02_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "towerfence_02_Built" );
+	},
+
+	towerfence_02_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "towerfence_02_Destroyed" );
+	},
+
+	allied_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_cp_open_Destroyed" );
+	},
+
+	backdoor_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "backdoor_Destroyed" );
+	},
+
+	frontgate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "frontgate_Destroyed" );
+	},
+
+	radar_obj1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_obj1_Destroyed" );
+	},
+
+	axis_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_cp_open_Destroyed" );
+	},
+
+	towerfence_01_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "towerfence_01_Destroyed" );
+	},
+
+	platform2_goto = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		vel = ToVector(trigger.Action);
+
+		if ( vel.z < 0 )
+		{
+			Map.Switches.platform2_call_switch.LimitTeam = 0;
+			Map.Switches.platform2_switch.LimitTeam = (1<<TEAM.ALLIES);
+			print("pl2 moving down");
+		}
+
+		if ( vel.z > 0 )
+		{
+			Map.Switches.platform2_call_switch.LimitTeam = (1<<TEAM.ALLIES);
+			Map.Switches.platform2_switch.LimitTeam = 0;
+			print("pl2 moving up");
+		}
+
+		Util.MapDebugPrint( "platform2_goto" );
+	},
+
+//~ 	Allies_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		Util.MapDebugPrint( "Allies_Capture_Flag" );
+//~ 	},
+
+//~ 	Axis_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
+//~ 	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.axis_cp_open_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_cp_open_Built );
+	OnTrigger( "MISSING_STRING", Map.towerfence_01_Built );
+	OnTrigger( "MISSING_STRING", Map.towerfence_02_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_cp_open_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_cp_open_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.radar_obj1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.towerfence_01_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.backdoor_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.towerfence_02_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.frontgate_Destroyed );
+	OnTrigger( "platform2_goto", Map.platform2_goto );
+//~ 	OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+//~ 	OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	if(bot.GetTeam() == TEAM.ALLIES)
+	{
+		// Start a thread on each Allied bot that checks if it's near a certain waypoint
+		bot.WpThread = bot:thread(ScriptGoals.WatchForWaypoint.ThreadFunc);
+	}
+	//~ bot.TargetBreakableDist = 300.0;
+};
+
+ScriptGoals.WatchForWaypoint = 
+{
+
+	// The name for this goal
+	Name = "watch_for_waypoint",
+
+	ThreadFunc = function()
+	{
+
+		//Data for platform2: Get the position of two named waypoints
+		wppos = Util.GetWpNamePosition("platform2_switch");
+		targetpos = Util.GetWpNamePosition("platform2_target");
+
+		// The loop for the thread:
+		while (true)
+		{
+
+			if (this.DistanceTo(wppos) < 45)
+			{
+				this.Say("Distance: ", this.DistanceTo(wppos));
+				if ( this.scriptgoal != ScriptGoals.WatchForWaypoint.Name )
+				{
+					this.Say("Bleh!");
+					this.scriptgoal = ScriptGoals.WatchForWaypoint.Name;
+					
+					this.starttime = GetTime();
+					this.EnableMovement(false);
+					dowhile ( GetTime() < this.starttime+4000 && this.Health > 0 && this.DistanceTo(targetpos) > 60 )
+					{
+						this.Say("Distance: ", this.DistanceTo(targetpos));
+						sleep(1);
+					}
+					this.SetScriptControlled(false);
+					this.EnableMovement(true);
+					this.scriptgoal = null;
+					this.ResetSubGoals();
+				}
+			}
+			yield();
+		}
+	},
+
+};

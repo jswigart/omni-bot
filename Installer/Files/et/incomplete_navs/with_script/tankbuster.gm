@@ -369,6 +369,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_Lorry_Wreck", 0.95 );
 	SetGoalPriority( "DEFUSE_Allied_Command_Post.*", 0.90 );
 	
+	MineField = OnTriggerRegion(AABB(534.210,2098.199,1.125,1169.149,3233.191,94.277), RegionTrigger.DisableCombatMovement);
 	
 	MapRoutes =
 	{
