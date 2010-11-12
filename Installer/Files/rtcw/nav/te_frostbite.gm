@@ -306,6 +306,8 @@ global Map =
 		}
 
 		Map.DocStatus = 1;
+		
+		Util.ChangeSpawn( TEAM.ALLIES, 2 ); 
 
 		//focus on transmitter
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Deliver_Defense.*" );
@@ -320,6 +322,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bGarage" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_btransmit" );
 
 		Map.AxisPushedForward = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -341,6 +344,8 @@ global Map =
 		}
 
 		Map.DocStatus = 0;
+		
+		Util.ChangeSpawn( TEAM.ALLIES, 0 ); 
 
 		//back to doc area
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
@@ -353,6 +358,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bGarage" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_btransmit" );
 
 		//if allowed, axis should /kill and spawn back at default (if close enough to spawn time)
 		//axis should spawn at default
