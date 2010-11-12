@@ -388,6 +388,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rcypanz.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
 
 		//allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_btrain.*" );
@@ -400,6 +401,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRockpath.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCommand.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
 	},
 
 	CP_Allies_Captured = function( trigger )
@@ -428,6 +430,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rcypanz.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
 		}
@@ -441,6 +444,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRockpath.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCommand.*" );
 		}
@@ -645,6 +649,8 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_reastgate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_beastgate.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 	SetGoalPriority( "DEFEND_eng_westgate.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_eng_opscover.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
@@ -662,10 +668,13 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_reastgate.*" );
+	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_beastgate.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
