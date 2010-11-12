@@ -128,7 +128,7 @@ this.Update = function()
 
 		if ( this.MapGoal.Stance == "crouch" )
 		{
-			this.Bot.HoldButton(BTN.CROUCH, 5);
+			this.Bot.HoldButton(BTN.CROUCH, 999);
 		}
 
 		this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);
