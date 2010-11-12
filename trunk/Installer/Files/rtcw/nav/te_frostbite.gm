@@ -26,6 +26,7 @@ global Map =
 	AxisPushedForward = true, // they start pushed forward
 	PanzHitlerFired = false, // Bots have not cleared hitler room yet
 	PanzLowerFired = false,
+	PanzMainDoorFired = false,
 	fallback = false,
 
 	//Dyno Counters
@@ -34,6 +35,7 @@ global Map =
 	WallDyno = 0,
 	PanzHitlerBots = 0,
 	PanzLowerBots = 0,
+	PanzMainDoorBots = 0,
 
 	//set to false if you don't want axis /killing when docs are returned
 	Suicide = true,
@@ -135,6 +137,35 @@ global Map =
 						}
 					}
 					Map.PanzLowerBots -= 1;
+				}
+				yield();
+			},
+		},
+		rpanzmaindoor =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !Map.PanzMainDoorFired && Map.PanzMainDoorBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "rpanzmaindoor" );
+					Map.PanzMainDoorBots += 1;
+					Map.PanzMainDoorFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							//sleep( 2 ); // Wait for axis to arrive
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzMainDoorBots -= 1;
 				}
 				yield();
 			},
@@ -316,6 +347,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Doc_Defense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rCourtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rflag.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Defense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
@@ -431,6 +463,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rflag.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
 
 
@@ -525,6 +558,8 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_CP_defense.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_bGarage" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rflag.*" );
+	RTCWUtil.LimitToClass( "GRENADE_rflag.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	// Artillery
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlagArty.*" );
