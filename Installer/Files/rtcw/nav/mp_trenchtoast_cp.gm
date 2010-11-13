@@ -354,6 +354,7 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );

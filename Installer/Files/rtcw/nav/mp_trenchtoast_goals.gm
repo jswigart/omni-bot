@@ -10,7 +10,7 @@ global _MG =
 		Orientation = Vec3(0.036, 0.018, -0.000),
 		Position = Vec3(5757.794, 12835.806, 612.440),
 		Radius = 10,
-		SerialNum = 180,
+		SerialNum = 68,
 		TagName = "bMid_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -25,7 +25,7 @@ global _MG =
 		Orientation = Vec3(0.720, 0.135, -0.000),
 		Position = Vec3(2921.871, 12111.875, 490.467),
 		Radius = 10,
-		SerialNum = 58,
+		SerialNum = 132,
 		TagName = "bMid_3",
 		TeamAvailability = 30,
 		Version = 1,
@@ -40,7 +40,7 @@ global _MG =
 		Orientation = Vec3(1.125, 0.009, -0.000),
 		Position = Vec3(3834.125, 10274.435, 688.609),
 		Radius = 10,
-		SerialNum = 132,
+		SerialNum = 134,
 		TagName = "bMid_4",
 		TeamAvailability = 30,
 		Version = 1,
@@ -55,7 +55,7 @@ global _MG =
 		Orientation = Vec3(0.395, -0.152, -0.000),
 		Position = Vec3(4630.505, 11865.131, 114.196),
 		Radius = 10,
-		SerialNum = 128,
+		SerialNum = 122,
 		TagName = "bMid_5",
 		TeamAvailability = 30,
 		Version = 1,
@@ -70,7 +70,7 @@ global _MG =
 		Orientation = Vec3(0.005, -0.069, -0.000),
 		Position = Vec3(6172.757, 13607.875, 641.857),
 		Radius = 10,
-		SerialNum = 122,
+		SerialNum = 124,
 		TagName = "bMid_6",
 		TeamAvailability = 30,
 		Version = 1,
@@ -85,7 +85,7 @@ global _MG =
 		Orientation = Vec3(3.096, -0.048, -0.000),
 		Position = Vec3(3806.485, 10316.125, 684.068),
 		Radius = 10,
-		SerialNum = 148,
+		SerialNum = 120,
 		TagName = "rMid_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -100,7 +100,7 @@ global _MG =
 		Orientation = Vec3(-3.111, 0.083, -0.000),
 		Position = Vec3(2960.486, 9426.125, 543.842),
 		Radius = 10,
-		SerialNum = 138,
+		SerialNum = 158,
 		TagName = "rMid_3",
 		TeamAvailability = 30,
 		Version = 1,
@@ -115,7 +115,7 @@ global _MG =
 		Orientation = Vec3(-2.775, -0.012, -0.000),
 		Position = Vec3(5274.884, 8260.125, 639.121),
 		Radius = 10,
-		SerialNum = 140,
+		SerialNum = 128,
 		TagName = "rMid_4",
 		TeamAvailability = 30,
 		Version = 1,
@@ -130,7 +130,7 @@ global _MG =
 		Orientation = Vec3(-2.840, -0.036, -0.000),
 		Position = Vec3(5164.673, 9641.535, 104.146),
 		Radius = 10,
-		SerialNum = 104,
+		SerialNum = 138,
 		TagName = "rMid_5",
 		TeamAvailability = 30,
 		Version = 1,
@@ -145,7 +145,7 @@ global _MG =
 		Orientation = Vec3(-1.890, -0.167, -0.000),
 		Position = Vec3(5908.530, 11171.709, 352.344),
 		Radius = 10,
-		SerialNum = 144,
+		SerialNum = 140,
 		TagName = "rMid_6",
 		TeamAvailability = 30,
 		Version = 1,
@@ -160,7 +160,7 @@ global _MG =
 		Orientation = Vec3(0.011, -0.070, -0.000),
 		Position = Vec3(4861.023, 12247.419, 98.917),
 		Radius = 10,
-		SerialNum = 72,
+		SerialNum = 52,
 		TagName = "bFirstspawn_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -175,7 +175,7 @@ global _MG =
 		Orientation = Vec3(-0.039, -0.049, -0.000),
 		Position = Vec3(4967.347, 12241.219, 98.917),
 		Radius = 10,
-		SerialNum = 150,
+		SerialNum = 148,
 		TagName = "bFirstspawn_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -190,7 +190,7 @@ global _MG =
 		Orientation = Vec3(-0.012, -0.122, -0.000),
 		Position = Vec3(4986.753, 11885.792, -13.735),
 		Radius = 10,
-		SerialNum = 154,
+		SerialNum = 150,
 		TagName = "bFirstspawn_3",
 		TeamAvailability = 30,
 		Version = 1,
@@ -203,9 +203,9 @@ global _MG =
 		MinRadius = 0,
 		Name = "ARTILLERY_S_bMid_1",
 		Orientation = Vec3(0.009, -0.159, -0.000),
-		Position = Vec3(3795.000, 11692.854, 407.585),
+		Position = Vec3(3750.581, 11711.875, 411.773),
 		Radius = 10,
-		SerialNum = 124,
+		SerialNum = 152,
 		TagName = "bMid_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -220,7 +220,7 @@ global _MG =
 		Orientation = Vec3(-3.135, -0.104, -0.000),
 		Position = Vec3(4930.185, 9264.676, 97.314),
 		Radius = 10,
-		SerialNum = 120,
+		SerialNum = 104,
 		TagName = "rFirstspawn_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -235,7 +235,7 @@ global _MG =
 		Orientation = Vec3(-3.135, -0.134, -0.000),
 		Position = Vec3(4809.695, 9262.751, 105.300),
 		Radius = 10,
-		SerialNum = 116,
+		SerialNum = 144,
 		TagName = "rFirstspawn_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -250,7 +250,7 @@ global _MG =
 		Orientation = Vec3(-3.126, -0.041, -0.000),
 		Position = Vec3(4832.835, 9682.024, -16.747),
 		Radius = 10,
-		SerialNum = 114,
+		SerialNum = 116,
 		TagName = "rFirstspawn_3",
 		TeamAvailability = 30,
 		Version = 1,
@@ -263,9 +263,9 @@ global _MG =
 		MinRadius = 0,
 		Name = "ARTILLERY_S_rMid_1",
 		Orientation = Vec3(3.132, -0.069, -0.000),
-		Position = Vec3(6005.251, 9809.862, 415.934),
+		Position = Vec3(6039.514, 9792.125, 416.018),
 		Radius = 10,
-		SerialNum = 112,
+		SerialNum = 70,
 		TagName = "rMid_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -281,7 +281,7 @@ global _MG =
 		Orientation = Vec3(0.159, -0.102, -0.000),
 		Position = Vec3(5754.136, 6844.911, 394.780),
 		Radius = 70,
-		SerialNum = 108,
+		SerialNum = 112,
 		TagName = "bFirstspawn",
 		TeamAvailability = 30,
 		Version = 1,
@@ -297,7 +297,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(5085.277, 9456.104, 31.767),
 		Radius = 70,
-		SerialNum = 106,
+		SerialNum = 108,
 		TagName = "bMid_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -313,7 +313,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(5839.949, 9638.717, 320.125),
 		Radius = 35,
-		SerialNum = 172,
+		SerialNum = 78,
 		TagName = "bMid_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -329,7 +329,7 @@ global _MG =
 		Orientation = Vec3(-2.956, -0.248, -0.000),
 		Position = Vec3(4084.969, 14620.944, 369.791),
 		Radius = 70,
-		SerialNum = 102,
+		SerialNum = 106,
 		TagName = "rFirstspawn",
 		TeamAvailability = 30,
 		Version = 1,
@@ -345,7 +345,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(4731.536, 12058.690, 25.061),
 		Radius = 70,
-		SerialNum = 60,
+		SerialNum = 102,
 		TagName = "rMid_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -361,7 +361,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(3982.031, 11832.740, 320.125),
 		Radius = 15,
-		SerialNum = 100,
+		SerialNum = 154,
 		TagName = "rMid_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -386,7 +386,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 96,
+		SerialNum = 72,
 		Stance = "crouch",
 		TagName = "bRear_1",
 		TeamAvailability = 0,
@@ -415,7 +415,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 92,
+		SerialNum = 96,
 		Stance = "crouch",
 		TagName = "bRear_2",
 		TeamAvailability = 0,
@@ -444,7 +444,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 90,
+		SerialNum = 92,
 		Stance = "crouch",
 		TagName = "bRear_3",
 		TeamAvailability = 0,
@@ -473,7 +473,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 118,
+		SerialNum = 90,
 		Stance = "crouch",
 		TagName = "bRear_4",
 		TeamAvailability = 0,
@@ -502,7 +502,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 28,
+		SerialNum = 136,
 		Stance = "crouch",
 		TagName = "bRear_5",
 		TeamAvailability = 0,
@@ -531,7 +531,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 36,
+		SerialNum = 100,
 		Stance = "crouch",
 		TagName = "rRear_1",
 		TeamAvailability = 0,
@@ -560,7 +560,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 152,
+		SerialNum = 94,
 		Stance = "crouch",
 		TagName = "rRear_2",
 		TeamAvailability = 0,
@@ -589,7 +589,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 156,
+		SerialNum = 168,
 		Stance = "crouch",
 		TagName = "rRear_3",
 		TeamAvailability = 0,
@@ -618,7 +618,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 160,
+		SerialNum = 156,
 		Stance = "crouch",
 		TagName = "rRear_4",
 		TeamAvailability = 0,
@@ -647,7 +647,7 @@ global _MG =
 		{
 			[0] = "DEFENDER",
 		},
-		SerialNum = 70,
+		SerialNum = 160,
 		Stance = "crouch",
 		TagName = "rRear_5",
 		TeamAvailability = 0,
@@ -819,7 +819,7 @@ global _MG =
 		Position = Vec3(3164.999, 10944.002, 128.125),
 		PrimeGrenade = 1,
 		Radius = 32,
-		SerialNum = 134,
+		SerialNum = 48,
 		Stance = "stand",
 		TagName = "Barricade1",
 		TargetGoal = "EXPLODE_barrier1",
@@ -839,7 +839,7 @@ global _MG =
 		Position = Vec3(6620.000, 10497.998, 128.125),
 		PrimeGrenade = 1,
 		Radius = 32,
-		SerialNum = 198,
+		SerialNum = 118,
 		Stance = "stand",
 		TagName = "Barricade2",
 		TargetGoal = "EXPLODE_barrier2",
@@ -848,6 +848,12 @@ global _MG =
 	},
 	MOUNTMG42_bCentral = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.949, 0.306, 0.081),
+			[1] = Vec3(-0.304, 0.945, 0.118),
+			[2] = Vec3(-0.071, 0.982, 0.177),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -865,6 +871,9 @@ global _MG =
 	},
 	MOUNTMG42_bNest = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -882,6 +891,12 @@ global _MG =
 	},
 	MOUNTMG42_rCentral = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.312, -0.941, 0.131),
+			[1] = Vec3(0.075, -0.981, 0.176),
+			[2] = Vec3(-0.945, -0.317, 0.082),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -899,6 +914,9 @@ global _MG =
 	},
 	MOUNTMG42_rNest = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -916,6 +934,11 @@ global _MG =
 	},
 	MOUNTMG42_t364 = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.669, 0.723, -0.172),
+			[1] = Vec3(-0.999, 0.023, 0.027),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -933,6 +956,12 @@ global _MG =
 	},
 	MOUNTMG42_t451 = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.656, 0.755, -0.005),
+			[1] = Vec3(0.204, 0.979, 0.008),
+			[2] = Vec3(-0.389, 0.912, -0.130),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -950,6 +979,9 @@ global _MG =
 	},
 	MOUNTMG42_t452 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -967,6 +999,11 @@ global _MG =
 	},
 	MOUNTMG42_t454 = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.642, -0.765, -0.060),
+			[1] = Vec3(0.981, 0.192, 0.024),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -984,6 +1021,9 @@ global _MG =
 	},
 	MOUNTMG42_t455 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1001,6 +1041,12 @@ global _MG =
 	},
 	MOUNTMG42_t456 = 
 	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.394, -0.917, -0.058),
+			[1] = Vec3(0.765, -0.642, -0.046),
+			[2] = Vec3(0.458, -0.884, -0.092),
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1018,6 +1064,9 @@ global _MG =
 	},
 	MOUNTMG42_t457 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1035,6 +1084,9 @@ global _MG =
 	},
 	MOUNTMG42_t460 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1052,6 +1104,9 @@ global _MG =
 	},
 	MOUNTMG42_t461 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1069,6 +1124,9 @@ global _MG =
 	},
 	MOUNTMG42_t462 = 
 	{
+		AimVectors = 
+		{
+		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
 		GroupName = "",
@@ -1304,7 +1362,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(5665.740, 6762.234, 405.977),
 		Radius = 70,
-		SerialNum = 194,
+		SerialNum = 114,
 		TagName = "bCentral",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1319,7 +1377,7 @@ global _MG =
 		Orientation = Vec3(0.019, -0.142, -0.000),
 		Position = Vec3(5882.330, 6306.125, 752.125),
 		Radius = 250,
-		SerialNum = 30,
+		SerialNum = 130,
 		TagName = "bSpawn",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1334,7 +1392,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(7192.410, 10660.400, 391.745),
 		Radius = 70,
-		SerialNum = 38,
+		SerialNum = 162,
 		TagName = "east",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1349,7 +1407,7 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(4163.887, 14696.950, 379.910),
 		Radius = 70,
-		SerialNum = 46,
+		SerialNum = 194,
 		TagName = "rCentral",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1364,7 +1422,7 @@ global _MG =
 		Orientation = Vec3(3.125, -0.142, -0.000),
 		Position = Vec3(3905.865, 15197.875, 752.125),
 		Radius = 250,
-		SerialNum = 50,
+		SerialNum = 30,
 		TagName = "rSpawn",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1379,7 +1437,7 @@ global _MG =
 		Orientation = Vec3(-2.762, -0.133, -0.000),
 		Position = Vec3(2744.151, 10692.140, 335.583),
 		Radius = 70,
-		SerialNum = 66,
+		SerialNum = 36,
 		TagName = "west",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1400,7 +1458,7 @@ global _MG =
 		Orientation = Vec3(-0.036, -0.145, -0.000),
 		Position = Vec3(4821.012, 8411.982, 346.500),
 		Radius = 35,
-		SerialNum = 98,
+		SerialNum = 42,
 		Stance = "crouch",
 		TagName = "bSnipe1",
 		TeamAvailability = 30,
@@ -1426,7 +1484,7 @@ global _MG =
 		Orientation = Vec3(-0.086, -0.128, -0.000),
 		Position = Vec3(3992.909, 5851.498, 576.125),
 		Radius = 35,
-		SerialNum = 130,
+		SerialNum = 58,
 		Stance = "crouch",
 		TagName = "bSnipe2",
 		TeamAvailability = 30,
@@ -1504,7 +1562,7 @@ global _MG =
 		Orientation = Vec3(2.966, -0.120, -0.000),
 		Position = Vec3(5513.804, 12566.273, 314.333),
 		Radius = 35,
-		SerialNum = 34,
+		SerialNum = 146,
 		Stance = "crouch",
 		TagName = "rSnipe2",
 		TeamAvailability = 30,
@@ -1530,7 +1588,7 @@ global _MG =
 		Orientation = Vec3(-2.342, -0.161, -0.000),
 		Position = Vec3(2514.525, 13031.938, 526.152),
 		Radius = 35,
-		SerialNum = 42,
+		SerialNum = 178,
 		Stance = "crouch",
 		TagName = "rSnipe3",
 		TeamAvailability = 30,
