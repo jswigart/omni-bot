@@ -60,6 +60,13 @@ global Map =
 			Team = ( 1 << TEAM.ALLIES ),
 			Waypoint = "bStepsAS",
 		},
+		whas =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "whas",
+		},
+
 	},
 
 	Navigation =
@@ -172,6 +179,7 @@ global Map =
 		Map.WarehouseStatus = true;
 		Map.AlliesPushedForward = false;
 
+		Map.Airstrike.whas.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Communications_Tower );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rTower.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Warehouse_Entrance );
@@ -251,6 +259,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rDoor.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rGate.*" );
+		}
+		
+		if ( Map.FriendlyFire == 0 ) {
+			Map.Airstrike.whas.Enabled = true;
 		}
 	},
 
