@@ -248,6 +248,7 @@ global Map =
 
 			if ( !Map.DocStatus ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Doc_Attack_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
 			}
 		}
 		
@@ -267,7 +268,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Doc_Defense_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_hill.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_south_service" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allied_sidewall" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bStronghold.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_stronghold.*" );
@@ -325,10 +325,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Doc_Defense_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bStronghold.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_south_service" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allied_sidewall" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_stronghold.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Doc_Attack_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Deliver_Defend.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Deliver_Support_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_hill.*" );
@@ -379,13 +379,13 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Flag_axis_obj01 );
 			if ( !Map.DocStatus ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Doc_Attack_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
 			}
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_flag_respawn_obj" );
 		}
 
 		// *** Artillery
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 
 		// Allied Panzer
@@ -482,6 +482,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_rEng.*", 0.91 );
 	SetGoalPriority( "MOUNT.*", 0.69 );
 	SetGoalPriority( "CAMP_hill.*", 0.95 );
+	SetGoalPriority( "PANZER_rSpawnkill.*", 0.86 );
 
 	RTCWUtil.LimitToClass( "ATTACK_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
@@ -667,6 +668,8 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Doc_Attack_3 = MapRoutes.FLAG_axis_obj01;
 	MapRoutes.ATTACK_Doc_Attack_4 = MapRoutes.FLAG_axis_obj01;
 	MapRoutes.ATTACK_Doc_Attack_5 = MapRoutes.FLAG_axis_obj01;
+	MapRoutes.PANZER_rSpawnkill_1 = MapRoutes.FLAG_axis_obj01;
+	MapRoutes.PANZER_rSpawnkill_2 = MapRoutes.FLAG_axis_obj01;
 	MapRoutes.ATTACK_Flag_Attack_1 = MapRoutes.CHECKPOINT_flag_respawn_obj;
 	MapRoutes.ATTACK_Flag_Attack_2 = MapRoutes.CHECKPOINT_flag_respawn_obj;
 	MapRoutes.ATTACK_Flag_Attack_3 = MapRoutes.CHECKPOINT_flag_respawn_obj;
