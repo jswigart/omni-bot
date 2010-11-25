@@ -265,10 +265,6 @@ this.AdjustWeaponProperties = function(bot, skill)
 	{
 		w = bot.GetWeapon( weap );
 		if ( w ) {
-			errorX = this.difficulties[skill].AimErrorX;
-			errorY = this.difficulties[skill].AimErrorY;
-			offsetX = this.difficulties[skill].AimOffsetX;
-			offsetY = this.difficulties[skill].AimOffsetY;
 
 			if ( weap != WEAPON.MAUSER && weap != WEAPON.SNIPER && weap != WEAPON.SNIPERRIFLE ) {
 				offsetZ = this.difficulties[skill].AimOffsetZ;
@@ -276,8 +272,8 @@ this.AdjustWeaponProperties = function(bot, skill)
 				offsetZ = this.difficulties[skill].SniperOffset;
 			}
 
-			w.PrimaryFire.MaxAimError = Vector2( errorX, errorY );
-			w.PrimaryFire.AimOffset = Vector3( offsetX, offsetY, offsetZ );
+			w.PrimaryFire.MaxAimError = Vector2( this.difficulties[skill].AimErrorX, this.difficulties[skill].AimErrorY );
+			w.PrimaryFire.AimOffset = Vector3( this.difficulties[skill].AimOffsetX, this.difficulties[skill].AimOffsetY, offsetZ );
 
 			if ( Debug_weaps ) {
 				print( w.Name, "weapon properties set" );

@@ -119,11 +119,11 @@ this.Exit = function()
 	this.GoalState = this.LAY_EXPLOSIVE;
 	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
-	
+
 	// clear the occupied flag
 	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
-	}	
+	}
 };
 
 this.UpdateDynamite = function()
@@ -131,6 +131,7 @@ this.UpdateDynamite = function()
 	hasCoverSpot = false;
 	aimVectors = null;
 	this.spotIndex = null;
+	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
 
 	while(1)
 	{
@@ -234,6 +235,11 @@ this.UpdateDynamite = function()
 				this.AddAimRequest(Priority.Low, "facing", aimVectors[ r ]);
 
 				sleep(0.75);
+
+				coverTimeout -= 1;
+				if ( coverTimeout <= 0 ) {
+					this.Finished();
+				}
 			}
 			default:
 			{
