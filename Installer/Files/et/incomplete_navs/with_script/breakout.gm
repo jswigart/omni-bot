@@ -276,8 +276,36 @@ global OnMapLoad = function()
 	OnTrigger( "^3Axis have taken the Shack!", Map.shack_flag_Axis_Captured );
 	OnTrigger( "^3Allies have captured the Shack!", Map.shack_flag_Allies_Captured );
 
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	ETUtil.DisableGoal(".*");
+	ETUtil.EnableGoal("CHECKPOINT_shack_flag");
+	
+	
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tiger_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_crypt_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Embankment_Assault_Ramp" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_tunnel_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_crypt_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Embankment_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	
+	Util.SetMaxUsers( 1, "BUILD.*" );
+	Util.SetMaxUsers( 1, "CAMP.*" );
+	
+	Util.SetGoalPosition( 2620.5, 3606.6, 32.125, "PLANT_Tank_Barrier_1");
+	Util.SetGoalPosition( 1175.2, 3437.9, 324.69, "PLANT_Tank_Barrier_2");
 
 	print( "OnMapLoad" );
 };

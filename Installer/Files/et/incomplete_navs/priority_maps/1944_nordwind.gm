@@ -1,7 +1,7 @@
 /****************************************************
-Pathing and script updated by **PC** >M@t3o$<
+Pathing and script updated by **PC** Mateos
 Correspondant WAY file size : -
-Last Update : 2nd October 2010
+Last Update : 21 November 2010
 ****************************************************/
 
 global Map =
@@ -130,6 +130,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Warehouse_Door );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Delta.*" );
 		
+		Util.ChangeSpawn(TEAM.ALLIES, 1);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
 		
@@ -295,7 +296,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=120});
@@ -348,31 +348,6 @@ global OnMapLoad = function()
 				},
 			},
 			
-			ROUTE_AxisSpawn2 =
-			{
-				ROUTE_Hill1 =
-				{
-					ROUTE_Hill2 =
-					{
-						ROUTE_Hill3 =
-						{
-							ROUTE_Hill4 =
-							{
-								ROUTE_Ground3 ={},
-							},
-						},
-					},
-				},
-				
-				ROUTE_Ground1 =
-				{
-					ROUTE_Ground2 =
-					{
-						ROUTE_Ground3 ={},
-					},
-				},
-			},
-			
 			ROUTE_AxisSpawn3 =
 			{
 				ROUTE_Hill1 =
@@ -394,20 +369,6 @@ global OnMapLoad = function()
 		BUILD_Command_Post =
 		{
 			ROUTE_AxisSpawn =
-			{
-				ROUTE_Hill1 =
-				{
-					ROUTE_Hill2 =
-					{
-						ROUTE_Hill3 =
-						{
-							ROUTE_Hill4 = {},
-						},
-					},
-				},
-			},
-			
-			ROUTE_AxisSpawn2 =
 			{
 				ROUTE_Hill1 =
 				{
@@ -473,7 +434,7 @@ global OnMapLoad = function()
 	
 	Util.Routes(MapRoutes);
 
-	print( "Omni-bot map script for 1944 Nordwind by **PC** >M@t3o$<." );
+	print( "Omni-bot map script for 1944 Nordwind by **PC** Mateos" );
 };
 
 global OnBotJoin = function( bot )

@@ -19,7 +19,7 @@
 
 global Map =
 {
-    Debug = true,
+    Debug = false,
     
     EscortVehicle =
     {

@@ -37,15 +37,18 @@ Added cure poison with needle support to goal_deliversupplies
 Added caching of trace results in goal_paththrough_artillery
 Added ability to force routing to build goals with offsets defined
 Added missing finish criteria in goal_covertops
+Added cover spot timeout to plant goal(s)
 Changed stuckage check goal to write separate logs for each map
 Changed paththrough_useswitch goal so that the wait function overrides any exit conditions
+Improved goal_escort to allow escorting bots to assist in building of vehicle (thx palota)
 Improved bots ability to mount mg42's
 Increased priority of deliver supplies goal and limited distance to 1500 units
+Lowered default priority of repairMG42 goal
 
 === SCRIPT ===
 Fixed MapGoal.GetPriority
 Fixed role manager to auto increment class manager minclass counts when crucialClass is set
-Fixed role manager crucialClass 
+Fixed role manager crucialClass
 Added Util.BotChat function
 Added Util.CatName function
 Added Util.SetCustomProperty function
@@ -53,7 +56,7 @@ Added EvalFunc support to goal_paththrough_navigation
 Added spawn point and voice macro support to role manager
 Added optional viewDistance parameter to Util.ChangeToSniperWeapons
 Added CLASS.DYNAMITE_ENT, CLASS.MORTAR_ENT, CLASS.SATCHEL_ENT, and CLASS.LANDMINE_ENT
-Changed class manager to only select bots that are in limbo
+Moved class manager to script goal with several functional improvements (thx palota)
 
 === COMMANDS ===
 Added optional filter param for debugtriggers
@@ -62,4 +65,8 @@ Added draw_paththrough 0|1 for rendering 3D text over paththrough waypoints
 
 === WAYPOINTS ===
 Several fixes, updates, and new maps supported. See the Assembla repository logs for details.
+
+=== TOOLS ===
+Updated DMS (thx MickyP)
+Updated Notepad++ for omnibot (thx d00d)
 

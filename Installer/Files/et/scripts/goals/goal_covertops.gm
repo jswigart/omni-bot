@@ -29,6 +29,12 @@ this.OnSpawn = function()
 
 this.GetPriority = function()
 {
+	if (this.HasBinoculars)
+	{
+		this.ReleaseWeaponRequest();
+		this.HasBinoculars = false;
+	}
+
 	while(1)
 	{
 		delay = RandInt(15, 45);
@@ -36,6 +42,7 @@ this.GetPriority = function()
 		{
 			if ( this.Debug ) { this.Bot.Say("spot mine evaluation"); }
 			if ( !this.Bot.HasEntityFlag(ENTFLAG.INWATER) && RandInt(0,10) < 2 && !this.Bot.GetVelocity().IsZero() && !this.Bot.HasTarget() ) {
+				this.HasBinoculars = true;
 				this.AddWeaponRequest(Priority.High, WEAPON.BINOCULARS );
 				sleep(0.5);
 				this.Bot.HoldButton(BTN.ATTACK1, 3);
@@ -45,6 +52,7 @@ this.GetPriority = function()
 					binocTime += 1;
 				}
 				this.ReleaseWeaponRequest();
+				this.HasBinoculars = false;
 			}
 
 			sleep(delay);

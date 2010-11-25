@@ -7,7 +7,7 @@ this.RolePriorityBonus = 0.1;
 //////////////////////////////////////////////////////////////////////////
 
 this.Schema = Schema();
-this.Schema.Stance = Validate.Enum("stand","crouch","prone","random").Default("crouch");
+this.Schema.Stance = Validate.Enum("stand","crouch","prone","random","jump").Default("crouch");
 this.Schema.IgnoreTargets = Validate.IntRange(0,1).Default(0);
 
 //////////////////////////////////////////////////////////////////////////
@@ -199,7 +199,7 @@ this.Help = function()
 	print("		trace - the traceinfo of the entity to be built");
 	print("		this MUST be an OID entity, use /oidlist to confirm");
 	print("Optional:");
-	print("		stance - stand, crouch, prone");
+	print("		stance - stand, crouch, prone, random, jump");
 	print("		offset - only use for movable build goals");
 	print("		vehicle - this must be set if using offsets");
 };
@@ -210,7 +210,7 @@ this.SetProperty = function(property, value)
 {
 	switch(property)
 	{
-		case "stance": // crouch,prone, random, stand, default stand
+		case "stance": // stand, crouch, prone, random, jump, default crouch
 		{
 			this.Stance = value;
 		}

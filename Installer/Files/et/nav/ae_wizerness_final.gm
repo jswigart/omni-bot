@@ -41,11 +41,11 @@ global Map =
 			DEFENDER = // the DEFENDER role
 			{
 				spawnpt = 1,			// users of this role will choose spawnpt 1
-				numbots = 3,			// maximum of 2 bots
+				numbots = 4,			// maximum of 2 bots
 			},
 			ATTACKER =
 			{
-				numbots = 4,
+				numbots = 2,
 			},
 		},
  
@@ -55,11 +55,11 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 2,
-				numbots = 3,
+				numbots = 4,
 			},
 			ATTACKER =
 			{
-				numbots = 4,
+				numbots = 2,
 			},
 		},
 	},

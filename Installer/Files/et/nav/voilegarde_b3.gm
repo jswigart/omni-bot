@@ -6,7 +6,7 @@ Last Update : 31th October 2010
 
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = false,
 
 	Assault_Ramp_Dyno = 0,

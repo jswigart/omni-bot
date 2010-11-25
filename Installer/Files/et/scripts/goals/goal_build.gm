@@ -197,6 +197,10 @@ this.Update = function()
 		{
 			this.Bot.HoldButton(BTN.PRONE, 99);
 		}
+		else if ( this.MapGoal.Stance == "jump" )
+		{
+			this.Bot.HoldButton(BTN.JUMP, 99);
+		}
 		else if ( this.MapGoal.Stance == "random" )
 		{
 			rand = RandInt(0, tableCount(this.Stances) - 1);

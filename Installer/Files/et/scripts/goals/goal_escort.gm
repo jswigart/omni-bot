@@ -39,31 +39,6 @@ this.GetPriority = function()
 					continue;
 				}
 
-				if ( !goal.Offsets ) {
-					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, no offsets defined!", true);
-					continue;
-				}
-
-				vehGoal = GetGoal(goal.Vehicle);
-				if (!vehGoal) {
-					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, invalid vehicle defined!", true);
-					continue;
-				}
-
-				vehEnt = vehGoal.GetEntity();
-				if (!vehEnt) {
-					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, no entity for defined vehicle!", true);
-					continue;
-				}
-				else if ( GetEntFlags(vehEnt, ENTFLAG.DEAD) ) {
-					if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ vehEnt ] ) {
-						continue;
-					}
-				}
-
 				this.MapGoal = goal;
 				this.Priority = goal.GetGoalPriority(this.Bot);
 				break;
@@ -84,11 +59,17 @@ this.Enter = function()
 	}
 
 	this.VehicleGoal = GetGoal(this.MapGoal.Vehicle);
-	this.VehicleEnt = this.VehicleGoal.GetEntity();
+	if (!this.VehicleGoal) {
+		this.MapGoal.DisableGoal(true);
+		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, invalid vehicle defined!", true);
+		this.Finished();
+	}
 
-	// bad things happen if it's inv and dead and we auto finish the goal
-	if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ this.VehicleEnt ] ) {
-		this.AddFinishCriteria(this.VehicleEnt,"hasentflag",ENTFLAG.DEAD);
+	this.VehicleEnt = this.VehicleGoal.GetEntity();
+	if (!this.VehicleEnt) {
+		this.MapGoal.DisableGoal(true);
+		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, no entity for defined vehicle!", true);
+		this.Finished();
 	}
 
 	// randomly choose a button
@@ -158,8 +139,29 @@ this.Update = function()
 			this.Finished();
 		}
 
+		if ( GetEntFlags(this.VehicleEnt, ENTFLAG.DEAD) ) {
+			if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ this.VehicleEnt ] ) {
+				this.BlackboardDelay(10, this.MapGoal);
+				this.Finished();
+			}
+		}
+
+		deadCheckInterval = 20; // frames
 		while(!this.Bot.IsStuck(2))
 		{
+			// check every second (20 frames) so they can leave if damaged while already escorting
+			deadCheckInterval -= 1;
+			if ( deadCheckInterval < 1 ) {
+				deadCheckInterval = 20;
+
+				if ( GetEntFlags(this.VehicleEnt, ENTFLAG.DEAD) ) {
+					if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ this.VehicleEnt ] ) {
+						this.BlackboardDelay(10, this.MapGoal);
+						this.Finished();
+					}
+				}
+			}
+
 			this.GetNewVehicleLookPosition();
 			if ( this.Button )
 				{ this.Bot.PressButton(this.Button); }

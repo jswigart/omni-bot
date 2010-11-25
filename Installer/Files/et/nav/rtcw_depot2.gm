@@ -138,8 +138,7 @@ global Map =
 
 	warehouse_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		Util.ChangeSpawn(TEAM.AXIS, 4, 4);
 
 		print( "warehouse_flag_Axis_Captured" );
 	},
@@ -434,6 +433,9 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_gun7 = MapRoutes.DEFEND_gun1;
 	MapRoutes.ATTACK_radio1 = MapRoutes.PLANT_Allies_Field_HQ;
 	MapRoutes.ATTACK_radio2 = MapRoutes.PLANT_Allies_Field_HQ;
+	MapRoutes.ATTACK_radio3 = MapRoutes.PLANT_Allies_Field_HQ;
+	MapRoutes.ATTACK_radio4 = MapRoutes.PLANT_Allies_Field_HQ;
+	MapRoutes.ATTACK_radio5 = MapRoutes.PLANT_Allies_Field_HQ;
 	MapRoutes.CHECKPOINT_forward_bunker_flag = MapRoutes.DEFEND_gun1;
 	
 	MapRoutes.ATTACK_gun0 = MapRoutes.PLANT_Anti_Aircraft_Gun;
@@ -449,12 +451,12 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Anti_Aircraft_Gun_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
 	OnTrigger( "Axis have destroyed the North Gate!", Map.North_Gate_Destroyed );
-	OnTrigger( "Allies have destroyed the South gate!", Map.South_Gate_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.forward_bunker_flag_Axis_Captured );
+	OnTrigger( "Allies have destroyed the South Gate!", Map.South_Gate_Destroyed );
+	OnTrigger( "Axis have captured the Forward Deployment Area!", Map.forward_bunker_flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.forward_bunker_flag_Allies_Captured );
 	OnTrigger( "MISSING_STRING", Map.trackside_flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.trackside_flag_Allies_Captured );
-	OnTrigger( "MISSING_STRING", Map.warehouse_flag_Axis_Captured );
+	OnTrigger( "Axis have captured the Warehouse flag!", Map.warehouse_flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.warehouse_flag_Allies_Captured );
 	OnTrigger( "Planted at the Anti-Aircraft gun.", Map.aa_plant);
 	OnTrigger( "Planted at the Allies Field HQ.", Map.hq_plant);
@@ -463,6 +465,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg1" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg4" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg2" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_North_Gate" );
 //~	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg5" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_877" );
@@ -499,8 +502,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
 	
-	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_warehouse_flag" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_warehouse_flag" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_trackside_flag" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_trackside_flag" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_snipe7" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_snipe4" );
@@ -508,7 +512,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_South_Gate", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_radio1", 0.7, TEAM.ALLIES, CLASS.COVERTOPS );
 	SetGoalPriority( "DEFEND_radio2", 0.7, TEAM.ALLIES, CLASS.COVERTOPS );
-	SetGoalPriority( "PLANT_North_Gate", 0.9, TEAM.AXIS, CLASS.ENGINEER );
+//	SetGoalPriority( "PLANT_North_Gate", 0.9, TEAM.AXIS, CLASS.ENGINEER );
 //~	SetGoalPriority( "CHECKPOINT_warehouse_flag", 1.0, TEAM.AXIS, 0 );
 	
 	SetGoalPriority( "MOUNTMG42_.*", 0.2, 0, CLASS.MEDIC );
@@ -537,9 +541,13 @@ global OnMapLoad = function()
 	
 	Util.DisableGoal("MOVER_.*");
 	Util.DisableGoal("CALLARTILLERY_.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_axis1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_D_axis1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_axis1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_axis1" );
 	
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
 	print( "OnMapLoad" );
 };

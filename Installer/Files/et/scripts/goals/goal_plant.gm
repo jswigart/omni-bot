@@ -6,6 +6,7 @@ this.Parent = "HighLevel";		// The name of the parent. This setting determines w
 this.SkipGetPriorityWhenActive = true;
 this.LimitToClass(CLASS.COVERTOPS, CLASS.ENGINEER);
 this.LogExternal = false;
+this.DisableRifleNade = true; // should engineers conserve their charge?
 
 
 // define some goal states
@@ -148,7 +149,9 @@ this.Enter = function()
 	}
 
 	// disable the rifle nade while the goal is active
-	ETUtil.DisableRifleNade(this.Bot, true);
+	if ( this.DisableRifleNade ) {
+		ETUtil.DisableRifleNade(this.Bot, true);
+	}
 
 	this.UpdateDebugString();
 };
@@ -246,6 +249,7 @@ this.UpdateDynamite = function()
 	hasCoverSpot = false;
 	aimVectors = null;
 	this.spotIndex = null;
+	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
 
 	while(1)
 	{
@@ -364,6 +368,11 @@ this.UpdateDynamite = function()
 				this.AddAimRequest(Priority.Low, "facing", aimVectors[ r ]);
 
 				sleep(0.75);
+
+				coverTimeout -= 1;
+				if ( coverTimeout <= 0 ) {
+					this.Finished();
+				}
 			}
 			default:
 			{

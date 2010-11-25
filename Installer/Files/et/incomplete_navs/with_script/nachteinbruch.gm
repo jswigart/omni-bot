@@ -1,7 +1,7 @@
 /****************************************************
 Pathing updated and script by **PC** Mateos
 Correspondant WAY file size : -
-Last Update : 9th November 2010
+Last Update : 17th November 2010
 ****************************************************/
 
 global Map =
@@ -55,7 +55,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
+		Util.ChangeSpawn(TEAM.ALLIES, 5);
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allies_Command_Post );
 
 		if ( Map.Debug )
@@ -66,7 +68,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Ammo_Storage_Gate );
 
 		if ( Map.Debug )
@@ -77,7 +79,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Construction_MG42 );
 
 		if ( Map.Debug )
@@ -88,7 +90,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Pak_Cannon );
 
 		if ( Map.Debug )
@@ -283,7 +285,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Ammo_Storage_Gate );
 
 		if ( Map.Debug )
@@ -303,7 +305,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Contruction_MG42 );
 
 		if ( Map.Debug )
@@ -314,13 +316,15 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Pak_Cannon );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Ammo_Storage_Gate );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Ammo_Supply );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Allied_Command_Post );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliesStart.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_FlagCaptured.*" );
 
 		if ( Map.Debug )
 			{ print( "Main_Door_Destroyed" ); }
@@ -330,7 +334,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Pak_Cannon );
 
 		if ( Map.Debug )
@@ -341,10 +345,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Pak_Cannon );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Ammo_Storage_Gate );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Ammo_Supply );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Allied_Command_Post );
 
@@ -356,7 +360,11 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_ForwardBunkerMG );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_ForwardBunkerMG );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliesStart.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_forwardbunker_flag );
 
 		if ( Map.Debug )
@@ -367,8 +375,13 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_forwardbunker_flag );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_ForwardBunkerMG );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_ForwardBunkerMG );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_FlagCaptured.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliesStart.*" );
 
 		if ( Map.Debug )
 			{ print( "forwardbunker_flag_Allies_Captured" ); }
@@ -408,23 +421,24 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have breached the Side Gate!", Map.Side_Gate_Destroyed );
 	OnTrigger( "Axis capture the forward Shack!", Map.forwardbunker_flag_Axis_Captured );
 	OnTrigger( "Allies captured the Forward Bunker!", Map.forwardbunker_flag_Allies_Captured );
-	
+
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	
+
 	// *** AXIS GOALS ***
 	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_ForwardBunkerMG );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_ForwardBunkerMG );
-	
+
 	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Door );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliesStart.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_forwardbunker_flag );
-	
+
 	// *** GOALS PROPERTIES ***
 	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
@@ -435,9 +449,9 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
-	
+
 	Util.SetGoalOffset( 50, 20, -30, "PLANT_Side_Gate" );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=60, MaxCampTime=120});
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120});
@@ -445,31 +459,50 @@ global OnMapLoad = function()
 	// *** ROUTES ***
 	MapRoutes =
 	{
-		PLANT_Main_Door = 
+		PLANT_Main_Door =
 		{
-			ROUTE_NorthernShack  = 
+			ROUTE_NorthernShack  =
 			{
-				ROUTE_NorthernRight1  = 
+				ROUTE_NorthernRight1  =
 				{
 					ROUTE_NorthernRight2  = {},
 				},
 			},
 		},
-		
-		PLANT_Side_Gate = 
+
+		PLANT_Side_Gate =
 		{
-			ROUTE_NorthernShack  = 
+			ROUTE_NorthernShack  =
 			{
-				ROUTE_NorthernLeft1  = 
+				ROUTE_NorthernLeft1  =
 				{
-					ROUTE_NorthernLeft2  = 
+					ROUTE_NorthernLeft2  =
 					{
 						ROUTE_NorthernLeft3  = {},
 					},
 				},
 			},
 		},
+
+		CHECKPOINT_forwardbunker_flag =
+		{
+			ROUTE_AxisMainBunker  =
+			{
+				ROUTE_AxisMainDoorAA  =
+				{
+					ROUTE_AxisMainDoorAB  = {},
+					ROUTE_AxisMainDoorAC  = {},
+				},
+			},
+		},
 	};
+	
+	//Copy routes
+	MapRoutes.DEFEND_Alpha1 = MapRoutes.CHECKPOINT_forwardbunker_flag;
+	MapRoutes.DEFEND_Alpha2 = MapRoutes.CHECKPOINT_forwardbunker_flag;
+	MapRoutes.DEFEND_Alpha3 = MapRoutes.CHECKPOINT_forwardbunker_flag;
+	MapRoutes.DEFEND_Alpha4 = MapRoutes.CHECKPOINT_forwardbunker_flag;
+	//Alpha 5 and 7 are on Side Gate, maybe I'll make a AxisSideGate route node later.
 
 	Util.Routes(MapRoutes);
 
