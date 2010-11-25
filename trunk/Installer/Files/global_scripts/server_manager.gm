@@ -221,11 +221,6 @@ global ManagePlayers = function( playerinfo )
 	else {
 		AdjustForBotTeam(NumPlayers);
 	}
-
-	// class manager
-	//if ( Util.ManageClasses ) {
-	//	Util.UpdateClasses();
-	//}
 };
 
 global MinAndMaxBots = function(NumPlayers)

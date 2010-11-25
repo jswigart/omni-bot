@@ -12,7 +12,7 @@
 
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = false,
 
 	Command_Post_Dyno = 0,

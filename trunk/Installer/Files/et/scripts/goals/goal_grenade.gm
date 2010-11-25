@@ -111,6 +111,10 @@ this.Update = function()
 {
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
+		if ( !Util.HasAmmoForWeapon(this.Bot,this.weapon) )
+		{
+			this.Finished();
+		}
 		if(!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
@@ -118,7 +122,7 @@ this.Update = function()
 
 		if ( this.MapGoal.Stance == "crouch" )
 		{
-			this.Bot.HoldButton(BTN.CROUCH, 5);
+			this.Bot.HoldButton(BTN.CROUCH, 999);
 		}
 
 		this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);

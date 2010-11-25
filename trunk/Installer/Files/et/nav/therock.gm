@@ -28,7 +28,7 @@
 
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = false,
 
 	Breach_Wall_Dyno = 0,

@@ -31,7 +31,7 @@ Total                  39 DEFEND, 16 MG42, 23 SNIPE
 
 global Map =
 {
-    Debug = true,
+    Debug = false,
     
     Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
     Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",

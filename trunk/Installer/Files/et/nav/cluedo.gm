@@ -12,7 +12,7 @@
 //  Spelling ~ billard = Billiard ~ Tardis ~ 18 June 2010
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = true,
 
 	Allied_Command_Post_Dyno = 0,

@@ -262,20 +262,8 @@ this.AdjustWeaponProperties = function(bot, skill)
 		w = bot.GetWeapon(weap);
 		if ( w )
 		{
-			errorX = this.difficulties[skill].AimErrorX;
-			errorY = this.difficulties[skill].AimErrorY;
-			offsetX = this.difficulties[skill].AimOffsetX;
-			offsetY = this.difficulties[skill].AimOffsetY;
-			offsetZ = this.difficulties[skill].AimOffsetZ;
-
-			w.PrimaryFire.MaxAimError = Vector2(errorX, errorY);
-			w.PrimaryFire.AimOffset = Vector3(offsetX, offsetY, offsetZ);
-
-			// cs: disabling this for now. desireable behavior would be to delay the shot
-			// but this disables the weapon and they lose focus
-			// if ( SnipeWeapons[ weap ] ) {
-				// w.PrimaryFire.DelayAfterFiring = this.difficulties[skill].SnipeDelay;
-			// }
+			w.PrimaryFire.MaxAimError = Vector2(this.difficulties[skill].AimErrorX, this.difficulties[skill].AimErrorY);
+			w.PrimaryFire.AimOffset = Vector3(this.difficulties[skill].AimOffsetX, this.difficulties[skill].AimOffsetY, this.difficulties[skill].AimOffsetZ);
 		}
 	}
 };

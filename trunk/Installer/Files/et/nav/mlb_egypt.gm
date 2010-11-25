@@ -10,6 +10,7 @@
 //	      	               	gun can be destroyed after loaded, fixed gold_Returned trigger, added templedoor_Destroyed trigger
 //	palota	29 October 2010	routes to switches and cappoint, ignore boat after temple entrance destroyed, allies suicide after gun fired,
 //	      	               	bots suicide at escape path only when gold returned and not taken again, axis don't repair boat in floodgate
+// palota	19 November 2010	ROUTE_escape_c1, ROUTE_r_temple, role to defend gold, longer MOUNTMG42 camp time, more bots ride boat after barrier destroyed
 //==========================================================================================
 //
 
@@ -66,6 +67,17 @@ global Map =
 			}
 		},
 		OnExit = function(ent) {},
+	},
+
+	Roles =
+	{
+		ALLIES =
+		{
+			DEFENDER2 =
+			{
+				numbots = 2,
+			},
+		},
 	},
 
 
@@ -139,6 +151,7 @@ global Map =
 	boat_barrier_Destroyed = function( trigger )   {
 		if ( TestMap )  { return; }
 		Map.BarrierIsBuild = false;
+		Util.SetMaxUsersInProgress( 9, "RIDE_boat" );
 		Map.Set_Ride();
 		SetGoalPriority("REPAIRMG42_156", 0.7);
 		Util.MapDebugPrint( "boat_barrier_Destroyed" );
@@ -160,6 +173,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_barrier2_l.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, ".*ARTILLERY.*_barrier2_l.*" );
 
+		Util.SetMaxUsersInProgress( 2, "RIDE_boat" );
 		Util.OnTriggerPosition( "MOVER_boat", "a_boat_46", 180.0, Map.Boat_At_LowerGate  );
 		Util.MapDebugPrint( "Boat past barrier" );
 	},
@@ -519,6 +533,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_cap_gold" );
 		//Allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_d_gold.*" );
+		Util.ClearRoleForGoals("DEFEND_d_gold.*", ROLE.DEFENDER2);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_scaffolding" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_gold_l.*" );
 
@@ -557,7 +572,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_a_gold_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_escape_.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_gold.*" );
+		Util.SetRoleForGoals("DEFEND_d_gold.*", ROLE.DEFENDER2);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_d_escape.*" );
 
 		Util.MapDebugPrint( "gold_Stolen" );
@@ -571,7 +586,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_gold_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_a_escape_.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_d_gold.*" );
+		Util.ClearRoleForGoals("DEFEND_d_gold.*", ROLE.DEFENDER2);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_escape.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_end");
 
@@ -608,7 +623,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=5, maxcamptime=25});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=30, maxcamptime=300});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=300});
-	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=30, maxcamptime=99});
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=200});
 	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=80, maxcamptime=400});
 
 	Util.SetMaxUsers( 1, "REPAIRMG42.*" );
@@ -829,6 +844,7 @@ global OnMapLoad = function()
 			ROUTE_gold = {
 				ROUTE_escape_a1 = { Weight = 2, ROUTE_escape_a2 = {}},
 				ROUTE_escape_b1 = {},
+				ROUTE_escape_c1 = {},
 			}
 		},
 
@@ -841,6 +857,18 @@ global OnMapLoad = function()
 			},
 		},
 
+		DEFEND_d_temple_l2 = {
+			ROUTE_r_spawn_l9 = {
+				ROUTE_r_temple_a1 = {},
+				ROUTE_r_temple_a2 = { Weight = 3 },
+			}
+		},
+
+		DEFEND_d_temple_l1 = {
+			ROUTE_r_spawn_l9 = {
+				ROUTE_r_temple_b1 = {},
+			}
+		},
 	};
 
 	// Copy routes  barrier
@@ -852,7 +880,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_a_flooddoor_x1 = MapRoutes.ATTACK_a_flooddoor_x2;
 	MapRoutes.ATTACK_a_flooddoor_x4 = MapRoutes.ATTACK_a_flooddoor_x2;
 	MapRoutes.ATTACK_a_flooddoor_x5 = MapRoutes.ATTACK_a_flooddoor_x2;
-	// Copy routes  Steal gold
+	// Copy routes  Steal ammo
 	MapRoutes.FLAG_ammo.ROUTE_r_spawn_x7_2 = MapRoutes.FLAG_ammo.ROUTE_r_spawn_x7;
 	MapRoutes.FLAG_ammo.ROUTE_r_spawn_x7_3 = MapRoutes.FLAG_ammo.ROUTE_r_spawn_x7;
 	// Copy routes  Dynowall2
@@ -868,6 +896,16 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_d_flooddoor_l6 = MapRoutes.DEFEND_d_flooddoor_l1;
 	MapRoutes.DEFEND_d_flooddoor_l7 = MapRoutes.DEFEND_d_flooddoor_l1;
 	MapRoutes.DEFEND_d_flooddoor_l8 = MapRoutes.DEFEND_d_flooddoor_l1;
+	// Copy routes  defend temple
+	MapRoutes.DEFEND_d_temple_l3 = MapRoutes.DEFEND_d_temple_l1;
+	MapRoutes.DEFEND_d_temple_l7 = MapRoutes.DEFEND_d_temple_l1;
+	MapRoutes.DEFEND_d_temple_l8 = MapRoutes.DEFEND_d_temple_l1;
+	MapRoutes.DEFEND_d_temple_l10 = MapRoutes.DEFEND_d_temple_l1;
+	MapRoutes.DEFEND_d_temple_l4 = MapRoutes.DEFEND_d_temple_l2;
+	MapRoutes.DEFEND_d_temple_l5 = MapRoutes.DEFEND_d_temple_l2;
+	MapRoutes.DEFEND_d_temple_l6 = MapRoutes.DEFEND_d_temple_l2;
+	MapRoutes.DEFEND_d_temple_l9 = MapRoutes.DEFEND_d_temple_l2;
+	MapRoutes.DEFEND_d_temple_l11 = MapRoutes.DEFEND_d_temple_l2;
 
 	MapRoutes.SWITCH_flooddoor_lowergate =
 	{

@@ -2,49 +2,116 @@
 
 // These parameters are required
 this.Name = "ClassManager";
-this.Parent = "Limbo";
+this.Parent = "LowLevel";
 this.AutoAdd = true;
+this.AlwaysRecieveEvents = true;
+this.OnlyWhileDead = true; // if set to false, they will /kill for class changes
 
-this.GetPriority = function()
+this.Initialize = function()
 {
-	// need to wait a bit for map starts.
-	sleep(1);
+	this.ClassCount = table();
+};
 
-	// init vars
-	botclass = this.Bot.GetClass();
-	team = this.Bot.GetTeam();
-	Util.LightClass = null;
-	Util.HeavyClass = null;
-	
-	// update class counts
-	Util.UpdateClasses();
-	Util.TeamLightClass(team);
-	Util.TeamHeavyClass(team);
-
-	// palota's logic for moving bots to 0 count classes regardless of min class counts
-	if ( Util.LightClass && Util.HeavyClass == null && Server.ClassCount[team][Util.LightClass] == 0 )
+this.UpdateClasses = function()
+{
+	// reset counters
+	foreach (class in Util.PlayerClassTable)
 	{
-		foreach ( class and num in Server.ClassCount[team] )
+		this.ClassCount[class] = 0;
+	}
+
+	// random delay (many bots can die at the same time)
+	sleep(RandFloat(0, 0.5));
+
+	// count humans too
+	for ( i = 0; i <= Server.NumPlayers; i += 1 )
+	{
+		if (EntityIsValid(i) && GetEntTeam(i) == this.Team)
 		{
-			if ( num > 1 )
+			class = GetEntClass(i);
+			if (class)
 			{
-				Util.HeavyClass = class;
+				if (this.ClassCount[class] < 1)
+				{
+					this.ClassCount[class] = 1;
+				}
+				else
+				{
+					this.ClassCount[class] += 1;
+				}
 			}
 		}
 	}
+};
 
-	// hoops to jump through before actually changing class ...
-	if ( Util.LightClass && Util.HeavyClass
-			&& (Util.LightClass != Util.HeavyClass) // don't change to same class
-			&& ( Server.ClassCount[team][Util.HeavyClass] - 1 !=  Server.ClassCount[team][Util.LightClass] // don't change if it would just reverse the problem
-					|| Server.ClassCount[team][Util.LightClass] < Server.MinClassCount[team][Util.LightClass] || Server.MinClassCount[team][Util.HeavyClass] == 0 )
-		)
+this.EvaluateClass = function(class, num)
+{
+	min = Server.MinClassCount[this.Team][class];
+	if (!min)
 	{
-		if ( this.Bot.GetClass() == Util.HeavyClass ) {
-			this.Bot.ChangeClass(Util.LightClass);
+		min = -99; // get rid of 0 min count classes first
+	}
+	if (!num)
+	{
+		num = -20; // prioritize classes that have no players
+		if (class==CLASS.ENGINEER){ num -= 1; }
+	}
+	return min-num;
+};
+
+this.EvalClassChange = function()
+{
+	if ( TestMapOn || DisableClassManager )
+	{
+		return false;
+	}
+
+	// update class counts
+	this.Team = this.Bot.GetTeam();
+	this.UpdateClasses();
+
+	//evaluate this bot
+	botClass = this.Bot.GetClass();
+	botEval = this.EvaluateClass(botClass, this.ClassCount[botClass] - 1);
+
+	//evaluate all classes
+	newClass = null;
+	foreach ( class and num in this.ClassCount )
+	{
+		if (class!=botClass) // don't change to same class
+		{
+			eval = this.EvaluateClass(class, num);
+			if (eval > botEval)
+			{
+				botEval = eval;
+				newClass = class;
+			}
 		}
 	}
-	
-	// only run it once (each time they go to limbo)
-	block(0);
+	if (newClass)
+	{
+		// cs: this must come before the class change call to prevent them from /killing next spawn
+		if (this.TapOut) {
+			this.Bot.ExecCommand("kill");
+			this.TapOut = false;
+		}
+
+		this.Bot.ChangeClass(newClass);
+	}
+};
+
+this.GetPriority = function()
+{
+	// cs: let them /kill in warmup so transitions from snipe or panzer maps wont take forever for correct classes to be used
+	if ( !this.OnlyWhileDead || GetGameState() != "Playing" ) {
+		this.EvalClassChange();
+	}
+
+	sleep(5);
+};
+
+this.Events[EVENT.DEATH] = function(attacker, mod)
+{
+	this.TapOut = true;
+	this.EvalClassChange();
 };
