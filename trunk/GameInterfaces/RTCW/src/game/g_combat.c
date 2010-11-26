@@ -67,6 +67,7 @@ const char *spreeSound[] = {
 
 static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death ) {
 	int spree = 0, old_spree = 0, snd_idx = 0;
+	qboolean skipBotEnt = ent && (ent->r.svFlags & SVF_BOT) && (g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE);
 
 	if ( &ent->client->ps ) {
 		old_spree = ent->client->ps.persistant[PERS_KILLSPREE];
@@ -86,7 +87,7 @@ static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death
 
 	// end of killing spree
 	if ( old_spree >= 5 && death ) {
-		if ( g_announcer.integer & ANNOUNCE_KILLINGSPREES ) {
+		if ( g_announcer.integer & ANNOUNCE_KILLINGSPREES && !skipBotEnt ) {
 			if ( att == NULL || !att->client || ent == att ) {
 				AP( va( "chat \"%s^d's killing spree ended after ^3%d^d kills! ^d(^1SUICIDE!^d)\"",
 						ent->client->pers.netname, old_spree ) );
@@ -99,13 +100,13 @@ static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death
 	}
 
 	// end of death spree
-	if ( old_spree <= -10 && !death && ( g_announcer.integer & ANNOUNCE_DEATHSPREES ) ) {
+	if ( (g_announcer.integer & ANNOUNCE_DEATHSPREES) && !skipBotEnt && old_spree <= -10 && !death ) {
 		AP( va( "chat \"%s^d's death spree has ended after ^3%d ^ddeaths!\"",
 				ent->client->pers.netname, -old_spree ) );
 	}
 
 	// new killing spree (killing spree every 5 kills, % 5)
-	if ( spree >= 5 && ( spree % 5 ) == 0 && ( g_announcer.integer & ANNOUNCE_KILLINGSPREES ) ) {
+	if ( (g_announcer.integer & ANNOUNCE_KILLINGSPREES) && !skipBotEnt && spree >= 5 && (spree % 5) == 0 ) {
 		gentity_t *te;
 		snd_idx = ( spree / 5 ) - 1;
 		snd_idx = ( snd_idx <= 9 ) ? snd_idx : 9;
@@ -116,7 +117,7 @@ static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death
 		te->r.svFlags |= SVF_BROADCAST;
 	}
 	// new death spree (death spree every 10 deaths, % 10)
-	else if ( spree <= -10 && ( -spree % 10 ) == 0 && ( g_announcer.integer & ANNOUNCE_DEATHSPREES ) ) {
+	else if ( (g_announcer.integer & ANNOUNCE_DEATHSPREES) && !skipBotEnt && spree <= -10 && (-spree % 10) == 0 ) {
 		gentity_t *te;
 		snd_idx = ( -spree / 10 ) - 1;
 		snd_idx = ( snd_idx < 6 ) ? snd_idx : 5;
