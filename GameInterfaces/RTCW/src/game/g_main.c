@@ -2586,7 +2586,8 @@ const char *multikillSound[] = {
 void G_CheckMultiKill( int clientNum ) {
 	gclient_t *client = &level.clients[level.sortedClients[clientNum]];
 
-	if ( !client || !( g_announcer.integer & ANNOUNCE_MULTIKILL ) ) {
+	if ( !client || !(g_announcer.integer & ANNOUNCE_MULTIKILL) || 
+			((g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE) && (g_entities[clientNum].r.svFlags & SVF_BOT)) ) {
 		return;
 	}
 
