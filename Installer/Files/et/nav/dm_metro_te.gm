@@ -7,6 +7,7 @@ global Map =
 	num_attackers = 0,
 	num_defenders = 0,
 	DontDispenseAmmo = true,
+	debug_regiontrigger = true,
 
 	Classes = function()
 	{
@@ -22,12 +23,50 @@ global Map =
 		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
 		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
 	},
+	
+	crashme =
+	{
+		Name = "crashme",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function()
+		{
+			Map.Bleh = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme2);
+			//DeleteTriggerRegion("crashme");
+			//return 1;
+		},
+		OnExit = function()
+		{
+			//DeleteTriggerRegion("crashme");
+		},
+	},
+	
+	crashme2 =
+	{
+		Name = "crashme2",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function()
+		{
+			//crashme2 = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme2);
+			//DeleteTriggerRegion("crashme2");
+		},
+		OnExit = function()
+		{
+			//DeleteTriggerRegion("crashme2");
+		},
+	},	
 };
 
 global OnMapLoad = function()
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
+	
+	// crash test for DeleteTriggerRegion
+	if ( Map.debug_regiontrigger ) {
+		crashme = OnTriggerRegion(AABB(310.648,375.502,1.125,667.926,540.118,91.125),Map.crashme);
+		//Map.Bleh = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme);
+		ExecCommand("drawtriggers");
+	}
 
 	//ExecCommand("draw_goals on");
 
@@ -43,12 +82,12 @@ global OnMapLoad = function()
 	// SetAvailableMapGoals( TEAM.AXIS, true, "bogus_name_test");
 	//Util.EnableGoal("CAMP_.*");
 	// Util.EnableGoal("AIRSTRIKE.*");
-	
+
 	// g = GetGoal("CAMP_test2");
 	// if (g)
 	// {
 		// g.SetRoles(ROLE.DEFENDER,ROLE.ATTACKER,ROLE.ATTACKER2);
-	// }	
+	// }
 
 	if( Map.debug_decel)
 	{
@@ -58,7 +97,7 @@ global OnMapLoad = function()
 		ExecCommand("wb deceltest");
 	}
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 
