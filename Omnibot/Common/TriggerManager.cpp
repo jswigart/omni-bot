@@ -30,6 +30,7 @@ public:
 	void SetNameHash(obuint32 _name) { m_NameHash = _name; }
 	obuint32 GetNameHash() const { return m_NameHash; }
 	int GetSerial() const { return m_SerialNum; }
+	void SetDeleteMe() { m_DeleteMe = true; } // cs: added so script function can 'schedule' a deletion
 	bool DeleteMe() const { return m_DeleteMe; }
 	bool Expired() const { return DeleteMe() || (m_ExpireTime && IGame::GetTime() >= m_ExpireTime); }
 
@@ -463,7 +464,8 @@ void TriggerManager::DeleteTrigger(int _serial)
 	{
 		if((*it)->GetSerial() == _serial)
 		{
-			it = m_TriggerShapes.erase(it);
+			//it = m_TriggerShapes.erase(it);
+			(*it)->SetDeleteMe(); // update handles the delete now
 			return;
 		}
 		++it;
@@ -478,8 +480,15 @@ void TriggerManager::DeleteTrigger(const String &_name)
 	{
 		if((*it)->GetNameHash() == uiName)
 		{
-			it = m_TriggerShapes.erase(it);
-			continue;
+			// cs: this crashes if trigger is active
+			//it = m_TriggerShapes.erase(it);
+			//continue;
+
+			// cs: lost the ability to delete all of the same name
+			//     since a continue here causes an infinite loop in
+			//	   some cases
+			(*it)->SetDeleteMe(); // update handles the delete now
+			return;
 		}
 		++it;
 	}
@@ -628,11 +637,13 @@ void TriggerManager::Update()
 			(*it)->RenderDebug();
 
 		(*it)->Update();
+
 		if((*it)->Expired())
 		{
 			it = m_TriggerShapes.erase(it);
 			continue;
 		}
+
 		++it;
 	}
 
