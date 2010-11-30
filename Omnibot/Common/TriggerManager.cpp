@@ -484,11 +484,8 @@ void TriggerManager::DeleteTrigger(const String &_name)
 			//it = m_TriggerShapes.erase(it);
 			//continue;
 
-			// cs: lost the ability to delete all of the same name
-			//     since a continue here causes an infinite loop in
-			//	   some cases
 			(*it)->SetDeleteMe(); // update handles the delete now
-			return;
+			//return;
 		}
 		++it;
 	}
@@ -631,20 +628,22 @@ void TriggerManager::Update()
 	Prof(TriggerManager_Update);
 
 	ShapeList::iterator it = m_TriggerShapes.begin();
-	for(; it != m_TriggerShapes.end(); )
+
+	unsigned int x = 0;
+	for(; x < m_TriggerShapes.size(); )
 	{
 		if(m_DrawTriggers && m_NextDrawTime < IGame::GetTime())
-			(*it)->RenderDebug();
+			m_TriggerShapes[ x ]->RenderDebug();
 
-		(*it)->Update();
+		m_TriggerShapes[ x ]->Update();
 
-		if((*it)->Expired())
+		if( m_TriggerShapes[ x ]->Expired())
 		{
-			it = m_TriggerShapes.erase(it);
+			it = m_TriggerShapes.erase(m_TriggerShapes.begin()+x);
 			continue;
 		}
 
-		++it;
+		++x;
 	}
 
 	if(m_NextDrawTime < IGame::GetTime())
