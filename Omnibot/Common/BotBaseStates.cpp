@@ -169,6 +169,7 @@ namespace AiState
 	void CaptureTheFlag::Enter()
 	{
 		m_LastFlagState = m_MapGoalFlag ? m_MapGoalFlag->GetGoalState() : 0;
+
 		Tracker.InProgress = m_MapGoalFlag;
 		FINDSTATEIF(FollowPath,GetRootState(),Goto(this));
 	}
@@ -192,6 +193,12 @@ namespace AiState
 		{
 		case GettingFlag:
 			{
+				// cs: this is a hack. if too many are in progress, bail.
+				if ( m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 0 ) {
+					BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
+					return State_Finished;
+				}
+
 				if(m_MapGoalFlag && !GetClient()->IsFlagGrabbable(m_MapGoalFlag))
 					return State_Finished;
 
