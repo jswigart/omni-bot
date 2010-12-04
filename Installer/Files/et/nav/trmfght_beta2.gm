@@ -520,7 +520,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_objective_5 = MapRoutes.FLAG_venomdocs;
 	Util.Routes( MapRoutes );
 
-	print( "Omni-bot map script for Tramfight beta 2 executed." );
+	Util.MapDebugPrint( "Omni-bot map script for Tramfight beta 2 executed." );
 };
 
 global OnBotJoin = function( bot )

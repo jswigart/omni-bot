@@ -333,13 +333,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ Util.MapDebugPrint("checking if ok to plant regulator"); }
+		Util.MapDebugPrint("checking if ok to plant regulator");
 
 		if (Map.LowerStatus > 0 && Map.DamStatus > 0)
 		{
-			if ( Map.Debug )
-				{ Util.MapDebugPrint("Setting plant to true..."); }
+			Util.MapDebugPrint("Setting plant to true...");
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_dam_flag" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_northsteps_.*" );

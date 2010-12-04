@@ -7,7 +7,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "allied_mg1_Built" );
+		Util.MapDebugPrint( "allied_mg1_Built" );
 	},
 
 	allied_mg2_Built = function( trigger )
@@ -15,7 +15,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "allied_mg2_Built" );
+		Util.MapDebugPrint( "allied_mg2_Built" );
 	},
 
 	construction_script_Built = function( trigger )
@@ -24,7 +24,7 @@ global Map =
 			{ return; }
 
 		Wp.SetWaypointFlag("Ladder2","closed",false);
-		print( "construction_script_Built" );
+		Util.MapDebugPrint( "construction_script_Built" );
 	},
 
 	construction_script_Destroyed = function( trigger )
@@ -32,7 +32,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		Wp.SetWaypointFlag("Ladder2","closed",true);
-		print( "construction_script_Destroyed" );
+		Util.MapDebugPrint( "construction_script_Destroyed" );
 	},
 
 	storagewall_Destroyed = function( trigger )
@@ -44,7 +44,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_War_Documents" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_documents.*" );
 
-		print( "storagewall_Destroyed" );
+		Util.MapDebugPrint( "storagewall_Destroyed" );
 	},
 
 	basewall_Dyno_Planted = function( trigger )
@@ -74,7 +74,7 @@ global Map =
 			}
 		}
 
-		print( "basewall_Dyno_Planted" );
+		Util.MapDebugPrint( "basewall_Dyno_Planted" );
 	},
 
 	basewall_Destroyed = function( trigger )
@@ -127,7 +127,7 @@ global Map =
 				}
 			}
 		}
-		print( "basewall_Destroyed" );
+		Util.MapDebugPrint( "basewall_Destroyed" );
 	},
 
 	Allies_Capture_Flag = function( trigger )

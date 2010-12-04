@@ -2,7 +2,7 @@
 global Map =
 {
 	ShowMovers = false,
-	
+
 	abbeySpawn = false,
 	townSpawn = false,
 	docsTaken = false,
@@ -30,7 +30,7 @@ global Map =
 				tr = TraceLine(wpinfo.position, pos2, null, TRACE.BREAKABLE, 0, true);
 				if(tr.fraction == 1){
 					_this.navigation.done=true;
-					break; 
+					break;
 				}
 				_this.AddAimRequest(Priority.Medium, "facing", wpinfo.facing);
 				_this.Goto(wpinfo.position);
@@ -41,7 +41,7 @@ global Map =
 		_this.Bot.PressButton(BTN.JUMP);
 		sleep(1);
 	},
-	
+
 	Navigation =
 	{
 		east_cp =
@@ -53,7 +53,7 @@ global Map =
 			navigate = function(_this) { Map.NavBreak(_this); },
 		},
 	},
-	
+
 	SetPriorities = function()
 	{
 		if(Map.abbeySpawn){
@@ -157,26 +157,26 @@ global Map =
 	{
 		Util.DisableGoal("ROUTE_abbey_defences_south");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_abbey_defences_east");
-		//print( "Abbey_Defences_Built" );
+		Util.MapDebugPrint( "Abbey_Defences_Built" );
 	},
 	Abbey_Defences_Destroyed = function( trigger )
 	{
 		Util.EnableGoal("ROUTE_abbey_defences_south");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_abbey_defences_east");
-		//print( "Abbey_Defences_Destroyed" );
+		Util.MapDebugPrint( "Abbey_Defences_Destroyed" );
 	},
 
 	Church_Defences_Built = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ROUTE_church_defences");
-		//print( "Church_Defences_Built" );
+		Util.MapDebugPrint( "Church_Defences_Built" );
 	},
 	Church_Defences_Destroyed = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_church_defences");
-		//print( "Church_Defences_Destroyed" );
+		Util.MapDebugPrint( "Church_Defences_Destroyed" );
 	},
-	
+
 	SetHillside = function(b)
 	{
 		Map.boatAccessible=b;
@@ -186,7 +186,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, b, "REPAIRMG42_boat_mg");
 		SetAvailableMapGoals(TEAM.AXIS, b || Map.docsTaken, "MOBILEMG42_side_door.*");
 	},
-	
+
 	Hillside_Defences_Built = function( trigger )
 	{
 		Map.SetHillside(false);
@@ -194,39 +194,39 @@ global Map =
 			ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, true, 1);
 			Map.classRevert=true;
 		}
-		wp="hillside"; 
+		wp="hillside";
 		if(RandInt(1,2)==1){ wp="hillside2"; }
 		Map.SetGoalPos("PLANT_Hillside_Defences", wp);
-		//print( "Hillside_Defences_Built" );
+		Util.MapDebugPrint( "Hillside_Defences_Built" );
 	},
 	Hillside_Defences_Destroyed = function( trigger )
 	{
 		Map.SetHillside(true);
-		//print( "Hillside_Defences_Destroyed" );
+		Util.MapDebugPrint( "Hillside_Defences_Destroyed" );
 	},
 
 	hill_defences_Built = function( trigger )
 	{
 		Util.DisableGoal("ROUTE_hill_east");
-		//print( "hill_defences_Built" );
+		Util.MapDebugPrint( "hill_defences_Built" );
 	},
 	hill_defences_Destroyed = function( trigger )
 	{
 		Util.EnableGoal("ROUTE_hill_east");
-		//print( "hill_defences_Destroyed" );
+		Util.MapDebugPrint( "hill_defences_Destroyed" );
 	},
 
 	Abbey_Command_Post_Built = function( trigger )
 	{
 		Map.abbeySpawn = true;
 		Map.SetPriorities();
-		//print( "Abbey_Command_Post_Built" );
+		Util.MapDebugPrint( "Abbey_Command_Post_Built" );
 	},
 	Abbey_Command_Post_Destroyed = function( trigger )
 	{
 		Map.abbeySpawn = false;
 		Map.SetPriorities();
-		//print( "Abbey_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Abbey_Command_Post_Destroyed" );
 	},
 
 	cityflag_Allies_Captured = function( trigger )
@@ -234,13 +234,13 @@ global Map =
 		Map.townSpawn = true;
 		Map.SetPriorities();
 		SetAvailableMapGoals(TEAM.AXIS, !Map.abbeyDoorDestroyed || !Map.sideDoorDestroyed, "DEFEND_side_door.*");
-		//print( "cityflag_Allies_Captured" );
+		Util.MapDebugPrint( "cityflag_Allies_Captured" );
 	},
 	cityflag_Axis_Captured = function( trigger )
 	{
 		Map.townSpawn = false;
 		Map.SetPriorities();
-		//print( "cityflag_Axis_Captured" );
+		Util.MapDebugPrint( "cityflag_Axis_Captured" );
 	},
 
 	Door_Destroyed = function(b)
@@ -258,7 +258,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, b, "BUILD_hill_defences");
 		SetAvailableMapGoals(TEAM.AXIS, b && (!Map.abbeyDoorDestroyed || !Map.sideDoorDestroyed), "DEFEND_side_door.*");
 	},
-	
+
 	Abbey_Door_Destroyed = function( trigger )
 	{
 		Map.abbeyDoorDestroyed=true;
@@ -266,7 +266,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_abbey_door.*");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_abbey_door.*");
 		Util.EnableGoal("ROUTE_abbey_door");
-		//print( "Abbey_Door_Destroyed" );
+		Util.MapDebugPrint( "Abbey_Door_Destroyed" );
 	},
 
 	Side_Door_Destroyed = function( trigger )
@@ -275,7 +275,7 @@ global Map =
 		Map.Door_Destroyed(true);
 		SetGoalPriority("PLANTMINE_side.*", 0.7, TEAM.AXIS);
 		Util.EnableGoal("ROUTE_side_door.*");
-		//print( "Side_Door_Destroyed" );
+		Util.MapDebugPrint( "Side_Door_Destroyed" );
 	},
 
 	Defend_Boat = function(b)
@@ -295,15 +295,15 @@ global Map =
 	Docs_Taken = function( trigger )
 	{
 		Map.Defend_Boat(true);
-		//print( "Docs_Taken" );
+		Util.MapDebugPrint( "Docs_Taken" );
 	},
 
 	Docs_Returned = function( trigger )
 	{
 		Map.Defend_Boat(false);
-		//print( "Docs_Returned" );
+		Util.MapDebugPrint( "Docs_Returned" );
 	},
-	
+
 	SetGoalPos = function(goal,wpname)
 	{
 		goal = GetGoal(goal);
@@ -350,28 +350,28 @@ global OnMapLoad = function()
 	Map.Defend_Boat(false);
 	Map.Door_Destroyed(false);
 
-	foreach (id and goal in { ".*MG42.*", "DEFEND_", "SNIPE.*", "PLANTMINE.*", 
-		"BUILD_Church_Defences", "BUILD_Abbey_Defences", "BUILD_hill_defences", "BUILD_Hillside_Defences", 
-		"BUILD_Command_Post", "BUILD_Axis_MG", 
+	foreach (id and goal in { ".*MG42.*", "DEFEND_", "SNIPE.*", "PLANTMINE.*",
+		"BUILD_Church_Defences", "BUILD_Abbey_Defences", "BUILD_hill_defences", "BUILD_Hillside_Defences",
+		"BUILD_Command_Post", "BUILD_Axis_MG",
 		"PLANT_Side_Door", "PLANT_Abbey_Defences", "PLANT_Command_Post" }){
 		Util.SetMaxUsersInProgress(1, goal);
 	}
 	Util.SetMaxUsersInProgress(5, "DEFEND_docs5");
 	Util.SetMaxUsersInProgress(5, "DEFEND_boat3");
-	
+
 	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
 	SetMapGoalProperties("MOUNTMG42_Axis_MG", {mincamptime=50, maxcamptime=200} );
 	SetMapGoalProperties("MOUNTMG42_boat_mg", {mincamptime=900, maxcamptime=900} );
 	SetMapGoalProperties("MOBILEMG.*", {mincamptime=50, maxcamptime=300} );
 	SetMapGoalProperties("SNIPE.*", {mincamptime=60, maxcamptime=200} );
-	
+
 	Map.SetGoalPos("BUILD_Hillside_Defences", "hillside1");
 	Map.SetGoalPos("PLANT_hill_defences", "hill_defences");
 	Map.SetGoalPos("PLANT_Abbey_Defences", "abbey_defences_south");
 	Util.AddUseWp("PLANT_Abbey_Door", "abbey_door_out");
 	Util.AddUseWp("PLANT_Abbey_Door", "abbey_door");
 	Util.SetGoalOffset(-10, 10, -10, "MOUNTMG42_boat_mg");
-	
+
 	Util.DisableGoal("ROUTE_side_door.*");
 	Util.DisableGoal("ROUTE_abbey_door");
 
@@ -380,13 +380,13 @@ global OnMapLoad = function()
 		CHECKPOINT_cityflag = {
 			ROUTE_allies_spawn = {
 				ROUTE_church_defences = {},
-				ROUTE_allies1 = { 
+				ROUTE_allies1 = {
 					ROUTE_town2 = { ROUTE_church_yard = { ROUTE_church_door = {}}},
-					ROUTE_east_cp = {}, 
+					ROUTE_east_cp = {},
 				},
 				ROUTE_allies2 = { ROUTE_town3 = { ROUTE_church_tower = {}}},
-				ROUTE_allies_south_wall = {ROUTE_east_cp = {}}, 
-			},			
+				ROUTE_allies_south_wall = {ROUTE_east_cp = {}},
+			},
 			ROUTE_axis_spawn = {
 				ROUTE_mg42 = {},
 				ROUTE_abbey_defences_east = { Weight=3, ROUTE_church_yard = {}},
@@ -394,8 +394,8 @@ global OnMapLoad = function()
 		},
 		BUILD_Command_Post = {
 			ROUTE_allies_spawn = {
-				ROUTE_east_cp = {}, 
-			},			
+				ROUTE_east_cp = {},
+			},
 		},
 		PLANT_Side_Door = {
 			ROUTE_allies_spawn = {
@@ -448,14 +448,14 @@ global OnMapLoad = function()
 				ROUTE_abbey_cp2 = { ROUTE_cathedral_stairs = { ROUTE_cloister2 = {}}},
 			},
 			ROUTE_flag = {
-				ROUTE_mg42 = { 
+				ROUTE_mg42 = {
 					ROUTE_cp_spawn = {
 						ROUTE_ammo = {},
 						ROUTE_cloister2 = {},
 					},
 					ROUTE_docs4 = {},
 				},
-				ROUTE_abbey_defences_east = { 
+				ROUTE_abbey_defences_east = {
 					ROUTE_abbey_cp2 = {},
 					ROUTE_axis_stairs = {},
 				},
@@ -470,7 +470,7 @@ global OnMapLoad = function()
 					ROUTE_hillside = {},
 				},
 			},
-		},		
+		},
 	};
 	MapRoutes.DEFEND_docs2 = MapRoutes.DEFEND_docs1;
 	MapRoutes.DEFEND_docs5 = MapRoutes.DEFEND_docs1;
@@ -478,12 +478,14 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_boat4 = MapRoutes.CAPPOINT_boat;
 	MapRoutes.DEFEND_hillside3 = MapRoutes.CAPPOINT_boat;
 	MapRoutes.DEFEND_hillside4 = MapRoutes.CAPPOINT_boat;
-	
+
 	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 
 	yield(); yield();
 	if(ETUtil.CountClass(TEAM.AXIS,CLASS.ENGINEER) < 3)
-	{ 
+	{
 		ETUtil.ChangeClass(TEAM.AXIS, CLASS.FIELDOPS, CLASS.ENGINEER, false, 1);
 	}
 };

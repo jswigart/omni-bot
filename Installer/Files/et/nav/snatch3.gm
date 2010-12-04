@@ -12,14 +12,14 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			//print(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + " BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier_1" );
 			Util.SetGoalPosition( 428.9, 2221.7, 164.125, Map.Plant_Main_Entrance);
  		},
  		OnExit = function(ent)
  		{
-			print(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " exited aabb trigger");
 			Util.DisableGroup( "group5");
 			Util.DisableGroup( "group4");
 			Util.EnableGroup( "group7", TEAM.ALLIES);
@@ -27,7 +27,6 @@ global Map =
 	//~		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Entrance" );
 	//~		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main.*" );
 			Util.MapDebugPrint("barrier1 exit");
-			
  		},
 		
 	},	
@@ -38,7 +37,7 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			//print(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 			
 			Util.EnableGroup( "group12", TEAM.AXIS);
@@ -49,7 +48,7 @@ global Map =
  		},
  		OnExit = function(ent)
  		{
-			print(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint(GetEntName(ent) + "exited aabb trigger");
 			Util.DisableGroup( "group13");
 		//~	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main.*" );
 			Util.MapDebugPrint("def exit");
@@ -62,7 +61,7 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			//print(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 		
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
@@ -81,7 +80,7 @@ global Map =
 			Util.DisableGroup( "group9");
 			
 			Util.EnableGroup( "group10", TEAM.ALLIES);
-			print(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " exited aabb trigger");
 			Util.MapDebugPrint("b2 exit");	
  		},
 	},	
@@ -92,7 +91,7 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			//print(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + " BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 			
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_tp.*" );
@@ -109,7 +108,7 @@ global Map =
  		OnExit = function(ent)
  		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Balcony_MG" );
-			print(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " exited aabb trigger");
 			Util.MapDebugPrint("shift exit");
  		},
 	},
@@ -120,7 +119,7 @@ global Map =
  		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
- 			//print(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 			
 //~			Map.EscortVehicle.truck.Enabled = true;
@@ -129,7 +128,7 @@ global Map =
  		OnExit = function(ent)
  		{
 			
-			print(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint(GetEntName(ent) + "exited aabb trigger");
 			Util.MapDebugPrint("fix exit");
  		},
 	},		

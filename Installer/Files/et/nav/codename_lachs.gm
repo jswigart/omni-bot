@@ -133,7 +133,7 @@ global Map =
 
 		},
 	},
-	
+
 	alspawn =
 	{
 		Name = "alspawn",
@@ -407,6 +407,8 @@ global OnMapLoad = function()
 
 	Util.EnableGoal("AMMOCAB_first_ammocabinet", true); // all but routes
 	Util.EnableGoal("HEALTHCAB_first_healthcabinet", true); // all but routes
+
+	// cs: these can be removed from script once the goals have been saved ...
 	Util.SetGroup( "MOVER_tank", "1");
 	Util.SetGroup( "ATTACK_door.*", "3");
 	Util.SetGroup( "BUILD_tank", "1");
@@ -460,8 +462,7 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "MOVER_truck", 1.0 );
 //~	SetGoalPriority( "PLANT_Defence_Door",1.20);
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
-	Util.MapDebugPrint( "" );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

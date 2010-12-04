@@ -1369,7 +1369,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

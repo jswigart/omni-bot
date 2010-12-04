@@ -540,7 +540,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_right_spawn_exit1");
 	SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_right_spawn_exit2");
 
-	print( "Omni-bot map script for Vesuvius_rev executed." );
+	Util.MapDebugPrint( "Omni-bot map script for Vesuvius_rev executed." );
 };
 
 global OnBotJoin = function( bot )

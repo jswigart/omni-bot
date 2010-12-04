@@ -393,37 +393,9 @@ global Map =
 
 		Map.SubOne = true;
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.REINFORCE_OFF);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.ExecCommand("vsay_team FTAttack");
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.DEFEND_OBJECTIVE);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.ExecCommand("vsay_team FTFallBack");
-					}
-				}
-			}
+		if ( Map.SubTwo ) {
+			ETUtil.WinningChat( TEAM.ALLIES );
+			ETUtil.LosingChat( TEAM.AXIS );
 		}
 
 		Util.MapDebugPrint( "U_245_Destroyed" );
@@ -435,19 +407,9 @@ global Map =
 			{ return; }
 		Map.SubTwo = true;
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-			}
+		if ( Map.SubOne ) {
+			ETUtil.WinningChat( TEAM.ALLIES );
+			ETUtil.LosingChat( TEAM.AXIS );
 		}
 
 		Util.MapDebugPrint( "U_952_Destroyed" );

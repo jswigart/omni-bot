@@ -46,7 +46,8 @@ global Map =
 		"MOVER_jeep_mover",
 	},
 	
-	JeepAtMarketGate = 
+	// cs: commented out as it does nothing.
+	/*JeepAtMarketGate = 
 	{
 		Name="JeepAtMarketGate",
 		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
@@ -55,9 +56,8 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited JeepAtMarketGate aabb trigger");
 		},
-	},
+	},*/
 
 	MarketGatePassed =
  	{
@@ -67,11 +67,10 @@ global Map =
  		{
  			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Market_Gate" );
 			
- 			Util.MapDebugPrint(GetEntName(ent),"MarketGatePassed");
+ 			Util.MapDebugPrint("MarketGatePassed");
 		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited MargetGatePassed aabb trigger");
  		},
 	},
 
@@ -83,11 +82,10 @@ global Map =
  		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Jeep_Barrier" );
 			
-  			Util.MapDebugPrint(GetEntName(ent),"BarrierPassed");
+  			Util.MapDebugPrint("BarrierPassed");
 		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
  		},
 	},
 
@@ -100,7 +98,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_1st_Ramp" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_1st_Ramp" );
 			
- 			Util.MapDebugPrint(GetEntName(ent),"Ramp1Passed");
+ 			Util.MapDebugPrint("Ramp1Passed");
  		},
  		OnExit = function(ent)
  		{
@@ -109,7 +107,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_gold.*" );
 			
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
+			Util.MapDebugPrint("exited Ramp1");
 		},
 	},
 
@@ -124,11 +122,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_2nd_Ramp" );
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Barrier_MG );
 			
- 			Util.MapDebugPrint(GetEntName(ent),"Ramp2Passed");
+ 			Util.MapDebugPrint("Ramp2Passed");
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
  		},
 	},
 
@@ -142,11 +139,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape2.*" );
 			
-			Util.MapDebugPrint(GetEntName(ent),"Escape2");
+			Util.MapDebugPrint("Escape2");
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
  		},
 	},
 
@@ -160,11 +156,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape3.*" );
 			
-			Util.MapDebugPrint(GetEntName(ent),"Escape3");
+			Util.MapDebugPrint("Escape3");
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
  		},
 	},
 
@@ -180,11 +175,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_escape4.*" );
 			
- 			Util.MapDebugPrint(GetEntName(ent),"Escape4");
+ 			Util.MapDebugPrint("Escape4");
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"exited aabb trigger");
  		},
 	},
 
@@ -430,7 +424,8 @@ global OnMapLoad = function()
 	// Don't plant as position is not updated from mapscript
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Jeep" );
 
-	SetGoalPriority( "BUILD_jeep", 0.1, TEAM.ALLIES, CLASS.ENGINEER );
+	// cs: was this intended? they would never build the jeep since it is never increased
+	//SetGoalPriority( "BUILD_jeep", 0.1, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "BUILD_1st_Ramp", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "BUILD_2nd_Ramp", 1.1, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "CHECKPOINT_flag", 0.7 );
@@ -442,7 +437,8 @@ global OnMapLoad = function()
 
 	Util.SetGoalOffset( 0,10,-10, "PLANT_Tower_Wall" );
 
-	jeep0 = OnTriggerRegion(AABB(-150,-650,-180, 30,-500,-120), Map.JeepAtMarketGate);
+	// cs: commented this one since it is doing nothing.
+	//jeep0 = OnTriggerRegion(AABB(-150,-650,-180, 30,-500,-120), Map.JeepAtMarketGate);
 	jeep1 = OnTriggerRegion(AABB(123.944,-672.875,-199.875,194.344,-504.221,-125.875), Map.MarketGatePassed);
 	jeep2 = OnTriggerRegion(AABB(-273.875,2080.943,-210.875,21.875,2193.165,-125.875), Map.BarrierPassed);
 	jeep3 = OnTriggerRegion(AABB(-231.874,3144.365,-84.875,-19.279,3216.411,0.125), Map.Ramp1Passed);

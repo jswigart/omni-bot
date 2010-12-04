@@ -261,14 +261,14 @@ global Map =
 	{
 		if ( TestMap ) { return; }
 
-		print( "Axis_Bunker_MG_1_Built" );
+		Util.MapDebugPrint( "Axis_Bunker_MG_1_Built" );
 	},
 
 	Axis_Bunker_MG_1_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "Axis_Bunker_MG_1_Destroyed" );
+		Util.MapDebugPrint( "Axis_Bunker_MG_1_Destroyed" );
 	},
 
 	//MG42 2:
@@ -278,14 +278,14 @@ global Map =
 
 		//Enable sniper spots Allies
 
-		print( "Axis_Bunker_MG_2_Built" );
+		Util.MapDebugPrint( "Axis_Bunker_MG_2_Built" );
 	},
 
 	Axis_Bunker_MG_2_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "Axis_Bunker_MG_2_Destroyed" );
+		Util.MapDebugPrint( "Axis_Bunker_MG_2_Destroyed" );
 	},
 
 	//MG42 3:
@@ -293,14 +293,14 @@ global Map =
 	{
 		if ( TestMap ) { return; }
 
-		print( "Axis_Command_Bunker_MG_Built" );
+		Util.MapDebugPrint( "Axis_Command_Bunker_MG_Built" );
 	},
 
 	Axis_Command_Bunker_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "Axis_Command_Bunker_MG_Destroyed" );
+		Util.MapDebugPrint( "Axis_Command_Bunker_MG_Destroyed" );
 	},
 
 
@@ -310,20 +310,20 @@ global Map =
 	{
 		if ( TestMap ) { return; }
 
-		print( "axis_Command_Post_Built" );
+		Util.MapDebugPrint( "axis_Command_Post_Built" );
 	},
 	Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "axis_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "axis_Command_Post_Destroyed" );
 	},
 
 	Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "allied_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "allied_Command_Post_Destroyed" );
 	},
 
 	Command_Post_Built = function( trigger )
@@ -331,7 +331,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "allied_Command_Post_Built" );
+		Util.MapDebugPrint( "allied_Command_Post_Built" );
 	},
 
 	//-----------------------------
@@ -345,16 +345,15 @@ global Map =
 	{
 		if ( TestMap ) { return; }
 
-		print( "East_Ramp_Built" );
+		Util.MapDebugPrint( "East_Ramp_Built" );
 	},
 
 	West_Ramp_Built = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-		print( "West_Ramp_Built" );
+		Util.MapDebugPrint( "West_Ramp_Built" );
 	},
-
 
 	Water_Pump_Built = function( trigger )
 	{
@@ -362,7 +361,7 @@ global Map =
 
 		Wp.SetWaypointFlag("pump","closed",false);		//open the waypoint path
 
-		print( "Water_Pump_Built" );
+		Util.MapDebugPrint( "Water_Pump_Built" );
 	},
 
 	Bridge_Built = function( trigger )
@@ -374,8 +373,7 @@ global Map =
 		Groups.DisableAllies(Groups.group5);
 		Groups.EnableAllies(Groups.group7);
 
-
-		print( "Bridge_Built" );
+		Util.MapDebugPrint( "Bridge_Built" );
 	},
 
 	//===trigger destroyed
@@ -384,15 +382,14 @@ global Map =
 	{
 		if ( TestMap ) { return; }
 
-		print( "East_Ramp_Destroyed" );
+		Util.MapDebugPrint( "East_Ramp_Destroyed" );
 	},
 
 	West_Ramp_Destroyed = function( trigger )
 	{
 		if ( TestMap ) { return; }
 
-
-		print( "West_Ramp_Destroyed" );
+		Util.MapDebugPrint( "West_Ramp_Destroyed" );
 	},
 
 	Water_Pump_Destroyed = function( trigger )
@@ -401,7 +398,7 @@ global Map =
 
 		Wp.SetWaypointFlag("pump","closed",true);		//close the waypoint path
 
-		print( "Water_Pump_Destroyed" );
+		Util.MapDebugPrint( "Water_Pump_Destroyed" );
 	},
 
 	Bridge_Destroyed = function( trigger )
@@ -415,9 +412,8 @@ global Map =
 
 		//Set Cappoint to Hide
 
-		print( "Bridge_Destroyed, Cappoint to hide" );
+		Util.MapDebugPrint( "Bridge_Destroyed, Cappoint to hide" );
 	},
-
 
 	// Bankdoor!
 	Bank_Door_Destroyed = function( trigger )
@@ -431,10 +427,8 @@ global Map =
 		Groups.EnableAllies(Groups.group3);
 		Groups.EnableAxis(Groups.group4);
 
-
-		print( "Bank_Door_Destroyed" );
+		Util.MapDebugPrint( "Bank_Door_Destroyed" );
 	},
-
 
 	//Main entrance!
 	Main_Entrance_Destroyed = function( trigger )
@@ -443,9 +437,8 @@ global Map =
 
 		Map.Main_Destroyed = true;
 
-		print( "Main_Entrance_Destroyed" );
+		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
 	},
-
 
 	//Side entrance!
 	Side_Entrance_Destroyed = function( trigger )
@@ -454,7 +447,7 @@ global Map =
 
 		Map.Side_Destroyed = true;
 
-		print( "Side_Entrance_Destroyed" );
+		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
 	},
 
 
@@ -466,11 +459,10 @@ global Map =
 
 		Map.Flag_Owner = "Allies";
 
-
 		//Make Switch active
 		//Map.Switches.elevator2_up.LimitTeam = (1<<TEAM.ALLIES);		//Elevator 2 upstairs
 
-		print( "depot_flag_Allies_Captured" );
+		Util.MapDebugPrint( "depot_flag_Allies_Captured" );
 	},
 
 
@@ -487,7 +479,7 @@ global Map =
 			if ( RandInt(0,4) < 2)     // 60% Bunker, 40% Submarine
 			{
 				bot.ChangeSpawnPoint( 3 ); 	// Depot spawn
-				print( "axisbot spawn 3" );
+				Util.MapDebugPrint( "axisbot spawn 3" );
 			}
 		}
 
@@ -498,7 +490,7 @@ global Map =
 		//Disable switch
 		//Map.Switches.elevator2_up.LimitTeam = 0;			//Elevator 2 upstairs
 
-		print( "depot_flag_Axis_Captured" );
+		Util.MapDebugPrint( "depot_flag_Axis_Captured" );
 	},
 
 	//=== triggers stolen and returned
@@ -511,7 +503,7 @@ global Map =
 		Groups.DisableAxis(Groups.group4);
 		Groups.EnableAxis(Groups.group6);
 
-		print( "radarbox1_Taken" );
+		Util.MapDebugPrint( "radarbox1_Taken" );
 	},
 
 	radarbox1_Returned = function( trigger )
@@ -523,7 +515,7 @@ global Map =
 		Groups.DisableAxis(Groups.group6);
 		Groups.EnableAxis(Groups.group4);
 
-		print( "radarbox1_returned" );
+		Util.MapDebugPrint( "radarbox1_returned" );
 	},
 
 	radarbox2_Taken = function( trigger )
@@ -535,7 +527,7 @@ global Map =
 		Groups.DisableAxis(Groups.group4);
 		Groups.EnableAxis(Groups.group6);
 
-		print( "radarbox2_Taken" );
+		Util.MapDebugPrint( "radarbox2_Taken" );
 	},
 
 	radarbox2_Returned = function( trigger )
@@ -547,21 +539,19 @@ global Map =
 		Groups.DisableAxis(Groups.group6);
 		Groups.EnableAxis(Groups.group4);
 
-		print( "radarbox2_Returned" );
+		Util.MapDebugPrint( "radarbox2_Returned" );
 	},
-
 
 	//=== triggers elevator move
 
 	//Elevator at Axis Spawn
 	ElevatorMove =  function( trigger )
 	{
+		vec = ToVector(trigger.Action);   //split action into 3 coordinates
 
-	vec = ToVector(trigger.Action);   //split action into 3 coordinates
-
-	if ( vec.z > 36 )    //(Action: 0.00 0.00 38.00) -> z = 38.00
-	{
-			print ( "elevator 2 is coming up" );
+		if ( vec.z > 36 )    //(Action: 0.00 0.00 38.00) -> z = 38.00
+		{
+			Util.MapDebugPrint( "elevator 2 is coming up", true );
 			sleep(1.0);
 
 			Map.Elevator2Status = "up";
@@ -570,18 +560,17 @@ global Map =
 			Map.Switches.elevator2_up.LimitTeam = 0;		//Elevator 2 upstairs
 			LimitBots = 0;
 
-
 			sleep( 5.0 );
-			print ( "Elevator 2 available" );
+			Util.MapDebugPrint( "Elevator 2 available", true );
 
 			Map.Liftup = true;
 
 			Wp.SetWaypointFlag("r_Lift2_1","closed",false);		//open the waypoint path
 		}
 
-	if ( vec[2] < -36 )    //(Action: 0.00 0.00 -38.00 )  -> z = -38.00
-	{
-			print ( "elevator 2 is going down" );
+		if ( vec[2] < -36 )    //(Action: 0.00 0.00 -38.00 )  -> z = -38.00
+		{
+			Util.MapDebugPrint( "elevator 2 is going down", true );
 			sleep(3.0);
 			Map.Elevator2Status = "down";
 
@@ -590,30 +579,29 @@ global Map =
 			if ( Map.Flag_Owner == "Allies" )
 			{
 				//Map.Switches.elevator2_up.LimitTeam = (1<<TEAM.ALLIES);
-				print ( "switch on" );
+				Util.MapDebugPrint( "switch on" );
 				LimitBots = 1;
 			}
 			Wp.SetWaypointFlag("r_Lift2_1","closed",true);		//close the waypoint path
 
-			print ( "Elevator 2 NOT available" );
+			Util.MapDebugPrint( "Elevator 2 NOT available", true );
 		}
 	},
 
 	//Elevator at flag
+	// cs: this is useless, all it is doing is printing ...
 	ElevatorMove1 =  function( trigger )
 	{
 		vec = ToVector(trigger.Action);   //split action into 3 coordinates
 
-
 		if ( vec[2] > 36 )    //(Action: 0.00 0.00 38.00) -> z = 38.00
 		{
-			print ( "elevator 1 is coming up" );
+			Util.MapDebugPrint( "elevator 1 is coming up", true );
 		}
-
 
 		if ( vec[2] < -36 )    //(Action: 0.00 0.00 -38.00 )  -> z = -38.00
 		{
-			print ( "elevator 1 is going down" );
+			Util.MapDebugPrint( "elevator 1 is going down", true );
 		}
 
 	},
@@ -692,7 +680,6 @@ global OnMapLoad = function()
 	OnTrigger( "aufzug1_goto", Map.ElevatorMove1 );    	//Moving elevator 1
 	OnTrigger( "aufzug_goto", Map.ElevatorMove );    	//Moving elevator 2
 
-
 	//Destroy Main goals
 	SetGoalPriority( "PLANT_.*", 0.9 );
 	SetGoalPriority( "BUILD_.*", 0.6 );
@@ -724,8 +711,6 @@ global OnMapLoad = function()
 	// *****  ROUTES   ****************************************
 	// ********************************************************
 
-	print("Configuring Routes");
-
 	MapRoutes =
 	{
 	    //Goal: Bankdoor
@@ -742,7 +727,7 @@ global OnMapLoad = function()
 						ROUTE_r_tunnelentrance_2 = {ROUTE_r_tunneldoor = {}, },
 					},
 				},
-		    },
+			},
 
 			ROUTE_r_allies_spawn2 =
 			{
@@ -754,10 +739,10 @@ global OnMapLoad = function()
 						ROUTE_r_tunnelentrance_2 = { ROUTE_r_tunneldoor =  {}, },
 					},
 				},
-		    },
+			},
 
-		    ROUTE_r_flagspawn =
-		    {
+			ROUTE_r_flagspawn =
+			{
 				ROUTE_r_split1 =
 				{
 					ROUTE_r_tunnelentrance_3 = { ROUTE_r_bankdoor = {}, },
@@ -776,7 +761,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_r_tunneldoor = { ROUTE_r_bankdoor = {}, },
 				},
-		    },
+			},
 		},
 
 
@@ -784,9 +769,9 @@ global OnMapLoad = function()
 
 		CAPPOINT_Dropoff =
 		{
-		    ROUTE_r_goldsafe =
-		    {
-		       ROUTE_r_tunneldoor =
+			ROUTE_r_goldsafe =
+			{
+				ROUTE_r_tunneldoor =
 				{
 					ROUTE_r_tunnelentrance_2 =
 					{
@@ -809,7 +794,7 @@ global OnMapLoad = function()
 					ROUTE_r_waterpump_exit = { ROUTE_r_waterpump = {}, },
 					ROUTE_r_spawn_exit = { ROUTE_r_frontwall = {}, },
 				},
-		    },
+			},
 		},
 
 
@@ -817,11 +802,11 @@ global OnMapLoad = function()
 
 		DEFEND_d_bankdoor2 =
 		{
-		    ROUTE_r_axisspawn_2 =
-		    {
-			ROUTE_r_ladder = { ROUTE_r_ladder2 = {}, },
+			ROUTE_r_axisspawn_2 =
+			{
+				ROUTE_r_ladder = { ROUTE_r_ladder2 = {}, },
 				ROUTE_r_tunnelentrance_1 = { ROUTE_r_tunneldoor = {}, },
-		    },
+			},
 		},
 
 		ATTACK_a_submarine =
@@ -868,7 +853,7 @@ global OnMapLoad = function()
 
 	Util.UpdateSwitchData();
 	Util.Routes(MapRoutes);
-	print( "Script loaded for Secret Bay" );
+	Util.MapDebugPrint( "Script loaded for Secret Bay" );
 };
 
 	// =======================================================
@@ -891,7 +876,7 @@ global OnBotJoin = function( bot )
 	{
 		if ( bot.HasWeapon(WEAPON.K43) || bot.HasWeapon(WEAPON.GARAND))
 		{
-			print("Sniper joined");
+			Util.MapDebugPrint("Sniper joined", true);
 			bot.MaxViewDistance = 10000.0;
 		}
 	}
@@ -1042,8 +1027,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
 
-			if ( Map && Map.Debug )
-				{ print("EnableAllies: enabling", goal); }
+			Util.MapDebugPrint("EnableAllies: enabling " + goal);
 		}
 	},
 
@@ -1053,8 +1037,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, goal );
 
-			if ( Map && Map.Debug )
-				{ print("EnableAxis: enabling", goal); }
+			Util.MapDebugPrint("EnableAxis: enabling " + goal);
 		}
 	},
 
@@ -1064,8 +1047,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, goal );
 
-			if ( Map && Map.Debug )
-				{ print("DisableAllies: disabling", goal); }
+			Util.MapDebugPrint("DisableAllies: disabling " + goal);
 		}
 	},
 
@@ -1075,8 +1057,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, goal );
 
-			if ( Map && Map.Debug )
-				{ print("DisableAxis: disabling", goal); }
+			Util.MapDebugPrint("DisableAxis: disabling " + goal);
 		}
 	},
 };

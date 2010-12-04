@@ -79,7 +79,7 @@ global Map =
 		}
 
 		//don't bother trying to defuse this
-		ETUtil.DisableGoal( "DEFUSE_Main_Entrance.*" );
+		Util.DisableGoal( "DEFUSE_Main_Entrance.*" );
 
 		Util.MapDebugPrint( "Main_Entrance_Planted" );
 	},

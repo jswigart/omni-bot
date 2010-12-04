@@ -130,13 +130,13 @@ global Map =
 
 		Util.MapDebugPrint( "Hidden_Room_Destroyed" );
 	},
-	
+
 	Bookcase_Exploded = function()
 	{
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_book" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_BOOKOFDEATHPLACE" );
 		Util.MapDebugPrint( "Bookcase_Exploded" );
-	},	
+	},
 
 	book_Taken = function( trigger )
 	{
@@ -451,32 +451,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( !axisAnnounce && bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						axisAnnounce = true;
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						axisAnnounce = true;
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-				if ( !alliesAnnounce && bot.GetTeam() == TEAM.ALLIES )
-				{
-					alliesAnnounce = true;
-					bot.SayVoice(VOICE.G_NEGATIVE);
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "Axis_Win" );
 	},
 

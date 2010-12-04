@@ -22,15 +22,15 @@ global Map =
 	bunker_door_Dyno = 0,
 	canyon_bunker_MG42_gun_Dyno = 0,
 	power_generator_Dyno = 0,
-	
+
 	Plant_Power_Generator = "PLANT_power_generator",
 	Plant_Command_Post = "PLANT_Command_Post",
 	Plant_beach_bunker = "PLANT_beach_bunker_door",
 	Callarty1 = "CALLARTILLERY_axis1",
-	
-	
-	
-	TriggerOne = 
+
+
+
+	TriggerOne =
 	{
 		Name = "TriggerOne =",
 		TriggerOnClass = CLASS.COVERTOPS,
@@ -51,8 +51,8 @@ global Map =
 		{
 		},
 	},
-	
-	TriggerTwo = 
+
+	TriggerTwo =
 	{
 		Name = "TriggerTwo =",
 		TriggerOnClass = CLASS.COVERTOPS,
@@ -180,7 +180,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.DisableGroup( "cp");
 		Map.power_generator_Dyno += 1;
 		Util.MapDebugPrint( "power_generator_Planted" );
@@ -271,17 +271,15 @@ global Map =
 
 	Axis_base_gate_Destroyed = function( trigger )
 	{
-	Util.DisableGroup( "allies1", TEAM.ALLIES);
-	Util.DisableGroup( "axis1", TEAM.AXIS);
-	Util.EnableGroup( "allies2", TEAM.ALLIES);
-	Util.EnableGroup( "axis2", TEAM.AXIS);
-//	ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, false, 1 );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_beach_bunker_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
-	
+		Util.DisableGroup( "allies1", TEAM.ALLIES);
+		Util.DisableGroup( "axis1", TEAM.AXIS);
+		Util.EnableGroup( "allies2", TEAM.ALLIES);
+		Util.EnableGroup( "axis2", TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_beach_bunker_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 
 		Map.Axis_base_gate_Dyno = 0;
 
@@ -320,18 +318,17 @@ global Map =
 
 	bunker_door_Destroyed = function( trigger )
 	{
-	Util.DisableGroup( "allies1", TEAM.ALLIES);
-	Util.DisableGroup( "axis1", TEAM.AXIS);
-	Util.EnableGroup( "allies2", TEAM.ALLIES);
-	Util.EnableGroup( "axis2", TEAM.AXIS);
-	Util.EnableGroup( "cp");
-//	ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, false, 1 );
-//	Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 3;
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_base_gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_beach_bunker_door" );
+		Util.DisableGroup( "allies1", TEAM.ALLIES);
+		Util.DisableGroup( "axis1", TEAM.AXIS);
+		Util.EnableGroup( "allies2", TEAM.ALLIES);
+		Util.EnableGroup( "axis2", TEAM.AXIS);
+		Util.EnableGroup( "cp");
+		//	Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 3;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_base_gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_beach_bunker_door" );
 
 		Map.bunker_door_Dyno = 0;
 
@@ -360,8 +357,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "EXPLODE_axis_basement_MG_Gun" );
 		Util.ChangeSpawn(TEAM.AXIS, 2, 4);
 		Util.ChangeSpawn(TEAM.AXIS, 1, 5);
-	
-		
 
 		Map.power_generator_Dyno = 0;
 
@@ -379,7 +374,7 @@ global Map =
 	oldcityflag_Allies_Captured = function( trigger )
 	{
 		Util.ChangeSpawn(TEAM.AXIS, 4, 3);
-		
+
 		rnd = RandInt(1,4);
 		if ( rnd == 1 )
 		{
@@ -397,10 +392,9 @@ global Map =
 		{
 			Util.SetGoalPosition( 6418.128, 1852.05, 912.125, Map.Plant_Power_Generator );
 		}
-		
+
 		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -440,10 +434,11 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have destroyed the power generator", Map.power_generator_Destroyed );
 	OnTrigger( "Axis reclaim the forward spawn!", Map.oldcityflag_Axis_Captured );
 	OnTrigger( "Allies capture the forward spawn!", Map.oldcityflag_Allies_Captured );
-	
+
 	cellar = OnTriggerRegion(AABB(2140.69,-528.873,609.125,2280.875,-319.127,683.125), Map.TriggerOne);
 	backdoor = OnTriggerRegion(AABB(2959.126,1766.493,937.125,3115.884,1952.875,1011.125), Map.TriggerTwo);
-	
+
+	// cs: these can be removed after the goals have been saved once ...
 	Util.SetGroup( "ATTACK_flag1", "allies1");
 	Util.SetGroup( "ATTACK_flag10", "allies1");
 	Util.SetGroup( "ATTACK_flag2", "allies1");
@@ -490,24 +485,19 @@ global OnMapLoad = function()
 	Util.SetGroup( "PLANTMINE_g5", "axis55");
 	Util.SetGroup( "CHECKPOINT_oldcityflag", "flag");
 //	Util.SetGroup( "PLANTMINE_g6", "axis55");
-	
-	
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
-	
+
 	Util.EnableGroup( "allies1", TEAM.ALLIES);
 	Util.EnableGroup( "axis1", TEAM.AXIS);
 	Util.EnableGroup( "axis_cab", TEAM.AXIS);
 	Util.EnableGroup( "cabs1");
 	Util.EnableGroup( "flag");
-	
+
 	ETUtil.LimitToClass("PLANT_Command_Post", 0, CLASS.COVERTOPS);
 	ETUtil.LimitToClass("PLANT_beachdoor", TEAM.ALLIES, CLASS.COVERTOPS);
 	SetGoalPriority( "PLANT_beachdoor", 0.99, 0, CLASS.COVERTOPS );
-	
-	
-	
-	
+
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
@@ -525,7 +515,7 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( 4416.66, -893.874, 1072.125, Map.Plant_Command_Post );
 	Util.SetGoalPosition( -583.4, -2006.5, 696.125, Map.Plant_beach_bunker );
 //	Util.SetGoalPosition( 1883.749, -277.636, 1048.125, Map.Callarty1 );
-	
+
 
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
@@ -533,10 +523,7 @@ global OnMapLoad = function()
 //	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=20, MaxCampTime=90} );
 //	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
-	if ( Map.Debug < 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
@@ -546,62 +533,3 @@ global OnBotJoin = function( bot )
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
 	bot.MaxViewDistance = 2400;
 };
-
-// cs: please don't do this. Use a Map.Classes function if you need custom min class counts
-/*global PostMapLoad = function()
-{
-	Util.ProcessMovers();
-
-	// set up the minimum class counts for the game
-	if ( !Util.ClassTablesInitialized )
-	{
-		Util.InitializeClassTables();
-	}
-
-	if ( Map && Map.SnipeMap )
-	{
-		Util.SnipeMap();
-	}
-	else if ( Map && Map.PanzerMap )
-	{
-		Map.DontSelectWeapons = true; // disable select weapons goal
-		ETUtil.PanzerMap();
-	}
-	else if ( Map && Map.Classes )
-	{
-		Map.Classes();
-	}
-	else
-	{
-		if ( Server.MaxBots < 10 && Server.MaxBots > 0 )
-		{
-			Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 0;
-			Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 2;
-			Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-			Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 1;
-
-			Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 0;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 1;
-		}
-		else
-		{
-			Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
-			Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
-			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 3;
-			Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] = 1;
-			Server.MinClassCount[TEAM.AXIS][CLASS.FIELDOPS] = 2;
-
-			Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-		}
-	}
-};*/
-
-

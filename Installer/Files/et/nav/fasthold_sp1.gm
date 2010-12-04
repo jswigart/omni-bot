@@ -1,6 +1,17 @@
-//script created by palota
+//==========================================================================================
+//
+//	fasthold_sp1.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	23 March 2010	Initial Script
+//	palota	3 December 2010	main gate has 2 use points, changed MaxUsersInProgress and priorities, added DEFEND_health
+//
+//==========================================================================================
+//
 global Map =
 {
+	Debug=0,
 	alliesFlag=false,
 	cemeteryDestroyed=false,
 	objTaken=0,
@@ -39,14 +50,14 @@ global Map =
 	SetSpawn = function(bot)
 	{
 		if (bot.GetTeam() == TEAM.ALLIES){
-			if (Map.alliesFlag){ bot.ChangeSpawnPoint(4); } 
-			else if(Map.cemeteryDestroyed){ 
+			if (Map.alliesFlag){ bot.ChangeSpawnPoint(4); }
+			else if(Map.cemeteryDestroyed){
 				if (RandInt(0,2)>0) { bot.ChangeSpawnPoint(3); }
-				else { bot.ChangeSpawnPoint(0); } 
+				else { bot.ChangeSpawnPoint(0); }
 			}else{
 				if (RandInt(0,1)==0) { bot.ChangeSpawnPoint(3); }
 				else { bot.ChangeSpawnPoint(0); }
-			}  
+			}
 		}else{
 			bot.ChangeSpawnPoint(4);
 		}
@@ -59,30 +70,32 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, enabled, "ROUTE_rope_.*");
 		SetAvailableMapGoals( TEAM.AXIS, enabled, "ROUTE_rope_.*");
 	},
-	
+
 	SetTruck = function(incr)
 	{
 		Map.objTaken+=incr;
-		if (Map.objTaken>0){ p=true; } else { p=false; }
-		SetAvailableMapGoals( TEAM.AXIS, p, "ATTACK_truck.*");
+		SetAvailableMapGoals( TEAM.AXIS, Map.objTaken>0, "ATTACK_truck.*");
 	},
 
 	Checkpoint_Captured = function(byAllies)
 	{
 		Map.alliesFlag=byAllies;
 		if(byAllies){ p=0.5; } else { p=0.1; }
-	 	SetGoalPriority( "DEFEND.*", p, TEAM.AXIS);
-	 	SetGoalPriority( "DEFEND_gate.*", 0.5, TEAM.AXIS);
-	 	SetGoalPriority( "DEFEND_train.*", 0.5, TEAM.AXIS);
-	 	SetGoalPriority( "DEFEND_stairs2", 0.6, TEAM.AXIS);
-		if(byAllies){ p=0.1; } else { p=0.57; }
-	 	SetGoalPriority( "BUILD_Train_Yard_MG", p, TEAM.AXIS);
+		SetGoalPriority( "DEFEND.*", p, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_gate.*", 0.5, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_train.*", 0.5, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_health.*", 0.5, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_stairs2", 0.6, TEAM.AXIS);
+		if(byAllies){ p=0.1; } else { p=0.75; }
+		SetGoalPriority( "BUILD_Train_Yard_MG", p, TEAM.AXIS);
 		if(byAllies){ p=0.81; } else { p=0.65; }
-	 	SetGoalPriority( "PLANT_Axis_Radio_Tower", p, TEAM.ALLIES);
+		SetGoalPriority( "PLANT_Axis_Radio_Tower", p, TEAM.ALLIES);
 		if(byAllies){ p=0.0; } else { p=0.6; }
-	 	SetGoalPriority( "ATTACK_gate.*", p, TEAM.ALLIES);
-		if(byAllies){ p=99; } else { p=1; }
+		SetGoalPriority( "ATTACK_gate.*", p, TEAM.ALLIES);
+		if(byAllies){ p=9; } else { p=1; }
 		Util.SetMaxUsersInProgress(p, "FLAG_axis_book");
+		if(byAllies){ p=5; } else { p=2; }
+		Util.SetMaxUsersInProgress(p, "CHECKPOINT_garage_forward_spawn");
 
 		SetAvailableMapGoals( TEAM.AXIS, byAllies, "HEALTHCAB_401");
 		SetAvailableMapGoals( TEAM.ALLIES, byAllies, "BUILD_Inner_Rope_Ladders");
@@ -98,27 +111,26 @@ global Map =
 
 	Inner_Rope_Ladders_Built = function( trigger )
 	{
-	 	Map.SetRopes(true);
+		Map.SetRopes(true);
 		Util.MapDebugPrint( "Inner_Rope_Ladders_Built" );
 	},
-	
+
 	Inner_Rope_Ladders_Destroyed = function( trigger )
 	{
-	 	Map.SetRopes(false);
+		Map.SetRopes(false);
 		Util.MapDebugPrint( "Inner_Rope_Ladders_Destroyed" );
 	},
 
 	Axis_Fasthold_Gate_Destroyed = function( trigger )
 	{
 		Map.Checkpoint_Captured(true);
-	 	SetGoalPriority( "DEFEND_stairs.*", 0.4, TEAM.AXIS);
-	 	SetGoalPriority( "DEFEND_tower_book.*", 0.55, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_stairs.*", 0.4, TEAM.AXIS);
+		SetGoalPriority( "DEFEND_tower_book.*", 0.55, TEAM.AXIS);
 		Util.EnableGoal("ROUTE_gate");
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_tower.*");
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*");
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*MG42.*");
-		//SetAvailableMapGoals( TEAM.AXIS, true, "FLAME.*"); // cs: no longer a goal in 0.8. camp goals can be weapon restricted
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILE.*");
 		Util.MapDebugPrint( "Axis_Fasthold_Gate_Destroyed" );
 	},
@@ -132,7 +144,7 @@ global Map =
 	Cemetery_Escape_Exit_Destroyed = function( trigger )
 	{
 		Map.cemeteryDestroyed=true;
-	 	Util.EnableGoal("ROUTE_cemetery");
+		Util.EnableGoal("ROUTE_cemetery");
 
 		foreach ( id and bot in BotTable )
 		{
@@ -143,7 +155,7 @@ global Map =
 
 	Train_Car_Door_Destroyed = function( trigger )
 	{
-	 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_enigma_box");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_enigma_box");
 		Util.MapDebugPrint( "Train_Car_Door_Destroyed" );
 	},
 
@@ -161,10 +173,10 @@ global Map =
 	{
 		Map.SetTruck(-1);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_tower_book.*");
-	 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_book");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_book");
 		Util.MapDebugPrint( "axis_book_Captured" );
 	},
-  
+
 	enigma_box_Taken = function( trigger )
 	{
 		Map.SetTruck(1);
@@ -179,7 +191,7 @@ global Map =
 	{
 		Map.SetTruck(-1);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_train.*");
-	 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_enigma_box");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_enigma_box");
 		Util.MapDebugPrint( "enigma_box_Captured" );
 	},
 
@@ -212,53 +224,52 @@ global OnMapLoad = function()
 	OnTrigger( "The Allies have secured the Engima box!", Map.enigma_box_Captured);
 	OnTrigger( "Allied team has destroyed the Radio Tower!", Map.Axis_Radio_Tower_Destroyed );
 
- 	Util.DisableGoal("AMMOCAB_secret");
- 	Util.DisableGoal("HEALTHCAB_secret");
+	Util.DisableGoal("AMMOCAB_secret");
+	Util.DisableGoal("HEALTHCAB_secret");
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_truck");
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*MG42_top.*north.*");
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_truck.*");
-	//SetAvailableMapGoals( TEAM.AXIS, false, "FLAME.*"); // cs: no longer a goal in 0.8. camp goals can be weapon restricted
-	//SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_health"); // cs: no longer a goal in 0.8. camp goals can be weapon restricted
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILE.*");
- 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*MG42.*");
- 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_enigma_box");
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*MG42.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_enigma_box");
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tower.*");
 
- 	SetGoalPriority(".*MG42_top_.*south", 0.2, TEAM.AXIS);
- 	SetGoalPriority(".*MG42_top_south.*", 0.5, TEAM.AXIS);
- 	SetGoalPriority("PLANT_Inner_Rope_Ladders", 0.91, TEAM.AXIS, CLASS.COVERTOPS);
- 	SetGoalPriority("PLANT_Command_Post", 0.69, TEAM.AXIS);
- 	SetGoalPriority("FLAGRETURN_enigma_box_dropped", 0.61, TEAM.AXIS, 0, true);
- 	SetGoalPriority("FLAGRETURN_axis_book_dropped", 0.61, TEAM.AXIS, 0, true);
- 	SetGoalPriority("ATTACK_truck.*", 0.6, TEAM.AXIS);
- 	SetGoalPriority("ATTACK_truck.*", 0.3, TEAM.AXIS, CLASS.ENGINEER);
- 	SetGoalPriority("PLANT_Command_Post", 0.6, TEAM.ALLIES, CLASS.ENGINEER);
- 	SetGoalPriority("PLANT_Train_Yard_MG", 0.1, TEAM.ALLIES, CLASS.ENGINEER);
- 	SetGoalPriority(".*MG42_top_south.*", 0.6, TEAM.ALLIES);
- 	SetGoalPriority("ATTACK_tower.*", 0.1, TEAM.ALLIES);
+	SetGoalPriority(".*MG42_top_.*south", 0.2, TEAM.AXIS);
+	SetGoalPriority(".*MG42_top_south.*", 0.5, TEAM.AXIS);
+	SetGoalPriority("PLANT_Inner_Rope_Ladders", 0.91, TEAM.AXIS, CLASS.COVERTOPS);
+	SetGoalPriority("PLANT_Command_Post", 0.69, TEAM.AXIS);
+	SetGoalPriority("FLAG.*", 0.65, TEAM.AXIS, 0, true);
+	SetGoalPriority("ATTACK_truck.*", 0.61, TEAM.AXIS);
+	SetGoalPriority("PLANT_Command_Post", 0.6, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority("PLANT_Train_Yard_MG", 0.1, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority("ATTACK_tower.*", 0.1, TEAM.ALLIES);
+	SetGoalPriority("SNIPE_allies_roof", 0.81, TEAM.ALLIES);
 
 	Util.SetMaxUsersInProgress(1, ".*MG42.*");
 	Util.SetMaxUsersInProgress(1, ".*Command_Post");
 	Util.SetMaxUsersInProgress(1, "DEFEND_stairs2");
 	Util.SetMaxUsersInProgress(1, "DEFEND_gate.*");
 	Util.SetMaxUsersInProgress(1, "DEFEND_tower_book.*");
-	Util.SetMaxUsersInProgress(2, "ATTACK_gate.*");
+	Util.SetMaxUsersInProgress(8, "ATTACK_truck.*");
+	Util.SetMaxUsersInProgress(5, "ATTACK_gate.*");
+	Util.SetMaxUsersInProgress(2, "FLAG_enigma_box");
 
- 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=70, maxcamptime=250} );
- 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=20, maxcamptime=80} );
- 	//SetMapGoalProperties( "FLAME_.*", {mincamptime=30, maxcamptime=100} ); // cs: no longer a goal in 0.8. camp goals can be weapon restricted
- 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=90, maxcamptime=300} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=150} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=40, maxcamptime=100} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=90, maxcamptime=300} );
 
 	Util.SetGoalPosition(4196, -78, 408, "PLANT_Cemetery_Escape_Exit");
 	Util.SetGoalPosition(381, 1548, 408, "PLANT_Inner_Rope_Ladders");
 	Util.SetGoalOffset(50, 0, 0, "PLANT_Train_Car_Door");
 
+	Util.AddUsePoint("PLANT_Axis_Fasthold_Gate", {Vector3(866.014, -374.125, 408.125), Vector3(863.806, -329.875, 408.125)} );
+
 	Map.Checkpoint_Captured(false);
 	Map.SetRopes(false);
 
- 	Util.DisableGoal("ROUTE_gate");
- 	Util.DisableGoal("ROUTE_cemetery");
+	Util.DisableGoal("ROUTE_gate");
+	Util.DisableGoal("ROUTE_cemetery");
 
 	MapRoutes =
 	{
@@ -269,7 +280,7 @@ global OnMapLoad = function()
 				ROUTE_allies4 = {},
 				ROUTE_allies5 = {},
 			},
-		},		
+		},
 		PLANT_Cemetery_Escape_Exit = {
 			ROUTE_allies_spawn = {
 				ROUTE_allies5 = {},
@@ -288,7 +299,7 @@ global OnMapLoad = function()
 			ROUTE_axis_spawn = {
 				ROUTE_stairs = {},
 				ROUTE_ropes = {},
-			},				
+			},
 		},
 		PLANT_Axis_Radio_Tower = {
 			ROUTE_flag = {
@@ -318,7 +329,7 @@ global OnMapLoad = function()
 			},
 		},
 		DEFEND_tower1 = {
-			ROUTE_axis_spawn = { 
+			ROUTE_axis_spawn = {
 				ROUTE_upstairs = {}
 			},
 		},
@@ -334,7 +345,7 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	if(bot.GetTeam()==TEAM.ALLIES){ 
+	if(bot.GetTeam()==TEAM.ALLIES){
 		bot.TargetBreakableDist = 70.0;
 	}
 	Map.SetSpawn(bot);

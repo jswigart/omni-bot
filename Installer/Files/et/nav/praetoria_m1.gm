@@ -310,7 +310,7 @@ global Map =
 		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
 		OnEnter = function(ent)
 		{
-			// Util.MapDebugPrint(GetEntName(ent), "entered");
+			// Util.MapDebugPrint(GetEntName(ent) + " entered", true);
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_start.*" );
@@ -338,7 +338,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			// Util.MapDebugPrint(GetEntName(ent), "exited");
+			// Util.MapDebugPrint(GetEntName(ent) + " exited");
 		},
 	},
 
@@ -399,12 +399,12 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_axis_start.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_axis_bridge.*" );
-			//Util.MapDebugPrint(GetEntName(ent), "entered 2");
+			//Util.MapDebugPrint(GetEntName(ent) + " entered 2", true);
 		},
 		OnExit = function(ent)
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_allies_start.*" );
-			//Util.MapDebugPrint(GetEntName(ent), "exited 2");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited 2", true);
 		},
 	},
 
@@ -432,7 +432,7 @@ global Map =
 		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
 		OnEnter = function(ent)
 		{
-			//Util.MapDebugPrint(GetEntName(ent), "entered 2");
+			//Util.MapDebugPrint(GetEntName(ent) + " entered 2", true);
 			if ( Map.Talk && MAP_TALK && Map.Barrier2IsBuilt )
 			{
 				foreach ( gameId and bot in BotTable )
@@ -450,7 +450,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			//Util.MapDebugPrint(GetEntName(ent), "exited 2");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited 2", true);
 		},
 	},
 

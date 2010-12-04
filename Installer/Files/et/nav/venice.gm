@@ -4,6 +4,8 @@ global Map =
 	Debug = false,
 	//set Talk to false if you don't want the Allied bots to cheer after victory:
 	Talk = true,
+	DefendingTeam = TEAM.AXIS,
+
 	Movers =
 	{
 		//retain these movers so we can make the bots ignore the
@@ -85,6 +87,10 @@ global Map =
 	Flag_relic = "FLAG_relic",
 	Flag_relic_dropped = "FLAG_relic_dropped",
 	Cappoint_429 = "CAPPOINT_429",
+
+	// region triggers for bot talk
+	iw1 = 0,
+	iw2 = 0,
 
 	//Status' for conditionals
 	TankBarrierStatus = 0, //not built
@@ -330,7 +336,7 @@ global Map =
 		Groups.DisableAxis(Groups.group2);
 		Groups.EnableAllies(Groups.group3);
 		Groups.EnableAxis(Groups.group4);
-		
+
 		Util.IgnoreTargetGoalAllBots("MOVER_at_gun");
 		Util.MapDebugPrint( "tank_past_AT" );
 	},
@@ -511,6 +517,9 @@ global Map =
 
 		Util.DisableGoal("MOUNT_tank");
 
+		Map.iw1 = OnTriggerRegion( AABB(4125.973,4134.436,-231.448,4781.629,5291.188,210.477), RegionTrigger.IntrusionWarning );
+		Map.iw2 = OnTriggerRegion( AABB(4378.506,3970.378,-246.310,4580.530,4146.209,10.023), RegionTrigger.IntrusionWarning );
+
 		Util.MapDebugPrint( "library_doors_destroyed" );
 	},
 
@@ -554,6 +563,9 @@ global Map =
 		Groups.DisableAxis(Groups.group12);
 		Groups.EnableAllies(Groups.group13);
 		Groups.EnableAxis(Groups.group14);
+
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
 
 		Map.EscortVehicle.Boat.Enabled = true;
 
@@ -751,28 +763,10 @@ global Map =
 
 	AlliesWon = function( trigger )
 	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint("AlliesWon");
-
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
-		}
 	},
-
 };
 
 global OnMapLoad = function()

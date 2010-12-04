@@ -1,5 +1,9 @@
 global Map =
 {
+	DefendingTeam = TEAM.AXIS,
+	ac1 = 0,
+	ac2 = 0,
+
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
 	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
@@ -38,6 +42,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.ac1 = OnTriggerRegion( AABB(2663.134,-1204.375,-11.845,2827.950,-1045.392,216.779), RegionTrigger.AllClear );
+		Map.ac2 = OnTriggerRegion( AABB(2631.797,-132.671,-16.197,2825.169,0.982,190.828), RegionTrigger.AllClear );
 		Util.MapDebugPrint( "Gold_Barrier_Destroyed" );
 	},
 
@@ -60,6 +66,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		DeleteTriggerRegion( Map.ac1 );
+		DeleteTriggerRegion( Map.ac2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_relic.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_cappoint.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Gold_Barrier" );
@@ -81,6 +90,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		Map.ac1 = OnTriggerRegion( AABB(2663.134,-1204.375,-11.845,2827.950,-1045.392,216.779), RegionTrigger.AllClear );
+		Map.ac2 = OnTriggerRegion( AABB(2631.797,-132.671,-16.197,2825.169,0.982,190.828), RegionTrigger.AllClear );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_allies_relic.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cappoint.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_cappoint.*" );
@@ -151,7 +163,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT_.*", {MinCampTime=10, MaxCampTime=120} );
 
 	Util.SetMaxUsersInProgress( 4, "ATTACK_allies_relic.*" );
-	Util.SetMaxUsersInUse( 1, "ATTACK_allies_relic.*" );
+	Util.SetMaxUsersInUse( 1, "ATTACK_.*" );
 	Util.SetMaxUsersInProgress( 2, Map.Flag_allied_gold );
 	Util.SetMaxUsersInProgress( 2, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
@@ -159,13 +171,20 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_.*" );
 	Util.SetMaxUsersInProgress( 3, "PLANT_Gold_Barrier" );
-	Util.SetMaxUsersInProgress( 1, "BUILD_Command_Post" );
+	Util.SetMaxUsers( 1, "BUILD_Command_Post" );
 	SetGoalPriority( "BUILD_Command_Post", 0.8 );
 	SetGoalPriority( "DEFEND_axis_relic.*", 0.6 );
 	SetGoalPriority( "CHECKPOINT_forwardbunker_flag", 0.65 );
 	SetGoalPriority( "PLANT_Gold_Barrier", 0.85 );
 	SetGoalPriority( "PLANT_Tunnel_Barrier", 0.9 );
 	SetGoalPriority( "BUILD_Gold_Barrier", 0.95 );
+
+	// region triggers
+	iw1 = OnTriggerRegion( AABB(2633.344,-160.659,8.460,2834.688,-20.915,145.261), RegionTrigger.IntrusionWarning );
+	iw2 = OnTriggerRegion( AABB(2595.836,-1257.690,-27.310,2831.202,-1064.640,202.445), RegionTrigger.IntrusionWarning );
+	iw3 = OnTriggerRegion( AABB(2597.685,-1000.137,-20.610,2858.448,-769.517,202.445), RegionTrigger.IntrusionWarning );
+	iw4 = OnTriggerRegion( AABB(2025.196,-659.325,112.778,2224.297,-440.665,346.311), RegionTrigger.IntrusionWarning );
+	iw5 = OnTriggerRegion( AABB(2323.203,-693.425,43.421,2502.215,-464.811,307.177), RegionTrigger.IntrusionWarning );
 
 	// *** ROUTES ***
 	Maproutes =

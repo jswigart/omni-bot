@@ -23,6 +23,11 @@ global Map =
 	goldsecured = false,
 	escort = false,
 
+	// for compat with 'old' versions
+	PlantPortGate = "PLANT_Port_gate",
+	PlantTrainGate = "PLANT_Train_gate",
+
+
 	Switches =
 	{
 		outside =
@@ -178,7 +183,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_Train_Doors" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Truck.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Train_gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.PlantTrainGate );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Train.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Truck.*" );
@@ -301,11 +306,11 @@ global Map =
 			{ return; }
 
 		if ( Map.truckatbarrier1 == true )
-			{
+		{
 			Map.escort = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
-			}
+		}
 
 		Map.barrier1built = true;
 		Util.MapDebugPrint( "Truck_Barrier_1_Built" );
@@ -317,11 +322,11 @@ global Map =
 			{ return; }
 
 		if ( Map.truckatbarrier2 == true )
-			{
+		{
 			Map.escort = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
-			}
+		}
 		Map.barrier2built = true;
 		Util.MapDebugPrint( "Truck_Barrier_2_Built" );
 	},
@@ -332,15 +337,15 @@ global Map =
 			{ return; }
 
 		if ( Map.truckatbarrier1 == true )
-			{
+		{
 			Map.escort = true;
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
-			}
+		}
 
 		if ( Map.truckstatus == true )
-			{
+		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
-			}
+		}
 
 		Map.barrier1built = false;
 		Util.MapDebugPrint( "Truck_Barrier_1_Destroyed" );
@@ -352,15 +357,15 @@ global Map =
 			{ return; }
 
 		if ( Map.truckatbarrier2 == true )
-			{
+		{
 			Map.escort = true;
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
-			}
+		}
 
 		if ( Map.truckstatus == true )
-			{
+		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
-			}
+		}
 		Map.barrier2built = false;
 		Util.MapDebugPrint( "Truck_Barrier_2_Destroyed" );
 	},
@@ -373,9 +378,9 @@ global Map =
 		Map.truckstatus = true;
 
 		if ( Map.escort == true )
-			{
+		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
-			}
+		}
 		Util.MapDebugPrint( "truck_repaired" );
 	},
 
@@ -394,11 +399,11 @@ global Map =
 			{ return; }
 
 		if ( Map.barrier1built == true )
-			{
+		{
 			Map.escort = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
-			}
+		}
 		Map.truckatbarrier1 = true;
 		Util.MapDebugPrint( "truck_at_barrier1" );
 	},
@@ -409,11 +414,11 @@ global Map =
 			{ return; }
 
 		if ( Map.barrier2built == true )
-			{
+		{
 			Map.escort = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
-			}
+		}
 		Map.truckatbarrier2 = true;
 		Util.MapDebugPrint( "truck_at_barrier2" );
 	},
@@ -472,41 +477,41 @@ global Map =
 
 	side_door_trigger = function( trigger )
 	{
-         vel = ToVector(trigger.Action);
+		vel = ToVector(trigger.Action);
 
-         if ( vel.z > 0 )
+		if ( vel.z > 0 )
 		{
-		sleep(1.5);
-		Map.Switches.outside.Enabled = true;
-		Map.Switches.inside.Enabled = true;
-		Map.DoorStatus = 0;
-		print( "side door closed" );
+			sleep(1.5);
+			Map.Switches.outside.Enabled = true;
+			Map.Switches.inside.Enabled = true;
+			Map.DoorStatus = 0;
+			Util.MapDebugPrint( "side door closed", true );
 		}
-         else if ( vel.z < 0 )
+		else if ( vel.z < 0 )
 		{
-		Map.Switches.outside.Enabled = false;
-		Map.Switches.inside.Enabled = false;
-		Map.DoorStatus = 1;
-		print( "side door open" );
+			Map.Switches.outside.Enabled = false;
+			Map.Switches.inside.Enabled = false;
+			Map.DoorStatus = 1;
+			Util.MapDebugPrint( "side door open", true );
 		}
 	},
 
 	big_door_trigger = function( trigger )
 	{
-         vel = ToVector(trigger.Action);
+		vel = ToVector(trigger.Action);
 
-         if ( vel.x > 0 )
+		if ( vel.x > 0 )
 		{
-		sleep(1.5);
-		Map.Switches.biggate.Enabled = true;
-		Map.DoorStatus = 0;
-		print( "big door closed" );
+			sleep(1.5);
+			Map.Switches.biggate.Enabled = true;
+			Map.DoorStatus = 0;
+			Util.MapDebugPrint( "big door closed", true );
 		}
-         else if ( vel.x < 0 )
+		else if ( vel.x < 0 )
 		{
-		Map.Switches.biggate.Enabled = false;
-		Map.DoorStatus = 1;
-		print( "big_door open" );
+			Map.Switches.biggate.Enabled = false;
+			Map.DoorStatus = 1;
+			Util.MapDebugPrint( "big_door open", true );
 		}
 	},
 };
@@ -565,11 +570,20 @@ global OnMapLoad = function()
 	barrier1 = OnTriggerRegion(AABB(-1791.296,-1854.212,1.125,-1525.994,-1785.886,97.373), RegionTrigger.VehicleTrigger);
 	barrier2 = OnTriggerRegion(AABB(-2887.417,-685.607,7.125,-2640.125,-623.803,84.741), RegionTrigger.VehicleTrigger);
 
+	// cs: need to detect if these goals exist since color strings have been completely stripped in the latest version
+	if (GetGoal(Map.PlantPortGate)==null) {
+		Map.PlantPortGate = "PLANT_3Port_gate";
+	}
+
+	if (GetGoal(Map.PlantTrainGate)==null) {
+		Map.PlantTrainGate = "PLANT_3Train_gate";
+	}
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.EnableGoal( "AMMOCAB.*" );
 	Util.EnableGoal( "HEALTHCAB.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Port_gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.PortGateGoal );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Port_Gate.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Port_Gate.*" );
@@ -585,7 +599,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 
-	Util.SetGoalOffset( 100, 0, 0, "PLANT_Train_gate" );
+	Util.SetGoalOffset( 100, 0, 0, Map.PlantTrainGate );
 
 	SetGoalPriority( "DEFEND_Yard.*", 0.49, TEAM.AXIS);
 
@@ -596,40 +610,10 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
 	Util.UpdateSwitchData();
 
 	MapRoutes =
 	{
-		PLANT_Port_gate =
-		{
-			ROUTE_Allies_1st_Spawn  =
-			{
-				ROUTE_Port_Gate_Passage  =
-				{
-				},
-				ROUTE_Wire_Reels  =
-				{
-					ROUTE_Boat_Side  =
-					{
-					},
-					ROUTE_Port_Gate_Entry  =
-					{
-					},
-				},
-				ROUTE_Lighthouse_Path  =
-				{
-					ROUTE_Port_Gate_Entry  =
-					{
-					},
-					ROUTE_Boat_Side  =
-					{
-					},
-				},
-			},
-		},
 		DEFEND_Port_Gate_1 =
 		{
 			ROUTE_Axis_Top_Spawn  =
@@ -871,6 +855,36 @@ global OnMapLoad = function()
 			},
 		},
 	};
+
+	portGate =
+	{
+		ROUTE_Allies_1st_Spawn  =
+		{
+			ROUTE_Port_Gate_Passage  =
+			{
+			},
+			ROUTE_Wire_Reels  =
+			{
+				ROUTE_Boat_Side  =
+				{
+				},
+				ROUTE_Port_Gate_Entry  =
+				{
+				},
+			},
+			ROUTE_Lighthouse_Path  =
+			{
+				ROUTE_Port_Gate_Entry  =
+				{
+				},
+				ROUTE_Boat_Side  =
+				{
+				},
+			},
+		},
+	};
+	MapRoutes[Map.PlantPortGate] = portGate;
+
 	MapRoutes.ATTACK_Port_Gate_1 = MapRoutes.PLANT_Port_gate;
 	MapRoutes.ATTACK_Port_Gate_2 = MapRoutes.PLANT_Port_gate;
 	MapRoutes.ATTACK_Port_Gate_3 = MapRoutes.PLANT_Port_gate;
@@ -923,7 +937,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

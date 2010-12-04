@@ -52,16 +52,16 @@ global Map =
 	Build_Soul_Resurector = "BUILD_Soul_Resurector",
 	Plant_Soul_Resurector = "PLANT_Soul_Resurector",
 	Soul_Resurector_Dyno = 0,
-	
+
 	Allies_Soul_Resurector_Built = function( trigger )
 	{
-         SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_ALLIES" );
-	 SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Allies.*" );
-	 SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Axis.*" );
-	 
+		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_ALLIES" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Axis.*" );
+
 		Util.MapDebugPrint( "Allies_Soul_Resurector_Built" );
 	},
-	
+
 	Allied_Soul_Resurector_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -70,33 +70,33 @@ global Map =
 		Map.Soul_Resurector_Dyno += 1;
 		Util.MapDebugPrint( "Allies_Soul_Resurector_Planted" );
 	},
-	
+
 	Allied_Soul_Resurector_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Soul_Resurector_Dyno -= 1;
-		Util.MapDebugUtil.MapDebugPrint( "Allies_Soul_Resurector_Defused" );
+		Util.MapDebugPrint( "Allies_Soul_Resurector_Defused" );
 	},
-	
+
 	Allies_Soul_Resurector_Destroyed = function( trigger )
 	{
-         SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FAKE_Allies.*" );
-	 SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Axis.*" );
-	 SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_ALLIES" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FAKE_Allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FAKE_Axis.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_ALLIES" );
 		Util.MapDebugPrint( "Allies_Soul_Resurector_Destroyed" );
 	},
- 
+
 	Axis_Soul_Resurector_Built = function( trigger )
 	{
-	 SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_AXIS" );
-         SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Axis.*" );
-	 SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Allies.*" );
-	 
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_AXIS" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Axis.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Allies.*" );
+
 		Util.MapDebugPrint( "Axis_Soul_Resurector_Built" );
 	},
-	
+
 	Axis_Soul_Resurector_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -105,25 +105,25 @@ global Map =
 		Map.Soul_Resurector_Dyno += 1;
 		Util.MapDebugPrint( "Axis_Soul_Resurector_Planted" );
 	},
-	
+
 	Axis_Soul_Resurector_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Soul_Resurector_Dyno -= 1;
-		Util.MapDebugUtil.MapDebugPrint( "Axis_Soul_Resurector_Defused" );
+		Util.MapDebugPrint( "Axis_Soul_Resurector_Defused" );
 	},
-	
+
 	Axis_Soul_Resurector_Destroyed = function( trigger )
 	{
-         SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_FAKE_Axis.*" );
-	 SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Allies.*" );
-	 SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_AXIS" );
-	 
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_FAKE_Axis.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_FAKE_Allies.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_AXIS" );
+
 		Util.MapDebugPrint( "Axis_Soul_Resurector_Destroyed" );
 	},
- 
+
 	allies_gold_crate_Taken = function( trigger )
 	{
 		if ( TestMap )
@@ -395,8 +395,8 @@ global Map =
 
 		Util.MapDebugPrint( "axis_gold_crate_7_Secured" );
 	},
-	
-	
+
+
 	ALLIES_Captured = function( trigger )
 	{
 		if ( TestMap )
@@ -412,8 +412,6 @@ global Map =
 
 		Util.MapDebugPrint( "AXIS_Captured" );
 	},
-
-
 };
 
 global OnMapLoad = function()
@@ -462,231 +460,231 @@ global OnMapLoad = function()
 	OnTrigger( "^1Axis has secured the sixth Bones!", Map.axis_gold_crate_5_Secured );
 	OnTrigger( "^1Axis has secured the seventh Bones!", Map.axis_gold_crate_6_Secured );
 	OnTrigger( "^1Axis has secured the last Bones!", Map.axis_gold_crate_7_Secured );
-//Util.SetGoalOffset	
+//Util.SetGoalOffset
 	 Util.SetGoalOffset( 0, 60, 10, "BUILD_Soul_Resurector" );
 	 Util.SetGoalOffset( 0, -60, 10, "PLANT_Soul_Resurector" );
-	 
-	
-//Util.DisableGoal	
+
+
+//Util.DisableGoal
 	 Util.DisableGoal( ".*", true ); // all but routes
-	 
-//SetGoalPriority	
+
+//SetGoalPriority
 	SetGoalPriority( "CAPPOINT_FAKE_.*", 1.0, 0, 0, true );
-	 
-//~SetAvailableMapGoals	 
+
+//~SetAvailableMapGoals
 	 SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Soul_Resurector");
 	 SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Soul_Resurector");
 	 SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
-	 SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );	
+	 SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
 	 SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_FAKE_Axis_.*" );
 	 SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_.*" );
-	
+
 	 SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Soul_Resurector");
 	 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Soul_Resurector");
 	 SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
-	 SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );	
+	 SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
 	 SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FAKE_Allies_.*" );
 	 SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-	 
+
 // Max users per goal
 	Util.SetMaxUsers( 1, "CAPPOINT_FAKE_Allies_.*" );
 	Util.SetMaxUsers( 1, "CAPPOINT_FAKE_Axis_.*" );
-	Util.SetMaxUsers( 1, "FLAG_.*" );	
+	Util.SetMaxUsers( 1, "FLAG_.*" );
 
 // Camp times
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
-//Map Routes		
+//Map Routes
 		MapRoutes =
 	{
-		BUILD_Soul_Resurector = 
+		BUILD_Soul_Resurector =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_Root_Allies_A  = 
+				ROUTE_Root_Allies_A  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_B  = 
+				ROUTE_Root_Allies_B  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_C  = 
+				ROUTE_Root_Allies_C  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_D  = 
+				ROUTE_Root_Allies_D  =
 				{
-					ROUTE_Root_Allies_TEL_A  = 
+					ROUTE_Root_Allies_TEL_A  =
 					{
-						ROUTE_Root_Allies_TEL_B  = 
+						ROUTE_Root_Allies_TEL_B  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Allies_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
 					},
-					ROUTE_Root_Allies_TEL_C  = 
+					ROUTE_Root_Allies_TEL_C  =
 					{
-						ROUTE_Root_Allies_TEL_D  = 
+						ROUTE_Root_Allies_TEL_D  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Allies_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
 					},
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_Root_Axis_A  = 
+				ROUTE_Root_Axis_A  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_B  = 
+				ROUTE_Root_Axis_B  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_C  = 
+				ROUTE_Root_Axis_C  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_D  = 
+				ROUTE_Root_Axis_D  =
 				{
-					ROUTE_Root_Axis_TEL_A  = 
+					ROUTE_Root_Axis_TEL_A  =
 					{
-						ROUTE_Root_Axis_TEL_B  = 
+						ROUTE_Root_Axis_TEL_B  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Axis_TEL_Exit  = 
+						ROUTE_Root_Axis_TEL_Exit  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
 					},
-					ROUTE_Root_Axis_TEL_C  = 
+					ROUTE_Root_Axis_TEL_C  =
 					{
-						ROUTE_Root_Axis_TEL_D  = 
+						ROUTE_Root_Axis_TEL_D  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Axis_TEL_Exit  = 
+						ROUTE_Root_Axis_TEL_Exit  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
@@ -694,268 +692,268 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Soul_Resurector = 
+		PLANT_Soul_Resurector =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_Root_Allies_A  = 
+				ROUTE_Root_Allies_A  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_B  = 
+				ROUTE_Root_Allies_B  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_C  = 
+				ROUTE_Root_Allies_C  =
 				{
-					ROUTE_Root_Allies_Res_A  = 
+					ROUTE_Root_Allies_Res_A  =
 					{
 					},
-					ROUTE_Root_Allies_Res_B  = 
+					ROUTE_Root_Allies_Res_B  =
 					{
 					},
-					ROUTE_Root_Allies_Res_C  = 
+					ROUTE_Root_Allies_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Allies_D  = 
+				ROUTE_Root_Allies_D  =
 				{
-					ROUTE_Root_Allies_TEL_A  = 
+					ROUTE_Root_Allies_TEL_A  =
 					{
-						ROUTE_Root_Allies_TEL_B  = 
+						ROUTE_Root_Allies_TEL_B  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Allies_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
 					},
-					ROUTE_Root_Allies_TEL_C  = 
+					ROUTE_Root_Allies_TEL_C  =
 					{
-						ROUTE_Root_Allies_TEL_D  = 
+						ROUTE_Root_Allies_TEL_D  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Allies_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
 						{
-							ROUTE_Root_Allies_Res_A  = 
+							ROUTE_Root_Allies_Res_A  =
 							{
 							},
-							ROUTE_Root_Allies_Res_B  = 
+							ROUTE_Root_Allies_Res_B  =
 							{
 							},
-							ROUTE_Root_Allies_Res_C  = 
+							ROUTE_Root_Allies_Res_C  =
 							{
 							},
 						},
 					},
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_Root_Axis_A  = 
+				ROUTE_Root_Axis_A  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_B  = 
+				ROUTE_Root_Axis_B  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_C  = 
+				ROUTE_Root_Axis_C  =
 				{
-					ROUTE_Root_Axis_Res_A  = 
+					ROUTE_Root_Axis_Res_A  =
 					{
 					},
-					ROUTE_Root_Axis_Res_B  = 
+					ROUTE_Root_Axis_Res_B  =
 					{
 					},
-					ROUTE_Root_Axis_Res_C  = 
+					ROUTE_Root_Axis_Res_C  =
 					{
 					},
 				},
-				ROUTE_Root_Axis_D  = 
+				ROUTE_Root_Axis_D  =
 				{
-					ROUTE_Root_Axis_TEL_A  = 
+					ROUTE_Root_Axis_TEL_A  =
 					{
-						ROUTE_Root_Axis_TEL_B  = 
+						ROUTE_Root_Axis_TEL_B  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
-						ROUTE_Root_Axis_TEL_Exit  = 
+						ROUTE_Root_Axis_TEL_Exit  =
 						{
-							ROUTE_Root_Axis_Res_A  = 
+							ROUTE_Root_Axis_Res_A  =
 							{
 							},
-							ROUTE_Root_Axis_Res_B  = 
+							ROUTE_Root_Axis_Res_B  =
 							{
 							},
-							ROUTE_Root_Axis_Res_C  = 
-							{
-							},
-						},
-					},
-					ROUTE_Root_Axis_TEL_C  = 
-					{
-						ROUTE_Root_Axis_TEL_D  = 
-						{
-							ROUTE_Root_Axis_Res_A  = 
-							{
-							},
-							ROUTE_Root_Axis_Res_B  = 
-							{
-							},
-							ROUTE_Root_Axis_Res_C  = 
-							{
-							},
-						},
-						ROUTE_Root_Axis_TEL_Exit  = 
-						{
-							ROUTE_Root_Axis_Res_A  = 
-							{
-							},
-							ROUTE_Root_Axis_Res_B  = 
-							{
-							},
-							ROUTE_Root_Axis_Res_C  = 
+							ROUTE_Root_Axis_Res_C  =
 							{
 							},
 						},
 					},
-				},
-			},
-		},
-		FLAG_axis_gold_crate = 
-		{
-			ROUTE_ALLIES_SPAWN  = 
-			{
-				ROUTE_Root_Allies_A  = 
-				{
-				},
-				ROUTE_Root_Allies_B  = 
-				{
-				},
-				ROUTE_Root_Allies_C  = 
-				{
-				},
-				ROUTE_Root_Allies_D  = 
-				{
-					ROUTE_Root_Allies_TEL_A  = 
+					ROUTE_Root_Axis_TEL_C  =
 					{
-						ROUTE_Root_Allies_TEL_B  = 
+						ROUTE_Root_Axis_TEL_D  =
 						{
+							ROUTE_Root_Axis_Res_A  =
+							{
+							},
+							ROUTE_Root_Axis_Res_B  =
+							{
+							},
+							ROUTE_Root_Axis_Res_C  =
+							{
+							},
 						},
-						ROUTE_Root_Allies_TEL_Exit  = 
+						ROUTE_Root_Axis_TEL_Exit  =
 						{
-						},
-					},
-					ROUTE_Root_Allies_TEL_C  = 
-					{
-						ROUTE_Root_Allies_TEL_D  = 
-						{
-						},
-						ROUTE_Root_Allies_TEL_Exit  = 
-						{
+							ROUTE_Root_Axis_Res_A  =
+							{
+							},
+							ROUTE_Root_Axis_Res_B  =
+							{
+							},
+							ROUTE_Root_Axis_Res_C  =
+							{
+							},
 						},
 					},
 				},
 			},
 		},
-		
-		FLAG_allies_gold_crate = 
+		FLAG_axis_gold_crate =
 		{
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_Root_Axis_A  = 
+				ROUTE_Root_Allies_A  =
 				{
 				},
-				ROUTE_Root_Axis_B  = 
+				ROUTE_Root_Allies_B  =
 				{
 				},
-				ROUTE_Root_Axis_C  = 
+				ROUTE_Root_Allies_C  =
 				{
 				},
-				ROUTE_Root_Axis_D  = 
+				ROUTE_Root_Allies_D  =
 				{
-					ROUTE_Root_Axis_TEL_A  = 
+					ROUTE_Root_Allies_TEL_A  =
 					{
-						ROUTE_Root_Axis_TEL_B  = 
+						ROUTE_Root_Allies_TEL_B  =
 						{
 						},
-						ROUTE_Root_Axis_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
 						{
 						},
 					},
-					ROUTE_Root_Axis_TEL_C  = 
+					ROUTE_Root_Allies_TEL_C  =
 					{
-						ROUTE_Root_Axis_TEL_D  = 
+						ROUTE_Root_Allies_TEL_D  =
 						{
 						},
-						ROUTE_Root_Axis_TEL_Exit  = 
+						ROUTE_Root_Allies_TEL_Exit  =
+						{
+						},
+					},
+				},
+			},
+		},
+
+		FLAG_allies_gold_crate =
+		{
+			ROUTE_AXIS_SPAWN  =
+			{
+				ROUTE_Root_Axis_A  =
+				{
+				},
+				ROUTE_Root_Axis_B  =
+				{
+				},
+				ROUTE_Root_Axis_C  =
+				{
+				},
+				ROUTE_Root_Axis_D  =
+				{
+					ROUTE_Root_Axis_TEL_A  =
+					{
+						ROUTE_Root_Axis_TEL_B  =
+						{
+						},
+						ROUTE_Root_Axis_TEL_Exit  =
+						{
+						},
+					},
+					ROUTE_Root_Axis_TEL_C  =
+					{
+						ROUTE_Root_Axis_TEL_D  =
+						{
+						},
+						ROUTE_Root_Axis_TEL_Exit  =
 						{
 						},
 					},
@@ -963,28 +961,26 @@ global OnMapLoad = function()
 			},
 		},
 	};
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_1;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_2;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_3;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_4;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_5;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_6;
-MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_7;
 
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_1;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_2;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_3;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_4;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_5;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_6;
-MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_7;
-	
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_1;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_2;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_3;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_4;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_5;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_6;
+	MapRoutes.FLAG_allies_gold_crate = MapRoutes.FLAG_allies_gold_crate_7;
+
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_1;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_2;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_3;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_4;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_5;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_6;
+	MapRoutes.FLAG_axis_gold_crate = MapRoutes.FLAG_axis_gold_crate_7;
+
 	Util.Routes(MapRoutes);
-	
-if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
 
-	print( "Omni_bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

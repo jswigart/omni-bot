@@ -1,6 +1,6 @@
 /****************************************************
 Pathing updated and script by **PC** Mateos
-Correspondant WAY file size : 66,1 Ko (67 747 octets)
+Correspondant WAY file size : 66,1ï¿½Ko (67ï¿½747 octets)
 Last Update : 31th October 2010
 ****************************************************/
 
@@ -161,7 +161,7 @@ global Map =
 	Elevator1 = function(trigger)
 	{
 		Map.Elevator1Pos = "moving";
-		if (Map.Debug) { print("Elevator1 moving"); }
+		Util.MapDebugPrint("Elevator1 moving");
 
 		Map.Switches.e1_top1.Enabled = false;
 		Map.Switches.e1_top2.Enabled = false;
@@ -177,14 +177,14 @@ global Map =
 			Map.Elevator1Pos = "bottom";
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_bot2.Enabled = true;
-			if (Map.Debug) { print("Elevator1 at bottom"); }
+			Util.MapDebugPrint("Elevator1 at bottom");
 		}
 		else
 		{
 			Map.Elevator1Pos = "top";
 			Map.Switches.e1_bot1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
-			if (Map.Debug) { print("Elevator1 at top"); }
+			Util.MapDebugPrint("Elevator1 at top");
 		}
 	},*/
 
@@ -198,8 +198,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
 
-		if ( Map.Debug )
-			{ print( "Assault_Ramp_Built" ); }
+		Util.MapDebugPrint( "Assault_Ramp_Built" ); 
 	},
 
 	Command_Post_Built = function( trigger )
@@ -207,8 +206,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Command_Post_Built" ); }
+		Util.MapDebugPrint( "Command_Post_Built" );
 	},
 
 	Courtyard_MG_Built = function( trigger )
@@ -216,8 +214,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Courtyard_MG_Built" ); }
+		Util.MapDebugPrint( "Courtyard_MG_Built" );
 	},
 
 	Electric_Floor_Controls_Built = function( trigger )
@@ -225,8 +222,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Electric_Floor_Controls_Built" ); }
+		Util.MapDebugPrint( "Electric_Floor_Controls_Built" );
 	},
 
 	Side_Gate_Built = function( trigger )
@@ -234,8 +230,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Side_Gate_Built" ); }
+		Util.MapDebugPrint( "Side_Gate_Built" );
 	},
 
 	Truck_Built = function( trigger )
@@ -245,8 +240,7 @@ global Map =
 
 		Map.TruckStatus = 0;		//Not Damaged
 
-		if ( Map.Debug )
-			{ print( "Truck_Built" ); }
+		Util.MapDebugPrint( "Truck_Built" );
 	},
 
 	Truck_Destroyed = function( trigger )
@@ -256,8 +250,7 @@ global Map =
 
 		Map.TruckStatus = 1;		//Damaged
 
-		if ( Map.Debug )
-			{ print( "Truck_Destroyed" ); }
+		Util.MapDebugPrint( "Truck_Destroyed" );
 	},
 
 	Truck_Barrier_Built = function( trigger )
@@ -265,8 +258,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Truck_Barrier_Built" ); }
+		Util.MapDebugPrint( "Truck_Barrier_Built" );
 	},
 
 	Assault_Ramp_Planted = function( trigger )
@@ -277,8 +269,7 @@ global Map =
 		Map.Assault_Ramp_Dyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Assault_Ramp );
 
-		if ( Map.Debug )
-			{ print( "Assault_Ramp_Planted" ); }
+		Util.MapDebugPrint( "Assault_Ramp_Planted" );
 	},
 
 	Command_Post_Planted = function( trigger )
@@ -292,8 +283,7 @@ global Map =
 		// CHECK! Is this a valid goal for both teams?
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
 
-		if ( Map.Debug )
-			{ print( "Command_Post_Planted" ); }
+		Util.MapDebugPrint( "Command_Post_Planted" );
 	},
 
 	Courtyard_MG_Planted = function( trigger )
@@ -304,8 +294,7 @@ global Map =
 		Map.Courtyard_MG_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Courtyard_MG );
 
-		if ( Map.Debug )
-			{ print( "Courtyard_MG_Planted" ); }
+		Util.MapDebugPrint( "Courtyard_MG_Planted" );
 	},
 
 	Electric_Floor_Controls_Planted = function( trigger )
@@ -316,8 +305,7 @@ global Map =
 		Map.Electric_Floor_Controls_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Electric_Floor_Controls );
 
-		if ( Map.Debug )
-			{ print( "Electric_Floor_Controls_Planted" ); }
+		Util.MapDebugPrint( "Electric_Floor_Controls_Planted" );
 	},
 
 	Generator_Planted = function( trigger )
@@ -329,8 +317,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Dyna.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Generator );
 
-		if ( Map.Debug )
-			{ print( "Generator_Planted" ); }
+		Util.MapDebugPrint( "Generator_Planted" );
 	},
 
 	Main_Entrance_Planted = function( trigger )
@@ -341,8 +328,7 @@ global Map =
 		Map.Main_Entrance_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Main_Entrance );
 
-		if ( Map.Debug )
-			{ print( "Main_Entrance_Planted" ); }
+		Util.MapDebugPrint( "Main_Entrance_Planted" );
 	},
 
 	Side_Gate_Planted = function( trigger )
@@ -353,8 +339,7 @@ global Map =
 		Map.Side_Gate_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
 
-		if ( Map.Debug )
-			{ print( "Side_Gate_Planted" ); }
+		Util.MapDebugPrint( "Side_Gate_Planted" );
 	},
 
 	Truck_Barrier_Planted = function( trigger )
@@ -365,8 +350,7 @@ global Map =
 		Map.Truck_Barrier_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier );
 
-		if ( Map.Debug )
-			{ print( "Truck_Barrier_Planted" ); }
+		Util.MapDebugPrint( "Truck_Barrier_Planted" );
 	},
 
 	Assault_Ramp_Defused = function( trigger )
@@ -378,8 +362,7 @@ global Map =
 		if ( Map.Assault_Ramp_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Assault_Ramp ); }
 
-		if ( Map.Debug )
-			{ print( "Assault_Ramp_Defused" ); }
+		Util.MapDebugPrint( "Assault_Ramp_Defused" );
 	},
 
 	Command_Post_Defused = function( trigger )
@@ -395,8 +378,7 @@ global Map =
 		if ( Map.Command_Post_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post ); }
 
-		if ( Map.Debug )
-			{ print( "Command_Post_Defused" ); }
+		Util.MapDebugPrint( "Command_Post_Defused" );
 	},
 
 	Courtyard_MG_Defused = function( trigger )
@@ -408,8 +390,7 @@ global Map =
 		if ( Map.Courtyard_MG_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Courtyard_MG ); }
 
-		if ( Map.Debug )
-			{ print( "Courtyard_MG_Defused" ); }
+		Util.MapDebugPrint( "Courtyard_MG_Defused" );
 	},
 
 	Electric_Floor_Controls_Defused = function( trigger )
@@ -423,8 +404,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls );
 
-		if ( Map.Debug )
-			{ print( "Electric_Floor_Controls_Defused" ); }
+		Util.MapDebugPrint( "Electric_Floor_Controls_Defused" );
 	},
 
 	Generator_Defused = function( trigger )
@@ -436,8 +416,7 @@ global Map =
 		if ( Map.Generator_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Generator ); }
 
-		if ( Map.Debug )
-			{ print( "Generator_Defused" ); }
+		Util.MapDebugPrint( "Generator_Defused" );
 	},
 
 	Main_Entrance_Defused = function( trigger )
@@ -449,8 +428,7 @@ global Map =
 		if ( Map.Main_Entrance_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance ); }
 
-		if ( Map.Debug )
-			{ print( "Main_Entrance_Defused" ); }
+		Util.MapDebugPrint( "Main_Entrance_Defused" );
 	},
 
 	Side_Gate_Defused = function( trigger )
@@ -462,8 +440,7 @@ global Map =
 		if ( Map.Side_Gate_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Gate ); }
 
-		if ( Map.Debug )
-			{ print( "Side_Gate_Defused" ); }
+		Util.MapDebugPrint( "Side_Gate_Defused" ); 
 	},
 
 	Truck_Barrier_Defused = function( trigger )
@@ -475,8 +452,7 @@ global Map =
 		if ( Map.Truck_Barrier_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Truck_Barrier ); }
 
-		if ( Map.Debug )
-			{ print( "Truck_Barrier_Defused" ); }
+		Util.MapDebugPrint( "Truck_Barrier_Defused" );
 	},
 
 	Assault_Ramp_Destroyed = function( trigger )
@@ -489,8 +465,7 @@ global Map =
 			Groups.DisableAxis(Groups.group3);
 		}
 
-		if ( Map.Debug )
-			{ print( "Assault_Ramp_Destroyed" ); }
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
 	},
 
 	Command_Post_Destroyed = function( trigger )
@@ -498,8 +473,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Command_Post_Destroyed" ); }
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
 	},
 
 	Courtyard_MG_Destroyed = function( trigger )
@@ -507,8 +481,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Courtyard_MG_Destroyed" ); }
+		Util.MapDebugPrint( "Courtyard_MG_Destroyed" );
 	},
 
 	Electric_Floor_Controls_Destroyed = function( trigger )
@@ -518,8 +491,7 @@ global Map =
 		
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Electric_Floor_Controls );
 
-		if ( Map.Debug )
-			{ print( "Electric_Floor_Controls_Destroyed" ); }
+		Util.MapDebugPrint( "Electric_Floor_Controls_Destroyed" );
 	},
 
 	Generator_Destroyed = function( trigger )
@@ -556,8 +528,7 @@ global Map =
 		//Buggy comportement
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
 
-		if ( Map.Debug )
-			{ print( "Generator_Destroyed" ); }
+		Util.MapDebugPrint( "Generator_Destroyed" );
 	},
 
 	Main_Entrance_Destroyed = function( trigger )
@@ -573,8 +544,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Charlie.*" );
 
-		if ( Map.Debug )
-			{ print( "Main_Entrance_Destroyed" ); }
+		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
 	},
 
 	Side_Gate_Destroyed = function( trigger )
@@ -584,8 +554,7 @@ global Map =
 		
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Side_Gate );
 
-		if ( Map.Debug )
-			{ print( "Side_Gate_Destroyed" ); }
+		Util.MapDebugPrint( "Side_Gate_Destroyed" );
 	},
 
 	Truck_Barrier_Destroyed = function( trigger )
@@ -593,8 +562,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Debug )
-			{ print( "Truck_Barrier_Destroyed" ); }
+		Util.MapDebugPrint( "Truck_Barrier_Destroyed" );
 	},
 
 	radarpart_Taken = function( trigger )
@@ -608,8 +576,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Hotel.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
 
-		if ( Map.Debug )
-			{ print( "radarpart_Taken" ); }
+		Util.MapDebugPrint( "radarpart_Taken" );
 	},
 
 	radarpart_Returned = function( trigger )
@@ -623,8 +590,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Hotel.*" );
 
-		if ( Map.Debug )
-			{ print( "radarpart_Returned" ); }
+		Util.MapDebugPrint( "radarpart_Returned" );
 	},
 
 	radarpart_Secured = function( trigger )
@@ -645,8 +611,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Hotel.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Electric_Floor_Controls );
 
-		if ( Map.Debug )
-			{ print( "radarpart_Secured" ); }
+		Util.MapDebugPrint( "radarpart_Secured" );
 	},
 
 	courtyardflag_Axis_Captured = function( trigger )
@@ -656,8 +621,7 @@ global Map =
 
 		SetGoalPriority( Map.Plant_Generator, 0.85 );
 
-		if ( Map.Debug )
-			{ print( "courtyardflag_Axis_Captured" ); }
+		Util.MapDebugPrint( "courtyardflag_Axis_Captured" );
 	},
 
 	courtyardflag_Allies_Captured = function( trigger )
@@ -669,8 +633,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_courtyardflag );
 
-		if ( Map.Debug )
-			{ print( "courtyardflag_Allies_Captured" ); }
+		Util.MapDebugPrint( "courtyardflag_Allies_Captured" );
 	},
 
 	truck_region_1 = function( trigger )
@@ -685,7 +648,7 @@ global Map =
 		Util.ChangeSpawn(TEAM.ALLIES, 1);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Golf.*" );
 
-		print( "truck_region_1" );
+		Util.MapDebugPrint( "truck_region_1" );
 	},
 
 	truck_region_2 = function( trigger )
@@ -697,7 +660,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood2" );
 
-		print( "truck_region_2" );
+		Util.MapDebugPrint( "truck_region_2" );
 	},
 };
 
@@ -940,7 +903,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 
-	print( "Omni-bot map script for Chateau Voilegarde Beta 3 by **PC** Mateos" );
+	Util.MapDebugPrint( "Omni-bot map script for Chateau Voilegarde Beta 3 by **PC** Mateos" );
 };
 
 global OnBotJoin = function( bot )
@@ -1005,8 +968,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
 
-			if ( Map && Map.Debug )
-				{ print("EnableAllies: enabling", goal); }
+			Util.MapDebugPrint("EnableAllies: enabling " +  goal);
 		}
 	},
 
@@ -1016,8 +978,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, goal );
 
-			if ( Map && Map.Debug )
-				{ print("EnableAxis: enabling", goal); }
+			Util.MapDebugPrint("EnableAxis: enabling " + goal);
 		}
 	},
 
@@ -1027,8 +988,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, goal );
 
-			if ( Map && Map.Debug )
-				{ print("DisableAllies: disabling", goal); }
+			Util.MapDebugPrint("DisableAllies: disabling " + goal);
 		}
 	},
 
@@ -1038,8 +998,7 @@ global Groups =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, goal );
 
-			if ( Map && Map.Debug )
-				{ print("DisableAxis: disabling", goal); }
+			Util.MapDebugPrint("DisableAxis: disabling " + goal);
 		}
 	},
 };

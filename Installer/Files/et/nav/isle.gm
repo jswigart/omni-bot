@@ -17,7 +17,7 @@ global Map =
 	Health_Cabinet_healthcabinet = "HEALTHCAB_healthcabinet",
 
 	DispenseHealthTime = 10.0,
-	
+
 	alliesFlag=false,
 
 	Navigation =
@@ -41,10 +41,10 @@ global Map =
 	SetSpawn = function(bot)
 	{
 		if (bot.GetTeam() == TEAM.ALLIES){
-			if (Map.alliesFlag){ bot.ChangeSpawnPoint(3); } 
-			else { bot.ChangeSpawnPoint(RandInt(1,2)); }   
+			if (Map.alliesFlag){ bot.ChangeSpawnPoint(3); }
+			else { bot.ChangeSpawnPoint(RandInt(1,2)); }
 		}else{
-			if (bot.GetClass() == CLASS.ENGINEER){ 
+			if (bot.GetClass() == CLASS.ENGINEER){
 				bot.ChangeSpawnPoint(4);
 			}
 		}
@@ -113,7 +113,7 @@ global Map =
 	{
 		foreach ( id and bot in BotTable )
 		{
-			if ( AABB(-3340,-260,150,-3120,0,810).Contains(bot.GetPosition()) 
+			if ( AABB(-3340,-260,150,-3120,0,810).Contains(bot.GetPosition())
 				&& (bot.GetTeam() == TEAM.AXIS || bot.GetClass() != CLASS.ENGINEER) ){
 				bot.ExecCommand("kill");
 			}
@@ -128,7 +128,7 @@ global Map =
 	{
 		Util.EnableGoal("ROUTE_well");
 	 	Map.Attack_Helipad(true);
-		print( "Well_Gate_Destroyed" );
+		Util.MapDebugPrint( "Well_Gate_Destroyed" );
 	},
 };
 
@@ -157,7 +157,7 @@ global OnMapLoad = function()
  	SetGoalPriority( Map.Build_Well_Gate, 0.8, TEAM.AXIS);
  	SetGoalPriority( Map.Mount_helipad_mg40, 0.65, TEAM.AXIS);
  	SetGoalPriority( Map.Repair_helipad_mg40, 0.85, TEAM.AXIS);
- 	
+
  	SetGoalPriority( Map.Plant_Axis_Helipad, 0.9, TEAM.ALLIES);
  	SetGoalPriority( Map.Plant_Aqueduct_Houses_Well_Gate, 0.92, TEAM.ALLIES);
  	SetGoalPriority( Map.Plant_Well_Gate, 0.9, TEAM.ALLIES);
@@ -181,7 +181,7 @@ global OnMapLoad = function()
 	Util.DisableGoal("ROUTE_north");
 	Util.DisableGoal("ROUTE_aqueduct");
 	//Util.DisableGoal("ROUTE_well");
-		
+
 	MapRoutes =
 	{
 		PLANT_Axis_Helipad =
@@ -197,7 +197,7 @@ global OnMapLoad = function()
 				ROUTE_south = {},
 			},
 		},
-		CHECKPOINT_forward_spawn = 
+		CHECKPOINT_forward_spawn =
 		{
 			ROUTE_allies_north = {
 				ROUTE_flag_north = {},
@@ -214,13 +214,13 @@ global OnMapLoad = function()
 	MapRoutes.PLANT_helipad_mg40 = MapRoutes.PLANT_Axis_Helipad;
 	MapRoutes.ATTACK_helipad1 = MapRoutes.PLANT_Axis_Helipad;
 	Util.Routes(MapRoutes);
-	
+
 	Util.MapDebugPrint( "Map script for " + GetMapName() + " loaded" );
 };
 
 global OnBotJoin = function( bot )
 {
-	if(bot.GetTeam()==TEAM.ALLIES){ 
+	if(bot.GetTeam()==TEAM.ALLIES){
 		ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
 	}
 	Map.SetSpawn(bot);

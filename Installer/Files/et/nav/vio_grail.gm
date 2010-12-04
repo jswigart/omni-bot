@@ -36,7 +36,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Built" );
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
 	Axis_Command_Post_Built = function( trigger )
@@ -44,14 +44,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Built" );
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Cloister_Door_Built = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_cloister1" );
 
-		print( "Cloister_Door_Built" );
+		Util.MapDebugPrint( "Cloister_Door_Built" );
 	},
 
 	Roof_Bridge_Built = function( trigger )
@@ -59,7 +59,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Roof_Bridge_Built" );
+		Util.MapDebugPrint( "Roof_Bridge_Built" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
@@ -67,7 +67,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
@@ -75,7 +75,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	Cloister_Door_Destroyed = function( trigger )
@@ -85,7 +85,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Cloister_Door" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_cloister1" );
 
-		print( "Cloister_Door_Destroyed" );
+		Util.MapDebugPrint( "Cloister_Door_Destroyed" );
 	},
 
 	Grenade_Casket_Destroyed = function( trigger )
@@ -93,7 +93,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_holynade" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_NADE_POINT_1" );
 
-		print( "Grenade_Casket_Destroyed" );
+		Util.MapDebugPrint( "Grenade_Casket_Destroyed" );
 	},
 
 	Main_Entrance_Destroyed = function( trigger )
@@ -108,7 +108,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
 		Util.ChangeSpawn(TEAM.AXIS, 2, 6);
 
-		print( "Main_Entrance_Destroyed" );
+		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
 	},
 
 	Roof_Bridge_Destroyed = function( trigger )
@@ -116,7 +116,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Roof_Bridge_Destroyed" );
+		Util.MapDebugPrint( "Roof_Bridge_Destroyed" );
 	},
 
 	holygrail_Taken = function( trigger )
@@ -124,7 +124,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_cp.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_grail.*" );
 
-		print( "holygrail_Taken" );
+		Util.MapDebugPrint( "holygrail_Taken" );
 	},
 	
 		holygrail_returned = function( trigger )
@@ -132,7 +132,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cp.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_grail.*" );
 
-		print( "holygrail_returned" );
+		Util.MapDebugPrint( "holygrail_returned" );
 	},
 
 
@@ -144,7 +144,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_casket.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_agrenade.*" );
 
-		print( "holynade_Taken" );
+		Util.MapDebugPrint( "holynade_Taken" );
 	},
 	
 	holynade_returned = function( trigger )
@@ -154,7 +154,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_casket.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_agrenade.*" );
 
-		print( "holynade_returned" );
+		Util.MapDebugPrint( "holynade_returned" );
 	},
 
 	GRAIL_1_Captured = function( trigger )
@@ -162,7 +162,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "GRAIL_1_Captured" );
+		Util.MapDebugPrint( "GRAIL_1_Captured" );
 	},
 
 	NADE_POINT_1_Captured = function( trigger )
@@ -176,7 +176,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_agrenade.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_127" );
 
-		print( "NADE_POINT_1_Captured" );
+		Util.MapDebugPrint( "NADE_POINT_1_Captured" );
 	},
 
 	phlagpoal1_Axis_Captured = function( trigger )
@@ -184,7 +184,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "phlagpoal1_Axis_Captured" );
+		Util.MapDebugPrint( "phlagpoal1_Axis_Captured" );
 	},
 
 	phlagpoal1_Allies_Captured = function( trigger )
@@ -192,7 +192,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "phlagpoal1_Allies_Captured" );
+		Util.MapDebugPrint( "phlagpoal1_Allies_Captured" );
 	},
 
 };
@@ -346,7 +346,7 @@ global OnMapLoad = function()
 	Util.Routes(MapRoutes);
 
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

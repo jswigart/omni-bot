@@ -1241,7 +1241,8 @@ Commands["sag"] =
 	Help =
 	{
 		"Show Active Goals, lists and optionally renders each currently active goal by team",
-		"Usage: /bot sag <optional render teamId>, <optional bool routes>, <optional bool showserial>",
+		"Usage: /bot sag <optional render teamId>, <optional bool routes>, <optional bool show use slots>",
+		"Example: /bot sag 0 0 1  - shows active goals for both team plus current MaxInuse and MaxInProgress settings",
 	},
 };
 

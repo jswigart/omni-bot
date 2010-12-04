@@ -20,7 +20,7 @@ global Map =
 	Axis_Command_Post_Dyno = 0,
 	Axis_Control_Center_Dyno = 0,
 	Axis_side_entrance_Dyno = 0,
-	
+
 	Navigation =
 	{
 		midladder =
@@ -29,10 +29,10 @@ global Map =
 			{
 				_this.Bot.HoldButton(BTN.FORWARD, 3);
 				sleep(3);
-			},			
+			},
 		},
 	},
-	
+
 	Roles =
 	{
 		AXIS = // Team
@@ -48,8 +48,8 @@ global Map =
 				numbots = 2,
 			},
 		},
- 
-		ALLIES = 
+
+		ALLIES =
 		{
 			AllBots = false, // default: every other bot
 			DEFENDER =
@@ -63,7 +63,7 @@ global Map =
 			},
 		},
 	},
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -214,10 +214,10 @@ global Map =
 			{ return; }
 
 		Map.Allied_side_entrance_Dyno = 0;
-		
+
 		Util.DisableGoal( "PLANT_Allied_side_entrance", true );
 		Util.EnableGoal( "ROUTE_axisside_.*", true );
-		
+
 		Util.MapDebugPrint( "Allied_side_entrance_Destroyed" );
 	},
 
@@ -247,10 +247,10 @@ global Map =
 			{ return; }
 
 		Map.Axis_side_entrance_Dyno = 0;
-		
-		Util.DisableGoal( "PLANT_Axis_side_entrance", true ); 
+
+		Util.DisableGoal( "PLANT_Axis_side_entrance", true );
 		Util.EnableGoal( "ROUTE_alliedside_.*", true );
-		
+
 		Util.MapDebugPrint( "Axis_side_entrance_Destroyed" );
 	},
 
@@ -285,7 +285,6 @@ global Map =
 
 		Util.MapDebugPrint( "axis_forward_checkpoint_Allies_Captured" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -318,7 +317,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have lost their forward spawn!", Map.allied_forward_checkpoint_Allies_Captured );
 	OnTrigger( "Axis have captured their forward spawn!", Map.axis_forward_checkpoint_Axis_Captured );
 	OnTrigger( "Axis have lost their forward spawn!", Map.axis_forward_checkpoint_Allies_Captured );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.DisableGoal( "ROUTE_alliedside_.*", true );
 	Util.DisableGoal( "ROUTE_axisside_.*", true );
@@ -359,25 +358,23 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 //Map Routes
-	Util.MapDebugPrint("Configuring Routes");
-	
 	MapRoutes =
 	{
-		PLANT_Axis_side_entrance = 
+		PLANT_Axis_side_entrance =
 		{
-			ROUTE_Allied_Spawn  = 
+			ROUTE_Allied_Spawn  =
 			{
-				ROUTE_Allied  = 
+				ROUTE_Allied  =
 				{
-					ROUTE_main_2  = 
+					ROUTE_main_2  =
 					{
-						ROUTE_main_3  = 
+						ROUTE_main_3  =
 						{
-							ROUTE_main_4  = 
+							ROUTE_main_4  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_alliedside  = 
+									ROUTE_alliedside  =
 									{
 									},
 								},
@@ -385,17 +382,17 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_AlliedB  = 
+				ROUTE_AlliedB  =
 				{
-					ROUTE_main_2  = 
+					ROUTE_main_2  =
 					{
-						ROUTE_main_3  = 
+						ROUTE_main_3  =
 						{
-							ROUTE_main_4  = 
+							ROUTE_main_4  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_alliedside  = 
+									ROUTE_alliedside  =
 									{
 									},
 								},
@@ -405,21 +402,21 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Allied_side_entrance = 
+		PLANT_Allied_side_entrance =
 		{
-			ROUTE_AxisSpawn  = 
+			ROUTE_AxisSpawn  =
 			{
-				ROUTE_Axis  = 
+				ROUTE_Axis  =
 				{
-					ROUTE_main_8  = 
+					ROUTE_main_8  =
 					{
-						ROUTE_main_7  = 
+						ROUTE_main_7  =
 						{
-							ROUTE_main_6  = 
+							ROUTE_main_6  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_axisside  = 
+									ROUTE_axisside  =
 									{
 									},
 								},
@@ -427,17 +424,17 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_AxisB  = 
+				ROUTE_AxisB  =
 				{
-					ROUTE_main_8  = 
+					ROUTE_main_8  =
 					{
-						ROUTE_main_7  = 
+						ROUTE_main_7  =
 						{
-							ROUTE_main_6  = 
+							ROUTE_main_6  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_axisside  = 
+									ROUTE_axisside  =
 									{
 									},
 								},
@@ -447,31 +444,31 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Allied_Control_Center = 
+		PLANT_Allied_Control_Center =
 		{
-			ROUTE_AxisSpawn  = 
+			ROUTE_AxisSpawn  =
 			{
-				ROUTE_Axis  = 
+				ROUTE_Axis  =
 				{
-					ROUTE_main_8  = 
+					ROUTE_main_8  =
 					{
-						ROUTE_main_7  = 
+						ROUTE_main_7  =
 						{
-							ROUTE_main_6  = 
+							ROUTE_main_6  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_main_4  = 
+									ROUTE_main_4  =
 									{
-										ROUTE_main_3  = 
+										ROUTE_main_3  =
 										{
-											ROUTE_main_2  = 
+											ROUTE_main_2  =
 											{
-												ROUTE_main_1  = 
+												ROUTE_main_1  =
 												{
-													ROUTE_main  = 
+													ROUTE_main  =
 													{
-														ROUTE_AlliedControl  = 
+														ROUTE_AlliedControl  =
 														{
 														},
 													},
@@ -479,23 +476,23 @@ global OnMapLoad = function()
 											},
 										},
 									},
-									ROUTE_axisside  = 
+									ROUTE_axisside  =
 									{
-										ROUTE_axisside_1  = 
+										ROUTE_axisside_1  =
 										{
-											ROUTE_axisside_2  = 
+											ROUTE_axisside_2  =
 											{
-												ROUTE_axisside_3  = 
+												ROUTE_axisside_3  =
 												{
-													ROUTE_axisside_4  = 
+													ROUTE_axisside_4  =
 													{
-														ROUTE_axisside_5  = 
+														ROUTE_axisside_5  =
 														{
-															ROUTE_axisside_6  = 
+															ROUTE_axisside_6  =
 															{
-																ROUTE_axisside_7  = 
+																ROUTE_axisside_7  =
 																{
-																	ROUTE_AlliedControl  = 
+																	ROUTE_AlliedControl  =
 																	{
 																	},
 																},
@@ -511,27 +508,27 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_AxisB  = 
+				ROUTE_AxisB  =
 				{
-					ROUTE_main_8  = 
+					ROUTE_main_8  =
 					{
-						ROUTE_main_7  = 
+						ROUTE_main_7  =
 						{
-							ROUTE_main_6  = 
+							ROUTE_main_6  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_main_4  = 
+									ROUTE_main_4  =
 									{
-										ROUTE_main_3  = 
+										ROUTE_main_3  =
 										{
-											ROUTE_main_2  = 
+											ROUTE_main_2  =
 											{
-												ROUTE_main_1  = 
+												ROUTE_main_1  =
 												{
-													ROUTE_main  = 
+													ROUTE_main  =
 													{
-														ROUTE_AlliedControl  = 
+														ROUTE_AlliedControl  =
 														{
 														},
 													},
@@ -539,23 +536,23 @@ global OnMapLoad = function()
 											},
 										},
 									},
-									ROUTE_axisside  = 
+									ROUTE_axisside  =
 									{
-										ROUTE_alliedside_1  = 
+										ROUTE_alliedside_1  =
 										{
-											ROUTE_alliedside_2  = 
+											ROUTE_alliedside_2  =
 											{
-												ROUTE_alliedside_3  = 
+												ROUTE_alliedside_3  =
 												{
-													ROUTE_alliedside_4  = 
+													ROUTE_alliedside_4  =
 													{
-														ROUTE_alliedside_5  = 
+														ROUTE_alliedside_5  =
 														{
-															ROUTE_alliedside_6  = 
+															ROUTE_alliedside_6  =
 															{
-																ROUTE_alliedside_7  = 
+																ROUTE_alliedside_7  =
 																{
-																	ROUTE_AlliedControl  = 
+																	ROUTE_AlliedControl  =
 																	{
 																	},
 																},
@@ -573,52 +570,52 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Axis_Control_Center = 
+		PLANT_Axis_Control_Center =
 		{
-			ROUTE_Allied_Spawn  = 
+			ROUTE_Allied_Spawn  =
 			{
-				ROUTE_Allied  = 
+				ROUTE_Allied  =
 				{
-					ROUTE_main_2  = 
+					ROUTE_main_2  =
 					{
-						ROUTE_main_3  = 
+						ROUTE_main_3  =
 						{
-							ROUTE_main_4  = 
+							ROUTE_main_4  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_main_6  = 
+									ROUTE_main_6  =
 									{
-										ROUTE_main_7  = 
+										ROUTE_main_7  =
 										{
-											ROUTE_main_8  = 
+											ROUTE_main_8  =
 											{
-												ROUTE_main_9  = 
+												ROUTE_main_9  =
 												{
-													ROUTE_AxisControl  = 
+													ROUTE_AxisControl  =
 													{
 													},
 												},
 											},
 										},
 									},
-									ROUTE_alliedside  = 
+									ROUTE_alliedside  =
 									{
-										ROUTE_alliedside_1  = 
+										ROUTE_alliedside_1  =
 										{
-											ROUTE_alliedside_2  = 
+											ROUTE_alliedside_2  =
 											{
-												ROUTE_alliedside_3  = 
+												ROUTE_alliedside_3  =
 												{
-													ROUTE_alliedside_4  = 
+													ROUTE_alliedside_4  =
 													{
-														ROUTE_alliedside_5  = 
+														ROUTE_alliedside_5  =
 														{
-															ROUTE_alliedside_6  = 
+															ROUTE_alliedside_6  =
 															{
-																ROUTE_alliedside_7  = 
+																ROUTE_alliedside_7  =
 																{
-																	ROUTE_AxisControl  = 
+																	ROUTE_AxisControl  =
 																	{
 																	},
 																},
@@ -634,48 +631,48 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_AlliedB  = 
+				ROUTE_AlliedB  =
 				{
-					ROUTE_main_2  = 
+					ROUTE_main_2  =
 					{
-						ROUTE_main_3  = 
+						ROUTE_main_3  =
 						{
-							ROUTE_main_4  = 
+							ROUTE_main_4  =
 							{
-								ROUTE_main_5  = 
+								ROUTE_main_5  =
 								{
-									ROUTE_main_6  = 
+									ROUTE_main_6  =
 									{
-										ROUTE_main_7  = 
+										ROUTE_main_7  =
 										{
-											ROUTE_main_8  = 
+											ROUTE_main_8  =
 											{
-												ROUTE_main_9  = 
+												ROUTE_main_9  =
 												{
-													ROUTE_AxisControl  = 
+													ROUTE_AxisControl  =
 													{
 													},
 												},
 											},
 										},
 									},
-									ROUTE_alliedside  = 
+									ROUTE_alliedside  =
 									{
-										ROUTE_alliedside_1  = 
+										ROUTE_alliedside_1  =
 										{
-											ROUTE_alliedside_2  = 
+											ROUTE_alliedside_2  =
 											{
-												ROUTE_alliedside_3  = 
+												ROUTE_alliedside_3  =
 												{
-													ROUTE_alliedside_4  = 
+													ROUTE_alliedside_4  =
 													{
-														ROUTE_alliedside_5  = 
+														ROUTE_alliedside_5  =
 														{
-															ROUTE_alliedside_6  = 
+															ROUTE_alliedside_6  =
 															{
-																ROUTE_alliedside_7  = 
+																ROUTE_alliedside_7  =
 																{
-																	ROUTE_AxisControl  = 
+																	ROUTE_AxisControl  =
 																	{
 																	},
 																},
@@ -697,11 +694,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 
-	
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

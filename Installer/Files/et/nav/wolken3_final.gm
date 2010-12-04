@@ -48,7 +48,7 @@ global Map =
 		Map.Main_Entrance_Dyno += 1;
 		Util.MapDebugPrint( "Main_Entrance_Planted" );
 	},
-	
+
 	Main_Entrance_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -57,12 +57,12 @@ global Map =
 		Map.Main_Entrance_Dyno -= 1;
 		Util.MapDebugPrint( "Main_Entrance_Defused" );
 	},
-	
+
 	Main_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel.*" );
@@ -74,7 +74,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_north_ammocabinet" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_north_healthcabinet" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Main_Entrance.*" );
-				
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Flag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_forwardspawn1_flag" );
 		sleep(2.1);
@@ -84,13 +84,13 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_documents_safe" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_north_ammocabinet" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_north_healthcabinet" );
-		
+
 		Map.Main_Entrance_Dyno = 0;
 		Map.Main_Entry_Destroyed = true;
 
 		Util.MapDebugPrint( "Main_Destroyed" );
 	},
-	
+
 	Side_Entrance_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -99,7 +99,7 @@ global Map =
 		Map.Side_Entrance_Dyno += 1;
 		Util.MapDebugPrint( "Side_Entrance_Planted" );
 	},
-	
+
 	Side_Entrance_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -108,7 +108,7 @@ global Map =
 		Map.Side_Entrance_Dyno -= 1;
 		Util.MapDebugPrint( "Side_Entrance_Defused" );
 	},
-	
+
 	Side_Entrance_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -125,7 +125,7 @@ global Map =
 
 		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
 	},
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -138,7 +138,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.RandomSpawn(TEAM.AXIS, 2);
 
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
@@ -152,7 +152,7 @@ global Map =
 		Map.Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Command_Post_Planted" );
 	},
-	
+
 	Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -161,7 +161,7 @@ global Map =
 		Map.Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Command_Post_Defused" );
 	},
-	
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -171,7 +171,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -181,12 +181,12 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
-	
+
 	documents_safe_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		if ( Map.Docs_Secured == true )
 		{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_documents_safe.*" );
@@ -195,7 +195,7 @@ global Map =
 		Map.documents_safe_Dyno += 1;
 		Util.MapDebugPrint( "documents_safe_Planted" );
 	},
-	
+
 	documents_safe_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -204,33 +204,33 @@ global Map =
 		Map.documents_safe_Dyno -= 1;
 		Util.MapDebugPrint( "documents_safe_Defused" );
 	},
-	
+
 	documents_safe_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.Docs_Secured == true )
 		{
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_documents_safe" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_documents" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_documents_safe" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_documents" );
 		}
 		else if ( Map.Docs_Secured == false )
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_documents" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_documents_safe" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_documents" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_documents_safe" );
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_documents_safe.*" );
 		Map.documents_safe_Dyno = 0;
 
 		Util.MapDebugPrint( "documents_safe_Destroyed" );
 	},
-	
+
 	documents_safe_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_documents" );
 
 		Util.MapDebugPrint( "documents_safe_Built" );
@@ -240,15 +240,15 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.Fuel_Taken == true || Map.Fuel_Secured == true )
 		{
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Obj_def.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Obj_def.*" );
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Docs.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Docs.*" );
-		
+
 		Map.Docs_Taken = true;
 		Util.MapDebugPrint( "documents_Taken" );
 	},
@@ -257,37 +257,37 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.Main_Entry_Destroyed == false )
 		{
 			if ( Map.Fuel_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
 			}
 			else if ( Map.Fuel_Taken == false )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
 			}
 		}
 		else if ( Map.Main_Entry_Destroyed == true )
 		{
-		if ( Map.Fuel_Taken == true )
+			if ( Map.Fuel_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Docs.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Docs.*" );
 			}
-		else if ( Map.Fuel_Taken == false )
+			else if ( Map.Fuel_Taken == false )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Docs.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Docs.*" );
 			}
 		}
-				
+
 		Map.Docs_Taken = false;
 		Util.MapDebugPrint( "documents_Returned" );
 	},
-	
+
 	documents_Secured = function( trigger )
 	{
 		if ( TestMap )
@@ -297,28 +297,28 @@ global Map =
 		{
 			if ( Map.Fuel_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			Util.MapDebugPrint( "documents_Secured1" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				Util.MapDebugPrint( "documents_Secured1" );
 			}
 			else if ( Map.Fuel_Taken == false )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			Util.MapDebugPrint( "documents_Secured2" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				Util.MapDebugPrint( "documents_Secured2" );
 			}
 		}
 		else if ( Map.Main_Entry_Destroyed == true )
 		{
-		if ( Map.Fuel_Taken == true )
+			if ( Map.Fuel_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			
-			Util.MapDebugPrint( "documents_Secured3" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+
+				Util.MapDebugPrint( "documents_Secured3" );
 			}
 			else
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
-			Util.MapDebugPrint( "documents_Secured4" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
+				Util.MapDebugPrint( "documents_Secured4" );
 			}
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_documents_safe" );
@@ -342,12 +342,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_fuel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_planefuel" );
 		Map.Fuel_Taken = true;
-		
-		
+
+
 		Util.MapDebugPrint( "fuel_can_Taken" );
 	},
-
-	
 
 	fuel_can_Returned = function( trigger )
 	{
@@ -358,29 +356,29 @@ global Map =
 		{
 			if ( Map.Docs_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
 			}
 			else
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
 			}
 		}
 		else if ( Map.Main_Entry_Destroyed == true )
 		{
-		if ( Map.Docs_Taken == true )
+			if ( Map.Docs_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_planefuel" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_fuel_can" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_planefuel" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_fuel_can" );
 			}
 			else
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_planefuel" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_fuel_can" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_planefuel" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_fuel_can" );
 			}
 		}
 		Map.Fuel_Taken = false;
@@ -396,27 +394,27 @@ global Map =
 		{
 			if ( Map.Docs_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			Util.MapDebugPrint( "fuel_can_Secured1" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				Util.MapDebugPrint( "fuel_can_Secured1" );
 			}
 			else if ( Map.Docs_Taken == false )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			Util.MapDebugPrint( "fuel_can_Secured2" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				Util.MapDebugPrint( "fuel_can_Secured2" );
 			}
 		}
 		else if ( Map.Main_Entry_Destroyed == true )
 		{
 			if ( Map.Docs_Taken == true )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
-			Util.MapDebugPrint( "fuel_can_Secured3" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Plane.*" ); // Keep Active
+				Util.MapDebugPrint( "fuel_can_Secured3" );
 			}
 			else if ( Map.Docs_Taken == false )
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
-			Util.MapDebugPrint( "fuel_can_Secured4" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Plane.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Obj_def.*" );
+				Util.MapDebugPrint( "fuel_can_Secured4" );
 			}
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_fuel_can" );
@@ -424,7 +422,6 @@ global Map =
 		Map.Fuel_Secured = true;
 		Util.MapDebugPrint( "fuel_can_Secured" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -455,7 +452,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have rebuilt the safe!", Map.documents_safe_Built );
 	OnTrigger( "The Axis have stolen the documents!", Map.documents_Taken );
 	OnTrigger( "The Allies have returned the documents", Map.documents_Returned );
-	OnTrigger( "The Axis have secured the documents!", Map.documents_Secured );	
+	OnTrigger( "The Axis have secured the documents!", Map.documents_Secured );
 	OnTrigger( "The Axis have stolen the fuel!", Map.fuel_can_Taken );
 	OnTrigger( "The Allies have returned the fuel!", Map.fuel_can_Returned );
 	OnTrigger( "The Axis have refueled the plane!", Map.fuel_can_Secured );
@@ -475,7 +472,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 
-	
+
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
@@ -483,7 +480,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Main_def.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Side_def.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forwardspawn1_flag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Main_Entrance" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Side_Entrance" );
@@ -496,342 +493,337 @@ global OnMapLoad = function()
 	SetGoalPriority("BUILD_documents_safe", 0.83);
 	SetGoalPriority("DEFEND_Plane_1", 0.51); // Make sure that at least 2 capoint defence are active
 	SetGoalPriority("DEFEND_Plane_2", 0.51);
-	
-	Util.AddUseWp("PLANT_documents_safe", "safe"); // Fix to rare issue where bots sometimes plant at the ground floor & not the 1st
-	
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
-	
+	Util.AddUseWp("PLANT_documents_safe", "safe"); // Fix to rare issue where bots sometimes plant at the ground floor & not the 1st
+
 	MapRoutes =
 	{
-		CHECKPOINT_forwardspawn1_flag = 
+		CHECKPOINT_forwardspawn1_flag =
 		{
-			ROUTE_AxisSpawn  = 
+			ROUTE_AxisSpawn  =
 			{
-				ROUTE_AT_Gun  = 
+				ROUTE_AT_Gun  =
 				{
-					ROUTE_side  = 
+					ROUTE_side  =
 					{
 					},
-					ROUTE_Side_minor  = 
+					ROUTE_Side_minor  =
 					{
 					},
 				},
-				ROUTE_Tank  = 
+				ROUTE_Tank  =
 				{
-					ROUTE_flag  = 
+					ROUTE_flag  =
 					{
 					},
-					ROUTE_main  = 
+					ROUTE_main  =
 					{
 					},
 				},
-				ROUTE_Main_long  = 
+				ROUTE_Main_long  =
 				{
-					ROUTE_flag  = 
+					ROUTE_flag  =
 					{
 					},
-					ROUTE_main  = 
+					ROUTE_main  =
 					{
 					},
 				},
 			},
-			ROUTE_Aliies_Spawn_4  = 
+			ROUTE_Aliies_Spawn_4  =
 			{
-				ROUTE_Slipway  = 
+				ROUTE_Slipway  =
 				{
-					ROUTE_Main_large  = 
+					ROUTE_Main_large  =
 					{
 					},
-					ROUTE_Main_Small  = 
+					ROUTE_Main_Small  =
 					{
 					},
 				},
-				ROUTE_Slipway_ladder  = 
+				ROUTE_Slipway_ladder  =
 				{
-					ROUTE_Main_large  = 
+					ROUTE_Main_large  =
 					{
 					},
-					ROUTE_Main_Small  = 
+					ROUTE_Main_Small  =
 					{
 					},
 				},
 			},
-			ROUTE_Allies_Spawn_5  = 
+			ROUTE_Allies_Spawn_5  =
 			{
-				ROUTE_Slipway  = 
+				ROUTE_Slipway  =
 				{
 				},
-				ROUTE_sidedoor  = 
+				ROUTE_sidedoor  =
 				{
-					ROUTE_Main_large  = 
+					ROUTE_Main_large  =
 					{
 					},
-					ROUTE_Main_Small  = 
+					ROUTE_Main_Small  =
 					{
 					},
 				},
 			},
 		},
-		PLANT_documents_safe = 
+		PLANT_documents_safe =
 		{
-			ROUTE_Flag_Spawn  = 
+			ROUTE_Flag_Spawn  =
 			{
-				ROUTE_Main_Small  = 
+				ROUTE_Main_Small  =
 				{
-					ROUTE_Slipway  = 
+					ROUTE_Slipway  =
 					{
-						ROUTE_House_Entry  = 
+						ROUTE_House_Entry  =
 						{
 						},
-						ROUTE_Wooden_Ladder  = 
+						ROUTE_Wooden_Ladder  =
 						{
 						},
 					},
-					ROUTE_Main_Side  = 
+					ROUTE_Main_Side  =
 					{
-						ROUTE_Wooden_Ladder  = 
+						ROUTE_Wooden_Ladder  =
 						{
 						},
-						ROUTE_House_Entry  = 
+						ROUTE_House_Entry  =
 						{
-							ROUTE_Stairs_North  = 
+							ROUTE_Stairs_North  =
 							{
 							},
-							ROUTE_Stairs_South  = 
+							ROUTE_Stairs_South  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_Main_large  = 
+				ROUTE_Main_large  =
 				{
-					ROUTE_Slipway  = 
+					ROUTE_Slipway  =
 					{
-						ROUTE_House_Entry  = 
+						ROUTE_House_Entry  =
 						{
-							ROUTE_Stairs_South  = 
+							ROUTE_Stairs_South  =
 							{
 							},
-							ROUTE_Stairs_North  = 
+							ROUTE_Stairs_North  =
 							{
 							},
 						},
-						ROUTE_Wooden_Ladder  = 
+						ROUTE_Wooden_Ladder  =
 						{
 						},
 					},
-					ROUTE_Main_Side  = 
+					ROUTE_Main_Side  =
 					{
-						ROUTE_Wooden_Ladder  = 
+						ROUTE_Wooden_Ladder  =
 						{
 						},
-						ROUTE_House_Entry  = 
+						ROUTE_House_Entry  =
 						{
-							ROUTE_Stairs_North  = 
+							ROUTE_Stairs_North  =
 							{
 							},
-							ROUTE_Stairs_South  = 
+							ROUTE_Stairs_South  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_CP_Spawn  = 
+				ROUTE_CP_Spawn  =
 				{
-					ROUTE_House_Entry  = 
+					ROUTE_House_Entry  =
 					{
-						ROUTE_Stairs_South  = 
+						ROUTE_Stairs_South  =
 						{
 						},
-						ROUTE_Stairs_North  = 
+						ROUTE_Stairs_North  =
 						{
 						},
 					},
 				},
 			},
-			ROUTE_CP_Spawn  = 
+			ROUTE_CP_Spawn  =
 			{
-				ROUTE_House_Entry  = 
+				ROUTE_House_Entry  =
 				{
-					ROUTE_Stairs_North  = 
+					ROUTE_Stairs_North  =
 					{
 					},
-					ROUTE_Stairs_South  = 
+					ROUTE_Stairs_South  =
 					{
 					},
 				},
 			},
 		},
-		FLAG_fuel_can = 
+		FLAG_fuel_can =
 		{
-			ROUTE_Flag_Spawn  = 
+			ROUTE_Flag_Spawn  =
 			{
-				ROUTE_CP_Spawn  = 
+				ROUTE_CP_Spawn  =
 				{
-					ROUTE_Tower_South  = 
+					ROUTE_Tower_South  =
 					{
 					},
-					ROUTE_Tower_North  = 
+					ROUTE_Tower_North  =
 					{
 					},
 				},
-				ROUTE_Main_large  = 
+				ROUTE_Main_large  =
 				{
-					ROUTE_Slipway  = 
+					ROUTE_Slipway  =
 					{
-						ROUTE_Tower_North  = 
+						ROUTE_Tower_North  =
 						{
 						},
-						ROUTE_Tower_South  = 
+						ROUTE_Tower_South  =
 						{
 						},
 					},
-					ROUTE_Main_Side  = 
+					ROUTE_Main_Side  =
 					{
-						ROUTE_Tower_North  = 
+						ROUTE_Tower_North  =
 						{
 						},
-						ROUTE_Tower_South  = 
+						ROUTE_Tower_South  =
 						{
 						},
 					},
 				},
-				ROUTE_Main_Small  = 
+				ROUTE_Main_Small  =
 				{
-					ROUTE_Slipway  = 
+					ROUTE_Slipway  =
 					{
-						ROUTE_Tower_North  = 
+						ROUTE_Tower_North  =
 						{
 						},
-						ROUTE_Tower_South  = 
+						ROUTE_Tower_South  =
 						{
 						},
 					},
-					ROUTE_Main_Side  = 
+					ROUTE_Main_Side  =
 					{
-						ROUTE_Tower_North  = 
+						ROUTE_Tower_North  =
 						{
 						},
-						ROUTE_Tower_South  = 
+						ROUTE_Tower_South  =
 						{
 						},
 					},
 				},
 			},
-			ROUTE_CP_Spawn  = 
+			ROUTE_CP_Spawn  =
 			{
-				ROUTE_Tower_North  = 
+				ROUTE_Tower_North  =
 				{
 				},
-				ROUTE_Tower_South  = 
+				ROUTE_Tower_South  =
 				{
 				},
 			},
 		},
-		CAPPOINT_Plane = 
+		CAPPOINT_Plane =
 		{
-			ROUTE_Docs  = 
+			ROUTE_Docs  =
 			{
-				ROUTE_Slipway  = 
+				ROUTE_Slipway  =
 				{
-					ROUTE_Tank  = 
+					ROUTE_Tank  =
 					{
-						ROUTE_AT_Gun  = 
+						ROUTE_AT_Gun  =
 						{
 						},
 					},
 				},
-				ROUTE_sidedoor  = 
+				ROUTE_sidedoor  =
 				{
-					ROUTE_side  = 
+					ROUTE_side  =
 					{
 					},
-					ROUTE_Side_minor  = 
+					ROUTE_Side_minor  =
 					{
 					},
 				},
 			},
-			ROUTE_Fuel  = 
+			ROUTE_Fuel  =
 			{
-				ROUTE_Tower_North  = 
+				ROUTE_Tower_North  =
 				{
-					ROUTE_sidedoor  = 
+					ROUTE_sidedoor  =
 					{
-						ROUTE_side  = 
+						ROUTE_side  =
 						{
 						},
-						ROUTE_Side_minor  = 
+						ROUTE_Side_minor  =
 						{
 						},
 					},
 				},
-				ROUTE_Tower_South  = 
+				ROUTE_Tower_South  =
 				{
-					ROUTE_sidedoor  = 
+					ROUTE_sidedoor  =
 					{
-						ROUTE_side  = 
+						ROUTE_side  =
 						{
 						},
-						ROUTE_Side_minor  = 
+						ROUTE_Side_minor  =
 						{
 						},
 					},
 				},
 			},
 		},
-		DEFEND_Docs_1 = 
+		DEFEND_Docs_1 =
 		{
-			ROUTE_Aliies_Spawn_4  = 
+			ROUTE_Aliies_Spawn_4  =
 			{
-				ROUTE_House_Entry  = 
+				ROUTE_House_Entry  =
 				{
-					ROUTE_Stairs_North  = 
+					ROUTE_Stairs_North  =
 					{
 					},
-					ROUTE_Stairs_South  = 
+					ROUTE_Stairs_South  =
 					{
 					},
 				},
-				ROUTE_Wooden_Ladder  = 
+				ROUTE_Wooden_Ladder  =
 				{
 				},
 			},
-			ROUTE_Allies_Spawn_5  = 
+			ROUTE_Allies_Spawn_5  =
 			{
-				ROUTE_House_Entry  = 
+				ROUTE_House_Entry  =
 				{
-					ROUTE_Stairs_North  = 
+					ROUTE_Stairs_North  =
 					{
 					},
-					ROUTE_Stairs_South  = 
+					ROUTE_Stairs_South  =
 					{
 					},
 				},
-				ROUTE_Wooden_Ladder  = 
+				ROUTE_Wooden_Ladder  =
 				{
 				},
 			},
 		},
-		PLANT_Main_Entrance = 
+		PLANT_Main_Entrance =
 		{
-			ROUTE_AxisSpawn  = 
+			ROUTE_AxisSpawn  =
 			{
-				ROUTE_Main_Small  = 
+				ROUTE_Main_Small  =
 				{
 				},
-				ROUTE_Main_large  = 
+				ROUTE_Main_large  =
 				{
 				},
 			},
-			ROUTE_CP_Spawn  = 
+			ROUTE_CP_Spawn  =
 			{
-				ROUTE_Main_large  = 
+				ROUTE_Main_large  =
 				{
 				},
-				ROUTE_Main_Small  = 
+				ROUTE_Main_Small  =
 				{
 				},
 			},
@@ -849,7 +841,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_planefuel = MapRoutes.PLANT_documents_safe;
 
 	Util.Routes(MapRoutes);
-
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

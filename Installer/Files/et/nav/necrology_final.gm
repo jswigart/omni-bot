@@ -19,7 +19,7 @@ global Map =
 	Axis_Command_Post_Dyno = 0,
 	Allied_Command_Post_Dyno = 0,
  	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -27,7 +27,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -36,7 +36,7 @@ global Map =
 		Map.Allied_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -53,7 +53,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -61,7 +61,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -70,7 +70,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -79,16 +79,16 @@ global Map =
 		Map.Axis_Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
-	
+
 	Allies_Resurector_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -96,7 +96,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allies.*" );
 		Util.MapDebugPrint( "Allies_Resurector_Built" );
 	},
-	
+
 	Allies_Resurector_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -105,7 +105,7 @@ global Map =
 		Map.Allies_Resurector_Dyno += 1;
 		Util.MapDebugPrint( "Allies_Resurector_Planted" );
 	},
-	
+
 	Allies_Resurector_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -114,7 +114,7 @@ global Map =
 		Map.Allies_Resurector_Dyno -= 1;
 		Util.MapDebugPrint( "Allies_Resurector_Defused" );
 	},
-	
+
 	Allies_Resurector_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -125,7 +125,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allies_Resurector" );
 		Util.MapDebugPrint( "Allies_Resurector_Destroyed" );
 	},
-	
+
 	Axis_Resurector_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -170,7 +170,7 @@ global Map =
 
 		Util.MapDebugPrint( "allies_gold_crate_Taken" );
 	},
-	
+
 	axis_gold_crate_Taken = function( trigger )
 	{
 		if ( TestMap )
@@ -178,7 +178,7 @@ global Map =
 
 		Util.MapDebugPrint( "axis_gold_crate_Taken" );
 	},
-	
+
 	allies_gold_crate_Returned = function( trigger )
 	{
 		if ( TestMap )
@@ -322,38 +322,30 @@ global Map =
 
 		Util.MapDebugPrint( "axis_gold_crate_7_Secured" );
 	},
-	
+
 	The_Axis_win = function( trigger )
-	{	
+	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.DisableGoal( "CAPPOINT_Allied" );
 		Util.DisableGoal( "FLAG_allies.*" );
-		if ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
+
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "The Axis win!!" );
 	},
-	
+
 	The_Allies_win = function( trigger )
-	{	
+	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.DisableGoal( "CAPPOINT_Axis" );
-		Util.DisableGoal( "FLAG_axis.*" );	
-		if ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
+		Util.DisableGoal( "FLAG_axis.*" );
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "The Allies win!!" );
 	},
 };
@@ -362,7 +354,7 @@ global OnMapLoad = function()
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
-	
+
 // Register callback functions
 	OnTrigger( "^4Allies activated the command post !", Map.Allied_Command_Post_Built );
 	OnTrigger( "^1Axis activated the command post !!", Map.Axis_Command_Post_Built );
@@ -402,19 +394,19 @@ global OnMapLoad = function()
 	OnTrigger( "Axis have stolen the Axis Bones!", Map.axis_gold_crate_Taken );
 	OnTrigger( "^1The Axis win!!", Map.The_Axis_win );
 	OnTrigger( "^4The Allies win!!", Map.The_Allies_win );
-	
+
 	Util.SetGoalOffset( -50, -20, -30, "BUILD_Allies_Resurector" );
 	Util.SetGoalOffset( 0, 50, 0, "PLANT_Allies_Resurector" );
 	Util.SetGoalOffset( 0, 50, -30, "BUILD_Axis_Resurector" );
 	Util.SetGoalOffset( -50, -20, 0, "PLANT_Axis_Resurector" );
 	Util.SetGoalOffset( 50, 0, -30, "BUILD_Command_Post" );
 	Util.SetGoalOffset( -50, -20, 0, "PLANT_Command_Post" );
-	
+
 	SetGoalPriority( "BUILD_Allies_Resurector", 0.91, TEAM.ALLIES, CLASS.ENGINEER, true );
 	SetGoalPriority( "BUILD_Axis_Resurector", 0.91, TEAM.AXIS, CLASS.ENGINEER, true );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
-	
+
 	Util.EnableGoal ("AMMOCAB.*");
 	Util.EnableGoal	("HEALTHCAB.*");
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allies.*");
@@ -439,39 +431,38 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 // Camp times
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
-//Routes	
-	Util.MapDebugPrint("Configuring Routes");
+//Routes
 	MapRoutes =
 	{
-		FLAG_allies_gold_crate = 
+		FLAG_allies_gold_crate =
 		{
-			ROUTE_allied  = 
+			ROUTE_allied  =
 			{
-				ROUTE_alliedeast  = 
+				ROUTE_alliedeast  =
 				{
-					ROUTE_alliedeastswitch  = 
+					ROUTE_alliedeastswitch  =
 					{
-						ROUTE_alliedeastcrypt  = 
+						ROUTE_alliedeastcrypt  =
 						{
-							ROUTE_alliedcrypt  = 
+							ROUTE_alliedcrypt  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_alliedwest  = 
+				ROUTE_alliedwest  =
 				{
-					ROUTE_alliedwestswitch  = 
+					ROUTE_alliedwestswitch  =
 					{
-						ROUTE_alliedwestabby  = 
+						ROUTE_alliedwestabby  =
 						{
-							ROUTE_alliedeastabby  = 
+							ROUTE_alliedeastabby  =
 							{
-								ROUTE_alliedeastswitch  = 
+								ROUTE_alliedeastswitch  =
 								{
-									ROUTE_alliedeastcrypt  = 
+									ROUTE_alliedeastcrypt  =
 									{
-										ROUTE_alliedcrypt  = 
+										ROUTE_alliedcrypt  =
 										{
 										},
 									},
@@ -482,35 +473,35 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		FLAG_axis_gold_crate = 
+		FLAG_axis_gold_crate =
 		{
-			ROUTE_axis  = 
+			ROUTE_axis  =
 			{
-				ROUTE_axiseast  = 
+				ROUTE_axiseast  =
 				{
-					ROUTE_axiseastswitch  = 
+					ROUTE_axiseastswitch  =
 					{
-						ROUTE_axiseastcrypt  = 
+						ROUTE_axiseastcrypt  =
 						{
-							ROUTE_axiscrypt  = 
+							ROUTE_axiscrypt  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_axiswest  = 
+				ROUTE_axiswest  =
 				{
-					ROUTE_axiswestswitch  = 
+					ROUTE_axiswestswitch  =
 					{
-						ROUTE_axisabbywest  = 
+						ROUTE_axisabbywest  =
 						{
-							ROUTE_axisabbyeast  = 
+							ROUTE_axisabbyeast  =
 							{
-								ROUTE_axiseastswitch  = 
+								ROUTE_axiseastswitch  =
 								{
-									ROUTE_axiseastcrypt  = 
+									ROUTE_axiseastcrypt  =
 									{
-										ROUTE_axiscrypt  = 
+										ROUTE_axiscrypt  =
 										{
 										},
 									},
@@ -521,33 +512,33 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		CAPPOINT_Allied = 
+		CAPPOINT_Allied =
 		{
-			ROUTE_alliedcrypt  = 
+			ROUTE_alliedcrypt  =
 			{
-				ROUTE_alliedeastcrypt  = 
+				ROUTE_alliedeastcrypt  =
 				{
-					ROUTE_alliedeastswitch  = 
+					ROUTE_alliedeastswitch  =
 					{
-						ROUTE_alliedeastabby  = 
+						ROUTE_alliedeastabby  =
 						{
-							ROUTE_alliedwestabby  = 
+							ROUTE_alliedwestabby  =
 							{
-								ROUTE_alliedwestswitch  = 
+								ROUTE_alliedwestswitch  =
 								{
-									ROUTE_alliedsanc  = 
+									ROUTE_alliedsanc  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_alliedeast  = 
+						ROUTE_alliedeast  =
 						{
-							ROUTE_alliedwest  = 
+							ROUTE_alliedwest  =
 							{
-								ROUTE_alliedwestswitch  = 
+								ROUTE_alliedwestswitch  =
 								{
-									ROUTE_alliedsanc  = 
+									ROUTE_alliedsanc  =
 									{
 									},
 								},
@@ -557,33 +548,33 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		CAPPOINT_Axis = 
+		CAPPOINT_Axis =
 		{
-			ROUTE_axiscrypt  = 
+			ROUTE_axiscrypt  =
 			{
-				ROUTE_axiseastcrypt  = 
+				ROUTE_axiseastcrypt  =
 				{
-					ROUTE_axiseastswitch  = 
+					ROUTE_axiseastswitch  =
 					{
-						ROUTE_axisabbyeast  = 
+						ROUTE_axisabbyeast  =
 						{
-							ROUTE_axisabbywest  = 
+							ROUTE_axisabbywest  =
 							{
-								ROUTE_axiswestswitch  = 
+								ROUTE_axiswestswitch  =
 								{
-									ROUTE_axissanc  = 
+									ROUTE_axissanc  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_axiseast  = 
+						ROUTE_axiseast  =
 						{
-							ROUTE_axiswest  = 
+							ROUTE_axiswest  =
 							{
-								ROUTE_alliedwestswitch  = 
+								ROUTE_alliedwestswitch  =
 								{
-									ROUTE_axissanc  = 
+									ROUTE_axissanc  =
 									{
 									},
 								},
@@ -599,7 +590,7 @@ global OnMapLoad = function()
 	MapRoutes.FLAG_allies_gold_crate_3 = MapRoutes.FLAG_allies_gold_crate;
 	MapRoutes.FLAG_allies_gold_crate_4 = MapRoutes.FLAG_allies_gold_crate;
 	MapRoutes.FLAG_allies_gold_crate_5 = MapRoutes.FLAG_allies_gold_crate;
-	MapRoutes.FLAG_allies_gold_crate_6 = MapRoutes.FLAG_allies_gold_crate; 
+	MapRoutes.FLAG_allies_gold_crate_6 = MapRoutes.FLAG_allies_gold_crate;
 	MapRoutes.FLAG_allies_gold_crate_7 = MapRoutes.FLAG_allies_gold_crate;
 	MapRoutes.FLAG_axis_gold_crate_1 = MapRoutes.FLAG_axis_gold_crate;
 	MapRoutes.FLAG_axis_gold_crate_2 = MapRoutes.FLAG_axis_gold_crate;
@@ -607,14 +598,11 @@ global OnMapLoad = function()
 	MapRoutes.FLAG_axis_gold_crate_4 = MapRoutes.FLAG_axis_gold_crate;
 	MapRoutes.FLAG_axis_gold_crate_5 = MapRoutes.FLAG_axis_gold_crate;
 	MapRoutes.FLAG_axis_gold_crate_6 = MapRoutes.FLAG_axis_gold_crate;
-	MapRoutes.FLAG_axis_gold_crate_7 = MapRoutes.FLAG_axis_gold_crate; 
-	
-	Util.Routes(MapRoutes);
-	
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
+	MapRoutes.FLAG_axis_gold_crate_7 = MapRoutes.FLAG_axis_gold_crate;
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

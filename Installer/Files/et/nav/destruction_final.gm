@@ -34,7 +34,7 @@ global Map =
 	Repair_courtyard = "REPAIRMG42_courtyard",
 	Repair_side = "REPAIRMG42_side",
 	Repair_Roof_MG42 = "REPAIRMG42_Roof_MG42",
-	
+
 	Roof_MG42_Dyno = 0,
 	Comm_Station_Dyno = 0,
 	Axis_Command_Post_Dyno = 0,
@@ -45,7 +45,7 @@ global Map =
 	stair_barricade_Dyno = 0,
 	gate_blown = false,
 	wall_blown = false,
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -53,7 +53,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -62,7 +62,7 @@ global Map =
 		Map.Allied_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -79,15 +79,15 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -96,7 +96,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -105,7 +105,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -118,12 +118,12 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Roof_MG42" );
-	
-	Util.MapDebugPrint( "Roof_MG42_Built" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Roof_MG42" );
+
+		Util.MapDebugPrint( "Roof_MG42_Built" );
 	},
-	
+
 	Roof_MG42_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -132,7 +132,7 @@ global Map =
 		Map.Roof_MG42_Dyno += 1;
 		Util.MapDebugPrint( "Roof_MG42_Planted" );
 	},
-	
+
 	Roof_MG42_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -141,25 +141,25 @@ global Map =
 		Map.Roof_MG42_Dyno -= 1;
 		Util.MapDebugPrint( "Roof_MG42_Defused" );
 	},
-	
+
 	Roof_MG42_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-	
+
 		Util.MapDebugPrint( "Roof_MG42_Destroyed" );
 	},
 
-//Side Door -No point-Start 
+//Side Door -No point-Start
 
 	side_door_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "side_door_Built" );
 	},
-	
+
 	side_door_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -168,7 +168,7 @@ global Map =
 		Map.side_door_Dyno += 1;
 		Util.MapDebugPrint( "side_door_Planted" );
 	},
-	
+
 	side_door_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -182,38 +182,38 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "side_door_Destroyed" );
 	},
-	
+
 //Side Door -No point-END
 
 	stair_barricade_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		if ( Map.gate_blown == true || Map.wall_blown == true ) 
-		{	
-		 SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_side" );
-		 SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_side" );
-		}	
+
+		if ( Map.gate_blown == true || Map.wall_blown == true )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_side" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_side" );
+		}
 		else
 		{
-		 SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Roof_MG42" );
-		 SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_side" );
-	         SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_side" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_side" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_side" );
 		}
-		 Util.DisableGoal("ROUTE_Barricade_B");	
-	
+		Util.DisableGoal("ROUTE_Barricade_B");
+
 		Util.MapDebugPrint( "stair_barricade_Built" );
 	},
-	
+
 	stair_barricade_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -222,7 +222,7 @@ global Map =
 		Map.stair_barricade_Dyno += 1;
 		Util.MapDebugPrint( "stair_barricade_Planted" );
 	},
-	
+
 	stair_barricade_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -232,32 +232,31 @@ global Map =
 		Util.MapDebugPrint( "stair_barricade_Defused" );
 	},
 
-	
+
 	stair_barricade_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.gate_blown == true || Map.wall_blown == true ) 
+		if ( Map.gate_blown == true || Map.wall_blown == true )
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_.*" );
 		}
 		else
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Roof_MG42" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_side" );
-	        SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_side" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_side" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_side" );
 		}
 		Util.EnableGoal("ROUTE_Barricade_B");
-		
-		Util.MapDebugPrint( "stair_barricade_Destroyed" );
 
+		Util.MapDebugPrint( "stair_barricade_Destroyed" );
 	},
-	
+
 	Comm_Station_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -266,7 +265,7 @@ global Map =
 		Map.Comm_Station_Dyno += 1;
 		Util.MapDebugPrint( "Comm_Station_Planted" );
 	},
-	
+
 	Comm_Station_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -275,7 +274,7 @@ global Map =
 		Map.Comm_Station_Dyno -= 1;
 		Util.MapDebugPrint( "Comm_Station_Defused" );
 	},
-	
+
 	Comm_Station_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -283,7 +282,7 @@ global Map =
 
 		Util.MapDebugPrint( "Comm_Station_Destroyed" );
 	},
-	
+
 	Warehouse_Gate_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -292,7 +291,7 @@ global Map =
 		Map.Warehouse_Gate_Dyno += 1;
 		Util.MapDebugPrint( "Warehouse_Gate_Planted" );
 	},
-	
+
 	Warehouse_Gate_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -301,12 +300,12 @@ global Map =
 		Map.Warehouse_Gate_Dyno -= 1;
 		Util.MapDebugPrint( "Warehouse_Gate_Defused" );
 	},
-	
+
 	Warehouse_Gate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }		
-	
+			{ return; }
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_courtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_courtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_south_ammocabinet" );
@@ -320,7 +319,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_stairsallies_.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_stair_barricade" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_WarehouseAllies_.*");
@@ -329,10 +328,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_WarehouseAllies_.*");
 		Util.EnableGoal("ROUTE_Warehouse_B");
 		Map.gate_blown = true;
-		
-			Util.MapDebugPrint( "Warehouse_Gate_Destroyed" );
+
+		Util.MapDebugPrint( "Warehouse_Gate_Destroyed" );
 	},
-	
+
 	Weakend_Wall_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -341,7 +340,7 @@ global Map =
 		Map.Weakend_Wall_Dyno += 1;
 		Util.MapDebugPrint( "Weakend_Wall_Planted" );
 	},
-	
+
 	Weakend_Wall_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -350,12 +349,12 @@ global Map =
 		Map.Weakend_Wall_Dyno -= 1;
 		Util.MapDebugPrint( "Weakend_Wall_Defused" );
 	},
-	
+
 	Weakend_Wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_broken_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Warehouse_Gate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_courtyard" );
@@ -369,7 +368,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_broken_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_courtyard" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_courtyard" );
@@ -378,8 +377,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_stairsallies_.*");
 		Util.EnableGoal("ROUTE_WWS");
 		Map.wall_blown = true;
-			
-			Util.MapDebugPrint( "Weakend_Wall_Destroyed" );
+
+		Util.MapDebugPrint( "Weakend_Wall_Destroyed" );
 	},
 };
 
@@ -436,7 +435,7 @@ global OnMapLoad = function()
 	Util.DisableGoal("ROUTE_Barricade_B");
 	Util.DisableGoal("ROUTE_WWS");
 	Util.DisableGoal("ROUTE_Warehouse_B");
-//SetGoalPriority	
+//SetGoalPriority
 	SetGoalPriority( "MOUNTMG42.*", 0.0, 0, CLASS.ENGINEER, true );
 	SetGoalPriority( "MOUNTMG42.*", 0.0, 0, CLASS.MEDIC, true );
 	SetGoalPriority( "BUILD_stair_barricade", 1.0, TEAM.AXIS, CLASS.ENGINEER, true);
@@ -446,8 +445,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_Comm_Station_2", 0.52, TEAM.AXIS, CLASS.COVERTOPS, true);
 	SetGoalPriority( "DEFEND_Comm_Station_2", 0.52, TEAM.AXIS, CLASS.SOLDIER, true);
 //~SetAvailableMapGoals
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" ); 
-//A Must Build ! - This first or map will be over to Quick ! 
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_stair_barricade" );
+//A Must Build ! - This first or map will be over to Quick !
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_courtyard" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_courtyard" );
@@ -455,12 +454,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_south_healthcabinet.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Warehouse_Gate_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_broken_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_2" ); 
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Comm_Station_2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_.*");
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Roof_MG42" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Roof_MG42" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Roof_MG42" );
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_south_ammocabinet" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Weakend_Wall" );
@@ -470,305 +469,305 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*");
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_stair_barricade" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_broken_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_WarehouseAllies_.*");	
-	
-//Map Routes Allies		
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_WarehouseAllies_.*");
+
+//Map Routes Allies
 	MapRoutes =
 	{
-		PLANT_Weakend_Wall = 
+		PLANT_Weakend_Wall =
 		{
-			ROUTE_SPAWN_A  = 
+			ROUTE_SPAWN_A  =
 			{
-				ROUTE_OPDW  = 
+				ROUTE_OPDW  =
 				{
-					ROUTE_bwstairs  = 
+					ROUTE_bwstairs  =
 					{
 					},
 				},
-				ROUTE_SPAWN  = 
+				ROUTE_SPAWN  =
 				{
-					ROUTE_OPDW  = 
+					ROUTE_OPDW  =
 					{
-						ROUTE_bwstairs  = 
+						ROUTE_bwstairs  =
 						{
 						},
 					},
-					ROUTE_bwstairs  = 
+					ROUTE_bwstairs  =
 					{
 					},
 				},
-				ROUTE_bwstairs  = 
+				ROUTE_bwstairs  =
 				{
 				},
 			},
 		},
-		PLANT_Comm_Station = 
+		PLANT_Comm_Station =
 		{
-			ROUTE_SPAWN_A  = 
+			ROUTE_SPAWN_A  =
 			{
-				ROUTE_SPAWN  = 
+				ROUTE_SPAWN  =
 				{
-					ROUTE_Warehouse_B  = 
+					ROUTE_Warehouse_B  =
 					{
-						ROUTE_side_door_A  = 
+						ROUTE_side_door_A  =
 						{
-							ROUTE_Side_Bottom  = 
+							ROUTE_Side_Bottom  =
 							{
-								ROUTE_north_comm  = 
+								ROUTE_north_comm  =
 								{
 								},
 							},
-							ROUTE_Barricade_B  = 
+							ROUTE_Barricade_B  =
 							{
-								ROUTE_west_comm  = 
+								ROUTE_west_comm  =
 								{
 								},
 							},
 						},
-						ROUTE_side_door_B  = 
+						ROUTE_side_door_B  =
 						{
-							ROUTE_Side_Bottom  = 
+							ROUTE_Side_Bottom  =
 							{
-								ROUTE_north_comm  = 
+								ROUTE_north_comm  =
 								{
 								},
 							},
-							ROUTE_Barricade_B  = 
+							ROUTE_Barricade_B  =
 							{
-								ROUTE_west_comm  = 
+								ROUTE_west_comm  =
 								{
 								},
 							},
 						},
 					},
 				},
-				ROUTE_WWS  = 
+				ROUTE_WWS  =
 				{
-					ROUTE_roof  = 
+					ROUTE_roof  =
 					{
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_Warehouse_B  = 
+				ROUTE_Warehouse_B  =
 				{
-					ROUTE_side_door_A  = 
+					ROUTE_side_door_A  =
 					{
-						ROUTE_Side_Bottom  = 
+						ROUTE_Side_Bottom  =
 						{
-							ROUTE_north_comm  = 
+							ROUTE_north_comm  =
 							{
 							},
 						},
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
-					ROUTE_side_door_B  = 
+					ROUTE_side_door_B  =
 					{
-						ROUTE_Side_Bottom  = 
+						ROUTE_Side_Bottom  =
 						{
-							ROUTE_north_comm  = 
+							ROUTE_north_comm  =
 							{
 							},
 						},
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
 				},
 			},
-			ROUTE_SPAWN_B  = 
+			ROUTE_SPAWN_B  =
 			{
-				ROUTE_WWS  = 
+				ROUTE_WWS  =
 				{
-					ROUTE_roof  = 
+					ROUTE_roof  =
 					{
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_Warehouse_B  = 
+				ROUTE_Warehouse_B  =
 				{
-					ROUTE_side_door_A  = 
+					ROUTE_side_door_A  =
 					{
-						ROUTE_Side_Bottom  = 
+						ROUTE_Side_Bottom  =
 						{
-							ROUTE_north_comm  = 
+							ROUTE_north_comm  =
 							{
 							},
 						},
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
-					ROUTE_side_door_B  = 
+					ROUTE_side_door_B  =
 					{
-						ROUTE_Side_Bottom  = 
+						ROUTE_Side_Bottom  =
 						{
-							ROUTE_north_comm  = 
+							ROUTE_north_comm  =
 							{
 							},
 						},
-						ROUTE_Barricade_B  = 
+						ROUTE_Barricade_B  =
 						{
-							ROUTE_west_comm  = 
+							ROUTE_west_comm  =
 							{
 							},
 						},
 					},
 				},
 			},
-		},	
+		},
 //Map Routes Axis
-		DEFEND_Warehouse_Gate_1 = 
+		DEFEND_Warehouse_Gate_1 =
 		{
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_Side_Bottom  = 
+				ROUTE_Side_Bottom  =
 				{
-					ROUTE_side_door_A  = 
+					ROUTE_side_door_A  =
 					{
-						ROUTE_AXIS_Warehouse_Door  = 
+						ROUTE_AXIS_Warehouse_Door  =
 						{
 						},
 					},
 				},
-				ROUTE_roof  = 
+				ROUTE_roof  =
 				{
-					ROUTE_AXIS_Courtyard  = 
+					ROUTE_AXIS_Courtyard  =
 					{
-						ROUTE_AXIS_Warehouse  = 
+						ROUTE_AXIS_Warehouse  =
 						{
-							ROUTE_Warehouse_A  = 
+							ROUTE_Warehouse_A  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_AXIS_Door  = 
+				ROUTE_AXIS_Door  =
 				{
-					ROUTE_AXIS_Warehouse  = 
+					ROUTE_AXIS_Warehouse  =
 					{
-						ROUTE_Warehouse_A  = 
+						ROUTE_Warehouse_A  =
 						{
 						},
 					},
 				},
 			},
 		},
-		PLANT_Allied_Command_Post = 
+		PLANT_Allied_Command_Post =
 		{
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_roof  = 
+				ROUTE_roof  =
 				{
-					ROUTE_WWS  = 
+					ROUTE_WWS  =
 					{
 					},
-					ROUTE_AXIS_Courtyard  = 
+					ROUTE_AXIS_Courtyard  =
 					{
-						ROUTE_AXIS_Warehouse  = 
+						ROUTE_AXIS_Warehouse  =
 						{
-							ROUTE_OPDW  = 
+							ROUTE_OPDW  =
 							{
-								ROUTE_bwstairs  = 
+								ROUTE_bwstairs  =
 								{
 								},
 							},
-							ROUTE_bwstairs  = 
+							ROUTE_bwstairs  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_north_comm  = 
+				ROUTE_north_comm  =
 				{
-					ROUTE_Roof_Broken  = 
+					ROUTE_Roof_Broken  =
 					{
-						ROUTE_AXIS_broken  = 
+						ROUTE_AXIS_broken  =
 						{
 						},
 					},
 				},
-				ROUTE_Side_Bottom  = 
+				ROUTE_Side_Bottom  =
 				{
-					ROUTE_side_door_A  = 
+					ROUTE_side_door_A  =
 					{
-						ROUTE_AXIS_Warehouse_Door  = 
+						ROUTE_AXIS_Warehouse_Door  =
 						{
-							ROUTE_OPDW  = 
+							ROUTE_OPDW  =
 							{
-								ROUTE_bwstairs  = 
+								ROUTE_bwstairs  =
 								{
 								},
-								ROUTE_bwstairs  = 
+								ROUTE_bwstairs  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_side_door_B  = 
+					ROUTE_side_door_B  =
 					{
-						ROUTE_AXIS_Warehouse_Door  = 
+						ROUTE_AXIS_Warehouse_Door  =
 						{
-							ROUTE_OPDW  = 
+							ROUTE_OPDW  =
 							{
-								ROUTE_bwstairs  = 
+								ROUTE_bwstairs  =
 								{
 								},
 							},
-							ROUTE_bwstairs  = 
+							ROUTE_bwstairs  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_AXIS_Door  = 
+				ROUTE_AXIS_Door  =
 				{
-					ROUTE_AXIS_Warehouse  = 
+					ROUTE_AXIS_Warehouse  =
 					{
-						ROUTE_OPDW  = 
+						ROUTE_OPDW  =
 						{
-							ROUTE_bwstairs  = 
+							ROUTE_bwstairs  =
 							{
 							},
 						},
-						ROUTE_bwstairs  = 
+						ROUTE_bwstairs  =
 						{
 						},
 					},
 				},
 			},
 		},
-		
-		MOUNTMG42_courtyard = 
+
+		MOUNTMG42_courtyard =
 		{
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_AXIS_Door  = 
+				ROUTE_AXIS_Door  =
 				{
 				},
-				ROUTE_roof  = 
+				ROUTE_roof  =
 				{
-					ROUTE_AXIS_Courtyard  = 
+					ROUTE_AXIS_Courtyard  =
 					{
 					},
 				},
@@ -776,43 +775,39 @@ global OnMapLoad = function()
 		},
 	};
 
-	 MapRoutes.ATTACK_broken_1 = MapRoutes.PLANT_Weakend_Wall;
-	 MapRoutes.ATTACK_broken_2 = MapRoutes.PLANT_Weakend_Wall;
-	 MapRoutes.ATTACK_broken_3 = MapRoutes.PLANT_Weakend_Wall;
-	 MapRoutes.ATTACK_broken_4 = MapRoutes.PLANT_Weakend_Wall;
-	 MapRoutes.ATTACK_broken_5 = MapRoutes.PLANT_Weakend_Wall;
-	
-	 MapRoutes.ATTACK_WarehouseAllies_1 = MapRoutes.PLANT_Warehouse_Gate;
-	 MapRoutes.ATTACK_WarehouseAllies_2 = MapRoutes.PLANT_Warehouse_Gate;
-	 MapRoutes.ATTACK_WarehouseAllies_3 = MapRoutes.PLANT_Warehouse_Gate;
-	 MapRoutes.ATTACK_WarehouseAllies_4 = MapRoutes.PLANT_Warehouse_Gate;
-	 MapRoutes.ATTACK_WarehouseAllies_5 = MapRoutes.PLANT_Warehouse_Gate;
-	
-	 MapRoutes.ATTACK_commallies_1 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_commallies_3 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_commallies_4 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_commallies_5 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_commallies_6 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_commallies_7 = MapRoutes.PLANT_Comm_Station;
-	 MapRoutes.ATTACK_stairsallies_1 = MapRoutes.PLANT_Comm_Station;
-	 
-	 MapRoutes.DEFEND_broken_1 = MapRoutes.PLANT_Allied_Command_Post;
-	 MapRoutes.DEFEND_broken_2 = MapRoutes.PLANT_Allied_Command_Post;
-	 MapRoutes.DEFEND_broken_3 = MapRoutes.PLANT_Allied_Command_Post;
-	 MapRoutes.DEFEND_broken_4 = MapRoutes.PLANT_Allied_Command_Post;
-	 MapRoutes.DEFEND_broken_5 = MapRoutes.PLANT_Allied_Command_Post;
-	 
-	 MapRoutes.DEFEND_Warehouse_Gate_2 = MapRoutes.DEFEND_Warehouse_Gate_1;
-	 MapRoutes.DEFEND_Warehouse_Gate_3 = MapRoutes.DEFEND_Warehouse_Gate_1;
-	 MapRoutes.DEFEND_Warehouse_Gate_4 = MapRoutes.DEFEND_Warehouse_Gate_1;
-	 
-	
-	 Util.Routes(MapRoutes);	
-	
-		if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
+	MapRoutes.ATTACK_broken_1 = MapRoutes.PLANT_Weakend_Wall;
+	MapRoutes.ATTACK_broken_2 = MapRoutes.PLANT_Weakend_Wall;
+	MapRoutes.ATTACK_broken_3 = MapRoutes.PLANT_Weakend_Wall;
+	MapRoutes.ATTACK_broken_4 = MapRoutes.PLANT_Weakend_Wall;
+	MapRoutes.ATTACK_broken_5 = MapRoutes.PLANT_Weakend_Wall;
 
-	print( "Omni_bot map script for " + GetMapName() + " executed." );
+	MapRoutes.ATTACK_WarehouseAllies_1 = MapRoutes.PLANT_Warehouse_Gate;
+	MapRoutes.ATTACK_WarehouseAllies_2 = MapRoutes.PLANT_Warehouse_Gate;
+	MapRoutes.ATTACK_WarehouseAllies_3 = MapRoutes.PLANT_Warehouse_Gate;
+	MapRoutes.ATTACK_WarehouseAllies_4 = MapRoutes.PLANT_Warehouse_Gate;
+	MapRoutes.ATTACK_WarehouseAllies_5 = MapRoutes.PLANT_Warehouse_Gate;
+
+	MapRoutes.ATTACK_commallies_1 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_commallies_3 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_commallies_4 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_commallies_5 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_commallies_6 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_commallies_7 = MapRoutes.PLANT_Comm_Station;
+	MapRoutes.ATTACK_stairsallies_1 = MapRoutes.PLANT_Comm_Station;
+
+	MapRoutes.DEFEND_broken_1 = MapRoutes.PLANT_Allied_Command_Post;
+	MapRoutes.DEFEND_broken_2 = MapRoutes.PLANT_Allied_Command_Post;
+	MapRoutes.DEFEND_broken_3 = MapRoutes.PLANT_Allied_Command_Post;
+	MapRoutes.DEFEND_broken_4 = MapRoutes.PLANT_Allied_Command_Post;
+	MapRoutes.DEFEND_broken_5 = MapRoutes.PLANT_Allied_Command_Post;
+
+	MapRoutes.DEFEND_Warehouse_Gate_2 = MapRoutes.DEFEND_Warehouse_Gate_1;
+	MapRoutes.DEFEND_Warehouse_Gate_3 = MapRoutes.DEFEND_Warehouse_Gate_1;
+	MapRoutes.DEFEND_Warehouse_Gate_4 = MapRoutes.DEFEND_Warehouse_Gate_1;
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

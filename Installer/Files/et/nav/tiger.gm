@@ -36,6 +36,8 @@ global Map =
 	Mover_tank = "MOVER_tank",
 	Mover_truck = "MOVER_truck",
 
+	Debug = 0,
+
 	// Some initial status settings for conditionals
 	TankGunIsEnabled = true,
 	RadioIsIntact = true,
@@ -151,7 +153,7 @@ global Map =
 		TriggerOnClass = CLASS.FIELDOPS,
 		OnEnter = function(ent)
 		{
-			//print(GetEntName(ent), "entered aabb trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " entered aabb trigger", true);
 			if (Map.TankGunIsEnabled)
 			{
 				Map.Switches.gun_switch.Enabled = true;
@@ -159,7 +161,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			//print(GetEntName(ent), "exited aabb trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited aabb trigger", true);
 			Map.Switches.gun_switch.Enabled = false;
 		},
 	},
@@ -170,7 +172,7 @@ global Map =
 		TriggerOnCategory = CAT.PLAYER,
 		OnEnter = function(ent)
 		{
-			//print(GetEntName(ent), "entered gun trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " entered gun trigger", true);
 			if (GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				Map.Switches.gun_switch2.Enabled = true;
@@ -182,7 +184,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			//print(GetEntName(ent), "exited gun trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited gun trigger", true);
 			if (GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				Map.Switches.gun_switch2.Enabled = false;
@@ -680,7 +682,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_gun_switch2", 0.6 );
 	Util.UpdateSwitchData();
 
-	print( "Omni-bot map script for Tiger executed." );
+	Util.MapDebugPrint( "Omni-bot map script for Tiger executed." );
 };
 
 global OnBotJoin = function( bot )

@@ -73,15 +73,15 @@ global Map =
 					yield();
 					return;
 				}
-				
+
 				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
 				_this.AddAimRequest(Priority.High, "position", Vector3(-469.875,2373.727,150.217));
-				
+
 				while( !Map.fbwindow_destroyed ) {
 					_this.Bot.HoldButton(BTN.ATTACK1, 1);
 					yield();
 				}
-				
+
 				_this.ReleaseAimRequest();
 				_this.ReleaseWeaponRequest();
 			},
@@ -249,7 +249,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_TruckAtForwardGate" );
 
 			SetGoalPriority( "AIRSTRIKE_TruckAtForwardGate", 0.81, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			if ( Map.forward_gate == 0 )	//intact
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
@@ -344,7 +344,7 @@ global Map =
 		if ( Map.forward_spawn_exit == 0 )
 		{
 			SetGoalPriority( "PLANT_Forward_Spawn_exit", 0.95, TEAM.ALLIES, CLASS.ENGINEER );
-			
+
 			sleep(1.5);
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
@@ -358,7 +358,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_Depot_gate_7" );
 
 			SetGoalPriority( "PLANT_Depot_Gate", 0.82, TEAM.ALLIES, CLASS.ENGINEER );
-			
+
 			if ( Map.allies_CP == 0 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_CP_.*" );
@@ -430,7 +430,7 @@ global Map =
 		if ( Map.forward_gate == 0 )
 		{
 			SetGoalPriority( "PLANT_Depot_Gate", 0.82, TEAM.ALLIES, CLASS.ENGINEER );
-			
+
 			sleep(1.5);
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
@@ -442,7 +442,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_East_wall_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_West_wall_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_Depot_gate_7" );
-			
+
 			SetGoalPriority( "DEFEND_start_.*", 0.72, TEAM.AXIS, 0 );
 
 			if ( Map.allies_CP == 0 )
@@ -569,7 +569,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_TruckAtDepotGate_.*" );
 
 			SetGoalPriority( "AIRSTRIKE_TruckAtDepotGate_2", 0.81, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			if ( Map.depot_gate == 0 )	//intact
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
@@ -596,7 +596,7 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_TruckPastDepotGate" );
 			SetGoalPriority( "AIRSTRIKE_TruckPastDepotGate", 0.81, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			Util.MapDebugPrint(GetEntName(ent) + " exited TruckAtDepotGate trigger", true);
  		},
 	},
@@ -1163,16 +1163,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		// et_autoexec can disable bot chat for all maps
-		if ( !MAP_TALK || Map.talk != 1 ) { return; }
-
-		// new bot chat function
-		Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_GOODGAME, 3 ); // 3 allies say good game
-		Util.BotChat( TEAM.AXIS, "vsay", VOICE.G_NEGATIVE, 3 ); // 3 axis disagree with them
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "^3allies_win" );
 	},
-	
+
 	fbwindow_exploded = function( trigger )
 	{
 		Map.fbwindow_destroyed = true;
@@ -1260,7 +1255,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_437", 0.50, TEAM.ALLIES, 0 );
 	SetGoalPriority( "MOUNTMG42_437", 0.70, TEAM.ALLIES, CLASS.SOLDIER );
 	SetGoalPriority( "PLANT_Command_Post", 0.40, TEAM.AXIS, CLASS.ENGINEER );
-	
+
 	SetGoalPriority( "DEFEND_start_11", 0.7, TEAM.AXIS, 0 );
 	//SetGoalPriority( "DEFEND_start_11", 0.4, TEAM.AXIS, CLASS.FIELDOPS );
 	//SetGoalPriority( "ROUTE_navigate_1", 1.2, TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, CLASS.FIELDOPS );
@@ -1633,10 +1628,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_AirstrikeTruckExit20_4" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_AirstrikeTruckExit20_5" );
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

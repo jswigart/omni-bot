@@ -629,7 +629,7 @@ global Map =
 			if ( Map.Debug ) {
 				DrawAABB(entBounds, COLOR.BLUE, 60);
 				DrawAABB(Map.CurrentTriggerBounds, COLOR.RED, 60);
-				print( "double TriggerRegion trigger detected!" );
+				Util.MapDebugPrint( "double TriggerRegion trigger detected!" );
 			}
 
 			// one was erroneously added, subtract it.

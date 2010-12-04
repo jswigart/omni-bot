@@ -44,7 +44,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Barricade_Built" );
+		Util.MapDebugPrint( "Barricade_Built" );
 	},
 
 	Command_Post_Built = function( trigger )
@@ -52,7 +52,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Command_Post_Built" );
+		Util.MapDebugPrint( "Command_Post_Built" );
 	},
 
 	Barricade_Destroyed = function( trigger )
@@ -60,7 +60,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Barricade_Destroyed" );
+		Util.MapDebugPrint( "Barricade_Destroyed" );
 	},
 
 	Command_Post_Destroyed = function( trigger )
@@ -68,38 +68,36 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
 	},
 
 	village_Gate_Destroyed = function( trigger )
-	{	
-	Util.DisableGroup( "1", TEAM.ALLIES);
-	Util.DisableGroup( "2", TEAM.AXIS);
-	Util.EnableGroup( "4", 0);
-	Util.DisableGroup( "3", 0);
-	Util.EnableGroup( "5", 0);
-	Util.DisableGroup( "7", 0);
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold");
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_371");
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barricade" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ar.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_parts.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_radar1" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis99" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_al1" );
+	{
+		Util.DisableGroup( "1", TEAM.ALLIES);
+		Util.DisableGroup( "2", TEAM.AXIS);
+		Util.EnableGroup( "4", 0);
+		Util.DisableGroup( "3", 0);
+		Util.EnableGroup( "5", 0);
+		Util.DisableGroup( "7", 0);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_371");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barricade" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_parts.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_radar1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis99" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_al1" );
 
 		Util.MapDebugPrint( "gate gone" );
 	},
-
-
 
 	CAPPOINT_371_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "CAPPOINT_371_Captured" );
+		Util.MapDebugPrint( "CAPPOINT_371_Captured" );
 	},
 
 	flag_Axis_Captured = function( trigger )
@@ -107,74 +105,61 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "flag_Axis_Captured" );
+		Util.MapDebugPrint( "flag_Axis_Captured" );
 	},
 
 	flag_Allies_Captured = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barricade" );
 
-		print( "flag_Allies_Captured" );
+		Util.MapDebugPrint( "flag_Allies_Captured" );
 	},
-	
+
 	obj_taken = function( trigger )
-{
-	
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_parts.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis99" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_radar1" );
-//~	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ao.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post");
-	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post");
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_axis1" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_al1" );
-	Util.DisableGroup( "5", 0);
-	
-	foreach ( id and bot in BotTable )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_parts.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis99" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_radar1" );
+		//~	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ao.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post");
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post");
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_axis1" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_al1" );
+		Util.DisableGroup( "5", 0);
+
+		foreach ( id and bot in BotTable )
 		{
-		    
 			if ( ( bot.GetTeam() == TEAM.AXIS ) && ( bot.GetClass() == CLASS.SOLDIER ) )
 			{
 				bot.ExecCommand( "kill" );
 			}
 		}
-		
-		
-	
-	
-	
-	Util.MapDebugPrint( "obj taken" );
-},
 
- obj_secure = function( trigger )
-{
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_parts.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ao.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_radar1" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_al1" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis99" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_axis1" );
-	Util.EnableGroup( "5", 0);
+		Util.MapDebugPrint( "obj taken" );
+	},
 
-	Util.MapDebugPrint( "obj sec" );
+	obj_secure = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_parts.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ao.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_radar1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_al1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis99" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_axis1" );
+		Util.EnableGroup( "5", 0);
 
-
-
-},
-
+		Util.MapDebugPrint( "obj sec" );
+	},
 };
 
 global OnMapLoad = function()
-
-
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
@@ -201,7 +186,7 @@ global OnMapLoad = function()
 	Util.SetGroup( "SMOKEBOMB_ax1", "2");
 	Util.SetGroup( "DEFEND_gate.*", "2");
 	Util.SetGroup( "AIRSTRIKE_axis", "2");
-	
+
 	Util.SetGroup( "HEALTHCAB_north_healthcabinet_1", "3");
 	Util.SetGroup( "AMMOCAB_north_ammocabinet_1", "3");
 	Util.SetGroup( "HEALTHCAB_north_healthcabinet", "4");
@@ -210,17 +195,13 @@ global OnMapLoad = function()
 	Util.SetGroup( "PLANT_Command_Post", "5");
 	Util.SetGroup( "ROUTE_.*", "6");
 	Util.SetGroup( "CHECKPOINT_flag", "7");
-	
+
 	Util.EnableGroup( "1", TEAM.ALLIES);
 	Util.EnableGroup( "2", TEAM.AXIS);
 	Util.EnableGroup( "3", 0);
 	Util.EnableGroup( "6", 0);
 	Util.EnableGroup( "7", 0);
-	
-	
-	
-	
-	
+
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "CAMP_.*" );
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
@@ -233,74 +214,66 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "BUILD_Command_Post" );
 	Util.SetMaxUsers( 1, "PLANT_Command_Post" );
 	Util.AddUseWp( "PLANT_Barricade", "planthere" );
-	
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=40} ); 
-	SetMapGoalProperties( "MOUNT_.*", {mincamptime=15, maxcamptime=40} ); 
+
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=40} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime=15, maxcamptime=40} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=15, maxcamptime=55} );
 	SetGoalPriority( "PLANT_Barricade", 1.0, TEAM.ALLIES, CLASS.COVERTOPS, true );
-	
 
-	
-	
 	MapRoutes =
 	{
-		PLANT_village_Gate = 
+		PLANT_village_Gate =
 		{
-			ROUTE_ally_spawn  = 
+			ROUTE_ally_spawn  =
 			{
-				ROUTE_lr  = 
+				ROUTE_lr  =
 				{
-					ROUTE_lr1  = 
+					ROUTE_lr1  =
 					{
-						ROUTE_right1  = 
+						ROUTE_right1  =
 						{
-							ROUTE_gate2  = 
+							ROUTE_gate2  =
 							{
 							},
 						},
-						ROUTE_left  = 
+						ROUTE_left  =
 						{
-							ROUTE_left3  = 
+							ROUTE_left3  =
 							{
 							},
 						},
 					},
-					ROUTE_right  = 
+					ROUTE_right  =
 					{
-						ROUTE_right2  = 
+						ROUTE_right2  =
 						{
 						},
 					},
 				},
 			},
 		},
-	
-		CHECKPOINT_flag = 
+		CHECKPOINT_flag =
 		{
-			ROUTE_ally_spawn  = 
+			ROUTE_ally_spawn  =
 			{
-				ROUTE_lr  = 
+				ROUTE_lr  =
 				{
-					ROUTE_lr1  = 
+					ROUTE_lr1  =
 					{
-						ROUTE_left  = 
+						ROUTE_left  =
 						{
-							ROUTE_left3  = 
+							ROUTE_left3  =
 							{
 							},
 						},
-						ROUTE_right1  = 
+						ROUTE_right1  =
 						{
-							ROUTE_gate2  = 
+							ROUTE_gate2  =
 							{
-								ROUTE_right4  = 
+								ROUTE_right4  =
 								{
 									ROUTE_right4a  = {},
-									
-										ROUTE_right4b  = {},
-										
-										
-									
+									ROUTE_right4b  = {},
 								},
 							},
 						},
@@ -308,27 +281,25 @@ global OnMapLoad = function()
 				},
 			},
 		},
-
-		
-		FLAG_gold = 
+		FLAG_gold =
 		{
-			ROUTE_ally_spawn3  = 
+			ROUTE_ally_spawn3  =
 			{
-				ROUTE_g1  = 
+				ROUTE_g1  =
 				{
-					ROUTE_gold5  = 
+					ROUTE_gold5  =
 					{
-						ROUTE_g2  = 
+						ROUTE_g2  =
 						{
-							ROUTE_gold3  = 
+							ROUTE_gold3  =
 							{
-								ROUTE_g3  = 
+								ROUTE_g3  =
 								{
-									ROUTE_g4  = 
+									ROUTE_g4  =
 									{
-										ROUTE_gold2  = 
+										ROUTE_gold2  =
 										{
-											ROUTE_g6  = 
+											ROUTE_g6  =
 											{
 											},
 										},
@@ -337,21 +308,21 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_gg2  = 
+					ROUTE_gg2  =
 					{
-						ROUTE_gg3  = 
+						ROUTE_gg3  =
 						{
-							ROUTE_gg4  = 
+							ROUTE_gg4  =
 							{
-								ROUTE_gold1  = 
+								ROUTE_gold1  =
 								{
-									ROUTE_gg5  = 
+									ROUTE_gg5  =
 									{
-										ROUTE_gg6  = 
+										ROUTE_gg6  =
 										{
-											ROUTE_gold4  = 
+											ROUTE_gold4  =
 											{
-												ROUTE_gg7  = 
+												ROUTE_gg7  =
 												{
 												},
 											},
@@ -362,17 +333,17 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_gg1  = 
+				ROUTE_gg1  =
 				{
-					ROUTE_gg2  = 
+					ROUTE_gg2  =
 					{
-						ROUTE_gg12  = 
+						ROUTE_gg12  =
 						{
-							ROUTE_obj3  = 
+							ROUTE_obj3  =
 							{
-								ROUTE_gg13  = 
+								ROUTE_gg13  =
 								{
-									ROUTE_gg6  = 
+									ROUTE_gg6  =
 									{
 									},
 								},
@@ -382,50 +353,40 @@ global OnMapLoad = function()
 				},
 			},
 		},
-
-		
-	
-	    
-	 
-	 
-	 DEFEND_parts1 = 
-	  {
-	   ROUTE_axis2 = 
-	    { 
-	      ROUTE_axis3 = 
-	       {
-	         ROUTE_defparts1 = {},
-		 ROUTE_defparts2 = {},
-	       },
-	     },
-	  },
-	   
-	   
-	   
-	     		 
-	 CAPPOINT_371 = 
+		DEFEND_parts1 =
 		{
-			ROUTE_objective  = 
+			ROUTE_axis2 =
 			{
-				ROUTE_objective2  = 
+				ROUTE_axis3 =
 				{
-					ROUTE_objective3  = 
+					ROUTE_defparts1 = {},
+					ROUTE_defparts2 = {},
+				},
+			},
+		},
+		CAPPOINT_371 =
+		{
+			ROUTE_objective  =
+			{
+				ROUTE_objective2  =
+				{
+					ROUTE_objective3  =
 					{
-						ROUTE_objective4  = 
+						ROUTE_objective4  =
 						{
-							ROUTE_objective5  = 
+							ROUTE_objective5  =
 							{
-								ROUTE_objective6  = 
+								ROUTE_objective6  =
 								{
-									ROUTE_gg5  = 
+									ROUTE_gg5  =
 									{
-										ROUTE_gold1  = 
+										ROUTE_gold1  =
 										{
-											ROUTE_gg4  = 
+											ROUTE_gg4  =
 											{
-												ROUTE_gg3  = 
+												ROUTE_gg3  =
 												{
-													ROUTE_gg2  = 
+													ROUTE_gg2  =
 													{
 													},
 												},
@@ -437,36 +398,36 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_g6  = 
+				ROUTE_g6  =
 				{
-					ROUTE_gg13  = 
+					ROUTE_gg13  =
 					{
-						ROUTE_obj3  = 
+						ROUTE_obj3  =
 						{
-							ROUTE_gg12  = 
+							ROUTE_gg12  =
 							{
-								ROUTE_gg2  = 
+								ROUTE_gg2  =
 								{
 								},
 							},
 						},
 					},
 				},
-				ROUTE_gg7  = 
+				ROUTE_gg7  =
 				{
-					ROUTE_gg6  = 
+					ROUTE_gg6  =
 					{
-						ROUTE_objective7  = 
+						ROUTE_objective7  =
 						{
-							ROUTE_gold2  = 
+							ROUTE_gold2  =
 							{
-								ROUTE_g3  = 
+								ROUTE_g3  =
 								{
-									ROUTE_gold3  = 
+									ROUTE_gold3  =
 									{
-										ROUTE_g2  = 
+										ROUTE_g2  =
 										{
-											ROUTE_gold5  = 
+											ROUTE_gold5  =
 											{
 											},
 										},
@@ -478,20 +439,8 @@ global OnMapLoad = function()
 				},
 			},
 		},
+	};
 
-	     
-		
-	   
-	       
-		
-};		
-		
-		
-			    
-		
-	
-	
-	
 	MapRoutes.DEFEND_parts2 = MapRoutes.DEFEND_parts1;
 	MapRoutes.DEFEND_parts3 = MapRoutes.DEFEND_parts1;
 	MapRoutes.DEFEND_parts4 = MapRoutes.DEFEND_parts1;
@@ -507,13 +456,9 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_ar2 = FLAG_gold;
 	MapRoutes.ATTACK_ar3 = FLAG_gold;
 	Util.Routes(MapRoutes);
-	
-	
-	Util.ShowActiveGoals();
-	print( "OnMapLoad" );
-};
 
-// Uncomment for shootable breakables
+	Util.MapDebugPrint( "OnMapLoad" );
+};
 
 global OnBotJoin = function( bot )
 {

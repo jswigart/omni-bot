@@ -6,10 +6,11 @@ Updated 2 20 10--Blindman
 02 23 10 -more ally camp spots at start
 moved some stuff around, new camp goals and a mg42
 ****************************************************/
-
+//	^4Tardis	01 December 2010	fixed team chat
 global Map =
 {
-	Talk = true, 
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
 	
 	Ammo_Cabinet_t63 = "AMMOCAB_t63",
 	Ammo_Cabinet_t65 = "AMMOCAB_t65",
@@ -225,37 +226,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_NEGATIVE);
-					}
-					else if( r > 8 )
-					{
-						bot.Say("Verdammt!");
-					}
-				}
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 
 		Util.MapDebugPrint( "Docs_Captured" );
 	},

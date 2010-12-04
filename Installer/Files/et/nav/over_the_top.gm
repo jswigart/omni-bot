@@ -435,39 +435,8 @@ global Map =
 	{
 		if ( TestMap )  { return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.COMMAND_COMPLETED);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.SORRY);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "allies_win" );
 	},
 
@@ -555,7 +524,7 @@ global Map =
 			Map.Button = "out";
 
 		}
-		Util.MapDebugPrint ( "Button is: " + Map.Button, true );
+		Util.MapDebugPrint( "Button is: " + Map.Button, true );
 	},
 
 
@@ -572,7 +541,7 @@ global Map =
 		}
 		if ( vec.z < 50 )   { Map.LiftMoving = "down"; }
 
-		Util.MapDebugPrint ( "lift is moving: " + Map.LiftMoving, true );
+		Util.MapDebugPrint( "lift is moving: " + Map.LiftMoving, true );
 	},
 
 
@@ -593,7 +562,7 @@ global Map =
 				if ( Map.Buttonout && Map.Liftup )
 				{
 					Map.Switches.LiftSwitch2.LimitTeam = 0;		//Button disabled for Allies
-					Util.MapDebugPrint ( "Switch2 disabled" );
+					Util.MapDebugPrint( "Switch2 disabled" );
 					Map.Switches.LiftSwitch4.LimitTeam = (1<<TEAM.ALLIES);		//Lift available for Allies
 					Util.MapDebugPrint( "lift ready", true);
 				}
@@ -606,14 +575,14 @@ global Map =
 				if ( Map.Buttonout && Map.Liftdown )
 				{
 					Map.Switches.LiftSwitch2.LimitTeam = (1<<TEAM.ALLIES);		//Button enabled for Allies
-					Util.MapDebugPrint ( "Switch2 enabled", true );
+					Util.MapDebugPrint( "Switch2 enabled", true );
 					Map.Switches.LiftSwitch4.LimitTeam = 0;		//Lift disabled for Allies
 					Util.MapDebugPrint( "lift not ready", true );
 				}
 
 			}
 
-			Util.MapDebugPrint ( "Doors opened. Position lift: " + Map.LiftPos, true );
+			Util.MapDebugPrint( "Doors opened. Position lift: " + Map.LiftPos, true );
 		}
 	},
 

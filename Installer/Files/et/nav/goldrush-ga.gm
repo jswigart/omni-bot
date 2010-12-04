@@ -957,13 +957,13 @@ global Map =
 		{
 			Wp.SetWaypointFlag("onewaydoor1", "door", false);
 			Wp.SetWaypointFlag("onewaydoor2", "door", false);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor1 opening"); }
+			Util.MapDebugPrint("BankDoor1 opening");
 		}
 		else
 		{
 			Wp.SetWaypointFlag("onewaydoor1", "door", true);
 			Wp.SetWaypointFlag("onewaydoor2", "door", true);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor1 closing"); }
+			Util.MapDebugPrint("BankDoor1 closing");
 		}
 	},
 
@@ -975,13 +975,13 @@ global Map =
 		{
 			Wp.SetWaypointFlag("onewaydoor3", "door", true);
 			Wp.SetWaypointFlag("onewaydoor4", "door", true);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor2 closing"); }
+			Util.MapDebugPrint("BankDoor2 closing");
 		}
 		else
 		{
 			Wp.SetWaypointFlag("onewaydoor3", "door", false);
 			Wp.SetWaypointFlag("onewaydoor4", "door", false);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor2 opening"); }
+			Util.MapDebugPrint("BankDoor2 opening");
 		}
 	},
 
@@ -993,13 +993,13 @@ global Map =
 		{
 			Wp.SetWaypointFlag("onewaydoor5", "door", false);
 			Wp.SetWaypointFlag("onewaydoor6", "door", false);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor3 opening"); }
+			Util.MapDebugPrint("BankDoor3 opening");
 		}
 		else
 		{
 			Wp.SetWaypointFlag("onewaydoor5", "door", true);
 			Wp.SetWaypointFlag("onewaydoor6", "door", true);
-			if (Map.Debug) { Util.MapDebugPrint("BankDoor3 closing"); }
+			Util.MapDebugPrint("BankDoor3 closing");
 		}
 	},
 

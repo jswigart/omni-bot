@@ -198,7 +198,7 @@ global Map =
 
 		Map.bOneDyno += 1;
 
-		print("planted_at_Tank_Barrier_1");
+		Util.MapDebugPrint("planted_at_Tank_Barrier_1");
 	},
 
 	defused_at_Tank_Barrier_1 = function ( trigger )
@@ -214,7 +214,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		}
 
-		print("defused_at_Tank_Barrier_1");
+		Util.MapDebugPrint("defused_at_Tank_Barrier_1");
 	},
 
 	Tank_Barrier_Destroyed = function( trigger )

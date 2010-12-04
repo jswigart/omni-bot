@@ -6,14 +6,14 @@ global Map =
  		TriggerOnClass = TEAM.ALLIES,
 		OnEnter = function(ent)
  		{
- 			//Util.MapDebugPrint(GetEntName(ent),"BarrierPassed");
+ 			//Util.MapDebugPrint(GetEntName(ent) + " BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_joint.*" );
  		},
  		OnExit = function(ent)
  		{
-			Util.MapDebugPrint(GetEntName(ent),"defending the joint");
+			Util.MapDebugPrint(GetEntName(ent) + " defending the joint");
  		},
 	},
 

@@ -563,6 +563,7 @@ global Map =
 
 	TwoMinute = function( trigger )
 	{
+		// cs: is it necessary to check the time > 0 here?
 		if (GetGameTimeLeft() > 0)
 		{
 			SetGoalPriority("FLAG.*", 0.96);
@@ -783,7 +784,7 @@ global OnMapLoad = function()
 
 	Map.Spawn_Captured();
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

@@ -13,11 +13,11 @@ global Map =
 {
 	ShowMovers = false,
 	Movers = { "MOVER_tank1" },
-	
+
 	phase = 0,
 	gateOpened = false,
 	ladderBuilt = false,
-	cpSecured = false, 
+	cpSecured = false,
 
 	Navigation =
 	{
@@ -36,16 +36,16 @@ global Map =
 				_this.Bot.PressButton(BTN.JUMP);
 				sleep(0.2);
 				_this.Bot.HoldButton(BTN.FORWARD,BTN.CROUCH, 2);
-				sleep(3);				
+				sleep(3);
 			}
 		},
 	},
-	
+
 	SetWall = function()
 	{
 		b = Map.phase>=50 || Map.ladderBuilt;
-		SetAvailableMapGoals(TEAM.ALLIES, b, "PLANT_power_generator"); 
-		SetAvailableMapGoals(TEAM.ALLIES, b, "PLANT_wall"); 
+		SetAvailableMapGoals(TEAM.ALLIES, b, "PLANT_power_generator");
+		SetAvailableMapGoals(TEAM.ALLIES, b, "PLANT_wall");
 	},
 
 	SetEscort = function()
@@ -54,7 +54,7 @@ global Map =
 		if(Map.phase>=10 && Map.phase<15){ b = Map.gateOpened; }
 		SetAvailableMapGoals(TEAM.ALLIES, b, "ESCORT_tank");
 	},
-	
+
 	SetLadder = function(enabled)
 	{
 		Map.ladderBuilt = enabled;
@@ -76,7 +76,7 @@ global Map =
 			}
 		}
 	},
-	
+
 	SetSpawn = function()
 	{
 		foreach(bot in BotTable)
@@ -123,7 +123,7 @@ global Map =
 		SetGoalPriority("PLANT_Command_Post", 0.81, TEAM.ALLIES );
 		Util.MapDebugPrint( "Spawn_Secured" );
 	},
-		
+
 	Tank_At_Gate = function( trigger )
 	{
 		Map.phase = 10;
@@ -248,7 +248,7 @@ global Map =
 		Map.SetLadder(false);
 		Util.MapDebugPrint( "ladder_Destroyed" );
 	},
-	
+
 	wall_Destroyed = function( trigger )
 	{
 		Util.MapDebugPrint( "wall_Destroyed" );
@@ -262,7 +262,7 @@ global Map =
 		Util.SetPercentInProgress(20, "CHECKPOINT_westbunker_flag");
 		Util.MapDebugPrint("bunker_flag_Allies_Captured");
 	},
-	
+
 	bunker_flag_Axis_Captured = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_cemetery");
@@ -279,7 +279,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_square.*");
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_docs.*");
 		SetAvailableMapGoals(TEAM.AXIS, true, "MOBILEMG42_tunnel");
-		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_docs"); 
+		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_docs");
 		Map.SetWall();
 		Map.SetEscort();
 		SetGoalPriority("BUILD_an_axis_radio", 0.75, TEAM.AXIS);
@@ -325,17 +325,17 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned docs!", Map.docs_Returned );
 
 	OnTriggerRegion(AABB(4499.125,-203.543,505.353,6635.184,-67.317,643.872), RegionTrigger.DisableCombatMovement); //windows above the Ladder
-		
+
 	Util.DisableGoal( ".*", true );
 	Util.DisableGoal("ROUTE_brick_wall");
 	Util.DisableGoal("ROUTE_tunnel");
-	foreach (goal in {  "BUILD_an_axis_radio", "BUILD_axis_radios", "BUILD_power_generator", "PLANT_ladder", 
-		"BUILD_tank_barrier_1", "AIRSTRIKE_barrier1", 
+	foreach (goal in {  "BUILD_an_axis_radio", "BUILD_axis_radios", "BUILD_power_generator", "PLANT_ladder",
+		"BUILD_tank_barrier_1", "AIRSTRIKE_barrier1",
 		"DEFEND_barrier1.*", "DEFEND_cp.*", "MOBILEMORTAR_barrier1", "SNIPE_barrier1" }){
 		SetAvailableMapGoals( TEAM.AXIS, true, goal );
 	}
-	foreach (goal in { "BUILD_Churchill_Tank", "ESCORT_tank", "MOUNT_tank", "CAPPOINT_transmit", 
-		"CHECKPOINT_westbunker_flag", "PLANT_an_axis_radio", "PLANT_axis_radios", "SWITCH_gate", 
+	foreach (goal in { "BUILD_Churchill_Tank", "ESCORT_tank", "MOUNT_tank", "CAPPOINT_transmit",
+		"CHECKPOINT_westbunker_flag", "PLANT_an_axis_radio", "PLANT_axis_radios", "SWITCH_gate",
 		"ATTACK_barrier1.*", "MOBILEMORTAR_allies_barrier1", "PLANT_tank_barrier.*",
 		"SNIPE_allies_barrier1" }){
 		SetAvailableMapGoals( TEAM.ALLIES, true, goal );
@@ -453,11 +453,11 @@ global OnMapLoad = function()
 			ROUTE_docs = {
 				ROUTE_docs_south = { ROUTE_square_east = {} },
 				ROUTE_docs_north = {},
-				ROUTE_cave = { Weight=2, 
+				ROUTE_cave = { Weight=2,
 					ROUTE_power_north = {
 						ROUTE_square_east = {},
 						ROUTE_square_south = {},
-					} 
+					}
 				},
 			}
 		},
@@ -465,13 +465,13 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_cp3 = MapRoutes.DEFEND_cp1;
 	MapRoutes.ATTACK_barrier1_1 = MapRoutes.PLANT_tank_barrier_1;
 	MapRoutes.ATTACK_barrier1_3 = MapRoutes.ATTACK_barrier1_1;
-	MapRoutes.PLANT_axis_radios = MapRoutes.PLANT_tank_barrier_1; 
+	MapRoutes.PLANT_axis_radios = MapRoutes.PLANT_tank_barrier_1;
 	MapRoutes.ATTACK_barrier2_2 = MapRoutes.PLANT_tank_barrier_2;
 	MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker2 = MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker1;
 	MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker3 = MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker1;
 	MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker4 = MapRoutes.FLAG_docs.ROUTE_bunker.ROUTE_bunker1;
 	Util.Routes(MapRoutes);
-	print( "Omni_bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

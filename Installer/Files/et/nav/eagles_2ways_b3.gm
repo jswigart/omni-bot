@@ -28,7 +28,7 @@
 global Map =
 {
 	talk = 1,
-	
+
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
 	Ammo_Cabinet_south_ammocabinet_2 = "AMMOCAB_south_ammocabinet_2",
@@ -74,15 +74,15 @@ global Map =
 	Mover_cablecar2 = "MOVER_cablecar2",
 
 	ShowMovers = false,
-	
+
 	cablecar_1_position = -1,	// 1 => in Castle station (initialy)
 					//-1 => leaving station
 					// 0 => in Village station
-	
+
 	cablecar_2_position = -1,	// 1 => in Castle station
 					//-1 => leaving station
 					// 0 => in Village station (initialy)
-	
+
 	Bus_Is_Near_Plane = 0,
 	Tunnel = 0,
 	Wall = 0,
@@ -103,7 +103,7 @@ global Map =
 	Allied5Spawn = 0,
 	HangarDoor = 1,		//Intact
 	planefuelTaken = 0,
-	
+
 	Navigation =
 	{
 		//  	/bot waypoint_setproperty paththrough Navigation_PT:jump
@@ -199,14 +199,14 @@ global Map =
 			gotowp = "Tram2",
 		},
 	},
-	
+
 	Movers =
 	{
 		"MOVER_cablecar1",
 		"MOVER_cablecar2",
 		"MOVER_truck",
 	},
-	
+
 	RideMovers =
 	{
 		//	/bot waypoint_setproperty paththrough RideMover_PT:car1village
@@ -315,46 +315,46 @@ global Map =
 			},
 		},
 	},
-	
+
 	Planted_at_Tunnel_Entrance = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Tunnel_Entrance_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Guardhouse" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Guardhouse" );
-		
+
 		SetGoalPriority( "MOUNTMG42_Guardhouse", 0.8, TEAM.AXIS, CLASS.SOLDIER );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tunnel_Entrance" );
-		
-		print( "Planted_at_Tunnel_Entrance" );
+
+		Util.MapDebugPrint( "Planted_at_Tunnel_Entrance" );
 	},
-	
+
 	Tunnel_Entrance_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Tunnel = 1;
-		
+
 		Wp.SetWaypointFlag( "b", "closed", false);
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_TunnelEntrance" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tunnel_Entrance.*" );
-		
+
 		if ( Map.Wall == 0 )
 		{
 			//SetGoalPriority( "PLANT_Avalanche_Wall", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_start_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_Axis_start_.*" );
-		
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_start_.*" );
-		
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*" );
@@ -368,72 +368,58 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Constructible" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Guardhouse" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allied_firstflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_firstflag_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Constructible" );
-			
+
 			SetGoalPriority( "ARTILLERY_S_Axis_start_.*", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
 			SetGoalPriority( "BUILD_Constructible", 1.3, TEAM.AXIS, CLASS.ENGINEER );
 			SetGoalPriority( "BUILD_Tram_Door", 0.83, TEAM.AXIS, CLASS.ENGINEER );
 			SetGoalPriority( "BUILD_Command_Post", 0.81, TEAM.AXIS, CLASS.ENGINEER );
-			
+
 			SetGoalPriority( "CHECKPOINT_firstflag", 0.82, TEAM.ALLIES, 0 );
-			
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_ENEMY_WEAK);
-					break;
-				}
-			}
+
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_ENEMY_WEAK, 1 );
 			sleep(1.5);
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_OOPS);
-					break;
-				}
-			}
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_OOPS, 1 );
 		}
-		
-		print( "Tunnel_Entrance_Destroyed" );
+
+		Util.MapDebugPrint( "Tunnel_Entrance_Destroyed" );
 	},
 
 	Planted_AvalancheWall = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.FirstFlagAllies == 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Avalanche_Wall_.*" );
 		}
 
-		print( "Planted_AvalancheWall" );
+		Util.MapDebugPrint( "Planted_AvalancheWall" );
 	},
-	
+
 	Avalanche_Wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Wall = 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_AvalancheWall" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Avalanche_Wall_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Avalanche_Wall_.*" );
-		
+
 		if ( Map.Tunnel == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_start_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_Axis_start_.*" );
-		
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_start_.*" );
-		
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*" );
@@ -447,61 +433,38 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Constructible" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Guardhouse" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allied_firstflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_firstflag_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Constructible" );
-			
+
 			SetGoalPriority( "ARTILLERY_S_Axis_start_.*", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
 			SetGoalPriority( "BUILD_Constructible", 1.3, TEAM.AXIS, CLASS.ENGINEER );
 			SetGoalPriority( "BUILD_Tram_Door", 0.83, TEAM.AXIS, CLASS.ENGINEER );
 			SetGoalPriority( "BUILD_Command_Post", 0.81, TEAM.AXIS, CLASS.ENGINEER );
-			
+
 			SetGoalPriority( "CHECKPOINT_firstflag", 0.82, TEAM.ALLIES, 0 );
-			
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_ENEMY_WEAK);
-					break;
-				}
-			}
+
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_ENEMY_WEAK, 1 );
 			sleep(1.5);
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_OOPS);
-					break;
-				}
-			}
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_OOPS, 1 );
 		}
 
-		print( "Avalanche_Wall_Destroyed" );
+		Util.MapDebugPrint( "Avalanche_Wall_Destroyed" );
 	},
 
 	firstflag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.FirstFlagAllies = 1;
-		
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam()  == TEAM.ALLIES )
-			{
-				bot.ChangeSpawnPoint( 0 );	//inside hut (cablecar station)
-			}
-			else
-			{
-				bot.ChangeSpawnPoint( 2 );
-			}
-		}
-		
+
+		Util.ChangeSpawn( TEAM.ALLIES, 0 );	//inside hut (cablecar station)
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Avalanche_Wall_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_firstflag_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Guardhouse" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Guardhouse" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Guardhouse" );
@@ -511,45 +474,45 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Avalanche_Wall_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_start_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_firstflag_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_secondflag_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Castle_Steel_Door" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_secondflag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_tcr_fuel_scriptname" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_tcr_docs_scriptname" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Castle_Steel_Door" );
-		
+
 		SetGoalPriority( Map.Plant_Tram_Door, 0.85, TEAM.ALLIES, CLASS.COVERTOPS );
 		SetGoalPriority( Map.Plant_Command_Post, 0.83, TEAM.ALLIES, CLASS.COVERTOPS );
 		SetGoalPriority( Map.Plant_Tram_Door, 0.55, TEAM.ALLIES, CLASS.ENGINEER );
 		SetGoalPriority( Map.Plant_Command_Post, 0.55, TEAM.ALLIES, CLASS.ENGINEER );
 		SetGoalPriority( Map.Plant_Guardhouse, 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 		SetGoalPriority( "CHECKPOINT_secondflag", 0.82, TEAM.ALLIES, 0 );
-		
+
 		SetGoalPriority( "DEFEND_Axis_secondflag_12", 0.65, TEAM.AXIS, CLASS.FIELDOPS );
 		SetGoalPriority( "DEFEND_Axis_secondflag_13", 0.7, TEAM.AXIS, CLASS.ENGINEER );
 
-		print( "firstflag_Allies_Captured" );
+		Util.MapDebugPrint( "firstflag_Allies_Captured" );
 	},
 
 	Guardhouse_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		print( "Guardhouse_Built" );
+
+		Util.MapDebugPrint( "Guardhouse_Built" );
 	},
 
 	Guardhouse_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Guardhouse" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Guardhouse" );
 
-		print( "Guardhouse_Destroyed" );
+		Util.MapDebugPrint( "Guardhouse_Destroyed" );
 	},
 
 	Allied_CP_Built = function( trigger )
@@ -557,62 +520,62 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_CP_Built" );
+		Util.MapDebugPrint( "Allied_CP_Built" );
 	},
-	
+
 	Allied_CP_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_CP_Destroyed" );
+		Util.MapDebugPrint( "Allied_CP_Destroyed" );
 	},
-	
+
 	Axis_CP_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_CP_Built" );
+		Util.MapDebugPrint( "Axis_CP_Built" );
 	},
-	
+
 	Axis_CP_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_CP_Destroyed" );
+		Util.MapDebugPrint( "Axis_CP_Destroyed" );
 	},
-	
+
 	Tram_Door_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Tram1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Tram2" );
-		
-		print( "Tram_Door_Built" );
+
+		Util.MapDebugPrint( "Tram_Door_Built" );
 	},
 
 	Tram_Door_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Tram1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Tram2" );
 
-		print( "Tram_Door_Destroyed" );
+		Util.MapDebugPrint( "Tram_Door_Destroyed" );
 	},
 
 	Barrier_1_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Barrier1Builded = 1;
-		
+
 		if ( Map.BusAtBarrier_1 == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = false;
@@ -621,14 +584,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 
-		print( "Barrier_1_Built" );
+		Util.MapDebugPrint( "Barrier_1_Built" );
 	},
 
 	Planted_Barrier_1 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.BusEscaping == 0 and Map.BusCaptured == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Barrier_1_.*" );
@@ -638,16 +601,16 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_Barrier_1_.*" );
 		}
 
-		print( "Planted_Barrier_1" );
+		Util.MapDebugPrint( "Planted_Barrier_1" );
 	},
-	
+
 	Barrier_1_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Barrier1Builded = 0;
-		
+
 		if ( Map.BusStatus == 1 and Map.BusAtBarrier_1 == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = true;
@@ -655,305 +618,279 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
-		
-		print( "Barrier_1_Destroyed" );
+
+		Util.MapDebugPrint( "Barrier_1_Destroyed" );
 	},
 
 	Castle_wall_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.CastleWall = 1;
-			
+
 		//Util.SetGoalOffset( 50, 20, 10, Map.Plant_Constructible );
 		//Util.SetGoalOffset( 5, 35, -20, Map.Plant_Constructible );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Constructible" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Constructible" );
 
-		print( "Castle_wall_Built" );
-		
+		Util.MapDebugPrint( "Castle_wall_Built" );
+
 		sleep(5);
 		if ( Map.SecondFlagAllies == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_FlagBus_1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_FlagBus_7" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_secondflag_6" );
 			SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_secondflag_7" );
+
+			Util.MapDebugPrint( "Castle_wall_Built: SecondFlagAllies" );
 		}
 	},
-	
+
 	Castle_wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.CastleWall = 0;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Constructible" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Constructible" );
-		
+
 		if ( Map.SecondFlagAllies == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_6" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_7" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_7" );
-			
+
 			SetGoalPriority( "DEFEND_Axis_FlagBus_1", 0.7, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_Axis_FlagBus_7", 0.7, TEAM.AXIS, 0 );
 		}
-		print( "Castle_wall_Destroyed" );
+		Util.MapDebugPrint( "Castle_wall_Destroyed" );
 	},
-	
+
 	Castle_Ladder_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Wp.SetWaypointFlag( "a", "closed", false);
-		
+
 		//Util.SetGoalOffset( -56, -36, 124, Map.Plant_Constructible );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_ConstructibleLadder" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_ConstructibleLadder1" );
-		
+
 		if ( Map.SecondFlagAllies == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_6" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_7" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_7" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Constructible_1" );
-			
+
 			SetGoalPriority( "DEFEND_Axis_FlagBus_1", 0.7, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_Axis_FlagBus_7", 0.7, TEAM.AXIS, 0 );
 		}
 
-		print( "Castle_Ladder_Built" );
+		Util.MapDebugPrint( "Castle_Ladder_Built" );
 	},
-	
+
 	Castle_Ladder_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Wp.SetWaypointFlag( "a", "closed", true);
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder1" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Constructible_1" );
 
-		print( "Castle_Ladder_Destroyed" );		
-		
 		if ( Map.SecondFlagAllies == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_6" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_7" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_7" );
-			
+
 			SetGoalPriority( "DEFEND_Axis_FlagBus_1", 0.7, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_Axis_FlagBus_7", 0.7, TEAM.AXIS, 0 );
 		}
+
+		Util.MapDebugPrint( "Castle_Ladder_Destroyed" );
 	},
-	
+
 	Planted_Constructible = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		if ( Map.CastleWall == 1 )
+
+		if ( Map.CastleWall == 1 && Map.SecondFlagAllies == 1 )
 		{
-			if ( Map.SecondFlagAllies == 1 )
-			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Constructible_.*" );
-			}
 		}
 
-		print( "Planted_Constructible" );
+		Util.MapDebugPrint( "Planted_Constructible" );
 	},
-	
+
 	Castle_Steel_Door_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_SteelDoor" );
 
-		print( "Castle_Steel_Door_Built" );
+		Util.MapDebugPrint( "Castle_Steel_Door_Built" );
 	},
 
 	Castle_Steel_Door_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Castle_Steel_Door );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Castle_Steel_Door" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_SteelDoor" );
 
-		print( "Castle_Steel_Door_Destroyed" );
+		Util.MapDebugPrint( "Castle_Steel_Door_Destroyed" );
 	},
 
 	secondflag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.SecondFlagAllies = 1;
-		
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam()  == TEAM.ALLIES )
-			{
-				bot.ChangeSpawnPoint( 3 );	//Castle
-			}
-			else
-			{
-				bot.ChangeSpawnPoint( 2 );
-			}
-		}
-		
+
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );	//Castle
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
+
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cablecar1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cablecar2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Constructible_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Constructible" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_secondflag_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_.*" );
 
-		print( "secondflag_Allies_Captured" );
+		Util.MapDebugPrint( "secondflag_Allies_Captured" );
 	},
-	
+
 	tcr_docs_scriptname_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.BusDocumentTaken = 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Bus" );
-		
+
 		if ( Map.BusFuelTaken == 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_FlagBus_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_secondflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Bus_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bus_.*" );
 		}
 
-		print( "Bus_Documents_Taken" );
+		Util.MapDebugPrint( "Bus_Documents_Taken" );
 	},
 
 	tcr_fuel_scriptname_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusFuelTaken = 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Bus" );
-		
+
 		if ( Map.BusDocumentTaken == 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_FlagBus_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_secondflag_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Bus_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bus_.*" );
 		}
 
-		print( "Bus_Fuel_Taken" );
+		Util.MapDebugPrint( "Bus_Fuel_Taken" );
 	},
 
 	Bus_Fuel_Returned = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusFuelTaken = 0;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_.*" );
 
-		print( "Bus_Fuel_Returned" );
+		Util.MapDebugPrint( "Bus_Fuel_Returned" );
 	},
-	
+
 	Bus_Documents_Returned = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusDocumentTaken = 0;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_FlagBus_.*" );
 
-		print( "Bus_Documents_Returned" );
+		Util.MapDebugPrint( "Bus_Documents_Returned" );
 	},
-	
+
 	Bus_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusCaptured = 1;
-		
+
 		SetGoalPriority( "BUILD_Barrier_1", 0.9, TEAM.AXIS, CLASS.ENGINEER );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barrier_1" );
 
-		print( "Bus_Captured" );
+		Util.MapDebugPrint( "Bus_Captured" );
 	},
 
 	Bus_Escaping = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.BusEscaping = 1;
-		
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam()  == TEAM.ALLIES )
-			{
-				//if ( RandInt(0,1) < 1)
-				//{				
-					bot.ChangeSpawnPoint( 0 );	//near constructible
-				//}
-				//else 
-				//{
-				//	bot.ChangeSpawnPoint( 9 );	//inside of bus garrage
-				//}
-			}
-			else
-			{
-				bot.ChangeSpawnPoint( 3 );	//bunker near hangar
-			}
-		}
-		
+
+		Util.ChangeSpawn( TEAM.ALLIES, 0 );	//near constructible
+		Util.ChangeSpawn( TEAM.AXIS, 3 );	//bunker near hangar
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Bus" );
-		
+
 		SetGoalPriority( "RIDE_Bus", 0.95, TEAM.ALLIES, CLASS.SOLDIER );
-		
+
 		if ( Map.BusStatus == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = true;
@@ -967,33 +904,33 @@ global Map =
 			//Map.RideVehicle.Bus.Enabled = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bus" );
-			
+
 			SetGoalPriority( "BUILD_Bus", 0.95, TEAM.ALLIES, CLASS.ENGINEER );
 		}
-		
+
 		//BusNearBarrier1 = OnTriggerRegion(AABB(-1105.433,-2844.047,1046.125,-808.262,-2731.939,1120.125), Map.Bus_Near_Barrier1);
 		//BusNearPlane = OnTriggerRegion(AABB(2687.125,4014.807,1047.125,2925.188,4268.565,1155.075), Map.Bus_Near_Plane);
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Bus_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Constructible" );
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bus_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Constructible" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Axis_AtBarrier1_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Axis_AtBarrier1_2" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_AtBarrier1_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allies_AtBarrier1_.*" );
-		
+
 		SetGoalPriority( "CALLARTILLERY_Allies_AtBarrier1_.*", 0.95, TEAM.ALLIES, CLASS.FIELDOPS );
 		SetGoalPriority( "ARTILLERY_S_Allies_AtBarrier1_.*", 0.95, TEAM.ALLIES, CLASS.FIELDOPS );
 
-		print( "Bus_Escaping" );
+		Util.MapDebugPrint( "Bus_Escaping" );
 	},
-	
+
 	Bus_Near_Barrier1 =
  	{
  		Name="Bus_Near_Barrier1",
@@ -1001,9 +938,9 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.BusAtBarrier_1 = 1;
-			
+
 			//BusPastBarrier1 = OnTriggerRegion(AABB(-167.388,-3835.898,1046.125,212.633,-3536.205,1120.125), Map.Bus_Past_Barrier1);
-			
+
 			if ( Map.Barrier1Builded == 1 )
 			{
 				//Map.EscortVehicle.Bus.Enabled = false;
@@ -1018,32 +955,32 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
-			
-			print(GetEntName(ent),"is near the Barrier 1");
-			
+
+			Util.MapDebugPrint(GetEntName(ent),"is near the Barrier 1");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.BusAtBarrier_1 = 0;
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barrier_1" );
  		},
 	},
-	
+
 	Bus_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusStatus = 0;
 		//Util.SetGoalOffset( 15, 10, -10, Map.Build_Bus );
-		
+
 		if ( Map.Bus_Is_Near_Plane == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Bus );
-			
+
 		}
-		
+
 		//Map.EscortVehicle.Bus.Enabled = false;
 		//Map.RideVehicle.Bus.Enabled = false;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
@@ -1051,16 +988,16 @@ global Map =
 		sleep(0.5);
 		Util.SetPositionGoal( Map.Build_Bus, Map.Mover_truck );
 
-		print( "Bus_Destroyed" );
+		Util.MapDebugPrint( "Bus_Destroyed" );
 	},
-	
+
 	Bus_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.BusStatus = 1;
-			
+
 		if ( Map.Bus_Is_Near_Plane == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = false;
@@ -1096,50 +1033,43 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
-		
-		print( "Bus_Built" );
+
+		Util.MapDebugPrint( "Bus_Built" );
 	},
-	
+
 	Bus_Past_Barrier1 =
  	{
  		Name="Bus_Past_Barrier1",
 		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
  		OnEnter = function(ent)
  		{
-			
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam()  == TEAM.AXIS )
-				{
-					bot.ChangeSpawnPoint( 3 );
-				}
-			}
-			
+			Util.ChangeSpawn( TEAM.AXIS, 3 );
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Axis_AtBarrier1_1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Axis_AtBarrier1_2" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Road_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Road_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Road_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barrier_2_1" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Road_MG" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barrier_2" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AxisPastBarrier1_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AxisPastBarrier1_2" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AxisPastBarrier1_3" );
-			
+
 			SetGoalPriority( "PLANT_Road_MG", 0.45, TEAM.AXIS, CLASS.ENGINEER );
 			SetGoalPriority( "PLANT_Road_MG", 0.9, TEAM.AXIS, CLASS.COVERTOPS );
-			
-			print(GetEntName(ent),"is near the Tunnel");
-			
+
+			Util.MapDebugPrint(GetEntName(ent),"is near the Tunnel");
+
  		},
  		OnExit = function(ent)
- 		{	
-			
+ 		{
+
  		},
 	},
 
@@ -1147,36 +1077,30 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Allied5Spawn = 1;
-		
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam()  == TEAM.ALLIES )
-			{
-				bot.ChangeSpawnPoint( 0 );	//near road MG42
-			}
-		}
-		
+
+		Util.ChangeSpawn( TEAM.ALLIES, 0 );
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AxisPastBarrier1_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AxisPastBarrier1_2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AxisPastBarrier1_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_AtBarrier1_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allies_AtBarrier1_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Road_MG" );
-		
+
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Road_MG" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisPlaneSpawn" );
 		SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_AtBridge_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_BackAccessToHangar_.*" );
-		
+
 		SetGoalPriority( "MOUNTMG42_Road_MG", 0.8, TEAM.AXIS, CLASS.SOLDIER );
 		SetGoalPriority( "CALLARTILLERY_Axis_AtBridge_6", 0.9, TEAM.AXIS, CLASS.FIELDOPS );
 		SetGoalPriority( "ARTILLERY_S_Axis_AtBridge_7", 0.9, TEAM.AXIS, CLASS.FIELDOPS );
 		SetGoalPriority( "ARTILLERY_S_Axis_AtBridge_8", 0.9, TEAM.AXIS, CLASS.FIELDOPS );
 		SetGoalPriority( "DEFEND_BackAccessToHangar_.*", 0.6, TEAM.AXIS, 0 );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allies_AtBridge_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_Allies_AtBridge_5" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_Allies_AtBridge_6" );
@@ -1184,43 +1108,43 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_Allies_AtBridge_8" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Hangar" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Allied5Spawn" );
-		
+
 		SetGoalPriority( "CALLARTILLERY_Allies_AtBridge_5", 0.9, TEAM.ALLIES, CLASS.FIELDOPS );
 		SetGoalPriority( "ARTILLERY_S_Allies_AtBridge_6", 0.9, TEAM.ALLIES, CLASS.FIELDOPS );
 		SetGoalPriority( "CALLARTILLERY_Allies_AtBridge_7", 0.9, TEAM.ALLIES, CLASS.FIELDOPS );
 		SetGoalPriority( "ARTILLERY_S_Allies_AtBridge_8", 0.9, TEAM.ALLIES, CLASS.FIELDOPS );
-		
+
 		//BusAtBridge = OnTriggerRegion(AABB(2288.865,-568.343,1015.125,2488.711,-417.035,1089.125), Map.Bus_At_Bridge);
 		//BusAtBarrier2 = OnTriggerRegion(AABB(2325.546,859.912,1046.125,2715.242,1007.095,1123.125), Map.Bus_At_Barrier2);
 
-		print( "Allied_captured_5_Spawn" );
+		Util.MapDebugPrint( "Allied_captured_5_Spawn" );
 	},
-	
+
 	Road_MG_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Road_MG" );
-		
+
 		if ( Map.Allied5Spawn == 0 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Road_MG" );
 		}
 
-		print( "Road_MG_Built" );
+		Util.MapDebugPrint( "Road_MG_Built" );
 	},
 
 	Road_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Road_MG" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Road_MG" );
 
-		print( "Road_MG_Destroyed" );
+		Util.MapDebugPrint( "Road_MG_Destroyed" );
 	},
 
 	Bus_At_Bridge =
@@ -1230,14 +1154,14 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.BusOnTheBridge = 1;
-			
+
 			if ( Map.BridgeBuilded == 0 )
 			{
 				//Map.EscortVehicle.Bus.Enabled = false;
 				//Map.RideVehicle.Bus.Enabled = false;
 				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
-				
+
 				SetGoalPriority( "BUILD_Bridge", 0.93, TEAM.ALLIES, CLASS.ENGINEER );
 			}
 			else
@@ -1247,33 +1171,33 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
-			
-			print(GetEntName(ent),"is on the Bridge");
-			
+
+			Util.MapDebugPrint(GetEntName(ent),"is on the Bridge");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.BusOnTheBridge = 0;
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
  		},
 	},
-	
+
 	Bridge_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Wp.SetWaypointFlag( "d", "jump", false);
 		Wp.SetWaypointFlag( "e", "jump", false);
 		Wp.SetWaypointFlag( "f", "jump", false);
 		Wp.SetWaypointFlag( "g", "jump", false);
-		
+
 		if ( Map.BusStatus == 0 )
 		{
 			SetGoalPriority( "BUILD_Bus", 0.98, TEAM.ALLIES, CLASS.ENGINEER );
 		}
-		
+
 		if ( Map.BusStatus == 1 and Map.BusOnTheBridge == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = true;
@@ -1281,34 +1205,34 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
-		
+
 		Map.BridgeBuilded = 1;
 
-		print( "Bridge_Built" );
+		Util.MapDebugPrint( "Bridge_Built" );
 	},
 
 	Bridge_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Wp.SetWaypointFlag( "d", "jump", true);
 		Wp.SetWaypointFlag( "e", "jump", true);
 		Wp.SetWaypointFlag( "f", "jump", true);
 		Wp.SetWaypointFlag( "g", "jump", true);
-		
+
 		Map.BridgeBuilded = 0;
 
-		print( "Bridge_Destroyed" );
+		Util.MapDebugPrint( "Bridge_Destroyed" );
 	},
 
 	Barrier_2_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Barrier2Builded = 1;
-		
+
 		if ( Map.BusStatus == 0 and Map.BusAtBarrier_2 == 1 )
 		{
 			SetGoalPriority( "BUILD_Bus", 0.6, TEAM.ALLIES, CLASS.ENGINEER );
@@ -1319,16 +1243,16 @@ global Map =
 		//	SetGoalPriority( "BUILD_Bus", 0.98, TEAM.ALLIES, CLASS.ENGINEER );
 		//}
 
-		print( "Barrier_2_Built" );
+		Util.MapDebugPrint( "Barrier_2_Built" );
 	},
 
 	Barrier_2_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Barrier2Builded = 0;
-		
+
 		if ( Map.BusStatus == 0 and Map.BusAtBarrier_2 == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Bus" );
@@ -1337,7 +1261,7 @@ global Map =
 			SetGoalPriority( "BUILD_Bus", 0.98, TEAM.ALLIES, CLASS.ENGINEER );
 			Util.SetMaxUsersInProgress( 2, "BUILD_Bus" );
 		}
-		
+
 		if ( Map.BusStatus == 1 and Map.BusAtBarrier_2 == 1 )
 		{
 			//Map.EscortVehicle.Bus.Enabled = true;
@@ -1345,8 +1269,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
-		
-		print( "Barrier_2_Destroyed" );
+
+		Util.MapDebugPrint( "Barrier_2_Destroyed" );
 	},
 
 	Bus_At_Barrier2 =
@@ -1356,14 +1280,14 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.BusAtBarrier_2 = 1;
-			
+
 			if ( Map.Barrier2Builded == 1 )
 			{
 				//Map.EscortVehicle.Bus.Enabled = false;
 				//Map.RideVehicle.Bus.Enabled = false;
 				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
-				
+
 				SetGoalPriority( "PLANT_Barrier_2_1", 0.85, TEAM.ALLIES, CLASS.ENGINEER );
 			}
 			else
@@ -1373,36 +1297,36 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
-			
-			print(GetEntName(ent),"is near the Barrier 2");
-			
+
+			Util.MapDebugPrint("Bus_At_Barrier2");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.BusAtBarrier_2 = 0;
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Road_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Road_MG" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barrier_2_1" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_AtBridge_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Road_MG" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barrier_2" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AxisPastBarrier2_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AxisPastBarrier2_2" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisPastBarrier2_.*" );
-			
+
 			SetGoalPriority( "CALLARTILLERY_Axis_AtBridge_6", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
 			SetGoalPriority( "ARTILLERY_S_Axis_AtBridge_7", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
 			SetGoalPriority( "ARTILLERY_S_Axis_AtBridge_8", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allies_AtBridge_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, ".*_AlliedPastBarrier2_.*" );
  		},
 	},
-	
+
 	Bus_Near_Plane =
  	{
  		Name="Bus_Near_Plane",
@@ -1410,191 +1334,162 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.Bus_Is_Near_Plane = 1;
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Bus );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Plane" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_tcr_planefuel_scriptname" );
-			
+
 			//Map.EscortVehicle.Bus.Enabled = false;
 			//Map.RideVehicle.Bus.Enabled = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
-			
+
 			SetGoalPriority( "CALLARTILLERY_AxisPastBarrier2_1", 0.75, TEAM.AXIS, CLASS.FIELDOPS );
 			SetGoalPriority( "ARTILLERY_S_AxisPastBarrier2_2", 0.75, TEAM.AXIS, CLASS.FIELDOPS );
-			
-			print(GetEntName(ent),"is near the plane");
-			
+
+			Util.MapDebugPrint("Bus_Near_Plane");
+
  		},
  		OnExit = function(ent)
- 		{	
-			
+ 		{
+
  		},
 	},
-	
+
 	Hangar_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.HangarDoor = 0;
 
-		print( "Hangar_Destroyed" );
+		Util.MapDebugPrint( "Hangar_Destroyed" );
 	},
 
 	tcr_planefuel_scriptname_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.planefuelTaken = 1;
-		
+
 		if ( Map.HangarDoor == 1 )	//intact
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisInHangar_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisInHangar_2" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisInHangar_6" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisInHangar_11" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliedInHangar_1" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliedInHangar_3" );
-			
+
 			SetGoalPriority( "DEFEND_AxisInHangar_1", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_2", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_6", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_11", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_.*", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			SetGoalPriority( "ATTACK_AlliedInHangar_1", 0.7, TEAM.ALLIES, 0 );
 			SetGoalPriority( "ATTACK_AlliedInHangar_3", 0.7, TEAM.ALLIES, 0 );
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisPastBarrier2_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisInHangar_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliedPastBarrier2_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliedInHangar_.*" );
-			
+
 			SetGoalPriority( "DEFEND_AxisInHangar_.*", 0.85, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_1", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_2", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_6", 0.9, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisInHangar_.*", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisPastBarrier2_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliedPastBarrier2_.*" );
-			
+
 			SetGoalPriority( "DEFEND_AxisPastBarrier2_.*", 0.45, TEAM.AXIS, 0 );
-			
+
 			SetGoalPriority( "ATTACK_AlliedPastBarrier2_.*", 0.45, TEAM.ALLIES, 0 );
 		}
 
-		print( "Plane_Fuel_Taken" );
+		Util.MapDebugPrint( "Plane_Fuel_Taken" );
 	},
 
 	Plane_Fuel_Returned = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.planefuelTaken = 0;
-		
+
 		if ( Map.HangarDoor == 1 )	//intact
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_2" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_6" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_11" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliedInHangar_1" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliedInHangar_3" );
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliedInHangar_.*" );
-			
+
 			SetGoalPriority( "DEFEND_AxisPastBarrier2_.*", 0.5, TEAM.AXIS, 0 );
-			
+
 			SetGoalPriority( "ATTACK_AlliedPastBarrier2_.*", 0.5, TEAM.ALLIES, 0 );
 		}
 
-		print( "Plane_Fuel_Returned" );
+		Util.MapDebugPrint( "Plane_Fuel_Returned" );
 	},
-	
+
 	Plane_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		if ( Map.HangarDoor == 1 and Map.planefuelTaken == 1 )	//intact & placed
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AlliedInHangar_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AxisInHangar_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AlliedPastBarrier2_.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisPastBarrier2_.*" );
-			
+
 			SetGoalPriority( "DEFEND_AxisPastBarrier2_.*", 0.95, TEAM.AXIS, 0 );
 			SetGoalPriority( "DEFEND_AxisPastBarrier2_.*", 0.7, TEAM.AXIS, CLASS.FIELDOPS );
-			
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_CHEER);
-					break;
-				}
-			}
+
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_CHEER, 1 );
 			sleep(1.5);
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS && Map.talk == 1 )
-				{
-					bot.SayVoice(VOICE.G_OOPS);
-					break;
-				}
-			}	
+			Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_OOPS, 1 );
 		}
-				
-		
-		print( "Plane_Captured" );
+
+		Util.MapDebugPrint( "Plane_Captured" );
 	},
-	
+
 	Allies_Win = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.ALLIES && Map.talk == 1 )
-			{
-				bot.SayVoice(VOICE.G_GOODGAME);
-				break;
-			}
-		}
-		sleep(1.5);
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.AXIS && Map.talk == 1 )
-			{
-				bot.SayVoice(VOICE.G_NEGATIVE);
-				break;
-			}
-		}
 
-		print( "Allies_Win" );
+		Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_GOODGAME, 1 );
+		sleep(1.5);
+		Util.BotChat( TEAM.ALLIES, "vsay", VOICE.G_NEGATIVE, 1 );
+
+		Util.MapDebugPrint( "Allies_Win" );
 	},
-	
+
 	cablecar2_in_Village =
  	{
  		Name="cablecar2_in_Village",
@@ -1602,19 +1497,19 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.cablecar_2_position = 0;
-			
-			//print(GetEntName(ent),"is in Village station");
-			
+
+			//Util.MapDebugPrint(GetEntName(ent),"is in Village station");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.cablecar_2_position = -1;
-			
-			//print(GetEntName(ent),"is leaving Village station");
+
+			//Util.MapDebugPrint(GetEntName(ent),"is leaving Village station");
  		},
 	},
-	
-	
+
+
 	cablecar2_in_Castle =
  	{
  		Name="cablecar2_in_Castle",
@@ -1622,18 +1517,18 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.cablecar_2_position = 1;
-			
-			//print(GetEntName(ent),"is in Castle station");
-			
+
+			//Util.MapDebugPrint(GetEntName(ent),"is in Castle station");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.cablecar_2_position = -1;
-			
-			//print(GetEntName(ent),"is leaving Castle station");
+
+			//Util.MapDebugPrint(GetEntName(ent),"is leaving Castle station");
  		},
 	},
-	
+
 	cablecar1_in_Village =
  	{
  		Name="cablecar1_in_Village",
@@ -1641,18 +1536,18 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.cablecar_1_position = 0;
-			
-			//print(GetEntName(ent),"is in Village station");
-			
+
+			//Util.MapDebugPrint(GetEntName(ent),"is in Village station");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.cablecar_1_position = -1;
-			
-			//print(GetEntName(ent),"is leaving Village station");
+
+			//Util.MapDebugPrint(GetEntName(ent),"is leaving Village station");
  		},
 	},
-	
+
 	cablecar1_in_Castle =
  	{
  		Name="cablecar1_in_Castle",
@@ -1660,18 +1555,18 @@ global Map =
  		OnEnter = function(ent)
  		{
 			Map.cablecar_1_position = 1;
-			
-			//print(GetEntName(ent),"is in Castle station");
-			
+
+			//Util.MapDebugPrint(GetEntName(ent),"is in Castle station");
+
  		},
  		OnExit = function(ent)
- 		{	
+ 		{
 			Map.cablecar_1_position = -1;
-			
-			//print(GetEntName(ent),"is leaving Castle station");
+
+			//Util.MapDebugPrint(GetEntName(ent),"is leaving Castle station");
  		},
 	},
-	
+
 };
 
 global OnMapLoad = function()
@@ -1723,22 +1618,22 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at the Constructible.", Map.Planted_Constructible );
 	OnTrigger( "Planted at Avalanche Wall.", Map.Planted_AvalancheWall );
 	OnTrigger( "^1The Allied Forces have secured the 'Allied 5-spawn'!", Map.Allied_5_Spawn );
-	
+
 	OnTrigger( "^1Allied team is escaping with the bus!", Map.Bus_Escaping );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_truck" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_Bus" );
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Avalanche_Wall" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tunnel_Entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Allied_start_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_Allied_start_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_Allied_start_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_Allied_start_33" );
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
@@ -1755,14 +1650,14 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Axis_start_30" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Axis_start_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_AxisPlaneSpawn" );
-	
+
 	SetGoalPriority( "PLANT_Avalanche_Wall", 0.92, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Tunnel_Entrance", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "CHECKPOINT_firstflag", 0.91, TEAM.ALLIES, 0 );
 	SetGoalPriority( "PLANT_Guardhouse", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Barrier_1", 0.65, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "REPAIRMG42_.*", 0.60, TEAM.ALLIES, CLASS.ENGINEER );
-	
+
 	SetGoalPriority( "BUILD_Barrier_1", 0.45, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "BUILD_Constructible", 0.67, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "BUILD_Tram_Door", 0.68, TEAM.AXIS, CLASS.ENGINEER );
@@ -1770,48 +1665,20 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALLARTILLERY_Axis_start_.*", 1.1, TEAM.AXIS, CLASS.FIELDOPS );
 	SetGoalPriority( "ARTILLERY_S_Axis_start_.*", 1.1, TEAM.AXIS, CLASS.FIELDOPS );
 	SetGoalPriority( Map.Plant_Bridge, 0.0, TEAM.AXIS, CLASS.COVERTOPS );
-	
+
 	SetGoalPriority( Map.Plant_Command_Post, 0.0, 0, CLASS.ENGINEER );
 	SetGoalPriority( "FLAGRETURN_.*", 0.92, 0, 0 );
-	
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam()  == TEAM.ALLIES )
-		{
-			bot.ChangeSpawnPoint( 0 );
-		}
-		else
-		{
-			bot.ChangeSpawnPoint( 0 );
-		}
-	}
-	
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam() == TEAM.ALLIES && Map.talk == 1 )
-		{
-			bot.SayVoice(VOICE.G_HI);
-			break;
-		}
-	}
-	sleep(1.5);
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam() == TEAM.AXIS && Map.talk == 1 )
-		{
-			bot.SayVoice(VOICE.G_HI);
-			break;
-		}
-	}
-	
+
+	Util.ChangeSpawn( TEAM.AXIS, 0 );
+	Util.ChangeSpawn( TEAM.ALLIES, 0 );
+
 	Wp.SetWaypointFlag( "a", "closed", true);
 	Wp.SetWaypointFlag( "b", "closed", true);
 	Wp.SetWaypointFlag( "d", "jump", true);
 	Wp.SetWaypointFlag( "e", "jump", true);
 	Wp.SetWaypointFlag( "f", "jump", true);
 	Wp.SetWaypointFlag( "g", "jump", true);
-	
-	
+
 	Util.SetMaxUsersInProgress( 1, "DEFUSE_.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
@@ -1825,31 +1692,31 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "ATTACK_AlliedInHangar_.*" );
 	Util.SetMaxUsersInProgress( 2, "PLANT_Barrier_2_1" );
 	Util.SetMaxUsersInProgress( 2, "PLANT_Avalanche_Wall" );
-	
+
 	cablecar2Village = OnTriggerRegion(AABB(-3542.435,1102.475,1207.125,-3367.565,1157.571,1281.125), Map.cablecar2_in_Village);
 	cablecar1Village = OnTriggerRegion(AABB(-3756.235,1101.835,1207.125,-3618.111,1172.167,1281.125), Map.cablecar1_in_Village);
 	cablecar2Castle = OnTriggerRegion(AABB(-3538.931,-2064.870,1655.125,-3387.412,-1989.670,1785.125), Map.cablecar2_in_Castle);
 	cablecar1Castle = OnTriggerRegion(AABB(-3776.556,-2048.875,1655.125,-3614.873,-1982.875,1785.125), Map.cablecar1_in_Castle);
-	
+
 	BusNearBarrier1 = OnTriggerRegion(AABB(-1105.433,-2844.047,1046.125,-808.262,-2731.939,1120.125), Map.Bus_Near_Barrier1);
 	BusNearPlane = OnTriggerRegion(AABB(2687.125,4014.807,1047.125,2925.188,4268.565,1155.075), Map.Bus_Near_Plane);
-	
+
 	BusPastBarrier1 = OnTriggerRegion(AABB(-167.388,-3835.898,1046.125,212.633,-3536.205,1120.125), Map.Bus_Past_Barrier1);
-	
+
 	BusAtBridge = OnTriggerRegion(AABB(2288.865,-568.343,1015.125,2488.711,-417.035,1089.125), Map.Bus_At_Bridge);
 	BusAtBarrier2 = OnTriggerRegion(AABB(2325.546,859.912,1046.125,2715.242,1007.095,1123.125), Map.Bus_At_Barrier2);
 
 	Map.cablecar_1_position = -1;
 	Map.cablecar_2_position = -1;
-	
+
 	Util.SetGoalOffset( -120, 90, 0, Map.Plant_Barrier_1 );
 	//Util.SetGoalOffset( 190, -30, 0, Map.Plant_Barrier_2 );
 	//Util.SetGoalOffset( -97, -6, -57, "PLANT_Tunnel_Entrance" );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=3, maxcamptime=5} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=180, maxcamptime=240} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=240, maxcamptime=300} );
-	
+
 	MapRoutes =
 	{
 		CHECKPOINT_firstflag =
@@ -1858,44 +1725,44 @@ global OnMapLoad = function()
 			{
 				ROUTE_TunnelEntrance =
 				{
-					
+
 				},
 				ROUTE_AvalancheWall =
 				{
-					
+
 				},
 			},
 			ROUTE_AlliesStartSpawn1 =
 			{
 				ROUTE_TunnelEntrance =
 				{
-					
+
 				},
 				ROUTE_AvalancheWall =
 				{
-					
+
 				},
 			},
 			ROUTE_AlliesStartSpawn2 =
 			{
 				ROUTE_TunnelEntrance =
 				{
-					
+
 				},
 				ROUTE_AvalancheWall =
 				{
-					
+
 				},
 			},
 			ROUTE_AlliesStartSpawn3 =
 			{
 				ROUTE_TunnelEntrance =
 				{
-					
+
 				},
 				ROUTE_AvalancheWall =
 				{
-					
+
 				},
 			},
 		},
@@ -1907,7 +1774,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_Tram2 =
 					{
-						
+
 					},
 				},
 				ROUTE_AllySpawn1Stairs =
@@ -1925,19 +1792,19 @@ global OnMapLoad = function()
 							{
 								ROUTE_SteelDoor =
 								{
-									
+
 								},
 								ROUTE_UpperStairs =
 								{
 									ROUTE_FlagStairs =
 									{
-										
+
 									},
 									ROUTE_FlagDoor =
 									{
 										ROUTE_UpperHealth2 =
 										{
-											
+
 										},
 									},
 								},
@@ -1967,7 +1834,7 @@ global OnMapLoad = function()
 										{
 											ROUTE_Back_8 =
 											{
-												
+
 											},
 										},
 									},
@@ -1995,7 +1862,7 @@ global OnMapLoad = function()
 										{
 											ROUTE_Back_8 =
 											{
-												
+
 											},
 										},
 									},
@@ -2026,7 +1893,7 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_Roof =
 										{
-											
+
 										},
 									},
 									ROUTE_BackFlagWay1 =
@@ -2034,12 +1901,12 @@ global OnMapLoad = function()
 										Weight = 3,
 										ROUTE_BackFlagWay2 =
 										{
-											
+
 										},
 									},
 									//ROUTE_FrontLadder =
 									//{
-									//	
+									//
 									//},
 								},
 							},
@@ -2057,19 +1924,19 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_Roof =
 									{
-										
+
 									},
 								},
 								//ROUTE_FrontLadder =
 								//{
-								//	
+								//
 								//},
 								ROUTE_BackFlagWay1 =
 								{
 									Weight = 3,
 									ROUTE_BackFlagWay2 =
 									{
-										
+
 									},
 								},
 							},
@@ -2081,7 +1948,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontLadder =
 							{
-								
+
 							},
 							ROUTE_FrontLadder =
 							{
@@ -2090,7 +1957,7 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_Roof =
 									{
-										
+
 									},
 								},
 								ROUTE_BackFlagWay2 =
@@ -2102,7 +1969,7 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_BackFlagWay2 =
 									{
-										
+
 									},
 								},
 							},
@@ -2119,7 +1986,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontLadder =
 								{
-									
+
 								},
 								ROUTE_FrontLadder =
 								{
@@ -2128,7 +1995,7 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_Roof =
 										{
-											
+
 										},
 									},
 									ROUTE_BackFlagWay2 =
@@ -2140,7 +2007,7 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_BackFlagWay2 =
 										{
-											
+
 										},
 									},
 								},
@@ -2167,19 +2034,19 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_Roof =
 										{
-											
+
 										},
 									},
 									//ROUTE_FrontLadder =
 									//{
-									//	
+									//
 									//},
 									ROUTE_BackFlagWay1 =
 									{
 										Weight = 3,
 										ROUTE_BackFlagWay2 =
 										{
-											
+
 										},
 									},
 								},
@@ -2198,19 +2065,19 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_Roof =
 									{
-										
+
 									},
 								},
 								//ROUTE_FrontLadder =
 								//{
-								//	
+								//
 								//},
 								ROUTE_BackFlagWay1 =
 								{
 									Weight = 3,
 									ROUTE_BackFlagWay2 =
 									{
-										
+
 									},
 								},
 							},
@@ -2222,7 +2089,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontLadder =
 							{
-								
+
 							},
 							ROUTE_FrontLadder =
 							{
@@ -2231,7 +2098,7 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_Roof =
 									{
-										
+
 									},
 								},
 								ROUTE_BackFlagWay2 =
@@ -2243,7 +2110,7 @@ global OnMapLoad = function()
 									Weight = 2,
 									ROUTE_BackFlagWay2 =
 									{
-										
+
 									},
 								},
 							},
@@ -2260,7 +2127,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontLadder =
 								{
-									
+
 								},
 								ROUTE_FrontLadder =
 								{
@@ -2269,7 +2136,7 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_Roof =
 										{
-											
+
 										},
 									},
 									ROUTE_BackFlagWay2 =
@@ -2281,7 +2148,7 @@ global OnMapLoad = function()
 										Weight = 2,
 										ROUTE_BackFlagWay2 =
 										{
-											
+
 										},
 									},
 								},
@@ -2299,7 +2166,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_FrontLadder =
 					{
-						
+
 					},
 					ROUTE_FrontLadder =
 					{
@@ -2318,18 +2185,18 @@ global OnMapLoad = function()
 						{
 							ROUTE_SideLadder =
 							{
-								
+
 							},
 							ROUTE_BackFlagWay1 =
 							{
 								ROUTE_BackFlagWay2 =
 								{
-									
+
 								},
 							},
 						},
 					},
-				
+
 				},
 			},
 			ROUTE_AlliesCastleSpawn =
@@ -2341,13 +2208,13 @@ global OnMapLoad = function()
 					{
 						ROUTE_SideLadder =
 						{
-							
+
 						},
 						ROUTE_BackFlagWay1 =
 						{
 							ROUTE_BackFlagWay2 =
 							{
-								
+
 							},
 						},
 					},
@@ -2360,7 +2227,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontLadder =
 							{
-								
+
 							},
 							ROUTE_FrontLadder =
 							{
@@ -2382,13 +2249,13 @@ global OnMapLoad = function()
 					{
 						ROUTE_SideLadder =
 						{
-							
+
 						},
 						ROUTE_BackFlagWay1 =
 						{
 							ROUTE_BackFlagWay2 =
 							{
-								
+
 							},
 						},
 					},
@@ -2401,7 +2268,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontLadder =
 							{
-								
+
 							},
 							ROUTE_FrontLadder =
 							{
@@ -2423,13 +2290,13 @@ global OnMapLoad = function()
 					{
 						ROUTE_SideLadder =
 						{
-							
+
 						},
 						ROUTE_BackFlagWay1 =
 						{
 							ROUTE_BackFlagWay2 =
 							{
-								
+
 							},
 						},
 					},
@@ -2442,7 +2309,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontLadder =
 							{
-								
+
 							},
 							ROUTE_FrontLadder =
 							{
@@ -2469,7 +2336,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_Constructible =
 							{
-								
+
 							},
 						},
 					},
@@ -2481,7 +2348,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_Constructible =
 								{
-									
+
 								},
 							},
 						},
@@ -2494,7 +2361,7 @@ global OnMapLoad = function()
 					{
 						ROUTE_Constructible =
 						{
-							
+
 						},
 					},
 				},
@@ -2502,7 +2369,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_FrontLadder =
 					{
-						
+
 					},
 				},
 			},
@@ -2527,7 +2394,7 @@ global OnMapLoad = function()
 										{
 											ROUTE_Back_8 =
 											{
-												
+
 											},
 										},
 									},
@@ -2555,7 +2422,7 @@ global OnMapLoad = function()
 										{
 											ROUTE_Back_8 =
 											{
-												
+
 											},
 										},
 									},
@@ -2581,7 +2448,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_Back_4 =
 								{
-									
+
 								},
 							},
 						},
@@ -2600,7 +2467,7 @@ global OnMapLoad = function()
 								{
 									ROUTE_Back_4 =
 									{
-										
+
 									},
 								},
 							},
@@ -2611,7 +2478,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontRunway_3 =
 								{
-									
+
 								},
 							},
 						},
@@ -2631,7 +2498,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_Back_4 =
 								{
-									
+
 								},
 							},
 						},
@@ -2650,7 +2517,7 @@ global OnMapLoad = function()
 								{
 									ROUTE_Back_4 =
 									{
-										
+
 									},
 								},
 							},
@@ -2661,7 +2528,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontRunway_3 =
 								{
-									
+
 								},
 							},
 						},
@@ -2681,7 +2548,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_Back_4 =
 								{
-									
+
 								},
 							},
 						},
@@ -2700,7 +2567,7 @@ global OnMapLoad = function()
 								{
 									ROUTE_Back_4 =
 									{
-										
+
 									},
 								},
 							},
@@ -2711,7 +2578,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontRunway_3 =
 								{
-									
+
 								},
 							},
 						},
@@ -2731,7 +2598,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_Back_4 =
 								{
-									
+
 								},
 							},
 						},
@@ -2750,7 +2617,7 @@ global OnMapLoad = function()
 								{
 									ROUTE_Back_4 =
 									{
-										
+
 									},
 								},
 							},
@@ -2761,7 +2628,7 @@ global OnMapLoad = function()
 							{
 								ROUTE_FrontRunway_3 =
 								{
-									
+
 								},
 							},
 						},
@@ -2786,13 +2653,13 @@ global OnMapLoad = function()
 								{
 									ROUTE_FlagBusFuel6 =
 									{
-										
+
 									},
 								},
 							},
 							ROUTE_FlagBusFuel5 =
 							{
-								
+
 							},
 						},
 					},
@@ -2810,13 +2677,13 @@ global OnMapLoad = function()
 								{
 									ROUTE_FlagBusFuel6 =
 									{
-										
+
 									},
 								},
 							},
 							ROUTE_FlagBusFuel5 =
 							{
-								
+
 							},
 						},
 					},
@@ -2833,14 +2700,14 @@ global OnMapLoad = function()
 								{
 									ROUTE_FlagBusFuel6 =
 									{
-										
+
 									},
 								},
 							},
 						},
 						ROUTE_FlagBusFuel5 =
 						{
-							
+
 						},
 					},
 					ROUTE_FrontRunway_1 =
@@ -2849,7 +2716,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_FrontRunway_3 =
 							{
-								
+
 							},
 						},
 					},
@@ -2871,19 +2738,19 @@ global OnMapLoad = function()
 							{
 								ROUTE_SpiralStairs =
 								{
-									
+
 								},
 							},
 							ROUTE_handrailing =
 							{
-								
+
 							},
 						},
 					},
 				},
 				ROUTE_FlagStairs =
 				{
-					
+
 				},
 			},
 			ROUTE_AlliesCastleSpawn1 =
@@ -2899,19 +2766,19 @@ global OnMapLoad = function()
 							{
 								ROUTE_SpiralStairs =
 								{
-									
+
 								},
 							},
 							ROUTE_handrailing =
 							{
-								
+
 							},
 						},
 					},
 				},
 				ROUTE_FlagStairs =
 				{
-					
+
 				},
 			},
 			ROUTE_AlliesCastleSpawn2 =
@@ -2927,24 +2794,24 @@ global OnMapLoad = function()
 							{
 								ROUTE_SpiralStairs =
 								{
-									
+
 								},
 							},
 							ROUTE_handrailing =
 							{
-								
+
 							},
 						},
 					},
 				},
 				ROUTE_FlagStairs =
 				{
-					
+
 				},
 			},
 		},
 	};
-	
+
 	MapRoutes.FLAG_tcr_docs_scriptname = MapRoutes.FLAG_tcr_fuel_scriptname;
 	MapRoutes.ATTACK_Allied_secondflag_1 = MapRoutes.CHECKPOINT_secondflag;
 	MapRoutes.ATTACK_Allied_secondflag_2 = MapRoutes.CHECKPOINT_secondflag;
@@ -2959,17 +2826,17 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_Bus_7 = MapRoutes.DEFEND_Bus_1;
 	MapRoutes.DEFEND_Bus_8 = MapRoutes.DEFEND_Bus_1;
 	MapRoutes.MOUNTMG42_Road_MG = MapRoutes.PLANT_Road_MG;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Tram1" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Tram2" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Constructible" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_SteelDoor" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder1" );
-	
-	print( "OnMapLoad" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
@@ -2978,14 +2845,14 @@ global OnBotJoin = function( bot )
 	ETUtil.SwitchWeapon(WEAPON.MP40);
 	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
 	ETUtil.SwitchWeapon(WEAPON.STEN);
-	
+
 	//	/setspawnpt <number>
 	//Axis Spawns:
 	//		0 - Axis spawn first spawn inside Hut
 	//		2 - Axis spawn Castle
 	//		3 - Axis spawn Bunker near hangar
 	//Allies Spawns:
-	//	Start:	
+	//	Start:
 	//		0 - Allies spawn first spawn in front of Hut
 	//	FirstFlag:
 	//		0 - Allies spawn inside of Cablecar station

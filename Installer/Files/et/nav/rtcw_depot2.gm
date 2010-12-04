@@ -47,7 +47,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Built" );
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
 	Axis_Command_Post_Built = function( trigger )
@@ -55,7 +55,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Built" );
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
@@ -63,7 +63,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
 	Allies_Field_HQ_Destroyed = function( trigger )
@@ -71,7 +71,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allies_Field_HQ_Destroyed" );
+		Util.MapDebugPrint( "Allies_Field_HQ_Destroyed" );
 	},
 
 	Anti_Aircraft_Gun_Destroyed = function( trigger )
@@ -79,7 +79,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Anti_Aircraft_Gun_Destroyed" );
+		Util.MapDebugPrint( "Anti_Aircraft_Gun_Destroyed" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
@@ -87,21 +87,21 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	North_Gate_Destroyed = function( trigger )
 	{
 		SetGoalPriority( "PLANT_Allies_Field_HQ", 1.0, TEAM.AXIS, CLASS.ENGINEER );
 
-		print( "North_Gate_Destroyed" );
+		Util.MapDebugPrint( "North_Gate_Destroyed" );
 	},
 
 	South_Gate_Destroyed = function( trigger )
 	{
 		SetGoalPriority( "PLANT_Anti_Aircraft_Gun", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
 
-		print( "South_Gate_Destroyed" );
+		Util.MapDebugPrint( "South_Gate_Destroyed" );
 	},
 
 	forward_bunker_flag_Axis_Captured = function( trigger )
@@ -109,7 +109,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "forward_bunker_flag_Axis_Captured" );
+		Util.MapDebugPrint( "forward_bunker_flag_Axis_Captured" );
 	},
 
 	forward_bunker_flag_Allies_Captured = function( trigger )
@@ -117,7 +117,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "forward_bunker_flag_Allies_Captured" );
+		Util.MapDebugPrint( "forward_bunker_flag_Allies_Captured" );
 	},
 
 	trackside_flag_Axis_Captured = function( trigger )
@@ -125,7 +125,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "trackside_flag_Axis_Captured" );
+		Util.MapDebugPrint( "trackside_flag_Axis_Captured" );
 	},
 
 	trackside_flag_Allies_Captured = function( trigger )
@@ -133,14 +133,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "trackside_flag_Allies_Captured" );
+		Util.MapDebugPrint( "trackside_flag_Allies_Captured" );
 	},
 
 	warehouse_flag_Axis_Captured = function( trigger )
 	{
 		Util.ChangeSpawn(TEAM.AXIS, 4, 4);
 
-		print( "warehouse_flag_Axis_Captured" );
+		Util.MapDebugPrint( "warehouse_flag_Axis_Captured" );
 	},
 
 	warehouse_flag_Allies_Captured = function( trigger )
@@ -148,7 +148,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "warehouse_flag_Allies_Captured" );
+		Util.MapDebugPrint( "warehouse_flag_Allies_Captured" );
 	},
 	
 	aa_plant = function( trigger )
@@ -161,7 +161,7 @@ global Map =
 			}
 		}
 
-		print( "aa_plant" );
+		Util.MapDebugPrint( "aa_plant" );
 	},
 	
 	hq_plant = function( trigger )
@@ -174,7 +174,7 @@ global Map =
 			}
 		}
 
-		print( "hq_plant" );
+		Util.MapDebugPrint( "hq_plant" );
 	},
 
 };
@@ -549,7 +549,7 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

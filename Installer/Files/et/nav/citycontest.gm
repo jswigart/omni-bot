@@ -251,13 +251,13 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_GateButton" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_GateButton*" );
-			print( "axis_need_open_the_gate" );
+			Util.MapDebugPrint( "axis_need_open_the_gate" );
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_GateButton" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_GateButton*" );
-			print( "allies_need_close_the_gate" );
+			Util.MapDebugPrint( "allies_need_close_the_gate" );
 		}
 
 		Util.MapDebugPrint( "truck_near_depot" );
@@ -272,7 +272,7 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
-			print( "axis_need_open_the_gate" );
+			Util.MapDebugPrint( "axis_need_open_the_gate" );
 		}
 
 		Util.MapDebugPrint( "depotgate" );
@@ -309,11 +309,7 @@ global Map =
 		Util.SetMaxUsersInProgress( 2, "PLANT_Allied_Command_Post" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DepotA.*" );
 
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.ALLIES )
-				{ bot.ChangeSpawnPoint( 1 ); }
-		}
+		Util.ChangeSpawn(TEAM.ALLIES, 1);
 
 		Util.MapDebugPrint( "outdepot_now" );
 	},
@@ -339,11 +335,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_covertruck_rp.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_nearend.*" );
 
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-				{ bot.ChangeSpawnPoint( 2 ); }
-		}
+		Util.ChangeSpawn(TEAM.AXIS, 2);
 
 		Util.MapDebugPrint( "nearend_now" );
 	},
@@ -420,7 +412,7 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_GateButton" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_GateButton*" );
-			print( "allies_need_close_the_gate" );
+			Util.MapDebugPrint( "allies_need_close_the_gate" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
@@ -523,8 +515,8 @@ global Map =
 			}
 			case 7:
 			{
-				ETUtil.SetExcludeIndexes( "BUILD_Truck", { 4, 5, 6 } ); 
-				ETUtil.SetExcludeIndexes( "ESCORT_Truck", { 2 } ); 
+				ETUtil.SetExcludeIndexes( "BUILD_Truck", { 4, 5, 6 } );
+				ETUtil.SetExcludeIndexes( "ESCORT_Truck", { 2 } );
 			}
 			case 8:
 			{
@@ -619,9 +611,6 @@ global OnMapLoad = function()
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
-
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
 
 	MapRoutes =
 	{
@@ -782,7 +771,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

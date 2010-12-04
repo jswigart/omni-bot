@@ -48,11 +48,11 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dyno_station.*" );
 			}
 
-			Util.MapDebugPrint(GetEntName(ent), "near station dyno", true);
+			Util.MapDebugPrint(GetEntName(ent) + " near station dyno", true);
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent), "leaves station dyno", true);
+			Util.MapDebugPrint(GetEntName(ent) + " leaves station dyno", true);
 		},
 	},
 

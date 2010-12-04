@@ -115,23 +115,23 @@ global Map =
 
 		for(i=0; i<4; i+=1)
 		{
-			//print("goto door");
+			//Util.MapDebugPrint("goto door");
 			if(_this.Goto(pos) == EVENT.PATH_FAILED )
 			{
-				//print("goto door failed");
+				//Util.MapDebugPrint("goto door failed");
 				return;
 			}
 			_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
 			tr = TraceLine(pos, pos2, null, TRACE.SOLID, 0, true);
 			if(tr.fraction == 1)
 			{
-				//print("go through door");
+				//Util.MapDebugPrint("go through door");
 				_this.Bot.MoveTowards(pos2);
 				sleep(0.6);
 				break;
 			}
 			sleep(0.1);
-			//print("open");
+			//Util.MapDebugPrint("open");
 			_this.Bot.PressButton(BTN.USE);
 			_this.Bot.MoveTowards(pos1);
 			//wait while door opens
@@ -428,10 +428,7 @@ global OnMapLoad = function()
 	Util.UpdateSwitchData();
 	Map.SetCommandPost(true); //must be called after UpdateSwitchData, because there is yield in SetPercentInProgress
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

@@ -25,6 +25,6 @@ this.PrimaryFire.SetTargetBias(CLASS.COVERTOPS, 0);
 this.PrimaryFire.SetTargetBias(CLASS.SOLDIER, 0);
 
 this.PrimaryFire.DefaultDesirability = 0.1;
-this.PrimaryFire.SetDesirabilityRange(0, 48, 0.1);
+this.PrimaryFire.SetDesirabilityRange(0, 48, 0.2);
 
 this.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.1);

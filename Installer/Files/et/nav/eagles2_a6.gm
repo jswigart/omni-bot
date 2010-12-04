@@ -4,12 +4,16 @@ global Map =
 	Talk = true,
 	ShowMovers = false,
 	Debug = 0,
+	DefendingTeam = TEAM.AXIS,
 
 	DynoDoorStatus = 1, // intact
 	Mover1Position = -1, // 0: town, 1: castle, -1: moving
 	Mover2Position = -1,
 	BusIsObsolete = false,
 	PathClear = false,
+	ac1 = 0,
+        iw1 = 0,
+	iw2 = 0,
 
 	// MGs
 	Mount_airfield_south_MG = "MOUNTMG42_1040",
@@ -160,6 +164,10 @@ global Map =
 
 	OnAlliedTownAccess = function()
 	{
+		Map.ac1 = OnTriggerRegion( AABB(-4642.330,-4467.956,2017.599,-4415.375,-4090.818,2155.825), RegionTrigger.AllClear );
+		Map.iw1 = OnTriggerRegion( AABB(-3732.181,-2522.349,1673.188,-3340.797,-1999.852,1871.812), RegionTrigger.IntrusionWarning );
+		Map.iw2 = OnTriggerRegion( AABB(-4629.056,-4391.316,2011.982,-3927.412,-3590.340,2523.481), RegionTrigger.IntrusionWarning );
+
 		SetGoalPriority( "PLANT_Town_Command_Post", 0.7 );
 		SetGoalPriority( "BUILD_Town_Command_Post", 0.7 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_allies_start.*" );
@@ -365,6 +373,10 @@ global Map =
 			}
 		}
 
+		DeleteTriggerRegion( Map.ac1 );
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Road_MG" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 		SetGoalPriority( "PLANT_Airfield_Command_Post", 0.6 );
@@ -463,6 +475,10 @@ global Map =
 
 	OnRadio = function(trigger)
 	{
+		ac2 = OnTriggerRegion( AABB(2958.740,3627.479,1023.404,3211.639,3789.152,1186.735), RegionTrigger.AllClear );
+		iw3 = OnTriggerRegion( AABB(2871.704,2756.586,1024.083,3178.867,3255.766,1275.218), RegionTrigger.IntrusionWarning );
+		iw4 = OnTriggerRegion( AABB(2968.512,3493.874,1049.776,3438.225,3812.013,1174.605), RegionTrigger.IntrusionWarning );
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge_axis.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_radio.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_radio.*" );
@@ -521,24 +537,8 @@ global Map =
 
 	AlliesWon = function(trigger)
 	{
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 	},
 
 	WatchMoverPosition = function()
@@ -558,11 +558,9 @@ global Map =
 				{
 					Map.Mover1Position = 0;
 					Map.Mover2Position = 1;
-					if ( Map.Debug )
-					{
-						print("mover1 at pos.", Map.Mover1Position);
-						print("mover2 at pos.", Map.Mover2Position);
-					}
+
+					Util.MapDebugPrint("mover1 at pos." + Map.Mover1Position, true);
+					Util.MapDebugPrint("mover2 at pos." + Map.Mover2Position, true);
 				}
 			}
 			else if ( DistanceBetween( entitypos, endpos ) < tolerance )
@@ -571,11 +569,9 @@ global Map =
 				{
 					Map.Mover1Position = 1;
 					Map.Mover2Position = 0;
-					if ( Map.Debug )
-					{
-						print("mover1 at pos.", Map.Mover1Position);
-						print("mover2 at pos.", Map.Mover2Position);
-					}
+
+					Util.MapDebugPrint("mover1 at pos. " + Map.Mover1Position, true);
+					Util.MapDebugPrint("mover2 at pos. " + Map.Mover2Position, true);
 				}
 			}
 			else
@@ -586,10 +582,8 @@ global Map =
 					Wp.SetWaypointFlag( "cable1_1", "closed", false );
 					SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_cable1_3" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_cable2_4" );
-					if ( Map.Debug )
-					{
-						print("c1 going down, c2 up.");
-					}
+
+					Util.MapDebugPrint("c1 going down, c2 up.");
 				}
 				if ( Map.Mover1Position == 0 )
 				{
@@ -597,10 +591,8 @@ global Map =
 					Wp.SetWaypointFlag( "cable1_1", "closed", true );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_cable1_3" );
 					SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_cable2_4" );
-					if ( Map.Debug )
-					{
-						print("c1 going up, c2 down.");
-					}
+
+					Util.MapDebugPrint("c1 going up, c2 down.");
 				}
 				Map.Mover1Position = -1;
 				Map.Mover2Position = -1;

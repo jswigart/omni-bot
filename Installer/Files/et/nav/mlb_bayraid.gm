@@ -275,7 +275,7 @@ global Map =
 		Wp.SetWaypointFlag("Gendoor_al","closed",true);
 		Wp.SetWaypointFlag("Gendoor_ax","closed",false);
 
-		Util.MapDebugPrint ( "GenDoor is now hold by" + Map.GenDoorStatus );
+		Util.MapDebugPrint( "GenDoor is now hold by" + Map.GenDoorStatus );
 	},
 
 	generator_teamdoor_Destroyed = function( trigger )
@@ -290,7 +290,7 @@ global Map =
 		Wp.SetWaypointFlag("Gendoor_al","closed",false);
 		Wp.SetWaypointFlag("Gendoor_ax","closed",true);
 
-		Util.MapDebugPrint ( "GenDoor is now hold by" + Map.GenDoorStatus );
+		Util.MapDebugPrint( "GenDoor is now hold by" + Map.GenDoorStatus );
 	},
 
 	north_teamdoor_Built = function( trigger )
@@ -339,7 +339,7 @@ global Map =
 			}
 		}
 
-		Util.MapDebugPrint ( "NorthDoor is now hold by " + Map.NorthDoorStatus );
+		Util.MapDebugPrint( "NorthDoor is now hold by " + Map.NorthDoorStatus );
 	},
 
 	north_teamdoor_1_Built = function( trigger )
@@ -355,7 +355,7 @@ global Map =
 		Wp.SetWaypointFlag("ax_rightdoor","closed",true);
 		Wp.SetWaypointFlag("al_rightdoor","closed",false);
 
-		Util.MapDebugPrint ( "NorthDoor is now hold by " + Map.NorthDoorStatus );
+		Util.MapDebugPrint( "NorthDoor is now hold by " + Map.NorthDoorStatus );
 	},
 
 	south_teamdoor_Built = function( trigger )
@@ -399,7 +399,7 @@ global Map =
 			}
 		}
 
-		Util.MapDebugPrint ( "SouthDoor is now hold by " + Map.SouthDoorStatus );
+		Util.MapDebugPrint( "SouthDoor is now hold by " + Map.SouthDoorStatus );
 	},
 
 	south_teamdoor_Destroyed = function( trigger )
@@ -414,7 +414,7 @@ global Map =
 		Wp.SetWaypointFlag("ax_leftdoor","closed",false);
 		Wp.SetWaypointFlag("al_leftdoor","closed",true);
 
-		Util.MapDebugPrint ( "SouthDoor is now hold by", Map.SouthDoorStatus );
+		Util.MapDebugPrint( "SouthDoor is now hold by", Map.SouthDoorStatus );
 	},
 
 	fence_door_Built = function( trigger )
@@ -615,26 +615,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.COMMAND_COMPLETED);
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "count_off", true );
 	},
 };

@@ -50,7 +50,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-//		ETUtil.ChangeSpawn(TEAM.ALLIES, 9, 3);
+//		Util.ChangeSpawn(TEAM.ALLIES, 9, 3);
 		foreach ( id and bot in BotTable )
 		{
 			if ( bot.GetTeam() == TEAM.ALLIES )

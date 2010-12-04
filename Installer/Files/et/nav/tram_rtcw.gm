@@ -430,8 +430,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSecondHalf.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCastle.*" );
 					
-				if ( Map.Debug )
-						{ Util.MapDebugPrint("Docs are halfway"); }
+				Util.MapDebugPrint("Docs are halfway");
 				}
 			}
 		},

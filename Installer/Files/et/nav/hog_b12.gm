@@ -155,7 +155,7 @@ global Map =
 		Map.CappointOffset = Vector3(0,-160,-30);
 
 		if ( !Map.TruckGoal ) {
-			if (Map.Debug) { print("UpdateCappoint: Invalid Vehicle Goalname!"); }
+			Util.MapDebugPrint("UpdateCappoint: Invalid Vehicle Goalname!");
 			Map.UpdateCappointThread = null;
 			return;
 		}
@@ -163,7 +163,7 @@ global Map =
 		if (!Map.CappointGoal) { Map.CappointGoal = GetGoal("CAPPOINT_truck"); }
 
 		if (!Map.CappointGoal) {
-			if (Map.Debug) { print("UpdateCappoint: Invalid Cappoint Goalname!"); }
+			Util.MapDebugPrint("UpdateCappoint: Invalid Cappoint Goalname!");
 			Map.UpdateCappointThread = null;
 			return;
 		}
@@ -284,7 +284,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
 		SetGoalPriority( "BUILD_Command_Post", 0.8 );
 		SetGoalPriority( "PLANT_Command_Post", 0.8 );
-		ETUtil.ChangeSpawn(TEAM.AXIS, 3);
+		Util.ChangeSpawn(TEAM.AXIS, 3);
         Util.MapDebugPrint( "truck_at_barrier" ); 
 		},
 		OnExit = function(ent)

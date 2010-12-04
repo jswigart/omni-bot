@@ -195,7 +195,7 @@ global Map =
 			}
 		},
 	},
-	
+
 	Tank_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -203,7 +203,7 @@ global Map =
 
 		Util.MapDebugPrint( "Tank_Built" );
 	},
-	
+
 	Tank_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -213,11 +213,11 @@ global Map =
 
 		//keep them focused on the tank
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Allied_Command_Post );
-		
+
 
 		Util.MapDebugPrint( "Tank_Destroyed" );
 	},
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -225,7 +225,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -234,7 +234,7 @@ global Map =
 		Map.Allied_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -243,7 +243,7 @@ global Map =
 		Map.Allied_Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
 	},
-	
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -253,7 +253,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -261,7 +261,7 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -270,7 +270,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -279,7 +279,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -289,7 +289,7 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
-	
+
 	Bridge_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -357,7 +357,7 @@ global Map =
 
 		Util.MapDebugPrint( "Bridge_Damaged" );
 	},
-	
+
 	Bridge_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -366,7 +366,7 @@ global Map =
 		Map.Bridge_Dyno += 1;
 		Util.MapDebugPrint( "Bridge_Planted" );
 	},
-	
+
 	Bridge_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -375,7 +375,7 @@ global Map =
 		Map.Bridge_Dyno -= 1;
 		Util.MapDebugPrint( "Bridge_Defused" );
 	},
-	
+
 	Bridge_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -385,8 +385,8 @@ global Map =
 
 		Util.MapDebugPrint( "Bridge_Destroyed" );
 	},
-	
-	
+
+
 	East_Axis_Base_Fortification_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -394,7 +394,7 @@ global Map =
 
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Built" );
 	},
-	
+
 	East_Axis_Base_Fortification_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -403,7 +403,7 @@ global Map =
 		Map.East_Axis_Base_Fortification_Dyno += 1;
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Planted" );
 	},
-	
+
 	East_Axis_Base_Fortification_Damaged = function( trigger )
 	{
 		if ( TestMap )
@@ -422,7 +422,7 @@ global Map =
 
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Damaged" );
 	},
-	
+
 	East_Axis_Base_Fortification_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -431,7 +431,7 @@ global Map =
 		Map.East_Axis_Base_Fortification_Dyno -= 1;
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Defused" );
 	},
-	
+
 	East_Axis_Base_Fortification_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -441,7 +441,7 @@ global Map =
 
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Destroyed" );
 	},
-	
+
 	West_Axis_Base_Fortification_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -449,7 +449,7 @@ global Map =
 
 		Util.MapDebugPrint( "West_Axis_Base_Fortification_Built" );
 	},
-	
+
 	West_Axis_Base_Fortification_Damaged = function( trigger )
 	{
 		if ( TestMap )
@@ -469,7 +469,7 @@ global Map =
 
 		Util.MapDebugPrint( "West_Axis_Base_Fortification_Damaged" );
 	},
-	
+
 	West_Axis_Base_Fortification_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -478,7 +478,7 @@ global Map =
 		Map.West_Axis_Base_Fortification_Dyno += 1;
 		Util.MapDebugPrint( "West_Axis_Base_Fortification_Planted" );
 	},
-	
+
 	West_Axis_Base_Fortification_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -487,7 +487,7 @@ global Map =
 		Map.West_Axis_Base_Fortification_Dyno -= 1;
 		Util.MapDebugPrint( "West_Axis_Base_Fortification_Defused" );
 	},
-	
+
 	West_Axis_Base_Fortification_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -504,7 +504,7 @@ global Map =
 
 		Util.MapDebugPrint( "Road_MG_Built" );
 	},
-	
+
 	Road_MG_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -513,7 +513,7 @@ global Map =
 		Map.Road_MG_Dyno += 1;
 		Util.MapDebugPrint( "Road_MG_Planted" );
 	},
-	
+
 	Road_MG_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -522,7 +522,7 @@ global Map =
 		Map.Road_MG_Dyno -= 1;
 		Util.MapDebugPrint( "Road_MG_Defused" );
 	},
-	
+
 	Road_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -532,7 +532,7 @@ global Map =
 
 		Util.MapDebugPrint( "Road_MG_Destroyed" );
 	},
-	
+
 	Side_MG_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -540,7 +540,7 @@ global Map =
 
 		Util.MapDebugPrint( "Side_MG_Built" );
 	},
-	
+
 	Side_MG_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -549,7 +549,7 @@ global Map =
 		Map.Side_MG_Dyno += 1;
 		Util.MapDebugPrint( "Side_MG_Planted" );
 	},
-	
+
 	Side_MG_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -558,7 +558,7 @@ global Map =
 		Map.Side_MG_Dyno -= 1;
 		Util.MapDebugPrint( "Side_MG_Defused" );
 	},
-	
+
 	Side_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -585,7 +585,7 @@ global Map =
 		Map.Tunnel_MG_Dyno += 1;
 		Util.MapDebugPrint( "Tunnel_MG_Planted" );
 	},
-	
+
 	Tunnel_MG_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -594,7 +594,7 @@ global Map =
 		Map.Tunnel_MG_Dyno -= 1;
 		Util.MapDebugPrint( "Tunnel_MG_Defused" );
 	},
-	
+
 	Tunnel_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -604,7 +604,7 @@ global Map =
 
 		Util.MapDebugPrint( "Tunnel_MG_Destroyed" );
 	},
-	
+
 	Fuel_Dump_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -641,7 +641,7 @@ global Map =
 		Map.Antenna_Bridge_Dyno += 1;
 		Util.MapDebugPrint( "Antenna_Bridge_Planted" );
 	},
-	
+
 	Antenna_Bridge_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -670,10 +670,10 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_AntennabridgeRoute2" );
-		
+
 		Util.MapDebugPrint( "Antenna_Bridge_Defused" );
 	},
-	
+
 	Antenna_Bridge_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -686,13 +686,13 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Tunnel_Doors.*" );
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_AntennabridgeRoute2" );
 		Wp.SetWaypointFlag("ANT","closed",false);
 
 		Util.MapDebugPrint( "Antenna_Bridge_Destroyed" );
 	},
-	
+
 	tunnelgrate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -772,7 +772,7 @@ global Map =
 
 		Util.MapDebugPrint( "tunneldoors_Destroyed" );
 	},
-	
+
 	depotgates_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -831,7 +831,7 @@ global Map =
 
 		Util.MapDebugPrint( "depotsidewall_Destroyed" );
 	},
-	
+
 	tbdoorone = function( trigger )
 	{
 		if ( TestMap )
@@ -997,35 +997,35 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
 	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
-		
+
 	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
 	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
 	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
 	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
-		
+
 	OnTrigger( "Allied team has reinforced the Bridge!", Map.Bridge_Built );
 	OnTrigger( "Planted at the Bridge!", Map.Bridge_Planted );
 	OnTrigger( "Axis team has damaged the Bridge!",  Map.Bridge_Damaged );
 	OnTrigger( "Defused at the Bridge!", Map.Bridge_Defused );
-	OnTrigger( "Axis team has destroyed the Bridge!", Map.Bridge_Destroyed );	
-	
+	OnTrigger( "Axis team has destroyed the Bridge!", Map.Bridge_Destroyed );
+
 	OnTrigger( "Allied team has constructed the Road MG Nest!", Map.Road_MG_Built );
 	OnTrigger( "Planted at the Road MG Nest!", Map.Road_MG_Planted );
 	OnTrigger( "Defused at the Road MG Nest!", Map.Road_MG_Defused );
 	OnTrigger( "Axis team has destroyed the Road MG Nest!", Map.Road_MG_Destroyed );
-	
+
 	OnTrigger( "Allied team has constructed the Side MG Nest!", Map.Side_MG_Built );
 	OnTrigger( "Axis team has constructed the Side MG Nest!", Map.Side_MG_Built );
-	
+
 	OnTrigger( "Planted at the Side MG Nest!", Map.Side_MG_Planted );
 	OnTrigger( "Defused at the Side MG Nest!", Map.Side_MG_Defused );
-	
+
 	OnTrigger( "Allied team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
 	OnTrigger( "Axis team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
-	
+
 	OnTrigger( "The Tank has been repaired", Map.Tank_Built );
 	OnTrigger( "The Tank has been damaged", Map.Tank_Destroyed );
-	
+
 	OnTrigger( "Axis team has constructed the Tunnel MG!", Map.Tunnel_MG_Built );
 	OnTrigger( "Planted at the Tunnel MG!", Map.Tunnel_MG_Planted );
 	OnTrigger( "Defused at the Tunnel MG!", Map.Tunnel_MG_Defused );
@@ -1036,26 +1036,26 @@ global OnMapLoad = function()
 	OnTrigger( "Allied team has damaged the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Damaged );
 	OnTrigger( "Defused at the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Defused );
 	OnTrigger( "Allied team has destroyed the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Destroyed );
-	
-	OnTrigger( "Axis team has constructed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Built );	
+
+	OnTrigger( "Axis team has constructed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Built );
 	OnTrigger( "Planted at the West Axis Base Fortification!", Map.East_Axis_Base_Fortification_Planted );
 	OnTrigger( "Allied team has damaged the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Damaged );
 	OnTrigger( "Defused at the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Defused );
 	OnTrigger( "Allied team has destroyed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Destroyed );
-	
+
 	OnTrigger( "Planted at the Fuel Dump.", Map.Fuel_Dump_Planted );
 	OnTrigger( "Defused at the Fuel Dump.", Map.Fuel_Dump_Defused );
 	OnTrigger( "Allied team has destroyed the Axis Fuel Dump!", Map.Fuel_Dump_Destroyed );
-	
+
 	OnTrigger( "Allied team has breached the Tunnel Grate!", Map.tunnelgrate_Destroyed );
 	OnTrigger( "Allied team has breached the Tunnel Doors!", Map.tunneldoors_Destroyed );
 	OnTrigger( "Allied team has breached the Depot Gates!", Map.depotgates_Destroyed );
 	OnTrigger( "Allied team has breached the Depot Side Wall!", Map.depotsidewall_Destroyed );
-	
+
 	OnTrigger( "tbdoor1_lever1_goto", Map.tbdoorone );
 	OnTrigger( "tbdoor2_lever1_goto", Map.tbdoortwo );
 	OnTrigger( "tank at location", Map.tank_at_location );
-	
+
 	OnTrigger( "Planted at the Antenna!", Map.Antenna_Bridge_Planted );
 	OnTrigger( "Defused at the Antenna!", Map.Antenna_Bridge_Defused );
 	OnTrigger( "The Allies have blown down the Antenna!", Map.Antenna_Bridge_Destroyed );
@@ -1074,11 +1074,11 @@ global OnMapLoad = function()
 	fallback = OnTriggerRegion(AABB(-6720.574,-1895.911,321.125,-6626.926,-1558.944,403.125),Map.AxisFallBack);
 	//detect allies going back door
 	//cs: use the same region trigger table since it was a copy / paste.
-	fueldepotdoor = OnTriggerRegion(AABB(-10072.157,-5748.204,177.125,-10027.903,-5203.836,291.125),Map.AxisFallBack);	
+	fueldepotdoor = OnTriggerRegion(AABB(-10072.157,-5748.204,177.125,-10027.903,-5203.836,291.125),Map.AxisFallBack);
 
 	// detect allies on the depot roof
 	depotroof = OnTriggerRegion(AABB(-11424.124,-6971.128,537.125,-10310.962,-6210.208,944.180),Map.DepotRoof);
-	
+
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
 	Util.SetMaxUsersInUse( 1, "ATTACK_.*" );
@@ -1096,11 +1096,11 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
 	Util.SetMaxUsers( 1, "BUILD_Road_MG" );
 	Util.SetMaxUsers( 1, "REPAIRMG.*" );
-	
-	Util.AddUseWp("PLANT_Antenna_Bridge", "Antenna");  
-	
+
+	Util.AddUseWp("PLANT_Antenna_Bridge", "Antenna");
+
 	Wp.SetWaypointFlag("ANT","closed",true);
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30} );
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=10, MaxCampTime=15} );
 	SetMapGoalProperties( "CAMP_.*", {MinCampTime=15, MaxCampTime=30} );
@@ -1535,11 +1535,8 @@ global OnMapLoad = function()
 	Util.Routes(MapRoutes);
 	Util.UpdateSwitchData();
 	Util.MapDebugPrint( "OnMapLoad" );
-	
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

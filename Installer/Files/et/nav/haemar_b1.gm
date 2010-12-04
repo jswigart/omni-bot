@@ -122,8 +122,8 @@ global Map =
 
 	Neutral_Command_Post_Destroyed = function( trigger )
 	{
-		ETUtil.DisableGoal("HEALTHCAB_.*");
-		ETUtil.DisableGoal("AMMOCAB_.*");
+		Util.DisableGoal("HEALTHCAB_.*");
+		Util.DisableGoal("AMMOCAB_.*");
 
 		Util.MapDebugPrint( "Neutral_Command_Post_Destroyed" );
 	},

@@ -219,31 +219,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				team = bot.GetTeam();
-				if ( team == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-				else if ( team == TEAM.AXIS )
-				{
-					bot.SayVoice(VOICE.G_NEGATIVE);
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "cap_2_Captured" );
 	},
 

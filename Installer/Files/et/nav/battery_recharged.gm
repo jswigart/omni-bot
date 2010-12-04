@@ -8,7 +8,6 @@
 //
 //==========================================================================================
 //
-// Warning REPAIRMG42 is not Enabled due to map bug will not Repair ! 
 
 global Map =
 {
@@ -29,26 +28,26 @@ global Map =
 	Power_Supply_Dyno = 0,
 	Power_Supply_Door_Dyno = 0,
 	Radar_Station_Dyno = 0,
-	
+
 	//set some vars for the door entities
 	frontdoorent,
 	leftdoorent,
 	rightdoorent,
-    
+
         //status' for conditionals
 	Barricade = false, //not built initially
 	Flagstatus = 0, //0 none, 1 axis, 2 allies
 	Doorcontrols = true, //intact
 	Frontdoor = false, //closed
-	Rightdoor = false, 
+	Rightdoor = false,
 	Leftdoor = false,
 	HatchStatus = false, //closed at start
 	CPStatus = 0, // no team owns it
         Power_Supply_Door = false, //not built initially
-	BaseTriggered = false, 
+	BaseTriggered = false,
 	Axis_Conservative = false,
 	DispenseHealthTime = 2,
-	
+
 	Switches =
 	{
 		FrontDoor =
@@ -80,10 +79,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, // leave for paththrough
 			WaypointName = "hatch",
-			LimitTeam = 0, // disabled initially.	
+			LimitTeam = 0, // disabled initially.
 		},
 	},
-	
+
 	BaseTrigger =
 	{
 		Name = "BaseTrigger",
@@ -104,7 +103,7 @@ global Map =
 		{
 		},
 	},
-	
+
 	Assault_Ramp =
 	{
 		Name="Assault_Ramp",
@@ -115,7 +114,7 @@ global Map =
 			{
 				//to see if built
 				if( Allied_Beach_Assault_Ramp_Built == true )
-				{	
+				{
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_3" );
@@ -132,7 +131,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_4" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Beach_Assault_Ramp" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Gun" );
-				}	
+				}
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Entered Assault_Ramp");
 			}
 		},
@@ -148,12 +147,12 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_4" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Beach_Assault_Ramp" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Gun" );
-				}	
+				}
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Exited Assault_Ramp");
 			}
 		},
 	},
-	
+
 	//for Human Players going in Back Way
 	BackPath =
 	{
@@ -165,11 +164,12 @@ global Map =
 			{
 				//to see if built
 				if( Map.Axis_South_East_MG_nest_Built == true )
-					{	
-						SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
-					}
+				{
+					SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_South_East_MG_nest" );
+				}
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rear_door.*" );
-				
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Entered Back Path");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
@@ -183,11 +183,12 @@ global Map =
 			{
 				//to see if built
 				if(Map.Axis_South_East_MG_nest_Built == true)
-					{	
-						SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
-					}
+				{
+					SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_South_East_MG_nest" );
+				}
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rear_door.*" );
-		
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Exited Back Path");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
@@ -201,27 +202,27 @@ global Map =
 		Name="BackTunnel",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function(ent)
-		{	
+		{
 			if(GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rear_door.*" );
-				
+
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_6" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_2" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_6" );
-				
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Entered Back Tunnel");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
 			{
 				Util.MapDebugPrint(GetEntName(ent) + " Axis Entered Back Tunnel");
 			}
-		},	
+		},
 		OnExit = function(ent)
-		{	
+		{
 			if(GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rear_door.*" );
@@ -231,7 +232,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_6" );
-				
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Exited Back Tunnel");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
@@ -245,27 +246,27 @@ global Map =
 		Name="BackStairs",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function(ent)
-		{	
+		{
 			if(GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rear_door.*" );
-				
+
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_6" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_2" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_6" );
-				
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Entered Back Stairs");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
 			{
 				Util.MapDebugPrint(GetEntName(ent) + " Axis Entered Back Stairs");
 			}
-		},	
+		},
 		OnExit = function(ent)
-		{	
+		{
 			if(GetEntTeam(ent) == TEAM.ALLIES)
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rear_door.*" );
@@ -275,7 +276,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_6" );
-				
+
 				Util.MapDebugPrint(GetEntName(ent) + " Allies Exited Back Stairs");
 			}
 			if(GetEntTeam(ent) == TEAM.AXIS)
@@ -284,14 +285,14 @@ global Map =
 			}
 		},
 	},
-	
+
 	Command_Post_Built_Allied = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.CPStatus = 2;
-		
+
 		if ( !Map.doorcontrols ) {
 			Util.ChangeSpawn( TEAM.ALLIES, 4, 4 ); // spawn up to 4 at cp
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP" );
@@ -301,7 +302,7 @@ global Map =
 
 		Util.MapDebugPrint( "Command_Post_Built_Allied" );
 	},
-	
+
 	Command_Post_Destroyed_Allied = function( trigger )
 	{
 		if ( TestMap )
@@ -311,7 +312,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_CP" );
 		Util.MapDebugPrint( "Command_Post_Destroyed_Allied" );
 	},
-	
+
 	Command_Post_Built_Axis = function( trigger )
 	{
 		if ( TestMap )
@@ -332,50 +333,50 @@ global Map =
 
 		Util.MapDebugPrint( "Command_Post_Destroyed_Axis" );
 	},
-	
+
 	Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Command_Post_Dyno += 1;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
 
-		Util.MapDebugPrint( "Command_Post_Planted" ); 
+		Util.MapDebugPrint( "Command_Post_Planted" );
 	},
-	
+
 	Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Command_Post_Dyno -= 1;
-		
+
 		if ( Map.Command_Post_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" ); }
 
 		if ( Map.Command_Post_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" ); }
 
-		Util.MapDebugPrint( "Command_Post_Defused" ); 
+		Util.MapDebugPrint( "Command_Post_Defused" );
 	},
 
-	
+
 	Allied_Beach_Assault_Ramp_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		Allied_Beach_Assault_Ramp_Built = true;	
+		Allied_Beach_Assault_Ramp_Built = true;
 		Wp.SetWaypointFlag("beach_ramp","closed",false);
 		Wp.SetWaypointFlag("beach_ramp_1","closed",false);
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Beach_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ramp.*" );
-		
+
 		Util.MapDebugPrint( "Allied_Beach_Assault_Ramp_Built" );
 	},
-	
+
 	Allied_Beach_Assault_Ramp_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -385,27 +386,27 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Beach_Assault_Ramp" );
 		Util.MapDebugPrint( "Allied_Beach_Assault_Ramp_Planted" );
 	},
-	
+
 	Allied_Beach_Assault_Ramp_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_Beach_Assault_Ramp_Dyno -= 1;
-		
+
 		if ( Map.Allied_Beach_Assault_Ramp_Dyno < 1 )
-		{ SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Beach_Assault_Ramp" ); }
-			
+			{ SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Beach_Assault_Ramp" ); }
+
 		Util.MapDebugPrint( "Allied_Beach_Assault_Ramp_Defused" );
 	},
-	
+
 	Allied_Beach_Assault_Ramp_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_Beach_Assault_Ramp_Dyno = 0;
-		
+
 		Wp.SetWaypointFlag("beach_ramp","closed",true);
 		Wp.SetWaypointFlag("beach_ramp_1","closed",true);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun" );
@@ -417,15 +418,17 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ramp.*" );
 		Util.MapDebugPrint( "Allied_Beach_Assault_Ramp_Destroyed" );
 	},
-	
+
 	Allied_East_beach_MG_nest_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_East_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Allied_East_beach_MG_nest" );
 
 		Util.MapDebugPrint( "Allied_East_beach_MG_nest_Built" );
 	},
-	
+
 	Allied_East_beach_MG_nest_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -435,17 +438,17 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_East_beach_MG_nest_Planted" );
 	},
-	
+
 	Allied_East_beach_MG_nest_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_East_beach_MG_nest_Dyno -= 1;
-			
+
 		Util.MapDebugPrint( "Allied_East_beach_MG_nest_Defused" );
 	},
-	
+
 	Allied_East_beach_MG_nest_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -455,15 +458,17 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_East_beach_MG_nest_Destroyed" );
 	},
-	
+
 	Allied_West_beach_MG_nest_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_West_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Allied_West_beach_MG_nest" );
+
 		Util.MapDebugPrint( "Allied_West_beach_MG_nest_Built" );
 	},
-	
+
 	Allied_West_beach_MG_nest_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -473,17 +478,17 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_West_beach_MG_nest_Planted" );
 	},
-	
+
 	Allied_West_beach_MG_nest_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_West_beach_MG_nest_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Allied_West_beach_MG_nest_Defused" );
 	},
-	
+
 	Allied_West_beach_MG_nest_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -493,7 +498,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_West_beach_MG_nest_Destroyed" );
 	},
-	
+
 	Axis_Main_Bunker_MG_nest_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -501,27 +506,27 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Main_Bunker_MG_nest_Built" );
 	},
-	
+
 	Axis_Main_Bunker_MG_nest_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Axis_Main_Bunker_MG_nest_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Axis_Main_Bunker_MG_nest_Planted" );
 	},
-	
+
 	Axis_Main_Bunker_MG_nest_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Axis_Main_Bunker_MG_nest_Dyno -= 1;
-			
+
 		Util.MapDebugPrint( "Axis_Main_Bunker_MG_nest_Defused" );
 	},
-	
+
 	Axis_Main_Bunker_MG_nest_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -531,35 +536,35 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Main_Bunker_MG_nest_Destroyed" );
 	},
-	
+
 	Axis_North_West_MG_nest_Built = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }		
+			{ return; }
 
 		Util.MapDebugPrint( "Axis_North_West_MG_nest_Built" );
 	},
-	
+
 	Axis_North_West_MG_nest_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Axis_North_West_MG_nest_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Axis_North_West_MG_nest_Planted" );
 	},
-	
+
 	Axis_North_West_MG_nest_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Axis_North_West_MG_nest_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Axis_North_West_MG_nest_Defused" );
 	},
-	
+
 	Axis_North_West_MG_nest_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -569,14 +574,14 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_North_West_MG_nest_Destroyed" );
 	},
-	
+
 	Axis_South_East_MG_nest_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Axis_South_East_MG_nest_Built = true;
-		
+
 		Util.MapDebugPrint( "Axis_South_East_MG_nest_Built" );
 	},
 
@@ -586,20 +591,20 @@ global Map =
 			{ return; }
 
 		Map.Axis_South_East_MG_nest_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Axis_South_East_MG_nest_Planted" );
 	},
-	
+
 	Axis_South_East_MG_nest_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Axis_South_East_MG_nest_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Axis_South_East_MG_nest_Defused" );
 	},
-	
+
 	Axis_South_East_MG_nest_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -607,26 +612,27 @@ global Map =
 
 		Map.Axis_South_East_MG_nest_Dyno = 0;
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_South_East_MG_nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_South_East_MG_nest" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_South_East_MG_nest" );
-		
+
 		Util.MapDebugPrint( "Axis_South_East_MG_nest_Destroyed" );
 	},
-	
+
 	Barricade_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Barricade = true;
-                
+
                 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_West_Beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_East_Beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_ramp" );
-		
+
 		Util.MapDebugPrint( "Barricade_Built" );
 	},
-	
+
 	Barricade_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -639,34 +645,34 @@ global Map =
                 SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_East_Beach_MG_nest" );
                 SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_West_Beach_MG_nest" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Beach_.*" );
-		
+
 		Util.MapDebugPrint( "Barricade_Planted" );
 	},
-	
+
 	Barricade_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Barricade_Dyno -= 1;
-		
+
 		if ( Map.Barricade_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" ); }		
-		
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" ); }
+
 		Util.MapDebugPrint( "Barricade_Defused" );
 	},
-	
+
 	Barricade_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Barricade_Dyno = 0;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barricade" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_ramp" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Beach_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" );
@@ -674,16 +680,16 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
-		
+
 		if( Map.flagstatus == 2 )
 		{
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barricade" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barricade" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barricade" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barricade" );
 		}
-	
+
 		Util.MapDebugPrint( "Barricade_Destroyed" );
 	},
-	
+
 	Generator_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -694,15 +700,15 @@ global Map =
                 SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_westdoor" );
 	        SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_eastdoor" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_GEN" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply_Door" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 		SetGoalPriority( "BUILD_Command_Post", 0.80, TEAM.ALLIES, CLASS.ENGINEER );
-		
+
 	        SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Generator" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_South_East_MG_nest" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rear_door.*" );
-		
+
 		if ( Map.Gun_Dyno < 1 && Map.Gun_controls_Dyno < 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex.*" );
@@ -712,28 +718,31 @@ global Map =
 			else if ( Map.flagstatus == 2 )
 				{ Map.Switches.FrontDoor.LimitTeam = (1<<TEAM.ALLIES); }
 			else
-				{ Map.Switches.FrontDoor.LimitTeam = 0; 
+			{
+				Map.Switches.FrontDoor.LimitTeam = 0;
 				Map.Switches.FrontDoor_Enabled = false;
-				}
+			}
 
 			if ( Map.rightdoor )
 				{ Map.Switches.RightDoor.LimitTeam = (1<<TEAM.AXIS); }
 			else if ( Map.flagstatus == 2 )
 				{ Map.Switches.RightDoor.LimitTeam = (1<<TEAM.ALLIES); }
 			else
-				{ Map.Switches.RightDoor.LimitTeam = 0; 
+			{
+				Map.Switches.RightDoor.LimitTeam = 0;
 				Map.Switches.RightDoor_Enabled = false;
-				}
+			}
 
 			if ( Map.leftdoor )
 				{ Map.Switches.LeftDoor.LimitTeam = (1<<TEAM.AXIS); }
 			else if ( Map.flagstatus == 2 )
 				{ Map.Switches.LeftDoor.LimitTeam = (1<<TEAM.ALLIES); }
 			else
-				{ Map.Switches.LeftDoor.LimitTeam = 0; 
+			{
+				Map.Switches.LeftDoor.LimitTeam = 0;
 				Map.Switches.LeftDoor_Enabled = false;
-				}
-		}	
+			}
+		}
 
 		Util.MapDebugPrint( "Generator_Built" );
 	},
@@ -744,30 +753,30 @@ global Map =
 			{ return; }
 
                 Map.Generator_Dyno += 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Generator" );
-		
+
 		Util.MapDebugPrint( "Generator_Planted" );
 	},
-	
+
 	Generator_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Generator_Dyno -= 1;
-		
+
 		if ( Map.Generator_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" ); }
-			
+
 		Util.MapDebugPrint( "Generator_Defused" );
 	},
-	
+
 	Generator_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.doorcontrols = false;
 		Map.Switches.FrontDoor.LimitTeam = 0;
 		Map.Switches.LeftDoor.LimitTeam = 0;
@@ -775,25 +784,25 @@ global Map =
 		Map.Switches.RightDoor_Enabled = false;
 		Map.Switches.LeftDoor_Enabled = false;
 		Map.Switches.FrontDoor_Enabled = false;
-                
+
                 SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_westdoor" );
 	        SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_eastdoor" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_GEN" );
 	        SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Generator" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_South_East_MG_nest" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rear_door.*" );
-		
+
 		SetAvailableMapGoals( 0, false, "SWITCH_frontdoor" );
 		SetAvailableMapGoals( 0, false, "SWITCH_leftdoor" );
 		SetAvailableMapGoals( 0, false, "SWITCH_rightdoor" );
-		
-		if ( Map.CPStatus == 2 ) 
+
+		if ( Map.CPStatus == 2 )
 		{
 			Util.ChangeSpawn( TEAM.ALLIES, 4, 4 ); // spawn up to 4 at cp
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CP" );
 		}
-		if ( Map.CPStatus == 0) 
+		if ( Map.CPStatus == 0)
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 			SetGoalPriority( Map.Build_Command_Post, 0.99, TEAM.ALLIES, CLASS.ENGINEER );
@@ -801,38 +810,38 @@ global Map =
 		}
 		if ( Map.Power_Supply_Door == true )
 		{
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_hatchroute" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
-		SetGoalPriority( Map.Plant_Power_Supply_Door, 0.99, TEAM.ALLIES, CLASS.COVERTOPS );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_hatchroute" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
+			SetGoalPriority( Map.Plant_Power_Supply_Door, 0.99, TEAM.ALLIES, CLASS.COVERTOPS );
 		}
 		if ( Map.Power_Supply_Door == false )
 		{
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
-		SetGoalPriority( Map.Plant_Power_Supply, 0.99, TEAM.ALLIES, CLASS.ENGINEER );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
+			SetGoalPriority( Map.Plant_Power_Supply, 0.99, TEAM.ALLIES, CLASS.ENGINEER );
 		}
-		
+
 		Util.MapDebugPrint( "Generator_Destroyed" );
 	},
-	
+
 	Power_Supply_Door_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Power_Supply_Door = true;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_hatchroute" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply");
-		
+
 		if ( Map.doorcontrols == false && Map.CPStatus == 2 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
 			SetGoalPriority( "PLANT_Power_Supply_Door", 0.99, TEAM.ALLIES, CLASS.COVERTOPS );
 		}
-		
+
 		Util.MapDebugPrint( "Power_Supply_Door_Built" );
 	},
-	
+
 	Power_Supply_Door_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -840,7 +849,7 @@ global Map =
 
 		Map.Power_Supply_Door_Dyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
-	
+
 		Util.MapDebugPrint( "Power_Supply_Door_Planted" );
 	},
 
@@ -851,30 +860,30 @@ global Map =
 
 		Map.Power_Supply_Door_Dyno -= 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex_5" );
-		
+
 		if ( Map.doorcontrols == false && Map.CPStatus == 2 )
-			{ 
-				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" ); 
-			}	
-			
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
+		}
+
 		Util.MapDebugPrint( "Power_Supply_Door_Defused" );
 	},
-	
+
 	Power_Supply_Door_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Power_Supply_Door_Dyno = 0;
 		Map.Power_Supply_Door = false;
-		
+
                 SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
-		
-	
+
+
 		Util.MapDebugPrint( "Power_Supply_Door_Destroyed" );
 	},
-	
+
 	Power_Supply_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -884,32 +893,20 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_5" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex_6" );
-		
-		
-		// randomize plant goal position
-		rand = RandInt( 1,4 );
-		if ( rand == 1 )
-			{ Util.SetGoalPosition( 3425,-4792,728, "PLANT_Power_Supply" ); }
-		else if ( rand == 2 )
-			{ Util.SetGoalPosition( 3424,-4543,728, "PLANT_Power_Supply" ); }
-		else if ( rand == 3 )
-			{ Util.SetGoalPosition( 3222,-4663,728, "PLANT_Power_Supply" ); }
-		else
-			{ Util.SetGoalPosition( 3629,-4681,728, "PLANT_Power_Supply" ); }
-		
+
 		Util.MapDebugPrint( "Power_Supply_Planted" );
 	},
-	
+
 	Power_Supply_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Power_Supply_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Power_Supply_Defused" );
 	},
-	
+
 	Power_Supply_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -917,32 +914,32 @@ global Map =
 
 		Map.Power_Supply_Dyno = 0;
 		Map.Power = true;
-		
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex_6" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Power_Supply_Door" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_hatch" );
-	
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex_6" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Power_Supply_Door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_hatch" );
+
 		Util.MapDebugPrint( "Power_Supply_Destroyed" );
 	},
-	
+
 	Gun_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gun_Dyno += 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Gun" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_3" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_4" );
-		
+
 		Util.MapDebugPrint( "Gun_Planted" );
 	},
-	
+
 	Gun_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -953,21 +950,21 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_4" );
-		
+
 		if ( Map.Gun_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" ); }		
-		
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" ); }
+
 		Util.MapDebugPrint( "Gun_Defused" );
 	},
-	
+
 	Gun_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gun_Dyno = 0;
-		
-		if  ( Map.Gun_Controls_Dyno == 0 && Map.Gun_Dyno == 0 ) 
+
+		if  ( Map.Gun_Controls_Dyno == 0 && Map.Gun_Dyno == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_1" );
@@ -976,32 +973,32 @@ global Map =
 			Map.Switches.RightDoor_Enabled = false;
 			Map.Switches.LeftDoor_Enabled = false;
 		}
-		else 
+		else
 		{
 			//defend incoming Allied_Beach_Assault_Ramp
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" ); 
-					
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" );
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*");
 
-		}	
+		}
 
 		Util.MapDebugPrint( "Gun_Destroyed" );
 	},
-	
+
 	Gun_Controls_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gun_Controls_Dyno += 1;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "Plant_Gun_Controls" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_3" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_4" );
-		
+
 		Util.MapDebugPrint( "Gun_Controls_Planted" );
 	},
 
@@ -1011,68 +1008,58 @@ global Map =
 			{ return; }
 
 		Map.Gun_Controls_Dyno -= 1;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_4" );
-		
+
 		if ( Map.Gun_Controls_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun_Controls" ); }		
-		
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun_Controls" ); }
+
 		Util.MapDebugPrint( "Gun_Controls_Defused" );
 	},
-	
+
 	Gun_Controls_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gun_Controls_Dyno = 0;
-		
-		if  ( Map.Gun_Controls_Dyno == 0 && Map.Gun_Dyno == 0 ) 
+
+		if  ( Map.Gun_Controls_Dyno == 0 && Map.Gun_Dyno == 0 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun.*" );
 			Map.Switches.RightDoor_Enabled = false;
 			Map.Switches.LeftDoor_Enabled = false;
-		
+
 		}
-		else 
+		else
 		{
 			//defend incoming Allied_Beach_Assault_Ramp
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_1" );
-					
-	
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
 		}
 
 		Util.MapDebugPrint( "Gun_Controls_Destroyed" );
 	},
-	
+
 	Radar_Station_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Radar_Station_Dyno += 1;
-		// randomize plant goal position
-		rand = RandInt( 1,4 );
-		if ( rand == 1 )
-			{ Util.SetGoalPosition( 637,-3483,1072, "PLANT_Radar_Station" ); }
-		else if ( rand == 2 )
-			{ Util.SetGoalPosition( 755,-3591,1072, "PLANT_Radar_Station" ); }
-		else if ( rand == 3 )
-			{ Util.SetGoalPosition( 638,-3715,1072, "PLANT_Radar_Station" ); }
-		else
-			{ Util.SetGoalPosition( 522,-3588,1072, "PLANT_Radar_Station" ); }
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Radar_Station" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_radar.*" );
+
 		Util.MapDebugPrint( "Radar_Station_Planted" );
 	},
 
@@ -1083,8 +1070,10 @@ global Map =
 
 		Map.Radar_Station_Dyno -= 1;
 		if ( Map.Radar_Station_Dyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" ); }	
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_radar.*" );
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_radar.*" );
+		}
 		Util.MapDebugPrint( "Radar_Station_Defused" );
 	},
 
@@ -1092,16 +1081,16 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Radar_Station_Dyno = 0;
-                SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" ); 	
+                SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun_Controls" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply_Door" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_mainbunker_ammocabinet" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_mainbunker_healthcabinet" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_radar.*" );
-				
+
 		Util.MapDebugPrint( "Radar_Station_Destroyed" );
 	},
 
@@ -1115,11 +1104,13 @@ global Map =
 		Util.ChangeSpawn( TEAM.ALLIES, 3 );
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Gun_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Beach_.*" ); 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Beach_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_West_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_East_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_West_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_East_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRG42_Allied_West_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Allied_East_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_bUpperBunker1" );
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Gun_.*" );
@@ -1127,15 +1118,17 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Flag_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker_mg42_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker_mg42_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIR42_westbunker_mg42_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIR42_westbunker_mg42_2" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barricade" );
-		
-		
+
+
 		if ( Map.Barricade  )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" ); }		
-		
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" ); }
+
 		if ( Map.frontdoor && Map.GunDyno < 1 && Map.doorcontrols )
 		{
 			// Map.Switches.FrontDoor.LimitTeam = (1<<TEAM.AXIS);
@@ -1179,8 +1172,8 @@ global Map =
 			Map.Switches.hatch.LimitTeam = (1<<TEAM.AXIS);
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_hatch" );
 		}
-		
-		Util.MapDebugPrint( "westbunker_flag_Axis_Captured" ); 
+
+		Util.MapDebugPrint( "westbunker_flag_Axis_Captured" );
 	},
 
 	westbunker_flag_Allies_Captured = function( trigger )
@@ -1190,7 +1183,7 @@ global Map =
 
                 Map.flagstatus = 2;
 		Util.SetMaxUsers( 2, "CHECKPOINT_westbunker_flag" );
-		
+
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Beach_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Gun_.*" );
@@ -1199,17 +1192,21 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_West_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_East_beach_MG_nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Allied_West_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Allied_East_beach_MG_nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Axis_Main_Bunker_MG_nest" );
                 SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" );
                 SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bunker.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bUpperBunker1" );
-		
+
 		//make sure they spawn at flag
 		Util.ChangeSpawn( TEAM.ALLIES, 5 );
-		
+
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_Main_Bunker_MG_nest" );
 		if ( Map.Gun_Dyno < 1 && Map.Gun_Controls_Dyno < 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex.*" );
@@ -1217,12 +1214,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Flag_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker_mg42_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker_mg42_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_westbunker_mg42_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_westbunker_mg42_2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*");
 		SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_Gunpatrol.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barricade" );
-		
+
 		if ( Map.frontdoor && Map.GunDyno < 1 && Map.doorcontrols )
 		{
 			// Map.Switches.FrontDoor.LimitTeam = (1<<TEAM.AXIS);
@@ -1284,7 +1283,7 @@ global Map =
 
 		Util.MapDebugPrint( "westbunker_flag_Allies_Captured" );
 	},
-	
+
 	front_door_lever = function( trigger )
 	{
 		if ( TestMap )
@@ -1431,7 +1430,7 @@ global Map =
 
 		Util.MapDebugPrint( "right_door_right", true );
 	},
-	
+
 	hatch_start = function( trigger )
 	{
 		if ( TestMap )
@@ -1443,33 +1442,33 @@ global Map =
 		if ( vel.z > 0 )
 		{
 			Map.HatchStatus = false; //closed
-	
+
 			if ( Map.Power_Supply_Door == true ) //Built
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_hatchroute" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hatch" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );				
-			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply" );
-			SetGoalPriority( "PLANT_Power_Supply", 0.83, TEAM.ALLIES, CLASS.ENGINEER );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_hatchroute" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hatch" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply" );
+				SetGoalPriority( "PLANT_Power_Supply", 0.83, TEAM.ALLIES, CLASS.ENGINEER );
 			}
 			if( Map.Power_Supply_Door == false ) //Distoryed
 			{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hatch" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
-			SetGoalPriority( "PALNT_Power_Supply", 0.99, TEAM.ALLIES, CLASS.ENGINEER );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply_Door" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hatch" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_hatch" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
+				SetGoalPriority( "PALNT_Power_Supply", 0.99, TEAM.ALLIES, CLASS.ENGINEER );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Power_Supply_Door" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
 			}
 			Wp.SetWaypointFlag( "Base Hatch 1", "closed", true );
 			Wp.SetWaypointFlag( "Base Hatch 2", "closed", true );
 			Wp.SetWaypointFlag( "basehatch", "closed", true );
-			
+
 			Util.MapDebugPrint("Hatch Closed", true);
 		}
 		else if ( vel.z < 0 )
 		{
-			Map.HatchStatus = true; //open 
+			Map.HatchStatus = true; //open
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_hatchroute" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_hatch" );
@@ -1480,22 +1479,22 @@ global Map =
 			Wp.SetWaypointFlag( "Base Hatch 1", "closed", false );
 			Wp.SetWaypointFlag( "Base Hatch 2", "closed", false );
 			Wp.SetWaypointFlag( "basehatch", "closed", false );
-			
+
 			Util.MapDebugPrint("Hatch Opened", true);
 		}
 	},
 };
 
 global OnMapLoad = function()
-{	
+{
 	Util.SetGoalPosition( 640.000,-3592.000,1108.000, "PLANT_Radar_Station" );
 	Util.SetGoalPosition( 3424.000,-4672.000,762.000, "PLANT_Power_Supply" );
 	Util.SetGoalPosition( 1820, -2801, 883, "PLANT_Barricade" );
 	Util.DisableGoal("REPAIRMG42_.*");
-	
+
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
-		
+
 	// Register callback functions
 	OnTrigger( "The Allied Beach Assault Ramp has been constructed.", Map.Allied_Beach_Assault_Ramp_Built );
 	OnTrigger( "The Allied East beach MG Nest has been constructed.", Map.Allied_East_beach_MG_nest_Built );
@@ -1558,30 +1557,28 @@ global OnMapLoad = function()
 	OnTrigger( "leftdoor_lever1_goto", Map.left_door_lever );
 	OnTrigger( "rightdoor_lever1_goto", Map.right_door_lever );
 	OnTrigger( "hatch_start", Map.hatch_start );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
-	
+
 	Util.DisableGoal("ROUTE_fdoor_route");
-	Util.DisableGoal("REPAIRMG42_.*");
 	Util.DisableGoal("ROUTE_CP" );
-	
-	
+
 	Wp.SetWaypointFlag("beach_ramp","closed",true);
 	Wp.SetWaypointFlag("beach_ramp_1","closed",true);
-	
-	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_1");  
-	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_2"); 
-	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_3"); 
-	Util.AddUseWp("PLANT_Gun", "Main_Gun"); 
-	Util.AddUseWp("PLANT_Gun", "Main_Gun_1"); 
-	Util.AddUseWp("PLANT_Gun", "Main_Gun_3"); 
-	Util.AddUseWp("PLANT_Power_Supply", "PW_1"); 
-	Util.AddUseWp("PLANT_Power_Supply", "PW_2"); 
-	Util.AddUseWp("PLANT_Power_Supply", "PW_3"); 
+
+	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_1");
+	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_2");
+	Util.AddUseWp("PLANT_Gun_Controls", "Gun_Con_3");
+	Util.AddUseWp("PLANT_Gun", "Main_Gun");
+	Util.AddUseWp("PLANT_Gun", "Main_Gun_1");
+	Util.AddUseWp("PLANT_Gun", "Main_Gun_3");
+	Util.AddUseWp("PLANT_Power_Supply", "PW_1");
+	Util.AddUseWp("PLANT_Power_Supply", "PW_2");
+	Util.AddUseWp("PLANT_Power_Supply", "PW_3");
 	Util.AddUseWp("PLANT_Power_Supply", "PW_4");
-	Util.AddUseWp("PLANT_Power_Supply", "PW_5"); 	
-	Util.AddUseWp("PLANT_Allied_Beach_Assault_Ramp", "beach_ramp_1"); 
-	Util.AddUseWp("PLANT_Radar_Station", "radar"); 
+	Util.AddUseWp("PLANT_Power_Supply", "PW_5");
+	Util.AddUseWp("PLANT_Allied_Beach_Assault_Ramp", "beach_ramp_1");
+	Util.AddUseWp("PLANT_Radar_Station", "radar");
 	Util.AddUseWp("PLANT_Radar_Station", "radar_1");
 	Util.AddUseWp("PLANT_Radar_Station", "radar_2");
 	Util.AddUseWp("PLANT_Radar_Station", "radar_3");
@@ -1595,7 +1592,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "BUILD_.*" );
 	Util.SetMaxUsers( 1, "PLANT_.*" );
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=30, maxcamptime=45});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=120});
@@ -1622,9 +1619,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.COVERTOPS);
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Beach_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Beach_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_West_beach_MG_nest" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_East_beach_MG_nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barricade" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun" );
@@ -1635,13 +1634,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Power_Supply" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bunker.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hatch" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_West_beach_MG_nest" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_East_beach_MG_nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_bUpperBunker1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_westbunker_flag" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_ramp" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
-	
+
 // Axis goals
 	SetGoalPriority( "BUILD_Barricade", 0.96, TEAM.AXIS );
 	SetGoalPriority( "BUILD_Generator", 0.96, TEAM.AXIS );
@@ -1658,7 +1655,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.COVERTOPS);
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_mainbunker_ammocabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_mainbunker_healthcabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Flag_.*" );
@@ -1677,40 +1674,42 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker_mg42_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker_mg42_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_Main_Bunker_MG_nest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_North_West_MG_nest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_South_East_MG_nest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_westbunker_mg42_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_westbunker_mg42_2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_ramp" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_westbunker_flag" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_bUpperBunker1" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );
-	
-	Util.DisableGoal("REPAIRMG42_.*");
+
 // trigger to let defending bots know to go after flag
 	tOne = OnTriggerRegion(Vector3(2336,-4161,920), 200, Map.BaseTrigger);
 // Back Way
 	BackPath = OnTriggerRegion(AABB(3936.262,-3211.632,1103.525,4825.469,-2535.125,1217.985),Map.BackPath);
 	BackTunnel = OnTriggerRegion(AABB(3899.481,-4124.875,890.505,4226.562,-4003.125,1091.574),Map.BackTunnel);
 	BackStairs = OnTriggerRegion(AABB(3782.084,-4856.874,897.125,4045.895,-4190.358,1099.125),Map.BackStairs);
-// Allied_Beach_Assault_Ramp	
+// Allied_Beach_Assault_Ramp
 	ramp = OnTriggerRegion(AABB(3070.153,-1925.497,505.125,3114.360,-1419.575,1125.931),Map.Assault_Ramp);
-// Switches	
-	Util.UpdateSwitchData();	
+// Switches
+	Util.UpdateSwitchData();
 // Set up Routing
-	Util.MapDebugPrint("Configuring Routes");
 
-	MapRoutes = 
+	MapRoutes =
 	{
 		PLANT_Gun_Controls =
 		{
-			ROUTE_FlagSpawn = 
+			ROUTE_FlagSpawn =
 			{
 				ROUTE_fdoor_route =
 				{
-					ROUTE_hatchroute = 
+					ROUTE_hatchroute =
 					{
 						ROUTE_hatchroute2 =
 						{
 							ROUTE_eastdoor = {},
 							ROUTE_westdoor = {},
-							ROUTE_weststairs = 
+							ROUTE_weststairs =
 							{
 								ROUTE_westladder = {},
 								ROUTE_eastladder = {},
@@ -1719,7 +1718,7 @@ global OnMapLoad = function()
 					},
 					ROUTE_southstairs =
 					{
-						ROUTE_guntop = 
+						ROUTE_guntop =
 						{
 							ROUTE_westladder = {},
 							ROUTE_eastladder = {},
@@ -1728,13 +1727,13 @@ global OnMapLoad = function()
 				},
 				ROUTE_radar_route =
 				{
-					ROUTE_hatchroute = 
+					ROUTE_hatchroute =
 					{
 						ROUTE_hatchroute2 =
 						{
 							ROUTE_eastdoor = {},
 							ROUTE_westdoor = {},
-							ROUTE_weststairs = 
+							ROUTE_weststairs =
 							{
 								ROUTE_westladder = {},
 								ROUTE_eastladder = {},
@@ -1743,7 +1742,7 @@ global OnMapLoad = function()
 					},
 					ROUTE_southstairs =
 					{
-						ROUTE_guntop = 
+						ROUTE_guntop =
 						{
 							ROUTE_westladder = {},
 							ROUTE_eastladder = {},
@@ -1754,17 +1753,17 @@ global OnMapLoad = function()
 		},
 		PLANT_Gun =
 		{
-			ROUTE_FlagSpawn = 
+			ROUTE_FlagSpawn =
 			{
 				ROUTE_fdoor_route =
 				{
-					ROUTE_hatchroute = 
+					ROUTE_hatchroute =
 					{
 						ROUTE_hatchroute2 =
 						{
 							ROUTE_eastdoor = {},
 							ROUTE_westdoor = {},
-							ROUTE_weststairs = 
+							ROUTE_weststairs =
 							{
 								ROUTE_westladder = {},
 								ROUTE_eastladder = {},
@@ -1773,7 +1772,7 @@ global OnMapLoad = function()
 					},
 					ROUTE_southstairs =
 					{
-						ROUTE_guntop = 
+						ROUTE_guntop =
 						{
 							ROUTE_westladder = {},
 							ROUTE_eastladder = {},
@@ -1782,13 +1781,13 @@ global OnMapLoad = function()
 				},
 				ROUTE_radar_route =
 				{
-					ROUTE_hatchroute = 
+					ROUTE_hatchroute =
 					{
 						ROUTE_hatchroute2 =
 						{
 							ROUTE_eastdoor = {},
 							ROUTE_westdoor = {},
-							ROUTE_weststairs = 
+							ROUTE_weststairs =
 							{
 								ROUTE_westladder = {},
 								ROUTE_eastladder = {},
@@ -1797,7 +1796,7 @@ global OnMapLoad = function()
 					},
 					ROUTE_southstairs =
 					{
-						ROUTE_guntop = 
+						ROUTE_guntop =
 						{
 							ROUTE_westladder = {},
 							ROUTE_eastladder = {},
@@ -1805,18 +1804,18 @@ global OnMapLoad = function()
 					},
 				},
 			},
-		},	
+		},
 		DEFEND_Gun_3 =
 		{
 			ROUTE_AxisSpawn =
 			{
-				ROUTE_hatchroute = 
+				ROUTE_hatchroute =
 				{
 					ROUTE_hatchroute2 =
 					{
 						ROUTE_eastdoor = {},
 						ROUTE_westdoor = {},
-						ROUTE_weststairs = 
+						ROUTE_weststairs =
 						{
 							ROUTE_westladder = {},
 							ROUTE_eastladder = {},
@@ -1845,96 +1844,96 @@ global OnMapLoad = function()
 			{
 				ROUTE_flagroute = { Weight = 3 },
 				ROUTE_gunpatrol = {},
-				ROUTE_southstairs = 
+				ROUTE_southstairs =
 				{
 					ROUTE_guntop = { ROUTE_guntop = {}, },
 				},
 			},
 		},
-		BUILD_Generator = 
+		BUILD_Generator =
 		{
-			ROUTE_AxisSpawn  = 
+			ROUTE_AxisSpawn  =
 			{
-				ROUTE_E5_stairs  = 
+				ROUTE_E5_stairs  =
 				{
 				},
-				ROUTE_southstairs  = 
+				ROUTE_southstairs  =
 				{
-					ROUTE_E5_stairs  = 
+					ROUTE_E5_stairs  =
 					{
 					},
-					ROUTE_southstairs_bot  = 
+					ROUTE_southstairs_bot  =
 					{
-						ROUTE_E5_stairs  = 
+						ROUTE_E5_stairs  =
 						{
 						},
 					},
 				},
 			},
-			ROUTE_FlagSpawn  = 
+			ROUTE_FlagSpawn  =
 			{
-				ROUTE_weststairs2  = 
+				ROUTE_weststairs2  =
 				{
-					ROUTE_weststairs  = 
+					ROUTE_weststairs  =
 					{
-						ROUTE_hatchroute2  = 
+						ROUTE_hatchroute2  =
 						{
-							ROUTE_rear_door  = 
+							ROUTE_rear_door  =
 							{
 							},
 						},
 					},
-					ROUTE_southstairs2  = 
+					ROUTE_southstairs2  =
 					{
-						ROUTE_E5_stairs  = 
+						ROUTE_E5_stairs  =
 						{
 						},
 					},
 				},
-				ROUTE_radar_route  = 
+				ROUTE_radar_route  =
 				{
-					ROUTE_fdoor_route  = 
+					ROUTE_fdoor_route  =
 					{
-						ROUTE_E5_stairs  = 
+						ROUTE_E5_stairs  =
 						{
 						},
 					},
 				},
 			},
 		},
-		PLANT_Power_Supply = 
+		PLANT_Power_Supply =
 		{
-			ROUTE_CP  = 
+			ROUTE_CP  =
 			{
-				ROUTE_rear_door  = 
+				ROUTE_rear_door  =
 				{
-					ROUTE_hatchroute  = 
+					ROUTE_hatchroute  =
 					{
 					},
-					ROUTE_E5_stairs  = 
+					ROUTE_E5_stairs  =
 					{
-						ROUTE_hatchroute  = 
+						ROUTE_hatchroute  =
 						{
 						},
 					},
 				},
 			},
-			ROUTE_FlagSpawn  = 
+			ROUTE_FlagSpawn  =
 			{
-				ROUTE_radar_route  = 
+				ROUTE_radar_route  =
 				{
-					ROUTE_flagroute  = 
+					ROUTE_flagroute  =
 					{
-						ROUTE_southstairs_bot  = 
+						ROUTE_southstairs_bot  =
 						{
-							ROUTE_hatchroute  = 
+							ROUTE_hatchroute  =
 							{
 							},
-							ROUTE_E5_stairs  = 
+							ROUTE_E5_stairs  =
 							{
-								ROUTE_rear_door  = 
+								ROUTE_rear_door  =
 								{
-									ROUTE_hatchroute  = 
+									ROUTE_hatchroute  =
 									{
 									},
 								},
@@ -1942,20 +1941,20 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_fdoor_route  = 
+				ROUTE_fdoor_route  =
 				{
-					ROUTE_flagroute  = 
+					ROUTE_flagroute  =
 					{
-						ROUTE_southstairs_bot  = 
+						ROUTE_southstairs_bot  =
 						{
-							ROUTE_hatchroute  = 
+							ROUTE_hatchroute  =
 							{
 							},
-							ROUTE_E5_stairs  = 
+							ROUTE_E5_stairs  =
 							{
-								ROUTE_rear_door  = 
+								ROUTE_rear_door  =
 								{
-									ROUTE_hatchroute  = 
+									ROUTE_hatchroute  =
 									{
 									},
 								},
@@ -1965,9 +1964,9 @@ global OnMapLoad = function()
 				},
 			},
 		},
-	
+
 	};
-	
+
 	// copy some routes
 	MapRoutes.ATTACK_Gun_1 = MapRoutes.PLANT_Gun_Controls;
 	MapRoutes.ATTACK_Gun_2 = MapRoutes.PLANT_Gun_Controls;
@@ -2004,11 +2003,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 
-
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
@@ -2019,7 +2014,7 @@ global OnBotJoin = function( bot )
 	//~bot.MaxViewDistance = 2400;
 	team = bot.GetTeam();
 	class = bot.GetClass();
-	
+
 	team = bot.GetTeam();
 	ETUtil.SelectWeapon( bot, WEAPON.STEN );
 
@@ -2040,12 +2035,12 @@ global OnBotJoin = function( bot )
 			bot.ChangeSpawnPoint(1);
 		}
 	}
-	
+
 	if ( team == TEAM.ALLIES )
 	{
 		if ( class == CLASS.COVERTOPS )
-		{ 
-			bot.ChangeSpawnPoint( 2 ); 
+		{
+			bot.ChangeSpawnPoint( 2 );
 		}
-	}   
+	}
 };

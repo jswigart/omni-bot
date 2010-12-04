@@ -322,9 +322,6 @@ global OnMapLoad = function()
 		}
 	};
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
 	MapRoutes =
 	{
 		FLAG_ammoBox1 = {
@@ -393,7 +390,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_submarine4 = MapRoutes.ATTACK_submarine1;
 	Util.Routes(MapRoutes);
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

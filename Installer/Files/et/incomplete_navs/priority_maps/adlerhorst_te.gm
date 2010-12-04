@@ -43,7 +43,6 @@ global Map =
 	afterbridgeTrigger = false,
 	barrierTrigger = false,
 	tankendTrigger = false,
-	Plant_Tank_Barrier = "PLANT_Tank_Barrier",
 	Door_to_the_Stairs_Destroyed = false,
 	Bunker_Wall_Destroyed = false,
 	doortopstatus = false, //closed
@@ -53,19 +52,21 @@ global Map =
 	docs_Reurned = false,
 	doortopstatus = false, //closed
 	doorbotstatus = false, //closed
+
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
+
 	Movers =
 	{
 		"MOVER_lift1",
 		"MOVER_tank",
 		"MOVER_chains",
 		"MOVER_turret",
-	},	
-//Bubba
+	},
+	//Bubba
 	BunkerLadderFacing = null,
 	StairsLadderFacing = null,
-// Navigation ladders Bubba
-	Navigation = 
+	// Navigation ladders Bubba
+	Navigation =
 	{
 		bunkerladderf =
 		{
@@ -79,7 +80,7 @@ global Map =
 				}
 				_this.AddAimRequest(Priority.High, "facing", Map.BunkerLadderFacing.facing);
 				_this.Bot.HoldButton(BTN.FORWARD, 10.0);
-				
+
 				Map.BunkerLadderFacing = null;
 				sleep(10); // for how ever long the bot should keep the aim request
 			},
@@ -89,22 +90,22 @@ global Map =
 			navigate = function(_this)
 			{
 				Util.MapDebugPrint("stairsladderc");
-				
+
 				if ( !Map.StairsLadderFacing )
 				{
 					Map.StairsLadderFacing = Util.WpNameInfo("LD2_a");
 				}
 				_this.AddAimRequest(Priority.High, "facing", Map.StairsLadderFacing.facing);
 				_this.Bot.HoldButton(BTN.FORWARD, 10.0);
-				
+
 				Map.StairsLadderFacing = null;
 				sleep(10); // for how ever long the bot should keep the aim request
 			},
 		},
 	},
-//End Navigation laddrs Bubba
-//lift switches	
- Switches =
+	//End Navigation laddrs Bubba
+	//lift switches
+	Switches =
 	{
 		callup =
 		{
@@ -121,15 +122,20 @@ global Map =
 				if ( Map.doortopstatus == true && Map.lift1Pos == "top")
 				{
 					sleep(0.5);
-					return true; 
+					return true;
 				}
 				if ( Map.doortopstatus == false && Map.lift1Pos == "top")
 				{
-					sleep(1);
-					return true; 
+					sleep(1.5);
+					return true;
+				}
+				if ( Map.lift1Pos == "moving" )
+				{
+					sleep(16);
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		in_top =
 		{
@@ -145,16 +151,21 @@ global Map =
 			{
 				if ( Map.doortopstatus == true && Map.lift1Pos == "top" )
 				{
-					sleep(0.5); 
-					return true; 
+					sleep(0.5);
+					return true;
 				}
 				if ( Map.doortopstatus == false && Map.lift1Pos == "top" )
 				{
-					sleep(1);
-					return true; 
+					sleep(1.5);
+					return true;
+				}
+				if ( Map.lift1Pos == "moving" )
+				{
+					sleep(16);
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		calldown =
 		{
@@ -171,15 +182,20 @@ global Map =
 				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom")
 				{
 					sleep(0.5);
-					return true; 
+					return true;
 				}
 				if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom")
 				{
-					sleep(1);
-					return true; 
+					sleep(1.5);
+					return true;
+				}
+				if ( Map.lift1Pos == "moving" )
+				{
+					sleep(16);
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 		in_bot =
 		{
@@ -196,388 +212,360 @@ global Map =
 				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom" )
 				{
 					sleep(0.5);
-					return true; 
-					
+					return true;
+
 				}
 				if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom" )
 				{
-					sleep(1);
-					return true; 
+					sleep(1.5);
+					return true;
+				}
+				if ( Map.lift1Pos == "moving" )
+				{
+					sleep(16);
+					return true;
 				}
 				return false;
-			},				
+			},
 		},
 	},
-//lift switches end	
-//lift
+	//lift switches end
+	//lift
 	lift1 = function(trigger)
 	{
 		Map.lift1Pos = "moving";
-		Util.MapDebugPrint("lift moving"); 
-		
 		Map.Switches.callup.Enabled = false;
 		Map.Switches.in_top.Enabled = false;
 		Map.Switches.calldown.Enabled = false;
 		Map.Switches.in_bot.Enabled = false;
 		doortopstatus = false; //closed
 		doorbotstatus = false; //closed
-		
+		Util.MapDebugPrint("lift moving");
+
 		sleep(16);
-	
+
 		vel = ToVector(trigger.Action);
-		
+
 		if (vel.z < 0)
 		{
 			Map.lift1Pos = "bottom";
 			Map.Switches.calldown.Enabled = true;
 			Map.Switches.in_bot.Enabled = true;
-			
-			Util.MapDebugPrint("lift at bottom"); 
+
+			Util.MapDebugPrint("lift at bottom");
 		}
-		else 
+		else if (vel.z > 0)
 		{
 			Map.lift1Pos = "top";
 			Map.Switches.callup.Enabled = true;
 			Map.Switches.in_top.Enabled = true;
 
-			Util.MapDebugPrint("lift at top"); 
+			Util.MapDebugPrint("lift at top");
 		}
 	},
-//lift doors	
+	//lift doors
 	lowerliftdoor = function( trigger )
-	{	
+	{
 		if ( trigger.Action == "opening" )
 		{
 			Map.doorbotstatus = true; //open
 			Map.Switches.calldown.Enabled = false;
 			Map.Switches.in_bot.Enabled = false;
-			
+			Wp.SetWaypointFlag("bot","closed",false);
+
 			Util.MapDebugPrint("Bottom Door Open");
 		}
-		else
+		else if ( trigger.Action == "closing" )
 		{
 			Map.doorbotstatus = false; //closed
 			Map.Switches.calldown.Enabled = true;
 			Map.Switches.in_bot.Enabled = true;
-	
+			Wp.SetWaypointFlag("bot","closed",true);
+
 			Util.MapDebugPrint("Bottom Door Closed");
 		}
 	},
 	upperliftdoor = function( trigger )
-	{	
+	{
 		if ( trigger.Action == "opening" )
 		{
 			Map.doortopstatus = true; //open
 			Map.Switches.callup.Enabled = false;
 			Map.Switches.in_top.Enabled = false;
-			
+			Wp.SetWaypointFlag("top","closed",false);
+
 			Util.MapDebugPrint("Top Door Open");
 		}
-		else
+		else if ( trigger.Action == "closing" )
 		{
 			Map.doortopstatus = false; //closed
 			Map.Switches.callup.Enabled = true;
 			Map.Switches.in_top.Enabled = true;
-			
+			Wp.SetWaypointFlag("top","closed",true);
+
 			Util.MapDebugPrint("Top Door Closed");
 		}
-	},	
-//lift end
-//Tank Trigger Regions
-	tankzoneTrigger = 
+	},
+	//lift end
+	//Tank Trigger Regions
+	tankzoneTrigger =
 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
 
 		OnEnter = function(ent)
-		{ 
-		Map.tankzoneTrigger = true;
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ZONE.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_fence.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ZONE.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank_ZONE" );
-		Util.MapDebugPrint( "Tank_Entered_Zone" ); 
+		{
+			Map.tankzoneTrigger = true;
+			Util.EnableGoal( "MOVER_tank", true );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ZONE.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_fence.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ZONE.*");
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank_ZONE" );
+			Util.MapDebugPrint( "Tank_Entered_Zone" );
 		},
 		OnExit = function(ent)
 		{
-		Map.tankzoneexitTrigger = true;
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ZONE.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ZONE.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
-		Util.MapDebugPrint( "Tank_Exited_Zone" ); 
+			Map.tankzoneTrigger = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_zone" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ZONE.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ZONE.*");
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+			Util.MapDebugPrint( "Tank_Exited_Zone" );
 		},
-        }, 
-//before bridge	
-	beforebridgeTrigger = 
+	},
+	//before bridge
+	beforebridgeTrigger =
 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
- 		OnEnter = function(ent)
-		{ 
-		Map.beforebridgeTrigger = true;
-		if ( Map.bridge_Built == true ) { 
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge");
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank_ZONE" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		Util.DisableGoal ( "MOUNT_Tank_ZONE" );
-		}
-		else if ( Map.bridge_Built == false ) {
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_zone" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank_ZONE" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_BF_Bridge.*");
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge");
-		Util.DisableGoal ( "MOUNT_AXI_Tank_ZONE" );
-		}
-		Util.MapDebugPrint( "Tank_Entered_before_bridge" ); 
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
+		OnEnter = function(ent)
+		{
+			Map.beforebridgeTrigger = true;
+			if ( Map.bridge_Built == true ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_bridge" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
+				SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge");
+				Util.DisableGoal ( "MOUNT_Tank_ZONE" );
+			}
+			else if ( Map.bridge_Built == false ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_zone" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_BF_Bridge.*");
+				SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge");
+				Util.DisableGoal ( "MOUNT_AXI_Tank_ZONE" );
+			}
+			Util.MapDebugPrint( "Tank_Entered_before_bridge" );
 		},
-		
+
 		OnExit = function(ent)
 		{
-		Map.beforebridgeexitTrigger = true;
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_first_ammocabinet" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_first_healthcabinet" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank_ZONE" );
-		Util.DisableGoal ( "MOUNT_Tank_ZONE" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_AF_Bridge" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_BF_Bridge.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
-		Util.MapDebugPrint( "Tank_Exited_before_bridge" ); 
+			Map.beforebridgeTrigger = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_first_ammocabinet" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_first_healthcabinet" );
+			Util.DisableGoal ( "MOUNT_Tank_ZONE" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_AF_Bridge" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_BF_Bridge.*");
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AF_Bridge.*");
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
+			Util.MapDebugPrint( "Tank_Exited_before_bridge" );
 		},
-        }, 
-//after birdge	
-	afterbridgeTrigger = 
+	},
+	//after birdge
+	afterbridgeTrigger =
 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
- 		OnEnter = function(ent) 
-		{ 	
-		Map.afterbridgeTrigger = true;	
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_AF_Bridge.*");
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_AF_Bridge" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AF_Bridge.*" );
-		Util.MapDebugPrint( "Tank_Entered_after_bridge" ); 
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
+		OnEnter = function(ent)
+		{
+			Map.afterbridgeTrigger = true;
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge");
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_AFbridge.*" );
+			Util.MapDebugPrint( "Tank_Entered_after_bridge" );
 		},
 		OnExit = function(ent)
 		{
-		Map.afterbridgeexitTrigger = true;
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AF_Bridge.*");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank.*");
-		Util.MapDebugPrint( "Tank_Exited_after_bridge" ); 
+			Map.afterbridgeTrigger = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
+			Util.MapDebugPrint( "Tank_Exited_after_bridge" );
 		},
-        }, 
-//at tank barrier	
-	barrierTrigger = 
+	},
+	//at tank barrier
+	barrierTrigger =
 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
- 		OnEnter = function(ent)
-		{ 
-		Map.barrierTrigger = true;
-		if ( Map.Tank_Barrier_Built == true && Tank_Built == true ) { 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AF_Bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_AF_Bridge" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		}
-		else if ( Map.Tank_Barrier_Destroyed == true && Tank_Built == true ) { 
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Barrier" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-		}
-		else 
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
+		OnEnter = function(ent)
 		{
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Barrier" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		}
-		
-		Util.MapDebugPrint( "Tank_Entered_barrier" ); 
+			Map.barrierTrigger = true;
+			if ( Map.Tank_Barrier_Built == true && Tank_Built == true ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AF_Bridge.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_AF_Bridge.*");
+				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
+				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_AF_Bridge" );
+			}
+			else if ( Map.Tank_Barrier_Destroyed == true && Tank_Built == true ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
+				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tank_Barrier" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Barrier" );
+			}
+			else
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
+				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
+			}
+
+			Util.MapDebugPrint( "Tank_Entered_barrier" );
 		},
 		OnExit = function(ent)
 		{
-		Map.barrierexitTrigger = true;
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Barrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Barrier" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tank_Barrier" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
-		Util.MapDebugPrint( "Tank_Exited_barrier" ); 
+			Map.barrierTrigger = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_bridge" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank_Barrier" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Barrier.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge");
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tank_Barrier" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
+			Util.MapDebugPrint( "Tank_Exited_barrier" );
 		},
-        }, 
-//Tank at At_End 	
-	tankendTrigger = 
+	},
+	//Tank at At_End
+	tankendTrigger =
 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
- 		OnEnter = function(ent)
-		{ 
-		Util.DisableGoal ( "MOUNT_tank" );
-		Util.DisableGoal ( "MOUNT_AF_bridge" );
-		Util.DisableGoal ( "MOUNT_Tank_ZONE" );
-		Util.DisableGoal ( "BUILD_Tank" );
-		Util.DisableGoal ( "MOVER_tank" );
-		Util.DisableGoal ( "MOVER_chains" );
-		Util.DisableGoal ( "MOVER_turret" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Gate_MG42" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bunker" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Door.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
-		
-		Util.MapDebugPrint( "Tank_Entered_End_Trip" ); 
+		TriggerOnEntity = GetGoal("MOVER_tank").GetEntity(),
+		OnEnter = function(ent)
+		{
+			Map.tankendTrigger = true;
+			Util.DisableGoal ( "MOUNT_.*" );
+			Util.DisableGoal ( "BUILD_Tank" );
+			Util.DisableGoal ( "MOVER_tank" );
+			Util.DisableGoal ( "MOVER_chains" );
+			Util.DisableGoal ( "MOVER_turret" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Gate_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bunker" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Door.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
+
+			Util.MapDebugPrint( "Tank_Entered_End_Trip" );
 		},
 		OnExit = function(ent)
 		{
 		},
-        },
-//end Tank Trigger Regions
-//OBJ - Going Though Sewer
+	},
+	//end Tank Trigger Regions
+	//OBJ - Going Though Sewer
 	SewerTrigger =
 	{
-        Name = "SewerTrigger",
-        TriggerOnClass = CLASS.ANYPLAYER,
-        OnEnter = function(ent)
+		Name = "SewerTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
 		{
-		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
 			{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_docs" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.callup.Enabled = false;
-			Map.Switches.in_top.Enabled = false;
-			Map.Switches.calldown.Enabled = false;
-			Map.Switches.in_bot.Enabled = false;
-		
-			Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Sewer With The Documents!");
-			}
-		},	
-		OnExit = function(ent)
-		{
-		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )	
-			{
+				ETUtil.SuicideSpawn( TEAM.AXIS, 1, -1 );
+				Util.DisableGoal( "DEFEND_gate.*" );
+				Util.DisableGoal( "ATTACK_gate.*" );
+				Util.DisableGoal( "MOUNTMG42_.*" );
+				Util.DisableGoal( "ATTACK_docs.*" );
+				Util.DisableGoal( "DEFEND_docs.*" );
+				Util.DisableGoal( "MOBILEMG42_docs" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-				
+				Map.Switches.callup.Enabled = false;
+				Map.Switches.in_top.Enabled = false;
+				Map.Switches.calldown.Enabled = false;
+				Map.Switches.in_bot.Enabled = false;
+
+				Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Sewer With The Documents!");
+			}
+		},
+		OnExit = function(ent)
+		{
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			{
 				Util.MapDebugPrint(GetEntName(ent) + "^3Has Exited Sewer With The Documents!");
 			}
 		},
 	},
-//OBJ - Though Gate //Thanks CS:
+	//OBJ - Though Gate //Thanks CS:
 	DocTrigger =
 	{
-        Name = "DocTrigger",
-        TriggerOnClass = CLASS.ANYPLAYER,
-        OnEnter = function(ent)
+		Name = "DocTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
 		{
-		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
 			{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_truck" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
-		
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_docs" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
-			Map.Switches.e1_top1.Enabled = false;
-			Map.Switches.e1_top2.Enabled = false;
-			Map.Switches.e1_bot1.Enabled = false;
-			Map.Switches.e1_bot2.Enabled = false;
-		
-			Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Gate Area With The Documents!");
-			}
-		},
-		OnExit = function(ent)
-		{
-		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )	
-			{
+				ETUtil.SuicideSpawn( TEAM.AXIS, 1, -1 );
+				Util.DisableGoal( "DEFEND_gate.*" );
+				Util.DisableGoal( "ATTACK_gate.*" );
+				Util.DisableGoal( "MOUNTMG42_.*" );
+				Util.DisableGoal( "ATTACK_docs.*" );
+				Util.DisableGoal( "DEFEND_docs.*" );
+				Util.DisableGoal( "MOBILEMG42_docs" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-				
+				Map.Switches.e1_top1.Enabled = false;
+				Map.Switches.e1_top2.Enabled = false;
+				Map.Switches.e1_bot1.Enabled = false;
+				Map.Switches.e1_bot2.Enabled = false;
+
+				Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Gate Area With The Documents!");
+			}
+		},
+		OnExit = function(ent)
+		{
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			{
 				Util.MapDebugPrint(GetEntName(ent) + "^3Has Exited Gate Area With The Documents!");
 			}
 		},
 	},
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -585,27 +573,27 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_Command_Post_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Allied_Command_Post_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
 	},
-	
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -615,38 +603,38 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Assault_Ramp_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Assault_Ramp_Built = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
 
 		Util.MapDebugPrint( "Assault_Ramp_Built" );
 	},
-	
+
 	Assault_Ramp_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Assault_Ramp_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Assault_Ramp_Planted" );
 	},
-	
+
 	Assault_Ramp_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Assault_Ramp_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Assault_Ramp_Defused" );
 	},
-		
+
 	Assault_Ramp_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -655,17 +643,17 @@ global Map =
 		Map.Assault_Ramp_Dyno = 0;
 		Map.Assault_Ramp_Built = false;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
-		
+
 		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
 	},
-	
+
 	Elevator_Room_Door_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Elevator_Room_Door_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Elevator_Room_Door_Planted" );
 	},
 
@@ -675,7 +663,7 @@ global Map =
 			{ return; }
 
 		Map.Elevator_Room_Door_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Elevator_Room_Door_Defused" );
 	},
 
@@ -686,102 +674,106 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Elevator_Controls" );
 		Map.Elevator_Room_Door_Dyno = 0;
-	 
+
 		Util.MapDebugPrint( "Elevator_Room_Door_Destroyed" );
 	},
-	
+
 	Elevator_Controls_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			  
-	Map.Switches.callup.Enabled = false;
-	Map.Switches.in_top.Enabled = false;
-	Map.Switches.calldown.Enabled = false;
-	Map.Switches.in_bot.Enabled = false;
-	
-	Wp.SetWaypointFlag("LIFT_A","closed",false); //open the way to the lift 
-	//Bots dont use lift till controls built
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Elevator_Controls*" );
 
-	
+		Map.Switches.callup.Enabled = true;
+		Map.Switches.in_top.Enabled = true;
+		Map.Switches.calldown.Enabled = true;
+		Map.Switches.in_bot.Enabled = true;
+
+		Wp.SetWaypointFlag("LIFT_A","closed",false); //open the way to the lift
+		Wp.SetWaypointFlag("top","closed",false);
+		Wp.SetWaypointFlag("bot","closed",false);
+		//Bots dont use lift till controls built
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
+		Util.EnableGoal( "FLAG.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Elevator_Controls*" );
+
+
 		Util.MapDebugPrint( "Elevator_Controls_Built" );
 	},
-	
+
 	Elevator_Controls_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Elevator_Controls_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Elevator_Controls_Planted" );
 	},
-	
+
 	Elevator_Controls_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Elevator_Controls_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Elevator_Controls_Defused" );
 	},
-	
+
 	Elevator_Controls_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-	 
+
 		Map.Elevator_Controls_Dyno = 0;
-		
+
 		Map.Switches.callup.Enabled = false;
 		Map.Switches.in_top.Enabled = false;
 		Map.Switches.calldown.Enabled = false;
 		Map.Switches.in_bot.Enabled = false;
-	 
-	 Wp.SetWaypointFlag("LIFT_A","closed",true); //close the way to the lift 
-	 SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
-	 SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
-	 SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Elevator_Controls" );
-	 
-	 Util.MapDebugPrint( "Elevator_Controls_Destroyed" );
+
+		Wp.SetWaypointFlag("LIFT_A","closed",true); //close the way to the lift
+		Wp.SetWaypointFlag("top","closed",true);
+		Wp.SetWaypointFlag("bot","closed",true);
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Elevator_Controls" );
+
+		Util.MapDebugPrint( "Elevator_Controls_Destroyed" );
 	},
-	
+
 	Gate_MG42_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Gate_MG42_Built = true;
-		
+
 		Util.MapDebugPrint( "Gate_MG42_Built" );
 	},
-	
+
 	Gate_MG42_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gate_MG42_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Gate_MG42_Planted" );
 	},
-	
+
 	Gate_MG42_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Gate_MG42_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Gate_MG42_Defused" );
 	},
-	
+
 	Gate_MG42_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -789,7 +781,7 @@ global Map =
 
 		Map.Gate_MG42_Built = false;
 		Map.Gate_MG42_Dyno = 0;
-		
+
 		if ( Map.Gate_MG42_Built == true && Map.Assault_Ramp_Built == true ){
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		}
@@ -800,190 +792,190 @@ global Map =
 		if ( Map.Gate_MG42_Built == true && Map.Assault_Ramp_Built == false ){
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		}
-		
+
 		Util.MapDebugPrint( "Gate_MG42_Destroyed" );
 	},
-	
+
 	Tank_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Tank_Built = true;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-		
+
 		if ( Map.tankzoneTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_zone.*" );	
-		
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_zone.*" );
+
 			Util.MapDebugPrint( "ARTI At tank zone when tank is Active" );
 		}
-		
+
 		if ( Map.tankzoneexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );	
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );
+
 			Util.MapDebugPrint( "NO ARTI At tank zone when tank has exited trigger" );
 		}
-		
+
 		if ( Map.beforebridgeTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_bridge.*" );
+
 			Util.MapDebugPrint( "ARTI At before bridge when tank is Active" );
 		}
-		
+
 		if ( Map.beforebridgeexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At before bridge when tank has exited trigger" );
 		}
-		
+
 		if ( Map.afterbridgeTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_AFbridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_AFbridge.*" );
+
 			Util.MapDebugPrint( "ARTI At after bridge when tank is Active" );
 		}
-		
+
 		if ( Map.afterbridgeexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At after bridge when tank has exited trigger" );
 		}
-		
+
 		if ( Map.barrierTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_Barrier.*" );
+
 			Util.MapDebugPrint( "ARTI At barrier when tank is Active" );
 		}
-		
-		if ( Map.barrierexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
-		
+
+		if ( Map.barrieTrigger == false ){
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
+
 			Util.MapDebugPrint( "ARTI At barrier when tank has exited trigger" );
 		}
-		
+
 		Util.MapDebugPrint( "Tank_Built" );
 	},
-	
+
 	Tank_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Tank_Destroyed = true;
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
-		
+
 		if ( Map.tankzoneTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );	
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );
 
 			Util.MapDebugPrint( "NO ARTI At tank zone when tank is Dead" );
 		}
-		
+
 		if ( Map.tankzoneexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );	
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_zone.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_zone.*" );
 
 			Util.MapDebugPrint( "NO ARTI At tank zone when tank has exited trigger" );
 		}
-		
+
 		if ( Map.beforebridgeTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At before bridge when tank is Dead" );
 		}
-		
+
 		if ( Map.beforebridgeexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_bridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_bridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At before bridge when tank has exited trigger" );
 		}
-		
+
 		if ( Map.afterbridgeTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At after bridge when tank is Dead" );
 		}
-		
+
 		if ( Map.afterbridgeexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AFbridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_AFbridge.*" );
+
 			Util.MapDebugPrint( "NO ARTI At after bridge when has exited trigger" );
 		}
-		
+
 		if ( Map.barrierTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
+
 			Util.MapDebugPrint( "NO ARTI At barrier when tank is Dead" );
 		}
-		
-		if ( Map.barrierexitTrigger == true ){
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
-		
+
+		if ( Map.barrierTrigger == false ){
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Barrier.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_Barrier.*" );
+
 			Util.MapDebugPrint( "NO ARTI At barrier when tank has exited trigger" );
 		}
-		
+
 		Util.MapDebugPrint( "Tank_Destroyed" );
 	},
-	
+
 	Tank_Barrier_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Tank_Barrier_Built = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Barrier.*" );
-		
+
 		Util.MapDebugPrint( "Tank_Barrier_Built" );
 	},
-	
+
 	Tank_Barrier_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Tank_Barrier_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Tank_Barrier_Planted" );
 	},
-	
+
 	Tank_Barrier_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Tank_Barrier_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Tank_Barrier_Defused" );
 	},
-	
+
 	Tank_Barrier_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -991,25 +983,25 @@ global Map =
 
 		Map.Tank_Barrier_Destroyed = true;
 		Map.Tank_Barrier_Dyno = 0;
-		
+
 		if( Map.barrierTrigger == true )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
 		}
-		if (Map.barrierexitTrigger == true)
+		if (Map.barrierTrigger == false)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank_Barrier" );
 		}
 		Util.MapDebugPrint( "Tank_Barrier_Destroyed" );
 	},
-	
+
 	bridge_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.bridge_Built = true;
-		if ( Map.afterbridgeTrigger == true || Map.afterbridgeexitTrigger == true || Map.beforebridgeTrigger == true || Map.beforebridgeexitTrigger == true )
+		if ( Map.afterbridgeTrigger == true || Map.afterbridgeTrigger == false || Map.beforebridgeTrigger == true || Map.beforebridgeTrigger == false )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge" );
@@ -1018,27 +1010,27 @@ global Map =
 		}
 		Util.MapDebugPrint( "bridge_Built" );
 	},
-	
+
 	bridge_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.bridge_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "bridge_Planted" );
 	},
-	
+
 	bridge_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.bridge_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "bridge_Defused" );
 	},
-	
+
 	bridge_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -1046,45 +1038,46 @@ global Map =
 
 		Map.bridge_Built = false;
 		Map.bridge_Dyno = 0;
-		
-		if (Map.barrierTrigger == true) 
+
+		if (Map.barrierTrigger == true)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge" );
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge");
-		
+
 		Util.MapDebugPrint( "bridge_Destroyed" );
 	},
-	
+
 	Bunker_Wall_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Bunker_Wall_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Bunker_Wall_Planted" );
 	},
-	
+
 	Bunker_Wall_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Bunker_Wall_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Bunker_Wall_Defused" );
 	},
-	
+
 	Bunker_Wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Bunker_Wall_Destroyed = true;
 		Map.Bunker_Wall_Dyno = 0;
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Assault_Ramp" );
+
 		if ( Map.Bunker_Wall_Destroyed == true && Map.Door_to_the_Stairs_Destroyed == true )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
@@ -1094,7 +1087,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
+			Util.EnableGoal( "FLAG.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
 		}
 		else
@@ -1105,33 +1098,33 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bunk.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
+			Util.EnableGoal( "FLAG.*" );
 			Util.DisableGoal( "MOUNTMG42_Gate_MG42" );
 		}
-		
+
 		Util.MapDebugPrint( "Bunker_Wall_Destroyed" );
 	},
-	
+
 	Door_to_the_Stairs_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Door_to_the_Stairs_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Door_to_the_Stairs_Planted" );
 	},
-	
+
 	Door_to_the_Stairs_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.Door_to_the_Stairs_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Door_to_the_Stairs_Defused" );
 	},
-	
+
 	Door_to_the_Stairs_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -1139,7 +1132,8 @@ global Map =
 
 		Map.Door_to_the_Stairs_Destroyed = true;
 		Map.Door_to_the_Stairs_Dyno = 0;
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Assault_Ramp" );
+
 		if ( Map.Door_to_the_Stairs_Destroyed == true && Map.Bunker_Wall_Destroyed == true )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
@@ -1149,8 +1143,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
 		}
 		else
 		{
@@ -1158,12 +1150,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_docs" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_DTTS.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
 			Util.DisableGoal( "MOUNTMG42_Gate_MG42" );
-			
+
 		}
-		
+
 		Util.MapDebugPrint( "Door_to_the_Stairs_Destroyed" );
 	},
 
@@ -1173,7 +1163,7 @@ global Map =
 			{ return; }
 
 		Map.Sewer_Entrance_Dyno += 1;
-		
+
 		Util.MapDebugPrint( "Sewer_Entrance_Planted" );
 	},
 
@@ -1183,10 +1173,10 @@ global Map =
 			{ return; }
 
 		Map.Sewer_Entrance_Dyno -= 1;
-		
+
 		Util.MapDebugPrint( "Sewer_Entrance_Defused" );
 	},
-	
+
 	Sewer_Entrance_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -1196,19 +1186,19 @@ global Map =
 
 		Util.MapDebugPrint( "Sewer_Entrance_Destroyed" );
 	},
-	
+
 	Gate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		Util.DisableGoal ( "MOUNT_tank" );
+
+		Util.DisableGoal ( "MOUNT_.*" );
 		Util.DisableGoal ( "BUILD_Tank" );
 		Util.DisableGoal ( "MOVER_tank" );
 		Util.DisableGoal ( "MOVER_chains" );
 		Util.DisableGoal ( "MOVER_turret" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		Util.EnableGoal ( "FLAG_docs" );
+		Util.EnableGoal ( "CAPPOINT_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_gate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_truck.*" );
@@ -1216,8 +1206,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Elevator_Room_Door" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Door_to_the_Stairs" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sewer_Entrance" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_docs" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bunker" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Door.*" );
@@ -1225,7 +1213,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank");
-		
+
 		if ( Map.Gate_MG42_Built == true && Map.Assault_Ramp_Built == true ){
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 		}
@@ -1238,18 +1226,18 @@ global Map =
 		}
 		Util.MapDebugPrint( "Gate_Destroyed" );
 	},
-	
+
 	docs_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.docs_Taken = true;
+
 		if ( Map.Door_to_the_Stairs_Destroyed == false )
-		{	
+		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
-			
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" ); //false when past gate
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); //false when past gate	
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); //false when past gate
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" ); //false when past gate
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
@@ -1260,18 +1248,16 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			Map.Switches.callup.Enabled = false;
 			Map.Switches.in_top.Enabled = false;
 			Map.Switches.calldown.Enabled = false;
 			Map.Switches.in_bot.Enabled = false;
-		}	
+		}
 		if ( Map.Bunker_Wall_Destroyed == false )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
-			
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" ); //false when past gate
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); // false when past gate	
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" ); // false when past gate
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" ); // false when past gate
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_docs.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Trans.*" );
@@ -1282,11 +1268,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			Map.Switches.callup.Enabled = false;
 			Map.Switches.in_top.Enabled = false;
 			Map.Switches.calldown.Enabled = false;
-			Map.Switches.in_bot.Enabled = false;		
+			Map.Switches.in_bot.Enabled = false;
 		}
 		else
 		{
@@ -1303,12 +1288,11 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_Trans.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Trans_1" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Trans_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			Map.Switches.callup.Enabled = false;
 			Map.Switches.in_top.Enabled = false;
 			Map.Switches.calldown.Enabled = false;
 			Map.Switches.in_bot.Enabled = false;
-		}	
+		}
 		Util.MapDebugPrint( "docs_Taken" );
 	},
 
@@ -1317,6 +1301,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		docs_Returned = true;
+
 		if ( Map.Door_to_the_Stairs_Destroyed == false )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_gate.*" );
@@ -1324,6 +1309,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Trans.*" );
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
 			Map.Switches.e1_bot1.Enabled = true;
@@ -1335,11 +1321,12 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truck" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Gate_MG42" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );			
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Trans.*" );
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
 			Map.Switches.e1_bot1.Enabled = true;
-			Map.Switches.e1_bot2.Enabled = true;	
+			Map.Switches.e1_bot2.Enabled = true;
 		}
 		else
 		{
@@ -1359,7 +1346,7 @@ global Map =
 			Map.Switches.e1_top1.Enabled = true;
 			Map.Switches.e1_top2.Enabled = true;
 			Map.Switches.e1_bot1.Enabled = true;
-			Map.Switches.e1_bot2.Enabled = true;		
+			Map.Switches.e1_bot2.Enabled = true;
 			Util.DisableGoal( "MOUNTMG42_Gate_MG42" );
 		}
 		Util.MapDebugPrint( "docs_Returned" );
@@ -1369,7 +1356,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		//Game Over CHEER !
 		if ( Map.Talk && MAP_TALK )
 		{
@@ -1377,20 +1364,20 @@ global Map =
 			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_NEGATIVE, 2);
 			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_GOODGAME, 2);
 		}
-		
+
 		Util.MapDebugPrint( "docs_Secured" );
 	},
- 	
+
 };
 
 global OnMapLoad = function()
 {
-	
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 
-// Register callback functions	
+	if ( TestMapOn )
+	{ Util.AutoTestMap(); }
+
+
+	// Register callback functions
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
 	OnTrigger( "The Assault Ramp has been constructed", Map.Assault_Ramp_Built );
 	OnTrigger( "Allied team has repaired the Elevator Controls!", Map.Elevator_Controls_Built );
@@ -1412,7 +1399,7 @@ global OnMapLoad = function()
 	OnTrigger( "documents! Taken", Map.docs_Taken );
 	OnTrigger( "documents! Returned", Map.docs_Returned );
 	OnTrigger( "Allied team has transmitted the documents!", Map.docs_Secured );
-	OnTrigger( "The Gate has been destroyed.", Map.Gate_Destroyed );	
+	OnTrigger( "The Gate has been destroyed.", Map.Gate_Destroyed );
 	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
 	OnTrigger( "Planted at the Assault Ramp.", Map.Assault_Ramp_Planted );
 	OnTrigger( "Planted at the Bunker Wall.", Map.Bunker_Wall_Planted );
@@ -1432,61 +1419,60 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at the Gate MG42.", Map.Gate_MG42_Defused );
 	OnTrigger( "Defused at the Sewer Entrance.", Map.Sewer_Entrance_Defused );
 	OnTrigger( "Defused at the Tank Barrier.", Map.Tank_Barrier_Defused );
-	OnTrigger( "Defused at the bridge.", Map.bridge_Defused );	
-// lift1 
-	OnTrigger( "lift1_goto", Map.lift1 );	
+	OnTrigger( "Defused at the bridge.", Map.bridge_Defused );
+	// lift1
+	OnTrigger( "lift1_goto", Map.lift1 );
 	OnTrigger( "upperliftdoor_Moving", Map.upperliftdoor );
 	OnTrigger( "liftdoor_Moving", Map.lowerliftdoor );
-//Tank trigger boxs	
+	//Tank trigger boxs
 	tankzone = OnTriggerRegion(AABB(5197.482,-1064.221,1371.389,5482.368,-832.551,1455.571),Map.tankzoneTrigger);
 	beforebridge = OnTriggerRegion(AABB(2103.102,-645.264,1294.110,2555.745,-399.927,1397.493),Map.beforebridgeTrigger);
 	afterbridge = OnTriggerRegion(AABB(596.730,-694.429,1298.068,1133.234,-343.213,1395.711),Map.afterbridgeTrigger);
 	barrier = OnTriggerRegion(AABB(-2156.101,278.863,1172.664,-1589.514,516.927,1308.137),Map.barrierTrigger);
 	tankend  = OnTriggerRegion(AABB(-5386.144,312.578,1151.795,-5003.214,497.556,1234.268),Map.tankendTrigger);
-//triggers if got Doc's //Thanks cs:
+	//triggers if got Doc's //Thanks cs:
 	doctrigger = OnTriggerRegion(AABB(-6637.083,-2265.753,1117.125,-5090.680,-786.329,1481.460), Map.DocTrigger);
-        sewertrigger = OnTriggerRegion(AABB(-4290.501,-3256.676,1015.601,718.188,-3206.340,1108.153), Map.SewerTrigger);
-//Util.SetGoalOffset	
-         Util.SetGoalOffset( 0, 40, 0, "PLANT_Bunker_Wall" );
-	 Util.SetGoalOffset( 15, 0, 0, "PLANT_Elevator_Room_Door" );
-//SetGoalPriority	
-	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.MEDIC, true  );
-	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
-	
-	SetGoalPriority( "PLANT_bridge*", 0.82, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
-	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.ALLIES, CLASS.MEDIC, true  );
-	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
-	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
-//Util.DisableGoal
+	sewertrigger = OnTriggerRegion(AABB(-4290.501,-3256.676,1015.601,718.188,-3206.340,1108.153), Map.SewerTrigger);
+	//Util.SetGoalOffset
+	Util.SetGoalOffset( 0, 40, 0, "PLANT_Bunker_Wall" );
+	Util.SetGoalOffset( 15, 0, 0, "PLANT_Elevator_Room_Door" );
+	//SetGoalPriority
+	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.MEDIC, true  );
+	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_bridge", 0.9, TEAM.AXIS, CLASS.ENGINEER, true );
+
+	//Util.DisableGoal
 	Util.DisableGoal( ".*", true ); // all but routes
-//SetAvailableMapGoals
+	//SetAvailableMapGoals
 	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_first_ammocabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_first_healthcabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ZONE.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge" );	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ZONE.*");
-
 	Wp.SetWaypointFlag("LIFT_A","closed",true);
-//Add Use Wp	
-	Util.AddUseWp("PLANT_Assault_Ramp", "ramp");  
-	Util.AddUseWp("PLANT_Assault_Ramp", "ramp1"); 
+	Wp.SetWaypointFlag("top","closed",true);
+	Wp.SetWaypointFlag("bot","closed",true);
+	//Add Use Wp
+	Util.AddUseWp("PLANT_Assault_Ramp", "ramp");
+	Util.AddUseWp("PLANT_Assault_Ramp", "ramp1");
 	Util.AddUseWp("PLANT_bridge", "bridge");
+	Util.AddUseWp("PLANT_bridge", "bridge1");
+	Util.AddUseWp("PLANT_bridge", "bridge2");
+	Util.AddUseWp("PLANT_bridge", "bridge3");
+	Util.AddUseWp("PLANT_bridge", "bridge4");
 	Util.AddUseWp("PLANT_Tank_Barrier", "Barrier");
 	Util.AddUseWp("PLANT_Tank_Barrier", "Barrier_1");
 	Util.AddUseWp("PLANT_Tank_Barrier", "Barrier_2");
 	Util.AddUseWp("PLANT_Tank_Barrier", "Barrier_3");
 	Util.AddUseWp("PLANT_Tank_Barrier", "Barrier_4");
 	Util.AddUseWp("PLANT_Elevator_Controls", "ELE_CON");
-//SwitchData
+	//SwitchData
 	Util.UpdateSwitchData();
-// Max users per goal
+	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
@@ -1498,171 +1484,113 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 	Util.SetMaxUsers( 1, "BUILD_.*" );
 	Util.SetMaxUsers( 2, "PLANT_.*" );
-// Camp times
+	// Camp times
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=30, maxcamptime=45});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=60});
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120} );
 	SetMapGoalProperties( "MOBILEMORTAR_.*", {MinCampTime=60, MaxCampTime=120} );
-//Map Routes
-	Util.MapDebugPrint("Configuring Routes");
-	
+	//Map Routes
+
 	MapRoutes =
 	{
-		FLAG_docs = 
+		FLAG_docs =
 		{
-			ROUTE_SPAWN_4  = 
+			ROUTE_SPAWN_4  =
 			{
-				ROUTE_GATE  = 
+				ROUTE_GATE  =
 				{
-					ROUTE_Door_to_the_stairs_A  = 
+					ROUTE_Door_to_the_stairs_A  =
 					{
-						ROUTE_Door_to_the_Stairs  = 
+						ROUTE_Door_to_the_Stairs  =
 						{
-							ROUTE_door_to_the_stairs_top  = 
+							ROUTE_door_to_the_stairs_top  =
 							{
-								ROUTE_Documents  = 
+								ROUTE_Documents  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_Door_to_the_stairs_B  = 
+					ROUTE_Door_to_the_stairs_B  =
 					{
-						ROUTE_Door_to_the_Stairs  = 
+						ROUTE_Door_to_the_Stairs  =
 						{
-							ROUTE_door_to_the_stairs_top  = 
+							ROUTE_door_to_the_stairs_top  =
 							{
-								ROUTE_Documents  = 
+								ROUTE_Documents  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_The_Bunker_Wall  = 
+					ROUTE_The_Bunker_Wall  =
 					{
-						ROUTE_Bunker_Wall_BOTTOM  = 
+						ROUTE_Bunker_Wall_BOTTOM  =
 						{
-							ROUTE_Bunker_Wall_TOP  = 
+							ROUTE_Bunker_Wall_TOP  =
 							{
-								ROUTE_Documents  = 
+								ROUTE_Documents  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_LIFT_Bot  = 
+					ROUTE_LIFT_Bot  =
 					{
-						ROUTE_LIFT_Top  = 
+						ROUTE_LIFT_Top  =
 						{
-							ROUTE_Documents  = 
+							ROUTE_Documents  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_GATE_A  = 
+				ROUTE_GATE_A  =
 				{
-					ROUTE_Assault_Ramp_B  = 
+					ROUTE_Assault_Ramp_B  =
 					{
-						ROUTE_Door_to_the_stairs_A  = 
+						ROUTE_Door_to_the_stairs_A  =
 						{
-							ROUTE_Door_to_the_Stairs  = 
+							ROUTE_Door_to_the_Stairs  =
 							{
-								ROUTE_door_to_the_stairs_top  = 
+								ROUTE_door_to_the_stairs_top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_Door_to_the_stairs_B  = 
+						ROUTE_Door_to_the_stairs_B  =
 						{
-							ROUTE_Door_to_the_Stairs  = 
+							ROUTE_Door_to_the_Stairs  =
 							{
-								ROUTE_door_to_the_stairs_top  = 
+								ROUTE_door_to_the_stairs_top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_LIFT_Bot  = 
+						ROUTE_LIFT_Bot  =
 						{
-							ROUTE_LIFT_Top  = 
+							ROUTE_LIFT_Top  =
 							{
-								ROUTE_Documents  = 
+								ROUTE_Documents  =
 								{
 								},
 							},
 						},
-						ROUTE_The_Bunker_Wall  = 
+						ROUTE_The_Bunker_Wall  =
 						{
-							ROUTE_Bunker_Wall_BOTTOM  = 
+							ROUTE_Bunker_Wall_BOTTOM  =
 							{
-								ROUTE_Bunker_Wall_TOP  = 
+								ROUTE_Bunker_Wall_TOP  =
 								{
-									ROUTE_Documents  = 
-									{
-									},
-								},
-							},
-						},
-					},
-				},
-				ROUTE_GATE_B  = 
-				{
-					ROUTE_Assault_Ramp  = 
-					{
-						ROUTE_Ramp_Right_A  = 
-						{
-							ROUTE_Door_to_the_stairs_A  = 
-							{
-								ROUTE_Door_to_the_Stairs  = 
-								{
-									ROUTE_door_to_the_stairs_top  = 
-									{
-										ROUTE_Documents  = 
-										{
-										},
-									},
-								},
-							},
-							ROUTE_Door_to_the_stairs_B  = 
-							{
-								ROUTE_Door_to_the_Stairs  = 
-								{
-									ROUTE_door_to_the_stairs_top  = 
-									{
-										ROUTE_Documents  = 
-										{
-										},
-									},
-								},
-							},
-						},
-						ROUTE_Ramp_Right_B  = 
-						{
-							ROUTE_The_Bunker_Wall  = 
-							{
-								ROUTE_Bunker_Wall_BOTTOM  = 
-								{
-									ROUTE_Bunker_Wall_TOP  = 
-									{
-										ROUTE_Documents  = 
-										{
-										},
-									},
-								},
-							},
-							ROUTE_LIFT_Bot  = 
-							{
-								ROUTE_LIFT_Top  = 
-								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
@@ -1670,31 +1598,88 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_Assault_Ramp_Bot  = 
+				ROUTE_GATE_B  =
 				{
-					ROUTE_Assault_Ramp  = 
+					ROUTE_Assault_Ramp  =
 					{
-						ROUTE_Ramp_Right_A  = 
+						ROUTE_Ramp_Right_A  =
 						{
-							ROUTE_Door_to_the_stairs_A  = 
+							ROUTE_Door_to_the_stairs_A  =
 							{
-								ROUTE_door_to_the_stairs_top  = 
+								ROUTE_Door_to_the_Stairs  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_door_to_the_stairs_top  =
+									{
+										ROUTE_Documents  =
+										{
+										},
+									},
+								},
+							},
+							ROUTE_Door_to_the_stairs_B  =
+							{
+								ROUTE_Door_to_the_Stairs  =
+								{
+									ROUTE_door_to_the_stairs_top  =
+									{
+										ROUTE_Documents  =
+										{
+										},
+									},
+								},
+							},
+						},
+						ROUTE_Ramp_Right_B  =
+						{
+							ROUTE_The_Bunker_Wall  =
+							{
+								ROUTE_Bunker_Wall_BOTTOM  =
+								{
+									ROUTE_Bunker_Wall_TOP  =
+									{
+										ROUTE_Documents  =
+										{
+										},
+									},
+								},
+							},
+							ROUTE_LIFT_Bot  =
+							{
+								ROUTE_LIFT_Top  =
+								{
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_Ramp_Right_B  = 
+					},
+				},
+				ROUTE_Assault_Ramp_Bot  =
+				{
+					ROUTE_Assault_Ramp  =
+					{
+						ROUTE_Ramp_Right_A  =
 						{
-							ROUTE_The_Bunker_Wall  = 
+							ROUTE_Door_to_the_stairs_A  =
 							{
-								ROUTE_Bunker_Wall_BOTTOM  = 
+								ROUTE_door_to_the_stairs_top  =
 								{
-									ROUTE_Bunker_Wall_TOP  = 
+									ROUTE_Documents  =
 									{
-										ROUTE_Documents  = 
+									},
+								},
+							},
+						},
+						ROUTE_Ramp_Right_B  =
+						{
+							ROUTE_The_Bunker_Wall  =
+							{
+								ROUTE_Bunker_Wall_BOTTOM  =
+								{
+									ROUTE_Bunker_Wall_TOP  =
+									{
+										ROUTE_Documents  =
 										{
 										},
 									},
@@ -1702,123 +1687,123 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_Assault_Ramp_B  = 
+					ROUTE_Assault_Ramp_B  =
 					{
-						ROUTE_Door_to_the_stairs_A  = 
+						ROUTE_Door_to_the_stairs_A  =
 						{
-							ROUTE_Door_to_the_Stairs  = 
+							ROUTE_Door_to_the_Stairs  =
 							{
-								ROUTE_door_to_the_stairs_top  = 
+								ROUTE_door_to_the_stairs_top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_Door_to_the_stairs_B  = 
+						ROUTE_Door_to_the_stairs_B  =
 						{
-							ROUTE_Door_to_the_Stairs  = 
+							ROUTE_Door_to_the_Stairs  =
 							{
-								ROUTE_door_to_the_stairs_top  = 
+								ROUTE_door_to_the_stairs_top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_Ramp_Right_A  = 
+						ROUTE_Ramp_Right_A  =
 						{
-							ROUTE_Door_to_the_stairs_A  = 
+							ROUTE_Door_to_the_stairs_A  =
 							{
-								ROUTE_Door_to_the_Stairs  = 
+								ROUTE_Door_to_the_Stairs  =
 								{
-									ROUTE_door_to_the_stairs_top  = 
+									ROUTE_door_to_the_stairs_top  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_Door_to_the_stairs_B  = 
+							ROUTE_Door_to_the_stairs_B  =
 							{
-								ROUTE_Door_to_the_Stairs  = 
+								ROUTE_Door_to_the_Stairs  =
 								{
-									ROUTE_door_to_the_stairs_top  = 
+									ROUTE_door_to_the_stairs_top  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_The_Bunker_Wall  = 
+							ROUTE_The_Bunker_Wall  =
 							{
-								ROUTE_Bunker_Wall_BOTTOM  = 
+								ROUTE_Bunker_Wall_BOTTOM  =
 								{
-									ROUTE_Bunker_Wall_TOP  = 
+									ROUTE_Bunker_Wall_TOP  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_LIFT_Bot  = 
+							ROUTE_LIFT_Bot  =
 							{
-								ROUTE_LIFT_Top  = 
+								ROUTE_LIFT_Top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
 							},
 						},
-						ROUTE_Ramp_Right_B  = 
+						ROUTE_Ramp_Right_B  =
 						{
-							ROUTE_Door_to_the_stairs_A  = 
+							ROUTE_Door_to_the_stairs_A  =
 							{
-								ROUTE_Door_to_the_Stairs  = 
+								ROUTE_Door_to_the_Stairs  =
 								{
-									ROUTE_door_to_the_stairs_top  = 
+									ROUTE_door_to_the_stairs_top  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_Door_to_the_stairs_B  = 
+							ROUTE_Door_to_the_stairs_B  =
 							{
-								ROUTE_Door_to_the_Stairs  = 
+								ROUTE_Door_to_the_Stairs  =
 								{
-									ROUTE_door_to_the_stairs_top  = 
+									ROUTE_door_to_the_stairs_top  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_The_Bunker_Wall  = 
+							ROUTE_The_Bunker_Wall  =
 							{
-								ROUTE_Bunker_Wall_BOTTOM  = 
+								ROUTE_Bunker_Wall_BOTTOM  =
 								{
-									ROUTE_Bunker_Wall_TOP  = 
+									ROUTE_Bunker_Wall_TOP  =
 									{
-										ROUTE_Documents  = 
+										ROUTE_Documents  =
 										{
 										},
 									},
 								},
 							},
-							ROUTE_LIFT_Bot  = 
+							ROUTE_LIFT_Bot  =
 							{
-								ROUTE_LIFT_Top  = 
+								ROUTE_LIFT_Top  =
 								{
-									ROUTE_Documents  = 
+									ROUTE_Documents  =
 									{
 									},
 								},
@@ -1829,66 +1814,66 @@ global OnMapLoad = function()
 			},
 		},
 
-		BUILD_bridge = 
+		BUILD_bridge =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_ALLIES_SPAWN_DOOR  = 
+				ROUTE_ALLIES_SPAWN_DOOR  =
 				{
-					ROUTE_SPAWN_DOOR_EXIT  = 
+					ROUTE_SPAWN_DOOR_EXIT  =
 					{
-						ROUTE_Con_BRIDGE  = 
+						ROUTE_Con_BRIDGE  =
 						{
 						},
 					},
 				},
-				ROUTE_Con_BRIDGE  = 
+				ROUTE_Con_BRIDGE  =
 				{
 				},
 			},
 		},
-		BUILD_Allied_Command_Post = 
+		BUILD_Allied_Command_Post =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_ALLIES_SPAWN_DOOR  = 
+				ROUTE_ALLIES_SPAWN_DOOR  =
 				{
-					ROUTE_HILL  = 
+					ROUTE_HILL  =
 					{
-						ROUTE_SPWAN_HUT  = 
+						ROUTE_SPWAN_HUT  =
 						{
 						},
 					},
 				},
-				ROUTE_HILL_1  = 
+				ROUTE_HILL_1  =
 				{
-					ROUTE_SPWAN_HUT  = 
+					ROUTE_SPWAN_HUT  =
 					{
 					},
 				},
 			},
 		},
-		CAPPOINT_Radio = 
+		CAPPOINT_Radio =
 		{
-			ROUTE_ROOF  = 
+			ROUTE_ROOF  =
 			{
-				ROUTE_Sewer_A  = 
+				ROUTE_Sewer_A  =
 				{
-					ROUTE_Sewer_B  = 
+					ROUTE_Sewer_B  =
 					{
-						ROUTE_bridge  = 
+						ROUTE_bridge  =
 						{
-							ROUTE_HILL_1  = 
+							ROUTE_HILL_1  =
 							{
-								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								ROUTE_OUTSIDE_HUT_FRUNT  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_OUTSIDE_HUT_BACK  = 
+								ROUTE_OUTSIDE_HUT_BACK  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
@@ -1896,71 +1881,71 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_GATE  = 
+				ROUTE_GATE  =
 				{
-					ROUTE_Bridge_River  = 
+					ROUTE_Bridge_River  =
 					{
-						ROUTE_bridge  = 
+						ROUTE_bridge  =
 						{
-							ROUTE_HILL_1  = 
+							ROUTE_HILL_1  =
 							{
-								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								ROUTE_OUTSIDE_HUT_FRUNT  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_OUTSIDE_HUT_BACK  = 
+								ROUTE_OUTSIDE_HUT_BACK  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
 							},
 						},
 					},
-					ROUTE_Bridge_River_B  = 
+					ROUTE_Bridge_River_B  =
 					{
-						ROUTE_bridge  = 
+						ROUTE_bridge  =
 						{
-							ROUTE_HILL_1  = 
+							ROUTE_HILL_1  =
 							{
-								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								ROUTE_OUTSIDE_HUT_FRUNT  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_OUTSIDE_HUT_BACK  = 
+								ROUTE_OUTSIDE_HUT_BACK  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
 							},
 						},
 					},
-					ROUTE_trans  = 
+					ROUTE_trans  =
 					{
-						ROUTE_Radio  = 
+						ROUTE_Radio  =
 						{
 						},
 					},
-					ROUTE_Con_BRIDGE_A  = 
+					ROUTE_Con_BRIDGE_A  =
 					{
-						ROUTE_Con_BRIDGE  = 
+						ROUTE_Con_BRIDGE  =
 						{
-							ROUTE_HILL_1  = 
+							ROUTE_HILL_1  =
 							{
-								ROUTE_OUTSIDE_HUT_FRUNT  = 
+								ROUTE_OUTSIDE_HUT_FRUNT  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_OUTSIDE_HUT_BACK  = 
+								ROUTE_OUTSIDE_HUT_BACK  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
@@ -1969,29 +1954,29 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_Documents  = 
+			ROUTE_Documents  =
 			{
-				ROUTE_LIFT_Top  = 
+				ROUTE_LIFT_Top  =
 				{
-					ROUTE_LIFT_Bot  = 
+					ROUTE_LIFT_Bot  =
 					{
-						ROUTE_Sewer_A  = 
+						ROUTE_Sewer_A  =
 						{
-							ROUTE_Sewer_B  = 
+							ROUTE_Sewer_B  =
 							{
-								ROUTE_bridge  = 
+								ROUTE_bridge  =
 								{
-									ROUTE_HILL_1  = 
+									ROUTE_HILL_1  =
 									{
-										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										ROUTE_OUTSIDE_HUT_FRUNT  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
-										ROUTE_OUTSIDE_HUT_BACK  = 
+										ROUTE_OUTSIDE_HUT_BACK  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
@@ -1999,71 +1984,71 @@ global OnMapLoad = function()
 								},
 							},
 						},
-						ROUTE_GATE  = 
+						ROUTE_GATE  =
 						{
-							ROUTE_Bridge_River  = 
+							ROUTE_Bridge_River  =
 							{
-								ROUTE_bridge  = 
+								ROUTE_bridge  =
 								{
-									ROUTE_HILL_1  = 
+									ROUTE_HILL_1  =
 									{
-										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										ROUTE_OUTSIDE_HUT_FRUNT  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
-										ROUTE_OUTSIDE_HUT_BACK  = 
+										ROUTE_OUTSIDE_HUT_BACK  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
 									},
 								},
 							},
-							ROUTE_Bridge_River_B  = 
+							ROUTE_Bridge_River_B  =
 							{
-								ROUTE_bridge  = 
+								ROUTE_bridge  =
 								{
-									ROUTE_HILL_1  = 
+									ROUTE_HILL_1  =
 									{
-										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										ROUTE_OUTSIDE_HUT_FRUNT  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
-										ROUTE_OUTSIDE_HUT_BACK  = 
+										ROUTE_OUTSIDE_HUT_BACK  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
 									},
 								},
 							},
-							ROUTE_trans  = 
+							ROUTE_trans  =
 							{
-								ROUTE_Radio  = 
+								ROUTE_Radio  =
 								{
 								},
 							},
-							ROUTE_Con_BRIDGE_A  = 
+							ROUTE_Con_BRIDGE_A  =
 							{
-								ROUTE_Con_BRIDGE  = 
+								ROUTE_Con_BRIDGE  =
 								{
-									ROUTE_HILL_1  = 
+									ROUTE_HILL_1  =
 									{
-										ROUTE_OUTSIDE_HUT_FRUNT  = 
+										ROUTE_OUTSIDE_HUT_FRUNT  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
-										ROUTE_OUTSIDE_HUT_BACK  = 
+										ROUTE_OUTSIDE_HUT_BACK  =
 										{
-											ROUTE_Radio  = 
+											ROUTE_Radio  =
 											{
 											},
 										},
@@ -2073,29 +2058,29 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_door_to_the_stairs_top  = 
+				ROUTE_door_to_the_stairs_top  =
 				{
-					ROUTE_Door_to_the_Stairs  = 
+					ROUTE_Door_to_the_Stairs  =
 					{
-						ROUTE_Door_to_the_stairs_A  = 
+						ROUTE_Door_to_the_stairs_A  =
 						{
-							ROUTE_Sewer_A  = 
+							ROUTE_Sewer_A  =
 							{
-								ROUTE_Sewer_B  = 
+								ROUTE_Sewer_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2103,71 +2088,71 @@ global OnMapLoad = function()
 									},
 								},
 							},
-							ROUTE_GATE  = 
+							ROUTE_GATE  =
 							{
-								ROUTE_Bridge_River  = 
+								ROUTE_Bridge_River  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_Bridge_River_B  = 
+								ROUTE_Bridge_River_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_trans  = 
+								ROUTE_trans  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_Con_BRIDGE_A  = 
+								ROUTE_Con_BRIDGE_A  =
 								{
-									ROUTE_Con_BRIDGE  = 
+									ROUTE_Con_BRIDGE  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2176,25 +2161,25 @@ global OnMapLoad = function()
 								},
 							},
 						},
-						ROUTE_Door_to_the_stairs_B  = 
+						ROUTE_Door_to_the_stairs_B  =
 						{
-							ROUTE_Sewer_A  = 
+							ROUTE_Sewer_A  =
 							{
-								ROUTE_Sewer_B  = 
+								ROUTE_Sewer_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2202,71 +2187,71 @@ global OnMapLoad = function()
 									},
 								},
 							},
-							ROUTE_GATE  = 
+							ROUTE_GATE  =
 							{
-								ROUTE_Bridge_River  = 
+								ROUTE_Bridge_River  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_Bridge_River_B  = 
+								ROUTE_Bridge_River_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_trans  = 
+								ROUTE_trans  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_Con_BRIDGE_A  = 
+								ROUTE_Con_BRIDGE_A  =
 								{
-									ROUTE_Con_BRIDGE  = 
+									ROUTE_Con_BRIDGE  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2277,29 +2262,29 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_Bunker_Wall_TOP  = 
+				ROUTE_Bunker_Wall_TOP  =
 				{
-					ROUTE_Bunker_Wall_BOTTOM  = 
+					ROUTE_Bunker_Wall_BOTTOM  =
 					{
-						ROUTE_The_Bunker_Wall  = 
+						ROUTE_The_Bunker_Wall  =
 						{
-							ROUTE_Sewer_A  = 
+							ROUTE_Sewer_A  =
 							{
-								ROUTE_Sewer_B  = 
+								ROUTE_Sewer_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2307,71 +2292,71 @@ global OnMapLoad = function()
 									},
 								},
 							},
-							ROUTE_GATE  = 
+							ROUTE_GATE  =
 							{
-								ROUTE_Bridge_River  = 
+								ROUTE_Bridge_River  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_Bridge_River_B  = 
+								ROUTE_Bridge_River_B  =
 								{
-									ROUTE_bridge  = 
+									ROUTE_bridge  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
 										},
 									},
 								},
-								ROUTE_trans  = 
+								ROUTE_trans  =
 								{
-									ROUTE_Radio  = 
+									ROUTE_Radio  =
 									{
 									},
 								},
-								ROUTE_Con_BRIDGE_A  = 
+								ROUTE_Con_BRIDGE_A  =
 								{
-									ROUTE_Con_BRIDGE  = 
+									ROUTE_Con_BRIDGE  =
 									{
-										ROUTE_HILL_1  = 
+										ROUTE_HILL_1  =
 										{
-											ROUTE_OUTSIDE_HUT_FRUNT  = 
+											ROUTE_OUTSIDE_HUT_FRUNT  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
-											ROUTE_OUTSIDE_HUT_BACK  = 
+											ROUTE_OUTSIDE_HUT_BACK  =
 											{
-												ROUTE_Radio  = 
+												ROUTE_Radio  =
 												{
 												},
 											},
@@ -2383,15 +2368,15 @@ global OnMapLoad = function()
 					},
 				},
 			},
-		},			
+		},
 	};
 
 	Util.Routes(MapRoutes);
 
 	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
+	{ Util.ShowActiveGoals(); }
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
@@ -2400,16 +2385,4 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 90.0;
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
 	//bot.MaxViewDistance = 2400;
-	
-	team = bot.GetTeam();
-// spawn
-	if ( team == TEAM.AXIS ) {
-		if ( Map.docs_Taken == true ) {
-			bot.ChangeSpawnPoint(1);
-		}
-		else if ( Map.docs_Reurned == true ) {
-			bot.ChangeSpawnPoint(5);
-		}
-	}
-
 };

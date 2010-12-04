@@ -824,9 +824,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Track_Switch_North_.*" );
 	Util.EnableGroup( "tsarty", TEAM.AXIS );
 
-	//set up some routing
-	Util.MapDebugPrint("Configuring Routes", true);
-
 	MapRoutes =
 	{
 		DEFEND_Depot_Yard_6 =
