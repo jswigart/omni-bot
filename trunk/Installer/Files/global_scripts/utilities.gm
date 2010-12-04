@@ -542,6 +542,20 @@ member SetMaxUsers = function( Users, GoalNames )
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+member GetMaxUsers = function( GoalNames )
+{
+	Goals = table();
+	GetGoals( Goals, 0, GoalNames );
+
+	foreach ( index and Goal in Goals ) {
+		numInUse = Goal.MaxUsers_InUse();
+		numInProgress = Goal.MaxUsers_InProgress();
+		print(format("%s: %d users in use; %d users in progress", Goal.GetName(), numInUse, numInProgress));
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
 member SetMaxUsersInUse = function( Users, GoalNames )
 {
 	Goals = table();
@@ -553,6 +567,19 @@ member SetMaxUsersInUse = function( Users, GoalNames )
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+member GetMaxUsersInUse = function( GoalNames )
+{
+	Goals = table();
+	GetGoals( Goals, 0, GoalNames );
+
+	foreach ( index and Goal in Goals ) {
+		num = Goal.MaxUsers_InUse();
+		print(format("%s: %d users in use", Goal.GetName(), num));
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
 member SetMaxUsersInProgress = function( Users, GoalNames )
 {
 	Goals = table();
@@ -560,6 +587,19 @@ member SetMaxUsersInProgress = function( Users, GoalNames )
 
 	foreach ( index and Goal in Goals )
 		{ Goal.MaxUsers_InProgress( Users ); }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member GetMaxUsersInProgress = function( GoalNames )
+{
+	Goals = table();
+	GetGoals( Goals, 0, GoalNames );
+
+	foreach ( index and Goal in Goals ) {
+		num = Goal.MaxUsers_InProgress();
+		print(format("%s: %d users in progress", Goal.GetName(), num));
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2458,7 +2498,7 @@ member OneBotSay = function(msg)
 //
 member BotSay = function(bot, msg)
 {
-	if ( MAP_TALK || (Map && Map.Talk) ) {
+	if ( MAP_TALK ) {
 		bot.Say(msg);
 	}
 };
@@ -2498,7 +2538,7 @@ member OneBotVSayTeam = function(team, vchat)
 // team 0 = all teams
 member BotChat = function(team, msgType, msg, numBots)
 {
-	if ( MAP_TALK || (Map && Map.Talk) )
+	if ( MAP_TALK )
 	{
 		bots = 0;
 		foreach ( id and bot in BotTable )
@@ -2552,7 +2592,7 @@ member BotChat = function(team, msgType, msg, numBots)
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member ShowActiveGoals = function(render, routes, showserial)
+member ShowActiveGoals = function(render, routes, showuse)
 {
 	GoalTable = table();
 	if (render)
@@ -2575,16 +2615,17 @@ member ShowActiveGoals = function(render, routes, showserial)
 
 			if (!routes && (goalName.Find("ROUTE") != -1) ) { continue; }
 
-			if ( (typeId(render) != 0 && render == 0) || render == teamId )
+			if ( !showuse && ((typeId(render) != 0 && render == 0) || render == teamId) )
 			{
 				goal.RenderGoal = true;
 			}
 
-			if ( !showserial ) {
+			if ( !showuse ) {
 				print( teamName + ": " + goalName + " is active" );
 			}
 			else {
-				print( teamName + ": serial: " + goal.SerialNum + " | " + goalName + " is active" );
+				print(format("%s: %s is active | inUse: %d - inProgress: %d",
+					teamName, goalName, goal.MaxUsers_InUse(), goal.MaxUsers_InProgress()));
 			}
 		}
 
@@ -2894,7 +2935,13 @@ member RenderPaththroughNodes = function(param)
 {
 	if ( param == 1 ) {
 		Util.FindPaththroughNodes();
-		Map.RenderPT = true;
+		if ( Map.PTNodes ) {
+			num = tableCount(Map.PTNodes);
+			if ( num > 0 ) {
+				print(format("rendering %d paththrough nodes", num));
+				Map.RenderPT = true;
+			}
+		}
 	}
 	else {
 		Map.RenderPT = false;

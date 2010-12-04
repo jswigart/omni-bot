@@ -53,23 +53,20 @@ global Map =
 
 		for(i=0; i<4; i+=1)
 		{
-		  //print("goto door");
 			if(_this.Goto(pos) == EVENT.PATH_FAILED )
 			{
-			  //print("goto door failed");
 				return;
 			}
 			_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
 			tr = TraceLine(pos, pos2, null, TRACE.SOLID, 0, true);
 			if(tr.fraction == 1)
 			{
-				//print("go through door");
 				_this.Bot.MoveTowards(pos2);
 				sleep(0.8);
 				break;
 			}
 			sleep(0.1);
-			//print("open");
+
 			_this.Bot.PressButton(BTN.USE);
 			_this.Bot.MoveTowards(pos1);
 			//wait while door opens
@@ -145,13 +142,11 @@ global Map =
 			stance = BTN.CROUCH,
 			board = function(_this)
 			{
-				//print("Board " + Map.BoatPos);
 				return Map.BoatPos == 1;
 			},
 
 			leave = function(_this)
 			{
-				//print("Leave " + Map.BoatPos);
 				if(_this.Bot.GetPosition().z < 630){
 					_this.Finished();
 					return true;
@@ -169,7 +164,6 @@ global Map =
 		OnEnter = function(ent)
 		{
 			Map.BoatPos = 1;
-			//print("Boat_Start");
 		},
 		OnExit = function(ent) { Map.BoatPos = -1; },
 	},
@@ -181,7 +175,6 @@ global Map =
 		OnEnter = function(ent)
 		{
 			Map.BoatPos = 2;
-			//print("Boat_End");
 		},
 		OnExit = function(ent) { Map.BoatPos = -1; },
 	},
@@ -240,8 +233,8 @@ global Map =
 	{
 		Map.numGates -= 1;
 		Map.SetGates();
-		ETUtil.DisableGoal("ROUTE_gate_" + which);
-		ETUtil.EnableGoal("ROUTE_ladder_" + which);
+		Util.DisableGoal("ROUTE_gate_" + which);
+		Util.EnableGoal("ROUTE_ladder_" + which);
 		Util.MapDebugPrint( which + " Barrier_Built" );
 	},
 
@@ -249,8 +242,8 @@ global Map =
 	{
 		Map.numGates += 1;
 		Map.SetGates();
-		ETUtil.EnableGoal("ROUTE_gate_" + which);
-		ETUtil.DisableGoal("ROUTE_ladder_" + which);
+		Util.EnableGoal("ROUTE_gate_" + which);
+		Util.DisableGoal("ROUTE_ladder_" + which);
 		Util.MapDebugPrint( which + " Barrier_Destroyed" );
 	},
 

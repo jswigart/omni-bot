@@ -22,6 +22,9 @@ this.UpgradeVersion = function(Props)
 	{
 		// default to disabled, until the entity stops moving.
 		this.DisableGoal(true);
+
+		// store the position. velocity check on injured ents is bad
+		this.EntPosition = GetEntPosition(this.GetEntity());
 	}
 };
 
@@ -53,17 +56,19 @@ this.Update = function()
 	{
 		if(this.IsDisabled())
 		{
-			ent = this.GetEntity();
-			if(GetEntVelocity(ent).IsZero())
+			entPos = GetEntPosition(this.GetEntity());
+			if(entPos == this.EntPosition)
 			{
 				this.DisableGoal(false);
+				block(0);
+			}
+			else
+			{
+				this.EntPosition = entPos;
 			}
 		}
-		sleep(1);
 	}
 	yield();
 };
-
-
 
 

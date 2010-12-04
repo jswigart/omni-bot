@@ -15,7 +15,7 @@ global Map =
 	DispenseAmmoTime = 1,
 
 	//set to false if you don't want allies /killing
-	Suicide = true, 
+	Suicide = true,
 
 	Switches =
 	{
@@ -29,37 +29,37 @@ global Map =
 			AimPosition = Vector3(-239.082, -623.875,414.684),
 		},
 	},
-	
+
 	gratebot = 0,
 	Navigation =
-	{	
+	{
 		railjump =
 		{
 			navigate = function(_this)
 			{
 				_this.Bot.HoldButton(BTN.JUMP, 0.25);
 				sleep(0.25);
-			},			
-		},	
+			},
+		},
 		sewer =
 		{
 			navigate = function(_this)
 			{
 				_this.Bot.HoldButton(BTN.CROUCH, 2);
 				sleep(2);
-			},			
+			},
 		},
-		sewerladder = 
-		{ 
-			navigate = function(_this) 
+		sewerladder =
+		{
+			navigate = function(_this)
 			{
 				_this.Bot.HoldButton(BTN.FORWARD, 3);
 				sleep(3);
-			},               
+			},
 		},
-		sewerladderb = 
-		{ 
-			navigate = function(_this) 
+		sewerladderb =
+		{
+			navigate = function(_this)
 			{
 				_this.Bot.HoldButton(BTN.FORWARD, 6);
 				sleep(1);
@@ -68,13 +68,13 @@ global Map =
 					Map.gratebot += 1;
 					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
 					_this.BlockForWeaponChange( WEAPON.KNIFE );
-					_this.Bot.HoldButton(BTN.ATTACK1, 3);					
+					_this.Bot.HoldButton(BTN.ATTACK1, 3);
 				}
-				
+
 				sleep(5);
 				Map.gratebot -= 1;
-			},               
-		}, 		
+			},
+		},
 	},
 
 	Side_Door_Destroyed = function( trigger )
@@ -160,7 +160,7 @@ global Map =
 				if ( Map.Suicide && bot.GetReinforceTime() < 8 )
 				{
 					bot.ExecCommand( "kill" );
-				} 
+				}
 			}
 		}
 
@@ -177,7 +177,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		ETUtil.StopSniping();	// Push inside
 		Map.TwoMinute = true;
 
@@ -192,7 +192,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		if ( Map.RelicStatus == true || !MAP_TALK ) { return; }
 
 		foreach ( id and bot in BotTable )
@@ -210,7 +210,7 @@ global Map =
 				}
 				sleep(0.5);
 			}
-		}		
+		}
 	},
 	alarm_on = function( trigger )
 	{
@@ -233,58 +233,18 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Util.MapDebugPrint( "round_end" );
-		
-		if (!MAP_TALK) { return; }
-		
-		foreach ( id and bot in BotTable )
+		if (Map.RelicStatus == false)	// Allies win
 		{
-			team = bot.GetTeam();
-			
-			if (RandInt(0,10) < 2)
-			{
-				bot.SayVoice(VOICE.G_GOODGAME);
-			}
-			if (Map.RelicStatus == false)	// Allies win
-			{
-				if (team == TEAM.ALLIES)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}					
-					sleep(0.5);
-				}
-				if (team == TEAM.AXIS)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_NEGATIVE);
-					}					
-					sleep(0.5);
-				}
-			}
-			else				// Axis win
-			{
-				if (team == TEAM.AXIS)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}					
-					sleep(0.5);
-				}
-				if (team == TEAM.ALLIES)
-				{
-					if (RandInt(0,10) < 5)
-					{
-						bot.SayVoice(VOICE.G_NEGATIVE);
-					}					
-					sleep(0.5);
-				}
+			ETUtil.WinningChat( TEAM.ALLIES );
+			ETUtil.LosingChat( TEAM.AXIS );
+		}
+		else				// Axis win
+		{
+			ETUtil.WinningChat( TEAM.AXIS );
+			ETUtil.LosingChat( TEAM.ALLIES );
+		}
 
-			}
-		}	
+		Util.MapDebugPrint( "round_end" );
 	},
 	SewerTrigger =
 	{
@@ -311,7 +271,7 @@ global Map =
 								break;
 							}
 						}
-						
+
 					}
 				}
 			}
@@ -344,7 +304,7 @@ global Map =
 								bot.SayTeam("Relic is going door!");
 								break;
 							}
-						}					
+						}
 					}
 				}
 			}
@@ -411,7 +371,7 @@ global Map =
 								break;
 							}
 						}
-					
+
 					}
 				}
 			}
@@ -419,8 +379,8 @@ global Map =
 		OnExit = function(ent)
 		{
 		},
-	},	
-	
+	},
+
 	check_grate = function()
 	{
 		wpOne = {};
@@ -428,37 +388,36 @@ global Map =
 		Wp.GetWaypointByName("top", wpOne);
 		Wp.GetWaypointByName("bottom", wpTwo);
 		offset = Vector3(0,0,10);
-		
+
 		while( !Map.Grate_Destroyed )
 		{
-			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false ); 
-			
+			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false );
+
 			 if ( tr.fraction < 1 )
 			 {
 				if ( Map.Debug )
 					{ DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.RED, 0.25); }
 			 }
-			 else 
+			 else
 			 {
 				if ( Map.Debug )
 					{ DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25); }
 				Map.Grate_Destroyed = true;
-				
+
 			 }
-			 
+
 			 sleep(0.25);
 		}
-		
-		if ( Map.Debug )
-			{ Util.MapDebugPrint( "grate_destroyed" ); }
-	},	
+
+		Util.MapDebugPrint( "grate_destroyed" );
+	},
 };
 
 global OnMapLoad = function()
 {
 
 	thread(Map.check_grate);
-	
+
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
@@ -512,12 +471,12 @@ global OnMapLoad = function()
 	tTwo = OnTriggerRegion(AABB(1110,1055,-1,1156,1167,77), Map.DoorTrigger);
 	tThree = OnTriggerRegion(AABB(1138,368,655,1176,501,705), Map.RoofTrigger);
 	tFour = OnTriggerRegion(AABB(1665,-48,-112,1703,48,-12), Map.AltarTrigger);
-	
+
 	MapRoutes =
 	{
 		DEFEND_bRelic_1 =
 		{
-			ROUTE_bspawn = 
+			ROUTE_bspawn =
 			{
 				ROUTE_rearalliedspawn = {Weight = 3,},
 				ROUTE_rearaltar = {},
@@ -539,7 +498,7 @@ global OnMapLoad = function()
 					ROUTE_maingallery = {Weight = 2,},
 					ROUTE_sewer = {},
 				},
-				ROUTE_rearaltar = 
+				ROUTE_rearaltar =
 				{
 					ROUTE_northgallery = {},
 					ROUTE_maingallery = {Weight = 2,},
@@ -554,15 +513,15 @@ global OnMapLoad = function()
 		},
 		PLANT_Side_Door =
 		{
-			ROUTE_rspawn = 
+			ROUTE_rspawn =
 			{
-				ROUTE_northentrance = 
+				ROUTE_northentrance =
 				{
 					Weight = 3,
 					ROUTE_maingallery = {},
 					ROUTE_northgallery = {Weight = 2,},
 				},
-				ROUTE_southentrance = 
+				ROUTE_southentrance =
 				{
 					Weight = 2,
 					ROUTE_maingallery = {},
@@ -572,16 +531,16 @@ global OnMapLoad = function()
 		},
 		ATTACK_rPlant_1 =
 		{
-			ROUTE_rspawn = 
+			ROUTE_rspawn =
 			{
-				ROUTE_northentrance = 
+				ROUTE_northentrance =
 				{
 					Weight = 2,
 					ROUTE_n_maingallery = {Weight=2,},
 					ROUTE_maingallery = {},
 					ROUTE_northgallery = {},
 				},
-				ROUTE_southentrance = 
+				ROUTE_southentrance =
 				{
 					Weight = 2,
 					ROUTE_maingallery = {},
@@ -594,47 +553,47 @@ global OnMapLoad = function()
 		{
 			ROUTE_rspawn =
 			{
-				ROUTE_northentrance = 
+				ROUTE_northentrance =
 				{
 					Weight = 3,
 					ROUTE_northgallery = {},
-					ROUTE_n_maingallery = 
-					{
-						ROUTE_door = {},
-						ROUTE_rearaltar = {},					
-					},
-					ROUTE_maingallery = 
+					ROUTE_n_maingallery =
 					{
 						ROUTE_door = {},
 						ROUTE_rearaltar = {},
 					},
-					ROUTE_roof = 
+					ROUTE_maingallery =
+					{
+						ROUTE_door = {},
+						ROUTE_rearaltar = {},
+					},
+					ROUTE_roof =
 					{
 						ROUTE_organroof = {},
 					},
 				},
-				ROUTE_southentrance = 
+				ROUTE_southentrance =
 				{
 					Weight = 3,
-					ROUTE_s_maingallery = 
-					{
-						ROUTE_door = {},
-						ROUTE_rearaltar = {},
-					},					
-					ROUTE_maingallery = 
+					ROUTE_s_maingallery =
 					{
 						ROUTE_door = {},
 						ROUTE_rearaltar = {},
 					},
-					ROUTE_roof = 
+					ROUTE_maingallery =
+					{
+						ROUTE_door = {},
+						ROUTE_rearaltar = {},
+					},
+					ROUTE_roof =
 					{
 						ROUTE_organroof = {},
 					},
 				},
-				ROUTE_sewer = 
+				ROUTE_sewer =
 				{
 					ROUTE_rearaltar = {},
-					ROUTE_door = {},			
+					ROUTE_door = {},
 				},
 			},
 		},

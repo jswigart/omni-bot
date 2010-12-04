@@ -17,7 +17,7 @@ global Map =
 	Allied_Slide_Dyno = 0,
 	Axis_Slide_Dyno = 0,
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
-	
+
 	Allied_Slide_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -60,15 +60,9 @@ global Map =
 			{ return; }
 
 		Map.Allied_Slide_Dyno = 0;
-		
-		if ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
-		
+
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "Allied_Slide_Destroyed" );
 	},
 
@@ -78,14 +72,9 @@ global Map =
 			{ return; }
 
 		Map.Axis_Slide_Dyno = 0;
-		
-		if ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "Axis_Slide_Destroyed" );
 	},
 
@@ -105,21 +94,21 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have destroyed the Axis Slide!", Map.Axis_Slide_Destroyed );
 
 	Util.DisableGoal( ".*", true ); // all but routes
-	// *** AXIS GOALS *** 
+	// *** AXIS GOALS ***
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_slideA_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_slide_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Slide" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
-	// *** ALLIES GOALS *** 
+	// *** ALLIES GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_slide_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_slideA_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Slide" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
-	//Add Use Wp	
-	Util.AddUseWp("PLANT_Axis_Slide", "axis_slide");  
-	Util.AddUseWp("PLANT_Axis_Slide", "axis_slide1"); 
+	//Add Use Wp
+	Util.AddUseWp("PLANT_Axis_Slide", "axis_slide");
+	Util.AddUseWp("PLANT_Axis_Slide", "axis_slide1");
 	Util.AddUseWp("PLANT_Allied_Slide", "allied_slide");
 	Util.AddUseWp("PLANT_Allied_Slide", "allied_slide1");
 	// Max users per goal
@@ -132,25 +121,25 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
-	
+
 	// *** ALLIED GOALS PRIORITY ***
 	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.ALLIES, CLASS.MEDIC );
 	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.ALLIES, CLASS.MEDIC );
 	SetGoalPriority( "PLANT_Axis_Slide", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
-	
+
 	// *** AXIS GOALS PRIORITY ***
 	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_.*", 0.0, TEAM.AXIS, CLASS.MEDIC );
 	SetGoalPriority( "ATTACK_.*", 0.0, TEAM.AXIS, CLASS.MEDIC );
 	SetGoalPriority( "PLANT_Allied_Slide", 1.0, TEAM.AXIS, CLASS.ENGINEER );
-	
+
 	// Camp times
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=30, maxcamptime=45});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
-	
+
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
@@ -158,27 +147,25 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 	Util.SetMaxUsers( 2, "PLANT_.*" );
 //Map Routes
-	Util.MapDebugPrint("Configuring Routes");	
-	
 	MapRoutes =
 	{
-		PLANT_Allied_Slide = 
+		PLANT_Allied_Slide =
 		{
-			ROUTE_Spawn_Allies  = 
+			ROUTE_Spawn_Allies  =
 			{
-				ROUTE_slide  = 
+				ROUTE_slide  =
 				{
-					ROUTE_slide_1  = 
+					ROUTE_slide_1  =
 					{
-						ROUTE_slide_2  = 
+						ROUTE_slide_2  =
 						{
-							ROUTE_slide_3  = 
+							ROUTE_slide_3  =
 							{
-								ROUTE_slide_4  = 
+								ROUTE_slide_4  =
 								{
-									ROUTE_slide_5  = 
+									ROUTE_slide_5  =
 									{
-										ROUTE_slide_6  = 
+										ROUTE_slide_6  =
 										{
 										},
 									},
@@ -186,31 +173,31 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_back  = 
+					ROUTE_back  =
 					{
-						ROUTE_back_1  = 
+						ROUTE_back_1  =
 						{
-							ROUTE_back_2  = 
+							ROUTE_back_2  =
 							{
-								ROUTE_back_3  = 
+								ROUTE_back_3  =
 								{
-									ROUTE_back_4  = 
+									ROUTE_back_4  =
 									{
-										ROUTE_back_5  = 
+										ROUTE_back_5  =
 										{
-											ROUTE_back_6  = 
+											ROUTE_back_6  =
 											{
-												ROUTE_back_7  = 
+												ROUTE_back_7  =
 												{
-													ROUTE_backA_1  = 
+													ROUTE_backA_1  =
 													{
-														ROUTE_slide_3  = 
+														ROUTE_slide_3  =
 														{
-															ROUTE_slide_4  = 
+															ROUTE_slide_4  =
 															{
-																ROUTE_slide_5  = 
+																ROUTE_slide_5  =
 																{
-																	ROUTE_slide_6  = 
+																	ROUTE_slide_6  =
 																	{
 																	},
 																},
@@ -228,25 +215,25 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Axis_Slide = 
+		PLANT_Axis_Slide =
 		{
-			ROUTE_Axis_Spawn  = 
+			ROUTE_Axis_Spawn  =
 			{
-				ROUTE_slideA  = 
+				ROUTE_slideA  =
 				{
-					ROUTE_slideA_1  = 
+					ROUTE_slideA_1  =
 					{
-						ROUTE_slideA_2  = 
+						ROUTE_slideA_2  =
 						{
-							ROUTE_slideA_3  = 
+							ROUTE_slideA_3  =
 							{
-								ROUTE_slideA_4  = 
+								ROUTE_slideA_4  =
 								{
-									ROUTE_slideA_5  = 
+									ROUTE_slideA_5  =
 									{
-										ROUTE_slideA_6  = 
+										ROUTE_slideA_6  =
 										{
-											ROUTE_slideA_7  = 
+											ROUTE_slideA_7  =
 											{
 											},
 										},
@@ -255,33 +242,33 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_backA  = 
+					ROUTE_backA  =
 					{
-						ROUTE_backA_1  = 
+						ROUTE_backA_1  =
 						{
-							ROUTE_backA_2  = 
+							ROUTE_backA_2  =
 							{
-								ROUTE_backA_3  = 
+								ROUTE_backA_3  =
 								{
-									ROUTE_backA_4  = 
+									ROUTE_backA_4  =
 									{
-										ROUTE_backA_5  = 
+										ROUTE_backA_5  =
 										{
-											ROUTE_backA_6  = 
+											ROUTE_backA_6  =
 											{
-												ROUTE_backA_7  = 
+												ROUTE_backA_7  =
 												{
-													ROUTE_backA_8  = 
+													ROUTE_backA_8  =
 													{
-														ROUTE_backA_9  = 
+														ROUTE_backA_9  =
 														{
-															ROUTE_slideA_4  = 
+															ROUTE_slideA_4  =
 															{
-																ROUTE_slideA_5  = 
+																ROUTE_slideA_5  =
 																{
-																	ROUTE_slideA_6  = 
+																	ROUTE_slideA_6  =
 																	{
-																		ROUTE_slideA_7  = 
+																		ROUTE_slideA_7  =
 																		{
 																		},
 																	},
@@ -304,10 +291,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

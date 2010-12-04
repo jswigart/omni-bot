@@ -949,11 +949,9 @@ if ( Mapgm == null )
 			Util.AddToTable( MapScript, "" );
 		}
 
-		Util.AddToTable( MapScript, "\tif ( Map.Debug > 1 )" );
-		Util.AddToTable( MapScript, "\t\t{ Util.ShowActiveGoals(); }" );
 		Util.AddToTable( MapScript, "" );
 
-		Util.AddToTable( MapScript, "\tprint( \"Omni-bot map script for \" + GetMapName() + \" executed.\" );" );
+		Util.AddToTable( MapScript, "\tUtil.MapDebugPrint( \"Omni-bot map script for \" + GetMapName() + \" executed.\" );" );
 
 		Util.AddToTable( MapScript, "};" );
 

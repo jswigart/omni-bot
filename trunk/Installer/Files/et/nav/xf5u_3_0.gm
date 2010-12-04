@@ -531,24 +531,10 @@ global Map =
 
 		Map.Obj1 = "true";
 
-		if ( Map.Obj2 && Map.Talk && MAP_TALK )
+		if ( Map.Obj2 )
 		{
-
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
+			ETUtil.WinningChat( TEAM.AXIS );
+			ETUtil.LosingChat( TEAM.ALLIES );
 		}
 
 		Util.MapDebugPrint( "rocket_fuel_Captured" );
@@ -592,24 +578,10 @@ global Map =
 
 		Map.Obj2 = "true";
 
-		if ( Map.Obj1 && Map.Talk && MAP_TALK )
+		if ( Map.Obj1 )
 		{
-
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
+			ETUtil.WinningChat( TEAM.AXIS );
+			ETUtil.LosingChat( TEAM.ALLIES );
 		}
 
 		Util.MapDebugPrint( "v2_docs_Captured" );
@@ -641,7 +613,7 @@ global Map =
 
 		if ( vec.z > 38 )
 		{
-			Util.MapDebugPrint ( "lift 1 is coming up", true );
+			Util.MapDebugPrint( "lift 1 is coming up", true );
 			sleep(15.0);
 
 			Map.Lift1Status = "up";
@@ -652,12 +624,12 @@ global Map =
 				Wp.SetWaypointFlag("Lift1_1","closed",false);
 				Wp.SetWaypointFlag("Lift1_2","closed",true);
 				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_lift1.*" );
-				Util.MapDebugPrint ( "lift1 is ready upstairs", true );
+				Util.MapDebugPrint( "lift1 is ready upstairs", true );
 			}
 		}
 		else if ( vec.z < -38 )
 		{
-			Util.MapDebugPrint ( "lift 1 is going down", true );
+			Util.MapDebugPrint( "lift 1 is going down", true );
 			sleep(15.0);
 
 			Map.Lift1Status = "down";
@@ -667,7 +639,7 @@ global Map =
 			{
 				Wp.SetWaypointFlag("Lift1_2","closed",false);
 				SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_a_lift1.*" );
-				Util.MapDebugPrint ( "lift1 is ready downstairs", true );
+				Util.MapDebugPrint( "lift1 is ready downstairs", true );
 			}
 		}
 	},
@@ -686,7 +658,7 @@ global Map =
 
 			Map.Switches.Switch1.LimitTeam = 0;
 			Map.Switches.Switch2.LimitTeam = (1<<TEAM.ALLIES);
-			Util.MapDebugPrint ( "SwitchOne is now: " + Map.SwitchOneStatus, true );
+			Util.MapDebugPrint( "SwitchOne is now: " + Map.SwitchOneStatus, true );
 		}
 		else if ( vec.z > 14 )
 		{
@@ -697,7 +669,7 @@ global Map =
 
 			Map.Switches.Switch1.LimitTeam = (1<<TEAM.AXIS);
 			Map.Switches.Switch2.LimitTeam = 0;
-			Util.MapDebugPrint ( "SwitchOne is now: " + Map.SwitchOneStatus, true );
+			Util.MapDebugPrint( "SwitchOne is now: " + Map.SwitchOneStatus, true );
 		}
 	},
 
@@ -707,7 +679,7 @@ global Map =
 
 		if ( vec.z > 38 )
       	{
-			Util.MapDebugPrint ( "lift 2 is coming up", true );
+			Util.MapDebugPrint( "lift 2 is coming up", true );
 			sleep(15.0);
 
 			Map.Lift2Status = "up";
@@ -718,12 +690,12 @@ global Map =
 				Wp.SetWaypointFlag("Lift2_1","closed",false);
 				Wp.SetWaypointFlag("Lift2_2","closed",true);
 				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_lift2.*" );
-				Util.MapDebugPrint ( "lift2 is ready upstairs", true );
+				Util.MapDebugPrint( "lift2 is ready upstairs", true );
 			}
 		}
 		else if ( vec.z < -38 )
       	{
-			Util.MapDebugPrint ( "lift 2 is going down", true );
+			Util.MapDebugPrint( "lift 2 is going down", true );
 			sleep(15.0);
 
 			Map.Lift2Status = "down";
@@ -733,7 +705,7 @@ global Map =
 			{
 				Wp.SetWaypointFlag("Lift2_2","closed",false);
 				SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_a_lift2.*" );
-				Util.MapDebugPrint ( "lift2 is ready downstairs", true );
+				Util.MapDebugPrint( "lift2 is ready downstairs", true );
 			}
 		}
 	},
@@ -752,7 +724,7 @@ global Map =
 
 			Map.Switches.Switch3.LimitTeam = 0;
 			Map.Switches.Switch4.LimitTeam = (1<<TEAM.ALLIES);
-			Util.MapDebugPrint ( "Switch3 is now " + Map.SwitchThreeStatus, true );
+			Util.MapDebugPrint( "Switch3 is now " + Map.SwitchThreeStatus, true );
 		}
 		else if ( vec.z > 14 )
 		{
@@ -763,7 +735,7 @@ global Map =
 
 			Map.Switches.Switch3.LimitTeam = (1<<TEAM.AXIS);
 			Map.Switches.Switch4.LimitTeam = 0;
-			Util.MapDebugPrint ( "Switch3 is now " + Map.SwitchThreeStatus, true );
+			Util.MapDebugPrint( "Switch3 is now " + Map.SwitchThreeStatus, true );
 		}
 	},
 
@@ -794,7 +766,7 @@ global Map =
 			if ( Map.Bigdoor )
 			{
 				Map.Switches.BigDoor.LimitTeam = 0;
-				Util.MapDebugPrint ( "Switch disabled ", true);
+				Util.MapDebugPrint( "Switch disabled ", true);
 			}
 
 			 sleep(0.25);

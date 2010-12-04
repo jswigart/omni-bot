@@ -65,7 +65,7 @@ global Map =
 			}
 		},
 	},
-	
+
 	Defend_Key1 = function( trigger )
 	{
 		sleep(20);
@@ -196,7 +196,7 @@ global Map =
 		Util.EnableGoal("AMMOCAB_.*_grate");
 		Util.EnableGoal("PLANT_Command_Post");
 		Map.SetHostage(true);
-		
+
 		foreach (bot in BotTable)
 		{
 			//kill sniper
@@ -211,26 +211,26 @@ global Map =
 		Util.SetPercentInProgress(90, "CHECKPOINT_depotflag");
 		Util.MapDebugPrint( "Flag_Allies" );
 	},
-	
+
 	Flag_Axis = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, false, "MOUNTMG42_Allied_MG42_Construction" );
 		Util.SetPercentInProgress(30, "CHECKPOINT_depotflag");
 		Util.MapDebugPrint( "Flag_Axis" );
 	},
-	
+
 	grate_door1_trigger = function( trigger )
 	{
 		vel = ToVector(trigger.Action);
 		Map.grateDoor1Opened = (vel.z < 0);
 	},
-	
+
 	grate_door2_trigger = function( trigger )
 	{
 		vel = ToVector(trigger.Action);
 		Map.grateDoor2Opened = (vel.z < 0);
 	},
-	
+
 	Cell_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -246,7 +246,7 @@ global Map =
 		Map.hostageDead = dead;
 		if(dead){ escort = 99; }else{ escort = 4; }
 		Util.SetMaxUsersInUse(escort, "ESCORT_hostage");
-		
+
 		foreach ( bot in BotTable )
 		{
 			if(!dead && bot.GetTeam()==TEAM.ALLIES){ t=0; }else{ t=999999; }
@@ -307,14 +307,14 @@ global Map =
 		Util.OnTriggerPosition("MOVER_hostage", "main_door", 100.0, Map.Hostage_main_door);
 		Util.MapDebugPrint( "Hostage_Released" );
 	},
-	
+
 	Hostage_main_door = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANTMINE_industry.*" );
 		Util.OnTriggerPosition("MOVER_hostage", "south_west", 150.0, Map.Hostage_south_west);
 		Util.MapDebugPrint( "Hostage_main_door" );
 	},
-	
+
 	Hostage_south_west = function( trigger )
 	{
 		Map.phase=50;
@@ -324,7 +324,7 @@ global Map =
 		Util.OnTriggerPosition("MOVER_hostage", "industry_tower", 200.0, Map.Hostage_industry_tower);
 		Util.MapDebugPrint( "Hostage_south_west" );
 	},
-	
+
 	Hostage_industry_tower = function( trigger )
 	{
 		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANTMINE_industry.*" );
@@ -332,7 +332,7 @@ global Map =
 		Util.OnTriggerPosition("MOVER_hostage", "industry_front", 300.0, Map.Hostage_industry_front);
 		Util.MapDebugPrint( "Hostage_industry_tower" );
 	},
-	
+
 	Hostage_industry_front = function( trigger )
 	{
 		Map.phase=60;
@@ -355,7 +355,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, true, "MOUNT_boat" );
 		Util.MapDebugPrint( "Hostage_tree" );
 	},
-	
+
 	Hostage_Killed = function( trigger )
 	{
 		Map.SetHostage(true);
@@ -394,14 +394,14 @@ global OnMapLoad = function()
 	//OnTrigger( "Allies have breached the BackYard Wall!", Map.backyard_wall_Destroyed );
 	OnTrigger( "^5The VIP has been killed..", Map.Hostage_Killed );
 	OnTrigger( "^5The VIP has been revived..", Map.Hostage_Revived );
-	
+
 	Util.DisableGoal( ".*", true );
-	foreach (goal in { "ATTACK_main_door.*", "PLANT_.*Back_Door_Lower", "PLANT_.*Back_Door_upper", 
-		"BUILD_Axis_MG42_Construction", "MOUNTMG42_Axis_MG42_Construction", "REPAIRMG42_Axis_MG42_Construction", 
+	foreach (goal in { "ATTACK_main_door.*", "PLANT_.*Back_Door_Lower", "PLANT_.*Back_Door_upper",
+		"BUILD_Axis_MG42_Construction", "MOUNTMG42_Axis_MG42_Construction", "REPAIRMG42_Axis_MG42_Construction",
 		"PLANT_Allied_MG42_Construction", "BUILD_Axis_Escort_Boat", "MOUNT_boat" }){
 		SetAvailableMapGoals( TEAM.AXIS, true, goal );
 	}
-	foreach (goal in { "BUILD_Command_Post", "PLANT_Axis_MG42_Construction", 
+	foreach (goal in { "BUILD_Command_Post", "PLANT_Axis_MG42_Construction",
 		"BUILD_Allied_MG42_Construction", "MOUNTMG42_Allied_MG42_Construction", "REPAIRMG42_Allied_MG42_Construction",
 		"CHECKPOINT_depotflag", "HEALTHCAB_building64", "AIRSTRIKE_mg", "MOBILEMORTAR_upper", "ATTACK_lower.*" }){
 		SetAvailableMapGoals( TEAM.ALLIES, true, goal );
@@ -419,7 +419,7 @@ global OnMapLoad = function()
 	SetGoalPriority("PLANT_.*c_Cell", 0.85);
 	SetGoalPriority("PLANTMINE_south_east.*", 0.9);
 	SetGoalPriority("SNIPE.*", 0.85);
-	
+
 	// Max users per goal
 	Util.SetMaxUsersInProgress(50, "ESCORT_hostage.*");
 	Util.SetMaxUsersInUse( 2, "ATTACK_.*" );
@@ -432,7 +432,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
 	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
-	
+
 	// Camp times
  	SetMapGoalProperties( "DEFEND_.*", {mincamptime=30, maxcamptime=100} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
@@ -445,8 +445,8 @@ global OnMapLoad = function()
 	if(g==null){ g=GetGoal("PLANT_8The_4Allies_8Back_Door_upper"); }
 	g.AddUsePoint(Vector3(4801,1271,696));
 	g.AddUsePoint(Vector3(4875,1272,696));
-	
-	Map.hostageEntity = GetGoal("MOVER_hostage").GetEntity();	
+
+	Map.hostageEntity = GetGoal("MOVER_hostage").GetEntity();
 
 	MapRoutes =
 	{
@@ -455,17 +455,17 @@ global OnMapLoad = function()
 				ROUTE_north_trees = {
 					ROUTE_industry_north = {},
 					ROUTE_industry_back = {},
-				}, 
-				ROUTE_north_outside = { 
+				},
+				ROUTE_north_outside = {
 					ROUTE_industry_south = {},
 					ROUTE_industry_back = {},
 				},
-				ROUTE_north_water = { 
+				ROUTE_north_water = {
 					ROUTE_industry_north = {},
 					ROUTE_industry_south = {},
 				},
 			},
-		},		
+		},
 		CAPPOINT_key2 = {
 			ROUTE_key2 = {
 				ROUTE_north_outside = {},
@@ -496,27 +496,24 @@ global OnMapLoad = function()
 		},
 	};
 	if (GetGoal("BUILD_DRiRelc_lock")!=null){
-		MapRoutes.BUILD_DRiRelc_lock = routePrison; 
+		MapRoutes.BUILD_DRiRelc_lock = routePrison;
 		MapRoutes.PLANT_DRiRelc_Cell = routePrison;
-	}else{ 
+	}else{
 		MapRoutes["BUILD_1D0Ri^1R0el1^0c_lock"] = routePrison;
-		MapRoutes["PLANT_1D0Ri^1R0el1^0c_Cell"] = routePrison;  
+		MapRoutes["PLANT_1D0Ri^1R0el1^0c_Cell"] = routePrison;
 	}
 	MapRoutes.ATTACK_prison1 = routePrison;
 	MapRoutes.ATTACK_prison2 = routePrison;
 	MapRoutes.ATTACK_prison3 = routePrison;
-	MapRoutes.ATTACK_industry1 = MapRoutes.FLAG_jail_key; 
-	MapRoutes.ATTACK_industry2 = MapRoutes.ATTACK_industry1; 
+	MapRoutes.ATTACK_industry1 = MapRoutes.FLAG_jail_key;
+	MapRoutes.ATTACK_industry2 = MapRoutes.ATTACK_industry1;
 	MapRoutes.ATTACK_industry3 = MapRoutes.ATTACK_industry1;
 	MapRoutes.DEFEND_industry2 = MapRoutes.DEFEND_industry7;
 	MapRoutes.DEFEND_industry3 = MapRoutes.DEFEND_industry7;
 	MapRoutes.CAPPOINT_key1 = { ROUTE_key1 = MapRoutes.FLAG_jail_key.ROUTE_axis_spawn };
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

@@ -21,10 +21,10 @@ global Map =
 	Main_Gate_Dyno = 0,
 	Control_Panel = false,
 	Pos = "bottom", //lift at bottom
-	
+
 	Navigation =
 	{
-//bottom lift		
+//bottom lift
 		// /bot waypoint_setproperty paththrough Navigation_PT:wait
 		wait =
 		{
@@ -54,7 +54,7 @@ global Map =
 				}
 				yield();
 			},
-		},	
+		},
 //top lift
 		// /bot waypoint_setproperty paththrough Navigation_PT:wait1
 		wait1 =
@@ -85,7 +85,7 @@ global Map =
 				}
 				yield();
 			},
-			
+
 		},
 	},
 //lift
@@ -94,24 +94,24 @@ global Map =
 		Map.Pos = "moving";
 		Wp.SetWaypointFlag("ground","closed",true);
 		Wp.SetWaypointFlag("first","closed",true);
-		Util.MapDebugPrint("lift moving"); 
+		Util.MapDebugPrint("lift moving");
 		sleep(4);
-		
+
 		vel = ToVector(trigger.Action);
-		
+
 		if (vel.z < 0)
 		{
 			Map.Pos = "bottom";
 			Wp.SetWaypointFlag("ground","closed",false);
-			Util.MapDebugPrint("Lift at bottom"); 
+			Util.MapDebugPrint("Lift at bottom");
 		}
 		else if (vel.z > 0)
 		{
 			Map.Pos = "top";
 			Wp.SetWaypointFlag("first","closed",false);
-			Util.MapDebugPrint("Lift at top"); 
+			Util.MapDebugPrint("Lift at top");
 		}
-	},	
+	},
 	//OBJ - Going Though Axis door
 	AxisDoorTrigger =
 	{
@@ -124,17 +124,17 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_GATE.*" );
 				Util.MapDebugPrint(GetEntName(ent) + " ^8 Has Entered Axis Door With The Documents !");
 			}
-		},	
+		},
 		OnExit = function(ent)
 		{
-		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )	
+		if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_GATE.*" );
 				Util.MapDebugPrint(GetEntName(ent) + " ^3 Has Exited Axis Door With The Documents !");
 			}
 		},
 	},
-	
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -142,7 +142,7 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -151,7 +151,7 @@ global Map =
 		Map.Allied_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -168,15 +168,15 @@ global Map =
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -185,7 +185,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -194,7 +194,7 @@ global Map =
 		Map.Axis_Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -202,12 +202,12 @@ global Map =
 
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
-	
+
 	Control_Panel_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		Map.Control_Panel = true;	
+		Map.Control_Panel = true;
 		Wp.SetWaypointFlag("controldoor","closed",false);
 		Wp.SetWaypointFlag("controldoor1","closed",false);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
@@ -219,7 +219,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Fake_Escape.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Cran" );
-		
+
 		Util.MapDebugPrint( "Control_Panel_Built" );
 	},
 
@@ -231,7 +231,7 @@ global Map =
 		Map.Control_Panel_Dyno += 1;
 		Util.MapDebugPrint( "Control_Panel_Planted" );
 	},
-	
+
 	Control_Panel_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -240,7 +240,7 @@ global Map =
 		Map.Control_Panel_Dyno -= 1;
 		Util.MapDebugPrint( "Control_Panel_Defused" );
 	},
-	
+
 	Control_Panel_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -255,7 +255,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Fake_Escape.*");
 		Util.MapDebugPrint( "Control_Panel_Destroyed" );
 	},
-	
+
 	MG_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -263,7 +263,7 @@ global Map =
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_MG" );
 		Util.MapDebugPrint( "MG_Built" );
 	},
-	
+
 	MG_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -281,7 +281,7 @@ global Map =
 		Map.MG_Dyno -= 1;
 		Util.MapDebugPrint( "MG_Defused" );
 	},
-	
+
 	MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -290,7 +290,7 @@ global Map =
 		Map.MG_Dyno = 0;
 		Util.MapDebugPrint( "MG_Destroyed" );
 	},
-	
+
 	Main_Gate_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -332,13 +332,13 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Cran" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cran" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_escape.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pannel.*" );
-		
+
 		Util.MapDebugPrint( "Very_Secret_Radar_Components_Taken" );
 	},
 
@@ -350,7 +350,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Cran" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_escape.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_pannel.*" );
-		
+
 		Util.MapDebugPrint( "Very_Secret_Radar_Components_Returned" );
 	},
 
@@ -366,7 +366,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.MapDebugPrint( "flag_flag_Axis_Captured" );
 	},
 
@@ -374,7 +374,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "flag_flag_Allies_Captured" );
 	},
 
@@ -405,10 +405,10 @@ global OnMapLoad = function()
 	OnTrigger( "Allied team has returned the very secret Radar Components!", Map.Very_Secret_Radar_Components_Returned );
 	OnTrigger( "Allied team has secured the very secret Radar Components!", Map.Very_Secret_Radar_Components_Secured );
 	OnTrigger( "Axis captured the Flag!", Map.flag_flag_Axis_Captured );
-	OnTrigger( "Allies captured the Flag!", Map.flag_flag_Allies_Captured );	
-	OnTrigger( "liftplatte_goto", Map.lift ); 
+	OnTrigger( "Allies captured the Flag!", Map.flag_flag_Allies_Captured );
+	OnTrigger( "liftplatte_goto", Map.lift );
 	door = OnTriggerRegion(AABB(1719.321,1501.421,-382.875,1824.874,1913.544,-308.875),Map.AxisDoorTrigger);
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_MG" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Gate" );
@@ -418,7 +418,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_AlliedMG.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_gate.*" );
 	SetGoalPriority( "CHECKPOINT.*", 0.49, 0, 0 ); //all teams and all classes
-	SetGoalPriority( "CAPPOINT_Fake_Escape", 0.80 ); 
+	SetGoalPriority( "CAPPOINT_Fake_Escape", 0.80 );
 	Wp.SetWaypointFlag("controldoor","closed",true); //control pannel doors
 	Wp.SetWaypointFlag("controldoor1","closed",true); //control pannel doors
 	Wp.SetWaypointFlag("first","closed",true); //fisrt floor lift doors
@@ -441,57 +441,34 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "ATTACK_Cran", {mincamptime=120, maxcamptime=180});
 	SetMapGoalProperties( "DEFEND_Cran", {mincamptime=120, maxcamptime=180});
-	
-	Util.MapDebugPrint("Configuring Routes");
-	
+
 	MapRoutes =
 	{
-		PLANT_Main_Gate = 
+		PLANT_Main_Gate =
 		{
-			ROUTE_Allies_Spawn  = 
+			ROUTE_Allies_Spawn  =
 			{
-				ROUTE_gate  = 
+				ROUTE_gate  =
 				{
-					ROUTE_gateA  = 
+					ROUTE_gateA  =
 					{
-						ROUTE_gateA_1  = 
+						ROUTE_gateA_1  =
 						{
-							ROUTE_gateA_2  = 
+							ROUTE_gateA_2  =
 							{
-								ROUTE_maingate  = 
+								ROUTE_maingate  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_gate_B  = 
+					ROUTE_gate_B  =
 					{
-						ROUTE_gate_B_1  = 
+						ROUTE_gate_B_1  =
 						{
-							ROUTE_gate_B_2  = 
+							ROUTE_gate_B_2  =
 							{
-								ROUTE_maingate  = 
-								{
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		BUILD_Control_Panel = 
-		{
-			ROUTE_pannel  = 
-			{
-				ROUTE_pannel_1  = 
-				{
-					ROUTE_pannel_2  = 
-					{
-						ROUTE_pannel_3  = 
-						{
-							ROUTE_pannel_4  = 
-							{
-								ROUTE_pannel_5  = 
+								ROUTE_maingate  =
 								{
 								},
 							},
@@ -500,34 +477,55 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		FLAG_Very_Secret_Radar_Components = 
+		BUILD_Control_Panel =
 		{
-			ROUTE_FLAG  = 
+			ROUTE_pannel  =
 			{
-				ROUTE_main  = 
+				ROUTE_pannel_1  =
 				{
-					ROUTE_alpha  = 
+					ROUTE_pannel_2  =
 					{
-						ROUTE_alpha_1  = 
+						ROUTE_pannel_3  =
 						{
-							ROUTE_alpha_2  = 
+							ROUTE_pannel_4  =
 							{
-								ROUTE_alpha_3  = 
+								ROUTE_pannel_5  =
 								{
-									ROUTE_alpha_4  = 
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		FLAG_Very_Secret_Radar_Components =
+		{
+			ROUTE_FLAG  =
+			{
+				ROUTE_main  =
+				{
+					ROUTE_alpha  =
+					{
+						ROUTE_alpha_1  =
+						{
+							ROUTE_alpha_2  =
+							{
+								ROUTE_alpha_3  =
+								{
+									ROUTE_alpha_4  =
 									{
-										
-										ROUTE_alpha_5  = 
+
+										ROUTE_alpha_5  =
 										{
-											ROUTE_alpha_6  = 
+											ROUTE_alpha_6  =
 											{
-												ROUTE_alpha_7  = 
+												ROUTE_alpha_7  =
 												{
-													ROUTE_alpha_8  = 
+													ROUTE_alpha_8  =
 													{
-														ROUTE_cran  = 
+														ROUTE_cran  =
 														{
-															ROUTE_obj  = 
+															ROUTE_obj  =
 															{
 															},
 														},
@@ -535,35 +533,35 @@ global OnMapLoad = function()
 												},
 											},
 										},
-										ROUTE_beta_6  = 
+										ROUTE_beta_6  =
 										{
-											ROUTE_beta_7  = 
+											ROUTE_beta_7  =
 											{
-												ROUTE_beta_8  = 
+												ROUTE_beta_8  =
 												{
-													ROUTE_cran  = 
+													ROUTE_cran  =
 													{
-														ROUTE_obj  = 
+														ROUTE_obj  =
 														{
 														},
 													},
 												},
-												ROUTE_delta  = 
+												ROUTE_delta  =
 												{
-													ROUTE_deltaA  = 
+													ROUTE_deltaA  =
 													{
-														ROUTE_deltaB  = 
+														ROUTE_deltaB  =
 														{
-															ROUTE_obj  = 
+															ROUTE_obj  =
 															{
 															},
 														},
 													},
-													ROUTE_delta_1  = 
+													ROUTE_delta_1  =
 													{
-														ROUTE_deltaB  = 
+														ROUTE_deltaB  =
 														{
-															ROUTE_obj  = 
+															ROUTE_obj  =
 															{
 															},
 														},
@@ -577,64 +575,64 @@ global OnMapLoad = function()
 						},
 					},
 					Weight = 2,
-					ROUTE_beta  = 
+					ROUTE_beta  =
 					{
-						ROUTE_beta_1  = 
+						ROUTE_beta_1  =
 						{
-							ROUTE_beta_2  = 
+							ROUTE_beta_2  =
 							{
-								ROUTE_beta_3  = 
+								ROUTE_beta_3  =
 								{
-									ROUTE_beta_4  = 
+									ROUTE_beta_4  =
 									{
-										ROUTE_beta_5  = 
+										ROUTE_beta_5  =
 										{
-											ROUTE_beta_6  = 
+											ROUTE_beta_6  =
 											{
-												ROUTE_beta_7  = 
+												ROUTE_beta_7  =
 												{
-													ROUTE_beta_8  = 
+													ROUTE_beta_8  =
 													{
-														ROUTE_cran  = 
+														ROUTE_cran  =
 														{
-															ROUTE_obj  = 
+															ROUTE_obj  =
 															{
 															},
 														},
 													},
-													ROUTE_delta  = 
+													ROUTE_delta  =
 													{
-														ROUTE_deltaA  = 
+														ROUTE_deltaA  =
 														{
-															ROUTE_deltaB  = 
+															ROUTE_deltaB  =
 															{
-																ROUTE_obj  = 
+																ROUTE_obj  =
 																{
 																},
 															},
 														},
-														ROUTE_delta_1  = 
+														ROUTE_delta_1  =
 														{
-															ROUTE_deltaB  = 
+															ROUTE_deltaB  =
 															{
-																ROUTE_obj  = 
+																ROUTE_obj  =
 																{
 																},
 															},
 														},
 													},
 												},
-												ROUTE_alpha_5  = 
+												ROUTE_alpha_5  =
 												{
-													ROUTE_alpha_6  = 
+													ROUTE_alpha_6  =
 													{
-														ROUTE_alpha_7  = 
+														ROUTE_alpha_7  =
 														{
-															ROUTE_alpha_8  = 
+															ROUTE_alpha_8  =
 															{
-																ROUTE_cran  = 
+																ROUTE_cran  =
 																{
-																	ROUTE_obj  = 
+																	ROUTE_obj  =
 																	{
 																	},
 																},
@@ -652,15 +650,12 @@ global OnMapLoad = function()
 				},
 			},
 		},
-	};	
+	};
 	MapRoutes.ATTACK_Cran = MapRoutes.FLAG_Very_Secret_Radar_Components;
-	
+
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

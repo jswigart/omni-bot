@@ -121,7 +121,7 @@ global Map =
 	{
 		vel = ToVector(trigger.Action);
 		if(vel.y < 0){
-			//print("elevator is up");
+			//Util.MapDebugPrint("elevator is up");
 			sleep(1.7);
 			Map.Switches.elevator_up_call.Enabled = false;
 			Map.Switches.elevator_up_in.Enabled = true;
@@ -129,7 +129,7 @@ global Map =
 			Map.Switches.elevator_down_call.Enabled = true;
 		}
 		else if(vel.y > 0){
-			//print("elevator is moving down");
+			//Util.MapDebugPrint("elevator is moving down");
 			Map.Switches.elevator_up_in.Enabled = false;
 		}
 	},
@@ -138,7 +138,7 @@ global Map =
 	{
 		vel = ToVector(trigger.Action);
 		if(vel.y < 0){
-			//print("elevator is down");
+			//Util.MapDebugPrint("elevator is down");
 			sleep(1.7);
 			Map.Switches.elevator_down_call.Enabled = false;
 			Map.Switches.elevator_down_in.Enabled = true;
@@ -146,7 +146,7 @@ global Map =
 			Map.Switches.elevator_up_call.Enabled = true;
 		}
 		else if(vel.y > 0){
-			//print("elevator is moving up");
+			//Util.MapDebugPrint("elevator is moving up");
 			Map.Switches.elevator_down_in.Enabled = false;
 		}
 	},
@@ -783,7 +783,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 	Util.UpdateSwitchData();
-	print( "Omni_bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

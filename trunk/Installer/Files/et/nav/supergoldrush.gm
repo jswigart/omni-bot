@@ -97,7 +97,7 @@ global Map =
 			Util.MapDebugPrint( GetEntName(ent) + " exiting." );
 		},
 	},
-	
+
 	increasebreakabledistB =
 	{
 		Name = "increasebreakabledistB",
@@ -121,7 +121,7 @@ global Map =
 			Util.MapDebugPrint( GetEntName(ent) + " exiting." );
 		},
 	},
-	
+
 	// path through for allies throwing a/s to assist in stealing tank
 	Airstrike =
 	{
@@ -177,18 +177,18 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Depot" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Depot" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Depot" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Depot" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_south_ammocabinet_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_south_healthcabinet_3" );
-		
+
 		Util.MapDebugPrint( "tank_at_1st_corner" );
 	},
-	
+
 	Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -262,7 +262,7 @@ global Map =
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" ); }
 
 		Wp.SetWaypointFlag( "AccessShaft", "closed", false );
-		
+
 		Util.MapDebugPrint("tank_at_barrier1");
 	},
 
@@ -576,7 +576,7 @@ global Map =
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" ); }
 
 		Wp.SetWaypointFlag( "truckmarker1", "closed", true );
-		
+
 		Util.MapDebugPrint("truck_at_barrier1");
 	},
 
@@ -607,7 +607,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
 
 		Wp.SetWaypointFlag( "truckmarker1", "closed", false );
-		
+
 		Util.MapDebugPrint( "truck_past_barrier1" );
 	},
 
@@ -884,7 +884,7 @@ global OnMapLoad = function()
 	barrier2 = OnTriggerRegion(AABB(1656.194,493.729,-416.801,2034.268,726.966,-337.425), RegionTrigger.VehicleTrigger);
 	barrier3 = OnTriggerRegion(AABB(480.061,-720.472,-332.313,634.705,-478.740,-222.440), RegionTrigger.VehicleTrigger);
 	barrier4 = OnTriggerRegion(AABB(-1818.902,-1406.621,-47.144,-1658.912,-1076.801,37.125), RegionTrigger.VehicleTrigger);
-	
+
 	SideJump = OnTriggerRegion( AABB(447.233,-436.875,-54.875,858.853,-271.125,114.482), Map.increasebreakabledistS );
 	BankEnt = OnTriggerRegion( AABB(1399.125,-2560.245,-374.875,1982.150,-2004.758,-248.875), Map.increasebreakabledistB );
 
@@ -948,7 +948,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_south_ammocabinet_3" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet_3" );
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
@@ -972,7 +972,7 @@ global OnMapLoad = function()
 
 	Wp.SetWaypointFlag( "truckmarker1", "closed", false );
 	Wp.SetWaypointFlag( "AccessShaft", "closed", true );
-	
+
 	//routes for tank build at barrier 2
 	Util.DisableGoal("ROUTE_repair_route.*");
 
@@ -1248,18 +1248,18 @@ global OnMapLoad = function()
 					ROUTE_bridgeroute2 = {},
 				},
 				ROUTE_cp_stairs = { Weight = 2,},
-			},			
+			},
 		},
-		BUILD_Tank_Barrier_1 = 
+		BUILD_Tank_Barrier_1 =
 		{
-			ROUTE_TankYardSpawn  = 
+			ROUTE_TankYardSpawn  =
 			{
-				ROUTE_TankYardSpawn2  = 
+				ROUTE_TankYardSpawn2  =
 				{
-					ROUTE_depotflank  = 
+					ROUTE_depotflank  =
 					{
 					},
-					ROUTE_depotflank2  = 
+					ROUTE_depotflank2  =
 					{
 					},
 				},
@@ -1324,7 +1324,7 @@ global OnMapLoad = function()
 
 	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

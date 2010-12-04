@@ -310,7 +310,7 @@ global Map =
 			{
 				Map.Train2Pos = 2;
 			}
-			//Util.MapDebugPrint(GetEntName(ent),"north");
+			//Util.MapDebugPrint(GetEntName(ent) + " north");
 		},
 		OnExit = function(ent)
 		{
@@ -322,7 +322,7 @@ global Map =
 			{
 				Map.Train2Pos = -1;
 			}
-			//Util.MapDebugPrint(GetEntName(ent),"leaves north station");
+			//Util.MapDebugPrint(GetEntName(ent) + " leaves north station");
 		},
 	},
 
@@ -340,7 +340,7 @@ global Map =
 			{
 				Map.Train2Pos = 3;
 			}
-			//Util.MapDebugPrint(GetEntName(ent),"west");
+			//Util.MapDebugPrint(GetEntName(ent) + " west");
 		},
 		OnExit = function(ent)
 		{
@@ -352,7 +352,7 @@ global Map =
 			{
 				Map.Train2Pos = -1;
 			}
-			//Util.MapDebugPrint(GetEntName(ent),"leaves west station");
+			//Util.MapDebugPrint(GetEntName(ent) + " leaves west station");
 		},
 	},
 
@@ -701,7 +701,7 @@ global OnMapLoad = function()
 	};
 	Util.Routes(Maproutes);
 
-	print( "Omni-bot map script for Subway loaded." );
+	Util.MapDebugPrint( "Omni-bot map script for Subway loaded." );
 };
 
 global OnBotJoin = function( bot )

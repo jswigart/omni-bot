@@ -14,15 +14,15 @@ global Map =
 	Debug = 0,
 	ShowMovers = false,
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
-	
+
 	Egg_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_EGG" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_ALLIES_EGG.*" );
-		
+
 		Util.MapDebugPrint( "Egg_Taken" );
 	},
 
@@ -30,10 +30,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_EGG_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_AXIS_EGG.*" );
-		
+
 		Util.MapDebugPrint( "Egg_1_Taken" );
 	},
 
@@ -41,9 +41,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_ALLIES_EGG.*" );
-		
+
 		Util.MapDebugPrint( "Egg_Returned" );
 	},
 
@@ -51,9 +51,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AXIS_EGG.*" );
-		
+
 		Util.MapDebugPrint( "Egg_1_Returned" );
 	},
 
@@ -61,14 +61,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		//allies win	
-		if ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
+		//allies win
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "Egg_Secured" );
 	},
 
@@ -77,13 +72,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		//axis win
-		iif ( Map.Talk && MAP_TALK )
-		{
-			Util.BotChat(TEAM.AXIS, "vsay", VOICE.G_CHEER, 3);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_NEGATIVE, 2);
-			Util.BotChat(TEAM.ALLIES, "vsay", VOICE.G_GOODGAME, 2);
-		}
-		
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "Egg_1_Secured" );
 	},
 };
@@ -100,7 +90,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have returned the Egg!", Map.Egg_1_Returned );
 	OnTrigger( "^1Allied team have secured the Egg!", Map.Egg_Secured );
 	OnTrigger( "^1Axis team have secured the Egg!", Map.Egg_1_Secured );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Egg_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AXIS_EGG.*" );
@@ -122,30 +112,26 @@ global OnMapLoad = function()
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
-	// Set up Routing
-	Util.MapDebugPrint("Configuring Routes");	
+
 	MapRoutes =
 	{
-		FLAG_Egg = 
+		FLAG_Egg =
 		{
-			ROUTE_EGG  = 
+			ROUTE_EGG  =
 			{
 			},
 		},
-		FLAG_Egg_1 = 
+		FLAG_Egg_1 =
 		{
-			ROUTE_EGG_1  = 
+			ROUTE_EGG_1  =
 			{
 			},
 		},
 	};
 
 	Util.Routes(MapRoutes);
-	
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

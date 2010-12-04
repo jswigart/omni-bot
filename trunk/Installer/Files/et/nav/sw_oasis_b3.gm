@@ -1,7 +1,7 @@
 /****************************************************
 Adapted from Siwa Oasis Official waypoints
 Pathing and script both adapted by **PCZ** >M@t3o$<
-Correspondant WAY file size : 64,6 Ko (66 176 octets)
+Correspondant WAY file size : 64,6 Ko (66ï¿½176 octets)
 Last Update : 28 February 2010
 ****************************************************/
 
@@ -643,7 +643,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFirstTunnel.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFirstTunnel.*" );
 	
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 	
 	// Set up routes to get to various goals
 	

@@ -241,14 +241,12 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_wall5 = MapRoutes.DEFEND_wall1;
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
 {
+	// cs: can we isolate this to a region? see RegionTrigger.BreakableDistance
 	if (bot.GetTeam()==TEAM.ALLIES)
 	{
 		bot.TargetBreakableDist = 400;

@@ -12,23 +12,13 @@ global Map =
 	ignore_doors = true,
 	ignore_flag = false,
 	Talk = true,
+	DefendingTeam = TEAM.AXIS,
 
-	Navigation =
-	{
-		callcover =
-		{
-			navigate = function(_this)
-			{
-				if ( Map.Talk && MAP_TALK && _this.Bot.GetClass() == CLASS.ENGINEER && RandInt(1,2) == 1 )
-				{
-					_this.Bot.SayVoice(VOICE.COVER_ME);
-					sleep(15);
-				}
-				else
-					{ sleep(1); }
-			},
-		},
-	},
+	ac1 = 0,
+	iw1 = 0,
+	iw2 = 0,
+	iw3 = 0,
+	iw4 = 0,
 
 	Switches =
 	{
@@ -41,7 +31,7 @@ global Map =
 			LimitTeam = 0,
 			LimitClass = Util.AllClasses,
 			LimitBots = 1,
-			AimPosition = Vector3(4993.680,767.875,57.902),
+			AimPosition = Vector3(4994,768,58),
 		},
 
 		door1_switch_2 =
@@ -53,7 +43,7 @@ global Map =
 			LimitTeam = 0,
 			LimitClass = Util.AllClasses,
 			LimitBots = 1,
-			AimPosition = Vector3(5328.125,524.452,58.847),
+			AimPosition = Vector3(5328,525,59),
 		},
 
 		door2_switch_1 =
@@ -65,7 +55,7 @@ global Map =
 			LimitTeam = 0,
 			LimitClass = Util.AllClasses,
 			LimitBots = 1,
-			AimPosition = Vector3(5888.125,-519.567,58.346),
+			AimPosition = Vector3(5888,-520,58),
 		},
 
 		door2_switch_2 =
@@ -77,7 +67,7 @@ global Map =
 			LimitTeam = 0,
 			LimitClass = Util.AllClasses,
 			LimitBots = 1,
-			AimPosition = Vector3(5816.090,-175.875,59.404),
+			AimPosition = Vector3(5816,-176,59),
 		},
 	},
 
@@ -184,6 +174,12 @@ global Map =
 	Transmitter_Area_Breached = function( trigger )
 	{
 		//Map.ignore_flag = true;
+		Map.iw3 = OnTriggerRegion( AABB(5749.500,104.583,-106.193,5815.824,395.715,82.366), RegionTrigger.IntrusionWarning );
+		Map.iw4 = OnTriggerRegion( AABB(5847.185,486.354,-106.625,6233.347,650.084,50.560), RegionTrigger.IntrusionWarning );
+		Map.ac1 = OnTriggerRegion( AABB(5947.959,374.042,-115.043,6010.202,566.491,28.068), RegionTrigger.AllClear );
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_allies_bridge.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_transmitter.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_transmitter_controls");
@@ -201,6 +197,10 @@ global Map =
 
 	Transmitter_Area_Closed = function( trigger )
 	{
+		DeleteTriggerRegion( Map.iw3 );
+		DeleteTriggerRegion( Map.iw4 );
+		DeleteTriggerRegion( Map.ac1 );
+
 		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_transmitter.*");
 		if ( Map.main_goals_accessible && Map.generator_status == 0 )
 		{
@@ -262,7 +262,6 @@ global Map =
 
 	Axis_Capture_Flag = function( trigger )
 	{
-		Util.MapDebugPrint( "Axis_Capture_Flag" );
 		SetAvailableMapGoals(TEAM.ALLIES, true, "MOUNTMG42_MGnest_1");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "REPAIRMG42_MGnest_1");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_MGnest");
@@ -286,6 +285,8 @@ global Map =
 			SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_transmitter.*");
 			SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_door.*");
 		}
+
+		Util.MapDebugPrint( "Axis_Capture_Flag" );
 	},
 
 	transmitter_door_1 = function(trigger)
@@ -296,14 +297,12 @@ global Map =
 		Map.door1_count += 1;
 		if (Map.door1_count % 2 == 0)
 		{
-			//Util.MapDebugPrint("even");
 			Map.door1_open = true;
 			Map.Switches.door1_switch_1.LimitTeam = (1<<TEAM.AXIS);
 			Map.Switches.door1_switch_2.LimitTeam = (1<<TEAM.AXIS);
 		}
 		else
 		{
-			//Util.MapDebugPrint("odd");
 			Map.door1_open = false;
 			Map.Switches.door1_switch_1.LimitTeam = (1<<TEAM.ALLIES);
 			Map.Switches.door1_switch_2.LimitTeam = (1<<TEAM.ALLIES);
@@ -319,8 +318,7 @@ global Map =
 				SendTrigger( TriggerInfo );
 			}
 		}
-		Util.MapDebugPrint("door1_count: " + Map.door1_count);
-		Util.MapDebugPrint("door1_open: " + Map.door1_open);
+		Util.MapDebugPrint("door1_count: " + Map.door1_count + "; door1_open: " + Map.door1_open);
 	},
 
 	transmitter_door_2 = function(trigger)
@@ -333,14 +331,12 @@ global Map =
 		Map.door2_count += 1;
 		if (Map.door2_count % 2 == 0)
 		{
-			//Util.MapDebugPrint("even");
 			Map.door2_open = true;
 			Map.Switches.door2_switch_1.LimitTeam = (1<<TEAM.AXIS);
 			Map.Switches.door2_switch_2.LimitTeam = (1<<TEAM.AXIS);
 		}
 		else
 		{
-			//Util.MapDebugPrint("odd");
 			Map.door2_open = false;
 			Map.Switches.door2_switch_1.LimitTeam = (1<<TEAM.ALLIES);
 			Map.Switches.door2_switch_2.LimitTeam = (1<<TEAM.ALLIES);
@@ -356,8 +352,7 @@ global Map =
 				SendTrigger( TriggerInfo );
 			}
 		}
-		Util.MapDebugPrint("door2_count: " + Map.door2_count);
-		Util.MapDebugPrint("door2_open: " + Map.door2_open);
+		Util.MapDebugPrint("door2_count: " + Map.door2_count + "; door2_open: " + Map.door2_open);
 	},
 
 	MainDoor_Destroyed = function()
@@ -395,6 +390,8 @@ global Map =
 		{
 			SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_generator.*");
 		}
+
+		Util.MapDebugPrint("MainDoor_Destroyed");
 	},
 
 	FootBridge_Built = function( trigger )
@@ -416,7 +413,7 @@ global Map =
 		if ( !Map.main_goals_accessible )
 			{ SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_rear_door"); }
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_back_door" );
-		Util.MapDebugPrint("FootBridge_Built");
+		Util.MapDebugPrint("FootBridge_Destroyed");
 	},
 };
 
@@ -539,6 +536,10 @@ global OnMapLoad = function()
 	// some usepoints for the rear door
 	Util.AddUsePoint("PLANT_rear_door", { Vector3(2227,-3445,10), Vector3(2287,-3447,10) });
 
+	// region triggers
+	Map.iw1 = OnTriggerRegion( AABB(2496.673,-538.475,4.231,2618.712,-373.223,163.242), RegionTrigger.IntrusionWarning );
+	Map.iw2 = OnTriggerRegion( AABB(2153.691,-719.669,10.958,2477.526,-360.558,108.556), RegionTrigger.IntrusionWarning );
+
 	MapRoutes =
 	{
 		PLANT_generator =
@@ -633,7 +634,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_back_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_main_door" );
 
-	print( "Omni-bot map script bergen.gm loaded." );
+	Util.MapDebugPrint( "Omni-bot map script bergen.gm loaded." );
 };
 
 global OnBotJoin = function( bot )

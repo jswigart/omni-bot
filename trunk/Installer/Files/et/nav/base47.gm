@@ -35,7 +35,7 @@ global Map =
 				sleep(1);
 			},
 		},
-		
+
 		middle =
 		{
 			navigate = function(_this)
@@ -55,10 +55,7 @@ global Map =
 			},
 		},
 	},
-	
-	
-	
-	
+
 	Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -135,7 +132,7 @@ global Map =
 		Map.topexit = true;
 		Util.MapDebugPrint( "Top_Broken" );
 	},
-	
+
 	Middle_Broken = function( trigger )
 	{
 		if ( TestMap )
@@ -166,7 +163,7 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.DisableGoal( "ROUTE_Sewer_Door" );
-	
+
 	Util.EnableGoal( "AMMOCAB.*" );
 	Util.EnableGoal( "HEALTHCAB.*" );
 	Util.EnableGoal( "BUILD_Command_Post" );
@@ -178,7 +175,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_War_Documents" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Radio" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Radar.*" );
-		
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Docs.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Radar.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_Roam.*" );
@@ -189,9 +186,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_Command_Post", 0.8 );
 	SetGoalPriority( "BUILD_Command_Post", 0.8 );
 	SetGoalPriority( "PLANT_Sewer_Door", 0.82 );
-	
+
 	Util.AddUseWp( "PLANT_Base_47_Radar", "Radar" );
-	
+
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
@@ -214,145 +211,145 @@ global OnMapLoad = function()
 
 	MapRoutes =
 	{
-		FLAG_War_Documents = 
+		FLAG_War_Documents =
 		{
-			ROUTE_Allies_Spawn  = 
+			ROUTE_Allies_Spawn  =
 			{
-				ROUTE_Bridge  = 
+				ROUTE_Bridge  =
 				{
-					ROUTE_Main_Exit  = 
+					ROUTE_Main_Exit  =
 					{
-						ROUTE_South_Stairs  = 
+						ROUTE_South_Stairs  =
 						{
-							ROUTE_South_Stairs_Top_Right  = 
+							ROUTE_South_Stairs_Top_Right  =
 							{
 							},
-							ROUTE_Docs_Back  = 
+							ROUTE_Docs_Back  =
 							{
 							},
 						},
-						ROUTE_Lower_Door  = 
+						ROUTE_Lower_Door  =
 						{
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_South_Stairs_Top_Right  = 
+								ROUTE_South_Stairs_Top_Right  =
 								{
 								},
 							},
 						},
-						ROUTE_North_Stairs  = 
+						ROUTE_North_Stairs  =
 						{
 						},
 					},
 				},
-				ROUTE_River_Side  = 
+				ROUTE_River_Side  =
 				{
-					ROUTE_Main_Exit  = 
+					ROUTE_Main_Exit  =
 					{
-						ROUTE_South_Stairs  = 
+						ROUTE_South_Stairs  =
 						{
-							ROUTE_South_Stairs_Top_Right  = 
+							ROUTE_South_Stairs_Top_Right  =
 							{
 							},
-							ROUTE_Docs_Back  = 
+							ROUTE_Docs_Back  =
 							{
 							},
 						},
-						ROUTE_Lower_Door  = 
+						ROUTE_Lower_Door  =
 						{
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_South_Stairs_Top_Right  = 
+								ROUTE_South_Stairs_Top_Right  =
 								{
 								},
 							},
 						},
-						ROUTE_North_Stairs  = 
+						ROUTE_North_Stairs  =
 						{
 						},
 					},
 				},
-				ROUTE_Sewer_Door  = 
+				ROUTE_Sewer_Door  =
 				{
-					ROUTE_Far_Exit  = 
+					ROUTE_Far_Exit  =
 					{
-						ROUTE_Base_Far_Top  = 
+						ROUTE_Base_Far_Top  =
 						{
-							ROUTE_Inside_Ladder  = 
+							ROUTE_Inside_Ladder  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
-							ROUTE_Center_Ladder  = 
+							ROUTE_Center_Ladder  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
-							ROUTE_Lower_Door  = 
+							ROUTE_Lower_Door  =
 							{
-								ROUTE_South_Stairs  = 
+								ROUTE_South_Stairs  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_Middle_Exit  = 
+					ROUTE_Middle_Exit  =
 					{
-						ROUTE_Middle_A  = 
+						ROUTE_Middle_A  =
 						{
-							ROUTE_Lower_Door  = 
+							ROUTE_Lower_Door  =
 							{
-								ROUTE_South_Stairs  = 
+								ROUTE_South_Stairs  =
 								{
-									ROUTE_South_Stairs_Top_Right  = 
+									ROUTE_South_Stairs_Top_Right  =
 									{
 									},
-									ROUTE_Docs_Back  = 
+									ROUTE_Docs_Back  =
 									{
 									},
 								},
 							},
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_South_Stairs_Top_Right  = 
+								ROUTE_South_Stairs_Top_Right  =
 								{
 								},
-								ROUTE_Docs_Back  = 
+								ROUTE_Docs_Back  =
 								{
 								},
 							},
 						},
-						ROUTE_Middle_B  = 
+						ROUTE_Middle_B  =
 						{
-							ROUTE_Lower_Door  = 
+							ROUTE_Lower_Door  =
 							{
-								ROUTE_South_Stairs  = 
+								ROUTE_South_Stairs  =
 								{
-									ROUTE_South_Stairs_Top_Right  = 
+									ROUTE_South_Stairs_Top_Right  =
 									{
 									},
-									ROUTE_Docs_Back  = 
+									ROUTE_Docs_Back  =
 									{
 									},
 								},
 							},
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_South_Stairs_Top_Right  = 
+								ROUTE_South_Stairs_Top_Right  =
 								{
 								},
-								ROUTE_Docs_Back  = 
+								ROUTE_Docs_Back  =
 								{
 								},
 							},
 						},
-						ROUTE_Middle_C  = 
+						ROUTE_Middle_C  =
 						{
-							ROUTE_Center_Ladder  = 
+							ROUTE_Center_Ladder  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
@@ -361,98 +358,98 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Base_47_Radar = 
+		PLANT_Base_47_Radar =
 		{
-			ROUTE_Allies_Spawn  = 
+			ROUTE_Allies_Spawn  =
 			{
-				ROUTE_Bridge  = 
+				ROUTE_Bridge  =
 				{
-					ROUTE_Main_Exit  = 
+					ROUTE_Main_Exit  =
 					{
-						ROUTE_South_Stairs  = 
+						ROUTE_South_Stairs  =
 						{
-							ROUTE_Radar_Bridge  = 
+							ROUTE_Radar_Bridge  =
 							{
 							},
 						},
-						ROUTE_Lower_Door  = 
+						ROUTE_Lower_Door  =
 						{
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
 						},
-						ROUTE_Center_Ladder  = 
+						ROUTE_Center_Ladder  =
 						{
 						},
 					},
 				},
-				ROUTE_River_Side  = 
+				ROUTE_River_Side  =
 				{
-					ROUTE_Main_Exit  = 
+					ROUTE_Main_Exit  =
 					{
-						ROUTE_South_Stairs  = 
+						ROUTE_South_Stairs  =
 						{
-							ROUTE_Radar_Bridge  = 
+							ROUTE_Radar_Bridge  =
 							{
 							},
 						},
-						ROUTE_Lower_Door  = 
+						ROUTE_Lower_Door  =
 						{
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_Center_Ladder  = 
+					ROUTE_Center_Ladder  =
 					{
 					},
 				},
-				ROUTE_Sewer_Door  = 
+				ROUTE_Sewer_Door  =
 				{
-					ROUTE_Middle_Exit  = 
+					ROUTE_Middle_Exit  =
 					{
-						ROUTE_Middle_A  = 
+						ROUTE_Middle_A  =
 						{
-							ROUTE_South_Stairs  = 
+							ROUTE_South_Stairs  =
 							{
-								ROUTE_Radar_Bridge  = 
+								ROUTE_Radar_Bridge  =
 								{
 								},
 							},
 						},
-						ROUTE_Middle_B  = 
+						ROUTE_Middle_B  =
 						{
-							ROUTE_Center_Ladder  = 
+							ROUTE_Center_Ladder  =
 							{
 							},
-							ROUTE_Inside_Ladder  = 
+							ROUTE_Inside_Ladder  =
 							{
 							},
 						},
-						ROUTE_Middle_C  = 
+						ROUTE_Middle_C  =
 						{
-							ROUTE_Center_Ladder  = 
+							ROUTE_Center_Ladder  =
 							{
 							},
-							ROUTE_Inside_Ladder  = 
+							ROUTE_Inside_Ladder  =
 							{
 							},
 						},
 					},
-					ROUTE_Far_Exit  = 
+					ROUTE_Far_Exit  =
 					{
-						ROUTE_Base_Far_Top  = 
+						ROUTE_Base_Far_Top  =
 						{
-							ROUTE_Center_Ladder  = 
+							ROUTE_Center_Ladder  =
 							{
 							},
-							ROUTE_Inside_Ladder  = 
+							ROUTE_Inside_Ladder  =
 							{
 							},
 						},
@@ -460,79 +457,79 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		CAPPOINT_Radio = 
+		CAPPOINT_Radio =
 		{
-			ROUTE_Docs  = 
+			ROUTE_Docs  =
 			{
-				ROUTE_Docs_Back  = 
+				ROUTE_Docs_Back  =
 				{
-					ROUTE_Lower_Door  = 
+					ROUTE_Lower_Door  =
 					{
-						ROUTE_Truck  = 
+						ROUTE_Truck  =
 						{
 						},
 					},
-					ROUTE_Main_Exit  = 
+					ROUTE_Main_Exit  =
 					{
-						ROUTE_Truck  = 
+						ROUTE_Truck  =
 						{
 						},
 					},
 				},
-				ROUTE_North_Stairs  = 
+				ROUTE_North_Stairs  =
 				{
 				},
-				ROUTE_Radar_Bridge  = 
+				ROUTE_Radar_Bridge  =
 				{
-					ROUTE_Centre  = 
+					ROUTE_Centre  =
 					{
 					},
 				},
 			},
 		},
-		DEFEND_Radar_1 = 
+		DEFEND_Radar_1 =
 		{
-			ROUTE_Axis_Spawn  = 
+			ROUTE_Axis_Spawn  =
 			{
-				ROUTE_Center_Ladder  = 
+				ROUTE_Center_Ladder  =
 				{
 				},
-				ROUTE_Inside_Ladder  = 
+				ROUTE_Inside_Ladder  =
 				{
 				},
-				ROUTE_North_Stairs  = 
+				ROUTE_North_Stairs  =
 				{
-					ROUTE_AB12  = 
+					ROUTE_AB12  =
 					{
-						ROUTE_Radar_Bridge  = 
+						ROUTE_Radar_Bridge  =
 						{
 						},
 					},
 				},
 			},
 		},
-		DEFEND_Docs_1 = 
+		DEFEND_Docs_1 =
 		{
-			ROUTE_Axis_Spawn  = 
+			ROUTE_Axis_Spawn  =
 			{
-				ROUTE_Center_Ladder  = 
+				ROUTE_Center_Ladder  =
 				{
-					ROUTE_Radar_Bridge  = 
+					ROUTE_Radar_Bridge  =
 					{
 					},
 				},
-				ROUTE_North_Stairs  = 
+				ROUTE_North_Stairs  =
 				{
 				},
 			},
-			ROUTE_Lower_Door  = 
+			ROUTE_Lower_Door  =
 			{
-				ROUTE_South_Stairs  = 
+				ROUTE_South_Stairs  =
 				{
-					ROUTE_South_Stairs_Top_Right  = 
+					ROUTE_South_Stairs_Top_Right  =
 					{
 					},
-					ROUTE_Docs_Back  = 
+					ROUTE_Docs_Back  =
 					{
 					},
 				},
@@ -548,7 +545,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_Radar_3 = MapRoutes.DEFEND_Radar_1;
 
 	Util.Routes(MapRoutes);
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

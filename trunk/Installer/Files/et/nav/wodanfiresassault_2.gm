@@ -720,8 +720,6 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = 2500;
 	bot.TargetBreakableDist = 100.0;
 
-	//ETUtil.SelectWeapon(bot, WEAPON.MAUSER);
-
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 };

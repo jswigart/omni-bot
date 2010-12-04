@@ -214,28 +214,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				r = RandRange(0,15);
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 13 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-				else if ( r > 10)
-				{
-					bot.Say("Verdammt!");
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+
+		Util.MapDebugPrint("AlliesWon");
 	},
 
 	KeyStolen = function( trigger )
@@ -261,12 +243,15 @@ global Map =
 
 		SetGoalPriority("ATTACK_safe.*", 0.6);
 		SetGoalPriority("ATTACK_flag.*", 0.55);
+
+		Util.MapDebugPrint("KeyStolen");
 	},
 
 	KeyDropped = function( trigger )
 	{
 		sleep(0.5);
 		SetGoalPriority("FLAGRETURN_key_dropped", 0.8);
+		Util.MapDebugPrint("KeyDropped");
 	},
 
 	KeyReturned = function( trigger )
@@ -284,6 +269,8 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_safe.*");
 		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_axis_start2");
 		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_axis_start1");
+
+		Util.MapDebugPrint("KeyReturned");
 	},
 
 	SafeOpen = function( trigger )
@@ -307,6 +294,8 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_axis_start1");
 		SetGoalPriority("ATTACK_safe.*", 0.6 );
 		SetGoalPriority("CHECKPOINT_forward_spawn", 0.6);
+
+		Util.MapDebugPrint("SafeOpen");
 	},
 
 	DocStolen = function( trigger )
@@ -325,6 +314,8 @@ global Map =
 		//SetGoalPriority("ATTACK_axis_start.*", 0.9);
 		SetGoalPriority("ATTACK_halftrack.*", 0.75);
 		SetGoalPriority("ATTACK_flag.*", 0.0 );
+
+		Util.MapDebugPrint("DocStolen");
 	},
 
 	DocDropped = function( trigger )
@@ -334,6 +325,8 @@ global Map =
 		SetGoalPriority("FLAG_case_dropped", 0.8);
 		SetGoalPriority("FLAGRETURN_case_dropped", 0.8);
 		//SetAvailableMapGoals(TEAM.AXIS, true, "FLAG_case_dropped");
+
+		Util.MapDebugPrint("DocDropped");
 	},
 
 	DocReturned = function( trigger )
@@ -371,6 +364,8 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("DocReturned");
 	},
 
 	GarageAxis = function( trigger )
@@ -391,11 +386,12 @@ global Map =
 			Util.SetMaxUsersInProgress( 1, "FLAG_key");
 			Util.SetMaxUsersInProgress( 2, "CHECKPOINT_forward_spawn");
 		}
+
+		Util.MapDebugPrint("GarageAxis");
 	},
 
 	GarageAllies = function( trigger )
 	{
-		//Util.MapDebugPrint("GarageAllies");
 		Map.InnerSpawn = 2;
 		SetAvailableMapGoals(TEAM.AXIS, false, "CALLARTILLERY_axis_start.*");
 		SetAvailableMapGoals(TEAM.AXIS, false, "CALLARTILLERY_gate.*");
@@ -412,13 +408,19 @@ global Map =
 			SetGoalPriority("ATTACK_axis_start.*", 0.5);
 			SetGoalPriority("ATTACK_axis_gate.*", 0.5);
 		}
-		if (Map.safe_open)
-			{ return; }
+
+		if (Map.safe_open) {
+			Util.MapDebugPrint("GarageAllies");
+			return;
+		}
+
 		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_key");
 		SetAvailableMapGoals(TEAM.AXIS, true, "ATTACK_keys.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_keys3");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_keys5");
 		SetGoalPriority("ATTACK_key.*", 0.6);
+
+		Util.MapDebugPrint("GarageAllies");
 	},
 
 	SideGate = function( trigger )
@@ -455,36 +457,9 @@ global Map =
 			}
 		}
 		Map.Answer1 = false;
-	},
-};
 
-global OnBotJoin = function( bot )
-{
-	if ( Map.Talk && MAP_TALK )
-	{
-		r = RandRange(0,20);
-		if( r < 1 )
-		{
-			bot.SayVoice(VOICE.LETS_GO);
-		}
-		else if( r < 2 )
-		{
-			bot.SayVoice(VOICE.WHERE_TO);
-		}
-		else if( r < 4 && !Map.Sidegate_open && bot.GetTeam() == TEAM.ALLIES && bot.GetClass() != CLASS.ENGINEER && bot.GetClass() != CLASS.COVERTOPS )
-		{
-			if( r < 3 )
-			{
-				bot.SayVoice(VOICE.CLEAR_PATH);
-				Map.Answer1 = true;
-			}
-			else if( r < 4 )
-			{
-				bot.SayVoice(VOICE.DESTROY_CONST);
-				Map.Answer1 = true;
-			}
-		}
-	}
+		Util.MapDebugPrint("SideGate");
+	},
 };
 
 global OnMapLoad = function()
@@ -634,5 +609,34 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_keys3 = MapRoutes.ATTACK_safe3;
 
 	Util.Routes(MapRoutes);
-	print("Omni-bot map script for Alpine Assault executed.");
+	Util.MapDebugPrint("Omni-bot map script for Alpine Assault executed.");
+};
+
+global OnBotJoin = function( bot )
+{
+	if ( Map.Talk && MAP_TALK )
+	{
+		r = RandRange(0,20);
+		if( r < 1 )
+		{
+			bot.SayVoice(VOICE.LETS_GO);
+		}
+		else if( r < 2 )
+		{
+			bot.SayVoice(VOICE.WHERE_TO);
+		}
+		else if( r < 4 && !Map.Sidegate_open && bot.GetTeam() == TEAM.ALLIES && bot.GetClass() != CLASS.ENGINEER && bot.GetClass() != CLASS.COVERTOPS )
+		{
+			if( r < 3 )
+			{
+				bot.SayVoice(VOICE.CLEAR_PATH);
+				Map.Answer1 = true;
+			}
+			else if( r < 4 )
+			{
+				bot.SayVoice(VOICE.DESTROY_CONST);
+				Map.Answer1 = true;
+			}
+		}
+	}
 };

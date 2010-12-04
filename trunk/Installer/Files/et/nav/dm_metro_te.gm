@@ -7,7 +7,7 @@ global Map =
 	num_attackers = 0,
 	num_defenders = 0,
 	DontDispenseAmmo = true,
-	debug_regiontrigger = true,
+	debug_regiontrigger = false,
 
 	Classes = function()
 	{
@@ -30,30 +30,13 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function()
 		{
-			Map.Bleh = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme2);
-			//DeleteTriggerRegion("crashme");
-			//return 1;
+			DeleteTriggerRegion("crashme");
 		},
 		OnExit = function()
 		{
-			//DeleteTriggerRegion("crashme");
+			DeleteTriggerRegion("crashme");
 		},
 	},
-	
-	crashme2 =
-	{
-		Name = "crashme2",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function()
-		{
-			//crashme2 = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme2);
-			//DeleteTriggerRegion("crashme2");
-		},
-		OnExit = function()
-		{
-			//DeleteTriggerRegion("crashme2");
-		},
-	},	
 };
 
 global OnMapLoad = function()
@@ -64,7 +47,6 @@ global OnMapLoad = function()
 	// crash test for DeleteTriggerRegion
 	if ( Map.debug_regiontrigger ) {
 		crashme = OnTriggerRegion(AABB(310.648,375.502,1.125,667.926,540.118,91.125),Map.crashme);
-		//Map.Bleh = OnTriggerRegion(AABB(1095.725,124.860,1.125,1228.827,320.875,87.125),Map.crashme);
 		ExecCommand("drawtriggers");
 	}
 

@@ -314,23 +314,22 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			Util.EnableGroup("keydefense", TEAM.AXIS );
-			Util.DisableGroup("axis1");
-			Util.DisableGroup("allies1");
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Gate" );
-			Util.EnableGroup("allies2", TEAM.ALLIES);
-			Util.EnableGroup("cp");
-			Util.SetGoalPosition( -966.9, 1716.4, 88.125, "PLANT_Main_Gate" ) ;
-			Util.ClearRoleForGoals(Map.Flag_keycard_flag, ROLE.INFILTRATOR);
-			sidedoor_status = 1;
+
+		Util.EnableGroup("keydefense", TEAM.AXIS );
+		Util.DisableGroup("axis1");
+		Util.DisableGroup("allies1");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Gate" );
+		Util.EnableGroup("allies2", TEAM.ALLIES);
+		Util.EnableGroup("cp");
+		Util.SetGoalPosition( -966.9, 1716.4, 88.125, "PLANT_Main_Gate" ) ;
+		Util.ClearRoleForGoals(Map.Flag_keycard_flag, ROLE.INFILTRATOR);
+		sidedoor_status = 1;
 
 		Util.MapDebugPrint( "Side_Door_Destroyed" );
 	},
 
 	Truck_Barrier_1_Destroyed = function( trigger )
 	{
-
-
 		Util.MapDebugPrint( "Truck_Barrier_1_Destroyed" );
 	},
 
@@ -393,6 +392,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
 		Util.DisableGroup("keydefense", TEAM.AXIS );
 		Util.DisableGroup("keydefense2", TEAM.AXIS );
 		Util.DisableGroup("cv", TEAM.AXIS);
@@ -408,7 +408,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_key12" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_key13" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_key14" );
-
 
 		Util.MapDebugPrint( "keycard_flag_Secured" );
 	},
@@ -428,7 +427,6 @@ global Map =
 
 		Util.MapDebugPrint( "flag1_flag_Allies_Captured" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -476,7 +474,9 @@ global OnMapLoad = function()
 
 	Util.DisableGoal(".*", true); // all but routes
 	Util.AddInvVehicle("MOVER_truck");
+
 	// groups
+	// cs: these can be removed from script once the goals are saved ...
 	Util.SetGroup( "MOBILEMORTAR_spwan1", "allies1");
 	Util.SetGroup( "MOBILEMORTAR_spwan2", "allies1");
 	Util.SetGroup( "ATTACK_flag.*", "allies1");
@@ -511,7 +511,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag1_flag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag1_flag" );
-	 Util.SetRoleForGoals(Map.Flag_keycard_flag, ROLE.INFILTRATOR);
+	Util.SetRoleForGoals(Map.Flag_keycard_flag, ROLE.INFILTRATOR);
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_keycard_flag );
 
 	// Max users per goal
@@ -545,8 +545,6 @@ global OnMapLoad = function()
 
 	// Camp times
 //~	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
-	Util.MapDebugPrint( "" );
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
 
 	MapRoutes =
 	{
@@ -597,7 +595,6 @@ global OnMapLoad = function()
 		},
 	};
 
-
 	MapRoutes.FLAG_keycard_flag = PLANT_Truck_Barrier_1;
 	MapRoutes.ATTACK_key12 = PLANT_Truck_Barrier_1;
 	MapRoutes.ATTACK_key11 = PLANT_Truck_Barrier_1;
@@ -605,6 +602,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_key13 = PLANT_Truck_Barrier_1;
 	Util.Routes(MapRoutes);
 
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

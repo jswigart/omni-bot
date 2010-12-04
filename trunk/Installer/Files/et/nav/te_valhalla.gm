@@ -6,10 +6,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 

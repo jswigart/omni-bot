@@ -49,7 +49,7 @@ global Map =
 			if ( Map.Westcheck == 1 && Map.Eastcheck == 1 )
 				{
 				SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Ship_Defence_MG" );
-				print( "Allies_just_in_time_made_it_when_portal_was_open" );
+				Util.MapDebugPrint( "Allies_just_in_time_made_it_when_portal_was_open" );
 				}
 			else
 				{

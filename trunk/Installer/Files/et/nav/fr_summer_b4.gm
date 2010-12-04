@@ -366,7 +366,7 @@ global Map =
 	spawn_cap = function( trigger )
 	{
 //~		Map.Switches.door1.Enabled = true;
-		ETUtil.ChangeSpawn(TEAM.ALLIES, 5, 4);
+		Util.ChangeSpawn(TEAM.ALLIES, 5, 4);
 		
 		Util.MapDebugPrint( "allies spawn forward", true );
 		Util.MapDebugPrint( "door switch active" );

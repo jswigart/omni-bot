@@ -316,7 +316,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.SetPositionGoal( "BUILD_Tank", "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
@@ -560,39 +560,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.Say("Noooo! omfg noooooo!!!");
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.Say("omgwtf haaax! We got 0wn3d!");
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.Say("Supertoll! Ist ganz geil!");
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.Say("We won ftw!");
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "Axis_win" );
 	},
 
@@ -601,40 +570,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						sleep(1.2);
-						bot.Say( "You lost, we win! roflmao! XD" );
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.Say( "omgwtf 0wn3d lulz!!!1" );
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.Say( "Scheisse! Wo sind meine Lederhosen!?" );
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.Say( "omg we got pwn3d!" );
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "Allies_win" );
 	},
 
@@ -734,7 +671,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsers( 1, "MOUNT_tank" );
 	Util.SetMaxUsers( 2, "ESCORT_tank" );
-	
+
 	ETUtil.SetExcludeIndexes( "ESCORT_tank", {5} );
 
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=60, MaxCampTime=120});

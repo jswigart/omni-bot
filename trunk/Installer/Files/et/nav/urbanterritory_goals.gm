@@ -417,7 +417,6 @@ global _MG =
 				{
 					[0] = Vec3(0.872, 0.489, -0.018),
 				},
-				occupied = 1,
 				position = Vec3(502.125, -992.947, 161.125),
 				stance = "stand",
 			},

@@ -57,7 +57,7 @@ global Map =
 		 SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_*" );
 		 SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_*" );
 		 SetGoalPriority( "DEFEND_.*", 0.8, TEAM.ALLIES, CLASS.SOLDIER );
-		
+
 		Util.MapDebugPrint( "allied_door_Destroyed" );
 	},
 
@@ -73,7 +73,7 @@ global Map =
 		 SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_*" );
 		 SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_*" );
 		 SetGoalPriority( "DEFEND_.*", 0.8, TEAM.AXIS, CLASS.SOLDIER );
-	
+
 		Util.MapDebugPrint( "axis_door_Destroyed" );
 	},
 
@@ -87,7 +87,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radar2" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_s1" );
-		
+
 		Util.MapDebugPrint( "gold_box_Taken" );
 	},
 
@@ -150,7 +150,7 @@ global Map =
 
 		Util.MapDebugPrint( "axis_flag1_Allies_Captured" );
 	},
-	
+
 	radar_returned = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_def_parts" );
@@ -163,7 +163,7 @@ global Map =
 
 		Util.MapDebugPrint( "radar returned" );
 	},
-	
+
 	gold_returned = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_gold_box" );
@@ -175,7 +175,7 @@ global Map =
 
 		Util.MapDebugPrint( "gold returned" );
 	},
-	
+
 	Ally_plant = function( trigger )
  	{
  		Util.MapDebugPrint( "Planted at axis door" );
@@ -207,13 +207,13 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at The allied door.", Map.Axis_plant );
 	OnTrigger( "Flag returned radar_parts!", Map.radar_returned );
 	OnTrigger( "Flag returned gold_box!", Map.gold_returned );
-	
+
 	Util.SetGoalPosition( 3340, 375.4, 96.125, Map.Plant_axis_door ) ;
 	Util.SetGoalPosition( 2818.1, 8267.9, 96.125, Map.Plant_allied_door ) ;
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	
+
 //~	SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_.*" );
 //~	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_ally_door" );
@@ -225,9 +225,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_mortar1" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_105" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_106" );
-	
+
 	Util.DisableGoal("REPAIRMG42_.*");
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*" );
@@ -236,10 +236,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_ally_snipe1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_snipe99" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_mortar2" );
-	
-//~	ETUtil.EnableGoal("MOBILEMORTAR_.*");
+
+//~	Util.EnableGoal("MOBILEMORTAR_.*");
 //~	MOBILEMORTAR
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_.*" );
@@ -247,10 +247,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_69" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_69" );
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
-	
+
 //~	"ARTILLERY_D_159"
 	Util.SetMaxUsersInProgress( 1, "DEFEND_*" );
 	Util.SetMaxUsersInProgress( 2, "PLANT_*" );
@@ -263,41 +263,39 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_.*", 0.2, 0, CLASS.FIELDOPS );
 //~	SetGoalPriority( "DEFEND_.*", 0.6, 0, CLASS.SOLDIER );
 //~	SetGoalPriority( "CHECKPOINT_.*", 0.6, 0, 0 );
-	
+
 	SetGoalPriority( "MOBILEMORTAR_.*", 0.85, 0, CLASS.SOLDIER );
 	SetGoalPriority( "MOBILEMG42_.*", 0.26, 0, CLASS.SOLDIER );
-	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=40, MaxCampTime=80} ); 
-	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=10, MaxCampTime=90} ); 
-	SetMapGoalProperties( "MOBILEMORTAR_.*", {MinCampTime=10, MaxCampTime=55} ); 
-	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=25, MaxCampTime=55} ); 
-	
-	Util.MapDebugPrint("Configuring Routes");
-	
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=40, MaxCampTime=80} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=10, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMORTAR_.*", {MinCampTime=10, MaxCampTime=55} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=25, MaxCampTime=55} );
+
 	MapRoutes =
 	{
-		PLANT_axis_door = 
+		PLANT_axis_door =
 		{
-			ROUTE_ally2  = 
+			ROUTE_ally2  =
 			{
-				ROUTE_stairs  = 
+				ROUTE_stairs  =
 				{
-					ROUTE_s1  = 
+					ROUTE_s1  =
 					{
-						ROUTE_tunnel  = 
+						ROUTE_tunnel  =
 						{
-							ROUTE_tunnel4  = 
+							ROUTE_tunnel4  =
 							{
-								ROUTE_tunnel3  = 
+								ROUTE_tunnel3  =
 								{
-									ROUTE_tunnel2  = 
+									ROUTE_tunnel2  =
 									{
-										ROUTE_stairs1  = 
+										ROUTE_stairs1  =
 										{
-											ROUTE_axis_flag  = 
+											ROUTE_axis_flag  =
 											{
-												ROUTE_allyplant  = 
+												ROUTE_allyplant  =
 												{
-													ROUTE_allyplant2  = 
+													ROUTE_allyplant2  =
 													{
 													},
 												},
@@ -309,33 +307,33 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ally3  = 
+				ROUTE_ally3  =
 				{
-					ROUTE_axisplant2  = 
+					ROUTE_axisplant2  =
 					{
-						ROUTE_ally_dyno1  = 
+						ROUTE_ally_dyno1  =
 						{
-							ROUTE_ar2  = 
+							ROUTE_ar2  =
 							{
-								ROUTE_ally_dyno2d  = 
+								ROUTE_ally_dyno2d  =
 								{
-									ROUTE_axis_dyno1  = 
+									ROUTE_axis_dyno1  =
 									{
-										ROUTE_axis_flag2  = 
+										ROUTE_axis_flag2  =
 										{
-											ROUTE_allyplant2  = 
+											ROUTE_allyplant2  =
 											{
 											},
 										},
 									},
 								},
-								ROUTE_axis_dyno3  = 
+								ROUTE_axis_dyno3  =
 								{
-									ROUTE_axis_dyno1  = 
+									ROUTE_axis_dyno1  =
 									{
-										ROUTE_axis_flag2  = 
+										ROUTE_axis_flag2  =
 										{
-											ROUTE_allyplant2  = 
+											ROUTE_allyplant2  =
 											{
 											},
 										},
@@ -348,25 +346,25 @@ global OnMapLoad = function()
 			},
 		},
 
-		PLANT_allied_door = 
+		PLANT_allied_door =
 		{
-			ROUTE_axis1  = 
+			ROUTE_axis1  =
 			{
-				ROUTE_stairs1  = 
+				ROUTE_stairs1  =
 				{
-					ROUTE_tunnel2  = 
+					ROUTE_tunnel2  =
 					{
-						ROUTE_tunnel3  = 
+						ROUTE_tunnel3  =
 						{
-							ROUTE_tunnel4  = 
+							ROUTE_tunnel4  =
 							{
-								ROUTE_tunnel  = 
+								ROUTE_tunnel  =
 								{
-									ROUTE_s1  = 
+									ROUTE_s1  =
 									{
-										ROUTE_stairs  = 
+										ROUTE_stairs  =
 										{
-											ROUTE_axisplant2  = 
+											ROUTE_axisplant2  =
 											{
 											},
 										},
@@ -375,17 +373,17 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_axis_dyno1  = 
+					ROUTE_axis_dyno1  =
 					{
-						ROUTE_axis_dyno3  = 
+						ROUTE_axis_dyno3  =
 						{
-							ROUTE_ally_dyno2c  = 
+							ROUTE_ally_dyno2c  =
 							{
-								ROUTE_ar2  = 
+								ROUTE_ar2  =
 								{
-									ROUTE_ally_dyno1  = 
+									ROUTE_ally_dyno1  =
 									{
-										ROUTE_axisplant2  = 
+										ROUTE_axisplant2  =
 										{
 										},
 									},
@@ -395,25 +393,25 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_axis2  = 
+			ROUTE_axis2  =
 			{
-				ROUTE_axis_flag  = 
+				ROUTE_axis_flag  =
 				{
-					ROUTE_stairs1  = 
+					ROUTE_stairs1  =
 					{
-						ROUTE_tunnel3  = 
+						ROUTE_tunnel3  =
 						{
-							ROUTE_tunnel4  = 
+							ROUTE_tunnel4  =
 							{
-								ROUTE_tunnel  = 
+								ROUTE_tunnel  =
 								{
-									ROUTE_s1  = 
+									ROUTE_s1  =
 									{
-										ROUTE_stairs  = 
+										ROUTE_stairs  =
 										{
-											ROUTE_axisplant1  = 
+											ROUTE_axisplant1  =
 											{
-												ROUTE_axisplant2  = 
+												ROUTE_axisplant2  =
 												{
 												},
 											},
@@ -424,19 +422,19 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_axis_flag2  = 
+				ROUTE_axis_flag2  =
 				{
-					ROUTE_axis_dyno1  = 
+					ROUTE_axis_dyno1  =
 					{
-						ROUTE_axis_dyno3  = 
+						ROUTE_axis_dyno3  =
 						{
-							ROUTE_ally_dyno2c  = 
+							ROUTE_ally_dyno2c  =
 							{
-								ROUTE_ar2  = 
+								ROUTE_ar2  =
 								{
-									ROUTE_ally_dyno1  = 
+									ROUTE_ally_dyno1  =
 									{
-										ROUTE_axisplant2  = 
+										ROUTE_axisplant2  =
 										{
 										},
 									},
@@ -447,36 +445,36 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		CALLARTILLERY_as1 = 
+		CALLARTILLERY_as1 =
 		{
-			ROUTE_ally1  = 
+			ROUTE_ally1  =
 			{
-				ROUTE_s1  = 
+				ROUTE_s1  =
 				{
-					ROUTE_tunnel  = 
+					ROUTE_tunnel  =
 					{
-						ROUTE_tunnel4  = 
+						ROUTE_tunnel4  =
 						{
-							ROUTE_ladder1  = 
+							ROUTE_ladder1  =
 							{
 							},
 						},
 					},
 				},
 			},
-			ROUTE_ally2  = 
+			ROUTE_ally2  =
 			{
-				ROUTE_axisplant1  = 
+				ROUTE_axisplant1  =
 				{
-					ROUTE_stairs  = 
+					ROUTE_stairs  =
 					{
-						ROUTE_s1  = 
+						ROUTE_s1  =
 						{
-							ROUTE_tunnel  = 
+							ROUTE_tunnel  =
 							{
-								ROUTE_tunnel4  = 
+								ROUTE_tunnel4  =
 								{
-									ROUTE_ladder1  = 
+									ROUTE_ladder1  =
 									{
 									},
 								},
@@ -484,11 +482,11 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ally3  = 
+				ROUTE_ally3  =
 				{
-					ROUTE_ally_dyno1  = 
+					ROUTE_ally_dyno1  =
 					{
-						ROUTE_ar2  = 
+						ROUTE_ar2  =
 						{
 						},
 					},
@@ -502,8 +500,7 @@ global OnMapLoad = function()
 	MapRoutes.CALLARTILLERY_as5 = MapRoutes.PLANT_axis_door;
 	MapRoutes.CALLARTILLERY_as4 = MapRoutes.PLANT_axis_door;
 	MapRoutes.CALLARTILLERY_as2 = MapRoutes.CALLARTILLERY_as1;
-	
-	Util.MapDebugPrint( "routing", true ); // only the message
+
 	Util.Routes(MapRoutes);
 
 	Util.MapDebugPrint( "OnMapLoad" );
@@ -512,8 +509,5 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-//~	ETUtil.SelectWeapon(bot, WEAPON.MORTAR);
 	bot.MaxViewDistance = 2900.0;
-//~	ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-//~	ETUtil.SetDualObjective(bot);
 };

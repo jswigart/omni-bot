@@ -5,22 +5,8 @@
 //------------------------------------------------------------------------------------------
 //	^4Tardis	04 November 2010	Copy Script - 0.8 (Bace Race)
 //------------------------------------------------------------------------------------------
-// debug prints
-global dprint = function(string)
-{
-	if ( Map.Debug < 1 )
-		{ return; }
 
-	print(string);
-
-	if ( Map.Debug > 1 )
-	{
-		ExecCommand("sag"); // list all active goals by team in console
-		yield();
-		print( "^3-------END: " + string + "-------" );
-	}
-};
-
+// cs: todo: replace trigger regions for cappoints with the new cappoint triggers (if possible)
 global Map =
 {
 	Quiet = true,
@@ -421,7 +407,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		dprint("Allied_Outpost_Destroyed");
+		Util.MapDebugPrint("Allied_Outpost_Destroyed");
 	},
 
 	Allied_Underbase_Door_Destroyed = function( trigger )
@@ -432,7 +418,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_cover_door" );
 		Util.EnableGoal( "ROUTE_b_w_underbase" );
 
-		dprint("Allied_Underbase_Door_Destroyed");
+		Util.MapDebugPrint("Allied_Underbase_Door_Destroyed");
 	},
 
 	Allied_Underbase_Wall_Destroyed = function( trigger )
@@ -443,55 +429,55 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_cover_wall" );
 		Util.EnableGoal( "ROUTE_b_e_underbase" );
 
-		dprint("Allied_Underbase_Wall_Destroyed");
+		Util.MapDebugPrint("Allied_Underbase_Wall_Destroyed");
 	},
 
 	Axis_Door_Planted = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_b_cover_door" );
-		dprint("Axis_Door_Planted");
+		Util.MapDebugPrint("Axis_Door_Planted");
 	},
 
 	Axis_Wall_Planted = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_b_cover_wall" );
-		dprint("Axis_Wall_Planted");
+		Util.MapDebugPrint("Axis_Wall_Planted");
 	},
 
 	Axis_Door_Defused = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_cover_door" );
-		dprint("Axis_Door_Defused");
+		Util.MapDebugPrint("Axis_Door_Defused");
 	},
 
 	Axis_Wall_Defused = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_cover_wall" );
-		dprint("Axis_Wall_Defused");
+		Util.MapDebugPrint("Axis_Wall_Defused");
 	},
 
 	Allied_Door_Planted = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_r_cover_door" );
-		dprint("Allied_Door_Planted");
+		Util.MapDebugPrint("Allied_Door_Planted");
 	},
 
 	Allied_Wall_Planted = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_r_cover_wall" );
-		dprint("Allied_Wall_Planted");
+		Util.MapDebugPrint("Allied_Wall_Planted");
 	},
 
 	Allied_Door_Defused = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_cover_door" );
-		dprint("Allied_Door_Defused");
+		Util.MapDebugPrint("Allied_Door_Defused");
 	},
 
 	Allied_Wall_Defused = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_cover_wall" );
-		dprint("Allied_Wall_Defused");
+		Util.MapDebugPrint("Allied_Wall_Defused");
 	},
 
 	Axis_Outpost_Destroyed = function( trigger )
@@ -499,7 +485,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		dprint("Axis_Outpost_Destroyed");
+		Util.MapDebugPrint("Axis_Outpost_Destroyed");
 	},
 
 	Axis_Underbase_Door_Destroyed = function( trigger )
@@ -510,7 +496,7 @@ global Map =
 		Util.EnableGoal( "ROUTE_r_e_underbase" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_cover_door" );
 
-		dprint("Axis_Underbase_Door_Destroyed");
+		Util.MapDebugPrint("Axis_Underbase_Door_Destroyed");
 	},
 
 	Axis_Underbase_Wall_Destroyed = function( trigger )
@@ -521,7 +507,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_cover_wall" );
 		Util.EnableGoal( "ROUTE_r_w_underbase" );
 
-		dprint("Axis_Underbase_Wall_Destroyed");
+		Util.MapDebugPrint("Axis_Underbase_Wall_Destroyed");
 	},
 
 	Axis_Med_L1 = function( trigger )
@@ -530,7 +516,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_med" );
-		dprint("Axis_Med_L1");
+		Util.MapDebugPrint("Axis_Med_L1");
 	},
 
 	Axis_Med_L2  = function( trigger )
@@ -541,7 +527,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_medical_axis_healthstand" );
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_med" );
-		dprint("Axis_Med_L2");
+		Util.MapDebugPrint("Axis_Med_L2");
 	},
 
 	Axis_Med_L3 = function( trigger )
@@ -550,7 +536,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_med" );
-		dprint("Axis_Med_L3");
+		Util.MapDebugPrint("Axis_Med_L3");
 	},
 
 	Axis_Med_L4  = function( trigger )
@@ -560,7 +546,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_red_pad_med");
 
-		dprint("Axis_Med_L4");
+		Util.MapDebugPrint("Axis_Med_L4");
 	},
 
 	Axis_Ops_L1 = function( trigger )
@@ -569,7 +555,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_ops" );
-		dprint("Axis_Ops_L1");
+		Util.MapDebugPrint("Axis_Ops_L1");
 	},
 
 	Axis_Ops_L2  = function( trigger )
@@ -578,7 +564,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_ops" );
-		dprint("Axis_Ops_L2");
+		Util.MapDebugPrint("Axis_Ops_L2");
 	},
 
 	Axis_Ops_L3 = function( trigger )
@@ -587,7 +573,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_ops" );
-		dprint("Axis_Ops_L3");
+		Util.MapDebugPrint("Axis_Ops_L3");
 	},
 
 	Axis_Ops_L4  = function( trigger )
@@ -601,7 +587,7 @@ global Map =
 		Wp.SetWaypointFlag( "bRightdoor", "allies", false );
 		Wp.SetWaypointFlag( "bLeftdoor", "allies", false );
 
-		dprint("Axis_Ops_L4");
+		Util.MapDebugPrint("Axis_Ops_L4");
 	},
 
 	Axis_Armory_L1 = function( trigger )
@@ -610,7 +596,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_armory" );
-		dprint("Axis_Armory_L1");
+		Util.MapDebugPrint("Axis_Armory_L1");
 	},
 
 	Axis_Armory_L2= function( trigger )
@@ -621,7 +607,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_armory_axis_ammostand" );
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_armory" );
-		dprint("Axis_Armory_L2");
+		Util.MapDebugPrint("Axis_Armory_L2");
 	},
 
 	Axis_Armory_L3 = function( trigger )
@@ -630,7 +616,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_armory" );
-		dprint("Axis_Armory_L3");
+		Util.MapDebugPrint("Axis_Armory_L3");
 	},
 
 	Axis_Armory_L4 = function( trigger )
@@ -640,7 +626,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_red_pad_armory");
 
-		dprint("Axis_Armory_L4");
+		Util.MapDebugPrint("Axis_Armory_L4");
 	},
 
 	Axis_Eng_L1 = function( trigger )
@@ -649,7 +635,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_engineering" );
-		dprint("Axis_Eng_L1");
+		Util.MapDebugPrint("Axis_Eng_L1");
 	},
 
 	Axis_Eng_L2= function( trigger )
@@ -658,7 +644,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_engineering" );
-		dprint("Axis_Eng_L2");
+		Util.MapDebugPrint("Axis_Eng_L2");
 	},
 
 	Axis_Eng_L3 = function( trigger )
@@ -667,7 +653,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_engineering" );
-		dprint("Axis_Eng_L3");
+		Util.MapDebugPrint("Axis_Eng_L3");
 	},
 
 	Axis_Eng_L4 = function( trigger )
@@ -677,7 +663,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_red_pad_engineering");
 
-		dprint("Axis_Eng_L4");
+		Util.MapDebugPrint("Axis_Eng_L4");
 	},
 
 	Axis_Spawn_L1 = function( trigger )
@@ -686,7 +672,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_spawn" );
-		dprint("Axis_Spawn_L1");
+		Util.MapDebugPrint("Axis_Spawn_L1");
 	},
 
 	Axis_Spawn_L2  = function( trigger )
@@ -695,7 +681,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_spawn" );
-		dprint("Axis_Spawn_L2");
+		Util.MapDebugPrint("Axis_Spawn_L2");
 	},
 
 	Axis_Spawn_L3 = function( trigger )
@@ -704,7 +690,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_spawn" );
-		dprint("Axis_Spawn_L3");
+		Util.MapDebugPrint("Axis_Spawn_L3");
 	},
 
 	Axis_Spawn_L4  = function( trigger )
@@ -714,7 +700,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_red_pad_spawn");
 
-		dprint("Axis_Spawn_L4");
+		Util.MapDebugPrint("Axis_Spawn_L4");
 	},
 
 	Allies_Med_L1 = function( trigger )
@@ -723,7 +709,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_med" );
-		dprint("Allies_Med_L1");
+		Util.MapDebugPrint("Allies_Med_L1");
 	},
 
 	Allies_Med_L2  = function( trigger )
@@ -734,7 +720,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_medical_allied_healthstand" );
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_med" );
-		dprint("Allies_Med_L2");
+		Util.MapDebugPrint("Allies_Med_L2");
 	},
 
 	Allies_Med_L3 = function( trigger )
@@ -743,7 +729,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_med" );
-		dprint("Allies_Med_L3");
+		Util.MapDebugPrint("Allies_Med_L3");
 	},
 
 	Allies_Med_L4  = function( trigger )
@@ -753,7 +739,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_blue_pad_med");
 
-		dprint("Allies_Med_L4");
+		Util.MapDebugPrint("Allies_Med_L4");
 	},
 
 	Allies_Ops_L1 = function( trigger )
@@ -762,7 +748,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_ops" );
-		dprint("Allies_Ops_L1");
+		Util.MapDebugPrint("Allies_Ops_L1");
 	},
 
 	Allies_Ops_L2  = function( trigger )
@@ -771,7 +757,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_ops" );
-		dprint("Allies_Ops_L2");
+		Util.MapDebugPrint("Allies_Ops_L2");
 	},
 
 	Allies_Ops_L3 = function( trigger )
@@ -780,7 +766,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_ops" );
-		dprint("Allies_Ops_L3");
+		Util.MapDebugPrint("Allies_Ops_L3");
 	},
 
 	Allies_Ops_L4  = function( trigger )
@@ -794,7 +780,7 @@ global Map =
 		Wp.SetWaypointFlag( "rRightdoor", "axis", false );
 		Wp.SetWaypointFlag( "rLeftdoor", "axis", false );
 
-		dprint("Allies_Ops_L4");
+		Util.MapDebugPrint("Allies_Ops_L4");
 	},
 
 	Allies_Armory_L1 = function( trigger )
@@ -803,7 +789,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_armory" );
-		dprint("Allies_Armory_L1");
+		Util.MapDebugPrint("Allies_Armory_L1");
 	},
 
 	Allies_Armory_L2= function( trigger )
@@ -814,7 +800,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_armory_allied_ammostand" );
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_armory" );
-		dprint("Allies_Armory_L2");
+		Util.MapDebugPrint("Allies_Armory_L2");
 	},
 
 	Allies_Armory_L3 = function( trigger )
@@ -823,7 +809,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_armory" );
-		dprint("Allies_Armory_L3");
+		Util.MapDebugPrint("Allies_Armory_L3");
 	},
 
 	Allies_Armory_L4 = function( trigger )
@@ -833,7 +819,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_blue_pad_armory");
 
-		dprint("Allies_Armory_L4");
+		Util.MapDebugPrint("Allies_Armory_L4");
 	},
 
 	Allies_Eng_L1 = function( trigger )
@@ -842,7 +828,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_engineering" );
-		dprint("Allies_Eng_L1");
+		Util.MapDebugPrint("Allies_Eng_L1");
 	},
 
 	Allies_Eng_L2= function( trigger )
@@ -851,7 +837,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_engineering" );
-		dprint("Allies_Eng_L2");
+		Util.MapDebugPrint("Allies_Eng_L2");
 	},
 
 	Allies_Eng_L3 = function( trigger )
@@ -860,7 +846,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_engineering" );
-		dprint("Allies_Eng_L3");
+		Util.MapDebugPrint("Allies_Eng_L3");
 	},
 
 	Allies_Eng_L4 = function( trigger )
@@ -870,7 +856,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_blue_pad_engineering");
 
-		dprint("Allies_Eng_L4");
+		Util.MapDebugPrint("Allies_Eng_L4");
 	},
 
 	Allies_Spawn_L1 = function( trigger )
@@ -879,7 +865,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_spawn" );
-		dprint("Allies_Spawn_L1");
+		Util.MapDebugPrint("Allies_Spawn_L1");
 	},
 
 	Allies_Spawn_L2  = function( trigger )
@@ -888,7 +874,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_spawn" );
-		dprint("Allies_Spawn_L2");
+		Util.MapDebugPrint("Allies_Spawn_L2");
 	},
 
 	Allies_Spawn_L3 = function( trigger )
@@ -897,7 +883,7 @@ global Map =
 			{ return; }
 
 		Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_spawn" );
-		dprint("Allies_Spawn_L3");
+		Util.MapDebugPrint("Allies_Spawn_L3");
 	},
 
 	Allies_Spawn_L4  = function( trigger )
@@ -907,7 +893,7 @@ global Map =
 
 		Util.RemoveGoal("CAPPOINT_blue_pad_spawn");
 
-		dprint("Allies_Spawn_L4");
+		Util.MapDebugPrint("Allies_Spawn_L4");
 	},
 
 	Red_Leftwall_Count = 0,
@@ -926,24 +912,24 @@ global Map =
 					if ( Map.Red_Leftwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_leftwall" );
-						dprint("^1Axis built left chain fence");
+						Util.MapDebugPrint("^1Axis built left chain fence");
 					}
 					else if ( Map.Red_Leftwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_leftwall" );
-						dprint("^1Axis built left barbed fence");
+						Util.MapDebugPrint("^1Axis built left barbed fence");
 					}
 					else if ( Map.Red_Leftwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_leftwall" );
-						dprint("^1Axis built left wall");
+						Util.MapDebugPrint("^1Axis built left wall");
 					}
 					else if ( Map.Red_Leftwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_red_pad_leftwall");
 
 						if ( Map.Red_Leftwall_Count == 4 )
-							{ dprint("^1Axis built left fortified wall"); }
+							{ Util.MapDebugPrint("^1Axis built left fortified wall"); }
 					}
 				}
 			}
@@ -969,24 +955,24 @@ global Map =
 					if ( Map.Red_Rightwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_rightwall" );
-						dprint("^1Axis built right chain fence");
+						Util.MapDebugPrint("^1Axis built right chain fence");
 					}
 					else if ( Map.Red_Rightwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_rightwall" );
-						dprint("^1Axis built right barbed fence");
+						Util.MapDebugPrint("^1Axis built right barbed fence");
 					}
 					else if ( Map.Red_Rightwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_rightwall" );
-						dprint("^1Axis built right wall");
+						Util.MapDebugPrint("^1Axis built right wall");
 					}
 					else if ( Map.Red_Rightwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_red_pad_rightwall");
 
 						if ( Map.Red_Rightwall_Count == 4 )
-							{ dprint("^1Axis built right fortified wall"); }
+							{ Util.MapDebugPrint("^1Axis built right fortified wall"); }
 					}
 				}
 			}
@@ -1012,24 +998,24 @@ global Map =
 					if ( Map.Red_Forwardwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_forwardwall" );
-						dprint("^1Axis built forward chain fence");
+						Util.MapDebugPrint("^1Axis built forward chain fence");
 					}
 					else if ( Map.Red_Forwardwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_forwardwall" );
-						dprint("^1Axis built forward barbed fence");
+						Util.MapDebugPrint("^1Axis built forward barbed fence");
 					}
 					else if ( Map.Red_Forwardwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_forwardwall" );
-						dprint("^1Axis built forward wall");
+						Util.MapDebugPrint("^1Axis built forward wall");
 					}
 					else if ( Map.Red_Forwardwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_red_pad_forwardwall");
 
 						if ( Map.Red_Forwardwall_Count == 4 )
-							{ dprint("^1Axis built forward fortified wall"); }
+							{ Util.MapDebugPrint("^1Axis built forward fortified wall"); }
 					}
 				}
 			}
@@ -1055,24 +1041,24 @@ global Map =
 					if ( Map.Red_Assault_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_assault" );
-						dprint("^1Axis built a Wooden Tower");
+						Util.MapDebugPrint("^1Axis built a Wooden Tower");
 					}
 					else if ( Map.Red_Assault_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_assault" );
-						dprint("^1Axis mounted a Tower Rocketgun");
+						Util.MapDebugPrint("^1Axis mounted a Tower Rocketgun");
 					}
 					else if ( Map.Red_Assault_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_assault" );
-						dprint("^1Axis built a Super Assault Tower");
+						Util.MapDebugPrint("^1Axis built a Super Assault Tower");
 					}
 					else if ( Map.Red_Assault_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_red_pad_assault");
 
 						if ( Map.Red_Assault_Count == 4 )
-							{ dprint("^1Axis mounted Upgraded Tower Machine Guns"); }
+							{ Util.MapDebugPrint("^1Axis mounted Upgraded Tower Machine Guns"); }
 					}
 				}
 			}
@@ -1098,24 +1084,24 @@ global Map =
 					if ( Map.Red_Bunker_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_gatebunker" );
-						dprint("^1Axis have built a Bunker");
+						Util.MapDebugPrint("^1Axis have built a Bunker");
 					}
 					else if ( Map.Red_Bunker_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_gatebunker" );
-						dprint("^1Axis mounted a Bunker Rocketgun");
+						Util.MapDebugPrint("^1Axis mounted a Bunker Rocketgun");
 					}
 					else if ( Map.Red_Bunker_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.AXIS, "CAPPOINT_red_pad_gatebunker" );
-						dprint("^1Axis built a Super Assault Tower");
+						Util.MapDebugPrint("^1Axis built a Super Assault Tower");
 					}
 					else if ( Map.Red_Bunker_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_red_pad_gatebunker");
 
 						if ( Map.Red_Bunker_Count == 4 )
-							{ dprint("^1Axis mounted Upgraded Bunker Machine Guns"); }
+							{ Util.MapDebugPrint("^1Axis mounted Upgraded Bunker Machine Guns"); }
 					}
 				}
 			}
@@ -1141,24 +1127,24 @@ global Map =
 					if ( Map.Blue_Leftwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_leftwall" );
-						dprint("^DAllies built left chain fence");
+						Util.MapDebugPrint("^DAllies built left chain fence");
 					}
 					else if ( Map.Blue_Leftwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_leftwall" );
-						dprint("^DAllies built left barbed fence");
+						Util.MapDebugPrint("^DAllies built left barbed fence");
 					}
 					else if ( Map.Blue_Leftwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_leftwall" );
-						dprint("^DAllies built left wall");
+						Util.MapDebugPrint("^DAllies built left wall");
 					}
 					else if ( Map.Blue_Leftwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_blue_pad_leftwall");
 
 						if ( Map.Blue_Leftwall_Count == 4 )
-							{ dprint("^DAllies built left fortified wall"); }
+							{ Util.MapDebugPrint("^DAllies built left fortified wall"); }
 					}
 				}
 			}
@@ -1184,24 +1170,24 @@ global Map =
 					if ( Map.Blue_Rightwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_rightwall" );
-						dprint("^DAllies built right chain fence");
+						Util.MapDebugPrint("^DAllies built right chain fence");
 					}
 					else if ( Map.Blue_Rightwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_rightwall" );
-						dprint("^DAllies built right barbed fence");
+						Util.MapDebugPrint("^DAllies built right barbed fence");
 					}
 					else if ( Map.Blue_Rightwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_rightwall" );
-						dprint("^DAllies built right wall");
+						Util.MapDebugPrint("^DAllies built right wall");
 					}
 					else if ( Map.Blue_Rightwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_blue_pad_rightwall");
 
 						if ( Map.Blue_Rightwall_Count == 4 )
-							{ dprint("^DAllies built right fortified wall"); }
+							{ Util.MapDebugPrint("^DAllies built right fortified wall"); }
 					}
 				}
 			}
@@ -1227,24 +1213,24 @@ global Map =
 					if ( Map.Blue_Forwardwall_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_forwardwall" );
-						dprint("^DAllies built forward chain fence");
+						Util.MapDebugPrint("^DAllies built forward chain fence");
 					}
 					else if ( Map.Blue_Forwardwall_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_forwardwall" );
-						dprint("^DAllies built forward barbed fence");
+						Util.MapDebugPrint("^DAllies built forward barbed fence");
 					}
 					else if ( Map.Blue_Forwardwall_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_forwardwall" );
-						dprint("^DAllies built forward wall");
+						Util.MapDebugPrint("^DAllies built forward wall");
 					}
 					else if ( Map.Blue_Forwardwall_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_blue_pad_forwardwall");
 
 						if ( Map.Blue_Forwardwall_Count == 4 )
-							{ dprint("^DAllies built forward fortified wall"); }
+							{ Util.MapDebugPrint("^DAllies built forward fortified wall"); }
 					}
 				}
 			}
@@ -1270,24 +1256,24 @@ global Map =
 					if ( Map.Blue_Assault_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_assault" );
-						dprint("^DAllies built a Wooden Tower");
+						Util.MapDebugPrint("^DAllies built a Wooden Tower");
 					}
 					else if ( Map.Blue_Assault_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_assault" );
-						dprint("^DAllies mounted a Tower Rocketgun");
+						Util.MapDebugPrint("^DAllies mounted a Tower Rocketgun");
 					}
 					else if ( Map.Blue_Assault_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_assault" );
-						dprint("^DAllies built a Super Assault Tower");
+						Util.MapDebugPrint("^DAllies built a Super Assault Tower");
 					}
 					else if ( Map.Blue_Assault_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_blue_pad_assault");
 
 						if ( Map.Blue_Assault_Count == 4 )
-							{ dprint("^DAllies mounted Upgraded Tower Machine Guns"); }
+							{ Util.MapDebugPrint("^DAllies mounted Upgraded Tower Machine Guns"); }
 					}
 				}
 			}
@@ -1313,24 +1299,24 @@ global Map =
 					if ( Map.Blue_Bunker_Count == 1 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_gatebunker" );
-						dprint("^DAllies have built a Bunker");
+						Util.MapDebugPrint("^DAllies have built a Bunker");
 					}
 					else if ( Map.Blue_Bunker_Count == 2 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_gatebunker" );
-						dprint("^DAllies mounted a Bunker Rocketgun");
+						Util.MapDebugPrint("^DAllies mounted a Bunker Rocketgun");
 					}
 					else if ( Map.Blue_Bunker_Count == 3 )
 					{
 						Map.ProcessStrat( TEAM.ALLIES, "CAPPOINT_blue_pad_gatebunker" );
-						dprint("^DAllies built a Super Assault Tower");
+						Util.MapDebugPrint("^DAllies built a Super Assault Tower");
 					}
 					else if ( Map.Blue_Bunker_Count >= 4 )
 					{
 						Util.DisableGoal("CAPPOINT_blue_pad_gatebunker");
 
 						if ( Map.Blue_Bunker_Count == 4 )
-							{ dprint("^DAllies mounted Upgraded Bunker Machine Guns"); }
+							{ Util.MapDebugPrint("^DAllies mounted Upgraded Bunker Machine Guns"); }
 					}
 				}
 			}
@@ -1879,7 +1865,7 @@ global OnMapLoad = function()
 	MapRoutes.CAPPOINT_red_pad_spawn = MapRoutes.CAPPOINT_red_pad_armory;
 
 	Util.Routes(MapRoutes);
-	dprint( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )

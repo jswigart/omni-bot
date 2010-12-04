@@ -128,7 +128,7 @@ global Map =
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
-	//MG´s
+	//MGï¿½s
 	axis_basement_MG_Gun_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -445,7 +445,7 @@ global Map =
 			}
 		}
 
-		Util.MapDebugPrint ( "Door is now: ",Map.Door );
+		Util.MapDebugPrint( "Door is now: ",Map.Door );
 	},
 
 	//Battery
@@ -454,39 +454,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.COMMAND_COMPLETED);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.SORRY);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "battery_Destroyed" );
 	},
 
@@ -551,9 +520,6 @@ global OnMapLoad = function()
 	//enable part 1 goals
 	Groups.EnableAllies(Groups.group1);
 	Groups.EnableAxis(Groups.group2);
-
-	//set up some routing
-	Util.MapDebugPrint( "Configuring Routes" );
 
 	//Routes
 	MapRoutes =

@@ -249,7 +249,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_cave_.*" );
 
 		//sleep(60); ///Why??? It was stopping the bots defending for 1 minute
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_hall_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_mg_al_hall_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_mg_al_hall_2" );
@@ -720,38 +720,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.COMMAND_COMPLETED);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.SORRY);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 
 		Util.MapDebugPrint( "Exit_Tunnel_Destroyed" );
 	},

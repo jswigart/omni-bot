@@ -24,7 +24,7 @@ global Map =
 	Detonator_Dyno = 0,
 	Tank_Barrier_Dyno = 0,
 	Tank_Destroyed = false,
-	
+
 	Ammo_Cabinet_wallammo = "AMMOCAB_wallammo",
 	Flag_fuzeredflag = "FLAG_fuzeredflag",
 	Cappoint_FuzeDropoff = "CAPPOINT_FuzeDropoff",
@@ -47,7 +47,7 @@ global Map =
 	Mover_tank = "MOVER_tank",
 	Mover_train = "MOVER_train",
 	Mover_truck = "MOVER_truck",
-	
+
 	Movers =
 	{
 		//Retain these movers
@@ -68,12 +68,12 @@ global Map =
 		OnEnter = function(ent)
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_TRAIN" );
-			Util.MapDebugPrint(GetEntName(ent), "Train Start Entering");
+			Util.MapDebugPrint(GetEntName(ent) + " Train Start Entering");
 		},
 		OnExit = function(ent)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_AXI_train" );
-			Util.MapDebugPrint(GetEntName(ent), "Train Start Leaving");
+			Util.MapDebugPrint(GetEntName(ent) + " Train Start Leaving");
 		}
 	},
 	TrainEndTrigger =
@@ -83,13 +83,13 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_TRAIN" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_AXI_train" );
-			Util.MapDebugPrint(GetEntName(ent), "Train End Entering");
+			Util.MapDebugPrint(GetEntName(ent) + " Train End Entering");
 		},
 		OnExit = function(ent)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_AXI_train" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_TRAIN" );
-			Util.MapDebugPrint(GetEntName(ent), "Train End Leaving");
+			Util.MapDebugPrint(GetEntName(ent) + " Train End Leaving");
 		}
 	},
 
@@ -100,33 +100,33 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post );
 
-		Util.MapDebugPrint( "Allied_Command_Post_Built" ); 
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Allied_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Allied_Command_Post_Dyno += 1;
-		Util.MapDebugPrint( "Allied_Command_Post_Planted" ); 
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Allied_Command_Post_Dyno -= 1;
-		Util.MapDebugPrint( "Allied_Command_Post_Defused" ); 
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
 	},
-	
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" ); 
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Assault_Ramp_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -134,33 +134,33 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Assault_Ramp );
 
-		Util.MapDebugPrint( "Assault_Ramp_Built" ); 
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
 	},
-	
+
 	Assault_Ramp_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Assault_Ramp_Dyno += 1;
-		Util.MapDebugPrint( "Assault_Ramp_Planted" ); 
+		Util.MapDebugPrint( "Assault_Ramp_Planted" );
 	},
-	
+
 	Assault_Ramp_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Assault_Ramp_Dyno -= 1;
-		Util.MapDebugPrint( "Assault_Ramp_Defused" ); 
+		Util.MapDebugPrint( "Assault_Ramp_Defused" );
 	},
-	
+
 	Assault_Ramp_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.MapDebugPrint( "Assault_Ramp_Destroyed" ); 
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -168,41 +168,41 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post );
 
-		Util.MapDebugPrint( "Axis_Command_Post_Built" ); 
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Axis_Command_Post_Dyno += 1;
-		Util.MapDebugPrint( "Axis_Command_Post_Planted" ); 
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Axis_Command_Post_Dyno -= 1;
-		Util.MapDebugPrint( "Axis_Command_Post_Defused" ); 
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" ); 
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
-	
+
 	Tank_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.MapDebugPrint( "Tank_Built" ); 
+		Util.MapDebugPrint( "Tank_Built" );
 	},
-	
+
 	Tank_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -210,9 +210,9 @@ global Map =
 		Map.Tank_Destroyed = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
 
-		Util.MapDebugPrint( "Tank_Destroyed" ); 
+		Util.MapDebugPrint( "Tank_Destroyed" );
 	},
-	
+
 	Tank_Barrier_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -220,15 +220,15 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier );
 
-		Util.MapDebugPrint( "Tank_Barrier_Built" ); 
+		Util.MapDebugPrint( "Tank_Barrier_Built" );
 	},
-	
+
 	Tank_Barrier_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Tank_Barrier_Dyno += 1;
-		Util.MapDebugPrint( "Tank_Barrier_Planted" ); 
+		Util.MapDebugPrint( "Tank_Barrier_Planted" );
 	},
 
 	Tank_Barrier_Defused = function( trigger )
@@ -236,20 +236,20 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		Map.Tank_Barrier_Dyno -= 1;
-		Util.MapDebugPrint( "Tank_Barrier_Defused" ); 
+		Util.MapDebugPrint( "Tank_Barrier_Defused" );
 	},
-	
+
 	Tank_Barrier_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		if( Map.Tank_Destroyed == true ) 
+
+		if( Map.Tank_Destroyed == true )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
-		}	
+		}
 
-		Util.MapDebugPrint( "Tank_Barrier_Destroyed" ); 
+		Util.MapDebugPrint( "Tank_Barrier_Destroyed" );
 	},
 
 	Depot_Gate_Planted = function( trigger )
@@ -257,17 +257,17 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		Map.Depot_Gate_Dyno += 1;
-		Util.MapDebugPrint( "Depot_Gate_Planted" ); 
+		Util.MapDebugPrint( "Depot_Gate_Planted" );
 	},
-	
+
 	Depot_Gate_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Depot_Gate_Dyno -= 1;
-		Util.MapDebugPrint( "Depot_Gate_Defused" ); 
+		Util.MapDebugPrint( "Depot_Gate_Defused" );
 	},
-	
+
 	Depot_Gate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -281,35 +281,35 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuzeredflag" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_fuze" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_fuze");
-		Util.MapDebugPrint( "Depot_Gate_Destroyed" ); 
+		Util.MapDebugPrint( "Depot_Gate_Destroyed" );
 	},
-	
+
 	Detonator_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Detonator_Dyno += 1;
-		Util.MapDebugPrint( "Detonator_Planted" ); 
+		Util.MapDebugPrint( "Detonator_Planted" );
 	},
-	
+
 	Detonator_Defused = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		Map.Detonator_Dyno -= 1;
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Detonator );
-		Util.MapDebugPrint( "Detonator_Defused" ); 
+		Util.MapDebugPrint( "Detonator_Defused" );
 	},
-	
+
 	Detonator_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Delta.*" );
-		
-		Util.MapDebugPrint( "Detonator_Destroyed" ); 
+
+		Util.MapDebugPrint( "Detonator_Destroyed" );
 	},
-	
+
 	Main_Gate_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -319,10 +319,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Command_Post );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
-	
+
 		Util.DisableGoal( "REPAIRMG42_NorthMG42" );
 		Util.DisableGoal( "REPAIRMG42_SouthMG42" );
-		
+
 		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_NorthMG42" );
 		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_SouthMG42" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_TRAIN" );
@@ -336,10 +336,8 @@ global Map =
 		Util.DisableGoal ( "BUILD_Tank" );
 		Util.DisableGoal ( "MOUNT_tank" );
 		Util.DisableGoal ( "MOVER_tank" );
-		
-		
 
-		Util.MapDebugPrint( "Main_Gate_Destroyed" ); 
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
 	},
 
 	fuzeredflag_Taken = function( trigger )
@@ -347,7 +345,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_fuzeredflag" );
-		Util.MapDebugPrint( "fuzeredflag_Taken" ); 
+		Util.MapDebugPrint( "fuzeredflag_Taken" );
 	},
 
 	fuzeredflag_Returned = function( trigger )
@@ -356,7 +354,7 @@ global Map =
 			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuzeredflag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FuzeDropoff" );
-		Util.MapDebugPrint( "fuzeredflag_Returned" ); 
+		Util.MapDebugPrint( "fuzeredflag_Returned" );
 	},
 
 	fuzeredflag_Secured = function( trigger )
@@ -371,15 +369,15 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Detonator );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_fuze" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_fuze");
-		Util.MapDebugPrint( "fuzeredflag_Secured" ); 
+		Util.MapDebugPrint( "fuzeredflag_Secured" );
 	},
 
 	AlliesWin = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-	
-		Util.MapDebugPrint( "AlliesWin" ); 
+
+		Util.MapDebugPrint( "AlliesWin" );
 	},
 
 };
@@ -426,7 +424,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
 	// *** AXIS GOALS ***
-	
+
 	Util.DisableGoal( "REPAIRMG42_NorthMG42" );
 	Util.DisableGoal( "REPAIRMG42_SouthMG42" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_NorthMG42" );
@@ -441,7 +439,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier );
 	Util.AddUseWp("PLANT_Depot_Gate", "depotgate");
 	Util.AddUseWp("PLANT_Depot_Gate", "depotgate1");
-	
+
 	// *** AXIS GOALS PRIORITY ***
 	SetGoalPriority( "DEFEND_.*", 0.4, TEAM.AXIS );
 	SetGoalPriority( Map.Plant_Allied_Command_Post, 0.5, TEAM.AXIS, CLASS.ENGINEER );
@@ -461,7 +459,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_FuzeDropoff", 0.0, TEAM.ALLIES, CLASS.SOLDIER );
 	SetGoalPriority( "ATTACK_FuzeDropoff", 0.0, TEAM.ALLIES, CLASS.FIELDOPS );
 	SetGoalPriority( "ATTACK_FuzeDropoff", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
-	
+
 	SetGoalPriority( Map.Plant_Axis_Command_Post, 0.5 );
 	SetGoalPriority( Map.Plant_Depot_Gate, 0.6 );
 	SetGoalPriority( Map.Build_Assault_Ramp, 0.7 );
@@ -478,7 +476,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "RIDE_.*" );
-	
+
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120} );
@@ -486,33 +484,32 @@ global OnMapLoad = function()
 	ts = OnTriggerRegion(AABB(1187.964,-264.241,249.125,1736.933,219.518,341.125), Map.TrainStartTrigger);
 	TrainEnd = OnTriggerRegion(AABB(5048.166,-227.690,249.125,5164.860,81.666,331.125), Map.TrainEndTrigger);
 //Map Routes
-	Util.MapDebugPrint("Configuring Routes");	
 	MapRoutes =
 	{
-		PLANT_Tank_Barrier = 
+		PLANT_Tank_Barrier =
 		{
-			ROUTE_Tank_Spawn  = 
+			ROUTE_Tank_Spawn  =
 			{
-				ROUTE_Tank_route  = 
+				ROUTE_Tank_route  =
 				{
-					ROUTE_Tank_route_1  = 
+					ROUTE_Tank_route_1  =
 					{
 					},
 				},
-				ROUTE_des_route  = 
+				ROUTE_des_route  =
 				{
-					ROUTE_des_route_1  = 
+					ROUTE_des_route_1  =
 					{
-						ROUTE_des_route_2  = 
+						ROUTE_des_route_2  =
 						{
-							ROUTE_des_route_3  = 
+							ROUTE_des_route_3  =
 							{
 							},
-							ROUTE_deswall_route  = 
+							ROUTE_deswall_route  =
 							{
-								ROUTE_deswall_route_1  = 
+								ROUTE_deswall_route_1  =
 								{
-									ROUTE_deswall_route_2  = 
+									ROUTE_deswall_route_2  =
 									{
 									},
 								},
@@ -522,36 +519,36 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		PLANT_Depot_Gate = 
+		PLANT_Depot_Gate =
 		{
-			ROUTE_outsidecity_spawn  = 
+			ROUTE_outsidecity_spawn  =
 			{
-				ROUTE_outsidecity  = 
+				ROUTE_outsidecity  =
 				{
-					ROUTE_cityA  = 
+					ROUTE_cityA  =
 					{
-						ROUTE_cityA_1  = 
+						ROUTE_cityA_1  =
 						{
-							ROUTE_cityA_2  = 
+							ROUTE_cityA_2  =
 							{
-								ROUTE_cityA_3  = 
+								ROUTE_cityA_3  =
 								{
-									ROUTE_cityA_4  = 
+									ROUTE_cityA_4  =
 									{
-										ROUTE_cityA_5  = 
+										ROUTE_cityA_5  =
 										{
 										},
-										ROUTE_arch  = 
+										ROUTE_arch  =
 										{
-											ROUTE_arch_1  = 
+											ROUTE_arch_1  =
 											{
-												ROUTE_arch_2  = 
+												ROUTE_arch_2  =
 												{
-													ROUTE_fuze_4  = 
+													ROUTE_fuze_4  =
 													{
-														ROUTE_fuze_3  = 
+														ROUTE_fuze_3  =
 														{
-															ROUTE_fuze_2  = 
+															ROUTE_fuze_2  =
 															{
 															},
 														},
@@ -559,18 +556,18 @@ global OnMapLoad = function()
 												},
 											},
 										},
-										ROUTE_cityD_3  = 
+										ROUTE_cityD_3  =
 										{
-											ROUTE_cityD_4  = 
+											ROUTE_cityD_4  =
 											{
-												ROUTE_cityD_5  = 
+												ROUTE_cityD_5  =
 												{
-													ROUTE_cityD_6  = 
+													ROUTE_cityD_6  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
@@ -582,59 +579,59 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_cityB  = 
+					ROUTE_cityB  =
 					{
-						ROUTE_cityB_1  = 
+						ROUTE_cityB_1  =
 						{
-							ROUTE_cityB_2  = 
+							ROUTE_cityB_2  =
 							{
-								ROUTE_cityB_3  = 
+								ROUTE_cityB_3  =
 								{
-									ROUTE_cityback_1  = 
+									ROUTE_cityback_1  =
 									{
-										ROUTE_cityback_2  = 
+										ROUTE_cityback_2  =
 										{
-											ROUTE_cityback_3  = 
+											ROUTE_cityback_3  =
 											{
-												ROUTE_cityback_4  = 
+												ROUTE_cityback_4  =
 												{
-													ROUTE_cityback_5  = 
+													ROUTE_cityback_5  =
 													{
 													},
 												},
 											},
 										},
 									},
-									ROUTE_cityA_5  = 
+									ROUTE_cityA_5  =
 									{
-										ROUTE_cityD_3  = 
+										ROUTE_cityD_3  =
 										{
-											ROUTE_cityD_4  = 
+											ROUTE_cityD_4  =
 											{
-												ROUTE_cityD_5  = 
+												ROUTE_cityD_5  =
 												{
-													ROUTE_cityD_6  = 
+													ROUTE_cityD_6  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
 												},
 											},
-											ROUTE_arch  = 
+											ROUTE_arch  =
 											{
-												ROUTE_arch_1  = 
+												ROUTE_arch_1  =
 												{
-													ROUTE_arch_2  = 
+													ROUTE_arch_2  =
 													{
-														ROUTE_fuze_4  = 
+														ROUTE_fuze_4  =
 														{
-															ROUTE_fuze_3  = 
+															ROUTE_fuze_3  =
 															{
-																ROUTE_fuze_2  = 
+																ROUTE_fuze_2  =
 																{
 																},
 															},
@@ -650,33 +647,33 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_cityspawn  = 
+			ROUTE_cityspawn  =
 			{
-				ROUTE_cityA  = 
+				ROUTE_cityA  =
 				{
-					ROUTE_cityA_1  = 
+					ROUTE_cityA_1  =
 					{
-						ROUTE_cityA_2  = 
+						ROUTE_cityA_2  =
 						{
-							ROUTE_cityA_3  = 
+							ROUTE_cityA_3  =
 							{
-								ROUTE_cityA_4  = 
+								ROUTE_cityA_4  =
 								{
-									ROUTE_cityA_5  = 
+									ROUTE_cityA_5  =
 									{
-										ROUTE_cityB_3  = 
+										ROUTE_cityB_3  =
 										{
-											ROUTE_cityback  = 
+											ROUTE_cityback  =
 											{
-												ROUTE_cityback_1  = 
+												ROUTE_cityback_1  =
 												{
-													ROUTE_cityback_2  = 
+													ROUTE_cityback_2  =
 													{
-														ROUTE_cityback_3  = 
+														ROUTE_cityback_3  =
 														{
-															ROUTE_cityback_4  = 
+															ROUTE_cityback_4  =
 															{
-																ROUTE_cityback_5  = 
+																ROUTE_cityback_5  =
 																{
 																},
 															},
@@ -685,19 +682,19 @@ global OnMapLoad = function()
 												},
 											},
 										},
-										ROUTE_cityD_3  = 
+										ROUTE_cityD_3  =
 										{
-											ROUTE_arch  = 
+											ROUTE_arch  =
 											{
-												ROUTE_arch_1  = 
+												ROUTE_arch_1  =
 												{
-													ROUTE_arch_2  = 
+													ROUTE_arch_2  =
 													{
-														ROUTE_fuze_4  = 
+														ROUTE_fuze_4  =
 														{
-															ROUTE_fuze_3  = 
+															ROUTE_fuze_3  =
 															{
-																ROUTE_fuze_2  = 
+																ROUTE_fuze_2  =
 																{
 																},
 															},
@@ -705,16 +702,16 @@ global OnMapLoad = function()
 													},
 												},
 											},
-											ROUTE_cityD_4  = 
+											ROUTE_cityD_4  =
 											{
-												ROUTE_cityD_5  = 
+												ROUTE_cityD_5  =
 												{
-													ROUTE_cityD_6  = 
+													ROUTE_cityD_6  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
@@ -727,45 +724,45 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_cityspawn_1  = 
+				ROUTE_cityspawn_1  =
 				{
-					ROUTE_cityspawn_2  = 
+					ROUTE_cityspawn_2  =
 					{
-						ROUTE_cityD  = 
+						ROUTE_cityD  =
 						{
-							ROUTE_cityD_1  = 
+							ROUTE_cityD_1  =
 							{
-								ROUTE_cityD_2  = 
+								ROUTE_cityD_2  =
 								{
-									ROUTE_cityD_3  = 
+									ROUTE_cityD_3  =
 									{
-										ROUTE_cityD_4  = 
+										ROUTE_cityD_4  =
 										{
-											ROUTE_cityD_5  = 
+											ROUTE_cityD_5  =
 											{
-												ROUTE_cityD_6  = 
+												ROUTE_cityD_6  =
 												{
-													ROUTE_fuze_2  = 
+													ROUTE_fuze_2  =
 													{
 													},
-													ROUTE_cityback_5  = 
+													ROUTE_cityback_5  =
 													{
 													},
 												},
 											},
 										},
 									},
-									ROUTE_arch  = 
+									ROUTE_arch  =
 									{
-										ROUTE_arch_1  = 
+										ROUTE_arch_1  =
 										{
-											ROUTE_arch_2  = 
+											ROUTE_arch_2  =
 											{
-												ROUTE_fuze_4  = 
+												ROUTE_fuze_4  =
 												{
-													ROUTE_fuze_3  = 
+													ROUTE_fuze_3  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
 													},
@@ -776,27 +773,27 @@ global OnMapLoad = function()
 								},
 							},
 						},
-						ROUTE_cityA_2  = 
+						ROUTE_cityA_2  =
 						{
-							ROUTE_cityA_3  = 
+							ROUTE_cityA_3  =
 							{
-								ROUTE_cityA_4  = 
+								ROUTE_cityA_4  =
 								{
-									ROUTE_cityA_5  = 
+									ROUTE_cityA_5  =
 									{
-										ROUTE_cityB_3  = 
+										ROUTE_cityB_3  =
 										{
-											ROUTE_cityback  = 
+											ROUTE_cityback  =
 											{
-												ROUTE_cityback_1  = 
+												ROUTE_cityback_1  =
 												{
-													ROUTE_cityback_2  = 
+													ROUTE_cityback_2  =
 													{
-														ROUTE_cityback_3  = 
+														ROUTE_cityback_3  =
 														{
-															ROUTE_cityback_4  = 
+															ROUTE_cityback_4  =
 															{
-																ROUTE_cityback_5  = 
+																ROUTE_cityback_5  =
 																{
 																},
 															},
@@ -805,34 +802,34 @@ global OnMapLoad = function()
 												},
 											},
 										},
-										ROUTE_cityD_3  = 
+										ROUTE_cityD_3  =
 										{
-											ROUTE_cityD_4  = 
+											ROUTE_cityD_4  =
 											{
-												ROUTE_cityD_5  = 
+												ROUTE_cityD_5  =
 												{
-													ROUTE_cityD_6  = 
+													ROUTE_cityD_6  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
 												},
 											},
-											ROUTE_arch  = 
+											ROUTE_arch  =
 											{
-												ROUTE_arch_1  = 
+												ROUTE_arch_1  =
 												{
-													ROUTE_arch_2  = 
+													ROUTE_arch_2  =
 													{
-														ROUTE_fuze_4  = 
+														ROUTE_fuze_4  =
 														{
-															ROUTE_fuze_3  = 
+															ROUTE_fuze_3  =
 															{
-																ROUTE_fuze_2  = 
+																ROUTE_fuze_2  =
 																{
 																},
 															},
@@ -846,29 +843,29 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_cityA_1  = 
+					ROUTE_cityA_1  =
 					{
-						ROUTE_cityA_2  = 
+						ROUTE_cityA_2  =
 						{
-							ROUTE_cityA_3  = 
+							ROUTE_cityA_3  =
 							{
-								ROUTE_cityA_4  = 
+								ROUTE_cityA_4  =
 								{
-									ROUTE_cityA_5  = 
+									ROUTE_cityA_5  =
 									{
-										ROUTE_cityB_3  = 
+										ROUTE_cityB_3  =
 										{
-											ROUTE_cityback  = 
+											ROUTE_cityback  =
 											{
-												ROUTE_cityback_1  = 
+												ROUTE_cityback_1  =
 												{
-													ROUTE_cityback_2  = 
+													ROUTE_cityback_2  =
 													{
-														ROUTE_cityback_3  = 
+														ROUTE_cityback_3  =
 														{
-															ROUTE_cityback_4  = 
+															ROUTE_cityback_4  =
 															{
-																ROUTE_cityback_5  = 
+																ROUTE_cityback_5  =
 																{
 																},
 															},
@@ -877,34 +874,34 @@ global OnMapLoad = function()
 												},
 											},
 										},
-										ROUTE_cityD_3  = 
+										ROUTE_cityD_3  =
 										{
-											ROUTE_cityD_4  = 
+											ROUTE_cityD_4  =
 											{
-												ROUTE_cityD_5  = 
+												ROUTE_cityD_5  =
 												{
-													ROUTE_cityD_6  = 
+													ROUTE_cityD_6  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
 												},
 											},
-											ROUTE_arch  = 
+											ROUTE_arch  =
 											{
-												ROUTE_arch_1  = 
+												ROUTE_arch_1  =
 												{
-													ROUTE_arch_2  = 
+													ROUTE_arch_2  =
 													{
-														ROUTE_fuze_4  = 
+														ROUTE_fuze_4  =
 														{
-															ROUTE_fuze_3  = 
+															ROUTE_fuze_3  =
 															{
-																ROUTE_fuze_2  = 
+																ROUTE_fuze_2  =
 																{
 																},
 															},
@@ -920,47 +917,47 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_cityspawn_1  = 
+			ROUTE_cityspawn_1  =
 			{
-				ROUTE_cityA_1  = 
+				ROUTE_cityA_1  =
 				{
-					ROUTE_cityA_2  = 
+					ROUTE_cityA_2  =
 					{
-						ROUTE_cityA_3  = 
+						ROUTE_cityA_3  =
 						{
-							ROUTE_cityA_4  = 
+							ROUTE_cityA_4  =
 							{
-								ROUTE_cityA_5  = 
+								ROUTE_cityA_5  =
 								{
 								},
-								ROUTE_cityD_3  = 
+								ROUTE_cityD_3  =
 								{
-									ROUTE_cityD_4  = 
+									ROUTE_cityD_4  =
 									{
-										ROUTE_cityD_5  = 
+										ROUTE_cityD_5  =
 										{
-											ROUTE_cityD_6  = 
+											ROUTE_cityD_6  =
 											{
-												ROUTE_fuze_2  = 
+												ROUTE_fuze_2  =
 												{
 												},
-												ROUTE_cityback_5  = 
+												ROUTE_cityback_5  =
 												{
 												},
 											},
 										},
 									},
-									ROUTE_arch  = 
+									ROUTE_arch  =
 									{
-										ROUTE_arch_1  = 
+										ROUTE_arch_1  =
 										{
-											ROUTE_arch_2  = 
+											ROUTE_arch_2  =
 											{
-												ROUTE_fuze_4  = 
+												ROUTE_fuze_4  =
 												{
-													ROUTE_fuze_3  = 
+													ROUTE_fuze_3  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
 													},
@@ -973,42 +970,42 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_cityspawn_2  = 
+				ROUTE_cityspawn_2  =
 				{
-					ROUTE_cityD  = 
+					ROUTE_cityD  =
 					{
-						ROUTE_cityD_1  = 
+						ROUTE_cityD_1  =
 						{
-							ROUTE_cityD_2  = 
+							ROUTE_cityD_2  =
 							{
-								ROUTE_cityD_3  = 
+								ROUTE_cityD_3  =
 								{
-									ROUTE_cityD_4  = 
+									ROUTE_cityD_4  =
 									{
-										ROUTE_cityD_5  = 
+										ROUTE_cityD_5  =
 										{
-											ROUTE_cityD_6  = 
+											ROUTE_cityD_6  =
 											{
-												ROUTE_fuze_2  = 
+												ROUTE_fuze_2  =
 												{
 												},
-												ROUTE_cityback_5  = 
+												ROUTE_cityback_5  =
 												{
 												},
 											},
 										},
 									},
-									ROUTE_arch  = 
+									ROUTE_arch  =
 									{
-										ROUTE_arch_1  = 
+										ROUTE_arch_1  =
 										{
-											ROUTE_arch_2  = 
+											ROUTE_arch_2  =
 											{
-												ROUTE_fuze_4  = 
+												ROUTE_fuze_4  =
 												{
-													ROUTE_fuze_3  = 
+													ROUTE_fuze_3  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
 													},
@@ -1020,27 +1017,27 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_cityA_2  = 
+					ROUTE_cityA_2  =
 					{
-						ROUTE_cityA_3  = 
+						ROUTE_cityA_3  =
 						{
-							ROUTE_cityA_4  = 
+							ROUTE_cityA_4  =
 							{
-								ROUTE_cityA_5  = 
+								ROUTE_cityA_5  =
 								{
-									ROUTE_cityB_3  = 
+									ROUTE_cityB_3  =
 									{
-										ROUTE_cityback  = 
+										ROUTE_cityback  =
 										{
-											ROUTE_cityback_1  = 
+											ROUTE_cityback_1  =
 											{
-												ROUTE_cityback_2  = 
+												ROUTE_cityback_2  =
 												{
-													ROUTE_cityback_3  = 
+													ROUTE_cityback_3  =
 													{
-														ROUTE_cityback_4  = 
+														ROUTE_cityback_4  =
 														{
-															ROUTE_cityback_5  = 
+															ROUTE_cityback_5  =
 															{
 															},
 														},
@@ -1049,34 +1046,34 @@ global OnMapLoad = function()
 											},
 										},
 									},
-									ROUTE_cityD_3  = 
+									ROUTE_cityD_3  =
 									{
-										ROUTE_cityD_4  = 
+										ROUTE_cityD_4  =
 										{
-											ROUTE_cityD_5  = 
+											ROUTE_cityD_5  =
 											{
-												ROUTE_cityD_6  = 
+												ROUTE_cityD_6  =
 												{
-													ROUTE_fuze_2  = 
+													ROUTE_fuze_2  =
 													{
 													},
-													ROUTE_cityback_5  = 
+													ROUTE_cityback_5  =
 													{
 													},
 												},
 											},
 										},
-										ROUTE_arch  = 
+										ROUTE_arch  =
 										{
-											ROUTE_arch_1  = 
+											ROUTE_arch_1  =
 											{
-												ROUTE_arch_2  = 
+												ROUTE_arch_2  =
 												{
-													ROUTE_fuze_4  = 
+													ROUTE_fuze_4  =
 													{
-														ROUTE_fuze_3  = 
+														ROUTE_fuze_3  =
 														{
-															ROUTE_fuze_2  = 
+															ROUTE_fuze_2  =
 															{
 															},
 														},
@@ -1091,29 +1088,29 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_cityspawn_2  = 
+			ROUTE_cityspawn_2  =
 			{
-				ROUTE_cityA_2  = 
+				ROUTE_cityA_2  =
 				{
-					ROUTE_cityA_3  = 
+					ROUTE_cityA_3  =
 					{
-						ROUTE_cityA_4  = 
+						ROUTE_cityA_4  =
 						{
-							ROUTE_cityA_5  = 
+							ROUTE_cityA_5  =
 							{
-								ROUTE_cityB_3  = 
+								ROUTE_cityB_3  =
 								{
-									ROUTE_cityback  = 
+									ROUTE_cityback  =
 									{
-										ROUTE_cityback_1  = 
+										ROUTE_cityback_1  =
 										{
-											ROUTE_cityback_2  = 
+											ROUTE_cityback_2  =
 											{
-												ROUTE_cityback_3  = 
+												ROUTE_cityback_3  =
 												{
-													ROUTE_cityback_4  = 
+													ROUTE_cityback_4  =
 													{
-														ROUTE_cityback_5  = 
+														ROUTE_cityback_5  =
 														{
 														},
 													},
@@ -1122,34 +1119,34 @@ global OnMapLoad = function()
 										},
 									},
 								},
-								ROUTE_cityD_3  = 
+								ROUTE_cityD_3  =
 								{
-									ROUTE_cityD_4  = 
+									ROUTE_cityD_4  =
 									{
-										ROUTE_cityD_5  = 
+										ROUTE_cityD_5  =
 										{
-											ROUTE_cityD_6  = 
+											ROUTE_cityD_6  =
 											{
-												ROUTE_fuze_2  = 
+												ROUTE_fuze_2  =
 												{
 												},
-												ROUTE_cityback_5  = 
+												ROUTE_cityback_5  =
 												{
 												},
 											},
 										},
 									},
-									ROUTE_arch  = 
+									ROUTE_arch  =
 									{
-										ROUTE_arch_1  = 
+										ROUTE_arch_1  =
 										{
-											ROUTE_arch_2  = 
+											ROUTE_arch_2  =
 											{
-												ROUTE_fuze_4  = 
+												ROUTE_fuze_4  =
 												{
-													ROUTE_fuze_3  = 
+													ROUTE_fuze_3  =
 													{
-														ROUTE_fuze_2  = 
+														ROUTE_fuze_2  =
 														{
 														},
 													},
@@ -1162,44 +1159,44 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_cityD  = 
+				ROUTE_cityD  =
 				{
-					ROUTE_cityD_1  = 
+					ROUTE_cityD_1  =
 					{
-						ROUTE_cityD_2  = 
+						ROUTE_cityD_2  =
 						{
-							ROUTE_cityD_3  = 
+							ROUTE_cityD_3  =
 							{
-								ROUTE_cityD_4  = 
+								ROUTE_cityD_4  =
 								{
-									ROUTE_cityD_5  = 
+									ROUTE_cityD_5  =
 									{
-										ROUTE_cityD_6  = 
+										ROUTE_cityD_6  =
 										{
-											ROUTE_fuze_2  = 
+											ROUTE_fuze_2  =
 											{
 											},
-											ROUTE_cityback_5  = 
+											ROUTE_cityback_5  =
 											{
 											},
 										},
 									},
 								},
-								ROUTE_cityA_5  = 
+								ROUTE_cityA_5  =
 								{
-									ROUTE_cityB_3  = 
+									ROUTE_cityB_3  =
 									{
-										ROUTE_cityback  = 
+										ROUTE_cityback  =
 										{
-											ROUTE_cityback_1  = 
+											ROUTE_cityback_1  =
 											{
-												ROUTE_cityback_2  = 
+												ROUTE_cityback_2  =
 												{
-													ROUTE_cityback_3  = 
+													ROUTE_cityback_3  =
 													{
-														ROUTE_cityback_4  = 
+														ROUTE_cityback_4  =
 														{
-															ROUTE_cityback_5  = 
+															ROUTE_cityback_5  =
 															{
 															},
 														},
@@ -1210,17 +1207,17 @@ global OnMapLoad = function()
 									},
 								},
 							},
-							ROUTE_arch  = 
+							ROUTE_arch  =
 							{
-								ROUTE_arch_1  = 
+								ROUTE_arch_1  =
 								{
-									ROUTE_arch_2  = 
+									ROUTE_arch_2  =
 									{
-										ROUTE_fuze_4  = 
+										ROUTE_fuze_4  =
 										{
-											ROUTE_fuze_3  = 
+											ROUTE_fuze_3  =
 											{
-												ROUTE_fuze_2  = 
+												ROUTE_fuze_2  =
 												{
 												},
 											},
@@ -1233,17 +1230,17 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		ATTACK_FuzeDropoff  = 
+		ATTACK_FuzeDropoff  =
 		{
-			ROUTE_fuze  = 
+			ROUTE_fuze  =
 			{
-				ROUTE_fuze_1  = 
+				ROUTE_fuze_1  =
 				{
-					ROUTE_fuze_2  = 
+					ROUTE_fuze_2  =
 					{
-						ROUTE_fuze_3  = 
+						ROUTE_fuze_3  =
 						{
-							ROUTE_fuze_4  = 
+							ROUTE_fuze_4  =
 							{
 							},
 						},
@@ -1252,19 +1249,19 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
-	
+
+
 	MapRoutes.ATTACK_Bravo1 = MapRoutes.PLANT_Tank_Barrier;
 	MapRoutes.ATTACK_Bravo2 = MapRoutes.PLANT_Tank_Barrier;
 	MapRoutes.ATTACK_Bravo3 = MapRoutes.PLANT_Tank_Barrier;
 	MapRoutes.ATTACK_Bravo4 = MapRoutes.PLANT_Tank_Barrier;
-	
+
 	MapRoutes.DEFEND_Alpha1 = MapRoutes.BUILD_Tank_Barrier;
 	MapRoutes.DEFEND_Alpha2 = MapRoutes.BUILD_Tank_Barrier;
 	MapRoutes.DEFEND_Alpha3 = MapRoutes.BUILD_Tank_Barrier;
 	MapRoutes.DEFEND_Alpha4 = MapRoutes.BUILD_Tank_Barrier;
 	MapRoutes.DEFEND_Alpha5 = MapRoutes.BUILD_Tank_Barrier;
-	
+
 	MapRoutes.ATTACK_Delta1 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.ATTACK_Delta2 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.ATTACK_Delta3 = MapRoutes.PLANT_Depot_Gate;
@@ -1272,7 +1269,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Delta5 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.ATTACK_Delta6 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.ATTACK_Delta7 = MapRoutes.PLANT_Depot_Gate;
-	
+
 	MapRoutes.DEFEND_Charlie1 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.DEFEND_Charlie2 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.DEFEND_Charlie3 = MapRoutes.PLANT_Depot_Gate;
@@ -1284,46 +1281,24 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_Charlie9 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.DEFEND_Charlie10 = MapRoutes.PLANT_Depot_Gate;
 	MapRoutes.DEFEND_Charlie11 = MapRoutes.PLANT_Depot_Gate;
-	
+
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
-
-	
-	
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 90.0;
 
-	w = bot.GetWeapon(WEAPON.THOMPSON);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.MP40);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.SHOTGUN);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.STEN);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.MP34);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.M97);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.M7);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.STG44);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.FG42);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.GARAND);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.K43);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
-	w = bot.GetWeapon(WEAPON.BAR);
-	w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	foreach ( id and weap in { WEAPON.THOMPSON,WEAPON.MP40,WEAPON.SHOTGUN,
+								WEAPON.STEN,WEAPON.MP34,WEAPON.M97,WEAPON.M7,
+								WEAPON.STG44,WEAPON.FG42,WEAPON.GARAND,
+								WEAPON.K43,WEAPON.BAR } )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
 
 	w = bot.GetWeapon(WEAPON.KNIFE);
 	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);

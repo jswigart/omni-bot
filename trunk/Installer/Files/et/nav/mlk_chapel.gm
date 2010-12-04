@@ -133,7 +133,7 @@ global OnMapLoad = function()
 	Maproutes.ATTACK_attack4 = Maproutes.ATTACK_attack1;
 	Util.Routes(Maproutes);
 
-	print( "Omni-bot map script for Chapel executed." );
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

@@ -57,29 +57,29 @@ global Map =
 	Mobile_MG42_d_doc_6 = "MOBILEMG42_d_doc_6",
 
 	ShowMovers = false,
-	
-	Movers = 
-	{ 
-	"MOVER_axis_compost_built_clip",
-	"MOVER_axis_compost_closed",
-	"MOVER_axis_compost_damaged",
-	"MOVER_axisgate",
-	"MOVER_axisgrate_frame",
-	"MOVER_bunkerdoors",
-	"MOVER_eastblock",
-	"MOVER_roadhousewall",
-	"MOVER_south_ammocabinet_clip",
-	"MOVER_south_ammocabinet_clip_1",
-	"MOVER_south_healthcabinet_clip",
-	"MOVER_south_healthcabinet_clip_1",
-	"MOVER_tower",
-	"MOVER_tower_1",
-	"MOVER_tower_destroyed",
-	"MOVER_transmitter_destroyed",
-	"MOVER_westblock",
-	}, 
 
-	
+	Movers =
+	{
+		"MOVER_axis_compost_built_clip",
+		"MOVER_axis_compost_closed",
+		"MOVER_axis_compost_damaged",
+		"MOVER_axisgate",
+		"MOVER_axisgrate_frame",
+		"MOVER_bunkerdoors",
+		"MOVER_eastblock",
+		"MOVER_roadhousewall",
+		"MOVER_south_ammocabinet_clip",
+		"MOVER_south_ammocabinet_clip_1",
+		"MOVER_south_healthcabinet_clip",
+		"MOVER_south_healthcabinet_clip_1",
+		"MOVER_tower",
+		"MOVER_tower_1",
+		"MOVER_tower_destroyed",
+		"MOVER_transmitter_destroyed",
+		"MOVER_westblock",
+	},
+
+
 	Navigation =
 	{
 		tunnelwall_aim = Vector3(-1625.096,-2492.563,4570.546),
@@ -211,7 +211,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Eastern_Blockade" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Eastern_Blockade" );
 
 		Util.MapDebugPrint( "Eastern_Blockade_Built" );
 	},
@@ -220,7 +220,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Eastern_Blockade" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Eastern_Blockade" );
 
 		Util.MapDebugPrint( "Eastern_Blockade_Destroyed" );
 	},
@@ -229,7 +229,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Western_Blockade" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Western_Blockade" );
 
 		Util.MapDebugPrint( "Western_Blockade_Built" );
 	},
@@ -238,7 +238,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Western_Blockade" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Western_Blockade" );
 
 		Util.MapDebugPrint( "Western_Blockade_Destroyed" );
 	},
@@ -381,38 +381,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.COMMAND_COMPLETED);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.SORRY);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 
 		Util.MapDebugPrint( "Dropoff_Captured" );
 	},
@@ -512,12 +482,12 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "PLANTMINE_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
-	
 
-	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
-	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120});
-	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60});
-	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120} );
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60} );
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120} );
 
 	//Priority Main goals
 	SetGoalPriority( "PLANT_Forward_Bunker_Doors", 0.9 );
@@ -557,9 +527,6 @@ global OnMapLoad = function()
 	//enable part 1 goals
 	Groups.EnableAllies(Groups.group1);
 	Groups.EnableAxis(Groups.group2);
-
-	//set up some routing
-	Util.MapDebugPrint( "Configuring Routes" );
 
 	//Routes
 	MapRoutes =
@@ -613,14 +580,14 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		DEFEND_d_bunker_1 = 
+		DEFEND_d_bunker_1 =
 		{
-			ROUTE_Flag_Spawn  = 
+			ROUTE_Flag_Spawn  =
 			{
-				ROUTE_Flag_Spawn_East  = 
+				ROUTE_Flag_Spawn_East  =
 				{
 				},
-				ROUTE_Flag_Spawn_West  = 
+				ROUTE_Flag_Spawn_West  =
 				{
 				},
 			},
@@ -643,7 +610,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-	Util.IgnoreTargetGoalTable(bot, Map.Movers);	
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
 };
 
 global Groups =

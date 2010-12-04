@@ -1,10 +1,10 @@
 // cluedo.gm by IRATA [omni-bot version 0.61]
-// omni-bot version 0.8 - updated ~ Tardis ~ 18 June 2010 for cluedo 1.3 
+// omni-bot version 0.8 - updated ~ Tardis ~ 18 June 2010 for cluedo 1.3
 // resetAT just sets ATTACK/DEFENCE to false -taken out not used ~ Tardis ~ 18 June 2010
-// 
+//
 //
 // TODO next version:
-// - add some nice sniper-spots outside added ~ ^4Tardis ~ 18 June 2010 
+// - add some nice sniper-spots outside added ~ ^4Tardis ~ 18 June 2010
 // - routing would be great added ~ Tardis ~ 18 June 2010
 // - let bots talk ? added ~ Tardis ~ 18 June 2010 ~  End Game Only
 // - more waypoints outside ? - added ~ Tardis ~ 18 June 2010
@@ -41,7 +41,7 @@ global Map =
 	lounge_flag_Allies_Captured = false,
 	study_flag_Axis_Captured = false,
 	study_flag_Allies_Captured = false,
-	
+
 	Switches_conservatory_Enabled = false,
 	Switches_kitchen_Enabled = false,
 	Switches_study_Enabled = false,
@@ -49,19 +49,19 @@ global Map =
 	Switches_diningroom_Enabled = false,
 	Switches_billiardroom_Enabled = false,
 	Switches_library_Enabled = false,
-	
-	lever_green_Enabled = false, //conservatory 
-	lever_white_Enabled = false, //kitchen 
-	lever_plum_Enabled = false, //study  
-	lever_scarlett_Enabled = false, //lounge 
-	lever_mustard_Enabled = false, //diningroom 
-	lever_peacock_Enabled = false, //billiardroom 
-	lever_monk_Enabled = false, //library 
-	
+
+	lever_green_Enabled = false, //conservatory
+	lever_white_Enabled = false, //kitchen
+	lever_plum_Enabled = false, //study
+	lever_scarlett_Enabled = false, //lounge
+	lever_mustard_Enabled = false, //diningroom
+	lever_peacock_Enabled = false, //billiardroom
+	lever_monk_Enabled = false, //library
+
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
-		
+
 //switches
-//conservatory	
+//conservatory
 	Switches =
 	{
 		conservatory =
@@ -79,13 +79,13 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//kitchen		
+//kitchen
 		kitchen =
 		{
 			Enabled = true,
@@ -101,13 +101,13 @@ global Map =
 				{
 					//wait 40 secs while the lever goes back up //Was 30 secs give player chance to get flag !
 					sleep(40);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//study		
+//study
 		study =
 		{
 			Enabled = true,
@@ -123,13 +123,13 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//lounge		
+//lounge
 		lounge =
 		{
 			Enabled = true,
@@ -145,13 +145,13 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//diningroom		
+//diningroom
 		diningroom =
 		{
 			Enabled = true,
@@ -167,13 +167,13 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//billiardroom		
+//billiardroom
 		billiardroom =
 		{
 			Enabled = true,
@@ -189,13 +189,13 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
 			},
 		},
-//library		
+//library
 		library =
 		{
 			Enabled = true,
@@ -211,7 +211,7 @@ global Map =
 				{
 					//wait 30 secs while the lever goes back up
 					sleep(30);
-					return true; 
+					return true;
 				}
 				//always return false unless the lever is down:
 				return false;
@@ -219,7 +219,7 @@ global Map =
 		},
 	},
 //watch switches
-//conservatory 
+//conservatory
 	lever_green = function( trigger )
 	{
 		Enabled = true;
@@ -229,14 +229,14 @@ global Map =
 			Map.Switches.conservatory.Enabled = false;
 			Util.MapDebugPrint( "conservatory_lever_down" );
 		}
-		else 
+		else
 		{
 			Map.lever_greenPos = 1;
 			Map.Switches.conservatory.Enabled = true;
 			Util.MapDebugPrint( "conservatory_lever_up");
 		}
 	},
-//kitchen	
+//kitchen
 	lever_white = function( trigger )
 	{
 		Enabled = true;
@@ -244,7 +244,7 @@ global Map =
 		{
 			Map.lever_whitePos = 0;
 			Map.Switches.kitchen.Enabled = false;
-			Util.DisableGoal ( "ATTACK_kitchen.*" );			
+			Util.DisableGoal ( "ATTACK_kitchen.*" );
 			Util.DisableGoal ( "DEFEND_defkitchen.*" );
 			Util.DisableGoal ( "SNIPE_kitchen.*" );
 			Wp.SetWaypointFlag("kitchen_window","closed",true);
@@ -253,7 +253,7 @@ global Map =
 			Wp.SetWaypointFlag("kitchen_water","closed",false);
 			Util.MapDebugPrint("kitchen_lever_down");
 		}
-		else 
+		else
 		{
 			Map.lever_whitePos = 1;
 			Map.Switches.kitchen.Enabled = true;
@@ -264,7 +264,7 @@ global Map =
 			Util.MapDebugPrint("kitchen_lever_up");
 		}
 	},
-//study	
+//study
 	lever_plum = function( trigger )
 	{
 		Enabled = true;
@@ -272,16 +272,16 @@ global Map =
 		{
 			Map.lever_plumPos = 0;
 			Map.Switches.study.Enabled = false;
-			Util.MapDebugPrint("study_lever_down");			
+			Util.MapDebugPrint("study_lever_down");
 		}
-		else 
+		else
 		{
 			Map.lever_plumPos = 1;
 			Map.Switches.study.Enabled = true;
 			Util.MapDebugPrint("study_lever_up");
 		}
 	},
-//lounge	
+//lounge
 	lever_scarlett = function( trigger )
 	{
 		Enabled = true;
@@ -289,16 +289,16 @@ global Map =
 		{
 			Map.lever_scarlettPos = 0;
 			Map.Switches.lounge.Enabled = false;
-			Util.MapDebugPrint("lounge_lever_down");		
+			Util.MapDebugPrint("lounge_lever_down");
 		}
-		else 
+		else
 		{
 			Map.lever_scarlettPos = 1;
 			Map.Switches.lounge.Enabled = true;
 			Util.MapDebugPrint("lounge_lever_up");
 		}
 	},
-//diningroom	
+//diningroom
 	lever_mustard = function( trigger )
 	{
 		Enabled = true;
@@ -306,7 +306,7 @@ global Map =
 		{
 			Map.lever_mustardPos = 0;
 			Map.Switches.diningroom.Enabled = false;
-			Util.MapDebugPrint("dinningroom_lever_down");		
+			Util.MapDebugPrint("dinningroom_lever_down");
 		}
 		else
 		{
@@ -316,7 +316,7 @@ global Map =
 		}
 
 	},
-//billiardroom	
+//billiardroom
 	lever_peacock = function( trigger )
 	{
 		Enabled = true;
@@ -326,7 +326,7 @@ global Map =
 			Map.Switches.billiardroom.Enabled = false;
 			Util.MapDebugPrint("billiardroom_lever_down");
 		}
-		else 
+		else
 		{
 			Map.lever_peacockPos = 1;
 			Map.Switches.billiardroom.Enabled = true;
@@ -343,31 +343,31 @@ global Map =
 			Map.Switches.library.Enabled = false;
 			Util.MapDebugPrint("library_lever_down");
 		}
-		else 
+		else
 		{
 			Map.lever_monkPos = 1;
 			Map.Switches.library.Enabled = true;
 			Util.MapDebugPrint("library_lever_up");
 		}
-	},	
+	},
 //Get Flags
 // Lounge
 	flag1_Get = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-							
+
 		Util.EnableGoal( "ATTACK_lounge.*" );
-		Util.EnableGoal( "CHECKPOINT_lounge_flag" ); 
-		Util.EnableGoal( "ROUTE_lounge" );  
-		Util.EnableGoal( "ROUTE_lounge_1" ); 
-		Util.EnableGoal( "ROUTE_lounge_2" );   
-		Util.EnableGoal( "ROUTE_lounge_3" );   
-		Util.EnableGoal( "ROUTE_lounge_a" );  
+		Util.EnableGoal( "CHECKPOINT_lounge_flag" );
+		Util.EnableGoal( "ROUTE_lounge" );
+		Util.EnableGoal( "ROUTE_lounge_1" );
+		Util.EnableGoal( "ROUTE_lounge_2" );
+		Util.EnableGoal( "ROUTE_lounge_3" );
+		Util.EnableGoal( "ROUTE_lounge_a" );
 		Map.Switches_lounge_Enabled = true;
 		Map.lever_scarlett_Enabled = true;
 		Wp.SetWaypointFlag("Lou","closed",false);
-		
+
 		Util.MapDebugPrint( "Get Lounge" );
 	},
 // Dining-Room
@@ -375,19 +375,19 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-						
-		Util.EnableGoal( "ATTACK_dining.*" ); 
+
+		Util.EnableGoal( "ATTACK_dining.*" );
 		Util.EnableGoal( "CHECKPOINT_diningroom_flag" );
-		Util.EnableGoal( "ROUTE_dinning" ); 
-		Util.EnableGoal( "ROUTE_dinning_1" ); 
+		Util.EnableGoal( "ROUTE_dinning" );
+		Util.EnableGoal( "ROUTE_dinning_1" );
 		Util.EnableGoal( "ROUTE_dinning_2" );
-		Util.EnableGoal( "ROUTE_dinning_a" ); 
-		Util.EnableGoal( "ROUTE_dinning_b" );  
-		Util.EnableGoal( "ROUTE_dinning_c" ); 
+		Util.EnableGoal( "ROUTE_dinning_a" );
+		Util.EnableGoal( "ROUTE_dinning_b" );
+		Util.EnableGoal( "ROUTE_dinning_c" );
 		Map.Switches_diningroom_Enabled = true;
 		Map.lever_mustard_Enabled = true;
 		Wp.SetWaypointFlag("Din","closed",false);
-		
+
 		Util.MapDebugPrint( "Get Dining-Room" );
 	},
 // Kitchen
@@ -395,16 +395,16 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-				
+
 		Util.EnableGoal( "ATTACK_kitchen.*" );
 		Util.EnableGoal( "CHECKPOINT_kitchen_flag" );
-		Util.EnableGoal( "ROUTE_kitchen_a" ); 
-		Util.EnableGoal( "ROUTE_kitchen_b" ); 
-		Util.EnableGoal( "ROUTE_kitchen_c" );  
+		Util.EnableGoal( "ROUTE_kitchen_a" );
+		Util.EnableGoal( "ROUTE_kitchen_b" );
+		Util.EnableGoal( "ROUTE_kitchen_c" );
 		Map.Switches_kitchen_Enabled = true;
 		Map.lever_white_Enabled = true;
 		Wp.SetWaypointFlag("Kit","closed",false);
-		
+
 		Util.MapDebugPrint( "Get Kitchen" );
 	},
 // Conservatory
@@ -412,74 +412,74 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.EnableGoal( "ATTACK_conservatory.*" );
 		Util.EnableGoal( "CHECKPOINT_conservatory_flag" );
-		Util.EnableGoal( "ROUTE_conservatory" ); 
+		Util.EnableGoal( "ROUTE_conservatory" );
 		Util.EnableGoal( "ROUTE_conservatory_1" );
-		Util.EnableGoal( "ROUTE_conservatory_2" );  
+		Util.EnableGoal( "ROUTE_conservatory_2" );
 		Util.EnableGoal( "ROUTE_conservatory_3" );
-		Util.EnableGoal( "ROUTE_conservatory_a" ); 
+		Util.EnableGoal( "ROUTE_conservatory_a" );
 		Map.Switches_conservatory_Enabled = true;
 		Map.lever_green_Enabled = true;
 		Wp.SetWaypointFlag("Con","closed",false);
-		
-		Util.MapDebugPrint( "Get Conservatory" );	
-			
+
+		Util.MapDebugPrint( "Get Conservatory" );
+
 	},
 // Billiard-Room
 	flag5_Get = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.EnableGoal( "ATTACK_billiard.*" );
 		Util.EnableGoal( "CHECKPOINT_billiardroom_flag" );
-		Util.EnableGoal( "ROUTE_billard" ); 
-		Util.EnableGoal( "ROUTE_billard_1" );  
-		Util.EnableGoal( "ROUTE_billard_2" ); 
-		Util.EnableGoal( "ROUTE_billard_a" ); 
-		Util.EnableGoal( "ROUTE_billard_b" ); 
+		Util.EnableGoal( "ROUTE_billard" );
+		Util.EnableGoal( "ROUTE_billard_1" );
+		Util.EnableGoal( "ROUTE_billard_2" );
+		Util.EnableGoal( "ROUTE_billard_a" );
+		Util.EnableGoal( "ROUTE_billard_b" );
 		Map.Switches_billiardroom_Enabled = true;
 		Map.lever_peacock_Enabled = true;
 		Wp.SetWaypointFlag("Bil","closed",false);
-		
-		Util.MapDebugPrint( "Get Billiard" );		
+
+		Util.MapDebugPrint( "Get Billiard" );
 	},
-// Library  
+// Library
 	flag6_Get = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-				
+
 		Util.EnableGoal( "ATTACK_library.*" );
 		Util.EnableGoal( "CHECKPOINT_library_flag" );
-		Util.EnableGoal( "ROUTE_library" ); 
-		Util.EnableGoal( "ROUTE_library_1" ); 
-		Util.EnableGoal( "ROUTE_library_a" ); 
-		Util.EnableGoal( "ROUTE_library_b" );  
+		Util.EnableGoal( "ROUTE_library" );
+		Util.EnableGoal( "ROUTE_library_1" );
+		Util.EnableGoal( "ROUTE_library_a" );
+		Util.EnableGoal( "ROUTE_library_b" );
 		Map.Switches_library_Enabled = true;
 		Map.lever_monk_Enabled = true;
 		Wp.SetWaypointFlag("Lib","closed",false);
-		
-		Util.MapDebugPrint( "Get Library" );	
+
+		Util.MapDebugPrint( "Get Library" );
 	},
-// Study  
+// Study
 	flag7_Get = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.EnableGoal( "ATTACK_studdy.*" );
 		Util.EnableGoal( "CHECKPOINT_studdy_flag" );
-		Util.EnableGoal( "ROUTE_study" );  
-		Util.EnableGoal( "ROUTE_study_1" ); 
-		Util.EnableGoal( "ROUTE_study_2" ); 
-		Util.EnableGoal( "ROUTE_study_a" ); 
+		Util.EnableGoal( "ROUTE_study" );
+		Util.EnableGoal( "ROUTE_study_1" );
+		Util.EnableGoal( "ROUTE_study_2" );
+		Util.EnableGoal( "ROUTE_study_a" );
 		Map.Switches_study_Enabled = true;
 		Map.lever_plum_Enabled = true;
 		Wp.SetWaypointFlag("Stu","closed",false);
-		
+
 		Util.MapDebugPrint( "Get Study" );
 	},
 //Command Post
@@ -487,7 +487,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
@@ -499,7 +499,7 @@ global Map =
 		Map.Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Command_Post_Planted" );
 	},
-	
+
 	Allied_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -508,23 +508,23 @@ global Map =
 		Map.Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Command_Post_Defused" );
 	},
-	
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Map.Command_Post_Dyno = 0;
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }	
+			{ return; }
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
@@ -533,7 +533,7 @@ global Map =
 		Map.Command_Post_Dyno += 1;
 		Util.MapDebugPrint( "Command_Post_Planted" );
 	},
-	
+
 	Axis_Command_Post_Defused = function( trigger )
 	{
 		if ( TestMap )
@@ -542,45 +542,45 @@ global Map =
 		Map.Command_Post_Dyno -= 1;
 		Util.MapDebugPrint( "Command_Post_Defused" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 			Map.Command_Post_Dyno = 0;
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
-	},	
+	},
 //Flags Captured
 //billiardroom
 	billiardroom_flag_Axis_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_billiard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_billiard.*" );			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_billiard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defbilliard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defbilliard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_billiardroom_flag" );
-		
+
 		Util.MapDebugPrint( "billiardroom_flag_Axis_Captured" );
 	},
 	billiardroom_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_billiard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_billiard.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_billiard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_defbilliard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_defbilliard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_billard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_billard.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_billiardroom_flag" );
-		
+
 		Util.MapDebugPrint( "billiardroom_flag_Allies_Captured" );
 	},
 //conservatory
@@ -588,30 +588,30 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_conservatory.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_conservatory.*" );				
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_devconservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_devconservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_conservatory_flag" );
-		
+
 		Util.MapDebugPrint( "conservatory_flag_Axis_Captured" );
 	},
 	conservatory_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_conservatory.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_conservatory.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_defconservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_defconservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_conservatory_flag" );
-		
+
 		Util.MapDebugPrint( "conservatory_flag_Allies_Captured" );
 	},
 //diningroom
@@ -619,57 +619,57 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_dining.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_dining.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_dining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defdining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defdining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_diningroom_flag" );
-		
+
 		Util.MapDebugPrint( "diningroom_flag_Axis_Captured" );
 	},
 	diningroom_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_dining.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_dining.*" );			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_dining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_defdining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_defdining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_dining.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_dining.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_diningroom_flag" );
-		
+
 		Util.MapDebugPrint( "diningroom_flag_Allies_Captured" );
 	},
 //kitchen
 	kitchen_flag_Axis_Captured = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }	
-			
+			{ return; }
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_kitchen.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_kitchen.*" );				
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_kitchen.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_kitchen_flag" );
-		
+
 		Util.MapDebugPrint( "kitchen_flag_Axis_Captured" );
 	},
 	kitchen_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_kitchen.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_kitchen.*" );				
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_kitchen.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_kitchen_flag" );
-		
+
 		Util.MapDebugPrint( "kitchen_flag_Allies_Captured" );
 	},
 //library
@@ -677,28 +677,28 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_library.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_library.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_library.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_library_flag" );
-		
+
 		Util.MapDebugPrint( "library_flag_Axis_Captured" );
 	},
 	library_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_library.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_library.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_library.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_library_flag" );
-		
+
 		Util.MapDebugPrint( "library_flag_Allies_Captured" );
-		
+
 
 	},
 //lounge
@@ -706,15 +706,15 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_lounge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_lounge.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_deflounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_deflounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_lounge_flag" );
-		
+
 		Util.MapDebugPrint( "lounge_flag_Axis_Captured" );
 
 
@@ -723,88 +723,88 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_lounge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_lounge.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_deflounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_deflounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_lounge_flag" );
-		
+
 		Util.MapDebugPrint( "lounge_flag_Allies_Captured" );
 	},
 //study
 	study_flag_Axis_Captured = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }	
-			
+			{ return; }
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_studdy.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_studdy.*" );	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defstuddy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defstuddy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_studdy_flag" );
-		
+
 		Util.MapDebugPrint( "study_flag_Axis_Captured" );
 	},
 	study_flag_Allies_Captured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_studdy.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_studdy.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defstuddy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defstuddy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_studdy_flag" );
-		
+
 		Util.MapDebugPrint( "study_flag_Allies_Captured" );
 	},
-//Flags Secured	
+//Flags Secured
 //billiardroom
 	billiardroom_flag_Axis_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		Util.DisableGoal( "CHECKPOINT_billiardroom_flag" ); 
+
+		Util.DisableGoal( "CHECKPOINT_billiardroom_flag" );
 		Util.DisableGoal( "ATTACK_billiard.*" );
 		Util.DisableGoal( "DEFEND_defbilliard.*" );
 		Util.DisableGoal( "SNIPE_billard.*" );
-		Util.DisableGoal( "ROUTE_billard" ); 
-		Util.DisableGoal( "ROUTE_billard_1" );  
-		Util.DisableGoal( "ROUTE_billard_2" ); 
-		Util.DisableGoal( "ROUTE_billard_a" ); 
-		Util.DisableGoal( "ROUTE_billard_b" );  
+		Util.DisableGoal( "ROUTE_billard" );
+		Util.DisableGoal( "ROUTE_billard_1" );
+		Util.DisableGoal( "ROUTE_billard_2" );
+		Util.DisableGoal( "ROUTE_billard_a" );
+		Util.DisableGoal( "ROUTE_billard_b" );
 		Map.Switches_billiardroom_Enabled = false;
 		Map.lever_peacock_Enabled = false;
 		Wp.SetWaypointFlag("Bill","closed",true);
-		
+
 		Util.MapDebugPrint( "billiardroom_flag_Axis_Secured" );
 	},
 	billiardroom_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.DisableGoal ( "CHECKPOINT_billiardroom_flag" );
 		Util.DisableGoal ( "ATTACK_billiard.*" );
 		Util.DisableGoal ( "DEFEND_defbilliard.*" );
 		Util.DisableGoal ( "SNIPE_billard.*" );
-		Util.DisableGoal ( "ROUTE_billard" ); 
-		Util.DisableGoal ( "ROUTE_billard_1" );  
-		Util.DisableGoal ( "ROUTE_billard_2" ); 
-		Util.DisableGoal ( "ROUTE_billard_a" ); 
-		Util.DisableGoal ( "ROUTE_billard_b" );  
+		Util.DisableGoal ( "ROUTE_billard" );
+		Util.DisableGoal ( "ROUTE_billard_1" );
+		Util.DisableGoal ( "ROUTE_billard_2" );
+		Util.DisableGoal ( "ROUTE_billard_a" );
+		Util.DisableGoal ( "ROUTE_billard_b" );
 		Map.Switches_billiardroom_Enabled = false;
 		Map.lever_peacock_Enabled = false;
 		Wp.SetWaypointFlag("Bill","closed",true);
-		
+
 		Util.MapDebugPrint( "billiardroom_flag_Allies_Secured" );
 	},
 //conservatory
@@ -812,40 +812,40 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-					
-		Util.DisableGoal ( "CHECKPOINT_conservatory_flag" ); 
+
+		Util.DisableGoal ( "CHECKPOINT_conservatory_flag" );
 		Util.DisableGoal ( "ATTACK_conservatory.*" );
 		Util.DisableGoal ( "DEFEND_devconservatory.*" );
 		Util.DisableGoal ( "SNIPE_conservatory.*" );
-		Util.DisableGoal ( "ROUTE_conservatory" ); 
+		Util.DisableGoal ( "ROUTE_conservatory" );
 		Util.DisableGoal ( "ROUTE_conservatory_1" );
-		Util.DisableGoal ( "ROUTE_conservatory_2" );  
+		Util.DisableGoal ( "ROUTE_conservatory_2" );
 		Util.DisableGoal ( "ROUTE_conservatory_3" );
-		Util.DisableGoal ( "ROUTE_conservatory_a" ); 
+		Util.DisableGoal ( "ROUTE_conservatory_a" );
 		Map.Switches_conservatory_Enabled = false;
 		Map.lever_green_Enabled = false;
 		Wp.SetWaypointFlag("Con","closed",true);
-		
+
 		Util.MapDebugPrint( "conservatory_flag_Axis_Secured" );
 	},
 	conservatory_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		Util.DisableGoal ( "CHECKPOINT_conservatory_flag" ); 
+
+		Util.DisableGoal ( "CHECKPOINT_conservatory_flag" );
 		Util.DisableGoal ( "ATTACK_conservatory.*" );
 		Util.DisableGoal ( "DEFEND_defconservatory.*" );
 		Util.DisableGoal ( "SNIPE_conservatory.*" );
-		Util.DisableGoal ( "ROUTE_conservatory" ); 
+		Util.DisableGoal ( "ROUTE_conservatory" );
 		Util.DisableGoal ( "ROUTE_conservatory_1" );
-		Util.DisableGoal ( "ROUTE_conservatory_2" );  
+		Util.DisableGoal ( "ROUTE_conservatory_2" );
 		Util.DisableGoal ( "ROUTE_conservatory_3" );
-		Util.DisableGoal ( "ROUTE_conservatory_a" );  
+		Util.DisableGoal ( "ROUTE_conservatory_a" );
 		Map.Switches_conservatory_Enabled = false;
 		Map.lever_green_Enabled = false;
 		Wp.SetWaypointFlag("Con","closed",true);
-		
+
 		Util.MapDebugPrint( "conservatory_flag_Allies_Secured" );
 	},
 //diningroom
@@ -853,42 +853,42 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.DisableGoal ( "CHECKPOINT_diningroom_flag" );
 		Util.DisableGoal ( "ATTACK_dining.*" );
 		Util.DisableGoal ( "DEFEND_defdining.*" );
 		Util.DisableGoal ( "SNIPE_dinning.*" );
-		Util.DisableGoal ( "ROUTE_dinning" ); 
-		Util.DisableGoal ( "ROUTE_dinning_1" ); 
+		Util.DisableGoal ( "ROUTE_dinning" );
+		Util.DisableGoal ( "ROUTE_dinning_1" );
 		Util.DisableGoal ( "ROUTE_dinning_2" );
-		Util.DisableGoal ( "ROUTE_dinning_a" ); 
-		Util.DisableGoal ( "ROUTE_dinning_b" );  
-		Util.DisableGoal ( "ROUTE_dinning_c" );  
+		Util.DisableGoal ( "ROUTE_dinning_a" );
+		Util.DisableGoal ( "ROUTE_dinning_b" );
+		Util.DisableGoal ( "ROUTE_dinning_c" );
 		Map.Switches_diningroom_Enabled = false;
 		Map.lever_mustard_Enabled = false;
 		Wp.SetWaypointFlag("Din","closed",true);
-		
+
 		Util.MapDebugPrint( "diningroom_flag_Axis_Secured" );
 	},
 	diningroom_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.DisableGoal ( "CHECKPOINT_diningroom_flag" );
 		Util.DisableGoal ( "ATTACK_dining.*" );
 		Util.DisableGoal ( "DEFEND_defdining.*" );
 		Util.DisableGoal ( "SNIPE_dinning.*" );
-		Util.DisableGoal ( "ROUTE_dinning" ); 
-		Util.DisableGoal ( "ROUTE_dinning_1" ); 
+		Util.DisableGoal ( "ROUTE_dinning" );
+		Util.DisableGoal ( "ROUTE_dinning_1" );
 		Util.DisableGoal ( "ROUTE_dinning_2" );
-		Util.DisableGoal ( "ROUTE_dinning_a" ); 
-		Util.DisableGoal ( "ROUTE_dinning_b" );  
-		Util.DisableGoal ( "ROUTE_dinning_c" ); 
+		Util.DisableGoal ( "ROUTE_dinning_a" );
+		Util.DisableGoal ( "ROUTE_dinning_b" );
+		Util.DisableGoal ( "ROUTE_dinning_c" );
 		Map.Switches_diningroom_Enabled = false;
 		Map.lever_mustard_Enabled = false;
 		Wp.SetWaypointFlag("Din","closed",true);
-		
+
 		Util.MapDebugPrint( "diningroom_flag_Allies_Secured" );
 	},
 //kitchen
@@ -896,37 +896,37 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.DisableGoal ( "CHECKPOINT_kitchen_flag" );
 		Util.DisableGoal ( "ATTACK_kitchen.*" );
 		Util.DisableGoal ( "DEFEND_defkitchen.*" );
 		Util.DisableGoal ( "ROUTE_kitchen.*" );
-		Util.DisableGoal ( "ROUTE_kitchen_a" ); 
-		Util.DisableGoal ( "ROUTE_kitchen_b" ); 
-		Util.DisableGoal ( "ROUTE_kitchen_c" ); 
+		Util.DisableGoal ( "ROUTE_kitchen_a" );
+		Util.DisableGoal ( "ROUTE_kitchen_b" );
+		Util.DisableGoal ( "ROUTE_kitchen_c" );
 		Map.Switches_kitchen_Enabled = false;
 		Map.lever_white_Enabled = false;
 		Wp.SetWaypointFlag("Kit","closed",true);
-		
+
 		Util.MapDebugPrint( "kitchen_flag_Axis_Secured" );
 	},
 	kitchen_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }	
-		
+			{ return; }
+
 		Util.DisableGoal ( "CHECKPOINT_kitchen_flag" );
 		Util.DisableGoal ( "ATTACK_kitchen.*" );
 		Util.DisableGoal ( "DEFEND_defkitchen.*" );
 		Util.DisableGoal ( "ROUTE_kitchen.*" );
 		Util.DisableGoal ( "SNIPE_kitchen.*" );
-		Util.DisableGoal ( "ROUTE_kitchen_a" ); 
-		Util.DisableGoal ( "ROUTE_kitchen_b" ); 
-		Util.DisableGoal ( "ROUTE_kitchen_c" ); 
+		Util.DisableGoal ( "ROUTE_kitchen_a" );
+		Util.DisableGoal ( "ROUTE_kitchen_b" );
+		Util.DisableGoal ( "ROUTE_kitchen_c" );
 		Map.Switches_kitchen_Enabled = false;
 		Map.lever_white_Enabled = false;
 		Wp.SetWaypointFlag("Kit","closed",true);
-		
+
 		Util.MapDebugPrint( "kitchen_flag_Allies_Secured" );
 	},
 //library
@@ -934,19 +934,19 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
-		Util.DisableGoal ( "CHECKPOINT_library_flag" ); 
+
+		Util.DisableGoal ( "CHECKPOINT_library_flag" );
 		Util.DisableGoal ( "ATTACK_library.*" );
 		Util.DisableGoal ( "DEFEND_deflibrary.*" );
 		Util.DisableGoal ( "SNIPE_library.*" );
-		Util.DisableGoal ( "ROUTE_library" ); 
-		Util.DisableGoal ( "ROUTE_library_1" ); 
-		Util.DisableGoal ( "ROUTE_library_a" ); 
-		Util.DisableGoal ( "ROUTE_library_b" );  
+		Util.DisableGoal ( "ROUTE_library" );
+		Util.DisableGoal ( "ROUTE_library_1" );
+		Util.DisableGoal ( "ROUTE_library_a" );
+		Util.DisableGoal ( "ROUTE_library_b" );
 		Map.Switches_library_Enabled = false;
 		Map.lever_monk_Enabled = false;
 		Wp.SetWaypointFlag("Lib","closed",true);
-		
+
 		Util.MapDebugPrint( "library_flag_Axis_Secured" );
 	},
 	library_flag_Allies_Secured = function( trigger )
@@ -958,14 +958,14 @@ global Map =
 		Util.DisableGoal ( "ATTACK_library.*" );
 		Util.DisableGoal ( "DEFEND_deflibrary.*" );
 		Util.DisableGoal ( "SNIPE_library.*" );
-		Util.DisableGoal ( "ROUTE_library" ); 
-		Util.DisableGoal ( "ROUTE_library_1" ); 
-		Util.DisableGoal ( "ROUTE_library_a" ); 
-		Util.DisableGoal ( "ROUTE_library_b" );  
+		Util.DisableGoal ( "ROUTE_library" );
+		Util.DisableGoal ( "ROUTE_library_1" );
+		Util.DisableGoal ( "ROUTE_library_a" );
+		Util.DisableGoal ( "ROUTE_library_b" );
 		Map.Switches_library_Enabled = false;
 		Map.lever_monk_Enabled = false;
 		Wp.SetWaypointFlag("Lib","closed",true);
-		
+
 		Util.MapDebugPrint( "library_flag_Allies_Secured" );
 	},
 //lounge
@@ -973,83 +973,83 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
-		Util.DisableGoal ( "CHECKPOINT_lounge_flag" ); 
+
+		Util.DisableGoal ( "CHECKPOINT_lounge_flag" );
 		Util.DisableGoal ( "ATTACK_lounge.*" );
 		Util.DisableGoal ( "DEFEND_deflounge.*" );
 		Util.DisableGoal ( "SNIPE_lounge.*" );
-		Util.DisableGoal ( "ROUTE_lounge" );  
-		Util.DisableGoal ( "ROUTE_lounge_1" ); 
-		Util.DisableGoal ( "ROUTE_lounge_2" );   
-		Util.DisableGoal ( "ROUTE_lounge_3" );   
-		Util.DisableGoal ( "ROUTE_lounge_a" );   
+		Util.DisableGoal ( "ROUTE_lounge" );
+		Util.DisableGoal ( "ROUTE_lounge_1" );
+		Util.DisableGoal ( "ROUTE_lounge_2" );
+		Util.DisableGoal ( "ROUTE_lounge_3" );
+		Util.DisableGoal ( "ROUTE_lounge_a" );
 		Map.Switches_lounge_Enabled = false;
 		Map.lever_scarlett_Enabled = false;
 		Wp.SetWaypointFlag("Lou","closed",true);
-		
+
 		Util.MapDebugPrint( "lounge_flag_Axis_Secured" );
 	},
 	lounge_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		Util.DisableGoal ( "CHECKPOINT_lounge_flag" ); 
+
+		Util.DisableGoal ( "CHECKPOINT_lounge_flag" );
 		Util.DisableGoal ( "ATTACK_lounge.*" );
 		Util.DisableGoal ( "DEFEND_deflounge.*" );
 		Util.DisableGoal ( "SNIPE_lounge.*" );
-		Util.DisableGoal ( "ROUTE_lounge" );  
-		Util.DisableGoal ( "ROUTE_lounge_1" ); 
-		Util.DisableGoal ( "ROUTE_lounge_2" );   
-		Util.DisableGoal ( "ROUTE_lounge_3" );   
-		Util.DisableGoal ( "ROUTE_lounge_a" );   
+		Util.DisableGoal ( "ROUTE_lounge" );
+		Util.DisableGoal ( "ROUTE_lounge_1" );
+		Util.DisableGoal ( "ROUTE_lounge_2" );
+		Util.DisableGoal ( "ROUTE_lounge_3" );
+		Util.DisableGoal ( "ROUTE_lounge_a" );
 		Map.Switches_lounge_Enabled = false;
 		Map.lever_scarlett_Enabled = false;
 		Wp.SetWaypointFlag("Lou","closed",true);
-		
+
 		Util.MapDebugPrint( "lounge_flag_Allies_Secured" );
 	},
 //study
 	study_flag_Axis_Secured = function( trigger )
 	{
 		if ( TestMap )
-			{ return; }			  
+			{ return; }
 
 		Util.DisableGoal ( "CHECKPOINT_studdy_flag" );
 		Util.DisableGoal ( "ATTACK_studdy.*" );
 		Util.DisableGoal ( "DEFEND_defstuddy.*" );
-		Util.DisableGoal ( "SNIPE_study.*" );		
-		Util.DisableGoal ( "ROUTE_study" );  
-		Util.DisableGoal ( "ROUTE_study_1" ); 
-		Util.DisableGoal ( "ROUTE_study_2" ); 
-		Util.DisableGoal ( "ROUTE_study_a" );  	
+		Util.DisableGoal ( "SNIPE_study.*" );
+		Util.DisableGoal ( "ROUTE_study" );
+		Util.DisableGoal ( "ROUTE_study_1" );
+		Util.DisableGoal ( "ROUTE_study_2" );
+		Util.DisableGoal ( "ROUTE_study_a" );
 		Map.Switches_study_Enabled = false;
 		Map.lever_plum_Enabled = false;
 		Wp.SetWaypointFlag("Stu","closed",true);
-		
+
 		Util.MapDebugPrint( "study_flag_Axis_Secured" );
 	},
 	study_flag_Allies_Secured = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.DisableGoal ( "CHECKPOINT_studdy_flag" );
 		Util.DisableGoal ( "ATTACK_studdy.*" );
 		Util.DisableGoal ( "DEFEND_defstuddy.*" );
 		Util.DisableGoal ( "SNIPE_study.*" );
-		Util.DisableGoal ( "ROUTE_study" );  
-		Util.DisableGoal ( "ROUTE_study_1" ); 
-		Util.DisableGoal ( "ROUTE_study_2" ); 
-		Util.DisableGoal ( "ROUTE_study_a" );  
+		Util.DisableGoal ( "ROUTE_study" );
+		Util.DisableGoal ( "ROUTE_study_1" );
+		Util.DisableGoal ( "ROUTE_study_2" );
+		Util.DisableGoal ( "ROUTE_study_a" );
 		Map.Switches_study_Enabled = false;
 		Map.lever_plum_Enabled = false;
 		Wp.SetWaypointFlag("Stu","closed",true);
-		
+
 		Util.MapDebugPrint( "study_flag_Allies_Secured" );
 	},
 //Trigger Regions
-//Magic HealthRoom	
+//Magic HealthRoom
 	HealthRoom =
 	{
 		Name="HealthRoom",
@@ -1068,80 +1068,20 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "Allies_Win !" );
 	},
 	axis_win = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice("VOICE.NEGATIVE");
-					}
-				}
-			}
-		}
+
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "AXIS_WIN !" );
-	},	
+	},
 };
 
 global OnMapLoad = function()
@@ -1164,7 +1104,7 @@ global OnMapLoad = function()
 	OnTrigger( "lever_scarlett_stop", Map.lever_scarlett );
 	OnTrigger( "lever_mustard_stop", Map.lever_mustard );
 	OnTrigger( "lever_peacock_stop", Map.lever_peacock );
-	OnTrigger( "lever_monk_stop", Map.lever_monk );		
+	OnTrigger( "lever_monk_stop", Map.lever_monk );
 // Register callback functions
 	OnTrigger( "Axis are in control of the ^1Billiard Room^7 - their timer is ticking!", Map.billiardroom_flag_Axis_Captured );
 	OnTrigger( "Allies are in control of the ^dBilliard Room^7 - their timer is ticking!", Map.billiardroom_flag_Allies_Captured );
@@ -1204,58 +1144,58 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at the Axis Command Post", Map.Axis_Command_Post_Defused );
 	OnTrigger( "Allies are victorious!", Map.allies_win );
 	OnTrigger( "Axis are victorious!", Map.axis_win );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 //Waypoints
 	Wp.SetWaypointFlag("Con","closed",true);
 	Wp.SetWaypointFlag("Kit","closed",true);
-	Wp.SetWaypointFlag("Stu","closed",true);	 
+	Wp.SetWaypointFlag("Stu","closed",true);
 	Wp.SetWaypointFlag("Lou","closed",true);
 	Wp.SetWaypointFlag("Din","closed",true);
 	Wp.SetWaypointFlag("Bil","closed",true);
 	Wp.SetWaypointFlag("Lib","closed",true);
-//Command Post	
+//Command Post
 	Util.EnableGoal( "BUILD_.*" );
 	Util.EnableGoal( "HEALTHCAB_.*" );
 //billiardroom
-	Util.DisableGoal ( "ROUTE_billard" ); 
-	Util.DisableGoal ( "ROUTE_billard_1" );  
-	Util.DisableGoal ( "ROUTE_billard_2" ); 
-	Util.DisableGoal ( "ROUTE_billard_a" ); 
-	Util.DisableGoal ( "ROUTE_billard_b" );  
+	Util.DisableGoal ( "ROUTE_billard" );
+	Util.DisableGoal ( "ROUTE_billard_1" );
+	Util.DisableGoal ( "ROUTE_billard_2" );
+	Util.DisableGoal ( "ROUTE_billard_a" );
+	Util.DisableGoal ( "ROUTE_billard_b" );
 //conservatry
-	Util.DisableGoal ( "ROUTE_conservatory" ); 
+	Util.DisableGoal ( "ROUTE_conservatory" );
 	Util.DisableGoal ( "ROUTE_conservatory_1" );
-	Util.DisableGoal ( "ROUTE_conservatory_2" );  
+	Util.DisableGoal ( "ROUTE_conservatory_2" );
 	Util.DisableGoal ( "ROUTE_conservatory_3" );
-	Util.DisableGoal ( "ROUTE_conservatory_a" );  
+	Util.DisableGoal ( "ROUTE_conservatory_a" );
 //dinningroom
-	Util.DisableGoal ( "ROUTE_dinning" ); 
-	Util.DisableGoal ( "ROUTE_dinning_1" ); 
+	Util.DisableGoal ( "ROUTE_dinning" );
+	Util.DisableGoal ( "ROUTE_dinning_1" );
 	Util.DisableGoal ( "ROUTE_dinning_2" );
-	Util.DisableGoal ( "ROUTE_dinning_a" ); 
-	Util.DisableGoal ( "ROUTE_dinning_b" );  
-	Util.DisableGoal ( "ROUTE_dinning_c" );  
+	Util.DisableGoal ( "ROUTE_dinning_a" );
+	Util.DisableGoal ( "ROUTE_dinning_b" );
+	Util.DisableGoal ( "ROUTE_dinning_c" );
 //kitchen
-	Util.DisableGoal ( "ROUTE_kitchen_a" ); 
-	Util.DisableGoal ( "ROUTE_kitchen_b" ); 
-	Util.DisableGoal ( "ROUTE_kitchen_c" );  
+	Util.DisableGoal ( "ROUTE_kitchen_a" );
+	Util.DisableGoal ( "ROUTE_kitchen_b" );
+	Util.DisableGoal ( "ROUTE_kitchen_c" );
 //library
-	Util.DisableGoal ( "ROUTE_library" ); 
-	Util.DisableGoal ( "ROUTE_library_1" ); 
-	Util.DisableGoal ( "ROUTE_library_a" ); 
-	Util.DisableGoal ( "ROUTE_library_b" );  	
+	Util.DisableGoal ( "ROUTE_library" );
+	Util.DisableGoal ( "ROUTE_library_1" );
+	Util.DisableGoal ( "ROUTE_library_a" );
+	Util.DisableGoal ( "ROUTE_library_b" );
 //lounge
-	Util.DisableGoal ( "ROUTE_lounge" );  
-	Util.DisableGoal ( "ROUTE_lounge_1" ); 
-	Util.DisableGoal ( "ROUTE_lounge_2" );   
-	Util.DisableGoal ( "ROUTE_lounge_3" );   
-	Util.DisableGoal ( "ROUTE_lounge_a" );   
+	Util.DisableGoal ( "ROUTE_lounge" );
+	Util.DisableGoal ( "ROUTE_lounge_1" );
+	Util.DisableGoal ( "ROUTE_lounge_2" );
+	Util.DisableGoal ( "ROUTE_lounge_3" );
+	Util.DisableGoal ( "ROUTE_lounge_a" );
 //study
-	Util.DisableGoal ( "ROUTE_study" );  
-	Util.DisableGoal ( "ROUTE_study_1" ); 
-	Util.DisableGoal ( "ROUTE_study_2" ); 
-	Util.DisableGoal ( "ROUTE_study_a" );  
+	Util.DisableGoal ( "ROUTE_study" );
+	Util.DisableGoal ( "ROUTE_study_1" );
+	Util.DisableGoal ( "ROUTE_study_2" );
+	Util.DisableGoal ( "ROUTE_study_a" );
 //SwitchData
 	Util.UpdateSwitchData();
 //MaxUsers
@@ -1273,53 +1213,53 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=10, MaxCampTime=60} );
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=60} );
-//MapRoutes 
+//MapRoutes
 	MapRoutes =
 	{
-		BUILD_Neutral_Command_Post = 
+		BUILD_Neutral_Command_Post =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_CP_A  = 
+				ROUTE_CP_A  =
 				{
 				},
-				ROUTE_CP_B  = 
+				ROUTE_CP_B  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_CP_A  = 
+				ROUTE_CP_A  =
 				{
 				},
-				ROUTE_CP_B  = 
+				ROUTE_CP_B  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_billiardroom_flag = 
+		CHECKPOINT_billiardroom_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_kitchen  = 
+							ROUTE_outside_kitchen  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_billard  = 
+									ROUTE_outside_billard  =
 									{
-										ROUTE_billard  = 
+										ROUTE_billard  =
 										{
 										},
-										ROUTE_billard_1  = 
+										ROUTE_billard_1  =
 										{
 										},
-										ROUTE_billard_2  = 
+										ROUTE_billard_2  =
 										{
 										},
 									},
@@ -1327,73 +1267,73 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_outside_billard  = 
+							ROUTE_outside_billard  =
 							{
-								ROUTE_billard  = 
+								ROUTE_billard  =
 								{
 								},
-								ROUTE_billard_1  = 
+								ROUTE_billard_1  =
 								{
 								},
-								ROUTE_billard_2  = 
+								ROUTE_billard_2  =
 								{
 								},
 							},
 						},
 					},
 				},
-				ROUTE_billard_a  = 
+				ROUTE_billard_a  =
 				{
 				},
-				ROUTE_billard_b  = 
+				ROUTE_billard_b  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_conservatory  = 
+					ROUTE_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_billard  = 
+							ROUTE_billard  =
 							{
 							},
-							ROUTE_billard_1  = 
+							ROUTE_billard_1  =
 							{
 							},
-							ROUTE_billard_2  = 
+							ROUTE_billard_2  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_lounge  = 
+							ROUTE_outside_lounge  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_library  = 
+									ROUTE_outside_library  =
 									{
-										ROUTE_outside_billard  = 
+										ROUTE_outside_billard  =
 										{
-											ROUTE_billard  = 
+											ROUTE_billard  =
 											{
 											},
-											ROUTE_billard_1  = 
+											ROUTE_billard_1  =
 											{
 											},
-											ROUTE_billard_2  = 
+											ROUTE_billard_2  =
 											{
 											},
 										},
@@ -1403,62 +1343,62 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_billard_a  = 
+				ROUTE_billard_a  =
 				{
 				},
-				ROUTE_billard_b  = 
+				ROUTE_billard_b  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_conservatory_flag = 
+		CHECKPOINT_conservatory_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_kitchen  = 
+							ROUTE_outside_kitchen  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_conservatory  = 
+									ROUTE_conservatory  =
 									{
 									},
-									ROUTE_conservatory_1  = 
+									ROUTE_conservatory_1  =
 									{
 									},
-									ROUTE_conservatory_2  = 
+									ROUTE_conservatory_2  =
 									{
 									},
-									ROUTE_conservatory_3  = 
+									ROUTE_conservatory_3  =
 									{
 									},
 								},
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_outside_billard  = 
+							ROUTE_outside_billard  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_conservatory  = 
+									ROUTE_conservatory  =
 									{
 									},
-									ROUTE_conservatory_1  = 
+									ROUTE_conservatory_1  =
 									{
 									},
-									ROUTE_conservatory_2  = 
+									ROUTE_conservatory_2  =
 									{
 									},
-									ROUTE_conservatory_3  = 
+									ROUTE_conservatory_3  =
 									{
 									},
 								},
@@ -1466,56 +1406,56 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_conservatory_a  = 
+				ROUTE_conservatory_a  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_conservatory  = 
+						ROUTE_conservatory  =
 						{
 						},
-						ROUTE_conservatory_1  = 
+						ROUTE_conservatory_1  =
 						{
 						},
-						ROUTE_conservatory_2  = 
+						ROUTE_conservatory_2  =
 						{
 						},
-						ROUTE_conservatory_3  = 
+						ROUTE_conservatory_3  =
 						{
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_lounge  = 
+							ROUTE_outside_lounge  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_library  = 
+									ROUTE_outside_library  =
 									{
-										ROUTE_outside_billard  = 
+										ROUTE_outside_billard  =
 										{
-											ROUTE_outside_conservatory  = 
+											ROUTE_outside_conservatory  =
 											{
-												ROUTE_conservatory  = 
+												ROUTE_conservatory  =
 												{
 												},
-												ROUTE_conservatory_1  = 
+												ROUTE_conservatory_1  =
 												{
 												},
-												ROUTE_conservatory_2  = 
+												ROUTE_conservatory_2  =
 												{
 												},
-												ROUTE_conservatory_3  = 
+												ROUTE_conservatory_3  =
 												{
 												},
 											},
@@ -1526,51 +1466,51 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_conservatory_a  = 
+				ROUTE_conservatory_a  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_diningroom_flag = 
+		CHECKPOINT_diningroom_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_dinning  = 
+							ROUTE_dinning  =
 							{
 							},
-							ROUTE_dinning_1  = 
+							ROUTE_dinning_1  =
 							{
 							},
-							ROUTE_dinning_2  = 
+							ROUTE_dinning_2  =
 							{
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_outside_billard  = 
+							ROUTE_outside_billard  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_kitchen  = 
+									ROUTE_outside_kitchen  =
 									{
-										ROUTE_outside_dinning  = 
+										ROUTE_outside_dinning  =
 										{
-											ROUTE_dinning  = 
+											ROUTE_dinning  =
 											{
 											},
-											ROUTE_dinning_1  = 
+											ROUTE_dinning_1  =
 											{
 											},
-											ROUTE_dinning_2  = 
+											ROUTE_dinning_2  =
 											{
 											},
 										},
@@ -1580,39 +1520,39 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_dinning_a  = 
+				ROUTE_dinning_a  =
 				{
 				},
-				ROUTE_dinning_b  = 
+				ROUTE_dinning_b  =
 				{
 				},
-				ROUTE_dinning_c  = 
+				ROUTE_dinning_c  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_outside_library  = 
+							ROUTE_outside_library  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_lounge  = 
+									ROUTE_outside_lounge  =
 									{
-										ROUTE_outside_dinning  = 
+										ROUTE_outside_dinning  =
 										{
-											ROUTE_dinning  = 
+											ROUTE_dinning  =
 											{
 											},
-											ROUTE_dinning_1  = 
+											ROUTE_dinning_1  =
 											{
 											},
-											ROUTE_dinning_2  = 
+											ROUTE_dinning_2  =
 											{
 											},
 										},
@@ -1622,70 +1562,70 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_dinning  = 
+							ROUTE_dinning  =
 							{
 							},
-							ROUTE_dinning_1  = 
+							ROUTE_dinning_1  =
 							{
 							},
-							ROUTE_dinning_2  = 
+							ROUTE_dinning_2  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_dinning_a  = 
+				ROUTE_dinning_a  =
 				{
 				},
-				ROUTE_dinning_b  = 
+				ROUTE_dinning_b  =
 				{
 				},
-				ROUTE_dinning_c  = 
+				ROUTE_dinning_c  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_kitchen_flag = 
+		CHECKPOINT_kitchen_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_kitchen  = 
+							ROUTE_outside_kitchen  =
 							{
-								ROUTE_kitchen_b  = 
+								ROUTE_kitchen_b  =
 								{
 								},
-								ROUTE_kitchen_c  = 
+								ROUTE_kitchen_c  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_outside_billard  = 
+							ROUTE_outside_billard  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_kitchen  = 
+									ROUTE_outside_kitchen  =
 									{
-										ROUTE_kitchen_b  = 
+										ROUTE_kitchen_b  =
 										{
 										},
-										ROUTE_kitchen_c  = 
+										ROUTE_kitchen_c  =
 										{
 										},
 									},
@@ -1694,32 +1634,32 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_kitchen_a  = 
+				ROUTE_kitchen_a  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_outside_library  = 
+							ROUTE_outside_library  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_lounge  = 
+									ROUTE_outside_lounge  =
 									{
-										ROUTE_outside_dinning  = 
+										ROUTE_outside_dinning  =
 										{
-											ROUTE_outside_kitchen  = 
+											ROUTE_outside_kitchen  =
 											{
-												ROUTE_kitchen_b  = 
+												ROUTE_kitchen_b  =
 												{
 												},
-												ROUTE_kitchen_c  = 
+												ROUTE_kitchen_c  =
 												{
 												},
 											},
@@ -1730,45 +1670,45 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_kitchen_b  = 
+						ROUTE_kitchen_b  =
 						{
 						},
-						ROUTE_kitchen_c  = 
+						ROUTE_kitchen_c  =
 						{
 						},
 					},
 				},
-				ROUTE_kitchen_a  = 
+				ROUTE_kitchen_a  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_library_flag = 
+		CHECKPOINT_library_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_kitchen  = 
+							ROUTE_outside_kitchen  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_billard  = 
+									ROUTE_outside_billard  =
 									{
-										ROUTE_outside_library  = 
+										ROUTE_outside_library  =
 										{
-											ROUTE_library  = 
+											ROUTE_library  =
 											{
 											},
-											ROUTE_library_1  = 
+											ROUTE_library_1  =
 											{
 											},
 										},
@@ -1777,62 +1717,62 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_library  = 
+							ROUTE_library  =
 							{
 							},
-							ROUTE_library_1  = 
+							ROUTE_library_1  =
 							{
 							},
 						},
 					},
 				},
-				ROUTE_library_a  = 
+				ROUTE_library_a  =
 				{
 				},
-				ROUTE_library_b  = 
+				ROUTE_library_b  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_outside_library  = 
+							ROUTE_outside_library  =
 							{
-								ROUTE_library  = 
+								ROUTE_library  =
 								{
 								},
-								ROUTE_library_1  = 
+								ROUTE_library_1  =
 								{
 								},
 							},
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_lounge  = 
+							ROUTE_outside_lounge  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_library  = 
+									ROUTE_outside_library  =
 									{
-										ROUTE_library  = 
+										ROUTE_library  =
 										{
 										},
-										ROUTE_library_1  = 
+										ROUTE_library_1  =
 										{
 										},
 									},
@@ -1841,59 +1781,59 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_library_a  = 
+				ROUTE_library_a  =
 				{
 				},
-				ROUTE_library_b  = 
+				ROUTE_library_b  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_lounge_flag = 
+		CHECKPOINT_lounge_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_lounge  = 
+						ROUTE_lounge  =
 						{
 						},
-						ROUTE_lounge_1  = 
+						ROUTE_lounge_1  =
 						{
 						},
-						ROUTE_lounge_2  = 
+						ROUTE_lounge_2  =
 						{
 						},
-						ROUTE_lounge_3  = 
+						ROUTE_lounge_3  =
 						{
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_outside_library  = 
+						ROUTE_outside_library  =
 						{
-							ROUTE_outside_billard  = 
+							ROUTE_outside_billard  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_kitchen  = 
+									ROUTE_outside_kitchen  =
 									{
-										ROUTE_outside_dinning  = 
+										ROUTE_outside_dinning  =
 										{
-											ROUTE_outside_lounge  = 
+											ROUTE_outside_lounge  =
 											{
-												ROUTE_lounge  = 
+												ROUTE_lounge  =
 												{
 												},
-												ROUTE_lounge_1  = 
+												ROUTE_lounge_1  =
 												{
 												},
-												ROUTE_lounge_2  = 
+												ROUTE_lounge_2  =
 												{
 												},
-												ROUTE_lounge_3  = 
+												ROUTE_lounge_3  =
 												{
 												},
 											},
@@ -1904,34 +1844,34 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_lounge_a  = 
+				ROUTE_lounge_a  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_outside_library  = 
+							ROUTE_outside_library  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_outside_lounge  = 
+									ROUTE_outside_lounge  =
 									{
-										ROUTE_lounge  = 
+										ROUTE_lounge  =
 										{
 										},
-										ROUTE_lounge_1  = 
+										ROUTE_lounge_1  =
 										{
 										},
-										ROUTE_lounge_2  = 
+										ROUTE_lounge_2  =
 										{
 										},
-										ROUTE_lounge_3  = 
+										ROUTE_lounge_3  =
 										{
 										},
 									},
@@ -1940,62 +1880,62 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_lounge  = 
+							ROUTE_outside_lounge  =
 							{
-								ROUTE_lounge  = 
+								ROUTE_lounge  =
 								{
 								},
-								ROUTE_lounge_1  = 
+								ROUTE_lounge_1  =
 								{
 								},
-								ROUTE_lounge_2  = 
+								ROUTE_lounge_2  =
 								{
 								},
-								ROUTE_lounge_3  = 
+								ROUTE_lounge_3  =
 								{
 								},
 							},
 						},
 					},
 				},
-				ROUTE_lounge_a  = 
+				ROUTE_lounge_a  =
 				{
 				},
 			},
 		},
-		CHECKPOINT_study_flag = 
+		CHECKPOINT_study_flag =
 		{
-			ROUTE_ALLIES_SPAWN  = 
+			ROUTE_ALLIES_SPAWN  =
 			{
-				ROUTE_hall  = 
+				ROUTE_hall  =
 				{
-					ROUTE_outside_lounge  = 
+					ROUTE_outside_lounge  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_kitchen  = 
+							ROUTE_outside_kitchen  =
 							{
-								ROUTE_outside_conservatory  = 
+								ROUTE_outside_conservatory  =
 								{
-									ROUTE_outside_billard  = 
+									ROUTE_outside_billard  =
 									{
-										ROUTE_outside_library  = 
+										ROUTE_outside_library  =
 										{
-											ROUTE_outside_study  = 
+											ROUTE_outside_study  =
 											{
-												ROUTE_study  = 
+												ROUTE_study  =
 												{
 												},
-												ROUTE_study_1  = 
+												ROUTE_study_1  =
 												{
 												},
-												ROUTE_study_2  = 
+												ROUTE_study_2  =
 												{
 												},
 											},
@@ -2005,42 +1945,42 @@ global OnMapLoad = function()
 							},
 						},
 					},
-					ROUTE_outside_study  = 
+					ROUTE_outside_study  =
 					{
-						ROUTE_study  = 
+						ROUTE_study  =
 						{
 						},
-						ROUTE_study_1  = 
+						ROUTE_study_1  =
 						{
 						},
-						ROUTE_study_2  = 
+						ROUTE_study_2  =
 						{
 						},
 					},
 				},
-				ROUTE_study_a  = 
+				ROUTE_study_a  =
 				{
 				},
 			},
-			ROUTE_AXIS_SPAWN  = 
+			ROUTE_AXIS_SPAWN  =
 			{
-				ROUTE_ballroom_a  = 
+				ROUTE_ballroom_a  =
 				{
-					ROUTE_outside_conservatory  = 
+					ROUTE_outside_conservatory  =
 					{
-						ROUTE_outside_billard  = 
+						ROUTE_outside_billard  =
 						{
-							ROUTE_outside_library  = 
+							ROUTE_outside_library  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_study  = 
+									ROUTE_study  =
 									{
 									},
-									ROUTE_study_1  = 
+									ROUTE_study_1  =
 									{
 									},
-									ROUTE_study_2  = 
+									ROUTE_study_2  =
 									{
 									},
 								},
@@ -2048,23 +1988,23 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_ballroom_b  = 
+				ROUTE_ballroom_b  =
 				{
-					ROUTE_outside_kitchen  = 
+					ROUTE_outside_kitchen  =
 					{
-						ROUTE_outside_dinning  = 
+						ROUTE_outside_dinning  =
 						{
-							ROUTE_outside_lounge  = 
+							ROUTE_outside_lounge  =
 							{
-								ROUTE_outside_study  = 
+								ROUTE_outside_study  =
 								{
-									ROUTE_study  = 
+									ROUTE_study  =
 									{
 									},
-									ROUTE_study_1  = 
+									ROUTE_study_1  =
 									{
 									},
-									ROUTE_study_2  = 
+									ROUTE_study_2  =
 									{
 									},
 								},
@@ -2072,12 +2012,12 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				ROUTE_study_a  = 
+				ROUTE_study_a  =
 				{
 				},
 			},
 		},
-	};	
+	};
 //billiard
 	MapRoutes.DEFEND_defbilliard1 = MapRoutes.CHECKPOINT_billiardroom_flag;
 	MapRoutes.DEFEND_defbilliard2 = MapRoutes.CHECKPOINT_billiardroom_flag;
@@ -2151,13 +2091,10 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_defstuddy4 = MapRoutes.CHECKPOINT_study_flag;
 	MapRoutes.ATTACK_studdy1 = MapRoutes.CHECKPOINT_study_flag;
 	MapRoutes.ATTACK_studdy2 = MapRoutes.CHECKPOINT_study_flag;
-	
+
 	Util.Routes(MapRoutes);
 
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
-
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )

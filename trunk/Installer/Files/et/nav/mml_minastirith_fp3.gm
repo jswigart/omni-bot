@@ -316,5 +316,5 @@ global OnMapLoad = function()
 	MapRoutes.CAPPOINT_563 = MapRoutes.CAPPOINT_561;
 	MapRoutes.ATTACK_a0_3 = MapRoutes.ATTACK_a0_1;
 	Util.Routes(MapRoutes);
-	print( "Omni_bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
 };

@@ -4,6 +4,7 @@ global Map =
 	BarrierIsBuilt = false,
 	BombIsConstructed = false,
 	ShowMovers = false,
+	DefendingTeam = TEAM.AXIS,
 
 	Movers =
 	{
@@ -222,6 +223,7 @@ global OnMapLoad = function()
 	OnTrigger( "trigger_down activated", Map.trigger_down );
 
 	wall1 = OnTriggerRegion( AABB(855,1446,751,1305,3071,996), RegionTrigger.DisableBotPush );
+	iw1 = OnTriggerRegion( AABB(-1791.650,2234.431,523.495,-17.125,2701.616,754.234), RegionTrigger.IntrusionWarning );
 
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "MOUNTMG42_.*" );

@@ -1,12 +1,12 @@
 // Omni-bot script for "Wacht Am Rhein beta 1" (bulge_beta1) by d00d.
-// Version 4.1 for Omni-bot 0.81.
+// Version 4.2 for Omni-bot 0.81.
 // Set Map.Talk below to false if you don't want the bots to use voice chats.
-
 global Map =
 {
 	// Set Talk to false if you don't want the bots to talk.
 	Talk = true,
 	ShowMovers = false,
+	DefendingTeam = TEAM.ALLIES,
 	Debug = 0,
 
 	// Status for conditionals
@@ -47,10 +47,6 @@ global Map =
 
 	BridgeBuilt = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Bridge built after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		if (!Map.TankIsAtBarrier && !Map.TankIsPastBarrier1)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_bridge_mg_axis1" );
@@ -63,14 +59,12 @@ global Map =
 		Wp.SetWaypointFlag("bridge1","closed",false);
 		Wp.SetWaypointFlag("bridge2","closed",false);
 		//Wp.SetWaypointFlag("ice","closed",true);
+
+		Util.MapDebugPrint("BridgeBuilt");
 	},
 
 	BridgeDestroyed = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Bridge destroyed after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		if (!Map.TankIsAtBarrier && !Map.TankIsPastBarrier1)
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_bridge_mine1" );
@@ -83,6 +77,8 @@ global Map =
 		Wp.SetWaypointFlag("bridge1","closed",true);
 		Wp.SetWaypointFlag("bridge2","closed",true);
 		Wp.SetWaypointFlag("ice","closed",false);
+
+		Util.MapDebugPrint("BridgeDestroyed");
 	},
 
 	TankAtBridge = function()
@@ -94,10 +90,6 @@ global Map =
 
 	TankOverBridge = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Tank over bridge after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		Map.TankIsAtBridge = false;
 		SetGoalPriority( "PLANT_Fallen_Tree", 0.9 );
 		SetGoalPriority( "PLANT_Damaged_Tree", 0.9 );
@@ -118,10 +110,6 @@ global Map =
 
 	TankPastBunker = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Tank past bunker after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_axis_bunker_mg.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SMOKEBOMB_axis_bunker_mg.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_bridge_mg_axis.*" );
@@ -157,10 +145,6 @@ global Map =
 
 	TankAtBarrier = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Tank at barrier 1 after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		Map.TankIsAtBarrier = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank_Barrier" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank_allies" );
@@ -200,19 +184,15 @@ global Map =
 
 	Barrier1Built = function()
 	{
-		//print("Bar1 constructed");
 		Map.Barrier1IsBuilt = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Fallen_Tree" );
 		Util.SetGoalOffset( 240, -10, 0, "PLANT_Fallen_Tree" );
 		Util.RemoveGoal( "PLANT_Damaged_Tree" );
+		Util.MapDebugPrint("Barrier1Built");
 	},
 
 	Barrier1Destroyed = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Barrier 1 destroyed after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		Map.Barrier1IsBuilt = false;
 		if ( GetGoal("PLANT_Fallen_Tree") )
 		{
@@ -241,10 +221,6 @@ global Map =
 
 	TankPastBarrier1 = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Tank past barrier 1 after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		Map.grenade_bunker_mg_active = true;
 		Map.TankIsAtBarrier = false;
 		Map.TankIsPastBarrier1 = true;
@@ -394,10 +370,6 @@ global Map =
 
 	Barrier2Destroyed = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Barrier 2 destroyed after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		if ( GetGameTimeLeft() < 150 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
@@ -420,31 +392,29 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("Barrier2Destroyed");
 	},
 
 	WindowDefenseBuilt = function()
 	{
-		//print("Window defense built");
 		SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_window1" );
 		if ( GetGameTimeLeft()>90 && GetGameTimeLeft()<900 && Map.TankIsPastBarrier1)
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_window_mine1" );
 		}
+		Util.MapDebugPrint("WindowDefenseBuilt");
 	},
 
 	WindowDefenseDestroyed = function()
 	{
-		//print("Window defense destroyed");
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_window1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_window_mine1" );
+		Util.MapDebugPrint("WindowDefenseDestroyed");
 	},
 
 	TankPastBarrier2 = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Tank past barrier 2 after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_barrier2_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bunker_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_mortar_barrier2_allies.*" );
@@ -534,10 +504,9 @@ global Map =
 
 	MainDoorDestroyed = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Main door destroyed after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
+		ac2 = OnTriggerRegion( AABB(-3101.128,-1246.338,137.056,-2984.251,-1048.710,327.378), RegionTrigger.AllClear );
+		frontdoor = OnTriggerRegion( AABB(-2913,-1478,133, -2714,-1238,302), RegionTrigger.IntrusionWarning );
+		radio = OnTriggerRegion( AABB(-3086,-698,124, -2965,-545,271), RegionTrigger.IntrusionWarning );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SMOKEBOMB_church.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_and_Control" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_and_Control" );
@@ -627,12 +596,16 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("MainDoorDestroyed");
 	},
 
 	SideDoorDestroyed = function()
 	{
-		//print("Side Door");
 		Map.SideDoorOpen = true;
+		ac3 = OnTriggerRegion( AABB(-2593.310,-686.479,119.511,-2452.219,-583.733,263.823), RegionTrigger.AllClear );
+		ac1 = OnTriggerRegion( AABB(-2606.604,-1159.880,129.006,-2502.231,-1053.702,317.038), RegionTrigger.AllClear );
+		backdoor = OnTriggerRegion( AABB(-2675.663,-1187.701,132.593,-2442.384,-784.781,277.449), RegionTrigger.IntrusionWarning );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_church_axis4" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_church_axis7" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_inside_church_allies8" );
@@ -662,11 +635,6 @@ global Map =
 			gametime = GetGameTimeLeft();
 			foreach ( gameId and bot in BotTable )
 			{
-				if (bot.GetTeam()==TEAM.ALLIES)
-				{
-					bot.GuardDoorFlagThread = bot:thread(ScriptGoals.GuardDoorFlag.ThreadFunc);
-					//print("Creating thread:",bot.GuardDoorFlagThread);
-				}
 				if (!bot.HasSpoken && bot.GetTeam() == TEAM.ALLIES && RandInt(1,rand) < 2)
 				{
 					sleep(1.0);
@@ -704,11 +672,12 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("SideDoorDestroyed");
 	},
 
 	TankDamaged = function()
 	{
-		//print("Tank damaged");
 		if(Map.SideDoorOpen) {return;}
 
 		//center it every time it is damaged
@@ -723,14 +692,18 @@ global Map =
 				{
 					sleep(1.0);
 					bot.SayVoice(VOICE.REPAIR_VEHICLE);
+					break;
 				}
-				else if (bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && RandInt(1,rand) < 2)
+				else if (bot.GetTeam() == TEAM.AXIS && bot.GetClass() != CLASS.ENGINEER && RandInt(1,rand) < 4)
 				{
 					sleep(1.5);
 					bot.SayTeam("Panzer instand setzen!"); //"Repair the tank" in German
+					break;
 				}
 			}
 		}
+
+		Util.MapDebugPrint("TankDamaged", true);
 	},
 
 	TankRepaired = function()
@@ -747,14 +720,12 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("TankRepaired", true);
 	},
 
 	OnDynoRadio = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Dyno planted in church after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
 		if ( Map.Talk && MAP_TALK )
 		{
 			wppos = Util.GetWpNamePosition( "inside_church_allies6" );
@@ -776,6 +747,8 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("OnDynoRadio");
 	},
 
 	OnDefusedRadio = function()
@@ -800,32 +773,15 @@ global Map =
 				}
 			}
 		}
+
+		Util.MapDebugPrint("OnDefuseRadio");
 	},
 
 	AxisWon = function()
 	{
-		//time_elapsed_in_seconds = 1800-GetGameTimeLeft();
-		//time_elapsed_in_minutes = (time_elapsed_in_seconds - time_elapsed_in_seconds%60)/60;
-		//print("LOG: Axis wins after", time_elapsed_in_minutes, "min.", time_elapsed_in_seconds%60, "sec.");
-
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 1 )
-					{
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-					else if( r > 8 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint("AxisWon");
 	},
 
 	tank_at_location = function( trigger )
@@ -989,7 +945,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_565" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_565" );
 
-	//Mobile MG/Mortar spots
+	// Mobile MG/Mortar spots
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_.*" );
@@ -1486,7 +1442,7 @@ global OnMapLoad = function()
 
 	};
 
-	//copy some routes
+	// copy some routes
 	MapRoutes.SNIPE_spawnrape2 = MapRoutes.SNIPE_spawnrape1;
 	MapRoutes.SNIPE_spawnrape3 = MapRoutes.SNIPE_spawnrape1;
 	MapRoutes.SNIPE_spawnrape4 = MapRoutes.SNIPE_spawnrape1;
@@ -1512,7 +1468,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_church_axis4" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_church_axis7" );
 
-	Util.MapDebugPrint( "Loaded Omni-bot map script for bulge_beta1." );
+	Util.MapDebugPrint( "Omni-bot map script for bulge_beta1 executed." );
 };
 
 global OnBotJoin = function(bot)
@@ -1534,49 +1490,4 @@ global OnBotJoin = function(bot)
 		sleep(2.0);
 		bot.ExecCommand("vsay_team FTMortar");
 	}
-};
-
-ScriptGoals.GuardDoorFlag =
-{
-	// This thread holds functionality to guard the side door of the church
-	ThreadFunc = function()
-	{
-		// Get the pos. of the waypoint at the church side door
-		wppos = Util.GetWpNamePosition("inside_church_allies8");
-
-		// The loop for the thread:
-		while (Map.SideDoorOpen)
-		{
-			if ( this.GetTeam() == TEAM.ALLIES && this.DistanceTo(wppos)<50 && this.Health > 0 )
-			{
-				// Inform teammates that we're at the defensive position,
-				// but randomize it a little so it won't get too annoying
-				if (RandInt(1,10)<2 && !this.HasTarget())
-				{
-					this.SayVoice(VOICE.ON_DEFENSE);
-				}
-				// While we're at the side door, warn teammates about incoming enemies
-				while (this.DistanceTo(wppos) < 250)
-				{
-					if (this.HasTarget())
-					{
-						mytarget = this.GetTarget(); //get target entity
-						if ( !this.IsAllied(mytarget) )
-						{
-							sleep(this.ReactionTime);
-							this.SayVoice(VOICE.INCOMING);
-							sleep(5);
-						}
-					}
-					// Say "All clear!" every now and then in case no one's attacking
-					else if ( RandInt(1,60)<2 && !this.GetNearestEnemy(CAT.PLAYER,CLASS.ANYPLAYER) )
-					{
-						this.SayVoice(VOICE.ALL_CLEAR);
-					}
-					sleep(1);
-				}
-			}
-			sleep(3);
-		}
-	},
 };

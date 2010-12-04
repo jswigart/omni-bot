@@ -42,6 +42,7 @@ global Map =
 
 	DispenseHealthTime = 10.0,
 	DispenseAmmoTime = 1.0,
+	DefendingTeam = TEAM.AXIS,
 
 	Tunnel_Doors = true,
 	Depot_Gates = true,
@@ -682,6 +683,16 @@ global Map =
 		Util.DisableGroup( "depotwallarty", TEAM.AXIS );
 		Util.EnableGroup( "depotarty", TEAM.AXIS );
 
+		// set up some bot chat warnings about incoming enemies based on region triggers
+		iw1 = OnTriggerRegion( AABB(-11668,-5740,161, -11469,-5512,393), RegionTrigger.IntrusionWarning );
+		iw2 = OnTriggerRegion( AABB(-9952,-5522,180, -9628,-5333,364), RegionTrigger.IntrusionWarning );
+		iw3 = OnTriggerRegion( AABB(-10136,-6699,146, -9994,-6608,367), RegionTrigger.IntrusionWarning );
+		iw4 = OnTriggerRegion( AABB(-11369,-7391,160, -11206,-6991,433), RegionTrigger.IntrusionWarning );
+		io1 = OnTriggerRegion( AABB(-11184,-7426,178, -11106,-7005,410), RegionTrigger.IntrusionWarningEngObj );
+		io2 = OnTriggerRegion( AABB(-11064,-7099,158, -10926,-6968,339), RegionTrigger.IntrusionWarningEngObj );
+		io3 = OnTriggerRegion( AABB(-10580,-7450,158, -10445,-7011,397), RegionTrigger.IntrusionWarningEngObj );
+		ac1 = OnTriggerRegion( AABB(-10861,-7124,165, -10641,-6995,351), RegionTrigger.AllClear );
+
 		Util.MapDebugPrint( "depotgates_Destroyed" );
 	},
 
@@ -916,15 +927,16 @@ global OnMapLoad = function()
 	intunnel = OnTriggerRegion(AABB(-5693.422,-2970.203,209.125,-5602.288,-2678.854,291.125), RegionTrigger.VehicleTrigger);
 	exittunnel = OnTriggerRegion(AABB(-7926.541,-2944.875,209.125,-7809.442,-2687.126,283.125), RegionTrigger.VehicleTrigger);
 
-	// disable push and combat movement around the first tower mg and depot wall for better pathing
-	cm = OnTriggerRegion(AABB(-3733.483,-2051.376,652.817,-3449.874,-1751.765,1083.265),RegionTrigger.DisableBotPush);
-	wall = OnTriggerRegion(AABB(-10136.874,-5462.146,441.125,-8755.125,-5162.832,523.125),RegionTrigger.DisableBotPush);
+	// disable push and combat movement around the first tower mg, fuel tank ladder and depot wall for better pathing
+	cm = OnTriggerRegion(AABB(-3733.483,-2051.376,652.817,-3449.874,-1751.765,1083.265), RegionTrigger.DisableBotPush);
+	wall = OnTriggerRegion(AABB(-10136.874,-5462.146,441.125,-8755.125,-5162.832,523.125), RegionTrigger.DisableBotPush);
+	fueltankladder = OnTriggerRegion(AABB(-10908.676,-7287.709,182.167,-10720.402,-7071.353,566.530), RegionTrigger.DisableBotPush);
 
 	// detect covert ops sneaking through tunnel grate
-	fallback = OnTriggerRegion(AABB(-6720.574,-1895.911,321.125,-6626.926,-1558.944,403.125),Map.AxisFallBack);
+	fallback = OnTriggerRegion(AABB(-6720.574,-1895.911,321.125,-6626.926,-1558.944,403.125), Map.AxisFallBack);
 
 	// detect allies on the depot roof
-	depotroof = OnTriggerRegion(AABB(-11424.124,-6971.128,537.125,-10310.962,-6210.208,944.180),Map.DepotRoof);
+	depotroof = OnTriggerRegion(AABB(-11424.124,-6971.128,537.125,-10310.962,-6210.208,944.180), Map.DepotRoof);
 
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );

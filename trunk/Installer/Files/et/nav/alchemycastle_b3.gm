@@ -26,30 +26,26 @@ global Map =
 
 		for(i=0; i<4; i+=1)
 		{
-			//print("goto door");
 			if(_this.Goto(pos) == EVENT.PATH_FAILED )
 			{
-				//print("goto door failed");
 				return;
 			}
 			_this.AddAimRequest(Priority.High, "facing", wpinfo.facing);
 			tr = TraceLine(pos, pos2, null, TRACE.SOLID, 0, true);
 			if(tr.fraction == 1)
 			{
-				//print("go through door");
 				_this.Bot.MoveTowards(pos2);
 				sleep(0.8);
 				break;
 			}
 			sleep(0.1);
-			//print("open");
 			_this.Bot.PressButton(BTN.USE);
 			_this.Bot.MoveTowards(pos1);
 			//wait while door opens
 			sleep(1);
 		}
 	},
-	
+
 	Nav_well_down = function(_this,x,y)
 	{
 		_this.AddAimRequest(Priority.High, "facing", Vector3(x,y,1.5));
@@ -163,13 +159,11 @@ global Map =
 			stance = BTN.CROUCH,
 			board = function(_this)
 			{
-				//print("Board " + Map.BoatPos);
 				return Map.BoatPos == 1;
 			},
 
 			leave = function(_this)
 			{
-				//print("Leave " + Map.BoatPos);
 				if(_this.Bot.GetPosition().z < 630){
 					_this.Finished();
 					return true;
@@ -186,7 +180,6 @@ global Map =
 		OnEnter = function(ent)
 		{
 			Map.BoatPos = 1;
-			//print("Boat_Start");
 		},
 		OnExit = function(ent) { Map.BoatPos = -1; },
 	},
@@ -198,7 +191,6 @@ global Map =
 		OnEnter = function(ent)
 		{
 			Map.BoatPos = 2;
-			//print("Boat_End");
 		},
 		OnExit = function(ent) { Map.BoatPos = -1; },
 	},
@@ -213,7 +205,7 @@ global Map =
 	SetCheckpoint = function(axis)
 	{
 		if (Map.entranceBlown){
-			if (axis){ p = 60; }else{ p = 20; } 
+			if (axis){ p = 60; }else{ p = 20; }
 			Util.SetPercentInProgress(p, "CHECKPOINT_forward_bunker");
 		}
 		SetAvailableMapGoals( TEAM.AXIS, axis, ".*MG42_barrier2" );
@@ -228,7 +220,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, Map.bridgeBuilt && !Map.entranceBlown, "DEFEND_sidewall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, Map.sideWallDestroyed && !Map.entranceBlown, "PLANT_Bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, Map.bridgeBuilt || Map.entranceBlown, "PLANT_Side_Wall" );
-		b = Map.bridgeBuilt && Map.sideWallDestroyed || Map.entranceBlown; 
+		b = Map.bridgeBuilt && Map.sideWallDestroyed || Map.entranceBlown;
 		SetAvailableMapGoals( TEAM.ALLIES, b, "FLAG_allied_obj" );
 		SetAvailableMapGoals( TEAM.ALLIES, b, "CAPPOINT_radio" );
 		SetAvailableMapGoals( TEAM.ALLIES, b, "PLANT_West_Barrier" );
@@ -243,7 +235,7 @@ global Map =
 		Map.SetCheckpoint(false);
 		Util.MapDebugPrint( "forward_bunker_Allies_Captured" );
 	},
-	
+
 	forward_bunker_Axis_Captured = function( trigger )
 	{
 		Map.SetCheckpoint(true);
@@ -282,7 +274,7 @@ global Map =
 		Util.OnTriggerPosition( "MOVER_tank", "barrier2_1", 180.0, Map.Tank_At_Barrier2 );
 		Util.MapDebugPrint("Tank_Passed_Barrier1");
 	},
-	
+
 	Tank_At_Barrier2 = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_south.*" );
@@ -292,7 +284,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_outer.*" );
 		SetGoalPriority( "MOUNT_tank", 0.59);
 		SetGoalPriority( "PLANT_Tank_Barrier_1", 0.9, TEAM.ALLIES);
-		SetGoalPriority( "CHECKPOINT_forward_bunker", 0.91, TEAM.ALLIES, CLASS.ENGINEER); 
+		SetGoalPriority( "CHECKPOINT_forward_bunker", 0.91, TEAM.ALLIES, CLASS.ENGINEER);
 		Util.MapDebugPrint("Tank_At_Barrier2");
 	},
 
@@ -340,7 +332,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_door.*" );
 		SetGoalPriority("FLAG_allied_obj", 0.5);
 		Util.SetMaxUsersInProgress(99, "FLAG_allied_obj");
-		SetGoalPriority( "CHECKPOINT_forward_bunker", 0.6, TEAM.ALLIES, CLASS.ENGINEER); 
+		SetGoalPriority( "CHECKPOINT_forward_bunker", 0.6, TEAM.ALLIES, CLASS.ENGINEER);
 		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
 		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 3;
 		Util.MapDebugPrint( "Main_Entrance_Blown" );
@@ -444,7 +436,7 @@ global OnMapLoad = function()
 	Util.DisableGoal(".*", true);
 	Util.EnableGoal("HEALTHCAB_.*1");
 	Util.EnableGoal("AMMOCAB_.*1");
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_south.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_south.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
@@ -488,12 +480,12 @@ global OnMapLoad = function()
 	SetGoalPriority( "ESCORT_tank", 0.75, TEAM.ALLIES);
 	SetGoalPriority( "SNIPE_allied_tower", 0.9, TEAM.ALLIES);
 	SetGoalPriority( "BUILD_Tank", 0.95, TEAM.ALLIES);
-	SetGoalPriority( "PLANTMINE_door.*", 0.81, TEAM.ALLIES); 
-	SetGoalPriority( "REPAIRMG42_allied", 0.9, TEAM.ALLIES); 
+	SetGoalPriority( "PLANTMINE_door.*", 0.81, TEAM.ALLIES);
+	SetGoalPriority( "REPAIRMG42_allied", 0.9, TEAM.ALLIES);
 
 	Map.SetCheckpoint(true);
 
-	foreach (goal in { ".*MG42.*", "SNIPE.*", "BUILD_Bridge", "PLANT_Side_Wall", 
+	foreach (goal in { ".*MG42.*", "SNIPE.*", "BUILD_Bridge", "PLANT_Side_Wall",
 		"PLANT_Bridge", "BUILD_Axis_Command_Post" }){
 		Util.SetMaxUsers(1, goal);
 	}

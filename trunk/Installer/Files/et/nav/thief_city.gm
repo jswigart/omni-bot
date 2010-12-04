@@ -404,7 +404,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_westwall" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_northwall" );
 
-	print( "Omni-bot script for thief_city loaded." );
+	Util.MapDebugPrint( "Omni-bot script for thief_city loaded." );
 };
 
 global OnBotJoin = function( bot )

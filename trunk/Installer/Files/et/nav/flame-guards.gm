@@ -1094,30 +1094,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.Talk && MAP_TALK )
-		{
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.ALLIES )
-				{
-					bot.SayVoice(VOICE.G_NEGATIVE);
-				}
-				if ( bot.GetTeam() == TEAM.AXIS )
-				{
-					r = RandRange(0,10);
-					if( r < 2 )
-					{
-						bot.SayVoice(VOICE.G_CHEER);
-					}
-					else if( r > 8 )
-					{
-						sleep(1.2);
-						bot.SayVoice(VOICE.G_GOODGAME);
-					}
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 		Util.MapDebugPrint( "axis_Win" );
 	},
 

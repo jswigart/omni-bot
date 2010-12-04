@@ -285,8 +285,6 @@ global Map =
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_wt.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_canal_mg42" );
-	//~	ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, false, 2 );
-		
 		
 		foreach ( id and bot in BotTable )
 		{

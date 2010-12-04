@@ -495,7 +495,7 @@ global Map =
         
 	FlagSpawnkill = function()
 	{
-		if (Map.Debug) {print("FlagSpawnkill");}
+		Util.MapDebugPrint( "FlagSpawnkill" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );

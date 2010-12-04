@@ -1117,38 +1117,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Say_Axis = 0;
-		Map.Say_Allies = 0;
-
-		foreach ( id and bot in BotTable )
-		{
-			team = bot.GetTeam();
-
-			// AXIS BOT
-			if ( team == TEAM.AXIS )
-			{
-				//Goodgame
-				if ( Map.Say_Axis < 2 && MAP_TALK )
-				{
-					sleep(1.5);
-					Map.Say_Axis += 1;
-					bot.SayVoice(VOICE.G_GOODGAME);
-				}
-			}
-
-			// ALLIES BOT
-			if ( team == TEAM.ALLIES )
-			{
-				//Be happy
-				if ( Map.Say_Allies < 2 && MAP_TALK )
-				{
-					sleep(1.5);
-					Map.Say_Allies += 1;
-					bot.SayVoice(VOICE.G_CHEER);
-				}
-			}
-		}
-
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 		Util.MapDebugPrint( "Codebook_Escaped" );
 	},
 

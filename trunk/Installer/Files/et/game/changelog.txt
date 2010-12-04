@@ -4,6 +4,7 @@
 === BOT ===
 Fixed kickbot crash in older Windows versions
 Fixed pathfinder crash
+Fixed region trigger related crashes
 Fixed SetAvailableMapGoals
 Fixed SetGoalPriority
 Fixed SetGoalGroup
@@ -11,11 +12,16 @@ Fixed goals being interrupted by other goal types with same priority as current 
 Fixed script goals being activated too early when bots spawned
 Fixed InWater flag not being auto added to waypoints
 Fixed issues with GetNearest related to entities that shared a classname with weapons
+Fixed InProgress tracking for FLAG_ goals
 Added bots will press jump when headed towards waypoints with the InWater flag
 Added SetIgnoreEntFlags weapon property
 Added rendering of RegionTrigger names
 Updated boost libraries to version 1_44_0
 
+=== MODS ===
+Fixed goal names to not include color strings
+Added support for NoQuarter WP_JOHNSON (thx Irata)
+Added conversion of panzerfaust request to bazooka for allied bots in NoQuarter
 
 === GOALS ===
 Moved MountMg42 goal to script and added support for user defined facings
@@ -38,6 +44,7 @@ Added caching of trace results in goal_paththrough_artillery
 Added ability to force routing to build goals with offsets defined
 Added missing finish criteria in goal_covertops
 Added cover spot timeout to plant goal(s)
+Added jump stance property to build goal for build goals in water (thx palota)
 Changed stuckage check goal to write separate logs for each map
 Changed paththrough_useswitch goal so that the wait function overrides any exit conditions
 Improved goal_escort to allow escorting bots to assist in building of vehicle (thx palota)
@@ -56,6 +63,7 @@ Added EvalFunc support to goal_paththrough_navigation
 Added spawn point and voice macro support to role manager
 Added optional viewDistance parameter to Util.ChangeToSniperWeapons
 Added CLASS.DYNAMITE_ENT, CLASS.MORTAR_ENT, CLASS.SATCHEL_ENT, and CLASS.LANDMINE_ENT
+Added re-usable region triggers for spotting and announcing enemies or all clear (thx d00d)
 Moved class manager to script goal with several functional improvements (thx palota)
 
 === COMMANDS ===
