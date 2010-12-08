@@ -103,41 +103,6 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class MobileMg42 : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
-
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
-
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
-
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
-
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
-
-		MobileMg42();
-	private:
-		Vector3f			m_AimPosition;
-		WeaponLimits		m_Limits;
-		MapGoalPtr			m_MapGoal;
-		TrackTargetZone		m_TargetZone;
-		Trackers			Tracker;
-
-		Seconds					m_MinCampTime;
-		Seconds					m_MaxCampTime;
-
-		int					m_ExpireTime;
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-
 	class MobileMortar : public StateChild, public FollowPathUser, public AimerUser
 	{
 	public:
@@ -546,6 +511,41 @@ namespace AiState
 	//	bool				m_IgnoreTargets;
 
 	//	bool				_GetMG42Properties();
+	//};
+
+	//////////////////////////////////////////////////////////////////////////
+
+	//class MobileMg42 : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
+
+	//	void GetDebugString(StringStr &out);
+	//	void RenderDebug();
+
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
+
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
+
+	//	MobileMg42();
+	//private:
+	//	Vector3f			m_AimPosition;
+	//	WeaponLimits		m_Limits;
+	//	MapGoalPtr			m_MapGoal;
+	//	TrackTargetZone		m_TargetZone;
+	//	Trackers			Tracker;
+
+	//	Seconds					m_MinCampTime;
+	//	Seconds					m_MaxCampTime;
+
+	//	int					m_ExpireTime;
 	//};
 };
 

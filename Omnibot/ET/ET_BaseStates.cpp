@@ -416,159 +416,6 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	MobileMg42::MobileMg42()
-		: StateChild("MobileMg42")
-		, FollowPathUser("MobileMg42")
-		, m_MinCampTime(6.f)
-		, m_MaxCampTime(10.f)
-		, m_ExpireTime(0)
-	{
-		LimitToWeapon().SetFlag(ET_WP_MOBILE_MG42);
-	}
-
-	void MobileMg42::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
-
-	void MobileMg42::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
-			m_TargetZone.RenderDebug();
-		}
-	}
-
-	// FollowPathUser functions.
-	bool MobileMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
-
-	// AimerUser functions.
-	bool MobileMg42::GetAimPosition(Vector3f &_aimpos)
-	{
-		_aimpos = m_AimPosition;
-		return true;
-	}
-
-	void MobileMg42::OnTarget()
-	{
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp)
-		{
-			if(!wp->CurrentWeaponIs(ET_WP_MOBILE_MG42_SET) && GetClient()->HasEntityFlag(ENT_FLAG_PRONED))
-			{
-				if(wp->CurrentWeaponIs(ET_WP_MOBILE_MG42))
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MOBILE_MG42_SET);
-				else
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MOBILE_MG42);
-			}
-			else
-			{
-				wp->SetOverrideWeaponID(ET_WP_MOBILE_MG42_SET);
-			}
-		}
-	}
-
-	obReal MobileMg42::GetPriority()
-	{
-		FINDSTATE(at,AttackTarget,GetRootState());
-		if(at != NULL && at->IsActive() && at->TargetExceedsWeaponLimits())
-			return 0.f;
-
-		if(IsActive())
-			return GetLastPriority();
-
-		m_MapGoal.reset();
-
-		GoalManager::Query qry(0xbe8488ed /* MOBILEMG42 */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		qry.GetBest(m_MapGoal);
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
-
-	void MobileMg42::Enter()
-	{
-		m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-		m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
-		m_ExpireTime = 0;
-
-		m_TargetZone.Restart(256.f);
-		Tracker.InProgress = m_MapGoal;
-		m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
-	}
-
-	void MobileMg42::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
-
-		m_MapGoal.reset();
-
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp)
-		{
-			wp->ReleaseWeaponRequest(GetNameHash());
-			wp->ClearOverrideWeaponID();
-		}
-		Tracker.Reset();
-	}
-
-	State::StateStatus MobileMg42::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
-
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
-
-		if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
-			return State_Finished;
-
-		if(DidPathSucceed())
-		{
-			// Only hang around here for a certain amount of time
-			if(m_ExpireTime==0)
-			{
-				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				Tracker.InUse = m_MapGoal;
-			}
-			else if(IGame::GetTime() > m_ExpireTime)
-			{
-				// Delay it from being used for a while.
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-				return State_Finished;
-			}
-
-			GetClient()->PressButton(BOT_BUTTON_PRONE);
-
-			Priority::ePriority pri = /*m_IgnoreTargets ? Priority::High :*/ Priority::Low;
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
-
-			// Handle aim limitations.
-			FINDSTATE(wp,WeaponSystem,GetRootState());
-			if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MOBILE_MG42_SET))
-			{
-				m_TargetZone.Update(GetClient());
-				if(m_TargetZone.HasAim())
-					m_AimPosition = m_TargetZone.GetAimPosition();
-			}
-		}
-		return State_Busy;
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-
 	MobileMortar::MobileMortar()
 		: StateChild("MobileMortar")
 		, FollowPathUser("MobileMortar")
@@ -961,7 +808,7 @@ namespace AiState
 						if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
 							GetClient()->PressButton(BOT_BUTTON_JUMP);
 						}
-					} else if ( heightDiff > 20.f ) {
+					} else /*if ( heightDiff > 20.f )*/ {
 						BitFlag64 btns;
 						btns.SetFlag(BOT_BUTTON_CROUCH);
 						GetClient()->HoldButton(btns,IGame::GetDeltaTime()*2);
@@ -2967,5 +2814,158 @@ namespace AiState
 	//	m_ScanRight = qr.Rotate(m_GunCenterArc);
 
 	//	return true;
+	//}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	//MobileMg42::MobileMg42()
+	//	: StateChild("MobileMg42")
+	//	, FollowPathUser("MobileMg42")
+	//	, m_MinCampTime(6.f)
+	//	, m_MaxCampTime(10.f)
+	//	, m_ExpireTime(0)
+	//{
+	//	LimitToWeapon().SetFlag(ET_WP_MOBILE_MG42);
+	//}
+
+	//void MobileMg42::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
+
+	//void MobileMg42::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+	//		m_TargetZone.RenderDebug();
+	//	}
+	//}
+
+	//// FollowPathUser functions.
+	//bool MobileMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
+
+	//// AimerUser functions.
+	//bool MobileMg42::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	_aimpos = m_AimPosition;
+	//	return true;
+	//}
+
+	//void MobileMg42::OnTarget()
+	//{
+	//	FINDSTATE(wp,WeaponSystem,GetRootState());
+	//	if(wp)
+	//	{
+	//		if(!wp->CurrentWeaponIs(ET_WP_MOBILE_MG42_SET) && GetClient()->HasEntityFlag(ENT_FLAG_PRONED))
+	//		{
+	//			if(wp->CurrentWeaponIs(ET_WP_MOBILE_MG42))
+	//				wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MOBILE_MG42_SET);
+	//			else
+	//				wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MOBILE_MG42);
+	//		}
+	//		else
+	//		{
+	//			wp->SetOverrideWeaponID(ET_WP_MOBILE_MG42_SET);
+	//		}
+	//	}
+	//}
+
+	//obReal MobileMg42::GetPriority()
+	//{
+	//	FINDSTATE(at,AttackTarget,GetRootState());
+	//	if(at != NULL && at->IsActive() && at->TargetExceedsWeaponLimits())
+	//		return 0.f;
+
+	//	if(IsActive())
+	//		return GetLastPriority();
+
+	//	m_MapGoal.reset();
+
+	//	GoalManager::Query qry(0xbe8488ed /* MOBILEMG42 */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	qry.GetBest(m_MapGoal);
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
+
+	//void MobileMg42::Enter()
+	//{
+	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
+	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+	//	m_ExpireTime = 0;
+
+	//	m_TargetZone.Restart(256.f);
+	//	Tracker.InProgress = m_MapGoal;
+	//	m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+	//}
+
+	//void MobileMg42::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+
+	//	m_MapGoal.reset();
+
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATE(wp,WeaponSystem,GetRootState());
+	//	if(wp)
+	//	{
+	//		wp->ReleaseWeaponRequest(GetNameHash());
+	//		wp->ClearOverrideWeaponID();
+	//	}
+	//	Tracker.Reset();
+	//}
+
+	//State::StateStatus MobileMg42::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
+
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
+
+	//	if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+	//		return State_Finished;
+
+	//	if(DidPathSucceed())
+	//	{
+	//		// Only hang around here for a certain amount of time
+	//		if(m_ExpireTime==0)
+	//		{
+	//			m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
+	//			Tracker.InUse = m_MapGoal;
+	//		}
+	//		else if(IGame::GetTime() > m_ExpireTime)
+	//		{
+	//			// Delay it from being used for a while.
+	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			return State_Finished;
+	//		}
+
+	//		GetClient()->PressButton(BOT_BUTTON_PRONE);
+
+	//		Priority::ePriority pri = /*m_IgnoreTargets ? Priority::High :*/ Priority::Low;
+	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
+
+	//		// Handle aim limitations.
+	//		FINDSTATE(wp,WeaponSystem,GetRootState());
+	//		if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MOBILE_MG42_SET))
+	//		{
+	//			m_TargetZone.Update(GetClient());
+	//			if(m_TargetZone.HasAim())
+	//				m_AimPosition = m_TargetZone.GetAimPosition();
+	//		}
+	//	}
+	//	return State_Busy;
 	//}
 };
