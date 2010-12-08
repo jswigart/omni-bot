@@ -37,6 +37,10 @@ this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(this.DefaultMaxCampt
 this.InitNewGoal = function()
 {
 	this.Schema.Check(this);
+
+	if ( this.AimVectors ) {
+		this.AimVectors[0] = GetLocalFacing();
+	}
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -157,22 +161,19 @@ this.SetProperty = function(property, value)
 			}
 			else
 			{
-				// cs: only one facing works, but by the time i realized
-				// it, it was far too late to change ... so now it's a table with
-				// only one index supported ... err i mean this was totally planned
-				// for future scalability .. yeah that's it.
 				i = ToInt(value);
-				if ( typeId(i) == 1 )
+				if ( typeId(i) == 1)
 				{
+					// make em add sequentially
+					n = tableCount(this.AimVectors);
+					if ( i < 0 || i > n )
+					{
+						i = n;
+					}
+
 					playerFace = GetLocalFacing();
-					this.AimVectors[ 0 ] = playerFace;
-					
-					if ( i == 0 ) {
-						print("Facing 0 set to",playerFace);
-					}
-					else {
-						print("Only one facing is supported atm, set Facing 0");
-					}
+					this.AimVectors[ i ] = playerFace;
+					print("Facing",i,"set to",playerFace);
 				}
 				else
 				{
