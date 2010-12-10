@@ -363,6 +363,9 @@ protected:
 	void _RunDijkstra(const NavFlags _team);
 	void _RunAStar(const NavFlags _team);
 
+
+	void _FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable);
+
 	void _PlanPathToGoal(Client *_client, const ClosestLink &_start, const ClosestLink &_goal, const NavFlags _team);
 	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
 	ClosestLink _GetClosestLink(const Vector3f &_pos, const NavFlags _team) const;
