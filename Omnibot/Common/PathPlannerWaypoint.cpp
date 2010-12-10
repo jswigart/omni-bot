@@ -1970,28 +1970,14 @@ void PathPlannerWaypoint::RegisterNavFlag(const String &_name, const NavFlags &_
 Vector3f PathPlannerWaypoint::GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team)
 {
 	Vector3f dest = _start;
-	if(!m_WaypointList.empty())
+
+	WaypointList reachableWps;
+	_FindAllReachable(_client, _start, _team, reachableWps);
+	
+	if(!reachableWps.empty())
 	{
-		// TODO: use a better random
-		// TODO: use the waypoint grouping to check groups before planning paths. generate
-		// the grouping id's using an occasional exhaustive search.
-		Waypoint *pWp = 0;
-
-		while(true)
-		{
-			int ix = rand() % (int)m_WaypointList.size();
-			pWp = m_WaypointList[ix];
-
-			// skip team flags that aren't us.
-			if(_team && pWp->IsFlagOn(F_NAV_TEAMONLY) && !pWp->IsFlagOn(_team))
-				continue;
-
-			// skip no connection wps.
-			if(pWp->m_Connections.empty())
-				continue;
-
-			break;
-		}
+		int ix = rand() % (int)m_WaypointList.size();
+		Waypoint *pWp = m_WaypointList[ix];
 
 		const float fWpHeight = g_fTopWaypointOffset-g_fBottomWaypointOffset;
 		const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;
@@ -2257,6 +2243,53 @@ Vector3f PathPlannerWaypoint::GetDisplayPosition(const Vector3f &_pos)
 	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
 	dp.z += g_fBottomWaypointOffset + (fWpHeight*0.5f);
 	return dp;
+}
+
+void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable) {
+	ClosestLink startLink = ClosestLink(_GetClosestWaypoint(_pos, _client->GetTeam(), SKIP_NO_CONNECTIONS, NULL));
+	WaypointList openList;
+	if(startLink.m_Wp) 
+	{
+		for(int i = 0; i < ClosestLink::NumWps; ++i)
+		{
+			if(startLink.m_Wp[i])
+				openList.push_back(startLink.m_Wp[i]);
+		}
+		while(!openList.empty()) {
+			Waypoint * pWp = openList.back();
+			openList.pop_back();
+
+			reachable.push_back(pWp);
+			
+			// loop through all connections
+			Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin();
+			while(it != pWp->m_Connections.end())
+			{
+				Waypoint * pNextWp = it->m_Connection;
+				// Don't use waypoints we're not allowed to.
+				if(_team && pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team))
+					continue;
+
+				// TODO: take flags into account.
+				if(pNextWp->IsFlagOn(F_NAV_CLOSED) || (it->m_ConnectionFlags & F_LNK_CLOSED))
+					continue;
+
+				if(std::find(reachable.begin(),reachable.end(),pNextWp)!=reachable.end())
+					continue;
+
+				float fWeight = 1.f;
+				if(m_CallbackFlags&pNextWp->GetNavigationFlags())
+				{
+					fWeight = m_Client ? m_Client->NavCallback(pNextWp->GetNavigationFlags(),pNextWp,pNextWp) : 1.f;
+					if(fWeight == 0.f)
+						continue;
+				}
+
+				openList.push_back(pNextWp);
+			}
+		}
+	}
+	
 }
 
 void PathPlannerWaypoint::EntityCreated(const EntityInstance &ei)
