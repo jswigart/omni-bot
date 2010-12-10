@@ -1976,8 +1976,8 @@ Vector3f PathPlannerWaypoint::GetRandomDestination(Client *_client, const Vector
 	
 	if(!reachableWps.empty())
 	{
-		int ix = rand() % (int)m_WaypointList.size();
-		Waypoint *pWp = m_WaypointList[ix];
+		int ix = rand() % (int)reachableWps.size();
+		Waypoint *pWp = reachableWps[ix];
 
 		const float fWpHeight = g_fTopWaypointOffset-g_fBottomWaypointOffset;
 		const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;
@@ -2248,7 +2248,7 @@ Vector3f PathPlannerWaypoint::GetDisplayPosition(const Vector3f &_pos)
 void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable) {
 	ClosestLink startLink = ClosestLink(_GetClosestWaypoint(_pos, _client->GetTeam(), SKIP_NO_CONNECTIONS, NULL));
 	WaypointList openList;
-	if(startLink.m_Wp) 
+	if(startLink.IsValid()) 
 	{
 		for(int i = 0; i < ClosestLink::NumWps; ++i)
 		{
@@ -2263,7 +2263,7 @@ void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_po
 			
 			// loop through all connections
 			Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin();
-			while(it != pWp->m_Connections.end())
+			for( ; it != pWp->m_Connections.end(); ++it)
 			{
 				Waypoint * pNextWp = it->m_Connection;
 				// Don't use waypoints we're not allowed to.
