@@ -597,6 +597,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		flag->s.modelindex2 = self->s.otherEntityNum2;// JPW NERVE FIXME set player->otherentitynum2 with old modelindex2 from flag and restore here
 		flag->message = self->message;	// DHM - Nerve :: also restore item name
+
+		// omnibot
+		Bot_Util_SendTrigger(flag, NULL, va("%s dropped.", flag->message), "dropped");
+		// end omnibot
+
 		// Clear out player's temp copies
 		self->s.otherEntityNum2 = 0;
 		self->message = NULL;
