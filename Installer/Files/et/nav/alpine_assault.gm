@@ -6,6 +6,17 @@ global Map =
 	safe_open = false,
 	Phase = 1,
 	InnerSpawn = 0,
+	DefendingTeam = TEAM.AXIS,
+
+	// region triggers
+	iw1 = 0,
+	iw2 = 0,
+	iw3 = 0,
+	iw4 = 0,
+	iw5 = 0,
+	iw6 = 0,
+	iw7 = 0,
+	iw8 = 0,
 
 	TrainPos = -1, // 1: south, 2: north, 3: stores, 4: armoury, -1: moving
 	EastSwitchPos = 1, // 1: default, 2: train going to stores
@@ -225,7 +236,13 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.iw5 = OnTriggerRegion( AABB(6764.630,1791.888,-167.221,6894.037,2031.099,-38.568), RegionTrigger.IntrusionWarning );
+		Map.iw6 = OnTriggerRegion( AABB(6652.040,2515.511,-185.796,6824.801,2734.915,-31.176), RegionTrigger.IntrusionWarning );
+		Map.iw7 = OnTriggerRegion( AABB(6375.917,1799.979,-184.977,6578.432,1962.003,-45.000), RegionTrigger.IntrusionWarning );
+		Map.iw8 = OnTriggerRegion( AABB(6533.235,1374.481,-202.566,6719.447,1595.966,-25.316), RegionTrigger.IntrusionWarning );
+
 		Map.Phase = 2;
+
 		SetAvailableMapGoals(TEAM.AXIS, false, "MOBILEMORTAR_axis_start.*");
 		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK.*gate.*");
 		SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK.*key.*");
@@ -278,8 +295,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+		DeleteTriggerRegion( Map.iw3 );
+		DeleteTriggerRegion( Map.iw4 );
+
 		Map.Phase = 3;
 		Map.safe_open = true;
+
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_keys.*");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_safe");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_halftrack");
@@ -302,6 +325,7 @@ global Map =
 	{
 		Map.Phase = 4;
 		Map.Switches.Safe.Enabled = false;
+
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_keys.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_halftrack");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_case");
@@ -471,6 +495,11 @@ global OnMapLoad = function()
 	tn = OnTriggerRegion( Vector3(2777,3459,220), 40, Map.train_north );
 	ta = OnTriggerRegion( Vector3(4834,4076,-20), 40, Map.train_armoury );
 	tt = OnTriggerRegion( Vector3(6336,2690,-130), 70, Map.train_stores );
+
+	Map.iw1 = OnTriggerRegion( AABB(4795.339,4379.173,-56.225,4978.581,4524.813,81.320), RegionTrigger.IntrusionWarning );
+	Map.iw2 = OnTriggerRegion( AABB(4377.626,4422.766,-77.392,4616.378,4538.027,77.860), RegionTrigger.IntrusionWarning );
+	Map.iw3 = OnTriggerRegion( AABB(4079.565,4113.782,-97.033,4249.600,4297.807,62.722), RegionTrigger.IntrusionWarning );
+	Map.iw4 = OnTriggerRegion( AABB(4196.791,4394.988,-68.587,4368.760,4566.788,96.422), RegionTrigger.IntrusionWarning );
 
 	OnTrigger("llever_c_goto", Map.east_Switch_Moving);
 	OnTrigger("hlever_c_goto", Map.west_Switch_Moving);

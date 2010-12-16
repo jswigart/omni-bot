@@ -2,6 +2,7 @@ global Map =
 {
 	Quiet = true,
 	AddHuntGoal = true,
+	DeathMatch = 1,
 
 	Switches =
 	{

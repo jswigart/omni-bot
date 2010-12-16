@@ -1,4 +1,4 @@
-// This script contains functionality to allow bots to toss airstrikes from given waypoints
+// This script contains functionality to allow bots to mount static mg42
 
 // These parameters are required
 this.Name = "MOUNTMG42";		// The name of the goal.
@@ -25,17 +25,17 @@ this.GetPriority = function()
 				if ( !GetEntFlags(ent, ENTFLAG.MOUNTABLE) ) {
 					continue;
 				}
-				
+
 				if ( GetEntFlags(ent, ENTFLAG.DEAD) ) {
 					continue;
 				}
-				
+
 				owner = this.Bot.GetMountedPlayerOnMG42(goal.GetEntity());
-				
+
 				if ( this.Debug && owner) {
 					this.Bot.Say(format("%s is mounted on %s",GetEntName(owner), goal.GetName()));
 				}
-				
+
 				if ( !owner || GetEntTeam(owner) != this.Bot.GetTeam() ) {
 					this.MapGoal = goal;
 					this.Priority = goal.GetGoalPriority(this.Bot);
@@ -66,11 +66,13 @@ this.Enter = function()
 	else {
 		this.MG42Info = table();
 	}
-	
+
 	// finish criteria
 	this.GoalEnt = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.GoalEnt,"hasentflag",ENTFLAG.DEAD);
 	this.AddFinishCriteria(this.GoalEnt,"not hasentflag",ENTFLAG.MOUNTABLE);
+
+	this.CombatThread = this.ForkThread(this.DisableCombat);
 };
 
 this.Update = function()
@@ -138,9 +140,35 @@ this.Update = function()
 	this.Finished();
 };
 
+//disable combat movement when a bot is near mg42, so that he can mount it
+this.DisableCombat = function()
+{
+	for(;;)
+	{
+		dist = this.Bot.DistanceTo(this.MapGoal.GetPosition());
+		if (dist < 600)
+		{
+			if (!this.Bot.DisableCombatMovement)
+			{
+				this.CombatMovementDisabled = true;
+				this.Bot.DisableCombatMovement = true;
+			}
+			break;
+		}
+		sleep((dist-500)/320);
+	}
+};
+
 this.Exit = function()
 {
 	this.Bot.PressButton(BTN.USE);
+
+	if ( this.CombatThread ) {
+		this.KillThread(this.CombatThread);
+	}
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+	}
 	if ( this.MG42Info ) {
 		tableClear(this.MG42Info);
 	}

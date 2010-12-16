@@ -60,7 +60,8 @@ this.Update = function()
 			if(entPos == this.EntPosition)
 			{
 				this.DisableGoal(false);
-				block(0);
+				// cs: actually can't block here or the goal will never get removed.
+				//block(0);
 			}
 			else
 			{

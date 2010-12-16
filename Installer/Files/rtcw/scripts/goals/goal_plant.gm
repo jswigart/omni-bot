@@ -152,7 +152,7 @@ this.UpdateDynamite = function()
 				// for voice chat 'cover me'
 				signal(this.Bot.Name + "_plant");
 
-				this.AddAimRequest(Priority.High, "position", this.Bot.GetPosition());
+				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
 				this.Bot.HoldButton(BTN.CROUCH, 99);
 				this.BlockForWeaponChange( WEAPON.DYNAMITE );

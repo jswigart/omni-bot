@@ -33,7 +33,7 @@ this.NumWeaponUsers = function(weaponId)
 	num = 0;
 	foreach ( bot and weapon in this.UsingWeapons )
 	{
-		if(weapon == weaponId)
+		if(weapon == weaponId && bot.GetClass()==CLASS.SOLDIER)
 		{
 			num += 1;
 		}

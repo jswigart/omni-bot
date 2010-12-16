@@ -152,6 +152,8 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_ramp" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bUpperBunker1" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_westbunkermg" );
+
+					DeleteTriggerRegion("BaseTrigger");
 					Util.MapDebugPrint("BaseTrigger");
 				}
 			}
@@ -197,6 +199,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bUpperBunker1" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_westbunkermg" );
 
+					DeleteTriggerRegion("Axis_Fallback");
 					Util.MapDebugPrint("Axis_Fallback");
 				}
 			}

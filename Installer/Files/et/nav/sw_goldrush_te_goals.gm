@@ -936,6 +936,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
+			[0] = Vec3(0.956, 0.286, -0.070),
 		},
 		CreateOnLoad = 1,
 		GoalType = "Attack",
@@ -947,8 +948,8 @@ global _MG =
 		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(-470.702, -901.067, -155.299),
 		Radius = 35,
-		SerialNum = 237,
-		Stance = "stand",
+		SerialNum = 272,
+		Stance = "crouch",
 		TagName = "Truck Barrier2 1",
 		TeamAvailability = 30,
 		Version = 1,

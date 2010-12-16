@@ -21,7 +21,6 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				Util.BotSay(_this.Bot,"^7X-mas ?");
 				timeout = 6;
 				while ( timeout > 1 ) {
 					_this.Goto(_this.Bot.GetPosition());
@@ -34,7 +33,6 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				Util.BotSay(_this.Bot,"Where is santa ?");
 				timeout = 6;
 				while ( timeout > 1 ) {
 					_this.Goto(_this.Bot.GetPosition());
@@ -73,7 +71,6 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				Util.BotSay(_this.Bot,"Happy hollidays");
 				timeout = 6;
 				while ( timeout > 1 ) {
 					_this.Goto(_this.Bot.GetPosition());

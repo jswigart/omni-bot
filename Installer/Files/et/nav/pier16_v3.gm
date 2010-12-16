@@ -19,10 +19,28 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				_this.Bot.HoldButton(BTN.FORWARD, 5);
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				sleep(2);
+			},
+		},
+		ladder2 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
 				sleep(3);
 			},
 		},
+		
+		l2 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3);
+			},
+		},
+		
 		l1 =
 		{
 			navigate = function(_this)
@@ -32,7 +50,7 @@ global Map =
 			},
 		},
 
-		l2 =
+		ladder3 =
 		{
 			navigate = function(_this)
 			{
@@ -45,12 +63,21 @@ global Map =
 		{
 			navigate = function(_this)
 			{
-				_this.Bot.HoldButton(BTN.STRAFE_L, 1.2);
+				_this.Bot.HoldButton(BTN.STRAFE_L, 2);
+				sleep(2);
+			},
+		},
+		
+		strafe_r_point =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.STRAFE_L, 2);
 				sleep(2);
 			},
 		},
 	},
-
+	
 	Switches =
 	{
 		door2 =
@@ -63,6 +90,8 @@ global Map =
 			AimPosition = Vector3(-1335.771,2448.125,-6.912),
 		},
 	},
+
+	
 
 	DontDispenseAmmo = true,
 	DontDispenseHealth = true,
@@ -178,6 +207,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_def.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_East_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_def1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_def2" );
 				
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Assault_Ramp" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Assault_Ramp" );

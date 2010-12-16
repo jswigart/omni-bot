@@ -90,7 +90,9 @@ this.Enter = function()
 {
 	// Set up some finish criteria
 	this.AddFinishCriteria(this.TargetEntity,"deleted");
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	
+	// cs: don't do this. when gibbing, it checks for limbo flag to move to steal uniform state
+	//this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 };
 
 this.Update = function()
@@ -138,6 +140,14 @@ this.Update = function()
 	}
 };
 
+this.TargetOffsets =
+{
+	Vector3(24,24,0),
+	Vector3(-24,-24,0),
+	Vector3(24,-24,0),
+	Vector3(-24,24,0),
+};
+
 this.UpdateGotoTarget = function()
 {
 	if ( this.TargetEntity )
@@ -154,8 +164,19 @@ this.UpdateGotoTarget = function()
 		if ( checkPosition != this.TargetPosition ) {
 			this.TargetPosition = checkPosition;
 
-			offsetPos = this.TargetPosition + Vector3(24,24,0);
-			if (this.Goto(offsetPos, 64.0) == EVENT.PATH_SUCCESS) {
+			// trace to find a reachable offset
+			eyePos = this.Bot.GetEyePosition();
+			botEnt = this.Bot.GetGameEntity();
+			offsetPos = null;
+			foreach( id and offset in this.TargetOffsets ) {
+				tr = TraceLine(eyePos, this.TargetPosition + this.TargetOffsets[ id ], null, TRACE.SHOT, botEnt, false);
+				if (tr.fraction == 1) {
+					offsetPos = this.TargetPosition + this.TargetOffsets[ id ];
+					break;
+				}
+			}
+
+			if (offsetPos && this.Goto(offsetPos, 64.0) == EVENT.PATH_SUCCESS) {
 				// sanity check ent and target ...
 				if ( !this.TargetEntity || !this.TargetPosition ) {
 					this.Finished();

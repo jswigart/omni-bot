@@ -51,6 +51,12 @@ global Map =
 	barrierthree = 0,
 	barrierfour = 0,
 
+	// region triggers
+	iw1 = 0,
+	iw2 = 0,
+	iw3 = 0,
+	DefendingTeam = TEAM.AXIS,
+
 	//vehicle positions
 	near_defense_one = false,
 	near_defense_two = false,
@@ -490,6 +496,11 @@ global Map =
 		Wp.SetWaypointFlag( "southstairs1", "axis", false );
 		Wp.SetWaypointFlag( "southstairs3", "axis", false );
 
+		// intrusion warning region triggers
+		Map.iw1 = OnTriggerRegion( AABB(1480.742,-2466.167,-403.870,1605.773,-2403.699,-235.466), RegionTrigger.IntrusionWarning );
+		Map.iw2 = OnTriggerRegion( AABB(1470.405,-2041.986,-359.106,1696.767,-1951.906,-206.108), RegionTrigger.IntrusionWarning );
+		Map.iw3 = OnTriggerRegion( AABB(1854.647,-2344.672,-406.225,1942.472,-2162.907,-187.716), RegionTrigger.IntrusionWarning );
+
 		Util.MapDebugPrint( "blow_doors" );
 	},
 
@@ -522,6 +533,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rBank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rBank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBank.*" );
+
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+		DeleteTriggerRegion( Map.iw3 );
 
 		Util.MapDebugPrint( "allies_taking_gold" );
 	},

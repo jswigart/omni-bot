@@ -158,7 +158,7 @@ global Map =
 	Plant_Mine_m_gun3 = "PLANTMINE_m_gun3",
 	Plant_Mine_m_gun4 = "PLANTMINE_m_gun4",
 
-	debugMode = false,
+	Debug = false,
 	currentGoal = "",
 	minDefFlagCampTime = 10,
 	maxDefFlagCampTime = 100,
@@ -788,7 +788,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_d_switch3", Map.defendPriority - 0.02 );				//Less important
 
 	//SET GOALS AT START
-	Util.DisableGoal( ".*" );	//disable all goals
+	Util.DisableGoal( ".*", true );	//disable all goals except routes
 
 	// Set Health and Ammo closed from start
 	Wp.SetWaypointFlag( "door_cabinets1", "closed", true );
@@ -861,6 +861,8 @@ global OnMapLoad = function()
 						ROUTE_hide3  = {},
 					},
 				},
+				ROUTE_wall_hole = {},
+				ROUTE_wall_right = {},
 			},
 		},
 		//Allies attack route without tank escort  (hiding)
@@ -1049,6 +1051,8 @@ global OnMapLoad = function()
 
 	// Copy routes
 	MapRoutes.ATTACK_at_a2 = MapRoutes.PLANT_tankbarrier;					//Route part 1
+	MapRoutes.SMOKEBOMB_tankbarrier_2 = MapRoutes.PLANT_tankbarrier;					//Route part 1
+	MapRoutes.SMOKEBOMB_tankbarrier_1 = MapRoutes.PLANT_tankbarrier;					//Route part 1
 	MapRoutes.ATTACK_at_a1 = MapRoutes.ATTACK_at_barrier_extra1;						//Route part 1
 	MapRoutes.ATTACK_at_barrier_extra2 = MapRoutes.ATTACK_at_barrier_extra1;					//Route without tank escort
 

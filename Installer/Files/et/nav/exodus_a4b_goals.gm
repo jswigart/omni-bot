@@ -2033,33 +2033,6 @@ global _MG =
 		TeamAvailability = 30,
 		Version = 1,
 	},
-	SNIPE_579 = 
-	{
-		AimVectors = 
-		{
-		},
-		CreateOnLoad = 1,
-		GoalType = "Snipe",
-		GroupName = "",
-		MaxCampTime = 6,
-		MinCampTime = 2,
-		MinRadius = 30,
-		Name = "SNIPE_579",
-		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(6413.875, 4381.076, 288.125),
-		Radius = 20,
-		SerialNum = 41,
-		Stance = "stand",
-		TagName = "579",
-		TeamAvailability = 30,
-		Version = 1,
-		Weapons = 
-		{
-			[22] = 1,
-			[29] = 1,
-			[33] = 1,
-		},
-	},
 	SNIPE_flag_snipe = 
 	{
 		AimVectors = 
