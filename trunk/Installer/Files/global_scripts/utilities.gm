@@ -247,6 +247,25 @@ member WaitForPlayerSpawn = function()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+member GetWpGUIDPosition = function( _params )
+{
+	WpGUID = _params;
+	wptable = table();
+	Wp = Wp.GetWaypointByGUID( WpGUID, wptable );
+
+	if ( Wp )
+	{
+		return wptable.position;
+	}
+	else
+	{
+		print("Util.GetWpGUIDPosition: No such waypoint");
+		return null;
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
 member WpNameInfo = function( wpName )
 {
 	wpTable = table();
@@ -2865,7 +2884,7 @@ member GetEntHealth = function(ent)
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// "day", "date", "time"
+// "day", "date", "time", "m"
 member TimeFormat = function(param)
 {
 	time = System.Time();
@@ -2887,6 +2906,10 @@ member TimeFormat = function(param)
 		{
 			s = format("%s %s", tokenized[4], tokenized[5]);
 			return s;
+		}
+		case "m": // meridiem
+		{
+			return tokenized[5];
 		}
 	}
 };

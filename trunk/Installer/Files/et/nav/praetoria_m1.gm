@@ -740,7 +740,8 @@ global Map =
 
 		Map.ControlsDyno += 1;
 
-		// TODO: shift defense, disable generator build
+		// TODO: shift defense
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Magnetic_Generator" );
 
 		Util.MapDebugPrint( "Radar_Control_Center_Planted" );
 	},
@@ -752,8 +753,11 @@ global Map =
 
 		Map.ControlsDyno -= 1;
 
-		if ( Map.ControlsDyno < 1 ) {
-			// TODO: shift defense, enable generator build
+		if ( Map.ControlsDyno < 1 )
+		{
+			// TODO: shift defense
+
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Magnetic_Generator" );
 		}
 
 		Util.MapDebugPrint( "Radar_Control_Center_Defused" );

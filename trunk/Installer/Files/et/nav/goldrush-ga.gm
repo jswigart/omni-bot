@@ -109,6 +109,12 @@ global Map =
 	near_defense_three = false,
 	near_defense_four = false,
 
+	// region triggers
+	iw1 = 0,
+	iw2 = 0,
+	iw3 = 0,
+	DefendingTeam = TEAM.AXIS,
+
 	//dyno counters
 	bOneDyno = 0,
 	bTwoDyno = 0,
@@ -636,6 +642,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_8" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_9" );
 
+		// intrusion warning region triggers
+		Map.iw1 = OnTriggerRegion( AABB(1480.742,-2466.167,-403.870,1605.773,-2403.699,-235.466), RegionTrigger.IntrusionWarning );
+		Map.iw2 = OnTriggerRegion( AABB(1470.405,-2041.986,-359.106,1696.767,-1951.906,-206.108), RegionTrigger.IntrusionWarning );
+		Map.iw3 = OnTriggerRegion( AABB(1854.647,-2344.672,-406.225,1942.472,-2162.907,-187.716), RegionTrigger.IntrusionWarning );
+
 		Wp.SetWaypointFlag("closeddoor1", "closed", false);
 		Wp.SetWaypointFlag("closeddoor2", "closed", false);
 		Wp.SetWaypointFlag("closeddoor3", "closed", false);
@@ -673,6 +684,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_allied );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_allied );
+
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+		DeleteTriggerRegion( Map.iw3 );
 
 		Util.MapDebugPrint( "allies_taking_gold" );
 	},
@@ -1149,7 +1164,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Depot_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Health_Cabinet_south_healthcabinet );
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*ARTILLERY.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Truck );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Bank_Wall_Breach );
@@ -1157,7 +1171,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier_2 );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Flag_gold_crate );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Cappoint_Gold_Dropoff );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_SPOT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_bridge );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_bank );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_allied );
@@ -1186,11 +1199,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Depot_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_north_healthcabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_south_healthcabinet );
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*ARTILLERY.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_2 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_1 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_2 );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_SPOT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bridge );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bank );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_allied );

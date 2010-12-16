@@ -475,7 +475,8 @@ Commands["stuckstart"] =
 			return;
 		}
 
-		ExecScript(GetMapName() + "_stuckages.gm");
+		stuckagefile = GetMapName() + "_stuckages.gm";
+		assert( ExecScript( stuckagefile ), "Error opening " + stuckagefile + "!" );
 
 		// copy all non-dupes to a temp table
 		temp = {};

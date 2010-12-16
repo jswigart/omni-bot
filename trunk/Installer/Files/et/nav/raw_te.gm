@@ -133,15 +133,7 @@ global Map =
 
 		Util.MapDebugPrint( "Vault_Door_Built" );
 	},
- /*
-	Vault_Door_1_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
 
-		Util.MapDebugPrint( "Vault_Door_1_Built" );
-	},
-*/
 	construction_mg_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -184,15 +176,6 @@ global Map =
 
 		Map.Vault_Door_Dyno += 1;
 		Util.MapDebugPrint( "Vault_Door_Planted" );
-	},
-
-	Vault_Door_1_Planted = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Map.Vault_Door_1_Dyno += 1;
-		Util.MapDebugPrint( "Vault_Door_1_Planted" );
 	},
 
 	construction_mg_Planted = function( trigger )
@@ -239,15 +222,6 @@ global Map =
 
 		Map.Vault_Door_Dyno -= 1;
 		Util.MapDebugPrint( "Vault_Door_Defused" );
-	},
-
-	Vault_Door_1_Defused = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Map.Vault_Door_1_Dyno -= 1;
-		Util.MapDebugPrint( "Vault_Door_1_Defused" );
 	},
 
 	construction_mg_Defused = function( trigger )
@@ -317,17 +291,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_docs" );
 		Util.MapDebugPrint( "Vault_Door_Destroyed" );
 	},
-
-	Vault_Door_1_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Map.Vault_Door_1_Dyno = 0;
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_docs" ); 
-		Util.MapDebugPrint( "Vault_Door_1_Destroyed" );
-	},
-
+	
 	construction_mg_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -416,19 +380,16 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at the Main Wall.", Map.Main_Wall_Planted );
 	OnTrigger( "Planted at the Side Wall.", Map.Side_Wall_Planted );
 	OnTrigger( "Planted at the Vault Door.", Map.Vault_Door_Planted );
-	OnTrigger( "Planted at the Vault Door 1.", Map.Vault_Door_1_Planted );
 	OnTrigger( "Planted at the construction mg.", Map.construction_mg_Planted );
 	OnTrigger( "Defused at the Castle Main Door.", Map.Castle_Main_Door_Defused );
 	OnTrigger( "Defused at the Main Wall.", Map.Main_Wall_Defused );
 	OnTrigger( "Defused at the Side Wall.", Map.Side_Wall_Defused );
 	OnTrigger( "Defused at the Vault Door.", Map.Vault_Door_Defused );
-	OnTrigger( "Defused at the Vault Door 1.", Map.Vault_Door_1_Defused );
 	OnTrigger( "Defused at the construction mg.", Map.construction_mg_Defused );
 	OnTrigger( "The allied team has ^3destroyed ^7the ^3Main Entrance^7!!", Map.Castle_Main_Door_Destroyed );
 	OnTrigger( "Allies have ^3breached ^7the ^3Main Wall^7!", Map.Main_Wall_Destroyed );
 	OnTrigger( "Allies have ^3breached ^7the ^3Side Wall^7!", Map.Side_Wall_Destroyed );
 	OnTrigger( "Allied team has ^3destroyed ^7the ^3Safe Door^7!", Map.Vault_Door_Destroyed );
-	OnTrigger( "Allied team has ^3destroyed ^7the ^3Safe Door^7!", Map.Vault_Door_1_Destroyed );
 	OnTrigger( "Axis team has ^3destroyed ^7the ^3mg42^7!", Map.construction_mg_Destroyed );
 	OnTrigger( "Allies have stolen the Secret Documents!", Map.docs_Taken );
 	OnTrigger( "Axis have returned the objective!", Map.docs_Returned );
@@ -448,6 +409,8 @@ global OnMapLoad = function()
 
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
 	Util.DisableGoal(".*", true); // all but routes
+	Util.RemoveGoal( "BUILD_Vault_Door_1" );
+	Util.RemoveGoal( "PLANT_Vault_Door_1" );
 	Util.SetGroup( "MOBILEMG42_.*", "1");
 	Util.SetGroup( "CAMP_start.*", "1");
 	Util.SetGroup( "HEALTHCAB_t64", "1");

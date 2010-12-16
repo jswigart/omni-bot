@@ -61,7 +61,7 @@ this.EvaluateClass = function(class, num)
 
 this.EvalClassChange = function()
 {
-	if ( TestMapOn || DisableClassManager )
+	if ( TestMapOn || DisableClassManager || TestBot )
 	{
 		return false;
 	}
@@ -102,12 +102,14 @@ this.EvalClassChange = function()
 
 this.GetPriority = function()
 {
+	sleep(1); // at map start all bots are returning class.soldier, so delay it a bit.
+
 	// cs: let them /kill in warmup so transitions from snipe or panzer maps wont take forever for correct classes to be used
 	if ( !this.OnlyWhileDead || GetGameState() != "Playing" ) {
 		this.EvalClassChange();
 	}
 
-	sleep(5);
+	sleep(4);
 };
 
 this.Events[EVENT.DEATH] = function(attacker, mod)

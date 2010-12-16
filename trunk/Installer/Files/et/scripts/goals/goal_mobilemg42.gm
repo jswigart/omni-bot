@@ -53,7 +53,11 @@ this.Update = function()
 	{
 		// disable combat movement. note: if it is too late here,
 		// there is no other choice but to move this to the Enter function
-		this.Bot.DisableCombatMovement = true;
+		if (!this.Bot.DisableCombatMovement)
+		{
+			this.CombatMovementDisabled = true;
+			this.Bot.DisableCombatMovement = true;
+		}
 
 		if(!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
@@ -102,7 +106,7 @@ this.IsOutOfRange = function(ent)
 {
 	v1 = (GetEntPosition(ent) - this.Bot.GetPosition()).Normalize();
 	v2 = this.AimVector.Normalize();
-	return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z < 0.65;
+	return v1.DotProduct(v2) < 0.65;
 };
 
 this.Events[EVENT.FEEL_PAIN] = function(ent)
@@ -117,7 +121,9 @@ this.Events[EVENT.FEEL_PAIN] = function(ent)
 
 this.Exit = function()
 {
-	this.Bot.DisableCombatMovement = false;
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+	}
 	this.Bot.ReleaseButton(BTN.PRONE);
 	this.ReleaseWeaponRequest();
 };

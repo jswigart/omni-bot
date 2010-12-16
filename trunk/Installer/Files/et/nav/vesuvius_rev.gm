@@ -20,9 +20,12 @@ global Map =
 	Mobile_MG42_phase6_1 = "MOBILEMG42_phase6_1",
 	Mover_truck = "MOVER_truck",
 
+	iw1 = 0,
+	DefendingTeam = TEAM.AXIS,
 	Talk = true,
-	//PlantMines = true,
+	PlantMines = true,
 	Phase = 1,
+
 	EscortVehicle =
 	{
 		Truck =
@@ -230,6 +233,7 @@ global Map =
 			{ return; }
 
 		Map.Phase = 3;
+		DeleteTriggerRegion( Map.iw1 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_ruins_access_rope );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_ruins_gate.*" );
@@ -430,6 +434,7 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( -607,3434,2146, Map.Plant_ruins_access_rope );
 	Util.SetGoalOffset( 15, 25, 0, Map.Build_ruins_access_rope );
 
+	Map.iw1 = OnTriggerRegion( AABB(-644.151,3564.467,1503.609,-465.730,3817.088,1626.681), RegionTrigger.IntrusionWarning );
 	Map.Phase = 1;
 
 	// *** ROUTES ***

@@ -9,6 +9,8 @@ global Map =
 	DontDispenseAmmo = true,
 	debug_regiontrigger = false,
 
+	DeathMatch = 1,
+
 	Classes = function()
 	{
 		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
@@ -23,7 +25,7 @@ global Map =
 		Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
 		Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
 	},
-	
+
 	crashme =
 	{
 		Name = "crashme",
@@ -43,7 +45,7 @@ global OnMapLoad = function()
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
-	
+
 	// crash test for DeleteTriggerRegion
 	if ( Map.debug_regiontrigger ) {
 		crashme = OnTriggerRegion(AABB(310.648,375.502,1.125,667.926,540.118,91.125),Map.crashme);

@@ -258,7 +258,10 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	{
 		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, isBot) == true )
 		{
-			this.Bot.SayVoice( VOICE.HOLD_FIRE );
+			if ( this.Bot.HasEntityFlag( ENTFLAG.DISGUISED ) )
+				{ this.Bot.SayVoice( VOICE.IMA_COVERTOPS ); }
+			else
+				{ this.Bot.SayVoice( VOICE.HOLD_FIRE ); }
 			this.responded_to_teamdamage = true;
 		}
 		else
