@@ -173,6 +173,14 @@ namespace AiState
 		return m_ScriptObject;
 	}
 
+	void ScriptGoal::InternalExit() 
+	{
+		State::InternalExit();
+		// always kill goal threads on an exit, we may not actually be active
+		// such as if we are running event threads we need to clean up
+		KillAllGoalThreads();
+	}
+
 	void ScriptGoal::InternalSignal(const gmVariable &_signal)
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
@@ -551,7 +559,6 @@ namespace AiState
 			m_Finished = false;
 		}
 	}
-
 
 	void ScriptGoal::Exit()
 	{
