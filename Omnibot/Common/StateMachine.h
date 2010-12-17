@@ -289,7 +289,7 @@ protected:
 	
 	obReal InternalGetPriority();
 	void InternalEnter();
-	void InternalExit();
+	virtual void InternalExit();
 	virtual void InternalParentExit() {}
 	StateStatus InternalUpdateState();
 

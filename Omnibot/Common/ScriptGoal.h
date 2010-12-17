@@ -189,6 +189,7 @@ namespace AiState
 		~ScriptGoal();
 	protected:
 		void InternalSignal(const gmVariable &_signal);
+		void InternalExit() ;
 	private:
 		Vector3f					m_AimVector;
 		obint32						m_AimWeaponId;

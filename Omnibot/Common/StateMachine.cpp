@@ -231,8 +231,8 @@ State *State::RemoveState(const char * _name)
 	State *pDeleteState = FindState(_name);
 	if(pDeleteState)
 	{
-		if(pDeleteState->IsActive())
-			pDeleteState->InternalExit();
+		pDeleteState->InternalExit();
+			
 		State *pLastState = NULL;
 		for(State *pState = pDeleteState->m_Parent->m_FirstChild; 
 			pState; 
@@ -348,23 +348,24 @@ void State::InternalEnter()
 
 void State::InternalExit() 
 {
-	OBASSERT(IsActive(), "Existing Inactive State!");
-	//Utils::OutputDebug(kInfo,"%s: State: %s Exit (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
+	if(IsActive())
+	{
+		//Utils::OutputDebug(kInfo,"%s: State: %s Exit (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
 
-	// exit all child states
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		if(pState->IsActive())
+		// exit all child states
+		for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 			pState->InternalExit();
 
-	m_StateTime = m_StateTimeUser = 0.f;
-	SetLastPriority( 0.0f );
-	m_StateFlags.SetFlag(State_Active, false);
-	
-	InternalParentExit();
-	Exit();	
+		m_StateTime = m_StateTimeUser = 0.f;
+		SetLastPriority( 0.0f );
+		m_StateFlags.SetFlag(State_Active, false);
 
-	if(m_StateFlags.CheckFlag(State_DebugExpandOnActive))
-		DebugExpand(false);
+		InternalParentExit();
+		Exit();	
+
+		if(m_StateFlags.CheckFlag(State_DebugExpandOnActive))
+			DebugExpand(false);
+	}
 }
 
 State::StateStatus State::InternalUpdateState()
@@ -387,8 +388,7 @@ State::StateStatus State::InternalUpdateState()
 
 void State::ExitAll()
 {
-	if(IsActive())
-		InternalExit();
+	InternalExit();
 }
 
 void State::CheckForCallbacks(const MessageHelper &_message, CallbackParameters &_cb)
