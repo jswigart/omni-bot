@@ -1457,13 +1457,12 @@ namespace AiState
 	}
 
 	void UseCabinet::Enter()
-	{
-		Tracker.InProgress = m_MapGoal;
-		
+	{	
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
 		if(!DidPathFail())
 		{
 			m_MapGoal = m_Query.m_List[GetDestinationIndex()];
+			Tracker.InProgress = m_MapGoal;
 		}
 	}
 
@@ -1481,7 +1480,7 @@ namespace AiState
 
 	State::StateStatus UseCabinet::Update(float fDt)
 	{
-		if(DidPathFail())
+		if(!m_MapGoal || DidPathFail())
 		{
 			// delay all of em.
 			for(obuint32 i = 0; i < m_Query.m_List.size(); ++i)

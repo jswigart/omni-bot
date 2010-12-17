@@ -777,6 +777,8 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	int GoalsDeferred = 0;
 	int GoalsLoadedFailed = 0;
 
+	Timer loadTime;
+
 	bool LoadedOk = true;
 
 	filePath script( "nav/%s_goals.gm", _map.c_str() );
@@ -892,8 +894,8 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	pMachine->GetGlobals()->Set(pMachine,MapGoalTable,gmVariable::s_null);
 	pMachine->CollectGarbage(true);
 
-	_err.AddInfo("%d Goals Loaded, %d Goals Deferred, %d Goals could not load.",
-		GoalsLoaded,GoalsDeferred,GoalsLoadedFailed);
+	_err.AddInfo("%d Goals Loaded, %d Goals Deferred, %d Goals could not load. elapsed time: %.2f seconds",
+		GoalsLoaded,GoalsDeferred,GoalsLoadedFailed,loadTime.GetElapsedSeconds());
 
 	return LoadedOk;
 }
