@@ -240,7 +240,7 @@ void Fill_Clip( playerState_t *ps, int weapon ) {
 		ammomove = ps->ammo[ammoweap];
 	}
 
-	if ( ammomove ) {
+	if ( ammomove > 0 ) {
 		ps->ammo[ammoweap] -= ammomove;
 		ps->ammoclip[BG_FindClipForWeapon( weapon )] += ammomove;
 	}
@@ -258,9 +258,16 @@ Add_Ammo
 //----(SA)	modified
 void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip ) {
 	int ammoweap = BG_FindAmmoForWeapon( weapon );
-	int totalcount;
+	int addamount = ammoTable[ammoweap].maxammo - ent->client->ps.ammo[ammoweap];
 
-	ent->client->ps.ammo[ammoweap] += count;
+	if (addamount < 0) {
+		addamount = 0;
+	}
+	else if (addamount > count) {
+		addamount = count;
+	}
+
+	ent->client->ps.ammo[ammoweap] += addamount;
 
 	if ( ammoweap == WP_GRENADE_LAUNCHER ) {         // make sure if he picks up a grenade that he get's the "launcher" too
 		COM_BitSet( ent->client->ps.weapons, WP_GRENADE_LAUNCHER );
@@ -276,22 +283,6 @@ void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip ) {
 	if ( fillClip ) {
 		Fill_Clip( &ent->client->ps, weapon );
 	}
-
-	// cap to max ammo
-	if ( g_dmflags.integer & DF_NO_WEAPRELOAD ) {      // no clips
-		totalcount = ent->client->ps.ammo[ammoweap];
-		if ( totalcount > ammoTable[ammoweap].maxammo ) {
-			ent->client->ps.ammo[ammoweap] = ammoTable[ammoweap].maxammo;
-		}
-
-	} else {                                        // using clips
-		totalcount = ent->client->ps.ammo[ammoweap] + ent->client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
-		if ( totalcount > ammoTable[ammoweap].maxammo ) {
-			ent->client->ps.ammo[ammoweap] = ammoTable[ammoweap].maxammo - ent->client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
-		}
-
-	}
-
 
 	if ( count >= 999 ) { // 'really, give /all/'
 		ent->client->ps.ammo[ammoweap] = count;
@@ -429,10 +420,16 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 				if ( weapon == WP_FLAMETHROWER ) { // FT doesn't use magazines so refill tank
 					other->client->ps.ammoclip[BG_FindAmmoForWeapon( WP_FLAMETHROWER )] = ammoTable[weapon].maxclip;
 				} else {
-					other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] += ammoTable[weapon].maxclip;
-					if ( other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] > ammoTable[weapon].maxclip * 3 ) {
-						other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] = ammoTable[weapon].maxclip * 3;
+					int addamount = (ammoTable[weapon].maxclip * 3) - other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )];
+
+					if (addamount < 0) {
+						addamount = 0;
 					}
+					else if (addamount > ammoTable[weapon].maxclip){
+						addamount = ammoTable[weapon].maxclip;
+					}
+
+					other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] += addamount;
 				}
 				return RESPAWN_SP;
 			}
