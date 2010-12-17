@@ -60,7 +60,6 @@ this.Update = function()
 			if(entPos == this.EntPosition)
 			{
 				this.DisableGoal(false);
-				block(0);
 			}
 			else
 			{
