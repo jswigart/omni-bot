@@ -309,15 +309,19 @@ global OnMapLoad = function()
 	rTrigger = OnTriggerRegion(AABB(143.000,-1594.000,-1.000,456.000,-1328.000,73.000), Map.rTrigger);
 
 	SetMapGoalProperties( "PANZER_.*", {mincamptime=45, maxcamptime=60});
+	SetMapGoalProperties( "DEFEND_bLT.*", {mincamptime=20, maxcamptime=21});
+	SetMapGoalProperties( "DEFEND_rLT.*", {mincamptime=20, maxcamptime=21});
+	SetMapGoalProperties( "DEFEND_bPanzWait.*", {mincamptime=20, maxcamptime=20});
+	SetMapGoalProperties( "DEFEND_rPanzWait.*", {mincamptime=20, maxcamptime=20});
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-	Util.SetMaxUsersInProgress ( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 
 	RTCWUtil.SetPrimaryGoals(1.0);
-	SetGoalPriority( "DEFEND_rLT.*", 0.55 );
-	SetGoalPriority( "DEFEND_bLT.*", 0.55 );
+	SetGoalPriority( "DEFEND_rLT.*", 0.7 );
+	SetGoalPriority( "DEFEND_bLT.*", 0.7 );
 	SetGoalPriority( "DEFEND_rPanzWait.*", 0.55 ); // go hide till panz recharges
 	SetGoalPriority( "DEFEND_bPanzWait.*", 0.55 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
@@ -325,10 +329,12 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER);
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.SOLDIER);
-	RTCWUtil.LimitToClass("DEFEND_rPanzWait.*", TEAM.AXIS, CLASS.LIEUTENANT);
-	RTCWUtil.LimitToClass("DEFEND_bPanzWait.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("DEFEND_rPanzWait.*", TEAM.AXIS, CLASS.SOLDIER);
+	RTCWUtil.LimitToClass("DEFEND_bPanzWait.*", TEAM.ALLIES, CLASS.SOLDIER);
 	RTCWUtil.LimitToClass("DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT);
 	RTCWUtil.LimitToClass("DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER);
+	RTCWUtil.LimitToClass("CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER);
 
 	RTCWUtil.DisableGoal(".*", true); //all but the routes
 	RTCWUtil.DisableGoal("ROUTE_bSide.*");
@@ -700,7 +706,6 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rForward4 = MapRoutes.PLANT_Allies_Control_Center;
 	MapRoutes.DEFEND_rForward5 = MapRoutes.PLANT_Allies_Control_Center;
 	MapRoutes.DEFEND_rForward6 = MapRoutes.PLANT_Allies_Control_Center;
-	MapRoutes.AIRSTRIKE_bAS2 = MapRoutes.AIRSTRIKE_bAS1;
 	MapRoutes.DEFEND_bLT1 = MapRoutes.AIRSTRIKE_bAS1;
 	MapRoutes.DEFEND_bLT2 = MapRoutes.AIRSTRIKE_bAS1;
 	MapRoutes.DEFEND_bLT3 = MapRoutes.AIRSTRIKE_bAS1;
@@ -709,7 +714,6 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_bPanzWait1 = MapRoutes.AIRSTRIKE_bAS1;
 	MapRoutes.DEFEND_bPanzWait2 = MapRoutes.AIRSTRIKE_bAS1;
 	MapRoutes.CHECKPOINT_axis_flag = MapRoutes.AIRSTRIKE_bAS1;
-	MapRoutes.AIRSTRIKE_rAS2 = MapRoutes.AIRSTRIKErAS1;
 	MapRoutes.DEFEND_rLT1 = MapRoutes.AIRSTRIKE_rAS1;
 	MapRoutes.DEFEND_rLT2 = MapRoutes.AIRSTRIKE_rAS1;
 	MapRoutes.DEFEND_rLT3 = MapRoutes.AIRSTRIKE_rAS1;
