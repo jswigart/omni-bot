@@ -1327,91 +1327,92 @@ qboolean CanDamage( gentity_t *targ, vec3_t origin ) {
 	}
 
 	// cs: test. send one trace with the bounds rather than 8 separate. seems fine so far
-	VectorCopy( midpoint, dest );
-	trap_Trace( &tr, origin, offsetmins, offsetmaxs, dest, ENTITYNUM_NONE, MASK_SOLID );
-	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+	// cs: bleh, it appears to break when tracing to an mg42 .. nades won't damage them.
+	//VectorCopy( midpoint, dest );
+	//trap_Trace( &tr, origin, offsetmins, offsetmaxs, dest, ENTITYNUM_NONE, MASK_SOLID );
+	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
 		//G_Printf("CanDamage: bounds trace success\n");
-		return qtrue;
-	}
+	//	return qtrue;
+	//}
 	//else {
 	//	G_Printf("CanDamage: bounds trace fail\n");
 	//}
 
 	// this should probably check in the plane of projection,
 	// rather than in world coordinate
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmaxs[0];
-	//dest[1] += offsetmaxs[1];
-	//dest[2] += offsetmaxs[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmaxs[0];
+	dest[1] += offsetmaxs[1];
+	dest[2] += offsetmaxs[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmaxs[0];
-	//dest[1] += offsetmins[1];
-	//dest[2] += offsetmaxs[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmaxs[0];
+	dest[1] += offsetmins[1];
+	dest[2] += offsetmaxs[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmins[0];
-	//dest[1] += offsetmaxs[1];
-	//dest[2] += offsetmaxs[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmins[0];
+	dest[1] += offsetmaxs[1];
+	dest[2] += offsetmaxs[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmins[0];
-	//dest[1] += offsetmins[1];
-	//dest[2] += offsetmaxs[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmins[0];
+	dest[1] += offsetmins[1];
+	dest[2] += offsetmaxs[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//// =========================
+	// =========================
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmaxs[0];
-	//dest[1] += offsetmaxs[1];
-	//dest[2] += offsetmins[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmaxs[0];
+	dest[1] += offsetmaxs[1];
+	dest[2] += offsetmins[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmaxs[0];
-	//dest[1] += offsetmins[1];
-	//dest[2] += offsetmins[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmaxs[0];
+	dest[1] += offsetmins[1];
+	dest[2] += offsetmins[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmins[0];
-	//dest[1] += offsetmaxs[1];
-	//dest[2] += offsetmins[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmins[0];
+	dest[1] += offsetmaxs[1];
+	dest[2] += offsetmins[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
-	//VectorCopy( midpoint, dest );
-	//dest[0] += offsetmins[0];
-	//dest[1] += offsetmins[1];
-	//dest[2] += offsetmins[2];
-	//trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
-	//if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
-	//	return qtrue;
-	//}
+	VectorCopy( midpoint, dest );
+	dest[0] += offsetmins[0];
+	dest[1] += offsetmins[1];
+	dest[2] += offsetmins[2];
+	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
+	if ( tr.fraction == 1 || &g_entities[tr.entityNum] == targ ) {
+		return qtrue;
+	}
 
 	return qfalse;
 }
