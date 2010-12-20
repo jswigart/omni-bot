@@ -132,6 +132,7 @@ this.UpdateDynamite = function()
 	aimVectors = null;
 	this.spotIndex = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
+	goalPos = this.MapGoal.GetPosition();
 
 	while(1)
 	{
@@ -151,7 +152,6 @@ this.UpdateDynamite = function()
 
 				// for voice chat 'cover me'
 				signal(this.Bot.Name + "_plant");
-
 				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
 				this.Bot.HoldButton(BTN.CROUCH, 99);
