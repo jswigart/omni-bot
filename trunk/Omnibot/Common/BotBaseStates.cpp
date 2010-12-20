@@ -1625,17 +1625,24 @@ namespace AiState
 					}
 					else
 					{
-						GetClient()->PressButton(BOT_BUTTON_MOVEDN);
+						// cs: moved lower 
+						//GetClient()->PressButton(BOT_BUTTON_MOVEDN);
 
 						m_LookAheadPt = vWpBot;
 
 						Vector3f vLook = m_LookAheadPt - vEye;
 
-						float h, p, r, cl = Mathf::DegToRad(60.f);
+						float h, p, r, cl = Mathf::DegToRad(-60.f); // cs: was 60. changed so they look up
 						vLook.ToSpherical(h, p, r);
 						p = ClampT(p,-cl,cl);
 						vLook.FromSpherical(h, p, r);
 						m_LookAheadPt = vEye + vLook;
+
+						// cs: only if they are looking up. (just to be sure)
+						if (m_LookAheadPt.z > vEye.z)
+						{
+							GetClient()->PressButton(BOT_BUTTON_MOVEDN);
+						}
 
 						//Utils::DrawLine(vEye,m_LookAheadPt,COLOR::RED,3.f);
 						//Utils::DrawLine(vEye,vWpBot,COLOR::MAGENTA,3.f);
