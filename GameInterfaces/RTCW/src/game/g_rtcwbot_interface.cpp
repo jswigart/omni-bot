@@ -1429,7 +1429,7 @@ void UpdateBotInput( int _client, const ClientInput &_input ) {
 		if ( _input.m_ButtonFlags.CheckFlag( BOT_BUTTON_FWD ) || _input.m_ButtonFlags.CheckFlag( BOT_BUTTON_MOVEUP ) ) {
 			cmd.forwardmove = fMaxSpeed;
 		}
-		if ( _input.m_ButtonFlags.CheckFlag( BOT_BUTTON_BACK ) /*|| _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEDN)*/ ) {
+		if ( _input.m_ButtonFlags.CheckFlag( BOT_BUTTON_BACK ) || _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEDN) ) {
 			cmd.forwardmove = -fMaxSpeed;
 		}
 		if ( _input.m_ButtonFlags.CheckFlag( BOT_BUTTON_RSTRAFE ) ) {
