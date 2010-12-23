@@ -1054,6 +1054,8 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Build_Axis_Main_Bunker_MG_nest, 0.91, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Allied_Beach_Assault_Ramp, 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Allied_Beach_Assault_Ramp, 0.81, TEAM.AXIS, CLASS.COVERTOPS );
+	SetGoalPriority( "DEFUSE_Axis_South_East_MG_nest.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Command_Post.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	Util.DisableGoal(".*", true); // all but routes
 	Util.DisableGoal("ROUTE_fdoor_route");
