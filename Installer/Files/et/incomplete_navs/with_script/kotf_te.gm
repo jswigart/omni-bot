@@ -1,0 +1,116 @@
+// TODO: route me
+
+global Map =
+{
+	Debug = 0,
+
+	ax_mg42_clip_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ax_mg42_clip_Built" );
+	},
+
+	al_mg42_clip_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "al_mg42_clip_Built" );
+	},
+
+	al_mg42_clip_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "al_mg42_clip_Destroyed" );
+	},
+
+	ax_mg42_clip_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ax_mg42_clip_Destroyed" );
+	},
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Capture_Flag" );
+	},
+
+	Allies_Capture_Axis_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Capture_Axis_Flag" );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Capture_Flag" );
+	},
+
+	Axis_Capture_Allied_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Capture_Allied_Flag" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "Axis has constructed the MG42 !", Map.ax_mg42_clip_Built );
+	OnTrigger( "Allies has constructed the MG42 !", Map.al_mg42_clip_Built );
+	OnTrigger( "Allies has destroyed the Axis MG42 !", Map.ax_mg42_clip_Destroyed );
+	OnTrigger( "Axis has destroyed the Axis MG42 !", Map.al_mg42_clip_Destroyed );
+ 	OnTrigger( "Allies capture their Flag!", Map.Allies_Capture_Flag );
+ 	OnTrigger( "Allies capture the Axis Flag!", Map.Allies_Capture_Axis_Flag );
+ 	OnTrigger( "Axis capture their Flag!", Map.Axis_Capture_Flag );
+ 	OnTrigger( "Axis capture Allied Flag!", Map.Axis_Capture_Allied_Flag );
+
+	Util.DisableGoal( "DEFEND_.*" );
+	Util.DisableGoal( "ATTACK_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Axis_MG42" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Axis_MG42" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_allies.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Allied_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Allied_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis.*" );
+
+	Util.SetGoalOffset( 0, 0, -40, "CHECKPOINT_allied_flag" );
+	Util.SetGoalOffset( 0, 0, -40, "CHECKPOINT_axis_flag" );
+
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "REPAIRMG42_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 2, "CHECKPOINT_.*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 150.0;
+};
