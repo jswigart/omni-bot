@@ -1,3 +1,13 @@
+//==============================================================================================
+//
+//	Santa's Grotto 1.2 - santas_grotto_v1_2
+//
+//	Who			When		What
+//----------------------------------------------------------------------------------------------
+//	Mateos			21/04/2010	Added _goals.gm + Routing to secure the Key Card
+//
+//==============================================================================================
+
 global Map =
 {
 	Ammo_Cabinet_t19 = "AMMOCAB_t19",
@@ -215,8 +225,7 @@ global OnMapLoad = function()
 	OnTrigger( "^1Axis have captured the North Pole!", Map.north_pole_flag_Axis_Captured );
 	OnTrigger( "^1Allies have Captured the North Pole!", Map.north_pole_flag_Allies_Captured );
 
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	Util.DisableGoal( ".*", true );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Gate.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Gate.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_First_Gate" );
@@ -228,7 +237,41 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "3rd_door_1", "axis", true );
 	Wp.SetWaypointFlag( "3rd_door_2", "axis", true );
 	
-//	ETUtil.ShowActiveGoals();
+	// *** ROUTING ***
+	MapRoutes =
+	{
+		CAPPOINT_Secondgate = 
+		{
+			ROUTE_GateKeyTaken  = 
+			{
+				ROUTE_KeyToSafe1  = 
+				{
+					ROUTE_KeyToSafe2  = 
+					{
+						ROUTE_KeyToSafe3  = 
+						{
+							ROUTE_KeyToSafe4  = 
+							{
+								ROUTE_KeyToSafe5  = 
+								{
+									ROUTE_KeyToSafe6  = 
+									{
+										ROUTE_KeyToSafe7  = 
+										{
+											ROUTE_KeySecured  = {},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	Util.Routes(MapRoutes);
+
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 

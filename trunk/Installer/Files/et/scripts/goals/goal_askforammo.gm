@@ -38,15 +38,25 @@ this.OnSpawn = function()
 
 this.GetPriority = function()
 {
+	askForDelay = 30; // num iterations before asking for ammo via voice
+	isMortaring = false;
+	addDesire = 0;
+
 	while(1)
 	{
 		this.Counter += 1;
+		
+		// special case for mortar
+		if ( this.Bot.GetCurrentWeapon() == WEAPON.MORTAR_SET ) {
+			askForDelay = 4; // mortar soldiers can ask more often
+			isMortaring = true;
+		}
 
 		// look for any packs or weapons laying around before calling for ammo
 		// note that goal_pickupitems handles a much shorter range pickup while this goal
 		// activates when the bot is desperate for ammo
 		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-		if(this.AmmoInfo.Desire > this.AmmoDesirThreshold)
+		if( (this.AmmoInfo.Desire > this.AmmoDesirThreshold) || (isMortaring && Util.AmmoForWeapon(this.Bot, WEAPON.MORTAR_SET) < 4) )
 		{
 			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
 
@@ -71,12 +81,12 @@ this.GetPriority = function()
 			}
 
 			botId = this.Bot.GetGameId();
-			if ( !this.BlackboardIsDelayed(botId) && this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup ) {
+			if ( !isMortaring && !this.BlackboardIsDelayed(botId) && this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup ) {
 				this.BlackboardId = botId;
 				this.Priority = 0.8;
 			}
 			else {
-				if ( (this.Counter % 30 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.FIELDOPS) > 0) && GetGameState() == "Playing" ) {
+				if ( (this.Counter % askForDelay == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.FIELDOPS) > 0) && GetGameState() == "Playing" ) {
 					this.Bot.SayVoice(VOICE.NEED_AMMO);
 				}
 			}

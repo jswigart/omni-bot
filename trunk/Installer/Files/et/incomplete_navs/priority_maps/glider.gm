@@ -15,7 +15,7 @@
 /****************************************************
 Pathing and script by Mateos
 Correspondant WAY file size : -
-Last Update : 6th December 2010
+Last Update : 21th December 2010
 ****************************************************/
 
 global Map =
@@ -30,28 +30,10 @@ global Map =
 	Tank_Barrier_2_Dyno = 0,
 	Assault_Ramp_Dyno = 0,
 
-	/*MountVehicle =
+	Movers =
 	{
-		Enabled = false,
-		Priority = 1.1,
-		LimitBots = 1,
+		"MOVER_glider_sm",
 	},
-
-	Target =
-	{
-		Glider_crates =
-		{
-			Priority = 0.9,
-			Enabled = false,
-			GrenadeTargetGoalName = "EXPLODE_Glider_crates",
-			LimitBots = 2,
-			LimitTeam = (1<<TEAM.AXIS),
-			Offset =
-			{
-				Vector3(-90.457, 195.817, -39.875),
-			}
-		},
-	},*/
 
 	LadderFacing = null,
 	// Navigation ladder
@@ -254,9 +236,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.MountVehicle.Enabled = true;
-
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_C.*" );	// TO DO!!!
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Compound_MG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_garage_flag" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_island_flag" );
@@ -267,6 +247,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_garage_flag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_island_flag" );
@@ -614,6 +595,17 @@ global Map =
 
 		Util.MapDebugPrint( "GliderHasLanded" );
 	},
+	
+	TankPastFirstBarrier = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bravo.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
+
+		Util.MapDebugPrint( "TankPastFirstBarrier" );
+	},
 
 	Guardpost_Reached = function( trigger )
 	{
@@ -634,7 +626,7 @@ global OnMapLoad = function()
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
-	// Register callback functions
+	// *** TRIGGERS ***
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
 	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
 	OnTrigger( "^3The Allies have built a Glider!", Map.Glider_crates_Built );
@@ -705,11 +697,11 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 3, "CHECKPOINT_.*" );
 	ETUtil.LimitToClass( "RIDE_Glider", TEAM.ALLIES, CLASS.ENGINEER);	// Thanks Micky :)
 	ETUtil.ExcludeClass( "MOUNTMG42_.*", TEAM.AXIS, CLASS.MEDIC, CLASS.ENGINEER );
 
-	Util.AddInvVehicle( "MOVER_glider_sm" );
-
+	// Closing falling ways of Ruins Spawn
 	Wp.SetWaypointFlag( "ruins1", "closed", true );
 	Wp.SetWaypointFlag( "ruins2", "closed", true );
 	Wp.SetWaypointFlag( "ruins3", "closed", true );
@@ -721,9 +713,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
 
 	Util.OnTriggerPosition( "MOVER_glider_sm", "Glider4", 200.0, Map.GliderHasLanded );
-
-	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
+	Util.OnTriggerPosition( "MOVER_tank", "region0", 200.0, Map.TankPastFirstBarrier );
 
 	Util.MapDebugPrint( "Omni-bot map script for Glider 3.0.2 by **PC** Mateos" );
 };

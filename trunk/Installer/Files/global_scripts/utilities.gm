@@ -1067,14 +1067,14 @@ member AliveCount = function ( team, class )
 {
 	count = 0;
 
-	foreach ( id and bot in BotTable )
+	for ( i = 0; i < Server.MaxPlayers; i = i + 1 )
 	{
-		if ( ( bot.GetTeam() == team ) && ( bot.GetClass() == class ) )
-		{
-			ent = bot.GetGameEntity();
+		if (!EntityIsValid(i) ) {
+			continue;
+		}
 
-			if ( !GetEntFlags( ent, ENTFLAG.DEAD ) )
-				{ count += 1; }
+		if ( GetEntTeam(i) == team && GetEntClass(i) == class && !GetEntFlags(i, ENTFLAG.DEAD, ENTFLAG.LIMBO) ) {
+			count += 1;
 		}
 	}
 
@@ -2622,6 +2622,7 @@ member ShowActiveGoals = function(render, routes, showuse)
 	foreach ( name and teamId in TEAM )
 	{
 		teamName = Util.TeamName(teamId);
+
 		if ( teamName == "SPECTATOR" ) { continue; }
 
 		GetGoals( GoalTable, teamId, ".*" );
@@ -2645,6 +2646,16 @@ member ShowActiveGoals = function(render, routes, showuse)
 			else {
 				print(format("%s: %s is active | inUse: %d - inProgress: %d",
 					teamName, goalName, goal.MaxUsers_InUse(), goal.MaxUsers_InProgress()));
+			}
+		}
+		
+		// script based switch goals
+		if ( Map && Map.Switches ) {
+			teamMask = (1<<teamId);
+			foreach ( id and switchTable in Map.Switches ) {
+				if ( switchTable.Enabled && (typeId(switchTable.LimitTeam) == 0 || (switchTable.LimitTeam & teamMask)) ) {
+					print(format("%s: Scripted Switch %s is active", teamName, switchTable.WaypointName));
+				}
 			}
 		}
 
@@ -2810,12 +2821,19 @@ member ListTableMembers = function(tbl, sortBy)
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member HasAmmoForWeapon = function(bot,wpn)
+member AmmoForWeapon = function(bot,wpn)
 {
 	ammoTable = table();
 	bot.GetCurrentAmmo(ammoTable, 0, wpn);
 
-	if ( ammoTable.CurrentAmmo > 0 ) {
+	return ammoTable.CurrentAmmo;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HasAmmoForWeapon = function(bot,wpn)
+{
+	if ( Util.AmmoForWeapon(bot, wpn) > 0 ) {
 		return true;
 	}
 

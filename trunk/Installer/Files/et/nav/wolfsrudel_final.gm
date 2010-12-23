@@ -4,7 +4,7 @@
 //
 //	Who 		When			What
 //------------------------------------------------------------------------------------------
-//	Tardis 		12 December 2010	Spawn Fixes // More Faceings // MG42's
+//	Tardis 		18 December 2010	Spawn Fixes // More Faceings // MG42's
 //	Tardis 		04 December 2010	Big Fix  // This Map Has Differences
 //	d00d		03 December 2010	added trigger strings
 //	Tardis		01 December 2010	initial wolfsrudel_final script
@@ -182,6 +182,10 @@ global Map =
 			{ return; }
 
 		Map.Bunker_Sidewall_Dyno = 0;
+		Util.ChangeSpawn(TEAM.ALLIES, 4, 3);
+		Util.ChangeSpawn(TEAM.ALLIES, 1, 4);
+		Util.ChangeSpawn(TEAM.AXIS, 5, 4);
+		Util.ChangeSpawn(TEAM.AXIS, 2, 3);
 		
 		if ( Map.Ant_Def == false ) //Defence not built
 		{
@@ -194,7 +198,7 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Antenna_Defense" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_ant_def" );
-			SetGoalPriority( "PLANT_Antenna_Defense", 0.85, TEAM.ALLIES );
+			SetGoalPriority( "PLANT_Antenna_Defense", 0.9, TEAM.ALLIES );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_mast.*" );
 		}
@@ -216,7 +220,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Antenna_Defense" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Woodenbarrier" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_forwardbunker.*" );
-	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
+		
 		Util.MapDebugPrint( "Bunker_Sidewall_Destroyed" );
 	},
 	
@@ -230,9 +235,8 @@ global Map =
 		{
 			SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_radarparts.*");
 		}
-		Util.EnableGoal( "CAPPOINT_cappoint1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_cappoint1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_cappoint1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_cappoint1" );
+		Util.EnableGoal( "DEFEND_cappoint1" );
 		SetGoalPriority( "DEFEND_cappoint.*", 0.8 );
 		
 		Util.MapDebugPrint( "emitterbox1_Taken" );
@@ -248,9 +252,8 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radarparts.*" );
 		}
-		Util.EnableGoal( "CAPPOINT_cappoint2" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_cappoint2" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_cappoint2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_cappoint2" );
+		Util.EnableGoal( "DEFEND_cappoint2" );
 		SetGoalPriority( "DEFEND_cappoint.*", 0.8 );
 		
 		Util.MapDebugPrint( "emitterbox2_Taken" );
@@ -264,12 +267,12 @@ global Map =
 
 		if ( Map.box2status != "taken" )
 		{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cappoint1" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_cappoint1" );
+			Util.DisableGoal( "DEFEND_cappoint1" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_cappoint1" );
 		}
 		
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_radarparts.*");
-		
+		Util.DisableGoal( "DEFEND_cappoint1" );
 		Util.MapDebugPrint( "emitterbox1_Returned" );
 	},
 
@@ -281,12 +284,12 @@ global Map =
 
 		if ( Map.box1status != "taken" )
 		{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cappoint2" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_cappoint2" );
+			Util.DisableGoal( "DEFEND_cappoint2" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_cappoint2" );
 		}
 		
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_radarparts.*");
-		
+		Util.DisableGoal( "DEFEND_cappoint2" );
 		Util.MapDebugPrint( "emitterbox2_Returned" );
 	},
 
@@ -299,10 +302,9 @@ global Map =
 		if ( Map.box2status == "secured" )
 		{
 			Util.DisableGoal( "CAPPOINT_cappoint1" );
+			Util.DisableGoal( "DEFEND_cappoint1" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_compost" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radarparts.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cappoint1" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_cappoint1" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_woodenbarrier" );
 		}
 		else if ( Map.Ant_Def == false ) //Defence not built
@@ -333,10 +335,9 @@ global Map =
 		if ( Map.box1status == "secured" )
 		{
 			Util.DisableGoal( "CAPPOINT_cappoint2" );
+			Util.DisableGoal( "DEFEND_cappoint2" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_compost" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_radarparts.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cappoint2" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_cappoint2" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_woodenbarrier" );
 		}
 		else if ( Map.Ant_Def == false ) //Defence not built
@@ -466,7 +467,7 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Antenna_Defense" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_ant_def" );
-			SetGoalPriority( "PLANT_Antenna_Defense", 0.85, TEAM.ALLIES );
+			SetGoalPriority( "PLANT_Antenna_Defense", 0.9, TEAM.ALLIES );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_mast.*" );
 		}
@@ -480,6 +481,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Woodenbarrier" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_MG_42_Nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_forwardbunker_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_forwardbunker_flag" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Bunker" );
@@ -598,6 +600,11 @@ global Map =
 
 		Map.Sidewall_Dyno = 0;
 		
+		Util.ChangeSpawn(TEAM.ALLIES, 4, 3);
+		Util.ChangeSpawn(TEAM.ALLIES, 1, 4);
+		Util.ChangeSpawn(TEAM.AXIS, 5, 4);
+		Util.ChangeSpawn(TEAM.AXIS, 2, 3);
+		
 		if ( Map.Ant_Def == false ) //Defence not built
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Radiomast_1" );
@@ -609,11 +616,10 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Antenna_Defense" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_ant_def" );
-			SetGoalPriority( "PLANT_Antenna_Defense", 0.85, TEAM.ALLIES );
+			SetGoalPriority( "PLANT_Antenna_Defense", 0.9, TEAM.ALLIES );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_mast.*" );
 		}
-		
 		Util.EnableGoal( "FLAG.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_sidewall_right" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Woodenbarrier" );
@@ -630,6 +636,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Antenna_Defense" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Woodenbarrier" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_forwardbunker.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_amast.*" );
 		
 		Util.MapDebugPrint( "Sidewall_Destroyed" );
 	},

@@ -46,12 +46,6 @@ global Map =
 		},
 	},
 
-	AMMOCAB_campo_ammocabinet = "AMMOCAB_campo_ammocabinet",
-	AMMOCAB_island_ammocabinet = "AMMOCAB_island_ammocabinet",
-	HEALTHCAB_campo_healthcabinet = "HEALTHCAB_campo_healthcabinet",
-	HEALTHCAB_island_healthcabinet = "HEALTHCAB_island_healthcabinet",
-	Build_footbridge = "BUILD_Foot_Bridge",
-	Build_axis_radio_built = "BUILD_Axis_Command_Post",
 	Build_tankbarrier = "BUILD_Tank_Barrier",
 	Build_side_entrance = "BUILD_Side_Entrance",
 	Build_lib_side_wall = "BUILD_Library_Side_Wall",
@@ -62,7 +56,6 @@ global Map =
 	Build_boatbarrier1 = "BUILD_Boat_Barrier_1",
 	Build_tank_construct = "BUILD_Tank",
 	Build_axislibmg42nest = "BUILD_Library_MG",
-	Build_alliedcampomg42nest = "BUILD_Campo_MG",
 	Build_boat_construct = "BUILD_Speedboat",
 	Destroy_axischurchmg42nest = "PLANT_Church_MG",
 	Destroy_side_entrance = "PLANT_Side_Entrance",
@@ -72,7 +65,6 @@ global Map =
 	Destroy_footbridge = "PLANT_Foot_Bridge",
 	Destroy_gun_construct = "PLANT_AT_Gun",
 	Destroy_tankbarrier = "PLANT_Tank_Barrier",
-	Destroy_alliedcampomg42nest = "PLANT_Campo_MG",
 	Destroy_axislibmg42nest = "PLANT_Library_MG",
 	Destroy_lib_side_wall = "PLANT_Library_Side_Wall",
 	Destroy_boatbarrier1 = "PLANT_Boat_Barrier_1",
@@ -112,22 +104,6 @@ global Map =
 	//Dyno Counters
 	TankBarrierDyno = 0,
 
-	axislibmg42nest_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axislibmg42nest_Built" );
-	},
-
-	axislibmg42nest_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axislibmg42nest_Destroyed" );
-	},
-
 	tank_construct_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -143,7 +119,7 @@ global Map =
 
 		if ( Map.RelicSecured )
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_boatbarrier2 );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Boat_Barrier_2" );
 		}
 
 		Util.MapDebugPrint( "boatbarrier1_Built" );
@@ -212,64 +188,6 @@ global Map =
 		Util.MapDebugPrint( "tankbarrier_Destroyed" );
 	},
 
-	alliedcampomg42nest_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "alliedcampomg42nest_Built" );
-	},
-
-	alliedcampomg42nest_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "alliedcampomg42nest_Destroyed" );
-	},
-
-	allied_radio_built_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "allied_radio_built_Built" );
-	},
-
-	allied_radio_built_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "allied_radio_built_Destroyed" );
-	},
-
-	footbridge_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		//enable the route nodes
-		Util.EnableGoal("ROUTE_fb_route2");
-		Util.EnableGoal("ROUTE_fb_route3");
-		Util.EnableGoal("ROUTE_fb_route4");
-
-		Util.MapDebugPrint( "footbridge_Built" );
-	},
-
-	footbridge_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		//disable the route nodes
-		Util.DisableGoal("ROUTE_fb_route2");
-		Util.DisableGoal("ROUTE_fb_route3");
-		Util.DisableGoal("ROUTE_fb_route4");
-
-		Util.MapDebugPrint( "footbridge_Destroyed" );
-	},
-
 	lib_side_wall_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -282,21 +200,6 @@ global Map =
 		Util.MapDebugPrint( "lib_side_wall_Destroyed" );
 	},
 
-	axischurchmg42nest_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axischurchmg42nest_Built" );
-	},
-
-	axischurchmg42nest_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axischurchmg42nest_Destroyed" );
-	},
 
 	side_entrance_Destroyed = function( trigger )
 	{
@@ -304,22 +207,6 @@ global Map =
 			{ return; }
 
 		Util.MapDebugPrint( "side_entrance_Destroyed" );
-	},
-
-	axis_radio_built_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axis_radio_built_Built" );
-	},
-
-	axis_radio_built_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Util.MapDebugPrint( "axis_radio_built_Destroyed" );
 	},
 
 	tank_past_AT = function( trigger )
@@ -368,7 +255,7 @@ global Map =
 			{ Map.Switches.AT_GUN.LimitTeam = (1<<TEAM.AXIS); }
 
 		//start the thread for the next position trigger
-		Util.OnTriggerPosition( Map.Mover_tank, "gatetrigger", 200.0,
+		Util.OnTriggerPosition( "MOVER_tank", "gatetrigger", 200.0,
 			Map.tank_at_gate );
 
 		Util.MapDebugPrint( "tank_in_sight" );
@@ -440,7 +327,7 @@ global Map =
 		Groups.EnableAxis(Groups.group6);
 
 		//start the thread for the next positional trigger
-		Util.OnTriggerPosition( Map.Mover_tank, "tbarrier", 200.0,
+		Util.OnTriggerPosition( "MOVER_tank", "tbarrier", 200.0,
 			Map.tank_at_barrier );
 
 		Util.MapDebugPrint( "tank_at_gate" );
@@ -469,9 +356,9 @@ global Map =
 
 		//focus on destroying barrier rather than building tank
 		if ( Map.TankBarrierStatus > 0 && Map.TankBarrierDyno < 1 )
-			{ SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_tank_construct ); }
+			{ SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" ); }
 		else
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_tank_construct ); }
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" ); }
 
 		Util.MapDebugPrint( "tank_at_barrier" );
 	},
@@ -485,7 +372,7 @@ global Map =
 
 		//dyno is down, repair the tank if needed
 		if ( Map.tank_near_barrier )
-			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_tank_construct); }
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank"); }
 
 		Util.MapDebugPrint( "tank_barrier_planted" );
 	},
@@ -499,7 +386,7 @@ global Map =
 
 		//no more dyno, back to focusing on the barrier
 		if ( Map.TankBarrierDyno < 1 && Map.tank_near_barrier )
-			{ SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_tank_construct); }
+			{ SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank"); }
 
 		Util.MapDebugPrint( "tank_barrier_defused" );
 	},
@@ -580,7 +467,7 @@ global Map =
 		Util.IgnoreTargetGoalAllBots("MOVER_tank");
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "passing_cp", 200.0,
+		Util.OnTriggerPosition( "MOVER_boat", "passing_cp", 200.0,
 			Map.boat_past_cp );
 
 		Util.MapDebugPrint( "boat_stolen" );
@@ -600,21 +487,21 @@ global Map =
 			{ return; }
 
 		//center it every time it is damaged
-		Util.SetPositionGoal( Map.Build_boat_construct, Map.Mover_boat );
+		Util.SetPositionGoal( "BUILD_Speedboat", "MOVER_boat" );
 
 		//bleh
 		if ( Map.BoatStart )
-			{ Util.SetGoalOffset( -20, 0, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( -20, 0, 60, "BUILD_Speedboat" ); }
 		else if ( Map.FirstCorner )
-			{ Util.SetGoalOffset( -30, 40, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( -30, 40, 60, "BUILD_Speedboat" ); }
 		else if ( Map.FirstCornerB )
-			{ Util.SetGoalOffset( 0, 35, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( 0, 35, 60, "BUILD_Speedboat" ); }
 		else if ( Map.SecondCorner )
-			{ Util.SetGoalOffset( 40, 35, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( 40, 35, 60, "BUILD_Speedboat" ); }
 		else if ( Map.SecondCornerB )
-			{ Util.SetGoalOffset( 40, 0, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( 40, 0, 60, "BUILD_Speedboat" ); }
 		else if ( Map.FinalTurn )
-			{ Util.SetGoalOffset( 0, 40, 60, Map.Build_boat_construct ); }
+			{ Util.SetGoalOffset( 0, 40, 60, "BUILD_Speedboat" ); }
 
 		Util.MapDebugPrint( "boat_construct_Damaged" );
 	},
@@ -626,8 +513,7 @@ global Map =
 
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "firstcorner", 200.0,
-			Map.boat_at_first_corner );
+		Util.OnTriggerPosition( "MOVER_boat", "firstcorner", 200.0, Map.boat_at_first_corner );
 
 		//shift the action
 		Groups.DisableAllies(Groups.group13);
@@ -647,7 +533,7 @@ global Map =
 		Map.FirstCorner = true;
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "firstcornerb", 150.0,
+		Util.OnTriggerPosition( "MOVER_boat", "firstcornerb", 150.0,
 			Map.boat_at_first_cornerb );
 
 		Util.MapDebugPrint("boat at first corner");
@@ -662,7 +548,7 @@ global Map =
 		Map.SecondCorner = true;
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "secondcornerb", 150.0,
+		Util.OnTriggerPosition( "MOVER_boat", "secondcornerb", 150.0,
 			Map.boat_at_second_cornerb );
 
 		Util.MapDebugPrint("boat at second corner");
@@ -677,7 +563,7 @@ global Map =
 		Map.FirstCornerB = true;
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "bbarrier1_marker", 200.0,
+		Util.OnTriggerPosition( "MOVER_boat", "bbarrier1_marker", 200.0,
 			Map.boat_at_bbarrier1 );
 
 		Util.MapDebugPrint("boat at first cornerb");
@@ -692,7 +578,7 @@ global Map =
 		Map.SecondCornerB = true;
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "bbarrier2_marker", 200.0,
+		Util.OnTriggerPosition( "MOVER_boat", "bbarrier2_marker", 200.0,
 			Map.boat_at_bbarrier2 );
 
 		Util.MapDebugPrint("boat at second cornerb");
@@ -729,7 +615,7 @@ global Map =
 			{ return; }
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "secondcorner", 200.0,
+		Util.OnTriggerPosition( "MOVER_boat", "secondcorner", 200.0,
 			Map.boat_at_second_corner );
 
 		//shift the action
@@ -747,7 +633,7 @@ global Map =
 			{ return; }
 
 		//set up the next position trigger
-		Util.OnTriggerPosition( Map.Mover_boat, "finalturn", 200.0,
+		Util.OnTriggerPosition( "MOVER_boat", "finalturn", 200.0,
 			Map.boat_at_final_turn );
 
 		Util.MapDebugPrint( "boat_at_bbarier2" );
@@ -774,34 +660,21 @@ global OnMapLoad = function()
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
-	OnTrigger( "Axis team has constructed the Library MG Nest!", Map.axislibmg42nest_Built );
-	OnTrigger( "Axis team has constructed the Church MG Nest!", Map.axischurchmg42nest_Built );
 	OnTrigger( "Boat Barrier #1 has been constructed.", Map.boatbarrier1_Built );
 	OnTrigger( "The Tank has been repaired", Map.tank_construct_Built );
-	OnTrigger( "Allied team has constructed the Campo MG Nest!", Map.alliedcampomg42nest_Built );
 	OnTrigger( "Boat Barrier #2 has been constructed.", Map.boatbarrier2_Built );
 	OnTrigger( "Tank Barrier has been constructed.", Map.tankbarrier_Built );
-	OnTrigger( "Allied team has constructed the Foot Bridge!", Map.footbridge_Built );
-	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_radio_built_Built );
 	OnTrigger( "The Boat has been repaired!", Map.boat_construct_Built );
-	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_radio_built_Built );
 	OnTrigger( "The AT Gun has been repaired!", Map.gun_construct_Built );
 	OnTrigger( "Planted at Boat Barrier #1.", Map.boatbarrier1_Planted );
 	OnTrigger( "Boat Barrier #1 has been destroyed.", Map.boatbarrier1_Destroyed );
-	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_radio_built_Destroyed );
 	OnTrigger( "Allies have destroyed the Library Side Wall!", Map.lib_side_wall_Destroyed );
 	OnTrigger( "Planted at Boat Barrier #2.", Map.boatbarrier2_Planted );
 	OnTrigger( "Boat Barrier #2 has been destroyed.", Map.boatbarrier2_Destroyed );
-	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_radio_built_Destroyed );
 	OnTrigger( "Tank Barrier has been destroyed.", Map.tankbarrier_Destroyed );
-	OnTrigger( "Allied team has destroyed the Library MG Nest!", Map.axislibmg42nest_Destroyed );
-	OnTrigger( "Allied team has destroyed the Church MG Nest!", Map.axischurchmg42nest_Destroyed );
-	OnTrigger( "Axis team has destroyed the Campo MG Nest!", Map.alliedcampomg42nest_Destroyed );
-	OnTrigger( "Axis team has destroyed the Foot Bridge!", Map.footbridge_Destroyed );
 	OnTrigger( "Allies have destroyed the Side Entrance!", Map.side_entrance_Destroyed );
 	OnTrigger( "The AT Gun has been damaged!", Map.gun_construct_Destroyed );
 	OnTrigger( "The Boat has been damaged!", Map.boat_construct_Damaged );
-	OnTrigger( "Allied team has escorted the Tank past the AT Gun!", Map.tank_past_AT );
 	OnTrigger( "The Tank is past the Tank Barrier!", Map.tank_past_Barrier );
 	OnTrigger( "Allied team has destroyed the Library Doors!", Map.library_doors_destroyed );
 	OnTrigger( "Allies have stolen The Relic!", Map.relic_stolen );
@@ -818,7 +691,9 @@ global OnMapLoad = function()
 	OnTrigger( "Allied team escaped with the Relic!", Map.AlliesWon );
 
 	//set up a positional trigger for the tank
-	Util.OnTriggerPosition( Map.Mover_tank, "tank_route2", 200.0, Map.tank_in_sight );
+	Util.OnTriggerPosition( "MOVER_tank", "tank_route2", 200.0, Map.tank_in_sight );
+	Util.OnTriggerPosition( "MOVER_tank", "Past_AT", 200.0, Map.tank_past_AT );
+	
 
 	//remove the truck as a goal
 	Util.RemoveGoal("MOVER_truck");
@@ -881,7 +756,7 @@ global OnMapLoad = function()
 	Groups.EnableAxis(Groups.group2);
 
 	//enable goals that can be active the entire round
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Cappoint_429 );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_429" );
 	Util.EnableGoal("ROUTE.*"); //enables for both teams
 
 	// set max. users
@@ -900,9 +775,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "PLANTMINE_.*" );
 
 	//disable some routes
-	Util.DisableGoal("ROUTE_fb_route2");
-	Util.DisableGoal("ROUTE_fb_route3");
-	Util.DisableGoal("ROUTE_fb_route4");
 	Util.DisableGoal("ROUTE_lib_deck");
 
 	MapRoutes =
@@ -1334,14 +1206,11 @@ global Groups =
 	//allies phase 1
 	group1 =
 	{
-		Map.Build_allied_radio_built,
-		Map.Build_tank_construct,
-		Map.Destroy_axischurchmg42nest,
-		Map.Build_alliedcampomg42nest,
-		Map.Mount_alliedcampomg42,
-		Map.Repair_alliedcampomg42,
-		Map.AMMOCAB_campo_ammocabinet,
-		Map.HEALTHCAB_campo_healthcabinet,
+		"BUILD_Tank",
+		"MOUNTMG42_874",
+		"REPAIRMG42_874",
+		"AMMOCAB_campo_ammocabinet",
+		"HEALTHCAB_campo_healthcabinet",
 		"MOUNT_tank",
 		"ATTACK_at_attack.*",
 		"MOBILEMORTAR_allies_start.*",
@@ -1352,14 +1221,12 @@ global Groups =
 	//axis phase 1
 	group2 =
 	{
-		Map.Build_axischurchmg42nest,
-		Map.Mount_axischurchmg42,
-		Map.Repair_axischurchmg42,
-		Map.Destroy_allied_radio_built,
-		Map.Build_tankbarrier,
-		Map.AMMOCAB_campo_ammocabinet,
-		Map.HEALTHCAB_campo_healthcabinet,
-		Map.BUILD_AT_Gun,
+		"MOUNTMG42_734",
+		"REPAIRMG42_734",
+		"BUILD_Tank_Barrier",
+		"AMMOCAB_campo_ammocabinet",
+		"HEALTHCAB_campo_healthcabinet",
+		"BUILD_AT_Gun",
 		"MOBILEMORTAR_axis_start.*",
 		"DEFEND_at_defend.*",
 		"CALLARTILLERY_at_defend.*",
@@ -1372,9 +1239,8 @@ global Groups =
 	//allies phase 2 - tank past AT Gun
 	group3 =
 	{
-		Map.Destroy_axischurchmg42nest,
-		Map.Build_tank_construct,
-		Map.Destroy_side_entrance,
+		"BUILD_Tank",
+		"PLANT_Side_Entrance",
 		"MOUNT_tank",
 		"ATTACK_gate_attack.*",
 		"ATTACK_at_attack_7",
@@ -1386,10 +1252,9 @@ global Groups =
 	//axis phase 2 - tank past AT Gun
 	group4 =
 	{
-		Map.Build_tankbarrier,
-		Map.Build_axischurchmg42nest,
-		Map.Mount_axischurchmg42,
-		Map.Repair_axischurchmg42,
+		"BUILD_Tank_Barrier",
+		"MOUNTMG42_734",
+		"REPAIRMG42_734",
 		"DEFEND_gate_defend.*",
 		"DEFEND_at_defend_5",
 		"DEFEND_at_defend_10",
@@ -1403,9 +1268,9 @@ global Groups =
 	//allies phase 3 - captured outpost
 	group5 =
 	{
-		Map.Destroy_side_entrance,
-		Map.Build_tank_construct,
-		Map.Destroy_tankbarrier,
+		"PLANT_Side_Entrance",
+		"BUILD_Tank",
+		"PLANT_Tank_Barrier",
 		"MOUNT_tank",
 		"ATTACK_tbarrier_attack.*",
 	},
@@ -1413,10 +1278,9 @@ global Groups =
 	//axis phase 3 - tank passing gate
 	group6 =
 	{
-		Map.Build_tankbarrier,
-		Map.Build_axis_radio_built,
-		Map.AMMOCAB_island_ammocabinet,
-		Map.HEALTHCAB_island_healthcabinet,
+		"BUILD_Tank_Barrier",
+		"AMMOCAB_island_ammocabinet",
+		"HEALTHCAB_island_healthcabinet",
 		"DEFEND_tbarrier_defend.*",
 		"SNIPE_tb_axis.*",
 		"GRENADE_boat",
@@ -1426,12 +1290,11 @@ global Groups =
 	//allies phase 4 - tank past barrier
 	group7 =
 	{
-		Map.Destroy_side_entrance,
-		Map.Build_tank_construct,
-		Map.Build_footbridge,
+		"PLANT_Side_Entrance",
+		"BUILD_Tank",
 		"MOUNT_tank",
-		Map.AMMOCAB_island_ammocabinet,
-		Map.HEALTHCAB_island_healthcabinet,
+		"AMMOCAB_island_ammocabinet",
+		"HEALTHCAB_island_healthcabinet",
 		"ATTACK_libdoor_attack.*",
 		"ATTACK_tbarrier_attack_5",
 		"ATTACK_tbarrier_attack_6",
@@ -1440,12 +1303,10 @@ global Groups =
 	//axis phase 4 - tank past barrier
 	group8 =
 	{
-		Map.Destroy_footbridge,
-		Map.Build_axislibmg42nest,
-		Map.Mount_axislibmg42,
-		Map.Repair_axislibmg42,
-		Map.AMMOCAB_island_ammocabinet,
-		Map.HEALTHCAB_island_healthcabinet,
+		"MOUNTMG42_798",
+		"REPAIRMG42_798",
+		"AMMOCAB_island_ammocabinet",
+		"HEALTHCAB_island_healthcabinet",
 		"DEFEND_libdoor_defend.*",
 		"SNIPE_lib_axis.*",
 		"MOBILEMORTAR_axis_library.*",
@@ -1456,13 +1317,9 @@ global Groups =
 	//allies phase 5 - library doors destroyed
 	group9 =
 	{
-		Map.Destroy_boatbarrier1,
-		Map.Build_footbridge,
-		Map.Destroy_lib_side_wall,
-		Map.Destroy_axislibmg42nest,
-		Map.Flag_relic,
-		Map.Flag_relic_dropped,
-		Map.Destroy_axis_radio_built,
+		"PLANT_Boat_Barrier_1",
+		"PLANT_Library_Side_Wall",
+		"FLAG_relic",
 		"MOUNT_tank",
 		"MOBILEMORTAR_allies_library.*",
 		"ATTACK_relic_attack.*",
@@ -1474,12 +1331,9 @@ global Groups =
 	group10 =
 	{
 		//barrier 2 is enabled when this is constructed
-		Map.Build_boatbarrier1,
-		Map.Build_axislibmg42nest,
-		Map.Mount_axislibmg42,
-		Map.Repair_axislibmg42,
-		Map.Destroy_footbridge,
-		Map.Flag_relic_dropped,
+		"BUILD_Boat_Barrier_1",
+		"MOUNTMG42_798",
+		"REPAIRMG42_798",
 		"MOBILEMORTAR_axis_library.*",
 		"DEFEND_relic_defend.*",
 		"SNIPE_lib_axis.*",
@@ -1491,9 +1345,8 @@ global Groups =
 	//allies - relic stolen
 	group11=
 	{
-		Map.Destroy_lib_side_wall,
-		Map.Destroy_boatbarrier1,
-		Map.Flag_relic_dropped,
+		"PLANT_Library_Side_Wall",
+		"PLANT_Boat_Barrier_1",
 		"MOBILEMORTAR_allies_library.*",
 		"ATTACK_deliver_attack.*",
 		"ATTACK_libdoor_attack_6",
@@ -1506,10 +1359,9 @@ global Groups =
 	//axis - relic stolen
 	group12=
 	{
-		Map.Build_boatbarrier1,
-		Map.Mount_axislibmg42,
-		Map.Flag_relic_dropped,
-		Map.Build_boat_construct,
+		"BUILD_Boat_Barrier_1",
+		"MOUNTMG42_798",
+		"BUILD_Speedboat",
 		"MOBILEMORTAR_axis_library.*",
 		"DEFEND_deliver_defend.*",
 		"DEFEND_relic_defend_4",
@@ -1524,9 +1376,9 @@ global Groups =
 	//allies - relic secured
 	group13=
 	{
-		Map.Destroy_boatbarrier1,
-		Map.Mover_boat,
-		Map.Build_boat_construct,
+		"PLANT_Boat_Barrier_1",
+		"MOVER_boat",
+		"BUILD_Speedboat",
 		"ATTACK_libdoor_attack.*",
 		"ATTACK_tbarrier_attack_5",
 		"ATTACK_tbarrier_attack_6",
@@ -1535,7 +1387,7 @@ global Groups =
 	//axis - relic secured
 	group14=
 	{
-		Map.Build_boatbarrier1,
+		"BUILD_Boat_Barrier_1",
 		"DEFEND_libdoor_defend.*",
 		"SNIPE_lib_axis.*",
 		"SNIPE_bridge",
@@ -1544,9 +1396,9 @@ global Groups =
 	//allies - boat past cp
 	group15 =
 	{
-		Map.Destroy_boatbarrier1,
-		Map.Mover_boat,
-		Map.Build_boat_construct,
+		"PLANT_Boat_Barrier_1",
+		"MOVER_boat",
+		"BUILD_Speedboat",
 		"ATTACK_cz1_attack.*",
 		"ATTACK_libdoor_attack_4",
 		"ATTACK_libdoor_attack_9",
@@ -1559,8 +1411,8 @@ global Groups =
 	//axis - boat past cp
 	group16 =
 	{
-		Map.Build_boatbarrier1,
-		Map.Build_boatbarrier2,
+		"BUILD_Boat_Barrier_1",
+		"BUILD_Boat_Barrier_2",
 		"DEFEND_cz1_defend.*",
 		"DEFEND_tbarrier_defend_1",
 		"DEFEND_tbarrier_defend_2",
@@ -1574,9 +1426,9 @@ global Groups =
 	//allies - boat at barrier 1
 	group17 =
 	{
-		Map.Destroy_boatbarrier2,
-		Map.Mover_boat,
-		Map.Build_boat_construct,
+		"PLANT_Boat_Barrier_2",
+		"MOVER_boat",
+		"BUILD_Speedboat",
 		"ATTACK_bb1_attack.*",
 		"ATTACK_cz1_attack_3",
 		"ATTACK_cz1_attack_4",
@@ -1590,7 +1442,7 @@ global Groups =
 	//axis - boat at barrier 1
 	group18 =
 	{
-		Map.Build_boatbarrier2,
+		"BUILD_Boat_Barrier_2",
 		"DEFEND_bb1_defend.*",
 		"DEFEND_cz1_defend_3",
 		"DEFEND_cz1_defend_5",
@@ -1604,9 +1456,9 @@ global Groups =
 	//allies - boat past barrier 1
 	group19 =
 	{
-		Map.Destroy_boatbarrier2,
-		Map.Mover_boat,
-		Map.Build_boat_construct,
+		"PLANT_Boat_Barrier_2",
+		"MOVER_boat",
+		"BUILD_Speedboat",
 		"ATTACK_bb2_attack.*",
 		"ATTACK_libdoor_attack_8",
 		"ATTACK_libdoor_attack_11",
@@ -1616,7 +1468,7 @@ global Groups =
 	//axis - boat past barrier 1
 	group20 =
 	{
-		Map.Build_boatbarrier2,
+		"BUILD_Boat_Barrier_2",
 		"DEFEND_bb2_defend.*",
 		"DEFEND_tbarrier_defend_2",
 		"DEFEND_tbarrier_defend_5",
