@@ -4,6 +4,7 @@
 //
 //	Who			When		What
 //------------------------------------------------------------------------------------------------------------
+//	Mateos			19/12/10	Added Defend Goals for Allies at the end
 //	jaskot			02/03/09	Converted old script to new format
 //
 //==========================================================================================
@@ -342,6 +343,29 @@ global Map =
 		
 		print( "Parts_Delivered" );
 	},
+	
+	TrainAtFirstTunnel = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_BoatHouseMG" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesBoatHouseBridge.*" );
+		
+		print( "TrainAtFirstTunnel" );
+	},
+	
+	TrainAtSecondTunnel = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesEnd" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHouseMG" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_AlliesBoatHouseBridge.*" );
+		
+		print( "TrainAtSecondTunnel" );
+	},
 
 };
 
@@ -371,6 +395,9 @@ global OnMapLoad = function()
 
 	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	Util.DisableGoal( "ATTACK_.*", true );
+	Util.DisableGoal( "DEFEND_.*", true );
 	
 	// Axis goals
 	SetGoalPriority( Map.Plant_Truck_Barrier, .92, TEAM.AXIS, CLASS.ENGINEER );
@@ -402,13 +429,17 @@ global OnMapLoad = function()
 	OnTriggerRegion( Vector3( 1936, 0, 884 ), 200, Map.ladder2triggerInfo );
 	OnTriggerRegion( Vector3( 1475, 0, 887 ), 200, Map.ladder3triggerInfo );
 	OnTriggerRegion( Vector3( 921, 0, 887 ), 200, Map.bridge1triggerInfo );
+	
+	//Region 0 when Train has passed First Buildable Bridge
+	Util.OnTriggerPosition( Map.Mover_train, "region1", 200.0, Map.TrainAtFirstTunnel );
+	// Region 1 will have Defend/Attack spots at the exit of First Tunnel
+	// Region 2 will be the actual Region 1
+	Util.OnTriggerPosition( Map.Mover_train, "region3", 200.0, Map.TrainAtSecondTunnel );
+	// Region 3 will be the Attack/Defend spots at the exit of Second Tunnel
+	// Region 4 will be the End, the actual Region 3
+	
+	// *** ROUTING ***
+	// To Do :)
 
 	print( "OnMapLoad" );
-};
-
-// Uncomment for shootable breakables
-
-global OnBotJoin = function( bot )
-{
-	//~ bot.TargetBreakableDist = 300.0;
 };

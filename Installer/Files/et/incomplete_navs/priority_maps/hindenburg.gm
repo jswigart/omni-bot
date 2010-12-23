@@ -1,0 +1,339 @@
+//============================================================================================
+//
+//	Hindenburg Beta 3 - hindenburg.gm
+//
+//	Who			When		What
+//--------------------------------------------------------------------------------------------
+//	Mateos			20/04/2010	From an incomplete .way file
+//
+//============================================================================================
+
+/****************************************************
+Pathing updated and script by Mateos
+Correspondant WAY file size : -
+Last Update : 16th December 2010
+****************************************************/
+
+global Map =
+{
+	// Bridge Controller
+	Switches =
+	{
+		BridgeController =
+		{
+			Enabled = true,
+			Priority = 0.8,
+			WaypointName = "Bridge Controller",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+		},
+	},
+
+
+	Bridge_Controller = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		// Convert the Action string into a vector3 value
+		vel = ToVector(trigger.Action);
+
+		// Disable it for both teams so they will stop pressing it
+		Map.Switches.BridgeController.LimitTeam = 0;
+
+		Util.MapDebugPrint( "Bridge_Controller" );
+	},
+
+	// *** TRIGGERS CALLBACK ***
+
+	Assault_ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_ramp_Built" );
+	},
+
+	City_Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_City_Wall" );
+
+		Util.MapDebugPrint( "City_Wall_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Wood_bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wood_bridge_Built" );
+	},
+
+	Assault_ramp_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_ramp_Planted" );
+	},
+
+	City_Wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "City_Wall_Planted" );
+	},
+
+	Neutral_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Neutral_Command_Post_Planted" );
+	},
+
+	Wood_bridge_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wood_bridge_Planted" );
+	},
+
+	side_entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_entrance_Planted" );
+	},
+
+	Assault_ramp_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_ramp_Defused" );
+	},
+
+	City_Wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "City_Wall_Defused" );
+	},
+
+	Neutral_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Neutral_Command_Post_Defused" );
+	},
+
+	Wood_bridge_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wood_bridge_Defused" );
+	},
+
+	side_entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_entrance_Defused" );
+	},
+
+	Assault_ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_ramp_Destroyed" );
+	},
+
+	City_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "City_Wall_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Wood_bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wood_bridge_Destroyed" );
+	},
+
+	side_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_entrance_Destroyed" );
+	},
+
+	gold_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_Taken" );
+	},
+
+	gold_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_Returned" );
+	},
+
+	gold_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_Secured" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Wood_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_side_entrance" );
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** TRIGGERS ***
+	OnTrigger( "Axis created the City wall!", Map.City_Wall_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Planted at Assault ramp.", Map.Assault_ramp_Planted );
+	OnTrigger( "Planted at City Wall.", Map.City_Wall_Planted );
+	OnTrigger( "Planted at the Neutral Command Post.", Map.Neutral_Command_Post_Planted );
+	OnTrigger( "Planted at Wood bridge.", Map.Wood_bridge_Planted );
+	OnTrigger( "Planted at the side entrance.", Map.side_entrance_Planted );
+	OnTrigger( "Defused at Assault ramp.", Map.Assault_ramp_Defused );
+	OnTrigger( "Defused at City Wall.", Map.City_Wall_Defused );
+	OnTrigger( "Defused at the Neutral Command Post.", Map.Neutral_Command_Post_Defused );
+	OnTrigger( "Defused at Wood bridge.", Map.Wood_bridge_Defused );
+	OnTrigger( "Defused at the side entrance.", Map.side_entrance_Defused );
+	OnTrigger( "Assault ramp has been destroyed.", Map.Assault_ramp_Destroyed );
+	OnTrigger( "The city wall has been destroyed.", Map.City_Wall_Destroyed );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Wood bridge destroyed!", Map.Wood_bridge_Destroyed );
+	OnTrigger( "Allies have destroyed the side entrance!", Map.side_entrance_Destroyed );
+	OnTrigger( "The Allies have stolen the decoder", Map.gold_Taken );
+	OnTrigger( "The Axis have returned the decoder", Map.gold_Returned );
+	OnTrigger( "The Allies have secured the decoder", Map.gold_Secured );
+	OnTrigger( "Axis reclaim the City Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "Allies capture the City Spawn!", Map.forwardspawn1_flag_Allies_Captured );
+
+	// These events don't have an wm_announce in the map script
+	OnTrigger( "MISSING_STRING", Map.Assault_ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Wood_bridge_Built );
+
+	// Bridge Controller
+	OnTrigger( "b_Moving", Map.Bridge_Controller );
+	Util.UpdateSwitchData();
+
+	// *** ALLIED GOALS ***
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
+
+	print( "Omni-bot map script for Hindenburg Beta 3 by Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 150.0;
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.BAR };
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
+};

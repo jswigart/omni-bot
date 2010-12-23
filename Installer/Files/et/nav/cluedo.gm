@@ -3,6 +3,7 @@
 //
 //
 // History:
+// - Fixed Switches Tardis ~ 17 December 2010
 // - let bots talk? added ~ Tardis ~ 18 June 2010  ~  End Game Only
 // - maybe let bots use transporter-switches - added paththough only ~ Tardis ~ 18 June 2010
 // - add some nice sniper-spots outside added ~ Tardis ~ 18 June 2010
@@ -14,12 +15,10 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = true,
-
+	ShowMovers = false,
 	Allied_Command_Post_Dyno = 0,
 	Axis_Command_Post_Dyno = 0,
 	Neutral_Command_Post_Dyno = 0,
-
 	lever_greenPos = 1, //switch is up initially
 	lever_whitePos = 1, //switch is up initially
 	lever_plumPos = 1, //switch is up initially
@@ -27,7 +26,6 @@ global Map =
 	lever_mustardPos = 1, //switch is up initially
 	lever_peacockPos = 1, //switch is up initially
 	lever_monkPos = 1, //switch is up initially
-
 	billiardroom_flag_Axis_Captured = false,
 	billiardroom_flag_Allies_Captured = false,
 	conservatory_flag_Axis_Captured = false,
@@ -42,7 +40,6 @@ global Map =
 	lounge_flag_Allies_Captured = false,
 	study_flag_Axis_Captured = false,
 	study_flag_Allies_Captured = false,
-
 	Switches_conservatory_Enabled = false,
 	Switches_kitchen_Enabled = false,
 	Switches_study_Enabled = false,
@@ -50,7 +47,6 @@ global Map =
 	Switches_diningroom_Enabled = false,
 	Switches_billiardroom_Enabled = false,
 	Switches_library_Enabled = false,
-
 	lever_green_Enabled = false, //conservatory
 	lever_white_Enabled = false, //kitchen
 	lever_plum_Enabled = false, //study
@@ -58,9 +54,37 @@ global Map =
 	lever_mustard_Enabled = false, //diningroom
 	lever_peacock_Enabled = false, //billiardroom
 	lever_monk_Enabled = false, //library
-
+	DoorOpen = false,
+	DoorClosed = true, // door is closed at start 
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
 
+	doorStart = Vector3(2109.987, 998.996, 24),
+	doorEnd = Vector3(2110.159, 860.252, 24),
+	Navigation =
+	{
+		door =
+		{
+			gotowp = "door",
+			navigate = function(_this)
+			{
+				botId = _this.Bot.GetGameId();
+				while(1) {
+					// cs: note: the second to last param as the bots own id makes sure the trace ignores the bot
+					tr = TraceLine(Map.doorStart, Map.doorEnd, null, TRACE.SHOT, botId, false);
+					if (tr.fraction < 1) {
+						yield();
+					}
+					else {
+						break;
+					}
+				}
+				
+				sleep(0.5);
+				//_this.Bot.Say("door is open");
+			},
+		},
+	},
+// /bot waypoint_setproperty paththrough Navigation_PT:door
 //switches
 //conservatory
 	Switches =
@@ -70,10 +94,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "conservatory",
-			AimPosition = Vec3(2495.903, 2938.875, 64.940),
+			AimPosition = Vec3(2495.988, 2943.875, 70.996),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_greenPos == 0 )
@@ -92,10 +116,10 @@ global Map =
 			Enabled = true,
 			//Priority = 0, //always set to 0 when using path through
 			WaypointName = "kitchen",
-			AimPosition = Vec3(1727.986, 2943.875, 61.357),
+			AimPosition = Vec3(1727.841, 2943.875, 70.750),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_whitePos == 0 )
@@ -114,10 +138,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "study",
-			AimPosition = Vec3(3071.875, 1407.815, 60.895),
+			AimPosition = Vec3(3071.875, 1407.462, 71.276),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_plumPos == 0 )
@@ -136,10 +160,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "lounge",
-			AimPosition = Vec3(1728.191, 963.779, 65.434),
+			AimPosition = Vec3(1728.112, 960.125, 71.010),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_scarlettPos == 0 )
@@ -158,10 +182,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "diningroom",
-			AimPosition = Vec3(1088.125, 1599.778, 61.611),
+			AimPosition = Vec3(1088.125, 1600.001, 70.996),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_mustardPos == 0 )
@@ -180,10 +204,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "billiardroom",
-			AimPosition = Vec3(3071.875, 2431.900, 59.458),
+			AimPosition = Vec3(3071.875, 2431.715, 71.405),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_peacockPos == 0 )
@@ -202,10 +226,10 @@ global Map =
 			Enabled = true,
 			Priority = 0, //always set to 0 when using path through
 			WaypointName = "library",
-			AimPosition = Vec3(3071.875, 1919.941, 61.723),
+			AimPosition = Vec3(3071.875, 1919.996, 70.967),
 			LimitBots = 1,
-			PressOnce = true,
 			Timeout = 1500,
+			LimitTeam = 0, // disabled initially.
 			Wait = function() // bot wait a bit for slow moving lever
 			{
 				if ( Map.lever_monkPos == 0 )
@@ -224,16 +248,18 @@ global Map =
 	lever_green = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_greenPos == 1)
+		if ( Map.lever_greenPos == 1 )
 		{
 			Map.lever_greenPos = 0;
 			Map.Switches.conservatory.Enabled = false;
+			Wp.SetWaypointFlag("Con","closed",true);
 			Util.MapDebugPrint( "conservatory_lever_down" );
 		}
 		else
 		{
 			Map.lever_greenPos = 1;
 			Map.Switches.conservatory.Enabled = true;
+			Wp.SetWaypointFlag("Con","closed",false);
 			Util.MapDebugPrint( "conservatory_lever_up");
 		}
 	},
@@ -241,7 +267,7 @@ global Map =
 	lever_white = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_whitePos == 1)
+		if ( Map.lever_whitePos == 1 )
 		{
 			Map.lever_whitePos = 0;
 			Map.Switches.kitchen.Enabled = false;
@@ -252,6 +278,7 @@ global Map =
 			Wp.SetWaypointFlag("kitchen_window_1","closed",true);
 			Wp.SetWaypointFlag("kitchen_a","closed",true);
 			Wp.SetWaypointFlag("kitchen_water","closed",false);
+			Wp.SetWaypointFlag("Kit","closed",true);
 			Util.MapDebugPrint("kitchen_lever_down");
 		}
 		else
@@ -262,6 +289,7 @@ global Map =
 			Wp.SetWaypointFlag("kitchen_window_1","closed",false);
 			Wp.SetWaypointFlag("kitchen_a","closed",false);
 			Wp.SetWaypointFlag("kitchen_water","closed",true);
+			Wp.SetWaypointFlag("Kit","closed",false);
 			Util.MapDebugPrint("kitchen_lever_up");
 		}
 	},
@@ -269,16 +297,18 @@ global Map =
 	lever_plum = function( trigger )
 	{
 		Enabled = true;
-		if  (Map.lever_plumPos == 1)
+		if  ( Map.lever_plumPos == 1 )
 		{
 			Map.lever_plumPos = 0;
 			Map.Switches.study.Enabled = false;
+			Wp.SetWaypointFlag("Stu","closed",true);
 			Util.MapDebugPrint("study_lever_down");
 		}
 		else
 		{
 			Map.lever_plumPos = 1;
 			Map.Switches.study.Enabled = true;
+			Wp.SetWaypointFlag("Stu","closed",false);
 			Util.MapDebugPrint("study_lever_up");
 		}
 	},
@@ -286,16 +316,18 @@ global Map =
 	lever_scarlett = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_scarlettPos == 1)
+		if ( Map.lever_scarlettPos == 1 )
 		{
 			Map.lever_scarlettPos = 0;
 			Map.Switches.lounge.Enabled = false;
+			Wp.SetWaypointFlag("Lou","closed",true);
 			Util.MapDebugPrint("lounge_lever_down");
 		}
 		else
 		{
 			Map.lever_scarlettPos = 1;
 			Map.Switches.lounge.Enabled = true;
+			Wp.SetWaypointFlag("Lou","closed",false);
 			Util.MapDebugPrint("lounge_lever_up");
 		}
 	},
@@ -303,16 +335,18 @@ global Map =
 	lever_mustard = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_mustardPos == 1)
+		if ( Map.lever_mustardPos == 1 )
 		{
 			Map.lever_mustardPos = 0;
 			Map.Switches.diningroom.Enabled = false;
+			Wp.SetWaypointFlag("Din","closed",true);
 			Util.MapDebugPrint("dinningroom_lever_down");
 		}
 		else
 		{
 			Map.lever_mustardPos = 1;
 			Map.Switches.diningroom.Enabled = true;
+			Wp.SetWaypointFlag("Din","closed",false);
 			Util.MapDebugPrint("dinningroom_lever_up");
 		}
 
@@ -321,16 +355,18 @@ global Map =
 	lever_peacock = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_peacockPos == 1)
+		if ( Map.lever_peacockPos == 1 )
 		{
 			Map.lever_peacockPos = 0;
 			Map.Switches.billiardroom.Enabled = false;
+			Wp.SetWaypointFlag("Bil","closed",true);
 			Util.MapDebugPrint("billiardroom_lever_down");
 		}
 		else
 		{
 			Map.lever_peacockPos = 1;
 			Map.Switches.billiardroom.Enabled = true;
+			Wp.SetWaypointFlag("Bil","closed",false);
 			Util.MapDebugPrint("billiardroom_lever_up");
 		}
 	},
@@ -338,16 +374,18 @@ global Map =
 	lever_monk = function( trigger )
 	{
 		Enabled = true;
-		if (Map.lever_monkPos == 1)
+		if ( Map.lever_monkPos == 1 )
 		{
 			Map.lever_monkPos = 0;
 			Map.Switches.library.Enabled = false;
+			Wp.SetWaypointFlag("Lib","closed",true);
 			Util.MapDebugPrint("library_lever_down");
 		}
 		else
 		{
 			Map.lever_monkPos = 1;
 			Map.Switches.library.Enabled = true;
+			Wp.SetWaypointFlag("Lib","closed",false);
 			Util.MapDebugPrint("library_lever_up");
 		}
 	},
@@ -365,10 +403,8 @@ global Map =
 		Util.EnableGoal( "ROUTE_lounge_2" );
 		Util.EnableGoal( "ROUTE_lounge_3" );
 		Util.EnableGoal( "ROUTE_lounge_a" );
-		Map.Switches_lounge_Enabled = true;
-		Map.lever_scarlett_Enabled = true;
 		Wp.SetWaypointFlag("Lou","closed",false);
-
+		
 		Util.MapDebugPrint( "Get Lounge" );
 	},
 // Dining-Room
@@ -385,8 +421,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_dinning_a" );
 		Util.EnableGoal( "ROUTE_dinning_b" );
 		Util.EnableGoal( "ROUTE_dinning_c" );
-		Map.Switches_diningroom_Enabled = true;
-		Map.lever_mustard_Enabled = true;
 		Wp.SetWaypointFlag("Din","closed",false);
 
 		Util.MapDebugPrint( "Get Dining-Room" );
@@ -402,8 +436,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_kitchen_a" );
 		Util.EnableGoal( "ROUTE_kitchen_b" );
 		Util.EnableGoal( "ROUTE_kitchen_c" );
-		Map.Switches_kitchen_Enabled = true;
-		Map.lever_white_Enabled = true;
 		Wp.SetWaypointFlag("Kit","closed",false);
 
 		Util.MapDebugPrint( "Get Kitchen" );
@@ -421,8 +453,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_conservatory_2" );
 		Util.EnableGoal( "ROUTE_conservatory_3" );
 		Util.EnableGoal( "ROUTE_conservatory_a" );
-		Map.Switches_conservatory_Enabled = true;
-		Map.lever_green_Enabled = true;
 		Wp.SetWaypointFlag("Con","closed",false);
 
 		Util.MapDebugPrint( "Get Conservatory" );
@@ -441,8 +471,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_billard_2" );
 		Util.EnableGoal( "ROUTE_billard_a" );
 		Util.EnableGoal( "ROUTE_billard_b" );
-		Map.Switches_billiardroom_Enabled = true;
-		Map.lever_peacock_Enabled = true;
 		Wp.SetWaypointFlag("Bil","closed",false);
 
 		Util.MapDebugPrint( "Get Billiard" );
@@ -459,8 +487,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_library_1" );
 		Util.EnableGoal( "ROUTE_library_a" );
 		Util.EnableGoal( "ROUTE_library_b" );
-		Map.Switches_library_Enabled = true;
-		Map.lever_monk_Enabled = true;
 		Wp.SetWaypointFlag("Lib","closed",false);
 
 		Util.MapDebugPrint( "Get Library" );
@@ -477,8 +503,6 @@ global Map =
 		Util.EnableGoal( "ROUTE_study_1" );
 		Util.EnableGoal( "ROUTE_study_2" );
 		Util.EnableGoal( "ROUTE_study_a" );
-		Map.Switches_study_Enabled = true;
-		Map.lever_plum_Enabled = true;
 		Wp.SetWaypointFlag("Stu","closed",false);
 
 		Util.MapDebugPrint( "Get Study" );
@@ -566,7 +590,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_billiardroom_flag" );
-
+		Map.Switches.billiardroom.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "billiardroom_flag_Axis_Captured" );
 	},
 	billiardroom_flag_Allies_Captured = function( trigger )
@@ -581,7 +605,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_billard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_billiardroom_flag" );
-
+		Map.Switches.billiardroom.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "billiardroom_flag_Allies_Captured" );
 	},
 //conservatory
@@ -597,7 +621,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_conservatory_flag" );
-
+		Map.Switches.conservatory.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "conservatory_flag_Axis_Captured" );
 	},
 	conservatory_flag_Allies_Captured = function( trigger )
@@ -612,7 +636,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_conservatory.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_conservatory_flag" );
-
+		Map.Switches.conservatory.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "conservatory_flag_Allies_Captured" );
 	},
 //diningroom
@@ -628,7 +652,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_diningroom_flag" );
-
+		Map.Switches.diningroom.LimitTeam = (1<<TEAM.ALLIES);		
 		Util.MapDebugPrint( "diningroom_flag_Axis_Captured" );
 	},
 	diningroom_flag_Allies_Captured = function( trigger )
@@ -643,7 +667,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_dining.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_diningroom_flag" );
-
+		Map.Switches.diningroom.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "diningroom_flag_Allies_Captured" );
 	},
 //kitchen
@@ -657,7 +681,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_kitchen_flag" );
-
+		Map.Switches.kitchen.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "kitchen_flag_Axis_Captured" );
 	},
 	kitchen_flag_Allies_Captured = function( trigger )
@@ -670,7 +694,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_defkitchen.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_kitchen_flag" );
-
+		Map.Switches.kitchen.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "kitchen_flag_Allies_Captured" );
 	},
 //library
@@ -684,7 +708,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_library_flag" );
-
+		Map.Switches.library.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "library_flag_Axis_Captured" );
 	},
 	library_flag_Allies_Captured = function( trigger )
@@ -697,7 +721,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_deflibrary.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_library_flag" );
-
+		Map.Switches.library.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "library_flag_Allies_Captured" );
 
 
@@ -715,7 +739,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_lounge_flag" );
-
+		Map.Switches.lounge.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "lounge_flag_Axis_Captured" );
 
 
@@ -732,7 +756,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_lounge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_lounge_flag" );
-
+		Map.Switches.lounge.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "lounge_flag_Allies_Captured" );
 	},
 //study
@@ -748,7 +772,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_studdy_flag" );
-
+		Map.Switches.study.LimitTeam = (1<<TEAM.ALLIES);
 		Util.MapDebugPrint( "study_flag_Axis_Captured" );
 	},
 	study_flag_Allies_Captured = function( trigger )
@@ -763,7 +787,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_studdy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_studdy_flag" );
-
+		Map.Switches.study.LimitTeam = (1<<TEAM.AXIS);
 		Util.MapDebugPrint( "study_flag_Allies_Captured" );
 	},
 //Flags Secured
@@ -782,8 +806,9 @@ global Map =
 		Util.DisableGoal( "ROUTE_billard_2" );
 		Util.DisableGoal( "ROUTE_billard_a" );
 		Util.DisableGoal( "ROUTE_billard_b" );
-		Map.Switches_billiardroom_Enabled = false;
-		Map.lever_peacock_Enabled = false;
+		Map.Switches_billiardroom_Disable = true;
+		Map.lever_peacock_Disable = true;
+		Map.Switches.billiardroom.LimitTeam = 0;
 		Wp.SetWaypointFlag("Bill","closed",true);
 
 		Util.MapDebugPrint( "billiardroom_flag_Axis_Secured" );
@@ -802,9 +827,11 @@ global Map =
 		Util.DisableGoal ( "ROUTE_billard_2" );
 		Util.DisableGoal ( "ROUTE_billard_a" );
 		Util.DisableGoal ( "ROUTE_billard_b" );
-		Map.Switches_billiardroom_Enabled = false;
-		Map.lever_peacock_Enabled = false;
 		Wp.SetWaypointFlag("Bill","closed",true);
+		Map.Switches_billiardroom_Disabled = true;
+		Map.lever_peacock_Disabled = true;
+		Map.Switches.billiardroom.LimitTeam = 0;
+		
 
 		Util.MapDebugPrint( "billiardroom_flag_Allies_Secured" );
 	},
@@ -823,8 +850,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_conservatory_2" );
 		Util.DisableGoal ( "ROUTE_conservatory_3" );
 		Util.DisableGoal ( "ROUTE_conservatory_a" );
-		Map.Switches_conservatory_Enabled = false;
-		Map.lever_green_Enabled = false;
+		Map.Switches_conservatory_Disabled = true;;
+		Map.lever_green_Disabled = true;;
+		Map.Switches.conservatory.LimitTeam = 0;
 		Wp.SetWaypointFlag("Con","closed",true);
 
 		Util.MapDebugPrint( "conservatory_flag_Axis_Secured" );
@@ -843,8 +871,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_conservatory_2" );
 		Util.DisableGoal ( "ROUTE_conservatory_3" );
 		Util.DisableGoal ( "ROUTE_conservatory_a" );
-		Map.Switches_conservatory_Enabled = false;
-		Map.lever_green_Enabled = false;
+		Map.Switches_conservatory_Disabled = true;;
+		Map.lever_green_Disabled = true;;
+		Map.Switches.conservatory.LimitTeam = 0;
 		Wp.SetWaypointFlag("Con","closed",true);
 
 		Util.MapDebugPrint( "conservatory_flag_Allies_Secured" );
@@ -865,8 +894,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_dinning_a" );
 		Util.DisableGoal ( "ROUTE_dinning_b" );
 		Util.DisableGoal ( "ROUTE_dinning_c" );
-		Map.Switches_diningroom_Enabled = false;
-		Map.lever_mustard_Enabled = false;
+		Map.Switches_diningroom_Disabled = true;;
+		Map.lever_mustard_Disabled = true;;
+		Map.Switches.diningroom.LimitTeam = 0;
 		Wp.SetWaypointFlag("Din","closed",true);
 
 		Util.MapDebugPrint( "diningroom_flag_Axis_Secured" );
@@ -886,8 +916,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_dinning_a" );
 		Util.DisableGoal ( "ROUTE_dinning_b" );
 		Util.DisableGoal ( "ROUTE_dinning_c" );
-		Map.Switches_diningroom_Enabled = false;
-		Map.lever_mustard_Enabled = false;
+		Map.Switches_diningroom_Disabled = true;;
+		Map.lever_mustard_Disabled = true;;
+		Map.Switches.diningroom.LimitTeam = 0;
 		Wp.SetWaypointFlag("Din","closed",true);
 
 		Util.MapDebugPrint( "diningroom_flag_Allies_Secured" );
@@ -905,8 +936,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_kitchen_a" );
 		Util.DisableGoal ( "ROUTE_kitchen_b" );
 		Util.DisableGoal ( "ROUTE_kitchen_c" );
-		Map.Switches_kitchen_Enabled = false;
-		Map.lever_white_Enabled = false;
+		Map.Switches_kitchen_Disabled = true;
+		Map.lever_white_Disabled = true;
+		Map.Switches.kitchen.LimitTeam = 0;
 		Wp.SetWaypointFlag("Kit","closed",true);
 
 		Util.MapDebugPrint( "kitchen_flag_Axis_Secured" );
@@ -924,8 +956,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_kitchen_a" );
 		Util.DisableGoal ( "ROUTE_kitchen_b" );
 		Util.DisableGoal ( "ROUTE_kitchen_c" );
-		Map.Switches_kitchen_Enabled = false;
-		Map.lever_white_Enabled = false;
+		Map.Switches_kitchen_Disabled = true;
+		Map.lever_white_Disabled = true;
+		Map.Switches.kitchen.LimitTeam = 0;
 		Wp.SetWaypointFlag("Kit","closed",true);
 
 		Util.MapDebugPrint( "kitchen_flag_Allies_Secured" );
@@ -944,8 +977,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_library_1" );
 		Util.DisableGoal ( "ROUTE_library_a" );
 		Util.DisableGoal ( "ROUTE_library_b" );
-		Map.Switches_library_Enabled = false;
-		Map.lever_monk_Enabled = false;
+		Map.Switches_library_Disabled = true;
+		Map.lever_monk_Disabled = true;
+		Map.Switches.library.LimitTeam = 0;
 		Wp.SetWaypointFlag("Lib","closed",true);
 
 		Util.MapDebugPrint( "library_flag_Axis_Secured" );
@@ -963,8 +997,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_library_1" );
 		Util.DisableGoal ( "ROUTE_library_a" );
 		Util.DisableGoal ( "ROUTE_library_b" );
-		Map.Switches_library_Enabled = false;
-		Map.lever_monk_Enabled = false;
+		Map.Switches_library_Disabled = true;
+		Map.lever_monk_Disabled = true;
+		Map.Switches.library.LimitTeam = 0;
 		Wp.SetWaypointFlag("Lib","closed",true);
 
 		Util.MapDebugPrint( "library_flag_Allies_Secured" );
@@ -984,8 +1019,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_lounge_2" );
 		Util.DisableGoal ( "ROUTE_lounge_3" );
 		Util.DisableGoal ( "ROUTE_lounge_a" );
-		Map.Switches_lounge_Enabled = false;
-		Map.lever_scarlett_Enabled = false;
+		Map.Switches_Disabled = true;
+		Map.lever_scarlett_Disabled = true;
+		Map.Switches.lounge.LimitTeam = 0;
 		Wp.SetWaypointFlag("Lou","closed",true);
 
 		Util.MapDebugPrint( "lounge_flag_Axis_Secured" );
@@ -1004,8 +1040,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_lounge_2" );
 		Util.DisableGoal ( "ROUTE_lounge_3" );
 		Util.DisableGoal ( "ROUTE_lounge_a" );
-		Map.Switches_lounge_Enabled = false;
-		Map.lever_scarlett_Enabled = false;
+		Map.Switches_lounge_Disabled = true;
+		Map.lever_scarlett_Disabled = true;
+		Map.Switches.lounge.LimitTeam = 0;
 		Wp.SetWaypointFlag("Lou","closed",true);
 
 		Util.MapDebugPrint( "lounge_flag_Allies_Secured" );
@@ -1024,8 +1061,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_study_1" );
 		Util.DisableGoal ( "ROUTE_study_2" );
 		Util.DisableGoal ( "ROUTE_study_a" );
-		Map.Switches_study_Enabled = false;
-		Map.lever_plum_Enabled = false;
+		Map.Switches_study_Disabled = true;
+		Map.lever_plum_Disabled = true;
+		Map.Switches.study.LimitTeam = 0;
 		Wp.SetWaypointFlag("Stu","closed",true);
 
 		Util.MapDebugPrint( "study_flag_Axis_Secured" );
@@ -1043,8 +1081,9 @@ global Map =
 		Util.DisableGoal ( "ROUTE_study_1" );
 		Util.DisableGoal ( "ROUTE_study_2" );
 		Util.DisableGoal ( "ROUTE_study_a" );
-		Map.Switches_study_Enabled = false;
-		Map.lever_plum_Enabled = false;
+		Map.Switches_study_Disabled = true;
+		Map.lever_plum_Disabled = true;
+		Map.Switches.study.LimitTeam = 0;
 		Wp.SetWaypointFlag("Stu","closed",true);
 
 		Util.MapDebugPrint( "study_flag_Allies_Secured" );
@@ -1145,6 +1184,9 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at the Axis Command Post", Map.Axis_Command_Post_Defused );
 	OnTrigger( "Allies are victorious!", Map.allies_win );
 	OnTrigger( "Axis are victorious!", Map.axis_win );
+	
+	// disable bot pushing in first allied spawn
+	nopush = OnTriggerRegion(AABB(1871.125,911.125,1.125,2352.875,1456.875,115.023),RegionTrigger.DisableBotPush);
 
 	Util.DisableGoal( ".*", true ); // all but routes
 //Waypoints
@@ -1154,10 +1196,9 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag("Lou","closed",true);
 	Wp.SetWaypointFlag("Din","closed",true);
 	Wp.SetWaypointFlag("Bil","closed",true);
-	Wp.SetWaypointFlag("Lib","closed",true);
 //Command Post
 	Util.EnableGoal( "BUILD_.*" );
-	Util.EnableGoal( "HEALTHCAB_.*" );
+	Util.EnableGoal( "HEALTHCAB_.*" ); 
 //billiardroom
 	Util.DisableGoal ( "ROUTE_billard" );
 	Util.DisableGoal ( "ROUTE_billard_1" );
