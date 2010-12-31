@@ -12,7 +12,7 @@ this.InitNewGoal = function()
 		this.BaseInitNewGoal();
 	}
 
-	this.Weaponss[ WEAPON.FLAMETHROWER ] = 1;
+	this.Weapons[ WEAPON.FLAMETHROWER ] = 1;
 };
 
 //////////////////////////////////////////////////////////////////////////
