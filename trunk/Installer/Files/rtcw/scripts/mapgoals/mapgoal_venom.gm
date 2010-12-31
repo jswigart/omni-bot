@@ -12,7 +12,7 @@ this.InitNewGoal = function()
 		this.BaseInitNewGoal();
 	}
 
-	this.Weaponss[ WEAPON.VENOM ] = 1;
+	this.Weapons[ WEAPON.VENOM ] = 1;
 };
 
 //////////////////////////////////////////////////////////////////////////
