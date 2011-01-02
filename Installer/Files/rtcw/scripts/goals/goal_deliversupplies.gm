@@ -264,7 +264,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 	}
 
 	if(macroId == VOICE.NEED_AMMO &&
-	   this.Bot.GetClass() == CLASS.FIELDOPS &&
+	   this.Bot.GetClass() == CLASS.LIEUTENANT &&
 	   this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
 	{
 		this.Supply = WEAPON.AMMO_PACK;
