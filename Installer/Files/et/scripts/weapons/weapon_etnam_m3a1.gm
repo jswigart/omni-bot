@@ -1,10 +1,16 @@
+//#M#014#
+//////////////////////////////////////////////////////////////////////////
 // The new weapon instance is passed to this function as the 'this'
 // Properties can be set like this.Property = x, or the this prefix can be left off.
+//////////////////////////////////////////////////////////////////////////
+
+WEAPON.M3A1 = 104; 					// Defined into g_etbot_interface.cpp
 
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
-this.Name = "MP40";
-this.WeaponId = WEAPON.MP40;
+this.Name = "M3A1";
+this.WeaponId = WEAPON.M3A1;
+this.PrimaryFire.AmmoType = WEAPON.M3A1;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
@@ -19,6 +25,5 @@ this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
 this.PrimaryFire.DefaultDesirability = 0.7;
 this.PrimaryFire.SetDesirabilityRange(0, 2600, 0.7);
 
-this.PrimaryFire.LowAmmoThreshold = 32;
+this.PrimaryFire.LowAmmoThreshold = 5;
 this.PrimaryFire.LowAmmoPriority = 0.8;
-this.PrimaryFire.LowAmmoGetAmmoAmount = 64;
