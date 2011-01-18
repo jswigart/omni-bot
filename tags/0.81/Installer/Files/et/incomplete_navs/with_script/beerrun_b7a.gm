@@ -1,0 +1,259 @@
+global Map =
+{
+	Quiet = true,
+	KeyStatus = false, //home
+	KeyCapturedStatus = false, //not capped
+	Keg1Status = false, //home
+	Keg2Status = false, //home
+	ControlsStatus = false, //destroyed
+	
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Flag_access_codes = "FLAG_access_codes",
+	Flag_axis_gold1 = "FLAG_axis_gold1",
+	Flag_axis_gold2 = "FLAG_axis_gold2",
+	Cappoint_keg = "CAPPOINT_keg",
+	Cappoint_keycodes = "CAPPOINT_keycodes",
+	Build_Axis_Controls = "BUILD_Axis_Controls",
+	Plant_Axis_Controls = "PLANT_Axis_Controls",
+
+	Axis_Controls_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ControlsStatus = true;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_keg" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Controls" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Controls" );
+	
+		print( "Axis_Controls_Built" );
+	},
+
+	Axis_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ControlsStatus = false;
+		
+		if ( Map.KeyCapturedStatus )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_keg" );
+		}
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Controls" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Controls" );
+		print( "Axis_Controls_Destroyed" );
+	},
+
+	access_codes_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.KeyStatus = true;
+		
+		print( "access_codes_Taken" );
+	},
+
+	access_codes_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.KeyStatus = false;
+			
+
+		print( "access_codes_Returned" );
+	},
+
+	axis_gold1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Keg1Status = true;
+
+		print( "axis_gold1_Taken" );
+	},
+
+	axis_gold1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.Keg1Status = false;
+		
+		print( "axis_gold1_Returned" );
+	},
+
+	axis_gold2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Keg2Status = true;
+		
+		print( "axis_gold2_Taken" );
+	},
+
+	axis_gold2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Keg2Status = false;
+		
+		print( "axis_gold2_Returned" );
+	},
+
+	keg1_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold2" );
+
+		print( "keg1_Captured" );
+	},
+
+	keg2_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "keg2_Captured" );
+	},
+
+	keycodes_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.KeyCapturedStatus = true;
+		
+		if ( !Map.ControlsStatus )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_keg" );
+		}
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Controls" );
+		
+        SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_keycodes" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_access_codes" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold1" );
+
+		print( "keycodes_Captured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Controls" );
+		
+		print( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Controls" );
+
+		print( "forward_spawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "beer_axis_controls_repaired", Map.Axis_Controls_Built );
+	OnTrigger( "beer_axis_controls_destroyed", Map.Axis_Controls_Destroyed );
+	OnTrigger( "The Allies have stolen the Key Card", Map.access_codes_Taken );
+    OnTrigger( "Flag returned access_codes!", Map.access_codes_Returned );
+	OnTrigger( "The Allies have stolen the 1st Beer Keg!", Map.axis_gold1_Taken );
+	OnTrigger( "Flag returned axis_gold1!", Map.axis_gold1_Returned );
+	OnTrigger( "The Allies have stolen the 2nd Beer Keg!", Map.axis_gold2_Taken );
+	OnTrigger( "Flag returned axis_gold2!", Map.axis_gold2_Returned );
+	OnTrigger( "Axis capture the Forward Bunker!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.forward_spawn_Allies_Captured );
+	OnTrigger( "The Allies have secured the 1st Beer Keg!", Map.keg1_Captured );
+	OnTrigger( "The Allies have secured the 2nd Beer Keg!", Map.keg2_Captured );
+	OnTrigger( "The Allies have unlocked the first Keg Vault", Map.keycodes_Captured );
+
+	//disable all goals at start
+	ETUtil.DisableGoal(".*", true); //all but routes
+
+	ETUtil.SetPrimaryGoals(1.0);
+
+	//SetGoalPriority( "CALL.*", 1.0 );
+	//SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	//SetGoalPriority( "DEFEND_axkeg.*", 1.0 );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_access_codes" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_keycodes" );
+
+	SetGoalPriority( "FLAG.*", 1.1 );
+	Util.SetMaxUsersInProgress( 3, "FLAG_access_codes" );
+	Util.SetGoalOffset( 0, -20, 0, "PLANT_Axis_Controls" );
+
+	Maproutes =
+	{
+ 		CHECKPOINT_forward_spawn =
+ 		{
+ 			ROUTE_alspawn = 
+			{
+				ROUTE_alcp1 = {},
+				ROUTE_alcp2 = {},
+			},
+
+		},
+ 		CAPPOINT_keycodes =
+ 		{
+ 			ROUTE_key = 
+			{
+				ROUTE_alcp1 = {},
+				ROUTE_alcp2 = {},
+			},
+		},
+     };
+
+    Util.Routes(Maproutes);
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+
+	class = bot.GetClass();
+
+	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER) 
+	{
+		if (Map.bPanzers == 0 )
+		{
+			ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
+			Map.bPanzers +=1;
+		}
+	}
+	if (bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER) 
+	{
+		if (Map.rPanzers == 0)
+		{
+			ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
+			Map.rPanzers +=1;
+		}
+	}
+};

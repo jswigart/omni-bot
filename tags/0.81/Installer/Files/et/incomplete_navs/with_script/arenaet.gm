@@ -1,0 +1,40 @@
+//==========================================================================================
+//
+//	arenaet.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Mobile_MG42_915 = "MOBILEMG42_915",
+	Snipe_902 = "SNIPE_902",
+	Snipe_946 = "SNIPE_946",
+	Plant_Mine_914 = "PLANTMINE_914",
+	Plant_Mine_939 = "PLANTMINE_939",
+	Plant_Mine_950 = "PLANTMINE_950",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

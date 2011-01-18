@@ -1,0 +1,320 @@
+//script modified by palota
+global Map =
+{
+	Ammo_Cabinet_t4 = "AMMOCAB_t4",
+	Ammo_Cabinet_t5 = "AMMOCAB_t5",
+	Health_Cabinet_t2 = "HEALTHCAB_t2",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Checkpoint_level2cp = "CHECKPOINT_level2cp",
+	Checkpoint_level3cp = "CHECKPOINT_level3cp",
+	Flag_palantir = "FLAG_palantir",
+	Cappoint_561 = "CAPPOINT_561",
+	Cappoint_563 = "CAPPOINT_563",
+	Build_Level_5_Gate = "BUILD_Level_5_Gate",
+	Plant_City_Gate = "PLANT_City_Gate",
+	Plant_Level_2_Gate = "PLANT_Level_2_Gate",
+	Plant_Level_3_Gate = "PLANT_Level_3_Gate",
+	Plant_Level_4_Gate = "PLANT_Level_4_Gate",
+	Plant_Level_5_Gate = "PLANT_Level_5_Gate",
+	Plant_Level_6_Gate = "PLANT_Level_6_Gate",
+	Plant_Level_7_Gate = "PLANT_Level_7_Gate",
+
+	City_Gate_Closed = function( trigger )
+	{
+		SetAvailableMapGoals(TEAM.ALLIES, true, ".*_g1_.*");
+		Util.MapDebugPrint( "City_Gate_Closed" );
+	},
+	
+	City_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g0_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g1_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g2_.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a0_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*_a2_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_2_Gate");
+		Util.MapDebugPrint( "City_Gate_Destroyed" );
+	},
+
+	Level_2_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g2_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g3_.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a2_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*_a3_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_3_Gate");
+		Util.EnableGoal("CHECKPOINT_level2cp");
+		Util.MapDebugPrint( "Level_2_Gate_Destroyed" );
+	},
+
+	Level_3_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g3_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g4_.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a3_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*_a4_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_4_Gate");
+		Util.DisableGoal("CHECKPOINT_level2cp");
+		Util.EnableGoal("CHECKPOINT_level3cp");
+		Util.MapDebugPrint( "Level_3_Gate_Destroyed" );
+	},
+
+	Level_4_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g4_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g5_.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a4_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*_a5_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_5_Gate");
+		Util.DisableGoal("CHECKPOINT_level3cp");
+		Util.EnableGoal("AMMO.*");
+		Util.EnableGoal("HEALTH.*");
+		Util.MapDebugPrint( "Level_4_Gate_Destroyed" );
+	},
+
+	Level_5_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g5_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g6_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_Level_5_Gate");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a5_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*_a6_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_6_Gate");
+		Util.DisableGoal("AMMO.*");
+		Util.DisableGoal("HEALTH.*");
+		Util.MapDebugPrint( "Level_5_Gate_Destroyed" );
+	},
+
+	Level_6_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_Level_5_Gate");
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g6_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g7_.*");
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g8_.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*_a6_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Level_7_Gate");
+		SetAvailableMapGoals(TEAM.AXIS, true, "FLAG.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "CAPPOINT.*");
+		Util.MapDebugPrint( "Level_6_Gate_Destroyed" );
+	},
+
+	Level_7_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false, ".*_g7_.*");
+		Util.EnableGoal("ROUTE_gate7");
+		Util.MapDebugPrint( "Level_7_Gate_Destroyed" );
+	},
+
+	palantir_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, true,  ".*_g9_.*");
+		SetAvailableMapGoals(TEAM.AXIS, true,  ".*_a9_.*");
+		Util.MapDebugPrint( "palantir_Taken" );
+	},
+
+	palantir_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.ALLIES, false,  ".*_g9_.*");
+		Util.MapDebugPrint( "palantir_Returned" );
+	},
+
+	CAPPOINT_561_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_561_Captured" );
+	},
+
+	CAPPOINT_563_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_563_Captured" );
+	},
+
+	level2cp_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "level2cp_Axis_Captured" );
+	},
+
+	level2cp_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "level2cp_Allies_Captured" );
+	},
+
+	level3cp_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "level3cp_Axis_Captured" );
+	},
+
+	level3cp_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "level3cp_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "maingate_left_down_goto", Map.City_Gate_Closed );
+	OnTrigger( "Axis have blown the City Gate and captured the first level!", Map.City_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 2 gate and captured the second level!", Map.Level_2_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 3 gate and captured the second level!", Map.Level_3_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 4 gate and captured the third level!", Map.Level_4_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 5 gate and captured the fourth level!", Map.Level_5_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 6 gate and gained access to all the City!", Map.Level_6_Gate_Destroyed );
+	OnTrigger( "Axis have blown the level 7 gate!", Map.Level_7_Gate_Destroyed );
+	OnTrigger( "Axis have taken the Palantir!", Map.palantir_Taken );
+	OnTrigger( "Flag returned palantir!", Map.palantir_Returned );
+	OnTrigger( "Axis have captured the Palantir and gained control of Minas Tirith!", Map.CAPPOINT_561_Captured );
+	OnTrigger( "Axis have captured the Palantir and gained control of Minas Tirith!", Map.CAPPOINT_563_Captured );
+	//OnTrigger( "MISSING_STRING", Map.level2cp_Axis_Captured );
+	//OnTrigger( "MISSING_STRING", Map.level2cp_Allies_Captured );
+	//OnTrigger( "MISSING_STRING", Map.level3cp_Axis_Captured );
+	//OnTrigger( "MISSING_STRING", Map.level3cp_Allies_Captured );
+	
+	Util.SetGoalOffset(51,-19,-235, "PLANT_Level_4_Gate");
+	Util.AddUseWp("PLANT_Level_5_Gate", "gate5");
+	Util.AddUseWp("PLANT_Level_5_Gate", "a5_2");
+
+	Util.DisableGoal(".*", true);
+	Util.DisableGoal("ROUTE_gate7");
+	
+	SetAvailableMapGoals(TEAM.ALLIES, true, ".*_g0_.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, ".*_a0_.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_City_Gate");
+
+	SetGoalPriority("ATTACK_a0_4", 0.49, TEAM.AXIS);
+	SetGoalPriority("ATTACK_a0_4", 0.51, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("PLANT_Abbey_Command_Post", 0.59, TEAM.AXIS, CLASS.ENGINEER);
+
+	Util.SetMaxUsersInProgress(1, "PLANTMINE.*");
+
+	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=300} );
+	SetMapGoalProperties("MOBILEMG.*", {mincamptime=150, maxcamptime=500} );
+	SetMapGoalProperties("SNIPE.*", {mincamptime=100, maxcamptime=250} );
+
+	MapRoutes =
+	{
+		FLAG_palantir = {
+			ROUTE_spawn8 = {
+				ROUTE_r8_east = {},
+				ROUTE_r8_in = {},
+			},
+			ROUTE_spawn8_1 = {
+				ROUTE_r8_east = {},
+				ROUTE_r8_in = {},
+			},
+		},
+		CAPPOINT_561 = {
+			ROUTE_palantir = {
+				ROUTE_r9_south_east = { Weight=4,
+					ROUTE_gate7 = {},
+					ROUTE_r9_north_east = {},
+				},
+				ROUTE_r9_north = { Weight=3 },
+				ROUTE_r9_south = {},
+			},
+		},
+		ATTACK_a0_2 = {
+			ROUTE_spawn0 = {
+				ROUTE_r0_1 = {},
+			},
+		},		
+		ATTACK_a0_1 = {
+			ROUTE_spawn0 = {
+				ROUTE_r0_2 = {},
+			},
+		},		
+		ATTACK_a2_1 = {
+			ROUTE_spawn2 = {
+				ROUTE_r2_2 = {},
+			},
+		},		
+		ATTACK_a3_2 = {
+			ROUTE_flag3 = {
+				ROUTE_r3_2 = {},
+			},
+		},		
+		ATTACK_a3_3 = {
+			ROUTE_flag3 = {
+				ROUTE_r3_3 = {},
+			},		
+		},		
+		ATTACK_a4_1 = {
+			ROUTE_flag4 = {
+				ROUTE_r4_1 = {},
+			},		
+		},		
+		ATTACK_a4_2 = {
+			ROUTE_flag4 = {
+				ROUTE_r4_2 = {},
+			},		
+		},
+		ATTACK_a5_1 = {
+			ROUTE_spawn5 = {
+				ROUTE_r5_1 = {},
+				ROUTE_r5_3 = {},
+			},		
+		},
+		ATTACK_a5_2 = {
+			ROUTE_spawn5 = {
+				ROUTE_r5_2 = {},
+				ROUTE_r5_4 = {},
+			},		
+		},
+		ATTACK_a6_1 = {
+			ROUTE_spawn6 = {
+				ROUTE_r6_1 = {},
+			},		
+		},
+	};
+	MapRoutes.CAPPOINT_563 = MapRoutes.CAPPOINT_561;
+	MapRoutes.ATTACK_a0_3 = MapRoutes.ATTACK_a0_1;
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint( "Omni_bot map script for " + GetMapName() + " executed." );
+};

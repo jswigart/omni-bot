@@ -1,0 +1,148 @@
+//script created by palota
+global Map =
+{
+	Allied_Crypt_Destroyed = function( trigger )
+	{
+	 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_gold");
+	 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_crypt_mir");
+	},
+	Axis_Crypt_Destroyed = function( trigger )
+	{
+	 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold");
+	 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_crypt");
+	},
+
+	allied_gold_Taken = function( trigger )
+	{
+	 	SetGoalPriority( "DEFEND.*", 0.1, TEAM.ALLIES);
+	 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard");
+	},
+	axis_gold_Taken = function( trigger )
+	{
+	 	SetGoalPriority( "DEFEND.*", 0.1, TEAM.AXIS);
+	 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_yard_mir");
+	},
+
+	allied_gold_Returned = function( trigger )
+	{
+	 	SetGoalPriority( "DEFEND.*", 0.5, TEAM.ALLIES);
+	 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
+	},
+	axis_gold_Returned = function( trigger )
+	{
+	 	SetGoalPriority( "DEFEND.*", 0.5, TEAM.AXIS);
+	 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "The Axis Team has Destroyed the Allied Crypt!", Map.Allied_Crypt_Destroyed );
+	OnTrigger( "The Allied Team has Destroyed the Axis Crypt!", Map.Axis_Crypt_Destroyed );
+	OnTrigger( "Axis have stolen the Allied Gold!", Map.allied_gold_Taken );
+	OnTrigger( "Allies have stolen the Axis Gold!", Map.axis_gold_Taken );
+	OnTrigger( "Flag returned allied_gold!", Map.allied_gold_Returned );
+	OnTrigger( "Flag returned axis_gold!", Map.axis_gold_Returned );
+
+ 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_gold");
+ 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_gold");
+ 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
+ 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
+
+ 	SetGoalPriority( "BUILD.*Command_Post", 0.8);
+ 	SetGoalPriority( "PLANT.*Command_Post", 0.7);
+ 	SetGoalPriority( "MOUNTMG42.*", 0.5);
+
+	Util.SetMaxUsersInProgress(1, "SNIPE_.*");
+	Util.SetMaxUsersInProgress(1, "MOUNTMG42.*");
+	Util.SetMaxUsersInProgress(1, "REPAIRMG42.*");
+	Util.SetMaxUsersInProgress(1, "BUILD.*Command_Post");
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=30, maxcamptime=120} );
+	SetMapGoalProperties( "DEFEND.*", {mincamptime=20, maxcamptime=60} );
+
+	Util.SetGoalOffset(-225,0,0, "PLANT_Axis_Crypt");
+	Util.SetGoalOffset(225,0,0, "PLANT_Allied_Crypt");
+
+	MapRoutes =
+	{
+		PLANT_Axis_Crypt = {
+			ROUTE_spawn_mir = {
+				ROUTE_under_left_mir = {
+					ROUTE_under_left = {},
+					ROUTE_under_right = {},
+				},
+				ROUTE_under_right_mir = {
+					ROUTE_under_left = {},
+					ROUTE_under_right = {},
+				},
+				ROUTE_crypt2_mir = {
+					ROUTE_side_mir = {},
+					ROUTE_side_long_mir = {},
+				},
+				ROUTE_center_mir = { Weight=2, ROUTE_right = { ROUTE_cabinet = {}}},
+				ROUTE_right_mir = { ROUTE_side = { } },
+				ROUTE_side_long = {},
+				ROUTE_center = {},
+			},
+		},
+		PLANT_Allied_Crypt = {
+			ROUTE_spawn = {
+				ROUTE_under_left = {
+					ROUTE_under_left_mir = {},
+					ROUTE_under_right_mir = {},
+				},
+				ROUTE_under_right = {
+					ROUTE_under_left_mir = {},
+					ROUTE_under_right_mir = {},
+				},
+				ROUTE_crypt2 = {
+					ROUTE_side = {},
+					ROUTE_side_long = {},
+				},
+				ROUTE_center = { Weight=2, ROUTE_right_mir = { ROUTE_cabinet_mir = {}}},
+				ROUTE_right = { ROUTE_side_mir = { } },
+				ROUTE_side_long_mir = {},
+				ROUTE_center_mir = {},
+			},
+		},
+		CAPPOINT_secure_mir = {
+			ROUTE_gold = {
+				ROUTE_under_left = {
+					ROUTE_under_left_mir = {},
+					ROUTE_under_right_mir = {},
+				},
+				ROUTE_left = {
+					ROUTE_right_mir = { Weight=2 },
+					ROUTE_gate_mir = {},
+				},
+			},
+		},
+		CAPPOINT_secure = {
+			ROUTE_gold_mir = {
+				ROUTE_under_left_mir = {
+					ROUTE_under_left = {},
+					ROUTE_under_right = {},
+				},
+				ROUTE_left_mir = {
+					ROUTE_right = { Weight=2 },
+					ROUTE_gate = {},
+				},
+			},
+		},
+	};
+	MapRoutes.ATTACK_crypt = MapRoutes.PLANT_Axis_Crypt;
+	MapRoutes.FLAG_axis_gold = MapRoutes.PLANT_Axis_Crypt;
+	MapRoutes.ATTACK_crypt_mir = MapRoutes.PLANT_Allied_Crypt;
+	MapRoutes.FLAG_allied_gold = MapRoutes.PLANT_Allied_Crypt;
+	Util.Routes(MapRoutes);
+};
+
+global OnBotJoin = function( bot )
+{
+	m1 = Max(Round(ETUtil.CountTeam(TEAM.AXIS)/2)-2, 2);
+	m2 = Max(Round(ETUtil.CountTeam(TEAM.ALLIES)/2)-2, 2);
+	Util.SetMaxUsersInProgress(m2, "ATTACK.*");
+	Util.SetMaxUsersInProgress(m1, "ATTACK.*_mir");
+	Util.SetMaxUsersInProgress(m1+1, "FLAG_allied_gold");
+	Util.SetMaxUsersInProgress(m2+1, "FLAG_axis_gold");
+};

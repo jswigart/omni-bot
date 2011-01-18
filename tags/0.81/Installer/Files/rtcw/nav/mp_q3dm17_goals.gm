@@ -1,0 +1,36 @@
+global _MG = 
+{
+	MOUNTMG42_mg = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_mg",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(2288.000, 64.000, 304.000),
+		Radius = 0,
+		SerialNum = 28,
+		TagName = "mg",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_mg = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_mg",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(2288.000, 64.000, 304.000),
+		Radius = 0,
+		SerialNum = 30,
+		TagName = "mg",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

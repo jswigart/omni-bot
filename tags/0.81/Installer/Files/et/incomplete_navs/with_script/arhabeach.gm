@@ -1,0 +1,61 @@
+//==========================================================================================
+//
+//	arhabeach.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Build_Wall = "BUILD_Wall",
+	Plant_Wall = "PLANT_Wall",
+	Mount_28 = "MOUNTMG42_28",
+	Repair_28 = "REPAIRMG42_28",
+	Mobile_MG42_81 = "MOBILEMG42_81",
+	Mobile_MG42_87 = "MOBILEMG42_87",
+	Mobile_MG42_91 = "MOBILEMG42_91",
+
+	Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Wall_Built" );
+	},
+
+	Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Wall_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalOffset( -20, 0, -140, Map.Plant_Wall );
+	
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Wall_Built );
+	OnTrigger( "Allies has breached the Wall !", Map.Wall_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

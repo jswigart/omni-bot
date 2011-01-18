@@ -1,0 +1,329 @@
+global Map =
+{
+	ShowMovers = true,
+	ObjTaken = false,
+	PlatformMovingUp = false,
+
+	Switches =
+	{
+		platform_switch =
+		{
+			// Debug = true,
+			WaypointName = "platform_switch",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+
+		door_open_outside =
+		{
+			// Debug = true,
+			WaypointName = "door_open_outside",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC),
+			LimitBots = 2,
+			LimitDistance = 1500,
+		},
+
+		door_open_inside =
+		{
+			WaypointName = "door_open_inside",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+
+		door_close_inside =
+		{
+			WaypointName = "door_close_inside",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+
+		door_close_outside =
+		{
+			WaypointName = "door_close_outside",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+	},
+
+	platform_goto = function( trigger )
+	{
+		vec = ToVector(trigger.Action);
+		
+		if ( vec.z == 64 ) //platform on upmost level
+		{
+			if(Map.ObjTaken)
+			{
+				SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_cappoint2" );
+				SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_cappoint1" );
+			}
+			Map.Switches.platform_switch.LimitTeam = (1<<TEAM.ALLIES);
+			Map.PlatformMovingUp = false;
+			Util.MapDebugPrint( "oben");
+		}
+		else if ( vec.z == -64.01 ) //platform on lowest level
+		{
+			if(!Map.ObjTaken)
+			{
+				SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_cappoint1" );
+				SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_cappoint2" );
+			}
+			Map.PlatformMovingUp = false;
+			Util.MapDebugPrint( "unten");
+		}
+		else if ( vec.z == 64.01 ) //platform starting on lowest level
+		{
+			if(Map.ObjTaken)
+			{
+				SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_cappoint1" );
+			}
+			Map.PlatformMovingUp = true;
+			Util.MapDebugPrint( "aufwaerts");
+		}
+		else if ( vec.z == -64 ) //platform starting on upmost level
+		{
+			Map.Switches.platform_switch.LimitTeam = 0;
+			Map.PlatformMovingUp = false;
+			Util.MapDebugPrint( "abwaerts");
+		}
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_compost_built_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_compost_built_Built" );
+	},
+
+	wall_tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "wall_tower_Built" );
+	},
+
+	fence_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "fence_Built" );
+	},
+
+	drain_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "drain_Built" );
+	},
+
+	wall_tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "wall_tower_Destroyed" );
+	},
+
+	wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "wall_Destroyed" );
+	},
+
+	fence_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "fence_Destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_compost_built_Destroyed" );
+	},
+
+	drain_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "drain_Destroyed" );
+	},
+
+	docs_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ObjTaken = false;
+		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_cappoint1" );
+		SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_cappoint2" );
+		print( "docs_Returned" );
+	},
+
+	door_Opened = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.door_open_inside.LimitTeam = 0;
+		Map.Switches.door_open_outside.LimitTeam = 0;
+		Map.Switches.door_close_inside.LimitTeam = (1<<TEAM.AXIS);
+		Map.Switches.door_close_outside.LimitTeam = (1<<TEAM.AXIS);
+		print( "door_Opened" );
+	},
+
+	door_Closed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.door_open_inside.LimitTeam = (1<<TEAM.ALLIES);
+		Map.Switches.door_open_outside.LimitTeam = (1<<TEAM.ALLIES);
+		Map.Switches.door_close_inside.LimitTeam = 0;
+		Map.Switches.door_close_outside.LimitTeam = 0;
+		print( "door_Closed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.wall_tower_Built );
+	OnTrigger( "MISSING_STRING", Map.drain_Built );
+	OnTrigger( "MISSING_STRING", Map.fence_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.fence_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.wall_tower_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.drain_Destroyed );
+	OnTrigger( "^3Mine Door Opening!", Map.door_Opened );
+	OnTrigger( "^3Mine Door Closing!", Map.door_Closed );
+	OnTrigger( "platform_goto", Map.platform_goto );
+	OnTrigger( "Flag returned documents!", Map.docs_Returned );
+
+	SetAvailableMapGoals(TEAM.AXIS, false, "CAPPOINT_cappoint1");
+	SetAvailableMapGoals(TEAM.AXIS, false, "CAPPOINT_cappoint2");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "CAPPOINT_cappoint2");
+	SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_cappoint1");
+
+	Util.UpdateSwitchData();
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	if(bot.GetTeam() == TEAM.ALLIES)
+	{
+		if(bot.CapThread)
+		{
+			Util.MapDebugPrint( "Killing Thread: ", bot.CapThread);
+			threadKill(bot.CapThread);
+		}
+		bot.CapThread = bot:thread(ScriptGoals.WatchForCappoint.ThreadFunc);
+		Util.MapDebugPrint( "CapThread started.");
+	}
+};
+
+ScriptGoals.WatchForCappoint = 
+{
+
+	// The name for this goal
+	Name = "watch_for_cappoint",
+
+	ThreadFunc = function()
+	{
+		// Store some waypoint data in a table:
+		mywaypoint = table();
+		Wp.GetWaypointByName( "cappoint1", mywaypoint );
+		radius = mywaypoint.radius;
+		wpPos = mywaypoint.position;
+		wpFacing = mywaypoint.facing;
+
+		// The loop for the thread:
+		while (true)
+		{
+			if ( this.DistanceTo(wpPos) < 50 && GetEntFlags(this.GetGameEntity(), ENTFLAG.CARRYINGGOAL) )
+			{
+				if ( !(this.scriptgoal == ScriptGoals.WatchForCappoint.Name))
+				{
+					this.scriptgoal = ScriptGoals.WatchForCappoint.Name;
+					ScriptGoals.WatchForCappoint.DoIt(this, wpFacing, wpPos);
+				}
+			}
+			sleep(1);
+		}
+	},
+
+	// In the DoIt function we take temporarily control over the bot if it's
+	// carrying the objective and gets close to the elevator platform
+	DoIt = function(bot, wpFacing, wpPos)
+	{
+		Map.ObjTaken = true;
+		targetpos = Vector3(2,-300,700);
+		goal = GetGoal("MAP_MOVER_platform");
+		entity = goal.GetEntity();
+		bot.SetScriptControlled(true);
+		bot.Say("Bleh!");
+		// Press the platform switch
+		dowhile ( bot.Health > 0 && !Map.PlatformMovingUp )
+		{
+			bot.TurnToFacing( wpFacing );
+			//bot.MoveTowards( wpPos );
+			bot.HoldButton( BTN.USE, 0.5 );
+			//sleep(0.5);
+			yield();
+		}
+		// Wait until platform arrives at targetpos
+		bot.starttime = GetTime();
+		bot.EnableMovement(false);
+		sleep(22);
+// 		dowhile ( GetTime() < bot.starttime + 22000 && bot.DistanceTo(GetEntPosition(entity)) < 350 && bot.Health > 0 && bot.DistanceTo(targetpos) > 100 )
+// 		{
+// 			// do nothing for 22 seconds
+// 			yield();
+// 		}
+		// Now resume normal navigation
+		if (bot.scriptgoal == ScriptGoals.WatchForCappoint.Name)
+		{
+			bot.scriptgoal = null;
+			bot.SetScriptControlled(false);
+			bot.EnableMovement(true);
+			bot.ResetSubGoals();
+			//bot.EnableMovement(true);
+		}
+	},
+
+};

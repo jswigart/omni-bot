@@ -1,0 +1,819 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	DefendingTeam = TEAM.AXIS,
+	ShowMovers = false,
+	Talk = true,
+	ElevatorIsEnabled = true,
+	NukeIsInTheCabin = false,
+	NukeIsOnTheTruck = false,
+	NukeTaken = false,
+	DoorIsOpen = false,
+	Phase1 = true,
+	BarrierIsBuilt = false,
+	TruckIsAtBarrier = false,
+	ElevatorAtLevel = 3,
+	RockOpen = 0,
+
+	// region triggers
+	iw1 = 0,
+	iw2 = 0,
+	iw3 = 0,
+	iw4 = 0,
+	iw5 = 0,
+	ac1 = 0,
+
+	Movers =
+	{
+		// retain these movers
+		"MOVER_truck",
+		"MOVER_cart",
+		"MOVER_elevator",
+	},
+
+	Switches =
+	{
+		wall_switch =
+		{
+			AimPosition = Vec3(984, 2244, 515),
+			Enabled = true,
+			Priority = 0.0,
+			WaypointName = "wall_switch",
+			Timeout = 1500,
+			Wait = function()
+			{
+				if ( Map.RockOpen == 1 )
+				{
+					sleep(5.5);
+					return true;
+				}
+				return false;
+			},
+		},
+		house_switch =
+		{
+			AimPosition = Vec3(-912, 2352, 1158),
+			Enabled = false,
+			//Debug = true,
+			Priority = 0.7,
+			Timeout = 1500,
+			WaypointName = "house_switch",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 700,
+		},
+		bookshelf_switch =
+		{
+			Enabled = false,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "bookshelf_switch",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+		elevator_door =
+		{
+			Enabled = false,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "elevator_door",
+			LimitTeam = 0,
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 100,
+		},
+		elevator_switch_up_0 =
+		{
+			AimPosition = Vec3(-928, 2336, 130),
+			Enabled = false,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "elevator_switch_up_0",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 1000,
+		},
+		elevator_switch_up_1 =
+		{
+			Enabled = true,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "elevator_switch_up_1",
+			LimitTeam = 0,
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 1500,
+		},
+		elevator_switch_up_2 =
+		{
+			Enabled = true,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "elevator_switch_up_2",
+			LimitTeam = 0,
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 1500,
+		},
+		elevator_switch_up_3 =
+		{
+			Enabled = true,
+			//Debug = true,
+			Priority = 0.8,
+			Timeout = 1500,
+			WaypointName = "elevator_switch_up_3",
+			LimitTeam = 0,
+			LimitClass = Util.AllClasses,
+			LimitBots = 1,
+			LimitDistance = 1500,
+		},
+	},
+
+	cabin_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.NukeIsOnTheTruck || Map.Phase1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_mg_Nest" );
+		}
+		Util.MapDebugPrint( "cabin_MG_Built" );
+	},
+
+	truck_construct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "truck_construct_Built" );
+	},
+
+	truck_at_door =
+	{
+		Name = "truck_at_door",
+		TriggerOnEntity = GetGoal("MOVER_truck").GetEntity(),
+		OnEnter = function(ent)
+		{
+			Map.Phase1 = false;
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Cart_Ramp" );
+			if (!Map.NukeIsOnTheTruck)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
+			}
+			if ( !Map.NukeIsOnTheTruck && !Map.NukeIsInTheCabin && !Map.NukeSecured )
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
+			}
+
+			Util.MapDebugPrint( "truck at door" );
+		},
+		OnExit = function(ent)
+			{ return; }
+	},
+
+	truck_at_barrier = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TruckIsAtBarrier = true;
+		if ( Map.BarrierIsBuilt )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier" );
+		}
+		Util.MapDebugPrint( "truck at barrier" );
+	},
+
+	barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.BarrierIsBuilt = false;
+		if ( Map.TruckIsAtBarrier )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		}
+		Util.MapDebugPrint( "barrier_Destroyed" );
+	},
+
+	barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.BarrierIsBuilt = true;
+		Util.MapDebugPrint( "barrier_Built" );
+	},
+
+	truck_construct_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetPositionGoal( "BUILD_Truck", "MOVER_truck" );
+		Util.MapDebugPrint( "truck_construct_Destroyed" );
+	},
+
+	elevator_generator_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ElevatorIsEnabled = true;
+		if ( Map.NukeTaken )
+		{
+			Map.Switches.elevator_switch_up_0.Enabled = true;
+		}
+		if ( Map.NukeSecured )
+		{
+			Map.Switches.house_switch.Enabled = true;
+		}
+		Util.MapDebugPrint( "elevator_generator_Built" );
+	},
+
+	elevator_generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.elevator_switch_up_0.Enabled = false;
+		Map.Switches.house_switch.Enabled = false;
+		Map.ElevatorIsEnabled = false;
+		Util.MapDebugPrint( "elevator_generator_Destroyed" );
+	},
+
+	war_room_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.DoorIsOpen = true;
+		DeleteTriggerRegion( Map.iw2 );
+		DeleteTriggerRegion( Map.iw3 );
+		Map.iw4 = OnTriggerRegion( AABB(-926.238,2065.573,45.765,-752.265,2307.669,230.476), RegionTrigger.IntrusionWarning );
+		Map.iw5 = OnTriggerRegion( AABB(-1691.597,2013.335,-34.178,-1401.510,2478.028,151.430), RegionTrigger.IntrusionWarning );
+		Map.ac1 = OnTriggerRegion( AABB(-1691.597,2016.323,1.870,-1436.138,2478.028,215.381), RegionTrigger.AllClear );
+		Map.Switches.elevator_switch_up_0.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_nuke.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_cart_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_nuke_axis.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_nuke.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_war_room.*" );
+
+		if ( Map.Talk && MAP_TALK )
+		{
+			rand = ETUtil.CountTeam(TEAM.AXIS) * 2;
+			rand2 = ETUtil.CountTeam(TEAM.ALLIES) * 2;
+			foreach ( gameId and bot in BotTable )
+			{
+				if (bot.GetTeam() == TEAM.AXIS && RandInt(0,rand) < 2 && GetGameTimeLeft()>120)
+				{
+					sleep(RandRange(1,2.5));
+					bot.SayVoice(VOICE.DEFEND_OBJECTIVE);
+				}
+				else if (bot.GetTeam() == TEAM.AXIS && RandInt(0,rand) < 2 && GetGameTimeLeft()>120)
+				{
+					sleep(RandRange(1,2.0));
+					bot.ExecCommand("vsay_team FTFallBack");
+				}
+				else if (bot.GetTeam() == TEAM.AXIS && RandInt(0,rand) < 2 && GetGameTimeLeft()>120)
+				{
+					sleep(RandRange(1,2.0));
+					bot.SayVoice(VOICE.REINFORCE_DEF);
+				}
+				if (bot.GetTeam() == TEAM.ALLIES && RandInt(0,rand2) < 2 && GetGameTimeLeft()>120)
+				{
+					sleep(RandRange(1,2.8));
+					bot.SayVoice(VOICE.REINFORCE_OFF);
+				}
+				else if (bot.GetTeam() == TEAM.ALLIES && RandInt(1,rand2) < 2 && GetGameTimeLeft()>300)
+				{
+					sleep(1.5);
+					bot.SayVoice(VOICE.G_CHEER);
+				}
+				else if (bot.GetTeam() == TEAM.ALLIES && RandInt(1,rand2) < 2 && GetGameTimeLeft()>120)
+				{
+					sleep(1.5);
+					bot.ExecCommand("vsay_team FTAttack");
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "war_room_door_Destroyed" );
+	},
+
+	nuke_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.NukeTaken = true;
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_cart_axis" );
+		Map.Switches.elevator_switch_up_0.Enabled = true;
+		Util.MapDebugPrint( "nuke_Taken" );
+	},
+
+	nuke_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.NukeTaken = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
+		Util.MapDebugPrint( "nuke_Returned" );
+	},
+
+	nuke_In_the_Elevator = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		DeleteTriggerRegion( Map.iw4 );
+		DeleteTriggerRegion( Map.iw5 );
+		DeleteTriggerRegion( Map.ac1 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_elevator_nuke" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_war_room.*" );
+		Map.NukeSecured = true;
+		Map.NukeTaken = false;
+		Map.Switches.elevator_switch_up_0.Enabled = false;
+		Map.Switches.bookshelf_switch.Enabled = true;
+		if ( Map.ElevatorIsEnabled )
+		{
+			Map.Switches.house_switch.Enabled = true;
+		}
+		Util.MapDebugPrint( "nuke_In_the_Elevator" );
+	},
+
+	nuke_In_the_Cabin = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.NukeIsInTheCabin = true;
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_534" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_534" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Elevator_Generator" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_cabin.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_cabin.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_elevator_nuke" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Elevator_Generator" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Sewers" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Back_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Root_Cellar" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_barrier.*" );
+
+		// Swap y offsets for escort goals when cart is in the cabin
+		SetMapGoalProperties( "ESCORT_cart_allies", { Offsets={Vec3(10, 70, 5),Vec3(-10, 70, 5)} } );
+		SetMapGoalProperties( "ESCORT_cart_axis", { Offsets={Vec3(10, -70, 5),Vec3(-10, -70, 5)} } );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_cart_allies" );
+
+		Map.NukeSecured = false;
+		Map.Switches.bookshelf_switch.Enabled = false;
+		Map.Switches.elevator_door.Enabled = false;
+		Map.Switches.house_switch.Enabled = false;
+		Map.Switches.elevator_switch_up_0.Enabled = false;
+		Map.Switches.elevator_switch_up_1.Enabled = false;
+		Map.Switches.elevator_switch_up_2.Enabled = false;
+		Map.Switches.elevator_switch_up_3.Enabled = false;
+		Util.OnTriggerPosition( "MOVER_truck", "barrier_trigger2", 250.0, Map.truck_at_barrier );
+		Util.MapDebugPrint( "nuke_In_the_Cabin" );
+	},
+
+	nuke_On_the_Truck = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.NukeIsOnTheTruck = true;
+		Map.NukeIsInTheCabin = false;
+		Map.Switches.bookshelf_switch.Enabled = false;
+		Map.Switches.house_switch.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cabin.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_hill_mg" );
+		Util.EnableGoal ( "MOVER_truck" );
+		Util.MapDebugPrint( "nuke_On_the_Truck" );
+	},
+
+	past_Barrier1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.TruckIsAtBarrier = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Truck_Barrier" );
+		Util.MapDebugPrint( "past b. 1" );
+	},
+
+	past_Barrier2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.TruckIsAtBarrier = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_hill_mg" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_cabin.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Truck_Barrier" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier" );
+		Util.MapDebugPrint( "past b. 2" );
+	},
+
+	sewers_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "sewers_Destroyed" );
+	},
+
+	root_cellar_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetGoalPriority( "PLANT_Main_Entrance_to_the_Nuke",  0.9 );
+		DeleteTriggerRegion( Map.iw1 );
+		Map.iw2 = OnTriggerRegion( AABB(223.186,2108.287,812.667,323.402,2302.091,949.582), RegionTrigger.IntrusionWarning );
+		Util.MapDebugPrint( "root_cellar_Destroyed" );
+	},
+
+	back_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Wp.SetWaypointFlag( "axis-door", "closed", true );
+		Wp.SetWaypointFlag( "axis-door2", "closed", true );
+		Map.iw3 = OnTriggerRegion( AABB(-309.076,2746.820,641.883,-25.581,2952.365,817.419), RegionTrigger.IntrusionWarning );
+		Util.MapDebugPrint( "back_wall_Destroyed" );
+	},
+
+	hill_top_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Util.DisableGoal ( "CHECKPOINT_.*" );
+		Util.DisableGoal ( "MOVER_truck" );
+		Util.DisableGoal ( "AMMOCAB_.*" );
+		Util.DisableGoal ( "HEALTHCAB_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_hill_mg" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_534" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_534" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Elevator_Generator" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_mg_Nest" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_mg_Nest" );
+		if ( Map.DoorIsOpen )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_nuke.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_nuke.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_nuke_axis.*" );
+		}
+
+		Util.MapDebugPrint( "Allies_Capture_Flag" );
+	},
+
+	AlliesWin = function()
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+	},
+
+	elevator_trigger = function( trigger )
+	{
+		//turn the trigger action string into a vector for referencing
+		vec = ToVector(trigger.Action);
+		//reference the changing value to determine elevator direction
+		if ( vec.z > 0 )
+		{
+			Util.MapDebugPrint("elevator going up", true);
+			if(Map.NukeSecured)
+			{
+				Map.Switches.house_switch.Enabled = false;
+				Map.Switches.elevator_switch_up_1.Enabled = false;
+				Map.Switches.elevator_switch_up_2.Enabled = false;
+				Map.Switches.elevator_switch_up_3.Enabled = false;
+			}
+		}
+		else if ( vec.z < 0 )
+		{
+			Util.MapDebugPrint("elevator going down", true);
+			if(Map.NukeTaken)
+			{
+				Map.Switches.elevator_switch_up_0.Enabled = false;
+			}
+		}
+	},
+
+	bookcase_trigger = function( trigger )
+	{
+		//turn the trigger action string into a vector for referencing
+		vec = ToVector(trigger.Action);
+		//reference the changing value to determine the direction
+		if ( vec.y > 0 )
+		{
+			Util.MapDebugPrint("bookcase opening", true);
+			Map.Switches.bookshelf_switch.Enabled = false;
+		}
+		else if ( vec.y < 0 )
+		{
+			Util.MapDebugPrint("bookcase closing", true);
+			if(Map.NukeSecured)
+			{
+				Map.Switches.bookshelf_switch.Enabled = true;
+			}
+		}
+	},
+
+	rock_trigger = function( trigger )
+	{
+		//turn the trigger action string into a vector for referencing
+		vec = ToVector(trigger.Action);
+		//reference the changing value to determine the direction
+		if ( vec.x > 0 )
+		{
+			Util.MapDebugPrint("rock opening", true);
+			Map.RockOpen = 1;
+			Map.Switches.wall_switch.Enabled = false;
+		}
+		else if ( vec.x < 0 )
+		{
+			Util.MapDebugPrint("rock closing", true);
+			Map.RockOpen = 0;
+			Map.Switches.wall_switch.Enabled = true;
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "axis_truckbar_constructed", Map.barrier_Built );
+	OnTrigger( "axis_truckbar_destroyed", Map.barrier_Destroyed );
+	OnTrigger( "allies_truck_barrier1", Map.past_Barrier1 );
+	OnTrigger( "allies_truck_barrier2", Map.past_Barrier2 );
+	OnTrigger( "^5The Allied Cabin MG Nest has been constructed.", Map.cabin_MG_Built );
+	OnTrigger( "^5The Elevator Generator has been constructed.", Map.elevator_generator_Built );
+	OnTrigger( "^1The Elevator Generator has been destroyed.", Map.elevator_generator_Destroyed );
+	OnTrigger( "^5The Truck has been repaired!", Map.truck_construct_Built );
+	OnTrigger( "^1The Truck has been damaged!", Map.truck_construct_Destroyed );
+	OnTrigger( "^5Allies have secured the Hill Top!", Map.hill_top_Secured );
+	OnTrigger( "^5Allies have breached the Back Door", Map.back_wall_Destroyed );
+	OnTrigger( "^5Allies have breached the Root Cellar", Map.root_cellar_Destroyed );
+	OnTrigger( "^5Allies have breached the Sewers", Map.sewers_Destroyed );
+	OnTrigger( "^5Allies have breached the Main Entrance to the Nuke!", Map.war_room_door_Destroyed );
+	OnTrigger( "^5Allies have the Nuke!", Map.nuke_Taken );
+	OnTrigger( "^1Axis have returned the Nuke!", Map.nuke_Returned );
+	OnTrigger( "^5The Allies have secured the Nuke in the Elevator!", Map.nuke_In_the_Elevator );
+	OnTrigger( "^5The Allies have moved the Nuke into the Cabin!", Map.nuke_In_the_Cabin );
+	OnTrigger( "^5Allies have loaded the Nuke onto the truck!", Map.nuke_On_the_Truck );
+	OnTrigger( "^5Allied team have escaped with the Nuke!", Map.AlliesWin );
+	OnTrigger( "elevator_goto", Map.elevator_trigger );
+	OnTrigger( "bookcase_goto", Map.bookcase_trigger );
+	OnTrigger( "rockbutton_goto", Map.rock_trigger );
+
+	Util.SetGoalPosition( -3010, -424, 330, "BUILD_Truck" );
+	Util.AddUseWp( "PLANT_Back_Door", "dyno1" );
+	Util.AddUseWp( "PLANT_Back_Door", "dyno2" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Cart_Ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_534" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_534" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Axis_mg_Nest" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Axis_mg_Nest" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_mg_Nest" );
+	//SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Truck_Barrier" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_elevator" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Elevator_Generator" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_mg_Nest" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_mg_Nest" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_mg_Nest" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Allied_mg_Nest" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Allied_mg_Nest" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_elevator" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_truck" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_hill_mg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_cabin.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier_3" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier_7" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_cabin.*" );
+
+	Wp.SetWaypointFlag( "axis-door", "closed", false );
+	Wp.SetWaypointFlag( "axis-door2", "closed", false );
+
+	Util.SetMaxUsers( 1, "ATTACK_cabin.*" );
+	Util.SetMaxUsers( 2, "ATTACK_elevator_nuke" );
+	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "ESCORT_truck" );
+	//Util.OnTriggerPosition( "MOVER_truck", "truck_trigger", 100.0, Map.truck_at_door );
+	Util.OnTriggerPosition( "MOVER_truck", "barrier_8", 200.0, Map.truck_at_barrier );
+	Util.UpdateSwitchData();
+	thread(Map.WatchElevatorPosition);
+
+	// Set Map Goal Properties
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=2, maxcamptime=15} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=3, maxcamptime=35} );
+	// Engineers can't arm the dynamite here:
+	SetGoalPriority( "PLANT_Axis_mg_Nest", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "ATTACK_elevator_nuke", 0.81, TEAM.ALLIES );
+
+	truck1 = OnTriggerRegion( Vec3(-326,2374,1146), 80, Map.truck_at_door );
+	break1 = OnTriggerRegion( AABB(460.027,2350.292,886.800,654.336,2671.970,1010.041), RegionTrigger.BreakableDistance );
+	break2 = OnTriggerRegion( AABB(-185.195,257.126,50.567,-66.612,417.956,201.734), RegionTrigger.BreakableDistance );
+	RegionTrigger.BreakableDistance.MinBreakableDist = 50;
+	RegionTrigger.BreakableDistance.MaxBreakableDist = 150;
+	Map.iw1 = OnTriggerRegion( AABB(283.959,2309.262,1078.865,560.409,2479.720,1253.359), RegionTrigger.IntrusionWarning );
+
+	// Routes
+	MapRoutes =
+	{
+		CHECKPOINT_hill_flag =
+		{
+			ROUTE_allied_spawn =
+			{
+				ROUTE_river1 = {},
+				ROUTE_bridge1 = {},
+				ROUTE_bridge2 = {},
+				ROUTE_cabin1 =
+				{
+					ROUTE_cabin2 = {},
+					ROUTE_roof1 = {},
+				},
+			},
+		},
+	};
+	Util.Routes(MapRoutes);
+
+	sleep( 2 );
+	Util.AddInvVehicle( "MOVER_cart" );
+
+	Util.MapDebugPrint( "Omni-bot script for axislab_final executed.", true );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2300;
+
+	yield();yield();
+	if( bot.CanSnipe() )
+	{
+		bot.MaxViewDistance = 2500;
+	}
+
+	bot.TargetBreakableDist = 50.0;
+};
+
+Map.WatchElevatorPosition = function()
+{
+	goal = GetGoal( "MOVER_elevator" );
+	entity = goal.GetEntity();
+	Util.MapDebugPrint("Elevator thread started", true);
+	position1 = Vector3(-1018, 2428, 1171); // top
+	position2 = Vector3(-1018, 2428, 771);
+	position3 = Vector3(-1018, 2428, 515);
+	position4 = Vector3(-1018, 2428, 143); // bottom
+	tolerance = 30;
+	while ( 1 )
+	{
+		if ( Map.Debug )
+		{
+			DrawDebugLine(position1 - Vector3(0,0,-10), position1 - Vector3(0,0,10), COLOR.CYAN, 2);
+			DrawDebugLine(position2 - Vector3(0,0,-10), position2 - Vector3(0,0,10), COLOR.CYAN, 2);
+			DrawDebugLine(position3 - Vector3(0,0,-10), position3 - Vector3(0,0,10), COLOR.CYAN, 2);
+			DrawDebugLine(position4 - Vector3(0,0,-10), position4 - Vector3(0,0,10), COLOR.CYAN, 2);
+		}
+		entposition = GetEntPosition( entity );
+
+		// just do one distance calculation
+		distanceFromPosition1 = DistanceBetween( entposition, position1 );
+		if ( distanceFromPosition1 < tolerance )
+		{
+			// elevator at top level
+			if ( Map.ElevatorAtLevel != 1 )
+			{
+				Map.ElevatorAtLevel = 1;
+				if (Map.NukeSecured)
+				{
+					Map.Switches.bookshelf_switch.Enabled = true;
+					SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_elevator_nuke" );
+				}
+				if(Map.NukeTaken && Map.ElevatorIsEnabled)
+				{
+					Map.Switches.elevator_switch_up_0.Enabled = true;
+				}
+				Util.MapDebugPrint( "elpos = " + Map.ElevatorAtLevel, true);
+			}
+		}
+		else if ( distanceFromPosition1 > 400 - tolerance && distanceFromPosition1 < 400 + tolerance )
+		{
+			// elevator at -1 level
+			if ( Map.ElevatorAtLevel != 2 )
+			{
+				Map.ElevatorAtLevel = 2;
+				if(Map.NukeTaken && Map.ElevatorIsEnabled)
+				{
+					Map.Switches.elevator_switch_up_0.Enabled = true;
+				}
+				Util.MapDebugPrint( "elpos = " + Map.ElevatorAtLevel, true);
+			}
+		}
+		else if ( distanceFromPosition1 > 656 - tolerance && distanceFromPosition1 < 656 + tolerance )
+		{
+			// elevator at -2 level
+			if ( Map.ElevatorAtLevel != 3 )
+			{
+				Map.ElevatorAtLevel = 3;
+				if(Map.NukeTaken && Map.ElevatorIsEnabled)
+				{
+					Map.Switches.elevator_switch_up_0.Enabled = true;
+				}
+				Util.MapDebugPrint( "elpos = " + Map.ElevatorAtLevel, true);
+			}
+		}
+		else if ( distanceFromPosition1 > 1024 - tolerance )
+		{
+			// elevator at lowest level
+			if ( Map.ElevatorAtLevel != 4 )
+			{
+				Map.ElevatorAtLevel = 4;
+				Util.MapDebugPrint( "elpos = " + Map.ElevatorAtLevel, true);
+			}
+		}
+		else
+		{
+			Map.ElevatorAtLevel = -1;
+			Map.Switches.elevator_switch_up_0.Enabled = false;
+			Map.Switches.house_switch.Enabled = false;
+			Util.MapDebugPrint("moving!", true);
+		}
+
+		sleep(1);
+	}
+};

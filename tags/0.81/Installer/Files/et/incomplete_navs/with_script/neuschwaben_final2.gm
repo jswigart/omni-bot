@@ -1,0 +1,317 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Checkpoint_forwardspawn1_flag = "CHECKPOINT_forwardspawn1_flag",
+	Flag_Secret_Documents = "FLAG_Secret_Documents",
+	Cappoint_Antenna = "CAPPOINT_Antenna",
+	Cappoint_Radio = "CAPPOINT_Radio",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Guard_Wall_for_air_tunnel = "BUILD_Guard_Wall_for_air_tunnel",
+	Build_Guard_Wall_near_Ground_Zero = "BUILD_Guard_Wall_near_Ground_Zero",
+	Build_Ladder_to_Ground_Zero = "BUILD_Ladder_to_Ground_Zero",
+	Build_Safe_Door = "BUILD_Safe_Door",
+	Build_mg42 = "BUILD_mg42",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Fence_to_air_tunnel = "PLANT_Fence_to_air_tunnel",
+	Plant_Guard_Wall_for_air_tunnel = "PLANT_Guard_Wall_for_air_tunnel",
+	Plant_Guard_Wall_near_Ground_Zero = "PLANT_Guard_Wall_near_Ground_Zero",
+	Plant_Ladder_to_Ground_Zero = "PLANT_Ladder_to_Ground_Zero",
+	Plant_Reichsflugscheibe_1 = "PLANT_Reichsflugscheibe_1",
+	Plant_Reichsflugscheibe_2 = "PLANT_Reichsflugscheibe_2",
+	Plant_Safe_Door = "PLANT_Safe_Door",
+	Plant_mg42 = "PLANT_mg42",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Built" ); }
+	},
+       
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Built" ); }
+	},
+
+	Guard_Wall_for_air_tunnel_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Guard_Wall_for_air_tunnel_Built" ); }
+	},
+
+	Guard_Wall_near_Ground_Zero_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Guard_Wall_near_Ground_Zero_Built" ); }
+	},
+
+	Ladder_to_Ground_Zero_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Ladder_to_Ground_Zero_Built" ); }
+	},
+
+	Safe_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Safe_Door_Built" ); }
+	},
+
+	mg42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "mg42_Built" ); }
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Destroyed" ); }
+	},
+       
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Destroyed" ); }
+	},
+
+	Fence_to_air_tunnel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Fence_to_air_tunnel_Destroyed" ); }
+	},
+
+	Guard_Wall_for_air_tunnel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Guard_Wall_for_air_tunnel_Destroyed" ); }
+	},
+
+	Guard_Wall_near_Ground_Zero_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Guard_Wall_near_Ground_Zero_Destroyed" ); }
+	},
+
+	Ladder_to_Ground_Zero_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Ladder_to_Ground_Zero_Destroyed" ); }
+	},
+
+	Reichsflugscheibe_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Reichsflugscheibe_1_Destroyed" ); }
+	},
+
+	Reichsflugscheibe_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Reichsflugscheibe_2_Destroyed" ); }
+	},
+
+	Safe_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Safe_Door_Destroyed" ); }
+	},
+
+	mg42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "mg42_Destroyed" ); }
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Secret_Documents_Taken" ); }
+	},
+
+	Secret_Documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Secret_Documents_Returned" ); }
+	},
+
+	Secret_Documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Secret_Documents_Secured" ); }
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "forwardspawn1_flag_Axis_Captured" ); }
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "forwardspawn1_flag_Allies_Captured" ); }
+	},
+       
+	Toxic_Water_Disabled = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Toxic_Water_Disabled" ); }
+	},
+       
+	Toxic_Water_Enabled = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Toxic_Water_Enabled" ); }
+	},
+       
+	Kantina_Spawn_Available = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Kantina_Spawn_Available" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** MAIN OBJECTIVES TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Axis team has built the Guard Wall for air tunnel!", Map.Guard_Wall_for_air_tunnel_Built );
+	OnTrigger( "Axis team has built the Guard Wall near Ground Zero!", Map.Guard_Wall_near_Ground_Zero_Built );
+	OnTrigger( "Allies has constructed the Ladder/Elevator to Ground Zero!", Map.Ladder_to_Ground_Zero_Built );
+	OnTrigger( "Axis team has built the Safe Door for Secret Documents!", Map.Safe_Door_Built );
+	OnTrigger( "Axis team has built the MG42!", Map.mg42_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Fence to air duct!", Map.Fence_to_air_tunnel_Destroyed );
+	OnTrigger( "Allied team has destroyed the Guard Wall for air tunnel!", Map.Guard_Wall_for_air_tunnel_Destroyed );
+	OnTrigger( "Allied team has destroyed the Guard Wall near Ground Zero!", Map.Guard_Wall_near_Ground_Zero_Destroyed );
+	OnTrigger( "Axis team has destroyed the ladder/elevator to Ground Zero!", Map.Ladder_to_Ground_Zero_Destroyed );
+	OnTrigger( "Allied team has destroyed Reichsflugscheibe 1!", Map.Reichsflugscheibe_1_Destroyed );
+	OnTrigger( "Allied team has destroyed Reichsflugscheibe 2!", Map.Reichsflugscheibe_2_Destroyed );
+	OnTrigger( "Allied team has destroyed the Safe Door for Secret Documents!", Map.Safe_Door_Destroyed );
+	OnTrigger( "Allies team has destroyed the MG42!", Map.mg42_Destroyed );
+	OnTrigger( "Allies have stolen The Secret Documents!", Map.Secret_Documents_Taken );
+	OnTrigger( "Flag returned Secret Documents!", Map.Secret_Documents_Returned );
+	OnTrigger( "Allied team escaped with the secret documents!", Map.Secret_Documents_Secured );
+	OnTrigger( "^rAxis reclaim the Forward Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "^rAllies capture the Forward Spawn!", Map.forwardspawn1_flag_Allies_Captured );
+       
+	// *** TOXIC WATER SWITCH ***
+	OnTrigger( "The Allied Team has deactivated the Toxic Water and build mini ladder", Map.Toxic_Water_Disabled );
+	OnTrigger( "The Axis Team has activated the Toxic Water and remove mini ladder", Map.Toxic_Water_Enabled );
+       
+	// *** FLAG FOR KANTINA SPAWN ***
+	OnTrigger( "^1Now Allies have forward spawn in Kantina forever!", Map.Kantina_Spawn_Available );
+       
+	// *** AXIS GOALS PRIORITIES ***
+	SetGoalPriority( "DEFEND_.*", 0.4 );
+	SetGoalPriority( Map.Build_mg42, 0.5 );
+	SetGoalPriority( Map.Build_Command_Post, 0.6 );
+	SetGoalPriority( Map.Build_Safe_Door, 0.7 );
+	SetGoalPriority( Map.Build_Guard_Wall_for_air_tunnel, 0.8 );
+	SetGoalPriority( Map.Build_Guard_Wall_near_Ground_Zero, 0.9 );
+       
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120} );
+       
+	print( "Omni-bot map script for Neuschwaben Final 2 by **PCZ** >M@t3o$<." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+};

@@ -1,0 +1,10 @@
+global Map =
+{
+	MapName = "mp_assault",
+
+	Scripts =
+	{
+		"mp_assault_cp_test_allies",
+		"mp_assault_cp_test_axis",
+	},	
+};	

@@ -1,0 +1,234 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Checkpoint_forwardspawn1_flag = "CHECKPOINT_forwardspawn1_flag",
+	Flag_radarbox_east = "FLAG_radarbox_east",
+	Flag_radarbox_west = "FLAG_radarbox_west",
+	Cappoint_67 = "CAPPOINT_67",
+	Cappoint_68 = "CAPPOINT_68",
+	Build_Allied_MG = "BUILD_Allied_MG",
+	Build_Axis_MG42_Construction = "BUILD_Axis_MG42_Construction",
+	Build_Axis_Team_Door = "BUILD_Axis_Team_Door",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Power_Generator = "BUILD_Power_Generator",
+	Build_Town_Door = "BUILD_Town_Door",
+	Plant_Allied_MG = "PLANT_Allied_MG",
+	Plant_Axis_MG42_Construction = "PLANT_Axis_MG42_Construction",
+	Plant_Axis_Team_Door = "PLANT_Axis_Team_Door",
+	Plant_Bank_Wall = "PLANT_Bank_Wall",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Main_Entrance = "PLANT_Main_Entrance",
+	Plant_Power_Generator = "PLANT_Power_Generator",
+	Plant_Town_Door = "PLANT_Town_Door",
+	Mount_179 = "MOUNTMG42_179",
+	Mount_382 = "MOUNTMG42_382",
+	Mount_Allied_MG = "MOUNTMG42_Allied_MG",
+	Mount_Axis_MG42_Construction = "MOUNTMG42_Axis_MG42_Construction",
+	Repair_179 = "REPAIRMG42_179",
+	Repair_382 = "REPAIRMG42_382",
+	Repair_Allied_MG = "REPAIRMG42_Allied_MG",
+	Repair_Axis_MG42_Construction = "REPAIRMG42_Axis_MG42_Construction",
+
+	Allied_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_MG_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_Built" );
+	},
+
+	Axis_Team_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Team_Door_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Power_Generator_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Power_Generator_Built" );
+	},
+
+	Town_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Town_Door_Built" );
+	},
+
+	Allied_MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_MG_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Axis_Team_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Team_Door_Destroyed" );
+	},
+
+	Bank_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bank_Wall_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Entrance_Destroyed" );
+	},
+
+	Power_Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Power_Generator_Destroyed" );
+	},
+
+	Town_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Town_Door_Destroyed" );
+	},
+
+	radarbox_east_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radarbox_east_Taken" );
+	},
+
+	radarbox_west_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radarbox_west_Taken" );
+	},
+
+	CAPPOINT_67_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_67_Captured" );
+	},
+
+	CAPPOINT_68_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_68_Captured" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forwardspawn1_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition(-2522,-6732,-295, "PLANT_Town_Door");
+	
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_MG_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Team_Door_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Power_Generator_Built );
+	OnTrigger( "MISSING_STRING", Map.Town_Door_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_MG_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Team_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bank_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Power_Generator_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Town_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.radarbox_east_Taken );
+	OnTrigger( "MISSING_STRING", Map.radarbox_west_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_67_Captured );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_68_Captured );
+	OnTrigger( "MISSING_STRING", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forwardspawn1_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_MG" );
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

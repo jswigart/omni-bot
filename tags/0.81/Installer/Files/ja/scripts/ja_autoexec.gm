@@ -1,0 +1,77 @@
+// Load any other scripts that we will need.
+ExecScript("ja_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("difficulty.gm");
+ExecScript("server_manager.gm");
+
+// New module format
+global Util = import("utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.PLAYER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ASSAULT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SCOUT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.TECH, "def_bot.gm");
+RegisterDefaultProfile(CLASS.JEDI, "def_bot.gm");
+RegisterDefaultProfile(CLASS.DEMO, "def_bot.gm");
+RegisterDefaultProfile(CLASS.HW, "def_bot.gm");
+
+/////////////////////////////////////////////////////////////////////
+
+// Set up a list of Names, optionally associated with a script.
+Names["Alora"] = "def_bot.gm";
+Names["Cultist"] = "def_bot.gm";
+Names["Desann"] = "def_bot.gm";
+Names["Imperial Officer"] = "def_bot.gm";
+Names["Imperial Saboteur"] = "def_bot.gm";
+Names["Imperial Worker"] = "def_bot.gm";
+Names["New Reborn"] = "def_bot.gm";
+Names["Rax Joris"] = "def_bot.gm";
+Names["Reborn"] = "def_bot.gm";
+Names["Reborn Master"] = "def_bot.gm";
+Names["Reborn Twin"] = "def_bot.gm";
+Names["Shadowtrooper"] = "def_bot.gm";
+Names["Snowtrooper"] = "def_bot.gm";
+Names["Stormtrooper"] = "def_bot.gm";
+Names["Swamptrooper"] = "def_bot.gm";
+Names["Tavion"] = "def_bot.gm";
+Names["TIE Pilot"] = "def_bot.gm";
+Names["Boba Fett"] = "def_bot.gm";
+Names["Chiss"] = "def_bot.gm";
+Names["Gran"] = "def_bot.gm";
+Names["Mercenary"] = "def_bot.gm";
+Names["Noghri"] = "def_bot.gm";
+Names["Reelo"] = "def_bot.gm";
+Names["Rodian"] = "def_bot.gm";
+Names["Trandoshan"] = "def_bot.gm";
+Names["Tusken Raider"] = "def_bot.gm";
+Names["Weequay"] = "def_bot.gm";
+Names["Bespin Cop"] = "def_bot.gm";
+Names["Chewbacca"] = "def_bot.gm";
+Names["Jan Ors"] = "def_bot.gm";
+Names["Jedi"] = "def_bot.gm";
+Names["Jedi Trainer"] = "def_bot.gm";
+Names["Kyle Katarn"] = "def_bot.gm";
+Names["Luke Skywalker"] = "def_bot.gm";
+Names["Mon Mothma"] = "def_bot.gm";
+Names["Morgan Katarn"] = "def_bot.gm";
+Names["Prisoner"] = "def_bot.gm";
+Names["Rebel"] = "def_bot.gm";
+Names["Rebel Pilot"] = "def_bot.gm";
+Names["Rosh Penin"] = "def_bot.gm";
+Names["Ugnaught"] = "def_bot.gm";
+Names["Jawa"] = "def_bot.gm";
+Names["^1S^2i^3n^4n^6a"] = "def_bot.gm";
+Names["^6Jessica"] = "def_bot.gm";
+Names["^6stormy"] = "def_bot.gm";
+Names["^0<^1j^5e^1n^0>"] = "def_bot.gm";
+
+Names["testbot"] = "testbot.gm";
+
+//EnableDebugWindow(true);
+
+print("JA Script Executed");

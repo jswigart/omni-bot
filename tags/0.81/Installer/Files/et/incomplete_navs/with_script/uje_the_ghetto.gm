@@ -1,0 +1,169 @@
+global Map =
+{
+        // cs: kept 0.66 naming on left since all calls use the alias'
+	Ammo_Cabinet_ammo5 = "AMMO_CABINET_ammo5",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_health5 = "HEALTH_CABINET_health5",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Build_bridge = "BUILD_Bridge",
+	Build_bridgeMG42 = "BUILD_Bridge_MG42",
+	Build_allied_compost_built = "BUILD_Command_Post",
+	Build_barrier = "BUILD_Tank_Barrier",
+	Build_gate = "BUILD_Gate",
+	Build_tank_construct = "BUILD_Tank",
+	Build_axis_compost_built = "BUILD_Command_Post",
+	Destroy_allied_compost_built = "PLANT_Command_Post",
+	Destroy_axis_compost_built = "PLANT_Command_Post",
+	Destroy_barrier = "PLANT_Tank_Barrier",
+	Destroy_gate = "PLANT_Gate",
+	Destroy_bridgeMG42 = "PLANT_Bridge_MG42",
+	Destroy_bridge = "PLANT_Bridge",
+	Mount_bridgeMG42_model = "MOUNTMG42_Bridge_MG42",
+	Repair_bridgeMG42_model = "REPAIRMG42_Bridge_MG42",
+	Mover_tank = "MOVER_tank",
+	Flag_maps = "FLAG_maps",
+	Cappoint_490 = "MAP_CAPPOINT_490",
+	Checkpoint_cityflag = "CHECKPOINT_cityflag",   
+
+	bridgeMG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridgeMG42_Built" );
+	},
+
+	bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_Built" );
+	},
+
+	tank_construct_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_tank_construct );
+
+		Util.MapDebugPrint( "tank_construct_Built" );
+	},
+	
+	tank_construct_Destroyed = function( trigger )
+	{
+		Util.SetPositionGoal( Map.Build_tank_construct, Map.Mover_tank );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_tank_construct );
+
+		Util.MapDebugPrint( "tank_construct_Destroyed" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gate_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barrier_Built" );
+	},
+
+	barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barrier_Destroyed" );
+	},
+
+	bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_Destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+	
+	axis_compost_built_Destroyed = function( trigger )
+	{
+	
+		Util.MapDebugPrint( "axis_compost_built_Destroyed" );
+	},
+
+	gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gate_Destroyed" );
+	},
+
+	bridgeMG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridgeMG42_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_compost_built_Built );
+	OnTrigger( "The bridge has been repaired.", Map.bridge_Built );
+	OnTrigger( "Tank Barrier has been constructed.", Map.barrier_Built );
+	OnTrigger( "Allied team has rebuilt the gate!", Map.gate_Built );
+	OnTrigger( "The Tank has been repaired!", Map.tank_construct_Built );
+	OnTrigger( "Allied team has built the bridge mg42!", Map.bridgeMG42_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_compost_built_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_compost_built_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_compost_built_Destroyed );
+	OnTrigger( "Axis team has destroyed the bridge mg42!", Map.bridgeMG42_Destroyed );
+	OnTrigger( "The bridge has been damaged.", Map.bridge_Destroyed );
+	OnTrigger( "Axis team has destroyed the gate!", Map.gate_Destroyed );
+	OnTrigger( "Tank Barrier has been destroyed.", Map.barrier_Destroyed );
+	OnTrigger( "The Tank has been damaged!", Map.tank_construct_Destroyed );
+
+	Util.SetGoalOffset( 20, -450, -45, "MAP_CONSTRUCTION_tank_construct" );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

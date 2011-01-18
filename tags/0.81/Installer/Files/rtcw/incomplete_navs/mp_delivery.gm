@@ -1,0 +1,176 @@
+global Map =
+{
+	Quiet = true,
+	DispenseAmmoTime = 1,
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Plant_Allied_Packing_Case = "PLANT_Allied_Packing_Case",
+	Plant_Axis_Packing_Case = "PLANT_Axis_Packing_Case",
+	Plant_Central_Foundry_Door = "PLANT_Central_Foundry_Door",
+	Plant_Central_Foundry_Door_1 = "PLANT_Central_Foundry_Door_1",
+	Mount_566 = "MOUNTMG42_566",
+	Mount_567 = "MOUNTMG42_567",
+	Mount_568 = "MOUNTMG42_568",
+	Mount_569 = "MOUNTMG42_569",
+	Repair_566 = "REPAIRMG42_566",
+	Repair_567 = "REPAIRMG42_567",
+	Repair_568 = "REPAIRMG42_568",
+	Repair_569 = "REPAIRMG42_569",
+	FriendlyFire,
+	
+	// Allies spawnpt 7 - Allied Lower Bunker
+	
+	//scripted defend spots for dual objective support
+	Defend =
+	{
+		AxisSpawnPt = 4, // axis defenders will choose this spawn point
+		AlliesSpawnPt = 101, // allied defenders will choose this spawn point
+		//the first bot joining defending team will switch to crucial class
+		CrucialClass = CLASS.ENGINEER,
+		AxisDefenders = 0, // a variable to keep a count of defenders
+		MaxAxisDefenders = 5, // maximum defenders for this team
+		AlliesDefenders = 0,
+		MaxAlliesDefenders = 5,
+		
+		// initialize some tables for adding waypoints for them to use
+		Axis = {}, 
+		Allies = {},		
+	},
+	
+	allied_conservative = {"bdual_1", "bdual_2", "bdual_3", "bdual_4", "bdual_5", "bdual_6", },
+	axis_conservative = {"rdual_1", "rdual_2", "rdual_3", "rdual_4", "rdual_5", "rdual_6", },
+	
+	//tables to hold current AS goals	
+	AxisASTable = {},
+	AlliesASTable = {},
+	AxisASPriority = 0.94, // less than Defend's. thx Martin
+	AlliesASPriority = 0.94, // less than Defend's. thx Martin	
+
+	Allied_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Packing_Case_Destroyed" );
+	},
+
+	Axis_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Packing_Case_Destroyed" );
+	},
+
+	Central_Foundry_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_Destroyed" );
+	},
+	
+	Central_Foundry_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_Planted" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Central_Foundry_Door.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Central_Foundry_Door.*" );
+	},
+
+	Central_Foundry_Door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_1_Destroyed" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp("PLANT_Allied_Packing_Case", "bcase");
+	Util.AddUseWp("PLANT_Axis_Packing_Case", "rcase");
+	Util.AddUseWp("PLANT_Central_Foundry_Door", "door1");
+	Util.AddUseWp("PLANT_Central_Foundry_Door", "door2");
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Packing_Case_Destroyed );
+	OnTrigger( "the Central Foundry Door Destroyed.", Map.Central_Foundry_Door_Destroyed );
+	OnTrigger( "Planted at the Central Foundry Door.", Map.Central_Foundry_Door_Planted );
+	//OnTrigger( "MISSING_STRING", Map.Central_Foundry_Door_1_Destroyed );
+	OnTrigger( "Axis captures the Foundry Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "Allies capture the Foundry Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});	
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+	RTCWUtil.SetPrimaryGoals(1.0);
+	
+	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Central_Foundry_Door" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
+	
+	SetGoalPriority("ATTACK.*", 0.45);
+	
+	
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
+	
+	Map.Defend.Allies = Map.allied_conservative;
+	Map.Defend.Axis = Map.axis_conservative;
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	
+	//select spawn point and change class if necessary
+	RTCWUtil.SetDualObjective(bot);
+};

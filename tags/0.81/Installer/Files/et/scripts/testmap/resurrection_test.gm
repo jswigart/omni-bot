@@ -1,0 +1,114 @@
+global Map =
+{
+	Vehicle =
+	{
+		Raft =
+		{
+			VehicleName = "Raft",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = (1<<CLASS.ENGINEER),
+			EntityNum = 573,
+			RidePosition = 
+			{
+				Vector3( 1, 0, 0 ),
+			},
+			BoardPosition = 
+			{
+				Vector3( 1, 0, 0 ),
+			},
+			
+			Riders = table(),
+		},
+	},
+	
+	FocusOnVehicle = -1,
+		
+	Ammo_Cabinet_basement_ammocabinet = "AMMO_CABINET_basement_ammocabinet",
+	Ammo_Cabinet_main_ammocabinet = "AMMO_CABINET_main_ammocabinet",
+	Checkpoint_room_flag = "CHECKPOINT_room_flag",
+	Health_Cabinet_main_healthcabinet = "HEALTH_CABINET_main_healthcabinet",
+	Health_Cabinet_basement_healthcabinet = "HEALTH_CABINET_basement_healthcabinet",
+	Build_bbridge = "MAP_CONSTRUCTION_bbridge",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_bgate = "MAP_CONSTRUCTION_bgate",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Build_dock = "MAP_CONSTRUCTION_dock",
+	Destroy_axis_compost_built = "MAP_DYNAMITE_TARGET_axis_compost_built",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Destroy_waterwaydoor1 = "MAP_DYNAMITE_TARGET_waterwaydoor1",
+	Destroy_bbridge = "MAP_DYNAMITE_TARGET_bbridge",
+	Destroy_catacombdoor1 = "MAP_DYNAMITE_TARGET_catacombdoor1",
+	Destroy_dock = "MAP_DYNAMITE_TARGET_dock",
+	Destroy_bgate = "MAP_DYNAMITE_TARGET_bgate",
+	Destroy_maingate1 = "MAP_DYNAMITE_TARGET_maingate1",
+	Mount_577 = "MAP_MOUNTABLE_MG42_577",
+	Mount_355 = "MAP_MOUNTABLE_MG42_355",
+	Repair_355 = "MAP_REPAIR_MG42_355",
+	Repair_577 = "MAP_REPAIR_MG42_577",
+	Flag_Book_of_the_Resurrection = "MAP_FLAG_Book_of_the_Resurrection",
+	Cappoint_459 = "MAP_CAPPOINT_459",
+
+	Tests = function()
+	{
+		OnTrigger( "Dock to waterway door has been constructed.", TestMap.Pass );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Basement Bridge has been constructed.", TestMap.Pass );
+		OnTrigger( "Gate to Crypt has been constructed.", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "The Main Gate has been breached!", TestMap.Pass );
+		OnTrigger( "Basement Bridge has been destroyed.", TestMap.Pass );
+		OnTrigger( "Gate to Crypt has been destroyed.", TestMap.Pass );
+		OnTrigger( "Allies Breached the catacomb tunnel entrance", TestMap.Pass );
+		OnTrigger( "Allies Breached the waterway entrance", TestMap.Pass );
+		OnTrigger( "Dock to waterway door has been destroyed.", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "Allies have stolen Book of the Resurrection!", TestMap.Pass );
+		OnTrigger( "Allied team is escaping with the Book!", TestMap.Pass );
+		OnTrigger( "Allied team escaped with the Book!", TestMap.Pass );
+		//~ OnTrigger( "Allies capture the Forward room!", TestMap.Pass );
+		//~ OnTrigger( "Axis reclaims the Forward room!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.SetOffsetGoal( 0, 40, 0, Map.Build_dock );
+		
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_main_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_main_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_basement_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_basement_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_main_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_main_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_basement_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_basement_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_maingate1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_dock );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_waterwaydoor1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_catacombdoor1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_Book_of_the_Resurrection, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_459, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle.Raft, 120, true );
+		
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_bgate, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_bbridge, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_bgate, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_bbridge, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_dock, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_compost_built, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_355, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_355, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_577, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_577, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_459, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

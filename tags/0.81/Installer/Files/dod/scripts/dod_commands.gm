@@ -1,0 +1,91 @@
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug"] = 
+{
+	Func = function( _params )
+	{
+		print( "Executing aim debugging script." );	
+		DODUtil.DebugBotAim( _params[0] );
+	},
+
+	Help = 
+	{
+		"Aim Debug, an aim debugging tool",
+		"Usage: /bot aim_debug",
+		"Note: adds two bots to the game and positions them on both",
+		"       sides of the player at the given range",
+		"       shooting is disabled and the AIM debug flag is set",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug_reload"] = 
+{
+	Func = function( _params )
+	{
+		foreach ( gameId and bot in BotTable )
+			{ bot.ReloadProfile(); }
+	},
+
+	Help = 
+	{
+		"Aim Debug Reload, reloads each bots profile",
+		"Usage: /bot aim_debug_reload",
+	},	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["warpto"] = 
+{
+	Func = function( _params )
+	{
+		DODUtil.WarpTo( _params );
+	},
+
+	Help = 
+	{
+		"Warp To, will teleport player to given goal if cheats are enabled",
+		"Usage: \\bot warpto <goalname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wt"] = 
+{
+	Func = function( _params )
+	{
+		DODUtil.WarpTo( _params );
+	},
+
+	Help = 
+	{
+		"Warp To, will teleport player to given goal if cheats are enabled",
+		"Usage: \\bot wt <goalname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["status"] = 
+{
+	Func = function( _params )
+	{
+		print( "userid - name" );
+		foreach ( gameId and bot in BotTable )
+			{ print( "#" + gameId, "-", bot.Name ); }
+	},
+
+	Help = 
+	{
+		"Print list of userids and names",
+		"Usage: \\bot status",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+

@@ -1,0 +1,67 @@
+Commands["testme"] = function(_params)
+{
+	print("Test Command");
+	foreach ( name and val in _params )
+        {
+		print( val );
+        }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["showweapons"] = function(_params)
+{
+	print("Printing Weapon List");
+	foreach ( name and Id in WEAPON )
+        {
+		print("Weapon " + name +" : id " + Id);
+        } 
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["showevents"] = function(_params)
+{
+	print("Printing Event List");
+	foreach ( name and Id in EVENT )
+        {
+		print("Event " + name +" : id " + Id);
+        } 
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["dumpglobals"] = function(_params)
+{
+	dumpGlobals("globals_functions.gm", DUMP.FUNCTIONS);
+	dumpGlobals("globals_references.gm", DUMP.REFERENCES);
+	dumpGlobals("globals_typefunctions.gm", DUMP.TYPEFUNCTIONS);
+	dumpGlobals("globals_all.gm", DUMP.ALL);
+	dumpGlobals("globals_all2.gm");
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["showscriptgoals"] = function(_params)
+{
+	print("Printing Bot Script Goals");
+	foreach ( gameId and bot in BotTable )
+        {
+		print(bot, bot.scriptgoal);
+        } 
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["numthreads"] = function(_params)
+{
+	allThreads = threadAllIds();
+	print("Number of threads", tableCount(allThreads));
+};
+
+
+
+
+
+
+

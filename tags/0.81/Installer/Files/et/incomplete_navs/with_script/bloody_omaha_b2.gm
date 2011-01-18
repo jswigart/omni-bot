@@ -1,0 +1,100 @@
+global Map =
+{
+
+	ForwardSpawn = false,
+
+	East_Anti_Tank_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Anti_Tank_Gun_Destroyed" );
+	},
+
+	West_Anti_Tank_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Anti_Tank_Gun_Destroyed" );
+	},
+
+	beach_Flag1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ForwardSpawn = false;
+		foreach ( gameId and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES )
+			{
+				bot.ChangeSpawnPoint( RandInt(0,9) );
+			}
+		}
+		print( "beach_Flag1_Axis_Captured" );
+	},
+
+	beach_Flag1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ForwardSpawn = true;
+		foreach ( gameId and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES )
+			{
+				bot.ChangeSpawnPoint( 0 );
+			}
+		}
+		print( "beach_Flag1_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) { Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.East_Anti_Tank_Gun_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_Anti_Tank_Gun_Destroyed );
+	OnTrigger( "The Axis have reclaimed the seawall!", Map.beach_Flag1_Axis_Captured );
+	OnTrigger( "The Allies are advancing up the beach!", Map.beach_Flag1_Allies_Captured );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_251" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_252" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+
+	SetGoalPriority( "DEFEND_.*", 0.54 );
+
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE_.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+
+	Util.SetGoalPosition( 1530,-13770,-50, "PLANT_Side_Wall" );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=5, maxcamptime=40} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=5, maxcamptime=40} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=10, maxcamptime=300} );
+
+	print( "Omni-bot script for Bloody Omaha loaded." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 4700;
+	if( bot.CanSnipe() )
+	{
+		bot.MaxViewDistance = 6500;
+	}
+	if ( bot.GetTeam() == TEAM.ALLIES && !Map.ForwardSpawn )
+	{
+		bot.ChangeSpawnPoint( RandInt(0,9) );
+	}
+};

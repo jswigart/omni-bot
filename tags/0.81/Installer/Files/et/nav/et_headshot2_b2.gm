@@ -1,0 +1,319 @@
+global Map =
+{
+	Quiet = true,
+	AddHuntGoal = true,
+	DeathMatch = 1,
+
+	Switches =
+	{
+		alfloor =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "alfloor",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(376.230,-507.875,89.553),
+		},
+
+		alwalls =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "alwalls",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(328.211,-507.875,89.553),
+		},
+
+		alboxes =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "alboxes",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(280.115,-507.875,89.553),
+		},
+
+		algrates =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "algrates",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(232.270,-507.875,89.553),
+		},
+
+		alduel =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "alduel",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(499.875,-98.316,-212.888),
+		},
+
+		axfloor =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "axfloor",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-888.018,507.875,89.553),
+		},
+
+		axwalls =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "axwalls",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-840.113,507.875,89.553),
+		},
+
+		axboxes =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "axboxes",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-792.436,507.875,89.553),
+		},
+
+		axgrates =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "axgrates",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-744.196,507.875,89.553),
+		},
+
+		axduel =
+		{
+			Enabled = true,
+			Priority = 1.00,
+			WaypointName = "axduel",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-1011.875,97.337,-214.497),
+		},
+	},
+
+	AlliesZone =
+	{
+		Name = "AlliesZone",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
+		{
+			if ( TestMap )
+				{ return; }
+
+			if( GetEntTeam(ent) == TEAM.ALLIES )
+			{
+				Map.Switches.alfloor.Enabled = false;
+				Map.Switches.alwalls.Enabled = false;
+				Map.Switches.alboxes.Enabled = false;
+				Map.Switches.algrates.Enabled = false;
+				Util.MapDebugPrint("Disabling Allies Switches!", true);
+			}
+		},
+		OnExit = function(ent)
+		{
+		},
+	},
+
+	AxisZone =
+	{
+		Name = "AxisZone",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
+		{
+			if ( TestMap )
+				{ return; }
+
+			if( GetEntTeam(ent) == TEAM.AXIS )
+			{
+				Map.Switches.axfloor.Enabled = false;
+				Map.Switches.axwalls.Enabled = false;
+				Map.Switches.axboxes.Enabled = false;
+				Map.Switches.axgrates.Enabled = false;
+				Util.MapDebugPrint("Disabling Axis Switches!", true);
+			}
+		},
+		OnExit = function(ent)
+		{
+		},
+	},
+
+	Floor = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+			Map.Switches.alfloor.Enabled = false;
+			Map.Switches.axfloor.Enabled = false;
+			Util.MapDebugPrint("floor up", true);
+		}
+		else
+		{
+			Map.Switches.alfloor.Enabled = false;
+			Map.Switches.axfloor.Enabled = false;
+			Util.MapDebugPrint("floor down", true);
+		}
+
+	},
+
+	Walls = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+			Map.Switches.alwalls.Enabled = false;
+			Map.Switches.axwalls.Enabled = false;
+			Util.MapDebugPrint("walls up", true);
+		}
+		else
+		{
+			Map.Switches.alwalls.Enabled = false;
+			Map.Switches.axwalls.Enabled = false;
+			Util.MapDebugPrint("walls down", true);
+		}
+
+	},
+
+	Boxes = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+			Map.Switches.alboxes.Enabled = false;
+			Map.Switches.axboxes.Enabled = false;
+			Util.MapDebugPrint("boxes up", true);
+		}
+		else
+		{
+			Map.Switches.alboxes.Enabled = false;
+			Map.Switches.axboxes.Enabled = false;
+			Util.MapDebugPrint("boxes down", true);
+		}
+
+	},
+
+	Grates = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		if ( vel.z > 0 )
+		{
+			Map.Switches.algrates.Enabled = false;
+			Map.Switches.axgrates.Enabled = false;
+			Util.MapDebugPrint("grates up", true);
+		}
+		else
+		{
+			Map.Switches.algrates.Enabled = false;
+			Map.Switches.axgrates.Enabled = false;
+			Util.MapDebugPrint("grates down", true);
+		}
+
+	},
+
+	Allies_Duel = function( trigger )
+	{
+			Map.Switches.alduel.Enabled = false;
+			Util.MapDebugPrint("Allies Are Ready!", true);
+	},
+
+	Axis_Duel = function( trigger )
+	{
+			Map.Switches.axduel.Enabled = false;
+			Util.MapDebugPrint("Axis Are Ready!", true);
+	},
+
+	FIGHT = function( trigger )
+	{
+			Util.MapDebugPrint("FIGHT!", true);
+	},
+
+	Allies_Win = function( trigger )
+	{
+			Map.Switches.alfloor.Enabled = true;
+			Map.Switches.alwalls.Enabled = true;
+			Map.Switches.alboxes.Enabled = true;
+			Map.Switches.algrates.Enabled = true;
+			Map.Switches.alduel.Enabled = true;
+			Map.Switches.axfloor.Enabled = true;
+			Map.Switches.axwalls.Enabled = true;
+			Map.Switches.axboxes.Enabled = true;
+			Map.Switches.axgrates.Enabled = true;
+			Map.Switches.axduel.Enabled = true;
+			Util.MapDebugPrint("Allies Win!", true);
+
+	},
+
+	Axis_Win = function( trigger )
+	{
+			Map.Switches.alfloor.Enabled = true;
+			Map.Switches.alwalls.Enabled = true;
+			Map.Switches.alboxes.Enabled = true;
+			Map.Switches.algrates.Enabled = true;
+			Map.Switches.alduel.Enabled = true;
+			Map.Switches.axfloor.Enabled = true;
+			Map.Switches.axwalls.Enabled = true;
+			Map.Switches.axboxes.Enabled = true;
+			Map.Switches.axgrates.Enabled = true;
+			Map.Switches.axduel.Enabled = true;
+			Util.MapDebugPrint("Axis Win!", true);
+
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "floors_goto", Map.Floor );
+	OnTrigger( "walls_goto", Map.Walls );
+	OnTrigger( "crates_goto", Map.Boxes );
+	OnTrigger( "grates_goto", Map.Grates );
+	OnTrigger( "The Allied team is ready", Map.Allies_Duel );
+	OnTrigger( "The Axis team is ready", Map.Axis_Duel );
+	OnTrigger( "^3Allies win!", Map.Allies_Win );
+	OnTrigger( "^3Axis win!", Map.Axis_Win );
+	OnTrigger( "^1FIGHT!", Map.FIGHT );
+
+	al_zone = OnTriggerRegion(Vector3(453,-90,-235), 100, Map.AlliesZone);
+	ax_zone = OnTriggerRegion(Vector3(-969,90,-235), 100, Map.AxisZone);
+
+	Util.UpdateSwitchData();
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	if ( Map.AddHuntGoal )
+	{
+		bot.AddScriptGoal("Hunt");
+	}
+};

@@ -1,0 +1,169 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Call_Artillery_119 = "CALLARTILLERY_119",
+	Call_Artillery_120 = "CALLARTILLERY_120",
+	Call_Artillery_139 = "CALLARTILLERY_139",
+	Call_Artillery_32 = "CALLARTILLERY_32",
+	Call_Artillery_65 = "CALLARTILLERY_65",
+	Artillery_S_119 = "ARTILLERY_S_119",
+	Artillery_S_120 = "ARTILLERY_S_120",
+	Artillery_S_139 = "ARTILLERY_S_139",
+	Artillery_S_32 = "ARTILLERY_S_32",
+	Artillery_S_65 = "ARTILLERY_S_65",
+	Checkpoint_roadbunker = "CHECKPOINT_roadbunker",
+	Flag_documents = "FLAG_documents",
+	Flag_keycard = "FLAG_keycard",
+	Cappoint_185 = "CAPPOINT_185",
+	Cappoint_88 = "CAPPOINT_88",
+	Build_Allied_Command_Center = "BUILD_Allied_Command_Center",
+	Build_Command_Post = "BUILD_Command_Post",
+	Plant_Allied_Command_Center = "PLANT_Allied_Command_Center",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Main_Entrance = "PLANT_Main_Entrance",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Mobile_MG42_129 = "MOBILEMG42_129",
+	Plant_Mine_139 = "PLANTMINE_139",
+	Plant_Mine_140 = "PLANTMINE_140",
+	Plant_Mine_159 = "PLANTMINE_159",
+	Plant_Mine_32 = "PLANTMINE_32",
+	Plant_Mine_33 = "PLANTMINE_33",
+	Plant_Mine_89 = "PLANTMINE_89",
+	Plant_Mine_90 = "PLANTMINE_90",
+	Plant_Mine_95 = "PLANTMINE_95",
+
+	Allied_Command_Center_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Center_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Allied_Command_Center_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Center_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Entrance_Destroyed" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Entrance_Destroyed" );
+	},
+
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "documents_Taken" );
+	},
+
+	keycard_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "keycard_Taken" );
+	},
+
+	CAPPOINT_185_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_185_Captured" );
+	},
+
+	CAPPOINT_keycard_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_documents" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_185" );
+		print( "CAPPOINT_88_Captured" );
+	},
+
+	roadbunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "roadbunker_Axis_Captured" );
+	},
+
+	roadbunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "roadbunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition( 2182, -650, 152, "PLANT_Main_Entrance" );
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Center_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Center_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.keycard_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_185_Captured );
+	OnTrigger( "Allies have gained access to the War Room!", Map.CAPPOINT_keycard_Captured );
+	OnTrigger( "MISSING_STRING", Map.roadbunker_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.roadbunker_Allies_Captured );
+
+	ETUtil.DisableGoal("PLANTMINE.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_documents" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_185" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

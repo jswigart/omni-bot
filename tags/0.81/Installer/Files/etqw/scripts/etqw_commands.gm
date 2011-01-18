@@ -1,0 +1,70 @@
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug"] = function( _params )
+{
+	print( "Executing aim debugging script." );	
+	ETQWUtil.DebugBotAim( _params[0] );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug_reload"] = function( _params )
+{
+	foreach ( gameId and bot in BotTable )
+	{
+		bot.ReloadProfile();
+	}	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// The command, "\bot makemapgm",  executes the function Mapgm.MakeMapgm to create
+//  a map script in gm script
+Commands["makemapgm"] = function( _params )
+{
+	ExecScript( "makemapgm.gm" );
+	EchoToScreen( 0, 3, "Executing make map gm script." );
+	print( "Executing make map gm script." );
+	Mapgm.MakeMapgm();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["testmap"] = function( _params )
+{
+	ETQWUtil.TestMap( _params );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["cvp"] = function( _params )
+{
+	ETQWUtil.CheckVehiclePath( _params );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["cvpo"] = function( _params )
+{
+	ETQWUtil.CheckVehiclePathOff();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["bvp"] = function( _params )
+{
+	ETQWUtil.BuildVehiclePath( _params );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["bvpo"] = function( _params )
+{
+	ETQWUtil.BuildVehiclePathOff();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["warpto"] = function( _params )
+{
+	ETQWUtil.WarpTo( _params );
+};

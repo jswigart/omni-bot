@@ -1,0 +1,526 @@
+// This script contains useful utility scripts for performing common actions.
+
+Util.AllTeamPlayers = 32;
+Util.AllTeams = (1 << TEAM.ALLIES) | (1 << TEAM.AXIS); 
+Util.AllClasses = (1 << CLASS.RIFLEMAN) | (1 << CLASS.ASSAULT) |
+	(1 << CLASS.SUPPORT) | (1 << CLASS.SNIPER) | 
+	(1 << CLASS.MACHINEGUNNER) | (1 << CLASS.ROCKET);
+Util.FlagCarrier = "";
+Util.Sniper = "CLASS.SNIPER";
+
+Util.SniperWeapons = 
+{
+	WEAPON.K98S,
+	WEAPON.SPRING,
+};
+
+Util.IndexedSniperWeapons = 
+{
+	[17] = 1,
+	[18] = 1,
+};
+
+Util.HaveTeam = { false, true, true, false, false };
+
+Util.TeamNames =
+{
+	{ "", "", "" },
+	{ "ALLIES", "Allies", "allies" },
+	{ "AXIS", "Axis", "axis" },
+};
+
+Util.BotNames =
+{ 
+	{
+		"", "", "", "", 
+		"", "",
+	},
+	{
+		"", "allies_rifleman", "allies_assault", "allies_support", 
+		"allies_sniper", "allies_machinegunner", "allies_rocket",
+	},
+	{
+		"", "axis_rifleman", "axis_assault", "axis_support", 
+		"axis_sniper", "axis_machinegunner", "axis_rocket",
+	},
+};
+
+Util.NoTimeLimit = "mp_timelimit 0";
+Util.TimeLimit1 = "mp_timelimit 1";
+
+
+member numaxis = 0;
+member numallies = 0;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgStatus = false;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOutput = function( text )
+{
+	while ( this.HudTextMsgStatus )
+	{
+		HudTextMsg( Util.GetPlayerEntity(), text );
+		sleep( 1 );
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOutput2 = function( text, time )
+{
+	this.HudTextMsgOn( text );
+	
+	for ( i = 0 ; i < time ; i = i + 1 )
+	{
+		if ( Util.Skip )
+			{ break; }
+
+		sleep( 1 );
+	}
+	
+	this.HudTextMsgOff();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgTimeout = function( text, time )
+{
+	thread( this.HudTextMsgOutput2, text, time );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOn = function( text )
+{
+	member HudTextMsgStatus = true;
+	thread( this.HudTextMsgOutput, text );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOff = function()
+{
+	this.HudTextMsgStatus = false;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetOffense = function()
+{
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetDefense = function()
+{
+};
+
+//////////////////////////////////////////////////////////////////////////
+// A table for referencing default goal priorities. Reference only
+
+if ( Util.DefaultPriorities == null )
+	{ Util.DefaultPriorities = table(); }
+
+//~ Util.DefaultPriorities["BUILD"] = 0.9;
+//~ Util.DefaultPriorities["PLANT"] = 0.8;
+//~ Util.DefaultPriorities["DEFUSE"] = 1.0;
+//~ Util.DefaultPriorities["REVIVE"] = 1.0;
+//~ Util.DefaultPriorities["MOVER"] = 0.0;
+//~ Util.DefaultPriorities["MOUNTMG42"] = 0.55;
+//~ Util.DefaultPriorities["REPAIRMG42"] = 0.56;
+//~ Util.DefaultPriorities["MOBILEMG42"] = 0.58;
+//~ Util.DefaultPriorities["MOBILEMORTAR"] = 0.58;
+//~ Util.DefaultPriorities["CALLARTILLERY"] = 0.7;
+//~ Util.DefaultPriorities["ARTILLERY_S"] = 0.7;
+//~ Util.DefaultPriorities["ARTILLERY_D"] = 0.7;
+//~ Util.DefaultPriorities["PLANTMINE"] = 0.7;
+//~ Util.DefaultPriorities["HEALTHCAB"] = 0.4;
+//~ Util.DefaultPriorities["AMMOCAB"] = 0.4;
+Util.DefaultPriorities["CHECKPOINT"] = 0.6;
+//~ Util.DefaultPriorities["EXPLODE"] = 0.3;
+//~ Util.DefaultPriorities["PANZER"] = 0.6;
+//~ Util.DefaultPriorities["FLAME"] = 0.6;
+
+///////////////////////////////////////////////////////////////////////////////
+// The DebugBotAim function runs this thread on the bots.
+
+member DebugBotAimThread = function( _targetpos )
+{
+	block( EVENT.SPAWNED );
+	
+	this.SetScriptControlled( true );
+	this.EnableShooting( false );
+	
+	// Repeat until we get there.
+	while(1)
+	{
+		print( "Going to " + _targetpos );
+		this.GoTo( _targetpos );
+		
+		if( block(EVENT.GOAL_SUCCESS, EVENT.GOAL_FAILED) == EVENT.GOAL_SUCCESS )
+		{
+			break;
+		}
+	}
+	
+	this.SetDebugFlag( DEBUG.AIM, true );
+			
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// This function adds 2 bots to the game, disables their 
+
+member DebugBotAim = function( _range )
+{
+	// Pick a default range to use if none is provided.
+	if( _range == null )
+	{
+		_range = 20;
+	}
+
+	print( "Range " + _range );
+	
+	KickAll();
+
+	AddBot( TEAM.ALLIES, CLASS.SOLDIER );
+	AddBot( TEAM.AXIS, CLASS.SOLDIER );
+	
+	// Get a target position for 2 bots.
+	localHost = GetGameEntityFromId(0);
+	localHostPos = localHost.GetPosition();
+	localHostFacing = localHost.GetFacing();
+	
+	sleep(5.0);
+		
+	// calculate 2 points on each side of the localhost to send the bots to.
+	aimPoints = table();
+	aimPoints[0] = localHostPos + ( localHostFacing * _range );
+	aimPoints[1] = localHostPos - ( localHostFacing * _range );
+	
+	print( "Creating bot threads." );
+	iCurrentBot = 0;
+	foreach ( gameId and bot in BotTable )
+	{
+		print( aimPoints[iCurrentBot] );
+		bot:thread( this.DebugBotAimThread, aimPoints[iCurrentBot] );
+		iCurrentBot += 1;
+		if(iCurrentBot >= 2)
+		{
+			break;
+		}
+	}	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member TestMap = function( _params )
+{
+	if ( GetGameState() == "Playing" )
+	{
+		ExecScript( "testmap.gm" );
+		TestMap.RunTests( _params );
+	}
+	else
+	{
+		print( "Can't run command during warmup" );
+		EchoToScreen( 3, "Can't run command during warmup" );
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member AutoTestMap = function()
+{
+	if ( GetGameState() == "Playing" )
+	{
+		yield();
+		this.TestMap();
+		sleep( 2 );
+		exit();
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member AddBotTester = function( team, class, name )
+{
+	// Add Tester bot
+	sleep( 1 );
+	AddBot(team, class, name);
+	sleep( 1 );
+	
+	botPtr = Util.GetBotPointer( name );
+	botId = Util.GetBotId( name );
+	botstats = {}; 
+	GetEntHealthAndArmor( botId, botstats );
+
+	while ( !botstats.Health )
+		{ sleep( 1 ); }
+		
+	return botPtr;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ClearMainGoals = function()
+{
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ClearSecondaryGoals = function()
+{
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//Disable a goal for both teams
+member DisableGoal = function( goal, routes )
+{
+	SetAvailableMapGoals( TEAM.AXIS, false, goal );
+	SetAvailableMapGoals( TEAM.ALLIES, false, goal );	
+
+	if (routes) 
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*" );
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//Enable a goal for both teams
+member EnableGoal = function( goal )
+{
+	SetAvailableMapGoals( TEAM.AXIS, true, goal );
+	SetAvailableMapGoals( TEAM.ALLIES, true, goal );	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ShowActiveGoals = function()
+{
+	GoalTable = table();
+	GetGoals( GoalTable, 0, ".*" );
+
+	ActiveBlue = table();
+	ActiveRed = table();
+
+	goalsActive = false;
+	
+	foreach ( id and Goal in GoalTable )
+	{
+		if ( Goal.IsAvailable(TEAM.ALLIES) && Goal.IsAvailable(TEAM.AXIS) )
+		{
+			goalsActive = true;
+			numallies = tableCount(ActiveBlue);
+			numaxis = tableCount(ActiveRed);
+
+			if ( numallies != 0 )
+				{ ActiveBlue[numallies + 1] = Goal; } 
+			else
+				{ ActiveBlue[0] = Goal; }
+
+			if ( numaxis != 0 )
+				{ ActiveRed[numaxis + 1] = Goal; } 
+			else
+				{ ActiveRed[0] = Goal; }
+			
+			continue;
+		}
+		
+		if ( Goal.IsAvailable(TEAM.ALLIES) )
+		{
+			goalsActive = true;
+			numallies = tableCount(ActiveBlue);
+			
+			if ( numallies != 0 )
+				{ ActiveBlue[numallies + 1] = Goal; } 
+			else
+				{ ActiveBlue[0] = Goal; }
+
+		}
+		else if ( Goal.IsAvailable(TEAM.AXIS) )
+		{
+			goalsActive = true;
+			numaxis = tableCount(ActiveRed);
+
+			if ( numaxis != 0 )
+				{ ActiveRed[numaxis + 1] = Goal; } 
+			else
+				{ ActiveRed[0] = Goal; }
+		}			
+	}
+
+	if ( !goalsActive )
+		{ print("ShowActiveGoals: no goals active"); }
+	else
+	{
+		foreach ( id and bluegoal in ActiveBlue )
+		{
+			bluegoalname = bluegoal.GetName();
+			print("BLUE:", bluegoalname, "is active");
+		}
+
+		foreach ( id and redgoal in ActiveRed )
+		{
+			redgoalname = redgoal.GetName();
+			print("RED:", redgoalname, "is active");
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member WarpTo = function( _params )
+{
+	//~ if ( !CheatsEnabled() )
+	//~ {
+		//~ print("^1cheats must be enabled to use this command");
+		//~ print("type /devmap", GetMapName(), "in console");
+		//~ return;
+	//~ }
+
+	goalname = _params[0];
+	goal = GetGoal( goalname );
+
+	if ( goal )
+	{
+		goalpos = goal.GetPosition(); 
+		s = "setpos " + goalpos[0] + " " + goalpos[1] + " " + goalpos[2];
+		print(s);
+
+		ServerCommand( s );
+	}
+	else
+	{ print("WarpTo: Invalid Goal"); }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member RollCall = function()
+{
+	foreach ( id and bot in BotTable )
+	{
+		print(bot.Name);
+		print(bot.GetTeam());
+		print(bot.GetClass());
+		print(bot);
+		print("^7-----------------------");
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CountClass = function( team, class )
+{
+	count = 0;
+	foreach ( id and bot in BotTable )
+	{
+		if ( bot.GetTeam() == team && bot.GetClass() == class )
+			{ count += 1; }
+	}
+	
+	return count;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CountTeam = function( team )
+{
+	count = 0;
+	foreach ( id and bot in BotTable )
+	{
+		if ( bot.GetTeam() == team )
+			{ count += 1; }
+	}
+	
+	return count;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ChangeClass = function( team, originalclass, newclass, revert, maxbots )
+{
+	numbots = 0;
+
+	foreach ( id and bot in BotTable )
+	{
+		if ( !GetEntFlags(bot.GetGameEntity(), ENTFLAG.CARRYINGGOAL) 
+			&& bot.GetTeam() == team  )
+		{
+			if ( bot.PrimaryClass == null )
+				{ bot.PrimaryClass = bot.GetClass(); }
+
+			if ( bot.PrimaryClass == originalclass && !revert && !bot.ClassChanged )
+			{
+				if ( numbots < maxbots )
+				{
+					numbots += 1;
+					bot.ClassChanged = true;
+					bot.ChangeClass(newclass);
+				}
+			}
+
+			if ( bot.ClassChanged && revert && bot.PrimaryClass == originalclass 
+				&& bot.GetClass() == newclass )
+			{
+				bot.ClassChanged = false;
+				bot.ChangeClass(bot.PrimaryClass);
+			} 
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetPrimaryGoals = function(priority)
+{
+	SetGoalPriority( "CHECKPOINT_.*", priority - 0.1f );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member RandomSpawn = function( team, spawn )
+{
+	foreach ( id and bot in BotTable )
+	{
+		if ( !bot.ChangedSpawn && bot.GetTeam() == team )
+		{
+			if ( RandInt( 0, 1 ) < 1 )
+			{
+				bot.ChangeSpawnPoint( spawn );
+				bot.ChangedSpawn = true;
+			}
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member PlayerClassTable =
+{
+	CLASS.RIFLEMAN,
+	CLASS.ASSAULT,
+	CLASS.SUPPORT,
+	CLASS.SNIPER,
+	CLASS.MACHINEGUNNER,
+	CLASS.ROCKET,
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member LimitToClass = function( goalname, team, class1, class2, 
+	class3, class4, class5, class6 )
+{
+	foreach ( id and class in this.PlayerClassTable )
+	{
+		if ( class == class1 || class == class2 || 
+			class == class3 || class == class4 || 
+			class == class5 || class == class6  )
+			{ continue; }
+		
+		SetGoalPriority( goalname, 0.0, team, class);
+	}
+};

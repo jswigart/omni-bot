@@ -1,0 +1,805 @@
+// VOL_NORM		1.0f
+
+// Channels
+//	CHAN_AUTO		= 0,
+//	CHAN_WEAPON		= 1,
+//	CHAN_VOICE		= 2,
+//	CHAN_ITEM		= 3,
+//	CHAN_BODY		= 4,
+//	CHAN_STREAM		= 5,		// allocate stream channel from the static or dynamic area
+//	CHAN_STATIC		= 6,		// allocate channel from the static area 
+// these can be set with "channel" "2" or "channel" "chan_voice"
+
+//-----------------------------------------------------------------------------
+// common attenuation values
+//-----------------------------------------------------------------------------
+
+// DON'T USE THESE - USE SNDLVL_ INSTEAD!!!
+//	ATTN_NONE		0.0f	
+//	ATTN_NORM		0.8f
+//	ATTN_IDLE		2.0f
+//	ATTN_STATIC		1.25f 
+//	ATTN_RICOCHET	1.5f
+//	ATTN_GUNFIRE	0.27f
+
+//	SNDLVL_NONE		= 0,
+//	SNDLVL_25dB		= 25,
+//	SNDLVL_30dB		= 30,
+//	SNDLVL_35dB		= 35,
+//	SNDLVL_40dB		= 40,
+//	SNDLVL_45dB		= 45,
+//	SNDLVL_50dB		= 50,	// 3.9
+//	SNDLVL_55dB		= 55,	// 3.0
+//	SNDLVL_IDLE		= 60,	// 2.0
+//	SNDLVL_TALKING	= 60,	// 2.0
+//	SNDLVL_60dB		= 60,	// 2.0
+//	SNDLVL_65dB		= 65,	// 1.5
+//	SNDLVL_STATIC	= 66,	// 1.25
+//	SNDLVL_70dB		= 70,	// 1.0
+//	SNDLVL_NORM		= 75,
+//	SNDLVL_75dB		= 75,	// 0.8
+//	SNDLVL_80dB		= 80,	// 0.7
+//	SNDLVL_85dB		= 85,	// 0.6
+//	SNDLVL_90dB		= 90,	// 0.5
+//	SNDLVL_95dB		= 95,
+//	SNDLVL_100dB	= 100,	// 0.4
+//	SNDLVL_105dB	= 105,
+//	SNDLVL_120dB	= 120,
+//	SNDLVL_130dB	= 130,
+//	SNDLVL_GUNFIRE	= 140,	// 0.27
+//	SNDLVL_140dB	= 140,	// 0.2
+//	SNDLVL_150dB	= 150,	// 0.2
+
+"Voice.German_Clear"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_areaclear.wav"
+}
+
+"Voice.German_BackUp"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_backup.wav"
+		wave "player/german/ger_backup2.wav"
+		wave "player/german/ger_backup3.wav"
+		wave "player/german/ger_backup4.wav"
+	}
+}
+
+"Voice.German_BehindUs"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_enemybehind.wav"
+		wave "player/german/ger_enemybehind2.wav"
+	}
+}
+
+"Voice.German_CeaseFire"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_ceasefire.wav"
+}
+
+"Voice.German_CoveringFire"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_coveringfire.wav"
+		wave "player/german/ger_coveringfire2.wav"
+	}
+}
+
+"Voice.German_CoverFlanks"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_coverflanks.wav"
+}
+
+"Voice.German_Displace"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_changeposition.wav"
+}
+
+"Voice.German_DropWeapons"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_dropweapons.wav"
+}
+
+"Voice.German_EnemyAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_enemyahead.wav"
+}
+
+"Voice.German_FallBack"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_fallback.wav"
+}
+
+"Voice.German_FireInHole"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_grenadeout.wav"
+}
+
+"Voice.German_FlankLeft"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_flankleft.wav"
+}
+
+"Voice.German_FlankRight"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_flankright.wav"
+}
+
+"Voice.German_Go"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_gogogo.wav"
+	}
+}
+
+"Voice.German_Grenade"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_grenadein.wav"
+		wave "player/german/ger_grenadein2.wav"
+		wave "player/german/ger_grenadein3.wav"
+		wave "player/german/ger_grenadein4.wav"
+	}
+}
+
+"Voice.German_Hold"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_holdposition.wav"
+		wave "player/german/ger_holdposition2.wav"
+	}
+}
+
+"Voice.German_Left"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_left.wav"
+}
+
+"Voice.German_Medic"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_medic.wav"
+		wave "player/german/ger_medic2.wav"
+
+	}
+}
+
+"Voice.German_MgAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_mgahead.wav"
+		wave "player/german/ger_mgahead2.wav"
+	}
+}
+
+"Voice.German_Moveout"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_moveout.wav"
+		wave "player/german/ger_moveout2.wav"
+		wave "player/german/ger_gogogo.wav"
+		wave "player/german/ger_gogogo2.wav"
+		wave "player/german/ger_gogogo3.wav"
+		wave "player/german/ger_gogogo4.wav"
+		wave "player/german/ger_gogogo7.wav"
+	}
+}
+
+"Voice.German_MoveUpMg"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_moveupmg.wav"
+		wave "player/german/ger_moveupmg2.wav"
+		wave "player/german/ger_moveupmg3.wav"
+	}
+}
+
+"Voice.German_NeedAmmo"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_needammo.wav"
+		wave "player/german/ger_needammo2.wav"
+		wave "player/german/ger_needammo3.wav"
+	}
+}
+
+"Voice.German_Negative"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_negative.wav"
+		wave "player/german/ger_negative2.wav"
+		wave "player/german/ger_negative3.wav"
+
+	}
+}
+
+"Voice.German_RocketSpotted"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_bazooka.wav"
+}
+
+"Voice.German_RocketSpotted2"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_piat.wav"
+}
+
+"Voice.German_Prepare"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_prepare.wav"
+		wave "player/german/ger_prepare2.wav"
+	}
+}
+
+"Voice.German_Right"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_right.wav"
+}
+
+"Voice.German_Sniper"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_sniper.wav"
+		wave "player/german/ger_sniper2.wav"
+	}
+}
+
+"Voice.German_SpreadOut"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_spreadout.wav"
+}
+
+"Voice.German_StartRound"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/startround/ger_flags.wav"
+		wave "player/german/startround/ger_flags2.wav"
+		wave "player/german/startround/ger_flags3.wav"
+		wave "player/german/startround/ger_flags4.wav"
+		wave "player/german/startround/ger_flags5.wav"
+	}
+}
+
+"Voice.German_StickTogether"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_sticktogether.wav"
+}
+
+"Voice.German_TakeCover"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_takecover.wav"
+}
+
+"Voice.German_TakingFireLeft"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_incomingfireleft.wav"
+}
+
+"Voice.German_TakingFireRight"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_incomingfireright.wav"
+}
+
+"Voice.German_TankAhead"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_tankahead.wav"
+}
+
+"Voice.German_UseRocket"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_usepanzerschreck.wav"
+		wave "player/german/ger_usepanzerschreck2.wav"
+		wave "player/german/ger_usepanzerschreck3.wav"
+	}
+}
+
+"Voice.German_UseGrenades"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_usegrenades.wav"
+		wave "player/german/ger_usegrenades2.wav"
+		wave "player/german/ger_usegrenades3.wav"
+		wave "player/german/ger_usegrenades4.wav"
+	}
+}
+
+"Voice.German_UseSmoke"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".75"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_smoke.wav"
+}
+
+"Voice.German_YesSir"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_yessir.wav"
+		wave "player/german/ger_yessir2.wav"
+		wave "player/german/ger_yessir3.wav"
+	}
+}
+
+"Voice.German_NiceShot"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_niceshot.wav"
+		wave "player/german/ger_niceshot2.wav"
+		wave "player/german/ger_niceshot3.wav"
+		wave "player/german/ger_niceshot4.wav"
+	}
+}
+
+"Voice.German_Thanks"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		"player/german/ger_thanks.wav"
+}
+
+"Voice.German_TakeAmmo"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_takeammo.wav"
+		wave "player/german/ger_takeammo2.wav"
+	}
+}
+
+"Voice.German_WeGotHim"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_wegothim.wav"
+		wave "player/german/ger_wegothim2.wav"
+		wave "player/german/ger_wegothim3.wav"
+		wave "player/german/ger_wegothim4.wav"
+		wave "player/german/ger_wegothim5.wav"
+		wave "player/german/ger_wegothim6.wav"
+		wave "player/german/ger_wegothim7.wav"
+	}
+}
+
+"Voice.German_MoveWithTank"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"	
+	{
+		wave "player/german/ger_movewithtank.wav"
+		wave "player/german/ger_movewithtank2.wav"
+		wave "player/german/ger_movewithtank3.wav"
+	}
+}
+
+"Voice.German_WhiskeyTangoFoxtrot"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		".5"
+	"soundlevel"	"SNDLVL_95dB"
+	"pitch"		"PITCH_NORM"
+	"wave"		 "player/jester.wav"
+}
+
+"Voice.German_FlagCapture"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_140dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/flagcaptured/ger_areacaptured.wav"
+		"wave"	"player/german/flagcaptured/ger_areasecure.wav"
+		"wave"	"player/german/flagcaptured/ger_objectivesecure.wav"
+		"wave"	"player/german/flagcaptured/ger_pointcaptured.wav"
+		"wave"	"player/german/flagcaptured/ger_pointsecure.wav"
+	}
+}
+
+"Voice.German_Flags"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+
+	}
+}
+
+"Voice.German_ObjectivesAttack"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+	}
+}
+
+"Voice.German_ObjectivesAttackTimed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+	}
+}
+
+"Voice.German_ObjectivesDefend"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+	}
+}
+
+"Voice.German_ObjectivesDefendTimed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+	}
+}
+
+"Voice.German_Beach"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		".90"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/startround/ger_beach.wav"
+		"wave"	"player/german/startround/ger_beach2.wav"
+		"wave"	"player/german/startround/ger_flags.wav"
+		"wave"	"player/german/startround/ger_flags2.wav"
+		"wave"	"player/german/startround/ger_flags3.wav"
+		"wave"	"player/german/startround/ger_flags4.wav"
+		"wave"	"player/german/startround/ger_flags5.wav"
+		"wave"	"player/german/startround/ger_attack.wav"
+		"wave"	"player/german/startround/ger_attack2.wav"
+		"wave"	"player/german/startround/ger_attacktimed.wav"
+		"wave"	"player/german/startround/ger_attacktimed3.wav"
+		"wave"	"player/german/startround/ger_attacktimed4.wav"
+		"wave"	"player/german/startround/ger_defense.wav"
+		"wave"	"player/german/startround/ger_defense2.wav"
+		"wave"	"player/german/startround/ger_defense3.wav"
+	}
+}
+
+"Voice.German_C4EnemyPlanted"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/ger_c4enemyplanted.wav"
+		"wave"	"player/german/ger_c4enemyplanted2.wav"
+		"wave"	"player/german/ger_c4enemyplanted3.wav"
+	}
+
+}
+
+"Voice.German_C4TeamPlanted"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/ger_c4teamplanted.wav"
+		"wave"	"player/german/ger_c4teamplanted2.wav"
+		"wave"	"player/german/ger_c4teamplanted3.wav"
+	}
+
+}
+
+"Voice.German_OneMinute"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/ger_oneminute1.wav"
+		"wave"	"player/german/ger_oneminute2.wav"
+	}
+}
+
+"Voice.German_TwoMinute"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/ger_twominute1.wav"
+		"wave"	"player/german/ger_twominute2.wav"
+	}
+}
+
+
+"Voice.German_C4Defused"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+	"rndwave"
+	{
+		"wave"	"player/german/ger_c4defused1.wav"
+		"wave"	"player/german/ger_c4defused2.wav"
+	}
+}

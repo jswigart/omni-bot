@@ -1,0 +1,207 @@
+// This script contains functionality to provide dodging while in combat
+
+// These parameters are required
+this.Name = "CombatMovement";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// These parameters are optional
+this.LimitToTargetClass(CLASS.ANYPLAYER); //only valid if targeting a client (player)
+this.Difficulty = 3;  // 1 - easy, 2 - medium, 3 - hard
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	this.DelayBetweenCalls = 0.3;
+	
+	print(this.Name, " Initialized");
+};
+
+this.GetPriority = function()
+{
+	if( this.ShouldCombatMovement(this.Bot) )
+	{
+		this.Priority = 1;
+		
+		ti = this.Bot.GetTargetInfo(this.Bot.GetTarget()); 
+		MyTargetDist = ti.Distance;
+		MyTargetPos = ti.Position;
+		
+		 if (!this.Bot.InFieldOfView(Vector3(MyTargetPos)) )
+		{
+			sleep(this.DelayBetweenCalls);
+			return;
+		}
+              
+		if (this.Difficulty == 1)
+			{ this.easy(this.Bot, MyTargetDist); }
+		else if (this.Difficulty == 2)
+			{ this.medium(this.Bot, MyTargetDist); }
+		else if (this.Difficulty == 3)
+			{ this.hard(this.Bot, MyTargetDist); }
+		else
+		{ 
+			print("Invalid Combat Movement Difficulty");
+			this.Finished(); 
+		}		              
+	}
+
+      sleep(this.DelayBetweenCalls);	
+};
+
+this.ShouldCombatMovement = function(bot)
+{	
+	if ( !this.EntFlagCheck(bot) )
+		{ return false; }
+
+	if ( !this.WeaponCheck(bot) )
+		{ return false; }
+
+	//add more if needed...
+		
+	return true;
+};
+
+this.WeaponCheck = function(bot)
+{	
+	MyCurrentWeapon = bot.GetCurrentWeapon();
+		
+	if ( MyCurrentWeapon == WEAPON.PANZERFAUST  ||
+		MyCurrentWeapon == WEAPON.K43_SCOPE   ||
+		MyCurrentWeapon == WEAPON.FG42_SCOPE   ||
+		MyCurrentWeapon == WEAPON.MOBILE_MG42_SET  ||
+		MyCurrentWeapon == WEAPON.MORTAR_SET  ||
+		MyCurrentWeapon == WEAPON.GPG40  ||
+		MyCurrentWeapon == WEAPON.M7 ||
+		MyCurrentWeapon == WEAPON.ALLY_GRENADE ||
+		MyCurrentWeapon == WEAPON.AXIS_GRENADE )		
+	{
+		return false;
+	}
+
+	return true;
+};
+
+this.EntFlagCheck = function(bot)
+{
+        if (bot.HasEntityFlag(ENTFLAG.MOUNTED) ||
+                bot.HasEntityFlag(ENTFLAG.ZOOMING) ||
+                bot.HasEntityFlag(ENTFLAG.INWATER) ||
+                bot.HasEntityFlag(ENTFLAG.ON_LADDER))
+        {
+                return false;
+        }
+        
+        return true;                                 
+};
+
+this.hard = function(bot, targetDist)
+{				
+	if ( targetDist <= 1000 )
+	{			
+		random = RandInt(0,10);
+		
+		if ( random < 4 )
+		{										
+			this.Bot.HoldButton(BTN.SPRINT, 1.0);
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);			
+		}
+		else if ( random < 9 )
+		{									
+			this.Bot.HoldButton(BTN.SPRINT, 1.0);
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);				
+		}	
+		else
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, 0.4);
+			sleep(0.4);
+		}	
+	}
+	else if ( targetDist <= 1600 )
+	{				
+		this.Bot.HoldButton(BTN.CROUCH, 1.0);
+		this.Bot.HoldButton(BTN.STRAFE_R, 0.2);
+		sleep(0.2);
+		this.Bot.HoldButton(BTN.STRAFE_L, 0.2);		
+	}
+	else
+	{
+		this.Bot.HoldButton(BTN.CROUCH, 1.0);    
+	}            
+};
+
+this.medium = function(bot, targetDist)
+{
+	if ( targetDist <= 500 )
+	{			
+		random = RandInt(0,10);
+		
+		if ( random < 4 )
+		{										
+			this.Bot.HoldButton(BTN.SPRINT, 0.5);
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);			
+		}
+		else if ( random < 9 )
+		{									
+			this.Bot.HoldButton(BTN.SPRINT, 0.5);
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);				
+		}	
+		else
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, 0.4);
+			sleep(0.4);
+		}	
+	}
+	else if ( targetDist <= 800 )
+	{				
+		this.Bot.HoldButton(BTN.CROUCH, 1.0);
+		this.Bot.HoldButton(BTN.STRAFE_R, 0.2);
+		sleep(0.2);
+		this.Bot.HoldButton(BTN.STRAFE_L, 0.2);		
+	}
+        else
+        {
+		this.Bot.HoldButton(BTN.CROUCH, 1.0);    
+        }            
+};
+
+this.easy = function(bot, targetDist)
+{
+	if ( targetDist <= 250 )
+	{			
+		random = RandInt(0,10);
+		
+		if ( random < 4 )
+		{										
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);			
+		}
+		else if ( random < 9 )
+		{									
+			this.Bot.HoldButton(BTN.STRAFE_L, 0.3);
+			sleep(0.3);
+			this.Bot.HoldButton(BTN.STRAFE_R, 0.3);				
+		}	
+		else
+		{ 
+			this.Bot.HoldButton(BTN.CROUCH, 0.4);
+			sleep(0.4);
+		}		
+	}
+	else if ( targetDist <= 400 )
+	{				
+		this.Bot.HoldButton(BTN.CROUCH, 1.0);
+		this.Bot.HoldButton(BTN.STRAFE_R, 0.2);
+		sleep(0.2);
+		this.Bot.HoldButton(BTN.STRAFE_L, 0.2);		
+	}          
+};

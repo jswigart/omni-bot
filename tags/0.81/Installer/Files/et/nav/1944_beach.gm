@@ -1,0 +1,777 @@
+/********************************************************
+Script and waypoints made by  :)BOK(: NAERLING
+Assistance : >WES< P!NNAN
+********************************************************/
+// cs: this map needs routing for the main goals. only routing for the cappoints exists
+
+global Map =
+{
+	Debug = false,
+	Quiet = true,
+	//set Talk to false if you don't want the bots talking ingame:
+	Talk = true,
+	Transmitter = false,
+	Doc = false,
+	Trans = true,
+
+	Call_Artillery_checkpoint_1 = "CALLARTILLERY_checkpoint_1",
+	Artillery_S_a_mine_2 = "ARTILLERY_S_a_mine_2",
+	Call_Artillery_checkpoint_2 = "CALLARTILLERY_checkpoint_2",
+	Artillery_S_a_bunker_3 = "ARTILLERY_S_a_bunker_3",
+	Call_Artillery_checkpoint_3 = "CALLARTILLERY_checkpoint_3",
+	Artillery_S_call_arty_3 = "ARTILLERY_S_call_arty_3",
+	Call_Artillery_checkpoint_4 = "CALLARTILLERY_checkpoint_4",
+	Artillery_S_a_gate_3 = "ARTILLERY_S_a_gate_3",
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Cappoint_Dropoff = "CAPPOINT_Dropoff",
+	Cappoint_hide = "CAPPOINT_hide",
+	Flag_documents = "FLAG_documents",
+	Build_Alllied_Transmitter = "BUILD_Alllied_Transmitter",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Eastern_Blockade = "BUILD_Eastern_Blockade",
+	Build_Forward_Bunker_Doors = "BUILD_Forward_Bunker_Doors",
+	Build_Western_Blockade = "BUILD_Western_Blockade",
+	Build_tower = "BUILD_tower",
+	Plant_Alllied_Transmitter = "PLANT_Alllied_Transmitter",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_Gate = "PLANT_Axis_Gate",
+	Plant_Forward_Bunker_Doors = "PLANT_Forward_Bunker_Doors",
+	Plant_Roadhouse_Wall = "PLANT_Roadhouse_Wall",
+	Plant_tower = "PLANT_tower",
+	Explode_Eastern_Blockade = "EXPLODE_Eastern_Blockade",
+	Explode_Beach_Tunnel = "EXPLODE_Beach_Tunnel",
+	Explode_Western_Blockade = "EXPLODE_Western_Blockade",
+	Mount_1668 = "MOUNTMG42_1668",
+	Mount_732 = "MOUNTMG42_732",
+	Mount_74 = "MOUNTMG42_74",
+	Mount_tower = "MOUNTMG42_tower",
+	Repair_1668 = "REPAIRMG42_1668",
+	Repair_732 = "REPAIRMG42_732",
+	Repair_74 = "REPAIRMG42_74",
+	Repair_tower = "REPAIRMG42_tower",
+	Mobile_MG42_d_ibunker_2 = "MOBILEMG42_d_ibunker_2",
+	Mobile_MG42_d_doc_6 = "MOBILEMG42_d_doc_6",
+
+	ShowMovers = false,
+
+	Movers =
+	{
+		"MOVER_axis_compost_built_clip",
+		"MOVER_axis_compost_closed",
+		"MOVER_axis_compost_damaged",
+		"MOVER_axisgate",
+		"MOVER_axisgrate_frame",
+		"MOVER_bunkerdoors",
+		"MOVER_eastblock",
+		"MOVER_roadhousewall",
+		"MOVER_south_ammocabinet_clip",
+		"MOVER_south_ammocabinet_clip_1",
+		"MOVER_south_healthcabinet_clip",
+		"MOVER_south_healthcabinet_clip_1",
+		"MOVER_tower",
+		"MOVER_tower_1",
+		"MOVER_tower_destroyed",
+		"MOVER_transmitter_destroyed",
+		"MOVER_westblock",
+	},
+
+
+	Navigation =
+	{
+		tunnelwall_aim = Vector3(-1625.096,-2492.563,4570.546),
+		tunnelwall_pos = null,
+		tunnelwall_pt =
+		{
+			//cs: changed this so they will go to the water and toss nades at it
+			// if they don't have any nades left, they will re-route around the other way
+			navigate = function(_this)
+			{
+				if ( !Map.TunnelGate && Util.HasAmmoForWeapon(_this.Bot, WEAPON.ALLY_GRENADE) )
+				{
+					if ( !Map.Navigation.tunnelwall_pos )
+					{
+						wpinfo = Util.WpNameInfo("start");
+						Map.Navigation.tunnelwall_pos = wpinfo.position;
+					}
+
+					if ( _this.Goto(Map.Navigation.tunnelwall_pos, 32.0) == EVENT.PATH_SUCCESS )
+					{
+						_this.AddAimRequest(Priority.High, "position", Map.Navigation.tunnelwall_aim);
+						_this.AddWeaponRequest(Priority.High, WEAPON.ALLY_GRENADE );
+						_this.BlockForWeaponChange( WEAPON.ALLY_GRENADE );
+
+						while( !Map.TunnelGate && Util.HasAmmoForWeapon(_this.Bot, WEAPON.ALLY_GRENADE) )
+						{
+							_this.Bot.PressButton(BTN.ATTACK1);
+							_this.Bot.HoldButton(BTN.JUMP, 0.5); // in water
+							sleep(0.5);
+						}
+
+						_this.ReleaseAimRequest();
+						_this.ReleaseWeaponRequest();
+
+						// no more nades, so send them back around the other way
+						if ( !Map.TunnelGate )
+						{
+							_this.Goto(Vector3(49.939,-2528.592,4931.199), 32.0);
+						}
+					}
+				}
+				else if (!Map.TunnelGate)	// if they don't have a nade and it's still there, send them back around the other way
+				{
+					_this.Goto(Vector3(49.939,-2528.592,4931.199), 32.0);
+				}
+
+				sleep(1);
+			},
+		},
+
+		// cs: removed goto and facing requests
+		ladder_4_pt =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3);
+			},
+		},
+		ladder_5_pt =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 5);
+				sleep(5);
+			},
+		},
+	},
+
+	//Transmitter
+	Alllied_Transmitter_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group1);
+		Groups.EnableAllies(Groups.group3);
+
+		if ( Map.Doc )
+		{
+			Groups.DisableAllies(Groups.group9);
+			Groups.EnableAllies(Groups.group10);
+		}
+
+		Map.Transmitter = true ;
+		Map.Trans = false;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_a_mine_.*" );
+		SetGoalPriority( "DEFEND_d_gate_.*", 0.9 );
+
+		Util.MapDebugPrint( "Alllied_Transmitter_Built" );
+	},
+
+	Alllied_Transmitter_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Doc )
+		{
+			Groups.DisableAllies(Groups.group10);
+			Groups.EnableAllies(Groups.group9);
+		}
+
+		Map.Trans = true;
+		Map.Transmitter = false ;
+
+		Util.MapDebugPrint( "Alllied_Transmitter_Destroyed" );
+	},
+
+	//CP
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	//Blockades
+	Eastern_Blockade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Eastern_Blockade" );
+
+		Util.MapDebugPrint( "Eastern_Blockade_Built" );
+	},
+
+	Eastern_Blockade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Eastern_Blockade" );
+
+		Util.MapDebugPrint( "Eastern_Blockade_Destroyed" );
+	},
+
+	Western_Blockade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "Explode_Western_Blockade" );
+
+		Util.MapDebugPrint( "Western_Blockade_Built" );
+	},
+
+	Western_Blockade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "Explode_Western_Blockade" );
+
+		Util.MapDebugPrint( "Western_Blockade_Destroyed" );
+	},
+
+	//Bunker door and Tower
+	Forward_Bunker_Doors_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAxis(Groups.group2);
+		Groups.EnableAxis(Groups.group4);
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_ibunker_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_d_ibunker_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ibunker_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_d_mine_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_a_mine_door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_d_mine_.*" );
+
+		Util.MapDebugPrint( "Forward_Bunker_Doors_Built" );
+	},
+
+	Forward_Bunker_Doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ibunker_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_d_ibunker_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_d_mine_door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_d_mine_door" );
+		SetGoalPriority( "DEFEND_d_gate_.*", 0.6 );
+
+		Util.MapDebugPrint( "Forward_Bunker_Doors_Destroyed" );
+	},
+
+	tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tower_Built" );
+	},
+
+	tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tower_Destroyed" );
+	},
+
+	//Gate and wall
+	Axis_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group3);
+		Groups.EnableAllies(Groups.group5);
+		Groups.DisableAxis(Groups.group4);
+		Groups.EnableAxis(Groups.group6);
+		SetGoalPriority( "DEFEND_d_gate_.*", 0.6 );
+
+		Util.MapDebugPrint( "Axis_Gate_Destroyed" );
+	},
+
+	Roadhouse_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		// stop using the door
+		Wp.SetWaypointFlag( "doorclose", "closed", true );
+
+		Groups.DisableAllies(Groups.group5);
+		Groups.EnableAllies(Groups.group7);
+		Groups.DisableAxis(Groups.group4);
+		Groups.EnableAxis(Groups.group6);
+		SetGoalPriority( "FLAG_documents", 0.9 );
+		SetGoalPriority( "ATTACK_a_wall_.*", 0.3);
+		SetGoalPriority( "ATTACK_a_cp_.*", 0.5 );
+
+		Util.MapDebugPrint( "Roadhouse_Wall_Destroyed" );
+	},
+
+	//Obj
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAxis(Groups.group6);
+		Groups.EnableAxis(Groups.group8);
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_path_.*" );
+		Map.Doc = true;
+
+		if ( Map.Trans )
+		{
+			Groups.DisableAllies(Groups.group7);
+			Groups.DisableAllies(Groups.group10);
+			Groups.EnableAllies(Groups.group9);
+
+			Util.MapDebugPrint("Going to Hide", true);
+		}
+		else
+		{
+			Groups.DisableAllies(Groups.group7);
+			Groups.EnableAllies(Groups.group10);
+			Groups.DisableAllies(Groups.group9);
+
+			Util.MapDebugPrint("Going to Dropoff", true);
+		}
+
+		SetGoalPriority( "ATTACK_a_cp_.*", 0.9);
+		SetGoalPriority( "BUILD_Alllied_Transmitter", 1.1 );
+
+		Util.MapDebugPrint( "documents_Taken" );
+	},
+
+	documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAxis(Groups.group8);
+		Groups.EnableAxis(Groups.group6);
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_path_.*" );
+		SetGoalPriority( "BUILD_Alllied_Transmitter", 0.9 );
+		Groups.DisableAllies(Groups.group9);
+		Groups.EnableAllies(Groups.group7);
+		Groups.DisableAllies(Groups.group10);
+		Map.Doc = false;
+
+		Util.MapDebugPrint( "documents_Returned" );
+	},
+
+	Dropoff_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+
+		Util.MapDebugPrint( "Dropoff_Captured" );
+	},
+
+	//Flag
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_mo_al_start_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_flag_mine_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_flag_mine_.*" );
+
+		Util.MapDebugPrint( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_mo_al_start_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_flag_mine_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_flag_mine_.*" );
+
+		Util.MapDebugPrint( "forward_spawn_Allies_Captured" );
+	},
+
+	check_Tunnelwall = function()
+	{
+		wpOne = Util.WpNameInfo("start");
+		wpTwo = Util.WpNameInfo("end");
+		while( !Map.TunnelGate )
+		{
+			tr = TraceLine( wpOne.position , wpTwo.position , null, TRACE.SHOT, 0, false );
+
+			 if ( tr.fraction < 1 )
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position , wpTwo.position , COLOR.RED, 0.25); }
+			 }
+			 else
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position , wpTwo.position , COLOR.GREEN, 0.25); }
+				Map.TunnelGate = true;
+			 }
+
+			 sleep(0.25);
+		}
+
+		Util.MapDebugPrint( "Tunnelwall_destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	thread(Map.check_Tunnelwall);
+	Wp.SetWaypointFlag( "doorclose", "closed", false );
+
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	Util.SetGoalOffset( 0, 20, -60, "PLANT_Axis_Gate" );
+	Util.SetGoalOffset( -10, 0, -30, "PLANT_Forward_Bunker_Doors" );
+	Util.SetGoalOffset( -20, 0, -60, "PLANT_Roadhouse_Wall" );
+	Util.SetGoalOffset( 0, -10, 0, "PLANT_Alllied_Transmitter" );
+
+	OnTrigger( "Allied Transmitter constructed. Charge speed increased!", Map.Alllied_Transmitter_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "the Axis East Blockade has been constructed.", Map.Eastern_Blockade_Built );
+	OnTrigger( "the Forward Bunker Doors have been constructed.", Map.Forward_Bunker_Doors_Built );
+	OnTrigger( "the Axis West Blockade has been constructed.", Map.Western_Blockade_Built );
+	OnTrigger( "tower has been constructed.", Map.tower_Built );
+	OnTrigger( "Axis team has destroyed the Allied Transmitter!", Map.Alllied_Transmitter_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "the Axis Gate has been destroyed.", Map.Axis_Gate_Destroyed );
+	OnTrigger( "the Axis East Blockade has been destroyed.", Map.Eastern_Blockade_Destroyed );
+	OnTrigger( "the Forward Bunker Doors have been destroyed.", Map.Forward_Bunker_Doors_Destroyed );
+	OnTrigger( "Roadhouse Wall has been destroyed.", Map.Roadhouse_Wall_Destroyed );
+	OnTrigger( "the Axis West Blockade has been destroyed.", Map.Western_Blockade_Destroyed );
+	OnTrigger( "the Axis Tower has been destroyed.", Map.tower_Destroyed );
+	OnTrigger( "Allies have stolen the documents!", Map.documents_Taken );
+	OnTrigger( "Documents returned!", Map.documents_Returned );
+	OnTrigger( "Allies have transmitted the documents!", Map.Dropoff_Captured );
+	OnTrigger( "Axis capture the forward bunker!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies capture the forward bunker!", Map.forward_spawn_Allies_Captured );
+
+	//set max users for goals
+	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 2, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANTMINE_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+
+
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120} );
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60} );
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120} );
+
+	//Priority Main goals
+	SetGoalPriority( "PLANT_Forward_Bunker_Doors", 0.9 );
+	SetGoalPriority( "PLANT_Roadhouse_Wall", 0.9 );
+	SetGoalPriority( "PLANT_Axis_Gate", 0.9 );
+	SetGoalPriority( "ATTACK_a_wall_.*", 0.8 );
+	SetGoalPriority( "BUILD_Alllied_Transmitter", 0.9 );
+	SetGoalPriority( "PLANT_Alllied_Transmitter", 0.9 );
+	SetGoalPriority( "BUILD_Axis_Command_Post", 0.7 );
+	SetGoalPriority( "PLANT_Axis_Command_Post", 0.6 );
+	SetGoalPriority( "DEFEND_d_cp_.*", 0.9 );
+	SetGoalPriority( "DEFEND_d_bunker_.*", 0.7 );
+	SetGoalPriority( "DEFEND_d_ibunker_.*", 0.7 );
+	SetGoalPriority( "DEFEND_d_doc_.*", 0.9 );
+	SetGoalPriority( "DEFEND_d_path_.*", 0.8 );
+	SetGoalPriority( "CHECKPOINT_forward_spawn", 0.9 );
+	SetGoalPriority( "Flag_documents", 0.5 );
+	SetGoalPriority( "PLANTMINE_d_mine_door", 0.85 );
+	SetGoalPriority( "PLANTMINE_a_mine_door", 0.85 );
+	SetGoalPriority( "PLANTMINE_flag_mine_.*", 0.7 );
+	SetGoalPriority( "PLANTMINE_a_mine_.*", 0.6 );
+	SetGoalPriority( "PLANTMINE_d_mine_.*", 0.6 );
+	SetGoalPriority( "ARTILLERY_S_.*", 1.0 );
+	SetGoalPriority( "CALLARTILLERY_.*", 1.0 );
+	SetGoalPriority( "Mount_tower", 0.8);
+	SetGoalPriority( "EXPLODE_Eastern_Blockade", 0.3 );
+	SetGoalPriority( "EXPLODE_Western_Blockade", 0.3 );
+	SetGoalPriority( "MOBILEMORTAR_mo_al_start_.*", 0.5 );
+	SetGoalPriority( "SNIPE_a_snipe_.*", 0.55 );
+	SetGoalPriority( "MOBILEMORTAR_mo_ax_start_.*", 0.65 );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	Util.EnableGoal("ROUTE.*"); //enable routing for both teams
+
+	//enable part 1 goals
+	Groups.EnableAllies(Groups.group1);
+	Groups.EnableAxis(Groups.group2);
+
+	//Routes
+	MapRoutes =
+	{
+		CAPPOINT_Hide =
+		{
+			ROUTE_r_docs =
+			{
+				ROUTE_r_split_1 =
+				{
+					ROUTE_r_door =
+					{
+						ROUTE_r_balcony =
+						{
+							ROUTE_r_water_1 =
+							{
+								ROUTE_r_beach =
+								{
+									ROUTE_r_beach_1 =
+									{
+										ROUTE_r_beach_2 =
+										{
+											ROUTE_r_beach_3 =
+											{
+												ROUTE_r_beach_4 =
+												{
+													ROUTE_r_beach_5 =
+													{
+														ROUTE_r_boat_1 =
+														{
+															ROUTE_r_beach_6 =
+															{
+																ROUTE_r_beach_7 =
+																{
+																	ROUTE_r_water_3 =
+																	{
+																		ROUTE_r_boat_2 = { ROUTE_Hide = {}, },
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		DEFEND_d_bunker_1 =
+		{
+			ROUTE_Flag_Spawn  =
+			{
+				ROUTE_Flag_Spawn_East  =
+				{
+				},
+				ROUTE_Flag_Spawn_West  =
+				{
+				},
+			},
+		},
+
+	};
+
+	//copy some routes
+	MapRoutes.CAPPOINT_Dropoff = MapRoutes.CAPPOINT_hide;
+	MapRoutes.DEFEND_d_bunker_2 = MapRoutes.DEFEND_d_bunker_1;
+	MapRoutes.DEFEND_d_bunker_3 = MapRoutes.DEFEND_d_bunker_1;
+	MapRoutes.DEFEND_d_ibunker_1 = MapRoutes.DEFEND_d_bunker_1;
+	MapRoutes.DEFEND_d_ibunker_2 = MapRoutes.DEFEND_d_bunker_1;
+	MapRoutes.DEFEND_d_ibunker_3 = MapRoutes.DEFEND_d_bunker_1;
+
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
+};
+
+global Groups =
+{
+	//Allies part 1
+	group1 =
+	{
+		"EXPLODE_Beach_Tunnel",
+		Map.Build_Alllied_Transmitter,
+		"ATTACK_a_cp_.*",
+		"ARTILLERY_S_a_bunker_3",
+		"CALLARTILLERY_checkpoint_2",
+	},
+
+	//Axis part 1
+	group2 =
+	{
+		Map.Build_Forward_Bunker_Doors,
+		"DEFEND_d_bunker_.*",
+	},
+
+	//Allies part 2
+	group3 =
+	{
+		Map.Build_Alllied_Transmitter,
+		Map.Plant_Axis_Gate,
+		"ATTACK_a_gate_.*",
+		"ARTILLERY_S_call_arty_3",
+		"CALLARTILLERY_checkpoint_3",
+	},
+
+	//Axis part 2
+	group4 =
+	{
+		"MOBILEMORTAR_mo_ax_start_.*",
+		Map.Checkpoint_forward_spawn,
+		Map.Build_Forward_Bunker_Doors,
+		"ARTILLERY_S_a_gate_3",
+		"CALLARTILLERY_checkpoint_4",
+		"DEFEND_d_bunker_.*",
+		"DEFEND_d_gate_4",
+		"DEFEND_d_gate_5",
+		"DEFEND_d_gate_6",
+		"DEFEND_d_cp_.*",
+		Map.Plant_Alllied_Transmitter,
+		Map.Build_tower,
+		Map.Mount_tower,
+		Map.Build_Eastern_Blockade,
+		Map.Build_Western_Blockade,
+	},
+
+	//Allies part 3
+	group5 =
+	{
+		Map.Build_Alllied_Transmitter,
+		Map.Checkpoint_forward_spawn,
+		Map.Plant_Forward_Bunker_Doors,
+		Map.Plant_Roadhouse_Wall,
+		"ATTACK_a_wall_.*",
+		Map.Plant_Axis_Gate,
+		"ATTACK_a_gate_.*",
+		Map.Flag_documents,
+		Map.Plant_Axis_Command_Post,
+	},
+
+	//Axis part3
+	group6 =
+	{
+		Map.Checkpoint_forward_spawn,
+		Map.Build_Forward_Bunker_Doors,
+		"DEFEND_d_bunker_.",
+		"DEFEND_d_doc_.*",
+		"DEFEND_d_path_.",
+		"MOBILEMG42_d_doc_6",
+		Map.Build_Axis_Command_Post,
+		Map.Build_tower,
+		Map.Mount_tower,
+	},
+
+	//Allies part 4
+	group7 =
+	{
+		Map.Build_Alllied_Transmitter,
+		Map.Checkpoint_forward_spawn,
+		Map.Plant_Forward_Bunker_Doors,
+		Map.Flag_documents,
+		"ATTACK_a_wall_.*",
+		"ATTACK_a_cp_.*",
+		"SNIPE_a_snipe.*",
+		Map.Plant_Axis_Command_Post,
+	},
+
+	//Axis part 4
+	group8 =
+	{
+		Map.Mount_tower,
+		"DEFEND_d_gate_.*",
+		"DEFEND_d_crossing_.*",
+		"DEFEND_d_cp_.",
+		Map.Plant_Alllied_Transmitter,
+		"ARTILLERY_S_a_mine_2",
+		"CALLARTILLERY_checkpoint_1",
+	},
+
+	//Allies part 5
+	group9 =
+	{
+		Map.Build_Alllied_Transmitter,
+		Map.Cappoint_hide,
+		Map.Flag_documents,
+		"ATTACK_a_gate_.*",
+		"ATTACK_a_cp_.*",
+		"SNIPE_a_snipe.*",
+		"ROUTE_.*",
+	},
+
+	//Allies part 6
+	group10 =
+	{
+		Map.Build_Alllied_Transmitter,
+		Map.Cappoint_Dropoff,
+		Map.Flag_documents,
+		"ATTACK_a_gate_.*",
+		"ATTACK_a_cp_.*",
+		"SNIPE_a_snipe.*",
+		"ROUTE_.*",
+	},
+
+	EnableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
+			Util.MapDebugPrint("EnableAllies: enabling " + goal, true);
+		}
+	},
+
+	EnableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, goal );
+			Util.MapDebugPrint("EnableAxis: enabling " + goal, true);
+		}
+	},
+
+	DisableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, goal );
+			Util.MapDebugPrint("DisableAllies: disabling " + goal, true);
+		}
+	},
+
+	DisableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, goal );
+			Util.MapDebugPrint("DisableAxis: disabling " + goal, true);
+		}
+	},
+};

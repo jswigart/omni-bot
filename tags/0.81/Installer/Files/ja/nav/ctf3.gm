@@ -1,0 +1,54 @@
+global Map =
+{
+	Cap_Red = "MAP_CAPPOINT_team_CTF_blueflag",
+	Cap_Blue = "MAP_CAPPOINT_team_CTF_redflag",
+	Flag_Red = "MAP_FLAG_team_CTF_redflag",
+	Flag_Blue = "MAP_FLAG_team_CTF_blueflag",
+
+	red_flag_pickedup = function(trigger)
+	{
+		Util.MapDebugPrint("red_flag_pickedup");
+	},
+
+	red_flag_returned = function(trigger)
+	{
+		Util.MapDebugPrint("red_flag_returned");
+	},
+
+	red_flag_dropped = function(trigger)
+	{
+		Util.MapDebugPrint("red_flag_dropped");
+	},
+
+	blue_flag_pickedup = function(trigger)
+	{
+		Util.MapDebugPrint("blue_flag_pickedup");
+	},
+
+	blue_flag_returned = function(trigger)
+	{
+		Util.MapDebugPrint("blue_flag_returned");
+	},
+
+	blue_flag_dropped = function(trigger)
+	{
+		Util.MapDebugPrint("blue_flag_dropped");
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Flag team_CTF_redflag pickedup", Map.red_flag_pickedup );
+	OnTrigger( "Flag team_CTF_redflag returned", Map.red_flag_returned );
+	OnTrigger( "Flag team_CTF_redflag dropped", Map.red_flag_dropped );
+	OnTrigger( "Flag team_CTF_blueflag pickedup", Map.blue_flag_pickedup );
+	OnTrigger( "Flag team_CTF_blueflag returned", Map.blue_flag_returned );
+	OnTrigger( "Flag team_CTF_blueflag dropped", Map.blue_flag_dropped );
+
+	Util.MapDebugPrint("OnMapLoad");
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.MapDebugPrint("OnBotJoin", true);
+};

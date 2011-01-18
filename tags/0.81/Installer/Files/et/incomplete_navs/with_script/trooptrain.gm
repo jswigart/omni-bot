@@ -1,0 +1,270 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Neutral_Command_Post_Dyno = 0,
+	a_Tiger_Tank_Dyno = 0,
+	a_Tiger_Tank_1_Dyno = 0,
+	an_Obstruction_Dyno = 0,
+	an_Obstruction_1_Dyno = 0,
+
+	Ammo_Cabinet_armoury_trigger_ammo = "AMMOCAB_armoury_trigger_ammo",
+	Checkpoint_midtrain_flag = "CHECKPOINT_midtrain_flag",
+	Build_Neutral_Command_Post = "BUILD_Neutral_Command_Post",
+	Plant_Neutral_Command_Post = "PLANT_Neutral_Command_Post",
+	Plant_a_Tiger_Tank = "PLANT_a_Tiger_Tank",
+	Plant_a_Tiger_Tank_1 = "PLANT_a_Tiger_Tank_1",
+	Plant_an_Obstruction = "PLANT_an_Obstruction",
+	Plant_an_Obstruction_1 = "PLANT_an_Obstruction_1",
+	Mount_71 = "MOUNTMG42_71",
+	Repair_71 = "REPAIRMG42_71",
+	Mover_tank = "MOVER_tank",
+
+	Neutral_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Neutral_Command_Post_Built" ); }
+	},
+
+	Neutral_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Neutral_Command_Post );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Neutral_Command_Post );
+
+		if ( Map.Debug )
+			{ print( "Neutral_Command_Post_Planted" ); }
+	},
+
+	a_Tiger_Tank_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_a_Tiger_Tank );
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_Planted" ); }
+	},
+
+	a_Tiger_Tank_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_1_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_a_Tiger_Tank_1 );
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_1_Planted" ); }
+	},
+
+	an_Obstruction_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_an_Obstruction );
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_Planted" ); }
+	},
+
+	an_Obstruction_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_1_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_an_Obstruction_1 );
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_1_Planted" ); }
+	},
+
+	Neutral_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno -= 1;
+		if ( Map.Neutral_Command_Post_Dyno < 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Neutral_Command_Post );
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Neutral_Command_Post );
+		}
+
+		if ( Map.Debug )
+			{ print( "Neutral_Command_Post_Defused" ); }
+	},
+
+	a_Tiger_Tank_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_Dyno -= 1;
+		if ( Map.a_Tiger_Tank_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_a_Tiger_Tank ); }
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_Defused" ); }
+	},
+
+	a_Tiger_Tank_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_1_Dyno -= 1;
+		if ( Map.a_Tiger_Tank_1_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_a_Tiger_Tank_1 ); }
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_1_Defused" ); }
+	},
+
+	an_Obstruction_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_Dyno -= 1;
+		if ( Map.an_Obstruction_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_an_Obstruction ); }
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_Defused" ); }
+	},
+
+	an_Obstruction_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_1_Dyno -= 1;
+		if ( Map.an_Obstruction_1_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_an_Obstruction_1 ); }
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_1_Defused" ); }
+	},
+
+	Neutral_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno = 0;
+
+		if ( Map.Debug )
+			{ print( "Neutral_Command_Post_Destroyed" ); }
+	},
+
+	a_Tiger_Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_Dyno = 0;
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_Destroyed" ); }
+	},
+
+	a_Tiger_Tank_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_Tiger_Tank_1_Dyno = 0;
+
+		if ( Map.Debug )
+			{ print( "a_Tiger_Tank_1_Destroyed" ); }
+	},
+
+	an_Obstruction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_Dyno = 0;
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_Destroyed" ); }
+	},
+
+	an_Obstruction_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.an_Obstruction_1_Dyno = 0;
+
+		if ( Map.Debug )
+			{ print( "an_Obstruction_1_Destroyed" ); }
+	},
+
+	midtrain_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "midtrain_flag_Axis_Captured" ); }
+	},
+
+	midtrain_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "midtrain_flag_Allies_Captured" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Neutral_Command_Post_Built );
+	OnTrigger( "Planted at the Neutral Command Post.", Map.Neutral_Command_Post_Planted );
+	OnTrigger( "Defused at the Neutral Command Post.", Map.Neutral_Command_Post_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.a_Tiger_Tank_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.a_Tiger_Tank_1_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.an_Obstruction_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.an_Obstruction_1_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.a_Tiger_Tank_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.a_Tiger_Tank_1_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.an_Obstruction_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.an_Obstruction_1_Defused );
+	OnTrigger( "MISSING_STRING", Map.a_Tiger_Tank_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.a_Tiger_Tank_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.an_Obstruction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.an_Obstruction_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.midtrain_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.midtrain_flag_Allies_Captured );
+
+	//~ETUtil.DisableGoal( ".*", true ); // all but routes
+
+	print( "Omni-bot map script for Troop Train executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 1000;
+};

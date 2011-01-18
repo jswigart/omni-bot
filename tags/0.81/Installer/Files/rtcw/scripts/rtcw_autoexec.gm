@@ -1,0 +1,47 @@
+// Load any other scripts that we will need.
+ExecScript( "rtcw_navconfig.gm" );
+ExecScript( "commands.gm" );
+ExecScript( "rtcw_commands.gm" );
+ExecScript( "server_manager.gm" );
+ExecScript( "rtcw_regiontriggers.gm" );
+ExecScript( "rtcw_botnames.gm" );
+
+// New module format
+global Util = import("utilities");
+global RTCWUtil = import("rtcw_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = false;
+global DEBUG_GOAL_AVAILABILITY = false;
+
+global DisableClassManager = false;
+
+global PostMapLoad = function()
+{
+	Util.ProcessMovers();
+	thread( RTCWUtil.ManageEngineers, 5 );
+
+	// set up the minimum class counts for the game
+	if ( !Util.ClassTablesInitialized ) {
+		Util.InitializeClassTables();
+	}
+
+	if ( Map && Map.SnipeMap ) {
+		Util.SnipeMap();
+	} else if ( Map && Map.Classes )   {
+		Map.Classes();
+	} else
+	{
+		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.LIEUTENANT] = 2;
+
+		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.LIEUTENANT] = 2;
+	}
+};
+
+print( "RTCW Script Executed" );

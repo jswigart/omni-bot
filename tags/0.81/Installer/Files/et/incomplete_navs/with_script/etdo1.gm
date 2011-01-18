@@ -1,0 +1,233 @@
+global Map =
+{
+	Quiet = true, // this gets rid of all the goal initialization spam 
+	
+	Switches =
+	{
+		door1 =
+		{
+			WaypointName = "door1",
+			Priority = 0, // always use 0 priority for path through
+			Enabled = true,
+			Debug = true,
+			// the rest of the table can use defaults
+			
+			// wait till the door is open
+			Wait = function()
+			{
+				if ( Map.DoorStatus )
+				{
+					sleep(2);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+	},
+	
+	Ammo_Cabinet_t1075 = "AMMOCAB_t1075",
+	Ammo_Cabinet_t1084 = "AMMOCAB_t1084",
+	Health_Cabinet_t1083 = "HEALTHCAB_t1083",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Checkpoint_twc_forward_bunker = "CHECKPOINT_twc_forward_bunker",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Depot_Defense = "BUILD_Depot_Defense",
+	Build_Generator = "BUILD_Generator",
+	Build_MG42 = "BUILD_MG42",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Depot_Defense = "PLANT_Depot_Defense",
+	Plant_Fuel_Depot = "PLANT_Fuel_Depot",
+	Plant_Generator = "PLANT_Generator",
+	Plant_MG42 = "PLANT_MG42",
+	Mount_MG42 = "MOUNTMG42_MG42",
+	Repair_MG42 = "REPAIRMG42_MG42",
+	
+	DoorStatus = false, //closed
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_twc_forward_bunker" );
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Depot_Defense_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Fuel_Depot" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_def1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_dyno" );
+
+		print( "Depot_Defense_Built" );
+	},
+
+	Generator_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Built" );
+	},
+
+	MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Built" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_twc_forward_bunker" );
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Depot_Defense_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Fuel_Depot" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_def1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dyno" );
+
+		print( "Depot_Defense_Destroyed" );
+	},
+
+	Fuel_Depot_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Fuel_Depot_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Destroyed" );
+	},
+
+	MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MG42_Destroyed" );
+	},
+
+	twc_forward_bunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Axis_Captured" );
+	},
+
+	twc_forward_bunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Allies_Captured" );
+	},
+	
+	SM_Door_Lever = function(trigger)
+	{
+		// disable the switch immediately
+		Map.Switches.door1.Enabled = false;
+	},
+	
+	SM_Door = function(trigger)
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		
+		if ( vel.y > 0 )
+		{
+			if ( Map.Switches.door1.Debug ){
+				print( "Door Opening" );
+			}
+			
+			Map.DoorStatus = true;
+			Map.Switches.door1.Enabled = false;
+		}
+		else
+		{
+			if ( Map.Switches.door1.Debug ){
+				print( "Door Closing" );
+			}
+
+			Map.DoorStatus = false;
+			Map.Switches.door1.Enabled = true;
+		}
+		
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "The Assault Ramp has been constructed.", Map.Assault_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "The Depot Defense has been constructed.", Map.Depot_Defense_Built );
+	OnTrigger( "The Generator has been constructed.", Map.Generator_Built );
+	OnTrigger( "MISSING_STRING", Map.MG42_Built );
+	OnTrigger( "The Assault Ramp has been destroyed.", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "The Depot Defense has been destroyed.", Map.Depot_Defense_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Fuel_Depot_Destroyed );
+	OnTrigger( "The Generator has been destroyed.", Map.Generator_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.MG42_Destroyed );
+	OnTrigger( "Axis reclaim the Forward Bunker!", Map.twc_forward_bunker_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.twc_forward_bunker_Allies_Captured );
+	OnTrigger( "sm_door_north_goto", Map.SM_Door );
+	OnTrigger( "sm_door_lever_goto", Map.SM_Door_Lever );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Fuel_Depot" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_twc_forward_bunker" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_dyno" );
+	SetMapGoalProperties( "DEFEND_fuel1", {mincamptime=30, maxcamptime=90});
+	SetMapGoalProperties( "DEFEND_def1", {mincamptime=90, maxcamptime=360});
+	SetMapGoalProperties( "DEFEND_dyno", {mincamptime=90, maxcamptime=360});
+	
+	Util.UpdateSwitchData();
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 2000.0;
+};

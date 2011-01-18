@@ -1,0 +1,11 @@
+// Panza Map
+// Needs Waypoints cleaning up
+global Map =  
+{ 
+        PanzerMap = true, 
+}; 
+ 
+global OnBotJoin = function(bot) 
+{ 
+        ETUtil.ChangeToPanzer(bot); 
+};

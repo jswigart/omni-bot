@@ -1,0 +1,23 @@
+global Map =
+{
+	Navigation =
+	{
+		ladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 2.0);
+				sleep(2.0);
+			},
+		},
+	},
+};
+
+global OnMapLoad = function(bot)
+{
+	print("Omni-bot map script loaded.");
+};
+
+global OnBotJoin = function(bot)
+{
+};

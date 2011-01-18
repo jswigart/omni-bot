@@ -1,0 +1,465 @@
+/****************************************************
+Pathing updated and script by **PCZ** >M@t3o$<
+Correspondant WAY file size : 17,6 Ko (18 099 octets)
+Last Update : 25 February 2010
+****************************************************/
+
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	// All targets
+	Target =
+	{
+		Allied_Bridge =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Allied_Bridge",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Allied_Bridge_Gate =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Allied_Bridge_Gate",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Allied_Fan_Gate =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Allied_Fan_Gate",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Allies_LoL =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Allies_LoL",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 2234.125, -1950.094, -1095.875),
+			}
+		},
+
+		Allies__Barrier_A =
+		{
+			Enabled = true,
+			Priority = 2.0,
+			GrenadeTargetGoalName = "EXPLODE_Allies__Barrier_A",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Allies__Barrier_B =
+		{
+			Enabled = true,
+			Priority = 2.0,
+			GrenadeTargetGoalName = "EXPLODE_Allies__Barrier_B",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_Barrier_A =
+		{
+			Enabled = true,
+			Priority = 2.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_Barrier_A",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_Barrier_B =
+		{
+			Enabled = true,
+			Priority = 2.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_Barrier_B",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_Bridge =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_Bridge",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_Bridge_Gate =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_Bridge_Gate",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_Fan_Gate =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_Fan_Gate",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+
+		Axis_LoL =
+		{
+			Enabled = true,
+			Priority = 1.0,
+			GrenadeTargetGoalName = "EXPLODE_Axis_LoL",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset =
+			{
+				Vector3( 0, 0, 0),
+			}
+		},
+	},
+
+	// *** TRIGGERS CALLBACKS ***
+
+	Allied_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Bridge_Built" ); }
+	},
+
+	Allied_Bridge_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Bridge_Gate_Built" ); }
+	},
+
+	Allied_Camper_Tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Camper_Tower_Built" ); }
+	},
+
+	Allied_Board_To_Fan_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Board_To_Fan_Built" ); }
+	},
+
+	Allies_LoL_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_LoL_Built" ); }
+	},
+
+	Allies__Barrier_A_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies__Barrier_A_Built" ); }
+	},
+
+	Allies__Barrier_B_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies__Barrier_B_Built" ); }
+	},
+
+	Axis_Barrier_A_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Barrier_A_Built" ); }
+	},
+
+	Axis_Barrier_B_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Barrier_B_Built" ); }
+	},
+
+	Axis_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bridge_Built" ); }
+	},
+
+	Axis_Bridge_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bridge_Gate_Built" ); }
+	},
+
+	Axis_Camper_Tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Camper_Tower_Built" ); }
+	},
+
+	Axis_Board_To_Fan_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Board_To_Fan_Built" ); }
+	},
+
+	Axis_LoL_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_LoL_Built" ); }
+	},
+
+	Allied_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Bridge_Destroyed" ); }
+	},
+
+	Allied_Bridge_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Bridge_Gate_Destroyed" ); }
+	},
+
+	Allied_Camper_Tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Camper_Tower_Destroyed" ); }
+	},
+
+	Allied_Fan_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Fan_Gate_Destroyed" ); }
+	},
+
+	Allied_Board_To_Fan_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Board_To_Fan_Destroyed" ); }
+	},
+
+	Allies_Fatal_Machine_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Fatal_Machine_Destroyed" ); }
+	},
+
+	Axis_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bridge_Destroyed" ); }
+	},
+
+	Axis_Bridge_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bridge_Gate_Destroyed" ); }
+	},
+
+	Axis_Camper_Tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Camper_Tower_Destroyed" ); }
+	},
+
+	Axis_Fan_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Fan_Gate_Destroyed" ); }
+	},
+
+	Axis_Board_To_Fan_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Board_To_Fan_Destroyed" ); }
+	},
+
+	Axis_Fatal_Machine_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Fatal_Machine_Destroyed" ); }
+	},
+
+	Axis_Barrier_A_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Barrier_A_Destroyed" ); }
+	},
+
+	Axis_Barrier_B_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Barrier_B_Destroyed" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** ALLIED BUILD GOALS ***
+	OnTrigger( "Allied Bridge has been built!", Map.Allied_Bridge_Built );
+	OnTrigger( "Allied Bridge Gate has been built!", Map.Allied_Bridge_Gate_Built );
+	OnTrigger( "Allied Camper Tower has been built!", Map.Allied_Camper_Tower_Built );
+	OnTrigger( "Allied board to fan has been built!", Map.Allied_Board_To_Fan_Built );
+	OnTrigger( "Allies LoL has been built!", Map.Allies_LoL_Built );
+	OnTrigger( "Allies Barrier has been built!", Map.Allies__Barrier_A_Built );
+	OnTrigger( "Allies Barrier has been built!", Map.Allies__Barrier_B_Built );
+
+	// *** AXIS BUILD GOALS ***
+	OnTrigger( "Axis Barrier has been built!", Map.Axis_Barrier_A_Built );
+	OnTrigger( "Axis Barrier has been built!", Map.Axis_Barrier_B_Built );
+	OnTrigger( "Axis Bridge has been built!", Map.Axis_Bridge_Built );
+	OnTrigger( "Axis Bridge Gate has been built!", Map.Axis_Bridge_Gate_Built );
+	OnTrigger( "Axis Camper Tower has been built!", Map.Axis_Camper_Tower_Built );
+	OnTrigger( "Axis board to fan has been built!", Map.Axis_Board_To_Fan_Built );
+	OnTrigger( "Axis LoL has been built!", Map.Axis_LoL_Built );
+
+	// *** ALLIED DESTROYED GOALS ***
+	OnTrigger( "Allied Bridge has been destroyed!", Map.Allied_Bridge_Destroyed );
+	OnTrigger( "Allied Bridge Gate has been destroyed", Map.Allied_Bridge_Gate_Destroyed );
+	OnTrigger( "Allied Camper Tower has been destroyed!", Map.Allied_Camper_Tower_Destroyed );
+	OnTrigger( "Allied has found a way to the fan!", Map.Allied_Fan_Gate_Destroyed );
+	OnTrigger( "Allied board to fan has been destroyed!", Map.Allied_Board_To_Fan_Destroyed );
+	OnTrigger( "Axis win!", Map.Allies_Fatal_Machine_Destroyed );
+
+	// *** AXIS DESTROYED GOALS ***
+	OnTrigger( "Axis Bridge has been destroyed!", Map.Axis_Bridge_Destroyed );
+	OnTrigger( "Axis Bridge Gate has been destroyed!", Map.Axis_Bridge_Gate_Destroyed );
+	OnTrigger( "Axis Camper Tower has been destroyed!", Map.Axis_Camper_Tower_Destroyed );
+	OnTrigger( "Axis board to fan has been destroyed!", Map.Axis_Fan_Gate_Destroyed );
+	OnTrigger( "Axis has found a way to the fan!", Map.Axis_Board_To_Fan_Destroyed );
+	OnTrigger( "Allies win!", Map.Axis_Fatal_Machine_Destroyed );
+	OnTrigger( "Axis Barrier has been destroyed!", Map.Axis_Barrier_A_Destroyed );
+	OnTrigger( "Axis Barrier has been destroyed!", Map.Axis_Barrier_B_Destroyed );
+
+	// Due of Doors opening problem, its is needed to disable both Bridge Gates
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_Bridge_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Allied_Bridge_Gate );
+
+	// *** AXIS GOALS PRIORITIES ***
+	SetGoalPriority( "PLANT_Axis_Fan_Gate", 0.5 );
+	SetGoalPriority( "PLANT_Allied_Camper_Tower", 0.5 );
+	SetGoalPriority( "PLANT_Allied_Fatal_Machine", 5.0 );
+
+	// *** ALLIED GOALS PRIORITIES ***
+	SetGoalPriority( "PLANT_Allied_Fan_Gate", 0.5 );
+	SetGoalPriority( "PLANT_Axis_Camper_Tower", 0.5 );
+	SetGoalPriority( "PLANT_Axis_Fatal_Machine", 5.0 );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+
+	print( "Omni-bot map script for Fatal Mill Beta 4 by **PCZ** >M@t3o$<." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 200.0;
+};

@@ -1,0 +1,31 @@
+// menu defs
+// 
+{	
+	loadMenu { "ui_mp/main.menu" }
+	loadMenu { "ui_mp/multi.menu" }			// NERVE - ATS
+ 	loadMenu { "ui_mp/joinserver.menu" }	// NERVE - SMF - commented in for multiplayer
+	loadMenu { "ui_mp/multi_setup.menu" }	// NERVE - ATS
+ 	loadMenu { "ui_mp/setup.menu" }
+ 	loadMenu { "ui_mp/createserver.menu" }	// NERVE - SMF - commented in for multiplayer
+	loadMenu { "ui_mp/controls.menu" }
+	loadMenu { "ui_mp/cdkey.menu" }
+	loadMenu { "ui_mp/system.menu" }
+	loadMenu { "ui_mp/options.menu" }
+	loadMenu { "ui_mp/credit.menu" }
+	loadMenu { "ui_mp/connect.menu" }
+	loadMenu { "ui_mp/password.menu" }
+	loadMenu { "ui_mp/quit.menu" }
+	loadMenu { "ui_mp/single_player.menu" }		// NERVE - SMF
+	loadMenu { "ui_mp/vid_restart.menu" }
+	loadMenu { "ui_mp/default.menu" }
+	loadMenu { "ui_mp/error.menu" }
+	loadMenu { "ui_mp/serverinfo.menu" }
+	loadMenu { "ui_mp/quitcredit.menu" }
+	loadMenu { "ui_mp/createfavorite.menu" }
+	loadMenu { "ui_mp/filter.menu" }
+	loadMenu { "ui_mp/in_rec_restart.menu" }	//NERVE - ATS
+	loadMenu { "ui_mp/rec_restart.menu" }		//NERVE - ATS
+	loadMenu { "ui_mp/pbinfo.menu" }			//NERVE - DHM
+	loadMenu { "ui_mp/mods.menu" }				//NERVE - DHM
+	loadMenu { "ui_mp/auto_update.menu" }		//NERVE - DHM
+}

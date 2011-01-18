@@ -1,0 +1,243 @@
+// Mapname: Facility31_b1
+// Omni Bot waypoint and script file by: Quantum Blade
+// Comments? Questions? Bugs? Find me at www.eptexasgaming.com
+// or www.quantumblade.com/ET
+// Version: Beta 1
+// updated by palota
+global Map =
+{
+	agentsTaken = 0,
+	agentsSecured = 0,
+	cargo = 1,
+	ShowMovers = false,
+	Movers = { "MOVER_cargo_rail", },
+
+	Switches =
+	{
+		CirculationSwitch1 =
+		{
+			Enabled = true,
+			WaypointName = "Circulation Switch 1",
+			LimitTeam = 0, // disabled initially.
+		},
+
+		CirculationSwitch2 =
+		{
+			Enabled = true,
+			WaypointName = "Circulation Switch 2",
+			LimitTeam = 0, // disabled initially.
+		},
+
+		Valve =
+		{
+			Enabled = true,
+			WaypointName = "Valve",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 3,
+			ExitConditions =
+			{
+				myFunc = function(bot)
+				{
+					return true;
+				},
+			},
+		},
+	},
+
+	Navigation =
+	{
+		ladder_cp = {
+			navigate = function(_this)
+			{
+				//print("nav");
+				_this.AddAimRequest(Priority.High, "facing", Vector3(-10,0,0));
+				sleep(0.2);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 2);
+				sleep(3);
+			},
+		},
+	},
+
+	RideMovers =
+	{
+		cargo_west =
+		{
+			movergoal = "MOVER_cargo_rail",
+			rideposition = Vector3(0,125,-50),
+			startwp = "cargo_west_in",
+			exitwp = "cargo_east_out",
+			board = function(_this)
+			{
+				return Map.cargo == 1;
+			},
+			leave = function(_this)
+			{
+				return Map.cargo == 3;
+			},
+		},
+		cargo_east =
+		{
+			movergoal = "MOVER_cargo_rail",
+			rideposition = Vector3(0,125,-50),
+			startwp = "cargo_east_in",
+			exitwp = "cargo_west_out",
+			board = function(_this)
+			{
+				return Map.cargo == 3;
+			},
+			leave = function(_this)
+			{
+				return Map.cargo == 1;
+			},
+		},
+	},
+
+	Cargo_Goto = function(trigger)
+	{
+		vel = ToVector(trigger.Action);
+		if(vel.x == 60){
+			if(Map.cargo==1){ Map.cargo=2; } //move from west to east
+			else{ sleep(9); Map.cargo=3; } //stop east
+		} else if(vel.x == -60){
+			if(Map.cargo==3){ Map.cargo=4; } //move from east to west
+			else{ sleep(9); Map.cargo=1; } //stop west
+		}
+		//print("cargo ", Map.cargo);
+	},
+
+	OnWallPlant = function(trigger)
+	{
+
+	},
+
+	OnWallBlown = function(trigger)
+	{
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_wall.*");
+	},
+
+	OnStolen = function(which)
+	{
+		Map.agentsTaken+=1;
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_obj_" + which + ".*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_secure.*");
+		if(Map.agentsTaken+Map.agentsSecured == 3){ SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_circulation.*"); }
+		Util.MapDebugPrint("stolen counter agent " + which);
+	},
+
+	OnStealCounterAgent = function(trigger)
+	{
+		if(trigger.Entity==136){
+			OnStolen("a");
+		}else if(trigger.Entity==147){
+			OnStolen("b");
+		}else if(trigger.Entity==148){
+			OnStolen("c");
+		}
+	},
+
+	OnReturnedCounterAgent = function(which)
+	{
+		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_obj_" + which + ".*");
+		Map.agentsTaken-=1;
+		if(Map.agentsTaken == 0){ SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_secure.*"); }
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_circulation.*");
+		print("returned counter agent ", which);
+	},
+
+	OnReturnedA = function(trigger)
+	{
+		OnReturnedCounterAgent("a");
+	},
+
+	OnReturnedB = function(trigger)
+	{
+		OnReturnedCounterAgent("b");
+	},
+
+	OnReturnedC = function(trigger)
+	{
+		OnReturnedCounterAgent("c");
+	},
+
+	OnSecureCounterAgent = function(trigger)
+	{
+		Map.agentsSecured+=1;
+		Map.agentsTaken-=1;
+	},
+
+	OnAllSecured = function(trigger)
+	{
+		Map.Switches.CirculationSwitch1.LimitTeam = (1<<TEAM.ALLIES);
+		Map.Switches.CirculationSwitch2.LimitTeam = (1<<TEAM.ALLIES);
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_secure.*");
+	},
+
+	OnPitDrain = function(trigger)
+	{
+		Map.Switches.Valve.Enabled = false;
+	},
+
+	OnAlliedCPBuilt = function(trigger)
+	{
+
+	},
+
+	OnAlliedCPUpgrade = function(trigger)
+	{
+
+	},
+
+	OnAlliedCPUpgrade2 = function(trigger)
+	{
+		SetGoalPriority( "DEFEND_wall.*", 0.5 );
+	},
+
+	AlliesWin = function(trigger)
+	{
+		Map.Switches.CirculationSwitch1.Enabled = false;
+		Map.Switches.CirculationSwitch2.Enabled = false;
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger("Planted at the Warehouse Wall.", Map.OnWallPlant);
+	OnTrigger("The Allies have breached the Warehouse Wall!", Map.OnWallBlown);
+	OnTrigger("Allies have stolen Chemical Counter-Agent!", Map.OnStealCounterAgent);
+	OnTrigger("The Allied Team has captured the first container of counter-agent!", Map.OnSecureCounterAgent);
+	OnTrigger("The Allied Team has captured the second container of counter-agent!", Map.OnSecureCounterAgent);
+	OnTrigger("The Allied Team has captured the final container of counter-agent!", Map.OnAllSecured);
+	OnTrigger("The Allied Team has Drained the Western Chemical Pit", Map.OnPitDrain);
+	OnTrigger("The Allies have constructed a Command Post!", Map.OnAlliedCPBuilt);
+	OnTrigger("The Allies have upgraded their Command Post!", Map.OnAlliedCPUpgrade);
+	OnTrigger("The Allies have constructed a Forward Spawn!", Map.OnAlliedCPUpgrade2);
+	OnTrigger("Flag returned counteragenta!", Map.OnReturnedA);
+	OnTrigger("Flag returned counteragentb!", Map.OnReturnedB);
+	OnTrigger("Flag returned counteragentc!", Map.OnReturnedC);
+	OnTrigger("cargo_rail_goto", Map.Cargo_Goto);
+	OnTrigger("The Axis Chemical Supply has been Destroyed!", Map.AlliesWin);
+
+	SetAvailableMapGoals(TEAM.ALLIES, false, "AMMO.*");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "HEALTH.*");
+	SetAvailableMapGoals(TEAM.AXIS, false, "AMMO.*");
+	SetAvailableMapGoals(TEAM.AXIS, false, "HEALTH.*");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND.*");
+	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_secure.*");
+	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_circulation.*");
+
+	SetGoalPriority( "HEALTHCAB_.*", 0.0 );
+	SetGoalPriority( "AMMOCAB_.*", 0.0 );
+	SetGoalPriority( "BUILD_Allied_Command_Post", 0.7 );
+	SetGoalPriority( "DEFEND_wall.*", 0.51 );
+	SetGoalPriority( "DEFEND_secure.*", 0.51 );
+
+	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=300} );
+
+	Util.UpdateSwitchData();
+};
+
+global OnBotJoin = function(bot)
+{
+	bot.MaxViewDistance = 2500;
+	bot.TargetBreakableDist = 150.0;
+};

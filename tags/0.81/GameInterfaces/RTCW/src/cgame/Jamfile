@@ -1,0 +1,31 @@
+# The client library.
+
+import modules ;
+
+BOOST = [ modules.peek : BOOST ] ; 
+
+project cgame
+	: requirements <include>$(BOOST)
+	: requirements <define>CGAMEDLL
+	: requirements <include>../game
+	: requirements <include>../ui
+	: requirements <include>../../../../Omnibot/Common
+	;
+
+# define external libs
+lib boost_datetime : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-1_44.a ;
+
+# define aliases for convenience and to force static linking
+alias boost_dt : boost_datetime : <link>static ;
+
+SOURCES = [ glob ../game/bg_*.c ]
+		  [ glob cg_*.c ]
+		  [ glob *.cpp ]
+		  ../game/q_math.c
+		  ../game/q_shared.c
+		  ../ui/ui_shared.c
+		  boost_dt
+		;
+
+lib cgame.mp.i386.so : $(SOURCES) : <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing <linkflags>-pthread <linkflags>-lrt ;
+

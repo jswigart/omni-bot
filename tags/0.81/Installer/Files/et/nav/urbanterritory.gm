@@ -1,0 +1,213 @@
+//==========================================================================================
+//
+//	UrbanTerritory.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	20 April 2010	Initial Script
+//	palota	23 October 2010	DYNAMITE_safe, ROUTE_allies_passage, mg42 aim vectors
+//
+//==========================================================================================
+//
+global Map =
+{
+	safeIsDestroyed=false,
+	safePlantedTime=null,
+
+	IgnoreEntPositions = { Vector3(-1441, 799, 30), Vector3(-835, -255, 66), Vector3(-798, -273, 65), Vector3(-874, -275, 65) },
+
+	Navigation =
+	{
+		ladder_down =  //roof
+		{
+			navigate = function(_this)
+			{
+				// at top of ladder, turn completely around
+				_this.AddAimRequest(Priority.High, "position", Vector3(392.873, -519.284, 288.125));
+				_this.Bot.HoldButton(BTN.CROUCH, 1.5);
+				sleep(1.5);
+			}
+		},
+
+		ladder_sewer = //route from the axis spawn to sewerage
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vector3(-0.3,0,-0.9));
+				_this.Bot.HoldButton(BTN.FORWARD,BTN.CROUCH, 1.5);
+				sleep(0.3);
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.3,0,-0.9));
+				sleep(2);
+			}
+		},
+
+		ductfan = // waypoint uid 193
+		{
+			navigate = function(_this)
+			{
+				if(!Map.gratebot){ Map.gratebot=0; }
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(1);
+				if (Map.gratebot < 1 && !Map.ductFanDestroyed)
+				{
+					Map.gratebot += 1;
+					_this.AddAimRequest(Priority.High, "position", Vector3(1203.604,-1093.651,6.875));
+					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+					_this.BlockForWeaponChange(WEAPON.KNIFE);
+
+					while(!Map.ductFanDestroyed) {
+						_this.Bot.PressButton(BTN.ATTACK1);
+						yield();
+					}
+				}
+
+				Map.gratebot -= 1;
+			},
+		},
+	},
+
+	Gold_Taken = function( trigger )
+	{
+		if(!Map.safeIsDestroyed){ Map.Safe_Destroyed(); }
+		Util.EnableGoal("DEFEND_truck.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck1");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck4");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_truck5");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_safe.*");
+	},
+
+	Gold_Returned = function( trigger )
+	{
+		Util.DisableGoal("DEFEND_truck.*");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_safe.*");
+	},
+
+	Safe_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_safe8");
+	},
+
+	Safe_Destroyed = function()
+	{
+		Map.safeIsDestroyed = true;
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Gold");
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_safe.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DYNAMITE_safe");
+		Util.MapDebugPrint( "Safe_Destroyed" );
+	},
+
+	DuctFan_Destroyed = function()
+	{
+		Map.ductFanDestroyed = true;
+		Util.MapDebugPrint("DuctFan_Destroyed", true);
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Axis have stolen Gold!", Map.Gold_Taken );
+	OnTrigger( "Flag returned Gold!", Map.Gold_Returned );
+	OnTrigger( "Planted at The Safe.", Map.Safe_Planted );
+
+	// grenade goals send a trigger when the target entity is destroyed
+	// replacing the Watch_Safe thread with this as an example since this is a lot easier
+	// /bot goal_create grenade safetrigger    /bot goal_setproperty trace while pointing at the explosive ent
+	// feel free to remove these comments.
+	OnTrigger( "GRENADE_safetrigger Exploded.", Map.Safe_Destroyed );
+	OnTrigger( "GRENADE_ductfan Exploded.", Map.DuctFan_Destroyed );
+
+	// a re-usable region trigger to disable bot pushing and combat movement. this one is around the rooftop ladder
+	nopush = OnTriggerRegion(AABB(135.125,-640.875,265.125,476.875,-407.125,469.125),RegionTrigger.DisableBotPush);
+
+	Util.DisableGoal("GRENADE.*");
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT.*");
+	Util.DisableGoal("DEFEND_truck.*");
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_Gold");
+	SetGoalPriority("MOUNTMG42.*", 0, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("MOBILEMG.*", 0.6, TEAM.AXIS);
+
+	Util.SetMaxUsersInProgress(1, "SNIPE.*");
+	Util.SetMaxUsersInProgress(1, "MOUNTMG42.*");
+
+	SetMapGoalProperties( "DEFEND.*", {mincamptime=40, maxcamptime=150} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=90, maxcamptime=300} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=90, maxcamptime=300} );
+
+	MapRoutes =
+	{
+		FLAG_Gold = {
+			ROUTE_axis_spawn = {
+				ROUTE_north1 = { ROUTE_floor1 = {}},
+				ROUTE_north3 = { ROUTE_floor2 = {}},
+				ROUTE_north4 = { ROUTE_floor2 = {}},
+				ROUTE_sewer_center = { Weight=4,
+					ROUTE_xxx = {},
+					ROUTE_sewer_south = { Weight=3,
+						ROUTE_shaft1 = {},
+						ROUTE_shaft2 = {},
+					},
+				},
+				ROUTE_roof = {},
+				ROUTE_south_west = { ROUTE_marijuana = { ROUTE_floor1 = {}}},
+				ROUTE_disco = { ROUTE_floor2 = {}},
+			}
+		},
+		CAPPOINT_van = {
+			ROUTE_gold1 = {
+				ROUTE_north1 = {},
+				ROUTE_north3 = {},
+				ROUTE_north4 = { Weight=2 },
+				ROUTE_sewer_south = { Weight=3, ROUTE_sewer_north = {}},
+			}
+		},
+		DEFEND_safe1 = {
+			ROUTE_allied_spawn = {
+				ROUTE_back = { Weight=2 },
+				ROUTE_entrance = {},
+				ROUTE_allies2 = {},
+			}
+		},
+		DEFEND_truck1 = {
+			ROUTE_allied_spawn = {
+				ROUTE_allies_passage = {},
+				ROUTE_north1 = {},
+				ROUTE_north3 = {},
+			}
+		},
+	};
+	MapRoutes.DYNAMITE_safe = MapRoutes.FLAG_Gold;
+	MapRoutes.ATTACK_safe3 = MapRoutes.FLAG_Gold;
+	MapRoutes.ATTACK_safe4 = MapRoutes.ATTACK_safe3;
+	MapRoutes.DEFEND_safe2 = MapRoutes.DEFEND_safe1;
+	MapRoutes.DEFEND_safe5 = MapRoutes.DEFEND_safe1;
+	MapRoutes.DEFEND_safe7 = MapRoutes.DEFEND_safe1;
+	MapRoutes.DEFEND_safe8 = MapRoutes.DEFEND_safe1;
+	MapRoutes.DEFEND_truck3 = MapRoutes.DEFEND_truck1;
+	MapRoutes.DEFEND_truck4 = MapRoutes.DEFEND_truck1;
+	Util.Routes(MapRoutes);
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 250.0;
+
+	if (!Map.IgnoreEnt)
+	{
+		Map.IgnoreEnt = table();
+		foreach(i and pos in Map.IgnoreEntPositions)
+		{
+			ent = TraceLine( pos, pos + Vector3(10,10,0), 0, TRACE.SHOT, 0, false ).entity;
+			if(ent)
+			{
+				Map.IgnoreEnt[i] = ent;
+				Util.MapDebugPrint("Ignoring entity " + GetGameIdFromEntity(ent), true);
+			}
+		}
+	}
+	foreach(ent in Map.IgnoreEnt)
+	{
+		bot.IgnoreTarget(ent, 99999);
+	}
+};

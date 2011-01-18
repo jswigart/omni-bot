@@ -1,0 +1,44 @@
+this.SetBaseGoalType("mapgoal_camp.gm");
+
+this.GoalType = "Panzer";
+
+//////////////////////////////////////////////////////////////////////////
+this.BaseInitNewGoal = this.InitNewGoal;
+this.InitNewGoal = function()
+{
+	// call the base goal init before we do custom stuff.
+	if(this.BaseInitNewGoal)
+	{
+		this.BaseInitNewGoal();
+	}
+
+	this.Weapons[ WEAPON.PANZERFAUST ] = 1;
+};
+
+//////////////////////////////////////////////////////////////////////////
+this.BaseUpgradeVersion = this.UpgradeVersion;
+this.UpgradeVersion = function(Props)
+{
+	initWeaponTable = false;
+	if(Props.Version==0)
+	{
+		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
+		initWeaponTable = true;
+	}
+
+	// call base goal upgrade
+	if(this.BaseUpgradeVersion)
+	{
+		this.BaseUpgradeVersion(Props);
+	}
+
+	if(initWeaponTable)
+	{
+		// fill in all the known sniper weapons by default
+		Props.Weapons = {};
+		Props.Weapons[ WEAPON.PANZERFAUST ] = 1;
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////

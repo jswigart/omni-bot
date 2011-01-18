@@ -1,0 +1,324 @@
+global Map =
+{
+        // cs: kept 0.66 naming on left since all calls use the alias'
+	Ammo_Cabinet_ammocab2 = "AMMO_CABINET_ammocab2",
+	Ammo_Cabinet_ammocab3 = "AMMO_CABINET_ammocab3",
+	Health_Cabinet_healthcab3 = "HEALTH_CABINET_healthcab3",
+	Health_Cabinet_healthcab2 = "HEALTH_CABINET_healthcab2",
+	Build_cratebarrier = "BUILD_Crate_Barrier",
+	Build_powerbuilt = "BUILD_Elevator_Power_Box",
+	Build_bridge_target = "BUILD_Treetop_Bridge",
+	Build_axis_cp_open = "BUILD_Command_Post",
+	Build_allied_cp_open = "BUILD_Command_Post",
+	Build_walkway_target = "BUILD_Assault_Ramp",
+	Build_alliedmgconstruct = "BUILD_Allied_Roof_MG",
+	Build_rope_target = "BUILD_Ropes",
+	Destroy_walkway_target = "PLANT_Assault_Ramp",
+	Destroy_powerbuilt = "PLANT_Elevator_Power_Box",
+	Destroy_alliedmgconstruct = "PLANT_Allied_Roof_MG",
+	Destroy_axis_cp_open = "PLANT_Command_Post",
+	Destroy_satcheldoor = "PLANT_Front_Door",  // cs: needs checked, may be swapped with missile base door
+	Destroy_dyno_door = "PLANT_Missile_Base_Door",
+	Destroy_cratebarrier = "PLANT_Crate_Barrier",
+	Destroy_bridge_target = "PLANT_Treetop_Bridge",
+	Destroy_rope_target = "PLANT_Ropes",
+	Mount_alliedmgconstruct_mg = "MOUNTMG42_Allied_Roof_MG",
+	Mount_495 = "MOUNTMG42_495",
+	Mount_494 = "MOUNTMG42_494",
+	Mount_496 = "MOUNTMG42_496",
+	Mount_498 = "MOUNTMG42_498",
+	Mount_403 = "MOUNTMG42_403",
+	Mount_407 = "MOUNTMG42_407",
+	Repair_407 = "REPAIRMG42_407",
+	Repair_496 = "REPAIRMG42_496",
+	Repair_498 = "REPAIRMG42_498",
+	Repair_494 = "REPAIRMG42_494",
+	Repair_403 = "REPAIRMG42_403",
+	Repair_alliedmgconstruct_mg = "REPAIRMG42_Allied_Roof_MG",
+	Repair_495 = "REPAIRMG42_495",
+	Flag_transmitter_flag = "FLAG_transmitter_flag",
+	Flag_the_key = "FLAG_the_key",
+	Cappoint_lock = "CAPPOINT_lock",
+	Cappoint_transmitter = "CAPPOINT_transmitter",
+        
+	Switches =
+	{
+		missile_switch1 =
+		{
+			//Debug = true,
+			WaypointName = "missile_switch1",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			//LimitDistance = 1000,
+		},
+		missile_switch2 =
+		{
+			//Debug = true,
+			WaypointName = "missile_switch2",
+			LimitTeam = 0,
+			LimitClass = (1<<CLASS.SOLDIER) | (1<<CLASS.COVERTOPS) | (1<<CLASS.FIELDOPS) | (1<<CLASS.MEDIC) | (1<<CLASS.ENGINEER),
+			LimitBots = 1,
+			//LimitDistance = 1000,
+		},
+	},        
+        
+	powerbuilt_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.Destroy_powerbuilt);
+		Util.EnableGoal(Map.Destroy_powerbuilt);
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.Build_powerbuilt);
+		Util.DisableGoal(Map.Build_powerbuilt);
+
+		Util.MapDebugPrint( "powerbuilt_Built" );
+	},
+
+	axis_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.Destroy_axis_cp_open);
+		Util.EnableGoal("MAP_DYNAMITE_TARGET_axis_cp_open");
+
+		Util.MapDebugPrint( "axis_cp_open_Built" );
+	},
+
+	cratebarrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "cratebarrier_Built" );
+	},
+
+	walkway_target_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "walkway_target_Built" );
+	},
+
+	rope_target_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "rope_target_Built" );
+	},
+
+	allied_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.Build_allied_cp_open);
+
+		Util.MapDebugPrint( "allied_cp_open_Built" );
+	},
+
+	bridge_target_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_target_Built" );
+	},
+
+	alliedmgconstruct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, true, Map.Mount_alliedmgconstruct_mg);
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.Mount_alliedmgconstruct_mg);
+		Util.EnableGoal(Map.Mount_alliedmgconstruct_mg);
+
+		Util.MapDebugPrint( "alliedmgconstruct_Built" );
+	},
+
+	rope_target_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "rope_target_Destroyed" );
+	},
+
+	satcheldoor_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "satcheldoor_Destroyed" );
+	},
+
+	walkway_target_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "walkway_target_Destroyed" );
+	},
+
+	cratebarrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "cratebarrier_Destroyed" );
+	},
+
+	powerbuilt_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.Destroy_powerbuilt);
+		Util.DisableGoal(Map.Destroy_powerbuilt);
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.Build_powerbuilt);
+		Util.EnableGoal(Map.Build_powerbuilt);
+
+		Util.MapDebugPrint( "powerbuilt_Destroyed" );
+	},
+
+	alliedmgconstruct_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.Mount_alliedmgconstruct_mg);
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.Mount_alliedmgconstruct_mg);
+
+		Util.MapDebugPrint( "alliedmgconstruct_Destroyed" );
+	},
+
+	bridge_target_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_target_Destroyed" );
+	},
+
+	dyno_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "dyno_door_Destroyed" );
+	},
+
+	axis_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.Build_axis_cp_open);
+		SetAvailableMapGoals(TEAM.ALLIES, false, Map.Destroy_axis_cp_open);
+
+		Util.MapDebugPrint( "axis_cp_open_Destroyed" );
+	},
+
+ 	Allies_Capture_Flag = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+                        
+ 		Util.MapDebugPrint( "Allies_Capture_Flag" );
+ 	},
+
+ 	Axis_Capture_Flag = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+                        
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.Flag_the_key);
+		SetAvailableMapGoals(TEAM.AXIS, true, Map.Cappoint_lock);
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.Flag_transmitter_flag);
+		SetAvailableMapGoals(TEAM.AXIS, false, Map.Cappoint_transmitter);
+
+ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
+ 	},
+
+	Axis_Capture_Key = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+                 
+                Map.Switches.missile_switch1.LimitTeam = (1<<TEAM.AXIS);
+		Util.MapDebugPrint( "Axis_Capture_Key");
+	},
+        
+	axis_doors_open = function( trigger )
+	{
+		Map.Switches.missile_switch1.LimitTeam = 0;
+		Util.MapDebugPrint( "axis_doors_open", true);
+	},
+
+	axis_doors_finished = function( trigger )
+	{
+		Map.Switches.missile_switch2.LimitTeam = (1<<TEAM.AXIS);
+		Util.MapDebugPrint( "axis_doors_finished", true);
+	},
+
+	axis_countdown_go = function( trigger )
+	{
+		Map.Switches.missile_switch2.LimitTeam = (1<<TEAM.ALLIES);
+		Util.MapDebugPrint( "axis_countdown_go", true);
+	},
+
+	axis_countdown_stop = function( trigger )
+	{
+		Map.Switches.missile_switch2.LimitTeam = (1<<TEAM.AXIS);
+		Util.MapDebugPrint( "axis_countdown_stop", true);
+	},        
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+                
+	OnTrigger( "The axis have repaired the Power Grid", Map.powerbuilt_Built );
+	OnTrigger( "Allies have built the MG42 Nest!", Map.alliedmgconstruct_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_cp_open_Built );
+	OnTrigger( "The Axis have constructed the Climbable Ropes", Map.rope_target_Built );
+	OnTrigger( "", Map.cratebarrier_Built );
+	OnTrigger( "Bridge Constructed!!", Map.bridge_target_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_cp_open_Built );
+	OnTrigger( "The Axis has constructed the Assault Ramp", Map.walkway_target_Built );
+	OnTrigger( "The Allies have destroyed the Climbable Ropes", Map.rope_target_Destroyed );
+	OnTrigger( "The Axis have destroyed the Crate Barrier", Map.cratebarrier_Destroyed );
+	OnTrigger( "The Axis have breached the front gate.", Map.dyno_door_Destroyed );
+	OnTrigger( "The Axis have breached the door to the underground base!!!!", Map.satcheldoor_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_cp_open_Destroyed );
+	OnTrigger( "The allies have destroyed the Power Grid", Map.powerbuilt_Destroyed );
+	OnTrigger( "Axis have destroyed the Allied Mg42 Nest!", Map.alliedmgconstruct_Destroyed );
+	OnTrigger( "The Allied have destroyed the Assault Ramp", Map.walkway_target_Destroyed );
+	OnTrigger( "", Map.bridge_target_Destroyed );
+ 	OnTrigger( "The Transmitter Parts have been returned!!!!", Map.Allies_Capture_Flag );
+ 	OnTrigger( "The Axis have activated the transmitter!!", Map.Axis_Capture_Flag );
+	OnTrigger( "The Axis have unlocked the Stairway Door!!", Map.Axis_Capture_Key );
+	OnTrigger( "axis_doors_open", Map.axis_doors_open );
+	OnTrigger( "axis_doors_finished", Map.axis_doors_finished );
+	OnTrigger( "axis_countdown_go", Map.axis_countdown_go );
+	OnTrigger( "axis_countdown_stop", Map.axis_countdown_stop );        
+
+	SetAvailableMapGoals(TEAM.AXIS, false, Map.Flag_the_key);
+	SetAvailableMapGoals(TEAM.AXIS, false, Map.Cappoint_lock);
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

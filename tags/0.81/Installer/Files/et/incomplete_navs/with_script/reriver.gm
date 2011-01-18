@@ -1,0 +1,95 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Lab_Main_Gate = "BUILD_Lab_Main_Gate",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Heavy_Water_Control_Pannel = "PLANT_Heavy_Water_Control_Pannel",
+	Plant_Lab_Main_Gate = "PLANT_Lab_Main_Gate",
+	Plant_Ventilation_Hatch = "PLANT_Ventilation_Hatch",
+	Mount_72 = "MOUNTMG42_72",
+	Mount_allies_spawn_mg = "MOUNTMG42_allies_spawn_mg",
+	Repair_72 = "REPAIRMG42_72",
+	Repair_allies_spawn_mg = "REPAIRMG42_allies_spawn_mg",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Lab_Main_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Lab_Main_Gate_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Heavy_Water_Control_Pannel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Heavy_Water_Control_Pannel_Destroyed" );
+	},
+
+	Lab_Main_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Lab_Main_Gate_Destroyed" );
+	},
+
+	Ventilation_Hatch_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Ventilation_Hatch_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "The Main Gate has been repaired!", Map.Lab_Main_Gate_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "The Control Panel has been destroyed!", Map.Heavy_Water_Control_Pannel_Destroyed );
+	OnTrigger( "The Main Gate has been destroyed!", Map.Lab_Main_Gate_Destroyed );
+	OnTrigger( "Allies have breached the Ventilation Hatch!", Map.Ventilation_Hatch_Destroyed );
+
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_allies_spawn_mg.*" );
+	
+	Util.SetGoalOffset ( 30, 0, 0, "PLANT_Ventilation_Hatch" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+};

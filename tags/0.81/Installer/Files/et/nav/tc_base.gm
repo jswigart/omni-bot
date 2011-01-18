@@ -1,0 +1,433 @@
+global Map =
+{
+	Quiet = true,
+	FocusPrimary = false,
+
+	Plant_North = "PLANT_North_Radar_01",
+	Plant_South = "PLANT_South_Radar_02",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_2 = "MOUNTMG42_mg42_2",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_2 = "REPAIRMG42_mg42_2",
+
+	AlliesNearNorth = false,
+	NorthStatus = false,
+	SouthStatus = false,
+	NorthDyno = 0,
+	SouthDyno = 0,
+	
+	AxisASTable = {},
+	
+	DispenseAmmoTime = 15, // give axis time to go call the arty
+
+	Airstrike =
+	{
+		bsk1 =
+		{
+			Enabled = true,
+			Team = (1<<TEAM.ALLIES),
+			Waypoint = "bASsk_1",
+		},
+		bsk2 =
+		{
+			Enabled = true,
+			Team = (1<<TEAM.ALLIES), 
+			Waypoint = "bASsk_2",
+		},
+		bsk3 =
+		{
+			Enabled = true,
+			Team = (1<<TEAM.ALLIES),
+			Waypoint = "bASsk_3",
+		},
+	},
+	
+	Navigation =
+	{
+		spawnjump =
+		{
+			navigate = function(_this)
+			{
+				sleep(0.75);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 0.5);
+				_this.Bot.HoldButton(BTN.JUMP, 1.5);
+			},			
+		},
+		ladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				sleep(2);
+			},		
+		},
+	},	
+
+	Switches =
+	{
+		gate1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // paththrough
+			WaypointName = "gate1",
+			LimitTeam = (1<<TEAM.ALLIES), 
+			LimitBots = 2,
+                        AimPosition = Vector3(-1409.125,1760.419,50.613),
+		},
+		gate2 =
+		{
+			Enabled = false,
+			Priority = 0.0, // paththrough
+			WaypointName = "gate2",
+			LimitTeam = (1<<TEAM.ALLIES), 
+			LimitBots = 2,
+                        AimPosition = Vector3(-1150.875,1791.541,51.915),
+		},
+	},
+
+	NorthTrigger =
+	{
+		Name = "NorthTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
+		{
+			if( GetEntTeam(ent) == TEAM.ALLIES )
+			{ 
+				Map.AlliesNearNorth = true;
+
+				if ( !Map.NorthStatus )
+				{
+					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_c.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg42_2" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_mg42_2" );
+					//SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );	//Cover OBJ, not arty
+
+					sleep(15);
+			
+					if ( Map.NorthDyno < 1 )
+					{
+						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+						SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_a.*" );
+						SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_2" );
+						SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_mg42_2" );
+					} 			
+				}
+			}
+		},
+		OnExit = function(ent)
+		{
+		},
+	},
+
+	North_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.NorthStatus = true;
+
+		if ( !Map.SouthStatus )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*");
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*");
+
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSouth.*");
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth.*");			
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_net_jail" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_nwc" );		// gate side of tunnel
+		
+		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );	// Make sure axis dont get too excited to call arty on their own position
+		SetGoalPriority( "ARTILLLERY.*", 0.5, TEAM_AXIS );
+
+		Util.DisableGoal("DEFEND_engNorth.*");
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPanzSouth.*" );	
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rPanzNorth.*" );
+	},
+
+	South_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.SouthStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_North );
+
+		// *** Artillery
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_net_jail" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engNorth.*");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*");
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_mg42_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );	//Martin - Put more arty on tunnel since allies push there more				
+
+		Util.DisableGoal("DEFEND_engSouth.*");
+	},
+
+	north_planted = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_c.*" );
+
+		Map.NorthDyno += 1;
+	},
+
+	north_defused = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.NorthDyno -= 1;
+
+		if ( Map.NorthDyno < 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_a.*" );
+		}	
+	},
+
+	south_planted = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.SouthDyno += 1;
+
+		if ( !Map.NorthStatus )
+		{ 
+			Util.DisableGoal("DEFUSE_South_Radar_02.*"); 
+			Util.DisableGoal("DEFEND_engSouth.*");
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rPanzSouth.*" );	
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPanzNorth.*" );	
+		}		
+	},
+
+	south_defused = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.SouthDyno -= 1;
+	},
+
+	gate_lever = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+		
+		Map.Switches.gate1.Enabled = false;
+		Map.Switches.gate2.Enabled = false;
+	},
+
+	gate_trigger = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		vel = ToVector(trigger.Action);
+
+		if ( vel.y < 0 )
+		{
+			Map.Switches.gate1.Enabled = false;
+			Map.Switches.gate2.Enabled = false;
+		}
+		else if ( vel.y > 0 )
+		{
+			Map.Switches.gate1.Enabled = true;
+			Map.Switches.gate2.Enabled = true;
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied team has disabled the North Radar!", Map.North_Destroyed );
+	OnTrigger( "Planted at the North Radar [01].", Map.north_planted );
+	OnTrigger( "Defused at the North Radar [01].", Map.north_defused );
+	OnTrigger( "Allied team has disabled the South Radar!", Map.South_Destroyed );
+	OnTrigger( "Planted at the South Radar [02].", Map.south_planted );
+	OnTrigger( "Defused at the South Radar [02].", Map.south_defused );
+	OnTrigger( "base_lever1_goto", Map.gate_lever );
+	OnTrigger( "base_gate1_goto", Map.gate_trigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=15, MaxCampTime=30});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=20, MaxCampTime=40});
+	SetMapGoalProperties( "DEFEND_rNorth_a7*", {MinCampTime=2, MaxCampTime=5}); // cs: just peak here since its so exposed
+	SetMapGoalProperties( "CAMP_.*", {MinCampTime=30, MaxCampTime=60});
+	SetMapGoalProperties( "MOUNT.*", {MinCampTime=30, MaxCampTime=60});
+
+	SetGoalPriority( "CALL.*", 0.9 );
+	SetGoalPriority( "ARTILLLERY.*", 1.2 );
+	SetGoalPriority( "DEFEND_eng.*", 0.9 );
+
+	Util.SetMaxUsers( 1, "MOUNT.*" );
+	Util.SetMaxUsers( 1, "DEFEND.*" );
+	Util.SetMaxUsers( 1, "CAMP.*" );
+	Util.SetMaxUsers( 2, "ATTACK_bSouth[24]" );
+
+	ETUtil.SetPrimaryGoals(1.0);
+	SetGoalPriority( "DEFEND_rNorth_a[16]", 0.60 );	
+	SetGoalPriority( "ATTACK_bSouth[24]", 0.55 );
+        
+	ETUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.FIELDOPS);
+	ETUtil.LimitToClass("DEFEND_eng.*", TEAM.AXIS, CLASS.ENGINEER);
+	ETUtil.LimitToClass("DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER);        
+	
+	Util.DisableGoal(".*", true); // all but routes
+
+	//for now, axis will give up the south plant
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_a.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPanzSouth.*" );	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPanzNorth.*" );	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bPanzNorth.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engSouth.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[24]" );
+
+	// *** Artillery
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill.*" );		// To call on axis spawn
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_net_jail" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_bridge" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_r2_arch" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_nwc" );		// gate side of tunnel
+
+	tOne = OnTriggerRegion(Vector3(603,2690,128), 200, Map.NorthTrigger);
+	tTwo = OnTriggerRegion(Vector3(930,1618,384), 200, Map.NorthTrigger);
+	
+	MapRoutes = 
+	{
+		PLANT_South_Radar_02 = 
+		{
+			ROUTE_bSpawn1 =
+			{
+				ROUTE_office =
+				{
+					ROUTE_uppersouth = {},
+					ROUTE_lowersouth = {},	
+				},
+			},
+			ROUTE_bSpawn2 =
+			{
+				ROUTE_office =
+				{
+					ROUTE_uppersouth = {},
+					ROUTE_lowersouth = {},	
+				},
+			},
+		},
+		PLANT_North_Radar_01 = 
+		{
+			ROUTE_bSpawn1 =
+			{
+				ROUTE_office =
+				{
+					ROUTE_uppersouth = 
+					{
+						Weight = 2,
+						ROUTE_netower = {},
+					},
+					ROUTE_lowersouth = 
+					{
+						ROUTE_zone3 = {},
+					},	
+				},
+				ROUTE_ntunnel = {Weight = 3,},
+			},
+			ROUTE_bSpawn2 =
+			{
+				ROUTE_office =
+				{
+					Weight = 2,
+					ROUTE_uppersouth = 
+					{
+						Weight = 2,
+						ROUTE_netower = {},
+					},
+					ROUTE_lowersouth = 
+					{
+						ROUTE_zone3 = {},
+					},	
+				},
+				ROUTE_ntunnel = {},
+			},
+		},
+		DEFEND_rNorth_a1 =
+		{
+			ROUTE_rSpawn = 
+			{
+				ROUTE_tinroof = {},
+				ROUTE_nstairs = { Weight = 3, },
+			},
+		},
+	};
+	
+	MapRoutes.ATTACK_bNorth1 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth2 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth3 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth4 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth5 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth6 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.ATTACK_bNorth7 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.CAMP_bPanzNorth1 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.CAMP_bPanzNorth2 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.CAMP_bPanzNorth3 = MapRoutes.PLANT_North_Radar_01;
+	MapRoutes.DEFEND_rNorth_a2 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_a3 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_a4 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_a5 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_a6 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_a7 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c1 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c2 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c3 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c4 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c5 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c6 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.DEFEND_rNorth_c7 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.CAMP_rPanzNorth3 = MapRoutes.DEFEND_rNorth_a1;
+	MapRoutes.ATTACK_bSouth1 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.ATTACK_bSouth2 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.ATTACK_bSouth3 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.ATTACK_bSouth4 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.ATTACK_bSouth5 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.ATTACK_bSouth6 = MapRoutes.PLANT_South_Radar_02;
+	MapRoutes.CALLARTILLERY_bSpawnkill_1 = MapRoutes.PLANT_North_Radar_01;
+	
+	Util.Routes(MapRoutes);
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+
+	ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
+};
+
+

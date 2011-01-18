@@ -1,0 +1,129 @@
+global Map =
+{
+	Call_Artillery_Bunker_2 = "CALLARTILLERY_Bunker_2",
+	Call_Artillery_Bunker_3 = "CALLARTILLERY_Bunker_3",
+	Call_Artillery_Bunker_4 = "CALLARTILLERY_Bunker_4",
+	Artillery_D_Bunker_5 = "ARTILLERY_D_Bunker_5",
+	Artillery_D_Bunker_6 = "ARTILLERY_D_Bunker_6",
+	Artillery_D_Bunker_7 = "ARTILLERY_D_Bunker_7",
+	Artillery_D_Bunker_8 = "ARTILLERY_D_Bunker_8",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Flag_gas_can = "FLAG_gas_can",
+	Cappoint_50 = "CAPPOINT_50",
+	Build_Coolant_Controls = "BUILD_Coolant_Controls",
+	Build_Truck = "BUILD_Truck",
+	Plant_Coolant_Controls = "PLANT_Coolant_Controls",
+	Plant_East_Security_Door = "PLANT_East_Security_Door",
+	Plant_West_Security_Door = "PLANT_West_Security_Door",
+	Mobile_MG42_Bunker_1 = "MOBILEMG42_Bunker_1",
+	Snipe_Bunker_10 = "SNIPE_Bunker_10",
+	Snipe_Bunker_9 = "SNIPE_Bunker_9",
+	Mover_truck = "MOVER_truck",
+
+	Coolant_Controls_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Coolant_Controls_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Built" );
+	},
+
+	Coolant_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Coolant_Controls_Destroyed" );
+	},
+
+	East_Security_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Security_Door_Destroyed" );
+	},
+
+	West_Security_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Security_Door_Destroyed" );
+	},
+
+	gas_can_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "gas_can_Taken" );
+	},
+
+	CAPPOINT_50_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_50_Captured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "forward_spawn_Allies_Captured" );
+	},
+
+	gate_destroyed = function( trigger )
+	{
+		
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Coolant_Controls_Built );
+	OnTrigger( "MISSING_STRING", Map.Truck_Built );
+	OnTrigger( "MISSING_STRING", Map.Coolant_Controls_Destroyed );
+	OnTrigger( "East Security Door breached!!", Map.East_Security_Door_Destroyed );
+	OnTrigger( "West Security Door breached!!", Map.West_Security_Door_Destroyed );
+	OnTrigger( "The Allies have stolen the box of explosives", Map.gas_can_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_50_Captured );
+	OnTrigger( "Axis capture the Forward Bunker!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.forward_spawn_Allies_Captured );
+	OnTrigger("the truck has rammed the main gate", Map.gate_destroyed);
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

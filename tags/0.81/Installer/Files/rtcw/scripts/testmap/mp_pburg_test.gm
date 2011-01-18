@@ -1,0 +1,153 @@
+global Map =
+{
+	MapName = "mp_pburg",
+	Quiet = true,
+	Call_Artillery_axart1_1 = "CALLARTILLERY_axart1_1",
+	Call_Artillery_axart1_2 = "CALLARTILLERY_axart1_2",
+	Artillery_S_target1 = "ARTILLERY_S_target1",
+	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
+	Flag_Secret_Documents = "FLAG_Secret_Documents",
+	Cappoint_148 = "CAPPOINT_148",
+	Plant_Courtyard_Wall = "PLANT_Courtyard_Wall",
+	Plant_Headquarters_Door = "PLANT_Headquarters_Door",
+	Explode_barrier1 = "EXPLODE_barrier1",
+	Mount_hqnest = "MOUNTMG42_hqnest",
+	Mount_mainstnest = "MOUNTMG42_mainstnest",
+	Repair_hqnest = "REPAIRMG42_hqnest",
+	Repair_mainstnest = "REPAIRMG42_mainstnest",
+	Snipe_axsnipe_1 = "SNIPE_axsnipe_1",
+
+	Courtyard_Wall_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Courtyard_Wall_Destroyed" );
+	},
+
+	Headquarters_Door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Headquarters_Door_Destroyed" );
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Secret_Documents_Taken" );
+	},
+
+	CAPPOINT_148_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "CAPPOINT_148_Captured" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beach_flag_Axis_Captured" );
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beach_flag_Allies_Captured" );
+	},
+
+	barrier_gone = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "barrier exploded" );
+	},
+
+	Target =
+	{
+		Barricade1 =
+		{
+			Priority = 0.8,
+			Enabled = true,
+			GrenadeTargetGoalName = "EXPLODE_barrier1",
+			LimitBots = 1,
+			LimitTeam = Util.AllTeams,
+			LimitClass = Util.AllClasses,
+			Offset = 
+			{
+				Vector3(60, -290, 0),
+			}
+		},
+
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "the Courtyard Wall Destroyed.", Map.Courtyard_Wall_Destroyed );
+		OnTrigger( "the Headquarters Door Destroyed.", Map.Headquarters_Door_Destroyed );
+		OnTrigger( "Allies have stolen the Secret Documents!", Map.Secret_Documents_Taken );
+		OnTrigger( "Axis reclaims the Courtyard!", Map.beach_flag_Axis_Captured );
+		OnTrigger( "Allies capture the Courtyard!", Map.beach_flag_Allies_Captured );
+		OnTrigger( "Explode_177 Exploded", Map.barrier_gone );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Explode_barrier1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_beach_flag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Courtyard_Wall, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Headquarters_Door, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_hqnest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mainstnest, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_hqnest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mainstnest, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_Secret_Documents, 120 );
+		
+		sleep( 2 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_axsnipe_1, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_148, 120 );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

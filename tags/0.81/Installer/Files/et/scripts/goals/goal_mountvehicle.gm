@@ -1,0 +1,288 @@
+// This script contains functionality to allow bots to mount vehicles
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.MOUNTSLOT)
+{
+	BB.MOUNTSLOT = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "MountVehicle";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.GetPriorityDelay = 3;		// Delay between calls to GetPriority
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Timeout = 30;
+	this.AimAdjustDelay = 1.5;
+	this.AimPanRate = 1.0;
+
+	// cs: this happens too early. todo: fixme
+	if(!Util.VehiclesInMap())
+	{
+		this.Disable = true;
+	}
+	else
+	{
+		if ( !Map )
+			{ global Map = table(); }
+
+		if ( !Map.MountVehicle )
+			{ Map.MountVehicle = table(); }
+
+		//~ // Set default values if not defined
+		if ( typeId( Map.MountVehicle.Enabled ) == 0 )
+			{ Map.MountVehicle.Enabled = true; }
+
+		if ( typeId( Map.MountVehicle.LimitBots ) == 0 )
+			{ Map.MountVehicle.LimitBots = Util.AllTeamPlayers; }
+
+		if ( typeId( Map.MountVehicle.LimitTeam ) == 0 )
+			{ Map.MountVehicle.LimitTeam = Util.AllTeams; }
+
+		if ( typeId( Map.MountVehicle.LimitClass ) == 0 )
+			{ Map.MountVehicle.LimitClass = Util.AllClasses; }
+
+		if ( typeId( Map.MountVehicle.Priority ) == 0 )
+			{ Map.MountVehicle.Priority = 0.66; }
+
+		if ( typeId( Map.MountVehicle.Range ) == 0 )
+			{ Map.MountVehicle.Range = 10000; }
+
+		Util.MapDebugPrint(this.Name + " Initialized", true);
+	}
+};
+
+this.OnSpawn = function()
+{
+	// don't consider this goal right away, because ET takes a few frame to initialize entities
+	// so vehicles will be alive temporarily at the start of the map for a few frames
+	this.DelayGetPriority(3);
+};
+
+this.GetPriority = function()
+{
+	//cs: temp fix. pending rewrite for reduction of script threads
+	if(!Util.VehiclesInMap())
+	{
+		this.Disable = true;
+	}
+
+	myTeamMask = ( 1 << this.Bot.GetTeam() );
+	myClassMask = ( 1 << this.Bot.GetClass() );
+
+	if(!this.IsActive())
+	{
+		vehicle = Util.GetNearestMountableVehicle( this.Bot, Map.MountVehicle.Range );
+
+		if ( Map.MountVehicle.Debug )
+			{ print( "vehicle:", vehicle); }
+
+		numBotsOnMount = Blackboard.GetNumRecords(BB.MOUNTSLOT, this.BlackboardId);
+
+		if ( Map.MountVehicle.Debug )
+		{
+			print( "numBotsOnMount:", numBotsOnMount);
+			print( "Map.MountVehicle.LimitBots:", Map.MountVehicle.LimitBots);
+		}
+
+		if(numBotsOnMount < Map.MountVehicle.LimitBots && vehicle)
+		{
+			if ( Map.MountVehicle.Debug )
+			{
+				print( "Util.GetVehicleGoalName:", Util.GetVehicleGoalName( vehicle ));
+				print( "Map.MountVehicle.Enabled:", Map.MountVehicle.Enabled);
+				print( "Map.MountVehicle.LimitTeam:", Map.MountVehicle.LimitTeam);
+				print( "Map.MountVehicle.LimitClass:", Map.MountVehicle.LimitClass);
+				print( "Util.IsVehicleAvailable:", Util.IsVehicleAvailable( this.Bot, vehicle ));
+				print( "Util.IsVehicleDead:", Util.IsVehicleDead( vehicle ));
+				print( "ENTFLAG.MOUNTABLE:", GetEntFlags( vehicle, ENTFLAG.MOUNTABLE ));
+			}
+
+			// Is it mountable AND not already mounted?
+			if (
+				Map.MountVehicle.Enabled  &&
+				( Map.MountVehicle.LimitTeam & myTeamMask ) &&
+				( Map.MountVehicle.LimitClass & myClassMask ) &&
+				Util.IsVehicleAvailable( this.Bot, vehicle ) &&
+				!Util.IsVehicleDead(vehicle) &&
+				GetEntFlags( vehicle, ENTFLAG.MOUNTABLE ) &&
+				!GetEntFlags( vehicle, ENTFLAG.MOUNTED )
+										)
+			{
+				if ( Map.MountVehicle.Debug )
+					{ print("Have tank to mount"); }
+
+				this.VehicleEntity = vehicle;
+				this.BlackboardId = 0; //support multiple?
+				this.Priority = Map.MountVehicle.Priority;
+				this.DebugString = Util.GetVehicleGoalName( vehicle );
+			}
+		}
+	}
+	else
+	{
+		botEnt = this.Bot.GetGameEntity();
+		othermounted = (!GetEntFlags(botEnt, ENTFLAG.MOUNTED) &&
+			GetEntFlags( this.VehicleEntity, ENTFLAG.MOUNTED ));
+
+		if(	othermounted ||
+			!Util.IsVehicleAvailable(this.Bot, this.VehicleEntity) ||
+			Util.IsVehicleDead(this.VehicleEntity))
+		{
+			this.Finished();
+		}
+	}
+};
+
+this.Enter = function()
+{
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = this.BlackboardId,
+	};
+	Blackboard.PostRecord(BB.MOUNTSLOT, bbRecord);
+};
+
+this.Exit = function()
+{
+	// Remove myself from the blackboard for using this switch
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.MOUNTSLOT);
+
+	this.Bot.PressButton(BTN.USE); // dismount
+
+	this.VehicleEntity = null;
+};
+
+this.Update = function()
+{
+	botEnt = this.Bot.GetGameEntity();
+	vehicleEntity = this.VehicleEntity;
+
+	framecounter = 0;
+	mountcounter =0;
+
+	while(true)
+	{
+		if(!GetEntFlags(botEnt, ENTFLAG.MOUNTED))
+		{
+			// If the tank is already mounted, someone beat us to it, so fail.
+			if(GetEntFlags(vehicleEntity, ENTFLAG.MOUNTED))
+			{
+				this.Finished();
+			}
+			else
+			{
+				vehPos = GetEntPosition(vehicleEntity);
+
+				if( this.Goto(vehPos, 256.f) == EVENT.PATH_FAILED )
+				{
+					this.Finished();
+				}
+
+				while ( !GetEntFlags( botEnt, ENTFLAG.MOUNTED ) )
+				{
+					vehPos = GetEntPosition(vehicleEntity);
+					if(!vehPos)
+					{
+						this.Finished();
+					}
+					else
+					{
+						// Still available, so lets go for it.
+						this.AddAimRequest( Priority.High, "position", vehPos );
+						framecounter += 1;
+
+						// Not mounted, lets try to get mounted.
+						this.Bot.MoveTowards(vehPos);
+
+						// A simple way to get the but to hit the use key and let off each frame.
+						if(framecounter & 1)
+						{
+							this.Bot.PressButton(BTN.USE);
+						}
+					}
+
+					if ( GetEntFlags( vehicleEntity, ENTFLAG.DEAD ) ||
+						( !GetEntFlags( botEnt, ENTFLAG.MOUNTED ) &&
+						GetEntFlags( vehicleEntity, ENTFLAG.MOUNTED ) ) )
+					{
+						this.Finished();
+					}
+
+					sleep(0.5);
+				}
+			}
+		}
+		else
+		{
+			while(true)
+			{
+				// Allow the current aim mode to do any processing to change the aimDirection
+				aimFunc = this.UseAimMode;
+				this:aimFunc();
+
+				if ( !Util.IsVehicleAvailable( this.Bot, vehicleEntity ) )
+				{
+					this.Finished();
+				}
+
+				if ( GetEntVelocity( vehicleEntity ).IsZero() )
+				{
+					mountcounter = mountcounter + 1;
+
+					if ( ( mountcounter / 20 ) == this.Timeout )
+					{
+						this.Finished();
+					}
+				}
+				else
+				{
+					mountcounter = 0;
+				}
+				yield();
+			}
+		}
+	}
+};
+
+this.AimModes =
+{
+	// vehicleVelocity makes the bot aim in the direction the vehicle is moving
+	vehicleVelocity = function()
+	{
+		vehicleVelocity = GetEntVelocity(this.VehicleEntity);
+
+		if(vehicleVelocity && !vehicleVelocity.IsZero())
+		{
+			this.AddAimRequest(Priority.Low, "facing", vehicleVelocity);
+		}
+		else
+		{
+			vehFacing = GetEntFacing( this.VehicleEntity );
+			this.AddAimRequest(Priority.Low, "facing", vehFacing);
+		}
+	},
+
+	// random360 will allow the bot to aim in random directions in a 360 degree arc, changing direction at defined intervals.
+	random360 = function()
+	{
+		// Is it time to adjust our aim?
+		currentTime = GetTime();
+		if(this.AimAdjust <= currentTime)
+		{
+			rand = RandRange(0.0, 360.0);
+			v = Vec3FromSpherical(rand, 0, rand);
+
+			this.AddAimRequest(Priority.Low, "facing", v);
+
+			// Schedule the next aim.
+			this.AimAdjust = currentTime + this.AimAdjustDelay;
+		}
+	},
+};
+
+this.UseAimMode = this.AimModes.vehicleVelocity;
+

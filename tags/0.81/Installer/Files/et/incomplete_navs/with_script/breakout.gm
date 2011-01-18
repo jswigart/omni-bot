@@ -1,0 +1,318 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Checkpoint_bank_flag = "CHECKPOINT_bank_flag",
+	Checkpoint_shack_flag = "CHECKPOINT_shack_flag",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Embankment_Assault_Ramp = "BUILD_Embankment_Assault_Ramp",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Build_Tank_Barrier_2 = "BUILD_Tank_Barrier_2",
+	Build_Tiger_Tank = "BUILD_Tiger_Tank",
+	Build_Unexploded_Bomb = "BUILD_Unexploded_Bomb",
+	Build_Unexploded_Bomb_1 = "BUILD_Unexploded_Bomb_1",
+	Build_bunker_MG42 = "BUILD_bunker_MG42",
+	Build_crypt_door = "BUILD_crypt_door",
+	Build_tunnel_door = "BUILD_tunnel_door",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Embankment_Assault_Ramp = "PLANT_Embankment_Assault_Ramp",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_Tank_Barrier_2 = "PLANT_Tank_Barrier_2",
+	Plant_Unexploded_Bomb = "PLANT_Unexploded_Bomb",
+	Plant_bunker_MG42 = "PLANT_bunker_MG42",
+	Plant_crypt_door = "PLANT_crypt_door",
+	Plant_tunnel_door = "PLANT_tunnel_door",
+	Explode_Unexploded_Bomb = "EXPLODE_Unexploded_Bomb",
+	Mount_361 = "MOUNTMG42_361",
+	Mount_432 = "MOUNTMG42_432",
+	Mount_bunker_MG42 = "MOUNTMG42_bunker_MG42",
+	Repair_361 = "REPAIRMG42_361",
+	Repair_432 = "REPAIRMG42_432",
+	Repair_bunker_MG42 = "REPAIRMG42_bunker_MG42",
+	Mobile_MG42_78 = "MOBILEMG42_78",
+	Snipe_338 = "SNIPE_338",
+	Snipe_78 = "SNIPE_78",
+	Snipe_98 = "SNIPE_98",
+	Mover_tank = "MOVER_tank",
+
+	EscortVehicle =
+	{
+		Tank =
+		{
+			EscortVehicleGoalName = "MOVER_tank",
+			Enabled = true,
+			LimitBots = 1,
+			Offset = 
+			{
+				Vector3(15,-40,0),
+				Vector3(-15,-40,0),
+			}
+		},
+	},
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Embankment_Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Embankment_Assault_Ramp_Built" );
+	},
+
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_2_Built" );
+	},
+
+	Tiger_Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tiger_Tank_Built" );
+	},
+
+	Unexploded_Bomb_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Unexploded_Bomb_Built" );
+	},
+
+	Unexploded_Bomb_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Unexploded_Bomb_1_Built" );
+	},
+
+	bunker_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bunker_MG42_Built" );
+	},
+
+	crypt_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "crypt_door_Built" );
+	},
+
+	tunnel_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tunnel_door_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Embankment_Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Embankment_Assault_Ramp_Destroyed" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_1_Destroyed" );
+	},
+
+	Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_2_Destroyed" );
+	},
+
+	Unexploded_Bomb_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Unexploded_Bomb_Destroyed" );
+	},
+
+	bunker_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bunker_MG42_Destroyed" );
+	},
+
+	crypt_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "crypt_door_Destroyed" );
+	},
+
+	tunnel_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tunnel_door_Destroyed" );
+	},
+
+	bank_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bank_flag_Axis_Captured" );
+	},
+
+	bank_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "bank_flag_Allies_Captured" );
+	},
+
+	shack_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "shack_flag_Axis_Captured" );
+	},
+
+	shack_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "shack_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased! ^3Allied respawn time now 17 secs!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis have destroyed the Allied Command Post! ^3Allied respawn time now 20 secs!", Map.Axis_Command_Post_Built );
+	OnTrigger( "^3Allies have built the Embankment Assault Ramp!", Map.Embankment_Assault_Ramp_Built );
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.Tank_Barrier_2_Built );
+	OnTrigger( "The Tiger has been repaired!", Map.Tiger_Tank_Built );
+	OnTrigger( "MISSING_STRING", Map.Unexploded_Bomb_Built );
+	OnTrigger( "MISSING_STRING", Map.Unexploded_Bomb_1_Built );
+	OnTrigger( "^3Allies have built the bunker MG42!", Map.bunker_MG42_Built );
+	OnTrigger( "^3Axis have built the crypt door!", Map.crypt_door_Built );
+	OnTrigger( "^3Axis have built the foot tunnel door!", Map.tunnel_door_Built );
+	OnTrigger( "Axis have destroyed the Allied Command Post! ^3Allied respawn time now 20 secs!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allies have destroyed the Axis Command Post! ^3Axis respawn time now 25 secs!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "^3Axis have destroyed the Embankment Assault Ramp!", Map.Embankment_Assault_Ramp_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Tank_Barrier_2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Unexploded_Bomb_Destroyed );
+	OnTrigger( "^3Axis have destroyed the bunker MG42!", Map.bunker_MG42_Destroyed );
+	OnTrigger( "^3Allies have destroyed the crypt door!", Map.crypt_door_Destroyed );
+	OnTrigger( "^3Allies have destroyed the foot tunnel door!", Map.tunnel_door_Destroyed );
+	OnTrigger( "^3Axis have captured the Bank!", Map.bank_flag_Axis_Captured );
+	OnTrigger( "^3Allies have taken the Bank!", Map.bank_flag_Allies_Captured );
+	OnTrigger( "^3Axis have taken the Shack!", Map.shack_flag_Axis_Captured );
+	OnTrigger( "^3Allies have captured the Shack!", Map.shack_flag_Allies_Captured );
+
+	
+	ETUtil.DisableGoal(".*");
+	ETUtil.EnableGoal("CHECKPOINT_shack_flag");
+	
+	
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tiger_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_crypt_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Embankment_Assault_Ramp" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_tunnel_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_crypt_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Embankment_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	
+	Util.SetMaxUsers( 1, "BUILD.*" );
+	Util.SetMaxUsers( 1, "CAMP.*" );
+	
+	Util.SetGoalPosition( 2620.5, 3606.6, 32.125, "PLANT_Tank_Barrier_1");
+	Util.SetGoalPosition( 1175.2, 3437.9, 324.69, "PLANT_Tank_Barrier_2");
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

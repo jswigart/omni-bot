@@ -1,0 +1,82 @@
+global Map =
+{
+	Ammo_Cabinet_supply2 = "AMMO_CABINET_supply2",
+	Ammo_Cabinet_supply1 = "AMMO_CABINET_supply1",
+	Health_Cabinet_health2 = "HEALTH_CABINET_health2",
+	Health_Cabinet_health1 = "HEALTH_CABINET_health1",
+	Build_ladder = "MAP_CONSTRUCTION_ladder",
+	Build_obelisk = "MAP_CONSTRUCTION_obelisk",
+	Build_falcon_airlock = "MAP_CONSTRUCTION_falcon_airlock",
+	Build_bridge = "MAP_CONSTRUCTION_bridge",
+	Destroy_ladder = "MAP_DYNAMITE_TARGET_ladder",
+	Destroy_obelisk = "MAP_DYNAMITE_TARGET_obelisk",
+	Destroy_falcon_airlock = "MAP_DYNAMITE_TARGET_falcon_airlock",
+	Destroy_bridge = "MAP_DYNAMITE_TARGET_bridge",
+	Mount_178 = "MAP_MOUNTABLE_MG42_178",
+	Mount_122 = "MAP_MOUNTABLE_MG42_122",
+	Mount_200 = "MAP_MOUNTABLE_MG42_200",
+	Repair_200 = "MAP_REPAIR_MG42_200",
+	Repair_178 = "MAP_REPAIR_MG42_178",
+	Repair_122 = "MAP_REPAIR_MG42_122",
+	Vehicle_speederman = "MAP_MOVER_speederman",
+	Flag_w_radar_part = "MAP_FLAG_w_radar_part",
+	Flag_e_radar_part = "MAP_FLAG_e_radar_part",
+	Cappoint_Radar = "MAP_CAPPOINT_Radar",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis have built the Falcon airlock defense!", TestMap.Pass );
+		//~ OnTrigger( "MISSING_STRING", Map.obelisk_Built );
+		OnTrigger( "Allies have built the shortcut ladder!", TestMap.Pass );
+		OnTrigger( "Allies have built the bridge!", TestMap.Pass );
+		OnTrigger( "Axis have damaged the shortcut ladder!", TestMap.Pass );
+		OnTrigger( "Allies have damaged the Falcon airlock defense!", TestMap.Pass );
+		//~ OnTrigger( "MISSING_STRING", Map.obelisk_Destroyed );
+		OnTrigger( "Axis have damaged the bridge!", TestMap.Pass );
+		OnTrigger( "Allies have stolen the Falcon radar command system!", TestMap.Pass );
+		OnTrigger( "Allies have secured one of the Falcon radar components!", TestMap.Pass );
+		OnTrigger( "Allies can now use the obelisk!", TestMap.Pass );
+		OnTrigger( "Allies have stolen the Falcon radar part!", TestMap.Pass );
+		//~ OnTrigger( "Tower Speeder is heading home!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_supply2, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_supply2, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_supply1, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_supply1, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_health1, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_health1, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_health2, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_health2, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_178, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_ladder, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_obelisk, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_122, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_200, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_falcon_airlock, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_122, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_ladder, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_178, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_bridge, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_200, 120, true );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_falcon_airlock, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_e_radar_part, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Radar, 120 );
+		TestMap.AtPosition( Map.Vehicle_speederman, "Speeder Dismount", 35.0 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_speederman, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_w_radar_part, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Radar, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

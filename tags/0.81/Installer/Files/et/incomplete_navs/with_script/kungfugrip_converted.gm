@@ -1,0 +1,139 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Checkpoint_forwardflag = "CHECKPOINT_forwardflag",
+	Flag_axis_obj01 = "FLAG_axis_obj01",
+	Cappoint_84 = "CAPPOINT_84",
+
+	Switches =
+	{
+		Switch1 =
+		{
+			Debug = false,
+			Enabled = true,
+			Priority = 0.8,
+			WaypointName = "lever1",
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitBots = 1,
+			Timeout = 2000,
+		},
+	},
+
+	// Keep these movers
+	Movers =
+	{
+		"MOVER_FishMover",
+	},
+
+	axis_obj01_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_cp.*" );
+
+		if ( Map.Debug )
+			{ print( "axis_obj01_Taken" ); }
+	},
+
+	axis_obj01_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_cp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_.*" );
+
+		if ( Map.Debug )
+			{ print( "axis_obj01_Returned" ); }
+	},
+
+	axis_obj01_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "axis_obj01_Secured" ); }
+	},
+
+	forwardflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "forwardflag_Axis_Captured" ); }
+	},
+
+	forwardflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "forwardflag_Allies_Captured" ); }
+	},
+
+	dartMover1_Moving = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( trigger.Action == "opening" )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_.*" );
+			Map.Switches.Switch1.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, true, Map.Flag_axis_obj01 );
+			if ( Map.Debug )
+				{ print( "dartMover1_Moving" ); }
+		}
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Axis have stolen ^1Allied Documents!", Map.axis_obj01_Taken );
+	OnTrigger( "Flag returned axis_obj01!", Map.axis_obj01_Returned );
+	OnTrigger( "^1The Axis team has used the cd_key!", Map.axis_obj01_Secured );
+	OnTrigger( "^1Axis have captured the Forward Bunker!", Map.forwardflag_Axis_Captured );
+	OnTrigger( "^1Allies have reclaimed the Forward Bunker!", Map.forwardflag_Allies_Captured );
+	OnTrigger( "dartMover1_Moving", Map.dartMover1_Moving );
+
+	SetGoalPriority( "ATTACK_cp.*", 0.7 );
+	SetGoalPriority( "SNIPE_cp.*", 0.8 );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Flag_axis_obj01 );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_cp.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cp.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_cp.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_radiocontrol" );
+
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_sponge" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_radiocontrol" );
+
+	Util.UpdateSwitchData();
+
+	print( "Omni-bot map script for Kung Fu Grip executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.IgnoreTarget( GetGoal("MOVER_FishMover").GetEntity(), 9999 );
+};

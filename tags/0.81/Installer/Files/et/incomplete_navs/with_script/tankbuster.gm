@@ -1,0 +1,408 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_second_ammocabinet = "AMMOCAB_second_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_second_healthcabinet = "HEALTHCAB_second_healthcabinet",
+	Checkpoint_station_flag = "CHECKPOINT_station_flag",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Axis_Depot_MG42 = "BUILD_Axis_Depot_MG42",
+	Build_Bomb_Truck = "BUILD_Bomb_Truck",
+	Build_Hut_MG42 = "BUILD_Hut_MG42",
+	Build_Workshop_Door = "BUILD_Workshop_Door",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_Depot_MG42 = "PLANT_Axis_Depot_MG42",
+	Plant_Hut_MG42 = "PLANT_Hut_MG42",
+	Plant_Lorry_Wreck = "PLANT_Lorry_Wreck",
+	Plant_Workshop_Door = "PLANT_Workshop_Door",
+	Mount_Allied_Spawn_MG42_B4 = "MOUNTMG42_Allied_Spawn_MG42_B4",
+	Mount_Axis_Depot_MG42 = "MOUNTMG42_Axis_Depot_MG42",
+	Mount_Hut_MG42 = "MOUNTMG42_Hut_MG42",
+	Repair_Allied_Spawn_MG42_B4 = "REPAIRMG42_Allied_Spawn_MG42_B4",
+	Repair_Axis_Depot_MG42 = "REPAIRMG42_Axis_Depot_MG42",
+	Repair_Hut_MG42 = "REPAIRMG42_Hut_MG42",
+	Mover_train1 = "MOVER_train1",
+	Mover_train2 = "MOVER_train2",
+	Mover_truck = "MOVER_truck",
+
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			LimitBots = 2,
+			Offset =
+			{
+				Vector3(0,-40,0),
+			},
+		},
+	},
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Built" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Depot_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Depot_MG42_Built" );
+	},
+
+	Bomb_Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bomb_Truck_Built" );
+	},
+
+	Bomb_Truck_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.SetPositionGoal( Map.Build_Bomb_Truck, Map.Mover_truck );
+		Util.SetGoalOffset( 0, -20, 0, "BUILD_Bomb_Truck" );
+
+		print( "Bomb_Truck_Destroyed" );
+	},
+	
+	Hut_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Hut_MG42_Built" );
+	},
+
+	Workshop_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Workshop_Door_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_Depot_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Depot_MG42_Destroyed" );
+	},
+
+	Hut_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Hut_MG42_Destroyed" );
+	},
+
+	Lorry_Wreck_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		print( "Lorry_Wreck_Destroyed" );
+	},
+
+	Workshop_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Workshop_Door_Destroyed" );
+	},
+
+	station_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "station_flag_Axis_Captured" );
+	},
+
+	station_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "station_flag_Allies_Captured" );
+	},
+
+	truck_at_gates = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_truck );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "Build_Bomb_Truck" );
+		
+		print( "truck_at_gates" );
+	},
+	
+	gates_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		sleep(10);
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_tank.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_rails" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_station_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Workshop_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_Ramp" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Workshop_Door.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_tank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_tank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Depot_MG42" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_Depot_MG42" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_Depot_MG42" );
+		
+		print( "gates_Destroyed" );
+	},
+	
+	felsen_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_felsen" );
+
+		print( "felsen_Destroyed" );
+	},
+	
+	krumm_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_krumm" );
+
+		print( "krumm_Destroyed" );
+	},
+	
+	schnepfer_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_schnepfer" );
+
+		print( "schnepfer_Destroyed" );
+	},
+	
+	kohlmann_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_kohlmann" );
+
+		print( "kohlmann_Destroyed" );
+	},
+	
+	abgrund_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_abgrund" );
+
+		print( "abgrund_Destroyed" );
+	},
+	
+	rand_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_rand" );
+
+		print( "rand_Destroyed" );
+	},
+	
+	kuhhirt_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_kuhhirt" );
+
+		print( "kuhhirt_Destroyed" );
+	},
+	
+	kartoffel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tank_kartoffel" );
+
+		print( "kartoffel_Destroyed" );
+	},
+	
+	rails_safe = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_rails" );
+
+		print( "rails_safe" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Allies have built the Assault Ramp!", Map.Assault_Ramp_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Axis have built the Depot MG42!", Map.Axis_Depot_MG42_Built );
+	OnTrigger( "The Bomb Truck has been repaired!", Map.Bomb_Truck_Built );
+	OnTrigger( "The Bomb Truck has been damaged!", Map.Bomb_Truck_Destroyed );	
+	OnTrigger( "Allies have built the Hut MG42!", Map.Hut_MG42_Built );
+	OnTrigger( "Axis have built the secure workshop door!!", Map.Workshop_Door_Built );
+	OnTrigger( "Axis have destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "Allies have destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Depot_MG42_Destroyed );
+	OnTrigger( "Axis have destroyed the Hut MG42!!", Map.Hut_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Lorry_Wreck_Destroyed );
+	OnTrigger( "Allies have destroyed the secure workshop door!!", Map.Workshop_Door_Destroyed );
+	OnTrigger( "^3Axis have reclaimed the Station!", Map.station_flag_Axis_Captured );
+	OnTrigger( "^3Allies have captured the Station!", Map.station_flag_Allies_Captured );
+	OnTrigger( "^3The Bomb Truck is at the depot gates!!", Map.truck_at_gates );
+	OnTrigger( "^3Truck detonation signal transmitted - detonation in 10 seconds!", Map.gates_Destroyed );
+	
+	OnTrigger( "^3Jagdpanther Felsen has been destroyed!", Map.felsen_Destroyed );
+	OnTrigger( "^3Jagdpanther Krumm has been destroyed!", Map.krumm_Destroyed );
+	OnTrigger( "^3Jagdpanther Schnepfer has been destroyed!", Map.schnepfer_Destroyed );
+	OnTrigger( "^3Jagdpanther Kohlmann has been destroyed!", Map.kohlmann_Destroyed );
+	OnTrigger( "^3Jagdpanther Abgrund has been destroyed!", Map.abgrund_Destroyed );
+	OnTrigger( "^3Jagdpanther Rand has been destroyed!", Map.rand_Destroyed );
+	OnTrigger( "^3Jagdpanther Kuhhirt has been destroyed!", Map.kuhhirt_Destroyed );
+	OnTrigger( "^3Jagdpanther Kartoffel has been destroyed!", Map.kartoffel_Destroyed );
+	OnTrigger( "^3Power to live rails interrupted - rails now safe!", Map.rails_safe );
+	
+
+	ETUtil.DisableGoal(".*");
+	
+	Util.SetPositionGoal( Map.Build_Bomb_Truck, Map.Mover_truck );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_truck );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lorry_Wreck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "Build_Bomb_Truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "Plant_Axis_Command_Post*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTH.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMO.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Depot_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Depot_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_Depot_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTH.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMO.*" );
+	
+	Util.SetMaxUsersInProgress( 1, "PLANT_.*" );
+	Util.SetMaxUsersInProgress( 1, "BUILD_.*" );
+	SetGoalPriority( "BUILD_Bomb_Truck", 0.94 );
+	SetGoalPriority( "PLANT_Lorry_Wreck", 0.95 );
+	SetGoalPriority( "DEFUSE_Allied_Command_Post.*", 0.90 );
+	
+	MineField = OnTriggerRegion(AABB(534.210,2098.199,1.125,1169.149,3233.191,94.277), RegionTrigger.DisableCombatMovement);
+	
+	MapRoutes =
+	{
+		ATTACK_rails = 
+		{
+			ROUTE_flag_spawn = 
+			{
+				ROUTE_main_path = {},
+				ROUTE_side_path = {},
+			},
+		},
+		
+	};
+	
+	MapRoutes.ATTACK_tank_abgrund = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_felsen = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_rand = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_kartoffel = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_kohlmann = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_krumm = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_kuhhirt = MapRoutes.ATTACK_rails;
+	MapRoutes.ATTACK_tank_schnepfer = MapRoutes.ATTACK_rails;
+	
+	Util.Routes(MapRoutes);
+	
+	
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 30.0;
+};

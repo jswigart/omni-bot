@@ -1,0 +1,300 @@
+// This script contains functionality to allow bots respond to miscelaneous events
+
+// These parameters are required
+this.Name = "VoiceChat";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AutoAdd = true;
+this.AlwaysRecieveEvents = true;
+
+this.Initialize = function()
+{
+	// the default frequency based on a 1 to 10 scale. setting to 0 will disable
+	this.Frequency = 4; // 40% chance to respond
+
+	// allow or disallow bots to respond to other bots
+	this.OnlyRespondToHumans = false;
+
+	// optionally scale the frequency based on number of bots
+	// the frequency rate will be reduced by this number for every bot
+	// useful for servers running a lot of bots to reduce noise
+	this.FrequencyReductionPerBot = 0.1;
+
+	// optionally fine tune frequency rates per response type. setting to 0 will disable
+	this.TEAMTHANKS_SAYWELCOME 	= this.Frequency;
+	this.REVIVED_SAYTHANKS		= this.Frequency;
+	this.HEALED_SAYTHANKS		= this.Frequency;
+	this.AMMO_SAYTHANKS		= this.Frequency;
+	this.TEAMKILL_SAYSORRY		= this.Frequency;
+	this.TEAMKILL_SAYOOPS		= this.Frequency;
+	this.REVENGE_CHEER		= this.Frequency;
+	this.KNIFEKILL_CHEER		= this.Frequency;
+	this.KNIFEDEATH_GREATSHOT	= this.Frequency;
+	this.KNIFEDEATH_NEGATIVE	= this.Frequency;
+	this.TEAMPAIN_HOLDFIRE		= this.Frequency;
+	this.GOODBYE_SAYGOODBYE		= this.Frequency;
+	this.HELLO_SAYHELLO		= this.Frequency;
+	this.NEEDENG_SAYENG		= this.Frequency;
+	this.NEEDMED_SAYMED		= this.Frequency * 0.25;
+	this.NEEDOPS_SAYOPS		= this.Frequency;
+	this.BUILD_SAYBUILD		= this.Frequency;
+	this.PLANT_SAYCOVER		= this.Frequency;
+	this.DEFEND_SAYDEFEND		= this.Frequency * 0.5;
+	this.ATTACK_SAYATTACK		= this.Frequency * 0.5;
+};
+
+this.Randomize = function(frequency, isBot)
+{
+	if ( this.OnlyRespondToHumans == true && isBot != null ) {
+		return false;
+	}
+
+	if ( !frequency ) { frequency = this.Frequency; }
+
+	// scale it based on bot count
+	frequency = frequency - ( tableCount(BotTable) * this.FrequencyReductionPerBot );
+	if ( frequency < 1 && this.Frequency > 0 ) { frequency = 1; }
+
+	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
+	{
+		sleep(RandFloat(0.5, 1.0));
+		return true;
+	}
+
+	return false;
+};
+
+this.IsBot = function(ent)
+{
+	if (ent)
+	{
+		b = Util.GetBotByName(GetEntName(ent));
+		if (b) { return b; }
+	}
+
+	return null;
+};
+
+this.GetPriority = function()
+{
+	// special case for some engineer goals. note: disabled if only response is for humans
+	// signals are sent from goal_build and goal_plant once they start the goal
+	t = block(this.Bot.Name + "_construct", this.Bot.Name + "_plant", this.Bot.Name + "_defend", this.Bot.Name + "_attack");
+
+	if ( t == this.Bot.Name + "_construct"
+		&& this.Randomize(this.BUILD_SAYBUILD, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.CONST_COMMENCING);
+	}
+	else if ( t == this.Bot.Name + "_plant"
+		&& this.Randomize(this.PLANT_SAYCOVER, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.COVER_ME);
+	}
+	else if ( t == this.Bot.Name + "_defend" // from goal_rolemanager.gm
+		&& this.Randomize(this.DEFEND_SAYDEFEND, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.ON_DEFENSE);
+	}
+	else if ( t == this.Bot.Name + "_attack" // from goal_rolemanager.gm
+		&& this.Randomize(this.ATTACK_SAYATTACK, true) == true )
+	{
+		this.Bot.SayVoice(VOICE.ON_OFFENSE);
+	}
+
+	// force a delay
+	sleep(10);
+};
+
+this.Events[EVENT.TEAM_VOICE] = function(source, id)
+{
+	cls = this.Bot.GetClass();
+	isBot = this.IsBot(source);
+
+	switch(id)
+	{
+		case VOICE.THANKS:
+		{
+			if ( cls == CLASS.MEDIC || cls == CLASS.FIELDOPS
+				&& this.Randomize(this.TEAMTHANKS_SAYWELCOME, isBot) == true )
+			{
+				pos = GetEntPosition(source);
+				if ( pos && this.Bot.DistanceTo( pos ) < 80 ) {
+					this.Bot.SayVoice(VOICE.WELCOME);
+				}
+			}
+			return;
+		}
+		case VOICE.NEED_ENGINEER:
+		{
+			if ( cls == CLASS.ENGINEER && this.Randomize(this.NEEDENG_SAYENG, isBot) == true )
+			{
+				this.Bot.SayVoice(VOICE.IMA_ENGINEER);
+			}
+			return;
+		}
+		case VOICE.NEED_MEDIC:
+		{
+			if ( cls == CLASS.MEDIC && this.Randomize(this.NEEDMED_SAYMED, isBot) == true )
+			{
+				this.Bot.SayVoice(VOICE.IMA_MEDIC);
+			}
+			return;
+		}
+		case VOICE.NEED_OPS:
+		{
+			if ( cls == CLASS.COVERTOPS && this.Randomize(this.NEEDOPS_SAYOPS, isBot) == true )
+			{
+				this.Bot.SayVoice(VOICE.IMA_COVERTOPS);
+			}
+			return;
+		}
+	}
+};
+
+this.Events[EVENT.REVIVED] = function(whoDoneIt)
+{
+	isBot = this.IsBot(whoDoneIt);
+	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
+		&& this.Randomize(this.REVIVED_SAYTHANKS, isBot ) == true )
+	{
+		this.Bot.SayVoice(VOICE.THANKS);
+	}
+};
+
+this.Events[EVENT.HEALED] = function(whoDoneIt)
+{
+	isBot = this.IsBot(whoDoneIt);
+	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
+		&& this.Randomize(this.HEALED_SAYTHANKS, isBot) == true )
+	{
+		this.Bot.SayVoice(VOICE.THANKS);
+	}
+};
+
+this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
+{
+	isBot = this.IsBot(whoDoneIt);
+	if ( whoDoneIt != this.Bot.GetGameEntity()
+		&& this.Randomize(this.AMMO_SAYTHANKS, isBot) == true )
+	{
+		this.Bot.SayVoice(VOICE.THANKS);
+	}
+};
+
+this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
+{
+	isBot = this.IsBot(victim);
+
+	if ( this.Bot.KillingForRevive == true ) { return; }
+
+	if ( this.Bot.IsAllied( victim ) && victim != this.Bot.GetGameEntity() )
+	{
+		if( this.Randomize(this.TEAMKILL_SAYSORRY, isBot) == true )
+			{ this.Bot.SayVoice( VOICE.SORRY ); }
+		else if ( this.Randomize(this.TEAMKILL_SAYOOPS, isBot) == true )
+			{ this.Bot.SayVoice( VOICE.OOPS ); }
+
+		return;
+	}
+
+	// cheer the revenge
+	if ( this.LastKiller && this.LastKiller == victim )
+	{
+		if ( this.Randomize(this.REVENGE_CHEER, isBot) == true )
+		{
+			this.Bot.SayVoice( VOICE.G_CHEER );
+		}
+
+		this.LastKiller = null; // always clear this
+		return;
+	}
+
+	if ( mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN" )
+	{
+		if ( this.Randomize(this.KNIFEKILL_CHEER, isBot) == true )
+		{
+			this.Bot.SayVoice( VOICE.G_CHEER );
+		}
+
+		return;
+	}
+};
+
+this.Events[EVENT.DEATH] = function(attacker, mod)
+{
+	if ( GetGameIdFromEntity(attacker) > 63 )
+		{ return;}
+
+	isBot = this.IsBot(attacker);
+
+	if ( !this.Bot.IsAllied( attacker ) )
+	{
+		this.LastKiller = attacker;
+
+		if ( (mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN") )
+		{
+			if ( this.Randomize(this.KNIFEDEATH_GREATSHOT, isBot) == true )
+				{ this.Bot.SayVoice( VOICE.G_GREATSHOT ); }
+			else if ( this.Randomize(this.KNIFEDEATH_NEGATIVE, isBot) == true )
+				{ this.Bot.SayVoice( VOICE.G_NEGATIVE ); }
+
+			return;
+		}
+	}
+};
+
+this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
+{
+	if ( GetGameIdFromEntity(Inflictor) > 63 )
+		{ return;}
+
+	isBot = this.IsBot(Inflictor);
+	if ( isBot && isBot.KillingForRevive == true ) {
+		return;
+	}
+
+	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)
+		&& Inflictor != this.Bot.GetGameEntity()  )
+	{
+		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, isBot) == true )
+		{
+			if ( this.Bot.HasEntityFlag( ENTFLAG.DISGUISED ) )
+				{ this.Bot.SayVoice( VOICE.IMA_COVERTOPS ); }
+			else
+				{ this.Bot.SayVoice( VOICE.HOLD_FIRE ); }
+			this.responded_to_teamdamage = true;
+		}
+		else
+		{
+			this.responded_to_teamdamage = false;
+		}
+	}
+};
+
+this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
+{
+	if (this.Bot.DelayResponse) {
+		sleep(this.Bot.DelayResponse);
+		this.Bot.DelayResponse = null;
+		return;
+	}
+
+	if ( WhoSaidIt == this.Bot.GetGameEntity() ) {
+		return;
+	}
+
+	isBot = this.IsBot(WhoSaidIt);
+
+	if(VoiceId == VOICE.G_BYE
+		&& this.Randomize(this.GOODBYE_SAYGOODBYE, isBot) == true)
+	{
+		this.Bot.SayVoice(VOICE.G_BYE);
+	}
+	else if(VoiceId == VOICE.G_HI
+		&& this.Randomize(this.HELLO_SAYHELLO, isBot) == true)
+	{
+		this.Bot.SayVoice(VOICE.G_HI);
+	}
+
+	this.Bot.DelayResponse = 5;
+};

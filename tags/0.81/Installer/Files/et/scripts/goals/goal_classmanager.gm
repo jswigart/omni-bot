@@ -1,0 +1,119 @@
+// This script determines if a bot needs to change classes
+
+// These parameters are required
+this.Name = "ClassManager";
+this.Parent = "LowLevel";
+this.AutoAdd = true;
+this.AlwaysRecieveEvents = true;
+this.OnlyWhileDead = true; // if set to false, they will /kill for class changes
+
+this.Initialize = function()
+{
+	this.ClassCount = table();
+};
+
+this.UpdateClasses = function()
+{
+	// reset counters
+	foreach (class in Util.PlayerClassTable)
+	{
+		this.ClassCount[class] = 0;
+	}
+
+	// random delay (many bots can die at the same time)
+	sleep(RandFloat(0, 0.5));
+
+	// count humans too
+	for ( i = 0; i <= Server.NumPlayers; i += 1 )
+	{
+		if (EntityIsValid(i) && GetEntTeam(i) == this.Team)
+		{
+			class = GetEntClass(i);
+			if (class)
+			{
+				if (this.ClassCount[class] < 1)
+				{
+					this.ClassCount[class] = 1;
+				}
+				else
+				{
+					this.ClassCount[class] += 1;
+				}
+			}
+		}
+	}
+};
+
+this.EvaluateClass = function(class, num)
+{
+	min = Server.MinClassCount[this.Team][class];
+	if (!min)
+	{
+		min = -99; // get rid of 0 min count classes first
+	}
+	if (!num)
+	{
+		num = -20; // prioritize classes that have no players
+		if (class==CLASS.ENGINEER){ num -= 1; }
+	}
+	return min-num;
+};
+
+this.EvalClassChange = function()
+{
+	if ( TestMapOn || DisableClassManager || TestBot )
+	{
+		return false;
+	}
+
+	// update class counts
+	this.Team = this.Bot.GetTeam();
+	this.UpdateClasses();
+
+	//evaluate this bot
+	botClass = this.Bot.GetClass();
+	botEval = this.EvaluateClass(botClass, this.ClassCount[botClass] - 1);
+
+	//evaluate all classes
+	newClass = null;
+	foreach ( class and num in this.ClassCount )
+	{
+		if (class!=botClass) // don't change to same class
+		{
+			eval = this.EvaluateClass(class, num);
+			if (eval > botEval)
+			{
+				botEval = eval;
+				newClass = class;
+			}
+		}
+	}
+	if (newClass)
+	{
+		// cs: this must come before the class change call to prevent them from /killing next spawn
+		if (this.TapOut) {
+			this.Bot.ExecCommand("kill");
+			this.TapOut = false;
+		}
+
+		this.Bot.ChangeClass(newClass);
+	}
+};
+
+this.GetPriority = function()
+{
+	sleep(1); // at map start all bots are returning class.soldier, so delay it a bit.
+
+	// cs: let them /kill in warmup so transitions from snipe or panzer maps wont take forever for correct classes to be used
+	if ( !this.OnlyWhileDead || GetGameState() != "Playing" ) {
+		this.EvalClassChange();
+	}
+
+	sleep(4);
+};
+
+this.Events[EVENT.DEATH] = function(attacker, mod)
+{
+	this.TapOut = true;
+	this.EvalClassChange();
+};

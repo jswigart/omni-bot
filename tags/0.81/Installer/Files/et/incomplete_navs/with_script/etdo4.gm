@@ -1,0 +1,164 @@
+global Map =
+{
+	Switches =
+	{
+		door1 =
+		{
+			WaypointName = "door1",
+			LimitTeam = 0, 
+			LimitClass = 0,
+			LimitBots = 8,
+			Enabled = true,
+			
+		},
+		
+	},
+	Ammo_Cabinet_t1075 = "AMMOCAB_t1075",
+	Ammo_Cabinet_t1084 = "AMMOCAB_t1084",
+	Health_Cabinet_t1083 = "HEALTHCAB_t1083",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Checkpoint_twc_forward_bunker = "CHECKPOINT_twc_forward_bunker",
+	Build_Allies_Command_Post = "BUILD_Allies_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Plant_Allies_Command_Post = "PLANT_Allies_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Depot_Defense = "PLANT_Depot_Defense",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Plant_Operation_Board = "PLANT_Operation_Board",
+	Plant_Side_Door = "PLANT_Side_Door",
+	Mount_17 = "MOUNTMG42_17",
+	Mount_30 = "MOUNTMG42_30",
+	Mount_547 = "MOUNTMG42_547",
+	Mount_560 = "MOUNTMG42_560",
+	Repair_17 = "REPAIRMG42_17",
+	Repair_30 = "REPAIRMG42_30",
+	Repair_547 = "REPAIRMG42_547",
+	Repair_560 = "REPAIRMG42_560",
+	Snipe_522 = "SNIPE_522",
+	Snipe_531 = "SNIPE_531",
+
+	Allies_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Allies_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Depot_Defense_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Depot_Defense_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	Operation_Board_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Operation_Board_Destroyed" );
+	},
+
+	Side_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Door_Destroyed" );
+	},
+
+	twc_forward_bunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Axis_Captured" );
+	},
+
+	twc_forward_bunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "twc_forward_bunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allies_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Allies_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Depot_Defense_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Operation_Board_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.twc_forward_bunker_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.twc_forward_bunker_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_547" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_560" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_632" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_641" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allies_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
+	SetMapGoalProperties( "SNIPE_522", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "SNIPE_531", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_def1", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_def2", {mincamptime=30, maxcamptime=200});
+	
+	Util.UpdateSwitchData();
+
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 800.0;
+};

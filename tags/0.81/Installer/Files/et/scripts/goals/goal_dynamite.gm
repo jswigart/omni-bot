@@ -1,0 +1,278 @@
+// This script contains functionality to allow bots to blindly dynamite a location
+
+this.Name = "DYNAMITE";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+this.LimitToClass(CLASS.ENGINEER);
+
+
+// define some goal states
+this.LAY_EXPLOSIVE = 0;
+this.ARM_EXPLOSIVE = 1;
+this.COVER_DYNAMITE = 2;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+		{
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,"DYNAMITE_.*");
+			if ( count > 0 )
+			{
+				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				{
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
+			}
+
+			tableClear(this.Bot.QueryGoalsTable);
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.GoalState = this.LAY_EXPLOSIVE;
+	this.ExplosiveEntity = null;
+
+	this.Goal_Name = this.MapGoal.GetName();
+	this.Goal_Position = this.MapGoal.GetPosition();
+
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+
+	this.UpdateDebugString();
+};
+
+this.Update = function()
+{
+	// cs: if they fired a rifle nade on the way, they lose charge
+	if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+	{
+		Util.MapDebugPrint( this.MapGoal.GetName() + " aborting, no charge", true );
+		this.Finished();
+	}
+
+	if ( this.RouteTo(this.MapGoal, 64.0) == EVENT.PATH_SUCCESS )
+	{
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		this.UpdateDynamite();
+	}
+	else
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+	}
+
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.PRONE, BTN.CROUCH);
+	this.ReleaseAimRequest();
+	this.ReleaseWeaponRequest();
+
+	this.GoalState = this.LAY_EXPLOSIVE;
+	this.ExplosiveEntity = null;
+
+	// clear the occupied flag
+	if ( typeId(this.spotIndex) != 0 ) {
+		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+	}
+};
+
+this.UpdateDynamite = function()
+{
+	hasCoverSpot = false;
+	aimVectors = null;
+	this.spotIndex = null;
+	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
+
+	while(1)
+	{
+		switch(this.GoalState)
+		{
+			case this.LAY_EXPLOSIVE:
+			{
+				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+				{
+					this.Finished();
+				}
+
+				this.Priority = 2.0;
+
+				// for voice chat 'cover me'
+				signal(this.Bot.Name + "_plant");
+
+				this.AddAimRequest(Priority.High, "position", this.Bot.GetPosition());
+				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
+				this.Bot.HoldButton(BTN.CROUCH, 99);
+				this.BlockForWeaponChange( WEAPON.DYNAMITE );
+				this.Bot.PressButton(BTN.ATTACK1);
+			}
+			case this.ARM_EXPLOSIVE:
+			{
+				this.UpdateDebugString();
+
+				if ( !EntityIsValid(this.ExplosiveEntity) )
+				{
+					this.Finished();
+				}
+
+				this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
+				this.BlockForWeaponChange( WEAPON.PLIERS );
+
+				while ( EntityIsValid(this.ExplosiveEntity) && this.Bot.GetExplosiveState(this.ExplosiveEntity) == 1 )
+				{
+					dynoPosition = GetEntPosition(this.ExplosiveEntity);
+					this.AddAimRequest(Priority.High, "position", dynoPosition);
+					this.Bot.MoveTowards(dynoPosition);
+					this.Bot.PressButton(BTN.ATTACK1);
+					yield();
+				}
+
+				this.BlackboardDelay(35, this.MapGoal);
+
+				this.Bot.ReleaseButton(BTN.CROUCH);
+
+				if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 )
+				{
+					this.ReleaseWeaponRequest();
+					this.ReleaseAimRequest();
+					this.GoalState = this.COVER_DYNAMITE;
+				}
+				else
+				{
+					this.Finished();
+				}
+			}
+			case this.COVER_DYNAMITE:
+			{
+				this.UpdateDebugString();
+
+				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
+				{
+					this.Finished();
+				}
+
+				// pick a cover spot
+				if (!hasCoverSpot) {
+
+					// only one per spot. iterate through all since 'break' exits the while loop
+					foreach ( id and spot in this.MapGoal.CoverSpots ) {
+						if ( typeId(this.spotIndex) != 0 || spot.occupied ) {
+							continue;
+						}
+						else {
+							spot.occupied = true;
+							this.spotIndex = id;
+						}
+					}
+
+					// no more cover spots available
+					if (typeId(this.spotIndex) == 0) { this.Finished(); }
+
+					if ( this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors) > 0 ) {
+						aimVectors = this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors;
+						hasCoverSpot = true;
+					}
+					else {
+						Util.MapDebugPrint(this.Goal_Name, ": Cover Spot has no AimVectors!");
+						this.Finished();
+					}
+
+					this.Goto(this.MapGoal.CoverSpots[ this.spotIndex ].position, 32.0);
+
+					switch (this.MapGoal.CoverSpots[ this.spotIndex ].stance)
+					{
+						case "crouch":
+						{
+							this.Bot.HoldButton(BTN.CROUCH, 99);
+						}
+						case "prone":
+						{
+							this.Bot.HoldButton(BTN.PRONE, 99);
+						}
+					}
+				}
+
+				r = Util.GetRandomFromTable(aimVectors);
+				this.AddAimRequest(Priority.Low, "facing", aimVectors[ r ]);
+
+				sleep(0.75);
+
+				coverTimeout -= 1;
+				if ( coverTimeout <= 0 ) {
+					this.Finished();
+				}
+			}
+			default:
+			{
+				this.Finished();
+			}
+		}
+
+		sleep(0.25);
+	}
+};
+
+this.UpdateDebugString = function()
+{
+	stateString = "";
+
+	switch(this.GoalState)
+	{
+		case this.LAY_EXPLOSIVE:
+		{
+			stateString = "LAY_EXPLOSIVE";
+		}
+		case this.ARM_EXPLOSIVE:
+		{
+			stateString = "ARM_EXPLOSIVE";
+		}
+		case this.COVER_DYNAMITE:
+		{
+			stateString = "COVER_DYNAMITE";
+		}
+		default:
+		{
+			stateString = "";
+		}
+	}
+
+	// for /bot debugbot <bot or all> fpinfo prints
+	this.DebugString = this.Goal_Name + " : " + stateString;
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	switch(weaponId)
+	{
+		case WEAPON.DYNAMITE:
+		{
+			this.ExplosiveEntity = projectileEntity;
+			this.GoalState = this.ARM_EXPLOSIVE;
+		}
+		default:
+		{
+		}
+	}
+};
+

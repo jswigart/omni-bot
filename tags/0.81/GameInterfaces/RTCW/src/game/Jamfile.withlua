@@ -1,0 +1,29 @@
+# The server library.
+
+project game
+	: requirements <define>GAMEDLL 
+	: requirements <define>WITH_LUA
+	: requirements <variant>debug:<define>DEBUG
+	: requirements <include>../../../../Omnibot/Common
+	: requirements <include>../../../../Omnibot/RTCW
+	: requirements <include>../lua
+	: requirements <include>../sqlite
+	: requirements <include>../sha-1
+	;
+
+lib lua_lib : : <file>../lua/libs/unix/liblua5.1.a ;
+alias lua : lua_lib : <link>static ;
+
+SOURCES = [ glob bg_*.c ]
+		  [ glob g_*.c ]
+                  [ glob et-*.c ]
+		  [ glob g_*.cpp ]
+		  [ glob ../sqlite/*.c ]
+		  [ glob ../sha-1/sha1.c ]
+		  [ glob ../../../../Omnibot/Common/BotLoadLibrary.cpp ]
+		  q_math.c
+		  q_shared.c
+		;
+
+lib qagame.mp.i386.so : $(SOURCES) ..//dl_lib lua : <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing ;
+

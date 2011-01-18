@@ -1,0 +1,200 @@
+global _MG = 
+{
+	CAMP_dz1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.019, 1.000, -0.014),
+			[1] = Vec3(0.971, 0.239, -0.026),
+			[2] = Vec3(-0.849, 0.529, -0.023),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz1",
+		Orientation = Vec3(0.019, -0.014, 0.000),
+		Position = Vec3(331.111, -645.839, 191.250),
+		Radius = 32,
+		SerialNum = 33,
+		Stance = "stand",
+		TagName = "dz1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.028, -1.000, 0.012),
+			[1] = Vec3(-0.562, -0.827, 0.005),
+			[2] = Vec3(-0.984, -0.157, -0.080),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz2",
+		Orientation = Vec3(-3.113, 0.012, -0.000),
+		Position = Vec3(257.601, 592.962, 191.250),
+		Radius = 32,
+		SerialNum = 35,
+		Stance = "stand",
+		TagName = "dz2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.895, 0.326, -0.305),
+			[1] = Vec3(-0.252, 0.929, -0.271),
+			[2] = Vec3(0.655, 0.756, -0.005),
+			[3] = Vec3(-0.236, -0.972, -0.015),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz3",
+		Orientation = Vec3(1.221, -0.309, 0.000),
+		Position = Vec3(419.770, -419.917, 383.250),
+		Radius = 32,
+		SerialNum = 37,
+		Stance = "stand",
+		TagName = "dz3",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz4 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.603, -0.756, -0.255),
+			[1] = Vec3(0.999, 0.040, 0.002),
+			[2] = Vec3(0.653, -0.758, -0.002),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz4",
+		Orientation = Vec3(-2.468, -0.258, -0.000),
+		Position = Vec3(-497.045, 291.040, 383.250),
+		Radius = 32,
+		SerialNum = 39,
+		Stance = "stand",
+		TagName = "dz4",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEADZONE_trigger_controlzone_2 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "DEADZONE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "DEADZONE_trigger_controlzone_2",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		PatrolPoints = 
+		{
+			[0] = Vec3(378.802, -438.997, 192.250),
+			[1] = Vec3(-376.617, -147.379, 192.250),
+			[2] = Vec3(192.619, 303.038, 192.250),
+		},
+		Position = Vec3(296.000, -352.000, 272.000),
+		Radius = 0,
+		SerialNum = 27,
+		TagName = "trigger_controlzone_2",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	DEADZONE_trigger_hurt_1 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "DEADZONE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "DEADZONE_trigger_hurt_1",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		PatrolPoints = 
+		{
+		},
+		Position = Vec3(-1360.000, -2064.000, -256.000),
+		Radius = 0,
+		SerialNum = 23,
+		TagName = "trigger_hurt_1",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	DEADZONE_trigger_hurt_4 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "DEADZONE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "DEADZONE_trigger_hurt_4",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		PatrolPoints = 
+		{
+		},
+		Position = Vec3(2368.000, 1424.000, -288.000),
+		Radius = 0,
+		SerialNum = 25,
+		TagName = "trigger_hurt_4",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	FLAG_powerup_deadzone_5 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_powerup_deadzone_5",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(2080.000, 928.000, 208.282),
+		Radius = 0,
+		SerialNum = 29,
+		TagName = "powerup_deadzone_5",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	FLAG_powerup_deadzone_6 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_powerup_deadzone_6",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-1152.000, -1536.000, 20.427),
+		Radius = 0,
+		SerialNum = 31,
+		TagName = "powerup_deadzone_6",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

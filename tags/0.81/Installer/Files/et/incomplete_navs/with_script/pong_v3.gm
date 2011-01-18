@@ -1,0 +1,347 @@
+global Map =
+{
+	Ammo_Cabinet_ammocabinet = "AMMOCAB_ammocabinet",
+	Ammo_Cabinet_ammocabinet_1 = "AMMOCAB_ammocabinet_1",
+	Health_Cabinet_healthcabinet = "HEALTHCAB_healthcabinet",
+	Health_Cabinet_healthcabinet_1 = "HEALTHCAB_healthcabinet_1",
+	Build_allied_wall_piece = "BUILD_allied_wall_piece",
+	Build_allied_wall_piece_1 = "BUILD_allied_wall_piece_1",
+	Build_allied_wall_piece_2 = "BUILD_allied_wall_piece_2",
+	Build_allied_wall_piece_3 = "BUILD_allied_wall_piece_3",
+	Build_allied_wall_piece_4 = "BUILD_allied_wall_piece_4",
+	Build_allied_wall_piece_5 = "BUILD_allied_wall_piece_5",
+	Build_allied_wall_piece_6 = "BUILD_allied_wall_piece_6",
+	Build_allied_wall_piece_a8 = "BUILD_allied_wall_piece_a8",
+	Build_axis_wall_piece = "BUILD_axis_wall_piece",
+	Build_axis_wall_piece_1 = "BUILD_axis_wall_piece_1",
+	Build_axis_wall_piece_2 = "BUILD_axis_wall_piece_2",
+	Build_axis_wall_piece_3 = "BUILD_axis_wall_piece_3",
+	Build_axis_wall_piece_4 = "BUILD_axis_wall_piece_4",
+	Build_axis_wall_piece_5 = "BUILD_axis_wall_piece_5",
+	Build_axis_wall_piece_6 = "BUILD_axis_wall_piece_6",
+	Build_axis_wall_piece_7 = "BUILD_axis_wall_piece_7",
+	Plant_allied_wall_piece = "PLANT_allied_wall_piece",
+	Plant_allied_wall_piece_1 = "PLANT_allied_wall_piece_1",
+	Plant_allied_wall_piece_2 = "PLANT_allied_wall_piece_2",
+	Plant_allied_wall_piece_3 = "PLANT_allied_wall_piece_3",
+	Plant_allied_wall_piece_4 = "PLANT_allied_wall_piece_4",
+	Plant_allied_wall_piece_5 = "PLANT_allied_wall_piece_5",
+	Plant_allied_wall_piece_6 = "PLANT_allied_wall_piece_6",
+	Plant_allied_wall_piece_a8 = "PLANT_allied_wall_piece_a8",
+	Plant_axis_wall_piece = "PLANT_axis_wall_piece",
+	Plant_axis_wall_piece_1 = "PLANT_axis_wall_piece_1",
+	Plant_axis_wall_piece_2 = "PLANT_axis_wall_piece_2",
+	Plant_axis_wall_piece_3 = "PLANT_axis_wall_piece_3",
+	Plant_axis_wall_piece_4 = "PLANT_axis_wall_piece_4",
+	Plant_axis_wall_piece_5 = "PLANT_axis_wall_piece_5",
+	Plant_axis_wall_piece_6 = "PLANT_axis_wall_piece_6",
+	Plant_axis_wall_piece_7 = "PLANT_axis_wall_piece_7",
+
+	allied_wall_piece_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_Built" );
+	},
+
+	allied_wall_piece_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_1_Built" );
+	},
+
+	allied_wall_piece_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_2_Built" );
+	},
+
+	allied_wall_piece_3_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_3_Built" );
+	},
+
+	allied_wall_piece_4_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_4_Built" );
+	},
+
+	allied_wall_piece_5_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_5_Built" );
+	},
+
+	allied_wall_piece_6_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_6_Built" );
+	},
+
+	allied_wall_piece_a8_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_a8_Built" );
+	},
+
+	axis_wall_piece_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_Built" );
+	},
+
+	axis_wall_piece_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_1_Built" );
+	},
+
+	axis_wall_piece_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_2_Built" );
+	},
+
+	axis_wall_piece_3_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_3_Built" );
+	},
+
+	axis_wall_piece_4_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_4_Built" );
+	},
+
+	axis_wall_piece_5_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_5_Built" );
+	},
+
+	axis_wall_piece_6_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_6_Built" );
+	},
+
+	axis_wall_piece_7_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_7_Built" );
+	},
+
+	allied_wall_piece_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_Destroyed" );
+	},
+
+	allied_wall_piece_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_1_Destroyed" );
+	},
+
+	allied_wall_piece_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_2_Destroyed" );
+	},
+
+	allied_wall_piece_3_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_3_Destroyed" );
+	},
+
+	allied_wall_piece_4_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_4_Destroyed" );
+	},
+
+	allied_wall_piece_5_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_5_Destroyed" );
+	},
+
+	allied_wall_piece_6_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_6_Destroyed" );
+	},
+
+	allied_wall_piece_a8_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_wall_piece_a8_Destroyed" );
+	},
+
+	axis_wall_piece_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_Destroyed" );
+	},
+
+	axis_wall_piece_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_1_Destroyed" );
+	},
+
+	axis_wall_piece_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_2_Destroyed" );
+	},
+
+	axis_wall_piece_3_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_3_Destroyed" );
+	},
+
+	axis_wall_piece_4_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_4_Destroyed" );
+	},
+
+	axis_wall_piece_5_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_5_Destroyed" );
+	},
+
+	axis_wall_piece_6_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_6_Destroyed" );
+	},
+
+	axis_wall_piece_7_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_wall_piece_7_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_1_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_2_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_3_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_4_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_5_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_6_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_a8_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_1_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_2_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_3_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_4_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_5_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_6_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_7_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_3_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_4_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_5_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_6_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_wall_piece_a8_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_3_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_4_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_5_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_6_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_wall_piece_7_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,224 @@
+//This script was made by Corn
+
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	barrier_1_Dyno = 0,
+	barrier_2_Dyno = 0,
+	stairs_Dyno = 0,
+
+	barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_barrier_1" );
+		Util.MapDebugPrint( "barrier_1_Built" );
+	},
+
+	barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_barrier_2" );
+		Util.MapDebugPrint( "barrier_2_Built" );
+	},
+
+	stairs_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_stairs" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_steal" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_stairs" );
+		Util.MapDebugPrint( "stairs_Built" );
+	},
+
+	barrier_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_barrier_1" );
+		Util.MapDebugPrint( "barrier_1_Planted" );
+	},
+
+	barrier_2_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_barrier_2" );
+		Util.MapDebugPrint( "barrier_2_Planted" );
+	},
+
+	stairs_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_stairs" );
+		Util.MapDebugPrint( "stairs_Planted" );
+	},
+
+	barrier_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_barrier_1" );
+		Util.MapDebugPrint( "barrier_1_Defused" );
+	},
+
+	barrier_2_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_barrier_2" );
+		Util.MapDebugPrint( "barrier_2_Defused" );
+	},
+
+	stairs_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_stairs" );
+		Util.MapDebugPrint( "stairs_Defused" );
+	},
+
+	barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_barrier_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_barrier_1" );
+
+		Util.MapDebugPrint( "barrier_1_Destroyed" );
+	},
+
+	barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_barrier_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_barrier_2" );
+
+		Util.MapDebugPrint( "barrier_2_Destroyed" );
+	},
+
+	stairs_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_stairs" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_stairs" );
+
+		Util.MapDebugPrint( "stairs_Destroyed" );
+	},
+
+	steal_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals ( TEAM.ALLIES, true, "CAPPOINT_165" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_steal" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_truck" );
+		Util.MapDebugPrint( "steal_Taken" );
+	},
+
+	steal_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals ( TEAM.ALLIES, false, "CAPPOINT_165" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_steal" );
+		Util.MapDebugPrint( "steal_Returned" );
+	},
+
+	steal_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.MapDebugPrint( "steal_Secured - Allies Win!!" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis team has built barrier 1!", Map.barrier_1_Built );
+	OnTrigger( "Axis team has built barrier 2!", Map.barrier_2_Built );
+	OnTrigger( "Allied team has built the stairs !", Map.stairs_Built );
+	OnTrigger( "Planted at barrier 1.", Map.barrier_1_Planted );
+	OnTrigger( "Planted at barrier 2.", Map.barrier_2_Planted );
+	OnTrigger( "Planted at the stairs.", Map.stairs_Planted );
+	OnTrigger( "Defused at barrier 1.", Map.barrier_1_Defused );
+	OnTrigger( "Defused at barrier 2.", Map.barrier_2_Defused );
+	OnTrigger( "Defused at the stairs.", Map.stairs_Defused );
+	OnTrigger( "Allied team has destroyed barrier 1!", Map.barrier_1_Destroyed );
+	OnTrigger( "Allied team has destroyed barrier 2!", Map.barrier_2_Destroyed );
+	OnTrigger( "Axis team has destroyed the stairs!", Map.stairs_Destroyed );
+	OnTrigger( "The allies has stolen the gold", Map.steal_Taken );
+	OnTrigger( "The gold has been returned", Map.steal_Returned );
+	OnTrigger( "The allies has captured the gold !!!!!", Map.steal_Secured );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_20" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_20" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_134" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_134" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_stairs" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_233" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 2, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=30, MaxCampTime=90} );
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=50} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND );
+			print( "Changed Bot's weapon to M1 Garand" ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 );
+			print( "Changed Bot's weapon to K43" ); }
+	};
+};

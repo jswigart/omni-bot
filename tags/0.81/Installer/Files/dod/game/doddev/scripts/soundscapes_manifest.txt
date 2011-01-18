@@ -1,0 +1,13 @@
+soundscapes_manifest
+{
+		"file"		"scripts/soundscapes_colmar.txt"
+		"file"		"scripts/soundscapes_kalt.txt"
+		"file"		"scripts/soundscapes_flash.txt"
+		"file"		"scripts/soundscapes_anzio.txt"
+		"file"		"scripts/soundscapes_avalanche.txt"
+		"file"		"scripts/soundscapes_donner.txt"	
+		"file"		"scripts/soundscapes_argentan.txt"
+		"file"		"scripts/soundscapes_jagd.txt"
+		"file"		"scripts/soundscapes_dod_palermo.txt"
+		// List additional soundscape files here
+}

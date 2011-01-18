@@ -1,0 +1,224 @@
+// Default DOD Bot Profile
+print( "Initializing Difficulties" );
+
+// The default starting difficulty
+global CurrentDifficulty = 3;
+global AdjustAim = true;
+
+// This script only defines 6 total difficulty levels (0-5). It isn't limited to 6 though, and can be easily set up with more.
+global difficulties = 
+{
+	// Difficulty 0
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 4.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 17,
+		AimErrorY = 17,
+		AimOffsetX = 0,
+		AimOffsetY = -10,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 1
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 3.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 15,
+		AimErrorY = 15,
+		AimOffsetX = 0,
+		AimOffsetY = -10,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 2
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 2.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 10,
+		AimErrorY = 10,
+		AimOffsetX = 0,
+		AimOffsetY = -7,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 3
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 1.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 7,
+		AimErrorY = 7,
+		AimOffsetX = 0,
+		AimOffsetY = -7,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 4
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 0.75,
+		MemorySpan = 2.5,
+		AimPersistance = 1.5,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 5,
+		AimErrorY = 5,
+		AimOffsetX = 0,
+		AimOffsetY = -5,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 5
+	{
+		FieldOfView = 100.0,
+		ReactionTime = 0.5,
+		MemorySpan = 3.0,
+		AimPersistance = 2.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 5,
+		AimErrorY = 5,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = 0,
+	},
+	// Difficulty uber
+	uber = 
+	{
+		FieldOfView = 105.0,
+		ReactionTime = 0.0,
+		MemorySpan = 5.0,
+		AimPersistance = 5.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 0,
+		AimErrorY = 0,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = 0,
+	},
+};
+
+// debug display flag
+global difficulties_Debug = true;
+
+// A helper function that sets a bot up with the current difficulty settings.
+difficulties.InitBotDifficultyProperties = function(bot)
+{
+	Debug = false;
+	
+	if(difficulties[CurrentDifficulty])
+	{
+		bot.FieldOfView = difficulties[CurrentDifficulty].FieldOfView;
+		bot.ReactionTime = difficulties[CurrentDifficulty].ReactionTime;
+		bot.MemorySpan = difficulties[CurrentDifficulty].MemorySpan;
+		bot.AimPersistance = difficulties[CurrentDifficulty].AimPersistance;
+		bot.MaxTurnSpeed = difficulties[CurrentDifficulty].MaxTurnSpeed;
+		bot.AimStiffness = difficulties[CurrentDifficulty].AimStiffness;
+		bot.AimDamping = difficulties[CurrentDifficulty].AimDamping;
+
+		if ( AdjustAim )
+			{ difficulties.AdjustWeaponProperties(bot); }
+		
+		if ( Debug )
+		{
+			print("Current Difficulty", CurrentDifficulty);
+			print("Difficulty FOV", bot.FieldOfView);
+			print("Difficulty ReactionTime", bot.ReactionTime);
+			print("Difficulty MemorySpan", bot.MemorySpan);
+			print("Difficulty AimPersistance", bot.AimPersistance);
+			print("Difficulty MaxTurnSpeed", bot.MaxTurnSpeed);
+			print("Difficulty AimStiffness", bot.AimStiffness);
+			print("Difficulty AimDamping", bot.AimDamping);
+		}
+	}
+	else
+	{
+		print("Invalid Current Difficulty", CurrentDifficulty);	
+	}
+};
+
+// A helper function that sets aim offsets for weapons
+difficulties.AdjustWeaponProperties = function(bot)
+{	
+	Debug_weaps = false;
+
+	AdjustableWeapons = 
+	{
+	};
+	foreach ( id and weap in AdjustableWeapons )
+	{
+		w = bot.GetWeapon(weap);
+		if ( w ) 
+		{
+			errorX = difficulties[CurrentDifficulty].AimErrorX;
+			errorY = difficulties[CurrentDifficulty].AimErrorY;
+			offsetX = difficulties[CurrentDifficulty].AimOffsetX;
+			offsetY = difficulties[CurrentDifficulty].AimOffsetY;
+			offsetZ = difficulties[CurrentDifficulty].AimOffsetZ;
+
+			w.PrimaryFire.MaxAimError = Vector2(errorX, errorY);
+			w.PrimaryFire.AimOffset = Vector3(offsetX, offsetY, offsetZ);
+			
+			if ( Debug_weaps )
+			{
+				print(w.Name, "weapon properties set");
+				print("offset:", w.PrimaryFire.AimOffset);
+				print("error:", w.PrimaryFire.MaxAimError);
+			}
+			
+			//return;
+		}
+	}
+};
+
+// Register a command that can be used to change the difficulty in-game
+// Example usage:
+//	bot difficulty 1
+//	bot difficulty uber
+Commands["difficulty"] = function(_params)
+{
+	if(_params[0] != null)
+	{
+		// Check if this difficulty level exists.
+		if(difficulties[_params[0]])
+		{
+			global CurrentDifficulty = _params[0];
+			
+			foreach ( gameId and bot in BotTable )
+			{
+				if(bot)
+				{
+					difficulties.InitBotDifficultyProperties(bot);
+				}                     
+			}
+			
+			print("Difficulty Changed", CurrentDifficulty);
+		}
+		else
+		{
+			print("Difficulty level not found", _params[0]);
+		}
+	}
+	
+	print("Difficulty:", CurrentDifficulty);
+};
+
+print( "Initializing Difficulties Complete" );

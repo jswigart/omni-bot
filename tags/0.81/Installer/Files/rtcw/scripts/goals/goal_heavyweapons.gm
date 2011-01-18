@@ -1,0 +1,92 @@
+// This script provides functionality for better weapon handling for soldiers
+
+// These parameters are required
+this.Name = "HeavyWeapons";	// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.LimitToClass(CLASS.SOLDIER);
+this.LimitToNoTarget(); // let weapon system take over when they have a target
+this.LimitToNoEntityFlag(ENTFLAG.ON_LADDER, ENTFLAG.MNT_MG42);
+
+this.Initialize = function()
+{
+	this.AmmoInfo = {};
+	this.Toggle = 0;
+};
+
+this.GetPriority = function()
+{
+	if (this.Bot.GetVelocity().IsZero() && !this.Bot.IsStuck()){
+		this.Priority = 0.5;
+	}
+	
+	sleep(1);
+};
+
+this.OnSpawn = function()
+{
+	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST))
+	{
+		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
+		sleep(1);
+		this.ReleaseWeaponRequest();
+	}
+};
+
+this.Update = function()
+{
+	if (!this.Bot.GetVelocity().IsZero()){
+		this.Finished();
+	}	
+	
+	this.CheckSoldierWeapon();
+	sleep(0.25);
+};
+
+this.CheckSoldierWeapon = function()
+{
+	if (!this.CheckAmmo){
+		return;
+	}
+	
+	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){ 
+		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST ); 
+	}
+	else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){ 
+		this.AddWeaponRequest(Priority.Low, WEAPON.VENOM );
+		this.BlockForWeaponChange(WEAPON.VENOM);
+		
+		this.SpinVenom();
+	}	
+	else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){ 
+		this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER ); 
+	}
+	else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){ 
+		this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER ); 
+	}
+};
+
+this.CheckAmmo = function()
+{
+	this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
+	
+	if(this.AmmoInfo.Desire > 0.9){
+		return false;
+	}
+	
+	return true;
+};
+
+this.SpinVenom = function()
+{
+	if(this.Toggle == 1) {
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		this.Toggle = 0;
+	}
+	else {
+		this.Toggle = 1;
+	}
+};
+
+
+ 

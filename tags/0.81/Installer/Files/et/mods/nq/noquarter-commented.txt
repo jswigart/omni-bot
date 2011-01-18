@@ -1,0 +1,776 @@
+// No Quarter 1.2.9 config descriptions
+// Visit www.shitstorm.org/noquarter for more documentation.
+
+// ********************************************************
+// **** This file is for reference only! DO NOT USE!   ****
+// ****         USE 'noquarter.cfg' INSTEAD !!!        ****
+// ********************************************************
+
+
+//////////////////
+//* Omni-Bots * //
+//////////////////
+
+// Omnibot_Enable - Enables omnibots. Requires Omnibot 0.71 installation
+set Omnibot_Enable 0
+
+// Omnitbot_Path - The path to the directory containing omnibot_et binary file.
+set Omnibot_Path ""
+
+// Various flags affecting the behaviour of bots.
+// 1  - Disable XPSave for bots
+// 2  - Bots cannot mount tanks
+// 4  - Bots cannot mount emplaced guns
+// 8  - Don't count bots (this affects the value of the cvar 'omnibot_playing' which contains the number of bots playing or -1 if this flag is set)
+// 16 - Bots will gib dead players, so they can no longer be revived (New in 1.2.7) 
+set Omnibot_Flags 0
+
+// *********************  ETMAIN  *************************
+
+////////////////////////////////
+//* Warmup                  * //
+////////////////////////////////
+// set g_doWarmup 0
+// set g_warmup 30
+
+////////////////////////////////
+//* Team Bleed Restrictions * //
+////////////////////////////////
+
+// When greater than 0, anybody that has this percentage of hits inflicted on a teammate will automatically be kicked. A minimum of g_minhits hits total required before this is calculated.
+// Client can see current stats for themselves by doing a /damage in console. Implemented to mimic shrub behavior as much as is possible, there are other ways to implement this feature, which may be implemented in addition to current manner. Default is 0.
+//NOTE: Shrubbot flag "1" (Player cannot be vote-kicked, vote-muted, or complained against.) overwrite this settings.
+// set g_teamDamageRestriction 0
+
+// Minimum number of damaging hits required before calculating if player has reached g_teamDamageRestriction threshold. Flamethrower and landmine hits are adjusted similar to shrub. Medics get -2 hits for every revive. Default is 6.
+// set g_minHits 6
+
+//////////////////////
+//* Advanced Kick * //
+//////////////////////
+
+//When set, anyone kicked for the reasons you specify, will be temporarily banned for g_autoTempBanTime seconds. Default is 0.
+// 1 - Tempban when reaching g_teamDamageRestriction
+// 2 - Tempban when someone is kicked by a shrubbot admin (using the !kick command). A normal shrubbot !kick kicks for 120 seconds
+// 4 - Tempban when someone is kicked by the advanced warning system. A normal kick by the warning system lasts 120 seconds
+// set g_autoTempBan 0
+
+//The number of seconds kicked for when g_autoTempBan is set. Default is 1800
+// set g_autoTempBanTime 1800
+
+///////////////////////////
+//* Resapwn time config *//
+///////////////////////////
+// Specifies the time interval in seconds between Allied/Axis respawns. It overrides the time set in the map's script on all map!
+// Use this cvar in custom mapconfig file if you do not want the changes to be valid on everywhere maps.
+// Default is 0 which mean the cvar is not active.
+// set g_useraxisrespawntime 0
+// set g_useralliedrespawntime 0
+
+// g_spawntimeMinPlayers - sets the minimum number of players needed to have full/original spawntimes.
+// A value of 0 disables this feature.
+// If set (to a value > 0), and there are fewer than "g_spawntimeMinPlayers" players playing, spawntimes get reduced automatically.
+//     "g_spawntimeMinPlayers" or more players playing = 100% of original spawntimes are used.
+//     Only 1 player playing = 10% of the original spawntimes are used.
+//     Any number of players in between = calculated percentage of original spawntimes are used.
+// Note: if g_useraxisrespawntime is used, this cvar has no effect for the axis respawntime.
+//       if g_useralliedrespawntime is used, this cvar has no effect for the allied respawntime.
+// set g_spawntimeMinPlayers 0
+
+// 1 	- Server puts obituaries in chat.
+// 128	- Log the GUIDs, had other functionality in shrubet
+// 256	- Log all private messages
+// 512	- Real time stamps in log (dvl)
+// 1024 - Log the IP in case of LOGOPTS_GUID is set for
+// 		  ClientUserinfoChangedGUID, ClientConnect & ClientDisconnect
+// 		  Adds also player namem to the log in some cases
+// set g_logoptions 0
+
+///////////////////////////////////
+//* Exclusive No Quarter CVARS * //
+///////////////////////////////////
+
+// g_csMethod - Sets the method NQ handles the configstring (CS).
+// This cvar is created to run bigger servers, with plenty players, without getting that MAX_GAMESTATE_CHARS error.
+// Usage of g_csMethod 1 is experimental !!! 
+// 0 - Common way. Full infos are sent. Use this for scrims and if you want to record demos. 
+// 1 - Updates only. Only new infos are sent . 
+       Important: Demo recordings do not fully work, some infos are lost.
+// Default value is 0.
+// Note: Admins set this cvar if they want to change the method, for handling the ConfigString.
+//       This cvar is latched, meaning the new value will not be used immediately. The server must be restarted to make this cvar active.
+//       There is another cvar that displays the currently used value; This cvar is called "csMethod" (without the quotes).
+//       Cvar csMethod is read-only, and is only used to read the current method for handling the ConfigString.
+set g_csMethod 0
+
+// g_csStrings - This cvar sets the number of strings packed in one packet. 
+// Increase the value to a maximum of 15 if there are players on the server reporting init screen issues. 
+// We suggest to test some lower values first, and if the problem persists, increase the value until it works properly.
+// If none helped use g_csMethod 0.
+set g_csStrings 3
+
+// g_ForceCvarFile - sets the filename with forced cvars settings to be used.
+// The file can contain forcecvar & sv_cvar commands, and usually carries the .cfg extension. (extension must also be included in the given filename).
+// If this cvar is set, the given file will be executed at every mapstart.
+// All the settings will then be checked for the complete duration of the map.
+set g_ForceCvarFile ""
+
+// g_campaignFile - allows to set the name of used campaign file (typically dummy.campaign)
+// to prevent players to download every referenced pk3 on the server f.g. in objective mode 
+set g_campaignFile ""
+
+// Specifies how the server handles bullets.
+// 0 = No simple bullets. This is the old-style way of handling bullets.
+// 1 = Simple bullets. This is the new-style handling. This method was designed to produce faster code.
+// The default value is 0
+set g_simpleBullets 0
+
+// Sets the duration of the Killer-View_Locking (in seconds).
+// 0 = disable Killer-View-Locking.
+// Values 1 to 20 are valid durations (seconds).
+set g_killerLockTime 5
+
+// ip_max_clients - limits the number of simultaneous connections per IP. Prevents q3fill attacks. Since most families that play from
+// one IP don't usually use more than 3 at once, 3 is default, set higher if you get complaints about that, though 3 is still
+// recommended for most cases.
+set ip_max_clients 3
+
+// g_friendlyFire - as of 1.1.1, to enable friendly fire, flag 1 is required.
+// Previously, friendly fire was assumed to be on if the values were greater than 0.
+// This is no longer the case, as flag 32 has been added, which is an option that
+// doesn't actually need friendly fire on.
+// 1  - Enable friendly fire
+// 2  - Friendly fire does only half damage to teammates
+// 4  - Friendly fire does an equal amount of damage to the inflictor
+// 8  - Friendly fires affects movers (tanks, trucks, etc)
+// 16 - Friendly fire delivers knockback (useful for kicking teammates or grenade boosting)
+// 32 - Landmines cannot be tripped by teammates (1.1.1 and higher)
+// 64 - Landmines hurt teammates when friendly fire is disabled (1.2.0 and higher)
+set g_friendlyFire 1
+
+// g_adrenaline - Customize behavior of adrenaline
+// 1    - Spawn with no adrenaline needles, can only get them from ammo packs
+// 2    - Ammo packs do not contain adrenaline needles
+// 4    - Can only carry one needle at a time
+// 8    - Adrenaline does not boost health
+// 16   - Adrenaline does not boost stamina
+// 32   - Adrenaline causes player's eyes to glow red when used
+// 64   - Disable adrenaline pickup (from cabinets etc)
+// 128  - Enables adrenaline for soldiers
+// 256  - Enables adrenaline for medics
+// 512  - Enables adrenaline for engineers
+// 1024 - Enables adrenaline for field ops
+// 2048 - Enables adrenaline for covert ops
+// 4096 - While using adrenaline you receive only half the damage !!!
+// Default: 0
+set g_adrenaline 32
+
+// g_noAttacklInvul - Removes spawn shield from a player once they begin to attack.
+// Default: 0
+set g_noAttacklInvul 1
+
+// g_weaponItems - customize how weapons are dropped upon limbo death
+// 0  - Drop no weapons upon limbo death
+// 1  - Drop primary weapon upon limbo death (default ET)
+// 2  - Drops secondary weapons (pistols) upon limbo death
+// 4  - Extra clips are included when you pickup a dropped weapon
+// 8  - Pick up ammo you need from dropped weapons, but leave the gun and what ammo is left on the ground
+// 16 - Do not pickup dropped weapons you don't need, guns that you already have, (but with no ammo),
+//      or if you have full ammo or that particular gun
+// 32 - Do not ammo clips from dropped Garands
+// Default: 1
+set g_weaponItems 7
+
+// g_missileHealth - Sets the amount of health a panzer/bazooka missile has.
+// Set this to 0 to make missiles indestructible.
+// Default: 5
+set g_missileHealth 5
+
+// g_missileSpeed - Sets the speed a panzer/bazooka missile travels at.
+// Set to 0 to enable default speed. Values over 300 are ignored if Guided Rockets are enabled.
+// Default: 0
+set g_missileSpeed 0
+
+// g_bulletReflect - Shooting at metal surfaces will reflect
+// the bullets back at the appropriate angle.
+// 1 - Reflect weapons that are set to reflect bullets
+// 2 - Reflect all weapons
+// Default: 0
+set g_bulletReflect 0
+
+// g_falloff - Sets falloff damage
+// 1 - Headshots only
+// 2 - Also for non-headshots
+// Default: 1
+set g_falloff 1
+
+// g_missileGravity - Sets gravity on Panzer and Bazooka rockets. This is not a bitmask.
+// 1 - Strong gravity
+// 2 - Weak gravity (realistic)
+// Default: 0
+set g_missileGravity 2
+
+// g_fastBackStab - Backstabs insta-gibs players into limbo,
+// making them unrevivable. Will play a unique animation on
+// the stabbed player.
+// Default: 0
+set g_fastBackStab 0
+
+// g_realism - A few flags to add a bit of realism to the gameplay.
+// 1   - Play transition animations when going prone and standing up
+//       from prone, overall it slows standing up from proning drastically.
+// 2   - Cannot use weapons while holding onto ladders.
+// 8   - Enables 'in view' check for aura. Aura will only be given if players can see each other.
+//       Do not activate on poor cpu servers or with high player count on server!
+// 16  - Leaning disabled.
+// 32  - No auto switching for poisoned players.
+// 64  - A script_mover removes items when driving over them (instead of pushing them).
+// 128 - Players on a rotating script_mover will rotate along with the mover.
+// 256 - Changing view (looking left/right) will not increase spread.
+// 512 - Rotating doors can be opened even while they are opening/closing already.
+// Default: 0
+set g_realism 32
+
+// g_announcer - killing spree announcer can be disabled by setting this to 0.
+// 0   - Disable announcer
+// 1   - Announce killing sprees
+// 2   - Announce death sprees
+// 4   - Announce multikills
+// 8   - Announce first blood
+// 16  - Announce first headshot
+// 32  - Announce kick sound
+// 64  - Announce ban sound
+// 128 - Announce mission/objective info in the (left)popup area, instead of the default top-area
+// 256 - Disable mission/objective announcements
+// Default: 255
+set g_announcer 127
+
+// g_flushItems - Allows dropped items to lay flush with the angle of the ground
+// they are on. May cause items to turn when they hit the ground.
+// Default: 1
+set g_flushItems 1
+
+// g_multikillTime - The time, in milliseconds, that a player has to make another kill
+// to be counted as a multikill. If g_multilkillTime milliseconds pass and a player
+// does not make another kill, the multikill is announced and reset.
+// Default: 1000
+set g_multikillTime 2500
+
+// g_mortarBBox - Puts a bounding box (hitbox) around mortar shells, to prevent them
+// from going through small windows and other narrow gaps.
+// Default: 0
+set g_mortarBBox 0
+
+// g_weaponScriptsDir - Defines the directory that weapon scripts will be placed to edit
+// how weapons behave in NQ.
+// Default: ""
+set g_weaponScriptsDir ""
+
+// g_spectator - Sets flags for various spectator options.
+// 1 - Players will have team colored glow arround them.
+// 2 - Players will show their names above them.
+// Default: 0
+set g_spectator 0
+
+// jp_insanity - Fun modes!
+// 1	  - Instant Spawn. Spawn times are instant.
+// 2	  - Unlimited Ammo. Everyone has unlimited ammo, no reloading.
+// 4	  - Mortar Cam. Mortars show a cam when fired.
+// 8	  - Rocket Cam. Rockets show a cam when fired.
+// 16	  - Unlimited Charge. Charge bars never drain.
+// 32	  - Guided Rockets. Rockets follow your crosshair.
+// 64	  - Homing rockets. Rockets follow nearby enemies.
+// 128	  - Dog Tags. Fun mode.
+// 256	  - Venom Mode. Allows soldiers to use the Venom gun from RTCW.
+// 512	  - Shows left HP. Shows attacker's HP left to victim.
+// 1024	  - Shows HP+Distance. Shows attacker's HP left to victim and his distance
+// 2048	  - Kickable Dynamites. Dynamites can be kicked.
+// 4096   - Killer Cam - in overlay window like mortar/missile cam.
+// 8192   - Riflenade Cam - in overlay window like mortar/missile cam.
+set jp_insanity 0
+
+// g_unlockWeapons - Picking up weapons per class.
+// 1	  - Soldier can pickup any weapon.
+// 2	  - Medic can pickup any weapon.
+// 4	  - Engineer can pickup any weapon.
+// 8	  - FieldOps can pickup any weapon.
+// 16	  - CovertOps can pickup any weapon.
+set g_unlockWeapons 0
+
+// nq_War - War modes!
+// The first bit enables/disables war-mode.
+// The other bits enable/disable weapons available in war-mode.
+// 1      - Enable War Mode: spawn with a few possible weapons, but plenty ammo..
+// 2      - (reserved for future use; Not in use)
+// 4      - Enable knives
+// 8      - Enable panzers
+// 16     - Enable sniperguns
+// 32     - Enable grenades
+// 64     - Enable rifles
+// 128    - Enable flamethrowers
+// 256    - Enable shotguns
+// 512    - Enable poison
+// 1024   - Enable smoke grenades
+// 2048   - Enable binoculars
+// 4096   - Enable pliers + dyna
+set nq_War 0
+
+////////////////////
+//* Other CVARS * //
+////////////////////
+
+// g_throwDistance - Sets the distance a ammo or health pack is thrown.
+// Default: 75
+set g_throwDistance 75
+
+// g_dragCorpse - Enables players to drag wounded teammates to safety.
+// Default: 0
+set g_dragCorpse 1
+
+// g_dropObj - Enables players to drop a carried objective by switching to knife and hitting thier activate bind (default F)
+// Default: 0
+set g_dropObj 1
+
+// g_slashkill - Controls various options and consequences for suicide by /kill cmd.
+// 1  - Player spawns with half charge bar after /kill.
+// 2  - Player spawns with 0 charge bar after /kill.
+// 4  - Restores the charge bar to the same state it was in at the moment the player issued /kill (regardless of how long they were in limbo), (sticky charge).
+// 8  - Disables /kill command.
+// 16 - Disables /kill when player is poisoned.
+// 32 - While in limbo after a /kill, charge bar fills normally.
+// 64 - Disables /kill while in a fight.
+// Default: 0
+set g_slashkill 0
+
+// g_spawnInvul - Sets spawn shield protection length.
+// Default: 3
+set g_spawnInvul 3
+
+// g_dropAmmo - Sets the amount of ammo packs a Field Ops drops when killed.
+// Don't set g_dropAmmo to a very high value as this may crash your server.
+// Default: 0
+set g_dropAmmo 1
+
+// g_dropHealth - Sets the amount of med packs a Medic drops when killed.
+// Don't set g_dropHealth to a very high value as this may crash your server.
+// Default: 0
+set g_dropHealth 1
+
+// g_shortcuts - Toggles shortcuts for player names, current health and other useful info. Shortcuts include:
+// [a] - last person who gave you ammo
+// [b] - last teammate who damaged you
+// [c] - the damage the last teammate [b] did to you
+// [d] - last person who killed you
+// [f] - last teammate calling for a fieldops (ammo)
+// [h] - last person who gave you health
+// [k] - last person you killed
+// [l] - your current location
+// [m] - last teammate calling for a medic
+// [n] - your name
+// [p] - teammate you are pointing at
+// [r] - last person who revived you
+// [s] - your health
+// [t] - ammo for current weapon
+// [w] - weapon you are currently holding
+// [x] - last connected person
+// For example, typing "Help me at [l]! I only have [s] health left" will produce something like "Help me at (A,2)! I only have 20 health left!"
+// Default: 0
+set g_shortcuts 1
+
+// g_shrubbot - Sets the name of the shrubbot config file (typically shrubbot.cfg).
+// When nothing is set, shrubbot features are disabled.
+// Default: ""
+set g_shrubbot "shrubbot.cfg"
+
+// g_skills - Allows players to retain skill bonuses when playing other classes.
+// 1  - Flak Jacket carries over
+// 2  - Adrenaline carries over
+// 4  - Enemy recognition carries over
+// 8  - Assassin backstab bonus carries over
+// 16 - Landmine spotting ability carries over
+// Default: 0
+set g_skills 16
+
+// g_msgs - Duration between banner messages setting g_msgX cvars,
+// (g_msgs1, g_msg2, etc). The first missing g_msgX cvar will start the message
+// cycle over, back to the first message.
+// Default: 0
+set g_msgs 30
+
+// g_msgPos - Change the location of banner messages if g_msgs is positive and
+// g_msgX cvars are set.
+// 0 - Chat area
+// 1 - Center of screen
+// 2 - Left notification area (CPM)
+// Default: 0
+set g_msgPos 1
+
+// g_msgX - Various CVARs that contain messages. g_msgs must be positive for these
+// to display. After the last g_msgX is displayed, the cycle will start over.
+seta g_msg0 "^?-^3REACTIVATED^?-^7"
+seta g_msg1 "^?-^3Welcome To ^1 No Quarter^?-^7"
+seta g_msg2 "^?|^3Spawn Killing Is Allowed!^?|^7"
+seta g_msg3 "^?|^3Don't Be A Jerk!^?|^7"
+seta g_msg4 ""
+
+// g_censor - A comma delimited string of words that will be censored from chat.
+// Default: ""
+set g_censor "fag,gay,shit,fuck,bitch,asshole,homo"
+
+// g_censorMuteTime - When the value of g_censorPenalty contains flag 8, censored
+// player will be muted for g_censorMuteTime seconds.
+// Default: 60
+set g_censorMuteTime "120"
+
+// g_censorNames - A comma delimited string of words that will be censored from
+// player names.
+// Default: ""
+set g_censorNames "hitler,osama"
+
+// g_censorPenalty - Sets the penalty for saying a word in the g_censor list.
+// 1  - Gib player
+// 2  - Kick players with names containing words in g_censorNames
+// 4  - Kill player, but don't gib (flag 1 has priority over this)
+// 8  - Auto-mute for g_censorMuteTime seconds.
+// 16 - Lose 10 XP
+// 32 - Burn
+// 64 - Poison
+// Default: 0
+set g_censorPenalty 48
+
+// g_intermissionTime - Set the length of time the end of game screens displays before
+// loading the next map.
+// Default: 60
+set g_intermissionTime 25
+
+// g_intermissionReadyPercent - The percent of connected players who need to hit the
+// "READY" button to move on to the next map without waiting g_intermissionTime to run out.
+// Default: 100
+set g_intermissionReadyPercent 75
+
+// g_inactivity - The seconds a player have to stay inactive before he is moved to
+// spectators ( in seconds ). A warning message is sent to the player after half the
+// specified time. Values have to be higher then 10 seconds, that is the time after the warn message is sent.
+// (if it's lower than that value, it will not work at all)
+// Default : 0
+set g_inactivity 180
+
+// g_spectatorInactivity - The seconds a spectator have to stay inactive before he is kicked
+// from the server ( in seconds ). A warning message is sent to the spectator after half the
+// specified time.
+// Default : 0
+set g_spectatorInactivity 0
+
+// g_mapScriptDirectory - Changes directory for custom mapscripts.
+// Similar to ETPro's "b_mapScriptsDirectory".
+// Default: ""
+set g_mapScriptDirectory ""
+
+// g_canisterKick - Sets the scale of kicking grenades, airstike cans, and smoke cans.
+// Set to 0 to disable. Value of around 60 - 120 is reasonable.
+// Default: 0
+set g_canisterKick 80
+
+// g_canisterKickOwner - If canister kicking is set to a positive integer and
+// g_canisterKickOnwer is enabled, ownership of a grenade or airstrike changes to the
+// last kicker.
+// Default: 0
+set g_canisterKickOwner 0
+
+// g_classChange - Toggles team uniform stealing to switch classes.
+// 1 - Enables/disables class change
+// 2 - Keeps the class on spawn after class change (1 needs to be set!)
+// Default: 0
+set g_classChange 0
+
+// g_constructibleXPsharing - Building objectives gives XP to all engineers building
+// an objective while you build it, rather than all at once when it is done. This is
+// done to avoid that one engineer that spends a long time building something and then
+// another engineer walks up and finishes it off gaining the XP for it.
+// Default: 0
+set g_constructibleXPsharing 1
+
+// g_doubleJump - Toggles double jumping.
+// Default: 0
+set g_doubleJump 0
+
+// g_doubleJumpHeight - Height boost gained by double jumping.
+// Default: 1.4
+set g_doubleJumpHeight 1.4
+
+// g_shove - Sets the strength of player shoving.
+// Set this to 80 to have a nice strenght for shoving. 
+// Note: If you use bots keep the default value - bots might loose their path if they shove each other.
+// Default: 0
+set g_shove 0
+
+// g_shoveNoZ - Set to 1 to disable boosting when g_shove is enabled.
+// Default: 0
+set g_shoveNoZ 0
+
+// g_asblock - enable airstrike blocking
+// 1 - Make an announcement whenever an airstrike is blocked.
+// 2 - A player may easily block an airstrike by crouching, standing, or proning over
+//     the enemy's canister to block the airstrike.
+// 4 - Reserved.
+// 8 - Lvl 3 FieldOPs and higher cannot have the airstrikes blocked by players.
+// Default: 0
+set g_asblock 0
+
+// g_fear
+// Credit given to a player when and opponent uses /kill within g_fear milliseconds.
+// Set to 0 to disable.
+// Default: 2000
+set g_fear 2000
+
+// g_goomba - Players can damage each other by landing on each other.
+// The value of g_goomba is a multiplier of how much damage is given.
+// Setting this to 0 disables goomba killing.
+// Default: 0
+set g_goomba 0
+
+// g_goombaFlags - This is a bitflag cvar that controls the way g_goomba is handled
+// 1  - Cannot goomba teammates
+// 2  - Hopping on another player does no damage.
+// 4  - Hopping on a teammate does no damage.
+// 8  - Falling player recieves no damage when landing on any other player.
+// 16 - Insta-gib goomba damage.
+// Default: 25
+set g_goombaFlags 25
+
+// g_headshot - Enables headshot mode.
+// Only headshots from weapons that can make headshots will hurt players.
+// Explosions, MGs, shotgun, knives, goombas, etc. will cause no damage.
+// 1 - Multiple headshots are needed to kill. HS does normal damage,  body-shots do no damage.
+// 2 - A single headshot kills instantly, bodyshots do no damage at all
+// 3 - A single headshot kills instantly, body-shots do normal damage
+// Default: 0
+set g_headshot 0
+
+// g_playdead - enabled playing dead with /playdead
+// Default: 0
+set g_playdead 1
+
+// g_medics - sets versious flags to customize medics.
+// 1    - Medics can't pick up their own health packs to cure themselves of poison needle effects
+// 2    - Medics can't pick up their own health packs at all.
+// 16   - Medics do not spawn with akimbo pistols, regardless of their light weapons skill
+// 32   - Medics spawn with pistol only, and can't pick up SMG of either team However, any class can steal
+//        a medics uni, if g_classChange is set to 1, and receive the medic benefits while retaining their
+//        current weapons, including akimbos and SMG
+// 64   - Medics can use syringes to heal living teammates as an alternative to the tk/revive cycle, if the
+//        teammate's health is < 25% their total HP
+// 128  - Medics get 12% extra HP
+// 256  - More Medics in a team do NOT make the team get higher maxHP
+// 512  - Medics do not regenerate at all
+// 1024 - Medics get HP if (non-medic)teammates pickup their healthpack(s).. (as if they pickup their own packs)
+// 2048 - All playerclasses get 25 extra maxHP, independent of the # medics in a team
+// 4096 - Fast medic resuscitationing - was g_fastres before
+set g_medics 65
+
+// g_realHead - Head hitbox will follow the animation that is played, just like ETPro.
+// This is HIGHLY recommended.
+// Default: 1
+set g_realHead 1
+
+// Limit of votings per map and player
+set vote_limit 3
+// Minimum of players having to vote yes, for a vote to pass
+set vote_percent 66
+// The various vote options (default voting disabled)
+// Default: 0
+set vote_allow_antilag 0
+set vote_allow_balancedteams 0
+set vote_allow_comp 0
+set vote_allow_friendlyfire 0
+set vote_allow_gametype 0
+set vote_allow_kick 0
+set vote_allow_map 0
+set vote_allow_maprestart 0
+set vote_allow_matchreset 0
+set vote_allow_mutespecs 0
+set vote_allow_muting 0
+set vote_allow_nextcampaign 0
+set vote_allow_nextmap 0
+set vote_allow_poll 0
+set vote_allow_pub 0
+set vote_allow_referee 0
+set vote_allow_restartcampaign 0
+set vote_allow_shuffleteamsxp 0
+set vote_allow_shuffleteamsxp_norestart 0
+set vote_allow_surrender 0
+set vote_allow_swapteams 0
+set vote_allow_timelimit 0
+set vote_allow_warmupdamage 0
+
+// Indicate if the team_maxXXX cvar values are a percentage of (team)players, or if the values are absolute.
+// 1 - use percentages for team_maxWEAPON values (team_maxShotguns etc.)
+// 2 - use percentages for team_maxCLASS values (team_maxSoldiers etc.)
+// Examples:
+// Suppose the server has 10 players per team playing, team_maxShotguns is set 5, and team_maxIsPercentage set to 0:
+//   then maximum 5 players (per team) can use a shotgun.
+// Suppose the server has 10 players per team playing, team_maxShotguns is set 20, and team_maxIsPercentage set to 1:
+//   then maximum 20% players (per team) can use a shotgun (which is 20/100*10 = 2 players)
+set team_maxIsPercentage 0
+
+// team_max[Weapon] - sets maximum amount of perticular weapons per team.
+// Set to -1 to allow unlimited, set to 0 to disable the weapon.
+set team_maxPanzers 3
+set team_maxMortars -1
+set team_maxRifleGrenades -1
+set team_maxMG42s -1
+set team_maxFlamers -1
+set team_maxShotguns -1
+set team_maxVenoms -1
+set team_maxLMGs -1
+set team_maxScopes -1
+// Don't set team_maxLandmines to a very high value as this may crash your server.
+set team_maxLandmines 10
+
+// team_panzerRestriction - The percent of connected players needed to enable Panzerfaust/Bazooka.
+// If set to 10 on 20 player slot server up to 2nd player panzer is enabled. If limit is undershot
+// during gameplay panzer is dropped and player is forced to use secondary weapon.
+// Default: 0
+set team_panzerRestriction 0
+
+// team_artyTime - The time (in seconds) that must elapse between artillery strikes per team.
+// Default: 10
+set team_artyTime 10
+
+// team_airstrikeTime - The time (in seconds) that must elapse between airstrikes strikes per team.
+// Default: 10
+set team_airstrikeTime  10
+
+// 
+set g_alliedSpawnInvul 0
+set g_axisSpawnInvul 0
+
+// g_XPSave - Sets flags for allowing per player XP saving between campaigns, rounds, etc.
+//  0 - Disable XP saving
+//  1 - Store XP when a client disconnects
+//  2 - Don't reset XP to the pre-map start values on a map restart, shuffle, etc..
+//  4 - Never ever reset xp
+//  8 - Force the disconnection of clients with the same GUID as the connecting client.
+//      This is useful in saving the stored XP of players with unreliable network connections
+//      since they should still get their stored XP even if reconnecting immediately with a new IP address
+// 16 - Do not use xp-save when playing stopwatch
+// 32 - If enabled the server tries to convert the very old xp file format (in one file) to single file based system - see g_XPSaveDirectory 
+        Rename the file to "xpsave.cfg" and restart the server. If it's done remove this flag from g_XPSave.
+// Default: 0
+set g_XPSave "15"
+
+// g_XPSaveDirectory - ABSOLUTE path to a new directory that will contain .xp files.
+// This is required for XP save to work.
+// Directory must be created before starting your server.
+// The path must not be relative like other file CVARs are, meaning, no "xpsave" value for this.
+// On linux something like this will work: "/home/ownername/.etwolf/servername/xpsave" or "/home/ownername/noquarter/xpsave"
+// Windows: "C:\<FULL_PATH>\xpsave"
+// Test with a /rcon writexp command to confirm you have set this CVAR properly.
+set g_XPSaveDirectory ""
+
+// g_XPSaveMaxAge - The number of seconds that must pass without a connection from this player before
+// XPSave forgets their XP and skills.
+// Default: 86400 (1 day)
+set g_XPSaveMaxAge 86400
+
+// g_XPDecay - Decays players' XP on the server when set to 1.
+// This feature is mainly used with the g_XPSave 4 flag which allows XP to continue building forever.
+// 1   - Enable XP Decay
+// 2   - Do not decay a player's XP when they are disconnected from the server.
+// 4   - Do not decay a player's XP for the class they are currently playing as.
+// 8   - Do not decay a player's XP while they are spectating
+// 16  - Do not decay a player's XP during warmup/intermission
+// 32  - Do not decay a player's XP when he/she is playing on a team.
+// 64  - Do not decay a player's Battle Sense XP when he/she is playing.
+// 128 - Do not decay a player's Light Weapons XP when he/she is playing.
+// Default: 0
+set g_XPDecay 0
+
+// g_XPDecayFloor - This is the minimum that any particular skill can be reduced to by g_XPDecay.
+// For example, setting this to 540.0 will ensure that no player will ever lose rank or
+// skill levels due to g_XPDecay.
+// Default: 0
+set g_XPDecayFloor 540
+
+// g_XPDecayRate - This is the rate (in skill points per second) that XP skill points for EACH
+// skill will decay when g_XPDecay is enabled. Setting this to 0.2 would result in a player losing
+// 12 points per minute IN ALL SKILLS, so up to 84XP per minute if the player has skill points for each skill.
+// Default: 0
+set g_XPDecayRate 0
+
+// g_maxXP - This will reset a players XP once their overall XP score reaches it.
+// It useful for servers with XPSave that never resets. Set to -1 to disable.
+// Default: -1
+set g_maxXP 10000
+
+// skill_[Skill] - Sets the amount of XP required to gain a skill level per class.
+// -1 disabled, 0 given immediatel a skill, all other cases the numbers determines how many xp point you need for a skill level.
+// The numbers can be linears (recommend; - example "20 50 90 140 200 270 350 440 540") or non-linears (example: "50 90 20 140 270 200 440 350 540")
+// Default: "20 50 90 140 200 270 350 440 540"
+seta skill_lightWeapons "20 50 90 140 200 270 350 440 540"
+seta skill_battleSense "20 50 90 140 200 270 350 440 540"
+seta skill_soldier "20 50 90 140 200 270 350 440 540"
+seta skill_medic "20 50 90 140 200 270 350 440 540"
+seta skill_engineer "20 50 90 140 200 270 350 440 540"
+seta skill_fieldops "20 50 90 140 200 270 350 440 540"
+seta skill_covertops "20 50 90 140 200 270 350 440 540"
+
+// g_countryflags - This will activate/deactivate (1/0) geoip on server (don't forget to place GeoIP.dat
+// in your noquarter directory on the server, read documentation for details)
+// http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz   OR
+// http://www.shitstorm.org/noquarter/wiki/index.php?title=Admin_CVARs#g_countryflags
+// Default: 0
+set g_countryflags 0
+
+// see http://wolfwiki.anime.net/index.php/Lua_Mod_API
+set lua_modules ""
+set lua_allowedModules ""
+
+// Sets the use of old or new code for processing mapscripts.
+// Enable any bit to use the new (faster) code. Disable any bit to use old code.
+// 1 - G_Script Preparse
+// 2 - G_RunEntity
+// 4 - G_Script_GetEventIndex
+// Default: 7
+set nq_scriptMode 7
+
+//* Map voting CVARS (don't set if you don't use map voting * //
+
+// Map voting only!
+//  1 - Changes the tie breaker so that the map not played in the longest wins.
+//  2 - Intermission doesn't end until g_intermissionReadyPercent people have voted.
+//      If there are no players connected to the server, intermission
+// 	    will end at the timeout.  (WARNING: This means that if there are
+// 	    spectators connected and not voting, the next map will not load until
+// 	    those spectators either vote, disconnect, or get kicked by the system)
+//  4 - Enables multi voting. Allows everybody to vote for 3 maps instead of one.
+//      First choice map gets 3 votes, second choice gets 2, third choice gets one
+//  8 - Don't randomize the maps, so they will always appear in the same order.
+// 16 - A passed nextmap vote (when g_gametype is 6) will start the intermission
+//      and lets players vote which map should be played next.
+//      NOTE: This makes one of the two teams be displayed as winner.
+// 32 - Disables the ready button in intermission.
+// Default: 0
+set g_mapVoteFlags 32
+
+// Map voting only!
+// Count of maps to vote for.
+// Default: 6
+set g_maxMapsVotedFor 20
+
+// Map voting only!
+// Maps played until a map is ready to vote again.
+// Default: 3
+set g_minMapAge 3
+
+// Map voting only!
+// Exclude maps from voting
+// Default: ""
+set g_excludedMaps ":fueldump:oasis:"
+
+// Map voting only!
+// How many maps occure before XP is reset. If g_XPSave flag 4 is set,
+// g_resetXPMapCount is ignored. Similarly, if g_resetXPMapCount is
+// set to 0, it is the same as setting g_XPSave flag 4.
+// Default: 0
+set g_resetXPMapCount 0

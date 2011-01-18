@@ -1,0 +1,229 @@
+global Map =
+{
+	EscortVehicle =
+	{
+		Truck =
+		{
+			Enabled = false,
+			EscortVehicleGoalName = "MOVER_truck",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 2,
+			Priority = 0.65,
+			Offset =
+			{
+				Vector3(-50,100,25),
+				Vector3(50,100,25),
+			}
+		},
+	},
+
+	Ammo_Cabinet_ammo_1 = "AMMOCAB_ammo_1",
+	Ammo_Cabinet_t1075b = "AMMOCAB_t1075b",
+	Health_Cabinet_heal_cabinet1 = "HEALTHCAB_heal_cabinet1",
+	Health_Cabinet_t1074b = "HEALTHCAB_t1074b",
+	Flag_School_record = "FLAG_School_record",
+	Cappoint_450 = "CAPPOINT_450",
+	Build_Assault_ramp = "BUILD_Assault_ramp",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Build_Truck = "BUILD_Truck",
+	Build_Truck_Barrier_1 = "BUILD_Truck_Barrier_1",
+	Plant_Assault_ramp = "PLANT_Assault_ramp",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_Truck_Barrier_1 = "PLANT_Truck_Barrier_1",
+	Mount_308 = "MOUNTMG42_308",
+	Mount_309 = "MOUNTMG42_309",
+	Mount_335 = "MOUNTMG42_335",
+	Repair_308 = "REPAIRMG42_308",
+	Repair_309 = "REPAIRMG42_309",
+	Repair_335 = "REPAIRMG42_335",
+	Mover_tank = "MOVER_tank",
+	Mover_truck = "MOVER_truck",
+
+	Assault_ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Built" );
+	},
+
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_1_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Built" );
+	},
+
+	Truck_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_1_Built" );
+	},
+
+	Assault_ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_ramp_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Barrier_1_Destroyed" );
+	},
+
+	Truck_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Truck_Barrier_1_Destroyed" );
+	},
+
+	School_record_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_335" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_335" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_309" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_309" );
+		
+		print( "School_record_Taken" );
+	},
+
+	School_record_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_335" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_335" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_309" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_309" );
+		print( "School_record_Returned" );
+	},
+
+	School_record_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_335" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_335" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Assault_ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_309" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_308" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_309" );
+		Map.EscortVehicle.Truck.Enabled = true;
+		print( "School_record_Secured" );
+	},
+
+	Backdoor_Unlocked = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_1" );
+
+		print( "Backdoor_Unlocked" );
+	},	
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Assault ramp has been constructed", Map.Assault_ramp_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_1_Built );
+	OnTrigger( "Assault ramp has been destroyed", Map.Assault_ramp_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_1_Destroyed );
+	OnTrigger( "Allies have stolen The School record!", Map.School_record_Taken );
+	OnTrigger( "Flag returned School record!", Map.School_record_Returned );
+	OnTrigger( "Allied team is escaping with the School record!", Map.School_record_Secured );
+	OnTrigger( "Backdoor are unlocked!", Map.Backdoor_Unlocked );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_335" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_335" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_t1075b" );	
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_t1074b" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier_1" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_308" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_309" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_308" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_309" );
+	
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 90.0;
+};

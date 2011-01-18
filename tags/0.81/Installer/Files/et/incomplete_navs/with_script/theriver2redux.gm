@@ -1,0 +1,153 @@
+global Map =
+{
+	Ammo_Cabinet_cabinet_ammo_model2 = "AMMOCAB_cabinet_ammo_model2",
+	Health_Cabinet_cabinet_health_model = "HEALTHCAB_cabinet_health_model",
+	Checkpoint_spawnbridge_flag = "CHECKPOINT_spawnbridge_flag",
+	Flag_Secret_Documents = "FLAG_Secret_Documents",
+	Cappoint_1113 = "CAPPOINT_1113",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Tram_Engine_Panel = "BUILD_Tram_Engine_Panel",
+	Build_Tunnel_Barrier = "BUILD_Tunnel_Barrier",
+	Plant_Bridge_Controls = "PLANT_Bridge_Controls",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Front_Wall = "PLANT_Front_Wall",
+	Plant_Tram_Engine_Panel = "PLANT_Tram_Engine_Panel",
+	Plant_Tunnel_Barrier = "PLANT_Tunnel_Barrier",
+	Explode_249 = "EXPLODE_249",
+	Explode_250 = "EXPLODE_250",
+	Explode_mapallies1 = "EXPLODE_mapallies1",
+	Mount_419 = "MOUNTMG42_419",
+	Mount_420 = "MOUNTMG42_420",
+	Repair_419 = "REPAIRMG42_419",
+	Repair_420 = "REPAIRMG42_420",
+	Snipe_FirstStage_1 = "SNIPE_FirstStage_1",
+	Snipe_Secondstage_1 = "SNIPE_Secondstage_1",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Tram_Engine_Panel_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tram_Engine_Panel_Built" );
+	},
+
+	Tunnel_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tunnel_Barrier_Built" );
+	},
+
+	Bridge_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Controls_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Front_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Front_Wall_Destroyed" );
+	},
+
+	Tram_Engine_Panel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tram_Engine_Panel_Destroyed" );
+	},
+
+	Tunnel_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tunnel_Barrier_Destroyed" );
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Secret_Documents!_Taken" );
+	},
+
+	CAPPOINT_1113_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_1113_Captured" );
+	},
+
+	spawnbridge_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawnbridge_flag_Axis_Captured" );
+	},
+
+	spawnbridge_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawnbridge_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Tram_Engine_Panel_Built );
+	OnTrigger( "MISSING_STRING", Map.Tunnel_Barrier_Built );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Controls_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Front_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Tram_Engine_Panel_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Tunnel_Barrier_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Secret_Documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_1113_Captured );
+	OnTrigger( "MISSING_STRING", Map.spawnbridge_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.spawnbridge_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 150.0;
+};

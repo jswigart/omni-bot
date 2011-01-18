@@ -1,0 +1,306 @@
+// sample animation script
+//
+//
+// commands:
+//	Animate <panel name> <variable> <target value> <interpolator> <start time> <duration>
+//		variables:
+//			FgColor
+//			BgColor
+//			Position
+//			Size
+//			Blur		(hud panels only)
+//			TextColor	(hud panels only)
+//			Ammo2Color	(hud panels only)
+//			Alpha		(hud weapon selection only)
+//			SelectionAlpha  (hud weapon selection only)
+//			TextScan	(hud weapon selection only)
+//
+//		interpolator:
+//			Linear
+//			Accel - starts moving slow, ends fast
+//			Deaccel - starts moving fast, ends slow
+//			Spline - simple ease in/out curve
+//			Pulse - < freq > over the duration, the value is pulsed (cosine) freq times ending at the dest value (assuming freq is integral)
+//			Flicker - < randomness factor 0.0 to 1.0 > over duration, each frame if random # is less than factor, use end value, otherwise use prev value
+//
+//	RunEvent <event name> <start time>
+//		starts another even running at the specified time
+//
+//	StopEvent <event name> <start time>
+//		stops another event that is current running at the specified time
+//
+//	StopAnimation <panel name> <variable> <start time>
+//		stops all animations refering to the specified variable in the specified panel
+//
+//	StopPanelAnimations <panel name> <start time>
+//		stops all active animations operating on the specified panel
+//
+//  SetFont <panel name> <fontparameter> <fontname from scheme> <set time> 
+//
+//	SetTexture <panel name> <textureidname> <texturefilename> <set time>
+//
+//  SetString <panel name> <string varname> <stringvalue> <set time>
+
+event LevelInit
+{
+}
+
+event MenuOpen
+{
+	StopEvent	MenuClose 0.0 
+
+	// fade in
+	Animate HudMenu Alpha 		"255"		Linear 0.0 0.1
+	Animate HudMenu SelectionAlpha 	"255"		Linear 0.0 0.1
+	Animate HudMenu FgColor		"FgColor"		Linear 0.0 0.1
+	Animate HudMenu MenuColor		"MenuColor"	Linear  0.0 0.1
+	Animate HudMenu ItemColor		"ItemColor"	Linear 0.0 0.1
+	Animate HudMenu TextScan		"1"		Linear 0.0 0.1
+
+	// Undo any blur
+	Animate HudMenu		Blur		"1"			Linear	0.0		0.01
+}
+
+event MenuClose
+{	
+	// Hide it
+	Animate HudMenu Alpha 		"0" Linear 0.0 1
+	Animate HudMenu SelectionAlpha 	"0" Linear 0.0 1
+	Animate HudMenu FgColor		"0 0 0 0" Linear 0.0 1
+	Animate HudMenu MenuColor		"0 0 0 0" Linear 0.0 1
+	Animate HudMenu ItemColor		"0 0 0 0" Linear 0.0 1
+}
+
+event MenuPulse
+{
+	Animate HudMenu		Blur		"7"			Linear	0.0		0.1
+	Animate HudMenu		Blur		"2"			Deaccel	0.1		0.1
+	Animate HudMenu		Blur		"7"			Linear	0.2		0.1
+	Animate HudMenu		Blur		"2"			Deaccel	0.3		0.1
+	Animate HudMenu		Blur		"7"			Linear	0.4		0.1
+	Animate HudMenu		Blur		"2"			Deaccel	0.5		0.1
+	Animate	HudMenu		Blur		"1"			Deaccel	0.6		0.4
+}
+
+event HintMessageShow
+{
+	// show the hints
+	Animate HudHintDisplay Alpha	255 Linear 0.0 0.5
+	Animate HudHintDisplay FgColor	"RoundStateFg"		Linear 0.0 0.01
+
+	// hide the panel after a while	
+	Animate HudHintDisplay Alpha	0 Linear 6.0 1.0
+}
+
+event HintMessageHide
+{
+	Animate HudHintDisplay Alpha	0 Linear 0.0 0.5
+}
+
+event KeyHintMessageShow
+{
+	// show the hints
+	Animate HudHintKeyDisplay Alpha	255 Linear 0.0 0.5
+
+	// flash text
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 0.0 0.01
+	Animate HudHintKeyDisplay FgColor	"255 220 0 255" Linear 0.5 0.2
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 0.7 0.2
+	Animate HudHintKeyDisplay FgColor	"255 220 0 255" Linear 1.5 0.2
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 1.7 0.2
+
+	// hide the panel after a while	
+	Animate HudHintKeyDisplay Alpha	0 Linear 12.0 1.0
+}
+
+event KeyHintMessageHide
+{
+	Animate HudHintKeyDisplay Alpha	0 Linear 0.0 0.5
+}
+
+event WarmupLabelShow
+{
+	// show the hints
+	Animate WarmupLabel Alpha	255 Linear 0.0 0.5
+	Animate WarmupLabel FgColor	"RoundStateFg"		Linear 0.0 0.01
+}
+
+event WarmupLabelHide
+{
+	Animate WarmupLabel Alpha	0 Linear 0.0 0.5
+}
+
+event RestartRoundLabelShow
+{
+	// show the hints
+	Animate RestartRoundLabel Alpha	255 Linear 0.0 0.5
+	Animate RestartRoundLabel FgColor	"RoundStateFg"		Linear 0.0 0.01
+}
+
+event RestartRoundLabelHide
+{
+	Animate RestartRoundLabel Alpha	0 Linear 0.0 0.5
+}
+
+event ReadyRestartLabelShow
+{
+	// show the hints
+	Animate ReadyRestartLabel Alpha	255 Linear 0.0 0.5
+	Animate ReadyRestartLabel FgColor	"RoundStateFg"		Linear 0.0 0.01
+}
+
+event ReadyRestartLabelHide
+{
+	Animate ReadyRestartLabel Alpha	0 Linear 0.0 0.5
+}
+
+event HudTakeDamageBleeding
+{
+	RunEvent HudTakeDamageLeft 0.0
+	RunEvent HudTakeDamageRight 0.0
+}
+
+event HudTakeDamageFront
+{
+}
+
+event HudTakeDamageLeft
+{
+	Animate HudDamageIndicator DmgColorLeft		"255 88 0 200"	Linear 0.0 0.0
+	Animate HudDamageIndicator DmgColorLeft		"255 0 0 200"	Linear 0.0 0.3
+	Animate HudDamageIndicator DmgColorLeft		"255 0 0 0"	Deaccel 0.3 0.5
+}
+
+event HudTakeDamageRight
+{
+	Animate HudDamageIndicator DmgColorRight		"255 88 0 200"	Linear 0.0 0.0
+	Animate HudDamageIndicator DmgColorRight		"255 0 0 200"	Linear 0.0 0.3
+	Animate HudDamageIndicator DmgColorRight		"255 0 0 0"	Deaccel 0.3 0.5
+}
+
+event HudTakeDamageBehind
+{
+	RunEvent HudTakeDamageLeft	0.0
+	RunEvent HudTakeDamageRight	0.0
+}
+
+event MapOff
+{
+	Animate overview Position "640 0" Linear 0.0 0.001
+	Animate overview Size "0 0" Linear 0.0 0.001
+}
+
+event SnapToSmall
+{
+	Animate overview Position "r165 5" Linear 0.0 0.001
+	Animate overview Size "160 120" Linear 0.0 0.001
+}
+
+event SnapToLarge
+{
+	Animate overview Position "c-300 20" Linear 0.0 0.001
+	Animate overview Size "600 440" Linear 0.0 0.001
+	
+	StopAnimation overview zoom 0.0
+	Animate overview zoom "1.0" Linear 0.0 0.0001
+}
+
+event MapZoomLevel1
+{
+	StopAnimation overview zoom 0.0
+	Animate overview zoom "1.75" Linear 0.0 0.2
+}
+
+event MapZoomLevel2
+{
+	StopAnimation overview zoom 0.0
+	Animate overview zoom "4.0" Linear 0.0 0.2
+}
+
+event MapScaleToSmall
+{
+	Animate overview Position "r165 5" Linear 0.0 0.2
+	Animate overview Size "160 120" Linear 0.0 0.2
+}
+
+// demo MapOverview
+event ZoomToSmall
+{
+	Animate overview Position "r165 5" Linear 0.0 0.2
+	Animate overview Size "160 120" Linear 0.0 0.2
+	
+	StopAnimation overview zoom 0.0
+	Animate overview zoom "1.0" Linear 0.0 0.0001
+	Animate overview zoom "3.0" Spline 0.0001 1.0
+}
+
+event ZoomToLarge
+{
+	Animate overview Position "c-300 20" Linear 0.0 0.2
+	Animate overview Size "600 440" Linear 0.0 0.2
+	
+	StopAnimation overview zoom 0.0
+	Animate overview zoom "1.0" Spline 0.0 0.2
+}
+
+event ObjectiveIconShrink
+{
+	Animate HudObjectiveIcons icon_expand "0" Linear 0.0 0.2
+}
+
+event ObjectiveIconGrow
+{
+	Animate HudObjectiveIcons icon_expand "4" Linear 0.0 0.2
+}
+
+// Commentary hud element
+event ShowCommentary
+{
+	StopEvent	HideCommentary 0.0
+	Animate 	HudCommentary 	Alpha 255.0 Linear 0.0 0.5
+}
+
+event HideCommentary
+{
+	StopEvent	ShowCommentary 0.0
+	Animate 	HudCommentary 	Alpha	0 Linear 0.0 0.5
+}
+
+event TimerFlash
+{	
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer"		Linear  0.0 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer_Flash"	Linear  0.2 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer"		Linear  0.4 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer_Flash"	Linear  0.6 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer"		Linear  0.8 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer_Flash"	Linear  1.0 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer"		Linear  1.2 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer_Flash"	Linear  1.4 0.1
+	Animate HudObjectiveIcons TimerBG	"HudPanelObjectivesTimer"		Linear  1.6 0.1
+}
+
+event ShowTimeAdded
+{	
+	// grow the box
+	Animate HudObjectiveIcons	time_added_height_anim	1.0 Linear 0.0 0.2
+	
+	// fade in the time added
+	Animate HudObjectiveIcons	time_added_alpha	255.0	Linear	0.2 0.1
+}
+
+event HideTimeAdded
+{
+	StopEvent ShowTimeAdded 0.0
+	
+	// fade out time added
+	Animate HudObjectiveIcons	time_added_alpha	0.0	Linear	0.0 0.1
+	
+	// shrink box
+	Animate HudObjectiveIcons	time_added_height_anim	0.0 Linear 0.1 0.2
+}
+
+event HudSnapShotReminderIn
+{
+	Animate ScreenshotPanel		Position	"c-83 -50"	Linear 0.0 0.001
+	Animate ScreenshotPanel		Position	"c-83 13"	Spline 0.001 0.2
+}

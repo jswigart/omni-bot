@@ -1,0 +1,448 @@
+#include "ui_mp/menudef.h"
+
+{
+\\ CALL VOTE MENU \\ 
+
+menuDef {
+    	name "ingame_callvote"
+    	visible 0
+    	fullscreen 0
+		rect 150 125 343 240
+		outOfBoundsClick			// this closes the window if it gets a click out of the rectangle
+    	focusColor 1 .75 0 1
+    	style 1
+    	border 1
+		onOpen { hide grpcallVote ; show misc ; setCvar cg_draw2D "0"; uiScript loadArenas }
+		onClose { setCvar cg_draw2D "1" }
+		onEsc { setCvar cg_draw2D "1" }
+
+itemDef 
+	{
+	name window
+	group ingamebox
+//	rect 0 2 343 200
+	rect 30 2 275 200	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+	}
+
+	itemDef 
+	{
+		name window2
+		group grpControlbutton
+//		rect 2 4 339 20	
+		rect 32 4 271 20	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .2
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .25
+		visible 1
+		decoration
+	}
+
+
+// 	BUTTONS	//
+itemDef {
+	name ctr_misc
+	text "Misc"
+	type 1
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	group grpControlbutton
+	background "ui_mp/assets/button_back.tga"
+	rect 30 3.5 45 20
+	textalign 1
+	textalignx 22
+	textaligny 14
+	border 1
+	bordercolor .1 .1 .1 0
+	forecolor 1 1 1 1
+	visible 1
+	action { hide grpCallVote ; show misc }
+	mouseEnter { setitemcolor ctr_misc backcolor .1 .37 .1 1 }
+      	mouseExit { setitemcolor ctr_misc backcolor .37 .1 .1 1 }
+	}
+
+
+itemDef {
+	name ctr_gametype
+	text "Type"
+	type 1
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	group grpControlbutton
+	background "ui_mp/assets/button_back.tga"
+//	rect 115 3.5 45 20
+	rect 105 3.5 45 20
+	textalign 1
+	textalignx 22
+	textaligny 14
+	border 1
+	bordercolor .1 .1 .1 0
+	forecolor 1 1 1 1
+	visible 1
+	action { hide grpCallVote ; show type }
+	mouseEnter { setitemcolor ctr_gametype backcolor .1 .37 .1 1 }
+      	mouseExit { setitemcolor ctr_gametype backcolor .37 .1 .1 1 }
+	}
+
+itemDef {
+	name ctr_kickplayer
+	text "Kick"
+	type 1
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	group grpControlbutton
+//	rect 200 3.5 45 20
+	rect 180 3.5 45 20
+	textalign 1
+	textalignx 22
+	textaligny 14
+	border 1
+	bordercolor .1 .1 .1 0
+	forecolor 1 1 1 1
+	backcolor .1 .1 .1 0 
+	visible 1
+	action { hide grpCallVote ; show kick }
+	mouseEnter { setitemcolor ctr_kickplayer backcolor .1 .37 .1 1 }
+      	mouseExit { setitemcolor ctr_kickplayer backcolor .37 .1 .1 1 }
+	}
+
+itemDef {
+	name ctr_changemap
+	text "Map"
+	type 1
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	group grpControlbutton
+//	rect 280 3.5 45 20
+	rect 260 3.5 45 20
+	textalign 1
+	textalignx 22
+	textaligny 14
+	border 1
+	bordercolor .1 .1 .1 0
+	forecolor 1 1 1 1
+	backcolor .1 .1 .1 0 
+	visible 1
+	action { hide grpCallVote ; show map }
+	mouseEnter { setitemcolor ctr_changemap backcolor .1 .37 .1 1 }
+      	mouseExit { setitemcolor ctr_changemap backcolor .37 .1 .1 1 }
+	}
+
+// 	MISC	//		
+/*		 
+itemDef {
+	name misc
+	text "Restart Map"
+	group grpCallVote
+	textscale .25
+//	rect 30 70 290 20
+	rect 28 60 290 20
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 145
+	textaligny 16
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote map_restart" ; uiScript closeingame }
+	}
+*/
+itemDef {
+	name misc
+	group grpCallVote
+	text "RESET MATCH"
+	textscale .25
+	style	WINDOW_STYLE_FILLED
+	backcolor .3 0.5 0.2 .25
+	rect 115 60 120 20
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 58
+	border 1
+	bordercolor .1 .1 .1 .3
+	textaligny 14
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote reset_match" ; uiScript closeingame }
+	}
+
+itemDef {
+	name misc
+	group grpCallVote
+	text "START MATCH"
+	textscale .25
+	rect 115 90 120 20
+	border 1
+	bordercolor .1 .1 .1 .3
+	style	WINDOW_STYLE_FILLED
+	backcolor .3 0.5 0.2 .25
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 58
+	textaligny 14
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote start_match" ; uiScript closeingame }
+	}
+
+itemDef {
+	name misc
+	group grpCallVote
+	text "NEXT MAP"
+	textscale .25
+//	rect 30 90 290 20
+	rect 115 120 120 20
+	border 1
+	bordercolor .1 .1 .1 .3
+	style	WINDOW_STYLE_FILLED
+	backcolor .3 0.5 0.2 .25
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 58
+	textaligny 14
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote nextmap" ; uiScript closeingame }
+	}
+
+itemDef {
+	name misc
+	group grpCallVote
+	text "SWAP TEAMS"
+	textscale .25
+//	rect 30 90 290 20
+	rect 115 150 120 20
+	border 1
+	bordercolor .1 .1 .1 .3
+	style	WINDOW_STYLE_FILLED
+	backcolor .3 0.5 0.2 .25
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 58
+	textaligny 14
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote swap_teams" ; uiScript closeingame }
+	}
+
+/*
+itemDef {
+	name misc
+	group grpCallVote
+	text "DO WARMUP"
+	textscale .25
+	rect 30 110 290 20
+	type 1
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx 145
+	textaligny 16
+	forecolor 1 1 1 1
+	visible 0
+	action { exec "cmd callvote g_doWarmup 1" ; uiScript closeingame }
+	}
+*/
+
+
+// Game Type //
+
+itemDef {
+	name type
+	group grpCallVote
+	text "Gametype:"
+	style WINDOW_STYLE_FILLED
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	ownerdraw UI_NETGAMETYPE
+//	rect 100 90 110 12
+	backcolor 1 1 1 .1
+	forecolor 1 1 1 1
+	rect 100 60 140 15
+	textalign 0
+	textalignx 10
+	textaligny 12
+	forecolor 1 1 1 1
+	visible 0
+	}
+itemDef {
+	name type
+	text "OK"
+	type 1
+	textscale .25
+	group grpCallVote
+	style WINDOW_STYLE_FILLED
+	background "ui/assets/button_back.tga"
+//	rect 123 160 100 15
+	rect 118 100 100 15
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx		50		// center
+	textaligny		11
+	forecolor 1 1 1 1
+	backcolor		.3 .5 .2 .3
+	visible 0
+	border			1
+	bordercolor		.1 .1 .1 .25
+	action { uiScript voteGame ; uiScript closeingame }
+//	mouseEnter { setcolor backcolor .1 .2 .37 1 }
+//	mouseExit { setcolor backcolor .3 .5 .2 .3 }
+	}
+
+
+// 	KICK PLAYER	//
+
+itemDef {
+	name kick
+	group grpCallVote
+	text "Kick Player:"
+	textscale .25
+//	rect 50 50 110 20
+	rect 130 25 110 20
+	textfont	UI_FONT_NORMAL
+	textalign 0
+	textalignx 0
+	textaligny 16
+	forecolor 1 1 1 1
+	visible 0
+	decoration
+	action { }
+	}
+itemDef {
+      name kick
+	group grpCallVote
+      rect 30 45 275 135
+	style WINDOW_STYLE_FILLED
+	type ITEM_TYPE_LISTBOX
+	elementwidth 120
+	elementheight 15
+	textfont	UI_FONT_NORMAL
+	textscale .25
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_PLAYER_LIST
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 .5 .25
+	outlinecolor .1 .1 .7 .5
+	visible 0
+	textstyle		0
+	textaligny		-5
+	columns			1 2 190 25
+	mouseEnter { fadein message_arena } 
+	mouseExit { fadeout message_arena }
+	}
+
+itemDef {
+	name kick
+	text "OK"
+	type 1
+	textscale .25
+	group grpCallVote
+	style WINDOW_STYLE_FILLED
+	background "ui/assets/button_back.tga"
+	rect 116 183 100 15
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx		50		// center
+	textaligny		11
+	forecolor 1 1 1 1
+	backcolor		.3 .5 .2 .3
+	visible 0
+	border			1
+	bordercolor		.1 .1 .1 .25
+	action { uiScript voteKick ; uiScript closeingame }
+//	mouseEnter { setcolor backcolor .1 .2 .37 1 }
+//	mouseExit { setcolor backcolor .3 .5 .2 .3 }
+	}
+
+// 	NEW MAP	//
+
+itemDef {
+	name map
+	group grpCallVote
+	text "New Map:"
+	ownerdraw UI_ALLMAPS_SELECTION 
+	textscale .25
+//	rect 50 50 110 20
+	rect 140 25 110 20
+	textfont	UI_FONT_NORMAL
+	textalign 0
+	textalignx 0
+	textaligny 16
+	forecolor 1 1 1 1
+	decoration
+	visible 0
+	action { }
+	}
+itemDef {
+	name map
+	group grpCallVote
+	rect 30 45 275 135
+//   	rect 50 70 250 85
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 120
+	elementheight 15
+	textscale .25
+	elementtype LISTBOX_TEXT
+	textfont	UI_FONT_NORMAL
+	feeder FEEDER_ALLMAPS
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 .5 .25
+	outlinecolor .1 .1 .7 .5
+	visible 0
+	textstyle		0
+	textaligny		-3
+	columns			1 2 190 25
+	mouseEnter { fadein message_arena } 
+	mouseExit { fadeout message_arena } 
+  	}
+
+
+itemDef {
+	name map
+	text "OK"
+	type 1
+	textscale .25
+	group grpCallVote
+	style WINDOW_STYLE_FILLED
+	background "ui/assets/button_back.tga"
+//	rect 123 160 100 15
+	rect 116 183 100 15
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textalignx		50		// center
+	textaligny		11
+	forecolor 1 1 1 1
+	backcolor .3 .5 .2 .3
+	visible 0
+	border			1
+	bordercolor		.1 .1 .1 .25
+	action { uiScript voteMap ; uiScript closeingame }
+//	mouseEnter { setcolor backcolor .1 .2 .37 1 }
+//      mouseExit { setcolor backcolor .3 .5 .2 .3 }
+	}
+
+	
+	
+	
+
+
+}
+
+
+}

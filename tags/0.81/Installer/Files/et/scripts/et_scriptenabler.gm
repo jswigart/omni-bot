@@ -1,0 +1,63 @@
+global ScriptEnable =
+{
+	DisableAll = false,
+
+	// this.AutoAdd = ScriptEnable.EnableScriptGoal(this.Name);
+	EnableScriptGoal = function(name)
+	{
+		if ( ScriptEnable.DisableAll == true ) {
+			return false;
+		}
+
+		switch(name)
+		{
+			// these are normally set to true
+
+			// patthrough goals
+			case "Airstrike_PT" 		:{ return true; }
+			case "Artillery_PT" 		:{ return true; }
+
+			// low level goals
+			case "AskForAmmo" 		:{ return true; }
+			case "AskForHealth" 		:{ return true; }
+			case "CombatMovement" 		:{ return true; }
+			case "Difficulty" 		:{ return true; }
+			case "DispenseAmmo" 		:{ return true; }
+			case "DispenseHealth" 		:{ return true; }
+			case "ResetXP" 			:{ return true; }
+			case "SecondaryWeapon" 		:{ return true; }
+			case "SelectWeapons" 		:{ return true; }
+			case "SupplySelf" 		:{ return true; }
+			case "VoiceChat" 		:{ return true; }
+
+			// high level goals
+			case "AIRSTRIKE" 		:{ return true; }
+			case "BUILD" 			:{ return true; }
+			case "DeliverSupplies" 		:{ return true; }
+			case "ESCORT" 			:{ return true; }
+			case "GRENADE" 			:{ return true; }
+			case "MOUNT" 			:{ return true; }
+			case "PLANT" 			:{ return true; }
+			case "RIDE" 			:{ return true; }
+			case "WatchForProjectile" 	:{ return true; }
+
+			// high level goals maintained for 0.71 compat
+			case "EscortVehicle" 		:{ return true; }
+			case "GrenadeTarget" 		:{ return true; }
+			case "MountVehicle" 		:{ return true; }
+			case "RideVehicle" 		:{ return true; }
+			case "UseSwitch" 		:{ return true; }
+
+			// these are normally set to false
+			case "Disguise" 		:{ return false; }	// incomplete
+			case "DualObjective" 		:{ return false; }	// legacy and never used
+			case "FireTeam" 		:{ return false; }	// experimental
+			case "Hunt" 			:{ return false; }	// experimental, for dm maps
+			case "RideTram" 		:{ return false; }	// legacy, b.AddScriptGoal for some maps
+			case "TestEvents" 		:{ return false; }	// debug shit
+			case "Test" 			:{ return false; }	// sandbox 
+
+			default : { print("no check for " + name); }
+		}
+	},
+};

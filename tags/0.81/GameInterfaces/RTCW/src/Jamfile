@@ -1,0 +1,18 @@
+# Root project file for the RTCW interface.
+# Builds the game libraries.
+
+
+project omnibot_rtcw
+	: build-dir ./build
+	: requirements <toolset>msvc:<define>WIN32
+	: requirements <toolset>gcc:<define>__linux__
+	: requirements <variant>debug:<define>_DEBUG
+	: requirements <variant>release:<define>NDEBUG
+	;
+
+# define external libs
+lib dl_lib : : <name>dl ;
+
+build-project cgame ;
+build-project game ;
+build-project ui ;

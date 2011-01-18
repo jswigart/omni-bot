@@ -1,0 +1,638 @@
+/********************************************************  
+Waypoints and Script by **PCZ** >M@t3o$<.
+********************************************************/  
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Axis_safe_door_Dyno = 0,
+	Axis_sewer_barrier_Dyno = 0,
+	Farmhouse_Barrier_Dyno = 0,
+	cell_door_Dyno = 0,
+
+	Ammo_Cabinet_basement_ammocabinet = "AMMOCAB_basement_ammocabinet",
+	Ammo_Cabinet_warehouse_ammocabinet = "AMMOCAB_warehouse_ammocabinet",
+	Health_Cabinet_basement_healthcabinet = "HEALTHCAB_basement_healthcabinet",
+	Health_Cabinet_warehouse_healthcabinet = "HEALTHCAB_warehouse_healthcabinet",
+	Checkpoint_building_flag = "CHECKPOINT_building_flag",
+	Flag_goldbars1 = "FLAG_goldbars1",
+	Flag_prisoner1 = "FLAG_prisoner1",
+	Cappoint_Medical_Beds = "CAPPOINT_Medical_Beds",
+	Cappoint_Truck = "CAPPOINT_Truck",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Axis_sewer_barrier = "BUILD_Axis_sewer_barrier",
+	Build_Farmhouse_Barrier = "BUILD_Farmhouse_Barrier",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_safe_door = "PLANT_Axis_safe_door",
+	Plant_Axis_sewer_barrier = "PLANT_Axis_sewer_barrier",
+	Plant_Farmhouse_Barrier = "PLANT_Farmhouse_Barrier",
+	Plant_cell_door = "PLANT_cell_door",
+	Mount_239 = "MOUNTMG42_239",
+	Mount_245 = "MOUNTMG42_245",
+	Mount_346 = "MOUNTMG42_346",
+	Mount_420 = "MOUNTMG42_420",
+	Mount_421 = "MOUNTMG42_421",
+	Mount_46 = "MOUNTMG42_46",
+	Mount_552 = "MOUNTMG42_552",
+	Mount_588 = "MOUNTMG42_588",
+	Mount_73 = "MOUNTMG42_73",
+	Mount_Gold_Crate = "MOUNTMG42_Gold_Crate",
+	Repair_239 = "REPAIRMG42_239",
+	Repair_245 = "REPAIRMG42_245",
+	Repair_346 = "REPAIRMG42_346",
+	Repair_420 = "REPAIRMG42_420",
+	Repair_421 = "REPAIRMG42_421",
+	Repair_46 = "REPAIRMG42_46",
+	Repair_552 = "REPAIRMG42_552",
+	Repair_588 = "REPAIRMG42_588",
+	Repair_73 = "REPAIRMG42_73",
+	Repair_Gold_Crate = "REPAIRMG42_Gold_Crate",
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Built" ); }
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Built" ); }
+	},
+
+	Axis_sewer_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "Map.Plant_cell_door" );
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Built" ); }
+	},
+
+	Farmhouse_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_AxisEscape1" );
+			
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_safe_door );
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Built" ); }
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Planted" ); }
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Planted" ); }
+	},
+
+	Axis_safe_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Planted" ); }
+	},
+
+	Axis_sewer_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Planted" ); }
+	},
+
+	Farmhouse_Barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Planted" ); }
+	},
+
+	cell_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cell_door_Planted" ); }
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Defused" ); }
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Defused" ); }
+	},
+
+	Axis_safe_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Defused" ); }
+	},
+
+	Axis_sewer_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Defused" ); }
+	},
+
+	Farmhouse_Barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Defused" ); }
+	},
+
+	cell_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cell_door_Defused" ); }
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Destroyed" ); }
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Destroyed" ); }
+	},
+
+	Axis_safe_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Destroyed" ); }
+	},
+
+	Axis_sewer_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Destroyed" ); }
+	},
+
+	Farmhouse_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisEscape1" );
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Destroyed" ); }
+	},
+
+	cell_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cell_door_Destroyed" ); }
+	},
+
+	goldbars1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Allies.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allies.*" );
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Taken" ); }
+	},
+
+	prisoner1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Axis.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Axis.*" );
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Taken" ); }
+	},
+
+	goldbars1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Allies.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allies.*" );
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Returned" ); }
+	},
+
+	prisoner1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Axis.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Axis.*" );
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Returned" ); }
+	},
+
+	goldbars1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Secured" ); }
+	},
+
+	prisoner1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Secured" ); }
+	},
+
+	building_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "Map.Plant_cell_door" );
+
+		if ( Map.Debug )
+			{ print( "building_flag_Axis_Captured" ); }
+	},
+
+	building_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.ALLIES, true, "Map.Plant_Axis_safe_door" );
+
+		if ( Map.Debug )
+			{ print( "building_flag_Allies_Captured" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** 	TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Sewer grate has been constructed.", Map.Axis_sewer_barrier_Built );
+	OnTrigger( "Farmhouse tunnel barrier has been constructed.", Map.Farmhouse_Barrier_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis safe door.", Map.Axis_safe_door_Planted );
+	OnTrigger( "Planted at the Axis sewer barrier.", Map.Axis_sewer_barrier_Planted );
+	OnTrigger( "Planted at the Farmhouse barrier.", Map.Farmhouse_Barrier_Planted );
+	OnTrigger( "Planted at the cell door.", Map.cell_door_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis safe door.", Map.Axis_safe_door_Defused );
+	OnTrigger( "Defused at the Axis sewer barrier.", Map.Axis_sewer_barrier_Defused );
+	OnTrigger( "Defused at the Farmhouse barrier.", Map.Farmhouse_Barrier_Defused );
+	OnTrigger( "Defused at the cell door.", Map.cell_door_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allies destroyed the Axis safe", Map.Axis_safe_door_Destroyed );
+	OnTrigger( "Sewer grate has been destroyed.", Map.Axis_sewer_barrier_Destroyed );
+	OnTrigger( "Farmhouse tunnel barrier has been destroyed.", Map.Farmhouse_Barrier_Destroyed );
+	OnTrigger( "Axis destroyed the cell door", Map.cell_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.goldbars1_Taken );
+	OnTrigger( "MISSING_STRING", Map.prisoner1_Taken );
+	OnTrigger( "MISSING_STRING", Map.goldbars1_Returned );
+	OnTrigger( "MISSING_STRING", Map.prisoner1_Returned );
+	OnTrigger( "The Allies have secured the good crate... AXIS are losers!", Map.goldbars1_Secured );
+	OnTrigger( "The Axis have rescued the prisoner... Allies are losers!", Map.prisoner1_Secured );
+	OnTrigger( "Axis capture the Forward Flag!", Map.building_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Flag!", Map.building_flag_Allies_Captured );
+	
+	// *** INITIAL AVAILABILITY OF GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "Map.Build_Axis_sewer_barrier" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "Map.Build_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "Map.Checkpoint_building_flag" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "Map.Plant_cell_door" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "Map.Build_Farmhouse_Barrier" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "Map.Build_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "Map.Checkpoint_building_flag" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "Map.Plant_Axis_safe_door" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+	
+	// *** PRIORITY ***
+	SetGoalPriority(Map.Build_Axis_Command_Post, 0.7);
+	SetGoalPriority(Map.Plant_Allied_Command_Post, 0.7);
+	SetGoalPriority(Map.Plant_Farmhouse_Barrier, 0.8);
+	SetGoalPriority(Map.Plant_cell_door, 0.9);
+	SetGoalPriority(Map.Build_Axis_sewer_barrier, 1.0);
+	
+	SetGoalPriority(Map.Checkpoint_building_flag, 0.85);
+	SetGoalPriority( "CHECKPOINT_building_flag", 0.0, 0, CLASS.ENGINEER );
+	
+	SetGoalPriority(Map.Build_Allied_Command_Post, 0.7);
+	SetGoalPriority(Map.Plant_Axis_Command_Post, 0.7);
+	SetGoalPriority(Map.Plant_Axis_sewer_barrier, 0.8);
+	SetGoalPriority(Map.Plant_Axis_safe_door, 0.9);
+	SetGoalPriority(Map.Build_Farmhouse_Barrier, 1.0);
+	
+	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	
+	Util.SetMaxUsersInUse( 1, "BUILD.*" );
+	Util.SetMaxUsersInUse( 1, "PLANT.*" );
+	
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		CHECKPOINT_building_flag =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_AlliedMiddle1 =
+					{
+						ROUTE_AlliedMiddle2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+						ROUTE_AlliedMiddle3 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+					
+					ROUTE_AlliedRight1 =
+					{
+						ROUTE_AlliedRight2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+					
+					ROUTE_AlliedLeft1 =
+					{
+						ROUTE_AlliedLeft2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+				},
+				
+				ROUTE_AlliedCPWay1 =
+				{
+					ROUTE_AlliedCPWay2 =
+					{
+						ROUTE_AlliedLeft1 =
+						{
+							ROUTE_AlliedLeft2 =
+							{
+								ROUTE_AlliedFlag ={}
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		PLANT_Farmhouse_Barrier =
+		{
+			ROUTE_AxisSpawn1 =
+			{
+				ROUTE_Sewer1 =
+				{
+					ROUTE_Sewer2 =
+					{
+						ROUTE_Sewer3 =
+						{
+							ROUTE_Sewer4 =
+							{
+								ROUTE_Sewer5 =
+								{
+									ROUTE_Sewer6 =
+									{
+										ROUTE_AlliedCPWay2 =
+										{
+											ROUTE_FarmhouseBarrier = {},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		PLANT_Axis_safe_door =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_Under1 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under3 =
+							{
+								ROUTE_Under4 =
+								{
+									ROUTE_AxisSafeDoor = {},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		PLANT_Axis_sewer_barrier =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_Under1 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under3 =
+							{
+								ROUTE_SewerBarrier = {},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		CAPPOINT_Truck =
+		{
+			ROUTE_GoldCrate =
+			{
+				ROUTE_Under4 =
+				{
+					ROUTE_Under3 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under1 =
+							{
+								ROUTE_AlliedPrincipal = {},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		CAPPOINT_MedicalBeds =
+		{
+			ROUTE_Prisoner =
+			{
+				Weight = 5,
+				ROUTE_AxisEscape1 =
+				{
+					ROUTE_AxisEscape2 =
+					{
+						ROUTE_AlliedCPWay2 =
+						{
+							ROUTE_Sewer6 =
+							{
+								ROUTE_Sewer5 =
+								{
+									ROUTE_Sewer4 =
+									{
+										ROUTE_Sewer3 =
+										{
+											ROUTE_Sewer2 =
+											{
+												ROUTE_Sewer1 = {},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Weight = 1,
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_Under1 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under3 = {},
+						},
+					},
+				},
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_cell_door = MapRoutes.PLANT_Farmhouse_Barrier;
+	
+	Util.Routes(MapRoutes);
+
+	print( "Omni-bot map script for Den Of Lions by **PCZ** >M@t3o$<." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 180.0;
+	w = bot.GetWeapon(WEAPON.THOMPSON);
+    w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+    w = bot.GetWeapon(WEAPON.MP40);
+    w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	
+	// crapshoot: lower priority of knife at close range so they keep shooting breakables with primary
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
+};

@@ -1,0 +1,337 @@
+global Map =
+{
+	Switches =
+	{
+		GarageDoor2 =
+		{
+			Enabled = true,
+			Priority = 0.65,
+			WaypointName = "Garage Door 2 Switch",
+		},
+	},
+	
+	garagedoor1 = true,
+	garagedoor2,
+	
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Checkpoint_checkpoint = "CHECKPOINT_checkpoint",
+	Build_Bridge = "BUILD_Bridge",
+	Build_Cabin_MG42 = "BUILD_Cabin_MG42",
+	Build_Cellar_MG42 = "BUILD_Cellar_MG42",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Complex_Roof_MG42 = "BUILD_Complex_Roof_MG42",
+	Build_Footbridge = "BUILD_Footbridge",
+	Build_Garage_Roof_MG42 = "BUILD_Garage_Roof_MG42",
+	Build_Generator = "BUILD_Generator",
+	Build_Window_MG42 = "BUILD_Window_MG42",
+	Plant_Axis_Door = "PLANT_Axis_Door",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Cabin_MG42 = "PLANT_Cabin_MG42",
+	Plant_Cellar_Entrance = "PLANT_Cellar_Entrance",
+	Plant_Cellar_MG42 = "PLANT_Cellar_MG42",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Communications_Radio = "PLANT_Communications_Radio",
+	Plant_Complex_Roof_MG42 = "PLANT_Complex_Roof_MG42",
+	Plant_Footbridge = "PLANT_Footbridge",
+	Plant_Garage_Door = "PLANT_Garage_Door",
+	Plant_Garage_Roof_MG42 = "PLANT_Garage_Roof_MG42",
+	Plant_Generator = "PLANT_Generator",
+	Plant_Window_MG42 = "PLANT_Window_MG42",
+	Explode_covtdoor_null = "EXPLODE_covtdoor_null",
+	Mount_Cabin_MG42 = "MOUNTMG42_Cabin_MG42",
+	Mount_Cellar_MG42 = "MOUNTMG42_Cellar_MG42",
+	Mount_Complex_Roof_MG42 = "MOUNTMG42_Complex_Roof_MG42",
+	Mount_Garage_Roof_MG42 = "MOUNTMG42_Garage_Roof_MG42",
+	Mount_Window_MG42 = "MOUNTMG42_Window_MG42",
+	Mount_axisgarage_mg42_actual = "MOUNTMG42_axisgarage_mg42_actual",
+	Repair_Cabin_MG42 = "REPAIRMG42_Cabin_MG42",
+	Repair_Cellar_MG42 = "REPAIRMG42_Cellar_MG42",
+	Repair_Complex_Roof_MG42 = "REPAIRMG42_Complex_Roof_MG42",
+	Repair_Garage_Roof_MG42 = "REPAIRMG42_Garage_Roof_MG42",
+	Repair_Window_MG42 = "REPAIRMG42_Window_MG42",
+	Repair_axisgarage_mg42_actual = "REPAIRMG42_axisgarage_mg42_actual",
+	Snipe_277 = "SNIPE_277",
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Built" );
+	},
+
+	Cabin_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Cabin_MG42_Built" );
+	},
+
+	Cellar_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Cellar_MG42_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Complex_Roof_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Complex_Roof_MG42_Built" );
+	},
+
+	Footbridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Footbridge_Built" );
+	},
+
+	Garage_Roof_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Garage_Roof_MG42_Built" );
+	},
+
+	Generator_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Built" );
+	},
+
+	Window_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Window_MG42_Built" );
+	},
+
+	Axis_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Door_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Destroyed" );
+	},
+
+	Cabin_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Cabin_MG42_Destroyed" );
+	},
+
+	Cellar_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Cellar_Entrance_Destroyed" );
+	},
+
+	Cellar_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Cellar_MG42_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Communications_Radio_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Communications_Radio_Destroyed" );
+	},
+
+	Complex_Roof_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Complex_Roof_MG42_Destroyed" );
+	},
+
+	Footbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Footbridge_Destroyed" );
+	},
+
+	Garage_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		garagedoor1 = false;
+
+		print( "Garage_Door_Destroyed" );
+	},
+
+	Garage_Roof_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Garage_Roof_MG42_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Generator_Destroyed" );
+	},
+
+	Window_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Window_MG42_Destroyed" );
+	},
+
+	checkpoint_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "checkpoint_Axis_Captured" );
+	},
+
+	checkpoint_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "checkpoint_Allies_Captured" );
+	},
+
+	garage_door2_lever = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.GarageDoor2.LimitTeam = 0;
+		
+		print( "garage_door2_lever" );
+	},
+
+	garage_door2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		sleep( 1 );
+		vel = ToVector(trigger.Action);
+
+		if ( vel[ 0 ] < 0 )
+		{
+			Map.garagedoor2 = false; 
+			print("garage door 2 closing"); 
+		}
+		else if ( vel[ 0 ] > 0 )
+		{ 
+			Map.garagedoor2 = true;
+			print("garage door 2 opening"); 
+		}
+
+		if ( Map.garagedoor2 )
+			{ Map.Switches.GarageDoor2.LimitTeam = (1<<TEAM.AXIS); }
+		else if ( !Map.garagedoor2 )
+			{ Map.Switches.GarageDoor2.LimitTeam = (1<<TEAM.ALLIES); }		
+		else
+			{ Map.Switches.GarageDoor2.LimitTeam = 0; }
+		
+		print( "garage_door2" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Bridge_Built );
+	OnTrigger( "MISSING_STRING", Map.Cabin_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Cellar_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Complex_Roof_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Footbridge_Built );
+	OnTrigger( "MISSING_STRING", Map.Garage_Roof_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Generator_Built );
+	OnTrigger( "MISSING_STRING", Map.Window_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Cabin_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Cellar_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Cellar_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Communications_Radio_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Complex_Roof_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Footbridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Garage_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Garage_Roof_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Generator_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Window_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.checkpoint_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint_Allies_Captured );
+	OnTrigger( "garagedoor2_lever_goto", Map.garage_door2_lever );
+	OnTrigger( "garagedoor2_goto", Map.garage_door2 );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	Util.UpdateSwitchData();
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

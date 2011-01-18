@@ -1,0 +1,16 @@
+# The user interface library.
+
+project ui
+	: requirements <define>UI_EXPORTS
+	: requirements <include>../game
+	: requirements <include>../../main/ui_mp
+	;
+
+SOURCES = [ glob ui_*.c ]
+		  ../game/bg_misc.c
+		  ../game/q_math.c
+		  ../game/q_shared.c
+		;
+
+lib ui.mp.i386.so : $(SOURCES) : <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing ;
+

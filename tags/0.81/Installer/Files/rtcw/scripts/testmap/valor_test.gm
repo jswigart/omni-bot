@@ -1,0 +1,178 @@
+global Map =
+{
+	MapName = "valor",
+	Quiet = true,
+	Call_Artillery_bBeach_1 = "CALLARTILLERY_bBeach_1",
+	Call_Artillery_bBeach_2 = "CALLARTILLERY_bBeach_2",
+	Call_Artillery_bBeach_3 = "CALLARTILLERY_bBeach_3",
+	Call_Artillery_bBeach_4 = "CALLARTILLERY_bBeach_4",
+	Call_Artillery_rBunker_1 = "CALLARTILLERY_rBunker_1",
+	Call_Artillery_rBunker_2 = "CALLARTILLERY_rBunker_2",
+	Call_Artillery_rBunker_3 = "CALLARTILLERY_rBunker_3",
+	Artillery_S_bBunker_1 = "ARTILLERY_S_bBunker_1",
+	Artillery_S_bBunker_2 = "ARTILLERY_S_bBunker_2",
+	Artillery_S_bBunker_3 = "ARTILLERY_S_bBunker_3",
+	Artillery_S_bBunker_4 = "ARTILLERY_S_bBunker_4",
+	Artillery_S_bFlag_1 = "ARTILLERY_S_bFlag_1",
+	Artillery_S_rBarricade = "ARTILLERY_S_rBarricade",
+	Artillery_S_rTrench = "ARTILLERY_S_rTrench",
+	Artillery_S_rWall = "ARTILLERY_S_rWall",
+	Artillery_S_rWall_Main_1 = "ARTILLERY_S_rWall_Main_1",
+	Artillery_S_rWall_Main_2 = "ARTILLERY_S_rWall_Main_2",
+	Checkpoint_beacheadspawn = "CHECKPOINT_beacheadspawn",
+	Plant_Beach_Head_Wall = "PLANT_Beach_Head_Wall",
+	Plant_Bunker_Breach = "PLANT_Bunker_Breach",
+	Plant_Cyanide_Drums = "PLANT_Cyanide_Drums",
+	Plant_Trench_Grate = "PLANT_Trench_Grate",
+	Explode_Barricade1 = "EXPLODE_Barricade1",
+	Explode_Barricade2 = "EXPLODE_Barricade2",
+	Explode_Barricade3 = "EXPLODE_Barricade3",
+	Mount_eastbunker = "MOUNTMG42_eastbunker",
+	Mount_mainbunker_1 = "MOUNTMG42_mainbunker_1",
+	Mount_mainbunker_2 = "MOUNTMG42_mainbunker_2",
+	Mount_westbunker = "MOUNTMG42_westbunker",
+	Repair_eastbunker = "REPAIRMG42_eastbunker",
+	Repair_mainbunker_1 = "REPAIRMG42_mainbunker_1",
+	Repair_mainbunker_2 = "REPAIRMG42_mainbunker_2",
+	Repair_westbunker = "REPAIRMG42_westbunker",
+	Snipe_bBeach_1 = "SNIPE_bBeach_1",
+	Snipe_bBeach_2 = "SNIPE_bBeach_2",
+	Snipe_bBeach_3 = "SNIPE_bBeach_3",
+	Snipe_bBeach_4 = "SNIPE_bBeach_4",
+	Snipe_bBeach_5 = "SNIPE_bBeach_5",
+	Snipe_rBeach_1 = "SNIPE_rBeach_1",
+	Snipe_rBeach_2 = "SNIPE_rBeach_2",
+	Snipe_rBeach_3 = "SNIPE_rBeach_3",
+	Snipe_rBeach_4 = "SNIPE_rBeach_4",
+	Snipe_rBeach_5 = "SNIPE_rBeach_5",
+
+	Target =
+	{
+		Barricade1 =
+		{
+			Priority = 2,
+			Enabled = true,
+			GrenadeTargetGoalName = "EXPLODE_Barricade1",
+			LimitBots = 2,
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitClass = Util.AllClasses,
+			Offset = 
+			{
+				Vector3(265, 0, -48),
+			}
+		},
+	},
+
+	Beach_Head_Wall_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Beach_Head_Wall_Destroyed" );
+	},
+
+	Bunker_Breach_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Bunker_Breach_Destroyed" );
+	},
+
+	Cyanide_Drums_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Cyanide_Drums_Destroyed" );
+	},
+
+	Trench_Grate_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Trench_Grate_Destroyed" );
+	},
+
+	beacheadspawn_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beacheadspawn_Axis_Captured" );
+	},
+
+	beacheadspawn_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beacheadspawn_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Trench-Grate! Destroyed.", Map.Trench_Grate_Destroyed );
+		OnTrigger( "The Beach-Head Wall Has Been Breached", Map.Beach_Head_Wall_Destroyed );
+		OnTrigger( "The Bunker Has Been Comprimised !!!", Map.Bunker_Breach_Destroyed );
+ 		OnTrigger( "Allies Sieze The Beach-Head !!", Map.beacheadspawn_Allies_Captured );
+ 		OnTrigger( "Axis Secure The Beach-Head!!", Map.beacheadspawn_Axis_Captured );
+		OnTrigger( "The Cyanide-Drums Destroyed.", Map.Cyanide_Drums_Destroyed );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_eastbunker, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mainbunker_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mainbunker_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_westbunker, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Trench_Grate, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Beach_Head_Wall, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Bunker_Breach, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_beacheadspawn, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_4, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_5, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_4, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_5, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Cyanide_Drums, 120 );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

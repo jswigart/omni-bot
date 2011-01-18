@@ -1,0 +1,227 @@
+global Map =
+{
+	Ammo_Cabinet_depot_ammocabinet = "AMMOCAB_depot_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Health_Cabinet_depot_healthcabinet = "HEALTHCAB_depot_healthcabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Checkpoint_depotflag = "CHECKPOINT_depotflag",
+	Flag_fuelcan = "FLAG_fuelcan",
+	Cappoint_130 = "CAPPOINT_130",
+	Build_Allied_MG_nest = "BUILD_Allied_MG_nest",
+	Build_Axis_MG42_Construction = "BUILD_Axis_MG42_Construction",
+	Build_Axis_MG42_Construction_1 = "BUILD_Axis_MG42_Construction_1",
+	Build_Bridge = "BUILD_Bridge",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Lorraine = "BUILD_Lorraine",
+	Plant_Allied_MG_nest = "PLANT_Allied_MG_nest",
+	Plant_Axis_MG42_Construction = "PLANT_Axis_MG42_Construction",
+	Plant_Axis_MG42_Construction_1 = "PLANT_Axis_MG42_Construction_1",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Main_Entrance_to_the_Rocket_Base = "PLANT_Main_Entrance_to_the_Rocket_Base",
+	Explode_flagexplo = "EXPLODE_flagexplo",
+	Explode_t1103 = "EXPLODE_t1103",
+	Mount_133 = "MOUNTMG42_133",
+	Mount_Allied_MG_nest = "MOUNTMG42_Allied_MG_nest",
+	Mount_Axis_MG42_Construction = "MOUNTMG42_Axis_MG42_Construction",
+	Mount_Axis_MG42_Construction_1 = "MOUNTMG42_Axis_MG42_Construction_1",
+	Mount_mg42_2 = "MOUNTMG42_mg42_2",
+	Repair_133 = "REPAIRMG42_133",
+	Repair_Allied_MG_nest = "REPAIRMG42_Allied_MG_nest",
+	Repair_Axis_MG42_Construction = "REPAIRMG42_Axis_MG42_Construction",
+	Repair_Axis_MG42_Construction_1 = "REPAIRMG42_Axis_MG42_Construction_1",
+	Repair_mg42_2 = "REPAIRMG42_mg42_2",
+	Snipe_498 = "SNIPE_498",
+	Snipe_499 = "SNIPE_499",
+	Snipe_500 = "SNIPE_500",
+	Mover_tank = "MOVER_tank",
+	Mover_train = "MOVER_train",
+	
+	EscortVehicle =
+	{
+		Tank =
+		{
+			EscortVehicleGoalName = "MOVER_tank",
+			Enabled = true,
+			LimitBots = 2,
+		},
+	},	
+
+	Allied_MG_nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_MG_nest_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_Built" );
+	},
+
+	Axis_MG42_Construction_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_1_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Lorraine_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Lorraine_Built" );
+	},
+
+	Allied_MG_nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_MG_nest_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Axis_MG42_Construction_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_MG42_Construction_1_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Main_Entrance_to_the_Rocket_Base_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Entrance_to_the_Rocket_Base_Destroyed" );
+	},
+
+	fuelcan_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "fuelcan_Taken" );
+	},
+
+	CAPPOINT_130_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "CAPPOINT_130_Captured" );
+	},
+
+	depotflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "depotflag_Axis_Captured" );
+	},
+
+	depotflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "depotflag_Allies_Captured" );
+	},
+	
+	TankEscorted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.EscortVehicle.Tank.Enabled = false; 
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_fuelcan );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_MG_nest_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_1_Built );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Built );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Lorraine_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_MG_nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Entrance_to_the_Rocket_Base_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.fuelcan_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_130_Captured );
+	OnTrigger( "MISSING_STRING", Map.depotflag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.depotflag_Allies_Captured );
+	OnTrigger( "Allies have escorted the Lorraine to the DepotYard", Map.TankEscorted );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	ETUtil.DisableGoal("MOUNTMG42.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Flag_fuelcan );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_depotflag );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

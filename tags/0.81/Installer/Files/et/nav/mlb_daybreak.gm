@@ -1,0 +1,1060 @@
+/********************************************************
+Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
+********************************************************/
+
+global Map =
+{
+	ShowMovers = false,
+	Debug = false,
+	Quiet = true,
+	//set Talk to false if you don't want the Axis bots to cheer after winning:
+	Talk = true,
+	GeneratorDoor = "closed",
+	Door = "closed",
+	Bunkerdoor = "closed",
+	Bomb = "disabled",
+	BreakableGate = false,
+	BreakableDoor = false,
+
+	MountVehicle =
+	{
+		Enabled = false,
+	},
+
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Ammo_Cabinet_north_ammocabinet_2 = "AMMOCAB_north_ammocabinet_2",
+	Ammo_Cabinet_north_ammocabinet_3 = "AMMOCAB_north_ammocabinet_3",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
+	Health_Cabinet_north_healthcabinet_2 = "HEALTHCAB_north_healthcabinet_2",
+	Health_Cabinet_north_healthcabinet_3 = "HEALTHCAB_north_healthcabinet_3",
+	Call_Artillery_905 = "CALLARTILLERY_905",
+	Call_Artillery_a_barrier2_3 = "CALLARTILLERY_a_barrier2_3",
+	Call_Artillery_ar_axis_1 = "CALLARTILLERY_ar_axis_1",
+	Artillery_S_1306 = "ARTILLERY_S_1306",
+	Flag_gold = "FLAG_gold",
+	Flag_gold2 = "FLAG_gold2",
+	Cappoint_Bombparts = "CAPPOINT_Bombparts",
+	Cappoint_Keycard = "CAPPOINT_Keycard",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Supply_Hangar_Spawn_Area = "BUILD_Supply_Hangar_Spawn_Area",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_Barrier = "BUILD_Tank_Barrier",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Supply_Hangar_Spawn_Area = "PLANT_Supply_Hangar_Spawn_Area",
+	Plant_Tank_Barrier = "PLANT_Tank_Barrier",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_ancient_castle_wall = "PLANT_ancient_castle_wall",
+	Plant_dam_access_gate = "PLANT_dam_access_gate",
+	Plant_generator = "PLANT_generator",
+	Plant_rocket_base_gate = "PLANT_rocket_base_gate",
+	Mount_564 = "MOUNTMG42_564",
+	Mount_t382 = "MOUNTMG42_t382",
+	Mount_t382_1 = "MOUNTMG42_t382_1",
+	Mount_t382_2 = "MOUNTMG42_t382_2",
+	Mount_t382_3 = "MOUNTMG42_t382_3",
+	Mount_t382_4 = "MOUNTMG42_t382_4",
+	Mount_t382_5 = "MOUNTMG42_t382_5",
+	Repair_564 = "REPAIRMG42_564",
+	Repair_t382 = "REPAIRMG42_t382",
+	Repair_t382_1 = "REPAIRMG42_t382_1",
+	Repair_t382_2 = "REPAIRMG42_t382_2",
+	Repair_t382_3 = "REPAIRMG42_t382_3",
+	Repair_t382_4 = "REPAIRMG42_t382_4",
+	Repair_t382_5 = "REPAIRMG42_t382_5",
+	Mobile_MG42_1304 = "MOBILEMG42_1304",
+	Mobile_MG42_1305 = "MOBILEMG42_1305",
+	Mover_tank = "MOVER_tank",
+
+	Navigation =
+	{
+		breakgate =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.BreakableGate )
+				{
+					// cache the info
+					if ( !Map.BreakableGateInfo ) {
+						Map.BreakableGateInfo = Util.WpNameInfo("r_spawnexit_5");
+					}
+
+					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					{
+						_this.AddAimRequest(Priority.High, "facing", Map.BreakableGateInfo.facing);
+						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
+						_this.BlockForWeaponChange( WEAPON.KNIFE );
+
+						while( !Map.BreakableGate )
+						{
+							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+							yield();
+						}
+					}
+				}
+				sleep(1);
+			},
+		},
+		breakdoor =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.BreakableDoor )
+				{
+					// cache the info
+					if ( !Map.BreakableDoorInfo ) {
+						Map.BreakableDoorInfo = Util.WpNameInfo("breakdoorpt");
+					}
+
+					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					{
+						_this.AddAimRequest(Priority.High, "facing", Map.BreakableDoorInfo.facing);
+						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
+						_this.BlockForWeaponChange( WEAPON.KNIFE );
+
+						while( !Map.BreakableDoor )
+						{
+							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+							yield();
+						}
+					}
+				}
+				sleep(1);
+			},
+		},
+	},
+
+	Switches =
+	{
+		generatorswitch =
+		{
+			Enabled = true,
+			//Debug = true,
+			WaypointName = "Switch1",
+			LimitBots = 1,
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.ENGINEER),
+			Priority = 0.0, // paththrough
+			AimPosition = Vector3(1555.125,7351.059,56.443),
+			Wait = function()
+			{
+				sleep(5);
+				return true;
+			},
+		},
+
+		keycarddoor =
+		{
+			Enabled = true,
+			//Debug = true,
+			WaypointName = "Switch2",
+			LimitBots = 1,
+			LimitTeam = 0, // disabled initially.
+			LimitClass = (1<<CLASS.ENGINEER),
+			Priority = 0.0, // paththrough
+			AimPosition = Vector3(-7364.125,8127.032,275.015),
+			Wait = function()
+			{
+				sleep(2);
+				return true;
+			},
+		},
+
+		keycarddoor2 =
+		{
+			Enabled = false,
+			//Debug = true,
+			WaypointName = "Switch3",
+			LimitBots = 1,
+			LimitTeam = (1<<TEAM.AXIS),
+			LimitClass = (1<<CLASS.ENGINEER),
+			Priority = 0.7,
+			AimPosition = Vector3(-7551.057,8027.875,274.167),
+		},
+
+		Bombswitch =
+		{
+			Enabled = true,
+			//Debug = true,
+			WaypointName = "Switch4",
+			LimitBots = 3,
+			LimitTeam = 0, // disabled initially.
+			LimitClass = Util.AllClasses,
+			Priority = 0.9,
+			AimPosition = Vector3(-7424.081,7129.125,-3.923),
+		},
+	},
+
+	//CPstuff
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	//Hangarspawn
+	Supply_Hangar_Spawn_Area_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group6);
+		Groups.DisableAxis(Groups.group5);
+		Groups.EnableAllies(Groups.group8);
+		Groups.EnableAxis(Groups.group7);
+
+		Util.MapDebugPrint( "Supply_Hangar_Spawn_Area_Built" );
+	},
+
+	Supply_Hangar_Spawn_Area_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag("c_ladder","closed",true);
+
+		Map.Hangar = "true" ;
+
+		Util.MapDebugPrint( "Supply_Hangar_Spawn_Area_Destroyed" );
+	},
+
+	//Tankstuff
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetPositionGoal( "BUILD_Tank", "MOVER_tank" );
+		Util.MapDebugPrint( "Tank_Destroyed" );
+	},
+
+	tank_leaves_artyarea = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank leaves area");
+	},
+
+	//Tankbarriers
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_Built" );
+	},
+
+	Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_Destroyed" );
+	},
+
+	run_24 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.BUILD_Tank_Barrier );
+
+		Groups.DisableAllies(Groups.group2);
+		Groups.DisableAxis(Groups.group1);
+		Groups.EnableAllies(Groups.group4);
+		Groups.EnableAxis(Groups.group3);
+
+		Util.MapDebugPrint( "Tank ist past Barrier1" );
+	},
+
+	Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Destroyed" );
+	},
+
+	run_53 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Tank ist past Barrier2" );
+	},
+
+	//Gates,Walls and Generator
+	ancient_castle_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ancient_castle_wall_Destroyed" );
+	},
+
+	base_entrance_gate_destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group4);
+		Groups.DisableAxis(Groups.group3);
+		Groups.EnableAllies(Groups.group6);
+		Groups.EnableAxis(Groups.group5);
+
+		Util.MapDebugPrint( "base_gate_Destroyed" );
+	},
+
+	dam_access_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group10);
+		Groups.DisableAxis(Groups.group9);
+		Groups.EnableAllies(Groups.group12);
+		Groups.EnableAxis(Groups.group11);
+
+		Util.MapDebugPrint( "dam_access_gate_Destroyed" );
+	},
+
+	generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.generatorswitch.Enabled = false;
+
+		// set the blockable flag for the connection since its a pt switch
+		Wp.SetWaypointFlag( "r_gendoor", "blockwall", true );
+
+		Groups.DisableAllies(Groups.group8);
+		Groups.DisableAxis(Groups.group7);
+		Groups.EnableAllies(Groups.group10);
+		Groups.EnableAxis(Groups.group9);
+
+		Util.MapDebugPrint( "generator_Destroyed" );
+	},
+
+	rocket_base_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Groups.DisableAllies(Groups.group12);
+		Groups.DisableAxis(Groups.group11);
+		Groups.EnableAllies(Groups.group14);
+		Groups.EnableAxis(Groups.group13);
+
+		Util.MapDebugPrint( "rocket_base_gate_Destroyed" );
+	},
+
+	//Objectives
+	gold_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_Taken" );
+	},
+
+	gold2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold2_Taken" );
+	},
+
+	Bombparts_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Bombparts_Captured" );
+	},
+
+	Keycard_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Keycard_Captured" );
+	},
+
+	//Switchstuff
+	checkdyno = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.Bombswitch.LimitTeam = (1<<TEAM.AXIS); // Switch for axis only
+
+		Util.MapDebugPrint( "Bomb ready " );
+	},
+
+	//Bombswitch
+	stop = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.Bombswitch.LimitTeam = (1<<TEAM.AXIS);	//Switch enabled for Axis
+		Map.Bomb = "disabled";
+
+		Util.MapDebugPrint( "Countdown is now: " + Map.Bomb, true);
+	},
+
+	start = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.Bombswitch.LimitTeam = (1<<TEAM.ALLIES); // Switch for allies only
+		Map.Bomb = "enabled";
+
+		Util.MapDebugPrint( "Countdown is now: " + Map.Bomb, true );
+	},
+
+	//Generatordoor
+	frontdoor_goto = function( trigger )
+	{
+		// cs: changed this to paththrough so its active when doors closed
+		// disabled when it's open
+		Map.Switches.generatorswitch.Enabled = false;
+
+		vec = ToVector( trigger.Action );
+		//Gate close
+		if ( vec.z > 0 )
+		{
+			Map.Switches.generatorswitch.Enabled = true;
+			Map.GeneratorDoor = "closed";
+		}
+		else
+		{
+			Map.GeneratorDoor = "open";
+		}
+
+		Util.MapDebugPrint( "GenDoor is now: " + Map.GeneratorDoor, true);
+	},
+
+	//keycarddoor
+	portedouble_droite_goto = function( trigger )
+	{
+		// cs: this one is paththrough
+		Map.Switches.keycarddoor.Enabled = false;
+		vec = ToVector( trigger.Action );
+		//Gate close
+		if ( vec.z > 0 )
+		{
+			Map.Switches.keycarddoor.Enabled = true;
+			Map.Switches.keycarddoor2.Enabled = false;
+			Map.Door = "closed";
+		}
+		else
+		{
+			Map.Switches.keycarddoor2.Enabled = true; // axis should close it
+			Map.Door = "open";
+		}
+
+		Util.MapDebugPrint( "Door is now: " + Map.Door, true);
+	},
+
+	//door to explosives
+	porte_bunker_gauche_goto = function( trigger )
+	{
+		vec = ToVector( trigger.Action );
+
+		//Bunkerdoor open
+		if ( vec.x > 0 )
+		{
+			Map.Switches.keycarddoor2.Enabled = false;	//Switch disabled
+
+			Groups.DisableAxis(Groups.group13);
+			Groups.EnableAxis(Groups.group15);
+
+			Map.Bunkerdoor = "open";
+		}
+
+		//Gate close
+		if ( vec.x < 10 )
+		{
+			Map.Bunkerdoor = "closed";
+		}
+
+		Util.MapDebugPrint( "Bunkerdoor is now: " + Map.Bunkerdoor, true);
+	},
+
+	AxisWon = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint("AxisWon");
+	},
+
+	check_breakableGate = function()
+	{
+		wpOne = Util.WpNameInfo("tracestart");
+		wpTwo = Util.WpNameInfo("traceend");
+		startoffset = Vector3(0,0,76);
+		endoffset = Vector3(0,0,100);
+
+		while( !Map.BreakableGate )
+		{
+			tr = TraceLine( wpOne.position + startoffset, wpTwo.position + endoffset, null, TRACE.SHOT, 0, false );
+
+			 if ( tr.fraction < 1 )
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position + startoffset, wpTwo.position + endoffset, COLOR.RED, 0.25); }
+			 }
+			 else
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position + startoffset, wpTwo.position + endoffset, COLOR.GREEN, 0.25); }
+				Map.BreakableGate = true;
+			 }
+
+			 sleep(0.25);
+		}
+
+		Util.MapDebugPrint( "breakableGate_destroyed", true );
+	},
+
+	check_breakableDoor = function()
+	{
+		wpOne = Util.WpNameInfo("start");
+		wpTwo = Util.WpNameInfo("end");
+		startoffset = Vector3(0,0,120);
+		endoffset = Vector3(0,0,76);
+		while( !Map.BreakableDoor )
+		{
+			tr = TraceLine( wpOne.position + startoffset, wpTwo.position + endoffset, null, TRACE.SHOT, 0, false );
+
+			 if ( tr.fraction < 1 )
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position + startoffset, wpTwo.position + endoffset, COLOR.RED, 0.25); }
+			 }
+			 else
+			 {
+				if ( Map.Debug )
+					{ DrawDebugLine(wpOne.position + startoffset, wpTwo.position + endoffset, COLOR.GREEN, 0.25); }
+				Map.BreakableDoor = true;
+			 }
+
+			 sleep(0.25);
+		}
+
+		Util.MapDebugPrint( "breakableDoor_destroyed", true );
+	},
+};
+
+global OnMapLoad = function()
+{
+	thread(Map.check_breakableDoor);
+	thread(Map.check_breakableGate);
+
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "^3Axis have built the supply hangar spawn location", Map.Supply_Hangar_Spawn_Area_Built );
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
+	OnTrigger( "Tank Barrier has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "Tank Barrier has been constructed.", Map.Tank_Barrier_2_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	//OnTrigger( "MISSING_STRING", Map.Supply_Hangar_Spawn_Area_Destroyed );
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+	OnTrigger( "Tank Barrier has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+	OnTrigger( "the tank has passed the first barrier", Map.run_24 );
+	OnTrigger( "Tank Barrier has been destroyed.", Map.Tank_Barrier_2_Destroyed );
+	OnTrigger( "the tank has passed the second barrier", Map.run_53 );
+	OnTrigger( "Axis have breached the ancient castle wall!!!!", Map.ancient_castle_wall_Destroyed );
+	OnTrigger( "Axis have blown the dam access gate!!!!", Map.dam_access_gate_Destroyed );
+	OnTrigger( "Axis have blown the generator!!!!", Map.generator_Destroyed );
+	OnTrigger( "Axis have breached the rocket base gate!!!!", Map.rocket_base_gate_Destroyed );
+	//OnTrigger( "^6The first explosive charge has been placed!!!!", Map.gold_Secured1 );
+	//OnTrigger( "^6The second explosive charge has been placed!!!!", Map.gold_Secured2 );
+	//OnTrigger( "^6The 3rd explosive charge has been placed!!!!", Map.gold_Secured3 );
+	//OnTrigger( "^6The 4th explosive charge has been placed!!!!", Map.gold_Secured4 );
+	//OnTrigger( "^6The last explosive charge has been placed!!!!", Map.gold_Secured5 );
+	OnTrigger( "^6Axis have stolen the keycard!!!", Map.gold2_Taken );
+	OnTrigger( "^5The tank has destroyed base entrance gate!!!!!!", Map.base_entrance_gate_destroyed );
+	OnTrigger( "^3Axis has blown the rocket !!!!!!", Map.AxisWon );
+	OnTrigger( "^6The bomb is ready to be armed!!!!", Map.checkdyno );
+	OnTrigger( "^6Countdown interrupted", Map.stop );
+	OnTrigger( "^6Countdown activated", Map.start );
+	OnTrigger( "tank at location", Map.tank_leaves_artyarea ); // only one in the map
+
+	//Moving triggers
+	OnTrigger( "frontdoor_lever1_goto", Map.frontdoor_goto );
+	OnTrigger( "portedouble_lever2_goto", Map.portedouble_droite_goto );
+	OnTrigger( "porte_bunker_gauche_goto", Map.porte_bunker_gauche_goto );
+
+	// this gets toggled in the generator destroyed trigger since it's a paththrough route
+	Wp.SetWaypointFlag( "r_gendoor", "blockwall", false );
+
+	// set up a positional trigger for the tank
+	// cs: uhh, the function that the original OnTriggerPosition call used doesn't do anything.
+	//tanktrigger = OnTriggerRegion(AABB(-3939.709,-6171.438,106.876,-3779.640,-5816.051,192.966),RegionTrigger.VehicleTrigger);
+
+	//set offset for better reachable
+	Util.SetGoalOffset( -240, -40, 0, "PLANT_Tank_Barrier_1" );
+	Util.SetGoalOffset( 0, 160, 0, "PLANT_Tank_Barrier" );
+
+	//open path
+	Wp.SetWaypointFlag("c_ladder","closed",false);
+
+	//set max users for goals
+	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 2, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsers( 1, "DEFEND.*" );
+	Util.SetMaxUsers( 1, "ATTACK.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120});
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+
+	//clear all goals
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.BUILD_Tank_Barrier_1 );
+
+	Util.EnableGoal("ROUTE.*"); //enable routing for both teams
+
+	//enable part 1 goals
+	Groups.EnableAllies(Groups.group2);
+	Groups.EnableAxis(Groups.group1);
+
+	//Routes
+	MapRoutes =
+	{
+		BUILD_Tank =
+		{
+			ROUTE_Axisspawn_1 =
+			{
+				ROUTE_split_1 =
+				{
+					ROUTE_r_split_3 =
+					{
+						ROUTE_r_building = {},
+						ROUTE_stairs_1 =
+						{
+							ROUTE_stairs_2 =
+							{
+								ROUTE_corner_1 =
+								{
+									ROUTE_corner_2 =
+									{
+										ROUTE_corner_3 =
+										{
+											ROUTE_ladder_1 =
+											{
+												ROUTE_ladder_2 = { ROUTE_corner_4 = {}, },
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			ROUTE_r_axisspawn_2 =
+			{
+				ROUTE_r_brokenwall =
+				{
+					ROUTE_r_stairs_3 =
+					{
+						ROUTE_r_barrier_2 = { ROUTE_r_Tankend = {}, },
+					},
+				},
+			},
+		},
+
+		BUILD_Tank_Barrier_1 =
+		{
+			ROUTE_r_wall_1 =
+			{
+				ROUTE_r_damagedwall = {},
+				ROUTE_r_frontwall = {},
+			},
+		},
+
+		PLANT_ancient_castle_wall =
+		{
+			ROUTE_Axisspawn_1 =
+			{
+				ROUTE_split_1 =
+				{
+					ROUTE_damaged_train =
+					{
+						ROUTE_first_fence = { ROUTE_housecorner_left = {}, },
+					},
+				},
+			},
+		},
+
+		BUILD_Supply_Hangar_Spawn_Area =
+		{
+			ROUTE_r_axisspawn_3 =
+			{
+				ROUTE_r_split_2 =
+				{
+					Weight = 2,
+					ROUTE_r_breakable_door = {},
+					ROUTE_r_antennaladder_1 = {},
+					ROUTE_r_antennaladder_2 = {},
+				},
+			},
+		},
+
+		PLANT_generator =
+		{
+			ROUTE_r_axisspawn_4 =
+			{
+				ROUTE_r_spawnexit_4 =
+				{
+					ROUTE_r_split_4 =
+					{
+						ROUTE_r_door =
+						{
+							ROUTE_r_upstairs =
+							{
+								ROUTE_r_door_1 = { ROUTE_r_gendoor = {}, },
+							},
+						},
+						ROUTE_r_train_1 =
+						{
+							ROUTE_r_split_5 =
+							{
+								ROUTE_r_betweenstairs = { ROUTE_r_gendoor = {}, },
+								ROUTE_r_train_2 = { ROUTE_r_train_3 = {}, },
+							},
+						},
+					},
+				},
+			},
+		},
+
+		PLANT_dam_access_gate =
+		{
+			ROUTE_r_axis_5 =
+			{
+				ROUTE_r_ventilator =
+				{
+					ROUTE_r_ventilator_exit = { ROUTE_r_ramp_2 = {}, },
+					ROUTE_r_ladder_3 = { ROUTE_r_ramp_1 = {}, },
+					ROUTE_r_ladder_4 = { ROUTE_r_ramp_2 = {}, },
+				},
+			},
+		},
+
+		PLANT_rocket_base_gate =
+		{
+			ROUTE_r_axisspawn_5 =
+			{
+				ROUTE_r_spawnexit_5 =
+				{
+					ROUTE_r_corner =
+					{
+						ROUTE_r_healthexit = { ROUTE_r_bridge = {}, },
+					},
+				},
+				ROUTE_r_spawnexit_6 =
+				{
+					ROUTE_r_waterway = { ROUTE_r_waterladder = {}, },
+				},
+			},
+		},
+
+		FLAG_gold2 =
+		{
+			ROUTE_r_axisspawn_6 =
+			{
+				ROUTE_r_saeulen =
+				{
+					ROUTE_r_split_6 =
+					{
+						ROUTE_r_laststairs = { ROUTE_r_lastladder = {}, },
+						ROUTE_r_healthstand =
+						{
+							ROUTE_r_rightcorner =
+							{
+								ROUTE_r_ladderend = { ROUTE_r_upperway = {}, },
+							},
+						},
+					},
+				},
+			},
+		},
+
+		CAPPOINT_Keycard =
+		{
+			ROUTE_r_keycard =
+			{
+				ROUTE_r_tunnel =
+				{
+					ROUTE_r_escape_1 = { ROUTE_r_escape_2 = {}, },
+				},
+				ROUTE_r_lastladder =
+				{
+					ROUTE_r_escape_3 = { ROUTE_r_escape_2 = {}, },
+					ROUTE_r_escape_4 = { ROUTE_r_escape_3 = {}, },
+				},
+			},
+		},
+
+		CAPPOINT_Bombparts =
+		{
+			ROUTE_r_bombparts =
+			{
+				ROUTE_r_entrance = { ROUTE_r_split_7 = {}, },
+				ROUTE_r_split_7 =
+				{
+					ROUTE_r_split_8 = {},
+					ROUTE_r_split_9 = {},
+				},
+			},
+		},
+	};
+
+	//copy some routes
+	MapRoutes.ATTACK_a_barrier1_1 = MapRoutes.BUILD_Tank;
+	MapRoutes.ATTACK_a_barrier1_2 = MapRoutes.BUILD_Tank;
+	MapRoutes.ATTACK_a_barrier1_3 = MapRoutes.BUILD_Tank;
+	MapRoutes.ATTACK_a_barrier1_4 = MapRoutes.BUILD_Tank;
+	MapRoutes.DEFEND_d_ancientwall_1 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.DEFEND_d_ancientwall_2 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.DEFEND_d_ancientwall_3 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.ATTACK_a_antenna_1 = MapRoutes.BUILD_Supply_Hangar_Spawn_Area;
+	MapRoutes.ATTACK_a_antenna_2 = MapRoutes.BUILD_Supply_Hangar_Spawn_Area;
+	MapRoutes.ATTACK_a_antenna_3 = MapRoutes.BUILD_Supply_Hangar_Spawn_Area;
+	MapRoutes.ATTACK_a_antenna_4 = MapRoutes.BUILD_Supply_Hangar_Spawn_Area;
+	MapRoutes.ATTACK_a_antenna_5 = MapRoutes.BUILD_Supply_Hangar_Spawn_Area;
+	MapRoutes.ATTACK_a_generator_5 = MapRoutes.PLANT_generator;
+	MapRoutes.ATTACK_generator_2 = MapRoutes.PLANT_generator;
+	MapRoutes.ATTACK_generator_3 = MapRoutes.PLANT_generator;
+	MapRoutes.ATTACK_a_generator_4 = MapRoutes.PLANT_generator;
+	MapRoutes.DEFEND_d_barrier1_1 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.DEFEND_d_barrier1_2 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.DEFEND_d_barrier1_3 = MapRoutes.BUILD_Tank_Barrier_1;
+	MapRoutes.ATTACK_a_gate1_1 = MapRoutes.PLANT_dam_access_gate;
+	MapRoutes.ATTACK_a_gate1_2 = MapRoutes.PLANT_dam_access_gate;
+	MapRoutes.ATTACK_a_gate1_3 = MapRoutes.PLANT_dam_access_gate;
+	MapRoutes.ATTACK_a_gate1_4 = MapRoutes.PLANT_dam_access_gate;
+
+
+	//set up the Switches and Routes
+	Util.UpdateSwitchData();
+	Util.Routes(MapRoutes);
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+
+	bot.MaxViewDistance = 2500;
+	bot.TargetBreakableDist = 100.0;
+};
+
+global Groups =
+{
+	//Axis part 1
+	group1 =
+	{
+		Map.Build_Tank,
+		"MOUNT_tank",
+		Map.Plant_Tank_Barrier,
+		Map.Plant_Tank_Barrier_1,
+		"ATTACK_a_barrier1_.*",
+	},
+
+	//Allies part 1
+	group2 =
+	{
+		Map.Build_Tank_Barrier,
+		"DEFEND_d_barrier1.*",
+		"DEFEND_d_ancientwall_.*",
+	},
+
+	//Axis part 2
+	group3 =
+	{
+		"MOUNT_tank",
+		Map.Build_Tank,
+		Map.Plant_ancient_castle_wall,
+		Map.Plant_Tank_Barrier_1,
+		Map.Call_Artillery_ar_axis_1,
+		"ATTACK_a_barrier2.*",
+		"SNIPE_s_wall_1",
+	},
+
+	//Allies part 2
+	group4 =
+	{
+		Map.Build_Tank_Barrier_1,
+		Map.Call_Artillery_a_barrier2_3,
+		"DEFEND_d_barrier2.*",
+		"DEFEND_d_castlewall.*",
+		Map.Mount_t382,
+	},
+
+	//Axis part 3
+	group5 =
+	{
+		"ATTACK_a_antenna.*",
+		Map.Build_Supply_Hangar_Spawn_Area,
+	},
+
+	//Allies part3
+	group6 =
+	{
+		"DEFEND_d_antenna.*",
+		Map.Mount_t382_1,
+		Map.Mount_t382_2,
+		Map.Mount_t382_3,
+	},
+
+	//Axis part 4
+	group7 =
+	{
+		"ATTACK_a_generator.*",
+		"ATTACK_generator.*",
+		Map.Plant_generator,
+	},
+
+	//Allies part 4
+	group8 =
+	{
+		"DEFEND_d_generator.*",
+	},
+
+	//Axis part 5
+	group9 =
+	{
+		"ATTACK_a_gate1.*",
+		Map.Plant_dam_access_gate,
+	},
+
+	//Allies part 5
+	group10 =
+	{
+		"DEFEND_d_gate1.*",
+	},
+
+	//Axis part 6
+	group11 =
+	{
+		"ATTACK_a_gate2.*",
+		Map.Plant_rocket_base_gate,
+		Map.Mount_t382_4,
+	},
+
+	//Allies part 6
+	group12 =
+	{
+		"DEFEND_d_gate2.*",
+		Map.Mount_t382_5,
+	},
+
+	//Axis part 7
+	group13 =
+	{
+		"ATTACK_a_end.*",
+		Map.Flag_gold2,
+		Map.Cappoint_Keycard,
+	},
+
+	//Allies part 7
+	group14 =
+	{
+		"DEFEND_d_end.*",
+		Map.Mobile_MG42_1304,
+		Map.Mobile_MG42_1305,
+	},
+
+	//Axis part 8
+	group15 =
+	{
+		Map.Flag_gold,
+		Map.Cappoint_Bombparts,
+		"ATTACK_a_end.*",
+	},
+
+	EnableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
+			Util.MapDebugPrint("EnableAllies: enabling " + goal, true);
+		}
+	},
+
+	EnableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, goal );
+			Util.MapDebugPrint("EnableAxis: enabling " + goal, true);
+		}
+	},
+
+	DisableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, goal );
+			Util.MapDebugPrint("DisableAllies: disabling " + goal, true);
+		}
+	},
+
+	DisableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, goal );
+			Util.MapDebugPrint("DisableAxis: disabling " + goal, true);
+		}
+	},
+};

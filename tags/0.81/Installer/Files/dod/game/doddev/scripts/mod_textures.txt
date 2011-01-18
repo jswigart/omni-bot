@@ -1,0 +1,656 @@
+"sprites/640_hud"
+{
+	TextureData
+	{
+		"d_thompson"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"337"
+			"y"		"0"
+			"width"		"175"
+			"height"	"61"
+		}
+
+		"d_bar"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"323"
+			"y"		"60"
+			"width"		"189"
+			"height"	"34"
+		}
+
+		"d_garand"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"326"
+			"y"		"96"
+			"width"		"186"
+			"height"	"39"
+		}
+
+		"d_spring"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"309"
+			"y"		"145"
+			"width"		"203"
+			"height"	"48"
+		}
+
+		"d_m1carbine"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"318"
+			"y"		"199"
+			"width"		"194"
+			"height"	"46"
+		}
+
+		"d_30cal"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"311"
+			"y"		"249"
+			"width"		"201"
+			"height"	"83"
+		}
+
+		"d_frag_us"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"229"
+			"y"		"229"
+			"width"		"76"
+			"height"	"49"
+		}
+
+		"d_amerknife"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"121"
+			"y"		"0"
+			"width"		"96"
+			"height"	"45"
+		}
+
+		"d_colt"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"231"
+			"y"		"0"
+			"width"		"90"
+			"height"	"61"
+		}
+
+		"d_mp40"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"3"
+			"y"		"0"
+			"width"		"113"
+			"height"	"51"
+		}
+
+		"d_mp44"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"112"
+			"width"		"157"
+			"height"	"59"
+		}
+
+		"d_k98"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"323"
+			"width"		"190"
+			"height"	"38"
+		}
+
+		"d_k98_scoped"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"274"
+			"width"		"190"
+			"height"	"47"
+		}
+
+		"d_mg42"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"361"
+			"width"		"206"
+			"height"	"56"
+		}
+
+		"d_spade"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"173"
+			"y"		"166"
+			"width"		"130"
+			"height"	"57"
+		}
+
+		"d_frag_ger"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"122"
+			"y"		"50"
+			"width"		"97"
+			"height"	"40"
+		}
+
+		"d_p38"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"51"
+			"width"		"98"
+			"height"	"60"
+		}
+
+		"d_c96"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"170"
+			"width"		"165"
+			"height"	"48"
+		}
+
+		"d_pschreck"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"0"
+			"y"		"419"
+			"width"		"201"
+			"height"	"57"
+		}
+
+		"d_bazooka"
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"307"
+			"y"		"336"
+			"width"		"205"
+			"height"	"38"
+		}
+
+		"d_punch"	
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"225"
+			"y"		"371"
+			"width"		"121"
+			"height"	"48"
+		}
+		
+		"d_riflegren_us"	
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"166"
+			"y"		"115"
+			"width"		"134"
+			"height"	"43"
+		}
+		
+		"d_riflegren_ger"	
+		{
+			"file"		"sprites/hud/death_icons"
+			"x"		"12"
+			"y"		"224"
+			"width"		"165"
+			"height"	"44"
+		}
+
+		"d_skull_dod"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"S"
+		}
+		
+		"d_dod_bomb_target"
+		{
+			"file"		"sprites/hud/explosion"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+
+		"crosshair"
+		{
+			"file"		"sprites/crosshairs"
+			"x"		"0"
+			"y"		"48"
+			"width"		"24"
+			"height"	"24"
+		}
+
+		"voice_self"
+		{
+			"file"		"voice/icntlk_local"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+
+		"voice_player"
+		{
+			"file"		"voice/icntlk_sv"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+
+		"capture_icon"
+		{
+			"font"		"ClientTitleFontSmall"
+			"character"	"."
+		}	
+
+		"stamina_icon"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"/"
+		}
+
+		"mgheat_mg42"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"0"
+		}
+
+		"mgheat_30cal"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"1"
+		}
+
+		"fireselect_bullet"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"4"
+		}
+
+		"weapon_bar_fireselect"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"2"
+		}		
+
+		"weapon_mp44_fireselect"
+		{
+			"font"		"ClientTitleFontPlayerIcons"
+			"character"	"3"
+		}
+
+		"wpn_garand"
+		{
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"189"
+			"width"		"375"
+			"height"	"80"
+		}
+
+		"wpn_tommy"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"0"
+			"width"		"350"
+			"height"	"122"
+			}
+
+		"wpn_bar"
+		{
+			"file"	"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"120"
+			"width"		"380"
+			"height"	"74"
+		}
+
+		"wpn_spring"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"286"
+			"width"		"409"
+			"height"	"101"
+		}
+
+		"wpn_30cal"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"490"
+			"width"		"407"
+			"height"	"178"
+		}
+
+		"wpn_bazooka"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"667"
+			"width"		"411"
+			"height"	"87"
+		}
+
+		"wpn_m1carb"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"396"
+			"width"		"391"
+			"height"	"95"
+		}
+
+		"wpn_colt"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"380"
+			"y"		"0"
+			"width"		"185"
+			"height"	"125"
+		}
+
+		"wpn_knife"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"589"
+			"y"		"0"
+			"width"		"195"
+			"height"	"96"
+		}
+
+		"wpn_riflegren_us"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"427"
+			"y"		"222"
+			"width"		"288"
+			"height"	"100"
+		}
+
+		"wpn_smoke_us"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"415"
+			"y"		"574"
+			"width"		"170"
+			"height"	"112"
+		}
+
+		"wpn_frag_us"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"412"
+			"y"		"458"
+			"width"		"158"
+			"height"	"100"
+		}
+
+		"wpn_k98"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"645"
+			"y"		"643"
+			"width"		"379"
+			"height"	"82"
+		}
+
+		"wpn_mp40"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"792"
+			"y"		"0"
+			"width"		"232"
+			"height"	"102"
+		}
+
+		"wpn_mp44"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"712"
+			"y"		"221"
+			"width"		"312"
+			"height"	"119"
+		}
+
+		"wpn_k98s"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"644"
+			"y"		"547"
+			"width"		"380"
+			"height"	"95"
+		}
+
+		"wpn_mg42"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"611"
+			"y"		"725"
+			"width"		"413"
+			"height"	"108"
+		}
+
+		"wpn_pschreck"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"618"
+			"y"		"835"
+			"width"		"406"
+			"height"	"124"
+		}
+
+		"wpn_c96"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"697"
+			"y"		"337"
+			"width"		"327"
+			"height"	"100"
+		}
+
+		"wpn_p38"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"833"
+			"y"		"101"
+			"width"		"191"
+			"height"	"121"
+		}
+
+		"wpn_spade"
+		{
+			"file"	"sprites/hud/dod_weapons01"
+			"x"		"407"
+			"y"		"334"
+			"width"		"259"
+			"height"	"107"
+		}
+
+		"wpn_riflegren_ger"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"675"
+			"y"		"447"
+			"width"		"349"
+			"height"	"93"
+		}
+
+		"wpn_smoke_ger"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"0"
+			"y"		"784"
+			"width"		"204"
+			"height"	"127"
+		}
+
+		"wpn_frag_ger"
+		{	
+			"file"		"sprites/hud/dod_weapons01"
+			"x"		"204"
+			"y"		"784"
+			"width"		"213"
+			"height"	"127"
+		}
+		
+		"wpn_tnt"
+		{
+			"file"		"sprites/hud/tnt"
+			"x"		"50"
+			"y"		"0"
+			"width"		"156"
+			"height"	"128"
+		}
+
+		"icon_obj_allies"
+		{
+			"file"	"sprites/obj_icons/icon_obj_allies"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"64"
+		}
+
+		"icon_obj_axis"
+		{
+			"file"	"sprites/obj_icons/icon_obj_axis"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"64"
+		}
+		
+		"stats_kill"
+		{
+			"file"	"sprites/hud/kills"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"64"
+		}
+
+		"stats_wounded"
+		{
+			"file"	"sprites/hud/wounded"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"64"
+		}
+
+		"stats_cap"
+		{
+			"file"	"sprites/hud/FlagCaptured"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+
+		"stats_defended"
+		{
+			"file"	"sprites/hud/Defended"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		
+		"stats_bombed"
+		{
+			"file"	"sprites/hud/winpanel_bomb"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		
+		"icon_defended"
+		{
+			"file"	"sprites/hud/Shield_DeathMessages"
+			"x"		"0"
+			"y"		"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		
+		"icon_c4"
+		{
+			"file"		"sprites/hud/c4"
+			"x"			"0"
+			"y"			"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		
+		"icon_c4_planted_bg"
+		{
+			"file"		"sprites/hud/c4_bg"
+			"x"			"0"
+			"y"			"0"
+			"width"		"64"
+			"height"	"64"
+		}
+		
+		"icon_c4_exploded"
+		{
+			"file"		"sprites/hud/explosion"
+			"x"			"0"
+			"y"			"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		
+		"icon_inventory_tnt"
+		{
+			"file"		"sprites/hud/hud_tnt"
+			"x"			"0"
+			"y"			"0"
+			"width"		"64"
+			"height"	"64"			
+		}
+		
+		"icon_inventory_tnt_grey"
+		{
+			"file"		"sprites/hud/hud_tnt_missing"
+			"x"			"0"
+			"y"			"0"
+			"width"		"64"
+			"height"	"64"			
+		}
+		
+		"leaderboard_dominated"
+		{
+			"file"		"hud/leaderboard_dominated"
+			"x"			"0"
+			"y"			"0"
+			"width"		"64"
+			"height"	"64"
+		}	
+		
+		"leaderboard_nemesis"
+		{
+			"file"		"hud/leaderboard_nemesis"
+			"x"			"0"
+			"y"			"0"
+			"width"		"64"
+			"height"	"64"
+		}
+	}
+}

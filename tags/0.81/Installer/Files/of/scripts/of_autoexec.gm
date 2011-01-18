@@ -1,0 +1,103 @@
+// Load any other scripts that we will need.
+ExecScript("commands.gm");
+ExecScript("of_navconfig.gm");
+//ExecScript("of_commands.gm");
+ExecScript("server_manager.gm");
+
+// New module format
+global Util = import("utilities");
+global OFUtil = import("of_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// Set up a list of Names, optionally associated with a script.
+
+RegisterDefaultProfile(CLASS.SCOUT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SNIPER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.DEMOMAN, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.HWGUY, "def_bot.gm");
+RegisterDefaultProfile(CLASS.PYRO, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SPY, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.CIVILIAN, "def_bot.gm");
+
+Names["Walter"] = "";
+Names["Fred"] = "";
+Names["Morgan"] = "";
+Names["Lawrence"] = "";
+Names["Richard"] = "";
+Names["Michael"] = "";
+Names["Brad"] = "";
+Names["George"] = "";
+Names["Anton"] = "";
+Names["Monty"] = "";
+Names["Bean"] = "";
+Names["Sean"] = "";
+Names["Backfire"] = "";
+Names["Halfwit"] = "";
+Names["Halfbaked"] = "";
+Names["Fullmonty"] = "";
+Names["Nohope"] = "";
+Names["Hitnrun"] = "";
+Names["Missnrun"] = "";
+Names["Oysterhead"] = "";
+Names["Fullthrottle"] = "";
+Names["Noammo"] = "";
+Names["Bullseye"] = "";
+Names["Aimless"] = "";
+Names["Blackadder"] = "";
+Names["Cledus"] = "";
+Names["Newbie"] = "";
+Names["Chimichanga"] = "";
+Names["Razor"] = "";
+Names["Tanz"] = "";
+Names["Vic"] = "";
+Names["Malin"] = "";
+Names["Thor"] = "";
+Names["Grog"] = "";
+Names["Drago"] = "";
+Names["Stinger"] = "";
+Names["Tarnok"] = "";
+Names["Wens"] = "";
+Names["Brohn"] = "";
+Names["Ivor"] = "";
+Names["Gordac"] = "";
+Names["Bortack"] = "";
+Names["Morgriff"] = "";
+Names["Kole"] = "";
+Names["Garbok"] = "";
+Names["Korv"] = "";
+Names["Vokur"] = "";
+Names["Gali"] = "";
+Names["Beelz"] = "";
+Names["CraigChrist"] = "";
+Names["WhittlinMan"] = "";
+Names["SpecialEd"] = "";
+Names["Flint"] = "";
+Names["Argo"] = "";
+Names["Milius"] = "";
+Names["Vera"] = "";
+Names["Merki"] = "";
+Names["Tarnen"] = "";
+Names["Royen"] = "";
+Names["Kaolin"] = "";
+Names["Nandet"] = "";
+Names["Nundak"] = "";
+Names["Ryver"] = "";
+Names["Mungri"] = "";
+Names["Chan"] = "";
+Names["Phi"] = "";
+Names["Amadi"] = "";
+Names["Zarna"] = "";
+
+// Register a bot with a script.
+//Names["samplebot"] = "sample.gm";
+
+//EnableDebugWindow(true);
+
+print("OF Script Executed");
+

@@ -1,0 +1,218 @@
+// These parameters are required
+this.Name = "SelectWeapons";	// The name of the goal.
+this.Parent = "Limbo";			// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Debug = false;
+this.AlwaysRecieveEvents = true;
+
+// currently limited to certain classes
+this.LimitToClass(CLASS.SOLDIER);
+
+// shared weapon counters
+this.UsingWeapons = {};
+
+this.Initialize = function()
+{
+	if ( Map && Map.DontSelectWeapons )
+		{ this.Finished(); }
+
+	this.Debug = false;
+	
+	if (!MinPlayersForMortar) {
+		global MinPlayersForMortar = ConfigGet("HeavyWeapons","MinPlayersForMortar", -1);
+		global MinPlayersForMobileMG = ConfigGet("HeavyWeapons","MinPlayersForMobileMG", -1);
+	}
+
+	this.EXCLUDE_MORTAR_AND_MG42 = {};
+	this.EXCLUDE_MORTAR_AND_MG42 [WEAPON.MOBILE_MG42] = true;
+	this.EXCLUDE_MORTAR_AND_MG42 [WEAPON.MORTAR] = true;
+};
+
+// Count the number of users for a particular weapon id
+this.NumWeaponUsers = function(weaponId)
+{
+	num = 0;
+	foreach ( bot and weapon in this.UsingWeapons )
+	{
+		if(weapon == weaponId && bot.GetClass()==CLASS.SOLDIER)
+		{
+			num += 1;
+		}
+	}
+	return num;
+};
+
+this.GetPriority = function()
+{
+	this.Priority = 1;
+	block(0);
+};
+
+this.Update = function()
+{
+	// This is needed in order to finish the goal. Without it, the goal will continue to have Update called on it.
+	while(1)
+	{
+		// do we have either of these weapons
+		hasMobileMg42 = this.Bot.HasWeapon(WEAPON.MOBILE_MG42);
+		hasMobileMortar = this.Bot.HasWeapon(WEAPON.MORTAR);
+
+		// update the using weapon table with whatever we're currently using
+		if(hasMobileMg42)
+		{
+			this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+		}
+		else if(hasMobileMortar)
+		{
+			this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+		}
+
+		// count how many other bots have these weapons
+		numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
+		numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
+
+		myTeam = this.Bot.GetTeam();
+
+		// count how many goals are available for each weapon type
+		goals_mg42 = {};
+		GetGoals(goals_mg42,myTeam,"MOBILEMG42.*");
+		goals_mortar = {};
+		GetGoals(goals_mortar,myTeam,"MOBILEMORTAR.*");
+		numMg42Goals = tableCount(goals_mg42);
+		numMortarGoals = tableCount(goals_mortar);
+
+		if(this.Debug)
+		{
+			print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mg42 Users:",numMg42Users,"/",numMg42Goals);
+			print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mortar Users:",numMortarUsers,"/",numMortarGoals);
+		}
+
+		// See if we're a good candidate to switch weapons.
+		if(hasMobileMg42)
+		{
+			if(numMg42Users > numMg42Goals || Server.NumPlayers <= MinPlayersForMobileMG )
+			{
+				if(numMortarUsers < numMortarGoals && Server.NumPlayers >= MinPlayersForMortar )
+				{
+					this.Bot.ChangePrimaryWeapon(WEAPON.MORTAR);
+					this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+
+					if(this.Debug)
+					{
+						this.Bot.SayTeam("Changing to Mortar");
+						print(this.Bot.Name, ":" ,"Changing to: Mortar");
+					}
+				}
+				else
+				{
+					// pick a new weapon other than mg42 and mortar
+					newWeapon = ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
+
+					this.Bot.ChangePrimaryWeapon(newWeapon);
+					this.UsingWeapons[this.Bot] = newWeapon;
+
+					if(this.Debug)
+					{
+						this.Bot.SayTeam("Changing to ", Util.WeaponName(newWeapon));
+						print(this.Bot.Name, ":" ,"Chose New Weapon:",Util.WeaponName(newWeapon));
+					}
+				}
+			}
+		}
+		else if(hasMobileMortar)
+		{
+			if(numMortarUsers > numMortarGoals || Server.NumPlayers <= MinPlayersForMortar )
+			{
+				if(numMg42Users < numMg42Goals && Server.NumPlayers >= MinPlayersForMobileMG )
+				{
+					this.Bot.ChangePrimaryWeapon(WEAPON.MOBILE_MG42);
+					this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+
+					if(this.Debug)
+					{
+						this.Bot.SayTeam("Changing to Mobile Mg42");
+						print(this.Bot.Name, ":" ,"Changing to: Mobile Mg42");
+					}
+				}
+				else
+				{
+					// pick a new weapon other than mg42 and mortar
+					newWeapon = ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
+
+					this.Bot.ChangePrimaryWeapon(newWeapon);
+					this.UsingWeapons[this.Bot] = newWeapon;
+
+					if(this.Debug)
+					{
+						this.Bot.SayTeam("Changing to ", Util.WeaponName(newWeapon));
+						print(this.Bot.Name, ":" ,"Chose New Weapon:",Util.WeaponName(newWeapon));
+					}
+				}
+			}
+		}
+		else if(numMg42Users < numMg42Goals && Server.NumPlayers >= MinPlayersForMobileMG)
+		{
+			this.Bot.ChangePrimaryWeapon(WEAPON.MOBILE_MG42);
+			this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+
+			if(this.Debug)
+			{
+				this.Bot.SayTeam("Changing to Mobile Mg42");
+				print(this.Bot.Name, ":" ,"Changing to: Mobile Mg42");
+			}
+		}
+		else if(numMortarUsers < numMortarGoals && Server.NumPlayers >= MinPlayersForMortar)
+		{
+			this.Bot.ChangePrimaryWeapon(WEAPON.MORTAR);
+			this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+
+			if(this.Debug)
+			{
+				this.Bot.SayTeam("Changing to Mortar");
+				print(this.Bot.Name, ":" ,"Changing to: Mortar");
+			}
+		}
+		sleep(this.Bot.GetReinforceTime() + 1);
+	}
+};
+
+this.Events[EVENT.DISCONNECTED] = function()
+{
+	this.UsingWeapons[this.Bot] = null;
+
+	if(this.Debug)
+	{
+		print(this.Bot.Name, "Disconnected, Clearing Weapon Selection");
+	}
+};
+
+Commands["minformortar"] =
+{
+	Func = function( _params )
+	{
+		minformortar = ToInt(_params[0], -1);
+		ConfigSet("HeavyWeapons","MinPlayersForMortar", minformortar);
+		global MinPlayersForMortar = minformortar;
+		print("MinPlayersForMortar set to", minformortar);
+	},
+
+	Help =
+	{
+		"set the minimum number of players playing in order for bots to choose the mobile mortar",
+	},
+};
+
+Commands["minformobilemg"] =
+{
+	Func = function( _params )
+	{
+		minformobilemg = ToInt(_params[0], -1);
+		ConfigSet("HeavyWeapons","MinPlayersForMobileMG", minformobilemg);
+		global MinPlayersForMobileMG = minformobilemg;
+		print("MinPlayersForMobileMG set to", minformobilemg);
+	},
+
+	Help =
+	{
+		"set the minimum number of players playing in order for bots to choose the mobile mortar",
+	},
+};

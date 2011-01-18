@@ -1,0 +1,118 @@
+// Default ET Bot Profile
+print( "Initializing Difficulties" );
+
+// The default starting difficulty
+global CurrentDifficulty = "medium";
+
+// This script only defines 6 total difficulty levels (0-5). It isn't limited to 6 though, and can be easily set up with more.
+global difficulties = 
+{
+	// Difficulty 0
+	easy =
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 0.5,
+		MemorySpan = 2.0,
+		AimPersistance = 2.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		MaxViewDistance = 3000,
+	},
+	// Difficulty 1
+	medium =
+	{
+		FieldOfView = 105.0,
+		ReactionTime = 0.25,
+		MemorySpan = 2.0,
+		AimPersistance = 3.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 7.5,
+		MaxViewDistance = 7000,
+	},
+	// Difficulty 2
+	hard =
+	{
+		FieldOfView = 120.0,
+		ReactionTime = 0.0,
+		MemorySpan = 2.0,
+		AimPersistance = 4.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 5.0,
+		MaxViewDistance = 10000,
+	},
+};
+
+// debug display flag
+global difficulties_Debug = true;
+
+// A helper function that sets a bot up with the current difficulty settings.
+difficulties.InitBotDifficultyProperties = function(bot)
+{
+	//global difficulties_Debug;
+	
+	if(difficulties[CurrentDifficulty])
+	{
+		bot.FieldOfView = difficulties[CurrentDifficulty].FieldOfView;
+		bot.ReactionTime = difficulties[CurrentDifficulty].ReactionTime;
+		bot.MemorySpan = difficulties[CurrentDifficulty].MemorySpan;
+		bot.AimPersistance = difficulties[CurrentDifficulty].AimPersistance;
+		bot.MaxTurnSpeed = difficulties[CurrentDifficulty].MaxTurnSpeed;
+		bot.AimStiffness = difficulties[CurrentDifficulty].AimStiffness;
+		bot.AimDamping = difficulties[CurrentDifficulty].AimDamping;
+		bot.MaxViewDistance = difficulties[CurrentDifficulty].MaxViewDistance;
+		
+		if ( difficulties_Debug )
+		{
+			print("Current Difficulty", CurrentDifficulty);
+			print("Difficulty FOV", bot.FieldOfView);
+			print("Difficulty ReactionTime", bot.ReactionTime);
+			print("Difficulty MemorySpan", bot.MemorySpan);
+			print("Difficulty AimPersistance", bot.AimPersistance);
+			print("Difficulty MaxTurnSpeed", bot.MaxTurnSpeed);
+			print("Difficulty AimStiffness", bot.AimStiffness);
+			print("Difficulty AimDamping", bot.AimDamping);
+			print("Difficulty MaxViewDistance", bot.MaxViewDistance);
+		}
+	}
+	else
+	{
+		print("Invalid Current Difficulty", CurrentDifficulty);	
+	}
+};
+
+// Register a command that can be used to change the difficulty in-game
+// Example usage:
+//	bot difficulty 1
+//	bot difficulty uber
+Commands["difficulty"] = function(_params)
+{
+	if(_params[0] != null)
+	{
+		// Check if this difficulty level exists.
+		if(difficulties[_params[0]])
+		{
+			global CurrentDifficulty = _params[0];
+			
+			foreach ( gameId and bot in BotTable )
+			{
+				if(bot)
+				{
+					difficulties.InitBotDifficultyProperties(bot);
+				}                     
+			}
+			
+			print("Difficulty Changed", CurrentDifficulty);
+		}
+		else
+		{
+			print("Difficulty level not found", _params[0]);
+		}
+	}
+	
+	print("Difficulty:", CurrentDifficulty);
+};
+
+print( "Initializing Difficulties Complete" );

@@ -1,0 +1,237 @@
+//==========================================================================================
+//
+//	1944_overlord.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//	jaskot			02/04/09	Added paththrough for transmitter ladder for
+//						unopposed offense and added tank MOVER and BUILD
+//						offset sync
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	TankAABB = AABB( -1951, -2564, 344, -1905, -2306, 408 ),
+	tanktriggerInfo =
+	{
+		Name="TankTrigger",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			print(GetEntName(ent),"entered aabb trigger");
+			
+			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
+		},
+		OnExit = function(ent)
+		{
+			print(GetEntName(ent),"exited aabb trigger");
+		},
+	},
+	
+	Navigation =
+	{
+		transmitterladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 1 );
+			},			
+		},
+	},
+	
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Flag_documents_1 = "FLAG_documents_1",
+	Flag_documents_2 = "FLAG_documents_2",
+	Build_Alllied_Transmitter = "BUILD_Alllied_Transmitter",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Axis_Library_Rear_Door = "BUILD_Axis_Library_Rear_Door",
+	Build_Forward_Bunker_Doors = "BUILD_Forward_Bunker_Doors",
+	Build_Tank = "BUILD_Tank",
+	Plant_Alllied_Transmitter = "PLANT_Alllied_Transmitter",
+	Plant_Axis_Bunker_Wall = "PLANT_Axis_Bunker_Wall",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_Generator = "PLANT_Axis_Generator",
+	Plant_Axis_Library_Rear_Door = "PLANT_Axis_Library_Rear_Door",
+	Plant_Forward_Bunker_Doors = "PLANT_Forward_Bunker_Doors",
+	Mount_424 = "MOUNTMG42_424",
+	Mount_595 = "MOUNTMG42_595",
+	Mount_679 = "MOUNTMG42_679",
+	Repair_424 = "REPAIRMG42_424",
+	Repair_595 = "REPAIRMG42_595",
+	Repair_679 = "REPAIRMG42_679",
+	Mobile_MG42_615 = "MOBILEMG42_615",
+	Mobile_MG42_617 = "MOBILEMG42_617",
+	Snipe_151 = "SNIPE_151",
+	Snipe_155 = "SNIPE_155",
+	Snipe_156 = "SNIPE_156",
+	Snipe_157 = "SNIPE_157",
+	Snipe_173 = "SNIPE_173",
+	Snipe_445 = "SNIPE_445",
+	Snipe_614 = "SNIPE_614",
+	Snipe_616 = "SNIPE_616",
+	Snipe_618 = "SNIPE_618",
+	Snipe_619 = "SNIPE_619",
+	Snipe_627 = "SNIPE_627",
+	Snipe_629 = "SNIPE_629",
+	Snipe_635 = "SNIPE_635",
+	Snipe_636 = "SNIPE_636",
+	Mover_tank = "MOVER_tank",
+
+	Alllied_Transmitter_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Alllied_Transmitter_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Library_Rear_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Library_Rear_Door_Built" );
+	},
+
+	Forward_Bunker_Doors_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Forward_Bunker_Doors_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Tank_Built" );
+	},
+
+	Alllied_Transmitter_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Alllied_Transmitter_Destroyed" );
+	},
+
+	Axis_Bunker_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Bunker_Wall );
+		
+		print( "Axis_Bunker_Wall_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Generator );
+		
+		print( "Axis_Generator_Destroyed" );
+	},
+
+	Axis_Library_Rear_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Library_Rear_Door_Destroyed" );
+	},
+
+	Forward_Bunker_Doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Forward_Bunker_Doors_Destroyed" );
+	},
+
+	documents_1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "documents_1_Taken" );
+	},
+
+	documents_2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "documents_2_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition( 1370, -834, 648, "PLANT_Axis_Generator" );
+	
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Alllied_Transmitter_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Library_Rear_Door_Built );
+	OnTrigger( "MISSING_STRING", Map.Forward_Bunker_Doors_Built );
+	OnTrigger( "MISSING_STRING", Map.Tank_Built );
+	OnTrigger( "MISSING_STRING", Map.Alllied_Transmitter_Destroyed );
+	OnTrigger( "The Axis Bunker Wall has been destroyed.", Map.Axis_Bunker_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "The Axis Generator has been destroyed.", Map.Axis_Generator_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Library_Rear_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Forward_Bunker_Doors_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.documents_1_Taken );
+	OnTrigger( "MISSING_STRING", Map.documents_2_Taken );
+	
+	OnTriggerRegion( Map.TankAABB, Map.tanktriggerInfo );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~ SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	//~ SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD.*" );
+	//~ SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT.*" );
+	
+	Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_tank );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

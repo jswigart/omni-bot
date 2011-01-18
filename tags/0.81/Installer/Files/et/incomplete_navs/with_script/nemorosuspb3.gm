@@ -1,0 +1,211 @@
+// No defend or route goals on waypoints but added into the script
+
+
+global Map =
+{
+	controls_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "controls_Built" );
+	},
+
+	doorcontrols_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "doorcontrols_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	tank_construct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tank_construct_Built" );
+	},
+
+	thebridge_Built = function( trigger )
+	{
+
+
+		Util.MapDebugPrint( "thebridge_Built" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_generator" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gun_Controls" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_side_entrance" );
+//		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gun1" );
+//		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gun2" );
+//		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dyno5" );
+		ETUtil.EnableGoal("AMMOCAB.*");
+		ETUtil.EnableGoal("HEALTHCAB.*");
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	maingate_Destroyed = function( trigger )
+	{
+
+
+		Util.MapDebugPrint( "maingate_Destroyed" );
+	},
+
+	doorcontrols_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "doorcontrols_Destroyed" );
+	},
+
+	controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "controls_Destroyed" );
+	},
+
+	maindoors_blown = function( trigger )
+	{
+//		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_gun3" );
+//		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_gun4" );
+		Util.MapDebugPrint( "maindoors_blown" );
+	},
+
+	thebridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "thebridge_Destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+
+
+
+
+
+
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.axis_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.controls_Built );
+	OnTrigger( "MISSING_STRING", Map.doorcontrols_Built );
+	OnTrigger( "Allied team has destroyed the Bunker Doors!", Map.maindoors_blown );
+	OnTrigger( "Allied team has reinforced the Bridge!", Map.thebridge_Built );
+	OnTrigger( "allies_hq_compost_constructed", Map.allied_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.tank_construct_Built );
+	OnTrigger( "allies_hq_compost_damaged", Map.allied_compost_built_Destroyed );
+	OnTrigger( "Allies have breached the side entrance!", Map.maingate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.thebridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.controls_Destroyed );
+	OnTrigger( "Allies team has destroyed the Door Controls Generator", Map.doorcontrols_Destroyed );
+
+	Util.SetGoalOffset( 10, -100, 0, "PLANT_side_entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_generator" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Gun_Controls" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_side_entrance" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gun1" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gun2" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gun3" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gun4" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_gun3" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_gun4" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_gun1" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_gun2" );
+//	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_dyno5" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_dyno5" );
+	Util.SetGoalOffset( 0, 0, 150, "PLANT_Bridge" );
+	Util.DisableGoal("AMMOCAB.*");
+	Util.DisableGoal("HEALTHCAB.*");
+
+/*	print("Configuring Routes");
+
+	Maproutes =
+	{
+		MAP_CONSTRUCTION_thebridge =
+		{
+ 			ROUTE_spawn2 =
+                      {
+
+	                    ROUTE_bridge1 = {},
+			    ROUTE_bridge2 = {},
+			    ROUTE_tank1 = {},
+                       },
+	        },
+
+		DEFEND_gun1 =
+	{
+ 			ROUTE_spawn3 =
+                      {
+		      	    Weight = 5,
+	                    ROUTE_gun_route = {},
+	                    ROUTE_gun_route2 = {},
+			    ROUTE_gun_route3 = {},
+		      },
+
+
+	},
+
+		MAP_DYNAMITE_TARGET_controls =
+		{
+			ROUTE_alspawn3 =
+			{
+				ROUTE_control1 = {},
+				Weight = 5,
+				ROUTE_control2 =
+					{
+					ROUTE_gunroute2 = {},
+					ROUTE_gunroute3 =
+						{
+						ROUTE_gunroute = {},
+						},
+					},
+			},
+		},
+	};
+
+	Maproutes.DEFEND_gun2 = Maproutes.DEFEND_gun1;
+	Maproutes.ROUTE_alspawn = Maproutes.alspawn3;
+	Maproutes.ROUTE_alspawn2 = Maproutes.alspawn3;
+	Maproutes.DEFEND_gun3 = Maproutes.MAP_DYNAMITE_TARGET_controls;
+	Maproutes.DEFEND_gun4 = Maproutes.MAP_DYNAMITE_TARGET_controls;
+	Maproutes.MAP_CONSTRUCTION_allied_compost_built = Maproutes.MAP_CONSTRUCTION_thebridge;
+	Util.Routes(Maproutes);
+*/
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 300.0;
+
+};

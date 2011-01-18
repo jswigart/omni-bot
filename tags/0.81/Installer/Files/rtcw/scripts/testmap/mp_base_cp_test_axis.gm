@@ -1,0 +1,136 @@
+global Map =
+{
+	MapName = "mp_base_cp",
+	Quiet = true,
+	Call_Artillery_spot_net = "CALLARTILLERY_spot_net",
+	Call_Artillery_spot_r2 = "CALLARTILLERY_spot_r2",
+	Call_Artillery_spot_tunnel_bridge = "CALLARTILLERY_spot_tunnel_bridge",
+	Call_Artillery_spot_tunnel_net = "CALLARTILLERY_spot_tunnel_net",
+	Artillery_D_target_bridge = "ARTILLERY_D_target_bridge",
+	Artillery_D_target_net_jail = "ARTILLERY_D_target_net_jail",
+	Artillery_D_target_r2_door = "ARTILLERY_D_target_r2_door",
+	Artillery_D_target_tunnel_r1 = "ARTILLERY_D_target_tunnel_r1",
+	Artillery_S_target_axis_spawn = "ARTILLERY_S_target_axis_spawn",
+	Artillery_S_target_nwc = "ARTILLERY_S_target_nwc",
+	Artillery_S_target_r2_arch = "ARTILLERY_S_target_r2_arch",
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_2 = "MOUNTMG42_mg42_2",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_2 = "REPAIRMG42_mg42_2",
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Axis takes the Northwest Lookout Tower!", Map.checkpoint01_Axis_Captured );
+		OnTrigger( "Allies take the Northwest Lookout Tower!", Map.checkpoint01_Allies_Captured );
+		OnTrigger( "Axis takes the Warehouse!", Map.checkpoint02_Axis_Captured );
+		OnTrigger( "Allies take the Warehouse!", Map.checkpoint02_Allies_Captured );
+		OnTrigger( "Axis takes Radar 02!", Map.checkpoint03_Axis_Captured );
+		OnTrigger( "Allies take Radar 02!", Map.checkpoint03_Allies_Captured );
+		OnTrigger( "Axis takes Radar 01 Access Bridge!", Map.checkpoint04_Axis_Captured );
+		OnTrigger( "Allies take Radar 01 Access Bridge!", Map.checkpoint04_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_checkpoint03, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_checkpoint04, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_checkpoint02, 120 );
+		
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_checkpoint01, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

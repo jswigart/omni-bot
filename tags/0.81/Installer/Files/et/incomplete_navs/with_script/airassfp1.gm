@@ -1,0 +1,302 @@
+//==========================================================================================
+//
+//	airassfp1.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	The Grim Reaper	unknown	Original script
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Navigation =
+	{
+		ladder1 =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 1 );
+			},			
+		},
+	},
+	
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Blimp = "BUILD_Blimp",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_East_Depot_MG_Nest = "BUILD_East_Depot_MG_Nest",
+	Build_East_Truck_Defences = "BUILD_East_Truck_Defences",
+	Build_South_Depot_MG_Nest = "BUILD_South_Depot_MG_Nest",
+	Build_West_Truck_Defences = "BUILD_West_Truck_Defences",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Blimp = "PLANT_Blimp",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_East_Chemical_Truck = "PLANT_East_Chemical_Truck",
+	Plant_East_Depot_MG_Nest = "PLANT_East_Depot_MG_Nest",
+	Plant_East_Sewer_Gate = "PLANT_East_Sewer_Gate",
+	Plant_East_Truck_Defences = "PLANT_East_Truck_Defences",
+	Plant_Main_Entrance = "PLANT_Main_Entrance",
+	Plant_Side_Entrance = "PLANT_Side_Entrance",
+	Plant_South_Depot_MG_Nest = "PLANT_South_Depot_MG_Nest",
+	Plant_West_Chemical_Truck = "PLANT_West_Chemical_Truck",
+	Plant_West_Sewer_Gate = "PLANT_West_Sewer_Gate",
+	Plant_West_Truck_Defences = "PLANT_West_Truck_Defences",
+	Mount_459 = "MOUNTMG42_459",
+	Mount_499 = "MOUNTMG42_499",
+	Mount_East_Depot_MG_Nest = "MOUNTMG42_East_Depot_MG_Nest",
+	Mount_South_Depot_MG_Nest = "MOUNTMG42_South_Depot_MG_Nest",
+	Repair_459 = "REPAIRMG42_459",
+	Repair_499 = "REPAIRMG42_499",
+	Repair_East_Depot_MG_Nest = "REPAIRMG42_East_Depot_MG_Nest",
+	Repair_South_Depot_MG_Nest = "REPAIRMG42_South_Depot_MG_Nest",
+	Snipe_292 = "SNIPE_292",
+	Snipe_297 = "SNIPE_297",
+	Snipe_97 = "SNIPE_97",
+	Snipe_98 = "SNIPE_98",
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
+		
+		print( "Assault_Ramp_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	East_Depot_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Depot_MG_Nest_Built" );
+	},
+
+	East_Truck_Defences_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS,  false, Map.Build_East_Truck_Defences );
+		
+		print( "East_Truck_Defences_Built" );
+	},
+
+	South_Depot_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "South_Depot_MG_Nest_Built" );
+	},
+
+	West_Truck_Defences_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS,  false, Map.Build_West_Truck_Defences );
+		
+		print( "West_Truck_Defences_Built" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	East_Chemical_Truck_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Chemical_Truck_Destroyed" );
+	},
+
+	East_Depot_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Depot_MG_Nest_Destroyed" );
+	},
+
+	East_Sewer_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Sewer_Gate_Destroyed" );
+	},
+
+	East_Truck_Defences_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Build_East_Truck_Defences );
+		
+		print( "East_Truck_Defences_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		// Axis
+		SetAvailableMapGoals( TEAM.AXIS,  false, Map.Mount_499 );
+		
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Build_South_Depot_MG_Nest );
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Mount_459 );
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Build_East_Truck_Defences );
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Build_West_Truck_Defences );
+
+		// Allies
+		SetAvailableMapGoals( TEAM.ALLIES,  false, Map.Mount_499 );
+		SetAvailableMapGoals( TEAM.ALLIES,  false, Map.Mount_459 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Chemical_Truck );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_West_Chemical_Truck );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_East_Depot_MG_Nest );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_South_Depot_MG_Nest );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South_Depot_MG_Nest );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_East_Depot_MG_Nest );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Entrance );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Truck_Defences );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_West_Truck_Defences );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_West_Sewer_Gate );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Sewer_Gate );
+
+		print( "Main_Entrance_Destroyed" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Entrance_Destroyed" );
+	},
+
+	South_Depot_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "South_Depot_MG_Nest_Destroyed" );
+	},
+
+	West_Chemical_Truck_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Chemical_Truck_Destroyed" );
+	},
+
+	West_Sewer_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Sewer_Gate_Destroyed" );
+	},
+
+	West_Truck_Defences_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS,  true, Map.Build_West_Truck_Defences );
+		
+		print( "West_Truck_Defences_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function(trigger)
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "The Allies have constructed the Assault Ramp!", Map.Assault_Ramp_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "The Axis East Depot MG Nest has been constructed.", Map.East_Depot_MG_Nest_Built );
+	OnTrigger( "Axis team has constructed the East Truck Defences!", Map.East_Truck_Defences_Built );
+	OnTrigger( "The Allies South Depot MG Nest has been constructed.", Map.South_Depot_MG_Nest_Built );
+	OnTrigger( "Axis team has constructed the West Truck Defences!", Map.West_Truck_Defences_Built );
+	OnTrigger( "The Axis have destroyed the Assault Ramp!", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have blown up the East Truck!", Map.East_Chemical_Truck_Destroyed );
+	OnTrigger( "The Axis East Depot MG Nest has been destroyed.", Map.East_Depot_MG_Nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.East_Sewer_Gate_Destroyed );
+	OnTrigger( "Allied team has damaged the East Truck Defences!", Map.East_Truck_Defences_Destroyed );
+	OnTrigger( "Allies have blown up the Main Entrance!", Map.Main_Entrance_Destroyed );
+	OnTrigger( "Allies have blown up the Side Entrance!", Map.Side_Entrance_Destroyed );
+	OnTrigger( "The Allies South Depot MG Nest has been destroyed.", Map.South_Depot_MG_Nest_Destroyed );
+	OnTrigger( "Allies have blown up the West Truck!", Map.West_Chemical_Truck_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_Sewer_Gate_Destroyed );
+	OnTrigger( "Allied team has damaged the West Truck Defences!", Map.West_Truck_Defences_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	// Axis
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_East_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_South_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_East_Truck_Defences );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_West_Truck_Defences );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_459 );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Blimp );
+	
+	// Allies
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Main_Entrance );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_West_Sewer_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_East_Sewer_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_East_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_South_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_South_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_East_Depot_MG_Nest );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Entrance );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_East_Truck_Defences );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_West_Truck_Defences );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_East_Chemical_Truck );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_West_Chemical_Truck );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_459 );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_499 );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Blimp );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Assault_Ramp );
+	
+	print( "OnMapLoad" );
+};
+

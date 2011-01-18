@@ -1,0 +1,213 @@
+// This script contains functionality to allow bots to escort vehicles
+
+// These parameters are required
+this.Name = "ESCORT";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.OnSpawn = function()
+{
+	// don't consider this goal right away, because ET takes a few frame to initialize entities
+	// so vehicles will be alive temporarily at the start of the map for a few frames
+	this.DelayGetPriority(3);
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,"ESCORT_.*");
+		if ( count > 0 )
+		{
+			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			{
+				if ( !goal.Offsets || tableCount(goal.Offsets) < 1 ) {
+					goal.DisableGoal(true);
+					Util.MapDebugPrint(goal.GetName() + " disabled, no offsets defined!", true);
+					continue;
+				}
+
+				if ( !goal.Vehicle ) {
+					goal.DisableGoal(true);
+					Util.MapDebugPrint(goal.GetName() + " disabled, no vehicle defined!", true);
+					continue;
+				}
+
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
+			}
+		}
+
+		tableClear(this.Bot.QueryGoalsTable);
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+
+	this.VehicleGoal = GetGoal(this.MapGoal.Vehicle);
+	if (!this.VehicleGoal) {
+		this.MapGoal.DisableGoal(true);
+		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, invalid vehicle defined!", true);
+		this.Finished();
+	}
+
+	this.VehicleEnt = this.VehicleGoal.GetEntity();
+	if (!this.VehicleEnt) {
+		this.MapGoal.DisableGoal(true);
+		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, no entity for defined vehicle!", true);
+		this.Finished();
+	}
+
+	// randomly choose a button
+	if (this.MapGoal.Buttons)
+	{
+		n = tableCount(this.MapGoal.Buttons);
+		if(n > 0)
+		{
+			r = RandInt(0,n-1);
+			this.Button = this.MapGoal.Buttons[ r ];
+		}
+	}
+};
+
+this.Update = function()
+{
+	x = 0;
+	startIndex = 0;
+	offsetCount = tableCount(this.MapGoal.Offsets);
+	offsetPos = null;
+	pathSuccess = false;
+
+	// randomly select a start index if one isn't defined or invalid
+	if ( typeId(this.MapGoal.StartIndex) != 1 || this.MapGoal.StartIndex < 0 || this.MapGoal.StartIndex > offsetCount - 1 ) {
+		startIndex = RandInt(0, offsetCount - 1);
+		if ( this.Debug ) { print(this.MapGoal.GetName(), "selected random start index of", startIndex); }
+	}
+	else {
+		startIndex = this.MapGoal.StartIndex;
+		if ( this.Debug ) { print(this.MapGoal.GetName(), "user defined start index of", startIndex); }
+	}
+
+	// loop through from the start index until we get a good path
+	for ( i = 0; i < offsetCount; i += 1 )
+	{
+		ind = startIndex + i;
+
+		// at the end of the list? continue looping from 0 if so
+		if ( ind > offsetCount - 1 ) {
+			ind = 0 + x;
+			x += 1;
+		}
+
+		// if it's excluded, skip it
+		if ( this.MapGoal.ExcludeIndexes && typeId(Util.GetTableKey(this.MapGoal.ExcludeIndexes, ind)) != 0 ) {
+			if ( this.Debug ) { print(this.Name, "skipping index", ind); }
+			continue;
+		}
+
+		// and finally check and see if the bot can get there
+		offsetPos = GetEntityWorldSpace(this.VehicleEnt, this.MapGoal.Offsets[ ind ]);
+		if ( this.Goto(offsetPos, 32.0) != EVENT.PATH_FAILED ) {
+			pathSuccess = true;
+			break;
+		}
+		else {
+			if ( this.Debug ) {
+				print( this.MapGoal.GetName(), "path failed for index", ind);
+			}
+		}
+	}
+
+	if ( pathSuccess ) {
+
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		if ( GetEntFlags(this.VehicleEnt, ENTFLAG.DEAD) ) {
+			if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ this.VehicleEnt ] ) {
+				this.BlackboardDelay(10, this.MapGoal);
+				this.Finished();
+			}
+		}
+
+		deadCheckInterval = 20; // frames
+		while(!this.Bot.IsStuck(2))
+		{
+			// check every second (20 frames) so they can leave if damaged while already escorting
+			deadCheckInterval -= 1;
+			if ( deadCheckInterval < 1 ) {
+				deadCheckInterval = 20;
+
+				if ( GetEntFlags(this.VehicleEnt, ENTFLAG.DEAD) ) {
+					if ( !Map || !Map.InvVehicle || !Map.InvVehicle[ this.VehicleEnt ] ) {
+						this.BlackboardDelay(10, this.MapGoal);
+						this.Finished();
+					}
+				}
+			}
+
+			this.GetNewVehicleLookPosition();
+			if ( this.Button )
+				{ this.Bot.PressButton(this.Button); }
+
+			offsetPos = GetEntityWorldSpace(this.VehicleEnt, this.MapGoal.Offsets[ ind ]);
+			if ( offsetPos ) {
+				dist = this.Bot.DistanceTo(offsetPos);
+				if ( dist < 128 ) {
+					this.Bot.MoveTowards(offsetPos, 8, MoveMode.Walk);
+				}
+				else if ( dist > 128 && dist < 512 ){
+					this.Bot.MoveTowards(offsetPos, 8, MoveMode.Run);
+				}
+				else {
+					// repath
+					this.ReleaseAimRequest();
+					if ( this.Goto(offsetPos) == EVENT.PATH_FAILED ) {
+						this.Finished();
+					}
+				}
+			}
+			else {
+				break;
+			}
+			yield();
+		}
+	}
+	else {
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.MapDebugPrint( this.MapGoal.GetName() + " vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt), true );
+	}
+
+	this.Finished();
+};
+
+this.GetNewVehicleLookPosition = function()
+{
+	vehicleVelocity = GetEntVelocity(this.VehicleEnt);
+
+	if(vehicleVelocity && !vehicleVelocity.IsZero())
+	{
+		this.AddAimRequest(Priority.Low, "facing", vehicleVelocity);
+	}
+	else
+	{
+		vehFacing = GetEntFacing( this.VehicleEnt );
+		this.AddAimRequest(Priority.Low, "facing", vehFacing);
+	}
+};

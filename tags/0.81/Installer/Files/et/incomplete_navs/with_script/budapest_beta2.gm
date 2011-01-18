@@ -1,0 +1,1717 @@
+////////////Budapest//////gm file for omni-bot 0.71
+
+global Map =
+{
+	//vars//
+	Debug = false,
+	//obj//
+	bridge_parts_destroyed = 0,//number of bridge parts destroyed
+	gates_destroyed = 0, //number of sewer gates destroyed
+	defences_built = false, //
+	//garage door//
+	garage_1_open =  false,//closed
+	garage_2_open =  false,//closed
+	garage_3_open =  false,//closed
+	//elevators//
+	elevator_pos = "bottom", //moving, top, bottom
+	elevator_team = 0,//no team 1 = axis, 2 = allies
+	elevator_2_pos = "bottom", //moving, top, bottom
+	elevator_2_team = 0,//no team 1 = axis, 2 = allies
+	//trams//
+	right_tram_pos = "bottom",
+	left_tram_pos = "top",
+	///forward spawn///
+	palace_team = 1,//no team 1 = axis, 2 = allies
+	
+	//Goals//
+	//main obj//
+	plant_west_bridge = "PLANT_West_bridge_support",
+	plant_east_bridge = "PLANT_East_bridge_support",
+	plant_main_bridge = "PLANT_Main_bridge_support",
+	//sewer gates//
+	plant_west_sewer = "PLANT_West_Sewer_Gate",
+	plant_east_sewer = "PLANT_East_Sewer_Gate",
+	plant_south_sewer = "PLANT_South_Sewer_Gate",
+	//bridge defences//
+	plant_bridge_defences = "PLANT_Bridge_Defences",
+	build_bridge_defences = "BUILD_Bridge_Defences",
+	//elevator generators//
+	build_first_generator = "BUILD_First_Elevator_Controls",
+	plant_first_generator =	"PLANT_First_Elevator_Controls",
+	build_second_generator = "BUILD_Second_Elevator_Controls",
+	plant_second_generator = "PLANT_Second_Elevator_Controls",
+	//command post//
+	build_cp = "BUILD_Neutral_Command_Post",
+	plant_cp = "PLANT_Neutral_Command_Post",
+	//mg42s//
+	mount_allies_mg42 = "MOUNTMG42_allies_mg42",
+	repair_allies_mg42 = "REPAIRMG42_allies_mg42",
+	mount_axis_mg42 = "MOUNTMG42_axis_mg42",
+	repair_axis_mg42 = "REPAIRMG42_axis_mg42",
+	//palace flag//
+	palace_flag = "CHECKPOINT_forward_flag",
+	
+	
+	//Vehicle boat 
+	MountVehicle =
+	{
+		Enabled = false, // controled by palace flag ownership 
+		Priority = 0.65, // activate the goal with a 0.65 priority
+		LimitTeam = (1<<TEAM.AXIS), 
+		LimitClass = (1<<CLASS.SOLDIER), 			
+		LimitTeams = Util.AllTeams, // all teams can use this goal
+		LimitBots = 1, // only 2 bots can use this goal
+	},
+
+	//tables//Paththrough//
+	///ladders///
+	Navigation =
+	{
+		//generic ladders
+		ladder_8 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 8);
+				sleep(8); 
+			},
+		},
+		ladder_6 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(6); 
+			},
+		},
+		ladder_5 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 5);
+				sleep(5); 
+			},
+		},
+		ladder_4 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 4);
+				sleep(4); 
+			},
+		},
+		ladder_3 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3); 
+			},
+		},
+		ladder_2 =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				sleep(2); 
+			},
+		},
+		//special ladders
+		bottom1_info = { cached = false, wpInfo = {}, },
+		ladder_bottom_1 =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.bottom1_info.cached )
+				{
+					Map.Navigation.bottom1_info.wpInfo = Util.WpNameInfo("ladder_bottom_1");
+					Map.Navigation.bottom1_info.cached = true;
+				}
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.bottom1_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 8.5);
+				sleep(8.5); 								
+			},
+		},
+		bottom8_info = { cached = false, wpInfo = {}, },
+		ladder_church_bottom =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.bottom8_info.cached )
+				{
+					Map.Navigation.bottom8_info.wpInfo = Util.WpNameInfo("ladder_bottom_8");
+					Map.Navigation.bottom8_info.cached = true;
+				}   
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.bottom8_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 7);
+				sleep(7);  
+				_this.Bot.HoldButton(BTN.STRAFE_L, 2);
+				sleep(2); 
+			},
+		},
+		top8_info = { cached = false, wpInfo = {}, },
+		ladder_church_top =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.top8_info.cached )
+				{
+					Map.Navigation.top8_info.wpInfo = Util.WpNameInfo("ladder_top_8");
+					Map.Navigation.top8_info.cached = true;
+				}   
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.top8_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 7);
+				sleep(7);  
+			},
+		},
+		churchSewer_info = { cached = false, wpInfo = {}, },
+		ladder_church_sewer =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.churchSewer_info.cached )
+				{
+					Map.Navigation.churchSewer_info.wpInfo = Util.WpNameInfo("ladder_church_sewer");
+					Map.Navigation.churchSewer_info.cached = true;
+				}   
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.churchSewer_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 4);
+				sleep(4);  
+			},
+		},
+		bridgeR_info = { cached = false, wpInfo = {}, },
+		ladder_bridge_r =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.bridgeR_info.cached )
+				{
+					Map.Navigation.bridgeR_info.wpInfo = Util.WpNameInfo("bridge_r");
+					Map.Navigation.bridgeR_info.cached = true;
+				}   
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.bridgeR_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(6);  
+			},
+		},
+		bridge1_info = { cached = false, wpInfo = {}, },
+		ladder_bridge_l =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Navigation.bridge1_info.cached )
+				{
+					Map.Navigation.bridge1_info.wpInfo = Util.WpNameInfo("bridge_l");
+					Map.Navigation.bridge1_info.cached = true;
+				}   
+				_this.AddAimRequest(Priority.High, "facing" , Map.Navigation.bridge1_info.wpInfo.facing);
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(6);  
+			},
+		},
+	},
+	
+	//paththroug switches//
+	Switches =
+	{ ///elevator 1 
+		elevator_switch_top =
+		{ //pre: this switch calls the elevator to the top
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_switch_top",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{ //elevator_pos = "bottom", //moving, top, bottom
+				if (  Map.elevator_pos == "bottom" )
+				{ 
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+		},
+		elevator_top =
+		{ //pre: this switch sends rider and elevator down
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_top",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if (  Map.elevator_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},	
+		},
+		elevator_switch_bottom =
+		{ //pre: this switch calls the elevator to the bottom
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_switch_bottom",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.elevator_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+		},
+		elevator_bottom =
+		{ //pre: this switch sends rider and elevator up
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_bottom",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.elevator_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		///elevator 2
+		elevator_2_switch_top =
+		{ //pre: this switch calls the elevator to the top
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_2_switch_top",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{ //elevator_pos = "bottom", //moving, top, bottom
+				if (  Map.elevator_2_pos == "bottom" )
+				{ 
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+		},
+		elevator_2_top =
+		{ //pre: this switch sends rider and elevator down
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_2_top",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if (  Map.elevator_2_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},	
+		},
+		elevator_2_switch_bottom =
+		{ //pre: this switch calls the elevator to the bottom
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_2_switch_bottom",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.elevator_2_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+		},
+		elevator_2_bottom =
+		{ //pre: this switch sends rider and elevator up
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "elevator_2_bottom",
+			Timeout = 6500,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.elevator_2_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		///Right tram///
+		tram_r_top =
+		{ 
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_r_top",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.right_tram_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_r_switch_top =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_r_switch_top",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.right_tram_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_r_bottom =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_r_bottom",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.right_tram_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_r_switch_bottom =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_r_switch_bottom",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.right_tram_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		///Left tram///
+		tram_l_top =
+		{ 
+			Enabled = false,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_l_top",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.left_tram_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_l_switch_top =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_l_switch_top",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.left_tram_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_l_bottom =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_l_bottom",
+			Timeout = 8000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.left_tram_pos == "bottom" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+		tram_l_switch_bottom =
+		{ 
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "tram_l_switch_bottom",
+			Timeout = 2000,
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.left_tram_pos == "top" )
+				{
+					sleep(1);
+					return true; 
+				}
+				return false;
+			},
+			
+		},
+	///normal use_switches///
+		garage_1 =
+		{
+			WaypointName = "garage_1",
+			LimitTeam = 0, //controled by flag ownership
+			LimitClass = (1<<CLASS.SOLDIER) | 
+						(1<<CLASS.FIELDOPS) |
+						(1<<CLASS.MEDIC),
+			LimitDistance = 500,
+		},
+		garage_2 =
+		{
+			WaypointName = "garage_2",
+			LimitTeam = 0, //controled by flag ownership
+			LimitClass = (1<<CLASS.SOLDIER) | 
+						(1<<CLASS.FIELDOPS) |
+						(1<<CLASS.MEDIC),
+			LimitDistance = 500,
+		},
+		garage_3 =
+		{
+			WaypointName = "garage_3",
+			LimitTeam = 0, //controled by flag ownership
+			LimitClass = (1<<CLASS.SOLDIER) | 
+						(1<<CLASS.FIELDOPS) |
+						(1<<CLASS.MEDIC),
+			LimitDistance = 500,
+		},
+	},
+
+	//trigger functions
+	//elevator 1
+	Axis_Own_Elevator = function( trigger )
+	{	
+		Wp.SetWaypointFlag("elevator_switch_top", "closed", false);
+		Wp.SetWaypointFlag("elevator_switch_top", "team1", true);
+		Wp.SetWaypointFlag("elevator_switch_top", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_switch_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team1", true);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_bottom", "team1", true);
+		Wp.SetWaypointFlag("elevator_bottom", "team2", false);
+		//=====switches============//
+		if (Map.elevator_pos == "bottom")
+		{
+			Map.Switches.elevator_switch_top.Enabled = true;
+			Map.Switches.elevator_bottom.Enabled = true;
+		}
+		else
+		{
+			Map.Switches.elevator_top.Enabled = true;
+			Map.Switches.elevator_switch_bottom.Enabled = true;
+		}
+		Map.elevator_team = 1;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Axis_Own_Elevator", true);
+	},
+	Allies_Own_Elevator = function( trigger )
+	{
+		Wp.SetWaypointFlag("elevator_switch_top", "closed", false);
+		Wp.SetWaypointFlag("elevator_switch_top", "team1", false);
+		Wp.SetWaypointFlag("elevator_switch_top", "team2", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_switch_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team2", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_bottom", "team2", true);
+		if (Map.elevator_pos == "bottom")
+		{
+			Map.Switches.elevator_switch_top.Enabled = true;
+			Map.Switches.elevator_bottom.Enabled = true;
+		}
+		else
+		{
+			Map.Switches.elevator_top.Enabled = true;
+			Map.Switches.elevator_switch_bottom.Enabled = true;
+		}
+		Map.elevator_team = 2;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Allies_Own_Elevator", true);
+	},
+	Nither_Own_Elevator = function( trigger )
+	{	
+		Wp.SetWaypointFlag("elevator_switch_top", "team1", false);
+		Wp.SetWaypointFlag("elevator_switch_top", "team2", false);
+		Wp.SetWaypointFlag("elevator_switch_top", "closed", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "team2", false);
+		Wp.SetWaypointFlag("elevator_switch_bottom", "closed", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_bottom", "closed", true);
+		Wp.SetWaypointFlag("elevator_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_bottom", "team2", false);
+		//=====switches============//
+		Map.Switches.elevator_switch_top.Enabled =  false;
+		Map.Switches.elevator_top.Enabled = false;
+		Map.Switches.elevator_switch_bottom.Enabled = false;
+		Map.Switches.elevator_bottom.Enabled =  false;
+		
+		Map.elevator_team = 0;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Niether_Own_Elevator", true);
+	},
+	//el switch control
+	Elevator = function(trigger)
+	{
+		Util.MapDebugPrint("Elevator1 moving", true);
+		Map.elevator_pos = "moving"; //elevator is moving now
+		//disable switches
+		Map.Switches.elevator_switch_top.Enabled = false;
+		Map.Switches.elevator_top.Enabled = false;
+		Map.Switches.elevator_switch_bottom.Enabled = false;
+		Map.Switches.elevator_bottom.Enabled = false;	
+		vel = ToVector(trigger.Action);
+		sleep(6.5); //wait is 6.5 in map script
+		if (vel.z < 0) //going down
+		{ 
+		//enable switches
+			Map.elevator_pos = "bottom";
+			Map.Switches.elevator_switch_top.Enabled = true;
+			Map.Switches.elevator_top.Enabled = false;
+			Map.Switches.elevator_switch_bottom.Enabled = false;
+			Map.Switches.elevator_bottom.Enabled = true;
+		}
+		else //going up
+		{ 	
+		//enable switches
+			Map.elevator_pos = "top";
+			Map.Switches.elevator_switch_top.Enabled = false;
+			Map.Switches.elevator_top.Enabled = true;
+			Map.Switches.elevator_switch_bottom.Enabled = true;
+			Map.Switches.elevator_bottom.Enabled = false;
+		}	
+	},
+	//elevator 2
+	Axis_Own_Elevator_2 = function( trigger )
+	{	
+		Wp.SetWaypointFlag("elevator_2_switch_top", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team1", true);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team1", true);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team1", true);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team2", false);
+		Map.elevator_team = 1;//no team 1 = axis, 2 = allies
+		//=====switches============//
+		if (Map.elevator_2_pos == "bottom")
+		{
+			Map.Switches.elevator_2_switch_top.Enabled = true;
+			Map.Switches.elevator_2_bottom.Enabled = true;
+		}
+		else
+		{
+			Map.Switches.elevator_2_top.Enabled = true;
+			Map.Switches.elevator_2_switch_bottom.Enabled = true;
+		}
+		Map.elevator_2_team = 1;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Axis_Own_Elevator_2", true);
+	},
+	Allies_Own_Elevator_2 = function( trigger )
+	{
+		Wp.SetWaypointFlag("elevator_2_switch_top", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team2", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team2", true);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_bottom", "closed", false);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team2", true);
+		Map.elevator_team = 2;//no team 1 = axis, 2 = allies
+		if (Map.elevator_2_pos == "bottom")
+		{
+			Map.Switches.elevator_2_switch_top.Enabled = true;
+			Map.Switches.elevator_2_bottom.Enabled = true;
+		}
+		else
+		{
+			Map.Switches.elevator_2_top.Enabled = true;
+			Map.Switches.elevator_2_switch_bottom.Enabled = true;
+		}
+		Map.elevator_2_team = 2;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Allies_Own_Elevator_2", true);
+	},
+	Nither_Own_Elevator_2 = function( trigger )
+	{	
+		Wp.SetWaypointFlag("elevator_2_switch_top", "closed", true);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_switch_top", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "closed", true);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_switch_bottom", "team2", false);
+		//=================//
+		Wp.SetWaypointFlag("elevator_2_bottom", "closed", true);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team1", false);
+		Wp.SetWaypointFlag("elevator_2_bottom", "team2", false);
+		//=====switches============//
+		Map.Switches.elevator_2_switch_top.Enabled =  false;
+		Map.Switches.elevator_2_top.Enabled = false;
+		Map.Switches.elevator_2_switch_bottom.Enabled = false;
+		Map.Switches.elevator_2_bottom.Enabled =  false;
+		
+		Map.elevator_2_team = 0;//no team 1 = axis, 2 = allies
+		Util.MapDebugPrint("Niether_Own_Elevator_2", true);
+	},
+	//el switch control
+	Elevator_2 = function(trigger)
+	{
+		Util.MapDebugPrint("Elevator2 moving", true); 
+		Map.elevator_2_pos = "moving"; //elevator is moving now
+		//disable switches
+		Map.Switches.elevator_2_switch_top.Enabled = false;
+		Map.Switches.elevator_2_top.Enabled = false;
+		Map.Switches.elevator_2_switch_bottom.Enabled = false;
+		Map.Switches.elevator_2_bottom.Enabled = false;	
+		vel = ToVector(trigger.Action);
+		sleep(6.5); //wait is 6.5 in map script
+		if (vel.z < 0) //going down
+		{ //enable switches
+			Map.elevator_2_pos = "bottom";
+			Map.Switches.elevator_2_switch_top.Enabled = true;
+			Map.Switches.elevator_2_top.Enabled = false;
+			Map.Switches.elevator_2_switch_bottom.Enabled = false;
+			Map.Switches.elevator_2_bottom.Enabled = true;
+			Util.MapDebugPrint("at bottom", true);
+		}
+		else //going up
+		{ //enable switches
+			Map.elevator_2_pos = "top";
+			Map.Switches.elevator_2_switch_top.Enabled = false;
+			Map.Switches.elevator_2_top.Enabled = true;
+			Map.Switches.elevator_2_switch_bottom.Enabled = true;
+			Map.Switches.elevator_2_bottom.Enabled = false;
+			Util.MapDebugPrint("at top", true);
+		}	
+	},
+	
+	//Trams
+	Right_Tram_Activated = function( trigger )
+	{
+		vel = ToVector(trigger.Action);
+		Map.Switches.tram_r_top.Enabled = false;
+		Map.Switches.tram_r_switch_top.Enabled = false;
+		Map.Switches.tram_r_switch_bottom.Enabled = false;
+		Map.Switches.tram_r_bottom.Enabled = false;
+		if (Map.right_tram_pos == "top")
+		{sleep(6.5);} //wait is 6.5 for down in map script
+		else
+		{sleep(8);} //wait is 8 for up in map script
+		
+		if (vel.z < 0) //going down
+		{ //enable switches
+			Map.Switches.tram_r_top.Enabled = false;
+			Map.Switches.tram_r_switch_top.Enabled = true;
+			Map.Switches.tram_r_switch_bottom.Enabled = false;
+			Map.Switches.tram_r_bottom.Enabled = true;
+			Map.right_tram_pos = "bottom";
+		}
+		else //going up
+		{ //enable switches
+			Map.Switches.tram_r_top.Enabled = true;
+			Map.Switches.tram_r_switch_top.Enabled = false;
+			Map.Switches.tram_r_switch_bottom.Enabled = true;
+			Map.Switches.tram_r_bottom.Enabled = false;
+			Map.right_tram_pos = "top";
+		}	
+		Util.MapDebugPrint("Right_Tram_Activated", true);
+	},
+	
+	Left_Tram_Activated = function( trigger )
+	{
+		vel = ToVector(trigger.Action);
+		Map.Switches.tram_l_top.Enabled = false;
+		Map.Switches.tram_l_switch_top.Enabled = false;
+		Map.Switches.tram_l_switch_bottom.Enabled = false;
+		Map.Switches.tram_l_bottom.Enabled = false;
+		if (Map.left_tram_pos == "top")
+		{sleep(6.5);} //wait is 6.5 for down in map script
+		else
+		{sleep(8);} //wait is 8 for up in map script
+		
+		if (vel.z < 0) //going down
+		{ //enable switches
+			Map.Switches.tram_l_top.Enabled = false;
+			Map.Switches.tram_l_switch_top.Enabled = true;
+			Map.Switches.tram_l_switch_bottom.Enabled = false;
+			Map.Switches.tram_l_bottom.Enabled = true;
+			Map.left_tram_pos = "bottom";
+		}
+		else //going up
+		{ //enable switches
+			Map.Switches.tram_l_top.Enabled = true;
+			Map.Switches.tram_l_switch_top.Enabled = false;
+			Map.Switches.tram_l_switch_bottom.Enabled = true;
+			Map.Switches.tram_l_bottom.Enabled = false;
+			Map.left_tram_pos = "top";
+		}	
+		Util.MapDebugPrint("Left_Tram_Activated", true);
+	},
+	//garages **redo these better**
+	Trigger_garage_1 = function( trigger )
+	{
+		vel = ToVector(trigger.Action);
+		sleep(2.25); //wait is 2.24 in map script
+		if (vel.x > 0) //going down
+		{ //enable switches
+			Map.garage_1_open = false;
+		}
+		else
+		{
+			Map.garage_1_open = true;
+		}
+		if (Map.garage_1_open == true && Map.palace_team == 1) 
+		{//if door is open and axis control the flag
+			Map.Switches.garage_1.LimitTeam = (1<<TEAM.ALLIES);
+		}
+		else if (Map.garage_1_open == false && Map.palace_team == 1)
+		{
+			Map.Switches.garage_1.LimitTeam = (1<<TEAM.AXIS);
+		}
+		else //we won't worry about this door anymore
+		{
+			Map.Switches.garage_1.LimitTeam = 0;
+		}
+		Util.MapDebugPrint("Trigger_garage_1", true);
+	},
+	Trigger_garage_2 = function( trigger )
+	{
+		vel = ToVector(trigger.Action);
+		sleep(2.25); //wait is 2.24 in map script
+		if (vel.y > 0) //going down
+		{ //enable switches
+			Map.garage_2_open = false;
+		}
+		else
+		{
+			Map.garage_2_open = true;
+		}
+		if (Map.garage_2_open == true && Map.palace_team == 1) 
+		{//if door is open and axis control the flag
+			Map.Switches.garage_2.LimitTeam = (1<<TEAM.ALLIES);
+		}
+		else if (Map.garage_2_open == false && Map.palace_team == 1)
+		{
+			Map.Switches.garage_2.LimitTeam = (1<<TEAM.AXIS);
+		}
+		else //we won't worry about this door anymore
+		{
+			Map.Switches.garage_2.LimitTeam = 0;
+		}
+		Util.MapDebugPrint("Trigger_garage_2", true);
+	},
+	
+	Trigger_garage_3 = function( trigger )
+	{ //this is the door to the second elevator
+		vel = ToVector(trigger.Action);
+		sleep(2.25); //wait is 2.24 in map script
+		if (vel.x > 0) //going down
+		{ //enable switches
+			Map.garage_3_open = false;
+		}
+		else
+		{
+			Map.garage_3_open = true;
+		}
+		if (Map.garage_3_open == true && Map.palace_team == 1) 
+		{//if door is open and axis control the flag
+			Map.Switches.garage_3.LimitTeam = 0;
+		}
+		else if (Map.garage_3_open == false && Map.palace_team == 1)
+		{
+			Map.Switches.garage_3.LimitTeam = (1<<TEAM.AXIS);
+		}
+		else if (Map.garage_3_open == false && Map.palace_team == 2)
+		{
+			Map.Switches.garage_2.LimitTeam = (1<<TEAM.ALLIES);
+		}
+		else if (Map.garage_3_open == true && Map.palace_team == 2)
+		{
+			Map.Switches.garage_2.LimitTeam = (1<<TEAM.AXIS);
+		}
+		Util.MapDebugPrint("Trigger_garage_3", true);
+	},
+	
+	//sewer gates
+	East_Gate_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("east_gate_block_0", "closed", true);
+		Wp.SetWaypointFlag("east_gate_block_1", "closed", true);
+		Map.gates_destroyed = Map.gates_destroyed + 1;
+		if ((Map.gates_destroyed > 1) || (Map.defences_built == 0))
+		{
+			if (Map.bridge_parts_destroyed < 2)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_west_bridge);
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_east_bridge);
+			}
+			else
+			{SetAvailableMapGoals( TEAM.ALLIES, true, plant_main_bridge);}
+		}	
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_west_bridge);
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_east_bridge);	
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_main_bridge);
+		}
+		Util.MapDebugPrint("East_Gate_Destroyed");
+	},
+	West_Gate_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("west_gate_block_0", "closed", true);
+		Wp.SetWaypointFlag("west_gate_block_1", "closed", true);
+		Map.gates_destroyed = Map.gates_destroyed + 1;
+		if ((Map.gates_destroyed > 1) || (Map.defences_built == 0))
+		{
+			if (Map.bridge_parts_destroyed < 2)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_west_bridge);
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_east_bridge);
+			}
+			else
+			{SetAvailableMapGoals( TEAM.ALLIES, true, plant_main_bridge);}
+		}	
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_west_bridge);
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_east_bridge);	
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_main_bridge);
+		}
+		Util.MapDebugPrint("West_Gate_Destroyed");
+	},
+	South_Gate_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("south_gate_block_0", "closed", true);
+		Wp.SetWaypointFlag("south_gate_block_1", "closed", true);
+		Map.gates_destroyed = Map.gates_destroyed + 1;
+		if ((Map.gates_destroyed > 1) || (Map.defences_built == 0))
+		{
+			if (Map.bridge_parts_destroyed < 2)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_west_bridge);
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_east_bridge);
+			}
+			else
+			{SetAvailableMapGoals( TEAM.ALLIES, true, plant_main_bridge);}
+		}	
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_west_bridge);
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_east_bridge);	
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_main_bridge);
+		}
+		Util.MapDebugPrint("South_Gate_Destroyed");
+	},
+	//bridge defences	
+	Bridge_Defences_Built = function( trigger )
+	{
+		Wp.SetWaypointFlag("bridge_defences_door_0", "team1", true);
+		Wp.SetWaypointFlag("bridge_defences_door_1", "team1", true);
+		Wp.SetWaypointFlag("bridge_defences_door_0", "disguise", true);
+		Wp.SetWaypointFlag("bridge_defences_door_1", "disguise", true);
+		Map.defences_built = true;
+		if ((Map.gates_destroyed > 1))
+		{
+			if (Map.bridge_parts_destroyed < 2)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_west_bridge);
+				SetAvailableMapGoals( TEAM.ALLIES, true, plant_east_bridge);
+			}
+			else
+			{SetAvailableMapGoals( TEAM.ALLIES, true, plant_main_bridge);}
+		}	
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_west_bridge);
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_east_bridge);	
+			SetAvailableMapGoals( TEAM.ALLIES, false, plant_main_bridge);
+		}
+		Util.MapDebugPrint("Bridge_Defences_Built");
+	},
+		
+	Bridge_Defences_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("bridge_defences_door_0", "team1", false);
+		Wp.SetWaypointFlag("bridge_defences_door_1", "team1", false);
+		Wp.SetWaypointFlag("bridge_defences_door_0", "disguise", false);
+		Wp.SetWaypointFlag("bridge_defences_door_1", "disguise", false);
+		Map.defences_built = false;
+		SetAvailableMapGoals( TEAM.ALLIES, true, plant_bridges);
+		Util.MapDebugPrint("Bridge_Defences_Destroyed");
+	},
+	//Bridge Main objective
+	East_Bridge_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("bridge_east_jump_0", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_east_jump_1", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_east_jump_2", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_east_jump_3", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_east_jump_4", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_east_blocker_0", "closed", true);
+		Wp.SetWaypointFlag("bridge_east_blocker_1", "closed", true);
+		Map.bridge_parts_destroyed = Map.bridge_parts_destroyed + 1;
+		if (Map.bridge_parts_destroyed < 2)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, plant_west_bridge);
+			SetAvailableMapGoals( TEAM.ALLIES, true, plant_east_bridge);
+		}
+		else
+		{SetAvailableMapGoals( TEAM.ALLIES, true, plant_main_bridge);}
+		Util.MapDebugPrint("East_Bridge_Destroyed");
+	},
+	West_Bridge_Destroyed = function( trigger )
+	{
+		Wp.SetWaypointFlag("bridge_west_jump_0", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_1", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_2", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_3", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_4", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_5", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_6", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_jump_0", "jumplow", true);
+		Wp.SetWaypointFlag("bridge_west_blocker_0", "closed", true);
+		Wp.SetWaypointFlag("bridge_west_blocker_1", "closed", true);
+		Map.bridge_parts_destroyed = Map.bridge_parts_destroyed + 1;
+		if (Map.bridge_parts_destroyed == 2)
+		{ }
+		Util.MapDebugPrint("West_Bridge_Destroyed");
+	},
+	//Palace Flag
+	Allies_Capture_Flag = function( trigger )
+    {	
+		//axis goals//
+		Groups.EnableAxis(Groups.group5); //"axis_bridge" flags
+		Groups.DisableAxis(Groups.group3); //first elevator
+		Groups.DisableAxis(Groups.group1); //"axis_palace" flags
+		//allies goals//
+		Groups.EnableAllies(Groups.group6); //"allies_bridge" flags
+		Groups.EnableAllies(Groups.group7); //allies dyna objs
+		Groups.EnableAllies(Groups.group4); //second elevator
+		Groups.DisableAllies(Groups.group2); //"allies_palace" flags
+		Groups.DisableAllies(Groups.group3); //first elevator
+		//garage doors//
+		Map.Switches.garage_1.LimitTeam = 0;	
+		Map.Switches.garage_2.LimitTeam = 0;
+		if (Map.garage_3_open == false)
+		{ Map.Switches.garage_3.LimitTeam = (1<<TEAM.ALLIES);}	
+		else
+		{ Map.Switches.garage_3.LimitTeam = (1<<TEAM.AXIS); }	
+		//patrol boat//
+		//Map.FocusOnVehicle = 0;
+		///MAP TEAM///
+		Map.palace_team = 2; //1-axis, 2-allies
+		ChangeTo2ndSpawn();
+		Map.MountVehicle.Enabled = true;
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_tank" );
+		Util.MapDebugPrint("Allies_Capture_Flag");
+	},
+	
+	Axis_Capture_Flag = function( trigger )
+    {	
+		//axis goals//
+		Groups.EnableAxis(Groups.group1); //"axis_palace" flags
+		Groups.EnableAxis(Groups.group3); //first elevator
+		Groups.DisableAxis(Groups.group5); //"axis_bridge" flags
+		//allies goals//
+		Groups.EnableAllies(Groups.group2); //"allies_palace" flags
+		Groups.EnableAllies(Groups.group3); //first elevator
+		Groups.DisableAllies(Groups.group4); //second elevator
+		Groups.DisableAllies(Groups.group6); //"allies_bridge" flags
+		Groups.DisableAllies(Groups.group7); //allies dyna objs
+		//garage doors
+		if (Map.garage_1_open == false)
+		{ Map.Switches.garage_1.LimitTeam = (1<<TEAM.ALLIES);}	
+		else
+		{ Map.Switches.garage_1.LimitTeam = (1<<TEAM.AXIS); }
+		if (Map.garage_2_open == false)
+		{ Map.Switches.garage_2.LimitTeam = (1<<TEAM.ALLIES);}	
+		else
+		{ Map.Switches.garage_2.LimitTeam = (1<<TEAM.AXIS); }
+		if (Map.garage_3_open == false)
+		{ Map.Switches.garage_3.LimitTeam = (1<<TEAM.AXIS);}	
+		else
+		{ Map.Switches.garage_3.LimitTeam = 0; }	
+		//patrol boat//
+		//Map.FocusOnVehicle = -1;
+		///MAP TEAM///
+		Map.palace_team = 1; //1-axis, 2-allies
+		ChangeTo1stSpawn();	
+		Map.MountVehicle.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
+		Util.MapDebugPrint("Axis_Capture_Flag");
+	},
+	
+};//end global map
+
+global OnMapLoad = function()
+{
+	//use waypoints.
+	Util.AddUseWp(Map.plant_west_bridge, "west_bridge_front_plant");
+	Util.AddUseWp(Map.plant_west_bridge, "west_bridge_bottom_plant");
+	Util.AddUseWp(Map.plant_west_bridge, "west_bridge_rear_plant");
+	Util.AddUseWp(Map.plant_east_bridge, "east_bridge_front_plant");
+	Util.AddUseWp(Map.plant_east_bridge, "east_bridge_bottom_plant");
+	Util.AddUseWp(Map.plant_east_bridge, "east_bridge_rear_plant");
+
+	//triger functions
+	//flag
+	//if (Map.Debug) { Util.MapDebugPrint(("start map load");
+	OnTrigger("The Allies have captured the Forward Bunker!", Map.Allies_Capture_Flag);
+	OnTrigger("The Axis have captured the Forward Bunker!", Map.Axis_Capture_Flag);
+	//elevator 1
+	OnTrigger("The Axis have repaired the First Elevator Generator!", Map.Axis_Own_Elevator);
+	OnTrigger("The Allies have repaired the First Elevator Generator!", Map.Allies_Own_Elevator);
+	OnTrigger("The First Elevator Generator has been Dammaged!", Map.Nither_Own_Elevator);
+	OnTrigger( "elevator_goto", Map.Elevator );
+	//elevator 2
+	OnTrigger("The Axis have repaired the Second Elevator Generator!", Map.Axis_Own_Elevator_2);
+	OnTrigger("The Allies have repaired the Second Elevator Generator!", Map.Allies_Own_Elevator_2);
+	OnTrigger("The Second Elevator Generator has been Dammaged!", Map.Nither_Own_Elevator_2);
+	OnTrigger( "elevator_2_goto", Map.Elevator_2 );
+	//Trams
+	OnTrigger("tram_r_goto", Map.Right_Tram_Activated);
+	OnTrigger("tram_l_goto", Map.Left_Tram_Activated);
+	//sewer gates///
+	OnTrigger("The Allies have destroyed the East Sewer Gate!", Map.East_Gate_Destroyed);
+	OnTrigger("The Allies have destroyed the West Sewer Gate!", Map.West_Gate_Destroyed);
+	OnTrigger("The Allies have destroyed the South Sewer Gate!", Map.South_Gate_Destroyed);
+	//garage doors
+	OnTrigger("g_door_l_goto", Map.Trigger_garage_1);
+	OnTrigger("g_door_l1_goto", Map.Trigger_garage_2);
+	OnTrigger("g_door_l2_goto", Map.Trigger_garage_3);
+	//bridge defences
+	OnTrigger("The Axis have Built the Bridge Defences!", Map.Bridge_Defences_Built);
+	OnTrigger("The Allies have destroyed the Bridge Defences!", Map.Bridge_Defences_Destroyed);
+	//bridge objectives
+	OnTrigger("The Allies have destroyed the East Bridge Support!", Map.East_Bridge_Destroyed);
+	OnTrigger("The Allies have destroyed the West Bridge Support!", Map.West_Bridge_Destroyed);
+
+	//start waypoints
+	//bridge jump waypoints
+	Wp.SetWaypointFlag("bridge_east_jump_0", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_east_jump_1", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_east_jump_2", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_east_jump_3", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_east_jump_4", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_0", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_1", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_2", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_3", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_4", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_5", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_6", "jumplow", false);
+	Wp.SetWaypointFlag("bridge_west_jump_0", "jumplow", false);
+	//unblocked paths at start\\
+	Wp.SetWaypointFlag("bridge_west_blocker_0", "closed", false);
+	Wp.SetWaypointFlag("bridge_west_blocker_1", "closed", false);
+	Wp.SetWaypointFlag("bridge_east_blocker_0", "closed", false);
+	Wp.SetWaypointFlag("bridge_east_blocker_1", "closed", false);
+	Wp.SetWaypointFlag("east_gate_block_0", "closed", false);
+	Wp.SetWaypointFlag("east_gate_block_1", "closed", false);
+	Wp.SetWaypointFlag("west_gate_block_0", "closed", false);
+	Wp.SetWaypointFlag("west_gate_block_1", "closed", false);
+	Wp.SetWaypointFlag("south_gate_block_0", "closed", false);
+	Wp.SetWaypointFlag("south_gate_block_1", "closed", false);
+	Wp.SetWaypointFlag("bridge_defences_door_0", "team1", false);
+	Wp.SetWaypointFlag("bridge_defences_door_1", "team1", false);
+	//elevator waypoints at start//
+	Wp.SetWaypointFlag("elevator_switch_top", "closed", true);
+	Wp.SetWaypointFlag("elevator_switch_top", "team1", false);
+	Wp.SetWaypointFlag("elevator_switch_top", "team2", false);
+	//=================//
+	Wp.SetWaypointFlag("elevator_switch_bottom", "closed", true);
+	Wp.SetWaypointFlag("elevator_switch_bottom", "team1", false);
+	Wp.SetWaypointFlag("elevator_switch_bottom", "team2", false);
+	//=================//
+	Wp.SetWaypointFlag("elevator_bottom", "closed", true);
+	Wp.SetWaypointFlag("elevator_bottom", "team1", false);
+	Wp.SetWaypointFlag("elevator_bottom", "team2", false);
+	//=================//
+	Wp.SetWaypointFlag("elevator_switch_bottom", "closed", true);
+	Wp.SetWaypointFlag("elevator_switch_bottom", "team1", false);
+	Wp.SetWaypointFlag("elevator_switch_bottom", "team2", false);
+	//elevator 2
+	Wp.SetWaypointFlag("elevator_2_switch_top", "closed", true);
+	Wp.SetWaypointFlag("elevator_2_switch_top", "team1", false);
+	Wp.SetWaypointFlag("elevator_2_switch_top", "team2", false);
+	//=================//
+	Wp.SetWaypointFlag("elevator_2_switch_bottom", "closed", true);
+	Wp.SetWaypointFlag("elevator_2_switch_bottom", "team1", false);
+	Wp.SetWaypointFlag("elevator_2_switch_bottom", "team2", false);
+	//=================//
+	Wp.SetWaypointFlag("elevator_2_bottom", "closed", true);
+	Wp.SetWaypointFlag("elevator_2_bottom", "team1", false);
+	Wp.SetWaypointFlag("elevator_2_bottom", "team2", false);
+
+	//goals//
+	// ** PRIORITY ***//
+	//main obj//
+	SetGoalPriority( Map.plant_west_bridge, 0.9 );
+	SetGoalPriority( Map.plant_east_bridge, 0.9 );
+	SetGoalPriority( Map.plant_main_bridge, 0.9 );
+	//------secondarys-------//
+	SetGoalPriority( Map.plant_bridge_defences, 0.85 );
+	SetGoalPriority( Map.build_bridge_defences, 0.85 );
+	SetGoalPriority( Map.plant_west_sewer, 0.8 );
+	SetGoalPriority( Map.plant_east_sewer, 0.8 );
+	SetGoalPriority( Map.plant_south_sewer, 0.8 );
+	//-------elevators & cp---------//
+	SetGoalPriority( Map.build_first_generator, 0.85 );
+	SetGoalPriority( Map.plant_first_generator, 0.85 );
+	SetGoalPriority( Map.build_second_generator, 0.85 );
+	SetGoalPriority( Map.plant_second_generator, 0.85 );
+	SetGoalPriority( Map.build_cp, 0.8 );
+	SetGoalPriority( Map.plant_cp, 0.8 );
+	//----mg42---//
+	SetGoalPriority( Map.mount_axis_mg42, 0.75 );
+	SetGoalPriority( Map.repair_axis_mg42, 0.75 );
+	SetGoalPriority( Map.mount_allies_mg42, 0.75 );
+	SetGoalPriority( Map.repair_allies_mg42, 0.75 );
+	//----forward flag---//
+	SetGoalPriority( Map.palace_flag, 0.8 );
+	// *** MAX USERS PER GOAL ***
+	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 2, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	//camptime//
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=120, MaxCampTime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
+	//disable other teams generic objs//
+	//axis goals//
+	Groups.EnableAxis(Groups.group8); //CP
+	Groups.DisableAxis(Groups.group5); //"axis_bridge" flags
+	Groups.DisableAxis(Groups.group2); //"allies_palace" flags
+	Groups.DisableAxis(Groups.group6); //"allies_bridge" flags
+	//allies goals//
+	Groups.EnableAllies(Groups.group8); //CP
+	Groups.DisableAllies(Groups.group6); //"allies_bridge" flags
+	Groups.DisableAllies(Groups.group1); //"axis_palace" flags
+	Groups.DisableAllies(Groups.group5); //"axis_bridge" flags
+	Groups.DisableAllies(Groups.group9); //main obj
+	//main obj
+	SetAvailableMapGoals( TEAM.ALLIES, false, plant_west_bridge);
+	SetAvailableMapGoals( TEAM.ALLIES, false, plant_east_bridge);	
+	SetAvailableMapGoals( TEAM.ALLIES, false, plant_main_bridge);
+	///---flag is captured by axis at start---///
+
+	//routes//
+	ROUTE_center = 
+	{
+		ROUTE_ticket_booth =
+		{
+			Weight = 2,
+			ROUTE_tram_r_bottom = 
+			{
+				ROUTE_tram_r_switch_top =  {},
+				{
+					ROUTE_tram_l_switch_bottom = 
+					{
+						ROUTE_tram_l_switch_top =  {},
+					},
+					ROUTE_tram_l_bottom = 
+					{
+						ROUTE_tram_l_switch_top =  {},
+					},
+					ROUTE_tram_l_switch_bottom = 
+					{
+						ROUTE_tram_l_switch_top =  {},
+					},
+				},
+			},
+		},
+	};	
+
+	MapRoutes =
+	{
+		PLANT_Bridge_Defences = //allies obj
+		{
+			ROUTE_palace_spawn =
+			{
+				ROUTE_palace_spawn_1_split =
+				{
+					ROUTE_elevator_2_switch_top_1 = 
+					{
+						Weight = 2,
+						ROUTE_elevator_2_switch_bottom_1 =
+						{
+							ROUTE_sewer_split_1 =
+							{
+								ROUTE_sewer_split_2 = {},
+							},
+						},
+					},
+					ROUTE_ladder_top_5 = 
+					{
+						ROUTE_ladder_bottom_6 =
+						{	
+							ROUTE_sewer_split_1 =
+							{
+								ROUTE_sewer_split_2 = {},
+							},
+						},
+					},
+					ROUTE_main_split =
+					{
+						Weight = 2,
+						ROUTE_tram_split = 
+						{
+							Weight = 2,
+							ROUTE_tram_r_switch_top = 
+							{
+								ROUTE_tram_r_bottom = 
+								{
+									Weight = 2,
+									ROUTE_bridge_defences_plant = {},
+								},
+								ROUTE_tram_r_switch_bottom = 
+								{
+									ROUTE_bridge_defences_plant = {},
+								},
+							},
+							ROUTE_tram_l_switch_top = 
+							{
+								ROUTE_tram_l_bottom = 
+								{
+									Weight = 2,
+									ROUTE_bridge_defences_plant = {},
+								},
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_bridge_defences_plant = {},
+								},
+							},	
+						},
+						ROUTE_defences_jumpoff = {},
+					},
+				},
+			},
+		},	
+		PLANT_East_Sewer_Gate =
+		{
+			ROUTE_palace_spawn =
+			{	
+				ROUTE_elevator_2_switch_top_1 =
+				{
+					Weight = 2,
+					ROUTE_elevator_2_switch_bottom_1 =
+					{
+						ROUTE_sewer_split_1 ={},
+					},
+				},
+				ROUTE_ladder_top_5 =
+				{
+					ROUTE_ladder_bottom_6 =
+					{	
+						ROUTE_sewer_split_1 ={},
+					},
+				},
+			},
+		},	
+		PLANT_Main_bridge_support = //allies obj
+		{
+			ROUTE_palace_spawn =
+			{
+				ROUTE_palace_spawn_1_split =
+				{				
+					ROUTE_elevator_2_switch_top_1 = 
+					{
+						Weight = 2,
+						ROUTE_elevator_2_switch_bottom_1 =
+						{
+							ROUTE_sewer_split_1 = {},
+							ROUTE_sewer_split_2 = {},
+						},
+					},
+					ROUTE_ladder_top_5 = 
+					{
+						ROUTE_ladder_bottom_6 =
+						{	
+							ROUTE_sewer_split_1 = {},
+							ROUTE_sewer_split_2 = {},
+						},
+					},
+					ROUTE_main_split =
+					{
+						Weight = 2,
+						ROUTE_tram_split = 
+						{
+							Weight = 2,
+							ROUTE_tram_r_switch_top = 
+							{
+								ROUTE_tram_r_bottom = 
+								{
+									Weight = 2,	
+									ROUTE_bridge_defences_plant = {},
+								},
+								ROUTE_tram_r_switch_bottom = 
+								{
+									ROUTE_bridge_defences_plant = {},
+								},
+							},
+							ROUTE_tram_l_switch_top = 
+							{
+								ROUTE_tram_l_bottom = 
+								{
+									Weight = 2,
+									ROUTE_bridge_defences_plant = {},
+								},
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_bridge_defences_plant = {},
+								},
+							},	
+						},
+						ROUTE_defences_jumpoff = {},
+					},
+				},
+			},
+		},	
+		CHECKPOINT_forward_flag =
+		{
+			ROUTE_church_spawn =
+			{
+				ROUTE_church_spawn_r_split = 
+				{
+					ROUTE_church_r_split = {},
+				},		
+				ROUTE_church_spawn_l_split = 
+				{
+					Weight = 3,	
+					ROUTE_church_sewer_enter =
+					{
+						Weight = 2,
+						ROUTE_elevator_1_switch_bottom_1 =
+						{
+							Weight = 2,
+						},
+						ROUTE_ladder_bottom_1 =
+						{
+							ROUTE_ladder_bottom_2 = {},
+						},
+						ROUTE_church_l_split = {},						
+					},
+				},
+			},
+			ROUTE_axis_west_spawn =
+			{
+				ROUTE_west_sewer =
+				{
+					ROUTE_sewer_south_connect =
+					{
+						ROUTE_sewer_split_1 = 
+						{
+							ROUTE_elevator_2_switch_bottom_1 =
+							{
+								Weight = 2,
+							},
+							ROUTE_ladder_bottom_6 = 
+							{
+								ROUTE_ladder_top_5 = {},
+							},	
+						},
+					},
+				},
+				ROUTE_west_divide = 
+				{
+					ROUTE_ticket_booth =
+					{
+						Weight = 2,
+						ROUTE_tram_r_bottom = 
+						{
+							ROUTE_tram_r_switch_top =  
+							{
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+								ROUTE_tram_l_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+							},
+						},
+					},
+				},
+			},
+			ROUTE_axis_east_spawn =
+			{
+				ROUTE_east_sewer = 
+				{
+					ROUTE_sewer_split_1 = 
+					{
+						ROUTE_elevator_2_switch_bottom_1 =
+						{
+							Weight = 2,
+						},
+						ROUTE_ladder_bottom_6 = 
+						{
+							ROUTE_ladder_top_5 = {},
+						},			
+					},
+				},
+				ROUTE_east_divide = 
+				{
+					ROUTE_ticket_booth =
+					{
+						Weight = 2,
+						ROUTE_tram_r_bottom = 
+						{
+							ROUTE_tram_r_switch_top =  
+							{
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+								ROUTE_tram_l_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+								ROUTE_tram_l_switch_bottom = 
+								{
+									ROUTE_tram_l_switch_top =  {},
+								},
+							},
+						},
+					},
+				},
+			},	
+		},		
+	};
+	
+	MapRoutes.PLANT_West_Sewer_Gate = MapRoutes.PLANT_East_Sewer_Gate;
+	MapRoutes.PLANT_South_Sewer_Gate = MapRoutes.PLANT_East_Sewer_Gate;
+	MapRoutes.PLANT_West_bridge_support = MapRoutes.PLANT_Main_bridge_support;
+	MapRoutes.PLANT_East_bridge_support = MapRoutes.PLANT_Main_bridge_support;
+	MapRoutes.ATTACK_allies_bridge_main = MapRoutes.PLANT_bridge_defences;
+
+	//update
+	Util.Routes(MapRoutes);
+
+	//patrol boat//
+	Map.MountVehicle.Enabled = false;
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
+	//update data
+	Util.AddInvVehicle("MOVER_tank");
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint("OnMapLoad");
+};
+
+
+global MAX_SECONDSPAWN_BOTS = 3; //number of bots to spawn at checkpoint closest to bridge limit 6
+global CURRENT_SECONDSPAWN_BOTS = 0; //current number of bots spawning at above
+
+global OnBotJoin = function( bot )
+{
+	team = bot.GetTeam();	
+	my_class = bot.GetClass();
+	if (team == TEAM.AXIS)
+	{
+		if (Map.palace_team == 2 && CURRENT_SECONDSPAWN_BOTS < 3)//allies own flag
+		{
+			bot.ChangeSpawnPoint(4);
+            CURRENT_SECONDSPAWN_BOTS += 1;
+		}
+		else if (Map.palace_team == 1)//axis own flag
+		{
+		bot.ChangeSpawnPoint(2);
+		}
+	}
+};
+
+global ChangeTo1stSpawn = function ()
+{
+	foreach ( Id and bot in BotTable )//change axis to palace
+	{
+		if ( bot.GetTeam() == TEAM.AXIS )
+		{
+			if (Map.flag_team == 0)//axis own the palace
+			{
+				bot.ChangeSpawnPoint(2);
+			}
+		}
+	}
+};
+
+global ChangeTo2ndSpawn = function ()
+{
+    CURRENT_SECONDSPAWN_BOTS = 0;
+    foreach (gameId and bot in BotTable)
+    {
+        if (bot && bot.GetTeam() == TEAM.AXIS &&
+            RandInt(0,10) > 5)
+        {
+            bot.ChangeSpawnPoint(4);
+            CURRENT_SECONDSPAWN_BOTS += 1;
+            //Util.MapDebugPrint("Axis spawn point changed to 4!");
+        }
+
+        if (CURRENT_SECONDSPAWN_BOTS >= MAX_SECONDSPAWN_BOTS)
+        {
+            break;
+        }
+    }
+};
+
+global Groups =
+{
+//Axis at start  
+	group1 =
+	{ //generic axis goals
+		"CALLARTILLERY_axis_palace.*",
+		"ATTACK_axis_palace.*",
+		"Defend_axis_palace.*",
+		"Snipe_axis_palace.*",
+	},
+//Allies at start  
+	group2 =
+	{ //generic allies goals
+		"CALLARTILLERY_allies_palace.*",
+		"ATTACK_allies_palace.*",
+		"Defend_allies_palace.*",
+		"Snipe_allies_palace.*",
+	},
+	
+	//elevators//
+	group3 =
+	{
+		Map.build_first_generator,
+		Map.plant_first_generator,
+	},
+	group4 =
+	{
+		Map.build_second_generator,
+		Map.plant_second_generator,
+	},
+//Axis after palace flag-lost
+	group5 =
+	{ //generic axis goals
+		"CALLARTILLERY_axis_bridge.*",
+		"ATTACK_axis_bridge.*",
+		"Defend_axis_bridge.*",
+		"Snipe_axis_bridge.*",
+		Map.mount_axis_mg42,
+		Map.repair_axis_mg42,
+	},
+//Allies after palace flag-capture
+	group6 =
+	{ //generic allies goals
+		"CALLARTILLERY_allies_bridge.*",
+		"ATTACK_allies_bridge.*",
+		"Defend_allies_bridge.*",
+		"Snipe_allies_bridge.*",
+		Map.mount_allies_mg42,
+		Map.repair_allies_mg42,
+	},
+	
+	group7 =
+	{
+		Map.plant_west_sewer,
+		Map.plant_east_sewer,
+		Map.plant_south_sewer,
+		Map.plant_bridge_defences,
+		Map.build_second_generator,
+		Map.plant_second_generator,
+	},
+//Comand post//
+	group8 =
+	{
+		Map.build_cp,
+		Map.plant_cp,
+	},
+	
+	group9 = 
+	{
+		Map.plant_west_bridge,
+		Map.plant_east_bridge,
+		Map.plant_main_bridge,
+	},
+	
+	EnableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
+			Util.MapDebugPrint("EnableAllies: enabling " + goal, true);
+		}
+	},
+	
+	EnableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, goal );
+			Util.MapDebugPrint("EnableAxis: enabling " + goal, true);
+		}
+	},
+
+	DisableAllies = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, goal );
+			Util.MapDebugPrint("DisableAllies: disabling " + goal, true);
+		}
+	},
+
+	DisableAxis = function(group)
+	{
+		foreach (id and goal in group)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, goal );
+			Util.MapDebugPrint("DisableAxis: disabling " + goal, true);
+		}
+	},	
+};

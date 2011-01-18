@@ -1,0 +1,14 @@
+global Map = 
+{
+	PanzerMap = true,
+};
+global OnMapLoad = function()
+{
+	Util.DisableGoal("HEALTHCAB_center");
+	Util.DisableGoal("AMMOCAB_tree");
+};
+global OnBotJoin = function(bot)
+{
+	ETUtil.ChangeToPanzer(bot);
+	bot.MaxViewDistance = 1850.0;
+};

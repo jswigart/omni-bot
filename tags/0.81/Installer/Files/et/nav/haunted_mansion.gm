@@ -1,0 +1,532 @@
+global Map =
+{
+	Ammo_Cabinet_1088 = "AMMOCAB_1088",
+	Ammo_Cabinet_south_healthcabinet = "AMMOCAB_south_healthcabinet",
+	Health_Cabinet_1089 = "HEALTHCAB_1089",
+	Health_Cabinet_t1083 = "HEALTHCAB_t1083",
+	Call_Artillery_146 = "CALLARTILLERY_146",
+	Call_Artillery_258 = "CALLARTILLERY_258",
+	Call_Artillery_262 = "CALLARTILLERY_262",
+	Call_Artillery_341 = "CALLARTILLERY_341",
+	Call_Artillery_342 = "CALLARTILLERY_342",
+	Artillery_D_260 = "ARTILLERY_D_260",
+	Artillery_D_622 = "ARTILLERY_D_622",
+	Artillery_S_164 = "ARTILLERY_S_164",
+	Artillery_S_260 = "ARTILLERY_S_260",
+	Artillery_S_622 = "ARTILLERY_S_622",
+	Artillery_S_688 = "ARTILLERY_S_688",
+	Checkpoint_forwardspawn1_flag = "CHECKPOINT_forwardspawn1_flag",
+	Flag_he_Gold = "FLAG_he_Gold",
+	Cappoint_824 = "CAPPOINT_824",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Axis_MG42_Construction = "BUILD_Axis_MG42_Construction",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Graveyard_Gate = "BUILD_Graveyard_Gate",
+	Build_Swamp_Bridge = "BUILD_Swamp_Bridge",
+	Plant_Altar = "PLANT_Altar",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Axis_MG42_Construction = "PLANT_Axis_MG42_Construction",
+	Plant_Bedroom_Door = "PLANT_Bedroom_Door",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Crypt_Wall = "PLANT_Crypt_Wall",
+	Plant_Graveyard_Gate = "PLANT_Graveyard_Gate",
+	Plant_Swamp_Bridge = "PLANT_Swamp_Bridge",
+	Mount_Axis_MG42_Construction = "MOUNTMG42_Axis_MG42_Construction",
+	Repair_Axis_MG42_Construction = "REPAIRMG42_Axis_MG42_Construction",
+	Snipe_561 = "SNIPE_561",
+	Snipe_church_snipe1 = "SNIPE_church_snipe1",
+	Snipe_church_snipe2 = "SNIPE_church_snipe2",
+	Plant_Mine_262 = "PLANTMINE_262",
+	Plant_Mine_302 = "PLANTMINE_302",
+	Plant_Mine_561 = "PLANTMINE_561",
+
+	Navigation =
+	{
+		slider =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "position", Vector3(122.379,-2499.282, -159.875));
+				_this.Bot.PressButton(BTN.USE);
+				_this.Bot.HoldButton(BTN.CROUCH, 3);
+				wait = 0;
+				while( wait < 1.5 )
+				{
+					_this.Goto(_this.Bot.GetPosition());
+					sleep(0.5);
+					wait += 0.5;
+				}
+				//sleep(3);
+			},
+		},
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bedroom_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ally.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bridge.*");
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_stairs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axismg1");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post");
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Graveyard_Gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_allymg1");
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold.*");
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Swamp_Bridge" );
+
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS )
+			{
+				if ( RandInt(0,2) < 2)
+				{
+					bot.ChangeSpawnPoint( 3 ); // outside mansion
+				}
+				else
+				{
+					bot.ChangeSpawnPoint( 1 ); //flag
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES )
+			{
+				if ( RandInt(0,1) < 2)
+				{
+					bot.ChangeSpawnPoint( 4 ); // CP spawn
+				}
+				else
+				{
+					bot.ChangeSpawnPoint( 1 ); //flag
+				}
+			}
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_forwardspawn1_flag );
+
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	Graveyard_Gate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Graveyard_Gate_Built" );
+	},
+
+	Swamp_Bridge_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_flag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Altar");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bridge.*");
+
+		Util.MapDebugPrint( "Swamp_Bridge_Built" );
+	},
+
+	Altar_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Altar_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Bedroom_Door_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_he_Gold" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_824" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_allymg1");
+
+		Util.MapDebugPrint( "Bedroom_Door_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Crypt_Wall_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bedroom_Door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_stairs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axismg1");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_flag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bridge.*");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Altar");
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Assault_Ramp" );
+		Wp.SetWaypointFlag( "allyescape", "closed", false );
+
+		Util.MapDebugPrint( "Crypt_Wall_Destroyed" );
+	},
+
+	Graveyard_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Graveyard_Gate_Destroyed" );
+	},
+
+	Swamp_Bridge_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bridge.*");
+
+		Util.MapDebugPrint( "Swamp_Bridge_Destroyed" );
+	},
+
+	obj_taken = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_cap.*");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_ally.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_stairs.*" );
+
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bridge5");
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gold.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axismg1");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_point.*" );
+
+		Util.MapDebugPrint( "Gold_taken" );
+	},
+
+	obj_secure = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_cap.*");
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ally.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_stairs.*" );
+//~		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bridge5");
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold.*");
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axismg1");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_point.*" );
+
+
+		Util.MapDebugPrint( "Gold_returned" );
+	},
+
+	CAPPOINT_824_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_824_Captured" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bridge.*" );
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Swamp_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Graveyard_Gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Crypt_Wall" );
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "^3The Assault Ramp has been constructed !", Map.Assault_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "allies_hq_compost_constructed", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Graveyard_Gate_Built );
+	OnTrigger( "^3The Swamp Bridge has been constructed !", Map.Swamp_Bridge_Built );
+	OnTrigger( "Allies have destroyed the ^3Altar!", Map.Altar_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "Allies have destroyed the ^3Bedroom Door!^w!", Map.Bedroom_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "the Crypt Wall Destroyed.", Map.Crypt_Wall_Destroyed );
+	OnTrigger( "^3The Graveyard Gate has been destroyed.", Map.Graveyard_Gate_Destroyed );
+	OnTrigger( "^1The Swamp Bridge has been destroyed.", Map.Swamp_Bridge_Destroyed );
+//~	OnTrigger( "^2Allies have stolen he gold!", Map.he_Gold_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_824_Captured );
+	OnTrigger( "^1Axis reclaim the Forward Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "^3Allies capture the Forward Spawn!", Map.forwardspawn1_flag_Allies_Captured );
+	OnTrigger( "Allies have stolen he Gold!", Map.obj_taken );
+	OnTrigger( "Flag returned he Gold!", Map.obj_secure );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Swamp_Bridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Graveyard_Gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Swamp_Bridge" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Graveyard_Gate" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forwardspawn1_flag");
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post");
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post");
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_.*");
+
+	SetGoalPriority( "PLANT_Graveyard_Gate", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Bedroom_Door", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Bedroom_Door", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Crypt_Wall", 0.83, TEAM.ALLIES, CLASS.ENGINEER, true );
+
+
+	Util.SetGoalOffset( -30, 0, 0, "PLANT_Graveyard_Gate" );
+	Util.SetGoalOffset( -35, 0, 0, "PLANT_Crypt_Wall" );
+
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_forwardspawn1_flag" );
+	Util.SetMaxUsersInProgress( 1, "PLANT_Graveyard_Gate" );
+
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=40} );
+	SetMapGoalProperties( "MOUNT_.*", {MinCampTime=15, MaxCampTime=40} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=90} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=15, MaxCampTime=55} );
+	Wp.SetWaypointFlag( "allyescape", "closed", true );
+
+	MapRoutes =
+	{
+		FLAG_he_Gold =
+		{
+			ROUTE_cpspawn  =
+			{
+				ROUTE_cpspawn2  =
+				{
+					ROUTE_cpspawn3  =
+					{
+						ROUTE_cpspawn5  =
+						{
+							ROUTE_cpspawn6  =
+							{
+								ROUTE_cpspawn9  =
+								{
+									ROUTE_cpspawn10  =
+									{
+									},
+								},
+							},
+						},
+						ROUTE_cpspawn4  =
+						{
+							ROUTE_cpspawn8  =
+							{
+								ROUTE_cpspawn11  =
+								{
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+
+		CAPPOINT_824 =
+		{
+			ROUTE_obj  =
+			{
+				ROUTE_obj2  =
+				{
+					ROUTE_obj3  =
+					{
+						ROUTE_cpspawn6  =
+						{
+							ROUTE_cpspawn5  =
+							{
+								ROUTE_obj19  =
+								{
+									ROUTE_obj20  =
+									{
+										ROUTE_obj16  =
+										{
+											ROUTE_obj17  =
+											{
+												ROUTE_obj18  =
+												{
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						ROUTE_cpspawn11  =
+						{
+							ROUTE_obj8  =
+							{
+								ROUTE_obj9  =
+								{
+									ROUTE_obj10  =
+									{
+										ROUTE_obj11  =
+										{
+											ROUTE_obj12  =
+											{
+												ROUTE_obj13  =
+												{
+													ROUTE_obj14  =
+													{
+														ROUTE_obj15  =
+														{
+															ROUTE_obj16  =
+															{
+																ROUTE_obj17  =
+																{
+																	ROUTE_obj18  =
+																	{
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_obj4  =
+				{
+					ROUTE_obj5  =
+					{
+						ROUTE_obj6  =
+						{
+							ROUTE_obj7  =
+							{
+								ROUTE_cpspawn10  =
+								{
+									ROUTE_cpspawn9  =
+									{
+										ROUTE_cpspawn6  =
+										{
+											ROUTE_cpspawn5  =
+											{
+												ROUTE_gold1  =
+												{
+													ROUTE_obj13  =
+													{
+														ROUTE_obj14  =
+														{
+															ROUTE_defend_bridge6  =
+															{
+																ROUTE_obj16  =
+																{
+																	ROUTE_obj17  =
+																	{
+																		ROUTE_obj18  =
+																		{
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									ROUTE_cpspawn11  =
+									{
+										ROUTE_obj8  =
+										{
+											ROUTE_cpspawn4  =
+											{
+												ROUTE_cpspawn3  =
+												{
+													ROUTE_obj19  =
+													{
+														ROUTE_obj20  =
+														{
+															ROUTE_obj16  =
+															{
+																ROUTE_obj17  =
+																{
+																	ROUTE_obj18  =
+																	{
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+
+	};
+
+	MapRoutes.ATTACK_ally1 = MapRoutes.FLAG_he_Gold;
+	MapRoutes.ATTACK_ally2 = MapRoutes.FLAG_he_Gold;
+	MapRoutes.ATTACK_ally3 = MapRoutes.FLAG_he_Gold;
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 100.0;
+	 bot.MaxViewDistance = 3000;
+};

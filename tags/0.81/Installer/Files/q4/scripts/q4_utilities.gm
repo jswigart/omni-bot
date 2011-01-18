@@ -1,0 +1,180 @@
+// This script contains useful utility scripts for performing common actions.
+	
+Util.NoTimeLimit = "si_timeLimit 0";
+Util.TimeLimit1 = "si_timeLimit 1";
+
+Util.HaveTeam = { false, true, true, false, false };
+
+Util.TeamNames =
+{
+	{ "", "", "" },
+	{ "MARINE", "Marine", "marine" },
+	{ "STROGG", "Strogg", "strogg" },
+};
+
+member numstrogg = 0;
+member nummarine = 0;
+
+///////////////////////////////////////////////////////////////////////////////
+//	
+member WarpTo = function( _params )
+{
+	if ( !CheatsEnabled() )
+	{
+		print("^1cheats must be enabled to use this command^7");
+		return;
+	}
+
+	found = false;
+	goalname = _params[0];
+		goal = GetGoal( goalname );
+
+		if ( goal )
+		{
+		found = true;
+		goalpos = goal.GetPosition(); 
+		s = "setviewpos " + goalpos[0] + " " + goalpos[1] + " " + goalpos[2] + " " + " 0";
+		print(s);
+		ExecCommandOnClient(Util.GetPlayerEntity(), s);
+		}
+		else //try wp name
+		{
+		wp = Util.WpNameInfo(_params[0]);
+		if ( wp.position )
+		{
+			found = true;
+			s = "setviewpos " + wp.position[0] + " " + wp.position[1] + " " + wp.position[2] + " " + " 0";
+			print(s);
+			ExecCommandOnClient(Util.GetPlayerEntity(), s);
+		} 
+		//print("WarpTo: Invalid Goal"); 
+	}
+
+	if ( !found )
+		{ print( "^1QUtil.Warpto: Invalid goal name or waypoint name^7"); }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member WarpTestBot = function( _params )
+{
+	if ( !CheatsEnabled() )
+	{
+		print("^1cheats must be enabled to use this command");
+		return;
+	}
+
+	b = Util.GetBotByName("testbot");
+	
+	if ( !b )
+	{
+		print("^1no testbot found");
+		return;
+	}
+	
+	found = false;
+
+	wp = Util.WpNameInfo(_params[0]);
+	if ( wp.position )
+	{
+		found = true;
+		s = "setviewpos " + wp.position[0] + " " + wp.position[1] + " " + wp.position[2] + " " + " 0";
+		print(s);
+		ExecCommandOnClient(b.GetGameEntity(), s);
+		yield();yield();
+		ExecCommandOnClient(Util.GetPlayerEntity(), "say_team bot come");
+		
+	} 
+
+	if ( !found )
+		{ print( "^1QUtil.WarpTestBot: Invalid waypoint name^7"); }
+};
+
+member InitDualObjective = function()
+{
+	if(GetModName() != "CTF")
+		{ return; }
+
+	Util.SetRoleForGroup("stroggDefends", ROLE.DEFENDER);
+	Util.SetRoleForGroup("marineDefends", ROLE.DEFENDER);
+	Util.DisableGroup( "stroggDefends", TEAM.MARINE );
+	Util.DisableGroup( "marineDefends", TEAM.STROGG );
+	
+	yield(); yield();
+	foreach( id and bot in BotTable )
+	{
+		this.SetDualObjective(bot);
+	}
+	
+	gt = Util.GoalTable("FLAG.*");
+	
+	foreach ( id and goal in gt )
+	{
+		goal.SetRoles(ROLE.ATTACKER);
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//	
+member SetDualObjective = function( bot )
+{
+	if(GetModName() != "CTF")
+		{ return; }
+		
+	if(GetGameState() != "Playing")
+		{ return; }
+		
+	team = bot.GetTeam();
+	
+	if ( !Map.Defend )
+		{ Map.Defend = table(); }
+
+	// counters for number of users
+	if ( !Map.Defend.MarineDefenders )
+		{ Map.Defend.MarineDefenders = 0; }
+		
+	if ( !Map.Defend.StroggDefenders )
+		{ Map.Defend.StroggDefenders = 0; }		
+
+	// some default values
+	if ( !Map.MaxDefenders )
+		{ Map.MaxDefenders = 3; }
+		
+	if ( team == TEAM.MARINE  )
+	{
+		this.nummarine += 1;
+		
+		if ( Map.Defend.MarineDefenders < Map.MaxDefenders  )
+		{
+			if ( this.nummarine % 2 == 0 )
+			{
+				bot.SetRoles(ROLE.DEFENDER);
+				bot.SayTeam("I'm going to defend this round");
+				Map.Defend.MarineDefenders += 1;
+			}
+		}
+		else
+		{
+			bot.SetRoles(ROLE.ATTACKER);
+		}
+	}	
+	
+	if ( team == TEAM.STROGG  )
+	{
+		this.numstrogg += 1;
+		
+		if ( Map.Defend.StroggDefenders < Map.MaxDefenders  )
+		{
+			if ( this.numstrogg % 2 == 0 )
+			{
+				bot.SetRoles(ROLE.DEFENDER);
+				bot.SayTeam("I'm going to defend this round");
+				Map.Defend.StroggDefenders += 1;
+			}
+		}
+		else
+		{
+			bot.SetRoles(ROLE.ATTACKER);
+		}		
+	}
+};

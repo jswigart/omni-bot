@@ -1,0 +1,173 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_forwardspawn = "CHECKPOINT_forwardspawn",
+	Flag_Allied_Flag = "FLAG_Allied_Flag",
+	Flag_Axis_Flag = "FLAG_Axis_Flag",
+	Mount_160 = "MOUNTMG42_160",
+	Mount_163 = "MOUNTMG42_163",
+	Mount_178 = "MOUNTMG42_178",
+	Mount_56 = "MOUNTMG42_56",
+	Repair_160 = "REPAIRMG42_160",
+	Repair_163 = "REPAIRMG42_163",
+	Repair_178 = "REPAIRMG42_178",
+	Repair_56 = "REPAIRMG42_56",
+	DispenseAmmoTime = 1,
+
+	Airstrike =
+	{
+		bnorthdoor =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.586, -0.197, 0.786 ),
+			NoPause = true,
+		},
+		bsouthdoor =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.656, -0.060, 0.753 ),
+			NoPause = true,
+		},
+		rnorthdoor =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ),
+			Facing = Vector3( -0.583, 0.045, 0.811 ),
+			NoPause = true,
+
+		},
+		rsouthdoor =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ),
+			Facing = Vector3( -0.675, 0.106, 0.731 ),
+			NoPause = true,
+		},
+	},
+	Allied_Flag_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "Allied_Flag_Taken" );
+	},
+
+	Axis_Flag_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "Axis_Flag_Taken" );
+	},
+
+	forwardspawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "forwardspawn_Axis_Captured" );
+		RTCWUtil.StopSniping();
+		Map.DisableAirstrikes();
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCapMG" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bSpawnMG" );
+	},
+
+	forwardspawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "forwardspawn_Allies_Captured" );
+		RTCWUtil.StopSniping();
+		Map.DisableAirstrikes();
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rSpawnMG" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCapMG" );
+	},
+	DisableAirstrikes = function()
+	{
+		Map.Airstrike.bsouthdoor.Enabled = false;
+		Map.Airstrike.bnorthdoor.Enabled = false;
+		Map.Airstrike.rsouthdoor.Enabled = false;
+		Map.Airstrike.rnorthdoor.Enabled = false;
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Flag_Taken );
+	OnTrigger( "MISSING_STRING", Map.Axis_Flag_Taken );
+	OnTrigger( "Axis Team captured the forward spawn!", Map.forwardspawn_Axis_Captured );
+	OnTrigger( "Allied Team captured forward spawn!", Map.forwardspawn_Allies_Captured );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 20} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 35} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_alliescap" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bSpawnMG" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Flag" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_axiscap" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rSpawnMG" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Flag" );
+
+	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 3, "FLAG.*" );
+
+	//SetGoalPriority("FLAG.*", 0.91);
+	SetGoalPriority( "MOUNTMG42_.*", 0.91 );
+
+
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "FLAG_Axis_Flag", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+
+	RTCWUtil.LimitToClass( "FLAG_Allied_Flag", TEAM.AXIS, CLASS.MEDIC, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+
+
+	RTCWUtil.StopSniping();
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	bot.TargetBreakableDist = 100.0;
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+};

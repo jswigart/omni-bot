@@ -1,0 +1,65 @@
+global Map =
+{
+	Ammo_Cabinet_amalba_modcab = "AMMOCAB_amalba_modcab",
+	Ammo_Cabinet_amaxba_modcab = "AMMOCAB_amaxba_modcab",
+	Build_Allied_Radio_Tower_Controller = "BUILD_Allied_Radio_Tower_Controller",
+	Build_Axis_Radio_Tower_Controller = "BUILD_Axis_Radio_Tower_Controller",
+	Plant_Allied_Radio_Tower_Controller = "PLANT_Allied_Radio_Tower_Controller",
+	Plant_Axis_Radio_Tower_Controller = "PLANT_Axis_Radio_Tower_Controller",
+
+	Allied_Radio_Tower_Controller_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Radio_Tower_Controller_Built" );
+	},
+
+	Axis_Radio_Tower_Controller_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Radio_Tower_Controller_Built" );
+	},
+
+	Allied_Radio_Tower_Controller_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Radio_Tower_Controller_Destroyed" );
+	},
+
+	Axis_Radio_Tower_Controller_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Radio_Tower_Controller_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Radio_Tower_Controller_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Radio_Tower_Controller_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_Radio_Tower_Controller_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Radio_Tower_Controller_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

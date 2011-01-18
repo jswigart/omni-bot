@@ -1,0 +1,26 @@
+global Map =
+{
+	Rune_1 = "FLAG_powerup_deadzone_2",
+	Rune_2 = "FLAG_powerup_deadzone_3",
+	Rune_3 = "FLAG_powerup_deadzone_4",
+	Rune_4 = "FLAG_powerup_deadzone_5",
+
+	Zone_1 = "DEADZONE_trigger_controlzone_2",
+};
+
+global OnMapLoad = function()
+{
+	if (GetModName() == "DeadZone")
+	{
+		Util.DisableGoal("DEADZONE_trigger_hurt.*");
+		Util.AddUsePtFromWp(Map.Zone_1, "deadzone1");
+		Util.AddUsePtFromWp(Map.Zone_1, "deadzone2");
+	}
+	
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.MapDebugPrint("OnBotJoin", true);
+};
