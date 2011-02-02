@@ -36,13 +36,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Pipe_Door_Controls" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bspawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Controls_Attack_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
 		
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Controls_Defense_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_breach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_breach.*" );
 		
 
 		foreach( id and bot in BotTable )
@@ -89,10 +90,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Deliver_Defense_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Deliver_Attack_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Doc_Attack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bspawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
+		
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Doc_Defense_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_blastdoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_blastdoor.*" );
 		//Util.ResetGoals();
 
 		Util.MapDebugPrint( "Documents_Stolen" );
@@ -110,8 +113,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Deliver_Defense_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Deliver_Attack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bspawnkill.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_blastdoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_blastdoor.*" );
 
 		//forget about the switches
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_blastdoor_2" );
@@ -205,10 +211,12 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH.*", 0.75 );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Controls_Attack_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Courtyard_Door_Controls" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Defense_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_breach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_breach.*" );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=10, maxcamptime=15});
 	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime=45, maxcamptime=60});
