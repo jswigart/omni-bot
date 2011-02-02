@@ -1,21 +1,5 @@
 global _MG = 
 {
-	AMMOCAB_hutammocab = 
-	{
-		CreateOnLoad = 0,
-		GoalType = "AMMOCAB",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "AMMOCAB_hutammocab",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(1915.000, 1076.000, -82.000),
-		Radius = 0,
-		Range = 1250,
-		SerialNum = 198,
-		TagName = "hutammocab",
-		TeamAvailability = 6,
-		Version = 1,
-	},
 	ATTACK_Controls_Attack_1 = 
 	{
 		AimVectors = 
@@ -525,27 +509,6 @@ global _MG =
 		Weapons = 
 		{
 		},
-	},
-	BUILD_Allied_CP = 
-	{
-		CreateOnLoad = 0,
-		GoalType = "BUILD",
-		GroupName = "",
-		IgnoreTargets = 0,
-		MinRadius = 0,
-		Mobile = 0,
-		Name = "BUILD_Allied_CP",
-		Offsets = 
-		{
-		},
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-404.000, -2068.000, 132.000),
-		Radius = 0,
-		SerialNum = 180,
-		Stance = "crouch",
-		TagName = "Allied CP",
-		TeamAvailability = 4,
-		Version = 1,
 	},
 	CAPPOINT_399 = 
 	{
@@ -1172,22 +1135,6 @@ global _MG =
 		TeamAvailability = 4,
 		Version = 1,
 	},
-	HEALTHCAB_huthpcab = 
-	{
-		CreateOnLoad = 0,
-		GoalType = "HEALTHCAB",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "HEALTHCAB_huthpcab",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(1915.000, 1016.000, -82.000),
-		Radius = 0,
-		Range = 1250,
-		SerialNum = 200,
-		TagName = "huthpcab",
-		TeamAvailability = 6,
-		Version = 1,
-	},
 	MOUNTMG42_77 = 
 	{
 		AimVectors = 
@@ -1255,25 +1202,6 @@ global _MG =
 		{
 			[6] = 1,
 		},
-	},
-	PLANT_Allied_CP = 
-	{
-		CoverSpots = 
-		{
-		},
-		CreateOnLoad = 0,
-		ExplosiveType = 3,
-		GoalType = "PLANT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "PLANT_Allied_CP",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-424.000, -2064.001, 112.000),
-		Radius = 0,
-		SerialNum = 182,
-		TagName = "Allied CP",
-		TeamAvailability = 2,
-		Version = 1,
 	},
 	PLANT_Courtyard_Door_Controls = 
 	{
