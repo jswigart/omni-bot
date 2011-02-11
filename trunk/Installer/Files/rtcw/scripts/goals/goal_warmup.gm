@@ -2,15 +2,14 @@
 this.Name = "Warmup";       // The name of the goal.
 this.Parent = "HighLevel";  // The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.Debug = false;
-this.AutoAdd = false; // too much lag
+this.AutoAdd = true; // too much lag
 
 this.Initialize = function()
 {
-	if ( !Map || !Map.Quiet ) {
-		print( this.Name, " Initialized" );
-	}
+	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
+// cs: currently OnSpawn is never called ...
 this.OnSpawn = function()
 {
 	// wait a couple frames to make sure everything is set
@@ -42,8 +41,8 @@ this.GetPriority = function()
 				this.Priority = 5.0; // run update
 			}
 		}
-	} else
-	{
+	}
+	else {
 		block( 0 ); // dont run getpriority at all anymore
 	}
 	sleep( 2 );
@@ -58,7 +57,8 @@ this.Update = function()
 
 	if ( botTeam == TEAM.AXIS ) {
 		grenadeWeapon = WEAPON.AXIS_GRENADE;
-	} else {
+	}
+	else {
 		grenadeWeapon = WEAPON.ALLY_GRENADE;
 	}
 
@@ -69,8 +69,8 @@ this.Update = function()
 	nearest = this.Target;
 	if ( nearest == NULL ) {
 		this.Finished();
-	} else
-	{
+	}
+	else {
 		while ( !GetEntFlags( nearest, ENTFLAG.DEAD ) )
 		{
 			if ( this.Debug ) {
@@ -87,7 +87,8 @@ this.Update = function()
 				this.AddWeaponRequest( Priority.High, WEAPON.SMOKE_GRENADE );
 				this.Bot.HoldButton( BTN.ATTACK1, 1 );
 				yield();
-			} else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.PANZERFAUST ) && this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) )       {
+			}
+			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.PANZERFAUST ) && this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
 				if ( this.Debug ) {
 					print( "panzer" );
 				}
@@ -105,7 +106,8 @@ this.Update = function()
 
 					if ( frameCounter < 40 ) {
 						this.Bot.HoldButton( BTN.ATTACK1, 0.25 );
-					} else {
+					}
+					else {
 						this.Bot.ReleaseButton( BTN.ATTACK1 );
 						yield(); // may need to increase this so they keep aim long enough
 						this.Finished(); // just finish it and let them start over
@@ -113,7 +115,8 @@ this.Update = function()
 					yield();
 					frameCounter += 1;
 				}
-			} else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.FLAMETHROWER ) && this.Bot.HasAmmo( WEAPON.FLAMETHROWER ) )       {
+			}
+			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.FLAMETHROWER ) && this.Bot.HasAmmo( WEAPON.FLAMETHROWER ) ) {
 				if ( this.Debug ) {
 					print( "flamer" );
 				}
@@ -130,7 +133,8 @@ this.Update = function()
 					this.Bot.HoldButton( BTN.ATTACK1, 2 );
 					yield();
 				}
-			} else if ( this.Bot.HasAmmo( grenadeWeapon ) )     {
+			}
+			else if ( this.Bot.HasAmmo( grenadeWeapon ) ) {
 				if ( this.Debug ) {
 					print( "Nade" );
 				}
@@ -147,7 +151,8 @@ this.Update = function()
 
 					if ( frameCounter < 40 ) {
 						this.Bot.HoldButton( BTN.ATTACK1, 999 );
-					} else {
+					}
+					else {
 						this.Bot.ReleaseButton( BTN.ATTACK1 );
 						yield(); // may need to increase this so they keep aim long enough
 						this.Finished(); // just finish it and let them start over
@@ -155,7 +160,8 @@ this.Update = function()
 					yield();
 					frameCounter += 1;
 				}
-			} else if ( bestWeapon != WEAPON.VENOM && this.Bot.HasAmmo( bestWeapon ) )     {
+			}
+			else if ( bestWeapon && bestWeapon != WEAPON.VENOM && this.Bot.HasAmmo( bestWeapon ) ) {
 				if ( this.Debug ) {
 					print( "BestWeapon:" + Util.WeaponName( bestWeapon ) );
 				}
@@ -172,11 +178,9 @@ this.Update = function()
 					yield();
 				}
 			}
-			// No ammo in airstrike, grenade or primary weapon, kill out
-			else
-			{
+			else { // No ammo in airstrike, grenade or primary weapon, kill out
 				yield();
-				this.Bot.ExecCommand( "kill" );
+				this.Bot.ExecCommand("kill");
 			}
 			yield();
 		}
@@ -189,5 +193,3 @@ this.Exit = function()
 	this.ReleaseWeaponRequest();
 	this.Bot.ReleaseButton( BTN.ATTACK1 );
 };
-
-
