@@ -142,6 +142,14 @@ global Map =
 			NoPause = true, // optional: set this if you want them throw while running
 			//Waypoint = "spot_r2", // optional: defining this will have them go to given waypoint and then throw a/s
 		},
+		nladder =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
+			Facing = Vector3( 0.604, 0.200, 0.770 ), // use this if no goto waypoint. /bot mypos shows facing
+			NoPause = true, // optional: set this if you want them throw while running
+			//Waypoint = "spot_r2", // optional: defining this will have them go to given waypoint and then throw a/s
+		},
 		bridge =
 		{
 			Enabled = true,
@@ -282,6 +290,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTruckAS_.*" );		
 
 		Map.Airstrike.sladder.Enabled = false;
+		Map.Airstrike.nladder.Enabled = false;
 		Map.Airstrike.cottage.Enabled = false;
 	},
 
@@ -315,6 +324,7 @@ global Map =
 
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
+			Map.Airstrike.nladder.Enabled = true;
 		}
 
 		Map.Airstrike.sladder.Enabled = true;
@@ -654,7 +664,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bCemetary5 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.ATTACK_bCemetary6 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.MOUNTMG42_cemetary_mg = MapRoutes.FLAG_obj_item01;
-	MapRoutes.ARTILLERY_S_bCemetary_1 = MapRoutes.FLAG_obj_item01;
+	MapRoutes.CALLARTILLERY_bCemetary_1 = MapRoutes.FLAG_obj_item01;
 
 	Util.Routes( MapRoutes );
 
