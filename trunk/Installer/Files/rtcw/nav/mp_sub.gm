@@ -64,12 +64,15 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rSub" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_storage" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bSub" );
 
 		if ( Map.FocusPrimary || Map.StorageStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Submarine );
 		}
+		Wp.SetWaypointFlag( "poolhallway", "allies", true ); // Keep axis out of that hallway
 	},
 
 	Filtration_Door_Planted = function( trigger )
@@ -99,6 +102,7 @@ global Map =
 
 		if ( Map.FocusPrimary || Map.FiltStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Submarine );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bSub" );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_filtration" );
@@ -231,6 +235,7 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "cpspawn12", "closed", true );
 	Wp.SetWaypointFlag( "cpspawn13", "closed", true );
 	Wp.SetWaypointFlag( "cpspawn14", "closed", true );
+	Wp.SetWaypointFlag( "poolhallway", "allies", false ); // Keep axis out of that hallway
 
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
@@ -271,7 +276,8 @@ global OnMapLoad = function()
 	//eng camp spots to wait for recharge
 	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_flag", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
@@ -311,6 +317,21 @@ global OnMapLoad = function()
 				},
 				ROUTE_mainstorage = { ROUTE_filtration = {}, },
 			},
+			DEFEND_rSub1 =
+			{
+				ROUTE_rSpawnSouth =
+				{
+					ROUTE_rExitSouth = {Weight = 2,},
+					ROUTE_rExitCenter = {},
+					ROUTE_rExitNorth = {},
+				},
+				ROUTE_rSpawnNorth =
+				{
+					ROUTE_rExitSouth = {},
+					ROUTE_rExitCenter = {},
+					ROUTE_rExitNorth = {Weight = 2,},
+				},
+			},
 		},
 	};
 
@@ -320,7 +341,15 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bSub4 = MapRoutes.PLANT_Axis_Submarine;
 	MapRoutes.ATTACK_bSub5 = MapRoutes.PLANT_Axis_Submarine;
 	MapRoutes.ATTACK_bSub6 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.GRENADE_bSub = MapRoutes.PLANT_Axis_Submarine;
 	MapRoutes.ATTACK_bSub7 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.DEFEND_rSub2 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub3 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub4 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub5 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub6 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub7 = MapRoutes.DEFEND_rSub1;
+	MapRoutes.DEFEND_rSub8 = MapRoutes.DEFEND_rSub1;
 	MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn2 = MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn1;
 	MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn3 = MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn1;
 
