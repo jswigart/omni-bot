@@ -536,17 +536,17 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade.*" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCottage.*" );
-	SetMapGoalProperties( "ATTACK_rtest.*", {mincamptime=1, maxcamptime=1});
+	//SetMapGoalProperties( "ATTACK_rtest.*", {mincamptime=1, maxcamptime=1});
 
-	SetGoalPriority( "ATTACK_rtest.*", 0.8 );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rtest.*" );
+	//SetGoalPriority( "ATTACK_rtest.*", 0.8 );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rtest.*" );
 
 	//Martin Testing
-	Map.spawnkill();
+	//Map.spawnkill();
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
