@@ -3,6 +3,7 @@ global Map =
 	Quiet = true,
 	FocusPrimary = false,
 	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
 	Debug = false,
 
 	PanzBarracksFired = false,
@@ -79,7 +80,7 @@ global Map =
 	Checkpoint_caveone_flag = "CHECKPOINT_caveone_flag",
 	Flag_Override_Key = "FLAG_Override_Key",
 	Cappoint_92 = "CAPPOINT_92",
-	Plant_service = "PLANT_Rocket_Bay_Emergency_Door",
+	Plant_service = "PLANT_Rocket_Bay_Emergency_Exit",
 	Plant_destroy_tunnel_rubble = "PLANT_Tunnel_Rubble",
 	Plant_office = "PLANT_Upper_Rocket_Bay_Door",
 
@@ -98,6 +99,10 @@ global Map =
 		RTCWUtil.EnableGoal( "ROUTE_tunnel" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzerWest" );
+		if (!Map.KeyStatus)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rEleWest" );
+		}
 	},
 
 	Tunnel_Rubble_Planted = function( trigger )
@@ -238,6 +243,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_flag_defend_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rPanzer.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rEleWest" );
 	},
 
 	Override_Key_Returned = function( trigger )
@@ -257,6 +263,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allies_Key_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rEleWest" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_del_.*" );
 
@@ -367,6 +374,7 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "SWITCH_controls", 0.9 );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	RTCWUtil.DisableGoal( "ROUTE_keydel[45]" );
 
@@ -392,14 +400,23 @@ global OnMapLoad = function()
 		{
 			ROUTE_allyspawn =
 			{
-				ROUTE_tunnel = {},
+				ROUTE_tunnel = 
+				{
+					Weight = 2,
+					ROUTE_westelevator = {Weight = 2,},
+					ROUTE_eastelevator = {},
+				},
 				ROUTE_upper_axisspawn = {},
-				ROUTE_rocketarea = {},
+				ROUTE_southupper = 
+				{
+					Weight = 2,
+					ROUTE_rocketarea = {},
+				},
 			},
 			ROUTE_forwardspawn =
 			{
-				ROUTE_westelevator = {Weight = 4,},
-				ROUTE_eastelevator = {Weight = 2,},
+				ROUTE_westelevator = {Weight = 2,},
+				ROUTE_eastelevator = {},
 				ROUTE_axisladder = {},
 			},
 		},
