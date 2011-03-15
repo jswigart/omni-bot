@@ -612,6 +612,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH_Gate1", 0.65 );
 	SetGoalPriority( "SWITCH_Gate2", 0.9 );
 	SetGoalPriority( "SWITCH_HangarDoor1", 0.65 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	thread( Map.check_flagPush );
 	//open up some airstrike goals if ff is off
