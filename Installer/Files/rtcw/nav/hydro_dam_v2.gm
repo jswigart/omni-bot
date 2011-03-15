@@ -108,6 +108,10 @@ global Map =
 		}
 
 		Util.MapDebugPrint( "allied_flag1_Axis_Captured" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSideSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill_as_.*" );
 	},
 
 	allied_flag1_Allies_Captured = function( trigger )
@@ -117,6 +121,9 @@ global Map =
 		}
 
 		Util.MapDebugPrint( "allied_flag1_Allies_Captured" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 	},
 
 	axis_flag1_Axis_Captured = function( trigger )
@@ -137,10 +144,9 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_as.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_as.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bAltSpawnkill.*" );
 
 		Util.MapDebugPrint( "axis_flag1_Allies_Captured" );
@@ -210,7 +216,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have stolen the Secret Documents!", Map.docs_taken );
 	OnTrigger( "MISSING_STRING", Map.cap_parts_Captured );
 	OnTrigger( "MISSING_STRING", Map.gold_cap_Captured );
-	OnTrigger( "Axis take the Allies base.!", Map.allied_flag1_Axis_Captured );
+	OnTrigger( "Axis take the Allied base.!", Map.allied_flag1_Axis_Captured );
 	OnTrigger( "Allies hold their base.!", Map.allied_flag1_Allies_Captured );
 	OnTrigger( "Axis hold their base.!", Map.axis_flag1_Axis_Captured );
 	OnTrigger( "Allies take the Axis base.!", Map.axis_flag1_Allies_Captured );
