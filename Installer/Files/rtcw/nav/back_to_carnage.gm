@@ -74,6 +74,10 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
+		
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", false );
+		Wp.SetWaypointFlag( "walljump2", "allies", false );
 	},
 
 	Axis_base_gate_Destroyed = function( trigger )
@@ -83,6 +87,10 @@ global Map =
 		}
 
 		Map.GateStatus = true;
+		
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", true );
+		Wp.SetWaypointFlag( "walljump2", "allies", true );
 
 		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, false );        // Let axis use smarter combat techniques
 
@@ -135,6 +143,8 @@ global Map =
 
 		Map.StairStatus = true;
 		RTCWUtil.EnableGoal( "ROUTE_steps" );
+		
+		Wp.SetWaypointFlag( "stairgate", "allies", true );
 	},
 
 	Sea_Wall_Destroyed = function( trigger )
@@ -176,6 +186,9 @@ global Map =
 		}
 
 		Map.BunkerDoorStatus = true;
+		
+		// Axis should not be in the trenches
+		Wp.SetWaypointFlag( "bunkerdoor", "allies", true );
 
 		RTCWUtil.EnableGoal( "ROUTE_bunkerdoor" );
 
@@ -244,6 +257,10 @@ global Map =
 
 		Map.TrenchStatus = true;
 		RTCWUtil.StopSniping();     // Push on OBJs now
+		
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", true );
+		Wp.SetWaypointFlag( "walljump2", "allies", true );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_staircase_gate" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
@@ -386,6 +403,7 @@ global OnMapLoad = function()
 
 	Util.AddUseWp( "PLANT_power_generator", "plant_gen1" );
 	Util.AddUseWp( "PLANT_power_generator", "plant_gen2" );
+	Util.AddUseWp( "PLANT_Axis_base_gate", "plant_basegate" );
 
 	RTCWUtil.DisableGoal( "ROUTE_basegate" );
 	RTCWUtil.DisableGoal( "ROUTE_steps" );
