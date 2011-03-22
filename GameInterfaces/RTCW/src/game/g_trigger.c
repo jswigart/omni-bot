@@ -771,6 +771,9 @@ void Touch_flagonly( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 
 		AddScore( other, ent->accuracy ); // JPW NERVE set from map, defaults to 20
 
+        // credits
+        other->client->sess.credits += CREDITS_OBJBONUS;
+
 		G_Script_ScriptEvent( ent, "death", "" );
 
 		// Removes itself
@@ -780,6 +783,9 @@ void Touch_flagonly( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	} else if ( ent->spawnflags & BLUE_FLAG && other->client->ps.powerups[ PW_BLUEFLAG ] ) {
 
 		AddScore( other, ent->accuracy ); // JPW NERVE set from map, defaults to 20
+
+        // credits
+        other->client->sess.credits += CREDITS_OBJBONUS;
 
 		G_Script_ScriptEvent( ent, "death", "" );
 
@@ -874,7 +880,7 @@ void SP_trigger_objective_info( gentity_t *ent ) {
 
 	// NERVE - SMF - spawn an explosive indicator
 	// cs: in deathmatch, we don't want the target icon on the radar
-	if ( !g_deathmatch.integer && ( ent->spawnflags & AXIS_OBJECTIVE ) || ( ent->spawnflags & ALLIED_OBJECTIVE ) ) {
+	if ( !g_deathmatch.integer && ((ent->spawnflags & AXIS_OBJECTIVE) || (ent->spawnflags & ALLIED_OBJECTIVE)) ) {
 		gentity_t *e;
 		e = G_Spawn();
 

@@ -399,21 +399,30 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		if ( cl->sess.sessionTeam == TEAM_RED ) {
 			te->s.eventParm = G_SoundIndex( "sound/multiplayer/axis/g-objective_taken.wav" );
 			trap_SendServerCommand( -1, va( "cp \"Axis have stolen %s!\n\" 2", ent->message ) );
+
+			// credits
+			other->client->sess.credits += CREDITS_OBJBONUS;
+
 			if ( gm ) {
 				G_Script_ScriptEvent( gm, "trigger", "allied_object_stolen" );
 			}
-			{
-				Bot_Util_SendTrigger( ent, NULL, va( "Axis have stolen %s!", ent->message ), "stolen" );
-			}
-		} else {
+
+            Bot_Util_SendTrigger( ent, NULL, va( "Axis have stolen %s!", ent->message ), "stolen" );
+
+		}
+		else {
 			te->s.eventParm = G_SoundIndex( "sound/multiplayer/allies/a-objective_taken.wav" );
 			trap_SendServerCommand( -1, va( "cp \"Allies have stolen %s!\n\" 2", ent->message ) );
+
+			// credits
+			other->client->sess.credits += CREDITS_OBJBONUS;
+
 			if ( gm ) {
 				G_Script_ScriptEvent( gm, "trigger", "axis_object_stolen" );
 			}
-			{
-				Bot_Util_SendTrigger( ent, NULL, va( "Allies have stolen %s!", ent->message ), "stolen" );
-			}
+
+            Bot_Util_SendTrigger( ent, NULL, va( "Allies have stolen %s!", ent->message ), "stolen" );
+
 		}
 		// dhm
 // jpw
@@ -1144,6 +1153,9 @@ void checkpoint_touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 	// Set controlling team
 	self->count = other->client->sess.sessionTeam;
 
+    // credits
+    other->client->sess.credits += CREDITS_OBJBONUS;
+
 	// Set animation
 	if ( self->count == TEAM_RED ) {
 		if ( self->s.frame == WCP_ANIM_NOFLAG ) {
@@ -1207,6 +1219,9 @@ void checkpoint_spawntouch( gentity_t *self, gentity_t *other, trace_t *trace ) 
 
 	// Set controlling team
 	self->count = other->client->sess.sessionTeam;
+
+    // credits
+    other->client->sess.credits += CREDITS_OBJBONUS;
 
 	// remove a compiler warning
 	flagAction = "touched";

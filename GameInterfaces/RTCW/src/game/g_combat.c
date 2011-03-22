@@ -13,7 +13,6 @@
 #endif
 
 static qboolean firstblood;
-static qboolean firstheadshot;
 extern vmCvar_t g_spreeSound[10];
 
 int BG_GetKillSpree( playerState_t *ps ) {
@@ -467,6 +466,17 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			attacker->client->ps.persistant[PERS_KILLS]++;
 			attacker->client->multikill++;
 			G_UpdateKillingSpree( attacker, NULL, qfalse );
+
+			// credits
+			attacker->client->sess.credits += CREDITS_KILLBONUS;
+			if ( attacker->client->sess.currentBetTarget == self ) {
+				// transfer the credits
+				attacker->client->sess.credits += attacker->client->sess.currentBetAmount;
+				self->client->sess.credits -= self->client->sess.currentBetAmount;
+				// clear the bet
+				G_ClearBet(attacker);
+			}
+
 		} else if ( meansOfDeath == MOD_SUICIDE ) {
 			attacker->client->pers.suicides++;
 		} else {
@@ -890,7 +900,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	// the intermission has allready been qualified for, so don't
 	// allow any extra scoring
-	if ( level.intermissionQueued || g_gamestate.integer != GS_PLAYING && g_warmupDamage.integer == 0 ) {
+	if ( level.intermissionQueued || (g_gamestate.integer != GS_PLAYING && g_warmupDamage.integer == 0) ) {
 		return;
 	}
 

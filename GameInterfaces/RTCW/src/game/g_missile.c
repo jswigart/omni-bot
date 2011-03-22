@@ -409,6 +409,12 @@ void G_ExplodeMissile( gentity_t *ent ) {
 					G_UseTargets( hit, ent );
 					hit->think = G_FreeEntity;
 					hit->nextthink = level.time + FRAMETIME;
+
+					// credits
+					if ( ent->parent && ent->parent->client ) {
+					    ent->parent->client->sess.credits += CREDITS_OBJBONUS;
+					}
+
 					G_Script_ScriptEvent( hit, "destroyed", "" );
 				}
 			}

@@ -9,7 +9,6 @@
 #include "g_local.h"
 #include "g_rtcwbot_interface.h"
 
-static float s_quadFactor;    // TODO: remove this
 static vec3_t forward, right, up;
 static vec3_t muzzleEffect;
 static vec3_t muzzleTrace;

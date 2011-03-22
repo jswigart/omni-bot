@@ -438,7 +438,7 @@ void limbo( gentity_t *ent, qboolean makeCorpse ) {
 
 		ent->client->ps.pm_flags |= PMF_LIMBO;
 
-		if ( !ent->r.svFlags & SVF_BOT ) {
+		if ( !(ent->r.svFlags & SVF_BOT) ) {
 			ent->client->ps.pm_flags |= PMF_FOLLOW;
 		}
 
@@ -1857,12 +1857,7 @@ void ClientBegin( int clientNum ) {
 	//CS: make sure this isn't set
 	client->sess.botSuicide = qfalse;
 	client->sess.botSuicidePersist = qfalse;
-
-	if ( ent->r.svFlags & SVF_BOT ) {
-		client->sess.botPush = qtrue;
-	} else {
-		client->sess.botPush = qfalse;
-	}
+	client->sess.botPush = ent->r.svFlags & SVF_BOT ? qtrue : qfalse;
 
 	// locate ent at a spawn point
 	ClientSpawn( ent, qfalse );
@@ -1931,6 +1926,12 @@ void ClientBegin( int clientNum ) {
 
 	// count current clients and rank for scoreboard
 	CalculateRanks();
+
+#ifdef _DEBUG
+    if ( client->sess.credits < 1000 ) {
+        client->sess.credits = 1000;
+    }
+#endif
 }
 
 /*================
@@ -1979,17 +1980,20 @@ void ClientSpawn( gentity_t *ent, qboolean revived ) {
 		VectorCopy( ent->s.origin, spawn_origin );
 		spawn_origin[2] += 9;   // spawns seem to be sunk into ground?
 		VectorCopy( ent->s.angles, spawn_angles );
-	} else
-	{
+	}
+	else {
+	    client->sess.buyTime = 0; // reset so they can buy again
+
 		if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
-			spawnPoint = SelectSpectatorSpawnPoint(
-				spawn_origin, spawn_angles );
-		} else if ( g_gametype.integer >= GT_TEAM ) {
+			spawnPoint = SelectSpectatorSpawnPoint(spawn_origin, spawn_angles );
+		}
+		else if ( g_gametype.integer >= GT_TEAM ) {
 			spawnPoint = SelectCTFSpawnPoint(
 				client->sess.sessionTeam,
 				client->pers.teamState.state,
 				spawn_origin, spawn_angles, client->sess.spawnObjectiveIndex );
-		} else {
+		}
+		else {
 			do {
 				// the first spawn should be at a good looking spot
 				if ( !client->pers.initialSpawn && client->pers.localClient ) {
@@ -2314,8 +2318,10 @@ void ClientDisconnect( int clientNum ) {
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
 	ent->client->sess.sessionTeam = TEAM_FREE;
 // JPW NERVE -- mg42 additions
-	ent->active = 0;
+	ent->active = qfalse;
 // jpw
+    ent->r.svFlags &= ~SVF_BOT;
+
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "" );
 
 	CalculateRanks();

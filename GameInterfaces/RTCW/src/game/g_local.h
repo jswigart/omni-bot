@@ -443,6 +443,11 @@ typedef struct {
 	qboolean botSuicide;            // CS: if true, bots will /kill 2 seconds before their next spawn
 	qboolean botSuicidePersist;
 	qboolean botPush;               // CS: in some cases we don't want bots pushing
+    int credits;
+    gentity_t *currentBetTarget;
+    int currentBetAmount;
+    int betTime;
+    int buyTime;
 } clientSession_t;
 
 //
@@ -939,7 +944,7 @@ void FinishSpawningItem( gentity_t *ent );
 void Think_Weapon( gentity_t *ent );
 int ArmorIndex( gentity_t *ent );
 void Fill_Clip( playerState_t *ps, int weapon );
-void    Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip );
+void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip );
 void Touch_Item( gentity_t *ent, gentity_t *other, trace_t *trace );
 
 // Touch_Item_Auto is bound by the rules of autoactivation (if cg_autoactivate is 0, only touch on "activate")
@@ -1003,6 +1008,8 @@ qboolean G_EmplacedGunIsRepairable( gentity_t* ent, gentity_t* other );
 void CheckTotalMsgs();
 void CheckMsgs( void );
 char * weaponToString( weapon_t weapon );
+
+void G_ClearBet(gentity_t *ent);
 
 //
 // g_combat.c
@@ -1317,6 +1324,7 @@ extern vmCvar_t g_LTNades;
 extern vmCvar_t g_MedNades;
 extern vmCvar_t g_smokeGrenades;
 extern vmCvar_t g_nadePacks;
+extern vmCvar_t g_betting;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;
@@ -1534,3 +1542,10 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 void G_ResetMarkers( gentity_t* ent );
 
 #endif
+
+// credits
+#define CREDITS_KILLBONUS 1
+#define CREDITS_OBJBONUS 10
+#define CREDITS_PRICE 100 // price for buying ammo / health
+#define CREDITS_ENABLE 0x0001
+#define CREDITS_BUYING 0x0002
