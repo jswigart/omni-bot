@@ -480,6 +480,14 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       sess.latchPlayerType,                                       FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       sess.latchPlayerWeapon,                                     FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       sess.latchPlayerWeapon2,                                    FIELD_INT,          0                                       ),
+
+	// credits
+	_et_gclient_addfield(       sess.credits,                                               FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       sess.currentBetTarget,                                      FIELD_ENTITY,       0                                       ),
+	_et_gclient_addfield(       sess.currentBetAmount,                                      FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       sess.betTime,                                               FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       sess.buyTime,                                               FIELD_INT,          0                                       ),
+
 	// TODO: sess.aWeaponStats
 	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
 
@@ -892,7 +900,7 @@ static int _et_GetTimeStamp( lua_State *L ) {
 	unsigned long long timestamp;
 	qtime_t q;
 	trap_RealTime( &q );
-	timestamp = ((q.tm_year * 31556926) + (q.tm_yday * 86400 ) + (q.tm_hour * 3600) + (q.tm_min * 60) + q.tm_sec) - 2208932660;
+	timestamp = ((q.tm_year * 31556926ULL) + (q.tm_yday * 86400ULL ) + (q.tm_hour * 3600ULL) + (q.tm_min * 60ULL) + q.tm_sec) - 2208932660ULL;
 	lua_pushinteger( L, timestamp );
 	return 1;
 }

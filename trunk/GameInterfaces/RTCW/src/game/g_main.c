@@ -76,6 +76,7 @@ vmCvar_t g_LTNades;
 vmCvar_t g_MedNades;
 vmCvar_t g_smokeGrenades;
 vmCvar_t g_nadePacks;
+vmCvar_t g_betting; // bit flagged. 0 disable 1 enable 2 buying
 
 // zinx etpro antiwarp
 vmCvar_t g_antiwarp;
@@ -357,6 +358,7 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_MedNades,                  "g_MedNades",                   "1",                    0,                                                  0,          qfalse },
 	{ &g_smokeGrenades,             "g_smokeGrenades",              "0",                    0,                                                  0,          qfalse },
 	{ &g_nadePacks,                 "g_nadePacks",                  "0",                    0,                                                  0,          qfalse },
+	{ &g_betting,                   "g_betting",                    "0",                    0,                                                  0,          qfalse },
 
 	// zinx etpro antiwarp
 	{ &g_maxWarp,                   "g_maxWarp",                    "4",                    0 },
@@ -2586,7 +2588,7 @@ const char *multikillSound[] = {
 void G_CheckMultiKill( int clientNum ) {
 	gclient_t *client = &level.clients[level.sortedClients[clientNum]];
 
-	if ( !client || !(g_announcer.integer & ANNOUNCE_MULTIKILL) || 
+	if ( !client || !(g_announcer.integer & ANNOUNCE_MULTIKILL) ||
 			((g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE) && (g_entities[clientNum].r.svFlags & SVF_BOT)) ) {
 		return;
 	}

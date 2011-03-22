@@ -129,7 +129,7 @@ void G_ResetMarkers( gentity_t* ent ) {
 	period = ( period == 0 ) ? 50.0f : 1000.f / period;
 
 	ent->client->topMarker = MAX_CLIENT_MARKERS - 1;
-	for ( i = MAX_CLIENT_MARKERS, time = level.time; i >= 0; i--, time -= period ) {
+	for ( i = MAX_CLIENT_MARKERS - 1, time = level.time; i >= 0; i--, time -= period ) {
 		ent->client->clientMarkers[i].servertime =  time;
 		ent->client->clientMarkers[i].time =        time;
 
@@ -183,11 +183,32 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 	gentity_t *other;
 	int res;
 	vec3_t dir;
+	float maxsBackup[MAX_CLIENTS];
+	int i;
+	int clientNum;
 
-	if ( ( !g_antilag.integer || !ent->client ) || ent->r.svFlags & SVF_BOT ) { //no antilag for bots
+	memset( &maxsBackup, 0, sizeof(maxsBackup) );
+
+	if ( ( !g_antilag.integer || !ent->client ) || (ent->r.svFlags & SVF_BOT) ) { //no antilag for bots
 		G_AttachBodyParts( ent ) ;
 
+		// cs: taken from ET. TODO: seems sort of silly .. in a death event, crouched, etc can't we explicitly set r.maxs?
+		for (i=0; i < level.numConnectedClients; i++ ) {
+		    clientNum = level.sortedClients[i];
+		    if ( &g_entities[clientNum] && &g_entities[clientNum].client && &g_entities[clientNum].takedamage ) {
+		        maxsBackup[clientNum] = g_entities[clientNum].r.maxs[2];
+		        g_entities[clientNum].r.maxs[2] = ClientHitboxMaxZ(&g_entities[clientNum]);
+		    }
+		}
+
 		trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
+
+		for (i=0; i < level.numConnectedClients; i++ ) {
+		    clientNum = level.sortedClients[i];
+		    if ( &g_entities[clientNum] && &g_entities[clientNum].client && &g_entities[clientNum].takedamage ) {
+		        g_entities[clientNum].r.maxs[2] = maxsBackup[clientNum];
+		    }
+		}
 
 		res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 		POSITION_READJUST

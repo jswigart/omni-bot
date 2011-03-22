@@ -1050,4 +1050,41 @@ char * weaponToString( weapon_t weapon ) {
 	}
 }
 
+void G_ClearBet(gentity_t *ent)
+{
+	if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+		return;
+	}
+
+	if ( !(ent && ent->client) ) {
+		return;
+	}
+
+	// clear their own bet
+	ent->client->sess.currentBetTarget = NULL;
+	ent->client->sess.currentBetAmount = 0;
+
+	// and anyone who has an active bet with them
+	{
+		gentity_t *playerEnt;
+		int i;
+		for( i = 0; i < level.maxclients; i++, playerEnt++) {
+			playerEnt = &g_entities[i];
+
+			if ( !(playerEnt && playerEnt->client) ) {
+				continue;
+			}
+
+			if( playerEnt->client->pers.connected != CON_CONNECTED ) {
+				continue;
+			}
+
+			if ( playerEnt->client->sess.currentBetTarget == ent ) {
+				playerEnt->client->sess.currentBetTarget = NULL;
+				playerEnt->client->sess.currentBetAmount = 0;
+			}
+		}
+	}
+}
+
 

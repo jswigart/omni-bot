@@ -35,7 +35,7 @@ static int parseClient;
 // these are used globally during script parsing
 static int numDefines[NUM_ANIM_CONDITIONS];
 static char defineStrings[10000];       // stores the actual strings
-static int defineStringsOffset;
+static unsigned int defineStringsOffset;
 static animStringItem_t defineStr[NUM_ANIM_CONDITIONS][MAX_ANIM_DEFINES];
 static int defineBits[NUM_ANIM_CONDITIONS][MAX_ANIM_DEFINES][2];
 

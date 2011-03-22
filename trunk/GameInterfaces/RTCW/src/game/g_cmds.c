@@ -2721,6 +2721,236 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 	Bot_Event_RecievedAmmo( target - g_entities, ent );
 }
 
+void Cmd_MyCredits_f ( gentity_t* ent )
+{
+	if( !ent || !ent->client ) {
+		return;
+	}
+	trap_SendServerCommand( ent - g_entities, va("print \"you have ^2%i^7 credits\n", ent->client->sess.credits) );
+}
+
+qboolean G_MatchOnePlayer(int *plist, char *err, int len)
+{
+	gclient_t *cl;
+	int *p;
+	char line[MAX_NAME_LENGTH+10];
+
+	err[0] = '\0';
+	line[0] = '\0';
+	if(plist[0] == -1) {
+		Q_strcat(err, len,
+			"no connected player by that name or slot #");
+		return qfalse;
+	}
+	if(plist[1] != -1) {
+		Q_strcat(err, len, "more than one player name matches. "
+			"be more specific or use the slot #:\n");
+		for(p = plist;*p != -1; p++) {
+			cl = &level.clients[*p];
+			if(cl->pers.connected == CON_CONNECTED) {
+				Com_sprintf(line, MAX_NAME_LENGTH + 10, "%2i - %s^7\n",
+					*p,
+					cl->pers.netname);
+				if(strlen(err)+strlen(line) > len)
+					break;
+				Q_strcat(err, len, line);
+			}
+		}
+		return qfalse;
+	}
+	return qtrue;
+}
+
+void Cmd_Bet_f( gentity_t* ent )
+{
+	int pids[MAX_CLIENTS];
+	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
+	gentity_t *vic = NULL;
+	char amountstr[11]; // 10 is max strlen() for 32-bit int
+	int amount = 0;
+
+	if ( trap_Argc() < 3 ) {
+		CP("print \"usage: !bet [name|slot#] [credits]\n\"");
+		return;
+	}
+
+	// you must be in a team to start a bet..
+	if ( ent->client->sess.sessionTeam != TEAM_RED && ent->client->sess.sessionTeam != TEAM_BLUE ) {
+		CP("print \"^dbet: ^9you are not in a team\n\"");
+		return;
+	}
+
+	// only 1 bet at a time..
+	if ( ent->client->sess.currentBetTarget ) {
+		CP("print \"^dbet: ^9you cannot start a bet while a request is pending\n\"");
+		return;
+	}
+
+	trap_Argv( 1, name, sizeof( name ) );
+
+	if(ClientNumbersFromString(name, pids) != 1) {
+		G_MatchOnePlayer(pids, err, sizeof(err));
+		CP(va("print \"^dbet: ^9%s\n\"", err));
+		return;
+	}
+	vic = &g_entities[pids[0]];
+
+	// target must be in a team to start a bet..
+	if ( vic->client->sess.sessionTeam != TEAM_RED && vic->client->sess.sessionTeam != TEAM_BLUE ) {
+		CP("print \"^dbet: ^9you cannot bet with spectators\n\"");
+		return;
+	}
+
+#ifndef _DEBUG
+	if ( vic->r.svFlags & SVF_BOT ) {
+		CP(va("print \"^dbet: ^9%s^9 is a bot and cannot bet\n\"",name));
+		return;
+	}
+#endif
+
+	// the other must be in the opposite team..
+	// this check eliminates the need to check for self-bets.
+	if ( vic->client->sess.sessionTeam == ent->client->sess.sessionTeam ) {
+		CP(va("print \"^dbet: ^9%s^9 is not in your opposing team\n\"",name));
+		return;
+	}
+
+	// the other must not have a bet in progress, or even have a pending request..
+	if ( vic->client->sess.currentBetTarget ) {
+		CP(va("print \"^dbet: ^9%s^9 is already in another bet\n\"",name));
+		return;
+	}
+
+	// lower the bet in case the other has insufficient credits..
+	trap_Argv( 2, amountstr, sizeof( amountstr ) );
+	amount = atoi(amountstr);
+	if ( vic->client->sess.credits < amount ) {
+		amount = vic->client->sess.credits;
+	}
+
+	// setup data for the bet..
+	ent->client->sess.currentBetTarget = vic;
+	vic->client->sess.currentBetTarget = ent;
+	ent->client->sess.currentBetAmount = amount;
+	vic->client->sess.currentBetAmount = amount;
+
+#ifdef _DEBUG
+	// bots always accept in debug mode
+	if (vic->r.svFlags & SVF_BOT) {
+		ent->client->sess.betTime = level.time;
+		vic->client->sess.betTime = level.time;
+	}
+#endif
+
+	CP(va("print \"^dbet: ^9you requested a bet with %s^9 (%i credits)\n\"",name,amount));
+	//CPx(vic->client - level.clients, va("^dbet: ^9%s^9 wants to bet with you\n",ent->client->pers.netname));
+	CPx(vic->client - level.clients, va("cp \"%s^9 wants to bet with you (%i credits)\n\"",ent->client->pers.netname,amount));	// centerprint
+}
+
+void Cmd_Accept_f( gentity_t* ent )
+{
+	gentity_t *vic = NULL;
+
+	// is the other player still valid?..
+	if ( ent->client->sess.currentBetTarget ) {
+		vic = ent->client->sess.currentBetTarget;
+		if ( !vic->client ) {
+			ent->client->sess.currentBetTarget = NULL;
+			ent->client->sess.currentBetAmount = 0;
+			CP(va("print \"^daccept: ^9%s^9 is no longer in a team\n\"",vic->client->pers.netname));
+			return;
+		}
+	}
+
+	// start the bet..
+	ent->client->sess.betTime = level.time;
+	vic->client->sess.betTime = level.time;
+
+	CP(va("print \"^daccept: ^9you accepted the bet with %s\n\"",vic->client->pers.netname));
+	//CPx(vic->client - level.clients, va("^daccept: ^9%s^9 accepted your bet\n",ent->client->pers.netname));
+	CPx(vic->client - level.clients, va("cp \"%s^9 accepted your bet\n\"",ent->client->pers.netname));	// centerprint
+}
+
+extern void MagicSink( gentity_t *self );
+void Cmd_Buy_f( gentity_t* ent )
+{
+	char buyingstr[MAX_STRING_CHARS];
+	int max;
+
+	trap_Argv( 1, buyingstr, sizeof( buyingstr ) );
+
+	// sanity..
+	if ( !(ent && ent->client) ) {
+		return;
+	}
+
+	// you must be in a team to be able to buy..
+	if ( ent->client->sess.sessionTeam != TEAM_RED && ent->client->sess.sessionTeam != TEAM_BLUE ) {
+		CP("print \"^dbuy: ^9you are not in a team\n\"");
+		return;
+	}
+
+	// you can buy max. 1 item per life..
+	if ( ent->client->sess.buyTime > 0 ) {
+		CP("print \"^dbuy: ^9you can only buy one item per life\n\"");
+		return;
+	}
+
+	if (!*buyingstr) {
+		CP("print \"usage: !buy [ammo|health|adrenaline]\n\"");
+		return;
+	}
+
+	// ammo and health cost CREDITS_PRICE credits.
+	// see if the player has enough credits..
+	if ( ent->client->sess.credits < CREDITS_PRICE ) {
+		CP(va("print \"^dbuy: ^9you need at least %i credits to buy something\n\"",CREDITS_PRICE));
+		return;
+	}
+
+	// buying ammo..
+	if ( !Q_stricmp(buyingstr, "ammo") ) {
+        if ( ent->client->ps.weapon ) {
+            Add_Ammo( ent, ent->client->ps.weapon, ammoTable[ent->client->ps.weapon].maxammo, qtrue );
+            CP("print \"^dbuy: ^9you bought yourself some ammo\n\"");
+        }
+        else {
+            CP("print \"^dbuy: ^9you need a primary weapon to buy ammo\n\"");
+            return;
+        }
+	}
+	// buying health..
+	else if ( !Q_stricmp(buyingstr, "health") ) {
+		max = ent->client->ps.stats[STAT_MAX_HEALTH];
+		if( ent->client->sess.playerType == PC_MEDIC ) {
+			max *= 1.12f;
+		}
+		ent->health = max;
+		CP("print \"^dbuy: ^9you bought yourself some health\n\"");
+	}
+	// buying lunch..
+	else if ( !Q_stricmp(buyingstr, "lunch") ) {
+		gentity_t   *drop = 0;
+		drop = Drop_Item(ent, &bg_itemlist[IL_ITEM_HEALTH_TURKEY], 0.f, qfalse);
+		if (drop) {
+			drop->think = MagicSink;
+			drop->timestamp = level.time + 15000;
+		}
+		CP("print \"^dbuy: ^9you bought yourself some lunch\n\"");
+	}
+	// invalid item..
+	else {
+		CP("print \"^dbuy: ^9you want to buy something that is not in store\n\"");
+		return;
+	}
+
+	// pay..
+	ent->client->sess.credits -= CREDITS_PRICE;
+
+	// only once per life. cleared on spawn
+	ent->client->sess.buyTime = level.time;
+}
+
 // cs: temp.
 // TODO: remove
 static char *temp[] =
@@ -2880,6 +3110,30 @@ void ClientCommand( int clientNum ) {
 		Cmd_NadePack_f( ent );
 	} else if ( Q_stricmp( cmd, "giveammo" ) == 0 ) {
 		Cmd_GiveAmmo_f( ent );
+	} else if ( Q_stricmp( cmd, "mycredits" ) == 0 ) {
+	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+	        return;
+	    }
+		Cmd_MyCredits_f( ent );
+	} else if ( Q_stricmp( cmd, "bet" ) == 0 ) {
+	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+	        return;
+	    }
+		Cmd_Bet_f( ent );
+	} else if ( Q_stricmp( cmd, "accept" ) == 0 ) {
+	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+	        return;
+	    }
+		Cmd_Accept_f( ent );
+	} else if ( Q_stricmp( cmd, "buy" ) == 0 ) {
+	    if ( !(g_betting.integer & CREDITS_BUYING) ) {
+	        trap_SendServerCommand( clientNum, "print \"buying is not enabled on this server\n\"" );
+	        return;
+	    }
+		Cmd_Buy_f( ent );
 	} else if ( Q_stricmp( cmd, "shv" ) == 0 ) { // TODO: remove
 		Cmd_ShowHashValue_f();
 	} else if ( Q_stricmp( cmd, "drop" ) == 0 ) { // TODO: remove

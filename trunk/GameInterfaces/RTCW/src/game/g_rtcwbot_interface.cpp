@@ -3123,7 +3123,7 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 			gentity_t *pDestroyable = EntityFromHandle( pMsg->m_Entity );
 			if ( pEnt && pEnt->inuse && pDestroyable && pDestroyable->inuse ) {
 				if ( pDestroyable->s.eType == ET_OID_TRIGGER
-					|| pDestroyable->spawnflags == 77 ||  pDestroyable->spawnflags == 104 
+					|| pDestroyable->spawnflags == 77 ||  pDestroyable->spawnflags == 104
 					|| ( pDestroyable->spawnflags == 76 && !pDestroyable->scriptName ) )
 				{
 					pMsg->m_State = CONST_DESTROYABLE;
@@ -3563,7 +3563,8 @@ void Bot_Interface_Update() {
 				g_OmniBotPlaying.integer = iNumBots;
 				trap_Cvar_Set( "omnibot_playing", va( "%i", iNumBots ) );
 			}
-		} else
+		}
+		else
 		{
 			if ( g_OmniBotPlaying.integer != -1 ) {
 				g_OmniBotPlaying.integer = -1;

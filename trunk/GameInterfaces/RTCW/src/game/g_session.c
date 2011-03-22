@@ -151,6 +151,13 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	sess->spawnObjectiveIndex = 0;
 	// dhm - end
 
+	// credits
+	sess->credits = 0;
+	sess->currentBetTarget = 0;
+	sess->currentBetAmount = 0;
+	sess->betTime = 0;
+	sess->buyTime = 0;
+
 	G_WriteClientSessionData( client );
 }
 
