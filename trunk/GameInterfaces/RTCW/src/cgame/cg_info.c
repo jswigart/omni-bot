@@ -5,11 +5,6 @@
 #define MAX_LOADING_PLAYER_ICONS    16
 #define MAX_LOADING_ITEM_ICONS      26
 
-static int loadingPlayerIconCount;
-static int loadingItemIconCount;
-static qhandle_t loadingPlayerIcons[MAX_LOADING_PLAYER_ICONS];
-static qhandle_t loadingItemIcons[MAX_LOADING_ITEM_ICONS];
-
 
 /*
 ===================

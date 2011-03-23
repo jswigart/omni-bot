@@ -1087,4 +1087,50 @@ void G_ClearBet(gentity_t *ent)
 	}
 }
 
+/*
+================
+return amount of ammo to be added for max ammo evaluations based on extraClips cvars
+================
+*/
+int G_ExtraAmmo( int playerClass, int weapon ) {
+    switch(weapon)
+    {
+        case WP_MAUSER:
+        case WP_SNIPERRIFLE:
+            return g_mauserExtraClips.integer * ammoTable[weapon].maxclip;
+            break;
+        case WP_VENOM:
+            return g_venomExtraClips.integer * ammoTable[weapon].maxclip;
+            break;
+        case WP_PANZERFAUST:
+            return g_panzerExtraClips.integer * ammoTable[weapon].maxclip;
+            break;
+        case WP_COLT:
+        case WP_LUGER:
+            return g_pistolExtraClips.integer * ammoTable[weapon].maxclip;
+            break;
+        case WP_THOMPSON:
+        case WP_MP40:
+            if (playerClass == PC_SOLDIER) {
+                return g_soldExtraClips.integer * ammoTable[weapon].maxclip;
+            }
+
+            if (playerClass == PC_MEDIC) {
+                return g_medExtraClips.integer * ammoTable[weapon].maxclip;
+            }
+
+            if (playerClass == PC_ENGINEER) {
+                return g_engExtraClips.integer * ammoTable[weapon].maxclip;
+            }
+
+            if (playerClass == PC_LT) {
+                return g_ltExtraClips.integer * ammoTable[weapon].maxclip;
+            }
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
+
 

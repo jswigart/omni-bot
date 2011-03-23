@@ -229,7 +229,7 @@ void CG_ReflectVelocity( localEntity_t *le, trace_t *trace ) {
 
 
 	// check for stop, making sure that even on low FPS systems it doesn't bobble
-	if ( !( le->leMarkType == LEMT_BLOOD && trace->startsolid ) && trace->allsolid ||
+	if ( !(le->leMarkType == LEMT_BLOOD && trace->startsolid) && trace->allsolid ||
 		 ( trace->plane.normal[2] > 0 &&
 		   ( le->pos.trDelta[2] < 40 || le->pos.trDelta[2] < -cg.frametime * le->pos.trDelta[2] ) ) ) {
 

@@ -13,7 +13,6 @@
 #endif
 
 static qboolean firstblood;
-extern vmCvar_t g_spreeSound[10];
 
 int BG_GetKillSpree( playerState_t *ps ) {
 	if ( ps != NULL ) {
@@ -473,6 +472,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				// transfer the credits
 				attacker->client->sess.credits += attacker->client->sess.currentBetAmount;
 				self->client->sess.credits -= self->client->sess.currentBetAmount;
+				// let them know about it
+				trap_SendServerCommand( attacker - g_entities, va( "chat \"^3You have won ^2%i ^3credits!\"",attacker->client->sess.currentBetAmount ) );
+				trap_SendServerCommand( self - g_entities, va( "chat \"^3You lost ^1%i ^3credits!\"",self->client->sess.currentBetAmount ) );
 				// clear the bet
 				G_ClearBet(attacker);
 			}

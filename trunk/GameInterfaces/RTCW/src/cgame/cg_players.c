@@ -2417,7 +2417,7 @@ void CG_Player( centity_t *cent ) {
 	refEntity_t head;
 	refEntity_t acc;
 
-	vec3_t playerOrigin;
+	vec3_t playerOrigin = {0,0,0};
 	vec3_t lightorigin;
 
 	int clientNum,i;

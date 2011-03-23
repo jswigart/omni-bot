@@ -357,9 +357,11 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 
 		// everybody likes grenades -- abuse weapon var as grenade type and i as max # grenades class can carry
 		switch ( other->client->ps.stats[STAT_PLAYER_CLASS] ) {
-		case PC_LT: // redundant but added for completeness/flexibility
+		case PC_LT:
+            i = g_LTNades.integer;
+            break;
 		case PC_MEDIC:
-			i = 1;
+			i = g_MedNades.integer;
 			break;
 		case PC_SOLDIER:
 			i = 4;
@@ -409,8 +411,8 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		}
 
 		other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] += ammoTable[weapon].maxclip;
-		if ( other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] > ammoTable[weapon].maxclip * 4 ) {
-			other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] = ammoTable[weapon].maxclip * 4;
+		if ( other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] > (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
+			other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] = (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon);
 		}
 
 		// and some two-handed ammo
@@ -420,7 +422,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 				if ( weapon == WP_FLAMETHROWER ) { // FT doesn't use magazines so refill tank
 					other->client->ps.ammoclip[BG_FindAmmoForWeapon( WP_FLAMETHROWER )] = ammoTable[weapon].maxclip;
 				} else {
-					int addamount = (ammoTable[weapon].maxclip * 3) - other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )];
+					int addamount = ( (ammoTable[weapon].maxclip * 3) + G_ExtraAmmo(other->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) - other->client->ps.ammo[BG_FindAmmoForWeapon( weapon )];
 
 					if (addamount < 0) {
 						addamount = 0;
@@ -664,10 +666,10 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 		nades = 4;
 		break;
 	case PC_LT:
-		nades = 1;
+		nades = g_LTNades.integer;
 		break;
 	case PC_MEDIC:
-		nades = 1;
+		nades = g_MedNades.integer;
 		break;
 	default:
 		nades = 1;
@@ -693,7 +695,7 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 	}
 
 	//if need pistol ammo, pickup!
-	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < ammoTable[weapon].maxclip * 4 ) {
+	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
 		return qtrue;
 	}
 
@@ -721,7 +723,7 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 				}
 			}
 
-			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < ammoTable[weapon].maxclip * numClips ) {
+			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * numClips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) {
 				return qtrue;
 			}
 		}
@@ -774,8 +776,7 @@ void Touch_Item( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 			weapon = WP_GRENADE_PINEAPPLE;
 		}
 
-		// max nades will be 12. 8 + the pack
-		if ( other->client->ps.ammoclip[BG_FindClipForWeapon( weapon )] > 8 ) {
+		if ( other->client->ps.ammoclip[BG_FindClipForWeapon( weapon )] >= ammoTable[ weapon ].maxammo ) {
 			return;
 		}
 	}

@@ -1010,6 +1010,7 @@ void CheckMsgs( void );
 char * weaponToString( weapon_t weapon );
 
 void G_ClearBet(gentity_t *ent);
+int G_ExtraAmmo( int playerClass, int weapon );
 
 //
 // g_combat.c
@@ -1331,7 +1332,6 @@ extern vmCvar_t g_antiwarp;
 extern vmCvar_t g_maxWarp;
 
 // from noquarter
-extern vmCvar_t g_spreeSound[10];
 extern vmCvar_t g_announcer;
 extern vmCvar_t g_shove;
 extern vmCvar_t g_shoveNoZ;
@@ -1546,6 +1546,6 @@ void G_ResetMarkers( gentity_t* ent );
 // credits
 #define CREDITS_KILLBONUS 1
 #define CREDITS_OBJBONUS 10
-#define CREDITS_PRICE 100 // price for buying ammo / health
+#define CREDITS_PRICE 50 // price for buying ammo / health
 #define CREDITS_ENABLE 0x0001
 #define CREDITS_BUYING 0x0002

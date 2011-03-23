@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../build/ui/Debug/ui.mp.i386" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Debug/ui.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/ui/Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -18,6 +18,7 @@
 					<Add option="-W" />
 					<Add option="-O0" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-D_DEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DUI_EXPORTS" />
@@ -26,9 +27,12 @@
 				<ResourceCompiler>
 					<Add directory="../detours" />
 				</ResourceCompiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="../build/ui/Release/ui.mp.i386" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Release/ui.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/ui/Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -38,6 +42,7 @@
 					<Add option="-O2" />
 					<Add option="-W" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_USRDLL" />
 					<Add option="-DUI_EXPORTS" />
@@ -48,10 +53,7 @@
 					<Add directory="../detours" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="odbc32" />
-					<Add library="odbccp32" />
-					<Add library="ws2_32" />
-					<Add library="../detours/detours" />
+					<Add option="-m32" />
 				</Linker>
 			</Target>
 		</Build>
