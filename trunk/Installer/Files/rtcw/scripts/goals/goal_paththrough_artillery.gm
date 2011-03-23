@@ -160,7 +160,7 @@ this.Update = function()
 	this.BlockForWeaponChange( WEAPON.BINOCULARS );
 
 	timeout = 0;
-	while ( timeout < 30 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
+	while ( timeout < 10 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
 	{
 		timeout += 1;
 
@@ -180,6 +180,8 @@ this.Update = function()
 	}
 
 	this.Bot.ReleaseButton( BTN.AIM, BTN.ATTACK1 );
+
+	sleep(1); // cs: need this in case aim is not successful
 
 	// Finish the state.
 	this.Finished();
