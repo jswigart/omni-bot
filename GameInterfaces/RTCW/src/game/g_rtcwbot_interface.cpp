@@ -75,10 +75,10 @@ extern "C" const char *_GetEntityName( gentity_t *_ent ) {
 		name = newentname;
 
 		if ( name ) {
-			char undschar[] = { '-', NULL };
+			char undschar[] = { '-', 0 };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`',
 								'^', '&', '<', '>', '+', '=', '|', '\'', '%',
-								'.', ':', '/', NULL };
+								'.', ':', '/', 0 };
 			char *curchar = NULL;
 			char *tmp = NULL;
 			char *tmpdst = NULL;

@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug - Lua">
 				<Option platforms="Unix;" />
-				<Option output="../build/game/Debug-Lua/qagame" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Debug/Lua/qagame.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/game/Debug-Lua" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -19,6 +19,7 @@
 					<Add option="-W" />
 					<Add option="-O0" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DBUILDING_REF_GL" />
 					<Add option="-DDEBUG" />
@@ -39,12 +40,13 @@
 					<Add directory="../sqlite" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-m32" />
 					<Add library="../lua/libs/unix/liblua5.1.a" />
 				</Linker>
 			</Target>
 			<Target title="Release - Lua">
 				<Option platforms="Unix;" />
-				<Option output="../build/game/Release-Lua/qagame" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Release/Lua/qagame.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/game/Release-Lua" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -54,6 +56,7 @@
 					<Add option="-Os" />
 					<Add option="-Wall" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-DGAMEDLL" />
 					<Add option="-D_CRT_SECURE_NO_DEPRECATE" />
@@ -72,12 +75,13 @@
 					<Add directory="../sqlite" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-m32" />
 					<Add library="../lua/libs/unix/liblua5.1.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option platforms="Unix;" />
-				<Option output="../build/game/Release/qagame" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Release/qagame.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/game/Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -87,6 +91,7 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-DGAMEDLL" />
 					<Add option="-D_CRT_SECURE_NO_DEPRECATE" />
@@ -101,10 +106,13 @@
 					<Add directory="../lua" />
 					<Add directory="../sha-1" />
 				</ResourceCompiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
 			</Target>
 			<Target title="Debug">
 				<Option platforms="Unix;" />
-				<Option output="../build/game/Debug/qagame" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/Debug/qagame.mp.i386.so" prefix_auto="0" extension_auto="0" />
 				<Option object_output="../build/game/Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -115,6 +123,7 @@
 					<Add option="-W" />
 					<Add option="-O0" />
 					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DBUILDING_REF_GL" />
 					<Add option="-DDEBUG" />
@@ -131,6 +140,9 @@
 					<Add directory="../lua" />
 					<Add directory="../sha-1" />
 				</ResourceCompiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
 			</Target>
 		</Build>
 		<Unit filename="../botai/inv.h" />

@@ -1784,3 +1784,4 @@ void BG_setCrosshair( char *colString, float *col, float alpha, char *cvarName )
 #define HITBOXBIT_CLIENT 4096
 
 #endif
+

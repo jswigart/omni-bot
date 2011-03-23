@@ -71,7 +71,7 @@ int weapBanksMultiPlayer[MAX_WEAP_BANKS_MP][MAX_WEAPS_IN_BANK_MP] = {
 ammotable_t ammoTable[] = {
 	//	MAX				USES	MAX		RELOAD	FIRE			NEXT	HEAT,	COOL,	MOD,	...				NUM
 	//	AMMO			AMT.	CLIP	TIME	DELAY			SHOT											CLIPS
-	{   0,              0,      0,      0,      50,             0,      0,      0,      0								},  //	WP_NONE					// 0
+	{   0,              0,      0,      0,      50,             0,      0,      0,      0,						0		},  //	WP_NONE					// 0
 
 	{   999,            0,      999,    0,      50,             200,    0,      0,      MOD_KNIFE,				1		},  //	WP_KNIFE				// 1
 
@@ -2984,7 +2984,7 @@ model="models/powerups/keys/key.md3"
 
 
 	// end of list marker
-	{NULL}
+	{NULL,NULL,{NULL,0,0,0,0},NULL,NULL,NULL,0,IT_BAD,KEY_NONE,0,0,"",NULL,{0,0,0,0,0}}
 };
 // END JOSEPH
 
@@ -4215,4 +4215,3 @@ long BG_StringHashValue_Lwr( const char *fname ) {
 	}
 	return hash;
 }
-

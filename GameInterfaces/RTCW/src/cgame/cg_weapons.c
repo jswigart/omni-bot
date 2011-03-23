@@ -2125,7 +2125,6 @@ void CG_AddPlayerFoot( refEntity_t *parent, playerState_t *ps, centity_t *cent )
 	refEntity_t wolfkick;
 	vec3_t kickangle;
 	int frame;
-	static int oldtime = 0;
 
 	if ( !( cg.snap->ps.persistant[PERS_WOLFKICK] ) ) {
 		return;

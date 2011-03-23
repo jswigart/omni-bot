@@ -1857,7 +1857,7 @@ qboolean G_DragCorpse( gentity_t *dragger, gentity_t *corpse ) {
 
 	// don't pull corpses past the dragger's head and don't start dragging
 	// until both players look like they're in contact
-	if ( dist > 85 || dist < 40 ) {
+	if ( dist > 128 || dist < 40 ) {
 		return qfalse;
 	}
 
@@ -2591,10 +2591,10 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			targWeap = WP_COLT;
 		}
 
-		maxGive = ( ammoTable[targWeap].maxclip * 4 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )];
+		maxGive = ( (ammoTable[targWeap].maxclip * 4) + G_ExtraAmmo(-1,targWeap) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] > ammoTable[targWeap].maxclip * 4 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] = ammoTable[targWeap].maxclip * 4;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] > ((ammoTable[targWeap].maxclip * 4) + G_ExtraAmmo(-1,targWeap)) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] = (ammoTable[targWeap].maxclip * 4) + G_ExtraAmmo(-1,targWeap);
 		}
 
 		break;
@@ -2621,10 +2621,10 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			targWeap = WP_STEN;
 		}
 
-		maxGive = ( ammoTable[targWeap].maxclip * 3 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )];
+		maxGive = ( (ammoTable[targWeap].maxclip * 3) + G_ExtraAmmo(target->client->ps.stats[STAT_PLAYER_CLASS],targWeap) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] > ammoTable[targWeap].maxclip * 3 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] = ammoTable[targWeap].maxclip * 3;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] > (ammoTable[targWeap].maxclip * 3) + G_ExtraAmmo(target->client->ps.stats[STAT_PLAYER_CLASS],targWeap) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( targWeap )] = (ammoTable[targWeap].maxclip * 3) + G_ExtraAmmo(target->client->ps.stats[STAT_PLAYER_CLASS],targWeap);
 		}
 
 		break;
@@ -2642,17 +2642,17 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			return;
 		}
 
-		maxGive = ( ammoTable[WP_SNIPERRIFLE].maxclip * 3 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )];
+		maxGive = ( (ammoTable[WP_SNIPERRIFLE].maxclip * 3) + G_ExtraAmmo(-1,WP_SNIPERRIFLE) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] > ammoTable[WP_SNIPERRIFLE].maxclip * 3 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] = ammoTable[WP_SNIPERRIFLE].maxclip * 3;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] > (ammoTable[WP_SNIPERRIFLE].maxclip * 3) + G_ExtraAmmo(-1,WP_SNIPERRIFLE) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] = (ammoTable[WP_SNIPERRIFLE].maxclip * 3) + G_ExtraAmmo(-1,WP_SNIPERRIFLE);
 		}
 
 
-		maxGive = ( ammoTable[WP_MAUSER].maxclip * 3 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )];
+		maxGive = ( (ammoTable[WP_MAUSER].maxclip * 3) + G_ExtraAmmo(-1,WP_MAUSER) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] > ammoTable[WP_MAUSER].maxclip * 3 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] = ammoTable[WP_MAUSER].maxclip * 3;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] > (ammoTable[WP_MAUSER].maxclip * 3) + G_ExtraAmmo(-1,WP_MAUSER) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] = (ammoTable[WP_MAUSER].maxclip * 3) + G_ExtraAmmo(-1,WP_MAUSER);
 		}
 
 		break;
@@ -2668,10 +2668,10 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			trap_SendServerCommand( ent - g_entities, va( "chat \"^7%s ^3does not have a Panzerfaust!\"", target->client->pers.netname ) );
 			return;
 		}
-		maxGive = ( ammoTable[WP_PANZERFAUST].maxclip * 3 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )];
+		maxGive = ( (ammoTable[WP_PANZERFAUST].maxclip * 3) + G_ExtraAmmo(-1,WP_PANZERFAUST) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] > ammoTable[WP_PANZERFAUST].maxclip * 3 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] = ammoTable[WP_PANZERFAUST].maxclip * 3;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] > (ammoTable[WP_PANZERFAUST].maxclip * 3) + G_ExtraAmmo(-1,WP_PANZERFAUST) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] = (ammoTable[WP_PANZERFAUST].maxclip * 3) + G_ExtraAmmo(-1,WP_PANZERFAUST);
 		}
 
 		break;
@@ -2688,10 +2688,10 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			trap_SendServerCommand( ent - g_entities, va( "chat \"^7%s ^3does not have a Venom!\"", target->client->pers.netname ) );
 			return;
 		}
-		maxGive = ( ammoTable[WP_VENOM].maxclip * 3 ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )];
+		maxGive = ( (ammoTable[WP_VENOM].maxclip * 3) + G_ExtraAmmo(-1,WP_VENOM) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )] += givenAmmo;
-		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )] > ammoTable[WP_VENOM].maxclip * 3 ) {
-			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )] = ammoTable[WP_VENOM].maxclip * 3;
+		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )] > (ammoTable[WP_VENOM].maxclip * 3) + G_ExtraAmmo(-1,WP_VENOM) ) {
+			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_VENOM )] = (ammoTable[WP_VENOM].maxclip * 3) + G_ExtraAmmo(-1,WP_VENOM);
 		}
 		break;
 
@@ -2871,7 +2871,6 @@ void Cmd_Accept_f( gentity_t* ent )
 	CPx(vic->client - level.clients, va("cp \"%s^9 accepted your bet\n\"",ent->client->pers.netname));	// centerprint
 }
 
-extern void MagicSink( gentity_t *self );
 void Cmd_Buy_f( gentity_t* ent )
 {
 	char buyingstr[MAX_STRING_CHARS];
@@ -2928,16 +2927,6 @@ void Cmd_Buy_f( gentity_t* ent )
 		ent->health = max;
 		CP("print \"^dbuy: ^9you bought yourself some health\n\"");
 	}
-	// buying lunch..
-	else if ( !Q_stricmp(buyingstr, "lunch") ) {
-		gentity_t   *drop = 0;
-		drop = Drop_Item(ent, &bg_itemlist[IL_ITEM_HEALTH_TURKEY], 0.f, qfalse);
-		if (drop) {
-			drop->think = MagicSink;
-			drop->timestamp = level.time + 15000;
-		}
-		CP("print \"^dbuy: ^9you bought yourself some lunch\n\"");
-	}
 	// invalid item..
 	else {
 		CP("print \"^dbuy: ^9you want to buy something that is not in store\n\"");
@@ -2964,36 +2953,6 @@ void Cmd_ShowHashValue_f() {
 		G_Printf( "%i: /*%s*/\n", BG_StringHashValue( temp[i] ), temp[i] );
 	}
 }
-
-// for checking stuff in the item list ...
-extern void MagicSink( gentity_t *self );
-void Cmd_DropStuff_f( gentity_t *ent, const char *index ) {
-	int i = atoi( index );
-	gitem_t     *item;
-	gentity_t   *launch = 0;
-	vec3_t velocity;
-	vec3_t offset;
-
-	if ( i < 1 || i > 92 ) {
-		return;
-	}
-
-	item = &bg_itemlist[i];
-
-	// set it out front
-	AngleVectors( ent->client->ps.viewangles, velocity, NULL, NULL );
-	VectorScale( velocity, 64, offset );
-	VectorAdd( offset, ent->r.currentOrigin, offset );
-	VectorScale( velocity, 100, velocity );
-	velocity[2] += 50 + random() * 35;
-
-	launch = LaunchItem( item,offset,velocity,ent->s.number );
-
-	launch->think = MagicSink;
-	launch->timestamp = level.time + 31200;
-
-	G_Printf( "dropped %s. index %i\n", item->classname, i );
-};
 // cs: end remove
 
 // -NERVE - SMF
@@ -3136,10 +3095,6 @@ void ClientCommand( int clientNum ) {
 		Cmd_Buy_f( ent );
 	} else if ( Q_stricmp( cmd, "shv" ) == 0 ) { // TODO: remove
 		Cmd_ShowHashValue_f();
-	} else if ( Q_stricmp( cmd, "drop" ) == 0 ) { // TODO: remove
-		char ind[MAX_TOKEN_CHARS];
-		trap_Argv( 1, ind, sizeof( ind ) );
-		Cmd_DropStuff_f( ent, ind );
 	} else {
 		trap_SendServerCommand( clientNum, va( "print \"unknown cmd[lof] %s\n\"", cmd ) );
 	}
