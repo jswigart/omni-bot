@@ -832,13 +832,6 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 
 	if ( !( ent->r.svFlags & SVF_NOCLIENT ) || ( ent->r.contents ) ) {    // RF, added this for bats, but this is safe for all movers, since if they aren't solid, and aren't visible to the client, they don't need to be linked
 		trap_LinkEntity( ent );
-		// if this entity is blocking AAS, then update it
-		if ( ent->AASblocking && ent->s.pos.trType == TR_STATIONARY ) {
-			// reset old blocking areas
-			G_SetAASBlockingEntity( ent, qfalse );
-			// set new areas
-			G_SetAASBlockingEntity( ent, qtrue );
-		}
 	}
 }
 
@@ -2007,10 +2000,6 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 	}
 //----(SA)	end
 
-	if ( ent->key ) {
-		G_SetAASBlockingEntity( ent, qtrue );
-	}
-
 	ent->nextthink = level.time + FRAMETIME;
 
 	if ( !( ent->flags & FL_TEAMSLAVE ) ) {
@@ -2033,10 +2022,6 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 			}
 
 			slave->key = ent->key;
-
-			if ( slave->key ) {
-				G_SetAASBlockingEntity( slave, qtrue );
-			}
 		}
 	}
 }
@@ -3042,7 +3027,7 @@ void BatMoveThink( gentity_t *bat ) {
 		// check for hurting someone
 		if ( bat->damage < level.time ) {
 			trap_Trace( &tr, bat->r.currentOrigin, NULL, NULL, bat->r.currentOrigin, bat->s.number, CONTENTS_BODY );
-			if ( tr.startsolid && tr.entityNum < MAX_CLIENTS && !g_entities[tr.entityNum].aiCharacter ) {
+			if ( tr.startsolid && tr.entityNum < MAX_CLIENTS ) {
 				G_Damage( &g_entities[tr.entityNum], bat, bat, vec3_origin, bat->r.currentOrigin, 1 + rand() % 3, DAMAGE_NO_KNOCKBACK, MOD_BAT );
 
 				// !! TODO: bat biting sound and view feedback
@@ -3432,11 +3417,7 @@ void Static_Pain( gentity_t *ent, gentity_t *attacker, int damage, vec3_t point 
 }
 
 void G_BlockThink( gentity_t *ent ) {
-	if ( ent->r.linked ) {
-		G_SetAASBlockingEntity( ent, qtrue );
-	} else {
-		G_SetAASBlockingEntity( ent, qfalse );
-	}
+
 }
 
 
@@ -3976,11 +3957,6 @@ void func_explosive_explode( gentity_t *self, gentity_t *inflictor, gentity_t *a
 	vec3_t dir = {0, 0, 1};
 	gentity_t   *tent = 0;
 
-	// RF, AAS areas are now free
-	if ( !( self->spawnflags & 16 ) ) {
-		G_SetAASBlockingEntity( self, qfalse );
-	}
-
 	self->takedamage = qfalse;          // don't allow anything try to hurt me now that i'm exploding
 
 	self->think = BecomeExplosion;
@@ -4085,11 +4061,6 @@ void func_explosive_spawn( gentity_t *self, gentity_t *other, gentity_t *activat
 	trap_LinkEntity( self );
 	self->use = func_explosive_use;
 	// turn the brush to visible
-
-	// RF, AAS areas are now occupied
-	if ( !( self->spawnflags & 16 ) ) {
-		G_SetAASBlockingEntity( self, qtrue );
-	}
 }
 
 

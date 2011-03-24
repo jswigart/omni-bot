@@ -229,10 +229,6 @@ void trap_BotFreeClient( int clientNum ) {
 	syscall( G_BOT_FREE_CLIENT, clientNum );
 }
 
-void trap_AAS_SetAASBlockingEntity( vec3_t absmin, vec3_t absmax, qboolean blocking ) {
-	syscall( BOTLIB_AAS_SETAASBLOCKINGENTITY, absmin, absmax, blocking );
-}
-
 int trap_BotGetServerCommand( int clientNum, char *message, int size ) {
 	return syscall( BOTLIB_GET_CONSOLE_MESSAGE, clientNum, message, size );
 }
