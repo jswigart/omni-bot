@@ -1468,7 +1468,13 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 
 		// explode any other dyno's
 		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
-			ent->nextthink = level.time + 250;
+		    // cs: only if it is a teammates dyno
+		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
+		        // and not if they both went to spec ...
+		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+                    ent->nextthink = level.time + 250;
+		        }
+		    }
 		}
 
 		if ( ent == ignore ) {
@@ -1581,7 +1587,13 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 
 		// explode any other dyno's
 		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
-			ent->nextthink = level.time + 250;
+		    // cs: only if it is a teammates dyno
+		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
+		        // and not if they both went to spec ...
+		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+                    ent->nextthink = level.time + 250;
+		        }
+		    }
 		}
 
 		if ( ent == ignore ) {

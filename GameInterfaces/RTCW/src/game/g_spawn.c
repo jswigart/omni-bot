@@ -105,16 +105,8 @@ field_t fields[] = {
 	{"time",        FOFS( speed ),        F_FLOAT},
 
 	// Ridah, AI fields
-	{"aiattributes", FOFS( aiAttributes ), F_LSTRING},
 	{"ainame",      FOFS( aiName ),       F_LSTRING},
-	{"aiteam",      FOFS( aiTeam ),       F_INT},
 	// done.
-
-	//----(SA) additional ai field
-	{"skin",        FOFS( aiSkin ),       F_LSTRING},
-	{"head",        FOFS( aihSkin ),      F_LSTRING},
-
-	//----(SA) done
 
 	// (SA) dlight lightstyles (made all these unique variables for testing)
 	{"_color",      FOFS( dl_color ),     F_VECTOR},      // color of the light	(the underscore is inserted by the color picker in QER)

@@ -504,28 +504,23 @@ void target_kill_use( gentity_t *self, gentity_t *other, gentity_t *activator ) 
 	}
 
 	while ( ( targ = G_Find( targ, FOFS( targetname ), self->target ) ) != NULL ) {
-		if ( targ->aiCharacter ) {       // (SA) if it's an ai character, free it nicely
-			targ->aiInactive = qtrue;
-		} else
-		{
-			// make sure it isn't going to respawn or show any events
-			targ->nextthink = 0;
-			if ( targ == activator ) {
-				continue;
-			}
+        // make sure it isn't going to respawn or show any events
+        targ->nextthink = 0;
+        if ( targ == activator ) {
+            continue;
+        }
 
-			// RF, script_movers should die!
-			if ( !Q_stricmp( targ->classname, "script_mover" ) && targ->die ) {
-				targ->die( targ, self, self, targ->health, 0 );
-				continue;
-			}
+        // RF, script_movers should die!
+        if ( !Q_stricmp( targ->classname, "script_mover" ) && targ->die ) {
+            targ->die( targ, self, self, targ->health, 0 );
+            continue;
+        }
 
-			trap_UnlinkEntity( targ );
-			targ->use = 0;
-			targ->touch = 0;
-			targ->nextthink = level.time + FRAMETIME;
-			targ->think = G_FreeEntity;
-		}
+        trap_UnlinkEntity( targ );
+        targ->use = 0;
+        targ->touch = 0;
+        targ->nextthink = level.time + FRAMETIME;
+        targ->think = G_FreeEntity;
 	}
 }
 
@@ -618,7 +613,6 @@ void Use_Target_Lock( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	while ( ( t = G_Find( t, FOFS( targetname ), ent->target ) ) != NULL )
 	{
 		t->key = ent->key;
-		G_SetAASBlockingEntity( t, t->key != 0 );
 	}
 }
 

@@ -287,27 +287,18 @@ struct gentity_s {
 	gitem_t     *item;          // for bonus items
 
 	// Ridah, AI fields
-	char        *aiAttributes;
-	char        *aiName;
-	int aiTeam;
-	void ( *AIScript_AlertEntity )( gentity_t *ent );
-	qboolean aiInactive;
-	int aiCharacter;            // the index of the type of character we are (from aicast_soldier.c)
+	char        *aiName;        // cs: used for movers / triggers too
+	void ( *AIScript_AlertEntity )( gentity_t *ent );   // cs: airplanes, etc
 	// done.
-
-	char        *aiSkin;
-	char        *aihSkin;
 
 	vec3_t dl_color;
 	char        *dl_stylestring;
 	char        *dl_shader;
 	int dl_atten;
 
-
 	int key;                    // used by:  target_speaker->nopvs,
 
 	qboolean active;
-	qboolean botDelayBegin;
 
 	// Rafael - mg42
 	float harc;
@@ -346,8 +337,6 @@ struct gentity_s {
 	int grenadeExplodeTime;         // we've caught a grenade, which was due to explode at this time
 	int grenadeFired;               // the grenade entity we last fired
 
-	int mg42ClampTime;              // time to wait before an AI decides to ditch the mg42
-
 	char        *track;
 
 	// entity scripting system
@@ -359,7 +348,6 @@ struct gentity_s {
 	// the accumulation buffer
 	int scriptAccumBuffer[G_MAX_SCRIPT_ACCUM_BUFFERS];
 
-	qboolean AASblocking;
 	float accuracy;
 
 	char        *tagName;       // name of the tag we are attached to
@@ -1001,7 +989,6 @@ void G_ProcessTagConnect( gentity_t *ent );
 void CleanseString( char *in, char *out, qboolean fToLower );
 gentity_t *AICast_FindEntityForName( char *name );
 float AngleDifference( float ang1, float ang2 );
-void G_SetAASBlockingEntity( gentity_t *ent, qboolean blocking );
 
 qboolean G_EmplacedGunIsMountable( gentity_t* ent, gentity_t* other );
 qboolean G_EmplacedGunIsRepairable( gentity_t* ent, gentity_t* other );
@@ -1517,7 +1504,6 @@ void    trap_EA_Command( int client, char *command );
 int     trap_BotAllocateClient( void );
 void    trap_BotFreeClient( int clientNum );
 int     trap_BotGetServerCommand( int clientNum, char *message, int size );
-void    trap_AAS_SetAASBlockingEntity( vec3_t absmin, vec3_t absmax, qboolean blocking );
 
 int     trap_GeneticParentsAndChildSelection( int numranks, float *ranks, int *parent1, int *parent2, int *child );
 qboolean G_EmplacedGunIsRepairable( gentity_t* ent, gentity_t* other );

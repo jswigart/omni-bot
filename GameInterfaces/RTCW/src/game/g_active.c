@@ -1578,30 +1578,28 @@ while a slow client may have multiple ClientEndFrame between ClientThink.
 */
 void ClientEndFrame( gentity_t *ent ) {
 	int frames;
+	int i;
 
 	if ( ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) || ( ent->client->ps.pm_flags & PMF_LIMBO ) ) { // JPW NERVE
 		SpectatorClientEndFrame( ent );
 		return;
 	}
 
-	if ( !ent->aiCharacter ) {
-		int i;
-		// turn off any expired powerups
-		for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
+    // turn off any expired powerups
+    for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
 
-			if ( i == PW_FIRE ||             // these aren't dependant on level.time
-				 i == PW_ELECTRIC ||
-				 i == PW_BREATHER ||
-				 i == PW_NOFATIGUE ) {
+        if ( i == PW_FIRE ||             // these aren't dependant on level.time
+             i == PW_ELECTRIC ||
+             i == PW_BREATHER ||
+             i == PW_NOFATIGUE ) {
 
-				continue;
-			}
+            continue;
+        }
 
-			if ( ent->client->ps.powerups[ i ] < level.time ) {
-				ent->client->ps.powerups[ i ] = 0;
-			}
-		}
-	}
+        if ( ent->client->ps.powerups[ i ] < level.time ) {
+            ent->client->ps.powerups[ i ] = 0;
+        }
+    }
 
 	//
 	// If the end of unit layout is displayed, don't give

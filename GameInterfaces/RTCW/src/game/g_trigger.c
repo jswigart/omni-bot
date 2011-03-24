@@ -51,11 +51,6 @@ void Touch_Multi( gentity_t *self, gentity_t *other, trace_t *trace ) {
 		return;
 	}
 
-	if ( !( self->spawnflags & 1 ) ) { // denotes AI_Touch flag
-		if ( other->aiCharacter ) {
-			return;
-		}
-	}
 	multi_trigger( self, other );
 }
 
@@ -673,10 +668,6 @@ void gas_touch( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 
 	traceEnt = &g_entities[ tr.entityNum ];
-
-	if ( traceEnt->aiSkin && strstr( traceEnt->aiSkin, "venom" ) ) {
-		return;
-	}
 
 	if ( traceEnt->takedamage ) {
 

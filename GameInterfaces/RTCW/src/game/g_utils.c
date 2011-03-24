@@ -71,19 +71,6 @@ float AngleDifference( float ang1, float ang2 ) {
 	return diff;
 }
 
-/*
-===============
-G_SetAASBlockingEntity
-
-  Adjusts routing so AI knows it can't move through this entity
-===============
-*/
-void G_SetAASBlockingEntity( gentity_t *ent, qboolean blocking ) {
-	ent->AASblocking = blocking;
-	trap_AAS_SetAASBlockingEntity( ent->r.absmin, ent->r.absmax, blocking );
-}
-
-
 // end used functions from old bot code
 
 void AddRemap( const char *oldShader, const char *newShader, float timeOffset ) {

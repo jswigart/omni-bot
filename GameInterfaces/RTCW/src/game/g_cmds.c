@@ -2151,70 +2151,6 @@ void Cmd_ClientDamage_f( gentity_t *clent ) {
 	ClientDamage( clent, entnum, enemynum, id );
 }
 
-/*
-==============
-Cmd_EntityCount_f
-==============
-*/
-#define AITEAM_NAZI     0
-#define AITEAM_ALLIES   1
-#define AITEAM_MONSTER  2
-void Cmd_EntityCount_f( gentity_t *ent ) {
-	if ( !g_cheats.integer ) {
-		return;
-	}
-
-	G_Printf( "entity count = %i\n", level.num_entities );
-
-	{
-		int kills[2];
-		int nazis[2];
-		int monsters[2];
-		int i;
-		gentity_t *ent;
-
-		// count kills
-		kills[0] = kills[1] = 0;
-		nazis[0] = nazis[1] = 0;
-		monsters[0] = monsters[1] = 0;
-		for ( i = 0; i < MAX_CLIENTS; i++ ) {
-			ent = &g_entities[i];
-
-			if ( !ent->inuse ) {
-				continue;
-			}
-
-			if ( !( ent->r.svFlags & SVF_CASTAI ) ) {
-				continue;
-			}
-
-			if ( ent->aiTeam == AITEAM_ALLIES ) {
-				continue;
-			}
-
-			kills[1]++;
-
-			if ( ent->health <= 0 ) {
-				kills[0]++;
-			}
-
-			if ( ent->aiTeam == AITEAM_NAZI ) {
-				nazis[1]++;
-				if ( ent->health <= 0 ) {
-					nazis[0]++;
-				}
-			} else {
-				monsters[1]++;
-				if ( ent->health <= 0 ) {
-					monsters[0]++;
-				}
-			}
-		}
-		G_Printf( "kills %i/%i nazis %i/%i monsters %i/%i \n",kills[0], kills[1], nazis[0], nazis[1], monsters[0], monsters[1] );
-
-	}
-}
-
 // NERVE - SMF
 void Cmd_SetSpawnPoint_f( gentity_t *clent ) {
 	char arg[MAX_TOKEN_CHARS];
@@ -3055,8 +2991,6 @@ void ClientCommand( int clientNum ) {
 		Cmd_Vote_f( ent );
 	} else if ( Q_stricmp( cmd, "setviewpos" ) == 0 ) {
 		Cmd_SetViewpos_f( ent );
-	} else if ( Q_stricmp( cmd, "entitycount" ) == 0 ) {
-		Cmd_EntityCount_f( ent );
 	} else if ( Q_stricmp( cmd, "setspawnpt" ) == 0 ) {
 		Cmd_SetSpawnPoint_f( ent );
 	} else if ( Q_stricmp( cmd, "stats" ) == 0 ) {

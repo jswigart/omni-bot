@@ -2147,40 +2147,6 @@ void SP_misc_spawner( gentity_t *ent ) {
 
 }
 
-//===========================================================================
-//
-// Mounted Gunner, attached to a moving vehicle of some-sort
-//
-
-/*QUAKED misc_mounted_gunner (.4 .9 .7) (-16 -16 -24) (16 16 64) TriggerSpawn
-Gunner controlling an MG42 to be mounted onto a vehicle.
-
-Gun must be able to rotate full 360 degrees, with slight pitching.
-
-The following entity script triggers will be called at appropriate times by the engine:
-
-  trigger gunner_start_attack
-  trigger gunner_end_attack
-  trigger gunner_death
-
-Fields:
-
-*IMPORTANT* color = vector offest of gun mount tag on truck, from truck's origin
-*IMPORTANT* delay = offset distance of gunnner mount tag on gun model, from gun's origin
-target = targetname of vehicle we are attached to
-aiTeam = 0 for Nazi, 1 for Allies, 2 for Monster
-harc = visible arc, for initially sighting enemies Default  is 220
-radius = visible distance, for sighting enemies Default is 4096
-
-varc = vertical fire arc Default is 90 (45 above and below)
-health = how much damage can it take default is 50
-accuracy = all guns are 100% accurate an entry of 0.5 would make it 50%
-damage = damage caused by each bullet
-*/
-
-#define MG42_SPREAD         200
-#define MG42_DAMAGE_AI      9
-
 void firetrail_die( gentity_t *ent ) {
 	G_FreeEntity( ent );
 }
