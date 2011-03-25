@@ -1003,6 +1003,13 @@ global InitializeRoutes = function()
 	MapRoutes.DEFEND_rBarn_4 = MapRoutes.PLANT_Allied_munitions;
 	MapRoutes.DEFEND_rBarn_5 = MapRoutes.PLANT_Allied_munitions;
 	MapRoutes.DEFEND_rBarn_6 = MapRoutes.PLANT_Allied_munitions;
+// ATTACK_rBarn
+	MapRoutes.ATTACK_rBarn_1 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_2 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_3 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_4 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_5 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_6 = MapRoutes.PLANT_Allied_munitions;
 // DEFEND_bRadar
 	MapRoutes.DEFEND_bRadar_1 = MapRoutes.PLANT_radar_equip;
 	MapRoutes.DEFEND_bRadar_2 = MapRoutes.PLANT_radar_equip;
@@ -1010,6 +1017,13 @@ global InitializeRoutes = function()
 	MapRoutes.DEFEND_bRadar_4 = MapRoutes.PLANT_radar_equip;
 	MapRoutes.DEFEND_bRadar_5 = MapRoutes.PLANT_radar_equip;
 	MapRoutes.DEFEND_bRadar_6 = MapRoutes.PLANT_radar_equip;
+// ATTACK_bRadar
+	MapRoutes.ATTACK_bRadar_1 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_2 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_3 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_4 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_5 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_6 = MapRoutes.PLANT_radar_equip;
 // DEFEND_rRadar
 	MapRoutes.DEFEND_rRadar_2 = MapRoutes.DEFEND_rRadar_1;
 	MapRoutes.DEFEND_rRadar_3 = MapRoutes.DEFEND_rRadar_1;
