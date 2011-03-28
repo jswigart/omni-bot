@@ -174,7 +174,6 @@ global Map =
 		//shift the action
 		Map.wait_for_door();
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_del_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bEng_key.*" );
 	},
 
 	Upper_Rocket_Bay_Door_Planted = function( trigger )
@@ -188,7 +187,6 @@ global Map =
 			RTCWUtil.DisableGoal( "DEFUSE_Upper_Rocket.*" );
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEng_key.*" );
 	},
 
 	Upper_Rocket_Bay_Door_Defused = function( trigger )
@@ -431,6 +429,14 @@ global OnMapLoad = function()
 				ROUTE_keydel5 = { ROUTE_keydel4 = {}, },
 			},
 		},
+		DEFEND_axis_key_defend_1 = 
+		{
+			ROUTE_axisspawn =
+			{
+				ROUTE_upper_axisspawn = {},
+				ROUTE_lower_axisspawn = {},
+			},
+		},
 	};
 
 	MapRoutes.ATTACK_Allies_Key_Attack_1 = MapRoutes.FLAG_Override_Key;
@@ -439,6 +445,14 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Allies_Key_Attack_4 = MapRoutes.FLAG_Override_Key;
 	MapRoutes.ATTACK_Allies_Key_Attack_5 = MapRoutes.FLAG_Override_Key;
 	MapRoutes.ATTACK_Allies_Key_Attack_6 = MapRoutes.FLAG_Override_Key;
+	MapRoutes.PLANT_Upper_Rocket_Bay_Door = MapRoutes.FLAG_Override_Key;
+	MapRoutes.DEFEND_axis_key_defend_2 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_3 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_4 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_5 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_6 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_7 = MapRoutes.DEFEND_axis_key_defend_1;
+	MapRoutes.DEFEND_axis_key_defend_8 = MapRoutes.DEFEND_axis_key_defend_1;
 
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
