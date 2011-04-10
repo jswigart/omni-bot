@@ -144,6 +144,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_2" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_main.*" );
 		Map.DontDispenseAmmo = false;   // pass out the goods
 	},
 
@@ -311,6 +312,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rCellar.*", 0.55 );
 	SetGoalPriority( "DEFEND_rDeliver[12]", 0.55 );
 	SetGoalPriority( "DEFEND_rRoam.*", 0.48 );
+	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_rLT_side.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 
 	RTCWUtil.LimitToClass( "DEFEND_rLT_side.*", TEAM.AXIS, CLASS.LIEUTENANT );
