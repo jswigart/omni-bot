@@ -2111,9 +2111,6 @@ namespace DebugWindow
 		case OVERLAY_OPENGL:
 			gOverlay = CreateOpenGLRenderOverlay();
 			break;
-		case OVERLAY_DIRECTX:
-			gOverlay = CreateGameRenderOverlay();
-			break;
 		case OVERLAY_GAME:
 			gOverlay = CreateGameRenderOverlay();
 			break;

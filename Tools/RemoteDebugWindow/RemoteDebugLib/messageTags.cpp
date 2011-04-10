@@ -50,8 +50,7 @@ namespace RemoteLib
 		}
 
 		RemoteEntHandle AllocEntity( const char * name, const char * tooltip ) {
-			int firstFree = -1;
-			for( int i = 0; i < maxEntities; ++i ) {
+			for( uint32 i = 0; i < maxEntities; ++i ) {
 				if ( !(entities[ i ].flags & INFO_INUSE) ) {
 					entities[ i ].SetName( name );
 					entities[ i ].SetToolTip( tooltip );
@@ -89,7 +88,7 @@ namespace RemoteLib
 				// send all deletes first
 				DataBuffer localDb( staticBuffer, StaticBufferSize );
 				
-				for( int i = 0; i < maxEntities; ++i ) {
+				for( uint32 i = 0; i < maxEntities; ++i ) {
 					if ( (entities[ i ].flags & INFO_DELETE) ) {
 						localDb.writeInt32( GetHandle( entities[ i ] ) );
 					}
@@ -104,7 +103,7 @@ namespace RemoteLib
 					db.endSizeHeader();
 					const uint32 errors = db.endWrite();
 					if ( errors == 0 ) {
-						for( int i = 0; i < maxEntities; ++i ) {
+						for( uint32 i = 0; i < maxEntities; ++i ) {
 							entities[ i ].Free();
 						}
 					}
@@ -112,7 +111,7 @@ namespace RemoteLib
 			}
 			
 			// sync entity changes
-			for( int i = 0; i < maxEntities; ++i ) {
+			for( uint32 i = 0; i < maxEntities; ++i ) {
 				RemoteEntInfo * info = &entities[ i ];
 				if ( info->flags & INFO_SYNC_BITS ) {
 					db.beginWrite( DataBuffer::WriteModeAllOrNone );
@@ -177,7 +176,7 @@ namespace RemoteLib
 						db.readInt32( bytes );
 						assert( bytes % sizeof(uint32) == 0 );
 						const uint32 numDeletes = bytes / sizeof(uint32);
-						for ( int i = 0; i < numDeletes; ++i ) {
+						for ( uint32 i = 0; i < numDeletes; ++i ) {
 							int32 hndl = 0;
 							db.readInt32( hndl );
 							RemoteEntInfo * info = GetEntityInfo( (RemoteEntHandle)hndl );
@@ -194,7 +193,7 @@ namespace RemoteLib
 
 						RemoteEntInfo * info = GetEntityInfo( infoHandle, true );
 
-						while( db.getBytesRead() - baseBytes < blockSize+4 ) {
+						while( db.getBytesRead() - baseBytes < (uint32)blockSize+4 ) {
 							int32 subTag = 0;
 							db.readInt32( subTag );
 							switch ( subTag ) 
@@ -231,7 +230,8 @@ namespace RemoteLib
 					break;
 				}
 
-				const uint32 blockBytesRead = db.getBytesRead() - baseBytes;
+				const uint32 blockBytesRead = db.getBytesRead() - (uint32)baseBytes;
+				blockBytesRead;
 				assert( blockBytesRead == blockSize+4 && "databuffer read error" );
 				db.endRead();
 			}

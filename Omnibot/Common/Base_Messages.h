@@ -401,14 +401,6 @@ struct Event_EntityCreated
 	int				m_EntityClass;	
 };
 
-struct EntityInstance
-{
-	GameEntity		m_Entity;
-	BitFlag32		m_EntityCategory;
-	int				m_EntityClass;
-	int				m_TimeStamp;
-};
-
 struct Event_EntityDeleted
 {
 	GameEntity		m_Entity;

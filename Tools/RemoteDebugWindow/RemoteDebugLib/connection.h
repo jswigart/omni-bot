@@ -87,7 +87,7 @@ namespace RemoteLib
 		virtual void updateConnections( ConnectionCallbacks * cb );
 		virtual void destroyConnections();
 
-		void setMaxConnections( int maxConn );
+		void setMaxConnections( unsigned short maxConn );
 
 		void sendToAll( DataBuffer & db );
 
@@ -96,7 +96,7 @@ namespace RemoteLib
 		int getNumConnections() const;
 		Connection * getConnection( int index ) const;
 
-		ConnectionManager( int maxConn );
+		ConnectionManager( unsigned short maxConn );
 		virtual ~ConnectionManager();
 	public:
 		unsigned short			maxConnections;

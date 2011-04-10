@@ -19,21 +19,21 @@ namespace AiState
 	const float IdealMedigunRange = 512.f;
 	const float MaxMedigunRange = 512.f;
 
-	bool MediGun::Ent::_ByDistance(const Ent &_1, const Ent &_2)
+	bool MediGun::Ent::_ByDistance(const Ent &ent1, const Ent &ent2)
 	{
-		const bool _inrange_1 = _1.m_Distance < 1024.f;
-		const bool _inrange_2 = _2.m_Distance < 1024.f;
+		const bool _inrange_1 = ent1.m_Distance < 1024.f;
+		const bool _inrange_2 = ent2.m_Distance < 1024.f;
 
 		if(_inrange_1 && !_inrange_2)
 			return true;
 		if(!_inrange_1 && _inrange_2)
 			return false;
 
-		const bool _full_1 = _1.m_Health >= _1.m_MaxHealth;
-		const bool _full_2 = _2.m_Health >= _2.m_MaxHealth;
+		const bool _full_1 = ent1.m_Health >= ent1.m_MaxHealth;
+		const bool _full_2 = ent2.m_Health >= ent2.m_MaxHealth;
 
-		const bool _over_1 = _1.m_Health >= _1.m_MaxHealth * 1.3f;
-		const bool _over_2 = _2.m_Health >= _2.m_MaxHealth * 1.3f;
+		const bool _over_1 = ent1.m_Health >= ent1.m_MaxHealth * 1.3f;
+		const bool _over_2 = ent2.m_Health >= ent2.m_MaxHealth * 1.3f;
 
 		if(!_full_1 && _full_2)
 			return true;
@@ -45,7 +45,7 @@ namespace AiState
 		if(_over_1 && !_over_2)
 			return false;
 
-		return _1.m_Health < _2.m_Health;
+		return ent1.m_Health < ent2.m_Health;
 	}
 
 	MediGun::MediGun() 

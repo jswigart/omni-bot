@@ -111,7 +111,7 @@ namespace RemoteLib
 
 	//////////////////////////////////////////////////////////////////////////
 
-	ConnectionManager::ConnectionManager( int maxConn )
+	ConnectionManager::ConnectionManager( unsigned short maxConn )
 		: maxConnections( maxConn )
 		, connections( 0 )
 		, skipSocketShutdown( false ) {
@@ -124,7 +124,7 @@ namespace RemoteLib
 		connections = NULL;
 	}
 
-	void ConnectionManager::setMaxConnections( int maxConn ) {
+	void ConnectionManager::setMaxConnections( unsigned short maxConn ) {
 		destroyConnections();
 		delete [] connections;
 		connections = NULL;
@@ -132,7 +132,7 @@ namespace RemoteLib
 		maxConnections = maxConn;
 		if ( maxConnections > 0 ) {
 			connections = new Connection *[ maxConnections ];		
-			for( int i = 0; i < maxConnections; ++i ) {
+			for( unsigned short i = 0; i < maxConnections; ++i ) {
 				connections[ i ] = NULL;
 			}
 		}

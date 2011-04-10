@@ -31,8 +31,18 @@ extern BlackBoard g_Blackboard;
 typedef boost::shared_ptr<Client> ClientPtr;
 typedef boost::weak_ptr<Client> ClientWPtr;
 
-typedef MessageDepot<Event_Sound,1024> SoundDepot;
-extern SoundDepot g_SoundDepot;
+//typedef MessageDepot<Event_Sound,1024> SoundDepot;
+//extern SoundDepot g_SoundDepot;
+
+struct EntityInstance
+{
+	GameEntity						m_Entity;
+	BitFlag32						m_EntityCategory;
+	int								m_EntityClass;
+	int								m_TimeStamp;
+
+	RemoteLib::RemoteEntHandle		m_RemoteHndl;
+};
 
 struct SyncImage {
 	String		image;
@@ -162,6 +172,7 @@ public:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+	virtual void SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync );
 #endif
 
 	IGame();

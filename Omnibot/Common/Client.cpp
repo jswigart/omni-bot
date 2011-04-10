@@ -191,61 +191,85 @@ void Client::Update()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	SyncImage image;
+	//SyncImage image;
 
-	// update shared base properties
-	Box3f obb;
-	EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
-	image.color = COLOR::WHITE;
-	image.image = "global/noimage";
-	image.pos = obb.Center.As2d();
-	image.yaw = GetFacingVector().XYHeading();
-	image.size = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
+	//// update shared base properties
+	//Box3f obb;
+	//EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
+	//image.color = COLOR::WHITE;
+	//image.image = "global/noimage";
+	//image.pos = obb.Center.As2d();
+	//image.yaw = GetFacingVector().XYHeading();
+	//image.size = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
 
-	// let subclasses alter images, etc
-	UpdateSyncImage( image );
+	//// let subclasses alter images, etc
+	//UpdateSyncImage( image );
 
-	const char * name = GetName( true );
+	//const char * name = GetName( true );
+	//
+	//if ( m_StateRoot ) {
+	//	m_StateRoot->Sync( db, fullSync, name, image );
+	//}	
+
+	//db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	//db.startSizeHeader();
+	//db.writeInt32( RemoteLib::ID_token );
+	//db.writeSmallString( "Clients" );
+	//db.writeSmallString( name );
+	//
+	///*RemoteLib::PackEllipse( db,
+	//	"fov", 
+	//	image.pos.x, image.pos.y,
+	//	image.size.x * 2.0f, image.size.y * 2.0f,
+	//	GetFieldOfView(),
+	//	Mathf::RadToDeg( image.yaw ),
+	//	image.color.r(), image.color.g(), image.color.b(), image.color.a() );*/
+	//
+	//obColor dirColor = COLOR::WHITE;
+	//Vector2f face2d = GetFacingVector().As2d();
+	//face2d.Normalize();
+	//Vector2f endLine = image.pos + face2d * image.size.Normalize() * 1.5f;
+	//RemoteLib::PackLine( db,
+	//	"",
+	//	"dir", 
+	//	image.pos.x, image.pos.y,
+	//	endLine.x, endLine.y, 
+	//	dirColor.r(), dirColor.g(), dirColor.b(), dirColor.a() );
+
+	//RemoteLib::PackImage( db, 
+	//	"",
+	//	name,
+	//	image.image.c_str(),
+	//	image.pos.x, image.pos.y,
+	//	image.size.x, image.size.y,
+	//	Mathf::RadToDeg( image.yaw ),
+	//	image.color.r(), image.color.g(), image.color.b(), image.color.a() );
+
+	//db.writeInt32( RemoteLib::ID_tokenEnd );
+	//db.endSizeHeader();
+	//db.endWrite();
 	
-	if ( m_StateRoot ) {
-		m_StateRoot->Sync( db, fullSync, name, image );
-	}	
-
 	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_token );
-	db.writeSmallString( "Clients" );
-	db.writeSmallString( name );
-	
-	/*RemoteLib::PackEllipse( db,
-		"fov", 
-		image.pos.x, image.pos.y,
-		image.size.x * 2.0f, image.size.y * 2.0f,
-		GetFieldOfView(),
-		Mathf::RadToDeg( image.yaw ),
-		image.color.r(), image.color.g(), image.color.b(), image.color.a() );*/
-	
-	obColor dirColor = COLOR::WHITE;
-	Vector2f face2d = GetFacingVector().As2d();
-	face2d.Normalize();
-	Vector2f endLine = image.pos + face2d * image.size.Normalize() * 1.5f;
-	RemoteLib::PackLine( db,
-		"",
-		"dir", 
-		image.pos.x, image.pos.y,
-		endLine.x, endLine.y, 
-		dirColor.r(), dirColor.g(), dirColor.b(), dirColor.a() );
+	db.writeInt32( RemoteLib::ID_qmlEntity );
 
-	RemoteLib::PackImage( db, 
-		"",
-		name,
-		image.image.c_str(),
-		image.pos.x, image.pos.y,
-		image.size.x, image.size.y,
-		Mathf::RadToDeg( image.yaw ),
-		image.color.r(), image.color.g(), image.color.b(), image.color.a() );
+	db.writeInt32( 1 ); // entity handle
+	if ( fullSync ) {
+		db.writeSmallString( "name" );
+		db.writeSmallString( "Entity 1" );
+	}
+	
+	/*db.writeSmallString( "x" );
+	db.writeFloat32( 100.0f );
+	db.writeSmallString( "y" );
+	db.writeFloat32( 100.0f );*/
+	db.writeSmallString( "yaw" );
+	db.writeFloat32( Mathf::RadToDeg(  GetFacingVector().XYHeading() ) );
+	db.writeSmallString( "classid" );
+	db.writeInt32( GetClass() );
+	db.writeSmallString( "healthpc" );
+	db.writeFloat32( GetHealthPercent() );
 
-	db.writeInt32( RemoteLib::ID_tokenEnd );
 	db.endSizeHeader();
 	db.endWrite();
 }

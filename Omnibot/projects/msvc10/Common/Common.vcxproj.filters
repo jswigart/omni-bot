@@ -121,9 +121,6 @@
     <Filter Include="3rdParty\guichan\sfml">
       <UniqueIdentifier>{128443f6-676d-417b-8a38-9fe9f57f61f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\sqlite">
-      <UniqueIdentifier>{7c76461d-aa78-4bc6-8156-1b8812580299}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty\Recast">
       <UniqueIdentifier>{73c805af-51f3-4da7-bb52-7bbd3f9a8087}</UniqueIdentifier>
     </Filter>
@@ -136,9 +133,6 @@
     <Filter Include="3rdParty\Recast\DebugUtils">
       <UniqueIdentifier>{5446d01a-88c7-4c9d-b209-9e5e917bd139}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\telnet">
-      <UniqueIdentifier>{d797721f-fa5f-42dd-af9e-acb42c585ce7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty\detours">
       <UniqueIdentifier>{a04e1269-3576-4086-b1d8-278ef9829af6}</UniqueIdentifier>
     </Filter>
@@ -150,6 +144,9 @@
     </Filter>
     <Filter Include="_Build">
       <UniqueIdentifier>{69469551-3cce-4e2a-8a0b-2c54d8f572a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RemoteDebug">
+      <UniqueIdentifier>{13065e1d-94ef-4870-80e5-0200fd2708ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,16 +165,10 @@
     <ClCompile Include="..\..\..\Common\BlackBoardItems.cpp">
       <Filter>Core\Blackboard</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\DebugConsole.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\DebugWindow.cpp">
       <Filter>Core\DebugConsole</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\RenderOverlay.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\RenderOverlayDirectX.cpp">
       <Filter>Core\DebugConsole</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\RenderOverlayGame.cpp">
@@ -738,9 +729,6 @@
     <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlinput.cpp">
       <Filter>3rdParty\guichan\sfml</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\sqlite3\sqlite3.c">
-      <Filter>3rdParty\sqlite</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp">
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClCompile>
@@ -751,9 +739,6 @@
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastFilter.cpp">
-      <Filter>3rdParty\Recast\Recast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastLog.cpp">
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMesh.cpp">
@@ -906,6 +891,36 @@
     <ClCompile Include="..\..\..\Common\BatchBuild.cpp">
       <Filter>_Build</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">
+      <Filter>3rdParty\Recast\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.cpp">
+      <Filter>RemoteDebug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.cpp">
+      <Filter>RemoteDebug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageTags.cpp">
+      <Filter>RemoteDebug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.cpp">
+      <Filter>RemoteDebug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.cpp">
+      <Filter>RemoteDebug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp">
+      <Filter>3rdParty\Recast\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp">
+      <Filter>3rdParty\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp">
+      <Filter>3rdParty\Recast\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourObstacleAvoidance.cpp">
+      <Filter>3rdParty\Recast\Detour</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\Client.h">
@@ -946,9 +961,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h">
       <Filter>Core\Blackboard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\DebugConsole.h">
-      <Filter>Core\DebugConsole</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\DebugWindow.h">
       <Filter>Core\DebugConsole</Filter>
@@ -1520,16 +1532,7 @@
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlinput.hpp">
       <Filter>3rdParty\guichan\sfml</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\sqlite3\sqlite3.h">
-      <Filter>3rdParty\sqlite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\sqlite3\sqlite3ext.h">
-      <Filter>3rdParty\sqlite</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h">
-      <Filter>3rdParty\Recast\Recast</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastLog.h">
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastTimer.h">
@@ -1681,6 +1684,42 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\CodeAnalysis.h">
       <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageQueue.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageTags.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\primitives.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.h">
+      <Filter>RemoteDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h">
+      <Filter>3rdParty\Recast\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h">
+      <Filter>3rdParty\Recast\Recast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\RecastInterfaces.h">
+      <Filter>3rdParty\Recast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourObstacleAvoidance.h">
+      <Filter>3rdParty\Recast\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h">
+      <Filter>3rdParty\Recast\Detour</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -241,7 +241,7 @@ namespace RemoteLib
 	bool DataBuffer::readFloat32( float & v, int precision ) {
 		int32 i = 0;
 		if ( readInt32( i ) ) {
-			v = (float)i / precision;
+			v = (float)i / (10 * precision);
 			return true;
 		}
 		return false;
@@ -256,7 +256,7 @@ namespace RemoteLib
 
 	bool DataBuffer::readString( char * buffer, int maxSize ) {
 		int16 len = 0;
-		assert( maxSize >= len );
+		assert( maxSize >= len ); maxSize;
 		return readInt16( len ) && read( buffer, len );
 	}
 
@@ -269,7 +269,7 @@ namespace RemoteLib
 
 	bool DataBuffer::readSmallString( char * buffer, int maxSize ) {
 		int8 len = 0;
-		assert( maxSize >= len );
+		assert( maxSize >= len ); maxSize;
 		return readInt8( len ) && read( buffer, len );
 	}
 

@@ -20,6 +20,7 @@ namespace RemoteLib
 		ID_image = REMOTELIB_MAKE_ID32('I','M','A','G'),
 		ID_token = REMOTELIB_MAKE_ID32('T','O','K','S'),
 		ID_tokenEnd = REMOTELIB_MAKE_ID32('T','O','K','E'),
+		ID_qmlEntity = REMOTELIB_MAKE_ID32('Q','M','L','E'),
 
 		ID_entityInfo = REMOTELIB_MAKE_ID32('E','N','T','I'),
 			ID_entityName = REMOTELIB_MAKE_ID32('E','N','A','M'),

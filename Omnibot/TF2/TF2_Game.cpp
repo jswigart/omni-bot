@@ -67,8 +67,6 @@ const char *TF2_Game::GetScriptSubfolder() const
 
 bool TF2_Game::Init() 
 {
-	SetRenderOverlayType(OVERLAY_DIRECTX);
-
 	if(!TF_Game::Init())
 		return false;
 

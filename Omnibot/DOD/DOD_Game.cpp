@@ -65,8 +65,6 @@ const char *DOD_Game::GetScriptSubfolder() const
 }
 bool DOD_Game::Init() 
 {
-	SetRenderOverlayType(OVERLAY_DIRECTX);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(DOD_Game::DOD_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(DOD_Game::DOD_GetEntityClassAimOffset);

@@ -1,11 +1,22 @@
 #include <QtGui>
 #include <QtNetwork>
 
+#include <QDeclarativeProperty>
+#include <QtDeclarative/QDeclarativeComponent>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeItem>
+
+
 #include "dataBuffer.h"
 #include "messageTags.h"
 #include "socket.h"
 
 #include "remotedebugwindow.h"
+
+enum UserDataKeys { EntityHandle = 1 };
+
+//////////////////////////////////////////////////////////////////////////
 
 enum ColumnTypes {
 	Header,
@@ -33,6 +44,57 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 	model = new QStandardItemModel( 0,0 );
 	model->insertColumns( 0, NumColumns );
 	ui.stateTree->setModel( model );
+
+	//////////////////////////////////////////////////////////////////////////
+	//ui.declarativeView->engine()->setBaseUrl(QUrl::fromLocalFile("./qml/"));
+	ui.declarativeView->setSource( QUrl::fromLocalFile( "./qml/main.qml" ) );
+	while( ui.declarativeView->status() != QDeclarativeView::Ready ) {
+	}
+
+	QDeclarativeEngine * engine = ui.declarativeView->engine();
+	mainContext = engine->contextForObject(ui.declarativeView->rootObject());
+	
+	qmlEntityComponent = new QDeclarativeComponent(engine,ui.declarativeView->rootObject());
+	qmlEntityComponent->loadUrl(QUrl::fromLocalFile("./qml/entity.qml"));
+
+	RemoteLib::DataBuffer db( 1024 );
+	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	db.startSizeHeader();
+	db.writeInt32( RemoteLib::ID_qmlEntity );
+
+	db.writeInt32( 1 ); // entity handle
+
+	db.writeSmallString( "name" );
+	db.writeSmallString( "Entity 1" );
+
+	db.writeSmallString( "x" );
+	db.writeFloat32( 100.0f );
+	db.writeSmallString( "y" );
+	db.writeFloat32( 100.0f );
+
+	db.writeSmallString( "yaw" );
+	db.writeFloat32( 45 );
+
+	db.writeSmallString( "classid" );
+	db.writeInt32( 3 );
+
+	db.endSizeHeader();
+	db.endWrite();
+
+	//////////////////////////////////////////////////////////////////////////
+
+	db.beginRead( RemoteLib::DataBuffer::ReadModeAllOrNone );
+
+	int32 tagId = 0, blockSize = 0;
+	db.readInt32( blockSize );
+	db.readInt32( tagId );
+	Q_ASSERT_X( tagId == RemoteLib::ID_qmlEntity, __FUNCTION__, "no" );
+	updateEntity( db );
+	/*createPlayer( 1, "Entity 1", 50, 50, 1 );
+	createPlayer( 2, "Entity 2", 100, 100, 2 );	
+	createPlayer( 3, "Entity 3", 150, 150, 3 );
+	createPlayer( 4, "Entity 4", 200, 200, 4 );
+	createPlayer( 5, "Entity 5", 250, 250, 5 );*/
 }
 
 RemoteDebugWindow::~RemoteDebugWindow() {
@@ -118,10 +180,9 @@ void RemoteDebugWindow::setupActions() {
 }
 
 void RemoteDebugWindow::onConnectLocalHost() {
-	QString ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 	QString port = QString::number( RemoteLib::TcpSocket::DefaultPort );
 	tcpSocket->abort();
-	tcpSocket->connectToHost(ipAddress,port.toInt());
+	tcpSocket->connectToHost(QHostAddress::LocalHost,port.toInt());
 }
 
 void RemoteDebugWindow::setupNetwork() {
@@ -298,6 +359,11 @@ void RemoteDebugWindow::processMessages() {
 				ui.graphics2d->msgToken( db );
 				break;
 			}
+		case RemoteLib::ID_qmlEntity:
+			{
+				updateEntity( db );				
+				break;
+			}
 		default:
 			Q_ASSERT_X( 0, __FUNCTION__, "unhandled message type" );
 			break;
@@ -323,6 +389,7 @@ bool RemoteDebugWindow::msgConfigName( RemoteLib::DataBuffer & db ) {
 	const float viewScaleX = settings.value( "scaleX", QVariant( 1.0f ) ).toFloat();
 	const float viewScaleY = settings.value( "scaleY", QVariant( 1.0f ) ).toFloat();
 	ui.graphics2d->scale( viewScaleX, viewScaleY );
+	
 	settings.endGroup();
 
 	return !db.hasReadError();
@@ -352,4 +419,88 @@ bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {
 		Q_ASSERT_X( !db.hasReadError(), __FUNCTION__, "databuffer read error" );
 	}
 	return !db.hasReadError();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+QGraphicsObject * RemoteDebugWindow::entityFromHandle( int handle ) {
+	QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(ui.declarativeView->rootObject());
+	const QObjectList & children = rootItem->children();
+	for ( QObjectList::const_iterator it = rootItem->children().begin();
+		it != rootItem->children().end(); 
+		++it ) {
+			const QGraphicsObject * item = qobject_cast<const QGraphicsObject*>((*it));
+			if ( item && item->data( EntityHandle ) == handle ) {
+				return const_cast<QGraphicsObject *>( item );
+			}
+	}
+	return NULL;
+}
+
+void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db ) {
+	// there should ALWAYS be an entity handle
+	int32 entityHandle = 0;
+	if(!db.readInt32(entityHandle)) {
+		return;
+	}
+
+	QGraphicsObject * entity = entityFromHandle( entityHandle );
+	if ( !entity ) {
+		QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(ui.declarativeView->rootObject());
+		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(qmlEntityComponent->create(mainContext));
+		item->setParentItem( rootItem );
+		item->setData(EntityHandle,entityHandle);
+		entity = item;
+	}
+
+	enum { MaxPropertySize = 256 };
+	char propertyName[ MaxPropertySize ];
+	while( db.readSmallString( propertyName, MaxPropertySize ) ) {
+		QVariant prop = entity->property( propertyName );
+		if ( prop.isNull() ) {
+			Q_ASSERT_X( 0, __FUNCTION__, "unknown property" );
+		} else {
+			QVariant::Type propType = prop.type();
+			switch( propType )
+			{
+			case QVariant::Int:
+				{
+					int32 val = 0.0f;
+					if ( db.read32( val ) ) {
+						if ( prop != val ) {
+							entity->setProperty( propertyName, val );
+						}
+					}
+					break;
+				}
+			case QVariant::String:
+				{
+					enum { MaxPropertySize = 256 };
+					char val[ MaxPropertySize ];
+					if ( db.readSmallString( val, MaxPropertySize ) ) {
+						if ( prop != val ) {
+							entity->setProperty( propertyName, val );
+						}
+					}
+					break;
+				}
+			case QMetaType::Float:
+			case QMetaType::Double:
+				{
+					float val = 0.0f;
+					if ( db.readFloat32( val ) ) {
+						if ( prop != val ) {
+							entity->setProperty( propertyName, val );
+						}
+					}
+					break;
+				}
+			default:
+				{
+					QString propTypeName = prop.typeName();
+					Q_ASSERT_X( 0, __FUNCTION__, "unhandled property type" );
+				}
+			}
+		}
+	}
 }
