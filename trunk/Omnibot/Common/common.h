@@ -36,7 +36,7 @@
 #pragma warning( disable: 6322 )	// Empty _except block
 #pragma warning( disable: 6355 )	// _alloca indicates failure by raising a stack overflow exception. Consider using _malloca instead
 #pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
-
+#pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
 
 // Enable some useful ones that are disabled by default 
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx

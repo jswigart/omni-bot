@@ -47,7 +47,7 @@ typedef boost::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
 typedef std::list<ScriptGoalPtr> ScriptGoalList;
 ScriptGoalList g_ScriptGoalList;
 
-SoundDepot g_SoundDepot;
+//SoundDepot g_SoundDepot;
 
 IGame::IGame() 
 	: m_bDrawBlockableTests	(false)
@@ -673,8 +673,6 @@ void IGame::UpdateGame()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-
-	// draw the clients
 	for(int i = 0; i < MAX_PLAYERS; ++i) {
 		if(m_ClientList[i]) {
 			m_ClientList[i]->Sync( db, fullSync );
@@ -682,16 +680,39 @@ void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	}
 
 	// draw the entities registered with the system
-	/*IGame::EntityIterator ent;
+	IGame::EntityIterator ent;
 	while( IGame::IterateEntity( ent ) ) {
-		Vector3f vPos;
-		if( EngineFuncs::EntityPosition( ent.GetEnt().m_Entity, vPos) ) {
-			if(Length(Vector3f((float)g_MapMouse.X, (float)g_MapMouse.Y, 0.f), vViewPortPos) < 3.f)
-			{
+		SyncEntity( ent.GetEnt(), db, fullSync );
+	}
+}
 
+void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync ) {
+	if ( ent.m_EntityCategory.CheckFlag( ENT_CAT_PROJECTILE ) ||
+		ent.m_EntityCategory.CheckFlag( ENT_CAT_PICKUP )) {
+
+			Box3f worldbounds;
+			worldbounds.Clear();
+			if ( EngineFuncs::EntityWorldOBB( ent.m_Entity, worldbounds ) ) {
+				db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+				db.startSizeHeader();
+
+				obColor col = COLOR::YELLOW;
+				RemoteLib::PackRect( db, 
+					"Projectile",
+					FindClassName( ent.m_EntityClass ),
+					worldbounds.Center.x, 
+					worldbounds.Center.y,
+					worldbounds.Extent[ 0 ]*2.0f,
+					worldbounds.Extent[ 1 ]*2.0f,
+					Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() ),
+					col.r(), col.g(), col.b(), col.a() );
+
+				db.endSizeHeader();
+				db.endWrite();
+
+				return;
 			}
-		}
-	}*/
+	}
 }
 #endif
 
@@ -749,6 +770,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				m_GameEntities[index].m_EntityClass = m->m_EntityClass;
 				m_GameEntities[index].m_EntityCategory = m->m_EntityCategory;
 				m_GameEntities[index].m_TimeStamp = IGame::GetTime();
+				m_GameEntities[index].m_RemoteHndl = 0;
 
 				NavigationManager::GetInstance()->GetCurrentPathPlanner()->EntityCreated(m_GameEntities[index]);
 
@@ -783,6 +805,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					m_GameEntities[index].m_EntityClass = 0;
 					m_GameEntities[index].m_EntityCategory.ClearAll();
 					m_GameEntities[index].m_TimeStamp = 0;
+					m_GameEntities[index].m_RemoteHndl = 0;
 				}
 
 				GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);
@@ -828,9 +851,9 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 		}
 	case GAME_SOUND:
 		{
-			const Event_Sound *m = _message.Get<Event_Sound>();
+			/*const Event_Sound *m = _message.Get<Event_Sound>();
 			if(m)
-				g_SoundDepot.Post(*m);
+				g_SoundDepot.Post(*m);*/
 			break;
 		}
 	case GAME_ADD_ENTITY_CONNECTION:

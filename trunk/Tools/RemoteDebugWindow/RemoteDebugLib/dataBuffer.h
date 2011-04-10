@@ -70,6 +70,7 @@ namespace RemoteLib
 
 		bool append( DataBuffer & db );
 
+		//////////////////////////////////////////////////////////////////////////
 		// template to auto convert
 		template< typename T >
 		bool read8( T & v ) {

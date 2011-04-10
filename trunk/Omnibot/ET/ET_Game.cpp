@@ -707,3 +707,69 @@ void ET_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathChe
 {
 	_pfnPathCheck = ET_PathCheck;
 }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+void ET_Game::SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync ) {
+	
+	obColor entColor = COLOR::WHITE;
+	Vector3f entSize = Vector3f( 16.0f, 16.0f, 16.0f );
+
+	const char * entName = NULL;
+	const char * imgName = NULL;
+
+	switch ( ent.m_EntityClass )
+	{
+	case ET_CLASSEX_DYNAMITE:
+		entName = "dynamite";
+		imgName = "et/ent_dynamite.png";
+		break;
+	case ET_CLASSEX_MINE:
+		entName = "mine";
+		imgName = "et/ent_mine.png";
+		break;
+	case ET_CLASSEX_SATCHEL:
+		entName = "satchel";
+		imgName = "et/ent_satchel.png";
+		break;
+	case ET_CLASSEX_SMOKEMARKER:
+		entName = "smokemarker";
+		imgName = "et/ent_smokegren.png";
+		break;
+	case ET_CLASSEX_SMOKEBOMB:
+		entName = "smokebomb";
+		imgName = "et/ent_smokegren.png";
+		break;
+	case ET_CLASSEX_GRENADE:
+		entName = "grenade";
+		imgName = "et/ent_grenade1.png";
+		break;
+	case ET_CLASSEX_CORPSE:
+		entName = "corpse";
+		imgName = "et/ent_dogtags.png";
+		break;
+	}
+	if ( imgName && entName ) {
+		Vector3f entPos = Vector3f::ZERO;
+
+		if ( EngineFuncs::EntityPosition( ent.m_Entity, entPos ) ) {
+			db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+			db.startSizeHeader();
+
+			RemoteLib::PackImage( db, 
+				"ents",
+				va( "%s_%d", entName, ent.m_Entity.AsInt() ), 
+				imgName,
+				entPos.x, entPos.y,
+				entSize.x, entSize.y,
+				0.0f,
+				entColor.r(), entColor.g(), entColor.b(), entColor.a() );
+
+			db.endSizeHeader();
+			db.endWrite();
+		}
+	}
+
+	va( "Item = { id: %s width: %d; height: %d;", 
+		entName, entSize.x, entSize.y );
+}
+#endif

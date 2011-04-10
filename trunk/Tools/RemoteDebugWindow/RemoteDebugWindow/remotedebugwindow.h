@@ -7,6 +7,7 @@
 #include <QSystemTrayIcon>
 
 class QStandardItemModel;
+class QDeclarativeComponent;
 
 class RemoteDebugWindow : public QMainWindow
 {
@@ -23,6 +24,9 @@ private:
 	void readSettings();
 
 	void setupActions();
+
+	QDeclarativeComponent *	qmlEntityComponent;
+	QDeclarativeContext *	mainContext;
 
 	// tray icon
 	QSystemTrayIcon *	trayIcon;
@@ -41,6 +45,10 @@ private:
 	QStandardItemModel * model;
 
 	QModelIndex findNodeForPath( const QString & path );
+
+	void updateEntity( RemoteLib::DataBuffer & db );
+
+	QGraphicsObject * entityFromHandle( int handle );
 private slots:
 	void processMessages();
 

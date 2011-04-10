@@ -65,8 +65,6 @@ const char *WOLF_Game::GetScriptSubfolder() const
 
 bool WOLF_Game::Init() 
 {
-	SetRenderOverlayType(OVERLAY_DIRECTX);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(WOLF_Game::WOLF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(WOLF_Game::WOLF_GetEntityClassAimOffset);

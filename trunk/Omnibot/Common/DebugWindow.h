@@ -4,7 +4,6 @@
 enum RenderOverlayType
 {
 	OVERLAY_OPENGL,
-	OVERLAY_DIRECTX,
 	OVERLAY_GAME,
 };
 

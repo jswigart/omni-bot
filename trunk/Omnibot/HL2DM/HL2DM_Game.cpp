@@ -65,8 +65,6 @@ const char *HL2DM_Game::GetScriptSubfolder() const
 
 bool HL2DM_Game::Init() 
 {
-	SetRenderOverlayType(OVERLAY_DIRECTX);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(HL2DM_Game::HL2DM_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(HL2DM_Game::HL2DM_GetEntityClassAimOffset);

@@ -94,6 +94,26 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageTags.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\..\Common\Client.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -114,23 +134,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\DebugConsole.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\DebugWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\RenderOverlay.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\RenderOverlayDirectX.cpp" />
     <ClCompile Include="..\..\..\Common\RenderOverlayGame.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -408,6 +423,22 @@
     <ClCompile Include="..\..\..\Common\obParser.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourObstacleAvoidance.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Math.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -1113,12 +1144,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\sqlite3\sqlite3.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -1138,12 +1163,6 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastFilter.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastLog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -1180,28 +1199,20 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourCommon.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMesh.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshBuilder.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNode.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DebugDraw.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -1410,6 +1421,13 @@
     <ClCompile Include="..\..\..\Common\BatchBuild.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageQueue.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageTags.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\primitives.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.h" />
+    <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.h" />
     <ClInclude Include="..\..\..\Common\Client.h" />
     <ClInclude Include="..\..\..\Common\CodeAnalysis.h" />
     <ClInclude Include="..\..\..\Common\Functions_Bot.h" />
@@ -1424,8 +1442,8 @@
     <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h" />
     <ClInclude Include="..\..\..\Common\BlackBoard.h" />
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h" />
-    <ClInclude Include="..\..\..\Common\DebugConsole.h" />
     <ClInclude Include="..\..\..\Common\DebugWindow.h" />
+    <ClInclude Include="..\..\..\Common\RecastInterfaces.h" />
     <ClInclude Include="..\..\..\Common\RenderOverlay.h" />
     <ClInclude Include="..\..\..\Common\EventReciever.h" />
     <ClInclude Include="..\..\..\Common\GoalManager.h" />
@@ -1491,6 +1509,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </CustomBuildStep>
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourObstacleAvoidance.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
     <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Math.h" />
     <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Box3.h" />
     <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3LinComp.h" />
@@ -1619,10 +1641,7 @@
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimage.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimageloader.hpp" />
     <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlinput.hpp" />
-    <ClInclude Include="..\..\..\dependencies\sqlite3\sqlite3.h" />
-    <ClInclude Include="..\..\..\dependencies\sqlite3\sqlite3ext.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastLog.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastTimer.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourCommon.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMesh.h" />

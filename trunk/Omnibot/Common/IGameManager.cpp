@@ -26,6 +26,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_REMOTE_DEBUGGING
+
 class OverlayConnectionCallbacks : public RemoteLib::ConnectionCallbacks
 {
 public:
