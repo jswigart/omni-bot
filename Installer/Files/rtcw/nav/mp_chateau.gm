@@ -369,7 +369,7 @@ global OnMapLoad = function()
 				ROUTE_piano =
 				{
 					ROUTE_balcony = {},
-					ROUTE_roof = {},
+					ROUTE_roof = {Weight=2,},
 				},
 				ROUTE_easthall =
 				{

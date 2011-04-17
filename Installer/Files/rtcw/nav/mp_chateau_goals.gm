@@ -1689,25 +1689,6 @@ global _MG =
 		TeamAvailability = 4,
 		Version = 1,
 	},
-	PLANT_Main_Door = 
-	{
-		CoverSpots = 
-		{
-		},
-		CreateOnLoad = 0,
-		ExplosiveType = 1,
-		GoalType = "PLANT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "PLANT_Main_Door",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-2952.000, 1068.000, 34.000),
-		Radius = 0,
-		SerialNum = 230,
-		TagName = "Main Door",
-		TeamAvailability = 4,
-		Version = 1,
-	},
 	ROUTE_Flag = 
 	{
 		CreateOnLoad = 1,
