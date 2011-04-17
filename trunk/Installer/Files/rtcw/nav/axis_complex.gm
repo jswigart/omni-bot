@@ -42,6 +42,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_3 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bASMain.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_doc_defend_.*" );
@@ -245,9 +246,11 @@ global OnMapLoad = function()
 
 	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER);
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_main_entrance_.*" );
+	
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_main_attack_.*" );
@@ -256,6 +259,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_main_entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_docdel2" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_docdel3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bASMain.*" );
 
 	// Arty
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_allied" );
@@ -333,7 +337,7 @@ global OnBotJoin = function( bot )
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 
 	//~ bot.TargetBreakableDist = 80.0;
-	bot.MaxViewDistance = 2000.0;
+	bot.MaxViewDistance = 2300.0;
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
