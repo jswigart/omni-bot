@@ -133,7 +133,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bMain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_.*" );
 
 		if ( Map.TwoMinute == false ) {
@@ -287,6 +287,7 @@ global Map =
 
 					}
 				}
+				Map.RelicFallback();
 			}
 		},
 		OnExit = function( ent )
@@ -315,6 +316,7 @@ global Map =
 						}
 					}
 				}
+				Map.RelicFallback();
 			}
 		},
 		OnExit = function( ent )
@@ -343,6 +345,7 @@ global Map =
 						}
 					}
 				}
+				Map.RelicFallback();
 			}
 		},
 		OnExit = function( ent )
@@ -441,6 +444,43 @@ global Map =
 			}
 		},
 	},
+	AlliedSpawn =
+	{
+		Name = "AlliedSpawn",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) 
+			{
+				Map.RelicFallback();
+			}
+
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	// Axis are close to the relic
+	RelicFallback = function()
+	{
+		if (!Map.RelicStatus)
+		{
+			print("fallback");
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bEngPlant.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic_[235]" );
+			if (Map.DoorStatus)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic_[14]" );
+			}
+		}
+	},
 };
 
 global OnMapLoad = function()
@@ -475,6 +515,7 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal( "ROUTE_door" );
 
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "SWITCH.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 
 	SetGoalPriority( "DEFEND_bEngPlant.*", 0.9 );    // Higher than alarm
@@ -484,8 +525,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "SWITCH_Alarm", 0.87 );
+	SetGoalPriority( "DEFEND_bRelic.*", 0.55 );
 
 	RTCWUtil.LimitToClass( "DEFEND_bEngPlant.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
@@ -494,7 +538,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEngPlant.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bMain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bMain.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 
 	RTCWUtil.EnableGoal( "FLAG_Holy_Relic" );
 	RTCWUtil.EnableGoal( "CAPPOINT_truck" );
@@ -508,6 +552,9 @@ global OnMapLoad = function()
 	tFour = OnTriggerRegion( AABB( 1665,-48,-112,1703,48,-12 ), Map.AltarTrigger );
 
 	plant = OnTriggerRegion( AABB( 851.000,865.000,-1.000,1024.000,1024.000,73.000 ), Map.Plant );
+	bSpawn = OnTriggerRegion( AABB( 1980.000,-860.000,-62.000,2019.000,-771.000,12.000 ), Map.AlliedSpawn );
+	
+	
 
 	MapRoutes =
 	{
@@ -543,7 +590,11 @@ global OnMapLoad = function()
 				},
 				ROUTE_rearalliedspawn =
 				{
-					ROUTE_sewer = {Weight = 2,},
+					ROUTE_southpassage = 
+					{
+						Weight = 2,
+						ROUTE_sewer = {},
+					},
 					ROUTE_southgallery = {},
 				},
 			},
@@ -556,7 +607,8 @@ global OnMapLoad = function()
 				{
 					Weight = 3,
 					ROUTE_maingallery = {},
-					ROUTE_northgallery = {Weight = 2,},
+					ROUTE_northgallery = {Weight = 3,},
+					ROUTE_n_maingallery = {},
 				},
 				ROUTE_southentrance =
 				{
@@ -582,6 +634,7 @@ global OnMapLoad = function()
 					Weight = 2,
 					ROUTE_maingallery = {},
 					ROUTE_s_maingallery = {},
+					ROUTE_southpassage = {},
 				},
 				ROUTE_sewer = {},
 			},
@@ -612,6 +665,16 @@ global OnMapLoad = function()
 				ROUTE_southentrance =
 				{
 					Weight = 3,
+					ROUTE_southpassage = 
+					{
+						ROUTE_rearaltar = {},
+						ROUTE_rearalliedspawn = {Weight = 2,},
+					},
+					ROUTE_southgallery =
+					{
+						ROUTE_rearaltar = {Weight = 2,},
+						ROUTE_rearalliedspawn = {},
+					},
 					ROUTE_s_maingallery =
 					{
 						ROUTE_door = {},
@@ -643,6 +706,16 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
+	
+	// Break entities bots suck at getting past
+	EntityKill( 199 );
+	EntityKill( 342 );
+	EntityKill( 222 );
+	EntityKill( 365 );
+	EntityKill( 230 );
+	EntityKill( 231 );
+	EntityKill( 341 );
+	EntityKill( 200 );
 };
 
 global OnBotJoin = function( bot )
