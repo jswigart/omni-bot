@@ -281,7 +281,7 @@ global Map =
 		}
 		Map.Airstrike.bridge.Enabled = true;
 		SetGoalPriority( "CALL.*", 0.6 );
-		SetGoalPriority( "ARTILLLERY.*", 0.6 );
+		SetGoalPriority( "ARTILLERY.*", 0.6 );
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );    // Martin - 1 axis at a time go for it
 		Wp.SetWaypointFlag( "pt_nav_towerjump", "closed", false );  // Open up the towerjump
@@ -301,7 +301,7 @@ global Map =
 
 		Map.Airstrike.bridge.Enabled = false;
 		SetGoalPriority( "CALL.*", 1.2 );
-		SetGoalPriority( "ARTILLLERY.*", 1.2 );
+		SetGoalPriority( "ARTILLERY.*", 1.2 );
 
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );    // Martin - But let 3 allies go for it.
 		Util.MapDebugPrint( "Axis_Capture_Flag" );

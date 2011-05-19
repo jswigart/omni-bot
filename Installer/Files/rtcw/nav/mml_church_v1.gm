@@ -523,7 +523,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "PANZER_rPlant.*", 0.9 );   // Higher than alarm
 	SetGoalPriority( "DEFEND_bRoam.*", 0.49 );
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "SWITCH_Alarm", 0.87 );
 	SetGoalPriority( "DEFEND_bRelic.*", 0.55 );
 

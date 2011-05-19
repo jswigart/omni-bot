@@ -196,7 +196,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_rArray.*", 0.8 );
 	SetGoalPriority( "ATTACK_bArray.*", 0.8 );
 	SetGoalPriority( "DEFEND_rRadar_4.*", 0.45 );

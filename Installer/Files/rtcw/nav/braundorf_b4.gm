@@ -353,7 +353,7 @@ global OnMapLoad = function()
 	Map.FlagDefense();
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_Flag_Defense_[46].*", 0.51 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 

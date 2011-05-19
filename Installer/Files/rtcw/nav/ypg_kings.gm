@@ -180,7 +180,7 @@ global OnMapLoad = function()
 	RTCWUtil.EnableGoal( "CAPPOINT.*", true ); // all but routes
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_rPreCrypt.*", 0.45 );
 
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );

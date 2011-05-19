@@ -307,7 +307,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "ATTACK_bHallway.*", 0.7 );
 	SetGoalPriority( "ATTACK_bGate.*", 0.69 );  //Take hallway first
 

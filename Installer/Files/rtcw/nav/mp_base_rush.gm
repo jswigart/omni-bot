@@ -160,7 +160,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_nwc" );     // gate side of tunnel
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
-		SetGoalPriority( "ARTILLLERY.*", 0.5, TEAM_AXIS );
+		SetGoalPriority( "ARTILLERY.*", 0.5, TEAM_AXIS );
 
 		RTCWUtil.DisableGoal( "DEFEND_engNorth.*" );
 
@@ -252,6 +252,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_transmit" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit" );
+		
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
@@ -287,7 +288,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
-
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocs.*" );
 		}
 
 		Util.MapDebugPrint( "docs_secured" );
@@ -365,6 +367,8 @@ global Map =
 		if ( Map.DocsAtHome ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocs.*" );
 		}
 
 		Util.MapDebugPrint( "wall_destroyed" );
@@ -532,8 +536,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNTMG42_t5", {mincamptime = 60, maxcamptime = 90} );
 
-	SetGoalPriority( "CALL.*", 0.9 );
-	SetGoalPriority( "ARTILLLERY.*", 1.2 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.2 );
 	SetGoalPriority( "PANZER.*", 0.65 );
 	SetGoalPriority( "DEFEND_eng.*", 0.9 );
 	SetGoalPriority( "PANZER_rSouth.*", 0.7 );

@@ -147,7 +147,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_nwc" );     // gate side of tunnel
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
-		SetGoalPriority( "ARTILLLERY.*", 0.5, TEAM_AXIS );
+		SetGoalPriority( "ARTILLERY.*", 0.5, TEAM_AXIS );
 
 		RTCWUtil.DisableGoal( "DEFEND_engNorth.*" );
 
@@ -319,7 +319,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 30, maxcamptime = 60} );
 
 	SetGoalPriority( "CALL.*", 0.9 );
-	SetGoalPriority( "ARTILLLERY.*", 1.2 );
+	SetGoalPriority( "ARTILLERY.*", 1.2 );
 	SetGoalPriority( "PANZER.*", 0.65 );
 	SetGoalPriority( "DEFEND_eng.*", 0.9 );
 	SetGoalPriority( "PANZER_rSouth.*", 0.7 );

@@ -361,7 +361,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "GRENADE_Barricade.*", 0.65 );
 

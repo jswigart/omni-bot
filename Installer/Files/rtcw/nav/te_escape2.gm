@@ -191,7 +191,7 @@ global Map =
 	thirty_second = function( trigger )
 	{
 		SetGoalPriority( "CALL.*", 0.0 );
-		SetGoalPriority( "ARTILLLERY.*", 0.0 );
+		SetGoalPriority( "ARTILLERY.*", 0.0 );
 		if ( Map.RelicStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
@@ -237,7 +237,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
 	SetGoalPriority( "CALL.*", 0.6 );
-	SetGoalPriority( "ARTILLLERY.*", 0.6 );
+	SetGoalPriority( "ARTILLERY.*", 0.6 );
 
 	RTCWUtil.SwitchSoldierWeapons( TEAM.AXIS, WEAPON.PANZERFAUST );
 

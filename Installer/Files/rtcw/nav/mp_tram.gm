@@ -876,7 +876,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CHECKPOINT.*", 1.1, TEAM.AXIS, CLASS.MEDIC, CLASS.LIEUTENANT );
 	SetGoalPriority( "CHECKPOINT.*", 1.1, TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
