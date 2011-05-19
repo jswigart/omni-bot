@@ -56,7 +56,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
 
 		SetGoalPriority( "CALL.*", 0.6 );
-		SetGoalPriority( "ARTILLLERY.*", 0.6 );
+		SetGoalPriority( "ARTILLERY.*", 0.6 );
 
 		Util.MapDebugPrint( "East_Tower_Door_Destroyed" );
 	},
@@ -133,7 +133,7 @@ global Map =
 
 		// Hold the enemy in the bunker/forest respectivly
 		SetGoalPriority( "CALL.*", 0.7 );
-		SetGoalPriority( "ARTILLLERY.*", 0.7 );
+		SetGoalPriority( "ARTILLERY.*", 0.7 );
 
 		Util.MapDebugPrint( "Decoder_Manual_Taken" );
 	},
@@ -158,7 +158,7 @@ global Map =
 
 		// CEASE FIRE!! Protect docs
 		SetGoalPriority( "CALL.*", 0.0 );
-		SetGoalPriority( "ARTILLLERY.*", 0.0 );
+		SetGoalPriority( "ARTILLERY.*", 0.0 );
 
 		Util.MapDebugPrint( "Decoder_Manual_Returned" );
 	},
@@ -184,7 +184,7 @@ global Map =
 
 		// dont call arty as much
 		SetGoalPriority( "CALL.*", 0.5 );
-		SetGoalPriority( "ARTILLLERY.*", 0.5 );
+		SetGoalPriority( "ARTILLERY.*", 0.5 );
 
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
 	},
@@ -269,7 +269,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_forest_[1234]" );
 
 	SetGoalPriority( "CALL.*", 1.5 );
-	SetGoalPriority( "ARTILLLERY.*", 1.5 );
+	SetGoalPriority( "ARTILLERY.*", 1.5 );
 	SetGoalPriority( "DEFEND_rMeeting.*", 0.6 );
 	SetGoalPriority( "DEFEND_axis_doc_del_.*", 0.7 );
 

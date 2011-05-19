@@ -526,7 +526,7 @@ global OnMapLoad = function()
 	RTCWUtil.EnableGoal( "CHECKPOINT_.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 ); // So only one player goes for flag
 	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
 	SetGoalPriority( "PANZER_bSpawnkill.*", 0.7 );  // Above regular attacks

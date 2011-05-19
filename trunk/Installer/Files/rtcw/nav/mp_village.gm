@@ -542,7 +542,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rCrypt7" );
 
 	SetGoalPriority( "CALL.*", 0.7 );
-	SetGoalPriority( "ARTILLLERY.*", 0.7 );
+	SetGoalPriority( "ARTILLERY.*", 0.7 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade.*" );

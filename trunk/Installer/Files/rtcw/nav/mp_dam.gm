@@ -422,7 +422,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 
 	SetGoalPriority( "PLANT_Main_Door", 0.93 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_regulator.*", 0.6 );
 	SetGoalPriority( "DEFEND_rLT.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );

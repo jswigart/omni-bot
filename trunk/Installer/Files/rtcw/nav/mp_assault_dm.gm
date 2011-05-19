@@ -174,7 +174,7 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );

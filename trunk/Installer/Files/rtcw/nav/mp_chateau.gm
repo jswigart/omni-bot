@@ -333,7 +333,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_door_2" );
 
 	SetGoalPriority( "CALL.*", 0.9 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	MapRoutes =
 	{

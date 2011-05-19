@@ -301,7 +301,7 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "ATTACK_bWall_eng_.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "ATTACK_bWall_eng.*", 0.91 );
 	SetGoalPriority( "PLANT_Bridge_Controls", 0.90 );
 	SetGoalPriority( "DEFEND_rDocs.*", 0.7 );

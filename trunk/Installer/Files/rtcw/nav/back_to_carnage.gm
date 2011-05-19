@@ -371,7 +371,7 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_RadioEng.*", 0.8 );
 	SetGoalPriority( "ATTACK_RadioEng.*", 0.8 );
 	SetGoalPriority( "DEFEND_rGeneratorEng.*", 0.8 );

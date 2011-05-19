@@ -373,7 +373,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	//these get set higher after the gate has been destroyed
 	SetGoalPriority( "DEFEND_rDocs1", 0.45 );
 	SetGoalPriority( "DEFEND_rDocs5", 0.45 );

@@ -170,7 +170,7 @@ global Map =
 		Map.CyanideDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_beacheadspawn );
 		SetGoalPriority( "CALL.*", 0.4 );
-		SetGoalPriority( "ARTILLLERY.*", 0.4 );
+		SetGoalPriority( "ARTILLERY.*", 0.4 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beacheadspawn" );
 	},
 
@@ -296,7 +296,7 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 );
 	SetGoalPriority( "DEFEND_rCyanide_[346]", 0.6 );
 	SetGoalPriority( "ATTACK_bCyanide_[7]", 0.6 );

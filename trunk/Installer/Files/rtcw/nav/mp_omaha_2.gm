@@ -218,7 +218,7 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "EXPLODE.*", 1.0 );
 	SetGoalPriority( "DEFEND_rStepsAlt.*", 0.4 );
 	SetGoalPriority( "ATTACK_bDocs.*", 0.86 );  // More than docs
