@@ -168,6 +168,29 @@ global Map =
 			sleep( 1.0 );
 		}
 	},
+	// Defenders should not combat move or get pushed out of position
+	MainSteps =
+	{
+		Name = "MainSteps",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	
 	Sub =
 	{
 		Name = "Sub",
@@ -214,6 +237,8 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( 974, 2559, 386, "PLANT_Axis_Submarine" );
 
 	tOne = OnTriggerRegion( AABB( 838.000,1005.000,282.000,1082.000,3185.000,415.000 ), Map.Sub );
+	StepsCrouch = OnTriggerRegion( AABB( 1599.000,1607.000,481.000,1848.000,1824.000,555.000 ), Map.MainSteps );
+	
 
 	Util.AddUseWp( "PLANT_Axis_Submarine", "frontsub" );
 	Util.AddUseWp( "PLANT_Axis_Submarine", "midsub" );
@@ -272,19 +297,19 @@ global OnMapLoad = function()
 	Util.DisableGroup( "backroutes" );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-
-	//eng camp spots to wait for recharge
-	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
+	
 	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	
+	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+	SetGoalPriority( "DEFEND_rSub[12]", 0.51 );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_flag" );
 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSub.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Filtration_Door );
