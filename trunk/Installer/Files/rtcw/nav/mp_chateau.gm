@@ -18,6 +18,7 @@ global Map =
 	DocStatus = false, //home
 	DefenseShifted = false,
 	DontDispenseAmmo = true,
+	DocsGone=false,
 
 	MainDyno = 0,
 
@@ -198,18 +199,31 @@ global Map =
 		}
 
 		Map.DocStatus = true;
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
-
-		//both teams will use these
-		RTCWUtil.EnableGoal( "DEFEND_rDeliver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
-
 		//disable the main door airstrikes
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		
+		// martin: just exit right away if docs are returned
+		while ( Map.DocsGone == false && Map.DocStatus == true )
+		{
+			sleep( 1 );
+		}	
+
+		// cs: changed this. why would they defend trasmit when docs are returned?
+		if (Map.DocStatus)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+			//both teams will use these
+			RTCWUtil.EnableGoal( "DEFEND_rDeliver.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+		}
+
+		
 	},
 
 	obj_secure = function( trigger )
@@ -219,6 +233,7 @@ global Map =
 		}
 
 		Map.DocStatus = false;
+		Map.DocsGone = false;
 
 		RTCWUtil.DisableGoal( "DEFEND_rDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
@@ -226,6 +241,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	},
 
 	Axis_Capture_Flag = function( trigger )
@@ -271,6 +287,31 @@ global Map =
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 	},
+	
+	DocsTrigger =
+	{
+		Name = "DocsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					//docs are gone
+					Map.DocsGone = true;
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
 };
 
 global OnMapLoad = function()
@@ -296,6 +337,10 @@ global OnMapLoad = function()
 	storage = OnTriggerRegion( AABB( -3712, 2438, -17, -3583, 2519, 57 ), Map.TriggerOne );
 	westhall = OnTriggerRegion( AABB( -3730, 2079, 367, -3657, 2256, 441 ), Map.TriggerOne );
 	easthall = OnTriggerRegion( AABB( -2064, 2075, 367, -1992, 2264, 441 ), Map.TriggerOne );
+	
+	elibrary = OnTriggerRegion( AABB( -2473.000,3123.000,369.000,-2431.000,3266.000,443.000 ), Map.DocsTrigger );
+	slibrary = OnTriggerRegion( AABB( -3004.000,3042.000,369.000,-2883.000,3082.000,443.000 ), Map.DocsTrigger );
+	nlibrary = OnTriggerRegion( AABB( -3462.000,3127.000,369.000,-3424.000,3256.000,443.000 ), Map.DocsTrigger );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
@@ -321,6 +366,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Door );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Cellar_Door );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
@@ -331,6 +377,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allies_cellar" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_cellar_door" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_door_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 
 	SetGoalPriority( "CALL.*", 0.9 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
