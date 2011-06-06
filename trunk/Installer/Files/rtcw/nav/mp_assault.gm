@@ -6,6 +6,9 @@ global Map =
 	DispenseAmmoTime = 10,
 	TowerMg = false,
 	Suicide = true,
+	// Prevents airstrikes disappearing by breaking windows on map start.
+	// Set to false to disable window breaking.
+	ReduceEntities = true,
 
 	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
 	Plant_Communications_Tower = "PLANT_Communications_Tower",
@@ -972,6 +975,48 @@ global OnMapLoad = function()
 	//MapRoutes.SNIPE_rGate_s2 = MapRoutes.SNIPE_rGate_s1;
 
 	Util.Routes( MapRoutes );
+	if(Map.ReduceEntities)
+	{
+		EntityKill(87);
+		EntityKill(88);
+		EntityKill(89);
+		EntityKill(90);
+		EntityKill(504);
+		EntityKill(506);
+		EntityKill(507);
+		EntityKill(508);
+		EntityKill(110);
+		EntityKill(482);
+		EntityKill(269);
+		EntityKill(512);
+		EntityKill(268);
+		EntityKill(270);
+		EntityKill(161);
+		EntityKill(265);
+		EntityKill(188);
+		EntityKill(485);
+		EntityKill(189);
+		EntityKill(190);
+		EntityKill(191);
+		EntityKill(221);
+		EntityKill(484);
+		EntityKill(222);
+		EntityKill(223);
+		EntityKill(224);
+		EntityKill(273);
+		EntityKill(274);
+		EntityKill(266);
+		EntityKill(267);
+		EntityKill(474);
+		EntityKill(475);
+		EntityKill(401);
+		EntityKill(402);
+		EntityKill(400);
+		EntityKill(105);
+		EntityKill(104);
+		EntityKill(103);
+		EntityKill(102);
+	}
 
 	Util.MapDebugPrint( "OnMapLoad" );
 };
