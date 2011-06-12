@@ -670,11 +670,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as.*" );
 
-	if ( Map.Suicide ) {
-		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
-		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
-	}
-
 	MapRoutes =
 	{
 		FLAG_War_Documents =
@@ -795,6 +790,12 @@ global OnMapLoad = function()
 	Util.Routes( MapRoutes );
 	yield(); yield();
 
+	// Martin - moving so it gets enabled
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+	}
+	
 	if ( Map.CompSettings ) {
 		RTCWUtil.SetTeamSuicide( TEAM.AXIS, 1, 1 );
 	}
