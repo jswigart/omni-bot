@@ -166,7 +166,9 @@ this.Update = function()
 
 		this.Bot.HoldButton( BTN.AIM, 1 );
 		// give time to aim
-		if ( timeout > 10 ) {
+		// Martin - why was this timeout > 10
+		// that would never be called...
+		if ( timeout > 3 ) {
 			this.Bot.HoldButton( BTN.ATTACK1, 1 );
 		}
 
