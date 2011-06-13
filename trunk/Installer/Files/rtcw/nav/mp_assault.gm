@@ -231,7 +231,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_gate_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_gate_2" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_tarmac" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_warehouse_ladder" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_warehouse_ladder" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // First spawn location
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bFlag.*" );
