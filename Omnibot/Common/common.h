@@ -111,6 +111,7 @@ typedef std::list<String> StringList;
 #endif
 
 // Boost
+#define BOOST_FILESYSTEM_DEPRECATED 1	// cs: 1_47 compile 'fix'
 #pragma warning( push )
 // stfu boost
 #pragma warning( disable: 4244 )
