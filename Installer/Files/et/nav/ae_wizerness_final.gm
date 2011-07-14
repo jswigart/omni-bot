@@ -46,6 +46,7 @@ global Map =
 			ATTACKER =
 			{
 				numbots = 2,
+				crucialClass = CLASS.ENGINEER,	// first bot
 			},
 		},
 
@@ -60,6 +61,7 @@ global Map =
 			ATTACKER =
 			{
 				numbots = 2,
+				crucialClass = CLASS.ENGINEER,	// first bot
 			},
 		},
 	},
@@ -258,7 +260,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_axis_forward_checkpoint" );
 		Util.MapDebugPrint( "allied_forward_checkpoint_Axis_Captured" );
 	},
 
@@ -266,7 +268,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_allied_forward_checkpoint" );
 		Util.MapDebugPrint( "allied_forward_checkpoint_Allies_Captured" );
 	},
 
@@ -274,7 +276,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_axis_forward_checkpoint" );
 		Util.MapDebugPrint( "axis_forward_checkpoint_Axis_Captured" );
 	},
 
@@ -282,7 +284,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_allied_forward_checkpoint" );
 		Util.MapDebugPrint( "axis_forward_checkpoint_Allies_Captured" );
 	},
 };
@@ -290,9 +292,9 @@ global Map =
 global OnMapLoad = function()
 {
 	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	{ Util.AutoTestMap(); }
 
-// Register callback functions
+	// Register callback functions
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!G", Map.Allied_Command_Post_Built );
 	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
 	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
@@ -330,6 +332,10 @@ global OnMapLoad = function()
 	Util.EnableGoal( "PLANT.*" );
 	SetGoalPriority( "PLANT_Axis_side_entrance", 0.82, TEAM.ALLIES, CLASS.ENGINEER, true );
 	SetGoalPriority( "PLANT_Allied_side_entrance", 0.82, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Allied_Control_Center", 0.81, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Axis_Control_Center", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "CAMP.*", 0.86, 0, 0, true );
+	SetGoalPriority( "CAMP.*", 0.80, 0, CLASS.ENGINEER, true );
 	Util.AddUseWp("PLANT_Axis_Control_Center", "Ax");
 	Util.AddUseWp("PLANT_Axis_Control_Center", "Ax1");
 	Util.AddUseWp("PLANT_Axis_Control_Center", "Ax2");
@@ -342,7 +348,7 @@ global OnMapLoad = function()
 	Util.AddUseWp("PLANT_Allied_Control_Center", "Al3");
 	Util.AddUseWp("PLANT_Allied_Control_Center", "Al4");
 	Util.AddUseWp("PLANT_Allied_Control_Center", "Al5");
-// Max users per goal
+	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
@@ -352,12 +358,12 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
-	Util.SetMaxUsers( 3, "CHECKPOINT.*" );
+	Util.SetMaxUsers( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsers( 1, "CAMP_.*" );
-// Camp times
+	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
-//Map Routes
+	//Map Routes
 	MapRoutes =
 	{
 		PLANT_Axis_side_entrance =
@@ -691,6 +697,20 @@ global OnMapLoad = function()
 			},
 		},
 	};
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack;
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack1;
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack2;
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack3;
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack4;
+	MapRoutes.PLANT_Axis_Control_Center = MapRoutes.CAMP_zAttack5;
+
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack1;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack2;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack3;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack4;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack5;
+	MapRoutes.PLANT_Allied_Control_Center = MapRoutes.CAMP_dAttack6;
 
 	Util.Routes(MapRoutes);
 
@@ -703,4 +723,6 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 90.0;
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
 	//~bot.MaxViewDistance = 2400;
+	Util.ChangeSpawn(TEAM.ALLIES, 2, 1, CLASS.ENGINEER); //One Allied ENGINEER will spawn at location 2
+	Util.ChangeSpawn(TEAM.AXIS, 1, 1, CLASS.ENGINEER); //One Axis ENGINEER will spawn at location 1
 };

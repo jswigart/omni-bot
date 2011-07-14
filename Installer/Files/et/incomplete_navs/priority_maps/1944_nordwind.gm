@@ -1,74 +1,40 @@
+//==================================================================================================
+//
+//	1944 Nordwind Final - 1944_nordwind.gm
+//
+//	Who  		When			What
+//--------------------------------------------------------------------------------------------------
+//	Mateos		~2009-2010		Initial Script -> Last Update
+//
+//==================================================================================================
+
 /****************************************************
-Pathing and script updated by **PC** Mateos
+Pathing and script by Mateos
 Correspondant WAY file size : -
-Last Update : 21 November 2010
+Last Update : 30 December 2010
 ****************************************************/
 
 global Map =
 {
-	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
-	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
-	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
-	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
-	Flag_Gold_Bars = "FLAG_Gold_Bars",
-	Cappoint_GoldDropoff = "CAPPOINT_GoldDropoff",
-	Build_Command_Post = "BUILD_Command_Post",
-	Build_Tank = "BUILD_Tank",
-	Build_Truck = "BUILD_Truck",
-	Build_Truck_Barrier = "BUILD_Truck_Barrier",
-	Plant_Command_Post = "PLANT_Command_Post",
-	Plant_Truck_Barrier = "PLANT_Truck_Barrier",
-	Plant_Warehouse_Door = "PLANT_Warehouse_Door",
-	Snipe_127 = "SNIPE_127",
-	Snipe_128 = "SNIPE_128",
-	Snipe_130 = "SNIPE_130",
-	Mover_tank = "MOVER_tank",
-	Mover_truck = "MOVER_truck",
-	
-	EscortVehicle =
-	{
-		Truck =
-		{
-			Enabled = true,
-			Priority = 0.9,
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitBots = 1,
-			LimitClass = Util.AllClasses,
-			LimitTeam = (1<<TEAM.AXIS),
-			Offset = 
-			{
-				Vector3(30,0,0),
-			}
-		},
-	},
-	
-	MountVehicle =
-	{
-		Enabled = true,
-		Priority = 0.9,
-		LimitBots = 1,
-		LimitClass = Util.AllClasses,
-		LimitTeam = (1<<TEAM.AXIS),
-	},
-
+	// *** TRIGGER CALLBACKS ***
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Command_Post );
-			
-		print( "Allied_Command_Post_Built" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
-	
+
 	Axis_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post );
-			
-		print( "Axis_Command_Post_Built" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Tank_Built = function( trigger )
@@ -76,7 +42,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tank_Built" );
+		Util.MapDebugPrint( "Tank_Built" );
 	},
 
 	Truck_Built = function( trigger )
@@ -84,17 +50,17 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Truck_Built" );
+		Util.MapDebugPrint( "Truck_Built" );
 	},
 
 	Truck_Barrier_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-		
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Truck_Barrier );
 
-		print( "Truck_Barrier_Built" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier" );
+
+		Util.MapDebugPrint( "Truck_Barrier_Built" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
@@ -102,15 +68,15 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
-	
+
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	Truck_Barrier_Destroyed = function( trigger )
@@ -118,7 +84,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Truck_Barrier_Destroyed" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "Truck_Barrier_Destroyed" );
 	},
 
 	Warehouse_Door_Destroyed = function( trigger )
@@ -126,112 +94,109 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Util.ChangeSpawn(TEAM.AXIS, 4);
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Warehouse_Door );
+		Util.ChangeSpawn( TEAM.AXIS, 4 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Delta.*" );
-		
-		Util.ChangeSpawn(TEAM.ALLIES, 1);
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Warehouse_Door" );
+
+		Util.ChangeSpawn( TEAM.ALLIES, 1 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
-		
-		print( "Warehouse_Door_Destroyed" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
+
+		Util.MapDebugPrint( "Warehouse_Door_Destroyed" );
 	},
 
 	Gold_Bars_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mover_truck );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Truck_Barrier );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Golf.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier" );
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_truck.*" );
 
-		print( "Gold_Bars_Taken" );
+		Util.MapDebugPrint( "Gold_Bars_Taken" );
 	},
-	
+
 	tank_region_0 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
-		Map.MountVehicle.Enabled = false;
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Golf.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_tank );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank );
-			
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Tank" );
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_truck.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck_Barrier );
-			
-		print( "tank_region_0" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "TankAtTruckyardGate" );
 	},
-	
+
 	tank_region_1 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Echo.*" );
-			
-		Util.ChangeSpawn(TEAM.ALLIES, 3);
+
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Charlie.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_start.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
-			
-		print( "tank_region_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_start.*" );
+
+		Util.MapDebugPrint( "tank_region_1" );
 	},
-	
+
 	tank_region_2 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Foxtrot.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Delta.*" );
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Bravo.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Charlie.*" );
-		
+
 		// Tactical decision: CP useless in fight
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
-			
-		print( "tank_region_2" );
+		Util.DisableGoal( "BUILD_Command_Post" );
+		Util.DisableGoal( "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "tank_region_2" );
 	},
-	
+
 	truck_region_3 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Delta.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Foxtrot.*" );
-			
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_High.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Truck_Barrier );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Bravo.*" );
-			
-		print( "truck_region_3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "truck_region_3" );
 	},
-	
+
 	truck_region_4 = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Hotel.*" );
-			
-		Util.ChangeSpawn(TEAM.ALLIES, 2);
+
+		Util.ChangeSpawn( TEAM.ALLIES, 2 );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Charlie.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
-		
-		print( "truck_region_4" );
+
+		Util.MapDebugPrint( "truck_region_4" );
 	},
 };
 
@@ -239,7 +204,7 @@ global OnMapLoad = function()
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
-	
+
 	// *** TRIGGERS ***
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!, Allies Contro", Map.Allied_Command_Post_Built );
 	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
@@ -251,64 +216,58 @@ global OnMapLoad = function()
 	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_Destroyed );
 	OnTrigger( "The Warehouse Door Destroyed.", Map.Warehouse_Door_Destroyed );
 	OnTrigger( "Axis team is escaping with the Gold Crates!", Map.Gold_Bars_Taken );
-	
+
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	
+	Util.DisableGoal( ".*", true );	// All but Routes
+
 	// *** AXIS GOALS ***
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Flag_Gold_Bars );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Cappoint_GoldDropoff );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mover_tank );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Command_Post );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Warehouse_Door );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Delta.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Echo.*" );
-	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Delta.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Gold_Bars" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_GoldDropoff" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Warehouse_Door" );
+
 	// *** ALLIED GOALS ***
-	Util.ChangeSpawn(TEAM.ALLIES, 3);
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
+	Util.ChangeSpawn( TEAM.ALLIES, 3 );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_High.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_start.*" );
-	
-	// *** ROUTING ***
-	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE.*" );
-	
-	// *** PRIORITY ***
+
+	// *** PRIORITY *** (Will probably be removed later)
 	SetGoalPriority( "ATTACK.*", 0.5 );
 	SetGoalPriority( "DEFEND.*", 0.5 );
 	SetGoalPriority( "DEFEND_High.*", 0.55 );
 	SetGoalPriority( "DEFEND_allies_truck.*", 0.55 );
-	SetGoalPriority( Map.Plant_Truck_Barrier, 0.6 );
-	SetGoalPriority( Map.Build_Command_Post, 0.6 );
-	SetGoalPriority( Map.Plant_Command_Post, 0.6 );
-	SetGoalPriority( Map.Build_Tank, 0.7 );
-	SetGoalPriority( Map.Plant_Warehouse_Door, 0.8 );
-	
+	SetGoalPriority( "PLANT_Truck_Barrier", 0.6 );
+	SetGoalPriority( "BUILD_Command_Post", 0.6 );
+	SetGoalPriority( "PLANT_Command_Post", 0.6 );
+	SetGoalPriority( "BUILD_Tank", 0.7 );
+	SetGoalPriority( "PLANT_Warehouse_Door", 0.8 );
+
 	// *** GOALS PROPERTIES ***
-	Util.SetMaxUsersInUse( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsersInProgress( 2, "BUILD.*" );
-	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
-	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "REPAIRMG42_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=120});
-	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
-	
+
 	Util.SetGoalOffset( 50, 75, 0, "PLANT_Truck_Barrier" );
-	
-	Util.OnTriggerPosition( Map.Mover_tank, "region0", 200.0, Map.tank_region_0 );
-	Util.OnTriggerPosition( Map.Mover_tank, "region1", 200.0, Map.tank_region_1 );
-	Util.OnTriggerPosition( Map.Mover_tank, "region2", 200.0, Map.tank_region_2 );
-	Util.OnTriggerPosition( Map.Mover_truck, "region3", 200.0, Map.truck_region_3 );
-	Util.OnTriggerPosition( Map.Mover_truck, "region2", 200.0, Map.truck_region_4 );
-	
+
+	Util.OnTriggerPosition( "MOVER_tank", "region0", 200.0, Map.tank_region_0 );
+	Util.OnTriggerPosition( "MOVER_tank", "region1", 200.0, Map.tank_region_1 );
+	Util.OnTriggerPosition( "MOVER_tank", "region2", 200.0, Map.tank_region_2 );
+	Util.OnTriggerPosition( "MOVER_truck", "region3", 200.0, Map.truck_region_3 );
+	Util.OnTriggerPosition( "MOVER_truck", "region2", 200.0, Map.truck_region_4 );
+
+	// Force Routing for the Tank Build
+	Util.ForceRouting( "BUILD_Tank", true );
+
 	// *** ROUTES ***
 	MapRoutes =
 	{
@@ -319,8 +278,8 @@ global OnMapLoad = function()
 				ROUTE_AlliedRoute1 = {},
 			},
 		},
-		
-		//First spawn
+
+		//First spawn (Does not work, sadly)
 		BUILD_Tank =
 		{
 			ROUTE_AxisSpawn =
@@ -338,7 +297,7 @@ global OnMapLoad = function()
 						},
 					},
 				},
-				
+
 				ROUTE_Ground1 =
 				{
 					ROUTE_Ground2 =
@@ -347,7 +306,7 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			
+
 			ROUTE_AxisSpawn3 =
 			{
 				ROUTE_Hill1 =
@@ -365,7 +324,7 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		
+
 		BUILD_Command_Post =
 		{
 			ROUTE_AxisSpawn =
@@ -381,7 +340,7 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			
+
 			ROUTE_AxisSpawn3 =
 			{
 				ROUTE_Hill1 =
@@ -396,8 +355,33 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		
-		// Warehouse Spawn Activated
+
+		ATTACK_Echo1 =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 = {},
+					},
+				},
+			},
+
+			ROUTE_AxisSpawn3 =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 = {},
+					},
+				},
+			},
+		},
+
+		// Warehouse Spawn Activatedv (Routes displayed at least...)
 		BUILD_Tank =
 		{
 			ROUTE_WarehouseSpawn =
@@ -412,7 +396,7 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		
+
 		BUILD_Command_Post =
 		{
 			ROUTE_WarehouseSpawn =
@@ -426,15 +410,29 @@ global OnMapLoad = function()
 				},
 			},
 		},
+
+		ATTACK_Echo1 =
+		{
+			ROUTE_WarehouseSpawn =
+			{
+				ROUTE_Ground2 =
+				{
+					ROUTE_Hill3 = {},
+				},
+			},
+		},
 	};
-	
-	//Copy routes
+
+	// Copy routes
+	MapRoutes.ATTACK_Echo3 = MapRoutes.ATTACK_Echo1;
+	MapRoutes.ATTACK_Echo4 = MapRoutes.ATTACK_Echo1;
+	MapRoutes.ATTACK_Echo6 = MapRoutes.ATTACK_Echo1;
 	MapRoutes.DEFEND_High4 = MapRoutes.DEFEND_High3;
 	MapRoutes.DEFEND_High5 = MapRoutes.DEFEND_High3;
-	
+
 	Util.Routes(MapRoutes);
 
-	print( "Omni-bot map script for 1944 Nordwind by **PC** Mateos" );
+	Util.MapDebugPrint( "Omni-bot map script for 1944 Nordwind by Mateos" );
 };
 
 global OnBotJoin = function( bot )

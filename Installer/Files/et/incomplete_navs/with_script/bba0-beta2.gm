@@ -1,0 +1,297 @@
+//==========================================================================================
+//
+//	bba0-beta2.gm
+//
+//	Who             	When		What
+//------------------------------------------------------------------------------------------
+//	^1|>^0B^1<|^0peyote	20 April 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	East_Allied_Bunker_Door_Dyno = 0,
+	West_Allied_Bunker_Door_Dyno = 0,
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	East_Allied_Bunker_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Allied_Bunker_Door_Dyno += 1;
+		Util.MapDebugPrint( "East_Allied_Bunker_Door_Planted" );
+	},
+
+	West_Allied_Bunker_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Allied_Bunker_Door_Dyno += 1;
+		Util.MapDebugPrint( "West_Allied_Bunker_Door_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	East_Allied_Bunker_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Allied_Bunker_Door_Dyno -= 1;
+		Util.MapDebugPrint( "East_Allied_Bunker_Door_Defused" );
+	},
+
+	West_Allied_Bunker_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Allied_Bunker_Door_Dyno -= 1;
+		Util.MapDebugPrint( "West_Allied_Bunker_Door_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	East_Allied_Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Allied_Bunker_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "East_Allied_Bunker_Door_Destroyed" );
+	},
+
+	West_Allied_Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Allied_Bunker_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "West_Allied_Bunker_Door_Destroyed" );
+	},
+
+	allied_flag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_flag" );
+		Util.MapDebugPrint( "allied_flag_Taken" );
+	},
+
+	axis_flag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_flag" );
+		Util.MapDebugPrint( "axis_flag_Taken" );
+	},
+
+	allied_flag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_flag" );
+		Util.MapDebugPrint( "allied_flag_Returned" );
+	},
+
+	axis_flag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_flag" );
+		Util.MapDebugPrint( "axis_flag_Returned" );
+	},
+
+	allied_flag_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_flag" );
+		Util.MapDebugPrint( "allied_flag_Secured" );
+	},
+
+	axis_flag_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_flag" );
+		Util.MapDebugPrint( "axis_flag_Secured" );
+	},
+
+	east_crypt_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "east_crypt_Axis_Captured" );
+	},
+
+	east_crypt_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "east_crypt_Allies_Captured" );
+	},
+
+	west_crypt_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "west_crypt_Axis_Captured" );
+	},
+
+	west_crypt_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "west_crypt_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "^4Allies Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "^1Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the East Allied Bunker Door..", Map.East_Allied_Bunker_Door_Planted );
+	OnTrigger( "Planted at the West Allied Bunker Door.", Map.West_Allied_Bunker_Door_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the East Axis Bunker Door.", Map.East_Allied_Bunker_Door_Defused );
+	OnTrigger( "Defused at the West Axis Bunker Door.", Map.West_Allied_Bunker_Door_Defused );
+	OnTrigger( "^1Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "^4Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.East_Allied_Bunker_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_Allied_Bunker_Door_Destroyed );
+	OnTrigger( "Axis have stolen the Allied Flag!", Map.allied_flag_Taken );
+	OnTrigger( "Allies have stolen the Axis Flag!", Map.axis_flag_Taken );
+	OnTrigger( "Allies have returned the Allies Flag!", Map.allied_flag_Returned );
+	OnTrigger( "Axis have returned the Axis Flag!", Map.axis_flag_Returned );
+	OnTrigger( "^1the Axis have Captured a Flag!!!", Map.allied_flag_Secured );
+	OnTrigger( "^4the Allies have Captured a Flag!!!", Map.axis_flag_Secured );
+	OnTrigger( "^1Axis capture the East Crypt Spawn!", Map.east_crypt_Axis_Captured );
+	OnTrigger( "^4Allies capture the West Crypt Spawn!", Map.east_crypt_Allies_Captured );
+	OnTrigger( "^1Axis capture the West Crypt Spawn!", Map.west_crypt_Axis_Captured );
+	OnTrigger( "^4Allies capture the West Crypt Spawn!", Map.west_crypt_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Allies.*" );
+	//SetMapGoalProperties( ".*", {MinCampTime=15, MaxCampTime=90} );
+	//SetGoalPriority( ".*", 1.0, 0, 0 ); //all teams and all classes
+
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "CHECKPOINT_.*" );
+	//Util.SetMaxUsers( 1, "ATTACK_.*" );
+	//Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

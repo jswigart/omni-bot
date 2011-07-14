@@ -8,7 +8,7 @@
 //
 //------------------------------------------------------------------------------------------
 //	Native12	6.11.2010		ReScript
-//
+//			29.12.2010		Correction in spawn`s triggers
 //==========================================================================================
 //	therock.way
 //
@@ -107,6 +107,7 @@ global Map =
 		Map.AlliedSpawn = 0;
 
 		Util.ChangeSpawn( TEAM.ALLIES, 2 );
+		Util.ChangeSpawn( TEAM.AXIS, 3 );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_forwardspawn_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
@@ -125,6 +126,7 @@ global Map =
 		Map.AlliedSpawn = 1;
 
 		Util.ChangeSpawn( TEAM.ALLIES, 3 );
+		Util.ChangeSpawn( TEAM.AXIS, 1 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_forwardspawn_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forwardspawn1_flag" );
@@ -1287,4 +1289,15 @@ global OnBotJoin = function( bot )
 	ETUtil.SwitchWeapon(WEAPON.MP40);
 	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
 	ETUtil.SwitchWeapon(WEAPON.FG42);
+	
+	if ( Map.AlliedSpawn == 0 )
+	{
+		Util.ChangeSpawn( TEAM.ALLIES, 2 );
+		Util.ChangeSpawn( TEAM.AXIS, 3 );
+	}
+	else
+	{
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );
+		Util.ChangeSpawn( TEAM.AXIS, 1 );
+	}
 };

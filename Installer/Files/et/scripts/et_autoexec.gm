@@ -78,6 +78,18 @@ global PostMapLoad = function()
 			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
 		}
 	}
+
+	if ( GetGameType() == 5 ) // last man standing
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+		Util.MapDebugPrint( "Running " + GetMapName() + " in LMS mode." );
+	}
+
 };
 
 print("ET Script Executed");

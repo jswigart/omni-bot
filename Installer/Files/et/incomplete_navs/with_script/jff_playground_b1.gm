@@ -1,0 +1,545 @@
+//==========================================================================================
+//
+//	jff_playground_b1.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	21 January 2011	Initial Script
+//	Dule OBJ
+//==========================================================================================
+//Blow the Safe - Get the Gold to Safe house - Build CP
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Allied_Safe_Dyno = 0,
+	Allied_barricade_Dyno = 0,
+	Assault_Ramp_Dyno = 0,
+	Assault_Ramp_1_Dyno = 0,
+	Axis_Safe_Dyno = 0,
+	Axis_barricade_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Allied_Command_Post_Dyno = 0,
+	CPAllied = false, //ALLIES CP Built - NO
+	CPAxis = false, //AXIS CP Built - NO
+	Allied_Secured_Gold = false, //(Initial = AXIS) Secured Gold - NO
+	Axis_Secured_Gold = false, //(Initial = ALLIES) Secured Gold - NO
+
+	Roles =
+	{
+		AXIS = // Team
+		{
+			AllBots = true, // each bot is considered for a role
+			DEFENDER = // the DEFENDER role
+			{
+				spawnpt = 2,			// users of this role will choose spawnpt 2
+				numbots = 3,			// maximum of 3 bots
+				crucialClass = CLASS.ENGINEER,	// first bot
+			},
+			ATTACKER = // the ATTACKER role
+			{
+				numbots = 4,			// maximum of 3 bots
+				crucialClass = CLASS.ENGINEER,	// first bot
+
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true, // default: every other bot
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER = // the ATTACKER role
+			{
+				numbots = 4,			// maximum of 3 bots
+				crucialClass = CLASS.ENGINEER,	// first bot
+
+			},
+		},
+	},
+
+	//Allied Goals
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.CPAllied = true;
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Neutral_Command_Post" );
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.CPAllied = false;
+		if (Map.Axis_Secured_Gold == true)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_CP.*" ); //Attack it
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" ); //Deffend it
+		}
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Allied_barricade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_barricade_Built" );
+	},
+
+	Allied_barricade_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_barricade_Dyno += 1;
+		Util.MapDebugPrint( "Allied_barricade_Planted" );
+	},
+
+	Allied_barricade_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_barricade_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_barricade_Defused" );
+	},
+
+	Allied_barricade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_barricade_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_barricade_Destroyed" );
+	},
+
+	Axis_Safe_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Safe_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_SafeAxis.*" );
+		Util.MapDebugPrint( "Axis_Safe_Planted" );
+	},
+
+	Axis_Safe_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Safe_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Safe_Defused" );
+	},
+
+	Axis_Safe_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Safe_Dyno = 0;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold_crate_axis" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allied_Gold" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_SafeAxis.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_GoldAllied.*" );
+		Util.MapDebugPrint( "Axis_Safe_Destroyed" );
+	},
+
+	gold_crate_axis_Taken = function( trigger ) //(Initial = ALLIES)
+	{
+		if ( TestMap )
+			{ return; }
+		Util.MapDebugPrint( "gold_crate_axis_Taken" );
+	},
+
+	gold_crate_axis_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_GoldAllied.*" );
+		Util.MapDebugPrint( "gold_crate_axis_Returned" );
+	},
+
+	gold_crate_axis_Secured = function( trigger ) //(Initial = ALLIES)
+	{
+		if ( TestMap )
+			{ return; }
+		Map.Axis_Secured_Gold = true;
+		
+		if ( Map.CPAllied == true )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" );
+		}
+		else if ( Map.CPAllied == false )
+		{
+			SetGoalPriority( "BUILD_Neutral_Command_Post", 1.1 );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_CP.*" ); //attacking
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" ); //defending
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_GoldAllied.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_SafeAxis.*" );
+		Util.MapDebugPrint( "gold_crate_axis_Secured" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
+	},
+
+	Assault_Ramp_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno += 1;
+		Util.MapDebugPrint( "Assault_Ramp_Planted" );
+	},
+
+	Assault_Ramp_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno -= 1;
+		Util.MapDebugPrint( "Assault_Ramp_Defused" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno = 0;
+
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
+	},
+	//Axis Goals
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.CPAxis = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.CPAxis = false;
+		if (Map.Allied_Secured_Gold == true)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" ); //Attack it
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_CP.*" ); //Deffend it
+		}
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Assault_Ramp_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_Ramp_1_Built" );
+	},
+
+	Assault_Ramp_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_1_Dyno += 1;
+		Util.MapDebugPrint( "Assault_Ramp_1_Planted" );
+	},
+
+	Assault_Ramp_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_1_Dyno -= 1;
+		Util.MapDebugPrint( "Assault_Ramp_1_Defused" );
+	},
+
+	Assault_Ramp_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_1_Dyno = 0;
+
+		Util.MapDebugPrint( "Assault_Ramp_1_Destroyed" );
+	},
+	Axis_barricade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_barricade_Built" );
+	},
+
+	Axis_barricade_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_barricade_Dyno += 1;
+		Util.MapDebugPrint( "Axis_barricade_Planted" );
+	},
+
+	Axis_barricade_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_barricade_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_barricade_Defused" );
+	},
+
+	Axis_barricade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_barricade_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_barricade_Destroyed" );
+	},
+
+	Allied_Safe_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Safe_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_SafeAllied.*" );
+		Util.MapDebugPrint( "Allied_Safe_Planted" );
+	},
+
+	Allied_Safe_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Safe_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Safe_Defused" );
+	},
+
+	Allied_Safe_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Safe_Dyno = 0;
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_gold_crate_allies" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_GoldAxis" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_SafeAllied.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_GoldAxis.*" );
+		Util.MapDebugPrint( "Allied_Safe_Destroyed" );
+	},
+
+	gold_crate_allies_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Util.MapDebugPrint( "gold_crate_allies_Taken" );
+	},
+
+	gold_crate_allies_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_GoldAxis.*" );
+		Util.MapDebugPrint( "gold_crate_allies_Returned" );
+	},
+
+	gold_crate_allies_Secured = function( trigger ) //(Initial = AXIS)
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.Allied_Secured_Gold = true; //(Initial = AXIS)
+		
+		if ( Map.CPAxis == true )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_CP.*" ); //attack if AXIS built
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" ); //defend if AXIS built
+		}
+		else if ( Map.CPAxis == false )
+		{
+			SetGoalPriority( "BUILD_Neutral_Command_Post", 1.1 );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_CP.*" ); //deffend allies if destoyed
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_CP.*" ); //attack axis if destroyed
+		}
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_GoldAxis.*" );
+	
+		Util.MapDebugPrint( "gold_crate_allies_Secured" );
+	},
+};
+	global OnMapLoad = function()
+	{
+		if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+		// Register callback functions
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+		OnTrigger( "The Allied barricade has been constucted!", Map.Allied_barricade_Built );
+		OnTrigger( "The Axis Assault Ramp has been constructed!", Map.Assault_Ramp_Built );
+		OnTrigger( "The Allied Assault Ramp has been constructed!", Map.Assault_Ramp_1_Built );
+		OnTrigger( "The Axis barricade has been constucted!", Map.Axis_barricade_Built );
+
+		OnTrigger( "Planted at the Allied Command Post!", Map.Allied_Command_Post_Planted );
+		OnTrigger( "Planted at the Axis Command Post!", Map.Axis_Command_Post_Planted );
+		OnTrigger( "Planted at the Allied Safe", Map.Allied_Safe_Planted );
+		OnTrigger( "Planted at the Allied barricade", Map.Allied_barricade_Planted );
+		OnTrigger( "Planted at the Axis Assault Ramp", Map.Assault_Ramp_Planted );
+		OnTrigger( "Planted at the Allied Assault Ramp", Map.Assault_Ramp_1_Planted );
+		OnTrigger( "Planted at the Axis Safe", Map.Axis_Safe_Planted );
+		OnTrigger( "Planted at the Axis barricade", Map.Axis_barricade_Planted );
+
+		OnTrigger( "Defused at the Allied Safe", Map.Allied_Safe_Defused );
+		OnTrigger( "Defused at the Allied barricade", Map.Allied_barricade_Defused );
+		OnTrigger( "Defused at the Axis Assault Ramp", Map.Assault_Ramp_Defused );
+		OnTrigger( "Defused at the Allied Assault Ramp", Map.Assault_Ramp_1_Defused );
+		OnTrigger( "Defused at the Axis Safe.", Map.Axis_Safe_Defused );
+		OnTrigger( "Defused at the Axis barricade.", Map.Axis_barricade_Defused );
+		OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+		OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+		
+		OnTrigger( "The Allied Safe has been breached !!", Map.Allied_Safe_Destroyed );
+		OnTrigger( "Allied have destroyed the barricade!", Map.Allied_barricade_Destroyed );
+		OnTrigger( "Axis have destroyed the Assault Ramp!", Map.Assault_Ramp_Destroyed );
+		OnTrigger( "Allies have destroyed the Assault Ramp!", Map.Assault_Ramp_1_Destroyed );
+		OnTrigger( "The Axis Safe has been breached !!", Map.Axis_Safe_Destroyed );
+		OnTrigger( "Axis have destroyed the barricade!", Map.Axis_barricade_Destroyed );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+
+		OnTrigger( "Allies have taken the Axis Gold!", Map.gold_crate_allies_Taken );
+		OnTrigger( "Axis have taken the Allies Gold!", Map.gold_crate_axis_Taken );
+		OnTrigger( "Axis have returned the Allies Gold!", Map.gold_crate_allies_Returned );
+		OnTrigger( "Allies have returned the Axis Gold!", Map.gold_crate_axis_Returned );
+		OnTrigger( "Allies have secured the Axis Gold!", Map.gold_crate_allies_Secured );
+		OnTrigger( "Axis have secured the Allies Gold!", Map.gold_crate_axis_Secured );
+
+		Util.DisableGoal( ".*", true ); // all but routes
+		
+		Util.EnableGoal("BUILD_Allied_barricade");
+		Util.EnableGoal("PLANT_Allied_barricade");
+		Util.EnableGoal("BUILD_Axis_barricade");
+		Util.EnableGoal("PLANT_Axis_barricade");
+		Util.EnableGoal("PLANT_Axis_Safe");
+		Util.EnableGoal("PLANT_Allied_Safe");
+		Util.EnableGoal("BUILD_Assault_Ramp");
+		Util.EnableGoal("BUILD_Assault_Ramp_1");
+		Util.EnableGoal("PLANT_Assault_Ramp");
+		Util.EnableGoal("PLANT_Assault_Ramp_1");	
+		Util.EnableGoal("PLANT_Neutral_Command_Post");
+		
+		//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+		//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+		Util.DisableGoal( "MOUNTMG42.*", true );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_SafeAxis.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_SafeAllied.*" );
+		
+		// Max users per goal
+		Util.SetMaxUsers( 1, "ATTACK_.*" );
+		Util.SetMaxUsers( 1, "DEFEND_.*" );
+		Util.SetMaxUsers( 1, "GRENADE_.*" );
+		Util.SetMaxUsers( 1, "SNIPE_.*" );
+		Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+		Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+		Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+		Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+		Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+		// Camp times
+		SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+		SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+		Util.SetGoalOffset( -20, 0, -60, "PLANT_Allied_Safe" );
+		Util.SetGoalOffset( 20, 0, -60, "PLANT_Axis_Safe" );
+		Util.SetGoalOffset( 0, 90, -60, "PLANT_Axis_barricade" );
+		Util.SetGoalOffset( 0, -90, -60, "PLANT_Allied_barricade" );
+		Util.AddUseWp("PLANT_Assault_Ramp_1", "Ramp1");
+		Util.AddUseWp("PLANT_Assault_Ramp_1", "Ramp1A");
+		Util.SetGoalOffset( -50, -90, -120, "PLANT_Assault_Ramp_1" );
+		Util.AddUseWp("PLANT_Assault_Ramp", "Ramp");
+		Util.AddUseWp("PLANT_Assault_Ramp", "RampA");
+		Util.SetGoalOffset( 50, 90, -120, "PLANT_Assault_Ramp" );
+		Util.AddUseWp("BUILD_Neutral_Command_Post", "CP");
+		Util.AddUseWp("BUILD_Allied_barricade", "ALLIEDBA");
+		Util.AddUseWp("BUILD_Axis_barricade", "AXISBA");
+		
+		Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+	};
+
+	global OnBotJoin = function( bot )
+	{
+		// Uncomment for shootable breakables
+		bot.TargetBreakableDist = 90.0;
+		// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+		bot.MaxViewDistance = 2400;
+	};

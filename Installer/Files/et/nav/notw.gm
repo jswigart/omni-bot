@@ -1,11 +1,13 @@
 /********************************************************
 Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
 ********************************************************/
-
+// Tardis  01 February	2011 Fixed Script
+//
+//==========================================================================================
 global Map =
 {
-	Debug = false,
-	Quiet = true,
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
 	//set Talk to false if you don't want the bots to talk ingame !
 	Talk = true,
 
@@ -285,7 +287,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND_d_xf5u_hangar.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_a_cp.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=240});
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120});
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60});
@@ -367,7 +370,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_a_flagpoint_8 = MapRoutes.CHECKPOINT_depot_flag;
 
 	Util.Routes(MapRoutes);
-	Util.MapDebugPrint( "Script for NOTW executed!" );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 // Uncomment for shootable breakables

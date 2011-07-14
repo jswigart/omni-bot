@@ -484,6 +484,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 		// Axis goals
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck_Barrier_2 );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bridge );
@@ -573,7 +574,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Truck_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Truck_Barrier2_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_1 );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Truck_Barrier_2 );
 
 		//make sure the truck repair goal is active
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck );

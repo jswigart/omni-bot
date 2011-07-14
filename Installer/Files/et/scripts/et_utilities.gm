@@ -519,7 +519,7 @@ member WarpToGoalOffset = function( _params )
 				s = "setviewpos " + goalpos[0] + " " + goalpos[1] + " " + goalpos[2] + " " + " 0";
 				print(s);
 
-				ExecCommandOnClient(Util.GetPlayerEntity(), s);
+				ExecCommandOnClient(GetLocalEntity(), s);
 		}
 		else
 		{ print("WarpTo: Invalid Goal"); }
@@ -1255,7 +1255,7 @@ member LosingChat = function( team )
 		return;
 	}
 
-	v = { VOICE.G_NEGATIVE, VOICE.G_OOPS, VOICE.G_GOODGAME, VOICE.G_BYE, VOICE.G_HOLD_FIRE };
+	v = { VOICE.G_NEGATIVE, VOICE.G_OOPS, VOICE.G_GOODGAME, VOICE.G_HOLD_FIRE };
 
 	foreach ( id and bot in BotTable ) {
 		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {

@@ -7,6 +7,13 @@ this.LimitToWeapon( WEAPON.MOBILE_MG42 );
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
+	this.FeelPainLocked = false; // throttle for the event
+
+	this.SecondaryWeapons = table();
+	this.SecondaryWeapons[WEAPON.COLT] = 1;
+	this.SecondaryWeapons[WEAPON.LUGER] = 1;
+	this.SecondaryWeapons[WEAPON.COLT_AKIMBO] = 1;
+	this.SecondaryWeapons[WEAPON.LUGER_AKIMBO] = 1;
 };
 
 this.GetPriority = function()
@@ -38,7 +45,8 @@ this.Enter = function()
 	// finish it once they run out of ammo
 	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponhasammo", WEAPON.MOBILE_MG42_SET, 0);
 
-	if(!this.MarkInProgress(this.MapGoal)) {
+	if(!this.MarkInProgress(this.MapGoal))
+	{
 		this.BlackboardDelay(5, this.MapGoal);
 		this.Finished();
 	}
@@ -49,6 +57,12 @@ this.Enter = function()
 
 this.Update = function()
 {
+	weapon = this.Bot.HasAnyWeapon(this.SecondaryWeapons);
+	if (weapon)
+	{
+		this.AddWeaponRequest(Priority.Medium, weapon);
+	}
+
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
 		// disable combat movement. note: if it is too late here,
@@ -59,7 +73,8 @@ this.Update = function()
 			this.Bot.DisableCombatMovement = true;
 		}
 
-		if(!this.MarkInUse(this.MapGoal)) {
+		if(!this.MarkInUse(this.MapGoal))
+		{
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
@@ -75,7 +90,7 @@ this.Update = function()
 		this.BlockForWeaponChange( WEAPON.MOBILE_MG42_SET );
 
 		// wait while mounting mg42, it is necessary for correct aim vector
-		sleep(1);
+		sleep(2);
 
 		this.Bot.HoldButton(BTN.PRONE, 999);
 
@@ -86,9 +101,6 @@ this.Update = function()
 		while( timeout < this.CampTime )
 		{
 			timeout += 1;
-
-			// todo: may need some target evaluation here
-
 			sleep(1);
 		}
 	}
@@ -104,19 +116,44 @@ this.Update = function()
 
 this.IsOutOfRange = function(ent)
 {
-	v1 = (GetEntPosition(ent) - this.Bot.GetPosition()).Normalize();
+	if (!this.AimVector)
+	{
+		return true;
+	}
+
+	entPos = GetEntPosition(ent);
+	botPos = this.Bot.GetPosition();
+
+	if ( !entPos || !botPos )
+	{
+		return true;
+	}
+
+	v1 = (entPos - botPos).Normalize();
 	v2 = this.AimVector.Normalize();
 	return v1.DotProduct(v2) < 0.65;
 };
 
 this.Events[EVENT.FEEL_PAIN] = function(ent)
 {
-	if (ent && this.IsOutOfRange(ent) && !this.Bot.IsAllied(ent))
+	// ignore non-player ents
+	if (!ent || this.FeelPainLocked || GetGameIdFromEntity(ent) > 63)
+	{
+		return;
+	}
+
+	if (!this.Bot.IsAllied(ent) && this.IsOutOfRange(ent))
 	{
 		this.Bot.HoldButton(BTN.JUMP, 2);
 		this.BlackboardDelay(7, this.MapGoal);
 		this.Finished();
 	}
+
+	// throttle it since this event can be fired in rapid succession
+	// we'll lose some precision, but this isn't critical functionality
+	this.FeelPainLocked = true;
+	sleep(1);
+	this.FeelPainLocked = false;
 };
 
 this.Exit = function()
@@ -126,5 +163,7 @@ this.Exit = function()
 	}
 	this.Bot.ReleaseButton(BTN.PRONE);
 	this.ReleaseWeaponRequest();
+
+	this.FeelPainLocked = false;
 };
 

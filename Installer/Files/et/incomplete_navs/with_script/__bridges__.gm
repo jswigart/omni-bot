@@ -2,178 +2,146 @@
 //
 //	__bridges__.gm
 //
-//	Who			When		What
-//------------------------------------------------------------------------------------------------------------
-//	Mateos			19/12/10	Added Defend Goals for Allies at the end
-//	jaskot			02/03/09	Converted old script to new format
+//	Who		When			What
+//------------------------------------------------------------------------------------------
+//	jaskot		02/03/09		Converted old script to new format
+//	Mateos		19/12/10		Added Defend Goals for Allies at the end
+//	MickyP		18 December 2010	Full 0.81 Update
 //
 //==========================================================================================
 //
 
 global Map =
 {
-	EscortVehicle =
+	Debug = 0,
+	ShowMovers = false,
+
+	MapStart = true,
+	EscortTruck = 1,
+	BuildTruck = 1,
+	TruckBuilt = 1,
+
+	TruckAtBarrier = 0,
+	TB_Built = 0,
+	TruckPastBarrier = 0,
+
+	TrainBuilt = 0,
+	BuildTrain = 0,
+	EscortTrain = true,
+
+	TrainAtRB = false,
+	RB_Built = false,
+	TrainPastRB = false,
+
+	TrainAtBB = false,
+	BB_Built = false,
+	TrainPastRB = false,
+
+	Navigation =
 	{
-		Truck =
+		ladder_1_pt =
 		{
-			EscortVehicleGoalName = "MOVER_truck",
-			Offset = 
+			navigate = function( _this )
 			{
-				Vector3(0,-20,0),
-			}
-		},
-	},
-	
-	RideVehicle =
-	{
-		Train =
-		{
-			Enabled = false,
-			Priority = 0.65,
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = (1<<CLASS.ENGINEER),
-			RideVehicleGoalName = "MOVER_train",
-			SeatRadius = 90,
-			
-			Seat =
-			{
-				{
-					BoardPosition = Vector3(-128, -68, -76),
-					RidePosition = Vector3(-56, -68, 80),
-					FacePosition = Vector3(-128, -68, 96),
-				},
+				_this.Bot.HoldButton( BTN.FORWARD, 5 );
+				sleep( 5 );
 			},
 		},
 	},
-	
-	deadarea_offset = Vector3( 0, 0, 0 ),
-	deadarea_AABB = AABB( 6205, -1999, 564, 7975, -1876, 692 ),
-	deadtriggerInfo =
-	{
-		Name="DeadAreaTrigger",
-		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
-		OnEnter = function(ent)
-		{
-			print(GetEntName(ent),"entered aabb trigger");
-			Map.deadarea_offset = Vector3( 280, 0, 0 );
-		},
-		OnExit = function(ent)
-		{
-			print(GetEntName(ent),"exited aabb trigger");
-			Map.deadarea_offset = Vector3( 0, 0, 0 );
-		},
-	},
-	
-	ladder1triggerInfo =
+
+	Ladder1 =
 	{
 		Name="Ladder 1",
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
 			print(GetEntName(ent),"entered ladder 1 trigger");
-			Wp.SetWaypointFlag( "Ladder 1", "closed", true );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder1a", "closed", true );
+			Wp.SetWaypointFlag( "Ladder1b", "closed", true );
+			Wp.SetWaypointFlag( "Ladder1c", "closed", true );
 		},
 		OnExit = function(ent)
 		{
 			print(GetEntName(ent),"exited ladder 1 trigger");
-			Wp.SetWaypointFlag( "Ladder 1", "closed", false );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder1a", "closed", false );
+			Wp.SetWaypointFlag( "Ladder1b", "closed", false );
+			Wp.SetWaypointFlag( "Ladder1c", "closed", false );
 		},
 	},
-	
-	ladder2triggerInfo =
+
+	Ladder2 =
 	{
 		Name="Ladder 2",
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
 			print(GetEntName(ent),"entered ladder 2 trigger");
-			Wp.SetWaypointFlag( "Ladder 2", "closed", true );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder2", "closed", true );
 		},
 		OnExit = function(ent)
 		{
 			print(GetEntName(ent),"exited ladder 2 trigger");
-			Wp.SetWaypointFlag( "Ladder 2", "closed", false );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder2", "closed", false );
 		},
 	},
-	
-	ladder3triggerInfo =
+
+	Ladder3 =
 	{
 		Name="Ladder 3",
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
 			print(GetEntName(ent),"entered ladder 3 trigger");
-			Wp.SetWaypointFlag( "Ladder 3", "closed", true );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder3a", "closed", true );
+			Wp.SetWaypointFlag( "Ladder3b", "closed", true );
 		},
 		OnExit = function(ent)
 		{
 			print(GetEntName(ent),"exited ladder 3 trigger");
-			Wp.SetWaypointFlag( "Ladder 3", "closed", false );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			Wp.SetWaypointFlag( "Ladder3a", "closed", false );
+			Wp.SetWaypointFlag( "Ladder3b", "closed", false );
 		},
 	},
-	
-	bridge1triggerInfo =
+
+	Ladder4 =
 	{
-		Name="Bridge 1",
+		Name="Ladder 4",
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered bridge 1 trigger");
-			Wp.SetWaypointFlag( "Bridge 1", "closed", true );
-			Wp.SetWaypointFlag( "Bridge 1a", "closed", true );
-			Wp.SetWaypointFlag( "Bridge 1b", "closed", true );
-			Wp.SetWaypointFlag( "Bridge 1c", "closed", true );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Boathouse_Bridge );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			print(GetEntName(ent),"entered ladder 4 trigger");
+			Wp.SetWaypointFlag( "Ladder4", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited bridge 1 trigger");
-			Wp.SetWaypointFlag( "Bridge 1", "closed", false );
-			Wp.SetWaypointFlag( "Bridge 1a", "closed", false );
-			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			print(GetEntName(ent),"exited ladder 4 trigger");
+			Wp.SetWaypointFlag( "Ladder4", "closed", false );
 		},
 	},
-	
-	Ammo_Cabinet_boathouse_ammocabinet = "AMMOCAB_boathouse_ammocabinet",
-	Ammo_Cabinet_reservoir_ammocabinet = "AMMOCAB_reservoir_ammocabinet",
-	Ammo_Cabinet_sawmill_ammocabinet = "AMMOCAB_sawmill_ammocabinet",
-	Health_Cabinet_reservoir_health_cabinet = "HEALTHCAB_reservoir_health_cabinet",
-	Health_Cabinet_boathouse_health_cabinet = "HEALTHCAB_sawmill_health_cabinet",
-	Checkpoint_forwardspawn = "CHECKPOINT_forwardspawn",
-	Checkpoint_forwardspawn0 = "CHECKPOINT_forwardspawn0",
-	Checkpoint_forwardspawn3 = "CHECKPOINT_forwardspawn3",
-	Build_Boathouse_Bridge = "BUILD_Boathouse_Bridge",
-	Build_Command_Post = "BUILD_Command_Post",
-	Build_Reservoir_Bridge = "BUILD_Reservoir_Bridge",
-	Build_Train = "BUILD_Train",
-	Build_Truck_Barrier = "BUILD_Truck_Barrier",
-	Build_truck = "BUILD_truck",
-	Plant_Boathouse_Bridge = "PLANT_Boathouse_Bridge",
-	Plant_Command_Post = "PLANT_Command_Post",
-	Plant_Reservoir_Bridge = "PLANT_Reservoir_Bridge",
-	Plant_Truck_Barrier = "PLANT_Truck_Barrier",
-	Mount_21 = "MOUNTMG42_21",
-	Mount_25 = "MOUNTMG42_25",
-	Mount_66 = "MOUNTMG42_66",
-	Repair_21 = "REPAIRMG42_21",
-	Repair_25 = "REPAIRMG42_25",
-	Repair_66 = "REPAIRMG42_66",
-	Mover_train = "MOVER_train",
-	Mover_truck = "MOVER_truck",
 
-	Boathouse_Bridge_Built = function( trigger )
+	Ladder5 =
+	{
+		Name="Ladder 5",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			print(GetEntName(ent),"entered ladder 5 trigger");
+			Wp.SetWaypointFlag( "Ladder5", "closed", true );
+		},
+		OnExit = function(ent)
+		{
+			print(GetEntName(ent),"exited ladder 5 trigger");
+			Wp.SetWaypointFlag( "Ladder5", "closed", false );
+		},
+	},
+
+	Map_Started = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
-
-		print( "Boathouse_Bridge_Built" );
+		// Stops Certain triggers running at start of map
+		Map.MapStart = false;
+		//Util.MapDebugPrint( "Map_Started" );
 	},
 
 	Command_Post_Built = function( trigger )
@@ -181,49 +149,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Command_Post_Built" );
-	},
-
-	Reservoir_Bridge_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "Reservoir_Bridge_Built" );
-	},
-
-	Train_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Map.RideVehicle.Train.Enabled = true;
-		
-		print( "Train_Built" );
-	},
-
-	Truck_Barrier_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "Truck_Barrier_Built" );
-	},
-
-	truck_Built = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "truck_Built" );
-	},
-
-	Boathouse_Bridge_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "Boathouse_Bridge_Destroyed" );
+		Util.MapDebugPrint( "Command_Post_Built" );
 	},
 
 	Command_Post_Destroyed = function( trigger )
@@ -231,27 +157,68 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
 	},
 
-	Reservoir_Bridge_Destroyed = function( trigger )
+	Truck_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Reservoir_Bridge_Destroyed" );
+		Map.TruckBuilt = 1;
+		if ( Map.EscortTruck == 0 )
+			{ return; }
+
+		else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Defend_Truck" );
+		}
+
+		Util.MapDebugPrint( "truck_Built" );
 	},
 
-	truck_Destroyed = function( trigger )
+	Truck_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.SetPositionGoal( Map.Build_truck, Map.Mover_truck );
-		Util.SetGoalOffset( Map.deadarea_offset.x, Map.deadarea_offset.y,
-			Map.deadarea_offset.z, Map.Build_truck );
-		
-		print( "truck_Destroyed" );
+		Map.TruckBuilt = 0;
+
+		if ( Map.MapStart == true )
+			{ return; }
+
+		if ( Map.BuildTruck == 0 )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
+
+		if ( Map.TruckPastBarrier == 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Defend_Truck" );
+		}
+		Util.MapDebugPrint( "truck_Destroyed" );
+	},
+
+	Truck_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TB_Built = 1;
+		if ( Map.TruckAtBarrier == 1 )
+		{
+			Map.EscortTruck = 0;
+			Map.BuildTruck = 0;
+			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_truck" );
+		}
+
+		Wp.SetWaypointFlag( "truckbarrier1", "closed", false );
+		Wp.SetWaypointFlag( "truckbarrier2", "closed", false );
+		Wp.SetWaypointFlag( "truckbarrier3", "closed", false );
+		Wp.SetWaypointFlag( "truckbarrier4", "closed", false );
+		Util.MapDebugPrint( "Truck_Barrier_Built" );
 	},
 
 	Truck_Barrier_Destroyed = function( trigger )
@@ -259,112 +226,384 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Truck_Barrier_Destroyed" );
+		Map.TB_Built = 0;
+
+		if ( Map.TruckAtBarrier == 1 )
+		{
+			Map.BuildTruck = 1;
+			Map.EscortTruck = 1;
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
+			if ( Map.TruckBuilt == 1 )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_truck" );
+			}
+		}
+
+		Wp.SetWaypointFlag( "truckbarrier1", "closed", true );
+		Wp.SetWaypointFlag( "truckbarrier2", "closed", true );
+		Wp.SetWaypointFlag( "truckbarrier3", "closed", true );
+		Wp.SetWaypointFlag( "truckbarrier4", "closed", true );
+		Util.MapDebugPrint( "Truck_Barrier_Destroyed" );
 	},
 
-	forwardspawn_Axis_Captured = function( trigger )
+	Truck_Stolen = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_boathouse_ammocabinet );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_boathouse_health_cabinet );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_142" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_142" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_166" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_166" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
-		
-		print( "forwardspawn_Axis_Captured" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Truck_Start.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Truck_Barrier.*" );
+
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Truck_Start.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHousePath" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_BoatHousePath" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Truck_Barrier.*" );
+
+
+		Util.MapDebugPrint( "Truck_Stolen" );
 	},
 
-	forwardspawn_Allies_Captured = function( trigger )
+	Truck_at_Barrier = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "forwardspawn_Allies_Captured" );
+		Map.TruckAtBarrier = 1;
+
+		if ( Map.TB_Built == 1 )
+		{
+			Map.EscortTruck = 0;
+			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_truck" );
+			print( "true test" );
+		}
+		if ( Map.TB_Built == 0 )
+		{
+			Map.EscortTruck = 1;
+			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
+			print( "false test" );
+		}
+
+		Util.MapDebugPrint( "Truck_at_Barrier" );
 	},
 
-	forwardspawn0_Axis_Captured = function( trigger )
+	Truck_Entered_Tunnel = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.TruckAtBarrier = 0;
+		Map.TruckPastBarrier = 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Truck_Barrier.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Truck_Barrier.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck_Barrier" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Truck_Barrier.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHouseBridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_BoatHouseBridge" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Attack_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_TT_Exit.*" );
+
+		ETUtil.SetExcludeIndexes( "BUILD_truck", { 0, 1 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Truck", { 0, 1 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Defend_Truck", { 0, 1 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Attack_Truck", { 2, 3 } );
+
+		Util.MapDebugPrint( "Truck_Entered_Tunnel" );
+	},
+
+	Truck_Exited_Tunnel = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "forwardspawn0_Axis_Captured" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_TT_Exit.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Reservoir_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_D_Reservoir_Bridge.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_A_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
+
+		ETUtil.SetExcludeIndexes( "BUILD_truck", { 2, 3 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Truck", { 2, 3 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Defend_Truck", { 2, 3 } );
+		ETUtil.SetExcludeIndexes( "ESCORT_Attack_Truck", { 0, 1 } );
+
+		Util.MapDebugPrint( "Truck_Exited_Tunnel" );
 	},
 
-	forwardspawn0_Allies_Captured = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "forwardspawn0_Allies_Captured" );
-	},
-
-	forwardspawn3_Axis_Captured = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		print( "forwardspawn3_Axis_Captured" );
-	},
-
-	forwardspawn3_Allies_Captured = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_boathouse_ammocabinet );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Health_Cabinet_boathouse_health_cabinet );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_142" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_142" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_166" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_166" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Ammo_Cabinet_reservoir_ammocabinet );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Health_Cabinet_reservoir_health_cabinet );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_272" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_272" );
-		
-		print( "forwardspawn3_Allies_Captured" );
-	},
-	
 	Parts_Delivered = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mover_truck );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Reservoir_Bridge );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Train );
-		
-		print( "Parts_Delivered" );
+		Map.EscortTruck = 0;
+		Map.BuildTruck = 0;
+		Map.BuildTrain = 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Reservoir_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Train" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Attack_Truck" );
+
+		Util.MapDebugPrint( "Parts_Delivered" );
 	},
-	
-	TrainAtFirstTunnel = function( trigger )
+
+	Train_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_BoatHouseMG" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesBoatHouseBridge.*" );
-		
-		print( "TrainAtFirstTunnel" );
+		Map.TrainBuilt = 1;
+
+		if ( Map.EscortTrain == true )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_Train" );
+		}
+		Util.MapDebugPrint( "Train_Built" );
 	},
-	
-	TrainAtSecondTunnel = function( trigger )
+
+	Train_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesEnd" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHouseMG" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_AlliesBoatHouseBridge.*" );
-		
-		print( "TrainAtSecondTunnel" );
+		if ( Map.MapStart == true )
+			{ return; }
+
+		Map.TrainBuilt = 0;
+
+		//Map.EscortTrain = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_Train" );
+
+		if (Map.BuildTrain == false )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Train" );
+		}
+
+		Util.MapDebugPrint( "Train_Destroyed" );
+	},
+
+	Train_At_Reservoir_Bridge = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TrainAtRB = true;
+
+
+		if ( Map.RB_Built == false )
+		{
+			Map.EscortTrain = false;
+			Map.BuildTrain = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Train" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_Train" );
+		}
+
+		Util.MapDebugPrint( "Train_At_Reservoir_Bridge" );
+	},
+
+	// 1st Bridge
+	Reservoir_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.RB_Built = true;
+
+
+		if ( Map.TrainAtRB == true )
+		{
+			Map.EscortTrain = true;
+			Map.BuildTrain = 1;
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Train" );
+
+			if ( Map.TrainBuilt == true )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_Train" );
+			}
+		}
+
+		Util.MapDebugPrint( "Reservoir_Bridge_Built" );
+	},
+
+	Reservoir_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.RB_Built = false;
+
+		if ( Map.TrainAtRB == true )
+		{
+			Map.EscortTrain = false;
+			Map.BuildTrain = 0;
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Train" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_Train" );
+		}
+
+		Util.MapDebugPrint( "Reservoir_Bridge_Destroyed" );
+	},
+
+	Train_Past_Reservoir_Bridge = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Reservoir_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_D_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_A_Reservoir_Bridge.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Boathouse_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_BoatHouse_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Reservoir_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_D_Reservoir_Bridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Boathouse_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_BoatHousePath" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_BoatHouse_Bridge.*" );
+		Util.MapDebugPrint( "Train_Past_Reservoir_Bridge" );
+	},
+
+	Train_At_BoatHouse_Bridge = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TrainAtBB = true;
+
+
+		if ( Map.BB_Built == false )
+		{
+			Map.EscortTrain = false;
+			Map.BuildTrain = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Train" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_Train" );
+		}
+
+		Util.MapDebugPrint( "Train_At_BoatHouse_Bridge" );
+	},
+
+	// 2nd Bridge
+	Boathouse_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.BB_Built = true;
+
+		if ( Map.TrainAtBB == true )
+		{
+			Map.EscortTrain = true;
+			Map.BuildTrain = 1;
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Train" );
+
+			if ( Map.TrainBuilt == true )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_Train" );
+			}
+		}
+
+		Util.MapDebugPrint( "Boathouse_Bridge_Built" );
+	},
+
+	Boathouse_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.BB_Built = false;
+
+		if ( Map.TrainAtBB == true )
+		{
+			Map.EscortTrain = false;
+			Map.BuildTrain = 0;
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Train" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "RIDE_Train" );
+		}
+
+		Util.MapDebugPrint( "Boathouse_Bridge_Destroyed" );
+	},
+
+
+	Train_Past_Boathouse_Bridge = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Boathouse_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_BoatHouse_Bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Axis_End.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Boathouse_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Allies_End.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHousePath" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_BoatHouse_Bridge.*" );
+		Util.MapDebugPrint( "Train_Past_Boathouse_Bridge" );
+	},
+
+	vehicle_at_location = function( trigger )
+	{
+		switch(Map.VehicleLocation)
+		{
+		case 1:
+			{
+				Map.Truck_Stolen();
+			}
+		case 2:
+			{
+				Map.Truck_at_Barrier();
+			}
+		case 3:
+			{
+				//Corner 1
+			}
+		case 4:
+			{
+				//Corner 2
+			}
+		case 5:
+			{
+				//Train at 1st Bridge
+				Map.Train_At_Reservoir_Bridge();
+			}
+		case 6:
+			{
+				//Train past 1st Bridge
+				Map.TrainAtRB = false;
+				Map.TrainPastRB = true;
+			}
+		case 7:
+			{
+				//Train at 2nd Bridge
+				Map.Train_At_BoatHouse_Bridge();
+				Map.TrainAtBB = true;
+			}
+		case 8:
+			{
+				//Train past 2nd Bridge
+				Map.TrainAtBB = false;
+				Map.TrainPastBB = true;
+			}
+		}
+		Util.MapDebugPrint("vehicle at location " + Map.VehicleLocation, true);
 	},
 
 };
@@ -372,74 +611,131 @@ global Map =
 global OnMapLoad = function()
 {
 	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	{ Util.AutoTestMap(); }
 
-	OnTrigger( "MISSING_STRING", Map.Boathouse_Bridge_Built );
-	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
-	OnTrigger( "MISSING_STRING", Map.Reservoir_Bridge_Built );
-	OnTrigger( "The Train has been repaired", Map.Train_Built );
-	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_Built );
-	OnTrigger( "The Truck has been repaired!", Map.truck_Built );
-	OnTrigger( "MISSING_STRING", Map.Boathouse_Bridge_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.Reservoir_Bridge_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.Truck_Barrier_Destroyed );
-	OnTrigger( "The Truck has been damaged!", Map.truck_Destroyed );
-	OnTrigger( "Axis gained spawn positions at The Boathouse!", Map.forwardspawn_Axis_Captured );
-	OnTrigger( "MISSING_STRING", Map.forwardspawn_Allies_Captured );
-	OnTrigger( "MISSING_STRING", Map.forwardspawn0_Axis_Captured );
-	OnTrigger( "MISSING_STRING", Map.forwardspawn0_Allies_Captured );
-	OnTrigger( "MISSING_STRING", Map.forwardspawn3_Axis_Captured );
-	OnTrigger( "Allies gained positions in the North Tunnel!", Map.forwardspawn3_Allies_Captured );
+	// Register callback functions
+
+	// Start Spawns
+	//Axis Spawn   = 4
+	//Allies Spawn = 5
+
+	OnTrigger( "bridges_allies_barrier_construct", Map.Map_Started );
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "The Truck has been damaged!", Map.Truck_Destroyed );
+
+	OnTrigger( "The Truck Barrier has been constructed.", Map.Truck_Barrier_Built );
+	OnTrigger( "The Truck Barrier has been destroyed.", Map.Truck_Barrier_Destroyed );
+
+	OnTrigger( "Allies gained positions in the North Tunnel!", Map.Truck_Entered_Tunnel ); //Axis gained spawn positions at The Boathouse!
+	// 1st spawn Change (truck in tunnel)
+	//Axis Spawn   = 3 (2 is available)
+	//Allies Spawn = l
+
+	OnTrigger( "Axis are regrouping at the reservoir!", Map.Truck_Exited_Tunnel );
+	//// 2nd spawn Change (truck out of tunnel)
+	//Axis Spawn   = 2
+	//Allies Spawn = 6
+
 	OnTrigger( "The spare parts have been delivered to the train.", Map.Parts_Delivered );
 
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	
-	Util.DisableGoal( "ATTACK_.*", true );
-	Util.DisableGoal( "DEFEND_.*", true );
-	
-	// Axis goals
-	SetGoalPriority( Map.Plant_Truck_Barrier, .92, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_truck, .91, TEAM.AXIS, CLASS.ENGINEER );
-	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_272" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_272" );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Boathouse_Bridge );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Reservoir_Bridge );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Train );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_reservoir_ammocabinet );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_sawmill_ammocabinet );
-	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_reservoir_health_cabinet );
-	
-	//Allied goals
-	SetGoalPriority( "REPAIRMG42_142", .92, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Truck_Barrier, .91, TEAM.ALLIES, CLASS.ENGINEER );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_272" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_272" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_reservoir_ammocabinet );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_sawmill_ammocabinet );
-	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Health_Cabinet_reservoir_health_cabinet );
-	
-	Util.SetGoalOffset( -96, 0, 0, Map.Plant_Truck_Barrier );
-	
-	OnTriggerRegion( Map.deadarea_AABB, Map.deadtriggerInfo );
-	OnTriggerRegion( Vector3( 2952, 0, 884 ), 200, Map.ladder1triggerInfo );
-	OnTriggerRegion( Vector3( 1936, 0, 884 ), 200, Map.ladder2triggerInfo );
-	OnTriggerRegion( Vector3( 1475, 0, 887 ), 200, Map.ladder3triggerInfo );
-	OnTriggerRegion( Vector3( 921, 0, 887 ), 200, Map.bridge1triggerInfo );
-	
-	//Region 0 when Train has passed First Buildable Bridge
-	Util.OnTriggerPosition( Map.Mover_train, "region1", 200.0, Map.TrainAtFirstTunnel );
-	// Region 1 will have Defend/Attack spots at the exit of First Tunnel
-	// Region 2 will be the actual Region 1
-	Util.OnTriggerPosition( Map.Mover_train, "region3", 200.0, Map.TrainAtSecondTunnel );
-	// Region 3 will be the Attack/Defend spots at the exit of Second Tunnel
-	// Region 4 will be the End, the actual Region 3
-	
-	// *** ROUTING ***
-	// To Do :)
+	OnTrigger( "The Train has been repaired", Map.Train_Built );
+	OnTrigger( "The Train has been damaged!", Map.Train_Destroyed );
 
-	print( "OnMapLoad" );
+	OnTrigger( "Reservoir Bridge has been repaired.", Map.Reservoir_Bridge_Built ); // 1st bridge
+	OnTrigger( "Reservoir Bridge has been damaged.", Map.Reservoir_Bridge_Destroyed );
+
+	OnTrigger( "axis have gained spawn positions in the North Tunnel", Map.Train_Past_Reservoir_Bridge );
+	//// 3rd spawn Change (truck out of tunnel)
+	//Axis Spawn   = 2
+	//Allies Spawn = 6
+
+	OnTrigger( "Boathouse Bridge has been repaired.", Map.Boathouse_Bridge_Built ); // 2nd bridge
+	OnTrigger( "Boathouse Bridge has been damaged.", Map.Boathouse_Bridge_Destroyed );
+
+	OnTrigger( "Axis gained spawn positions at The Mill Tunnel!", Map.Train_Past_Boathouse_Bridge );
+	//// 4th spawn Change (truck out of tunnel)
+	//Axis Spawn   = 4
+	//Allies Spawn = 1
+
+
+	OnTrigger( "train at location", Map.vehicle_at_location );
+	OnTrigger( "truck at location", Map.vehicle_at_location );
+
+	TruckStolen	= OnTriggerRegion(AABB(828.838,487.985,254.667,1024.631,541.497,330.883),	RegionTrigger.VehicleTrigger);
+	TruckBarrier	= OnTriggerRegion(AABB(1230.363,2206.532,230.125,1368.292,2328.765,304.125),	RegionTrigger.VehicleTrigger);
+	Corner1 	= OnTriggerRegion(AABB(5876.540,-2018.874,597.152,5916.129,-1857.128,671.152),	RegionTrigger.VehicleTrigger);
+	Corner2 	= OnTriggerRegion(AABB(8062.165,-2018.873,597.125,8101.741,-1857.126,671.125),	RegionTrigger.VehicleTrigger);
+	AtRB 		= OnTriggerRegion(AABB(7097.912,2390.979,801.125,7203.838,2687.380,903.125),	RegionTrigger.VehicleTrigger);
+	PastRB 		= OnTriggerRegion(AABB(7004.381,2405.083,801.125,7058.375,2670.811,903.125),	RegionTrigger.VehicleTrigger);
+	AtBB 		= OnTriggerRegion(AABB(703.963,-134.282,817.125,802.184,132.732,947.727),	RegionTrigger.VehicleTrigger);
+	PastBB 		= OnTriggerRegion(AABB(593.390,-148.487,805.125,639.102,238.875,903.125),	RegionTrigger.VehicleTrigger);
+
+	Util.SetGoalOffset( -96, 0, 0, "PLANT_Truck_Barrier" );
+
+	Ladder1 	= OnTriggerRegion(AABB(2796.329,-98.603,817.125,3105.440,74.847,903.125),	Map.Ladder1);
+	Ladder2 	= OnTriggerRegion(AABB(1847.747,-87.716,817.125,2131.147,84.751,903.125),	Map.Ladder2);
+	Ladder3 	= OnTriggerRegion(AABB(1210.926,-90.602,805.125,1609.544,105.015,903.125),	Map.Ladder3);
+	Ladder4 	= OnTriggerRegion(AABB(384.672,-85.701,801.125,689.526,92.372,903.125),		Map.Ladder4);
+	Ladder5 	= OnTriggerRegion(AABB(-1005.942,-113.741,801.125,-771.613,96.430,899.903),	Map.Ladder5);
+//	Ladder6 	= OnTriggerRegion(AABB(-4190.028,-2229.533,817.125,-3996.438,-2006.494,903.125),Map.Ladder6); // Not Used Yet
+//	Ladder7 	= OnTriggerRegion(AABB(-4190.429,-2973.649,817.125,-4012.724,-2640.389,903.125),Map.Ladder7); // Not Used Yet
+
+	Util.DisableGoal( ".*", true );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Truck_Start.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck_Barrier" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Truck_Start.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_BoatHousePath" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_BoatHouseBridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_BoatHouseBridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_BoatHousePath" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+
+	Wp.SetWaypointFlag( "truckbarrier1", "closed", true );
+	Wp.SetWaypointFlag( "truckbarrier2", "closed", true );
+	Wp.SetWaypointFlag( "truckbarrier3", "closed", true );
+	Wp.SetWaypointFlag( "truckbarrier4", "closed", true );
+
+	SetGoalPriority( "ESCORT_Defend_Truck", 0.78 );
+	SetGoalPriority( "BUILD_Command_Post", 0.8 );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+	{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
 };

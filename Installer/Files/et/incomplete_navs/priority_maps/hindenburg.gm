@@ -1,56 +1,28 @@
-//============================================================================================
+//======================================================================================
 //
 //	Hindenburg Beta 3 - hindenburg.gm
 //
 //	Who			When		What
-//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 //	Mateos			20/04/2010	From an incomplete .way file
 //
-//============================================================================================
+//======================================================================================
 
 /****************************************************
 Pathing updated and script by Mateos
 Correspondant WAY file size : -
-Last Update : 16th December 2010
+Last Update : 27 February 2011
 ****************************************************/
 
 global Map =
 {
-	// Bridge Controller
-	Switches =
-	{
-		BridgeController =
-		{
-			Enabled = true,
-			Priority = 0.8,
-			WaypointName = "Bridge Controller",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			LimitBots = 1,
-		},
-	},
-
-
-	Bridge_Controller = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		// Convert the Action string into a vector3 value
-		vel = ToVector(trigger.Action);
-
-		// Disable it for both teams so they will stop pressing it
-		Map.Switches.BridgeController.LimitTeam = 0;
-
-		Util.MapDebugPrint( "Bridge_Controller" );
-	},
-
 	// *** TRIGGERS CALLBACK ***
-
 	Assault_ramp_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_ramp" );
 
 		Util.MapDebugPrint( "Assault_ramp_Built" );
 	},
@@ -70,6 +42,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Neutral_Command_Post" );
+
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
@@ -87,6 +61,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Wood_bridge" );
 
 		Util.MapDebugPrint( "Wood_bridge_Built" );
 	},
@@ -176,6 +152,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_ramp" );
+
 		Util.MapDebugPrint( "Assault_ramp_Destroyed" );
 	},
 
@@ -183,6 +161,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_City_Wall" );
 
 		Util.MapDebugPrint( "City_Wall_Destroyed" );
 	},
@@ -192,6 +172,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Util.EnableGoal( "BUILD.Neutral_Command_Post" );
+
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
@@ -200,6 +182,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Util.EnableGoal( "BUILD.Neutral_Command_Post" );
+
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
@@ -207,6 +191,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Wood_bridge" );
 
 		Util.MapDebugPrint( "Wood_bridge_Destroyed" );
 	},
@@ -248,6 +234,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHEKPOINT_forwardspawn1_flag" );
+
 		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
 	},
 
@@ -259,9 +247,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Wood_Bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_side_entrance" );
 
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHEKPOINT_forwardspawn1_flag" );
+
 		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
 	},
-
 };
 
 global OnMapLoad = function()
@@ -300,33 +289,36 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Assault_ramp_Built );
 	OnTrigger( "MISSING_STRING", Map.Wood_bridge_Built );
 
-	// Bridge Controller
-	OnTrigger( "b_Moving", Map.Bridge_Controller );
-	Util.UpdateSwitchData();
-
+	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
+	Util.DisableGoal( ".*", true );	//All but Routes
+	
 	// *** ALLIED GOALS ***
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_DecoderDropoff" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_BridgeController" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_City_Wall" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
 
 	// *** GOALS PROPERTIES ***
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
 	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
-	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
 
-	print( "Omni-bot map script for Hindenburg Beta 3 by Mateos" );
+	Util.MapDebugPrint( "Omni-bot map script for Hindenburg Beta 3 by Mateos" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 150.0;
-	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.BAR };
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.GARAND, WEAPON.K43, WEAPON.BAR, WEAPON.STG44, WEAPON.STEN, WEAPON.FG42 };
 
 	foreach( id and weap in weaps )
 	{

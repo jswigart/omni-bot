@@ -393,6 +393,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_barricade.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_barricade" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_barricade_mg" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_barricade_mg" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_forward_spawn" );
@@ -400,6 +401,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_frontgate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_allied_mg" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Castle_MG" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_Castle_MG" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Castle_MG" );
@@ -673,6 +676,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_bridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_bridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_bridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_forest_hut.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_backdoor[123]" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_barricade" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_tunnel.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_barricade_mg" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_barricade_mg" );
@@ -697,6 +704,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_kurbel", 0.6, TEAM.ALLIES );
 	SetGoalPriority( "CHECKPOINT_forwardflag", 0.71 );
 	SetGoalPriority( "GRENADE_.*", 0.65, TEAM.ALLIES );
+	SetGoalPriority( "BUILD_Command_Post", 0.8, TEAM.AXIS );
+	SetGoalPriority( "PLANTMINE_tunnel.*", 0.8, TEAM.AXIS );
+	SetGoalPriority( "PLANTMINE_barricade", 0.8, TEAM.AXIS );
 	SetGoalPriority( "SWITCH_antenna_switch", 0.8, TEAM.AXIS );
 	SetGoalPriority( "DEFEND_bridge[789]", 0.71, TEAM.AXIS ); // roled goals
 

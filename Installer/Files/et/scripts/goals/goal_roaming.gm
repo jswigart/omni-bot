@@ -11,7 +11,7 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		if ( Map && Map.DeathMatch == 1 ) {
+		if ( Map && Map.DeathMatch == 1 || GetGameType() == 5) { //last man standing
 			block(0);
 		}
 
