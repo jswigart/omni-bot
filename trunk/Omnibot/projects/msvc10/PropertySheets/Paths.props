@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <BOOST>$(SolutionDir)..\..\..\libs\boost\boost_1_44</BOOST>
+    <BOOST>$(SolutionDir)..\..\..\libs\boost\boost_1_47</BOOST>
     <InterfaceDir>$(SolutionDir)..\..\..\GameInterfaces</InterfaceDir>
     <OMNIBOT_INST>$(SolutionDir)..\..\..\Installer\Files</OMNIBOT_INST>
     <REMOTEDEBUGLIB>$(SolutionDir)..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>

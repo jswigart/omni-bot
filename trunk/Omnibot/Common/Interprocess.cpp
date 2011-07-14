@@ -6,7 +6,7 @@
 
 #include "Interprocess.h"
 
-//#define INTERPROCESS
+#define INTERPROCESS
 
 #ifdef INTERPROCESS
 #include <boost/interprocess/ipc/message_queue.hpp>
