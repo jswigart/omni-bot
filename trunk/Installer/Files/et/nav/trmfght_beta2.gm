@@ -406,6 +406,19 @@ global OnMapLoad = function()
 			},
 			ROUTE_forward_spawn  =
 			{
+				ROUTE_forward_spawn2  =
+				{
+					ROUTE_generator  =
+					{
+						ROUTE_exit1 = {},
+						ROUTE_exit2 = {}
+					},
+					ROUTE_tunnel1  =
+					{
+						ROUTE_exit1 = {},
+						ROUTE_exit2 = {}
+					}
+				},
 				ROUTE_generator  =
 				{
 					ROUTE_exit1 = {},

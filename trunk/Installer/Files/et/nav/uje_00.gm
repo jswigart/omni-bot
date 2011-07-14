@@ -82,6 +82,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.flag3 );
 		//SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_healthcabinet );
 
+		Util.SetMaxUsers( 2, "CHECKPOINT_flag_3");
+		SetGoalPriority( "CHECKPOINT_flag_3", 0.81);
+
 		Util.MapDebugPrint( "^3loading_ammo" );
 	},
 
@@ -92,7 +95,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.fuelcans_3 );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.fuelcans_4 );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Destroy_defense1 );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_fuel_.*" );
+		SetGoalPriority( Map.Destroy_defense1, 0.79);
 
 		Util.MapDebugPrint( "^3need_fuel" );
 	},
@@ -117,7 +122,7 @@ global Map =
 	{
 		foreach ( id and bot in BotTable )
 		{
-			if ( bot.GetTeam() == TEAM.AXIS ) {
+			if ( bot.GetTeam() == TEAM.AXIS || RandInt(1,2) == 1) {
 				bot.ChangeSpawnPoint( 0 );
 			}
 			else {
@@ -137,12 +142,16 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_tank_construct );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Destroy_defense1 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.cappoint );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.fuelcans_1 );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.fuelcans_2 );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.fuelcans_3 );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_fuel_.*" );
+
+		Util.SetMaxUsers( 1, Map.Destroy_defense1);
+		SetGoalPriority( Map.Destroy_defense1, 0.9);
 
 		Util.MapDebugPrint( "^3loaded" );
 

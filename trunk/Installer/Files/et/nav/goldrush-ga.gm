@@ -550,6 +550,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_mg42_bridge );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_secret );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_mg42_secret );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_Tank_Barrier2_.*" );
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Ammo_Cabinet_south_ammocabinet );
@@ -596,6 +597,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_secret );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_mg42_secret );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bank_mg" );
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier2_.*" );
@@ -626,6 +628,7 @@ global Map =
 		sleep( 2 );
 
 		// Allied goals
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_Tank_Barrier2_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Tank );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_gold_crate );
@@ -663,6 +666,7 @@ global Map =
 			Map.truck_at_barrier1 );
 
 		// Allied goals
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bank_mg" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bank_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Truck_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Truck_Barrier_1 );
@@ -1183,6 +1187,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_secret" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_mg42_secret" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bank_mg" );
 
 	// Axis goals
 	SetGoalPriority( Map.Build_Tank_Barrier_1, 0.94, TEAM.AXIS, CLASS.ENGINEER );
@@ -1210,6 +1216,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_allied );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_bank_mg" );
 
 	Wp.SetWaypointFlag("closeddoor1", "closed", true);
 	Wp.SetWaypointFlag("closeddoor2", "closed", true);

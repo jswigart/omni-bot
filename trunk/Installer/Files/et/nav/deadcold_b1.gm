@@ -3,35 +3,35 @@ global Map =
 {
 	Allied_Crypt_Destroyed = function( trigger )
 	{
-	 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_gold");
-	 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_crypt_mir");
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_gold");
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_crypt_mir");
 	},
 	Axis_Crypt_Destroyed = function( trigger )
 	{
-	 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold");
-	 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_crypt");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_crypt");
 	},
 
 	allied_gold_Taken = function( trigger )
 	{
-	 	SetGoalPriority( "DEFEND.*", 0.1, TEAM.ALLIES);
-	 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard");
+		SetGoalPriority( "DEFEND.*", 0.1, TEAM.ALLIES);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard");
 	},
 	axis_gold_Taken = function( trigger )
 	{
-	 	SetGoalPriority( "DEFEND.*", 0.1, TEAM.AXIS);
-	 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_yard_mir");
+		SetGoalPriority( "DEFEND.*", 0.1, TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_yard_mir");
 	},
 
 	allied_gold_Returned = function( trigger )
 	{
-	 	SetGoalPriority( "DEFEND.*", 0.5, TEAM.ALLIES);
-	 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
+		SetGoalPriority( "DEFEND.*", 0.5, TEAM.ALLIES);
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
 	},
 	axis_gold_Returned = function( trigger )
 	{
-	 	SetGoalPriority( "DEFEND.*", 0.5, TEAM.AXIS);
-	 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
+		SetGoalPriority( "DEFEND.*", 0.5, TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
 	},
 };
 
@@ -44,14 +44,14 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned allied_gold!", Map.allied_gold_Returned );
 	OnTrigger( "Flag returned axis_gold!", Map.axis_gold_Returned );
 
- 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_gold");
- 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_gold");
- 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
- 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_gold");
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_gold");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
 
- 	SetGoalPriority( "BUILD.*Command_Post", 0.8);
- 	SetGoalPriority( "PLANT.*Command_Post", 0.7);
- 	SetGoalPriority( "MOUNTMG42.*", 0.5);
+	SetGoalPriority( "BUILD.*Command_Post", 0.8);
+	SetGoalPriority( "PLANT.*Command_Post", 0.7);
+	SetGoalPriority( "MOUNTMG42.*", 0.5);
 
 	Util.SetMaxUsersInProgress(1, "SNIPE_.*");
 	Util.SetMaxUsersInProgress(1, "MOUNTMG42.*");

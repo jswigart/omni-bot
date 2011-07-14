@@ -552,16 +552,16 @@ global OnMapLoad = function()
 	SetGoalPriority("MOBILEMG42_axis_start.*", 0.7);
 	SetGoalPriority("CHECKPOINT_forward_spawn", 0.7);
 	SetGoalPriority("FLAG_key", 0.7);
-	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=0, MaxCampTime=20});
-	SetMapGoalProperties( "ATTACK_flag.*", {MinCampTime=0, MaxCampTime=5});
-	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=180});
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=0, MaxCampTime=20} );
+	SetMapGoalProperties( "ATTACK_flag.*", {MinCampTime=0, MaxCampTime=5} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=180} );
 
 	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*");
 	Util.SetMaxUsersInProgress( 1, "SNIPE_.*");
 	Util.SetMaxUsersInProgress( 1, "PLANT_.*");
 	Util.SetMaxUsersInProgress( 1, "ATTACK_.*");
 	Util.SetMaxUsersInProgress( 3, "ATTACK_halftrack.*");
-	Util.SetMaxUsersInProgress( 1, "FLAG_key");
+	Util.SetMaxUsersInProgress( 2, "FLAG_key");
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT_forward_spawn");
 	Util.SetGoalOffset( -50, 0, 0, "PLANT_Side_Gate" );
 	Util.UpdateSwitchData();
@@ -584,6 +584,21 @@ global OnMapLoad = function()
 				ROUTE_south_route1 = {},
 				ROUTE_north_route1 = {},
 				ROUTE_allies_start2 = {},
+			}
+		},
+		CAPPOINT_safe =
+		{
+			ROUTE_key =
+			{
+				ROUTE_key_right =
+				{
+				},
+				ROUTE_key_left =
+				{
+				},
+				ROUTE_forking =
+				{
+				}
 			}
 		},
 		CAPPOINT_halftrack =

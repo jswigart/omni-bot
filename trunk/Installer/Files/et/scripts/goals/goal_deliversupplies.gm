@@ -1,4 +1,4 @@
-// This script contains functionality to allow medic bots to deliver ammo to people that request it.
+// This script contains functionality to allow fieldops or medic bots to deliver ammo or health to people that request it.
 
 // These parameters are required
 this.Name = "DeliverSupplies";	// The name of the goal.
@@ -125,6 +125,8 @@ this.CurePoisonWithNeedle = function()
 
 this.Update = function()
 {
+	counter = 0;
+
 	while(1)
 	{
 		entPos = GetEntPosition(this.TargetEntity);
@@ -196,6 +198,27 @@ this.Update = function()
 			}
 
 			this.Finished();
+		}
+		else
+		{
+			d = DistanceBetween(entPos, this.Bot.GetPosition());
+			if ( d < 70 )
+			{
+				counter += 1;
+				if ( counter > 30 )
+				{
+					if ( this.DynamicGotoThread )
+					{
+						this.KillThread(this.DynamicGotoThread);
+						this.DynamicGotoThread = null;
+					}
+					this.OnTarget = true;
+				}
+			}
+			else
+			{
+				counter = 0;
+			}
 		}
 
 		yield();
@@ -325,8 +348,8 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 	}
 
 	if(macroId == VOICE.NEED_AMMO &&
-	   this.Bot.GetClass() == CLASS.FIELDOPS &&
-	   this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
+		this.Bot.GetClass() == CLASS.FIELDOPS &&
+		this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
 	{
 		this.Supply = WEAPON.AMMO_PACK;
 		this.TargetEntity = whoSaidIt;
@@ -344,7 +367,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 	}
 	else if(macroId == VOICE.NEED_MEDIC &&
 		 this.Bot.GetClass() == CLASS.MEDIC &&
-	         this.Bot.IsWeaponCharged(WEAPON.MEDKIT))
+				this.Bot.IsWeaponCharged(WEAPON.MEDKIT))
 	{
 		this.Supply = WEAPON.MEDKIT;
 		this.TargetEntity = whoSaidIt;

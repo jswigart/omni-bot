@@ -1,0 +1,298 @@
+//============================================================================
+//
+//	V1 Rocket Beta 2 - v1rocket_b2.gm
+//
+//	Who            	When			What
+//----------------------------------------------------------------------------
+//	Mateos		26 December 2010	Based on files present before
+//
+//============================================================================
+
+/****************************************************
+Pathing updated and script by Mateos
+Correspondant WAY file size : -
+Last Update : 26 December 2010
+****************************************************/
+
+global Map =
+{
+	// To Do
+	EscortVehicle =
+	{
+		Tank =
+		{
+			EscortVehicleGoalName = "MOVER_tank",
+			Enabled = true,
+			LimitBots = 2,
+		},
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Allied_MG_nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_MG_nest" );
+
+		Util.MapDebugPrint( "Allied_MG_nest_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_MG42_Construction" );
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Built" );
+	},
+
+	Axis_MG42_Construction_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_MG42_Construction_1" );
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_1_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
+
+		Util.MapDebugPrint( "Bridge_Built" );
+	},
+
+	Lorraine_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Lorraine_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.EnableGoal( "BUILD_Command_Post" );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.EnableGoal( "BUILD_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Allied_MG_nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_MG_nest" );
+
+		Util.MapDebugPrint( "Allied_MG_nest_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Allied_MG42_Construction" );
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Axis_MG42_Construction_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Allied_MG42_Construction_1" );
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_1_Destroyed" );
+	},
+
+	Bridge_Damaged = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
+
+		Util.MapDebugPrint( "Bridge_Damaged" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
+
+		Util.MapDebugPrint( "Bridge_Destroyed" );
+	},
+
+	Lorraine_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Lorraine" );
+
+		Util.MapDebugPrint( "Lorraine_Destroyed" );
+	},
+
+	Main_Entrance_to_the_Rocket_Base_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Main_Entrance_to_the_Rocket_Base_Destroyed" );
+	},
+
+	fuelcan_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_130" );
+
+		Util.MapDebugPrint( "fuelcan_Taken" );
+	},
+
+	CAPPOINT_130_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_130_Captured" );
+	},
+
+	depotflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_depotflag" );
+
+		Util.MapDebugPrint( "depotflag_Axis_Captured" );
+	},
+
+	depotflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_depotflag" );
+
+		Util.MapDebugPrint( "depotflag_Allies_Captured" );
+	},
+
+	TankPastMainEntrance = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
+
+		Util.MapDebugPrint( "TankPastMainEntrance" );
+	},
+
+	TankEscorted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.EscortVehicle.Tank.Enabled = false;	//To Do
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuelcan" );
+
+		Util.MapDebugPrint( "TankEscorted" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "The Allied MG Nest has been constructed.", Map.Allied_MG_nest_Built );
+	OnTrigger( "Axis Team have built the MG42 nest near the First Radar!!", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "Axis Team have built the MG42 at the bunker!!", Map.Axis_MG42_Construction_1_Built );
+	OnTrigger( "Allied team has reinforced the Bridge!", Map.Bridge_Built );
+	OnTrigger( "The Tank has been repaired", Map.Lorraine_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "The Allied MG Nest has been destroyed.", Map.Allied_MG_nest_Destroyed );
+	OnTrigger( "Allies have destroyed the MG42 nest near the First Radar!!", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "Allies have destroyed the MG42 nest at the bunker!!", Map.Axis_MG42_Construction_1_Destroyed );
+	OnTrigger( "Axis team has damaged the Bridge!", Map.Bridge_Damaged );
+	OnTrigger( "Axis team has destroyed the Bridge!", Map.Bridge_Destroyed );
+	OnTrigger( "The Tank has been damaged", Map.Lorraine_Destroyed );
+	OnTrigger( "Allies have breached the Main Entrance and entered the Rocket Base", Map.Main_Entrance_to_the_Rocket_Base_Destroyed );
+	OnTrigger( "Allies have stolen The Rocket Fuel!", Map.fuelcan_Taken );
+	OnTrigger( "MISSING_STRING", Map.CAPPOINT_130_Captured );	//No announcement ingame
+	OnTrigger( "Axis captured the Depot Yard!", Map.depotflag_Axis_Captured );
+	OnTrigger( "Allies captured the Depot Yard!", Map.depotflag_Allies_Captured );
+	OnTrigger( "Allies have escorted the Lorraine to the DepotYard", Map.TankEscorted );
+
+	// *** ALLIED GOALS ***
+	Util.DisableGoal("SNIPE.*");
+	Util.DisableGoal("MOUNTMG42.*");
+	Util.DisableGoal("REPAIRMG42.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_fuelcan" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_deptoflag" );
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
+
+	Util.OnTriggerPosition( "MOVER_tank", "region1", 200.0, Map.TankPastMainEntrance );
+
+	Util.MapDebugPrint( "Omni-bot map script for V1 Rocket Beta 2 by Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.TargetBreakableDist = 2800;
+};

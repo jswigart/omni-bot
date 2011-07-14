@@ -5,7 +5,7 @@
 //	Who            	When		What
 //------------------------------------------------------------------------------------------
 //	crapshoot	29 April 2010	Initial Script
-//
+//	^4Tardis	21 February 2011  Small Fix
 //==========================================================================================
 
 global Map =
@@ -391,7 +391,9 @@ global Map =
 
 		// Axis goals
 		Map.ShiftToCP();
-
+		//Move the Truck Now //Tardis
+		ETUtil.SetStartIndex("ESCORT_truck", 1); 
+		
 		Util.MapDebugPrint( "Forward_Bunker_Gate_Destroyed" );
 	},
 
@@ -811,7 +813,7 @@ global OnMapLoad = function()
 	topoframp = OnTriggerRegion(AABB(237.000,-1520.000,321.000,364.000,-1475.000,395.000),Map.AxisFallback);
 
 	// allied bots should prefer to escort from the back at this point
-	ETUtil.SetStartIndex("ESCORT_truck", 1);
+	//ETUtil.SetStartIndex("ESCORT_truck", 1); //Tardis moved to Forward_bunker Destroyed
 
 	// disable all the goals at map start (except routes)
 	Util.DisableGoal( ".*", true );
@@ -868,7 +870,12 @@ global OnMapLoad = function()
 	// covert ops in disguise can reach these goals at any time
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Depot_Fence" );
-
+	//Fix offsets
+	Util.SetGoalOffset( -20, 20, 0, "PLANT_Crane_Controls" );
+	//AddUseWp
+	Util.AddUseWp("PLANT_Crane_Controls", "crane");
+	Util.AddUseWp("PLANT_Depot_Fence", "fence1");
+	Util.AddUseWp("PLANT_Depot_Fence", "fence");
 	// Set up routing
 	InitializeMapRoutes();
 

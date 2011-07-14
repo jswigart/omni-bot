@@ -1,314 +1,188 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 global Map =
 {
 	Quiet = true,
 	AddHuntGoal = true,
-	DeathMatch = 1,
+	debug = false,
 
-	Switches =
+	// Functions
+
+	ResetTeams = function()
 	{
-		alfloor =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "alfloor",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(376.230,-507.875,89.553),
-		},
+			// Reset ALLIES
 
-		alwalls =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "alwalls",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(328.211,-507.875,89.553),
-		},
+			Wp.SetWaypointFlag("alboxes","closed",true);
+			Wp.SetWaypointFlag("alfloor","closed",true);
+			Wp.SetWaypointFlag("algrates","closed",true);
+			Wp.SetWaypointFlag("alwalls","closed",true);
+			Wp.SetWaypointFlag("alduel","closed",false);
 
-		alboxes =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "alboxes",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(280.115,-507.875,89.553),
-		},
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_al_boxes" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_al_floor" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_al_grates" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_al_walls" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_duel" );
 
-		algrates =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "algrates",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(232.270,-507.875,89.553),
-		},
+			// Reset AXIS
 
-		alduel =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "alduel",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(499.875,-98.316,-212.888),
-		},
+			Wp.SetWaypointFlag("axboxes","closed",true);
+			Wp.SetWaypointFlag("axfloor","closed",true);
+			Wp.SetWaypointFlag("axgrates","closed",true);
+			Wp.SetWaypointFlag("axwalls","closed",true);
+			Wp.SetWaypointFlag("axduel","closed",false);
 
-		axfloor =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "axfloor",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(-888.018,507.875,89.553),
-		},
-
-		axwalls =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "axwalls",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(-840.113,507.875,89.553),
-		},
-
-		axboxes =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "axboxes",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(-792.436,507.875,89.553),
-		},
-
-		axgrates =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "axgrates",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(-744.196,507.875,89.553),
-		},
-
-		axduel =
-		{
-			Enabled = true,
-			Priority = 1.00,
-			WaypointName = "axduel",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitClass = Util.AllClasses,
-			AimPosition = Vector3(-1011.875,97.337,-214.497),
-		},
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ax_boxes" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ax_floor" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ax_grates" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ax_walls" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_duel" );
 	},
 
-	AlliesZone =
-	{
-		Name = "AlliesZone",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
-		{
-			if ( TestMap )
-				{ return; }
-
-			if( GetEntTeam(ent) == TEAM.ALLIES )
-			{
-				Map.Switches.alfloor.Enabled = false;
-				Map.Switches.alwalls.Enabled = false;
-				Map.Switches.alboxes.Enabled = false;
-				Map.Switches.algrates.Enabled = false;
-				Util.MapDebugPrint("Disabling Allies Switches!", true);
-			}
-		},
-		OnExit = function(ent)
-		{
-		},
-	},
-
-	AxisZone =
-	{
-		Name = "AxisZone",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
-		{
-			if ( TestMap )
-				{ return; }
-
-			if( GetEntTeam(ent) == TEAM.AXIS )
-			{
-				Map.Switches.axfloor.Enabled = false;
-				Map.Switches.axwalls.Enabled = false;
-				Map.Switches.axboxes.Enabled = false;
-				Map.Switches.axgrates.Enabled = false;
-				Util.MapDebugPrint("Disabling Axis Switches!", true);
-			}
-		},
-		OnExit = function(ent)
-		{
-		},
-	},
-
-	Floor = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		vel = ToVector(trigger.Action);
-		if ( vel.z > 0 )
-		{
-			Map.Switches.alfloor.Enabled = false;
-			Map.Switches.axfloor.Enabled = false;
-			Util.MapDebugPrint("floor up", true);
-		}
-		else
-		{
-			Map.Switches.alfloor.Enabled = false;
-			Map.Switches.axfloor.Enabled = false;
-			Util.MapDebugPrint("floor down", true);
-		}
-
-	},
-
-	Walls = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		vel = ToVector(trigger.Action);
-		if ( vel.z > 0 )
-		{
-			Map.Switches.alwalls.Enabled = false;
-			Map.Switches.axwalls.Enabled = false;
-			Util.MapDebugPrint("walls up", true);
-		}
-		else
-		{
-			Map.Switches.alwalls.Enabled = false;
-			Map.Switches.axwalls.Enabled = false;
-			Util.MapDebugPrint("walls down", true);
-		}
-
-	},
-
-	Boxes = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		vel = ToVector(trigger.Action);
-		if ( vel.z > 0 )
-		{
-			Map.Switches.alboxes.Enabled = false;
-			Map.Switches.axboxes.Enabled = false;
-			Util.MapDebugPrint("boxes up", true);
-		}
-		else
-		{
-			Map.Switches.alboxes.Enabled = false;
-			Map.Switches.axboxes.Enabled = false;
-			Util.MapDebugPrint("boxes down", true);
-		}
-
-	},
-
-	Grates = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		vel = ToVector(trigger.Action);
-		if ( vel.z > 0 )
-		{
-			Map.Switches.algrates.Enabled = false;
-			Map.Switches.axgrates.Enabled = false;
-			Util.MapDebugPrint("grates up", true);
-		}
-		else
-		{
-			Map.Switches.algrates.Enabled = false;
-			Map.Switches.axgrates.Enabled = false;
-			Util.MapDebugPrint("grates down", true);
-		}
-
-	},
+	// Triggers
 
 	Allies_Duel = function( trigger )
 	{
-			Map.Switches.alduel.Enabled = false;
-			Util.MapDebugPrint("Allies Are Ready!", true);
+			if ( TestMap )
+				{ return; }
+
+			Wp.SetWaypointFlag("alboxes","closed",false);
+			Wp.SetWaypointFlag("alfloor","closed",false);
+			Wp.SetWaypointFlag("algrates","closed",false);
+			Wp.SetWaypointFlag("alwalls","closed",false);
+			Wp.SetWaypointFlag("axduel","closed",true);
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_boxes" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_floor" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_grates" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_walls" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_al_duel" );
+
+			Util.MapDebugPrint("Allies Are Ready!");
 	},
 
 	Axis_Duel = function( trigger )
 	{
-			Map.Switches.axduel.Enabled = false;
-			Util.MapDebugPrint("Axis Are Ready!", true);
+			if ( TestMap )
+				{ return; }
+
+			Wp.SetWaypointFlag("axboxes","closed",false);
+			Wp.SetWaypointFlag("axfloor","closed",false);
+			Wp.SetWaypointFlag("axgrates","closed",false);
+			Wp.SetWaypointFlag("axwalls","closed",false);
+			Wp.SetWaypointFlag("axduel","closed",true);
+
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_boxes" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_floor" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_grates" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_walls" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ax_duel" );
+
+			Util.MapDebugPrint("Axis Are Ready!");
 	},
 
 	FIGHT = function( trigger )
 	{
-			Util.MapDebugPrint("FIGHT!", true);
+			if ( TestMap )
+				{ return; }
+
+			Util.MapDebugPrint("FIGHT!");
 	},
 
 	Allies_Win = function( trigger )
 	{
-			Map.Switches.alfloor.Enabled = true;
-			Map.Switches.alwalls.Enabled = true;
-			Map.Switches.alboxes.Enabled = true;
-			Map.Switches.algrates.Enabled = true;
-			Map.Switches.alduel.Enabled = true;
-			Map.Switches.axfloor.Enabled = true;
-			Map.Switches.axwalls.Enabled = true;
-			Map.Switches.axboxes.Enabled = true;
-			Map.Switches.axgrates.Enabled = true;
-			Map.Switches.axduel.Enabled = true;
-			Util.MapDebugPrint("Allies Win!", true);
+			if ( TestMap )
+				{ return; }
 
+			Map.ResetTeams();
+
+			Util.MapDebugPrint("Allies Win!");
 	},
 
 	Axis_Win = function( trigger )
 	{
-			Map.Switches.alfloor.Enabled = true;
-			Map.Switches.alwalls.Enabled = true;
-			Map.Switches.alboxes.Enabled = true;
-			Map.Switches.algrates.Enabled = true;
-			Map.Switches.alduel.Enabled = true;
-			Map.Switches.axfloor.Enabled = true;
-			Map.Switches.axwalls.Enabled = true;
-			Map.Switches.axboxes.Enabled = true;
-			Map.Switches.axgrates.Enabled = true;
-			Map.Switches.axduel.Enabled = true;
-			Util.MapDebugPrint("Axis Win!", true);
+			if ( TestMap )
+				{ return; }
 
+			Map.ResetTeams();
+
+			Util.MapDebugPrint("Axis Win!");
+	},
+
+	No_Win = function( trigger )
+	{
+			if ( TestMap )
+				{ return; }
+
+			Map.ResetTeams();
+
+			Util.MapDebugPrint("No Winner");
 	},
 };
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 global OnMapLoad = function()
 {
 	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
+	{
+		Util.AutoTestMap();
+	}
 
-	OnTrigger( "floors_goto", Map.Floor );
-	OnTrigger( "walls_goto", Map.Walls );
-	OnTrigger( "crates_goto", Map.Boxes );
-	OnTrigger( "grates_goto", Map.Grates );
 	OnTrigger( "The Allied team is ready", Map.Allies_Duel );
 	OnTrigger( "The Axis team is ready", Map.Axis_Duel );
 	OnTrigger( "^3Allies win!", Map.Allies_Win );
 	OnTrigger( "^3Axis win!", Map.Axis_Win );
+	OnTrigger( "The arena is empty, ^3no winner", Map.No_Win );
 	OnTrigger( "^1FIGHT!", Map.FIGHT );
 
-	al_zone = OnTriggerRegion(Vector3(453,-90,-235), 100, Map.AlliesZone);
-	ax_zone = OnTriggerRegion(Vector3(-969,90,-235), 100, Map.AxisZone);
+	Util.DisableGoal( ".*", true ); // all but routes
 
-	Util.UpdateSwitchData();
+	// set Allies goals
 
-	Util.MapDebugPrint( "OnMapLoad" );
+	Wp.SetWaypointFlag("alboxes","closed",true);
+	Wp.SetWaypointFlag("alfloor","closed",true);
+	Wp.SetWaypointFlag("algrates","closed",true);
+	Wp.SetWaypointFlag("alwalls","closed",true);
+	Wp.SetWaypointFlag("alduel","closed",false);
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_al_duel" );
+
+	// set Axis goals
+
+	Wp.SetWaypointFlag("axboxes","closed",true);
+	Wp.SetWaypointFlag("axfloor","closed",true);
+	Wp.SetWaypointFlag("axgrates","closed",true);
+	Wp.SetWaypointFlag("axwalls","closed",true);
+	Wp.SetWaypointFlag("axduel","closed",false);
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_ax_duel" );
+
+	// routes
+	MapRoutes =
+	{
+		SWITCH_al_duel =
+		{
+			ROUTE_al_spawn_route =
+			{
+				ROUTE_al_duel_route = {},
+			},
+		},
+
+		SWITCH_ax_duel =
+		{
+			ROUTE_ax_spawn_route =
+			{
+				ROUTE_ax_duel_route = {},
+			},
+		},
+	};
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 global OnBotJoin = function( bot )
 {
@@ -317,3 +191,5 @@ global OnBotJoin = function( bot )
 		bot.AddScriptGoal("Hunt");
 	}
 };
+
+///////////////////////////////////////////////////////////////////////////////////////////////////

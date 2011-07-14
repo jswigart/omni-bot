@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------------------
 //	native12 & Qiki		20.10.2010		Initial Script
 //				28.10.2010		Final version
+//	native12		29.12.2010		Correction in Allied spawns, added navigation....
 //==========================================================================================
 //
 //	eagles_2ways_b3.way
@@ -137,6 +138,22 @@ global Map =
 					_this.AddAimRequest(Priority.VeryHigh, "facing", wpTable.facing);
 					_this.Bot.HoldButton(BTN.FORWARD, 1.5);
 					sleep(1);
+				}
+			},
+		},
+		//  	/bot waypoint_setproperty paththrough Navigation_PT:callarti
+		callarti =
+		{
+			navigate = function(_this)
+			{
+				wpTable = {};
+				Wp.GetWaypointByName("call", wpTable);
+				if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+				{
+					_this.AddAimRequest(Priority.VeryHigh, "facing", wpTable.facing);
+					_this.Bot.HoldButton(BTN.JUMP, 0.5);
+					_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+					sleep(1.5);
 				}
 			},
 		},
@@ -458,10 +475,13 @@ global Map =
 			{ return; }
 
 		Map.FirstFlagAllies = 1;
-
-		Util.ChangeSpawn( TEAM.ALLIES, 0 );	//inside hut (cablecar station)
-		Util.ChangeSpawn( TEAM.AXIS, 2 );
-
+		
+		if ( Map.SecondFlagAllies == 0 )
+		{
+			Util.ChangeSpawn( TEAM.ALLIES, 7 );	//inside hut (cablecar station)
+			Util.ChangeSpawn( TEAM.AXIS, 2 );
+		}
+		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Avalanche_Wall_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_firstflag_.*" );
 
@@ -760,7 +780,8 @@ global Map =
 			{ return; }
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Castle_Steel_Door );
-
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Castle_Steel_Door_.*" );
+		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Castle_Steel_Door" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_SteelDoor" );
@@ -884,7 +905,8 @@ global Map =
 
 		Map.BusEscaping = 1;
 
-		Util.ChangeSpawn( TEAM.ALLIES, 0 );	//near constructible
+		//Util.ChangeSpawn( TEAM.ALLIES, 0 );	//near constructible
+		Util.ChangeSpawn( TEAM.ALLIES, 5 );	//near constructible
 		Util.ChangeSpawn( TEAM.AXIS, 3 );	//bunker near hangar
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Bus" );
@@ -1080,7 +1102,8 @@ global Map =
 
 		Map.Allied5Spawn = 1;
 
-		Util.ChangeSpawn( TEAM.ALLIES, 0 );
+		//Util.ChangeSpawn( TEAM.ALLIES, 0 );
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_AxisPastBarrier1_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_AxisPastBarrier1_2" );
@@ -1669,8 +1692,8 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Plant_Command_Post, 0.0, 0, CLASS.ENGINEER );
 	SetGoalPriority( "FLAGRETURN_.*", 0.92, 0, 0 );
 
-	Util.ChangeSpawn( TEAM.AXIS, 0 );
-	Util.ChangeSpawn( TEAM.ALLIES, 0 );
+	Util.ChangeSpawn( TEAM.ALLIES, 6 );
+	Util.ChangeSpawn( TEAM.AXIS, 8 );
 
 	Wp.SetWaypointFlag( "a", "closed", true);
 	Wp.SetWaypointFlag( "b", "closed", true);
@@ -1684,7 +1707,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
 	Util.SetMaxUsersInProgress( 1, "BUILD_.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANTMINE_.*" );
-	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT_.*" );
 	Util.SetMaxUsersInProgress( 3, "ROUTE_Tram1" );
 	Util.SetMaxUsersInProgress( 3, "ROUTE_Tram2" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
@@ -2845,31 +2868,39 @@ global OnBotJoin = function( bot )
 	ETUtil.SwitchWeapon(WEAPON.MP40);
 	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
 	ETUtil.SwitchWeapon(WEAPON.STEN);
-
-	//	/setspawnpt <number>
-	//Axis Spawns:
-	//		0 - Axis spawn first spawn inside Hut
-	//		2 - Axis spawn Castle
-	//		3 - Axis spawn Bunker near hangar
-	//Allies Spawns:
-	//	Start:
-	//		0 - Allies spawn first spawn in front of Hut
-	//	FirstFlag:
-	//		0 - Allies spawn inside of Cablecar station
-	//		6 - Allies spawn first spawn in front of Hut
-	//	SecondFlag:
-	//		3 - Allies spawn inside Castle
-	//		6 - Allies spawn first spawn in front of Hut
-	//		7 - Allies spawn inside of Cablecar station
-	//	Bus captured:
-	//		0 - Allies spawn near Constructible
-	//		6 - Allies spawn first spawn in front of Hut
-	//		7 - Allies spawn inside of Cablecar station
-	//		9 - Allies spawn inside of bus garrage
-	//	5. spawn:
-	//		0 - Allies spawn near Road MG42
-	//		5 - Allies spawn near Constructible
-	//		6 - Allies spawn first spawn in front of Hut
-	//		7 - Allies spawn inside of Cablecar station
-	//		9 - Allies spawn inside of bus garrage
+	
+	if ( Map.Allied5Spawn == 0 )
+	{
+		if ( Map.BusEscaping == 0 )
+		{
+			if ( Map.SecondFlagAllies == 0 )
+			{
+				if ( Map.FirstFlagAllies == 0 )
+				{
+					Util.ChangeSpawn( TEAM.ALLIES, 6 );
+					Util.ChangeSpawn( TEAM.AXIS, 8 );
+				}
+				else
+				{
+					Util.ChangeSpawn( TEAM.ALLIES, 7 );	//inside hut (cablecar station)
+					Util.ChangeSpawn( TEAM.AXIS, 2 );	//Castle
+				}
+			}
+			else
+			{
+				Util.ChangeSpawn( TEAM.ALLIES, 3 );	//Castle
+				Util.ChangeSpawn( TEAM.AXIS, 2 );
+			}
+		}
+		else
+		{
+			Util.ChangeSpawn( TEAM.ALLIES, 5 );	//near constructible
+			Util.ChangeSpawn( TEAM.AXIS, 3 );	//bunker near hangar
+		}
+	}
+	else
+	{
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );	//hut near bridge
+		Util.ChangeSpawn( TEAM.AXIS, 3 );
+	}
 };
