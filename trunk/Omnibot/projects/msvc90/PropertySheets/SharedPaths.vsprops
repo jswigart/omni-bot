@@ -16,7 +16,7 @@
 	/>
 	<UserMacro
 		Name="BOOST"
-		Value="$(REPO_ROOT)libs\boost\boost_1_47"
+		Value="$(REPO_ROOT)libs\boost\boost_1_44"
 		PerformEnvironmentSet="true"
 	/>
 	<UserMacro

@@ -15,7 +15,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#include "CodeAnalysis.h"
+//#include "CodeAnalysis.h"
 
 
 // Disable some compiler warnings.
@@ -111,7 +111,8 @@ typedef std::list<String> StringList;
 #endif
 
 // Boost
-#define BOOST_FILESYSTEM_DEPRECATED 1	// cs: 1_47 compile 'fix'
+#define BOOST_NO_RVALUE_REFERENCES 1 // cs: < 1_45 vs2010 compile 'fix'
+//#define BOOST_FILESYSTEM_DEPRECATED 1	// cs: > 1_44 compile 'fix'
 #pragma warning( push )
 // stfu boost
 #pragma warning( disable: 4244 )
