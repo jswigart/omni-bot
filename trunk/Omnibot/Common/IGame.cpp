@@ -770,7 +770,10 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				m_GameEntities[index].m_EntityClass = m->m_EntityClass;
 				m_GameEntities[index].m_EntityCategory = m->m_EntityCategory;
 				m_GameEntities[index].m_TimeStamp = IGame::GetTime();
+
+#ifdef ENABLE_REMOTE_DEBUGGING
 				m_GameEntities[index].m_RemoteHndl = 0;
+#endif
 
 				NavigationManager::GetInstance()->GetCurrentPathPlanner()->EntityCreated(m_GameEntities[index]);
 
@@ -805,7 +808,10 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					m_GameEntities[index].m_EntityClass = 0;
 					m_GameEntities[index].m_EntityCategory.ClearAll();
 					m_GameEntities[index].m_TimeStamp = 0;
+
+#ifdef ENABLE_REMOTE_DEBUGGING
 					m_GameEntities[index].m_RemoteHndl = 0;
+#endif
 				}
 
 				GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);

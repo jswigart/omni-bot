@@ -41,7 +41,9 @@ struct EntityInstance
 	int								m_EntityClass;
 	int								m_TimeStamp;
 
+#ifdef ENABLE_REMOTE_DEBUGGING
 	RemoteLib::RemoteEntHandle		m_RemoteHndl;
+#endif
 };
 
 struct SyncImage {
