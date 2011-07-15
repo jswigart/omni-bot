@@ -32,10 +32,12 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -54,8 +56,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ui_mp_x86</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ui_mp_x86</TargetName>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -99,7 +101,12 @@
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et
+      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
+copy "$(TargetPath)" "$(ETDIR)\omnibot"
+$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
+copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
+
+
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -143,7 +150,12 @@
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>..\..\..\..\..\Build_Scripts\post_build.bat $(TargetPath) et debug
+      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
+copy "$(TargetPath)" "$(ETDIR)\omnibot"
+$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
+copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
+
+
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
