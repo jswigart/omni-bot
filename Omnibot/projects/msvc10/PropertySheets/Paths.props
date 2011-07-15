@@ -2,14 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <BOOST>$(SolutionDir)..\..\..\libs\boost\boost_1_47</BOOST>
-    <InterfaceDir>$(SolutionDir)..\..\..\GameInterfaces</InterfaceDir>
-    <OMNIBOT_INST>$(SolutionDir)..\..\..\Installer\Files</OMNIBOT_INST>
-    <REMOTEDEBUGLIB>$(SolutionDir)..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
+	<REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
+    <BOOST>$(REPO_ROOT)\libs\boost\boost_1_47</BOOST>
+    <InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
+    <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
+    <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
+	<ETDIR>C:\games\Wolfenstein - Enemy Territory</ETDIR>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
+    <BuildMacro Include="REPO_ROOT">
+      <Value>$(REPO_ROOT)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>  
     <BuildMacro Include="BOOST">
       <Value>$(BOOST)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
@@ -26,5 +32,9 @@
       <Value>$(REMOTEDEBUGLIB)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
+    <BuildMacro Include="ETDIR">
+      <Value>$(ETDIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>	
   </ItemGroup>
 </Project>
