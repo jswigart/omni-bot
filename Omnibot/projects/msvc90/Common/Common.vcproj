@@ -366,10 +366,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\Common\RenderOverlayDirectX.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\Common\RenderOverlayGame.cpp"
 					>
 					<FileConfiguration
