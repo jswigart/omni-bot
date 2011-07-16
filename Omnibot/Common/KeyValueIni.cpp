@@ -56,6 +56,10 @@
 #include <string>
 #include <assert.h>
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
 namespace KEYVALUEINI
 {
 

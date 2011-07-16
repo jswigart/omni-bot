@@ -11,7 +11,7 @@
 #include "BotExports.h"
 #include "Omni-Bot.h"
 
-#include <stdio.h>
+//#include <stdio.h>
 
 #ifdef WIN32
 #include <Windows.h>

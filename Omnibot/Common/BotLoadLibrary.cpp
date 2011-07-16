@@ -12,6 +12,9 @@
 #pragma warning(disable:4706) //assignment within conditional expression
 
 #include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 //////////////////////////////////////////////////////////////////////////
 

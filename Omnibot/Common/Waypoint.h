@@ -128,4 +128,6 @@ private:
 
 typedef boost::shared_ptr<Waypoint> WaypointPtr;
 
+bool waypoint_comp(const Waypoint* _wp1, const Waypoint* _wp2);
+
 #endif
