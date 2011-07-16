@@ -38,7 +38,9 @@
 #include <sys/types.h>
 //#include <sys/stat.h>
 
-#include <stdio.h>
+//#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include <stdarg.h>
 
 #ifdef __GNUC__

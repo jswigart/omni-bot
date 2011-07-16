@@ -15,6 +15,9 @@
 #include <math.h>
 #include <iostream>
 
+#include <cstdlib>
+#include <cstring>
+
 namespace Wm3
 {
 
