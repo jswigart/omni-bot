@@ -48,7 +48,7 @@ float ResponseCurve::CalculateValue(float _value)
 {
 	OBASSERT(!m_PointList.empty(), "No Points in Response Curve!");
 
-	int iNumPoints = m_PointList.size();
+	int iNumPoints = (int)m_PointList.size();
 
 	// Check the extents.
 	if(_value < m_PointList[0].x)

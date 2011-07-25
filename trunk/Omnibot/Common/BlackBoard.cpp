@@ -152,7 +152,7 @@ int BlackBoard::RemoveBBRecordByTarget(int _target, int _type /*= bbk_All*/)
 
 int BlackBoard::RemoveAllBBRecords(int _type /*= bbk_All*/)
 {
-	int iCount = m_DB.size();
+	int iCount = (int)m_DB.size();
 	if(_type == bbk_All)
 	{
 		m_DB.clear();

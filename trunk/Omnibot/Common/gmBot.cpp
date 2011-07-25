@@ -498,7 +498,7 @@ int gmBot::gmfSay(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				int len = (int)strlen(pAsString);
 				if(chatMsgSize - iMsgPos > len)
 				{
 					Utils::StringCopy(&chatMsg[iMsgPos], pAsString, len);
@@ -542,7 +542,7 @@ int gmBot::gmfSayTeam(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				int len = (int)strlen(pAsString);
 				if(chatMsgSize - iMsgPos > len)
 				{
 					Utils::StringCopy(&chatMsg[iMsgPos], pAsString, len);

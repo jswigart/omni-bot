@@ -200,7 +200,7 @@
     <ClCompile Include="g_etbot_interface.cpp">
       <Filter>omnibot</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Omnibot\Common\BotLoadLibrary.cpp">
+    <ClCompile Include="$(REPO_ROOT)\Omnibot\Common\BotLoadLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

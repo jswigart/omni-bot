@@ -45,7 +45,7 @@ extern "C" void InterProcessUpdate()
 			//Open a message queue.
 			message_queue mq(open_only,"debug_draw_queue");
 			unsigned int priority = 0;
-			unsigned int recvd_size = 0;
+			size_t recvd_size = 0;
 			IPC_DebugDrawMsg msg;
 			while(mq.try_receive(&msg, sizeof(msg), recvd_size, priority))
 			{

@@ -989,7 +989,7 @@ LiveUpdateKey ScriptManager::RegisterLiveUpdate(const filePath &_file)
 	}
 
 	// add it to the list.
-	const LiveUpdateKey key = g_LiveUpdate.size();
+	const LiveUpdateKey key = (int)g_LiveUpdate.size();
 
 	LiveUpdateEntry entry(_file, FileSystem::FileModifiedTime(_file));
 	g_LiveUpdate.push_back(entry);

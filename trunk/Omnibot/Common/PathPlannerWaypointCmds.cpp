@@ -985,13 +985,13 @@ void PathPlannerWaypoint::cmdWaypointTranslate(const StringVector &_args)
 
 		if(m_SelectedWaypoints.empty())
 		{
-			iNum = m_WaypointList.size();
+			iNum = (int)m_WaypointList.size();
 			it = m_WaypointList.begin();
 			itEnd = m_WaypointList.end();
 		}
 		else
 		{
-			iNum = m_SelectedWaypoints.size();
+			iNum = (int)m_SelectedWaypoints.size();
 			it = m_SelectedWaypoints.begin();
 			itEnd = m_SelectedWaypoints.end();
 		}
@@ -1397,7 +1397,7 @@ void PathPlannerWaypoint::_BenchmarkGetNavPoint(const StringVector &_args)
 	EngineFuncs::ConsoleMessage("-= Waypoint GetNavPoint Benchmark =-");
 
 	double dTimeTaken = 0.0f;
-	obuint32 iNumWaypoints = m_WaypointList.size();
+	obuint32 iNumWaypoints = (obuint32)m_WaypointList.size();
 	Timer tme;
 
 	obuint32 iHits = 0, iMisses = 0;

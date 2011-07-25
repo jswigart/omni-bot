@@ -577,7 +577,7 @@ void PathPlannerFloodFill::_BuildSector(int _floodRoot)
 			// mark sectorized
 			NavNode &nn = m_FloodFillData->m_Nodes[WorkingGrid.Get(x,y)];
 			nn.m_Sectorized = true;
-			nn.m_Sector = m_Sectors.size();
+			nn.m_Sector = (int)m_Sectors.size();
 
 			// make part of this sector
 			newSector.m_ContainingCells.insert(WorkingGrid.Get(x,y));

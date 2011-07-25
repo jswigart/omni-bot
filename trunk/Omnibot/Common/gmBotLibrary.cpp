@@ -2663,7 +2663,7 @@ static int GM_CDECL gmfConfigGet(gmThread *a_thread)
 		else if(vValue.IsFloat() && Utils::ConvertString(sValue,FloatVal))
 			a_thread->PushFloat(FloatVal);
 		else
-			a_thread->PushNewString(sValue.c_str(),sValue.length());
+			a_thread->PushNewString(sValue.c_str(),(int)sValue.length());
 	}
 	else if(!a_thread->Param(2).IsNull())
 	{

@@ -805,7 +805,7 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 
 	if(!routes.empty())
 	{
-		int iIndex = routes.size()-1;
+		int iIndex = (int)routes.size()-1;
 
 		float fWght = Mathf::IntervalRandom(0.f, fTotalWeight);
 		for(obuint32 i = 0; i < routes.size(); ++i)

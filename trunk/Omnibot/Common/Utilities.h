@@ -316,7 +316,7 @@ public:
 	void DelProperty(const String &_name);
 	String GetProperty(const String &_name) const;
 
-	obuint32 GetNumProperties() const { return m_Properties.size(); }
+	obuint32 GetNumProperties() const { return (obuint32)m_Properties.size(); }
 
 	template <typename T>
 	bool AddPropertyT(const String &_name, T &_value)

@@ -149,7 +149,7 @@ public:
 			//////////////////////////////////////////////////////////////////////////
 			if(gl != NULL && SquaredLength(gl->Position,pCurNode->Position)<Mathf::Sqr(32.f))
 			{
-				FoundGoalIndex = gl - &m_CurrentGoals[0];
+				FoundGoalIndex = (int)(gl - &m_CurrentGoals[0]);
 				fl.Finished = true;
 
 				m_Solution.resize(0);

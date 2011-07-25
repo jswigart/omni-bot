@@ -610,7 +610,7 @@ bool PathPlannerWaypoint::SetWaypointName(Waypoint *_wp, const String &_name)
 
 bool PathPlannerWaypoint::SetWaypointName(int _index, const String &_name)
 {
-	if(InRangeT<int>(_index, 0, m_WaypointList.size()-1))
+	if(InRangeT<int>(_index, 0, (int)m_WaypointList.size()-1))
 	{
 		Waypoint *pWp = m_WaypointList[_index];
 		return SetWaypointName(pWp, _name);
