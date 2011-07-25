@@ -778,7 +778,7 @@ void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
 							}
 							else
 							{
-								m_ActiveNavSectors[i].m_StartPortal = m_NavPortals.size()-1;
+								m_ActiveNavSectors[i].m_StartPortal = (int)m_NavPortals.size()-1;
 								m_ActiveNavSectors[i].m_NumPortals = 1;
 							}
 							//////////////////////////////////////////////////////////////////////////

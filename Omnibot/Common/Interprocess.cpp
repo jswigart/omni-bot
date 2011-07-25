@@ -211,7 +211,7 @@ namespace InterProcess
 				msg.m_Debugtype = DRAW_POLYGON;
 				msg.m_Duration = Utils::SecondsToMilliseconds(_time);
 
-				msg.data.m_Polygon.m_NumVerts = _vertices.size();
+				msg.data.m_Polygon.m_NumVerts = (int)_vertices.size();
 				if(msg.data.m_Polygon.m_NumVerts>IPC_DebugPolygonMessage::MaxPolyVerts)
 					msg.data.m_Polygon.m_NumVerts = IPC_DebugPolygonMessage::MaxPolyVerts;
 

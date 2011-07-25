@@ -198,8 +198,8 @@ namespace Utils
 		HashIndexMap::iterator it = g_HashIndexMap.find(hash);
 		if(it == g_HashIndexMap.end())
 		{
-			obuint32 iOffset = g_StringRepository.size();
-			g_StringRepository.append(_str.c_str(), _str.size()+1);
+			obuint32 iOffset = (obuint32)g_StringRepository.size();
+			g_StringRepository.append(_str.c_str(), (int)_str.size()+1);
 			g_HashIndexMap.insert(std::make_pair(hash, iOffset));
 		}
 	}
@@ -634,7 +634,7 @@ namespace Utils
 		if(depthTest)
 			flags|=IEngineInterface::DR_NODEPTHTEST;
 
-		if(!g_EngineFuncs->DebugPolygon((obVec3*)&_vertices[0], _vertices.size(), _color, _time, flags))
+		if(!g_EngineFuncs->DebugPolygon((obVec3*)&_vertices[0], (int)_vertices.size(), _color, _time, flags))
 			InterProcess::DrawPolygon(_vertices, _color, _time);
 	}
 
@@ -943,7 +943,7 @@ namespace Utils
 		obuint32 i;
 		for(obuint32 t = 0; t < _trim.size(); ++t)
 		{
-			while((i = _out.find(_trim[t])) != _out.npos)
+			while((i = (obuint32)_out.find(_trim[t])) != _out.npos)
 				_out.erase(i, 1);
 		}
 	}
@@ -1789,7 +1789,7 @@ bool Options::LoadConfigFile(const String &_file)
 				FileOptions = 0;
 			}
 
-			FileOptions = loadKeyValueIni(contents.c_str(),contents.size(),NumSections);
+			FileOptions = loadKeyValueIni(contents.c_str(),(unsigned int)contents.size(),NumSections);
 		}
 		return true;
 	}
@@ -2183,8 +2183,8 @@ const char *StringBuffer::AddUniqueString(const String & _str)
 		if(!m_Strings[s])
 		{
 			m_Strings[s] = &m_Buffer[m_BufferOffset];
-			Utils::StringCopy(&m_Buffer[m_BufferOffset],_str.c_str(),_str.length()+1);
-			m_BufferOffset += _str.length()+1;
+			Utils::StringCopy(&m_Buffer[m_BufferOffset],_str.c_str(),(int)_str.length()+1);
+			m_BufferOffset += (obuint32)_str.length()+1;
 			return m_Strings[s];
 		}
 	}

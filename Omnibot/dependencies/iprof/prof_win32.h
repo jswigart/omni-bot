@@ -12,12 +12,14 @@ typedef __int64 Prof_Int64;
 #endif
       void Prof_get_timestamp(Prof_Int64 *result)
       {
+#ifndef _M_X64 // cs: TODO: 64bit support
          __asm {
             rdtsc;
             mov    ebx, result
             mov    [ebx], eax
             mov    [ebx+4], edx
          }
+#endif
       }
 
 #endif

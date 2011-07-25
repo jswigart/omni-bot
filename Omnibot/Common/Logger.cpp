@@ -298,7 +298,7 @@ const std::string &Logger::HeaderString(const LogFlags logBits) const
 
 	if(m_OutMask & WRITE_FILE)
 	{
-		int	ix = SourceFile().rfind('\\');
+		int	ix = (int)SourceFile().rfind('\\');
 		ix = (ix == (int) std::string::npos ? 0: ix+1);
 		sprintf(temp, "%15s", SourceFile().substr(ix).c_str());
 		HeaderString += temp;

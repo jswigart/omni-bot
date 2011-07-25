@@ -569,8 +569,10 @@ float Q_rsqrt( float f );		// reciprocal square root
 
 #define SQRTFAST( x ) ( 1.0f / Q_rsqrt( x ) )
 
+#if defined _M_X64
+#define myftol(x) floor(x) // cs: temp for 64bit compile
 // fast float to int conversion
-#if id386 && !( (defined __linux__ || defined __FreeBSD__ || defined __GNUC__ ) && (defined __i386__ ) ) // rb010123
+#elif id386 && !( (defined __linux__ || defined __FreeBSD__ || defined __GNUC__ ) && (defined __i386__ ) ) // rb010123
 long myftol( float f );
 #elif defined( __MACOS__ )
 #define	myftol(x) (long)(x)

@@ -198,7 +198,7 @@ public:
 			//////////////////////////////////////////////////////////////////////////
 			if(gl /*&& SquaredLength(gl->Position,pCurNode->Position)<Mathf::Sqr(32.f)*/)
 			{
-				FoundGoalIndex = gl - &m_CurrentGoals[0];
+				FoundGoalIndex = (int)(gl - &m_CurrentGoals[0]);
 				fl.Finished = true;
 
 				m_Solution.resize(0);
@@ -1994,7 +1994,7 @@ void PathPlannerFloodFill::SaveFloodStarts()
 	f.OpenForWrite(strBuffer, File::Text);
 	if(f.IsOpen())
 	{
-		f.WriteInt32(m_StartPositions.size());
+		f.WriteInt32((obuint32)m_StartPositions.size());
 		Vector3List::const_iterator cIt = m_StartPositions.begin();
 		for(; cIt != m_StartPositions.end(); ++cIt)
 		{

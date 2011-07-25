@@ -1037,7 +1037,7 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 			table->Set(pMachine, i, gmVariable(pUser));
 		}
 	}
-	a_thread->PushInt(qry.m_List.size());
+	a_thread->PushInt((gmint)qry.m_List.size());
 	return GM_OK;
 }
 

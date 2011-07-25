@@ -548,7 +548,7 @@ void TriggerManager::cmdDrawTriggers(const StringVector &_args)
 
 void TriggerManager::cmdDebugTriggers(const StringVector &_args)
 {
-	int numArgs = _args.size();
+	int numArgs = (int)_args.size();
 	m_DebugTriggersExpr = ".*";
 
 	if(numArgs >= 2)
