@@ -375,16 +375,19 @@ namespace KEYVALUEINI
 	int        fi_fprintf(FILE_INTERFACE *fph,const char *fmt,...)
 	{
 		int ret = 0;
+		va_list ap;
+		va_start(ap, fmt);
 
 		char buffer[2048];
 		buffer[2047] = 0;
 
 #ifdef __linux__
-		vsnprintf(buffer,2047, fmt, (char *)(&fmt+1));
+		vsnprintf(buffer,2047, fmt, ap);
 #else
-		_vsnprintf(buffer,2047, fmt, (char *)(&fmt+1));
+		_vsnprintf(buffer,2047, fmt, ap);
 #endif
 
+		va_end(ap);
 		if ( fph )
 		{
 			ret = fph->writeString(buffer);
@@ -392,7 +395,6 @@ namespace KEYVALUEINI
 
 		return ret;
 	}
-
 
 	int        fi_fflush(FILE_INTERFACE *fph)
 	{
