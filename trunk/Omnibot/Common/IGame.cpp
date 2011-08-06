@@ -673,12 +673,6 @@ void IGame::UpdateGame()
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGame::UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db ) {
-	for(int i = 0; i < Constants::MAX_PLAYERS; ++i) {
-		if(m_ClientList[i]) {
-			m_ClientList[i]->UpdateSync( snapShots.clientSnapShots[i], db );
-		}
-	}
-
 	// draw the entities registered with the system
 	IGame::EntityIterator ent;
 	while( IGame::IterateEntity( ent ) ) {
@@ -686,7 +680,7 @@ void IGame::UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db 
 	}
 }
 void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
-	RemoteLib::DataBufferStatic<1024> localBuffer;
+	RemoteLib::DataBufferStatic<2048> localBuffer;
 	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );;
 
 	EntitySnapShot newSnapShot = snapShot;
@@ -694,15 +688,50 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 	//////////////////////////////////////////////////////////////////////////
 	// check for values that have changed
 	{
-		Vector3f pos = Vector3f::ZERO;
-		EngineFuncs::EntityPosition( ent.m_Entity, pos );
+		Vector3f entPosition = Vector3f::ZERO,
+				facingVector = Vector3f::ZERO,
+				rightVector = Vector3f::ZERO,
+				upVector = Vector3f::ZERO;
+
+		Msg_HealthArmor hlth;
+		EngineFuncs::EntityPosition( ent.m_Entity, entPosition );
 		const int entClass = InterfaceFuncs::GetEntityClass( ent.m_Entity );
 		const String entName = EngineFuncs::EntityName( ent.m_Entity );
+		//Box3f worldBounds;
+		AABB localBounds;
+		EngineFuncs::EntityOrientation( ent.m_Entity, facingVector, rightVector, upVector );
+
 		newSnapShot.Sync( "name", entName.c_str(), localBuffer );
-		newSnapShot.Sync( "x", pos.x, localBuffer );
-		newSnapShot.Sync( "y", pos.y, localBuffer );
-		newSnapShot.Sync( "z", pos.z, localBuffer );
+		newSnapShot.Sync( "x", entPosition.x, localBuffer );
+		newSnapShot.Sync( "y", entPosition.y, localBuffer );
+		newSnapShot.Sync( "z", entPosition.z, localBuffer );
 		newSnapShot.Sync( "classid", entClass, localBuffer );
+
+		float oldHdg = Mathf::RadToDeg( facingVector.XYHeading() );
+		float oldPitch = Mathf::RadToDeg( facingVector.GetPitch() );
+
+		float heading = 0.0f, pitch = 0.0f, radius = 0.0f;
+		facingVector.ToSpherical( heading, pitch, radius );
+		newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
+		newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
+		newSnapShot.Sync( "teamid", InterfaceFuncs::GetEntityTeam( ent.m_Entity ), localBuffer );
+		if ( InterfaceFuncs::GetHealthAndArmor( ent.m_Entity, hlth ) ) {
+			newSnapShot.Sync( "health", hlth.m_CurrentHealth, localBuffer );
+			newSnapShot.Sync( "maxhealth", hlth.m_MaxHealth, localBuffer );
+			newSnapShot.Sync( "armor", hlth.m_CurrentArmor, localBuffer );
+			newSnapShot.Sync( "maxarmor", hlth.m_MaxArmor, localBuffer );
+		}
+		
+		if ( EngineFuncs::EntityLocalAABB( ent.m_Entity, localBounds ) ) {
+			const float entRadius = Mathf::Min( localBounds.GetAxisLength( 0 ), localBounds.GetAxisLength( 0 ) ) * 0.5f;
+			newSnapShot.Sync( "entRadius", entRadius, localBuffer );
+			newSnapShot.Sync( "entHeight", localBounds.GetAxisLength( 2 ), localBuffer );
+		}
+
+		ClientPtr bot = GetClientByIndex( ent.m_Entity.GetIndex() );
+		if ( bot ) {
+			bot->InternalSyncEntity( newSnapShot, localBuffer );
+		}
 	}
 	
 	const uint32 writeErrors = localBuffer.endWrite();
@@ -721,6 +750,9 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 			snapShot = newSnapShot;
 		}
 	}
+}
+void IGame::InternalSyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
+	// for derived classes
 }
 #endif
 

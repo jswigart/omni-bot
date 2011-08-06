@@ -35,8 +35,16 @@ Item3D {
 
     // state properties
     property color teamColor : "white";
+    property color activeColor : getActiveColor()
+
     property string className: "NoClass"
     property url classTexture: ""
+
+    function getActiveColor() {
+        if ( health > 0 && maxhealth > 0 )
+            return teamColor;
+        else return "grey";
+    }
 
     Component.onCompleted: {
         var entAttribs = {
@@ -95,7 +103,6 @@ Item3D {
          //console.debug( "yaw " + yaw );
     }
     onHealthChanged: {
-        console.debug( name + " : " + health );
         //entList.updateEntity( { 'handle' : handle, 'health' : health } )
     }
     onMaxhealthChanged: {
@@ -107,6 +114,8 @@ Item3D {
     onEntHeightChanged: {
         //height6
     }
+    onFovChanged: {
+    }
 
     Item3D {
         id: entCylinder
@@ -117,17 +126,18 @@ Item3D {
             radius: entity.entRadius
             length: entity.entHeight
             effect: Effect {
-                color: entity.teamColor
+                color: entity.activeColor
             }
         }
 
         // FOV lines
         Line {
+            id: fovLines
             width: 2.0
             vertices: [
-                100, -100, 0,
+                Math.sin(-fov * 0.5 * Math.PI/180.0) * 100.0, Math.cos(-fov * 0.5 * Math.PI/180.0) * 100.0, 0,
                 0, 0, 0,
-                100, 100, 0
+                Math.sin(fov * 0.5 * Math.PI/180.0) * 100.0, Math.cos(fov * 0.5 * Math.PI/180.0) * 100.0, 0,
             ]
             effect: Effect {
                 color: "black"
@@ -144,7 +154,7 @@ Item3D {
             scale: 32
             effect: Effect {
                 blending: true
-                color: entity.teamColor
+                color: entity.activeColor
                 texture: entity.classTexture
             }
 

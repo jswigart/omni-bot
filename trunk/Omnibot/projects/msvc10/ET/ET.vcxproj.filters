@@ -30,9 +30,6 @@
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\ET\2.60\src\game\g_etbot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -59,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\GameInterfaces\ET\src\game\g_etbot_interface.cpp">
+      <Filter>_Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
