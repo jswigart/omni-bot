@@ -328,7 +328,7 @@ static int GM_CDECL gmfKickBotFromTeam(gmThread *a_thread)
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 	if(pGame)
 	{
-		for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
+		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
 			ClientPtr cp = pGame->GetClientByIndex(i);
 			if(cp && cp->GetTeam() == team)
@@ -371,7 +371,7 @@ static int GM_CDECL gmfMoveBotToAnotherTeam(gmThread *a_thread)
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 	if(pGame)
 	{
-		for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
+		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
 			ClientPtr cp = pGame->GetClientByIndex(i);
 			if(cp && cp->GetTeam() == sourceteam)

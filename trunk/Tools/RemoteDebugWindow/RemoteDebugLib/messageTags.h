@@ -3,10 +3,11 @@
 #ifndef __MESSAGETAGS_H__
 #define __MESSAGETAGS_H__
 
-#define REMOTELIB_MAKE_ID32( a, b, c, d )  ( ((d)<<24) | ((c)<<16) | ((b)<<8) | (a))
+#define REMOTELIB_MAKE_ID32( a, b, c, d )  ( ((a)<<24) | ((b)<<16) | ((c)<<8) | (d))
 
 namespace RemoteLib
 {
+	//////////////////////////////////////////////////////////////////////////      
 	enum MsgTagId 
 	{
 		ID_configName = REMOTELIB_MAKE_ID32('C','O','N','F'),

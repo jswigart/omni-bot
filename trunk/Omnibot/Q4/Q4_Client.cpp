@@ -87,23 +87,3 @@ void Q4_Client::SetupBehaviorTree()
 	using namespace AiState;
 	//FINDSTATEIF(HighLevel,GetStateRoot(),AppendState(new Deadzone))
 }
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-void Q4_Client::UpdateSyncImage( SyncImage & syncImage ) { 
-	switch ( GetTeam() )
-	{
-	case Q4_TEAM_MARINE:
-		syncImage.image = "q4/marine_icon.png";
-		syncImage.color = COLOR::GREEN;
-		break;
-	case Q4_TEAM_STROGG:
-		syncImage.image = "q4/strogg_icon.png";
-		syncImage.color = COLOR::ORANGE;
-		break;
-	}
-
-	if ( GetHealthPercent() <= 0.0f ) {
-		syncImage.color = COLOR::GREY;
-	}
-}
-#endif

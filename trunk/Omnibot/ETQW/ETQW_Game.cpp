@@ -520,7 +520,7 @@ void ETQW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 	{
 		CheckGameState();
 		OBASSERT(GameStarted(),"Game Not Started Yet");
-		OBASSERT(_msg->m_GameId < MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
+		OBASSERT(_msg->m_GameId < Constants::MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 		ClientPtr &cp = GetClientFromCorrectedGameId(_msg->m_GameId);

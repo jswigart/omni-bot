@@ -87,7 +87,12 @@ void Client::Update()
 	// Set dirty flags to invalidate caches.
 	m_InternalFlags.SetFlag(FL_DIRTYEYEPOS);
 
-	// update my locally properties with the one the game has for me.
+	// for remote syncing
+	const Vector3f oldPosition = m_Position;
+	const Vector3f oldFacing = m_FacingVector;
+	const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
+
+	// update my locally properties with the one the game has for me.	
 	EngineFuncs::EntityPosition(m_GameEntity, m_Position);
 	EngineFuncs::EntityWorldOBB(m_GameEntity, m_WorldBounds);
 	EngineFuncs::EntityGroundEntity(m_GameEntity, m_MoveEntity);
@@ -190,88 +195,50 @@ void Client::Update()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void Client::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	//SyncImage image;
-
-	//// update shared base properties
-	//Box3f obb;
-	//EngineFuncs::EntityWorldOBB( GetGameEntity(), obb );
-	//image.color = COLOR::WHITE;
-	//image.image = "global/noimage";
-	//image.pos = obb.Center.As2d();
-	//image.yaw = GetFacingVector().XYHeading();
-	//image.size = Vector2f( obb.Extent[0] * 2.0f, obb.Extent[1] * 2.0f );
-
-	//// let subclasses alter images, etc
-	//UpdateSyncImage( image );
-
-	//const char * name = GetName( true );
-	//
-	//if ( m_StateRoot ) {
-	//	m_StateRoot->Sync( db, fullSync, name, image );
-	//}	
-
-	//db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	//db.startSizeHeader();
-	//db.writeInt32( RemoteLib::ID_token );
-	//db.writeSmallString( "Clients" );
-	//db.writeSmallString( name );
-	//
-	///*RemoteLib::PackEllipse( db,
-	//	"fov", 
-	//	image.pos.x, image.pos.y,
-	//	image.size.x * 2.0f, image.size.y * 2.0f,
-	//	GetFieldOfView(),
-	//	Mathf::RadToDeg( image.yaw ),
-	//	image.color.r(), image.color.g(), image.color.b(), image.color.a() );*/
-	//
-	//obColor dirColor = COLOR::WHITE;
-	//Vector2f face2d = GetFacingVector().As2d();
-	//face2d.Normalize();
-	//Vector2f endLine = image.pos + face2d * image.size.Normalize() * 1.5f;
-	//RemoteLib::PackLine( db,
-	//	"",
-	//	"dir", 
-	//	image.pos.x, image.pos.y,
-	//	endLine.x, endLine.y, 
-	//	dirColor.r(), dirColor.g(), dirColor.b(), dirColor.a() );
-
-	//RemoteLib::PackImage( db, 
-	//	"",
-	//	name,
-	//	image.image.c_str(),
-	//	image.pos.x, image.pos.y,
-	//	image.size.x, image.size.y,
-	//	Mathf::RadToDeg( image.yaw ),
-	//	image.color.r(), image.color.g(), image.color.b(), image.color.a() );
-
-	//db.writeInt32( RemoteLib::ID_tokenEnd );
-	//db.endSizeHeader();
-	//db.endWrite();
+void Client::UpdateSync( ClientSnapShot & snapShot, RemoteLib::DataBuffer & db ) {
+	/*if ( m_StateRoot ) {
+		m_StateRoot->Sync( db, GetName(true) );
+	}*/
 	
-	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_qmlEntity );
+	BitFlag64 localSyncFlags;
 
-	db.writeInt32( 1 ); // entity handle
-	if ( fullSync ) {
-		db.writeSmallString( "name" );
-		db.writeSmallString( "Entity 1" );
+	RemoteLib::DataBufferStatic<1024> localBuffer;
+	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );;
+
+	ClientSnapShot newSnapShot = snapShot;
+	
+	newSnapShot.Sync( "name", GetName( true ), localBuffer );
+	newSnapShot.Sync( "x", m_Position.x, localBuffer );
+	newSnapShot.Sync( "y", m_Position.y, localBuffer );
+	newSnapShot.Sync( "z", m_Position.z, localBuffer );
+	newSnapShot.Sync( "yaw", Mathf::RadToDeg( GetFacingVector().XYHeading() ), localBuffer );
+	newSnapShot.Sync( "pitch", Mathf::RadToDeg( GetFacingVector().GetPitch() ), localBuffer );
+	newSnapShot.Sync( "fov", m_FieldOfView, localBuffer );
+	newSnapShot.Sync( "classid", m_Class, localBuffer );
+	newSnapShot.Sync( "teamid", m_Team, localBuffer );
+	newSnapShot.Sync( "entRadius", 32.0f, localBuffer );
+	newSnapShot.Sync( "entHeight", GetWorldBounds().Extent[2], localBuffer );
+	newSnapShot.Sync( "health", m_HealthArmor.m_CurrentHealth, localBuffer );
+	newSnapShot.Sync( "maxhealth", m_HealthArmor.m_MaxHealth, localBuffer );
+	newSnapShot.Sync( "armor", m_HealthArmor.m_CurrentArmor, localBuffer );
+	newSnapShot.Sync( "maxarmor", m_HealthArmor.m_MaxArmor, localBuffer );
+		
+	const uint32 writeErrors = localBuffer.endWrite();
+	assert( writeErrors == 0 );
+	
+	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_qmlEntity );
+		db.writeInt32( GetGameEntity().AsInt() );
+		db.append( localBuffer );
+		db.endSizeHeader();
+
+		if ( db.endWrite() == 0 ) {
+			// mark the stuff we synced as done so we don't keep spamming it
+			snapShot = newSnapShot;
+		}
 	}
-	
-	/*db.writeSmallString( "x" );
-	db.writeFloat32( 100.0f );
-	db.writeSmallString( "y" );
-	db.writeFloat32( 100.0f );*/
-	db.writeSmallString( "yaw" );
-	db.writeFloat32( Mathf::RadToDeg(  GetFacingVector().XYHeading() ) );
-	db.writeSmallString( "classid" );
-	db.writeInt32( GetClass() );
-	db.writeSmallString( "healthpc" );
-	db.writeFloat32( GetHealthPercent() );
-
-	db.endSizeHeader();
-	db.endWrite();
 }
 
 #endif
@@ -651,7 +618,7 @@ void Client::Init(int _gameid)
 
 void Client::Shutdown()
 {
-	IGameManager::GetInstance()->SyncRemoteDelete( GetName( true ) );
+	IGameManager::GetInstance()->SyncRemoteDelete( GetGameEntity().AsInt() );
 
 	//////////////////////////////////////////////////////////////////////////	
 	// Call any map callbacks.
@@ -963,7 +930,7 @@ void Client::CheckTeamEvent()
 	{
 		// Update our team.
 		m_Team = iCurrentTeam;
-
+		
 		// Send a change team event.
 		Event_ChangeTeam d = { iCurrentTeam };
 		SendEvent(MessageHelper(MESSAGE_CHANGETEAM, &d, sizeof(d)));
@@ -976,7 +943,7 @@ void Client::CheckClassEvent()
 	if(iCurrentClass != m_Class)
 	{
 		m_Class = iCurrentClass;
-
+		
 		// Send a change class event.
 		Event_ChangeClass d = { iCurrentClass };
 		SendEvent(MessageHelper(MESSAGE_CHANGECLASS, &d, sizeof(d)));

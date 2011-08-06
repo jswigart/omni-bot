@@ -44,11 +44,7 @@ public:
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
 	void SetupBehaviorTree();
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void UpdateSyncImage( SyncImage & syncImage );
-#endif
-
+	
 	ET_Client();
 	virtual ~ET_Client();
 protected:

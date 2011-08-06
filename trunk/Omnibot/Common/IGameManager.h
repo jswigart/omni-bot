@@ -17,11 +17,36 @@ class GoalManager;
 class ScriptManager;
 class PathPlannerBase;
 
+//////////////////////////////////////////////////////////////////////////
+#ifdef ENABLE_REMOTE_DEBUGGING
+
+typedef RemoteLib::SyncSnapshot<32> ClientSnapShot;
+typedef RemoteLib::SyncSnapshot<16> EntitySnapShot;
+
+struct RemoteSnapShots {	
+	ClientSnapShot			clientSnapShots[ Constants::MAX_PLAYERS ];
+	EntitySnapShot			entitySnapShots[ Constants::MAX_ENTITIES ];
+
+	void Clear() {
+		for ( int i = 0; i < Constants::MAX_PLAYERS; ++i ) {
+			clientSnapShots[ i ].Clear();
+		}
+		for ( int i = 0; i < Constants::MAX_ENTITIES; ++i ) {
+			entitySnapShots[ i ].Clear();
+		}
+	}
+};
+#endif
+//////////////////////////////////////////////////////////////////////////
+
 // interface: IGameManager
 //		Handles most of the common functionality of the game manager. Mods should subclass
 //		this in order to create their own instance of IGame from within the CreateGameFromGameID
 //		function
 class IGameManager : public CommandReciever
+#ifdef ENABLE_REMOTE_DEBUGGING
+	, public RemoteLib::ConnectionCallbacks
+#endif
 {
 public:
 	/*
@@ -56,8 +81,8 @@ public:
 	bool AddUpdateFunction(const String &_name, FunctorPtr _func);
 	bool RemoveUpdateFunction(const String &_name);
 
-	void SyncRemoteDelete( const char * path );
-
+	void SyncRemoteDelete( int entityHandle );
+	
 	// Singleton Accessors
 	static IGameManager *GetInstance();
 	static void DeleteInstance();	
@@ -72,6 +97,13 @@ protected:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	RemoteLib::ConnectionManagerServer	m_Remote;
+
+	// todo: make this per connection
+	RemoteSnapShots						m_SnapShots;
+
+	void OnConnect( RemoteLib::Connection * conn );
+	void OnDisConnect( RemoteLib::Connection * conn );
+	void OnAcceptConnection( RemoteLib::Connection * conn );
 #endif
 
 	virtual void InitCommands();

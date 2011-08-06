@@ -830,7 +830,7 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 #endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath, SyncImage & img ) {
+void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath ) {
 	String pth = va( "%s/%s", statePath, GetName().c_str() );
 
 	StringStr s;
@@ -867,7 +867,7 @@ void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * stateP
 	}
 
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->Sync( db, fullSync, pth.c_str(), img );
+		pState->Sync( db, fullSync, pth.c_str() );
 
 }
 #endif

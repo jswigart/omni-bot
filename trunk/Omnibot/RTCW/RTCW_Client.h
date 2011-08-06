@@ -42,11 +42,7 @@ public:
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
 	void SetupBehaviorTree();
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	void UpdateSyncImage( SyncImage & syncImage );
-#endif
-
+	
 	RTCW_Client();
 	virtual ~RTCW_Client();
 protected:

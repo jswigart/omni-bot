@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>795</width>
     <height>600</height>
    </rect>
   </property>
@@ -14,11 +14,8 @@
    <string>RemoteDebugWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
-     <number>1</number>
-    </property>
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
      <widget class="QTabWidget" name="categories">
       <property name="currentIndex">
        <number>3</number>
@@ -114,35 +111,22 @@
         <property name="margin">
          <number>1</number>
         </property>
-        <item>
-         <widget class="MapWidget" name="graphics2d">
-          <property name="backgroundBrush">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>200</red>
-             <green>200</green>
-             <blue>200</blue>
-            </color>
-           </brush>
-          </property>
-          <property name="dragMode">
-           <enum>QGraphicsView::ScrollHandDrag</enum>
-          </property>
-          <property name="transformationAnchor">
-           <enum>QGraphicsView::AnchorUnderMouse</enum>
-          </property>
-          <property name="rubberBandSelectionMode">
-           <enum>Qt::IntersectsItemBoundingRect</enum>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="qmlView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
+       </property>
        <attribute name="title">
         <string>View</string>
        </attribute>
-       <widget class="QDeclarativeView" name="declarativeView">
+       <widget class="QDeclarativeView" name="declarativeMap">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -150,6 +134,24 @@
           <width>791</width>
           <height>521</height>
          </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="backgroundBrush">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>200</red>
+           <green>200</green>
+           <blue>200</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="resizeMode">
+         <enum>QDeclarativeView::SizeViewToRootObject</enum>
         </property>
        </widget>
       </widget>
@@ -162,7 +164,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>795</width>
      <height>21</height>
     </rect>
    </property>
@@ -213,11 +215,6 @@
    <class>QDeclarativeView</class>
    <extends>QGraphicsView</extends>
    <header>QtDeclarative/QDeclarativeView</header>
-  </customwidget>
-  <customwidget>
-   <class>MapWidget</class>
-   <extends>QGraphicsView</extends>
-   <header>mapwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

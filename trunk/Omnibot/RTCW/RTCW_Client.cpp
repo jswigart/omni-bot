@@ -355,36 +355,3 @@ void RTCW_Client::SetupBehaviorTree()
 	GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
 	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
 }
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-void RTCW_Client::UpdateSyncImage( SyncImage & syncImage ) { 
-	switch ( GetClass() )
-	{
-	case RTCW_CLASS_SOLDIER:
-		syncImage.image = "et/class_soldier.png";
-		break;
-	case RTCW_CLASS_MEDIC:
-		syncImage.image = "et/class_medic.png";
-		break;
-	case RTCW_CLASS_ENGINEER:
-		syncImage.image = "et/class_engineer.png";
-		break;
-	case RTCW_CLASS_LIEUTENANT:
-		syncImage.image = "et/class_fieldops.png";
-		break;
-	}
-	switch ( GetTeam() )
-	{
-	case RTCW_TEAM_ALLIES:
-		syncImage.color = COLOR::BLUE;
-		break;
-	case RTCW_TEAM_AXIS:
-		syncImage.color = COLOR::RED;
-		break;
-	}
-
-	if ( GetHealthPercent() <= 0.0f ) {
-		syncImage.color = COLOR::GREY;
-	}
-}
-#endif

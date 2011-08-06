@@ -248,7 +248,7 @@ public:
 #endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath, SyncImage & img );
+	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath );
 #endif
 
 	//////////////////////////////////////////////////////////////////////////

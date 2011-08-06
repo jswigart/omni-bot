@@ -25,23 +25,6 @@
 #include "ChunkedFile.h"
 
 //////////////////////////////////////////////////////////////////////////
-#ifdef ENABLE_REMOTE_DEBUGGING
-
-class OverlayConnectionCallbacks : public RemoteLib::ConnectionCallbacks
-{
-public:
-	void OnConnect( RemoteLib::Connection * conn ) {
-		EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
-	}
-	void OnDisConnect( RemoteLib::Connection * conn ) {
-		EngineFuncs::ConsoleMessage( va( "Remote disconnected %s", conn->getIp() ) );
-	}
-	void OnAcceptConnection( RemoteLib::Connection * conn ) {
-		EngineFuncs::ConsoleMessage( va( "Remote connected to %s", conn->getIp() ) );
-	}
-} connectionCallbacks;
-#endif
-//////////////////////////////////////////////////////////////////////////
 
 IGameManager *IGameManager::m_Instance = 0;
 
@@ -163,7 +146,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	{
 		int numConnections = 0;
 		if(Options::GetValue("RemoteWindow","Enabled",numConnections)) {
-			m_Remote.setMaxConnections( numConnections );
+			m_Remote.setMaxConnections( (unsigned short)numConnections );
 		}
 		int remotePort = m_Remote.getPort();
 		if(Options::GetValue("RemoteWindow","Port",remotePort)) {
@@ -272,11 +255,12 @@ void IGameManager::UpdateGame()
 #ifdef ENABLE_REMOTE_DEBUGGING
 		{
 			Prof(RemoteSync);
-			m_Remote.updateConnections( &connectionCallbacks );
+			m_Remote.updateConnections( this );
 			for( int i = 0; i < m_Remote.getNumConnections(); ++i ) {
 				RemoteLib::Connection * conn = m_Remote.getConnection( i );
 				if ( conn->isConnected() ) {
 					RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
+					// keep alive
 					if ( IGame::GetTime() > conn->getUserData() ) {
 						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 						sendBuffer.startSizeHeader();
@@ -293,11 +277,13 @@ void IGameManager::UpdateGame()
 						sendBuffer.writeString( m_Game->RemoteConfigName() );
 						sendBuffer.endSizeHeader();
 						sendBuffer.endWrite();
-					}
 
-					m_Game->Sync( sendBuffer, conn->isNewConnection() );
-					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
-					m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
+						m_SnapShots.Clear();
+					}
+					
+					m_Game->UpdateSync( m_SnapShots, sendBuffer );
+					//m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
+					//m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
 					conn->clearNewConnection();
 				}
 			}
@@ -526,7 +512,7 @@ bool IGameManager::RemoveUpdateFunction(const String &_name)
 	return false;
 }
 
-void IGameManager::SyncRemoteDelete( const char * path ) 
+void IGameManager::SyncRemoteDelete( int entityHandle ) 
 {
 #ifdef ENABLE_REMOTE_DEBUGGING
 	if ( m_Remote.getNumConnections() > 0 ) {
@@ -537,10 +523,20 @@ void IGameManager::SyncRemoteDelete( const char * path )
 		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 		db.startSizeHeader();
 		db.writeInt32( RemoteLib::ID_delete );
-		db.writeString( path );
+		db.writeInt32( entityHandle );
 		db.endSizeHeader();
 		db.endWrite();
 		m_Remote.sendToAll( db );
 	}
 #endif
+}
+
+void IGameManager::OnConnect( RemoteLib::Connection * conn ) {
+	EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
+}
+void IGameManager::OnDisConnect( RemoteLib::Connection * conn ) {
+	EngineFuncs::ConsoleMessage( va( "Remote disconnected %s", conn->getIp() ) );
+}
+void IGameManager::OnAcceptConnection( RemoteLib::Connection * conn ) {
+	EngineFuncs::ConsoleMessage( va( "Remote connected to %s", conn->getIp() ) );
 }

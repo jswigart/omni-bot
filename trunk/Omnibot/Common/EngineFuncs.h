@@ -40,4 +40,8 @@ namespace EngineFuncs
 	void ConsoleError(const char* _msg);
 };
 
+namespace Constants {
+	enum Internal { MAX_PLAYERS = 64, MAX_ENTITIES = 4096 };
+}
+
 #endif

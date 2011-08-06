@@ -40,7 +40,7 @@ IGame::GameVars::GameVars()
 {
 }
 
-EntityInstance IGame::m_GameEntities[MAX_ENTITIES];
+EntityInstance IGame::m_GameEntities[Constants::MAX_ENTITIES];
 int IGame::m_MaxEntity = 0;
 
 typedef boost::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
@@ -123,7 +123,7 @@ void IGame::Shutdown()
 		m_LastGameState = m_GameState = GAME_STATE_INVALID;
 	}
 
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 	{
 		if(m_ClientList[i])
 		{
@@ -655,7 +655,7 @@ void IGame::UpdateGame()
 	obstacleManager.Update();
 
 	// This is called often to update the state of the bots and perform their "thinking"
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 	{
 		if(m_ClientList[i])
 		{
@@ -672,46 +672,54 @@ void IGame::UpdateGame()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void IGame::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	for(int i = 0; i < MAX_PLAYERS; ++i) {
+void IGame::UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db ) {
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i) {
 		if(m_ClientList[i]) {
-			m_ClientList[i]->Sync( db, fullSync );
+			m_ClientList[i]->UpdateSync( snapShots.clientSnapShots[i], db );
 		}
 	}
 
 	// draw the entities registered with the system
 	IGame::EntityIterator ent;
 	while( IGame::IterateEntity( ent ) ) {
-		SyncEntity( ent.GetEnt(), db, fullSync );
+		SyncEntity( ent.GetEnt(), snapShots.entitySnapShots[ ent.GetIndex() ], db );
 	}
 }
+void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
+	RemoteLib::DataBufferStatic<1024> localBuffer;
+	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );;
 
-void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync ) {
-	if ( ent.m_EntityCategory.CheckFlag( ENT_CAT_PROJECTILE ) ||
-		ent.m_EntityCategory.CheckFlag( ENT_CAT_PICKUP )) {
+	EntitySnapShot newSnapShot = snapShot;
 
-			Box3f worldbounds;
-			worldbounds.Clear();
-			if ( EngineFuncs::EntityWorldOBB( ent.m_Entity, worldbounds ) ) {
-				db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-				db.startSizeHeader();
+	//////////////////////////////////////////////////////////////////////////
+	// check for values that have changed
+	{
+		Vector3f pos = Vector3f::ZERO;
+		EngineFuncs::EntityPosition( ent.m_Entity, pos );
+		const int entClass = InterfaceFuncs::GetEntityClass( ent.m_Entity );
+		const String entName = EngineFuncs::EntityName( ent.m_Entity );
+		newSnapShot.Sync( "name", entName.c_str(), localBuffer );
+		newSnapShot.Sync( "x", pos.x, localBuffer );
+		newSnapShot.Sync( "y", pos.y, localBuffer );
+		newSnapShot.Sync( "z", pos.z, localBuffer );
+		newSnapShot.Sync( "classid", entClass, localBuffer );
+	}
+	
+	const uint32 writeErrors = localBuffer.endWrite();
+	assert( writeErrors == 0 );
 
-				obColor col = COLOR::YELLOW;
-				RemoteLib::PackRect( db, 
-					"Projectile",
-					FindClassName( ent.m_EntityClass ),
-					worldbounds.Center.x, 
-					worldbounds.Center.y,
-					worldbounds.Extent[ 0 ]*2.0f,
-					worldbounds.Extent[ 1 ]*2.0f,
-					Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() ),
-					col.r(), col.g(), col.b(), col.a() );
+	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_qmlEntity );
+		db.writeInt32( ent.m_Entity.AsInt() );
+		db.append( localBuffer );
+		db.endSizeHeader();
 
-				db.endSizeHeader();
-				db.endWrite();
-
-				return;
-			}
+		if ( db.endWrite() == 0 ) {
+			// mark the stuff we synced as done so we don't keep spamming it
+			snapShot = newSnapShot;
+		}
 	}
 }
 #endif
@@ -771,10 +779,6 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				m_GameEntities[index].m_EntityCategory = m->m_EntityCategory;
 				m_GameEntities[index].m_TimeStamp = IGame::GetTime();
 
-#ifdef ENABLE_REMOTE_DEBUGGING
-				m_GameEntities[index].m_RemoteHndl = 0;
-#endif
-
 				NavigationManager::GetInstance()->GetCurrentPathPlanner()->EntityCreated(m_GameEntities[index]);
 
 #ifdef _DEBUG
@@ -808,10 +812,6 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					m_GameEntities[index].m_EntityClass = 0;
 					m_GameEntities[index].m_EntityCategory.ClearAll();
 					m_GameEntities[index].m_TimeStamp = 0;
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-					m_GameEntities[index].m_RemoteHndl = 0;
-#endif
 				}
 
 				GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);
@@ -895,7 +895,7 @@ void IGame::DispatchGlobalEvent(const MessageHelper &_message)
 	default:
 		{
 			// Send this event to everyone.
-			for(int i = 0; i < MAX_PLAYERS; ++i)
+			for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 			{
 				if(m_ClientList[i])
 					m_ClientList[i]->SendEvent(_message);
@@ -913,7 +913,7 @@ void IGame::DispatchGlobalEvent(const MessageHelper &_message)
 
 void IGame::DispatchEvent(int _dest, const MessageHelper &_message)
 {
-	if(_dest >= 0 && _dest < MAX_PLAYERS)
+	if(_dest >= 0 && _dest < Constants::MAX_PLAYERS)
 	{
 		// Send to someone in particular
 		ClientPtr cp = GetClientFromCorrectedGameId(_dest);
@@ -937,7 +937,7 @@ void IGame::ClientJoined(const Event_SystemClientConnected *_msg)
 	{
 		CheckGameState();
 		OBASSERT(GameStarted(),"Game Not Started Yet");
-		OBASSERT(_msg->m_GameId < MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
+		OBASSERT(_msg->m_GameId < Constants::MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 
@@ -963,7 +963,7 @@ void IGame::ClientJoined(const Event_SystemClientConnected *_msg)
 void IGame::ClientLeft(const Event_SystemClientDisConnected *_msg)
 {
 	Utils::OutputDebug(kInfo, "Client Left Game, ClientNum: %d", _msg->m_GameId);
-	OBASSERT(_msg->m_GameId < MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
+	OBASSERT(_msg->m_GameId < Constants::MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!");
 
 	ClientPtr &cp = GetClientFromCorrectedGameId(_msg->m_GameId);
 	if(cp)
@@ -1029,7 +1029,7 @@ void IGame::StartTraining()
 		int iThreadId;
 		if(!ScriptManager::GetInstance()->ExecuteFile(script, iThreadId))
 		{
-			EngineFuncs::ConsoleError(va("Error Running Training Script: %s", script));
+			EngineFuncs::ConsoleError(va("Error Running Training Script: %s", script.c_str()));
 		}
 	}
 }
@@ -1175,7 +1175,7 @@ bool IGame::UnhandledCommand(const StringVector &_args)
 {
 	Prof(UnhandledCommand);
 	bool handled = false;
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 	{
 		if(m_ClientList[i])
 		{
@@ -1204,7 +1204,7 @@ void IGame::cmdBotDontShoot(const StringVector &_args)
 
 		if(bDontShoot != Invalid)
 		{
-			for(int i = 0; i < MAX_PLAYERS; ++i)
+			for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 			{
 				if(m_ClientList[i])
 				{
@@ -1248,7 +1248,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 	if(botname == "all")
 		bAll = true;
 
-	for(int p = 0; p < MAX_PLAYERS; ++p)
+	for(int p = 0; p < Constants::MAX_PLAYERS; ++p)
 	{
 		if(m_ClientList[p])
 		{
@@ -1307,7 +1307,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 void IGame::cmdKickAll(const StringVector &_args)
 {
 	// Kick all bots from the game.
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 	{
 		if(m_ClientList[i])
 		{
@@ -1485,7 +1485,7 @@ void IGame::AddBot(Msg_Addbot &_addbot, bool _createnow)
 
 ClientPtr IGame::GetClientByGameId(int _gameId)
 {
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		if(m_ClientList[i] && m_ClientList[i]->GetGameID() == _gameId)
 			return ClientPtr(m_ClientList[i]);
 	return ClientPtr();
@@ -1493,7 +1493,7 @@ ClientPtr IGame::GetClientByGameId(int _gameId)
 
 ClientPtr IGame::GetClientByIndex(int _index)
 {
-	if(InRangeT<int>(_index, 0, MAX_PLAYERS))
+	if(InRangeT<int>(_index, 0, Constants::MAX_PLAYERS))
 		return m_ClientList[_index];
 	return ClientPtr();
 }
@@ -1774,7 +1774,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 int IGame::GetDebugWindowNumClients() const
 {
 	int num = 0;
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		if(m_ClientList[i])
 			++num;
 	return num;
@@ -1782,7 +1782,7 @@ int IGame::GetDebugWindowNumClients() const
 
 ClientPtr IGame::GetDebugWindowClient(int index) const
 {
-	for(int i = 0; i < MAX_PLAYERS; ++i)
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 	{
 		if(m_ClientList[i])
 		{
@@ -1813,7 +1813,7 @@ bool IGame::IsEntityValid(const GameEntity &_hnl)
 	if(_hnl.IsValid())
 	{
 		const int index = _hnl.GetIndex();
-		if(index >= 0 && index < MAX_ENTITIES)
+		if(index >= 0 && index < Constants::MAX_ENTITIES)
 		{
 			EntityInstance &ei = m_GameEntities[index];
 			UpdateEntity( ei );
@@ -1835,11 +1835,8 @@ bool IGame::IterateEntity(IGame::EntityIterator &_it)
 		if(m_GameEntities[i].m_Entity.IsValid())
 		{
 			UpdateEntity( m_GameEntities[i] );
-
 			_it.m_Current = m_GameEntities[i];
-
-			//if ( it.m_Current.m_TimeStamp )
-
+			_it.m_Index = i;
 			return true;
 		}			
 	}
@@ -1889,7 +1886,7 @@ void IGame::PropogateDeletedThreads()
 	if ( m_NumDeletedThreads > 0 )
 	{
 		std::sort(m_DeletedThreads,m_DeletedThreads+m_NumDeletedThreads,_ThreadIdSort);
-		for(int i = 0; i < MAX_PLAYERS; ++i)
+		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
 			if(m_ClientList[i])
 			{

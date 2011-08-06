@@ -57,7 +57,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib QtOpenGL4.lib QtNetwork4.lib QtWebKit4.lib opengl32.lib QtDeclarative4.lib"
+				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib QtOpenGL4.lib QtNetwork4.lib QtWebKit4.lib QtDeclarative4.lib"
 				OutputFile="$(SolutionDir)/bin/$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="false"
@@ -127,7 +127,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib QtOpenGLd4.lib QtNetworkd4.lib QtWebKitd4.lib opengl32.lib QtDeclaratived4.lib"
+				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib QtOpenGLd4.lib QtNetworkd4.lib QtWebKitd4.lib QtDeclaratived4.lib"
 				OutputFile="$(SolutionDir)/bin/$(ProjectName)_d.exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="true"
@@ -407,7 +407,7 @@
 		/>
 		<Global
 			Name="QtVersion Win32"
-			Value="4.7.2"
+			Value="4.8"
 		/>
 		<Global
 			Name="RccDir"

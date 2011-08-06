@@ -4,6 +4,8 @@
 
 namespace RemoteLib
 {
+	int32 HashString32(const char *_str);
+
 	class TcpSocket;
 
 	class DataBuffer
@@ -37,7 +39,7 @@ namespace RemoteLib
 		bool isReading() const { return readMode > ReadModeNone; }
 
 		bool startSizeHeader();
-		void endSizeHeader();
+		uint32 endSizeHeader();
 
 		int readFromSocket( TcpSocket & socket );
 		int sendToSocket( TcpSocket & socket );
@@ -148,6 +150,179 @@ namespace RemoteLib
 		// sets error state
 		bool		checkWrite( uint32 bytes );
 		bool		checkRead( uint32 bytes );
+	};
+	//////////////////////////////////////////////////////////////////////////
+	template< int size >
+	class DataBufferStatic : public DataBuffer {
+	public:
+		DataBufferStatic() : DataBuffer( buffer, size ) { }
+	private:
+		char buffer[ size ];
+	};
+	//////////////////////////////////////////////////////////////////////////
+	template< int _size_ = 64 >
+	class SyncSnapshot {
+	public:
+		enum valType {
+			VAL_NULL,
+			VAL_FLOAT,
+			VAL_INT,
+			VAL_STRING,
+		};
 
+		bool Sync( const char * name, float val, DataBuffer & db, bool force = false ) {
+			int i = 0;
+			for ( ; i < numRecords; ++i ) {
+				if ( buffer[ i ].name == name ) {
+					assert( buffer[ i ].type == VAL_FLOAT );
+					if ( force || buffer[ i ].data.fval != val ) {
+						// need to sync
+						break;
+					} else {
+						// dont need to update
+						return true;
+					}
+				}
+			}
+			if ( i == numRecords ) {
+				if ( numRecords < _size_ ) {
+					numRecords++;
+				} else {
+					assert( 0 && "out of records!" );
+					return false;
+				}
+			}
+			if ( i < numRecords ) {
+				buffer[ i ].name = name;
+				buffer[ i ].type = VAL_FLOAT;
+				buffer[ i ].data.fval = val;
+				return db.writeSmallString( name ) && db.writeFloat32( val );
+			}
+			return false;
+		}
+		bool Sync( const char * name, int32 val, DataBuffer & db, bool force = false ) {
+			int i = 0;
+			for ( ; i < numRecords; ++i ) {
+				if ( buffer[ i ].name == name ) {
+					assert( buffer[ i ].type == VAL_INT );
+					if ( force || buffer[ i ].data.ival != val ) {
+						// need to sync
+						break;
+					} else {
+						// dont need to update
+						return true;
+					}
+				}
+			}
+			if ( i == numRecords ) {
+				if ( numRecords < _size_ ) {
+					numRecords++;
+				} else {
+					assert( 0 && "out of records!" );
+					return false;
+				}
+			}
+			if ( i < numRecords ) {
+				buffer[ i ].name = name;
+				buffer[ i ].type = VAL_INT;
+				buffer[ i ].data.ival = val;
+				return db.writeSmallString( name ) && db.writeInt32( val );
+			}
+			return false;
+		}
+		bool Sync( const char * name, const char * val, DataBuffer & db, bool force = false ) {
+			// hash string
+			const int32 stringHash = HashString32( val );
+			
+			int i = 0;
+			for ( ; i < numRecords; ++i ) {
+				if ( buffer[ i ].name == name ) {
+					assert( buffer[ i ].type == VAL_STRING );
+					if ( force || buffer[ i ].data.sval != stringHash ) {
+						// need to sync
+						break;
+					} else {
+						// dont need to update
+						return true;
+					}
+				}
+			}
+			if ( i == numRecords ) {
+				if ( numRecords < _size_ ) {
+					numRecords++;
+				} else {
+					assert( 0 && "out of records!" );
+					return false;
+				}
+			}
+			if ( i < numRecords ) {
+				buffer[ i ].name = name;
+				buffer[ i ].type = VAL_STRING;
+				buffer[ i ].data.sval = stringHash;
+				return db.writeSmallString( name ) && db.writeSmallString( val );
+			}
+			return false;
+		}
+		void Clear() { numRecords = 0; }
+		SyncSnapshot() : numRecords( 0 ) {
+			for ( int i = 0; i < _size_; ++i ) {
+				buffer[ i ].type = VAL_NULL;
+				buffer[ i ].name = NULL;
+				buffer[ i ].data.ival = 0;
+			}
+		}
+	private:
+		struct values_t {
+			union {
+				float		fval;
+				int32		ival;
+				int32		sval;
+			} data;
+			
+			valType			type;
+			const char *	name;
+			values_t() 
+				: name( NULL ) {
+					data.ival = 0;
+			}
+		};
+
+		values_t		buffer[ _size_ ];
+		int				numRecords;
+	};
+	//////////////////////////////////////////////////////////////////////////
+	class SyncVarBase {
+	public:
+		friend class SyncableEntity;
+		
+		virtual bool UpdateSync( DataBuffer & db ) = 0;
+
+		SyncVarBase( const char * name ) : nextVar( NULL ), varName( name ) {}
+		virtual ~SyncVarBase() {}
+	protected:
+		const char *			varName;
+		SyncVarBase *			nextVar;
+	};
+	
+	//////////////////////////////////////////////////////////////////////////
+	class SyncInt : public SyncVarBase {
+	public:
+		virtual bool UpdateSync( DataBuffer & db );
+		SyncInt( const char * name, int32 & val );
+	private:
+		int32 &				currentValue;
+		int32				syncedValue;
+
+		SyncInt & operator=( const SyncInt & other );
+	};
+	class SyncFloat : public SyncVarBase {
+	public:
+		virtual bool UpdateSync( DataBuffer & db );
+		SyncFloat( const char * name, float & val );
+	private:
+		float &				currentValue;
+		float				syncedValue;
+
+		SyncFloat & operator=( const SyncFloat & other );
 	};
 };
