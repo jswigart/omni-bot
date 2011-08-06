@@ -20,17 +20,12 @@ class PathPlannerBase;
 //////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_REMOTE_DEBUGGING
 
-typedef RemoteLib::SyncSnapshot<32> ClientSnapShot;
-typedef RemoteLib::SyncSnapshot<16> EntitySnapShot;
+typedef RemoteLib::SyncSnapshot<32> EntitySnapShot;
 
-struct RemoteSnapShots {	
-	ClientSnapShot			clientSnapShots[ Constants::MAX_PLAYERS ];
+struct RemoteSnapShots {
 	EntitySnapShot			entitySnapShots[ Constants::MAX_ENTITIES ];
 
 	void Clear() {
-		for ( int i = 0; i < Constants::MAX_PLAYERS; ++i ) {
-			clientSnapShots[ i ].Clear();
-		}
 		for ( int i = 0; i < Constants::MAX_ENTITIES; ++i ) {
 			entitySnapShots[ i ].Clear();
 		}

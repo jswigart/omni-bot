@@ -162,7 +162,8 @@ public:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db );
-	virtual void SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
+	void SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
+	virtual void InternalSyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
 #endif
 
 	IGame();

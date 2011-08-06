@@ -195,52 +195,9 @@ void Client::Update()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void Client::UpdateSync( ClientSnapShot & snapShot, RemoteLib::DataBuffer & db ) {
-	/*if ( m_StateRoot ) {
-		m_StateRoot->Sync( db, GetName(true) );
-	}*/
-	
-	BitFlag64 localSyncFlags;
-
-	RemoteLib::DataBufferStatic<1024> localBuffer;
-	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );;
-
-	ClientSnapShot newSnapShot = snapShot;
-	
-	newSnapShot.Sync( "name", GetName( true ), localBuffer );
-	newSnapShot.Sync( "x", m_Position.x, localBuffer );
-	newSnapShot.Sync( "y", m_Position.y, localBuffer );
-	newSnapShot.Sync( "z", m_Position.z, localBuffer );
-	newSnapShot.Sync( "yaw", Mathf::RadToDeg( GetFacingVector().XYHeading() ), localBuffer );
-	newSnapShot.Sync( "pitch", Mathf::RadToDeg( GetFacingVector().GetPitch() ), localBuffer );
-	newSnapShot.Sync( "fov", m_FieldOfView, localBuffer );
-	newSnapShot.Sync( "classid", m_Class, localBuffer );
-	newSnapShot.Sync( "teamid", m_Team, localBuffer );
-	newSnapShot.Sync( "entRadius", 32.0f, localBuffer );
-	newSnapShot.Sync( "entHeight", GetWorldBounds().Extent[2], localBuffer );
-	newSnapShot.Sync( "health", m_HealthArmor.m_CurrentHealth, localBuffer );
-	newSnapShot.Sync( "maxhealth", m_HealthArmor.m_MaxHealth, localBuffer );
-	newSnapShot.Sync( "armor", m_HealthArmor.m_CurrentArmor, localBuffer );
-	newSnapShot.Sync( "maxarmor", m_HealthArmor.m_MaxArmor, localBuffer );
-		
-	const uint32 writeErrors = localBuffer.endWrite();
-	assert( writeErrors == 0 );
-	
-	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_qmlEntity );
-		db.writeInt32( GetGameEntity().AsInt() );
-		db.append( localBuffer );
-		db.endSizeHeader();
-
-		if ( db.endWrite() == 0 ) {
-			// mark the stuff we synced as done so we don't keep spamming it
-			snapShot = newSnapShot;
-		}
-	}
+void Client::InternalSyncEntity( EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
+	snapShot.Sync( "fov", GetFieldOfView(), db );
 }
-
 #endif
 
 const char *Client::GetName(bool _clean) const

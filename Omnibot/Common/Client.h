@@ -264,7 +264,7 @@ public:
 	bool DistributeUnhandledCommand(const StringVector &_args);
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void UpdateSync( ClientSnapShot & snapShot, RemoteLib::DataBuffer & db );
+	virtual void InternalSyncEntity( EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
 #endif
 
 	Client();

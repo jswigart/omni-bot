@@ -15,7 +15,7 @@ global RegionTrigger = import("et_regiontriggers");
 global TestMapOn = false;
 
 // global debug flags
-global DEBUG_MAP_SCRIPTS = false;
+global DEBUG_MAP_SCRIPTS = true;
 global DEBUG_GOAL_AVAILABILITY = false;
 
 // global flag to turn off bot chat in supported maps
