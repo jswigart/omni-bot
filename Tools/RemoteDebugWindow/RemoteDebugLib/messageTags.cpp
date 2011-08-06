@@ -232,7 +232,7 @@ namespace RemoteLib
 
 				const uint32 blockBytesRead = db.getBytesRead() - (uint32)baseBytes;
 				blockBytesRead;
-				assert( blockBytesRead == blockSize+4 && "databuffer read error" );
+				assert( blockBytesRead == (uint32)blockSize+4 && "databuffer read error" );
 				db.endRead();
 			}
 		}
@@ -279,6 +279,7 @@ namespace RemoteLib
 	}
 
 	bool Line::Send( DataBuffer & db ) {
+		db;
 		return false;
 	}
 

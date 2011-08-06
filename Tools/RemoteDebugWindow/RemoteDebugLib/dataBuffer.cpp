@@ -1,4 +1,5 @@
 #include <memory>
+#include <ctype.h>
 #include <assert.h>
 
 #include "SystemLib.h"
@@ -127,13 +128,15 @@ namespace RemoteLib
 		return true;
 	}
 
-	void DataBuffer::endSizeHeader() {
+	uint32 DataBuffer::endSizeHeader() {
 		// doesn't include the size header
 		if ( sizeHdr ) {
 			const int32 packetSize = (int32)( writePtr - (char*)sizeHdr ) - sizeof( uint32 );
 			*sizeHdr = SystemLib::hostToNetByteOrder( packetSize );
 			sizeHdr = NULL;
+			return (uint32)packetSize;
 		}
+		return 0;
 	}
 
 	bool DataBuffer::peekInt8( int8 & v ) {
@@ -294,10 +297,14 @@ namespace RemoteLib
 	}
 
 	bool DataBuffer::append( DataBuffer & db ) {
-		beginWrite( WriteModeAllOrNone );
-		bool ok = write( db.readPtr, db.getBytesWritten() );
-		endWrite();
-		return ok;
+		if ( isWriting() ) {
+			return write( db.readPtr, db.getBytesWritten() );
+		} else {
+			beginWrite( WriteModeAllOrNone );
+			bool ok = write( db.readPtr, db.getBytesWritten() );
+			endWrite();
+			return ok;
+		}
 	}
 
 	uint32 DataBuffer::beginWrite( WriteMode mode ) {
@@ -376,5 +383,24 @@ namespace RemoteLib
 			return false;
 		}
 		return true;
+	}
+
+	/*
+	* FNV-1a hash 32 bit http://www.isthe.com/chongo/tech/comp/fnv/
+	*/
+	int32 HashString32(const char *_str)
+	{
+		const int32 FNV_32_PRIME = ((int32)0x01000193);
+		const int32 FNV1A_32_INIT = ((int32)0x811c9dc5);
+
+		const char *s = _str;
+		int32 hval = FNV1A_32_INIT;		
+		while (*s) 
+		{
+			char c = (char)tolower(*s++);
+			hval ^= (int32)c;
+			hval *= FNV_32_PRIME;
+		}
+		return hval;
 	}
 };

@@ -40,19 +40,6 @@ struct EntityInstance
 	BitFlag32						m_EntityCategory;
 	int								m_EntityClass;
 	int								m_TimeStamp;
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	RemoteLib::RemoteEntHandle		m_RemoteHndl;
-#endif
-};
-
-struct SyncImage {
-	String		image;
-	String		overlay;
-	Vector2f	pos;
-	Vector2f	size;
-	obColor		color;
-	float		yaw;
 };
 
 // class: IGame
@@ -132,8 +119,6 @@ public:
 
 	void LoadGoalScripts(bool _clearold);
 
-	enum Internal { MAX_PLAYERS = 64, };
-
 	virtual ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 
 	virtual bool CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, StringStr &err);
@@ -149,10 +134,13 @@ public:
 		friend class IGame;		
 		operator bool() const;
 		void Clear();
+		EntityInstance &GetEnt() { return m_Current; }
 		const EntityInstance &GetEnt() const { return m_Current; }
+		const int GetIndex() const { return m_Index; }
 		EntityIterator() {}
 	private:
 		EntityInstance	m_Current;
+		int				m_Index;
 	};
 
 	static bool IsEntityValid(const GameEntity &_hnl);
@@ -173,20 +161,19 @@ public:
 	virtual const char * RemoteConfigName() const { return "Omnibot"; }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
-	virtual void SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync );
+	void UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db );
+	virtual void SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
 #endif
 
 	IGame();
 	virtual ~IGame();
 protected:	
-	ClientPtr			m_ClientList[MAX_PLAYERS];
+	ClientPtr			m_ClientList[Constants::MAX_PLAYERS];
 	
 	State				*m_StateRoot;
 
-	enum { MAX_ENTITIES = 4096 };
 	static int					m_MaxEntity;
-	static EntityInstance		m_GameEntities[MAX_ENTITIES];
+	static EntityInstance		m_GameEntities[Constants::MAX_ENTITIES];
 
 	static GameState	m_GameState;
 	static GameState	m_LastGameState;

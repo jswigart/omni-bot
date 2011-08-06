@@ -9,6 +9,10 @@
 class QStandardItemModel;
 class QDeclarativeComponent;
 
+namespace RemoteLib {
+	class DataBuffer;
+};
+
 class RemoteDebugWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -27,6 +31,7 @@ private:
 
 	QDeclarativeComponent *	qmlEntityComponent;
 	QDeclarativeContext *	mainContext;
+	QObject *				objViewPort;
 
 	// tray icon
 	QSystemTrayIcon *	trayIcon;
@@ -46,7 +51,11 @@ private:
 
 	QModelIndex findNodeForPath( const QString & path );
 
-	void updateEntity( RemoteLib::DataBuffer & db );
+	void InitView( QDeclarativeView *view, const QUrl & file );
+	void CacheComponent(QDeclarativeEngine *engine, QDeclarativeComponent *& component, const QString & file );
+
+	void deleteEntity( int entityHandle );
+	void updateEntity( RemoteLib::DataBuffer & db, int blockSize );
 
 	QGraphicsObject * entityFromHandle( int handle );
 private slots:

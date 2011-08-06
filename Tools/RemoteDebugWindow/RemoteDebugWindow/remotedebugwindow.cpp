@@ -6,7 +6,7 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeItem>
-
+#include <QGLWidget>
 
 #include "dataBuffer.h"
 #include "messageTags.h"
@@ -47,57 +47,66 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 
 	//////////////////////////////////////////////////////////////////////////
 	//ui.declarativeView->engine()->setBaseUrl(QUrl::fromLocalFile("./qml/"));
-	ui.declarativeView->setSource( QUrl::fromLocalFile( "./qml/main.qml" ) );
-	while( ui.declarativeView->status() != QDeclarativeView::Ready ) {
+
+	QDeclarativeEngine * engine = ui.declarativeMap->engine();
+	//engine->addImportPath( "" );
+
+	QGLWidget * glWidget = new QGLWidget;
+	glWidget->qglClearColor( QColor( "cyan" ) );
+	ui.declarativeMap->setViewport( glWidget ); 
+	InitView( ui.declarativeMap, QUrl::fromLocalFile( "./qml/common/mapView.qml" ) );
+
+	objViewPort = ui.declarativeMap->rootObject();
+	objViewPort = objViewPort->findChild<QObject*>( "viewport" );
+	if ( objViewPort == NULL ) {
+		QMessageBox msgBox(this);
+		msgBox.setText("Qml Error.");
+		msgBox.setInformativeText( "Expected 'viewport' for 3d content." );
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
 	}
-
-	QDeclarativeEngine * engine = ui.declarativeView->engine();
-	mainContext = engine->contextForObject(ui.declarativeView->rootObject());
 	
-	qmlEntityComponent = new QDeclarativeComponent(engine,ui.declarativeView->rootObject());
-	qmlEntityComponent->loadUrl(QUrl::fromLocalFile("./qml/entity.qml"));
-
-	RemoteLib::DataBuffer db( 1024 );
-	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_qmlEntity );
-
-	db.writeInt32( 1 ); // entity handle
-
-	db.writeSmallString( "name" );
-	db.writeSmallString( "Entity 1" );
-
-	db.writeSmallString( "x" );
-	db.writeFloat32( 100.0f );
-	db.writeSmallString( "y" );
-	db.writeFloat32( 100.0f );
-
-	db.writeSmallString( "yaw" );
-	db.writeFloat32( 45 );
-
-	db.writeSmallString( "classid" );
-	db.writeInt32( 3 );
-
-	db.endSizeHeader();
-	db.endWrite();
-
-	//////////////////////////////////////////////////////////////////////////
-
-	db.beginRead( RemoteLib::DataBuffer::ReadModeAllOrNone );
-
-	int32 tagId = 0, blockSize = 0;
-	db.readInt32( blockSize );
-	db.readInt32( tagId );
-	Q_ASSERT_X( tagId == RemoteLib::ID_qmlEntity, __FUNCTION__, "no" );
-	updateEntity( db );
-	/*createPlayer( 1, "Entity 1", 50, 50, 1 );
-	createPlayer( 2, "Entity 2", 100, 100, 2 );	
-	createPlayer( 3, "Entity 3", 150, 150, 3 );
-	createPlayer( 4, "Entity 4", 200, 200, 4 );
-	createPlayer( 5, "Entity 5", 250, 250, 5 );*/
+	mainContext = engine->contextForObject(objViewPort);
+	
+	CacheComponent( engine, qmlEntityComponent, "./qml/common/entity.qml");
 }
 
 RemoteDebugWindow::~RemoteDebugWindow() {
+}
+
+void RemoteDebugWindow::InitView( QDeclarativeView *view, const QUrl & file ) {
+	view->setSource( file );
+
+	if ( view->status() == QDeclarativeView::Error ) {
+		qDebug() << view->errors();
+
+		if ( view->errors().count() > 0 ) {
+			QMessageBox msgBox(this);
+			msgBox.setText("Qml Error.");
+			msgBox.setInformativeText( view->errors()[ 0 ].toString() );
+			msgBox.setStandardButtons(QMessageBox::Ok);
+			msgBox.exec();
+		}
+		return;
+	}
+
+	while( view->status() != QDeclarativeView::Ready ) {
+	}
+}
+
+void RemoteDebugWindow::CacheComponent(QDeclarativeEngine *engine, QDeclarativeComponent *& component, const QString & file ) {
+	component = new QDeclarativeComponent(engine,objViewPort);
+	component->loadUrl(QUrl::fromLocalFile(file));
+
+	if ( component->errors().count() > 0 ) {
+		qDebug() << component->errors();
+
+		QMessageBox msgBox(this);
+		msgBox.setText("Qml Error.");
+		msgBox.setInformativeText( component->errorString() );
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
+	}
 }
 
 void RemoteDebugWindow::writeSettings()
@@ -207,6 +216,8 @@ void RemoteDebugWindow::socketDisconnected() {
 	trayIcon->setIcon( trayIconDisconnected );
 	/*ui.actionConnect->setEnabled(true);
 	ui.actionDisconnect->setEnabled(false);*/
+
+	// todo: delete all subobjects
 }
 
 void RemoteDebugWindow::socketReadyToRead() {
@@ -215,6 +226,8 @@ void RemoteDebugWindow::socketReadyToRead() {
 	recvdData.append(tcpSocket->readAll());
 	const int sizeAfter = recvdData.size();
 	processMessages();
+
+	qDebug() << "Read" << (sizeAfter - sizeBefore) << "bytes\n";
 }
 
 void RemoteDebugWindow::socketDisplayError(QAbstractSocket::SocketError socketError) {
@@ -317,16 +330,17 @@ void RemoteDebugWindow::processMessages() {
 				tcpSocket->write( (char*)&tagId, 4 );
 				break;
 			}
+		case RemoteLib::ID_qmlEntity:
+			{
+				updateEntity( db, blockSize-4 );				
+				break;
+			}
 		case RemoteLib::ID_delete:
 			{
-				enum { BufferSz = 256 };
-				char groupBuf[ BufferSz ] = {};
-				char nameBuf[ BufferSz ] = {};
-
-				QString group, name;
-				db.readSmallString( groupBuf, BufferSz ); group = groupBuf;
-				db.readSmallString( nameBuf, BufferSz ); name = nameBuf;
-				ui.graphics2d->msgDelete( group, name );
+				int entityHandle = 0;
+				if ( db.readInt32( entityHandle ) ) {
+					deleteEntity( entityHandle );
+				}
 				break;
 			}
 		case RemoteLib::ID_treeNode:
@@ -336,32 +350,27 @@ void RemoteDebugWindow::processMessages() {
 			}
 		case RemoteLib::ID_circle:
 			{
-				ui.graphics2d->msgCircle( db );
+				//ui.graphics2d->msgCircle( db );
 				break;
 			}
 		case RemoteLib::ID_line:
 			{
-				ui.graphics2d->msgLine( db );
+				//ui.graphics2d->msgLine( db );
 				break;
 			}
 		case RemoteLib::ID_obb:
 			{
-				ui.graphics2d->msgRect( db );
+				//ui.graphics2d->msgRect( db );
 				break;
 			}
 		case RemoteLib::ID_image:
 			{
-				ui.graphics2d->msgImage( db );
+				//ui.graphics2d->msgImage( db );
 				break;
 			}
 		case RemoteLib::ID_token:
 			{
-				ui.graphics2d->msgToken( db );
-				break;
-			}
-		case RemoteLib::ID_qmlEntity:
-			{
-				updateEntity( db );				
+				//ui.graphics2d->msgToken( db );
 				break;
 			}
 		default:
@@ -388,7 +397,7 @@ bool RemoteDebugWindow::msgConfigName( RemoteLib::DataBuffer & db ) {
 	settings.beginGroup( configName );
 	const float viewScaleX = settings.value( "scaleX", QVariant( 1.0f ) ).toFloat();
 	const float viewScaleY = settings.value( "scaleY", QVariant( 1.0f ) ).toFloat();
-	ui.graphics2d->scale( viewScaleX, viewScaleY );
+	//ui.graphics2d->scale( viewScaleX, viewScaleY );
 	
 	settings.endGroup();
 
@@ -424,20 +433,28 @@ bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {
 //////////////////////////////////////////////////////////////////////////
 
 QGraphicsObject * RemoteDebugWindow::entityFromHandle( int handle ) {
-	QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(ui.declarativeView->rootObject());
+	QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(objViewPort);
 	const QObjectList & children = rootItem->children();
 	for ( QObjectList::const_iterator it = rootItem->children().begin();
 		it != rootItem->children().end(); 
 		++it ) {
 			const QGraphicsObject * item = qobject_cast<const QGraphicsObject*>((*it));
-			if ( item && item->data( EntityHandle ) == handle ) {
+			QVariant handleData = item ? item->data( EntityHandle ) : QVariant();
+			if ( handleData.toInt() == handle ) {
 				return const_cast<QGraphicsObject *>( item );
 			}
 	}
 	return NULL;
 }
 
-void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db ) {
+void RemoteDebugWindow::deleteEntity( int entityHandle ) {
+	QGraphicsObject * entity = entityFromHandle( entityHandle );
+	delete entity;
+}
+
+void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize ) {
+	const uint32 baseBytes = db.getBytesRead();
+
 	// there should ALWAYS be an entity handle
 	int32 entityHandle = 0;
 	if(!db.readInt32(entityHandle)) {
@@ -446,19 +463,34 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db ) {
 
 	QGraphicsObject * entity = entityFromHandle( entityHandle );
 	if ( !entity ) {
-		QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(ui.declarativeView->rootObject());
-		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(qmlEntityComponent->create(mainContext));
+		QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(objViewPort);
+		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(qmlEntityComponent->beginCreate(mainContext));
 		item->setParentItem( rootItem );
+		item->setParent( rootItem );
 		item->setData(EntityHandle,entityHandle);
 		entity = item;
+
+		entity->setProperty( "handle", entityHandle );
+
+		qmlEntityComponent->completeCreate();
 	}
 
+	uint32 blockBytesRead = 0;
+
 	enum { MaxPropertySize = 256 };
-	char propertyName[ MaxPropertySize ];
+	char propertyName[ MaxPropertySize ] = {};
 	while( db.readSmallString( propertyName, MaxPropertySize ) ) {
 		QVariant prop = entity->property( propertyName );
 		if ( prop.isNull() ) {
-			Q_ASSERT_X( 0, __FUNCTION__, "unknown property" );
+			QMessageBox msgBox(this);
+			msgBox.setText("Unknown Property.");
+			msgBox.setInformativeText( "Received Unknown Property: " + QString(propertyName) + " unable to continue." );
+			msgBox.setStandardButtons(QMessageBox::Ok);
+			msgBox.exec();
+
+			tcpSocket->disconnect();
+			db.clear();
+			return;
 		} else {
 			QVariant::Type propType = prop.type();
 			switch( propType )
@@ -501,6 +533,11 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db ) {
 					Q_ASSERT_X( 0, __FUNCTION__, "unhandled property type" );
 				}
 			}
+		}
+
+		blockBytesRead = db.getBytesRead() - baseBytes;
+		if ( blockBytesRead >= blockSize ) {
+			break;
 		}
 	}
 }

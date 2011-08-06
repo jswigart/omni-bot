@@ -1,0 +1,69 @@
+<!DOCTYPE QtCreatorProject>
+<qtcreator>
+ <data>
+  <variable>ProjectExplorer.Project.ActiveTarget</variable>
+  <value type="int">0</value>
+ </data>
+ <data>
+  <variable>ProjectExplorer.Project.EditorSettings</variable>
+  <valuemap type="QVariantMap">
+   <value key="EditorConfiguration.AutoIndent" type="bool">true</value>
+   <value key="EditorConfiguration.AutoSpacesForTabs" type="bool">false</value>
+   <value key="EditorConfiguration.Codec" type="QByteArray">System</value>
+   <value key="EditorConfiguration.DoubleIndentBlocks" type="bool">false</value>
+   <value key="EditorConfiguration.IndentBraces" type="bool">false</value>
+   <value key="EditorConfiguration.IndentSize" type="int">4</value>
+   <value key="EditorConfiguration.MouseNavigation" type="bool">true</value>
+   <value key="EditorConfiguration.PaddingMode" type="int">1</value>
+   <value key="EditorConfiguration.ScrollWheelZooming" type="bool">true</value>
+   <value key="EditorConfiguration.SmartBackspace" type="bool">false</value>
+   <value key="EditorConfiguration.SpacesForTabs" type="bool">true</value>
+   <value key="EditorConfiguration.TabKeyBehavior" type="int">0</value>
+   <value key="EditorConfiguration.TabSize" type="int">8</value>
+   <value key="EditorConfiguration.UseGlobal" type="bool">true</value>
+   <value key="EditorConfiguration.Utf8BomBehavior" type="int">1</value>
+   <value key="EditorConfiguration.addFinalNewLine" type="bool">true</value>
+   <value key="EditorConfiguration.cleanIndentation" type="bool">true</value>
+   <value key="EditorConfiguration.cleanWhitespace" type="bool">true</value>
+   <value key="EditorConfiguration.inEntireDocument" type="bool">false</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>ProjectExplorer.Project.Target.0</variable>
+  <valuemap type="QVariantMap">
+   <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">QML Viewer</value>
+   <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">QML Viewer</value>
+   <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">QmlProjectManager.QmlTarget</value>
+   <value key="ProjectExplorer.Target.ActiveBuildConfiguration" type="int">-1</value>
+   <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">-1</value>
+   <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">0</value>
+   <value key="ProjectExplorer.Target.BuildConfigurationCount" type="int">0</value>
+   <value key="ProjectExplorer.Target.DeployConfigurationCount" type="int">0</value>
+   <valuemap key="ProjectExplorer.Target.RunConfiguration.0" type="QVariantMap">
+    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString"></value>
+    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString">QML Viewer</value>
+    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">QmlProjectManager.QmlRunConfiguration</value>
+    <value key="QmlProjectManager.QmlRunConfiguration.MainScript" type="QString">main.qml</value>
+    <value key="QmlProjectManager.QmlRunConfiguration.QDeclarativeViewerArguments" type="QString"></value>
+    <value key="QmlProjectManager.QmlRunConfiguration.QtVersion" type="int">6</value>
+    <valuelist key="QmlProjectManager.QmlRunConfiguration.UserEnvironmentChanges" type="QVariantList"/>
+    <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>
+    <value key="RunConfiguration.UseCppDebugger" type="bool">false</value>
+    <value key="RunConfiguration.UseQmlDebugger" type="bool">true</value>
+   </valuemap>
+   <value key="ProjectExplorer.Target.RunConfigurationCount" type="int">1</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>ProjectExplorer.Project.TargetCount</variable>
+  <value type="int">1</value>
+ </data>
+ <data>
+  <variable>ProjectExplorer.Project.Updater.EnvironmentId</variable>
+  <value type="QString">{27781ced-504d-44d1-9934-897ae6f186f5}</value>
+ </data>
+ <data>
+  <variable>ProjectExplorer.Project.Updater.FileVersion</variable>
+  <value type="int">9</value>
+ </data>
+</qtcreator>

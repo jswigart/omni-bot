@@ -216,7 +216,7 @@ void MapGoal::_Init()
 
 MapGoal::~MapGoal() 
 {
-	IGameManager::GetInstance()->SyncRemoteDelete( va( "MapGoal:%s", GetName().c_str() ) );
+	//IGameManager::GetInstance()->SyncRemoteDelete( va( "MapGoal:%s", GetName().c_str() ) );
 
 	gmBind2::Class<MapGoal>::NullifyUserObject(m_ScriptObject);
 }

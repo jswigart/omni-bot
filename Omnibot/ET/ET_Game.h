@@ -50,11 +50,7 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	void SyncEntity( const EntityInstance & ent, RemoteLib::DataBuffer & db, bool fullSync );
-#endif
-
+	
 	ET_Game() {};
 	virtual ~ET_Game() {};
 protected:
