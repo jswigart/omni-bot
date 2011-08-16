@@ -840,9 +840,6 @@
     <ClCompile Include="..\..\..\Common\mdump.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\MemoryManager.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\MessageManager.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
@@ -1617,9 +1614,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\mdump.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\MemoryManager.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\MessageFunctor.h">

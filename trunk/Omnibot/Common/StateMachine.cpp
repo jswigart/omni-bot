@@ -11,21 +11,21 @@
 #include "BotTargetingSystem.h"
 #include "DebugWindow.h"
 
-State::State(const char * _name, const UpdateDelay &_ur) 
-	: m_LastUpdateTime(0)
-	, m_NextUpdate(0)
-	, m_StateTime(0.f)
-	, m_StateTimeUser(0.f)
-	, m_NameHash(0)
-	, m_DebugIcon(Ico_Default)
-	, m_Sibling(0)
+State::State(const char * _name, const UpdateDelay &_ur)
+	: m_Sibling(0)
 	, m_Parent(0)
 	, m_FirstChild(0)
 	, m_Root(0)
 	, m_Client(0)
+	, m_NextUpdate(0)
+	, m_LastUpdateTime(0)
+	, m_StateTime(0.f)
+	, m_StateTimeUser(0.f)
 	, m_LastPriority(0.f)
 	, m_LastPriorityTime(0)
 	, m_UpdateRate(_ur)
+	, m_NameHash(0)
+	, m_DebugIcon(Ico_Default)
 	, m_SyncCrc( 0 )
 {
 	SetName(_name);
