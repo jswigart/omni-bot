@@ -19,6 +19,7 @@
 
 
 // Disable some compiler warnings.
+#ifdef _WIN32
 #pragma warning(   error: 4002 )	// Too many actual parameters for macro: promoted to be an error
 #pragma warning( disable: 4097 )	// typedef-name '...' used as synonym for class-name '...'
 #pragma warning( disable: 4100 )	// unreferenced formal parameter
@@ -37,6 +38,9 @@
 #pragma warning( disable: 6355 )	// _alloca indicates failure by raising a stack overflow exception. Consider using _malloca instead
 #pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
 #pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
+#endif // _WIN32
+
+#define _UNUSED(x) ((void)x) // cs: for gcc warnings
 
 // Enable some useful ones that are disabled by default 
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
@@ -111,12 +115,20 @@ typedef std::list<String> StringList;
 #endif
 
 // Boost
-#define BOOST_NO_RVALUE_REFERENCES 1 // cs: < 1_45 vs2010 compile 'fix'
-//#define BOOST_FILESYSTEM_DEPRECATED 1	// cs: > 1_44 compile 'fix'
+#if _MSC_VER == 1600 // cs: ffs
+#include <boost/version.hpp>
+#if BOOST_VERSION <= 104400
+#define BOOST_NO_RVALUE_REFERENCES 1
+#endif // boost lib <= 1_44_0
+#endif // vs2010
+
+#ifdef _WIN32
 #pragma warning( push )
 // stfu boost
 #pragma warning( disable: 4244 )
 #pragma warning( disable: 4265 )
+#endif //_WIN32
+
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -132,7 +144,10 @@ typedef std::list<String> StringList;
 #include <boost/array.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/thread.hpp>
+
+#ifdef _WIN32
 #pragma warning( pop )
+#endif // _WIN32
 
 namespace fs = boost::filesystem;
 

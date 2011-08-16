@@ -263,8 +263,8 @@ public:
 
 		LimitToCallback() 
 			: m_LimitTo(0)
-			, m_Delay(0)
 			, m_NextCallback(0)
+			, m_Delay(0)
 			, m_This(gmVariable::s_null)
 			, m_OnlyWhenActive(false)
 			, m_Result(false)

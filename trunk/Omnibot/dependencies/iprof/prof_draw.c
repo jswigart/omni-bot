@@ -5,7 +5,9 @@
 #include "prof.h"
 #include "prof_internal.h"
 
+#ifdef _WIN32
 #pragma warning(disable:4305; disable:4244)
+#endif
 
 // use factor to compute a glow amount
 int get_colors(float factor,
