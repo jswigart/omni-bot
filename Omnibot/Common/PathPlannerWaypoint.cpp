@@ -78,17 +78,17 @@ NavFlags PathPlannerWaypoint::m_BlockableMask = 0;
 
 PathPlannerWaypoint::PathPlannerWaypoint() 
 	: PathPlannerBase()
+	, m_Client					(0)
 	, m_DefaultWaypointRadius	(35.0f)
 	, m_SelectedWaypoint		(-1)
-	, m_PathCheckCallback		(0)
-	, m_MovingWaypointIndex		(-1)
 	, m_ConnectWp				(0)
 	, m_NextUID					(0)
-	, m_WaypointMark			(0)
 	, m_GoodPathQueries			(0)
 	, m_BadPathQueries			(0)
+	, m_PathCheckCallback		(0)
+	, m_WaypointMark			(0)
+	, m_MovingWaypointIndex		(-1)
 	, m_BoxStart				(Vector3f::ZERO)
-	, m_Client					(0)
 {
 	// Add all the waypoint versions along with their matching serializers
 	m_WaypointSerializer[1] = WpSerializerPtr(new WaypointSerializer_V1);

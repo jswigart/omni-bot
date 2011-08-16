@@ -2220,12 +2220,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\MemoryManager.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\MessageManager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -2584,7 +2578,6 @@
     <ClInclude Include="..\..\..\Common\KeyValueIni.h" />
     <ClInclude Include="..\..\..\Common\Logger.h" />
     <ClInclude Include="..\..\..\Common\mdump.h" />
-    <ClInclude Include="..\..\..\Common\MemoryManager.h" />
     <ClInclude Include="..\..\..\Common\MessageFunctor.h" />
     <ClInclude Include="..\..\..\Common\MessageManager.h" />
     <ClInclude Include="..\..\..\Common\NameManager.h" />

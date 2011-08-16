@@ -62,8 +62,8 @@ public:
 	//void SetBinding(PropertyBinding *_bind) { m_Binding = _bind; }
 	//PropertyBinding *GetBinding() const { return m_Binding; }
 	Property(const String &_name, obuint32 _flags) 
-		: m_Name(_name)
-		, m_Flags(_flags)
+		: m_Flags(_flags)
+		, m_Name(_name)
 	{
 	}
 	virtual ~Property() {}

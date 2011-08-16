@@ -29,7 +29,7 @@
 
 duDebugDraw * gDDraw = 0;
 
-static const int NAVMESH_MAGIC = 'OMNI';
+static const obuint32 NAVMESH_MAGIC = 'OMNI';
 static const int NAVMESH_VERSION = 2;
 
 static const bool DUMP_OBJS = true;

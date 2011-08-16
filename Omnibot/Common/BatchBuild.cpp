@@ -43,7 +43,6 @@
 #include "Interprocess.cpp"
 #include "KeyValueIni.cpp"
 #include "Logger.cpp"
-#include "MemoryManager.cpp"
 #include "MessageManager.cpp"
 #include "NameManager.cpp"
 #include "PropertyBinding.cpp"

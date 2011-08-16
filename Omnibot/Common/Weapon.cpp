@@ -738,11 +738,11 @@ Weapon::Weapon(Client *_client/* = 0*/)
 Weapon::Weapon(Client *_client, const Weapon *_wpn) 
 	: m_Client				(_client)
 	, m_WeaponID			(0)
-	, m_ScriptObject		(0)
 	, m_WeaponLockTime		(0)
 	, m_MinUseTime			(0)
-	, m_LastAmmoUpdate		(0)
 	, m_WeaponNameHash		(0)
+	, m_LastAmmoUpdate		(0)
+	, m_ScriptObject		(0)
 {
 	m_WeaponID = _wpn->m_WeaponID;
 	m_WeaponAliasID = _wpn->m_WeaponAliasID;

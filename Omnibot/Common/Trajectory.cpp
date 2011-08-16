@@ -75,8 +75,8 @@ namespace Trajectory
 		, m_Duration(5.f)
 		, m_BounceLoss(0.f)
 		, m_GravityMultiplier(1.f)
-		, m_StopAtHit(false)
 		, m_TraceBounce(true)
+		, m_StopAtHit(false)
 		, m_StopPos(0.f,0.f,0.f)
 	{
 	}

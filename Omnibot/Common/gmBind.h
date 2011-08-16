@@ -1847,7 +1847,7 @@ protected:
 	// by the GMBIND_PROPERTY_MAP_BEGIN macro
 	//
 public:
-	static void registerProperty(char *name, gmBindPropertyFP getFunc, gmBindPropertyFP setFunc)
+	static void registerProperty(const char *name, gmBindPropertyFP getFunc, gmBindPropertyFP setFunc)
 	{
 		// Create a new map pair
 		m_propertyFunctions.insert( name, gmBindPropertyFunctionPair( getFunc, setFunc ) );

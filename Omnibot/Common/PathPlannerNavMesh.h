@@ -71,10 +71,10 @@ public:
 		enum eMirror { MirrorNone,MirrorX,MirrorNX,MirrorY,MirrorNY,MirrorZ,MirrorNZ };
 		obuint32		m_Mirror : 3;
 		NavSector()
-			: m_Mirror(MirrorNone)
+			: m_Id(0)
 			, m_StartPortal(0)
 			, m_NumPortals(0)
-			, m_Id(0)
+			, m_Mirror(MirrorNone)
 		{
 		}
 
@@ -207,9 +207,9 @@ protected:
 		const Vector3f &HitNormal() const { return m_HitNormal; }
 
 		NavCollision(bool _hit, const Vector3f &_pos = Vector3f::ZERO, const Vector3f &_normal = Vector3f::ZERO, obint32 _attrib = 0)
-			: m_HitSomething(_hit)
-			, m_HitPosition(_pos)
+			: m_HitPosition(_pos)
 			, m_HitNormal(_normal)
+			, m_HitSomething(_hit)
 		{
 			m_HitAttrib.Attrib = _attrib;
 		}
