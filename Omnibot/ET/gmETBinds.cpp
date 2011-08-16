@@ -293,7 +293,7 @@ int gmfSayFireTeam(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				int len = (int)strlen(pAsString);
 				if(chatMsgSize - iMsgPos > len)
 				{
 					Utils::StringCopy(&chatMsg[iMsgPos], pAsString, len);
@@ -358,7 +358,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			int len = strlen(pAsString);
+			int len = (int)strlen(pAsString);
 			if(cvarSize - iPos > len)
 			{
 				Utils::StringCopy(&cvar[iPos], pAsString, len);
@@ -373,7 +373,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				int len = (int)strlen(pAsString);
 				if(valueSize - iPos > len)
 				{
 					Utils::StringCopy(&value[iPos], pAsString, len);
@@ -417,7 +417,7 @@ static int GM_CDECL gmfGetCvar(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			int len = strlen(pAsString);
+			int len = (int)strlen(pAsString);
 			if(cvarSize - iPos > len)
 			{
 				Utils::StringCopy(&cvar[iPos], pAsString, len);
@@ -631,46 +631,46 @@ static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 { 
-	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon},
-	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon},	
-	{"GetReinforceTime",		gmfGetReinforceTime},
-	{"GetCursorHint",			gmfGetCurrentCursorHint},
-	{"ChangeSpawnPoint",		gmfChangeSpawnPoint},
+	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon, NULL},
+	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},	
+	{"GetReinforceTime",		gmfGetReinforceTime, NULL},
+	{"GetCursorHint",			gmfGetCurrentCursorHint, NULL},
+	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},
 	
-	{"IsInFireTeam",			gmfIsInFireTeam},
-	{"FireteamCreate",			gmfFireteamCreate},
-	{"FireteamDisband",			gmfFireteamDisband},
-	{"FireTeamLeave",			gmfFireTeamLeave},
-	{"FireTeamInvite",			gmfFireTeamInvite},
-	{"FireTeamApply",			gmfFireTeamApply},
-	{"FireTeamWarn",			gmfFireTeamWarn},	
-	{"FireTeamKick",			gmfFireTeamKick},
-	{"FireTeamPropose",			gmfFireTeamPropose},
+	{"IsInFireTeam",			gmfIsInFireTeam, NULL},
+	{"FireteamCreate",			gmfFireteamCreate, NULL},
+	{"FireteamDisband",			gmfFireteamDisband, NULL},
+	{"FireTeamLeave",			gmfFireTeamLeave, NULL},
+	{"FireTeamInvite",			gmfFireTeamInvite, NULL},
+	{"FireTeamApply",			gmfFireTeamApply, NULL},
+	{"FireTeamWarn",			gmfFireTeamWarn, NULL},	
+	{"FireTeamKick",			gmfFireTeamKick, NULL},
+	{"FireTeamPropose",			gmfFireTeamPropose, NULL},
 		
-	{"FireTeamGetInfo",			gmfFireTeamGetInfo},
+	{"FireTeamGetInfo",			gmfFireTeamGetInfo, NULL},
 
-	{"VoteYes",					gmfVoteYes},
-	{"VoteNo",					gmfVoteNo},
+	{"VoteYes",					gmfVoteYes, NULL},
+	{"VoteNo",					gmfVoteNo, NULL},
 
-	{"SayFireTeam",				gmfSayFireTeam},
+	{"SayFireTeam",				gmfSayFireTeam, NULL},
 
-	{"DisableBotPush",			gmfDisableBotPush},
+	{"DisableBotPush",			gmfDisableBotPush, NULL},
 
-	{"GetExplosiveState",		gmfGetExplosiveState},
-	{"GetConstructableState",	gmfGetConstructableState},
-	{"GetDestroyableState",		gmfGetDestroyableState},
+	{"GetExplosiveState",		gmfGetExplosiveState, NULL},
+	{"GetConstructableState",	gmfGetConstructableState, NULL},
+	{"GetDestroyableState",		gmfGetDestroyableState, NULL},
 
 	// TODO: add owner to MG42Info table when breaking mod compat doesn't matter?
-	{"GetMG42Info",				gmfGetMG42Info},
-	{"GetMountedPlayerOnMG42",	gmfGetMountedPlayerOnMG42},
+	{"GetMG42Info",				gmfGetMG42Info, NULL},
+	{"GetMountedPlayerOnMG42",	gmfGetMountedPlayerOnMG42, NULL},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =
 {
-	{"GetGameType",				gmfGetGameType},
-	{"SetCvar",					gmfSetCvar},
-	{"GetCvar",					gmfGetCvar},
-	{"IsWaitingForMedic",		gmfIsWaitingForMedic},
+	{"GetGameType",				gmfGetGameType, NULL},
+	{"SetCvar",					gmfSetCvar, NULL},
+	{"GetCvar",					gmfGetCvar, NULL},
+	{"IsWaitingForMedic",		gmfIsWaitingForMedic, NULL},
 };
 
 void gmBindETBotLibrary(gmMachine *_machine)

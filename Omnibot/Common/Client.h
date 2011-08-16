@@ -240,7 +240,7 @@ public:
 
 	virtual bool CanBotSnipe() { return false; }
 	virtual bool GetSniperWeapon(int &nonscoped, int &scoped) { nonscoped=0; scoped=0; return false; }
-	virtual bool GetSkills(gmMachine *machine, gmTableObject *tbl) { machine; tbl; return false;}
+	virtual bool GetSkills(gmMachine *machine, gmTableObject *tbl) { _UNUSED(machine); _UNUSED(tbl); return false;}
 
 	virtual float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) { return false; }
 

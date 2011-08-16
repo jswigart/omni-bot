@@ -35,8 +35,8 @@ public:
 			: m_Pt(Vector3f::ZERO)
 			, m_Radius(0.f)
 			, m_NavFlags(0)
-			, m_OnPathThrough(0)
 			, m_NavId(0)
+			, m_OnPathThrough(0)
 			, m_OnPathThroughParam(0)
 		{
 		}

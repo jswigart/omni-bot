@@ -140,21 +140,21 @@ Real Math<Real>::Tan (Real fValue)
 template <class Real>
 void Math<Real>::SinCos(Real a, Real &s, Real &c)
 {
-	//cs: commenting out asm atm for 64bit compat
-//#ifdef _WIN32
-//	_asm 
-//	{
-//		fld		a
-//		fsincos
-//		mov		ecx, c
-//		mov		edx, s
-//		fstp	dword ptr [ecx]
-//		fstp	dword ptr [edx]
-//	}
-//#else
+
+#if	defined(_WIN32) && !(defined(_M_X64))
+	_asm 
+	{
+		fld		a
+		fsincos
+		mov		ecx, c
+		mov		edx, s
+		fstp	dword ptr [ecx]
+		fstp	dword ptr [edx]
+	}
+#else
 	s = Sin( a );
 	c = Cos( a );
-//#endif
+#endif
 }
 //----------------------------------------------------------------------------
 template <class Real>
