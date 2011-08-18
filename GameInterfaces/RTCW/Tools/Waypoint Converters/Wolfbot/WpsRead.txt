@@ -1,0 +1,64 @@
+Ok, here is my poor attempt at explaining how this program works and what it does, as well as why I use some of the really bizarre-looking methods to decode things.  First, and hopefully you know this, this program takes the information stored in .wps files for wolfbot and presents it in a more readable format.  It can parse and understand all the data in the file, with the exception of 4 bytes in the header, and 4 bytes per waypoint.  Not using this data seems to have no effect on the outcome, and all my testing thus far shows that my decoding corresponds to what is used in-game by wolfbot.  Anyway, on to the formatting...
+
+First, an explanation of the .wps format as I understand it.
+Every .wps file has a single header, which is always 52 bytes in length.  A typical header, divided into pieces, looks like this:
+
+[6B 61 6A 69 62 6F 74 00] [01 00 00 00] [49 01 00 00] [68 00 08 02] [6D 70 5F 62 65 61 63 68 00][....]
+
+The first bit is the string "kajibot" followed by 00, which is how strings end in C/C++.  Next is the version number, which is 1 (byte order for numbers is reversed, so this is really 00 00 00 01).  The third field is the number of waypoints in the file, in this example 00000149, or 329.  The next 4 bytes are seemingly random and serve no purpose, though this could be wrong.  They are very often 08 00 00 00, but not always, and it doesn't seem to matter for anything.  Immediately after this starts the map name, in this example it decodes to "mp_beach" (again with a trailing 00 to end it).  The remaining bytes up to byte 53 (represented here as [....]) are simply space reserved for the map name if it had been longer (up to 32 characters).  Their value is random and unimportant, being just a small snapshot of what the waypoint creator had in RAM at the time they created the file.
+
+Immediately after the header (starting with byte 53) begins the list of waypoints/links.  Without using an example, this is the setup of a waypoint (numbers above fields are the # of bytes):
+
+      4		     4		    4		 4	 4	     4		   4		  4		   4		 4
+[x coordinate] [y coordinate] [z coordinate] [number] [flags] [entities 1 & 2] [entity 3] [objective flags] [number links] [XX XX XX XX]
+
+The x, y, and z coordinates are all floating point numbers representing the position of the waypoint on the map.  The next field is the number assigned to the waypoint (the number you see when you edit/create waypoints).  The flags field is a group of logical-ORed values (essentially you can add them together for multiple flags).  These values are as follows:
+
+0 - normal
+1 - camp
+2 - nothing/unknown
+4 - objective
+8 - door
+16 - axis unreachable
+32 - allies unreachable
+64 - mg42
+128 - axis deliver
+256 - allies deliver
+
+So if you had a waypoint with the 'mg42' and the 'allies unreachable' flags set, the value would be (64 OR 32), which is 96.  The next field is somewhat confusing.  If either of the unreachable flags is set, there is a list of entities (objects) which must be destroyed before the flag is 'reachable' again.  If you create waypoints with wolfbot, you have no doubt seen this.  If there are no associated objects, this field and the next are 00 00 00 00.  If there are, the process is rather strange.  Basically, to get the number of the first entity, you take the last 5 digits of the number and divide them by 1024 (2^10).  The second entity number is the first 3 digits, followed by 5 zeroes, divided by 1048576 (2^20).  
+
+For example - assume the value in the file is 00 90 C1 06.  First, since numbers are backwards, you reverse this to 06 C1 90 00.  The last 5 digits are 19000, which is hex for 102400.  This divided by 1024 gives you the first entity number, which is 100.  To get the second number, you take the first 3 digits and 5 zeros - 06C00000.  This converted to decimal and divided by 1048576 gives you the second entity number, which is 108.
+
+Entity 3 is much simpler, and has no encoding.  If it is not zero, it is simply stored as a normal number.  Also note that while the waypoint editor part of wolfbot says you can have 4 associated objects, the 4th is never written or stored.
+
+The objective flags are the next field, and they are significantly more bizarre than the entities.  If you thought the last bit was bad...  Basically, there are 5 values that you get from this field.  They are the flags listed in the waypoint editor for objectives: team, type, priority, linked objective and func_explosive (the entity number).  When the waypoint is not an objective, this field is 0 and life is much simpler.  When it DOES have a value, this is how to decode it:
+
+As an example I will use the value 02320200.  First, reverse this to 00023202 (I will leave out the leading 0s from now on for simplicity).  To get the 'linked objective' value, take the first digit and 4 0s, and divide it by 131072 (2^17).  In this case, you are left with '1'.  To simplify this, the link value is always the 1st digit divided by 2.  The 'func_explosive' number is the middle 3 digits plus a zero divided by 128, and dropping and decimal.  In this case, that would be 3200 (decimal 12800) divided by 128, or 100.  To get the priority value, you take the same value (3200) and divide it by 64, and then subtract twice the func_explosive number.  In this case that would be 3200 (dec 12800) divided by 64, which is 200, minus twice 100, which gives 0.  This value is not always 0 because sometimes the func_explosive had a decimal that gets dropped off.  The team and type values are determined by the last digit, using the formula ((4 x type) + team = last digit).  In this case, that gives (4 x type) + team = 2.  If the last digit (here, 2) is even, then team is automatically 2.  Otherwise, it is 1.  So here, team is 2, and type is 0.  The upshot of all this confusing BS is that 02320200 translates into all this info: "team 2, type 0, priority 0, linked objective 1, func_explosive 100".  A list of the meanings of these values is below.
+
+team - 1 = axis, 2 = allies
+type - 0 - bomb, 1 = steal, 2 = capture
+priority - 0 = high, 1 = low (maybe other values, which are lowER)
+linked obj - not really sure, but that's what it's called in-game
+func_explosive - if a bomb objective, the number of the entity to destroy
+
+Woohoo, done with that crap!  The next four bytes are the number of links from this waypoint.  The last field shown above is unknown and I don't know its purpose, if it even has one.
+
+After that comes the list of links.  This is thankfully rather easier to understand.  A typical link looks like this:
+
+     4            4         1
+[link number] [distance] [flags] CD CD CD
+
+the link number is just the number of the target waypoint.  The distance is the distance from the waypoint to the other waypoint connected by the link.  This is probably used to help determine which waypoint to choose when there are multiple options.  The next value is the path flags, listed below (again, logical ORed)
+
+0 - normal
+1 - crouch
+2 - unused/unknown
+4 - jump
+8 - walk
+16 - blocked
+32 - ladder
+
+The last 3 bytes of the link (the CDCDCD) are probably technically part of the flags, but as far as I can tell they are always CDCDCD and can be ignored.  After those bytes, the next link starts, or, if there are no more links on this waypoint, the next waypoint begins.  This continues until the end of the file.
+
+
+Now...how the program works...I'm too tired to explain all that now :)  Really, all it does is read in the waypoint file into variables, then do all the weird conversions I just explained, formats the output so that it's readable, and then writes it to a text file.  It looks funky, but it works :-P

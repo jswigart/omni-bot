@@ -1,0 +1,9 @@
+- Usage help for Node, Action, and (when implemented) Route attributes.
+
+- Allow for additional meta-data for Actions / Nodes / Routes. This will require an additional file saved in the executable directory (<map-name>.meta) and will allow for giving a friendly name to Nodes, Actions, and Routes
+
+- Validate lines after conditional keywords. ie: do not allow if_action_false by itself.
+
+- Show visual indication for an aiscript that has been edited, warn if closing and the file has not been saved, allow for ctrl-s saving, and updated the last modified date in comments (if exists) to the current date time.
+
+- Figure out all of the entity types that spawn other entities (ie: misc_mg42) so we can properly determine the entity numbers for misc_mg42 (and others that may be affected).

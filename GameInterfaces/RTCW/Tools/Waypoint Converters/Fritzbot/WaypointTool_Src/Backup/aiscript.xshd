@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!-- syntaxdefinition for aiscript by Hobbit -->
+
+<SyntaxDefinition name = "aiscript" extensions = ".aiscript">
+	
+	<Properties>
+		<Property name="LineComment" value="//"/>
+	</Properties>
+	
+	<Digits name = "Digits" bold = "false" italic = "false" color = "DarkBlue"/>
+
+	<RuleSets>
+		<RuleSet ignorecase="true">
+			<Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,	.?</Delimiters>
+			
+			<Span name = "DocLineComment" bold = "true" italic = "true" color = "DarkGray" stopateol = "true">
+				<Begin bold = "false" italic = "true" color = "Black">///</Begin>
+			</Span>
+		  
+		  	<Span name = "LineComment" bold = "false" italic = "true" color = "Black" stopateol = "true">
+			   	<Begin>//@!/@</Begin>
+		  	</Span>
+		  
+			<Span name = "BlockComment" bold = "false" italic = "true" color = "Black" stopateol = "false">
+				<Begin>/*</Begin>
+				<End>*/</End>
+			</Span>
+		  	
+			<Span name = "String" bold = "false" italic = "false" color = "Blue" stopateol = "true">
+				<Begin>"</Begin>
+				<End>"</End>
+			</Span>
+			
+			<Span name = "MultiLineString" bold = "false" italic = "false" color = "Blue" stopateol = "false" noescapesequences="true">
+				<Begin>@@"</Begin>
+				<End>"</End>
+			</Span>
+			
+			<Span name = "Char" bold = "false" italic = "false" color = "Magenta" stopateol = "true">
+				<Begin>&apos;</Begin>
+				<End>&apos;</End>
+			</Span>
+			
+			<MarkPrevious bold = "true" italic = "false" color = "MidnightBlue">(</MarkPrevious>
+			
+			<KeyWords name = "Punctuation" bold = "false" italic = "false" color = "Magenta">
+				<Key word = "?" />
+				<Key word = "," />
+				<Key word = "." />
+				<Key word = ";" />
+				<Key word = "(" />
+				<Key word = ")" />
+				<Key word = "[" />
+				<Key word = "]" />
+				<Key word = "{" />
+				<Key word = "}" />
+				<Key word = "+" />
+				<Key word = "-" />
+				<Key word = "/" />
+				<Key word = "%" />
+				<Key word = "*" />
+				<Key word = "&lt;" />
+				<Key word = "&gt;" />
+				<Key word = "^" />
+				<Key word = "=" />
+				<Key word = "~" />
+				<Key word = "!" />
+				<Key word = "|" />
+			    <Key word = "&amp;" />
+		  	</KeyWords>
+		  
+			<KeyWords name = "ActionKeywords" bold="true" italic="false" color="Red">
+				<Key word = "action" />
+				<Key word = "default" />
+			</KeyWords>
+
+			<KeyWords name = "GlobalStatements" bold="true" italic="false" color="DarkBlue">
+				<Key word = "bot_SightDist" />
+				<Key word = "spawnflag_is_priority" />
+				<Key word = "cmdpost_is_priority" />
+				<Key word = "construct_is_priority" />
+				<Key word = "map_has_vehicle" />
+				<Key word = "vehicle_entity_number" />
+				<Key word = "vehicle_team_owner" />
+			</KeyWords>
+		
+			<KeyWords name = "ConditionalStatements" bold="true" italic="true" color="DarkCyan">
+				<Key word = "if_obj_home_false" />
+				<Key word = "if_obj_home_true" />
+				<Key word = "if_construct_built_false" />
+				<Key word = "if_construct_built_true" />
+				<Key word = "if_fda_owner_axis" />
+				<Key word = "if_fda_owner_allies" />
+				<Key word = "if_action_false" />
+				<Key word = "if_action_true" />
+				<Key word = "if_obj_captured" />
+				<Key word = "if_allied_cp_built_true" />
+				<Key word = "if_allied_cp_built_false" />
+				<Key word = "if_axis_cp_built_true" />
+				<Key word = "if_axis_cp_built_false" />
+			</KeyWords>
+			
+			<KeyWords name = "Actions" bold="true" italic="false" color="Green">
+				<Key word = "node_connect" />
+				<Key word = "node_disconnect" />
+				<Key word = "activateAction" />
+				<Key word = "deactivateAction" />
+				<Key word = "activateAction_Group" />
+				<Key word = "deactivateAction_Group" />
+				<Key word = "openNodeGrpToTeam" />
+				<Key word = "bot_switchToWeap" />
+				<Key word = "resetNodeFlag" />
+				<Key word = "set_Map_Has_Vehicle" />
+				<Key word = "set_Vehicle_Owner" />
+				<Key word = "set_Vehicle_Number" />
+				<Key word = "kill_action" />
+				<Key word = "wait" />
+		  	</KeyWords>
+
+			<KeyWords name = "Weapons" bold="true" italic="true" color="Orange">
+				<Key word = "random" />
+				<Key word = "random_f" />
+				<Key word = "panzer" />
+				<Key word = "sniper" />
+				<Key word = "smg" />
+				<Key word = "flame" />
+				<Key word = "random_p" />
+				<Key word = "FG42" />
+				<Key word = "k43" />
+				<Key word = "garand" />
+				<Key word = "mortar" />
+				<Key word = "random_pf" />
+				<Key word = "venom" />
+				<Key word = "MG42" />
+				<Key word = "random_fp" />
+			</KeyWords>
+		  
+			<KeyWords name = "Teams" bold="true" italic="true" color="Black">
+				<Key word = "axis" />
+				<Key word = "allies" />
+			</KeyWords>
+		</RuleSet>
+		
+	</RuleSets>
+</SyntaxDefinition>
+
+

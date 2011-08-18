@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="WaypointTool">
+</Property><Property Name="Solution File" Value="E:\WaypointTool_Src\WaypointTool.sln">
+</Property><Property Name="User Options File" Value="E:\WaypointTool_Src\WaypointTool.suo">
+</Property><Property Name="Date" Value="Sunday, October 08, 2006">
+</Property><Property Name="Time" Value="12:28 PM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="WaypointTool.sln" Description="File successfully backed up as E:\WaypointTool_Src\Backup\WaypointTool.sln">
+</Event><Event ErrorLevel="0" Project="" Source="WaypointTool.suo" Description="File successfully backed up as E:\WaypointTool_Src\Backup\WaypointTool.suo">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointTool.csproj" Description="Project file successfully backed up as E:\WaypointTool_Src\Backup\WaypointTool.csproj">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointTool.csproj.user" Description="Project user file successfully backed up as E:\WaypointTool_Src\Backup\WaypointTool.csproj.user">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AboutDialog.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AboutDialog.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Action.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Action.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="ActionControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\ActionControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="ActionDifference.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\ActionDifference.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="ActionPrinter.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\ActionPrinter.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Actions.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Actions.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AIScriptEditor.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AIScriptEditor.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AIScriptFoldingStrategy.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AIScriptFoldingStrategy.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AIScriptValidationMessage.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AIScriptValidationMessage.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AIScriptValidator.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AIScriptValidator.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AlternatingBotRowCollection.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AlternatingBotRowCollection.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AppData.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AppData.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AssemblyInfo.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Bits.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Bits.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BotReader.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BotReader.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Bots.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Bots.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BotsControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BotsControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BspEntity.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BspEntity.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BspReader.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BspReader.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BspReaderControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BspReaderControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="CodeHelperDialog.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\CodeHelperDialog.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="ConfigWriter.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\ConfigWriter.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Conversion.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Conversion.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="DataGridComboBoxColumn.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\DataGridComboBoxColumn.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Enumerations.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Enumerations.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="FormMain.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\FormMain.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Hex.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Hex.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="IPrintableUserControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\IPrintableUserControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Keyword.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Keyword.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordCollection.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordCollection.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordComparer.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordComparer.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordCompletionData.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordCompletionData.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordCompletionDataProvider.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordCompletionDataProvider.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordFactory.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordFactory.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordInput.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordInput.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="KeywordInsightDataProvider.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\KeywordInsightDataProvider.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NavigationCompareControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NavigationCompareControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NavigationDiff.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NavigationDiff.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NavigationElementBase.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NavigationElementBase.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NavigationReader.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NavigationReader.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NewAIScriptDialog.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NewAIScriptDialog.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Node.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Node.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NodeControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NodeControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NodeDifference.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NodeDifference.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NodePrinter.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NodePrinter.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Nodes.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Nodes.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Project.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Project.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Route.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Route.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="RouteControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\RouteControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="RouteDifference.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\RouteDifference.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="RoutePrinter.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\RoutePrinter.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Routes.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Routes.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="TreeViewDragDrop.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\TreeViewDragDrop.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="UserData.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\UserData.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointControl.cs" Description="File successfully backed up as E:\WaypointTool_Src\Backup\WaypointControl.cs">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Actions.xsx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Actions.xsx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="aiscript.xshd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\aiscript.xshd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Bots.xsx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Bots.xsx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Nodes.xsx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Nodes.xsx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Project.xsx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Project.xsx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Routes.xsx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Routes.xsx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Actions.xsd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Actions.xsd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="App.ico" Description="File successfully backed up as E:\WaypointTool_Src\Backup\App.ico">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Bots.xsd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Bots.xsd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Changes.txt" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Changes.txt">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Info.txt" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Info.txt">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Nodes.xsd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Nodes.xsd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Project.xsd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Project.xsd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Routes.xsd" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Routes.xsd">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="Todo.txt" Description="File successfully backed up as E:\WaypointTool_Src\Backup\Todo.txt">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AboutDialog.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AboutDialog.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="ActionControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\ActionControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="AIScriptEditor.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\AIScriptEditor.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BotsControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BotsControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="BspReaderControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\BspReaderControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="CodeHelperDialog.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\CodeHelperDialog.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="FormMain.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\FormMain.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NavigationCompareControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NavigationCompareControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NewAIScriptDialog.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NewAIScriptDialog.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="NodeControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\NodeControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="RouteControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\RouteControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointControl.resx" Description="File successfully backed up as E:\WaypointTool_Src\Backup\WaypointControl.resx">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointTool.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="WaypointTool" Source="WaypointTool.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="WaypointTool.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="WaypointTool.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="WaypointTool" Source="WaypointTool.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
