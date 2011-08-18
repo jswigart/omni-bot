@@ -1,0 +1,156 @@
+//==========================================================================================
+//
+//	mp_resurrection.gm
+//
+//	Who        	When		What
+//------------------------------------------------------------------------------------------
+//	^0MARTIN ^?>:(	14 August 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	catacomb_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "catacomb_door_Destroyed" );
+	},
+
+	main_gate_power_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "main_gate_power_Destroyed" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bMain.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rMain.*" );
+	},
+
+	waterway_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rMain.*" );
+
+		Util.MapDebugPrint( "waterway_door_Destroyed" );
+		
+	},
+
+	Book_of_the_Resurrection_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Book_of_the_Resurrection_Taken" );
+	},
+
+	room_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "room_flag_Axis_Captured" );
+	},
+
+	room_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
+
+		Util.MapDebugPrint( "room_flag_Allies_Captured" );
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	tower1 = OnTriggerRegion( AABB( -3472.000,-2608.000,-30.000,-3119.000,-1999.000,44.000 ), Map.DisableCombatMove );
+	tower2 = OnTriggerRegion( AABB( -3472.000,-1288.000,-30.000,-3127.000,-743.000,44.000 ), Map.DisableCombatMove );		
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.catacomb_door_Destroyed );
+	OnTrigger( "The Main Gate has been breached!", Map.main_gate_power_Destroyed );
+	OnTrigger( "Allies Breached the waterway entrance", Map.waterway_door_Destroyed );
+	OnTrigger( "Allies have stolen Book of the Resurrection!", Map.Book_of_the_Resurrection_Taken );
+	OnTrigger( "Axis reclaims the Forward room!", Map.room_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward room!", Map.room_flag_Allies_Captured );
+	// "Planted at the waterway door."
+	// "Planted at the main gate power."
+	// "Flag returned Book of the Resurrection!"
+	// "Planted at the catacomb door."
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "VENOM_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+	
+	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
+	
+	RTCWUtil.LimitToClass( "GRENADE_rMain.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "MOUNTMG42_rMain.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rMain.*" );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.StopSniping();
+};
