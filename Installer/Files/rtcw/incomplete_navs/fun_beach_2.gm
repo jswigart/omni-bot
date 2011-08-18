@@ -1,0 +1,785 @@
+// crapshoot: need to replace watchforwaypoint with paththrough navigation
+
+/* Fun_beach_final.gm 
+ 	omni-bot version 0.66
+
+ 	resetAT just sets ATTACK/DEFENCE SNIPE/ARTY to false
+ 	Set mineBias to 0 if you dont want mines 
+
+ 	Author: Advieszeur  
+ 
+ 	Updated: may, 5 2008
+   
+ 	Last Changes: tweaking
+ 
+ 	Special: 
+           
+	ToDo:
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+*/
+
+global Map =
+{
+	debugMode = true,
+	//ShowMovers = true,
+   	currentGoal = "",
+   	maxViewDistance = 2500,
+   	targetBreakableDist = 100,
+   	escorting = false,
+    shouldEscort = true,
+	switchLimit = 2,
+	craneActivate = 0,
+	LiftMoving = "",
+	
+
+    mineBias = 1.5,
+    attackBias = 4.0,
+    defendBias = 4.0,
+	gotoBias =  4.0,
+	mountBias  = 1.5,
+	constructBias = 3.0,
+	dynoBias = 3.3,
+	snipeBias  = 2.0,
+	ctfBias  = 	 4.0,
+	
+	BlockPath  = false,
+
+	//Conditionals for map goals
+	doors_destroyed = 0,
+	Wall_Destroyed = false,
+	
+	Switches =
+    {
+	   	LiftHandle =  { 
+			Enabled = true,
+	        WaypointName = "lift_handle", 
+	        LimitTeam = 0,    						// Starts disabled 
+	        LimitClass = (1<<CLASS.ENGINEER) | (1<<CLASS.MEDIC) | (1<<CLASS.FIELDOPS) | (1<<CLASS.SOLDIER),
+	        LimitDistance = 1000, 
+	        //PressOnce = true,    //once per spawn 
+
+	        ExitConditions =  { 
+	            someFunc = function(bot) 
+	            	{  return true;  },            
+	        }, 
+		},
+		
+	   	DecoyGen =  { 
+			Enabled = true,
+	        WaypointName = "Generator_Decoy", 
+	        LimitTeam = 0,    						// Starts disabled 
+	        LimitClass = (1<<CLASS.ENGINEER) ,
+	        //LimitDistance = 500, 
+	        PressOnce = true,    //once per spawn 
+
+	        ExitConditions =  { 
+	            someFunc = function(bot) 
+	            	{  return true;  },            
+	        }, 
+		},		
+	},	
+	
+	Movers =
+  	{
+    		//retain the Lift as a mover
+    		"MOVER_base_gate1",
+  	},
+	
+	resetAT = function()  {
+    	//DEFEND
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+    	//ATTACK
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+    	//SNIPE
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+	
+		bprint ("Reset all prim. goals");
+    },
+ 
+	// Event functions
+
+	//COMMAND POST
+	
+	allied_compost_built_Built = function( trigger )   {
+		if ( TestMap )  { return; }
+		Wp.SetWaypointFlag("c_node_cp","closed",true);			//commandpost path closed
+		//Spitting spawn 
+		foreach ( id and bot in BotTable )  {
+    		if ( bot.GetTeam() == TEAM.ALLIES ) {
+    			if ( RandInt(0,2) < 2)   {
+    	    		bot.ChangeSpawnPoint( 1 ); 		// 2/3 flagspawn
+    			} else {
+            		bot.ChangeSpawnPoint( 3 ); 		// cp_spawn		
+				}
+    		}   
+		}
+		bprint( "allied_compost_built_Built" );
+	},
+	    
+	axis_compost_built_Built = function( trigger ) {
+		if ( TestMap )  { return; }
+    	Wp.SetWaypointFlag("c_node_cp","closed",false);			//commandpost path closed
+		bprint( "axis_compost_built_Built" );
+	},
+		
+	allied_compost_built_Destroyed = function( trigger )  {
+		if ( TestMap )  { return; }
+    	Wp.SetWaypointFlag("c_node_cp","closed",false);			//commandpost path closed
+		bprint( "allied_compost_built_Destroyed" );
+	},
+				
+	axis_compost_built_Destroyed = function( trigger )  {
+		if ( TestMap )  { return; }
+		Wp.SetWaypointFlag("c_node_cp","closed",false);			//commandpost path closed	
+		bprint( "allied_compost_built_Destroyed" );
+	},
+			
+	//MG 
+	  basemg_Built = function( trigger )  {
+		if ( TestMap )  { return; }		
+		bprint( "basemg_Built" );
+	},
+		
+	basemg_Destroyed = function( trigger )  {
+		if ( TestMap )  { return; }		
+		bprint( "basemg_Destroyed" );
+	},
+		
+	stairmg_Destroyed = function( trigger ) {
+		if ( TestMap )  { return; }		
+		bprint( "basemg_Destroyed" );
+	},
+		
+	stairmg_Built = function( trigger ) {
+		if ( TestMap )  { return; }
+		bprint( "stairmg_Built" );
+	},		
+			
+	//Ramp
+	ramp_Built = function( trigger )  {
+		if ( TestMap )  { return; }			
+		//Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Ventialtion_Power_Generator" );  					//ramp	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator_Protection_Net" );					//wall		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );		//flag 	
+			
+		bprint( "ramp_Built" );
+	},
+	
+	ramp_Destroyed = function( trigger )   {
+		if ( TestMap )  { return; }	
+		bprint( "ramp_Destroyed" );
+	},	
+	
+	//Beach doors
+	frontdoor_Destroyed = function( trigger )  {
+		if ( TestMap )  { return; }	
+		if ( Map.Wall_Destroyed )  { return; }	    		
+
+		Map.doors_destroyed = Map.doors_destroyed+1;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );  		//ramp	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_main_base_wall_breach" );		//wall	
+		
+		//ATTACK and Sniper
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_front.*" );				//1 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_bunker.*" );				//1 							
+
+		//Defendspots
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_front_inside" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_top1" ); 	
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_wall.*" ); 
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ramp" ); 			//			 			 		 
+			 				    
+		if (doors_destroyed > 1) {
+			Map.resetAT();  //reset all primairy goals
+			//AXIS defend 				
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_wall.*" ); 		//1-2
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_lowerside.*" ); 	//1-4
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ramp" ); 
+		}
+
+		bprint( "adoor (front) Destroyed" );
+	},
+		
+	lowerdoor_Destroyed = function( trigger ) {
+		if ( TestMap )  { return; }
+	    if ( Map.Wall_Destroyed )  { return; }	
+		
+		Map.doors_destroyed = Map.doors_destroyed+1;
+			  		
+  		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );  		//ramp	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_main_base_wall_breach" );		//wall	
+		
+		//ATTACK and Sniper
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_lower.*" );			//1-3 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_bunker.*" );			//1-3  			
+		
+		//Defendspots
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_lower_inside" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_top2" ); 			
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_lowerside.*" ); 
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ramp" ); 			//
+ 
+			 
+		if (doors_destroyed > 1)  {
+			Map.resetAT();  //reset all primairy goals
+			//AXIS defend and snipe
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_wall.*" ); 		//1-2
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_lowerside.*" ); 	//1-4
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_ramp" ); 			//				
+		}			 			
+		
+		bprint( "bdoor (lower) Destroyed" );
+	},
+		
+	//Wall
+	wall_Destroyed = function( trigger )  {
+		if ( TestMap )  { return; }	
+
+		Map.resetAT();  //reset all primairy goals  	
+		Map.Wall_Destroyed = true;
+		  		
+		//Blocked waypoints
+		Wp.SetWaypointFlag("c_lower_cabinets","closed",true);						//block ammo - health  
+		Wp.SetWaypointFlag("c_walljump","closed",true);						//block ammo - health  
+		Wp.SetWaypointFlag("c_cp_health","closed",false);							//enable ammo - health  
+		Wp.SetWaypointFlag("c_node_front","closed",true);			//frontdoor - wall 
+		Wp.SetWaypointFlag("c_node_lower","closed",true);			//lowerdoor - cabinets    		
+		
+		//Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Ventialtion_Power_Generator" );  					//ramp	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator_Protection_Net" );					//wall		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );	//CP
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );		//CP 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );  				//MG's	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );  				//MG's	
+
+		//Axis
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );  				//MG's
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );  				//MG's	
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag1" );  						//flag
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Assault_Ramp" );  				//ramp
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Postt" );  	//CP
+		
+		//Defend - attack and sniper
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_inside_wall" ); 
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_inside_entrance" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_gen.*" );				//1-3
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_gen.*" );			//1-3 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_entrance" );	
+		
+		//Start patch split thread, because route doesn't do the trick 
+    	//if (Map.PathThread)   {  threadKill(Map.PathThread);  }  //Killing old threads
+    	//Map.PathThread = thread(ScriptGoals.WatchForWaypoint.PathThreadFunc(90) ); //switch every 1.5 minutes
+		
+		//Fake switch because Engi don't find the generator easy
+		Map.Switches.DecoyGen.LimitTeam = (1<<TEAM.ALLIES); 	// Enable switch for Allies		 
+		  		  		
+		bprint( "wall_Destroyed" );
+	},	
+	
+	//Generator
+	net_Built = function( trigger )  {
+		if ( TestMap )  { return; }	
+		bprint( "net_Built" );
+	},
+				
+	net_Destroyed = function( trigger ) {
+		if ( TestMap )  { return; }	
+		bprint( "net_Destroyed" );
+	},	
+	
+	generator_Destroyed = function( trigger )   {
+		if ( TestMap )  { return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		
+		//Blocked waypoints
+    	Wp.SetWaypointFlag("c_vent","closed",false);						//open path ventilator
+     	Wp.SetWaypointFlag("c_radar_cabinets","closed",false);				//open path amm0-health       	
+ 		Wp.SetWaypointFlag("c_lower_cabinets","closed",true);				//block ammo - health    			
+		     
+		//Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_staircase_access_doors" );		//doors		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equipment" );				//radar 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag2" );						//radar 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_base_MG_Nest" );			//radar 
+
+		//Axis
+		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );  				//MG's	
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Radar_base_MG_Nest" );  			//MG's	radar
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_stairmg_gun" );  			//MG's	stair
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Radar_base_MG_Nest" );  			//MG's	radar
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_stairmg_gun" );  			//MG's	stair		
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag1" );  						//flag
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Assault_Ramp" );  				//ramp
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Postt" );  	//CP   
+
+		//Defend - attack and sniper
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_stairs.*" ); 		//1-3
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_flag2_.*" );		//1-2
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_radar.*" );   //1-4
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_radar.*" );		//radar 
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_stair_ramp" );			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_basementdoor" );				
+	
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_s_radar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_radar.*" );	
+
+		Map.Switches.DecoyGen.LimitTeam = 0; 	// Disable switch for Allies	
+		
+		//Threads
+		if (Map.PathThread)   {  threadKill(Map.PathThread);  }  //Killing path threads
+
+		//Normal spawn ànd quick spawn  (selfkill))
+		foreach ( id and bot in BotTable )  {
+    		if ( bot.GetTeam() == TEAM.ALLIES )  { bot.ChangeSpawnPoint( 0 ); }
+			bot.ExecCommand("kill"); 
+			//Killing running tread
+   			if(bot.LiftThreadFunc)    { threadKill(bot.LiftThreadFunc);  } 	
+			//Starting thread\
+			bot.LiftThreadFunc = bot:thread(ScriptGoals.WatchForWaypoint.LiftThreadFunc);
+	  		bprint("Creating Threads for: ", bot.Name);
+		}		
+ 			   		
+		bprint( "gen_Destroyed" );
+	},
+			
+	//Stair Ramp	
+	mstair_Built = function( trigger )	{
+		if ( TestMap )  { return; }
+		//Make lift available for Allies
+		Map.Switches.LiftHandle.LimitTeam = (1<<TEAM.ALLIES); 	// Enable switch for Allies
+		bprint( "mstair_Built" );
+	},
+
+	mstair_Destroyed = function( trigger )	{	
+		if ( TestMap )  { return; }	
+		bprint( "mstair_Destroyed" );
+	},	
+
+	//Basement door
+	basementdoor_Destroyed = function( trigger )	{	
+		if ( TestMap )  { return; }	
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Metal_Staircase" );  				//ramp	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_basementdoor" );	
+		bprint( "basementdoor_Destroyed" );
+	},
+		
+	//Capture the Flag	
+	//Beach side
+	Allies_Capture_Flag = function( trigger )	{	 
+		if ( TestMap )  { return; }	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );  
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" ); 
+ 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_bunker_window" ); 
+		bprint( "Allies_Capture_Flag" );
+	},
+	
+	Axis_Capture_Flag = function( trigger )	{ 	
+		if ( TestMap )  { return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_t436" );		//@MG Ramp
+ 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_bunker_window" ); 
+		bprint( "Axis_Capture_Flag" );
+	},  
+	 	
+ 	//Radar side   
+ 	Allies_Capture_Flag2 = function( trigger )	{	 
+		if ( TestMap )  { return; }			
+		//Defend - attack and sniper
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_stairs.*" ); 		//1-3
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_d_flag2_.*" );		//1-2
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_d_flag2_.*" );		//1-2		
+    	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_stairmg_gun" );  			//MG's	stair			 
+		bprint( "Allies_Capture_Flag" );
+	},
+	
+	Axis_Capture_Flag2 = function( trigger )	{	
+    	if ( TestMap )  { return; }			
+		//Defend - attack and sniper
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_stairs.*" ); 		//1-3
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_flag2_.*" );		//1-2
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_d_flag2_.*" );		//1-2
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_stairmg_gun" );  			//MG's	stair
+		bprint( "Axis_Capture_Flag" );			 			
+	},  	  
+ 	  
+ 	//End
+	radar_Destroyed = function( trigger )	{	
+		if ( TestMap )  { return; }
+		bprint( "rdr_Destroyed" );
+	},	  
+
+	//Lift moving
+	lift_goto = function( trigger )
+	{
+		vec = ToVector(trigger.Action);  //value z lift is 100 or -100		
+		if ( vec.z > 15 )   { Map.LiftMoving = "up";  }
+		if ( vec.z < 15 )   { Map.LiftMoving = "down"; }
+		bprint ( "lift is moving: ",Map.LiftMoving ); 
+		
+		//Block entrance to lift for 12 second 
+		//Wp.SetWaypointFlag("c_liftAccess","closed",true);   	//Block the liftentrance
+		Map.Switches.LiftHandle.LimitTeam = 0; 						// Disable switch for Allies
+		Util.ResetGoals();	
+        thread(ScriptGoals.WatchForWaypoint.TimerThreadFunc(12) );		//Enable after 12 seconds
+	},
+
+};
+
+
+//######  GLOBAL  MAP LOAD  #################
+
+global OnMapLoad = function()
+{
+	//wait for all goals to initialize
+	sleep(1);
+    	if ( TestMap )  { return; }
+	
+   //MOVE GOALS FOR BETTER REACHABLE
+	Util.SetGoalOffset( -40, 0,  -80, "PLANT_main_base_wall_breach" );
+	//Util.SetGoalOffset( -140, 0,  -60, "PLANT_Ventialtion_Power_Generator" );
+	Util.SetGoalOffset( 0, 110,  -60, "PLANT_Ventialtion_Power_Generator" );
+	Util.SetGoalOffset( -260, -350,  -60, "PLANT_Generator_Protection_Net" );	
+	Util.SetGoalOffset( 0, -40,  0, "BUILD_Assault_Ramp" );
+	Util.SetGoalOffset( -10, 0,  -50, "PLANT_Axis_staircase_access_doors" );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=5});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=99, maxcamptime=999});
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=10, maxcamptime=30});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=30, maxcamptime=70});	
+
+    // Max users per goal
+	//Util.SetMaxUsersInUse( 2, "MOUNTMG42.*" );
+	//Util.SetMaxUsersInUse( 2, "GO_.*" );
+	//Util.SetMaxUsersAttacking( 1, "ATTACK_a_entrance" );
+	//Util.SetMaxUsersInUse( 2, "CHECKPOINT_flag2" );	
+	
+  //SET GOALS AT START
+
+	Map.resetAT(); 
+	//Disable all defend,attack and snipe spots
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	// SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	
+	// Set closed WP (block path)
+    Wp.SetWaypointFlag("c_vent","closed",true);					//ventilator
+    Wp.SetWaypointFlag("c_lower_cabinets","closed",false);		//enable ammo - health 
+    Wp.SetWaypointFlag("c_node_front","closed",false);			//frontdoor - wall 
+    Wp.SetWaypointFlag("c_node_lower","closed",false);			//lowerdoor - cabinets 
+    Wp.SetWaypointFlag("c_node_cp","closed",false);				//commandpost path 
+    Wp.SetWaypointFlag("c_walljump","closed",false);			//Jump over the wall  
+	Wp.SetWaypointFlag("c_cpTunnel","closed",false);    		//Tunnelpath  (commandpost)
+	Wp.SetWaypointFlag("c_LeftTunnel","closed",false);    		//Tunnelpath Ramp (leftside)
+	Wp.SetWaypointFlag("c_liftAccess","closed",false);   		//liftentrance
+    
+	//ALLIES
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_t378" );  		//@boat
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_t378" );			//@boat
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_t436" );		//@Ramp in Bunker
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_t436" );			//@Ramp in Bunker		
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Front_Bunker_Door" );  	//Lower
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower_Bunker_Door" );		//Front
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag1" );				//flag 
+	
+	//ATTACK and Sniper
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_boat1" );		// 1-2
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_boat2" );		// 1-2	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_beach1" );		//1-2 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_s_beach2" );		//1-2 		
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_lower.*" );				//1-3 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_front.*" );				//1 	
+
+ 	//AXIS   
+    //Defendspots and sniper AXIS
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_front_inside" );				    
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_lower_inside" ); 
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_flag1.*" );				    
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_d_top.*" ); 
+
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_s_bunker.*" );
+ 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_s_flag1" );	  
+	 
+
+   ////////////////////////////////////////////////////////////////////
+   //*************    TRIGGERS  ***************************************
+	//MG-stuff
+	OnTrigger( "Axis Staircase MG42 Nest constructed.", Map.stairmg_Built );
+	OnTrigger( "Axis Staircase MG42 Nest destroyed.", Map.stairmg_Destroyed );	
+	OnTrigger( "Radar Base MG42 Nest constructed.", Map.basemg_Built );
+	OnTrigger( "Radar Base MG42 Nest destroyed.", Map.basemg_Destroyed );
+	//CP 
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_compost_built_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_compost_built_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_compost_built_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_compost_built_Destroyed );
+	//Beach doors + main wall	
+	OnTrigger( "Allies have breached the lower beach bunker door!!!!", Map.lowerdoor_Destroyed );
+	OnTrigger( "Allies have breached the front beach bunker door!!!!", Map.frontdoor_Destroyed );
+	OnTrigger( "Allies have breached the main base wall!!!!", Map.wall_Destroyed );	
+	//assault ramp 
+	OnTrigger( "Assault Ramp constructed.", Map.ramp_Built );
+	OnTrigger( "Assault Ramp destroyed.", Map.ramp_Destroyed );	
+	//Staircase (at trucks) 
+	OnTrigger( "Metal Staircase constructed.", Map.mstair_Built );	
+	OnTrigger( "Metal staircase destroyed.", Map.mstair_Destroyed );
+	//Generator
+	OnTrigger( "Generator protection contructed", Map.net_Built );
+	OnTrigger( "^1WARNING: ^3Generator protection destroyed", Map.net_Destroyed );
+	OnTrigger( "Allies have destroyed the ventilation power generator!!!!", Map.generator_Destroyed );
+	//Basement
+	OnTrigger( "Allies have destroyed the basement doors!!!!", Map.basementdoor_Destroyed );	
+	//ctf beach + battery
+ 	OnTrigger( "^3Allies have captured the beach bunkers", Map.Allies_Capture_Flag );
+ 	OnTrigger( "^3Axis have reclaimed the beach bunkers", Map.Axis_Capture_Flag );
+ 	OnTrigger( "^3Allies have captured the battery bunker ", Map.Allies_Capture_Flag2 );
+ 	OnTrigger( "^3Axis have reclaimed the battery bunkers", Map.Axis_Capture_Flag2 );
+ 	//End game - radar destroyed	
+	OnTrigger( "Allies have destroyed the radar!!!!", Map.radar_Destroyed );
+
+	//lift
+	OnTrigger( "base_lever1_goto", Map.lift_goto );
+
+   //*************    END  TRIGGERS  ***************************************
+   /////////////////////////////////////////////////////////////////////////
+	
+
+   // ********************************************************
+   // *****  ROUTES   ****************************************
+   // ********************************************************
+
+ 	
+	bprint("Configuring Routes");
+	
+	MapRoutes =
+	{
+    	PLANT_Generator_Protection_Net = 
+        { 
+            ROUTE_flagspawn = 
+            {   
+				//Ramp tunnel route 
+                ROUTE_r_ramp1 = 
+                { 
+					ROUTE_r_ramp2a = {},
+					ROUTE_r_ramp2b  = {Weight = 3,},
+                },
+
+				//Main entrence 
+                ROUTE_r_entrance1 = 
+                { 
+					ROUTE_r_entrance2a = {Weight = 3,},
+					ROUTE_r_entrance2b  = 
+					{
+						ROUTE_r_entrance3a = {},
+						ROUTE_r_entrance3b = {},	
+					},
+                },				
+
+				//CP tunnel route 
+                ROUTE_r_cp1 = 
+                { ROUTE_r_cp2 = {},  },
+								
+				//Tube route
+                ROUTE_r_tube1 = 
+                { 
+					ROUTE_r_entrance2a = {},
+					ROUTE_r_entrance2b  = 
+					{
+						ROUTE_r_entrance3a = {},
+						ROUTE_r_entrance3b = {},	
+					},
+                },
+ 
+            },
+ 
+            ROUTE_cp_spawn = 
+            {   
+				//Ramp tunnel route 
+                ROUTE_r_ramp1 = 
+                { 
+					ROUTE_r_ramp2a = {},
+					ROUTE_r_ramp2b  = {Weight = 2,},
+                },
+
+				//Main entrence 
+                ROUTE_r_entrance1 = 
+                { 
+					ROUTE_r_entrance2a = {Weight = 3,},
+					ROUTE_r_entrance2b  = 
+					{
+						ROUTE_r_entrance3a = {},
+						ROUTE_r_entrance3b = {},	
+					},
+                },				
+
+				//CP tunnel route 
+                ROUTE_r_cp1 = 
+                { ROUTE_r_cp2 = {},  },
+								
+				//Tube route
+                ROUTE_r_tube1 = 
+                { 
+					ROUTE_r_entrance2a = {},
+					ROUTE_r_entrance2b  = 
+					{
+						ROUTE_r_entrance3a = {},
+						ROUTE_r_entrance3b = {},	
+					},
+                },
+ 
+            }, 
+        }, 
+
+
+	}; 
+
+
+	// Copy routes
+	MapRoutes.PLANT_Ventialtion_Power_Generator = MapRoutes.PLANT_Generator_Protection_Net;
+	MapRoutes.ATTACK_a_gen1 = MapRoutes.PLANT_Generator_Protection_Net;
+	MapRoutes.ATTACK_a_gen2 = MapRoutes.PLANT_Generator_Protection_Net;
+	MapRoutes.ATTACK_a_gen3 = MapRoutes.PLANT_Generator_Protection_Net;	
+
+	bprint( "Routes loaded" );
+
+   // *** END  ROUTES  ******************************************
+	Util.UpdateSwitchData();
+	Util.Routes(MapRoutes);
+	bprint( "OnMapLoad" );
+
+};
+
+
+///  BOT STUFF
+
+global OnBotJoin = function( bot )
+{
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+  	// destroy breakables (player size is about 70) 
+  	bot.TargetBreakableDist = Map.targetBreakableDist;
+	bot.MaxViewDistance = Map.maxViewDistance;
+
+	if( class == CLASS.COVERTOPS )  {
+        	if ( bot.HasWeapon(WEAPON.K43) || bot.HasWeapon(WEAPON.GARAND) || bot.HasWeapon(WEAPON.FG42))  {
+				bprint("Sniper joined");
+          		bot.MaxViewDistance = 10000;
+        	}
+	}
+
+  	bprint( "OnBotJoin ", bot.Name );
+};
+
+global OnBotLeave = function( bot )  {    
+	if(bot.LiftThreadFunc)    { threadKill(bot.LiftThreadFunc);  }   
+};
+
+
+//=========== Screen Prints ====================
+global bprint = function(a,b,c,d,e,f,g)   {	
+ 	//  Build print only shows the prints on screen
+ 	//  in build time (development). If another Mod then
+ 	//  Omnibot is active, there is no print on the screen
+ 
+ 	if (a==null) {a="";}
+ 	if (b==null) {b="";}
+	if (c==null) {c="";}
+ 	if (d==null) {d="";}
+ 	if (e==null) {e="";}
+ 	if (f==null) {f="";}
+ 	if (g==null) {g="";}
+				 	
+	//Re - enable boat attack	
+	if (Map.BuildTime)  {
+		print(a,b,c,d,e,f,g);			
+	}
+};  
+
+
+//######## CONTROLLED  SCRIPT  #################
+ScriptGoals.WatchForWaypoint = 
+{
+	//Elevator
+	LiftThreadFunc = function()
+	{
+		wppos = Util.GetWpNamePosition("lift_handle"); 		//Lift button
+    	wpceiling = Util.GetWpNamePosition("p_ceiling");
+    	
+		bprint("start lift wp thread");
+		while (true)  {
+			if (this.DistanceTo(wppos) < 60)  {
+			    this.EnableMovement(false);
+		    
+				goal = GetGoal( "MAP_MOVER_base_gate1" );	    
+				entity = goal.GetEntity();			    
+				entposition = GetEntPosition( entity );
+	  			DistanceToCeiling = Distance( entposition, wpceiling );
+				sleep (0.2);  		//Give lift trigger some time
+				bprint("bot lift check");		
+				//Check if lift is fully down, and moving up	
+				if ( Map.LiftMoving == "up" && DistanceToCeiling > 700)  {
+					//Bot in moving lift, must wait there
+					bprint("Bot is going up");
+			    	sleep (7.0);	 		//let the trigger set the variable for the button
+			    }
+			    this.EnableMovement(true);
+			}
+			sleep(0.5);  
+		}  
+	}, 
+	
+  	TimerThreadFunc = function(SecondsToWait)   {
+	    bprint("timer thread started, switch blocked");
+	    starttime = GetTime();
+	    Wait = SecondsToWait*1000;
+
+	    dowhile(GetTime() < starttime+Wait)   {
+  			//do nothing, just return control to the virtual machine so we don't lock it completely
+  			yield();
+  			sleep(0.1);
+	    }
+		//reset Liftmoving and enable liftswitch agaign
+		Map.LiftMoving = "not" ;
+		//Wp.SetWaypointFlag("c_liftAccess","closed",false);   	//UnBlock the liftentrance
+	    Map.Switches.LiftHandle.LimitTeam = (1<<TEAM.ALLIES); 	// Enable switch for Allies
+		Util.ResetGoals();		
+	    bprint("timer thread ended, switch available again");
+	    return;
+  	},	
+
+	PathThreadFunc = function(SecondsToWait)  { 
+  	    bprint("Path thread started");
+        while (true) { 
+    	    starttime = GetTime();
+    	    Wait = SecondsToWait*1000;   
+        	
+        	dowhile ( GetTime() < starttime+Wait )  { 
+        		yield();
+				sleep(1.0);	
+        	} 
+
+			if ( Map.BlockPath )   {
+                Wp.SetWaypointFlag("c_cpTunnel","closed",false); 
+                Wp.SetWaypointFlag("c_LeftTunnel","closed",false); 
+                Map.BlockPath = false;
+                bprint("path Open");
+			} else {
+                Wp.SetWaypointFlag("c_cpTunnel","closed",true); 
+                Wp.SetWaypointFlag("c_LeftTunnel","closed",true); 
+                Map.BlockPath = true;
+                bprint("path Blocked");
+			}
+        } 
+	}, 	
+	
+};

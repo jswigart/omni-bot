@@ -1,0 +1,102 @@
+global _MG = 
+{
+	EXPLODE_201 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "EXPLODE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "EXPLODE_201",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1468.193, 1632.000, -324.001),
+		Radius = 0,
+		SerialNum = 38,
+		TagName = "",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	FLAG_Top_Secret_Documents = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_Top_Secret_Documents",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1720.000, 1048.000, -296.000),
+		Radius = 0,
+		SerialNum = 30,
+		TagName = "Top Secret Documents",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	MOVER_cine_door = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "MOVER",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "MOVER_cine_door",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(0.000, 0.000, 0.000),
+		Radius = 0,
+		SerialNum = 32,
+		TagName = "cine_door",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOVER_cine_door_1 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "MOVER",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "MOVER_cine_door_1",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(0.000, 0.000, 0.000),
+		Radius = 0,
+		SerialNum = 34,
+		TagName = "cine_door",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	PLANT_Allied_Helicopter = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Allied_Helicopter",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(408.000, 79.000, 395.000),
+		Radius = 0,
+		SerialNum = 28,
+		TagName = "Allied Helicopter",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Cathedrale_door = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Cathedrale_door",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1616.000, 710.000, -384.000),
+		Radius = 0,
+		SerialNum = 36,
+		TagName = "Cathedrale door",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	Version = 1,
+};

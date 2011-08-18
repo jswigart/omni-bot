@@ -1,0 +1,88 @@
+global _MG = 
+{
+	CHECKPOINT_spawn_flag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "CHECKPOINT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CHECKPOINT_spawn_flag",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-704.000, -1404.000, 772.000),
+		Radius = 0,
+		SerialNum = 42,
+		TagName = "spawn_flag",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	MOUNTMG42_211 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_211",
+		Orientation = Vec3(-2.356, 0.000, -0.000),
+		Position = Vec3(148.000, -8.000, 720.000),
+		Radius = 0,
+		SerialNum = 44,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOVER_no_flood = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "MOVER",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "MOVER_no_flood",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(964.000, -164.000, 964.000),
+		Radius = 0,
+		SerialNum = 40,
+		TagName = "no_flood",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	PLANT_Flood_Control_Room = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Flood_Control_Room",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-177.000, 183.999, 1376.000),
+		Radius = 0,
+		SerialNum = 38,
+		TagName = "Flood Control Room",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	REPAIRMG42_211 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_211",
+		Orientation = Vec3(-2.356, 0.000, -0.000),
+		Position = Vec3(148.000, -8.000, 720.000),
+		Radius = 0,
+		SerialNum = 46,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};
