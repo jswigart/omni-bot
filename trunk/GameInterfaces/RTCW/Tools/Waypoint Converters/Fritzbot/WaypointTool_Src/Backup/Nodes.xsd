@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="Nodes" targetNamespace="http://tempuri.org/Nodes.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/Nodes.xsd" xmlns:mstns="http://tempuri.org/Nodes.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="Nodes" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Node">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ID" type="xs:string" minOccurs="0" />
+							<xs:element name="Flag" type="xs:string" minOccurs="0" />
+							<xs:element name="Radius" type="xs:string" minOccurs="0" />
+							<xs:element name="Entity" type="xs:string" minOccurs="0" />
+							<xs:element name="Team" type="xs:string" minOccurs="0" />
+							<xs:element name="Group" type="xs:string" minOccurs="0" />
+							<xs:element name="Connection1" type="xs:string" minOccurs="0" />
+							<xs:element name="Connection2" type="xs:string" minOccurs="0" />
+							<xs:element name="Connection3" type="xs:string" minOccurs="0" />
+							<xs:element name="Connection4" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

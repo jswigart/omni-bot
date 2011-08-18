@@ -1,0 +1,54 @@
+Version 1.23
+----------------------------------------------------------------
+1. Fixed csv export for actions
+
+Version 1.22
+----------------------------------------------------------------
+1. Added csv export for waypoints (export from each view)
+
+Version 1.21
+----------------------------------------------------------------
+1. Fixed OutofMemory Exception Error related to print spooler
+2. Changed new aiscript form to only print vehicle owner / ent when has vehicle is checked
+ 
+Version 1.20
+----------------------------------------------------------------
+1. Added the validate button back to AIScript Editor
+2. Fixed edits not saving when switching between windows
+3. Fixed friendly names for Active and Prone not displaying in print preview / printout
+4. Fixed extra spacing between words in AIscript printouts
+5. Adjusted margins for all printouts
+
+Version 1.19
+----------------------------------------------------------------
+1. Increased Font size for waypoint printouts
+2. Decreased Font size for aiscript printouts and changed to Ariel
+3. Fixed save nav / aiscript bug introduced in 1.18
+4. Fixed validation of autoloaded aiscript if autoloaded waypoints are loaded first
+5. Added friendly names for Active and Prone in the action grid
+6. Added vehicle ent and vehicle owner to the new aiscript form
+
+Version 1.18
+----------------------------------------------------------------
+1. Added event_expire and event_explode to the allowable list for if_action_true / false validation
+2. Added timestamp to headers for node / action / route printouts
+3. Added auto load of last loaded nav files (use the waypoints menu)
+4. Added auto load of last loaded aiscript
+5. Added script validation support for openNodeGrpToTeam
+6. Changed Fonts for printout. Smaller font and now Ariel instead of San Serif
+
+
+Version 1.17
+----------------------------------------------------------------
+1. Re-Enabled AI Script Validation
+2. Added script validation support for default action test
+3. Added script validation support for set_Map_Has_Vehicle
+4. Added script validation support for set_Vehicle_Number
+5. Added script validation support for set_Vehicle_Owner
+6. Added script validation support for kill_action
+7. Added event_explode and event_expire to the scriptable action list for validation
+8. Added Action validation for action_plant_construct
+9. Added Action validation for action_event_explode
+10. Added Action validation for action_event_expire
+11. Fixed if_<team>_cp_built_<true/false> validation
+12. Updated aiscript.xshd for syntax highlighting of added keywords

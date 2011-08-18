@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="Actions" targetNamespace="http://tempuri.org/Actions.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/Actions.xsd" xmlns:mstns="http://tempuri.org/Actions.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="Actions" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Action">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ID" type="xs:string" minOccurs="0" />
+							<xs:element name="CloseNode" type="xs:string" minOccurs="0" />
+							<xs:element name="AllyAction" type="xs:string" minOccurs="0" />
+							<xs:element name="AxisAction" type="xs:string" minOccurs="0" />
+							<xs:element name="Radius" type="xs:string" minOccurs="0" />
+							<xs:element name="Goal" type="xs:string" minOccurs="0" />
+							<xs:element name="Group" type="xs:string" minOccurs="0" />
+							<xs:element name="Class" type="xs:string" minOccurs="0" />
+							<xs:element name="Links" type="xs:string" minOccurs="0" />
+							<xs:element name="Prone" type="xs:string" minOccurs="0" />
+							<xs:element name="Active" type="xs:string" minOccurs="0" />
+							<xs:element name="Entity" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

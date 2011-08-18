@@ -1,0 +1,61 @@
+Fritz Waypoint Tool (ET) was developed as an aide for waypointing Return To Castle Wolfenstein - Enemy Territory maps for FritzBot.
+
+High level features include:
+
+1. Ability to read .nav files
+
+2. Node, Action, and Route validation. This includes linked actions to ensure the right type, entity settings, and a lot of other attributes.
+
+3. Node, Action, and Route editing with friendly attributes.
+
+4. Configuration file creation (.cfg) for execution while waypointing. The configuration files will change the waypoint to reflect changes you made in this tool.
+
+5. AIScript editing and validation. Full syntax highlighting, validation of layout, and (when loaded) validation against a navigation file.
+
+6. Navigation file comparison. Allows you to load two navigation files and see a summary of differences.
+
+To start, choose File->Open from the menu. Choose a navigation file and press the 'Open' button. The nodes contained in the navigation will be displayed in a grid that is fully editable. To view the Actions defined in the navigation, click on the Actions tab. You can navigate between Nodes, Actions, and Routes in this manner while retaining any edits that you have made.
+
+Each view will allow you to validate the attributes by clicking on the 'Validate' button at the bottom. This validation will aide in making sure your Nodes, Actions, and Routes are correct, but does not guarantee 100% validity.
+
+In the Node view, there is an option to 'Auto Connect'. This is meant to be used with a new navigation file or a navigation file that you have added nodes to. It will connect all nodes that do not currently have a connection. 
+
+!!!WARNING!!!
+Sometimes, you will want to have node definitions without any connections. These are nodes that will be connected by the AIScript as the result of an action being completed. If you have these and hit the 'Auto Connect' button in the Node view, these will be connected as a result. You will have to edit these nodes again so that they have no connections.
+!!!WARNING!!!
+
+When you are finished editing, choose File->Write Configs from the menu. This will write out several .cfg files in the folder where you ran the Fritz Waypoint Tool (ET) from. The filenames are based on the name of the .nav file you loaded. For example, if you loaded et_ice.nav, the following files are generated for you:
+
+et_ice.cfg (the main .cfg that you will exec)
+et_ice.nodes.cfg
+et_ice.nodes_X_X.cfg
+et_ice.actions.cfg
+et_ice_actions_X_X.cfg
+et_ice_routes.cfg
+et_ice_routes_X_X.cfg
+
+The top level configuration will handle executing the node, action, and route configs, which handle executing all generated node, action, and route config files.
+
+You will need to copy these config files to your etmain folder before executing.
+
+A backup of your .nav file will be automatically created for you when writing configurations. This is a safety mechanism that will allow you to "rollback" changes to a navigation if needed. The file created will be named the same as your .navigation with the date and time appended (down to the second) and saved in the same directory that you opened the navigation from.
+
+In the above example, after copying the files to your etmain folder, you would type "exec et_ice.cfg" in the console. (assuming you have the Fritz mod loaded, are in devmap mode, and are properly setup for node editing).
+
+These scripts perform all of the node_xxx and action_xxx commands that you would normally have to enter by hand. You will see the result of the scripts in the console. Look for errors and correct if needed. When you are finished, type "/node_save" in the console to write the changes.
+
+Ideally, when starting a new waypoint, you will just need to "node_add" and "action_add" before using this tool. I personally bind mouse 2 to "node_add" and walk the map right-clicking to add nodes. Then I do the same for "action_add" and "route_add." All the while, taking notes on connections needed, action descriptions, entity numbers, etc. Copius notes during this process will speed up the editing process tremendously.
+
+When you are done placing your nodes, actions, and routes, save the navigation (node_save) and then load it into the Waypoint Tool.
+
+To begin editing an AIScript, click on the 'AIScript' menu item. You do not need to have a navigation file loaded when doing so, but it is recommended that you do. Having a navigation file loaded will give you a list of scriptable actions, all nodes, and allows validation to be much more complete.
+
+You can open an existing AIScript or create a new one. To aide in creating a new one, click on the 'New' toolbar button. This will prompt you for some basic information and then create a skeleton script for you to work with. If a navigation file is loaded, it will create 'Action' blocks for each scriptable action.
+
+Script Help is available as well. You can right-click the editor window and choose 'Script Help' or click on the 'Help' toolbar button. This will show information on all of the keywords available, will allow you to fill out parameters, and insert the command into the editor at the current cursor position.
+
+Validation is performed when you open a script or click on the 'Validate' toolbar button. If a navigation file is open, it will validate nodes, actions, and their attributes against the command. A summary of errors will be listed at the bottom of the editor and will show the line number that the error occured on. If no navigation file is open, only checks for required elements and basic layout will be performed.
+
+Happy Waypointing - hopefully this will save a lot of time.
+
+--Hobbit
