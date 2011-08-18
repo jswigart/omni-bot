@@ -1,0 +1,181 @@
+global _MG = 
+{
+	FLAG_Artefact = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_Artefact",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(4588.000, 2312.000, 496.000),
+		Radius = 0,
+		SerialNum = 32,
+		TagName = "Artefact",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	MOUNTMG42_471 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_471",
+		Orientation = Vec3(0.000, -0.000, 0.000),
+		Position = Vec3(-4364.000, -4924.000, 1336.000),
+		Radius = 0,
+		SerialNum = 36,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_472 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_472",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-1807.000, -5877.000, 1189.000),
+		Radius = 0,
+		SerialNum = 40,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_473 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_473",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(1099.000, -5414.000, 1157.000),
+		Radius = 0,
+		SerialNum = 44,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	PLANT_Tunnel_sealing = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Tunnel_sealing",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-2188.000, 184.000, 758.000),
+		Radius = 0,
+		SerialNum = 28,
+		TagName = "Tunnel sealing",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_escape_Truck_to_New_York = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_escape_Truck_to_New_York",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-5398.161, -5368.371, 1170.000),
+		Radius = 0,
+		SerialNum = 30,
+		TagName = "escape Truck to New York",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_upper_pyramide_entrance = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_upper_pyramide_entrance",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1845.000, -1429.000, 1022.500),
+		Radius = 0,
+		SerialNum = 34,
+		TagName = "upper pyramide entrance",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	REPAIRMG42_471 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_471",
+		Orientation = Vec3(0.000, -0.000, 0.000),
+		Position = Vec3(-4364.000, -4924.000, 1336.000),
+		Radius = 0,
+		SerialNum = 38,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_472 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_472",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-1807.000, -5877.000, 1189.000),
+		Radius = 0,
+		SerialNum = 42,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_473 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_473",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(1099.000, -5414.000, 1157.000),
+		Radius = 0,
+		SerialNum = 46,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

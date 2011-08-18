@@ -1,0 +1,200 @@
+global _MG = 
+{
+	FLAG_Documents = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_Documents",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(2048.000, 160.000, 16.000),
+		Radius = 0,
+		SerialNum = 36,
+		TagName = "Documents",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	MOUNTMG42_247 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_247",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(32.000, 170.000, 104.000),
+		Radius = 0,
+		SerialNum = 38,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_248 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_248",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(1616.000, -880.000, 128.000),
+		Radius = 0,
+		SerialNum = 42,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_249 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_249",
+		Orientation = Vec3(0.785, -0.000, 0.000),
+		Position = Vec3(2040.000, -704.000, 128.000),
+		Radius = 0,
+		SerialNum = 46,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	PLANT_Gun_Four = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Gun_Four",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(2180.000, 456.000, 48.000),
+		Radius = 0,
+		SerialNum = 28,
+		TagName = "Gun Four",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Gun_One = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Gun_One",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(12.000, -768.000, 96.000),
+		Radius = 0,
+		SerialNum = 34,
+		TagName = "Gun One",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Gun_Three = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Gun_Three",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1444.000, 440.000, 48.000),
+		Radius = 0,
+		SerialNum = 30,
+		TagName = "Gun Three",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Gun_Two = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Gun_Two",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(700.000, 416.000, 64.000),
+		Radius = 0,
+		SerialNum = 32,
+		TagName = "Gun Two",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	REPAIRMG42_247 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_247",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(32.000, 170.000, 104.000),
+		Radius = 0,
+		SerialNum = 40,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_248 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_248",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(1616.000, -880.000, 128.000),
+		Radius = 0,
+		SerialNum = 44,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_249 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_249",
+		Orientation = Vec3(0.785, -0.000, 0.000),
+		Position = Vec3(2040.000, -704.000, 128.000),
+		Radius = 0,
+		SerialNum = 48,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

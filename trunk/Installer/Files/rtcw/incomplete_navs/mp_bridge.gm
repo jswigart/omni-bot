@@ -1,0 +1,34 @@
+global Map =
+{
+	cm_wall1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "cm_wall1_Destroyed" );
+	},
+
+	cm_wall2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "cm_wall2_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "Allies secret entrance wall destroyed!", Map.cm_wall1_Destroyed );
+	OnTrigger( "Axis secret entrance wall destroyed!", Map.cm_wall2_Destroyed );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+};
