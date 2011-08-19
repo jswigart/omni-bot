@@ -42,7 +42,7 @@ Viewport {
     }
 
     Mesh {
-        dumpInfo: true
+        //dumpInfo: true
         meshName: "humanoid"
         //options:
         source: "./cache/humanoid.obj"
