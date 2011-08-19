@@ -26,7 +26,7 @@ Item3D {
     property int roleMask: 0
 
     Mesh {
-        dumpInfo: true
+        //dumpInfo: true
         meshName: "humanoid"
         //options:
         source: "./cache/humanoid.obj"

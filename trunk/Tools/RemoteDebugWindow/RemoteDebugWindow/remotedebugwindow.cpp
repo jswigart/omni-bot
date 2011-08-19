@@ -72,6 +72,10 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 	objComponents = new QObject();
 
 	//CacheComponent( engine, qmlEntityComponent, "./qml/common/entity.qml");
+
+	qDebug() << "Binary Loc " << QLibraryInfo::location( QLibraryInfo::BinariesPath );
+	qDebug() << "Plugin Loc " << QLibraryInfo::location( QLibraryInfo::PluginsPath );
+	qDebug() << "Import Loc " << QLibraryInfo::location( QLibraryInfo::ImportsPath );
 }
 
 RemoteDebugWindow::~RemoteDebugWindow() {
