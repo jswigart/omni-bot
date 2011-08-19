@@ -41,6 +41,13 @@ Viewport {
         id: root
     }
 
+    Mesh {
+        dumpInfo: true
+        meshName: "humanoid"
+        //options:
+        source: "./cache/humanoid.obj"
+    }
+
     ///////////////////////////////////////////
 //    Sphere {
 //         radius: 20
@@ -96,17 +103,24 @@ Viewport {
         property double lastMouseX;
         property double lastMouseY;
 
+        //drag.filterChildren: true
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-        hoverEnabled: true
+        //hoverEnabled: true
         onClicked: {
             if ( mouse.button == Qt.RightButton ) {
                 console.debug( "onClicked " );
+            } else {
+                mouse.accepted = false;
             }
         }
         onPressed: {
-            lastMouseX = mouse.x;
-            lastMouseY = mouse.y;
+            if ( mouse.button == Qt.RightButton ) {
+                lastMouseX = mouse.x;
+                lastMouseY = mouse.y;
+            } else {
+                mouse.accepted = false;
+            }
         }
         onPositionChanged: {
             var stepSize = 20;

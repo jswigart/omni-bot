@@ -1766,41 +1766,57 @@ void MapGoal::action(const gcn::ActionEvent& actionEvent)
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void MapGoal::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	if ( fullSync || m_NeedsSynced || GetDynamicPosition() || GetDynamicOrientation() ) {
-		m_NeedsSynced = false;
+	if ( fullSync || m_NeedsSynced ) {
+		snapShot.Clear();
+	}
 
+	RemoteLib::DataBufferStatic<2048> localBuffer;
+	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+
+	MapGoalSnapshot newSnapShot = snapShot;
+
+	const Box3f worldbounds = GetWorldBounds();
+	const float heading = Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() );
+	const float pitch = Mathf::RadToDeg( worldbounds.Axis[ 0 ].GetPitch() );
+
+	newSnapShot.Sync( "name", GetName().c_str(), localBuffer );
+	newSnapShot.Sync( "tagName", GetTagName().c_str(), localBuffer );
+	newSnapShot.Sync( "entityid", GetEntity().AsInt(), localBuffer );
+	newSnapShot.Sync( "ownerid", GetOwner().AsInt(), localBuffer );
+	newSnapShot.Sync( "x", worldbounds.Center.x, localBuffer );
+	newSnapShot.Sync( "y", worldbounds.Center.y, localBuffer );
+	newSnapShot.Sync( "z", worldbounds.Center.z, localBuffer );
+	newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
+	newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
+	newSnapShot.Sync( "sizex", worldbounds.Extent[ 0 ], localBuffer );
+	newSnapShot.Sync( "sizey", worldbounds.Extent[ 1 ], localBuffer );
+	newSnapShot.Sync( "sizez", worldbounds.Extent[ 2 ], localBuffer );
+	newSnapShot.Sync( "defaultPriority", GetDefaultPriority(), localBuffer );	
+	newSnapShot.Sync( "usersInProgress", GetCurrentUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
+	newSnapShot.Sync( "maxUsersInProgress", GetMaxUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
+	newSnapShot.Sync( "usersInUse", GetCurrentUsers( MapGoal::TRACK_INUSE ), localBuffer );
+	newSnapShot.Sync( "maxUsersInUse", GetMaxUsers( MapGoal::TRACK_INUSE ), localBuffer );
+	newSnapShot.Sync( "availableTeamMask", GetAvailableFlags().GetRawFlags(), localBuffer );
+	newSnapShot.Sync( "roleMask", GetRoleMask().GetRawFlags(), localBuffer );
+	// todo: routes, team/class priorities, etc
+
+	const uint32 writeErrors = localBuffer.endWrite();
+	assert( writeErrors == 0 );
+
+	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
 		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 		db.startSizeHeader();
-
-		obColor col = COLOR::ORANGE;
-		const Box3f worldbounds = GetWorldBounds();
-		RemoteLib::PackRect( db, 
-			"MapGoal",
-			GetName().c_str(),
-			worldbounds.Center.x, 
-			worldbounds.Center.y,
-			worldbounds.Extent[ 0 ]*2.0f,
-			worldbounds.Extent[ 1 ]*2.0f,
-			Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() ),
-			col.r(), col.g(), col.b(), col.a() );
-
+		db.writeInt32( RemoteLib::ID_qmlComponent );
+		db.writeInt32( GetSerialNum() );
+		db.writeSmallString( "mapgoal" );
+		db.append( localBuffer );
 		db.endSizeHeader();
-		db.endWrite();
 
-
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		RemoteLib::PackLine( db,
-			"",
-			"dir", 
-			worldbounds.Center.x, 
-			worldbounds.Center.y,
-			worldbounds.Center.x+worldbounds.Axis[0].x*32.0f, 
-			worldbounds.Center.y+worldbounds.Axis[0].y*32.0f,
-			col.r(), col.g(), col.b(), col.a() );
-		db.endSizeHeader();
-		db.endWrite();
-	}	
+		if ( db.endWrite() == 0 ) {
+			// mark the stuff we synced as done so we don't keep spamming it
+			snapShot = newSnapShot;
+		}
+	}
 }
 #endif
 

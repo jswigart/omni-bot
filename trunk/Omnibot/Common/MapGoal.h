@@ -392,6 +392,9 @@ public:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+
+	typedef RemoteLib::SyncSnapshot<32> MapGoalSnapshot;
+	MapGoalSnapshot	snapShot;
 #endif
 
 	MapGoal(const char *_goaltype);

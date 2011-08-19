@@ -41,6 +41,11 @@ public:
 		bool CheckFlag(unsigned int _flag) const { return CheckBitT<unsigned int>(m_ConnectionFlags, _flag); }
 		void SetFlag(unsigned int _flag) { SetBitT<unsigned int>(m_ConnectionFlags, _flag); }
 		void ClearFlag(unsigned int _flag) { ClearBitT<unsigned int>(m_ConnectionFlags, _flag); }
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+		typedef RemoteLib::SyncSnapshot<12> ConnectionSnapShot;
+		ConnectionSnapShot	snapShot;
+#endif
 	} ConnectionInfo;
 	typedef std::list<ConnectionInfo> ConnectionList;
 	
@@ -53,16 +58,16 @@ public:
 
 	inline const NavFlags &GetNavigationFlags() const { return m_NavigationFlags; }
 
-	inline void AddFlag(const NavFlags _flag) { m_NavigationFlags |= _flag; m_NeedsSynced = true; }
-	inline void RemoveFlag(const NavFlags _flag) { m_NavigationFlags &= ~_flag; m_NeedsSynced = true; }
-	inline void ClearFlags() { m_NavigationFlags = 0; m_NeedsSynced = true; }
+	inline void AddFlag(const NavFlags _flag) { m_NavigationFlags |= _flag; }
+	inline void RemoveFlag(const NavFlags _flag) { m_NavigationFlags &= ~_flag; }
+	inline void ClearFlags() { m_NavigationFlags = 0; }
 	inline bool IsFlagOn(const NavFlags _flag) const { return (m_NavigationFlags & _flag) ? true : false; }
 	inline bool IsAnyFlagOn(const NavFlags _flag) const { return (m_NavigationFlags & _flag) ? true : false; }
-	inline void SetPosition( const Vector3f & v ) { m_Position = v; m_NeedsSynced = true; }
+	inline void SetPosition( const Vector3f & v ) { m_Position = v; }
 	inline float GetRadius() const { return m_Radius; }
-	inline void SetRadius(float _rad) { m_Radius = _rad; m_NeedsSynced = true; }
+	inline void SetRadius(float _rad) { m_Radius = _rad; }
 
-	inline void SetName( const String & s ) { m_WaypointName = s; m_NeedsSynced = true; }
+	inline void SetName( const String & s ) { m_WaypointName = s; }
 	inline const String &GetName() const { return m_WaypointName; }
 	inline int GetUID() const { return (int)m_UID; }
 	inline int GetHash() const { return (intptr_t)this; }
@@ -120,8 +125,12 @@ protected:
 	PropertyMap			m_PropertyList;
 
 	bool				m_Locked : 1;
+	
+#ifdef ENABLE_REMOTE_DEBUGGING
+	typedef RemoteLib::SyncSnapshot<16> WaypointSnapShot;
+	WaypointSnapShot	snapShot;
+#endif
 
-	bool				m_NeedsSynced : 1;
 
 	static obuint32		m_NextUID;
 private:

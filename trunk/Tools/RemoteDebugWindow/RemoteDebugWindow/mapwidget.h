@@ -44,11 +44,6 @@ public:
 	MapWidget( QWidget *parent = 0 );
 
 	bool msgDelete( const QString & group, const QString & name );
-	bool msgCircle( RemoteLib::DataBuffer & db );
-	bool msgLine( RemoteLib::DataBuffer & db );
-	bool msgRect( RemoteLib::DataBuffer & db );
-	bool msgImage( RemoteLib::DataBuffer & db );
-	bool msgToken( RemoteLib::DataBuffer & db );
 protected:
 	void resizeEvent( QResizeEvent * event );
 	void dragEnterEvent( QDragEnterEvent *event );
@@ -68,11 +63,6 @@ private:
 
 	QGraphicsItem * findItemInGroup( const QString & name, QGraphicsItemGroup * group );
 	QGraphicsItemGroup * findGroup( const QString & path, QGraphicsItemGroup * group = NULL );
-
-	bool msgCirleInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
-	bool msgLineInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
-	bool msgRectInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
-	bool msgImageInternal( RemoteLib::DataBuffer & db, QGraphicsItemGroup * subGroup );
 
 	enum UserDataKeys { PathKey = 1, TagName = 2 };
 

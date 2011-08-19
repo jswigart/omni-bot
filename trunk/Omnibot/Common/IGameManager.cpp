@@ -282,8 +282,8 @@ void IGameManager::UpdateGame()
 					}
 					
 					m_Game->UpdateSync( m_SnapShots, sendBuffer );
-					//m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
-					//m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
+					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
+					m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
 					conn->clearNewConnection();
 				}
 			}

@@ -57,30 +57,63 @@ void Waypoint::Reset()
 
 	m_OnPathThrough = 0;
 	m_OnPathThroughParam = 0;
-
-	m_NeedsSynced = true;
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	if ( fullSync || m_NeedsSynced ) {
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_circle );
-		db.writeString( va( "wp/wp_%d", GetUID() ) );
-		db.writeFloat16( GetPosition().x, 0 );
-		db.writeFloat16( GetPosition().y, 0 );
-		db.writeFloat16( GetRadius(), 0 );
-		db.writeInt8( COLOR::WHITE.r() );
-		db.writeInt8( COLOR::WHITE.g() );
-		db.writeInt8( COLOR::WHITE.b() );
-		db.writeInt8( COLOR::WHITE.a() );
-		db.endSizeHeader();
-		m_NeedsSynced = ( db.endWrite() > 0 );
+	if ( fullSync ) {
+		snapShot.Clear();
 	}
 
+	//{
+	//	RemoteLib::DataBufferStatic<2048> localBuffer;
+	//	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+
+	//	WaypointSnapShot newSnapShot = snapShot;
+
+	//	newSnapShot.Sync( "name", GetName().c_str(), localBuffer );
+	//	newSnapShot.Sync( "uid", GetUID(), localBuffer );
+	//	newSnapShot.Sync( "x", GetPosition().x, localBuffer );
+	//	newSnapShot.Sync( "y", GetPosition().y, localBuffer );
+	//	newSnapShot.Sync( "z", GetPosition().z, localBuffer );
+	//	newSnapShot.Sync( "offsetTop", g_fTopWaypointOffset, localBuffer );
+	//	newSnapShot.Sync( "offsetBottom", g_fBottomWaypointOffset, localBuffer );
+
+	//	newSnapShot.Sync( "radius", GetRadius(), localBuffer );
+	//	//newSnapShot.Sync( "color", GetRadius(), localBuffer );
+
+	//	if ( m_Entity.IsValid() ) { // optional
+	//		newSnapShot.Sync( "entityid", m_Entity.AsInt(), localBuffer );
+	//	}
+
+	//	if ( !m_Facing.IsZero() ) { // optional
+	//		const float heading = Mathf::RadToDeg( m_Facing.XYHeading() );
+	//		newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
+	//	}
+
+	//	const uint32 writeErrors = localBuffer.endWrite();
+	//	assert( writeErrors == 0 );
+
+	//	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
+	//		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	//		db.startSizeHeader();
+	//		db.writeInt32( RemoteLib::ID_qmlComponent );
+	//		db.writeInt32( GetUID() );
+	//		db.writeSmallString( "waypoint" );
+	//		db.append( localBuffer );
+	//		db.endSizeHeader();
+
+	//		if ( db.endWrite() == 0 ) {
+	//			// mark the stuff we synced as done so we don't keep spamming it
+	//			snapShot = newSnapShot;
+	//		}
+	//	}
+	//}
+
+	//////////////////////////////////////////////////////////////////////////
+
 	Waypoint::ConnectionList::iterator it = m_Connections.begin();
-	for ( ; it != m_Connections.end(); ++it )
+	for ( int index = 0; it != m_Connections.end(); ++it, ++index )
 	{
 		ConnectionInfo & ci = (*it);
 
@@ -95,24 +128,37 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 			}
 		}
 
-		if ( fullSync || ci.CheckFlag( F_LNK_NEEDSYNC ) ) {
+		if ( fullSync ) {
+			ci.snapShot.Clear();
+		}
+
+		ConnectionInfo::ConnectionSnapShot newSnapShot = ci.snapShot;
+
+		RemoteLib::DataBufferStatic<2048> localBuffer;
+		localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		newSnapShot.Sync( "fromx", GetPosition().x, localBuffer );
+		newSnapShot.Sync( "fromy", GetPosition().y, localBuffer );
+		newSnapShot.Sync( "fromz", GetPosition().z + g_fTopPathOffset, localBuffer );
+		newSnapShot.Sync( "tox", ci.m_Connection->GetPosition().x, localBuffer );
+		newSnapShot.Sync( "toy", ci.m_Connection->GetPosition().y, localBuffer );
+		newSnapShot.Sync( "toz", ci.m_Connection->GetPosition().z + g_fBottomPathOffset, localBuffer );
+		newSnapShot.Sync( "color", linkColor.rgba(), localBuffer );
+		
+		const uint32 writeErrors = localBuffer.endWrite();
+		assert( writeErrors == 0 );
+
+		if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
 			db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 			db.startSizeHeader();
-			db.writeInt32( RemoteLib::ID_line );
-			db.writeString( va( "wpc/wp_%d_to%d", GetUID(), ci.m_Connection->GetUID() ) );
-			db.writeFloat16( GetPosition().x, 0 );
-			db.writeFloat16( GetPosition().y, 0 );
-			db.writeFloat16( ci.m_Connection->GetPosition().x, 0 );
-			db.writeFloat16( ci.m_Connection->GetPosition().y, 0 );
-			db.writeInt8( linkColor.r() );
-			db.writeInt8( linkColor.g() );
-			db.writeInt8( linkColor.b() );
-			db.writeInt8( linkColor.a() );
+			db.writeInt32( RemoteLib::ID_qmlComponent );
+			db.writeInt32( GetUID() | ( index<<30 ) );
+			db.writeSmallString( "connection" );
+			db.append( localBuffer );
 			db.endSizeHeader();
-			if ( db.endWrite() > 0 ) {
-				ci.SetFlag( F_LNK_NEEDSYNC );
-			} else {
-				ci.ClearFlag( F_LNK_NEEDSYNC );
+
+			if ( db.endWrite() == 0 ) {
+				// mark the stuff we synced as done so we don't keep spamming it
+				ci.snapShot = newSnapShot;
 			}
 		}
 	}
@@ -166,8 +212,6 @@ bool Waypoint::ConnectTo(Waypoint *_wp, obuint32 _flags)
 		info.m_Connection = _wp;
 		info.m_ConnectionFlags = _flags;
 		m_Connections.push_back(info);
-
-		m_NeedsSynced = true;
 		return true;
 	}
 	return false;
@@ -180,7 +224,6 @@ void Waypoint::DisconnectFrom(const Waypoint *_wp)
 	{
 		if((*it).m_Connection == _wp) {
 			m_Connections.erase(it++);
-			m_NeedsSynced = true;
 		} else
 			++it;
 	}
