@@ -2,8 +2,6 @@ import QtQuick 1.0
 import Qt3D 1.0
 import Qt3D.Shapes 1.0
 
-import "entity.js" as Script
-
 Item3D {
     id: entity
     enabled: true
@@ -26,8 +24,11 @@ Item3D {
     property int maxhealth: 1.0
     property int armor: 0.0
     property int maxarmor: 0.0
-    property real entRadius : 64.0
-    property real entHeight : 64.0
+//    property real entRadius : 64.0
+//    property real entHeight : 64.0
+    property real entSizeX: 5.0
+    property real entSizeY: 5.0
+    property real entSizeZ: 5.0
     property real fov: 90.0;
 
     property bool showCylinder: true;
@@ -108,12 +109,6 @@ Item3D {
     onMaxhealthChanged: {
         //entList.updateEntity( { 'handle' : handle, 'maxhealth' : maxhealth } )
     }
-    onEntRadiusChanged:  {
-        //console.debug( "onEntRadiusChanged " + entRadius );
-    }
-    onEntHeightChanged: {
-        //height6
-    }
     onFovChanged: {
     }
 
@@ -123,8 +118,8 @@ Item3D {
 
         Cylinder {
             id: cyl
-            radius: entity.entRadius
-            length: entity.entHeight
+            radius: entity.entSizeZ
+            length: Math.max( entity.entSizeX, entity.entSizeY ) * 0.5
             effect: Effect {
                 color: entity.activeColor
             }
@@ -151,7 +146,7 @@ Item3D {
         enabled: entity.showBox
 
         Cube  {
-            scale: 32
+            scale: 1
             effect: Effect {
                 blending: true
                 color: entity.activeColor
@@ -159,23 +154,27 @@ Item3D {
             }
 
             onClicked: {
-                console.debug( "Clicked " + name );
+                console.debug( "Clicked " + entity.name );
             }
             onDoubleClicked: {
-                console.debug( "DblClicked " + name );
+                console.debug( "DblClicked " + entity.name );
             }
             onHoverEnter: {
-                console.debug( "HoverEnter " + name );
+                console.debug( "HoverEnter " + entity.name );
             }
             onHoverLeave: {
-                console.debug( "HoverLeave " + name );
+                console.debug( "HoverLeave " + entity.name );
             }
             onPressed: {
-                console.debug( "Pressed " + name );
+                console.debug( "Pressed " + entity.name );
             }
             onReleased: {
-                console.debug( "Released " + name );
+                console.debug( "Released " + entity.name );
             }
+
+            transform: [
+                 Scale3D { scale: Qt.vector3d(entity.entSizeX, entity.entSizeY, entity.entSizeZ) }
+            ]
         }
     }
 

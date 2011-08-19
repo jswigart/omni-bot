@@ -28,6 +28,7 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 	, trayIconDisconnected( ":/RemoteDebugWindow/Resources/disconnected.png" )
 	, trayIconConnected( ":/RemoteDebugWindow/Resources/connected.png" )
+	, objComponents( NULL )
 {
 	ui.setupUi(this);
 
@@ -68,10 +69,13 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 	
 	mainContext = engine->contextForObject(objViewPort);
 	
-	CacheComponent( engine, qmlEntityComponent, "./qml/common/entity.qml");
+	objComponents = new QObject();
+
+	//CacheComponent( engine, qmlEntityComponent, "./qml/common/entity.qml");
 }
 
 RemoteDebugWindow::~RemoteDebugWindow() {
+	delete objComponents;
 }
 
 void RemoteDebugWindow::InitView( QDeclarativeView *view, const QUrl & file ) {
@@ -102,11 +106,30 @@ void RemoteDebugWindow::CacheComponent(QDeclarativeEngine *engine, QDeclarativeC
 		qDebug() << component->errors();
 
 		QMessageBox msgBox(this);
-		msgBox.setText("Qml Error.");
+		msgBox.setText("Component Not Found.");
 		msgBox.setInformativeText( component->errorString() );
 		msgBox.setStandardButtons(QMessageBox::Ok);
 		msgBox.exec();
+
+		delete component;
+		component = NULL;
 	}
+}
+
+QDeclarativeComponent * RemoteDebugWindow::FindComponentType( const QString & componentName ) {
+	QDeclarativeComponent *component = objComponents->findChild<QDeclarativeComponent*>( componentName );
+	if ( !component ) {
+		QString componentFile;
+		QTextStream stream( &componentFile );
+		stream << "./qml/common/" << componentName << ".qml";
+		
+		CacheComponent( ui.declarativeMap->engine(), component, componentFile );
+		if ( component ) {
+			component->setObjectName( componentName );
+			component->setParent( objComponents );
+		}
+	}
+	return component;
 }
 
 void RemoteDebugWindow::writeSettings()
@@ -330,9 +353,9 @@ void RemoteDebugWindow::processMessages() {
 				tcpSocket->write( (char*)&tagId, 4 );
 				break;
 			}
-		case RemoteLib::ID_qmlEntity:
+		case RemoteLib::ID_qmlComponent:
 			{
-				updateEntity( db, blockSize-4 );				
+				updateComponent( db, blockSize-4 );				
 				break;
 			}
 		case RemoteLib::ID_delete:
@@ -346,31 +369,6 @@ void RemoteDebugWindow::processMessages() {
 		case RemoteLib::ID_treeNode:
 			{
 				msgTreeNode( db );
-				break;
-			}
-		case RemoteLib::ID_circle:
-			{
-				//ui.graphics2d->msgCircle( db );
-				break;
-			}
-		case RemoteLib::ID_line:
-			{
-				//ui.graphics2d->msgLine( db );
-				break;
-			}
-		case RemoteLib::ID_obb:
-			{
-				//ui.graphics2d->msgRect( db );
-				break;
-			}
-		case RemoteLib::ID_image:
-			{
-				//ui.graphics2d->msgImage( db );
-				break;
-			}
-		case RemoteLib::ID_token:
-			{
-				//ui.graphics2d->msgToken( db );
 				break;
 			}
 		default:
@@ -452,7 +450,7 @@ void RemoteDebugWindow::deleteEntity( int entityHandle ) {
 	delete entity;
 }
 
-void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize ) {
+void RemoteDebugWindow::updateComponent( RemoteLib::DataBuffer & db, int blockSize ) {
 	const uint32 baseBytes = db.getBytesRead();
 
 	// there should ALWAYS be an entity handle
@@ -460,11 +458,28 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize 
 	if(!db.readInt32(entityHandle)) {
 		return;
 	}
+	enum { MaxPropertySize = 256 };
+	char componentName[ MaxPropertySize ] = {};
+	db.readSmallString( componentName, MaxPropertySize );
+
+	QDeclarativeComponent * component = FindComponentType( componentName );
+	if ( component == NULL ) {
+		QMessageBox msgBox(this);
+		msgBox.setText("Unknown Component type, disconnecting...");
+		msgBox.setInformativeText( QString("Component Type Not Found: ") + componentName );
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
+
+		tcpSocket->disconnect();
+		return;
+	}
+
+	bool finishEntity = false;
 
 	QGraphicsObject * entity = entityFromHandle( entityHandle );
 	if ( !entity ) {
 		QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(objViewPort);
-		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(qmlEntityComponent->beginCreate(mainContext));
+		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(component->beginCreate(mainContext));
 		item->setParentItem( rootItem );
 		item->setParent( rootItem );
 		item->setData(EntityHandle,entityHandle);
@@ -472,12 +487,11 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize 
 
 		entity->setProperty( "handle", entityHandle );
 
-		qmlEntityComponent->completeCreate();
+		finishEntity = true;
 	}
 
 	uint32 blockBytesRead = 0;
 
-	enum { MaxPropertySize = 256 };
 	char propertyName[ MaxPropertySize ] = {};
 	while( db.readSmallString( propertyName, MaxPropertySize ) ) {
 		QVariant prop = entity->property( propertyName );
@@ -527,6 +541,17 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize 
 					}
 					break;
 				}
+			case QMetaType::QColor:
+				{
+					int val = 0;
+					if ( db.readInt32( val ) ) {
+						QColor newColor( val );
+						if ( prop != val ) {
+							entity->setProperty( propertyName, val );
+						}
+					}
+					break;
+				}
 			default:
 				{
 					QString propTypeName = prop.typeName();
@@ -539,5 +564,9 @@ void RemoteDebugWindow::updateEntity( RemoteLib::DataBuffer & db, int blockSize 
 		if ( blockBytesRead >= blockSize ) {
 			break;
 		}
+	}
+
+	if ( finishEntity ) {
+		component->completeCreate();
 	}
 }

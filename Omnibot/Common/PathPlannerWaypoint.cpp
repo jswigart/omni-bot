@@ -472,14 +472,12 @@ void PathPlannerWaypoint::Update()
 				if ((*it).second->m_ConnectionFlags & F_LNK_CLOSED)
 				{
 					(*it).second->m_ConnectionFlags &= ~F_LNK_CLOSED;
-					(*it).second->m_ConnectionFlags |= F_LNK_NEEDSYNC;
 				}
 				break;
 			case B_PATH_CLOSED:
 				if (!((*it).second->m_ConnectionFlags & F_LNK_CLOSED))
 				{
 					(*it).second->m_ConnectionFlags |= F_LNK_CLOSED;
-					(*it).second->m_ConnectionFlags |= F_LNK_NEEDSYNC;
 
 					//////////////////////////////////////////////////////////////////////////
 					Event_DynamicPathsChanged m(0xFFFF, (*it).second->m_Connection->GetUID());

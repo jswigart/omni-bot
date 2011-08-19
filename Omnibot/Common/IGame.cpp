@@ -681,7 +681,7 @@ void IGame::UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db 
 }
 void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
 	RemoteLib::DataBufferStatic<2048> localBuffer;
-	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );;
+	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 
 	EntitySnapShot newSnapShot = snapShot;
 
@@ -707,11 +707,9 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 		newSnapShot.Sync( "z", entPosition.z, localBuffer );
 		newSnapShot.Sync( "classid", entClass, localBuffer );
 
-		float oldHdg = Mathf::RadToDeg( facingVector.XYHeading() );
-		float oldPitch = Mathf::RadToDeg( facingVector.GetPitch() );
+		const float heading = Mathf::RadToDeg( facingVector.XYHeading() );
+		const float pitch = Mathf::RadToDeg( facingVector.GetPitch() );
 
-		float heading = 0.0f, pitch = 0.0f, radius = 0.0f;
-		facingVector.ToSpherical( heading, pitch, radius );
 		newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
 		newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
 		newSnapShot.Sync( "teamid", InterfaceFuncs::GetEntityTeam( ent.m_Entity ), localBuffer );
@@ -721,11 +719,12 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 			newSnapShot.Sync( "armor", hlth.m_CurrentArmor, localBuffer );
 			newSnapShot.Sync( "maxarmor", hlth.m_MaxArmor, localBuffer );
 		}
-		
-		if ( EngineFuncs::EntityLocalAABB( ent.m_Entity, localBounds ) ) {
-			const float entRadius = Mathf::Min( localBounds.GetAxisLength( 0 ), localBounds.GetAxisLength( 0 ) ) * 0.5f;
-			newSnapShot.Sync( "entRadius", entRadius, localBuffer );
-			newSnapShot.Sync( "entHeight", localBounds.GetAxisLength( 2 ), localBuffer );
+
+		Box3f worldBounds;
+		if ( EngineFuncs::EntityWorldOBB( ent.m_Entity, worldBounds ) ) {
+			newSnapShot.Sync( "entSizeX", worldBounds.Extent[0], localBuffer );
+			newSnapShot.Sync( "entSizeY", worldBounds.Extent[1], localBuffer );
+			newSnapShot.Sync( "entSizeZ", worldBounds.Extent[2], localBuffer );
 		}
 
 		ClientPtr bot = GetClientByIndex( ent.m_Entity.GetIndex() );
@@ -740,8 +739,9 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
 		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_qmlEntity );
+		db.writeInt32( RemoteLib::ID_qmlComponent );
 		db.writeInt32( ent.m_Entity.AsInt() );
+		db.writeSmallString( "entity" );
 		db.append( localBuffer );
 		db.endSizeHeader();
 
