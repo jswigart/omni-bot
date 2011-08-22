@@ -254,6 +254,7 @@ global OnMapLoad = function()
 	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
 
 	SetGoalPriority( "SWITCH.*", 0.7 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Vent" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
@@ -261,9 +262,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_wheel" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_nerf" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alsnipe.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 
 	Util.SetMaxUsersInProgress( 2, Map.Flag_hose_head );
 
