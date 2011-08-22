@@ -22,6 +22,7 @@ global Map =
 	Repair_mg42_3_4 = "REPAIRMG42_mg42_3_4",
 	DispenseAmmoTime = 10,
 	DontDispenseAmmo = true,
+	Suicide = true,
 
 	//set status' for conditionals
 	//FlagStatus = 0, //0 nobody, 1 axis, 2 allies
@@ -54,6 +55,11 @@ global Map =
 
 		//allies should plant tower first
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
+		
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 
 		SetGoalPriority( "CALL.*", 0.6 );
 		SetGoalPriority( "ARTILLERY.*", 0.6 );
@@ -102,6 +108,9 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
+		
+		Wp.SetWaypointFlag( "roofjump1", "allies", false );
+		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 
 		//don't bother trying to defuse this
 		RTCWUtil.DisableGoal( "DEFUSE_Main_Entrance.*" );
@@ -116,6 +125,9 @@ global Map =
 		}
 
 		Map.DocStatus = 1;
+		
+		Wp.SetWaypointFlag( "roofjump1", "allies", false );
+		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_doc_defend_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_doc_panzer_.*" );
@@ -133,8 +145,7 @@ global Map =
 
 		// Hold the enemy in the bunker/forest respectivly
 		SetGoalPriority( "CALL.*", 0.7 );
-		SetGoalPriority( "ARTILLERY.*", 0.7 );
-
+		
 		Util.MapDebugPrint( "Decoder_Manual_Taken" );
 	},
 
@@ -184,7 +195,6 @@ global Map =
 
 		// dont call arty as much
 		SetGoalPriority( "CALL.*", 0.5 );
-		SetGoalPriority( "ARTILLERY.*", 0.5 );
 
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
 	},
@@ -269,7 +279,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_forest_[1234]" );
 
 	SetGoalPriority( "CALL.*", 1.5 );
-	SetGoalPriority( "ARTILLERY.*", 1.5 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_rMeeting.*", 0.6 );
 	SetGoalPriority( "DEFEND_axis_doc_del_.*", 0.7 );
 
@@ -327,6 +337,14 @@ global OnMapLoad = function()
 			},
 		},
 	};
+	
+	yield(); yield();
+
+	// Martin - moving so it gets enabled
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+	}
 
 	Util.Routes( Maproutes );
 	Util.MapDebugPrint( "OnMapLoad" );
