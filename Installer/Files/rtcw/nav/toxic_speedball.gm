@@ -176,6 +176,28 @@ global Map =
 		Map.Airstrike.rsouthdoor.Enabled = false;
 		Map.Airstrike.rnorthdoor.Enabled = false;
 	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	
 	AlliesWin = function()
 	{
 		if ( TestMap ) {
@@ -220,6 +242,8 @@ global OnMapLoad = function()
 	}
 	
 	thread( Map.panzertimer );
+	
+	ras = OnTriggerRegion( AABB( -2224.000,-344.000,401.000,-1794.000,1.000,475.000 ), Map.DisableCombatMove );
 
 	OnTrigger( "MISSING_STRING", Map.Allied_Flag_Taken );
 	OnTrigger( "MISSING_STRING", Map.Axis_Flag_Taken );
@@ -324,6 +348,55 @@ global OnMapLoad = function()
 					},
 				},
 			},
+			ROUTE_bspawn =
+			{
+				ROUTE_bcargo =
+				{
+					ROUTE_bsewer =
+					{
+						ROUTE_bmidcenter = {},
+						ROUTE_boverlook = 
+						{
+							Weight = 2,
+							ROUTE_bnorthcenter ={},
+						},
+					},
+					ROUTE_bwesttank =
+					{
+						ROUTE_bmidcenter = {},
+						ROUTE_bsouthcenter = {},
+					},
+				},
+				ROUTE_bboxes =
+				{
+					ROUTE_bsewer =
+					{
+						ROUTE_bmidcenter = {},
+						ROUTE_boverlook = 
+						{
+							Weight = 2,
+							ROUTE_bnorthcenter ={},
+						},
+					},
+					ROUTE_bwesttank =
+					{
+						ROUTE_bmidcenter = {},
+						ROUTE_bsouthcenter = {},
+					},
+				},
+				ROUTE_bladder =
+				{
+					Weight = 2,
+					ROUTE_beasttank =
+					{
+						ROUTE_bmidcenter = {},
+						ROUTE_btankmg42 =
+						{
+							ROUTE_bsouthcenter = {},
+						},
+					},
+				},
+			},
 		},
 		CAPPOINT_axiscap =
 		{
@@ -410,7 +483,7 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		AIRSTRIKE_rDeliver1 =
+		AIRSTRIKE_rDeliver_1 =
 		{
 			ROUTE_spawnflag =
 			{
@@ -420,6 +493,104 @@ global OnMapLoad = function()
 					ROUTE_boverlook = {},
 				},
 				ROUTE_bmidcenter = {},
+			},
+		},
+		// ** ALLIES **
+		CAPPOINT_alliescap =
+		{
+			ROUTE_alliesdocsteal =
+			{
+				ROUTE_rsouthcenter =
+				{
+					ROUTE_roverlook =
+					{
+						ROUTE_rsewer =
+						{
+							ROUTE_rboxes ={},
+							ROUTE_rcargo = {Weight=3,},
+						},
+						ROUTE_reasttank =
+						{
+							ROUTE_rboxes ={},
+							ROUTE_rcargo = {},
+							ROUTE_rladder = {},
+						},
+					},
+				},
+				ROUTE_rmidcenter =
+				{
+					ROUTE_rsewer =
+					{
+						ROUTE_rboxes ={},
+						ROUTE_rcargo = {Weight=3,},
+					},
+					ROUTE_reasttank =
+					{
+						ROUTE_rboxes ={},
+						ROUTE_rcargo = {},
+						ROUTE_rladder = {},
+					},
+					ROUTE_rwesttank =
+					{
+						ROUTE_rladder = {},
+					},
+				},
+				ROUTE_rnorthcenter =
+				{
+					ROUTE_reasttank =
+					{
+						ROUTE_rboxes ={},
+						ROUTE_rcargo = {Weight=3,},
+					},
+					ROUTE_rwesttank =
+					{
+						ROUTE_rladder = {},
+					},
+					ROUTE_rtankmg42 =
+					{
+						ROUTE_rladder = {},
+					},
+				},
+			},
+		},
+		ATTACK_bAttack_1 =
+		{
+			ROUTE_spawnflag =
+			{
+				ROUTE_rsouthcenter =
+				{
+					ROUTE_roverlook =
+					{
+						ROUTE_rsewer =	{},
+						ROUTE_reasttank = {},
+					},
+				},
+				ROUTE_rmidcenter =
+				{
+					Weight = 2,
+					ROUTE_rsewer =	{},
+					ROUTE_reasttank = {},
+					ROUTE_rwesttank = {},
+				},
+				ROUTE_rnorthcenter =
+				{
+					Weight = 2,
+					ROUTE_reasttank = {},
+					ROUTE_rwesttank = {},
+					ROUTE_rtankmg42 = {},
+				},
+			},
+		},
+		AIRSTRIKE_bDeliver_1 =
+		{
+			ROUTE_spawnflag =
+			{
+				ROUTE_rsouthcenter =
+				{
+					Weight = 2,
+					ROUTE_roverlook = {},
+				},
+				ROUTE_rmidcenter = {},
 			},
 		},
 	};
