@@ -40,7 +40,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
 			RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		}
 
@@ -160,6 +160,7 @@ global Map =
 		}
 
 		Map.FlagStatus = 2;
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bQuickroute_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bQuickroute" );
@@ -176,7 +177,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_cellar" );
 		}
 
-		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+		
 
 		Util.MapDebugPrint( "flag_obj_Allies_Captured" );
 	},
@@ -237,7 +238,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
 	SetGoalPriority( "CALL.*", 0.6 );
-	SetGoalPriority( "ARTILLERY.*", 0.6 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	RTCWUtil.SwitchSoldierWeapons( TEAM.AXIS, WEAPON.PANZERFAUST );
 
