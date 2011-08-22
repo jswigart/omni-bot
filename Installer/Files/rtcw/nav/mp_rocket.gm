@@ -431,7 +431,7 @@ global OnMapLoad = function()
 		},
 		DEFEND_axis_key_defend_1 = 
 		{
-			ROUTE_axisspawn =
+			ROUTE_axis_spawn =
 			{
 				ROUTE_upper_axisspawn = {},
 				ROUTE_lower_axisspawn = {},
