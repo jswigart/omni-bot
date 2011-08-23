@@ -327,12 +327,12 @@ public:
 
 	TriggerShape()
 		: m_NameHash(0)
+		, m_ExpireTime(0)
 		, m_NextUpdateTime(0)
 		, m_UpdateDelay(0)
-		, m_ExpireTime(0)
-		, m_DeleteMe(false)
 		, m_SerialNum(0)
 		, m_ThisObject(gmVariable::s_null)
+		, m_DeleteMe(false)
 	{
 		static int sNextSerial = 1;
 

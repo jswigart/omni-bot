@@ -15,9 +15,9 @@ bbItem::bbItem(int _type)
 	: m_Owner(0)
 	, m_Target(0)
 	, m_ExpireTime(std::numeric_limits<int>::max())
-	, m_Type(_type)
 	, m_DeleteOnExpire(false)
 	, m_DeleteOnRefCount1(false)
+	, m_Type(_type)
 	, m_InBB(false)
 {
 }

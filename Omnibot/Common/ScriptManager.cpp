@@ -168,7 +168,7 @@ int ImportModuleImpl(gmThread *a_thread, const char *a_filename, gmVariable &a_t
 	}
 	catch(const std::exception & ex)
 	{
-		ex;
+		_UNUSED(ex);
 	}
 	
 	GM_EXCEPTION_MSG("Unable to execute %s",a_filename);
@@ -890,7 +890,7 @@ void ScriptManager::cmdScriptRunFile(const StringVector &_args)
 		}
 		catch(const std::exception & ex)
 		{
-			ex;
+			//ex;
 			LOGCRIT("Filesystem Exception: "<<ex.what());
 		}
 	}

@@ -261,7 +261,7 @@ namespace InterfaceFuncs
 			InterfaceMsg(msg);
 			return data.m_Value;
 		}
-		return NULL;
+		return 0;
 	}
 
 	int GetGameType()
