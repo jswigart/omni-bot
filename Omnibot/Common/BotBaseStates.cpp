@@ -999,8 +999,8 @@ namespace AiState
 		: m_UserName(0)
 		, m_CallingThread(GM_INVALID_THREAD)
 		, m_DestinationIndex(0)
-		, m_PathSuccess(false)
 		, m_PathFailed(None)
+		, m_PathSuccess(false)
 	{
 		m_UserName = Utils::MakeHash32(_user);
 	}

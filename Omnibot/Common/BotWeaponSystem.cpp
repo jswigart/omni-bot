@@ -67,8 +67,8 @@ namespace AiState
 
 	AttackTarget::AttackTarget() 
 		: StateChild("AttackTarget")
-		, m_CurrentWeaponHash(0)
 		, m_AimPosition(Vector3f::ZERO)
+		, m_CurrentWeaponHash(0)
 		, m_ShootTheBastard(0)
 		, m_TargetExceedsWeaponLimits(0)
 	{
@@ -243,8 +243,8 @@ namespace AiState
 		, m_ReactionTimeInMS	(0)
 		, m_AimPersistance		(2000)
 		, m_DesiredWeaponID		(0)
-		, m_OverrideWeapon		(0)
 		, m_DefaultWeapon		(0)
+		, m_OverrideWeapon		(0)
 		, m_CurrentRequestOwner	(0)
 	{
 		//AppendState(new AttackTargetOffhand);
@@ -481,7 +481,7 @@ namespace AiState
 			// If it has changed, set our new weapon.
 			if(!m_CurrentWeapon || !m_CurrentWeapon->IsWeapon(currentWeapon.m_WeaponId))
 			{
-				bool bFound = false;
+				//bool bFound = false;
 				WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
 				for( ; it != itEnd; ++it)
 				{
@@ -489,7 +489,7 @@ namespace AiState
 					{
 						m_CurrentWeapon = (*it);
 						m_CurrentWeapon->Select();
-						bFound = true;
+						//bFound = true;
 
 						Event_WeaponChanged weapChanged = { currentWeapon.m_WeaponId };
 						MessageHelper hlpr(ACTION_WEAPON_CHANGE, &weapChanged, sizeof(weapChanged));

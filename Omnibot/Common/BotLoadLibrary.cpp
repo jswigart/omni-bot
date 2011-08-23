@@ -8,8 +8,10 @@
 
 #include "BotExports.h"
 
+#ifdef _WIN32
 #pragma warning(disable:4530) //C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
 #pragma warning(disable:4706) //assignment within conditional expression
+#endif // _WIN32
 
 #include <string>
 #include <cstdio>
@@ -79,7 +81,7 @@ const char *Omnibot_FixPath(const char *_path)
 	const int iBufferSize = 512;
 	static char pathstr[iBufferSize] = {0};
 	Omnibot_strncpy(pathstr, _path, iBufferSize);
-	pathstr[iBufferSize-1] = NULL;
+	pathstr[iBufferSize-1] = '\0';
 
 	// unixify the path slashes
 	char *pC = pathstr;
@@ -93,7 +95,7 @@ const char *Omnibot_FixPath(const char *_path)
 	// trim any trailing slash
 	while(*pC == '/' && pC > pathstr)
 	{
-		*pC = NULL;
+		*pC = '\0';
 		--pC;
 	}
 	return pathstr;
@@ -313,7 +315,9 @@ static int StringCompareNoCase(const char *s1, const char *s2)
 
 #include <dlfcn.h>
 #define GetProcAddress dlsym
+#ifndef NULL
 #define NULL 0
+#endif
 
 //////////////////////////////////////////////////////////////////////////	
 void *g_BotLibrary = NULL;

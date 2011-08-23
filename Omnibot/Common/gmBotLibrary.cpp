@@ -96,7 +96,7 @@ static int GM_CDECL gmfEchoMessageToScreen(gmThread *a_thread)
 	GM_CHECK_FLOAT_OR_INT_PARAM(duration, 0);
 	GM_CHECK_STRING_PARAM(msg, 1);
 	//g_EngineFuncs->PrintScreenText(NULL, duration, COLOR::WHITE, msg);
-	Utils::PrintText(Vector3f::ZERO, COLOR::WHITE, IGame::GetDeltaTimeSecs()*2.f, msg);
+	Utils::PrintText(Vector3f::ZERO, COLOR::WHITE, IGame::GetDeltaTimeSecs()*duration, msg);
 	return GM_OK;
 }
 
@@ -1500,11 +1500,11 @@ static int gmfGetEntityPowerups(gmThread *a_thread)
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 
-	bool bSuccess = false;
+	//bool bSuccess = false;
 	BitFlag64 targetFlags;
 	if(gameEnt.IsValid() && InterfaceFuncs::GetEntityPowerUps(gameEnt, targetFlags))
 	{
-		bSuccess = true;
+		//bSuccess = true;
 		for(int i = 1; i < a_thread->GetNumParams(); ++i)
 		{
 			GM_CHECK_INT_PARAM(flag, i);
