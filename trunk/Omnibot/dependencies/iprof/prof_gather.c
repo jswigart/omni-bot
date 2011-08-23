@@ -3,6 +3,7 @@
 #include <string.h>
 #include "prof.h"
 #include "prof_internal.h"
+#include <stdint.h>
 
 Prof_Define(_global);
 
@@ -24,7 +25,7 @@ static int zone_hash_mask  = 0;
 
 static int hash(Prof_Zone *z, Prof_Zone_Stack *s)
 {
-   int n = (int) z + (int) s;
+   int n = (uintptr_t) z + (uintptr_t) s;
    return n + (n >> 8);
 }
 

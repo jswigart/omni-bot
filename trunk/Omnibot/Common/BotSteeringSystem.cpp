@@ -18,13 +18,13 @@ namespace AiState
 		: StateChild("SteeringSystem")
 		, m_TargetVector	(Vector3f::ZERO)
 		, m_TargetRadius	(32.f)
-		, m_TargetVector3d	(false)
+		, m_MoveMode		(Run)
 		, m_DistanceToTarget(0.f)
 		, m_MoveVec			(Vector3f::ZERO)
-		, m_MoveType		(Normal)
-		, m_MoveMode		(Run)
 		, m_NoAvoidTime		(0)
+		, m_MoveType		(Normal)
 		, m_bMoveEnabled	(true)
+		, m_TargetVector3d	(false)
 	{
 	}
 

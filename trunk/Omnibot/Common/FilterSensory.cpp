@@ -12,12 +12,12 @@ int FilterSensory::ANYPLAYERCLASS = 0;
 
 FilterSensory::FilterSensory(Client *_client, AiState::SensoryMemory::Type _type) 
 	: m_Client			(_client)
-	, m_MaxDistance		(-1.f)
-	, m_MemorySpan		(0)
-	, m_Type			(_type)
-	, m_AnyPlayerClass	(false)
 	, m_NumPositions	(0)
+	, m_MaxDistance		(-1.f)
+	, m_Type			(_type)
+	, m_MemorySpan		(0)
 	, m_SortType		(Sort_None)
+	, m_AnyPlayerClass	(false)
 {
 	ClearPositions();
 	ResetClasses();
