@@ -29,8 +29,8 @@ namespace AiState
 		: StateChild("CaptureTheFlag")
 		, FollowPathUser("CaptureTheFlag")
 		, m_GoalState(Idle)
-		, m_NextMoveTime(0)
 		, m_LastFlagState(0)
+		, m_NextMoveTime(0)
 	{
 	}
 
@@ -998,9 +998,9 @@ namespace AiState
 	FollowPathUser::FollowPathUser(const String &_user)
 		: m_UserName(0)
 		, m_CallingThread(GM_INVALID_THREAD)
-		, m_PathFailed(None)
 		, m_DestinationIndex(0)
 		, m_PathSuccess(false)
+		, m_PathFailed(None)
 	{
 		m_UserName = Utils::MakeHash32(_user);
 	}
@@ -1028,11 +1028,11 @@ namespace AiState
 
 	FollowPath::FollowPath() 
 		: StateChild("FollowPath")
-		, m_RayDistance(-1.0f)
+		, m_PathStatus(PathFinished)
 		, m_PtOnPath(Vector3f::ZERO)
 		, m_LookAheadPt(Vector3f::ZERO)
-		, m_PathStatus(PathFinished)
 		, m_PassThroughState(0)
+		, m_RayDistance(-1.0f)
 	{
 	}
 

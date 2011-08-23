@@ -78,7 +78,7 @@ Weapon::WeaponFireMode::~WeaponFireMode()
 	if(m_ScriptObject)
 	{
 		gmBind2::Class<WeaponFireMode>::NullifyUserObject(m_ScriptObject);
-		m_ScriptObject = NULL;
+		m_ScriptObject = 0; //NULL;
 	}
 }
 
@@ -727,8 +727,8 @@ Weapon::Weapon(Client *_client/* = 0*/)
 	, m_WeaponID			(0)
 	, m_WeaponAliasID		(0)
 	, m_WeaponLockTime		(0)
-	, m_WeaponNameHash		(0)
 	, m_MinUseTime			(0)
+	, m_WeaponNameHash		(0)
 	, m_LastAmmoUpdate		(0)
 	, m_ScriptObject		(0)
 {
@@ -739,8 +739,8 @@ Weapon::Weapon(Client *_client, const Weapon *_wpn)
 	: m_Client				(_client)
 	, m_WeaponID			(0)
 	, m_WeaponLockTime		(0)
-	, m_MinUseTime			(0)
 	, m_WeaponNameHash		(0)
+	, m_MinUseTime			(0)
 	, m_LastAmmoUpdate		(0)
 	, m_ScriptObject		(0)
 {
@@ -770,7 +770,7 @@ Weapon::~Weapon()
 	if(m_ScriptObject)
 	{
 		gmBind2::Class<Weapon>::NullifyUserObject(m_ScriptObject);
-		m_ScriptObject = NULL;
+		m_ScriptObject = 0; //NULL;
 	}
 }
 

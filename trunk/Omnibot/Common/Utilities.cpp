@@ -64,7 +64,7 @@ namespace Utils
 		}
 		catch(const std::exception&e)
 		{
-			e;
+			_UNUSED(e);
 			OBASSERT(0, e.what());
 		}
 		return false;
@@ -983,7 +983,7 @@ namespace Utils
 			return iRes != IDIGNORE;
 #else
 			vsnprintf(buffer, 2048, _msg, list);
-			assert(_bexp && buffer);
+			assert(_bexp /*&& buffer*/); //cs: gcc - the address of ‘buffer’ will always evaluate as ‘true’
 			return true;
 #endif
 		}
@@ -1044,7 +1044,7 @@ namespace Utils
 	bool GetSegmentOverlap(const Segment3f &_seg1, const Segment3f &_seg2, Segment3f &out)
 	{
 		static float DotThreshold = -0.98f;
-		static float DistanceThreshold = 8.f;
+		//static float DistanceThreshold = 8.f;
 		
 		// TODO: move these out.
 		static float MinOverlapWidth = 10.f;
@@ -1613,7 +1613,7 @@ void filePath::FixPath()
 	// trim any trailing slash
 	while(*pC == '/' && pC > buffer)
 	{
-		*pC = NULL;
+		*pC = '\0';
 		--pC;
 	}
 }

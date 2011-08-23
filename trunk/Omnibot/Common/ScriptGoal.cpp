@@ -95,7 +95,7 @@ namespace AiState
 		if(m_ScriptObject)
 		{
 			gmScriptGoal::NullifyObject(m_ScriptObject);
-			m_ScriptObject = NULL;
+			m_ScriptObject = 0; //NULL;
 		}
 	}
 
@@ -119,7 +119,7 @@ namespace AiState
 	{
 		ScriptGoal *pNewGoal = new ScriptGoal(GetName().c_str());
 		*pNewGoal = *this;
-		pNewGoal->m_ScriptObject = NULL; // dont want to copy this
+		pNewGoal->m_ScriptObject = 0; //NULL; // dont want to copy this
 
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		gmTableObject *pTheirTable = gmScriptGoal::GetUserTable(GetScriptObject(pMachine));

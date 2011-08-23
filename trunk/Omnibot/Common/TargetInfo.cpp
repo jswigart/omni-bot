@@ -27,7 +27,7 @@ TargetInfo::~TargetInfo()
 	if(m_ScriptObject)
 	{
 		gmTargetInfo::NullifyObject(m_ScriptObject);
-		m_ScriptObject = NULL;
+		m_ScriptObject = 0; //NULL;
 	}
 }
 

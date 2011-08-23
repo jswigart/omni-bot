@@ -1910,7 +1910,7 @@ bool PathPlannerWaypoint::DeleteWaypoint(const Vector3f &_pos)
 		m_MovingWaypointIndex = -1;
 
 	// Clear the connect point if we're going to delete it.
-	if(m_ConnectWp = pDeleteMe)
+	if(m_ConnectWp == pDeleteMe)
 		m_ConnectWp = 0;
 
 	if(pDeleteMe && (pDeleteMe->GetPosition() - _pos).Length() < 100.0f)

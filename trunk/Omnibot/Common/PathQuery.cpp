@@ -14,8 +14,8 @@ PathQuery::PathQuery(Client *_client) :
 	m_Client(_client),
 	m_Starts(0),
 	m_Goals(0),
-	m_ReturnPartial(false),
-	m_MaxPathDistance(Utils::FloatMax)
+	m_MaxPathDistance(Utils::FloatMax),
+	m_ReturnPartial(false)
 {
 	/*for(int i = 0; i < MaxDesirabilities; ++i)
 	m_Desirabilities[i] = 0.f;*/

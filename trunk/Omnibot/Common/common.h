@@ -103,7 +103,7 @@ typedef std::list<String> StringList;
 			using ::equal_to;
 		};
 	#else
-		#include <ext/hash_map>
+		#include <ext/hash_map> // cs: deprecated message recommends unordered_map, but that relies on experimental -std=c++0x. tr1/unordered_map is an option ...
 		#include <ext/functional>
 		namespace stdext
 		{
@@ -329,7 +329,7 @@ enum MoveMode
 
 // cs: FIXME: debug version of OBASSERT doesnt build in linux. doesn't like __VA_ARGS__
 #ifdef __linux__ 
-#define OBASSERT(f, sz, ...) (f)
+#define OBASSERT(f, sz, ...) {}	// cs: for gcc warnings, was (f)
 #else // !__linux__
 #ifdef	_DEBUG
 #define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
