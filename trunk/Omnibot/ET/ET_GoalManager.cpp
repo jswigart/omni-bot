@@ -22,13 +22,14 @@ ET_GoalManager::~ET_GoalManager()
 
 void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 {
-	enum { MaxGoals=8 };
+	enum { MaxGoals=10 };
 
 	MapGoalDef Definition[MaxGoals];
 	int NumDefs = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 
+	// NumDefs 1
 	if(_wp->IsFlagOn(F_ET_NAV_MG42SPOT))
 	{
 		/*MapGoalPtr goal(new ET_MobileMG42Goal());
@@ -36,6 +37,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","MOBILEMG42");
 	}
+
+	// NumDefs 2
 	if(_wp->IsFlagOn(F_ET_NAV_MORTAR))
 	{
 		/*MapGoalPtr goal(new ET_MobileMortarGoal());
@@ -43,6 +46,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","MOBILEMORTAR");
 	}
+
+	// NumDefs 3
 	if(_wp->IsFlagOn(F_ET_NAV_ARTSPOT))
 	{
 		/*MapGoalPtr goal(new ET_CallArtyGoal());
@@ -50,6 +55,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","CALLARTILLERY");
 	}
+
+	// NumDefs 4
 	if(_wp->IsFlagOn(F_ET_NAV_ARTYTARGET_S))
 	{
 		/*MapGoalPtr goal(new ET_CallArtyTargetGoal_Static());
@@ -57,6 +64,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","ARTILLERY_S");
 	}
+
+	// NumDefs 5
 	if(_wp->IsFlagOn(F_ET_NAV_ARTYTARGET_D))
 	{
 		/*MapGoalPtr goal(new ET_CallArtyTargetGoal_Dynamic());
@@ -64,6 +73,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","ARTILLERY_D");
 	}
+
+	// NumDefs 6
 	if(_wp->IsFlagOn(F_ET_NAV_MINEAREA))
 	{
 		/*MapGoalPtr goal(new ET_PlantMineGoal());
@@ -71,6 +82,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","PLANTMINE");
 	}
+
+	// NumDefs 7
 	if(_wp->IsFlagOn(F_ET_NAV_CAPPOINT))
 	{
 		/*MapGoalPtr goal(new FlagCapGoal());
@@ -78,6 +91,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","cappoint");
 	}
+
+	// NumDefs 8
 	if(_wp->IsFlagOn(F_ET_NAV_FLAMETHROWER))
 	{
 		/*MapGoalPtr goal(new ET_FlamethrowerGoal());
@@ -85,6 +100,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","FLAME");
 	}
+
+	// NumDefs 9
 	if(_wp->IsFlagOn(F_ET_NAV_PANZER))
 	{
 		/*MapGoalPtr goal(new ET_PanzerGoal());
@@ -92,12 +109,8 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","PANZER");
 	}
-	//version 0.7x feature, per gfs possibly auto create if wp has a name
-	/*if(_wp->IsFlagOn(F_ET_NAV_USERGOAL))
-	{
-		MapGoalPtr goal(new ET_UserGoal());
-		newGoals.push_back(goal);
-	}*/
+
+	// NOTE: pay attention to MaxGoals / NumDefs!!
 
 	RegisterWaypointGoals(_wp,Definition,NumDefs);
 	
