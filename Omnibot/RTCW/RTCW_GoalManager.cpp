@@ -22,13 +22,14 @@ RTCW_GoalManager::~RTCW_GoalManager()
 
 void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 {
-	enum { MaxGoals=32 };
+	enum { MaxGoals=8 };
 
 	MapGoalDef Definition[MaxGoals];
 	int NumDefs = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 
+	// NumDefs 1
 	if(_wp->IsFlagOn(F_RTCW_NAV_ARTSPOT))
 	{
 		/*MapGoalPtr goal(new RTCW_CallArtyGoal());
@@ -36,6 +37,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","CALLARTILLERY");
 	}
+
+	// NumDefs 2
 	if(_wp->IsFlagOn(F_RTCW_NAV_ARTYTARGET_S))
 	{
 		/*MapGoalPtr goal(new RTCW_CallArtyTargetGoal_Static());
@@ -43,6 +46,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","ARTILLERY_S");
 	}
+
+	// NumDefs 3
 	if(_wp->IsFlagOn(F_RTCW_NAV_ARTYTARGET_D))
 	{
 		/*MapGoalPtr goal(new RTCW_CallArtyTargetGoal_Dynamic());
@@ -50,6 +55,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","ARTILLERY_D");
 	}
+
+	// NumDefs 4
 	if(_wp->IsFlagOn(F_RTCW_NAV_CAPPOINT))
 	{
 		/*MapGoalPtr goal(new FlagCapGoal());
@@ -57,6 +64,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","cappoint");
 	}
+
+	// NumDefs 5
 	if(_wp->IsFlagOn(F_RTCW_NAV_PANZER))
 	{
 		/*MapGoalPtr goal(new RTCW_PanzerGoal());
@@ -64,6 +73,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","PANZER");
 	}
+
+	// NumDefs 6
 	if(_wp->IsFlagOn(F_RTCW_NAV_VENOM))
 	{
 		/*MapGoalPtr goal(new RTCW_VenomGoal());
@@ -71,6 +82,8 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","VENOM");
 	}
+
+	// NumDefs 7
 	if(_wp->IsFlagOn(F_RTCW_NAV_FLAMETHROWER))
 	{
 		/*MapGoalPtr goal(new RTCW_FlamethrowerGoal());
@@ -79,12 +92,7 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 		Definition[NumDefs++].Props.SetString("Type","FLAME");
 	}
 
-//  version 0.7x feature, per gfs possibly auto create if wp has a name
-	/*if(_wp->IsFlagOn(F_RTCW_NAV_USERGOAL))
-	{
-		MapGoalPtr goal(new RTCW_UserGoal());
-		newGoals.push_back(goal);
-	}*/
+	// NOTE: pay attention to MaxGoals / NumDefs!!
 
 	RegisterWaypointGoals(_wp,Definition,NumDefs);
 	
