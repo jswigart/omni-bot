@@ -495,10 +495,10 @@ void TriggerManager::DeleteTrigger(const String &_name)
 
 TriggerManager *TriggerManager::m_Instance = 0;
 
-TriggerManager::TriggerManager() 
-	: m_DebugTriggers(false)
+TriggerManager::TriggerManager()
+	: m_NextDrawTime(0)
+	, m_DebugTriggers(false)
 	, m_DrawTriggers(false)
-	, m_NextDrawTime(0)
 {
 	InitCommands();
 }

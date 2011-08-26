@@ -523,11 +523,11 @@ void MapGoal::InternalInitEntityState()
 		if(b2) m_InterfacePosition = m_Position;
 
 		worldbounds.UnTranslate(m_Position);
-		m_LocalBounds = worldbounds;
+		if(b1) m_LocalBounds = worldbounds;
 
 		Vector3f vFwd, vRight, vUp;
 		bool b3 = EngineFuncs::EntityOrientation(GetEntity(), vFwd, vRight, vUp);
-		m_Orientation = Matrix3f(vRight, vFwd, vUp, true);
+		if(b3) m_Orientation = Matrix3f(vRight, vFwd, vUp, true);
 
 		OBASSERT(b1&&b2&&b3,"Lost Entity!");
 	}
@@ -675,7 +675,7 @@ Matrix3f MapGoal::GetMatrix()
 		Vector3f vFwd, vRight, vUp;
 		bool b = EngineFuncs::EntityOrientation(GetEntity(), vFwd, vRight, vUp);
 		OBASSERT(b,"Lost Entity!");
-		m_Orientation = Matrix3f(vRight, vFwd, vUp, false);
+		if(b) m_Orientation = Matrix3f(vRight, vFwd, vUp, false);
 	}
 	return m_Orientation;
 }

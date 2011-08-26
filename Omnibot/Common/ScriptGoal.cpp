@@ -37,9 +37,9 @@ namespace AiState
 			gmTableNode *pNode = avoidTable->GetFirst(tIt);
 			while(pNode)
 			{
-				const char *valueString = pNode->m_value.GetCStringSafe();
+				/*const char *valueString = pNode->m_value.GetCStringSafe();
 				valueString;
-				/*if(!Q_stricmp(valueString,"enemies"))
+				if(!Q_stricmp(valueString,"enemies"))
 				{
 				}
 				if(!Q_stricmp(valueString,"allies"))

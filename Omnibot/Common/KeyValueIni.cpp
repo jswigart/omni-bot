@@ -2,6 +2,8 @@
 #include <vector>
 
 #include "CodeAnalysis.h"
+#include <stdio.h>
+#include <stdarg.h>
 
 /*!
 **
@@ -63,8 +65,9 @@
 namespace KEYVALUEINI
 {
 
-
+#ifdef _WIN32
 #pragma warning(disable:4996) // Disabling stupid .NET deprecated warning.
+#endif
 
 #define DEFAULT_BUFFER_SIZE 1000000
 #define DEFAULT_GROW_SIZE   2000000
@@ -72,7 +75,7 @@ namespace KEYVALUEINI
 #if defined(__linux__) || ((defined __MACH__) && (defined __APPLE__))
 #   define _stricmp(a,b) strcasecmp((a),(b))
 #endif
-	
+
 #if defined(__linux__) || ((defined __MACH__) && (defined __APPLE__))
 #   define _vsnprintf(a,b,c,d) vsnprintf((a),(b),(c),(d))
 #endif
@@ -565,7 +568,7 @@ namespace KEYVALUEINI
 				if ( mData ) {
 					memcpy(mData,data,len);
 					mData[len] = 0;
-				
+
 					//validateMem(mData,len);
 					mLen  = len;
 					mMyAlloc = true;
@@ -900,8 +903,8 @@ class KeyValueSection
 {
 public:
 	KeyValueSection(const char *section,unsigned int lineno)
-		: mSection(section)
-		, mLineNo(lineno)
+		: mLineNo(lineno)
+		, mSection(section)
 	{
 	}
 

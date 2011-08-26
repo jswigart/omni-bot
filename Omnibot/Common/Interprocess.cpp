@@ -38,8 +38,8 @@ public:
 	}
 
 	InterProcessMessageQueue(const char *_name, obuint32 _msgs) :
-		m_MessageQueue(open_or_create, _name, _msgs, sizeof(MsgType)),
-		m_Name(_name)
+		m_Name(_name),
+		m_MessageQueue(open_or_create, _name, _msgs, sizeof(MsgType))
 	{
 	}
 	~InterProcessMessageQueue()

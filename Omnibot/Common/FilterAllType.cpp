@@ -112,7 +112,7 @@ void FilterAllType::Check(int _index, const MemoryRecord &_record)
 			OBASSERT(0, "Not Implemented yet!");
 
 			// Get the distance to this person.
-			float fCurDistanceToSq = (vSensoryPos - _record.m_TargetInfo.m_LastPosition).SquaredLength();
+			/*float fCurDistanceToSq = (vSensoryPos - _record.m_TargetInfo.m_LastPosition).SquaredLength();
 			fCurDistanceToSq;
 			for(obuint32 i = 0; i < m_List.size(); ++i)
 			{
@@ -120,29 +120,29 @@ void FilterAllType::Check(int _index, const MemoryRecord &_record)
 				{
 				case Sort_NearToFar:
 					{
-						/*const MemoryRecord *pRec = 
+						const MemoryRecord *pRec = 
 						float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
 						if(fCurDistanceToSq < fDistSq)
 						{
 							m_List.insert(i, &_record);
 							break;
-						}*/
+						}
 						break;
 					}
 				case Sort_FarToNear:
 					{
-						/*float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
+						float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
 						if(fCurDistanceToSq > fDistSq)
 						{
 
-						}*/
+						}
 						break;
 					}
 				case Sort_None:
 				default:
 					break;
 				}
-			}
+			}*/
 		}
 	}
 }

@@ -881,7 +881,7 @@ StateSimultaneous::StateSimultaneous(const char * _name, const UpdateDelay &_ur)
 
 obReal StateSimultaneous::GetPriority()
 {
-	State *pBestState = NULL;
+	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 	{
@@ -892,7 +892,7 @@ obReal StateSimultaneous::GetPriority()
 		if(fPriority > fBestPriority)
 		{
 			fBestPriority = fPriority;
-			pBestState = pState;
+			//pBestState = pState;
 		}
 	}
 	return fBestPriority;
@@ -1035,7 +1035,7 @@ void StatePrioritized::GetDebugString(StringStr &out)
 
 obReal StatePrioritized::GetPriority()
 {
-	State *pBestState = NULL;
+	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 	{
@@ -1046,7 +1046,7 @@ obReal StatePrioritized::GetPriority()
 		if(fPriority > fBestPriority)
 		{
 			fBestPriority = fPriority;
-			pBestState = pState;
+			//pBestState = pState;
 		}
 	}
 	return fBestPriority;
