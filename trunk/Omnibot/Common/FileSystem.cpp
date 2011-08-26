@@ -384,7 +384,7 @@ void _MountAllCallback(void *data, const char *origdir, const char *str)
 	}
 	catch(const std::exception & ex)
 	{
-		ex;
+		//ex;
 		SOFTASSERTALWAYS(0, "Filesystem: %s", ex.what());
 	}
 }
@@ -418,7 +418,7 @@ void FileSystem::MountArchives(const char *_folder, const char *_mountpoint)
 	}
 	catch(const std::exception & ex)
 	{
-		ex;
+		//ex;
 		SOFTASSERTALWAYS(0, "Filesystem: ", ex.what());
 	}
 }
@@ -758,7 +758,7 @@ obuint64 File::ReadWholeFile(String &_readto)
 	char buffer[BufferSize] = {};
 
 	obuint32 readBytes = 0, totalBytes = 0;
-	while(readBytes = (obuint32)Read(buffer,1,BufferSize))
+	while((readBytes = (obuint32)Read(buffer,1,BufferSize)))
 	{
 		_readto.append(buffer,readBytes);
 		totalBytes += readBytes;

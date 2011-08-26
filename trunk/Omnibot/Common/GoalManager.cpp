@@ -80,17 +80,17 @@ private:
 
 GoalManager::Query::Query(obuint32 _type, Client *_client)
 	: m_GoalType(_type)
-	, m_Client(_client)
 	, m_Team(0)
 	, m_RoleMask(-1)
+	, m_Client(_client)
 	, m_TagName(0)
 	, m_SortType(SORT_BIAS)
+	, m_Error(QueryOk)
 	, m_SkipNoInProgressSlots(true)
 	, m_SkipNoInUseSlots(true)
 	, m_SkipDelayed(true)
 	, m_SkipInUse(true)
 	, m_CheckInRadius(false)
-	, m_Error(QueryOk)
 {
 	Bot(_client);
 }
@@ -882,7 +882,7 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 				LoadedOk = false;
 
 				// release the reference to the table
-				m_LoadedMapGoals = NULL;
+				m_LoadedMapGoals = 0; //NULL;
 			}
 		}
 	}
@@ -1157,7 +1157,7 @@ void GoalManager::cmdGoalMove(const StringVector &_args)
 
 void GoalManager::Shutdown()
 {
-	m_LoadedMapGoals = NULL;
+	m_LoadedMapGoals = 0; //NULL;
 	m_MapGoalList.clear();
 }
 

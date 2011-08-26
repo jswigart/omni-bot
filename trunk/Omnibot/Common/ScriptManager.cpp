@@ -499,7 +499,7 @@ gmVariable ScriptManager::ExecBotCallback(Client *_client, const char *_func)
 	gmTableObject *pBotTable = GetBotTable(_client);
 	if(pBotTable)
 	{
-		gmVariable v = pBotTable->Get(m_ScriptEngine, _func);
+		/*gmVariable v =*/ pBotTable->Get(m_ScriptEngine, _func);
 
 		gmCall call;
 		gmVariable vThis(_client->GetScriptObject());
@@ -583,16 +583,17 @@ bool ScriptManager::ExecuteString(const String &_string, gmVariable *_this/* = N
 
 bool ScriptManager::ExecuteStringLogged(const String &_string)
 {
+	bool b = false;
 	File f;
 	f.OpenForWrite("user/logged.gm", File::Text, true);
 	if(f.IsOpen())
 	{
-		bool b = f.WriteString(_string) && f.WriteNewLine();
+		b = f.WriteString(_string) && f.WriteNewLine();
 		OBASSERT(b, "Problem logging script string!");
 	}
 	EngineFuncs::ConsoleMessage(va("ExecString: %s", _string.c_str()));
 
-	return ExecuteString(_string);
+	return (b && ExecuteString(_string));
 }
 
 void ScriptManager::LogAnyMachineErrorMessages(gmMachine *_machine)
@@ -926,7 +927,7 @@ void ScriptManager::cmdScriptExecute(const StringVector &_args)
 		}
 		catch(const std::exception & ex)
 		{
-			ex;
+			//ex;
 			LOGCRIT("Filesystem Exception: " << ex.what());
 		}
 	}
