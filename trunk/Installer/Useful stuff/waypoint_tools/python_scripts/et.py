@@ -126,7 +126,13 @@ def FindDebugEnabled():
 					tempFile = Path+fname+'~~~'
 					inp = open(origFile)
 					outp = open(tempFile, 'w')
-					s = inp.read()
+
+					try:
+						s = inp.read()
+					except Exception:
+						print('FindDebugEnabled: skipping {0}, check encoding for utf-8'.format(fname))
+						continue
+
 					outtext = re.sub('Debug = 1', 'Debug = 0', s)
 					outp.write(outtext)
 					outp.close()
@@ -149,7 +155,13 @@ def ReplaceDeprecated():
 					tempFile = Path+fname+'~~~'
 					inp = open(origFile)
 					outp = open(tempFile, 'w')
-					s = inp.read()
+
+					try:
+						s = inp.read()
+					except Exception:
+						print('ReplaceDeprecated: skipping {0}, check encoding for utf-8'.format(fname))
+						continue
+
 					outtext = re.sub('ETUtil.DisableGoal', 'Util.DisableGoal', s)
 					outtext = re.sub('ETUtil.EnableGoal', 'Util.EnableGoal', s)
 					outtext = re.sub('ETUtil.RandomSpawn', 'Util.RandomSpawn', s)
@@ -225,7 +237,13 @@ def ListToDo():
 			if ext[1]==".gm":
 				if ext[0].find('_goals') == -1:
 					f = open(Path+fname, 'r')
-					lines = f.readlines()
+
+					try:
+						lines = f.readlines()
+					except Exception:
+						print('ListToDo: skipping {0}, check encoding for utf-8'.format(fname))
+						continue
+
 					todolist = []
 					lineNum = 0
 					for line in lines:
@@ -256,7 +274,13 @@ def NoRouteList():
 			if ext[1]==".gm":
 				if ext[0].find('_goals') == -1:
 					f = open(Path+fname, 'r')
-					contents = f.read()
+
+					try:
+						contents = f.read()
+					except Exception:
+						print('NoRouteList: skipping {0}, check encoding for utf-8'.format(fname))
+						continue
+
 					if contents.find('DeathMatch') < 0 and contents.find('SnipeMap') < 0 and contents.find('PanzerMap') < 0 and contents.find('Util.Routes') < 0:
 						out.write('{0} has no routes initialized\n'.format(ext[0]))
 					f.close()
