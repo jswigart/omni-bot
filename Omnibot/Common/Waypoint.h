@@ -70,7 +70,7 @@ public:
 	inline void SetName( const String & s ) { m_WaypointName = s; }
 	inline const String &GetName() const { return m_WaypointName; }
 	inline int GetUID() const { return (int)m_UID; }
-	inline int GetHash() const { return (intptr_t)this; }
+	inline uintptr_t GetHash() const { return (uintptr_t)this; }
 	inline void SetEntity(GameEntity _ent) { m_Entity = _ent; }
 
 	bool IsConnectedTo(const Waypoint *_wp) const;

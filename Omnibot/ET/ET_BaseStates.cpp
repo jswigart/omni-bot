@@ -1001,8 +1001,8 @@ namespace AiState
 		, FollowPathUser("CallArtillery")
 		, m_MinCampTime(1.f)
 		, m_MaxCampTime(2.f)
-		, m_ExpireTime(0)
 		, m_Stance(StanceStand)
+		, m_ExpireTime(0)
 	{
 		LimitToWeapon().SetFlag(ET_WP_BINOCULARS);
 	}

@@ -50,11 +50,11 @@ public:
 	typedef boost::fast_pool_allocator< std::pair< const int, Waypoint* >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > HashMapAllocator;
 
 #ifdef WIN32
-	typedef stdext::hash_compare<int> HashMapCompare;
-	typedef stdext::hash_map<int, Waypoint*, HashMapCompare, HashMapAllocator > WaypointHashMap;
+	typedef stdext::hash_compare<uintptr_t> HashMapCompare;
+	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, HashMapAllocator > WaypointHashMap;
 #else
-	typedef stdext::hash<int> HashMapCompare;
-	typedef stdext::hash_map<int, Waypoint*, HashMapCompare, stdext::equal_to<int>, HashMapAllocator > WaypointHashMap;
+	typedef stdext::hash<uintptr_t> HashMapCompare;
+	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, stdext::equal_to<int>, HashMapAllocator > WaypointHashMap;
 #endif
 
 	static void SetMovementCapFlags(const NavFlags &_flags);

@@ -374,7 +374,7 @@ bool ET_Client::CanBotSnipe()
 		ET_WP_K43_SCOPE,
 		ET_WP_GARAND_SCOPE,
 	};
-	for(int i = 0; i < sizeof(SniperWeapons)/sizeof(SniperWeapons[0]); ++i)
+	for(unsigned int i = 0; i < sizeof(SniperWeapons)/sizeof(SniperWeapons[0]); ++i)
 	{
 		WeaponPtr w = GetWeaponSystem()->GetWeapon(SniperWeapons[i]);
 		if(w && w->GetFireMode(Primary).HasAmmo())
