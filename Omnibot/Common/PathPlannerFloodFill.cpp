@@ -271,7 +271,7 @@ private:
 	typedef stdext::hash_map<uintptr_t, PlanNode*, HashMapCompare/*, HashMapAllocator*/ > NavHashMap;
 #else
 	typedef stdext::hash<uintptr_t> HashMapCompare;
-	typedef stdext::hash_map<uintptr_t, PlanNode*, HashMapCompare, stdext::equal_to<int>/*, HashMapAllocator*/ > NavHashMap;
+	typedef stdext::hash_map<uintptr_t, PlanNode*, HashMapCompare, stdext::equal_to<uintptr_t>/*, HashMapAllocator*/ > NavHashMap;
 #endif
 	NodeList			m_OpenList;
 	NodeList			m_Solution;

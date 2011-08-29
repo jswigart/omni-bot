@@ -54,7 +54,7 @@ public:
 	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, HashMapAllocator > WaypointHashMap;
 #else
 	typedef stdext::hash<uintptr_t> HashMapCompare;
-	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, stdext::equal_to<int>, HashMapAllocator > WaypointHashMap;
+	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, stdext::equal_to<uintptr_t>, HashMapAllocator > WaypointHashMap;
 #endif
 
 	static void SetMovementCapFlags(const NavFlags &_flags);
