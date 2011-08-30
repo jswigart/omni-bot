@@ -216,6 +216,12 @@
 #ifndef _INCLUDE_PHYSFS_H_
 #define _INCLUDE_PHYSFS_H_
 
+#ifdef _WIN32
+#pragma warning( disable: 4100 )
+#pragma warning( disable: 4127 )
+#pragma warning( disable: 6255 )
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
