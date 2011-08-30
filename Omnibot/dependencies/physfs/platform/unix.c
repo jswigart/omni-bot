@@ -23,9 +23,8 @@
 #include <dirent.h>
 #include <time.h>
 #include <errno.h>
-#include <sys/mount.h>
 
-#if (!defined PHYSFS_NO_PTHREADS_SUPPORT)
+#if (!defined PHYSFS_NO_THREAD_SUPPORT)
 #include <pthread.h>
 #endif
 
@@ -34,6 +33,7 @@
 #    undef PHYSFS_HAVE_MNTENT_H /* don't do both... */
 #  endif
 #  include <sys/ucred.h>
+#  include <sys/mount.h>
 #endif
 
 #ifdef PHYSFS_HAVE_MNTENT_H
@@ -42,6 +42,9 @@
 
 #include "physfs_internal.h"
 
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
 
 int __PHYSFS_platformInit(void)
 {
@@ -100,6 +103,14 @@ void __PHYSFS_platformDetectAvailableCDs(PHYSFS_StringCallback cb, void *data)
     {
         int add_it = 0;
         if (strcmp(ent->mnt_type, "iso9660") == 0)
+            add_it = 1;
+        else if (strcmp(ent->mnt_type, "udf") == 0)
+            add_it = 1;
+
+        /* !!! FIXME: these might pick up floppy drives, right? */
+        else if (strcmp(ent->mnt_type, "auto") == 0)
+            add_it = 1;
+        else if (strcmp(ent->mnt_type, "supermount") == 0)
             add_it = 1;
 
         /* add other mount types here */
@@ -182,12 +193,42 @@ static char *findBinaryInPath(const char *bin, char *envr)
 } /* findBinaryInPath */
 
 
+static char *readSymLink(const char *path)
+{
+    ssize_t len = 64;
+    ssize_t rc = -1;
+    char *retval = NULL;
+
+    while (1)
+    {
+         char *ptr = (char *) allocator.Realloc(retval, (size_t) len);
+         if (ptr == NULL)
+             break;   /* out of memory. */
+         retval = ptr;
+
+         rc = readlink(path, retval, len);
+         if (rc == -1)
+             break;  /* not a symlink, i/o error, etc. */
+
+         else if (rc < len)
+         {
+             retval[rc] = '\0';  /* readlink doesn't null-terminate. */
+             return retval;  /* we're good to go. */
+         } /* else if */
+
+         len *= 2;  /* grow buffer, try again. */
+    } /* while */
+
+    if (retval != NULL)
+        allocator.Free(retval);
+    return NULL;
+} /* readSymLink */
+
+
 char *__PHYSFS_platformCalcBaseDir(const char *argv0)
 {
-    const char *PROC_SELF_EXE = "/proc/self/exe";
     char *retval = NULL;
     char *envr = NULL;
-    struct stat stbuf;
 
     /* fast path: default behaviour can handle this. */
     if ( (argv0 != NULL) && (strchr(argv0, '/') != NULL) )
@@ -198,20 +239,22 @@ char *__PHYSFS_platformCalcBaseDir(const char *argv0)
      *  /proc filesystem, you can get the full path to the current process from
      *  the /proc/self/exe symlink.
      */
-    if ((lstat(PROC_SELF_EXE, &stbuf) != -1) && (S_ISLNK(stbuf.st_mode)))
+    retval = readSymLink("/proc/self/exe");
+    if (retval == NULL)
     {
-        const size_t len = stbuf.st_size;
-        char *buf = (char *) allocator.Malloc(len+1);
-        if (buf != NULL)  /* if NULL, maybe you'll get lucky later. */
-        {
-            if (readlink(PROC_SELF_EXE, buf, len) != len)
-                allocator.Free(buf);
-            else
-            {
-                buf[len] = '\0';  /* readlink doesn't null-terminate. */
-                retval = buf;  /* we're good to go. */
-            } /* else */
-        } /* if */
+        /* older kernels don't have /proc/self ... try PID version... */
+        const unsigned long long pid = (unsigned long long) getpid();
+        char path[64];
+        const int rc = (int) snprintf(path,sizeof(path),"/proc/%llu/exe",pid);
+        if ( (rc > 0) && (rc < sizeof(path)) )
+            retval = readSymLink(path);
+    } /* if */
+
+    if (retval != NULL)  /* chop off filename. */
+    {
+        char *ptr = strrchr(retval, '/');
+        if (ptr != NULL)
+            *ptr = '\0';
     } /* if */
 
     if ((retval == NULL) && (argv0 != NULL))
@@ -221,6 +264,14 @@ char *__PHYSFS_platformCalcBaseDir(const char *argv0)
         BAIL_IF_MACRO(!envr, NULL, NULL);
         retval = findBinaryInPath(argv0, envr);
         allocator.Free(envr);
+    } /* if */
+
+    if (retval != NULL)
+    {
+        /* try to shrink buffer... */
+        char *ptr = (char *) allocator.Realloc(retval, strlen(retval) + 1);
+        if (ptr != NULL)
+            retval = ptr;  /* oh well if it failed. */
     } /* if */
 
     return(retval);
@@ -289,7 +340,7 @@ int __PHYSFS_platformSetDefaultAllocator(PHYSFS_Allocator *a)
 } /* __PHYSFS_platformSetDefaultAllocator */
 
 
-#if (defined PHYSFS_NO_PTHREADS_SUPPORT)
+#if (defined PHYSFS_NO_THREAD_SUPPORT)
 
 PHYSFS_uint64 __PHYSFS_platformGetThreadID(void) { return(0x0001); }
 void *__PHYSFS_platformCreateMutex(void) { return((void *) 0x0001); }
@@ -387,7 +438,7 @@ void __PHYSFS_platformReleaseMutex(void *mutex)
     } /* if */
 } /* __PHYSFS_platformReleaseMutex */
 
-#endif /* !PHYSFS_NO_PTHREADS_SUPPORT */
+#endif /* !PHYSFS_NO_THREAD_SUPPORT */
 
 #endif /* PHYSFS_PLATFORM_UNIX */
 

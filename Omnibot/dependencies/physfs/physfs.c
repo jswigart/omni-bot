@@ -245,7 +245,8 @@ static void __PHYSFS_quick_sort(void *a, PHYSFS_uint32 lo, PHYSFS_uint32 hi,
                 break;
             swapfn(a, i, j);
         } /* while */
-        swapfn(a, i, hi-1);
+        if (i != (hi-1))
+            swapfn(a, i, hi-1);
         __PHYSFS_quick_sort(a, lo, j, cmpfn, swapfn);
         __PHYSFS_quick_sort(a, i+1, hi, cmpfn, swapfn);
     } /* else */
@@ -604,18 +605,21 @@ static int freeDirHandle(DirHandle *dh, FileHandle *openList)
 
 static char *calculateUserDir(void)
 {
-    char *retval = NULL;
-    const char *str = NULL;
+    char *retval = __PHYSFS_platformGetUserDir();
+    if (retval != NULL)
+    {
+        /* make sure it really exists and is normalized. */
+        char *ptr = __PHYSFS_platformRealPath(retval);
+        allocator.Free(retval);
+        retval = ptr;
+    } /* if */
 
-    str = __PHYSFS_platformGetUserDir();
-    if (str != NULL)
-        retval = (char *) str;
-    else
+    if (retval == NULL)
     {
         const char *dirsep = PHYSFS_getDirSeparator();
         const char *uname = __PHYSFS_platformGetUserName();
+        const char *str = (uname != NULL) ? uname : "default";
 
-        str = (uname != NULL) ? uname : "default";
         retval = (char *) allocator.Malloc(strlen(baseDir) + strlen(str) +
                                            strlen(dirsep) + 6);
 
@@ -753,13 +757,6 @@ int PHYSFS_init(const char *argv0)
     BAIL_IF_MACRO(!appendDirSep(&baseDir), NULL, 0);
 
     userDir = calculateUserDir();
-    if (userDir != NULL)
-    {
-        ptr = __PHYSFS_platformRealPath(userDir);
-        allocator.Free(userDir);
-        userDir = ptr;
-    } /* if */
-
     if ((userDir == NULL) || (!appendDirSep(&userDir)))
     {
         allocator.Free(baseDir);
@@ -948,9 +945,9 @@ int PHYSFS_setWriteDir(const char *newDir)
 
 int PHYSFS_mount(const char *newDir, const char *mountPoint, int appendToPath)
 {
-    DirHandle *dh = NULL;
+    DirHandle *dh;
     DirHandle *prev = NULL;
-    DirHandle *i = NULL;
+    DirHandle *i;
 
     BAIL_IF_MACRO(newDir == NULL, ERR_INVALID_ARGUMENT, 0);
 
@@ -995,7 +992,7 @@ int PHYSFS_addToSearchPath(const char *newDir, int appendToPath)
 
 int PHYSFS_removeFromSearchPath(const char *oldDir)
 {
-    DirHandle *i = NULL;
+    DirHandle *i;
     DirHandle *prev = NULL;
     DirHandle *next = NULL;
 

@@ -1,9 +1,9 @@
-///* 
-//7zMain.c
-//Test application for 7z Decoder
-//LZMA SDK 4.43 Copyright (c) 1999-2006 Igor Pavlov (2006-06-04)
-//*/
-//
+/* 
+7zMain.c
+Test application for 7z Decoder
+LZMA SDK 4.43 Copyright (c) 1999-2006 Igor Pavlov (2006-06-04)
+*/
+
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <string.h>

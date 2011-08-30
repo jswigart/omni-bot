@@ -1,11 +1,11 @@
-///* 
-//LzmaStateTest.c
-//Test application for LZMA Decoder (State version)
-//
-//This file written and distributed to public domain by Igor Pavlov.
-//This file is part of LZMA SDK 4.26 (2005-08-02)
-//*/
-//
+/* 
+LzmaStateTest.c
+Test application for LZMA Decoder (State version)
+
+This file written and distributed to public domain by Igor Pavlov.
+This file is part of LZMA SDK 4.26 (2005-08-02)
+*/
+
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <string.h>

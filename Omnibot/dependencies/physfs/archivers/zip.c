@@ -7,7 +7,7 @@
  *   by Gilles Vollant.
  */
 
-#if (defined PHYSFS_SUPPORTS_ZIP) || (defined PHYSFS_SUPPORTS_PK3)
+#if (defined PHYSFS_SUPPORTS_ZIP)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -375,13 +375,13 @@ static int ZIP_fileClose(fvoid *opaque)
 static PHYSFS_sint64 zip_find_end_of_central_dir(void *in, PHYSFS_sint64 *len)
 {
     PHYSFS_uint8 buf[256];
+    PHYSFS_uint8 extra[4] = { 0, 0, 0, 0 };
     PHYSFS_sint32 i = 0;
     PHYSFS_sint64 filelen;
     PHYSFS_sint64 filepos;
     PHYSFS_sint32 maxread;
     PHYSFS_sint32 totalread = 0;
     int found = 0;
-    PHYSFS_uint32 extra = 0;
 
     filelen = __PHYSFS_platformFileLength(in);
     BAIL_IF_MACRO(filelen == -1, NULL, 0);  /* !!! FIXME: unlocalized string */
@@ -419,7 +419,7 @@ static PHYSFS_sint64 zip_find_end_of_central_dir(void *in, PHYSFS_sint64 *len)
         {
             if (__PHYSFS_platformRead(in, buf, maxread - 4, 1) != 1)
                 return(-1);
-            *((PHYSFS_uint32 *) (&buf[maxread - 4])) = extra;
+            memcpy(&buf[maxread - 4], &extra, sizeof (extra));
             totalread += maxread - 4;
         } /* if */
         else
@@ -429,7 +429,7 @@ static PHYSFS_sint64 zip_find_end_of_central_dir(void *in, PHYSFS_sint64 *len)
             totalread += maxread;
         } /* else */
 
-        extra = *((PHYSFS_uint32 *) (&buf[0]));
+        memcpy(&extra, buf, sizeof (extra));
 
         for (i = maxread - 4; i > 0; i--)
         {
@@ -544,8 +544,11 @@ static ZIPentry *zip_find_entry(ZIPinfo *info, const char *path, int *isDir)
 
             if (thispath[pathlen] == '\0') /* found entry? */
                 return(&a[middle]);
+            /* adjust search params, try again. */
+            else if (thispath[pathlen] > '/')
+                hi = middle - 1;
             else
-                hi = middle - 1;  /* adjust search params, try again. */
+                lo = middle + 1;
         } /* if */
     } /* while */
 
@@ -955,7 +958,7 @@ static int zip_entry_cmp(void *_a, PHYSFS_uint32 one, PHYSFS_uint32 two)
     if (one != two)
     {
         const ZIPentry *a = (const ZIPentry *) _a;
-    return(strcmp(a[one].name, a[two].name));
+        return(strcmp(a[one].name, a[two].name));
     } /* if */
 
     return 0;
@@ -966,12 +969,12 @@ static void zip_entry_swap(void *_a, PHYSFS_uint32 one, PHYSFS_uint32 two)
 {
     if (one != two)
     {
-    ZIPentry tmp;
-    ZIPentry *first = &(((ZIPentry *) _a)[one]);
-    ZIPentry *second = &(((ZIPentry *) _a)[two]);
-    memcpy(&tmp, first, sizeof (ZIPentry));
-    memcpy(first, second, sizeof (ZIPentry));
-    memcpy(second, &tmp, sizeof (ZIPentry));
+        ZIPentry tmp;
+        ZIPentry *first = &(((ZIPentry *) _a)[one]);
+        ZIPentry *second = &(((ZIPentry *) _a)[two]);
+        memcpy(&tmp, first, sizeof (ZIPentry));
+        memcpy(first, second, sizeof (ZIPentry));
+        memcpy(second, &tmp, sizeof (ZIPentry));
     } /* if */
 } /* zip_entry_swap */
 
@@ -1444,41 +1447,6 @@ const PHYSFS_Archiver __PHYSFS_Archiver_ZIP =
     ZIP_fileLength,         /* fileLength() method     */
     ZIP_fileClose           /* fileClose() method      */
 };
-
-#if (defined PHYSFS_SUPPORTS_PK3)
-const PHYSFS_ArchiveInfo __PHYSFS_ArchiveInfo_PK3 =
-{
-    "PK3",
-    ZIP_ARCHIVE_DESCRIPTION,
-    "Ryan C. Gordon <icculus@icculus.org>",
-    "http://icculus.org/physfs/",
-};
-
-const PHYSFS_Archiver __PHYSFS_Archiver_PK3 =
-{
-    &__PHYSFS_ArchiveInfo_PK3,
-    ZIP_isArchive,          /* isArchive() method      */
-    ZIP_openArchive,        /* openArchive() method    */
-    ZIP_enumerateFiles,     /* enumerateFiles() method */
-    ZIP_exists,             /* exists() method         */
-    ZIP_isDirectory,        /* isDirectory() method    */
-    ZIP_isSymLink,          /* isSymLink() method      */
-    ZIP_getLastModTime,     /* getLastModTime() method */
-    ZIP_openRead,           /* openRead() method       */
-    ZIP_openWrite,          /* openWrite() method      */
-    ZIP_openAppend,         /* openAppend() method     */
-    ZIP_remove,             /* remove() method         */
-    ZIP_mkdir,              /* mkdir() method          */
-    ZIP_dirClose,           /* dirClose() method       */
-    ZIP_read,               /* read() method           */
-    ZIP_write,              /* write() method          */
-    ZIP_eof,                /* eof() method            */
-    ZIP_tell,               /* tell() method           */
-    ZIP_seek,               /* seek() method           */
-    ZIP_fileLength,         /* fileLength() method     */
-    ZIP_fileClose           /* fileClose() method      */
-};
-#endif
 
 #endif  /* defined PHYSFS_SUPPORTS_ZIP */
 
