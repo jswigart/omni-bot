@@ -33,6 +33,11 @@
 
 #include "zconf.h"
 
+#ifdef _WIN32
+#pragma warning( disable: 4127 )
+#pragma warning( disable: 4131 )
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
