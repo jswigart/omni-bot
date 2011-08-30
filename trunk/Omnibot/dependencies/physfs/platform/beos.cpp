@@ -11,6 +11,18 @@
 
 #ifdef PHYSFS_PLATFORM_BEOS
 
+#ifdef PHYSFS_PLATFORM_HAIKU
+#include <os/kernel/OS.h>
+#include <os/app/Roster.h>
+#include <os/storage/Volume.h>
+#include <os/storage/VolumeRoster.h>
+#include <os/storage/Directory.h>
+#include <os/storage/Entry.h>
+#include <os/storage/Path.h>
+#include <os/kernel/fs_info.h>
+#include <os/device/scsi.h>
+#include <os/support/Locker.h>
+#else
 #include <be/kernel/OS.h>
 #include <be/app/Roster.h>
 #include <be/storage/Volume.h>
@@ -21,6 +33,7 @@
 #include <be/kernel/fs_info.h>
 #include <be/device/scsi.h>
 #include <be/support/Locker.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -161,14 +174,17 @@ static team_id getTeamID(void)
 
 char *__PHYSFS_platformCalcBaseDir(const char *argv0)
 {
-    /* in case there isn't a BApplication yet, we'll construct a roster. */
-    BRoster roster; 
-    app_info info;
-    status_t rc = roster.GetRunningAppInfo(getTeamID(), &info);
-    BAIL_IF_MACRO(rc < B_OK, strerror(rc), NULL);
-    BEntry entry(&(info.ref), true);
+    image_info info;
+    int32 cookie = 0;
+
+    while (get_next_image_info(0, &cookie, &info) == B_OK) {
+        if (info.type == B_APP_IMAGE)
+            break;
+    }
+
+    BEntry entry(info.name, true);
     BPath path;
-    rc = entry.GetPath(&path);  /* (path) now has binary's path. */
+    status_t rc = entry.GetPath(&path);  /* (path) now has binary's path. */
     assert(rc == B_OK);
     rc = path.GetParent(&path); /* chop filename, keep directory. */
     assert(rc == B_OK);

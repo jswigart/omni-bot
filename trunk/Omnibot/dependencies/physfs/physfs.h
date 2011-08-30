@@ -1,4 +1,8 @@
-/** \file physfs.h */
+/**
+ * \file physfs.h
+ *
+ * Main header file for PhysicsFS.
+ */
 
 /**
  * \mainpage PhysicsFS
@@ -334,7 +338,7 @@ PHYSFS_COMPILE_TIME_ASSERT(sint64, sizeof(PHYSFS_sint64) == 8);
  * \sa PHYSFS_setBuffer
  * \sa PHYSFS_flush
  */
-typedef struct
+typedef struct PHYSFS_File
 {
     void *opaque;  /**< That's all you get. Don't touch. */
 } PHYSFS_File;
@@ -369,7 +373,7 @@ typedef struct
  *
  * \sa PHYSFS_supportedArchiveTypes
  */
-typedef struct
+typedef struct PHYSFS_ArchiveInfo
 {
     const char *extension;   /**< Archive file extension: "ZIP", for example. */
     const char *description; /**< Human-readable archive description. */
@@ -391,7 +395,7 @@ typedef struct
  * \sa PHYSFS_VERSION
  * \sa PHYSFS_getLinkedVersion
  */
-typedef struct
+typedef struct PHYSFS_Version
 {
     PHYSFS_uint8 major; /**< major revision */
     PHYSFS_uint8 minor; /**< minor revision */
@@ -399,9 +403,9 @@ typedef struct
 } PHYSFS_Version;
 
 #ifndef DOXYGEN_SHOULD_IGNORE_THIS
-#define PHYSFS_VER_MAJOR 1
-#define PHYSFS_VER_MINOR 1
-#define PHYSFS_VER_PATCH 1
+#define PHYSFS_VER_MAJOR 2
+#define PHYSFS_VER_MINOR 0
+#define PHYSFS_VER_PATCH 2
 #endif  /* DOXYGEN_SHOULD_IGNORE_THIS */
 
 
@@ -531,7 +535,7 @@ __EXPORT__ int PHYSFS_deinit(void);
  * for (i = PHYSFS_supportedArchiveTypes(); *i != NULL; i++)
  * {
  *     printf("Supported archive: [%s], which is [%s].\n",
- *              i->extension, i->description);
+ *              (*i)->extension, (*i)->description);
  * }
  * \endcode
  *
@@ -986,7 +990,7 @@ __EXPORT__ const char *PHYSFS_getRealDir(const char *filename);
  * PHYSFS_freeList(rc);
  * \endcode
  *
- *  ...will print:
+ *  \...will print:
  *
  * \verbatim
  * We've got [x.sav].
@@ -1211,9 +1215,9 @@ __EXPORT__ PHYSFS_sint64 PHYSFS_read(PHYSFS_File *handle,
  * The file must be opened for writing.
  *
  *   \param handle retval from PHYSFS_openWrite() or PHYSFS_openAppend().
- *   \param buffer buffer to store read data into.
- *   \param objSize size in bytes of objects being read from (handle).
- *   \param objCount number of (objSize) objects to read from (handle).
+ *   \param buffer buffer of bytes to write to (handle).
+ *   \param objSize size in bytes of objects being written to (handle).
+ *   \param objCount number of (objSize) objects to write to (handle).
  *  \return number of objects written. PHYSFS_getLastError() can shed light on
  *           the reason this might be < (objCount). -1 if complete failure.
  */
@@ -1974,7 +1978,7 @@ __EXPORT__ int PHYSFS_symbolicLinksPermitted(void);
  *
  * \sa PHYSFS_setAllocator
  */
-typedef struct
+typedef struct PHYSFS_Allocator
 {
     int (*Init)(void);   /**< Initialize. Can be NULL. Zero on failure. */
     void (*Deinit)(void);  /**< Deinitialize your allocator. Can be NULL. */
@@ -2268,7 +2272,7 @@ __EXPORT__ void PHYSFS_enumerateFilesCallback(const char *dir,
  *
  * Strings that don't fit in the destination buffer will be truncated, but
  *  will always be null-terminated and never have an incomplete UTF-8
- *  sequence at the end.
+ *  sequence at the end. If the buffer length is 0, this function does nothing.
  *
  *   \param src Null-terminated source string in UCS-4 format.
  *   \param dst Buffer to store converted UTF-8 string.
@@ -2290,7 +2294,7 @@ __EXPORT__ void PHYSFS_utf8FromUcs4(const PHYSFS_uint32 *src, char *dst,
  *
  * Strings that don't fit in the destination buffer will be truncated, but
  *  will always be null-terminated and never have an incomplete UCS-4
- *  sequence at the end.
+ *  sequence at the end. If the buffer length is 0, this function does nothing.
  *
  *   \param src Null-terminated source string in UTF-8 format.
  *   \param dst Buffer to store converted UCS-4 string.
@@ -2313,7 +2317,7 @@ __EXPORT__ void PHYSFS_utf8ToUcs4(const char *src, PHYSFS_uint32 *dst,
  *
  * Strings that don't fit in the destination buffer will be truncated, but
  *  will always be null-terminated and never have an incomplete UTF-8
- *  sequence at the end.
+ *  sequence at the end. If the buffer length is 0, this function does nothing.
  *
  * Please note that UCS-2 is not UTF-16; we do not support the "surrogate"
  *  values at this time.
@@ -2339,7 +2343,7 @@ __EXPORT__ void PHYSFS_utf8FromUcs2(const PHYSFS_uint16 *src, char *dst,
  *
  * Strings that don't fit in the destination buffer will be truncated, but
  *  will always be null-terminated and never have an incomplete UCS-2
- *  sequence at the end.
+ *  sequence at the end. If the buffer length is 0, this function does nothing.
  *
  * Please note that UCS-2 is not UTF-16; we do not support the "surrogate"
  *  values at this time.
@@ -2365,7 +2369,7 @@ __EXPORT__ void PHYSFS_utf8ToUcs2(const char *src, PHYSFS_uint16 *dst,
  *
  * Strings that don't fit in the destination buffer will be truncated, but
  *  will always be null-terminated and never have an incomplete UTF-8
- *  sequence at the end.
+ *  sequence at the end. If the buffer length is 0, this function does nothing.
  *
  * Please note that we do not supply a UTF-8 to Latin1 converter, since Latin1
  *  can't express most Unicode codepoints. It's a legacy encoding; you should

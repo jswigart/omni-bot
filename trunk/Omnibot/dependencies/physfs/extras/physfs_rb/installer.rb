@@ -1,4 +1,4 @@
-# $Id: installer.rb 585 2003-07-21 03:46:50Z icculus $
+# $Id: installer.rb,v 1.3 2003/07/21 03:46:50 icculus Exp $
 
 require 'rbconfig'
 require 'find'

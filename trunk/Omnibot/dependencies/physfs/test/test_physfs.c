@@ -25,9 +25,9 @@
 
 #include "physfs.h"
 
-#define TEST_VERSION_MAJOR  1
-#define TEST_VERSION_MINOR  1
-#define TEST_VERSION_PATCH  1
+#define TEST_VERSION_MAJOR  2
+#define TEST_VERSION_MINOR  0
+#define TEST_VERSION_PATCH  2
 
 static FILE *history_file = NULL;
 static PHYSFS_uint32 do_buffer_size = 0;
@@ -1116,7 +1116,9 @@ static void open_history_file(void)
 
         do
         {
-            fgets(buf, sizeof (buf), f);
+            if (fgets(buf, sizeof (buf), f) == NULL)
+                break;
+
             if (buf[strlen(buf) - 1] == '\n')
                 buf[strlen(buf) - 1] = '\0';
             add_history(buf);
