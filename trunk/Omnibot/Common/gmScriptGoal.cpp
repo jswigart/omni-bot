@@ -533,7 +533,7 @@ int gmScriptGoal::gmfGotoRandom(gmThread *a_thread)
 	CHECK_THIS_SGOAL();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_FLOAT_OR_INT_PARAM(r,0,32.f);
-	GM_TABLE_PARAM(Options,2,NULL);
+	GM_TABLE_PARAM(Options,1,NULL);
 
 	MoveOptions opn;
 	opn.Radius = r;
@@ -562,7 +562,7 @@ int gmScriptGoal::gmfGotoRandomAsync(gmThread *a_thread)
 	CHECK_THIS_SGOAL();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_FLOAT_OR_INT_PARAM(r,0,32.f);
-	GM_TABLE_PARAM(Options,2,NULL);
+	GM_TABLE_PARAM(Options,1,NULL);
 
 	MoveOptions opn;
 	opn.Radius = r;
