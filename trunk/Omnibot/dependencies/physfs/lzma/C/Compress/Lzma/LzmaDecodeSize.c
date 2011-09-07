@@ -59,7 +59,7 @@ Byte RangeDecoderReadByte(CRangeDecoder *rd)
   return (*rd->Buffer++);
 }
 
-* #define ReadByte (*rd->Buffer++) */
+/* #define ReadByte (*rd->Buffer++) */
 #define ReadByte (RangeDecoderReadByte(rd))
 
 void RangeDecoderInit(CRangeDecoder *rd
