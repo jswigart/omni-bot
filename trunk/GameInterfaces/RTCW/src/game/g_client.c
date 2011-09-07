@@ -1705,7 +1705,8 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
 	// Xian - check for max lives enforcement ban
-	if ( g_enforcemaxlives.integer && ( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) {
+	// cs: don't enforce for bots
+	if ( !isBot && !(ent->r.svFlags & SVF_BOT) && g_enforcemaxlives.integer && ( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) {
 		value = Info_ValueForKey( userinfo, "cl_guid" );
 		if ( G_FilterMaxLivesPacket( value ) ) {
 			return "Max Lives Enforcement Temp Ban";
