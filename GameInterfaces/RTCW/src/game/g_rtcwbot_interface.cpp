@@ -3671,7 +3671,8 @@ void Bot_Event_AddWeapon( int _client, int _weaponId ) {
 
 void Bot_Event_RemoveWeapon( int _client, int _weaponId ) {
 	if ( IsOmnibotLoaded() ) {
-		if ( IsBot( &g_entities[_client] ) ) {
+		// cs: don't send the event if the bot is dead so b.HasWeapon() will work in Limbo
+		if ( (IsBot(&g_entities[_client])  && (&g_entities[_client].health > 0)) ) {
 			Event_RemoveWeapon d = { _weaponId };
 			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_REMOVEWEAPON, &d, sizeof( d ) ) );
 		}
