@@ -29,6 +29,14 @@ this.OnPathThrough = function( data )
 		return false;
 	}
 
+	// cs: only allow it every 5 seconds to handle bad spots.
+	time = GetTime();
+	if ( this.Bot.ptArtyTime && time - this.Bot.ptArtyTime < 5 ) {
+		return false;
+	}
+
+	this.Bot.ptArtyTime = time;
+
 	// cache info about this pt spot
 	if ( !Map.PTArtyInfo ) {
 		Map.PTArtyInfo = {};
@@ -42,7 +50,7 @@ this.OnPathThrough = function( data )
 	if ( !Map.PTArtyInfo[ data ].TraceSuccess ) {
 		Map.PTArtyInfo[ data ].TraceSuccess = {};
 	}
-	
+
 	// cache successful traces in the form of a list of map goals
 	this.Data = data;
 	if ( this.FindTarget() == false ) {
@@ -180,6 +188,8 @@ this.Update = function()
 
 		yield();
 	}
+
+	// cs: Log the position if they still have a charge?
 
 	this.Bot.ReleaseButton( BTN.AIM, BTN.ATTACK1 );
 
