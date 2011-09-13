@@ -402,7 +402,7 @@ namespace AiState
 					m_ActiveThread[ON_SPAWN].Kill();
 
 				// don't call it unless we can
-				if(!CanBeSelected())
+				if(CanBeSelected() != NoSelectReasonNone)
 					return;
 
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
