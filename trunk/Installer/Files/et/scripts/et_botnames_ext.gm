@@ -1,0 +1,195 @@
+/////////////////////////////////////////////////////////////////////
+// temp var to disable other bot name functions
+global TestBotNames = true;
+
+/////////////////////////////////////////////////////////////////////
+// initialize the team tables
+AxisBots = table();
+AlliedBots = table();
+
+/////////////////////////////////////////////////////////////////////
+// USER CONFIG STARTS HERE
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.FIELDOPS, "def_bot.gm");
+RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
+
+/////////////////////////////////////////////////////////////////////
+// optionally assign a prefix for the bot name. set to "" for no prefix
+AxisPrefix = "^1[BOT]^7";
+AlliedPrefix = "^4[BOT]^7";
+
+/////////////////////////////////////////////////////////////////////
+// Axis Bots
+
+// Covert Ops
+AxisBots["Walter"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Fred"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Morgan"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Lawrence"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Richard"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Michael"] = { class=CLASS.COVERTOPS, profile="" };
+AxisBots["Brad"] = { class=CLASS.COVERTOPS, profile="" };
+
+// Engineers
+AxisBots["George"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Anton"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Monty"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Bean"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Sean"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Backfire"] = { class=CLASS.ENGINEER, profile="" };
+AxisBots["Halfwit"] = { class=CLASS.ENGINEER, profile="" };
+
+// Field Ops
+AxisBots["Halfbaked"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Fullmonty"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Nohope"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Hitnrun"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Missnrun"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Oysterhead"] = { class=CLASS.FIELDOPS, profile="" };
+AxisBots["Fullthrottle"] = { class=CLASS.FIELDOPS, profile="" };
+
+// Medics
+AxisBots["NoAmmo"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Bullseye"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Aimless"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Blackadder"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Newbie"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Cledus"] = { class=CLASS.MEDIC, profile="" };
+AxisBots["Chimichanga"] = { class=CLASS.MEDIC, profile="" };
+
+// Soldiers
+AxisBots["Razor"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Tanz"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Vic"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Malin"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Thor"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Grog"] = { class=CLASS.SOLDIER, profile="" };
+AxisBots["Drago"] = { class=CLASS.SOLDIER, profile="" };
+
+/////////////////////////////////////////////////////////////////////
+// Allied Bots
+
+// Covert Ops
+AlliedBots["Stinger"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Tarnok"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Wens"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Brohn"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Ivor"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Gordac"] = { class=CLASS.COVERTOPS, profile="" };
+AlliedBots["Bortack"] = { class=CLASS.COVERTOPS, profile="" };
+
+// Engineers
+AlliedBots["Morgriff"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Kole"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Garbok"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Korv"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Vokur"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Gali"] = { class=CLASS.ENGINEER, profile="" };
+AlliedBots["Beelz"] = { class=CLASS.ENGINEER, profile="" };
+
+// Field Ops
+AlliedBots["CraigChrist"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["WhittlinMan"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["SpecialEd"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["Flint"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["Argo"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["Milius"] = { class=CLASS.FIELDOPS, profile="" };
+AlliedBots["Vera"] = { class=CLASS.FIELDOPS, profile="" };
+
+// Medics
+AlliedBots["Merki"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Tarnen"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Royen"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Kaolin"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Nandet"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Nundak"] = { class=CLASS.MEDIC, profile="" };
+AlliedBots["Ryver"] = { class=CLASS.MEDIC, profile="" };
+
+// Soldiers
+AlliedBots["Mungri"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["Chan"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["Amadi"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["Zarna"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["PillowPants"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["ListerFiend"] = { class=CLASS.SOLDIER, profile="" };
+AlliedBots["Ilikechocmilk"] = { class=CLASS.SOLDIER, profile="" };
+
+/////////////////////////////////////////////////////////////////////
+// END USER CONFIG. DO NOT EDIT BELOW
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+// initialize some global tables for external reference
+// the previous tables are set up for user friendliness
+global _AxisBots = table();
+global _AlliedBots = table();
+
+/////////////////////////////////////////////////////////////////////
+// register the bot names and set up tables for OnBotAutoJoin reference
+
+// axis
+foreach ( botName and loadout in AxisBots ) {
+	name = AxisPrefix + botName;
+	Names[ name ] = loadout.profile;
+	if (!_AxisBots[ loadout.class ]) {
+		_AxisBots[ loadout.class ] = table();
+	}
+	// add the name to the list
+	_AxisBots[ loadout.class ][ tableCount(_AxisBots[ loadout.class ]) ] = name;
+}
+
+// allies
+foreach ( botName and loadout in AlliedBots ) {
+	name = AlliedPrefix + botName;
+	Names[ name ] = loadout.profile;
+	if (!_AlliedBots[ loadout.class ]) {
+		_AlliedBots[ loadout.class ] = table();
+	}
+	// add the name to the list
+	_AlliedBots[ loadout.class ][ tableCount(_AlliedBots[ loadout.class ]) ] = name;
+}
+
+/////////////////////////////////////////////////////////////////////
+// pick a bot to add based on team / class needed
+global OnBotAutoJoin = function()
+{
+	desiredTeam = TEAM.AXIS;
+	if ( Server.Team[TEAM.AXIS].NumPlayers > Server.Team[TEAM.ALLIES].NumPlayers ) {
+		desiredTeam = TEAM.ALLIES;
+	}
+	
+	desiredClass = ClassManager.EvalClassByTeam(desiredTeam);
+	
+	// find a bot for the team and class. sequential lookup for now.
+	teamTable = _AxisBots;
+	if ( desiredTeam == TEAM.ALLIES ) {
+		teamTable = _AlliedBots;
+	}
+	
+	botName = null;
+	if ( desiredClass != -1 ) {
+		foreach ( name in teamTable[ desiredClass ] ) {
+			// make sure this name is not already used
+			if ( !Util.GetBotByName(name) ) {
+				botName = name;
+				break;
+			}
+		}
+	}
+	
+	// todo: handle if there aren't enough bots
+	if ( botName ) {
+		botTable = { class = desiredClass, team = desiredTeam, name = botName };
+	}
+	else {
+		botTable = { class = desiredClass, team = desiredTeam };
+	}
+	
+	return botTable;
+};

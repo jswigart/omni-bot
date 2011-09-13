@@ -1,5 +1,4 @@
 // Load any other scripts that we will need.
-ExecScript("et_botnames.gm");
 ExecScript("et_navconfig.gm");
 ExecScript("commands.gm");
 ExecScript("et_commands.gm");
@@ -10,12 +9,19 @@ ExecScript("server_manager.gm");
 global Util = import("utilities");
 global ETUtil = import("et_utilities");
 global RegionTrigger = import("et_regiontriggers");
+global ClassManager = import("et_classmanager");
+
+// cs: only load one of the following botname scripts at a time
+ExecScript("et_botnames.gm");
+
+// this script allows for defining bots per team and class
+//ExecScript("et_botnames_ext.gm"); // note: must be loaded after et_classmanager
 
 // testmap mode
 global TestMapOn = false;
 
 // global debug flags
-global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_MAP_SCRIPTS = false;
 global DEBUG_GOAL_AVAILABILITY = false;
 
 // global flag to turn off bot chat in supported maps
@@ -92,4 +98,4 @@ global PostMapLoad = function()
 
 };
 
-print("ET Script Executed");
+print("ET autoexec script executed.");
