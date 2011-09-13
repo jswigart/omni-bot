@@ -239,7 +239,13 @@ global MinAndMaxBots = function(NumPlayers)
 		if(OnBotAutoJoin) {
 			// OnBotAutoJoin should give us a table of bot info to use
 			t = OnBotAutoJoin();
-			AddBot(t);
+			// cs: passing an empty table may not give expected results
+			if(tableCount(t) != 0) {
+				AddBot(t);
+			}
+			else {
+				AddBot();
+			}
 			return;
 		}
 		else {
@@ -256,7 +262,13 @@ global MinAndMaxBots = function(NumPlayers)
 			if(OnBotAutoJoin) {
 				// OnBotAutoJoin should give us a table of bot info to use
 				t = OnBotAutoJoin();
-				AddBot(t);
+				// cs: passing an empty table may not give expected results
+				if(tableCount(t) != 0) {
+					AddBot(t);
+				}
+				else {
+					AddBot();
+				}
 				return;
 			}
 			else {

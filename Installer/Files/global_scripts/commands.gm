@@ -1097,8 +1097,21 @@ Commands["ab"] =
 
 		for ( i = 0; i < _params[0]; i = i + 1 )
 		{
-			AddBot();
-			sleep(0.2);
+			if(OnBotAutoJoin) {
+				// OnBotAutoJoin should give us a table of bot info to use
+				t = OnBotAutoJoin();
+				// cs: passing an empty table may not give expected results
+				if(tableCount(t) != 0) {
+					AddBot(t);
+				}
+				else {
+					AddBot();
+				}
+			}
+			else {
+				AddBot();
+			}
+			sleep(1); // give time for server manager to update bot counts
 		}
 	},
 
