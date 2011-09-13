@@ -18,12 +18,12 @@
     <Filter Include="Lua API\Header Files">
       <UniqueIdentifier>{0e7504b9-ad32-4e05-a78c-a2690022cf81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lua API\Source Files">
-      <UniqueIdentifier>{88d9ef0d-d057-498c-b4b2-302e4319e49d}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
-    </Filter>
     <Filter Include="sqlite">
       <UniqueIdentifier>{4ca33f99-d112-4436-8dd7-223b2437c0b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{88d9ef0d-d057-498c-b4b2-302e4319e49d}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,115 +69,115 @@
       <Filter>Omnibot</Filter>
     </ClCompile>
     <ClCompile Include="g_lua.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bg_animation.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bg_lib.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bg_misc.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bg_pmove.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bg_slidemove.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="et-antiwarp.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_active.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_alarm.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_antilag.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_awards.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_client.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_cmds.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_combat.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_items.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_main.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_mem.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_misc.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_missile.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_mover.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_props.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_script.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_script_actions.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_session.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_sha1.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_spawn.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_svcmds.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_syscalls.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_target.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_team.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_tramcar.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_trigger.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_utils.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="g_weapon.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="q_math.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="q_shared.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\sha-1\sha1.c">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\sqlite\lsqlite3.c">
       <Filter>sqlite</Filter>
@@ -188,7 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="game.def">
-      <Filter>Lua API\Source Files</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="Jamfile" />
   </ItemGroup>
