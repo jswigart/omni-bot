@@ -382,10 +382,18 @@ static qboolean weaponCharged(playerState_t* ps, team_t team, int weapon, int* s
 		}
 		break;
 	case WP_MEDIC_ADRENALINE:
+#ifdef NOQUARTER
+		//cs: from BG_CheckCharge()
+		if ( ps->powerups[PW_ADRENALINE] )
+		{
+			return qfalse;
+		}
+#else
 		if ( WC_WEAPON_TIME_LEFT < WC_MEDIC_TIME )
 		{
 			return qfalse;
 		}
+#endif
 		break;
 	case WP_BINOCULARS:
 		switch (ps->stats[ STAT_PLAYER_CLASS ])
