@@ -442,6 +442,10 @@ void limbo( gentity_t *ent, qboolean makeCorpse ) {
 			ent->client->ps.pm_flags |= PMF_FOLLOW;
 		}
 
+		if ( !ent->client->sess.botSuicidePersist || g_gamestate.integer != GS_PLAYING ) {
+			ent->client->sess.botSuicide = qfalse;
+		}
+
 		if ( makeCorpse ) {
 			CopyToBodyQue( ent ); // make a nice looking corpse
 		} else {
