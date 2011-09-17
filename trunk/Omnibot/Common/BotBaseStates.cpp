@@ -159,10 +159,13 @@ namespace AiState
 			}
 		}
 
-		if(m_MapGoalFlag)
-			return m_MapGoalFlag->GetPriorityForClient(GetClient());
+		// cs: check m_MapGoalCap first in case the bot randomly walks over a dropped flag
+		// otherwise it will return zero priority since m_MapGoalFlag is set to 'carrying' above
 		if(m_MapGoalCap)
 			return m_MapGoalCap->GetPriorityForClient(GetClient());
+		if(m_MapGoalFlag)
+			return m_MapGoalFlag->GetPriorityForClient(GetClient());
+
 		return 0.f;
 	}
 
