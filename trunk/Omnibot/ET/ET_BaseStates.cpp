@@ -893,7 +893,7 @@ namespace AiState
 	// AimerUser functions.
 	bool DefuseDynamite::GetAimPosition(Vector3f &_aimpos)
 	{
-		_aimpos = m_MapGoal->GetPosition();
+		_aimpos = m_MapGoal->GetWorldBounds().Center;
 		return true;
 	}
 
