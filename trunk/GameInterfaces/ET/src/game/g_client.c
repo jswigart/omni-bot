@@ -513,6 +513,9 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 
 		ent->client->ps.pm_flags |= PMF_LIMBO;
 		ent->client->ps.pm_flags |= PMF_FOLLOW;
+		// omnibot
+		ent->client->sess.botSuicide = qfalse; // cs: avoid needlessly /killing at next spawn
+		// end omnibot
 
 		
 		if( makeCorpse ) {
