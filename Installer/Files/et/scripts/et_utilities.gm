@@ -127,6 +127,16 @@ member numallies = 0;
 member numaxis = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
+// store time at start of map since GetTime() is server uptime. set in PostMapLoad
+member MapStartTime = 0.0;
+
+member GetTimeElapsed = function()
+{
+	t = GetTime();
+	return t - ETUtil.MapStartTime;
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // todo: make generic with a Util.GenericGoals table
 member ClearMainGoals = function()
 {

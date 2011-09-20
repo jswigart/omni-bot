@@ -97,7 +97,8 @@ if(PrimaryWeaponChoices==null)
 
 //////////////////////////////////////////////////////////////////////////
 
-global ClassPrimaryWeaponChoice = function(bot, excludeweapons)
+// cs: moved from global so it can be called externally and be unique per bot
+this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
 {
 	myteam = bot.GetTeam();
 	myclass = bot.GetClass();
@@ -142,7 +143,8 @@ global ClassPrimaryWeaponChoice = function(bot, excludeweapons)
 	return ToInt(weaponChoice);
 };
 
-global ClassSecondaryWeaponChoice = function(bot, excludeweapons)
+// cs: moved from global so it can be called externally and be unique per bot
+this.ClassSecondaryWeaponChoice = function(bot, excludeweapons)
 {
 	return null;
 };
@@ -153,8 +155,8 @@ this.SelectWeapons = function()
 	myclass = this.GetClass();
 
 	weaponSelection = {};
-	weaponSelection.Primary = ClassPrimaryWeaponChoice(this);
-	weaponSelection.Secondary = ClassSecondaryWeaponChoice(this);
+	weaponSelection.Primary = this.ClassPrimaryWeaponChoice(this);
+	weaponSelection.Secondary = this.ClassSecondaryWeaponChoice(this);
 
 	if ( weaponSelection.Primary )
 		{ this.ChangePrimaryWeapon( weaponSelection.Primary ); }
