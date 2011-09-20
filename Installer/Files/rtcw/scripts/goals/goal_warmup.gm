@@ -1,8 +1,10 @@
 // These parameters are required
-this.Name = "Warmup";       // The name of the goal.
-this.Parent = "HighLevel";  // The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "Warmup";       	// The name of the goal.
+this.Parent = "HighLevel";  	// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.Debug = false;
-this.AutoAdd = true; // too much lag
+this.AutoAdd = true; 		// too much lag
+this.Grenades = true;
+this.Airstrikes = true;
 
 this.Initialize = function()
 {
@@ -50,7 +52,7 @@ this.GetPriority = function()
 
 this.Update = function()
 {
-	bestWeapon = this.BestWeapon; // for scoping
+	//bestWeapon = this.BestWeapon; // for scoping
 	frameCounter = 0; // init outside the loop
 	botClass = this.Bot.GetClass();
 	botTeam = this.Bot.GetTeam();
@@ -73,22 +75,44 @@ this.Update = function()
 	else {
 		while ( !GetEntFlags( nearest, ENTFLAG.DEAD ) )
 		{
+			bestWeapon = this.Bot.GetBestWeapon();
 			if ( this.Debug ) {
 				print( "found target" );
 			}
 
 			// cs: scaling airstrikes. large numbers of bots lag the server
-			if ( RandInt(1, 10) < 2 && botClass == CLASS.LIEUTENANT && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
+			if ( this.Airstrikes && RandInt(1, 10) < 5 && botClass == CLASS.LIEUTENANT && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) 
+			{
 				if ( this.Debug ) {
 					print( "airstrike" );
 				}
-				this.Bot.MoveTowards( GetEntEyePosition( nearest ) );
+				
 				this.AddAimRequest( Priority.High, "position", GetEntEyePosition( nearest ) );
 				this.AddWeaponRequest( Priority.High, WEAPON.SMOKE_GRENADE );
-				this.Bot.HoldButton( BTN.ATTACK1, 1 );
-				yield();
+				
+				frameCounter = 0;
+				while ( this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) )
+				{
+					if ( this.Debug ) {
+						print( "AirstrikeWhile" );
+					}
+					this.Bot.MoveTowards( GetEntEyePosition( nearest ) );
+					this.AddAimRequest( Priority.High, "position", GetEntEyePosition( nearest ) );
+
+					if ( frameCounter < 40 ) {
+						this.Bot.HoldButton( BTN.ATTACK1, 999 );
+					}
+					else {
+						this.Bot.ReleaseButton( BTN.ATTACK1 );
+						yield(); // may need to increase this so they keep aim long enough
+						this.Finished(); // just finish it and let them start over
+					}
+					yield();
+					frameCounter += 1;
+				}
 			}
-			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.PANZERFAUST ) && this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.PANZERFAUST ) && this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) 
+			{
 				if ( this.Debug ) {
 					print( "panzer" );
 				}
@@ -116,7 +140,8 @@ this.Update = function()
 					frameCounter += 1;
 				}
 			}
-			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.FLAMETHROWER ) && this.Bot.HasAmmo( WEAPON.FLAMETHROWER ) ) {
+			else if ( botClass == CLASS.SOLDIER && this.Bot.HasWeapon( WEAPON.FLAMETHROWER ) && this.Bot.HasAmmo( WEAPON.FLAMETHROWER ) ) 
+			{
 				if ( this.Debug ) {
 					print( "flamer" );
 				}
@@ -134,7 +159,8 @@ this.Update = function()
 					yield();
 				}
 			}
-			else if ( this.Bot.HasAmmo( grenadeWeapon ) ) {
+			else if ( this.Grenades && this.Bot.HasAmmo( grenadeWeapon ) ) 
+			{
 				if ( this.Debug ) {
 					print( "Nade" );
 				}
@@ -144,7 +170,7 @@ this.Update = function()
 				while ( this.Bot.HasAmmo( grenadeWeapon ) )
 				{
 					if ( this.Debug ) {
-						print( "AllyNadeWhile" );
+						print( "NadeWhile" );
 					}
 					this.Bot.MoveTowards( GetEntEyePosition( nearest ) );
 					this.AddAimRequest( Priority.High, "position", GetEntEyePosition( nearest ) );
@@ -161,7 +187,14 @@ this.Update = function()
 					frameCounter += 1;
 				}
 			}
-			else if ( bestWeapon && bestWeapon != WEAPON.VENOM && this.Bot.HasAmmo( bestWeapon ) ) {
+			// Only knife left, kill out
+			else if ( bestWeapon && bestWeapon == WEAPON.KNIFE && this.Bot.HasAmmo( bestWeapon ) ) 
+			{
+				yield();
+				this.Bot.ExecCommand("kill");			
+			}
+			else if ( bestWeapon && bestWeapon != WEAPON.VENOM && this.Bot.HasAmmo( bestWeapon ) ) 
+			{
 				if ( this.Debug ) {
 					print( "BestWeapon:" + Util.WeaponName( bestWeapon ) );
 				}
