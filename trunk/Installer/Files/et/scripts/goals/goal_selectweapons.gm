@@ -105,7 +105,7 @@ this.Update = function()
 				else
 				{
 					// pick a new weapon other than mg42 and mortar
-					newWeapon = ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
+					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
 
 					this.Bot.ChangePrimaryWeapon(newWeapon);
 					this.UsingWeapons[this.Bot] = newWeapon;
@@ -136,7 +136,7 @@ this.Update = function()
 				else
 				{
 					// pick a new weapon other than mg42 and mortar
-					newWeapon = ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
+					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
 
 					this.Bot.ChangePrimaryWeapon(newWeapon);
 					this.UsingWeapons[this.Bot] = newWeapon;

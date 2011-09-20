@@ -32,6 +32,7 @@ global DisableClassManager = 0;
 
 global PostMapLoad = function()
 {
+	ETUtil.MapStartTime = GetTime() - 1.75; // seems to be a bit of a delay
 	Util.ProcessMovers();
 
 	// set up the minimum class counts for the game
