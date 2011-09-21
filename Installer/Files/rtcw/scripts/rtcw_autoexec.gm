@@ -9,6 +9,7 @@ ExecScript( "rtcw_botnames.gm" );
 // New module format
 global Util = import("utilities");
 global RTCWUtil = import("rtcw_utilities");
+global ClassManager = import("rtcw_classmanager");
 
 // global debug flags
 global DEBUG_MAP_SCRIPTS = false;
