@@ -2,7 +2,7 @@
 this.Name = "Warmup";       	// The name of the goal.
 this.Parent = "HighLevel";  	// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.Debug = false;
-this.AutoAdd = true; 		// too much lag
+this.AutoAdd = false; 		// too much lag
 this.Grenades = true;
 this.Airstrikes = true;
 
@@ -81,7 +81,7 @@ this.Update = function()
 			}
 
 			// cs: scaling airstrikes. large numbers of bots lag the server
-			if ( this.Airstrikes && RandInt(1, 10) < 5 && botClass == CLASS.LIEUTENANT && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) 
+			if ( this.Airstrikes && botClass == CLASS.LIEUTENANT && RandInt(1, 10) < 5 && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) 
 			{
 				if ( this.Debug ) {
 					print( "airstrike" );
@@ -188,7 +188,7 @@ this.Update = function()
 				}
 			}
 			// Only knife left, kill out
-			else if ( bestWeapon && bestWeapon == WEAPON.KNIFE && this.Bot.HasAmmo( bestWeapon ) ) 
+			else if ( bestWeapon && bestWeapon == WEAPON.KNIFE ) 
 			{
 				yield();
 				this.Bot.ExecCommand("kill");			
