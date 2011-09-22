@@ -90,7 +90,7 @@ this.Enter = function()
 {
 	// Set up some finish criteria
 	this.AddFinishCriteria(this.TargetEntity,"deleted");
-	
+
 	// cs: don't do this. when gibbing, it checks for limbo flag to move to steal uniform state
 	//this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 };
@@ -208,7 +208,7 @@ this.UpdateGib = function()
 	{
 		//cache the position because for some reason its getting destroyed in rare cases
 		tPos = this.TargetPosition;
-		
+
 		if ( this.Bot.HasTarget() ) {
 			this.Finished();
 		}
@@ -305,10 +305,12 @@ this.UpdateStealth = function()
 
 	botEnt = this.Bot.GetGameEntity();
 	while( this.State == this.STEALTH ) {
-		sleep(0.5);
-		this.GotoRandomAsync(32.0);
+		if (!this.GotoRandomAsync(32.0)) {
+			this.Finished();
+		}
+		sleep(0.5); // give them a chance to start moving before checking velocity ...
 		while(!this.Bot.GetVelocity().IsZero()) {
-			sleep(0.5);
+			sleep(5);
 			if (!GetEntFlags(botEnt, ENTFLAG.DISGUISED) ) {
 				this.Finished();
 			}
