@@ -271,7 +271,7 @@ this.UpdateDynamite = function()
 
 				// for voice chat 'cover me'
 				signal(this.Bot.Name + "_plant");
-				
+
 				goalPos = this.MapGoal.GetPosition();
 				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
@@ -342,7 +342,7 @@ this.UpdateDynamite = function()
 
 					// no more cover spots available
 					if (typeId(this.spotIndex) == 0) { this.Finished(); }
-					
+
 					spot = this.MapGoal.CoverSpots[ this.spotIndex ];
 					spot.occupied = true;
 
@@ -420,8 +420,10 @@ this.UpdateSatchel = function()
 				this.UpdateDebugString();
 				this.ReleaseWeaponRequest();
 				this.ReleaseAimRequest();
-				this.GotoRandomAsync(32.0);
-
+				if (!this.GotoRandomAsync(32.0)) {
+					this.Finished();
+				}
+				sleep(0.5); // give them a chance to start moving before checking velocity ...
 				// todo: need a func that will return random dest vec to evaluate instead
 				while( !this.Bot.GetVelocity().IsZero() )
 				{
