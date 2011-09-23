@@ -106,6 +106,7 @@ void MapGoal::CopyFrom(MapGoal *_other)
 	m_MinRadius = _other->m_MinRadius;
 	m_DefaultPriority = _other->m_DefaultPriority;
 	m_RolePriorityBonus = _other->m_RolePriorityBonus;
+	m_RandomUsePoint = _other->m_RandomUsePoint;
 
 	m_AvailableTeams = _other->m_AvailableTeams;
 
@@ -170,6 +171,7 @@ void MapGoal::_Init()
 	m_SerialNum = 0;
 	m_DefaultPriority = 1.f;
 	m_RolePriorityBonus = 0.f;
+	m_RandomUsePoint = 0;
 
 	m_SerialNum = GetMapGoalSerial();
 
@@ -828,12 +830,23 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 
 	if(GetNumUsePoints() > 0)
 	{
-		for(obint32 i = 0; i < GetNumUsePoints(); ++i)
+		if ( m_RandomUsePoint )
 		{
+			int iRand = Mathf::IntervalRandomInt(0, (int)GetNumUsePoints());
 			Destination d;
-			d.m_Position = GetWorldUsePoint(i);
+			d.m_Position = GetWorldUsePoint(iRand);
 			d.m_Radius = Mathf::Max(GetRadius(), _minradius);
 			_dest.push_back(d);
+		}
+		else
+		{
+			for(obint32 i = 0; i < GetNumUsePoints(); ++i)
+			{
+				Destination d;
+				d.m_Position = GetWorldUsePoint(i);
+				d.m_Radius = Mathf::Max(GetRadius(), _minradius);
+				_dest.push_back(d);
+			}
 		}
 	}
 	else
@@ -1026,6 +1039,16 @@ void MapGoal::RenderDefault()
 		txtOut += Utils::GetTeamString(m_AvailableTeams.GetRawFlags());
 		txtOut += "\n";
 	}
+	if(bf.CheckFlag(DrawRandomUsePoint))
+	{
+		int rup = GetRandomUsePoint();
+		if ( rup > 0 )
+		{
+			txtOut += "RandomUsePoint: ";
+			txtOut += String(va("%i", rup));
+			txtOut += "\n";
+		}
+	}
 
 	// bounds
 	if(bf.CheckFlag(DrawBounds))
@@ -1127,6 +1150,7 @@ void MapGoal::BindProperties()
 	BindProperty("SerialNum",m_SerialNum);
 	BindProperty("Priority",m_DefaultPriority);
 	BindProperty("Radius",m_Radius);
+	BindProperty("RandomUsePoint",m_RandomUsePoint);
 	
 	{
 		int EnumSize = 0;
@@ -1481,6 +1505,7 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	GoalTable->Set(_machine,"MinRadius",gmVariable(m_MinRadius));
 	GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
 	GoalTable->Set(_machine,"CreateOnLoad",gmVariable(m_CreateOnLoad));
+	GoalTable->Set(_machine,"RandomUsePoint",gmVariable(m_RandomUsePoint));
 
 	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&m_Bounds,true);
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
@@ -1627,6 +1652,12 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		//return false;
 	}
 	SetCreateOnLoad(CreateOnLoad!=0);
+
+	if(!proptable->Get(_machine,"RandomUsePoint").GetInt(m_RandomUsePoint,0))
+	{
+		//_err.AddError("Goal.RandomUsePoint Field Missing!");
+		//return false;
+	}
 
 	// clear out the properties we don't want to pass along.
 	//proptable->Set(_machine,"Version",gmVariable::s_null);
@@ -2224,6 +2255,7 @@ void MapGoal::Bind(gmMachine *_m)
 		.var_bitfield(&MapGoal::m_DefaultDrawFlags,DrawInitialAvail,"RenderDefaultInitialAvailability","Draw the initial availability of the goal.")
 		.var_bitfield(&MapGoal::m_DefaultDrawFlags,DrawCurrentAvail,"RenderDefaultCurrentAvailability","Draw the current availability of the goal.")
 		.var_bitfield(&MapGoal::m_DefaultDrawFlags,DrawCenterBounds,"RenderDefaultAtCenterBounds","Draw debug options using the center of the bounding box.")
+		.var_bitfield(&MapGoal::m_DefaultDrawFlags,DrawRandomUsePoint,"RenderRandomUsePoint","Draw whether or not the goal randomly selects a usepoint.")
 		
 		.func(gmfMaxUsers_InProgress,			"MaxUsers_InProgress","Set the max number of 'inprogress' users that can use the goal")
 		.func(gmfMaxUsers_InUse,				"MaxUsers_InUse","Set the max number of 'inuse' users that can use the goal")

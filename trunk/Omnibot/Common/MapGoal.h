@@ -98,6 +98,7 @@ public:
 		DrawCenterBounds,
 		DrawDisabled,
 		DrawSynced,
+		DrawRandomUsePoint,
 		DrawAll = -1,
 	};
 
@@ -384,6 +385,8 @@ public:
 	void CreateGuiFromBluePrint(gmMachine *a_machine, gmTableObject *a_schema);
 	void HudDisplay();
 
+	int GetRandomUsePoint() const { return m_RandomUsePoint; };
+
 #ifdef ENABLE_DEBUG_WINDOW
 	// action listener
 	void action(const gcn::ActionEvent& actionEvent);
@@ -465,6 +468,8 @@ private:
 	String		m_TagName;
 	String		m_Name;
 	String		m_GroupName;
+
+	int			m_RandomUsePoint; // randomly select a usepoint to use?
 
 #ifdef Prof_ENABLED
 	Prof_Zone					*m_ProfZone;
