@@ -557,5 +557,6 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
+	bot.RemoveState("WatchForProjectile");
 };
 
