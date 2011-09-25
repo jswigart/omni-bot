@@ -71,6 +71,8 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Research_Documents_Taken );
 	OnTrigger( "MISSING_STRING", Map.the_flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.the_flag_Allies_Captured );
+	
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
