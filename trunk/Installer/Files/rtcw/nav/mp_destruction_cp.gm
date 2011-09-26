@@ -287,16 +287,19 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_checkpoint6" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );
+			Wp.SetWaypointFlag( "axisflag", "axis", true );
+			/*SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );*/
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
 
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bSpawnkill" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bSpawnkill.*" );
+			Wp.SetWaypointFlag( "axisflag", "axis", false );
+			/*SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bSpawnkill" );*/
 		}
 
 		if ( Map.c6status == 1 && Map.c5status == 1 && Map.c4status == 1 && Map.c3status == 1 ) {
@@ -304,15 +307,16 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );
+			/*SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );*/
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnkill.*" );
+			/*SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill" );*/
 		}
 	},
 
@@ -427,14 +431,18 @@ global OnMapLoad = function()
 			{
 				ROUTE_eRoad =
 				{
-					ROUTE_sCourtyard = {Weight = 2,},
+					ROUTE_srCourtyard = 
+					{
+						Weight = 2,
+						ROUTE_sCourtyard ={},
+					},
 					ROUTE_Courtyard = {Weight = 3,},
 					ROUTE_nCourtyard = {},
 				},
 				ROUTE_nAlleyway =
 				{
 					Weight = 3,
-					ROUTE_sCourtyard = {},
+					ROUTE_srCourtyard = {ROUTE_sCourtyard={},},
 					ROUTE_Courtyard = {Weight = 4,},
 					ROUTE_nCourtyard = {Weight = 2,},
 				},
