@@ -1,0 +1,85 @@
+// weapon selection functions and tables
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// TABLES
+///////////////////////////////////////////////////////////////////////////////////////////
+
+global PrimaryWeaponChoices = {};
+global WeaponTable = {};
+
+PrimaryWeaponChoices["etmain"] = {};
+PrimaryWeaponChoices["etmain"][CLASS.SOLDIER] = {};
+PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.PANZERFAUST] = true;
+PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.MOBILE_MG42] = true;
+PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.FLAMETHROWER] = true;
+PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.MORTAR] = true;
+
+PrimaryWeaponChoices["noquarter"] = {};
+PrimaryWeaponChoices["noquarter"][CLASS.SOLDIER] = PrimaryWeaponChoices["etmain"][CLASS.SOLDIER];
+
+// if allowed, add venom to the list.
+if ( GetModName() == "noquarter" && (GetCvar("jp_insanity") & 256) ) {
+	PrimaryWeaponChoices["noquarter"][CLASS.SOLDIER][ WEAPON.VENOM ] = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+	WeaponTable.SetWeaponAvailability( CLASS.SOLDIER, WEAPON.FLAMETHROWER, true );
+	WeaponTable.SetWeaponAvailability( CLASS.SOLDIER, {WEAPON.MORTAR, WEAPON.MOBILE_MG42}, false);
+*/
+WeaponTable.SetWeaponAvailability = function(class, weapon, enable)
+{
+	mod = GetModName();
+	// if a table for mod is not set up, use etmain weapons
+	if (!PrimaryWeaponChoices[mod]) {
+		mod = "etmain";
+	}
+
+	if (!PrimaryWeaponChoices[mod][class]) {
+		Util.MapDebugPrint("WeaponTable.SetWeaponAvailabilty: No weapon table for class", Util.ClassName(class));
+		return;
+	}
+
+	if ( typeName(weapon) == "table" ) {
+		foreach ( wpn in weapon ) {
+			PrimaryWeaponChoices[mod][class][wpn] = enable;
+		}
+	}
+	else {
+		PrimaryWeaponChoices[mod][class][weapon] = enable;
+	}
+};
+
+WeaponTable.GetPrimaryWeapons = function(class) {
+	mod = GetModName();
+	if (!PrimaryWeaponChoices[mod]) {
+		mod = "etmain";
+	}
+
+	if ( PrimaryWeaponChoices[mod][class] ) {
+		return PrimaryWeaponChoices[mod][class];
+	}
+
+	return null;
+};
+
+// for debug
+WeaponTable.ListWeaponAvailability = function()
+{
+	mod = GetModName();
+	if (!PrimaryWeaponChoices[mod]) {
+		mod = "etmain";
+	}
+
+	print("\n//////////// Weapon Availability ////////////");
+	foreach ( id and class in PrimaryWeaponChoices[mod] ) {
+		print(format("\n------ %s ------", Util.ClassName(id)));
+
+		foreach ( w and e in class ) {
+			print(format("%s = %d", Util.WeaponName(w), e));
+		}
+	}
+};

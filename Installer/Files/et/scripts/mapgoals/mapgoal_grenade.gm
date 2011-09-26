@@ -147,7 +147,7 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		targetgoal or traceinfo - the goal that is to be grenaded or traceinfo");
+	print("		targetgoal or trace - the goal that is to be grenaded or traceinfo");
 	print("		facing - Direction the bot should face");
 	print("Optional:");
 	print("		stance - stand, crouch");

@@ -242,6 +242,13 @@ this.Update = function()
 				// if they aren't there by now, they most likely aren't gonna make it
 				break;
 			}
+			if ( frameCounter > 200 && this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+			{
+				// GetConstructableState is unreliable, it can return 1 even if objective can't be built !
+				Util.MapDebugPrint( this.MapGoal.GetName() + " failed, timeout", true );
+				this.BlackboardDelay(45, this.MapGoal);
+				break;
+			}
 		}
 	}
 	else

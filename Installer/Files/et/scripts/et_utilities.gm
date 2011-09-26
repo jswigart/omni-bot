@@ -13,6 +13,8 @@ Util.PlayerClassTable =
 
 Util.AllTeamPlayers = 32;
 
+Util.TeamBotChangeClassExecuted = 0;
+
 // offset for converted waypoint goals
 Util.WaypointGoalOffset = Vector3(0,0,-24);
 
@@ -114,9 +116,6 @@ Util.BotNames =
 		"allies_fieldops", "allies_covertops",
 	},
 };
-
-// class management stuff
-Util.ManageClasses = true;
 
 // debug string color
 Util.DebugColorString = "^b";

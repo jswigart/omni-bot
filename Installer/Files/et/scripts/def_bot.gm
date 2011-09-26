@@ -48,95 +48,26 @@ this.SelectClass = function()
 	return null;
 };
 
-if(PrimaryWeaponChoices==null)
-{
-	global PrimaryWeaponChoices = {};
-
-	PrimaryWeaponChoices.ETmain_Weapons = {};
-	PrimaryWeaponChoices.ETmain_Weapons[CLASS.SOLDIER] =
-	{
-		WEAPON.PANZERFAUST,
-		WEAPON.MOBILE_MG42,
-		WEAPON.FLAMETHROWER,
-		WEAPON.MORTAR,
-	};
-
-	PrimaryWeaponChoices.Jaymod_Weapons = {};
-	PrimaryWeaponChoices.Jaymod_Weapons[CLASS.SOLDIER] =
-	{
-		WEAPON.PANZERFAUST,
-		WEAPON.MOBILE_MG42,
-		WEAPON.FLAMETHROWER,
-		WEAPON.MORTAR,
-	};
-
-	PrimaryWeaponChoices.NQ_WeaponsAxis = {};
-	PrimaryWeaponChoices.NQ_WeaponsAxis[CLASS.SOLDIER] =
-	{
-		WEAPON.PANZERFAUST,
-		WEAPON.MOBILE_MG42,
-		WEAPON.FLAMETHROWER,
-		WEAPON.MORTAR, // mortar2 is the same id now
-	};
-
-	PrimaryWeaponChoices.NQ_WeaponsAllies = {};
-	PrimaryWeaponChoices.NQ_WeaponsAllies[CLASS.SOLDIER] =
-	{
-		WEAPON.BAZOOKA,
-		WEAPON.MOBILE_MG42, // browning is the same id now
-		WEAPON.FLAMETHROWER,
-		WEAPON.MORTAR,
-	};
-
-	// if allowed, add venom to the list
-	if ( GetModName() == "noquarter" && (GetCvar("jp_insanity") & 256) ) {
-		PrimaryWeaponChoices.NQ_WeaponsAllies[CLASS.SOLDIER][ tableCount(PrimaryWeaponChoices.NQ_WeaponsAllies[CLASS.SOLDIER]) ] = WEAPON.VENOM;
-		PrimaryWeaponChoices.NQ_WeaponsAxis[CLASS.SOLDIER][ tableCount(PrimaryWeaponChoices.NQ_WeaponsAxis[CLASS.SOLDIER]) ] = WEAPON.VENOM;
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // cs: moved from global so it can be called externally and be unique per bot
 this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
 {
-	myteam = bot.GetTeam();
 	myclass = bot.GetClass();
-
 	weaponChoice = 0;
-	ModName = GetModName();
+	wpns = WeaponTable.GetPrimaryWeapons(myclass);
 
-	switch(ModName)
+	// copy only usable weapons
+	if (wpns)
 	{
-		case "noquarter":
-		{
-			if ( myteam == TEAM.ALLIES ) {
-				wpns = PrimaryWeaponChoices.NQ_WeaponsAllies[myclass];
-			}
-			else {
-				wpns = PrimaryWeaponChoices.NQ_WeaponsAxis[myclass];
+		tmp = table();
+		foreach ( weapon and avail in wpns ) {
+			if ( avail && (!excludeweapons || !excludeweapons[weapon]) ) {
+				tmp[ tableCount(tmp) ] = weapon;
 			}
 		}
-		case "jaymod":
-		{
-			wpns = PrimaryWeaponChoices.Jaymod_Weapons[myclass];
-		}
-		default: // etmain
-		{
-			wpns = PrimaryWeaponChoices.ETmain_Weapons[myclass];
-		}
-	}
 
-	if ( wpns )
-	{
-		// loop until we get an acceptable weapon
-		while(1)
-		{
-			weaponChoice = wpns[ RandInt( 0, tableCount(wpns)-1 ) ];
-			if(!excludeweapons || !excludeweapons[weaponChoice]) {
-				break;
-			}
-			yield();
+		tc = tableCount(tmp);
+		if ( tc > 0 ) {
+			weaponChoice = tmp[Util.GetRandomFromTable(tmp)];
 		}
 	}
 
@@ -151,18 +82,14 @@ this.ClassSecondaryWeaponChoice = function(bot, excludeweapons)
 
 this.SelectWeapons = function()
 {
-	myteam = this.GetTeam();
-	myclass = this.GetClass();
+	Primary = this.ClassPrimaryWeaponChoice(this);
+	Secondary = this.ClassSecondaryWeaponChoice(this);
 
-	weaponSelection = {};
-	weaponSelection.Primary = this.ClassPrimaryWeaponChoice(this);
-	weaponSelection.Secondary = this.ClassSecondaryWeaponChoice(this);
+	if ( Primary )
+		{ this.ChangePrimaryWeapon( Primary ); }
 
-	if ( weaponSelection.Primary )
-		{ this.ChangePrimaryWeapon( weaponSelection.Primary ); }
-
-	if ( weaponSelection.Secondary )
-		{ this.ChangeSecondaryWeapon( weaponSelection.Secondary ); }
+	if ( Secondary )
+		{ this.ChangeSecondaryWeapon( Secondary ); }
 };
 
 //////////////////////////////////////////////////////////////////////////
