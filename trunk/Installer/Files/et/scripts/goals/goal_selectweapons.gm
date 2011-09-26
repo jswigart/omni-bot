@@ -9,6 +9,8 @@ this.LimitToClass(CLASS.SOLDIER);
 
 // shared weapon counters
 this.UsingWeapons = {};
+this.UsingWeapons[ TEAM.ALLIES ] = {};
+this.UsingWeapons[ TEAM.AXIS ] = {};
 
 this.Initialize = function()
 {
@@ -31,7 +33,7 @@ this.Initialize = function()
 this.NumWeaponUsers = function(weaponId)
 {
 	num = 0;
-	foreach ( bot and weapon in this.UsingWeapons )
+	foreach ( bot and weapon in this.UsingWeapons[ this.Bot.GetTeam() ] )
 	{
 		if(weapon == weaponId && bot.GetClass()==CLASS.SOLDIER)
 		{
@@ -56,21 +58,21 @@ this.Update = function()
 		hasMobileMg42 = this.Bot.HasWeapon(WEAPON.MOBILE_MG42);
 		hasMobileMortar = this.Bot.HasWeapon(WEAPON.MORTAR);
 
+		myTeam = this.Bot.GetTeam();
+
 		// update the using weapon table with whatever we're currently using
 		if(hasMobileMg42)
 		{
-			this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+			this.UsingWeapons[myTeam][this.Bot] = WEAPON.MOBILE_MG42;
 		}
 		else if(hasMobileMortar)
 		{
-			this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+			this.UsingWeapons[myTeam][this.Bot] = WEAPON.MORTAR;
 		}
 
 		// count how many other bots have these weapons
 		numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
 		numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
-
-		myTeam = this.Bot.GetTeam();
 
 		// count how many goals are available for each weapon type
 		goals_mg42 = {};
@@ -94,7 +96,7 @@ this.Update = function()
 				if(numMortarUsers < numMortarGoals && Server.NumPlayers >= MinPlayersForMortar )
 				{
 					this.Bot.ChangePrimaryWeapon(WEAPON.MORTAR);
-					this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+					this.UsingWeapons[myTeam][this.Bot] = WEAPON.MORTAR;
 
 					if(this.Debug)
 					{
@@ -108,7 +110,7 @@ this.Update = function()
 					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
 
 					this.Bot.ChangePrimaryWeapon(newWeapon);
-					this.UsingWeapons[this.Bot] = newWeapon;
+					this.UsingWeapons[myTeam][this.Bot] = newWeapon;
 
 					if(this.Debug)
 					{
@@ -125,7 +127,7 @@ this.Update = function()
 				if(numMg42Users < numMg42Goals && Server.NumPlayers >= MinPlayersForMobileMG )
 				{
 					this.Bot.ChangePrimaryWeapon(WEAPON.MOBILE_MG42);
-					this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+					this.UsingWeapons[myTeam][this.Bot] = WEAPON.MOBILE_MG42;
 
 					if(this.Debug)
 					{
@@ -139,7 +141,7 @@ this.Update = function()
 					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
 
 					this.Bot.ChangePrimaryWeapon(newWeapon);
-					this.UsingWeapons[this.Bot] = newWeapon;
+					this.UsingWeapons[myTeam][this.Bot] = newWeapon;
 
 					if(this.Debug)
 					{
@@ -152,7 +154,7 @@ this.Update = function()
 		else if(numMg42Users < numMg42Goals && Server.NumPlayers >= MinPlayersForMobileMG)
 		{
 			this.Bot.ChangePrimaryWeapon(WEAPON.MOBILE_MG42);
-			this.UsingWeapons[this.Bot] = WEAPON.MOBILE_MG42;
+			this.UsingWeapons[myTeam][this.Bot] = WEAPON.MOBILE_MG42;
 
 			if(this.Debug)
 			{
@@ -163,7 +165,7 @@ this.Update = function()
 		else if(numMortarUsers < numMortarGoals && Server.NumPlayers >= MinPlayersForMortar)
 		{
 			this.Bot.ChangePrimaryWeapon(WEAPON.MORTAR);
-			this.UsingWeapons[this.Bot] = WEAPON.MORTAR;
+			this.UsingWeapons[myTeam][this.Bot] = WEAPON.MORTAR;
 
 			if(this.Debug)
 			{
@@ -177,7 +179,8 @@ this.Update = function()
 
 this.Events[EVENT.DISCONNECTED] = function()
 {
-	this.UsingWeapons[this.Bot] = null;
+	// cs: TODO. test this to see if it is getting correct team
+	this.UsingWeapons[this.Bot.GetTeam()][this.Bot] = null;
 
 	if(this.Debug)
 	{

@@ -59,6 +59,7 @@ this.InitNewGoal = function()
 	}
 
 	this.Radius = 32;
+	this.DisableCM = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,6 +118,13 @@ this.UpgradeVersion = function(Props)
 			this.DefaultPriority += 0.2;
 		}
 
+		if ( Props.DisableCM ) {
+			this.DisableCM = Props.DisableCM;
+		}
+		else {
+			this.DisableCM = 0;
+		}
+
 		// detect 0 facing vectors
 		if ( typeId(Props.AimVectors) == 6 )
 		{
@@ -163,14 +171,18 @@ this.Render = function(editMode)
 				}
 				this.ExtraDebugText += Util.WeaponName(wpnId);
 			}
-
-			this.ExtraDebugText += format("\nStance: %s\n",this.Stance);
 			// newline if it wrote weapons
 			if(tableCount(this.Weapons) > 0)
 			{
 				this.ExtraDebugText += "\n";
 			}
-			this.ExtraDebugText += format("CampTime: %g to %g secs.",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
+
+			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
+			this.ExtraDebugText += format("CampTime: %g to %g secs.\n",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
+
+			if ( this.DisableCM ) {
+				this.ExtraDebugText += format("DisableCM: %d", this.DisableCM);
+			}
 		}
 
 		if ( this.Stance == "crouch" )
@@ -216,6 +228,7 @@ this.SaveToTable = function(SaveTable)
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
 	SaveTable.Weapons = this.Weapons;
+	SaveTable.DisableCM = this.DisableCM;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -230,6 +243,7 @@ this.Help = function()
 	print("		weapon - only this weapon is usable here, supports multiple");
 	print("		mincamptime - minimum time a bot should camp at the goal");
 	print("		maxcamptime - maximum time a bot should camp at the goal");
+	print("		disablecm - disable combat movement at this goal");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -316,6 +330,18 @@ this.SetProperty = function(property, value)
 			if(this.Schema.MaxCampTime.CheckPrintErrors(this,v))
 			{
 				this.MaxCampTime = v;
+			}
+		}
+		case "disablecm":
+		{
+			i = ToInt(value);
+			if ( typeId(i) == 1)
+			{
+				this.DisableCM = i;
+			}
+			else
+			{
+				print("disablecm requires integer");
 			}
 		}
 		default:

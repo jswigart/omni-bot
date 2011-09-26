@@ -3,6 +3,7 @@ ExecScript("et_navconfig.gm");
 ExecScript("commands.gm");
 ExecScript("et_commands.gm");
 ExecScript("server_manager.gm");
+ExecScript("et_weapontables.gm");
 //ExecScript("autowaypoint.gm");
 
 // New module format

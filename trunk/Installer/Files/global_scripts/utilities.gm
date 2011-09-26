@@ -1222,17 +1222,17 @@ member AddGoalRoute = function(goalname, startname, endname, weight)
 	}
 	if( !s )
 	{
-		print("Util.AddGoalRoute: Goal", startname, "not found! ", goalname, "->",
-				startname, "->", endname );
+		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + startname + " not found! " + goalname + " -> " +
+				startname + " -> " + endname );
 	}
 	if ( !e )
 	{
-		print("Util.AddGoalRoute: Goal", endname, "not found! ", goalname, "->",
-				startname, "->", endname);
+		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + endname + " not found! " + goalname + " -> " +
+				startname + " -> " + endname);
 	}
 	if ( !g )
 	{
-		print("Util.AddGoalRoute: Goal", goalname, "not found!");
+		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + goalname + " not found!");
 	}
 	return false;
 };
@@ -2648,7 +2648,7 @@ member ShowActiveGoals = function(render, routes, showuse)
 					teamName, goalName, goal.MaxUsers_InUse(), goal.MaxUsers_InProgress()));
 			}
 		}
-		
+
 		// script based switch goals
 		if ( Map && Map.Switches ) {
 			teamMask = (1<<teamId);
@@ -3020,4 +3020,37 @@ member SetCustomProperty = function(goalname, property, value)
 	else {
 		Util.MapDebugPrint("Util.SetCustomProperty: Invalid goal name " + goalname, true);
 	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// Finds goal closest to local player inside a given radius.
+// All arguments are optional.
+member FindClosestGoal = function( radius, regEx, team )
+{
+	if ( !radius )
+		{ radius = 200; }
+	if ( !regEx )
+		{ regEx = ".*"; }
+	if ( !team )
+		{ team = 0; }
+	dist = null;
+	playerPos = GetLocalPosition();
+	foundGoal = null;
+	mapgoals = table();
+
+	GetGoals( mapgoals, team, regEx );
+	foreach ( id and mapgoal in mapgoals )
+	{
+		evalDist = Util.Distance( mapgoal.GetPosition(), playerPos );
+		if ( evalDist < radius )
+		{
+			if ( !dist || evalDist < dist )
+			{
+				dist = evalDist;
+				foundGoal = mapgoal;
+			}
+		}
+	}
+
+	return foundGoal;
 };

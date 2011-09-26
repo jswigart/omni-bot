@@ -151,6 +151,83 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 	}
 };
 
+this.Events[EVENT.TEAM_CHAT_MSG] = function(source, id)
+{
+	sleep(RandFloat(0.01, 1.00));
+	
+	//print(this.Bot.Name, " can be changed = ", !Util.TeamBotChangeClassExecuted);
+	if(Util.TeamBotChangeClassExecuted == 1)
+	{
+		sleep(1.1);
+		Util.TeamBotChangeClassExecuted = 0;
+		return;
+	}
+	else
+	{
+		cls = this.Bot.GetClass();
+
+		if (id.Length() == 7)
+		{
+			botChanged = 0;
+			switch(id.Left(3))
+			{
+				case "sol":					
+				{
+					currClass = CLASS.SOLDIER;
+				}
+				case "med":
+				{
+					currClass = CLASS.MEDIC;
+				}
+				case "eng":
+				{
+					currClass = CLASS.ENGINEER;
+				}
+				case "fop":
+				{
+					currClass = CLASS.FIELDOPS;
+				}
+				case "cov":
+				{
+					currClass = CLASS.COVERTOPS;
+				}
+			}
+			
+			switch(id.Right(3))
+			{
+				case "sol":					
+				{
+					newClass = CLASS.SOLDIER;
+				}
+				case "med":
+				{
+					newClass = CLASS.MEDIC;
+				}
+				case "eng":
+				{
+					newClass = CLASS.ENGINEER;
+				}
+				case "fop":
+				{
+					newClass = CLASS.FIELDOPS;
+				}
+				case "cov":
+				{
+					newClass = CLASS.COVERTOPS;
+				}
+			}
+			
+			if (cls == currClass)
+			{
+				print("****** CHANGING BOT CLASS FOR ", this.Bot.Name, " ******");
+				Util.TeamBotChangeClassExecuted = 1;
+				this.Bot.ChangeClass(newClass);
+				//this.Bot.ExecCommand("kill");
+			}
+		}
+	}
+};
+
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
 	isBot = this.IsBot(whoDoneIt);

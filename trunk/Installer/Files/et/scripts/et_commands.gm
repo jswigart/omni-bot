@@ -637,10 +637,10 @@ Commands["campstart"] =
 			print("type /devmap", GetMapName(), "in console");
 			return;
 		}
-		
+
 		// get a table of the camp type goals in the map
 		goals = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*");
-		
+
 		foreach ( id and goal in goals )
 		{
 			goalPos = goal.GetPosition();
@@ -661,10 +661,10 @@ Commands["campstart"] =
 			ExecCommand("goal_finish");
 			ExecCommand("draw_goals off " + goalName);
 		}
-		
+
 		print("finished iterating through camp goals");
 	},
-	
+
 	Help =
 	{
 		"start iterating through the plant goals in the map. helper for adding facings",
@@ -694,6 +694,72 @@ Commands["campnext"] =
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+Commands["saveplayerpos"] =
+{
+	Func = function( _params )
+	{
+		pos = GetLocalPosition();
+		string = ToString( _params[0] ) + ": Vec3(" + ToInt(pos.x) + "," + ToInt(pos.y) + "," + ToInt(pos.z) + ")";
+		DrawDebugLine( pos - Vec3(0,0,6), pos + Vec3(0,0,6), COLOR.CYAN, 15 );
+
+		MapName = GetMapName();
+		gmName = MapName + "_positions.txt";
+		gmfile = File();
+		assert( gmfile.Open( gmName, "text", false, true ), "^1Error writing to file!" );
+		assert( gmfile.Write( string, System.NewLine ), "^1Error writing to file!" );
+		gmfile.Close();
+		print( "Current player position written to " + gmName + ". Drawing cyan debug line for 15 seconds." );
+	},
+
+	Help =
+	{
+		"Waypointing tool - writes player positions to a file in user folder",
+	},
+};
+
+Commands["spp"] = Commands["saveplayerpos"];
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["saveusepoint"] =
+{
+	Func = function( _params )
+	{
+		if ( _params[0] )
+			{ regEx = _params[0]; }
+		else
+			{ regEx = ".*"; }
+		goal = Util.FindClosestGoal( 200, regEx );
+		if ( !goal )
+		{
+			print( "No goal found!" );
+			return;
+		}
+		goalname = goal.GetName();
+		print( "Using goal: " + goalname );
+		pos = GetLocalPosition();
+		string = "Util.AddUsePoint( \"" + goalname + "\", Vec3(" + ToInt(pos.x) + "," + ToInt(pos.y) + "," + ToInt(pos.z) + ") );";
+		DrawDebugLine( pos - Vec3(0,0,6), pos + Vec3(0,0,6), COLOR.CYAN, 15 );
+
+		MapName = GetMapName();
+		fileName = MapName + "_positions.txt";
+		file = File();
+		assert( file.Open( fileName, "text", false, true ), "^1Error writing to file!" );
+		assert( file.Write( string, System.NewLine ), "^1Error writing to file!" );
+		file.Close();
+		print( "Usepoint written to " + fileName + ". Drawing cyan debug line for 15 seconds." );
+	},
+
+	Help =
+	{
+		"Waypointing tool - stores player position as usepoint in a file in user folder",
+	},
+};
+
+Commands["sup"] = Commands["saveusepoint"];
+
+///////////////////////////////////////////////////////////////////////////////
 // NOTE: this is temp. to be deleted
 Commands["fixoffsets"] =
 {
@@ -705,7 +771,7 @@ Commands["fixoffsets"] =
 			print("couldn't find ", s);
 			return;
 		}
-		
+
 		foreach ( goalTable in _MG )
 		{
 			if ( !goalTable.Vehicle ) {
@@ -713,13 +779,13 @@ Commands["fixoffsets"] =
 			}
 
 			ETUtil.FixOffsets(_MG[ goalTable.Vehicle ].Position, _MG[ goalTable.Vehicle ].Name, goalTable);
-			
+
 			ExecCommand("draw_goals on " + goalTable.Name);
 			ExecCommand("goal_edit");
 			block("nextoffsetgoal");
 			ExecCommand("draw_goals off " + goalTable.Name);
 		}
-		
+
 		print("finished iterating through vehicle offsets");
 	},
 };

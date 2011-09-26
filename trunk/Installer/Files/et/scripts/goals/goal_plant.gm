@@ -19,6 +19,10 @@ this.COVER_DYNAMITE = 4;
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
+	this.WatchForEntityCategory({
+		Radius = 350,
+		Category = CAT.PROJECTILE,
+	});
 };
 
 this.GetPriority = function()
@@ -194,11 +198,6 @@ this.Update = function()
 		// else {
 			// this.Finished();
 		// }
-
-		this.WatchForEntityCategory({
-			Radius = 350,
-			Category = CAT.PROJECTILE,
-		});
 
 		switch(botClass)
 		{
@@ -533,7 +532,12 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 	if ( ent && GetEntClass(ent) == CLASS.SATCHEL_ENT && this.Bot.GetClass() == CLASS.ENGINEER
 		&& this.Bot.IsAllied(ent) && this.GoalState != this.COVER_DYNAMITE)
 	{
-		this.BlackboardDelay(10, this.MapGoal);
-		this.Finished();
+		// abort this goal only if engineer has same goal as covertops
+		pos = GetEntPosition(ent);
+		if (pos && DistanceBetween(pos, this.MapGoal.GetPosition()) < 250)
+		{
+			this.BlackboardDelay(10, this.MapGoal);
+			this.Finished();
+		}
 	}
 };
