@@ -531,6 +531,7 @@ void IGameManager::SyncRemoteDelete( int entityHandle )
 #endif
 }
 
+#ifdef ENABLE_REMOTE_DEBUGGING
 void IGameManager::OnConnect( RemoteLib::Connection * conn ) {
 	EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
 }
@@ -540,3 +541,4 @@ void IGameManager::OnDisConnect( RemoteLib::Connection * conn ) {
 void IGameManager::OnAcceptConnection( RemoteLib::Connection * conn ) {
 	EngineFuncs::ConsoleMessage( va( "Remote connected to %s", conn->getIp() ) );
 }
+#endif // ENABLE_REMOTE_DEBUGGING
