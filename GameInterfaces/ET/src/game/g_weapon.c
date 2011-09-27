@@ -2068,8 +2068,9 @@ evilbanigoto:
 						return;*/
 
 					//bani - eh, why was this commented out? it makes sense, and prevents a sploit.
-					if (dynamiteDropTeam == ent->client->sess.sessionTeam)
-						return;
+					// cs: moving team checks lower so omnibot can always catch a defuse event
+					//if (dynamiteDropTeam == ent->client->sess.sessionTeam)
+					//	return;
 
 					for ( i=0 ; i<num ; i++ ) {
 						hit = &g_entities[touch[i]];
@@ -2091,15 +2092,16 @@ evilbanigoto:
 								continue;
 							}
 
-							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+							// omnibot
+							G_Script_ScriptEvent( hit->target_ent, "defused", "" );
+							// end omnibot
+
+							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
 								if ((hit->spawnflags & AXIS_OBJECTIVE) && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++;
-								}
-								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "" );
 								}
 
 								{
@@ -2112,16 +2114,13 @@ evilbanigoto:
 //								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\n\"");
 								//bani
 								defusedObj = qtrue;
-							} else { // TEAM_ALLIES
+							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
 								if ((hit->spawnflags & ALLIED_OBJECTIVE) && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++; 
 									hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
-								}
-								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "" );
 								}
 
 								{
@@ -2173,8 +2172,12 @@ evilbanigoto:
 								continue;
 							}
 
+							// omnibot
+							G_Script_ScriptEvent( hit, "defused", "" );
+							// end omnibot
+
 							// we got somthing to destroy
-							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
 								if ( hit->s.teamNum == TEAM_AXIS && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
@@ -2182,7 +2185,6 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++;
 								}
-								G_Script_ScriptEvent( hit, "defused", "" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
@@ -2192,7 +2194,7 @@ evilbanigoto:
 								}
 
 //								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\" 2");
-							} else { // TEAM_ALLIES
+							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
 								if ( hit->s.teamNum == TEAM_ALLIES && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
@@ -2200,7 +2202,6 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++; 
 								}
-								G_Script_ScriptEvent( hit, "defused", "" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
