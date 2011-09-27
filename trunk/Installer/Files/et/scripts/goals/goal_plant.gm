@@ -15,6 +15,7 @@ this.ARM_EXPLOSIVE = 1;
 this.RUNAWAY = 2;
 this.DETONATE_EXPLOSIVE = 3;
 this.COVER_DYNAMITE = 4;
+this.LOOK_FOR_DYNO = 5;
 
 this.Initialize = function()
 {
@@ -125,7 +126,6 @@ this.GetPriority = function()
 
 this.Enter = function()
 {
-	this.GoalState = this.LAY_EXPLOSIVE;
 	this.ExplosiveEntity = null;
 
 	if ( this.MapGoal.TraceEntity )
@@ -203,10 +203,12 @@ this.Update = function()
 		{
 			case CLASS.ENGINEER:
 			{
+				this.GoalState = this.LOOK_FOR_DYNO;
 				this.UpdateDynamite();
 			}
 			case CLASS.COVERTOPS:
 			{
+				this.GoalState = this.LAY_EXPLOSIVE;
 				this.UpdateSatchel();
 			}
 			default:
@@ -259,6 +261,24 @@ this.UpdateDynamite = function()
 
 		switch(this.GoalState)
 		{
+			case this.LOOK_FOR_DYNO:
+			{
+				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ProjectileEntity);
+				if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 150 && this.Bot.IsAllied(ent)
+						&& this.Bot.GetExplosiveState(ent) == 1 ) {
+					this.ExplosiveEntity = ent;
+					this.GoalState = this.ARM_EXPLOSIVE;
+				}
+				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
+					this.GoalState = this.LAY_EXPLOSIVE;
+				}
+				else if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 ) {
+					this.GoalState = this.COVER_DYNAMITE;
+				}
+				else {
+					this.Finished();
+				}
+			}
 			case this.LAY_EXPLOSIVE:
 			{
 				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
@@ -274,7 +294,6 @@ this.UpdateDynamite = function()
 				goalPos = this.MapGoal.GetPosition();
 				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
-				this.Bot.HoldButton(BTN.CROUCH, 99);
 				this.BlockForWeaponChange( WEAPON.DYNAMITE );
 				this.Bot.PressButton(BTN.ATTACK1);
 			}
@@ -295,28 +314,20 @@ this.UpdateDynamite = function()
 					dynoPosition = GetEntPosition(this.ExplosiveEntity);
 					this.AddAimRequest(Priority.High, "position", dynoPosition);
 					this.Bot.MoveTowards(dynoPosition);
-					this.Bot.PressButton(BTN.ATTACK1);
+					this.Bot.PressButton(BTN.ATTACK1,BTN.CROUCH);
 					yield();
 				}
 
-				this.BlackboardDelay(35, this.MapGoal);
+				this.ReleaseWeaponRequest();
+				this.ReleaseAimRequest();
 
-				this.Bot.ReleaseButton(BTN.CROUCH);
-
-				if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 )
-				{
-					this.ReleaseWeaponRequest();
-					this.ReleaseAimRequest();
-					this.GoalState = this.COVER_DYNAMITE;
-				}
-				else
-				{
-					this.Finished();
-				}
+				// look for other close by dynos to arm
+				this.GoalState = this.LOOK_FOR_DYNO;
 			}
 			case this.COVER_DYNAMITE:
 			{
 				this.UpdateDebugString();
+				this.BlackboardDelay(35, this.MapGoal);
 
 				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
