@@ -23,6 +23,17 @@ member GetBotByName = function(name)
 	return null;
 };
 
+member IsBot = function(ent)
+{
+	if (ent)
+	{
+		b = Util.GetBotByName(GetEntName(ent));
+		if (b) { return b; }
+	}
+
+	return null;
+};
+
 member EntityPositionByName = function(entname)
 {
 	e = GetEntityByName(entname);
