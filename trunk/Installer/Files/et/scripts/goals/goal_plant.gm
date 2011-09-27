@@ -263,9 +263,18 @@ this.UpdateDynamite = function()
 		{
 			case this.LOOK_FOR_DYNO:
 			{
-				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ProjectileEntity);
-				if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 150 && this.Bot.IsAllied(ent)
-						&& this.Bot.GetExplosiveState(ent) == 1 ) {
+				foundDyno = false;
+				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
+				dowhile(ent) {
+					if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 200 && this.Bot.IsAllied(ent)
+							&& this.Bot.GetExplosiveState(ent) == 1 ) {
+						foundDyno = true;
+						break;
+					}
+					ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, ent);
+				}
+
+				if ( foundDyno ) {
 					this.ExplosiveEntity = ent;
 					this.GoalState = this.ARM_EXPLOSIVE;
 				}
