@@ -63,17 +63,6 @@ this.Randomize = function(frequency, isBot)
 	return false;
 };
 
-this.IsBot = function(ent)
-{
-	if (ent)
-	{
-		b = Util.GetBotByName(GetEntName(ent));
-		if (b) { return b; }
-	}
-
-	return null;
-};
-
 this.GetPriority = function()
 {
 	// special case for some engineer goals. note: disabled if only response is for humans
@@ -108,7 +97,7 @@ this.GetPriority = function()
 this.Events[EVENT.TEAM_VOICE] = function(source, id)
 {
 	cls = this.Bot.GetClass();
-	isBot = this.IsBot(source);
+	isBot = Util.IsBot(source);
 
 	switch(id)
 	{
@@ -230,7 +219,7 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(source, id)
 
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.REVIVED_SAYTHANKS, isBot ) == true )
 	{
@@ -240,7 +229,7 @@ this.Events[EVENT.REVIVED] = function(whoDoneIt)
 
 this.Events[EVENT.HEALED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.HEALED_SAYTHANKS, isBot) == true )
 	{
@@ -250,7 +239,7 @@ this.Events[EVENT.HEALED] = function(whoDoneIt)
 
 this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity()
 		&& this.Randomize(this.AMMO_SAYTHANKS, isBot) == true )
 	{
@@ -260,7 +249,8 @@ this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 
 this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 {
-	isBot = this.IsBot(victim);
+	if (!this.Bot) { return; }
+	isBot = Util.IsBot(victim);
 
 	if ( this.Bot.KillingForRevive == true ) { return; }
 
@@ -299,10 +289,10 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 
 this.Events[EVENT.DEATH] = function(attacker, mod)
 {
-	if ( GetGameIdFromEntity(attacker) > 63 )
+	if ( !this.Bot || GetGameIdFromEntity(attacker) > 63 )
 		{ return;}
 
-	isBot = this.IsBot(attacker);
+	isBot = Util.IsBot(attacker);
 
 	if ( !this.Bot.IsAllied( attacker ) )
 	{
@@ -325,7 +315,7 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	if ( GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
-	isBot = this.IsBot(Inflictor);
+	isBot = Util.IsBot(Inflictor);
 	if ( isBot && isBot.KillingForRevive == true ) {
 		return;
 	}
@@ -360,7 +350,7 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 		return;
 	}
 
-	isBot = this.IsBot(WhoSaidIt);
+	isBot = Util.IsBot(WhoSaidIt);
 
 	if(VoiceId == VOICE.G_BYE
 		&& this.Randomize(this.GOODBYE_SAYGOODBYE, isBot) == true)
