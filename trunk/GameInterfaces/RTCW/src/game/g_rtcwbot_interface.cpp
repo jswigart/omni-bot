@@ -762,7 +762,7 @@ static int _GetEntityTeam( gentity_t *_ent ) {
 		return Bot_TeamGameToBot( BODY_TEAM( _ent ) );
 	case ET_MISSILE:
 		if ( _ent->s.weapon == WP_DYNAMITE ) {
-			return Bot_TeamGameToBot( _ent->s.teamNum ); //% 4
+			return Bot_TeamGameToBot( _ent->s.teamNum % 4 );
 		}
 	// Let this fall through
 	default:
