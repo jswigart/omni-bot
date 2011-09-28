@@ -146,7 +146,7 @@ this.CanHealWithNeedle = function()
 		return false;
 	}
 
-	return false;
+	return true;
 };
 
 this.Update = function()
