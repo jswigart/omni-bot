@@ -36,6 +36,9 @@ this.Enter = function()
 		this.IsSniper = this.Bot.CanSnipe();
 		this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
 	}
+
+	// store combat movement restrictions
+	this.SavedCombatMovement = this.Bot.DisableCombatMovement;
 };
 
 this.Exit = function()
@@ -43,6 +46,9 @@ this.Exit = function()
 	this.UsingWeapon = null;
 	this.Bot.ReleaseButton(BTN.CROUCH);
 	this.ReleaseWeaponRequest();
+
+	// restore combat movement restrictions
+	this.Bot.DisableCombatMovement = this.SavedCombatMovement;
 };
 
 this.GetPriority = function()
@@ -79,6 +85,8 @@ this.Update = function()
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
+
+		this.Bot.DisableCombatMovement = this.MapGoal.DisableCM > 0;
 
 		if ( this.WeaponRestricted > 0 && this.UsingWeapon )
 		{
