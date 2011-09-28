@@ -4,7 +4,6 @@
 this.Name = "DeliverSupplies";	// The name of the goal.
 this.Parent = "HighLevel";	// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.KillAndRevive = true;	// Do a quick kill and revive if target health is less than 37
-this.HealWithNeedle = false;	// Some mods allow for healing with needle. KillAndRevive should be disabled if this is active.
 
 this.AlwaysRecieveEvents = true;
 
@@ -128,6 +127,28 @@ this.CurePoisonWithNeedle = function()
 	return false;
 };
 
+this.CanHealWithNeedle = function()
+{
+	if ( !this.TargetEntity ) {
+		return false;
+	}
+
+	// todo: check all mods for the cvar. etpub and nq for sure have g_medics. and probably nitmod, chaos and silentmod
+	if ( !(GetCvar("g_medics") & 64) ) {
+		return false;
+	}
+
+	haTable = {};
+	GetEntHealthAndArmor(this.TargetEntity, haTable);
+
+	// from etpub and nq code. assuming other mods are the same.
+	if ( haTable.Health > haTable.MaxHealth * 0.25 ) {
+		return false;
+	}
+
+	return false;
+};
+
 this.Update = function()
 {
 	counter = 0;
@@ -161,15 +182,17 @@ this.Update = function()
 			pos = GetEntEyePosition(this.TargetEntity);
 			this.AddAimRequest(Priority.High, "position",pos);
 
-			if ( this.HealWithNeedle && Util.GetEntHealth(this.TargetEntity) < 60 ) {
+			hasNeedle = Util.HasAmmoForWeapon(this.Bot, WEAPON.SYRINGE) > 0;
+
+			if ( hasNeedle && this.CanHealWithNeedle() ) {
 				this.State = this.SWITCH_TO_SYRINGE;
 				this.HealingWithNeedle = true;
 			}
-			else if ( this.CurePoisonWithNeedle() ) {
+			else if ( hasNeedle && this.CurePoisonWithNeedle() ) {
 				this.State = this.SWITCH_TO_SYRINGE;
 				this.CuringPoisonWithNeedle = true;
 			}
-			else if ( !this.KillTarget ) {
+			else if ( !this.KillTarget || !hasNeedle ) {
 				this.State = this.DELIVER_PACKS;
 				this.AddWeaponRequest(Priority.High, this.Supply);
 				this.BlockForWeaponChange(this.Supply);
