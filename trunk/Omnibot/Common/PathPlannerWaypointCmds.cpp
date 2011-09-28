@@ -1024,12 +1024,11 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 
 	bool bUsePlayer = false;
 	bool bAxis[3] = { false, false, false };
-
 	if(_args[1].find('x') != std::string::npos)
 		bAxis[0] = true;
-	if(_args[1].find('y') != std::string::npos)
+	else if(_args[1].find('y') != std::string::npos)
 		bAxis[1] = true;
-	if(_args[1].find('z') != std::string::npos)
+	else if(_args[1].find('z') != std::string::npos)
 		bAxis[2] = true;
 	if(_args.size() == 3 && _args[2].find('p') != std::string::npos)
 		bUsePlayer = true;
@@ -1044,11 +1043,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 		return;
 	}
 
-	EngineFuncs::ConsoleMessage(va("mirroring waypoints around %s",
-		va("%s %s %s", 
-		(bAxis[0] ? "x" : ""), 
-		(bAxis[1] ? "y" : ""), 
-		(bAxis[2] ? "z" : ""))));
+	EngineFuncs::ConsoleMessage(va("mirroring waypoints around %s", _args[1].c_str()));
 	
 	WaypointList mirroredWaypoints;
 
