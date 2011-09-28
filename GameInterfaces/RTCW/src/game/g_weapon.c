@@ -653,11 +653,6 @@ void Weapon_Engineer( gentity_t *ent ) {
 						VectorAdd( ent->client->ps.origin, ent->r.mins, mins );
 						VectorAdd( ent->client->ps.origin, ent->r.maxs, maxs );
 
-						// don't report if not disarming *enemy* dynamite in field
-						if ( dynamiteDropTeam == ent->client->sess.sessionTeam ) {
-							return;
-						}
-
 						for ( i = 0 ; i < num ; i++ ) {
 							hit = &g_entities[touch[i]];
 
@@ -670,9 +665,11 @@ void Weapon_Engineer( gentity_t *ent ) {
 									continue;
 								}
 
+								G_Script_ScriptEvent( hit, "defused", "" );
+
 								traceEnt = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_SOUND );
 								traceEnt->r.svFlags |= SVF_BROADCAST;
-								if ( ent->client->sess.sessionTeam == TEAM_RED ) {
+								if ( ent->client->sess.sessionTeam == TEAM_RED && dynamiteDropTeam != TEAM_RED ) {
 									if ( ( hit->spawnflags & AXIS_OBJECTIVE ) && ( !scored ) ) {
 										AddScore( ent,WOLF_DYNAMITE_DIFFUSE ); // FIXME add team info to *dynamite* so we don't get points for diffusing own team dynamite
 										scored++;
@@ -681,11 +678,7 @@ void Weapon_Engineer( gentity_t *ent ) {
 									trap_SendServerCommand( -1, "cp \"Axis engineer disarmed the Dynamite!\n\"2" );
 									traceEnt->s.eventParm = G_SoundIndex( "sound/multiplayer/axis/g-dynamite_defused.wav" );
 									traceEnt->s.teamNum = TEAM_RED;
-
-									if ( hit ) {
-										G_Script_ScriptEvent( hit, "defused", "" );
-									}
-								} else { // TEAM_BLUE
+								} else if ( dynamiteDropTeam != TEAM_BLUE ) { // TEAM_BLUE
 									if ( ( hit->spawnflags & ALLIED_OBJECTIVE ) && ( !scored ) ) {
 										AddScore( ent,WOLF_DYNAMITE_DIFFUSE );
 										scored++;
@@ -694,10 +687,6 @@ void Weapon_Engineer( gentity_t *ent ) {
 									trap_SendServerCommand( -1, "cp \"Allied engineer disarmed the Dynamite!\n\"2" );
 									traceEnt->s.eventParm = G_SoundIndex( "sound/multiplayer/allies/a-dynamite_defused.wav" );
 									traceEnt->s.teamNum = TEAM_BLUE;
-
-									if ( hit ) {
-										G_Script_ScriptEvent( hit, "defused", "" );
-									}
 								}
 							}
 						}
