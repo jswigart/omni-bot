@@ -263,6 +263,7 @@ this.UpdateDynamite = function()
 		{
 			case this.LOOK_FOR_DYNO:
 			{
+				this.UpdateDebugString();
 				foundDyno = false;
 				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
 				dowhile(ent) {
@@ -285,6 +286,7 @@ this.UpdateDynamite = function()
 					this.GoalState = this.COVER_DYNAMITE;
 				}
 				else {
+					this.BlackboardDelay(35, this.MapGoal);
 					this.Finished();
 				}
 			}
@@ -336,7 +338,6 @@ this.UpdateDynamite = function()
 			case this.COVER_DYNAMITE:
 			{
 				this.UpdateDebugString();
-				this.BlackboardDelay(35, this.MapGoal);
 
 				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
@@ -497,6 +498,10 @@ this.UpdateDebugString = function()
 
 	switch(this.GoalState)
 	{
+		case this.LOOK_FOR_DYNO:
+		{
+			stateString = "LOOK_FOR_DYNO";
+		}
 		case this.LAY_EXPLOSIVE:
 		{
 			stateString = "LAY_EXPLOSIVE";
