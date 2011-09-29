@@ -2157,7 +2157,8 @@ namespace AiState
 		if(IGame::GetGameState() != IGame::GetLastGameState())
 			return 0.f;
 
-		return StateSimultaneous::GetPriority();
+		//return StateSimultaneous::GetPriority();
+		return 1.0f;
 	}
 
 	void Main::Enter()
