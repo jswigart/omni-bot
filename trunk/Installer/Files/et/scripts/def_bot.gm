@@ -32,7 +32,7 @@ this.AimDamping = 10.0;
 // this.ProfileSkill = 3;
 
 // optionally set a moveskill for the bot. this will effect how they react when in combat (i.e. strafing and crouching)
-// setting this will over-ride and value set in goal_combatmovement
+// setting this will over-ride any value set in goal_combatmovement
 // 0 - off, 1 - easy, 2 - medium, 3 - hard, 4 - random
 // this.moveskill = 3;
 
@@ -67,7 +67,16 @@ this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
 
 		tc = tableCount(tmp);
 		if ( tc > 0 ) {
-			weaponChoice = tmp[Util.GetRandomFromTable(tmp)];
+			if ( _PreferredWeapon && _PreferredWeapon[ this.Name ] ) {
+				ind = Util.GetTableKey(tmp, _PreferredWeapon[ this.Name ]);
+				if ( typeId(ind) == 1 ) {
+					weaponChoice = tmp[ind];
+				}
+			}
+
+			if ( !weaponChoice ) {
+				weaponChoice = tmp[Util.GetRandomFromTable(tmp)];
+			}
 		}
 	}
 
