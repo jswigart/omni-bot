@@ -119,6 +119,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <BaseAddress>0x60000000</BaseAddress>
     </Link>
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
@@ -166,6 +167,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <BaseAddress>0x60000000</BaseAddress>
     </Link>
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
