@@ -49,7 +49,7 @@ this.Enter = function()
 	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 
 	this.KillTarget = false;
-	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true 
+	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true
 		&& this.Bot.HasAmmo(WEAPON.SYRINGE) && this.TargetEntity && !GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) )
 	{
 		// are they low enough on health?
@@ -98,6 +98,15 @@ this.Update = function()
 	while(1)
 	{
 		entPos = GetEntPosition(this.TargetEntity);
+
+		// reset if they chose a closer target
+		if ( this.ChangedTarget ) {
+			this.TargetPosition = entPos;
+			this.ChangedTarget = false;
+			if ( this.DynamicGotoThread )
+				{ this.KillThread(this.DynamicGotoThread); }
+			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+		}
 
 		if ( entPos.IsZero() )
 			{ this.Finished(); }
@@ -253,14 +262,21 @@ this.UpdateReviveTarget = function()
 
 this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 {
-	if(this.IsActive() || this.DelayNextResponse)
+	dist = this.Bot.DistanceTo(whoSaidIt);
+	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD) || dist > 1500 )
 	{
 		return;
 	}
 
-	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) || this.Bot.DistanceTo(whoSaidIt) > 1500 )
-	{
+	if ( this.TargetEntity && this.TargetEntity == whoSaidIt ) {
+		//this.Bot.SayTeam("i heard you the first time " + GetEntName(whoSaidIt));
 		return;
+	}
+	else if ( this.TargetEntity ) {
+		// store previous ents and collect targets to deliver to?
+		if ( dist < this.Bot.DistanceTo(this.TargetEntity) ) {
+			this.ChangedTarget = true;
+		}
 	}
 
 	if(macroId == VOICE.NEED_AMMO &&
@@ -271,15 +287,6 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.TargetEntity = whoSaidIt;
 
 		this.Priority = 1.5;
-		this.DelayNextResponse = true;
-		sleep(10);
-		this.DelayNextResponse = false;
-
-		// if we haven't activated by now, don't bother
-		if(!this.IsActive())
-		{
-			this.Priority = 0;
-		}
 	}
 	else if(macroId == VOICE.NEED_MEDIC &&
 		 this.Bot.GetClass() == CLASS.MEDIC &&
@@ -289,15 +296,6 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.TargetEntity = whoSaidIt;
 
 		this.Priority = 1.5;
-		this.DelayNextResponse = true;
-		sleep(10);
-		this.DelayNextResponse = false;
-
-		// if we haven't activated by now, don't bother
-		if(!this.IsActive())
-		{
-			this.Priority = 0;
-		}
 	}
 };
 
