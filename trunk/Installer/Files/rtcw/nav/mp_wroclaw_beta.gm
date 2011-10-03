@@ -29,6 +29,18 @@ global Map =
 		},
 	},
 
+	Switches =
+	{
+		lever1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever1",
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+	},	
+
 	Navigation =
 	{
 		boxjump =
@@ -174,11 +186,13 @@ global Map =
 
 		vel = ToVector( trigger.Action );
 		if ( vel.z > 0 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
+			//SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
+			Map.Switches.lever1.Enabled = false;
 		}
 		else
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
+			//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
+			Map.Switches.lever1.Enabled = true;
 		}
 	},
 };
@@ -228,7 +242,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_alPanz.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_ald.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" ); // unused.
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_lower_access_door_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_communication_ops" );
@@ -241,6 +255,7 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
+	Util.UpdateSwitchData();
 
 	MapRoutes =
 	{
