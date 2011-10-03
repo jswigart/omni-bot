@@ -27,6 +27,7 @@ this.Enter = function()
 	this.FriendlyFire = GetCvar("g_friendlyfire");
 	this.PacksThrown = 0;
 	this.TargetPosition = GetEntPosition(this.TargetEntity);
+	this.StartPosition = this.TargetPosition; // don't chase them across the entire map
 	this.OnTarget = false;
 
 	if ( this.Respond )
@@ -98,6 +99,8 @@ this.Update = function()
 	while(1)
 	{
 		entPos = GetEntPosition(this.TargetEntity);
+		if ( entPos.IsZero() )
+			{ this.Finished(); }
 
 		// reset if they chose a closer target
 		if ( this.ChangedTarget ) {
@@ -108,20 +111,18 @@ this.Update = function()
 			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
 		}
 
-		if ( entPos.IsZero() )
-			{ this.Finished(); }
-
-		d = DistanceBetween(entPos,this.TargetPosition);
-		if( d > 128 && d < 500)
+		d = DistanceBetween(entPos,this.StartPosition);
+		if( d > 128 && d < 1000 )
 		{
 			if ( this.DynamicGotoThread )
 				{ this.KillThread(this.DynamicGotoThread); }
 			this.TargetPosition = entPos;
 			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
 		}
-		else if ( d > 500 )
+		else if ( d > 1000 )
 		{
 			//stop chasing
+			//this.Bot.SayTeam("stop moving if you want packs " + GetEntName(this.TargetEntity));
 			this.Finished();
 		}
 
