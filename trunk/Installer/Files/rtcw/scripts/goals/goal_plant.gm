@@ -146,7 +146,6 @@ this.UpdateDynamite = function()
 			case this.LOOK_FOR_DYNO:
 			{
 				this.UpdateDebugString();
-				this.Bot.Say("looking");
 				foundDyno = false;
 				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
 				dowhile(ent) {
