@@ -1977,7 +1977,7 @@ int gmBot::gmfSetRoles(gmThread *a_thread)
 
 	GM_CHECK_NUM_PARAMS(1);
 
-	BitFlag32 rolemask;
+	BitFlag32 rolemask = native->GetRoleMask(); // cs: preserve current mask
 	for(int p = 0; p < a_thread->GetNumParams(); ++p)
 	{
 		GM_CHECK_INT_PARAM(r,p);
@@ -1993,7 +1993,7 @@ int gmBot::gmfClearRoles(gmThread *a_thread)
 
 	GM_CHECK_NUM_PARAMS(1);
 
-	BitFlag32 rolemask;
+	BitFlag32 rolemask = native->GetRoleMask(); // cs: preserve current mask
 	for(int p = 0; p < a_thread->GetNumParams(); ++p)
 	{
 		GM_CHECK_INT_PARAM(r,p);
