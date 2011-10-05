@@ -1641,6 +1641,14 @@ member TestBot = function( _params )
 //
 member WeaponName = function(weaponId)
 {
+	if (weaponId == WEAPON.MORTAR)
+	{
+		return "MORTAR"; //same as GRANATWERFER
+	}
+	if (weaponId == WEAPON.MOBILE_MG42)
+	{
+		return "MOBILE_MG42"; //same as MOBILE_BROWNING
+	}
 	foreach ( name and Id in WEAPON )
 	{
 		if(weaponId == Id)

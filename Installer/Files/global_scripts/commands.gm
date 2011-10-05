@@ -1499,7 +1499,7 @@ Commands["fix_waterwps"] =
 	{
 		wpTable = {};
 		Wp.GetAllWaypoints(wpTable);
-		
+
 		foreach ( id && wp in wpTable ) {
 			foreach ( flag && set in wp.flags ) {
 				if ( flag == "underwater" && set == 1 ) {
@@ -1508,7 +1508,7 @@ Commands["fix_waterwps"] =
 					}
 				}
 			}
-		}		
+		}
 	},
 
 	Help =
@@ -1516,3 +1516,62 @@ Commands["fix_waterwps"] =
 		"adds inwater flag to waypoints close to the water surface",
 	},
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["testbotroles"] =
+{
+	Func = function(_params)
+	{
+		if ( tableCount(BotTable) < 1 ) {
+			print("adding testbot");
+			ExecCommand("testbot 1 1");
+			yield();
+		}
+
+		usebot = null;
+		foreach ( id and bot in BotTable ) {
+			usebot = bot;
+			break;
+		}
+
+		if (!usebot) {
+			print("please add a bot first");
+			return;
+		}
+
+		print("testing single role");
+		usebot.SetRoles(ROLE.DEFENDER);
+		yield();
+		if ( !usebot.HasRole(ROLE.DEFENDER) ) {
+			print("single role failed!");
+			return;
+		}
+
+		print("\ntesting accumulated role");
+
+		usebot.SetRoles(ROLE.DEFENDER1);
+		yield();
+		if ( !usebot.HasRole(ROLE.DEFENDER) || !usebot.HasRole(ROLE.DEFENDER1) ) {
+			print("accumulated role failed!");
+			return;
+		}
+
+		print("\ntesting single role removal");
+
+		usebot.ClearRoles(ROLE.DEFENDER1);
+		yield();
+		if ( !usebot.HasRole(ROLE.DEFENDER) || usebot.HasRole(ROLE.DEFENDER1) ) {
+			print("single role removal failed!");
+			return;
+		}
+
+		print("\nall tests passed\n");
+	},
+
+	Help =
+	{
+		"test bot roles",
+	},
+};
+Commands["tbr"] = Commands["testbotroles"];

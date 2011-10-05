@@ -30,3 +30,8 @@ this.AimStiffness = 75.0;
 this.AimDamping = 10.0;
 
 this.AddScriptGoal("TestBot");
+
+this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
+{
+	return 0;
+};
