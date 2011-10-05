@@ -1313,6 +1313,7 @@ extern vmCvar_t g_MedNades;
 extern vmCvar_t g_smokeGrenades;
 extern vmCvar_t g_nadePacks;
 extern vmCvar_t g_betting;
+extern vmCvar_t g_muteSpecs;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;
