@@ -9,13 +9,24 @@ this.Debug = false;
 
 this.Initialize = function()
 {
+	this.JumpLimit = 1;
+
 	if ( GetGameState() != "Playing" ) {
 		this.Disable = true;
 	}
 };
 
+this.ResetStuck = function()
+{
+	this.Bot.StuckPos = null;
+	this.Bot.Stucktime = 0;
+	this.JumpAttempts = 0;
+};
+
 this.GetPriority = function()
 {
+	this.JumpAttempts = 0;
+
 	while(1)
 	{
 		if ( Server.SleepBots == true && Server.NumPlayers == Server.NumBots ) {
@@ -28,7 +39,9 @@ this.GetPriority = function()
 			this.JustSpawned = false;
 		}
 
-		if ( this.Bot.IsStuck(this.Interval) )
+		// cs: distance check overrides IsStuck if previously stuck. this is going to be bad in cases where
+		// the destination happens to be less than 100 units away from stuck pos.
+		if ( this.Bot.StuckPos || this.Bot.IsStuck(this.Interval) )
 		{
 			nearestPlayer = this.Bot.GetNearest(CAT.PLAYER);
 
@@ -60,7 +73,11 @@ this.GetPriority = function()
 				if ( this.Debug ) {
 					this.Bot.Say("i've been stuck for " + this.Bot.Stucktime + " seconds");
 				}
-				if ( this.Bot.Stucktime >= this.KillTime )
+
+				if ( this.Bot.StuckPos && this.Bot.DistanceTo(this.Bot.StuckPos) > 100 ) {
+					this.ResetStuck();
+				}
+				else if ( this.Bot.Stucktime >= this.KillTime )
 				{
 					if ( this.LogStuckage ) {
 						// write it to the omni-bot log
@@ -73,19 +90,15 @@ this.GetPriority = function()
 					if ( this.KillWhenStuck ) {
 						this.Bot.ExecCommand("kill");
 					}
+
+					this.ResetStuck();
 				}
-				else
+				else if ( this.JumpAttempts < this.JumpLimit )
 				{
 					this.Bot.StuckPos = this.Bot.GetPosition();
 					this.Bot.PressButton(BTN.JUMP);
+					this.JumpAttempts += 1;
 				}
-			}
-		}
-		else
-		{
-			if ( this.Bot.StuckPos && this.Bot.DistanceTo(this.Bot.StuckPos) > 100 ) {
-				this.Bot.StuckPos = null;
-				this.Bot.Stucktime = 0;
 			}
 		}
 
@@ -115,5 +128,5 @@ this.StuckageLog = function(pos)
 
 	str = "Stuckages[ tableCount(Stuckages) ] = Vector3("+pos.x +","+pos.y+","+pos.z+");";
 	assert( gmfile.Write( str, System.NewLine ) );
-	gmfile.Close();	
+	gmfile.Close();
 };
