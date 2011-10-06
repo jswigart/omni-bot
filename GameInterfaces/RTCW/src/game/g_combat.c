@@ -198,7 +198,7 @@ void TossClientItems( gentity_t *self ) {
 			drop = Drop_Item( self, item, 0, qfalse );
 			// JPW NERVE -- fix ammo counts
 			drop->count = self->client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
-			drop->item->quantity = self->client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
+			drop->item->quantity = self->client->ps.ammo[BG_FindClipForWeapon( weapon )];
 			// jpw
 		}
 	}
