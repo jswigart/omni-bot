@@ -31,8 +31,6 @@
 
 int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	int quantity;
-	int i;
-	gclient_t   *client;
 
 	if ( !other->client->ps.powerups[ent->item->giTag] ) {
 
@@ -54,48 +52,6 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	}
 
 	other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
-
-	// give any nearby players a "denied" anti-reward
-	for ( i = 0 ; i < level.maxclients ; i++ ) {
-		vec3_t delta;
-		float len;
-		vec3_t forward;
-		trace_t tr;
-
-		client = &level.clients[i];
-		if ( client == other->client ) {
-			continue;
-		}
-		if ( client->pers.connected == CON_DISCONNECTED ) {
-			continue;
-		}
-		if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
-			continue;
-		}
-
-		// if too far away, no sound
-		VectorSubtract( ent->s.pos.trBase, client->ps.origin, delta );
-		len = VectorNormalize( delta );
-		if ( len > 192 ) {
-			continue;
-		}
-
-		// if not facing, no sound
-		AngleVectors( client->ps.viewangles, forward, NULL, NULL );
-		if ( DotProduct( delta, forward ) < 0.4 ) {
-			continue;
-		}
-
-		// if not line of sight, no sound
-		trap_Trace( &tr, client->ps.origin, NULL, NULL, ent->s.pos.trBase, ENTITYNUM_NONE, CONTENTS_SOLID );
-		if ( tr.fraction != 1.0 ) {
-			continue;
-		}
-
-		// anti-reward
-		client->ps.persistant[PERS_REWARD_COUNT]++;
-		client->ps.persistant[PERS_REWARD] = REWARD_DENIED;
-	}
 
 	if ( ent->s.density == 2 ) {   // multi-stage health first stage
 		return RESPAWN_PARTIAL;
@@ -244,6 +200,92 @@ void Fill_Clip( playerState_t *ps, int weapon ) {
 		ps->ammo[ammoweap] -= ammomove;
 		ps->ammoclip[BG_FindClipForWeapon( weapon )] += ammomove;
 	}
+}
+
+/*/////////////////////////////////////////////////
+PlayerNeedsAmmo
+Maleficus' function to check whether a player currrently
+has any use for an ammo pack.  This allows us to prevent
+the player from picking up the pack if he does not need it.
+*/                                                                                                                                                                                                                                                   /////////////////////////////////////////////////
+qboolean PlayerNeedsAmmo( gentity_t *ent ) {
+	int nades, weapon, i;
+	int numClips = 3;
+
+	//check nades first!
+	switch ( ent->client->ps.stats[STAT_PLAYER_CLASS] )
+	{
+	case PC_ENGINEER:
+		nades = 8;
+		break;
+	case PC_SOLDIER:
+		nades = 4;
+		break;
+	case PC_LT:
+		nades = g_LTNades.integer;
+		break;
+	case PC_MEDIC:
+		nades = g_MedNades.integer;
+		break;
+	default:
+		nades = 1;
+		break;
+	}
+
+	//if short on nades, pickup!
+	if ( ent->client->sess.sessionTeam == TEAM_RED ) {
+		weapon = WP_GRENADE_LAUNCHER;
+	} else {
+		weapon = WP_GRENADE_PINEAPPLE;
+	}
+
+	if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( weapon )] < nades ) {
+		return qtrue;
+	}
+
+	//check pistols
+	if ( ent->client->sess.sessionTeam == TEAM_RED ) {
+		weapon = WP_LUGER;
+	} else {
+		weapon = WP_COLT;
+	}
+
+	//if need pistol ammo, pickup!
+	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
+		return qtrue;
+	}
+
+	if ( ent->client->ps.stats[STAT_PLAYER_CLASS] == PC_MEDIC ) {
+		if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDIC_SYRINGE )] < 10 ) {
+			return qtrue;
+		}
+	}
+
+	if ( g_helmetProtection.integer ) {
+		if ( ent->client->ps.eFlags & EF_HEADSHOT ) {
+			return qtrue;
+		}
+	}
+
+	//loop through remaining weapons and if need ammo, pickup!
+	for ( i = 0; i < MAX_WEAPS_IN_BANK_MP; i++ )
+	{
+		weapon = weapBanksMultiPlayer[3][i];
+
+		if ( COM_BitCheck( ent->client->ps.weapons, weapon ) ) {
+			if ( weapon == WP_FLAMETHROWER ) {
+				if ( ent->client->ps.ammoclip[BG_FindAmmoForWeapon( weapon )] < ammoTable[weapon].maxclip ) {
+					return qtrue;
+				}
+			}
+
+			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * numClips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) {
+				return qtrue;
+			}
+		}
+	}
+
+	return qfalse;      //player doesn't need any ammo, so don't let him pick up the pack!
 }
 
 /*
@@ -656,92 +698,6 @@ void Touch_Item_Auto( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	if ( other->client->pers.autoActivate == PICKUP_FORCE ) {      // autoactivate probably forced by the "Cmd_Activate_f()" function
 		other->client->pers.autoActivate = PICKUP_ACTIVATE;     // so reset it.
 	}
-}
-
-/*/////////////////////////////////////////////////
-PlayerNeedsAmmo
-Maleficus' function to check whether a player currrently
-has any use for an ammo pack.  This allows us to prevent
-the player from picking up the pack if he does not need it.
-*/                                                                                                                                                                                                                                                   /////////////////////////////////////////////////
-qboolean PlayerNeedsAmmo( gentity_t *ent ) {
-	int nades, weapon, i;
-	int numClips = 3;
-
-	//check nades first!
-	switch ( ent->client->ps.stats[STAT_PLAYER_CLASS] )
-	{
-	case PC_ENGINEER:
-		nades = 8;
-		break;
-	case PC_SOLDIER:
-		nades = 4;
-		break;
-	case PC_LT:
-		nades = g_LTNades.integer;
-		break;
-	case PC_MEDIC:
-		nades = g_MedNades.integer;
-		break;
-	default:
-		nades = 1;
-		break;
-	}
-
-	//if short on nades, pickup!
-	if ( ent->client->sess.sessionTeam == TEAM_RED ) {
-		weapon = WP_GRENADE_LAUNCHER;
-	} else {
-		weapon = WP_GRENADE_PINEAPPLE;
-	}
-
-	if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( weapon )] < nades ) {
-		return qtrue;
-	}
-
-	//check pistols
-	if ( ent->client->sess.sessionTeam == TEAM_RED ) {
-		weapon = WP_LUGER;
-	} else {
-		weapon = WP_COLT;
-	}
-
-	//if need pistol ammo, pickup!
-	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
-		return qtrue;
-	}
-
-	if ( ent->client->ps.stats[STAT_PLAYER_CLASS] == PC_MEDIC ) {
-		if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDIC_SYRINGE )] < 10 ) {
-			return qtrue;
-		}
-	}
-
-	if ( g_helmetProtection.integer ) {
-		if ( ent->client->ps.eFlags & EF_HEADSHOT ) {
-			return qtrue;
-		}
-	}
-
-	//loop through remaining weapons and if need ammo, pickup!
-	for ( i = 0; i < MAX_WEAPS_IN_BANK_MP; i++ )
-	{
-		weapon = weapBanksMultiPlayer[3][i];
-
-		if ( COM_BitCheck( ent->client->ps.weapons, weapon ) ) {
-			if ( weapon == WP_FLAMETHROWER ) {
-				if ( ent->client->ps.ammoclip[BG_FindAmmoForWeapon( weapon )] < ammoTable[weapon].maxclip ) {
-					return qtrue;
-				}
-			}
-
-			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * numClips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) {
-				return qtrue;
-			}
-		}
-	}
-
-	return qfalse;      //player doesn't need any ammo, so don't let him pick up the pack!
 }
 
 /*
