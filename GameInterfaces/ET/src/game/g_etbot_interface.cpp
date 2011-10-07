@@ -4900,6 +4900,11 @@ public:
 								pEnt->client->sess.playerWeapon = WP_MORTAR2;
 								pEnt->client->sess.latchPlayerWeapon = WP_MORTAR2;
 							}
+							else if ( pEnt->client->sess.sessionTeam == TEAM_ALLIES && pMsg->m_Selection == ET_WP_PANZERFAUST )
+							{
+								pEnt->client->sess.playerWeapon = WP_BAZOOKA;
+								pEnt->client->sess.latchPlayerWeapon = WP_BAZOOKA;
+							}
 							else
 							{
 								pEnt->client->sess.playerWeapon = _weaponBotToGame(pMsg->m_Selection);
