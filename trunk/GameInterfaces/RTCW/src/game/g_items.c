@@ -302,7 +302,8 @@ void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip ) {
 	int ammoweap = BG_FindAmmoForWeapon( weapon );
 	
 	// cs: this extraClip stuff needs rewritten ...
-	int maxammo = (ammoTable[ammoweap].maxclip * (ammoTable[ammoweap].numClips - 1)) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon);
+	int clips = ammoTable[ammoweap].numClips > 1 ? ammoTable[ammoweap].numClips - 1 : ammoTable[ammoweap].numClips;
+	int maxammo = (ammoTable[ammoweap].maxclip * clips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon);
 	int addamount = maxammo - ent->client->ps.ammo[ammoweap];
 
 	if (addamount < 0) {
@@ -527,9 +528,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 
 // JPW NERVE  prevents drop/pickup weapon "quick reload" exploit
 	if ( alreadyHave ) {
-		if ( PlayerNeedsAmmo(other) ) {
-			Add_Ammo( other, ent->item->giTag, quantity + ent->item->quantity, !alreadyHave );
-		}
+		Add_Ammo( other, ent->item->giTag, quantity + ent->item->quantity, !alreadyHave );
 	} else {
 		// set them up with exactly what was dropped
 		other->client->ps.ammoclip[BG_FindClipForWeapon( ent->item->giTag )] = quantity;
