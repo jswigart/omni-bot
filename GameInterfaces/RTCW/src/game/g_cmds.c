@@ -1163,7 +1163,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	int j;
 	gentity_t   *other;
 	int color;
-	char name[64];
+	char name[128]; // enough for netname + location
 	// don't let text be too long for malicious reasons
 	char text[MAX_SAY_TEXT];
 	char location[64];
