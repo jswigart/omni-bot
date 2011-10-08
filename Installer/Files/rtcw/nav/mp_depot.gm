@@ -42,20 +42,49 @@ global Map =
 	{
 		AXIS =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				spawnpt = 1,
 				numbots = 5,
 				crucialClass = CLASS.ENGINEER,
 			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER1 = // ruins airstrikes
+			{
+				numbots = 1,
+				crucialClass = CLASS.LIEUTENANT,
+			},
 		},
 
 		ALLIES =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				spawnpt = 2,
 				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
@@ -208,8 +237,33 @@ global Map =
 
 	Ops_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
+		if ( TestMap || Map.Ended ) {
 			return;
+		}
+
+		Map.Ended = true;
+
+		Util.MapDebugPrint( "Ops_Destroyed" );
+
+		foreach( id and bot in BotTable )
+		{
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
+			}
+
+			team = bot.GetTeam();
+			if ( team == TEAM.AXIS ) {
+				if ( RandInt( 0,10 ) < 5 ) {
+					bot.SayVoice( VOICE.G_CHEER );
+				}
+				sleep( 0.5 );
+			}
+			else if ( team == TEAM.ALLIES ) {
+				if ( RandInt( 0,10 ) < 5 ) {
+					bot.SayVoice( VOICE.G_NEGATIVE );
+				}
+				sleep( 0.5 );
+			}
 		}
 	},
 
@@ -247,8 +301,33 @@ global Map =
 
 	AA_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
+		if ( TestMap || Map.Ended ) {
 			return;
+		}
+
+		Map.Ended = true;
+
+		Util.MapDebugPrint( "AA_Destroyed" );
+
+		foreach( id and bot in BotTable )
+		{
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
+			}
+
+			team = bot.GetTeam();
+			if ( team == TEAM.ALLIES ) {
+				if ( RandInt( 0,10 ) < 5 ) {
+					bot.SayVoice( VOICE.G_CHEER );
+				}
+				sleep( 0.5 );
+			}
+			else if ( team == TEAM.AXIS ) {
+				if ( RandInt( 0,10 ) < 5 ) {
+					bot.SayVoice( VOICE.G_NEGATIVE );
+				}
+				sleep( 0.5 );
+			}
 		}
 	},
 
@@ -293,8 +372,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Field_Ops );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 	},
 
 	West_Gate_Planted = function( trigger )
@@ -336,8 +413,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_AA_Gun );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
 	},
 
 	East_Gate_Planted = function( trigger )
@@ -466,12 +541,7 @@ global Map =
 				}
 				Map.AxisInRuins = true;
 
-				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
-
-				if ( Map.AxisInWarehouse == true ) {
-					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
-				}
 
 				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
@@ -482,9 +552,6 @@ global Map =
 				Map.AxisInRuins = false;
 
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				if ( Map.AxisInWarehouse == true ) {
-					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
-				}
 			}
 		},
 		OnExit = function( ent )
@@ -495,6 +562,7 @@ global Map =
 		},
 	},
 
+	WarehousePlayers = 0,
 	WarehouseTrigger =
 	{
 		Name = "WarehouseTrigger",
@@ -506,27 +574,10 @@ global Map =
 			}
 
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
-				if ( Map.FlagStatus == 2 ) {
-					return;
-				}
-				Map.AxisInWarehouse = true;
+				Map.WarehousePlayers += 1;
 
-				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
-				if ( Map.AxisInRuins == true ) {
-					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
-				}
-
-				Map.WarehouseASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
-				while ( ( GetTime() < Map.WarehouseASTimer ) && ( Map.FlagStatus != 2 ) )
-				{
-					sleep( 1 );
-				}
-
-				Map.AxisInWarehouse = false;
-				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				if ( Map.AxisInRuins == true ) {
-					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
 				}
 			}
 		},
@@ -535,6 +586,15 @@ global Map =
 			if ( TestMap ) {
 				return;
 			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.WarehousePlayers -= 1;
+
+				if ( Map.WarehousePlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bwhas.*" );
+				}
+			}
+
 		},
 	},
 	Ops =
@@ -627,7 +687,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies capture the Forward Deployment Area!", Map.CP_Allies_Captured );
 
 	tOne = OnTriggerRegion( AABB( -8514,3503,287,-8496,3638,392 ), Map.RuinsTrigger );
-	tTwo = OnTriggerRegion( AABB( -8072,1535,-366,-8032,1728,-245 ), Map.WarehouseTrigger );
+	tTwo = OnTriggerRegion( AABB(-8048.000,1135.000,-254.000,-7623.000,2160.000,-180.000), Map.WarehouseTrigger );
 	tThree = OnTriggerRegion( AABB( -8032.000,3701.000,287.000,-7855.000,3741.000,409.000 ), Map.RuinsTrigger );
 	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
 	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
@@ -669,12 +729,14 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_reastgate.*" );
-	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
+
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_beastgate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
