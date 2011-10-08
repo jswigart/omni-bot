@@ -155,7 +155,7 @@ global Map =
 			navigate = function( _this )
 			{
 				_this.Bot.HoldButton( BTN.FORWARD, 3 );
-				sleep( 2 );
+				sleep( 3 );
 			},
 		},
 
@@ -716,7 +716,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_eng_eastgate.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
+	SetGoalPriority( "AIRSTRIKE_bwhas.*", 0.94 ); // focus on higher threat
 	SetGoalPriority( "CAMP_.*", 0.95 );
 
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
@@ -790,6 +791,31 @@ global OnMapLoad = function()
 						ROUTE_rearwh = { ROUTE_wh = {}, },
 					},
 				},
+			},
+		},
+		CAMP_aaflex1 =
+		{
+			ROUTE_adspawn1 = { ROUTE_radioroom = {}, },
+		},
+		CAMP_opsflex3 =
+		{
+			ROUTE_arspawn1 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
+			},
+			ROUTE_arspawn2 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
+			},
+			ROUTE_arspawn3 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
 			},
 		},
 		DEFEND_bAA1 =
@@ -1058,6 +1084,13 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_btrain4 = MapRoutes_DEFEND_btrain1;
 	MapRoutes.DEFEND_btrain5 = MapRoutes_DEFEND_btrain1;
 	MapRoutes.DEFEND_btrain6 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.CAMP_aaflex2 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_aaflex3 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_aaflex4 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_opsflex4 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsflex6 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsd3 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsd6 = MapRoutes.CAMP_opsflex3;
 
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
