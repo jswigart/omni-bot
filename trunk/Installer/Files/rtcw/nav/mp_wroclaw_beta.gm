@@ -230,6 +230,7 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	kz = OnTriggerRegion( AABB( -203,-1535,-370,60,-1326,-96 ), Map.KillZone );
+	nopush = OnTriggerRegion(AABB(-1968.000,1695.000,25.000,-1295.000,2205.000,99.000),RegionTrigger.DisableBotPush);
 
 	SetGoalPriority( "REPAIRMG42_.*", 0.96 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
