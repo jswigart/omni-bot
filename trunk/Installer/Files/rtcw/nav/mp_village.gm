@@ -129,7 +129,20 @@ global Map =
 				numbots = 1,
 				crucialClass = CLASS.LIEUTENANT,
 			},
+			DEFENDER1 = //no goals assigned. this is forcing at least one engineer
+			{
+				numbots = 1,
+				crucialClass = CLASS.ENGINEER,
+			}
 		},
+		ALLIES =
+		{
+			ATTACKER = //no goals assigned. this is forcing at least one engineer
+			{
+				numbots = 1,
+				crucialClass = CLASS.ENGINEER,
+			}
+		},		
 	},	
 
 	Airstrike =
