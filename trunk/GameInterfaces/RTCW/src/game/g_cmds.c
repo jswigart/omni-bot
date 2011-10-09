@@ -2836,7 +2836,7 @@ void Cmd_Buy_f( gentity_t* ent )
 	}
 
 	if (!*buyingstr) {
-		CP("print \"usage: !buy [ammo|health|adrenaline]\n\"");
+		CP("print \"usage: /buy [ammo|health]\n\"");
 		return;
 	}
 
