@@ -1117,7 +1117,6 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 void AddScore( gentity_t *ent, int score );
 void CalculateRanks( void );
 qboolean SpotWouldTelefrag( gentity_t *spot );
-float ClientHitboxMaxZ( gentity_t *hitEnt );
 
 //
 // g_svcmds.c
