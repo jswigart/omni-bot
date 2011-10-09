@@ -692,6 +692,9 @@ global OnMapLoad = function()
 	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
 	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
 	tyele = OnTriggerRegion(AABB(-10204.000,1679.000,-822.000,-9874.000,1832.000,330.000),RegionTrigger.DisableBotPush);
+	nopush1 = OnTriggerRegion(AABB(-12480.000,4105.000,-758.000,-12294.000,4293.000,-449.000),RegionTrigger.DisableBotPush);
+	nopush2 = OnTriggerRegion(AABB(-12071.000,4143.000,-566.000,-11888.000,4261.000,-220.000),RegionTrigger.DisableBotPush);
+	nopush3 = OnTriggerRegion(AABB(-12466.000,5925.000,-758.000,-12285.000,6088.000,-111.000),RegionTrigger.DisableBotPush);	
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
