@@ -2379,22 +2379,3 @@ void G_RetrieveMoveSpeedsFromClient( int entnum, char *text ) {
 	}
 }
 
-// ClientHitboxMaxZ returns the proper value to use for
-// the entity's r.maxs[2] when running a trace.
-float ClientHitboxMaxZ( gentity_t *hitEnt ) {
-	if ( !hitEnt ) {
-		return 0;
-	}
-	if ( !hitEnt->client ) {
-		return hitEnt->r.maxs[2];
-	}
-
-	if ( hitEnt->client->ps.eFlags & EF_DEAD ) {
-		return 4;
-	}
-	if ( hitEnt->client->ps.eFlags & EF_CROUCHING ) {
-		return 24;
-	}
-
-	return 36;
-}

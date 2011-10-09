@@ -625,8 +625,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	self->s.loopSound = 0;
 
 	//trap_UnlinkEntity( self );
-	self->r.maxs[2] = self->client->ps.crouchMaxZ; //0;
-	self->client->ps.maxs[2] = self->client->ps.crouchMaxZ; //0;
+	self->r.maxs[2] = 4;
+	self->client->ps.maxs[2] = 4;
 	trap_LinkEntity( self );
 
 	// don't allow respawn until the death anim is done
