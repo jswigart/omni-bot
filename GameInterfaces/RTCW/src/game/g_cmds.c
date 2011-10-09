@@ -2797,6 +2797,10 @@ void Cmd_Accept_f( gentity_t* ent )
 			return;
 		}
 	}
+	else {
+		CP("print \"^daccept: you have not received a bet request!\n\"");
+		return;
+	}
 
 	// start the bet..
 	ent->client->sess.betTime = level.time;
