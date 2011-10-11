@@ -1,12 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugWindow", "RemoteDebugWindow\RemoteDebugWindow.vcproj", "{15CE2F8C-EA71-4EB9-8970-703FC444AE0A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{C9B38552-3534-437E-A660-C34A62DDCEB1} = {C9B38552-3534-437E-A660-C34A62DDCEB1}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugWindow", "RemoteDebugWindow\RemoteDebugWindow.vcxproj", "{15CE2F8C-EA71-4EB9-8970-703FC444AE0A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugLib", "RemoteDebugLib\RemoteDebugLib.vcproj", "{C9B38552-3534-437E-A660-C34A62DDCEB1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugLib", "RemoteDebugLib\RemoteDebugLib.vcxproj", "{C9B38552-3534-437E-A660-C34A62DDCEB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

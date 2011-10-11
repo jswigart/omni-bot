@@ -2604,14 +2604,12 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 					if ( Simple_EmplacedGunIsRepairable( pEnt ) ) {
 						pMsg->m_CurrentHealth = 0;
 						pMsg->m_MaxHealth = MG42_MULTIPLAYER_HEALTH;
-					} else
-					{
+					} else {
 						if ( pEnt->mg42BaseEnt > 0 ) {
 							gentity_t *pBase = &g_entities[pEnt->mg42BaseEnt];
 							pMsg->m_CurrentHealth = pBase->health;
 							pMsg->m_MaxHealth = MG42_MULTIPLAYER_HEALTH;
-						} else
-						{
+						} else {
 							// just in case
 							pMsg->m_CurrentHealth = pEnt->health;
 							pMsg->m_MaxHealth = MG42_MULTIPLAYER_HEALTH;
@@ -3054,8 +3052,7 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 				if ( _data.GetMessageId() == RTCW_MSG_PICKWEAPON2 ) {
 					pEnt->client->sess.playerWeapon2 = _weaponBotToGame( pMsg->m_Selection );
 					pEnt->client->sess.latchPlayerWeapon2 = _weaponBotToGame( pMsg->m_Selection );
-				} else
-				{
+				} else {
 					//CS: /kill 2 seconds before next spawn
 					if ( !( pEnt->client->ps.pm_flags & PMF_LIMBO ) && pEnt->client->sess.playerWeapon != _weaponBotToMpWeapon( pMsg->m_Selection ) ) {
 						pEnt->client->sess.botSuicide = qtrue;
@@ -3066,8 +3063,7 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 					pEnt->client->sess.latchPlayerWeapon = _weaponBotToMpWeapon( pMsg->m_Selection );
 				}
 				pMsg->m_Good = True;
-			} else
-			{
+			} else {
 				pMsg->m_Good = False;
 			}
 		}
@@ -3247,9 +3243,7 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 			}
 
 			if ( t == ET_PLAYER ) {
-				pMsg->m_PlayerClass = ( pEnt->client->sess.playerType == pEnt->client->sess.latchPlayerType )
-									  ? Bot_PlayerClassGameToBot( pEnt->client->sess.playerType )
-									  : Bot_PlayerClassGameToBot( pEnt->client->sess.latchPlayerType );
+				pMsg->m_PlayerClass = Bot_PlayerClassGameToBot( pEnt->client->sess.latchPlayerType );
 			}
 		}
 		break;
@@ -3289,20 +3283,6 @@ void PrintMessage( const char *_msg ) {
 		G_Printf( "%s%s\n", S_COLOR_GREEN, tmpbuffer );
 	}
 }
-
-// TODO: remove when new stuff is working
-/*	bool PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg)
-    {
-        if(_msg && (g_LastScreenMessageTime != level.time))
-        {
-            trap_SendServerCommand(-1, va("cp \"%s\"", _msg));
-            g_LastScreenMessageTime = level.time;
-
-            return true;
-        }
-
-        return false;
-    }*/
 
 const char *GetMapName() {
 	char serverinfo[MAX_INFO_STRING];
