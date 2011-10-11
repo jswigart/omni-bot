@@ -364,7 +364,7 @@ void Weapon_Syringe( gentity_t *ent ) {
 
 				// DHM - Nerve :: Let the person being revived know about it
 				trap_SendServerCommand( traceEnt - g_entities, va( "cp \"You have been revived by [lof]%s!\n\"", ent->client->pers.netname ) );
-				traceEnt->props_frame_state = ent->s.number;
+				traceEnt->props_frame_state = ent-g_entities;
 
 				if ( g_reportRevives.integer ) {
 					trap_SendServerCommand( -1, va( "print \"%s ^7was revived by %s\n\"", traceEnt->client->pers.netname, ent->client->pers.netname ) );

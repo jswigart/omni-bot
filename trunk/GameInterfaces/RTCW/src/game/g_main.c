@@ -1963,7 +1963,7 @@ Append information about this game to the log file
 ================
 */
 void LogExit( const char *string ) {
-	int i, numSorted, winner;
+	int i, winner;
 	gclient_t       *cl;
 	char cs[MAX_STRING_CHARS];
 
