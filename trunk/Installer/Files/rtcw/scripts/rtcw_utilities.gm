@@ -882,3 +882,43 @@ member ToggleFlag = function( goal, time )
 		sleep(1);
 	}
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// randomly global chat some victory message
+member WinningChat = function( team )
+{
+	// not if bot chat is disabled
+	if ( !MAP_TALK ) {
+		return;
+	}
+
+	v = { VOICE.G_CHEER, VOICE.G_ENEMY_WEAK, VOICE.G_AFFIRMATIVE, VOICE.G_GOODGAME, VOICE.G_GREATSHOT };
+
+	foreach ( id and bot in BotTable ) {
+		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {
+			ind = Util.GetRandomFromTable(v);
+			bot.SayVoice(v[ind]);
+			sleep(RandFloat(0.5, 1.0));
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// randomly global chat some displeasure about losing
+member LosingChat = function( team )
+{
+	// not if bot chat is disabled
+	if ( !MAP_TALK ) {
+		return;
+	}
+
+	v = { VOICE.G_NEGATIVE, VOICE.G_OOPS, VOICE.G_GOODGAME, VOICE.G_HOLD_FIRE };
+
+	foreach ( id and bot in BotTable ) {
+		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {
+			ind = Util.GetRandomFromTable(v);
+			bot.SayVoice(v[ind]);
+			sleep(RandFloat(0.5, 1.0));
+		}
+	}
+};

@@ -1963,8 +1963,9 @@ Append information about this game to the log file
 ================
 */
 void LogExit( const char *string ) {
-	int i, numSorted;
+	int i, numSorted, winner;
 	gclient_t       *cl;
+	char cs[MAX_STRING_CHARS];
 
 	// NERVE - SMF - do not allow LogExit to be called in non-playing gamestate
 	if ( g_gamestate.integer != GS_PLAYING ) {
@@ -1983,12 +1984,6 @@ void LogExit( const char *string ) {
 	// that will get cut off when the queued intermission starts
 	trap_SetConfigstring( CS_INTERMISSION, "1" );
 
-	// don't send more than 32 scores (FIXME?)
-	numSorted = level.numConnectedClients;
-	if ( numSorted > 32 ) {
-		numSorted = 32;
-	}
-
 	if ( g_gametype.integer >= GT_TEAM ) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 					 level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
@@ -1997,7 +1992,7 @@ void LogExit( const char *string ) {
 	// NERVE - SMF - send gameCompleteStatus message to master servers
 	trap_SendConsoleCommand( EXEC_APPEND, "gameCompleteStatus\n" );
 
-	for ( i = 0 ; i < numSorted ; i++ ) {
+	for ( i = 0 ; i < level.numConnectedClients ; i++ ) {
 		int ping;
 
 		cl = &level.clients[level.sortedClients[i]];
@@ -2011,6 +2006,9 @@ void LogExit( const char *string ) {
 
 		BG_SetKillSpree( &cl->ps, 0 );
 
+		// cs: default behavior of sending 32 scores, but we want to clear spree for all.
+		if ( i > 31 ) { continue; }
+
 		ping = cl->ps.ping < 999 ? cl->ps.ping : 999;
 
 		G_LogPrintf( "score: %i  ping: %i  client: %i %s\n",
@@ -2018,16 +2016,15 @@ void LogExit( const char *string ) {
 					 cl->pers.netname );
 	}
 
+	trap_GetConfigstring( CS_MULTI_MAPWINNER, cs, sizeof( cs ) );
+	winner = atoi( Info_ValueForKey( cs, "winner" ) );
+
 	// NERVE - SMF
 	if ( g_gametype.integer == GT_WOLF_STOPWATCH ) {
-		char cs[MAX_STRING_CHARS];
-		int winner, defender;
+		int defender;
 
 		trap_GetConfigstring( CS_MULTI_INFO, cs, sizeof( cs ) );
 		defender = atoi( Info_ValueForKey( cs, "defender" ) );
-
-		trap_GetConfigstring( CS_MULTI_MAPWINNER, cs, sizeof( cs ) );
-		winner = atoi( Info_ValueForKey( cs, "winner" ) );
 
 		// NERVE - SMF
 		if ( !g_currentRound.integer ) {
@@ -2046,8 +2043,8 @@ void LogExit( const char *string ) {
 		trap_Cvar_Set( "g_currentRound", va( "%i", !g_currentRound.integer ) );
 	}
 	// -NERVE - SMF
-
-	Bot_Util_SendTrigger( NULL, NULL, "Round End.", "roundend" );
+	winner += 1; // to match ob team constants
+	Bot_Util_SendTrigger( NULL, NULL, "Round End.", va("%i", winner) );
 	RoundStats();
 	ExtendWarmup( qtrue );
 	WriteAwards();
