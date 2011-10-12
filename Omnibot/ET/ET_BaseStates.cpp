@@ -392,8 +392,14 @@ namespace AiState
 				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE);
 
 			// keep watching the target position.
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
+			// cs: make sure they are within bounds before planting
+			// TODO: FIXME: check for unreachable.
+			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+			if ( fDistanceToTarget < 4096 )
+			{
+				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
+			}
 		}		
 		return State_Busy;
 	}
