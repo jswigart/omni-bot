@@ -243,7 +243,7 @@ namespace AiState
 	// FollowPathUser functions.
 	bool PlantMine::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
 			_final = false;
 		else 
 			_final = true;
@@ -395,7 +395,7 @@ namespace AiState
 			// cs: make sure they are within bounds before planting
 			// TODO: FIXME: check for unreachable.
 			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-			if ( fDistanceToTarget < 4096 )
+			if ( fDistanceToTarget < 1024 ) // 32 units.
 			{
 				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
 				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
@@ -445,7 +445,7 @@ namespace AiState
 	// FollowPathUser functions.
 	bool MobileMortar::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
 			_final = false;
 		else 
 			_final = true;
@@ -547,7 +547,12 @@ namespace AiState
 				m_FireDelay = IGame::GetTime() + 2000;
 			}
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+			// TODO: FIXME: check for unreachable.
+			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+			if ( fDistanceToTarget < 1024 ) // 32 units.
+			{
+				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+			}
 		}
 		return State_Busy;
 	}
