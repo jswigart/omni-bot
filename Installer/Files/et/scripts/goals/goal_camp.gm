@@ -110,6 +110,15 @@ this.Update = function()
 				{
 					this.Bot.HoldButton(BTN.PRONE, 1.1);
 				}
+				case "peek":
+				{
+					if ( timeout % RandInt(2,4) == 0 ) {
+						// stand
+					}
+					else { // hide
+						this.Bot.HoldButton(BTN.CROUCH, 1.1);
+					}
+				}
 			}
 
 			if ( this.WeaponRestricted > 0 && this.IsSniper )

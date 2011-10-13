@@ -33,7 +33,7 @@ CheckMaxCamp = function(var)
 this.Schema = Schema();
 this.Schema.AimVectors = Validate.TableOf("vector3").Default({});
 this.Schema.Weapons = Validate.TableOf("int").CheckValue(WEAPON).Default({});
-this.Schema.Stance = Validate.Enum("stand","crouch","prone").Default("stand");
+this.Schema.Stance = Validate.Enum("stand","crouch","prone","peek").Default("stand");
 this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(10).CheckCallback(CheckMinCamp);
 this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(20).CheckCallback(CheckMaxCamp);
 
@@ -239,7 +239,7 @@ this.Help = function()
 	print("Requires:");
 	print("		facing - Direction the bot should face");
 	print("Optional:");
-	print("		stance - stand, crouch, prone");
+	print("		stance - stand, crouch, prone, peek");
 	print("		weapon - only this weapon is usable here, supports multiple");
 	print("		mincamptime - minimum time a bot should camp at the goal");
 	print("		maxcamptime - maximum time a bot should camp at the goal");

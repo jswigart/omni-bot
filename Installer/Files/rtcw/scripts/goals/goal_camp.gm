@@ -106,9 +106,21 @@ this.Update = function()
 				this.Finished();
 			}
 
-			if( this.MapGoal.Stance == "crouch" )
+			switch (this.MapGoal.Stance)
 			{
-				this.Bot.HoldButton(BTN.CROUCH, 1.1);
+				case "crouch":
+				{
+					this.Bot.HoldButton(BTN.CROUCH, 1.1);
+				}
+				case "peek":
+				{
+					if ( timeout % RandInt(2,4) == 0 ) {
+						// stand
+					}
+					else { // hide
+						this.Bot.HoldButton(BTN.CROUCH, 1.1);
+					}
+				}
 			}
 
 			//if ( this.WeaponRestricted > 0 && this.IsSniper )
