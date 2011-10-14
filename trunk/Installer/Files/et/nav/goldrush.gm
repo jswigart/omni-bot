@@ -154,9 +154,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rTbarrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTbarrier1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Command_Post.*" );
+		SetGoalPriority( Map.Build_Command_Post, 0.8, TEAM.AXIS);
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDepot.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rTank.*" );
 
@@ -260,8 +258,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBarrier2.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_north_ammocabinet );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Tank_Barrier1_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_1 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Health_Cabinet_north_healthcabinet );
 
@@ -356,10 +352,14 @@ global Map =
 
 		Map.near_defense_two = true;
 
+		SetGoalPriority( Map.Build_Command_Post, 0.83, TEAM.ALLIES);
+
 		if ( Map.barriertwo > 0 && Map.bTwoDyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Tank ); }
 		else
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank ); }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
 
 		// enable the repair routes
 		Util.EnableGoal("ROUTE_repair_route.*");
@@ -376,7 +376,6 @@ global Map =
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bank_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_mg42_bank );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Tank_Barrier2_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_newbarrier2_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_2 );
@@ -488,7 +487,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bridge );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_[89]" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_Roam4" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank_axis" );
@@ -520,7 +518,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Truck_Barrier_2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bank_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_mg42_bank );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_mg42_bank );
+		SetGoalPriority( Map.Build_Truck, 0.9, TEAM.ALLIES );
 
 		Map.TruckLoaded = true;
 
@@ -548,6 +546,8 @@ global Map =
 			{ return; }
 
 		Map.near_defense_three = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
 
 		if ( Map.barrierthree > 0 && Map.bThreeDyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Truck ); }
@@ -873,6 +873,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "MOUNT_tank.*" );
+	Util.SetMaxUsers( 1, ".*Command_Post" );
 
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30});
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=20});
@@ -880,7 +881,6 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_Tank_Barrier2_Roam.*", {MinCampTime=1, MaxCampTime=2});
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=45, MaxCampTime=90});
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
-	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=120, MaxCampTime=120});
 
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER );
@@ -890,7 +890,7 @@ global OnMapLoad = function()
 	ETUtil.SetCabinets();
 
 	// Allied goals
-	SetGoalPriority( Map.Flag_gold_crate, 0.92, TEAM.ALLIES );
+	SetGoalPriority( Map.Build_Truck, 0.7, TEAM.ALLIES );
 	SetGoalPriority( Map.Cappoint_Gold_Dropoff, 0.92, TEAM.ALLIES );
 	SetGoalPriority( Map.Build_Tank, 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Command_Post, 0.0, TEAM.ALLIES, CLASS.ENGINEER );

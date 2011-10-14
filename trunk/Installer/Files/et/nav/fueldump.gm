@@ -177,12 +177,27 @@ global Map =
 		},
 	},
 
+	AlliedCommandPost =
+	{
+		Name = "AlliedCommandPost",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function(ent)
+		{
+			bot = Util.IsBot(ent);
+			if(bot){ bot.SetRoles(ROLE.ATTACKER3); }
+		},
+		OnExit = function(ent)
+		{
+			bot = Util.IsBot(ent);
+			if(bot){ bot.ClearRoles(ROLE.ATTACKER3); }
+		},
+	},
+
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		Util.SetMaxUsersInProgress( 9, Map.Plant_Fuel_Dump);
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
@@ -191,7 +206,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Util.SetMaxUsersInProgress( 1, Map.Plant_Fuel_Dump);
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
@@ -666,6 +680,8 @@ global Map =
 		if ( !Map.Front_Dump )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Fuel_Dump ); }
 
+		Util.SetRoleForGoals( "BUILD_Allied_Command_Post", ROLE.ATTACKER3);
+
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Depot_Gates.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Side_MG );
@@ -938,6 +954,9 @@ global OnMapLoad = function()
 	// detect allies on the depot roof
 	depotroof = OnTriggerRegion(AABB(-11424.124,-6971.128,537.125,-10310.962,-6210.208,944.180), Map.DepotRoof);
 
+	// build allied command post
+	OnTriggerRegion(AABB(-11784.988,-3097.148,495.804,-10327.292,-1356.500,710.138), Map.AlliedCommandPost);
+
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
 	Util.SetMaxUsersInUse( 1, "ATTACK_.*" );
@@ -1028,7 +1047,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rFootbridge.*" );
 	
 	Util.SetMaxUsersInProgress( 1, "BUILD_Allied_Command_Post");
-	Util.SetMaxUsersInProgress( 1, Map.Plant_Fuel_Dump);
+	Util.ClearRoleForGoals( "BUILD_Allied_Command_Post", ROLE.ATTACKER3);
 	SetGoalPriority("BUILD_Allied_Command_Post", 0.85);
 
 	//set up some routing

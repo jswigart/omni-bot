@@ -93,6 +93,7 @@ this.Update = function()
 		}
 
 		timeout = 0;
+		peektime = 0;
 		while( timeout < this.CampTime )
 		{
 			if ( this.UsingWeapon && !this.Bot.HasAmmo(this.UsingWeapon) )
@@ -112,11 +113,14 @@ this.Update = function()
 				}
 				case "peek":
 				{
-					if ( timeout % RandInt(2,4) == 0 ) {
-						// stand
+					if ( timeout % RandInt(2,4) == 0 ) { // stand
+						if ( peektime == 0 ) {
+							peektime = timeout + this.Bot.ReactionTime + 1;
+						}
 					}
-					else { // hide
-						this.Bot.HoldButton(BTN.CROUCH, 1.1);
+					else if ( timeout >= peektime ) { // hide
+						peektime = 0;
+						this.Bot.HoldButton(BTN.CROUCH, RandInt(1,3));
 					}
 				}
 			}

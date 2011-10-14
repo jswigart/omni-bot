@@ -3,45 +3,20 @@ Just slightly edited the original Goldrush waypoints and script.
 Credits go to the maker of the original Goldrush files.
 Editors of the Goldrush-GA release are =VOC= Naerling and crapshoot.
 *******************************************************************/
+/******************************************************************
+UPDATED BY: BubbaG1 & **DRC**Stunner
+UPDATED: August 16, 2011
+- Added waypoints along ledges and routes to use them
+- Added tank barrier 1 & 2 plant positions with updated routing
+- Once bank doors are blown, at least half of allied bots will
+  change to original spawn.
+*******************************************************************/
 
 global Map =
 {
 	MountVehicle =
 	{
 		LimitBots = 2,
-	},
-	EscortVehicle =
-	{
-		Truck =
-		{
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(0,-40,0),
-			},
-		},
-	},
-	Navigation =
-	{
-		quickjump =
-		{
-			// better response time than nav flags
-			navigate = function(_this)
-			{
-				_this.Bot.PressButton(BTN.JUMP);
-				yield();
-			},
-		},
-		crouchjump =
-		{
-			navigate = function(_this)
-			{
-				_this.Bot.PressButton(BTN.JUMP);
-				_this.Bot.HoldButton(BTN.CROUCH, 0.5);
-				yield();
-			},
-		},
 	},
 
 	Debug = false,
@@ -94,6 +69,7 @@ global Map =
 	Plant_Mine_depotgate2 = "PLANTMINE_depotgate2",
 
 	start_of_map = true,
+	EndTankRun = false,
 	Escorting = false,
 	TruckLoaded = false,
 
@@ -349,6 +325,11 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
 			Map.start_of_map = false;
 		}
+		
+		if ( !Map.EndTankRun )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
+		}
 
 		Util.MapDebugPrint( "Tank_Built" );
 	},
@@ -383,6 +364,11 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+			
+		if ( Map.TruckLoaded )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		}
 
 		Util.MapDebugPrint( "Truck_Built" );
 	},
@@ -626,6 +612,22 @@ global Map =
 			{ return; }
 
 		sleep( 2 );
+		
+		Map.EndTankRun = true;
+		
+		numAlliedBots = 0;
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES )
+			{
+				numAllies += 1;
+				if ( numAlliedBots % 2 == 0 )
+				{
+					bot.ChangeSpawnPoint( 3 );
+				}
+			}
+		}
+
 
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_Tank_Barrier2_.*" );
@@ -636,6 +638,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Bank_Wall_Breach );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_bank.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bridge );
@@ -678,6 +681,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_truck );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Bank_Wall_Breach );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_bank.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 
 		Map.TruckLoaded = true;
 
@@ -762,6 +766,7 @@ global Map =
 			{ return; }
 
 		Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 		Util.MapDebugPrint( "Tank_Destroyed" );
 	},
@@ -772,6 +777,7 @@ global Map =
 			{ return; }
 
 		Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
 
 		Util.MapDebugPrint( "Truck_Destroyed" );
 	},
@@ -849,6 +855,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
 
 		Map.bOneDyno += 1;
+		
+		//engineers already have two plants, save charge for tank
+		if ( Map.bOneDyno >= 2 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_1 );
+		}
 
 		Util.MapDebugPrint("planted_at_Tank_Barrier_1");
 	},
@@ -865,6 +877,12 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Tank );
 		}
+		
+		//allow engineers to plant twice
+		if ( Map.bOneDyno < 2 && Map.near_defense_one )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_1 );
+		}
 
 		Util.MapDebugPrint("defused_at_Tank_Barrier_1");
 	},
@@ -880,6 +898,12 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
 		}
+		
+		//engineers already have two plants, save charge for tank
+		if ( Map.bTwoDyno >= 2 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_2 );
+		}
 
 		Util.MapDebugPrint("planted_at_Tank_Barrier_2");
 	},
@@ -894,6 +918,12 @@ global Map =
 		if ( Map.bTwoDyno < 1 && Map.near_defense_two )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Tank );
+		}
+		
+		//allow engineers to plant twice
+		if ( Map.bTwoDyno < 2 && Map.near_defense_two )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_2 );
 		}
 
 		Util.MapDebugPrint("defused_at_Tank_Barrier_2");
@@ -1124,6 +1154,12 @@ global OnMapLoad = function()
 	// Adjust tank goal for rebuild
 	Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
 	Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck ); //truck too
+	
+	//Additional plant positions for Tank Barrier 1
+	Util.AddUsePoint( "PLANT_Tank_Barrier_1", { Vec3(935, 611, 8), Vec3(628, 524, -1), Vec3(545, 465, 3), Vec3(647, 613, 8) } );
+
+	//Additional plant positions for Tank Barrier 2
+	Util.AddUsePoint( "PLANT_Tank_Barrier_2", { Vec3(2030, 253, -401), Vec3(1631, 251, -413), Vec3(1653, 304, -285), Vec3(1581, -130, -183), Vec3(2042, 480, -403) } );
 
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 1, "ATTACK_Depot_.*" );
@@ -1141,8 +1177,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsersInProgress( 1, "SMOKEBOMB_.*" );
 
-	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30} );
-	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=5, MaxCampTime=10} );
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=5, MaxCampTime=20} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=60, MaxCampTime=120} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120}  );
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=120, MaxCampTime=120} );
@@ -1171,6 +1207,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Truck );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Bank_Wall_Breach );
+	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_2 );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier_1 );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier_2 );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Flag_gold_crate );
@@ -1189,6 +1226,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bank_mg" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 	// Axis goals
 	SetGoalPriority( Map.Build_Tank_Barrier_1, 0.94, TEAM.AXIS, CLASS.ENGINEER );
@@ -1202,7 +1241,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_south_ammocabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Depot_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_north_healthcabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_south_healthcabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_2 );
@@ -1218,6 +1256,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_bank_mg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Depot_.*" );
 
 	Wp.SetWaypointFlag("closeddoor1", "closed", true);
 	Wp.SetWaypointFlag("closeddoor2", "closed", true);
@@ -1239,6 +1278,7 @@ global OnMapLoad = function()
 
 	// disable combat movement
 	secretwindow = OnTriggerRegion(AABB(2175,-1087,-30, 2320,-700,97), RegionTrigger.DisableBotPush);
+	sill1 = OnTriggerRegion(AABB(-65,-620,123, 1628,-164,407), RegionTrigger.DisableBotPush);
 
 	//routes for tank build at barrier 2
 	Util.DisableGoal("ROUTE_repair_route.*");
@@ -1252,51 +1292,91 @@ global OnMapLoad = function()
 			{
 				ROUTE_depotgate =
 				{
-					ROUTE_depotgate2 = {},
-					ROUTE_depotgatesplit = { ROUTE_as_rightsplit1 = {}, },
-					ROUTE_cproute = {},
+					ROUTE_depotgate2 = 
+					{
+					},
+					ROUTE_depotgatesplit = 
+					{
+						ROUTE_as_rightsplit1 = 
+						{
+						},
+					},
+					ROUTE_cproute = 
+					{
+					},
 				},
 				ROUTE_as_right =
 				{
-					ROUTE_as_rightsplit1 = {},
-					ROUTE_as_rightsplit2 = { ROUTE_depotflank = {}, },
+					ROUTE_as_rightsplit1 = 
+					{
+					},
+					ROUTE_as_rightsplit2 = 
+					{
+						ROUTE_depotflank = 
+						{
+						},
+					},
 				},
 			},
 			ROUTE_AllySpawn2 =
 			{
 				ROUTE_depotgate =
 				{
-					ROUTE_depotgate2 = {},
-					ROUTE_depotgatesplit = { ROUTE_as_rightsplit1 = {}, },
-					ROUTE_cproute = {},
+					ROUTE_depotgate2 = 
+					{
+					},
+					ROUTE_depotgatesplit = 
+					{
+						ROUTE_as_rightsplit1 = 
+						{
+						},
+					},
+					ROUTE_cproute = 
+					{
+					},
 				},
 				ROUTE_as_right =
 				{
-					ROUTE_as_rightsplit1 = {},
-					ROUTE_as_rightsplit2 = { ROUTE_depotflank = {}, },
+					ROUTE_as_rightsplit1 = 
+					{
+					},
+					ROUTE_as_rightsplit2 = 
+					{
+						ROUTE_depotflank = 
+						{
+						},
+					},
 				},
 			},
 
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_repair_route_stairs = {},
+				ROUTE_repair_route_stairs = 
+				{
+				},
 				ROUTE_repair_route_bridge1 =
 				{
 					ROUTE_repair_route_bridge2 =
 					{
-						ROUTE_repair_route_bridge3 = {},
-					}
+						ROUTE_repair_route_bridge3 =
+						{
+						},
+					},
 				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_repair_route_stairs = {},
+				ROUTE_repair_route_stairs = 
+				{
+				},
 				ROUTE_repair_route_bridge1 =
 				{
 					ROUTE_repair_route_bridge2 =
 					{
-						ROUTE_repair_route_bridge3 = {},
-					}
+						ROUTE_repair_route_bridge3 = 
+						{
+						},
+					},
 				},
 			},
 		},
@@ -1304,22 +1384,60 @@ global OnMapLoad = function()
 		{
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_depotflank = {},
-				ROUTE_depotflank2 = {},
-				ROUTE_as_rightsplit1 = {},
+				ROUTE_depotflank = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
+				ROUTE_depotflank2 = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
+				ROUTE_as_rightsplit1 = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_depotflank = {},
-				ROUTE_depotflank2 = {},
-				ROUTE_as_rightsplit1 = {},
+				ROUTE_depotflank = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
+				ROUTE_depotflank2 = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
+				ROUTE_as_rightsplit1 = 
+				{
+					ROUTE_tank_barrier_1a = {},
+					ROUTE_tank_barrier_1b = {},
+					ROUTE_tank_barrier_1c = {},
+					ROUTE_tank_barrier_1d = {},
+				},
 			},
 		},
 		ATTACK_Tank_Barrier1_3 =
 		{
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_hidden_passage = {},
+				ROUTE_hidden_passage = 
+				{
+				},
 			},
 		},
 		PLANT_Tank_Barrier_2 =
@@ -1328,78 +1446,268 @@ global OnMapLoad = function()
 			{
 				ROUTE_bridgeroute =
 				{
-					ROUTE_bridgeroute2 = {},
+					ROUTE_tank_barrier_2a = {},
+					ROUTE_bridgeroute2 = 
+					{
+						ROUTE_tank_barrier_2b = {},
+						ROUTE_tank_barrier_2c = {},
+						ROUTE_tank_barrier_2d = {},
+					},
 				},
-				ROUTE_cp_stairs = { Weight = 2,},
+				ROUTE_cp_stairs = 
+				{
+					Weight = 2,
+					ROUTE_tank_barrier_2b = {},
+					ROUTE_tank_barrier_2c = {},
+					ROUTE_tank_barrier_2d = {},
+				},
+				ROUTE_repair_route_bridge1 = 
+				{
+					ROUTE_tank_barrier_2a = {},
+				},
+				ROUTE_tank_barrier_2e = {},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
 				ROUTE_bridgeroute =
 				{
-					ROUTE_bridgeroute2 = {},
+					ROUTE_tank_barrier_2a = {},
+					ROUTE_bridgeroute2 = 
+					{
+						ROUTE_tank_barrier_2b = {},
+						ROUTE_tank_barrier_2c = {},
+						ROUTE_tank_barrier_2d = {},
+					},
 				},
-				ROUTE_cp_stairs = { Weight = 2,},
+				ROUTE_cp_stairs = 
+				{
+					Weight = 2,
+					ROUTE_tank_barrier_2b = {},
+					ROUTE_tank_barrier_2c = {},
+					ROUTE_tank_barrier_2d = {},
+				},
+				ROUTE_repair_route_bridge1 = 
+				{
+					ROUTE_tank_barrier_2a = {},
+				},
+				ROUTE_tank_barrier_2e = {},
 			},
 		},
 		ATTACK_Tank_Barrier2_1 =
 		{
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_bridgeroute =
+				ROUTE_bridgeroute = 
 				{
-					Weight = 2,
 					ROUTE_bridgeroute2 = {},
 				},
-				ROUTE_trb1_stairs = { Weight = 2, ROUTE_b2flank = {}, },
+				ROUTE_trb1_stairs = 
+				{
+					Weight = 2,
+					ROUTE_b2flank = 
+					{
+					},
+				},
 				ROUTE_cp_stairs = {},
+				ROUTE_bridge_mg_ledge1 = 
+				{
+					ROUTE_bridge_mg_ledge2 = 
+					{
+						ROUTE_bridge_mg_ledge3 = {},
+					},
+				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_bridgeroute =
+				ROUTE_bridgeroute = 
+				{
+					ROUTE_bridgeroute2 = 
+					{
+					},
+				},
+				ROUTE_trb1_stairs = 
 				{
 					Weight = 2,
-					ROUTE_bridgeroute2 = {},
+					ROUTE_b2flank = 
+					{
+					},
 				},
-				ROUTE_trb1_stairs = { Weight = 2, ROUTE_b2flank = {}, },
-				ROUTE_cp_stairs = {},
+				ROUTE_cp_stairs = 
+				{
+				},
+				ROUTE_bridge_mg_ledge1 = 
+				{
+					ROUTE_bridge_mg_ledge2 = 
+					{
+						ROUTE_bridge_mg_ledge3 = 
+						{
+						},
+					},
+				},
 			},
 		},
 		ATTACK_newbarrier2_1 =
 		{
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_trb1_stairs = { Weight = 3, ROUTE_b2flank = {}, },
+				ROUTE_trb1_stairs = 
+				{
+					Weight = 3,
+					ROUTE_b2flank = 
+					{
+					},
+				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_trb1_stairs = { Weight = 3, ROUTE_b2flank = {}, },
+				ROUTE_trb1_stairs = 
+				{
+					Weight = 3,
+					ROUTE_b2flank = 
+					{
+					},
+				},
 			},
 		},
 		ATTACK_Bank_1 =
 		{
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_trb1_stairs = {},
-				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
-				ROUTE_southstairs = {},
+				ROUTE_trb1_stairs = 
+				{
+				},
+				ROUTE_cp_stairs = 
+				{
+					ROUTE_cp_stairs2 = 
+					{
+					},
+				},
+				ROUTE_southstairs = 
+				{
+				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_trb1_stairs = {},
-				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
-				ROUTE_southstairs = {},
+				ROUTE_trb1_stairs = 
+				{
+				},
+				ROUTE_cp_stairs = 
+				{
+					ROUTE_cp_stairs2 = 
+					{
+					},
+				},
+				ROUTE_southstairs = 
+				{
+				},
 			},
 		},
 		BUILD_Truck =
 		{
-			ROUTE_TankYardSpawn = { ROUTE_trb1_stairs = {}, },
-			ROUTE_TankYardSpawn2 = { ROUTE_trb1_stairs = {}, },
+			ROUTE_TankYardSpawn = 
+			{
+				ROUTE_trb1_stairs = 
+				{
+				},
+			},
+			ROUTE_TankYardSpawn2 = 
+			{
+				ROUTE_trb1_stairs = 
+				{
+				},
+			},
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_SouthStairsLedge = 
+				{
+					ROUTE_TruckLedge = 
+					{
+						ROUTE_AxisMGLedge = 
+						{
+						},
+					},
+				},
+			},
+			ROUTE_AllySpawn2 = 
+			{
+				ROUTE_SouthStairsLedge = 
+				{
+					ROUTE_TruckLedge = 
+					{
+						ROUTE_AxisMGLedge = {},
+					},
+				},
+			},
 		},
 		FLAG_gold_crate =
 		{
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_bankback = 
+				{
+					ROUTE_bankback3 = 
+					{
+						ROUTE_elevator = {},
+					},
+				},
+				ROUTE_SouthStairsLedge = 
+				{
+					ROUTE_TruckLedge = 
+					{
+						ROUTE_AxisMGLedge = 
+						{
+							ROUTE_bankback = 
+							{
+							},
+							ROUTE_bankfront = 
+							{
+							},
+						},
+					},
+				},
+				ROUTE_wallbreach = 
+				{
+				},
+			},
+			ROUTE_AllySpawn2 =
+			{
+				ROUTE_bankback = 
+				{
+					ROUTE_bankback3 = 
+					{
+						ROUTE_elevator = {},
+					},
+				},
+				ROUTE_SouthStairsLedge = 
+				{
+					ROUTE_TruckLedge = 
+					{
+						ROUTE_AxisMGLedge = 
+						{
+							ROUTE_bankback = 
+							{
+							},
+							ROUTE_bankfront = 
+							{
+							},
+						},
+					},
+				},
+				ROUTE_wallbreach = 
+				{
+				},
+			},
 			ROUTE_TankYardSpawn =
 			{
-				ROUTE_bankback = { ROUTE_bankback3 = { ROUTE_elevator = {} } },
+				ROUTE_bankback = 
+				{
+					ROUTE_bankback3 = 
+					{
+						ROUTE_elevator = 
+						{
+						},
+					},
+				},
 				ROUTE_TankYardSpawn2 =
 				{
 					ROUTE_trb1_stairs =
@@ -1407,15 +1715,31 @@ global OnMapLoad = function()
 						Weight = 2,
 						ROUTE_westbank =
 						{
-							ROUTE_bankfront = {},
-							ROUTE_westbank2 = { ROUTE_bankback = {}, },
+							ROUTE_bankfront = 
+							{
+							},
+							ROUTE_westbank2 = 
+							{
+								ROUTE_bankback = 
+								{
+								},
+							},
 						},
 					},
-					ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
-					ROUTE_southstairs = {},
+					ROUTE_cp_stairs = 
+					{
+						ROUTE_cp_stairs2 = 
+						{
+						},
+					},
+					ROUTE_southstairs = 
+					{
+					},
 					ROUTE_southstairs2 =
 					{
-						ROUTE_wallbreach = {},
+						ROUTE_wallbreach = 
+						{
+						},
 					},
 				},
 				ROUTE_TankYardSpawn3 =
@@ -1425,17 +1749,29 @@ global OnMapLoad = function()
 						Weight = 2,
 						ROUTE_westbank =
 						{
-							ROUTE_bankfront = {},
-							ROUTE_westbank2 = { ROUTE_bankback = {}, },
+							ROUTE_bankfront = 
+							{
+							},
+							ROUTE_westbank2 = 
+							{
+								ROUTE_bankback = {},
+							},
 						},
 					},
-					ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
-					ROUTE_southstairs = {},
+					ROUTE_cp_stairs = 
+					{
+						ROUTE_cp_stairs2 = {},
+					},
+					ROUTE_southstairs = 
+					{
+					},
 					ROUTE_southstairs2 =
 					{
-						ROUTE_wallbreach = {},
+						ROUTE_wallbreach = 
+						{
+						},
 					},
-				}
+				},
 			},
 			ROUTE_TankYardSpawn2 =
 			{
@@ -1444,12 +1780,24 @@ global OnMapLoad = function()
 					Weight = 2,
 					ROUTE_westbank =
 					{
-						ROUTE_bankfront = {},
-						ROUTE_westbank2 = { ROUTE_bankback = {}, },
+						ROUTE_bankfront = 
+						{
+						},
+						ROUTE_westbank2 = 
+						{
+							ROUTE_bankback = {},
+						},
 					},
 				},
-				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
-				ROUTE_southstairs = {},
+				ROUTE_cp_stairs = 
+				{
+					ROUTE_cp_stairs2 = 
+					{
+					},
+				},
+				ROUTE_southstairs = 
+				{
+				},
 			},
 		},
 		CAPPOINT_Gold_Dropoff =
@@ -1459,9 +1807,13 @@ global OnMapLoad = function()
 				ROUTE_bankback =
 				{
 					Weight = 2,
-					ROUTE_westbank2 = {},
+					ROUTE_westbank2 = 
+					{
+					},
 				},
-				ROUTE_bankfront = {},
+				ROUTE_bankfront = 
+				{
+				},
 			},
 		},
 		ATTACK_Truck_Barrier1_1 =
@@ -1523,8 +1875,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-
-	//copy some routes
+	// copy some routes
 	MapRoutes.ATTACK_Depot_6 = MapRoutes.BUILD_Tank;
 	MapRoutes.ATTACK_Depot_7 = MapRoutes.BUILD_Tank;
 	MapRoutes.ATTACK_Depot_8 = MapRoutes.BUILD_Tank;

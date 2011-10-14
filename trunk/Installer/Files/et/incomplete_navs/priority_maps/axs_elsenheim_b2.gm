@@ -1,0 +1,381 @@
+//==========================================================================================
+//
+//	axs_elsenheim_b2.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	d00d	24 August 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Built" );
+	},
+
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_2_Built" );
+	},
+
+	Truck_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_1_Built" );
+	},
+
+	Truck_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_2_Built" );
+	},
+
+	beach_mg_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "beach_mg_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Dynamite_Objective_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_beach_mg" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tank_[123456789]" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_house.*" );
+		Util.MapDebugPrint( "Dynamite_Objective_Destroyed" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_1_Destroyed" );
+	},
+
+	Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Barrier_2_Destroyed" );
+	},
+
+	Truck_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_1_Destroyed" );
+	},
+
+	Truck_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Barrier_2_Destroyed" );
+	},
+
+	beach_mg_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "beach_mg_Destroyed" );
+	},
+
+	side_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tank_[123456789]" );
+		Util.MapDebugPrint( "side_wall_Destroyed" );
+	},
+
+	doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+		Util.MapDebugPrint( "doors_Destroyed" );
+	},
+
+	Tank_Stolen = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tankbarrier1.*" );
+		Util.MapDebugPrint( "Tank_Stolen" );
+	},
+
+	Tank_Past_Barrier1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_beach_mg" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_tank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tankbarrier2.*" );
+		Util.MapDebugPrint( "Tank_Past_Barrier1" );
+	},
+
+	Tank_Past_Barrier2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_tank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_gold.*" );
+		Util.MapDebugPrint( "Tank_Past_Barrier2" );
+	},
+
+	Truck_Past_Barrier1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tankbarrier1.*" );
+		Util.MapDebugPrint( "Truck_Past_Barrier1" );
+	},
+
+	Truck_Past_Barrier2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_tankbarrier1.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_tank_.*" );
+		Util.MapDebugPrint( "Truck_Past_Barrier2" );
+	},
+
+	gold_crate1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_crate1_Taken" );
+	},
+
+	gold_crate1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_crate1_Returned" );
+	},
+
+	gold_crate1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_crate1_Secured" );
+	},
+
+	gold_crate2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_crate2_Taken" );
+	},
+
+	gold_crate2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "gold_crate2_Returned" );
+	},
+
+	gold_crate2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		Util.MapDebugPrint( "gold_crate2_Secured" );
+	},
+
+	gold_crates_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier_[12]" );
+		Util.MapDebugPrint( "gold_crates_Secured" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.Tank_Barrier_2_Built );
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_1_Built );
+	OnTrigger( "Truck Barrier #2 has been constructed.", Map.Truck_Barrier_2_Built );
+	OnTrigger( "Allied team has built the east beach mg!", Map.beach_mg_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have beached the house !!", Map.Dynamite_Objective_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Tank_Barrier_2_Destroyed );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_1_Destroyed );
+	OnTrigger( "Truck Barrier #2 has been destroyed.", Map.Truck_Barrier_2_Destroyed );
+	OnTrigger( "Axis team has destroyed the east beach mg!", Map.beach_mg_Destroyed );
+	OnTrigger( "Allies have destroyed the Side Wall", Map.side_wall_Destroyed );
+	OnTrigger( "Allied team has stolen the Tank!", Map.Tank_Stolen );
+	OnTrigger( "goldrush_allies_tank_barrier1", Map.Tank_Past_Barrier1 );
+	OnTrigger( "goldrush_allies_tank_barrier2", Map.Tank_Past_Barrier2 );
+	OnTrigger( "goldrush_allies_truck_barrier1", Map.Truck_Past_Barrier1 );
+	OnTrigger( "goldrush_allies_truck_barrier2", Map.Truck_Past_Barrier2 );
+	OnTrigger( "goldrush_allies_gold1_taken", Map.gold_crate1_Taken );
+	OnTrigger( "goldrush_allies_gold2_taken", Map.gold_crate2_Taken );
+	OnTrigger( "goldrush_allies_gold1_returned", Map.gold_crate1_Returned );
+	OnTrigger( "goldrush_allies_gold2_returned", Map.gold_crate2_Returned );
+	OnTrigger( "Allied team has secured the first Gold Crate!", Map.gold_crate1_Secured );
+	OnTrigger( "Allied team has secured the second Gold Crate!", Map.gold_crate2_Secured );
+	OnTrigger( "Allied team is escaping with the Gold Crates!", Map.gold_crates_Secured );
+	OnTrigger( "Axis reclaim the Forward Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Spawn!", Map.forwardspawn1_flag_Allies_Captured );
+	OnTrigger( "Allied team has destroyed the Bank Doors!", Map.doors_Destroyed );
+
+	// Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Goal availability Allies
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Truck_Barrier_[12]" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_beach_mg" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+
+	// Goal availability Axis
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier_[12]" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_house.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_[12]" );
+
+	// Goal positions
+	Util.SetGoalPosition( -2813, 1241, -206, "PLANT_side_wall" );
+	Util.AddUsePoint( "PLANT_Truck_Barrier_1", {Vec3(941,17,-380), Vec3(663,69,-380)} );
+	Util.AddUsePoint( "PLANT_Truck_Barrier_2", {Vec3(674,1446,-380), Vec3(941,1421,-380)} );
+
+	// Goal priority
+	SetGoalPriority( "PLANT_side_wall", 0.92 );
+	SetGoalPriority( "PLANT_Dynamite_Objective", 0.92 );
+	SetGoalPriority( "BUILD_Tank", 0.91 );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 85;
+	bot.MaxViewDistance = 3000;
+};

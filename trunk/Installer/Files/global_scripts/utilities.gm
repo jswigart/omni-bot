@@ -2026,10 +2026,18 @@ member ShowGroup = function(group)
 member SetRoleForGoals = function(exp, role)
 {
 	gt = Util.GoalTable(exp);
+	isRoleTable = typeName(role) == "table";
 
 	foreach ( id and goal in gt )
 	{
-		goal.SetRoles(role);
+		if ( isRoleTable ) {
+			foreach ( id in role ) {
+				goal.SetRoles(id);
+			}
+		}
+		else {
+			goal.SetRoles(role);
+		}
 	}
 };
 
@@ -2038,10 +2046,18 @@ member SetRoleForGoals = function(exp, role)
 member ClearRoleForGoals = function(exp, role)
 {
 	gt = Util.GoalTable(exp);
+	isRoleTable = typeName(role) == "table";
 
 	foreach ( id and goal in gt )
 	{
-		goal.ClearRoles(role);
+		if ( isRoleTable ) {
+			foreach ( id in role ) {
+				goal.ClearRoles(id);
+			}
+		}
+		else {
+			goal.ClearRoles(role);
+		}
 	}
 };
 
@@ -2070,10 +2086,18 @@ member ClearRoleForTable = function(tbl, role)
 member SetRoleForGroup = function(group, role)
 {
 	groupTable = this.GetGroup(group);
+	isRoleTable = typeName(role) == "table";
 
 	foreach ( id and goal in groupTable )
 	{
-		goal.SetRoles(role);
+		if ( isRoleTable ) {
+			foreach ( id in role ) {
+				goal.SetRoles(id);
+			}
+		}
+		else {
+			goal.SetRoles(role);
+		}
 	}
 };
 
@@ -2082,10 +2106,18 @@ member SetRoleForGroup = function(group, role)
 member ClearRoleForGroup = function(group, role)
 {
 	groupTable = this.GetGroup(group);
+	isRoleTable = typeName(role) == "table";
 
 	foreach ( id and goal in groupTable )
 	{
-		goal.ClearRoles(role);
+		if ( isRoleTable ) {
+			foreach ( id in role ) {
+				goal.ClearRoles(id);
+			}
+		}
+		else {
+			goal.ClearRoles(role);
+		}
 	}
 };
 

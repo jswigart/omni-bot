@@ -5,13 +5,13 @@
 //	Who  	When		What
 //------------------------------------------------------------------------------------------
 //	^4Tardis	29 January 2011	Initial Script
-//
+//	^4Tardis 	25 September 2011 - Fixes
 //==========================================================================================
 //
 
 global Map =
 {
-	Debug = 0, // please set to zero before distributing your script
+	Debug = 1, // please set to zero before distributing your script
 	ShowMovers = false,
 
 	Assault_ramp_Dyno = 0,
@@ -417,7 +417,7 @@ global Map =
 			{ return; }
 
 		Util.DisableGoal( "MOVER_tank" );
-		Util.DisableGoal( "BUILD_tank" );
+		Util.DisableGoal( "BUILD_Tank" );
 		Util.DisableGoal( "MOUNT_Tank" );
 		Util.DisableGoal( "MOUNT_AXIS" );
 		Util.DisableGoal( "ESCORT_Tank" );
@@ -430,7 +430,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_AXIS" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_ramp" );
