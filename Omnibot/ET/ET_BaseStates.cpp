@@ -395,10 +395,14 @@ namespace AiState
 			// cs: make sure they are within bounds before planting
 			// TODO: FIXME: check for unreachable.
 			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-			if ( fDistanceToTarget < 1024 ) // 32 units.
+			if ( fDistanceToTarget <= 1024 ) // 32 units.
 			{
 				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
 				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
+			}
+			else
+			{
+				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
 			}
 		}		
 		return State_Busy;
@@ -549,9 +553,13 @@ namespace AiState
 
 			// TODO: FIXME: check for unreachable.
 			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-			if ( fDistanceToTarget < 1024 ) // 32 units.
+			if ( fDistanceToTarget <= 1024 ) // 32 units.
 			{
 				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+			}
+			else
+			{
+				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
 			}
 		}
 		return State_Busy;
