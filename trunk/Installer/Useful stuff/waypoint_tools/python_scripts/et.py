@@ -18,7 +18,8 @@ DoFindDuplicates = True		# search all nav folders for dupes
 DoReplaceDeprecated = True	# replace deprecated utility functions
 DoFindZeroFacings = True	# find all camp type goals with no facing
 DoToDoList = True		# find TODOs in map scripts
-DoNoRouteList = True	# list all maps that don't have routes initialized
+DoNoRouteList = True		# list all maps that don't have routes initialized
+DoOldScriptGoalList = True	# list maps with unsupported script goal setups
 
 ########################################################################
 # populate a sorted list of files in nav
@@ -26,6 +27,13 @@ DoNoRouteList = True	# list all maps that don't have routes initialized
 Path = "../../../Files/et/nav/"
 NavList=os.listdir(os.path.normpath(Path))
 NavList.sort()
+
+########################################################################
+# populate lists for incomplete maps
+########################################################################
+NoScriptList = os.listdir('../../../Files/et/incomplete_navs/no_script/')
+WithScriptList = os.listdir('../../../Files/et/incomplete_navs/with_script/')
+PriorityList = os.listdir('../../../Files/et/incomplete_navs/priority_maps/')
 
 ########################################################################
 # Main
@@ -41,7 +49,7 @@ def Main():
 		FindDuplicates()
 
 	if DoReplaceDeprecated==True:
-		ReplaceDeprecated()
+		FindDeprecated()
 
 	if DoFindZeroFacings==True:
 		FindZeroFacings()
@@ -51,6 +59,9 @@ def Main():
 
 	if DoNoRouteList==True:
 		NoRouteList()
+
+	if DoOldScriptGoalList==True:
+		OldScriptGoalList()
 
 ########################################################################
 # build a wiki formatted waypoint list
@@ -70,10 +81,6 @@ def BuildWaypointList():
 # find duplicate waypoints
 ########################################################################
 def FindDuplicates():
-	NoScriptList = os.listdir('../../../Files/et/incomplete_navs/no_script/')
-	WithScriptList = os.listdir('../../../Files/et/incomplete_navs/with_script/')
-	PriorityList = os.listdir('../../../Files/et/incomplete_navs/priority_maps/')
-
 	f = open(os.path.normpath('results/dupelist.txt'), 'w')
 
 	# iterate no_script
@@ -123,9 +130,7 @@ def FindDebugEnabled():
 			if ext[1]==".gm":
 				if ext[0].find('_goals') == -1:
 					origFile = Path+fname
-					tempFile = Path+fname+'~~~'
-					inp = open(origFile)
-					outp = open(tempFile, 'w')
+					inp = open(origFile, 'r')
 
 					try:
 						s = inp.read()
@@ -133,19 +138,42 @@ def FindDebugEnabled():
 						print('FindDebugEnabled: skipping {0}, check encoding for utf-8'.format(fname))
 						continue
 
-					outtext = re.sub('Debug = 1', 'Debug = 0', s)
-					outp.write(outtext)
-					outp.close()
+					if ( s.find('Debug = 1') > 0 ):
+						tempFile = Path+fname+'~~~'
+						outp = open(tempFile, 'w')
+						outtext = re.sub('Debug = 1', 'Debug = 0', s)
+						outp.write(outtext)
+						outp.close()
+						os.remove(origFile)
+						os.rename(tempFile,origFile)
+
 					inp.close()
-					os.remove(origFile)
-					os.rename(tempFile,origFile)
 
 ########################################################################
 # search for map scripts that have deprecated utility functions and
 # replace them.
 # note: make sure all gm files are closed before running this one
 ########################################################################
-def ReplaceDeprecated():
+_ReplacedDeprecated = False
+
+def ReplaceDeprecated(fname, stream, oldFunc, newFunc):
+	global _ReplacedDeprecated
+	tempFile = Path+fname+'~~~'
+	outp = open(tempFile, 'w')
+	outtext = re.sub(oldFunc, newFunc, stream)
+	outp.write(outtext)
+	outp.close()
+
+	_ReplacedDeprecated = True
+
+	# read from new file to catch other deprecated funcs
+	inp = open(tempFile, 'r')
+	s = inp.read()
+	inp.close()
+	return s
+
+def FindDeprecated():
+	global _ReplacedDeprecated
 	for fname in NavList:
 		if os.path.isfile(Path+fname):
 			ext = os.path.splitext(fname)
@@ -153,24 +181,35 @@ def ReplaceDeprecated():
 				if ext[0].find('_goals') == -1:
 					origFile = Path+fname
 					tempFile = Path+fname+'~~~'
-					inp = open(origFile)
-					outp = open(tempFile, 'w')
+					inp = open(origFile, 'r')
 
 					try:
 						s = inp.read()
 					except Exception:
 						print('ReplaceDeprecated: skipping {0}, check encoding for utf-8'.format(fname))
+						inp.close()
 						continue
 
-					outtext = re.sub('ETUtil.DisableGoal', 'Util.DisableGoal', s)
-					outtext = re.sub('ETUtil.EnableGoal', 'Util.EnableGoal', s)
-					outtext = re.sub('ETUtil.RandomSpawn', 'Util.RandomSpawn', s)
-					outtext = re.sub('ETUtil.ChangeSpawn', 'Util.ChangeSpawn', s)
-					outp.write(outtext)
-					outp.close()
+					if ( s.find('ETUtil.DisableGoal') > 0 ):
+						s = ReplaceDeprecated(fname,s,'ETUtil.DisableGoal','Util.DisableGoal')
+
+					if ( s.find('ETUtil.EnableGoal') > 0 ):
+						s = ReplaceDeprecated(fname,s,'ETUtil.EnableGoal','Util.EnableGoal')
+
+					if ( s.find('ETUtil.RandomSpawn') > 0 ):
+						s = ReplaceDeprecated(fname,s,'ETUtil.RandomSpawn','Util.RandomSpawn')
+
+					if ( s.find('ETUtil.ChangeSpawn') > 0 ):
+						s = ReplaceDeprecated(fname,s,'ETUtil.ChangeSpawn','Util.ChangeSpawn')
+
 					inp.close()
-					os.remove(origFile)
-					os.rename(tempFile,origFile)
+
+					if ( _ReplacedDeprecated == True ):
+						os.remove(origFile)
+						os.rename(tempFile,origFile)
+
+					_ReplacedDeprecated = False
+
 
 ########################################################################
 # find camp goals with zero facings
@@ -287,7 +326,77 @@ def NoRouteList():
 	out.close()
 
 ########################################################################
+# find maps with old script goals set up
+########################################################################
+def SearchForOldScriptGoal(contents):
+	str_list = []
+
+	if contents.find("Target =") > 0:
+		str_list.append('has a Target table - goal_grenadetarget\n')
+
+	if contents.find("MountVehicle =") > 0:
+		str_list.append('has a MountVehicle table - goal_mountvehicle\n')
+
+	if contents.find("RideVehicle =") > 0:
+		str_list.append('has a RideVehicle table - goal_ridevehicle\n')
+
+	if contents.find("RideTram =") > 0:
+		str_list.append('has a RideTram table - goal_ridetram\n')
+
+	if contents.find("EscortVehicle =") > 0:
+		str_list.append('has an EscortVehicle table - goal_escortvehicle\n')
+
+	if contents.find("Switches =") > 0:
+		str_list.append('has a Switches table - check for paththrough\n')
+
+	return str_list
+
+def CheckForOldScriptGoal(fname, out):
+	if os.path.isfile(Path+fname):
+		ext = os.path.splitext(fname)
+
+		if ext[1]==".gm":
+			if ext[0].find('_goals') == -1:
+				f = open(Path+fname, 'r')
+
+				try:
+					contents = f.read()
+				except Exception:
+					print('OldScriptGoalList: skipping {0}, check encoding for utf-8'.format(fname))
+					f.close()
+					return
+
+				res =  SearchForOldScriptGoal(contents)
+				if ( len(res) > 0 ):
+					out.write('---- {0} ----\n'.format(ext[0]))
+					for item in res:
+						out.write(item)
+
+					out.write('\n')
+
+				f.close()
+
+def OldScriptGoalList():
+	out = open(os.path.normpath('results/oldscriptgoallist.txt'), 'w')
+	out.write('List of map scripts with old script goals\n\n')
+
+	out.write('---------- With Script ----------\n\n')
+	for fname in WithScriptList:
+		CheckForOldScriptGoal(fname,out)
+
+	out.write('\n\n---------- Priority Maps ----------\n\n')
+	for fname in PriorityList:
+		CheckForOldScriptGoal(fname,out)
+
+	out.write('\n\n---------- Nav Folder ---------\n\n')
+	for fname in NavList:
+		CheckForOldScriptGoal(fname,out)
+
+	out.close()
+
+########################################################################
 # run it
 ########################################################################
 Main()
+
 
