@@ -5,7 +5,7 @@ this.Debug = false;
 this.AlwaysRecieveEvents = true;
 
 // currently limited to certain classes
-this.LimitToClass(CLASS.SOLDIER);
+this.LimitToClass(CLASS.SOLDIER, CLASS.COVERTOPS);
 
 // shared weapon counters
 this.UsingWeapons = {};
@@ -25,6 +25,10 @@ this.Initialize = function()
 	this.EXCLUDE_MORTAR_AND_MG42 = {};
 	this.EXCLUDE_MORTAR_AND_MG42 [WEAPON.MOBILE_MG42] = true;
 	this.EXCLUDE_MORTAR_AND_MG42 [WEAPON.MORTAR] = true;
+
+	this.EXCLUDE_SNIPE = {};
+	this.EXCLUDE_SNIPE [WEAPON.GARAND] = true;
+	this.EXCLUDE_SNIPE [WEAPON.K43] = true;
 };
 
 // Count the number of users for a particular weapon id
@@ -74,40 +78,67 @@ this.Update = function()
 	{
 		myTeam = this.Bot.GetTeam();
 
-		// count how many other bots have these weapons
-		numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
-		numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
-
-		// count how many goals are available for each weapon type
-		goals_mg42 = {};
-		GetGoals(goals_mg42,myTeam,"MOBILEMG42.*");
-		goals_mortar = {};
-		GetGoals(goals_mortar,myTeam,"MOBILEMORTAR.*");
-		numMg42Goals = tableCount(goals_mg42);
-		numMortarGoals = tableCount(goals_mortar);
-
-		if(this.Debug)
-		{
-			print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mg42 Users:",numMg42Users,"/",numMg42Goals);
-			print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mortar Users:",numMortarUsers,"/",numMortarGoals);
-		}
-
 		// this.Bot.HasWeapon cannot be used, because it always returns false !!!
 		// cs: this.Bot.HasWeapon should be fixed now ...
 		lastWeapon = this.UsingWeapons[myTeam][this.Bot];
 
-		if(Server.NumPlayers >= MinPlayersForMortar && numMortarUsers <= numMortarGoals && (numMortarUsers < numMortarGoals || lastWeapon == WEAPON.MORTAR))
+		if (this.Bot.GetClass() == CLASS.SOLDIER)
 		{
-			newWeapon = WEAPON.MORTAR;
+			// count how many other bots have these weapons
+			numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
+			numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
+
+			// count how many goals are available for each weapon type
+			goals_mg42 = {};
+			GetGoals(goals_mg42,myTeam,"MOBILEMG42.*");
+			goals_mortar = {};
+			GetGoals(goals_mortar,myTeam,"MOBILEMORTAR.*");
+			numMg42Goals = tableCount(goals_mg42);
+			numMortarGoals = tableCount(goals_mortar);
+
+			if(this.Debug)
+			{
+				print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mg42 Users:",numMg42Users,"/",numMg42Goals);
+				print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mortar Users:",numMortarUsers,"/",numMortarGoals);
+			}
+
+			if(Server.NumPlayers >= MinPlayersForMortar && numMortarUsers <= numMortarGoals && (numMortarUsers < numMortarGoals || lastWeapon == WEAPON.MORTAR))
+			{
+				newWeapon = WEAPON.MORTAR;
+			}
+			else if(Server.NumPlayers >= MinPlayersForMobileMG && numMg42Users <= numMg42Goals && (numMg42Users < numMg42Goals || lastWeapon == WEAPON.MOBILE_MG42))
+			{
+				newWeapon = WEAPON.MOBILE_MG42;
+			}
+			else
+			{
+				// pick a new weapon other than mg42 and mortar
+				newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_MORTAR_AND_MG42);
+			}
 		}
-		else if(Server.NumPlayers >= MinPlayersForMobileMG && numMg42Users <= numMg42Goals && (numMg42Users < numMg42Goals || lastWeapon == WEAPON.MOBILE_MG42))
+		else  // CLASS.COVERTOPS
 		{
-			newWeapon = WEAPON.MOBILE_MG42;
-		}
-		else
-		{
-			// pick a new weapon other than mg42 and mortar
-			newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.Bot, this.EXCLUDE_MORTAR_AND_MG42);
+			// count how many goals are available
+			if (Util.IsSnipeMap) {
+				numSnipeGoals = 99;
+			}
+			else
+			{
+				goals_snipe = {};
+				GetGoals(goals_snipe,myTeam,"SNIPE_.*");
+				numSnipeGoals = tableCount(goals_snipe);
+			}
+
+			if (numSnipeGoals > 0)
+			{
+				tbl = Util.TeamSniperWeapons[ Util.TeamName(myTeam) ];
+				newWeapon = tbl[ Util.GetRandomFromTable(tbl) ];
+			}
+			else
+			{
+				// pick a new weapon other than GARAND and K43
+				newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_SNIPE);
+			}
 		}
 
 		//WeaponTable.SetWeaponAvailability can be called anytime from triggers,

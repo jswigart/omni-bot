@@ -1,0 +1,241 @@
+//==========================================================================================
+//
+//	uje_airport.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	28 September 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+
+	Airfield_side_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Airfield_side_door_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Garrison_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Garrison_MG_Nest_Built" );
+	},
+
+	Old_City_MG_Nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Old_City_MG_Nest_Built" );
+	},
+
+	side_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_door_Built" );
+	},
+
+	Airfield_side_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Airfield_side_door_Dyno = 0;
+
+		Util.MapDebugPrint( "Airfield_side_door_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Controls_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Controls_Destroyed" );
+	},
+
+	Axis_Main_Airfield_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Main_Airfield_entrance_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Main_Airfield_entrance_Destroyed" );
+	},
+
+	Cargo_plane_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Cargo_plane_1_Dyno = 0;
+
+		Util.MapDebugPrint( "Cargo_plane_1_Destroyed" );
+	},
+
+	Garrison_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Garrison_MG_Nest_Dyno = 0;
+
+		Util.MapDebugPrint( "Garrison_MG_Nest_Destroyed" );
+	},
+
+	Old_City_MG_Nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_City_MG_Nest_Dyno = 0;
+
+		Util.MapDebugPrint( "Old_City_MG_Nest_Destroyed" );
+	},
+
+	Second_Cargoplane_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Second_Cargoplane_Dyno = 0;
+
+		Util.MapDebugPrint( "Second_Cargoplane_Destroyed" );
+	},
+
+	The_First_Cargoplane_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.The_First_Cargoplane_Dyno = 0;
+
+		Util.MapDebugPrint( "The_First_Cargoplane_Destroyed" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.Airfield_side_door_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Garrison_MG_Nest_Built );
+	OnTrigger( "MISSING_STRING", Map.Old_City_MG_Nest_Built );
+	OnTrigger( "MISSING_STRING", Map.side_door_Built );
+	OnTrigger( "MISSING_STRING", Map.Airfield_side_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Controls_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Main_Airfield_entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Cargo_plane_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Garrison_MG_Nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Old_City_MG_Nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Second_Cargoplane_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.The_First_Cargoplane_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.oldcityflag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	Util.SetGoalOffset( 500, 0, 0, "PLANT_Axis_Main_Airfield_entrance" );
+	Util.SetGoalOffset( 150, 0, 0, "PLANT_Second_Cargoplane" );
+	Util.SetGoalOffset( 0, 150, 0, "PLANT_Cargo_plane_1" );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

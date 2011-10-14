@@ -1,0 +1,409 @@
+//==================================================================================================
+//
+//	1944 Nordwind Final - 1944_nordwind.gm
+//
+//	Who  		When			What
+//--------------------------------------------------------------------------------------------------
+//	Mateos		10/05/2011		Conversion to 1944 Nordwind 2
+//	Mateos		~2009-2010		Initial Script -> Last Update for 1944 Nordwind
+//
+//==================================================================================================
+
+/****************************************************
+Pathing and script by Mateos
+Correspondant WAY file size : -
+Last Update : 10 May 2011
+****************************************************/
+
+global Map =
+{
+	// *** TRIGGER CALLBACKS ***
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Jagdpanther_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Jagdpanther_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Truck_Built" );
+	},
+
+	Truck_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier" );
+
+		Util.MapDebugPrint( "Truck_Barrier_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Truck_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "Truck_Barrier_Destroyed" );
+	},
+
+	Warehouse_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.ChangeSpawn( TEAM.AXIS, 4 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Delta.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Warehouse_Gate" );
+
+		Util.ChangeSpawn( TEAM.ALLIES, 1 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
+
+		Util.MapDebugPrint( "Warehouse_Gate_Destroyed" );
+	},
+
+	Gold_Bars_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Golf.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_truck.*" );
+
+		Util.MapDebugPrint( "Gold_Bars_Taken" );
+	},
+
+	Jagdpanther_region_0 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Golf.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Tank" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_truck.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "JagdpantherAtTruckyardGate" );
+	},
+
+	Jagdpanther_region_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Echo.*" );
+
+		Util.ChangeSpawn( TEAM.ALLIES, 3 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Alpha.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_start.*" );
+
+		Util.MapDebugPrint( "Jagdpanther_region_1" );
+	},
+
+	Jagdpanther_region_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Foxtrot.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Delta.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Bravo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Alpha.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Charlie.*" );
+
+		// Tactical decision: CP useless in fight
+		Util.DisableGoal( "BUILD_Allied_Command_Post" );
+		Util.DisableGoal( "PLANT_Allied_Command_Post" );
+
+		Util.MapDebugPrint( "Jagdpanther_region_2" );
+	},
+
+	truck_region_3 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Delta.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Foxtrot.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_High.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Bravo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck_Barrier" );
+
+		Util.MapDebugPrint( "truck_region_3" );
+	},
+
+	truck_region_4 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Hotel.*" );
+
+		Util.ChangeSpawn( TEAM.ALLIES, 2 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Charlie.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_High.*" );
+
+		Util.MapDebugPrint( "truck_region_4" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** TRIGGERS ***
+	// The announcements for OnTrigger events are trimmed to 71 chars,
+	// the maximum supported by Omni-bot.
+	OnTrigger( "Allied Command Post constructed. The Tank Depot Spawn is available and ", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. The Warehouse Spawn is available and cha", Map.Axis_Command_Post_Built );
+	OnTrigger( "The Jagdpanther has been repaired!", Map.Jagdpanther_Built );
+	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post! Allies have lost the c", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post! The Warehouse Spawn ha", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_Destroyed );
+	OnTrigger( "The Warehouse Gate has been destroyed. The Axis now have access to thei", Map.Warehouse_Gate_Destroyed );
+	OnTrigger( "Axis team is escaping with the Gold Crates!", Map.Gold_Bars_Taken );
+
+	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
+	Util.DisableGoal( ".*", true );	// All but Routes
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Echo.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Delta.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_gold_crate" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_GoldDropoff" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Warehouse_Gate" );
+
+	// *** ALLIED GOALS ***
+	Util.ChangeSpawn( TEAM.ALLIES, 3 );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_High.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_start.*" );
+
+	// *** PRIORITY *** (Will probably be removed later)
+	SetGoalPriority( "ATTACK.*", 0.5 );
+	SetGoalPriority( "DEFEND.*", 0.5 );
+	SetGoalPriority( "DEFEND_High.*", 0.55 );
+	SetGoalPriority( "DEFEND_allies_truck.*", 0.55 );
+	SetGoalPriority( "PLANT_Truck_Barrier", 0.6 );
+	SetGoalPriority( "BUILD_Allied_Command_Post", 0.6 );
+	SetGoalPriority( "PLANT_Allied_Command_Post", 0.6 );
+	SetGoalPriority( "BUILD_Tank", 0.7 );
+	SetGoalPriority( "PLANT_Warehouse_Gate", 0.8 );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
+
+	Util.SetGoalOffset( 50, 75, 0, "PLANT_Truck_Barrier" );
+
+	Util.OnTriggerPosition( "MOVER_Jagdpanther", "region0", 200.0, Map.Jagdpanther_region_0 );
+	Util.OnTriggerPosition( "MOVER_Jagdpanther", "region1", 200.0, Map.Jagdpanther_region_1 );
+	Util.OnTriggerPosition( "MOVER_Jagdpanther", "region2", 200.0, Map.Jagdpanther_region_2 );
+	Util.OnTriggerPosition( "MOVER_truck", "region3", 200.0, Map.truck_region_3 );
+	Util.OnTriggerPosition( "MOVER_truck", "region2", 200.0, Map.truck_region_4 );
+
+	// Force Routing for the Jagdpanther Build
+	Util.ForceRouting( "BUILD_Tank", true );
+
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		DEFEND_High3 =
+		{
+			ROUTE_AlliedSpawn =
+			{
+				ROUTE_AlliedRoute1 = {},
+			},
+		},
+
+		//First spawn (Does not work, sadly)
+		BUILD_Tank =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 =
+						{
+							ROUTE_Hill4 =
+							{
+								ROUTE_Ground3 ={},
+							},
+						},
+					},
+				},
+
+				ROUTE_Ground1 =
+				{
+					ROUTE_Ground2 =
+					{
+						ROUTE_Ground3 ={},
+					},
+				},
+			},
+
+			ROUTE_AxisSpawn3 =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 =
+						{
+							ROUTE_Hill4 =
+							{
+								ROUTE_Ground3 ={},
+							},
+						},
+					},
+				},
+			},
+		},
+
+		ATTACK_Echo1 =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 = {},
+					},
+				},
+			},
+
+			ROUTE_AxisSpawn3 =
+			{
+				ROUTE_Hill1 =
+				{
+					ROUTE_Hill2 =
+					{
+						ROUTE_Hill3 = {},
+					},
+				},
+			},
+		},
+
+		// Warehouse Spawn Activatedv (Routes displayed at least...)
+		BUILD_Tank =
+		{
+			ROUTE_WarehouseSpawn =
+			{
+				ROUTE_Ground2 =
+				{
+					ROUTE_Ground3 ={},
+				},
+				ROUTE_Warehouse1 =
+				{
+					ROUTE_Warehouse2 ={},
+				},
+			},
+		},
+
+		ATTACK_Echo1 =
+		{
+			ROUTE_WarehouseSpawn =
+			{
+				ROUTE_Ground2 =
+				{
+					ROUTE_Hill3 = {},
+				},
+			},
+		},
+	};
+
+	// Copy routes
+	MapRoutes.ATTACK_Echo3 = MapRoutes.ATTACK_Echo1;
+	MapRoutes.ATTACK_Echo4 = MapRoutes.ATTACK_Echo1;
+	MapRoutes.ATTACK_Echo6 = MapRoutes.ATTACK_Echo1;
+	MapRoutes.DEFEND_High4 = MapRoutes.DEFEND_High3;
+	MapRoutes.DEFEND_High5 = MapRoutes.DEFEND_High3;
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot 0.81 map script for 1944 Nordwind 2 by Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.K43, WEAPON.BAR, WEAPON.STEN, WEAPON.MP34, WEAPON.BAR, WEAPON.STG44, WEAPON.FG42};
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
+};

@@ -151,6 +151,7 @@ global Map =
 	{
 		Map.SetDynPos();
 		SetAvailableMapGoals( TEAM.AXIS, true, ".*village.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_allied.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_submarine.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Submarine" );
 		SetAvailableMapGoals( TEAM.AXIS, !Map.sideWallDestroyed || !Map.mainEntranceDestroyed, "DEFEND_sidewall.*" );

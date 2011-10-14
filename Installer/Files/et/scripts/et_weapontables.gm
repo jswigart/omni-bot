@@ -4,27 +4,104 @@
 // TABLES
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-global PrimaryWeaponChoices = {};
 global WeaponTable = {};
 
-PrimaryWeaponChoices["etmain"] = {};
-PrimaryWeaponChoices["etmain"][CLASS.SOLDIER] = {};
-PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.PANZERFAUST] = true;
-PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.MOBILE_MG42] = true;
-PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.FLAMETHROWER] = true;
-PrimaryWeaponChoices["etmain"][CLASS.SOLDIER][WEAPON.MORTAR] = true;
+global PrimaryWeaponChoices = {};
+PrimaryWeaponChoices[TEAM.AXIS] = {};
+PrimaryWeaponChoices[TEAM.ALLIES] = {};
 
-PrimaryWeaponChoices["noquarter"] = {};
-PrimaryWeaponChoices["noquarter"][CLASS.SOLDIER] = PrimaryWeaponChoices["etmain"][CLASS.SOLDIER];
-
-// if allowed, add venom to the list.
-if ( GetModName() == "noquarter" && (GetCvar("jp_insanity") & 256) ) {
-	PrimaryWeaponChoices["noquarter"][CLASS.SOLDIER][ WEAPON.VENOM ] = true;
+////////////////////
+// soldiers weapons
+////////////////////
+tbl = {};
+tbl[WEAPON.PANZERFAUST] = true;
+tbl[WEAPON.MOBILE_MG42] = true;
+tbl[WEAPON.FLAMETHROWER] = true;
+tbl[WEAPON.MORTAR] = true;
+isNq = (GetModName() == "noquarter");
+if (isNq) {
+	if (GetCvar("jp_insanity") & 256) {
+		// if allowed, add venom to the list.
+		tbl[ WEAPON.VENOM ] = true;
+	}
+	tbl[WEAPON.STG44] = false;
+}else{
+	tbl[WEAPON.MP40] = false;
 }
+PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER] = tbl;
+
+tbl = {};
+tbl[WEAPON.MOBILE_MG42] = true;
+tbl[WEAPON.FLAMETHROWER] = true;
+tbl[WEAPON.MORTAR] = true;
+if (isNq) {
+	if (GetCvar("jp_insanity") & 256) {
+		// if allowed, add venom to the list.
+		tbl[ WEAPON.VENOM ] = true;
+	}
+	tbl[WEAPON.BAZOOKA] = true;
+	tbl[WEAPON.BAR] = false;
+}else{
+	tbl[WEAPON.PANZERFAUST] = true;
+	tbl[WEAPON.THOMPSON] = false;
+}
+PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER] = tbl;
+
+/////////////////////
+// covertops weapons
+/////////////////////
+tbl = {};
+tbl[WEAPON.K43] = true;
+tbl[WEAPON.FG42] = true;
+if (isNq) {
+	tbl[WEAPON.MP34] = true;
+}else{
+	tbl[WEAPON.STEN] = true;
+}
+PrimaryWeaponChoices[TEAM.AXIS][CLASS.COVERTOPS] = tbl;
+
+tbl = {};
+tbl[WEAPON.GARAND] = true;
+tbl[WEAPON.STEN] = true;
+if (isNq) {
+	tbl[WEAPON.BAR] = true;
+}else{
+	tbl[WEAPON.FG42] = true;
+}
+PrimaryWeaponChoices[TEAM.ALLIES][CLASS.COVERTOPS] = tbl;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+WeaponTable.SetWeaponTeamAvailability = function(team, class, weapon, enable)
+{
+	classTable = PrimaryWeaponChoices[team][class];
+	if (!classTable) {
+		Util.MapDebugPrint("WeaponTable.SetWeaponAvailabilty: No weapon table for class " + Util.ClassName(class), true);
+		return;
+	}
+
+	if ( typeName(weapon) == "table" ) {
+		foreach ( wpn in weapon ) {
+			this.SetWeaponTeamAvailability(team, class, wpn, enable);
+		}
+		return;
+	}
+
+	if (GetModName() == "noquarter") {
+		if (team == TEAM.ALLIES && weapon == WEAPON.PANZERFAUST) {
+			weapon = WEAPON.BAZOOKA;
+		}
+		if (team == TEAM.AXIS && weapon == WEAPON.STEN) {
+			weapon = WEAPON.MP34;
+		}
+	}
+	if (typeId(classTable[weapon]) !=0 ) { // enable only weapons which are permitted for this team and class
+		classTable[weapon] = enable;
+	}
+};
 
 /*
 	WeaponTable.SetWeaponAvailability( CLASS.SOLDIER, WEAPON.FLAMETHROWER, true );
@@ -32,54 +109,28 @@ if ( GetModName() == "noquarter" && (GetCvar("jp_insanity") & 256) ) {
 */
 WeaponTable.SetWeaponAvailability = function(class, weapon, enable)
 {
-	mod = GetModName();
-	// if a table for mod is not set up, use etmain weapons
-	if (!PrimaryWeaponChoices[mod]) {
-		mod = "etmain";
-	}
-
-	if (!PrimaryWeaponChoices[mod][class]) {
-		Util.MapDebugPrint("WeaponTable.SetWeaponAvailabilty: No weapon table for class", Util.ClassName(class));
-		return;
-	}
-
-	if ( typeName(weapon) == "table" ) {
-		foreach ( wpn in weapon ) {
-			PrimaryWeaponChoices[mod][class][wpn] = enable;
-		}
-	}
-	else {
-		PrimaryWeaponChoices[mod][class][weapon] = enable;
-	}
+	WeaponTable.SetWeaponTeamAvailability(TEAM.AXIS, class, weapon, enable);
+	WeaponTable.SetWeaponTeamAvailability(TEAM.ALLIES, class, weapon, enable);
 };
 
-WeaponTable.GetPrimaryWeapons = function(class) {
-	mod = GetModName();
-	if (!PrimaryWeaponChoices[mod]) {
-		mod = "etmain";
-	}
-
-	if ( PrimaryWeaponChoices[mod][class] ) {
-		return PrimaryWeaponChoices[mod][class];
-	}
-
-	return null;
+WeaponTable.GetPrimaryWeapons = function(team, class)
+{
+	return PrimaryWeaponChoices[team][class];
 };
 
 // for debug
 WeaponTable.ListWeaponAvailability = function()
 {
-	mod = GetModName();
-	if (!PrimaryWeaponChoices[mod]) {
-		mod = "etmain";
-	}
-
 	print("\n//////////// Weapon Availability ////////////");
-	foreach ( id and class in PrimaryWeaponChoices[mod] ) {
-		print(format("\n------ %s ------", Util.ClassName(id)));
+	foreach ( team and tbl in PrimaryWeaponChoices )
+	{
+		print(format("\n Team: %s", Util.TeamName(team)));
+		foreach ( id and class in tbl) {
+			print(format("\n------ %s ------", Util.ClassName(id)));
 
-		foreach ( w and e in class ) {
-			print(format("%s = %d", Util.WeaponName(w), e));
+			foreach ( w and e in class ) {
+				print(format("%s = %d", Util.WeaponName(w), e));
+			}
 		}
 	}
 };

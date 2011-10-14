@@ -1,28 +1,37 @@
 //========================================================================================================
 //
-//	1944 Nordwind Final - 1944_nordwind.gm
+//	Operation Resurrection Final - resurrection.gm
 //
 //	Who  		When			What
 //--------------------------------------------------------------------------------------------------------
 //	Mateos		~2009			Updated ailmanki waypoints for OB 0.71
-//	Crapshoot	~2010			Conversion of my unfinished 0.71 waypoints to the beta 0.8
+//	Crapshoot	~2010			Conversion of my unfinished 0.71 waypoints to the Beta 0.8
 //	Mateos		21/05/2011		Conversion of the final 0.71 waypoints to 0.81
 //
 //========================================================================================================
 
 /****************************************************
 Original waypoints by ailmanki (12 July 2007)
-Pathing updated and script by >M@t£o$<
-Correspondant WAY file size : 85,9 Ko (87 978 octets)
-Last Update : 21 May 2011
+Pathing updated and script by Mateos
+Correspondant WAY file size : -
+Last Update : 8 September 2011
 ****************************************************/
+
+// TO DO:	- "DEFUSE.*" logic with conditionals -> Priority 0 when obj secured
+//		- Disable Combat Movements on some Attack/Defend spots
+//		- Upgrade Boat Escort system to 0.81 way
 
 global Map =
 {
-	Debug = 0,
+	Debug = 1,
 	// Set Talk to false if you don't want the bots to talk:
 	Talk = true,
 	ShowMovers = false,
+
+	// Make Axis bots not fall back when some stuff need to be built/defused/destroyed
+	Book_of_the_Resurrection_Status = 0,	//Not secured or stolen
+
+	Main_Gate_Status = 0,	// Main Gate closed
 
 	Allied_Command_Post_Dyno = 0,
 	Axis_Command_Post_Dyno = 0,
@@ -55,11 +64,51 @@ global Map =
 		},
 	},
 
+	Navigation =
+	{
+		caretaker_house_ladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3);
+			},
+		},
+		front_gate_ladder_1 = // waypoint 1109, uid 1148
+		{
+			navigate = function(_this)
+			{
+				//look up, move backwards for 3 seconds
+				// /bot mypos will show your current facing in console
+				_this.AddAimRequest(Priority.High, "facing", Vector3(-0.672,0.035,0.740));
+				_this.Bot.HoldButton(BTN.BACKWARD, 3);
+				sleep(3);
+				// spin around and press forward for 1 second
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.994,-0.091,-0.053));
+				_this.Bot.HoldButton(BTN.FORWARD, 1); // may consider 0.5 for this
+				sleep(1);
+				_this.ReleaseAimRequest();
+			},
+		},
+	},
+
 	// *** TRIGGER CALLBACKS ***
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+
+		// If obj not stolen/secured, Axis can plant the enemy CP
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
+		}
+
+		// If some real player build Allied CP while obj stolen/secured, don't care it
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
+		}
 
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Allied_Command_Post_Built" ); }
@@ -70,6 +119,18 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		// If obj not stolen/secured, Allies can plant the enemy CP
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
+		}
+
+		// If some real player build Axis CP while obj stolen/secured (Nice battle sense), don't care it
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
+		}
+
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Axis_Command_Post_Built" ); }
 	},
@@ -79,7 +140,19 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Basement_Bridge" );
+		// If obj not stolen/secured, Axis can plant it (Can be used to escape)
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Basement_Bridge" );
+		}
+
+		// If some real player build it while obj stolen/secured, don't care it
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Basement_Bridge" );
+
+			// If Axis Covert Op, True: To Do
+		}
 
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Basement_Bridge_Built" ); }
@@ -92,6 +165,18 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_CryptGate1" );
 
+		// If obj not stolen/secured, Allies can plant it (Can be used to escape)
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Crypt_Gate" );
+		}
+
+		// If some real player build it while obj stolen/secured, don't care it
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Crypt_Gate" );
+		}
+
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Crypt_Gate_Built" ); }
 	},
@@ -101,7 +186,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_start4" );
+		// If main_gate_power_destroyed, do not enable the side Defend spot
+		if ( Map.Main_Gate_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_start4" );
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_waterway_door" );
 
@@ -314,6 +403,18 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		// If obj not stolen/secured, Allies can build their CP
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+		}
+
+		// If some real player destroy Allied CP while obj stolen/secured, don't care it
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Command_Post" );
+		}
+
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Allied_Command_Post_Destroyed" ); }
 	},
@@ -322,6 +423,18 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		// If obj not stolen/secured, Axis can build their CP safely
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+		}
+
+		// If obj stolen/secured, everyone camp outside, engis included
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Command_Post" );
+		}
 
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Axis_Command_Post_Destroyed" ); }
@@ -332,6 +445,12 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		// Only useless to re-build it when obj is secured
+		if ( Map.Book_of_the_Resurrection_Status == 1 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Basement_Bridge" );
+		}
+
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "Basement_Bridge_Destroyed" ); }
 	},
@@ -341,8 +460,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Obj.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Taken.*" );
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Obj.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Taken.*" );
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_CryptGate1" );
 
@@ -366,10 +488,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Obj.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Taken.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bravo.*" );
+		// If obj not stolen/secured only, disabled on Taken, re-enabled if Returned
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Obj.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Taken.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bravo.*" );
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_Ladder1" );
 
@@ -382,27 +508,37 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Main_Gate_Status = 1;	// Main Gate opened
+
 		Wp.SetWaypointFlag( "WaterwayClosed", "closed", false );
 
+		// *** AXIS GOALS ***
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisFlag" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Catacomb.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_DoorDestroyed" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_HouseMG42" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Crypt_Gate" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_EntranceMobileMG42" );
+
+		SetGoalPriority( "DEFEND_AxisFlag", 0.55 );
+		SetGoalPriority( "DEFEND_Catacomb.*", 0.55 );
+		SetGoalPriority( "DEFEND_DoorDestroyed", 0.55 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisFlag" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Catacomb.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_DoorDestroyed" );
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_StartMG42" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_start.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_High" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_DoorDestroyed" );
 
+		// *** ALLIED GOALS ***
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Charlie.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_room_flag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Crypt_Gate" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_catacomb_door" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Echo.*" );
 
 		if (Map.Talk)
@@ -446,7 +582,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Basement_Bridge" );
+		// In case some real player wants to XP while obj is secured...
+		if ( Map.Book_of_the_Resurrection_Status == 0 )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Basement_Bridge" );
+		}
 
 		if ( Map.Debug )
 			{ Util.MapDebugPrint( "waterway_door_Destroyed" ); }
@@ -456,6 +596,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		Map.Book_of_the_Resurrection_Status = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Echo.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
@@ -498,6 +640,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Book_of_the_Resurrection_Status = 0;
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bravo.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Catacomb.*");
@@ -531,7 +675,13 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.Book_of_the_Resurrection_Status = 1;
+
+		// Making bots only focus on end goals
 		Util.DisableGoal( ".*", true );	// All but Routes
+		SetGoalPriority( "DEFUSE_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+		SetGoalPriority( "DEFUSE_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
+
 		Util.EnableGoal( "MOVER_train2", true );
 		Map.EscortVehicle.Boat.Enabled = true;
 
@@ -539,7 +689,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_start.*" );
 
-		//Close useless "DEFEND_start.*" spots
+		// Close useless "DEFEND_start.*" spots
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_start1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_start2" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_start4" );
@@ -702,6 +852,10 @@ global OnMapLoad = function()
 	OnTrigger( "Allies capture the Forward room!", Map.room_flag_Allies_Captured );
 	OnTrigger( "Allied team escaped with the Book!", Map.AlliesWin );
 
+	// *** NO PUSH ZONES ***
+	nopush1 = OnTriggerRegion(AABB(-2021.686,-822.044,900.956,-1786.145,-448.430,1117.125),RegionTrigger.DisableBotPush);
+	nopush2 = OnTriggerRegion(AABB(-1841.861,-254.305,441.926,-1519.329,-28.528,1157.042),RegionTrigger.DisableBotPush);
+
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
 	Util.DisableGoal( ".*", true );	// All but Routes
 
@@ -709,8 +863,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Dock" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_StartMG42" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_start.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_High" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_start4" );
+
+	SetGoalPriority( "DEFEND_High", 0.55 );	// DEFEND is 0.50 and CHECKPOINT 0.60
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_High" );
 
 	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Dock" );
@@ -718,49 +874,23 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Boat" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_main_gate_power" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_Of_The_Resurrection" );
-
-	// *** AXIS GOALS PRIORITY ***
-	SetGoalPriority( "MOUNTMG42_.*", 0.3 );
-	SetGoalPriority( "DEFEND_.*", 0.4 );
-	SetGoalPriority( "DEFEND_start3", 1.0 );
-	SetGoalPriority( "DEFEND_start6", 1.0 );
-	SetGoalPriority( "DEFEND_start4", 1.5 );
-	SetGoalPriority( "DEFEND_High", 2.0 );
-	SetGoalPriority( "DEFEND_AxisFlag", 2.0 );
-	SetGoalPriority( "DEFEND_Catacomb.*", 2.0 );
-	SetGoalPriority( "DEFEND_DoorDestroyed", 2.0 );
-	SetGoalPriority( "DEFEND_Delta.*", 2.25 );
-	SetGoalPriority( "PLANTMINE_.*", 2.5 );
-	SetGoalPriority( "PLANT_Allied_Command_Post", 2.6 );
-	SetGoalPriority( "PLANT_Dock", 2.7 );
-	SetGoalPriority( "PLANT_Basement_Bridge", 2.7 );
-	SetGoalPriority( "BUILD_Crypt_Gate", 3.0 );
-
-	// *** ALLIED GOALS PRIORITY ***
-	SetGoalPriority( "ATTACK_.*", 0.4 );
-	SetGoalPriority( "PLANT_Axis_Command_Post", 0.5 );
-	SetGoalPriority( "BUILD_Basement_Bridge", 0.6 );
-	SetGoalPriority( "PLANT_Crypt_Gate", 0.7 );
-	SetGoalPriority( "PLANT_catacomb_door", 0.7 );
-	SetGoalPriority( "BUILD_Dock", 0.8 );
-	SetGoalPriority( "PLANT_waterway_door", 0.8 );
-	SetGoalPriority( "PLANT_main_gate_power", 0.8 );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Ladder1" );
 
 	// *** GOALS PROPERTIES ***
 	Util.AddInvVehicle( "MOVER_train2" );
 
-	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
-	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
-	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
-	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
-	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
-	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
-	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "REPAIR_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 2, "CHECKPOINT_.*" );
 
-	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
-	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120} );
 
 	//Closed the side path, bots directly take obj...
 	Wp.SetWaypointFlag( "WaterwayClosed", "closed", true );
@@ -800,14 +930,13 @@ global OnMapLoad = function()
 	};
 
 	Util.Routes(MapRoutes);
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_Ladder1" );
 
-	Util.MapDebugPrint( "Omni-bot map script for Resurrection Final by >M@t£o$<." );
+	Util.MapDebugPrint( "Omni-bot map script for Resurrection Final by Mateos" );
 };
 
 global OnBotJoin = function( bot )
 {
+	bot.MaxViewDistance = 2000;
 	bot.TargetBreakableDist = 300.0;
 
 	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.K43, WEAPON.BAR, WEAPON.STEN, WEAPON.MP34, WEAPON.BAR, WEAPON.STG44, WEAPON.FG42};

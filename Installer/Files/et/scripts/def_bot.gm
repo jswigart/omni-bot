@@ -49,11 +49,11 @@ this.SelectClass = function()
 };
 
 // cs: moved from global so it can be called externally and be unique per bot
-this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
+this.ClassPrimaryWeaponChoice = function(excludeweapons)
 {
-	myclass = bot.GetClass();
+	myclass = this.GetClass();
 	weaponChoice = 0;
-	wpns = WeaponTable.GetPrimaryWeapons(myclass);
+	wpns = WeaponTable.GetPrimaryWeapons(this.GetTeam(), myclass);
 
 	// copy only usable weapons
 	if (wpns)
@@ -84,15 +84,15 @@ this.ClassPrimaryWeaponChoice = function(bot, excludeweapons)
 };
 
 // cs: moved from global so it can be called externally and be unique per bot
-this.ClassSecondaryWeaponChoice = function(bot, excludeweapons)
+this.ClassSecondaryWeaponChoice = function(excludeweapons)
 {
 	return null;
 };
 
 this.SelectWeapons = function()
 {
-	Primary = this.ClassPrimaryWeaponChoice(this);
-	Secondary = this.ClassSecondaryWeaponChoice(this);
+	Primary = this.ClassPrimaryWeaponChoice();
+	Secondary = this.ClassSecondaryWeaponChoice();
 
 	if ( Primary )
 		{ this.ChangePrimaryWeapon( Primary ); }

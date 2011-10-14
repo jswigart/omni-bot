@@ -48,10 +48,13 @@ Util.TeamSniperWeapons =
 
 	ALLIES =
 	{
-		WEAPON.FG42,
 		WEAPON.GARAND,
 	},
 };
+
+if (GetModName() != "noquarter") {
+	Util.TeamSniperWeapons["ALLIES"][1] = WEAPON.FG42;
+}
 
 Util.TeamSideArms =
 {

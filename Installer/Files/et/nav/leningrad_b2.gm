@@ -7,12 +7,20 @@
 //	palota	04 July 2010	Initial Script
 //	palota	15 August 2010	more goals added
 //	palota	29 August 2010	Navigation, more routes, DEFEND_square.*, AIRSTRIKE_barrier1, GRENADE_wall_mg, ATTACK_cp
-//
+// palota	28 September 2011	tank_barrier_1 UsePoints, axis role, disabled axis_radios after tank_barrier_2, changed priorities
 //==========================================================================================
 global Map =
 {
 	ShowMovers = false,
 	Movers = { "MOVER_tank1" },
+
+	Roles = {
+		AXIS = {
+			DEFENDER2 = {
+				numbots = 4
+			}
+		}
+	},
 
 	phase = 0,
 	gateOpened = false,
@@ -69,7 +77,7 @@ global Map =
 		{
 			if(Map.phase<30){
 				bot.ChangeSpawnPoint(0);
-			}else if (RandInt(0,3)==0){
+			}else if (bot.HasRole(ROLE.DEFENDER2)){
 				bot.ChangeSpawnPoint(4); //bunker
 			}else{
 				bot.ChangeSpawnPoint(1); //axis spawn
@@ -132,6 +140,7 @@ global Map =
 		Util.SetMaxUsersInProgress(9, "SWITCH_gate");
 		SetGoalPriority("BUILD_tank_barrier_2", 0.95, TEAM.AXIS);
 		SetGoalPriority("PLANT_Command_Post", 0.85, TEAM.ALLIES );
+		SetGoalPriority("PLANT_axis_radios", 0.81);
 		Util.DisableGoal("MOUNT_tank");
 		SetAvailableMapGoals(TEAM.AXIS, true, "AIRSTRIKE_gate");
 		SetAvailableMapGoals(TEAM.AXIS, true, "GRENADE_wall_mg");
@@ -165,6 +174,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_barrier2.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_cp");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_barrier2.*");
+		SetGoalPriority(".*_axis_radios", 0.8);
 		Util.EnableGoal("MOUNT_tank");
 		Util.OnTriggerPosition( "MOVER_tank1", "barrier2", 170.0, Map.Tank_At_Barrier2 );
 		Util.MapDebugPrint( "Tank_Passed_Gate" );
@@ -192,6 +202,7 @@ global Map =
 		Util.DisableGoal("BUILD_tank_barrier_2");
 		Util.DisableGoal("SWITCH_gate");
 		Util.DisableGoal(".*MG42_broken_wall");
+		Util.DisableGoal(".*_axis_radios");
 		SetAvailableMapGoals(TEAM.AXIS, false, "GRENADE_wall_mg");
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_park");
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_cemetery");
@@ -202,7 +213,6 @@ global Map =
 		Util.EnableGoal("AMMOCAB.*");
 		Util.EnableGoal("HEALTHCAB.*");
 		Util.SetPercentInProgress(50, "CHECKPOINT_westbunker_flag");
-		SetGoalPriority("CHECKPOINT_westbunker_flag", 0.6, TEAM.AXIS);
 		SetGoalPriority("CHECKPOINT_westbunker_flag", 0.8, TEAM.ALLIES);
 		Map.SetSpawn();
 		Util.OnTriggerPosition( "MOVER_tank1", "square1", 170.0, Map.Tank_At_Square1 );
@@ -257,14 +267,15 @@ global Map =
 
 	bunker_flag_Allies_Captured = function( trigger )
 	{
+		Util.SetRoleForGoals("CHECKPOINT_westbunker_flag", ROLE.DEFENDER2);
 		SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_cemetery");
 		SetAvailableMapGoals(TEAM.AXIS, true, "CHECKPOINT_westbunker_flag");
-		Util.SetPercentInProgress(20, "CHECKPOINT_westbunker_flag");
 		Util.MapDebugPrint("bunker_flag_Allies_Captured");
 	},
 
 	bunker_flag_Axis_Captured = function( trigger )
 	{
+		Util.ClearRoleForGoals("CHECKPOINT_westbunker_flag", ROLE.DEFENDER2);
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_cemetery");
 		Util.SetPercentInProgress(40, "CHECKPOINT_westbunker_flag");
 		Util.MapDebugPrint("bunker_flag_Axis_Captured");
@@ -275,7 +286,6 @@ global Map =
 		Map.phase=50;
 		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_square.*");
 		SetAvailableMapGoals(TEAM.AXIS, false, "SNIPE_square_west");
-		SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_axis_radios");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_square.*");
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_docs.*");
 		SetAvailableMapGoals(TEAM.AXIS, true, "MOBILEMG42_tunnel");
@@ -283,11 +293,9 @@ global Map =
 		Map.SetWall();
 		Map.SetEscort();
 		SetGoalPriority("BUILD_an_axis_radio", 0.75, TEAM.AXIS);
-		SetGoalPriority("MOUNTMG42_park", 0.5, TEAM.AXIS);
-		SetGoalPriority("DEFEND_docs1", 0.71, TEAM.AXIS);
-		SetGoalPriority("DEFEND_docs2", 0.71, TEAM.AXIS);
 		SetGoalPriority("BUILD_ladder", 0.9, TEAM.ALLIES);
 		SetGoalPriority("PLANT_wall", 0.85, TEAM.ALLIES);
+		Util.SetRoleForGoals("MOUNTMG42_park", ROLE.DEFENDER2);
 		Util.SetMaxUsersInProgress(1, ".*MG42_park");
 		Util.SetMaxUsersInProgress(1, "MOUNT_tank");
 		Util.MapDebugPrint("Tunnel_Entrance");
@@ -346,26 +354,34 @@ global OnMapLoad = function()
 	SetGoalPriority("DEFEND_transmit.*", 0.79);
 	SetGoalPriority("CHECKPOINT_westbunker_flag", 0.1);
 	SetGoalPriority("PLANTMINE.*", 0.85);
-	SetGoalPriority("SNIPE_allies_barrier1", 0.81);
+	SetGoalPriority("SNIPE_allies_barrier1", 0.82);
+	SetGoalPriority("PLANT_axis_radios", 0.82);
 	SetGoalPriority("SNIPE_square_west", 0.85);
 	SetGoalPriority("MOUNT_tank", 0.5, TEAM.AXIS);
 	SetGoalPriority("BUILD_tank_barrier_1", 0.95, TEAM.AXIS);
 	SetGoalPriority("PLANT_ladder", 0.6, TEAM.AXIS, CLASS.ENGINEER);
 	SetGoalPriority("BUILD_tank_barrier_2", 0.89, TEAM.AXIS);
 	SetGoalPriority("BUILD_ladder", 0.8, TEAM.ALLIES);
+	SetGoalPriority("MOUNTMG42_broken_wall", 0.71, TEAM.ALLIES);
 	SetGoalPriority("REPAIRMG42_broken_wall", 0.85, TEAM.ALLIES);
 	SetGoalPriority("FLAG_docs", 0.75, TEAM.ALLIES);
+	SetGoalPriority("ESCORT_tank", 0.69, TEAM.ALLIES);
+
+	Util.SetRoleForGoals("MOUNTMG42_cemetery", ROLE.DEFENDER2);
+	Util.ClearRoleForTable({ "MOUNTMG42_park", "CHECKPOINT_westbunker_flag" }, ROLE.DEFENDER2);
 
 	foreach (goal in { ".*MG42_cemetery", ".*MG42_broken_wall", "GRENADE_.*", "SNIPE_.*",
 		"BUILD_an_axis_radio", "BUILD_axis_radios", "BUILD_power_generator",  }){
 		Util.SetMaxUsersInProgress(1, goal);
 	}
 
-	SetMapGoalProperties( "DEFEND_.*", {mincamptime=35, maxcamptime=120} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=10, maxcamptime=60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=20, maxcamptime=60} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=50, maxcamptime=150} );
 
 	Util.AddUseWp("PLANT_wall", "brick_wall1");
 	Util.AddUseWp("PLANT_wall", "brick_wall2");
+	Util.AddUsePoint( "PLANT_tank_barrier_1", { Vec3(290.826, 2463.787, 292.125), Vec3(430.341, 1903.612, 292.125) } );
 
 	Util.OnTriggerPosition( "MOVER_tank1", "barrier1", 170.0, Map.Tank_At_Barrier1 );
 
@@ -387,7 +403,7 @@ global OnMapLoad = function()
 				ROUTE_allies2 = {},
 				ROUTE_allies3 = {},
 				ROUTE_allies4 = {},
-				ROUTE_gazebo = { Weight=3 },
+				ROUTE_gazebo = { Weight=4 },
 			},
 		},
 		PLANT_tank_barrier_2 = {

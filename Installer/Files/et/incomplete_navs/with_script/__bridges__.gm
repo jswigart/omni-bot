@@ -55,14 +55,14 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered ladder 1 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"entered ladder 1 trigger");
 			Wp.SetWaypointFlag( "Ladder1a", "closed", true );
 			Wp.SetWaypointFlag( "Ladder1b", "closed", true );
 			Wp.SetWaypointFlag( "Ladder1c", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited ladder 1 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"exited ladder 1 trigger");
 			Wp.SetWaypointFlag( "Ladder1a", "closed", false );
 			Wp.SetWaypointFlag( "Ladder1b", "closed", false );
 			Wp.SetWaypointFlag( "Ladder1c", "closed", false );
@@ -75,12 +75,12 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered ladder 2 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"entered ladder 2 trigger");
 			Wp.SetWaypointFlag( "Ladder2", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited ladder 2 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"exited ladder 2 trigger");
 			Wp.SetWaypointFlag( "Ladder2", "closed", false );
 		},
 	},
@@ -91,13 +91,13 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered ladder 3 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"entered ladder 3 trigger");
 			Wp.SetWaypointFlag( "Ladder3a", "closed", true );
 			Wp.SetWaypointFlag( "Ladder3b", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited ladder 3 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"exited ladder 3 trigger");
 			Wp.SetWaypointFlag( "Ladder3a", "closed", false );
 			Wp.SetWaypointFlag( "Ladder3b", "closed", false );
 		},
@@ -109,12 +109,12 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered ladder 4 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"entered ladder 4 trigger");
 			Wp.SetWaypointFlag( "Ladder4", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited ladder 4 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"exited ladder 4 trigger");
 			Wp.SetWaypointFlag( "Ladder4", "closed", false );
 		},
 	},
@@ -125,12 +125,12 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			print(GetEntName(ent),"entered ladder 5 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"entered ladder 5 trigger");
 			Wp.SetWaypointFlag( "Ladder5", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			print(GetEntName(ent),"exited ladder 5 trigger");
+			Util.MapDebugPrint(GetEntName(ent),"exited ladder 5 trigger");
 			Wp.SetWaypointFlag( "Ladder5", "closed", false );
 		},
 	},
@@ -276,14 +276,14 @@ global Map =
 			Map.EscortTruck = 0;
 			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_truck" );
-			print( "true test" );
+			Util.MapDebugPrint( "true test" );
 		}
 		if ( Map.TB_Built == 0 )
 		{
 			Map.EscortTruck = 1;
 			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
-			print( "false test" );
+			Util.MapDebugPrint( "false test" );
 		}
 
 		Util.MapDebugPrint( "Truck_at_Barrier" );
@@ -727,7 +727,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
 	if ( Map.Debug > 1 )
-	{ Util.ShowActiveGoals(); }
+		{ Util.ShowActiveGoals(); }
 
 	print( "Omni-bot map script for " + GetMapName() + " executed." );
 };
