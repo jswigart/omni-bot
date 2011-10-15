@@ -33,7 +33,8 @@ this.Enter = function()
 
 	if ( this.WeaponRestricted > 0 )
 	{
-		this.IsSniper = this.Bot.CanSnipe();
+		//this.IsSniper = this.Bot.CanSnipe();
+		this.IsSniper = Util.CanBotSnipe(this.Bot);
 		this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
 	}
 

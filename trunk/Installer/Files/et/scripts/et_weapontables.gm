@@ -19,13 +19,18 @@ tbl[WEAPON.MOBILE_MG42] = true;
 tbl[WEAPON.FLAMETHROWER] = true;
 tbl[WEAPON.MORTAR] = true;
 isNq = (GetModName() == "noquarter");
+isEtnam = GetModName() == "etpub" && GetCvar("g_etnamFlags") > 0;
 if (isNq) {
 	if (GetCvar("jp_insanity") & 256) {
 		// if allowed, add venom to the list.
 		tbl[ WEAPON.VENOM ] = true;
 	}
-	tbl[WEAPON.STG44] = false;
+	tbl[WEAPON.STG44] = true;
 }else{
+	if (isEtnam) {
+		tbl[WEAPON.M79] = true;
+		tbl[/*WEAPON.ITHACA*/ 102] = false;
+	}
 	tbl[WEAPON.MP40] = false;
 }
 PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER] = tbl;
@@ -40,19 +45,40 @@ if (isNq) {
 		tbl[ WEAPON.VENOM ] = true;
 	}
 	tbl[WEAPON.BAZOOKA] = true;
-	tbl[WEAPON.BAR] = false;
+	tbl[WEAPON.BAR] = true;
 }else{
-	tbl[WEAPON.PANZERFAUST] = true;
+	if (isEtnam) {
+		tbl[WEAPON.LAW] = true;
+		tbl[WEAPON.M79] = true;
+		tbl[/*WEAPON.ITHACA*/ 102] = false;
+	}else{
+		tbl[WEAPON.PANZERFAUST] = true;
+	}
 	tbl[WEAPON.THOMPSON] = false;
 }
 PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER] = tbl;
+
+if (GetModName() == "Jaymod") {
+	PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER][WEAPON.M97] = false;
+	PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER][WEAPON.M97] = false;
+}
+
+if (GetModName() == "silEnT") {
+	PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER][/*WEAPON.PPSH*/ 101] = false;
+	PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER][/*WEAPON.PPSH*/ 101] = false;
+}
 
 /////////////////////
 // covertops weapons
 /////////////////////
 tbl = {};
 tbl[WEAPON.K43] = true;
-tbl[WEAPON.FG42] = true;
+if (isEtnam) {
+	tbl[WEAPON.SAK47] = false;
+	tbl[WEAPON.RPD] = true;
+}else{
+	tbl[WEAPON.FG42] = true;
+}
 if (isNq) {
 	tbl[WEAPON.MP34] = true;
 }else{
@@ -63,12 +89,16 @@ PrimaryWeaponChoices[TEAM.AXIS][CLASS.COVERTOPS] = tbl;
 tbl = {};
 tbl[WEAPON.GARAND] = true;
 tbl[WEAPON.STEN] = true;
+if (isEtnam) {
+	tbl[WEAPON.M3A1] = true;
+}
 if (isNq) {
 	tbl[WEAPON.BAR] = true;
 }else{
 	tbl[WEAPON.FG42] = true;
 }
 PrimaryWeaponChoices[TEAM.ALLIES][CLASS.COVERTOPS] = tbl;
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

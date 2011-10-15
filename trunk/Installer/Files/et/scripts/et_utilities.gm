@@ -36,13 +36,13 @@ Util.SniperWeapons =
 	WEAPON.FG42_SCOPE,
 	WEAPON.K43_SCOPE,
 	WEAPON.GARAND_SCOPE,
+	WEAPON.SAK47SCOPE,
 };
 
 Util.TeamSniperWeapons =
 {
 	AXIS =
 	{
-		WEAPON.FG42,
 		WEAPON.K43,
 	},
 
@@ -54,6 +54,12 @@ Util.TeamSniperWeapons =
 
 if (GetModName() != "noquarter") {
 	Util.TeamSniperWeapons["ALLIES"][1] = WEAPON.FG42;
+}
+
+if (GetModName() == "etpub" && GetCvar("g_etnamFlags") > 0) {
+	//Util.TeamSniperWeapons["AXIS"][1] = WEAPON.SAK47;
+} else {
+	Util.TeamSniperWeapons["AXIS"][1] = WEAPON.FG42;
 }
 
 Util.TeamSideArms =
@@ -80,6 +86,17 @@ Util.IndexedSniperWeapons =
 	[22] = 1,
 	[29] = 1,
 	[33] = 1,
+	[111] = 1,
+};
+
+Util.CanBotSnipe = function(bot)
+{
+	foreach ( weapon in Util.SniperWeapons ) {
+		if ( bot.HasWeapon(weapon) ) {
+			return true;
+		}
+	}
+	return false;
 };
 
 // this errors
