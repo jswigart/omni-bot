@@ -96,13 +96,13 @@ function et_ConsoleCommand()  -- rcon
 end
 
 function et_ClientCommand(clientNum)
-    local argv0 = string.lower(et.trap_Argv(0)) -- say, say_team, vsay, vsay_team
+	local argv0 = string.lower(et.trap_Argv(0)) -- say, say_team, vsay, vsay_team
 	local text = et.ConcatArgs(1)  -- chat concatargs automatically, typing command in console does not, needed for same input
 	local s,e,command,temp
 	local params = {}
-    local clientguid = string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(clientNum), "cl_guid"))
-    local clientlvl = "0"
-    local clientflags = global_level_table[clientlvl]["flags"]
+	local clientguid = string.lower(et.Info_ValueForKey(et.trap_GetUserinfo(clientNum), "cl_guid"))
+	local clientlvl = "0"
+	local clientflags = global_level_table[clientlvl]["flags"]
 	
 	if global_mute_table[clientguid] ~= nil and (argv0 == "say" or argv0 == "say_team" or argv0 == "vsay" or argv0 == "vsay_team") then -- is player muted
 		userprint(clientNum, "cp", "^1You are muted")
@@ -120,23 +120,27 @@ function et_ClientCommand(clientNum)
 			command = command or "nil"
 		end	
 		command = string.lower(command)
-	    if commandflags[command] == nil then
-	        userprint(clientNum, "chat", "^3error: ^5" .. command .. " ^7is not a valid " .. modname .. " command")
-	        return 1
-	    end
+		if commandflags[command] == nil then
+			userprint(clientNum, "chat", "^3error: ^5" .. command .. " ^7is not a valid " .. modname .. " command")
+			return 1
+		end
 		if global_admin_table[clientguid] ~= nil then
 		    clientlvl = tostring(global_admin_table[clientguid]["level"])
 		    clientflags = global_level_table[clientlvl]["flags"]
 		end
-        if string.find(clientflags, commandflags[command]) == nil and clientflags ~= "*" then
-            userprint(clientNum, "chat", "^3" .. command .. ": ^7insufficient admin status")
-            return 1
-        end
-		if argv0 == "say" then
+		if string.find(clientflags, commandflags[command]) == nil and clientflags ~= "*" then
+		    userprint(clientNum, "chat", "^3" .. command .. ": ^7insufficient admin status")
+		    return 1
+		end
+		
+		-- lets make announce only centerprint
+		if command == "announce" then
+			-- do nothing
+		elseif argv0 == "say" then
 			-- SAY_ALL		0
 			-- SAY_TEAM		1
 			-- SAY_TELL		2
-			-- SAY_LIMBO	3
+			-- SAY_LIMBO		3
 			et.G_Say(clientNum, 0, text)
 		elseif argv0 == "say_team" then
 			et.G_Say(clientNum, 1, text)			
@@ -147,6 +151,7 @@ function et_ClientCommand(clientNum)
 		command = nil
 		temp = nil
 	end
+
     return 0
 end
 
@@ -215,64 +220,66 @@ end
 
 function execcommand(command, clientNum, params)
 	if command == "admindel" then
-        admindel(clientNum, params)
-    elseif command == "admintest" then
-        admintest(clientNum, params)
-    elseif command == "ban" then
-        ban(clientNum, params)
-    elseif command == "botplayers" then
-        botplayers(clientNum, params)
-    elseif command == "date" then
-        date(clientNum)
-    elseif command == "help" then
-        help(clientNum, params)
-    elseif command == "gib" then
-        gib(clientNum, params)
-    elseif command == "kick" then
-        kick(clientNum, params)
-    elseif command == "listadmins" then
+		admindel(clientNum, params)
+	elseif command == "admintest" then
+		admintest(clientNum, params)
+	elseif command == "announce" then
+		announce(clientNum, params)
+	elseif command == "ban" then
+		ban(clientNum, params)
+	elseif command == "botplayers" then
+		botplayers(clientNum, params)
+	elseif command == "date" then
+		date(clientNum)
+	elseif command == "help" then
+		help(clientNum, params)
+	elseif command == "gib" then
+		gib(clientNum, params)
+	elseif command == "kick" then
+		kick(clientNum, params)
+	elseif command == "listadmins" then
 		listadmins(clientNum, params)
-    elseif command == "listplayers" then
-        listplayers(clientNum)
-    elseif command == "maprecords" then
-        maprecords(clientNum)
-    elseif command == "mute" then
+	elseif command == "listplayers" then
+		listplayers(clientNum)
+	elseif command == "maprecords" then
+		maprecords(clientNum)
+	elseif command == "mute" then
 		mute(clientNum, params)
-    elseif command == "nextmap" then
-        nextmap(clientNum)
-    elseif command == "putteam" then
-        putteam(clientNum, params)
-    elseif command == "rename" then
-        rename(clientNum, params)
-    elseif command == "serverrecords" then
-        serverrecords(clientNum)
-    elseif command == "setlevel" then
-        setlevel(clientNum, params)
-    elseif command == "showbans" then
-        showbans(clientNum, params)
-    elseif command == "slap" then
-        slap(clientNum, params)
-    elseif command == "spec999" then
-        spec999(clientNum)
-    elseif command == "stats" then
-        stats(clientNum, params)
-    elseif command == "swap" then
-        swap(clientNum)
-    elseif command == "time" then
-        time(clientNum)
-    elseif command == "timelimit" then
-        timelimit(clientNum, params)
-    elseif command == "unban" then
-        unban(clientNum, params)
-    elseif command == "unmute" then
+	elseif command == "nextmap" then
+		nextmap(clientNum)
+	elseif command == "putteam" then
+		putteam(clientNum, params)
+	elseif command == "rename" then
+		rename(clientNum, params)
+	elseif command == "serverrecords" then
+		serverrecords(clientNum)
+	elseif command == "setlevel" then
+		setlevel(clientNum, params)
+	elseif command == "showbans" then
+		showbans(clientNum, params)
+	elseif command == "slap" then
+		slap(clientNum, params)
+	elseif command == "spec999" then
+		spec999(clientNum)
+	elseif command == "stats" then
+		stats(clientNum, params)
+	elseif command == "swap" then
+		swap(clientNum)
+	elseif command == "time" then
+		time(clientNum)
+	elseif command == "timelimit" then
+		timelimit(clientNum, params)
+	elseif command == "unban" then
+		unban(clientNum, params)
+	elseif command == "unmute" then
 		unmute(clientNum, params)
-    elseif command == "warn" then
-        warn(clientNum, params)
-    else
-        userprint(clientNum, "chat", "^3error: ^5" .. command .. " ^7is not a valid command!")
-    end
+	elseif command == "warn" then
+		warn(clientNum, params)
+	else
+		userprint(clientNum, "chat", "^3error: ^5" .. command .. " ^7is not a valid command!")
+	end
 
-    return
+	return
 end
 
 function expiremsg(expires)
@@ -489,7 +496,12 @@ function userprint(clientNum, area, text)
     else
         -- et.G_Print(et.Q_CleanStr(text) .. "\n")  -- questionable if im gonna leave this line in
         -- et.trap_SendServerCommand(clientNum, area .. "\"" .. text .. " \"")
-        et.trap_SendServerCommand(clientNum, string.format('%s \"%s\"',area,text))
+	-- cs: lets give centprints a high priority
+	if area == "cp" then
+		et.trap_SendServerCommand(clientNum, string.format('%s \"%s\" 5',area,text))
+	else
+		et.trap_SendServerCommand(clientNum, string.format('%s \"%s\"',area,text))
+	end
     end
 end
 
