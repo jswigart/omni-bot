@@ -77,6 +77,22 @@ function admintest(clientNum, params)
     return
 end
 
+function announce(clientNum, msg)
+	if msg[1] == nil then
+		userprint(clientNum, "chat", commandhelp["announce"])
+		return
+	end
+	
+	local msgString = ""
+	for index, val in pairs(msg) do
+		if index > 0 then
+			msgString = msgString .. " " .. val
+		end
+	end
+
+	userprint(-1, "cp", msgString)
+end
+
 function ban(clientNum, params)
     local header = "^3ban: ^7"
     local reason = ""
