@@ -2648,6 +2648,152 @@ global _MG =
 		{
 		},
 	},
+	FLAME_axiscamper1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.998, -0.053, -0.038),
+			[1] = Vec3(0.998, -0.053, -0.068),
+			[2] = Vec3(0.737, -0.676, 0.006),
+		},
+		CreateOnLoad = 1,
+		GoalType = "FLAME",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "FLAME_axiscamper1",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-12688.698, 6035.809, -271.875),
+		Radius = 35,
+		SerialNum = 601,
+		Stance = "crouch",
+		TagName = "axiscamper1",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[8] = 1,
+		},
+	},
+	FLAME_axiscamper2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.876, 0.408, -0.258),
+			
+			[1] = Vec3(0.875, 0.407, -0.159),
+
+
+			[2] = Vec3(0.100, -0.994, -0.042),
+
+		},
+		CreateOnLoad = 1,
+		GoalType = "FLAME",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "FLAME_axiscamper2",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-12660.176, 5988.900, 8.125),
+		Radius = 35,
+		SerialNum = 602,
+		Stance = "stand",
+		TagName = "axiscamper2",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[8] = 1,
+		},
+	},
+	FLAME_axiscamper3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.221, -0.915, -0.337),
+		},
+		CreateOnLoad = 1,
+		GoalType = "FLAME",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "FLAME_axiscamper3",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-12234.125, 6133.875, 512.125),
+		Radius = 35,
+		SerialNum = 603,
+		Stance = "crouch",
+		TagName = "axiscamper3",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[8] = 1,
+		},
+	},
+	FLAME_axiscamper4 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.043, -0.998, -0.035),
+
+		},
+		CreateOnLoad = 1,
+		GoalType = "FLAME",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "FLAME_axiscamper4",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-12138.125, 6117.866, 616.125),
+
+		Radius = 35,
+		SerialNum = 604,
+		Stance = "stand",
+		TagName = "axiscamper4",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[8] = 1,
+		},
+	},
+	FLAME_axiscamper5 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.527, -0.849, -0.010),
+
+			[1] = Vec3(-0.919, 0.392, -0.010),
+
+			[2] = Vec3(-0.856, -0.516, -0.010),
+
+		},
+		CreateOnLoad = 1,
+		GoalType = "FLAME",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "FLAME_axiscamper5",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-11734.166, 5884.562, 616.125),
+
+		Radius = 35,
+		SerialNum = 604,
+		Stance = "stand",
+		TagName = "axiscamper5",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[8] = 1,
+		},
+	},
 	GRENADE_beastgate = 
 	{
 		CreateOnLoad = 1,
@@ -2792,6 +2938,33 @@ global _MG =
 			[6] = 1,
 		},
 	},
+	PANZER_btrainpanz3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.020, 1.000, 0.004),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "PANZER_btrainpanz3",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-9533.418, 1532.437, -231.875),
+		Radius = 35,
+		SerialNum = 63,
+		Stance = "stand",
+		TagName = "btrainpanz3",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
 	PANZER_rcypanz1 = 
 	{
 		AimVectors = 
@@ -2840,6 +3013,90 @@ global _MG =
 		Stance = "crouch",
 		TagName = "rcypanz2",
 		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
+	PANZER_opscamper1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.647, -0.739, -0.187),
+			[1] = Vec3(0.715, -0.680, -0.186),
+			[2] = Vec3(0.243, -0.857, -0.455),
+
+		},
+		CreateOnLoad = 1,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "PANZER_opscamper1",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-8330.394, 3426.125, 88.125),
+		Radius = 35,
+		SerialNum = 321,
+		Stance = "stand",
+		TagName = "opscamper1",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
+	PANZER_opscamper2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.999, -0.033, -0.015),
+			[1] = Vec3(-0.846, 0.533, -0.008),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "PANZER_opscamper2",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-5990.125, 1739.875, -223.875),
+		Radius = 35,
+		SerialNum = 331,
+		Stance = "stand",
+		TagName = "opscamper2",
+		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
+	PANZER_opscamper3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.975, 0.222, -0.012),
+//			[1] = Vec3(-0.713, 0.701, 0.002),
+//			[2] = Vec3(-0.975, 0.222, -0.012),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "PANZER_opscamper3",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-8031.875, 1410.124, -231.875),
+		Radius = 35,
+		SerialNum = 341,
+		Stance = "stand",
+		TagName = "opscamper3",
+		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
 		{
@@ -3519,7 +3776,7 @@ global _MG =
 			[4] = 1,
 		},
 	},
-	SNIPE_bruinsnipe = 
+	SNIPE_bruinsnipe1 = 
 	{
 		AimVectors = 
 		{
@@ -3532,13 +3789,40 @@ global _MG =
 		MaxCampTime = 90,
 		MinCampTime = 60,
 		MinRadius = 30,
-		Name = "SNIPE_bruinsnipe",
+		Name = "SNIPE_bruinsnipe1",
 		Orientation = Vec3(1.061, 0.220, -0.000),
 		Position = Vec3(-5991.875, 2194.125, -247.875),
 		Radius = 20,
 		SerialNum = 78,
 		Stance = "stand",
-		TagName = "bruinsnipe",
+		TagName = "bruinsnipe1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+			[4] = 1,
+		},
+	},
+	SNIPE_bruinsnipe2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.999, 0.050, 0.009),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 90,
+		MinCampTime = 60,
+		MinRadius = 30,
+		Name = "SNIPE_bruinsnipe2",
+		Orientation = Vec3(-0.000, 0.000, -0.000),
+		Position = Vec3(-7218.126, 1550.680, -231.875),
+		Radius = 20,
+		SerialNum = 75,
+		Stance = "crouch",
+		TagName = "bruinsnipe2",
 		TeamAvailability = 30,
 		Version = 1,
 		Weapons = 
