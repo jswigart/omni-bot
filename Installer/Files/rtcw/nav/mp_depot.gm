@@ -26,6 +26,9 @@ global Map =
 	WestDyno = 0,
 	EastDyno = 0,
 
+        alsoldiers = 0,
+        axsoldiers = 0,
+
 	FriendlyFire,
 
 	Airstrike =
@@ -46,7 +49,7 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 1,
-				numbots = 5,
+				numbots = 6,
 				crucialClass = CLASS.ENGINEER,
 			},
 			DEFENDER1 = // flex spots
@@ -73,7 +76,7 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 2,
-				numbots = 5,
+				numbots = 6,
 				crucialClass = CLASS.ENGINEER,
 			},
 			DEFENDER1 = // flex spots
@@ -458,6 +461,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rcy.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_cymg );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_cymg );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
@@ -472,6 +476,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRockpath.*" );
@@ -490,6 +495,7 @@ global Map =
 
 		Wp.SetWaypointFlag( "ruinsdrop", "closed", false );  //Let them drop to fallback faster
 
+
 		//axis
 		Map.Airstrike.ascoal.Enabled = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -499,6 +505,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcy.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_cymg );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_cymg );
@@ -506,8 +513,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rcypanz.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
+
 		if ( Map.FriendlyFire < 1 ) {
+
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
+
 		}
 
 		//allies
@@ -516,12 +526,16 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRockpath.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
+
 		if ( Map.FriendlyFire < 1 ) {
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCommand.*" );
+
 		}
 	},
 
@@ -700,7 +714,10 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
-	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+//	SetMapGoalProperties( "FLAME_axiscamper.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_opscamper.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_btrainpanz.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_rcypanz.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 
 	//open up some airstrike goals if ff is off
@@ -751,11 +768,18 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "spawnboxes", "closed", false );
 
 	Util.SetMaxUsersInProgress( 2, Map.Checkpoint_flag_respawn_obj );
+
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
-	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "FLAME_axiscamper.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_opscamper.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_btrainpanz.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_rcypanz.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
+
+	Util.SetMaxUsersInUse( 1, "FLAME_axiscamper.*" );
+	Util.SetMaxUsersInUse( 1, "PANZER_opscamper.*" );
 
 	MapRoutes =
 	{
@@ -1102,4 +1126,59 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 80.0;
+        bot.MaxViewDistance = 2500;
+
+  	class = bot.GetClass();
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER )
+	{
+		if ( Map.alsoldiers == 1 ) {
+
+			RTCWUtil.SelectWeapon( bot, WEAPON.VENOM );
+			Map.alsoldiers += 1;
+		}
+		else if ( Map.alsoldiers == 2 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.alsoldiers += 1;
+		}
+		else if ( Map.alsoldiers == 3 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.alsoldiers += 1;
+
+		}
+		else if ( Map.alsoldiers == 4 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+//			Map.alsoldiers += 1;
+			Map.alsoldiers = 0;
+		}
+		else {
+//			RTCWUtil.SelectSoldierWeapons(TEAM.ALLIES, bot, WEAPON.FLAMETHROWER, WEAPON.VENOM, WEAPON.PANZERFAUST, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.alsoldiers += 1;
+		}
+	}
+	else if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER )
+	{
+		if ( Map.axsoldiers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 2 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.VENOM );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 3 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 4 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+//			Map.axsoldiers += 1;
+			Map.axsoldiers = 0;
+		}
+		else {
+//			RTCWUtil.SelectSoldierWeapons(TEAM.AXIS, bot, WEAPON.FLAMETHROWER, WEAPON.VENOM, WEAPON.PANZERFAUST, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+			Map.axsoldiers += 1;
+		}
+	}
 };
