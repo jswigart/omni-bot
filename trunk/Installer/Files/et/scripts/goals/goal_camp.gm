@@ -4,6 +4,26 @@ this.Parent = "HighLevel";		// The name of the parent. This setting determines w
 this.SkipGetPriorityWhenActive = true;
 this.Debug = false;
 
+// cs: this is a hack to overcome limitations with LimitToWeapon
+this.CheckWeaponRestrictions = function(goal)
+{
+	if ( !goal.Weapons || tableCount(goal.Weapons) < 1 ) {
+		return true;
+	}
+
+	if (goal.Weapons[WEAPON.PANZERFAUST]) {
+		goal.Weapons[WeaponTable.AlliedPanzer] = 1;
+	}
+
+	foreach ( weap and exp in goal.Weapons ) {
+		if ( this.Bot.HasWeapon(weap) ) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
@@ -58,8 +78,12 @@ this.GetPriority = function()
 		count = this.QueryGoals(this.Bot.QueryGoalsTable,"CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*");
 		if ( count > 0 )
 		{
-			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
+				if (!this.CheckWeaponRestrictions(goal) ) {
+					continue;
+				}
+
 				this.MapGoal = goal;
 				this.Priority = goal.GetGoalPriority(this.Bot);
 				break;

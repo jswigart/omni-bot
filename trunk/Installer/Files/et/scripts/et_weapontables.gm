@@ -29,7 +29,8 @@ if (isNq) {
 }else{
 	if (isEtnam) {
 		tbl[WEAPON.M79] = true;
-		tbl[/*WEAPON.ITHACA*/ 102] = false;
+		if (!WEAPON.ITHACA) { WEAPON.ITHACA = 102; }
+		tbl[WEAPON.ITHACA] = false;
 	}
 	tbl[WEAPON.MP40] = false;
 }
@@ -44,18 +45,19 @@ if (isNq) {
 		// if allowed, add venom to the list.
 		tbl[ WEAPON.VENOM ] = true;
 	}
-	tbl[WEAPON.BAZOOKA] = true;
+	WeaponTable.AlliedPanzer = WEAPON.BAZOOKA;
 	tbl[WEAPON.BAR] = true;
 }else{
 	if (isEtnam) {
-		tbl[WEAPON.LAW] = true;
+		WeaponTable.AlliedPanzer = WEAPON.LAW;
 		tbl[WEAPON.M79] = true;
-		tbl[/*WEAPON.ITHACA*/ 102] = false;
+		tbl[WEAPON.ITHACA] = false;
 	}else{
-		tbl[WEAPON.PANZERFAUST] = true;
+		WeaponTable.AlliedPanzer = WEAPON.PANZERFAUST;
 	}
 	tbl[WEAPON.THOMPSON] = false;
 }
+tbl[WeaponTable.AlliedPanzer] = true;
 PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER] = tbl;
 
 if (GetModName() == "Jaymod") {
@@ -74,7 +76,7 @@ if (GetModName() == "silEnT") {
 tbl = {};
 tbl[WEAPON.K43] = true;
 if (isEtnam) {
-	tbl[WEAPON.SAK47] = false;
+	tbl[WEAPON.SAK47] = true;
 	tbl[WEAPON.RPD] = true;
 }else{
 	tbl[WEAPON.FG42] = true;
@@ -120,14 +122,15 @@ WeaponTable.SetWeaponTeamAvailability = function(team, class, weapon, enable)
 		return;
 	}
 
+	if (weapon == WEAPON.PANZERFAUST && team == TEAM.ALLIES) {
+		weapon = WeaponTable.AlliedPanzer;
+	}
 	if (GetModName() == "noquarter") {
-		if (team == TEAM.ALLIES && weapon == WEAPON.PANZERFAUST) {
-			weapon = WEAPON.BAZOOKA;
-		}
 		if (team == TEAM.AXIS && weapon == WEAPON.STEN) {
 			weapon = WEAPON.MP34;
 		}
 	}
+
 	if (typeId(classTable[weapon]) !=0 ) { // enable only weapons which are permitted for this team and class
 		classTable[weapon] = enable;
 	}

@@ -36,7 +36,7 @@ Util.SniperWeapons =
 	WEAPON.FG42_SCOPE,
 	WEAPON.K43_SCOPE,
 	WEAPON.GARAND_SCOPE,
-	WEAPON.SAK47SCOPE,
+	111, //WEAPON.SAK47SCOPE,
 };
 
 Util.TeamSniperWeapons =
@@ -57,7 +57,7 @@ if (GetModName() != "noquarter") {
 }
 
 if (GetModName() == "etpub" && GetCvar("g_etnamFlags") > 0) {
-	//Util.TeamSniperWeapons["AXIS"][1] = WEAPON.SAK47;
+	Util.TeamSniperWeapons["AXIS"][1] = 110; //WEAPON.SAK47;
 } else {
 	Util.TeamSniperWeapons["AXIS"][1] = WEAPON.FG42;
 }
@@ -70,6 +70,7 @@ Util.TeamSideArms =
 		WEAPON.LUGER_SILENCED,
 		WEAPON.LUGER_AKIMBO,
 		WEAPON.LUGER_AKIMBO_SILENCED,
+		WEAPON.REVOLVER,
 	},
 
 	ALLIES =
@@ -78,6 +79,7 @@ Util.TeamSideArms =
 		WEAPON.COLT_SILENCED,
 		WEAPON.COLT_AKIMBO,
 		WEAPON.COLT_AKIMBO_SILENCED,
+		WEAPON.REVOLVER,
 	},
 };
 
@@ -1208,12 +1210,11 @@ member ChangeToPanzer = function( bot )
 		bot.ChangeClass(CLASS.SOLDIER);
 		yield();
 	}
-	if ( bot.GetTeam() == TEAM.ALLIES && GetModName() == "noquarter" ) {
-		bot.ChangePrimaryWeapon(WEAPON.BAZOOKA);
-		return;
+	if ( bot.GetTeam() == TEAM.ALLIES ) {
+		bot.ChangePrimaryWeapon(WeaponTable.AlliedPanzer);
+	} else {
+		bot.ChangePrimaryWeapon(WEAPON.PANZERFAUST);
 	}
-
-	bot.ChangePrimaryWeapon(WEAPON.PANZERFAUST);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

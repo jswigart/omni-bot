@@ -26,6 +26,31 @@ this.Initialize = function()
 	});
 };
 
+this.SanityCheckWeapon = function(weapon)
+{
+	if ( this.Bot.HasWeapon(weapon) ) {
+		return true;
+	}
+
+	if ( this.LogExternal ) {
+		gmFile = File();
+		fileName = format("%s_Log.gm", Util.WeaponName(weapon));
+
+		if ( !System.FileExists(fileName) ) {
+			assert( gmfile.Open( fileName, "text", false ) );
+		}
+		else {
+			assert( gmfile.Open( fileName, "text", false, true ) );
+		}
+
+		str = System.Time() + ":" + GetMapName() + ": covert ops has no satchel for " + goal.GetName();
+		assert( gmfile.Write( str, System.NewLine ) );
+		gmfile.Close();
+	}
+
+	return false;
+};
+
 this.GetPriority = function()
 {
 	botClass = this.Bot.GetClass();
@@ -47,24 +72,7 @@ this.GetPriority = function()
 						}
 
 						// this was happening in beta, leaving as safeguard
-						if ( !this.Bot.HasWeapon(WEAPON.SATCHEL) ) {
-							if (this.LogExternal) {
-								gmfile = File();
-								fileName = "CovertOps_Log.gm";
-
-								if ( !System.FileExists(fileName) ) {
-									assert( gmfile.Open( fileName, "text", false ) );
-								}
-								else {
-									assert( gmfile.Open( fileName, "text", false, true ) );
-								}
-
-								str = System.Time() + ":" + GetMapName() + ": covert ops has no satchel for " + goal.GetName();
-								assert( gmfile.Write( str, System.NewLine ) );
-								gmfile.Close();
-							}
-							continue;
-						}
+						if ( !this.SanityCheckWeapon(WEAPON.SATCHEL) ) { continue; }
 					}
 
 					if ( botClass == CLASS.ENGINEER )
@@ -74,24 +82,7 @@ this.GetPriority = function()
 						}
 
 						// this was happening in beta, leaving as safeguard
-						if ( !this.Bot.HasWeapon(WEAPON.DYNAMITE) ) {
-							if (this.LogExternal) {
-								gmfile = File();
-								fileName = "Engineer_Log.gm";
-
-								if ( !System.FileExists(fileName) ) {
-									assert( gmfile.Open( fileName, "text", false ) );
-								}
-								else {
-									assert( gmfile.Open( fileName, "text", false, true ) );
-								}
-
-								str = System.Time() + ": " + GetMapName() + ": engineer has no dynamite for " + goal.GetName();
-								assert( gmfile.Write( str, System.NewLine ) );
-								gmfile.Close();
-							}
-							continue;
-						}
+						if ( !this.SanityCheckWeapon(WEAPON.DYNAMITE) ) { continue; }
 					}
 
 					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
@@ -177,27 +168,6 @@ this.Update = function()
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
-
-		// cs: this is most likely fine, but it was added far too late to trust
-		// is the waypoint too far away?
-		// if ( this.GoalEntity && EntityIsValid(this.GoalEntity) ) {
-			// timeout = 0;
-			// goalPosition = GetEntPosition(this.GoalEntity);
-			// while( timeout < 60 && !CheckEntityBoundsIntersect(this.Bot.GetGameEntity(), this.GoalEntity) ) {
-				// this.Bot.MoveTowards(goalPosition);
-				// yield();
-				// timeout += 1;
-			// }
-
-			// if ( timeout >= 60 ) {
-				// Log( this.MapGoal.GetName() + " failed bounds check, check position!" );
-				// this.BlackboardDelay(10, this.MapGoal);
-				// this.Finished();
-			// }
-		// }
-		// else {
-			// this.Finished();
-		// }
 
 		switch(botClass)
 		{
@@ -286,7 +256,9 @@ this.UpdateDynamite = function()
 					this.GoalState = this.COVER_DYNAMITE;
 				}
 				else {
-					this.BlackboardDelay(35, this.MapGoal);
+					if (this.ExplosiveEntity) {
+						this.BlackboardDelay(35, this.MapGoal);
+					}
 					this.Finished();
 				}
 			}
@@ -297,6 +269,7 @@ this.UpdateDynamite = function()
 					this.Finished();
 				}
 
+				this.Bot.HoldButton(BTN.CROUCH, 99);
 				this.Priority = 2.0;
 
 				// for voice chat 'cover me'
@@ -325,12 +298,13 @@ this.UpdateDynamite = function()
 					dynoPosition = GetEntPosition(this.ExplosiveEntity);
 					this.AddAimRequest(Priority.High, "position", dynoPosition);
 					this.Bot.MoveTowards(dynoPosition);
-					this.Bot.PressButton(BTN.ATTACK1,BTN.CROUCH);
+					this.Bot.PressButton(BTN.ATTACK1);
 					yield();
 				}
 
 				this.ReleaseWeaponRequest();
 				this.ReleaseAimRequest();
+				this.Bot.ReleaseButton(BTN.CROUCH);
 
 				// look for other close by dynos to arm
 				this.GoalState = this.LOOK_FOR_DYNO;
@@ -339,7 +313,7 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 
-				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
+				if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
 					this.Finished();
 				}
