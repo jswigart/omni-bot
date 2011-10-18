@@ -31,12 +31,6 @@ this.UpgradeVersion = function(Props)
 		initWeaponTable = true;
 	}
 
-	// call base goal upgrade
-	if(this.BaseUpgradeVersion)
-	{
-		this.BaseUpgradeVersion(Props);
-	}
-
 	if(initWeaponTable)
 	{
 		// fill in all the known sniper weapons by default
@@ -58,6 +52,12 @@ this.UpgradeVersion = function(Props)
 	// handle etnam specific sniper weapon. thx palota.
 	if ( Props.Weapons && !Props.Weapons[111] ) {
 		Props.Weapons[111] = 1;
+	}
+
+	// call base goal upgrade. cs: do this last so LimitToWeapon includes all weapons.
+	if(this.BaseUpgradeVersion)
+	{
+		this.BaseUpgradeVersion(Props);
 	}
 };
 

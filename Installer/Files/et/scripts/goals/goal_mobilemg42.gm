@@ -8,12 +8,6 @@ this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
 	this.FeelPainLocked = false; // throttle for the event
-
-	this.SecondaryWeapons = table();
-	this.SecondaryWeapons[WEAPON.COLT] = 1;
-	this.SecondaryWeapons[WEAPON.LUGER] = 1;
-	this.SecondaryWeapons[WEAPON.COLT_AKIMBO] = 1;
-	this.SecondaryWeapons[WEAPON.LUGER_AKIMBO] = 1;
 };
 
 this.GetPriority = function()
@@ -57,7 +51,7 @@ this.Enter = function()
 
 this.Update = function()
 {
-	weapon = this.Bot.HasAnyWeapon(this.SecondaryWeapons);
+	weapon = ETUtil.GetBotSideArm(this.Bot);
 	if (weapon)
 	{
 		this.AddWeaponRequest(Priority.Medium, weapon);

@@ -1641,11 +1641,11 @@ member TestBot = function( _params )
 //
 member WeaponName = function(weaponId)
 {
-	if (weaponId == WEAPON.MORTAR)
+	if (weaponId == WEAPON.MORTAR && weaponId)
 	{
 		return "MORTAR"; //same as GRANATWERFER
 	}
-	if (weaponId == WEAPON.MOBILE_MG42)
+	if (weaponId == WEAPON.MOBILE_MG42 && weaponId)
 	{
 		return "MOBILE_MG42"; //same as MOBILE_BROWNING
 	}
@@ -1656,7 +1656,7 @@ member WeaponName = function(weaponId)
 			return name;
 		}
 	}
-	return "UnknownWeapon";
+	return "UnknownWeapon" + weaponId;
 };
 
 member WeaponNameToId = function(weap)

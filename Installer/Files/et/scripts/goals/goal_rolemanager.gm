@@ -107,7 +107,7 @@ this.Events[EVENT.DISCONNECTED] = function()
 	yield();
 	// see if any bots without roles can take the spot
 	// this is executed for all bots except the bot which has been disconnected
-	this.FindFreeRoleSlot();
+	if (this.FindFreeRoleSlot){ this.FindFreeRoleSlot(); }
 };
 
 this.Events[EVENT.CHANGETEAM] = function(team)

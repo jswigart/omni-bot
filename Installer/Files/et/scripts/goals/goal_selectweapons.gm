@@ -14,8 +14,10 @@ this.UsingWeapons[ TEAM.AXIS ] = {};
 
 this.Initialize = function()
 {
-	if ( Map && Map.DontSelectWeapons )
-		{ this.Finished(); }
+	if ( Map && (Map.DontSelectWeapons || Map.PanzerMap) ) {
+		this.Disable = true; 
+		return;
+	}
 
 	if (!MinPlayersForMortar) {
 		global MinPlayersForMortar = ConfigGet("HeavyWeapons","MinPlayersForMortar", -1);
@@ -140,16 +142,19 @@ this.Update = function()
 				newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_SNIPE);
 			}
 		}
-
-		//WeaponTable.SetWeaponAvailability can be called anytime from triggers,
-		//ChangePrimaryWeapon will switch to another weapon if current weapon availability is false
-		this.Bot.ChangePrimaryWeapon(newWeapon);
-		this.UsingWeapons[myTeam][this.Bot] = newWeapon;
-
-		if(this.Debug && newWeapon!=lastWeapon)
+		
+		if (newWeapon)
 		{
-			this.Bot.SayTeam("Changing to ", Util.WeaponName(newWeapon));
-			print(this.Bot.Name, ":" ,"Chose New Weapon:",Util.WeaponName(newWeapon));
+			//WeaponTable.SetWeaponAvailability can be called anytime from triggers,
+			//ChangePrimaryWeapon will switch to another weapon if current weapon availability is false
+			this.Bot.ChangePrimaryWeapon(newWeapon);
+			this.UsingWeapons[myTeam][this.Bot] = newWeapon;
+
+			if(this.Debug && newWeapon!=lastWeapon)
+			{
+				this.Bot.SayTeam("Changing to ", Util.WeaponName(newWeapon));
+				print(this.Bot.Name, ":" ,"Chose New Weapon:",Util.WeaponName(newWeapon));
+			}
 		}
 
 		sleep(this.Bot.GetReinforceTime() + 1);
