@@ -245,7 +245,7 @@ static IntEnum ET_ClassEnum[] =
 	IntEnum("BREAKABLE",		ET_CLASSEX_BREAKABLE),
 	IntEnum("CORPSE",			ET_CLASSEX_CORPSE),
 	//IntEnum("INJUREDPLAYER",	ET_CLASSEX_INJUREDPLAYER),
-	IntEnum("TREASURE",			ET_CLASSEX_TREASURE),
+	IntEnum("TRIPMINE",			ET_CLASSEX_TREASURE), // cs: to avoid breaking mod compat
 	IntEnum("ROCKET",			ET_CLASSEX_ROCKET),
 	IntEnum("MORTAR_ENT",		ET_CLASSEX_MORTAR),
 	IntEnum("FLAME",			ET_CLASSEX_FLAMECHUNK),
@@ -666,7 +666,8 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
 		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
 	}
-	else if(_wp1->IsFlagOn(F_ET_NAV_BRIDGE) && _wp2->IsFlagOn(F_ET_NAV_BRIDGE))
+
+	if(res != PathPlannerWaypoint::B_PATH_CLOSED && _wp1->IsFlagOn(F_ET_NAV_BRIDGE) && _wp2->IsFlagOn(F_ET_NAV_BRIDGE))
 	{
 		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
 		vEnd = vStart +  Vector3f(0,0,-48);
@@ -680,7 +681,8 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
 		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
 	}
-	else if(_wp2->IsFlagOn(F_ET_NAV_WATERBLOCKABLE))
+
+	if(res != PathPlannerWaypoint::B_PATH_CLOSED && _wp2->IsFlagOn(F_ET_NAV_WATERBLOCKABLE))
 	{
 		vStart = _wp1->GetPosition();
 		vEnd = vStart + Vector3f(0.0f, 0.0f, 5.0f);
