@@ -179,49 +179,13 @@ int G_SwitchBodyPartEntity( gentity_t* ent ) {
 
 // Run a trace with players in historical positions.
 void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask ) {
-	trace_t tr;
-	gentity_t *other;
 	int res;
 	vec3_t dir;
 
-	if ( ( !g_antilag.integer || !ent->client ) || (ent->r.svFlags & SVF_BOT) ) { //no antilag for bots
-		G_AttachBodyParts( ent ) ;
-
-		trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
-
-		res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
-		POSITION_READJUST
-
-		G_DettachBodyParts();
-		return;
-	}
-
-	G_AdjustClientPositions( ent, ent->client->pers.cmd.serverTime, qtrue );
-
+	// cs: completely removed antilag since it is a broken pos.
 	G_AttachBodyParts( ent ) ;
-
 	trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
-
 	res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
 	POSITION_READJUST
-
 	G_DettachBodyParts();
-
-	G_AdjustClientPositions( ent, 0, qfalse );
-
-	if ( results->entityNum >= 0 && results->entityNum < MAX_CLIENTS && ( other = &g_entities[results->entityNum] )->inuse ) {
-		G_AttachBodyParts( ent ) ;
-
-		trap_Trace( &tr, start, mins, maxs, other->client->ps.origin, passEntityNum, contentmask );
-		res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
-		POSITION_READJUST
-
-		if ( tr.entityNum != results->entityNum ) {
-			trap_Trace( results, start, mins, maxs, end, passEntityNum, contentmask );
-			res = G_SwitchBodyPartEntity( &g_entities[results->entityNum] );
-			POSITION_READJUST
-		}
-
-		G_DettachBodyParts();
-	}
 }
