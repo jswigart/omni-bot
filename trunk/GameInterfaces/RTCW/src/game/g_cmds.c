@@ -154,6 +154,7 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 	int idnum;
 	char s2[MAX_STRING_CHARS];
 	char n2[MAX_STRING_CHARS];
+	char *m;
 
 	// numeric values are just slot numbers
 	if ( s[0] >= '0' && s[0] <= '9' ) {
@@ -178,7 +179,8 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 			continue;
 		}
 		CleanseString( cl->pers.netname, n2, qtrue );
-		if ( !strcmp( n2, s2 ) ) {
+		m = strstr( n2, s2 );
+		if ( m != NULL ) {
 			return idnum;
 		}
 	}
@@ -273,8 +275,8 @@ void G_PrivateMessage( gentity_t *ent, char *botTargetName, char *botMessage, qb
 		trap_Argv( 1, name, sizeof( name ) );
 		msg = ConcatArgs( 2 );
 		pcount = ClientNumbersFromString( name, pids );
-	} else
-	{
+	}
+	else {
 		msg = botMessage;
 		pcount = ClientNumbersFromString( botTargetName, pids );
 	}
