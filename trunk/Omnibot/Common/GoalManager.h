@@ -64,6 +64,7 @@ public:
 		Query &RoleMask(obuint32 _i);
 		Query &Ent(GameEntity _ent);
 		Query &CheckInRadius(const Vector3f & pos, float radius);
+		Query &CheckRangeProperty(bool checkRange);
 
 		Query &NoFilters();
 		Query &SkipDelayed(bool _skip);
@@ -113,6 +114,7 @@ public:
 		bool			m_SkipDelayed;
 		bool			m_SkipInUse;
 		bool			m_CheckInRadius;
+		bool			m_CheckRangeProperty;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	void InitGameGoals();

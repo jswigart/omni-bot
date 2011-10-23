@@ -91,6 +91,7 @@ GoalManager::Query::Query(obuint32 _type, Client *_client)
 	, m_SkipDelayed(true)
 	, m_SkipInUse(true)
 	, m_CheckInRadius(false)
+	, m_CheckRangeProperty(false)
 {
 	Bot(_client);
 }
@@ -166,6 +167,12 @@ GoalManager::Query &GoalManager::Query::CheckInRadius(const Vector3f & pos, floa
 	m_Position = pos;
 	m_Radius = radius;
 	m_CheckInRadius = true;
+	return *this;
+}
+
+GoalManager::Query &GoalManager::Query::CheckRangeProperty(bool checkRange)
+{
+	m_CheckRangeProperty = checkRange;
 	return *this;
 }
 
@@ -324,6 +331,16 @@ bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 	{
 		if(m_Client->GetBB().GetNumBBRecords(bbk_DelayGoal, mg->GetSerialNum()) > 0)
 			return false;
+	}
+
+	// cs: do this after bb delay check to throttle distance calculations
+	if(m_CheckRangeProperty && m_Client)
+	{
+		float range = (float)mg->GetRange();
+		if(range > 0 && (m_Client->GetPosition() - mg->GetPosition()).SquaredLength() > Mathf::Sqr(range))
+		{
+			return false;
+		}
 	}
 
 	return true;
