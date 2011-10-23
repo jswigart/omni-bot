@@ -99,6 +99,7 @@ public:
 		DrawDisabled,
 		DrawSynced,
 		DrawRandomUsePoint,
+		DrawRangeLimit,
 		DrawAll = -1,
 	};
 
@@ -387,6 +388,9 @@ public:
 
 	int GetRandomUsePoint() const { return m_RandomUsePoint; };
 
+	int GetRange() const { return m_Range; };
+	void SetRange(int _range) { m_Range = _range; };
+
 #ifdef ENABLE_DEBUG_WINDOW
 	// action listener
 	void action(const gcn::ActionEvent& actionEvent);
@@ -470,6 +474,7 @@ private:
 	String		m_GroupName;
 
 	int			m_RandomUsePoint; // randomly select a usepoint to use?
+	int			m_Range;  // distance limited
 
 #ifdef Prof_ENABLED
 	Prof_Zone					*m_ProfZone;
@@ -493,6 +498,9 @@ private:
 	Vec3 GetFacing_Script();
 	void SetBounds_Script(const Vec3 &_mins, const Vec3 &_maxs);
 	Vec3 GetBoundsCenter_Script();
+
+	void SetRange_Script(const int &range);
+	int GetRange_Script();
 
 	MapGoalWPtr	m_WeakPtr;
 

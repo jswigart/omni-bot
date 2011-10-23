@@ -1005,6 +1005,7 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 	GoalManager::Query qry;
 	qry.Bot(native->GetClient());
 	qry.Expression(pExpr);
+	qry.CheckRangeProperty(true);
 
 	// parse optional parameters
 	if(params)
