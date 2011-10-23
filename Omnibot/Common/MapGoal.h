@@ -499,7 +499,7 @@ private:
 	void SetBounds_Script(const Vec3 &_mins, const Vec3 &_maxs);
 	Vec3 GetBoundsCenter_Script();
 
-	void SetRange_Script(const int &range);
+	void SetRange_Script(const int &_range);
 	int GetRange_Script();
 
 	MapGoalWPtr	m_WeakPtr;
