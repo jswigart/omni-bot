@@ -604,7 +604,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 //		GameEntity
 //
 // Returns:
-//		MG42 Info
+//		Entity of the owner
 static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
@@ -619,6 +619,92 @@ static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 		gmVariable v;
 		v.SetEntity(owner.AsInt());
 		a_thread->Push(v);
+	}
+	else
+	{
+		a_thread->PushNull();
+	}
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: IsMG42Repairable
+//		Returns whether or not the MG42 is repairable
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		1 if the Mg42 is repairable
+static int gmfIsMG42Repairable(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);	
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	int repairable = InterfaceFuncs::IsMountableGunRepairable(native, gameEnt) ? 1 : 0;
+	a_thread->PushInt(repairable);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: TeamLandminesAvailable
+//		Returns number of landmines available to be planted 
+//		
+//
+// Parameters:
+//
+//		None
+//
+// Returns:
+//		Number of landmines available to be planted
+static int gmfTeamLandminesAvailable(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	int currentMines, maxMines;
+	InterfaceFuncs::NumTeamMines(native, currentMines, maxMines);
+	a_thread->PushInt(maxMines - currentMines);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: GetCabinetData
+//		Returns table of data for the cabinet
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//		Table
+//
+// Returns:
+//		Table of Cabinet Data
+static int gmfGetCabinetData(gmThread *a_thread)
+{
+	GM_CHECK_NUM_PARAMS(2);
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_TABLE_PARAM(tbl,1);
+
+	DisableGCInScope gcEn(a_thread->GetMachine());
+
+	if(!tbl)
+		tbl = a_thread->GetMachine()->AllocTableObject();
+
+	ET_CabinetData cabinetData;
+	if(tbl != NULL && InterfaceFuncs::GetCabinetData(gameEnt,cabinetData))
+	{
+		tbl->Set(a_thread->GetMachine(),"CurrentAmount",gmVariable(cabinetData.m_CurrentAmount));
+		tbl->Set(a_thread->GetMachine(),"MaxAmount",gmVariable(cabinetData.m_MaxAmount));
+		tbl->Set(a_thread->GetMachine(),"Rate",gmVariable(cabinetData.m_Rate));
+		a_thread->PushInt(1);
 	}
 	else
 	{
@@ -663,6 +749,9 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	// TODO: add owner to MG42Info table when breaking mod compat doesn't matter?
 	{"GetMG42Info",				gmfGetMG42Info, NULL},
 	{"GetMountedPlayerOnMG42",	gmfGetMountedPlayerOnMG42, NULL},
+
+	{"IsMG42Repairable",		gmfIsMG42Repairable, NULL},
+	{"TeamLandminesAvailable",	gmfTeamLandminesAvailable, NULL},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =
@@ -671,6 +760,7 @@ static gmFunctionEntry s_ExtendedBotLib[] =
 	{"SetCvar",					gmfSetCvar, NULL},
 	{"GetCvar",					gmfGetCvar, NULL},
 	{"IsWaitingForMedic",		gmfIsWaitingForMedic, NULL},
+	{"GetCabinetData",			gmfGetCabinetData, NULL},
 };
 
 void gmBindETBotLibrary(gmMachine *_machine)

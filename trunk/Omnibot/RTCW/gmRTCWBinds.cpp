@@ -569,22 +569,48 @@ static int gmfGetMG42Info(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: IsMG42Repairable
+//		Returns whether or not the MG42 is repairable
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		1 if the Mg42 is repairable
+static int gmfIsMG42Repairable(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);	
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	int repairable = InterfaceFuncs::IsMountableGunRepairable(native, gameEnt) ? 1 : 0;
+	a_thread->PushInt(repairable);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 { 
-	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon},
-	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon},	
-	{"GetReinforceTime",		gmfGetReinforceTime},
-	{"GetCursorHint",			gmfGetCurrentCursorHint},
-	{"ChangeSpawnPoint",		gmfChangeSpawnPoint},		
-	{"CanSnipe",				gmfCanSnipe},	
-	{"Snipe",					gmfSnipe},	
-	{"SendPrivateMessage",		gmfSendPrivateMessage},
-	{"GetSpawnPoint",			gmfGetSpawnPoint},
-	{"Suicide",					gmfSetSuicide},
-	{"DisableBotPush",			gmfDisableBotPush},
-	{"GetExplosiveState",		gmfGetExplosiveState},
-	{"GetDestroyableState",		gmfGetDestroyableState},
-	{"GetMG42Info",				gmfGetMG42Info},
+	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon, NULL},
+	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},	
+	{"GetReinforceTime",		gmfGetReinforceTime, NULL},
+	{"GetCursorHint",			gmfGetCurrentCursorHint, NULL},
+	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},		
+	{"CanSnipe",				gmfCanSnipe, NULL},	
+	{"Snipe",					gmfSnipe, NULL},	
+	{"SendPrivateMessage",		gmfSendPrivateMessage, NULL},
+	{"GetSpawnPoint",			gmfGetSpawnPoint, NULL},
+	{"Suicide",					gmfSetSuicide, NULL},
+	{"DisableBotPush",			gmfDisableBotPush, NULL},
+	{"GetExplosiveState",		gmfGetExplosiveState, NULL},
+	{"GetDestroyableState",		gmfGetDestroyableState, NULL},
+	{"GetMG42Info",				gmfGetMG42Info, NULL},
+	{"IsMG42Repairable",		gmfIsMG42Repairable, NULL},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =
