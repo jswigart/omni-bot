@@ -485,6 +485,10 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		return RESPAWN_SP;
 	}
 // jpw
+
+	// check if player already had the weapon
+	alreadyHave = COM_BitCheck( other->client->ps.weapons, ent->item->giTag );
+
 	if ( ent->count < 0 ) {
 		quantity = 0; // None for you, sir!
 	} else {
@@ -492,15 +496,14 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 			quantity = 30;
 			ent->item->quantity = 0;
 		} else {
-			if ( ent->count ) {
+			if ( alreadyHave ) {
+				quantity = ent->count + ent->item->quantity;
+			}
+			else {
 				quantity = ent->count;
-			} else {
-				quantity = ent->item->quantity;
 			}
 		}
 	}
-	// check if player already had the weapon
-	alreadyHave = COM_BitCheck( other->client->ps.weapons, ent->item->giTag );
 
 	// add the weapon
 	COM_BitSet( other->client->ps.weapons, ent->item->giTag );
@@ -528,7 +531,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 
 // JPW NERVE  prevents drop/pickup weapon "quick reload" exploit
 	if ( alreadyHave ) {
-		Add_Ammo( other, ent->item->giTag, quantity + ent->item->quantity, !alreadyHave );
+		Add_Ammo( other, ent->item->giTag, quantity, !alreadyHave );
 	} else {
 		// set them up with exactly what was dropped
 		other->client->ps.ammoclip[BG_FindClipForWeapon( ent->item->giTag )] = quantity;
