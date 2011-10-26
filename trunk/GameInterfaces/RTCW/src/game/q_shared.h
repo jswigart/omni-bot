@@ -648,6 +648,7 @@ void    AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 );
 
 float AngleNormalize360( float angle );
 float AngleNormalize180( float angle );
+unsigned int AngleNormalizeInt(int angle);
 float AngleDelta( float angle1, float angle2 );
 
 qboolean PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c );

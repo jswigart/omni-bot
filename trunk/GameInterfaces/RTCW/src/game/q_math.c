@@ -640,6 +640,16 @@ float AngleNormalize360( float angle ) {
 	return ( 360.0 / 65536 ) * ( (int)( angle * ( 65536 / 360.0 ) ) & 65535 );
 }
 
+// tjw: integer angles used for at least usercmd.angles[3]
+// 
+// returns angle normalized to the range [0 <= angle < 65536]
+unsigned int AngleNormalizeInt(int angle)
+{
+	if(angle < 0)
+		angle = (65536 + (angle % 65536));
+	return (angle % 65536);
+
+}
 
 /*
 =================
