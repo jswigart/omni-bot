@@ -2104,7 +2104,10 @@ void PM_AdjustAimSpreadScale( void ) {
 		} else {
 			// take player view rotation into account
 			for ( i = 0; i < 2; i++ )
-				viewchange += fabs( SHORT2ANGLE( pm->cmd.angles[i] ) - SHORT2ANGLE( pm->oldcmd.angles[i] ) );
+				//viewchange += fabs( SHORT2ANGLE( pm->cmd.angles[i] ) - SHORT2ANGLE( pm->oldcmd.angles[i] ) );
+				viewchange += fabs(AngleSubtract(
+					SHORT2ANGLE(AngleNormalizeInt(pm->cmd.angles[i])),
+					SHORT2ANGLE(AngleNormalizeInt(pm->oldcmd.angles[i]))));
 		}
 
 		viewchange = (float)viewchange / cmdTime;   // convert into this movement for a second
