@@ -1002,8 +1002,8 @@ void ClientThink_real( gentity_t *ent ) {
 				if ( ( g_throwableKnives.integer > 0 ) || ( g_throwableKnives.integer == -1 ) ) {
 					Cmd_ThrowKnife_f( ent );
 				}
-			} else
-			{
+			}
+			else {
 				int i, weapon;
 				vec3_t offset, org;
 
