@@ -504,6 +504,7 @@ typedef struct {
 	int team_damage;
 	int goomba;
 	int poison;
+	int knifeKill;
 	int killSpreeMax;
 	int deathSpreeMax;
 
@@ -705,6 +706,11 @@ typedef struct
 	char highPoisonName[MAX_NETNAME];
 	int highPoisonValue;
 	qboolean highPoisonAnnounce;
+
+	// knives
+	char highKnifeName[MAX_NETNAME];
+	int highKnifeValue;
+	qboolean highKnifeAnnounce;
 
 	// high kill spree
 	char highKillSpreeName[MAX_NETNAME];
@@ -1397,7 +1403,6 @@ extern vmCvar_t g_banIPs;
 extern vmCvar_t g_filterBan;
 extern vmCvar_t g_rankings;
 extern vmCvar_t g_enableBreath;
-extern vmCvar_t g_smoothClients;
 extern vmCvar_t pmove_fixed;
 extern vmCvar_t pmove_msec;
 

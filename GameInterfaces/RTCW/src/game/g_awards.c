@@ -34,6 +34,10 @@ void ExtendWarmup( qboolean adjust ) {
 		roundAwards.highPoisonAnnounce = qtrue;
 		extend++;
 	}
+	if ( roundAwards.highKnifeValue > 0 ) {
+		roundAwards.highKnifeAnnounce = qtrue;
+		extend++;
+	}
 	if ( roundAwards.highHSValue > 0 ) {
 		roundAwards.highHSAnnounce = qtrue;
 		extend++;
@@ -54,10 +58,10 @@ void ExtendWarmup( qboolean adjust ) {
 		roundAwards.highKillSpreeAnnounce = qtrue;
 		extend++;
 	}
-	if ( roundAwards.highDeathSpreeValue < 0 ) {
+	/*if ( roundAwards.highDeathSpreeValue < 0 ) {
 		roundAwards.highDeathSpreeAnnounce = qtrue;
 		extend++;
-	}
+	}*/
 
 	// set the number of awards that will be printed
 	if ( extend > 0 ) {
@@ -115,6 +119,11 @@ void SetAwards( gclient_t *cl ) {
 		Q_strncpyz( roundAwards.highPoisonName, cl->pers.netname, sizeof( roundAwards.highPoisonName ) );
 	}
 
+	if ( cl->pers.knifeKill > roundAwards.highKnifeValue ) {
+		roundAwards.highKnifeValue = cl->pers.knifeKill;
+		Q_strncpyz( roundAwards.highKnifeName, cl->pers.netname, sizeof( roundAwards.highKnifeName ) );
+	}
+
 	if ( cl->pers.headshots > roundAwards.highHSValue ) {
 		roundAwards.highHSValue = cl->pers.headshots;
 		Q_strncpyz( roundAwards.highHSName, cl->pers.netname, sizeof( roundAwards.highHSName ) );
@@ -156,6 +165,7 @@ void ClearAwards() {
 	roundAwards.highGibsValue = 0;
 	roundAwards.highGoombaValue = 0;
 	roundAwards.highPoisonValue = 0;
+	roundAwards.highKnifeValue = 0;
 	roundAwards.highHSValue = 0;
 	roundAwards.highKillValue = 0;
 	roundAwards.highMedValue = 0;
@@ -257,6 +267,14 @@ void ListAwards() {
 										,roundAwards.highPoisonName ) );
 	}
 
+	if ( roundAwards.highKnifeValue > 0 ) {
+		FormatName( roundAwards.highKnifeName );
+		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
+										,"^3Knife Kills:^7"
+										,roundAwards.highKnifeValue
+										,roundAwards.highKnifeName ) );
+	}
+
 	if ( roundAwards.highKillSpreeValue > 0 ) {
 		FormatName( roundAwards.highKillSpreeName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
@@ -265,13 +283,13 @@ void ListAwards() {
 										,roundAwards.highKillSpreeName ) );
 	}
 
-	if ( roundAwards.highDeathSpreeValue < 0 ) {
+	/*if ( roundAwards.highDeathSpreeValue < 0 ) {
 		FormatName( roundAwards.highDeathSpreeName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
 										,"^3DeathSpree:^7"
 										,roundAwards.highDeathSpreeValue
 										,roundAwards.highDeathSpreeName ) );
-	}
+	}*/
 	ClearAwards();
 }
 
@@ -361,6 +379,12 @@ void PrintAwards() {
 		return;
 	}
 
+	if ( roundAwards.highKnifeAnnounce ) {
+		trap_SendServerCommand( -1, va( "cp \"^3Most Knife Kills: ^7%i\n%s\" 3",roundAwards.highKnifeValue,roundAwards.highKnifeName ) );
+		roundAwards.highKnifeAnnounce = qfalse;
+		return;
+	}
+
 	if ( roundAwards.highKillSpreeAnnounce ) {
 		trap_SendServerCommand( -1, va( "cp \"^3Kill Spree: ^7%i\n%s\" 3",roundAwards.highKillSpreeValue,roundAwards.highKillSpreeName ) );
 		roundAwards.highKillSpreeAnnounce = qfalse;
@@ -441,6 +465,11 @@ void WriteAwards() {
 	if ( roundAwards.highPoisonValue > 0 ) {
 		strcat( buf, va( "PoisonValue %i \n", roundAwards.highPoisonValue ) );
 		strcat( buf, va( "PoisonName %s \n", roundAwards.highPoisonName ) );
+	}
+
+	if ( roundAwards.highKnifeValue > 0 ) {
+		strcat( buf, va( "KnifeValue %i \n", roundAwards.highKnifeValue ) );
+		strcat( buf, va( "KnifeName %s \n", roundAwards.highKnifeName ) );
 	}
 
 	if ( roundAwards.highKillSpreeValue > 0 ) {
@@ -566,6 +595,12 @@ void ReadAwards() {
 			break;
 		case 133419: /*PoisonName*/
 			Q_strncpyz( roundAwards.highPoisonName, arg, sizeof( roundAwards.highPoisonName ) );
+			break;
+		case 131657: /*KnifeValue*/
+			roundAwards.highKnifeValue = atoi( arg );
+			break;
+		case 115831: /*KnifeName*/
+			Q_strncpyz( roundAwards.highKnifeName, arg, sizeof( roundAwards.highKnifeName ) );
 			break;
 		case 201937: /*DeathSpreeValue*/
 			roundAwards.highDeathSpreeValue = atoi( arg );

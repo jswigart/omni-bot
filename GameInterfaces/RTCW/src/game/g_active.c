@@ -1185,12 +1185,7 @@ void ClientThink_real( gentity_t *ent ) {
 		ent->r.eventTime = level.time;
 	}
 
-	// Ridah, fixes jittery zombie movement
-	if ( g_smoothClients.integer ) {
-		BG_PlayerStateToEntityStateExtraPolate( &ent->client->ps, &ent->s, ent->client->ps.commandTime, qtrue );
-	} else {
-		BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
-	}
+	BG_PlayerStateToEntityStateExtraPolate( &ent->client->ps, &ent->s, ent->client->ps.commandTime, qtrue );
 
 	// use the snapped origin for linking so it matches client predicted versions
 	VectorCopy( ent->s.pos.trBase, ent->r.currentOrigin );
@@ -1626,14 +1621,7 @@ void ClientEndFrame( gentity_t *ent ) {
 
 	G_SetClientSound( ent );
 
-	// set the latest infor
-
-	// Ridah, fixes jittery zombie movement
-	if ( g_smoothClients.integer ) {
-		BG_PlayerStateToEntityStateExtraPolate( &ent->client->ps, &ent->s, level.time, qfalse );
-	} else {
-		BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qfalse );
-	}
+	BG_PlayerStateToEntityStateExtraPolate( &ent->client->ps, &ent->s, level.time, qfalse );
 
 	// DHM - Nerve :: If it's been a couple frames since being revived, and props_frame_state
 	//					wasn't reset, go ahead and reset it
