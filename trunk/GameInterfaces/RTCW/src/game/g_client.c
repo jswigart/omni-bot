@@ -1856,6 +1856,7 @@ void ClientBegin( int clientNum ) {
 	client->pers.team_damage = 0;
 	client->pers.goomba = 0;
 	client->pers.poison = 0;
+	client->pers.knifeKill = 0;
 	client->pers.killSpreeMax = 0;
 	client->pers.deathSpreeMax = 0;
 

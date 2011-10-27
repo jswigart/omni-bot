@@ -457,6 +457,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(       pers.headshots,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.goomba,                                                FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.poison,                                                FIELD_INT,          0                                       ),
+	_et_gclient_addfield(       pers.knifeKill,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.killSpreeMax,                                          FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       pers.deathSpreeMax,                                         FIELD_INT,          0                                       ),
 

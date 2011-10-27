@@ -455,10 +455,22 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	//stats
 	if ( attacker && attacker->client ) {
 		if ( !OnSameTeam( attacker, self ) ) {
-			if ( meansOfDeath == MOD_GOOMBA ) {
+
+			switch(meansOfDeath)
+			{
+			case MOD_GOOMBA:
 				attacker->client->pers.goomba++;
-			} else if ( meansOfDeath == MOD_POISON ) {
+				break;
+			case MOD_POISON:
 				attacker->client->pers.poison++;
+				break;
+			case MOD_KNIFE:
+			case MOD_KNIFE_STEALTH:
+			case MOD_KNIFE_THROWN:
+				attacker->client->pers.knifeKill++;
+				break;
+			default:
+				break;
 			}
 
 			attacker->client->pers.kills++;
