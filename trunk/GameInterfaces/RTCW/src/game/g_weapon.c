@@ -52,7 +52,8 @@ void Weapon_Knife( gentity_t *ent ) {
 	AngleVectors( ent->client->ps.viewangles, forward, right, up );
 	CalcMuzzlePoint( ent, ent->s.weapon, forward, right, up, muzzleTrace );
 	VectorMA( muzzleTrace, KNIFE_DIST, forward, end );
-	trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
+	//trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
+	G_HistoricalTrace(ent, &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT);
 
 	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
 		return;
@@ -1318,8 +1319,17 @@ Bullet_Fire
 void Bullet_Fire( gentity_t *ent, float spread, int damage ) {
 	vec3_t end;
 
-	Bullet_Endpos( ent, spread, &end );
+	Bullet_Endpos(ent, spread, &end);
+
+	if ( g_antilag.integer ) {
+		G_HistoricalTraceBegin( ent );
+	}
+
 	Bullet_Fire_Extended( ent, ent, muzzleTrace, end, spread, damage );
+
+	if ( g_antilag.integer ) { 
+		G_HistoricalTraceEnd( ent );
+	}
 
 	//stats
 	ent->client->pers.acc_shots++;
@@ -1340,7 +1350,8 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 	gentity_t   *tent;
 	gentity_t   *traceEnt;
 
-	G_HistoricalTrace( source, &tr, start, NULL, NULL, end, source->s.number, MASK_SHOT );
+	//G_HistoricalTrace( source, &tr, start, NULL, NULL, end, source->s.number, MASK_SHOT );
+	G_Trace(source, &tr, start, NULL, NULL, end, source->s.number, MASK_SHOT);
 
 	// bullet debugging using Q3A's railtrail
 	if ( g_debugBullets.integer & 1 ) {
@@ -1389,6 +1400,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_FLESH );
 		tent->s.eventParm = traceEnt->s.number;
 	} else {
+		trace_t tr2;
 		// Ridah, bullet impact should reflect off surface
 		vec3_t reflect;
 		float dot;
@@ -1406,6 +1418,18 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		}
 
 		tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_WALL );
+
+		G_Trace(source, &tr2, start, NULL, NULL, end, source->s.number, MASK_WATER | MASK_SHOT);
+
+		if((tr.entityNum != tr2.entityNum && tr2.fraction != 1)) {
+			vec3_t v;
+
+			VectorSubtract( tr.endpos, start, v );
+
+			tent->s.origin2[0] = (8192 * tr2.fraction) / VectorLength( v );
+		} else {
+			tent->s.origin2[0] = 0;
+		}
 
 		dot = DotProduct( forward, tr.plane.normal );
 		VectorMA( forward, -2 * dot, tr.plane.normal, reflect );
