@@ -197,30 +197,7 @@ global Map =
 			}
 		},
 	},
-	
-	AlliesWin = function()
-	{
-		if ( TestMap ) {
-			return;
-		}
 
-		Util.MapDebugPrint( "timelimit_hit" );
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 3 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			sleep( 0.2 );
-			if ( RandInt( 0,10 ) > 7 ) {
-				bot.SayVoice( VOICE.G_CHEER );
-				sleep( 0.2 );
-			}
-			if ( RandInt( 0,10 ) < 6 && RandInt( 0,10 ) > 3 ) {
-				bot.SayVoice( VOICE.G_ENEMY_WEAK );
-				sleep( 0.2 );
-			}
-		}
-	},
 	panzertimer = function()
 	{
 		while ( 1 )

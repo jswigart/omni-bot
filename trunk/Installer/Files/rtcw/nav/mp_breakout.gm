@@ -71,24 +71,6 @@ global Map =
 		}
 		Util.MapDebugPrint( "Allied_Field_Communications_Destroyed" );
 
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 2 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			if ( bot.GetTeam() == TEAM.AXIS ) {
-				if ( RandInt( 0,10 ) < 5 ) {
-					bot.SayVoice( VOICE.G_CHEER );
-				}
-				sleep( 0.5 );
-			}
-			if ( bot.GetTeam() == TEAM.ALLIES ) {
-				if ( RandInt( 0,10 ) < 5 ) {
-					bot.SayVoice( VOICE.G_NEGATIVE );
-				}
-				sleep( 0.5 );
-			}
-		}
 	},
 	Allied_Field_Communications_Defused = function( trigger )
 	{
@@ -183,25 +165,6 @@ global Map =
 		}
 
 		Util.MapDebugPrint( "German_88_Destroyed" );
-
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 2 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			if ( bot.GetTeam() == TEAM.ALLIES ) {
-				if ( RandInt( 0,10 ) < 5 ) {
-					bot.SayVoice( VOICE.G_CHEER );
-				}
-				sleep( 0.5 );
-			}
-			if ( bot.GetTeam() == TEAM.AXIS ) {
-				if ( RandInt( 0,10 ) < 5 ) {
-					bot.SayVoice( VOICE.G_NEGATIVE );
-				}
-				sleep( 0.5 );
-			}
-		}
 	},
 
 	German_88_Defused = function( trigger )

@@ -270,6 +270,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Controls_Attack.*" );
 	},
+
+	ControlsEngEnt = {},
 	Controls =
 	{
 		Name = "Controls",
@@ -280,35 +282,45 @@ global Map =
 				return;
 			}
 
-			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
-				foreach( id and bot in BotTable )
-				{
-					if ( bot.GetTeam() == TEAM.AXIS ) {
-						bot.SayTeam( "Allies are planting at Controls!" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-						SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Base.*" );
-						sleep( 15 );
-						if ( Map.ControlsDyno == 0 ) {
-							Map.BaseFlex();
-							break;
-						} else
-						{
-							Map.BaseDefense();
-							break;
-						}
-					}
+			if ( ent && GetEntTeam( ent ) == TEAM.ALLIES ) {
+
+				// add it to the list
+				Map.ControlsEngEnt[ ent ] = true;
+
+				// already shifted
+				if ( tableCount(Map.ControlsEngEnt) > 1 ) {
+					return;
 				}
+
+				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are planting at Controls!" );
+
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "CALL.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Base.*" );
 			}
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
+			if ( TestMap || !ent  || !Map.ControlsEngEnt[ ent ] ) {
 				return;
+			}
+
+			Map.ControlsEngEnt[ ent ] = null;
+
+			if ( tableCount(Map.ControlsEngEnt) > 0 ) {
+				return;
+			}
+
+			// all clear, shift back appropriately
+			if ( Map.ControlsDyno == 0 ) {
+				Map.BaseFlex();
+			}
+			else {
+				Map.BaseDefense();
 			}
 		},
 	},

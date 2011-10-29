@@ -188,7 +188,7 @@ global Map =
 				Wp.SetWaypointFlag( "cagejump", "closed", true );
 				b = Util.GetBotByName( GetEntName( ent ) );
 				if ( b ) {
-					b.SayTeam( "I'm droping the objective at the cage!" );
+					b.SayTeam( "I'm dropping the objective at the cage!" );
 				}
 				foreach( id and bot in BotTable )
 				{
