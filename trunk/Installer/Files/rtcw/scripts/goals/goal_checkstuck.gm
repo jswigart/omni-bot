@@ -48,8 +48,8 @@ this.GetPriority = function()
 
 				sleep( 0.5 );
 				return;
-			} else
-			{
+			}
+			else {
 				// stuck time gets reset for each new path, so lets accumulate our own
 				this.Bot.Stucktime += this.Interval;
 
@@ -63,7 +63,14 @@ this.GetPriority = function()
 				} else
 				{
 					this.Bot.StuckPos = this.Bot.GetPosition();
-					this.Bot.PressButton( BTN.JUMP );
+					// hack. either they get out of stuckage or they fall off and try again.
+					if ( this.Bot.HasEntityFlag( ENTFLAG.ON_LADDER ) ) {
+						this.Bot.Say("stuck on ladder");
+						this.Bot.PressButton( BTN.STRAFE_R );
+					}
+					else {
+						this.Bot.PressButton( BTN.JUMP );
+					}
 				}
 			}
 		} else
