@@ -27,14 +27,7 @@ global Map =
 
 		Map.FuelDyno -= 1;
 
-		if ( Map.FuelDyno == 0 ) {
-			foreach( id and bot in BotTable )
-			{
-				if ( bot.GetTeam() == TEAM.AXIS ) {
-					bot.SayVoice( VOICE.G_ENEMY_WEAK );
-					break;
-				}
-			}
+		if ( Map.FuelDyno == 0 && tableCount(Map.FueldumpEngEnt) < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -198,6 +191,7 @@ global Map =
 		}
 	},
 
+	FueldumpEngEnt = {},
 	Fueldump =
 	{
 		Name = "Fueldump",
@@ -208,44 +202,41 @@ global Map =
 				return;
 			}
 
-			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER && GetEntTeam( ent ) != TEAM.ALLIES ) {
 				return;
 			}
-			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
-				foreach( id and bot in BotTable )
-				{
-					if ( bot.GetTeam() == TEAM.AXIS ) {
-						//bot.SayTeam("Allies are planting at the Fueldump!");
-						RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are planting at the Fueldump!" );
-						RTCWUtil.OneBotVSayTeam( TEAM.AXIS, VOICE.DEFEND_OBJECTIVE );
-						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-						SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_fueldump.*" );
-						SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-						sleep( 15 );
-						if ( Map.FuelDyno == 0 ) {
-							foreach( id and bot in BotTable )
-							{
-								if ( bot.GetTeam() == TEAM.AXIS ) {
-									bot.SayVoice( VOICE.G_ENEMY_WEAK );
-									break;
-								}
-							}
-							SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
-							SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
-							SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-							SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
-							SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
-							break;
-						}
-						break;
-					}
-				}
+
+			// add it to the list
+			Map.FuelddumpEngEnt[ ent ] = true;
+
+			// already shifted
+			if ( tableCount(Map.FueldumpEngEnt) > 1 ) {
+				return;
 			}
+
+			RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are planting at the Fueldump!" );
+			RTCWUtil.OneBotVSayTeam( TEAM.AXIS, VOICE.DEFEND_OBJECTIVE );
+
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_fueldump.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
+			if ( TestMap || !ent  || !Map.FueldumpEngEnt[ ent ] ) {
 				return;
+			}
+
+			// clear it from the list
+			Map.FueldumpEngEnt[ ent ] = null;
+
+			// no more allied engineers, push out
+			if ( tableCount(Map.FueldumpEngEnt) < 1 ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
 			}
 		},
 	},

@@ -190,7 +190,8 @@ global Map =
 			}
 		},
 	},
-	
+
+	SubEngEnt = {},
 	Sub =
 	{
 		Name = "Sub",
@@ -204,29 +205,38 @@ global Map =
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
+
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+
+				// track this ent
+				Map.SubEngEnt[ ent ] = true;
+
+				// already shifted
+				if ( tableCount(Map.SubEngEnt) > 1 ) {
+					return;
+				}
+
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSubSnipe.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_rSubFlame.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub[345678]" );
-				foreach( id and bot in BotTable )
-				{
-					if ( bot.GetTeam() == TEAM.AXIS ) {
-						bot.SayTeam( "Allies are planting at the Submarine!" );
-						break;
-					}
-				}
-				sleep( 15 );
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
+				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are planting at the Submarine!" );
 			}
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
+			if ( TestMap || !ent  || !Map.SubEngEnt[ ent ]  ) {
 				return;
+			}
+
+			// clear it from the list
+			Map.SubEngEnt[ ent ] = null;
+
+			if ( tableCount(Map.SubEngEnt) < 1 ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
 			}
 		},
 	},
@@ -238,7 +248,7 @@ global OnMapLoad = function()
 
 	tOne = OnTriggerRegion( AABB( 838.000,1005.000,282.000,1082.000,3185.000,415.000 ), Map.Sub );
 	StepsCrouch = OnTriggerRegion( AABB( 1599.000,1607.000,481.000,1848.000,1824.000,555.000 ), Map.MainSteps );
-	
+
 
 	Util.AddUseWp( "PLANT_Axis_Submarine", "frontsub" );
 	Util.AddUseWp( "PLANT_Axis_Submarine", "midsub" );
@@ -297,11 +307,11 @@ global OnMapLoad = function()
 	Util.DisableGroup( "backroutes" );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	
+
 	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
 	SetGoalPriority( "DEFEND_rSub[12]", 0.51 );

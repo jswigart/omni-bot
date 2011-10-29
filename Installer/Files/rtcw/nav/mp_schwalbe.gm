@@ -439,47 +439,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bFlag.*" );
 	},
-	round_end = function( trigger )
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 2 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			if ( Map.DocStatus == true && Map.PlaneStatus == true ) { // Allies win
-				if ( bot.GetTeam() == TEAM.ALLIES ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_CHEER );
-					}
-					sleep( 0.5 );
-				}
-				if ( bot.GetTeam() == TEAM.AXIS ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_NEGATIVE );
-					}
-					sleep( 0.5 );
-				}
-			} else                // Axis win
-			{
-				if ( bot.GetTeam() == TEAM.AXIS ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_CHEER );
-					}
-					sleep( 0.5 );
-				}
-				if ( bot.GetTeam() == TEAM.ALLIES ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_NEGATIVE );
-					}
-					sleep( 0.5 );
-				}
-			}
-		}
-	},
 };
 
 global OnMapLoad = function()
@@ -506,7 +465,6 @@ global OnMapLoad = function()
 	OnTrigger( "Explode_144 Exploded", Map.barrier1_destroyed );
 	OnTrigger( "Explode_121 Exploded", Map.barrier2_destroyed );
 	OnTrigger( "Explode_122 Exploded", Map.barrier3_destroyed );
-	OnTrigger( "Round End.", Map.round_end );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 25, maxcamptime = 40} );

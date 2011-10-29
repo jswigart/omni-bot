@@ -37,8 +37,8 @@ global PostMapLoad = function()
 		Util.SnipeMap();
 	} else if ( Map && Map.Classes )   {
 		Map.Classes();
-	} else
-	{
+	}
+	else {
 		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
 		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
 		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 1;

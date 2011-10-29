@@ -265,7 +265,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rGate.*" );
 		}
-		
+
 		if ( Map.FriendlyFire == 0 ) {
 			Map.Airstrike.whas.Enabled = true;
 		}
@@ -501,20 +501,18 @@ global Map =
 
 	check_flagPush = function()
 	{
-		while ( 1 )
+		while ( Map.AxisAtTower == false && Map.WarehouseStatus == false && Map.GateHatchStatus == false  )
 		{
 			if ( Map.FirstTimeCheck == true ) {
 				Map.FirstTimeCheck = false;
 				sleep( 3 );
 			}
 			if ( RTCWUtil.IsTeamClassDead( TEAM.AXIS, CLASS.ENGINEER ) ) {
-				if ( Map.GateStatus == true ) {
-					if ( Map.AxisAtTower == false && Map.WarehouseStatus == false && Map.GateHatchStatus == false && !Map.AlliesPushedForward ) {
-						Map.AlliesPushedForward = true;
-						RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Rush the flag!" );
-						Map.FlagSpawnkill();
-						RTCWUtil.OneBotVSayTeam( TEAM.ALLIES, VOICE.NEED_BACKUP );
-					}
+				if ( Map.GateStatus == true && !Map.AlliesPushedForward ) {
+					Map.AlliesPushedForward = true;
+					RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Rush the flag!" );
+					Map.FlagSpawnkill();
+					RTCWUtil.OneBotVSayTeam( TEAM.ALLIES, VOICE.NEED_BACKUP );
 				}
 			}
 			sleep( 1 );

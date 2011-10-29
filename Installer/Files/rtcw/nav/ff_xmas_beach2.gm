@@ -433,63 +433,6 @@ global Map =
 		Util.MapDebugPrint( "documents_returned" );
 	},
 
-	documents_secured = function( trigger )
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		Util.MapDebugPrint( "documents_secured" );
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 2 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			sleep( 0.5 );
-			if ( bot.GetTeam() == TEAM.ALLIES ) {
-				if ( RandInt( 0,10 ) < 3 ) {
-					bot.SayVoice( VOICE.G_CHEER );
-				}
-				sleep( 0.5 );
-			}
-			if ( bot.GetTeam() == TEAM.AXIS ) {
-				if ( RandInt( 0,10 ) < 3 ) {
-					bot.SayVoice( VOICE.G_NEGATIVE );
-				}
-				sleep( 0.5 );
-			}
-		}
-	},
-
-	timelimit_hit = function( trigger )
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		Util.MapDebugPrint( "timelimit_hit" );
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 3 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			sleep( 0.5 );
-			if ( bot.GetTeam() == TEAM.AXIS ) {
-				if ( RandInt( 0,10 ) < 2 ) {
-					bot.SayVoice( VOICE.G_CHEER );
-
-				}
-				sleep( 0.5 );
-			}
-			if ( bot.GetTeam() == TEAM.ALLIES ) {
-				if ( RandInt( 0,10 ) < 3 ) {
-					bot.SayVoice( VOICE.G_NEGATIVE );
-				}
-				sleep( 0.5 );
-			}
-		}
-	},
-
 	two_minute = function( trigger )
 	{
 		if ( TestMap ) {
@@ -547,7 +490,6 @@ global OnMapLoad = function()
 	OnTrigger( "Axis have returned the =FF= Christmas List!", Map.documents_returned );
 	//OnTrigger( "Allies transmitted the =FF= Christmas List!", Map.documents_secured );
 	OnTrigger( "two minute warning.", Map.two_minute );
-	//OnTrigger( "Round End.", Map.timelimit_hit );
 
 	//some triggers to help bots know when to aggressively defend warroom
 	tOne = OnTriggerRegion( Vector3( 3695,1483,896 ), 200, Map.BackStairsTrigger );
