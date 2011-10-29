@@ -35,7 +35,7 @@ global Map =
 			},
 		},
 	},
-	
+
 	Switches =
 	{
 		gate1 =
@@ -299,7 +299,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 			}
 		} else // FF is ON
-		{		
+		{
 			//Spawnkill Supportfire - Based on flag owner
 			if ( Map.FlagStatus == 1 ) {  // Axis own flag
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -324,7 +324,7 @@ global Map =
 			}
 			if ( Map.FlagAttacker == 1 && Map.FlagStatus == 1 ) { // Axis own it and Allies NOT going for it
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );			
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 			}
 			if ( Map.FlagAttacker == 2 && Map.FlagStatus == 2 ) { // Allies own it and Axis NOT going for it
@@ -446,6 +446,11 @@ global OnMapLoad = function()
 	}
 
 	Util.AddUseWp( "PLANT_Back_Alley_Wall", "backwall" );
+	Util.AddUseWp( "PLANT_Church_Alley_Gate", "churchgate_1" );
+	Util.AddUseWp( "PLANT_Allied_Field_Communications", "ops1" );
+	Util.AddUseWp( "PLANT_German_88", "aa1" );
+	Util.AddUseWp( "PLANT_German_88", "aa2" );
+	Util.AddUseWp( "PLANT_German_88", "aa3" );
 
 	OnTrigger( "The Allied Field Communications Destroyed.", Map.Allied_Field_Communications_Destroyed );
 	OnTrigger( "Defused at The Allied Field Communications.", Map.Allied_Field_Communications_Defused );
@@ -524,11 +529,6 @@ global OnMapLoad = function()
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
-	Util.AddUseWp( "PLANT_Church_Alley_Gate", "churchgate_1" );
-	Util.AddUseWp( "PLANT_Allied_Field_Communications", "ops1" );
-	Util.AddUseWp( "PLANT_German_88", "aa1" );
-	Util.AddUseWp( "PLANT_German_88", "aa2" );
-	Util.AddUseWp( "PLANT_German_88", "aa3" );
 	Wp.SetWaypointFlag( "doorhack", "closed", true );
 	Wp.SetWaypointFlag( "sewerhole", "closed", false );
 

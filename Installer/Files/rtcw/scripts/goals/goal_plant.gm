@@ -133,11 +133,11 @@ this.UpdateDynamite = function()
 	aimVectors = null;
 	this.spotIndex = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
-	goalPos = this.MapGoal.GetPosition();
 
 	while(1)
 	{
-		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 ) {
+		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 )
+		{
 			this.Finished();
 		}
 
@@ -168,20 +168,26 @@ this.UpdateDynamite = function()
 					this.GoalState = this.COVER_DYNAMITE;
 				}
 				else {
-					this.BlackboardDelay(35, this.MapGoal);
+					if (this.ExplosiveEntity) {
+						this.BlackboardDelay(35, this.MapGoal);
+					}
 					this.Finished();
 				}
 			}
 			case this.LAY_EXPLOSIVE:
 			{
-				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
+				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+				{
 					this.Finished();
 				}
 
+				this.Bot.HoldButton(BTN.CROUCH, 99);
 				this.Priority = 2.0;
 
 				// for voice chat 'cover me'
 				signal(this.Bot.Name + "_plant");
+
+				goalPos = this.MapGoal.GetPosition();
 				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
 				this.BlockForWeaponChange( WEAPON.DYNAMITE );
@@ -191,25 +197,31 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 
-				if ( !EntityIsValid(this.ExplosiveEntity) ) {
+				if ( !EntityIsValid(this.ExplosiveEntity) )
+				{
 					this.Finished();
+				}
+
+				// crouch to arm others dyno too.
+				if ( !this.Bot.HasEntityFlag(ENTFLAG.CROUCHED) ) {
+					this.Bot.HoldButton(BTN.CROUCH, 99);
 				}
 
 				this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
 				this.BlockForWeaponChange( WEAPON.PLIERS );
 
-				while ( EntityIsValid(this.ExplosiveEntity) && this.Bot.GetExplosiveState(this.ExplosiveEntity) == 1 ) {
+				while ( EntityIsValid(this.ExplosiveEntity) && this.Bot.GetExplosiveState(this.ExplosiveEntity) == 1 )
+				{
 					dynoPosition = GetEntPosition(this.ExplosiveEntity);
 					this.AddAimRequest(Priority.High, "position", dynoPosition);
 					this.Bot.MoveTowards(dynoPosition);
-					this.Bot.PressButton(BTN.ATTACK1,BTN.CROUCH);
+					this.Bot.PressButton(BTN.ATTACK1);
 					yield();
 				}
 
-				this.BlackboardDelay(35, this.MapGoal);
-
 				this.ReleaseWeaponRequest();
 				this.ReleaseAimRequest();
+				this.Bot.ReleaseButton(BTN.CROUCH);
 
 				// look for other close by dynos to arm
 				this.GoalState = this.LOOK_FOR_DYNO;
@@ -218,20 +230,23 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 
-				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 ) {
+				if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
+				{
 					this.Finished();
 				}
 
 				// pick a cover spot
 				if (!hasCoverSpot) {
 
-					// only one per spot. iterate through all since 'break' exits the while loop
+					// choose spot which is not occupied
+					maxval = -1;
 					foreach ( id and spot in this.MapGoal.CoverSpots ) {
-						if ( typeId(this.spotIndex) != 0 || spot.occupied ) {
+						if (spot.occupied ) {
 							continue;
 						}
-						else {
-							spot.occupied = true;
+						val = UnitRandom();
+						if (val > maxval) {
+							maxval = val;
 							this.spotIndex = id;
 						}
 					}
@@ -239,8 +254,11 @@ this.UpdateDynamite = function()
 					// no more cover spots available
 					if (typeId(this.spotIndex) == 0) { this.Finished(); }
 
-					if ( this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors) > 0 ) {
-						aimVectors = this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors;
+					spot = this.MapGoal.CoverSpots[ this.spotIndex ];
+					spot.occupied = true;
+
+					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
+						aimVectors = spot.AimVectors;
 						hasCoverSpot = true;
 					}
 					else {
@@ -248,10 +266,18 @@ this.UpdateDynamite = function()
 						this.Finished();
 					}
 
-					this.Goto(this.MapGoal.CoverSpots[ this.spotIndex ].position, 32.0);
+					this.Goto(spot.position, 32.0);
 
-					if ( this.MapGoal.CoverSpots[ this.spotIndex ].stance == "crouch" ) {
-						this.Bot.HoldButton(BTN.CROUCH, 99);
+					switch (spot.stance)
+					{
+						case "crouch":
+						{
+							this.Bot.HoldButton(BTN.CROUCH, 99);
+						}
+						case "prone":
+						{
+							this.Bot.HoldButton(BTN.PRONE, 99);
+						}
 					}
 				}
 
