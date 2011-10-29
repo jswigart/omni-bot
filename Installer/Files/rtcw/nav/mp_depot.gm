@@ -110,7 +110,7 @@ global Map =
 		{
 			navigate = function( _this )
 			{
-				_this.Bot.HoldButton( BTN.FORWARD, 4 );
+				_this.Bot.HoldButton( BTN.FORWARD, 6 );
 				sleep( 4 );
 			},
 		},
@@ -130,8 +130,8 @@ global Map =
 		{
 			navigate = function( _this )
 			{
-				_this.Bot.HoldButton( BTN.FORWARD, 4.5 );
-				sleep( 4.5 );
+				_this.Bot.HoldButton( BTN.FORWARD, 8 );
+				sleep( 8 );
 			},
 		},
 
@@ -666,7 +666,8 @@ global OnMapLoad = function()
 	tyele = OnTriggerRegion(AABB(-10204.000,1679.000,-822.000,-9874.000,1832.000,330.000),RegionTrigger.DisableBotPush);
 	nopush1 = OnTriggerRegion(AABB(-12480.000,4105.000,-758.000,-12294.000,4293.000,-449.000),RegionTrigger.DisableBotPush);
 	nopush2 = OnTriggerRegion(AABB(-12071.000,4143.000,-566.000,-11888.000,4261.000,-220.000),RegionTrigger.DisableBotPush);
-	nopush3 = OnTriggerRegion(AABB(-12466.000,5925.000,-758.000,-12285.000,6088.000,-111.000),RegionTrigger.DisableBotPush);	
+	nopush3 = OnTriggerRegion(AABB(-12466.000,5925.000,-758.000,-12285.000,6088.000,-111.000),RegionTrigger.DisableBotPush);
+	nopush4 = OnTriggerRegion(AABB(-9253.000,2989.000,-316.000,-9005.000,3136.000,-174.000),RegionTrigger.DisableBotPush);
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
