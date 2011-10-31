@@ -109,9 +109,12 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("Script","Debug","true",false);
 	Options::SetValue("Script","EnableRemoteDebugger","true",false);
 	Options::SetValue("Debug Render","EnableInterProcess","true",false);
+
+#ifdef ENABLE_FILE_DOWNLOADER
 	Options::SetValue("Downloader","Server","",false);
 	Options::SetValue("Downloader","Script","",false);
 	Options::SetValue("Downloader","DownloadMissingNav","true",false);
+#endif
 
 	Options::SetValue("Log","LogInfo","true",false);
 	Options::SetValue("Log","LogWarnings","true",false);
