@@ -65,7 +65,7 @@ this.GetPriority = function()
 					this.Bot.StuckPos = this.Bot.GetPosition();
 					// hack. either they get out of stuckage or they fall off and try again.
 					if ( this.Bot.HasEntityFlag( ENTFLAG.ON_LADDER ) ) {
-						this.Bot.Say("stuck on ladder");
+						//this.Bot.Say("stuck on ladder");
 						this.Bot.PressButton( BTN.STRAFE_R );
 					}
 					else {
