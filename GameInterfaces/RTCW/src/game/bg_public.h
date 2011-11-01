@@ -30,6 +30,8 @@
 
 #define VOTE_TIME           30000   // 30 seconds before vote times out
 
+#define OVERCLIP        1.001 // cs: moved from bg_local.h
+
 // Rafael
 #define DEFAULT_VIEWHEIGHT  40
 #define CROUCH_VIEWHEIGHT   16
