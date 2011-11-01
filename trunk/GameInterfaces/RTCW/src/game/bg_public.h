@@ -1192,6 +1192,7 @@ qboolean BG_AkimboFireSequence( playerState_t *ps );    //----(SA)	added
 #define ITEM_INDEX( x ) ( ( x ) - bg_itemlist )
 
 qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *ps );
+void BG_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce );
 
 
 // g_dmflags->integer flags
