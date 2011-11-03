@@ -46,6 +46,11 @@ this.OnPathThrough = function( data )
 	}
 	if ( !Map.PTArtyInfo[ data ].WpInfo ) {
 		Map.PTArtyInfo[ data ].WpInfo = Util.WpNameInfo( data );
+
+		// cs: no wp info, create an empty table rather than re-checking every time.
+		if ( !Map.PTArtyInfo[ data ].WpInfo ) {
+			Map.PTArtyInfo[ data ].WpInfo = {};
+		}
 	}
 	if ( !Map.PTArtyInfo[ data ].TraceSuccess ) {
 		Map.PTArtyInfo[ data ].TraceSuccess = {};
@@ -86,12 +91,11 @@ this.FindTarget = function()
 			continue;
 		}
 
+		temp[ i ] = mg;
 		i += 1;
-		temp[ i - 1 ] = mg;
 	}
 
 	tc = tableCount( temp );
-	x = 0;
 	if ( tc > 0 ) {
 		x = RandInt( 0, tc - 1 );
 	} else {
@@ -118,8 +122,8 @@ this.CacheTraceResults = function()
 			if ( !this.Bot.HasLineOfSightTo( pos ) ) {
 				continue;
 			}
-		} else // evaluate from the goto wp
-		{
+		}
+		else { // evaluate from the goto wp
 			tr = TraceLine( Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3( 0,0,42 ), pos, null, TRACE.SHOT, this.Bot.GetGameId(), false );
 			if ( tr.fraction < 1 ) {
 				if ( this.DebugLos ) {
@@ -133,7 +137,9 @@ this.CacheTraceResults = function()
 		Map.PTArtyInfo[ this.Data ].TraceSuccess[ tableCount( Map.PTArtyInfo[ this.Data ].TraceSuccess ) ] = mg;
 	}
 
-	Map.PTArtyInfo[ this.Data ].Cached = true;
+	// cs: we can only cache ones with a valid wp name as data otherwise 'data' most likely is not unique
+	// really need to pass the wp guid to the callback for indexing
+	Map.PTArtyInfo[ this.Data ].Cached = !(!Map.PTArtyInfo[ this.Data ].WpInfo.facing);
 };
 
 this.Exit = function()
@@ -167,16 +173,14 @@ this.Update = function()
 	this.AddWeaponRequest( Priority.High, WEAPON.BINOCULARS );
 	this.BlockForWeaponChange( WEAPON.BINOCULARS );
 
-	timeout = 0;
-	while ( timeout < 10 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
+	timeout = 21;
+	this.Bot.HoldButton( BTN.AIM, 1.1 ); // 20 fps
+	while ( timeout > 0 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
 	{
-		timeout += 1;
+		timeout -= 1;
 
-		this.Bot.HoldButton( BTN.AIM, 1 );
-		// give time to aim
-		// Martin - why was this timeout > 10
-		// that would never be called...
-		if ( timeout > 3 ) {
+		// keep trying every 3 frames rather than every frame after 3 frames.
+		if ( timeout % 3 == 0 ) { // was timeout > 3
 			this.Bot.HoldButton( BTN.ATTACK1, 1 );
 		}
 
@@ -192,8 +196,6 @@ this.Update = function()
 	// cs: Log the position if they still have a charge?
 
 	this.Bot.ReleaseButton( BTN.AIM, BTN.ATTACK1 );
-
-	sleep(1); // cs: need this in case aim is not successful
 
 	// Finish the state.
 	this.Finished();
