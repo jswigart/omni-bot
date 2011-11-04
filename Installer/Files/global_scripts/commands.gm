@@ -1575,3 +1575,39 @@ Commands["testbotroles"] =
 	},
 };
 Commands["tbr"] = Commands["testbotroles"];
+
+///////////////////////////////////////////////////////////////////////////////
+// delete all waypoints that do not have properties / flags
+Commands["waypoint_startover"] =
+{
+	Func = function(params)
+	{
+		wpTable = {};
+		Wp.GetAllWaypoints(wpTable);
+
+		foreach ( id && wp in wpTable ) {
+			keep = false;
+
+			foreach ( flag && set in wp.flags ) {
+				if ( set == 1 ) {
+					keep = true;
+				}
+			}
+
+			foreach( ptype and value in wp.property ) {
+				if ( ptype == "paththrough" ) {
+					keep = true;
+				}
+			}
+
+			if (!keep) {
+				Wp.DeleteWaypoint(wp.guid);
+			}
+		}
+	},
+
+	Help =
+	{
+		"delete all waypoints that do not have properties / flags",
+	},
+};

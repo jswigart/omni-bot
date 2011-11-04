@@ -15,23 +15,26 @@ this.Initialize = function()
 
 this.Enter = function()
 {
-	if (this.MapGoal.TraceEntity)
+	if (this.MapGoal.HasEntity)
 	{
-		this.TargetEntity = this.MapGoal.TraceEntity;
-	}
-	else
-	{
-		goal = GetGoal(this.MapGoal.TargetGoal);
-
-		if ( goal )
+		if (this.MapGoal.TraceEntity)
 		{
-			this.TargetEntity = goal.GetEntity();
+			this.TargetEntity = this.MapGoal.TraceEntity;
 		}
-	}
+		else
+		{
+			goal = GetGoal(this.MapGoal.TargetGoal);
 
-	if ( !this.TargetEntity )
-	{
-		this.Finished();
+			if ( goal )
+			{
+				this.TargetEntity = goal.GetEntity();
+			}
+			if ( !this.TargetEntity )
+			{
+				this.Finished();
+			}
+		}
+		this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
 	}
 
 	if ( this.MapGoal.PrimeGrenade > 3 )
@@ -39,9 +42,7 @@ this.Enter = function()
 		this.MapGoal.PrimeGrenade = 3;
 	}
 
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
-
-	if(!this.MarkInProgress(this.MapGoal)) {
+	if (!this.MarkInProgress(this.MapGoal)) {
 		this.BlackboardDelay(5, this.MapGoal);
 		this.Finished();
 	}
@@ -63,7 +64,7 @@ this.Exit = function()
 		this.Bot.ReleaseButton(BTN.CROUCH);
 	}
 
-	this.TargetEnity = null;
+	this.TargetEntity = null;
 };
 
 this.GetPriority = function()
@@ -75,21 +76,24 @@ this.GetPriority = function()
 			count = this.QueryGoals(this.Bot.QueryGoalsTable,"GRENADE_.*");
 			if ( count > 0 )
 			{
-				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
-					if ( !goal.TraceEntity && !goal.TargetGoal )
+					if (goal.TraceEntity)
 					{
-						continue;
-					}
-					else if( !goal.TraceEntity && goal.TargetGoal )
-					{
-						g = GetGoal(goal.TargetGoal);
-						if (!g || (g && GetEntFlags(g.GetEntity(), ENTFLAG.DEAD)))
+						if (!EntityIsValid(goal.TraceEntity) || GetEntFlags(goal.TraceEntity, ENTFLAG.DEAD))
 						{
 							continue;
 						}
 					}
-					else if (goal.TraceEntity && (!EntityIsValid(goal.TraceEntity) || GetEntFlags(goal.TraceEntity, ENTFLAG.DEAD)))
+					else if(goal.TargetGoal)
+					{
+						g = GetGoal(goal.TargetGoal);
+						if (!g || GetEntFlags(g.GetEntity(), ENTFLAG.DEAD))
+						{
+							continue;
+						}
+					}
+					else if(goal.HasEntity)
 					{
 						continue;
 					}
@@ -100,7 +104,7 @@ this.GetPriority = function()
 				}
 			}
 
-			 tableClear(this.Bot.QueryGoalsTable);
+			tableClear(this.Bot.QueryGoalsTable);
 		}
 
 		sleep(2);
@@ -115,7 +119,7 @@ this.Update = function()
 		{
 			this.Finished();
 		}
-		if(!this.MarkInUse(this.MapGoal)) {
+		if (!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
@@ -130,21 +134,34 @@ this.Update = function()
 		this.BlockForWeaponChange( this.weapon );
 		sleep( .25 );
 		this.Priority = 2.0; // don't let other goals interrupt it
-		while ( !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) && Util.HasAmmoForWeapon(this.Bot,this.weapon) )
+
+		counter = 0;
+		while ( (!this.TargetEntity || !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD )) && Util.HasAmmoForWeapon(this.Bot,this.weapon) )
 		{
+			if (counter > 0) {
+				sleep(1.5);
+			}
 			if ( this.MapGoal.PrimeGrenade > 1 )
 			{
 				this.Bot.HoldButton( BTN.ATTACK1, this.MapGoal.PrimeGrenade );
+				sleep( this.MapGoal.PrimeGrenade );
 			}
 			else
 			{
 				this.Bot.PressButton( BTN.ATTACK1 );
 			}
+			sleep(0.4);
 
-			sleep( this.MapGoal.PrimeGrenade + 0.5 );
+			counter += 1;
+			if (this.MapGoal.Count)
+			{
+				if ( counter >= this.MapGoal.Count)
+				{
+					this.BlackboardDelay(30, this.MapGoal);
+					this.Finished();
+				}
+			}
 		}
-
-		sleep(1);
 	}
 	else
 	{

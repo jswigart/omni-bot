@@ -1,8 +1,4 @@
 /////////////////////////////////////////////////////////////////////
-// temp var to disable other bot name functions
-global TestBotNames = true;
-
-/////////////////////////////////////////////////////////////////////
 // initialize the team tables
 AxisBots = table();
 AlliedBots = table();
@@ -21,8 +17,8 @@ RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
 
 /////////////////////////////////////////////////////////////////////
 // optionally assign a prefix for the bot name. set to "" for no prefix
-AxisPrefix = "^1[BOT]^7";
-AlliedPrefix = "^4[BOT]^7";
+global AxisPrefix = "^1[BOT]^7";
+global AlliedPrefix = "^4[BOT]^7";
 
 /////////////////////////////////////////////////////////////////////
 // Axis Bots
@@ -121,6 +117,33 @@ AlliedBots["ListerFiend"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
 AlliedBots["Ilikechocmilk"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
 
 /////////////////////////////////////////////////////////////////////
+// Overflow bots - used if no bots left for team / class desired
+global _OverFlowBotNumber = 0;
+global ExtraBots =
+{
+	"Himdar",
+	"Vedro",
+	"Icexo",
+	"Tahlkora",
+	"Bolund",
+	"Ellanil",
+	"Galul",
+	"Mindelos",
+	"Ostmor",
+	"Sagel",
+	"Thalath",
+	"Dharmesh",
+	"Aegarond",
+	"Havo",
+	"Jarno",
+	"Leiruth",
+	"Edoli",
+	"Edwig",
+	"Faden",
+	"Skorgan"
+};
+
+/////////////////////////////////////////////////////////////////////
 // END USER CONFIG. DO NOT EDIT BELOW
 /////////////////////////////////////////////////////////////////////
 
@@ -168,6 +191,7 @@ foreach ( botName and loadout in AlliedBots ) {
 // pick a bot to add based on team / class needed
 global OnBotAutoJoin = function()
 {
+	botTable = {};
 	desiredTeam = TEAM.AXIS;
 	if ( Server.Team[TEAM.AXIS].NumPlayers > Server.Team[TEAM.ALLIES].NumPlayers ) {
 		desiredTeam = TEAM.ALLIES;
@@ -175,14 +199,16 @@ global OnBotAutoJoin = function()
 
 	desiredClass = ClassManager.EvalClassByTeam(desiredTeam);
 
-	// find a bot for the team and class. sequential lookup for now.
 	teamTable = _AxisBots;
 	if ( desiredTeam == TEAM.ALLIES ) {
 		teamTable = _AlliedBots;
 	}
 
+	// find a bot for the team and class. sequential lookup for now.
+	// cs: note: gm tables are actually randomized, so bots will vary
+	// from game to game.
 	botName = null;
-	if ( desiredClass != -1 ) {
+	if ( desiredClass != -1 && teamTable[ desiredClass ] ) {
 		foreach ( name in teamTable[ desiredClass ] ) {
 			// make sure this name is not already used
 			if ( !Util.GetBotByName(name) ) {
@@ -192,12 +218,26 @@ global OnBotAutoJoin = function()
 		}
 	}
 
-	// todo: handle if there aren't enough bots
 	if ( botName ) {
 		botTable = { class = desiredClass, team = desiredTeam, name = botName };
 	}
 	else {
-		botTable = { class = desiredClass, team = desiredTeam };
+		if ( _OverFlowBotNumber < tableCount(ExtraBots) ) {
+			botName = ExtraBots[_OverFlowBotNumber];
+			global _OverFlowBotNumber = _OverFlowBotNumber + 1;
+		}
+
+		if ( botName ) {
+			prefix = AxisPrefix;
+			if ( desiredTeam == TEAM.ALLIES ) {
+				prefix = AlliedPrefix;
+			}
+
+			botTable = { class = desiredClass, team = desiredTeam, name = prefix + botName };
+		}
+		else {
+			botTable = { class = desiredClass, team = desiredTeam };
+		}
 	}
 
 	return botTable;

@@ -11,96 +11,155 @@ PrimaryWeaponChoices[TEAM.AXIS] = {};
 PrimaryWeaponChoices[TEAM.ALLIES] = {};
 
 ////////////////////
+// mod detection
+////////////////////
+modName = GetModName();
+isNq = modName == "noquarter";
+isEtnam = modName == "etpub" && GetCvar("g_etnamFlags") > 0;
+isSilentMod = modName == "silEnT";
+isJaymod = modName == "Jaymod";
+isNitmod = modName == "nitmod";
+
+////////////////////
 // soldiers weapons
 ////////////////////
-tbl = {};
-tbl[WEAPON.PANZERFAUST] = true;
-tbl[WEAPON.MOBILE_MG42] = true;
-tbl[WEAPON.FLAMETHROWER] = true;
-tbl[WEAPON.MORTAR] = true;
-isNq = (GetModName() == "noquarter");
-isEtnam = GetModName() == "etpub" && GetCvar("g_etnamFlags") > 0;
-if (isNq) {
-	if (GetCvar("jp_insanity") & 256) {
-		// if allowed, add venom to the list.
-		tbl[ WEAPON.VENOM ] = true;
-	}
-	tbl[WEAPON.STG44] = true;
-}else{
-	if (isEtnam) {
-		tbl[WEAPON.M79] = true;
-		if (!WEAPON.ITHACA) { WEAPON.ITHACA = 102; }
-		tbl[WEAPON.ITHACA] = false;
-	}
-	tbl[WEAPON.MP40] = false;
-}
-PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER] = tbl;
+tbl1 = {};
+tbl1[WEAPON.PANZERFAUST] = true; //RPG
+tbl1[WEAPON.MOBILE_MG42] = true;
+tbl1[WEAPON.FLAMETHROWER] = true;
+tbl1[WEAPON.MORTAR] = true;
+tbl2 = {};
+tbl2[WEAPON.MOBILE_MG42] = true; //MOBILE_BROWNING
+tbl2[WEAPON.FLAMETHROWER] = true;
+tbl2[WEAPON.MORTAR] = true;
 
-tbl = {};
-tbl[WEAPON.MOBILE_MG42] = true;
-tbl[WEAPON.FLAMETHROWER] = true;
-tbl[WEAPON.MORTAR] = true;
 if (isNq) {
 	if (GetCvar("jp_insanity") & 256) {
 		// if allowed, add venom to the list.
-		tbl[ WEAPON.VENOM ] = true;
+		tbl1[WEAPON.VENOM] = true;
+		tbl2[WEAPON.VENOM] = true;
 	}
+	tbl1[WEAPON.STG44] = true;
+	tbl2[WEAPON.BAR] = true;
 	WeaponTable.AlliedPanzer = WEAPON.BAZOOKA;
-	tbl[WEAPON.BAR] = true;
 }else{
 	if (isEtnam) {
+		tbl1[WEAPON.M79] = true;
+		tbl2[WEAPON.M79] = true;
+		if (!WEAPON.ITHACA) { WEAPON.ITHACA = 102; }
+		tbl1[WEAPON.ITHACA] = false;
+		tbl2[WEAPON.ITHACA] = false;
 		WeaponTable.AlliedPanzer = WEAPON.LAW;
-		tbl[WEAPON.M79] = true;
-		tbl[WEAPON.ITHACA] = false;
 	}else{
 		WeaponTable.AlliedPanzer = WEAPON.PANZERFAUST;
 	}
-	tbl[WEAPON.THOMPSON] = false;
-}
-tbl[WeaponTable.AlliedPanzer] = true;
-PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER] = tbl;
-
-if (GetModName() == "Jaymod") {
-	PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER][WEAPON.M97] = false;
-	PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER][WEAPON.M97] = false;
+	tbl1[WEAPON.MP40] = false;
+	tbl2[WEAPON.THOMPSON] = false;
 }
 
-if (GetModName() == "silEnT") {
-	PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER][/*WEAPON.PPSH*/ 101] = false;
-	PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER][/*WEAPON.PPSH*/ 101] = false;
+tbl2[WeaponTable.AlliedPanzer] = true;
+
+if (isJaymod) {
+	// cs: shouldn't these be enabled?
+	tbl1[WEAPON.M97] = false;
+	tbl2[WEAPON.M97] = false;
 }
+if (isSilentMod && GetCvar("g_classWeapons") & 1) {
+	// TODO: handle mod version with next release of silEnT
+	tbl1[WEAPON.PPSH] = true;
+	tbl2[WEAPON.PPSH] = true;
+}
+PrimaryWeaponChoices[TEAM.AXIS][CLASS.SOLDIER] = tbl1;
+PrimaryWeaponChoices[TEAM.ALLIES][CLASS.SOLDIER] = tbl2;
 
 /////////////////////
 // covertops weapons
 /////////////////////
-tbl = {};
-tbl[WEAPON.K43] = true;
+tbl1 = {};
+tbl1[WEAPON.K43] = true; //DRAGUNOV
+tbl2 = {};
+tbl2[WEAPON.GARAND] = true; //M21 RIFLE
+tbl2[WEAPON.STEN] = true;
+
 if (isEtnam) {
-	tbl[WEAPON.SAK47] = true;
-	tbl[WEAPON.RPD] = true;
+	tbl1[WEAPON.SAK47] = true;
+	tbl1[WEAPON.RPD] = true;
+	tbl2[WEAPON.M3A1] = true;
 }else{
-	tbl[WEAPON.FG42] = true;
+	tbl1[WEAPON.FG42] = true;
 }
 if (isNq) {
-	tbl[WEAPON.MP34] = true;
+	tbl1[WEAPON.MP34] = true;
+	tbl2[WEAPON.BAR] = true;
 }else{
-	tbl[WEAPON.STEN] = true;
+	tbl1[WEAPON.STEN] = true;
+	tbl2[WEAPON.FG42] = true; //M16 SCOPED
 }
-PrimaryWeaponChoices[TEAM.AXIS][CLASS.COVERTOPS] = tbl;
+PrimaryWeaponChoices[TEAM.AXIS][CLASS.COVERTOPS] = tbl1;
+PrimaryWeaponChoices[TEAM.ALLIES][CLASS.COVERTOPS] = tbl2;
 
-tbl = {};
-tbl[WEAPON.GARAND] = true;
-tbl[WEAPON.STEN] = true;
+///////////////////
+// common weapons
+//////////////////
+foreach (class in { CLASS.MEDIC, CLASS.ENGINEER, CLASS.FIELDOPS } )
+{
+	tbl1 = {};
+	tbl1[WEAPON.MP40] = true; //AK-47
+	tbl2 = {};
+	tbl2[WEAPON.THOMPSON] = true; //M16
+
+	if (isEtnam) {
+		tbl1[WEAPON.ITHACA] = true;
+		tbl2[WEAPON.ITHACA] = true;
+		tbl1[WEAPON.RPD] = true;
+		tbl2[WEAPON.M3A1] = true;
+	}
+	if (isNq && class!=CLASS.MEDIC) {
+		tbl1[WEAPON.SHOTGUN] = true;
+		tbl2[WEAPON.SHOTGUN] = true;
+	}
+	if (isJaymod) {
+		tbl1[WEAPON.M97] = true;
+		tbl2[WEAPON.M97] = true;
+	}
+	if (isSilentMod || isNitmod) {
+		tbl1[WEAPON.THOMPSON] = true;
+		tbl2[WEAPON.MP40] = true;
+	}
+	if (isNitmod && (GetCvar("g_weapons") & 512) && class!=CLASS.ENGINEER) {
+		tbl1[WEAPON.STEN] = true;
+		tbl2[WEAPON.STEN] = true;
+	}
+	PrimaryWeaponChoices[TEAM.AXIS][class] = tbl1;
+	PrimaryWeaponChoices[TEAM.ALLIES][class] = tbl2;
+}
+
+/////////////////////
+// engineer weapons
+/////////////////////
+tbl1 = PrimaryWeaponChoices[TEAM.AXIS][CLASS.ENGINEER];
+tbl2 = PrimaryWeaponChoices[TEAM.ALLIES][CLASS.ENGINEER];
+tbl1[WEAPON.KAR98] = true;
+tbl2[WEAPON.CARBINE] = true;
+
 if (isEtnam) {
-	tbl[WEAPON.M3A1] = true;
+	tbl1[WEAPON.M79] = true;
+	tbl2[WEAPON.M79] = true;
 }
-if (isNq) {
-	tbl[WEAPON.BAR] = true;
-}else{
-	tbl[WEAPON.FG42] = true;
+if (isSilentMod && GetCvar("g_classWeapons") & 2 ) {
+	tbl1[WEAPON.PPSH] = true;
+	tbl2[WEAPON.PPSH] = true;
 }
-PrimaryWeaponChoices[TEAM.ALLIES][CLASS.COVERTOPS] = tbl;
 
+/////////////////////
+// fieldops weapons
+/////////////////////
+tbl1 = PrimaryWeaponChoices[TEAM.AXIS][CLASS.FIELDOPS];
+tbl2 = PrimaryWeaponChoices[TEAM.ALLIES][CLASS.FIELDOPS];
+if (isSilentMod && GetCvar("g_classWeapons") & 4 ) {
+	tbl1[WEAPON.PPSH] = true;
+	tbl2[WEAPON.PPSH] = true;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

@@ -45,7 +45,8 @@ this.Exit = function()
 
 this.CheckForClassChange = function()
 {
-	if (this.Bot.crucialClass) {
+	// cs: added temp test for timestamp to limit repeated /kills reported by blindman
+	if (this.Bot.crucialClass || (this.Bot.classChangeTime && GetTime() - this.Bot.classChangeTime < 20) ) {
 		// don't change crucial class which has been set by role manager
 		return;
 	}
@@ -57,5 +58,6 @@ this.CheckForClassChange = function()
 		// cs: note: version 0.82 should not require it to come before the class change
 		this.Bot.ExecCommand("kill");
 		this.Bot.ChangeClass(newClass);
+		this.Bot.classChangeTime = GetTime(); // test for blindman
 	}
 };

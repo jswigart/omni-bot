@@ -1224,26 +1224,41 @@ member AddGoalRoute = function(goalname, startname, endname, weight)
 		weight = 1.0;
 	}
 
-	g = GetGoal(goalname);
 	s = GetGoal(startname);
 	e = GetGoal(endname);
-	if(g && s && e )
+
+	if (typeName(goalname) == "table")
 	{
-		return g.AddRoute(startname, endname, weight);
+		if ( s && e )
+		{
+			foreach (goal in goalname)
+			{
+				goal.AddRoute(startname, endname, weight);
+			}
+			return true;
+		}
+	}
+	else
+	{
+		g = GetGoal(goalname);
+		if ( !g )
+		{
+			Util.MapDebugPrint("Util.AddGoalRoute: Goal " + goalname + " not found!", true);
+		}
+		else if ( s && e )
+		{
+			return g.AddRoute(startname, endname, weight);
+		}
 	}
 	if( !s )
 	{
-		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + startname + " not found! " + goalname + " -> " +
-				startname + " -> " + endname );
+		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + startname + " not found! " +
+				startname + " -> " + endname, true);
 	}
 	if ( !e )
 	{
-		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + endname + " not found! " + goalname + " -> " +
-				startname + " -> " + endname);
-	}
-	if ( !g )
-	{
-		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + goalname + " not found!");
+		Util.MapDebugPrint("Util.AddGoalRoute: Goal " + endname + " not found! " +
+				startname + " -> " + endname, true);
 	}
 	return false;
 };
@@ -1284,9 +1299,17 @@ member Routes = function(routetable)
 // Loop through all the top level nodes, these are the goal names.
 	foreach ( goalname and goalroutes in routetable )
 	{
-		foreach ( name and route in goalroutes )
+		Goals = Util.GoalTable(goalname);
+		if (tableCount(Goals))
 		{
-			this.GoalRoutes(goalname, name, route);
+			foreach ( name and route in goalroutes )
+			{
+				this.GoalRoutes(Goals, name, route);
+			}
+		}
+		else
+		{
+			Util.MapDebugPrint("Util.Routes: Goal " + goalname + " not found!", true);
 		}
 	}
 };
@@ -1961,7 +1984,7 @@ member SetGroupForTable = function(tbl, group)
 			this.SetGroupForTable(exp, group);
 		}
 		else if ( type == 5 )  // string
- 		{
+		{
 			this.SetGroup(exp, group);
 		}
 	}
@@ -3070,6 +3093,19 @@ member SetCustomProperty = function(goalname, property, value)
 	}
 	else {
 		Util.MapDebugPrint("Util.SetCustomProperty: Invalid goal name " + goalname, true);
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetGoalRange = function(goalname, range)
+{
+	mg = GetGoal(goalname);
+	if (mg) {
+		mg.SetRange(range);
+	}
+	else {
+		Util.MapDebugPrint("Util.SetGoalRange: Invalid goal name " + goalname, true);
 	}
 };
 
