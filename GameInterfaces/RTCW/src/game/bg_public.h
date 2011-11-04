@@ -30,8 +30,6 @@
 
 #define VOTE_TIME           30000   // 30 seconds before vote times out
 
-#define OVERCLIP        1.001 // cs: moved from bg_local.h
-
 // Rafael
 #define DEFAULT_VIEWHEIGHT  40
 #define CROUCH_VIEWHEIGHT   16
@@ -1194,7 +1192,6 @@ qboolean BG_AkimboFireSequence( playerState_t *ps );    //----(SA)	added
 #define ITEM_INDEX( x ) ( ( x ) - bg_itemlist )
 
 qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *ps );
-void BG_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce );
 
 
 // g_dmflags->integer flags
