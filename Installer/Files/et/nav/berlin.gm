@@ -146,7 +146,7 @@ global Map =
 			navigate = function(_this)
 			{
 				Util.MapDebugPrint("ladder paththrough");
-				//  *sigh* this sucks like heck ... Û“ ... but it works more or less -- d00d
+				//  *sigh* this sucks like heck ... √≥√í ... but it works more or less -- d00d
 				/*
 				_this.AddAimRequest(Priority.High);  // leave off optional parameters, defaults to AimPosition, so set it
 				_this.AimVector = Vec3(5686,4880,0); // this can be called at any time in the script goal
@@ -903,7 +903,7 @@ global OnMapLoad = function()
 
 	OnTrigger( "^1*** ^7Axis have fallen back to the ^3Factory! ^1***", Map.Axis_at_Factory );
 
-	// Goals, goals, g‘‘als!
+	// Goals, goals, g√î√îals!
 	Util.RemoveGoal( "MOVER_tank" );
 	Util.DisableGoal( "CHECKPOINT_.*", true );
 	Util.DisableGoal( "MOUNT.*", true );

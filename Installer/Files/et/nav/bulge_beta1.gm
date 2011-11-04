@@ -17,11 +17,6 @@ global Map =
 	TankIsAtBridge = false,
 	grenade_bunker_mg_active = false,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	/*** TRIGGER REGIONS ***/
 	bunker_mg_trigger =
 	{

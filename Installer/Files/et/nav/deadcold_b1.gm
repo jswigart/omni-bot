@@ -1,38 +1,102 @@
 //script created by palota
 global Map =
 {
+	Debug = 0,
+	axisCryptDestroyed = false,
+	alliedCryptDestroyed = false,
+
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER = {
+				numbots = 10,
+			},
+			ATTACKER1 = {
+				numbots = 1,
+				crucialClass = CLASS.SOLDIER,
+			},
+		},
+		ALLIES =
+		{
+			DEFENDER = {
+				numbots = 10,
+			},
+			ATTACKER1 = {
+				numbots = 1,
+				crucialClass = CLASS.SOLDIER,
+			},
+		},
+	},
+
 	Allied_Crypt_Destroyed = function( trigger )
 	{
+		alliedCryptDestroyed = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_gold");
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_crypt_mir");
+		Util.SetGoalRange( "BUILD_Axis_Command_Post", 0 );
+		Util.MapDebugPrint("Allied_Crypt_Destroyed");
 	},
 	Axis_Crypt_Destroyed = function( trigger )
 	{
+		axisCryptDestroyed = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_gold");
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_crypt");
+		Util.SetGoalRange( "BUILD_Allied_Command_Post", 0 );
+		Util.MapDebugPrint("Axis_Crypt_Destroyed");
 	},
 
 	allied_gold_Taken = function( trigger )
 	{
 		SetGoalPriority( "DEFEND.*", 0.1, TEAM.ALLIES);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_yard");
+		Util.MapDebugPrint("allied_gold_Taken");
 	},
 	axis_gold_Taken = function( trigger )
 	{
 		SetGoalPriority( "DEFEND.*", 0.1, TEAM.AXIS);
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_yard_mir");
+		Util.MapDebugPrint("axis_gold_Taken");
 	},
 
 	allied_gold_Returned = function( trigger )
 	{
-		SetGoalPriority( "DEFEND.*", 0.5, TEAM.ALLIES);
+		SetGoalPriority( "DEFEND.*", 0.6, TEAM.ALLIES);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
+		Util.MapDebugPrint("allied_gold_Returned");
 	},
 	axis_gold_Returned = function( trigger )
 	{
-		SetGoalPriority( "DEFEND.*", 0.5, TEAM.AXIS);
+		SetGoalPriority( "DEFEND.*", 0.6, TEAM.AXIS);
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
+		Util.MapDebugPrint("axis_gold_Returned");
 	},
+
+	allied_gold_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+	},
+	axis_gold_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+	},
+
+	axis_Command_Post_Built = function( trigger )
+	{
+		if (!alliedCryptDestroyed) {
+			Util.SetGoalRange( "BUILD_Axis_Command_Post", 900 );
+		}
+		Util.MapDebugPrint("axis_Command_Post_Built");
+	},
+	allied_Command_Post_Built = function( trigger )
+	{
+		if (!axisCryptDestroyed) {
+			Util.SetGoalRange( "BUILD_Allied_Command_Post", 900 );
+		}
+		Util.MapDebugPrint("allied_Command_Post_Built");
+	}
 };
 
 global OnMapLoad = function()
@@ -43,22 +107,36 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have stolen the Axis Gold!", Map.axis_gold_Taken );
 	OnTrigger( "Flag returned allied_gold!", Map.allied_gold_Returned );
 	OnTrigger( "Flag returned axis_gold!", Map.axis_gold_Returned );
+	OnTrigger( "The Axis have Secured the Allied Gold!", Map.allied_gold_Secured );
+	OnTrigger( "The Allies have Secured the Axis Gold!", Map.axis_gold_Secured );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_Command_Post_Built );
 
 	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_gold");
 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_gold");
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_yard");
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_yard_mir");
 
-	SetGoalPriority( "BUILD.*Command_Post", 0.8);
 	SetGoalPriority( "PLANT.*Command_Post", 0.7);
-	SetGoalPriority( "MOUNTMG42.*", 0.5);
+	SetGoalPriority( "MOUNTMG42.*", 0.6);
+	SetGoalPriority( "DEFEND_.*", 0.6);
+	SetGoalPriority( "FLAG_.*", 0.5);
+	SetGoalPriority( "ATTACK_yard.*", 0.8);
 
+	Util.SetMaxUsersInProgress(1, ".*Command_Post");
 	Util.SetMaxUsersInProgress(1, "SNIPE_.*");
-	Util.SetMaxUsersInProgress(1, "MOUNTMG42.*");
 	Util.SetMaxUsersInProgress(1, "REPAIRMG42.*");
-	Util.SetMaxUsersInProgress(1, "BUILD.*Command_Post");
+	Util.SetMaxUsersInProgress(20, "ATTACK_.*");
+	Util.SetMaxUsersInUse(2, "ATTACK_.*");
+
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=30, maxcamptime=120} );
-	SetMapGoalProperties( "DEFEND.*", {mincamptime=20, maxcamptime=60} );
+	SetMapGoalProperties( "DEFEND.*", {mincamptime=10, maxcamptime=60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=20, maxcamptime=60} );
+
+	Util.SetRoleForGoals( "DEFEND_.*", ROLE.DEFENDER );
+	Util.SetRoleForGoals( "MOUNTMG42_.*", ROLE.ATTACKER1 );
+	Util.SetGoalRange( "BUILD_Allied_Command_Post", 0 );
+	Util.SetGoalRange( "BUILD_Axis_Command_Post", 0 );
 
 	Util.SetGoalOffset(-225,0,0, "PLANT_Axis_Crypt");
 	Util.SetGoalOffset(225,0,0, "PLANT_Allied_Crypt");
@@ -139,10 +217,5 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	m1 = Max(Round(ETUtil.CountTeam(TEAM.AXIS)/2)-2, 2);
-	m2 = Max(Round(ETUtil.CountTeam(TEAM.ALLIES)/2)-2, 2);
-	Util.SetMaxUsersInProgress(m2, "ATTACK.*");
-	Util.SetMaxUsersInProgress(m1, "ATTACK.*_mir");
-	Util.SetMaxUsersInProgress(m1+1, "FLAG_allied_gold");
-	Util.SetMaxUsersInProgress(m2+1, "FLAG_axis_gold");
+	bot.MaxViewDistance = 2600;
 };

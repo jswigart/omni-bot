@@ -1238,7 +1238,10 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goals
+	bot.AddScriptGoal("MountVehicle");
+	bot.AddScriptGoal("EscortVehicle");
+
 	//make sure allies spawn at default
 	bot.ChangeSpawnPoint( 0 );
-
 };

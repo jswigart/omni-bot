@@ -12,6 +12,7 @@ Last Update : 21 December 2009
 // 	^4Tardis	10 October 2010 Updated Script - 0.8
 //
 //==========================================================================================
+// cs: map needs new mount goal setup
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
@@ -334,7 +335,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		Util.DisableGoal ( "BUILD_Tank" );
-		Util.DisableGoal ( "MOUNT_tank" );
+		Util.DisableGoal ( "MOUNT_tank" ); // cs: uhh, was this ever enabled?
 		Util.DisableGoal ( "MOVER_tank" );
 
 		Util.MapDebugPrint( "Main_Gate_Destroyed" );
@@ -1289,6 +1290,9 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goal
+	bot.AddScriptGoal("MountVehicle");
+
 	bot.TargetBreakableDist = 90.0;
 
 	foreach ( id and weap in { WEAPON.THOMPSON,WEAPON.MP40,WEAPON.SHOTGUN,

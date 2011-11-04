@@ -8,8 +8,8 @@
 //	native12		08. June 2011	First release
 //	native12		07. July 2011	Released
 //
-//	frostbite.way		25 June 2011	Size: 348 160 b
-//	frostbite_goals.gm	19 June 2011	Size: 65 536 b
+//	frostbite.way		25 June 2011	Size: 348Â 160 b
+//	frostbite_goals.gm	19 June 2011	Size: 65Â 536 b
 //==========================================================================================
 
 global Map =
@@ -1181,7 +1181,7 @@ global Map =
 				{
 					Map.DocsInside = false;
 					
-					Util.MapDebugPrint( "^5documents aren´t near transmitter tower" );
+					Util.MapDebugPrint( "^5documents arenÂ´t near transmitter tower" );
 				}
 			}
 		},
@@ -1211,7 +1211,7 @@ global Map =
 				{
 					Util.SetMaxUsers( 4, "FLAG.*" );
 					
-					Util.MapDebugPrint( "^5documents aren´t inside transmitter tower" );
+					Util.MapDebugPrint( "^5documents arenÂ´t inside transmitter tower" );
 				}
 			}
 		},

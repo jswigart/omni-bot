@@ -21,11 +21,6 @@ global Map =
 	Tank_Barrier2_Dyno = 0,
 	Town_Gate_Dyno = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Navigation =
 	{
 		quickjump =

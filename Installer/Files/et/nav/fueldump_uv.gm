@@ -77,11 +77,6 @@ global Map =
 	BridgeStatus = 0, //not built
 	AntennaBridgeStatus = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	// allied covert op on depot roof will always be detected
 	// key = position, value = radius
 	CovertDetectionSpots =

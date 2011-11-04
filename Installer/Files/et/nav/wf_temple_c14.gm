@@ -25,11 +25,6 @@ global Map =
 	//set Talk to false if you don't want the Allied bots to cheer after winning:
 	Talk = true,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
 	Ammo_Cabinet_north_ammocabinet_2 = "AMMOCAB_north_ammocabinet_2",

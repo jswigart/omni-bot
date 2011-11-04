@@ -44,11 +44,6 @@ global Map =
 	Bird3 = "MOVER_bird3",
 	Bird4 = "MOVER_bird4",
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	// Keep these movers
 	Movers =
 	{

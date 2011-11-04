@@ -14,11 +14,6 @@ UPDATED: August 16, 2011
 
 global Map =
 {
-	MountVehicle =
-	{
-		LimitBots = 2,
-	},
-
 	Debug = false,
 
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",

@@ -11,11 +11,6 @@ global Map =
 		 "MOVER_flying",
 		 "MOVER_flying_goose",
  	 },
-	 
-	 MountVehicle =
-	 {
-		Enabled = false,
-	 },
 
 	//Ammo_Cabinet_237 = "AMMO_237",
 	//Ammo_Cabinet_448 = "AMMO_448",

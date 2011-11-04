@@ -9,12 +9,6 @@ global Map =
 	Debug = false,
 	Quiet = true,
 	
-	MountVehicle =
-	{
-		LimitBots = 2,
-		Enabled = true,
-	},
-	
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
 	Call_Artillery_ar_al_call_bridge = "CALLARTILLERY_ar_al_call_bridge",

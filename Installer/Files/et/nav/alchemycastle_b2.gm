@@ -1,4 +1,5 @@
 //script created by palota
+// cs: needs new escort goal
 global Map =
 {
 	Ammo_Cabinet = "AMMOCAB_south_ammocabinet",
@@ -380,4 +381,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goal
+	bot.AddScriptGoal("EscortVehicle");
 };

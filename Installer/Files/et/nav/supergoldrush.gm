@@ -1,10 +1,5 @@
 global Map =
 {
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	start_of_map = true,
 	Escorting = false,
 	TruckLoaded = false,

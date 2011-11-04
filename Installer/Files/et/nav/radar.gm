@@ -556,7 +556,7 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Plant_Main_Entrance, 0.82, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Side_Entrance, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Axis_Road_MG_Nest, 0.0, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( Map.Plant_Axis_Watchtower_MG_Nest, 0.0, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Axis_Watchto.*MG_Nest", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 
 	// Axis goals
 	SetGoalPriority( Map.Build_Bunker_MG_Nest, 0.91, TEAM.AXIS, CLASS.ENGINEER );
@@ -572,7 +572,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bunker_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Road_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Entrance" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Watchtower_MG_Nest" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Watchto.*MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_Entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Axis_Road_MG_Nest" );

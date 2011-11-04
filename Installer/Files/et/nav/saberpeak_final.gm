@@ -140,16 +140,8 @@ global Map =
 		Util.MapDebugPrint("Side_Path");
 	},
 
-	SetDynPos = function()
-	{
-		goal = GetGoal("PLANT_Submarine");
-		goal.SetPosition(Util.WpNameInfo("submarine" + RandInt(1,4)).position);
-		goal.DynamicPosition = false;
-	},
-
 	Submarine_Accessible = function()
 	{
-		Map.SetDynPos();
 		SetAvailableMapGoals( TEAM.AXIS, true, ".*village.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_allied.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_submarine.*" );
@@ -184,6 +176,8 @@ global Map =
 		Map.SetSpawn();
 		ETUtil.SetExcludeIndexes("BUILD_allies_assault_boat", null);
 		ETUtil.SetStartIndex("BUILD_allies_assault_boat", 0);
+		Util.SetGoalRange("GRENADE_tower_mg_east", 800);
+		Util.SetGoalRange("GRENADE_tower_mg_west", 700);
 		Util.MapDebugPrint("Main_Entrance_Destroyed");
 	},
 
@@ -203,7 +197,6 @@ global Map =
 
 	Submarine_Planted = function( trigger )
 	{
-		Map.SetDynPos();
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_submarine.*" );
 		Map.Submarine_Dyno += 1;
 		Util.MapDebugPrint( "Submarine_Planted" );
@@ -216,6 +209,13 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_submarine.*" );
 		}
 		Util.MapDebugPrint( "Submarine_Defused" );
+	},
+
+	Submarine_Destroyed = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "Submarine_Destroyed" );
 	},
 };
 
@@ -232,6 +232,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
 	OnTrigger( "Planted at the Submarine.", Map.Submarine_Planted );
 	OnTrigger( "Defused at the Submarine.", Map.Submarine_Defused );
+	OnTrigger( "The Submarine has been destroyed!", Map.Submarine_Destroyed );
 
 	Util.DisableGoal(".*", true);
 	Util.DisableGoal("ROUTE_sidewall");
@@ -295,6 +296,10 @@ global OnMapLoad = function()
 	Util.SetGoalOffset(0, 30, -30, "MOUNTMG42_tower_east");
 
 	Util.AddUseWp("PLANT_Side_Wall", "sidewall1");
+	Util.AddUseWp("PLANT_Submarine", "submarine1");
+	Util.AddUseWp("PLANT_Submarine", "submarine2");
+	Util.AddUseWp("PLANT_Submarine", "submarine3");
+	Util.AddUseWp("PLANT_Submarine", "submarine4");
 
 	ETUtil.SetAimModeForMount("MOUNT_ship", "velocity");
 	ETUtil.SetStartIndex("BUILD_allies_assault_boat", 2);
@@ -322,6 +327,9 @@ global OnMapLoad = function()
 			bot.ReleaseButton(BTN.FORWARD);
 		}
 	};
+
+	Util.SetGoalRange("GRENADE_tower_mg_east", 0);
+	Util.SetGoalRange("GRENADE_tower_mg_west", 0);
 
 	MapRoutes =
 	{

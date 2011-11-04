@@ -59,11 +59,6 @@ global Map =
 	BridgeStatus = 0, //not built
 	FootBridgeStatus = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	// allied covert op on depot roof will always be detected
 	// key = position, value = radius
 	CovertDetectionSpots =
@@ -174,22 +169,6 @@ global Map =
 			if ( Map.DepotRoofCounter < 1 ) {
 				Util.DisableGroup( "depotroof", TEAM.AXIS );
 			}
-		},
-	},
-
-	AlliedCommandPost =
-	{
-		Name = "AlliedCommandPost",
-		TriggerOnClass = CLASS.ENGINEER,
-		OnEnter = function(ent)
-		{
-			bot = Util.IsBot(ent);
-			if(bot){ bot.SetRoles(ROLE.ATTACKER3); }
-		},
-		OnExit = function(ent)
-		{
-			bot = Util.IsBot(ent);
-			if(bot){ bot.ClearRoles(ROLE.ATTACKER3); }
 		},
 	},
 
@@ -547,17 +526,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Fuel_Dump.*" );
 		Util.EnableGroup( "depotwall", TEAM.AXIS );
 
-		// randomize plant goal position
-		rand = RandInt( 1,4 );
-		if ( rand == 1 )
-			{ Util.SetGoalPosition( -10840,-7310,450, Map.Plant_Fuel_Dump ); }
-		else if ( rand == 2 )
-			{ Util.SetGoalPosition( -10830,-7570,250, Map.Plant_Fuel_Dump ); }
-		else if ( rand == 3 )
-			{ Util.SetGoalPosition( -10890,-7430,250, Map.Plant_Fuel_Dump ); }
-		else
-			{ Util.SetGoalPosition( -10750,-7423,250, Map.Plant_Fuel_Dump ); }
-
 		Util.MapDebugPrint( "Fuel_Dump_Planted" );
 	},
 
@@ -680,7 +648,7 @@ global Map =
 		if ( !Map.Front_Dump )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Fuel_Dump ); }
 
-		Util.SetRoleForGoals( "BUILD_Allied_Command_Post", ROLE.ATTACKER3);
+		Util.SetGoalRange( "BUILD_Allied_Command_Post", 1600);
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Depot_Gates.*" );
@@ -954,9 +922,6 @@ global OnMapLoad = function()
 	// detect allies on the depot roof
 	depotroof = OnTriggerRegion(AABB(-11424.124,-6971.128,537.125,-10310.962,-6210.208,944.180), Map.DepotRoof);
 
-	// build allied command post
-	OnTriggerRegion(AABB(-11784.988,-3097.148,495.804,-10327.292,-1356.500,710.138), Map.AlliedCommandPost);
-
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
 	Util.SetMaxUsersInUse( 1, "ATTACK_.*" );
@@ -1045,10 +1010,13 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bridge_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_rBridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rFootbridge.*" );
-	
+
 	Util.SetMaxUsersInProgress( 1, "BUILD_Allied_Command_Post");
-	Util.ClearRoleForGoals( "BUILD_Allied_Command_Post", ROLE.ATTACKER3);
-	SetGoalPriority("BUILD_Allied_Command_Post", 0.85);
+	Util.SetGoalRange( "BUILD_Allied_Command_Post", 0);
+	SetGoalPriority("BUILD_Allied_Command_Post", 0.86);
+
+	// randomize plant goal position
+	Util.AddUsePoint( Map.Plant_Fuel_Dump, { Vec3(-10840,-7310,450), Vec3(-10830,-7570,250), Vec3(-10890,-7430,250),  Vec3(-10750,-7423,250) });
 
 	//set up some routing
 	MapRoutes =

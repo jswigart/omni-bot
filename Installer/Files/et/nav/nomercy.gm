@@ -23,11 +23,6 @@ global Map =
 	Fence_Status = 0,
 	CP_Status = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Allies_Capture_Flag = function( trigger )
 	{
 		Map.BunkerFlag_Status = 1;

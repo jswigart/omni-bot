@@ -6,14 +6,14 @@
 //------------------------------------------------------------------------------------------
 //	Qiki			14 December 2010	Initial Script
 //	Native12		4.1.2011		Final script
-//	adlernest_2.way		4.1.2011		Size: 278 528 b
-//	adlernest_2_goals.gm	4.1.2011		Size: 65 536 b
+//	adlernest_2.way		4.1.2011		Size: 278Â 528 b
+//	adlernest_2_goals.gm	4.1.2011		Size: 65Â 536 b
 //==========================================================================================
 //
 //	Native12		
 //	adlernest_2.gm		11.1.2011		Cleaning script, correction
-//	adlernest_2.way		11.1.2011		Size: 278 528 b
-//	adlernest_2_goals.gm	11.1.2011		Size: 65 536 b
+//	adlernest_2.way		11.1.2011		Size: 278Â 528 b
+//	adlernest_2_goals.gm	11.1.2011		Size: 65Â 536 b
 //==========================================================================================
 //
 //	adlernest_2.gm		13.1.2011		Correction in navigation table (Thx crapshoot)
@@ -389,14 +389,14 @@ global Map =
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_CP" );
 							
-							Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies in Triggers, ^3Eng isn´t in Triggers" );
+							Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies in Triggers, ^3Eng isnÂ´t in Triggers" );
 						}
 					}
 					else
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_CP" );
 						
-						Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies in Triggers, ^3Eng isn´t in Triggers" );
+						Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies in Triggers, ^3Eng isnÂ´t in Triggers" );
 					}
 					
 					while( Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 and Map.Docs_taken == 0 and Map.DoorControlDestroyed == 0 and Map.BlastDoorOpen == 0 and Map.CP_build == 0 )
@@ -414,7 +414,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 						
-						Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies aren´t in Triggers, Docs not taken" );
+						Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies arenÂ´t in Triggers, Docs not taken" );
 					}
 				}
 				else
@@ -427,7 +427,7 @@ global Map =
 				
 					SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 					
-					Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies aren´t in Triggers, Docs not taken" );
+					Util.MapDebugPrint( "^5Allied_CP_Destroyed, BlastDoor closed, Allies arenÂ´t in Triggers, Docs not taken" );
 				}
 			}
 			else
@@ -474,14 +474,14 @@ global Map =
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Allied_CP_.*" );
 						
-						Util.MapDebugPrint( "^5Allied_CP_Planted, BlastDoor closed, Allies in Triggers, ^3Eng isn´t in Triggers" );
+						Util.MapDebugPrint( "^5Allied_CP_Planted, BlastDoor closed, Allies in Triggers, ^3Eng isnÂ´t in Triggers" );
 					}
 				}
 				else
 				{
 					SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Allied_CP_.*" );
 					
-					Util.MapDebugPrint( "^5Allied_CP_Planted, BlastDoor closed, Allies in Triggers, ^3Eng isn´t in Triggers" );
+					Util.MapDebugPrint( "^5Allied_CP_Planted, BlastDoor closed, Allies in Triggers, ^3Eng isnÂ´t in Triggers" );
 				}
 			}
 			else
@@ -559,7 +559,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 						
-						Util.MapDebugPrint( "^5documents_Taken, Doorcontrols intact, CP not builded, BlastDoor closed, Allies aren´t in Triggers" );
+						Util.MapDebugPrint( "^5documents_Taken, Doorcontrols intact, CP not builded, BlastDoor closed, Allies arenÂ´t in Triggers" );
 					}
 				}
 				else
@@ -573,7 +573,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 					
-					Util.MapDebugPrint( "^5documents_Taken, Doorcontrols intact, CP not builded, BlastDoor closed, Allies aren´t in Triggers" );
+					Util.MapDebugPrint( "^5documents_Taken, Doorcontrols intact, CP not builded, BlastDoor closed, Allies arenÂ´t in Triggers" );
 				}
 			}
 			else
@@ -691,7 +691,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 						
-						Util.MapDebugPrint( "^5documents_Returned, BlastDoor closed, ^3Allies aren´t in Triggers" );
+						Util.MapDebugPrint( "^5documents_Returned, BlastDoor closed, ^3Allies arenÂ´t in Triggers" );
 					}
 				}
 				else
@@ -704,7 +704,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 					
-					Util.MapDebugPrint( "^5documents_Returned, BlastDoor closed, ^3Allies aren´t in Triggers" );
+					Util.MapDebugPrint( "^5documents_Returned, BlastDoor closed, ^3Allies arenÂ´t in Triggers" );
 				}
 			}
 			else
@@ -924,14 +924,14 @@ global Map =
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_CP" );
 							
-							Util.MapDebugPrint( "^5Door_Close, ^3Eng isn´t in triggers" );
+							Util.MapDebugPrint( "^5Door_Close, ^3Eng isnÂ´t in triggers" );
 						}
 					}
 					else
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_CP" );
 						
-						Util.MapDebugPrint( "^5Door_Close, Allies in triggers, ^3Eng isn´t in triggers" );
+						Util.MapDebugPrint( "^5Door_Close, Allies in triggers, ^3Eng isnÂ´t in triggers" );
 					}
 					
 					while( Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 and Map.CP_build == 0 and Map.DoorControlDestroyed == 0 and Map.BlastDoorOpen == 0 and Map.Docs_taken == 0 )
@@ -950,7 +950,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 						
-						Util.MapDebugPrint( "^5Door_Close, CP not builded, ^3Allies aren´t in triggers" );
+						Util.MapDebugPrint( "^5Door_Close, CP not builded, ^3Allies arenÂ´t in triggers" );
 					}
 				}
 				else
@@ -965,7 +965,7 @@ global Map =
 				
 					SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_DoorControls_.*" );
 					
-					Util.MapDebugPrint( "^5Door_Close, CP not builded, ^3Allies aren´t in triggers" );
+					Util.MapDebugPrint( "^5Door_Close, CP not builded, ^3Allies arenÂ´t in triggers" );
 				}
 			}
 			else
