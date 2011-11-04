@@ -1,10 +1,5 @@
 global Map =
 {
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Switches =
 	{
 		TrackSwitch =

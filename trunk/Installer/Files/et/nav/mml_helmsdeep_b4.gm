@@ -14,11 +14,6 @@ global Map =
 	Dynamite2 = false,
 	Hall_Gate_Blown = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Call_Artillery_ar_al_call_1 = "CALLARTILLERY_ar_al_call_1",
 	Artillery_S_Checkpoint_1 = "ARTILLERY_S_Checkpoint_1",
 	Artillery_S_Checkpoint_2 = "ARTILLERY_S_Checkpoint_2",

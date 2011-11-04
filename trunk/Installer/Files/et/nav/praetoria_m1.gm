@@ -56,11 +56,6 @@ global Map =
 	GeneratorDyno = 0,
 	ControlsDyno = 0,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Movers =
 	{
 		"MOVER_allied_mg",

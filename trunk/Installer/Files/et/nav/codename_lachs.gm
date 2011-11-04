@@ -28,11 +28,6 @@ global Map =
 //~	DontDispenseAmmo = true,
 	DontDispenseHealth = true,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	axismove =
 	{
 		Name = "axismove",

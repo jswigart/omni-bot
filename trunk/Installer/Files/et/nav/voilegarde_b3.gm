@@ -3,7 +3,7 @@ Pathing updated and script by **PC** Mateos
 Correspondant WAY file size : 66,1�Ko (67�747 octets)
 Last Update : 31th October 2010
 ****************************************************/
-
+// cs: needs new escort goal
 global Map =
 {
 	Debug = 0,
@@ -908,6 +908,9 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goal
+	bot.AddScriptGoal("EscortVehicle");
+
 	bot.TargetBreakableDist = 90.0;
 	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.BAR };
 

@@ -687,6 +687,10 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goals
+	bot.AddScriptGoal("RideVehicle");
+	bot.AddScriptGoal("GrenadeTarget");
+
 	bot.TargetBreakableDist = 90.0;
 	bot.IgnoreTarget( GetGoal("MOVER_petrol_east").GetEntity(), 9999 );
 	bot.IgnoreTarget( GetGoal("MOVER_petrol_west").GetEntity(), 9999 );

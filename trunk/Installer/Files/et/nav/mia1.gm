@@ -134,6 +134,7 @@ global Map =
 		SetGoalPriority( "DEFEND_door.*", 0.45);
 		SetGoalPriority( "GRENADE_door.*", 0.49);
 		SetGoalPriority( "GRENADE_door.*", 0.65, TEAM.ALLIES, CLASS.FIELDOPS);
+		Util.SetGoalRange("BUILD_Neutral_Command_Post", 2700);
 
 		Util.MapDebugPrint( "Door_Lock_Destroyed" );
 	},
@@ -324,6 +325,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_generatorgate", 0.75);
 
 	Util.SetRoleForGoals("ATTACK_roof.*", ROLE.ATTACKER2);
+	Util.SetGoalRange("BUILD_Neutral_Command_Post", 0);
 
 	// Max users per goal
 	foreach (goal in { "DEFEND_.*", "ATTACK_.*", ".*MG42_.*", "GRENADE_.*",

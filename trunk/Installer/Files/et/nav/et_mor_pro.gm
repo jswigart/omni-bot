@@ -56,11 +56,6 @@ global Map =
 		},
 	},
 
-	Mountvehicle =
-	{
-		Enabled = false,
-	},
-
 	// First Stage
 	Tank_Status = 0, // Initially not repaired
 	Tank_Bridge_Status = 0, // Initially not built

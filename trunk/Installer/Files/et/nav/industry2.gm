@@ -22,11 +22,6 @@ global Map =
 {
 	Debug = false, // Alice: Slap me if I forget to set it to false before commiting
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	// Conditionals
 	Barrier_1 = false,
 	Barrier_2 = false,

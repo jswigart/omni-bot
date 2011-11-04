@@ -1,6 +1,6 @@
 /****************************************************
 Pathing updated and script by **PCZ** >M@t3o$<
-Correspondant WAY file size : 58,4 Ko (59 865 octets)
+Correspondant WAY file size : 58,4 Ko (59Â 865 octets)
 Last Update : 2 November 2009
 ****************************************************/
 
@@ -38,11 +38,6 @@ global Map =
 	Repair_MG2 = "REPAIRMG42_MG2",
 	Repair_North_market_MG_nest = "REPAIRMG42_North_market_MG_nest",
 	Mover_tank = "MOVER_tank",
-
-	MountVehicle =
-	{
-		Enabled = false,
-	},
 
 	Allied_Command_Post_Built = function( trigger )
 	{

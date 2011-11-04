@@ -11,7 +11,7 @@ global Map =
 	Build_Allied_East_beach_MG_nest = "BUILD_Allied_East_beach_MG_nest",
 	Build_Allied_West_beach_MG_nest = "BUILD_Allied_West_beach_MG_nest",
 	Build_Axis_Main_Bunker_MG_nest = "BUILD_Axis_Main_Bunker_MG_nest",
-	Build_Axis_North_West_MG_nest = "BUILD_Axis_North_West_MG_nest",
+	Build_Axis_North_West_MG_nest = "BUILD_Axis_North_W.*MG_nest",
 	Build_Axis_South_East_MG_nest = "BUILD_Axis_South_East_MG_nest",
 	Build_Command_Post = "BUILD_Command_Post",
 	Build_Generator = "BUILD_Generator",
@@ -19,7 +19,7 @@ global Map =
 	Plant_Allied_East_beach_MG_nest = "PLANT_Allied_East_beach_MG_nest",
 	Plant_Allied_West_beach_MG_nest = "PLANT_Allied_West_beach_MG_nest",
 	Plant_Axis_Main_Bunker_MG_nest = "PLANT_Axis_Main_Bunker_MG_nest",
-	Plant_Axis_North_West_MG_nest = "PLANT_Axis_North_West_MG_nest",
+	Plant_Axis_North_West_MG_nest = "PLANT_Axis_North_W.*MG_nest",
 	Plant_Axis_South_East_MG_nest = "PLANT_Axis_South_East_MG_nest",
 	Plant_Command_Post = "PLANT_Command_Post",
 	Plant_Generator = "PLANT_Generator",
@@ -27,7 +27,7 @@ global Map =
 	Mount_Allied_East_beach_MG_nest = "MOUNTMG42_Allied_East_beach_MG_nest",
 	Mount_Allied_West_beach_MG_nest = "MOUNTMG42_Allied_West_beach_MG_nest",
 	Mount_Axis_Main_Bunker_MG_nest = "MOUNTMG42_Axis_Main_Bunker_MG_nest",
-	Mount_Axis_North_West_MG_nest = "MOUNTMG42_Axis_North_West_MG_nest",
+	Mount_Axis_North_West_MG_nest = "MOUNTMG42_Axis_North_W.*MG_nest",
 	Mount_Axis_South_East_MG_nest = "MOUNTMG42_Axis_South_East_MG_nest",
 	Mount_eastbunker_mg42_1 = "MOUNTMG42_eastbunker_mg42_1",
 	Mount_eastbunker_mg42_2 = "MOUNTMG42_eastbunker_mg42_2",
@@ -36,7 +36,7 @@ global Map =
 	Repair_Allied_East_beach_MG_nest = "REPAIRMG42_Allied_East_beach_MG_nest",
 	Repair_Allied_West_beach_MG_nest = "REPAIRMG42_Allied_West_beach_MG_nest",
 	Repair_Axis_Main_Bunker_MG_nest = "REPAIRMG42_Axis_Main_Bunker_MG_nest",
-	Repair_Axis_North_West_MG_nest = "REPAIRMG42_Axis_North_West_MG_nest",
+	Repair_Axis_North_West_MG_nest = "REPAIRMG42_Axis_North_W.*MG_nest",
 	Repair_Axis_South_East_MG_nest = "REPAIRMG42_Axis_South_East_MG_nest",
 	Repair_eastbunker_mg42_1 = "REPAIRMG42_eastbunker_mg42_1",
 	Repair_eastbunker_mg42_2 = "REPAIRMG42_eastbunker_mg42_2",
@@ -146,9 +146,9 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cFlag.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Beach_Assault_Ramp" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_westbunker_flag" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_North_West_MG_nest" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_North_West_MG_nest" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_North_West_MG_nest" );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Axis_North_West_MG_nest );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Axis_North_West_MG_nest );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_North_West_MG_nest );
 					SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_ramp" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bUpperBunker1" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_westbunkermg" );
@@ -192,9 +192,9 @@ global Map =
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cFlag.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Beach_Assault_Ramp" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_westbunker_flag" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_North_West_MG_nest" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_North_West_MG_nest" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_North_West_MG_nest" );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Axis_North_West_MG_nest );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Axis_North_West_MG_nest );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Axis_North_West_MG_nest );
 					SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_ramp" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bUpperBunker1" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_westbunkermg" );
@@ -1028,7 +1028,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOUNT.*" );
 	Util.SetMaxUsers( 1, "SMOKEBOMB_.*" );
 	Util.SetMaxUsers( 1, "REPAIRMG42_.*" );
-	Util.SetMaxUsers( 1, "BUILD_Axis_North_West_MG_nest" );
+	Util.SetMaxUsers( 1, Map.Build_Axis_North_West_MG_nest );
 	Util.SetMaxUsers( 1, "BUILD_Axis_South_East_MG_nest" );
 	Util.SetMaxUsers( 1, "BUILD_Generator" );
 
@@ -1082,11 +1082,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_westbunker_flag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker_mg42_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker_mg42_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_North_West_MG_nest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_Axis_North_West_MG_nest );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_westbunker_mg42_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_westbunker_mg42_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_North_West_MG_nest" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_North_West_MG_nest" ); // overlooks ramp
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_Axis_North_West_MG_nest );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_North_West_MG_nest ); // overlooks ramp
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Main_Bunker_MG_nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_South_East_MG_nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Generator" );
@@ -1148,82 +1148,68 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		DEFEND_Gun_3 =
-		{
-			ROUTE_AxisSpawn =
-			{
-				ROUTE_hatchroute =
-				{
-					ROUTE_hatchroute2 =
-					{
-						ROUTE_eastdoor = {},
-						ROUTE_westdoor = {},
-						ROUTE_weststairs =
-						{
-							ROUTE_westladder = {},
-							ROUTE_eastladder = {},
-						},
-					},
-				},
-				ROUTE_southstairs =
-				{
-					Weight = 2,
-					ROUTE_southstairs2 = { Weight = 2, },
-					ROUTE_guntop = {},
-				},
-			},
-		},
 		MOUNTMG42_Axis_Main_Bunker_MG_nest =
 		{
 			ROUTE_AxisSpawn =
 			{
-				ROUTE_gunpatrol = { ROUTE_gunpatrol2 = {}, },
-				ROUTE_gunpatrol2 = { ROUTE_gunpatrol = {}, },
+				ROUTE_westladder = { ROUTE_gunpatrol2 = {}, },
+				ROUTE_eastladder = { ROUTE_gunpatrol = {}, },
 			},
 		},
-		DEFEND_Flag_5 =
+	};
+	MapRoutes["DEFEND_Gun_.*"] =
+	{
+		ROUTE_AxisSpawn =
 		{
-			ROUTE_AxisSpawn =
+			ROUTE_hatchroute =
 			{
-				ROUTE_flagroute = { Weight = 3 },
-				ROUTE_gunpatrol = {},
-				ROUTE_southstairs =
+				ROUTE_hatchroute2 =
 				{
-					ROUTE_guntop = { ROUTE_guntop = {}, },
+					ROUTE_eastdoor = {},
+					ROUTE_westdoor = {},
+					ROUTE_weststairs =
+					{
+						ROUTE_westladder = {},
+						ROUTE_eastladder = {},
+					},
 				},
+			},
+			ROUTE_southstairs =
+			{
+				Weight = 2,
+				ROUTE_southstairs2 = { Weight = 2, },
+				ROUTE_guntop = {},
+			},
+		},
+	};
+	MapRoutes["DEFEND_Flag_.*"] =
+	{
+		ROUTE_AxisSpawn =
+		{
+			ROUTE_flagroute = { Weight = 3 },
+			ROUTE_gunpatrol = {},
+			ROUTE_southstairs =
+			{
+				ROUTE_guntop = { ROUTE_guntop = {}, },
 			},
 		},
 	};
 
 	//copy some routes
-	MapRoutes.ATTACK_Gun_1 = MapRoutes.PLANT_Gun_Controls;
-	MapRoutes.ATTACK_Gun_2 = MapRoutes.PLANT_Gun_Controls;
-	MapRoutes.ATTACK_Gun_3 = MapRoutes.PLANT_Gun_Controls;
-	MapRoutes.ATTACK_Gun_4 = MapRoutes.PLANT_Gun_Controls;
-	MapRoutes.ATTACK_Gun_5 = MapRoutes.PLANT_Gun_Controls;
-	MapRoutes.DEFEND_Gun_4 = MapRoutes.DEFEND_Gun_3;
-	MapRoutes.DEFEND_Gun_5 = MapRoutes.DEFEND_Gun_3;
-	MapRoutes.DEFEND_Gun_6 = MapRoutes.DEFEND_Gun_3;
-	MapRoutes.DEFEND_Gun_7 = MapRoutes.DEFEND_Gun_3;
-	MapRoutes.DEFEND_Gun_1 = MapRoutes.DEFEND_Gun_3;
-	MapRoutes.DEFEND_Gun_2 = MapRoutes.DEFEND_Gun_3;
+	MapRoutes["ATTACK_Gun_.*"] = MapRoutes.PLANT_Gun_Controls;
 	MapRoutes.MOUNTMG42_westbunker_mg42_1 = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.MOUNTMG42_westbunker_mg42_2 = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
-	MapRoutes.MOUNTMG42_Axis_North_West_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
+	MapRoutes[Map.Mount_Axis_North_West_MG_nest] = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.MOUNTMG42_Axis_South_East_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.REPAIRMG42_westbunker_mg42_2 = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.REPAIRMG42_Axis_Main_Bunker_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.REPAIRMG42_Axis_South_East_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.REPAIRMG42_westbunker_mg42_1 = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
-	MapRoutes.REPAIRMG42_Axis_North_West_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
+	MapRoutes[Map.Repair_Axis_North_West_MG_nest] = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.BUILD_Generator = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.BUILD_Axis_Main_Bunker_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 	MapRoutes.BUILD_Axis_South_East_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
-	MapRoutes.BUILD_Axis_North_West_MG_nest = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
-	MapRoutes.DEFEND_Flag_6 = MapRoutes.DEFEND_Flag_5;
-	MapRoutes.DEFEND_Flag_7 = MapRoutes.DEFEND_Flag_5;
-	MapRoutes.DEFEND_Flag_8 = MapRoutes.DEFEND_Flag_5;
-	MapRoutes.DEFEND_Flag_9 = MapRoutes.DEFEND_Flag_5;
+	MapRoutes[Map.Build_Axis_North_West_MG_nest] = MapRoutes.MOUNTMG42_Axis_Main_Bunker_MG_nest;
 
 	if ( Map.EastBunkerMgs )
 	{

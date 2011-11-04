@@ -1,5 +1,5 @@
 // cs: this map needs routing. camptimes?
-
+// cs: needs new escort goal
 
 global Map =
 {
@@ -670,5 +670,8 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goal
+	bot.AddScriptGoal("EscortVehicle");
+
 	bot.TargetBreakableDist = 100.0;
 };

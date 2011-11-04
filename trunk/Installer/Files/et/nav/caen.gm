@@ -27,11 +27,6 @@ global Map =
 	Flag_maps = "FLAG_maps",
 	Cappoint_708 = "CAPPOINT_708",
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	//set status' for conditionals
 	TankStatus = 0, //not built
 	BridgeStatus = 1, //intact

@@ -12,8 +12,8 @@
 //	native12		4 March 2011		Minor fix
 //	native12		6 March 2011		Release
 //------------------------------------------------------------------------------------------
-//	el_kef_final.way	6 March 2011		Size: 430 080 b
-//	el_kef_final_goals.gm	6 March 2011		Size: 94 208 b
+//	el_kef_final.way	6 March 2011		Size: 430Â 080 b
+//	el_kef_final_goals.gm	6 March 2011		Size: 94Â 208 b
 //==========================================================================================
 //ToDo:	Maybe cleaning duplicate commands in single triggers (not necessary)
 //
@@ -242,7 +242,7 @@ global Map =
 					}
 				}
 				
-				Util.MapDebugPrint( "^5flag_Allies_Captured, axis aren´t in village, village gate planted" );
+				Util.MapDebugPrint( "^5flag_Allies_Captured, axis arenÂ´t in village, village gate planted" );
 			}
 			else
 			{
@@ -257,7 +257,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag" );
 					
-					Util.MapDebugPrint( "^5flag_Allies_Captured, axis aren´t in village, village gate not planted, allied CP not built" );
+					Util.MapDebugPrint( "^5flag_Allies_Captured, axis arenÂ´t in village, village gate not planted, allied CP not built" );
 				}
 				else
 				{
@@ -270,7 +270,7 @@ global Map =
 					
 					Util.ChangeSpawn( TEAM.ALLIES, 5 );	//CP
 					
-					Util.MapDebugPrint( "^5flag_Allies_Captured, axis aren´t in village, village gate not planted, allied CP built" );
+					Util.MapDebugPrint( "^5flag_Allies_Captured, axis arenÂ´t in village, village gate not planted, allied CP built" );
 				}
 			}
 		}
@@ -1904,7 +1904,7 @@ global Map =
 				}
 			}
 			
-			Util.MapDebugPrint( "^5village_Gate_Planted, flag allies captured, axis aren´t in Town" );
+			Util.MapDebugPrint( "^5village_Gate_Planted, flag allies captured, axis arenÂ´t in Town" );
 		}
 		else
 		{
@@ -2163,14 +2163,14 @@ global Map =
 				{
 					SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barricade" );
 					
-					Util.MapDebugPrint( "^5Barricade_Built, village gate intact, allied eng or covertops aren´t in village" );
+					Util.MapDebugPrint( "^5Barricade_Built, village gate intact, allied eng or covertops arenÂ´t in village" );
 				}
 			}
 			else
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barricade" );
 				
-				Util.MapDebugPrint( "^5Barricade_Built, village gate intact, allied eng or covertops aren´t in village" );
+				Util.MapDebugPrint( "^5Barricade_Built, village gate intact, allied eng or covertops arenÂ´t in village" );
 			}
 		}
 		else
@@ -2255,7 +2255,7 @@ global Map =
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barricade" );
 				
-				Util.MapDebugPrint( "^5Barricade_destroyed, village gate intact, allies aren´t in village" );
+				Util.MapDebugPrint( "^5Barricade_destroyed, village gate intact, allies arenÂ´t in village" );
 			}
 		}
 		else
@@ -2327,7 +2327,7 @@ global Map =
 				
 				SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_AtGold_.*" );
 				
-				Util.MapDebugPrint( "^5door_Built, village gate intact, allies aren´t in room with gold" );
+				Util.MapDebugPrint( "^5door_Built, village gate intact, allies arenÂ´t in room with gold" );
 			}
 			
 			if ( Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 or Map.AlliesInTrigger4 > 0 or Map.AlliesInTrigger5 > 0 )
@@ -2387,7 +2387,7 @@ global Map =
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_door" );
 							
-							Util.MapDebugPrint( "^5door_Built, village gate intact, allied eng or covertops aren´t in village, gold not taken" );
+							Util.MapDebugPrint( "^5door_Built, village gate intact, allied eng or covertops arenÂ´t in village, gold not taken" );
 						}
 					}
 				}
@@ -2395,7 +2395,7 @@ global Map =
 				{
 					SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_door" );
 					
-					Util.MapDebugPrint( "^5door_Built, village gate intact, allied eng or covertops aren´t in village" );
+					Util.MapDebugPrint( "^5door_Built, village gate intact, allied eng or covertops arenÂ´t in village" );
 				}
 				
 				while ( Map.AlliesNearGold > 0 )
@@ -2421,7 +2421,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearGold_.*" );
 					
-					Util.MapDebugPrint( "^5door_Built, village gate intact, allies aren´t in village" );
+					Util.MapDebugPrint( "^5door_Built, village gate intact, allies arenÂ´t in village" );
 				}
 			}
 			else
@@ -2430,7 +2430,7 @@ global Map =
 				
 				SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearGold_.*" );
 				
-				Util.MapDebugPrint( "^5door_Built, village gate intact, allies aren´t in village" );
+				Util.MapDebugPrint( "^5door_Built, village gate intact, allies arenÂ´t in village" );
 			}
 		}
 		else
@@ -2457,7 +2457,7 @@ global Map =
 				
 				SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_AtGold_.*" );
 				
-				Util.MapDebugPrint( "^5door_Built, allies aren´t in room with gold" );
+				Util.MapDebugPrint( "^5door_Built, allies arenÂ´t in room with gold" );
 			}
 			
 			if ( Map.GoldTaken == 1 )
@@ -2645,7 +2645,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_AtGold_.*" );
 						
-						Util.MapDebugPrint( "^5door_Destroyed, village gate intact, gold not taken, allies aren´t in village" );
+						Util.MapDebugPrint( "^5door_Destroyed, village gate intact, gold not taken, allies arenÂ´t in village" );
 					}
 				}
 				else
@@ -2655,7 +2655,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_AtGold_.*" );
 					
-					Util.MapDebugPrint( "^5door_Destroyed, village gate intact, gold not taken, allies aren´t in village" );
+					Util.MapDebugPrint( "^5door_Destroyed, village gate intact, gold not taken, allies arenÂ´t in village" );
 				}
 			}
 			else
@@ -2801,7 +2801,7 @@ global Map =
 						}
 					}
 					
-					Util.MapDebugPrint( "^5allies aren´t in room with gold" );
+					Util.MapDebugPrint( "^5allies arenÂ´t in room with gold" );
 				}
 			}
 		},
@@ -2826,7 +2826,7 @@ global Map =
 			}
 			if ( Map.AxisInTrigger == 0 )
 			{
-				Util.MapDebugPrint( "^5axis aren´t in Town" );
+				Util.MapDebugPrint( "^5axis arenÂ´t in Town" );
 			}
 		},
 	},
@@ -2937,7 +2937,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, false, "FLAGRETURN_gold_dropped" );
 					
-					Util.MapDebugPrint( "^5gold_Dropped, village gate intact, allies aren´t in village" );
+					Util.MapDebugPrint( "^5gold_Dropped, village gate intact, allies arenÂ´t in village" );
 				}
 			}
 			else
@@ -2946,7 +2946,7 @@ global Map =
 				
 				SetAvailableMapGoals( TEAM.AXIS, false, "FLAGRETURN_gold_dropped" );
 				
-				Util.MapDebugPrint( "^5gold_Dropped, village gate intact, allies aren´t in village" );
+				Util.MapDebugPrint( "^5gold_Dropped, village gate intact, allies arenÂ´t in village" );
 			}
 		}
 		else
@@ -3033,14 +3033,14 @@ global Map =
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_door" );
 							
-							Util.MapDebugPrint( "^5gold returned, village gate intact, door built, allied eng or covertops aren´t in village" );
+							Util.MapDebugPrint( "^5gold returned, village gate intact, door built, allied eng or covertops arenÂ´t in village" );
 						}
 					}
 					else
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_door" );
 						
-						Util.MapDebugPrint( "^5gold returned, village gate intact, door built, allied eng or covertops aren´t in village" );
+						Util.MapDebugPrint( "^5gold returned, village gate intact, door built, allied eng or covertops arenÂ´t in village" );
 					}
 					
 					while ( Map.village_gate == 1 and Map.DoorBuilt == 1 and Map.AlliedCP == 0 and Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 or Map.AlliesInTrigger4 > 0 or Map.AlliesInTrigger5 > 0 )
@@ -3052,7 +3052,7 @@ global Map =
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_NearGold_.*" );
 						
-						Util.MapDebugPrint( "^5gold returned, village gate intact, allies aren´t in village" );
+						Util.MapDebugPrint( "^5gold returned, village gate intact, allies arenÂ´t in village" );
 					}
 				}
 				else
@@ -3080,7 +3080,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_Axis_NearGold_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_door" );
 						
-						Util.MapDebugPrint( "^5gold returned, village gate intact, allies aren´t in village, door not built" );
+						Util.MapDebugPrint( "^5gold returned, village gate intact, allies arenÂ´t in village, door not built" );
 					}
 				}
 			}
@@ -3093,7 +3093,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_Axis_NearGold_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_door" );
 				
-				Util.MapDebugPrint( "^5gold returned, village gate intact, allies aren´t in village" );
+				Util.MapDebugPrint( "^5gold returned, village gate intact, allies arenÂ´t in village" );
 			}
 		}
 		else
@@ -3411,7 +3411,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 						
-						Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allied eng or covertops aren´t in village" );
+						Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allied eng or covertops arenÂ´t in village" );
 					}
 				}
 				else
@@ -3419,12 +3419,12 @@ global Map =
 					SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 					
-					Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allied eng or covertops aren´t in village" );
+					Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allied eng or covertops arenÂ´t in village" );
 				}
 			}
 			else
 			{
-				Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allies aren´t in village" );
+				Util.MapDebugPrint( "^5Axis_Command_Post_Built, village gate intact, allies arenÂ´t in village" );
 			}
 		}
 		else
@@ -3504,7 +3504,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_2" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_4" );
 						
-						Util.MapDebugPrint( "^5Allied command post planted, village gate intact, allied eng isn´t in village" );
+						Util.MapDebugPrint( "^5Allied command post planted, village gate intact, allied eng isnÂ´t in village" );
 					}
 				}
 				else
@@ -3513,7 +3513,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_2" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_4" );
 					
-					Util.MapDebugPrint( "^5Allied command post planted, village gate intact, allied eng isn´t in village" );
+					Util.MapDebugPrint( "^5Allied command post planted, village gate intact, allied eng isnÂ´t in village" );
 				}
 			}
 			else
@@ -3608,7 +3608,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 						
-						Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allied engs aren´t in village" );
+						Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allied engs arenÂ´t in village" );
 					}
 				}
 				else
@@ -3616,7 +3616,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 					
-					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allied engs aren´t in village" );
+					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allied engs arenÂ´t in village" );
 				}
 				
 				while ( Map.village_gate == 1 and Map.GoldTaken == 0 and Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 or Map.AlliesInTrigger4 > 0 or Map.AlliesInTrigger5 > 0 )
@@ -3628,7 +3628,7 @@ global Map =
 				{
 					SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_gold" );
 					
-					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, gold not taken, allies aren´t in village" );
+					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, gold not taken, allies arenÂ´t in village" );
 				}
 				
 				while ( Map.village_gate == 1 and Map.AlliesInTrigger1 > 0 or Map.AlliesInTrigger2 > 0 or Map.AlliesInTrigger3 > 0 or Map.AlliesInTrigger4 > 0 or Map.AlliesInTrigger5 > 0 )
@@ -3645,7 +3645,7 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag" );
 					
-					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allies aren´t in village, flag allies captured" );
+					Util.MapDebugPrint( "^5Allied_Command_Post_Destroyed, village gate intact, allies arenÂ´t in village, flag allies captured" );
 				}
 			}
 		}
@@ -3771,7 +3771,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 						
-						Util.MapDebugPrint( "^5Axis_Command_Post_Destroyed, village gate intact, allied engs aren´t in village" );
+						Util.MapDebugPrint( "^5Axis_Command_Post_Destroyed, village gate intact, allied engs arenÂ´t in village" );
 					}
 				}
 				else
@@ -3779,7 +3779,7 @@ global Map =
 					SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allied_CP_.*" );
 					
-					Util.MapDebugPrint( "^5Axis_Command_Post_Destroyed, village gate intact, allied eng isn´t in village" );
+					Util.MapDebugPrint( "^5Axis_Command_Post_Destroyed, village gate intact, allied eng isnÂ´t in village" );
 				}
 			}
 		}

@@ -11,8 +11,8 @@
 //	Native12		27 May 2011	Add routes, change of priorities....,release
 //
 //------------------------------------------------------------------------------------------
-//	apennines_b2.way	27 May 2011	Size: 593 920 b
-//	apennines_b2_goals.gm	27 May 2011	Size: 86 016 b
+//	apennines_b2.way	27 May 2011	Size: 593Â 920 b
+//	apennines_b2_goals.gm	27 May 2011	Size: 86Â 016 b
 //==========================================================================================
 //ToDo:	
 
@@ -1376,13 +1376,13 @@ global Map =
 			//Util.MapDebugPrint( "^5Bridge_Destroyed, garage door intact" );
 		}
 		
-		if ( Map.AlliesPastRiver == 0 )	//Allies don´t cross river
+		if ( Map.AlliesPastRiver == 0 )	//Allies donÂ´t cross river
 		{
 			if ( Map.AlliedFlag == 0 )	//Bunker is Axis
 			{
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearBridge_.*" );
 				
-				//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Bunker is Axis" );
+				//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Bunker is Axis" );
 			}
 			
 			if ( Map.AlliesInCanyon == 0 )
@@ -1422,7 +1422,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 					}
 					
-					//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Allies are not in Canyon, Footbridge destroyed" );
+					//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Allies are not in Canyon, Footbridge destroyed" );
 				}
 				else	//Footbridge built
 				{
@@ -1448,7 +1448,7 @@ global Map =
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 						}
 						
-						//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Allies are not in Canyon, Footbridge built, Generator built" );
+						//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Allies are not in Canyon, Footbridge built, Generator built" );
 					}
 					else	//Generator destroyed
 					{
@@ -1473,7 +1473,7 @@ global Map =
 							SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Cellar_Entrance" );
 							SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allied_NearCellarEntrance_.*" );
 							
-							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Allies are not in Canyon, Footbridge built, Generator destroyed, Cellarentrance intact" );
+							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Allies are not in Canyon, Footbridge built, Generator destroyed, Cellarentrance intact" );
 						}
 					}
 				}
@@ -1500,7 +1500,7 @@ global Map =
 						}
 					}
 					
-					//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon" );
+					//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon" );
 				}
 				else	//built
 				{
@@ -1523,7 +1523,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 							}
 							
-							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies don´t cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon" );
+							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies donÂ´t cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon" );
 						}
 					}
 				}
@@ -1544,7 +1544,7 @@ global Map =
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 						}
 						
-						//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge destroyed, Allied engs don´t cross river" );
+						//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge destroyed, Allied engs donÂ´t cross river" );
 						
 						if ( Map.AlliedCovertPastRiver == 0 )
 						{
@@ -1557,7 +1557,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 							}
 							
-							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge destroyed, Allied engs don´t cross river, Allied covertops don´t cross river" );
+							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge destroyed, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 						}
 					}
 				}
@@ -1574,7 +1574,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							}
 							
-							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge built, Generator built, Allied engs don´t cross river" );
+							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge built, Generator built, Allied engs donÂ´t cross river" );
 							
 							if ( Map.AlliedCovertPastRiver == 0 )
 							{
@@ -1587,7 +1587,7 @@ global Map =
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 								}
 								
-								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge built, Generator built, Allied engs don´t cross river, Allied covertops don´t cross river" );
+								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are not in Canyon, Footbridge built, Generator built, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 							}
 						}
 					}
@@ -1608,7 +1608,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							}
 							
-							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon, Allied engs don´t cross river" );
+							//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon, Allied engs donÂ´t cross river" );
 							
 							if ( Map.AlliedCovertPastRiver == 0 )
 							{
@@ -1621,7 +1621,7 @@ global Map =
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 								}
 								
-								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon, Allied engs don´t cross river, Allied covertops don´t cross river" );
+								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge destroyed, Allied engs are not in Canyon, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 							}
 						}
 					}
@@ -1641,7 +1641,7 @@ global Map =
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 								}
 								
-								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon, Allied engs don´t cross river" );
+								//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon, Allied engs donÂ´t cross river" );
 								
 								if ( Map.AlliedCovertPastRiver == 0 )
 								{
@@ -1654,7 +1654,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 									}
 									
-									//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon, Allied engs don´t cross river, Allied covertops don´t cross river" );
+									//Util.MapDebugPrint( "^5Bridge_Destroyed, Allies cross river, Allies are in Canyon, Footbridge built, Generator built, Allied engs are not in Canyon, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 								}
 							}
 						}
@@ -1967,7 +1967,7 @@ global Map =
 				
 				//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon" );
 				
-				if ( Map.AlliesPastRiver == 0 )	//Allies don´t cross river
+				if ( Map.AlliesPastRiver == 0 )	//Allies donÂ´t cross river
 				{
 					SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 					SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Communications_Radio" );
@@ -1978,7 +1978,7 @@ global Map =
 					{
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearBridge_.*" );
 						
-						//Util.MapDebugPrint( "^5Generator built, Bridge destroyed, Allies are not in canyon, Allies don´t cross river, Bunker is Axis" );
+						//Util.MapDebugPrint( "^5Generator built, Bridge destroyed, Allies are not in canyon, Allies donÂ´t cross river, Bunker is Axis" );
 					}
 					
 					if ( Map.CellarEntrance )	//intact
@@ -2001,11 +2001,11 @@ global Map =
 					
 					SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 					
-					//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies don´t cross river" );
+					//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies donÂ´t cross river" );
 				}
 				else	//Allies cross river
 				{
-					if ( Map.AlliedEngPastRiver == 0 )	//Allied engs don´t cross river
+					if ( Map.AlliedEngPastRiver == 0 )	//Allied engs donÂ´t cross river
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Communications_Radio" );
 						
@@ -2021,9 +2021,9 @@ global Map =
 							SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_NearFootBridge_2" );
 						}
 						
-						//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies cross river, Allied engs don´t cross river" );
+						//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies cross river, Allied engs donÂ´t cross river" );
 						
-						if ( Map.AlliedCovertPastRiver == 0 )	//Allied covertops don´t cross river
+						if ( Map.AlliedCovertPastRiver == 0 )	//Allied covertops donÂ´t cross river
 						{
 							if ( Map.ComplexMG42 )	//built
 							{
@@ -2034,7 +2034,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 							}
 							
-							//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies cross river, Allied engs don´t cross river, Allied covertops don´t cross river" );
+							//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are not in Canyon, Allies cross river, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 						}
 					}
 				}
@@ -2053,7 +2053,7 @@ global Map =
 						//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Footbridge destroyed" );
 					}
 					
-					if ( Map.AlliesPastRiver == 0 )	//Allies don´t cross river
+					if ( Map.AlliesPastRiver == 0 )	//Allies donÂ´t cross river
 					{
 						SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Communications_Radio" );
@@ -2062,7 +2062,7 @@ global Map =
 						{
 							SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearBridge_.*" );
 							
-							//Util.MapDebugPrint( "^5Generator built, Bridge destroyed, Allies are in canyon, Allies don´t cross river, Bunker is Axis" );
+							//Util.MapDebugPrint( "^5Generator built, Bridge destroyed, Allies are in canyon, Allies donÂ´t cross river, Bunker is Axis" );
 						}
 						
 						if ( Map.ComplexMG42 )	//built
@@ -2084,11 +2084,11 @@ global Map =
 							SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_NearFootBridge_2" );
 						}
 						
-						//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies don´t cross river" );
+						//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies donÂ´t cross river" );
 					}
 					else	//Allies cross river
 					{
-						if ( Map.AlliedEngPastRiver == 0 )	//Allied engs don´t cross river
+						if ( Map.AlliedEngPastRiver == 0 )	//Allied engs donÂ´t cross river
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Communications_Radio" );
 							
@@ -2112,9 +2112,9 @@ global Map =
 								SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_NearFootBridge_2" );
 							}
 							
-							//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies cross river, Allied engs don´t cross river" );
+							//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies cross river, Allied engs donÂ´t cross river" );
 							
-							if ( Map.AlliedCovertPastRiver == 0 )	//Allied covertops don´t cross river
+							if ( Map.AlliedCovertPastRiver == 0 )	//Allied covertops donÂ´t cross river
 							{
 								if ( Map.ComplexMG42 )	//built
 								{
@@ -2125,7 +2125,7 @@ global Map =
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 								}
 								
-								//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies cross river, Allied engs don´t cross river, Allied covertops don´t cross river" );
+								//Util.MapDebugPrint( "^5Generator_Built, Bridge destroyed, Allies are in Canyon, Allied engs are not in Canyon, Allies cross river, Allied engs donÂ´t cross river, Allied covertops donÂ´t cross river" );
 							}
 						}
 					}
@@ -2802,7 +2802,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 						
-						//Util.MapDebugPrint( "^5DFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance intact" );
+						//Util.MapDebugPrint( "^5DFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance intact" );
 					}
 				}
 				else	//cellarentrance destroyed
@@ -2843,7 +2843,7 @@ global Map =
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 						}
 						
-						//Util.MapDebugPrint( "^5DFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance destroyed" );
+						//Util.MapDebugPrint( "^5DFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance destroyed" );
 						
 						if ( Map.AlliesInCanyon == 0 )	//Allies are not in canyon
 						{
@@ -2853,7 +2853,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 							
-							//Util.MapDebugPrint( "^5DFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allies are not in canyon, Generator built, Cellarentrance destroyed" );
+							//Util.MapDebugPrint( "^5DFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allies are not in canyon, Generator built, Cellarentrance destroyed" );
 						}
 					}
 				}
@@ -2925,7 +2925,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 							
-							//Util.MapDebugPrint( "^5EFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance intact" );
+							//Util.MapDebugPrint( "^5EFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance intact" );
 						}
 					}
 					else	//cellarentrance destroyed
@@ -2966,7 +2966,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 							}
 							
-							//Util.MapDebugPrint( "^5EFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance destroyed" );
+							//Util.MapDebugPrint( "^5EFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allied engs are not in canyon, Generator built, Cellarentrance destroyed" );
 							
 							if ( Map.AlliesInCanyon == 0 )	//Allies are not in canyon
 							{
@@ -2976,7 +2976,7 @@ global Map =
 								
 								SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 								
-								//Util.MapDebugPrint( "^5EFootbridge_Built, Allies don´t cross river, Bridge destroyed, Allies are not in canyon, Generator built, Cellarentrance destroyed" );
+								//Util.MapDebugPrint( "^5EFootbridge_Built, Allies donÂ´t cross river, Bridge destroyed, Allies are not in canyon, Generator built, Cellarentrance destroyed" );
 							}
 						}
 					}
@@ -3031,13 +3031,13 @@ global Map =
 				
 				//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed" );
 				
-				if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies don´t cross river, Bridge destroyed
+				if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies donÂ´t cross river, Bridge destroyed
 				{
 					if ( Map.AlliedFlag == 0 )	//Bunker is Axis
 					{
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearBridge_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies don´t cross river, Bridge destroyed, Bunker is Axis" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies donÂ´t cross river, Bridge destroyed, Bunker is Axis" );
 					}
 					
 					if ( Map.CellarEntrance )	//intact
@@ -3045,7 +3045,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Cellar entrance intact" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 					}
 					else	//Cellarentrance destroyed
 					{
@@ -3062,7 +3062,7 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 					}
 					if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 					{
@@ -3070,19 +3070,19 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_InfrontofWall_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Setting Axis defend to wall" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Setting Axis defend to wall" );
 					}
 				}
 				else	//Allies cross river or Bridge built
 				{
-					if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs don´t cross river, Bridge destroyed
+					if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs donÂ´t cross river, Bridge destroyed
 					{
 						if ( Map.CellarEntrance )	//intact
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance intact" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 						}
 						else	//Cellarentrance destroyed
 						{
@@ -3099,7 +3099,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 						}
 						if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 						{
@@ -3107,7 +3107,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_InfrontofWall_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Setting Axis defend to wall" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Setting Axis defend to wall" );
 						}
 					}
 				}
@@ -3119,13 +3119,13 @@ global Map =
 				
 				//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built" );
 				
-				if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies don´t cross river, Bridge destroyed
+				if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies donÂ´t cross river, Bridge destroyed
 				{
 					if ( Map.AlliedFlag == 0 )	//Bunker is Axis
 					{
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearBridge_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies don´t cross river, Bridge destroyed, Bunker is Axis" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies donÂ´t cross river, Bridge destroyed, Bunker is Axis" );
 					}
 					
 					if ( Map.CellarEntrance )	//intact
@@ -3133,7 +3133,7 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 						SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cellar entrance intact" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 					}
 					else	//cellarentrance destroyed
 					{
@@ -3150,26 +3150,26 @@ global Map =
 						
 						SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 					}
 					if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 					{
 						SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 						SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_InfrontofWall_.*" );
 						
-						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
+						//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
 					}
 				}
 				else	//Allies cross river or Bridge built
 				{
-					if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs don´t cross river, Bridge destroyed
+					if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs donÂ´t cross river, Bridge destroyed
 					{
 						if ( Map.CellarEntrance )	//intact
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance intact" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 						}
 						else	//Cellarentrance destroyed
 						{
@@ -3186,7 +3186,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 						}
 						if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 						{
@@ -3194,7 +3194,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_InfrontofWall_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Setting Axis defend to wall" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Setting Axis defend to wall" );
 						}
 					}
 				}
@@ -3211,14 +3211,14 @@ global Map =
 					
 					//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed" );
 					
-					if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies don´t cross river, Bridge destroyed
+					if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies donÂ´t cross river, Bridge destroyed
 					{
 						if ( Map.CellarEntrance )	//intact
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Cellar entrance intact" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 						}
 						else	//Cellarentrance destroyed
 						{
@@ -3235,7 +3235,7 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 						}
 						if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 						{
@@ -3243,19 +3243,19 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_InfrontofWall_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies don´t cross river, Bridge destroyed, Setting Axis defend to wall" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies donÂ´t cross river, Bridge destroyed, Setting Axis defend to wall" );
 						}
 					}
 					else	//Allies cross river or Bridge built
 					{
-						if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs don´t cross river, Bridge destroyed
+						if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs donÂ´t cross river, Bridge destroyed
 						{
 							if ( Map.CellarEntrance )	//intact
 							{
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 								SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance intact" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 							}
 							else	//Cellarentrance destroyed
 							{
@@ -3272,7 +3272,7 @@ global Map =
 								
 								SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 							}
 							if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 							{
@@ -3280,7 +3280,7 @@ global Map =
 								
 								SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_InfrontofWall_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Setting Axis defend to wall" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator destroyed, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Setting Axis defend to wall" );
 							}
 						}
 					}
@@ -3292,14 +3292,14 @@ global Map =
 					
 					//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Generator built" );
 					
-					if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies don´t cross river, Bridge destroyed
+					if ( Map.AlliesPastRiver == 0 and Map.BridgeBuild == 0 )	//Allies donÂ´t cross river, Bridge destroyed
 					{
 						if ( Map.CellarEntrance )	//intact
 						{
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cellar entrance intact" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 						}
 						else	//cellarentrance destroyed
 						{
@@ -3316,26 +3316,26 @@ global Map =
 							
 							SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 						}
 						if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 						{
 							SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 							SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_InfrontofWall_.*" );
 							
-							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies don´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
+							//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies donÂ´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
 						}
 					}
 					else	//Allies cross river or Bridge built
 					{
-						if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs don´t cross river, Bridge destroyed
+						if ( Map.AlliedEngPastRiver == 0 and Map.BridgeBuild == 0 )	//Allied engs donÂ´t cross river, Bridge destroyed
 						{
 							if ( Map.CellarEntrance )	//intact
 							{
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_Entrance" );
 								SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_NearCellarEntrance_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance intact" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance intact" );
 							}
 							else	//cellarentrance destroyed
 							{
@@ -3352,14 +3352,14 @@ global Map =
 								
 								SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_Radio_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cellar entrance destroyed" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cellar entrance destroyed" );
 							}
 							if ( Map.AxisChangeSpawn == 0 and Map.AlliedFlag == 0 )	//Bunker is Axis
 							{
 								SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_NearFootBridge_.*" );
 								SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_InfrontofWall_.*" );
 								
-								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs don´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
+								//Util.MapDebugPrint( "^5Footbridge_Destroyed, Allies are in canyon, Allied engs are not in canyon, Generator built, Allies cross river, Allied engs donÂ´t cross river, Bridge destroyed, Cancell Axis defend in Canyon" );
 							}
 						}
 					}
@@ -4114,7 +4114,7 @@ global Map =
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Complex_Roof_MG42" );
 							SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 							
-							//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance intact" );
+							//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact" );
 							
 							if ( Map.AlliedEngInCanyon == 0 )	//Allied engs are not in canyon
 							{
@@ -4130,7 +4130,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allied_NearFootBridge_.*" );
 										SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Footbridge" );
 										
-										//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance intact, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed" );
+										//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed" );
 									}
 								}
 								else	//Generator built
@@ -4140,7 +4140,7 @@ global Map =
 									
 									SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearFootBridge_.*" );
 									
-									//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance intact, Allied engs are not in canyon, Generator built" );
+									//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact, Allied engs are not in canyon, Generator built" );
 								}
 							}
 						}
@@ -4161,7 +4161,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allied_NearFootBridge_.*" );
 										SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Footbridge" );
 										
-										//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed" );
+										//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed" );
 										
 										if ( Map.AlliesInCanyon == 0 )	//Allies are not in canyon
 										{
@@ -4169,7 +4169,7 @@ global Map =
 											SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_south_ammocabinet_1" );
 											SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_south_healthcabinet_1" );
 											
-											//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed, Allies are not in canyon" );
+											//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator destroyed, Footbridge destroyed, Allies are not in canyon" );
 										}
 									}
 								}
@@ -4179,7 +4179,7 @@ global Map =
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Complex_Roof_MG42" );
 									SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 									
-									//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator built" );
+									//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator built" );
 									
 									if ( Map.AlliesInCanyon == 0 )	//Allies are not in canyon
 									{
@@ -4187,7 +4187,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_south_ammocabinet_1" );
 										SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_south_healthcabinet_1" );
 										
-										//Util.MapDebugPrint( "^5Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator built, Allies are not in canyon" );
+										//Util.MapDebugPrint( "^5Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Allied engs are not in canyon, Generator built, Allies are not in canyon" );
 									}
 								}
 							}
@@ -5075,7 +5075,7 @@ global Map =
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Complex_Roof_MG42" );
 								SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Cellar_MG42" );
 								
-								//Util.MapDebugPrint( "^5Canyon is clear, Allies don´t cross river, Bridge destroyed, Cellarentrance intact" );
+								//Util.MapDebugPrint( "^5Canyon is clear, Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact" );
 								
 								if ( Map.Generator == 0 )	//Generator destroyed
 								{
@@ -5089,7 +5089,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allied_NearFootBridge_.*" );
 										SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Footbridge" );
 										
-										//Util.MapDebugPrint( "^5Canyon is clear, Allies don´t cross river, Bridge destroyed, Cellarentrance intact, Generator destroyed, Footbridge destroyed" );
+										//Util.MapDebugPrint( "^5Canyon is clear, Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact, Generator destroyed, Footbridge destroyed" );
 									}
 								}
 								else	//Generator built
@@ -5099,7 +5099,7 @@ global Map =
 									
 									SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearFootBridge_.*" );
 									
-									//Util.MapDebugPrint( "^5Canyon is clear, Allies don´t cross river, Bridge destroyed, Cellarentrance intact, Generator built" );
+									//Util.MapDebugPrint( "^5Canyon is clear, Allies donÂ´t cross river, Bridge destroyed, Cellarentrance intact, Generator built" );
 								}
 							}
 							else	//Cellarentrance destroyed
@@ -5120,7 +5120,7 @@ global Map =
 										SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allied_NearFootBridge_.*" );
 										SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Footbridge" );
 										
-										//Util.MapDebugPrint( "^5Canyon is clear, Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Generator destroyed, Footbridge destroyed" );
+										//Util.MapDebugPrint( "^5Canyon is clear, Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Generator destroyed, Footbridge destroyed" );
 									}
 								}
 								else	//Generator built
@@ -5134,7 +5134,7 @@ global Map =
 									
 									SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_NearFootBridge_.*" );
 									
-									//Util.MapDebugPrint( "^5Canyon is clear, Allies don´t cross river, Bridge destroyed, Cellarentrance destroyed, Generator built" );
+									//Util.MapDebugPrint( "^5Canyon is clear, Allies donÂ´t cross river, Bridge destroyed, Cellarentrance destroyed, Generator built" );
 								}
 							}
 							

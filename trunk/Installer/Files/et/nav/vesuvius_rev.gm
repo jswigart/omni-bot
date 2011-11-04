@@ -1,3 +1,4 @@
+// cs: needs new escort goal
 global Map =
 {
 	Checkpoint_forwardspawn = "CHECKPOINT_forwardspawn",
@@ -550,4 +551,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
+	// old script goal
+	bot.AddScriptGoal("EscortVehicle");
 };

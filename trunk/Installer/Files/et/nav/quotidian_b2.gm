@@ -497,6 +497,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties("MOUNTMG42.*", {mincamptime=50, maxcamptime=300} );
 	SetMapGoalProperties("SNIPE_.*", {mincamptime=90, maxcamptime=300} );
 	SetMapGoalProperties("MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=300} );
+	
+	Util.SetGoalPosition(-1536, 5301, 102, "PLANT_Road_Barrier"); //entity bounds were ok in quotidian_b1, but are broken in quotidian_b2
 
 	MapRoutes =
 	{

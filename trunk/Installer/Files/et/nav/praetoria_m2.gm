@@ -23,8 +23,6 @@ global Map =
 	Mover_Tank = "MOVER_tank1",
 	Movers = { "MOVER_tank1" },
 
-	MountVehicle = { Enabled = false },
-
 	Depot_hatch_Destroyed = function()
 	{
 		Util.EnableGoal("ROUTE_depot_up");

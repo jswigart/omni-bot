@@ -9,11 +9,6 @@ global Map =
 	Talk = true, //set this to false if you wont bots talking ingame
 	Quiet = true,
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",

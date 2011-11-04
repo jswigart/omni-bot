@@ -1,7 +1,7 @@
 /****************************************************
 Pathing and script from Caen 4 waypoints
 Adapted to Caen 3 Beta 3 by **PCZ** >M@t3o$<
-Correspondant WAY file size : 52,0 Ko (53 331 octets)
+Correspondant WAY file size : 52,0 Ko (53Â 331 octets)
 Last Update : 23 October 2009
 ****************************************************/
 
@@ -33,11 +33,6 @@ global Map =
 	Mover_tank = "MOVER_tank",
 	Flag_maps = "FLAG_maps",
 	Cappoint_996 = "CAPPOINT_996",
-
-	MountVehicle =
-	{
-		Enabled = false,
-	},
 
 	//set status' for conditionals
 	TankStatus = 0, //not built

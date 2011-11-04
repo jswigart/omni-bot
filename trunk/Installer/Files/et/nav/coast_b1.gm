@@ -16,29 +16,7 @@ global Map =
 	Repair_337 = "REPAIRMG42_337",
 	Mover_tank = "MOVER_tank",
 
-	MountVehicle =
-	{
-		Enabled = false,
-	},
-
 	Suicide = 1,
-
-	EscortVehicle =
-	{
-		Tank =
-		{
-			Enabled = true,
-			EscortVehicleGoalName = "MOVER_tank",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitBots = 1,
-//~			Priority = 0.9,
-			Offset =
-			{
-				Vector3(-10,-160,20),
-			//~	Vector3(20,-160,20),
-			}
-		},
-	},
 
 	Classes = function()
 	{

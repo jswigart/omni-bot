@@ -6,7 +6,8 @@
 //------------------------------------------------------------------------------------------
 //	jaskot		02/03/09		Converted old script to new format
 //	Mateos		19/12/10		Added Defend Goals for Allies at the end
-//	MickyP		18 December 2010	Full 0.81 Update
+//	MickyP		18 December 2010	0.71-0.81 Update
+//	MickyP		18 October 2011		Routing/Landmines Added & General fixes
 //
 //==========================================================================================
 //
@@ -19,7 +20,7 @@ global Map =
 	MapStart = true,
 	EscortTruck = 1,
 	BuildTruck = 1,
-	TruckBuilt = 1,
+	TruckBuilt = 0,
 
 	TruckAtBarrier = 0,
 	TB_Built = 0,
@@ -55,14 +56,14 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"entered ladder 1 trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 1 trigger");
 			Wp.SetWaypointFlag( "Ladder1a", "closed", true );
 			Wp.SetWaypointFlag( "Ladder1b", "closed", true );
 			Wp.SetWaypointFlag( "Ladder1c", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited ladder 1 trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 1 trigger");
 			Wp.SetWaypointFlag( "Ladder1a", "closed", false );
 			Wp.SetWaypointFlag( "Ladder1b", "closed", false );
 			Wp.SetWaypointFlag( "Ladder1c", "closed", false );
@@ -75,12 +76,12 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"entered ladder 2 trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 2 trigger");
 			Wp.SetWaypointFlag( "Ladder2", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited ladder 2 trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 2 trigger");
 			Wp.SetWaypointFlag( "Ladder2", "closed", false );
 		},
 	},
@@ -91,13 +92,13 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"entered ladder 3 trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 3 trigger");
 			Wp.SetWaypointFlag( "Ladder3a", "closed", true );
 			Wp.SetWaypointFlag( "Ladder3b", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited ladder 3 trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 3 trigger");
 			Wp.SetWaypointFlag( "Ladder3a", "closed", false );
 			Wp.SetWaypointFlag( "Ladder3b", "closed", false );
 		},
@@ -109,12 +110,12 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"entered ladder 4 trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 4 trigger");
 			Wp.SetWaypointFlag( "Ladder4", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited ladder 4 trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 4 trigger");
 			Wp.SetWaypointFlag( "Ladder4", "closed", false );
 		},
 	},
@@ -125,13 +126,45 @@ global Map =
 		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
 		OnEnter = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"entered ladder 5 trigger");
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 5 trigger");
 			Wp.SetWaypointFlag( "Ladder5", "closed", true );
 		},
 		OnExit = function(ent)
 		{
-			Util.MapDebugPrint(GetEntName(ent),"exited ladder 5 trigger");
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 5 trigger");
 			Wp.SetWaypointFlag( "Ladder5", "closed", false );
+		},
+	},
+
+	Ladder6 =
+	{
+		Name="Ladder 6",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 6 trigger");
+			Wp.SetWaypointFlag( "Ladder6", "closed", true );
+		},
+		OnExit = function(ent)
+		{
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 6 trigger");
+			Wp.SetWaypointFlag( "Ladder6", "closed", false );
+		},
+	},
+
+	Ladder7 =
+	{
+		Name="Ladder 7",
+		TriggerOnClass = { CLASS.VEHICLE, CLASS.VEHICLE_HVY },
+		OnEnter = function(ent)
+		{
+			Util.MapDebugPrint(GetEntName(ent) + " entered ladder 7 trigger");
+			Wp.SetWaypointFlag( "Ladder7", "closed", true );
+		},
+		OnExit = function(ent)
+		{
+			//Util.MapDebugPrint(GetEntName(ent) + " exited ladder 7 trigger");
+			Wp.SetWaypointFlag( "Ladder7", "closed", false );
 		},
 	},
 
@@ -141,7 +174,6 @@ global Map =
 			{ return; }
 		// Stops Certain triggers running at start of map
 		Map.MapStart = false;
-		//Util.MapDebugPrint( "Map_Started" );
 	},
 
 	Command_Post_Built = function( trigger )
@@ -276,14 +308,12 @@ global Map =
 			Map.EscortTruck = 0;
 			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_truck" );
-			Util.MapDebugPrint( "true test" );
 		}
 		if ( Map.TB_Built == 0 )
 		{
 			Map.EscortTruck = 1;
 			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Truck" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
-			Util.MapDebugPrint( "false test" );
 		}
 
 		Util.MapDebugPrint( "Truck_at_Barrier" );
@@ -554,6 +584,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Boathouse_Bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Allies_End.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_Allies_End.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_BoatHousePath" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_BoatHouse_Bridge.*" );
 		Util.MapDebugPrint( "Train_Past_Boathouse_Bridge" );
@@ -567,36 +598,60 @@ global Map =
 			{
 				Map.Truck_Stolen();
 			}
+
 		case 2:
 			{
 				Map.Truck_at_Barrier();
 			}
+
 		case 3:
 			{
-				//Corner 1
+				//Under Bridge
+				Util.EnableGoal( "ROUTE_Corner_1" );
+				Util.DisableGoal( "ROUTE_Res_Drop_3" );
 			}
+
 		case 4:
 			{
-				//Corner 2
+				//Corner 1
+				Util.DisableGoal( "ROUTE_Corner_1" );
+				Util.EnableGoal( "ROUTE_MG_Tower_Path" );
+				Util.EnableGoal( "ROUTE_Corner_2" );
 			}
+		
 		case 5:
+			{
+				//MG Tower path
+				Util.DisableGoal( "ROUTE_MG_Tower_Path" );
+			}
+
+		case 6:
+			{
+				//Corner 2
+				Util.DisableGoal( "ROUTE_Corner_2" );
+			}
+
+		case 7:
 			{
 				//Train at 1st Bridge
 				Map.Train_At_Reservoir_Bridge();
 			}
-		case 6:
+
+		case 8:
 			{
 				//Train past 1st Bridge
 				Map.TrainAtRB = false;
 				Map.TrainPastRB = true;
 			}
-		case 7:
+
+		case 9:
 			{
 				//Train at 2nd Bridge
 				Map.Train_At_BoatHouse_Bridge();
 				Map.TrainAtBB = true;
 			}
-		case 8:
+
+		case 10:
 			{
 				//Train past 2nd Bridge
 				Map.TrainAtBB = false;
@@ -651,7 +706,7 @@ global OnMapLoad = function()
 	OnTrigger( "Reservoir Bridge has been damaged.", Map.Reservoir_Bridge_Destroyed );
 
 	OnTrigger( "axis have gained spawn positions in the North Tunnel", Map.Train_Past_Reservoir_Bridge );
-	//// 3rd spawn Change (truck out of tunnel)
+	//// 3rd spawn Change (train out of tunnel)
 	//Axis Spawn   = 2
 	//Allies Spawn = 6
 
@@ -659,7 +714,7 @@ global OnMapLoad = function()
 	OnTrigger( "Boathouse Bridge has been damaged.", Map.Boathouse_Bridge_Destroyed );
 
 	OnTrigger( "Axis gained spawn positions at The Mill Tunnel!", Map.Train_Past_Boathouse_Bridge );
-	//// 4th spawn Change (truck out of tunnel)
+	//// 4th spawn Change (train out of tunnel)
 	//Axis Spawn   = 4
 	//Allies Spawn = 1
 
@@ -669,24 +724,30 @@ global OnMapLoad = function()
 
 	TruckStolen	= OnTriggerRegion(AABB(828.838,487.985,254.667,1024.631,541.497,330.883),	RegionTrigger.VehicleTrigger);
 	TruckBarrier	= OnTriggerRegion(AABB(1230.363,2206.532,230.125,1368.292,2328.765,304.125),	RegionTrigger.VehicleTrigger);
+	TruckBridge	= OnTriggerRegion(AABB(5183.131,2573.917,449.125,5400.875,2624.912,523.125),	RegionTrigger.VehicleTrigger);
 	Corner1 	= OnTriggerRegion(AABB(5876.540,-2018.874,597.152,5916.129,-1857.128,671.152),	RegionTrigger.VehicleTrigger);
+	MGTowerPath	= OnTriggerRegion(AABB(6851.544,-2013.851,593.125,6899.880,-1857.128,667.125),	RegionTrigger.VehicleTrigger);
 	Corner2 	= OnTriggerRegion(AABB(8062.165,-2018.873,597.125,8101.741,-1857.126,671.125),	RegionTrigger.VehicleTrigger);
 	AtRB 		= OnTriggerRegion(AABB(7097.912,2390.979,801.125,7203.838,2687.380,903.125),	RegionTrigger.VehicleTrigger);
 	PastRB 		= OnTriggerRegion(AABB(7004.381,2405.083,801.125,7058.375,2670.811,903.125),	RegionTrigger.VehicleTrigger);
 	AtBB 		= OnTriggerRegion(AABB(703.963,-134.282,817.125,802.184,132.732,947.727),	RegionTrigger.VehicleTrigger);
 	PastBB 		= OnTriggerRegion(AABB(593.390,-148.487,805.125,639.102,238.875,903.125),	RegionTrigger.VehicleTrigger);
 
-	Util.SetGoalOffset( -96, 0, 0, "PLANT_Truck_Barrier" );
-
 	Ladder1 	= OnTriggerRegion(AABB(2796.329,-98.603,817.125,3105.440,74.847,903.125),	Map.Ladder1);
 	Ladder2 	= OnTriggerRegion(AABB(1847.747,-87.716,817.125,2131.147,84.751,903.125),	Map.Ladder2);
 	Ladder3 	= OnTriggerRegion(AABB(1210.926,-90.602,805.125,1609.544,105.015,903.125),	Map.Ladder3);
 	Ladder4 	= OnTriggerRegion(AABB(384.672,-85.701,801.125,689.526,92.372,903.125),		Map.Ladder4);
 	Ladder5 	= OnTriggerRegion(AABB(-1005.942,-113.741,801.125,-771.613,96.430,899.903),	Map.Ladder5);
-//	Ladder6 	= OnTriggerRegion(AABB(-4190.028,-2229.533,817.125,-3996.438,-2006.494,903.125),Map.Ladder6); // Not Used Yet
-//	Ladder7 	= OnTriggerRegion(AABB(-4190.429,-2973.649,817.125,-4012.724,-2640.389,903.125),Map.Ladder7); // Not Used Yet
+	Ladder6 	= OnTriggerRegion(AABB(-4190.028,-2229.533,817.125,-3996.438,-2006.494,903.125),Map.Ladder6);
+	Ladder7 	= OnTriggerRegion(AABB(-4190.429,-2973.649,817.125,-4012.724,-2640.389,903.125),Map.Ladder7);
 
 	Util.DisableGoal( ".*", true );
+	Util.DisableGoal( "ROUTE_Corner_1" );
+	Util.DisableGoal( "ROUTE_MG_Tower_Path" );
+	Util.DisableGoal( "ROUTE_Corner_2" );
+	
+	Util.EnableGoal( "HEALTHCAB.*" );
+	Util.EnableGoal( "AMMOCAB.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_truck" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Truck_Barrier.*" );
@@ -703,11 +764,25 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 
-	Wp.SetWaypointFlag( "truckbarrier1", "closed", true );
-	Wp.SetWaypointFlag( "truckbarrier2", "closed", true );
-	Wp.SetWaypointFlag( "truckbarrier3", "closed", true );
-	Wp.SetWaypointFlag( "truckbarrier4", "closed", true );
+	
 
+	Wp.SetWaypointFlag( "truckbarrier1",	"closed", true );
+	Wp.SetWaypointFlag( "truckbarrier2",	"closed", true );
+	Wp.SetWaypointFlag( "truckbarrier3",	"closed", true );
+	Wp.SetWaypointFlag( "truckbarrier4",	"closed", true );
+	Wp.SetWaypointFlag( "Ladder1a",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder1b",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder1c",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder2",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder3a",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder3b",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder4",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder5",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder6",		"closed", false );
+	Wp.SetWaypointFlag( "Ladder7",		"closed", false );
+
+	Util.SetGoalOffset( -96, 0, 0, "PLANT_Truck_Barrier" );
+	
 	SetGoalPriority( "ESCORT_Defend_Truck", 0.78 );
 	SetGoalPriority( "BUILD_Command_Post", 0.8 );
 
@@ -727,15 +802,230 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
 	if ( Map.Debug > 1 )
-		{ Util.ShowActiveGoals(); }
+	{ Util.ShowActiveGoals(); }
 
-	print( "Omni-bot map script for " + GetMapName() + " executed." );
+
+	MapRoutes =
+	{
+		BUILD_truck =
+		{
+			ROUTE_Spawn_5  =
+			{
+				ROUTE_Truck_Start_Stairs  =
+				{
+				},
+				ROUTE_Truck_Start_Slope  =
+				{
+				},
+				ROUTE_Truck_Tun_Exit  =
+				{
+					ROUTE_Truck_Tun_Entry  =
+					{
+					},
+				},
+			},
+			ROUTE_Spawn_2  = 
+			{
+				ROUTE_Res_Bridge_Center  = 
+				{
+				},
+				ROUTE_Tunnel_Hut  = 
+				{
+				},
+				ROUTE_Corner_1  = 
+				{
+				},
+				ROUTE_Corner_2  = 
+				{
+				},
+				ROUTE_MG_Tower_Path  = 
+				{
+				},
+			},
+		},
+		PLANT_Truck_Barrier =
+		{
+			ROUTE_Truck_Start_Stairs  =
+			{
+			},
+		},
+		PLANT_Truck_Barrier_1 =
+		{
+			ROUTE_Truck_Tun_Exit  =
+			{
+			},
+		},
+		BUILD_Boathouse_Bridge = 
+		{
+			ROUTE_Spawn_5  = 
+			{
+				ROUTE_Boathouse_Bridge_NorthSide  = 
+				{
+				},
+				ROUTE_Boathouse_Bridge_Underside  = 
+				{
+				},
+				ROUTE_Boathouse_Bridge_SouthSide  = 
+				{
+				},
+				ROUTE_Truck_Start_Slope  = 
+				{
+					ROUTE_BoatHose_Ladder  = 
+					{
+					},
+				},
+				ROUTE_Truck_Start_Stairs  = 
+				{
+					ROUTE_BoatHouse_MG_Stairs  = 
+					{
+					},
+				},
+			},
+		},
+		DEFEND_Truck_Start_1 =
+		{
+			ROUTE_Spawn_4  =
+			{
+				ROUTE_Spawn_4_MG_Exit  =
+				{
+				},
+				ROUTE_Spawn_4_Tunnel_Exit  =
+				{
+					ROUTE_Boathouse_Bridge_NorthSide  =
+					{
+						ROUTE_Truck_Start_Slope  =
+						{
+						},
+					},
+					ROUTE_Boathouse_Bridge_SouthSide  =
+					{
+						ROUTE_Truck_Start_Stairs  =
+						{
+						},
+					},
+				},
+			},
+		},
+
+		ATTACK_Axis_End_1 =
+		{
+			ROUTE_Spawn_4  =
+			{
+				ROUTE_Spawn_4_Tunnel_Exit  =
+				{
+					ROUTE_End_Train_Tunnel_Exit  =
+					{
+					},
+				},
+				ROUTE_End_East_Exit  =
+				{
+				},
+				ROUTE_End_West_Exit  =
+				{
+				},
+			},
+		},
+
+		DEFEND_TT_Exit_1 = 
+		{
+			ROUTE_Spawn_5  = 
+			{
+				ROUTE_Res_Drop_1  = 
+				{
+				},
+				ROUTE_Res_Drop_2  = 
+				{
+				},
+				ROUTE_Res_Drop_3  = 
+				{
+				},
+			},
+		},
+
+		BUILD_Truck_Barrier = 
+		{
+			ROUTE_Spawn_4  = 
+			{
+				ROUTE_Spawn_4_Tunnel_Exit  = 
+				{
+					ROUTE_Spawn_3  = 
+					{
+					},
+				},
+				ROUTE_Spawn_4_MG_Exit  = 
+				{
+				},
+			},
+		},
+		DEFEND_Allies_End_1 = 
+		{
+			ROUTE_Spawn_1  = 
+			{
+				ROUTE_Spawn_1_Front_Exit  = 
+				{
+				},
+				ROUTE_Spawn_1_Left_Exit  = 
+				{
+				},
+				ROUTE_Spawn_1_Right_Exit_1  = 
+				{
+					ROUTE_Spawn_1_Right_Exit_2  = 
+					{
+					},
+				},
+			},
+		},
+	};
+
+	MapRoutes.ESCORT_Truck = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_1 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_2 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_3 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_4 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_5 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Start_6 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_1 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_2 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_3 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_4 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_5 = MapRoutes.BUILD_truck;
+	MapRoutes.ATTACK_Truck_Barrier_6 = MapRoutes.BUILD_truck;
+	MapRoutes.DEFEND_Truck_Start_2 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Start_3 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Start_4 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Start_5 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Barrier_1 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Barrier_2 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Barrier_3 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Barrier_4 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.DEFEND_Truck_Barrier_1 = MapRoutes.DEFEND_Truck_Start_1;
+	MapRoutes.ATTACK_Axis_End_2 = MapRoutes.ATTACK_Axis_End_1;
+	MapRoutes.ATTACK_Axis_End_3 = MapRoutes.ATTACK_Axis_End_1;
+	MapRoutes.ATTACK_Axis_End_4 = MapRoutes.ATTACK_Axis_End_1;
+	MapRoutes.ATTACK_Axis_End_5 = MapRoutes.ATTACK_Axis_End_1;
+	MapRoutes.ATTACK_Axis_End_6 = MapRoutes.ATTACK_Axis_End_1;
+	MapRoutes.DEFEND_TT_Exit_2 = MapRoutes.DEFEND_TT_Exit_1;
+	MapRoutes.DEFEND_TT_Exit_3 = MapRoutes.DEFEND_TT_Exit_1;
+	MapRoutes.DEFEND_TT_Exit_4 = MapRoutes.DEFEND_TT_Exit_1;
+	MapRoutes.DEFEND_TT_Exit_5 = MapRoutes.DEFEND_TT_Exit_1;
+	MapRoutes.ESCORT_Attack_Truck = MapRoutes.DEFEND_TT_Exit_1;
+	MapRoutes.DEFEND_Allies_End_2 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_3 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_4 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_5 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_6 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_7 = MapRoutes.DEFEND_Allies_End_1;
+	MapRoutes.DEFEND_Allies_End_8 = MapRoutes.DEFEND_Allies_End_1;
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
 {
 	// Uncomment for shootable breakables
-	//~bot.TargetBreakableDist = 90.0;
+	bot.TargetBreakableDist = 90.0;
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
 	//~bot.MaxViewDistance = 2400;
 };

@@ -74,6 +74,10 @@ global Map =
 			Priority = 0, //cs: always set to 0 when using path through
 			WaypointName = "elevator",
 			AimPosition = Vector3(1591.875,2666.291,-141.341),
+			
+			// cs: example for GotoAsync usage
+			//UseAsync = true,
+			//AsyncTimeout = 3000,
 
 			//cs: the bots will wait until elevator is at top
 			Wait = function()
