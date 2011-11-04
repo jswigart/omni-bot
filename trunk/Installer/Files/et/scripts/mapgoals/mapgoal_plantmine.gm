@@ -38,7 +38,7 @@ this.UpgradeVersion = function(Props)
 			TriggerOnCategory = CAT.MINE,
 		};
 
-		rgnId = OnTriggerRegion(this.GetPosition(), 96.0, tbl);
+		rgnId = OnTriggerRegion(this.GetPosition(), 64.0, tbl);
 		//todo: attach the life of this region to the mapgoal
 	}
 };

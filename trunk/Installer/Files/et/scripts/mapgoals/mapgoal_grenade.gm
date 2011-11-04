@@ -12,6 +12,7 @@ this.Schema = Schema();
 //this.Schema.Facing = Validate.Vec3().Default(GetLocalFacing);
 this.Schema.Stance = Validate.Enum("stand","crouch","prone").Default("stand");
 this.Schema.PrimeGrenade = Validate.IntRange(0,3).Default(1);
+this.Schema.Count = Validate.IntRange(0,9).Default(0);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +44,9 @@ this.UpgradeVersion = function(Props)
 		this.Facing = Props.Facing;
 		this.Stance = Props.Stance;
 		this.PrimeGrenade = Props.PrimeGrenade;
+		this.Count = Props.Count;
 		this.TraceInfo = Props.TraceInfo;
+		this.HasEntity = this.TargetGoal!=null || this.TraceInfo && this.TraceInfo.id != -1;
 
 		if(!this.Schema.Check(this) || (!this.TargetGoal && tableCount(this.TraceInfo) < 1))
 		{
@@ -82,7 +85,12 @@ this.Render = function(editMode)
 				this.ExtraDebugText += format("TraceEnt: %d\n",this.TraceEntity);
 			}
 			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
-			this.ExtraDebugText += format("PrimeGrenade: %d\n",this.PrimeGrenade);
+			if (this.PrimeGrenade != 1) {
+				this.ExtraDebugText += format("PrimeGrenade: %d\n",this.PrimeGrenade);
+			}
+			if (this.Count) {
+				this.ExtraDebugText += format("Count: %d\n",this.Count);
+			}
 		}
 
 		if ( this.Stance == "crouch" )
@@ -139,6 +147,7 @@ this.SaveToTable = function(SaveTable)
 	SaveTable.TraceInfo = this.TraceInfo;
 	SaveTable.TraceEntity = this.TraceEntity;
 	SaveTable.PrimeGrenade = this.PrimeGrenade;
+	SaveTable.Count = this.Count;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -147,11 +156,13 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		targetgoal or trace - the goal that is to be grenaded or traceinfo");
-	print("		facing - Direction the bot should face");
+	print("     targetgoal or trace or traceline - the goal that is to be grenaded or trace info,");
+	print("                                        you should use traceline only if there is no entity");
+	print("     facing - Direction the bot should face");
 	print("Optional:");
-	print("		stance - stand, crouch");
-	print("		prime - time in seconds the bot should prime the grenade. default 1, max 3");
+	print("     stance - stand, crouch");
+	print("     prime - time in seconds the bot should prime the grenade. default 1, max 3");
+	print("     count - maximum number of thrown grenades. default 0 (unlimited)");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -187,6 +198,10 @@ this.SetProperty = function(property, value)
 				this.PrimeGrenade = 3;
 			}
 		}
+		case "count":
+		{
+			this.Count = ToInt(value, 0);
+		}
 		case "targetgoal":
 		{
 			if ( GetGoal(value) )
@@ -217,6 +232,22 @@ this.SetProperty = function(property, value)
 				}
 			}
 		}
+		case "traceline":
+		{
+			//this is used for destroyable objects which do not have entity
+			info = {};
+			info.eyePos = GetLocalEyePosition();
+			aim = GetLocalFacing();
+			tr = TraceLine( info.eyePos, info.eyePos + aim * 1000, 0, TRACE.SHOT|TRACE.FLOODFILLENT, GetGameIdFromEntity(GetLocalEntity()), false );
+			if (tr.fraction < 1)
+			{
+				info.id = -1;
+				info.endPos = tr.end + aim * 10;
+				DrawDebugLine( info.eyePos, info.endPos, COLOR.GREEN, 20 );
+				this.TraceInfo = info;
+				this.TraceEntity = null;
+			}
+		}
 		default:
 		{
 			print(this.GoalType, ": Invalid property:", property);
@@ -228,21 +259,42 @@ this.SetProperty = function(property, value)
 
 //////////////////////////////////////////////////////////////////////////
 
-// give it some time to find it since some games spawn ents late
 this.Update = function()
 {
+	if ( !this.TraceInfo || !this.TraceInfo.eyePos || !this.TraceInfo.endPos )
+	{
+		block(0);
+	}
+
+	exploded = false;
+
 	while(1)
 	{
-		this.TimeoutForTrace += 20;
-		if (!this.TraceEntity
-				&& this.TraceInfo
-				&& this.TraceInfo.eyePos
-				&& this.TraceInfo.endPos)
-		{
-			this.TraceEntity = Util.TraceForEntityInfo(this.TraceInfo.eyePos, this.TraceInfo.endPos);
-		}
+		sleep(1);
 
-		if ( this.TraceEntity && !EntityIsValid(this.TraceEntity) )
+		if (this.HasEntity)
+		{
+			// give it some time to find it since some games spawn ents late
+			this.TimeoutForTrace += 20;
+			if (!this.TraceEntity)
+			{
+				this.TraceEntity = Util.TraceForEntityInfo(this.TraceInfo.eyePos, this.TraceInfo.endPos);
+			}
+
+			if ( this.TraceEntity && !EntityIsValid(this.TraceEntity) )
+			{
+				exploded = true;
+			}
+		}
+		else
+		{
+			tr = TraceLine( this.TraceInfo.eyePos, this.TraceInfo.endPos, 0, TRACE.SHOT|TRACE.FLOODFILLENT, 0, true );
+			if (tr.fraction == 1)
+			{
+				exploded = true;
+			}
+		}
+		if (exploded)
 		{
 			triggerInfo =
 			{
@@ -257,8 +309,6 @@ this.Update = function()
 			this.DisableGoal(true);
 			block(0);
 		}
-
-		sleep(1);
 	}
 };
 

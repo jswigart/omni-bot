@@ -10,21 +10,21 @@ WEAPON.SAK47SCOPED = 111; 					// Defined into g_etbot_interface.cpp
 // Overall weapon properties.
 this.Name = "SAK47 Scoped";
 this.WeaponId = WEAPON.SAK47SCOPED;
-this.PrimaryFire.AmmoType = WEAPON.SAK47SCOPED;
 this.MinUseTime = 0.0;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.
 this.PrimaryFire.WeaponType = "instant";
-this.PrimaryFire.MaxEquipMoveMode = "still"; // Can't zoom scope while in motion
+this.PrimaryFire.CrouchToMoveWhenZoomed = true;
 this.PrimaryFire.RequiresAmmo = true;
 this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.HasClip = true;
+this.PrimaryFire.IgnoreReload = true;
 
 this.PrimaryFire.MaxAimError = Vector2(0, 0);
 this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
 
-this.PrimaryFire.DefaultDesirability = 0.0;
+this.PrimaryFire.DefaultDesirability = 0.7;
 this.PrimaryFire.SetDesirabilityRange(500, 4000, 0.8);
 
 // Use a 1-2 second delay between every 1 shot for stability.

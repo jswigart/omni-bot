@@ -35,7 +35,19 @@ this.UpgradeVersion = function(Props)
 		this.Weapons = Props.Weapons;
 		this.Stance = Props.Stance;
 		this.Roles = Props.Roles;
-		
+
+		if ( tableCount(this.Weapons) > 0 )
+		{
+			this.DefaultPriority += 0.2;
+		}
+
+		if ( Props.DisableCM ) {
+			this.DisableCM = Props.DisableCM;
+		}
+		else {
+			this.DisableCM = 0;
+		}
+
 		// detect 0 facing vectors
 		if ( typeId(Props.AimVectors) == 6 )
 		{
@@ -45,7 +57,7 @@ this.UpgradeVersion = function(Props)
 					Util.MapDebugPrint(this.GetName() + " facing " + id + " is zero!", true);
 				}
 			}
-		}		
+		}
 	}
 };
 

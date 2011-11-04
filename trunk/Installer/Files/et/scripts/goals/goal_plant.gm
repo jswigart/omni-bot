@@ -24,7 +24,16 @@ this.Initialize = function()
 		Radius = 350,
 		Category = CAT.PROJECTILE,
 	});
+
+	// check for entity status so we can finish if another player destroys it
+	this.LimitTo( this.CheckDestroyableState, 1 );
 };
+
+this.CheckDestroyableState = function()
+{
+	return !this.MapGoal || this.GoalEntity && EntityIsValid(this.GoalEntity) && this.Bot.GetDestroyableState(this.GoalEntity) > 0;
+};
+
 
 this.SanityCheckWeapon = function(weapon)
 {
@@ -213,6 +222,7 @@ this.Exit = function()
 
 	// re-enable the rifle nade
 	ETUtil.DisableRifleNade(this.Bot, false);
+	this.MapGoal = null;
 };
 
 this.UpdateDynamite = function()
@@ -224,11 +234,6 @@ this.UpdateDynamite = function()
 
 	while(1)
 	{
-		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 )
-		{
-			this.Finished();
-		}
-
 		switch(this.GoalState)
 		{
 			case this.LOOK_FOR_DYNO:
@@ -290,6 +295,11 @@ this.UpdateDynamite = function()
 					this.Finished();
 				}
 
+				// crouch to arm others dyno too.
+				if ( !this.Bot.HasEntityFlag(ENTFLAG.CROUCHED) ) {
+					this.Bot.HoldButton(BTN.CROUCH, 99);
+				}
+
 				this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
 				this.BlockForWeaponChange( WEAPON.PLIERS );
 
@@ -317,6 +327,9 @@ this.UpdateDynamite = function()
 				{
 					this.Finished();
 				}
+
+				//don't plant another dynamite after coverTimeout or if all coverspots are occupied
+				this.BlackboardDelay(35, this.MapGoal);
 
 				// pick a cover spot
 				if (!hasCoverSpot) {
@@ -388,11 +401,6 @@ this.UpdateSatchel = function()
 {
 	while(1)
 	{
-		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 )
-		{
-			this.Finished();
-		}
-
 		switch(this.GoalState)
 		{
 			case this.LAY_EXPLOSIVE:
@@ -426,7 +434,7 @@ this.UpdateSatchel = function()
 						break;
 					}
 
-					if (this.Bot.DistanceTo(this.Goal_Position) > 300)
+					if (this.Bot.DistanceTo(this.ExplosiveEntity) > 300)
 					{
 						this.GoalState = this.DETONATE_EXPLOSIVE;
 						break;

@@ -13,13 +13,8 @@ global RegionTrigger = import("et_regiontriggers");
 global ClassManager = import("et_classmanager");
 
 // cs: only load one of the following botname scripts at a time
-ExecScript("et_botnames.gm");
-
-// this script allows for defining bots per team and class
-//ExecScript("et_botnames_ext.gm"); // note: must be loaded after et_classmanager
-
-// testmap mode
-global TestMapOn = false;
+ExecScript("et_botnames_ext.gm"); // note: must be loaded after et_classmanager
+//ExecScript("et_botnames.gm"); // 0.81 script
 
 // global debug flags
 global DEBUG_MAP_SCRIPTS = false;
@@ -48,7 +43,6 @@ global PostMapLoad = function()
 	}
 	else if ( Map && Map.PanzerMap )
 	{
-		Map.DontSelectWeapons = true; // disable select weapons goal
 		ETUtil.PanzerMap();
 	}
 	else if ( Map && Map.Classes )

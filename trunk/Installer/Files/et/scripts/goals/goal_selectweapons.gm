@@ -4,8 +4,7 @@ this.Parent = "Limbo";			// The name of the parent. This setting determines wher
 this.Debug = false;
 this.AlwaysRecieveEvents = true;
 
-// currently limited to certain classes
-this.LimitToClass(CLASS.SOLDIER, CLASS.COVERTOPS);
+//this.LimitToClass(CLASS.SOLDIER, CLASS.COVERTOPS);
 
 // shared weapon counters
 this.UsingWeapons = {};
@@ -84,62 +83,70 @@ this.Update = function()
 		// cs: this.Bot.HasWeapon should be fixed now ...
 		lastWeapon = this.UsingWeapons[myTeam][this.Bot];
 
-		if (this.Bot.GetClass() == CLASS.SOLDIER)
+		switch (this.Bot.GetClass())
 		{
-			// count how many other bots have these weapons
-			numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
-			numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
+			case CLASS.SOLDIER:
+			{
+				// count how many other bots have these weapons
+				numMg42Users = this.NumWeaponUsers(WEAPON.MOBILE_MG42);
+				numMortarUsers = this.NumWeaponUsers(WEAPON.MORTAR);
 
-			// count how many goals are available for each weapon type
-			goals_mg42 = {};
-			GetGoals(goals_mg42,myTeam,"MOBILEMG42.*");
-			goals_mortar = {};
-			GetGoals(goals_mortar,myTeam,"MOBILEMORTAR.*");
-			numMg42Goals = tableCount(goals_mg42);
-			numMortarGoals = tableCount(goals_mortar);
+				// count how many goals are available for each weapon type
+				goals_mg42 = {};
+				GetGoals(goals_mg42,myTeam,"MOBILEMG42.*");
+				goals_mortar = {};
+				GetGoals(goals_mortar,myTeam,"MOBILEMORTAR.*");
+				numMg42Goals = tableCount(goals_mg42);
+				numMortarGoals = tableCount(goals_mortar);
 
-			if(this.Debug)
-			{
-				print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mg42 Users:",numMg42Users,"/",numMg42Goals);
-				print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mortar Users:",numMortarUsers,"/",numMortarGoals);
-			}
+				if(this.Debug)
+				{
+					print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mg42 Users:",numMg42Users,"/",numMg42Goals);
+					print(this.Bot.Name, ":" ,Util.TeamName(myTeam), ": # Mortar Users:",numMortarUsers,"/",numMortarGoals);
+				}
 
-			if(Server.NumPlayers >= MinPlayersForMortar && numMortarUsers <= numMortarGoals && (numMortarUsers < numMortarGoals || lastWeapon == WEAPON.MORTAR))
+				if(Server.NumPlayers >= MinPlayersForMortar && numMortarUsers <= numMortarGoals && (numMortarUsers < numMortarGoals || lastWeapon == WEAPON.MORTAR))
+				{
+					newWeapon = WEAPON.MORTAR;
+				}
+				else if(Server.NumPlayers >= MinPlayersForMobileMG && numMg42Users <= numMg42Goals && (numMg42Users < numMg42Goals || lastWeapon == WEAPON.MOBILE_MG42))
+				{
+					newWeapon = WEAPON.MOBILE_MG42;
+				}
+				else
+				{
+					// pick a new weapon other than mg42 and mortar
+					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_MORTAR_AND_MG42);
+				}
+			}
+			case CLASS.COVERTOPS:
 			{
-				newWeapon = WEAPON.MORTAR;
-			}
-			else if(Server.NumPlayers >= MinPlayersForMobileMG && numMg42Users <= numMg42Goals && (numMg42Users < numMg42Goals || lastWeapon == WEAPON.MOBILE_MG42))
-			{
-				newWeapon = WEAPON.MOBILE_MG42;
-			}
-			else
-			{
-				// pick a new weapon other than mg42 and mortar
-				newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_MORTAR_AND_MG42);
-			}
-		}
-		else  // CLASS.COVERTOPS
-		{
-			// count how many goals are available
-			if (Util.IsSnipeMap) {
-				numSnipeGoals = 99;
-			}
-			else
-			{
-				goals_snipe = {};
-				GetGoals(goals_snipe,myTeam,"SNIPE_.*");
-				numSnipeGoals = tableCount(goals_snipe);
-			}
+				// count how many goals are available
+				if (Util.IsSnipeMap) {
+					numSnipeGoals = 99;
+				}
+				else
+				{
+					goals_snipe = {};
+					GetGoals(goals_snipe,myTeam,"SNIPE_.*");
+					numSnipeGoals = tableCount(goals_snipe);
+				}
 
-			if (numSnipeGoals > 0)
-			{
-				tbl = Util.TeamSniperWeapons[ Util.TeamName(myTeam) ];
-				newWeapon = tbl[ Util.GetRandomFromTable(tbl) ];
+				if (numSnipeGoals > 0)
+				{
+					tbl = Util.TeamSniperWeapons[ Util.TeamName(myTeam) ];
+					newWeapon = tbl[ Util.GetRandomFromTable(tbl) ];
+				}
+				else
+				{
+					// pick a new weapon other than GARAND and K43
+					newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_SNIPE);
+				}
 			}
-			else
+			default:
 			{
-				// pick a new weapon other than GARAND and K43
-				newWeapon = this.Bot.ClassPrimaryWeaponChoice(this.EXCLUDE_SNIPE);
+				//random available weapon
+				newWeapon = this.Bot.ClassPrimaryWeaponChoice(null);
 			}
 		}
 		
