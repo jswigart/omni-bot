@@ -14,7 +14,8 @@
 
 #define MAX_WP_HEAT     1500.f
 
-//#define OVERCLIP        1.001 // cs: moved to bg_public.h
+
+#define OVERCLIP        1.001
 
 // all of the locals will be zeroed before each
 // pmove, just to make damn sure we don't have

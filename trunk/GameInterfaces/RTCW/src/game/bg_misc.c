@@ -4168,26 +4168,6 @@ void BG_setCrosshair( char *colString, float *col, float alpha, char *cvarName )
 	trap_Cvar_Set( cvarName, "White" );
 }
 
-void BG_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce ) {
-	float	backoff;
-	float	change;
-	int		i;
-
-	backoff = DotProduct (in, normal);
-
-	if ( backoff < 0 ) {
-		backoff *= overbounce;
-	}
-	else {
-		backoff /= overbounce;
-	}
-
-	for ( i=0 ; i<3 ; i++ ) {
-		change = normal[i]*backoff;
-		out[i] = in[i] - change;
-	}
-}
-
 // consts to offset random reinforcement seeds
 const unsigned int aReinfSeeds[MAX_REINFSEEDS] = { 11, 3, 13, 7, 2, 5, 1, 17 };
 
