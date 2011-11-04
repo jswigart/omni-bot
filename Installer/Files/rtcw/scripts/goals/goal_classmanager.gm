@@ -45,6 +45,11 @@ this.Exit = function()
 
 this.CheckForClassChange = function()
 {
+	if ( this.Bot.crucialClass ) {
+		// don't change crucial class which has been set by role manager
+		return;
+	}
+
 	newClass = ClassManager.EvalClassChange(this.Bot);
 
 	if (newClass) {

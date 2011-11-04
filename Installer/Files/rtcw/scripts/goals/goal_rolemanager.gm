@@ -6,150 +6,133 @@ this.AlwaysRecieveEvents = true;
 
 this.Initialize = function()
 {
-	if ( !Map || !Map.Roles ) {
-		return;
-	}
-
-	sleep(0.5); // give some time to get a team
-
-	// bleh, need to have a team lookup table for selecting every other bot per team
-	team = Util.TeamName(this.Bot.GetTeam());
-	if ( !Map.Roles.TeamTables ) { Map.Roles.TeamTables = table(); }
-	if ( !Map.Roles.TeamTables[ team ] ) {
-		Map.Roles.TeamTables[ team ] = table();
-	}
-
-	Map.Roles.TeamTables[ team ][ this.Bot ] = true;
-	this.Bot.RoleManagerTeamSlot = tableCount(Map.Roles.TeamTables[ team ]);
-
-	this.FindFreeRoleSlot();
+	this.justStarted = true;
 };
 
 this.FindFreeRoleSlot = function()
 {
+	// return if map doesn't have Roles table
 	// skip bots that already have a role
-	if ( Util.BotHasAnyRole(this.Bot) ) {
+	if ( !Map || !Map.Roles || Util.BotHasAnyRole(this.Bot) ) {
 		return;
 	}
 
-	if ( Map && Map.Roles ) {
-		team = Util.TeamName(this.Bot.GetTeam());
-		if ( Map.Roles[ team ]) {
-			// every other bot for the team unless specified
-			if (!Map.Roles[ team ].AllBots && this.Bot.RoleManagerTeamSlot % 2 != 0) {
+	team = this.Bot.GetTeam();
+	teamRoles = Map.Roles[ Util.TeamName(team) ];
+	if (!teamRoles){ return; }
+
+	botCount = 0;
+	evalNum = 0;
+	newClass = null;
+	foreach ( id and role in teamRoles ) {
+		if ( id == "AllBots" || !role.numbots ) { continue; }
+		if ( !role.bots ) { role.bots = table(); }
+
+		//remove disconnected bots
+		foreach ( bot and val in role.bots ) {
+			if (!bot.Name) {
+				role.bots[bot] = null;
+			}
+		}
+
+		currentBots = tableCount(role.bots);
+		botCount += currentBots;
+		numFree =  role.numbots - currentBots;
+
+		if ( this.Debug ) {
+			print( Util.TeamName(team), id, "current:", currentBots, "free:", numFree, "evalnum:" + evalNum );
+		}
+
+		// prioritize roles that have no players
+		if (currentBots == 0) { numFree += 9; }
+
+		// see which one needs a bot the most
+		if ( numFree > evalNum ) {
+			evalNum = numFree;
+			newRole = id;
+
+			if ( currentBots == 0 ) {
+				newClass = role.crucialClass;
+			} else {
+				newClass = null;
+			}
+			spawnPoint = role.spawnpt;
+			voiceMacro = role.voice;
+		}
+	}
+
+	// store it in the table and set the role
+	if ( typeId(newRole) != 0 ) {
+
+		// every other bot for the team unless specified
+		if (!teamRoles.AllBots) {
+			// teamCount = ETUtil.CountTeam(); //deprecated
+			teamCount = 0;
+			foreach ( bot in BotTable )
+			{
+				if ( bot.GetTeam() == team )
+					{ teamCount += 1; }
+			}
+			if (2 * botCount >= teamCount - 1) {
 				return;
 			}
+		}
 
-			evalNum = 0;
-			newClass = null;
-			spawnPoint = null;
-			voiceMacro = null;
-			foreach ( id and role in Map.Roles[ team ] ) {
-				if ( id == "AllBots"  ) { continue; }
-				if ( !Map.Roles[ team ][ id ].bots ) { Map.Roles[ team ][ id ].bots = table(); }
+		if (this.Debug) { print(this.Bot.Name, "role set to", newRole); }
+		teamRoles[ newRole ].bots[ this.Bot ] = true;
+		this.Bot.SetRoles(ROLE[newRole]);
 
-				if ( !Map.Roles[ team ][ id ].numbots ) {
-					continue;
-				}
+		// and change class if necessary
+		if ( newClass ) {
+			if (this.Debug) { print(this.Bot.Name, "crucial class set to", Util.ClassName(newClass)); }
+			this.Bot.crucialClass = newClass;
+			this.Bot.ChangeClass(newClass);
+		}
 
-				currentBots = tableCount(Map.Roles[ team ][ id ].bots);
-				numFree =  Map.Roles[ team ][ id ].numbots - currentBots;
+		// spawnpoint too
+		if ( spawnPoint ) {
+			this.Bot.ChangeSpawnPoint(spawnPoint);
+		}
 
-				if ( this.Debug ) {
-					print( Util.GetTableKey(ROLE, ROLE[id]), "current:", currentBots, "free:", numFree, "evalnum:" + evalNum );
-				}
-
-				// see which one needs a bot the most
-				if ( numFree > evalNum ) {
-					evalNum = numFree;
-					newRole = ROLE[id];
-					roleIndex = id; // for storing in the Map.Roles table
-
-					if ( currentBots == 0 && role.crucialClass ) {
-						newClass = role.crucialClass;
-					} else {
-						newClass = null;
-					}
-
-					if ( role.spawnpt ) {
-						spawnPoint = role.spawnpt;
-					} else {
-						spawnPoint = null;
-					}
-
-					if ( role.voice ) {
-						voiceMacro = role.voice;
-					} else {
-						voiceMacro = null;
-					}
-				}
-			}
-
-			// store it in the table and set the role
-			if ( typeId(newRole) != 0 ) {
-				if (this.Debug) { print(this.Bot.Name, "role set to", Util.GetTableKey(ROLE,newRole)); }
-				Map.Roles[ team ][ roleIndex ].bots[ this.Bot ] = true;
-				this.Bot.SetRoles(newRole);
-
-				// and change class if necessary
-				if ( newClass ) {
-					// increase class manager slots for this class
-					Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] = Server.MinClassCount[ this.Bot.GetTeam() ][ newClass ] + 1;			
-					this.Bot.ChangeClass(newClass);
-				}
-
-				// spawnpoint too
-				if ( spawnPoint ) {
-					this.Bot.ChangeSpawnPoint(spawnPoint);
-				}
-
-				// signal a voice macro
-				if ( voiceMacro ) {
-					signal( format("%s_%s", this.Bot.Name, voiceMacro) );
-				}
-			}
+		// signal a voice macro
+		if ( voiceMacro ) {
+			signal( format("%s_%s", this.Bot.Name, voiceMacro) );
 		}
 	}
 };
 
 this.Events[EVENT.DISCONNECTED] = function()
 {
-	team = Util.TeamName(this.Bot.GetTeam());
-	storedBot = this.Bot;
-	botName = this.Bot.Name;
-
 	// wait a frame so the disconnecting bot is gone
 	yield();
+	// see if any bots without roles can take the spot
+	// this is executed for all bots except the bot which has been disconnected
+	if (this.FindFreeRoleSlot){ this.FindFreeRoleSlot(); }
+};
 
-	// bleh. would be much cleaner if the event passed the bot that was actually leaving
-	b = Util.GetBotByName(botName);
-	if (!b)
-	{
-		if ( Map && Map.Roles ) {
-			if ( Map.Roles[ team ]) {
-				foreach ( id and role in Map.Roles[ team ] ) {
-
-					if ( !Map.Roles[ team ][ id ].bots || !Map.Roles[ team ][ id ].numbots ) {
-						continue;
-					}
-
-					// clear the slot the disconnected bot was occupying
-					if (Map.Roles[ team ][ id ].bots[ storedBot ] == true) {
-						Map.Roles[ team ][ id ].bots[ storedBot ] = null;
-					}
+this.Events[EVENT.CHANGETEAM] = function(team)
+{
+	if ( !Map || !Map.Roles ) {
+		return;
+	}
+	if (this.justStarted) {
+		this.justStarted = null;
+	} else {
+		// clear role in old team
+		if (team==TEAM.AXIS){ team=TEAM.ALLIES; } else { team=TEAM.AXIS; }
+		teamRoles = Map.Roles[ Util.TeamName(team) ];
+		if (teamRoles) {
+			bot = this.Bot;
+			foreach ( name and role in teamRoles ) {
+				if (name != "AllBots" && role.bots && role.bots[bot]) {
+					if (this.Debug){ print(bot.Name, "role", name, "cleared"); }
+					role.bots[bot] = null;
+					bot.ClearRoles(ROLE[name]);
+					bot.crucialClass = null;
 				}
-			}
-
-			// also clear it from the team table
-			if ( Map.Roles.TeamTables && Map.Roles.TeamTables[ team ] ) {
-				Map.Roles.TeamTables[ team ][ storedBot ] = null;
 			}
 		}
 	}
-	else
-	{
-		// see if any bots without roles can take the spot
-		this.FindFreeRoleSlot();
-	}
+	// set role in new team
+	this.FindFreeRoleSlot();
 };
-
