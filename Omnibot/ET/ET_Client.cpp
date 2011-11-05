@@ -472,7 +472,7 @@ void ET_Client::SetupBehaviorTree()
 	GetStateRoot()->AppendTo("HighLevel", new TakeCheckPoint);
 	//GetStateRoot()->AppendTo("HighLevel", new MobileMg42);
 	GetStateRoot()->AppendTo("HighLevel", new MobileMortar);
-	GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);
+	//GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);
 	GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
 	GetStateRoot()->AppendTo("HighLevel", new PlantMine);
 	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);

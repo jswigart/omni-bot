@@ -1,0 +1,196 @@
+this.Name = "REVIVE";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+
+this.LimitToClass(CLASS.MEDIC); // weapon.syringe instead?
+
+// states
+this.REVIVE_TARGET = 1;
+this.HEAL_TARGET = 2;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+	this.CheckReviveTimer = 2; // look for closer goals every x seconds
+	this.PacksThrown = 0;
+	this.BBDelayTime = 1; // path failed will increase this
+};
+
+this.QueryReviveGoals = function()
+{
+	bestGoal = null;
+	count = this.QueryGoals(this.Bot.QueryGoalsTable,"REVIVE_.*");
+	if ( count > 0 )
+	{
+		closest = 2001; // range + 1
+		foreach ( id and goal in this.Bot.QueryGoalsTable )
+		{
+			dist = this.Bot.DistanceTo(goal.GetPosition());
+			if ( dist < closest ) {
+				bestGoal = goal;
+				closest = dist;
+			}
+		}
+	}
+	tableClear(this.Bot.QueryGoalsTable);
+	return bestGoal;
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		if ( this.Bot.HasAmmo(WEAPON.SYRINGE) ) {
+			this.MapGoal = this.QueryReviveGoals();
+			if ( this.MapGoal ) {
+				this.Priority = this.MapGoal.GetGoalPriority(this.Bot);
+			}
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.State = this.REVIVE_TARGET;
+	this.TargetEntity = this.MapGoal.GetEntity();
+	this.PacksThrown = 0;
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	this.BBDelayTime = 1; // default. if interrupted for a closer revive, dont delay long.
+};
+
+this.LookForCloserReviveGoals = function()
+{
+	while(1) {
+		sleep(this.CheckReviveTimer);
+		goal = this.QueryReviveGoals();
+		if ( !goal || goal != this.MapGoal ) {
+			this.Finished();
+		}
+	}
+};
+
+this.Update = function()
+{
+	if ( !this.LookForCloserReviveGoalsThread ) {
+		this.LookForCloserReviveGoalsThread = this.ForkThread(this.LookForCloserReviveGoals);
+	}
+
+	switch( this.State )
+	{
+		case this.REVIVE_TARGET:
+		{
+			this.UpdateRevive();
+		}
+		case this.HEAL_TARGET:
+		{
+			this.UpdateHeal();
+		}
+		default:
+		{
+			this.Finished();
+		}
+	};
+
+	yield();
+};
+
+this.Exit = function()
+{
+	if ( this.LookForCloserReviveGoalsThread ) {
+		this.KillThread(this.LookForCloserReviveGoalsThread);
+		this.LookForCloserReviveGoalsThread = null;
+	}
+
+	this.BlackboardDelay(this.BBDelayTime, this.MapGoal);
+};
+
+this.UpdateRevive = function()
+{
+	if ( this.RouteTo(this.MapGoal, 32.f) != EVENT.PATH_FAILED ) {
+
+		if ( Util.GetEntHealth(this.TargetEntity) > 0 ) {
+			this.State = this.HEAL_TARGET;
+			return;
+		}
+
+		this.AddAimRequest(Priority.High, "position",GetEntPosition(this.TargetEntity));
+		this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
+		this.BlockForWeaponChange(WEAPON.SYRINGE);
+
+		timeout = 12; // 3 seconds
+		while( timeout > 0 && Util.GetEntHealth(this.TargetEntity) < 0 ) {
+			// position check here because some mods allow bodies to be dragged
+			pos = GetEntPosition(this.TargetEntity);
+			if (pos) {
+				this.AddAimRequest(Priority.High, "position",pos);
+
+				eyePos = GetEntEyePosition(this.Bot.GetGameEntity());
+				heightDiff = pos.z - eyePos.z;
+				if ( heightDiff > 20.f ) {
+					this.Bot.PressButton(BTN.JUMP);
+				}
+				else {
+					this.Bot.HoldButton(BTN.CROUCH, 0.5);
+				}
+
+				this.Bot.MoveTowards(pos);
+				this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+			}
+			else {
+				this.Finished();
+			}
+			sleep(0.25);
+			timeout -= 1;
+		}
+
+		if ( timeout > 0 ) {
+			this.State = this.HEAL_TARGET;
+		}
+		else {
+			this.Finished();
+		}
+	}
+	else {
+		this.BBDelayTime = 10;
+		this.Finished();
+	}
+};
+
+this.UpdateHeal = function()
+{
+	if ( !this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
+		this.Finished();
+	}
+
+	this.AddAimRequest(Priority.High, "position",GetEntEyePosition(this.TargetEntity));
+	this.AddWeaponRequest(Priority.High, WEAPON.MEDKIT);
+	this.BlockForWeaponChange(WEAPON.MEDKIT);
+
+	this.Bot.HoldButton(BTN.BACKWARD, 0.25); // move off them
+	sleep(0.25);
+
+	while( this.PacksThrown < 2 && this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
+		pos = GetEntEyePosition(this.TargetEntity);
+		if (pos) {
+			this.AddAimRequest(Priority.High, "position",pos);
+			this.Bot.MoveTowards(pos);
+			this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		}
+		else {
+			this.Finished();
+		}
+		sleep(0.25);
+	}
+
+	this.BBDelayTime = 10; // packs on ground most likely
+	this.Finished();
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	if( weaponId == WEAPON.MEDKIT ) {
+		this.PacksThrown += 1;
+	}
+ };
