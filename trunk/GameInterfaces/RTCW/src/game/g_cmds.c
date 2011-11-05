@@ -2882,6 +2882,17 @@ void Cmd_Buy_f( gentity_t* ent )
 	ent->client->sess.buyTime = level.time;
 }
 
+void Cmd_Injure_f( gentity_t *ent )
+{
+	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
+	  (ent->client->ps.pm_flags & PMF_LIMBO) ||
+	  ent->health <= 0) {
+		return;
+	}
+
+	G_Damage(ent,NULL,NULL,NULL,NULL,ent->health + 1,0, MOD_POISONGAS);
+}
+
 // cs: temp.
 // TODO: remove
 static char *temp[] =
@@ -3033,6 +3044,8 @@ void ClientCommand( int clientNum ) {
 	        return;
 	    }
 		Cmd_Buy_f( ent );
+	} else if (Q_stricmp (cmd, "injure") == 0) {
+		Cmd_Injure_f (ent);
 	} else if ( Q_stricmp( cmd, "shv" ) == 0 ) { // TODO: remove
 		Cmd_ShowHashValue_f();
 	} else {

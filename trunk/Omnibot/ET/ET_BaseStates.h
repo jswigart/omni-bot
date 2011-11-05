@@ -140,43 +140,43 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class ReviveTeammate : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
-		typedef enum
-		{
-			REVIVING,
-			HEALING,
-		} GoalState;
+	//class ReviveTeammate : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
+	//	typedef enum
+	//	{
+	//		REVIVING,
+	//		HEALING,
+	//	} GoalState;
 
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		ReviveTeammate();
-	private:
-		GoalState			m_GoalState;
+	//	ReviveTeammate();
+	//private:
+	//	GoalState			m_GoalState;
 
-		GameTimer			m_CheckReviveTimer;
+	//	GameTimer			m_CheckReviveTimer;
 
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		MapGoalList			m_List;
-		float				m_Range;
+	//	Trackers			Tracker;
+	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalList			m_List;
+	//	float				m_Range;
 
-		bool AreThereNewReviveGoals();
-	};
+	//	bool AreThereNewReviveGoals();
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 

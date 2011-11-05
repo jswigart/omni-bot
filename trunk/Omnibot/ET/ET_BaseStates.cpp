@@ -606,275 +606,275 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	ReviveTeammate::ReviveTeammate()
-		: StateChild("ReviveTeammate")
-		, FollowPathUser("ReviveTeammate")
-		, m_Range(2000.f)
-	{
-		LimitToWeapon().SetFlag(ET_WP_SYRINGE);
-	}
+	//ReviveTeammate::ReviveTeammate()
+	//	: StateChild("ReviveTeammate")
+	//	, FollowPathUser("ReviveTeammate")
+	//	, m_Range(2000.f)
+	//{
+	//	LimitToWeapon().SetFlag(ET_WP_SYRINGE);
+	//}
 
-	void ReviveTeammate::GetDebugString(StringStr &out)
-	{
-		switch(m_GoalState)
-		{
-		case REVIVING:
-			out << "Reviving ";
-			break;
-		case HEALING:
-			out << "Healing ";
-			break;
-		}
+	//void ReviveTeammate::GetDebugString(StringStr &out)
+	//{
+	//	switch(m_GoalState)
+	//	{
+	//	case REVIVING:
+	//		out << "Reviving ";
+	//		break;
+	//	case HEALING:
+	//		out << "Healing ";
+	//		break;
+	//	}
 
-		if(m_MapGoal && m_MapGoal->GetEntity().IsValid())
-			out << std::endl << EngineFuncs::EntityName(m_MapGoal->GetEntity(), "<noname>");
-	}
+	//	if(m_MapGoal && m_MapGoal->GetEntity().IsValid())
+	//		out << std::endl << EngineFuncs::EntityName(m_MapGoal->GetEntity(), "<noname>");
+	//}
 
-	void ReviveTeammate::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
-		}
-	}
+	//void ReviveTeammate::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool ReviveTeammate::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool ReviveTeammate::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	bool ReviveTeammate::GetAimPosition(Vector3f &_aimpos)
-	{
-		const Box3f obb = m_MapGoal->GetWorldBounds();
-		if ( m_GoalState == REVIVING )
-			_aimpos = obb.GetCenterBottom();
-		else
-			_aimpos = obb.Center;
-		return true;
-	}
+	//// AimerUser functions.
+	//bool ReviveTeammate::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	const Box3f obb = m_MapGoal->GetWorldBounds();
+	//	if ( m_GoalState == REVIVING )
+	//		_aimpos = obb.GetCenterBottom();
+	//	else
+	//		_aimpos = obb.Center;
+	//	return true;
+	//}
 
-	void ReviveTeammate::OnTarget()
-	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
-		{
-			if(InterfaceFuncs::IsAlive(m_MapGoal->GetEntity()))
-			{
-				if(ws->CurrentWeaponIs(ET_WP_MEDKIT))
-					ws->FireWeapon();
-			}
-			else
-			{
-				if(ws->CurrentWeaponIs(ET_WP_SYRINGE))
-					ws->FireWeapon();
-			}
-		}
-	}
+	//void ReviveTeammate::OnTarget()
+	//{
+	//	FINDSTATE(ws, WeaponSystem, GetRootState());
+	//	if(ws)
+	//	{
+	//		if(InterfaceFuncs::IsAlive(m_MapGoal->GetEntity()))
+	//		{
+	//			if(ws->CurrentWeaponIs(ET_WP_MEDKIT))
+	//				ws->FireWeapon();
+	//		}
+	//		else
+	//		{
+	//			if(ws->CurrentWeaponIs(ET_WP_SYRINGE))
+	//				ws->FireWeapon();
+	//		}
+	//	}
+	//}
 
-	obReal ReviveTeammate::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
+	//obReal ReviveTeammate::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		//qry.GetBest(m_MapGoal);
+	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	//qry.GetBest(m_MapGoal);
 
-		float fDistToRevive;
-		float fClosestRevive = 0.f;
-		MapGoalList::iterator mIt = qry.m_List.begin();
-		for(; mIt != qry.m_List.end(); )
-		{
-			fDistToRevive = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-			(*mIt)->GetProperty("Range",m_Range);
-			if ( fDistToRevive > m_Range * m_Range )
-			{
-				BlackboardDelay(5.f, (*mIt)->GetSerialNum()); // ignore it for a while so dist calcs aren't done every frame
-				mIt = qry.m_List.erase(mIt);
-				continue;
-			}
+	//	float fDistToRevive;
+	//	float fClosestRevive = 0.f;
+	//	MapGoalList::iterator mIt = qry.m_List.begin();
+	//	for(; mIt != qry.m_List.end(); )
+	//	{
+	//		fDistToRevive = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
+	//		(*mIt)->GetProperty("Range",m_Range);
+	//		if ( fDistToRevive > m_Range * m_Range )
+	//		{
+	//			BlackboardDelay(5.f, (*mIt)->GetSerialNum()); // ignore it for a while so dist calcs aren't done every frame
+	//			mIt = qry.m_List.erase(mIt);
+	//			continue;
+	//		}
 
-			// use the closest one or the first one found within 200 units
-			if ( fClosestRevive == 0.f || (fDistToRevive < fClosestRevive && fDistToRevive > 40000.f) )
-			{
-				fClosestRevive = fDistToRevive;
-				m_MapGoal = (*mIt);
-			}
+	//		// use the closest one or the first one found within 200 units
+	//		if ( fClosestRevive == 0.f || (fDistToRevive < fClosestRevive && fDistToRevive > 40000.f) )
+	//		{
+	//			fClosestRevive = fDistToRevive;
+	//			m_MapGoal = (*mIt);
+	//		}
 
-			++mIt;
-		}
+	//		++mIt;
+	//	}
 
-		m_List = qry.m_List;
-		// m_MapGoal.reset();
-		// TODO: check weapon capability vs target underwater?
+	//	m_List = qry.m_List;
+	//	// m_MapGoal.reset();
+	//	// TODO: check weapon capability vs target underwater?
 
-		return !m_List.empty() && m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//	return !m_List.empty() && m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void ReviveTeammate::Enter()
-	{
-		m_GoalState = REVIVING;
+	//void ReviveTeammate::Enter()
+	//{
+	//	m_GoalState = REVIVING;
 
-		m_CheckReviveTimer.Delay(2.f);
+	//	m_CheckReviveTimer.Delay(2.f);
 
-		FINDSTATE(fp, FollowPath, GetRootState());
-		if(fp != NULL && fp->Goto(this, m_List, Run))
-		{
-			m_MapGoal = m_List[GetDestinationIndex()];
-			Tracker.InProgress = m_MapGoal;
-		}
-		else
-		{
-			m_MapGoal.reset();
-			Tracker.Reset();
-			for(obuint32 i = 0; i < m_List.size(); ++i)
-			{
-				BlackboardDelay(10.f, m_List[i]->GetSerialNum());
-			}
-		}
-	}
+	//	FINDSTATE(fp, FollowPath, GetRootState());
+	//	if(fp != NULL && fp->Goto(this, m_List, Run))
+	//	{
+	//		m_MapGoal = m_List[GetDestinationIndex()];
+	//		Tracker.InProgress = m_MapGoal;
+	//	}
+	//	else
+	//	{
+	//		m_MapGoal.reset();
+	//		Tracker.Reset();
+	//		for(obuint32 i = 0; i < m_List.size(); ++i)
+	//		{
+	//			BlackboardDelay(10.f, m_List[i]->GetSerialNum());
+	//		}
+	//	}
+	//}
 
-	void ReviveTeammate::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void ReviveTeammate::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus ReviveTeammate::Update(float fDt)
-	{
-		if(!m_MapGoal)
-			return State_Finished;
+	//State::StateStatus ReviveTeammate::Update(float fDt)
+	//{
+	//	if(!m_MapGoal)
+	//		return State_Finished;
 
-		if(m_CheckReviveTimer.IsExpired())
-		{
-			// finish if there's new goals, so we can activate again and go to a new goal
-			if(AreThereNewReviveGoals())
-				return State_Finished;
-			m_CheckReviveTimer.Delay(2.f);
-		}
+	//	if(m_CheckReviveTimer.IsExpired())
+	//	{
+	//		// finish if there's new goals, so we can activate again and go to a new goal
+	//		if(AreThereNewReviveGoals())
+	//			return State_Finished;
+	//		m_CheckReviveTimer.Delay(2.f);
+	//	}
 
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		GameEntity reviveEnt = m_MapGoal->GetEntity();
+	//	GameEntity reviveEnt = m_MapGoal->GetEntity();
 
-		//////////////////////////////////////////////////////////////////////////
-		Msg_HealthArmor ha;
-		if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.m_CurrentHealth >= ha.m_MaxHealth)
-			return State_Finished;
+	//	//////////////////////////////////////////////////////////////////////////
+	//	Msg_HealthArmor ha;
+	//	if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.m_CurrentHealth >= ha.m_MaxHealth)
+	//		return State_Finished;
 
-		BitFlag64 ef;
-		if(InterfaceFuncs::GetEntityFlags(reviveEnt,ef))
-		{
-			if(ef.CheckFlag(ET_ENT_FLAG_INLIMBO))
-				return State_Finished;
-		}
-		//////////////////////////////////////////////////////////////////////////
+	//	BitFlag64 ef;
+	//	if(InterfaceFuncs::GetEntityFlags(reviveEnt,ef))
+	//	{
+	//		if(ef.CheckFlag(ET_ENT_FLAG_INLIMBO))
+	//			return State_Finished;
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
 
-		if(DidPathSucceed())
-		{
-			if(GetClient()->GetStuckTime() > 2000)
-			{
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-				return State_Finished;
-			}
+	//	if(DidPathSucceed())
+	//	{
+	//		if(GetClient()->GetStuckTime() > 2000)
+	//		{
+	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			return State_Finished;
+	//		}
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::High,this,GetNameHash()));
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::High,this,GetNameHash()));
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
 
-			switch(m_GoalState)
-			{
-			case REVIVING:
-				{
-					if(InterfaceFuncs::IsAlive(reviveEnt))
-					{
-						m_GoalState = HEALING;
-					}
-					else
-					{
-						GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-						FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), ET_WP_SYRINGE));
-					}
+	//		switch(m_GoalState)
+	//		{
+	//		case REVIVING:
+	//			{
+	//				if(InterfaceFuncs::IsAlive(reviveEnt))
+	//				{
+	//					m_GoalState = HEALING;
+	//				}
+	//				else
+	//				{
+	//					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
+	//					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), ET_WP_SYRINGE));
+	//				}
 
-					// if the height differences are significant, jump/crouch
-					const Vector3f eyePos = GetClient()->GetEyePosition();
-					Vector3f aimPos;
-					GetAimPosition( aimPos );
-					const float heightDiff = aimPos.z - eyePos.z;
-					if ( heightDiff > 20.f ) {
-						if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
-							GetClient()->PressButton(BOT_BUTTON_JUMP);
-						}
-					} else /*if ( heightDiff > 20.f )*/ {
-						BitFlag64 btns;
-						btns.SetFlag(BOT_BUTTON_CROUCH);
-						GetClient()->HoldButton(btns,IGame::GetDeltaTime()*2);
-					}
+	//				// if the height differences are significant, jump/crouch
+	//				const Vector3f eyePos = GetClient()->GetEyePosition();
+	//				Vector3f aimPos;
+	//				GetAimPosition( aimPos );
+	//				const float heightDiff = aimPos.z - eyePos.z;
+	//				if ( heightDiff > 20.f ) {
+	//					if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
+	//						GetClient()->PressButton(BOT_BUTTON_JUMP);
+	//					}
+	//				} else /*if ( heightDiff > 20.f )*/ {
+	//					BitFlag64 btns;
+	//					btns.SetFlag(BOT_BUTTON_CROUCH);
+	//					GetClient()->HoldButton(btns,IGame::GetDeltaTime()*2);
+	//				}
 
-					break;
-				}				
-			case HEALING:
-				{
-					// cs: bb delay any time the goal needs interrupted here
-					// otherwise it's a loop of goto and then finish which causes them
-					// to just 'stick' to the target without doing anything useful 
+	//				break;
+	//			}				
+	//		case HEALING:
+	//			{
+	//				// cs: bb delay any time the goal needs interrupted here
+	//				// otherwise it's a loop of goto and then finish which causes them
+	//				// to just 'stick' to the target without doing anything useful 
 
-					if(GetClient()->GetTargetingSystem()->HasTarget())
-					{
-						BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
-						return State_Finished;
-					}
+	//				if(GetClient()->GetTargetingSystem()->HasTarget())
+	//				{
+	//					BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
+	//					return State_Finished;
+	//				}
 
-					if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MEDKIT, Primary))
-					{
-						BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
-						return State_Finished;
-					}
+	//				if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MEDKIT, Primary))
+	//				{
+	//					BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
+	//					return State_Finished;
+	//				}
 
-					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), ET_WP_MEDKIT));
-					break;
-				}
-			}
-		}
-		return State_Busy;
-	}
+	//				GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
+	//				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::High, GetNameHash(), ET_WP_MEDKIT));
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	return State_Busy;
+	//}
 
-	bool ReviveTeammate::AreThereNewReviveGoals()
-	{
-		GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
+	//bool ReviveTeammate::AreThereNewReviveGoals()
+	//{
+	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
 
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			if(std::find(m_List.begin(),m_List.end(),qry.m_List[i]) == m_List.end())
-				return true;
-		}
+	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	{
+	//		if(std::find(m_List.begin(),m_List.end(),qry.m_List[i]) == m_List.end())
+	//			return true;
+	//	}
 
-		return false;
-	}
+	//	return false;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 

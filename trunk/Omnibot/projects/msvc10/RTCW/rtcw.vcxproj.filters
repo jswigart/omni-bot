@@ -13,14 +13,14 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2f35eb8e-af91-426c-8dbc-5a713af3724a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Filters">
-      <UniqueIdentifier>{475c6832-731e-475f-af9a-04e2bffab3c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Scripting">
       <UniqueIdentifier>{1f30be4a-178d-4b80-9c90-d849b8d541a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Goals">
       <UniqueIdentifier>{d9d40015-322a-49e5-97e1-85cf69e3a55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Filters">
+      <UniqueIdentifier>{475c6832-731e-475f-af9a-04e2bffab3c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,12 +29,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\MP\WolfMP-Source\src\game\g_rtcwbot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\RTCW\PrecompRTCW.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\RTCW\RTCW_Client.cpp">
       <Filter>Core</Filter>
@@ -48,8 +42,8 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_VoiceMacros.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp">
-      <Filter>Core\Filters</Filter>
+    <ClCompile Include="..\..\..\RTCW\PrecompRTCW.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\RTCW\gmRTCWBinds.cpp">
       <Filter>Core\Scripting</Filter>
@@ -60,6 +54,12 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_GoalManager.cpp">
       <Filter>Core\Goals</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp">
+      <Filter>Core\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\src\game\g_rtcwbot_interface.cpp">
+      <Filter>_Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc">
@@ -67,20 +67,9 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\RTCW\RTCW_BuildInterface.bld">
-      <Filter>_Interface</Filter>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="RTCW_BuildInterface.results">
-      <Filter>_Interface</Filter>
-    </None>
     <None Include="..\..\..\RTCW\Jamfile" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\RTCW\PrecompRTCW.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\RTCW\RTCW_Client.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -102,8 +91,11 @@
     <ClInclude Include="..\..\..\RTCW\RTCW_VoiceMacros.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\RTCW\RTCW_FilterClosest.h">
-      <Filter>Core\Filters</Filter>
+    <ClInclude Include="..\..\..\RTCW\PrecompRTCW.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\resource.h">
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\RTCW\gmRTCWBinds.h">
       <Filter>Core\Scripting</Filter>
@@ -114,5 +106,18 @@
     <ClInclude Include="..\..\..\RTCW\RTCW_GoalManager.h">
       <Filter>Core\Goals</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\RTCW\RTCW_FilterClosest.h">
+      <Filter>Core\Filters</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="RTCW_BuildInterface.results">
+      <Filter>_Interface</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <BuildExternal Include="..\..\..\RTCW\RTCW_BuildInterface.bld">
+      <Filter>_Interface</Filter>
+    </BuildExternal>
   </ItemGroup>
 </Project>

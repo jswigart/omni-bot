@@ -55,7 +55,7 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PropertySheets\ReleaseProperties.props" />
-    <Import Project="..\PropertySheets\BaseDllProperties.props" />
+    <Import Project="..\PropertySheets\BaseDllProperties64.props" />
     <Import Project="..\PropertySheets\BaseBuildProperties.props" />
     <Import Project="..\PropertySheets\Paths.props" />
   </ImportGroup>
@@ -67,7 +67,7 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\PropertySheets\BaseDllProperties.props" />
+    <Import Project="..\PropertySheets\BaseDllProperties64.props" />
     <Import Project="..\PropertySheets\BaseBuildProperties.props" />
     <Import Project="..\PropertySheets\Paths.props" />
   </ImportGroup>
@@ -113,6 +113,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompRTCW.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)PrecompRTCW.pch</PrecompiledHeaderOutputFile>
+      <AdditionalOptions>/Wp64 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -144,6 +145,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <AdditionalOptions>/MACHINE:X64 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
@@ -164,6 +166,9 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
@@ -188,9 +193,13 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <AdditionalOptions>/MACHINE:X64 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
@@ -296,25 +305,16 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ResourceCompile Include="..\Common\Common.rc" />
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\RTCW\RTCW_BuildInterface.bld">
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(InterfaceDir)GameInterfaces\RTCW\MP\WolfMP-Source\src\RTCW2008.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InterfaceDir)GameInterfaces\RTCW\MP\WolfMP-Source\src\RTCW2008.sln</Solution>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</Config>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</Config>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(InterfaceDir)GameInterfaces\RTCW\MP\WolfMP-Source\src\RTCW2008.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(InterfaceDir)GameInterfaces\RTCW\MP\WolfMP-Source\src\RTCW2008.sln</Solution>
+    <CustomBuildStep Include="RTCW_BuildInterface.results">
+      <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="RTCW_BuildInterface.results" />
+    </CustomBuildStep>
     <None Include="..\..\..\RTCW\Jamfile" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\RTCW\PrecompRTCW.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Client.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Config.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Game.h" />
@@ -322,17 +322,33 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\RTCW\RTCW_Messages.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_NavigationFlags.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_VoiceMacros.h" />
-    <ClInclude Include="..\..\..\RTCW\RTCW_FilterClosest.h" />
+    <ClInclude Include="..\..\..\RTCW\PrecompRTCW.h" />
+    <ClInclude Include="..\Common\resource.h" />
     <ClInclude Include="..\..\..\RTCW\gmRTCWBinds.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_BaseStates.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_GoalManager.h" />
+    <ClInclude Include="..\..\..\RTCW\RTCW_FilterClosest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildExternal Include="..\..\..\RTCW\RTCW_BuildInterface.bld">
+      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(InterfaceDir)GameInterfaces\RTCW\src\RTCW2010.sln</Solution>
+      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InterfaceDir)GameInterfaces\RTCW\src\RTCW2010.sln</Solution>
+      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(InterfaceDir)GameInterfaces\RTCW\src\RTCW2010.sln</Solution>
+      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(InterfaceDir)GameInterfaces\RTCW\src\RTCW2010.sln</Solution>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </BuildExternal>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\dependencies\gmsrc_ex\src\gm\gm2010.vcxproj">
       <Project>{8c9cc332-d582-453a-af10-20b100857587}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.vcxproj">
-      <Project>{2740aa5f-ab52-4d24-ae5a-97033aaecd7a}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
