@@ -143,86 +143,86 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	TakeCheckPoint::TakeCheckPoint()
-		: StateChild("TakeCheckPoint")
-		, FollowPathUser("TakeCheckPoint")
-	{
-	}
+	//TakeCheckPoint::TakeCheckPoint()
+	//	: StateChild("TakeCheckPoint")
+	//	, FollowPathUser("TakeCheckPoint")
+	//{
+	//}
 
-	void TakeCheckPoint::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
+	//void TakeCheckPoint::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
 
-	void TakeCheckPoint::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-		}
-	}
+	//void TakeCheckPoint::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//	}
+	//}
 
 	// FollowPathUser functions.
-	bool TakeCheckPoint::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//bool TakeCheckPoint::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	obReal TakeCheckPoint::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
+	//obReal TakeCheckPoint::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		GoalManager::Query qry(0xf7e4a57f /* CHECKPOINT */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		qry.GetBest(m_MapGoal);
+	//	GoalManager::Query qry(0xf7e4a57f /* CHECKPOINT */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	qry.GetBest(m_MapGoal);
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void TakeCheckPoint::Enter()
-	{
-		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
-		Tracker.InProgress = m_MapGoal;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
-	}
+	//void TakeCheckPoint::Enter()
+	//{
+	//	m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+	//	Tracker.InProgress = m_MapGoal;
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+	//}
 
-	void TakeCheckPoint::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void TakeCheckPoint::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+	//	m_MapGoal.reset();
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus TakeCheckPoint::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//State::StateStatus TakeCheckPoint::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		if(DidPathSucceed())
-		{
-			m_TargetPosition.z = GetClient()->GetPosition().z;
-			GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);			
-		}
-		return State_Busy;
-	}
+	//	if(DidPathSucceed())
+	//	{
+	//		m_TargetPosition.z = GetClient()->GetPosition().z;
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);			
+	//	}
+	//	return State_Busy;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -495,140 +495,140 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	DefuseDynamite::DefuseDynamite()
-		: StateChild("DefuseDynamite")
-		, FollowPathUser("DefuseDynamite")
-	{
-		LimitToWeapon().SetFlag(RTCW_WP_PLIERS);
-	}
+	//DefuseDynamite::DefuseDynamite()
+	//	: StateChild("DefuseDynamite")
+	//	, FollowPathUser("DefuseDynamite")
+	//{
+	//	LimitToWeapon().SetFlag(RTCW_WP_PLIERS);
+	//}
 
-	void DefuseDynamite::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
+	//void DefuseDynamite::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
 
-	void DefuseDynamite::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-		}
-	}
+	//void DefuseDynamite::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool DefuseDynamite::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool DefuseDynamite::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	bool DefuseDynamite::GetAimPosition(Vector3f &_aimpos)
-	{
-		_aimpos = m_MapGoal->GetWorldBounds().Center;
-		return true;
-	}
+	//// AimerUser functions.
+	//bool DefuseDynamite::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	_aimpos = m_MapGoal->GetWorldBounds().Center;
+	//	return true;
+	//}
 
-	void DefuseDynamite::OnTarget()
-	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(RTCW_WP_PLIERS))
-			ws->FireWeapon();
-	}
+	//void DefuseDynamite::OnTarget()
+	//{
+	//	FINDSTATE(ws, WeaponSystem, GetRootState());
+	//	if(ws && ws->CurrentWeaponIs(RTCW_WP_PLIERS))
+	//		ws->FireWeapon();
+	//}
 
-	obReal DefuseDynamite::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
+	//obReal DefuseDynamite::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		GoalManager::Query qry(0x1899efc7 /* DEFUSE */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-				continue;
+	//	GoalManager::Query qry(0x1899efc7 /* DEFUSE */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	{
+	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//			continue;
 
-			if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
-				continue;
+	//		if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//			continue;
 
-			if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.m_List[i]->GetEntity()) == XPLO_ARMED)
-			{
-				m_MapGoal = qry.m_List[i];
-				break;
-			}
-			else
-			{
-				qry.m_List[i]->SetDeleteMe(true);
-			}
-		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//		if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.m_List[i]->GetEntity()) == XPLO_ARMED)
+	//		{
+	//			m_MapGoal = qry.m_List[i];
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			qry.m_List[i]->SetDeleteMe(true);
+	//		}
+	//	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void DefuseDynamite::Enter()
-	{
-		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
-		Tracker.InProgress = m_MapGoal;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
-	}
+	//void DefuseDynamite::Enter()
+	//{
+	//	m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+	//	Tracker.InProgress = m_MapGoal;
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+	//}
 
-	void DefuseDynamite::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void DefuseDynamite::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus DefuseDynamite::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//State::StateStatus DefuseDynamite::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		if(DidPathSucceed())
-		{
-			ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_MapGoal->GetEntity());
-			switch(eState)
-			{
-			case XPLO_INVALID:
-			case XPLO_UNARMED:
-				return State_Finished;
-			default:
-				break; // keep processing
-			}
+	//	if(DidPathSucceed())
+	//	{
+	//		ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_MapGoal->GetEntity());
+	//		switch(eState)
+	//		{
+	//		case XPLO_INVALID:
+	//		case XPLO_UNARMED:
+	//			return State_Finished;
+	//		default:
+	//			break; // keep processing
+	//		}
 
-			m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+	//		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
 
-			const float fDistanceToDynamite = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
-			if(fDistanceToDynamite > 2500.0f)
-			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
-			}
-			else
-			{
-				GetClient()->PressButton(BOT_BUTTON_CROUCH);
+	//		const float fDistanceToDynamite = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
+	//		if(fDistanceToDynamite > 2500.0f)
+	//		{
+	//			GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+	//		}
+	//		else
+	//		{
+	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_PLIERS));
-			}
-		}
-		return State_Busy;
-	}
+	//			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+	//			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_PLIERS));
+	//		}
+	//	}
+	//	return State_Busy;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 

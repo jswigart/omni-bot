@@ -44,28 +44,28 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class TakeCheckPoint : public StateChild, public FollowPathUser
-	{
-	public:
+	//class TakeCheckPoint : public StateChild, public FollowPathUser
+	//{
+	//public:
 
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		TakeCheckPoint();
-	private:
-		Trackers		Tracker;
+	//	TakeCheckPoint();
+	//private:
+	//	Trackers		Tracker;
 
-		MapGoalPtr		m_MapGoal;
-		Vector3f		m_TargetPosition;
-	};
+	//	MapGoalPtr		m_MapGoal;
+	//	Vector3f		m_TargetPosition;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -108,32 +108,32 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class DefuseDynamite : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
+	//class DefuseDynamite : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
 
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		DefuseDynamite();
-	private:
-		Vector3f			m_TargetPosition;
+	//	DefuseDynamite();
+	//private:
+	//	Vector3f			m_TargetPosition;
 
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-	};
+	//	Trackers			Tracker;
+	//	MapGoalPtr			m_MapGoal;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
