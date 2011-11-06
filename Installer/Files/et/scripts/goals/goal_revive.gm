@@ -12,7 +12,6 @@ this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
 	this.CheckReviveTimer = 2; // look for closer goals every x seconds
-	this.PacksThrown = 0;
 	this.BBDelayTime = 1; // path failed will increase this
 };
 
@@ -55,9 +54,13 @@ this.Enter = function()
 {
 	this.State = this.REVIVE_TARGET;
 	this.TargetEntity = this.MapGoal.GetEntity();
-	this.PacksThrown = 0;
 	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 	this.BBDelayTime = 1; // default. if interrupted for a closer revive, dont delay long.
+
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BBDelayTime = 10;
+		this.Finished();
+	}
 };
 
 this.LookForCloserReviveGoals = function()
@@ -149,6 +152,7 @@ this.UpdateRevive = function()
 			this.State = this.HEAL_TARGET;
 		}
 		else {
+			this.BBDelayTime = 10;
 			this.Finished();
 		}
 	}
@@ -171,7 +175,7 @@ this.UpdateHeal = function()
 	this.Bot.HoldButton(BTN.BACKWARD, 0.25); // move off them
 	sleep(0.25);
 
-	while( this.PacksThrown < 2 && this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
+	while( this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
 		pos = GetEntEyePosition(this.TargetEntity);
 		if (pos) {
 			this.AddAimRequest(Priority.High, "position",pos);
@@ -187,10 +191,3 @@ this.UpdateHeal = function()
 	this.BBDelayTime = 10; // packs on ground most likely
 	this.Finished();
 };
-
-this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
-{
-	if( weaponId == WEAPON.MEDKIT ) {
-		this.PacksThrown += 1;
-	}
- };

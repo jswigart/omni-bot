@@ -4702,6 +4702,9 @@ public:
 				OB_GETMSG(ET_WaitingForMedic);
 				if(pMsg)
 				{
+					// cs:	the health value here is for the healing state of the revive goal.
+					//		this whole message should be obsoleted since we can provide a much
+					//		more flexible solution in script.
 					if (pEnt && pEnt->inuse && pEnt->client &&
 						(pEnt->health <= 60 || pEnt->client->ps.pm_type == PM_DEAD) &&
 						!(pEnt->client->ps.pm_flags & PMF_LIMBO))
