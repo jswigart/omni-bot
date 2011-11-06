@@ -326,7 +326,7 @@ global Map =
 	thirty_second = function( trigger )
 	{
 		// better go short with docs now
-		RTCWUtil.DisableGoal( "ROUTE_sidewall" );
+		Util.DisableGoal( "ROUTE_sidewall" );
 	},
 };
 
@@ -349,8 +349,8 @@ global OnMapLoad = function()
 	htrigger = OnTriggerRegion( AABB( 3538,4083,727, 3769, 4159, 832 ), Map.HallTrigger );
 	bhtrigger = OnTriggerRegion( AABB( 4783,5134,847, 4838, 5272, 921 ), Map.BackHallTrigger );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "CAPPOINT.*" );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	GateMgs =

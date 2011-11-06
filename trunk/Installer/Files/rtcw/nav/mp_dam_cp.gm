@@ -106,8 +106,8 @@ global OnMapLoad = function()
 	OnTrigger( "Axis takes the Observation Tower!", Map.checkpoint04_Axis_Captured );
 	OnTrigger( "Allies take the Observation Tower!", Map.checkpoint04_Allies_Captured );
 
-	RTCWUtil.DisableGoal( ".*" );
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

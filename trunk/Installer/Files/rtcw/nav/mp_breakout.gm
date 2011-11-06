@@ -208,7 +208,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA_LT.*" );
 		Map.SupportFire();
 
-		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 101 ); // Martin - Don't spawn in the house
+		Util.ChangeSpawnNoDefenders( TEAM.ALLIES, 101 ); // Martin - Don't spawn in the house
 	},
 
 	obj_flag_Allies_Captured = function( trigger )
@@ -233,7 +233,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA_LT.*" );
 		Map.SupportFire();
 
-		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 0 ); // Martin - spawn default
+		Util.ChangeSpawnNoDefenders( TEAM.ALLIES, 0 ); // Martin - spawn default
 	},
 
 	toggle_flag = function()
@@ -491,7 +491,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 0.94 ); // Less than dual

@@ -682,7 +682,7 @@ global OnMapLoad = function()
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.LimitToClass( "DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );

@@ -233,7 +233,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 120, maxcamptime = 180} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "SNIPE.*", 0.92 );

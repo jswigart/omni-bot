@@ -48,7 +48,7 @@ global Map =
 		Map.DamStatus = 1;
 
 		Map.regulator_plant_check();
-		RTCWUtil.EnableGoal( "ROUTE_northstairwell" );
+		Util.EnableGoal( "ROUTE_northstairwell" );
 	},
 
 	Lower_Dam_Door_Destroyed = function( trigger )
@@ -75,7 +75,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower_Dam_Door" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng.*" );
 		Map.flag_check();
-		RTCWUtil.EnableGoal( "ROUTE_main" );
+		Util.EnableGoal( "ROUTE_main" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_dam_flag" );    // We cant ever reclaim...
 	},
 
@@ -442,9 +442,9 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "GRENADE_AccessDuct", TEAM.ALLIES, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_SnipeWindow", TEAM.ALLIES, CLASS.SOLDIER );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_main" );
-	RTCWUtil.DisableGoal( "ROUTE_northstairwell" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_main" );
+	Util.DisableGoal( "ROUTE_northstairwell" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "AIRSTRIKE.*" );

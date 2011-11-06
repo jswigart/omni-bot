@@ -189,7 +189,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*" );
+	Util.DisableGoal( ".*" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 

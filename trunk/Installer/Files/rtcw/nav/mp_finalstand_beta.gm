@@ -44,7 +44,7 @@ global Map =
 
 		Map.EvalDefense();
 
-		RTCWUtil.EnableGoal( "ROUTE_gate" );
+		Util.EnableGoal( "ROUTE_gate" );
 	},
 
 	Bridge_Destroyed = function( trigger )
@@ -98,7 +98,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Alley_Gate" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSewer.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rGate.*" );
-		RTCWUtil.EnableGoal( "ROUTE_sewer" );
+		Util.EnableGoal( "ROUTE_sewer" );
 
 	},
 
@@ -173,9 +173,9 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
-	RTCWUtil.DisableGoal( "ROUTE_gate" );
-	RTCWUtil.DisableGoal( "ROUTE_sewer" );
+	Util.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( "ROUTE_gate" );
+	Util.DisableGoal( "ROUTE_sewer" );
 
 	SetGoalPriority( "DEFEND_bLTGate.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );

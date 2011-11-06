@@ -90,7 +90,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "ROUTE_eastvent" );
+		Util.EnableGoal( "ROUTE_eastvent" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_South_Vent" );
 
@@ -114,7 +114,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "ROUTE_southvent" );
+		Util.EnableGoal( "ROUTE_southvent" );
 
 		Util.MapDebugPrint( "South_Vent_Destroyed" );
 	},
@@ -127,7 +127,7 @@ global Map =
 
 		Map.DocStatus = true;
 
-		RTCWUtil.ChangeSpawn( TEAM.AXIS, 2, 3 );
+		Util.ChangeSpawn( TEAM.AXIS, 2, 3 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axhall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axroom.*" );
@@ -151,7 +151,7 @@ global Map =
 
 		Map.DocStatus = false;
 
-		RTCWUtil.ChangeSpawn( TEAM.AXIS, 1 );
+		Util.ChangeSpawn( TEAM.AXIS, 1 );
 
 		//enable the wheel again
 		SetAvailableMapGoals( TEAM.AXIS, tree, "SWITCH_wheel" );
@@ -248,10 +248,10 @@ global OnMapLoad = function()
 	//SetMapGoalProperties( "PANZER_.*", {mincamptime=30, maxcamptime=60});
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_eastvent" );
-	RTCWUtil.DisableGoal( "ROUTE_southvent" );
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_eastvent" );
+	Util.DisableGoal( "ROUTE_southvent" );
+	Util.EnableGoal( "CAPPOINT_.*" );
 
 	SetGoalPriority( "SWITCH.*", 0.7 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

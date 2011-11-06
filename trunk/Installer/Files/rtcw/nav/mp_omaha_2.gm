@@ -92,7 +92,7 @@ global Map =
 
 		Map.DocStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
-		RTCWUtil.ChangeSpawn( TEAM.AXIS, 2 );
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
 	},
 	Secret_Documents_Returned = function( trigger )
 	{
@@ -108,7 +108,7 @@ global Map =
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
 
-		RTCWUtil.ChangeSpawn( TEAM.AXIS, 0 );
+		Util.ChangeSpawn( TEAM.AXIS, 0 );
 	},
 	two_minute = function( trigger )
 	{
@@ -230,7 +230,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_Wall_breach" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_wooden_gate" );
@@ -246,7 +246,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_.*" );
 
-	RTCWUtil.EnableGoal( "CAPPOINT_deliver" );
+	Util.EnableGoal( "CAPPOINT_deliver" );
 
 	MapRoutes =
 	{

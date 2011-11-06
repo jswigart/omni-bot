@@ -116,7 +116,7 @@ global Map =
 		RTCWUtil.StopSniping();
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
-		RTCWUtil.EnableGoal( "ROUTE_basegate" );
+		Util.EnableGoal( "ROUTE_basegate" );
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 
 		if ( Map.GeneratorStatus == true ) {
@@ -142,7 +142,7 @@ global Map =
 		}
 
 		Map.StairStatus = true;
-		RTCWUtil.EnableGoal( "ROUTE_steps" );
+		Util.EnableGoal( "ROUTE_steps" );
 		
 		Wp.SetWaypointFlag( "stairgate", "allies", true );
 	},
@@ -165,8 +165,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
-		RTCWUtil.EnableGoal( "ROUTE_sBeach" );
-		RTCWUtil.EnableGoal( "ROUTE_nBeach" );
+		Util.EnableGoal( "ROUTE_sBeach" );
+		Util.EnableGoal( "ROUTE_nBeach" );
 		Map.DontDispenseAmmo = false;
 	},
 
@@ -190,7 +190,7 @@ global Map =
 		// Axis should not be in the trenches
 		Wp.SetWaypointFlag( "bunkerdoor", "allies", true );
 
-		RTCWUtil.EnableGoal( "ROUTE_bunkerdoor" );
+		Util.EnableGoal( "ROUTE_bunkerdoor" );
 
 		if ( Map.GeneratorStatus == false ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGenerator.*" );
@@ -367,7 +367,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
@@ -405,9 +405,9 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_power_generator", "plant_gen2" );
 	Util.AddUseWp( "PLANT_Axis_base_gate", "plant_basegate" );
 
-	RTCWUtil.DisableGoal( "ROUTE_basegate" );
-	RTCWUtil.DisableGoal( "ROUTE_steps" );
-	RTCWUtil.DisableGoal( "ROUTE_bunkerdoor" );
+	Util.DisableGoal( "ROUTE_basegate" );
+	Util.DisableGoal( "ROUTE_steps" );
+	Util.DisableGoal( "ROUTE_bunkerdoor" );
 
 	MapRoutes =
 	{

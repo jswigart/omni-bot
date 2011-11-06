@@ -327,9 +327,9 @@ global Map =
 			return;
 		}
 		Map.BunkerStatus = true;
-		RTCWUtil.EnableGoal( "ROUTE_mainent" );
-		RTCWUtil.EnableGoal( "ROUTE_mainent2" );
-		RTCWUtil.EnableGoal( "ROUTE_mainent3" );
+		Util.EnableGoal( "ROUTE_mainent" );
+		Util.EnableGoal( "ROUTE_mainent2" );
+		Util.EnableGoal( "ROUTE_mainent3" );
 		Util.DisableGoal( "SWITCH_lever2" );
 
 		if ( !Map.EnigmaStatus && !Map.FlagStatus ) {
@@ -367,7 +367,7 @@ global Map =
 
 		Map.EnigmaStatus = true;
 
-		RTCWUtil.EnableGoal( "DEFEND_enidef.*" );
+		Util.EnableGoal( "DEFEND_enidef.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
@@ -414,7 +414,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axmain_.*" );
 		}
 
-		RTCWUtil.DisableGoal( "DEFEND_enidef.*" );
+		Util.DisableGoal( "DEFEND_enidef.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart2_.*" );
@@ -454,7 +454,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
 		} else if ( Map.EnigmaStatus )   {
-			RTCWUtil.EnableGoal( "DEFEND_enidef.*" );
+			Util.EnableGoal( "DEFEND_enidef.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
@@ -485,7 +485,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ax1stfl_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
 		} else if ( Map.EnigmaStatus )   {
-			RTCWUtil.EnableGoal( "DEFEND_enidef.*" );
+			Util.EnableGoal( "DEFEND_enidef.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
@@ -551,7 +551,7 @@ global Map =
 		}
 
 		Map.BarrierStatus = true;
-		RTCWUtil.EnableGoal( "ROUTE_acctunn" );
+		Util.EnableGoal( "ROUTE_acctunn" );
 	},
 
 	elevator_buttons = function( trigger )
@@ -618,12 +618,12 @@ global OnMapLoad = function()
 	OnTrigger( "elevator_body_goto", Map.elevator_trigger );
 	OnTrigger( "elevator_body_Opening", Map.elevator_buttons );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_mainent" );
-	RTCWUtil.DisableGoal( "ROUTE_mainent2" );
-	RTCWUtil.DisableGoal( "ROUTE_mainent3" );
-	RTCWUtil.DisableGoal( "ROUTE_acctunn" );
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_mainent" );
+	Util.DisableGoal( "ROUTE_mainent2" );
+	Util.DisableGoal( "ROUTE_mainent3" );
+	Util.DisableGoal( "ROUTE_acctunn" );
+	Util.EnableGoal( "CAPPOINT_.*" );
 	RTCWUtil.SetPrimaryGoals( 1.1 );
 	RTCWUtil.LimitToClass( "DEFEND_axeng1_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "DEFEND_axeng2_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );

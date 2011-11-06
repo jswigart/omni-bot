@@ -117,7 +117,7 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		RTCWUtil.EnableGoal( "ROUTE_depotgate" );
+		Util.EnableGoal( "ROUTE_depotgate" );
 		Map.DepotStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
@@ -147,7 +147,7 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		RTCWUtil.EnableGoal( "ROUTE_eastwall" );
+		Util.EnableGoal( "ROUTE_eastwall" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Supply_Documents" );
 		if ( Map.DepotStatus == false ) {
@@ -175,7 +175,7 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		RTCWUtil.EnableGoal( "ROUTE_westwall" );
+		Util.EnableGoal( "ROUTE_westwall" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Supply_Documents" );
 		if ( Map.DepotStatus == false ) {
@@ -337,7 +337,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
@@ -349,12 +349,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 
-	RTCWUtil.EnableGoal( "CHECKPOINT_forwardflag" );
-	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
-	RTCWUtil.EnableGoal( "ROUTE.*" );
-	RTCWUtil.DisableGoal( "ROUTE_westwall" );
-	RTCWUtil.DisableGoal( "ROUTE_eastwall" );
-	RTCWUtil.DisableGoal( "ROUTE_depotgate" );
+	Util.EnableGoal( "CHECKPOINT_forwardflag" );
+	Util.EnableGoal( "CAPPOINT_transmitter" );
+	Util.EnableGoal( "ROUTE.*" );
+	Util.DisableGoal( "ROUTE_westwall" );
+	Util.DisableGoal( "ROUTE_eastwall" );
+	Util.DisableGoal( "ROUTE_depotgate" );
 
 	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 ); // More than docs
 	SetGoalPriority( "DEFEND_rEng.*", 0.90 );

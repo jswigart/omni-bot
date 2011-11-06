@@ -38,7 +38,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*" );
+	Util.DisableGoal( ".*" );
 	OnTrigger( "Round End.", Map.Round_End );
 
 	if ( Map.TestMemRecord ) {

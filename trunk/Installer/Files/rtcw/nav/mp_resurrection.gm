@@ -11,7 +11,7 @@
 
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0, // please set to zero before distributing your script
 	ShowMovers = false,
 	FogViewDistance = 1400,
 	NormalViewDistance = 5000,
@@ -275,8 +275,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 );
 	
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_transmitter" );
 	
 	RTCWUtil.LimitToClass( "GRENADE_rMain.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );

@@ -173,7 +173,7 @@ global Map =
 		Map.BasementStatus = true;
 		Map.BasementDyno = 0;
 
-		RTCWUtil.EnableGoal( "ROUTE_basement" );
+		Util.EnableGoal( "ROUTE_basement" );
 		//SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_snowhut" );
 	},
 
@@ -204,7 +204,7 @@ global Map =
 		Map.LowerStatus = true;
 		Map.LowerDyno = 0;
 
-		RTCWUtil.EnableGoal( "ROUTE_engineroom1" );
+		Util.EnableGoal( "ROUTE_engineroom1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bLower.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng.*" );
@@ -245,8 +245,8 @@ global Map =
 		Map.DontDispenseAmmo = true;
 
 		// disable all goals for both teams
-		RTCWUtil.DisableGoal( ".*", true );  //all but routes
-		RTCWUtil.DisableGoal( "ROUTE_basement" );
+		Util.DisableGoal( ".*", true );  //all but routes
+		Util.DisableGoal( "ROUTE_basement" );
 
 		DeleteTriggerRegion( "SupplyRoom" );
 
@@ -861,7 +861,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 3, "FLAG.*" ); // Martin - 3 people go for it (now includes after dropped)
 
-	RTCWUtil.DisableGoal( ".*", true );
+	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1 );
 
 	SetGoalPriority( "DEFEND_rRoam.*", 0.48 );
@@ -887,7 +887,7 @@ global OnMapLoad = function()
 	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC );
 	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 
-	RTCWUtil.DisableGoal( "ROUTE_engineroom1" );
+	Util.DisableGoal( "ROUTE_engineroom1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam_supply.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng.*" );

@@ -94,9 +94,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_spawn_defend_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_flag_defend_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_key_defend_.*" );       // Fallback
-		RTCWUtil.EnableGoal( "ROUTE_westelevator" );
-		RTCWUtil.EnableGoal( "ROUTE_eastelevator" );
-		RTCWUtil.EnableGoal( "ROUTE_tunnel" );
+		Util.EnableGoal( "ROUTE_westelevator" );
+		Util.EnableGoal( "ROUTE_eastelevator" );
+		Util.EnableGoal( "ROUTE_tunnel" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzerWest" );
 		if (!Map.KeyStatus)
@@ -112,7 +112,7 @@ global Map =
 		}
 
 		//don't bother trying to defuse this
-		RTCWUtil.DisableGoal( "DEFUSE_Tunnel_Rubble.*" );
+		Util.DisableGoal( "DEFUSE_Tunnel_Rubble.*" );
 	},
 
 	Tunnel_Rubble_Defused = function( trigger )
@@ -130,7 +130,7 @@ global Map =
 
 		Map.ServiceStatus = true;
 
-		RTCWUtil.EnableGoal( "ROUTE_keydel[45]" );
+		Util.EnableGoal( "ROUTE_keydel[45]" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_office );
 
 		Map.AxisOpenDoor = true;
@@ -148,7 +148,7 @@ global Map =
 
 		//don't bother trying to defuse this if key is gone
 		if ( Map.KeyStatus ) {
-			RTCWUtil.DisableGoal( "DEFUSE_Rocket_Bay.*" );
+			Util.DisableGoal( "DEFUSE_Rocket_Bay.*" );
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEng_emergency.*" );
 	},
@@ -184,7 +184,7 @@ global Map =
 
 		//don't bother trying to defuse this if keycard stolen
 		if ( Map.KeyStatus ) {
-			RTCWUtil.DisableGoal( "DEFUSE_Upper_Rocket.*" );
+			Util.DisableGoal( "DEFUSE_Upper_Rocket.*" );
 		}
 
 	},
@@ -207,7 +207,7 @@ global Map =
 
 		//50% chance for a bot to select flagspawn
 		//first parameter is team, second is spawnpoint
-		RTCWUtil.RandomSpawn( TEAM.ALLIES, 1 );
+		Util.RandomSpawn( TEAM.ALLIES, 1 );
 	},
 
 	caveone_flag_Axis_Captured = function( trigger )
@@ -344,8 +344,8 @@ global OnMapLoad = function()
 	OnTrigger( "rocdoor_lever1_goto", Map.door_lever );
 	OnTrigger( "rocdoor_right_goto", Map.door_trigger );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
-	RTCWUtil.EnableGoal( "CAPPOINT.*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
+	Util.EnableGoal( "CAPPOINT.*", true ); //all but the routes
 
 	docspush = OnTriggerRegion( AABB( -2460.000,1519.000,583.000,-2245.000,1608.000,702.000 ), RegionTrigger.DisableBotPush );
 
@@ -374,7 +374,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH_controls", 0.9 );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 
-	RTCWUtil.DisableGoal( "ROUTE_keydel[45]" );
+	Util.DisableGoal( "ROUTE_keydel[45]" );
 
 	//this removes the goal, so the bots wont target it or anything
 	Util.RemoveGoal( "MOVER_train1" );
@@ -385,9 +385,9 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
 
 	SetGoalPriority( "PLANT_Tunnel_Rubble.*", 1.0 );    // Plant me first for easy access
-	RTCWUtil.DisableGoal( "ROUTE_westelevator" );
-	RTCWUtil.DisableGoal( "ROUTE_eastelevator" );
-	RTCWUtil.DisableGoal( "ROUTE_tunnel" );
+	Util.DisableGoal( "ROUTE_westelevator" );
+	Util.DisableGoal( "ROUTE_eastelevator" );
+	Util.DisableGoal( "ROUTE_tunnel" );
 
 	//set up the switches
 	Util.UpdateSwitchData();

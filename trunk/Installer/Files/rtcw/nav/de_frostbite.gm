@@ -190,7 +190,7 @@ global Map =
 		}
 
 		Map.MainDoorStatus = 1;
-		RTCWUtil.EnableGoal( "ROUTE_lowercp" );
+		Util.EnableGoal( "ROUTE_lowercp" );
 		Wp.SetWaypointFlag( "lowerhack", "closed", false );
 		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
 
@@ -206,7 +206,7 @@ global Map =
 		}
 
 		//bots shouldnt attempt defuse
-		RTCWUtil.DisableGoal( "DEFUSE_main.*" );
+		Util.DisableGoal( "DEFUSE_main.*" );
 
 		Map.MainDoorDyno += 1;
 	},
@@ -227,7 +227,7 @@ global Map =
 		}
 
 		Map.WallStatus = 1;
-		RTCWUtil.EnableGoal( "ROUTE_wallroute" );
+		Util.EnableGoal( "ROUTE_wallroute" );
 		Wp.SetWaypointFlag( "wallhack", "closed", false );
 		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
 
@@ -246,7 +246,7 @@ global Map =
 		}
 
 		//bots shouldnt attempt defuse
-		RTCWUtil.DisableGoal( "DEFUSE_storage.*" );
+		Util.DisableGoal( "DEFUSE_storage.*" );
 
 		Map.WallDyno += 1;
 	},
@@ -284,7 +284,7 @@ global Map =
 
 		//bots shouldnt attempt defuse if they don't own flag
 		if ( Map.FlagStatus != 1 ) {
-			RTCWUtil.DisableGoal( "DEFUSE_service.*" );
+			Util.DisableGoal( "DEFUSE_service.*" );
 		}
 
 		Map.ServiceDoorDyno += 1;
@@ -506,13 +506,13 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_Doc_Defense_4", 0.65 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_lowercp" );
-	RTCWUtil.DisableGoal( "ROUTE_wallroute" );
-	RTCWUtil.DisableGoal( "ROUTE_office" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_lowercp" );
+	Util.DisableGoal( "ROUTE_wallroute" );
+	Util.DisableGoal( "ROUTE_office" );
 
-	RTCWUtil.EnableGoal( Map.Checkpoint );
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	Util.EnableGoal( Map.Checkpoint );
+	Util.EnableGoal( "CAPPOINT_.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_main_door );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_CP_attack.*" );

@@ -227,7 +227,7 @@ global Map =
 		Map.SideWallStatus = true;
 
 		//toggle on the side wall route
-		RTCWUtil.EnableGoal( "ROUTE_sidewall" );
+		Util.EnableGoal( "ROUTE_sidewall" );
 	},
 
 	Service_Door_Destroyed  = function( trigger )
@@ -254,7 +254,7 @@ global Map =
 		
 		Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" ); // On large sided teams, not everyone should make a u-turn for the flag
 
-		RTCWUtil.EnableGoal( "ROUTE_servicehalls" );
+		Util.EnableGoal( "ROUTE_servicehalls" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Flag_Defense_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Flag_Attack_.*" );
@@ -294,7 +294,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Flag_Defense_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Fortress_Wall" );
-			RTCWUtil.DisableGoal( "DEFUSE.*" );
+			Util.DisableGoal( "DEFUSE.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_stronghold.*" );
 
@@ -486,11 +486,11 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "ATTACK_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_sidewall" );
-	RTCWUtil.DisableGoal( "ROUTE_servicehalls" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_sidewall" );
+	Util.DisableGoal( "ROUTE_servicehalls" );
 
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
+	Util.EnableGoal( "CAPPOINT.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Flag_Attack_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Service_Door" );

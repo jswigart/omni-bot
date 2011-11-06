@@ -261,7 +261,7 @@ global Map =
 		}
 
 		//set these if either has been destroyed
-		RTCWUtil.EnableGoal( Map.Checkpoint_beach_flag );
+		Util.EnableGoal( Map.Checkpoint_beach_flag );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_3 );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_t364 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
@@ -409,8 +409,8 @@ global Map =
 		}
 
 		if ( Map.DocStatus ) {
-			RTCWUtil.DisableGoal( "CALLARTILLERY.*" );
-			RTCWUtil.DisableGoal( "ARTILLERY.*" );
+			Util.DisableGoal( "CALLARTILLERY.*" );
+			Util.DisableGoal( "ARTILLERY.*" );
 		}
 
 		Util.MapDebugPrint( "EvalArty" );
@@ -610,8 +610,8 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.ENGINEER, CLASS.MEDIC );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT_transmitter" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_transmitter" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
