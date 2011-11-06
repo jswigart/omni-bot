@@ -56,11 +56,6 @@ this.Enter = function()
 	this.TargetEntity = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
 	this.BBDelayTime = 1; // default. if interrupted for a closer revive, dont delay long.
-
-	if(!this.MarkInProgress(this.MapGoal)) {
-		this.BBDelayTime = 10;
-		this.Finished();
-	}
 };
 
 this.LookForCloserReviveGoals = function()
