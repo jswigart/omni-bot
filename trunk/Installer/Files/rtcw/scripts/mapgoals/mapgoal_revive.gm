@@ -7,7 +7,6 @@ this.Radius = 64;
 this.DynamicPosition = true;
 this.DynamicOrientation = true;
 this.Range = 2000; // this matches value for compass icon in SDK
-this.MaxUsers_InProgress(2);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -70,7 +69,3 @@ this.Update = function()
 	}
 	yield();
 };
-
-
-
-

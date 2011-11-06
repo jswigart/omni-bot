@@ -15,131 +15,131 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	RepairMg42::RepairMg42()
-		: StateChild("RepairMg42")
-		, FollowPathUser("RepairMg42")
-		, m_IgnoreTargets(false)
-	{
-		LimitToWeapon().SetFlag(RTCW_WP_PLIERS);
-	}
+	//RepairMg42::RepairMg42()
+	//	: StateChild("RepairMg42")
+	//	, FollowPathUser("RepairMg42")
+	//	, m_IgnoreTargets(false)
+	//{
+	//	LimitToWeapon().SetFlag(RTCW_WP_PLIERS);
+	//}
 
-	void RepairMg42::GetDebugString(StringStr &out)
-	{
-		if(IsActive())
-		{
-			//if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
-			out << "Repairing " + (m_MapGoal?m_MapGoal->GetName():"");
-		}
-	}
+	//void RepairMg42::GetDebugString(StringStr &out)
+	//{
+	//	if(IsActive())
+	//	{
+	//		//if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
+	//		out << "Repairing " + (m_MapGoal?m_MapGoal->GetName():"");
+	//	}
+	//}
 
-	void RepairMg42::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-		}
-	}
+	//void RepairMg42::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool RepairMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool RepairMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	bool RepairMg42::GetAimPosition(Vector3f &_aimpos)
-	{
-		_aimpos = m_MG42Position;
-		return true;
-	}
+	//// AimerUser functions.
+	//bool RepairMg42::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	_aimpos = m_MG42Position;
+	//	return true;
+	//}
 
-	void RepairMg42::OnTarget()
-	{
-		FINDSTATE(ws,WeaponSystem,GetRootState());
-		if(ws && ws->GetCurrentRequestOwner() == GetNameHash())
-			ws->FireWeapon();
-	}
+	//void RepairMg42::OnTarget()
+	//{
+	//	FINDSTATE(ws,WeaponSystem,GetRootState());
+	//	if(ws && ws->GetCurrentRequestOwner() == GetNameHash())
+	//		ws->FireWeapon();
+	//}
 
-	obReal RepairMg42::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
+	//obReal RepairMg42::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		BitFlag64 entFlags;
+	//	BitFlag64 entFlags;
 
-		GoalManager::Query qry(0x17929136 /* REPAIRMG42 */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-				continue;
+	//	GoalManager::Query qry(0x17929136 /* REPAIRMG42 */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	{
+	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//			continue;
 
-			bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
-			if(!bBroken)
-				continue;
-			else
-			{
-				float fDistToRepair = SquaredLength2d(qry.m_List[i]->GetPosition(), GetClient()->GetPosition());
-				if ( fDistToRepair > 4000000 ) { // 2000 squared
-					BlackboardDelay(10.f, qry.m_List[i]->GetSerialNum());
-					continue;
-				}
-			}
+	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
+	//		if(!bBroken)
+	//			continue;
+	//		else
+	//		{
+	//			float fDistToRepair = SquaredLength2d(qry.m_List[i]->GetPosition(), GetClient()->GetPosition());
+	//			if ( fDistToRepair > 4000000 ) { // 2000 squared
+	//				BlackboardDelay(10.f, qry.m_List[i]->GetSerialNum());
+	//				continue;
+	//			}
+	//		}
 
-			m_MapGoal = qry.m_List[i];
-			break;
-		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//		m_MapGoal = qry.m_List[i];
+	//		break;
+	//	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void RepairMg42::Enter()
-	{
-		m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+	//void RepairMg42::Enter()
+	//{
+	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
 
-		Tracker.InProgress = m_MapGoal;
-		m_MG42Position = m_MapGoal->GetWorldBounds().Center;
-		//m_MapGoal->GetWorldBounds().CenterBottom(m_MG42Position);
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
-	}
+	//	Tracker.InProgress = m_MapGoal;
+	//	m_MG42Position = m_MapGoal->GetWorldBounds().Center;
+	//	//m_MapGoal->GetWorldBounds().CenterBottom(m_MG42Position);
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+	//}
 
-	void RepairMg42::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void RepairMg42::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoal.reset();
-		Tracker.Reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
-	}
+	//	m_MapGoal.reset();
+	//	Tracker.Reset();
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//}
 
-	State::StateStatus RepairMg42::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//State::StateStatus RepairMg42::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity());
-		if(!bBroken || !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity());
+	//	if(!bBroken || !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		if(DidPathSucceed())
-		{
-			GetClient()->PressButton(BOT_BUTTON_CROUCH);
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//	if(DidPathSucceed())
+	//	{
+	//		GetClient()->PressButton(BOT_BUTTON_CROUCH);
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
 
-			Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_PLIERS));
-		}
-		return State_Busy;
-	}
+	//		Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
+	//		FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_PLIERS));
+	//	}
+	//	return State_Busy;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 

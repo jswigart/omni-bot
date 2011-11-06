@@ -15,32 +15,32 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	class RepairMg42 : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
-		void GetDebugString(StringStr &out);
-		void RenderDebug();
+	//class RepairMg42 : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
+	//	void GetDebugString(StringStr &out);
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		RepairMg42();
-	private:
-		Vector3f			m_MG42Position;
-		MapGoalPtr			m_MapGoal;
-		Trackers			Tracker;
+	//	RepairMg42();
+	//private:
+	//	Vector3f			m_MG42Position;
+	//	MapGoalPtr			m_MapGoal;
+	//	Trackers			Tracker;
 
-		bool				m_IgnoreTargets;
-	};
+	//	bool				m_IgnoreTargets;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 

@@ -6,6 +6,11 @@ this.RolePriorityBonus = 0.1;
 
 //////////////////////////////////////////////////////////////////////////
 
+this.Schema = Schema();
+this.Schema.Stance = Validate.Enum("stand","crouch").Default("crouch");
+
+//////////////////////////////////////////////////////////////////////////
+
 this.UpgradeVersion = function(Props)
 {
 	// version 0 is string,string key/values from the old waypoint format
@@ -16,8 +21,77 @@ this.UpgradeVersion = function(Props)
 	}
 	else if(Props.Version == this.Version)
 	{
+		this.Schema.Check(Props);
+		this.Stance = Props.Stance;
 
+		if( !this.Schema.Check(this) ) {
+			this.DisableGoal(true);
+		}
 	}
 };
 
 //////////////////////////////////////////////////////////////////////////
+
+this.Render = function(editMode)
+{
+	while(this.RenderGoal == true)
+	{
+		if(this.ExtraDebugText==null)
+		{
+			this.ExtraDebugText = "";
+			if ( this.Stance )
+			{
+				this.ExtraDebugText += format("Stance: %s\n",this.Stance);
+			}
+		}
+
+		this.RenderDefault();
+
+		sleep(2);
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.SaveToTable = function(SaveTable)
+{
+	SaveTable.Stance = this.Stance;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.Help = function()
+{
+	print(this.GoalType,"goal, version",this.Version);
+	print("Optional:");
+	print("		stance - stand, crouch");
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.SetProperty = function(property, value)
+{
+	switch(property)
+	{
+		case "stance": // crouch, stand, default crouch
+		{
+			this.Stance = value;
+		}
+		default:
+		{
+			print(this.GoalType, ": Invalid property:", property);
+		}
+	}
+
+	this.ExtraDebugText = null;
+};
+
+//////////////////////////////////////////////////////////////////////////
+global CreateGui = function(object, guidef)
+{
+};
+//////////////////////////////////////////////////////////////////////////
+this.HudDisplay = function(window)
+{
+	this.CreateGuiFromSchema(this.Schema);
+};
