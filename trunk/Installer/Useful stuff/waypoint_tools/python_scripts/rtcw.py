@@ -24,16 +24,14 @@ DoOldScriptGoalList = True	# list maps with unsupported script goal setups
 ########################################################################
 # populate a sorted list of files in nav
 ########################################################################
-Path = "../../../Files/et/nav/"
+Path = "../../../Files/rtcw/nav/"
 NavList=os.listdir(os.path.normpath(Path))
 NavList.sort()
 
 ########################################################################
 # populate lists for incomplete maps
 ########################################################################
-NoScriptList = os.listdir('../../../Files/et/incomplete_navs/no_script/')
-WithScriptList = os.listdir('../../../Files/et/incomplete_navs/with_script/')
-PriorityList = os.listdir('../../../Files/et/incomplete_navs/priority_maps/')
+PriorityList = os.listdir('../../../Files/rtcw/incomplete_navs/')
 
 ########################################################################
 # Main
@@ -67,7 +65,7 @@ def Main():
 # build a wiki formatted waypoint list
 ########################################################################
 def BuildWaypointList():
-	f = open(os.path.normpath('results/et_wplist.txt'), 'w')
+	f = open(os.path.normpath('results/rtcw_wplist.txt'), 'w')
 	f.write('=== 0.82 released waypoints ===\n\n')
 
 	for fname in NavList:
@@ -81,32 +79,7 @@ def BuildWaypointList():
 # find duplicate waypoints
 ########################################################################
 def FindDuplicates():
-	f = open(os.path.normpath('results/et_dupelist.txt'), 'w')
-
-	# iterate no_script
-	for fname in NoScriptList:
-		if fname == '.svn':
-			continue
-
-		if fname in WithScriptList:
-			f.write('{0} exists in no_script and with_script\n'.format(fname))
-
-		if fname in PriorityList:
-			f.write('{0} exists in no_script and priority_maps\n'.format(fname))
-
-		if fname in NavList:
-			f.write('{0} exists in no_script and nav\n'.format(fname))
-
-	# iterate with_script
-	for fname in WithScriptList:
-		if fname == '.svn':
-			continue
-
-		if fname in PriorityList:
-			f.write('{0} exists in with_script and priority_maps\n'.format(fname))
-
-		if fname in NavList:
-			f.write('{0} exists in with_script and nav\n'.format(fname))
+	f = open(os.path.normpath('results/rtcw_dupelist.txt'), 'w')
 
 	# iterate priority_maps
 	for fname in PriorityList:
@@ -114,7 +87,7 @@ def FindDuplicates():
 			continue
 
 		if fname in NavList:
-			f.write('{0} exists in priority_maps and nav\n'.format(fname))
+			f.write('{0} exists in incomplete_navs and nav\n'.format(fname))
 
 	f.write('### end dup list')
 	f.close()
@@ -190,17 +163,17 @@ def FindDeprecated():
 						inp.close()
 						continue
 
-					if ( s.find('ETUtil.DisableGoal') > 0 ):
-						s = ReplaceDeprecated(fname,s,'ETUtil.DisableGoal','Util.DisableGoal')
+					if ( s.find('RTCWUtil.DisableGoal') > 0 ):
+						s = ReplaceDeprecated(fname,s,'RTCWUtil.DisableGoal','Util.DisableGoal')
 
-					if ( s.find('ETUtil.EnableGoal') > 0 ):
-						s = ReplaceDeprecated(fname,s,'ETUtil.EnableGoal','Util.EnableGoal')
+					if ( s.find('RTCWUtil.EnableGoal') > 0 ):
+						s = ReplaceDeprecated(fname,s,'RTCWUtil.EnableGoal','Util.EnableGoal')
 
-					if ( s.find('ETUtil.RandomSpawn') > 0 ):
-						s = ReplaceDeprecated(fname,s,'ETUtil.RandomSpawn','Util.RandomSpawn')
+					if ( s.find('RTCWUtil.RandomSpawn') > 0 ):
+						s = ReplaceDeprecated(fname,s,'RTCWUtil.RandomSpawn','Util.RandomSpawn')
 
-					if ( s.find('ETUtil.ChangeSpawn') > 0 ):
-						s = ReplaceDeprecated(fname,s,'ETUtil.ChangeSpawn','Util.ChangeSpawn')
+					if ( s.find('RTCWUtil.ChangeSpawn') > 0 ):
+						s = ReplaceDeprecated(fname,s,'RTCWUtil.ChangeSpawn','Util.ChangeSpawn')
 
 					inp.close()
 
@@ -215,7 +188,7 @@ def FindDeprecated():
 # find camp goals with zero facings
 ########################################################################
 def FindZeroFacings():
-	out = open(os.path.normpath('results/et_zerofacings.txt'), 'w')
+	out = open(os.path.normpath('results/rtcw_zerofacings.txt'), 'w')
 
 	for fname in NavList:
 		if os.path.isfile(Path+fname):
@@ -267,7 +240,7 @@ def FindZeroFacings():
 # list todos in map scripts (nav directory only)
 ########################################################################
 def ListToDo():
-	out = open(os.path.normpath('results/et_todolist.txt'), 'w')
+	out = open(os.path.normpath('results/rtcw_todolist.txt'), 'w')
 	out.write('List of map scripts in nav with TODOs\n\n')
 
 	for fname in NavList:
@@ -304,7 +277,7 @@ def ListToDo():
 # list maps that don't call Util.Routes (except deathmatch, snipe and panzer maps)
 ########################################################################
 def NoRouteList():
-	out = open(os.path.normpath('results/et_noroutelist.txt'), 'w')
+	out = open(os.path.normpath('results/rtcw_noroutelist.txt'), 'w')
 	out.write('List of map scripts in nav without routes initialized\n\n')
 
 	for fname in NavList:
@@ -333,18 +306,6 @@ def SearchForOldScriptGoal(contents):
 
 	if contents.find("Target =") > 0:
 		str_list.append('has a Target table - goal_grenadetarget\n')
-
-	if contents.find("MountVehicle =") > 0:
-		str_list.append('has a MountVehicle table - goal_mountvehicle\n')
-
-	if contents.find("RideVehicle =") > 0:
-		str_list.append('has a RideVehicle table - goal_ridevehicle\n')
-
-	if contents.find("RideTram =") > 0:
-		str_list.append('has a RideTram table - goal_ridetram\n')
-
-	if contents.find("EscortVehicle =") > 0:
-		str_list.append('has an EscortVehicle table - goal_escortvehicle\n')
 
 	if contents.find("Switches =") > 0:
 		str_list.append('has a Switches table - check for paththrough\n')
@@ -377,12 +338,8 @@ def CheckForOldScriptGoal(fname, out):
 				f.close()
 
 def OldScriptGoalList():
-	out = open(os.path.normpath('results/et_oldscriptgoallist.txt'), 'w')
+	out = open(os.path.normpath('results/rtcw_oldscriptgoallist.txt'), 'w')
 	out.write('List of map scripts with old script goals\n\n')
-
-	out.write('---------- With Script ----------\n\n')
-	for fname in WithScriptList:
-		CheckForOldScriptGoal(fname,out)
 
 	out.write('\n\n---------- Priority Maps ----------\n\n')
 	for fname in PriorityList:
