@@ -30,7 +30,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.DisableGoal( ".*" );
+	Util.DisableGoal( ".*" );
 
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );

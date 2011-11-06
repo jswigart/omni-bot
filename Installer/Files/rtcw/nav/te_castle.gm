@@ -289,7 +289,7 @@ global OnMapLoad = function()
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 45} );

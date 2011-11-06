@@ -69,7 +69,7 @@ global Map =
 		}
 
 		//don't bother defusing this
-		RTCWUtil.DisableGoal( "DEFUSE_Filtration_.*" );
+		Util.DisableGoal( "DEFUSE_Filtration_.*" );
 
 		//open up the route nodes for the back way from flag
 		Util.EnableGroup( "backroutes" );
@@ -101,7 +101,7 @@ global Map =
 		}
 
 		//don't bother defusing this
-		RTCWUtil.DisableGoal( "DEFUSE_Storage_.*" );
+		Util.DisableGoal( "DEFUSE_Storage_.*" );
 
 		if ( Map.FiltStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_.*" );
@@ -201,7 +201,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
 	rtGrp =
 	{

@@ -228,9 +228,9 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_gatepatrol.*", {mincamptime = 5, maxcamptime = 10} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
+	Util.EnableGoal( "CAPPOINT.*" );
 	//Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsers( 1, "PANZER.*" );
 	Util.SetMaxUsers( 1, "DEFEND_rMain.*" );

@@ -348,7 +348,7 @@ global OnMapLoad = function()
 	OnTrigger( "Planted at the side door.", Map.Dyno_Plant_SideDoor );
 	OnTrigger( "Defused at the side door.", Map.Dyno_Defuse_SideDoor );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
@@ -356,7 +356,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetGoalPriority( Map.Destroy_main_gate_script, 1.5 );
 
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	// Allied Goals
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_side_door_script );

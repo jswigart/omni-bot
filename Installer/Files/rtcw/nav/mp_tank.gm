@@ -239,7 +239,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.DisableGoal( "DEFUSE_Map.*" );
+		Util.DisableGoal( "DEFUSE_Map.*" );
 
 	},
 
@@ -438,9 +438,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CHECKPOINT.*" );
+	Util.EnableGoal( "CAPPOINT.*" );
 	RTCWUtil.LimitToClass( "FLAG.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );  //Martin - Engies should NOT try to get docs, just protect the base
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );

@@ -131,8 +131,8 @@ global OnMapLoad = function()
 	OnTrigger( "Axis takes the Main Storage Room!", Map.checkpoint05_Axis_Captured );
 	OnTrigger( "Allies take the Main Storage Room!", Map.checkpoint05_Allies_Captured );
 
-	RTCWUtil.DisableGoal( ".*" );
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

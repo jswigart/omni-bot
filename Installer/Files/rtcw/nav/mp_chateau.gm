@@ -88,8 +88,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allied_obj1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bMain.*" );
-		RTCWUtil.EnableGoal( Map.Checkpoint );
-		RTCWUtil.EnableGoal( "ROUTE_cellardoor" );
+		Util.EnableGoal( Map.Checkpoint );
+		Util.EnableGoal( "ROUTE_cellardoor" );
 
 		if ( !Map.MainStatus && !Map.DefenseShifted ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCellar.*" );
@@ -139,7 +139,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_door_2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT_side.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_target_allies_cellar" );
-		RTCWUtil.EnableGoal( Map.Checkpoint );
+		Util.EnableGoal( Map.Checkpoint );
 
 		// Artillery
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_1" );
@@ -189,7 +189,7 @@ global Map =
 		}
 
 		// for now, just dont even try to defuse
-		RTCWUtil.DisableGoal( "DEFUSE.*" );
+		Util.DisableGoal( "DEFUSE.*" );
 	},
 
 	obj_taken = function( trigger )
@@ -219,7 +219,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
 			//both teams will use these
-			RTCWUtil.EnableGoal( "DEFEND_rDeliver.*" );
+			Util.EnableGoal( "DEFEND_rDeliver.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
 		}
 
@@ -235,7 +235,7 @@ global Map =
 		Map.DocStatus = false;
 		Map.DocsGone = false;
 
-		RTCWUtil.DisableGoal( "DEFEND_rDeliver.*" );
+		Util.DisableGoal( "DEFEND_rDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
@@ -348,9 +348,9 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_rRoam.*", {mincamptime = 0, maxcamptime = 1} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
-	RTCWUtil.DisableGoal( "ROUTE_cellardoor" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT.*" );
+	Util.DisableGoal( "ROUTE_cellardoor" );
 
 	SetGoalPriority( Map.Plant_Main_Door, 0.93 ); //plant this first
 	SetGoalPriority( "DEFEND_rFlag.*", 0.55 );

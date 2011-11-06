@@ -162,7 +162,7 @@ global Map =
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
 		SetGoalPriority( "ARTILLERY.*", 0.5, TEAM_AXIS );
 
-		RTCWUtil.DisableGoal( "DEFEND_engNorth.*" );
+		Util.DisableGoal( "DEFEND_engNorth.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSouth.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rNorth.*" );
@@ -226,7 +226,7 @@ global Map =
 
 		Map.NETStatus = true;
 		Map.DispenseAmmoTime = 1;
-		RTCWUtil.EnableGoal( "ROUTE_netdoor" );
+		Util.EnableGoal( "ROUTE_netdoor" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bunker_Wall" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
@@ -304,7 +304,7 @@ global Map =
 		Map.DocsTransmitted = true;
 		Map.DocsAtHome = false;
 
-		RTCWUtil.DisableGoal( "FLAG_Axis_Coordinates", true ); // all but routes
+		Util.DisableGoal( "FLAG_Axis_Coordinates", true ); // all but routes
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_t5" );
@@ -387,7 +387,7 @@ global Map =
 		}
 		Map.DoorStatus = 1;
 		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_officegate" );
-		RTCWUtil.DisableGoal( "ROUTE_bunkerwall" );
+		Util.DisableGoal( "ROUTE_bunkerwall" );
 		Util.MapDebugPrint( "door_closed" );
 	},
 
@@ -401,7 +401,7 @@ global Map =
 
 		SetAvailableMapGoals( 0, false, "SWITCH_officegate" );
 
-		RTCWUtil.EnableGoal( "ROUTE_bunkerwall" );
+		Util.EnableGoal( "ROUTE_bunkerwall" );
 
 		if ( Map.DocsAtHome == true && Map.DocsTransmitted == false ) {
 			Util.LimitToTeam( TEAM.AXIS, "SWITCH_officegate" );
@@ -561,10 +561,10 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rNorth_c[3]", 0.60 );
 	SetGoalPriority( "ATTACK_bSouth[24]", 0.55 );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT_transmit", true );
-	RTCWUtil.DisableGoal( "ROUTE_netdoor" );
-	RTCWUtil.DisableGoal( "ROUTE_bunkerwall" );
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "CAPPOINT_transmit", true );
+	Util.DisableGoal( "ROUTE_netdoor" );
+	Util.DisableGoal( "ROUTE_bunkerwall" );
 
 	//for now, axis will give up the south plant
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );

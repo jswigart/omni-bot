@@ -231,7 +231,7 @@ global Map =
 		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.ALLIES, CLASS.SOLDIER );
 
 		// make sure all flags are active
-		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+		Util.EnableGoal( "CHECKPOINT.*" );
 	},
 
 	ToggleDefends = function()
@@ -390,7 +390,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
-	RTCWUtil.DisableGoal( ".*", true );
+	Util.DisableGoal( ".*", true );
 
 	//soldiers will use mg's && rear flags
 	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.AXIS, CLASS.SOLDIER );
@@ -402,7 +402,7 @@ global OnMapLoad = function()
 	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
 	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
 
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCheckpoint5" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFirstspawn.*" );

@@ -110,7 +110,7 @@ global Map =
 
 		print( "Foward_Barricade_Destroyed" );
 		Map.BarbwireStatus = true;
-		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+		Util.EnableGoal( "CHECKPOINT.*" );
 
 		Map.BarbwireDefense();
 
@@ -125,7 +125,7 @@ global Map =
 
 		print( "West_Barrier_Destroyed" );
 		Map.BarbwireStatus = true;
-		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+		Util.EnableGoal( "CHECKPOINT.*" );
 
 		Map.BarbwireDefense();
 
@@ -391,7 +391,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );

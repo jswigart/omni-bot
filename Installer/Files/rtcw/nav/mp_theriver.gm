@@ -62,9 +62,9 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBridge.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
 		}
-		RTCWUtil.EnableGoal( "ROUTE_wall" );
-		RTCWUtil.EnableGoal( "ROUTE_eFootbridge" );
-		RTCWUtil.EnableGoal( "ROUTE_wFootbridge" );
+		Util.EnableGoal( "ROUTE_wall" );
+		Util.EnableGoal( "ROUTE_eFootbridge" );
+		Util.EnableGoal( "ROUTE_wFootbridge" );
 	},
 
 	War_Documents_Taken = function( trigger )
@@ -264,11 +264,11 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT_6" );
-	RTCWUtil.DisableGoal( "ROUTE_wall" );
-	RTCWUtil.DisableGoal( "ROUTE_eFootbridge" );
-	RTCWUtil.DisableGoal( "ROUTE_wFootbridge" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_6" );
+	Util.DisableGoal( "ROUTE_wall" );
+	Util.DisableGoal( "ROUTE_eFootbridge" );
+	Util.DisableGoal( "ROUTE_wFootbridge" );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 

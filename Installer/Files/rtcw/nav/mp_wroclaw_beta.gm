@@ -115,8 +115,8 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "ROUTE_axcenter" );
-		RTCWUtil.EnableGoal( "ROUTE_alcenter2" );
+		Util.EnableGoal( "ROUTE_axcenter" );
+		Util.EnableGoal( "ROUTE_alcenter2" );
 	},
 
 	central_access_door_Planted = function( trigger )
@@ -134,8 +134,8 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.DisableGoal( "ROUTE_rearladder" );
-		RTCWUtil.EnableGoal( "ROUTE_lower1" );
+		Util.DisableGoal( "ROUTE_rearladder" );
+		Util.EnableGoal( "ROUTE_lower1" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axatt7" );
 	},
@@ -155,8 +155,8 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.DisableGoal( "ROUTE_rearladder" );
-		RTCWUtil.EnableGoal( "ROUTE_lower2" );
+		Util.DisableGoal( "ROUTE_rearladder" );
+		Util.EnableGoal( "ROUTE_lower2" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axatt8" );
 	},
@@ -176,7 +176,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "ROUTE_alrear3" );
+		Util.EnableGoal( "ROUTE_alrear3" );
 	},
 
 	rear_access_door_Planted = function( trigger )
@@ -237,12 +237,12 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "SNIPE.*", {mincamptime = 60, maxcamptime = 90} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_alrear3" );
-	RTCWUtil.DisableGoal( "ROUTE_alcenter2" );
-	RTCWUtil.DisableGoal( "ROUTE_axcenter" );
-	RTCWUtil.DisableGoal( "ROUTE_lower.*" );
-	RTCWUtil.EnableGoal( "MOUNTMG42_axmg" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_alrear3" );
+	Util.DisableGoal( "ROUTE_alcenter2" );
+	Util.DisableGoal( "ROUTE_axcenter" );
+	Util.DisableGoal( "ROUTE_lower.*" );
+	Util.EnableGoal( "MOUNTMG42_axmg" );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	kz = OnTriggerRegion( AABB( -203,-1535,-370,60,-1326,-96 ), Map.KillZone );

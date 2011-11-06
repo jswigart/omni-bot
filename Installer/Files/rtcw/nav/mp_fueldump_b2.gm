@@ -283,7 +283,7 @@ global OnMapLoad = function()
 	OnTrigger( "two minute warning.", Map.two_minute );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 
 	SetGoalPriority( "ATTACK_bGate.*", 0.51 );
 	SetGoalPriority( "ATTACK_bSide.*", 0.51 );

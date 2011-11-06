@@ -72,7 +72,7 @@ global Map =
 		}
 
 		//don't bother trying to defuse this
-		RTCWUtil.DisableGoal( "DEFUSE_East_Tower.*" );
+		Util.DisableGoal( "DEFUSE_East_Tower.*" );
 
 		Util.MapDebugPrint( "East_Tower_Door_Planted" );
 	},
@@ -110,7 +110,7 @@ global Map =
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 
 		//don't bother trying to defuse this
-		RTCWUtil.DisableGoal( "DEFUSE_Main_Entrance.*" );
+		Util.DisableGoal( "DEFUSE_Main_Entrance.*" );
 
 		Util.MapDebugPrint( "Main_Entrance_Planted" );
 	},
@@ -266,9 +266,9 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	//disable all goals at start
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	Util.EnableGoal( "CAPPOINT_.*" );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER);
 

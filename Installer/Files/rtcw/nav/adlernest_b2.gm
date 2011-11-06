@@ -203,7 +203,7 @@ global OnMapLoad = function()
 	OnTrigger( "Main Blast Doors opening!", Map.Blast_Doors_Open );
 	OnTrigger( "Main Blast Doors closing!", Map.Blast_Doors_Closed );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	
 	Util.EnableGoal( "CAPPOINT.*" );

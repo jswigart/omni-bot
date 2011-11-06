@@ -158,14 +158,14 @@ global Map =
 			{ return; }
 
 		signal("Init_bDefends");
-		RTCWUtil.EnableGoal("ROUTE_bSide.*");
+		Util.EnableGoal("ROUTE_bSide.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Control_Center" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rForward.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPanzWait.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanz.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAS.*" );
-		RTCWUtil.EnableGoal("CHECKPOINT_allied_flag");
+		Util.EnableGoal("CHECKPOINT_allied_flag");
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg42_[12]" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMid.*" );
@@ -225,14 +225,14 @@ global Map =
 			{ return; }
 
 		signal("Init_rDefends");
-		RTCWUtil.EnableGoal("ROUTE_rSide.*");
+		Util.EnableGoal("ROUTE_rSide.*");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Control_Center" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bForward.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bPanzWait.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanz.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bAS.*" );
-		RTCWUtil.EnableGoal("CHECKPOINT_axis_flag");
+		Util.EnableGoal("CHECKPOINT_axis_flag");
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_[45]" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bMid.*" );
@@ -336,9 +336,9 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass("CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER);
 	RTCWUtil.LimitToClass("CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER);
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
-	RTCWUtil.DisableGoal("ROUTE_bSide.*");
-	RTCWUtil.DisableGoal("ROUTE_rSide.*");
+	Util.DisableGoal(".*", true); //all but the routes
+	Util.DisableGoal("ROUTE_bSide.*");
+	Util.DisableGoal("ROUTE_rSide.*");
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_[12]" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMid.*" );

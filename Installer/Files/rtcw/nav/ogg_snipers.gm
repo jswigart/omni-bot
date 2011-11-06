@@ -60,7 +60,7 @@ global OnMapLoad = function()
 		Util.AutoTestMap();
 	}
 
-	RTCWUtil.DisableGoal( ".*", true );
+	Util.DisableGoal( ".*", true );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 90} );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );

@@ -56,7 +56,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "FLAG.*" );  //Enable the flag goal
+		Util.EnableGoal( "FLAG.*" );  //Enable the flag goal
 
 		Util.MapDebugPrint( "Water_Tower_Door_Destroyed" );
 	},
@@ -99,7 +99,7 @@ global Map =
 
 		//if (Map.FlagStatus == 1)
 		//{
-		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
+		Util.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
@@ -145,8 +145,8 @@ global Map =
 
 		//if (Map.FlagStatus == 2)
 		//{
-		//RTCWUtil.ChangeSpawnNoDefenders(TEAM.AXIS, 0);	// Martin - Spawn at bridge to prevent flank
-		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
+		//Util.ChangeSpawnNoDefenders(TEAM.AXIS, 0);	// Martin - Spawn at bridge to prevent flank
+		Util.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
@@ -236,7 +236,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );

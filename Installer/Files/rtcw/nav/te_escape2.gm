@@ -224,8 +224,8 @@ global OnMapLoad = function()
 	//RTCWUtil.LimitToClass("MOUNT.*", 0, CLASS.LIEUTENANT, CLASS.SOLDIER);
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.EnableGoal( "CAPPOINT_deliver" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_deliver" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rFlag_.*" );

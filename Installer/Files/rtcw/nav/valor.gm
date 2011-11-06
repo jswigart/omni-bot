@@ -50,7 +50,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bunker_Breach" );
-		RTCWUtil.EnableGoal( Map.Checkpoint_beach_flag );
+		Util.EnableGoal( Map.Checkpoint_beach_flag );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beacheadspawn" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beacheadspawn" );
@@ -318,7 +318,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Trench_Grate" );        // Plant here then wall

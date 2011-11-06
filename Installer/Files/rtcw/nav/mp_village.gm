@@ -276,14 +276,14 @@ global Map =
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );    //Martin - Ok Ken, at least let only 1 axis go for it instead of all the soldiers.
 
 		//spawn back
-		RTCWUtil.ChangeSpawn( TEAM.ALLIES, 2 );
+		Util.ChangeSpawn( TEAM.ALLIES, 2 );
 
 		// axis soldier will grab flag if a minimum of 5 axis are alive
 		if ( !RTCWUtil.IsTeamDead( TEAM.AXIS, 5 ) ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		} else
 		{
-			RTCWUtil.DisableGoal( "CHECKPOINT.*", true );
+			Util.DisableGoal( "CHECKPOINT.*", true );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
@@ -318,7 +318,7 @@ global Map =
 		Util.SetMaxUsersInProgress( 64, "CHECKPOINT.*" );   //Martin - Anyone can go for it now...
 
 		//spawn default
-		RTCWUtil.ChangeSpawn( TEAM.ALLIES, 0 );
+		Util.ChangeSpawn( TEAM.ALLIES, 0 );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
@@ -438,7 +438,7 @@ global Map =
 		}
 
 		Map.b2_status = true;
-		RTCWUtil.EnableGoal( "ROUTE_block2" );
+		Util.EnableGoal( "ROUTE_block2" );
 	},
 
 	block3 = function( trigger )
@@ -448,7 +448,7 @@ global Map =
 		}
 
 		Map.b3_status = true;
-		RTCWUtil.EnableGoal( "ROUTE_block3" );
+		Util.EnableGoal( "ROUTE_block3" );
 	},
 	spawnkill = function()
 	{
@@ -545,11 +545,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_cd.*", 0.95 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
 
-	RTCWUtil.DisableGoal( ".*", true );
+	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.EnableGoal( "CAPPOINT.*" );
-	RTCWUtil.DisableGoal( "ROUTE_block2" );
-	RTCWUtil.DisableGoal( "ROUTE_block3" );
+	Util.EnableGoal( "CAPPOINT.*" );
+	Util.DisableGoal( "ROUTE_block2" );
+	Util.DisableGoal( "ROUTE_block3" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rCrypt7" );

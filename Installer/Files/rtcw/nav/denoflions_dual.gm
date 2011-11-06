@@ -148,7 +148,7 @@ global Map =
 			{ return; }
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_munitions" );
-		RTCWUtil.EnableGoal("ROUTE_CentralSewer");
+		Util.EnableGoal("ROUTE_CentralSewer");
 
 		Util.MapDebugPrint( "sewer_bars_Destroyed" );
 	},
@@ -279,7 +279,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	Util.DisableGoal(".*", true); //all but the routes
 	RTCWUtil.SetPrimaryGoals(1.0);
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
@@ -305,8 +305,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "PLANT_sewer_bars" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
 
-	RTCWUtil.EnableGoal("CHECKPOINT.*");
-	RTCWUtil.DisableGoal("ROUTE_CentralSewer");
+	Util.EnableGoal("CHECKPOINT.*");
+	Util.DisableGoal("ROUTE_CentralSewer");
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first

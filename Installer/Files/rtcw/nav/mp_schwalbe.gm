@@ -161,7 +161,7 @@ global Map =
 				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25);
 				Map.Duct_Destroyed = true;
 
-				RTCWUtil.EnableGoal( "ROUTE_ducts" );
+				Util.EnableGoal( "ROUTE_ducts" );
 			}
 
 			sleep( 0.25 );
@@ -423,7 +423,7 @@ global Map =
 	},
 	DeliverDefense = function()
 	{
-		RTCWUtil.ChangeSpawn( TEAM.AXIS, 2 );
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
@@ -478,10 +478,10 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	//disable all goals at start
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
-	RTCWUtil.EnableGoal( "CHECKPOINT_.*" );
+	Util.EnableGoal( "CAPPOINT_.*" );
+	Util.EnableGoal( "CHECKPOINT_.*" );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

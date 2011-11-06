@@ -237,7 +237,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_alliescap" );
@@ -251,7 +251,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_r.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Flag" );
 
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 10, "CHECKPOINT.*" ); // we need to get this to win

@@ -39,7 +39,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_3" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
 
-		RTCWUtil.EnableGoal( "ROUTE_cyardwall" );
+		Util.EnableGoal( "ROUTE_cyardwall" );
 	},
 
 	Headquarters_Door_Destroyed = function( trigger )
@@ -57,7 +57,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_4" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
 
-		RTCWUtil.EnableGoal( "ROUTE_hqdoor" );
+		Util.EnableGoal( "ROUTE_hqdoor" );
 
 		if ( !Map.DocStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
@@ -230,10 +230,10 @@ global OnMapLoad = function()
 	OnTrigger( "Allies capture the Courtyard!", Map.beach_flag_Allies_Captured );
 	OnTrigger( "Explode_177 Exploded", Map.barrier_gone );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_hqdoor" );
-	RTCWUtil.DisableGoal( "ROUTE_cyardwall" );
-	RTCWUtil.EnableGoal( "CAPPOINT_.*" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_hqdoor" );
+	Util.DisableGoal( "ROUTE_cyardwall" );
+	Util.EnableGoal( "CAPPOINT_.*" );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 60, maxcamptime = 90} );

@@ -25,7 +25,7 @@ global Map =
 			return;
 		}
 
-		RTCWUtil.EnableGoal( "FLAG.*", true ); // all but routes
+		Util.EnableGoal( "FLAG.*", true ); // all but routes
 
 		Util.MapDebugPrint( "Ark_of_the_Covenant_Destroyed" );
 	},
@@ -166,7 +166,7 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Ark_of_the_Covenant", "crypt2" );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rInitial.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
@@ -177,7 +177,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCrypt.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCrypt.*" );
 
-	RTCWUtil.EnableGoal( "CAPPOINT.*", true ); // all but routes
+	Util.EnableGoal( "CAPPOINT.*", true ); // all but routes
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

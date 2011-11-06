@@ -142,8 +142,8 @@ global OnMapLoad = function()
 	OnTrigger( "Axis captures the Axis Transmitter!", Map.checkpoint05_Axis_Captured );
 	OnTrigger( "Allies capture the Axis Transmitter!", Map.checkpoint05_Allies_Captured );
 
-	RTCWUtil.DisableGoal( ".*" );
-	RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

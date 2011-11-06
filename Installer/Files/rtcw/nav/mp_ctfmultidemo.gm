@@ -98,7 +98,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
@@ -109,7 +109,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CAMP_.*", 0.94 );
 
-	RTCWUtil.EnableGoal( "FLAG_.*", true );
+	Util.EnableGoal( "FLAG_.*", true );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bCappoint.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );

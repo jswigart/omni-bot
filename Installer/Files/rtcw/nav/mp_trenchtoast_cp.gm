@@ -283,9 +283,9 @@ global Map =
 		//better get as many flags as possible now
 		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.AXIS, CLASS.SOLDIER );
 		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.ALLIES, CLASS.SOLDIER );
-		RTCWUtil.DisableGoal( "MOUNT.*" );
-		RTCWUtil.DisableGoal( "CALL.*" );
-		RTCWUtil.DisableGoal( "CAMP.*" );
+		Util.DisableGoal( "MOUNT.*" );
+		Util.DisableGoal( "CALL.*" );
+		Util.DisableGoal( "CAMP.*" );
 	},
 
 	barrier1 = function( trigger )
@@ -353,7 +353,7 @@ global OnMapLoad = function()
 	OnTrigger( "thirty second warning.", Map.thirty_second );
 
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );

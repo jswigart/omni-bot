@@ -150,7 +150,7 @@ global Map =
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
 		SetGoalPriority( "ARTILLERY.*", 0.5, TEAM_AXIS );
 
-		RTCWUtil.DisableGoal( "DEFEND_engNorth.*" );
+		Util.DisableGoal( "DEFEND_engNorth.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSouth.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rNorth.*" );
@@ -177,7 +177,7 @@ global Map =
 
 		Map.DispenseAmmoTime = 1;
 
-		RTCWUtil.DisableGoal( "DEFEND_engSouth.*" );
+		Util.DisableGoal( "DEFEND_engSouth.*" );
 
 	},
 
@@ -216,8 +216,8 @@ global Map =
 		Map.SouthDyno += 1;
 
 		if ( !Map.NorthStatus ) {
-			RTCWUtil.DisableGoal( "DEFUSE_South_Radar_02.*" );
-			RTCWUtil.DisableGoal( "DEFEND_engSouth.*" );
+			Util.DisableGoal( "DEFUSE_South_Radar_02.*" );
+			Util.DisableGoal( "DEFEND_engSouth.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rSouth.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
 		}
@@ -341,7 +341,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rNorth_c[3]", 0.60 );
 	SetGoalPriority( "ATTACK_bSouth[24]", 0.55 );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 
 	//for now, axis will give up the south plant
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_a.*" );

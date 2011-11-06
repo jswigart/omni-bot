@@ -74,7 +74,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Array" );
 
-		RTCWUtil.EnableGoal( "ROUTE_security" );
+		Util.EnableGoal( "ROUTE_security" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bArray.*" );
 		Map.DontDispenseAmmo = false;
 	},
@@ -179,7 +179,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
@@ -300,7 +300,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 
-	RTCWUtil.DisableGoal( "ROUTE_security" );
+	Util.DisableGoal( "ROUTE_security" );
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 

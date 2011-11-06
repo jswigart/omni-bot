@@ -145,7 +145,7 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	SetGoalPriority( "SWITCH_.*", 0.8 );
 
-	RTCWUtil.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( ".*", true ); // all but routes
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );

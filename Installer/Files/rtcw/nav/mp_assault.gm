@@ -214,7 +214,7 @@ global Map =
 		Map.GateHatchStatus = true;
 		Map.DontDispenseAmmo = true;
 
-		RTCWUtil.EnableGoal( "ROUTE_mwh.*" );
+		Util.EnableGoal( "ROUTE_mwh.*" );
 		if ( !Map.GateStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate1" );
 		}
@@ -249,7 +249,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-		RTCWUtil.EnableGoal( "CHECKPOINT.*" );
+		Util.EnableGoal( "CHECKPOINT.*" );
 
 		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
@@ -631,8 +631,8 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_hatch", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but the routes
-	RTCWUtil.DisableGoal( "ROUTE_mwh.*" );
+	Util.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( "ROUTE_mwh.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rGate.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rGate.*" );

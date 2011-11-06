@@ -70,7 +70,7 @@ global Map =
 		}
 
 		Map.DoorStatus = true;
-		RTCWUtil.EnableGoal( "ROUTE_door" );
+		Util.EnableGoal( "ROUTE_door" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rPlant.*" );
 
@@ -511,8 +511,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_bDeliver.*", {mincamptime = 5, maxcamptime = 10} );
 	SetMapGoalProperties( "DEFEND_bTruck.*", {mincamptime = 5, maxcamptime = 10} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	RTCWUtil.DisableGoal( "ROUTE_door" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_door" );
 
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "SWITCH.*" );
@@ -540,8 +540,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bMain.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 
-	RTCWUtil.EnableGoal( "FLAG_Holy_Relic" );
-	RTCWUtil.EnableGoal( "CAPPOINT_truck" );
+	Util.EnableGoal( "FLAG_Holy_Relic" );
+	Util.EnableGoal( "CAPPOINT_truck" );
 
 	Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 
