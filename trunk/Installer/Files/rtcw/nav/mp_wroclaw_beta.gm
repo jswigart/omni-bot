@@ -39,6 +39,16 @@ global Map =
 			LimitTeam = ( 1 << TEAM.ALLIES ),
 			LimitClass = Util.AllClasses,
 		},
+		// Axis should close it when they run by to slow down allies
+		lever2 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever2",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitClass = Util.AllClasses,
+		},
 	},	
 
 	Navigation =
@@ -185,14 +195,18 @@ global Map =
 		}
 
 		vel = ToVector( trigger.Action );
+		// Gate Opening
 		if ( vel.z > 0 ) {
 			//SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
 			Map.Switches.lever1.Enabled = false;
+			Map.Switches.lever2.Enabled = true;
 		}
+		// Gate Closing
 		else
 		{
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
 			Map.Switches.lever1.Enabled = true;
+			Map.Switches.lever2.Enabled = false;
 		}
 	},
 };
@@ -202,6 +216,8 @@ global OnMapLoad = function()
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
+	
+	Util.SetGoalPosition( 121, -1618, 184, Map.Plant_allied_communication_ops ) ;
 
 	OnTrigger( "Axis have destroyed the allied communication ops!", Map.allied_communication_ops_Destroyed );
 	OnTrigger( "Allies have destroyed the axis communication ops!", Map.axis_communication_ops_Destroyed );
@@ -235,6 +251,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "REPAIRMG42_.*", 0.96 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "SWITCH_lever1", 0.4 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_central_access_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_rear_access_door" );
@@ -253,6 +270,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_axmg" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_axd.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSK.*" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
@@ -291,27 +309,6 @@ global OnMapLoad = function()
 
 		ATTACK_alatt1 =
 		{
-			ROUTE_alsp1 =
-			{
-				ROUTE_alcenter1 =
-				{
-					ROUTE_alwesthall =
-					{
-						ROUTE_vents1 = {},
-						ROUTE_vents2 = {},
-					},
-					ROUTE_alcenter2 = {Weight = 1,},
-				},
-				ROUTE_alwaterway1 =
-				{
-					ROUTE_alwaterway2 = {},
-				},
-				ROUTE_alrear1 =
-				{
-					ROUTE_alrear2 = {},
-					ROUTE_alrear3 = {},
-				},
-			},
 			ROUTE_alsp2 =
 			{
 				ROUTE_alcenter1 =
