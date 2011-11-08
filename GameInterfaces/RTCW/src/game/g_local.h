@@ -1319,6 +1319,7 @@ extern vmCvar_t g_smokeGrenades;
 extern vmCvar_t g_nadePacks;
 extern vmCvar_t g_betting;
 extern vmCvar_t g_muteSpecs;
+extern vmCvar_t g_kickItems;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;
@@ -1543,3 +1544,7 @@ void G_Trace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t
 #define CREDITS_PRICE 50 // price for buying ammo / health
 #define CREDITS_ENABLE 0x0001
 #define CREDITS_BUYING 0x0002
+
+// kick items
+#define KICK_AIRSTRIKE	0x001
+#define KICK_GRENADE	0x002	

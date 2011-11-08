@@ -78,6 +78,7 @@ vmCvar_t g_smokeGrenades;
 vmCvar_t g_nadePacks;
 vmCvar_t g_betting; // bit flagged. 0 disable 1 enable 2 buying
 vmCvar_t g_muteSpecs;
+vmCvar_t g_kickItems; // bit flagged. 0 disable 1 grenades 2 airstrike
 
 // zinx etpro antiwarp
 vmCvar_t g_antiwarp;
@@ -359,6 +360,7 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_nadePacks,                 "g_nadePacks",                  "0",                    0,                                                  0,          qfalse },
 	{ &g_betting,                   "g_betting",                    "0",                    0,                                                  0,          qfalse },
 	{ &g_muteSpecs,                 "g_muteSpecs",                  "0",                    0,                                                  0,          qfalse },
+	{ &g_kickItems,                 "g_kickItems",                  "0",                    0,                                                  0,          qfalse },
 
 	// zinx etpro antiwarp
 	{ &g_maxWarp,                   "g_maxWarp",                    "4",                    0 },

@@ -1878,6 +1878,96 @@ qboolean G_DragCorpse( gentity_t *dragger, gentity_t *corpse ) {
 	return qtrue; // no checks yet
 }
 
+// credits to s4ndmod
+void G_CanisterKick( gentity_t *ent ) {
+
+	gentity_t   *traceEnt;
+	vec3_t forward, right, up, angles, mins, maxs, origin;
+	float speed = 800.0f;       //default value, based on some testing
+	int i, num;
+	int touch[MAX_GENTITIES];
+
+	if (
+	    //dead players
+		ent->client->ps.pm_flags & PMF_LIMBO ||
+		ent->client->ps.pm_type == PM_DEAD
+		) {
+		// do not pass go, do not kick canisters
+		return;
+	}
+
+	// Find straight ahead, no pitching...
+	// We do this since we don't actually want to have to look at the item we
+	// are going to kick
+	VectorCopy( ent->client->ps.viewangles, angles );
+	angles[PITCH] = 0;
+	angles[ROLL] = 0;
+	AngleVectors( angles, forward, right, up );
+
+	// Move straight ahead from origin 24 units
+	// Not the full 32 since we want to be able to kick thing we are just about standing on.
+	VectorMA( ent->r.currentOrigin,24,forward,origin );
+
+	// Only kick things that are up to about CH_KNIFE_DIST away in front of us.
+	// and only up to about waist high.
+	VectorAdd( origin, tv( -32.f,-32.f,-24.f ), mins );
+	VectorAdd( origin, tv( 32.f,32.f,8.f ), maxs );
+
+	num = trap_EntitiesInBox( mins, maxs, touch, MAX_GENTITIES );
+
+	if ( g_debugBullets.integer ) {
+		gentity_t *tent;
+
+		tent = G_TempEntity( mins, EV_RAILTRAIL );
+		VectorCopy( maxs, tent->s.origin2 );
+		tent->s.dmgFlags = 1;
+
+	}
+
+	for ( i = 0; i < num; i++ ) {
+
+		traceEnt = &g_entities[touch[i]];
+
+		// prevents a nasty kick corpses bug if they died holding any of
+		// the kick weapon types.
+		if ( traceEnt->s.eType != ET_MISSILE ) {
+			continue;
+		}
+
+		// check for grenades, and misc canisters otherwise reject...
+		if ( ( g_kickItems.integer & KICK_GRENADE && traceEnt->s.weapon == WP_GRENADE_PINEAPPLE ) ||
+			 ( g_kickItems.integer & KICK_GRENADE && traceEnt->s.weapon == WP_GRENADE_LAUNCHER ) ||
+			 ( g_kickItems.integer & KICK_AIRSTRIKE && traceEnt->s.weapon == WP_SMOKE_GRENADE ) ) {
+
+			traceEnt->s.pos.trType = TR_GRAVITY;            //have to set this in case it was reset to TR_STATIONARY
+			VectorClear( angles );        //only angles[1] is used
+			//set it to the direction we're facing, +/- 15 degrees
+			angles[1] = ent->client->ps.viewangles[1] + ( crandom() * 15.0f );
+
+			//get the 'forward' vector based on the direction we're facing
+			AngleVectors( angles, forward, NULL, NULL );
+			//add some randomness to the 'height' of the kick
+			forward[2] = 0.5f + ( crandom() * 0.15f );
+			VectorNormalizeFast( forward );               //re-normalize the vector
+
+			speed += ( crandom() * 150.0f );              //add some randomness to the speed/distance of the kick
+			VectorScale( forward, speed, forward );       //and multiply the vector by the speed
+
+			//play the grenade throwing sound, just to let them know they successfully kicked it
+			G_Sound( ent, G_SoundIndex( "sound/weapons/grenade/grenlf1a.wav" ) );
+
+			trap_UnlinkEntity( traceEnt );                    //probably not necessary, may prevent an occasional error
+			traceEnt->s.pos.trTime = level.time - 50;   //move a little on the first frame
+
+			//set the grenade's initial position
+			VectorCopy( traceEnt->r.currentOrigin, traceEnt->s.pos.trBase );
+			VectorCopy( forward, traceEnt->s.pos.trDelta );   //essentially, set the velocity
+			SnapVector( traceEnt->s.pos.trDelta );                //"save network bandwith" apparently...rounds everything to integers
+			trap_LinkEntity( traceEnt );                      //re-link the grenade...have to if we unlinked it
+		}
+	}
+}
+
 // Rafael
 /*
 ==================
@@ -2028,6 +2118,7 @@ void Cmd_Activate_f( gentity_t *ent ) {
 Cmd_Activate2_f() is only for:
     shove
     dragging
+	kicking
  */
 void Cmd_Activate2_f( gentity_t *ent ) {
 	trace_t tr;
@@ -2078,6 +2169,8 @@ void Cmd_Activate2_f( gentity_t *ent ) {
 			return;
 		}
 	}
+
+	G_CanisterKick(ent);
 }
 
 
