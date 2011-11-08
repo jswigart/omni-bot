@@ -934,6 +934,7 @@ fire_grenade
 gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeWPID ) {
 	gentity_t   *bolt;
 	qboolean noExplode = qfalse;
+	qboolean addSmallBounds = qfalse;
 
 	bolt = G_Spawn();
 
@@ -995,6 +996,7 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 		bolt->methodOfDeath         = MOD_GRENADE;
 		bolt->splashMethodOfDeath   = MOD_GRENADE_SPLASH;
 		bolt->s.eFlags              = EF_BOUNCE_HALF | EF_BOUNCE;
+		addSmallBounds				= (g_kickItems.integer & KICK_GRENADE);
 		break;
 	case WP_GRENADE_PINEAPPLE:
 		bolt->classname             = "grenade";
@@ -1002,11 +1004,13 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 		bolt->methodOfDeath         = MOD_GRENADE;
 		bolt->splashMethodOfDeath   = MOD_GRENADE_SPLASH;
 		bolt->s.eFlags              = EF_BOUNCE_HALF | EF_BOUNCE;
+		addSmallBounds				= (g_kickItems.integer & KICK_GRENADE);
 		break;
 // JPW NERVE
 	case WP_SMOKE_GRENADE:
 		bolt->classname             = "grenade";
 		bolt->s.eFlags              = EF_BOUNCE_HALF | EF_BOUNCE;
+		addSmallBounds				= (g_kickItems.integer & KICK_AIRSTRIKE);
 
 		if ( ( g_smokeGrenades.integer ) && ( self->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) && ( self->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) ) {
 			bolt->r.svFlags |= SVF_SMOKEGRENADE;
@@ -1037,6 +1041,14 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 		VectorSet( bolt->r.maxs, 12, 12, 20 );
 		VectorCopy( bolt->r.maxs, bolt->r.absmax );
 		break;
+	}
+
+	// give a bounds for kicking
+	if ( addSmallBounds ) {
+		VectorSet( bolt->r.mins, -5, -5, 0 );
+		VectorCopy( bolt->r.mins, bolt->r.absmin );
+		VectorSet( bolt->r.maxs, 5, 5, 5 );
+		VectorCopy( bolt->r.maxs, bolt->r.absmax );
 	}
 
 // JPW NERVE -- blast radius proportional to damage
