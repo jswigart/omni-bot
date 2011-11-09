@@ -27,6 +27,7 @@ this.CheckWeaponRestrictions = function(goal)
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
+	this.Bot.UsableGoals = table(); // more hacks for LimitToWeapon
 };
 
 this.Enter = function()
@@ -78,19 +79,33 @@ this.GetPriority = function()
 		count = this.QueryGoals(this.Bot.QueryGoalsTable,"CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*");
 		if ( count > 0 )
 		{
+			topPriority = 0;
 			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
 				if (!this.CheckWeaponRestrictions(goal) ) {
 					continue;
 				}
 
-				this.MapGoal = goal;
-				this.Priority = goal.GetGoalPriority(this.Bot);
-				break;
+				// it's a sorted list
+				if ( topPriority == 0 ) {
+					topPriority = goal.GetGoalPriority(this.Bot);
+				}
+				else if ( goal.GetGoalPriority(this.Bot) < topPriority ) {
+					continue;
+				}
+
+				this.Bot.UsableGoals[ tableCount(this.Bot.UsableGoals) ] = goal;
+			}
+
+			// this hackeration is sponsored by the evil bugfinding genius of palota
+			if ( topPriority > 0 ) {
+				this.MapGoal = this.Bot.UsableGoals[ Util.GetRandomFromTable(this.Bot.UsableGoals) ];
+				this.Priority = topPriority;
+				//this.Bot.Say("chose " + this.MapGoal.GetName());
 			}
 		}
-
 		tableClear(this.Bot.QueryGoalsTable);
+		tableClear(this.Bot.UsableGoals);
 
 		sleep(2);
 	}
