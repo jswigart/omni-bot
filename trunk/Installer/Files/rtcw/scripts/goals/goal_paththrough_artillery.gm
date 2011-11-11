@@ -181,7 +181,7 @@ this.Update = function()
 
 		// keep trying every 3 frames rather than every frame after 3 frames.
 		if ( timeout % 3 == 0 ) { // was timeout > 3
-			this.Bot.HoldButton( BTN.ATTACK1, 1 );
+			this.Bot.PressButton(BTN.ATTACK1);
 		}
 
 		if ( Map.PTArtyInfo[ this.Data ].WpInfo && Map.PTArtyInfo[ this.Data ].WpInfo.position ) {
