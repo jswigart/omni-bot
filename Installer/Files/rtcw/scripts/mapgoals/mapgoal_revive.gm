@@ -22,9 +22,9 @@ this.UpgradeVersion = function(Props)
 	{
 		// default to disabled, until the entity stops moving.
 		this.DisableGoal(true);
-		
+
 		// store the position. velocity check on injured ents is bad
-		this.EntPosition = GetEntPosition(this.GetEntity());		
+		this.EntPosition = GetEntPosition(this.GetEntity());
 	}
 };
 
@@ -45,9 +45,10 @@ this.CanReviveUnderWater = function()
 
 this.Update = function()
 {
-	sleep(0.25); // give it some time to update internally
+	sleep(1); // give it some time to update internally
+	goalEnt = this.GetEntity();
 	if ( (this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER))
-			|| !IsWaitingForMedic(this.GetEntity()) )
+			|| !GetEntFlags(goalEnt, ENTFLAG.DEAD) || GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
 	{
 		this.SetAvailable(0, false);
 		this.SetRemoveFlag(true);
@@ -60,6 +61,8 @@ this.Update = function()
 			if(entPos == this.EntPosition)
 			{
 				this.DisableGoal(false);
+				// cs: actually can't block here or the goal will never get removed.
+				//block(0);
 			}
 			else
 			{
@@ -69,3 +72,5 @@ this.Update = function()
 	}
 	yield();
 };
+
+
