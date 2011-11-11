@@ -1,24 +1,31 @@
 // This script contains functionality to trigger any available movers as set up in the global map table.
 
 // These parameters are required
-this.Name = "Artillery_PT";		// The name of the goal.
-this.Parent = "LowLevel";		// PathThrough states must be low level or they will not be used.
+this.Name = "Artillery_PT";     // The name of the goal.
+this.Parent = "LowLevel";       // PathThrough states must be low level or they will not be used.
 this.Debug = false;
+this.DebugLos = false;
 
-this.OnPathThrough = function(data)
+this.OnPathThrough = function( data )
 {
-	if (!data) { return false; }
-	if ( this.IsActive() ) { return false; }
+	if ( !data ) {
+		return false;
+	}
+	if ( this.IsActive() ) {
+		return false;
+	}
 
-	if ( !Map ) { global Map = {}; }
+	if ( !Map ) {
+		global Map = {};
+	}
 
 	if ( this.Bot.GetClass() != CLASS.FIELDOPS ) {
-		sleep(1); // give time to move off the wp
+		sleep( 1 ); // give time to move off the wp
 		return false;
 	}
 
 	if ( !this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) ) {
-		sleep(1);
+		sleep( 1 );
 		return false;
 	}
 
@@ -39,14 +46,20 @@ this.OnPathThrough = function(data)
 	}
 	if ( !Map.PTArtyInfo[ data ].WpInfo ) {
 		Map.PTArtyInfo[ data ].WpInfo = Util.WpNameInfo( data );
+
+		// cs: no wp info, create an empty table rather than re-checking every time.
+		if ( !Map.PTArtyInfo[ data ].WpInfo ) {
+			Map.PTArtyInfo[ data ].WpInfo = {};
+		}
 	}
 	if ( !Map.PTArtyInfo[ data ].TraceSuccess ) {
 		Map.PTArtyInfo[ data ].TraceSuccess = {};
 	}
 
+	// cache successful traces in the form of a list of map goals
 	this.Data = data;
-	if (this.FindTarget() == false) {
-		sleep(1); // give time to move off the wp
+	if ( this.FindTarget() == false ) {
+		sleep( 1 ); // give time to move off the wp
 		return false;
 	}
 
@@ -58,31 +71,33 @@ this.FindTarget = function()
 	team = this.Bot.GetTeam();
 
 	// cache the goal list
-	if ( !Map ) { global Map = {}; }
+	if ( !Map ) {
+		global Map = {};
+	}
 	if ( !Map.ArtyGoals ) {
 		Map.ArtyGoals = {};
-		GetGoals(Map.ArtyGoals, 0, "Artillery_S.*" );
+		GetGoals( Map.ArtyGoals, 0, "Artillery_S.*" );
 	}
 
-	if (!Map.PTArtyInfo[ this.Data ].Cached) {
+	if ( !Map.PTArtyInfo[ this.Data ].Cached ) {
 		this.CacheTraceResults();
 	}
 
 	temp = {};
 	i = 0;
-	foreach ( id and mg in Map.PTArtyInfo[ this.Data ].TraceSuccess )
+	foreach( id and mg in Map.PTArtyInfo[ this.Data ].TraceSuccess )
 	{
-		if ( !mg.IsAvailable(team) ) {
+		if ( !mg.IsAvailable( team ) ) {
 			continue;
 		}
 
+		temp[ i ] = mg;
 		i += 1;
-		temp[ i - 1 ] = mg;
 	}
 
-	tc = tableCount(temp);
+	tc = tableCount( temp );
 	x = 0;
-	if ( tc > 0 ){
+	if ( tc > 0 ) {
 		x = RandInt( 0, tc - 1 );
 	} else {
 		return false;
@@ -96,36 +111,36 @@ this.FindTarget = function()
 
 this.CacheTraceResults = function()
 {
-	foreach ( id and mg in Map.ArtyGoals )
+	foreach( id and mg in Map.ArtyGoals )
 	{
 		pos = mg.GetPosition();
 
-		if ( !Map.PTArtyInfo[ this.Data ].WpInfo || !Map.PTArtyInfo[ this.Data ].WpInfo.facing )
-		{
-			if ( !this.Bot.InFieldOfView(pos, 180) ){
+		if ( !Map.PTArtyInfo[ this.Data ].WpInfo || !Map.PTArtyInfo[ this.Data ].WpInfo.facing ) {
+			if ( !this.Bot.InFieldOfView( pos, 180 ) ) {
 				continue;
 			}
 
-			if ( !this.Bot.HasLineOfSightTo(pos) ){
+			if ( !this.Bot.HasLineOfSightTo( pos ) ) {
 				continue;
 			}
 		}
-		else // evaluate from the goto wp
-		{
-			tr = TraceLine(Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3(0,0,42), pos, null, TRACE.SHOT, this.Bot.GetGameId(), false);
+		else { // evaluate from the goto wp
+			tr = TraceLine( Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3( 0,0,42 ), pos, null, TRACE.SHOT, this.Bot.GetGameId(), false );
 			if ( tr.fraction < 1 ) {
-				if ( this.Debug ) {
-					DrawDebugLine(Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3(0,0,42), pos, COLOR.RED, 30);
+				if ( this.DebugLos ) {
+					DrawDebugLine( Map.PTArtyInfo[ this.Data ].WpInfo.position + Vector3( 0,0,42 ), pos, COLOR.RED, 30 );
 				}
 				continue;
 			}
 		}
 
 		// cache any successful ones
-		Map.PTArtyInfo[ this.Data ].TraceSuccess[ tableCount(Map.PTArtyInfo[ this.Data ].TraceSuccess) ] = mg;
+		Map.PTArtyInfo[ this.Data ].TraceSuccess[ tableCount( Map.PTArtyInfo[ this.Data ].TraceSuccess ) ] = mg;
 	}
 
-	Map.PTArtyInfo[ this.Data ].Cached = true;
+	// cs: we can only cache ones with a valid wp name as data otherwise 'data' most likely is not unique
+	// really need to pass the wp guid to the callback for indexing
+	Map.PTArtyInfo[ this.Data ].Cached = !(!Map.PTArtyInfo[ this.Data ].WpInfo.facing);
 };
 
 this.Exit = function()
@@ -137,13 +152,13 @@ this.Exit = function()
 this.Update = function()
 {
 	if ( Map.PTArtyInfo[ this.Data ].WpInfo && Map.PTArtyInfo[ this.Data ].WpInfo.position ) {
-		if( this.Goto(Map.PTArtyInfo[ this.Data ].WpInfo.position) == EVENT.PATH_FAILED) {
+		if ( this.Goto( Map.PTArtyInfo[ this.Data ].WpInfo.position ) == EVENT.PATH_FAILED ) {
 			this.Finished();
 		}
 	}
 
 	if ( !this.Bot.HasLineOfSightTo( this.TargetGoalPosition ) ) {
-		if ( this.Debug ) {
+		if ( this.DebugLos ) {
 			this.Bot.Say( "aborting pt arty, no los" );
 		}
 		sleep(1);
@@ -155,20 +170,33 @@ this.Update = function()
 	}
 
 	// call the artillery
-	this.AddAimRequest(Priority.High, "position", this.TargetGoalPosition);
-	this.AddWeaponRequest(Priority.High, WEAPON.BINOCULARS );
+	this.AddAimRequest( Priority.High, "position", this.TargetGoalPosition );
+	this.AddWeaponRequest( Priority.High, WEAPON.BINOCULARS );
 	this.BlockForWeaponChange( WEAPON.BINOCULARS );
 
-	timeout = 0;
-	while( timeout < 5 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
+	timeout = 21;
+	this.Bot.HoldButton( BTN.AIM, 1.1 ); // 20 fps
+	while ( timeout > 0 && this.Bot.IsWeaponCharged( WEAPON.BINOCULARS ) )
 	{
-		timeout += 1;
-		this.AddAimRequest(Priority.High, "position", this.TargetGoalPosition);
-		this.Bot.HoldButton(BTN.AIM, 1);
-		this.Bot.HoldButton(BTN.ATTACK1, 1);
-		this.Goto(this.Bot.GetPosition());
+		timeout -= 1;
+
+		// keep trying every 3 frames
+		if ( timeout % 3 == 0 ) {
+			this.Bot.PressButton(BTN.ATTACK1);
+		}
+
+		if ( Map.PTArtyInfo[ this.Data ].WpInfo && Map.PTArtyInfo[ this.Data ].WpInfo.position ) {
+			this.Bot.MoveTowards( Map.PTArtyInfo[ this.Data ].WpInfo.position );
+		} else {
+			this.Goto( this.Bot.GetPosition() );
+		}
+
 		yield();
 	}
+
+	// cs: Log the position if they still have a charge?
+
+	this.Bot.ReleaseButton( BTN.AIM );
 
 	// Finish the state.
 	this.Finished();

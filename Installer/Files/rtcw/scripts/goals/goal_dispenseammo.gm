@@ -74,5 +74,4 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
 	this.RevivedTime = GetTime();
-}
-
+};
