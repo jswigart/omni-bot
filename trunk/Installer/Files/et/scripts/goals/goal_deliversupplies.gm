@@ -38,7 +38,9 @@ this.GetPriority = function()
 		this.Bot.RevivedTargetEnt = null;
 		this.Supply = WEAPON.MEDKIT;
 		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
-		this.Priority = this.DeliverPriority;
+
+		// cs: if we've activated from a revive goal, lets give it a higher priority than normal.
+		this.Priority = 1.1;
 	}
 };
 

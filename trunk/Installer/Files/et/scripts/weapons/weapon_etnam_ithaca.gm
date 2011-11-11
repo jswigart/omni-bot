@@ -4,13 +4,18 @@
 // Properties can be set like this.Property = x, or the this prefix can be left off.
 //////////////////////////////////////////////////////////////////////////
 
-WEAPON.SHOTGUN = 102; 		// Defined into g_etbot_interface.cpp
+WEAPON.ITHACA = 102; 		// Defined into g_etbot_interface.cpp
+
+// nq uses id 102.
+if ( GetModName() == "noquarter" ) {
+	WEAPON.ITHACA = WEAPON.NONE;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
 this.Name = "Ithaca";
-this.WeaponId = WEAPON.SHOTGUN;
-this.PrimaryFire.AmmoType = WEAPON.SHOTGUN;
+this.WeaponId = WEAPON.ITHACA;
+this.PrimaryFire.AmmoType = WEAPON.ITHACA;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

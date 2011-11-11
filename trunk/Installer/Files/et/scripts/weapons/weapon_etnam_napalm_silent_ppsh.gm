@@ -1,10 +1,13 @@
-// cs: TODO: handle mod version with next release
 if ( GetModName() == "silEnT" )
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Overall weapon properties.
 	this.Name = "PPSH";
-	WEAPON.PPSH = 101;
+	WEAPON.PPSH = 50;
+	if ( GetModVersion() == "0.3.3" ) {
+		WEAPON.PPSH = 101;
+	}
+
 	this.WeaponId = WEAPON.PPSH;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -32,6 +35,10 @@ else
 	//////////////////////////////////////////////////////////////////////////
 
 	WEAPON.NAPALM_MARKER = 101; 		// Defined into g_etbot_interface.cpp
+
+	if ( GetModName() == "noquarter" ) {
+		WEAPON.NAPALM_MARKER = WEAPON.NONE;
+	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Overall weapon properties.
