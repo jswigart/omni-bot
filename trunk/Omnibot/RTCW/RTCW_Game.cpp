@@ -583,25 +583,6 @@ void RTCW_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathC
 	_pfnPathCheck = RTCW_PathCheck;
 }
 
-void MapLoad()
-{
-		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		{
-			gmCall call;
-			if(call.BeginGlobalFunction(pMachine, "OnMapLoad", gmVariable::s_null, true))
-			{
-				call.End();
-			}
-		}
-		{
-			gmCall call;
-			if(call.BeginGlobalFunction(pMachine, "PostMapLoad", gmVariable::s_null, true))
-			{
-				call.End();
-			}
-		}
-}
-
 void RTCW_Game::StartGame()
 {
 	if(GameStarted())
@@ -639,7 +620,23 @@ void RTCW_Game::StartGame()
 
 	if(ScriptManager::GetInstance()->ExecuteFile(script, iThreadId))
 	{
-		MapLoad();
+		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+		{
+			gmCall call;
+			if(call.BeginGlobalFunction(pMachine, "OnMapLoad", gmVariable::s_null, true))
+			{
+				call.End();
+			}
+		}
+	}
+
+	// cs: moved this out so it does not depend on a map script. some autoexec scripts define it.
+	{
+		gmCall call;
+		if(call.BeginGlobalFunction(pMachine, "PostMapLoad", gmVariable::s_null, true))
+		{
+			call.End();
+		}
 	}
 
 	// Other initialization.

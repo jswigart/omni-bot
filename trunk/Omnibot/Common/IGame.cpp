@@ -1099,12 +1099,14 @@ void IGame::InitMapScript()
 				call.End();
 			}
 		}
+	}
+
+	// cs: moved this out so it does not depend on a map script. some autoexec scripts define it.
+	{
+		gmCall call;
+		if(call.BeginGlobalFunction(pMachine, "PostMapLoad", gmVariable::s_null, true))
 		{
-			gmCall call;
-			if(call.BeginGlobalFunction(pMachine, "PostMapLoad", gmVariable::s_null, true))
-			{
-				call.End();
-			}
+			call.End();
 		}
 	}
 
