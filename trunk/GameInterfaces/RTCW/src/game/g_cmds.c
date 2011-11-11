@@ -2986,6 +2986,39 @@ void Cmd_Injure_f( gentity_t *ent )
 	G_Damage(ent,NULL,NULL,NULL,NULL,ent->health + 1,0, MOD_POISONGAS);
 }
 
+// credits to etpub. lua bound function only for mmod ( or some other lua admin system ).
+qboolean G_FlingClient( gentity_t *vic, int flingType )
+{
+	vec3_t dir, flingvec;
+
+	if(!vic || !vic->client)
+		return qfalse;
+
+	if(!(vic->client->sess.sessionTeam == TEAM_RED ||
+			vic->client->sess.sessionTeam == TEAM_BLUE))
+		return qfalse;
+
+	if(vic->health <= 0)
+		return qfalse;
+
+	// plenty of room for improvement on setting the dir vector
+	if(flingType == 0) {	//fling
+		VectorSet(dir, crandom()*50, crandom()*50, 10);
+	} else if(flingType == 1) {	//throw
+		AngleVectors(vic->client->ps.viewangles, dir, NULL, NULL );
+		dir[2] = .25f;
+	} else {	// launch
+		VectorSet(dir, 0, 0, 10);
+	}
+	VectorNormalize(dir);
+	VectorScale(dir, 1500, flingvec);
+	VectorAdd(vic->s.pos.trDelta, flingvec, vic->s.pos.trDelta);
+	VectorAdd(vic->client->ps.velocity, 
+			flingvec, 
+			vic->client->ps.velocity);
+	return qtrue;					
+}
+
 // cs: temp.
 // TODO: remove
 static char *temp[] =
