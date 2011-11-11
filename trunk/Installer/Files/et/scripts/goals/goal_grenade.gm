@@ -85,15 +85,19 @@ this.GetPriority = function()
 							continue;
 						}
 					}
-					else if(goal.TargetGoal)
+					else if (goal.TargetGoal)
 					{
 						g = GetGoal(goal.TargetGoal);
-						if (!g || GetEntFlags(g.GetEntity(), ENTFLAG.DEAD))
+						if (!g) {
+							continue;
+						}
+						ent = g.GetEntity();
+						if (!ent || GetEntFlags(ent, ENTFLAG.DEAD))
 						{
 							continue;
 						}
 					}
-					else if(goal.HasEntity)
+					else if (goal.HasEntity)
 					{
 						continue;
 					}

@@ -1,8 +1,9 @@
-// This script contains functionality to allow medic bots to dispense ammo at spawn
+// This script contains functionality to allow fieldops to dispense ammo at spawn
 
 // These parameters are required
 this.Name = "DispenseAmmo";	// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AlwaysRecieveEvents = true;
 
 // possible options
 this.LimitToClass(CLASS.FIELDOPS);
@@ -20,6 +21,9 @@ this.Initialize = function()
 // NOTE: This function won't be called if the bot doesn't match the allowed classes set up above.
 this.OnSpawn = function()
 {
+	if (this.RevivedTime && GetTime() - this.RevivedTime < 3)
+		{ return; }
+
 	if ( Map && Map.DispenseAmmoTime )
 		{ sleep(Map.DispenseAmmoTime); }
 	else
@@ -68,3 +72,7 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 	}
 };
 
+this.Events[EVENT.REVIVED] = function(whoDoneIt)
+{
+	this.RevivedTime = GetTime();
+};
