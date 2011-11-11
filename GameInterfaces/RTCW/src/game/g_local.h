@@ -755,10 +755,11 @@ typedef struct {
 	int teamScores[TEAM_NUM_TEAMS];
 	int lastTeamLocationTime;               // last time of client team location update
 
+	/* cs: these appear to be unused
 	int soldierChargeTime[2];
 	int medicChargeTime[2];
 	int engineerChargeTime[2];
-	int lieutenantChargeTime[2];
+	int lieutenantChargeTime[2]; */
 
 	qboolean newSession;                // don't use any old session data, because
 	                                    // we changed gametype
@@ -915,6 +916,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir );
 #ifdef WITH_LUA
 char *ConcatArgs( int start );
 void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
+qboolean G_FlingClient( gentity_t *vic, int flingType );
 //char *Q_SayConcatArgs(int start);
 //char *Q_AddCR(char *s);
 //int Q_SayArgc();

@@ -941,6 +941,20 @@ static int _et_GetMapName( lua_State *L ) {
 }
 // }}}
 
+// et.FlingClient( clientNum, team )
+static int _et_FlingClient( lua_State *L ) {
+	int clientNum = luaL_checkint( L, 1 );
+	int flingType = luaL_checkint( L, 2 );
+
+	if ( (g_entities + clientNum)->client && ((g_entities + clientNum)->client->pers.connected == CON_CONNECTED) ) {
+		if ( G_FlingClient(g_entities + clientNum, flingType) ) {
+			return 1;
+		}
+	}
+	return 0;
+}
+// }}}
+
 // et library initialisation array
 static const luaL_Reg etlib[] = {
 	// ET Library Calls
@@ -1005,6 +1019,7 @@ static const luaL_Reg etlib[] = {
 	{ "SetTeam",                    _et_SetTeam                 },
 	{ "GetLevelTime",               _et_GetLevelTime            },
 	{ "GetMapName",                 _et_GetMapName              },
+	{ "FlingClient",                _et_FlingClient             },
 
 	{ NULL },
 };
