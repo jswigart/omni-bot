@@ -11,7 +11,7 @@ this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
 	this.CheckReviveTimer = 2; // look for closer goals every x seconds
-	this.BBDelayTime = 1; // path failed will increase this
+	this.BBDelayTime = 1.25; // path failed will increase this
 };
 
 this.QueryReviveGoals = function()
@@ -42,6 +42,8 @@ this.GetPriority = function()
 			this.MapGoal = this.QueryReviveGoals();
 			if ( this.MapGoal ) {
 				this.Priority = this.MapGoal.GetGoalPriority(this.Bot);
+			} else {
+				this.Priority = 0;
 			}
 		}
 
@@ -54,7 +56,9 @@ this.Enter = function()
 	this.State = this.REVIVE_TARGET;
 	this.TargetEntity = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
-	this.BBDelayTime = 1; // default. if interrupted for a closer revive, dont delay long.
+
+	// cs: note: mapgoal_revive can take up to a second to remove the goal. so delay this a bit longer
+	this.BBDelayTime = 1.25; // default. if interrupted for a closer revive, dont delay long.
 };
 
 this.LookForCloserReviveGoals = function()
@@ -97,6 +101,10 @@ this.Exit = function()
 	}
 
 	this.BlackboardDelay(this.BBDelayTime, this.MapGoal);
+
+	// for sanity
+	this.MapGoal = null;
+	this.Priority = null;
 };
 
 this.UpdateRevive = function()
@@ -132,10 +140,10 @@ this.UpdateRevive = function()
 			timeout -= 1;
 		}
 
-		if ( timeout > 0 ) {
-			this.ReleaseAimRequest();
-			this.ReleaseWeaponRequest();
+		this.ReleaseAimRequest();
+		this.ReleaseWeaponRequest();
 
+		if ( timeout > 0 ) {
 			// activate deliver supplies goal.
 			this.Bot.RevivedTargetEnt = this.TargetEntity;
 			signal( this.Bot.Name + "_deliversupplies" );

@@ -1,10 +1,16 @@
 // The new weapon instance is passed to this function as the 'this'
 // Properties can be set like this.Property = x, or the this prefix can be left off.
 
+WEAPON.JOHNSON = 102; 		// Defined into g_etbot_interface.cpp
+
+if ( GetModName() != "noquarter" ) {
+	WEAPON.JOHNSON = WEAPON.NONE;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
 this.Name = "Johnson";
-this.WeaponId = 102;
+this.WeaponId = WEAPON.JOHNSON;
 
 //////////////////////////////////////////////////////////////////////////
 // Set some weapon properties that affect some internal logic.

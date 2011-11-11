@@ -1,11 +1,17 @@
 // The new weapon instance is passed to this function as the 'this'
 // Properties can be set like this.Property = x, or the this prefix can be left off.
 
+WEAPON.JOHNSON_SCOPED = 101;
+
+if ( GetModName() != "noquarter" ) {
+	WEAPON.JOHNSON_SCOPED = WEAPON.NONE;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
 this.Name = "Johnson Scoped";
-this.WeaponId = 101;
-this.WeaponAliasId = 102;
+this.WeaponId = WEAPON.JOHNSON_SCOPED;
+this.WeaponAliasId = WEAPON.JOHNSON;
 this.MinUseTime = 0.0;
 
 //////////////////////////////////////////////////////////////////////////

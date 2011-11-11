@@ -46,7 +46,6 @@ if (isNq) {
 	if (isEtnam) {
 		tbl1[WEAPON.M79] = true;
 		tbl2[WEAPON.M79] = true;
-		if (!WEAPON.ITHACA) { WEAPON.ITHACA = 102; }
 		tbl1[WEAPON.ITHACA] = false;
 		tbl2[WEAPON.ITHACA] = false;
 		WeaponTable.AlliedPanzer = WEAPON.LAW;
