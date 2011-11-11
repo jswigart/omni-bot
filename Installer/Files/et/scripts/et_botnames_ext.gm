@@ -17,8 +17,7 @@ RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
 
 /////////////////////////////////////////////////////////////////////
 // optionally assign a prefix for the bot name. set to "" for no prefix
-global AxisPrefix = "^1[BOT]^7";
-global AlliedPrefix = "^4[BOT]^7";
+global BotPrefix = "^o[BOT]^7";
 
 /////////////////////////////////////////////////////////////////////
 // Axis Bots
@@ -159,7 +158,7 @@ global _PreferredWeapon = table();
 
 // axis
 foreach ( botName and loadout in AxisBots ) {
-	name = AxisPrefix + botName;
+	name = BotPrefix + botName;
 	Names[ name ] = loadout.profile;
 	if (!_AxisBots[ loadout.class ]) {
 		_AxisBots[ loadout.class ] = table();
@@ -174,7 +173,7 @@ foreach ( botName and loadout in AxisBots ) {
 
 // allies
 foreach ( botName and loadout in AlliedBots ) {
-	name = AlliedPrefix + botName;
+	name = BotPrefix + botName;
 	Names[ name ] = loadout.profile;
 	if (!_AlliedBots[ loadout.class ]) {
 		_AlliedBots[ loadout.class ] = table();
@@ -228,12 +227,7 @@ global OnBotAutoJoin = function()
 		}
 
 		if ( botName ) {
-			prefix = AxisPrefix;
-			if ( desiredTeam == TEAM.ALLIES ) {
-				prefix = AlliedPrefix;
-			}
-
-			botTable = { class = desiredClass, team = desiredTeam, name = prefix + botName };
+			botTable = { class = desiredClass, team = desiredTeam, name = BotPrefix + botName };
 		}
 		else {
 			botTable = { class = desiredClass, team = desiredTeam };
