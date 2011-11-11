@@ -133,17 +133,20 @@ this.UpdateRevive = function()
 		}
 
 		if ( timeout > 0 ) {
+			this.ReleaseAimRequest();
+			this.ReleaseWeaponRequest();
+
 			// activate deliver supplies goal.
 			this.Bot.RevivedTargetEnt = this.TargetEntity;
 			signal( this.Bot.Name + "_deliversupplies" );
+			sleep(1);
 		}
 		else {
 			this.BBDelayTime = 10;
-			this.Finished();
 		}
 	}
 	else {
 		this.BBDelayTime = 10;
-		this.Finished();
 	}
+	this.Finished();
 };

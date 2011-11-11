@@ -693,61 +693,17 @@ member ExcludeClass = function( goalname, team, class1, class2, class3, class4 )
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//
+// parameter isFog is ignored, goal_zooming sets MaxViewDistance
 member SelectWeapon = function( bot, w, isFog )
 {
-	class = bot.GetClass();
-	team = bot.GetTeam();
-
-	if ( class == CLASS.SOLDIER )
+	tbl = WeaponTable.GetPrimaryWeapons( bot.GetTeam(), bot.GetClass() );
+	if (!tbl || typeId(tbl[w]) != 0)
 	{
-		if ( w == WEAPON.PANZERFAUST ||
-			w == WEAPON.FLAMETHROWER ||
-			( team == TEAM.AXIS &&
-				( w == WEAPON.GRANATWERFER ||
-				w == WEAPON.MORTAR ||
-				w == WEAPON.MOBILE_MG42 ||
-				w == WEAPON.MP40 ) ) ||
-			( team == TEAM.ALLIES && ( w == WEAPON.MORTAR ||
-				w == WEAPON.MOBILEBROWNING ||
-				w == WEAPON.MOBILE_MG42 ||
-				w == WEAPON.THOMPSON ) ) )
-		{
-			bot.ChangePrimaryWeapon( w );
-			return;
+		if (!Map || !Map.DontSelectWeapons) {
+			//goal_selectweapons changes weapon every spawn
+			Util.MapDeprecateMessage( "ETUtil.SelectWeapon", "WeaponTable.SetWeaponAvailability" );
 		}
-	}
-
-	if ( class == CLASS.ENGINEER )
-	{
-		if ( ( team == TEAM.AXIS && ( w == WEAPON.GPG40 ||
-			w == WEAPON.MP40 ) ) ||
-			 ( team == TEAM.ALLIES && ( w == WEAPON.M7 ||
-			w == WEAPON.THOMPSON ) ) )
-		{
-			bot.ChangePrimaryWeapon( w );
-			return;
-		}
-	}
-
-	if ( class == CLASS.COVERTOPS )
-	{
-		if ( w == WEAPON.FG42 || w == WEAPON.STEN ||
-			( team == TEAM.AXIS && w == WEAPON.K43 ) ||
-			( team == TEAM.ALLIES && w == WEAPON.GARAND ) )
-		{
-			bot.ChangePrimaryWeapon(w);
-
-			if ( (w != WEAPON.STEN) && !isFog )
-			{
-				if ( bot.MaxViewDistance < 5000 )
-					{ bot.MaxViewDistance = bot.MaxViewDistance * 2; }
-				else
-					{ bot.MaxViewDistance = 10000; }
-			}
-
-			return;
-		}
+		bot.ChangePrimaryWeapon( w );
 	}
 };
 

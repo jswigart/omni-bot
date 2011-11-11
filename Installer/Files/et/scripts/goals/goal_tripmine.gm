@@ -1,4 +1,4 @@
-// This script contains functionality to allow bots to satchel or dynamite goals
+// This script contains functionality to allow bots to plant tripmines
 
 // These parameters are required
 this.Name = "TRIPMINE";		// The name of the goal.
