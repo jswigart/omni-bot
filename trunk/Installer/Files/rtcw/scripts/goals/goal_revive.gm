@@ -6,7 +6,6 @@ this.LimitToClass(CLASS.MEDIC); // weapon.syringe instead?
 
 // states
 this.REVIVE_TARGET = 1;
-this.HEAL_TARGET = 2;
 
 this.Initialize = function()
 {
@@ -81,10 +80,6 @@ this.Update = function()
 		{
 			this.UpdateRevive();
 		}
-		case this.HEAL_TARGET:
-		{
-			this.UpdateHeal();
-		}
 		default:
 		{
 			this.Finished();
@@ -107,12 +102,6 @@ this.Exit = function()
 this.UpdateRevive = function()
 {
 	if ( this.RouteTo(this.MapGoal, 32.f) != EVENT.PATH_FAILED ) {
-
-		if ( Util.GetEntHealth(this.TargetEntity) > 0 ) {
-			this.State = this.HEAL_TARGET;
-			return;
-		}
-
 		this.AddAimRequest(Priority.High, "position",GetEntPosition(this.TargetEntity));
 		this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
 		this.BlockForWeaponChange(WEAPON.SYRINGE);
@@ -144,45 +133,20 @@ this.UpdateRevive = function()
 		}
 
 		if ( timeout > 0 ) {
-			this.State = this.HEAL_TARGET;
+			this.ReleaseAimRequest();
+			this.ReleaseWeaponRequest();
+
+			// activate deliver supplies goal.
+			this.Bot.RevivedTargetEnt = this.TargetEntity;
+			signal( this.Bot.Name + "_deliversupplies" );
+			sleep(1);
 		}
 		else {
 			this.BBDelayTime = 10;
-			this.Finished();
 		}
 	}
 	else {
 		this.BBDelayTime = 10;
-		this.Finished();
 	}
-};
-
-this.UpdateHeal = function()
-{
-	if ( !this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
-		this.Finished();
-	}
-
-	this.AddAimRequest(Priority.High, "position",GetEntEyePosition(this.TargetEntity));
-	this.AddWeaponRequest(Priority.High, WEAPON.MEDKIT);
-	this.BlockForWeaponChange(WEAPON.MEDKIT);
-
-	this.Bot.HoldButton(BTN.BACKWARD, 0.25); // move off them
-	sleep(0.25);
-
-	while( this.Bot.IsWeaponCharged(WEAPON.MEDKIT) ) {
-		pos = GetEntEyePosition(this.TargetEntity);
-		if (pos) {
-			this.AddAimRequest(Priority.High, "position",pos);
-			this.Bot.MoveTowards(pos);
-			this.Bot.HoldButton(BTN.ATTACK1, 0.25);
-		}
-		else {
-			this.Finished();
-		}
-		sleep(0.25);
-	}
-
-	this.BBDelayTime = 10; // packs on ground most likely
 	this.Finished();
 };

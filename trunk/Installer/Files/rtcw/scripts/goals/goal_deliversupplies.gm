@@ -9,6 +9,7 @@ this.AlwaysRecieveEvents = true;
 
 // possible options
 this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
+this.DeliverPriority = 0.9;
 
 // states
 this.DELIVER_PACKS = 1;
@@ -20,6 +21,20 @@ this.Initialize = function()
 {
 	this.Respond = false;
 	Util.MapDebugPrint(this.Name + " Initialized", true);
+};
+
+this.GetPriority = function()
+{
+	block( this.Bot.Name + "_deliversupplies" );
+
+	sleep(0.5);
+	if ( this.Bot.RevivedTargetEnt ) {
+		this.TargetEntity =  this.Bot.RevivedTargetEnt;
+		this.Bot.RevivedTargetEnt = null;
+		this.Supply = WEAPON.MEDKIT;
+		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
+		this.Priority = this.DeliverPriority;
+	}
 };
 
 this.Enter = function()
@@ -288,7 +303,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.Supply = WEAPON.AMMO_PACK;
 		this.TargetEntity = whoSaidIt;
 
-		this.Priority = 1.5;
+		this.Priority = this.DeliverPriority;
 	}
 	else if(macroId == VOICE.NEED_MEDIC &&
 		 this.Bot.GetClass() == CLASS.MEDIC &&
@@ -297,7 +312,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.Supply = WEAPON.MEDKIT;
 		this.TargetEntity = whoSaidIt;
 
-		this.Priority = 1.5;
+		this.Priority = this.DeliverPriority;
 	}
 };
 
