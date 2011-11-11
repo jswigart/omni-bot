@@ -1,0 +1,159 @@
+// This script contains functionality to allow bots to satchel or dynamite goals
+
+// These parameters are required
+this.Name = "TRIPMINE";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.LimitToWeapon(WEAPON.TRIPMINE);
+
+
+// define some goal states
+this.LAY_EXPLOSIVE = 0;
+this.ARM_EXPLOSIVE = 1;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.GetPriority = function()
+{
+	botClass = this.Bot.GetClass();
+
+	while(1)
+	{
+		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) && Util.HasAmmoForWeapon(this.Bot, WEAPON.TRIPMINE) )
+		{
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,"TRIPMINE_.*");
+			if ( count > 0 )
+			{
+				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				{
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
+			}
+
+			tableClear(this.Bot.QueryGoalsTable);
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.GoalState = this.LAY_EXPLOSIVE;
+	this.ExplosiveEntity = null;
+
+	this.Goal_Name = this.MapGoal.GetName();
+	this.Goal_Position = this.MapGoal.GetPosition();
+	
+	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", WEAPON.DYNAMITE);
+	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not hasammo", WEAPON.TRIPMINE);
+
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+};
+
+this.Update = function()
+{
+	if ( this.RouteTo(this.MapGoal, 64.0) == EVENT.PATH_SUCCESS )
+	{
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		while(1)
+		{
+			switch(this.GoalState)
+			{
+				case this.LAY_EXPLOSIVE:
+				{
+					this.UpdateSetMine();
+				}
+				case this.ARM_EXPLOSIVE:
+				{
+					this.UpdateArmMine();
+				}
+				default:
+				{
+					this.Finished();
+				}
+			}
+			
+			sleep(0.25);
+		}
+	}
+	else
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+	}
+
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.ReleaseAimRequest();
+	this.ReleaseWeaponRequest();
+
+	this.GoalState = this.LAY_EXPLOSIVE;
+	this.GoalEntity = null;
+	this.ExplosiveEntity = null;
+
+	this.MapGoal = null;
+};
+
+this.UpdateSetMine = function()
+{
+	this.Priority = 2.0;
+
+	goalPos = this.MapGoal.GetPosition();
+	this.AddAimRequest(Priority.High, "position", this.MapGoal.AimPosition);
+	this.AddWeaponRequest(Priority.High, WEAPON.TRIPMINE );
+	this.BlockForWeaponChange( WEAPON.TRIPMINE );
+	this.Bot.PressButton(BTN.ATTACK1);
+};
+
+this.UpdateArmMine = function()
+{
+	if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) ) {
+		this.Finished();
+	}
+
+	this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
+	this.BlockForWeaponChange( WEAPON.PLIERS );
+
+	while ( EntityIsValid(this.ExplosiveEntity) && this.Bot.GetExplosiveState(this.ExplosiveEntity) == 1 ) {
+		minePosition = GetEntPosition(this.ExplosiveEntity);
+		this.AddAimRequest(Priority.High, "position", minePosition);
+		this.Bot.MoveTowards(minePosition);
+		this.Bot.PressButton(BTN.ATTACK1);
+		yield();
+	}
+	
+	this.Finished();
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	switch(weaponId)
+	{
+		case WEAPON.TRIPMINE:
+		{
+			print(projectileEntity);
+			this.ExplosiveEntity = projectileEntity;
+			this.GoalState = this.ARM_EXPLOSIVE;
+		}
+		default:
+		{
+		}
+	}
+};
