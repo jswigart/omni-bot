@@ -333,6 +333,12 @@ void Weapon_Syringe( gentity_t *ent ) {
 				memcpy( ammoclip,traceEnt->client->ps.ammoclip,sizeof( int ) * MAX_WEAPONS );
 				memcpy( weapons,traceEnt->client->ps.weapons,sizeof( int ) * ( MAX_WEAPONS / ( sizeof( int ) * 8 ) ) );
 
+				// cancel a complaint if active for the reviver
+				if ( traceEnt->client->pers.complaintClient == ent->s.clientNum ) {
+					traceEnt->client->pers.complaintEndTime = -1;
+					trap_SendServerCommand( ent - g_entities, "complaint -2" );
+				}
+
 				ClientSpawn( traceEnt, qtrue );
 				Bot_Event_Revived( traceEnt - g_entities, ent );
 
