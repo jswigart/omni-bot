@@ -941,7 +941,7 @@ static int _et_GetMapName( lua_State *L ) {
 }
 // }}}
 
-// et.FlingClient( clientNum, team )
+// et.FlingClient( clientNum, flingType )
 static int _et_FlingClient( lua_State *L ) {
 	int clientNum = luaL_checkint( L, 1 );
 	int flingType = luaL_checkint( L, 2 );
@@ -952,6 +952,15 @@ static int _et_FlingClient( lua_State *L ) {
 		}
 	}
 	return 0;
+}
+// }}}
+
+// et.FlingClientA( flingType )
+static int _et_FlingClientA( lua_State *L ) {
+	int flingType = luaL_checkint( L, 1 );
+
+	G_FlingClientA(flingType);
+	return 1;
 }
 // }}}
 
@@ -1020,6 +1029,7 @@ static const luaL_Reg etlib[] = {
 	{ "GetLevelTime",               _et_GetLevelTime            },
 	{ "GetMapName",                 _et_GetMapName              },
 	{ "FlingClient",                _et_FlingClient             },
+	{ "FlingClientA",                _et_FlingClientA           },
 
 	{ NULL },
 };
