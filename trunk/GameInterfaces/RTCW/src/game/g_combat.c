@@ -417,8 +417,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 	// g_shortcuts
 	if ( attacker && attacker->client ) {
-		self->client->pers.lastkiller_client = attacker->client->ps.clientNum;
-		attacker->client->pers.lastkilled_client = self->client->ps.clientNum;
+		self->client->pers.lastkiller_client = attacker->s.number;
+		attacker->client->pers.lastkilled_client = self->s.number;
 	}
 
 	if ( attacker ) {

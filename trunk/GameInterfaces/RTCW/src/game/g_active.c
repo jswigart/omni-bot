@@ -137,7 +137,7 @@ void P_WorldEffects( gentity_t *ent ) {
 						ent->damage = 15;
 					}
 
-					Bot_Event_Drowning( ent->client->ps.clientNum );
+					Bot_Event_Drowning( ent-g_entities );
 
 					// play a gurp sound instead of a normal pain sound
 					if ( ent->health <= ent->damage ) {
@@ -962,7 +962,7 @@ void ClientThink_real( gentity_t *ent ) {
 	// spectators don't do much
 	// DHM - Nerve :: In limbo use SpectatorThink
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR || client->ps.pm_flags & PMF_LIMBO ) {
-		if ( client->sess.spectatorState == SPECTATOR_SCOREBOARD ) {
+		if ( client->sess.spectatorState == SPECTATOR_SCOREBOARD || (ent->r.svFlags & SVF_BOT) ) {
 			return;
 		}
 		SpectatorThink( ent, ucmd );
@@ -1012,7 +1012,7 @@ void ClientThink_real( gentity_t *ent ) {
 					weapon = weapBanksMultiPlayer[3][i];
 					if ( COM_BitCheck( client->ps.weapons,weapon ) ) {
 
-						item = BG_FindItemForWeapon( weapon );
+						item = BG_FindItemForWeapon( (weapon_t)weapon );
 						if ( item ) {
 							VectorCopy( client->ps.viewangles, angles );
 
@@ -1037,7 +1037,7 @@ void ClientThink_real( gentity_t *ent ) {
 							trap_Trace( &tr, client->ps.origin, mins, maxs, org, ent->s.number, MASK_SOLID );
 							VectorCopy( tr.endpos, org );
 
-							ent2 = LaunchItem( item, org, velocity, client->ps.clientNum );
+							ent2 = LaunchItem( item, org, velocity, ent-g_entities );
 							COM_BitClear( client->ps.weapons,weapon );
 
 							if ( weapon == WP_MAUSER ) {
@@ -1052,10 +1052,10 @@ void ClientThink_real( gentity_t *ent ) {
 							if ( client->ps.weapon == weapon ) {
 								client->ps.weapon = 0;
 							}
-							ent2->count = client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
-							ent2->item->quantity = client->ps.ammo[BG_FindClipForWeapon( weapon )];
-							client->ps.ammoclip[BG_FindClipForWeapon( weapon )] = 0;
-							client->ps.ammo[BG_FindClipForWeapon( weapon )] = 0;
+							ent2->count = client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )];
+							ent2->item->quantity = client->ps.ammo[BG_FindClipForWeapon( (weapon_t)weapon )];
+							client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )] = 0;
+							client->ps.ammo[BG_FindClipForWeapon( (weapon_t)weapon )] = 0;
 
 							Bot_Event_RemoveWeapon( client->ps.clientNum, Bot_WeaponGameToBot( weapon ) );
 						}

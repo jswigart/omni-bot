@@ -1582,14 +1582,14 @@ typedef enum {
 #define SQR( a ) ( ( a ) * ( a ) )
 
 // TTimo - voting config flags
-#define VOTEFLAGS_RESTART           ( 1 << 0 )
+#define VOTEFLAGS_RESTART       ( 1 << 0 )
 #define VOTEFLAGS_RESETMATCH    ( 1 << 1 )
 #define VOTEFLAGS_STARTMATCH    ( 1 << 2 )
-#define VOTEFLAGS_NEXTMAP           ( 1 << 3 )
-#define VOTEFLAGS_SWAP              ( 1 << 4 )
-#define VOTEFLAGS_TYPE              ( 1 << 5 )
-#define VOTEFLAGS_KICK              ( 1 << 6 )
-#define VOTEFLAGS_MAP                   ( 1 << 7 )
+#define VOTEFLAGS_NEXTMAP       ( 1 << 3 )
+#define VOTEFLAGS_SWAP          ( 1 << 4 )
+#define VOTEFLAGS_TYPE          ( 1 << 5 )
+#define VOTEFLAGS_KICK          ( 1 << 6 )
+#define VOTEFLAGS_MAP           ( 1 << 7 )
 
 //////////////////////////////////////////////////////////////////////////
 
