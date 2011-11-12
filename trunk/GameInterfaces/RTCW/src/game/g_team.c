@@ -124,27 +124,13 @@ void Team_FragBonuses( gentity_t *targ, gentity_t *inflictor, gentity_t *attacke
 		return;
 	}
 
-	team = targ->client->sess.sessionTeam;
-	otherteam = OtherTeam( targ->client->sess.sessionTeam );
-	if ( otherteam < 0 ) {
-		return; // whoever died isn't on a team
-
-	}
-// JPW NERVE -- no bonuses for fragging friendlies, penalties scored elsewhere
-	if ( team == attacker->client->sess.sessionTeam ) {
+	// no bonus for team kills
+	if ( targ->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
 		return;
 	}
-// jpw
 
-	// same team, if the flag at base, check to he has the enemy flag
-	if ( team == TEAM_RED ) {
-		enemy_flag_pw = PW_BLUEFLAG;
-	} else {
-		enemy_flag_pw = PW_REDFLAG;
-	}
-
-	// did the attacker frag the flag carrier?
-	if ( targ->client->ps.powerups[enemy_flag_pw] ) {
+	// give bonus if it is a flag carrier. team check is above
+	if ( targ->client->ps.powerups[PW_BLUEFLAG] ||  targ->client->ps.powerups[PW_REDFLAG] ) {
 		if ( g_gametype.integer >= GT_WOLF ) {
 			AddScore( attacker, WOLF_FRAG_CARRIER_BONUS );
 		} else {

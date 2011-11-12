@@ -534,8 +534,6 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 			// DHM - Nerve :: Complaint lodging
 			if ( attacker != self && level.warmupTime <= 0 ) {
-				//CS: uhh maybe we shouldn't even do anything if local client or bot?
-				//if ( attacker->client->pers.localClient && !(attacker->r.svFlags & SVF_BOT)) {
 				if ( attacker->client->pers.localClient || ( attacker->r.svFlags & SVF_BOT ) ) {
 					//trap_SendServerCommand( self-g_entities, "complaint -4" );
 				} else {
