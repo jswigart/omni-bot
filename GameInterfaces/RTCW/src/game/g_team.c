@@ -115,10 +115,6 @@ order.
 ================
 */
 void Team_FragBonuses( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker ) {
-	int enemy_flag_pw;
-	int otherteam;
-	int team;
-
 	// no bonus for fragging yourself
 	if ( !targ->client || !attacker->client || targ == attacker ) {
 		return;
@@ -131,13 +127,7 @@ void Team_FragBonuses( gentity_t *targ, gentity_t *inflictor, gentity_t *attacke
 
 	// give bonus if it is a flag carrier. team check is above
 	if ( targ->client->ps.powerups[PW_BLUEFLAG] ||  targ->client->ps.powerups[PW_REDFLAG] ) {
-		if ( g_gametype.integer >= GT_WOLF ) {
-			AddScore( attacker, WOLF_FRAG_CARRIER_BONUS );
-		} else {
-			AddScore( attacker, CTF_FRAG_CARRIER_BONUS );
-			PrintMsg( NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
-					  attacker->client->pers.netname, TeamName( team ) );
-		}
+		AddScore( attacker, WOLF_FRAG_CARRIER_BONUS );
 	}
 }
 

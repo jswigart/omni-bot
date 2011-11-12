@@ -336,6 +336,7 @@ void Weapon_Syringe( gentity_t *ent ) {
 				// cancel a complaint if active for the reviver
 				if ( traceEnt->client->pers.complaintClient == ent->s.clientNum ) {
 					traceEnt->client->pers.complaintEndTime = -1;
+					traceEnt->client->pers.complaintClient = -1;
 					trap_SendServerCommand( ent - g_entities, "complaint -2" );
 				}
 

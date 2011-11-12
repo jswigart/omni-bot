@@ -2587,7 +2587,7 @@ const char *multikillSound[] = {
 };
 
 void G_CheckMultiKill( int clientNum ) {
-	gclient_t *client = &level.clients[level.sortedClients[clientNum]];
+	gclient_t *client = &level.clients[clientNum];
 
 	if ( !client || !(g_announcer.integer & ANNOUNCE_MULTIKILL) ||
 			((g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE) && (g_entities[clientNum].r.svFlags & SVF_BOT)) ) {
@@ -2597,13 +2597,13 @@ void G_CheckMultiKill( int clientNum ) {
 	if ( level.time - client->lastKillTime > g_multikillTime.integer ) {
 		int multikillLevel = 0;
 
-		if ( client->multikill >= 7 ) {
+		if ( client->multikill >= 11 ) {
 			multikillLevel = 5; //ludicrous kill
-		} else if ( client->multikill >= 6 )                              {
+		} else if ( client->multikill >= 9 )                              {
 			multikillLevel = 4; //mega kill
-		} else if ( client->multikill >= 5 )                              {
+		} else if ( client->multikill >= 7 )                              {
 			multikillLevel = 3; //monster kill
-		} else if ( client->multikill >= 4 )                              {
+		} else if ( client->multikill >= 5 )                              {
 			multikillLevel = 2; //ultra kill
 		} else if ( client->multikill >= 3 )                              {
 			multikillLevel = 1; //multi kill

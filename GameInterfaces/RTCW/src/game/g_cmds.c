@@ -649,8 +649,8 @@ void SetTeam( gentity_t *ent, char *s ) {
 		if ( g_teamForceBalance.integer  ) {
 			int counts[TEAM_NUM_TEAMS];
 
-			counts[TEAM_BLUE] = TeamCount( ent - g_entities, TEAM_BLUE );
-			counts[TEAM_RED] = TeamCount( ent - g_entities, TEAM_RED );
+			counts[TEAM_BLUE] = TeamCount( clientNum, TEAM_BLUE );
+			counts[TEAM_RED] = TeamCount( clientNum, TEAM_RED );
 
 			// We allow a spread of one
 			if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] >= 1 ) {
@@ -788,11 +788,10 @@ void StopFollowing( gentity_t *ent ) {
 		client->pers.enterTime = enterTime;
 		VectorCopy( pos, client->ps.origin );
 		SetClientViewAngle( ent, angle );
-	} else
-	{
+	} else {
 		// legacy code, FIXME: useless?
+		// cs: no, it isn't useless
 		ent->client->sess.spectatorState = SPECTATOR_FREE;
-		//ent->r.svFlags &= ~SVF_BOT;
 		ent->client->ps.clientNum = ent - g_entities;
 	}
 }
@@ -2353,7 +2352,7 @@ void Cmd_ThrowKnife_f( gentity_t *ent ) {
 	VectorCopy( tr.endpos, org );
 
 	G_Sound( ent, G_SoundIndex( "sound/weapons/knife/knife_slash1.wav" ) );
-	ent2 = LaunchItem( item, org, velocity, ent->client->ps.clientNum );
+	ent2 = LaunchItem( item, org, velocity, ent-g_entities );
 
 	ent2->touch = Touch_Knife;
 	ent2->parent = ent;
@@ -2364,7 +2363,7 @@ void Cmd_ThrowKnife_f( gentity_t *ent ) {
 
 	ent->thrownKnifeTime = level.time;
 
-	trap_SendServerCommand( ent->client->ps.clientNum, va( "chat \"^3Knives left:^7 %d\" %i", ent->client->ps.ammo[BG_FindAmmoForWeapon( WP_KNIFE )], qfalse ) );
+	trap_SendServerCommand( ent-g_entities, va( "chat \"^3Knives left:^7 %d\" %i", ent->client->ps.ammo[BG_FindAmmoForWeapon( WP_KNIFE )], qfalse ) );
 }
 
 /*////////////////////////////////////////////
