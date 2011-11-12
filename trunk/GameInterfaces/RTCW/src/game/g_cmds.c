@@ -3019,6 +3019,18 @@ qboolean G_FlingClient( gentity_t *vic, int flingType )
 	return qtrue;					
 }
 
+qboolean G_FlingClientA( int flingType )
+{
+	int i;
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		if ( level.clients[ i ].pers.connected == CON_CONNECTED ) {
+			G_FlingClient( g_entities + i, flingType );
+		}
+	}
+
+	return qtrue;
+}
+
 // cs: temp.
 // TODO: remove
 static char *temp[] =

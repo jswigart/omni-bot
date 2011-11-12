@@ -16,12 +16,7 @@ void Team_InitGame( void ) {
 }
 
 int OtherTeam( int team ) {
-	if ( team == TEAM_RED ) {
-		return TEAM_BLUE;
-	} else if ( team == TEAM_BLUE ) {
-		return TEAM_RED;
-	}
-	return team;
+	return team == TEAM_RED ? TEAM_BLUE : TEAM_RED;
 }
 
 const char *TeamName( int team ) {

@@ -917,6 +917,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir );
 char *ConcatArgs( int start );
 void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
 qboolean G_FlingClient( gentity_t *vic, int flingType );
+qboolean G_FlingClientA( int flingType );
 //char *Q_SayConcatArgs(int start);
 //char *Q_AddCR(char *s);
 //int Q_SayArgc();
@@ -1322,6 +1323,7 @@ extern vmCvar_t g_nadePacks;
 extern vmCvar_t g_betting;
 extern vmCvar_t g_muteSpecs;
 extern vmCvar_t g_kickItems;
+extern vmCvar_t g_binocs;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;
@@ -1538,8 +1540,6 @@ void G_HistoricalTraceBegin( gentity_t *ent );
 void G_HistoricalTraceEnd( gentity_t *ent );
 void G_Trace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask );
 
-#endif
-
 // credits
 #define CREDITS_KILLBONUS 1
 #define CREDITS_OBJBONUS 10
@@ -1548,5 +1548,13 @@ void G_Trace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t
 #define CREDITS_BUYING 0x0002
 
 // kick items
-#define KICK_AIRSTRIKE	0x001
-#define KICK_GRENADE	0x002	
+#define KICK_AIRSTRIKE	0x0001
+#define KICK_GRENADE	0x0002
+
+// binoculars
+#define BINOCS_SOLDIER	0x0001
+#define	BINOCS_ENG		0x0002
+#define	BINOCS_MEDIC	0x0004
+
+#endif // __G_LOCAL_H__
+

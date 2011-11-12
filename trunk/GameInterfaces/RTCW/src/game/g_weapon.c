@@ -913,7 +913,7 @@ Weapon_Artillery
 */
 void Weapon_Artillery( gentity_t *ent ) {
 	if ( ent->client->ps.stats[STAT_PLAYER_CLASS] != PC_LT ) {
-		G_Printf( "not a lieutenant, you can't shoot this!\n" );
+		//G_Printf( "not a lieutenant, you can't shoot this!\n" );
 		return;
 	}
 	if ( level.time - ent->client->ps.classWeaponTime > g_LTChargeTime.integer ) {

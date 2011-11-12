@@ -733,6 +733,15 @@ void SetWolfSkin( gclient_t *client, char *model ) {
 	}
 }
 
+void AddPlayerWeapon(gclient_t *client, weapon_t weapon, int ammo, int ammoclip)
+{
+	COM_BitSet( client->ps.weapons, weapon );
+	client->ps.ammo[BG_FindAmmoForWeapon( weapon )] = ammo;
+	client->ps.ammoclip[BG_FindClipForWeapon( weapon )] = ammoclip;
+	Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( weapon ) );
+}
+
+// cs: todo: rewrite this function ...
 void SetWolfSpawnWeapons( gclient_t *client ) {
 
 	int pc = client->sess.playerType;
@@ -769,183 +778,58 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 	client->ps.weapons[0] = 0;
 	client->ps.weapons[1] = 0;
 
-	COM_BitSet( client->ps.weapons, WP_KNIFE );
-
-	if ( g_throwableKnives.integer > 0 ) {
-		client->ps.ammo[BG_FindAmmoForWeapon( WP_KNIFE )] = g_throwableKnives.integer;
-	}
-
-	client->ps.ammoclip[BG_FindClipForWeapon( WP_KNIFE )] = 1;
+	AddPlayerWeapon(client, WP_KNIFE, g_throwableKnives.integer > 0 ? g_throwableKnives.integer : 0, 1);
 	client->ps.weapon = WP_KNIFE;
 	client->ps.weaponstate = WEAPON_READY;
 
-	Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_KNIFE ) );
-
-
 	// Engineer gets dynamite
 	if ( pc == PC_ENGINEER ) {
-		COM_BitSet( client->ps.weapons, WP_DYNAMITE );
-		client->ps.ammo[BG_FindAmmoForWeapon( WP_DYNAMITE )] = 0;
-		client->ps.ammoclip[BG_FindClipForWeapon( WP_DYNAMITE )] = 1;
+		AddPlayerWeapon(client, WP_DYNAMITE, 0, 1);
+		AddPlayerWeapon(client, WP_PLIERS, 1, 1);
 
-		Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_DYNAMITE ) );
-
-		// NERVE - SMF
-		COM_BitSet( client->ps.weapons, WP_PLIERS );
-		client->ps.ammoclip[BG_FindClipForWeapon( WP_PLIERS )] = 1;
-		client->ps.ammo[WP_PLIERS] = 1;
-
-		Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_PLIERS ) );
+		if ( g_binocs.integer & BINOCS_ENG ) {
+			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
+		}
 	}
 
-	if ( g_knifeonly.integer != 1 && !g_instaGib.integer ) {
+	// Medics always get syringe and medkit
+	if ( pc == PC_MEDIC ) {
+		AddPlayerWeapon(client, WP_MEDIC_SYRINGE, 0, 10);
+		AddPlayerWeapon(client, WP_MEDKIT, 1, 1);
+
+		if ( g_binocs.integer & BINOCS_MEDIC ) {
+			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
+		}
+	}
+
+	if ( pc == PC_SOLDIER && (g_binocs.integer & BINOCS_SOLDIER) ) {
+			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
+	}
+
+	if ( g_knifeonly.integer != 1 && !g_instaGib.integer )
+	{
 		// Lieutenant gets binoculars, ammo pack, artillery, and a grenade
 		if ( pc == PC_LT ) {
 			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
-			COM_BitSet( client->ps.weapons, WP_AMMO );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_AMMO )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_AMMO )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_AMMO ) );
-
-
-			COM_BitSet( client->ps.weapons, WP_ARTY );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_ARTY )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_ARTY )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_ARTY ) );
-
-			COM_BitSet( client->ps.weapons, WP_BINOCULARS );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_BINOCULARS )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_BINOCULARS )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_BINOCULARS ) );
-
-			// NERVE - SMF
-			COM_BitSet( client->ps.weapons, WP_SMOKE_GRENADE );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_SMOKE_GRENADE )] = 1;
-			client->ps.ammo[WP_SMOKE_GRENADE] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_SMOKE_GRENADE ) );
-
-			switch ( client->sess.sessionTeam ) {
-			case TEAM_BLUE:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = g_LTNades.integer ? g_LTNades.integer : 1;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_PINEAPPLE ) );
-
-				break;
-			case TEAM_RED:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_LAUNCHER );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_LAUNCHER )] = g_LTNades.integer ? g_LTNades.integer : 1;;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_LAUNCHER ) );
-
-				break;
-			default:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = g_LTNades.integer ? g_LTNades.integer : 1;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_PINEAPPLE ) );
-
-				break;
-			}
+			AddPlayerWeapon(client, WP_AMMO, 0, 1);
+			AddPlayerWeapon(client, WP_ARTY, 0, 1);
+			AddPlayerWeapon(client, WP_BINOCULARS, 0, 1);
+			AddPlayerWeapon(client, WP_SMOKE_GRENADE, 1, 1);
+			AddPlayerWeapon(client, client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE, 0, g_LTNades.integer ? g_LTNades.integer : 1);
 		}
 
 		// Everyone gets a pistol
-		switch ( client->sess.sessionTeam ) { // JPW NERVE was playerPistol
-
-		case TEAM_RED: // JPW NERVE
-			COM_BitSet( client->ps.weapons, WP_LUGER );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_LUGER )] += 8;
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_LUGER )] += ( 24 + ( 8 * extraPistol ) );
-			client->ps.weapon = WP_LUGER;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_LUGER ) );
-
-			break;
-		default: // '0' // TEAM_BLUE
-			COM_BitSet( client->ps.weapons, WP_COLT );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_COLT )] += 8;
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_COLT )] += ( 24 + ( 8 * extraPistol ) );
-			client->ps.weapon = WP_COLT;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_COLT ) );
-
-			break;
-		}
+		AddPlayerWeapon(client, client->sess.sessionTeam == TEAM_RED ? WP_LUGER : WP_COLT, 24 + ( 8 * extraPistol ), 8);
 
 		// Everyone except Medic and LT get some grenades
 		if ( ( pc != PC_LT ) && ( pc != PC_MEDIC ) ) { // JPW NERVE
-
-			switch ( client->sess.sessionTeam ) { // was playerItem
-
-			case TEAM_BLUE:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_GRENADE_PINEAPPLE )] = 0;
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = 4 + 4 * ( pc == PC_ENGINEER ); // JPW NERVE
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_PINEAPPLE ) );
-
-				break;
-			case TEAM_RED:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_LAUNCHER );
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_GRENADE_LAUNCHER )] = 0;
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_LAUNCHER )] = 4 + 4 * ( pc == PC_ENGINEER ); // JPW NERVE
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_LAUNCHER ) );
-
-				break;
-			default:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_GRENADE_PINEAPPLE )] = 0;
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = 4 + 4 * ( pc == PC_ENGINEER ); // JPW NERVE
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_LAUNCHER ) );
-
-				break;
-			}
+			AddPlayerWeapon(client, client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE, 0, 4 + 4 * ( pc == PC_ENGINEER ));
 		}
 
 
 		// JPW NERVE
 		if ( pc == PC_MEDIC ) {
-			COM_BitSet( client->ps.weapons, WP_MEDIC_SYRINGE );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDIC_SYRINGE )] = 10;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDIC_SYRINGE ) );
-
-			// NERVE - SMF
-			COM_BitSet( client->ps.weapons, WP_MEDKIT );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDKIT )] = 1;
-			client->ps.ammo[WP_MEDKIT] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDKIT ) );
-
-			switch ( client->sess.sessionTeam ) { // was playerItem
-			case TEAM_BLUE:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = g_MedNades.integer ? g_MedNades.integer : 1;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_PINEAPPLE ) );
-
-				break;
-			case TEAM_RED:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_LAUNCHER );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_LAUNCHER )] = g_MedNades.integer ? g_MedNades.integer : 1;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_LAUNCHER ) );
-
-				break;
-			default:
-				COM_BitSet( client->ps.weapons, WP_GRENADE_PINEAPPLE );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_GRENADE_PINEAPPLE )] = g_MedNades.integer ? g_MedNades.integer : 1;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_GRENADE_PINEAPPLE ) );
-
-				break;
-			}
+			AddPlayerWeapon(client, client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE, 0, g_MedNades.integer ? g_MedNades.integer : 1);
 		}
 		// jpw
 
@@ -964,45 +848,18 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 			switch ( client->sess.playerWeapon ) {
 
 			case 3:     // WP_MP40
-				COM_BitSet( client->ps.weapons, WP_MP40 );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_MP40 )] += 32;
-				if ( pc == PC_SOLDIER ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += ( 64 + ( 32 * extraSold ) );
-				} else {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += ( 32 + ( 32 * extraLT ) );
-				}
+				AddPlayerWeapon(client, WP_MP40, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
 				client->ps.weapon = WP_MP40;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MP40 ) );
-
 				break;
 
 			case 4:     // WP_THOMPSON
-				COM_BitSet( client->ps.weapons, WP_THOMPSON );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_THOMPSON )] += 30;
-				if ( pc == PC_SOLDIER ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += ( 60 + ( 30 * extraSold ) );
-				} else {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += ( 30 + ( 30 * extraLT ) );
-				}
+				AddPlayerWeapon(client, WP_THOMPSON, pc == PC_SOLDIER ?  60 + ( 30 * extraSold ) : 30 + ( 30 * extraLT ), 30);
 				client->ps.weapon = WP_THOMPSON;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_THOMPSON ) );
-
 				break;
 
 			case 5:     // WP_STEN
-				COM_BitSet( client->ps.weapons, WP_STEN );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_STEN )] += 32;
-				if ( pc == PC_SOLDIER ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_STEN )] += ( 64 + ( 32 * extraSold ) );
-				} else {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_STEN )] += ( 32 + ( 32 * extraLT ) );
-				}
+				AddPlayerWeapon(client, WP_STEN, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
 				client->ps.weapon = WP_STEN;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_STEN ) );
-
 				break;
 
 			case 6:     // WP_MAUSER, WP_SNIPERRIFLE
@@ -1010,20 +867,9 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 					return;
 				}
 
-				COM_BitSet( client->ps.weapons, WP_SNIPERRIFLE );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_SNIPERRIFLE )] = 10;
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] = ( 10 + ( 10 * extraMauser ) );
-				client->ps.weapon = WP_SNIPERRIFLE;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_SNIPERRIFLE ) );
-
-				COM_BitSet( client->ps.weapons, WP_MAUSER );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_MAUSER )] = 10;
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] = ( 10 + ( 10 * extraMauser ) );
+				AddPlayerWeapon(client, WP_SNIPERRIFLE, 10 + ( 10 * extraMauser ), 10);
+				AddPlayerWeapon(client, WP_MAUSER, 10 + ( 10 * extraMauser ), 10);
 				client->ps.weapon = WP_MAUSER;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MAUSER ) );
-
 				break;
 
 			case 8:     // WP_PANZERFAUST
@@ -1031,24 +877,17 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 					return;
 				}
 
-				COM_BitSet( client->ps.weapons, WP_PANZERFAUST );
-				client->ps.ammo[BG_FindAmmoForWeapon( WP_PANZERFAUST )] = ( 4 + ( 1 * extraPanz ) );
+				AddPlayerWeapon(client, WP_PANZERFAUST, 4 + extraPanz, 0);
 				client->ps.weapon = WP_PANZERFAUST;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_PANZERFAUST ) );
-
 				break;
 
 			case 9:     // WP_VENOM
 				if ( pc != PC_SOLDIER ) {
 					return;
 				}
-				COM_BitSet( client->ps.weapons, WP_VENOM );
-				client->ps.ammoclip[BG_FindAmmoForWeapon( WP_VENOM )] = ( 500 + ( 500 * extraVenom ) );
+
+				AddPlayerWeapon(client, WP_VENOM, 500 * extraVenom, 500);
 				client->ps.weapon = WP_VENOM;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_VENOM ) );
-
 				break;
 
 			case 10:    // WP_FLAMETHROWER
@@ -1056,166 +895,46 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 					return;
 				}
 
-				COM_BitSet( client->ps.weapons, WP_FLAMETHROWER );
-				client->ps.ammoclip[BG_FindAmmoForWeapon( WP_FLAMETHROWER )] = 200;
+				AddPlayerWeapon(client, WP_FLAMETHROWER, 0, 200);
 				client->ps.weapon = WP_FLAMETHROWER;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_FLAMETHROWER ) );
-
 				break;
 
 			default:    // give MP40 if given invalid weapon number
 				if ( client->sess.sessionTeam == TEAM_RED ) { // JPW NERVE
-					COM_BitSet( client->ps.weapons, WP_MP40 );
-					client->ps.ammoclip[BG_FindClipForWeapon( WP_MP40 )] += 32;
-					if ( pc == PC_SOLDIER ) {
-						client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += ( 64 + ( 32 * extraSold ) );
-					} else {
-						client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += ( 32 + ( 32 * extraLT ) );
-					}
+					AddPlayerWeapon(client, WP_MP40, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
 					client->ps.weapon = WP_MP40;
-
-					Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MP40 ) );
 				} else { // TEAM_BLUE
-					COM_BitSet( client->ps.weapons, WP_THOMPSON );
-					client->ps.ammoclip[BG_FindClipForWeapon( WP_THOMPSON )] += 30;
-					if ( pc == PC_SOLDIER ) {
-						client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += ( 60 + ( 30 * extraSold ) );
-					} else {
-						client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += ( 30 + ( 30 * extraLT ) );
-					}
+					AddPlayerWeapon(client, WP_THOMPSON, pc == PC_SOLDIER ?  60 + ( 30 * extraSold ) : 30 + ( 30 * extraLT ), 30);
 					client->ps.weapon = WP_THOMPSON;
-
-					Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_THOMPSON ) );
 				}
 				break;
 			}
 		} else { // medic or engineer gets assigned MP40 or Thompson with one magazine ammo
-			if ( client->sess.sessionTeam == TEAM_RED ) { // axis
-				COM_BitSet( client->ps.weapons, WP_MP40 );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_MP40 )] += 32;
-				// JPW NERVE
-				if ( pc == PC_ENGINEER ) { // OK so engineers get two mags
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += ( 32 + ( 32 * extraEng ) );
-				}
-
-				if ( pc == PC_MEDIC ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_MP40 )] += 32 * extraMed;
-				}
-				// jpw
+			if ( client->sess.sessionTeam == TEAM_RED ) {
+				AddPlayerWeapon(client, WP_MP40, pc == PC_ENGINEER ?  32 + ( 32 * extraEng ) : 32 * extraMed, 32);
 				client->ps.weapon = WP_MP40;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MP40 ) );
-			} else { // allied
-				COM_BitSet( client->ps.weapons, WP_THOMPSON );
-				client->ps.ammoclip[BG_FindClipForWeapon( WP_THOMPSON )] += 30;
-				// JPW NERVE
-				if ( pc == PC_ENGINEER ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += ( 30 + ( 30 * extraEng ) );
-				}
-
-				if ( pc == PC_MEDIC ) {
-					client->ps.ammo[BG_FindAmmoForWeapon( WP_THOMPSON )] += 30 * extraMed;
-				}
-				// jpw
+			} else {
+				AddPlayerWeapon(client, WP_THOMPSON, pc == PC_ENGINEER ?  30 + ( 30 * extraEng ) : 30 * extraMed, 30);
 				client->ps.weapon = WP_THOMPSON;
-
-				Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_THOMPSON ) );
 			}
 		}
 
-	} else if ( g_knifeonly.integer == 1 && g_instaGib.integer != 1 ) {   // Knifeonly block
-		if ( pc == PC_MEDIC ) {
-			COM_BitSet( client->ps.weapons, WP_MEDIC_SYRINGE );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDIC_SYRINGE )] = 20;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDIC_SYRINGE ) );
-
-			// NERVE - SMF
-			COM_BitSet( client->ps.weapons, WP_MEDKIT );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDKIT )] = 1;
-			client->ps.ammo[WP_MEDKIT] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDKIT ) );
-		}
-	} // End Knifeonly stuff -- Ensure that medics get their basic stuff
-	else // has to be instagib here
-	{
-		COM_BitSet( client->ps.weapons, WP_MAUSER );
-		client->ps.ammoclip[BG_FindClipForWeapon( WP_MAUSER )] = 10;
-		client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] = ( 30 + ( 10 * extraMauser ) );
+	} else if ( g_instaGib.integer == 1 ) {
+		AddPlayerWeapon(client, WP_MAUSER,  30 + ( 10 * extraMauser ), 10);
 		client->ps.weapon = WP_MAUSER;
-
-		Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MAUSER ) );
 
 		// Lieutenant gets binoculars, ammo pack, artillery, and a grenade
 		if ( pc == PC_LT ) {
 			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
-			COM_BitSet( client->ps.weapons, WP_AMMO );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_AMMO )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_AMMO )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_AMMO ) );
-
-
-			COM_BitSet( client->ps.weapons, WP_ARTY );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_ARTY )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_ARTY )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_ARTY ) );
-
-			COM_BitSet( client->ps.weapons, WP_BINOCULARS );
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_BINOCULARS )] = 0;
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_BINOCULARS )] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_BINOCULARS ) );
-
-			// NERVE - SMF
-			COM_BitSet( client->ps.weapons, WP_SMOKE_GRENADE );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_SMOKE_GRENADE )] = 1;
-			client->ps.ammo[WP_SMOKE_GRENADE] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_SMOKE_GRENADE ) );
+			AddPlayerWeapon(client, WP_AMMO, 0, 1);
+			AddPlayerWeapon(client, WP_ARTY, 0, 1);
+			AddPlayerWeapon(client, WP_BINOCULARS, 0, 1);
+			AddPlayerWeapon(client, WP_SMOKE_GRENADE, 1, 1);
 		}
 
 		// Everyone gets a pistol
-		switch ( client->sess.sessionTeam ) { // JPW NERVE was playerPistol
-
-		case TEAM_RED: // JPW NERVE
-			COM_BitSet( client->ps.weapons, WP_LUGER );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_LUGER )] += 8;
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_LUGER )] += ( 24 + ( 8 * extraPistol ) );
-			client->ps.weapon = WP_LUGER;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_LUGER ) );
-
-			break;
-		default: // '0' // TEAM_BLUE
-			COM_BitSet( client->ps.weapons, WP_COLT );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_COLT )] += 8;
-			client->ps.ammo[BG_FindAmmoForWeapon( WP_COLT )] += ( 24 + ( 8 * extraPistol ) );
-			client->ps.weapon = WP_COLT;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_COLT ) );
-
-			break;
-		}
-
-		if ( pc == PC_MEDIC ) {
-			COM_BitSet( client->ps.weapons, WP_MEDIC_SYRINGE );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDIC_SYRINGE )] = 20;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDIC_SYRINGE ) );
-
-			// NERVE - SMF
-			COM_BitSet( client->ps.weapons, WP_MEDKIT );
-			client->ps.ammoclip[BG_FindClipForWeapon( WP_MEDKIT )] = 1;
-			client->ps.ammo[WP_MEDKIT] = 1;
-
-			Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( WP_MEDKIT ) );
-		}
+		AddPlayerWeapon(client, client->sess.sessionTeam == TEAM_RED ? WP_LUGER : WP_COLT, 24 + ( 8 * extraPistol ), 8);
 	}
-
 
 	// JPW NERVE -- medics on each team make cumulative health bonus -- this gets overridden for "revived" players
 	// count up # of medics on team
