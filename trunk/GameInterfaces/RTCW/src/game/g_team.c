@@ -60,7 +60,7 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
 
 	// NOTE: if buffer overflow, it's more likely to corrupt stack and crash than do a proper G_Error?
 	va_start( argptr,fmt );
-	if ( vsprintf( msg, fmt, argptr ) > sizeof( msg ) ) {
+	if ( vsprintf( msg, fmt, argptr ) >= sizeof( msg ) ) {
 		G_Error( "PrintMsg overrun" );
 	}
 	va_end( argptr );
@@ -763,7 +763,7 @@ void TeamplayInfoMessage( gentity_t *ent ) {
 						 " %i %i %i %i %i",
 						 level.sortedClients[i], player->client->pers.teamState.location, h, player->s.powerups, player->client->ps.stats[STAT_PLAYER_CLASS] );
 			j = strlen( entry );
-			if ( stringlength + j > sizeof( string ) ) {
+			if ( stringlength + j >= sizeof( string ) ) {
 				break;
 			}
 			strcpy( string + stringlength, entry );

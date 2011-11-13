@@ -65,7 +65,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 					 cl->ps.persistant[PERS_SCORE], ping, ( level.time - cl->pers.enterTime ) / 60000,
 					 scoreFlags, g_entities[level.sortedClients[i]].s.powerups, playerClass, respawnsLeft );
 		j = strlen( entry );
-		if ( stringlength + j > 1024 ) {
+		if ( stringlength + j >= sizeof(string) ) {
 			break;
 		}
 		strcpy( string + stringlength, entry );
