@@ -755,6 +755,7 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 	int extraMauser = ( g_mauserExtraClips.integer <= 3 ) ? g_mauserExtraClips.integer : 3;
 	int extraPanz   = ( g_panzerExtraClips.integer <= 3 ) ? g_panzerExtraClips.integer : 3;
 	int extraVenom  = ( g_venomExtraClips.integer <= 3 ) ? g_venomExtraClips.integer : 3;
+	int classModifier = 0;
 
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		return;
@@ -781,6 +782,25 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 	AddPlayerWeapon(client, WP_KNIFE, g_throwableKnives.integer > 0 ? g_throwableKnives.integer : 0, 1);
 	client->ps.weapon = WP_KNIFE;
 	client->ps.weaponstate = WEAPON_READY;
+
+	// extra ammo modifier
+	switch(pc)
+	{
+	    case PC_ENGINEER:
+            classModifier = extraEng + 1;
+            break;
+        case PC_MEDIC:
+            classModifier = extraMed;
+            break;
+        case PC_LT:
+            classModifier = extraLT + 1;
+            break;
+        case PC_SOLDIER:
+            classModifier = extraSold + 2;
+            break;
+        default:
+            break;
+	}
 
 	// Engineer gets dynamite
 	if ( pc == PC_ENGINEER ) {
@@ -833,11 +853,11 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 		}
 		// jpw
 
-		// Soldiers and Lieutenants get a 2-handed weapon
-		if ( pc == PC_SOLDIER || pc == PC_LT ) {
+		// 2 handed weapons
+		if ( pc == PC_SOLDIER || pc == PC_LT || g_unlockWeapons.integer ) {
 
 			// JPW NERVE -- if LT is selected but illegal weapon, set to team-specific SMG
-			if ( ( pc == PC_LT ) && ( client->sess.playerWeapon > 5 ) ) {
+			if ( !g_unlockWeapons.integer && ( pc == PC_LT ) && ( client->sess.playerWeapon > 5 ) ) {
 				if ( client->sess.sessionTeam == TEAM_RED ) {
 					client->sess.playerWeapon = 3;
 				} else {
@@ -848,22 +868,22 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 			switch ( client->sess.playerWeapon ) {
 
 			case 3:     // WP_MP40
-				AddPlayerWeapon(client, WP_MP40, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
+				AddPlayerWeapon(client, WP_MP40, 32 * classModifier, 32);
 				client->ps.weapon = WP_MP40;
 				break;
 
 			case 4:     // WP_THOMPSON
-				AddPlayerWeapon(client, WP_THOMPSON, pc == PC_SOLDIER ?  60 + ( 30 * extraSold ) : 30 + ( 30 * extraLT ), 30);
+				AddPlayerWeapon(client, WP_THOMPSON, 30 * classModifier, 30);
 				client->ps.weapon = WP_THOMPSON;
 				break;
 
 			case 5:     // WP_STEN
-				AddPlayerWeapon(client, WP_STEN, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
+				AddPlayerWeapon(client, WP_STEN, 32 * classModifier, 32);
 				client->ps.weapon = WP_STEN;
 				break;
 
 			case 6:     // WP_MAUSER, WP_SNIPERRIFLE
-				if ( pc != PC_SOLDIER ) {
+				if ( pc != PC_SOLDIER && !g_unlockWeapons.integer ) {
 					return;
 				}
 
@@ -873,7 +893,7 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 				break;
 
 			case 8:     // WP_PANZERFAUST
-				if ( pc != PC_SOLDIER ) {
+				if ( pc != PC_SOLDIER && !g_unlockWeapons.integer ) {
 					return;
 				}
 
@@ -882,7 +902,7 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 				break;
 
 			case 9:     // WP_VENOM
-				if ( pc != PC_SOLDIER ) {
+				if ( pc != PC_SOLDIER && !g_unlockWeapons.integer ) {
 					return;
 				}
 
@@ -891,7 +911,7 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 				break;
 
 			case 10:    // WP_FLAMETHROWER
-				if ( pc != PC_SOLDIER ) {
+				if ( pc != PC_SOLDIER && !g_unlockWeapons.integer ) {
 					return;
 				}
 
@@ -901,20 +921,20 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 
 			default:    // give MP40 if given invalid weapon number
 				if ( client->sess.sessionTeam == TEAM_RED ) { // JPW NERVE
-					AddPlayerWeapon(client, WP_MP40, pc == PC_SOLDIER ?  64 + ( 32 * extraSold ) : 32 + ( 32 * extraLT ), 32);
+					AddPlayerWeapon(client, WP_MP40, 32 * classModifier, 32);
 					client->ps.weapon = WP_MP40;
 				} else { // TEAM_BLUE
-					AddPlayerWeapon(client, WP_THOMPSON, pc == PC_SOLDIER ?  60 + ( 30 * extraSold ) : 30 + ( 30 * extraLT ), 30);
+					AddPlayerWeapon(client, WP_THOMPSON, 30 * classModifier, 30);
 					client->ps.weapon = WP_THOMPSON;
 				}
 				break;
 			}
 		} else { // medic or engineer gets assigned MP40 or Thompson with one magazine ammo
 			if ( client->sess.sessionTeam == TEAM_RED ) {
-				AddPlayerWeapon(client, WP_MP40, pc == PC_ENGINEER ?  32 + ( 32 * extraEng ) : 32 * extraMed, 32);
+				AddPlayerWeapon(client, WP_MP40, 32 * classModifier, 32);
 				client->ps.weapon = WP_MP40;
 			} else {
-				AddPlayerWeapon(client, WP_THOMPSON, pc == PC_ENGINEER ?  30 + ( 30 * extraEng ) : 30 * extraMed, 30);
+				AddPlayerWeapon(client, WP_THOMPSON, 30 * classModifier, 30);
 				client->ps.weapon = WP_THOMPSON;
 			}
 		}

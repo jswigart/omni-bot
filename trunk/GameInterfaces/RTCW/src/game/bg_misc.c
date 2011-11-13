@@ -15,6 +15,7 @@ extern vmCvar_t cg_gameType;
 #endif
 #ifdef GAMEDLL
 extern vmCvar_t g_gametype;
+extern vmCvar_t g_unlockWeapons;
 #endif
 // jpw
 
@@ -3347,22 +3348,24 @@ qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *
 
 	switch ( item->giType ) {
 	case IT_WEAPON:
-// JPW NERVE -- medics & engineers can only pick up same weapon type
-// CS: not anymore
 		if ( item->giTag == WP_AMMO ) { // magic ammo for any two-handed weapon
 			return qtrue;
 		}
-		/*if ((ps->stats[STAT_PLAYER_CLASS] == PC_MEDIC) || (ps->stats[STAT_PLAYER_CLASS] == PC_ENGINEER)) {
-		    if (!COM_BitCheck( ps->weapons, item->giTag)) {
-		        return qfalse;
-		    }
-		    else {
-		        return qtrue;
-		    }
-		}*/
 
+// cs: todo: client cvar for prediction if we ever do another cgame.
+#ifdef GAMEDLL
+        // early out if they have the same weapon
+        if ( g_unlockWeapons.integer && COM_BitCheck( ps->weapons, item->giTag ) ) {
+            return qtrue;
+        }
+
+        // let it fall through to the empty weapon bank check if weapons are unlocked
+		if ( !g_unlockWeapons.integer && ( ps->stats[STAT_PLAYER_CLASS] == PC_LT || ( ps->stats[STAT_PLAYER_CLASS] == PC_MEDIC ) ||
+			 ( ps->stats[STAT_PLAYER_CLASS] == PC_ENGINEER ) ) )  {
+#else
 		if ( ps->stats[STAT_PLAYER_CLASS] == PC_LT || ( ps->stats[STAT_PLAYER_CLASS] == PC_MEDIC ) ||
 			 ( ps->stats[STAT_PLAYER_CLASS] == PC_ENGINEER ) ) {
+#endif // GAMEDLL
 			if ( ( item->giTag != WP_MP40 ) && ( item->giTag != WP_THOMPSON ) && ( item->giTag != WP_STEN ) ) {
 				return qfalse;
 
@@ -3370,8 +3373,6 @@ qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *
 				if ( COM_BitCheck( ps->weapons, WP_THOMPSON ) || COM_BitCheck( ps->weapons, WP_STEN ) ) { //but they have sten or thompson return false
 					return qfalse;
 				}
-				/*if (ps->ammo[BG_FindAmmoForWeapon(WP_MP40)] >= ammoTable[WP_MP40].maxclip*3)
-				        return qfalse;*/
 
 				return qtrue;
 
@@ -3379,8 +3380,6 @@ qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *
 				if ( COM_BitCheck( ps->weapons, WP_MP40 ) || COM_BitCheck( ps->weapons, WP_STEN ) ) {
 					return qfalse;
 				}
-				/*if (ps->ammo[BG_FindAmmoForWeapon(WP_THOMPSON)] >= ammoTable[WP_THOMPSON].maxclip*3)
-				    return qfalse;*/
 
 				return qtrue;
 
@@ -3388,8 +3387,6 @@ qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *
 				if ( COM_BitCheck( ps->weapons, WP_MP40 ) || COM_BitCheck( ps->weapons, WP_THOMPSON ) ) {
 					return qfalse;
 				}
-				/*if (ps->ammo[BG_FindAmmoForWeapon(WP_STEN)] >= ammoTable[WP_STEN].maxclip*3)
-				    return qfalse;*/
 
 				return qtrue;
 

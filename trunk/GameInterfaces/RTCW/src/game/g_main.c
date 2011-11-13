@@ -80,6 +80,7 @@ vmCvar_t g_betting; // bit flagged. 0 disable 1 enable 2 buying
 vmCvar_t g_muteSpecs;
 vmCvar_t g_kickItems; // bit flagged. 0 disable 1 grenades 2 airstrike
 vmCvar_t g_binocs; // bit flagged. 0 disable 1 soldiers 2 engineers 4 medics
+vmCvar_t g_unlockWeapons;
 
 // zinx etpro antiwarp
 vmCvar_t g_antiwarp;
@@ -363,6 +364,7 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_muteSpecs,                 "g_muteSpecs",                  "0",                    0,                                                  0,          qfalse },
 	{ &g_kickItems,                 "g_kickItems",                  "0",                    0,                                                  0,          qfalse },
 	{ &g_binocs,                    "g_binocs",						"0",                    0,                                                  0,          qfalse },
+	{ &g_unlockWeapons,             "g_unlockWeapons",				"0",                    0,                                                  0,          qfalse },
 
 	// zinx etpro antiwarp
 	{ &g_maxWarp,                   "g_maxWarp",                    "4",                    0 },
