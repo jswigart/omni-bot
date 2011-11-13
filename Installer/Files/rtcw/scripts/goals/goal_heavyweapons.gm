@@ -16,11 +16,29 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
-	if (this.Bot.GetVelocity().IsZero() && !this.Bot.IsStuck()){
+	if ( this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) ) {
+		this.SwitchToSideArm();
+	}
+	else if (this.Bot.GetVelocity().IsZero() && !this.Bot.IsStuck()) {
 		this.Priority = 0.5;
 	}
-	
+	else {
+		this.SwitchToSideArm();
+	}
+
 	sleep(1);
+};
+
+this.SwitchToSideArm = function()
+{
+	if ( !this.Bot.HasTarget() ) {
+		sideArm = WEAPON.LUGER;
+		if ( this.Bot.GetTeam() == TEAM.ALLIES ) {
+			sideArm = WEAPON.COLT;
+		}
+
+		this.AddWeaponRequest(Priority.Medium, sideArm);
+	}
 };
 
 this.OnSpawn = function()
@@ -30,6 +48,8 @@ this.OnSpawn = function()
 		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
 		sleep(1);
 		this.ReleaseWeaponRequest();
+
+		this.SwitchToSideArm();
 	}
 };
 
@@ -37,43 +57,52 @@ this.Update = function()
 {
 	if (!this.Bot.GetVelocity().IsZero()){
 		this.Finished();
-	}	
-	
+	}
+
 	this.CheckSoldierWeapon();
 	sleep(0.25);
+};
+
+this.Exit = function()
+{
+	this.ReleaseWeaponRequest();
 };
 
 this.CheckSoldierWeapon = function()
 {
 	if (!this.CheckAmmo){
+		this.SwitchToSideArm();
 		return;
 	}
-	
-	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){ 
-		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST ); 
+
+	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
+		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
 	}
-	else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){ 
+	else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){
 		this.AddWeaponRequest(Priority.Low, WEAPON.VENOM );
 		this.BlockForWeaponChange(WEAPON.VENOM);
-		
+
 		this.SpinVenom();
-	}	
-	else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){ 
-		this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER ); 
 	}
-	else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){ 
-		this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER ); 
+	else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){
+		this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER );
+	}
+	else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){
+		this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER );
+	}
+	else {
+		this.SwitchToSideArm();
 	}
 };
 
 this.CheckAmmo = function()
 {
 	this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-	
-	if(this.AmmoInfo.Desire > 0.9){
+
+	if(this.AmmoInfo.Desire > 0.9) {
 		return false;
 	}
-	
+
 	return true;
 };
 
@@ -89,4 +118,3 @@ this.SpinVenom = function()
 };
 
 
- 

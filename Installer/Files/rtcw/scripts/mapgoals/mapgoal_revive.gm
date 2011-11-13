@@ -48,7 +48,7 @@ this.Update = function()
 	sleep(1); // give it some time to update internally
 	goalEnt = this.GetEntity();
 	if ( (this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER))
-			|| !GetEntFlags(goalEnt, ENTFLAG.DEAD) || GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
+			|| !GetEntFlags(goalEnt, ENTFLAG.INJURED) || GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
 	{
 		this.SetAvailable(0, false);
 		this.SetRemoveFlag(true);
