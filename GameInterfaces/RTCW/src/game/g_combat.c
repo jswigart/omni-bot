@@ -166,7 +166,6 @@ void TossClientItems( gentity_t *self ) {
 	int weapon;
 	gentity_t   *drop = 0;
 
-	// drop the weapon if not a gauntlet or machinegun
 	weapon = self->s.weapon;
 
 	// make a special check to see if they are changing to a new
