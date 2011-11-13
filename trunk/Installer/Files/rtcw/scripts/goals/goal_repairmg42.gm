@@ -1,6 +1,7 @@
 this.Name = "REPAIRMG42";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
+this.LimitToWeapon( WEAPON.PLIERS );
 
 this.Initialize = function()
 {
