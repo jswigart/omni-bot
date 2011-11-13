@@ -1107,7 +1107,7 @@ int AddBot( const MessageHelper &_data ) {
 		PrintError( va( "Could not connect bot: %s", s ) );
 		num = -1;
 	}
-	return num;
+	return bot && bot->inuse ? num : -1;
 }
 
 void RemoveBot( const MessageHelper &_data ) {
@@ -2371,7 +2371,7 @@ obResult GetCurrentAmmo( const GameEntity _ent, int _weaponId, FireMode _mode, i
 			maxclip = GetAmmoTableData( ammoIndex )->maxclip;
 		}
 
-		_max = GetAmmoTableData( ammoIndex )->maxclip * GetAmmoTableData( ammoIndex )->numClips;
+		_max = maxclip * GetAmmoTableData( ammoIndex )->numClips;
 
 		return Success;
 	}
