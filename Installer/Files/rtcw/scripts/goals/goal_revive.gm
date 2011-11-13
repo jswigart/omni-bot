@@ -42,7 +42,6 @@ this.GetPriority = function()
 			this.MapGoal = this.QueryReviveGoals();
 			if ( this.MapGoal ) {
 				this.Priority = this.MapGoal.GetGoalPriority(this.Bot);
-			}
 			} else {
 				this.Priority = 0;
 			}
