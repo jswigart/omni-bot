@@ -458,32 +458,6 @@ global _MG =
 		TeamAvailability = 2,
 		Version = 1,
 	},
-	GRENADE_ductfan = 
-	{
-		CreateOnLoad = 1,
-		Facing = Vec3(0.000, 0.000, 0.000),
-		GoalType = "GRENADE",
-		GroupName = "",
-		MinRadius = 32,
-		Name = "GRENADE_ductfan",
-		Orientation = Vec3(2.891, 1.451, -0.000),
-		Position = Vec3(1223.752, -1067.125, -221.875),
-		PrimeGrenade = 1,
-		Radius = 0,
-		SerialNum = 118,
-		Stance = "stand",
-		TagName = "ductfan",
-		TeamAvailability = 30,
-		TraceEntity = 194,
-		TraceInfo = 
-		{
-			class = "BREAKABLE",
-			endPos = Vec3(1795.484, -580.124, -561.768),
-			eyePos = Vec3(1178.182, -1133.180, 39.600),
-			id = 194,
-		},
-		Version = 1,
-	},
 	GRENADE_safetrigger = 
 	{
 		CreateOnLoad = 1,

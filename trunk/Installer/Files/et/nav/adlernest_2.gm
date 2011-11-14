@@ -243,17 +243,6 @@ global Map =
 		
 		Util.SetMaxUsers( 20, "FLAG_documents" );
 		
-		//foreach ( id and bot in BotTable )
-		//{
-		//	if ( bot.GetTeam()  == TEAM.AXIS )
-		//	{
-		//		if ( bot.GetClass() == CLASS.SOLDIER )
-		//		{
-		//			ETUtil.SwitchWeapon(WEAPON.MP40);
-		//		}
-		//	}
-		//}
-		
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_DoorControls_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Door_controls_.*" );
 		
@@ -1395,22 +1384,9 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
-	
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam()  == TEAM.AXIS )
-		{
-			if ( bot.GetClass() == CLASS.SOLDIER )
-			{
-				ETUtil.SwitchWeapon(WEAPON.MOBILE_MG42);
-			}
-		}
-	}
-	
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.PANZERFAUST, false);
+	WeaponTable.SetWeaponAvailability(CLASS.ENGINEER, { WEAPON.KAR98, WEAPON.CARBINE }, false);
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Axis_DoorControls_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Axis_DoorControls_2" );
@@ -1746,28 +1722,6 @@ global OnBotJoin = function( bot )
 		Util.ChangeSpawn( TEAM.ALLIES, 1 );
 	}
 	
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
-	
-	if ( Map.DoorControlDestroyed == 0 )
-	{
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam()  == TEAM.AXIS )
-			{
-				if ( bot.GetClass() == CLASS.SOLDIER )
-				{
-					ETUtil.SwitchWeapon(WEAPON.MOBILE_MG42);
-				}
-			}
-		}
-	}
-	
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-
 	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 250.0;
-	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
 };

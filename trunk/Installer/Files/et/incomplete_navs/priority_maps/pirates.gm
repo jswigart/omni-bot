@@ -11,7 +11,7 @@
 
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0, // please set to zero before distributing your script
 	ShowMovers = false,
 
 	Main_Entrance_Dyno = 0,

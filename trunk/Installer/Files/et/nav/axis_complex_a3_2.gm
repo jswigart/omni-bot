@@ -69,6 +69,8 @@ global Map =
 
 		SetGoalPriority( "CALL.*", 0.0 );
 
+		WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, true);
+
 		Util.MapDebugPrint( "Main_Entrance_Destroyed " );
 	},
 
@@ -246,6 +248,8 @@ global OnMapLoad = function()
 	Map.MainDoorStatus = false; //intact
 	Map.SideWallStatus = false; //intact
 
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
+
 	Maproutes =
 	{
 		FLAG_sec_docs =
@@ -295,8 +299,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	ETUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-
 	//~ bot.TargetBreakableDist = 300.0;
 	bot.MaxViewDistance = 2000.0;
 

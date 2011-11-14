@@ -13,7 +13,7 @@ global Map =
 {
 	Debug = 1, // please set to zero before distributing your script
 	ShowMovers = false,
-   Movers = { "MOVER_tank" },
+	Movers = { "MOVER_tank" },
 
 	barrierDestroyed = false,
 	bridgeDestroyed = true,
@@ -73,7 +73,6 @@ global Map =
 	{
 		Map.bridgeDestroyed = false;
 		Map.SetEscort();
-		Wp.SetWaypointFlag("bridge", "closed", false);
 		Util.EnableGoal("ROUTE_bridge");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 		Util.MapDebugPrint( "HQ_Bridge_Built" );
@@ -83,7 +82,6 @@ global Map =
 	{
 		Map.bridgeDestroyed = true;
 		Map.SetEscort();
-		Wp.SetWaypointFlag("bridge", "closed", true);
 		Util.DisableGoal("ROUTE_bridge");
 
 		Util.MapDebugPrint( "HQ_Bridge_Destroyed" );
@@ -319,7 +317,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis team has re-built the South Anti-Tank Cannon!!", Map.South_Anti_Tank_Cannon_Built );
 	OnTrigger( "Axis has destroyed the East Flack Cannon!", Map.East_Anti_Air_Cannon_Destroyed );
 	OnTrigger( "Axis has destroyed the West Flack Cannon!", Map.West_Anti_Air_Cannon_Destroyed );
-	OnTrigger( "Axis has stolen the Allied battle plans!", Map.docs_Taken ); //this wm_announce text is in map script 
+	OnTrigger( "Axis has stolen the Allied battle plans!", Map.docs_Taken ); //this wm_announce text is in map script
 	OnTrigger( "Axis have stolen the Allied battle plans!", Map.docs_Taken );
 	OnTrigger( "Flag returned docs!", Map.docs_Returned );
 	OnTrigger( "Axis has secured the Allied battle plans!", Map.docs_Secured );
@@ -383,8 +381,6 @@ global OnMapLoad = function()
 
 	Util.SetGoalOffset(30, -30, 0, "MOUNTMG42_axis_bunker");
 
-	Wp.SetWaypointFlag("bridge", "closed", true);
-
 	Map.Tank_Arrived();
 
 	MapRoutes =
@@ -399,21 +395,21 @@ global OnMapLoad = function()
 			ROUTE_axis_spawn = {
 				ROUTE_east_entrance = {},
 				ROUTE_fence = {
-               ROUTE_bridge_east = {},
-               ROUTE_bridge_west = {},
+					ROUTE_bridge_east = {},
+					ROUTE_bridge_west = {},
 				},
 			},
 		},
 		CAPPOINT_truck = {
 			ROUTE_docs = {
-            ROUTE_north_tunnel = { Weight=2,
-	            ROUTE_bridge_west = {
-	            	ROUTE_command_post = {},
-	            	ROUTE_south_west = {},
+				ROUTE_north_tunnel = { Weight=2,
+					ROUTE_bridge_west = {
+						ROUTE_command_post = {},
+						ROUTE_south_west = {},
 					}
 				},
-            ROUTE_east_entrance = { Weight=2 },
-            ROUTE_bridge_east = {},
+				ROUTE_east_entrance = { Weight=2 },
+				ROUTE_bridge_east = {},
 			}
 		},
 		CHECKPOINT_forward_spawn = {

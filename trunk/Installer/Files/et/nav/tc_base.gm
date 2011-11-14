@@ -426,8 +426,6 @@ global OnBotJoin = function( bot )
 
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-
-	ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
 };
 
 

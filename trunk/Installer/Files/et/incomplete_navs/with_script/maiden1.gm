@@ -1,0 +1,324 @@
+//==========================================================================================
+//
+//	maiden1.gm
+//
+//	Who            	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	16 October 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Dungeon_Dyno = 0,
+	MG_Dyno = 0,
+	MG_1_Dyno = 0,
+	MG_2_Dyno = 0,
+	Prison_Wall_Dyno = 0,
+	Tunnel_Dyno = 0,
+
+	MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_Built" );
+	},
+
+	MG_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_1_Built" );
+	},
+
+	MG_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "MG_2_Built" );
+	},
+
+	Dungeon_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Dungeon_Dyno += 1;
+		Util.MapDebugPrint( "Dungeon_Planted" );
+	},
+
+	MG_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_Dyno += 1;
+		Util.MapDebugPrint( "MG_Planted" );
+	},
+
+	MG_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_1_Dyno += 1;
+		Util.MapDebugPrint( "MG_1_Planted" );
+	},
+
+	MG_2_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_2_Dyno += 1;
+		Util.MapDebugPrint( "MG_2_Planted" );
+	},
+
+	Prison_Wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Prison_Wall_Dyno += 1;
+		Util.MapDebugPrint( "Prison_Wall_Planted" );
+	},
+
+	Tunnel_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_Dyno += 1;
+		Util.MapDebugPrint( "Tunnel_Planted" );
+	},
+
+	Dungeon_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Dungeon_Dyno -= 1;
+		Util.MapDebugPrint( "Dungeon_Defused" );
+	},
+
+	MG_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_Dyno -= 1;
+		Util.MapDebugPrint( "MG_Defused" );
+	},
+
+	MG_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_1_Dyno -= 1;
+		Util.MapDebugPrint( "MG_1_Defused" );
+	},
+
+	MG_2_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_2_Dyno -= 1;
+		Util.MapDebugPrint( "MG_2_Defused" );
+	},
+
+	Prison_Wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Prison_Wall_Dyno -= 1;
+		Util.MapDebugPrint( "Prison_Wall_Defused" );
+	},
+
+	Tunnel_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_Dyno -= 1;
+		Util.MapDebugPrint( "Tunnel_Defused" );
+	},
+
+	Dungeon_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Dungeon_Dyno = 0;
+
+		Util.MapDebugPrint( "Dungeon_Destroyed" );
+	},
+
+	MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_Dyno = 0;
+
+		Util.MapDebugPrint( "MG_Destroyed" );
+	},
+
+	MG_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_1_Dyno = 0;
+
+		Util.MapDebugPrint( "MG_1_Destroyed" );
+	},
+
+	MG_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.MG_2_Dyno = 0;
+
+		Util.MapDebugPrint( "MG_2_Destroyed" );
+	},
+
+	Prison_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Prison_Wall_Dyno = 0;
+
+		Util.MapDebugPrint( "Prison_Wall_Destroyed" );
+	},
+
+	Tunnel_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_Dyno = 0;
+
+		Util.MapDebugPrint( "Tunnel_Destroyed" );
+	},
+
+	Maiden_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Maiden_Taken" );
+	},
+
+	Maiden_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Maiden_Returned" );
+	},
+
+	Maiden_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Maiden_Secured" );
+	},
+
+	flag_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "flag_flag_Axis_Captured" );
+	},
+
+	flag_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "flag_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied team has built the mg!", Map.MG_Built );//~ game scpipt needs fix
+	OnTrigger( "Allied team has built the mg!", Map.MG_1_Built );//~ game scpipt needs fix
+	OnTrigger( "Allied team has built the mg!", Map.MG_2_Built ); //This is Axis team has built the mg!// ~ game scpipt needs fix
+	OnTrigger( "Planted at the Dungeon", Map.Dungeon_Planted );
+	OnTrigger( "Planted at the MG", Map.MG_Planted );
+	OnTrigger( "Planted at the MG_1", Map.MG_1_Planted );
+	OnTrigger( "Planted at the MG_2", Map.MG_2_Planted );
+	OnTrigger( "Planted at the Prison_Wall", Map.Prison_Wall_Planted );
+	OnTrigger( "Planted at the Tunnel", Map.Tunnel_Planted );
+	OnTrigger( "Defused at the Dungeon", Map.Dungeon_Defused );
+	OnTrigger( "Defused at the MG", Map.MG_Defused );
+	OnTrigger( "Defused at the MG_1", Map.MG_1_Defused );
+	OnTrigger( "Defused at the MG_2", Map.MG_2_Defused );
+	OnTrigger( "Defused at the Prison_Wall", Map.Prison_Wall_Defused );
+	OnTrigger( "Defused at the Tunnel", Map.Tunnel_Defused );
+	OnTrigger( "Allies have breached the Dungeon!", Map.Dungeon_Destroyed );
+	OnTrigger( "Axis team has destroyed the mg!", Map.MG_Destroyed );//~ game scpipt needs fix
+	OnTrigger( "Axis team has destroyed the mg!", Map.MG_1_Destroyed );//~ game scpipt needs fix
+	OnTrigger( "Axis team has destroyed the mg!", Map.MG_2_Destroyed ); // This is Allied team has destroyed the mg!// ~ game scpipt needs fix
+	OnTrigger( "Allies have breached the Prison Wall!", Map.Prison_Wall_Destroyed );
+	OnTrigger( "Allies have breached the Side Tunnel!", Map.Tunnel_Destroyed );
+	OnTrigger( "Allies have stolen the Maiden!", Map.Maiden_Taken );
+	OnTrigger( "Axis have returned the Maiden! ", Map.Maiden_Returned );
+	OnTrigger( "Allied team has rescued the Maiden!", Map.Maiden_Secured );
+	OnTrigger( "Axis captured the Flag!", Map.flag_flag_Axis_Captured );
+	OnTrigger( "Allies captured the Flag!", Map.flag_flag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "PLANTMINE_.*" );
+	Util.SetMaxUsers( 2, "BUILD_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+//Add Use Wp
+	Util.AddUseWp("PLANT_Prison_Wall", "prison");
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

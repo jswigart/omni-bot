@@ -228,8 +228,6 @@ global Map =
 			Map.AlliesASTable = { "blue_as1_p1", "blue_as2_p1", };
 		}
 
-		ETUtil.StopSniping();
-			
 		//set these if either has been destroyed
 		if (!Map.StairwellStatus)
 		{

@@ -168,8 +168,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_p1axis_west_courtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_waterpump" );
 
-		ETUtil.SwitchWeapon( WEAPON.MOBILE_MG42, TEAM.AXIS );
-
 		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
 	},
 

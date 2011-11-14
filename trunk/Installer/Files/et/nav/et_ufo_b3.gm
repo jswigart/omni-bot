@@ -146,9 +146,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.main.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.d.*" ); 
 		}
-
-		//soldiers should switch to panzer
-		ETUtil.SwitchWeapon(WEAPON.PANZERFAUST);
 	},
 
 	allied_obj1_Destroyed = function( trigger )
@@ -196,9 +193,6 @@ global Map =
 		    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.main.*" );
 		    SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_phase1.d.*" );                          
 		}
-
-		//soldiers should switch to panzer
-		ETUtil.SwitchWeapon(WEAPON.PANZERFAUST);                  		
 	},
 
 	main_planted = function( trigger )

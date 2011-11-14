@@ -2859,15 +2859,15 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_ConstructibleLadder1" );
 
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
+
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.STEN);
 	
 	if ( Map.Allied5Spawn == 0 )
 	{

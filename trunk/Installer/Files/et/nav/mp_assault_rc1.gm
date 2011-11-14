@@ -422,7 +422,7 @@ global Map =
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 		
-		ETUtil.SwitchWeapon( WEAPON.PANZERFAUST, TEAM.AXIS );
+		WeaponTable.SetWeaponTeamAvailability(TEAM.AXIS, CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rGate.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rDoor.*" );		

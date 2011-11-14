@@ -580,8 +580,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 

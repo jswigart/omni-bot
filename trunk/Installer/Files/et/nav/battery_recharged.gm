@@ -1281,6 +1281,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_hatch" );
 		}
 
+		WeaponTable.SetWeaponAvailability(CLASS.COVERTOPS, WEAPON.FG42, false);
+
 		Util.MapDebugPrint( "westbunker_flag_Allies_Captured" );
 	},
 
@@ -2016,7 +2018,6 @@ global OnBotJoin = function( bot )
 	class = bot.GetClass();
 
 	team = bot.GetTeam();
-	ETUtil.SelectWeapon( bot, WEAPON.STEN );
 
 	// default spawn
 	if ( team == TEAM.ALLIES ) {

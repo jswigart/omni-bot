@@ -602,8 +602,6 @@ global Map =
 		SetGoalPriority( "DEFUSE_Bridge.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
 		SetGoalPriority( "DEFUSE_Foot_Bridge.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true );
 
-		ETUtil.SwitchWeapon( WEAPON.STEN, TEAM.ALLIES ); // allied cov ops switch weap
-
 		// Axis goals
 		Util.DisableGroup( "tdoor", TEAM.AXIS );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTeamDoor.*" );
@@ -1384,5 +1382,4 @@ global OnBotJoin = function( bot )
 
 	// default spawn
 	bot.ChangeSpawnPoint(0);
-	ETUtil.SwitchWeapon( WEAPON.GARAND, TEAM.ALLIES );
 };

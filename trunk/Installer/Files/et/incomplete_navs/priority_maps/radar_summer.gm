@@ -764,7 +764,7 @@ global OnMapLoad = function()
     OnTrigger( "The tank has been damaged!", Map.Tank_Damaged );
     OnTrigger( "Allies have stolen the West Radar Parts!", Map.radarbox1_Taken );
     OnTrigger( "Allies have stolen the East Radar Parts!", Map.radarbox2_Taken );
-    OnTrigger( "Àxis have returned the West Radar Parts!", Map.radarbox1_Returned );
+    OnTrigger( "Ã€xis have returned the West Radar Parts!", Map.radarbox1_Returned );
     OnTrigger( "Axis have returned the East Radar Parts!", Map.radarbox2_Returned );
     OnTrigger( "Allies have secured the West Radar Parts!", Map.radarbox1_Secured );
     OnTrigger( "Allies have secured the East Radar Parts!", Map.radarbox2_Secured );
