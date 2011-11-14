@@ -7,6 +7,14 @@ this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
 	this.GoalEntity = null;
+
+	// check for entity status so we can finish if another player repairs it
+	this.LimitTo( this.CheckRepairableState, 2 );
+};
+
+this.CheckRepairableState = function()
+{
+	return !this.GoalEntity || this.Bot.IsMG42Repairable(this.GoalEntity);
 };
 
 this.GetPriority = function()
