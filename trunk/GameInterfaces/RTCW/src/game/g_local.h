@@ -1325,6 +1325,7 @@ extern vmCvar_t g_muteSpecs;
 extern vmCvar_t g_kickItems;
 extern vmCvar_t g_binocs;
 extern vmCvar_t g_unlockWeapons;
+extern vmCvar_t g_flagLock;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;

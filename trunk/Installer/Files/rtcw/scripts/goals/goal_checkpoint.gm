@@ -16,7 +16,8 @@ this.GetPriority = function()
 		{
 			foreach ( id and goal in this.Bot.QueryGoalsTable )
 			{
-				if ( goal.IsAvailable(this.Bot.GetTeam()) ) {
+				// cs: if a flag is locked, it will be entflag.disabled
+				if ( goal.IsAvailable(this.Bot.GetTeam()) && !GetEntFlags(goal.GetEntity(), ENTFLAG.DISABLED) ) {
 					this.MapGoal = goal;
 					this.Priority = goal.GetGoalPriority(this.Bot);
 					break;

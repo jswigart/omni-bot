@@ -1943,6 +1943,12 @@ obResult GetEntityFlags( const GameEntity _ent, BitFlag64 &_flags ) {
 			    _flags.SetFlag(ENT_FLAG_DISABLED);
 			break;*/
 		}
+		case ET_TRAP: // checkpoints
+		{
+		    if ( pEnt->touch == NULL ) {
+		        _flags.SetFlag( ENT_FLAG_DISABLED );
+		    }
+		}
 		case ET_CORPSE:
 		{
 			_flags.SetFlag( ENT_FLAG_VISTEST );
