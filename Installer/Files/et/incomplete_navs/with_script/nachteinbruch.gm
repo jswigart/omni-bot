@@ -461,7 +461,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	ETUtil.NoSnipe(bot);
 	ETUtil.SetCabinets();
 	bot.MaxViewDistance = 2800;
 	Util.IgnoreTargetGoal( bot, "MOVER_ammogate" );

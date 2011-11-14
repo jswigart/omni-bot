@@ -572,6 +572,8 @@ global Map =
 				Util.MapDebugPrint( "^5Service_Door_Destroyed, Allied CP built, storage wall closed & not destroyed" );
 			}
 		}
+		WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, true);
+		WeaponTable.SetWeaponAvailability(CLASS.ENGINEER, { WEAPON.KAR98, WEAPON.CARBINE }, false);
 	},
 	
 	Storage_Wall_Moved = function( trigger )
@@ -1257,9 +1259,8 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned docs!", Map.docs_Returned );
 	OnTrigger( "The Allies have transmitted the Supply Documents!", Map.docs_Secured );
 	
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.STEN);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
 	
 	Util.DisableGoal( ".*", true ); // all but routes
 	
@@ -2124,9 +2125,4 @@ global OnBotJoin = function( bot )
 {
 	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 150.0;
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.STEN);
-	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
 };

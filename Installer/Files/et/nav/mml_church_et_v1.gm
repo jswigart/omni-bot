@@ -178,7 +178,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		ETUtil.StopSniping();	// Push inside
+		Util.DisableGoal("SNIPE_.*");	// Push inside
 		Map.TwoMinute = true;
 
 		if (Map.RelicStatus == false)

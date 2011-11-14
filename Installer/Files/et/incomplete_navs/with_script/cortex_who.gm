@@ -254,7 +254,7 @@ global OnMapLoad = function()
 	OnTrigger( "Defused at the Command Post (2eme etage).", Map.Command_Post_(2eme_etage)_Defused );
 	OnTrigger( "Defused at the porte de minus (2eme etage).", Map.porte_de_minus_(2eme_etage)_Defused );
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_(2eme_etage)_Destroyed );
-	OnTrigger( "La porte de Minus à été ouverte", Map.porte_de_minus_(2eme_etage)_Destroyed );
+	OnTrigger( "La porte de Minus Ã  Ã©tÃ© ouverte", Map.porte_de_minus_(2eme_etage)_Destroyed );
 	OnTrigger( "Axis have stolen !", Map.cd1_Taken );
 	OnTrigger( "Axis have stolen !", Map.cd2_Taken );
 	OnTrigger( "Axis have stolen !", Map.cd3_Taken );

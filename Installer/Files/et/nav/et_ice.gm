@@ -593,8 +593,6 @@ global OnBotJoin = function( bot )
 {
 	team = bot.GetTeam();
 
-	ETUtil.NoSnipe(bot);
-
         // two allies will camp the hill
 	ETUtil.SetDualObjective(bot);
 };

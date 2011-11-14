@@ -338,6 +338,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "ATTACK_.*", {maxcamptime=15} );
 	SetMapGoalProperties( "DEFEND_.*", {maxcamptime=35} );
 	SetMapGoalProperties( "SNIPE_.*", {maxcamptime=70} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {maxcamptime=100} );
 	SetMapGoalProperties( "MOUNT_.*", {maxcamptime=100} );
 
 	/*** PRIORITY ***/

@@ -168,8 +168,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_p1axis_west_courtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_waterpump" );
 
-		ETUtil.SwitchWeapon( WEAPON.MOBILE_MG42, TEAM.AXIS );
-
 		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
 	},
 
@@ -535,8 +533,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	Util.SetGoalPosition( 9661.875, 3858.125, -199.875, "PLANT_South_Anti_Tank_Gun" );
-	Util.SetGoalPosition( 9646.170, 4780.875, -199.875, "PLANT_North_Anti_Tank_Gun" );
 	Util.SetGoalPosition( 4576.686, 6586.125, -468.781, "PLANT_Old_City_Water_Pump" );
 
 	if ( TestMapOn )
@@ -654,6 +650,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_waterpump" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFirstTunnel.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFirstTunnel.*" );
+
+	// randomize plant goal position
+	Util.AddUsePoint( Map.Plant_North_Anti_Tank_Gun, { Vec3(9662, 4696, -103), Vec3(9649, 4773, -200) });
+	Util.AddUsePoint( Map.Plant_South_Anti_Tank_Gun, { Vec3(9658, 3935, -103), Vec3(9644, 3869, -200) });
 
 	// Routing
 	MapRoutes =

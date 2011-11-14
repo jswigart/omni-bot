@@ -11,6 +11,7 @@
 
 global Map =
 {
+	DeathMatch = 1,
 	ShowMovers = false,
 };
 

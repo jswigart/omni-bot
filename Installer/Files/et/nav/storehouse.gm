@@ -1022,6 +1022,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_Allied_AtDocuments_8" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_Entrance" );
 
+		WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+
 		Util.MapDebugPrint( "^3Main_Entrance_Destroyed" );
 	},
 
@@ -1319,6 +1321,8 @@ global OnMapLoad = function()
 	triggertankpasttunnel = OnTriggerRegion(AABB(-3161.727,-1048.670,1153.125,-2487.367,-468.014,1291.553), Map.TankPastTunnel);
 	triggertankendpath = OnTriggerRegion(AABB(-2101.136,914.774,1356.113,-1887.271,1128.575,1474.908), Map.TankEndPath);
 
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
+
 	MapRoutes =
 	{
 		PLANT_Road_MG =
@@ -1451,7 +1455,5 @@ global OnBotJoin = function( bot )
 	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 250.0;
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
+	bot.MaxViewDistance = 4250;
 };

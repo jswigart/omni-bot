@@ -351,7 +351,4 @@ global OnBotJoin = function( bot )
 {
 	 bot.TargetBreakableDist = 100.0;
 	 bot.MaxViewDistance = 3700.0;
-	 
-	 ETUtil.SelectWeapon(bot, WEAPON.GARAND);
-	 ETUtil.SelectWeapon(bot, WEAPON.K43);
 };

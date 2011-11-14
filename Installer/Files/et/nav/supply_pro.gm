@@ -1672,10 +1672,6 @@ global OnBotJoin = function( bot )
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
 	//~bot.MaxViewDistance = 2400;
 
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
-
 	//	/setspawnpt <number>
 	//Axis Spawns:
 	//		3 - Axis Forwardbunker spawn (only at start before destroing Forward gate)

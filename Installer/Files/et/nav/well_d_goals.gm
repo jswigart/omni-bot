@@ -977,6 +977,7 @@ global _MG =
 	},
 	GRENADE_floor = 
 	{
+		Count = 1,
 		CreateOnLoad = 1,
 		Facing = Vec3(-0.026, 0.995, -0.094),
 		GoalType = "GRENADE",

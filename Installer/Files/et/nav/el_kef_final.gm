@@ -3989,6 +3989,8 @@ global OnMapLoad = function()
 	trigger6 = OnTriggerRegion(AABB(2841.512,-2493.462,-654.875,3520.874,-2151.406,-243.513), Map.Trigger_HouseWithGold);
 	trigger7 = OnTriggerRegion(AABB(-2856.874,-872.274,-598.875,-224.219,1664.875,-31.930), Map.Trigger_7);
 
+	WeaponTable.SetWeaponTeamAvailability(TEAM.ALLIES, CLASS.SOLDIER, WEAPON.THOMPSON, true);
+
 	MapRoutes =
 	{
 		CHECKPOINT_flag =
@@ -4794,21 +4796,4 @@ global OnBotJoin = function( bot )
 		//Util.ChangeSpawn( TEAM.ALLIES, 1 );
 		Util.ChangeSpawn( TEAM.AXIS, 3 );
 	}
-	
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
-	
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam()  == TEAM.AXIS )
-		{
-			if ( bot.GetClass() == CLASS.SOLDIER )
-			{
-				ETUtil.SwitchWeapon(WEAPON.MOBILE_MG42);
-			}
-		}
-	}
-	
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
 };

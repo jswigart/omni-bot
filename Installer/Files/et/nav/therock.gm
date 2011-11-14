@@ -554,6 +554,10 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=180, MaxCampTime=240} );
 
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.PANZERFAUST, false);
+	WeaponTable.SetWeaponAvailability(CLASS.ENGINEER, { WEAPON.KAR98, WEAPON.CARBINE }, false);
+	
 	MapRoutes =
 	{
 		CHECKPOINT_forwardspawn1_flag =
@@ -1286,10 +1290,6 @@ global OnBotJoin = function( bot )
 		ETUtil.ChangeClass( TEAM.ALLIES, CLASS.SOLDIER, CLASS.COVERTOPS, false, 1 );
 	}
 
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
-	
 	if ( Map.AlliedSpawn == 0 )
 	{
 		Util.ChangeSpawn( TEAM.ALLIES, 2 );

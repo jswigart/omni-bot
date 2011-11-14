@@ -1268,6 +1268,7 @@ global _MG =
 	},
 	GRENADE_tower_mg_east = 
 	{
+		Count = 3,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.003, 0.134, 0.991),
 		GoalType = "GRENADE",
@@ -1291,6 +1292,7 @@ global _MG =
 	},
 	GRENADE_tower_mg_west = 
 	{
+		Count = 3,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.013, 0.139, 0.990),
 		GoalType = "GRENADE",

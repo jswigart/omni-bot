@@ -5498,9 +5498,8 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.STEN);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, { WEAPON.MP40, WEAPON.THOMPSON }, true);
+	WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.FLAMETHROWER, false);
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_south_ammocabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_south_healthcabinet" );
@@ -5872,9 +5871,6 @@ global OnBotJoin = function( bot )
 	}
 	
 	bot.TargetBreakableDist = 100.0;
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.STEN);
 	//ETUtil.ChangeClass( TEAM.AXIS, CLASS.MEDIC, CLASS.COVERTOPS, false, 1 );
 	//ETUtil.ChangeClass( TEAM.ALLIES, CLASS.MEDIC, CLASS.COVERTOPS, false, 1 );
 	bot.MaxViewDistance = 2400;

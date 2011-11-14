@@ -654,17 +654,6 @@ global Map =
  		{
 			Map.TankPassBunkerExit = 1;
 
-			foreach ( id and bot in BotTable )
-			{
-				if ( bot.GetTeam()  == TEAM.AXIS )
-				{
-					if ( bot.GetClass() == CLASS.SOLDIER )
-					{
-						ETUtil.SwitchWeapon(WEAPON.MP40);
-					}
-				}
-			}
-
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_Callartillery_Trigger_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_Start_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Axis_InsideBunker_.*" );
@@ -954,6 +943,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allied_parts_two" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Weak_Wall" );
+
+		WeaponTable.SetWeaponAvailability(CLASS.SOLDIER, WEAPON.PANZERFAUST, false);
+		WeaponTable.SetWeaponAvailability(CLASS.ENGINEER, { WEAPON.KAR98, WEAPON.CARBINE }, false);
 
 		Util.MapDebugPrint( "^3Memorial_destroyed" );
 
@@ -1496,20 +1488,6 @@ global OnBotJoin = function( bot )
 		Util.ChangeSpawn( TEAM.AXIS, 1 );
 		Util.ChangeSpawn( TEAM.ALLIES, 3 );
 	}
-
-	foreach ( id and bot in BotTable )
-	{
-		if ( bot.GetTeam()  == TEAM.AXIS )
-		{
-			if ( bot.GetClass() == CLASS.SOLDIER )
-			{
-				ETUtil.SwitchWeapon(WEAPON.MOBILE_MG42);
-			}
-		}
-	}
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.FG42);
 
 	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 300.0;

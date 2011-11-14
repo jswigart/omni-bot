@@ -2076,6 +2076,7 @@ global _MG =
 	},
 	GRENADE_barrier = 
 	{
+		Count = 1,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.898, 0.427, 0.104),
 		GoalType = "GRENADE",
@@ -2101,6 +2102,7 @@ global _MG =
 	},
 	GRENADE_castle_mg = 
 	{
+		Count = 3,
 		CreateOnLoad = 1,
 		Facing = Vec3(-0.933, 0.313, 0.178),
 		GoalType = "GRENADE",
@@ -2145,6 +2147,7 @@ global _MG =
 	},
 	GRENADE_castle_mg3 = 
 	{
+		Count = 2,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.316, -0.946, 0.075),
 		GoalType = "GRENADE",
@@ -2167,6 +2170,7 @@ global _MG =
 	},
 	GRENADE_serpentine_mg = 
 	{
+		Count = 3,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.506, -0.002, 0.862),
 		GoalType = "GRENADE",
@@ -2189,6 +2193,7 @@ global _MG =
 	},
 	GRENADE_spawn_mg = 
 	{
+		Count = 2,
 		CreateOnLoad = 1,
 		Facing = Vec3(-0.749, 0.559, 0.356),
 		GoalType = "GRENADE",
@@ -2211,6 +2216,7 @@ global _MG =
 	},
 	GRENADE_tunnelentrance = 
 	{
+		Count = 1,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.940, -0.285, 0.189),
 		GoalType = "GRENADE",

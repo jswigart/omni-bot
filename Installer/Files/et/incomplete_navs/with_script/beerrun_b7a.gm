@@ -231,29 +231,3 @@ global OnMapLoad = function()
 
 	print( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
-
-global OnBotJoin = function( bot )
-{
-	//~ bot.TargetBreakableDist = 300.0;
-
-	class = bot.GetClass();
-
-	if (bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER) 
-	{
-		if (Map.bPanzers == 0 )
-		{
-			ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-			Map.bPanzers +=1;
-		}
-	}
-	if (bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER) 
-	{
-		if (Map.rPanzers == 0)
-		{
-			ETUtil.SelectWeapon(bot, WEAPON.PANZERFAUST);
-			Map.rPanzers +=1;
-		}
-	}
-};

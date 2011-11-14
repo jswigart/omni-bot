@@ -263,16 +263,6 @@ global Map =
 			Map.AlliesASTable = { "blue_as1_p1", "blue_as2_p1", };
 		}
 
-		//switch from sniper to other soldier weap
-		if ( Map.CompSettings )
-		{
-			ETUtil.SwitchWeapon(WEAPON.PANZERFAUST);
-		}
-		else
-		{
-			ETUtil.StopSniping();
-		}
-			
 		//set these if either has been destroyed
 		Util.EnableGoal( Map.Checkpoint_beach_flag );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_3);
@@ -337,12 +327,6 @@ global Map =
 			Map.DocStatus = true;
 			
 			Map.EvalArty();	//Martin - Lets stop spamming sooner
-			
-			// make sure they fully shift even if only one dyno goal is destroyed
-			if ( Map.CompSettings )
-			{
-				ETUtil.SwitchWeapon(WEAPON.PANZERFAUST);
-			}
 			
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBeach.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bBeach.*" );

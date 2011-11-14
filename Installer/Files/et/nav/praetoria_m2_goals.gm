@@ -705,6 +705,7 @@ global _MG =
 	},
 	GRENADE_depot_hatch = 
 	{
+		Count = 1,
 		CreateOnLoad = 1,
 		Facing = Vec3(0.975, 0.026, -0.221),
 		GoalType = "GRENADE",
