@@ -1176,6 +1176,32 @@ void checkpoint_spawntouch( gentity_t *self, gentity_t *other, trace_t *trace ) 
 		return;
 	}
 
+	if ( self->count < 0 ) {
+		firsttime = qtrue;
+	}
+
+	if ( g_flagLock.integer ) {
+	    switch(other->client->sess.sessionTeam)
+	    {
+	        case TEAM_RED:
+	        {
+	            if ( self->spawnflags & ALLIED_ONLY ) {
+	                return;
+	            }
+	            break;
+	        }
+	        case TEAM_BLUE:
+	        {
+	            if ( self->spawnflags & AXIS_ONLY ) {
+	                return;
+	            }
+	            break;
+	        }
+            default:
+                break;
+	    }
+	}
+
 // JPW NERVE
 	if ( self->s.frame == WCP_ANIM_NOFLAG ) {
 		AddScore( other, WOLF_SP_CAPTURE );
@@ -1183,10 +1209,6 @@ void checkpoint_spawntouch( gentity_t *self, gentity_t *other, trace_t *trace ) 
 		AddScore( other, WOLF_SP_RECOVER );
 	}
 // jpw
-
-	if ( self->count < 0 ) {
-		firsttime = qtrue;
-	}
 
 	// Set controlling team
 	self->count = other->client->sess.sessionTeam;
@@ -1252,8 +1274,7 @@ void checkpoint_spawntouch( gentity_t *self, gentity_t *other, trace_t *trace ) 
 		} else {
 			Bot_Util_SendTrigger( self, NULL, va( "axis_%s_%s", flagAction, _GetEntityName( self ) ), flagAction );
 		}
-	} else
-	{
+	} else {
 		G_Script_ScriptEvent( self, "trigger", "allied_capture" );
 		if ( g_deathmatch.integer ) {
 			Bot_Util_SendTrigger( self, NULL, va( "dm_allies_%s_%s", flagAction, _GetEntityName( self ) ), flagAction );
@@ -1265,8 +1286,11 @@ void checkpoint_spawntouch( gentity_t *self, gentity_t *other, trace_t *trace ) 
 	// Don't allow touch again until animation is finished
 	self->touch = NULL;
 
-	self->think = checkpoint_think;
-	self->nextthink = level.time + 1000;
+    // cs: so self->touch will remain null as an indication to bots that it cannot be used
+    if ( !g_flagLock.integer ) {
+        self->think = checkpoint_think;
+        self->nextthink = level.time + 1000;
+    }
 
 	// activate all targets
 	// Arnout - updated this to allow toggling of initial spawnpoints as well, plus now it only
