@@ -62,6 +62,7 @@ member EvalClassChange = function(bot)
 	//evaluate this bot
 	botClass = bot.GetClass();
 	botEval = ClassManager.EvaluateClass(team, botClass, Server.ClassCount[team][botClass] - 1);
+	isDead = GetEntFlags(bot.GetGameEntity(), ENTFLAG.DEAD, ENTFLAG.LIMBO);
 
 	//evaluate all classes
 	newClass = null;
@@ -70,7 +71,7 @@ member EvalClassChange = function(bot)
 		if (class!=botClass) // don't change to same class
 		{
 			eval = ClassManager.EvaluateClass(team, class, num);
-			if (eval > botEval)
+			if (eval >= botEval && (eval > botEval || isDead && RandInt(0,3)==0) )
 			{
 				botEval = eval;
 				newClass = class;

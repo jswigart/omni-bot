@@ -5,6 +5,7 @@ this.KillWhenStuck = true;
 this.LogStuckage = true;
 this.Interval = 0.6;
 this.KillTime = 5.0; // time before /killing
+this.BreakableTimeout = 10; // time to destroy breakables
 this.Debug = false;
 
 this.Initialize = function()
@@ -53,10 +54,21 @@ this.GetPriority = function()
 			// is the bot blocked by a player?
 			if ( nearestPlayer && this.Bot.DistanceTo(nearestPlayer) < 65 && this.Bot.InFieldOfView(GetEntPosition(nearestPlayer), 180.0) )
 			{
-				this.Bot.HoldButton(BTN.STRAFE_L, 0.5);
+				if (GetEntFlags(nearestPlayer, ENTFLAG.PRONE))
+				{
+					this.Bot.PressButton(BTN.JUMP);
 
-				if ( this.Debug ) {
-					this.Bot.Say("side stepping player");
+					if ( this.Debug ) {
+						this.Bot.Say("jump over proned player");
+					}
+				}
+				else
+				{
+					this.Bot.HoldButton(BTN.STRAFE_L, 0.5);
+
+					if ( this.Debug ) {
+						this.Bot.Say("side stepping player");
+					}
 				}
 
 				// reset the stuck timer so they don't get a new goal
@@ -76,6 +88,13 @@ this.GetPriority = function()
 
 				if ( this.Bot.StuckPos && this.Bot.DistanceTo(this.Bot.StuckPos) > 100 ) {
 					this.ResetStuck();
+				}
+				else if ( this.Bot.HasTarget() && GetEntClass(this.Bot.GetTarget())==CLASS.BREAKABLE
+					&& this.Bot.Stucktime < this.BreakableTimeout + this.KillTime )
+				{
+					if (this.Bot.Stucktime < this.BreakableTimeout) {
+						this.Bot.ResetStuckTime();
+					}
 				}
 				else if ( this.Bot.Stucktime >= this.KillTime )
 				{

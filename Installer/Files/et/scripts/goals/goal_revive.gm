@@ -114,8 +114,10 @@ this.UpdateRevive = function()
 		this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
 		this.BlockForWeaponChange(WEAPON.SYRINGE);
 
-		timeout = 12; // 3 seconds
-		while( timeout > 0 && Util.GetEntHealth(this.TargetEntity) < 0 ) {
+		for (timeout = 12; timeout > 0; timeout -= 1) { // 3 seconds
+			health = Util.GetEntHealth(this.TargetEntity);
+			if (health >= 0) { break; }
+
 			// position check here because some mods allow bodies to be dragged
 			pos = GetEntPosition(this.TargetEntity);
 			if (pos) {
@@ -137,17 +139,18 @@ this.UpdateRevive = function()
 				this.Finished();
 			}
 			sleep(0.25);
-			timeout -= 1;
 		}
 
 		this.ReleaseAimRequest();
 		this.ReleaseWeaponRequest();
 
 		if ( timeout > 0 ) {
-			// activate deliver supplies goal.
-			this.Bot.RevivedTargetEnt = this.TargetEntity;
-			signal( this.Bot.Name + "_deliversupplies" );
-			sleep(1);
+			if (health < 100) { //skilled medic can revive to full health
+				// activate deliver supplies goal.
+				this.Bot.RevivedTargetEnt = this.TargetEntity;
+				signal( this.Bot.Name + "_deliversupplies" );
+				sleep(1);
+			}
 		}
 		else {
 			this.BBDelayTime = 10;
