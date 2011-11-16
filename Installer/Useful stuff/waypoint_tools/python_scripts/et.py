@@ -31,9 +31,12 @@ NavList.sort()
 ########################################################################
 # populate lists for incomplete maps
 ########################################################################
-NoScriptList = os.listdir('../../../Files/et/incomplete_navs/no_script/')
-WithScriptList = os.listdir('../../../Files/et/incomplete_navs/with_script/')
-PriorityList = os.listdir('../../../Files/et/incomplete_navs/priority_maps/')
+NoScriptPath = ('../../../Files/et/incomplete_navs/no_script/')
+NoScriptList = os.listdir(os.path.normpath(NoScriptPath))
+WithScriptPath = ('../../../Files/et/incomplete_navs/with_script/')
+WithScriptList = os.listdir(os.path.normpath(WithScriptPath))
+PriorityPath = ('../../../Files/et/incomplete_navs/priority_maps/')
+PriorityList = os.listdir(os.path.normpath(PriorityPath))
 
 ########################################################################
 # Main
@@ -331,6 +334,11 @@ def NoRouteList():
 def SearchForOldScriptGoal(contents):
 	str_list = []
 
+	# doh, MountVehicle auto activated based on availability of mover goal ...
+	oops = re.findall('\s*SetAvailableMapGoals\(.*"MOVER_.*', contents)
+	if len(oops) > 0:
+		str_list.append('sets availability for mover goal - goal_mountvehicle\n')
+
 	if contents.find("Target =") > 0:
 		str_list.append('has a Target table - goal_grenadetarget\n')
 
@@ -346,18 +354,18 @@ def SearchForOldScriptGoal(contents):
 	if contents.find("EscortVehicle =") > 0:
 		str_list.append('has an EscortVehicle table - goal_escortvehicle\n')
 
-	if contents.find("Switches =") > 0:
-		str_list.append('has a Switches table - check for paththrough\n')
+	#if contents.find("Switches =") > 0:
+	#	str_list.append('has a Switches table - check for paththrough\n')
 
 	return str_list
 
-def CheckForOldScriptGoal(fname, out):
-	if os.path.isfile(Path+fname):
-		ext = os.path.splitext(fname)
+def CheckForOldScriptGoal(path, fname, out):
+	if os.path.isfile(path):
+		ext = os.path.splitext(path)
 
 		if ext[1]==".gm":
 			if ext[0].find('_goals') == -1:
-				f = open(Path+fname, 'r')
+				f = open(path, 'r')
 
 				try:
 					contents = f.read()
@@ -368,7 +376,7 @@ def CheckForOldScriptGoal(fname, out):
 
 				res =  SearchForOldScriptGoal(contents)
 				if ( len(res) > 0 ):
-					out.write('---- {0} ----\n'.format(ext[0]))
+					out.write('---- {0} ----\n'.format(fname))
 					for item in res:
 						out.write(item)
 
@@ -382,15 +390,15 @@ def OldScriptGoalList():
 
 	out.write('---------- With Script ----------\n\n')
 	for fname in WithScriptList:
-		CheckForOldScriptGoal(fname,out)
+		CheckForOldScriptGoal(WithScriptPath + fname,fname,out)
 
 	out.write('\n\n---------- Priority Maps ----------\n\n')
 	for fname in PriorityList:
-		CheckForOldScriptGoal(fname,out)
+		CheckForOldScriptGoal(PriorityPath + fname,fname,out)
 
 	out.write('\n\n---------- Nav Folder ---------\n\n')
 	for fname in NavList:
-		CheckForOldScriptGoal(fname,out)
+		CheckForOldScriptGoal(Path + fname,fname,out)
 
 	out.close()
 
