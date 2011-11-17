@@ -1182,7 +1182,7 @@ obResult ChangeTeam( int _client, int _newteam, const MessageHelper *_data ) {
 	}
 
 	// always go to spectator first to solve problems on map restarts
-	//SetTeam(bot, "spectator");
+	//SetTeam(bot, "spectator", qfalse);
 
 	Msg_PlayerChooseEquipment *pMsg = 0;
 	if ( _data ) {
@@ -1206,7 +1206,7 @@ obResult ChangeTeam( int _client, int _newteam, const MessageHelper *_data ) {
 		}
 	}
 
-	SetTeam( bot, teamName );
+	SetTeam( bot, teamName, qfalse );
 	//ReTransmitWeapons(bot);
 	return Success;
 }

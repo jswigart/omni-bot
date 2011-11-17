@@ -921,7 +921,7 @@ static int _et_SetTeam( lua_State *L ) {
 	const char *team = luaL_checkstring( L, 2 );
 
 	if ( (g_entities + clientNum)->client && ((g_entities + clientNum)->client->pers.connected == CON_CONNECTED) ) {
-		SetTeam(g_entities + clientNum, (char *)team);
+		SetTeam(g_entities + clientNum, (char *)team, qtrue);
 	}
 	return 0;
 }
