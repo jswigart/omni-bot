@@ -496,7 +496,7 @@ void    Svcmd_ForceTeam_f( void ) {
 
 	// set the team
 	trap_Argv( 2, str, sizeof( str ) );
-	SetTeam( &g_entities[cl - level.clients], str );
+	SetTeam( &g_entities[cl - level.clients], str, qtrue );
 }
 
 /*
