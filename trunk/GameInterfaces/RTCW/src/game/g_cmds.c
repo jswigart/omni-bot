@@ -597,7 +597,7 @@ void Cmd_Kill_f( gentity_t *ent ) {
 SetTeam
 =================
 */
-void SetTeam( gentity_t *ent, char *s, qboolean ignoreBalance ) {
+void SetTeam( gentity_t *ent, char *s, qboolean ignoreRestrictions ) {
 	int team, oldTeam;
 	gclient_t           *client;
 	int clientNum;
@@ -640,13 +640,13 @@ void SetTeam( gentity_t *ent, char *s, qboolean ignoreBalance ) {
 		}
 
 		// NERVE - SMF
-		if ( g_noTeamSwitching.integer && team != ent->client->sess.sessionTeam && g_gamestate.integer == GS_PLAYING ) {
+		if ( !ignoreRestrictions && g_noTeamSwitching.integer && team != ent->client->sess.sessionTeam && g_gamestate.integer == GS_PLAYING ) {
 			trap_SendServerCommand( clientNum, "cp \"You cannot switch during a match, please wait until the round ends.\n\"" );
 			return; // ignore the request
 		}
 
 		// NERVE - SMF - merge from team arena
-		if ( !ignoreBalance && g_teamForceBalance.integer  ) {
+		if ( !ignoreRestrictions && g_teamForceBalance.integer  ) {
 			int counts[TEAM_NUM_TEAMS];
 
 			counts[TEAM_BLUE] = TeamCount( clientNum, TEAM_BLUE );
@@ -685,7 +685,7 @@ void SetTeam( gentity_t *ent, char *s, qboolean ignoreBalance ) {
 	}
 
 	// NERVE - SMF - prevent players from switching to regain deployments
-	if ( g_maxlives.integer > 0 && ent->client->ps.persistant[PERS_RESPAWNS_LEFT] == 0 &&
+	if ( !ignoreRestrictions && g_maxlives.integer > 0 && ent->client->ps.persistant[PERS_RESPAWNS_LEFT] == 0 &&
 		 oldTeam != TEAM_SPECTATOR ) {
 		trap_SendServerCommand( clientNum,
 								"cp \"You can't switch teams because you are out of lives.\n\" 3" );
