@@ -28,9 +28,9 @@ global Map =
 	//~		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main.*" );
 			Util.MapDebugPrint("barrier1 exit");
  		},
-		
-	},	
-	
+
+	},
+
 	def =
  	{
  		Name="def",
@@ -39,12 +39,12 @@ global Map =
  		{
  			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
-			
+
 			Util.EnableGroup( "group12", TEAM.AXIS);
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_2" );
 //~			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
 //~			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_MG42" );
-					
+
  		},
  		OnExit = function(ent)
  		{
@@ -54,7 +54,7 @@ global Map =
 			Util.MapDebugPrint("def exit");
  		},
 	},
-	
+
 	barrier2 =
  	{
  		Name="barrier2",
@@ -63,28 +63,28 @@ global Map =
  		{
  			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
-		
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_MG42" );
-			
-			
+
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier_2" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Balcony_MG" );
 			Util.EnableGroup( "group14", TEAM.AXIS);
 			Util.DisableGroup( "group15");
 			Util.MapDebugPrint("b2 enter");
-			
+
  		},
  		OnExit = function(ent)
  		{
 			Util.DisableGroup( "group9");
-			
+
 			Util.EnableGroup( "group10", TEAM.ALLIES);
 			Util.MapDebugPrint(GetEntName(ent) + " exited aabb trigger");
-			Util.MapDebugPrint("b2 exit");	
+			Util.MapDebugPrint("b2 exit");
  		},
-	},	
-		
+	},
+
 	shift =
  	{
  		Name="shift",
@@ -93,9 +93,9 @@ global Map =
  		{
  			//Util.MapDebugPrint(GetEntName(ent) + " BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_tp.*" );
-			
+
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Bridge" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Command_Post" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_mtr1" );
@@ -103,7 +103,7 @@ global Map =
 			Util.DisableGroup( "group8");
 			Util.EnableGroup( "group9", TEAM.ALLIES);
 			Util.EnableGroup( "group15", TEAM.AXIS);
-			Util.MapDebugPrint("shift enter");		
+			Util.MapDebugPrint("shift enter");
  		},
  		OnExit = function(ent)
  		{
@@ -112,7 +112,7 @@ global Map =
 			Util.MapDebugPrint("shift exit");
  		},
 	},
-	
+
 	fix_truck =
  	{
  		Name="fix_truck",
@@ -121,18 +121,18 @@ global Map =
  		{
  			//Util.MapDebugPrint(GetEntName(ent) + "BarrierPassed");
 			//Map.RideVehicle.truck.Enabled = true;
-			
+
 //~			Map.EscortVehicle.truck.Enabled = true;
-			Util.MapDebugPrint("fix it!");			
+			Util.MapDebugPrint("fix it!");
  		},
  		OnExit = function(ent)
  		{
-			
+
 			Util.MapDebugPrint(GetEntName(ent) + "exited aabb trigger");
 			Util.MapDebugPrint("fix exit");
  		},
-	},		
-		
+	},
+
 	Quiet = true,
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
@@ -227,7 +227,7 @@ global Map =
 	},
 
 	Truck_Built = function( trigger )
-	{	
+	{
 		Util.SetMaxUsers( 2, "ESCORT_.*" );
 		Util.MapDebugPrint("truck built");
 	},
@@ -327,18 +327,17 @@ global Map =
 	},
 
 	gold_crate_Taken = function( trigger )
-	{		
+	{
 //~		SetAvailableMapGoals( TEAM.AXIS, true, "ATACK_at.*" );
 
 		Util.DisableGroup("group1");
 		Util.DisableGroup("group2");
 		Util.EnableGroup( "group3", TEAM.AXIS);
 		Util.EnableGroup( "group6", TEAM.ALLIES);
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_53" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_wall.*" );
-		
-		Util.MapDebugPrint("gold_crate_Taken");	
+
+		Util.MapDebugPrint("gold_crate_Taken");
 	},
 
 	CAPPOINT_53_Captured = function( trigger )
@@ -349,27 +348,25 @@ global Map =
 		Util.EnableGroup( "group5", TEAM.AXIS);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_wall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier_1" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
-	
+
 //~		Map.EscortVehicle.truck.Enabled = true;
 		Util.MapDebugPrint("CAPPOINT_53_Captured");
 	},
-	
+
 	truck_blasted = function( trigger )
 	{
 		Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck );
 //~		Map.EscortVehicle.truck.Enabled = false;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_Truck" );
 //~		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
 		Util.SetMaxUsers( 1, "ESCORT_.*" );
-		Util.MapDebugPrint("truck blasted");	
+		Util.MapDebugPrint("truck blasted");
 	},
-	
+
 	gold_crate_returned = function( trigger )
 	{
 		Util.EnableGroup( "group1", TEAM.ALLIES);
@@ -379,17 +376,17 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_wall.*" );
 		Util.MapDebugPrint("crate returned");
 	},
-	
+
 	wall_plant = function( trigger )
 	{
-		Util.EnableGroup( "group16", TEAM.ALLIES);		
+		Util.EnableGroup( "group16", TEAM.ALLIES);
 		Util.MapDebugPrint("wall  plant");
 	},
-	
+
 	wall_defused = function( trigger )
-	{		
+	{
 		Util.DisableGroup( "group16");
-		Util.MapDebugPrint("wall  defused");	
+		Util.MapDebugPrint("wall  defused");
 	},
 };
 
@@ -426,72 +423,13 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_Truck" );
-	
-	//~g1
-//~	Util.SetGroup("MOVER_truck", "group1");
-	Util.SetGroup("FLAG_gold_crate", "group1");
-	Util.SetGroup("CAPPOINT_53", "group1");
-	Util.SetGroup("PLANT_Radio_Wall", "group1");
-	Util.SetGroup("BUILD_Bridge", "group1");
-	Util.SetGroup("ATTACK_p.*", "group1");
-	Util.SetGroup("BUILD_Allied_Command_Post", "group1");
-	Util.SetGroup("MOBILEMORTAR_mrt1", "group1");
-	Util.SetGroup("AIRSTRIKE_ally.*", "group1");
-	
-//~g2
-	Util.SetGroup("DEFEND_PARTS_.*", "group2");
-	Util.SetGroup("BUILD_Truck_Barrier_1", "group2");
-	Util.SetGroup("PLANT_Allied_Command_Post", "group2");
-	Util.SetGroup("PLANT_Bridge", "group2");
-	Util.SetGroup("BUILD_Axis_Command_Post", "group2");
-	Util.SetGroup("BUILD_Balcony_MG", "group2");
-	
-	//~ g3
-	Util.SetGroup("ATTACK_at.*", "group3");
-	
-	//~g4
-	Util.SetGroup("ATTACK_k.*", "group4");
-	Util.SetGroup("BUILD_Allied_Command_Post", "group4");
-	Util.SetGroup("MOBILEMORTAR_mrt99", "group4");
-	
-	//~g5
-	Util.SetGroup("DEFEND_b.*", "group5");
-	//~	Util.SetGroup("BUILD_Truck_Barrier_1", "group5");
-	
-	//~g6
-	Util.SetGroup("ATTACK_bf.*", "group6");
-	
-	//~g7
-	Util.SetGroup("ATTACK_m.*", "group7");
-	Util.SetGroup("PLANT_Main_Entrance", "group7");
-	
-	//~g12
-	Util.SetGroup("DEFEND_tp.*", "group12");
-	Util.SetGroup("MOUNTMG42_Balcony_MG", "group12");
-	
-	//~g13
-	Util.SetGroup("DEFEND_main.*", "group13");
-	
-	//~g14
-	Util.SetGroup("ATTACK_truck.*", "group14");
-	
-	//~g15
-	Util.SetGroup("DEFEND_shift.*", "group15");
-	Util.SetGroup("MOBILEMORTAR_mtr1", "group15");
-	
-	//~g16
-	Util.SetGroup("ATTACK_dyno.*", "group16");
-	
-	//~g17
-	Util.SetGroup("ROUTE_.*", "group17");
-	
+
 	Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck );
 	Util.SetGoalOffset( -28, 0, 0, "PLANT_Main_Entrance" );
 	Util.SetGoalPosition( -1462.6, 1353.2, 216.787, "PLANT_Truck_Barrier_1" ) ;
 	Util.SetGoalOffset( -55, -75, 0, "PLANT_Truck_Barrier_2" );
 	Util.SetGoalPosition( -2188.5, 1307.2, 211.8, "PLANT_Radio_Wall" ) ;
-	Util.SetGoalOffset( 0, 0, -220, "PLANT_Bridge" );	
+	Util.SetGoalOffset( 0, 0, -220, "PLANT_Bridge" );
 //~	Util.SetGoalOffset( -55, -55, 0, "PLANT_Truck_Barrier_1" );
 //~	Util.SetGoalOffset( 0, -35, -19, "PLANT_Radio_Wall" );
 //~	Util.SetGoalOffset( 0, 0, -220, "PLANT_Bridge_1" );
@@ -507,14 +445,14 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "REVIVE_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 5, "FLAG_gold_crate" );
-	
+
 //~	SetGoalPriority( "MOBILEMORTAR_.*", 0.85, 0, CLASS.SOLDIER );
 //~	SetGoalPriority( "PLANT_Command_Post", 0.89, 0, CLASS.COVERTOPS );
 //~	SetGoalPriority( "PLANT_Command_Post", 0.0, 0, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Radio_Wall", 0.86, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "BUILD_Truck", 0.98, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "ATTACK_k.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
-	
+
 	ETUtil.LimitToClass("PLANT_Command_Post", 0, CLASS.COVERTOPS);
 	ETUtil.LimitToClass("PLANT_Bridge", TEAM.AXIS, CLASS.COVERTOPS);
 
@@ -522,49 +460,49 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "ass2", "closed", false );
 	Wp.SetWaypointFlag( "ass3", "closed", false );
 	Wp.SetWaypointFlag( "ass4", "closed", false );
-		
+
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=30, MaxCampTime=90} );
 	SetMapGoalProperties( "MOUNT_.*", {MinCampTime=30, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=30, MaxCampTime=90} );
-	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=30, MaxCampTime=90} ); 
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=30, MaxCampTime=90} );
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=90} );
-	
+
 	OnTriggerRegion(AABB(-1532,1472.5,148.6,-1108,1710,249), Map.Barrierpassed);
 	OnTriggerRegion(AABB(25.5,1960.6,137,88.7,2428,213), Map.def);
 	OnTriggerRegion(AABB(1654.5,-1438,-0.875,1811,-882,75.125), Map.barrier2);
 	OnTriggerRegion(AABB(456.8,97.3,21.9,885.5,203.6,110.8), Map.shift);
 	OnTriggerRegion(AABB(-1489.5,1120.5,205,-1109,1196.8,288.8), Map.fix_truck);
-	
+
 	Util.EnableGroup( "group1", TEAM.ALLIES);
 	Util.EnableGroup( "group2", TEAM.AXIS);
 	Util.EnableGroup( "group17"); // routes
 	Util.EnableGoal("AMMOCAB_.*"); //enables for both teams
 	Util.EnableGoal("HEALTHCAB_.*"); //enables for both teams
-	
+
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_in1" );
 
 	MapRoutes =
 	{
-		CAPPOINT_53 = 
+		CAPPOINT_53 =
 		{
-			ROUTE_obj  = 
+			ROUTE_obj  =
 			{
-				ROUTE_obj2  = 
+				ROUTE_obj2  =
 				{
-					ROUTE_obj1  = 
+					ROUTE_obj1  =
 					{
-						ROUTE_obj4  = 
+						ROUTE_obj4  =
 						{
-							ROUTE_obj5  = 
+							ROUTE_obj5  =
 							{
-								ROUTE_tunnel1  = 
+								ROUTE_tunnel1  =
 								{
-									ROUTE_tunnel2  = 
+									ROUTE_tunnel2  =
 									{
 									},
 								},
 							},
-							ROUTE_tunnel3  = 
+							ROUTE_tunnel3  =
 							{
 							},
 						},
@@ -572,24 +510,24 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		
-		FLAG_gold_crate = 
+
+		FLAG_gold_crate =
 		{
-			ROUTE_spawn3  = 
+			ROUTE_spawn3  =
 			{
-				ROUTE_in1  = 
+				ROUTE_in1  =
 				{
-					ROUTE_in2  = 
+					ROUTE_in2  =
 					{
-						ROUTE_in3  = 
+						ROUTE_in3  =
 						{
-							ROUTE_in4  = 
+							ROUTE_in4  =
 							{
-								ROUTE_in5  = 
+								ROUTE_in5  =
 								{
-									ROUTE_in6  = 
+									ROUTE_in6  =
 									{
-										ROUTE_in7  = 
+										ROUTE_in7  =
 										{
 										},
 									},
@@ -599,29 +537,29 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_spawn1  = 
+			ROUTE_spawn1  =
 			{
-				ROUTE_fs50  = 
+				ROUTE_fs50  =
 				{
-					ROUTE_fs51  = 
+					ROUTE_fs51  =
 					{
-						ROUTE_fs52  = 
+						ROUTE_fs52  =
 						{
-							ROUTE_fs53  = 
+							ROUTE_fs53  =
 							{
-								ROUTE_obj1  = 
+								ROUTE_obj1  =
 								{
 								},
 							},
 						},
 					},
-					ROUTE_tunnel2  = 
+					ROUTE_tunnel2  =
 					{
-						ROUTE_tunnel1  = 
+						ROUTE_tunnel1  =
 						{
-							ROUTE_obj4  = 
+							ROUTE_obj4  =
 							{
-								ROUTE_obj1  = 
+								ROUTE_obj1  =
 								{
 								},
 							},
@@ -632,24 +570,24 @@ global OnMapLoad = function()
 		},
 
 	};
-	MapRoutes.ATTACK_p1 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_p2 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_p3 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_p5 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_p6 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_k1 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_k2 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_k3 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_k4 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_m1 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_m2 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_m3 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.ATTACK_m4 = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.PLANT_Radio_Wall = MapRoutes.FLAG_gold_crate; 
-	MapRoutes.PLANT_Truck_Barrier_1 = MapRoutes.FLAG_gold_crate; 
+	MapRoutes.ATTACK_p1 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_p2 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_p3 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_p5 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_p6 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_k1 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_k2 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_k3 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_k4 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_m1 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_m2 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_m3 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.ATTACK_m4 = MapRoutes.FLAG_gold_crate;
+	MapRoutes.PLANT_Radio_Wall = MapRoutes.FLAG_gold_crate;
+	MapRoutes.PLANT_Truck_Barrier_1 = MapRoutes.FLAG_gold_crate;
 	Util.Routes(MapRoutes);
-	
-	Util.MapDebugPrint("OnMapLoad");	
+
+	Util.MapDebugPrint("OnMapLoad");
 };
 
 global OnBotJoin = function( bot )

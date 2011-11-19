@@ -554,7 +554,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_radardefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis_radardefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_radardefense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_tank1" );
 
 		Util.MapDebugPrint( "South_Bunker_Entrance_Destroyed" );
 	},
@@ -885,7 +884,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR.*" );
@@ -919,7 +917,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_axis_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_axis_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_axis_start.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 

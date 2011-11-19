@@ -116,13 +116,11 @@ global Map =
 			if ( Map.gold_on_truck == 0 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at position - not loaded" );
 			}
 			else
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at position - gold loaded" );
 			}
 		}
@@ -131,13 +129,11 @@ global Map =
 			if ( Map.depot_gate == 0 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at depot gate - gate not destroyed" );
 			}
 			else
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at depot gate - gate destroyed" );
 			}
 		}
@@ -146,20 +142,17 @@ global Map =
 			if ( Map.forward_gate == 0 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at forward gate - gate not destroyed" );
 			}
 			else
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				Util.MapDebugPrint( "^3Truck_Built at forward gate - gate destroyed" );
 			}
 		}
 		else
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 
 			Util.MapDebugPrint( "^3Truck_Built in map" );
 		}
@@ -173,7 +166,6 @@ global Map =
 			{ return; }
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 
 		if ( Map.truck_at_position == 1 )
 		{
@@ -253,7 +245,6 @@ global Map =
 			if ( Map.forward_gate == 0 )	//intact
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 
 				SetGoalPriority( "BUILD_Truck", 0.70, TEAM.ALLIES, CLASS.ENGINEER );
 
@@ -263,7 +254,6 @@ global Map =
 			if ( Map.forward_gate == 1 )	//destroyed
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 
 				Util.MapDebugPrint(GetEntName(ent) + " TruckAtForwardGate - Gate destroyed", true);
 			}
@@ -338,7 +328,6 @@ global Map =
 		if ( Map.truck_status == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 		}
 
 		if ( Map.forward_spawn_exit == 0 )
@@ -573,7 +562,6 @@ global Map =
 			if ( Map.depot_gate == 0 )	//intact
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 
 				SetGoalPriority( "BUILD_Truck", 0.70, TEAM.ALLIES, CLASS.ENGINEER );
 
@@ -583,7 +571,6 @@ global Map =
 			if ( Map.depot_gate == 1 )	//destroyed
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 
 				Util.MapDebugPrint(GetEntName(ent) + " TruckAtDepotGate - Gate destroyed", true);
 			}
@@ -643,7 +630,6 @@ global Map =
 		if ( Map.truck_status == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 		}
 
 		if ( Map.west_depod_wall == 0 && Map.east_depod_wall == 0 )	//both intact
@@ -891,7 +877,6 @@ global Map =
 		Map.truck_at_position = 1;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_TruckAtDepotGate_.*" );
@@ -974,7 +959,6 @@ global Map =
 		if ( Map.truck_status == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 		}
 
 		//truck2 = OnTriggerRegion(AABB(125.861,-2280.408,1.128,1178.685,-2093.029,75.128), Map.TruckAtBackSpawnExit);
@@ -1229,7 +1213,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_start_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardflag" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Forward_Gate" );

@@ -276,7 +276,6 @@ global Map =
 		sleep( 2 );
 
 		// Allied goals
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Gold_Bars" );
@@ -580,7 +579,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_north_ammocabinet" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_north_healthcabinet" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -1010,7 +1008,7 @@ global OnMapLoad = function()
 			{
 				ROUTE_uppercp = { Weight = 2, },
 				ROUTE_cp_stairs = {},
-			},		
+			},
 		},
 	};
 

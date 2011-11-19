@@ -95,6 +95,7 @@ this.Exit = function()
 	// clear the occupied flag
 	if ( typeId(this.spotIndex) != 0 ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+		this.spotIndex = null;
 	}
 };
 
@@ -102,7 +103,6 @@ this.UpdateDynamite = function()
 {
 	hasCoverSpot = false;
 	aimVectors = null;
-	this.spotIndex = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
 
 	while(1)
@@ -167,7 +167,7 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 
-				if ( !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
+				if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
 					this.Finished();
 				}
@@ -175,13 +175,15 @@ this.UpdateDynamite = function()
 				// pick a cover spot
 				if (!hasCoverSpot) {
 
-					// only one per spot. iterate through all since 'break' exits the while loop
+					// choose spot which is not occupied
+					maxval = -1;
 					foreach ( id and spot in this.MapGoal.CoverSpots ) {
-						if ( typeId(this.spotIndex) != 0 || spot.occupied ) {
+						if (spot.occupied ) {
 							continue;
 						}
-						else {
-							spot.occupied = true;
+						val = UnitRandom();
+						if (val > maxval) {
+							maxval = val;
 							this.spotIndex = id;
 						}
 					}
@@ -189,8 +191,11 @@ this.UpdateDynamite = function()
 					// no more cover spots available
 					if (typeId(this.spotIndex) == 0) { this.Finished(); }
 
-					if ( this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors && tableCount(this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors) > 0 ) {
-						aimVectors = this.MapGoal.CoverSpots[ this.spotIndex ].AimVectors;
+					spot = this.MapGoal.CoverSpots[ this.spotIndex ];
+					spot.occupied = true;
+
+					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
+						aimVectors = spot.AimVectors;
 						hasCoverSpot = true;
 					}
 					else {
@@ -198,9 +203,9 @@ this.UpdateDynamite = function()
 						this.Finished();
 					}
 
-					this.Goto(this.MapGoal.CoverSpots[ this.spotIndex ].position, 32.0);
+					this.Goto(spot.position, 32.0);
 
-					switch (this.MapGoal.CoverSpots[ this.spotIndex ].stance)
+					switch (spot.stance)
 					{
 						case "crouch":
 						{

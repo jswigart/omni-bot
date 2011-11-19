@@ -7,12 +7,16 @@
 //	native12		16 July 2011	Initial Script
 //				15.10.2011	First release
 //				13.11.2011	Added: coverspots, build & plant CP, some routes
+//				15.11.2011	Added: navigate for ladder near cappoint & release
 //==========================================================================================
-//	ToDo:	looking for bugs & test....
+//
+//	sandstorm_beta.way	15.11.2011	Size: 286 720 b
+//	sandstorm_beta_goals.gm	3.11.2011	Size: 180 224 b
+//
+//==========================================================================================
 
 global Map =
 {
-	//Debug = 1, // please set to zero before distributing your script
 	Debug = 0, // please set to zero before distributing your script
 	ShowMovers = false,
 
@@ -63,6 +67,33 @@ global Map =
 				_this.Bot.PressButton(BTN.JUMP);
 				_this.Bot.HoldButton(BTN.SPRINT, 1);
 				sleep(1);
+			},
+		},
+		//  	/bot waypoint_setproperty paththrough Navigation_PT:ladder_upp
+		ladder_upp =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.9,-0.04,0.5));
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				sleep(1.8);
+				_this.Bot.HoldButton(BTN.STRAFE_L, 0.5);
+				sleep(0.3);
+			},
+		},
+		//  	/bot waypoint_setproperty paththrough Navigation_PT:ladder_down
+		ladder_down =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.036804,-0.000487,-0.999322));
+				yield();
+				_this.Bot.HoldButton(BTN.FORWARD, 1);
+				_this.Bot.HoldButton(BTN.CROUCH, 1);
+				sleep(1);
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.036003,0.007651,0.999322));
+				_this.Bot.HoldButton(BTN.BACKWARD, 2);
+				sleep(2);
 			},
 		},
 	},
@@ -911,6 +942,9 @@ global Map =
 		
 		Map.BankDoors = false;
 		
+		Wp.SetWaypointFlag( "in_wall_1", "closed", false );
+		Wp.SetWaypointFlag( "in_wall_2", "closed", false );
+		
 		CappTrigger = OnTriggerRegion(AABB(3006.321,-2201.787,1771.876,3538.532,-1668.514,2468.320), Map.CappointTrigger);
 		
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_TankNearDoor_.*" );
@@ -1394,6 +1428,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "BUILD_Command_Post", 0.55, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Command_Post", 0.49, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Command_Post", 0.80, TEAM.ALLIES, CLASS.COVERTOPS );
+	SetGoalPriority( "PLANT_elevator_shaft_vent", 0.82, TEAM.ALLIES, CLASS.COVERTOPS );
+	SetGoalPriority( "PLANT_vault_storage_vent", 0.82, TEAM.ALLIES, CLASS.COVERTOPS );
 
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
@@ -1420,6 +1456,9 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "under_elevator_5", "closed", false );
 	Wp.SetWaypointFlag( "under_elevator_6", "closed", false );
 	
+	Wp.SetWaypointFlag( "in_wall_1", "closed", true );
+	Wp.SetWaypointFlag( "in_wall_2", "closed", true );
+	
 	Util.SetGoalPosition(-1146.284058, -212.875000, 2857.125000, "PLANT_elevator_shaft_vent");
 	
 	Util.AddUseWp( "PLANT_vault_storage_vent", "vault_storage_vent_1" );
@@ -1432,8 +1471,7 @@ global OnMapLoad = function()
 	ETUtil.LimitToClass( "PLANT_elevator_shaft_vent", TEAM.ALLIES, CLASS.COVERTOPS );
 	ETUtil.LimitToClass( "PLANT_vault_storage_vent", TEAM.ALLIES, CLASS.COVERTOPS );
 	
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.MP40);
+	ETUtil.SetCabinets();
 	
 	Tank1 = OnTriggerRegion(AABB(2065.170,-1677.510,1665.182,2551.687,-1358.115,1781.530), Map.TankTrigger1);
 	Tank2 = OnTriggerRegion(AABB(1263.977,-869.446,1942.097,1337.971,-361.100,2033.230), Map.TankAtBarrier1);
@@ -1619,6 +1657,34 @@ global OnMapLoad = function()
 				},
 			},
 		},
+		PLANT_vault_storage_vent =
+		{
+			ROUTE_LowerBaseSpawn_1 =
+			{
+				ROUTE_LowerBaseSpawnStairs_1 =
+				{ 
+					ROUTE_LowerBaseSpawnStairs_2 =
+					{
+						ROUTE_CP_Stairs_1 =
+						{
+							ROUTE_CP_Stairs_2 =
+							{
+								ROUTE_Bridge =
+								{
+									ROUTE_NearHealthCab =
+									{
+										ROUTE_Door_NearHealthCab =
+										{
+											
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	};
 	
 	MapRoutes["ATTACK_Allied_TankPastFirstBarrier_.*"] =
@@ -1726,9 +1792,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	ETUtil.SwitchWeapon(WEAPON.THOMPSON);
-	ETUtil.SwitchWeapon(WEAPON.MP40);
-	
 	if ( Map.TankIsNearDoor )
 	{
 		Util.ChangeSpawn(TEAM.AXIS, 5 );

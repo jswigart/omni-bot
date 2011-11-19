@@ -268,7 +268,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_nuke.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_cart_allies" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_nuke_axis.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
@@ -323,7 +322,6 @@ global Map =
 			{ return; }
 
 		Map.NukeTaken = true;
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_cart_axis" );
 		Map.Switches.elevator_switch_up_0.Enabled = true;
 		Util.MapDebugPrint( "nuke_Taken" );
@@ -335,7 +333,6 @@ global Map =
 			{ return; }
 
 		Map.NukeTaken = false;
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
 		Util.MapDebugPrint( "nuke_Returned" );
 	},
@@ -348,11 +345,9 @@ global Map =
 		DeleteTriggerRegion( Map.iw4 );
 		DeleteTriggerRegion( Map.iw5 );
 		DeleteTriggerRegion( Map.ac1 );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_elevator_nuke" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Cart_Ramp" );
@@ -382,7 +377,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_mg_Nest" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_mg_Nest" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_mg_Nest" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_cabin.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_cabin.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_elevator_nuke" );
@@ -392,7 +386,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Sewers" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Back_Door" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Root_Cellar" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Cart_Ramp" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_barrier.*" );
@@ -424,10 +417,8 @@ global Map =
 		Map.Switches.bookshelf_switch.Enabled = false;
 		Map.Switches.house_switch.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Cart_Ramp" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cabin.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Cart_Ramp" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_mg_Nest" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Allied_mg_Nest" );
@@ -435,7 +426,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_hill_mg" );
-		Util.EnableGoal ( "MOVER_truck" );
 		Util.MapDebugPrint( "nuke_On_the_Truck" );
 	},
 
@@ -494,7 +484,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		Util.DisableGoal ( "CHECKPOINT_.*" );
-		Util.DisableGoal ( "MOVER_truck" );
 		Util.DisableGoal ( "AMMOCAB_.*" );
 		Util.DisableGoal ( "HEALTHCAB_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_hill_mg" );
@@ -630,7 +619,7 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Back_Door", "dyno1" );
 	Util.AddUseWp( "PLANT_Back_Door", "dyno2" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_cart" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Cart_Ramp" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_534" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_534" );
@@ -638,19 +627,17 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Axis_mg_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Allied_mg_Nest" );
 	//SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Truck_Barrier" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_elevator" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_.*" );
 
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cart" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Elevator_Generator" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_mg_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Axis_mg_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_mg_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Allied_mg_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Allied_mg_Nest" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_elevator" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_truck" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );

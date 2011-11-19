@@ -4393,6 +4393,34 @@ global _MG =
 		{
 		},
 	},
+	ESCORT_boat = 
+	{
+		Buttons = 
+		{
+			[0] = 2,
+		},
+		CreateOnLoad = 1,
+		GoalType = "ESCORT",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ESCORT_boat",
+		Offsets = 
+		{
+			[0] = Vec3(67.118, -54.479, -23.440),
+			[1] = Vec3(65.544, 49.979, -19.406),
+			[2] = Vec3(5.863, -176.224, -22.854),
+		},
+		Orientation = Vec3(2.266, -0.089, -0.000),
+		Position = Vec3(3577.658, 4040.338, -222.875),
+		Radius = 0,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 765,
+		TagName = "boat",
+		TeamAvailability = 30,
+		Vehicle = "MOVER_boat",
+		Version = 1,
+	},	
 	FLAG_relic = 
 	{
 		CreateOnLoad = 0,

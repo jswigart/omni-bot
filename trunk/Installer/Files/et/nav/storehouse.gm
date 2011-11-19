@@ -184,7 +184,6 @@ global Map =
 		if ( Map.TankIsAtBarrier1 == 1 and Map.TankBarrierBuilded == 1 and Map.TankPastTankBarrier == 0 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tank_Barrier_1" );
@@ -198,7 +197,6 @@ global Map =
 		else if ( Map.TankIsAtBarrier1 == 1 and Map.TankBarrierBuilded == 0 and Map.TankPastTankBarrier == 0 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 
 			Util.MapDebugPrint( "^3Tank_Built at barrier & barrier not builded" );
@@ -206,14 +204,12 @@ global Map =
 		else if ( Map.MainEntranceDestroyed == 1 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		}
 		else
 		{
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 
 			Util.MapDebugPrint( "^3Tank_Built" );
@@ -228,7 +224,6 @@ global Map =
 		Map.TankStatus = 0;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 		if ( Map.TankIsAtBarrier1 == 1 and Map.TankBarrierBuilded == 1 and Map.TankPastTankBarrier == 0 )
@@ -563,7 +558,6 @@ global Map =
 		if ( Map.TankIsAtBarrier1 == 1 )
 		{
 			//SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 			if ( Map.TankStatus == 0 )
@@ -640,7 +634,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 
 			Util.MapDebugPrint( "^3Tank_Barrier_1_Destroyed, tank at barrier & not destroyed" );
@@ -984,7 +977,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Axis_PastBarrier_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_PastBarrier_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Axis_InTunnel_.*" );
@@ -1035,7 +1027,6 @@ global Map =
  		{
 			Util.DisableGoal( "ESCORT_tank", true );
 			Util.DisableGoal( "MOUNT_tank", true );
-			Util.DisableGoal( "MOVER_tank", true );
 			Util.DisableGoal( "BUILD_tank", true );
 
 			Util.MapDebugPrint( "^3Tank�s_path_ended" );
@@ -1269,7 +1260,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Axis_.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Road_MG" );

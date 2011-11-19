@@ -1,4 +1,3 @@
-// cs: needs new escort goal
 global Map =
 {
 	ShowMovers = false,
@@ -13,22 +12,6 @@ global Map =
 		//corresponding targets later on
 		"MOVER_church_rubble",
 		"MOVER_at_gun",
-	},
-
-	EscortVehicle =
-	{
-		Boat =
-		{
-			EscortVehicleGoalName = "MOVER_boat",
-			Enabled = false,
-			LimitBots = 2,
-			ButtonPress = BTN.JUMP,
-			Offset =
-			{
-				Vector3(67,-15,-18),
-				Vector3(-0.5,-145,-27),
-			},
-		},
 	},
 
 	Switches =
@@ -88,7 +71,6 @@ global Map =
 	tank_near_barrier = false,
 	GunStatus = 1, //built
 	RelicSecured = false,
-	Escorting = false,
 	BoatStart = true,
 	FirstCorner = false,
 	FirstCornerB = false,
@@ -450,8 +432,6 @@ global Map =
 		DeleteTriggerRegion( Map.iw1 );
 		DeleteTriggerRegion( Map.iw2 );
 
-		Map.EscortVehicle.Boat.Enabled = true;
-
 		Util.MapDebugPrint( "relic_secured" );
 	},
 
@@ -689,7 +669,7 @@ global OnMapLoad = function()
 	//set up a positional trigger for the tank
 	Util.OnTriggerPosition( "MOVER_tank", "tank_route2", 200.0, Map.tank_in_sight );
 	Util.OnTriggerPosition( "MOVER_tank", "Past_AT", 200.0, Map.tank_past_AT );
-	
+
 
 	//remove the truck as a goal
 	Util.RemoveGoal("MOVER_truck");
@@ -1184,9 +1164,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// old script goal
-	bot.AddScriptGoal("EscortVehicle");
-
 	bot.MaxViewDistance = 2500;
 
 	Util.IgnoreTargetGoal( bot, "MOVER_church_rubble" );
@@ -1376,7 +1353,7 @@ global Groups =
 	group13=
 	{
 		"PLANT_Boat_Barrier_1",
-		"MOVER_boat",
+		"ESCORT_boat",
 		"BUILD_Speedboat",
 		"ATTACK_libdoor_attack.*",
 		"ATTACK_tbarrier_attack_5",
@@ -1396,7 +1373,7 @@ global Groups =
 	group15 =
 	{
 		"PLANT_Boat_Barrier_1",
-		"MOVER_boat",
+		"ESCORT_boat",
 		"BUILD_Speedboat",
 		"ATTACK_cz1_attack.*",
 		"ATTACK_libdoor_attack_4",
@@ -1426,7 +1403,7 @@ global Groups =
 	group17 =
 	{
 		"PLANT_Boat_Barrier_2",
-		"MOVER_boat",
+		"ESCORT_boat",
 		"BUILD_Speedboat",
 		"ATTACK_bb1_attack.*",
 		"ATTACK_cz1_attack_3",
@@ -1456,7 +1433,7 @@ global Groups =
 	group19 =
 	{
 		"PLANT_Boat_Barrier_2",
-		"MOVER_boat",
+		"ESCORT_boat",
 		"BUILD_Speedboat",
 		"ATTACK_bb2_attack.*",
 		"ATTACK_libdoor_attack_8",

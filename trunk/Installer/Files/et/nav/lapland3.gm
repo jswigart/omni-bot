@@ -51,7 +51,6 @@ global Map =
 
 		OnEnter = function(ent)
 		{
-			Util.EnableGoal( "MOVER_tank", true );
 			Wp.SetWaypointFlag("warp","closed", true );
 			Util.MapDebugPrint( "Tank Entered Warp Zone" );
 		},
@@ -59,7 +58,6 @@ global Map =
 		{
 			Wp.SetWaypointFlag("warp","closed", false );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_axis_tank" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_tank" );
 			Util.MapDebugPrint( "Tank Exited Warp Zone" );
 		},
 	},
@@ -547,7 +545,6 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); // all but routes
 
 	Util.EnableGoal( "CHECKPOINT_.*" );
-	Util.EnableGoal( "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_BunkerMG");
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_FlagBunkerMG");
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_BunkerMG" );

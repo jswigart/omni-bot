@@ -96,7 +96,6 @@ global Map =
 
 		if ( Map.TankAtTunnelDoors == 1 and Map.TunnelDoorsBuilt == 1 )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -105,7 +104,6 @@ global Map =
 		}
 		else if ( Map.TankAtTunnelDoors == 1 and Map.TunnelDoorsBuilt == 0 )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 
@@ -113,7 +111,6 @@ global Map =
 		}
 		else if ( Map.TankAtCastleGates == 1 and Map.CastleGatesBuilt == 1 )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -122,7 +119,6 @@ global Map =
 		}
 		else if ( Map.TankAtCastleGates == 1 and Map.CastleGatesBuilt == 0 )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 
@@ -130,7 +126,6 @@ global Map =
 		}
 		else if ( Map.MemorialDestroyed == 1 )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
@@ -138,7 +133,6 @@ global Map =
 		}
 		else
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 
@@ -155,7 +149,6 @@ global Map =
 
 		Map.TankStatus = 0;
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetGoalPriority( "BUILD_Tank", 0.92, TEAM.ALLIES, CLASS.ENGINEER );
@@ -364,7 +357,6 @@ global Map =
 			}
 			else
 			{
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 				SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -436,7 +428,6 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tunnel_Doors_1" );
 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 		}
@@ -464,7 +455,6 @@ global Map =
 			if ( Map.TunnelDoorsBuilt == 1 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tunnel_Doors_1" );
 				sleep(0.5);
@@ -699,7 +689,6 @@ global Map =
 			}
 			else
 			{
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 
 				SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -773,7 +762,6 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Castle_Gates_2" );
 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 		}
@@ -800,7 +788,6 @@ global Map =
 			if ( Map.CastleGatesBuilt == 1 )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Castle_Gates_2" );
 				sleep(0.5);
@@ -902,7 +889,6 @@ global Map =
 		Wp.SetWaypointFlag( "Waypoint_under_memorial", "closed", false);
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Bunker_Spawn_.*" );

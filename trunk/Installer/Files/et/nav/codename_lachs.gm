@@ -25,7 +25,6 @@ global Map =
 	Repair_78 = "REPAIRMG42_78",
 	Mover_tank = "MOVER_tank",
 	Mover_truck = "MOVER_truck",
-//~	DontDispenseAmmo = true,
 	DontDispenseHealth = true,
 
 	axismove =
@@ -173,7 +172,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-//~		Map.EscortVehicle.tank.Enabled = true;
+
 		DontDispenseHealth = false;
 
 		Util.MapDebugPrint( "Tank_Built" );
@@ -276,8 +275,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-	//~	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_flag" );
-
 		Util.MapDebugPrint( "Road_Barrier_Destroyed" );
 	},
 
@@ -336,9 +333,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-//~		Util.ChangeSpawn(TEAM.ALLIES, 0, 9);
-//~		Util.SetGoalPosition( 4843.579, -3909.043, 17.732, "PLANT_Road_Barrier" ) ;
-
 		Util.MapDebugPrint( "forward_flag_Allies_Captured" );
 	},
 
@@ -347,7 +341,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
@@ -397,39 +390,9 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( 4952.605,-4241.878,28.125, "PLANT_Road_Barrier" ) ;
 	Util.SetRoleForGoals(Map.Flag_Design_Plans, ROLE.INFILTRATOR);
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Design_Plans );
-	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
 
 	Util.EnableGoal("AMMOCAB_first_ammocabinet", true); // all but routes
 	Util.EnableGoal("HEALTHCAB_first_healthcabinet", true); // all but routes
-
-	// cs: these can be removed from script once the goals have been saved ...
-	Util.SetGroup( "MOVER_tank", "1");
-	Util.SetGroup( "ATTACK_door.*", "3");
-	Util.SetGroup( "BUILD_tank", "1");
-	Util.SetGroup( "ATTACK_spawn.*", "8");
-	Util.SetGroup( "MOUNTMG42_466", "8");
-	Util.SetGroup( "MOBILEMG42_spawn4", "8");
-	Util.SetGroup( "ESCORT_tank", "1");
-	Util.SetGroup( "MOUNT_tank", "1");
-	Util.SetGroup( "MOVER_truck", "2");
-	Util.SetGroup( "BUILD_truck", "2");
-//~	Util.SetGroup( "PLANT_defence", "2");
-	Util.SetGroup( "PLANT_Road_Barrier", "1");
-	Util.SetGroup( "ATTACK_bar.*", "7");
-
-	Util.SetGroup( "BUILD_Road_Barrier", "1a");
-	Util.SetGroup( "BUILD_Defence_Door", "1a");
-	Util.SetGroup( "MOUNTMG42_39", "1a");
-	Util.SetGroup( "GRENADE_grate", "1a");
-	Util.SetGroup( "CAMP_defence.*", "2a");
-	Util.SetGroup( "MOUNTMG42_571", "2a");
-	Util.SetGroup( "CAMP_plans.*", "2a");
-	Util.SetGroup( "CAMP_truck.*", "3a");
-	Util.SetGroup( "CAMP_return.*", "4a");
-	Util.SetGroup( "CAMP_bridge.*", "5a");
-	Util.SetGroup( "CAMP_endgame.*", "6a");
-	Util.SetGroup( "CAMP_mid.*", "7a");
 
 	Util.EnableGroup("1", TEAM.ALLIES);
 	Util.EnableGroup("8", TEAM.ALLIES);
@@ -452,11 +415,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_flag" );
 
-	// Camp times
-//~	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
-
-	SetGoalPriority( "MOVER_truck", 1.0 );
-//~	SetGoalPriority( "PLANT_Defence_Door",1.20);
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 

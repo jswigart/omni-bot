@@ -3,7 +3,7 @@ Pathing updated and script by **PC** Mateos
 Correspondant WAY file size : 66,1�Ko (67�747 octets)
 Last Update : 31th October 2010
 ****************************************************/
-// cs: needs new escort goal
+
 global Map =
 {
 	Debug = 0,
@@ -69,21 +69,6 @@ global Map =
 	Snipe_MainDoor = "SNIPE_MainDoor",
 
 	Mover_truck = "MOVER_truck",
-
-	EscortVehicle =
-	{
-		Truck =
-		{
-			EscortVehicleGoalName = "MOVER_truck",
-			Enabled = false,
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(15,-40,0),
-				Vector3(-15,-40,0),
-			}
-		},
-	},
 
 	/*Switches =
 	{
@@ -198,7 +183,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_courtyardflag );
 
-		Util.MapDebugPrint( "Assault_Ramp_Built" ); 
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
 	},
 
 	Command_Post_Built = function( trigger )
@@ -312,7 +297,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Generator_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Dyna.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Generator );
@@ -335,7 +320,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Side_Gate_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Gate );
 
@@ -346,7 +331,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Truck_Barrier_Dyno += 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Truck_Barrier );
 
@@ -397,7 +382,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.Electric_Floor_Controls_Dyno -= 1;
 		if ( Map.Electric_Floor_Controls_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Electric_Floor_Controls ); }
@@ -440,7 +425,7 @@ global Map =
 		if ( Map.Side_Gate_Dyno < 1 )
 			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Gate ); }
 
-		Util.MapDebugPrint( "Side_Gate_Defused" ); 
+		Util.MapDebugPrint( "Side_Gate_Defused" );
 	},
 
 	Truck_Barrier_Defused = function( trigger )
@@ -488,7 +473,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Electric_Floor_Controls );
 
 		Util.MapDebugPrint( "Electric_Floor_Controls_Destroyed" );
@@ -535,7 +520,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Map.MainEntranceStatus == 1;		//Main Entrance is destroyed
 
 		Groups.DisableAxis(Groups.group2);
@@ -551,7 +536,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Side_Gate );
 
 		Util.MapDebugPrint( "Side_Gate_Destroyed" );
@@ -569,10 +554,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Groups.DisableAxis(Groups.group4);
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Hotel.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Hotel.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
 
@@ -583,10 +568,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Groups.EnableAxis(Groups.group4);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Hotel.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Hotel.*" );
 
@@ -604,7 +589,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Hotel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Electric_Floor_Controls );
 
-		Map.EscortVehicle.Truck.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AlliedHood2" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
@@ -644,7 +629,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_240 );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_End.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Delta.*" );
-		
+
 		Util.ChangeSpawn(TEAM.ALLIES, 1);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Golf.*" );
 
@@ -908,9 +893,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// old script goal
-	bot.AddScriptGoal("EscortVehicle");
-
 	bot.TargetBreakableDist = 90.0;
 	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.BAR };
 

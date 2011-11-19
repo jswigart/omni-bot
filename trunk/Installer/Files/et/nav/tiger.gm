@@ -96,57 +96,6 @@ global Map =
 		},
 	},
 
-	Target =
-	{
-		WestFireWall =
-		{
-			Enabled = false,
-			Priority = 1.0,
-			GrenadeTargetGoalName = "MOVER_petrol_west",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(610, -40, 44),
-			}
-		},
-
-		EastFireWall =
-		{
-			Enabled = false,
-			Priority = 1.0,
-			GrenadeTargetGoalName = "MOVER_petrol_east",
-			LimitTeam = (1<<TEAM.AXIS),
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(578, -152, 44),
-			}
-		},
-	},
-
-	RideVehicle =
-	{
-		Truck =
-		{
-			Enabled = true,
-			Priority = 0.9,
-			Stance = BTN.PRONE,
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitClass = (1<<CLASS.ENGINEER),
-			RideVehicleGoalName = "MOVER_truck",
-			SeatRadius = 80,
-			Seat =
-			{
-				{
-					BoardPosition = Vector3(-4.680,-161.625,-28.375),
-					FacePosition = Vector3(-4.680,-161.625,22.021),
-					RidePosition = Vector3(4.577,-38.449,-4.500),
-				},
-			},
-		},
-	},
-
 	radioTriggerTable =
 	{
 		Name="RadioTrigger",
@@ -411,7 +360,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Target.EastFireWall.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_EastFireWall" );
 		Util.MapDebugPrint( "fuel_east_ignited" );
 	},
 
@@ -423,7 +372,7 @@ global Map =
 		Map.FuelPouredWest = true;
 		if ( Map.TruckNearWestFireWall == true )
 		{
-			Map.Target.WestFireWall.Enabled = true;
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_WestFireWall" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_west" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_axis_fuel" );
@@ -436,7 +385,7 @@ global Map =
 			{ return; }
 
 		Map.FuelPouredWest = false;
-		Map.Target.WestFireWall.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_WestFireWall" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_west" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_axis_fuel" );
 		Util.MapDebugPrint( "fuel_west_ignited" );
@@ -453,7 +402,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_axis_fuel" );
 		}
 		Map.FuelPouredWest = false;
-		Map.Target.WestFireWall.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_WestFireWall" );
 		Util.MapDebugPrint( "fuel_west_burnt_out" );
 	},
 
@@ -489,7 +438,7 @@ global Map =
 		Map.TruckNearWestFireWall = true;
 		if ( Map.FuelPouredWest == true )
 		{
-			Map.Target.WestFireWall.Enabled = true;
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_WestFireWall" );
 		}
 		Util.MapDebugPrint( "truck_near_firewall" );
 	},
@@ -511,12 +460,12 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_west_phase2.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_west_phase3.*" );
 			Map.TruckNearWestFireWall = false;
-			Map.Target.WestFireWall.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_WestFireWall" );
 		}
 
 		if(Map.EastRouteIsActive)
 		{
-			Map.Target.EastFireWall.Enabled = false;
+			SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_EastFireWall" );
 		}
 		Util.MapDebugPrint( "truck_past_firewall" );
 	},
@@ -546,7 +495,7 @@ global Map =
 		Map.WestRouteIsActive = false;
 		Map.EastRouteIsActive = false;
 		Map.TruckNearWestFireWall = false;
-		Map.Target.WestFireWall.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_WestFireWall" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_west" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_axis_fuel" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_east_.*" );
@@ -658,6 +607,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_allied_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_Ramp" );
+	ETUtil.LimitToClass( "RIDE_truck", CLASS.ENGINEER );
 
 	// Flag communication cable waypoint closed until cables are built
 	Wp.SetWaypointFlag("cables1", "closed", true);
@@ -677,6 +627,7 @@ global OnMapLoad = function()
 	Util.SetGoalOffset( 0, 40, 0, Map.Build_Axis_Command_Post );
 	Util.SetGoalOffset( 0, 40, 0, Map.Build_Allied_Command_Post );
 
+	SetGoalPriority( "RIDE_truck", 0.9 );
 	SetGoalPriority( "BUILD_Assault_Ramp", 0.8 );
 	SetGoalPriority( "BUILD_communication_cables", 1.1 );
 	SetGoalPriority( "DEFEND_gun_switch2", 0.6 );
@@ -687,10 +638,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// old script goals
-	bot.AddScriptGoal("RideVehicle");
-	bot.AddScriptGoal("GrenadeTarget");
-
 	bot.TargetBreakableDist = 90.0;
 	bot.IgnoreTarget( GetGoal("MOVER_petrol_east").GetEntity(), 9999 );
 	bot.IgnoreTarget( GetGoal("MOVER_petrol_west").GetEntity(), 9999 );

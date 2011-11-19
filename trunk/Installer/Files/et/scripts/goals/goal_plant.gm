@@ -216,8 +216,9 @@ this.Exit = function()
 	this.ExplosiveEntity = null;
 
 	// clear the occupied flag
-	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
+	if ( this.MapGoal && typeId(this.spotIndex) != 0 ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+		this.spotIndex = null;
 	}
 
 	// re-enable the rifle nade
@@ -229,7 +230,6 @@ this.UpdateDynamite = function()
 {
 	hasCoverSpot = false;
 	aimVectors = null;
-	this.spotIndex = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
 
 	while(1)

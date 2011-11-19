@@ -12,7 +12,6 @@ Last Update : 21 December 2009
 // 	^4Tardis	10 October 2010 Updated Script - 0.8
 //
 //==========================================================================================
-// cs: map needs new mount goal setup
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
@@ -54,13 +53,6 @@ global Map =
 		//Retain these movers
 		"MOVER_tank",
 		"MOVER_train",
-	},
-
-	MountVehicle =
-	{
-		Enabled = true,
-		Priority = 1.1,
-		LimitBots = 1,
 	},
 
 	TrainStartTrigger =
@@ -332,11 +324,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Depot_Gate );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Assault_Ramp );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Allied_Command_Post );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		Util.DisableGoal ( "BUILD_Tank" );
-		Util.DisableGoal ( "MOUNT_tank" ); // cs: uhh, was this ever enabled?
-		Util.DisableGoal ( "MOVER_tank" );
+		Util.DisableGoal ( "MOUNT_tank" );
 
 		Util.MapDebugPrint( "Main_Gate_Destroyed" );
 	},
@@ -434,7 +425,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier );
 
 	// *** ALLIED GOALS ***
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_tank );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier );
@@ -1290,9 +1281,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// old script goal
-	bot.AddScriptGoal("MountVehicle");
-
 	bot.TargetBreakableDist = 90.0;
 
 	foreach ( id and weap in { WEAPON.THOMPSON,WEAPON.MP40,WEAPON.SHOTGUN,

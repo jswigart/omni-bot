@@ -95,7 +95,7 @@ global Map =
 			},
 		},
 	},
-	
+
 	// path through for allies throwing a/s to assist in stealing tank
 	Airstrike =
 	{
@@ -107,7 +107,7 @@ global Map =
 			NoPause = false,
 			Waypoint = "bTankAS1",
 		},
-	},	
+	},
 
 	slopeNodes = function(close)
 	{
@@ -234,9 +234,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier_2 );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_mg42_bridge );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_mg42_bridge );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBarrier2.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBarrier2.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_north_ammocabinet );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Tank_Barrier1_.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Tank_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Command_Post );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Tank_Barrier_1 );
@@ -252,7 +252,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_1 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rTbarrier1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTbarrier1_.*" );		
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTbarrier1_.*" );
 
 		//make sure the tank repair goal is active
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
@@ -452,7 +452,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Truck );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_gold_crate );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Cappoint_Gold_Dropoff );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 		// Axis goals
@@ -474,7 +473,6 @@ global Map =
 
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_mg42_allied );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_truck );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_mg42_allied );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Truck_Barrier1_.*" );
@@ -489,13 +487,13 @@ global Map =
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_allied );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_allied );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Truck_Barrier1_.*" );		
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Truck_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rBank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rBank.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBank.*" );		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBank.*" );
 
 		Util.MapDebugPrint( "allies_taking_gold" );
 	},
@@ -727,12 +725,12 @@ global Map =
 			{
 				// axis can't get a good aim from here
 				SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank_axis" );
-			}			
+			}
 			case 4:
 			{
 				Map.tank_at_bridge_mg();
 				SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank_axis" );
-				
+
 				// allies can come from both sides
 				ETUtil.SetAimModeForMount( "MOUNT_tank_axis", "random" );
 			}
@@ -860,7 +858,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_north_ammocabinet" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_north_healthcabinet" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );
@@ -1144,7 +1141,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Tank_Barrier2_4 = MapRoutes.ATTACK_Tank_Barrier2_1;
 	MapRoutes.ATTACK_Tank_Barrier2_5 = MapRoutes.ATTACK_Tank_Barrier2_1;
 	MapRoutes.AIRSTRIKE_bBarrier2_1 = MapRoutes.ATTACK_Tank_Barrier2_1;
-	MapRoutes.AIRSTRIKE_bBarrier2_2 = MapRoutes.ATTACK_Tank_Barrier2_1;	
+	MapRoutes.AIRSTRIKE_bBarrier2_2 = MapRoutes.ATTACK_Tank_Barrier2_1;
 	MapRoutes.ATTACK_newbarrier2_2 = MapRoutes.ATTACK_newbarrier2_1;
 	MapRoutes.ATTACK_newbarrier2_3 = MapRoutes.ATTACK_newbarrier2_1;
 	MapRoutes.ATTACK_Bank_2 = MapRoutes.ATTACK_Bank_1;

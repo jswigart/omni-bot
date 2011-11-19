@@ -182,7 +182,6 @@ global Map =
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisBunkerDefend1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_AxisBunkerDefend2" );
 		Util.MapDebugPrint( "Main_Gate_Destroyed" );
