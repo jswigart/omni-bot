@@ -1,5 +1,4 @@
 //script created by palota
-// cs: needs new escort goal
 global Map =
 {
 	Ammo_Cabinet = "AMMOCAB_south_ammocabinet",
@@ -121,17 +120,6 @@ global Map =
 		},
 	},
 
-	EscortVehicle =
-	{
-		Tank =
-		{
-			Enabled = true,
-			Priority = 0.6,
-			EscortVehicleGoalName = "MOVER_tank",
-			LimitBots = 4,
-		},
-	},
-
 	RideMovers =
 	{
 		boat =
@@ -212,7 +200,8 @@ global Map =
 	Main_Entrance_Blown = function( trigger )
 	{
 		Map.Entrance_To_Castle();
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Tank" );
 		Util.MapDebugPrint( "Main_Entrance_Blown" );
 	},
 
@@ -327,7 +316,8 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Build_Tank_Barrier_2, 1.5, TEAM.AXIS);
 
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_forward_bunker );
@@ -346,6 +336,8 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Plant_Tank_Barrier_1, 1.0, TEAM.ALLIES);
 	SetGoalPriority( Map.Plant_Tank_Barrier_2, 0.85, TEAM.ALLIES);
 	SetGoalPriority( Map.Build_Allied_Command_Post, 0.75, TEAM.ALLIES);
+	SetGoalPriority( "ESCORT_Tank", 0.6, TEAM.ALLIES );
+	Util.SetMaxUsers( 4, "ESCORT_Tank" );
 
 	ETUtil.SetCabinets();
 
@@ -379,8 +371,3 @@ global OnMapLoad = function()
 	Util.Routes(MapRoutes);
 };
 
-global OnBotJoin = function( bot )
-{
-	// old script goal
-	bot.AddScriptGoal("EscortVehicle");
-};

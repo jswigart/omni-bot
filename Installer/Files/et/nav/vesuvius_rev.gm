@@ -1,4 +1,3 @@
-// cs: needs new escort goal
 global Map =
 {
 	Checkpoint_forwardspawn = "CHECKPOINT_forwardspawn",
@@ -26,20 +25,6 @@ global Map =
 	Talk = true,
 	PlantMines = true,
 	Phase = 1,
-
-	EscortVehicle =
-	{
-		Truck =
-		{
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitBots = 1,
-			Offset =
-			{
-				Vector3(-40,-100,0),
-				Vector3(40,-100,0),
-			}
-		},
-	},
 
 	Truck_Built = function( trigger )
 	{
@@ -547,10 +532,4 @@ global OnMapLoad = function()
 	SetAvailableMapGoals(TEAM.ALLIES, true, "ROUTE_right_spawn_exit2");
 
 	Util.MapDebugPrint( "Omni-bot map script for Vesuvius_rev executed." );
-};
-
-global OnBotJoin = function( bot )
-{
-	// old script goal
-	bot.AddScriptGoal("EscortVehicle");
 };

@@ -1,5 +1,4 @@
 // cs: this map needs routing. camptimes?
-// cs: needs new escort goal
 
 global Map =
 {
@@ -55,31 +54,6 @@ global Map =
 		}
 	},
 
-	// disable bot pushing and combat movement in this region. for axis spawn window for now but is re-usable
-	disablepush =
-	{
-		Name = "disablepush",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function(ent)
-		{
-			b = Util.GetBotByName(GetEntName(ent));
-			if (b)
-			{
-				b.DisableBotPush(true);
-				b.DisableCombatMovement = true;
-			}
-		},
-		OnExit = function(ent)
-		{
-			b = Util.GetBotByName(GetEntName(ent));
-			if (b)
-			{
-				b.DisableBotPush(false);
-				b.DisableCombatMovement = false;
-			}
-		},
-	},
-
 	Navigation =
 	{
 		quickjump =
@@ -93,23 +67,6 @@ global Map =
 		},
 	},
 
-	EscortVehicle =
-	{
-		// Limit to 2 bots, it's near allies spawn
-		Truck =
-		{
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitTeam = (1<<TEAM.ALLIES),
-			//LimitClass = (1<<CLASS.FIELDOPS | CLASS.MEDIC | CLASS.COVERTOPS | CLASS.SOLDIER),
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(0,-40,0),
-				Vector3(-50,0,0),
-			}
-		},
-	},
-
 	TruckOutOfShack = function( trigger )
 	{
 		if ( TestMap )
@@ -117,6 +74,7 @@ global Map =
 
 		//Enable all construction offsets:
 		ETUtil.SetExcludeIndexes( "BUILD_Truck", {} );
+		ETUtil.SetExcludeIndexes( "ESCORT_truck", {0,1} );
 
 		//Set up a new positional trigger for the truck:
 		Util.OnTriggerPosition("MOVER_truck", "bridge_trigger", 150, Map.TruckAtBridge);
@@ -136,7 +94,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_allies_10");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_allies_11");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_allies_12");
-		SetAvailableMapGoals(TEAM.ALLIES, false, "MOVER_truck");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ESCORT_truck");
 		//Set up a new positional trigger for the truck:
 		Util.OnTriggerPosition("MOVER_truck", "bridge_trigger2", 150, Map.TruckOnBridge);
 		Util.MapDebugPrint( "TruckAtBridge" );
@@ -160,7 +118,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals(TEAM.ALLIES, true, "MOVER_truck");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "ESCORT_truck");
 		Util.MapDebugPrint( "pontoon_bridge_Built" );
 	},
 
@@ -179,7 +137,7 @@ global Map =
 
 		SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_Allied_Command_Post");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_Truck");
-		SetAvailableMapGoals(TEAM.ALLIES, false, "MOVER_Truck");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "ESCORT_Truck");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "MOBILEMORTAR_bridge.*");
 		SetAvailableMapGoals(TEAM.AXIS, false, "CALLARTILLERY_axis_start.*");
 
@@ -464,24 +422,9 @@ global Map =
 
 	AxisWon = function( trigger )
 	{
-		//Util.MapDebugPrint("AxisWon");
-		if (!Map.Talk || !MAP_TALK)
-			{return;}
-		foreach ( id and bot in BotTable )
-		{
-			if ( bot.GetTeam() == TEAM.AXIS )
-			{
-				r = RandRange(0,10);
-				if( r < 2 )
-				{
-					bot.SayVoice(VOICE.G_GOODGAME);
-				}
-				else if( r > 8 )
-				{
-					bot.SayVoice(VOICE.G_CHEER);
-				}
-			}
-		}
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint("AxisWon");
 	},
 
 };
@@ -489,7 +432,7 @@ global Map =
 global OnMapLoad = function()
 {
 	// this region trigger disables bot pushing and combat movement at the axis spawn window
-	axisWindow = OnTriggerRegion(AABB(1311.125,-1020.875,-224.875,1580.875,-688.033,-84.646), Map.disablepush);
+	axisWindow = OnTriggerRegion(AABB(1311.125,-1020.875,-224.875,1580.875,-688.033,-84.646), RegionTrigger.DisableBotPush);
 
 	if ( TestMapOn )
 		{ ETUtil.AutoTestMap(); }
@@ -523,6 +466,7 @@ global OnMapLoad = function()
 
 	Wp.SetWaypointFlag("barn_mg", "closed", true);
 	ETUtil.SetExcludeIndexes( "BUILD_Truck", { 2, 3, 4, 5 } ); // disable offsets 2 through 5
+	ETUtil.SetExcludeIndexes( "ESCORT_truck", { 2, 3 } );
 
 	// *** MAX USERS ***
 	Util.SetMaxUsers( 2, "RIDE_train" ); // we run against time here ...
@@ -670,8 +614,5 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// old script goal
-	bot.AddScriptGoal("EscortVehicle");
-
 	bot.TargetBreakableDist = 100.0;
 };

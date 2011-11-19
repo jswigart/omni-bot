@@ -114,9 +114,10 @@ this.UpdateRevive = function()
 		this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
 		this.BlockForWeaponChange(WEAPON.SYRINGE);
 
+		health = 0;
 		for (timeout = 12; timeout > 0; timeout -= 1) { // 3 seconds
 			health = Util.GetEntHealth(this.TargetEntity);
-			if (health >= 0) { break; }
+			if (health > 0) { break; }
 
 			// position check here because some mods allow bodies to be dragged
 			pos = GetEntPosition(this.TargetEntity);

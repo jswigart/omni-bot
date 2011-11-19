@@ -475,13 +475,13 @@ global Map =
 			{ return; }
 
 		Map.FirstFlagAllies = 1;
-		
+
 		if ( Map.SecondFlagAllies == 0 )
 		{
 			Util.ChangeSpawn( TEAM.ALLIES, 7 );	//inside hut (cablecar station)
 			Util.ChangeSpawn( TEAM.AXIS, 2 );
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Avalanche_Wall_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_Allied_firstflag_.*" );
 
@@ -598,9 +598,6 @@ global Map =
 
 		if ( Map.BusAtBarrier_1 == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 
@@ -633,9 +630,6 @@ global Map =
 
 		if ( Map.BusStatus == 1 and Map.BusAtBarrier_1 == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = true;
-			//Map.RideVehicle.Bus.Enabled = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
 
@@ -781,7 +775,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Castle_Steel_Door );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Castle_Steel_Door_.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Castle_Steel_Door" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_SteelDoor" );
@@ -800,8 +794,6 @@ global Map =
 		Util.ChangeSpawn( TEAM.AXIS, 2 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*_Axis_secondflag_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cablecar1" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_cablecar2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Constructible_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Constructible" );
 
@@ -915,16 +907,10 @@ global Map =
 
 		if ( Map.BusStatus == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = true;
-			//Map.RideVehicle.Bus.Enabled = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
 		else
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bus" );
@@ -965,16 +951,10 @@ global Map =
 
 			if ( Map.Barrier1Builded == 1 )
 			{
-				//Map.EscortVehicle.Bus.Enabled = false;
-				//Map.RideVehicle.Bus.Enabled = false;
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 			}
 			else
 			{
-				//Map.EscortVehicle.Bus.Enabled = true;
-				//Map.RideVehicle.Bus.Enabled = true;
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
 
@@ -1003,9 +983,6 @@ global Map =
 
 		}
 
-		//Map.EscortVehicle.Bus.Enabled = false;
-		//Map.RideVehicle.Bus.Enabled = false;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		sleep(0.5);
 		Util.SetPositionGoal( Map.Build_Bus, Map.Mover_truck );
@@ -1022,37 +999,22 @@ global Map =
 
 		if ( Map.Bus_Is_Near_Plane == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 		else if ( Map.Barrier1Builded == 1 and Map.BusAtBarrier_1 == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 		else if (Map.BusOnTheBridge == 1 and Map.BridgeBuilded == 0 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 		else if ( Map.Barrier2Builded == 1 and Map.BusAtBarrier_2 == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 		}
 		else
 		{
-			//Map.EscortVehicle.Bus.Enabled = true;
-			//Map.RideVehicle.Bus.Enabled = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
 
@@ -1180,18 +1142,12 @@ global Map =
 
 			if ( Map.BridgeBuilded == 0 )
 			{
-				//Map.EscortVehicle.Bus.Enabled = false;
-				//Map.RideVehicle.Bus.Enabled = false;
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 
 				SetGoalPriority( "BUILD_Bridge", 0.93, TEAM.ALLIES, CLASS.ENGINEER );
 			}
 			else
 			{
-				//Map.EscortVehicle.Bus.Enabled = true;
-				//Map.RideVehicle.Bus.Enabled = true;
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
 
@@ -1223,9 +1179,6 @@ global Map =
 
 		if ( Map.BusStatus == 1 and Map.BusOnTheBridge == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = true;
-			//Map.RideVehicle.Bus.Enabled = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
 
@@ -1287,9 +1240,6 @@ global Map =
 
 		if ( Map.BusStatus == 1 and Map.BusAtBarrier_2 == 1 )
 		{
-			//Map.EscortVehicle.Bus.Enabled = true;
-			//Map.RideVehicle.Bus.Enabled = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 		}
 
@@ -1306,18 +1256,12 @@ global Map =
 
 			if ( Map.Barrier2Builded == 1 )
 			{
-				//Map.EscortVehicle.Bus.Enabled = false;
-				//Map.RideVehicle.Bus.Enabled = false;
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 
 				SetGoalPriority( "PLANT_Barrier_2_1", 0.85, TEAM.ALLIES, CLASS.ENGINEER );
 			}
 			else
 			{
-				//Map.EscortVehicle.Bus.Enabled = true;
-				//Map.RideVehicle.Bus.Enabled = true;
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_Bus" );
 			}
 
@@ -1363,9 +1307,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Plane" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_tcr_planefuel_scriptname" );
 
-			//Map.EscortVehicle.Bus.Enabled = false;
-			//Map.RideVehicle.Bus.Enabled = false;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_Bus" );
 
 			SetGoalPriority( "CALLARTILLERY_AxisPastBarrier2_1", 0.75, TEAM.AXIS, CLASS.FIELDOPS );
@@ -1644,12 +1585,7 @@ global OnMapLoad = function()
 
 	OnTrigger( "^1Allied team is escaping with the bus!", Map.Bus_Escaping );
 
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_truck" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_Bus" );
-
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Avalanche_Wall" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tunnel_Entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Allied_start_.*" );
@@ -1657,6 +1593,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_Allied_start_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_Allied_start_33" );
 
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
@@ -2868,7 +2805,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
-	
+
 	if ( Map.Allied5Spawn == 0 )
 	{
 		if ( Map.BusEscaping == 0 )

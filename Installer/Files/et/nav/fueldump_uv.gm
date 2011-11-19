@@ -811,7 +811,6 @@ global Map =
 		// Allied goals
 		sleep( 2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Depot_Side_Wall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
@@ -1137,7 +1136,6 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_alliedhut_healthcabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_alliedhut_ammocabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_alliedtunnel_mg42" ); //useless
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Antenna_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );

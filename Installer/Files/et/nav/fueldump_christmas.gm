@@ -686,7 +686,6 @@ global Map =
 		// Allied goals
 		sleep( 2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Depot_Side_Wall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
@@ -866,7 +865,7 @@ global OnMapLoad = function()
 
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
-	
+
 	OnTrigger( "^D***^WAllied Command Post constructed. Charge speed increased!^D***", Map.Allied_Command_Post_Built );
 	OnTrigger( "^J***^WAxis Command Post constructed. Charge speed increased!^J***", Map.Axis_Command_Post_Built );
 	OnTrigger( "^D***^WAllied team has reinforced the Bridge!^D***", Map.Bridge_Built );
@@ -981,7 +980,6 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_alliedhut_healthcabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_alliedhut_ammocabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_alliedtunnel_mg42" ); //useless
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Foot_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );

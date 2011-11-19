@@ -333,7 +333,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Command_Post );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Health_Cabinet_t1171 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_t1170 );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_train2 );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Railgun.*" ); //just to make sure
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Crane_Area_.*" );
@@ -791,10 +790,8 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_train2" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Track_Switch_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_t1171" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_train1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_t1170" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Track_Switch_MG_Nest" );
@@ -808,10 +805,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_bTrackswitch.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_mg42_3" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_train2" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Track_Switch_MG_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_t1171" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_train1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_t1170" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Track_Switch_MG_Nest" );

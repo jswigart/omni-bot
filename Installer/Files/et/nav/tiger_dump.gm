@@ -152,7 +152,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		
+
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
@@ -161,7 +161,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		
+
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
@@ -660,7 +660,6 @@ global Map =
 		// Axis goals
 		sleep( 2 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Depot_Side_Wall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
@@ -950,10 +949,10 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER );
 	SetGoalPriority( "SMOKEBOMB_allies_bridge.*", 0.8, 0, CLASS.COVERTOPS );
 	SetGoalPriority( "PLANT_Side_MG", 0.0, 0, CLASS.ENGINEER );
-	
+
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.MEDIC, true  );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER, true );
-	
+
 	// Axis goals
 	SetGoalPriority( "PLANT_Allied_Command_Post", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Tunnel_MG", 0.0, TEAM.AXIS, CLASS.ENGINEER );
@@ -976,7 +975,6 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "SMOKEBOMB_allies_bridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_tunnel_mg" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Bridge" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Foot_Bridge" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank" );

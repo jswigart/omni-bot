@@ -52,21 +52,6 @@ global Map =
 		"MOVER_truck",
 	},
 
-	EscortVehicle =
-	{
-		Truck =
-		{
-			Enabled = false,
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitTeam = (1<<TEAM.ALLIES),
-			Offset =
-			{
-				Vector3(-75,100,30),
-				Vector3(75,100,30),
-			}
-		},
-	},
-
 	RideMovers =
 	{
 		botheast =
@@ -543,7 +528,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_Corner_MG );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_dynamite_train" );
-		Map.EscortVehicle.Truck.Enabled = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Chamber" );
 
 		myEnt = GetGoal("MOVER_truck").GetEntity();
@@ -599,7 +584,6 @@ global Map =
 	DynoLoaded = function( trigger)
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-		Map.EscortVehicle.Truck.Enabled = false;
 		Util.MapDebugPrint("DynoLoaded");
 	},
 

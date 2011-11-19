@@ -506,7 +506,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Gold_Bars" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Gold_Dropoff" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 		// Axis goals
@@ -532,7 +531,6 @@ global Map =
 
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_mg42_allied" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_allied" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Truck_Barrier1_.*" );
@@ -943,8 +941,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_south_ammocabinet_3" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet_3" );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );

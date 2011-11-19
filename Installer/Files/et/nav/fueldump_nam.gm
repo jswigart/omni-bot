@@ -697,7 +697,6 @@ global Map =
 		// Allied goals
 		sleep( 2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Depot_Side_Wall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_tank );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
@@ -993,7 +992,6 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_alliedhut_healthcabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_alliedhut_ammocabinet" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_alliedtunnel_mg42" ); //useless
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Foot_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -1019,7 +1017,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bridge_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_rBridge.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rFootbridge.*" );
-	
+
 	Util.SetMaxUsersInProgress( 1, "BUILD_Allied_Command_Post");
 	Util.SetMaxUsersInProgress( 1, Map.Plant_Fuel_Dump);
 	SetGoalPriority("BUILD_Allied_Command_Post", 0.85);

@@ -252,6 +252,7 @@ this.SetProperty = function(property, value)
 				{
 					n = tableCount(this.Buttons);
 					this.Buttons[ n ] = button;
+					print("button set to " + value);
 				}
 				else
 				{

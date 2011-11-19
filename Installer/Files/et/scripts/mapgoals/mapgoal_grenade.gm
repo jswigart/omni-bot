@@ -222,11 +222,13 @@ this.SetProperty = function(property, value)
 			}
 			else
 			{
-				targetinfo = Util.ShowEntityInfo();
+				type = Util.GetTableValue(TRACE, value);
+				targetinfo = Util.ShowEntityInfo(type);
 				if (tableCount(targetinfo) > 0)
 				{
 					// store the trace positions. this is so we can handle ETPro map scripts
 					// since adding ents with the 'create' command makes ent numbers unreliable
+					targetinfo.traceType = type;
 					this.TraceInfo = targetinfo;
 					this.TraceEntity = targetinfo.id; // for render update
 				}
@@ -278,7 +280,7 @@ this.Update = function()
 			this.TimeoutForTrace += 20;
 			if (!this.TraceEntity)
 			{
-				this.TraceEntity = Util.TraceForEntityInfo(this.TraceInfo.eyePos, this.TraceInfo.endPos);
+				this.TraceEntity = Util.TraceForEntityInfo(this.TraceInfo.eyePos, this.TraceInfo.endPos, this.TraceInfo.traceType);
 			}
 
 			if ( this.TraceEntity && !EntityIsValid(this.TraceEntity) )

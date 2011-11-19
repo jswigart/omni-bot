@@ -267,7 +267,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_axis_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_axis.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_elevator" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
@@ -284,7 +283,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_allies.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_171" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_mg42_pillar" );
-	SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_elevator" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_171" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
