@@ -964,6 +964,21 @@ static int _et_FlingClientA( lua_State *L ) {
 }
 // }}}
 
+static int _et_SetMap( lua_State *L ) {
+		char s[MAX_STRING_CHARS];
+		const char *mapName = luaL_checkstring( L, 1 );
+
+		// preserve nextmap so rotation can continue
+		trap_Cvar_VariableStringBuffer( "nextmap", s, sizeof( s ) );
+		if ( *s ) {
+			trap_SendConsoleCommand( EXEC_APPEND, va( "map %s; set nextmap \"%s\"\n", mapName, s ) );
+		} else {
+
+			trap_SendConsoleCommand( EXEC_APPEND, va( "map %s;\n", mapName ) );
+		}
+		return 1;
+}
+
 // et library initialisation array
 static const luaL_Reg etlib[] = {
 	// ET Library Calls
@@ -1029,7 +1044,8 @@ static const luaL_Reg etlib[] = {
 	{ "GetLevelTime",               _et_GetLevelTime            },
 	{ "GetMapName",                 _et_GetMapName              },
 	{ "FlingClient",                _et_FlingClient             },
-	{ "FlingClientA",                _et_FlingClientA           },
+	{ "FlingClientA",               _et_FlingClientA            },
+	{ "SetMap",                     _et_SetMap                  },
 
 	{ NULL },
 };
