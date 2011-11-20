@@ -1253,6 +1253,26 @@ member LosingChat = function( team )
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+//
+member CheckTripminePosition = function()
+{
+	// must be within 64 units of wall
+	tr = Util.TraceFromPlayer(64, TRACE.SHOT);
+	if ( tr.fraction >= 1.0 ) {
+		return false;
+	}
+
+	// wire distance is max of 512 units
+	tr2 = Util.TraceFromPlane(tr.end, tr.normal, 512);
+	if ( tr2.fraction >= 1.0 ) {
+		return false;
+	}
+
+	// original trace position is used for the goals aim position
+	return tr.end;
+};
+
+///////////////////////////////////////////////////////////////////////////////
 //DEPRECATE
 member RandomSpawn = function( team, spawn )
 {
