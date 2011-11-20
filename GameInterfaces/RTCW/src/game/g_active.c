@@ -216,7 +216,7 @@ void P_WorldEffects( gentity_t *ent ) {
 			angles[ROLL] = 0;
 			SetClientViewAngle( ent, angles );
 
-			G_Damage( ent, attacker, attacker, NULL, NULL, 10, 0, MOD_POISON );
+			G_Damage( ent, attacker, attacker, NULL, NULL, g_poisonDmg.integer, 0, MOD_POISON );
 			ent->lastPoisonTime = level.time;
 		}
 	}

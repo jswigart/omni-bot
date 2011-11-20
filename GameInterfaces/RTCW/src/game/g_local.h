@@ -1316,6 +1316,7 @@ extern vmCvar_t g_pistolExtraClips;
 extern vmCvar_t g_panzerExtraClips;
 extern vmCvar_t g_deathmatch;
 extern vmCvar_t g_poison;
+extern vmCvar_t g_poisonDmg;
 extern vmCvar_t g_LTNades;
 extern vmCvar_t g_MedNades;
 extern vmCvar_t g_smokeGrenades;
