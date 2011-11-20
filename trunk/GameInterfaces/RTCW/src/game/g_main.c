@@ -72,6 +72,7 @@ vmCvar_t g_pistolExtraClips;
 vmCvar_t g_panzerExtraClips;
 vmCvar_t g_deathmatch;
 vmCvar_t g_poison;
+vmCvar_t g_poisonDmg;
 vmCvar_t g_LTNades;
 vmCvar_t g_MedNades;
 vmCvar_t g_smokeGrenades;
@@ -89,7 +90,6 @@ vmCvar_t g_maxWarp;
 
 // from noquarter
 vmCvar_t g_multikillTime;
-vmCvar_t g_multikillSound[5];
 vmCvar_t g_announcer;
 vmCvar_t g_shove;
 vmCvar_t g_shoveNoZ;
@@ -357,6 +357,7 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_panzerExtraClips,          "g_panzerExtraClips",           "0",                    0,                                                  0,          qfalse },
 	{ &g_deathmatch,                "g_deathmatch",                 "0",                    CVAR_SYSTEMINFO | CVAR_LATCH,                       0,          qfalse },
 	{ &g_poison,                    "g_poison",                     "0",                    0,                                                  0,          qfalse },
+	{ &g_poisonDmg,                 "g_poisonDmg",                  "10",                   0,                                                  0,          qfalse },
 	{ &g_LTNades,                   "g_LTNades",                    "1",                    0,                                                  0,          qfalse },
 	{ &g_MedNades,                  "g_MedNades",                   "1",                    0,                                                  0,          qfalse },
 	{ &g_smokeGrenades,             "g_smokeGrenades",              "0",                    0,                                                  0,          qfalse },
