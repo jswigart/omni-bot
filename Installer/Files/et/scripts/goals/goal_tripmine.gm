@@ -29,6 +29,12 @@ this.GetPriority = function()
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )
 				{
+					if ( !ETUtil.CheckTripminePosition() ) {
+						goal.SetAvailable(0, false);
+						goal.SetRemoveFlag(true);
+						continue;
+					}
+
 					this.MapGoal = goal;
 					this.Priority = goal.GetGoalPriority(this.Bot);
 					break;
@@ -49,7 +55,7 @@ this.Enter = function()
 
 	this.Goal_Name = this.MapGoal.GetName();
 	this.Goal_Position = this.MapGoal.GetPosition();
-	
+
 	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", WEAPON.DYNAMITE);
 	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not hasammo", WEAPON.TRIPMINE);
 
@@ -85,7 +91,7 @@ this.Update = function()
 					this.Finished();
 				}
 			}
-			
+
 			sleep(0.25);
 		}
 	}
@@ -138,7 +144,7 @@ this.UpdateArmMine = function()
 		this.Bot.PressButton(BTN.ATTACK1);
 		yield();
 	}
-	
+
 	this.Finished();
 };
 

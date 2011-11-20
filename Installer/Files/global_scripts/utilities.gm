@@ -1154,22 +1154,36 @@ member TraceForEntityInfo = function (startPos, endPos, traceType)
 //
 member TraceForPosition = function()
 {
-	playerEnt = GetLocalEntity();
-	playerId = GetGameIdFromEntity(playerEnt);
-	eyePos = GetLocalEyePosition();
-	endPos = eyePos + GetLocalFacing() * 50000;
-	tr = TraceLine( eyePos, endPos, 0, TRACE.SHOT, playerId, false );
-	DrawDebugLine( eyePos, tr.end, COLOR.GREEN, 5 );
-
-	if ( tr.end )
-	{
+	tr = Util.TraceFromPlayer(TRACE.SHOT, 50000);
+	if ( tr.end ) {
 		return tr.end;
 	}
-	else
-	{
+	else {
 		print("Util.TraceForPosition: unable to find position" );
 		return Vector3(0,0,0);
 	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member TraceFromPlayer = function(distance, traceType)
+{
+	if( !distance ) { distance = 50000; }
+	if( !traceType) { traceType=TRACE.SHOT; }
+
+	eyePos = GetLocalEyePosition();
+	tr = TraceLine( eyePos, eyePos + GetLocalFacing() * distance, 0, traceType, GetGameIdFromEntity(GetLocalEntity()), false );
+	if ( tr.end && (MAP_DEBUG || (Map && Map.Debug)) ) { DrawDebugLine( eyePos, tr.end, COLOR.GREEN, 5 ); }
+	return tr;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member TraceFromPlane = function(start, normal, distance)
+{
+	tr = TraceLine( start, start + normal * distance, 0, TRACE.SHOT, GetGameIdFromEntity(GetLocalEntity()), false );
+	if ( MAP_DEBUG || (Map && Map.Debug) ) { DrawDebugLine( start, start + normal * distance, COLOR.BLUE, 5 ); }
+	return tr;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

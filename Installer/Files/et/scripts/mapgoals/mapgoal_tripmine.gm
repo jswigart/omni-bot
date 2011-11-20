@@ -13,22 +13,34 @@ this.Schema.Stance = Validate.Enum("stand","crouch").Default("stand");
 
 //////////////////////////////////////////////////////////////////////////
 
+this.CheckPosition = function()
+{
+	aimpos = ETUtil.CheckTripminePosition();
+
+	if (aimpos) {
+		this.AimPosition = aimpos;
+
+	}
+	else {
+		// make this obnoxious so they see it ..
+		print("^1INVALID POSITION! use /bot setproperty aim");
+	}
+
+	return aimpos;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 this.InitNewGoal = function()
 {
 	this.Schema.Check(this);
 	this.Radius = this.MinRadius;
-	
+
 	if (GetEntFlags(GetLocalEntity(), ENTFLAG.CROUCHED)) {
 		this.Stance = "crouch";
-	}	
-	
-	tracePos = Util.TraceForPosition();
-	if ( !tracePos.IsZero() ) {
-		this.AimPosition = tracePos;
 	}
-	else {
-		print("unable to find an aim position, use /bot goal_setproperty aim");
-	}
+
+	this.CheckPosition ();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,12 +83,12 @@ this.Render = function()
 	{
 		goalBasePos = this.GetPosition();
 		goalPos = goalBasePos + offset2;
-		
+
 		if(this.ExtraDebugText==null)
 		{
 			this.ExtraDebugText = "";
 			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
-		}		
+		}
 
 		this.RenderDefault();
 
@@ -92,10 +104,10 @@ this.Render = function()
 			else {
 				DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
 			}
-			
-			if ( this.AimPosition && !this.AimPosition.IsZero() ) {
-				DrawArrow(goalPos+stanceOffset,this.AimPosition,COLOR.YELLOW,2);
-			}
+		}
+
+		if ( this.AimPosition && !this.AimPosition.IsZero() ) {
+			DrawArrow(goalPos,this.AimPosition,COLOR.YELLOW,2);
 		}
 
 		sleep(2);
@@ -130,15 +142,11 @@ this.SetProperty = function(property, value)
 	{
 		case "aim":
 		{
-			if ( value == "clearall" || value == "clear" )
-			{
-				this.AimPosition = Vector3(0,0,0);
-				print("Aim Position cleared");
-			}
-			else
-			{
-				this.AimPosition = Util.TraceForPosition();
-				print("Aim position set to",this.AimPosition);
+			// move the goal
+			ExecCommand("goal_move toplayer");
+			aim = this.CheckPosition ();
+			if ( aim ) {
+				print( "aim set to " + aim );
 			}
 		}
 		case "stance": // crouch, stand, default stand
