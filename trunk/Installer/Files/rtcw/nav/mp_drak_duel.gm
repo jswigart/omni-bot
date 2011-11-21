@@ -7,17 +7,6 @@ global Map =
 	SpecBots = false,
 	TestMemRecord = false,
 	NoGib = true,
-
-	StoredBotGib = null,
-
-	Round_End = function()
-	{
-		SetCvar( "g_botGib", Map.StoredBotGib );
-
-		if ( Map.DumpStats ) {
-			ExecCommand( "dstats" );
-		}
-	},
 };
 
 global OnMapLoad = function()
@@ -39,7 +28,6 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 
 	Util.DisableGoal( ".*" );
-	OnTrigger( "Round End.", Map.Round_End );
 
 	if ( Map.TestMemRecord ) {
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK.*" );
