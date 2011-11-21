@@ -593,9 +593,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			if ( ent->s.eType != ET_PLAYER ) {
 				break;      // not in the player model
 			}
-			if ( g_dmflags.integer & DF_NO_FALLING ) {
-				break;
-			}
+
 			if ( event == EV_FALL_NDIE ) {
 				damage = 9999;
 			} else if ( event == EV_FALL_DMG_50 ) {
@@ -636,6 +634,11 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 					G_Damage( &g_entities[ent->s.groundEntityNum], ent, ent, tv( 0, 0, -1 ), NULL, damage, 0, MOD_GOOMBA ); //splat!
 
 				}
+				break;
+			}
+
+            // cs: moved down so goombas will still work.
+			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
 
