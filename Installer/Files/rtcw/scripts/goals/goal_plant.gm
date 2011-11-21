@@ -107,7 +107,6 @@ this.Update = function()
 		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
 	}
 
-	this.BlackboardDelay(10, this.MapGoal);
 	this.Finished();
 };
 
@@ -122,8 +121,9 @@ this.Exit = function()
 	this.ExplosiveEntity = null;
 
 	// clear the occupied flag
-	if ( this.MapGoal && typeId(this.spotIndex) != 0 && this.MapGoal.CoverSpots[ this.spotIndex ] ) {
+	if ( this.MapGoal && typeId(this.spotIndex) != 0 ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+		this.spotIndex = null;
 	}
 };
 
@@ -131,7 +131,6 @@ this.UpdateDynamite = function()
 {
 	hasCoverSpot = false;
 	aimVectors = null;
-	this.spotIndex = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
 
 	while(1)
@@ -234,6 +233,9 @@ this.UpdateDynamite = function()
 				{
 					this.Finished();
 				}
+
+				//don't plant another dynamite after coverTimeout or if all coverspots are occupied
+				this.BlackboardDelay(35, this.MapGoal);
 
 				// pick a cover spot
 				if (!hasCoverSpot) {

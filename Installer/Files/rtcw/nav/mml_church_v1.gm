@@ -219,50 +219,6 @@ global Map =
 		Map.AlarmStatus = false;
 		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 	},
-	round_end = function( trigger )
-	{
-		if ( TestMap ) {
-			return;
-		}
-
-		print( "round_end" );
-
-		foreach( id and bot in BotTable )
-		{
-			if ( RandInt( 0,10 ) < 2 ) {
-				bot.SayVoice( VOICE.G_GOODGAME );
-			}
-			if ( Map.RelicStatus == false ) { // Allies win
-				if ( bot.GetTeam() == TEAM.ALLIES ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_CHEER );
-					}
-					sleep( 0.5 );
-				}
-				if ( bot.GetTeam() == TEAM.AXIS ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_NEGATIVE );
-					}
-					sleep( 0.5 );
-				}
-			} else                // Axis win
-			{
-				if ( bot.GetTeam() == TEAM.AXIS ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_CHEER );
-					}
-					sleep( 0.5 );
-				}
-				if ( bot.GetTeam() == TEAM.ALLIES ) {
-					if ( RandInt( 0,10 ) < 5 ) {
-						bot.SayVoice( VOICE.G_NEGATIVE );
-					}
-					sleep( 0.5 );
-				}
-
-			}
-		}
-	},
 	SewerTrigger =
 	{
 		Name = "SewerTrigger",
@@ -453,7 +409,7 @@ global Map =
 			if ( TestMap ) {
 				return;
 			}
-			if ( GetEntTeam( ent ) == TEAM.AXIS ) 
+			if ( GetEntTeam( ent ) == TEAM.AXIS )
 			{
 				Map.RelicFallback();
 			}
@@ -501,7 +457,6 @@ global OnMapLoad = function()
 	OnTrigger( "thirty second warning.", Map.thirty_second );
 	OnTrigger( "The Allied Alarm is on", Map.alarm_on );
 	OnTrigger( "The Allied Alarm is off", Map.alarm_off );
-	OnTrigger( "Round End.", Map.round_end );
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 20} );
@@ -553,8 +508,8 @@ global OnMapLoad = function()
 
 	plant = OnTriggerRegion( AABB( 851.000,865.000,-1.000,1024.000,1024.000,73.000 ), Map.Plant );
 	bSpawn = OnTriggerRegion( AABB( 1980.000,-860.000,-62.000,2019.000,-771.000,12.000 ), Map.AlliedSpawn );
-	
-	
+
+
 
 	MapRoutes =
 	{
@@ -590,7 +545,7 @@ global OnMapLoad = function()
 				},
 				ROUTE_rearalliedspawn =
 				{
-					ROUTE_southpassage = 
+					ROUTE_southpassage =
 					{
 						Weight = 2,
 						ROUTE_sewer = {},
@@ -665,7 +620,7 @@ global OnMapLoad = function()
 				ROUTE_southentrance =
 				{
 					Weight = 3,
-					ROUTE_southpassage = 
+					ROUTE_southpassage =
 					{
 						ROUTE_rearaltar = {},
 						ROUTE_rearalliedspawn = {Weight = 2,},
@@ -706,7 +661,7 @@ global OnMapLoad = function()
 
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
-	
+
 	// Break entities bots suck at getting past
 	EntityKill( 199 );
 	EntityKill( 342 );

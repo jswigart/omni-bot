@@ -44,7 +44,7 @@ this.SelectTeam = function()
 
 //////////////////////////////////////////////////////////////////////////
 
-global ClassPrimaryWeaponChoice = function( bot )
+this.ClassPrimaryWeaponChoice = function()
 {
 	myteam = bot.GetTeam();
 	myclass = bot.GetClass();
@@ -63,27 +63,22 @@ global ClassPrimaryWeaponChoice = function( bot )
 	return null;
 };
 
-global ClassSecondaryWeaponChoice = function( bot )
+// remove?
+this.ClassSecondaryWeaponChoice = function( bot )
 {
 	return null;
 };
 
 this.SelectWeapons = function()
 {
-	myteam = this.GetTeam();
-	myclass = this.GetClass();
+	Primary = this.ClassPrimaryWeaponChoice();
+	Secondary = this.ClassSecondaryWeaponChoice();
 
-	//print("SelectWeapons: Class", myclass, "Team", myteam);
-
-	weaponSelection = {};
-	weaponSelection.Primary = ClassPrimaryWeaponChoice( this );
-	weaponSelection.Secondary = ClassSecondaryWeaponChoice( this );
-
-	if ( weaponSelection.Primary ) {
-		this.ChangePrimaryWeapon( weaponSelection.Primary );
+	if ( Primary ) {
+		this.ChangePrimaryWeapon( Primary );
 	}
 
-	if ( weaponSelection.Secondary ) {
-		this.ChangeSecondaryWeapon( weaponSelection.Secondary );
+	if ( Secondary ) {
+		this.ChangeSecondaryWeapon( Secondary );
 	}
 };
