@@ -26,6 +26,13 @@ this.FindFreeRoleSlot = function()
 	newClass = null;
 	foreach ( id and role in teamRoles ) {
 		if ( id == "AllBots" || !role.numbots ) { continue; }
+
+		if ( role.MinBotsForRole ) {
+			if ( Server.Team[ team ].NumBots < role.MinBotsForRole ) {
+				continue;
+			}
+		}
+
 		if ( !role.bots ) { role.bots = table(); }
 
 		//remove disconnected bots
