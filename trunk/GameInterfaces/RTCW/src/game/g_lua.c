@@ -964,20 +964,53 @@ static int _et_FlingClientA( lua_State *L ) {
 }
 // }}}
 
+// et.SetMap( flingType )
 static int _et_SetMap( lua_State *L ) {
-		char s[MAX_STRING_CHARS];
-		const char *mapName = luaL_checkstring( L, 1 );
+	char s[MAX_STRING_CHARS];
+	const char *mapName = luaL_checkstring( L, 1 );
 
-		// preserve nextmap so rotation can continue
-		trap_Cvar_VariableStringBuffer( "nextmap", s, sizeof( s ) );
-		if ( *s ) {
-			trap_SendConsoleCommand( EXEC_APPEND, va( "map %s; set nextmap \"%s\"\n", mapName, s ) );
-		} else {
+	// preserve nextmap so rotation can continue
+	trap_Cvar_VariableStringBuffer( "nextmap", s, sizeof( s ) );
+	if ( *s ) {
+		trap_SendConsoleCommand( EXEC_APPEND, va( "map %s; set nextmap \"%s\"\n", mapName, s ) );
+	} else {
 
-			trap_SendConsoleCommand( EXEC_APPEND, va( "map %s;\n", mapName ) );
-		}
-		return 1;
+		trap_SendConsoleCommand( EXEC_APPEND, va( "map %s;\n", mapName ) );
+	}
+	return 1;
 }
+// }}}
+
+// et.lol( clientNum )
+static int _et_lol( lua_State *L ) {
+	int clientNum = luaL_checkint( L, 1 );
+	vec3_t dir;
+	int it, grenadeWPID, degPerNade;
+	float x, y;
+	gentity_t *nade;
+	gentity_t *ent = g_entities + clientNum;
+
+	if ( !ent->client ) {
+		return 0;
+	}
+
+	grenadeWPID = ent->client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE; 
+
+	degPerNade = 36; // 360 / 10
+	for( it = 0; it < 10; it++ ) {
+		x = 200 * cos( DEG2RAD(degPerNade * it) );  
+		y = 200 * sin( DEG2RAD(degPerNade * it) );
+		VectorSet( dir, x, y, 30 );
+		VectorSubtract( ent->client->ps.velocity, dir, dir );
+		dir[2] = 60;
+		nade = fire_grenade( ent, ent->r.currentOrigin, 
+					dir, grenadeWPID );
+		nade->nextthink = level.time + 1000;
+	}
+
+	return 1;
+}
+// }}}
 
 // et library initialisation array
 static const luaL_Reg etlib[] = {
@@ -1046,6 +1079,7 @@ static const luaL_Reg etlib[] = {
 	{ "FlingClient",                _et_FlingClient             },
 	{ "FlingClientA",               _et_FlingClientA            },
 	{ "SetMap",                     _et_SetMap                  },
+	{ "lol",                        _et_lol                     },
 
 	{ NULL },
 };
