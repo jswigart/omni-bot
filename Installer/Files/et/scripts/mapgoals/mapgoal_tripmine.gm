@@ -1,6 +1,6 @@
 this.GoalType = "TRIPMINE";
 this.Version = 1;
-this.DefaultPriority = 0.8;
+this.DefaultPriority = 0.81;
 this.MinRadius = 32;
 this.RolePriorityBonus = 0.1;
 this.MaxUsers_InUse(1);

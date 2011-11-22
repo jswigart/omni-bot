@@ -29,12 +29,6 @@ this.GetPriority = function()
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )
 				{
-					if ( !ETUtil.CheckTripminePosition() ) {
-						goal.SetAvailable(0, false);
-						goal.SetRemoveFlag(true);
-						continue;
-					}
-
 					this.MapGoal = goal;
 					this.Priority = goal.GetGoalPriority(this.Bot);
 					break;
@@ -72,6 +66,10 @@ this.Update = function()
 		if(!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
+		}
+
+		if ( this.MapGoal.Stance == "crouch" ) {
+			this.Bot.HoldButton( BTN.CROUCH, 99 );
 		}
 
 		while(1)
@@ -154,7 +152,6 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 	{
 		case WEAPON.TRIPMINE:
 		{
-			print(projectileEntity);
 			this.ExplosiveEntity = projectileEntity;
 			this.GoalState = this.ARM_EXPLOSIVE;
 		}
