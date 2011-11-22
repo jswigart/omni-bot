@@ -150,6 +150,7 @@ global Map =
 		Util.ChangeSpawnForRole( TEAM.ALLIES, ROLE.ATTACKER2, 1 );
 		Util.DisableGoal("ROUTE_cpassist");
 
+		Util.DisableGroup( "cpdefense", TEAM.AXIS );
 		Map.ShiftAxisToParts();
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
@@ -249,12 +250,11 @@ global Map =
 		SetGoalPriority( "DEFUSE_Main_Entrance.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 		SetGoalPriority( "DEFUSE_Side_Entrance.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 
-		if ( Map.SideDoorStatus > 0 && Map.CPStatus == 0 && Map.EastPartsStatus == 0 ) {
+		if ( Map.CPStatus < 2 && Map.EastPartsStatus == 0 ) {
 			Util.EnableGroup( "cpdefense", TEAM.AXIS );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rBunkerEast[23]" );
 		}
 		else if ( Map.EastPartsStatus == 0 ) {
-			Util.DisableGroup( "cpdefense", TEAM.AXIS );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rBunkerEast[23]" );
 			Util.EnableGroup( "eastparts", TEAM.AXIS );
 		}
@@ -374,6 +374,13 @@ global Map =
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
 		}
 
+		// reset the east defense
+		if ( Map.EastPartsStatus == 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rEastParts.*" );
+		}
+
 		Util.EnableGroup( "westparts", TEAM.AXIS );
 		Util.MapDebugPrint( "radarbox1_Returned" );
 	},
@@ -389,10 +396,15 @@ global Map =
 		if ( Map.EastPartsStatus != 1  ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWestParts.*" );
 		}
 
-		// FIXME: don't enable the entire westparts group
-		Util.EnableGroup( "westparts", TEAM.AXIS );
+		// add more focus to east
+		Util.ClearRoleForGroup("eastparts", ROLE.DEFENDER1);
+		SetGoalPriority( "DEFEND_rEastParts.*", 0.65, TEAM.AXIS );
+
 		Util.MapDebugPrint( "radarbox1_Radar_Dropoff_Captured" );
 	},
 
@@ -408,8 +420,6 @@ global Map =
 		Util.EnableGroup( "rdeliver", TEAM.AXIS );
 
 		if ( Map.WestPartsStatus != 0 ) {
-			// FIXME: if solely focusing on east parts, the entire west
-			// parts group should not be active.
 			Util.DisableGroup( "westparts", TEAM.AXIS );
 		}
 
@@ -431,6 +441,13 @@ global Map =
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
 		}
 
+		// reset the west defense
+		if ( Map.WestPartsStatus == 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWestParts.*" );
+		}
+
 		Util.EnableGroup( "eastparts", TEAM.AXIS );
 		Util.MapDebugPrint( "radarbox2_Returned" );
 	},
@@ -442,14 +459,22 @@ global Map =
 
 		Map.EastPartsStatus = 2;
 
+		// make sure these are disabled
+		Util.DisableGroup( "cpdefense", TEAM.AXIS );
+
 		// are the others on their way?
 		if ( Map.WestPartsStatus != 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rEastParts.*" );
 		}
 
-		// FIXME: don't enable the entire eastparts group
-		Util.EnableGroup( "eastparts", TEAM.AXIS );
+		// add more focus to west
+		Util.ClearRoleForGroup("westparts", ROLE.DEFENDER2);
+		SetGoalPriority( "DEFEND_rWestParts.*", 0.65, TEAM.AXIS );
+
 		Util.MapDebugPrint( "radarbox2_Radar_Dropoff_Captured" );
 	},
 
