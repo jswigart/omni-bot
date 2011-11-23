@@ -9,7 +9,7 @@ this.MaxUsers_InProgress(1);
 //////////////////////////////////////////////////////////////////////////
 
 this.Schema = Schema();
-this.Schema.Stance = Validate.Enum("stand","crouch").Default("stand");
+this.Schema.Stance = Validate.Enum("stand","crouch").Default("crouch");
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -77,12 +77,14 @@ this.UpgradeVersion = function(Props)
 
 this.Render = function()
 {
+	offset = Vector3(0,0,32);
 	offset2 = Vector3(0,0,64);
 
 	while(this.RenderGoal == true)
 	{
 		goalBasePos = this.GetPosition();
 		goalPos = goalBasePos + offset2;
+		aimLine = goalBasePos + offset;
 
 		if(this.ExtraDebugText==null)
 		{
@@ -107,7 +109,7 @@ this.Render = function()
 		}
 
 		if ( this.AimPosition && !this.AimPosition.IsZero() ) {
-			DrawArrow(goalPos,this.AimPosition,COLOR.YELLOW,2);
+			DrawArrow(aimLine,this.AimPosition,COLOR.YELLOW,2);
 		}
 
 		sleep(2);
