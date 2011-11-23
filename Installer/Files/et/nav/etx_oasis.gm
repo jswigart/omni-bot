@@ -216,6 +216,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_North_Anti_Tank_Gun.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_North_Gun.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_north_clear.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_NorthGun.*" );
 
 		//hmm might consider staying conservative after one is destroyed
 		if ( Map.SouthDyno < 1 )
@@ -272,6 +273,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_South_Anti_Tank_Gun.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_South_Gun.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_south_clear.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_SouthGun.*" );
 
 		if ( Map.NorthDyno < 1 )
 		{
@@ -349,6 +351,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSouthEntrance.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTunnel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSouthEntrance.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_NorthGun.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_SouthGun.*" );
 
 		// all classes now
 		SetGoalPriority( "DEFEND_north_clear.*", 0.92 );
@@ -358,7 +362,7 @@ global Map =
 		if ( Map.NorthDyno < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_north_clear.*" );
 		}
-		
+
 		if ( Map.SouthDyno < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_south_clear.*" );
 		}
@@ -378,6 +382,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFirstTunnel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_waterpump" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_Flag.*" );
 
 		// this one can be enabled sooner
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMORTAR_bGuns.*" );
@@ -533,8 +538,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	Util.SetGoalPosition( 9661.875, 3858.125, -199.875, "PLANT_South_Anti_Tank_Gun" );
-	Util.SetGoalPosition( 9646.170, 4780.875, -199.875, "PLANT_North_Anti_Tank_Gun" );
 	Util.SetGoalPosition( 4576.686, 6586.125, -468.781, "PLANT_Old_City_Water_Pump" );
 
 	if ( TestMapOn )
@@ -579,7 +582,7 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER );
-	
+
 	// don't backtrack to defuse these unless camping
 	SetGoalPriority( "DEFUSE_Oasis_Water_Pump.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER, true );
 	SetGoalPriority( "DEFUSE_Allied_Command_Post.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER, true );
@@ -649,9 +652,14 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_p1axis_valleyledge_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_oldcityflag" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Flag_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_Flag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_waterpump" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFirstTunnel.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFirstTunnel.*" );
+
+	// randomize plant goal position
+	Util.AddUsePoint( Map.Plant_North_Anti_Tank_Gun, { Vec3(9662, 4696, -103), Vec3(9649, 4773, -200) });
+	Util.AddUsePoint( Map.Plant_South_Anti_Tank_Gun, { Vec3(9658, 3935, -103), Vec3(9644, 3869, -200) });
 
 	// Routing
 	MapRoutes =
