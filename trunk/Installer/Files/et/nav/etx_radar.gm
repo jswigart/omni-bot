@@ -41,6 +41,8 @@ global Map =
 	MainDyno = 0,
 	SideDyno = 0,
 
+	FirstAxisEng = null,
+
 	Navigation =
 	{
 		quickjump =
@@ -62,10 +64,12 @@ global Map =
 			AllBots = true,
 			DEFENDER2 = // west
 			{
+				crucialClass = CLASS.ENGINEER, // for mines
 				numbots = 4,
 			},
 			DEFENDER1 = // east
 			{
+				crucialClass = CLASS.ENGINEER, // for mines
 				numbots = 4,
 			},
 		},
@@ -84,7 +88,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		sleep( 2 );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Axis_Road_MG_Nest );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_Axis_Road_MG_Nest );
 
@@ -147,6 +150,7 @@ global Map =
 		Util.ChangeSpawnForRole( TEAM.ALLIES, ROLE.ATTACKER2, 1 );
 		Util.DisableGoal("ROUTE_cpassist");
 
+		Util.DisableGroup( "cpdefense", TEAM.AXIS );
 		Map.ShiftAxisToParts();
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
@@ -157,17 +161,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-
-		// cp built, so spawn the eng back at the flag
-		if ( !Map.CpFirstBuilt ) {
-			Map.CpFirstBuilt = true;
-			
-			if ( Map.FirstAxisEng ) {
-				Map.FirstAxisEng.ChangeSpawnPoint(0);
-			}
+		if ( Map.FirstAxisEng && !Map.AxisShiftedToParts ) {
+			Map.FirstAxisEng.ChangeSpawnPoint(3);
 		}
 
-		Util.ClearRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER2 );
 		Util.MapDebugPrint( "axis_radio_built_Built" );
 	},
 
@@ -205,21 +202,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_Bunker_MG_Nest );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Bunker_MG_Nest );
 
-		if ( Map.SideDoorStatus == 1 )
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post );
-		}
-
 		// Axis goals
 		Map.ShiftAxisToParts();
-		Util.ClearRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER2 );
 		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
 	},
 
 	Planted_Main = function( trigger )
 	{
-		if ( TestMap || Map.CPStatus == 1)
+		if ( TestMap || Map.CPStatus == 1 )
 			{ return; }
 
 		Map.MainDyno += 1;
@@ -254,17 +244,17 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBunkerPatrol.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_rBunker.*" );
 
 		// don't bother with defuses
 		SetGoalPriority( "DEFUSE_Main_Entrance.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 		SetGoalPriority( "DEFUSE_Side_Entrance.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
 
-		if ( (Map.SideDyno > 0 || Map.SideDoorStatus > 0) && Map.CPStatus == 0 && Map.EastPartsStatus == 0 ) {
+		if ( Map.CPStatus < 2 && Map.EastPartsStatus == 0 ) {
 			Util.EnableGroup( "cpdefense", TEAM.AXIS );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rBunkerEast[23]" );
 		}
 		else if ( Map.EastPartsStatus == 0 ) {
-			Util.DisableGroup( "cpdefense", TEAM.AXIS );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rBunkerEast[23]" );
 			Util.EnableGroup( "eastparts", TEAM.AXIS );
 		}
@@ -293,6 +283,9 @@ global Map =
 
 		Map.SideDoorStatus = 1;
 
+		// let allies build it now
+		Util.ClearRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER3 );
+
 		if ( Map.CPStatus == 0 ) {
 			Util.EnableGoal("ROUTE_cpassist");
 		}
@@ -301,20 +294,19 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Side_Door_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Entrance );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_cpassist" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post );
 
 		if ( Map.MainDoorStatus == 1 || GetGameTimeLeft() < 90 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Radar_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_radarbox1 );
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_radarbox2 );
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Command_Post );
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Command_Post );
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Cappoint_Radar_Dropoff );
 		}
 
 		// Axis goals
 		Map.ShiftAxisToParts();
-		Util.ClearRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER2 );
 		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
 	},
 
@@ -360,6 +352,7 @@ global Map =
 		Util.DisableGroup( "westparts", TEAM.AXIS );
 		Util.EnableGroup( "rdeliver", TEAM.AXIS );
 
+		// shift the east defenders too unless east parts are home
 		if ( Map.EastPartsStatus != 0 ) {
 			Util.DisableGroup( "eastparts", TEAM.AXIS );
 			Util.DisableGroup( "cpdefense", TEAM.AXIS );
@@ -378,10 +371,14 @@ global Map =
 		// are the others on their way?
 		if ( Map.EastPartsStatus != 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
-		}
-		else {
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
-			Util.EnableGroup( "eastparts", TEAM.AXIS );
+		}
+
+		// reset the east defense
+		if ( Map.EastPartsStatus == 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rEastParts.*" );
 		}
 
 		Util.EnableGroup( "westparts", TEAM.AXIS );
@@ -399,9 +396,15 @@ global Map =
 		if ( Map.EastPartsStatus != 1  ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWestParts.*" );
 		}
 
-		Util.EnableGroup( "westparts", TEAM.AXIS );
+		// add more focus to east
+		Util.ClearRoleForGroup("eastparts", ROLE.DEFENDER1);
+		SetGoalPriority( "DEFEND_rEastParts.*", 0.65, TEAM.AXIS );
+
 		Util.MapDebugPrint( "radarbox1_Radar_Dropoff_Captured" );
 	},
 
@@ -435,10 +438,14 @@ global Map =
 		// are the others on their way?
 		if ( Map.WestPartsStatus != 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
-		}
-		else {
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
-			Util.EnableGroup( "westparts", TEAM.AXIS );
+		}
+
+		// reset the west defense
+		if ( Map.WestPartsStatus == 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rWestParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWestParts.*" );
 		}
 
 		Util.EnableGroup( "eastparts", TEAM.AXIS );
@@ -452,13 +459,22 @@ global Map =
 
 		Map.EastPartsStatus = 2;
 
+		// make sure these are disabled
+		Util.DisableGroup( "cpdefense", TEAM.AXIS );
+
 		// are the others on their way?
 		if ( Map.WestPartsStatus != 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
 			Util.DisableGroup( "rdeliver", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rEastParts.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rEastParts.*" );
 		}
 
-		Util.EnableGroup( "eastparts", TEAM.AXIS );
+		// add more focus to west
+		Util.ClearRoleForGroup("westparts", ROLE.DEFENDER2);
+		SetGoalPriority( "DEFEND_rWestParts.*", 0.65, TEAM.AXIS );
+
 		Util.MapDebugPrint( "radarbox2_Radar_Dropoff_Captured" );
 	},
 
@@ -467,9 +483,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		// Allied goals
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Main_Door_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Side_Door_.*" );
+		// Axis goals
+		SetAvailableMapGoals( TEAM.AXIS, Map.MainDyno > 1, "DEFEND_rMainDefuseAssist.*" );
+		SetAvailableMapGoals( TEAM.AXIS, Map.SideDyno > 1, "DEFEND_rSideDefuseAssist.*" );
 
 		Util.MapDebugPrint( "roadbunker_Axis_Captured" );
 	},
@@ -479,11 +495,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		// Allied goals
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Main_Door_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Side_Door_.*" );
-
-		// Axis goals - nothing to do here since shift depends on Main / Side status
+		// Axis goals
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMainDefuseAssist.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSideDefuseAssist.*" );
 
 		Util.MapDebugPrint( "roadbunker_Allies_Captured" );
 	},
@@ -522,7 +536,7 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned radarbox2!", Map.East_Parts_Returned );
 
 	// Max users per goal
-	Util.SetMaxUsers( 15, Map.Checkpoint_roadbunker );
+	Util.SetMaxUsers( 4, Map.Checkpoint_roadbunker );
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
@@ -559,10 +573,14 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_Axis_Watchto.*MG_Nest", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 
 	// Axis goals
-	SetGoalPriority( Map.Build_Bunker_MG_Nest, 0.91, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Bunker_MG_Nest, 0.79, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_rSideDefuseAssist.*", 0.8, TEAM.AXIS );
 	SetGoalPriority( "DEFEND_rMainDefuseAssist.*", 0.8, TEAM.AXIS );
 	SetGoalPriority( "DEFEND_rPartsPatrol.*", 0.49, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT.*", 0.9, TEAM.AXIS ); // always recapture!
+
+	Util.SetRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER3 );
+	Util.ClearRoleForGoals( "BUILD_Command_Post", ROLE.ATTACKER2 );
 
 	Util.DisableGoal( ".*", true ); // all but routes
 
@@ -577,6 +595,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_Entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Axis_Road_MG_Nest" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_roadbunker" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Main_Door_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Side_Door_.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Bunker_MG_Nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_Road_MG_Nest" );
@@ -589,9 +609,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBunker.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBunker.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBunker.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_rBunker.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
-
-	Util.SetRoleForGoals( "BUILD_Command_Post", ROLE.DEFENDER2 );
 
 	Util.DisableGoal("ROUTE_cpassist");
 
@@ -787,12 +806,18 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = 2500;
 	bot.TargetBreakableDist = 150.0;
 
-	// first axis engineer joining will spawn back and build the cp
-	if ( !Map.FirstAxisEng && bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.ENGINEER ) {
-		Map.FirstAxisEng = bot;
-		bot.ChangeSpawnPoint(5);
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		if ( !Map.FirstAxisEng ) {
+			bot.SetRoles(ROLE.DEFENDER3, ROLE.DEFENDER1);
+			bot.ChangeClass(CLASS.ENGINEER);
+			bot.ChangeSpawnPoint(5); // cs: will not work on a map_restart
+			Map.FirstAxisEng = bot;
+		}
+		else {
+			bot.ChangeSpawnPoint(3);
+		}
 	}
 	else {
-		bot.ChangeSpawnPoint(0);
+		bot.ChangeSpawnPoint(2);
 	}
 };

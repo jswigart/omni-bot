@@ -135,7 +135,8 @@ global Map =
 					Util.ChangeSpawn( TEAM.AXIS, 1 );
 					Map.BaseTriggered = true;
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun.*" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_controls.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Flag_.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cFlag.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_westbunker_mg42_1 );
@@ -181,6 +182,7 @@ global Map =
 					Util.ChangeSpawn( TEAM.AXIS, 1 );
 					Util.OneBotVSayTeam( TEAM.AXIS, VOICE.INCOMING );
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Gun.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_controls.*" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Flag_.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_cFlag.*" );
@@ -248,7 +250,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		//~ sleep( 2 );
 		Map.beachplanks = false;
 
 		// Allied goals
@@ -609,6 +610,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Main_Bunker_MG_nest" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Main_Bunker_MG_nest" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_flex.*" );
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Flag_.*" );
@@ -618,6 +620,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_westbunker_mg42_1" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_westbunker_mg42_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_bunker1" );
 
 		if ( Map.frontdoor && Map.GunDyno < 1 && Map.doorcontrols )
 		{
@@ -701,6 +704,7 @@ global Map =
 		Map.GunDyno += 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gc_flex.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_flex.*" );
 		Map.Switches.FrontDoor.LimitTeam = 0;
 		SetAvailableMapGoals( 0, false, "SWITCH_frontdoor" );
 
@@ -721,6 +725,7 @@ global Map =
 		if ( Map.GunDyno < 1 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gc_flex.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_flex.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_South_East_MG_nest" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_South_East_MG_nest" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Generator" );
@@ -1093,6 +1098,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_South_East_MG_nest" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Generator" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_ramp" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_bunker1" );
 
 	MapRoutes =
 	{
