@@ -147,11 +147,13 @@ global Map =
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Depot_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_Tank_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rTbarrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTbarrier1_.*" );
 		SetGoalPriority( Map.Build_Command_Post, 0.8, TEAM.AXIS);
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDepot.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rTank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_Depot.*" );
 
 		// use build offsets instead of forced routing
 		Util.ForceRouting( "BUILD_Tank", false );
@@ -259,12 +261,14 @@ global Map =
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Ammo_Cabinet_south_ammocabinet );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_Tank_Barrier2_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_2 );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Health_Cabinet_south_healthcabinet );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_1 );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_Tank_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rTbarrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTbarrier1_.*" );
 
@@ -387,6 +391,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_Tank_Barrier2_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_[89]" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_Roam4" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_2 );
@@ -482,6 +487,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_[89]" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_Bank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_Roam4" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_tank_axis" );
 
@@ -520,6 +526,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_allied );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Truck_Barrier1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_Bank.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_bank );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_rBank.*" );
@@ -917,6 +924,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Depot.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDepot.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_rTank.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_Depot.*" );
 
 	//routes for tank build at barrier 2
 	Util.DisableGoal("ROUTE_repair_route.*");
