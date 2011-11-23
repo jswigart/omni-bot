@@ -26,6 +26,13 @@ this.Enter = function()
 	wpinfo = Util.WpNameInfo(this.mover.startwp);
 	this.Pos = wpinfo.position;
 	this.Facing = wpinfo.facing * 1024;
+
+	this.Bot.DisableCombatMovement = true;
+};
+
+this.Exit = function()
+{
+	this.Bot.DisableCombatMovement = false;
 };
 
 this.Update = function()
