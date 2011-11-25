@@ -63,6 +63,8 @@ this.Enter = function()
 	this.GoalEnt = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.GoalEnt,"hasentflag",ENTFLAG.DEAD);
 	this.AddFinishCriteria(this.GoalEnt,"not hasentflag",ENTFLAG.MOUNTABLE);
+
+	this.CombatThread = this.ForkThread(this.DisableCombat);
 };
 
 this.Update = function()
@@ -129,9 +131,35 @@ this.Update = function()
 	this.Finished();
 };
 
+//disable combat movement when a bot is near mg42, so that he can mount it
+this.DisableCombat = function()
+{
+	for(;;)
+	{
+		dist = this.Bot.DistanceTo(this.MapGoal.GetPosition());
+		if (dist < 600)
+		{
+			if (!this.Bot.DisableCombatMovement)
+			{
+				this.CombatMovementDisabled = true;
+				this.Bot.DisableCombatMovement = true;
+			}
+			break;
+		}
+		sleep((dist-500)/320);
+	}
+};
+
 this.Exit = function()
 {
 	this.Bot.PressButton(BTN.USE);
+
+	if ( this.CombatThread ) {
+		this.KillThread(this.CombatThread);
+	}
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+	}
 	if ( this.MG42Info ) {
 		tableClear(this.MG42Info);
 	}
