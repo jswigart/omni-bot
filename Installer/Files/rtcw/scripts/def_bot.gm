@@ -46,10 +46,7 @@ this.SelectTeam = function()
 
 this.ClassPrimaryWeaponChoice = function()
 {
-	myteam = bot.GetTeam();
-	myclass = bot.GetClass();
-
-	if ( myclass == CLASS.SOLDIER ) {
+	if ( this.GetClass() == CLASS.SOLDIER ) {
 		wpns =
 		{
 			WEAPON.MAUSER,
