@@ -16,7 +16,7 @@
 		<h2>About</h2>
 		Made to give RTCW easy to use admin commands.<br>
 		Questions or help: goto <a href="http://www.thelunaticfam.com/" target="_blank">www.thelunaticfam.com</a> and post on the forum with your questions.<br>
-		<b>NOTE:</b> mmod will only work in the <a href="link to mod" target="_blank">OmniBot mod for RTCW</a>.
+		<b>NOTE:</b> mmod will only work in the <a href="http://www.omni-bot.com/" target="_blank">OmniBot .82 mod for RTCW</a>.
 		<hr>
 		<a name="install"></a>
 		<h2>Installation</h2>
@@ -54,15 +54,15 @@
 		<br>
 		level    = 2<br>
 		name     = Trusted Friend<br>
-		flags    = aChitBqmnAPRp<br>
+		flags    = aChitBqmnAPRpf<br>
 		<br>
 		level    = 3<br>
 		name     = Semi Moderator<br>
-		flags    = aChitBqmnAPRgkNswTop<br>
+		flags    = aChitBqmnAPRgkNswToplSfxr<br>
 		<br>
 		level    = 4<br>
 		name     = Full Moderator<br>
-		flags    = aChitBqmnAPRgkNswTobpQ<br>
+		flags    = aChitBqmnAPRgkNswTobpQlLSfxr<br>
 		<br>
 		level    = 5<br>
 		name     = King Admin<br>
@@ -100,6 +100,16 @@
 			prints out player's current mmod admin level in global chat.
 			When the NAME or SLOT are added and the user has the right mmod
 			permissions, the level of another player will be shown.
+		</td></tr>
+		
+		<tr><td>
+			!announce
+			</td><td>
+			f
+			</td><td>
+			!announce [MSG]
+			</td><td>
+			announces message in centerprint.
 		</td></tr>
 
 		<tr><td>
@@ -141,6 +151,27 @@
 		</td></tr>
 
 		<tr><td>
+			!fling
+			</td><td>
+			l
+			</td><td>
+			!fling [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing
+			NAME.
+		</td></tr>
+		
+		<tr><td>
+			!flinga
+			</td><td>
+			L
+			</td><td>
+			!flinga
+			</td><td>
+			send everyone flying
+		</td></tr>
+		
+		<tr><td>
 			!gib
 			</td><td>
 			g
@@ -173,6 +204,26 @@
 			off the server.  REASON is given to the client as the drop message.
 			The client will be banned for 2 minutes.
 		</td></tr>
+		
+		<tr><td>
+			!launch
+			</td><td>
+			l
+			</td><td>
+			!launch [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing NAME.
+		</td></tr>
+		
+		<tr><td>
+			!launcha
+			</td><td>
+			L
+			</td><td>
+			!launcha
+			</td><td>
+			send everyone flying
+		</td></tr>
 
 		<tr><td>
 			!listadmins
@@ -191,7 +242,7 @@
 			If SKIP is provided, admin number's less than that number are skipped before
 			printing starts.
 		</td></tr>
-
+		
 		<tr><td>
 			!listplayers
 			</td><td>
@@ -210,7 +261,27 @@
 			<tr><td>name</td></tr>
 			</table>
 		</td></tr>
+				
+		<tr><td>
+			!lol
+			</td><td>
+			x
+			</td><td>
+			!lol [NAME|SLOT]
+			</td><td>
+			make player drop grenades in slot number SLOT or with name containing NAME.
+		</td></tr>
 
+		<tr><td>
+			!map
+			</td><td>
+			M
+			</td><td>
+			!map [MAP NAME]
+			</td><td>
+			change map to [MAP NAME].  i.e. !map mp_beach
+		</td></tr>
+		
 		<tr><td>
 			!maprecords
 			</td><td>
@@ -262,10 +333,30 @@
 			</td><td>
 			N
 			</td><td>
-			!rename [NAME|SLOT] [NEWNAME]
+			!rename [NAME|SLOT] [NEW NAME]
 			</td><td>
 			sets the player in slot number SLOT or with name containing NAME
 			to NEWNAME.
+		</td></tr>
+		
+		<tr><td>
+			!reset
+			</td><td>
+			r
+			</td><td>
+			!reset
+			</td><td>
+			reset the match
+		</td></tr>
+		
+		<tr><td>
+			!restart
+			</td><td>
+			r
+			</td><td>
+			!restart
+			</td><td>
+			restart the map
 		</td></tr>
 
 		<tr><td>
@@ -306,8 +397,18 @@
 			<tr><td>when the ban will expire</td></tr>
 			<tr><td>reason for the ban</td></tr>
 			</table>
-			If SKIP is provided, ban number's less than that number are skipped before
+			If SKIP is provided, ban numbers less than that number are skipped before
 			printing starts.
+		</td></tr>
+		
+		<tr><td>
+			!shuffle
+			</td><td>
+			S
+			</td><td>
+			!shuffle
+			</td><td>
+			shuffles teams
 		</td></tr>
 
 		<tr><td>
@@ -372,6 +473,27 @@
 			</td><td>
 			changes the time limit of current map to MINUTES.
 		</td></tr>
+		
+		<tr><td>
+			!throw
+			</td><td>
+			l
+			</td><td>
+			!throw [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing
+			NAME.
+		</td></tr>
+		
+		<tr><td>
+			!throwa
+			</td><td>
+			L
+			</td><td>
+			!throwa
+			</td><td>
+			send everyone flying
+		</td></tr>
 
 		<tr><td>
 			!unban
@@ -418,8 +540,11 @@
 		<hr>
 		<a name="credits"></a>
 		<h2>Credits</h2>
-		(LuNaTiC)*Marcus - creator<br>
-		crapshoot - testing, suggestions, made !maprecords and !serverrecords commands, and rtcw omnibot mod creator<br>
-		Necromancer - let me use some code from Kmod+<br>
+		<ul>
+			<li>(LuNaTiC)*Marcus - mmod creator</li>
+			<li>crapshoot - testing, suggestions, made !maprecords, !serverrecords, and !announce commands, and rtcw omni-bot mod creator</li>
+			<li>Necromancer - let me use some code from Kmod+</li>
+			<li>madaaron - feature requests</li>
+		</ul>
 	</body>
 </html>
