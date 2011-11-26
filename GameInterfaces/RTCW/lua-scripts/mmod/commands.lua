@@ -78,6 +78,8 @@ function admintest(clientNum, params)
 end
 
 function announce(clientNum, msg)
+	local header = "^3announce: ^7"
+	
 	if msg[1] == nil then
 		userprint(clientNum, "chat", commandhelp["announce"])
 		return
@@ -91,6 +93,8 @@ function announce(clientNum, msg)
 	end
 
 	userprint(-1, "cp", msgString)
+	local tmpMsg = header .. "^7announcement was center printed!"
+	userprint(-1, "chat", tmpMsg)
 end
 
 function ban(clientNum, params)
@@ -199,6 +203,47 @@ end
 function date(clientNum)
 	local date = os.date("%A, %B %d, %Y")
 	userprint(-1, "chat", "^3date: ^7The server date is " .. date)
+    return
+end
+
+function fling(clientNum, params)
+	local header = "^3fling: ^7"
+    local victim = ReadyCommand(clientNum, "fling", params)
+    
+    if victim == 99 then
+        return
+    end
+
+	if victim ~= -1 then
+        local victim_health = et.gentity_get(victim, "health")
+        local name = et.gentity_get(victim,"pers.netname")
+        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
+		           
+        if team == 3 then -- spec
+	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team!")
+	        return
+        end
+        if victim_health <=0 then 
+	        userprint(clientNum, "chat", header .. name .. " ^7must be alive!")
+	        return
+        end
+		et.FlingClient(victim, 0)  -- 0=fling, 1=throw, 2=launch
+        local tmpMsg = header .. name .. " ^7was flung!"
+	    userprint(-1, "chat", tmpMsg)
+	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    else
+        userprint(clientNum, "chat", commandhelp["fling"])
+    end
+    return
+end
+
+function flinga(clientNum)
+	local header = "^3flinga: ^7"
+    
+	et.FlingClientA(0)  -- 0=fling, 1=throw, 2=launch
+	local tmpMsg = header .. "^7everyone was flung!"
+	userprint(-1, "chat", tmpMsg)
+	et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
     return
 end
 
@@ -360,6 +405,47 @@ function kick(clientNum, params)
     return
 end
 
+function launch(clientNum, params)
+	local header = "^3launch: ^7"
+    local victim = ReadyCommand(clientNum, "launch", params)
+    
+    if victim == 99 then
+        return
+    end
+
+	if victim ~= -1 then
+        local victim_health = et.gentity_get(victim, "health")
+        local name = et.gentity_get(victim,"pers.netname")
+        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
+		        
+        if team == 3 then -- spec
+	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team!")
+	        return
+        end
+        if victim_health <=0 then 
+	        userprint(clientNum, "chat", header .. name .. " ^7must be alive!")
+	        return
+        end
+		et.FlingClient(victim, 2)  -- 0=fling, 1=throw, 2=launch
+        local tmpMsg = header .. name .. " ^7was launched!"
+	    userprint(-1, "chat", tmpMsg)
+	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    else
+        userprint(clientNum, "chat", commandhelp["launch"])
+    end
+    return
+end
+
+function launcha(clientNum)
+	local header = "^3launcha: ^7"
+    
+	et.FlingClientA(2)  -- 0=fling, 1=throw, 2=launch
+	local tmpMsg = header .. "^7everyone was launched!"
+	userprint(-1, "chat", tmpMsg)
+	et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    return
+end
+
 function listadmins(clientNum, params)
     local header = "^3listadmins: ^7"
 	local admins = 0
@@ -488,6 +574,49 @@ function listplayers(clientNum)
     return
 end
 
+function lol(clientNum, params)
+	local header = "^3lol: ^7"
+    local victim = ReadyCommand(clientNum, "lol", params)
+    
+    if victim == 99 then
+        return
+    end
+
+	if victim ~= -1 then
+        local victim_health = et.gentity_get(victim, "health")
+        local name = et.gentity_get(victim,"pers.netname")
+        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
+		        
+        if team == 3 then -- spec
+	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team!")
+	        return
+        end
+        if victim_health <=0 then 
+	        userprint(clientNum, "chat", header .. name .. " ^7must be alive!")
+	        return
+        end
+		et.lol(victim)
+        local tmpMsg = header .. name
+	    userprint(-1, "chat", tmpMsg)
+	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    else
+        userprint(clientNum, "chat", commandhelp["lol"])
+    end
+    return
+end
+
+function map(clientNum, params)
+	local header = "^3map: ^7"
+
+	if params[1] ~= nil then
+		et.SetMap(params[1])
+		local tmpMsg = header .. "^7map changed to: ^3" .. params[1]
+		userprint(-1, "chat", tmpMsg)
+	else
+		userprint(clientNum, "chat", commandhelp["map"])
+	end
+end
+
 function maprecords(clientNum)
 	local header = "^3maprecords: ^7"
 	local count = 0
@@ -592,11 +721,21 @@ function putteam(clientNum, params)
 	    local fullteam = ""
         local name = et.gentity_get(victim,"pers.netname")
         local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
-        
+		        
         if table.getn(params) < 2 then
             userprint(clientNum, "chat", header .. "usage: !putteam [name|slot] [b|r|s]")
             return
         end
+		
+	    if ( team == 1 ) then
+		    team = "r"
+	    elseif ( team == 2 ) then
+		    team = "b"
+	    elseif ( team == 3 ) then
+		    team = "s"
+		end
+
+		params[2] = string.lower(params[2])
 	    
 	    if ( params[2] == "r" or params[2] == "axis" ) then
 		    newteam = "r"
@@ -656,6 +795,22 @@ function rename(clientNum, params)
     else
         userprint(clientNum, "chat", commandhelp["rename"])
     end
+    return
+end
+
+function reset(clientNum)
+    local tmpMsg = "^3reset: ^7match was resetted!"
+    userprint(-1, "chat", tmpMsg)
+    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+	et.trap_SendConsoleCommand(et.EXEC_APPEND, "reset_match")
+    return
+end
+
+function restart(clientNum)
+    local tmpMsg = "^3restart: ^7map was restarted!"
+    userprint(-1, "chat", tmpMsg)
+    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+	et.trap_SendConsoleCommand(et.EXEC_APPEND, "map_restart")
     return
 end
 
@@ -830,6 +985,50 @@ function showbans(clientNum, params)
 	mmodDB = nil
 end
 
+function shuffle(clientNum)
+	local header = "^3shuffle: ^7"
+	local slottable = {}
+	local teamtable = {}
+	local tableindex = 1
+	local newteam = ""
+    
+	for i=0,tonumber(et.trap_Cvar_Get("sv_maxclients"))-1,1 do
+		tempname = string.lower(et.Q_CleanStr(et.gentity_get(i,"pers.netname")))
+		if (tempname ~= "") then
+			tempteam = et.gentity_get(i,"sess.sessionTeam")
+			if (tempteam ~= 3) then
+				slottable[tableindex] = i
+				teamtable[tableindex] = tempteam
+				tableindex = tableindex + 1
+			end
+		end
+	end
+
+	--shuffle array
+	local n = table.getn(slottable)
+	while n >= 2 do
+		-- n is now the last pertinent index
+		local k = math.random(n) -- 1 <= k <= n
+		-- Quick swap
+		teamtable[n], teamtable[k] = teamtable[k], teamtable[n]
+		n = n - 1
+	end
+	
+	for n = 1,table.getn(slottable),1 do
+		if teamtable[n] == 1 then
+			newteam = "r"
+		else
+			newteam = "b"
+		end
+		et.SetTeam(slottable[n], newteam)
+	end
+
+	local tmpMsg = header .. "^7teams were shuffled!"
+	userprint(-1, "chat", tmpMsg)
+	et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    return
+end
+
 function slap(clientNum, params)
     local header = "^3slap: ^7"
     local reason = ""
@@ -968,6 +1167,48 @@ function swap(clientNum)
     userprint(-1, "chat", header .. " teams have been swapped")
     return
 end
+
+function throw(clientNum, params)
+	local header = "^3throw: ^7"
+    local victim = ReadyCommand(clientNum, "throw", params)
+    
+    if victim == 99 then
+        return
+    end
+
+	if victim ~= -1 then
+        local victim_health = et.gentity_get(victim, "health")
+        local name = et.gentity_get(victim,"pers.netname")
+        local team = et.gentity_get(victim,"sess.sessionTeam")  -- 1=axis ,2=allies ,3=spec
+		
+        if team == 3 then -- spec
+	        userprint(clientNum, "chat", header .. name .. " ^7must be on a team!")
+	        return
+        end
+        if victim_health <=0 then 
+	        userprint(clientNum, "chat", header .. name .. " ^7must be alive!")
+	        return
+        end
+		et.FlingClient(victim, 1)  -- 0=fling, 1=throw, 2=launch
+        local tmpMsg = header .. name .. " ^7was thrown!"
+	    userprint(-1, "chat", tmpMsg)
+	    et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    else
+        userprint(clientNum, "chat", commandhelp["throw"])
+    end
+    return
+end
+
+function throwa(clientNum)
+	local header = "^3throwa: ^7"
+    
+	et.FlingClientA(1)  -- 0=fling, 1=throw, 2=launch
+	local tmpMsg = header .. "^7everyone was thrown!"
+	userprint(-1, "chat", tmpMsg)
+	et.G_LogPrint(et.Q_CleanStr("clientNum " .. clientNum .. ": command " .. tmpMsg) .. "\n")
+    return
+end
+
 
 function time(clientNum)
 	local time = os.date("%I:%M:%S%p")
