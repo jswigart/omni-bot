@@ -849,7 +849,7 @@ static void CG_RegisterSounds( void ) {
 	}
 
 	// only register the items that the server says we need
-	strcpy( items, CG_ConfigString( CS_ITEMS ) );
+	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof(items));
 
 	for ( i = 1 ; i < bg_numItems ; i++ ) {
 		if ( items[ i ] == '1' || cg_buildScript.integer ) {
@@ -1245,7 +1245,7 @@ static void CG_RegisterGraphics( void ) {
 // END
 
 	// only register the items that the server says we need
-	strcpy( items, CG_ConfigString( CS_ITEMS ) );
+	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof(items));
 
 	CG_LoadingString( " - items" );
 	for ( i = 1 ; i < bg_numItems ; i++ ) {
