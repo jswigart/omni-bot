@@ -1247,8 +1247,8 @@ obResult ChangeClass( int _client, int _newclass, const MessageHelper *_data ) {
 			} else {
 				_newclass = Bot_PlayerClassGameToBot( rand() % NUM_PLAYER_CLASSES );
 			}
-		} else
-		{
+		}
+		else {
 			_newclass = Bot_PlayerClassGameToBot( bot->client->sess.latchPlayerType );
 		}
 	}
@@ -1282,8 +1282,11 @@ obResult ChangeClass( int _client, int _newclass, const MessageHelper *_data ) {
 		} else if ( !( bot->client->ps.pm_flags & PMF_LIMBO ) )     {
 			bot->client->sess.botSuicide = qtrue;
 		}
-	} else
-	{
+
+		// always clear this on class change. util scripts set it per class
+		bot->client->sess.botSuicidePersist = qfalse;
+	}
+	else {
 		// also retransmit weapons stuff
 		ReTransmitWeapons( bot );
 	}
