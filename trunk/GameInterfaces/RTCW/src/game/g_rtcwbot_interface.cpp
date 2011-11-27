@@ -1008,7 +1008,7 @@ void Bot_Util_CheckForGoalEntity( GameEntity _ent ) {
 					}
 					sprintf( buffer, "%s_dropped", pGoalName ? pGoalName : "allies_flag" );
 					Bot_Util_AddGoal( "flag",pEnt,( 1 << RTCW_TEAM_ALLIES ),buffer );
-					Bot_Util_AddGoal( "returnflag",pEnt,( 1 << RTCW_TEAM_AXIS ),buffer );
+					Bot_Util_AddGoal( "flagreturn",pEnt,( 1 << RTCW_TEAM_AXIS ),buffer );
 				} else if ( !Q_stricmp( pEnt->classname, "team_CTF_blueflag" ) )        {
 					// axis flag
 					if ( pEnt->s.otherEntityNum != -1 ) {
@@ -1017,7 +1017,7 @@ void Bot_Util_CheckForGoalEntity( GameEntity _ent ) {
 					sprintf( buffer, "%s_dropped", pGoalName ? pGoalName : "axis_flag" );
 
 					Bot_Util_AddGoal( "flag",pEnt,( 1 << RTCW_TEAM_AXIS ),buffer );
-					Bot_Util_AddGoal( "returnflag",pEnt,( 1 << RTCW_TEAM_ALLIES ),buffer );
+					Bot_Util_AddGoal( "flagreturn",pEnt,( 1 << RTCW_TEAM_ALLIES ),buffer );
 				}
 				break;
 			}
