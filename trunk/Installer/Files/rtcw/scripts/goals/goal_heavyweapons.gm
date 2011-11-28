@@ -16,17 +16,8 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
-	if ( this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) ) {
-		this.SwitchToSideArm();
-	}
-	else if (this.Bot.GetVelocity().IsZero() && !this.Bot.IsStuck()) {
-		this.Priority = 0.5;
-	}
-	else {
-		this.SwitchToSideArm();
-	}
-
-	sleep(1);
+	this.Priority = 1.0;
+	block(0);
 };
 
 this.SwitchToSideArm = function()
@@ -37,7 +28,7 @@ this.SwitchToSideArm = function()
 			sideArm = WEAPON.COLT;
 		}
 
-		this.AddWeaponRequest(Priority.Medium, sideArm);
+		this.AddWeaponRequest(Priority.Low, sideArm);
 	}
 };
 
@@ -48,19 +39,18 @@ this.OnSpawn = function()
 		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
 		sleep(1);
 		this.ReleaseWeaponRequest();
-
-		this.SwitchToSideArm();
 	}
 };
 
 this.Update = function()
 {
-	if (!this.Bot.GetVelocity().IsZero()){
-		this.Finished();
-	}
+	while(1) {
+		if (this.Bot.GetVelocity().IsZero()) {
+			this.CheckSoldierWeapon();
+		}
 
-	this.CheckSoldierWeapon();
-	sleep(0.25);
+		sleep(0.25);
+	}
 };
 
 this.Exit = function()
@@ -75,7 +65,10 @@ this.CheckSoldierWeapon = function()
 		return;
 	}
 
-	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
+	if ( this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) ) {
+		this.SwitchToSideArm();
+	}
+	else if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
 		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
 	}
 	else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){
@@ -116,5 +109,3 @@ this.SpinVenom = function()
 		this.Toggle = 1;
 	}
 };
-
-
