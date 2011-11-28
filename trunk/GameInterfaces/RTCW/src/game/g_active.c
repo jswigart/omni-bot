@@ -594,32 +594,42 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				break;      // not in the player model
 			}
 
+			// TODO: clean this up ...
 			if ( event == EV_FALL_NDIE ) {
 				damage = 9999;
 			} else if ( event == EV_FALL_DMG_50 ) {
 				damage = 50;
-				ent->client->ps.pm_time = 1000;
-				ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-				VectorClear( ent->client->ps.velocity );
+				if ( !(g_dmflags.integer & DF_NO_FALLING) ) {
+					ent->client->ps.pm_time = 1000;
+					ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+					VectorClear( ent->client->ps.velocity );
+				}
 			} else if ( event == EV_FALL_DMG_25 ) {
 				damage = 25;
-				ent->client->ps.pm_time = 250;
-				ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-				VectorClear( ent->client->ps.velocity );
+				if ( !(g_dmflags.integer & DF_NO_FALLING) ) {
+					ent->client->ps.pm_time = 250;
+					ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+					VectorClear( ent->client->ps.velocity );
+				}
 			} else if ( event == EV_FALL_DMG_15 ) {
 				damage = 15;
-				ent->client->ps.pm_time = 1000;
-				ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-				VectorClear( ent->client->ps.velocity );
+				if ( !(g_dmflags.integer & DF_NO_FALLING) ) {
+					ent->client->ps.pm_time = 1000;
+					ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+					VectorClear( ent->client->ps.velocity );
+				}
 			} else if ( event == EV_FALL_DMG_10 ) {
 				damage = 10;
-				ent->client->ps.pm_time = 1000;
-				ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-				VectorClear( ent->client->ps.velocity );
+				if ( !(g_dmflags.integer & DF_NO_FALLING) ) {
+					ent->client->ps.pm_time = 1000;
+					ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+					VectorClear( ent->client->ps.velocity );
+				}
 			} else {
 				damage = 5; // never used
 
 			}
+
 			if ( ( g_goomba.integer ) && ( ent->s.groundEntityNum < MAX_CLIENTS ) && ( ent->s.groundEntityNum != -1 )
 				 && ( g_entities[ent->s.groundEntityNum].client->ps.stats[STAT_HEALTH] > 0 ) ) {
 				if ( g_goombaDmg.value ) {
