@@ -1454,7 +1454,7 @@ static int gmfGetEntRotationMatrix(gmThread *a_thread)
 //		... - Any number of additional flags to check for
 //
 // Returns:
-//		int - true if entity has ALL flags passed
+//		int - true if entity has ANY flag passed
 static int gmfGetEntityFlags(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(2);
