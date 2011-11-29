@@ -132,6 +132,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*");
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*MG42.*");
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILE.*");
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_tower.*");
 		Util.MapDebugPrint( "Axis_Fasthold_Gate_Destroyed" );
 	},
 
@@ -226,6 +227,7 @@ global OnMapLoad = function()
 
 	Util.DisableGoal("AMMOCAB_secret");
 	Util.DisableGoal("HEALTHCAB_secret");
+	Util.DisableGoal("TRIPMINE.*");
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_truck");
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*MG42_top.*north.*");

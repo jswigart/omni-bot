@@ -191,9 +191,11 @@ global Map =
 	SetDefend = function()
 	{
 		SetAvailableMapGoals(TEAM.AXIS, Map.commandPostDestroyed && !Map.objTaken, "DEFEND_cp.*");
+		SetAvailableMapGoals(TEAM.AXIS, Map.commandPostDestroyed && !Map.objTaken, "TRIPMINE_church.*");
 		SetAvailableMapGoals(TEAM.AXIS, Map.commandPostDestroyed && !Map.objTaken, "DEFEND_village.*");
 		SetAvailableMapGoals(TEAM.AXIS, Map.commandPostDestroyed && !Map.objTaken, "DEFEND_tunnel_entrance.*");
 		SetAvailableMapGoals(TEAM.AXIS, !Map.commandPostDestroyed && !Map.objTaken, "DEFEND_crystals.*");
+		SetAvailableMapGoals(TEAM.AXIS, !Map.commandPostDestroyed && !Map.objTaken, "TRIPMINE_crystals.*");
 		SetAvailableMapGoals(TEAM.AXIS, !Map.objTaken, "DEFEND_generator.*");
 		SetAvailableMapGoals(TEAM.AXIS, Map.objTaken, "DEFEND_zeppelin.*");
 	},
@@ -318,7 +320,7 @@ global OnMapLoad = function()
 	Util.LimitToTeam(TEAM.AXIS, "ROUTE_crystals_axis");
 	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_.*");
 	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_.*");
-	SetAvailableMapGoals(TEAM.ALLIES, false, "PLANTMINE_.*");
+	SetAvailableMapGoals(TEAM.ALLIES, false, ".*MINE_.*");
 	SetAvailableMapGoals(TEAM.ALLIES, false, "SNIPE_castle_tower");
 
 	SetGoalPriority("DEFEND_crystals.*", 0.53);

@@ -626,9 +626,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_axis_docs.*");
 	SetAvailableMapGoals(TEAM.AXIS, false, "GRENADE_axis.*");
 	SetAvailableMapGoals(TEAM.ALLIES, false, "GRENADE_allied.*");
+	Util.LimitToTeam(TEAM.AXIS, "TRIPMINE_x.*");
+	Util.LimitToTeam(TEAM.ALLIES, "TRIPMINE_l.*");
 
 	Util.SetRoleForTable({"DEFEND_.*_docs.*", "BUILD_Allied_Dam.*", "BUILD_Axis_Gate.*",
-		"BUILD_Allied_MG", ".*MG42_Allied_MG", ".*MG42_axismg_mg42", }, ROLE.DEFENDER);
+		"BUILD_Allied_MG", ".*MG42_Allied_MG", ".*MG42_axismg_mg42", "TRIPMINE.*" }, ROLE.DEFENDER);
 
 	SetGoalPriority("DEFEND.*_cap.*", 0.97);
 	SetGoalPriority("DEFEND.*_docs.*", 0.84);

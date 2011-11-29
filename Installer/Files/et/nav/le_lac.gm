@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------------------
 //	palota	5 may 2010	Initial Script
 //	palota	22 October 2010	BUILD_allies_assault_boat paththrough
+//	palota	27 November 2011	parachute paththrough navigation (very buggy), ATTACK MaxUsers
 //==========================================================================================
 //
 global Map =
@@ -179,6 +180,28 @@ global Map =
 
 	Navigation =
 	{
+		parachute = {
+			navigate = function(_this)
+			{
+				_this.Goto(_this.Bot.GetPosition());
+				_this.AddAimRequest(Priority.Low, "position", Vec3(-3815.434, -1128.956, 1129.706));
+				for(i=0; i<200; i+=1)
+				{
+					pos = _this.Bot.GetPosition();
+					if(pos.z>-120){ break; }
+					_this.Bot.ResetStuckTime();
+					_this.Bot.MoveTowards(pos);
+					yield();
+				}
+				for(i=0; i<400; i+=1)
+				{
+					pos = _this.Bot.GetPosition();
+					if(pos.z<515){ break; }
+					_this.Bot.MoveTowards(pos);
+					yield();
+				}
+			}
+		},
 		dam_door = {
 			navigate = function(_this)
 			{
@@ -333,6 +356,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, b, "FLAG_bomb_pickup");
 		SetAvailableMapGoals(TEAM.ALLIES, b, "CAPPOINT_port_fuel");
 		SetAvailableMapGoals(TEAM.AXIS, b, "DEFEND_fuel.*");
+		SetAvailableMapGoals(TEAM.AXIS, b, "TRIPMINE_fuel.*");
 	},
 
 	Get_Fuel = function(trigger)
@@ -514,6 +538,7 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, false, Map.MOUNTMG42_Axis_MG42_Beach);
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2");
 		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_mg42_2_1");
+		SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_missile.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "FLAG_gold");
 		SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_missile.*");
 		SetAvailableMapGoals(TEAM.ALLIES, true, Map.PLANT_Back_Door);
@@ -616,6 +641,8 @@ global OnMapLoad = function()
 	OnTrigger("elevatordoor_down_goto", Map.Elevator_Down);
 	OnTrigger("hatch2_start", Map.ASgun_hatch_trigger);
 
+	OnTriggerRegion( AABB(-6951.792,640.794,618.503,-5462.037,2321.158,1823.906), RegionTrigger.DisableBotPush ); //parachute
+
 	Util.DisableGoal(".*", true);
 	Util.DisableGoal("ROUTE_sewer_grate");
 	Util.DisableGoal("ROUTE_side_door");
@@ -651,12 +678,15 @@ global OnMapLoad = function()
 	SetGoalPriority("PLANT_back_door", 0.85, TEAM.ALLIES);
 	SetGoalPriority("REPAIRMG42.*", 0.8);
 	SetGoalPriority("FLAG.*", 0.49, TEAM.AXIS, 0, true);
+	SetGoalPriority("TRIPMINE.*", 0.8, TEAM.AXIS);
 
 	Map.SetGun();
 
 	foreach (id and goal in { ".*MG42.*", Map.PLANT_Command_Post, Map.BUILD_Command_Post }){
 		Util.SetMaxUsersInProgress(1, goal);
 	}
+	Util.SetMaxUsersInProgress(5, "ATTACK_missile.*");
+	Util.SetMaxUsersInProgress(15, "ATTACK_ship1");
 
 	SetMapGoalProperties("DEFEND_.*", {mincamptime=60, maxcamptime=250} );
 

@@ -153,8 +153,16 @@ global Map =
 		SetAvailableMapGoals(TEAM.AXIS, false, "MOBILEMG42_wall.*" );
 		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_start.*" );
 		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_sewer.*" );
+		SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_x.*" );
+		if(!Map.agentsTakenTable["a"]){
+			SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_a.*" );
+		}
 		if(!Map.agentsTakenTable["b"]){
 			SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_obj_b.*" );
+			SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_b.*" );
+		}
+		if(!Map.agentsTakenTable["c"]){
+			SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_c.*" );
 		}
 		if(!Map.pitDrain){
 			SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_valve.*" );
@@ -202,6 +210,7 @@ global Map =
 				Map.agentsTaken+=1;
 				Map.agentsTakenTable[which] = true;
 				SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_obj_" + which + ".*");
+				SetAvailableMapGoals(TEAM.AXIS, false, "TRIPMINE_" + which + ".*" );
 				SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_secure.*");
 				SetAvailableMapGoals(TEAM.ALLIES, true, "ATTACK_secure.*");
 				if(Map.agentsTaken+Map.agentsSecured == 3){
@@ -215,6 +224,7 @@ global Map =
 	OnReturnedCounterAgent = function(which)
 	{
 		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_obj_" + which + ".*");
+		SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_" + which + ".*" );
 		Map.agentsTaken-=1;
 		Map.agentsTakenTable[which] = false;
 		if(Map.agentsTaken == 0){
@@ -347,6 +357,7 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_valve.*" );
 	SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
 	SetAvailableMapGoals(TEAM.AXIS, true, "MOBILEMG42_wall.*" );
+	SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_a.*" );
 
 	SetAvailableMapGoals(TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
 	SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_securePoint" );

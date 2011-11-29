@@ -118,6 +118,8 @@ global Map =
 	{
 		Util.OnTriggerPosition( Map.Mover_Tank, "depot", 190.0, Map.Tank_In_Depot );
 		SetGoalPriority( "SWITCH_gate_depot", 0.9 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_repair_l.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_repair_x.*" );
 		Util.MapDebugPrint( "Tank_At_Gate" );
 	},
 
@@ -257,6 +259,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_east.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_repair_l.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_repair_x.*" );
 		Map.Attack_Gun(true);
 		Util.DisableGoal("DEFEND_depot.*");
 		Util.OnTriggerPosition( Map.Mover_Tank, "before_gate", 180.0, Map.Tank_At_Gate2 );
@@ -401,6 +405,7 @@ global Map =
 		Map.Set_Fuel_Goals(false);
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_east.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_gun" );
 		SetGoalPriority( "BUILD_Hell_on_Wheels", 0.99, TEAM.ALLIES );
 		ETUtil.SetAimModeForMount("MOUNT_Tank", "opposite");
 		Util.OnTriggerPosition( Map.Mover_Tank, "yard3", 300.0, Map.Allies_Escape2 );

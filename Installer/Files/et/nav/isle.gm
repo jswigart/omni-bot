@@ -65,7 +65,7 @@ global Map =
 	{
 		Map.alliesFlag=byAllies;
 		SetAvailableMapGoals( TEAM.AXIS, !byAllies, "DEFEND_flag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, !byAllies, "PLANTMINE_flag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, !byAllies, ".*MINE_flag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, byAllies, "PLANTMINE_axis.*" );
 		if(!Map.houseWellGrateDestroyed){
 			SetAvailableMapGoals( TEAM.ALLIES, byAllies, Map.Plant_Aqueduct_Houses_Well_Gate );
@@ -189,7 +189,7 @@ global OnMapLoad = function()
 
 	Util.DisableGoal("MOVER.*");
 	Util.DisableGoal("DEFEND_.*");
-	Util.DisableGoal("PLANTMINE_.*");
+	Util.DisableGoal(".*MINE_.*");
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Aqueduct_Houses_Well_Gate );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Build_Damaged_aqueduct );
 
@@ -197,7 +197,8 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.Build_Well_Gate, 0.8, TEAM.AXIS);
 	SetGoalPriority( Map.Mount_helipad_mg40, 0.65, TEAM.AXIS);
 	SetGoalPriority( Map.Repair_helipad_mg40, 0.85, TEAM.AXIS);
-	SetGoalPriority( "PLANTMINE_flag.*", 0.74, TEAM.AXIS);
+	SetGoalPriority( "PLANTMINE_flag.*", 0.73, TEAM.AXIS);
+	SetGoalPriority( "TRIPMINE_flag.*", 0.74, TEAM.AXIS);
 
 	SetGoalPriority( Map.Checkpoint_forward_spawn, 0.75, TEAM.ALLIES);
 	SetGoalPriority( Map.Plant_Axis_Helipad, 0.89, TEAM.ALLIES);

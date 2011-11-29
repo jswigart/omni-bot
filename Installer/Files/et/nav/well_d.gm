@@ -165,6 +165,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_center.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_wall.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_wall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_x.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK.*" );

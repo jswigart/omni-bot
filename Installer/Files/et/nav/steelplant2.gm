@@ -165,6 +165,7 @@ global Map =
 	{
 		Util.EnableGoal("ROUTE_tunnel_west");
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_x.*" );
 		SetGoalPriority( "DEFEND_grate.*", 0.5);
 		Util.SetRoleForGoals("DEFEND_grate.*", ROLE.DEFENDER2);
 		Util.MapDebugPrint( "Well_Grate_Destroyed" );
@@ -249,6 +250,7 @@ global OnMapLoad = function()
 	Util.LimitToTeam( TEAM.AXIS, "GRENADE_fan");
 	Util.LimitToTeam( TEAM.ALLIES, "GRENADE_sentry");
 	Util.LimitToTeam( TEAM.AXIS, ".*_x.*");
+	SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_x.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
 
 	Util.ClearRoleForGoals("DEFEND_grate.*", ROLE.DEFENDER2);
