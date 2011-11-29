@@ -173,6 +173,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG.*");
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT.*");
 	Util.DisableGoal("DEFEND_truck.*");
+	Util.LimitToTeam( TEAM.ALLIES, "TRIPMINE_l.*");
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_Gold");
 	SetGoalPriority("MOUNTMG42.*", 0, TEAM.AXIS, CLASS.ENGINEER);

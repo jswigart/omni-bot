@@ -142,9 +142,11 @@ global Map =
 
 	Submarine_Accessible = function()
 	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Neutral_Command_Post" );
 		SetAvailableMapGoals( TEAM.AXIS, true, ".*village.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_allied.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_submarine.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_submarine.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Submarine" );
 		SetAvailableMapGoals( TEAM.AXIS, !Map.sideWallDestroyed || !Map.mainEntranceDestroyed, "DEFEND_sidewall.*" );
 	},
@@ -265,7 +267,7 @@ global OnMapLoad = function()
 	SetGoalPriority("ESCORT_ship", 0.58, TEAM.ALLIES);
 	SetGoalPriority("SNIPE_allied.*", 0.82, TEAM.ALLIES);
 	SetGoalPriority("GRENADE_tower_mg.*", 0.6, TEAM.ALLIES);
-	SetGoalPriority("PLANT_Neutral_Command_Post", 0.51, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority("PLANT_Neutral_Command_Post", 0.51, 0, CLASS.ENGINEER);
 	SetGoalPriority("REPAIRMG42_.*", 0.88, TEAM.AXIS);
 
 	Map.Spawn_Changed();

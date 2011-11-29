@@ -189,6 +189,7 @@ global Map =
 	{
 		Map.objTaken = b;
 		SetAvailableMapGoals( TEAM.AXIS, !b, "DEFEND_lab.*" );
+		SetAvailableMapGoals( TEAM.AXIS, !b, "TRIPMINE_lab.*" );
 		SetAvailableMapGoals( TEAM.AXIS, !b, "MOBILEMG42_lab.*" );
 		SetAvailableMapGoals( TEAM.AXIS, !b, ".*MG42_lower" );
 		SetAvailableMapGoals( TEAM.AXIS, b, "DEFEND_cap.*" );
@@ -316,6 +317,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_roof.*", 0.61);
 	SetGoalPriority( "DEFUSE_Neutral_Command_Post.*", 0.8, TEAM.ALLIES, CLASS.ENGINEER, true);
 	SetGoalPriority( "REPAIRMG42_Door.*", 0.82);
+	SetGoalPriority( "TRIPMINE.*", 0.82 );
 	SetGoalPriority( "REPAIRMG42_lower", 0.86);
 	SetGoalPriority( "SNIPE.*", 0.81);
 	SetGoalPriority( "MOUNTMG42.*", 0.6, TEAM.AXIS);

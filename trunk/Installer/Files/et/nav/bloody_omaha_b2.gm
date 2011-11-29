@@ -103,6 +103,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, !b, "DEFEND_center.*" );
 		SetAvailableMapGoals( TEAM.AXIS, !b, "DEFEND_front.*" );
 		SetAvailableMapGoals( TEAM.AXIS, b, ".*MG42_lower" );
+		SetAvailableMapGoals( TEAM.AXIS, b, "TRIPMINE.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, !b, "SNIPE_allies.*" );
 		if(!Map.seaWallDestroyed){ SetAvailableMapGoals( TEAM.ALLIES, b, "PLANT_Seawall" ); }
@@ -121,6 +122,7 @@ global Map =
 
 		WeaponTable.SetWeaponAvailability( CLASS.SOLDIER, WEAPON.FLAMETHROWER, b );
 		WeaponTable.SetWeaponAvailability( CLASS.SOLDIER, WEAPON.PANZERFAUST, !b );
+		WeaponTable.SetWeaponAvailability( null, WeaponTable.Shotgun, b );
 	},
 
 	beach_Flag1_Axis_Captured = function( trigger )
@@ -292,6 +294,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CHECKPOINT_beach_Flag1", 0.6 );
 	SetGoalPriority( "DEFEND_.*_dyno.*", 0.9 );
 	SetGoalPriority( "DEFUSE_Command_Post.*", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true);
+	SetGoalPriority( "PLANT_Command_Post.*", 0.7, TEAM.AXIS, CLASS.ENGINEER);
 
 	foreach (goal in { "DEFEND_.*", "MOUNTMG42_.*", "CALLARTILLERY_.*",
 		"SNIPE_.*", "BUILD_Command_Post", "PLANT_Side_Wall"  }){

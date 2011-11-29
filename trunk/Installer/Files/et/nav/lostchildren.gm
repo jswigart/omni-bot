@@ -187,6 +187,7 @@ global Map =
 		Util.EnableGoal( "ROUTE_barrier1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_axis_stairs" );
 		Map.SetAvail();
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_book.*" );
 		SetGoalPriority("MOUNTMG42_north", 0.7);
 		SetGoalPriority("MOBILEMG42_east.*", 0.69, TEAM.ALLIES);
 		Util.SetMaxUsers( 5, "FLAG_book1" );
@@ -267,6 +268,7 @@ global Map =
 		Util.EnableGoal( "ROUTE_wall" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_axis_stairs" );
 		Map.SetAvail();
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_boat.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_north" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_east.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Old_pool_bridge" );

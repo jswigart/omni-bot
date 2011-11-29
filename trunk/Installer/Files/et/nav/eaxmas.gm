@@ -31,6 +31,7 @@ global Map =
 		Map.gateDestroyed = true;
 		Util.ClearRoleForGoals( "FLAG_scr_AXIS_GOLD", ROLE.INFILTRATOR);
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_church.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_church.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_gate.*" );
 		Util.EnableGoal( ".*CAB_.*3");
