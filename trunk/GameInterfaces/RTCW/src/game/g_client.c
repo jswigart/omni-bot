@@ -1518,6 +1518,17 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	return NULL;
 }
 
+/*================
+setSeedPings
+Sets random number for a bot's ping.
+The seed will give it an initial 'ping' and then will fluctuate +/-  from it
+================*/
+void setSeedPings( gentity_t* ent ) {
+	if ( ent->client ) {
+		ent->client->pers.seedPing = ( ( rand() % 70 ) + 30 );  // 30 to 100 for pings
+	}
+}
+
 /*
 ===========
 ClientBegin
@@ -1604,6 +1615,17 @@ void ClientBegin( int clientNum ) {
 	client->sess.botSuicidePersist = qfalse;
 	client->sess.botPush = ent->r.svFlags & SVF_BOT ? qtrue : qfalse;
 
+	// force team based smg when swapping teams and weapons are unlocked
+	if ( g_unlockWeapons.integer && (client->sess.playerWeapon == WP_THOMPSON || client->sess.playerWeapon == WP_MP40) ) {
+		if ( client->sess.sessionTeam == TEAM_RED ) {
+			client->pers.cmd.mpSetup |= 3 << MP_WEAPON_OFFSET;
+			client->ps.weapon = WP_MP40;
+		} else if ( client->sess.sessionTeam == TEAM_BLUE ) {
+			client->pers.cmd.mpSetup |= 4 << MP_WEAPON_OFFSET;
+			client->ps.weapon = WP_THOMPSON;
+		}
+	}
+
 	// locate ent at a spawn point
 	ClientSpawn( ent, qfalse );
 
@@ -1677,17 +1699,6 @@ void ClientBegin( int clientNum ) {
         client->sess.credits = 1000;
     }
 #endif
-}
-
-/*================
-setSeedPings
-Sets random number for a bot's ping.
-The seed will give it an initial 'ping' and then will fluctuate +/-  from it
-================*/
-void setSeedPings( gentity_t* ent ) {
-	if ( ent->client ) {
-		ent->client->pers.seedPing = ( ( rand() % 70 ) + 30 );  // 30 to 100 for pings
-	}
 }
 
 /*
