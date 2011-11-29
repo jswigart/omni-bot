@@ -182,22 +182,23 @@ void TossClientItems( gentity_t *self ) {
 	}
 
 	// JPW NERVE don't drop these weapon types
-	if ( ( weapon == WP_FLAMETHROWER ) || ( weapon == WP_GARAND ) || ( weapon == WP_MAUSER ) || ( weapon == WP_VENOM ) ) {
+	if ( !g_unlockWeapons.integer && (( weapon == WP_FLAMETHROWER ) || ( weapon == WP_GARAND ) || ( weapon == WP_MAUSER ) || ( weapon == WP_VENOM )) ) {
 		weapon = WP_NONE;
 	}
 	// jpw
 
-	if ( weapon > WP_NONE && weapon < WP_MONSTER_ATTACK1 && self->client->ps.ammo[ BG_FindAmmoForWeapon( weapon )] ) {
+	if ( weapon > WP_NONE && weapon < WP_MONSTER_ATTACK1 &&
+			(self->client->ps.ammo[ BG_FindAmmoForWeapon( (weapon_t)weapon )] || self->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )]) ) {
 		// find the item type for this weapon
-		item = BG_FindItemForWeapon( weapon );
+		item = BG_FindItemForWeapon( (weapon_t)weapon );
 		// spawn the item
 
 		// Rafael
 		if ( item && !( self->client->ps.persistant[PERS_HWEAPON_USE] ) ) {
 			drop = Drop_Item( self, item, 0, qfalse );
 			// JPW NERVE -- fix ammo counts
-			drop->count = self->client->ps.ammoclip[BG_FindClipForWeapon( weapon )];
-			drop->item->quantity = self->client->ps.ammo[BG_FindClipForWeapon( weapon )];
+			drop->count = self->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )];
+			drop->item->quantity = self->client->ps.ammo[BG_FindClipForWeapon( (weapon_t)weapon )];
 			// jpw
 		}
 	}

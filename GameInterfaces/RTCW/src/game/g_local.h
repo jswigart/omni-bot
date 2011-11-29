@@ -1185,7 +1185,6 @@ void ClientUserinfoChanged( int clientNum );
 void ClientDisconnect( int clientNum );
 void ClientBegin( int clientNum );
 void ClientCommand( int clientNum );
-void setSeedPings( gentity_t* ent );  // Martin for fakeping
 
 //
 // g_active.c
