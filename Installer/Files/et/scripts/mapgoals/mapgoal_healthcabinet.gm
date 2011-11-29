@@ -40,7 +40,7 @@ this.Render = function()
 		if(this.ExtraDebugText==null)
 		{
 			this.ExtraDebugText = "";
-			this.ExtraDebugText += format("Range: %g", ToFloat(this.Range));
+			//this.ExtraDebugText += format("Range: %g", ToFloat(this.Range));
 		}
 
 		this.RenderDefault();

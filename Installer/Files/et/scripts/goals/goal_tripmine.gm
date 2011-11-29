@@ -5,6 +5,7 @@ this.Name = "TRIPMINE";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.SkipGetPriorityWhenActive = true;
 this.LimitToWeapon(WEAPON.TRIPMINE);
+this.AutoAdd = GetModName() == "silEnT" && (GetCvar("g_friendlyFireOpts") & 8);
 
 
 // define some goal states
@@ -14,15 +15,21 @@ this.ARM_EXPLOSIVE = 1;
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
+
+	// check ammo so we can finish if too many tripmines are placed
+	this.LimitTo( this.CheckTripmineAmmo, 2 );
+};
+
+this.CheckTripmineAmmo = function()
+{
+	return Util.HasAmmoForWeapon(this.Bot, WEAPON.TRIPMINE);
 };
 
 this.GetPriority = function()
 {
-	botClass = this.Bot.GetClass();
-
 	while(1)
 	{
-		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) && Util.HasAmmoForWeapon(this.Bot, WEAPON.TRIPMINE) )
+		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		{
 			count = this.QueryGoals(this.Bot.QueryGoalsTable,"TRIPMINE_.*");
 			if ( count > 0 )
@@ -51,7 +58,6 @@ this.Enter = function()
 	this.Goal_Position = this.MapGoal.GetPosition();
 
 	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", WEAPON.DYNAMITE);
-	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not hasammo", WEAPON.TRIPMINE);
 
 	if(!this.MarkInProgress(this.MapGoal)) {
 		this.BlackboardDelay(5, this.MapGoal);
@@ -61,7 +67,7 @@ this.Enter = function()
 
 this.Update = function()
 {
-	if ( this.RouteTo(this.MapGoal, 64.0) == EVENT.PATH_SUCCESS )
+	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
 		if(!this.MarkInUse(this.MapGoal)) {
 			this.BlackboardDelay(5, this.MapGoal);
@@ -109,7 +115,6 @@ this.Exit = function()
 	this.ReleaseWeaponRequest();
 
 	this.GoalState = this.LAY_EXPLOSIVE;
-	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
 
 	this.MapGoal = null;
@@ -119,7 +124,6 @@ this.UpdateSetMine = function()
 {
 	this.Priority = 2.0;
 
-	goalPos = this.MapGoal.GetPosition();
 	this.AddAimRequest(Priority.High, "position", this.MapGoal.AimPosition);
 	this.AddWeaponRequest(Priority.High, WEAPON.TRIPMINE );
 	this.BlockForWeaponChange( WEAPON.TRIPMINE );

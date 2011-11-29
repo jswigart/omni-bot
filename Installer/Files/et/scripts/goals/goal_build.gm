@@ -170,6 +170,8 @@ this.Update = function()
 
 	if ( pathSuccess == true )
 	{
+		this.Bot.StuckPos = null;
+
 		if ( this.Bot.GetConstructableState(this.TargetEntity) < 1 )
 		{
 			this.BlackboardDelay(5, this.MapGoal);
