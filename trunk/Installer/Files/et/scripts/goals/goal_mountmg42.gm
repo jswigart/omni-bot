@@ -79,10 +79,12 @@ this.Update = function()
 {
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
-		if(!this.MarkInUse(this.MapGoal)) {
+		if(!this.MarkInUse(this.MapGoal) || this.Bot.GetMountedPlayerOnMG42(this.GoalEnt)) {
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
+
+		this.Bot.StuckPos = null;
 
 		timeout = 0;
 		while( timeout < this.CampTime )
@@ -161,7 +163,9 @@ this.DisableCombat = function()
 
 this.Exit = function()
 {
-	this.Bot.PressButton(BTN.USE);
+	if (this.Bot.HasEntityFlag(ENTFLAG.MNT_MG42)){
+		this.Bot.PressButton(BTN.USE);
+	}
 
 	if ( this.CombatThread ) {
 		this.KillThread(this.CombatThread);

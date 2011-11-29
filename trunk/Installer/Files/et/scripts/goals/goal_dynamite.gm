@@ -72,6 +72,8 @@ this.Update = function()
 			this.Finished();
 		}
 
+		this.Bot.StuckPos = null;
+
 		this.UpdateDynamite();
 	}
 	else

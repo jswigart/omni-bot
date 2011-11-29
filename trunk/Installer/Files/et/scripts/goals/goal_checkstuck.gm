@@ -112,11 +112,17 @@ this.GetPriority = function()
 
 					this.ResetStuck();
 				}
-				else if ( this.JumpAttempts < this.JumpLimit )
+				else
 				{
-					this.Bot.StuckPos = this.Bot.GetPosition();
-					this.Bot.PressButton(BTN.JUMP);
-					this.JumpAttempts += 1;
+					if (!this.Bot.StuckPos) {
+						this.ResetStuck();
+					}
+					if ( this.JumpAttempts < this.JumpLimit)
+					{
+						this.Bot.StuckPos = this.Bot.GetPosition();
+						this.Bot.PressButton(BTN.JUMP);
+						this.JumpAttempts += 1;
+					}
 				}
 			}
 		}

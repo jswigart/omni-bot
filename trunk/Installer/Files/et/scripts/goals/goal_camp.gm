@@ -134,6 +134,8 @@ this.Update = function()
 			this.Finished();
 		}
 
+		this.Bot.StuckPos = null;
+
 		this.Bot.DisableCombatMovement = this.MapGoal.DisableCM > 0;
 
 		if ( this.WeaponRestricted > 0 && this.UsingWeapon )

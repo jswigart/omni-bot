@@ -66,6 +66,8 @@ this.Update = function()
 			this.Finished();
 		}
 
+		this.Bot.StuckPos = null;
+
 		if ( this.MapGoal.Stance == "crouch" ) {
 			this.Bot.HoldButton(BTN.CROUCH, 99);
 		}

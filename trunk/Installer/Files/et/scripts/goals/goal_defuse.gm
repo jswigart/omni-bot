@@ -63,6 +63,8 @@ this.Update = function()
 			this.Finished();
 		}
 
+		this.Bot.StuckPos = null;
+
 		pos = GetEntPosition(this.TargetEntity);
 		this.AddAimRequest(Priority.High, "position", pos);
 		this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );

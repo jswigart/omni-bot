@@ -73,6 +73,8 @@ this.Update = function()
 			this.Finished();
 		}
 
+		this.Bot.StuckPos = null;
+
 		// note: they can only select one randomly each time they activate the goal
 		// this is because there is no guarantee that they are able to cycle through each one
 		// given the limits of the weapon while it is set.

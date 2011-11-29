@@ -108,16 +108,19 @@ foreach (class in { CLASS.MEDIC, CLASS.ENGINEER, CLASS.FIELDOPS } )
 	tbl2[WEAPON.THOMPSON] = true; //M16
 
 	if (isEtnam) {
+		WeaponTable.Shotgun = WEAPON.ITHACA;
 		tbl1[WEAPON.ITHACA] = true;
 		tbl2[WEAPON.ITHACA] = true;
 		tbl1[WEAPON.RPD] = true;
 		tbl2[WEAPON.M3A1] = true;
 	}
 	if (isNq && class!=CLASS.MEDIC) {
+		WeaponTable.Shotgun = WEAPON.SHOTGUN;
 		tbl1[WEAPON.SHOTGUN] = true;
 		tbl2[WEAPON.SHOTGUN] = true;
 	}
 	if (isJaymod) {
+		WeaponTable.Shotgun = WEAPON.M97;
 		tbl1[WEAPON.M97] = true;
 		tbl2[WEAPON.M97] = true;
 	}
@@ -167,6 +170,13 @@ if (isSilentMod && GetCvar("g_classWeapons") & 4 ) {
 
 WeaponTable.SetWeaponTeamAvailability = function(team, class, weapon, enable)
 {
+	if (typeId(class) == 0 ) {
+		foreach (classId in Util.PlayerClassTable) {
+			this.SetWeaponTeamAvailability(team, classId, weapon, enable);
+		}
+		return;
+	}
+
 	classTable = PrimaryWeaponChoices[team][class];
 	if (!classTable) {
 		Util.MapDebugPrint("WeaponTable.SetWeaponAvailabilty: No weapon table for class " + Util.ClassName(class), true);
