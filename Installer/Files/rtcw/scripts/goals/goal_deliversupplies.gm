@@ -9,7 +9,7 @@ this.AlwaysRecieveEvents = true;
 
 // possible options
 this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
-this.DeliverPriority = 0.9;
+this.DeliverPriority = 1.1;
 
 // states
 this.DELIVER_PACKS = 1;
@@ -35,7 +35,7 @@ this.GetPriority = function()
 		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
 
 		// cs: if we've activated from a revive goal, lets give it a higher priority than normal.
-		this.Priority = 1.1;
+		this.Priority = this.DeliverPriority + 0.2;
 	}
 };
 

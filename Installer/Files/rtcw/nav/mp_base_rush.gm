@@ -14,7 +14,7 @@ global Map =
 	DocsAtHome = true,
 	DocsTransmitted = false,
 	DoorStatus = 1,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	DispenseAmmoTime = 10, // give axis time to go call the arty
 	DontDispenseAmmo = true,
@@ -252,7 +252,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_transmit" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit" );
-		
+
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );

@@ -178,7 +178,6 @@ global Map =
 		Map.DispenseAmmoTime = 1;
 
 		Util.DisableGoal( "DEFEND_engSouth.*" );
-		//RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 	},
 
 	north_planted = function( trigger )

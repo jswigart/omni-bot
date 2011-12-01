@@ -15,7 +15,7 @@ global Map =
 	DispenseAmmoTime = 1,
 
 	//set to false if you don't want allies /killing
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	gratebot = 0,
 	Navigation =

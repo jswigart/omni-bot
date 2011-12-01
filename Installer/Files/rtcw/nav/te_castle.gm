@@ -1,7 +1,7 @@
 global Map =
 {
 	//set this to false if you don't like bots /killing
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 	Quiet = true,
 	Flag_Sacred_Obelisk = "FLAG_Sacred_Obelisk",
 	Plant_Coffin = "PLANT_Coffin",

@@ -4,7 +4,7 @@ global Map =
 	Debug = false,
 	DebugAvailability = false,
 	ViewDistance = 4300,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 	TowerPlayers = 0,
 	DocsGone = false,
 
@@ -630,14 +630,14 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	//SetGoalPriority( "DEFUSE_.*", 0.0, 0, CLASS.ENGINEER, true );	//Martin - Turned off via available goals when its planted
 	//RTCWUtil.LimitToClass("MOUNT.*", 0, CLASS.ENGINEER, CLASS.MEDIC);
-	
+
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 );
 	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 	SetGoalPriority( "GRENADE_Barricade.*", 0.81 );
-	
+
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.ENGINEER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
@@ -795,7 +795,7 @@ global OnMapLoad = function()
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
 	}
-	
+
 	if ( Map.CompSettings ) {
 		RTCWUtil.SetTeamSuicide( TEAM.AXIS, 1, 1 );
 	}

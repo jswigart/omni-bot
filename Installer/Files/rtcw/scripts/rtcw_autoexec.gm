@@ -21,6 +21,7 @@ global DEBUG_GOAL_AVAILABILITY = false;
 global DisableClassManager = false;
 
 global MAP_TALK = true; // end round chats.
+global MAP_SUICIDE = false; // kill out for charge, etc
 
 global PostMapLoad = function()
 {
