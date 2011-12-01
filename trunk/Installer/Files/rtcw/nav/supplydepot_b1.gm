@@ -14,6 +14,7 @@ global Map =
 	DepotStatus = false,
 	WallStatus = false,
 	SpawnPlanted = false,
+	Suicide = true,
 
 	Navigation =
 	{
@@ -32,7 +33,11 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-
+		
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+		
 		Map.FlagStatus = false;
 	},
 
@@ -43,6 +48,9 @@ global Map =
 		}
 
 		Map.FlagStatus = true;
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
 		if ( Map.DepotStatus == false ) {
@@ -213,6 +221,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlagSK.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rTunnel.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagSKAS_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 	},
@@ -346,6 +355,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Forward_Spawn_Door" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rTunnel.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 
@@ -361,6 +371,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bEng.*", 0.90 );
 
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	MapRoutes =
@@ -524,8 +535,16 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rDocs_5 = MapRoutes.DEFEND_rDocs_1;
 	MapRoutes.DEFEND_rDocs_6 = MapRoutes.DEFEND_rDocs_1;
 	MapRoutes.DEFEND_rDocs_7 = MapRoutes.DEFEND_rDocs_1;
-
+	
 	Util.Routes( MapRoutes );
+	
+	yield();yield();
+	
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+	
 };
 
 global OnBotJoin = function( bot )
