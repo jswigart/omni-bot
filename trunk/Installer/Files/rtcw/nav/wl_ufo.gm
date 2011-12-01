@@ -20,7 +20,7 @@ global Map =
 	MainStatus = true,
 	SouthStatus = true,
 	DocStatus = true,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	Navigation =
 	{

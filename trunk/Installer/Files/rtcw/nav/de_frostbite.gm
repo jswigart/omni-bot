@@ -36,7 +36,7 @@ global Map =
 	PanzLowerBots = 0,
 
 	//set to false if you don't want axis /killing when docs are returned
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	Airstrike =
 	{

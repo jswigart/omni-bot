@@ -3,7 +3,7 @@ global Map =
 	DontDispenseAmmo = true,
 	DispenseAmmoTime = 1,
 	//set this to false if you don't like bots /killing
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 	Debug = false,
 	Quiet = true,
 	Flag_Sacred_Obelisk = "FLAG_Sacred_Obelisk",

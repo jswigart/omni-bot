@@ -3,6 +3,7 @@ global Map =
 	Quiet = true,
 	FocusPrimary = false,
 	ViewDistance = 5000,
+	Suicide = MAP_SUICIDE,
 
 	Checkpoint_beacheadspawn = "CHECKPOINT_beacheadspawn",
 	Plant_Trench = "PLANT_Trench_Grate",
@@ -82,7 +83,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p[12]" );
 	},
@@ -122,7 +125,9 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Trench.*" );
-		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
 	},
 
 
@@ -305,7 +310,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_Barricade1", 0.66 );
 	SetGoalPriority( "GRENADE_Barricade1", 0.65 );
 
-	RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );

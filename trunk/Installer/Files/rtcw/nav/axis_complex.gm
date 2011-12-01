@@ -22,7 +22,7 @@ global Map =
 	Repair_mg42_3_4 = "REPAIRMG42_mg42_3_4",
 	DispenseAmmoTime = 10,
 	DontDispenseAmmo = true,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	//set status' for conditionals
 	//FlagStatus = 0, //0 nobody, 1 axis, 2 allies
@@ -56,7 +56,7 @@ global Map =
 
 		//allies should plant tower first
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
-		
+
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
@@ -104,7 +104,7 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		
+
 		Wp.SetWaypointFlag( "roofjump1", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
@@ -122,7 +122,7 @@ global Map =
 		}
 
 		Map.DocStatus = 1;
-		
+
 		Wp.SetWaypointFlag( "roofjump1", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 		Wp.SetWaypointFlag( "roofjump3", "allies", false );
@@ -151,7 +151,7 @@ global Map =
 		}
 
 		Map.DocStatus = 0;
-		
+
 		Wp.SetWaypointFlag( "roofjump1", "allies", true );
 		Wp.SetWaypointFlag( "roofjump2", "allies", true );
 		Wp.SetWaypointFlag( "roofjump3", "allies", true );
@@ -216,7 +216,7 @@ global Map =
 			}
 		},
 	},
-	
+
 	DisableCombatMove =
 	{
 		Name = "DisableCombatMove",
@@ -256,7 +256,7 @@ global OnMapLoad = function()
 	tOne = OnTriggerRegion( AABB( 528,-2458,739, 636, -1832, 814 ), Map.FoyerTrigger );
 	tPillbox1 = OnTriggerRegion( AABB( -494.000,-2326.000,1013.000,-15.000,-1978.000,1087.000 ), Map.DisableCombatMove );
 	tPillbox2 = OnTriggerRegion( AABB( -1163.000,-2173.000,986.000,-724.000,-1852.000,1060.000 ), Map.DisableCombatMove );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 35, maxcamptime = 60} );
@@ -275,7 +275,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_main_entrance_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_lowmg42" );
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_main_attack_.*" );
@@ -303,7 +303,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, Map.Mount_mg42_3_3 );
 	Util.SetMaxUsersInProgress( 1, Map.Repair_mg42_3_3 );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	
+
 	Wp.SetWaypointFlag( "roofjump1", "allies", true );
 	Wp.SetWaypointFlag( "roofjump2", "allies", true );
 	Wp.SetWaypointFlag( "roofjump3", "allies", true );
@@ -356,7 +356,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	yield(); yield();
 
 	// Martin - moving so it gets enabled
@@ -364,7 +364,7 @@ global OnMapLoad = function()
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
 	}
-	
+
 	EntityKill( 277 );
 
 	Util.Routes( Maproutes );

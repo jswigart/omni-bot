@@ -3,7 +3,7 @@ global Map =
 	Quiet = true,
 	FocusPrimary = false,
 	DontDispenseAmmo = true,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
 	Flag_Secret_Documents = "FLAG_Secret_Documents",

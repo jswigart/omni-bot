@@ -4,7 +4,7 @@ global Map =
 	Debug = false,
 	DebugAvailability = false,
 	ViewDistance = 3500,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 	TowerPlayers = 0,
 
 	Airstrike =
