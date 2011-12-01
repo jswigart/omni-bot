@@ -31,6 +31,7 @@ global Map =
 		{
 			DEFENDER =
 			{
+				crucialClass = CLASS.ENGINEER,
 				numbots = 3,
 			},
 		},
@@ -379,7 +380,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rDocs5", 0.45 );
 	SetGoalPriority( "DEFEND_rDocs6", 0.45 );
 	SetGoalPriority( "DEFEND_rBackhall", 0.6 );
-	SetGoalPriority( "CAMP_bGate.*", 0.95 );
+	SetGoalPriority( "CAMP_bGate.*", 0.75 ); // less than plant! note 0.1 is added for role bonus too.
 
 	RTCWUtil.ExcludeClass( "FLAG_Docs", TEAM.ALLIES, CLASS.SOLDIER );
 
