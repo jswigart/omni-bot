@@ -48,7 +48,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
 			//RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		}
@@ -91,11 +90,11 @@ global Map =
 
 		Map.RelicStatus = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_cellar" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_cellar" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAltDeliver_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag_obj" );
@@ -124,7 +123,6 @@ global Map =
 
 		Map.RelicStatus = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver_.*" );
@@ -132,7 +130,7 @@ global Map =
 
 		//SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag_obj" ); //Martin - this is a suicide mission, just stay back
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver_.*" );
-		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCellar_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAltDeliver_.*" );
 		if ( Map.TunnelStatus == true || Map.MainStatus == true ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard_.*" );
@@ -253,6 +251,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag_obj" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 
 //	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT.*" );	// Martin - stupid to have on
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
@@ -338,8 +337,11 @@ global OnMapLoad = function()
 		},
 		DEFEND_rDocs_1 =
 		{
-			ROUTE_quickroute = {Weight = 3,},
-			ROUTE_securitydoor = {},
+			ROUTE_rSpawn =
+			{
+				ROUTE_quickroute = {Weight = 3,},
+				ROUTE_securitydoor = {},
+			},
 		},
 		DEFEND_rFlag_1 =
 		{
