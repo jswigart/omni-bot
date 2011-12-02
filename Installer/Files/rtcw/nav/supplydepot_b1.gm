@@ -14,7 +14,7 @@ global Map =
 	DepotStatus = false,
 	WallStatus = false,
 	SpawnPlanted = false,
-	Suicide = true,
+	Suicide = MAP_SUICIDE,
 
 	Navigation =
 	{
