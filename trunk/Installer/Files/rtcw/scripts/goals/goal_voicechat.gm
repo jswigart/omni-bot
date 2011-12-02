@@ -16,12 +16,12 @@ this.Initialize = function()
 	}
 
 	// allow or disallow bots to respond to other bots
-	this.OnlyRespondToHumans = false;
+	this.OnlyRespondToHumans = true;
 
 	// optionally scale the frequency based on number of bots
 	// the frequency rate will be reduced by this number for every bot
 	// useful for servers running a lot of bots to reduce noise
-	this.FrequencyReductionPerBot = 0.1;
+	this.FrequencyReductionPerBot = 0;
 
 	// optionally fine tune frequency rates per response type. setting to 0 will disable
 	this.TEAMTHANKS_SAYWELCOME 	= this.Frequency;
@@ -44,9 +44,12 @@ this.Initialize = function()
 	this.PLANT_SAYCOVER		= this.Frequency;
 	this.DEFEND_SAYDEFEND		= this.Frequency * 0.5;
 	this.ATTACK_SAYATTACK		= this.Frequency * 0.5;
+
+	// a bit of general chatter for kills / deaths
+	this.EXTRA_CHAT_MSG		= 1.5; // 15% chance for these
 };
 
-this.Randomize = function(frequency, isBot)
+this.Randomize = function(frequency, isBot, immediate)
 {
 	if ( this.OnlyRespondToHumans == true && isBot != null ) {
 		return false;
@@ -60,22 +63,14 @@ this.Randomize = function(frequency, isBot)
 
 	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
 	{
-		sleep(RandFloat(0.5, 1.0));
+		// death event must not sleep first
+		if (!immediate) {
+			sleep(RandFloat(0.5, 1.0));
+		}
 		return true;
 	}
 
 	return false;
-};
-
-this.IsBot = function(ent)
-{
-	if (ent)
-	{
-		b = Util.GetBotByName(GetEntName(ent));
-		if (b) { return b; }
-	}
-
-	return null;
 };
 
 this.GetPriority = function()
@@ -106,7 +101,7 @@ this.GetPriority = function()
 this.Events[EVENT.TEAM_VOICE] = function(source, id)
 {
 	cls = this.Bot.GetClass();
-	isBot = this.IsBot(source);
+	isBot = Util.IsBot(source);
 
 	switch(id)
 	{
@@ -140,9 +135,9 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 		}
 		case VOICE.NEED_OPS:
 		{
-			if ( cls == CLASS.COVERTOPS && this.Randomize(this.NEEDOPS_SAYOPS, isBot) == true )
+			if ( cls == CLASS.LIEUTENANT && this.Randomize(this.NEEDOPS_SAYOPS, isBot) == true )
 			{
-				this.Bot.SayVoice(VOICE.IMA_COVERTOPS);
+				this.Bot.SayVoice(VOICE.IMA_LIEUTENANT);
 			}
 			return;
 		}
@@ -151,7 +146,7 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.REVIVED_SAYTHANKS, isBot ) == true )
 	{
@@ -161,7 +156,7 @@ this.Events[EVENT.REVIVED] = function(whoDoneIt)
 
 this.Events[EVENT.HEALED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.HEALED_SAYTHANKS, isBot) == true )
 	{
@@ -171,7 +166,7 @@ this.Events[EVENT.HEALED] = function(whoDoneIt)
 
 this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 {
-	isBot = this.IsBot(whoDoneIt);
+	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity()
 		&& this.Randomize(this.AMMO_SAYTHANKS, isBot) == true )
 	{
@@ -181,7 +176,8 @@ this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 
 this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 {
-	isBot = this.IsBot(victim);
+	if ( !this.Bot ) { return; }
+	isBot = Util.IsBot(victim);
 
 	if ( this.Bot.KillingForRevive == true ) { return; }
 
@@ -195,27 +191,7 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 		return;
 	}
 
-	// cheer the revenge
-	if ( this.LastKiller && this.LastKiller == victim )
-	{
-		if ( this.Randomize(this.REVENGE_CHEER, isBot) == true )
-		{
-			this.Bot.SayVoice( VOICE.G_CHEER );
-		}
-
-		this.LastKiller = null; // always clear this
-		return;
-	}
-
-	if ( mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN" )
-	{
-		if ( this.Randomize(this.KNIFEKILL_CHEER, isBot) == true )
-		{
-			this.Bot.SayVoice( VOICE.G_CHEER );
-		}
-
-		return;
-	}
+	this.ProcessExtraChatMessage(this.KilledSomeone, false, false, GetEntName(victim));
 };
 
 this.Events[EVENT.DEATH] = function(attacker, mod)
@@ -223,20 +199,23 @@ this.Events[EVENT.DEATH] = function(attacker, mod)
 	if ( GetGameIdFromEntity(attacker) > 63 )
 		{ return;}
 
-	isBot = this.IsBot(attacker);
+	isBot = Util.IsBot(attacker);
 
 	if ( !this.Bot.IsAllied( attacker ) )
 	{
-		this.LastKiller = attacker;
-
-		if ( (mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN") )
-		{
-			if ( this.Randomize(this.KNIFEDEATH_GREATSHOT, isBot) == true )
-				{ this.Bot.SayVoice( VOICE.G_GREATSHOT ); }
-			else if ( this.Randomize(this.KNIFEDEATH_NEGATIVE, isBot) == true )
-				{ this.Bot.SayVoice( VOICE.G_NEGATIVE ); }
-
+		this.ProcessExtraChatMessage(this.KilledByEnemy, false, true, GetEntName(attacker));
+	}
+	else
+	{
+		if ( mod == "MOD_SUICIDE" ) {
 			return;
+		}
+
+		if ( attacker == this.Bot.GetGameEntity() ) { // killed self
+			this.ProcessExtraChatMessage(this.KilledSelf, false, true);
+		}
+		else {
+			this.ProcessExtraChatMessage(this.TeamKilled, true, true, GetEntName(attacker));
 		}
 	}
 };
@@ -246,7 +225,7 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	if ( GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
-	isBot = this.IsBot(Inflictor);
+	isBot = Util.IsBot(Inflictor);
 	if ( isBot && isBot.KillingForRevive == true ) {
 		return;
 	}
@@ -292,4 +271,74 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 	}
 
 	this.Bot.DelayResponse = 5;
+};
+
+////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+////////////////////////////////////////////////////////////////////////
+
+this.ProcessExtraChatMessage = function(tbl, isTeam, immediate, entName)
+{
+	if ( !this.Randomize(this.EXTRA_CHAT_MSG, null, immediate) ) {
+		return;
+	}
+
+	ind = Util.GetRandomFromTable(tbl);
+
+	// oops. invalid or empty table
+	if ( ind < 0 ) {
+		return;
+	}
+
+	msg = tbl[ind];
+
+	if ( typeName(msg) == "int" ) {
+		this.Bot.SayVoice(msg);
+	}
+	else {
+		// 25% of the time the bot will send a private message if allowed
+		if ( entName && RandInt(0,3) == 0 && GetCvar("g_privatemessages") > 0 ) {
+			this.Bot.SendPrivateMessage(entName, msg);
+		}
+		else if ( isTeam ) {
+			this.Bot.SayTeam(msg);
+		}
+		else {
+			this.Bot.Say(msg);
+		}
+	}
+};
+
+////////////////////////////////////////////////////////////////////////
+// CHAT TABLES
+////////////////////////////////////////////////////////////////////////
+
+this.KilledSelf =
+{
+	VOICE.G_OOPS,
+};
+
+this.TeamKilled =
+{
+	VOICE.NEGATIVE,
+};
+
+this.KilledByEnemy =
+{
+	VOICE.G_GREATSHOT,
+	VOICE.G_GREATSHOT,
+	VOICE.G_NEGATIVE,
+	VOICE.G_OOPS,
+	VOICE.G_HOLD_FIRE,
+	VOICE.NEED_BACKUP,
+	VOICE.TAKING_FIRE,
+};
+
+this.KilledSomeone =
+{
+	VOICE.G_ENEMY_WEAK,
+	VOICE.G_CHEER,
+	VOICE.G_CHEER,
+	VOICE.G_AFFIRMATIVE,
+	VOICE.PATH_CLEARED,
 };
