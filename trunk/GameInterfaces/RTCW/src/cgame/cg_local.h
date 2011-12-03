@@ -1501,6 +1501,7 @@ extern vmCvar_t cg_fraglimit;
 extern vmCvar_t cg_deathmatch;
 extern vmCvar_t cg_spawnTimer_period;
 extern vmCvar_t cg_spawnTimer_set;
+extern vmCvar_t	cg_improvedSmoke;			// Martin
 
 //
 // cg_main.c

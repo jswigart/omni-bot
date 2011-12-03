@@ -365,9 +365,23 @@ CG_GetWindVector
 ==========================
 */
 void CG_GetWindVector( vec3_t dir ) {
-	dir[0] = random() * 0.25;
-	dir[1] = cgs.smokeWindDir; // simulate a little wind so it looks natural
-	dir[2] = random(); // one direction (so smoke goes side-like)
+	// 0 - Horizontal
+	// 1 - Horizontal
+	// 2 - Vertical
+
+	if (cg_improvedSmoke.integer)
+	{
+		dir[0] = random() * 0.25;
+		dir[1] = random() * 0.25; // simulate a little wind so it looks natural
+		dir[2] = random() * 1.2; // one direction (so smoke goes side-like)
+	}
+	else
+	{
+		dir[0] = random() * 0.25;
+		dir[1] = cgs.smokeWindDir; // simulate a little wind so it looks natural
+		dir[2] = random(); // one direction (so smoke goes side-like)
+	}
+
 	VectorNormalize( dir );
 }
 // jpw
@@ -418,24 +432,49 @@ void CG_PyroSmokeTrail( centity_t *ent, const weaponInfo_t *wi ) {
 		CG_GetWindVector( dir );
 		VectorScale( dir,65,dir ); // was 75, before that 55
 
-		if ( !ent->currentState.otherEntityNum2 ) { // axis team, generate red smoke
-			CG_SmokePuff( origin, dir,
-						  25 + rnd * 110, // width
-						  rnd * 0.5 + 0.5, rnd * 0.5 + 0.5, 1, 0.5,
-						  4800 + ( rand() % 2800 ), // duration was 2800+
-						  t,
-						  0,
-						  0,
-						  cgs.media.smokePuffShader );
-		} else {
-			CG_SmokePuff( origin, dir,
-						  25 + rnd * 110, // width
-						  1.0, rnd * 0.5 + 0.5, rnd * 0.5 + 0.5, 0.5,
-						  4800 + ( rand() % 2800 ), // duration was 2800+
-						  t,
-						  0,
-						  0,
-						  cgs.media.smokePuffShader );
+		if (cg_improvedSmoke.integer)
+		{
+			if ( !ent->currentState.otherEntityNum2 ) { // allied team, generate red smoke
+				CG_SmokePuff( origin, dir,
+								   25 + rnd * 110, // width
+								   rnd * 0.5 + 0.2, rnd * 0.5 + 0.2, 1, 0.5,
+								   4800 + ( rand() % 2800 ), // duration was 2800+
+								   t,
+								   0,
+								   0,
+								   cgs.media.smokePuffShader );
+			} else {
+				CG_SmokePuff( origin, dir,
+								   25 + rnd * 110, // width
+								   1.0, rnd * 0.5 + 0.2, rnd * 0.5 + 0.2, 0.5,
+								   4800 + ( rand() % 2800 ), // duration was 2800+
+								   t,
+								   0,
+								   0,
+								   cgs.media.smokePuffShader );
+			}
+		}
+		else
+		{
+			if ( !ent->currentState.otherEntityNum2 ) { // allied team, generate red smoke
+				CG_SmokePuff( origin, dir,
+								   25 + rnd * 110, // width
+								   rnd * 0.5 + 0.5, rnd * 0.5 + 0.5, 1, 0.5,
+								   4800 + ( rand() % 2800 ), // duration was 2800+
+								   t,
+								   0,
+								   0,
+								   cgs.media.smokePuffShader );
+			} else {
+				CG_SmokePuff( origin, dir,
+								   25 + rnd * 110, // width
+								   1.0, rnd * 0.5 + 0.5, rnd * 0.5 + 0.5, 0.5,
+								   4800 + ( rand() % 2800 ), // duration was 2800+
+								   t,
+								   0,
+								   0,
+								   cgs.media.smokePuffShader );
+			}
 		}
 	}
 }
