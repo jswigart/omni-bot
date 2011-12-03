@@ -285,6 +285,7 @@ vmCvar_t cg_fraglimit;
 vmCvar_t cg_deathmatch;
 vmCvar_t cg_spawnTimer_set;   //quad
 vmCvar_t cg_spawnTimer_period;   //quad
+vmCvar_t cg_improvedSmoke;		//Martin
 
 typedef struct {
 	vmCvar_t    *vmCvar;
@@ -474,6 +475,7 @@ cvarTable_t cvarTable[] = {
 	{ &cg_deathmatch,                   "g_deathmatch",                 "0",                    0 },
 	{ &cg_spawnTimer_set,               "cg_spawnTimer_set",            "-1",                   CVAR_TEMP },
 	{ &cg_spawnTimer_period,            "cg_spawnTimer_period",         "0",                    CVAR_TEMP },
+	{ &cg_improvedSmoke,				"cg_improvedSmoke",				"0",					CVAR_ARCHIVE | CVAR_LATCH },	// Martin
 };
 int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
 
