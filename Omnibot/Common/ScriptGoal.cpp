@@ -464,8 +464,9 @@ namespace AiState
 						int iRetVal = 0;
 						if(call.DidReturnVariable() && call.GetReturnedInt(iRetVal) && iRetVal)
 						{
-							SetScriptPriority(1.f);
-							SetLastPriority(1.f);
+							// cs: upped to 10. we don't ever want these interrupted. handle in goal query?
+							SetScriptPriority(10.f);
+							SetLastPriority(10.f);
 							return true;
 						}						
 					}
