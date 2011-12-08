@@ -319,13 +319,7 @@ void State::RootUpdate()
 obReal State::InternalGetPriority()
 {
 	// cs: hack to make sure paththrough isn't interrupted
-	FINDSTATE(hl,HighLevel,GetClient()->GetStateRoot());
-	if(hl != NULL && hl->GetActiveState() && hl->GetActiveState()->IsUninterruptible())
-	{
-		return m_LastPriority;
-	}
-
-	if( /*!GetClient()->CheckUserFlag(Client::FL_PATHTHROUGHACTIVE) &&*/ (m_LastPriorityTime < IGame::GetTime()) )
+	if( (m_LastPriorityTime < IGame::GetTime() && !GetClient()->CheckUserFlag(Client::FL_UNINTERRUPTIBLE)) )
 	{
 		const noSelectReason_t rsn = CanBeSelected();
 		SetSelectable( rsn == NoSelectReasonNone );
