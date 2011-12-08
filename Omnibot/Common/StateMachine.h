@@ -80,8 +80,6 @@ public:
 		State_DontAutoAdd,
 		State_ScriptGoal,			// This state is a script goal.
 
-		State_Uninterruptible,		// State should always complete once activated
-
 		State_StartUser = 24,
 	};
 
@@ -159,12 +157,10 @@ public:
 	inline bool IsDisabled() const { return IsUserDisabled() || !IsSelectable(); }
 	inline bool IsScriptGoal() const { return m_StateFlags.CheckFlag(State_ScriptGoal); }
 	inline bool IsAutoAdd() const { return !m_StateFlags.CheckFlag(State_DontAutoAdd); }
-	inline bool IsUninterruptible() const { return m_StateFlags.CheckFlag(State_Uninterruptible); }
 	
 	inline void SetScriptGoal(bool _b) { m_StateFlags.SetFlag(State_ScriptGoal, _b); }
 	inline void SetAutoAdd(bool _b) { m_StateFlags.SetFlag(State_DontAutoAdd, !_b); }
 	inline void SetUserDisabled(bool _b) { m_StateFlags.SetFlag(State_UserDisabled, _b); }
-	inline void SetUninterruptible(bool _b) { m_StateFlags.SetFlag(State_Uninterruptible, _b); }
 
 	inline bool CheckFlag(obint32 _flag) { return m_StateFlags.CheckFlag(_flag); }
 	inline void SetFlag(obint32 _flag) { m_StateFlags.SetFlag(_flag); }
