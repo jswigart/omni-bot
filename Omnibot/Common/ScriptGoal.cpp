@@ -466,7 +466,12 @@ namespace AiState
 						{
 							SetScriptPriority(1.f);
 							SetLastPriority(1.f);
-							GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,true);
+							//GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,true);
+							FINDSTATE(hl,HighLevel,GetClient()->GetStateRoot());
+							if(hl != NULL && hl->GetActiveState())
+							{
+								hl->GetActiveState()->SetUninterruptible(true);
+							}
 							return true;
 						}						
 					}
@@ -480,7 +485,12 @@ namespace AiState
 	{
 		SetScriptPriority(0.f);
 		SetLastPriority(0.f);
-		GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,false);
+		//GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,false);
+		FINDSTATE(hl,HighLevel,GetClient()->GetStateRoot());
+		if(hl != NULL && hl->GetActiveState())
+		{
+			hl->GetActiveState()->SetUninterruptible(false);
+		}
 	}
 
 	obReal ScriptGoal::GetPriority()
