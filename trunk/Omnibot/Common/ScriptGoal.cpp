@@ -464,9 +464,9 @@ namespace AiState
 						int iRetVal = 0;
 						if(call.DidReturnVariable() && call.GetReturnedInt(iRetVal) && iRetVal)
 						{
-							// cs: upped to 10. we don't ever want these interrupted. handle in goal query?
-							SetScriptPriority(10.f);
-							SetLastPriority(10.f);
+							SetScriptPriority(1.f);
+							SetLastPriority(1.f);
+							GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,true);
 							return true;
 						}						
 					}
@@ -480,6 +480,7 @@ namespace AiState
 	{
 		SetScriptPriority(0.f);
 		SetLastPriority(0.f);
+		GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,false);
 	}
 
 	obReal ScriptGoal::GetPriority()
