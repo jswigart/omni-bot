@@ -466,7 +466,6 @@ namespace AiState
 						{
 							SetScriptPriority(1.f);
 							SetLastPriority(1.f);
-							GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,true);
 							return true;
 						}						
 					}
@@ -573,10 +572,6 @@ namespace AiState
 			Prof(Exit);
 
 			SetScriptPriority( 0.0f );
-
-			// cs: clear the flag so pt info can be reset
-			if(m_Callbacks[ON_PATH_THROUGH])
-				GetClient()->SetUserFlag(Client::FL_PATHTHROUGHACTIVE,false);
 
 			if(m_Callbacks[ON_EXIT])
 			{
