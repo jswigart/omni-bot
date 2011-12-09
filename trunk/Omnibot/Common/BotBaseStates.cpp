@@ -1242,7 +1242,12 @@ namespace AiState
 			return false;
 		OBASSERT(_owner,"No User Defined!");
 
-		if(_owner->GetFollowUserName() != m_PassThroughState)
+		// cs: don't run if other than paththrough
+		if(m_PassThroughState && _owner->GetFollowUserName() != m_PassThroughState)
+			return false;
+
+		// cs: paththrough goal has exited, clear the pt info
+		if (!GetClient()->CheckUserFlag(Client::FL_PATHTHROUGHACTIVE))
 			CancelPathThrough();
 
 		m_Query.m_Final = true;
@@ -1279,6 +1284,7 @@ namespace AiState
 			NotifyUserFailed(FollowPathUser::NoPath);
 			m_Query.m_User = 0;
 		}
+
 		return m_PathStatus < PathFinished;
 	}
 
