@@ -318,8 +318,7 @@ void State::RootUpdate()
 
 obReal State::InternalGetPriority()
 {
-	// cs: hack to make sure paththrough isn't interrupted
-	if( (m_LastPriorityTime < IGame::GetTime()) /*&& !GetClient()->CheckUserFlag(Client::FL_UNINTERRUPTIBLE)*/ )
+	if(m_LastPriorityTime < IGame::GetTime())
 	{
 		const noSelectReason_t rsn = CanBeSelected();
 		SetSelectable( rsn == NoSelectReasonNone );
