@@ -974,7 +974,7 @@ void ClientThink_real( gentity_t *ent ) {
 	// spectators don't do much
 	// DHM - Nerve :: In limbo use SpectatorThink
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR || client->ps.pm_flags & PMF_LIMBO ) {
-		if ( client->sess.spectatorState == SPECTATOR_SCOREBOARD || (ent->r.svFlags & SVF_BOT) ) {
+		if ( client->sess.spectatorState == SPECTATOR_SCOREBOARD /*|| (ent->r.svFlags & SVF_BOT)*/ ) {
 			return;
 		}
 		SpectatorThink( ent, ucmd );
