@@ -171,6 +171,7 @@ static void CG_TransitionSnapshot( void ) {
 
 	if ( !cg.nextSnap ) {
 		CG_Error( "CG_TransitionSnapshot: NULL cg.nextSnap" );
+		return; // for compiler warning
 	}
 
 	// execute any server string commands before transitioning entities
@@ -420,8 +421,9 @@ void CG_ProcessSnapshots( void ) {
 			CG_SetNextSnap( snap );
 
 			// if time went backwards, we have a level restart
-			if ( cg.nextSnap->serverTime < cg.snap->serverTime ) {
+			if ( !cg.nextSnap || !cg.snap || (cg.nextSnap->serverTime < cg.snap->serverTime) ) {
 				CG_Error( "CG_ProcessSnapshots: Server time went backwards" );
+				return; // for compiler warning
 			}
 		}
 
@@ -437,6 +439,7 @@ void CG_ProcessSnapshots( void ) {
 	// assert our valid conditions upon exiting
 	if ( cg.snap == NULL ) {
 		CG_Error( "CG_ProcessSnapshots: cg.snap == NULL" );
+		return; // for compiler warning
 	}
 	if ( cg.time < cg.snap->serverTime ) {
 		// this can happen right after a vid_restart

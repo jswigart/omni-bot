@@ -1124,6 +1124,7 @@ qboolean G_LuaInit() {
 				trap_FS_FCloseFile( f );
 			} else {
 				code = malloc( flen + 1 );
+				if ( !code ) { return qfalse; }
 				trap_FS_Read( code, flen, f );
 				*( code + flen ) = '\0';
 				trap_FS_FCloseFile( f );
@@ -1136,6 +1137,7 @@ qboolean G_LuaInit() {
 				} else {
 					// Init lua_vm_t struct
 					vm = (lua_vm_t*) malloc( sizeof( lua_vm_t ) );
+					if (!vm) { return qfalse; }
 					vm->id = -1;
 					Q_strncpyz( vm->file_name, crt, sizeof( vm->file_name ) );
 					Q_strncpyz( vm->mod_name, "", sizeof( vm->mod_name ) );

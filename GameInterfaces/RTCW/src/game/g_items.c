@@ -580,7 +580,7 @@ int Pickup_Health( gentity_t *ent, gentity_t *other ) {
 	other->poisoned = qfalse;
 
 	//stats
-	if ( ( ent->parent ) && ( ent->parent != other ) && ( OnSameTeam( ent->parent, other ) ) ) {
+	if ( ( ent->parent && ent->parent->client ) && ( ent->parent != other ) && ( OnSameTeam( ent->parent, other ) ) ) {
 		ent->parent->client->pers.medPacks++;
 	}
 
@@ -649,6 +649,11 @@ RespawnItem
 ===============
 */
 void RespawnItem( gentity_t *ent ) {
+
+	if ( !ent ) {
+		return;
+	}
+
 	// randomly select from teamed entities
 	if ( ent->team ) {
 		gentity_t   *master;

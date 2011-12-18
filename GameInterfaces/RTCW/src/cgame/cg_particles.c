@@ -128,7 +128,11 @@ void CG_ClearParticles( void ) {
 		particles[i].next = &particles[i + 1];
 		particles[i].type = 0;
 	}
-	particles[cl_numparticles - 1].next = NULL;
+
+	// for warning
+	if ( cl_numparticles > 0 ) {
+		particles[cl_numparticles - 1].next = NULL;
+	}
 
 	oldtime = cg.time;
 
@@ -182,8 +186,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 					}
 
 				}
-			} else
-			{
+			}
+			else {
 				if ( org[2] < p->end ) {
 					p->time = cg.time;
 					VectorCopy( org, p->org ); // Ridah, fixes rare snow flakes that flicker on the ground
@@ -256,8 +260,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 			verts[3].modulate[1] = 255;
 			verts[3].modulate[2] = 255;
 			verts[3].modulate[3] = 255 * p->alpha;
-		} else
-		{
+		}
+		else {
 			VectorMA( org, -p->height, vup, point );
 			VectorMA( point, -p->width, vright, point );
 			VectorCopy( point, TRIverts[0].xyz );
@@ -436,8 +440,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		if ( p->rotate ) {
 			VectorMA( org, -height, rup2, point );
 			VectorMA( point, -width, rright2, point );
-		} else
-		{
+		}
+		else {
 			VectorMA( org, -p->height, vup, point );
 			VectorMA( point, -p->width, vright, point );
 		}
@@ -452,8 +456,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		if ( p->rotate ) {
 			VectorMA( org, -height, rup2, point );
 			VectorMA( point, width, rright2, point );
-		} else
-		{
+		}
+		else {
 			VectorMA( org, -p->height, vup, point );
 			VectorMA( point, p->width, vright, point );
 		}
@@ -468,8 +472,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		if ( p->rotate ) {
 			VectorMA( org, height, rup2, point );
 			VectorMA( point, width, rright2, point );
-		} else
-		{
+		}
+		else {
 			VectorMA( org, p->height, vup, point );
 			VectorMA( point, p->width, vright, point );
 		}
@@ -484,8 +488,8 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		if ( p->rotate ) {
 			VectorMA( org, height, rup2, point );
 			VectorMA( point, -width, rright2, point );
-		} else
-		{
+		}
+		else {
 			VectorMA( org, p->height, vup, point );
 			VectorMA( point, -p->width, vright, point );
 		}
@@ -543,20 +547,20 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 	} else if ( p->type == P_BLEED ) {
 		vec3_t rr, ru;
 		vec3_t rotate_ang;
-		float alpha;
+		float bleedAlpha;
 
-		alpha = p->alpha;
+		bleedAlpha = p->alpha;
 
 		if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
-			alpha = 1;
+			bleedAlpha = 1;
 		}
 
 		if ( p->roll ) {
 			vectoangles( cg.refdef.viewaxis[0], rotate_ang );
 			rotate_ang[ROLL] += p->roll;
 			AngleVectors( rotate_ang, NULL, rr, ru );
-		} else
-		{
+		}
+		else {
 			VectorCopy( vup, ru );
 			VectorCopy( vright, rr );
 		}
@@ -569,7 +573,7 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		verts[0].modulate[0] = 111;
 		verts[0].modulate[1] = 19;
 		verts[0].modulate[2] = 9;
-		verts[0].modulate[3] = 255 * alpha;
+		verts[0].modulate[3] = 255 * bleedAlpha;
 
 		VectorMA( org, -p->height, ru, point );
 		VectorMA( point, p->width, rr, point );
@@ -579,7 +583,7 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		verts[1].modulate[0] = 111;
 		verts[1].modulate[1] = 19;
 		verts[1].modulate[2] = 9;
-		verts[1].modulate[3] = 255 * alpha;
+		verts[1].modulate[3] = 255 * bleedAlpha;
 
 		VectorMA( org, p->height, ru, point );
 		VectorMA( point, p->width, rr, point );
@@ -589,7 +593,7 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		verts[2].modulate[0] = 111;
 		verts[2].modulate[1] = 19;
 		verts[2].modulate[2] = 9;
-		verts[2].modulate[3] = 255 * alpha;
+		verts[2].modulate[3] = 255 * bleedAlpha;
 
 		VectorMA( org, p->height, ru, point );
 		VectorMA( point, -p->width, rr, point );
@@ -599,10 +603,10 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		verts[3].modulate[0] = 111;
 		verts[3].modulate[1] = 19;
 		verts[3].modulate[2] = 9;
-		verts[3].modulate[3] = 255 * alpha;
+		verts[3].modulate[3] = 255 * bleedAlpha;
 
 	} else if ( p->type == P_FLAT_SCALEUP ) {
-		float width, height;
+		float scaleUpWidth, scaleUpHeight;
 		float sinR, cosR;
 
 		if ( p->color == BLOODRED ) {
@@ -615,19 +619,19 @@ void CG_AddParticleToScene( cparticle_t *p, vec3_t org, float alpha ) {
 		time2 = p->endtime - p->time;
 		ratio = time / time2;
 
-		width = p->width + ( ratio * ( p->endwidth - p->width ) );
-		height = p->height + ( ratio * ( p->endheight - p->height ) );
+		scaleUpWidth = p->width + ( ratio * ( p->endwidth - p->width ) );
+		scaleUpHeight = p->height + ( ratio * ( p->endheight - p->height ) );
 
-		if ( width > p->endwidth ) {
-			width = p->endwidth;
+		if ( scaleUpWidth > p->endwidth ) {
+			scaleUpWidth = p->endwidth;
 		}
 
-		if ( height > p->endheight ) {
-			height = p->endheight;
+		if ( scaleUpHeight > p->endheight ) {
+			scaleUpHeight = p->endheight;
 		}
 
-		sinR = height * sin( DEG2RAD( p->roll ) ) * sqrt( 2 );
-		cosR = width * cos( DEG2RAD( p->roll ) ) * sqrt( 2 );
+		sinR = scaleUpHeight * sin( DEG2RAD( p->roll ) ) * sqrt( 2 );
+		cosR = scaleUpWidth * cos( DEG2RAD( p->roll ) ) * sqrt( 2 );
 
 		VectorCopy( org, verts[0].xyz );
 		verts[0].xyz[0] -= sinR;

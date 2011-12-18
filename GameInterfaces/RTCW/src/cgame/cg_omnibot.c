@@ -373,6 +373,10 @@ void CG_DrawDebugPolygon( UdpDebugPolygonMessage *_polyinfo ) {
 	int i = 0;
 	polyVert_t verts[65];
 
+	if ( !_polyinfo || _polyinfo->numverts < 1 ) {
+		return;
+	}
+
 	for (; i < _polyinfo->numverts; ++i )
 	{
 		verts[i].xyz[0] = _polyinfo->verts[_polyinfo->numverts - i - 1][0];
@@ -424,6 +428,10 @@ void InitLineList( LineList *_list, int _initialsize ) {
 }
 
 void AddToLineList( LineList *_list, const UdpDebugLines_t *_line ) {
+	if ( !_list || !_list->m_pDebugLines ) {
+		return;
+	}
+
 	if ( _list->m_NumDebugLines >= _list->m_MaxDebugLines ) {
 		// We've gone over, so we need to reallocate.
 		int iNewBufferSize = _list->m_MaxDebugLines + OMNIBOT_LINES_INCREASE_SIZE;

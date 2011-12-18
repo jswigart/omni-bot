@@ -1008,8 +1008,8 @@ void CG_AddFlameToScene( flameChunk_t *fHead ) {
 		if ( !f->ignitionOnly &&
 			 ( (float)( FLAME_SPRITE_START_BLUE_SCALE * f->blueLife ) < (float)lived ) ) {
 
-			float alpha, lifeFrac;
-			qboolean skip = qfalse;
+			float lifeFrac;
+			skip = qfalse;
 
 			// should we merge it with the next sprite?
 			while ( fNext && !droppedTrail ) {

@@ -1748,7 +1748,7 @@ float Item_Slider_ThumbPosition( itemDef_t *item ) {
 		x = item->window.rect.x;
 	}
 
-	if ( editDef == NULL && item->cvar ) {
+	if ( editDef == NULL /*&& item->cvar*/ ) {
 		return x;
 	}
 
@@ -4110,13 +4110,9 @@ void Item_ListBox_Paint( itemDef_t *item ) {
 
 
 void Item_OwnerDraw_Paint( itemDef_t *item ) {
-	menuDef_t *parent;
-
 	if ( item == NULL ) {
 		return;
 	}
-
-	parent = (menuDef_t*)item->parent;
 
 	if ( DC->ownerDrawItem ) {
 		vec4_t color, lowLight;
@@ -4472,6 +4468,7 @@ menuDef_t *Menus_ActivateByName( const char *p, qboolean modalStack ) {
 			if ( modalStack && m->window.flags & WINDOW_MODAL ) {
 				if ( modalMenuCount >= MAX_MODAL_MENUS ) {
 					Com_Error( ERR_DROP, "MAX_MODAL_MENUS exceeded\n" );
+					return m; // for compiler warning
 				}
 				modalMenuStack[modalMenuCount++] = focus;
 			}

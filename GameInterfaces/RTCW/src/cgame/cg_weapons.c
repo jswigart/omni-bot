@@ -1497,7 +1497,7 @@ static void CG_RunWeapLerpFrame( clientInfo_t *ci, weaponInfo_t *wi, lerpFrame_t
 
 		// get the next frame based on the animation
 		anim = lf->animation;
-		if ( !anim->frameLerp ) {
+		if ( !anim || !anim->frameLerp ) {
 			return;     // shouldn't happen
 		}
 		if ( cg.time < lf->animationTime ) {
@@ -2143,7 +2143,6 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			}
 		} else {
 			if ( weaponNum == WP_FLAMETHROWER ) {
-				vec3_t angles;
 				AxisToAngles( flash.axis, angles );
 // JPW NERVE
 				weaponNum = BG_FindAmmoForWeapon( WP_FLAMETHROWER );
@@ -3943,7 +3942,6 @@ void CG_FireWeapon( centity_t *cent ) {
 				trap_S_StartSound( NULL, ent->number, CHAN_WEAPON, firesound[c] );
 
 				if ( fireEchosound && fireEchosound[c] ) { // check for echo
-					centity_t   *cent;
 					vec3_t porg, gorg, norm;    // player/gun origin
 					float gdist;
 

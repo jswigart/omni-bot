@@ -78,6 +78,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params ) {
 		token = COM_ParseExt( &pString, qfalse );
 		if ( !token[0] ) {
 			G_Error( "G_Scripting: gotomarker must have an targetname\n" );
+			return qfalse; // for compiler warning
 		}
 
 		// find the entity with the given "targetname"
@@ -85,6 +86,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params ) {
 
 		if ( !target ) {
 			G_Error( "G_Scripting: can't find entity with \"targetname\" = \"%s\"\n", token );
+			return qfalse; // for compiler warning
 		}
 
 		VectorSubtract( target->r.currentOrigin, ent->r.currentOrigin, vec );
@@ -92,6 +94,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params ) {
 		token = COM_ParseExt( &pString, qfalse );
 		if ( !token[0] ) {
 			G_Error( "G_Scripting: gotomarker must have a speed\n" );
+			return qfalse; // for compiler warning
 		}
 
 		speed = atof( token );
@@ -445,6 +448,7 @@ qboolean G_ScriptAction_AlertEntity( gentity_t *ent, char *params ) {
 		if ( !alertent ) {
 			if ( !foundalertent ) {
 				G_Error( "G_Scripting: alertentity cannot find targetname \"%s\"\n", params );
+				return qfalse; // for compiler warning
 			} else {
 				break;
 			}
@@ -499,6 +503,7 @@ qboolean G_ScriptAction_Accum( gentity_t *ent, char *params ) {
 	token = COM_ParseExt( &pString, qfalse );
 	if ( !token[0] ) {
 		G_Error( "G_Scripting: accum without a buffer index\n" );
+		return qfalse; // for compiler warning
 	}
 
 	bufferIndex = atoi( token );
@@ -643,6 +648,7 @@ qboolean G_ScriptAction_FaceAngles( gentity_t *ent, char *params ) {
 			token = COM_Parse( &pString );
 			if ( !token || !token[0] ) {
 				G_Error( "G_Scripting: syntax: faceangles <pitch> <yaw> <roll> <duration/GOTOTIME>\n" );
+				return qfalse; // for compiler warning
 			}
 			angles[i] = atoi( token );
 		}
@@ -864,6 +870,7 @@ qboolean G_ScriptAction_StartCam( gentity_t *ent, char *params ) {
 	player = AICast_FindEntityForName( "player" );
 	if ( !player ) {
 		G_Error( "player not found, perhaps you should give them more time to spawn in" );
+		return qfalse; // for compiler warning
 	}
 	trap_SendServerCommand( player->s.number, va( "startCam %s", token ) );
 

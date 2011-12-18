@@ -800,9 +800,10 @@ redo:
 
         if(filedata) {
             if(filedatasz < ret) {
-                filedatasz  = ret;
-                filedatatmp = realloc(filedatatmp, filedatasz);
-                if(!filedatatmp) GOTOQUIT;
+                    filedatasz  = ret;
+                    //filedatatmp = realloc(filedatatmp, filedatasz);
+                    filedatatmp = realloc(filedata, filedatasz);
+                    if(!filedatatmp) GOTOQUIT;
             }
             memcpy(filedatatmp + ret - len, buff, len);
         } else if(fd) {

@@ -44,6 +44,7 @@ CG_FreeMarkPoly
 void CG_FreeMarkPoly( markPoly_t *le ) {
 	if ( !le->prevMark ) {
 		CG_Error( "CG_FreeLocalEntity: not active" );
+		return; // for compiler warning
 	}
 
 	// remove from the doubly linked active list
@@ -72,6 +73,11 @@ markPoly_t  *CG_AllocMark( int endTime ) {
 		while ( cg_activeMarkPolys.prevMark && time == cg_activeMarkPolys.prevMark->time ) {
 			CG_FreeMarkPoly( cg_activeMarkPolys.prevMark );
 		}
+	}
+
+	if ( !cg_freeMarkPolys ) {
+		CG_Error( "CG_AllocMark: unable to allocate" );
+		return 0; // for compiler warning
 	}
 
 	le = cg_freeMarkPolys;

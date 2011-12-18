@@ -229,7 +229,7 @@ static void CG_OpenLimbo_f( void ) {
 	}
 
 	// set current player type
-	if ( mp_currentPlayerType.integer != cg.snap->ps.stats[ STAT_PLAYER_CLASS ] ) {
+	if ( cg.snap && mp_currentPlayerType.integer != cg.snap->ps.stats[ STAT_PLAYER_CLASS ] ) {
 		trap_Cvar_Set( "mp_currentPlayerType", va( "%i", cg.snap->ps.stats[ STAT_PLAYER_CLASS ] ) );
 	}
 

@@ -276,6 +276,7 @@ BG_ModelInfoForClient
 animModelInfo_t *BG_ModelInfoForClient( int client ) {
 	if ( !globalScriptData ) {
 		BG_AnimParseError( "BG_ModelInfoForClient: NULL globalScriptData" );
+		return 0; // for compiler warning
 	}
 	//
 	if ( !globalScriptData->clientModels[client] ) {
@@ -296,6 +297,7 @@ animModelInfo_t *BG_ModelInfoForModelname( char *modelname ) {
 	//
 	if ( !globalScriptData ) {
 		BG_AnimParseError( "BG_ModelInfoForModelname: NULL globalScriptData" );
+		return 0; // for compiler warning
 	}
 	//
 	for ( i = 0, modelInfo = globalScriptData->modelInfo; i < MAX_ANIMSCRIPT_MODELS; i++, modelInfo++ ) {
@@ -609,6 +611,7 @@ qboolean BG_AnimParseAnimConfig( animModelInfo_t *animModelInfo, const char *fil
 		token = COM_ParseExt( &text_p, qfalse );
 		if ( !token || !token[0] ) {
 			BG_AnimParseError( "end of file without ENDANIMS: line %i" );
+			return qfalse; // for compiler warning
 		}
 		fps = atof( token );
 		if ( fps == 0 ) {

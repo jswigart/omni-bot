@@ -966,7 +966,10 @@ qboolean CG_RegisterClientSkin( clientInfo_t *ci, const char *modelName, const c
 qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelName, const char *skinName );
 
 static void CG_RegisterGraphics( void ) {
-	char name[1024];
+	char bloodName[32];
+	char debrisName[32];
+	char inlineModelName[10];
+	const char *modelName;
 
 	int i;
 	char items[MAX_ITEMS + 1];
@@ -1223,8 +1226,8 @@ static void CG_RegisterGraphics( void ) {
 
 	for ( i = 0; i < MAX_LOCKER_DEBRIS; i++ )
 	{
-		Com_sprintf( name, sizeof( name ), "models/mapobjects/debris/personal%i.md3", i + 1 );
-		cgs.media.shardJunk[i] = trap_R_RegisterModel( name );
+		Com_sprintf( debrisName, sizeof( debrisName ), "models/mapobjects/debris/personal%i.md3", i + 1 );
+		cgs.media.shardJunk[i] = trap_R_RegisterModel( debrisName );
 	}
 
 	memset( cg_items, 0, sizeof( cg_items ) );
@@ -1273,9 +1276,8 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.bulletMarkShaderGlass = trap_R_RegisterShader( "gfx/damage/glass_mrk" );
 
 	for ( i = 0 ; i < 5 ; i++ ) {
-		char name[32];
-		Com_sprintf( name, sizeof( name ), "blood_dot%i", i + 1 );
-		cgs.media.bloodDotShaders[i] = trap_R_RegisterShader( name );
+		Com_sprintf( bloodName, sizeof( bloodName ), "blood_dot%i", i + 1 );
+		cgs.media.bloodDotShaders[i] = trap_R_RegisterShader( bloodName );
 	}
 
 	CG_LoadingString( " - inline models" );
@@ -1283,12 +1285,11 @@ static void CG_RegisterGraphics( void ) {
 	// register the inline models
 	cgs.numInlineModels = trap_CM_NumInlineModels();
 	for ( i = 1 ; i < cgs.numInlineModels ; i++ ) {
-		char name[10];
 		vec3_t mins, maxs;
 		int j;
 
-		Com_sprintf( name, sizeof( name ), "*%i", i );
-		cgs.inlineDrawModel[i] = trap_R_RegisterModel( name );
+		Com_sprintf( inlineModelName, sizeof( inlineModelName ), "*%i", i );
+		cgs.inlineDrawModel[i] = trap_R_RegisterModel( inlineModelName );
 		trap_R_ModelBounds( cgs.inlineDrawModel[i], mins, maxs );
 		for ( j = 0 ; j < 3 ; j++ ) {
 			cgs.inlineModelMidpoints[i][j] = mins[j] + 0.5 * ( maxs[j] - mins[j] );
@@ -1299,8 +1300,6 @@ static void CG_RegisterGraphics( void ) {
 
 	// register all the server specified models
 	for ( i = 1 ; i < MAX_MODELS ; i++ ) {
-		const char      *modelName;
-
 		modelName = CG_ConfigString( CS_MODELS + i );
 		if ( !modelName[0] ) {
 			break;
@@ -1376,6 +1375,7 @@ CG_ConfigString
 const char *CG_ConfigString( int index ) {
 	if ( index < 0 || index >= MAX_CONFIGSTRINGS ) {
 		CG_Error( "CG_ConfigString: bad index: %i", index );
+		return("for compiler warning");
 	}
 	return cgs.gameState.stringData + cgs.gameState.stringOffsets[ index ];
 }

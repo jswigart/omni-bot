@@ -1112,7 +1112,8 @@ qboolean IsBinaryMoverBlocked( gentity_t *ent, gentity_t *other, gentity_t *acti
 		if ( !activator ) {
 			if ( Q_stricmp( other->classname, "target_relay" ) == 0 ) {
 				is_relay = qtrue;
-			} else if ( !activator->client ) {
+			}
+			else {
 				return qfalse;
 			}
 		}
@@ -1910,6 +1911,10 @@ void Think_SpawnNewDoorTrigger( gentity_t *ent ) {
 	gentity_t       *other;
 	vec3_t mins, maxs;
 	int i, best;
+
+	if ( !ent ) {
+		return;
+	}
 
 	// set all of the slaves as shootable
 	for ( other = ent ; other ; other = other->teamchain ) {

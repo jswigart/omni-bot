@@ -318,9 +318,11 @@ void G_Script_ScriptParse( gentity_t *ent ) {
 			eventNum = G_Script_EventForString( token );
 			if ( eventNum < 0 ) {
 				G_Error( "G_Script_ScriptParse(), Error (line %d): unknown event: %s.\n", COM_GetCurrentParseLine(), token );
+				return; // for compiler warning
 			}
 			if ( numEventItems >= MAX_SCRIPT_EVENTS ) {
 				G_Error( "G_Script_ScriptParse(), Error (line %d): MAX_SCRIPT_EVENTS reached (%d)\n", COM_GetCurrentParseLine(), MAX_SCRIPT_EVENTS );
+				return; // for compiler warning
 			}
 
 			curEvent = &events[numEventItems];
@@ -332,6 +334,7 @@ void G_Script_ScriptParse( gentity_t *ent ) {
 			{
 				if ( !token[0] ) {
 					G_Error( "G_Script_ScriptParse(), Error (line %d): '}' expected, end of script found.\n", COM_GetCurrentParseLine() );
+					return; // for compiler warning
 				}
 
 				if ( strlen( params ) ) { // add a space between each param
@@ -350,11 +353,13 @@ void G_Script_ScriptParse( gentity_t *ent ) {
 			{
 				if ( !token[0] ) {
 					G_Error( "G_Script_ScriptParse(), Error (line %d): '}' expected, end of script found.\n", COM_GetCurrentParseLine() );
+					return; // for compiler warning
 				}
 
 				action = G_Script_ActionForString( token );
 				if ( !action ) {
 					G_Error( "G_Script_ScriptParse(), Error (line %d): unknown action: %s.\n", COM_GetCurrentParseLine(), token );
+					return; // for compiler warning
 				}
 
 				curEvent->stack.items[curEvent->stack.numItems].action = action;
@@ -394,6 +399,7 @@ void G_Script_ScriptParse( gentity_t *ent ) {
 
 				if ( curEvent->stack.numItems >= G_MAX_SCRIPT_STACK_ITEMS ) {
 					G_Error( "G_Script_ScriptParse(): script exceeded MAX_SCRIPT_ITEMS (%d), line %d\n", G_MAX_SCRIPT_STACK_ITEMS, COM_GetCurrentParseLine() );
+					return; // for compiler warning
 				}
 			}
 
@@ -405,6 +411,7 @@ void G_Script_ScriptParse( gentity_t *ent ) {
 			{
 				if ( !token[0] ) {
 					G_Error( "G_Script_ScriptParse(), Error (line %d): '}' expected, end of script found.\n", COM_GetCurrentParseLine() );
+					return; // for compiler warning
 				} else if ( token[0] == '{' ) {
 					bracketLevel++;
 				} else if ( token[0] == '}' ) {

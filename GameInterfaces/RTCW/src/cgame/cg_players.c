@@ -1082,6 +1082,7 @@ static void CG_SetLerpFrameAnimation( clientInfo_t *ci, lerpFrame_t *lf, int new
 
 	if ( newAnimation < 0 || newAnimation >= ci->modelInfo->numAnimations ) {
 		CG_Error( "Bad animation number (CG_SLFA): %i", newAnimation );
+		return; // for compiler warning
 	}
 
 	anim = &ci->modelInfo->animations[ newAnimation ];
@@ -1126,7 +1127,7 @@ void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, float
 
 		// get the next frame based on the animation
 		anim = lf->animation;
-		if ( !anim->frameLerp ) {
+		if ( !anim || !anim->frameLerp ) {
 			return;     // shouldn't happen
 		}
 		if ( cg.time < lf->animationTime ) {
@@ -1301,7 +1302,7 @@ void CG_RunLerpFrameRate( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, c
 
 	// Ridah, make sure the animation speed is updated when possible
 	anim = lf->animation;
-	if ( anim->moveSpeed && lf->oldFrameSnapshotTime ) {
+	if ( anim && anim->moveSpeed && lf->oldFrameSnapshotTime ) {
 		// calculate the speed at which we moved over the last frame
 		if ( cg.latestSnapshotTime != lf->oldFrameSnapshotTime && cg.nextSnap ) {
 			float moveSpeed;
@@ -1336,7 +1337,7 @@ void CG_RunLerpFrameRate( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, c
 
 	// if we have passed the current frame, move it to
 	// oldFrame and calculate a new frame
-	if ( cg.time >= lf->frameTime ) {
+	if ( anim && cg.time >= lf->frameTime ) {
 		int f;
 
 		lf->oldFrame = lf->frame;
@@ -2660,7 +2661,6 @@ void CG_Player( centity_t *cent ) {
 // JPW NERVE -- test
 #ifndef PRE_RELEASE_DEMO
 	if ( cg_fxflags & 2 ) {
-		int i;
 		for ( i = 0; i < 3; i++ )
 			VectorScale( head.axis[i], 2.5, head.axis[i] );
 		head.nonNormalizedAxes = qtrue;

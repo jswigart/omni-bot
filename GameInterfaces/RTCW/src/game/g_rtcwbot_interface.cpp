@@ -757,7 +757,9 @@ static int _GetEntityTeam( gentity_t *_ent ) {
 	switch ( t )
 	{
 	case ET_PLAYER:
-		return Bot_TeamGameToBot( _ent->client->sess.sessionTeam );
+		if ( _ent->client ) {
+			return Bot_TeamGameToBot( _ent->client->sess.sessionTeam );
+		}
 	case ET_CORPSE:
 		return Bot_TeamGameToBot( BODY_TEAM( _ent ) );
 	case ET_MISSILE:
@@ -3366,10 +3368,10 @@ int GetAutoNavFeatures( AutoNavFeature *_feature, int _max ) {
 		////////////////////////////////////////////////////////////////////////
 		_feature[iNumFeatures].m_Type = 0;
 		_feature[iNumFeatures].m_TravelTime = 0;
-		for ( int i = 0; i < 3; ++i )
+		for ( int x = 0; x < 3; ++i )
 		{
-			_feature[iNumFeatures].m_Position[i] = e->r.currentOrigin[i];
-			_feature[iNumFeatures].m_TargetPosition[i] = e->r.currentOrigin[i];
+			_feature[iNumFeatures].m_Position[x] = e->r.currentOrigin[x];
+			_feature[iNumFeatures].m_TargetPosition[x] = e->r.currentOrigin[x];
 			_feature[iNumFeatures].m_Bounds.m_Mins[0] = 0.f;
 			_feature[iNumFeatures].m_Bounds.m_Maxs[0] = 0.f;
 			AngleVectors( e->s.angles, _feature[iNumFeatures].m_Facing, NULL, NULL );
