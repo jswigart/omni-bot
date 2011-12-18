@@ -1044,10 +1044,6 @@ CG_Efx
 ==============
 */
 static void CG_Efx( centity_t *cent ) {
-	trace_t trace;
-	vec3_t perpvec;
-	vec3_t stickPoint;
-
 	if ( cent->currentState.eType == ET_EF_SPOTLIGHT ) {
 		vec3_t targetpos, normalized_direction, direction;
 		float dist, fov = 90;
