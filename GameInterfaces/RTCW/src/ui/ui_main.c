@@ -4604,7 +4604,7 @@ static void UI_RunMenuScript( char **args ) {
 				cls = "IamSoldier";
 			}
 
-			trap_Cmd_ExecuteText( EXEC_APPEND, va( "VoiceTeamChat %s\n", s ) );
+			trap_Cmd_ExecuteText( EXEC_APPEND, va( "VoiceTeamChat %s\n", cls ) );
 
 		} else if ( Q_stricmp( name, "showObjectiveView" ) == 0 ) {
 			menuDef_t *objMenu = Menu_GetFocused();
@@ -4623,7 +4623,7 @@ static void UI_RunMenuScript( char **args ) {
 
 				trap_Cvar_Set( "ui_limboObjective", "1" );
 			} else {
-				item = Menu_FindItemByName( menu, "window_tab2" );
+				item = Menu_FindItemByName( objMenu, "window_tab2" );
 				if ( item ) {
 					item->window.flags |= WINDOW_VISIBLE;
 				}
