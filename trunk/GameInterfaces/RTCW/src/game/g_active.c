@@ -10,7 +10,7 @@ void PushBot( gentity_t *ent, gentity_t *other ) {
 	float oldspeed;
 
 	// dont push when scripted not to be pushed
-	if ( other->client && !other->client->sess.botPush ) {
+	if ( !other->client || !other->client->sess.botPush ) {
 		return;
 	}
 
@@ -845,7 +845,6 @@ void GetLTinfo( gentity_t *ent ) {
 
 void limbo( gentity_t *ent, qboolean makeCorpse ); // JPW NERVE
 void reinforce( gentity_t *ent ); // JPW NERVE
-void ClientDamage( gentity_t *clent, int entnum, int enemynum, int id );        // NERVE - SMF
 
 /*
 ==============
@@ -1282,7 +1281,6 @@ void ClientThink_real( gentity_t *ent ) {
 
 	if ( g_debugPlayerHitboxes.integer & 2 && ent-g_entities != 0 ) {
 		gentity_t *head;
-		vec3_t maxs;
 
 		VectorCopy( ent->r.maxs, maxs );
 		G_RailBox( ent->r.currentOrigin, ent->r.mins, maxs, tv( 0.f,0.f,1.f ), ent-g_entities );

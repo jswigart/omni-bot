@@ -78,6 +78,7 @@ void G_ReadSessionData( gclient_t *client ) {
 			&client->sess.latchPlayerSkin   // DHM - Nerve
 			);
 
+
 	// NERVE - SMF
 	if ( g_altStopwatchMode.integer ) {
 		test = qtrue;

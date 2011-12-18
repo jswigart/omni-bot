@@ -1268,10 +1268,10 @@ const char* CG_LocalizeServerCommand( const char *buf ) {
 
 	if ( togloc ) {
 		memset( temp, 0, sizeof( temp ) );
-		strncpy( temp, buf + prev, i - prev );
+		strncpy( temp, buf + prev, i - prev ); // cs: isn't i - prev always going to be 0 here?
 		strcat( token, CG_TranslateString( temp ) );
 	} else {
-		strncat( token, buf + prev, i - prev );
+		strncat( token, buf + prev, i - prev ); // cs: isn't i - prev always going to be 0 here?
 	}
 
 	return token;

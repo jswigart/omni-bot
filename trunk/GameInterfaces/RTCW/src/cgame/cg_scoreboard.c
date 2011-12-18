@@ -197,7 +197,7 @@ int WM_DrawObjectives( int x, int y, int width, float fade ) {
 	y = tempy;
 
 	if ( cg.snap->ps.pm_type == PM_INTERMISSION ) {
-		const char *s, *buf, *shader = NULL, *flagshader = NULL, *nameshader = NULL;
+		const char *shader = NULL, *flagshader = NULL, *nameshader = NULL;
 
 		s = CG_ConfigString( CS_MULTI_MAPWINNER );
 		buf = Info_ValueForKey( s, "winner" );

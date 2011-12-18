@@ -389,7 +389,7 @@ void CG_KillTrail( trailJunc_t *t ) {
 		next = NULL;
 	}
 	t->nextJunc = NULL;
-	if ( next->nextJunc && next->nextJunc == t ) {
+	if ( next && next->nextJunc && next->nextJunc == t ) {
 		next->nextJunc = NULL;
 	}
 	if ( next ) {
@@ -673,20 +673,20 @@ void CG_AddTrailToScene( trailJunc_t *trail, int iteration, int numJuncs ) {
 
 		if ( !( trail->flags & TJFL_NOPOLYMERGE ) ) {
 			trap_R_AddPolysToScene( trail->shader, 3, &outVerts[0], numOutVerts / 3 );
-		} else {
-			int k;
+		}
+		else {
 			for ( k = 0; k < numOutVerts / 3; k++ ) {
 				trap_R_AddPolyToScene( trail->shader, 3, &outVerts[k * 3] );
 			}
 		}
-	} else
-	{
+	}
+	else {
 		// send the polygons
 		// FIXME: is it possible to send a GL_STRIP here? We are actually sending 2x the verts we really need to
 		if ( !( trail->flags & TJFL_NOPOLYMERGE ) ) {
 			trap_R_AddPolysToScene( trail->shader, 4, &verts[0], i / 4 );
-		} else {
-			int k;
+		}
+		else {
 			for ( k = 0; k < i / 4; k++ ) {
 				trap_R_AddPolyToScene( trail->shader, 4, &verts[k * 4] );
 			}

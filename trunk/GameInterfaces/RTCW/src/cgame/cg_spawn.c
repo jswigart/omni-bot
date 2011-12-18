@@ -44,24 +44,6 @@ qboolean    CG_SpawnInt( const char *key, const char *defaultString, int *out ) 
 	return present;
 }
 
-qboolean    CG_SpawnVector( const char *key, const char *defaultString, float *out ) {
-	char        *s;
-	qboolean present;
-
-	present = CG_SpawnString( key, defaultString, &s );
-	sscanf( s, "%f %f %f", &out[0], &out[1], &out[2] );
-	return present;
-}
-
-qboolean    CG_SpawnVector2D( const char *key, const char *defaultString, float *out ) {
-	char        *s;
-	qboolean present;
-
-	present = CG_SpawnString( key, defaultString, &s );
-	sscanf( s, "%f %f", &out[0], &out[1] );
-	return present;
-}
-
 typedef struct {
 	char    *name;
 	void ( *spawn )( void );

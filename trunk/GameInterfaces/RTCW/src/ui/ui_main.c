@@ -4459,15 +4459,15 @@ static void UI_RunMenuScript( char **args ) {
 			}
 		} else if ( Q_stricmp( name, "addFavorite" ) == 0 ) {
 			if ( ui_netSource.integer != AS_FAVORITES ) {
-				char name[MAX_NAME_LENGTH];
-				char addr[MAX_NAME_LENGTH];
+				char favoriteName[MAX_NAME_LENGTH];
+				char favoriteAddr[MAX_NAME_LENGTH];
 
 				trap_LAN_GetServerInfo( ui_netSource.integer, uiInfo.serverStatus.displayServers[uiInfo.serverStatus.currentServer], buff, MAX_STRING_CHARS );
-				name[0] = addr[0] = '\0';
-				Q_strncpyz( name,    Info_ValueForKey( buff, "hostname" ), MAX_NAME_LENGTH );
-				Q_strncpyz( addr,    Info_ValueForKey( buff, "addr" ), MAX_NAME_LENGTH );
-				if ( strlen( name ) > 0 && strlen( addr ) > 0 ) {
-					int res = trap_LAN_AddServer( AS_FAVORITES, name, addr );
+				favoriteName[0] = favoriteAddr[0] = '\0';
+				Q_strncpyz( favoriteName,    Info_ValueForKey( buff, "hostname" ), MAX_NAME_LENGTH );
+				Q_strncpyz( favoriteAddr,    Info_ValueForKey( buff, "addr" ), MAX_NAME_LENGTH );
+				if ( strlen( favoriteName ) > 0 && strlen( favoriteAddr ) > 0 ) {
+					int res = trap_LAN_AddServer( AS_FAVORITES, favoriteName, favoriteAddr );
 					if ( res == 0 ) {
 						// server already in the list
 						Com_Printf( trap_TranslateString( "Favorite already in list\n" ) );
@@ -4476,30 +4476,30 @@ static void UI_RunMenuScript( char **args ) {
 						Com_Printf( trap_TranslateString( "Favorite list full\n" ) );
 					} else {
 						// successfully added
-						Com_Printf( trap_TranslateString( "Added favorite server %s\n" ), addr );
+						Com_Printf( trap_TranslateString( "Added favorite server %s\n" ), favoriteAddr );
 					}
 				}
 			}
 		} else if ( Q_stricmp( name, "deleteFavorite" ) == 0 ) {
 			if ( ui_netSource.integer == AS_FAVORITES ) {
-				char addr[MAX_NAME_LENGTH];
+				char favoriteAddr[MAX_NAME_LENGTH];
 				trap_LAN_GetServerInfo( ui_netSource.integer, uiInfo.serverStatus.displayServers[uiInfo.serverStatus.currentServer], buff, MAX_STRING_CHARS );
-				addr[0] = '\0';
-				Q_strncpyz( addr,    Info_ValueForKey( buff, "addr" ), MAX_NAME_LENGTH );
-				if ( strlen( addr ) > 0 ) {
-					trap_LAN_RemoveServer( AS_FAVORITES, addr );
+				favoriteAddr[0] = '\0';
+				Q_strncpyz( favoriteAddr,    Info_ValueForKey( buff, "addr" ), MAX_NAME_LENGTH );
+				if ( strlen( favoriteAddr ) > 0 ) {
+					trap_LAN_RemoveServer( AS_FAVORITES, favoriteAddr );
 				}
 			}
 		} else if ( Q_stricmp( name, "createFavorite" ) == 0 ) {
 			if ( ui_netSource.integer == AS_FAVORITES ) {
-				char name[MAX_NAME_LENGTH];
-				char addr[MAX_NAME_LENGTH];
+				char favoriteName[MAX_NAME_LENGTH];
+				char favoriteAddr[MAX_NAME_LENGTH];
 
-				name[0] = addr[0] = '\0';
-				Q_strncpyz( name,    UI_Cvar_VariableString( "ui_favoriteName" ), MAX_NAME_LENGTH );
-				Q_strncpyz( addr,    UI_Cvar_VariableString( "ui_favoriteAddress" ), MAX_NAME_LENGTH );
-				if ( strlen( name ) > 0 && strlen( addr ) > 0 ) {
-					int res = trap_LAN_AddServer( AS_FAVORITES, name, addr );
+				favoriteName[0] = favoriteAddr[0] = '\0';
+				Q_strncpyz( favoriteName,    UI_Cvar_VariableString( "ui_favoriteName" ), MAX_NAME_LENGTH );
+				Q_strncpyz( favoriteAddr,    UI_Cvar_VariableString( "ui_favoriteAddress" ), MAX_NAME_LENGTH );
+				if ( strlen( favoriteName ) > 0 && strlen( favoriteAddr ) > 0 ) {
+					int res = trap_LAN_AddServer( AS_FAVORITES, favoriteName, favoriteAddr );
 					if ( res == 0 ) {
 						// server already in the list
 						Com_Printf( trap_TranslateString( "Favorite already in list\n" ) );
@@ -4508,7 +4508,7 @@ static void UI_RunMenuScript( char **args ) {
 						Com_Printf( trap_TranslateString( "Favorite list full\n" ) );
 					} else {
 						// successfully added
-						Com_Printf( trap_TranslateString( "Added favorite server %s\n" ), addr );
+						Com_Printf( trap_TranslateString( "Added favorite server %s\n" ), favoriteAddr );
 					}
 				}
 			}
@@ -4590,33 +4590,33 @@ static void UI_RunMenuScript( char **args ) {
 			}
 		} else if ( Q_stricmp( name, "wm_sayPlayerClass" ) == 0 ) {
 			int playerType;
-			const char *s;
+			const char *cls;
 
 			playerType = trap_Cvar_VariableValue( "mp_currentPlayerType" );
 
 			if ( playerType == 1 ) {
-				s = "IamMedic";
+				cls = "IamMedic";
 			} else if ( playerType == 2 ) {
-				s = "IamEngineer";
+				cls = "IamEngineer";
 			} else if ( playerType == 3 ) {
-				s = "IamLieutenant";
+				cls = "IamLieutenant";
 			} else {
-				s = "IamSoldier";
+				cls = "IamSoldier";
 			}
 
 			trap_Cmd_ExecuteText( EXEC_APPEND, va( "VoiceTeamChat %s\n", s ) );
 
 		} else if ( Q_stricmp( name, "showObjectiveView" ) == 0 ) {
-			menuDef_t *menu = Menu_GetFocused();
+			menuDef_t *objMenu = Menu_GetFocused();
 			itemDef_t *item;
 
 			if ( trap_Cvar_VariableValue( "ui_isSpectator" ) ) {
-				item = Menu_FindItemByName( menu, "window_tab2" );
+				item = Menu_FindItemByName( objMenu, "window_tab2" );
 				if ( item ) {
 					item->window.flags &= ~WINDOW_VISIBLE;
 				}
 
-				item = Menu_FindItemByName( menu, "window_tab1" );
+				item = Menu_FindItemByName( objMenu, "window_tab1" );
 				if ( item ) {
 					item->window.flags |= WINDOW_VISIBLE;
 				}
@@ -4628,7 +4628,7 @@ static void UI_RunMenuScript( char **args ) {
 					item->window.flags |= WINDOW_VISIBLE;
 				}
 
-				item = Menu_FindItemByName( menu, "window_tab1" );
+				item = Menu_FindItemByName( objMenu, "window_tab1" );
 				if ( item ) {
 					item->window.flags &= ~WINDOW_VISIBLE;
 				}
@@ -6682,7 +6682,6 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 	// DHM - Nerve :: This now accepts strings up to 256 chars long, and will break them up into multiple lines.
 	//					They are also now printed in Yellow for readability.
 	if ( cstate.connState < CA_CONNECTED ) {
-		char    *s;
 		char ps[60];
 		int i, len, index = 0, yPrint = yStart + 210;
 		qboolean neednewline = qfalse;

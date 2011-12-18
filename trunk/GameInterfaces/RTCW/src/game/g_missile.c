@@ -329,7 +329,6 @@ void G_ExplodeMissile( gentity_t *ent ) {
 
 	// splash damage
 	if ( ent->splashDamage ) {
-		vec3_t origin;
 		trace_t tr;
 
 		VectorCopy( ent->r.currentOrigin, origin );
@@ -977,7 +976,9 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 	bolt->s.weapon      = grenadeWPID;
 	bolt->r.ownerNum    = self->s.number;
 	bolt->parent        = self;
-	bolt->s.teamNum		= self->client->sess.sessionTeam;
+	if ( self->client ) {
+		bolt->s.teamNum		= self->client->sess.sessionTeam;
+	}
 
 // JPW NERVE -- commented out bolt->damage and bolt->splashdamage, override with G_GetWeaponDamage()
 // so it works with different netgame balance.  didn't uncomment bolt->damage on dynamite 'cause its so *special*

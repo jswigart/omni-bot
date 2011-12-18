@@ -1544,7 +1544,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
 // JPW NERVE
 	} else if ( !Q_stricmp( arg1,"kick" ) ) {
-		int i,kicknum = MAX_CLIENTS;
+		int kicknum = MAX_CLIENTS;
 		for ( i = 0; i < MAX_CLIENTS; i++ ) {
 			if ( level.clients[i].pers.connected != CON_CONNECTED ) {
 				continue;
@@ -2170,79 +2170,6 @@ void Cmd_Activate2_f( gentity_t *ent ) {
 	}
 
 	G_CanisterKick(ent);
-}
-
-
-// NERVE - SMF
-/*
-============
-ClientDamage
-============
-*/
-void ClientDamage( gentity_t *clent, int entnum, int enemynum, int id ) {
-	gentity_t *enemy, *ent;
-	vec3_t vec;
-
-	ent = &g_entities[entnum];
-
-	enemy = &g_entities[enemynum];
-
-	// if the attacker can't see the target, then don't allow damage
-	if ( ( enemy->client ) && ( !CanDamage( ent, enemy->client->ps.origin ) ) ) {
-		return; // don't allow damage
-	}
-
-	switch ( id ) {
-	case CLDMG_SPIRIT:
-		break;
-	case CLDMG_BOSS1LIGHTNING:
-		break;
-	case CLDMG_TESLA:
-		// do some cheat protection
-		if ( g_gametype.integer != GT_SINGLE_PLAYER ) {
-			if ( enemy->s.weapon != WP_TESLA ) {
-				break;
-			}
-			if ( !( enemy->client->buttons & BUTTON_ATTACK ) ) {
-				break;
-			}
-		}
-
-		if ( ent->takedamage /*&& !AICast_NoFlameDamage(ent->s.number)*/ ) {
-			VectorSubtract( ent->r.currentOrigin, enemy->r.currentOrigin, vec );
-			VectorNormalize( vec );
-			G_Damage( ent, enemy, enemy, vec, ent->r.currentOrigin, 3, 0, MOD_LIGHTNING );
-		}
-		break;
-	case CLDMG_FLAMETHROWER:
-		break;
-	}
-}
-// -NERVE - SMF
-
-/*
-============
-Cmd_ClientDamage_f
-============
-*/
-void Cmd_ClientDamage_f( gentity_t *clent ) {
-	char s[MAX_STRING_CHARS];
-	int entnum, id, enemynum;
-
-	if ( trap_Argc() != 4 ) {
-		G_Printf( "ClientDamage command issued with incorrect number of args\n" );
-	}
-
-	trap_Argv( 1, s, sizeof( s ) );
-	entnum = atoi( s );
-
-	trap_Argv( 2, s, sizeof( s ) );
-	enemynum = atoi( s );
-
-	trap_Argv( 3, s, sizeof( s ) );
-	id = atoi( s );
-
-	ClientDamage( clent, entnum, enemynum, id );
 }
 
 // NERVE - SMF
@@ -2887,7 +2814,7 @@ void Cmd_Accept_f( gentity_t* ent )
 		if ( !vic->client ) {
 			ent->client->sess.currentBetTarget = NULL;
 			ent->client->sess.currentBetAmount = 0;
-			CP(va("print \"^daccept: ^9%s^9 is no longer in a team\n\"",vic->client->pers.netname));
+			CP("print \"^daccept: target is no longer in a team\n\"");
 			return;
 		}
 	}

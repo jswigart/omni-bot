@@ -422,7 +422,7 @@ qboolean AICast_CheckAttackAtPos( int entnum, int enemy, vec3_t pos, qboolean du
 void AICast_Init( void );
 // done.
 
-void G_RetrieveMoveSpeedsFromClient( int entnum, char *text );
+void G_RetrieveMoveSpeedsFromClient( int entnum, char *moveSpeedText );
 
 /*
 ================
@@ -1397,7 +1397,7 @@ void G_ShutdownGame( int restart ) {
 #ifndef GAME_HARD_LINKED
 // this is only here so the functions in q_shared.c and bg_*.c can link
 
-void QDECL Com_Error( int level, const char *error, ... ) {
+void QDECL Com_Error( int errorLevel, const char *error, ... ) {
 	va_list argptr;
 	char text[1024];
 

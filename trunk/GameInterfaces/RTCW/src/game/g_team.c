@@ -929,7 +929,7 @@ void objective_Register( gentity_t *self ) {
 	int cs_obj = CS_MULTI_SPAWNTARGETS;
 	char cs[MAX_STRING_CHARS];
 
-	if ( numobjectives == MAX_MULTI_SPAWNTARGETS ) {
+	if ( numobjectives >= MAX_MULTI_SPAWNTARGETS ) {
 		G_Error( "SP_team_WOLF_objective: exceeded MAX_MULTI_SPAWNTARGETS (%d)\n",MAX_MULTI_SPAWNTARGETS );
 	} else { // Set config strings
 		cs_obj += numobjectives;

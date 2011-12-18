@@ -1048,77 +1048,7 @@ static void CG_Efx( centity_t *cent ) {
 	vec3_t perpvec;
 	vec3_t stickPoint;
 
-	if ( cent->currentState.eType == ET_EF_TESLA ) {
-		int i;
-		float rnd = cent->currentState.angles2[0];
-
-		for ( i = 0; i < MAX_TESLA_BOLTS; i++ ) {
-			if ( cent->boltTimes[i] < cg.time ) {
-				VectorSet( cent->boltLocs[i], crandom(), crandom(), crandom() );
-				VectorNormalize2( cent->boltLocs[i], cent->boltLocs[i] );
-				VectorMA( cent->currentState.origin2, rnd, cent->boltLocs[i], cent->boltLocs[i] );
-
-				cent->boltTimes[i] = cg.time + rand() % cent->currentState.time2;     // hold this position for ~1 second ('stickytime' value is stored in .time2)
-
-				// cut the bolt short if it collides w/ something
-				CG_Trace( &trace, cent->currentState.origin, NULL, NULL, cent->boltLocs[i], -1, MASK_SOLID | CONTENTS_BODY );
-
-				if ( trace.fraction < 1 ) {
-					float movePerUpdate;
-
-					VectorCopy( trace.endpos, cent->boltLocs[i] );
-
-					// store perpendicular vector so end can 'crawl'
-					PerpendicularVector( perpvec, trace.plane.normal );
-
-					RotatePointAroundVector( stickPoint, trace.plane.normal, perpvec, crandom() * 360 );
-
-					// scale it so it won't move too far with bolts that have long boltTimer's
-					movePerUpdate = 1.0f / (float)( cent->boltTimes[i] - cg.time );
-
-					// move a max of 64 away from the 'original' target location
-					VectorScale( stickPoint, movePerUpdate * trace.fraction * 64.0f, cent->boltCrawlDirs[i] );
-
-				} else {
-					VectorSet( cent->boltCrawlDirs[i], 0, 0, 0 );
-				}
-
-			}
-		}
-
-		for ( i = 0; i < MAX_TESLA_BOLTS; i++ ) {
-
-			if ( cent->boltCrawlDirs[0] || cent->boltCrawlDirs[1] || cent->boltCrawlDirs[2] ) {
-				VectorMA( cent->boltLocs[i], cent->boltTimes[i] - cg.time, cent->boltCrawlDirs[i], perpvec );
-			} else {
-				VectorCopy( cent->boltLocs[i], perpvec );
-			}
-
-			CG_DynamicLightningBolt(    cgs.media.lightningBoltShader,  // shader
-										cent->currentState.origin,      // start
-										perpvec,                // end
-										cent->currentState.density,     // numBolts
-										cent->currentState.frame,       // maxWidth
-										qtrue,      // fade
-										1.0,        // startAlpha
-										0,          // recursion
-										i * i * 2 );     // randseed
-		}
-
-		// add dlight
-		if ( cent->currentState.dl_intensity ) {
-			int randomness = cent->currentState.time2;
-
-			if ( ( cg.time / 50 ) % ( randomness + ( cg.time % randomness ) ) == 0 ) {
-				int dli = cent->currentState.dl_intensity;
-				int r = dli & 255;
-				int g = ( dli >> 8 ) & 255;
-				int b = ( dli >> 16 ) & 255;
-				trap_R_AddLightToScene( cent->currentState.origin, cent->currentState.time, (float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, 0 );
-			}
-		}
-	} else if ( cent->currentState.eType == ET_EF_SPOTLIGHT ) {
-
+	if ( cent->currentState.eType == ET_EF_SPOTLIGHT ) {
 		vec3_t targetpos, normalized_direction, direction;
 		float dist, fov = 90;
 		vec4_t color = {1, 1, 1, .1};
@@ -1290,7 +1220,6 @@ static void CG_Mover( centity_t *cent ) {
 
 		if ( cent->currentState.density == 8 ) {
 			refEntity_t flash;
-			vec3_t angles;
 
 			angles[YAW] = 90;
 			angles[ROLL] = random() * 90;
@@ -1762,10 +1691,11 @@ static void CG_AddEntityToTag( centity_t *cent ) {
 
 	if ( !sParent ) {
 		CG_Error( "CG_EntityTagConnected: unable to find configstring to perform connection" );
+		return; // for compiler warning
 	}
 
 	// if parent isn't visible, then don't draw us
-	if ( !centParent->currentValid ) {
+	if ( !centParent || !centParent->currentValid ) {
 		return;
 	}
 

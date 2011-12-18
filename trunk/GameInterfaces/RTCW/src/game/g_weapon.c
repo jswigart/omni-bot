@@ -729,6 +729,10 @@ void weapon_callAirStrike( gentity_t *ent ) {
 	trace_t tr;
 	float traceheight, bottomtraceheight;
 
+	if ( !ent || !ent->parent ) {
+		return;
+	}
+
 	VectorCopy( ent->s.pos.trBase,bomboffset );
 	bomboffset[2] += 4096;
 
@@ -748,7 +752,7 @@ void weapon_callAirStrike( gentity_t *ent ) {
 	if ( ( tr.fraction < 1.0 ) && ( !( tr.surfaceFlags & SURF_NOIMPACT ) ) ) { //SURF_SKY)) ) { // JPW NERVE changed for trenchtoast foggie prollem
 		G_SayTo( ent->parent, ent->parent, 2, COLOR_YELLOW, "Pilot: ", "Aborting, can't see target.", qtrue );
 
-		if ( ent->parent->client->sess.sessionTeam == TEAM_BLUE ) {
+		if ( ent->parent->client && ent->parent->client->sess.sessionTeam == TEAM_BLUE ) {
 			te = G_TempEntity( ent->parent->s.pos.trBase, EV_GLOBAL_CLIENT_SOUND );
 			te->s.eventParm = G_SoundIndex( "sound/multiplayer/allies/a-aborting.wav" );
 			te->s.teamNum = ent->parent->s.clientNum;
@@ -766,7 +770,7 @@ void weapon_callAirStrike( gentity_t *ent ) {
 		return;
 	}
 
-	if ( ent->parent->client->sess.sessionTeam == TEAM_BLUE ) {
+	if ( ent->parent->client && ent->parent->client->sess.sessionTeam == TEAM_BLUE ) {
 		te = G_TempEntity( ent->parent->s.pos.trBase, EV_GLOBAL_CLIENT_SOUND );
 		te->s.eventParm = G_SoundIndex( "sound/multiplayer/allies/a-affirmative_omw.wav" );
 		te->s.teamNum = ent->parent->s.clientNum;
@@ -1068,61 +1072,6 @@ void Weapon_Artillery( gentity_t *ent ) {
 	// Omni-bot - Send a fire event.
 	Bot_Event_FireWeapon( ent - g_entities, Bot_WeaponGameToBot( WP_ARTY ), 0 );
 
-}
-
-gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity, int ownerNum );
-// jpw
-
-/*
-===============
-CheckMeleeAttack
-    using 'isTest' to return hits to world surfaces
-===============
-*/
-trace_t *CheckMeleeAttack( gentity_t *ent, float dist, qboolean isTest ) {
-	static trace_t tr;
-	vec3_t end;
-	gentity_t   *tent;
-	gentity_t   *traceEnt;
-
-	// set aiming directions
-	AngleVectors( ent->client->ps.viewangles, forward, right, up );
-
-	CalcMuzzlePoint( ent, WP_GAUNTLET, forward, right, up, muzzleTrace );
-
-	VectorMA( muzzleTrace, dist, forward, end );
-
-	trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
-	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
-		return NULL;
-	}
-
-	// no contact
-	if ( tr.fraction == 1.0f ) {
-		return NULL;
-	}
-
-	traceEnt = &g_entities[ tr.entityNum ];
-
-	// send blood impact
-	if ( traceEnt->takedamage && traceEnt->client ) {
-		tent = G_TempEntity( tr.endpos, EV_MISSILE_HIT );
-		tent->s.otherEntityNum = traceEnt->s.number;
-		tent->s.eventParm = DirToByte( tr.plane.normal );
-		tent->s.weapon = ent->s.weapon;
-	}
-
-//----(SA)	added
-	if ( isTest ) {
-		return &tr;
-	}
-//----(SA)
-
-	if ( !traceEnt->takedamage ) {
-		return NULL;
-	}
-
-	return &tr;
 }
 
 

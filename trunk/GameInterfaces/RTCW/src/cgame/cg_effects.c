@@ -227,7 +227,9 @@ localEntity_t *CG_MakeExplosion( vec3_t origin, vec3_t dir, qhandle_t hModel, qh
 	ex->pos.trType = TR_LINEAR;
 	ex->pos.trTime = cg.time;
 	VectorCopy( newOrigin, ex->pos.trBase );
-	VectorScale( dir, 48, ex->pos.trDelta );
+	if (dir) {
+		VectorScale( dir, 48, ex->pos.trDelta );
+	}
 	// done.
 
 	ex->color[0] = ex->color[1] = ex->color[2] = 1.0;
@@ -312,7 +314,6 @@ void CG_Bleed( vec3_t origin, int entityNum ) {
 
 		{
 			float len;
-			vec3_t vec;
 
 			VectorSubtract( bOrigin, vhead, vec );
 			len = VectorLength( vec );

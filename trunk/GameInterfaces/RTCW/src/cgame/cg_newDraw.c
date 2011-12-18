@@ -9,21 +9,6 @@ extern displayContextDef_t cgDC;
 int drawTeamOverlayModificationCount = -1;
 int CG_DrawField( int x, int y, int width, int value, int charWidth, int charHeight, qboolean dodrawpic, qboolean leftAlign );      // NERVE - SMF
 
-void CG_InitTeamChat() {
-}
-
-void CG_SetPrintString( int type, const char *p ) {
-	if ( type == SYSTEM_PRINT ) {
-		strcpy( systemChat, p );
-	} else {
-		strcpy( teamChat2, teamChat1 );
-		strcpy( teamChat1, p );
-	}
-}
-
-void CG_CheckOrderPending() {
-}
-
 static void CG_SetSelectedPlayerName() {
 	if ( cg_currentSelectedPlayer.integer >= 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers ) {
 		clientInfo_t *ci = cgs.clientinfo + sortedTeamPlayers[cg_currentSelectedPlayer.integer];
@@ -43,7 +28,6 @@ int CG_GetSelectedPlayer() {
 }
 
 void CG_SelectNextPlayer() {
-	CG_CheckOrderPending();
 	if ( cg_currentSelectedPlayer.integer >= 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers ) {
 		cg_currentSelectedPlayer.integer++;
 	} else {
@@ -53,18 +37,12 @@ void CG_SelectNextPlayer() {
 }
 
 void CG_SelectPrevPlayer() {
-	CG_CheckOrderPending();
 	if ( cg_currentSelectedPlayer.integer > 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers ) {
 		cg_currentSelectedPlayer.integer--;
 	} else {
 		cg_currentSelectedPlayer.integer = numSortedTeamPlayers;
 	}
 	CG_SetSelectedPlayerName();
-}
-
-
-// (SA) not sure what you'd use this for anyway...
-static void CG_DrawPlayerArmorIcon( rectDef_t *rect, qboolean draw2D ) {
 }
 
 static void CG_DrawPlayerArmorValue( rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
@@ -1701,12 +1679,12 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x, float text_
 	case CG_PLAYER_WEAPON_ICON2D:
 		CG_DrawPlayerWeaponIcon( &rect, ownerDrawFlags & CG_SHOW_HIGHLIGHTED, align );
 		break;
-	case CG_PLAYER_ARMOR_ICON:
+	/*case CG_PLAYER_ARMOR_ICON:
 		CG_DrawPlayerArmorIcon( &rect, ownerDrawFlags & CG_SHOW_2DONLY );
 		break;
 	case CG_PLAYER_ARMOR_ICON2D:
 		CG_DrawPlayerArmorIcon( &rect, qtrue );
-		break;
+		break;*/
 	case CG_PLAYER_ARMOR_VALUE:
 		CG_DrawPlayerArmorValue( &rect, scale, color, shader, textStyle );
 		break;

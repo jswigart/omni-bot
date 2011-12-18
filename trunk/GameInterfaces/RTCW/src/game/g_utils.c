@@ -755,10 +755,12 @@ G_ProcessTagConnect
 void G_ProcessTagConnect( gentity_t *ent ) {
 	if ( !ent->tagName ) {
 		G_Error( "G_ProcessTagConnect: NULL ent->tagName\n" );
+		return; // for compiler warning
 	}
 
 	if ( !ent->tagParent ) {
 		G_Error( "G_ProcessTagConnect: NULL ent->tagParent\n" );
+		return; // for compiler warning
 	}
 
 	G_FindConfigstringIndex( va( "%i %i %s", ent->s.number, ent->tagParent->s.number, ent->tagName ), CS_TAGCONNECTS, MAX_TAGCONNECTS, qtrue );

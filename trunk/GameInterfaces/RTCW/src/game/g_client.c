@@ -199,6 +199,7 @@ gentity_t *SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) {
 	// find a single player start spot
 	if ( !spot ) {
 		G_Error( "Couldn't find a spawn point" );
+		return 0; // for compiler warning
 	}
 
 	VectorCopy( spot->s.origin, origin );
@@ -2089,17 +2090,18 @@ void ClientDisconnect( int clientNum ) {
 G_RetrieveMoveSpeedsFromClient
 ==================
 */
-void G_RetrieveMoveSpeedsFromClient( int entnum, char *text ) {
+void G_RetrieveMoveSpeedsFromClient( int entnum, char *moveSpeedText ) {
 	char *text_p, *token;
 	animation_t *anim;
 	animModelInfo_t *modelInfo;
 
-	text_p = text;
+	text_p = moveSpeedText;
 
 	// get the model name
 	token = COM_Parse( &text_p );
 	if ( !token || !token[0] ) {
 		G_Error( "G_RetrieveMoveSpeedsFromClient: internal error" );
+		return; // for compiler warning
 	}
 
 	modelInfo = BG_ModelInfoForModelname( token );

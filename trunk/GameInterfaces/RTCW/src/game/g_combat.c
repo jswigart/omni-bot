@@ -65,7 +65,7 @@ const char *spreeSound[] = {
 
 static void G_UpdateKillingSpree( gentity_t *ent, gentity_t *att, qboolean death ) {
 	int spree = 0, old_spree = 0, snd_idx = 0;
-	qboolean skipBotEnt = ent && (ent->r.svFlags & SVF_BOT) && (g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE);
+	qboolean skipBotEnt = (ent && (ent->r.svFlags & SVF_BOT) && (g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE));
 
 	if ( &ent->client->ps ) {
 		old_spree = ent->client->ps.persistant[PERS_KILLSPREE];
@@ -1065,11 +1065,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			take *= 2; // sniper rifles can do full-kill (and knock into limbo)
 
 		}
-		if ( !( targ->client->ps.eFlags & EF_HEADSHOT ) ) {  // only toss hat on first headshot
-			G_AddEvent( targ, EV_LOSE_HAT, DirToByte( dir ) );
-		}
 
-		targ->client->ps.eFlags |= EF_HEADSHOT;
+		if ( targ->client ) {
+			if ( !( targ->client->ps.eFlags & EF_HEADSHOT ) ) {  // only toss hat on first headshot
+				G_AddEvent( targ, EV_LOSE_HAT, DirToByte( dir ) );
+			}
+
+			targ->client->ps.eFlags |= EF_HEADSHOT;
+		}
 
 		//stats
 		if ( attacker->client && targ->client && !sameTeam ) {

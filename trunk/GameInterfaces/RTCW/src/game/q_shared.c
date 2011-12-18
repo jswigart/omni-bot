@@ -440,7 +440,7 @@ int COM_Compress( char *data_p ) {
 			}
 		}
 	}
-	*datao = 0;
+	if (datao) *datao = 0;
 	return size;
 }
 
@@ -712,6 +712,7 @@ void Q_strncpyz( char *dest, const char *src, int destsize ) {
 	}
 	if ( destsize < 1 ) {
 		Com_Error( ERR_FATAL,"Q_strncpyz: destsize < 1" );
+		return; // for compiler warning
 	}
 
 	strncpy( dest, src, destsize - 1 );
@@ -1126,8 +1127,11 @@ void Info_RemoveKey( char *s, const char *key ) {
 		}
 		*o = 0;
 
-		if ( !strcmp( key, pkey ) ) {
-			strcpy( start, s );  // remove this part
+		if (!Q_stricmp (key, pkey) )
+		{
+			// rain - arguments to strcpy must not overlap
+			//strcpy (start, s);	// remove this part
+			memmove(start, s, strlen(s) + 1); // remove this part
 			return;
 		}
 

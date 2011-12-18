@@ -39,6 +39,7 @@ CG_FreeLocalEntity
 void CG_FreeLocalEntity( localEntity_t *le ) {
 	if ( !le->prev ) {
 		CG_Error( "CG_FreeLocalEntity: not active" );
+		return; // for compiler warning
 	}
 
 	// remove from the doubly linked active list
