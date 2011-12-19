@@ -226,7 +226,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Axis_Flag_Taken );
 	OnTrigger( "Axis Team captured the forward spawn!", Map.forwardspawn_Axis_Captured );
 	OnTrigger( "Allied Team captured forward spawn!", Map.forwardspawn_Allies_Captured );
-	OnTrigger( "Allies successfully Captured the Flag!", Map.AlliesWin ); // This is the same script event for both teams...
+	//OnTrigger( "Allies successfully Captured the Flag!", Map.AlliesWin ); // This is the same script event for both teams...
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 20} );
