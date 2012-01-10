@@ -1,6 +1,7 @@
 global Map =
 {
 	Quiet = true,
+	Debug = true,
 	DispenseAmmoTime = 1,
 	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
 	Plant_Allied_Packing_Case = "PLANT_Allied_Packing_Case",
@@ -17,34 +18,29 @@ global Map =
 	Repair_569 = "REPAIRMG42_569",
 	FriendlyFire,
 	
-	// Allies spawnpt 7 - Allied Lower Bunker
-	
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 4, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 101, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-		
-		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 4,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 101,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
 	},
 	
-	allied_conservative = {"bdual_1", "bdual_2", "bdual_3", "bdual_4", "bdual_5", "bdual_6", },
-	axis_conservative = {"rdual_1", "rdual_2", "rdual_3", "rdual_4", "rdual_5", "rdual_6", },
-	
-	//tables to hold current AS goals	
-	AxisASTable = {},
-	AlliesASTable = {},
-	AxisASPriority = 0.94, // less than Defend's. thx Martin
-	AlliesASPriority = 0.94, // less than Defend's. thx Martin	
-
 	Allied_Packing_Case_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -145,12 +141,12 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
 	
 	SetGoalPriority("ATTACK.*", 0.45);
-	
+	SetGoalPriority( "CAMP.*", 0.95); // dedicated defends
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
 	
 
 	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	
 	
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
@@ -159,8 +155,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
 	
-	Map.Defend.Allies = Map.allied_conservative;
-	Map.Defend.Axis = Map.axis_conservative;
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rdual.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bdual.*" );
 
 	print( "OnMapLoad" );
 };
@@ -172,5 +168,5 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 100.0;
 	
 	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
+	//RTCWUtil.SetDualObjective(bot);
 };
