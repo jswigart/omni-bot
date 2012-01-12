@@ -3,42 +3,100 @@ global Map =
 	Quiet = true,
 	Debug = true,
 	DispenseAmmoTime = 1,
-	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
-	Plant_Allied_Packing_Case = "PLANT_Allied_Packing_Case",
-	Plant_Axis_Packing_Case = "PLANT_Axis_Packing_Case",
-	Plant_Central_Foundry_Door = "PLANT_Central_Foundry_Door",
-	Plant_Central_Foundry_Door_1 = "PLANT_Central_Foundry_Door_1",
-	Mount_566 = "MOUNTMG42_566",
-	Mount_567 = "MOUNTMG42_567",
-	Mount_568 = "MOUNTMG42_568",
-	Mount_569 = "MOUNTMG42_569",
-	Repair_566 = "REPAIRMG42_566",
-	Repair_567 = "REPAIRMG42_567",
-	Repair_568 = "REPAIRMG42_568",
-	Repair_569 = "REPAIRMG42_569",
 	FriendlyFire,
+	AxisCaseDyno = 0,
+	AlliedCaseDyno = 0,
 	
 	Roles =
 	{
 		AXIS =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				spawnpt = 4,
-				numbots = 5,
+				numbots = 6,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
 
 		ALLIES =
 		{
+			AllBots = true,
 			DEFENDER =
 			{
 				spawnpt = 101,
-				numbots = 5,
+				numbots = 6,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
+	},
+	
+	Switches =
+	{
+		// North Gate
+		gate_n_out =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "gate_n_out",
+			//LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+		gate_n_in =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "gate_n_in",
+			LimitBots = 1,
+			//LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitClass = Util.AllClasses,
+		},
+		// South Gate
+		gate_s_out =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "gate_s_out",
+			//LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+		gate_s_in =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "gate_s_in",
+			LimitBots = 1,
+			//LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitClass = Util.AllClasses,
+		},
+	},
+	
+	Allied_Packing_Case_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.AlliedCaseDyno -= 1;
+		
+		if (Map.AlliedCaseDyno < 1)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rCover.*" );
+		}
+
+		print( "Allied_Packing_Case_Defused" );
+	},
+	
+	Allied_Packing_Case_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.AlliedCaseDyno += 1;
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCover.*" );
+
+		print( "Allied_Packing_Case_Planted" );
 	},
 	
 	Allied_Packing_Case_Destroyed = function( trigger )
@@ -49,6 +107,33 @@ global Map =
 		print( "Allied_Packing_Case_Destroyed" );
 	},
 
+	Axis_Packing_Case_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.AxisCaseDyno -= 1;
+		
+		if (Map.AxisCaseDyno < 1)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bCover.*" );
+		}
+
+		print( "Axis_Packing_Case_Defused" );
+	},
+	
+	Axis_Packing_Case_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.AxisCaseDyno += 1;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCover.*" );
+		
+		print( "Axis_Packing_Case_Planted" );
+	},
+	
 	Axis_Packing_Case_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -99,6 +184,71 @@ global Map =
 
 		print( "flag_respawn_obj_Allies_Captured" );
 	},
+	
+	gate_north = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Gate Opening
+		if ( vel.z > 0 ) {
+			Util.MapDebugPrint( "North Opening" );
+			Map.Switches.gate_n_out.Enabled = false;
+			Map.Switches.gate_n_in.Enabled = true;
+		}
+		// Gate Closing
+		else
+		{
+			Util.MapDebugPrint( "North Closing" );
+			Map.Switches.gate_n_out.Enabled = false;
+			Map.Switches.gate_n_in.Enabled = false;
+		}
+	},
+	gate_south = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Gate Opening
+		if ( vel.z > 0 ) {
+			Util.MapDebugPrint( "South Opening" );
+			Map.Switches.gate_s_out.Enabled = false;
+			Map.Switches.gate_s_in.Enabled = true;
+		}
+		// Gate Closing
+		else
+		{
+			Util.MapDebugPrint( "South Closing" );
+			Map.Switches.gate_s_out.Enabled = true;
+			Map.Switches.gate_s_in.Enabled = false;
+		}
+	},
+	
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+				b.DisableBotPush( true );
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+				b.DisableBotPush( false );
+			}
+		},
+	},
 
 };
 
@@ -111,14 +261,22 @@ global OnMapLoad = function()
 	Util.AddUseWp("PLANT_Axis_Packing_Case", "rcase");
 	Util.AddUseWp("PLANT_Central_Foundry_Door", "door1");
 	Util.AddUseWp("PLANT_Central_Foundry_Door", "door2");
+	
+	tTurntable = OnTriggerRegion( AABB( 1192.000,-8904.000,66.000,2152.000,-7978.000,150.000 ), Map.DisableCombatMove );
 
+	OnTrigger( "Defused at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
+	OnTrigger( "Planted at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
 	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
+	OnTrigger( "Defused at the Axis Packing Case.", Map.Axis_Packing_Case_Planted );
+	OnTrigger( "Planted at the Axis Packing Case.", Map.Axis_Packing_Case_Planted );
 	OnTrigger( "MISSING_STRING", Map.Axis_Packing_Case_Destroyed );
 	OnTrigger( "the Central Foundry Door Destroyed.", Map.Central_Foundry_Door_Destroyed );
 	OnTrigger( "Planted at the Central Foundry Door.", Map.Central_Foundry_Door_Planted );
 	//OnTrigger( "MISSING_STRING", Map.Central_Foundry_Door_1_Destroyed );
 	OnTrigger( "Axis captures the Foundry Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
 	OnTrigger( "Allies capture the Foundry Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "southdoor1_Opening", Map.gate_south );
+	OnTrigger( "northdoor1_Opening", Map.gate_north );
 	
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
@@ -134,19 +292,23 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Central_Foundry_Door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rdual.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bdual.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 	
 	SetGoalPriority("ATTACK.*", 0.45);
 	SetGoalPriority( "CAMP.*", 0.95); // dedicated defends
-	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.94 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	
-
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
 	
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
@@ -155,9 +317,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
 	
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rdual.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bdual.*" );
-
 	print( "OnMapLoad" );
 };
 
