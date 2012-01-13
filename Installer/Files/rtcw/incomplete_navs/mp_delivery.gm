@@ -187,7 +187,7 @@ global Map =
 	
 	gate_north = function( trigger )
 	{
-		if ( TestMap ) {
+		/*if ( TestMap ) {
 			return;
 		}
 
@@ -204,11 +204,11 @@ global Map =
 			Util.MapDebugPrint( "North Closing" );
 			Map.Switches.gate_n_out.Enabled = false;
 			Map.Switches.gate_n_in.Enabled = false;
-		}
+		}*/
 	},
 	gate_south = function( trigger )
 	{
-		if ( TestMap ) {
+		/*if ( TestMap ) {
 			return;
 		}
 
@@ -225,7 +225,7 @@ global Map =
 			Util.MapDebugPrint( "South Closing" );
 			Map.Switches.gate_s_out.Enabled = true;
 			Map.Switches.gate_s_in.Enabled = false;
-		}
+		}*/
 	},
 	
 	DisableCombatMove =
@@ -264,10 +264,13 @@ global OnMapLoad = function()
 	
 	tTurntable = OnTriggerRegion( AABB( 1192.000,-8904.000,66.000,2152.000,-7978.000,150.000 ), Map.DisableCombatMove );
 
-	OnTrigger( "Defused at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
+	//Allies Spawn Ladder: ladder1_goto (negative value for 'opening' (able to climb))
+	// Axis spawn ladder: doesnt appear to be a good script event
+	
+	OnTrigger( "Defused at the Allied Packing Case.", Map.Allied_Packing_Case_Defused );
 	OnTrigger( "Planted at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
 	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
-	OnTrigger( "Defused at the Axis Packing Case.", Map.Axis_Packing_Case_Planted );
+	OnTrigger( "Defused at the Axis Packing Case.", Map.Axis_Packing_Case_Defused );
 	OnTrigger( "Planted at the Axis Packing Case.", Map.Axis_Packing_Case_Planted );
 	OnTrigger( "MISSING_STRING", Map.Axis_Packing_Case_Destroyed );
 	OnTrigger( "the Central Foundry Door Destroyed.", Map.Central_Foundry_Door_Destroyed );
@@ -279,6 +282,7 @@ global OnMapLoad = function()
 	OnTrigger( "northdoor1_Opening", Map.gate_north );
 	
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "CAMP.*", {mincamptime=15, maxcamptime=25});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
 	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
@@ -289,6 +293,7 @@ global OnMapLoad = function()
 	RTCWUtil.DisableGoal(".*", true); //all but the routes
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCover.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Central_Foundry_Door" );
@@ -296,6 +301,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCover.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
@@ -315,7 +321,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
+	Util.SetMaxUsersInProgress( 1, "PLANT_Central.*" );
 	
 	print( "OnMapLoad" );
 };
