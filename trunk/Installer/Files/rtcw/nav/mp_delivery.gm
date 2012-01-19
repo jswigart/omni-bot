@@ -69,7 +69,7 @@ global Map =
 		bspawnladder =
 		{
 			Enabled = true,
-			Priority = 0.6,
+			Priority = 1.6,
 			WaypointName = "bspawnladder",
 			LimitBots = 1,
 			LimitTeam = ( 1 << TEAM.ALLIES ), // Allies should try to keep this open always
@@ -373,6 +373,68 @@ global Map =
 			}
 		},
 	},
+	
+	AlliedCase =
+	{
+		Name = "AlliedCase",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.ALLIES ) {
+						bot.SayTeam( "Axis are planting at the Packing Case!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	
+	AxisCase =
+	{
+		Name = "AlliedCase",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at the Packing Case!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
 
 };
 
@@ -390,9 +452,10 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "coalramp2", "closed", true );
 	
 	tTurntable = OnTriggerRegion( AABB( 1192.000,-8904.000,66.000,2152.000,-7978.000,150.000 ), Map.DisableCombatMove );
-
-	// Axis spawn ladder: doesnt appear to be a good script event
 	
+	bCaseMsg = OnTriggerRegion( AABB( 1565.000,-9768.000,52.000,1813.000,-9526.000,140.000 ), Map.AlliedCase );
+	rCaseMsg = OnTriggerRegion( AABB( 636.000,1064.000,66.000,866.000,1307.000,141.000 ), Map.AxisCase );
+		
 	OnTrigger( "Defused at the Allied Packing Case.", Map.Allied_Packing_Case_Defused );
 	OnTrigger( "Planted at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
 	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
@@ -452,6 +515,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "CAMP.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_Central.*" );
 	
 	MapRoutes =
@@ -498,6 +562,22 @@ global OnMapLoad = function()
 					ROUTE_turntabletunnel = {},
 				},
 			},
+			ROUTE_rspawnmid =
+			{
+				ROUTE_nmidtrain = {},
+				ROUTE_nwatrium =
+				{
+					ROUTE_sleepingquarters = {},
+					ROUTE_swatrium = {},
+				},
+				ROUTE_switchroom =
+				{
+					ROUTE_nupper =
+					{
+						ROUTE_supper = {},
+					},
+				},
+			},
 		},
 		PLANT_Axis_Packing_Case =
 		{
@@ -505,11 +585,16 @@ global OnMapLoad = function()
 			{
 				ROUTE_nwatrium = 
 				{
+					Weight = 2,
 					ROUTE_swboxes =
 					{
 						ROUTE_axistrain = {},
 						ROUTE_axistrees = {},
 						ROUTE_rwesttunnel = {},
+						ROUTE_axisbasement =
+						{
+							ROUTE_rearhut = {ROUTE_neconnection={},},
+						},
 					},
 				},
 				ROUTE_cafeteria =
@@ -521,12 +606,17 @@ global OnMapLoad = function()
 							ROUTE_axistrain = {},
 							ROUTE_axistrees = {},
 							ROUTE_rwesttunnel = {},
+							ROUTE_axisbasement =
+							{
+								ROUTE_rearhut = {ROUTE_neconnection={},},
+							},
 						},
 						ROUTE_rsouthtunnel = {ROUTE_rwesttunnel={},},
 					},
 				},
 				ROUTE_nupper =
 				{
+					Weight = 2,
 					ROUTE_coalupper =
 					{
 						ROUTE_swboxes =
@@ -538,6 +628,7 @@ global OnMapLoad = function()
 					},
 					ROUTE_boxcarupper =
 					{
+						Weight = 2,
 						ROUTE_seboxes =
 						{
 							ROUTE_axistrain = {},
@@ -547,7 +638,7 @@ global OnMapLoad = function()
 						ROUTE_rsouthtunnel = {ROUTE_rwesttunnel={},},
 						ROUTE_switchroom =
 						{
-							Weight = 2,
+							Weight = 3,
 							ROUTE_rearhut = {ROUTE_neconnection={},},
 						},
 					},
@@ -566,8 +657,32 @@ global OnMapLoad = function()
 					},
 				},
 			},
+			ROUTE_bspawnmid =
+			{
+				ROUTE_smidtrain = {},
+				ROUTE_swatrium =
+				{
+					ROUTE_cafeteria = {},
+					ROUTE_nwatrium = {},
+				},
+				ROUTE_turntablen =
+				{
+					ROUTE_bsidehall =
+					{
+						ROUTE_nupper = {},
+					},
+				},
+				ROUTE_nupper = {},
+			},
 		},
 	};
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_smidtrain = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_centralsteps;
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_nupper = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_nupper;
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_turntablen.ROUTE_bsidehall.ROUTE_nupper = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_nupper;
+	
+	MapRoutes.PLANT_Allied_Packing_Case.ROUTE_rspawnmid.ROUTE_nmidtrain = MapRoutes.PLANT_Allied_Packing_Case.ROUTE_flagspawn.ROUTE_centralsteps;
+	MapRoutes.PLANT_Allied_Packing_Case.ROUTE_rspawnmid.ROUTE_switchroom.ROUTE_nupper.ROUTE_supper = MapRoutes.PLANT_Allied_Packing_Case.ROUTE_flagspawn.ROUTE_supper;
+	
 	
 	MapRoutes.DEFEND_rCover1 = MapRoutes.PLANT_Allied_Packing_Case;
 	MapRoutes.DEFEND_rCover2 = MapRoutes.PLANT_Allied_Packing_Case;
@@ -585,6 +700,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bAttack_1 = MapRoutes.PLANT_Axis_Packing_Case;
 	MapRoutes.AIRSTRIKE_bCover1 = MapRoutes.PLANT_Axis_Packing_Case;
 	MapRoutes.AIRSTRIKE_bCover2 = MapRoutes.PLANT_Axis_Packing_Case;
+	//MapRoutes.ROUTE_bspawnmid.ROUTE_swatrium
 	
 	Util.Routes( MapRoutes );	
 	print( "OnMapLoad" );
