@@ -205,6 +205,7 @@ global Map =
 			{ return; }
 			
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bswatrium" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 
 		print( "flag_respawn_obj_Axis_Captured" );
 		
@@ -216,6 +217,8 @@ global Map =
 			{ return; }
 			
 		//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bswatrium" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
 
 		print( "flag_respawn_obj_Allies_Captured" );
 	},
@@ -474,7 +477,7 @@ global OnMapLoad = function()
 	OnTrigger( "ladder4_goto", Map.coal_ramp );
 	OnTrigger( "ladder2activate", Map.axis_ramp );
 	
-	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "CAMP.*", {mincamptime=15, maxcamptime=25});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
