@@ -155,6 +155,18 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
 	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});	
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+	RTCWUtil.SetPrimaryGoals(1.0);
+	
+	SetGoalPriority("MOUNTMG42.*", 0.91);
+	
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_testaxisgoal" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_testalliedgoal" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBaseart.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 	
 	Map.Defend.Axis = Map.base_conservative;
 	Map.Defend.Allies = Map.house_conservative;
@@ -171,6 +183,4 @@ global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
 	
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
 };
