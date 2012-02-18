@@ -1,8 +1,8 @@
 global Map =
 {
 	Quiet = true,
-	Debug = true,
-	DispenseAmmoTime = 3,
+	Debug = false,
+	DispenseAmmoTime = 1,
 	DontDispenseAmmo = false,
 	FriendlyFire,
 	AxisCaseDyno = 0,
@@ -503,6 +503,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bdual.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_bspawnladder" );
 	
 	SetGoalPriority("ATTACK.*", 0.45);
 	SetGoalPriority( "CAMP.*", 0.95); // dedicated defends
@@ -706,6 +707,7 @@ global OnMapLoad = function()
 	//MapRoutes.ROUTE_bspawnmid.ROUTE_swatrium
 	
 	Util.Routes( MapRoutes );	
+	Util.UpdateSwitchData();
 	print( "OnMapLoad" );
 };
 
