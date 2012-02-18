@@ -172,6 +172,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzTransmit.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
 
 			// some axis should wait around a bit to try and catch runner
 			timeout = 0;
@@ -183,6 +185,13 @@ global Map =
 
 			if ( Map.DocStatus ) {
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
+			}
+			
+			foreach( id and bot in BotTable )
+			{
+				if ( bot.GetTeam() == TEAM.AXIS ) {
+					bot.ChangeSpawnPoint( 2 );
+				}
 			}
 		}
 
@@ -205,6 +214,15 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+			}
+		}
 
 		Util.MapDebugPrint( "Docs_Returned" );
 	},
@@ -329,6 +347,50 @@ global Map =
 		// better go short with docs now
 		Util.DisableGoal( "ROUTE_sidewall" );
 	},
+	
+	ViewDistance = 8000,
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
 };
 
 global OnMapLoad = function()
@@ -336,6 +398,9 @@ global OnMapLoad = function()
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
+	
+	transladder = OnTriggerRegion( AABB( 2293.000,3291.000,437.000,2366.000,3418.000,800.000 ), Map.LadderTrigger );
+	transplatform = OnTriggerRegion( AABB( 2379.000,3284.000,729.000,2809.000,4017.000,803.000 ), Map.DisableCombatMove );
 
 	OnTrigger( "The Compound Gate has been breached!", Map.Radio_Destroyed );
 	OnTrigger( "Planted at The Radio.", Map.Radio_Planted );
@@ -469,6 +534,9 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_Docs;
 
 	Util.Routes( MapRoutes );
+	
+	EntityKill( 239);
+	EntityKill( 158);
 
 	Util.MapDebugPrint( "OnMapLoad" );
 };
