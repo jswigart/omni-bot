@@ -181,13 +181,20 @@ void TossClientItems( gentity_t *self ) {
 		weapon = WP_NONE;
 	}
 
-	// JPW NERVE don't drop these weapon types
+	// JPW NERVE don't drop these weapon types.
 	if ( !g_unlockWeapons.integer && (( weapon == WP_FLAMETHROWER ) || ( weapon == WP_GARAND ) || ( weapon == WP_MAUSER ) || ( weapon == WP_VENOM )) ) {
 		weapon = WP_NONE;
 	}
 	// jpw
 
-	if ( weapon > WP_NONE && weapon < WP_MONSTER_ATTACK1 &&
+	// don't drop these weapons in any mode
+	weapon = (weapon == WP_KNIFE || weapon == WP_KNIFE2 ||
+				weapon == WP_LUGER || weapon == WP_COLT ||
+				weapon == WP_GRENADE_PINEAPPLE ||
+				weapon == WP_GRENADE_LAUNCHER)
+				? WP_NONE : weapon;
+
+	if ( weapon > WP_NONE && weapon < WP_MEDIC_SYRINGE &&
 			(self->client->ps.ammo[ BG_FindAmmoForWeapon( (weapon_t)weapon )] || self->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )]) ) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( (weapon_t)weapon );
@@ -204,24 +211,45 @@ void TossClientItems( gentity_t *self ) {
 	}
 
 	if ( g_dropItems.integer ) {
-		if ( self->client->ps.stats[STAT_PLAYER_CLASS] == PC_MEDIC ) {
-			int i;
-			item = BG_FindItemByIndex( IL_ITEM_HEALTH );
+		int itemId = 0;
+		int numToDrop = 2;
 
-			for ( i = 0; i < 2; i++ )
+		switch(self->client->ps.stats[STAT_PLAYER_CLASS])
+		{
+		case PC_MEDIC:
+			itemId = IL_ITEM_HEALTH;
+			break;
+		case PC_LT:
+			itemId = IL_WEAPON_MAGICAMMO;
+			break;
+		case PC_ENGINEER:
 			{
-				drop = Drop_Item( self, item, 0, qfalse );
-				drop->think = MagicSink;
-				drop->timestamp = level.time + 31200;
-				drop->parent = NULL;
+				int teamGrenade = WP_GRENADE_LAUNCHER;
+				itemId = IL_AMMO_GRENADES;
+
+				if ( self->client->sess.sessionTeam == TEAM_BLUE ) {
+					itemId = IL_AMMO_GRENADES_AMERICAN;
+					teamGrenade = WP_GRENADE_PINEAPPLE;
+				}
+
+				// drop a nade pack for every 4 nades the player has (max 2 nade packs)
+				numToDrop = (int)(self->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)teamGrenade )] / 4);
+				numToDrop = numToDrop > 2 ? 2 : numToDrop;
+				break;
 			}
-		} else if ( self->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) {
-			int i;
-			item = BG_FindItemByIndex( IL_WEAPON_MAGICAMMO );
+		default:
+			break;
+		}
 
-			for ( i = 0; i < 2; i++ )
+		if (itemId > 0)
+		{
+			int i;
+			item = BG_FindItemByIndex( itemId );
+
+			for ( i = 0; i < numToDrop; i++ )
 			{
-				drop = Drop_Item( self, item, 0, qfalse );
+				// cs: revisit this if allowed to drop more than 2 items ...
+				drop = Drop_Item( self, item, (float)(i + 60), i > 0 ? qtrue : qfalse );
 				drop->think = MagicSink;
 				drop->timestamp = level.time + 31200;
 				drop->parent = NULL;

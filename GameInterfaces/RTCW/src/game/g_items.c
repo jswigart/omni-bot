@@ -239,7 +239,7 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 		weapon = WP_GRENADE_PINEAPPLE;
 	}
 
-	if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( weapon )] < nades ) {
+	if ( ent->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )] < nades ) {
 		return qtrue;
 	}
 
@@ -251,7 +251,7 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 	}
 
 	//if need pistol ammo, pickup!
-	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
+	if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( (weapon_t)weapon )] < (ammoTable[weapon].maxclip * 4) + G_ExtraAmmo(-1,weapon) ) {
 		return qtrue;
 	}
 
@@ -274,12 +274,12 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 
 		if ( COM_BitCheck( ent->client->ps.weapons, weapon ) ) {
 			if ( weapon == WP_FLAMETHROWER ) {
-				if ( ent->client->ps.ammoclip[BG_FindAmmoForWeapon( weapon )] < ammoTable[weapon].maxclip ) {
+				if ( ent->client->ps.ammoclip[BG_FindAmmoForWeapon( (weapon_t)weapon )] < ammoTable[weapon].maxclip ) {
 					return qtrue;
 				}
 			}
 
-			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( weapon )] < (ammoTable[weapon].maxclip * numClips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) {
+			if ( ent->client->ps.ammo[BG_FindAmmoForWeapon( (weapon_t)weapon )] < (ammoTable[weapon].maxclip * numClips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon) ) {
 				return qtrue;
 			}
 		}
@@ -986,8 +986,8 @@ gentity_t *Drop_Item( gentity_t *ent, gitem_t *item, float angle, qboolean novel
 
 	if ( novelocity ) {
 		VectorClear( velocity );
-	} else
-	{
+	}
+	else {
 		AngleVectors( angles, velocity, NULL, NULL );
 		VectorScale( velocity, 150, velocity );
 		velocity[2] += 200 + crandom() * 50;
