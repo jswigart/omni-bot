@@ -208,7 +208,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA_LT.*" );
 		Map.SupportFire();
 
-		Util.ChangeSpawnNoDefenders( TEAM.ALLIES, 101 ); // Martin - Don't spawn in the house
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 101 ); // Martin - Don't spawn in the house
 	},
 
 	obj_flag_Allies_Captured = function( trigger )
@@ -233,7 +233,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA_LT.*" );
 		Map.SupportFire();
 
-		Util.ChangeSpawnNoDefenders( TEAM.ALLIES, 0 ); // Martin - spawn default
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.ALLIES, 0 ); // Martin - spawn default
 	},
 
 	toggle_flag = function()

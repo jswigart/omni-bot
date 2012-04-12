@@ -99,7 +99,7 @@ global Map =
 
 		//if (Map.FlagStatus == 1)
 		//{
-		Util.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
@@ -145,8 +145,8 @@ global Map =
 
 		//if (Map.FlagStatus == 2)
 		//{
-		//Util.ChangeSpawnNoDefenders(TEAM.AXIS, 0);	// Martin - Spawn at bridge to prevent flank
-		Util.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
+		//RTCWUtil.ChangeSpawnNoDefenders(TEAM.AXIS, 0);	// Martin - Spawn at bridge to prevent flank
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
