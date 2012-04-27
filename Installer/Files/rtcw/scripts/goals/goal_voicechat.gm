@@ -257,7 +257,7 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 		return;
 	}
 
-	isBot = this.IsBot(WhoSaidIt);
+	isBot = Util.IsBot(WhoSaidIt);
 
 	if(VoiceId == VOICE.G_BYE
 		&& this.Randomize(this.GOODBYE_SAYGOODBYE, isBot) == true)

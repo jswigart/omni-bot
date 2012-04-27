@@ -430,8 +430,6 @@ global Map =
 		//allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_btrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag_respawn_obj );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_opsmg );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Repair_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
@@ -480,8 +478,6 @@ global Map =
 
 		//allies
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_btrain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_opsmg );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_opsmg );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
@@ -569,6 +565,43 @@ global Map =
 
 		},
 	},
+	
+	LowerRuinsPlayers = 0,
+	LowerRuinsTrigger =
+	{
+		Name = "LowerRuinsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers -= 1;
+
+				if ( Map.LowerRuinsPlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+
+		},
+	},
+	
 	Ops =
 	{
 		Name = "Ops",
@@ -661,6 +694,7 @@ global OnMapLoad = function()
 	tOne = OnTriggerRegion( AABB( -8514,3503,287,-8496,3638,392 ), Map.RuinsTrigger );
 	tTwo = OnTriggerRegion( AABB(-8048.000,1135.000,-254.000,-7623.000,2160.000,-180.000), Map.WarehouseTrigger );
 	tThree = OnTriggerRegion( AABB( -8032.000,3701.000,287.000,-7855.000,3741.000,409.000 ), Map.RuinsTrigger );
+	lowerruins = OnTriggerRegion( AABB( -8768, 2239, 1, -7615, 2592, 163 ), Map.LowerRuinsTrigger );
 	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
 	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
 	tyele = OnTriggerRegion(AABB(-10204.000,1679.000,-822.000,-9874.000,1832.000,330.000),RegionTrigger.DisableBotPush);
@@ -698,6 +732,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
 	SetGoalPriority( "AIRSTRIKE_bwhas.*", 0.94 ); // focus on higher threat
 	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "MOUNT_opsmg", 0.95 );
+	SetGoalPriority( "REPAIR_opsmg", 0.96 );
 
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
 	SetGoalPriority( "ATTACK.*", 0.45 );
