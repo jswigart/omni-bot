@@ -15,7 +15,7 @@ this.Initialize = function()
 	watchParams = {
 		Radius = this.Range,
 		Category = CAT.PICKUP,
-		RequireLOS = TRACE.VISIBLE,
+		//RequireLOS = TRACE.VISIBLE,
 	};
 	this.WatchForEntityCategory(watchParams);
 	this.Bot.AmmoTable = {};
