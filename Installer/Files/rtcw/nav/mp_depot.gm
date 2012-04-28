@@ -509,7 +509,7 @@ global Map =
 				}
 				Map.AxisInRuins = true;
 
-				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
+				//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
 
 				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
 				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
@@ -519,7 +519,7 @@ global Map =
 
 				Map.AxisInRuins = false;
 
-				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bruinsas.*" );
 			}
 		},
 		OnExit = function( ent )
@@ -731,6 +731,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
 	SetGoalPriority( "AIRSTRIKE_bwhas.*", 0.94 ); // focus on higher threat
+	SetGoalPriority( "AIRSTRIKE_blower.*", 0.94 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "MOUNT_opsmg", 0.95 );
 	SetGoalPriority( "REPAIR_opsmg", 0.96 );
