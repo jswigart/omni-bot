@@ -733,8 +733,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_bwhas.*", 0.94 ); // focus on higher threat
 	SetGoalPriority( "AIRSTRIKE_blower.*", 0.94 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
-	SetGoalPriority( "MOUNT_opsmg", 0.95 );
-	SetGoalPriority( "REPAIR_opsmg", 0.96 );
+	SetGoalPriority( "MOUNTMG42_opsmg", 0.95 );
+	SetGoalPriority( "REPAIRMG42_opsmg", 0.96 );
 
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
 	SetGoalPriority( "ATTACK.*", 0.45 );
@@ -754,6 +754,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_beastgate.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_opsmg" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_opsmg" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
