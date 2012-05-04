@@ -162,6 +162,8 @@ global OnMapLoad = function()
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bRoad.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRoad.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHospital.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bHospital.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hospital" );
 	
 	Util.UpdateSwitchData();
