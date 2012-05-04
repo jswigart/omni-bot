@@ -8,6 +8,7 @@ global Map =
 	AxisCaseDyno = 0,
 	AlliedCaseDyno = 0,
 	AxisRamp = 0,
+	FlagStatus = 0,
 	
 	Roles =
 	{
@@ -79,7 +80,7 @@ global Map =
 		{
 			Enabled = true,
 			Priority = 0.51,
-			WaypointName = "trainladder",
+			WaypointName = "trainswitch",
 			LimitBots = 1,
 			LimitTeam = ( 1 << TEAM.ALLIES ), // Allies should try to keep this open always
 			LimitClass = Util.AllClasses,
@@ -206,6 +207,7 @@ global Map =
 			
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bswatrium" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+		Map.FlagStatus = TEAM.AXIS;
 
 		print( "flag_respawn_obj_Axis_Captured" );
 		
@@ -219,6 +221,7 @@ global Map =
 		//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bswatrium" );
 		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
+		Map.FlagStatus = TEAM.ALLIES;
 
 		print( "flag_respawn_obj_Allies_Captured" );
 	},
