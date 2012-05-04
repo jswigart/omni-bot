@@ -1,0 +1,63 @@
+//==========================================================================================
+//
+//	mp_ruins.gm
+//
+//	Who        	When		What
+//------------------------------------------------------------------------------------------
+//	^0MARTIN ^?>:(	28 April 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	church_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "church_flag_Axis_Captured" );
+	},
+
+	church_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "church_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis control the ruins!", Map.church_flag_Axis_Captured );
+	OnTrigger( "Allies control the ruins!", Map.church_flag_Allies_Captured );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} );
+	
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "ATTACK_center" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRuins.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRuins.*" );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};

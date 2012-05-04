@@ -1,0 +1,137 @@
+global _MG = 
+{
+	AIRSTRIKE_bRuins1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.584, 0.014, 0.811),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_bRuins1",
+		Orientation = Vec3(-1.547, 0.947, -0.000),
+		Position = Vec3(-247.000, -106.000, -20.000),
+		Radius = 32,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 44,
+		Stance = "stand",
+		TagName = "bRuins1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_bRuins2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.631, 0.068, 0.773),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_bRuins2",
+		Orientation = Vec3(-1.464, 0.883, -0.000),
+		Position = Vec3(-300.000, -810.000, -16.000),
+		Radius = 32,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 46,
+		Stance = "stand",
+		TagName = "bRuins2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_rRuins1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.785, -0.003, 0.619),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_rRuins1",
+		Orientation = Vec3(1.575, 0.668, -0.000),
+		Position = Vec3(322.000, -91.000, 7.000),
+		Radius = 32,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 40,
+		Stance = "stand",
+		TagName = "rRuins1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_rRuins2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.680, -0.129, 0.722),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_rRuins2",
+		Orientation = Vec3(1.758, 0.806, -0.000),
+		Position = Vec3(499.000, 653.000, 16.000),
+		Radius = 32,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 42,
+		Stance = "stand",
+		TagName = "rRuins2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ATTACK_center = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.033, -0.969, -0.243),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Attack",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "ATTACK_center",
+		Orientation = Vec3(-3.108, -0.246, -0.000),
+		Position = Vec3(62.000, -100.000, -61.000),
+		Radius = 32,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 28,
+		Stance = "stand",
+		TagName = "center",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CHECKPOINT_church_flag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "CHECKPOINT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CHECKPOINT_church_flag",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(64.000, -96.000, -191.000),
+		Radius = 0,
+		RandomUsePoint = 0,
+		Range = 0,
+		SerialNum = 32,
+		TagName = "church_flag",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	Version = 1,
+};
