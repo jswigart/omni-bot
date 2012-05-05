@@ -458,8 +458,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rasspawn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rOps.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
@@ -735,6 +733,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "MOUNTMG42_opsmg", 0.95 );
 	SetGoalPriority( "REPAIRMG42_opsmg", 0.96 );
+	SetGoalPriority( "DEFUSE_Allied_Field_Operations*", 1.2, TEAM.ALLIES, CLASS.ENGINEER, true );
 
 	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
 	SetGoalPriority( "ATTACK.*", 0.45 );
