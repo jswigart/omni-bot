@@ -1598,7 +1598,7 @@ int gmBot::gmfHasEntityFlagAll(gmThread *a_thread)
 
 	for(int i = 0; i < a_thread->GetNumParams(); ++i)
 	{
-		GM_CHECK_INT_PARAM(n, 0);
+		GM_CHECK_INT_PARAM(n, i);
 		if(!native->HasEntityFlag(n))
 		{
 			a_thread->PushInt(0);
@@ -1626,7 +1626,7 @@ int gmBot::gmfHasEntityFlagAny(gmThread *a_thread)
 
 	for(int i = 0; i < a_thread->GetNumParams(); ++i)
 	{
-		GM_CHECK_INT_PARAM(n, 0);
+		GM_CHECK_INT_PARAM(n, i);
 		if(native->HasEntityFlag(n))
 		{
 			a_thread->PushInt(1);
