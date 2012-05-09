@@ -1570,14 +1570,14 @@ int gmBot::gmfHasPowerUp(gmThread *a_thread)
 
 	for(int i = 0; i < a_thread->GetNumParams(); ++i)
 	{
-		GM_CHECK_INT_PARAM(n, 0);
-		if(!native->HasPowerup(n))
+		GM_CHECK_INT_PARAM(n, i);
+		if(native->HasPowerup(n))
 		{
-			a_thread->PushInt(0);
+			a_thread->PushInt(1);
 			return GM_OK;
 		}
 	}
-	a_thread->PushInt(1);
+	a_thread->PushInt(0);
 	return GM_OK;
 }
 
@@ -2010,7 +2010,7 @@ int gmBot::gmfHasRole(gmThread *a_thread)
 
 	for(int i = 0; i < a_thread->GetNumParams(); ++i)
 	{
-		GM_CHECK_INT_PARAM(n, 0);
+		GM_CHECK_INT_PARAM(n, i);
 		if(native->GetRoleMask().CheckFlag(n))
 		{
 			a_thread->PushInt(1);
