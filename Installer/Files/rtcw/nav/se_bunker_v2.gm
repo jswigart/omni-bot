@@ -16,16 +16,14 @@ global Map =
 
 			foreach( entTable in Map.AxisInLower )
 			{
-				ha = GetEntHealthAndArmor( entTable.entity );
-				if ( ha.Health < 1 || entTable.toggle == 0 ) {
+				if ( Util.GetEntHealth(entTable.entity) < 1 || entTable.toggle == 0 ) {
 					Map.NumAxisInLower -= 1;
 				}
 			}
 
 			foreach( entTable in Map.AlliesInLower )
 			{
-				ha = GetEntHealthAndArmor( entTable.entity );
-				if ( ha.Health < 1 || entTable.toggle == 0 ) {
+				if ( Util.GetEntHealth(entTable.entity) < 1 || entTable.toggle == 0 ) {
 					Map.NumAlliesInLower -= 1;
 				}
 			}
@@ -429,6 +427,8 @@ global Map =
 
 		Map.FlagStatus = false;
 
+		SetAvailableMapGoals( TEAM.ALLIES, !Map.BarrierStatus, "GRENADE_barrier" );
+
 		if ( !Map.BunkerStatus && Map.DoorStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_lever2" );
 		}
@@ -474,6 +474,8 @@ global Map =
 		}
 
 		Map.FlagStatus = true;
+
+		Util.DisableGoal( "GRENADE_barrier" );
 
 		if ( !Map.VaultStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_al1stfl_.*" );
@@ -551,6 +553,7 @@ global Map =
 		}
 
 		Map.BarrierStatus = true;
+		Util.DisableGoal( "GRENADE_barrier" );
 		Util.EnableGoal( "ROUTE_acctunn" );
 	},
 
@@ -618,6 +621,8 @@ global OnMapLoad = function()
 	OnTrigger( "elevator_body_goto", Map.elevator_trigger );
 	OnTrigger( "elevator_body_Opening", Map.elevator_buttons );
 
+	RTCWUtil.KillEntities( { 624, 626 } ); // the gate out front by the mg42 nests
+
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.DisableGoal( "ROUTE_mainent" );
 	Util.DisableGoal( "ROUTE_mainent2" );
@@ -644,10 +649,12 @@ global OnMapLoad = function()
 	SetGoalPriority( "PANZER_.*", 0.65 );
 	SetGoalPriority( "FLAME_.*", 0.65 );
 	SetGoalPriority( "SWITCH_lever2", 0.65 );
+	SetGoalPriority( "GRENADE_barrier", 1.1 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_spawn" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_osatt_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_barrier" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
@@ -665,6 +672,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, Map.Mount_outsidenest );
 	Util.SetMaxUsersInProgress( 15, Map.Checkpoint_forward_spawn );
 	Util.SetMaxUsersInProgress( 15, Map.Flag_Enigma_Machine );
+	Util.SetMaxUsersInProgress( 1, "GRENADE_barrier" );
 	Util.UpdateSwitchData();
 
 	//while ele is moving, don't let them path through it
