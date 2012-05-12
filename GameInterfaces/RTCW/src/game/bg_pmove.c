@@ -236,7 +236,7 @@ static void PM_Friction( void ) {
 
 	// apply flying friction
 	if ( pm->ps->powerups[PW_FLIGHT] ) {
-		drop += speed * pm_flightfriction * pml.frametime;
+			drop += speed * pm_flightfriction * pml.frametime;
 	}
 
 	if ( pm->ps->pm_type == PM_SPECTATOR ) {
@@ -1234,6 +1234,12 @@ static void PM_GroundTrace( void ) {
 	}
 
 	pm->ps->groundEntityNum = trace.entityNum;
+
+	// lose the parachute
+	if (pm->ps->powerups[PW_FLIGHT] > 0) {
+		pm->ps->powerups[PW_FLIGHT] = 0;
+		pm->ps->stats[STAT_KEYS] = ~( 1 << KEY_7 );
+	}
 
 	PM_AddTouchEnt( trace.entityNum );
 }

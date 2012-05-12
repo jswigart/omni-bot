@@ -437,7 +437,7 @@ typedef enum {
 	KEY_4,      // field radio
 	KEY_5,      // satchel charge
 	INV_BINOCS, // binoculars
-	KEY_7,
+	KEY_7,		// parachute
 	KEY_8,
 	KEY_9,
 	KEY_10,

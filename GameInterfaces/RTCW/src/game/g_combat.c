@@ -231,10 +231,10 @@ void TossClientItems( gentity_t *self ) {
 					itemId = IL_AMMO_GRENADES_AMERICAN;
 					teamGrenade = WP_GRENADE_PINEAPPLE;
 				}
-
-				// drop a nade pack for every 4 nades the player has (max 2 nade packs)
+				
+				// drop a nade pack if they have 4 or more nades. no bots, we don't want too many laying around
 				numToDrop = (int)(self->client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)teamGrenade )] / 4);
-				numToDrop = numToDrop > 2 ? 2 : numToDrop;
+				numToDrop = (numToDrop > 1 && !(self->r.svFlags & SVF_BOT)) ? 1 : 0;
 				break;
 			}
 		default:
@@ -663,8 +663,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	self->s.loopSound = 0;
 
 	//trap_UnlinkEntity( self );
-	self->r.maxs[2] = 4;
-	self->client->ps.maxs[2] = 4;
+	self->r.maxs[2] = 8;
+	self->client->ps.maxs[2] = 8;
 	trap_LinkEntity( self );
 
 	// don't allow respawn until the death anim is done
