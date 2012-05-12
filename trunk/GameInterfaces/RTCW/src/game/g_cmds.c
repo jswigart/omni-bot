@@ -1984,7 +1984,7 @@ void Cmd_Activate_f( gentity_t *ent ) {
 
 	// deploy parachute
 	if ( (ent->client->ps.stats[STAT_KEYS] & ( 1 << KEY_7 )) && ent->s.groundEntityNum == ENTITYNUM_NONE ) {
-		ent->client->ps.powerups[PW_FLIGHT] = level.time;
+		ent->client->ps.powerups[PW_FLIGHT] = INT_MAX;
 	}
 
 	if ( ent->active ) {
