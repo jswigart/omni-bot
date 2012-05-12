@@ -1982,6 +1982,11 @@ void Cmd_Activate_f( gentity_t *ent ) {
 	int activatetime = level.time;
 	qboolean walking = qfalse;
 
+	// deploy parachute
+	if ( (ent->client->ps.stats[STAT_KEYS] & ( 1 << KEY_7 )) && ent->s.groundEntityNum == ENTITYNUM_NONE ) {
+		ent->client->ps.powerups[PW_FLIGHT] = level.time;
+	}
+
 	if ( ent->active ) {
 		if ( ent->client->ps.persistant[PERS_HWEAPON_USE] ) {
 			// DHM - Nerve :: Restore original position if current position is bad
@@ -2857,7 +2862,7 @@ void Cmd_Buy_f( gentity_t* ent )
 	}
 
 	if (!*buyingstr) {
-		CP("print \"usage: /buy [ammo|health]\n\"");
+		CP("print \"usage: /buy [ammo|health|para]\n\"");
 		return;
 	}
 
@@ -2888,9 +2893,14 @@ void Cmd_Buy_f( gentity_t* ent )
 		ent->health = max;
 		CP("print \"^dbuy: ^9you bought yourself some health\n\"");
 	}
+	else if ( !Q_stricmp(buyingstr, "para") ) {
+		ent->client->ps.stats[STAT_KEYS] |= ( 1 << KEY_7 );
+		CP("print \"^dbuy: ^9you bought a parachute. press use in mid air to deploy\n\"");
+	}
 	// invalid item..
 	else {
 		CP("print \"^dbuy: ^9you want to buy something that is not in store\n\"");
+		CP("print \"usage: /buy [ammo|health|para]\n\"");
 		return;
 	}
 

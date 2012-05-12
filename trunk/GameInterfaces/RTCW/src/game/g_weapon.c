@@ -297,7 +297,9 @@ void Weapon_Syringe( gentity_t *ent ) {
 
 	AngleVectors( ent->client->ps.viewangles, forward, right, up );
 	CalcMuzzlePointForActivate( ent, forward, right, up, muzzleTrace );
-	VectorMA( muzzleTrace, 48, forward, end );           // CH_ACTIVATE_DIST
+
+	// cs: changed from 48 to 64. original z was 24 high and changed to 8, so give the 16 back when reviving.
+	VectorMA( muzzleTrace, 64, forward, end );           // CH_ACTIVATE_DIST
 
 	trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
 
