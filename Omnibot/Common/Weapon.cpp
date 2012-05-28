@@ -177,7 +177,7 @@ bool Weapon::WeaponFireMode::UsesClip() const
 
 bool Weapon::WeaponFireMode::EnoughAmmoToReload() const
 {
-	return (m_AmmoCurrent > 0);//(m_AmmoCurrent >= m_ClipMax);
+	return (m_AmmoCurrent >= m_ClipMax);//(m_AmmoCurrent > 0);
 }
 
 obReal Weapon::WeaponFireMode::CalculateDefaultDesirability(Client *_bot)
