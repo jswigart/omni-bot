@@ -161,7 +161,7 @@ this.Update = function()
 		}
 
 		if ( !pathSuccess ) {
-			Util.MapDebugPrint( this.MapGoal.GetName() + " vehicle path failed, check position: " + GetEntPosition(vehEnt), true );
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "vehicle path failed, check position: " + GetEntPosition(vehEnt));
 		}
 	}
 	else if ( this.RouteTo(this.MapGoal, 128.0) == EVENT.PATH_SUCCESS ) {
@@ -247,7 +247,7 @@ this.Update = function()
 			if ( frameCounter > 200 && this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
 			{
 				// GetConstructableState is unreliable, it can return 1 even if objective can't be built !
-				Util.MapDebugPrint( this.MapGoal.GetName() + " failed, timeout", true );
+				Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
 				this.BlackboardDelay(45, this.MapGoal);
 				break;
 			}
@@ -258,7 +258,7 @@ this.Update = function()
 		this.BlackboardDelay(10, this.MapGoal);
 
 		if (!useOffsets) {
-			Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 		}
 	}
 

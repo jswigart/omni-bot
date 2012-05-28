@@ -1,5 +1,9 @@
 // Default ET Bot Profile
 
+// this script is executed every time bot changes class,
+//  return immediately if this bot is already initialized
+if (this.ClassPrimaryWeaponChoice) { return; }
+
 // FieldOfView is the angle(in degrees) that the bot can 'see' in front of them.
 this.FieldOfView = 90.0;
 

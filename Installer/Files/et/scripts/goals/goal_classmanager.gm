@@ -25,14 +25,14 @@ this.Update = function()
 {
 	while(1)
 	{
-		sleep(1); // at map start all bots are returning class.soldier, so delay it a bit.
+		sleep(2); // at map start all bots are returning class.soldier, so delay it a bit.
 
 		// cs: let them /kill in warmup so transitions from snipe or panzer maps wont take forever for correct classes to be used
 		if ( !this.OnlyWhileDead || GetGameState() != "Playing" ) {
 			this.CheckForClassChange();
 		}
 
-		sleep(4);
+		sleep(3);
 	}
 };
 

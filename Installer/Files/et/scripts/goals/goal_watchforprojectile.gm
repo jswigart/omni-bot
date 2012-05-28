@@ -21,7 +21,7 @@ this.Initialize = function()
 		this.AvoidRadius[ CLASS.GRENADE ] = 320;
 	}
 
-	Util.MapDebugPrint( this.Name + " Initialized", true );
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

@@ -24,7 +24,7 @@ this.Initialize = function()
 	this.Counter = 0;
 	this.Timeout = 1000; // milliseconds
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

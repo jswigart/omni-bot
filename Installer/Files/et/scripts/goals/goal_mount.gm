@@ -32,14 +32,14 @@ this.GetPriority = function()
 			{
 				if ( !goal.Vehicle ) {
 					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, no vehicle defined!", true);
+					Util.ScriptDebugPrint(goal.GetName(), "disabled", "no vehicle defined!");
 					continue;
 				}
 
 				vehGoal = GetGoal(goal.Vehicle);
 				if (!vehGoal) {
 					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, invalid vehicle defined!", true);
+					Util.ScriptDebugPrint(goal.GetName(), "disabled", "invalid vehicle defined!");
 					continue;
 				}
 
@@ -94,7 +94,7 @@ this.Enter = function()
 		}
 	}
 	else {
-		Util.MapDebugPrint(this.MapGoal.GetName(), "Invalid vehicle goal!");
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "disabled", "invalid vehicle defined!");
 		this.MapGoal.DisableGoal(true);
 		this.Finished();
 	}
@@ -227,11 +227,17 @@ this.Update = function()
 				if( !pathSuccess )
 				{
 					this.BlackboardDelay(10, this.MapGoal);
-					Util.MapDebugPrint( this.MapGoal.GetName() + " vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt), true );
+					Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt));
 					this.Finished();
 				}
 
 				this.Bot.StuckPos = null;
+
+				// bot can't shoot if he mounts mg42 while reloading,
+				// because RELOADING entity flag is not cleared (probably bug in the interface)
+				while (this.Bot.HasEntityFlag(ENTFLAG.RELOADING)) {
+					sleep(0.2);
+				}
 
 				while ( !GetEntFlags( botEnt, ENTFLAG.MOUNTED ) )
 				{

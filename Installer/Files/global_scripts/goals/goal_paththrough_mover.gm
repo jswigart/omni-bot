@@ -21,6 +21,7 @@ this.OnPathThrough = function(data)
 this.Enter = function()
 {
 	this.mover = Map.RideMovers[this.CurrentMover];
+	this.HighLevelGoal = this.Bot.GetHighLevelGoalName();
 
 	wpinfo = Util.WpNameInfo(this.mover.startwp);
 	this.Pos = wpinfo.position;

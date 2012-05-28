@@ -27,7 +27,7 @@ this.Initialize = function()
 	this.Class = null;
 	this.Timeout = 1500; // milliseconds
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.OnSpawn = function()

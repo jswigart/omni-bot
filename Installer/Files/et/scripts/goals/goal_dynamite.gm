@@ -4,6 +4,7 @@ this.Name = "DYNAMITE";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
 this.LimitToClass(CLASS.ENGINEER);
+this.Debug = false;
 
 
 // define some goal states
@@ -61,7 +62,7 @@ this.Update = function()
 	// cs: if they fired a rifle nade on the way, they lose charge
 	if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
 	{
-		Util.MapDebugPrint( this.MapGoal.GetName() + " aborting, no charge", true );
+		if (this.Debug) { print( this.MapGoal.GetName() + " aborting, no charge"); }
 		this.Finished();
 	}
 
@@ -79,7 +80,7 @@ this.Update = function()
 	else
 	{
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 	}
 
 	this.Finished();
@@ -201,7 +202,7 @@ this.UpdateDynamite = function()
 						hasCoverSpot = true;
 					}
 					else {
-						Util.MapDebugPrint(this.Goal_Name, ": Cover Spot has no AimVectors!");
+						if (this.Debug) { print(this.Goal_Name + ": Cover Spot has no AimVectors!"); }
 						this.Finished();
 					}
 

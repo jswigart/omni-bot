@@ -16,7 +16,7 @@ this.Initialize = function()
 	this.HealthThreshold = 50.0;
 	this.DelayBetweenCalls = 15.0;
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()
@@ -81,7 +81,7 @@ this.Update = function()
 
 this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
 {
-	if(CurrentHealth < this.HealthThreshold && this.Bot.GetClass() == CLASS.MEDIC)
+	if(CurrentHealth < this.HealthThreshold && this.Bot.GetClass() == CLASS.MEDIC && !(GetCvar("g_medics") & 2))
 	{
 		this.Supply = WEAPON.MEDKIT;
 		this.Priority = 1;

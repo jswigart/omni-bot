@@ -86,6 +86,12 @@ this.Update = function()
 
 		this.Bot.StuckPos = null;
 
+		// bot can't shoot if he mounts mg42 while reloading,
+		// because RELOADING entity flag is not cleared (probably bug in the interface)
+		while (this.Bot.HasEntityFlag(ENTFLAG.RELOADING)) {
+			sleep(0.2);
+		}
+
 		timeout = 0;
 		while( timeout < this.CampTime )
 		{
@@ -135,7 +141,7 @@ this.Update = function()
 	else
 	{
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 	}
 
 	this.BlackboardDelay(10, this.MapGoal);

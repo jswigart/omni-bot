@@ -15,13 +15,17 @@ this.Initialize = function()
 	watchParams = {
 		Radius = this.Range,
 		Category = CAT.PICKUP,
-		RequireLOS = TRACE.VISIBLE,
+		
+		// cs: lets pretend bots hear the pack being dropped behind them ...
+		// it's reasonable since this is limited to a 200 radius. this should
+		// improve the deliver supplies goal success rate.
+		//RequireLOS = TRACE.VISIBLE,
 	};
 	this.WatchForEntityCategory(watchParams);
 	this.Bot.AmmoTable = {};
 	this.Bot.AmmoInfo = {};
 
-	Util.MapDebugPrint( this.Name + " Initialized", true );
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

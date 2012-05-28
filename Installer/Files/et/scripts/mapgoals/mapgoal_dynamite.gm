@@ -117,6 +117,10 @@ this.SaveToTable = function(SaveTable)
 this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
+	print("Optional:");
+	print("		coverspot - location to go to after planting dynamite, supports multiple");
+	print("		coverfacing - Direction the bot should face at cover spot");
+	print("		coverstance - stand, crouch, prone");
 };
 
 //////////////////////////////////////////////////////////////////////////

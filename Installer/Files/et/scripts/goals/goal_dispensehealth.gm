@@ -11,8 +11,7 @@ this.LimitToNoEntityFlag(ENTFLAG.MOUNTED);
 
 this.Initialize = function()
 {
-	// Internal variables
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 // This callback is called when the bot spawns into the game. You may run this function as a thread,
