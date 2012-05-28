@@ -112,9 +112,10 @@ this.Update = function()
 
 		this.ReleaseAimRequest();
 		//cs: wait function now overrides exitConditions
-		if ( /*!exitCondition &&*/ currentswitch.Wait && this.counter < currentswitch.Timeout) {
+		if ( currentswitch.Wait && this.counter < currentswitch.Timeout) {
 			while ( currentswitch.Wait() != true ) {
-				this.Goto(this.Bot.GetPosition());
+				//this.Goto can't be used inside moving elevators
+				this.Bot.MoveTowards(this.Bot.GetPosition());
 				yield();
 			}
 		}

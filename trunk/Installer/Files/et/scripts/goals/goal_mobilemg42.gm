@@ -34,6 +34,11 @@ this.GetPriority = function()
 	}
 };
 
+this.OnSpawn = function()
+{
+	this.RevivedTime = GetTime();
+};
+
 this.Enter = function()
 {
 	// finish it once they run out of ammo
@@ -82,13 +87,17 @@ this.Update = function()
 		this.AimVector = this.MapGoal.AimVectors[ r ];
 		this.AddAimRequest(Priority.High, "facing", this.AimVector);
 
-		this.AddWeaponRequest(Priority.High, WEAPON.MOBILE_MG42_SET );
-		this.BlockForWeaponChange( WEAPON.MOBILE_MG42_SET );
+		// wait until bot stands up after revive
+		t = this.RevivedTime - GetTime() + 2;
+		if (t > 0) { sleep(t); }
 
-		// wait while mounting mg42, it is necessary for correct aim vector
-		sleep(2);
+		this.AddWeaponRequest(Priority.High, WEAPON.MOBILE_MG42 );
+		this.BlockForWeaponChange( WEAPON.MOBILE_MG42 );
 
 		this.Bot.HoldButton(BTN.PRONE, 999);
+
+		this.AddWeaponRequest(Priority.High, WEAPON.MOBILE_MG42_SET );
+		this.BlockForWeaponChange( WEAPON.MOBILE_MG42_SET );
 
 		// replace the aim request with a low priority one so the targeting system can take over
 		this.AddAimRequest(Priority.Low, "facing", this.AimVector);
@@ -103,7 +112,7 @@ this.Update = function()
 	else
 	{
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 	}
 
 	this.BlackboardDelay(5, this.MapGoal);

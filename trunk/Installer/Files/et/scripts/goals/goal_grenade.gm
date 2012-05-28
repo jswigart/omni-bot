@@ -147,6 +147,10 @@ this.Update = function()
 			if (counter > 0) {
 				sleep(1.5);
 			}
+			if ( MAP_TALK && this.Bot.GetNearestAlly(CAT.PLAYER) && RandInt(0,5) < 1 )
+			{
+				this.Bot.SayVoice( VOICE.FIRE_IN_THE_HOLE );
+			}
 			if ( this.MapGoal.PrimeGrenade > 1 )
 			{
 				this.Bot.HoldButton( BTN.ATTACK1, this.MapGoal.PrimeGrenade );
@@ -172,7 +176,7 @@ this.Update = function()
 	else
 	{
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 	}
 
 	this.Finished();

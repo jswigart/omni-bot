@@ -117,7 +117,7 @@ this.Initialize = function()
 	this.GoalsInRadius = {};
 
 	// print the initialized message IF Map Debug prints are enabled
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 /*

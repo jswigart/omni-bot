@@ -32,6 +32,7 @@ this.Initialize = function()
 		this.TestTeamVoice = false;
 		this.TestPrivateVoice = false;
 		this.TestSpawnEvent = false;
+		this.TestChangeTeam = false;
 	}
 	else
 	{
@@ -196,3 +197,13 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
+
+this.Events[EVENT.CHANGETEAM] = function(team)
+{
+	if ( this.TestAll == true || this.TestChangeTeam == true )
+	{
+		print(this.Bot.Name, " changed team to", Util.TeamName(team));
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////////

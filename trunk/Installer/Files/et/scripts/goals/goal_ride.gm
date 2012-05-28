@@ -138,7 +138,7 @@ this.DynamicGoto = function()
 	}
 	else {
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt), true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt));
 		this.Finished();
 	}
 };

@@ -29,13 +29,13 @@ this.GetPriority = function()
 			{
 				if ( !goal.Offsets || tableCount(goal.Offsets) < 1 ) {
 					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, no offsets defined!", true);
+					Util.ScriptDebugPrint(goal.GetName(), "disabled", "no offsets defined!");
 					continue;
 				}
 
 				if ( !goal.Vehicle ) {
 					goal.DisableGoal(true);
-					Util.MapDebugPrint(goal.GetName() + " disabled, no vehicle defined!", true);
+					Util.ScriptDebugPrint(goal.GetName(), "disabled", "no vehicle defined!");
 					continue;
 				}
 
@@ -65,14 +65,14 @@ this.Enter = function()
 	this.VehicleGoal = GetGoal(this.MapGoal.Vehicle);
 	if (!this.VehicleGoal) {
 		this.MapGoal.DisableGoal(true);
-		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, invalid vehicle defined!", true);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "disabled", "invalid vehicle defined!");
 		this.Finished();
 	}
 
 	this.VehicleEnt = this.VehicleGoal.GetEntity();
 	if (!this.VehicleEnt) {
 		this.MapGoal.DisableGoal(true);
-		Util.MapDebugPrint(this.MapGoal.GetName() + " disabled, no entity for defined vehicle!", true);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "disabled", "no entity for defined vehicle!");
 		this.Finished();
 	}
 
@@ -249,7 +249,7 @@ this.Update = function()
 	}
 	else {
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt), true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "vehicle path failed, check position: " + GetEntPosition(this.VehicleEnt));
 	}
 
 	this.Finished();

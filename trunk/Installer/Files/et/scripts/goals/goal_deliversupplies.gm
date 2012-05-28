@@ -10,6 +10,8 @@ this.AlwaysRecieveEvents = true;
 // possible options
 this.LimitToClass(CLASS.FIELDOPS, CLASS.MEDIC);
 this.DeliverPriority = 0.9;
+this.DeliverAfterRevivePriority = 1.1;
+this.RangeLimit = 1500.0;
 
 // states
 this.DELIVER_PACKS = 1;
@@ -25,7 +27,6 @@ this.Initialize = function()
 	this.Respond = false;
 	this.CuringPoisonWithNeedle = false;
 	this.HealingWithNeedle = false;
-	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.GetPriority = function()
@@ -40,7 +41,7 @@ this.GetPriority = function()
 		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
 
 		// cs: if we've activated from a revive goal, lets give it a higher priority than normal.
-		this.Priority = 1.1;
+		this.Priority = this.DeliverAfterRevivePriority;
 	}
 };
 
@@ -177,6 +178,7 @@ this.Update = function()
 		if ( entPos.IsZero() )
 			{ this.Finished(); }
 
+		// repath or quit if the target has moved too far from the goto destination
 		d = DistanceBetween(entPos,this.TargetPosition);
 		if( d > 128 && d < 500)
 		{
@@ -193,6 +195,7 @@ this.Update = function()
 
 		if ( this.OnTarget )
 		{
+			this.Bot.StuckPos = null;
 			this.Priority = 2.0;
 
 			// aim at target while waiting for weapon change
@@ -211,8 +214,6 @@ this.Update = function()
 			}
 			else if ( !this.KillTarget || !hasNeedle ) {
 				this.State = this.DELIVER_PACKS;
-				this.AddWeaponRequest(Priority.High, this.Supply);
-				this.BlockForWeaponChange(this.Supply);
 			}
 			else {
 				this.State = this.KILL_TARGET;
@@ -260,6 +261,7 @@ this.Update = function()
 		}
 		else
 		{
+			// workaround for target standing directly on waypoint (path_success never fired)
 			d = DistanceBetween(entPos, this.Bot.GetPosition());
 			if ( d < 70 )
 			{
@@ -290,18 +292,36 @@ this.UpdateDeliverPacks = function()
 		this.Finished();
 	}
 
-	if ( this.Bot.GetCurrentWeapon() != this.Supply ) {
-		this.AddWeaponRequest(Priority.High, this.Supply);
-		this.BlockForWeaponChange(this.Supply);
-	}
-
 	pos = GetEntEyePosition(this.TargetEntity);
 	if (pos)
 	{
-		//move towards them while giving packs
-		this.AddAimRequest(Priority.High, "position",pos);
-		this.Bot.MoveTowards(pos);
-		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		d = this.Bot.DistanceTo(pos);
+		if (d < 60 || d < 90 && this.TimeOnTarget > 20)
+		{
+			this.Bot.MoveTowards(pos);
+			if ( this.Bot.GetCurrentWeapon() != this.Supply )
+			{
+				this.AddWeaponRequest(Priority.High, this.Supply);
+			}
+			else
+			{
+				//move towards them while giving packs
+				this.AddAimRequest(Priority.High, "position",pos);
+				yield();
+				this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+			}
+		}
+		else if (d > 250 || this.TimeOnTarget > 50)
+		{
+			this.Finished();
+		}
+		else
+		{
+			//move towards
+			this.AddAimRequest(Priority.Medium, "position",pos);
+			this.Bot.MoveTowards(pos);
+			this.Bot.HoldButton(BTN.SPRINT, 0.25);
+		}
 	}
 	else
 	{
@@ -435,35 +455,22 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		return;
 	}
 
-	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) || this.Bot.DistanceTo(whoSaidIt) > 1500 )
+	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD ) || this.Bot.DistanceTo(whoSaidIt) > this.RangeLimit )
 	{
 		return;
 	}
 
-	if(macroId == VOICE.NEED_AMMO &&
-		this.Bot.GetClass() == CLASS.FIELDOPS &&
-		this.Bot.IsWeaponCharged(WEAPON.AMMO_PACK))
-	{
-		this.Supply = WEAPON.AMMO_PACK;
-		this.TargetEntity = whoSaidIt;
-
-		this.Priority = this.DeliverPriority;
-		this.DelayNextResponse = true;
-		sleep(10);
-		this.DelayNextResponse = false;
-
-		// if we haven't activated by now, don't bother
-		if(!this.IsActive())
-		{
-			this.Priority = 0;
-		}
+	packType = null;
+	if(macroId == VOICE.NEED_AMMO && this.Bot.GetClass() == CLASS.FIELDOPS) {
+		packType = WEAPON.AMMO_PACK;
 	}
-	else if(macroId == VOICE.NEED_MEDIC &&
-		 this.Bot.GetClass() == CLASS.MEDIC &&
-				this.Bot.IsWeaponCharged(WEAPON.MEDKIT))
-	{
-		this.Supply = WEAPON.MEDKIT;
+	else if(macroId == VOICE.NEED_MEDIC && this.Bot.GetClass() == CLASS.MEDIC) {
+		packType = WEAPON.MEDKIT;
+	}
+
+	if (packType && this.Bot.IsWeaponCharged(packType)) {
 		this.TargetEntity = whoSaidIt;
+		this.Supply = packType;
 
 		this.Priority = this.DeliverPriority;
 		this.DelayNextResponse = true;
@@ -471,8 +478,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.DelayNextResponse = false;
 
 		// if we haven't activated by now, don't bother
-		if(!this.IsActive())
-		{
+		if(!this.IsActive()) {
 			this.Priority = 0;
 		}
 	}

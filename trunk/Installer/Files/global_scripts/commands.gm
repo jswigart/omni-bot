@@ -241,39 +241,6 @@ Commands["skipreset"] =
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
-Commands["stopall"] =
-{
-	Func = function(_params)
-	{
-		Util.StopAllBots();
-	},
-
-	Help =
-	{
-		"Stop All, disables movement for all bots",
-		"Usage: /bot stopall",
-	},
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-Commands["startall"] =
-{
-	Func = function(_params)
-	{
-		Util.StartAllBots();
-	},
-
-	Help =
-	{
-		"Start All, enables movement for all bots",
-		"Usage: /bot startall",
-	},
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
 //
 // This is a Game Monkey Script function that creates a thread using the function we defined above.
 // Uncomment the following line if you want to run the function above.

@@ -25,7 +25,7 @@ this.FindFreeRoleSlot = function()
 	evalNum = 0;
 	newClass = null;
 	foreach ( id and role in teamRoles ) {
-		if ( id == "AllBots" || !role.numbots ) { continue; }
+		if ( typeId(role) != 6 || !role.numbots ) { continue; }
 
 		if ( role.MinBotsForRole ) {
 			if ( Server.Team[ team ].NumBots < role.MinBotsForRole ) {
@@ -36,8 +36,15 @@ this.FindFreeRoleSlot = function()
 		if ( !role.bots ) { role.bots = table(); }
 
 		//remove disconnected bots
+		deleted = null;
 		foreach ( bot and val in role.bots ) {
 			if (!bot.Name) {
+				if (!deleted){ deleted = table(); }
+				deleted[tableCount(deleted)] = bot;
+			}
+		}
+		if (deleted) {
+			foreach ( bot in deleted ) {
 				role.bots[bot] = null;
 			}
 		}
@@ -68,6 +75,10 @@ this.FindFreeRoleSlot = function()
 		}
 	}
 
+	//team counter is used only immediately after map restart
+	if (!teamRoles.teamCount){ teamRoles.teamCount = 0; }
+	teamRoles.teamCount += 1;
+
 	// store it in the table and set the role
 	if ( typeId(newRole) != 0 ) {
 
@@ -79,6 +90,10 @@ this.FindFreeRoleSlot = function()
 			{
 				if ( bot.GetTeam() == team )
 					{ teamCount += 1; }
+			}
+			if (teamCount > teamRoles.teamCount) {
+				//do not count bots that have not been initialized yet
+				teamCount = teamRoles.teamCount;
 			}
 			if (2 * botCount >= teamCount - 1) {
 				return;
@@ -131,7 +146,7 @@ this.Events[EVENT.CHANGETEAM] = function(team)
 		if (teamRoles) {
 			bot = this.Bot;
 			foreach ( name and role in teamRoles ) {
-				if (name != "AllBots" && role.bots && role.bots[bot]) {
+				if (typeId(role) == 6 && role.bots && role.bots[bot]) {
 					if (this.Debug){ print(bot.Name, "role", name, "cleared"); }
 					role.bots[bot] = null;
 					bot.ClearRoles(ROLE[name]);

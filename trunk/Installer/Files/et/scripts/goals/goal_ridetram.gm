@@ -20,8 +20,6 @@ this.Initialize = function()
 	{
 		this.Disable = true;
 	}
-
-	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
 
 this.GetPriority = function()

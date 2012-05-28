@@ -1154,7 +1154,7 @@ member TraceForEntityInfo = function (startPos, endPos, traceType)
 //
 member TraceForPosition = function()
 {
-	tr = Util.TraceFromPlayer(TRACE.SHOT, 50000);
+	tr = Util.TraceFromPlayer();
 	if ( tr.end ) {
 		return tr.end;
 	}
@@ -2459,6 +2459,37 @@ member MapDebugPrint = function(message, msgonly)
 		}
 		print(format("%s%s", Util.DebugColorString, message));
 	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ScriptDebugPrint = function(goalName, dbgType, msg)
+{
+	if (!DEBUG_SCRIPT_GOALS && (!Map || !Map.Debug) || !DEBUG_SCRIPT_GOALS_FILTER[dbgType]) { return; }
+	
+	if (!msg)
+	{
+		switch(dbgType)
+		{
+			case "pathfailed":
+			{
+				msg = "path failed, check reachability";
+			}
+			case "timedout":
+			{
+				msg = "failed, timeout";
+			}
+			case "disabled":
+			{
+				msg = "disabled, invalid goal setup";
+			}
+			default:
+			{
+				msg = "";
+			}
+		}
+	}
+	print(format("%s%s: %s %s", Util.DebugColorString, dbgType, goalName, msg));
 };
 
 ///////////////////////////////////////////////////////////////////////////////

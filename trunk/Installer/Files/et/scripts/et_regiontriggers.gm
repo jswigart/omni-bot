@@ -23,7 +23,7 @@ member DisableBotPush =
 			b.DisableBotPush(true);
 			b.DisableCombatMovement = true;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " entering.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering." );
 	},
 	OnExit = function(ent)
 	{
@@ -33,7 +33,7 @@ member DisableBotPush =
 			b.DisableBotPush(false);
 			b.DisableCombatMovement = false;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " exiting.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting." );
 	},
 };
 
@@ -55,7 +55,7 @@ member DisableCombatMovement =
 		{
 			b.DisableCombatMovement = true;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " entering.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering." );
 	},
 	OnExit = function(ent)
 	{
@@ -64,7 +64,7 @@ member DisableCombatMovement =
 		{
 			b.DisableCombatMovement = false;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " exiting.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting." );
 	},
 };
 
@@ -98,7 +98,7 @@ member BreakableDistance =
 		{
 			b.TargetBreakableDist = RegionTrigger.BreakableDistance.MaxBreakableDist;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " entering.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering." );
 	},
 	OnExit = function(ent)
 	{
@@ -107,7 +107,7 @@ member BreakableDistance =
 		{
 			b.TargetBreakableDist = RegionTrigger.BreakableDistance.MinBreakableDist;
 		}
-		Util.MapDebugPrint( GetEntName(ent) + " exiting.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting." );
 	},
 };
 
@@ -221,11 +221,11 @@ member IntrusionWarning =
 			}
 		}
 		sleep(2);
-		Util.MapDebugPrint( GetEntName(ent) + " entering.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering." );
 	},
 	OnExit = function(ent)
 	{
-		Util.MapDebugPrint( GetEntName(ent) + " exiting.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting." );
 	},
 };
 
@@ -282,11 +282,11 @@ member IntrusionWarningEngObj =
 			}
 		}
 		sleep(2);
-		Util.MapDebugPrint( GetEntName(ent) + " entering.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering." );
 	},
 	OnExit = function(ent)
 	{
-		Util.MapDebugPrint( GetEntName(ent) + " exiting.", true );
+		Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting." );
 	},
 };
 

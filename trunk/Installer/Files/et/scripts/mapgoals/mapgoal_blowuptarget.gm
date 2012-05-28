@@ -183,6 +183,11 @@ this.Help = function()
 	print("Requires:");
 	print("		trace - the traceinfo of the entity to be built");
 	print("		this MUST be an OID entity, use /oidlist to confirm");
+	print("Optional:");
+	print("		etype - dyno, satchel, both");
+	print("		coverspot - location to go to after planting dynamite, supports multiple");
+	print("		coverfacing - Direction the bot should face at cover spot");
+	print("		coverstance - stand, crouch, prone");
 };
 
 //////////////////////////////////////////////////////////////////////////

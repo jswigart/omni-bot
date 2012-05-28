@@ -10,6 +10,20 @@ this.Difficulty = 3;  // 0 - off, 1 - easy, 2 - medium, 3 - hard, 4 - random
 
 this.Difficulty = ConfigGet("CombatMovement","moveskill", this.Difficulty);
 
+// combat movement is enabled for these weapons
+this.EnabledWeapons = {};
+foreach(wpn in { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.STEN, WEAPON.K43_SCOPE, WEAPON.FG42_SCOPE, WEAPON.GARAND_SCOPE,
+	WEAPON.COLT, WEAPON.COLT_SILENCED, WEAPON.COLT_AKIMBO, WEAPON.COLT_AKIMBO_SILENCED,
+	WEAPON.LUGER, WEAPON.LUGER_SILENCED, WEAPON.LUGER_AKIMBO, WEAPON.LUGER_AKIMBO_SILENCED,
+	WEAPON.SHOTGUN, WEAPON.BAR, WEAPON.STG44, WEAPON.MP34, //NoQuarter
+	WEAPON.M97, //Jaymod
+	WEAPON.PPSH, //silEnT
+	WEAPON.ITHACA, WEAPON.RPD, WEAPON.M3A1, WEAPON.SAK47SCOPED, WEAPON.REVOLVER //ETnam
+}) {
+	this.EnabledWeapons[wpn] = 1;
+}
+
+
 this.Initialize = function()
 {
 	// Internal variables
@@ -27,7 +41,7 @@ this.Initialize = function()
 		}
 	}
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Exit = function()
@@ -93,12 +107,12 @@ this.ShouldCombatMovement = function()
 		return false;
 	}
 
-	if ( !this.WeaponCheck() )
+	if ( !this.EnabledWeapons[this.Bot.GetCurrentWeapon()] )
 	{
 		return false;
 	}
 
-	if ( this.Bot.GetHighLevelGoalName() == "ReviveTeammate" )
+	if ( this.Bot.GetHighLevelGoalName() == "REVIVE" )
 	{
 		return false;
 	}
@@ -108,40 +122,11 @@ this.ShouldCombatMovement = function()
 	return true;
 };
 
-this.WeaponCheck = function()
-{
-	w = this.Bot.GetCurrentWeapon();
-
-	if (
-		w == WEAPON.THOMPSON  ||
-		w == WEAPON.MP40  ||
-		w == WEAPON.K43   ||
-		w == WEAPON.FG42   ||
-		w == WEAPON.GARAND   ||
-		w == WEAPON.COLT  ||
-		w == WEAPON.COLT_SILENCED  ||
-		w == WEAPON.COLT_AKIMBO   ||
-		w == WEAPON.COLT_AKIMBO_SILENCED  ||
-		w == WEAPON.LUGER ||
-		w == WEAPON.LUGER_SILENCED ||
-		w == WEAPON.LUGER_AKIMBO ||
-		w == WEAPON.LUGER_AKIMBO_SILENCED ||
-		w == WEAPON.STEN ||
-		w == WEAPON.SHOTGUN ||
-		w == WEAPON.BAR ||
-		w == WEAPON.STG44 ||
-		w == WEAPON.MP34
-	   )
-	{
-		return true;
-	}
-
-	return false;
-};
-
 this.EntFlagCheck = function()
 {
-	if (this.Bot.HasAnyEntityFlag(ENTFLAG.MOUNTED,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER, ENTFLAG.PRONE))
+//	if (this.Bot.HasAnyEntityFlag(ENTFLAG.MOUNTED,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER, ENTFLAG.PRONE))
+	//temporary workaround, because HasAnyEntityFlag does not work in the current omnibot version
+	if (this.Bot.HasEntityFlag(ENTFLAG.MOUNTED) || this.Bot.HasEntityFlag(ENTFLAG.ZOOMING) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) || this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.PRONE))
 	{
 		return false;
 	}

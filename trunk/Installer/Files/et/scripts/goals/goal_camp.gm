@@ -47,9 +47,9 @@ this.Enter = function()
 	{
 		this.WeaponRestricted = tableCount(this.MapGoal.Weapons);
 	}
-	else
+	else if (this.Debug)
 	{
-		Util.MapDebugPrint(this.MapGoal.GetName() + " has no Weapons Table", true);
+		print(this.MapGoal.GetName() + " has no Weapons Table");
 	}
 
 	if ( this.WeaponRestricted > 0 )
@@ -191,7 +191,7 @@ this.Update = function()
 	else
 	{
 		this.BlackboardDelay(10, this.MapGoal);
-		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
 	}
 
 	// don't choose the same camp spot
