@@ -231,16 +231,13 @@ namespace AiState
 		struct Query 
 		{
 			FollowPathUser	*m_User;
-			Vector3f		m_Position;
-			float			m_Radius;
+			DestinationVector	m_Destination;
 			MoveMode		m_MoveMode;
 			bool			m_SkipLastPt;
 			bool			m_Final;
 
 			Query()
 				: m_User(0)
-				, m_Position(Vector3f::ZERO)
-				, m_Radius(0.f)
 				, m_MoveMode(Run)
 				, m_SkipLastPt(false)
 				, m_Final(false)
@@ -251,7 +248,6 @@ namespace AiState
 		Query				m_Query;
 		Query				m_SavedQuery;
 		Path				m_CurrentPath;
-		DestinationVector	m_LastDestination;
 
 		// Internal Data
 		PathStatus	m_PathStatus;
@@ -263,6 +259,7 @@ namespace AiState
 		// For jump behaviors.
 		float		m_RayDistance;
 
+		bool Goto();
 		bool CheckForMover(const Vector3f &_pos);
 		void CheckForLowJumps(const Vector3f &_destination);
 		void CheckForGapJumps(const Vector3f &_destination);
