@@ -367,6 +367,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_bridge.*" );
 
@@ -550,6 +551,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_southdefense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_generator" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_generatordefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_radardefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_axis_radardefense.*" );
@@ -567,6 +570,9 @@ global Map =
 
 		SetMapGoalProperties( "MOUNT_tank", {AimMode = "random", TeamAvailability = 6} );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_generator" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_bridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_axis_southdefense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_southdefense.*" );

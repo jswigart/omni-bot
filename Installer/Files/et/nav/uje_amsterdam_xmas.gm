@@ -4,7 +4,7 @@
 //
 //	Who  	When		What
 //------------------------------------------------------------------------------------------
-//	|TP|kaos	27 November 2011	r2 Script
+//	|TP|kaos	30 November 2011	r3 Script
 //
 //==========================================================================================
 //
@@ -93,11 +93,11 @@ global Map =
 		if ( TestMap )
 			{ return; }
 			
-		Map.Safe_Dyno = 0; // if Safe destroyed...
+		Map.Safe_Destroyed = 1; // if Safe destroyed...
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Real" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Fake" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ra_1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ra_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ra_2" );
 		
 		Util.MapDebugPrint( "Field_Radio_Built" );
 	},
@@ -336,7 +336,7 @@ global Map =
 
 		Map.Field_Radio_Dyno = 0;
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ra_1" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ra_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ra_2" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Real" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Fake" );
 

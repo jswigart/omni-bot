@@ -1,5 +1,7 @@
 /********************************************************
 Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
+
+Updated By: BubbaG1 - 16 December, 2011
 ********************************************************/
 
 global Map =
@@ -14,7 +16,13 @@ global Map =
 	Bunkerdoor = "closed",
 	Bomb = "disabled",
 	BreakableGate = false,
+	BreakableGateInfo = null,
 	BreakableDoor = false,
+	AxisTankDestroyedEntranceGate = false,
+	AxisBuiltSupplyHangarSpawnArea = false,
+	AxisDestroyedGenerator = false,
+	AxisDestroyedDamAccessGate = false,
+	AxisDestroyedRocketBaseGate = false,
 
 	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
 	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
@@ -76,7 +84,7 @@ global Map =
 						Map.BreakableGateInfo = Util.WpNameInfo("r_spawnexit_5");
 					}
 
-					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					if ( _this.Goto(Map.BreakableGateInfo.position) == EVENT.PATH_SUCCESS )
 					{
 						_this.AddAimRequest(Priority.High, "facing", Map.BreakableGateInfo.facing);
 						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
@@ -205,10 +213,24 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Groups.DisableAllies(Groups.group6);
-		Groups.DisableAxis(Groups.group5);
-		Groups.EnableAllies(Groups.group8);
-		Groups.EnableAxis(Groups.group7);
+		Map.AxisBuiltSupplyHangarSpawnArea = true;
+		
+		if ( Map.AxisTankDestroyedEntranceGate || Map.AxisDestroyedGenerator || Map.AxisDestroyedDamAccessGate || Map.AxisDestroyedRocketBaseGate )
+		{
+			Groups.DisableAllies(Groups.group6);
+			Groups.DisableAllies(Groups.group4);
+			Groups.DisableAllies(Groups.group2);
+			
+			Groups.DisableAxis(Groups.group5);
+			Groups.DisableAxis(Groups.group3);
+			Groups.DisableAxis(Groups.group1);
+		}
+		
+		if ( !Map.AxisDestroyedGenerator && !Map.AxisDestroyedDamAccessGate && !Map.AxisDestroyedRocketBaseGate )
+		{
+			Groups.EnableAllies(Groups.group8);
+			Groups.EnableAxis(Groups.group7);
+		}
 
 		Util.MapDebugPrint( "Supply_Hangar_Spawn_Area_Built" );
 	},
@@ -283,11 +305,19 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.BUILD_Tank_Barrier );
 
-		Groups.DisableAllies(Groups.group2);
-		Groups.DisableAxis(Groups.group1);
-		Groups.EnableAllies(Groups.group4);
-		Groups.EnableAxis(Groups.group3);
+		if ( Map.AxisTankDestroyedEntranceGate || Map.AxisDestroyedGenerator || Map.AxisDestroyedDamAccessGate || Map.AxisDestroyedRocketBaseGate )
+		{
+			Groups.DisableAllies(Groups.group2);
+			
+			Groups.DisableAxis(Groups.group1);
+		}
 
+		if ( Map.AxisDestroyedGenerator == false )
+		{		
+			Groups.EnableAllies(Groups.group4);
+			Groups.EnableAxis(Groups.group3);
+		}
+		
 		Util.MapDebugPrint( "Tank ist past Barrier1" );
 	},
 
@@ -303,7 +333,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
 
 		Util.MapDebugPrint( "Tank ist past Barrier2" );
 	},
@@ -322,10 +351,16 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.AxisTankDestroyedEntranceGate = true;
+		
 		Groups.DisableAllies(Groups.group4);
 		Groups.DisableAxis(Groups.group3);
-		Groups.EnableAllies(Groups.group6);
-		Groups.EnableAxis(Groups.group5);
+		
+		if ( !Map.AxisBuiltSupplyHangarSpawnArea && !Map.AxisDestroyedGenerator && !Map.AxisDestroyedDamAccessGate && !Map.AxisDestroyedRocketBaseGate )
+		{
+			Groups.EnableAllies(Groups.group6);
+			Groups.EnableAxis(Groups.group5);
+		}
 
 		Util.MapDebugPrint( "base_gate_Destroyed" );
 	},
@@ -335,11 +370,26 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.AxisDestroyedDamAccessGate = true;
+		
 		Groups.DisableAllies(Groups.group10);
+		Groups.DisableAllies(Groups.group8);
+		Groups.DisableAllies(Groups.group6);
+		Groups.DisableAllies(Groups.group4);
+		Groups.DisableAllies(Groups.group2);
+		
 		Groups.DisableAxis(Groups.group9);
-		Groups.EnableAllies(Groups.group12);
-		Groups.EnableAxis(Groups.group11);
-
+		Groups.DisableAxis(Groups.group7);
+		Groups.DisableAxis(Groups.group5);
+		Groups.DisableAxis(Groups.group3);
+		Groups.DisableAxis(Groups.group1);
+		
+		if ( !Map.AxisDestroyedRocketBaseGate )
+		{
+			Groups.EnableAllies(Groups.group12);
+			Groups.EnableAxis(Groups.group11);
+		}
+		
 		Util.MapDebugPrint( "dam_access_gate_Destroyed" );
 	},
 
@@ -348,15 +398,28 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.AxisDestroyedGenerator = true;
+
 		Map.Switches.generatorswitch.Enabled = false;
 
 		// set the blockable flag for the connection since its a pt switch
 		Wp.SetWaypointFlag( "r_gendoor", "blockwall", true );
 
 		Groups.DisableAllies(Groups.group8);
+		Groups.DisableAllies(Groups.group6);
+		Groups.DisableAllies(Groups.group4);
+		Groups.DisableAllies(Groups.group2);
+		
 		Groups.DisableAxis(Groups.group7);
-		Groups.EnableAllies(Groups.group10);
-		Groups.EnableAxis(Groups.group9);
+		Groups.DisableAxis(Groups.group5);
+		Groups.DisableAxis(Groups.group3);
+		Groups.DisableAxis(Groups.group1);
+
+		if ( !Map.AxisDestroyedRocketBaseGate && !Map.AxisDestroyedDamAccessGate )
+		{		
+			Groups.EnableAllies(Groups.group10);
+			Groups.EnableAxis(Groups.group9);
+		}
 
 		Util.MapDebugPrint( "generator_Destroyed" );
 	},
@@ -366,8 +429,22 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.AxisDestroyedRocketBaseGate = true;
+		
 		Groups.DisableAllies(Groups.group12);
+		Groups.DisableAllies(Groups.group10);
+		Groups.DisableAllies(Groups.group8);
+		Groups.DisableAllies(Groups.group6);
+		Groups.DisableAllies(Groups.group4);
+		Groups.DisableAllies(Groups.group2);
+		
 		Groups.DisableAxis(Groups.group11);
+		Groups.DisableAxis(Groups.group9);
+		Groups.DisableAxis(Groups.group7);
+		Groups.DisableAxis(Groups.group5);
+		Groups.DisableAxis(Groups.group3);
+		Groups.DisableAxis(Groups.group1);
+		
 		Groups.EnableAllies(Groups.group14);
 		Groups.EnableAxis(Groups.group13);
 
@@ -403,6 +480,20 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+
+		Groups.DisableAllies(Groups.group12);
+		Groups.DisableAllies(Groups.group10);
+		Groups.DisableAllies(Groups.group8);
+		Groups.DisableAllies(Groups.group6);
+		Groups.DisableAllies(Groups.group4);
+		Groups.DisableAllies(Groups.group2);
+		
+		Groups.DisableAxis(Groups.group11);
+		Groups.DisableAxis(Groups.group9);
+		Groups.DisableAxis(Groups.group7);
+		Groups.DisableAxis(Groups.group5);
+		Groups.DisableAxis(Groups.group3);
+		Groups.DisableAxis(Groups.group1);
 
 		Util.MapDebugPrint( "Keycard_Captured" );
 	},

@@ -1,0 +1,476 @@
+//==========================================================================================
+//
+//	chariot.gm
+//
+//	Who                    	When		What
+//------------------------------------------------------------------------------------------
+//	^1>^7|^4S^7|^1<G^03^1N*^0X	18 April 2012	Initial Script
+//	palota	15 May 2012	fixed syntax errors, fixed triggers, added PLANT use points, disabled PLANT goals at start, limited CHECKPOINT max users
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	BUILD_1st_Pumphouse_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_1st_Pumphouse_Door_Built" );
+	},
+
+	BUILD_2nd_Pumphouse_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_2nd_Pumphouse_Door_Built" );
+	},
+
+	First_Pumphouse_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Pumphouse_Door_Dyno += 1;
+		Util.MapDebugPrint( "First_Pumphouse_Door_Planted" );
+	},
+
+	Second_Pumphouse_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Second_Pumphouse_Door_Dyno += 1;
+		Util.MapDebugPrint( "Second_Pumphouse_Door_Planted" );
+	},
+
+	dropoff_fuel_dump = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_fuel_dump");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Fuel_Dump");
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defend_truckbay" );
+
+		Util.MapDebugPrint( "dropoff_fuel_dump" );
+	},
+
+	Fuel_Dump_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Dyno += 1;
+		Util.MapDebugPrint( "Fuel_Dump_Planted" );
+	},
+
+	Fuel_Dump_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Gate_Dyno += 1;
+		Util.MapDebugPrint( "Fuel_Dump_Gate_Planted" );
+	},
+
+	dropoff_north_gate = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_north_gate");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_North_Gate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defend_Ngate");
+		//Orientation = Vec3(-1.571, 0.000, -0.000),
+		//Position = Vec3(8976.000, 1792.000, 936.000),
+
+		Util.MapDebugPrint( "dropoff_north_gate" );
+	},
+
+	North_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Gate_Dyno += 1;
+		Util.MapDebugPrint( "North_Gate_Planted" );
+	},
+
+	dropoff_north_winding_gear = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_north_winding_gear");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_North_Winding_Gear");
+
+		Util.MapDebugPrint( "dropoff_north_winding_gear" );
+	},
+
+	North_Winding_Gear_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Winding_Gear_Dyno += 1;
+		Util.MapDebugPrint( "North_Winding_Gear_Planted" );
+	},
+
+	dropoff_old_lock = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_old_lock");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Old_Lock" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_defend_lock" );
+		//Orientation = Vec3(-1.571, 0.000, -0.000),
+		//Position = Vec3(1471.999, 6227.813, 832.000),
+
+		Util.MapDebugPrint( "dropoff_old_lock" );
+	},
+
+	Old_Lock_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_Lock_Dyno += 1;
+		Util.MapDebugPrint( "Old_Lock_Planted" );
+	},
+
+	dropoff_pump = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_pump");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Pump" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_pumphouse" );
+
+		Util.MapDebugPrint( "dropoff_pump" );
+	},
+
+	Pump_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Pump_Dyno += 1;
+		Util.MapDebugPrint( "Pump_Planted" );
+	},
+
+	dropoff_south_winding_gear = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_south_winding_gear");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_Winding_Gear" );
+
+		Util.MapDebugPrint( "dropoff_south_winding_gear" );
+	},
+
+	South_Winding_Gear_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.South_Winding_Gear_Dyno += 1;
+		Util.MapDebugPrint( "South_Winding_Gear_Planted" );
+	},
+
+	First_Pumphouse_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Pumphouse_Door_Dyno -= 1;
+		Util.MapDebugPrint( "First_Pumphouse_Door_Defused" );
+	},
+
+	Second_Pumphouse_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Second_Pumphouse_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Second_Pumphouse_Door_Defused" );
+	},
+
+	Fuel_Dump_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Dyno -= 1;
+		Util.MapDebugPrint( "Fuel_Dump_Defused" );
+	},
+
+	Fuel_Dump_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Gate_Dyno -= 1;
+		Util.MapDebugPrint( "Fuel_Dump_Gate_Defused" );
+	},
+
+	North_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Gate_Dyno -= 1;
+		Util.MapDebugPrint( "North_Gate_Defused" );
+	},
+
+	North_Winding_Gear_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Winding_Gear_Dyno -= 1;
+		Util.MapDebugPrint( "North_Winding_Gear_Defused" );
+	},
+
+	Old_Lock_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_Lock_Dyno -= 1;
+		Util.MapDebugPrint( "Old_Lock_Defused" );
+	},
+
+	Pump_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Pump_Dyno -= 1;
+		Util.MapDebugPrint( "Pump_Defused" );
+	},
+
+	South_Winding_Gear_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.South_Winding_Gear_Dyno -= 1;
+		Util.MapDebugPrint( "South_Winding_Gear_Defused" );
+	},
+
+	First_Pumphouse_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Pumphouse_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "First_Pumphouse_Door_Destroyed" );
+	},
+
+	Second_Pumphouse_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Second_Pumphouse_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Second_Pumphouse_Door_Destroyed" );
+	},
+
+	Fuel_Dump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Dyno = 0;
+
+		Util.MapDebugPrint( "Fuel_Dump_Destroyed" );
+	},
+
+	Fuel_Dump_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fuel_Dump_Gate_Dyno = 0;
+
+		Util.MapDebugPrint( "Fuel_Dump_Gate_Destroyed" );
+	},
+
+	North_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Gate_Dyno = 0;
+
+		Util.MapDebugPrint( "North_Gate_Destroyed" );
+	},
+
+	North_Winding_Gear_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.North_Winding_Gear_Dyno = 0;
+
+		Util.MapDebugPrint( "North_Winding_Gear_Destroyed" );
+	},
+
+	Old_Lock_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_Lock_Dyno = 0;
+
+		Util.MapDebugPrint( "Old_Lock_Destroyed" );
+	},
+
+	Pump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Pump_Dyno = 0;
+
+		Util.DisableGoal(".*_Pumphouse_Door");
+		Util.MapDebugPrint( "Pump_Destroyed" );
+	},
+
+	South_Winding_Gear_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.South_Winding_Gear_Dyno = 0;
+
+		Util.MapDebugPrint( "South_Winding_Gear_Destroyed" );
+	},
+
+	explosives_1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "explosives_1_Taken" );
+	},
+
+	explosives_1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "explosives_1_Returned" );
+	},
+
+	dockside_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "dockside_flag_Axis_Captured" );
+	},
+
+	dockside_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "dockside_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	// Register callback functions
+	OnTrigger( "^3*** ^7Axis have repaired the 1st Pumphouse door! ^3***", Map.BUILD_1st_Pumphouse_Door_Built );
+	OnTrigger( "^3*** ^7Axis have repaired the 2nd Pumphouse door! ^3***", Map.BUILD_2nd_Pumphouse_Door_Built );
+	OnTrigger( "Planted at the 1st Pumphouse Door.", Map.First_Pumphouse_Door_Planted );
+	OnTrigger( "Planted at the 2nd Pumphouse Door.", Map.Second_Pumphouse_Door_Planted );
+	OnTrigger( "Planted at the Fuel Dump.", Map.Fuel_Dump_Planted );
+	OnTrigger( "Planted at the Fuel Dump Gate.", Map.Fuel_Dump_Gate_Planted );
+	OnTrigger( "Planted at the North Gate.", Map.North_Gate_Planted );
+	OnTrigger( "Planted at the North Winding Gear.", Map.North_Winding_Gear_Planted );
+	OnTrigger( "Planted at the Old Lock.", Map.Old_Lock_Planted );
+	OnTrigger( "Planted at the Pump.", Map.Pump_Planted );
+	OnTrigger( "Planted at the South Winding Gear.", Map.South_Winding_Gear_Planted );
+	OnTrigger( "Defused at the 1st Pumphouse Door.", Map.First_Pumphouse_Door_Defused );
+	OnTrigger( "Defused at the 2nd Pumphouse Door.", Map.Second_Pumphouse_Door_Defused );
+	OnTrigger( "Defused at the Fuel Dump.", Map.Fuel_Dump_Defused );
+	OnTrigger( "Defused at the Fuel Dump Gate.", Map.Fuel_Dump_Gate_Defused );
+	OnTrigger( "Defused at the North Gate.", Map.North_Gate_Defused );
+	OnTrigger( "Defused at the North Winding Gear.", Map.North_Winding_Gear_Defused );
+	OnTrigger( "Defused at the Old Lock.", Map.Old_Lock_Defused );
+	OnTrigger( "Defused at the Pump.", Map.Pump_Defused );
+	OnTrigger( "Defused at the South Winding Gear.", Map.South_Winding_Gear_Defused );
+	OnTrigger( "^3*** ^7Allies have destroyed the 1st Pumphouse door! ^3***", Map.First_Pumphouse_Door_Destroyed );
+	OnTrigger( "^3*** ^7Allies have destroyed the 2nd Pumphouse door! ^3***", Map.Second_Pumphouse_Door_Destroyed );
+	OnTrigger( "^3*** ^7Fuel Dump destroyed! ^3***", Map.Fuel_Dump_Destroyed );
+	OnTrigger( "^3*** ^7The Allies have destroyed the Fuel Dump Gate! ^3***", Map.Fuel_Dump_Gate_Destroyed );
+	OnTrigger( "^3*** ^7North Gate destroyed! ^3***", Map.North_Gate_Destroyed );
+	OnTrigger( "^3*** ^7North Winding Gear destroyed! ^3***", Map.North_Winding_Gear_Destroyed );
+	OnTrigger( "^3*** ^7Old Lock destroyed! ^3***", Map.Old_Lock_Destroyed );
+	OnTrigger( "^3*** ^7Pump destroyed! ^3***", Map.Pump_Destroyed );
+	OnTrigger( "^3*** ^7South Winding Gear destroyed! ^3***", Map.South_Winding_Gear_Destroyed );
+	OnTrigger( "^3*** ^7The Allies have taken some Demolition Charges! ^3***", Map.explosives_1_Taken );
+	OnTrigger( "^3*** ^7Axis have returned some Demolition Charges! ^3***", Map.explosives_1_Returned );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the North Gate! ^3***", Map.dropoff_north_gate );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the Fuel Dump! ^3***", Map.dropoff_fuel_dump );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the Old Lock! ^3***", Map.dropoff_old_lock );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the Pump! ^3***", Map.dropoff_pump );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the North Winding Gear! ^3***", Map.dropoff_north_winding_gear );
+	OnTrigger( "^3*** ^7Demolition Charges primed at the South Winding Gear! ^3***", Map.dropoff_south_winding_gear );
+	OnTrigger( "^3*** ^7Axis have retaken the Dockside! ^3***", Map.dockside_flag_Axis_Captured );
+	OnTrigger( "^3*** ^7Allies have captured the Dockside! ^3***", Map.dockside_flag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Fuel_Dump" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_North_Gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_North_Winding_Gear" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Old_Lock" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Pump" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_South_Winding_Gear" );
+
+	SetGoalPriority( "PLANT_.*Pumphouse_Door", 0.75, TEAM.ALLIES, CLASS.ENGINEER );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 2, "CHECKPOINT_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	Util.AddUsePoint("PLANT_Old_Lock", Vec3(1550.296, 6228.716, 1025.125));
+	Util.AddUsePoint("PLANT_North_Gate", Vec3(8980.989, 1798.500, 1016.125));
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+};

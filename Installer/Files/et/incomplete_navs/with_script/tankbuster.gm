@@ -29,19 +29,6 @@ global Map =
 	Mover_train2 = "MOVER_train2",
 	Mover_truck = "MOVER_truck",
 
-	EscortVehicle =
-	{
-		Truck =
-		{
-			EscortVehicleGoalName = "MOVER_truck",
-			LimitBots = 2,
-			Offset =
-			{
-				Vector3(0,-40,0),
-			},
-		},
-	},
-	
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -153,7 +140,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );			
 		print( "Lorry_Wreck_Destroyed" );
 	},
 
@@ -186,8 +174,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mover_truck );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "Build_Bomb_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Bomb_Truck" );
 		
 		print( "truck_at_gates" );
 	},
@@ -325,7 +313,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Axis_Depot_MG42_Destroyed );
 	OnTrigger( "Axis have destroyed the Hut MG42!!", Map.Hut_MG42_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.Lorry_Wreck_Destroyed );
+	OnTrigger( "the Lorry Wreck Destroyed.", Map.Lorry_Wreck_Destroyed );
 	OnTrigger( "Allies have destroyed the secure workshop door!!", Map.Workshop_Door_Destroyed );
 	OnTrigger( "^3Axis have reclaimed the Station!", Map.station_flag_Axis_Captured );
 	OnTrigger( "^3Allies have captured the Station!", Map.station_flag_Allies_Captured );
@@ -343,8 +331,8 @@ global OnMapLoad = function()
 	OnTrigger( "^3Power to live rails interrupted - rails now safe!", Map.rails_safe );
 	
 
-	ETUtil.DisableGoal(".*");
-	
+	Util.DisableGoal( ".*", true );
+
 	Util.SetPositionGoal( Map.Build_Bomb_Truck, Map.Mover_truck );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mover_truck );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lorry_Wreck" );
@@ -368,6 +356,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "BUILD_Bomb_Truck", 0.94 );
 	SetGoalPriority( "PLANT_Lorry_Wreck", 0.95 );
 	SetGoalPriority( "DEFUSE_Allied_Command_Post.*", 0.90 );
+
+	Util.AddUsePoint("PLANT_Lorry_Wreck", Vec3(3203.709, 1205.518, 123.125));
 	
 	MineField = OnTriggerRegion(AABB(534.210,2098.199,1.125,1169.149,3233.191,94.277), RegionTrigger.DisableCombatMovement);
 	

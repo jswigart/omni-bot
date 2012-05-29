@@ -7,6 +7,7 @@
 //	^4Tardis	30 December 2010	Converted from fuledump
 //	AXIS ATTACK MAP
 // 	^4Tardis	05 September 2011 	NOTE: Use with tiger_dump_b7.pk3
+//	^4Tardis 	22 December 2011	Fixed some bugs
 //==========================================================================================
 //
 
@@ -264,9 +265,9 @@ global Map =
 
 		Map.Front_Dump = true;
 
-		//  Axis goals
-		// cs: allied bots shouldn't worry about this as it hurts AXIS chances of defusing
-		// SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_East_Axis_Base_Fortification );
+		//  ALLIES goals
+		// cs: allied bots shouldn't worry about this as it hurts ALLIES chances of defusing // no need as use side door
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_East_Axis_Base_Fortification" );
 
 		if ( Map.Rear_Dump && !Map.Depot_Gates )
 		{
@@ -274,8 +275,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_FD_patrol" );
 		}
 
-		// Allied goals
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_East_Axis_Base_Fortification" );
+		// AXIS goals
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Axis_Base_Fortification" );
 
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Built" );
 	},
@@ -287,15 +288,15 @@ global Map =
 
 		Map.Front_Dump = false;
 
-		// Axis goals
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_East_Axis_Base_Fortification" );
-
+		// AXIS goals
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Axis_Base_Fortification" );
+		
 		if ( !Map.Depot_Gates )
 		{ SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Fuel_Dump" ); }
 
 		// Allied goals
-		// cs: AXIS bots shouldn't build this. makes it harder to defuse
-		//SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_East_Axis_Base_Fortification );
+		// cs: Allies bots shouldn't build this. makes it harder to defuse // no need use side door
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Axis_Base_Fortification" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_FD_patrol" );
 
 		Util.MapDebugPrint( "East_Axis_Base_Fortification_Damaged" );
@@ -583,7 +584,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Tunnel_MG" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_axisbase_mg42" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Side_MG" );
-		//SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Axis_Base_Fortification" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Axis_Base_Fortification" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Axis_Base_Fortification" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_MG" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
@@ -979,7 +980,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Foot_Bridge" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_tank" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Side_MG" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Tunnel_MG" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Bridge_.*" );
@@ -992,7 +993,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bridge_cons" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Tunnel_MG" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tunnel_MG" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Foot_Bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_arty_bridge_cons.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bridge" );
@@ -1119,7 +1120,7 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		BUILD_Allied_Command_Post =
+		BUILD_Axis_Command_Post =
 		{
 			ROUTE_TunnelSpawn1 =
 			{
@@ -1320,9 +1321,9 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_Depot_Gates_3 = MapRoutes.ATTACK_Depot_Gates_1;
 	MapRoutes.ATTACK_Tank_Bay_1 = MapRoutes.ATTACK_Depot_Gates_1;
 	MapRoutes.ATTACK_Tank_Bay_2 = MapRoutes.ATTACK_Depot_Gates_1;
-	MapRoutes.PLANT_Tunnel_MG = MapRoutes.BUILD_Allied_Command_Post;
-	MapRoutes.MOUNTMG42_alliedtunnel_mg42 = MapRoutes.BUILD_Allied_Command_Post;
-	MapRoutes.REPAIRMG42_alliedtunnel_mg42 = MapRoutes.BUILD_Allied_Command_Post;
+	MapRoutes.PLANT_Tunnel_MG = MapRoutes.BUILD_Axis_Command_Post;
+	MapRoutes.MOUNTMG42_alliedtunnel_mg42 = MapRoutes.BUILD_Axis_Command_Post;
+	MapRoutes.REPAIRMG42_alliedtunnel_mg42 = MapRoutes.BUILD_Axis_Command_Post;
 	MapRoutes.ATTACK_Fuel_Dump_2 = MapRoutes.ATTACK_Fuel_Dump_1;
 	MapRoutes.ATTACK_Fuel_Dump_3 = MapRoutes.ATTACK_Fuel_Dump_1;
 	MapRoutes.ATTACK_Fuel_Dump_4 = MapRoutes.ATTACK_Fuel_Dump_1;
@@ -1343,7 +1344,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_Depot_Gates_15 = MapRoutes.DEFEND_Fuel_Dump_6;
 	MapRoutes.REPAIRMG42_Side_MG = MapRoutes.DEFEND_Depot_Gates_6;
 	MapRoutes.MOUNTMG42_Side_MG = MapRoutes.DEFEND_Depot_Gates_6;
-	MapRoutes.PLANT_Allied_Command_Post = MapRoutes.DEFEND_Depot_Gates_6;
+	MapRoutes.PLANT_Axis_Command_Post = MapRoutes.DEFEND_Depot_Gates_6;
 	MapRoutes.DEFEND_Fuel_Dump_7 = MapRoutes.DEFEND_Fuel_Dump_6;
 	MapRoutes.DEFEND_Fuel_Dump_8 = MapRoutes.DEFEND_Fuel_Dump_6;
 	MapRoutes.DEFEND_Fuel_Dump_9 = MapRoutes.DEFEND_Fuel_Dump_6;

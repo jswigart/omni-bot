@@ -166,6 +166,7 @@ global Map =
 		Util.SetMaxUsersInProgress( 2, "BUILD_Tank_Barrier_2" );
 		SetGoalPriority( "BUILD_Tank_Barrier_2", 0.9 );
 		SetGoalPriority( "PLANT_Tank_Barrier_2", 0.9 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_allies_barrier2.*" );
 		Util.MapDebugPrint( "TankPastBarrier1" );
 	},
 
@@ -222,6 +223,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_allies_barrier2.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_allies_switch.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_phase6.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_phase6.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_allies_phase6.*" );
@@ -311,7 +314,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_.*" );
 
+	SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );

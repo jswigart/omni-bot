@@ -8,6 +8,7 @@ global Map =
 	DepotIsCleared = false,
 	ElevatorDoorStatus = 0, // closed
 	StationEntranceStatus = 1, // intact
+	DefendingTeam = TEAM.AXIS,
 	Focus = null,
 
 	Depot_Side_Door_Dyno = 0,
@@ -234,6 +235,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_depot );
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_hotel );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_hotel.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_depot.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_ramp" );
@@ -453,6 +455,7 @@ global Map =
 		if ( !Map.StationIsSecured )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_station.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_station_entrance.*" );
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_dyno_station.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SMOKEBOMB_allies.*" );
@@ -753,6 +756,9 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_shop.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_shop.*" );
 
+		DeleteTriggerRegion( Map.iw1 );
+		DeleteTriggerRegion( Map.iw2 );
+
 		Util.MapDebugPrint( "flag_shop_Allies_Secured" );
 	},
 
@@ -812,9 +818,12 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_station.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Station_Barricade );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_station_entrance.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_station.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_station.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_station.*" );
+
+		Wp.SetWaypointFlag( "station_teamdoor", "disguise", false );
 
 		Util.MapDebugPrint( "station_Cleared" );
 	},
@@ -839,6 +848,8 @@ global OnMapLoad = function()
 	/*** REGION TRIGGERS ***/
 	sdt = OnTriggerRegion( AABB(4840,3717,15, 5180,4120,140), Map.station_dyno_trigger );
 	fmg = OnTriggerRegion( AABB(5617,8700,190, 5736,8850,267), Map.factory_mg_trigger );
+	Map.iw1 = OnTriggerRegion( AABB(5433,2987,5, 5525,3089,194), RegionTrigger.IntrusionWarning );
+	Map.iw2 = OnTriggerRegion( AABB(4922,3764,9, 5076,4046,230), RegionTrigger.IntrusionWarning );
 
 	// these region triggers disable bot pushing and combat movement at the barb-wire barrier and other places
 	tmp = OnTriggerRegion( AABB(5668,2637,333, 6177,3306,613), Map.disablepush );
@@ -914,6 +925,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_Hotel_MG );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Depot_Side_Door );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR.*" );
@@ -928,10 +940,15 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_lib2" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_lib3" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SMOKEBOMB_allies.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_barrier[123]" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_hotel_mg.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_allies_mg.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_allies_mg.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_Factory_MG );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allies_mg.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_Hotel_MG );
+	SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
@@ -978,6 +995,7 @@ global OnMapLoad = function()
 	// Ramp not built initially, close path
 	Wp.SetWaypointFlag( "ramp1", "closed", true );
 	Wp.SetWaypointFlag( "ramp2", "closed", true );
+	Wp.SetWaypointFlag( "station_teamdoor", "disguise", true );
 
 	Util.AddUseWp( "PLANT_Depot_Side_Door", "door_inside" );
 	Util.AddUseWp( "PLANT_Depot_Side_Door", "door_outside" );

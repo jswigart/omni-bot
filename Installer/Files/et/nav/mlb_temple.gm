@@ -5,6 +5,8 @@ Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
 //cs: artillery goals need looked at. they were so far off i couldn't tell what the intent was, so i commented out a bunch
 // use /bot tracearty or /bot tracearty all to see the problems
 
+//bub: updated so engineers will not focus on buildig tank barriers until group 4
+
 global Map =
 {
 
@@ -503,6 +505,14 @@ global Map =
 
 		Util.MapDebugPrint("tank at location " + Map.VehicleLocation, true);
 	},
+	
+	tank_reached_command_post_area = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	
+		Util.MapDebugPrint( "tank_reached_command_post_area" );
+	},
 };
 
 global OnMapLoad = function()
@@ -540,6 +550,7 @@ global OnMapLoad = function()
 	OnTrigger( "fueldump_allies_bridge_reinforce", Map.fueldump_allies_bridge_reinforce );
 	OnTrigger( "The Tank has been damaged!", Map.Tank_Damaged );
 	OnTrigger( "tank at location", Map.tank_at_location );
+	OnTrigger( "The tank has reached the command post area", Map.tank_reached_command_post_area );
 
 	//set up a positional trigger for the tank
 	l1 = OnTriggerRegion(AABB(3189.990,6417.613,982.043,3386.819,6738.422,1084.557), RegionTrigger.VehicleTrigger);
@@ -584,6 +595,10 @@ global OnMapLoad = function()
 
 	// cs: set these as slightly higher priority so allies will favor assisting doc run
 	SetGoalPriority( "ATTACK_a_gold.*", 0.6, TEAM.ALLIES );
+	
+	// bub: set priority to build tank barriers, first by CP, then by temple
+	SetGoalPriority( "BUILD_Tank_Barrier", 0.8, TEAM.AXIS );
+	SetGoalPriority( "BUILD_Tank_Barrier_1", 0.9, TEAM.AXIS );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
@@ -683,7 +698,6 @@ global Groups =
 		Map.Health_Cabinet_north_healthcabinet,
 		//"MOBILEMORTAR_m_axis_.*", // cs: this doesn't exist
 		Map.Build_Tank_Barrier,
-		Map.Build_Tank_Barrier_1,
 		Map.Plant_Canyon_Rope_Bridge,
 		Map.Plant_Tank_Bridge,
 		Map.Checkpoint_flag1,
@@ -709,6 +723,7 @@ global Groups =
 	//Axis part 2
 	group4 =
 	{
+		Map.Build_Tank_Barrier,
 		Map.Build_Tank_Barrier_1,
 		Map.Build_Temple_MG_Nest,
 		"DEFEND_d_barrier1.*",

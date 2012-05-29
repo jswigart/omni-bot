@@ -37,27 +37,12 @@ global Map =
 	Snipe_98 = "SNIPE_98",
 	Mover_tank = "MOVER_tank",
 
-	EscortVehicle =
-	{
-		Tank =
-		{
-			EscortVehicleGoalName = "MOVER_tank",
-			Enabled = true,
-			LimitBots = 1,
-			Offset = 
-			{
-				Vector3(15,-40,0),
-				Vector3(-15,-40,0),
-			}
-		},
-	},
-	
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Built" );
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
 	Axis_Command_Post_Built = function( trigger )
@@ -65,7 +50,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Built" );
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Embankment_Assault_Ramp_Built = function( trigger )
@@ -73,7 +58,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Embankment_Assault_Ramp_Built" );
+		Util.MapDebugPrint( "Embankment_Assault_Ramp_Built" );
 	},
 
 	Tank_Barrier_1_Built = function( trigger )
@@ -81,7 +66,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tank_Barrier_1_Built" );
+		Util.MapDebugPrint( "Tank_Barrier_1_Built" );
 	},
 
 	Tank_Barrier_2_Built = function( trigger )
@@ -89,7 +74,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tank_Barrier_2_Built" );
+		Util.MapDebugPrint( "Tank_Barrier_2_Built" );
 	},
 
 	Tiger_Tank_Built = function( trigger )
@@ -97,7 +82,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tiger_Tank_Built" );
+		Util.MapDebugPrint( "Tiger_Tank_Built" );
 	},
 
 	Unexploded_Bomb_Built = function( trigger )
@@ -105,7 +90,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Unexploded_Bomb_Built" );
+		Util.MapDebugPrint( "Unexploded_Bomb_Built" );
 	},
 
 	Unexploded_Bomb_1_Built = function( trigger )
@@ -113,7 +98,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Unexploded_Bomb_1_Built" );
+		Util.MapDebugPrint( "Unexploded_Bomb_1_Built" );
 	},
 
 	bunker_MG42_Built = function( trigger )
@@ -121,7 +106,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "bunker_MG42_Built" );
+		Util.MapDebugPrint( "bunker_MG42_Built" );
 	},
 
 	crypt_door_Built = function( trigger )
@@ -129,7 +114,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "crypt_door_Built" );
+		Util.MapDebugPrint( "crypt_door_Built" );
 	},
 
 	tunnel_door_Built = function( trigger )
@@ -137,7 +122,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "tunnel_door_Built" );
+		Util.MapDebugPrint( "tunnel_door_Built" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
@@ -145,7 +130,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Allied_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
@@ -153,7 +138,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Axis_Command_Post_Destroyed" );
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	Embankment_Assault_Ramp_Destroyed = function( trigger )
@@ -161,7 +146,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Embankment_Assault_Ramp_Destroyed" );
+		Util.MapDebugPrint( "Embankment_Assault_Ramp_Destroyed" );
 	},
 
 	Tank_Barrier_1_Destroyed = function( trigger )
@@ -169,7 +154,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tank_Barrier_1_Destroyed" );
+		Util.MapDebugPrint( "Tank_Barrier_1_Destroyed" );
 	},
 
 	Tank_Barrier_2_Destroyed = function( trigger )
@@ -177,7 +162,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Tank_Barrier_2_Destroyed" );
+		Util.MapDebugPrint( "Tank_Barrier_2_Destroyed" );
 	},
 
 	Unexploded_Bomb_Destroyed = function( trigger )
@@ -185,7 +170,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Unexploded_Bomb_Destroyed" );
+		Util.MapDebugPrint( "Unexploded_Bomb_Destroyed" );
 	},
 
 	bunker_MG42_Destroyed = function( trigger )
@@ -193,7 +178,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "bunker_MG42_Destroyed" );
+		Util.MapDebugPrint( "bunker_MG42_Destroyed" );
 	},
 
 	crypt_door_Destroyed = function( trigger )
@@ -201,7 +186,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "crypt_door_Destroyed" );
+		Util.MapDebugPrint( "crypt_door_Destroyed" );
 	},
 
 	tunnel_door_Destroyed = function( trigger )
@@ -209,7 +194,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "tunnel_door_Destroyed" );
+		Util.MapDebugPrint( "tunnel_door_Destroyed" );
 	},
 
 	bank_flag_Axis_Captured = function( trigger )
@@ -217,7 +202,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "bank_flag_Axis_Captured" );
+		Util.MapDebugPrint( "bank_flag_Axis_Captured" );
 	},
 
 	bank_flag_Allies_Captured = function( trigger )
@@ -225,7 +210,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "bank_flag_Allies_Captured" );
+		Util.MapDebugPrint( "bank_flag_Allies_Captured" );
 	},
 
 	shack_flag_Axis_Captured = function( trigger )
@@ -233,7 +218,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "shack_flag_Axis_Captured" );
+		Util.MapDebugPrint( "shack_flag_Axis_Captured" );
 	},
 
 	shack_flag_Allies_Captured = function( trigger )
@@ -241,9 +226,22 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "shack_flag_Allies_Captured" );
+		Util.MapDebugPrint( "shack_flag_Allies_Captured" );
 	},
-
+	
+	Tank_Passed_Barrier1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_shack_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_crypt_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Embankment_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+		
+		Util.MapDebugPrint( "Tank_Passed_Barrier1" );
+	},
 };
 
 global OnMapLoad = function()
@@ -275,19 +273,16 @@ global OnMapLoad = function()
 	OnTrigger( "^3Allies have taken the Bank!", Map.bank_flag_Allies_Captured );
 	OnTrigger( "^3Axis have taken the Shack!", Map.shack_flag_Axis_Captured );
 	OnTrigger( "^3Allies have captured the Shack!", Map.shack_flag_Allies_Captured );
+	OnTrigger( "goldrush_allies_tank_barrier1", Map.Tank_Passed_Barrier1 );
 
 	
 	ETUtil.DisableGoal(".*");
-	ETUtil.EnableGoal("CHECKPOINT_shack_flag");
-	
-	
+	//ETUtil.EnableGoal("CHECKPOINT_shack_flag");		
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tiger_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_2" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_crypt_door" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Embankment_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_2" );
@@ -307,12 +302,34 @@ global OnMapLoad = function()
 	Util.SetGoalPosition( 2620.5, 3606.6, 32.125, "PLANT_Tank_Barrier_1");
 	Util.SetGoalPosition( 1175.2, 3437.9, 324.69, "PLANT_Tank_Barrier_2");
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 // Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 300.0;
+	sleep(1);
+	
+	//bot.MaxViewDistance = 3000;
+
+	team = bot.GetTeam();
+	class = bot.GetClass();
+	
+	if ( team == TEAM.ALLIES )
+	{
+		if ( ETUtil.CountClass(TEAM.ALLIES, CLASS.ENGINEER) < 1 )
+		{
+			Util.MapDebugPrint( "***breakout ALLIED bot, CLASS changed to ENGINEER***" );
+			bot.ChangeClass(CLASS.ENGINEER);
+		}
+	}
+	else
+	{
+		if ( ETUtil.CountClass(TEAM.AXIS, CLASS.ENGINEER) < 1 )
+		{
+			Util.MapDebugPrint( "***breakout AXIS bot, CLASS changed to ENGINEER***" );
+			bot.ChangeClass(CLASS.ENGINEER);
+		}
+	}
 };

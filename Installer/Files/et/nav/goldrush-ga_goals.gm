@@ -1124,6 +1124,10 @@ global _MG =
 		Name = "BUILD_Tank",
 		Offsets = 
 		{
+			[0] = Vec3(98.125, -22.514, -31.964),
+			[1] = Vec3(-7.497, -204.578, -29.306),
+			[2] = Vec3(-98.125, 24.768, -37.573),
+			[3] = Vec3(-3.021, 158.572, -40.957),
 		},
 		Orientation = Vec3(1.519, 0.001, -0.021),
 		Position = Vec3(-358.000, 2196.000, 390.000),
@@ -1132,6 +1136,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "Tank",
 		TeamAvailability = 4,
+		Vehicle = "MOVER_tank",
 		Version = 1,
 	},
 	BUILD_Tank_Barrier_1 = 

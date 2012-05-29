@@ -1,0 +1,343 @@
+//==========================================================================================
+//
+//	op_desert.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	15 February 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Main_gate_Dyno = 0,
+	desert_wall_Dyno = 0,
+	
+	DoorStatus = 0, //door is closed initially
+	flagstatus = 0, //0 none, 1 axis, 2 allies
+	
+	Switches =
+	{
+		door =
+		{
+			Enabled = true,
+			Priority = 0, //always set to 0 when using path through
+			WaypointName = "door",
+			LimitClass = (1<<CLASS.ENGINEER) | (1<<CLASS.SOLDIER), //soldiers and engineers can use
+			Timeout = 2000,
+			AimPosition = Vec3(-1467.715, -516.125, 315.442), // Optional 0.8x only, use /bot aim_pos to get aim vector. Replaces the unreliable waypoint facing.
+			Wait = function() // optional. used to have the bot wait a bit for slow moving doors / elevators
+			{
+				if ( Map.DoorStatus == 1 )
+				{
+					//wait 1.5 secs while the door opens
+					sleep(1.5);
+					return true; 
+				}
+				//always return false unless the door is open:
+				return false;
+			},
+		},
+		// /bot waypoint_setproperty paththrough UseSwitch_PT:door
+	},
+	
+	Roles =
+	{
+		AXIS = // Team
+		{
+			AllBots = true, // each bot is considered for a role
+			DEFENDER = // the DEFENDER role
+			{
+				spawnpt = 3,			// users of this role will choose spawnpt 3
+				numbots = 3,			// maximum of 3 bots
+				crucialClass = CLASS.ENGINEER,	// first bot
+			},
+		},
+		ALLIES =
+		{
+			AllBots = true, // default: every other bot
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+	
+	desert_wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.desert_wall_Dyno += 1;
+		Util.MapDebugPrint( "desert_wall_Planted" );
+	},
+
+	desert_wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.desert_wall_Dyno -= 1;
+		Util.MapDebugPrint( "desert_wall_Defused" );
+	},
+	
+	desert_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.desert_wall_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		Util.DisableGoal( "AMMOCAB_first_ammocabinet");
+		Util.DisableGoal( "HEALTHCAB_first_healthcabinet");
+		Util.EnableGoal( "PLANT.Main_gate" );
+		Util.SetRoleForGoals("CAMP_main.*", ROLE.DEFENDER);
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_main.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pickup_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pickup_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pickup_3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_flag.*" );
+		
+		Util.MapDebugPrint( "desert_wall_Destroyed" );
+	},
+	
+	Main_gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_gate_Dyno += 1;
+		Util.MapDebugPrint( "Main_gate_Planted" );
+	},
+	
+	Main_gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_gate_Dyno -= 1;
+		Util.MapDebugPrint( "Main_gate_Defused" );
+	},	
+	
+	Main_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_gate_Dyno = 0;
+		
+		Util.EnableGoal( "FLAG.*" );
+		Util.EnableGoal( "CAPPOINT_Truck" );
+		Util.EnableGoal( "AMMOCAB_first_ammocabinet_1");
+		Util.EnableGoal( "HEALTHCAB_first_healthcabinet_1");
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pickup.*" );
+		Util.SetRoleForGoals("CAMP_switch.*", ROLE.DEFENDER);
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_main.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_switch.*" );
+		Util.MapDebugPrint( "Main_gate_Destroyed" );
+	},
+
+	scr_AXIS_GOLD_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "scr_AXIS_GOLD_Taken" );
+	},
+
+	scr_AXIS_GOLD_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.DisableGoal( "CAMP_Truck.*" ); //make shure goal is disabled
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_switch.*" ); //make shure goal is enabled
+		Util.SetRoleForGoals("CAMP_switch.*", ROLE.DEFENDER); //make shure goal is enabled
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_pickup.*" ); //make shure goal is enabled
+		
+		Util.MapDebugPrint( "scr_AXIS_GOLD_Returned" );
+	},
+
+	scr_AXIS_GOLD_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		//Game Over
+		if ( Map.Talk && MAP_TALK )
+		{
+			ETUtil.WinningChat( TEAM.AXIS );
+			ETUtil.LosingChat( TEAM.ALLIES );
+		}
+		
+		Util.MapDebugPrint( "scr_AXIS_GOLD_Secured" );
+	},
+
+	forward_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.flagstatus = 1;
+		//make sure they spawn at flag
+		Util.ChangeSpawn( TEAM.AXIS, 1 );
+		
+		Util.MapDebugPrint( "forward_flag_Axis_Captured" );
+	},
+
+	forward_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.flagstatus = 2;
+		//make sure they spawn at flag
+		Util.ChangeSpawn( TEAM.ALLIES, 1 );
+		
+		Util.MapDebugPrint( "forward_flag_Allies_Captured" );
+	},
+	
+	door_open = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.DoorStatus = 1;	
+		
+		Map.Switches.door.LimitTeam = (1<<TEAM.AXIS);
+		Util.MapDebugPrint( "Secured Doors are open" );
+	},
+	
+	door_closed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.DoorStatus = 0;	
+
+		Map.Switches.door.LimitTeam = (1<<TEAM.ALLIES);
+		Util.MapDebugPrint( "Secured Doors are closed" );
+	},
+	
+	//OBJ - Going Though Secure Doors
+	SecureDoor =
+	{
+		Name = "SecureDoor",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
+		{
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			{
+				Util.MapDebugPrint(GetEntName(ent) + "^8Has Entered Secure Room With The Gold!");
+			}
+		},
+		OnExit = function(ent)
+		{
+			if ( GetEntFlags(ent,ENTFLAG.CARRYINGGOAL) )
+			{
+				Map.Switches.door.Enabled = false;
+				Util.EnableGoal( "CAMP_Truck.*" );
+				Util.SetRoleForGoals("CAMP_Truck.*", ROLE.DEFENDER);
+				SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_switch.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_pickup.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_flag.*" );
+				
+				Util.MapDebugPrint(GetEntName(ent) + "^3Has Exited Secure Room The Gold!");
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Planted at the Main_gate.", Map.Main_gate_Planted );
+	OnTrigger( "Planted at the desert_wall.", Map.desert_wall_Planted );
+	OnTrigger( "Defused at the Main_gate.", Map.Main_gate_Defused );
+	OnTrigger( "Defused at the desert_wall.", Map.desert_wall_Defused );
+	OnTrigger( "The Allies have destroyed the main_gate!", Map.Main_gate_Destroyed );
+	OnTrigger( "The Allies have destroyed the Desert Wall!", Map.desert_wall_Destroyed );
+	OnTrigger( "Allies have stolen the Gold!", Map.scr_AXIS_GOLD_Taken );
+	OnTrigger( "Axis have returned the Gold!", Map.scr_AXIS_GOLD_Returned );
+	OnTrigger( "Allies have stolen the gold successful!", Map.scr_AXIS_GOLD_Secured );
+	OnTrigger( "Axis have captured the Forward Flag!", Map.forward_flag_Axis_Captured );
+	OnTrigger( "Allies have captured the Forward Flag!", Map.forward_flag_Allies_Captured );
+	OnTrigger( "^1The Secured Doors are open!", Map.door_open );
+	OnTrigger( "^7The Secured Doors are closed!", Map.door_closed);
+	
+	Secure = OnTriggerRegion(AABB(-1357.867,1294.340,12.943,-1071.089,1474.828,137.237),Map.SecureDoor);
+
+	
+	Util.DisableGoal( ".*", true ); // all but routes
+	
+	Util.EnableGoal( "PLANT.desert_wall" );
+	Util.EnableGoal( "AMMOCAB_first_ammocabinet");
+	Util.EnableGoal( "HEALTHCAB_first_healthcabinet");
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_wall.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_wall.*" );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 3, "CHECKPOINT.*" );
+	Util.SetMaxUsers( 1, "CAMP_.*" );
+	Util.SetMaxUsers( 1, "PLANTMINE_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+	
+	SetGoalPriority( "ATTACK_pickup", 0.51 , TEAM.ALLIES); 
+
+	
+	Util.UpdateSwitchData();
+	
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 2400;
+	
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	// default spawn
+	if ( team == TEAM.ALLIES ) {
+		if ( Map.flagstatus == 1 ) {
+			bot.ChangeSpawnPoint(1);
+		}
+		else {
+			bot.ChangeSpawnPoint(2);
+		}
+	}
+	else if ( team == TEAM.AXIS ) {
+		if ( Map.flagstatus == 2 ) {
+			bot.ChangeSpawnPoint(1);
+		}
+		else {
+			bot.ChangeSpawnPoint(3);
+		}
+	}
+};

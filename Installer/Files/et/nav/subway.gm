@@ -477,7 +477,9 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_phase2.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_phase3.*" );
 		}
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_south_station_spawn" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_mainstationflag" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_south_station_spawn" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_mainstationflag" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );

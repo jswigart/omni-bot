@@ -1,0 +1,23 @@
+global Map =
+{
+	SnipeMap = true,
+};
+
+global OnMapLoad = function()
+{
+	Util.DisableGoal(".*CAB_.*");
+	SetAvailableMapGoals(TEAM.AXIS, true, "HEALTHCAB_misc_cabinet_health9");
+	SetAvailableMapGoals(TEAM.AXIS, true, "AMMOCAB_misc_cabinet_supply9");
+	SetAvailableMapGoals(TEAM.ALLIES, true, "HEALTHCAB_misc_cabinet_health10");
+	SetAvailableMapGoals(TEAM.ALLIES, true, "AMMOCAB_misc_cabinet_supply10");
+
+	SetMapGoalProperties("SNIPE.*", { MinCampTime=50, MaxCamptime=100 });
+	
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 4500;
+	Util.ChangeToSniperWeapons(bot);
+};

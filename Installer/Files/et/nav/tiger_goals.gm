@@ -1784,6 +1784,11 @@ global _MG =
 		Name = "BUILD_Tiger",
 		Offsets = 
 		{
+			[0] = Vec3(-106.125, 82.829, -35.875),
+			[1] = Vec3(-106.125, -52.617, -35.875),
+			[2] = Vec3(0.000, -158.633, -35.875),
+			[3] = Vec3(106.126, -53.229, -35.875),
+			[4] = Vec3(106.125, 75.181, -35.875),
 		},
 		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(806.000, 1477.000, 66.000),
@@ -1794,6 +1799,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "Tiger",
 		TeamAvailability = 2,
+		Vehicle = "MOVER_tank",
 		Version = 1,
 	},
 	BUILD_Truck_it_moves_if_an_Engineer_of_either_team_gets_in_the_back = 

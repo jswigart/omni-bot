@@ -78,16 +78,6 @@ global Map =
 	Plant_Mine_anticart1 = "PLANTMINE_anticart1",
 	Plant_Mine_anticart2 = "PLANTMINE_anticart2",
 
-	EscortVehicle =
-	{
-		Tank =
-		{
-			EscortVehicleGoalName = "MOVER_tank",
-			Enabled = true,
-			LimitBots = 2,
-		},
-	},
-	
 	Allied_CP_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -461,8 +451,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		Map.EscortVehicle.Tank.Enabled = false;
-		Util.RemoveGoal("BUILD_Tank");
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_UJE_tank" );
 		Util.RemoveGoal("MOVER_tank");
 		print( "TankAtBase" );
 	},

@@ -143,6 +143,7 @@ global Map =
 		Map.TankIsAtBarrier = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank_Barrier" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_allies_barrier2.*" );
 
 		//Disable health and ammo stand
 		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB.*" );
@@ -414,8 +415,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_bunker_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_mortar_barrier2_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_2ndbarrier_mg_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_allies_barrier2.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOBILEMG42_church_mg_allies.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_church_allies.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_allies_church.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_church_allies.*" );
 		//Redisable 3 sniper spots that are only important after the main door is open:
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_church_allies1" );

@@ -1,17 +1,17 @@
-/****************************************************
-0.7 script by **PCZ** >M@t3o$<
-Last Update : 21 December 2009
-****************************************************/
 //==========================================================================================
 //
-//	oilraid.gm
+//	Oil Raid Final - oilraid.gm
 //
-//	Who  	When		What
+//	Who  		When			What
 //------------------------------------------------------------------------------------------
 //
-// 	^4Tardis	10 October 2010 Updated Script - 0.8
+//	Mateos		23 May 2012		Further updates planned
+// 	^4Tardis	10 October 2010 	Updated Script - 0.8
+//	Mateos		21 December 2009	Based on incomplete .way file
+//						Added script for 0.71
 //
 //==========================================================================================
+
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
@@ -24,29 +24,6 @@ global Map =
 	Detonator_Dyno = 0,
 	Tank_Barrier_Dyno = 0,
 	Tank_Destroyed = false,
-
-	Ammo_Cabinet_wallammo = "AMMOCAB_wallammo",
-	Flag_fuzeredflag = "FLAG_fuzeredflag",
-	Cappoint_FuzeDropoff = "CAPPOINT_FuzeDropoff",
-	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
-	Build_Assault_Ramp = "BUILD_Assault_Ramp",
-	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
-	Build_Detonator = "BUILD_Detonator",
-	Build_Tank = "BUILD_Tank",
-	Build_Tank_Barrier = "BUILD_Tank_Barrier",
-	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
-	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
-	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
-	Plant_Depot_Gate = "PLANT_Depot_Gate",
-	Plant_Detonator = "PLANT_Detonator",
-	Plant_Tank_Barrier = "PLANT_Tank_Barrier",
-	Mount_NorthMG42 = "MOUNTMG42_NorthMG42",
-	Mount_SouthMG42 = "MOUNTMG42_SouthMG42",
-	Repair_NorthMG42 = "REPAIRMG42_NorthMG42",
-	Repair_SouthMG42 = "REPAIRMG42_SouthMG42",
-	Mover_tank = "MOVER_tank",
-	Mover_train = "MOVER_train",
-	Mover_truck = "MOVER_truck",
 
 	Movers =
 	{
@@ -88,158 +65,122 @@ global Map =
 
 	Allied_Command_Post_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
 	Allied_Command_Post_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Allied_Command_Post_Dyno += 1;
+
 		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
 	},
 
 	Allied_Command_Post_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Allied_Command_Post_Dyno -= 1;
+
 		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
 	Assault_Ramp_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Assault_Ramp );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Assault_Ramp" );
 
 		Util.MapDebugPrint( "Assault_Ramp_Built" );
 	},
 
 	Assault_Ramp_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Assault_Ramp_Dyno += 1;
+
 		Util.MapDebugPrint( "Assault_Ramp_Planted" );
 	},
 
 	Assault_Ramp_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Assault_Ramp_Dyno -= 1;
+
 		Util.MapDebugPrint( "Assault_Ramp_Defused" );
 	},
 
 	Assault_Ramp_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
 	},
 
 	Axis_Command_Post_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
 
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Axis_Command_Post_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Axis_Command_Post_Dyno += 1;
+
 		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
 
 	Axis_Command_Post_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Axis_Command_Post_Dyno -= 1;
+
 		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	Tank_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Tank_Built" );
 	},
 
 	Tank_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Tank_Destroyed = true;
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 
 		Util.MapDebugPrint( "Tank_Destroyed" );
 	},
 
 	Tank_Barrier_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
 
 		Util.MapDebugPrint( "Tank_Barrier_Built" );
 	},
 
 	Tank_Barrier_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Tank_Barrier_Dyno += 1;
+
 		Util.MapDebugPrint( "Tank_Barrier_Planted" );
 	},
 
 	Tank_Barrier_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Tank_Barrier_Dyno -= 1;
+
 		Util.MapDebugPrint( "Tank_Barrier_Defused" );
 	},
 
 	Tank_Barrier_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		if( Map.Tank_Destroyed == true )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 		}
 
 		Util.MapDebugPrint( "Tank_Barrier_Destroyed" );
@@ -247,57 +188,51 @@ global Map =
 
 	Depot_Gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Depot_Gate_Dyno += 1;
+
 		Util.MapDebugPrint( "Depot_Gate_Planted" );
 	},
 
 	Depot_Gate_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Depot_Gate_Dyno -= 1;
+
 		Util.MapDebugPrint( "Depot_Gate_Defused" );
 	},
 
 	Depot_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_AXI_train" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_TRAIN" );
 		Util.DisableGoal( "RIDE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FuzeDropoff" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuzeredflag" );
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_fuze" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_fuze");
+		SetAvailableMapGoals( TEAM.AXIS, false, "RIDE_AXI_train" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuzeredflag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FuzeDropoff" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "RIDE_TRAIN" );
+
 		Util.MapDebugPrint( "Depot_Gate_Destroyed" );
 	},
 
 	Detonator_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Detonator_Dyno += 1;
+
 		Util.MapDebugPrint( "Detonator_Planted" );
 	},
 
 	Detonator_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.Detonator_Dyno -= 1;
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Detonator );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Detonator" );
+
 		Util.MapDebugPrint( "Detonator_Defused" );
 	},
 
 	Detonator_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Delta.*" );
 
 		Util.MapDebugPrint( "Detonator_Destroyed" );
@@ -305,11 +240,8 @@ global Map =
 
 	Main_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Charlie.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Axis_Command_Post );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
 
@@ -318,14 +250,16 @@ global Map =
 
 		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_NorthMG42" );
 		//SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_SouthMG42" );
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "RIDE_TRAIN" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Delta.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Depot_Gate );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Assault_Ramp );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Allied_Command_Post );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Depot_Gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+
 		Util.DisableGoal ( "BUILD_Tank" );
 		Util.DisableGoal ( "MOUNT_tank" );
 
@@ -334,51 +268,42 @@ global Map =
 
 	fuzeredflag_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_fuzeredflag" );
+
 		Util.MapDebugPrint( "fuzeredflag_Taken" );
 	},
 
 	fuzeredflag_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_fuzeredflag" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_FuzeDropoff" );
+
 		Util.MapDebugPrint( "fuzeredflag_Returned" );
 	},
 
 	fuzeredflag_Secured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		// Make sure Allied Engineers detonate the explosive
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_FuzeDropoff" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_fuzeredflag" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_FuzeDropoff" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_FuzeDropoff" );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Detonator );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Detonator" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_fuze" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_fuze");
+
 		Util.MapDebugPrint( "fuzeredflag_Secured" );
 	},
 
 	AlliesWin = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "AlliesWin" );
 	},
-
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
+	// *** TRIGGERS ***
 	OnTrigger( "Allied have constucted a command post", Map.Allied_Command_Post_Built );
 	OnTrigger( "Allies have constucted the ramp", Map.Assault_Ramp_Built );
 	OnTrigger( "Axis have constucted a command post", Map.Axis_Command_Post_Built );
@@ -412,33 +337,31 @@ global OnMapLoad = function()
 	OnTrigger( "Axis have destroyed the detonator!", Map.Detonator_Destroyed );
 
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	Util.DisableGoal( ".*", true );	// All but Routes
 
 	// *** AXIS GOALS ***
-
 	Util.DisableGoal( "REPAIRMG42_NorthMG42" );
 	Util.DisableGoal( "REPAIRMG42_SouthMG42" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_NorthMG42" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_SouthMG42" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Alpha.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier" );
 
 	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Tank_Barrier );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier" );
 	Util.AddUseWp("PLANT_Depot_Gate", "depotgate");
 	Util.AddUseWp("PLANT_Depot_Gate", "depotgate1");
 
 	// *** AXIS GOALS PRIORITY ***
 	SetGoalPriority( "DEFEND_.*", 0.4, TEAM.AXIS );
-	SetGoalPriority( Map.Plant_Allied_Command_Post, 0.5, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Axis_Command_Post, 0.6, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Plant_Assault_Ramp, 0.7, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Tank_Barrier, 1.0, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Plant_Detonator, 2.0, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Allied_Command_Post", 0.5, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Axis_Command_Post", 0.6, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Assault_Ramp", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Tank_Barrier", 1.0, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Detonator", 2.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 
@@ -452,10 +375,10 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_FuzeDropoff", 0.0, TEAM.ALLIES, CLASS.FIELDOPS );
 	SetGoalPriority( "ATTACK_FuzeDropoff", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
 
-	SetGoalPriority( Map.Plant_Axis_Command_Post, 0.5 );
-	SetGoalPriority( Map.Plant_Depot_Gate, 0.6 );
-	SetGoalPriority( Map.Build_Assault_Ramp, 0.7 );
-	SetGoalPriority( Map.Build_Allied_Command_Post, 0.8 );
+	SetGoalPriority( "PLANT_Axis_Command_Post", 0.5 );
+	SetGoalPriority( "PLANT_Depot_Gate", 0.6 );
+	SetGoalPriority( "BUILD_Assault_Ramp", 0.7 );
+	SetGoalPriority( "BUILD_Allied_Command_Post", 0.8 );
 
 	// *** GOALS PROPERTIES ***
 	Util.AddInvVehicle( "MOVER_train" );
@@ -475,7 +398,8 @@ global OnMapLoad = function()
 
 	ts = OnTriggerRegion(AABB(1187.964,-264.241,249.125,1736.933,219.518,341.125), Map.TrainStartTrigger);
 	TrainEnd = OnTriggerRegion(AABB(5048.166,-227.690,249.125,5164.860,81.666,331.125), Map.TrainEndTrigger);
-//Map Routes
+
+	//Map Routes
 	MapRoutes =
 	{
 		PLANT_Tank_Barrier =
@@ -1283,10 +1207,13 @@ global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 90.0;
 
-	foreach ( id and weap in { WEAPON.THOMPSON,WEAPON.MP40,WEAPON.SHOTGUN,
-								WEAPON.STEN,WEAPON.MP34,WEAPON.M97,WEAPON.M7,
-								WEAPON.STG44,WEAPON.FG42,WEAPON.GARAND,
-								WEAPON.K43,WEAPON.BAR } )
+	foreach ( id and weap in
+	{
+		WEAPON.THOMPSON,WEAPON.MP40,WEAPON.SHOTGUN,
+		WEAPON.STEN,WEAPON.MP34,WEAPON.M97,WEAPON.M7,
+		WEAPON.STG44,WEAPON.FG42,WEAPON.GARAND,
+		WEAPON.K43,WEAPON.BAR
+	} )
 	{
 		w = bot.GetWeapon(weap);
 		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
