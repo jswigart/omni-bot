@@ -1093,6 +1093,14 @@ namespace AiState
 
 	void FollowPath::Stop(bool _clearuser)
 	{
+		if(m_PassThroughState && _clearuser)
+		{
+			// _clearuser is true if HighLevel goal was aborted,
+			// don't interrupt active paththrough
+			m_SavedQuery.m_User = 0;
+			return;
+		}
+
 		if(m_PathStatus == PathInProgress)
 		{
 			NotifyUserFailed(FollowPathUser::Interrupted);
@@ -1113,12 +1121,7 @@ namespace AiState
 	bool FollowPath::Repath()
 	{
 		bool bFinal = m_Query.m_Final; // save the final state
-		bool b = Goto(
-			m_Query.m_User,
-			m_Query.m_Position,
-			m_Query.m_Radius,
-			m_Query.m_MoveMode,
-			m_Query.m_SkipLastPt);
+		bool b = Goto();
 		m_Query.m_Final = bFinal; // restore it
 		return b;		
 	}
@@ -1169,8 +1172,6 @@ namespace AiState
 
 	void FollowPath::DynamicPathUpdated(const Event_DynamicPathsChanged *_m)
 	{
-		bool bRepath = false;
-
 		Path::PathPoint p;
 		for(int i = m_CurrentPath.GetCurrentPtIndex(); i < m_CurrentPath.GetNumPts(); ++i)
 		{
@@ -1180,22 +1181,15 @@ namespace AiState
 			{
 				if(p.m_NavId==_m->m_NavId)
 				{
-					bRepath = true;
+					Repath();
 					break;
 				}
 			}
 			else if(p.m_NavFlags&F_NAV_DYNAMIC)
 			{
-				bRepath = true;
+				Repath();
 				break;
 			}
-		}
-
-		if(bRepath)
-		{
-			bool bFinal = m_Query.m_Final;
-			Goto(m_Query.m_User,m_LastDestination,m_Query.m_MoveMode,m_Query.m_SkipLastPt);
-			m_Query.m_Final = bFinal;
 		}
 	}
 
@@ -1248,40 +1242,43 @@ namespace AiState
 
 	bool FollowPath::Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
 	{
-		if(!_owner)
-			return false;
-		OBASSERT(_owner,"No User Defined!");
+		if(m_PassThroughState && _owner->GetFollowUserName() != m_PassThroughState)
+		{
+			// remember current query and don't interrupt active paththrough
+			m_SavedQuery.m_User = _owner;
+			m_SavedQuery.m_Destination = _goals;
+			m_SavedQuery.m_MoveMode = _movemode;
+			m_SavedQuery.m_SkipLastPt = _skiplastpt;
+			return true;
+		}
 
-		if(_owner->GetFollowUserName() != m_PassThroughState)
-			CancelPathThrough();
+		m_Query.m_User = _owner;
+		m_Query.m_Destination = _goals;
+		m_Query.m_MoveMode = _movemode;
+		m_Query.m_SkipLastPt = _skiplastpt;
+		return Goto();
+	}
+
+	bool FollowPath::Goto()
+	{
+		if(!m_Query.m_User) return false;
+		m_Query.m_User->ResetPathUser();
 
 		m_Query.m_Final = true;
-		m_Query.m_SkipLastPt = _skiplastpt;
-		m_Query.m_User = _owner;
-		m_Query.m_MoveMode = _movemode;
-		m_Query.m_User->ResetPathUser();
-		m_LastDestination = _goals;
-
-		//////////////////////////////////////////////////////////////////////////
 
 		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
-		_owner->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), _goals, GetClient()->GetTeamFlag());
+		m_Query.m_User->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), m_Query.m_Destination, GetClient()->GetTeamFlag());
 		if(pPathPlanner->FoundGoal())
 		{
 			m_CurrentPath.Clear();
 			pPathPlanner->GetPath(m_CurrentPath);
 			if(!m_Query.m_SkipLastPt)
 			{
-				m_CurrentPath.AddPt(_goals[_owner->m_DestinationIndex].m_Position, 
-				_goals[_owner->m_DestinationIndex].m_Radius);
+				Destination &dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
+				m_CurrentPath.AddPt(dest.m_Position, dest.m_Radius);
 			}
 			GetClient()->ResetStuckTime();
 			m_PathStatus = PathInProgress;
-
-			//////////////////////////////////////////////////////////////////////////
-			m_Query.m_Position = _goals[_owner->m_DestinationIndex].m_Position;
-			m_Query.m_Radius = _goals[_owner->m_DestinationIndex].m_Radius;
-			//////////////////////////////////////////////////////////////////////////
 		}
 		else
 		{
@@ -1303,7 +1300,7 @@ namespace AiState
 		m_Query.m_User = _owner;
 		m_Query.m_MoveMode = _movemode;
 		m_Query.m_User->ResetPathUser();
-		m_LastDestination.resize(0);
+		m_Query.m_Destination.resize(0);
 
 		GetClient()->ResetStuckTime();
 		m_CurrentPath = _path;
@@ -1394,12 +1391,12 @@ namespace AiState
 					if(_how == FollowPathUser::NoPath)
 					{
 						f.WriteString("\tDest = {"); f.WriteNewLine();
-						for(obuint32 i = 0; i < m_LastDestination.size(); ++i)
+						for(obuint32 i = 0; i < m_Query.m_Destination.size(); ++i)
 						{
 							f.Printf("\t\tVector3(%f,%f,%f),",
-								m_LastDestination[i].m_Position.x,
-								m_LastDestination[i].m_Position.y,
-								m_LastDestination[i].m_Position.z);
+								m_Query.m_Destination[i].m_Position.x,
+								m_Query.m_Destination[i].m_Position.y,
+								m_Query.m_Destination[i].m_Position.z);
 							f.WriteNewLine();
 						}
 						f.WriteString("\t},"); f.WriteNewLine();
