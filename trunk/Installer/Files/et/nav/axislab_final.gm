@@ -273,6 +273,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_nuke.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_war_room.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_nuke" );
 
 		if ( Map.Talk && MAP_TALK )
 		{
@@ -353,6 +354,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Cart_Ramp" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_war_room.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_nuke" );
 		Map.NukeSecured = true;
 		Map.NukeTaken = false;
 		Map.Switches.elevator_switch_up_0.Enabled = false;
@@ -417,6 +419,7 @@ global Map =
 		Map.Switches.bookshelf_switch.Enabled = false;
 		Map.Switches.house_switch.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_bridge" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cabin.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Cart_Ramp" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_cart_allies" );
@@ -499,12 +502,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_534" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_534" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Cart_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_bridge" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Elevator_Generator" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_mg_Nest" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_mg_Nest" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_mg_Nest" );
 		if ( Map.DoorIsOpen )
 		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_nuke" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_nuke.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_nuke.*" );
@@ -630,6 +635,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_cart_axis" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Elevator_Generator" );
@@ -642,7 +648,10 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_hill_mg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_bridge" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_start" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_cabin.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier_3" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_barrier_7" );

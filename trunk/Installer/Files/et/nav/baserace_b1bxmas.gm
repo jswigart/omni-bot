@@ -894,5 +894,5 @@ global OnBotJoin = function( bot )
 	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 120.0;
 	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	bot.MaxViewDistance = 2000;
+	bot.MaxViewDistance = 1200;
 };

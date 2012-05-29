@@ -1787,6 +1787,11 @@ global _MG =
 		Name = "BUILD_Truck",
 		Offsets = 
 		{
+			[0] = Vec3(-75.626, -63.674, -30.375),
+			[1] = Vec3(-75.625, 18.700, -30.375),
+			[2] = Vec3(75.626, -76.162, -30.375),
+			[3] = Vec3(65.626, 44.366, -30.375),
+			[4] = Vec3(-1.469, 159.126, -30.153),
 		},
 		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-2140.000, 568.000, 72.000),
@@ -1795,6 +1800,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "Truck",
 		TeamAvailability = 4,
+		Vehicle = "MOVER_truck",
 		Version = 1,
 	},
 	CALLARTILLERY_TruckAtDepotGate_3 = 

@@ -12,6 +12,7 @@ global Map =
 	Destroy_side_gate = "PLANT_side_gate",
 	Destroy_side_door_script = "PLANT_side_door",
 	Destroy_main_gate_script = "PLANT_main_gate",
+	Movers = { "MOVER_side_gate", "MOVER_side_gate_1" }, //construction materials
 
 	// Set Status' for conditionals
 	SideGateStatus = 1, //not built
@@ -435,6 +436,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 40.0;
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
 };
 
 /*

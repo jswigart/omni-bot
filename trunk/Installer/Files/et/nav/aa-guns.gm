@@ -153,7 +153,6 @@ global Map =
 	Plant_Mine_m_gun3 = "PLANTMINE_m_gun3",
 	Plant_Mine_m_gun4 = "PLANTMINE_m_gun4",
 
-	Debug = false,
 	currentGoal = "",
 	minDefFlagCampTime = 10,
 	maxDefFlagCampTime = 100,

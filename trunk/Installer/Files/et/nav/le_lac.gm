@@ -17,6 +17,7 @@ global Map =
 	shipDamaged = false,
 	backDestroyed = false,
 	sideDestroyed = false,
+	elevator_pos = "start",
 
 	ShowMovers = false,
 	Movers = { "MOVER_ship", "MOVER_boat_sm" },
@@ -87,34 +88,54 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "elevator_up_call",
+			Timeout = 8000,
+			ExitConditions =
+			{
+				f = function(bot){
+					return Map.elevator_pos == "moving_up";
+				}
+			},
+			Wait = function()
+			{
+				return Map.elevator_pos == "top";
+			}
 		},
 		elevator_up_in =
 		{
-			Enabled = true,
+			Enabled = false,
 			Priority = 0,
 			WaypointName = "elevator_up_in",
 			Wait = function()
 			{
-				sleep(5);
-				return true;
-			}
+				return Map.elevator_pos != "moving_down";
+			},
 		},
 		elevator_down_call =
 		{
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "elevator_down_call",
+			Timeout = 8000,
+			ExitConditions =
+			{
+				f = function(bot){
+					return Map.elevator_pos == "moving_down";
+				}
+			},
+			Wait = function()
+			{
+				return Map.elevator_pos == "bottom";
+			}
 		},
 		elevator_down_in =
 		{
-			Enabled = true,
+			Enabled = false,
 			Priority = 0,
 			WaypointName = "elevator_down_in",
 			Wait = function()
 			{
-				sleep(5);
-				return true;
-			}
+				return Map.elevator_pos != "moving_up";
+			},
 		},
 	},
 
@@ -122,15 +143,22 @@ global Map =
 	{
 		vel = ToVector(trigger.Action);
 		if(vel.y < 0){
-			//Util.MapDebugPrint("elevator is up");
-			sleep(1.7);
-			Map.Switches.elevator_up_call.Enabled = false;
-			Map.Switches.elevator_up_in.Enabled = true;
-			sleep(2);
-			Map.Switches.elevator_down_call.Enabled = true;
+			Util.MapDebugPrint("elevator is up", true);
+			sleep(1);
+			if(Map.elevator_pos == "moving_up"){
+				Map.elevator_pos = "stopped_top";
+				sleep(2);
+				if(Map.elevator_pos == "stopped_top"){
+					Map.elevator_pos = "top";
+					Map.Switches.elevator_up_call.Enabled = false;
+					Map.Switches.elevator_up_in.Enabled = true;
+				}
+			}
 		}
 		else if(vel.y > 0){
-			//Util.MapDebugPrint("elevator is moving down");
+			Util.MapDebugPrint("elevator is moving down", true);
+			Map.elevator_pos = "moving_down";
+			Map.Switches.elevator_up_call.Enabled = true;
 			Map.Switches.elevator_up_in.Enabled = false;
 		}
 	},
@@ -139,16 +167,26 @@ global Map =
 	{
 		vel = ToVector(trigger.Action);
 		if(vel.y < 0){
-			//Util.MapDebugPrint("elevator is down");
-			sleep(1.7);
-			Map.Switches.elevator_down_call.Enabled = false;
-			Map.Switches.elevator_down_in.Enabled = true;
-			sleep(2);
-			Map.Switches.elevator_up_call.Enabled = true;
+			Util.MapDebugPrint("elevator is down", true);
+			sleep(1);
+			if(Map.elevator_pos == "moving_down"){
+				Map.elevator_pos = "stopped_bottom";
+				sleep(2);
+				if(Map.elevator_pos == "stopped_bottom"){
+					Map.elevator_pos = "bottom";
+					Map.Switches.elevator_down_call.Enabled = false;
+					Map.Switches.elevator_down_in.Enabled = true;
+				}
+			}
 		}
 		else if(vel.y > 0){
-			//Util.MapDebugPrint("elevator is moving up");
+			Util.MapDebugPrint("elevator is moving up", true);
+			Map.elevator_pos = "moving_up";
+			Map.Switches.elevator_down_call.Enabled = true;
 			Map.Switches.elevator_down_in.Enabled = false;
+		}
+		else if(Map.elevator_pos == "start"){
+			Map.elevator_pos = "moving_down";
 		}
 	},
 

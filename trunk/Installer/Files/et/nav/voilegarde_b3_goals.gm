@@ -905,6 +905,9 @@ global _MG =
 		Name = "BUILD_Truck",
 		Offsets = 
 		{
+			[0] = Vec3(-1.283, -161.625, -32.375),
+			[1] = Vec3(-76.125, -26.686, -32.375),
+			[2] = Vec3(76.125, -7.441, -32.375),
 		},
 		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-1588.000, -5192.000, -162.000),
@@ -915,6 +918,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "Truck",
 		TeamAvailability = 4,
+		Vehicle = "MOVER_truck",
 		Version = 1,
 	},
 	BUILD_Truck_Barrier = 
@@ -2369,7 +2373,7 @@ global _MG =
 		Range = 0,
 		SerialNum = 514,
 		TagName = "truck",
-		TeamAvailability = 30,
+		TeamAvailability = 0,
 		Vehicle = "MOVER_truck",
 		Version = 1,
 	},

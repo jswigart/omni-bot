@@ -387,6 +387,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_serpentine" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_axis_foward_hut" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_forward_spawn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_forward_spawn.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_ladder_switch" );
@@ -412,6 +414,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Grate_Door" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_antenna4" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_antenna7" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_main_door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_rear_gate" );
 
 		Util.MapDebugPrint( "Serpentine_Barricade_Destroyed" );
 	},
@@ -472,6 +476,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_castle.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_castle.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_antenna.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_antenna.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_336" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis_Castle_MG" );
@@ -693,6 +698,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_tunnelentrance" ); // roled defenders have better cover inside
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_serpentine" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_axis_foward_hut" );
 
 	SetGoalPriority( "MOUNTMG42_Bridge_MG", 0.71, TEAM.ALLIES );
 	SetGoalPriority( "MOUNTMG42_.*", 0.6, TEAM.ALLIES, CLASS.ENGINEER );

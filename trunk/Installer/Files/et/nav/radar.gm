@@ -161,8 +161,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.FirstAxisEng && !Map.AxisShiftedToParts ) {
-			Map.FirstAxisEng.ChangeSpawnPoint(3);
+		if ( Map.FirstAxisEng ) {
+			Map.FirstAxisEng.crucialClass = null;
+			if (!Map.AxisShiftedToParts){ Map.FirstAxisEng.ChangeSpawnPoint(3); }
+			Map.FirstAxisEng = null;
 		}
 
 		Util.MapDebugPrint( "axis_radio_built_Built" );
@@ -809,6 +811,7 @@ global OnBotJoin = function( bot )
 	if ( bot.GetTeam() == TEAM.AXIS ) {
 		if ( !Map.FirstAxisEng ) {
 			bot.SetRoles(ROLE.DEFENDER3, ROLE.DEFENDER1);
+			bot.crucialClass = CLASS.ENGINEER;
 			bot.ChangeClass(CLASS.ENGINEER);
 			bot.ChangeSpawnPoint(5); // cs: will not work on a map_restart
 			Map.FirstAxisEng = bot;

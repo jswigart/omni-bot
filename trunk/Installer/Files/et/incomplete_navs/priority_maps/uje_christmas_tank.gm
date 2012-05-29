@@ -33,23 +33,6 @@ global Map =
 	r1Pos = 0,
 	Debug = 1,
 	
-	EscortVehicle =
-	{
-		Tank =
-		{
-			Enabled = true,
-			EscortVehicleGoalName = "MOVER_tank",
-			LimitTeam = (1<<TEAM.ALLIES),
-			LimitBots = 2,
-//~			Priority = 0.9,
-			Offset =
-			{
-				Vector3(-20,-160,20),
-				Vector3(20,-160,20),
-			}
-		},
-	},
-	
 	r1 =
 	{
 		Name = "r1",
@@ -199,6 +182,7 @@ global Map =
 	
 	wall2_blown = function( trigger )
 	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_presents.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_presents.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Presents" );

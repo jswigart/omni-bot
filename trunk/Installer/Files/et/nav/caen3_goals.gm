@@ -727,6 +727,13 @@ global _MG =
 		Name = "BUILD_Tank",
 		Offsets = 
 		{
+			[0] = Vec3(-98.126, -113.016, -37.152),
+			[1] = Vec3(-98.126, -12.539, -37.949),
+			[2] = Vec3(-98.126, 86.980, -38.739),
+			[3] = Vec3(98.124, 76.700, -37.829),
+			[4] = Vec3(99.202, -11.055, -37.107),
+			[5] = Vec3(98.134, -114.508, -36.884),
+			[6] = Vec3(-0.162, -195.471, -36.562),
 		},
 		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(767.000, 1808.000, 310.000),
@@ -735,6 +742,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "Tank",
 		TeamAvailability = 2,
+		Vehicle = "MOVER_tank",
 		Version = 1,
 	},
 	CAPPOINT_996 = 

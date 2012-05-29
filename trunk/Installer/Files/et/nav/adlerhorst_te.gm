@@ -33,10 +33,6 @@ global Map =
 	Sewer_Entrance_Dyno = 0,
 	Tank_Barrier_Dyno = 0,
 	bridge_Dyno = 0,
-	Switches_callup_Enabled = false,
-	Switches_in_top_Enabled = false,
-	Switches_calldown_Enabled = false,
-	Switches_in_bot_Enabled = false,
 	bridge_Built = false,
 	Tank_Barrier_Built = false,
 	tankzoneTrigger = false,
@@ -49,10 +45,9 @@ global Map =
 	doortopstatus = false, //closed
 	doorbotstatus = false, //closed
 	lift1Pos = "bottom", //lift at bottom
+	lift1Moving = false,
 	docs_Taken = false,
 	docs_Reurned = false,
-	doortopstatus = false, //closed
-	doorbotstatus = false, //closed
 	Tank_Built = true, //Built at Start
 
 	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
@@ -116,30 +111,20 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "callup",
-			LimitBots = 1,
-			PressOnce = true,
-			Timeout = 1500,
-			LimitTeam = 0, // disabled initially.
+			Timeout = 22000,
 			AimPosition = Vec3(-4476.618, -7115.125 ,4064.090),
 			// /bot waypoint_setproperty paththrough UseSwitch_PT:callup
+			ExitConditions =
+			{
+				f = function(bot){
+					return Map.lift1Moving && Map.lift1Pos == "bottom";
+				}
+			},
 			Wait = function()
 			{
-				if ( Map.doortopstatus == true && Map.lift1Pos == "top")
-				{
-					sleep(0.5);
-					return true;
-				}
-				else if ( Map.doortopstatus == false && Map.lift1Pos == "top")
-				{
-					sleep(1.5);
-					return true;
-				}
-				else if ( Map.lift1Pos == "moving" )
-				{
-					sleep(17);
-					return true;
-				}
-				return false;
+				if(Map.lift1Moving){ return false; }
+				sleep(2);
+				return true;
 			},
 		},
 		in_top =
@@ -147,30 +132,12 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "in_top",
-			LimitBots = 1,
-			PressOnce = true,
-			Timeout = 1500,
-			LimitTeam = 0, // disabled initially.
+			Timeout = 3500,
 			AimPosition = Vec3(-4552.427, -6960.125, 4064.761),
 			// /bot waypoint_setproperty paththrough UseSwitch_PT:in_top
 			Wait = function()
 			{
-				if ( Map.doortopstatus == true && Map.lift1Pos == "top" )
-				{
-					sleep(0.5);
-					return true;
-				}
-				else if ( Map.doortopstatus == false && Map.lift1Pos == "top" )
-				{
-					sleep(1.5);
-					return true;
-				}
-				else if ( Map.lift1Pos == "moving" )
-				{
-					sleep(17);
-					return true;
-				}
-				return false;
+				return !Map.lift1Moving;
 			},
 		},
 		calldown =
@@ -178,30 +145,20 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "calldown",
-			LimitBots = 1,
-			PressOnce = true,
-			Timeout = 1500,
-			LimitTeam = 0, // disabled initially.
+			Timeout = 22000,
 			AimPosition = Vec3(-4601.875, -6887.567, 1216.112),
 			// /bot waypoint_setproperty paththrough UseSwitch_PT:calldown
+			ExitConditions =
+			{
+				f = function(bot){
+					return Map.lift1Moving && Map.lift1Pos == "top";
+				}
+			},
 			Wait = function()
 			{
-				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom")
-				{
-					sleep(0.5);
-					return true;
-				}
-				else if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom")
-				{
-					sleep(1.5);
-					return true;
-				}
-				else if ( Map.lift1Pos == "moving" )
-				{
-					sleep(17);
-					return true;
-				}
-				return false;
+				if(Map.lift1Moving){ return false; }
+				sleep(2);
+				return true;
 			},
 		},
 		in_bot =
@@ -209,31 +166,12 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "in_bot",
-			LimitBots = 1,
-			PressOnce = true,
-			Timeout = 1500,
-			LimitTeam = 0, // disabled initially.
-			AimPosition = Vec3(-4552.246, 7063.875, 1216.423),
+			Timeout = 3500,
+			AimPosition = Vec3(-4552.246, -7063.875, 1216.423),
 			// /bot waypoint_setproperty paththrough UseSwitch_PT:in_bot
 			Wait = function()
 			{
-				if ( Map.doorbotstatus == true && Map.lift1Pos == "bottom" )
-				{
-					sleep(0.5);
-					return true;
-
-				}
-				else if ( Map.doorbotstatus == false && Map.lift1Pos == "bottom" )
-				{
-					sleep(1.5);
-					return true;
-				}
-				else if ( Map.lift1Pos == "moving" )
-				{
-					sleep(17);
-					return true;
-				}
-				return false;
+				return !Map.lift1Moving;
 			},
 		},
 	},
@@ -241,40 +179,31 @@ global Map =
 	//lift
 	lift1 = function(trigger)
 	{
-		Map.lift1Pos = "moving";
-		Map.Switches.callup.Disabled = true;
-		Map.Switches.in_top.Disabled= true;
-		Map.Switches.calldown.Disabled = true;
-		Map.Switches.in_bot.Disabled = true;
-		Map.Switches.e1_top1.LimitTeam = 0;
-		Map.Switches.e1_top2.LimitTeam = 0;
-		Map.Switches.e1_bot1.LimitTeam = 0;
-		Map.Switches.e1_bot2.LimitTeam = 0;
-		doortopstatus = false; //closed
-		doorbotstatus = false; //closed
-		Util.MapDebugPrint("lift moving");
+		Util.MapDebugPrint("lift moving", true);
+		Map.Switches.in_top.Enabled = false;
+		Map.Switches.in_bot.Enabled = false;
 
-		sleep(17);
+		Map.lift1Moving = true;
+		sleep(15.3);
+		Map.lift1Moving = false;
 
-		vel = ToVector(trigger.Action);
-
-		if (vel.z < 0)
+		z = ToVector(trigger.Action).z;
+		if (z < 0)
 		{
 			Map.lift1Pos = "bottom";
-			Map.Switches.calldown.Enabled = true;
+			Util.MapDebugPrint("lift at bottom", true);
+			sleep(2);
 			Map.Switches.in_bot.Enabled = true;
-
-			Util.MapDebugPrint("lift at bottom");
 		}
-		else if (vel.z > 0)
+		else if (z > 0)
 		{
 			Map.lift1Pos = "top";
-			Map.Switches.callup.Enabled = true;
+			Util.MapDebugPrint("lift at top", true);
+			sleep(2);
 			Map.Switches.in_top.Enabled = true;
-
-			Util.MapDebugPrint("lift at top");
 		}
 	},
+
 	//lift doors
 	lowerliftdoor = function( trigger )
 	{
@@ -282,19 +211,15 @@ global Map =
 		{
 			Map.doorbotstatus = true; //open
 			Map.Switches.calldown.Enabled = false;
-			Map.Switches.in_bot.Enabled = false;
-			Wp.SetWaypointFlag("bot","closed",false);
 
-			Util.MapDebugPrint("Bottom Door Open");
+			Util.MapDebugPrint("Bottom Door Open", true);
 		}
 		else if ( trigger.Action == "closing" )
 		{
 			Map.doorbotstatus = false; //closed
 			Map.Switches.calldown.Enabled = true;
-			Map.Switches.in_bot.Enabled = true;
-			Wp.SetWaypointFlag("bot","closed",true);
 
-			Util.MapDebugPrint("Bottom Door Closed");
+			Util.MapDebugPrint("Bottom Door Closed", true);
 		}
 	},
 	upperliftdoor = function( trigger )
@@ -303,19 +228,15 @@ global Map =
 		{
 			Map.doortopstatus = true; //open
 			Map.Switches.callup.Enabled = false;
-			Map.Switches.in_top.Enabled = false;
-			Wp.SetWaypointFlag("top","closed",false);
 
-			Util.MapDebugPrint("Top Door Open");
+			Util.MapDebugPrint("Top Door Open", true);
 		}
 		else if ( trigger.Action == "closing" )
 		{
 			Map.doortopstatus = false; //closed
 			Map.Switches.callup.Enabled = true;
-			Map.Switches.in_top.Enabled = true;
-			Wp.SetWaypointFlag("top","closed",true);
 
-			Util.MapDebugPrint("Top Door Closed");
+			Util.MapDebugPrint("Top Door Closed", true);
 		}
 	},
 	//lift end
@@ -700,13 +621,8 @@ global Map =
 		Map.Switches.in_top.Enabled = true;
 		Map.Switches.calldown.Enabled = true;
 		Map.Switches.in_bot.Enabled = true;
-		Map.Switches.callup.LimitTeam = (1<<TEAM.ALLIES);
-		Map.Switches.in_top.LimitTeam = (1<<TEAM.ALLIES);
-		Map.Switches.calldown.LimitTeam = (1<<TEAM.ALLIES);
-		Map.Switches.in_bot.LimitTeam = (1<<TEAM.ALLIES);
-		Wp.SetWaypointFlag("LIFT_A","closed",false); //open the way to the lift
-		Wp.SetWaypointFlag("top","closed",false);
-		Wp.SetWaypointFlag("bot","closed",false);
+		Wp.SetWaypointFlag("in_top","closed",false);
+		Wp.SetWaypointFlag("in_bot","closed",false);
 		//Bots don't use lift till controls built
 		Util.EnableGoal( "FLAG.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lift.*" );
@@ -745,18 +661,13 @@ global Map =
 
 		Map.Elevator_Controls_Dyno = 0;
 
-		Map.Switches.callup.Disabled = true;
-		Map.Switches.in_top.Disabled= true;
-		Map.Switches.calldown.Disabled = true;
-		Map.Switches.in_bot.Disabled = true;
-		Map.Switches.e1_top1.LimitTeam = 0;
-		Map.Switches.e1_top2.LimitTeam = 0;
-		Map.Switches.e1_bot1.LimitTeam = 0;
-		Map.Switches.e1_bot2.LimitTeam = 0;
+		Map.Switches.callup.Enabled = false;
+		Map.Switches.in_top.Enabled= false;
+		Map.Switches.calldown.Enabled = false;
+		Map.Switches.in_bot.Enabled = false;
 
-		Wp.SetWaypointFlag("LIFT_A","closed",true); //close the way to the lift
-		Wp.SetWaypointFlag("top","closed",true);
-		Wp.SetWaypointFlag("bot","closed",true);
+		Wp.SetWaypointFlag("in_top","closed",true);
+		Wp.SetWaypointFlag("in_bot","closed",true);
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lift.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docs.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Elevator_Controls" );
@@ -1323,9 +1234,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_ZONE.*");
-	Wp.SetWaypointFlag("LIFT_A","closed",true);
-	Wp.SetWaypointFlag("top","closed",true);
-	Wp.SetWaypointFlag("bot","closed",true);
+	Wp.SetWaypointFlag("in_top","closed",true);
+	Wp.SetWaypointFlag("in_bot","closed",true);
 //Add Use Wp
 	Util.AddUseWp("PLANT_Assault_Ramp", "ramp");
 	Util.AddUseWp("PLANT_Assault_Ramp", "ramp1");

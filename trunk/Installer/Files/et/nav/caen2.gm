@@ -34,6 +34,7 @@ global Map =
 	GateStatus = 1, //intact
 	DocStatus = 0, //home
 	FlagStatus = 0, //0 none, 1 axis, 2 allies
+	DefendingTeam = TEAM.ALLIES,
 
 	TankAtBridge = false,
 	TankOverBridge = false,
@@ -424,6 +425,7 @@ global Map =
 		//open up the doc defense
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_docs.*" );
 
+		docs_trigger = OnTriggerRegion( AABB(-343,5212,273,97,5509,399), RegionTrigger.IntrusionWarning );
 		Util.MapDebugPrint( "Wall_Breach" );
 	},
 
@@ -535,7 +537,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_docs.*", 0.6);
 	SetGoalPriority( "ATTACK_phase2.*", 0.6);
 	SetGoalPriority( Map.Flag_maps, 0.66 );
-	SetGoalPriority( Map.Cappoint_708, 0.66 );
+	SetGoalPriority( Map.Cappoint_708, 0.9 );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, 0, CLASS.ENGINEER );
 
 	//clear all goals for both teams

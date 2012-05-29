@@ -1,0 +1,34 @@
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 3000;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+	
+	bot.SetGoalProperty("SNIPE", "MinCampTime", 30);
+	bot.SetGoalProperty("SNIPE", "MaxCampTime", 50);
+	
+};
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class != CLASS.COVERTOPS )
+		{ bot.ChangeClass( CLASS.COVERTOPS ); }
+
+	if ( team == TEAM.ALLIES )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.GARAND );
+		weapon = bot.GetWeapon( WEAPON.GARAND );
+		//weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+	else if ( team == TEAM.AXIS )
+	{
+		bot.ChangePrimaryWeapon( WEAPON.K43 );
+		weapon = bot.GetWeapon( WEAPON.K43 );
+		//weapon.PrimaryFire.SetDesirabilityRange(500, 6000, 0.8);
+	}
+};

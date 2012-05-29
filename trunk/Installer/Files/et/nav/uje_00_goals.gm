@@ -689,7 +689,7 @@ global _MG =
 		Position = Vec3(-152.000, 856.000, 264.000),
 		Radius = 0,
 		SerialNum = 272,
-		Stance = "crouch",
+		Stance = "prone",
 		TagName = "Bridge",
 		TeamAvailability = 2,
 		Version = 1,
@@ -747,6 +747,10 @@ global _MG =
 		Name = "BUILD_UJE_tank",
 		Offsets = 
 		{
+			[0] = Vec3(-29.243, -166.795, -25.798),
+			[1] = Vec3(32.042, -166.306, -25.806),
+			[2] = Vec3(-83.273, 67.517, -23.396),
+			[3] = Vec3(82.125, 64.337, -23.501),
 		},
 		Orientation = Vec3(-1.571, -0.030, -0.000),
 		Position = Vec3(-2748.870, -2695.547, 150.102),
@@ -755,6 +759,7 @@ global _MG =
 		Stance = "crouch",
 		TagName = "UJE tank",
 		TeamAvailability = 2,
+		Vehicle = "MOVER_tank",
 		Version = 1,
 	},
 	BUILD_supplies = 
@@ -1533,7 +1538,7 @@ global _MG =
 		MinRadius = 32,
 		Name = "DEFEND_fuel_w1",
 		Orientation = Vec3(2.077, -0.092, -0.000),
-		Position = Vec3(-469.192, -2865.921, 545.125),
+		Position = Vec3(-437.283, -2727.955, 228.571),
 		Radius = 32,
 		SerialNum = 362,
 		Stance = "stand",
@@ -1548,7 +1553,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.975, -0.026, -0.220),
+			[0] = Vec3(-0.935, -0.212, -0.284),
 		},
 		CreateOnLoad = 1,
 		GoalType = "Defend",
@@ -1558,7 +1563,7 @@ global _MG =
 		MinRadius = 32,
 		Name = "DEFEND_fuel_w2",
 		Orientation = Vec3(1.597, -0.221, -0.000),
-		Position = Vec3(-486.109, -3407.819, 545.125),
+		Position = Vec3(30.297, -2569.386, 576.125),
 		Radius = 32,
 		SerialNum = 364,
 		Stance = "stand",
@@ -1573,7 +1578,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.949, -0.247, -0.196),
+			[0] = Vec3(-0.052, 0.995, -0.089),
 		},
 		CreateOnLoad = 1,
 		GoalType = "Defend",
@@ -1583,7 +1588,7 @@ global _MG =
 		MinRadius = 32,
 		Name = "DEFEND_fuel_w3",
 		Orientation = Vec3(1.826, -0.198, -0.000),
-		Position = Vec3(-475.251, -3144.185, 545.125),
+		Position = Vec3(-1585.344, -3289.882, 167.679),
 		Radius = 32,
 		SerialNum = 378,
 		Stance = "stand",
