@@ -65,6 +65,7 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "IgnoreTarget", gmfIgnoreTargetForTime /*gmfIgnoreTarget*/ )
 	GMBIND_FUNCTION( "GetWeapon", gmfGetWeapon )
 	GMBIND_FUNCTION( "GetHighLevelGoalName", gmfGetHighLevelGoalName )
+	GMBIND_FUNCTION( "GetMapGoalName", gmfGetMapGoalName )
 	GMBIND_FUNCTION( "SetRoles", gmfSetRoles )
 	GMBIND_FUNCTION( "ClearRoles", gmfClearRoles )
 	GMBIND_FUNCTION( "HasRole", gmfHasRole )
@@ -1968,6 +1969,29 @@ int gmBot::gmfGetHighLevelGoalName(gmThread *a_thread)
 	else
 		a_thread->PushNull();
 
+	return GM_OK;
+}
+
+int gmBot::gmfGetMapGoalName(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(0);
+	using namespace AiState;
+	FINDSTATE(hl,HighLevel,native->GetStateRoot());
+	if(hl != NULL)
+	{
+		State *state = hl->GetActiveState();
+		if(state)
+		{
+			MapGoal *g = state->GetMapGoalPtr();
+			if(g)
+			{
+				a_thread->PushNewString(g->GetName().c_str());
+				return GM_OK;
+			}
+		}
+	}
+	a_thread->PushNull();
 	return GM_OK;
 }
 

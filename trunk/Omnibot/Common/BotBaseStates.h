@@ -290,6 +290,7 @@ namespace AiState
 		GoalState GetGoalState() const { return m_GoalState; }
 
 		void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		// FollowPathUser
@@ -320,6 +321,7 @@ namespace AiState
 		StateStatus Update(float fDt);
 
 		//void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		// FollowPathUser

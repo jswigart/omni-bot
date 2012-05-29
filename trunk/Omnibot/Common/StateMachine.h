@@ -242,6 +242,7 @@ public:
 	// Debug
 	virtual void RenderDebug() {}
 	virtual void GetDebugString(StringStr &out) {}
+	virtual MapGoal *GetMapGoalPtr() { return NULL; }
 
 #ifdef ENABLE_DEBUG_WINDOW
 	virtual void RenderDebugWindow(gcn::DrawInfo drawinfo);

@@ -28,6 +28,11 @@ namespace AiState
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
 
+	MapGoal *PlantMine::GetMapGoalPtr()
+	{
+		return m_MapGoal.get();
+	}
+
 	void PlantMine::RenderDebug()
 	{
 		if(IsActive())
@@ -235,6 +240,11 @@ namespace AiState
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
 
+	MapGoal *MobileMortar::GetMapGoalPtr()
+	{
+		return m_MapGoal.get();
+	}
+
 	void MobileMortar::RenderDebug()
 	{
 		if(IsActive())
@@ -417,6 +427,11 @@ namespace AiState
 	void CallArtillery::GetDebugString(StringStr &out)
 	{
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	}
+
+	MapGoal *CallArtillery::GetMapGoalPtr()
+	{
+		return m_MapGoal.get();
 	}
 
 	void CallArtillery::RenderDebug()
@@ -706,6 +721,11 @@ namespace AiState
 		out << 
 			(m_MapGoal ? m_MapGoal->GetName() : "") <<
 			" (" << m_HealthPriority << "," << m_AmmoPriority << ")";
+	}
+
+	MapGoal *UseCabinet::GetMapGoalPtr()
+	{
+		return m_MapGoal.get();
 	}
 
 	void UseCabinet::RenderDebug()
