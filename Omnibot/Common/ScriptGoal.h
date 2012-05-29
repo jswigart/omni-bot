@@ -142,6 +142,7 @@ namespace AiState
 
 		MapGoalPtr &GetMapGoal() { return m_MapGoal; }
 		void SetMapGoal(MapGoalPtr &_mg) { m_MapGoal = _mg; m_Tracker.Reset(); }
+		MapGoal *GetMapGoalPtr() { return m_MapGoal.get(); }
 
 		void SetParentName(const char *_str);
 		String GetParentName() const;

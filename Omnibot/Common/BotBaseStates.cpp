@@ -66,6 +66,11 @@ namespace AiState
 			out << std::endl << m_MapGoalCap->GetName();
 	}
 
+	MapGoal *CaptureTheFlag::GetMapGoalPtr()
+	{
+		return m_MapGoalFlag ? m_MapGoalFlag.get() : m_MapGoalCap.get();
+	}
+
 	void CaptureTheFlag::RenderDebug()
 	{
 		if(m_MapGoalFlag)
@@ -507,6 +512,11 @@ namespace AiState
 	{
 		return "";
 	}*/
+
+	MapGoal *ReturnTheFlag::GetMapGoalPtr()
+	{
+		return m_MapGoal.get();
+	}
 
 	void ReturnTheFlag::RenderDebug()
 	{

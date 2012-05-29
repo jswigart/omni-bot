@@ -20,6 +20,7 @@ namespace AiState
 	public:
 
 		void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -53,6 +54,7 @@ namespace AiState
 	{
 	public:
 		void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -91,6 +93,7 @@ namespace AiState
 	public:
 
 		void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -137,6 +140,7 @@ namespace AiState
 		};
 
 		void GetDebugString(StringStr &out);
+		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		obReal GetPriority();

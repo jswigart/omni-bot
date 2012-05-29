@@ -58,6 +58,7 @@ public:
 	static int gmfGetSkills(gmThread *a_thread);
 	static int gmfGetStat(gmThread *a_thread);
 	static int gmfGetHighLevelGoalName(gmThread *a_thread);
+	static int gmfGetMapGoalName(gmThread *a_thread);
 	static int gmfSetRoles(gmThread *a_thread);
 	static int gmfClearRoles(gmThread *a_thread);
 	static int gmfHasRole(gmThread *a_thread);
