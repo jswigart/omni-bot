@@ -30,6 +30,8 @@ bool ET_FilterClosest::CheckEx(const MemoryRecord &_record)
 			GameEntity mounted = InterfaceFuncs::GetMountedPlayerOnMG42(m_Client, _record.GetEntity());
 			if(!mounted.IsValid() || m_Client->IsAllied(mounted))
 				return false;
+			MemoryRecord *record2 = m_Client->GetSensoryMemory()->GetMemoryRecord(mounted);
+			if(record2 && record2->ShouldIgnore()) return false;
 			break;
 		}
 	case ET_CLASSEX_BREAKABLE:
