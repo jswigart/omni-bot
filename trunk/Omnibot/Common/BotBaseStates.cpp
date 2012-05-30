@@ -68,7 +68,7 @@ namespace AiState
 
 	MapGoal *CaptureTheFlag::GetMapGoalPtr()
 	{
-		return m_MapGoalFlag ? m_MapGoalFlag.get() : m_MapGoalCap.get();
+		return m_MapGoalCap ? m_MapGoalCap.get() : m_MapGoalFlag.get();
 	}
 
 	void CaptureTheFlag::RenderDebug()
