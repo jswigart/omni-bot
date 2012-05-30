@@ -1018,18 +1018,20 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 
 	if(_args.size() < 2)
 	{
-		EngineFuncs::ConsoleError("axis not specified, valid axis are x,y,z");
+		EngineFuncs::ConsoleError("axis not specified, valid axis are x,y,z (rotation) or m (mirror)");
 		return;
 	}
 
 	bool bUsePlayer = false;
-	bool bAxis[3] = { false, false, false };
+	bool bAxis[4] = { false, false, false, false };
 	if(_args[1].find('x') != std::string::npos)
 		bAxis[0] = true;
 	else if(_args[1].find('y') != std::string::npos)
 		bAxis[1] = true;
 	else if(_args[1].find('z') != std::string::npos)
 		bAxis[2] = true;
+	if(_args[1].find('m') != std::string::npos)
+		bAxis[3] = true;
 	if(_args.size() == 3 && _args[2].find('p') != std::string::npos)
 		bUsePlayer = true;
 
@@ -1037,7 +1039,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 	if(bUsePlayer)
 		g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPlayerPos);
 
-	if(!bAxis[0] && !bAxis[1] && !bAxis[2])
+	if(!bAxis[0] && !bAxis[1] && !bAxis[2] && !bAxis[3])
 	{
 		EngineFuncs::ConsoleError("invalid axis specified.");
 		return;
@@ -1107,11 +1109,17 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 				Matrix3f mat(vAxis, Mathf::DegToRad(180.0f));
 				pWp->m_Position = mat * pWp->m_Position;
 				pWp->m_Facing = mat * pWp->m_Facing;
-
-				if(bUsePlayer)
-					pWp->m_Position += vPlayerPos;
 			}
 		}
+		// Mirror the waypoint.
+		if(bAxis[3])
+		{
+			pWp->m_Position.y = -pWp->m_Position.y;
+			pWp->m_Facing.y = -pWp->m_Facing.y;
+		}
+		if(bUsePlayer)
+			pWp->m_Position += vPlayerPos;
+
 		mirroredWaypoints.push_back(pWp);
 	}
 
