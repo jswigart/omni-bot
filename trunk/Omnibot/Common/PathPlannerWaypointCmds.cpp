@@ -657,6 +657,8 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 
 			if(pClosest->GetPropertyMap().AddProperty(propertyName, propertyValue))
 			{
+				if(propertyName == "paththrough") pClosest->PostLoad();
+
 				EngineFuncs::ConsoleMessage(va("property set: %s, %s", 
 					propertyName.c_str(), propertyValue.c_str()));
 			}
@@ -716,6 +718,8 @@ void PathPlannerWaypoint::cmdWaypointClearProperty(const StringVector &_args)
 			propertyName = _args[1];
 			std::transform(propertyName.begin(), propertyName.end(), propertyName.begin(), toLower());
 			pClosest->GetPropertyMap().DelProperty(propertyName);
+
+			if(propertyName == "paththrough") pClosest->PostLoad();
 			return;
 		}
 	}
