@@ -480,7 +480,9 @@ namespace AiState
 		obReal GetPriority();
 		void Enter();
 		Main();
+		void OnSpawn();
 	private:
+		bool	m_OnSpawnCalled;
 	};
 
 	//////////////////////////////////////////////////////////////////////////

@@ -2153,7 +2153,8 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	Main::Main() 
-		: StateSimultaneous("Main") 
+		: StateSimultaneous("Main"),
+		m_OnSpawnCalled(false)
 	{
 		AppendState(new LowLevel);
 		AppendState(new HighLevel);		
@@ -2170,8 +2171,16 @@ namespace AiState
 
 	void Main::Enter()
 	{
-		GetRootState()->OnSpawn();
+		if(!m_OnSpawnCalled)
+			GetRootState()->OnSpawn();
+		m_OnSpawnCalled = false;
 		GetClient()->SendEvent(MessageHelper(MESSAGE_SPAWN));
+	}
+
+	void Main::OnSpawn()
+	{
+		m_OnSpawnCalled = true;
+		State::OnSpawn();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
