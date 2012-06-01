@@ -535,20 +535,11 @@ namespace AiState
 
 			if(!m_MapGoal)
 			{
-				GoalManager::Query qry(0xbdeaa8d7 /* flag */, GetClient());
-				qry.Team(0); // get flag for all teams.
+				GoalManager::Query qry(0xa06840e5 /* flagreturn */, GetClient());
 				GoalManager::GetInstance()->GetGoals(qry);
 				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
 				{
 					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-						continue;
-
-					// skip flags available to me. in theory, any unavailable flag is mine
-					// and can be recovered by me.
-					if(qry.m_List[i]->IsAvailable(iMyTeam))
-						continue;
-
-					if(!qry.m_List[i]->GetAvailableFlags().AnyFlagSet())
 						continue;
 
 					if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
