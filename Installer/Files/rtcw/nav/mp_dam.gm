@@ -15,6 +15,9 @@ global Map =
 	Repair_168 = "REPAIRMG42_168",
 	DontDispenseAmmo = true,
 	Suicide = MAP_SUICIDE,
+	// Maybe fixes error: couldent find a spawn point?
+	// Set to false to disable window breaking.
+	ReduceEntities = true,
 
 	FlagStatus = 0,
 	LowerStatus = 0,
@@ -635,6 +638,46 @@ global OnMapLoad = function()
 	if ( Map.Suicide ) {
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
 	}
+	if(Map.ReduceEntities)
+	{
+		EntityKill(413);
+		EntityKill(418);
+		EntityKill(419);
+		EntityKill(417);
+		EntityKill(416);
+		EntityKill(415);
+		EntityKill(632);
+		EntityKill(400);
+		EntityKill(401);
+		EntityKill(402);
+		EntityKill(635);
+		EntityKill(634);
+		EntityKill(562);
+		EntityKill(561);
+		EntityKill(563);
+		EntityKill(565);
+		EntityKill(404);
+		EntityKill(173);
+		EntityKill(396);
+		EntityKill(618);
+		EntityKill(617);
+		EntityKill(619);
+		EntityKill(558);
+		EntityKill(184);
+		EntityKill(693);
+		EntityKill(611);
+		EntityKill(564);
+		EntityKill(210);
+		EntityKill(175);
+		EntityKill(174);
+		/*i = 63;
+		while (i < 1024)
+		{
+			EntityKill(i);
+			i += 1;
+		}*/
+	}
+	
 	Util.MapDebugPrint( "OnMapLoad" );
 	
 };
