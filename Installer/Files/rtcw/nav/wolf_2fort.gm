@@ -1,8 +1,8 @@
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0, // please set to zero before distributing your script
 	ShowMovers = false,
-	DispenseAmmoTime = 10,
+	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	
 	Airstrike =
@@ -188,7 +188,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWatchtower.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPlant.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rmg.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Entrance" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Teams_Documents" );
@@ -196,7 +195,6 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bPlant.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bmg.*" );
 
 	MapRoutes =
 	{
