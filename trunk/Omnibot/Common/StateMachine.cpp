@@ -1063,6 +1063,7 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 {
 	State *pBestState = NULL;
 	float fBestPriority = 0.f;
+	int iBestRand = 0;
 
 #ifdef _DEBUG
 	const int N = 64; // cs: was 32
@@ -1086,10 +1087,24 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		NumPriorities++;
 #endif
 
-		if(fPriority > fBestPriority)
+		if(fPriority >= fBestPriority)
 		{
-			fBestPriority = fPriority;
-			pBestState = pState;
+			if(fPriority > fBestPriority)
+			{
+				fBestPriority = fPriority;
+				pBestState = pState;
+				iBestRand = 0;
+			}
+			else if(fPriority > 0)
+			{
+				int iRand = rand();
+				if (iBestRand == 0) iBestRand = rand();
+				if (iRand > iBestRand)
+				{
+					iBestRand = iRand;
+					pBestState = pState;
+				}
+			}
 		}
 	}
 
@@ -1098,7 +1113,6 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 	// on equal priorities
 	if ( m_CurrentState ) {
 		if ( m_CurrentState->GetLastPriority() >= fBestPriority ) {
-			fBestPriority = m_CurrentState->GetLastPriority();
 			pBestState = m_CurrentState;
 		}
 	}	
