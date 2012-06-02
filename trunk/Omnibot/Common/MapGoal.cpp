@@ -1528,8 +1528,8 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	GoalTable->Set(_machine,"MinRadius",gmVariable(m_MinRadius));
 	GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
 	GoalTable->Set(_machine,"CreateOnLoad",gmVariable(m_CreateOnLoad));
-	GoalTable->Set(_machine,"RandomUsePoint",gmVariable(m_RandomUsePoint));
-	GoalTable->Set(_machine,"Range",gmVariable(m_Range));
+	if(m_RandomUsePoint) GoalTable->Set(_machine,"RandomUsePoint",gmVariable(m_RandomUsePoint));
+	if(m_Range) GoalTable->Set(_machine,"Range",gmVariable(m_Range));
 
 	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&m_Bounds,true);
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
