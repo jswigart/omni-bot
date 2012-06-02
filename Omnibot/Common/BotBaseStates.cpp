@@ -531,8 +531,6 @@ namespace AiState
 	{
 		if(!m_MapGoal)
 		{
-			const int iMyTeam = GetClient()->GetTeam();
-
 			if(!m_MapGoal)
 			{
 				GoalManager::Query qry(0xa06840e5 /* flagreturn */, GetClient());
