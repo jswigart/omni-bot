@@ -443,7 +443,8 @@ void State::InternalProcessEvent(const MessageHelper &_message, CallbackParamete
 			int ThreadId = _cb.CallFunction(pFunc, varThis, !_cb.CallImmediate());
 			
 			// add it to the tracking list for management of its lifetime.
-			if(ThreadId != GM_INVALID_THREAD)
+			// don't add thread if AlwaysRecieveEvents=true, because events REVIVED, CHANGETEAM, DEATH would not be executed
+			if(ThreadId != GM_INVALID_THREAD && !AlwaysRecieveEvents())
 				AddForkThreadId(ThreadId);
 		}
 	}
