@@ -855,12 +855,19 @@ static int _GetEntityClass( gentity_t *_ent ) {
 				return RTCW_CLASSEX_AIRSTRIKE;
 			}
 			break;
+		case WP_SMOKETRAIL:
 		case WP_ARTY:
-			return RTCW_CLASSEX_ARTY;
+			// cs: the airstrike bombs are also wp_arty. added aiName so a new client wouldn't
+			//     need to be distributed.
+			// TODO: fix this properly if a new client will be included in a release.
+			if ( _ent->aiName && !Q_strncmp( _ent->aiName, "artillery", sizeof( "artillery" ) ) ) {
+			    return RTCW_CLASSEX_ARTY;
+			}
+			break;
 		case WP_DYNAMITE:
 			return RTCW_CLASSEX_DYNAMITE;
 		default:
-			if ( !Q_strncmp( _ent->classname, "air strike", sizeof( "air strike" ) ) ) {
+			if ( _ent->aiName && !Q_strncmp( _ent->aiName, "air strike", sizeof( "air strike" ) ) ) {
 				return RTCW_CLASSEX_AIRSTRIKE;
 			}
 		}
