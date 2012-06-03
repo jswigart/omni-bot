@@ -42,9 +42,9 @@ this.Initialize = function()
 	this.ATTACK_SAYATTACK		= this.Frequency * 0.5;
 };
 
-this.Randomize = function(frequency, isBot)
+this.Randomize = function(frequency, source)
 {
-	if ( this.OnlyRespondToHumans == true && isBot != null ) {
+	if ( this.OnlyRespondToHumans && Util.IsBot(source) ) {
 		return false;
 	}
 
@@ -97,14 +97,13 @@ this.GetPriority = function()
 this.Events[EVENT.TEAM_VOICE] = function(source, id)
 {
 	cls = this.Bot.GetClass();
-	isBot = Util.IsBot(source);
 
 	switch(id)
 	{
 		case VOICE.THANKS:
 		{
 			if ( cls == CLASS.MEDIC || cls == CLASS.FIELDOPS
-				&& this.Randomize(this.TEAMTHANKS_SAYWELCOME, isBot) == true )
+				&& this.Randomize(this.TEAMTHANKS_SAYWELCOME, source) == true )
 			{
 				pos = GetEntPosition(source);
 				if ( pos && this.Bot.DistanceTo( pos ) < 80 ) {
@@ -115,7 +114,7 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 		}
 		case VOICE.NEED_ENGINEER:
 		{
-			if ( cls == CLASS.ENGINEER && this.Randomize(this.NEEDENG_SAYENG, isBot) == true )
+			if ( cls == CLASS.ENGINEER && this.Randomize(this.NEEDENG_SAYENG, source) == true )
 			{
 				this.Bot.SayVoice(VOICE.IMA_ENGINEER);
 			}
@@ -123,7 +122,7 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 		}
 		case VOICE.NEED_MEDIC:
 		{
-			if ( cls == CLASS.MEDIC && this.Randomize(this.NEEDMED_SAYMED, isBot) == true )
+			if ( cls == CLASS.MEDIC && this.Randomize(this.NEEDMED_SAYMED, source) == true )
 			{
 				this.Bot.SayVoice(VOICE.IMA_MEDIC);
 			}
@@ -131,7 +130,7 @@ this.Events[EVENT.TEAM_VOICE] = function(source, id)
 		}
 		case VOICE.NEED_OPS:
 		{
-			if ( cls == CLASS.COVERTOPS && this.Randomize(this.NEEDOPS_SAYOPS, isBot) == true )
+			if ( cls == CLASS.COVERTOPS && this.Randomize(this.NEEDOPS_SAYOPS, source) == true )
 			{
 				this.Bot.SayVoice(VOICE.IMA_COVERTOPS);
 			}
@@ -219,9 +218,8 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(source, id)
 
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
-	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
-		&& this.Randomize(this.REVIVED_SAYTHANKS, isBot ) == true )
+		&& this.Randomize(this.REVIVED_SAYTHANKS, whoDoneIt ) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
 	}
@@ -229,9 +227,8 @@ this.Events[EVENT.REVIVED] = function(whoDoneIt)
 
 this.Events[EVENT.HEALED] = function(whoDoneIt)
 {
-	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
-		&& this.Randomize(this.HEALED_SAYTHANKS, isBot) == true )
+		&& this.Randomize(this.HEALED_SAYTHANKS, whoDoneIt) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
 	}
@@ -239,9 +236,8 @@ this.Events[EVENT.HEALED] = function(whoDoneIt)
 
 this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 {
-	isBot = Util.IsBot(whoDoneIt);
 	if ( whoDoneIt != this.Bot.GetGameEntity()
-		&& this.Randomize(this.AMMO_SAYTHANKS, isBot) == true )
+		&& this.Randomize(this.AMMO_SAYTHANKS, whoDoneIt) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
 	}
@@ -250,15 +246,14 @@ this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 {
 	if (!this.Bot) { return; }
-	isBot = Util.IsBot(victim);
 
 	if ( this.Bot.KillingForRevive == true ) { return; }
 
 	if ( this.Bot.IsAllied( victim ) && victim != this.Bot.GetGameEntity() )
 	{
-		if( this.Randomize(this.TEAMKILL_SAYSORRY, isBot) == true )
+		if( this.Randomize(this.TEAMKILL_SAYSORRY, victim) == true )
 			{ this.Bot.SayVoice( VOICE.SORRY ); }
-		else if ( this.Randomize(this.TEAMKILL_SAYOOPS, isBot) == true )
+		else if ( this.Randomize(this.TEAMKILL_SAYOOPS, victim) == true )
 			{ this.Bot.SayVoice( VOICE.OOPS ); }
 
 		return;
@@ -267,7 +262,7 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 	// cheer the revenge
 	if ( this.LastKiller && this.LastKiller == victim )
 	{
-		if ( this.Randomize(this.REVENGE_CHEER, isBot) == true )
+		if ( this.Randomize(this.REVENGE_CHEER, victim) == true )
 		{
 			this.Bot.SayVoice( VOICE.G_CHEER );
 		}
@@ -278,7 +273,7 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 
 	if ( mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN" )
 	{
-		if ( this.Randomize(this.KNIFEKILL_CHEER, isBot) == true )
+		if ( this.Randomize(this.KNIFEKILL_CHEER, victim) == true )
 		{
 			this.Bot.SayVoice( VOICE.G_CHEER );
 		}
@@ -292,17 +287,15 @@ this.Events[EVENT.DEATH] = function(attacker, mod)
 	if ( !this.Bot || GetGameIdFromEntity(attacker) > 63 )
 		{ return;}
 
-	isBot = Util.IsBot(attacker);
-
 	if ( !this.Bot.IsAllied( attacker ) )
 	{
 		this.LastKiller = attacker;
 
 		if ( (mod == "MOD_KNIFE_STEALTH" || mod == "MOD_KNIFE" || mod == "MOD_KNIFE_THROWN") )
 		{
-			if ( this.Randomize(this.KNIFEDEATH_GREATSHOT, isBot) == true )
+			if ( this.Randomize(this.KNIFEDEATH_GREATSHOT, attacker) == true )
 				{ this.Bot.SayVoice( VOICE.G_GREATSHOT ); }
-			else if ( this.Randomize(this.KNIFEDEATH_NEGATIVE, isBot) == true )
+			else if ( this.Randomize(this.KNIFEDEATH_NEGATIVE, attacker) == true )
 				{ this.Bot.SayVoice( VOICE.G_NEGATIVE ); }
 
 			return;
@@ -315,15 +308,15 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	if ( GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
-	isBot = Util.IsBot(Inflictor);
-	if ( isBot && isBot.KillingForRevive == true ) {
-		return;
-	}
-
 	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)
 		&& Inflictor != this.Bot.GetGameEntity()  )
 	{
-		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, isBot) == true )
+		isBot = Util.IsBot(Inflictor);
+		if ( isBot && isBot.KillingForRevive == true ) {
+			return;
+		}
+
+		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, Inflictor) == true )
 		{
 			if ( this.Bot.HasEntityFlag( ENTFLAG.DISGUISED ) )
 				{ this.Bot.SayVoice( VOICE.IMA_COVERTOPS ); }
@@ -350,15 +343,13 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 		return;
 	}
 
-	isBot = Util.IsBot(WhoSaidIt);
-
 	if(VoiceId == VOICE.G_BYE
-		&& this.Randomize(this.GOODBYE_SAYGOODBYE, isBot) == true)
+		&& this.Randomize(this.GOODBYE_SAYGOODBYE, WhoSaidIt) == true)
 	{
 		this.Bot.SayVoice(VOICE.G_BYE);
 	}
 	else if(VoiceId == VOICE.G_HI
-		&& this.Randomize(this.HELLO_SAYHELLO, isBot) == true)
+		&& this.Randomize(this.HELLO_SAYHELLO, WhoSaidIt) == true)
 	{
 		this.Bot.SayVoice(VOICE.G_HI);
 	}

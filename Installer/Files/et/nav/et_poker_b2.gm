@@ -44,26 +44,24 @@ global Map =
 
 	DestroyBreakable = function(_this, position, facing)
 	{
-		name = "breakable" + _this.CurrentNavigation;
-		if (!Map[name]){
-			Map[name] = true;
-			ent = TraceLine( position, position + 200*facing, 0, TRACE.SHOT, _this.Bot.GetGameId(), false ).entity;
-			if(ent)
-			{
-				id = GetGameIdFromEntity(ent);
-				Util.MapDebugPrint("destroying breakable " + id, true);
-				_this.Bot.HoldButton(BTN.FORWARD, 6);
-				_this.AddAimRequest(Priority.High, "facing", facing);
-				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
-				_this.BlockForWeaponChange(WEAPON.KNIFE);
-				for(j=0; j<30; j+=1) {
-					if (!EntityIsValid(id)){ return; }
-					_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-					if(facing.z < -0.7){ _this.Bot.HoldButton(BTN.CROUCH, 0.4); }
-					sleep(0.5);
-				}
-				Map[name] = null;
+		name = "breakable_" + _this.CurrentNavigation;
+		Map[name] = true;
+		ent = TraceLine( position, position + 200*facing, 0, TRACE.SHOT, _this.Bot.GetGameId(), false ).entity;
+		if(ent)
+		{
+			id = GetGameIdFromEntity(ent);
+			Util.MapDebugPrint("destroying breakable " + id, true);
+			_this.Bot.HoldButton(BTN.FORWARD, 6);
+			_this.AddAimRequest(Priority.High, "facing", facing);
+			_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+			_this.BlockForWeaponChange(WEAPON.KNIFE);
+			for(j=0; j<30; j+=1) {
+				if (!EntityIsValid(id)){ return; }
+				_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+				if(facing.z < -0.7){ _this.Bot.HoldButton(BTN.CROUCH, 0.4); }
+				sleep(0.5);
 			}
+			Map[name] = null;
 		}
 		sleep(2.5);
 	},
@@ -95,18 +93,38 @@ global Map =
 		}},
 
 		//breakables
-		x_hole = { navigate = function(t){
-			Map.DestroyBreakable(t, Vec3(1.525, 2153.875, -256.125), Vec3(0.019, 0.561, 0.828));
-		}},
-		l_hole = { navigate = function(t){
-			Map.DestroyBreakable(t, Vec3(1.321, -2153.875, -256.125), Vec3(-0.008, -0.525, 0.851));
-		}},
-		x_low_ladder = { navigate = function(t){
-			Map.DestroyBreakable(t, Vec3(438.249, 1001.875, -565.658), Vec3(-0.023, 0.320, 0.947));
-		}},
-		l_low_ladder = { navigate = function(t){
-			Map.DestroyBreakable(t, Vec3(435.646, -1001.871, -561.887), Vec3(0.024, -0.453, 0.891));
-		}},
+		x_hole = {
+			EvalFunc = function(t){ 
+				return !Map.breakable_x_hole;
+			},
+			navigate = function(t){ 
+				Map.DestroyBreakable(t, Vec3(1.525, 2153.875, -256.125), Vec3(0.019, 0.561, 0.828));
+			}
+		},
+		l_hole = { 
+			EvalFunc = function(t){ 
+				return !Map.breakable_l_hole;
+			},
+			navigate = function(t){
+				Map.DestroyBreakable(t, Vec3(1.321, -2153.875, -256.125), Vec3(-0.008, -0.525, 0.851));
+			}
+		},
+		x_low_ladder = { 
+			EvalFunc = function(t){ 
+				return !Map.breakable_x_low_ladder;
+			},
+			navigate = function(t){
+				Map.DestroyBreakable(t, Vec3(438.249, 1001.875, -565.658), Vec3(-0.023, 0.320, 0.947));
+			}
+		},
+		l_low_ladder = { 
+			EvalFunc = function(t){ 
+				return !Map.breakable_l_low_ladder;
+			},
+			navigate = function(t){
+				Map.DestroyBreakable(t, Vec3(435.646, -1001.871, -561.887), Vec3(0.024, -0.453, 0.891));
+			}
+		},
 
 		//ammo and health boxes
 		health1x = {navigate=function(t){

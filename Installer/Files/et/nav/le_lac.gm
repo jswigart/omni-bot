@@ -192,26 +192,24 @@ global Map =
 
 	DestroyBreakable = function(_this, position, facing)
 	{
-		name = "breakable" + _this.CurrentNavigation;
-		if (!Map[name]){
-			Map[name] = true;
-			ent = TraceLine( position, position + 200*facing, 0, TRACE.SHOT, _this.Bot.GetGameId(), false ).entity;
-			if(ent)
-			{
-				id = GetGameIdFromEntity(ent);
-				Util.MapDebugPrint("destroying breakable " + id, true);
-				_this.Bot.HoldButton(BTN.FORWARD, 6);
-				_this.AddAimRequest(Priority.High, "facing", facing);
-				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
-				_this.BlockForWeaponChange(WEAPON.KNIFE);
-				for(j=0; j<30; j+=1) {
-					if (!EntityIsValid(id)){ return; }
-					_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-					if(facing.z < -0.7){ _this.Bot.HoldButton(BTN.CROUCH, 0.4); }
-					sleep(0.5);
-				}
-				Map[name] = null;
+		name = "breakable_" + _this.CurrentNavigation;
+		Map[name] = true;
+		ent = TraceLine( position, position + 200*facing, 0, TRACE.SHOT, _this.Bot.GetGameId(), false ).entity;
+		if(ent)
+		{
+			id = GetGameIdFromEntity(ent);
+			Util.MapDebugPrint("destroying breakable " + id, true);
+			_this.Bot.HoldButton(BTN.FORWARD, 6);
+			_this.AddAimRequest(Priority.High, "facing", facing);
+			_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+			_this.BlockForWeaponChange(WEAPON.KNIFE);
+			for(j=0; j<30; j+=1) {
+				if (!EntityIsValid(id)){ return; }
+				_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+				if(facing.z < -0.7){ _this.Bot.HoldButton(BTN.CROUCH, 0.4); }
+				sleep(0.5);
 			}
+			Map[name] = null;
 		}
 		sleep(3);
 	},
@@ -251,24 +249,36 @@ global Map =
 			}
 		},
 		sewer_hatch = {
+			EvalFunc = function(t){ 
+				return !Map.breakable_sewer_hatch;
+			},
 			navigate = function(_this)
 			{
 				Map.DestroyBreakable(_this, Vector3(-2235.844, -1241.875, 807.015), Vector3(0, -0.184, 0.983));
 			}
 		},
 		hatch_fuel1 = {
+			EvalFunc = function(t){ 
+				return !Map.breakable_hatch_fuel1;
+			},
 			navigate = function(_this)
 			{
 				Map.DestroyBreakable(_this, Vector3(-154.126, 2071.415, 659.089), Vector3(0.214, 0, 0.977));
 			}
 		},
 		hatch_fuel2 = {
+			EvalFunc = function(t){ 
+				return !Map.breakable_hatch_fuel2;
+			},
 			navigate = function(_this)
 			{
 				Map.DestroyBreakable(_this, Vector3(-160.332, 2882.322, 648.125), Vector3(0.215, 0.015, 0.976));
 			}
 		},
 		hatch_fuel2top = {
+			EvalFunc = function(t){ 
+				return !Map.breakable_hatch_fuel2top;
+			},
 			navigate = function(_this)
 			{
 				Map.DestroyBreakable(_this, Vector3(-169.874, 2889.875, 764.247), Vector3(-0.029, 0.022, -0.999));

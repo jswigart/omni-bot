@@ -68,18 +68,18 @@ global Map =
 			navigate = function(_this)
 			{
 				botId = _this.Bot.GetGameId();
-				while(1) {
+				for(i=0; i<15; i+=1) {
 					// cs: note: the second to last param as the bots own id makes sure the trace ignores the bot
 					tr = TraceLine(Map.doorStart, Map.doorEnd, null, TRACE.SHOT, botId, false);
 					if (tr.fraction < 1) {
-						yield();
+						sleep(0.2);
 					}
 					else {
+						if(i>0){ sleep(0.4); }
 						break;
 					}
 				}
 				
-				sleep(0.5);
 				//_this.Bot.Say("door is open");
 			},
 		},

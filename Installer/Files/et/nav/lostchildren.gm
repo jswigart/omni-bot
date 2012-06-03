@@ -46,9 +46,11 @@ global Map =
 			_this.Bot.HoldButton(BTN.FORWARD, 2.5);
 			sleep(2.5);
 		}},
-		grate = { navigate = function(_this) { //second boat access breakable
-			if(!Map.sideGrateDestroyed)
-			{
+		grate = { //second boat access breakable
+			EvalFunc = function(t){ 
+				return !Map.sideGrateDestroyed;
+			},
+			navigate = function(_this) {
 				_this.Bot.HoldButton(BTN.FORWARD, 3);
 				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
 				_this.BlockForWeaponChange(WEAPON.KNIFE);
@@ -64,9 +66,9 @@ global Map =
 				}
 				_this.ReleaseWeaponRequest();
 				_this.ReleaseAimRequest();
+				sleep(3);
 			}
-			sleep(3);
-		}},
+		},
 	},
 
 	Second_Access =

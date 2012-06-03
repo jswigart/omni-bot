@@ -450,6 +450,18 @@ this.UpdateHealWithNeedle = function()
 
 this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 {
+	packType = null;
+	if(macroId == VOICE.NEED_AMMO && this.Bot.GetClass() == CLASS.FIELDOPS) {
+		packType = WEAPON.AMMO_PACK;
+	}
+	else if(macroId == VOICE.NEED_MEDIC && this.Bot.GetClass() == CLASS.MEDIC) {
+		packType = WEAPON.MEDKIT;
+	}
+	else
+	{ 
+		return;
+	}
+	
 	if(this.IsActive() || this.DelayNextResponse)
 	{
 		return;
@@ -460,15 +472,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		return;
 	}
 
-	packType = null;
-	if(macroId == VOICE.NEED_AMMO && this.Bot.GetClass() == CLASS.FIELDOPS) {
-		packType = WEAPON.AMMO_PACK;
-	}
-	else if(macroId == VOICE.NEED_MEDIC && this.Bot.GetClass() == CLASS.MEDIC) {
-		packType = WEAPON.MEDKIT;
-	}
-
-	if (packType && this.Bot.IsWeaponCharged(packType)) {
+	if (this.Bot.IsWeaponCharged(packType)) {
 		this.TargetEntity = whoSaidIt;
 		this.Supply = packType;
 

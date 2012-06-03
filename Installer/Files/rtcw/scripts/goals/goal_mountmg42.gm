@@ -76,6 +76,12 @@ this.Update = function()
 			this.Finished();
 		}
 
+		// bot can't shoot if he mounts mg42 while reloading,
+		// because RELOADING entity flag is not cleared (probably bug in the interface)
+		while (this.Bot.HasEntityFlag(ENTFLAG.RELOADING)) {
+			sleep(0.2);
+		}
+		
 		timeout = 0;
 		while( timeout < this.CampTime )
 		{

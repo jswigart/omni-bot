@@ -16,42 +16,74 @@ global Map =
 	monsterPos = 0,
 
 	//paththrough to avoid red monster
-	NavM = function(_this, p1,p2, x1,y1,z1, x2,y2,z2)
+	NavM = function(_this, x1,y1,z1, x2,y2,z2)
 	{
-		if(Map.monsterPos>=p1 && Map.monsterPos<=p2){
-			_this.Goto(Vec3(x1,y1,z1));
-			_this.Goto(Vec3(x2,y2,z2));
-		}else{
-			sleep(2);
-		}
+		_this.Goto(Vec3(x1,y1,z1));
+		_this.Goto(Vec3(x2,y2,z2));
 	},
 
 	Navigation =
 	{
-		monster_sw = {navigate=function(_this){
-			Map.NavM(_this, 2,5, 794.601, 1880.551, 24.125,
+		monster_sw = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=2 && Map.monsterPos<=5;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 794.601, 1880.551, 24.125,
 				2556.482, 1897.436, 24.125);
-		}},
-		monster_s = {navigate=function(_this){
-			Map.NavM(_this, 3,4, 794.601, 1880.551, 24.125,
+			}
+		},
+		monster_s = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=3 && Map.monsterPos<=4;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 794.601, 1880.551, 24.125,
 				2556.482, 1897.436, 24.125);
-		}},
-		monster_e = {navigate=function(_this){
-			Map.NavM(_this, 2,3, 2503.585, 1253.081, 28.125,
+			}
+		},
+		monster_e = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=2 && Map.monsterPos<=3;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 2503.585, 1253.081, 28.125,
 				2519.882, 1798.793, 28.125);
-		}},
-		monster_ne = {navigate=function(_this){
-			Map.NavM(_this, 1,2, 2556.482, 1897.436, 24.125,
+			}
+		},
+		monster_ne = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=1 && Map.monsterPos<=2;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 2556.482, 1897.436, 24.125,
 				794.601, 1880.551, 24.125);
-		}},
-		monster_nw = {navigate=function(_this){
-			Map.NavM(_this, 6,7, 1098.783, 2567.899, 28.125,
+			}
+		},
+		monster_nw = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=6 && Map.monsterPos<=7;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 1098.783, 2567.899, 28.125,
 				810.520, 2330.407, 24.125);
-		}},
-		monster_w = {navigate=function(_this){
-			Map.NavM(_this, 5,6, 794.601, 1880.551, 24.125,
+			}
+		},
+		monster_w = {
+			EvalFunc = function(_this)
+			{ 
+				return Map.monsterPos>=5 && Map.monsterPos<=6;
+			},
+			navigate=function(_this){
+				Map.NavM(_this, 794.601, 1880.551, 24.125,
 				804.725, 1248.878, 28.125);
-		}},
+			}
+		},
 	},
 
 	monsterscript_goto = function( trigger )

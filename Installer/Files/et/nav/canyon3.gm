@@ -92,13 +92,15 @@ global Map =
 		l12 = {navigate=function(t){
 			Map.NavL(t, 0.5, 0.5, 0.5);
 		}},
-		centerflag = {navigate=function(_this){
-			if(_this.Bot.GetTeam() != Map.forwardFlag){
+		centerflag = {
+			EvalFunc = function(_this)
+			{
+				return _this.Bot.GetTeam() != Map.forwardFlag;
+			},
+			navigate=function(_this){
 				_this.Goto(Vector3(-171.719, -1510.005, 5087.556));
-			}else{
-				sleep(1);
 			}
-		}},
+		},
 	},
 
 	Roles =

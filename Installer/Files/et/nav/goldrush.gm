@@ -74,30 +74,26 @@ global Map =
 		rnadehall =
 		{
 			wpInfo = Util.WpNameInfo("rNadeHall"),
+			EvalFunc = function(_this)
+			{
+				return Map.spamnades && Map.rnadehall_bots < 1 && Map.start_of_map && _this.Bot.HasAmmo(WEAPON.AXIS_GRENADE);
+			},
 			navigate = function(_this)
 			{
-				if ( Map.spamnades && Map.rnadehall_bots < 1 && Map.start_of_map && _this.Bot.HasAmmo(WEAPON.AXIS_GRENADE) )
+				Map.rnadehall_bots += 1;
+
+				_this.AddAimRequest(Priority.High, "facing", Map.Navigation.rnadehall.wpInfo.facing);
+				_this.AddWeaponRequest(Priority.High, WEAPON.AXIS_GRENADE );
+
+				if ( _this.Goto(Map.Navigation.rnadehall.wpInfo.position) == EVENT.PATH_SUCCESS )
 				{
-					Map.rnadehall_bots += 1;
-
-					_this.AddAimRequest(Priority.High, "facing", Map.Navigation.rnadehall.wpInfo.facing);
-					_this.AddWeaponRequest(Priority.High, WEAPON.AXIS_GRENADE );
-
-					if ( _this.Goto(Map.Navigation.rnadehall.wpInfo.position) == EVENT.PATH_SUCCESS )
-					{
-						_this.BlockForWeaponChange( WEAPON.AXIS_GRENADE );
-						_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-						sleep(1);
-					}
-
-					Map.rnadehall_bots -= 1;
-					yield();
-				}
-				else
-				{
+					_this.BlockForWeaponChange( WEAPON.AXIS_GRENADE );
+					_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
 					sleep(1);
 				}
 
+				Map.rnadehall_bots -= 1;
+				yield();
 			},
 		},
 
