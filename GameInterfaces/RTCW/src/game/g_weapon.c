@@ -813,6 +813,7 @@ void weapon_callAirStrike( gentity_t *ent ) {
 		bomb->damage        = 400; // maybe should un-hard-code these?
 		bomb->splashDamage  = 400;
 		bomb->classname             = "air strike";
+		bomb->aiName		    = "air strike";
 		bomb->splashRadius          = 400;
 		bomb->methodOfDeath         = MOD_AIRSTRIKE;
 		bomb->splashMethodOfDeath   = MOD_AIRSTRIKE;
@@ -994,6 +995,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 			bomb->s.weapon      = WP_ARTY; // might wanna change this
 			bomb->r.ownerNum    = ent->s.number;
 			bomb->parent        = ent;
+			bomb->aiName	    = "artillery";
 
 			if ( i == 0 ) {
 				bomb->nextthink = level.time + 5000;
@@ -1019,6 +1021,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 				bomb->splashDamage  = 400;
 				bomb->splashRadius  = 400;
 			}
+			bomb->aiName		    = "artillery";
 			bomb->methodOfDeath         = MOD_AIRSTRIKE;
 			bomb->splashMethodOfDeath   = MOD_AIRSTRIKE;
 			bomb->clipmask = MASK_MISSILESHOT;
@@ -1061,6 +1064,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 			bomb2->damage       = 0;
 			bomb2->nextthink = bomb->nextthink - 600;
 			bomb2->classname = "air strike";
+			bomb2->aiName	 = "artillery";
 			bomb2->clipmask = MASK_MISSILESHOT;
 			bomb2->s.pos.trType = TR_STATIONARY; // was TR_GRAVITY,  might wanna go back to this and drop from height
 			bomb2->s.pos.trTime = level.time;       // move a bit on the very first frame
@@ -1548,9 +1552,6 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 	}
 	// jpw
 
-	// let the AI know which grenade it has fired
-	ent->grenadeFired = m->s.number;
-
 	// Ridah, return the grenade so we can do some prediction before deciding if we really want to throw it or not
 	return m;
 }
@@ -1981,7 +1982,7 @@ void FireWeapon( gentity_t *ent ) {
 	break;
 	// -NERVE - SMF
 	case WP_ARTY:
-		G_Printf( "calling artilery\n" );
+		//G_Printf( "calling artilery\n" );
 		break;
 	case WP_MEDIC_SYRINGE:
 		Weapon_Syringe( ent );

@@ -335,7 +335,6 @@ struct gentity_s {
 	int count2;
 
 	int grenadeExplodeTime;         // we've caught a grenade, which was due to explode at this time
-	int grenadeFired;               // the grenade entity we last fired
 
 	char        *track;
 
