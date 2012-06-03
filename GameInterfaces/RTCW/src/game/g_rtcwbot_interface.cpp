@@ -854,6 +854,7 @@ static int _GetEntityClass( gentity_t *_ent ) {
 			if ( !(_ent->r.svFlags & SVF_SMOKEGRENADE) ) {
 				return RTCW_CLASSEX_AIRSTRIKE;
 			}
+			break;
 		case WP_ARTY:
 			return RTCW_CLASSEX_ARTY;
 		case WP_DYNAMITE:
