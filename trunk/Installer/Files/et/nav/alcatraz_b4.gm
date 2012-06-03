@@ -24,30 +24,30 @@ global Map =
 	{
 		grate1 =
 		{
+			EvalFunc = function(_this)
+			{
+				return !Map.grateDoor1Opened && _this.Bot.GetTeam()==TEAM.AXIS;
+			},
 			navigate = function(_this)
 			{
-				if(!Map.grateDoor1Opened && _this.Bot.GetTeam()==TEAM.AXIS){
-					_this.AddAimRequest(Priority.High, "position", Vector3(2259.587, -505.125, 843.902));
-					_this.Goto(Vector3(2260.560, -539.842, 808.125));
-					sleep(0.5);
-					_this.Bot.PressButton(BTN.USE);
-				}else{
-					sleep(2);
-				}
+				_this.AddAimRequest(Priority.High, "position", Vector3(2259.587, -505.125, 843.902));
+				_this.Goto(Vector3(2260.560, -539.842, 808.125));
+				sleep(0.5);
+				_this.Bot.PressButton(BTN.USE);
 			}
 		},
 		grate2 =
 		{
+			EvalFunc = function(_this)
+			{
+				return !Map.grateDoor2Opened && _this.Bot.GetTeam()==TEAM.AXIS;
+			},
 			navigate = function(_this)
 			{
-				if(!Map.grateDoor2Opened && _this.Bot.GetTeam()==TEAM.AXIS){
-					_this.AddAimRequest(Priority.High, "position", Vector3(2211.750, 486.875, 845.041));
-					_this.Goto(Vector3(2211.321, 445.769, 808.125));
-					sleep(0.3);
-					_this.Bot.PressButton(BTN.USE);
-				}else{
-					sleep(2);
-				}
+				_this.AddAimRequest(Priority.High, "position", Vector3(2211.750, 486.875, 845.041));
+				_this.Goto(Vector3(2211.321, 445.769, 808.125));
+				sleep(0.3);
+				_this.Bot.PressButton(BTN.USE);
 			}
 		},
 	},

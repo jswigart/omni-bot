@@ -79,53 +79,54 @@ global Map =
 		ladder_2 =	//hatch at pond near axis mg42 at the start
 		{
 			gotowp = "ladder_2", // waypoint for the bot to go to before doing anything else
+			EvalFunc = function(_this)
+			{ 
+				return Map.Crypt_Wall;
+			},
 			navigate = function(_this)
 			{
-				if ( Map.Crypt_Wall )
+				if ( !Map.Hatch3_opening )
 				{
-					if ( !Map.Hatch3_opening )
+					while( !Map.Hatch3_opening )
 					{
-						while( !Map.Hatch3_opening )
-						{
-							_this.AddAimRequest(Priority.High, "position", Vector3(-71.173088, -2512.090576, 16.125677));
-							_this.AddAimRequest(Priority.High, "facing", Vector3(0.575191, 0.099748, -0.811915));
-							sleep(0.3);
-							_this.Bot.PressButton( BTN.USE );
-							Util.MapDebugPrint( "hatch_3 closed => open it" );
-							yield();
-						}
-						
+						_this.AddAimRequest(Priority.High, "position", Vector3(-71.173088, -2512.090576, 16.125677));
+						_this.AddAimRequest(Priority.High, "facing", Vector3(0.575191, 0.099748, -0.811915));
+						sleep(0.3);
+						_this.Bot.PressButton( BTN.USE );
+						Util.MapDebugPrint( "hatch_3 closed => open it" );
+						yield();
+					}
+					
+					sleep(0.5);
+					
+					_this.Bot.HoldButton(BTN.WALK, 1.5);
+					_this.Bot.HoldButton(BTN.CROUCH, 1.5);
+					_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+					sleep(1.5);
+					_this.Bot.ReleaseButton(BTN.WALK);
+					_this.Bot.ReleaseButton(BTN.CROUCH);
+					_this.Bot.ReleaseButton(BTN.FORWARD);
+					_this.ReleaseAimRequest();
+					
+				}
+				else
+				{
+					
+					while ( Map.Hatch3_opening )
+					{
+						Util.MapDebugPrint( "hatch_3 opened => do nothing" );
+						_this.AddAimRequest(Priority.High, "position", Vector3(-71.173088, -2512.090576, 16.125677));
+						_this.AddAimRequest(Priority.High, "facing", Vector3(0.575191, 0.099748, -0.811915));
 						sleep(0.5);
-						
 						_this.Bot.HoldButton(BTN.WALK, 1.5);
 						_this.Bot.HoldButton(BTN.CROUCH, 1.5);
 						_this.Bot.HoldButton(BTN.FORWARD, 1.5);
 						sleep(1.5);
-						_this.Bot.ReleaseButton(BTN.WALK);
-						_this.Bot.ReleaseButton(BTN.CROUCH);
-						_this.Bot.ReleaseButton(BTN.FORWARD);
-						_this.ReleaseAimRequest();
-						
 					}
-					else
-					{
-						
-						while ( Map.Hatch3_opening )
-						{
-							Util.MapDebugPrint( "hatch_3 opened => do nothing" );
-							_this.AddAimRequest(Priority.High, "position", Vector3(-71.173088, -2512.090576, 16.125677));
-							_this.AddAimRequest(Priority.High, "facing", Vector3(0.575191, 0.099748, -0.811915));
-							sleep(0.5);
-							_this.Bot.HoldButton(BTN.WALK, 1.5);
-							_this.Bot.HoldButton(BTN.CROUCH, 1.5);
-							_this.Bot.HoldButton(BTN.FORWARD, 1.5);
-							sleep(1.5);
-						}
-						_this.Bot.ReleaseButton(BTN.WALK);
-						_this.Bot.ReleaseButton(BTN.CROUCH);
-						_this.Bot.ReleaseButton(BTN.FORWARD);
-						_this.ReleaseAimRequest();
-					}
+					_this.Bot.ReleaseButton(BTN.WALK);
+					_this.Bot.ReleaseButton(BTN.CROUCH);
+					_this.Bot.ReleaseButton(BTN.FORWARD);
+					_this.ReleaseAimRequest();
 				}
 			},
 		},
@@ -134,53 +135,54 @@ global Map =
 		ladder_4 =	//hatch near altar
 		{
 			gotowp = "ladder_4", // waypoint for the bot to go to before doing anything else
+			EvalFunc = function(_this)
+			{ 
+				return Map.Crypt_Wall;
+			},
 			navigate = function(_this)
 			{
-				if ( Map.Crypt_Wall )
+				if ( !Map.Hatch2_opening )
 				{
-					if ( !Map.Hatch2_opening )
+					while( !Map.Hatch2_opening )
 					{
-						while( !Map.Hatch2_opening )
-						{
-							_this.AddAimRequest(Priority.High, "position", Vector3(2543.232178, 1063.767334, 16.125000));
-							_this.AddAimRequest(Priority.High, "facing", Vector3(0.550597,-0.035470,-0.834018));
-							sleep(0.3);
-							_this.Bot.PressButton( BTN.USE );
-							Util.MapDebugPrint( "hatch_2 closed => open it" );
-							yield();
-						}
-						
+						_this.AddAimRequest(Priority.High, "position", Vector3(2543.232178, 1063.767334, 16.125000));
+						_this.AddAimRequest(Priority.High, "facing", Vector3(0.550597,-0.035470,-0.834018));
+						sleep(0.3);
+						_this.Bot.PressButton( BTN.USE );
+						Util.MapDebugPrint( "hatch_2 closed => open it" );
+						yield();
+					}
+					
+					sleep(0.5);
+					
+					_this.Bot.HoldButton(BTN.WALK, 1.5);
+					_this.Bot.HoldButton(BTN.CROUCH, 1.5);
+					_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+					sleep(1.5);
+					_this.Bot.ReleaseButton(BTN.WALK);
+					_this.Bot.ReleaseButton(BTN.CROUCH);
+					_this.Bot.ReleaseButton(BTN.FORWARD);
+					_this.ReleaseAimRequest();
+					
+				}
+				else
+				{
+					
+					while ( Map.Hatch2_opening )
+					{
+						Util.MapDebugPrint( "hatch_2 opened => do nothing" );
+						_this.AddAimRequest(Priority.High, "position", Vector3(2537.543945, 1064.134277, 16.125000));
+						_this.AddAimRequest(Priority.High, "facing", Vector3(0.519663,0.152375,-0.840673));
 						sleep(0.5);
-						
 						_this.Bot.HoldButton(BTN.WALK, 1.5);
 						_this.Bot.HoldButton(BTN.CROUCH, 1.5);
 						_this.Bot.HoldButton(BTN.FORWARD, 1.5);
 						sleep(1.5);
-						_this.Bot.ReleaseButton(BTN.WALK);
-						_this.Bot.ReleaseButton(BTN.CROUCH);
-						_this.Bot.ReleaseButton(BTN.FORWARD);
-						_this.ReleaseAimRequest();
-						
 					}
-					else
-					{
-						
-						while ( Map.Hatch2_opening )
-						{
-							Util.MapDebugPrint( "hatch_2 opened => do nothing" );
-							_this.AddAimRequest(Priority.High, "position", Vector3(2537.543945, 1064.134277, 16.125000));
-							_this.AddAimRequest(Priority.High, "facing", Vector3(0.519663,0.152375,-0.840673));
-							sleep(0.5);
-							_this.Bot.HoldButton(BTN.WALK, 1.5);
-							_this.Bot.HoldButton(BTN.CROUCH, 1.5);
-							_this.Bot.HoldButton(BTN.FORWARD, 1.5);
-							sleep(1.5);
-						}
-						_this.Bot.ReleaseButton(BTN.WALK);
-						_this.Bot.ReleaseButton(BTN.CROUCH);
-						_this.Bot.ReleaseButton(BTN.FORWARD);
-						_this.ReleaseAimRequest();
-					}
+					_this.Bot.ReleaseButton(BTN.WALK);
+					_this.Bot.ReleaseButton(BTN.CROUCH);
+					_this.Bot.ReleaseButton(BTN.FORWARD);
+					_this.ReleaseAimRequest();
 				}
 			},
 		},

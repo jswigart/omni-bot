@@ -75,56 +75,56 @@ global Map =
 	{
 		breakgate =
 		{
+			EvalFunc = function(_this)
+			{ 
+				return !Map.BreakableGate;
+			},
 			navigate = function(_this)
 			{
-				if ( !Map.BreakableGate )
+				// cache the info
+				if ( !Map.BreakableGateInfo ) {
+					Map.BreakableGateInfo = Util.WpNameInfo("r_spawnexit_5");
+				}
+
+				if ( _this.Goto(Map.BreakableGateInfo.position) == EVENT.PATH_SUCCESS )
 				{
-					// cache the info
-					if ( !Map.BreakableGateInfo ) {
-						Map.BreakableGateInfo = Util.WpNameInfo("r_spawnexit_5");
-					}
+					_this.AddAimRequest(Priority.High, "facing", Map.BreakableGateInfo.facing);
+					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
+					_this.BlockForWeaponChange( WEAPON.KNIFE );
 
-					if ( _this.Goto(Map.BreakableGateInfo.position) == EVENT.PATH_SUCCESS )
+					while( !Map.BreakableGate )
 					{
-						_this.AddAimRequest(Priority.High, "facing", Map.BreakableGateInfo.facing);
-						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
-						_this.BlockForWeaponChange( WEAPON.KNIFE );
-
-						while( !Map.BreakableGate )
-						{
-							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-							yield();
-						}
+						_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+						yield();
 					}
 				}
-				sleep(1);
 			},
 		},
 		breakdoor =
 		{
+			EvalFunc = function(_this)
+			{ 
+				return !Map.BreakableDoor;
+			},
 			navigate = function(_this)
 			{
-				if ( !Map.BreakableDoor )
+				// cache the info
+				if ( !Map.BreakableDoorInfo ) {
+					Map.BreakableDoorInfo = Util.WpNameInfo("breakdoorpt");
+				}
+
+				if ( _this.Goto(Map.BreakableDoorInfo.position) == EVENT.PATH_SUCCESS )
 				{
-					// cache the info
-					if ( !Map.BreakableDoorInfo ) {
-						Map.BreakableDoorInfo = Util.WpNameInfo("breakdoorpt");
-					}
+					_this.AddAimRequest(Priority.High, "facing", Map.BreakableDoorInfo.facing);
+					_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
+					_this.BlockForWeaponChange( WEAPON.KNIFE );
 
-					if ( _this.Goto(wpinfo.position) == EVENT.PATH_SUCCESS )
+					while( !Map.BreakableDoor )
 					{
-						_this.AddAimRequest(Priority.High, "facing", Map.BreakableDoorInfo.facing);
-						_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE );
-						_this.BlockForWeaponChange( WEAPON.KNIFE );
-
-						while( !Map.BreakableDoor )
-						{
-							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-							yield();
-						}
+						_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+						yield();
 					}
 				}
-				sleep(1);
 			},
 		},
 	},

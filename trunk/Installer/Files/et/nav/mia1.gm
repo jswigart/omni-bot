@@ -44,19 +44,18 @@ global Map =
 		},
 		elevator_call =
 		{
+			EvalFunc = function(_this){ 
+				return Map.elevatorPos==4 && _this.Bot.GetTeam()==TEAM.ALLIES && GetTime()-Map.callElevatorTime > 9;
+			},
 			navigate = function(_this)
 			{
 				//switch button if the elevator is down
-				if (Map.elevatorPos==4 && _this.Bot.GetTeam()==TEAM.ALLIES && GetTime()-Map.callElevatorTime > 9){
-					Map.callElevatorTime = GetTime();
-					_this.Goto(Vector3(120.114, 983.871, -55.875));
-					if (Map.elevatorPos==4){
-						_this.AddAimRequest(Priority.High, "position", Vector3(118.6,1037.8,6.6));
-						sleep(0.3);
-						_this.Bot.PressButton(BTN.USE);
-					}
-				}else{
-					sleep(0.5);
+				Map.callElevatorTime = GetTime();
+				_this.Goto(Vector3(120.114, 983.871, -55.875));
+				if (Map.elevatorPos==4){
+					_this.AddAimRequest(Priority.High, "position", Vector3(118.6,1037.8,6.6));
+					sleep(0.3);
+					_this.Bot.PressButton(BTN.USE);
 				}
 			}
 		},

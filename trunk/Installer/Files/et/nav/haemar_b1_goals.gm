@@ -1421,6 +1421,7 @@ global _MG =
 		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-2416.000, -1824.000, 190.000),
 		Radius = 0,
+		RandomUsePoint = 1,
 		SerialNum = 267,
 		TagName = "Door Controls",
 		TeamAvailability = 4,

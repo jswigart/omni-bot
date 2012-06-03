@@ -370,20 +370,16 @@ member WarpTo = function( _params )
 		return;
 	}
 
-	found = false;
+	pos = null;
 
 	if ( typeName( _params[0] ) == "float" ) // try wp guid first
 	{
 		wpguid = ToInt(_params[0]);
-		wppos = Util.GetWpGUIDPosition(wpguid);
+		pos = Util.GetWpGUIDPosition(wpguid);
 
-		if ( wppos )
+		if ( pos )
 		{
-			found = true;
-			wppos += Vector3(0,0,24);
-			s = "setviewpos " + wppos[0] + " " + wppos[1] + " " + wppos[2] + " " + " 0";
-			print(s);
-			ExecCommandOnClient(GetLocalEntity(), s);
+			pos += Vector3(0,0,24);
 		}
 	}
 	else if ( typeName( _params[0] ) == "string" )
@@ -393,31 +389,42 @@ member WarpTo = function( _params )
 
 		if ( goal )
 		{
-			found = true;
-			goalpos = goal.GetPosition() + Vector3(0,0,24);
-			s = "setviewpos " + goalpos[0] + " " + goalpos[1] + " " + goalpos[2] + " " + " 0";
-			print(s);
-			ExecCommandOnClient(GetLocalEntity(), s);
+			pos = goal.GetPosition() + Vector3(0,0,24);
 		}
-
 		else // try wp name
 		{
 			wp = Util.WpNameInfo(_params[0]);
 			if ( wp && wp.position )
 			{
-				found = true;
-				wp.position += Vector3(0,0,24);
-				s = "setviewpos " + wp.position[0] + " " + wp.position[1] + " " + wp.position[2] + " " + " 0";
-				print(s);
-				ExecCommandOnClient(GetLocalEntity(), s);
+				pos = wp.position + Vector3(0,0,24);
+			}
+			else // try paththrough
+			{
+				wpTable = {};
+				Wp.GetAllWaypoints(wpTable);
+				foreach ( wp in wpTable )
+				{
+					foreach ( flag && name in wp.property )
+					{
+						if ( flag == "paththrough" && name.Right(_params[0].Length() + 1) == ":" + _params[0] ){
+							pos = wp.position;
+						}
+					}
+				}
 			}
 		}
 	}
 	else
 		{ print( "^1ETUtil.WarpTo: Invalid parameter!" ); }
 
-	if ( !found )
-		{ print( "^1ETUtil.Warpto: Invalid goal name, waypoint name, or identifier!^2" ); }
+	if ( pos )
+	{
+		s = "setviewpos " + pos[0] + " " + pos[1] + " " + pos[2] + " " + " 0";
+		print(s);
+		ExecCommandOnClient(GetLocalEntity(), s);
+	}
+	else
+		{ print( "^1ETUtil.Warpto: Invalid goal name, waypoint name, waypoint UID or paththrough name!^2" ); }
 };
 
 member WarpTestBot = function( _params )
@@ -931,7 +938,7 @@ member DrawSpawns = function()
 {
 	for ( i = 64; i < 1024; i = i + 1 )
 	{
-		if (GetEntClass(i) == CLASS.PLAYERSTART)
+		if (EntityIsValid(i) && GetEntClass(i) == CLASS.PLAYERSTART)
 		{
 			pos = GroundPoint(GetEntPosition(i));
 			DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);

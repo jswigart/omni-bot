@@ -23,7 +23,12 @@ this.GetPriority = function()
 		}
 
 		if ( this.JustSpawned ) {
-			sleep( 3.6 );
+			for (i = 0; i < 3; i += 1) {
+				sleep(1.2);
+				// player cannot move while standing up after he is revived,
+				// reset stuck timer to prevent pathfailed errors immediately after revive
+				this.Bot.ResetStuckTime();
+			}
 			this.JustSpawned = false;
 		}
 
