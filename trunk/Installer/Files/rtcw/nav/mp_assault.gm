@@ -280,6 +280,9 @@ global Map =
 			return;
 		}
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+		
+		SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // only arty tower
 
 		if ( Map.GateHatchStatus == false ) {
 			if ( Map.Suicide ) {
@@ -613,7 +616,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_bGarage_[236]", 0.55 );
 	SetGoalPriority( "GRENADE_gatebarrier", 0.81 );
 	SetGoalPriority( "GRENADE_hatch", 0.81 );
-	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.89 );	// Less than the gate flag
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "SWITCH_Gate1", 0.65 );
 	SetGoalPriority( "SWITCH_Gate2", 0.9 );
@@ -946,6 +949,12 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rGate_4 = MapRoutes.CHECKPOINT_flag_respawn_obj;
 	MapRoutes.ATTACK_rGate_5 = MapRoutes.CHECKPOINT_flag_respawn_obj;
 	MapRoutes.ATTACK_rGate_6 = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.GRENADE_rGateSpam1 = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.GRENADE_rGateSpam2 = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.GRENADE_rGateSpam3 = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.AIRSTRIKE_red_as1_gate = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.AIRSTRIKE_red_as2_gate = MapRoutes.CHECKPOINT_flag_respawn_obj;
+	MapRoutes.PLANT_Gate_Hatch = MapRoutes.CHECKPOINT_flag_respawn_obj;
 	MapRoutes.ATTACK_rDoor_1 = MapRoutes.PLANT_Warehouse_Entrance;
 	MapRoutes.ATTACK_rDoor_2 = MapRoutes.PLANT_Warehouse_Entrance;
 	MapRoutes.ATTACK_rDoor_3 = MapRoutes.PLANT_Warehouse_Entrance;
