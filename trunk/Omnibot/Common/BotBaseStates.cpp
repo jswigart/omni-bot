@@ -1086,6 +1086,8 @@ namespace AiState
 		{
 			// _clearuser is true if HighLevel goal was aborted,
 			// don't interrupt active paththrough
+			if(m_SavedQuery.m_User && m_SavedQuery.m_User!=m_Query.m_User) 
+				m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
 			m_SavedQuery.m_User = 0;
 			return;
 		}
@@ -1105,14 +1107,6 @@ namespace AiState
 	void FollowPath::ClearUser()
 	{
 		m_Query.m_User = 0;
-	}
-
-	bool FollowPath::Repath()
-	{
-		bool bFinal = m_Query.m_Final; // save the final state
-		bool b = Goto();
-		m_Query.m_Final = bFinal; // restore it
-		return b;		
 	}
 
 	void FollowPath::CancelPathThrough()
@@ -1195,14 +1189,19 @@ namespace AiState
 		DestinationVector destlist;
 		if(_owner->GetNextDestination(destlist, bFinalDest, _skiplastpt))
 		{
-			bool r = Goto(_owner, destlist, _movemode, _skiplastpt);
-			m_Query.m_Final = bFinalDest; 
-			return r;
+			return Goto(_owner, destlist, _movemode, _skiplastpt, bFinalDest);
 		}
 
-		m_PathStatus = PathNotFound;
-		NotifyUserFailed(FollowPathUser::NoPath);
-		m_Query.m_User = 0;
+		if(_owner == m_Query.m_User)
+		{
+			m_PathStatus = PathNotFound;
+			NotifyUserFailed(FollowPathUser::NoPath);
+			m_Query.m_User = 0;
+		}
+		else
+		{
+			_owner->OnPathFailed(FollowPathUser::NoPath);
+		}
 		return false;
 	}
 
@@ -1229,31 +1228,40 @@ namespace AiState
 		return Goto(_owner, destlist, _movemode, _skiplastpt);
 	}
 
-	bool FollowPath::Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
+	bool FollowPath::Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/, bool _final /*= true*/)
 	{
-		if(m_PassThroughState && _owner->GetFollowUserName() != m_PassThroughState)
+		if (_owner != m_Query.m_User)
 		{
-			// remember current query and don't interrupt active paththrough
-			m_SavedQuery.m_User = _owner;
-			m_SavedQuery.m_Destination = _goals;
-			m_SavedQuery.m_MoveMode = _movemode;
-			m_SavedQuery.m_SkipLastPt = _skiplastpt;
-			return true;
+			if (m_PassThroughState)
+			{
+				if(_owner->GetFollowUserName() != m_PassThroughState)
+				{
+					if (m_SavedQuery.m_User && _owner != m_SavedQuery.m_User)
+						m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
+
+					// remember current query and don't interrupt active paththrough
+					m_SavedQuery.m_User = _owner;
+					m_SavedQuery.m_Destination = _goals;
+					m_SavedQuery.m_MoveMode = _movemode;
+					m_SavedQuery.m_SkipLastPt = _skiplastpt;
+					m_SavedQuery.m_Final = _final;
+					return true;
+				}
+			}
 		}
 
 		m_Query.m_User = _owner;
 		m_Query.m_Destination = _goals;
 		m_Query.m_MoveMode = _movemode;
 		m_Query.m_SkipLastPt = _skiplastpt;
-		return Goto();
+		m_Query.m_Final = _final;
+		return Repath();
 	}
 
-	bool FollowPath::Goto()
+	bool FollowPath::Repath()
 	{
 		if(!m_Query.m_User) return false;
 		m_Query.m_User->ResetPathUser();
-
-		m_Query.m_Final = true;
 
 		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
 		m_Query.m_User->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), m_Query.m_Destination, GetClient()->GetTeamFlag());
@@ -1415,8 +1423,11 @@ namespace AiState
 				if(!pPathThrough || (!pPathThrough->IsActive() && pPathThrough->GetLastPriority()<Mathf::EPSILON))
 				{
 					m_PassThroughState = 0;
-					RestoreQuery();
-					Repath();
+					if(m_Query.m_User != m_SavedQuery.m_User)
+					{
+						RestoreQuery();
+						Repath();
+					}
 				}
 			}
 		}
@@ -1543,9 +1554,8 @@ namespace AiState
 						DestinationVector destlist;
 						if(m_Query.m_User->GetNextDestination(destlist, bFinalDest, bSkipLast))
 						{
-							if(Goto(m_Query.m_User, destlist, m_Query.m_MoveMode, bSkipLast))
+							if(Goto(m_Query.m_User, destlist, m_Query.m_MoveMode, bSkipLast, bFinalDest))
 							{
-								m_Query.m_Final = bFinalDest;
 								return State_Busy;
 							}
 						}

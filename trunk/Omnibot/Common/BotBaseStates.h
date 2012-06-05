@@ -187,7 +187,7 @@ namespace AiState
 		bool Goto(FollowPathUser *_owner, const Vector3f &_pos, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false);
 		bool Goto(FollowPathUser *_owner, const Vector3List &_goals, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false);
 		bool Goto(FollowPathUser *_owner, const MapGoalList &_goals, MoveMode _movemode = Run, bool _skiplastpt = false);
-		bool Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode = Run, bool _skiplastpt = false);
+		bool Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode = Run, bool _skiplastpt = false, bool _final = true);
 		bool Goto(FollowPathUser *_owner, const Path &_path, MoveMode _movemode = Run);
 		void Stop(bool _clearuser = false);
 		void ClearUser();
@@ -259,7 +259,6 @@ namespace AiState
 		// For jump behaviors.
 		float		m_RayDistance;
 
-		bool Goto();
 		bool CheckForMover(const Vector3f &_pos);
 		void CheckForLowJumps(const Vector3f &_destination);
 		void CheckForGapJumps(const Vector3f &_destination);
