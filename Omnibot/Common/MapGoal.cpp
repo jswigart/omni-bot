@@ -808,9 +808,9 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 	{
 		const Route &r = (*cIt);
 		float fDistSq = SquaredLength(_bot->GetPosition(), r.m_Start->GetPosition());
-		if(r.m_Start->IsAvailable(_bot->GetTeam()) &&
+		if( fDistSq < Mathf::Sqr(r.m_Start->GetRadius()) &&
 			r.m_End->IsAvailable(_bot->GetTeam()) &&
-			fDistSq < Mathf::Sqr(r.m_Start->GetRadius()))
+			r.m_Start->IsAvailable(_bot->GetTeam()) )
 		{
 			routes.push_back(r);
 			fTotalWeight += r.m_Weight;
