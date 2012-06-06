@@ -213,10 +213,10 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
 
+	m_Game->LoadGoalScripts(true);
+
 	EngineFuncs::ConsoleMessage(va("Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds()));
 	LOG("Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds.");
-
-	m_Game->LoadGoalScripts(true);
 
 	return BOT_ERROR_NONE;
 }
