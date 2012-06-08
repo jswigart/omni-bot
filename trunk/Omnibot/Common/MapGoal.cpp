@@ -1041,9 +1041,13 @@ void MapGoal::RenderDefault()
 	}
 	if(bf.CheckFlag(DrawInitialAvail))
 	{
-		txtOut += "Initial: ";
-		txtOut += Utils::GetTeamString(m_AvailableTeamsInit.GetRawFlags());
-		txtOut += "\n";
+		// goals created by goal_create command are always initially enabled for all teams
+		if (m_AvailableTeamsInit.GetRawFlags() != 30 || !GetCreateOnLoad())
+		{
+			txtOut += "Initial: ";
+			txtOut += Utils::GetTeamString(m_AvailableTeamsInit.GetRawFlags());
+			txtOut += "\n";
+		}
 	}
 	if(bf.CheckFlag(DrawCurrentAvail))
 	{
