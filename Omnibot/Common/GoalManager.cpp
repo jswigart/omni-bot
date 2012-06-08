@@ -1493,13 +1493,25 @@ void GoalManager::RemoveGoalByEntity(GameEntity _ent)
 
 		if((*it)->GetEntity() == _ent)
 		{
-			OnGoalDelete((*it));
-			(*it)->SetDeleteMe(true);
 			(*it)->SetAvailabilityTeams(0);
+
+			if ((*it)->GetRemoveWithEntity())
+			{
+				OnGoalDelete((*it));
+				(*it)->SetDeleteMe(true);
 #ifdef _DEBUG
-			LOG("Goal Deleted: " << (*it)->GetGoalType() << ", " << (*it)->GetName().c_str());
+				LOG("Goal Deleted: " << (*it)->GetGoalType() << ", " << (*it)->GetName().c_str());
 #endif
-			it = m_MapGoalList.erase(it);
+				it = m_MapGoalList.erase(it);
+			}
+			else
+			{
+				(*it)->SetDisabled(true);
+#ifdef _DEBUG
+				LOG("Goal Disabled: " << (*it)->GetGoalType() << ", " << (*it)->GetName().c_str());
+#endif
+				++it;
+			}
 		}
 		else
 			++it;
