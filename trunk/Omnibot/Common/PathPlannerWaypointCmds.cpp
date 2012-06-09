@@ -117,6 +117,8 @@ void PathPlannerWaypoint::InitCommands()
 		this, &PathPlannerWaypoint::cmdMaxRadius);
 	SetEx("waypoint_slice", "Slices a connection so that it doesn't exceed a specified length.", 
 		this, &PathPlannerWaypoint::cmdWaypointSlice);
+	SetEx("waypoint_split", "Splits a connection to 2 parts at player position.", 
+		this, &PathPlannerWaypoint::cmdWaypointSplit);
 	SetEx("waypoint_ground", "Grounds all waypoints based on the navigation rendering offsets.", 
 		this, &PathPlannerWaypoint::cmdWaypointGround);
 	
@@ -2017,6 +2019,59 @@ void PathPlannerWaypoint::cmdWaypointSlice(const StringVector &_args)
 		}
 	}
 	PRINT_USAGE(strUsage);
+}
+
+void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
+{
+	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
+		return;
+
+	Vector3f p;
+	if(!Utils::GetLocalPosition(p))
+		return;
+
+	ClosestLink l = _GetClosestLink(p,F_NAV_TEAM1|F_NAV_TEAM2|F_NAV_TEAM3|F_NAV_TEAM4);
+	Waypoint *wp0 = l.m_Wp[0]; 
+	Waypoint *wp1 = l.m_Wp[1];
+	if(!wp0 || !wp1)
+	{
+		EngineFuncs::ConsoleError("You must stand at a connection between waypoints.");
+		return;
+	}
+	
+	Vector3f p0 = wp0->GetPosition(); 
+	Vector3f p1 = wp1->GetPosition(); 
+	
+	const float fMid = (g_fTopWaypointOffset + g_fBottomWaypointOffset) / 2;
+	p0 += Vector3f(0.f,0.f,fMid);
+	p1 += Vector3f(0.f,0.f,fMid);
+
+	// find point on connection which is near player
+	Vector3f d = p1 - p0;
+	p = (p-p1).Dot(d) / d.SquaredLength() * d + p1;
+
+	const float minDist = 20;
+	if(Length(p, p0) < minDist || Length(p, p1) < minDist)
+	{
+		EngineFuncs::ConsoleError("You are too close to a waypoint.");
+		return;
+	}
+
+	Vector3f g;
+	if(GroundPosition(g, p)) p = g;
+
+	Waypoint *wp = AddWaypoint(p,Vector3f::ZERO);			
+
+	if(wp0->IsConnectedTo(wp1)){
+		wp0->DisconnectFrom(wp1);
+		wp0->ConnectTo(wp);
+		wp->ConnectTo(wp1);
+	}
+	if(wp1->IsConnectedTo(wp0)){
+		wp1->DisconnectFrom(wp0);
+		wp1->ConnectTo(wp);
+		wp->ConnectTo(wp0);
+	}
 }
 
 void PathPlannerWaypoint::cmdWaypointGround(const StringVector &_args)
