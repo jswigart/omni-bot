@@ -315,6 +315,7 @@ protected:
 	void cmdBoxSelect(const StringVector &_args);
 	void cmdBoxSelectRoom(const StringVector &_args);
 	void cmdWaypointSlice(const StringVector &_args);
+	void cmdWaypointSplit(const StringVector &_args);
 	void cmdWaypointGround(const StringVector &_args);
 
 	Waypoint_Header		m_WaypointHeader;
