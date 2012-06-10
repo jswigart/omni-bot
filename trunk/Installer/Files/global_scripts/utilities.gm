@@ -23,6 +23,11 @@ member GetBotByName = function(name)
 	return null;
 };
 
+member IsHuman = function(ent)
+{
+	return ent != null && GetEntFlags(ent, ENTFLAG.HUMANCONTROLLED);
+};
+
 member IsBot = function(ent)
 {
 	if (ent)

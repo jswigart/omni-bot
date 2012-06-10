@@ -51,7 +51,7 @@ this.Initialize = function()
 
 this.Randomize = function(frequency, source, immediate)
 {
-	if ( this.OnlyRespondToHumans == true && Util.IsBot(source) ) {
+	if ( this.OnlyRespondToHumans == true && !Util.IsHuman(source) ) {
 		return false;
 	}
 
