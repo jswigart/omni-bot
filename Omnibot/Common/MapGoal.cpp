@@ -1530,7 +1530,10 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	GoalTable->Set(_machine,"Position",gmVariable(m_InterfacePosition.IsZero() ? m_Position : m_InterfacePosition));
 	GoalTable->Set(_machine,"Radius",gmVariable(m_Radius));
 	GoalTable->Set(_machine,"MinRadius",gmVariable(m_MinRadius));
-	GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
+	
+	// There's no reason to save SerialNum, because function LoadFromTable never loaded SerialNum from file.
+	//GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
+	
 	GoalTable->Set(_machine,"CreateOnLoad",gmVariable(m_CreateOnLoad));
 	if(m_RandomUsePoint) GoalTable->Set(_machine,"RandomUsePoint",gmVariable(m_RandomUsePoint));
 	if(m_Range) GoalTable->Set(_machine,"Range",gmVariable(m_Range));
@@ -1624,11 +1627,17 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		_err.AddError("Goal.MinRadius Field Missing!");
 		return false;
 	}
-	if(!proptable->Get(_machine,"SerialNum").GetIntSafe(m_SerialNum))
-	{
-		_err.AddError("Goal.SerialNum Field Missing!");
-		return false;
-	}
+	
+	// Command /bot goal_create does not generate unique serial numbers !
+	// If some goals are deleted, then newly created goals can have same serial number as existing goals.
+	// Because serial numbers in the file are not unique, it would be very dangerous to load them.
+	// Fortunatelly, omni-bot never loaded serial numbers from a file, because here is another bug.
+	// Function GetIntSafe cannot change value of m_SerialNum, because parameter is not passed by reference (see declaration in gmVariable.h)
+	//if(!proptable->Get(_machine,"SerialNum").GetIntSafe(m_SerialNum))
+	//{
+	//	_err.AddError("Goal.SerialNum Field Missing!");
+	//	return false;
+	//}
 
 	Vector3f Euler(0,0,0);
 	if(!proptable->Get(_machine,"Orientation").GetVector(Euler))
