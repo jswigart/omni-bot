@@ -575,15 +575,14 @@ static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 //		table	- Property table.
 //
 // Returns:
-//		<gm - mapgoal> - The map goal with the provided name.
-//		- OR -
-//		null - If no map goals matched the name.
+//		none
 static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 {
 	GM_CHECK_STRING_PARAM(expr,0);
 	GM_CHECK_TABLE_PARAM(props,1);
 
 	GoalManager::Query qry;
+	qry.NoFilters();
 	qry.Expression(expr);
 	GoalManager::GetInstance()->GetGoals(qry);
 	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
