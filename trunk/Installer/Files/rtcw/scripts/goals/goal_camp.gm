@@ -101,7 +101,7 @@ this.Update = function()
 		timeout = 0;
 		while( timeout < this.CampTime )
 		{
-			if ( this.UsingWeapon && !this.Bot.HasAmmo(this.UsingWeapon) )
+			if ( this.UsingWeapon && (!this.Bot.HasAmmo(this.UsingWeapon) || (this.UsingWeapon == WEAPON.PANZERFAUST && !this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0))) )
 			{
 				this.Finished();
 			}

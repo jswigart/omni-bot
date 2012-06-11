@@ -58,21 +58,6 @@ if ( Util.DefaultPriorities == null ) {
 	Util.DefaultPriorities = table();
 }
 
-Util.DefaultPriorities["PLANT"] = 0.8;
-Util.DefaultPriorities["DEFUSE"] = 1.0;
-Util.DefaultPriorities["REVIVE"] = 1.0;
-Util.DefaultPriorities["MOVER"] = 0.0;
-Util.DefaultPriorities["MOUNTMG42"] = 0.55;
-Util.DefaultPriorities["REPAIRMG42"] = 0.56;
-Util.DefaultPriorities["CALLARTILLERY"] = 0.7;
-Util.DefaultPriorities["ARTILLERY_S"] = 0.7;
-Util.DefaultPriorities["ARTILLERY_D"] = 0.7;
-Util.DefaultPriorities["CHECKPOINT"] = 0.6;
-Util.DefaultPriorities["EXPLODE"] = 0.3;
-Util.DefaultPriorities["PANZER"] = 0.6;
-Util.DefaultPriorities["FLAME"] = 0.6;
-Util.DefaultPriorities["VENOM"] = 0.6;
-
 // class management stuff
 Util.ManageClasses = false;
 
@@ -97,48 +82,6 @@ Util.TeamSniperWeapons =
 
 member numallies = 0;
 member numaxis = 0;
-
-///////////////////////////////////////////////////////////////////////////////
-// This function adds 2 bots to the game, disables their
-
-member DebugBotAim = function( _range )
-{
-	// Pick a default range to use if none is provided.
-	if ( _range == null ) {
-		_range = 20;
-	}
-
-	print( "Range " + _range );
-
-	KickAll();
-
-	AddBot( TEAM.ALLIES, CLASS.SOLDIER );
-	AddBot( TEAM.AXIS, CLASS.SOLDIER );
-
-	// Get a target position for 2 bots.
-	localHost = GetGameEntityFromId( 0 );
-	localHostPos = localHost.GetPosition();
-	localHostFacing = localHost.GetFacing();
-
-	sleep( 5.0 );
-
-	// calculate 2 points on each side of the localhost to send the bots to.
-	aimPoints = table();
-	aimPoints[0] = localHostPos + ( localHostFacing * _range );
-	aimPoints[1] = localHostPos - ( localHostFacing * _range );
-
-	print( "Creating bot threads." );
-	iCurrentBot = 0;
-	foreach( gameId and bot in BotTable )
-	{
-		print( aimPoints[iCurrentBot] );
-		bot: thread( RTCWUtil.DebugBotAimThread, aimPoints[iCurrentBot] );
-		iCurrentBot += 1;
-		if ( iCurrentBot >= 2 ) {
-			break;
-		}
-	}
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
