@@ -191,7 +191,7 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 
 this.Events[EVENT.DEATH] = function(attacker, mod)
 {
-	if ( GetGameIdFromEntity(attacker) > 63 )
+	if ( !this.Bot || GetGameIdFromEntity(attacker) > 63 )
 		{ return;}
 
 	if ( !this.Bot.IsAllied( attacker ) )

@@ -6,7 +6,7 @@ this.Parent = "LowLevel";		// The name of the parent. This setting determines wh
 
 this.LimitToClass(CLASS.SOLDIER);
 this.LimitToNoTarget(); // let weapon system take over when they have a target
-this.LimitToNoEntityFlag(ENTFLAG.ON_LADDER, ENTFLAG.MNT_MG42);
+this.LimitToNoEntityFlag(ENTFLAG.MNT_MG42);
 
 this.Initialize = function()
 {
@@ -45,11 +45,8 @@ this.OnSpawn = function()
 this.Update = function()
 {
 	while(1) {
-		if (this.Bot.GetVelocity().IsZero()) {
-			this.CheckSoldierWeapon();
-		}
-
-		sleep(0.25);
+		this.CheckSoldierWeapon();
+		sleep(1);
 	}
 };
 
@@ -60,7 +57,7 @@ this.Exit = function()
 
 this.CheckSoldierWeapon = function()
 {
-	if (!this.CheckAmmo){
+	if ( !this.CheckAmmo() ) {
 		this.SwitchToSideArm();
 		return;
 	}
@@ -68,24 +65,29 @@ this.CheckSoldierWeapon = function()
 	if ( this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) ) {
 		this.SwitchToSideArm();
 	}
-	else if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
-		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
-	}
-	else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){
-		this.AddWeaponRequest(Priority.Low, WEAPON.VENOM );
-		this.BlockForWeaponChange(WEAPON.VENOM);
+	else if ( this.Bot.GetVelocity().IsZero() ) {
+		if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
+			this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.VENOM );
+			this.BlockForWeaponChange(WEAPON.VENOM);
 
-		this.SpinVenom();
-	}
-	else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){
-		this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER );
-	}
-	else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){
-		this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER );
+			this.SpinVenom();
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER );
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER );
+		}
+		else {
+			this.SwitchToSideArm();
+		}
 	}
 	else {
 		this.SwitchToSideArm();
-	}
+	}	
 };
 
 this.CheckAmmo = function()
