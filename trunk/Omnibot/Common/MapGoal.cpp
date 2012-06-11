@@ -802,13 +802,23 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 {
 	Routes routes;
 
+	float fTolerance = _bot->GetWorldBounds().Extent[2];
+
 	float fTotalWeight = 0.f;
 	Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
 	for(; cIt != cItEnd; ++cIt)
 	{
 		const Route &r = (*cIt);
-		float fDistSq = SquaredLength(_bot->GetPosition(), r.m_Start->GetPosition());
-		if( fDistSq < Mathf::Sqr(r.m_Start->GetRadius()) &&
+
+		// RouteTo can be called when a bot is not yet within ROUTE goal radius, 
+		// because FollowPath calculates 2D distance (that is less than 3D distance).
+		// Omni-bot 0.81 compared 3D distance here and skipped ROUTE goals on stairs, hillsides etc.
+		Vector3f vDist = _bot->GetPosition() - r.m_Start->GetPosition();
+		if( vDist.x * vDist.x + vDist.y * vDist.y <= Mathf::Sqr(r.m_Start->GetRadius()) &&
+			abs(vDist.z - fTolerance) - 2 * fTolerance <= r.m_Start->GetRadius() &&
+			
+			// Most maps have all routes enabled for all teams, 
+			// that's why it's better to check availability after checking radius.
 			r.m_End->IsAvailable(_bot->GetTeam()) &&
 			r.m_Start->IsAvailable(_bot->GetTeam()) )
 		{
