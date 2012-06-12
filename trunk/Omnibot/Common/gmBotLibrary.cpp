@@ -2429,7 +2429,7 @@ static int GM_CDECL gmfGetLocalGroundPosition(gmThread *a_thread)
 {	
 	GM_CHECK_NUM_PARAMS(0);
 	Vector3f v;
-	if(Utils::GetLocalPosition(v))
+	if(Utils::GetLocalGroundPosition(v, TR_MASK_FLOODFILL))
 		a_thread->PushVector(v);
 	else
 		a_thread->PushNull();
