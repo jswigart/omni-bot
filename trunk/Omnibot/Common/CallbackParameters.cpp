@@ -56,7 +56,7 @@ void CallbackParameters::PrintDebug()
 				EngineFuncs::ConsoleMessage(va("	+ Float: %s, %f\n", m_DebugNames[i], m_Variables[i].GetFloat()));
 				break;
 			}
-		case GM_VECTOR:
+		case GM_VEC3:
 			{
 				float x,y,z;
 				m_Variables[i].GetVector(x,y,z);
