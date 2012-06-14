@@ -1967,7 +1967,13 @@ static int gmfEntityIsValid(gmThread *a_thread)
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
 
-	a_thread->PushInt(gameEnt.IsValid() ? 1 : 0);
+	bool valid = gameEnt.IsValid();
+
+	if(valid && a_thread->ParamType(0) == GM_ENTITY && 
+		g_EngineFuncs->IDFromEntity(gameEnt) == -1)
+		valid = false;
+
+	a_thread->PushInt(valid ? 1 : 0);
 	return GM_OK;
 }
 
