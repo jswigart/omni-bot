@@ -1507,6 +1507,7 @@ void GoalManager::RemoveGoalByEntity(GameEntity _ent)
 			else
 			{
 				(*it)->SetDisabled(true);
+				(*it)->SetEntity(GameEntity());
 #ifdef _DEBUG
 				LOG("Goal Disabled: " << (*it)->GetGoalType() << ", " << (*it)->GetName().c_str());
 #endif
