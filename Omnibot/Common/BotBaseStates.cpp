@@ -2090,7 +2090,7 @@ namespace AiState
 			{
 				Path::PathPoint pp;
 				if(fp->IsMoving() && fp->GetCurrentPath().GetCurrentPt(pp) && 
-					(pp.m_NavFlags & F_NAV_CLIMB))
+					(pp.m_NavFlags & (F_NAV_CLIMB|F_NAV_DOOR) ))
 				{
 					m_NextLookTime = GetNextLookTime();
 					return 0.f;
