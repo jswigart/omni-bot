@@ -786,6 +786,15 @@ bool MapGoal::AddRoute(const MapGoalPtr &_routeStart, const MapGoalPtr &_midpt, 
 {
 	if(_routeStart && _midpt)
 	{
+		// find whether this route already exists
+		Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
+		for(; cIt != cItEnd; ++cIt)
+		{
+			const Route &o = (*cIt);
+			if(o.m_Start == _routeStart && o.m_End == _midpt) 
+				return true;
+		}
+
 		Route r;
 		r.m_Start = _routeStart;
 		r.m_End = _midpt;
