@@ -163,7 +163,9 @@ Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLook
 
 		float fClosestDist = Utils::FloatMax;
 		int iStartPt = 0, iEndPt = 0;
-		for(int i = MaxT(m_CurrentPt-1,0); i < m_NumPts-1; ++i)
+		int iStart = MaxT(m_CurrentPt-1,0);
+		int iEnd = MinT(iStart + 2, m_NumPts-1);
+		for(int i = iStart; i < iEnd; ++i)
 		{
 			float fRatioOnSeg;
 			float fDist = PointToSegmentDistance(_position, m_Pts[i].m_Pt, m_Pts[i+1].m_Pt, vPtOnSeg, fRatioOnSeg);
@@ -186,7 +188,7 @@ Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLook
 			const float fDesiredDistanceOnPath = fCurrentDistanceOnPath + _lookAheadDistance;
 			
 			bool bFound = false;
-			for(int i = 0; i < m_NumPts-1; ++i)
+			for(int i = iStartPt; i < m_NumPts-1; ++i)
 			{
 				if(m_Links[i+1].m_Distance >= fDesiredDistanceOnPath)
 				{
