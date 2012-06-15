@@ -610,7 +610,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 	bool bFoundGoal = false;
 
 	const char *pExpression = 0;
-	if(a_thread->GetNumParams()==3)
+	if(a_thread->GetNumParams() > 2)
 	{
 		if(a_thread->ParamType(2)==GM_STRING)
 		{
