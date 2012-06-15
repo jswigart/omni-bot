@@ -618,6 +618,8 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 		}
 		else
 		{
+			EngineFuncs::ConsoleMessage("SetAvailableMapGoals: Parameter 3 must be a string");
+			LOGWARN("SetAvailableMapGoals: Parameter 3 must be a string");
 			a_thread->PushInt(0);
 			return GM_OK;
 		}		
@@ -649,7 +651,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 	{
 		EngineFuncs::ConsoleMessage(va("SetAvailableMapGoals: goal query for %s has no results!", 
 			pExpression ));
-		LOG("SetAvailableMapGoals: goal query for " << pExpression << " has no results!");
+		LOGWARN("SetAvailableMapGoals: goal query for " << pExpression << " has no results!");
 		a_thread->PushInt(0);
 	}
 
