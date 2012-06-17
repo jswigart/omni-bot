@@ -645,56 +645,6 @@ global OnMapLoad = function()
 				},
 				ROUTE_flagside = {},
 			},
-			ROUTE_AllySpawn2 =
-			{
-				ROUTE_tunnel =
-				{
-					ROUTE_hill =
-					{
-						ROUTE_flagside = { Weight = 2, },
-						ROUTE_flagroad =
-						{
-							ROUTE_flagroad2 = { ROUTE_flagfar = {}, },
-						},
-					},
-				 },
-				ROUTE_allyfront =
-				{
-					Weight = 2,
-					ROUTE_flagmain = { Weight = 2, },
-					ROUTE_flagside = {},
-					ROUTE_flagroad =
-					{
-						ROUTE_flagroad2 = { ROUTE_flagfar = {}, },
-					},
-				},
-				ROUTE_flagside = {},
-			},
-			ROUTE_AllySpawn3 =
-			{
-				ROUTE_tunnel =
-				{
-					ROUTE_hill =
-					{
-						ROUTE_flagside = { Weight = 2, },
-						ROUTE_flagroad =
-						{
-							ROUTE_flagroad2 = { ROUTE_flagfar = {}, },
-						},
-					},
-				 },
-				ROUTE_allyfront =
-				{
-					Weight = 2,
-					ROUTE_flagmain = { Weight = 2, },
-					ROUTE_flagside = {},
-					ROUTE_flagroad =
-					{
-						ROUTE_flagroad2 = { ROUTE_flagfar = {}, },
-					},
-				},
-				ROUTE_flagside = {},
-			},
 		},
 		PLANT_Main_Entrance =
 		{
@@ -765,39 +715,33 @@ global OnMapLoad = function()
 			},
 
 		},
-		DEFEND_rEastParts1 =
+	};
+	MapRoutes["DEFEND_rEastParts.*"] =
+	{
+		ROUTE_AxisSpawn1 =
 		{
-			ROUTE_AxisSpawn1 =
-			{
-				ROUTE_eastpatrol1 = {},
-				ROUTE_eastpatrol2 = {},
-			},
-			ROUTE_AxisSpawn2 =
-			{
-				ROUTE_gateroute = {},
-				ROUTE_westpatrol1 = {},
-			},
+			ROUTE_eastpatrol1 = {},
+			ROUTE_eastpatrol2 = {},
 		},
-		DEFEND_rWestParts1 =
+		ROUTE_AxisSpawn2 =
 		{
-			ROUTE_AxisSpawn1 =
-			{
-				ROUTE_maincentral = {},
-				ROUTE_westpatrol1 = {},
-				ROUTE_westpatrol2 = {},
-			},
+			ROUTE_gateroute = {},
+			ROUTE_westpatrol1 = {},
+		},
+	};
+	MapRoutes["DEFEND_rWestParts.*"] =
+	{
+		ROUTE_AxisSpawn1 =
+		{
+			ROUTE_maincentral = {},
+			ROUTE_westpatrol1 = {},
+			ROUTE_westpatrol2 = {},
 		},
 	};
 
 	//copy some routes
-	MapRoutes.DEFEND_rEastParts2 = MapRoutes.DEFEND_rEastParts1;
-	MapRoutes.DEFEND_rEastParts3 = MapRoutes.DEFEND_rEastParts1;
-	MapRoutes.DEFEND_rEastParts4 = MapRoutes.DEFEND_rEastParts1;
-	MapRoutes.DEFEND_rEastParts5 = MapRoutes.DEFEND_rEastParts1;
-	MapRoutes.DEFEND_rWestParts2 = MapRoutes.DEFEND_rWestParts1;
-	MapRoutes.DEFEND_rWestParts3 = MapRoutes.DEFEND_rWestParts1;
-	MapRoutes.DEFEND_rWestParts4 = MapRoutes.DEFEND_rWestParts1;
-	MapRoutes.DEFEND_rWestParts5 = MapRoutes.DEFEND_rWestParts1;
+	MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn2 = MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn1;
+	MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn3 = MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn1;
 
 	Util.Routes(MapRoutes);
 	Util.MapDebugPrint( "OnMapLoad" );

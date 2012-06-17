@@ -261,14 +261,17 @@ global Map =
 						SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
 						SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTruck.*" );
 
-						b = Util.GetBotByName(GetEntName(ent));
-						b.SayTeam("I'm taking relic via sewer!");
-						foreach ( id and bot in BotTable )
+						b = Util.IsBot(ent);
+						if(b)
 						{
-							if ( bot.GetTeam() == TEAM.ALLIES )
+							b.SayTeam("I'm taking relic via sewer!");
+							foreach ( id and bot in BotTable )
 							{
-								bot.SayTeam("Relic is going sewer!");
-								break;
+								if ( bot.GetTeam() == TEAM.ALLIES )
+								{
+									bot.SayTeam("Relic is going sewer!");
+									break;
+								}
 							}
 						}
 
@@ -294,7 +297,7 @@ global Map =
 					{
 						if (b)
 						{
-							b = Util.GetBotByName(GetEntName(ent));
+							b = Util.IsBot(ent);
 							b.SayTeam("I'm taking relic via door!");
 						}
 						foreach ( id and bot in BotTable )
@@ -327,7 +330,7 @@ global Map =
 					{
 						if (b)
 						{
-							b = Util.GetBotByName(GetEntName(ent));
+							b = Util.IsBot(ent);
 							b.SayTeam("I'm taking relic via roof!");
 						}
 						foreach ( id and bot in BotTable )
@@ -360,7 +363,7 @@ global Map =
 					{
 						if (b)
 						{
-							b = Util.GetBotByName(GetEntName(ent));
+							b = Util.IsBot(ent);
 							b.SayTeam("I'm taking relic via altar!");
 						}
 						foreach ( id and bot in BotTable )

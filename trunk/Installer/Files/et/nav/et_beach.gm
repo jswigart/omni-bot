@@ -110,7 +110,7 @@ global Map =
 					if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) )
 					{
 						// Martin - Let bots tell teammates where documents are going
-						b = Util.GetBotByName(GetEntName(ent));
+						b = Util.IsBot(ent);
 						if(b)
 						{
 							b.SayTeam("I'm going long!");
@@ -163,7 +163,7 @@ global Map =
 					if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) )
 					{
 						// Martin - Let bots tell teammates where documents are going
-						b = Util.GetBotByName(GetEntName(ent));
+						b = Util.IsBot(ent);
 						if(b)
 						{
 							b.SayTeam("I'm going short!");

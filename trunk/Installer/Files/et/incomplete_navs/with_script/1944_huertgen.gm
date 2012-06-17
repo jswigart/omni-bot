@@ -6,6 +6,7 @@
 //--------------------------------------------------------------------------------------------
 //	Mateos			04/12/10	Full script, based on the few things from
 //						jaskot's conversion
+//
 //	jaskot			02/03/09	Converted old script to new format (Very poor)
 //
 //============================================================================================
@@ -13,14 +14,14 @@
 /****************************************************
 Pathing updated and script by Mateos
 Correspondant WAY file size : -
-Last Update : 15th December 2010
+Last Update : 15th June 2012
 ****************************************************/
 
 global Map =
 {
-
-	TankStolen = 0,		//Not Stolen
-	AxisCPStatus = 0,	//Not Built or Destroyed
+	Debug = 1,		// Please set to zero before distributing your script
+	TankStolen = 0,		// Not Stolen
+	AxisCPStatus = 0,	// Not Built or Destroyed
 	TruckGateStatus = 0,	// Not Destroyed
 
 	ShowMovers = true,
@@ -53,58 +54,54 @@ global Map =
 
 	Allied_Command_Post_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		if ( Map.TankStolen == 1 )
+		{
+			Util.ChangeSpawn(TEAM.ALLIES, 3);	// Command Post Spawn
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+		}
 
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		Util.EnableGoal( "BUILD_Command_Post" );
+		if ( Map.TankStolen == 1 )
+		{
+			Util.EnableGoal( "BUILD_Command_Post" );
+		}
 
 		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
 	},
 
 	Axis_Command_Post_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
-		Map.AxisCPStatus = 1;	//Built
-		
+		Map.AxisCPStatus = 1;	// Built
+
 		if ( Map.TankStolen == 1 )
 		{
-			Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
-		}
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+		}
 
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		Map.AxisCPStatus = 0;	// Destroyed
 
-		Map.AxisCPStatus = 0;	//Destroyed
-		
-		Util.EnableGoal( "BUILD_Command_Post" );
+		if ( Map.TankStolen == 1 )
+		{
+			Util.EnableGoal( "BUILD_Command_Post" );
+		}
 
 		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
 	},
 
 	Grate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Grate" );
 
 		Util.MapDebugPrint( "Grate_Destroyed" );
@@ -112,72 +109,79 @@ global Map =
 
 	Tank_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Tank_Built" );
 	},
 
 	Tank_Stolen = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		Map.TankStolen = 1;		// Stolen by Allies
 
-		Map.TankStolen = 1;		//Stolen by Allies
-		
-		Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
+		Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bravo.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_footbridge" );
-		
+
 		// Enable everything to make it usable on servers
 		SetAvailableMapGoals( TEAM.ALLIES, true, ".*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alpha.*" );	// Not added yet
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alpha.*" );	// Not added yet, maybe not needed
 
 		Util.MapDebugPrint( "Tank_Stolen" );
 	},
-	
+
 	TankPastFirstHouse = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Charlie.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bravo.*" );
-		
+
 		if ( Map.TankStolen == 1 && Map.AxisCPStatus == 1 )
 		{
-			Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 		}
 
 		Util.MapDebugPrint( "TankPasFirstHouse" );
 	},
-	
+
 	TankNearTruckGate = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_899" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Charlie.*" );
-		
+
 		if ( Map.TankStolen == 1 && Map.AxisCPStatus == 1 )
 		{
-			Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Grate" );
 
 		Util.MapDebugPrint( "TankNearTruckGate" );
 	},
 
+	Truck_Gate_Destroyed = function( trigger )
+	{
+		Map.TruckGateStatus = 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_tower" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tower" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
+
+		Util.MapDebugPrint( "Truck_Gate_Destroyed" );
+	},
+
+	Truck_at_Bridge = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Echo.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Delta.*" );
+
+		Util.MapDebugPrint( "Truck_at_Bridge" );
+	},
+
 	Tank_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		// Repair the Tank only if the Truck Gate has not been destroyed
 		if ( Map.TruckGateStatus == 0 )
 		{
@@ -189,17 +193,11 @@ global Map =
 
 	Truck_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Truck_Built" );
 	},
 
 	Truck_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
 
 		Util.MapDebugPrint( "Truck_Destroyed" );
@@ -207,9 +205,6 @@ global Map =
 
 	footbridge_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_footbridge" );
 
 		Util.MapDebugPrint( "footbridge_Built" );
@@ -217,9 +212,6 @@ global Map =
 
 	footbridge_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_footbridge" );
 
 		Util.MapDebugPrint( "footbridge_Destroyed" );
@@ -227,9 +219,6 @@ global Map =
 
 	tower_Built = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_tower" );
 
 		Util.MapDebugPrint( "tower_Built" );
@@ -237,42 +226,55 @@ global Map =
 
 	tower_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_tower" );
 
 		Util.MapDebugPrint( "tower_Destroyed" );
 	},
 
-	Truck_Gate_Destroyed = function( trigger )
-	{
-		if ( TestMap )
-			{ return; }
-
-		Map.TruckGateStatus = 1;
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
-
-		Util.MapDebugPrint( "Truck_Gate_Destroyed" );
-	},
-
 	Anti_Tank_Gun_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 
 		Util.MapDebugPrint( "Anti_Tank_Gun_Destroyed" );
+	},
+
+	Axis_Ammo_Bunker_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Ammo_Bunker_Destroyed" );
+	},
+
+	Axis_North_Path_Build = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Axis_North_Path" );
+
+		Util.MapDebugPrint( "Axis_North_Path_Build" );
+	},
+
+	Axis_North_Path_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Anti_Tank_Gun" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_Axis_North_Path" );
+
+		Util.MapDebugPrint( "Axis_North_Path_Destroyed" );
+	},
+
+	vehicle_at_location = function( trigger )
+	{
+		switch(Map.VehicleLocation)
+		{
+			case 1:
+			{
+				Map.Truck_at_Bridge();	// Truck at Bridge
+			}
+		}
+		Util.MapDebugPrint("vehicle at location " + Map.VehicleLocation, true);
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
+	// *** TRIGGERS ***
 	// The announcements are trimmed to 71 chars, the maximum supported by Omni-Bot.
 	OnTrigger( "Allied Command Post constructed. Charge speed increased!, Allies Contro", Map.Allied_Command_Post_Built );
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
@@ -291,6 +293,10 @@ global OnMapLoad = function()
 
 	OnTrigger( "1944_huertgen_allies_truck_steal", Map.Truck_Gate_Destroyed );
 	OnTrigger( "Allies have destroyed the Anti Tank Gun!", Map.Anti_Tank_Gun_Destroyed );
+	OnTrigger( "the Axis Ammo Bunker has been destroyed, Axis Bunker Spawn disabled.", Map.Axis_Ammo_Bunker_Destroyed );
+
+	OnTrigger( "the Axis North Path has been blockaded.", Map.Axis_North_Path_Built );
+	OnTrigger( "the Allies have cleared the Axis North Path.", Map.Axis_North_Path_Destroyed );
 
 	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
 	Util.DisableGoal( ".*", true );	// All but routes
@@ -302,14 +308,33 @@ global OnMapLoad = function()
 	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alpha.*" );	// Not added yet
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alpha.*" );	// Not added yet, maybe not needed
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_footbridge" );
 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Axis_North_Path" );
+
 	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "MOUNT_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ESCORT_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
+
 	Util.SetGoalPosition( 50, 0, 0, "PLANT_Grate" );
 	Util.SetGoalPosition( 3700, 700, 0, "PLANT_footbridge" );
 	Util.OnTriggerPosition( "MOVER_tank", "region1", 200.0, Map.TankPastFirstHouse );
 	Util.OnTriggerPosition( "MOVER_tank", "region2", 200.0, Map.TankNearTruckGate );
+
+	// *** VEHICLE TRIGGERS ***
+	OnTrigger( "tank at location", Map.vehicle_at_location );
+	OnTrigger( "truck at location", Map.vehicle_at_location );
+
+	Trigger1 = OnTriggerRegion(AABB(-1664.875,-1051.546,105.125,-1407.125,-884.309,179.125),	RegionTrigger.VehicleTrigger);
 
 	Util.MapDebugPrint( "Omni-bot map script for 1944 Huertgen Forest Final by Mateos" );
 };
@@ -320,10 +345,10 @@ global OnBotJoin = function( bot )
 	{
 		Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
 	}
-	
+
 	// Make bots stop shooting the Movers targets
 	Util.IgnoreTargetGoalTable(bot, Map.Movers);
-	
+
 	// Recurent Mover targets shooted
 	bot.IgnoreTarget( GetGoal("MOVER_tower_base").GetEntity(), 9999 );
 	bot.IgnoreTarget( GetGoal("MOVER_aagun_1_clip").GetEntity(), 9999 );

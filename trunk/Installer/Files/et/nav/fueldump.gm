@@ -1030,54 +1030,10 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_AllySpawn2 =
-			{
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
-			ROUTE_AllySpawn3 =
-			{
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
 		},
 		BUILD_Bridge =
 		{
 			ROUTE_AllySpawn =
-			{
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
-			ROUTE_AllySpawn2 =
-			{
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
-			ROUTE_AllySpawn3 =
 			{
 				ROUTE_mainbridgeRoute1 = {},
 				ROUTE_mainbridge4 =
@@ -1103,42 +1059,10 @@ global OnMapLoad = function()
 					},
 				},
 			},
-			ROUTE_AllySpawn2 =
-			{
-				ROUTE_footbridgeRoute2 = {Weight = 2,},
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
-			ROUTE_AllySpawn3 =
-			{
-				ROUTE_footbridgeRoute2 = {Weight = 2,},
-				ROUTE_mainbridgeRoute1 = {},
-				ROUTE_mainbridge4 =
-				{
-					ROUTE_mainbridge5 =
-					{
-						ROUTE_mainbridgeRoute2 = {}
-					},
-				},
-			},
 		},
 		BUILD_Allied_Command_Post =
 		{
 			ROUTE_TunnelSpawn1 =
-			{
-				ROUTE_northtunnel =
-				{
-					ROUTE_cphill = {},
-					ROUTE_cpflank = {},
-				},
-			},
-			ROUTE_TunnelSpawn2 =
 			{
 				ROUTE_northtunnel =
 				{
@@ -1167,54 +1091,10 @@ global OnMapLoad = function()
 					ROUTE_southtunnel2 = {},
 				},
 			},
-			ROUTE_TunnelSpawn2 =
-			{
-				ROUTE_maintunnel =
-				{
-					ROUTE_eTankPath1 = { ROUTE_eTankPath2 = {}, },
-					ROUTE_wTankPath1 = { ROUTE_wTankPath2 = {}, },
-				},
-				ROUTE_northtunnel =
-				{
-					ROUTE_cphill = {},
-					ROUTE_cpflank = {},
-				},
-				ROUTE_southtunnel =
-				{
-					Weight = 2,
-					ROUTE_southtunnel2 = {},
-				},
-			},
 		},
 		ATTACK_Fuel_Dump_1 =
 		{
 			ROUTE_TunnelSpawn1 =
-			{
-				ROUTE_maintunnel =
-				{
-					ROUTE_eTankPath1 = { ROUTE_eTankPath2 = {}, },
-					ROUTE_wTankPath1 = { ROUTE_wTankPath2 = {}, },
-					ROUTE_cphill =
-					{
-						ROUTE_depotgate = {},
-						ROUTE_sidewall = { ROUTE_sidewall2 = {}, },
-					},
-				},
-				ROUTE_northtunnel =
-				{
-					ROUTE_cphill = {},
-					ROUTE_cpflank =
-					{
-						ROUTE_sidewall = { ROUTE_sidewall2 = {}, },
-					},
-				},
-				ROUTE_southtunnel =
-				{
-					Weight = 2,
-					ROUTE_southtunnel2 = {},
-				},
-			},
-			ROUTE_TunnelSpawn2 =
 			{
 				ROUTE_maintunnel =
 				{
@@ -1299,14 +1179,6 @@ global OnMapLoad = function()
 		GRENADE_axis_base_mg =
 		{
 			ROUTE_TunnelSpawn1 =
-			{
-				ROUTE_southtunnel =
-				{
-					Weight = 2,
-					ROUTE_southtunnel2 = {},
-				},
-			},
-			ROUTE_TunnelSpawn2 =
 			{
 				ROUTE_southtunnel =
 				{

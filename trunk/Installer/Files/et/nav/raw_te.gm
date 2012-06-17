@@ -36,7 +36,7 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function(ent)
 		{
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				b.DisableBotPush(true);
@@ -48,7 +48,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				b.DisableBotPush(false);

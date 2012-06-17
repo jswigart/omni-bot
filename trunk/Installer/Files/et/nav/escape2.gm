@@ -120,7 +120,7 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function(ent)
 		{
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b && b.GetTeam() == TEAM.ALLIES)
 			{
 				b.TargetBreakableDist = 200.0;
@@ -129,7 +129,7 @@ global Map =
 		},
 		OnExit = function(ent)
 		{
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				b.TargetBreakableDist = 80.0;

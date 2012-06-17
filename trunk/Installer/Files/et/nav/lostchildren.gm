@@ -202,7 +202,7 @@ global Map =
 	{
 		pos = {Vector3(-882.501, -925.875, -103.875), Vector3(-890.581, -738.125, -103.711)};
 		goal = GetGoal("PLANT_Second_barrier");
-		goal.SetPosition(pos[Util.GetRandomFromTable(pos)]);
+		goal.SetPosition(Util.GetRandomTableValue(pos));
 		goal.DynamicPosition = false;
 	},
 
