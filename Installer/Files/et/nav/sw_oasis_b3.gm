@@ -521,7 +521,7 @@ global Map =
 		{
 			team = GetEntTeam(ent);
 			if ( team != TEAM.ALLIES ) { return; }
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				b.TargetBreakableDist = 570.0;
@@ -531,7 +531,7 @@ global Map =
 		{
 			team = GetEntTeam(ent);
 			if ( team != TEAM.ALLIES ) { return; }
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				b.TargetBreakableDist = 0.0;

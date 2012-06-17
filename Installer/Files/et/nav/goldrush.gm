@@ -949,17 +949,8 @@ global OnMapLoad = function()
 			},
 			ROUTE_AllySpawn2 =
 			{
-				ROUTE_depotgate =
-				{
-					ROUTE_depotgate2 = {},
-					ROUTE_depotgatesplit = { ROUTE_as_rightsplit1 = {}, },
-					ROUTE_cproute = {},
-				},
-				ROUTE_as_right =
-				{
-					ROUTE_as_rightsplit1 = {},
-					ROUTE_as_rightsplit2 = { ROUTE_depotflank = {}, },
-				},
+				ROUTE_depotgate = {},
+				ROUTE_as_right = {},
 			},
 
 			ROUTE_TankYardSpawn =
@@ -977,14 +968,7 @@ global OnMapLoad = function()
 			ROUTE_TankYardSpawn2 =
 			{
 				ROUTE_repair_route_stairs = {},
-				ROUTE_repair_route_bridge1 =
-				{
-					Weight = 2,
-					ROUTE_repair_route_bridge2 =
-					{
-						ROUTE_repair_route_bridge3 = {},
-					}
-				},
+				ROUTE_repair_route_bridge1 = { Weight = 2 },
 			},
 		},
 		PLANT_Tank_Barrier_1 =
@@ -1015,10 +999,7 @@ global OnMapLoad = function()
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_bridgeroute =
-				{
-					ROUTE_bridgeroute2 = {},
-				},
+				ROUTE_bridgeroute = {},
 				ROUTE_cp_stairs = { Weight = 2,},
 			},
 		},
@@ -1036,12 +1017,8 @@ global OnMapLoad = function()
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_bridgeroute =
-				{
-					Weight = 2,
-					ROUTE_bridgeroute2 = {},
-				},
-				ROUTE_trb1_stairs = { Weight = 2, ROUTE_b2flank = {}, },
+				ROUTE_bridgeroute = { Weight = 2 },
+				ROUTE_trb1_stairs = { Weight = 2 },
 				ROUTE_cp_stairs = {},
 			},
 		},
@@ -1053,7 +1030,7 @@ global OnMapLoad = function()
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_trb1_stairs = { ROUTE_b2flank = {}, },
+				ROUTE_trb1_stairs = {},
 			},
 		},
 		ATTACK_Bank_1 =
@@ -1067,7 +1044,7 @@ global OnMapLoad = function()
 			ROUTE_TankYardSpawn2 =
 			{
 				ROUTE_trb1_stairs = {},
-				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
+				ROUTE_cp_stairs = {},
 				//ROUTE_southstairs = {},
 			},
 		},
@@ -1094,16 +1071,8 @@ global OnMapLoad = function()
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_trb1_stairs =
-				{
-					Weight = 2,
-					ROUTE_westbank =
-					{
-						ROUTE_bankfront = {},
-						ROUTE_westbank2 = { ROUTE_bankback = {}, },
-					},
-				},
-				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
+				ROUTE_trb1_stairs = { Weight = 2 },
+				ROUTE_cp_stairs = {},
 				ROUTE_southstairs = {},
 			},
 		},
@@ -1129,7 +1098,7 @@ global OnMapLoad = function()
 			ROUTE_TankYardSpawn2 =
 			{
 				ROUTE_trb1_stairs = {},
-				ROUTE_longalley = { Weight = 2, ROUTE_longstairs = {}, },
+				ROUTE_longalley = { Weight = 2 },
 			},
 		},
 		DEFEND_Tank_Barrier1_6 =
@@ -1195,10 +1164,7 @@ global OnMapLoad = function()
 			},
 			ROUTE_TankYardSpawn2 =
 			{
-				ROUTE_bridgeroute =
-				{
-					ROUTE_bridgeroute2 = {},
-				},
+				ROUTE_bridgeroute = {},
 				ROUTE_cp_stairs = { Weight = 2,},
 			},
 		},

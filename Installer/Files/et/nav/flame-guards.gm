@@ -268,7 +268,7 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function(ent)
 		{
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				//b.Say( "Arg! I'm stuck in the cupboard, stupid mapbug!!!" );

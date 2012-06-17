@@ -219,7 +219,7 @@ global Map =
 		{
 
 
-			b = Util.GetBotByName(GetEntName(ent));
+			b = Util.IsBot(ent);
 			if (b)
 			{
 				// cs: users can disable map script initiated chats like this with MAP_TALK set to false

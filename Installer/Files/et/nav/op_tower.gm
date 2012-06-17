@@ -222,7 +222,7 @@ global Map =
  		TriggerOnClass = CLASS.ANYPLAYER,
  		OnEnter = function(ent)
  		{
- 			b = Util.GetBotByName(GetEntName(ent));
+ 			b = Util.IsBot(ent);
  			if (b)
  			{
  				sleep(1);

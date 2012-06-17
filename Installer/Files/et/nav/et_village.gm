@@ -38,76 +38,8 @@ global Map =
 
 	FriendlyFire,
 
-	PanzGateBots = 0,
-	BridgeASBots = 0,
 	Navigation =
 	{
-		rpanzgate =
-		{
-			navigate = function(_this)
-			{
-				// this is just using the barrier as they eval since its simple
-				// others will need to eval other map vars
-				if ( Map.PanzGateBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
-				{
-					if ( !Map.PanzGateInfo ) {
-						Map.PanzGateInfo = Util.WpNameInfo("rPanzGate");
-					}
-
-					Map.PanzGateBots += 1;
-
-					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(Map.PanzGateInfo.position) == EVENT.PATH_SUCCESS )
-					{
-						_this.Bot.ReleaseButton(BTN.SPRINT);
-						if (_this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0) )
-						{
-							_this.AddAimRequest(Priority.High, "facing", Map.PanzGateInfo.facing);
-							_this.AddWeaponRequest(Priority.High, WEAPON.PANZERFAUST );
-							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
-							sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 2);
-							sleep(5);
-						}
-					}
-				}
-				yield();
-			},
-		},
-		// Martin - lets have axis LT run like crazy to the airstrike
-		rbridgeas =
-		{
-			navigate = function(_this)
-			{
-				if ( Map.BridgeASBots == 0 && _this.Bot.HasWeapon( WEAPON.SMOKE_GRENADE ) )
-				{
-					if ( !Map.BridgeASInfo ) {
-						Map.BridgeASInfo = Util.WpNameInfo("bridge_as");
-					}
-
-					Map.BridgeASBots += 1;
-
-					_this.Bot.MaxViewDistance = 10;	//Martin - Don't let bots see enemies when they throw smoke
-					_this.Bot.HoldButton(BTN.SPRINT, 999);
-					if ( _this.Goto(Map.BridgeASInfo.position) == EVENT.PATH_SUCCESS )
-					{
-						_this.Bot.ReleaseButton(BTN.SPRINT);
-						if (_this.Bot.IsWeaponCharged(WEAPON.SMOKE_GRENADE, 0) )
-						{
-							_this.AddAimRequest(Priority.High, "facing", Map.BridgeASInfo.facing);
-							_this.AddWeaponRequest(Priority.High, WEAPON.SMOKE_GRENADE );
-							_this.BlockForWeaponChange( WEAPON.SMOKE_GRENADE );
-							//sleep(0.3); // make sure its ready to fire
-							_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
-							sleep(1);
-							_this.Bot.MaxViewDistance = 10000;	//Martin - Extra strength glasses
-						}
-					}
-				}
-				yield();
-			},
-		},
-
 		// cs: from ledge by destroyed cottage to boxes
 		tjump =
 		{

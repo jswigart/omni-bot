@@ -9,20 +9,6 @@ global Map =
 	flag = 1,
 	southTruckDestroyed = false,
 
-	Navigation =
-	{
-		breakable =
-		{
-			navigate = function(_this)
-			{
-				for(j=0; j<7; j+=1){
-					sleep(2); 
-					_this.Bot.ResetStuckTime();
-				} 
-			},
-		}
-	},
-	
 	UseTug = function(_this)
 	{
 		_this.AddAimRequest(Priority.High, "facing", _this.Facing);

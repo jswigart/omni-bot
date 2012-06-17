@@ -5,6 +5,7 @@
 //	Who	When		What
 //------------------------------------------------------------------------------------------
 //	palota	04 April 2012	new gm script, goals, fixed teleports
+//	palota	07 June 2012	covertops can destroy spawnwall
 //
 //==========================================================================================
 //
@@ -142,8 +143,7 @@ global Map =
 			Map.phase=50;
 			Map.SetEscort();
 			SetAvailableMapGoals(TEAM.AXIS, true, "TRIPMINE_x.*");
-			SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_spawnwall" ); //does not work, because GetDestroyableState returns -1
-			SetAvailableMapGoals(TEAM.ALLIES, true, "DYNAMITE_spawnwall" );
+			SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_spawnwall" ); //does not work in Omni-bot 0.81, requires Omni-bot 0.82
 			SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_Schoolbus" );
 			SetAvailableMapGoals(TEAM.ALLIES, true, "CAPPOINT_truck");
 			SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_Truck");
@@ -176,7 +176,7 @@ global Map =
 	spawnwall_Destroyed = function( trigger )
 	{
 		Util.EnableGoal("ROUTE_spawnwall");
-		SetAvailableMapGoals(TEAM.ALLIES, false, "DYNAMITE_spawnwall" );
+		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_spawnwall" );
 		Map.plutoninum_Accessible();
 		Util.MapDebugPrint( "spawnwall_Destroyed" );
 	},
@@ -219,7 +219,6 @@ global Map =
 		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_Moes_wall");
 		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_Schoolbus" );
 		SetAvailableMapGoals(TEAM.ALLIES, false, "PLANT_spawnwall" );
-		SetAvailableMapGoals(TEAM.ALLIES, false, "DYNAMITE_spawnwall" );
 		Util.SetMaxUsers( 2, "BUILD_Truck_Barrier_2" );
 		SetGoalPriority("REPAIRMG42_mg42_bank", 0.91, TEAM.ALLIES);
 		Util.ClearRoleForGoals("DEFEND_square.*", ROLE.DEFENDER2 );
@@ -312,6 +311,7 @@ global OnMapLoad = function()
 	SetGoalPriority("BUILD_Truck_Barrier_1", 0.89, TEAM.AXIS);
 	SetGoalPriority("BUILD_Truck_Barrier_2", 0.7, TEAM.AXIS);
 	SetGoalPriority("PLANT_Command_Post", 0.6, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority("PLANT_spawnwall", 0.8, TEAM.ALLIES, CLASS.ENGINEER);
 	SetGoalPriority("MOUNTMG42_mg42_bank", 0.85, TEAM.ALLIES, CLASS.SOLDIER);
 	SetGoalPriority("SNIPE_.*", 0.8);
 
@@ -325,7 +325,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "BUILD_Moes_wall" );
 	Util.SetMaxUsers( 1, "BUILD_Truck_Barrier_1" );
 	Util.SetMaxUsers( 1, "BUILD_Truck_Barrier_2" );
-	Util.SetMaxUsers( 1, "DYNAMITE_spawnwall" );
+	Util.SetMaxUsers( 1, "PLANT_spawnwall" );
 	Util.SetMaxUsers( 1, "REPAIRMG42_.*" );
 
 	Util.ClearRoleForGoals("DEFEND_square.*", ROLE.DEFENDER2 );
