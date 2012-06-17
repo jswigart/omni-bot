@@ -9,6 +9,9 @@ member WaypointGoalOffset = Vector3(0,0,0);
 // color string for debug messages
 member DebugColorString = "";
 
+// games can define goal types that will have route tables auto initialized with makemapgm
+member PrimaryRouteGoalQuery = "";
+
 //////////////////////////////////////////////////////////////////////////
 // Helper function for getting a bot by name.
 member GetBotByName = function(name)

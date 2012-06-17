@@ -13,6 +13,7 @@ if ( Mapgm == null )
 	global WriteMapGoalDef = false; // store goal names in Map table
 	global WriteDynoTriggers = true; // register plant/defuse events and store # of dynos planted
 	global DisableDynoAfterPlant = false; // disable plant goals when planted once, reenable on defuse
+	global AddRouteFunction = true; // add the InitializeRoute function with skeleton routing for primary goals
 
 	///////////////////////////////////////////////////////////////////////////////
 
@@ -963,6 +964,27 @@ if ( Mapgm == null )
 		Util.AddToTable( MapScript, "\t\/\/ Only set MaxViewDistance on maps with limited sight (e.g. fog)" );
 		Util.AddToTable( MapScript, "\t\/\/~bot.MaxViewDistance = 2400;" );
 		Util.AddToTable( MapScript, "};" );
+		
+		if (AddRouteFunction)
+		{
+			Util.AddToTable( MapScript, "" );
+			Util.AddToTable( MapScript, "global InitializeRoutes = function()" );
+			Util.AddToTable( MapScript, "{" );
+			Util.AddToTable( MapScript, "\tMapRoutes =" );
+			Util.AddToTable( MapScript, "\t{" );
+
+			goals = Util.GoalTable(Util.PrimaryRouteGoalQuery, 0);
+			foreach ( goal in goals )
+			{
+				Util.AddToTable(MapScript, format("\t\t%s =", goal.GetName()));
+				Util.AddToTable(MapScript,"\t\t{");
+				Util.AddToTable(MapScript,"\t\t},");
+			}
+			
+			Util.AddToTable( MapScript, "\t};" );
+			Util.AddToTable( MapScript, "\tUtil.Routes(MapRoutes);" );
+			Util.AddToTable( MapScript, "};" );
+		}
 
 		gmfile = File();
 		assert( gmfile.Open( gmName, "text", false, false ), "^1Error writing to script file!" );
