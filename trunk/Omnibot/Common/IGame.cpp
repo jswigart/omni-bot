@@ -1099,6 +1099,14 @@ void IGame::InitMapScript()
 				call.End();
 			}
 		}
+
+		{
+			gmCall call;
+			if(call.BeginGlobalFunction(pMachine, "InitializeRoutes", gmVariable::s_null, true))
+			{
+				call.End();
+			}
+		}
 	}
 
 	// cs: moved this out so it does not depend on a map script. some autoexec scripts define it.

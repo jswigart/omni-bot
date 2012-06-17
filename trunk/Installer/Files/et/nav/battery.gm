@@ -1100,6 +1100,35 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMORTAR_ramp" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_bunker1" );
 
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	team = bot.GetTeam();
+
+	// default spawn
+	if ( team == TEAM.ALLIES ) {
+		if ( Map.flagstatus == 2 ) {
+			bot.ChangeSpawnPoint(5);
+		}
+		else {
+			bot.ChangeSpawnPoint(3);
+		}
+	}
+	else if ( team == TEAM.AXIS ) {
+		if ( Map.flagstatus != 2 ) {
+			bot.ChangeSpawnPoint(5);
+		}
+		else {
+			bot.ChangeSpawnPoint(1);
+		}
+	}
+};
+
+global InitializeRoutes = function()
+{
 	MapRoutes =
 	{
 		PLANT_Gun_Controls =
@@ -1228,29 +1257,4 @@ global OnMapLoad = function()
 	}
 
 	Util.Routes(MapRoutes);
-	Util.UpdateSwitchData();
-	Util.MapDebugPrint( "OnMapLoad" );
-};
-
-global OnBotJoin = function( bot )
-{
-	team = bot.GetTeam();
-
-	// default spawn
-	if ( team == TEAM.ALLIES ) {
-		if ( Map.flagstatus == 2 ) {
-			bot.ChangeSpawnPoint(5);
-		}
-		else {
-			bot.ChangeSpawnPoint(3);
-		}
-	}
-	else if ( team == TEAM.AXIS ) {
-		if ( Map.flagstatus != 2 ) {
-			bot.ChangeSpawnPoint(5);
-		}
-		else {
-			bot.ChangeSpawnPoint(1);
-		}
-	}
 };

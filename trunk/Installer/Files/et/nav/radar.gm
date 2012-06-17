@@ -615,7 +615,33 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
 
 	Util.DisableGoal("ROUTE_cpassist");
+	Util.MapDebugPrint( "OnMapLoad" );
+};
 
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2500;
+	bot.TargetBreakableDist = 150.0;
+
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		if ( !Map.FirstAxisEng ) {
+			bot.SetRoles(ROLE.DEFENDER3, ROLE.DEFENDER1);
+			bot.crucialClass = CLASS.ENGINEER;
+			bot.ChangeClass(CLASS.ENGINEER);
+			bot.ChangeSpawnPoint(5); // cs: will not work on a map_restart
+			Map.FirstAxisEng = bot;
+		}
+		else {
+			bot.ChangeSpawnPoint(3);
+		}
+	}
+	else {
+		bot.ChangeSpawnPoint(2);
+	}
+};
+
+global InitializeRoutes = function()
+{
 	MapRoutes =
 	{
 		CHECKPOINT_roadbunker =
@@ -744,27 +770,4 @@ global OnMapLoad = function()
 	MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn3 = MapRoutes.CHECKPOINT_roadbunker.ROUTE_AllySpawn1;
 
 	Util.Routes(MapRoutes);
-	Util.MapDebugPrint( "OnMapLoad" );
-};
-
-global OnBotJoin = function( bot )
-{
-	bot.MaxViewDistance = 2500;
-	bot.TargetBreakableDist = 150.0;
-
-	if ( bot.GetTeam() == TEAM.AXIS ) {
-		if ( !Map.FirstAxisEng ) {
-			bot.SetRoles(ROLE.DEFENDER3, ROLE.DEFENDER1);
-			bot.crucialClass = CLASS.ENGINEER;
-			bot.ChangeClass(CLASS.ENGINEER);
-			bot.ChangeSpawnPoint(5); // cs: will not work on a map_restart
-			Map.FirstAxisEng = bot;
-		}
-		else {
-			bot.ChangeSpawnPoint(3);
-		}
-	}
-	else {
-		bot.ChangeSpawnPoint(2);
-	}
 };

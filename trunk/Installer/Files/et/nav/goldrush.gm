@@ -924,7 +924,17 @@ global OnMapLoad = function()
 
 	//routes for tank build at barrier 2
 	Util.DisableGoal("ROUTE_repair_route.*");
+	Util.MapDebugPrint( "OnMapLoad" );
+};
 
+global OnBotJoin = function( bot )
+{
+	//make sure allies spawn at default
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
 	// force routing for the tank build
 	Util.ForceRouting( "BUILD_Tank", true );
 
@@ -1225,11 +1235,4 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_Truck_Barrier1_10 = MapRoutes.DEFEND_Truck_Barrier1_6;
 
 	Util.Routes(MapRoutes);
-	Util.MapDebugPrint( "OnMapLoad" );
-};
-
-global OnBotJoin = function( bot )
-{
-	//make sure allies spawn at default
-	bot.ChangeSpawnPoint( 0 );
 };

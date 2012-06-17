@@ -819,6 +819,21 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Track_Switch_North_.*" );
 	Util.EnableGroup( "tsarty", TEAM.AXIS );
 
+	Util.UpdateSwitchData();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2500;
+	//~ bot.TargetBreakableDist = 300.0;
+
+	// default spawn
+	bot.ChangeSpawnPoint(0);
+};
+
+global InitializeRoutes = function()
+{
 	MapRoutes =
 	{
 		DEFEND_Depot_Yard_6 =
@@ -958,15 +973,4 @@ global OnMapLoad = function()
 	MapRoutes.SWITCH_trackswitch = MapRoutes.ATTACK_Track_Switch_North_1;
 
 	Util.Routes(MapRoutes);
-	Util.UpdateSwitchData();
-	Util.MapDebugPrint( "OnMapLoad" );
-};
-
-global OnBotJoin = function( bot )
-{
-	bot.MaxViewDistance = 2500;
-	//~ bot.TargetBreakableDist = 300.0;
-
-	// default spawn
-	bot.ChangeSpawnPoint(0);
 };

@@ -661,10 +661,19 @@ global OnMapLoad = function()
 	Util.AddUsePoint( Map.Plant_North_Anti_Tank_Gun, { Vec3(9662, 4696, -103), Vec3(9649, 4773, -200) });
 	Util.AddUsePoint( Map.Plant_South_Anti_Tank_Gun, { Vec3(9658, 3935, -103), Vec3(9644, 3869, -200) });
 
-	// Routing
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
 	MapRoutes =
 	{
-		// Alternate Routes
 		CHECKPOINT_oldcityflag =
 		{
 			ROUTE_allyspawn =
@@ -976,11 +985,4 @@ global OnMapLoad = function()
 	MapRoutes.MOBILEMG42_rGuns2 = MapRoutes.MOBILEMG42_rGuns1;
 
 	Util.Routes(MapRoutes);
-	Util.MapDebugPrint( "OnMapLoad" );
-};
-
-global OnBotJoin = function( bot )
-{
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

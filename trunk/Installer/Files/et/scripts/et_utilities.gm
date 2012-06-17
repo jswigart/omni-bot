@@ -52,6 +52,8 @@ Util.TeamSniperWeapons =
 	},
 };
 
+Util.PrimaryRouteGoalQuery = "BUILD_.*\nPLANT_.*\nFLAG_.*\nCHECKPOINT_.*";
+
 if (GetModName() != "noquarter") {
 	Util.TeamSniperWeapons["ALLIES"][1] = WEAPON.FG42;
 }
