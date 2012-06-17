@@ -225,7 +225,10 @@ this.UpdateGib = function()
 			return;
 		}
 
-		this.Bot.HoldButton(BTN.CROUCH, 99);
+		// crouch time must be lower than gib timeout,
+		// because body sometimes can't be gibbed if covertops is crouched
+		this.Bot.HoldButton(BTN.CROUCH, 2);
+		
 		this.AddAimRequest(Priority.High, "position", tPos + Vector3(0,0,-12));
 
 		this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
@@ -331,7 +334,12 @@ this.UpdateStealth = function()
 this.Exit = function()
 {
 	this.Priority = 0; // this func is called directly in some cases
-	this.State = this.SPOT_MINES;
+	if (this.State == this.GOTO_TARGET) {
+		// target entered limbo
+		this.State = this.SEARCH_FOR_CORPSE;
+	} else {
+		this.State = this.SPOT_MINES;
+	}
 	this.TargetPosition = null;
 	this.Bot.ReleaseButton(BTN.CROUCH, BTN.USE, BTN.ATTACK1);
 	this.ReleaseAimRequest();
@@ -380,7 +388,7 @@ this.UpdateDebugString = function()
 
 this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 {
-	if ( this.Bot.GetClass() != CLASS.COVERTOPS || this.IsActive()) { return; }
+	if ( !this.Bot || this.Bot.GetClass() != CLASS.COVERTOPS || this.IsActive()) { return; }
 
 	if ( victim ) {
 		if ( this.Bot.GetTarget() == victim && this.Bot.DistanceTo(victim) < 1000 )

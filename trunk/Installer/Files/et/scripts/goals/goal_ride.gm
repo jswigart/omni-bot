@@ -1,4 +1,4 @@
-// This script contains functionality to allow medic bots to ride vehicles
+// This script contains functionality to allow bots to ride vehicles
 
 // These parameters are required
 this.Name = "RIDE";		// The name of the goal.
@@ -77,7 +77,10 @@ this.Exit = function()
 	if ( this.DynamicGotoThread )
 		{ this.KillThread(this.DynamicGotoThread); }
 
-	this.Bot.DisableCombatMovement = false;
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
+	}
 	this.OnTarget = false;
 };
 
@@ -133,7 +136,9 @@ this.DynamicGoto = function()
 
 	if(pathSuccess) {
 		// disable combat movement so they can board better
+		this.CombatMovementDisabled = true;
 		this.Bot.DisableCombatMovement = true;
+
 		this.OnTarget = true;
 	}
 	else {

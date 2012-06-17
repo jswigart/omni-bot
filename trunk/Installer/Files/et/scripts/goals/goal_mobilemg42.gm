@@ -64,14 +64,6 @@ this.Update = function()
 
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
-		// disable combat movement. note: if it is too late here,
-		// there is no other choice but to move this to the Enter function
-		if (!this.Bot.DisableCombatMovement)
-		{
-			this.CombatMovementDisabled = true;
-			this.Bot.DisableCombatMovement = true;
-		}
-
 		if(!this.MarkInUse(this.MapGoal))
 		{
 			this.BlackboardDelay(5, this.MapGoal);
@@ -80,11 +72,18 @@ this.Update = function()
 
 		this.Bot.StuckPos = null;
 
+		// disable combat movement. note: if it is too late here,
+		// there is no other choice but to move this to the Enter function
+		if (!this.Bot.DisableCombatMovement)
+		{
+			this.CombatMovementDisabled = true;
+			this.Bot.DisableCombatMovement = true;
+		}
+
 		// note: they can only select one randomly each time they activate the goal
 		// this is because there is no guarantee that they are able to cycle through each one
 		// given the limits of the weapon while it is set.
-		r = Util.GetRandomFromTable( this.MapGoal.AimVectors );
-		this.AimVector = this.MapGoal.AimVectors[ r ];
+		this.AimVector = Util.GetRandomTableValue( this.MapGoal.AimVectors );
 		this.AddAimRequest(Priority.High, "facing", this.AimVector);
 
 		// wait until bot stands up after revive
@@ -165,6 +164,7 @@ this.Exit = function()
 {
 	if (this.CombatMovementDisabled) {
 		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
 	}
 	this.Bot.ReleaseButton(BTN.PRONE);
 	this.ReleaseWeaponRequest();

@@ -116,7 +116,7 @@ this.UpgradeVersion = function(Props)
 		// cs: we cant do this unless a major rewrite to support big bitfields :(
 		//this.LimitToWeapon(this.Weapons);
 
-		if ( tableCount(this.Weapons) > 0 )
+		if ( this.Weapons && tableCount(this.Weapons) > 0 )
 		{
 			this.DefaultPriority += 0.2;
 		}
@@ -231,7 +231,7 @@ this.SaveToTable = function(SaveTable)
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
 	SaveTable.Weapons = this.Weapons;
-	SaveTable.DisableCM = this.DisableCM;
+	if (this.DisableCM) { SaveTable.DisableCM = this.DisableCM; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -337,8 +337,9 @@ this.SetProperty = function(property, value)
 		}
 		case "disablecm":
 		{
-			i = ToInt(value);
-			if ( typeId(i) == 1)
+			if (value == null){ i = 1; }
+			else { i = ToInt(value); }
+			if ( typeId(i) == 1 )
 			{
 				this.DisableCM = i;
 			}

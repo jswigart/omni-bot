@@ -6,6 +6,7 @@ this.Region = null;
 this.ExplosiveTypeDynamite = 1<<0;
 this.ExplosiveTypeSatchel = 1<<1;
 this.RolePriorityBonus = 0.1;
+this.RemoveWithEntity = false;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +15,6 @@ this.InitNewGoal = function()
 	this.TraceInfo = {};
 	this.TraceEntity = null;
 	this.ExplosiveType = this.ExplosiveTypeDynamite;
-	this.CoverSpots = {};
 	this.CreateOnLoad = true; // user created goals need this
 };
 
@@ -48,19 +48,20 @@ this.UpgradeVersion = function(Props)
 		this.ExplosiveType = Props.ExplosiveType;
 		this.IgnoreTargets = Props.IgnoreTargets;
 		this.TraceInfo = Props.TraceInfo;
+		this.IgnoreEntity = Props.IgnoreEntity;
+		this.DetonateSpots = Props.DetonateSpots;
+		this.CoverSpots = Props.CoverSpots;
 
-		if ( Props.CoverSpots )
+		if ( this.CoverSpots )
 		{
-			this.CoverSpots = Props.CoverSpots;
-
 			// clear any occupied slots
-			foreach ( id and spot in this.CoverSpots ) {
+			foreach ( spot in this.CoverSpots ) {
 				spot.occupied = null;
 			}
-		}
-		else
-		{
-			this.CoverSpots = table();
+			// delete empty table
+			if (tableCount(this.CoverSpots)==0) {
+				this.CoverSpots = null;
+			}
 		}
 
 		// verify fields and types.
@@ -79,11 +80,8 @@ this.Render = function(editMode)
 		bbEnt = this.TraceEntity;
 	}
 
-	if (this.CoverSpots)
-	{
-		topOffset = Vector3(0,0,64);
-		stanceOffset = Vector3(0,0,0);
-	}
+	topOffset = Vector3(0,0,64);
+	stanceOffset = Vector3(0,0,0);
 
 	while(this.RenderGoal == true)
 	{
@@ -113,6 +111,11 @@ this.Render = function(editMode)
 				{
 					this.ExtraDebugText += "ExplosiveType: INVALID\n";
 				}
+			}
+
+			if (this.IgnoreEntity)
+			{
+				this.ExtraDebugText += "IgnoreEntity\n";
 			}
 		}
 
@@ -150,13 +153,27 @@ this.Render = function(editMode)
 				}
 
 				DrawLine(base,base+topOffset,COLOR.BLUE,2);
-				DrawText3d(base+topOffset, this.GetName() + " Cover Spot " + ToString(id) + "\nStance: " + spot.stance,COLOR.WHITE,2,textDrawRadius);
+				coverTimeout = "";
+				if (spot.Timeout) {
+					coverTimeout = "\nTimeout: " + spot.Timeout;
+				}
+				DrawText3d(base+topOffset, this.GetName() + " Cover Spot " + ToString(id) + "\nStance: " + spot.stance + coverTimeout,COLOR.WHITE,2,textDrawRadius);
 
 				foreach ( id and face in spot.AimVectors )
 				{
 					DrawArrow(base+topOffset+stanceOffset,base+topOffset+stanceOffset+face*32,COLOR.BLUE,2);
 					DrawText3d(base+topOffset+stanceOffset+face*32,ToString(id),COLOR.WHITE,2,512);
 				}
+			}
+		}
+
+		if ( this.DetonateSpots )
+		{
+			foreach ( id and spot in this.DetonateSpots )
+			{
+				base = GroundPoint(spot);
+				DrawLine(base,base+topOffset,COLOR.BLUE,2);
+				DrawText3d(base+topOffset, this.GetName() + " Detonate Spot " + id,COLOR.WHITE,2,textDrawRadius);
 			}
 		}
 
@@ -171,8 +188,10 @@ this.SaveToTable = function(SaveTable)
 	// save the goal specific properties
 	SaveTable.ExplosiveType = this.ExplosiveType;
 	SaveTable.IgnoreTargets = this.IgnoreTargets;
-	SaveTable.TraceInfo 	= this.TraceInfo;
-	SaveTable.CoverSpots	= this.CoverSpots;
+	SaveTable.TraceInfo  = this.TraceInfo;
+	SaveTable.CoverSpots = this.CoverSpots;
+	SaveTable.IgnoreEntity = this.IgnoreEntity;
+	SaveTable.DetonateSpots = this.DetonateSpots;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -181,16 +200,44 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		trace - the traceinfo of the entity to be built");
-	print("		this MUST be an OID entity, use /oidlist to confirm");
+	print("     trace - the traceinfo of the entity to destroy,");
+	print("             this should be an OID entity, use /oidlist to confirm");
+	print("  or");
+	print("     ignoreentity - goal will be enabled/disabled in map script");
 	print("Optional:");
-	print("		etype - dyno, satchel, both");
-	print("		coverspot - location to go to after planting dynamite, supports multiple");
-	print("		coverfacing - Direction the bot should face at cover spot");
-	print("		coverstance - stand, crouch, prone");
+	print("     etype - dyno, satchel, both");
+	print("     coverspot - location to go to after planting dynamite, supports multiple");
+	print("     coverfacing - Direction the bot should face at cover spot");
+	print("     coverstance - stand, crouch, prone");
+	print("     covertimeout - how long to stay on cover spot, default value is 25 seconds");
+	print("     detonatespot - location to go to after placing satchel, supports multiple");
 };
 
 //////////////////////////////////////////////////////////////////////////
+
+this.GetNearestCoverSpot = function()
+{
+	spot = null;
+	dist = null;
+	if ( this.CoverSpots )
+	{
+		// get the closest one
+		foreach (item in this.CoverSpots)
+		{
+			testDist = DistanceBetween(GetLocalPosition(), item.position);
+			if (!dist || testDist < dist)
+			{
+				dist = testDist;
+				spot = item;
+			}
+		}
+	}
+	if (!spot)
+	{
+		print(this.GoalType, ": No cover spots found!");
+	}
+	return spot;
+};
 
 this.SetProperty = function(property, value)
 {
@@ -206,16 +253,30 @@ this.SetProperty = function(property, value)
 			else
 			{
 				targetinfo = Util.ShowEntityInfo(TRACE.ALL);
-				if (tableCount(targetinfo) > 0 && targetinfo.id && GetEntClass(targetinfo.id) == CLASS.GOAL)
+				if (tableCount(targetinfo) > 0 && targetinfo.id && (GetEntClass(targetinfo.id) == CLASS.GOAL /* || GetEntClass(targetinfo.id) == null */))
 				{
 					// store the trace positions. this is so we can handle ETPro map scripts
 					// since adding ents with the 'create' command makes ent numbers unreliable
 					this.TraceInfo = targetinfo;
+					this.IgnoreEntity = null;
 				}
 				else
 				{
 					print("Invalid or no entity found");
 				}
+			}
+		}
+		case "ignoreentity":
+		{
+			if (value == "0" || value == "false")
+			{
+				this.IgnoreEntity = null;
+			}
+			else
+			{
+				this.TraceInfo = null;
+				this.TraceEntity = null;
+				this.IgnoreEntity = true;
 			}
 		}
 		case "etype":
@@ -237,32 +298,28 @@ this.SetProperty = function(property, value)
 		{
 			if ( value == "clearall" || value == "clear" )
 			{
-				tableClear(this.CoverSpots);
+				this.CoverSpots = null;
 			}
 			else
 			{
 				i = ToInt(value);
 				if ( typeId(i) == 1)
 				{
+					if (!this.CoverSpots)
+					{
+						this.CoverSpots = {};
+					}
 					spotCount = tableCount(this.CoverSpots);
 					if ( i < 0 || i > spotCount )
 					{
 						i = spotCount;
 					}
 
-					playerFace = GetLocalFacing();
-
-					this.CoverSpots[ i ] = table();
-					this.CoverSpots[ i ].position = GetLocalPosition();
-
-					if ( !this.CoverSpots[ i ].AimVectors )
-					{
-						this.CoverSpots[ i ].AimVectors = table();
-					}
-
-					facingCount = tableCount(this.CoverSpots[ i ].AimVectors);
-					this.CoverSpots[ i ].AimVectors[ facingCount ] = playerFace;
-					this.CoverSpots[ i ].stance = "stand";
+					this.CoverSpots[ i ] = {
+						position = GetLocalPosition(),
+						AimVectors = { GetLocalFacing() },
+						stance = "stand"
+					};
 
 					print("Cover Spot",i," added");
 				}
@@ -274,97 +331,92 @@ this.SetProperty = function(property, value)
 		}
 		case "coverfacing":
 		{
-			if ( this.CoverSpots )
+			spot = this.GetNearestCoverSpot();
+			if (spot)
 			{
-				clear = false;
 				if ( value != "clearall" && value != "clear" ) {
 					ind = ToInt(value, 0);
 					if (typeId(ind) != 1) {
 						print(this.GoalType, ": Invalid facing index, expecting int");
 						return;
 					}
-				}
-				else {
-					clear = true;
-				}
-
-				spot = null;
-				dist = null;
-				spotCount = tableCount(this.CoverSpots);
-
-				// get the closest one
-				for( i = 0; i < spotCount; i += 1)
-				{
-					if ( !this.CoverSpots[ i ] ) { continue; }
-					testDist = DistanceBetween(GetLocalPosition(), this.CoverSpots[ i ].position);
-					if (!dist || testDist < dist) {
-						dist = testDist;
-						spot = i;
-					}
-				}
-
-				if (typeId(spot) == 1)
-				{
-					if ( clear ) {
-						tableClear(this.CoverSpots[ spot ].AimVectors);
-						print("all facings cleared");
-						return;
-					}
-
-					facingCount = tableCount(this.CoverSpots[ spot ].AimVectors);
+					facingCount = tableCount(spot.AimVectors);
 					if ( ind < 0 || ind > facingCount ) {
 						ind = facingCount;
 					}
 
 					playerFace = GetLocalFacing();
-					this.CoverSpots[ spot ].AimVectors[ ind ] = playerFace;
+					spot.AimVectors[ ind ] = playerFace;
 					print("Facing",ind,"set to",playerFace);
 				}
-				else
-				{
-					print(this.GoalType, ": No cover spots found!");
+				else {
+					tableClear(spot.AimVectors);
+					print("all facings cleared");
 				}
 			}
 		}
 		case "coverstance":
 		{
-			if ( this.CoverSpots )
+			spot = this.GetNearestCoverSpot();
+			if (spot)
 			{
-				spot = null;
-				dist = null;
-				spotCount = tableCount(this.CoverSpots);
+				spotStance = "stand";
 
-				// get the closest one
-				for( i = 0; i < spotCount; i += 1)
+				if ( value == "crouch" || value == "prone" )
 				{
-					if ( !this.CoverSpots[ i ] ) { continue; }
-					testDist = DistanceBetween(GetLocalPosition(), this.CoverSpots[ i ].position);
-					if (!dist || testDist < dist)
-					{
-						dist = testDist;
-						spot = i;
-					}
+					spotStance = value;
 				}
 
-				if (typeId(spot) == 1)
+				spot.stance = spotStance;
+				print("Stance set to",spotStance);
+			}
+		}
+		case "covertimeout":
+		{
+			spot = this.GetNearestCoverSpot();
+			if (spot)
+			{
+				timeout = ToInt(value, 0);
+				if ( timeout == 0 )
 				{
-					spotStance = "stand";
-
-					if ( value == "crouch" )
-					{
-						spotStance = value;
-					}
-					else if ( value == "prone" )
-					{
-						spotStance = value;
-					}
-
-					this.CoverSpots[ spot ].stance = spotStance;
-					print("Stance set to",spotStance);
+					spot.Timeout = null;
+					print("Timeout cleared");
 				}
 				else
 				{
-					print(this.GoalType, ": No cover spots found!");
+					spot.Timeout = timeout;
+					print("Timeout set to",timeout);
+				}
+			}
+		}
+		case "detonatespot":
+		{
+			if ( value == "clearall" || value == "clear" )
+			{
+				this.DetonateSpots = null;
+			}
+			else
+			{
+				i = ToInt(value);
+				if ( typeId(i) == 1)
+				{
+					if (!this.DetonateSpots)
+					{
+						this.DetonateSpots = {};
+					}
+					spotCount = tableCount(this.DetonateSpots);
+					if ( i < 0 || i > spotCount )
+					{
+						i = spotCount;
+					}
+
+					this.DetonateSpots[ i ] = GetLocalPosition();
+
+					print("Detonate spot",i," added");
+				}
+				else
+				{
+					print(this.GoalType, ": Invalid detonate spot index, expecting int");
 				}
 			}
 		}

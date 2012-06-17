@@ -145,6 +145,15 @@ this.CurePoisonWithNeedle = function()
 	return false;
 };
 
+this.CheckHealthForNeedle = function()
+{
+	haTable = {};
+	GetEntHealthAndArmor(this.TargetEntity, haTable);
+
+	// from etpub and nq code. assuming other mods are the same.
+	return haTable.Health <= haTable.MaxHealth * 0.25;
+};
+
 this.CanHealWithNeedle = function()
 {
 	if ( !this.TargetEntity ) {
@@ -156,15 +165,7 @@ this.CanHealWithNeedle = function()
 		return false;
 	}
 
-	haTable = {};
-	GetEntHealthAndArmor(this.TargetEntity, haTable);
-
-	// from etpub and nq code. assuming other mods are the same.
-	if ( haTable.Health > haTable.MaxHealth * 0.25 ) {
-		return false;
-	}
-
-	return true;
+	return this.CheckHealthForNeedle();
 };
 
 this.Update = function()
@@ -362,7 +363,6 @@ this.UpdateKillTarget = function()
 this.UpdateSwitchToSyringe = function()
 {
 	this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
-	this.BlockForWeaponChange(WEAPON.SYRINGE);
 
 	if ( this.CuringPoisonWithNeedle ) {
 		this.State = this.CURE_POISON_WITH_NEEDLE;
@@ -371,6 +371,7 @@ this.UpdateSwitchToSyringe = function()
 		this.State = this.HEAL_WITH_NEEDLE;
 	}
 	else {
+		this.BlockForWeaponChange(WEAPON.SYRINGE);
 		this.State = this.REVIVE_TARGET;
 	}
 };
@@ -416,7 +417,9 @@ this.UpdateCurePoisonWithNeedle = function()
 	{
 		this.AddAimRequest(Priority.High, "position",pos);
 		this.Bot.MoveTowards(pos);
-		this.Bot.PressButton(BTN.ATTACK1);
+		if (this.Bot.GetCurrentWeapon() == WEAPON.SYRINGE) {
+			this.Bot.PressButton(BTN.ATTACK1);
+		}
 	}
 	else
 	{
@@ -432,17 +435,39 @@ this.UpdateHealWithNeedle = function()
 	if ( this.TimeOnTarget > 100 ) {
 		this.Finished();
 	}
-
 	pos = GetEntPosition(this.TargetEntity);
-	if (pos && this.TargetEntity)
-	{
-		this.AddAimRequest(Priority.High, "position",pos + Vector3(0,0,32));
-		this.Bot.MoveTowards(pos);
-		this.Bot.PressButton(BTN.ATTACK1, BTN.SPRINT);
-	}
-	else
-	{
+
+	// finish when target is healed
+	if (!pos || !this.CheckHealthForNeedle()) {
 		this.Finished();
+	}
+
+	botPos = this.Bot.GetPosition();
+	dist = DistanceBetween(botPos, pos);
+
+	// finish if target escaped
+	if (dist > 300) {
+		this.Finished();
+	}
+
+	// sprint to target
+	if (dist > 45)
+	{
+		this.Bot.MoveTowards(pos);
+		if(dist > 70) {
+			this.Bot.PressButton(BTN.SPRINT);
+		}
+	}
+
+	if (!GetEntFlags(this.TargetEntity, ENTFLAG.PRONE, ENTFLAG.CROUCHED)) {
+		pos += Vector3(0,0,32);
+	}
+	this.AddAimRequest(Priority.High, "position", pos);
+
+	if (DistanceBetween(pos, botPos + this.Bot.GetFacing() * 30) < 50 &&
+		this.Bot.GetCurrentWeapon() == WEAPON.SYRINGE)
+	{
+		this.Bot.PressButton(BTN.ATTACK1);
 	}
 
 	yield();
@@ -458,10 +483,10 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		packType = WEAPON.MEDKIT;
 	}
 	else
-	{ 
+	{
 		return;
 	}
-	
+
 	if(this.IsActive() || this.DelayNextResponse)
 	{
 		return;
@@ -479,11 +504,13 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.Priority = this.DeliverPriority;
 		this.DelayNextResponse = true;
 		sleep(10);
-		this.DelayNextResponse = false;
-
-		// if we haven't activated by now, don't bother
-		if(!this.IsActive()) {
-			this.Priority = 0;
+		if(this.DelayNextResponse) // can be null if bot disconnected
+		{
+			this.DelayNextResponse = false;
+			// if we haven't activated by now, don't bother
+			if(!this.IsActive()) {
+				this.Priority = 0;
+			}
 		}
 	}
 };

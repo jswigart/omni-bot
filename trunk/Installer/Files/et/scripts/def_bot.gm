@@ -79,7 +79,7 @@ this.ClassPrimaryWeaponChoice = function(excludeweapons)
 			}
 
 			if ( !weaponChoice ) {
-				weaponChoice = tmp[Util.GetRandomFromTable(tmp)];
+				weaponChoice = Util.GetRandomTableValue(tmp);
 			}
 		}
 	}

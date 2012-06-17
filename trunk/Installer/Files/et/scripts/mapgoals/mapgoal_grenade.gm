@@ -147,7 +147,7 @@ this.SaveToTable = function(SaveTable)
 	SaveTable.TraceInfo = this.TraceInfo;
 	SaveTable.TraceEntity = this.TraceEntity;
 	SaveTable.PrimeGrenade = this.PrimeGrenade;
-	SaveTable.Count = this.Count;
+	if(this.Count) { SaveTable.Count = this.Count; }
 };
 
 //////////////////////////////////////////////////////////////////////////

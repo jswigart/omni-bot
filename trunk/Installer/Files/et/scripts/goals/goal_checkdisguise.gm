@@ -1,4 +1,4 @@
-// This script contains functionality to ignore disguised enemies if they arent close enough
+// This script contains functionality to ignore disguised enemies if they aren't close enough
 
 // These parameters are required
 this.Name = "CheckDisguise";		// The name of the goal.
@@ -18,9 +18,8 @@ this.Initialize = function()
 		Map.PrimaryGoalPositions = table();
 		gt = Util.GoalTable("PLANT_.*\nCHECKPOINT_.*\nFLAG_.*");
 
-		foreach ( id and goal in gt ) {
+		foreach ( goal in gt ) {
 			i = tableCount( Map.PrimaryGoalPositions );
-			p = goal.GetPosition();
 			Map.PrimaryGoalPositions[i] = goal.GetPosition();
 			if ( this.Debug ) {
 				print("caching goal position for ", goal.GetName());
@@ -31,52 +30,56 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
-	nearObj = false;
 	t = this.Bot.GetTarget();
+
+	// if they are close to a primary goal, just have the bots shoot them
+	foreach ( position in Map.PrimaryGoalPositions )
+	{
+		if ( DistanceBetween(t, position) < 250 ) {
+			if (this.Debug) {
+				this.Bot.Say("I'm shooting a disguised target that is near primary objective, dist = " + this.Bot.DistanceTo(t));
+			}
+			//wait until this thread is killed because target lost disguise after shooting
+			block(0);
+		}
+	}
+
+	// map scripts can also define specific areas to always detect them
+	// key = position, value = radius
+	if ( Map.CovertDetectionSpots ) {
+		foreach ( location in Map.CovertDetectionSpots ) {
+			if ( DistanceBetween(t, location[0]) <= location[1] ) {
+				if (this.Debug) {
+					this.Bot.Say("I'm shooting a disguised target that is near CovertDetectionSpots, dist = " + this.Bot.DistanceTo(t));
+				}
+				//wait until this thread is killed because target lost disguise after shooting
+				block(0);
+			}
+		}
+	}
 
 	while(1)
 	{
-		// if they are close to a primary goal, just have the bots shoot them
-		foreach ( id and position in Map.PrimaryGoalPositions )
-		{
-			if ( DistanceBetween(t, position) < 250 ) {
-				nearObj = true;
-				break;
-			}
-		}
-
-		// map scripts can also define specific areas to always detect them
-		// key = position, value = radius
-		if ( Map && Map.CovertDetectionSpots ) {
-			foreach ( location in Map.CovertDetectionSpots ) {
-				if ( DistanceBetween(t, location[0]) <= location[1] ) {
-					nearObj = true;
-					break;
-				}
-			}
-		}
-
 		// increase odds of shooting with decreased distance to target
-		if (this.Debug) { shootingDisguised = true; }
 		dist = this.Bot.DistanceTo(t);
 
 		// if not near an objective, calculate odds to 'detect' based on distance, bot difficulty, and number of players
 		// f.e. if target is 300 units away and difficulty is 4 and there are 8 total players there is a 22% chance to shoot
 		// while 20 total players would equal a 10% chance ...
-		if ( !nearObj && ((dist > 1500) || (RandInt(0, ToInt(dist) > (50 + (10 * this.Bot.aimskill) - (3 * Server.NumPlayersNoSpec))))) ) {
-			if (this.Debug) { shootingDisguised = false; }
+		if ( (dist > 1500) || RandInt(0, ToInt(dist)) > 50 + (10 * this.Bot.aimskill) - (3 * Server.NumPlayersNoSpec) ) {
+			if (this.Debug) {
+				this.Bot.Say("I'm ignoring a disguised target, dist = " + dist);
+			}
 			this.Bot.IgnoreTarget( t, 10 - this.Bot.MemorySpan );
+			// wait until this thread is killed because this bot has no target,
+			// (GetPriority will be called again after IgnoreTarget timeout)
+			block(0);
 		}
 
-		if ( this.Debug ) {
-			if(shootingDisguised) {
-				this.Bot.Say("I'm shooting a disguised target: nearObj = " + nearObj + " dist = " + this.Bot.DistanceTo(t));
-			}
-			else {
-				this.Bot.Say("I'm ignoring a disguised target: nearObj = " + nearObj + " dist = " + this.Bot.DistanceTo(t));
-			}
+		if (this.Debug) {
+			this.Bot.Say("I'm shooting a disguised target, dist = " + dist);
 		}
 
-		yield();
+		sleep(0.5);
 	}
 };

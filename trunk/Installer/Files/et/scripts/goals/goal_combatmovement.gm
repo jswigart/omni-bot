@@ -124,14 +124,7 @@ this.ShouldCombatMovement = function()
 
 this.EntFlagCheck = function()
 {
-//	if (this.Bot.HasAnyEntityFlag(ENTFLAG.MOUNTED,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER, ENTFLAG.PRONE))
-	//temporary workaround, because HasAnyEntityFlag does not work in the current omnibot version
-	if (this.Bot.HasEntityFlag(ENTFLAG.MOUNTED) || this.Bot.HasEntityFlag(ENTFLAG.ZOOMING) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) || this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.PRONE))
-	{
-		return false;
-	}
-
-	return true;
+	return !this.Bot.HasAnyEntityFlag(ENTFLAG.MOUNTED,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER,ENTFLAG.PRONE);
 };
 
 this.hard = function(dist)

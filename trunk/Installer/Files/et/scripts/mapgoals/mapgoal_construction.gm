@@ -17,6 +17,7 @@ this.InitNewGoal = function()
 	this.TraceInfo = {};
 	this.TraceEntity = null;
 	this.CreateOnLoad = true; // user created goals need this
+	this.Facing = GetLocalFacing();
 
 	this.Schema.Check(this);
 };
@@ -60,6 +61,8 @@ this.UpgradeVersion = function(Props)
 		}
 
 		this.TraceInfo = Props.TraceInfo;
+		this.IgnoreEntity = Props.IgnoreEntity;
+		this.Facing = Props.Facing;
 
 		if(!this.Schema.Check(this))
 		{
@@ -114,10 +117,15 @@ this.Render = function()
 			{
 				this.ExtraDebugText += "IgnoreTargets \n";
 			}
-			
+
+			if (this.IgnoreEntity)
+			{
+				this.ExtraDebugText += "IgnoreEntity\n";
+			}
+
 			if (this.Vehicle) {
 				this.ExtraDebugText += format("Vehicle: %s",this.Vehicle);
-			}			
+			}
 		}
 
 		// Render the built-in debug info.
@@ -137,6 +145,14 @@ this.Render = function()
 		if (bbEnt)
 		{
 			DrawEntityOBB( bbEnt, 20, COLOR.GREEN );
+		}
+
+		if ( this.Facing && this.IgnoreEntity)
+		{
+			goalBasePos = this.GetPosition();
+			goalPos = goalBasePos + Vec3(0,0,64);
+			DrawLine(goalPos,goalBasePos,COLOR.YELLOW,2);
+			DrawArrow(goalPos,goalPos+this.Facing*32,COLOR.BLUE,2);
 		}
 
 		if ( this.Vehicle && this.Offsets )
@@ -182,12 +198,14 @@ this.Render = function()
 this.SaveToTable = function(SaveTable)
 {
 	// save the goal specific properties
-	SaveTable.Mobile 			= this.Mobile;
-	SaveTable.IgnoreTargets 		= this.IgnoreTargets;
-	SaveTable.TraceInfo 			= this.TraceInfo;
-	SaveTable.Stance 			= this.Stance;
-	SaveTable.Vehicle 			= this.Vehicle;
-	SaveTable.Offsets 			= this.Offsets;
+	SaveTable.Mobile        = this.Mobile;
+	SaveTable.IgnoreTargets       = this.IgnoreTargets;
+	SaveTable.TraceInfo        = this.TraceInfo;
+	SaveTable.Stance        = this.Stance;
+	SaveTable.Vehicle          = this.Vehicle;
+	if (tableCount(this.Offsets) > 0) { SaveTable.Offsets = this.Offsets; }
+	SaveTable.IgnoreEntity = this.IgnoreEntity;
+	if (this.IgnoreEntity) { SaveTable.Facing = this.Facing; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -196,12 +214,15 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		trace - the traceinfo of the entity to be built");
-	print("		this MUST be an OID entity, use /oidlist to confirm");
+	print("     trace - the traceinfo of the entity to be built,");
+	print("             this MUST be an OID entity, use /oidlist to confirm");
+	print("  or");
+	print("     ignoreentity - goal will be enabled/disabled in map script");
+	print("     facing - direction the bot should face");
 	print("Optional:");
-	print("		stance - stand, crouch, prone, random, jump");
-	print("		offset - only use for movable build goals");
-	print("		vehicle - this must be set if using offsets");
+	print("     stance - stand, crouch, prone, random, jump");
+	print("     offset - only use for movable build goals");
+	print("     vehicle - this must be set if using offsets");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -229,11 +250,38 @@ this.SetProperty = function(property, value)
 					// store the trace positions. this is so we can handle ETPro map scripts
 					// since adding ents with the 'create' command makes ent numbers unreliable
 					this.TraceInfo = targetinfo;
+					this.IgnoreEntity = null;
 				}
 				else
 				{
 					print("Invalid or no entity found");
 				}
+			}
+		}
+		case "ignoreentity":
+		{
+			if (value == "0" || value == "false")
+			{
+				this.IgnoreEntity = null;
+			}
+			else
+			{
+				this.TraceInfo = null;
+				this.TraceEntity = null;
+				this.IgnoreEntity = true;
+			}
+		}
+		case "facing":
+		{
+			playerFace = GetLocalFacing();
+			this.Facing = playerFace;
+			if (this.IgnoreEntity)
+			{
+				print("Facing set to",playerFace);
+			}
+			else
+			{
+				print("Facing is not required because IgnoreEntity is false");
 			}
 		}
 		case "vehicle":

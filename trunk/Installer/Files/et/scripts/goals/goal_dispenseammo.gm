@@ -15,19 +15,19 @@ this.Initialize = function()
 	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
-// This callback is called when the bot spawns into the game. You may run this function as a thread,
-// however it should be kept in mind that the goal tracks the thread, and will kill the thread and re-run
-// this callback upon each spawn. If you need a persistant thread, you should spawn one yourself.
+// This callback is called when the bot SPAWNS or is REVIVED.
 // NOTE: This function won't be called if the bot doesn't match the allowed classes set up above.
 this.OnSpawn = function()
 {
+	// sleep before checking RevivedTime, because RIVIVED event can be called after OnSpawn
+	sleep(0.5);
 	if (this.RevivedTime && GetTime() - this.RevivedTime < 3)
 		{ return; }
 
 	if ( Map && Map.DispenseAmmoTime )
-		{ sleep(Map.DispenseAmmoTime); }
+		{ sleep(Map.DispenseAmmoTime - 0.5); }
 	else
-		{ sleep(3); }
+		{ sleep(2.5); }
 
 	this.Priority = 1.0;
 };

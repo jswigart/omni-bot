@@ -1,6 +1,6 @@
 this.GoalType = "CHECKPOINT";
 this.Version = 1;
-this.DefaultPriority = 0.71;
+this.DefaultPriority = 0.7;
 this.DisableForControllingTeam = true;
 this.CreateOnLoad = false;
 this.RolePriorityBonus = 0.1;
