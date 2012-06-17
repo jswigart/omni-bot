@@ -56,21 +56,16 @@ this.Enter = function()
 	}
 
 	if ( tableCount(teammatesAlive) > 0 ) {
-		this.GotoPosition = GetEntPosition(teammatesAlive[ Util.GetRandomFromTable(teammatesAlive) ]);
+		this.GotoPosition = GetEntPosition(Util.GetRandomTableValue(teammatesAlive));
 	}
 };
 
 this.Update = function()
 {
-	if ( !this.GotoPosition ) {
+	if ( !this.GotoPosition || this.Goto(this.GotoPosition, 64.0) == EVENT.PATH_FAILED) {
 		// bb delay it so the default roam goal can activate
 		this.BlackboardDelay(6, this.BlackboardId);
-		this.Finished();
 	}
-	else {
-		this.Goto(this.GotoPosition, 64.0);
-	}
-
 	this.Finished();
 };
 

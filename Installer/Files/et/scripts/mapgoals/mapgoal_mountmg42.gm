@@ -108,7 +108,7 @@ this.SaveToTable = function(SaveTable)
 	// save the goal specific properties
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
-	SaveTable.AimVectors = this.AimVectors;
+	if(tableCount(this.AimVectors) > 0) { SaveTable.AimVectors = this.AimVectors; }
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -61,8 +61,7 @@ this.Update = function()
 			this.Bot.HoldButton(BTN.CROUCH, 1.1);
 		}
 
-		r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
-		this.AddAimRequest(Priority.High, "facing", this.MapGoal.AimVectors[ r ]);
+		this.AddAimRequest(Priority.High, "facing", Util.GetRandomTableValue(this.MapGoal.AimVectors));
 
 		this.AddWeaponRequest(Priority.High, WEAPON.SMOKE_GRENADE );
 		this.BlockForWeaponChange( WEAPON.SMOKE_GRENADE );

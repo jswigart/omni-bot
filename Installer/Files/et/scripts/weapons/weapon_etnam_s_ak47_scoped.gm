@@ -10,6 +10,7 @@ WEAPON.SAK47SCOPED = 111; 					// Defined into g_etbot_interface.cpp
 // Overall weapon properties.
 this.Name = "SAK47 Scoped";
 this.WeaponId = WEAPON.SAK47SCOPED;
+this.WeaponAliasId = WEAPON.SAK47;
 this.MinUseTime = 0.0;
 
 //////////////////////////////////////////////////////////////////////////

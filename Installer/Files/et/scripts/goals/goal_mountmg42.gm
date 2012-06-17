@@ -9,7 +9,6 @@ this.Debug = false;
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
-	this.UseFacings = false;
 };
 
 this.GetPriority = function()
@@ -59,14 +58,6 @@ this.Enter = function()
 
 	this.CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
 
-	// doing this here rather than initialize so it wont require a map restart
-	if ( tableCount(this.MapGoal.AimVectors) > 0 ) {
-		this.UseFacings = true;
-	}
-	else {
-		this.MG42Info = table();
-	}
-
 	// finish criteria
 	this.GoalEnt = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.GoalEnt,"hasentflag",ENTFLAG.DEAD);
@@ -108,29 +99,30 @@ this.Update = function()
 					this.Bot.PressButton(BTN.USE);
 				}
 			}
-			else { // mounted
-				if ( this.UseFacings ) {
-					r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
-					this.AddAimRequest(Priority.Low, "facing", this.MapGoal.AimVectors[ r ]);
-				}
-				else {
+			else // mounted
+			{
+				// doing this here rather than in Enter() so it won't require respawn
+				vectors = this.MapGoal.AimVectors;
+				if ( !vectors || tableCount(vectors) == 0 )
+				{
 					// get the mg42 properties if we don't have them yet
-					if ( tableCount(this.MG42Info) < 1 ) {
-						this.Bot.GetMG42Info(this.MG42Info);
-						this.Facings = table();
-						this.Facings[ 0 ] = this.MG42Info.CenterFacing;
-						this.Facings[ 1 ] = this.MG42Info.CenterFacing; // weighted towards middle
-						this.Facings[ 2 ] = Vec3FromSpherical(0, 0, this.MG42Info.MinHorizontal);
-						this.Facings[ 3 ] = Vec3FromSpherical(0, 0, this.MG42Info.MaxHorizontal);
+					if ( !this.Facings ) {
+						MG42Info = {};
+						this.Bot.GetMG42Info(MG42Info);
+						this.Facings = {
+							MG42Info.CenterFacing,
+							MG42Info.CenterFacing, // weighted towards middle
+							Vec3FromSpherical(0, 0, MG42Info.MinHorizontal),
+							Vec3FromSpherical(0, 0, MG42Info.MaxHorizontal)
+						};
 					}
-
-					r = Util.GetRandomFromTable(this.Facings);
-					this.AddAimRequest(Priority.Low, "facing", this.Facings[ r ]);
-
-					if ( this.Debug ) {
-						goalPos = this.MapGoal.GetPosition() + Vector3(0,0,12);
-						DrawArrow(goalPos,goalPos+this.Facings[ r ]*64,COLOR.YELLOW,2);
-					}
+					vectors = this.Facings;
+				}
+				r = Util.GetRandomTableValue(vectors);
+				this.AddAimRequest(Priority.Low, "facing", r);
+				if ( this.Debug ) {
+					goalPos = this.MapGoal.GetPosition() + Vector3(0,0,12);
+					DrawArrow(goalPos,goalPos+r*64,COLOR.YELLOW,2);
 				}
 			}
 
@@ -178,9 +170,8 @@ this.Exit = function()
 	}
 	if (this.CombatMovementDisabled) {
 		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
 	}
-	if ( this.MG42Info ) {
-		tableClear(this.MG42Info);
-	}
+	this.Facings = null;
 };
 

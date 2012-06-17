@@ -135,7 +135,7 @@ this.Update = function()
 				if (numSnipeGoals > 0)
 				{
 					tbl = Util.TeamSniperWeapons[ Util.TeamName(myTeam) ];
-					newWeapon = tbl[ Util.GetRandomFromTable(tbl) ];
+					newWeapon = Util.GetRandomTableValue(tbl);
 				}
 				else
 				{

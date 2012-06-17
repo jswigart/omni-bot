@@ -1111,8 +1111,8 @@ member ShowEntityInfo = function (traceType)
 	playerId = GetGameIdFromEntity(playerEnt);
 	info.eyePos = GetLocalEyePosition();
 	info.endPos = info.eyePos + GetLocalFacing() * 1024;
-	DrawDebugLine( info.eyePos, info.endPos, COLOR.GREEN, 20 );
 	tr = TraceLine( info.eyePos, info.endPos, 0, traceType, playerId, false );
+	if(tr.end){ DrawDebugLine( info.eyePos, tr.end, COLOR.GREEN, 20 ); }
 
 	if ( !tr.entity || !EntityIsValid(tr.entity) )
 	{
@@ -1195,15 +1195,7 @@ member TraceFromPlane = function(start, normal, distance)
 //
 member AddUsePtFromWp = function(GoalName, wpname)
 {
-	wpInfo = {};
-	if(Wp.GetWaypointByName(wpname, wpInfo))
-	{
-		goal = GetGoal(GoalName);
-		if(goal && wpInfo.position)
-		{
-			goal.AddUsePoint(wpInfo.position);
-		}
-	}
+	this.AddUseWp(GoalName, wpname);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1231,7 +1223,14 @@ member AddUsePoint = function( goalname, positions )
 //
 member AddUseWp = function( goalname, wpName )
 {
-	this.AddUsePoint(goalname, this.GetWpNamePosition(wpName));
+	if ( typeId(wpName) == 6 )
+	{
+		this.AddUsePoint(goalname, this.GetWPPoss(wpName));
+	}
+	else
+	{
+		this.AddUsePoint(goalname, this.GetWpNamePosition(wpName));
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1915,10 +1914,10 @@ member ShowGoalInfo = function ( goalname )
 
 	goalPos = goal.GetPosition();
 
-	print(	"Util.ShowGoalInfo:", "goalname:", goalname, "goal:", goal );
-	print(	"Util.ShowGoalInfo:", "entity:", entity, "health:", goalha.Health,
+	print(   "Util.ShowGoalInfo:", "goalname:", goalname, "goal:", goal );
+	print(   "Util.ShowGoalInfo:", "entity:", entity, "health:", goalha.Health,
 		"dead:", dead );
-	print(	"Util.ShowGoalInfo:", "goalPos:", goalPos );
+	print(   "Util.ShowGoalInfo:", "goalPos:", goalPos );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2471,7 +2470,7 @@ member MapDebugPrint = function(message, msgonly)
 member ScriptDebugPrint = function(goalName, dbgType, msg)
 {
 	if (!DEBUG_SCRIPT_GOALS && (!Map || !Map.Debug) || !DEBUG_SCRIPT_GOALS_FILTER[dbgType]) { return; }
-	
+
 	if (!msg)
 	{
 		switch(dbgType)
@@ -3191,3 +3190,20 @@ member FindClosestGoal = function( radius, regEx, team )
 
 	return foundGoal;
 };
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member GetRandomTableValue = function(tbl)
+{
+		if ( typeId(tbl) == 6 )
+		{
+			count = tableCount(tbl);
+			if (count > 0)
+			{
+				return tbl[RandInt(0, count-1)];
+			}
+		}
+
+		return null;
+};
+

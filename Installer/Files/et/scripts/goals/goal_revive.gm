@@ -130,7 +130,7 @@ this.UpdateRevive = function()
 					this.Bot.PressButton(BTN.JUMP);
 				}
 				else {
-					this.Bot.HoldButton(BTN.CROUCH, 0.5);
+					this.Bot.HoldButton(BTN.CROUCH, 1.3);
 				}
 
 				this.Bot.MoveTowards(pos);

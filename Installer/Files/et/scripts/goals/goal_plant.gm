@@ -26,12 +26,12 @@ this.Initialize = function()
 	});
 
 	// check for entity status so we can finish if another player destroys it
-	this.LimitTo( this.CheckDestroyableState, 1 );
+	this.LimitTo( this.CheckDestroyableState, 1, true );
 };
 
 this.CheckDestroyableState = function()
 {
-	return !this.MapGoal || this.GoalEntity && EntityIsValid(this.GoalEntity) && this.Bot.GetDestroyableState(this.GoalEntity) > 0;
+	return !this.GoalEntity || this.Bot.GetDestroyableState(this.GoalEntity) > 0;
 };
 
 
@@ -63,16 +63,22 @@ this.SanityCheckWeapon = function(weapon)
 this.GetPriority = function()
 {
 	botClass = this.Bot.GetClass();
+	if (botClass == CLASS.ENGINEER)
+	{
+		query = "PLANT_.*\nDYNAMITE_.*";
+	} else {
+		query = "PLANT_.*";
+	}
 
 	while(1)
 	{
 		if ( (botClass == CLASS.ENGINEER && this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 			|| (botClass == CLASS.COVERTOPS && this.Bot.IsWeaponCharged(WEAPON.SATCHEL, 0)) )
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"PLANT_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable, query);
 			if ( count > 0 )
 			{
-				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
 					if ( botClass == CLASS.COVERTOPS )
 					{
@@ -94,20 +100,23 @@ this.GetPriority = function()
 						if ( !this.SanityCheckWeapon(WEAPON.DYNAMITE) ) { continue; }
 					}
 
-					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
+					if ( !goal.IgnoreEntity )
 					{
-						if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 )
+						if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
 						{
-							continue;
+							if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 )
+							{
+								continue;
+							}
 						}
-					}
-					else
-					{
-						goalEnt = goal.GetEntity();
-
-						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 )
+						else
 						{
-							continue;
+							goalEnt = goal.GetEntity();
+
+							if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 )
+							{
+								continue;
+							}
 						}
 					}
 
@@ -128,23 +137,24 @@ this.Enter = function()
 {
 	this.ExplosiveEntity = null;
 
-	if ( this.MapGoal.TraceEntity )
-	{
-		this.GoalEntity = this.MapGoal.TraceEntity;
-	}
-	else
-	{
-		this.GoalEntity = this.MapGoal.GetEntity();
-	}
-
 	this.Goal_Name = this.MapGoal.GetName();
-	this.Goal_Position = this.MapGoal.GetPosition();
 
-	if ( !this.GoalEntity )
+	if ( !this.MapGoal.IgnoreEntity )
 	{
-		Util.ScriptDebugPrint(this.Goal_Name, "disabled", "entered with no entity!");
-		this.MapGoal.DisableGoal(true);
-		this.Finished();
+		if ( this.MapGoal.TraceEntity )
+		{
+			this.GoalEntity = this.MapGoal.TraceEntity;
+		}
+		else
+		{
+			this.GoalEntity = this.MapGoal.GetEntity();
+		}
+		if ( !this.GoalEntity )
+		{
+			Util.ScriptDebugPrint(this.Goal_Name, "disabled", "entered with no entity!");
+			this.MapGoal.DisableGoal(true);
+			this.Finished();
+		}
 	}
 
 	if(!this.MarkInProgress(this.MapGoal)) {
@@ -242,9 +252,10 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 				foundDyno = false;
+				goalPos = this.MapGoal.GetPosition();
 				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
 				dowhile(ent) {
-					if ( ent && DistanceBetween(this.GoalEntity, ent) < 200 && this.Bot.IsAllied(ent)
+					if ( ent && DistanceBetween(goalPos, ent) < 200 && this.Bot.IsAllied(ent)
 							&& this.Bot.GetExplosiveState(ent) == 1 ) {
 						foundDyno = true;
 						break;
@@ -357,6 +368,7 @@ this.UpdateDynamite = function()
 
 					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
 						aimVectors = spot.AimVectors;
+						if ( spot.Timeout ) { coverTimeout = spot.Timeout; }
 						hasCoverSpot = true;
 					}
 					else {
@@ -379,8 +391,7 @@ this.UpdateDynamite = function()
 					}
 				}
 
-				r = Util.GetRandomFromTable(aimVectors);
-				this.AddAimRequest(Priority.Low, "facing", aimVectors[ r ]);
+				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(aimVectors));
 
 				sleep(0.75);
 
@@ -424,25 +435,42 @@ this.UpdateSatchel = function()
 				this.UpdateDebugString();
 				this.ReleaseWeaponRequest();
 				this.ReleaseAimRequest();
-				if (!this.GotoRandomAsync(32.0)) {
-					this.Finished();
-				}
-				sleep(0.5); // give them a chance to start moving before checking velocity ...
-				// todo: need a func that will return random dest vec to evaluate instead
-				while( !this.Bot.GetVelocity().IsZero() )
-				{
-					if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) )
-					{
-						break;
-					}
 
-					if (this.Bot.DistanceTo(this.ExplosiveEntity) > 300)
+				detSpot = Util.GetRandomTableValue(this.MapGoal.DetonateSpots);
+				if (detSpot)
+				{
+					if (this.Goto(detSpot) == EVENT.PATH_SUCCESS)
 					{
 						this.GoalState = this.DETONATE_EXPLOSIVE;
-						break;
+					}
+					else
+					{
+						detSpot = null;
+					}
+				}
+				if (!detSpot)
+				{
+					if (!this.GotoRandomAsync(32.0)) {
+						this.Finished();
 					}
 
-					sleep(1);
+					sleep(0.5); // give them a chance to start moving before checking velocity ...
+					// todo: need a func that will return random dest vec to evaluate instead
+					while( !this.Bot.GetVelocity().IsZero() )
+					{
+						if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) )
+						{
+							break;
+						}
+
+						if (this.Bot.DistanceTo(this.ExplosiveEntity) > 300)
+						{
+							this.GoalState = this.DETONATE_EXPLOSIVE;
+							break;
+						}
+
+						sleep(1);
+					}
 				}
 			}
 			case this.DETONATE_EXPLOSIVE:

@@ -15,20 +15,14 @@ this.Initialize = function()
 	this.Stances = { -1, BTN.PRONE, BTN.CROUCH, };
 
 	// check every second for constructible status so we can finish if necessary
-	this.LimitTo( this.CheckConstructableState, 1 );
+	this.LimitTo( this.CheckConstructableState, 1, true );
 };
 
 this.CheckConstructableState = function()
 {
-	// pretty much a hack here. if there is no MapGoal, return true since
-	// we want GetPriority to run and find one
-	if (  !this.MapGoal || !this.TargetEntity ) {
-		return true;
-	}
-
 	// basically this is acting like a custom finish criteria. handles bots
 	// in route to the construction
-	if ( this.Bot.GetConstructableState(this.TargetEntity) < 1 ) {
+	if ( this.TargetEntity && this.Bot.GetConstructableState(this.TargetEntity) < 1 ) {
 
 		if ( this.Debug ) {
 			this.Bot.Say(this.MapGoal.GetName() + " already built, aborting");
@@ -46,19 +40,22 @@ this.GetPriority = function()
 		count = this.QueryGoals(this.Bot.QueryGoalsTable,"BUILD.*");
 		if ( count > 0 )
 		{
-			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
-				if( !goal.TraceEntity )
+				if ( !goal.IgnoreEntity )
 				{
-					goalEnt = goal.GetEntity();
-					if ( !goalEnt || this.Bot.GetConstructableState(goalEnt) < 1 )
+					if( !goal.TraceEntity )
+					{
+						goalEnt = goal.GetEntity();
+						if ( !goalEnt || this.Bot.GetConstructableState(goalEnt) < 1 )
+						{
+							continue;
+						}
+					}
+					else if ( goal.TraceEntity && (!EntityIsValid(goal.TraceEntity) || this.Bot.GetConstructableState(goal.TraceEntity) < 1 ) )
 					{
 						continue;
 					}
-				}
-				else if ( goal.TraceEntity && (!EntityIsValid(goal.TraceEntity) || this.Bot.GetConstructableState(goal.TraceEntity) < 1 ) )
-				{
-					continue;
 				}
 
 				this.MapGoal = goal;
@@ -75,11 +72,14 @@ this.GetPriority = function()
 
 this.Enter = function()
 {
-	if ( this.MapGoal.TraceEntity ) {
-		this.TargetEntity = this.MapGoal.TraceEntity;
-	}
-	else {
-		this.TargetEntity = this.MapGoal.GetEntity();
+	if ( !this.MapGoal.IgnoreEntity )
+	{
+		if ( this.MapGoal.TraceEntity ) {
+			this.TargetEntity = this.MapGoal.TraceEntity;
+		}
+		else {
+			this.TargetEntity = this.MapGoal.GetEntity();
+		}
 	}
 
 	this.Position = this.MapGoal.GetPosition();
@@ -103,6 +103,7 @@ this.Update = function()
 	useOffsets = false;
 	vehEnt = null;
 	offsetCount = 0;
+	hasEnt = !this.MapGoal.IgnoreEntity;
 
 	// are offsets set up for this goal?
 	if ( !this.MapGoal.ForceRouting && this.MapGoal.Offsets && this.MapGoal.Vehicle ) {
@@ -172,7 +173,7 @@ this.Update = function()
 	{
 		this.Bot.StuckPos = null;
 
-		if ( this.Bot.GetConstructableState(this.TargetEntity) < 1 )
+		if ( hasEnt && this.Bot.GetConstructableState(this.TargetEntity) < 1 )
 		{
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
@@ -188,9 +189,9 @@ this.Update = function()
 			this.BlackboardDelay(5, this.MapGoal);
 			this.Finished();
 		}
-		
+
 		if (this.MapGoal.PaththroughFunction){ this.MapGoal.PaththroughFunction(this); }
-		
+
 		if ( this.MapGoal.Stance == "crouch" )
 		{
 			this.Bot.HoldButton(BTN.CROUCH, 99);
@@ -214,7 +215,14 @@ this.Update = function()
 		// for voice chat 'im constructing'
 		signal(this.Bot.Name + "_construct");
 
-		this.AddAimRequest(Priority.High, "position", this.Position);
+		if (hasEnt)
+		{
+			this.AddAimRequest(Priority.High, "position", this.Position);
+		}
+		else
+		{
+			this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);
+		}
 		this.AddWeaponRequest(Priority.High, WEAPON.PLIERS);
 		this.BlockForWeaponChange( WEAPON.PLIERS);
 		sleep( .25 );
@@ -222,10 +230,14 @@ this.Update = function()
 		botEnt = this.Bot.GetGameEntity();
 
 		frameCounter = 0;
-		while ( this.Bot.GetConstructableState(this.TargetEntity) != 0 )
+
+		while ( !hasEnt || this.Bot.GetConstructableState(this.TargetEntity) != 0 )
 		{
-			inBounds = CheckEntityBoundsIntersect(botEnt, this.TargetEntity);
-			if (frameCounter < 15 || inBounds == false)
+			if (hasEnt)
+			{
+				inBounds = CheckEntityBoundsIntersect(botEnt, this.TargetEntity);
+			}
+			if (frameCounter < 15 || !inBounds)
 			{
 				this.Bot.MoveTowards(this.Position);
 			}
@@ -240,7 +252,7 @@ this.Update = function()
 			yield();
 			frameCounter += 1;
 
-			if ( frameCounter > 100 && inBounds == false ) {
+			if ( frameCounter > 100 && inBounds == false && hasEnt ) {
 				// if they aren't there by now, they most likely aren't gonna make it
 				break;
 			}

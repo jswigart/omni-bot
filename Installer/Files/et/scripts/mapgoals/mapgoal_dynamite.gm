@@ -5,6 +5,7 @@ this.CreateOnLoad = true;
 this.Region = null;
 this.MinRadius = 30;
 this.RolePriorityBonus = 0.1;
+this.IgnoreEntity = true;
 
 //////////////////////////////////////////////////////////////////////////
 

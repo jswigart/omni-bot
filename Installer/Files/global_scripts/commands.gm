@@ -1445,6 +1445,27 @@ Commands["dbg_goalavailability"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Commands["dbg_scriptgoals"] =
+{
+	Func = function(_params)
+	{
+		global DEBUG_SCRIPT_GOALS = !DEBUG_SCRIPT_GOALS;
+		if ( DEBUG_SCRIPT_GOALS ) {
+			print("script goals debugging enabled");
+		}
+		else {
+			print("script goals debugging disabled");
+		}
+	},
+
+	Help =
+	{
+		"toggle script goals debugging (pathfailed, timedout, ...)",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 Commands["draw_paththrough"] =
 {
 	Func = function(_params)
