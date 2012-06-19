@@ -7,6 +7,7 @@ this.CreateOnLoad = false;
 this.RolePriorityBonus = 0.1;
 this.MaxUsers_InUse(1);
 this.MaxUsers_InProgress(2);
+this.RemoveWithEntity = false;
 
 //////////////////////////////////////////////////////////////////////////
 // Couple callbacks to enforce additional constraints on property values.
