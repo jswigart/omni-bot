@@ -1,11 +1,15 @@
 this.Name = "REVIVE";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
 
 this.LimitToClass(CLASS.MEDIC); // weapon.syringe instead?
 
 // states
 this.REVIVE_TARGET = 1;
+
+this.RangeForRevive = 2000;
+this.RangeForNearby = 750;
 
 this.Initialize = function()
 {
@@ -14,15 +18,19 @@ this.Initialize = function()
 	this.BBDelayTime = 1.25; // path failed will increase this
 };
 
-this.QueryReviveGoals = function()
+this.QueryReviveGoals = function(range, skipGoal)
 {
 	bestGoal = null;
 	count = this.QueryGoals(this.Bot.QueryGoalsTable,"REVIVE_.*");
 	if ( count > 0 )
 	{
-		closest = 2001; // range + 1
+		closest = range + 1;
 		foreach ( id and goal in this.Bot.QueryGoalsTable )
 		{
+			if ( skipGoal && goal == skipGoal ) {
+				continue;
+			}
+
 			dist = this.Bot.DistanceTo(goal.GetPosition());
 			if ( dist < closest ) {
 				bestGoal = goal;
@@ -39,7 +47,7 @@ this.GetPriority = function()
 	while(1)
 	{
 		if ( this.Bot.HasAmmo(WEAPON.SYRINGE) ) {
-			this.MapGoal = this.QueryReviveGoals();
+			this.MapGoal = this.QueryReviveGoals(this.RangeForRevive);
 			if ( this.MapGoal ) {
 				this.Priority = this.MapGoal.GetGoalPriority(this.Bot);
 			} else {
@@ -65,11 +73,28 @@ this.LookForCloserReviveGoals = function()
 {
 	while(1) {
 		sleep(this.CheckReviveTimer);
-		goal = this.QueryReviveGoals();
+		goal = this.QueryReviveGoals(this.RangeForRevive);
 		if ( !goal || goal != this.MapGoal ) {
 			this.Finished();
 		}
 	}
+};
+
+this.EvalDeliverSupplies = function()
+{
+	if ( this.Bot.GetTarget() != null ) {
+		if ( this.Debug ) {
+			this.Bot.Say("skipping deliver supplies, have target");
+		}
+		return false;
+	}
+	
+	goal = this.QueryReviveGoals(this.RangeForNearby, this.MapGoal);
+	if ( this.Debug && goal ) {
+		this.Bot.Say("skipping deliver supplies, nearby revive");
+	}
+	
+	return !goal;
 };
 
 this.Update = function()
@@ -145,11 +170,13 @@ this.UpdateRevive = function()
 		this.ReleaseAimRequest();
 		this.ReleaseWeaponRequest();
 
-		if ( timeout > 0 ) {
-			// activate deliver supplies goal.
-			this.Bot.RevivedTargetEnt = this.TargetEntity;
-			signal( this.Bot.Name + "_deliversupplies" );
-			sleep(1);
+		if ( timeout > 0 && this.RangeForRevive) {
+			if ( this.EvalDeliverSupplies() ) {
+				// activate deliver supplies goal.
+				this.Bot.RevivedTargetEnt = this.TargetEntity;
+				signal( this.Bot.Name + "_deliversupplies" );
+				sleep(1);
+			}
 		}
 		else {
 			this.BBDelayTime = 10;
