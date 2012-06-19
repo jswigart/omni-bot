@@ -1739,7 +1739,7 @@ void ClientSpawn( gentity_t *ent, qboolean revived ) {
 		VectorCopy( ent->s.angles, spawn_angles );
 	}
 	else {
-	    client->sess.buyTime = 0; // reset so they can buy again
+		client->sess.buyTime    = 0; // reset so they can buy again
 		client->ps.stats[STAT_KEYS] = ~( 1 << KEY_7 ); // clear parachute
 
 		if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
