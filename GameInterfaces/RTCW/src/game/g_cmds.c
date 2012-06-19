@@ -1321,11 +1321,15 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 		cmd = "vchat";
 	}
 
+	if ( other->r.svFlags & SVF_BOT ) {
+	    // Omni-bot Send this voice macro to the bot as an event.
+	    Bot_Event_VoiceMacro( other - g_entities, ent, mode, id );
+	    return;
+	}
+
 	trap_SendServerCommand( other - g_entities, va( "%s %d %d %d %s %i %i %i", cmd, voiceonly, ent->s.number, color, id,
 													(int)ent->s.pos.trBase[0], (int)ent->s.pos.trBase[1], (int)ent->s.pos.trBase[2] ) );
 
-	// Omni-bot Send this voice macro to the bot as an event.
-	Bot_Event_VoiceMacro( other - g_entities, ent, mode, id );
 }
 
 void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, const char *customChat, qboolean voiceonly ) {

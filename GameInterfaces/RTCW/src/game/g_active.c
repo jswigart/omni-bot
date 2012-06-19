@@ -1179,7 +1179,7 @@ void ClientThink_real( gentity_t *ent ) {
 	Pmove( &pm );
 
 	// server cursor hints
-	if ( ent->lastHintCheckTime < level.time ) {
+	if ( !(ent->r.svFlags & SVF_BOT) && ent->lastHintCheckTime < level.time ) {
 		G_CheckForCursorHints( ent );
 		ent->lastHintCheckTime = level.time + FRAMETIME;
 	}
