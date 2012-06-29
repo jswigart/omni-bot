@@ -20,6 +20,7 @@ this.Initialize = function()
 	if ( tableCount(this.AvoidRadius) == 0 ) {
 		this.AvoidRadius[ CLASS.AIRSTRIKE ] = 470;
 		this.AvoidRadius[ CLASS.GRENADE ] = 320;
+		this.AvoidRadius[ CLASS.ARTY ] = 470;
 	}
 
 	Util.ScriptDebugPrint(this.Name, "initialized");
@@ -46,6 +47,10 @@ this.Update = function()
 	botId = this.Bot.GetGameId();
 	radius = this.AvoidRadius[ this.AvoidEntClass ];
 	found = false;
+	
+	if (!radius) {
+		radius = 470;
+	}
 
 	for(;;)
 	{
