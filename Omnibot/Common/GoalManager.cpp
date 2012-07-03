@@ -270,13 +270,17 @@ void GoalManager::Query::FromTable(gmMachine *a_machine, gmTableObject *a_table)
 
 bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 {
+	if(m_GoalType && m_GoalType!=mg->GetGoalTypeHash())
+		return false;
+
+	if(m_Team && !mg->IsAvailable(m_Team) && 
+		!(m_Client && mg->GetOwner() == m_Client->GetGameEntity()))
+		return false;
+
 	if(mg->GetDeleteMe() || mg->GetDisabled())
 		return false;
 
 	if(m_SkipInUse && mg->GetInUse())
-		return false;
-
-	if(m_GoalType && m_GoalType!=mg->GetGoalTypeHash())
 		return false;
 
 	if(m_Client && mg->GetPriorityForClient(m_Client)==0.f)
@@ -295,13 +299,6 @@ bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 		if(!mg->GetLimitWeapons().IsAllowed(m_Client))
 			return false;
 	}
-
-	bool bOwned = false;
-	if(m_Client && mg->GetOwner() == m_Client->GetGameEntity())
-		bOwned = true;
-
-	if(!bOwned && (m_Team && !mg->IsAvailable(m_Team)))
-		return false;
 
 	if(m_TagName && mg->GetTagName() != m_TagName)
 		return false;

@@ -997,14 +997,23 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_TABLE_PARAM(table, 0);
-	GM_STRING_PARAM(pExpr,1,0);
 	GM_TABLE_PARAM(params,2,0);
 
 	Prof(QueryMapGoals);
 
 	GoalManager::Query qry;
+
+	if(a_thread->GetNumParams() > 1 && a_thread->ParamType(1) == GM_INT)
+	{
+		qry.Type(a_thread->Param(1).GetInt());
+	}
+	else
+	{
+		GM_STRING_PARAM(pExpr,1,0);
+		qry.Expression(pExpr);
+	}
+
 	qry.Bot(native->GetClient());
-	qry.Expression(pExpr);
 	qry.CheckRangeProperty(true);
 
 	// parse optional parameters
