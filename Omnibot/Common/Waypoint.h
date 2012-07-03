@@ -106,6 +106,7 @@ protected:
 	float				m_HeuristicCost;
 	NavFlags			m_ConnectionFlags;
 	int					m_GoalIndex;
+	int					m_PathSerial;
 
 	// Waypoint info.
 	NavFlags			m_NavigationFlags;

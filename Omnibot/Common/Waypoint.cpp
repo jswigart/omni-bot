@@ -54,6 +54,7 @@ void Waypoint::Reset()
 	m_Mark = 0;
 	m_GoalIndex = 0;
 	m_Locked = false;
+	m_PathSerial = 0;
 
 	m_OnPathThrough = 0;
 	m_OnPathThroughParam = 0;
