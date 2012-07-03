@@ -874,6 +874,12 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 	Vector3f successorNodeVec;
 	float fSuccesorCost;
 
+	int serial = ++m_PathSerial;
+	for(WaypointList::const_iterator cIt = m_OpenList.begin(); cIt != m_OpenList.end(); ++cIt)
+	{
+		(*cIt)->m_PathSerial = serial;
+	}
+
 	Waypoint *pCurrentNode = 0;
 
 	// Look for the path.
@@ -931,48 +937,51 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 			if(!(it->m_ConnectionFlags & F_LNK_TELEPORT))
 				fSuccesorCost += (pCurrentNode->GetPosition() - pNextWp->GetPosition()).Length();
 
-			// Look for this waypoint on the closed list.
-			closedIt = m_ClosedList.find(pNextWp->GetHash());
-			if(closedIt != m_ClosedList.end())
+			if(pNextWp->m_PathSerial == serial)
 			{
-				// See if this would have a better cost.
-				if(closedIt->second->m_GivenCost > fSuccesorCost)
+				// Look for this waypoint on the closed list.
+				closedIt = m_ClosedList.find(pNextWp->GetHash());
+				if(closedIt != m_ClosedList.end())
 				{
-					// Recycle this node.
-					Waypoint *pFound			= closedIt->second;
-					pFound->m_Parent			= pCurrentNode;
-					pFound->m_GivenCost			= fSuccesorCost;
-					pFound->m_FinalCost			= pFound->m_GivenCost;
-					pFound->m_ConnectionFlags	= it->m_ConnectionFlags;
-					// and remove from the closed list.
-					m_ClosedList.erase(closedIt);
-					// ... back into the open list
-					HeapInsert(m_OpenList, pFound);
+					// See if this would have a better cost.
+					if(closedIt->second->m_GivenCost > fSuccesorCost)
+					{
+						// Recycle this node.
+						Waypoint *pFound			= closedIt->second;
+						pFound->m_Parent			= pCurrentNode;
+						pFound->m_GivenCost			= fSuccesorCost;
+						pFound->m_FinalCost			= pFound->m_GivenCost;
+						pFound->m_ConnectionFlags	= it->m_ConnectionFlags;
+						// and remove from the closed list.
+						m_ClosedList.erase(closedIt);
+						// ... back into the open list
+						HeapInsert(m_OpenList, pFound);
+					}
+					continue;
 				}
-				continue;
-			}
 
-			// Check the open list for this node to see if it's better
-			WaypointList::iterator openIt = std::find(m_OpenList.begin(), m_OpenList.end(), pNextWp);
-			if(openIt != m_OpenList.end())
-			{
-				if((*openIt)->m_GivenCost > fSuccesorCost)
+				// Check the open list for this node to see if it's better
+				WaypointList::iterator openIt = std::find(m_OpenList.begin(), m_OpenList.end(), pNextWp);
+				if(openIt != m_OpenList.end())
 				{
-					// Recycle and re-insert this node since it's better
-					Waypoint *pFound			= (*openIt);
-					pFound->m_Parent			= pCurrentNode;
-					pFound->m_GivenCost			= fSuccesorCost;
-					pFound->m_FinalCost			= pFound->m_GivenCost;
-					pFound->m_ConnectionFlags	= it->m_ConnectionFlags;
-					// Remove it from the open list first.
-					//m_OpenList.erase(openIt);
-					// ... and re-insert it
+					if((*openIt)->m_GivenCost > fSuccesorCost)
+					{
+						// Recycle and re-insert this node since it's better
+						Waypoint *pFound			= (*openIt);
+						pFound->m_Parent			= pCurrentNode;
+						pFound->m_GivenCost			= fSuccesorCost;
+						pFound->m_FinalCost			= pFound->m_GivenCost;
+						pFound->m_ConnectionFlags	= it->m_ConnectionFlags;
+						// Remove it from the open list first.
+						//m_OpenList.erase(openIt);
+						// ... and re-insert it
 
-					// Since we possibly removed from the middle, we need to fix the heap again.
-					//std::make_heap(m_OpenList.begin(), m_OpenList.end(), waypoint_comp);
-					std::push_heap(m_OpenList.begin(), openIt+1, waypoint_comp);
+						// Since we possibly removed from the middle, we need to fix the heap again.
+						//std::make_heap(m_OpenList.begin(), m_OpenList.end(), waypoint_comp);
+						std::push_heap(m_OpenList.begin(), openIt+1, waypoint_comp);
+					}
+					continue;
 				}
-				continue;
 			}
 
 			// New node to explore
@@ -981,6 +990,7 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 			pNextWp->m_HeuristicCost	= 0;
 			pNextWp->m_FinalCost		= pNextWp->m_GivenCost;
 			pNextWp->m_ConnectionFlags	= it->m_ConnectionFlags;
+			pNextWp->m_PathSerial = serial;
 			HeapInsert(m_OpenList, pNextWp);
 		}
 	}
@@ -2248,10 +2258,14 @@ void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_po
 	WaypointList openList;
 	if(startLink.IsValid()) 
 	{
+		int serial = ++m_PathSerial;
 		for(int i = 0; i < ClosestLink::NumWps; ++i)
 		{
 			if(startLink.m_Wp[i])
+			{
 				openList.push_back(startLink.m_Wp[i]);
+				startLink.m_Wp[i]->m_PathSerial = serial;
+			}
 		}
 		while(!openList.empty()) {
 			Waypoint * pWp = openList.back();
@@ -2264,15 +2278,15 @@ void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_po
 			for( ; it != pWp->m_Connections.end(); ++it)
 			{
 				Waypoint * pNextWp = it->m_Connection;
+				if(pNextWp->m_PathSerial==serial)
+					continue;
+
 				// Don't use waypoints we're not allowed to.
 				if(_team && pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team))
 					continue;
 
 				// TODO: take flags into account.
 				if(pNextWp->IsFlagOn(F_NAV_CLOSED) || (it->m_ConnectionFlags & F_LNK_CLOSED))
-					continue;
-
-				if(std::find(reachable.begin(),reachable.end(),pNextWp)!=reachable.end())
 					continue;
 
 				float fWeight = 1.f;
@@ -2284,6 +2298,7 @@ void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_po
 				}
 
 				openList.push_back(pNextWp);
+				pNextWp->m_PathSerial = serial;
 			}
 		}
 	}
