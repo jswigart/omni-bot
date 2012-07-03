@@ -819,8 +819,12 @@ obReal Weapon::LowOnAmmoPriority(FireMode _mode, int &_ammotype, int &_getammo)
 	if(GetFireMode(_mode).IsDefined())
 	{
 		_ammotype = GetWeaponID();//GetFireMode(_mode).m_AmmoType;
-		_getammo = GetFireMode(_mode).GetLowAmmoGetAmmoAmount();
-		if(GetFireMode(_mode).m_AmmoCurrent <= GetFireMode(_mode).GetLowAmmoThreshold())
+	
+		// _getammo must be greater than threshold, otherwise UseCabinet goal would be 
+		// immediately aborted after path to cabinet is found
+		int threshold = GetFireMode(_mode).GetLowAmmoThreshold();
+		_getammo = MaxT(threshold + 1, GetFireMode(_mode).GetLowAmmoGetAmmoAmount());
+		if(GetFireMode(_mode).m_AmmoCurrent <= threshold)
 		{
 			fLowAmmoPriority = GetFireMode(_mode).GetLowAmmoPriority();
 		}
