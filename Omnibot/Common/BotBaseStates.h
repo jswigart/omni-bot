@@ -412,7 +412,6 @@ namespace AiState
 
 		obReal GetPriority();
 
-		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
 
