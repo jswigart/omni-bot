@@ -885,6 +885,7 @@ namespace AiState
 
 	void UseCabinet::Enter()
 	{	
+		m_UseTime = 0;
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
 		if(!DidPathFail())
 		{
@@ -953,6 +954,17 @@ namespace AiState
 		if(DidPathSucceed())
 		{
 			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetWorldUsePoint());
+
+			if(m_UseTime==0)
+			{
+				m_UseTime = IGame::GetTime();
+			}
+			else if(IGame::GetTime() - m_UseTime > 15000)
+			{
+				//timeout
+				BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+				return State_Finished;
+			}
 		}
 		return State_Busy;
 	}
