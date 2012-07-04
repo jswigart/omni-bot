@@ -2358,7 +2358,7 @@ void PathPlannerWaypoint::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics
 		if(g_SelectedClient != -1)
 			selectedPlayer = IGameManager::GetInstance()->GetGame()->GetDebugWindowClient(g_SelectedClient);
 		
-		for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
+		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
 			ClientPtr c = IGameManager::GetInstance()->GetGame()->GetClientByIndex(i);
 			if(c)
@@ -2587,7 +2587,7 @@ void PathPlannerNavMesh::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics 
 		if(g_SelectedClient != -1)
 			selectedPlayer = IGameManager::GetInstance()->GetGame()->GetDebugWindowClient(g_SelectedClient);
 
-		for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
+		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
 			ClientPtr c = IGameManager::GetInstance()->GetGame()->GetClientByIndex(i);
 			if(c)

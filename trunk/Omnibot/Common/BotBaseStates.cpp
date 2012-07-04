@@ -1186,6 +1186,8 @@ namespace AiState
 	bool FollowPath::Goto(FollowPathUser *_owner, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
 	{
 		bool bFinalDest = true;
+		if (!_owner) return false;
+
 		DestinationVector destlist;
 		if(_owner->GetNextDestination(destlist, bFinalDest, _skiplastpt))
 		{
@@ -1216,7 +1218,7 @@ namespace AiState
 	{
 		DestinationVector destlist;
 		for(obuint32 i = 0; i < _goals.size(); ++i)
-			destlist.push_back(Destination(_goals[i],_radius));
+		    destlist.push_back(Destination(_goals[i],_radius));
 		return Goto(_owner, destlist, _movemode, _skiplastpt);
 	}
 
@@ -1271,7 +1273,7 @@ namespace AiState
 			pPathPlanner->GetPath(m_CurrentPath);
 			if(!m_Query.m_SkipLastPt)
 			{
-				Destination &dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
+				Destination dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
 				m_CurrentPath.AddPt(dest.m_Position, dest.m_Radius);
 			}
 			GetClient()->ResetStuckTime();
@@ -1290,7 +1292,7 @@ namespace AiState
 	{
 		if(!_owner)
 			return false;
-		OBASSERT(_owner,"No User Defined!");
+		//OBASSERT(_owner,"No User Defined!");
 
 		m_Query.m_SkipLastPt = false;
 		m_Query.m_Final = true;
@@ -1552,7 +1554,7 @@ namespace AiState
 					{
 						bool bSkipLast = false, bFinalDest = false;
 						DestinationVector destlist;
-						if(m_Query.m_User->GetNextDestination(destlist, bFinalDest, bSkipLast))
+						if(m_Query.m_User && m_Query.m_User->GetNextDestination(destlist, bFinalDest, bSkipLast))
 						{
 							if(Goto(m_Query.m_User, destlist, m_Query.m_MoveMode, bSkipLast, bFinalDest))
 							{
