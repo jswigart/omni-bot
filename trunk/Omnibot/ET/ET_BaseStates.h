@@ -162,6 +162,7 @@ namespace AiState
 		CabinetType			m_CabinetType;
 		int					m_AmmoType;
 		int					m_GetAmmoAmount;
+		obint32				m_UseTime;
 
 		float				m_HealthPriority;
 		float				m_AmmoPriority;
