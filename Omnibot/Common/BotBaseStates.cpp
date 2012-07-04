@@ -1602,57 +1602,43 @@ namespace AiState
 			m_PtOnPath = m_CurrentPath.FindNearestPtOnPath(vPos, &m_LookAheadPt, 128.f);
 
 			//////////////////////////////////////////////////////////////////////////
-			if(m_OldLadderStyle)
-			{
-
-			}
-			else
+			if(!m_OldLadderStyle)
 			{
 				if(GetClient()->HasEntityFlag(ENT_FLAG_ONLADDER))
 				{
-					Vector3f vEye = GetClient()->GetEyePosition();
+					float fHeight = pt.m_Pt.z - vPos.z;
 
-					Vector3f vWpBot = pt.m_Pt + Vector3f(0.f,0.f,g_fTopWaypointOffset);
-					if(vWpBot.z > vPos.z)
+					if(Mathf::FAbs(fHeight) > g_fTopWaypointOffset || m_LadderDirection == 0)
+					{
+						if (fHeight > 0) m_LadderDirection = 1;
+						else m_LadderDirection = -1;
+					}
+					
+					Vector3f vEye = GetClient()->GetEyePosition();
+					Vector3f vLook = pt.m_Pt - vEye;
+					float h, p, r, cl = Mathf::DegToRad(60.f);
+
+					if(m_LadderDirection > 0)
 					{
 						GetClient()->PressButton(BOT_BUTTON_MOVEUP);
-
-						m_LookAheadPt = vWpBot;
-
-						Vector3f vLook = m_LookAheadPt - vEye;
-
-						float h, p, r, cl = Mathf::DegToRad(60.f);
+						vLook.z += g_fTopWaypointOffset;
 						vLook.ToSpherical(h, p, r);
 						p = ClampT(p,-cl,cl);
-						vLook.FromSpherical(h, p, r);
-						m_LookAheadPt = vEye + vLook;
-
-						//Utils::DrawLine(vEye,m_LookAheadPt,COLOR::GREEN,3.f);
 					}
 					else
 					{
-						// cs: moved lower 
-						//GetClient()->PressButton(BOT_BUTTON_MOVEDN);
-
-						m_LookAheadPt = vWpBot;
-
-						Vector3f vLook = m_LookAheadPt - vEye;
-
-						float h, p, r, cl = Mathf::DegToRad(-60.f); // cs: was 60. changed so they look up
+						GetClient()->PressButton(BOT_BUTTON_MOVEDN);
 						vLook.ToSpherical(h, p, r);
-						p = ClampT(p,-cl,cl);
-						vLook.FromSpherical(h, p, r);
-						m_LookAheadPt = vEye + vLook;
-
-						// cs: only if they are looking up. (just to be sure)
-						if (m_LookAheadPt.z > vEye.z)
-						{
-							GetClient()->PressButton(BOT_BUTTON_MOVEDN);
-						}
-
-						//Utils::DrawLine(vEye,m_LookAheadPt,COLOR::RED,3.f);
-						//Utils::DrawLine(vEye,vWpBot,COLOR::MAGENTA,3.f);
+						p = cl;
 					}
+
+					vLook.FromSpherical(h, p, r);
+					m_LookAheadPt = vEye + vLook;
+					//Utils::DrawLine(vEye,m_LookAheadPt, (m_LadderDirection > 0) ? COLOR::GREEN : COLOR::RED,3.f);
+				}
+				else
+				{
+					m_LadderDirection = 0;
 				}
 			}
 			//////////////////////////////////////////////////////////////////////////

@@ -253,6 +253,7 @@ namespace AiState
 		PathStatus	m_PathStatus;
 		Vector3f	m_PtOnPath;
 		Vector3f	m_LookAheadPt;
+		int			m_LadderDirection;
 		
 		obuint32	m_PassThroughState;
 
