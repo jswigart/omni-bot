@@ -958,11 +958,6 @@ namespace AiState
 		return ROAM_GOAL_PRIORITY; 
 	}
 
-	void Roam::Enter()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), GotoRandomPt(this));
-	}
-
 	void Roam::Exit()
 	{
 		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
