@@ -47,7 +47,10 @@ namespace AiState
 		typedef const float (*pfnGetEntityOffset)(const int _entclass, const BitFlag64 &_entflags);
 		// typedef: pfnGetEntityOffset
 		//		Callback function for getting an offset for an entity type
-		typedef const float (*pfnGetEntityVisDistance)(const int _entclass, const BitFlag64 &_entflags, float _default);
+		typedef const void (*pfnGetEntityVisDistance)(float &_distance, const TargetInfo &_target, const Client *_client);
+		// typedef: pfnCanSensoreEntity
+		//		Callback function for checking whether an entity can be shot or watched
+		typedef const bool (*pfnCanSensoreEntity)(const EntityInstance &_ent);
 		//////////////////////////////////////////////////////////////////////////
 
 		enum DebugFlags
@@ -123,6 +126,10 @@ namespace AiState
 		//		Sets a callback to be used as <m_pfnGetVisDistance>
 		static void SetEntityVisDistanceCallback(pfnGetEntityVisDistance _pfnCallback);
 
+		// function: SetCanSensoreEntityCallback
+		//		Sets a callback to be used as <m_pfnCanSensoreEntity>
+		static void SetCanSensoreEntityCallback(pfnCanSensoreEntity _pfnCallback);
+
 		// function: GetMemorySpan
 		//		Accessor for the bots memory span
 		inline int GetMemorySpan() const { return m_MemorySpan; }
@@ -197,6 +204,9 @@ namespace AiState
 		// callback: m_pfnGetVisDistance
 		//		Method the Sensory memory uses to request an entity visibility distance from the game.
 		static pfnGetEntityVisDistance		m_pfnGetVisDistance;
+		// callback: m_pfnCanSensoreEntity
+		//		Method the Sensory memory uses to check whether an entity can be shot or watched
+		static pfnCanSensoreEntity		m_pfnCanSensoreEntity;
 	private:
 	};
 };
