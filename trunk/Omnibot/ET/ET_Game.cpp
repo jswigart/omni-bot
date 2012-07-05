@@ -100,7 +100,8 @@ bool ET_Game::Init()
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ET_Game::ET_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ET_Game::ET_GetEntityClassAimOffset);
-	//AiState::SensoryMemory::SetEntityVisDistanceCallback(ET_Game::ET_GetEntityVisDistance);
+	AiState::SensoryMemory::SetEntityVisDistanceCallback(ET_Game::ET_GetEntityVisDistance);
+	AiState::SensoryMemory::SetCanSensoreEntityCallback(ET_Game::ET_CanSensoreEntity);
 
 	if(!IGame::Init())
 		return false;
@@ -534,17 +535,23 @@ void ET_Game::InitCommands()
 	IGame::InitCommands();
 }
 
-const float ET_Game::ET_GetEntityVisDistance(const int _class, const BitFlag64 &_entflags, float _default)
+const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client)
 {
-	switch(_class)
+	switch(_target.m_EntityClass)
 	{
-	case ENT_CLASS_GENERIC_WEAPON:	
+	case ET_CLASSEX_BREAKABLE:
+		_distance = static_cast<const ET_Client*>(_client)->GetBreakableTargetDist();
+		break;
 	case ENT_CLASS_GENERIC_AMMO:
+		_distance = 2000.0f;
+		break;
 	case ENT_CLASS_GENERIC_HEALTH:
-		return 1000.0f;
+		_distance = 1000.0f;
+		break;
+	default:
+		if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
+			_distance = 1500.0f;
 	}
-
-	return _default;
 }
 
 /*	
@@ -611,6 +618,17 @@ const float ET_Game::ET_GetEntityClassAvoidRadius(const int _class)
 		break;
 	}
 	return 0.0f;
+}
+
+const bool ET_Game::ET_CanSensoreEntity(const EntityInstance &_ent)
+{
+	if( (((1<<ENT_CAT_PICKUP_HEALTH)|(1<<ENT_CAT_PICKUP_AMMO)|(1<<ENT_CAT_PICKUP_WEAPON)|(1<<ENT_CAT_PROJECTILE)|(1<<ENT_CAT_SHOOTABLE))
+		& _ent.m_EntityCategory.GetRawFlags()) == 0)
+		return false;
+
+	int c =_ent.m_EntityClass;
+	return c<ET_CLASS_MAX || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE && 
+		c!=ET_CLASSEX_ARTY && c!=ET_CLASSEX_SMOKEBOMB && c!=ET_CLASSEX_FLAMECHUNK && c!=ET_CLASSEX_ROCKET;
 }
 
 void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)

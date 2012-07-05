@@ -16,6 +16,7 @@ namespace AiState
 	SensoryMemory::pfnGetEntityOffset SensoryMemory::m_pfnGetTraceOffset = NULL;
 	SensoryMemory::pfnGetEntityOffset SensoryMemory::m_pfnGetAimOffset = NULL;
 	SensoryMemory::pfnGetEntityVisDistance SensoryMemory::m_pfnGetVisDistance = NULL;
+	SensoryMemory::pfnCanSensoreEntity SensoryMemory::m_pfnCanSensoreEntity = NULL;
 
 	SensoryMemory::SensoryMemory() : StateChild("SensoryMemory", UpdateDelay(Utils::HzToSeconds(10))),
 		m_MemorySpan(5000)
@@ -120,6 +121,10 @@ namespace AiState
 	{
 		m_pfnGetVisDistance = _pfnCallback;
 	}
+	void SensoryMemory::SetCanSensoreEntityCallback(pfnCanSensoreEntity _pfnCallback)
+	{
+		m_pfnCanSensoreEntity = _pfnCallback;
+	}
 
 	void SensoryMemory::UpdateEntities()
 	{
@@ -132,6 +137,9 @@ namespace AiState
 		IGame::EntityIterator ent;
 		while(IGame::IterateEntity(ent))
 		{
+			if(m_pfnCanSensoreEntity && !m_pfnCanSensoreEntity(ent.GetEnt()))
+				continue;
+
 			// skip myself
 			if(selfEntity == ent.GetEnt().m_Entity)
 				continue;
@@ -302,11 +310,6 @@ namespace AiState
 			return false;
 
 		//////////////////////////////////////////////////////////////////////////
-		const float DistanceToEntity = Length(ti.m_LastPosition, GetClient()->GetEyePosition());
-		float EntityViewDistance = Utils::FloatMax;
-		if(m_pfnGetVisDistance)
-			EntityViewDistance = m_pfnGetVisDistance(ti.m_EntityClass, ti.m_EntityFlags, EntityViewDistance);
-
 		Vector3f vTracePosition = vNewPosition;
 		if(m_pfnGetTraceOffset)
 			vTracePosition.z += m_pfnGetTraceOffset(ti.m_EntityClass, ti.m_EntityFlags);
@@ -315,6 +318,11 @@ namespace AiState
 			(GetClient()->IsWithinViewDistance(vTracePosition) && 
 			GetClient()->InFieldOfView(vTracePosition)))
 		{
+			const float DistanceToEntity = Length(ti.m_LastPosition, GetClient()->GetEyePosition());
+			float EntityViewDistance = Utils::FloatMax;
+			if(m_pfnGetVisDistance)
+				m_pfnGetVisDistance(EntityViewDistance, ti, GetClient());
+
 			if(DebugDrawingEnabled() && m_DebugFlags.CheckFlag(Dbg_ShowPerception))
 			{
 				Utils::DrawLine(GetClient()->GetEyePosition(),vTracePosition,COLOR::YELLOW,0.2f);

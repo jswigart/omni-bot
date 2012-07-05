@@ -72,7 +72,8 @@ protected:
 
 	static const float ET_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
 	static const float ET_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const float ET_GetEntityVisDistance(const int _class, const BitFlag64 &_entflags, float _default);
+	static const void ET_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
+	static const bool ET_CanSensoreEntity(const EntityInstance &_ent);
 	static const float ET_GetEntityClassAvoidRadius(const int _class);
 
 	StringBuffer m_ExtraWeaponNames;
