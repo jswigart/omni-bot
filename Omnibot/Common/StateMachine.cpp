@@ -338,6 +338,8 @@ void State::InternalEnter()
 	OBASSERT(!IsActive(), "Entering Active State!");
 	//Utils::OutputDebug(kInfo,"%s: State: %s Enter (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
 
+	if(m_LimitCallback.m_OnlyWhenActive) m_LimitCallback.m_Result = true;
+
 	m_StateTime = m_StateTimeUser = IGame::GetTimeSecs();
 	m_StateFlags.SetFlag(State_Active, true);
 	Enter();
@@ -724,7 +726,6 @@ void State::LimitTo(const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, 
 	m_LimitCallback.m_LimitTo = _fn;
 	m_LimitCallback.m_Delay = _delay;
 	m_LimitCallback.m_OnlyWhenActive = _onlywhenactive;
-	if(_onlywhenactive) m_LimitCallback.m_Result = true;
 	m_LimitCallback.m_NextCallback = IGame::GetTime() + m_LimitCallback.m_Delay;
 }
 
