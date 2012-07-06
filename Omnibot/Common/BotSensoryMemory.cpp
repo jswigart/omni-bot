@@ -318,7 +318,7 @@ namespace AiState
 			(GetClient()->IsWithinViewDistance(vTracePosition) && 
 			GetClient()->InFieldOfView(vTracePosition)))
 		{
-			const float DistanceToEntity = Length(ti.m_LastPosition, GetClient()->GetEyePosition());
+			const float DistanceToEntity = Length(vTracePosition, GetClient()->GetEyePosition());
 			float EntityViewDistance = Utils::FloatMax;
 			if(m_pfnGetVisDistance)
 				m_pfnGetVisDistance(EntityViewDistance, ti, GetClient());
@@ -377,7 +377,7 @@ namespace AiState
 					Utils::DrawLine(GetClient()->GetEyePosition(),ti.m_LastPosition,COLOR::YELLOW,0.2f);
 				}
 
-				_record.m_TargetInfo.m_DistanceTo = DistanceToEntity;
+				_record.m_TargetInfo.m_DistanceTo = Length(ti.m_LastPosition, GetClient()->GetEyePosition());
 				if(!bIsStatic)
 				{
 					EngineFuncs::EntityOrientation(ent, ti.m_LastFacing, 0, 0);
@@ -535,7 +535,7 @@ namespace AiState
 				{
 					if((m_Records[i].m_TargetInfo.m_EntityCategory & category).AnyFlagSet())
 					{
-						if(m_Records[i].m_TargetInfo.m_DistanceTo <= radius)
+						if(m_Records[i].m_TargetInfo.m_DistanceTo <= radius && m_Records[i].GetTimeLastSensed() >= 0)
 						{
 							hndls[numRecords++] = RecordHandle((obint16 )i,m_Records[i].GetSerial());
 						}
@@ -557,7 +557,7 @@ namespace AiState
 				{
 					if((m_Records[i].m_TargetInfo.m_EntityCategory & category).AnyFlagSet())
 					{
-						if(m_Records[i].m_TargetInfo.m_DistanceTo <= radius)
+						if(m_Records[i].m_TargetInfo.m_DistanceTo <= radius && m_Records[i].GetTimeLastSensed() >= 0)
 						{
 							ents[numRecords++] = m_Records[i].GetEntity();
 						}					
