@@ -783,7 +783,8 @@ namespace AiState
 
 	void ScriptGoal::UpdateEntityInRadius()
 	{
-		if(m_WatchEntities.m_Category.AnyFlagSet() && m_WatchEntities.m_Radius > 0.f)
+		if(m_WatchEntities.m_Category.AnyFlagSet() && m_WatchEntities.m_Radius > 0.f
+			&& (AlwaysRecieveEvents() || IsActive()))
 		{
 			SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
