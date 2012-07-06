@@ -551,6 +551,8 @@ const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &
 	default:
 		if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
 			_distance = 1500.0f;
+		else if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PROJECTILE))
+			_distance = 500.0f;
 	}
 }
 
