@@ -76,6 +76,22 @@ private:
 	PriorityLessThan();
 };
 
+typedef std::pair<int,float> IndexPriority;
+
+class IndexPriorityGreaterThan
+{
+public:
+	bool operator()(IndexPriority _i1, IndexPriority _i2)
+	{
+		return _i1.second > _i2.second;
+	}
+
+	bool operator()(float _val, IndexPriority _i2)
+	{
+		return _val > _i2.second;
+	}
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 GoalManager::Query::Query(obuint32 _type, Client *_client)
@@ -359,25 +375,37 @@ void GoalManager::Query::OnQueryFinish()
 			{
 				if(m_List.size()>1)
 				{
-					std::sort(m_List.begin(),m_List.end(), PriorityGreaterThan(m_Client));
+					// Get priorities of all goals in the list
+					typedef std::vector<IndexPriority> IndexPriorityList;
+					IndexPriorityList list;
+					list.reserve(m_List.size());
+					int index=0;
+					for(MapGoalList::iterator it = m_List.begin(); it != m_List.end(); it++)
+					{
+						list.push_back( IndexPriority(index++, 
+							m_Client ? (*it)->GetPriorityForClient(m_Client) : (*it)->GetDefaultPriority()));
+					}
 
-					typedef std::pair<MapGoalList::iterator, MapGoalList::iterator> MapGoalRange;
+					std::sort(list.begin(), list.end(), IndexPriorityGreaterThan());
 
 					// Randomize the ranges that have the same bias.
-					MapGoalList::iterator itCurrent = m_List.begin();
-					while(itCurrent != m_List.end())
+					for(IndexPriorityList::iterator it = list.begin(); it != list.end(); )
 					{
-						MapGoalRange range = std::equal_range(itCurrent, 
-							m_List.end(), 
-							(*itCurrent), 
-							PriorityGreaterThan(m_Client));
+						IndexPriorityList::iterator upper = std::upper_bound(
+							it, list.end(), (*it).second, IndexPriorityGreaterThan());
 
-						std::random_shuffle(range.first, range.second);
-						if(range.second != m_List.end())
-							itCurrent = range.second+1;
-						else
-							break;
+						std::random_shuffle(it, upper);
+						it = upper;
 					}
+					
+					// Reorder goals list
+					MapGoalList newList;
+					newList.reserve(list.size());
+					for(IndexPriorityList::iterator it = list.begin(); it!=list.end(); it++)
+					{
+						newList.push_back(m_List[it->first]);
+					}
+					m_List.swap(newList);
 				}				
 				break;
 			}
