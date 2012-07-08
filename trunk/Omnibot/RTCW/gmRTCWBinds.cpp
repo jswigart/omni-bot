@@ -500,33 +500,6 @@ static int GM_CDECL gmfGetDestroyableState(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
-// function: IsWaitingForMedic
-//		Returns true if entity is waiting for a medic
-//		
-//
-// Parameters:
-//
-//		GameEntity
-//
-// Returns:
-//		IsWaitingForMedic
-static int GM_CDECL gmfIsWaitingForMedic(gmThread *a_thread)
-{
-	GM_CHECK_NUM_PARAMS(1);
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
-	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-
-	if(InterfaceFuncs::IsWaitingForMedic(gameEnt))
-		a_thread->PushInt(1);
-	else
-		a_thread->PushInt(0);
-
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // function: GetMG42Info
 //		Returns currently mounted mg42 info for the bot
 //		
@@ -618,7 +591,6 @@ static gmFunctionEntry s_ExtendedBotLib[] =
 	{"GetGameType",				gmfGetGameType},
 	{"SetCvar",					gmfSetCvar},
 	{"GetCvar",					gmfGetCvar},
-	{"IsWaitingForMedic",		gmfIsWaitingForMedic},
 };
 
 void gmBindRTCWBotLibrary(gmMachine *_machine)

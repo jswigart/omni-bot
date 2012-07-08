@@ -738,6 +738,7 @@ void Bot_Util_AddGoal( const char *_type, gentity_t *_ent, int _team, const char
 		goaldef.Props.SetString( "Type",_type );
 		goaldef.Props.SetEntity( "Entity",HandleFromEntity( _ent ) );
 		goaldef.Props.SetInt( "Team",_team );
+		goaldef.Props.SetVector( "Position", _ent->r.currentOrigin );
 		goaldef.Props.SetString( "TagName",_tag );
 		goaldef.Props.SetInt( "InterfaceGoal",1 );
 		if ( _extrakey && _extraval ) {
@@ -2927,29 +2928,6 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 			} else
 			{
 				pMsg->m_MedicNear = Invalid;
-			}
-		}
-		break;
-	}
-	case RTCW_MSG_ISWAITINGFORMEDIC:
-	{
-		OB_GETMSG( RTCW_WaitingForMedic );
-		if ( pMsg ) {
-			// cs:	the health value here is for the healing state of the revive goal.
-			//		this whole message should be obsoleted since we can provide a much
-			//		more flexible solution in script.
-			if ( pEnt && pEnt->inuse && pEnt->client &&
-				 ( pEnt->health <= 76 || pEnt->client->ps.pm_type == PM_DEAD ) &&
-				 !( pEnt->client->ps.pm_flags & PMF_LIMBO ) ) {
-				pMsg->m_WaitingForMedic = True;
-			} else if ( pEnt && pEnt->inuse && pEnt->client &&
-						pEnt->client->ps.pm_type == PM_NORMAL ) {
-				pMsg->m_WaitingForMedic = False;
-			} else if ( pEnt && pEnt->inuse && pEnt->client &&
-						pEnt->client->ps.pm_flags & PMF_LIMBO ) {
-				pMsg->m_WaitingForMedic = False;
-			} else {
-				pMsg->m_WaitingForMedic = Invalid;
 			}
 		}
 		break;
