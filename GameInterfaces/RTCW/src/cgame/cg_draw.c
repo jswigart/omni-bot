@@ -3686,7 +3686,10 @@ static void CG_Draw2D( void ) {
 	}
 
 	CG_DrawFlashBlendBehindHUD();
-	CG_DrawOnScreenText();
+
+	if (cg_omnibotdrawing.integer) {
+	    CG_DrawOnScreenText();
+	}
 
 #ifndef PRE_RELEASE_DEMO
 	if ( cg_uselessNostalgia.integer ) {
@@ -3990,7 +3993,7 @@ void CG_DrawOnScreenText(void) {
 			continue;
 		}
 		
-		if( CG_WorldToScreen(worldtext->origin, &x, &y) && DistanceSquared(cg.refdef.vieworg, worldtext->origin) < MAX_RENDERDIST * MAX_RENDERDIST )
+		if( CG_WorldToScreen(worldtext->origin, &x, &y) && (cg_omnibotdrawing.integer == 2 && !PointVisible(worldtext->origin) ? qfalse : qtrue) && DistanceSquared(cg.refdef.vieworg, worldtext->origin) < MAX_RENDERDIST * MAX_RENDERDIST )
 		{
 			//CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, worldtext->origin, -1, CONTENTS_SOLID);
 

@@ -1502,6 +1502,7 @@ extern vmCvar_t cg_deathmatch;
 extern vmCvar_t cg_spawnTimer_period;
 extern vmCvar_t cg_spawnTimer_set;
 extern vmCvar_t	cg_improvedSmoke;			// Martin
+extern vmCvar_t cg_omnibotdrawing;
 
 //
 // cg_main.c
@@ -1676,6 +1677,7 @@ void CG_BuildSolidList( void );
 int CG_PointContents( const vec3_t point, int passEntityNum );
 void CG_Trace( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 			   int skipNumber, int mask );
+qboolean PointVisible( vec3_t point );
 void CG_PredictPlayerState( void );
 void CG_LoadDeferredPlayers( void );
 
