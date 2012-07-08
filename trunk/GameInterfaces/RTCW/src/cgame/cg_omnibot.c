@@ -4,10 +4,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-extern vmCvar_t cg_omnibotdrawing;
-
-//////////////////////////////////////////////////////////////////////////
-
 const int OMNIBOT_LINES_INCREASE_SIZE = 512;
 const int OMNIBOT_LINES_INITIAL_SIZE = 4096;
 
@@ -428,7 +424,7 @@ void InitLineList( LineList *_list, int _initialsize ) {
 }
 
 void AddToLineList( LineList *_list, const UdpDebugLines_t *_line ) {
-	if ( !_list || !_list->m_pDebugLines ) {
+	if ( !_list ) {
 		return;
 	}
 
@@ -451,8 +447,10 @@ void AddToLineList( LineList *_list, const UdpDebugLines_t *_line ) {
 	}
 
 	// Add it to the list.
-	_list->m_pDebugLines[_list->m_NumDebugLines] = *_line;
-	++_list->m_NumDebugLines;
+	if (_list->m_pDebugLines) {
+	    _list->m_pDebugLines[_list->m_NumDebugLines] = *_line;
+	    ++_list->m_NumDebugLines;
+	}
 }
 
 void ClearLineList( LineList *_list, qboolean _freememory ) {
