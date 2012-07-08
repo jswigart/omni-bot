@@ -67,7 +67,8 @@ protected:
 
 	static const float RTCW_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
 	static const float RTCW_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const float RTCW_GetEntityVisDistance(const int _class, const BitFlag64 &_entflags, float _default);
+	static const void RTCW_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
+	static const bool RTCW_CanSensoreEntity(const EntityInstance &_ent);
 	static const float RTCW_GetEntityClassAvoidRadius(const int _class);
 };
 

@@ -99,7 +99,8 @@ bool RTCW_Game::Init()
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(RTCW_Game::RTCW_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(RTCW_Game::RTCW_GetEntityClassAimOffset);
-	//AiState::SensoryMemory::SetEntityVisDistanceCallback(RTCW_Game::RTCW_GetEntityVisDistance);
+	AiState::SensoryMemory::SetEntityVisDistanceCallback(RTCW_Game::RTCW_GetEntityVisDistance);
+	AiState::SensoryMemory::SetCanSensoreEntityCallback(RTCW_Game::RTCW_CanSensoreEntity);
 
 	if(!IGame::Init())
 		return false;
@@ -429,17 +430,25 @@ void RTCW_Game::InitCommands()
 	IGame::InitCommands();
 }
 
-const float RTCW_Game::RTCW_GetEntityVisDistance(const int _class, const BitFlag64 &_entflags, float _default)
+const void RTCW_Game::RTCW_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client)
 {
-	switch(_class)
+	switch(_target.m_EntityClass)
 	{
-	case ENT_CLASS_GENERIC_WEAPON:	
+	case RTCW_CLASSEX_BREAKABLE:
+		_distance = static_cast<const RTCW_Client*>(_client)->GetBreakableTargetDist();
+		break;
 	case ENT_CLASS_GENERIC_AMMO:
+		_distance = static_cast<const RTCW_Client*>(_client)->GetAmmoEntityDist();
+		break;
 	case ENT_CLASS_GENERIC_HEALTH:
-		return 1000.0f;
+		_distance = static_cast<const RTCW_Client*>(_client)->GetHealthEntityDist();
+		break;
+	default:
+		if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
+			_distance = static_cast<const RTCW_Client*>(_client)->GetWeaponEntityDist();
+		else if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PROJECTILE))
+			_distance = static_cast<const RTCW_Client*>(_client)->GetProjectileEntityDist();
 	}
-
-	return _default;
 }
 
 const float RTCW_Game::RTCW_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
@@ -485,6 +494,16 @@ const float RTCW_Game::RTCW_GetEntityClassAvoidRadius(const int _class)
 		break;
 	}
 	return 0.0f;
+}
+
+const bool RTCW_Game::RTCW_CanSensoreEntity(const EntityInstance &_ent)
+{
+	if( (((1<<ENT_CAT_PICKUP_HEALTH)|(1<<ENT_CAT_PICKUP_AMMO)|(1<<ENT_CAT_PICKUP_WEAPON)|(1<<ENT_CAT_PROJECTILE)|(1<<ENT_CAT_SHOOTABLE))
+		& _ent.m_EntityCategory.GetRawFlags()) == 0)
+		return false;
+
+	int c =_ent.m_EntityClass;
+	return c<RTCW_CLASS_MAX || c!=RTCW_CLASSEX_ARTY && c!=RTCW_CLASSEX_FLAMECHUNK && c!=RTCW_CLASSEX_ROCKET;
 }
 
 void RTCW_Game::ClientJoined(const Event_SystemClientConnected *_msg)

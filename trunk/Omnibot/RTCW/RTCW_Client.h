@@ -38,6 +38,10 @@ public:
 	bool GetSniperWeapon(int &nonscoped, int &scoped);
 
 	float GetBreakableTargetDist() const { return m_BreakableTargetDistance; }
+	float GetHealthEntityDist() const { return m_HealthEntityDistance; }
+	float GetAmmoEntityDist() const { return m_AmmoEntityDistance; }
+	float GetWeaponEntityDist() const { return m_WeaponEntityDistance; }
+	float GetProjectileEntityDist() const { return m_ProjectileEntityDistance; }
 
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
@@ -50,6 +54,10 @@ protected:
 	int HandleVoiceMacroEvent(const MessageHelper &_message);
 
 	float		m_BreakableTargetDistance;
+	float		m_HealthEntityDistance;
+	float		m_AmmoEntityDistance;
+	float		m_WeaponEntityDistance;
+	float		m_ProjectileEntityDistance;
 };
 
 #endif

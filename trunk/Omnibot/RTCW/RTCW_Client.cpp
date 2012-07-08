@@ -76,7 +76,11 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 RTCW_Client::RTCW_Client() :
-	m_BreakableTargetDistance(0.f)
+	m_BreakableTargetDistance(0.f),
+	m_HealthEntityDistance(1000.0f),
+	m_AmmoEntityDistance(2000.0f),
+	m_WeaponEntityDistance(1500.0f),
+	m_ProjectileEntityDistance(500.0f)
 {
 	m_StepHeight = 8.0f; // subtract a small value as a buffer to jump
 }

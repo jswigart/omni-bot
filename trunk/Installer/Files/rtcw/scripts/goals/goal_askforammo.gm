@@ -7,6 +7,7 @@ this.Parent = "HighLevel";		// The name of the parent. This setting determines w
 // These parameters are optional
 this.LimitToClass( CLASS.MEDIC, CLASS.ENGINEER, CLASS.SOLDIER );
 this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
 
 if(!BB.PICKUPAMMO) {
 	BB.PICKUPAMMO = Blackboard.MakeKey();
@@ -20,7 +21,7 @@ this.Initialize = function()
 
 	// Internal variables
 	this.AmmoDesirThreshold = 0.5;
-	this.RangeForPickup = 2000.0;
+	//this.RangeForPickup = this.Bot.AmmoEntityDist;
 	this.Counter = 0;
 	this.AmmoInfo = {}; // so we re-use the same table
 	this.DroppedWeapon = null;
@@ -46,7 +47,7 @@ this.GetPriority = function()
 		// note that goal_pickupitems handles a much shorter range pickup while this goal
 		// activates when the bot is desperate for ammo
 		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-		if(this.AmmoInfo.Desire > this.AmmoDesirThreshold)
+		if((this.AmmoInfo.Desire > this.AmmoDesirThreshold) || this.Debug)
 		{
 			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
 
@@ -74,7 +75,7 @@ this.GetPriority = function()
 			}
 
 			botId = this.Bot.GetGameId();
-			if ( !this.BlackboardIsDelayed(botId) && this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup ) {
+			if ( this.Pack && !this.BlackboardIsDelayed(botId) /*&& GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPickup*/ ) {
 				this.BlackboardId = botId;
 				this.Priority = 0.8;
 			}

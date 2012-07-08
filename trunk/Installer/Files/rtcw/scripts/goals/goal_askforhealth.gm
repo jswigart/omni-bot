@@ -4,6 +4,7 @@
 this.Name = "AskForHealth";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
 
 if(!BB.PICKUPHEALTH) {
 	BB.PICKUPHEALTH = Blackboard.MakeKey();
@@ -20,9 +21,13 @@ this.Initialize = function()
 
 	// Internal variables
 	this.HealthThreshold = 50.0;
-	this.RangeForPack = 1000.0;
+	//this.RangeForPack = this.Bot.HealthEntityDist;
 	this.Counter = 0;
 	this.Timeout = 1000; // milliseconds
+	
+	if (this.Debug) {
+		this.HealthThreshold = 200;
+	}
 
 	Util.MapDebugPrint(this.Name + " Initialized", true);
 };
@@ -51,12 +56,12 @@ this.GetPriority = function()
 	{
 		this.Counter += 1;
 
-		if( this.Bot.Health < this.HealthThreshold && this.Bot.Health > 0 )
+		if( (this.Bot.Health < this.HealthThreshold && this.Bot.Health > 0) || this.Debug )
 		{
 			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.HEALTH );
 
 			botId = this.Bot.GetGameId();
-			if ( !this.BlackboardIsDelayed(botId) &&this.Pack && GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPack ) {
+			if ( this.Pack && !this.BlackboardIsDelayed(botId) /*&& GetEntPosition(this.Pack) && this.Bot.DistanceTo(this.Pack) <= this.RangeForPack*/ ) {
 				this.BlackboardId = botId;
 				this.Priority = 0.8;
 			}
@@ -81,6 +86,7 @@ this.Update = function()
 		}
 
 		timeout = 0;
+		if (this.Debug) { this.Bot.Say("going to pack"); }
 		while ( this.Pack && timeout < this.Timeout ) {
 			pos = GetEntPosition(this.Pack);
 

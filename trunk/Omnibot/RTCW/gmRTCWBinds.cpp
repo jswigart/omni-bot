@@ -633,4 +633,7 @@ void gmBindRTCWBotLibrary(gmMachine *_machine)
 	// var: TargetBreakableDistance
 	//		The distance the bot will target breakable entities. Targets beyond this range will be ignored.
 	gmBot::RegisterAutoProperty("TargetBreakableDist", GM_FLOAT, offsetof(RTCW_Client, m_BreakableTargetDistance), 0);
+	gmBot::RegisterAutoProperty("HealthEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_HealthEntityDistance), 0);
+	gmBot::RegisterAutoProperty("AmmoEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_AmmoEntityDistance), 0);
+	gmBot::RegisterAutoProperty("WeaponEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_WeaponEntityDistance), 0);
 }
