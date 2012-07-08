@@ -76,14 +76,6 @@ namespace InterfaceFuncs
 		return data.m_State;
 	}
 
-//	ConstructableState GetConstructableState(Client *_bot, const GameEntity _constructable)
-//	{
-//		RTCW_ConstructionState data = { _constructable, CONST_INVALID };
-//		MessageHelper msg(RTCW_MSG_GCONSTRUCTABLE, &data, sizeof(data));
-//		InterfaceMsg(msg, _bot->GetGameEntity());
-//		return data.m_State;
-//	}
-
 	ConstructableState IsDestroyable(Client *_bot, const GameEntity _ent)
 	{
 		RTCW_Destroyable data = { _ent, CONST_INVALID };
@@ -106,14 +98,6 @@ namespace InterfaceFuncs
 		MessageHelper msg(RTCW_MSG_GCANBEGRABBED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
 		return data.m_CanBeGrabbed == True;
-	}
-
-	obBool IsWaitingForMedic(const GameEntity _ent)
-	{
-		RTCW_WaitingForMedic data = { False };
-		MessageHelper msg(RTCW_MSG_ISWAITINGFORMEDIC, &data, sizeof(data));
-		InterfaceMsg(msg, _ent);
-		return data.m_WaitingForMedic==True ? True : False;
 	}
 
 	bool SelectPrimaryWeapon(Client *_bot, RTCW_Weapon _weapon)

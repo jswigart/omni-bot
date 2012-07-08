@@ -19,12 +19,10 @@ namespace InterfaceFuncs
 	bool IsWeaponOverheated(Client *_bot, RTCW_Weapon _weapon);
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max);
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite);
-//	ConstructableState GetConstructableState(Client *_bot, const GameEntity _constructable);
 	ConstructableState IsDestroyable(Client *_bot, const GameEntity _ent);
 	bool HasFlag(Client *_bot);
 	bool ItemCanBeGrabbed(Client *_bot, const GameEntity _ent);
 	void NumTeamMines(Client *_bot, int &_current, int &_max);
-	obBool IsWaitingForMedic(const GameEntity _ent);
 	bool SelectPrimaryWeapon(Client *_bot, RTCW_Weapon _weapon);
 	bool SelectSecondaryWeapon(Client *_bot, RTCW_Weapon _weapon);
 	float GetReinforceTime(Client *_bot);
