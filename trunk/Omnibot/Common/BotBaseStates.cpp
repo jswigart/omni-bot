@@ -1259,6 +1259,7 @@ namespace AiState
 	{
 		if(!m_Query.m_User) return false;
 		m_Query.m_User->ResetPathUser();
+		m_PathThroughPtIndex = -1;
 
 		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
 		m_Query.m_User->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), m_Query.m_Destination, GetClient()->GetTeamFlag());
@@ -1422,8 +1423,18 @@ namespace AiState
 					m_PassThroughState = 0;
 					if(m_Query.m_User != m_SavedQuery.m_User)
 					{
+						// find new path to the current goal
 						RestoreQuery();
 						Repath();
+					}
+					else if(m_CurrentPath.GetCurrentPtIndex() != m_PathThroughPtIndex + 1)
+					{
+						// repath if the previous waypoint has paththrough which has been skipped
+						Path::PathPoint ptPrev;
+						if(m_CurrentPath.GetPreviousPt(ptPrev) && ptPrev.m_OnPathThrough && ptPrev.m_OnPathThroughParam)
+						{
+							Repath();
+						}
 					}
 				}
 			}
@@ -1538,6 +1549,7 @@ namespace AiState
 						if(pPathThrough->OnPathThrough(s))
 						{
 							m_PassThroughState = pt.m_OnPathThrough;
+							m_PathThroughPtIndex = m_CurrentPath.GetCurrentPtIndex();
 						}
 					}
 				}

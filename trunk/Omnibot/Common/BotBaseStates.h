@@ -256,6 +256,7 @@ namespace AiState
 		int			m_LadderDirection;
 		
 		obuint32	m_PassThroughState;
+		int			m_PathThroughPtIndex;
 
 		// For jump behaviors.
 		float		m_RayDistance;
