@@ -636,4 +636,5 @@ void gmBindRTCWBotLibrary(gmMachine *_machine)
 	gmBot::RegisterAutoProperty("HealthEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_HealthEntityDistance), 0);
 	gmBot::RegisterAutoProperty("AmmoEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_AmmoEntityDistance), 0);
 	gmBot::RegisterAutoProperty("WeaponEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_WeaponEntityDistance), 0);
+	gmBot::RegisterAutoProperty("ProjectileEntityDist", GM_FLOAT, offsetof(RTCW_Client, m_ProjectileEntityDistance), 0);
 }
