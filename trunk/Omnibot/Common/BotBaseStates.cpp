@@ -1619,6 +1619,19 @@ namespace AiState
 				if(GetClient()->HasEntityFlag(ENT_FLAG_ONLADDER))
 				{
 					float fHeight = pt.m_Pt.z - vPos.z;
+					
+					if(m_LadderDirection == 0)
+					{
+						if(fDistanceSq < fWpRadiusSq * 4)
+						{
+							// current waypoint has not been consumed yet
+							Path::PathPoint nextpt;
+							if(m_CurrentPath.GetNextPt(nextpt))
+							{
+								fHeight = nextpt.m_Pt.z - vPos.z;
+							}
+						}
+					}
 
 					if(Mathf::FAbs(fHeight) > g_fTopWaypointOffset || m_LadderDirection == 0)
 					{
@@ -1626,27 +1639,32 @@ namespace AiState
 						else m_LadderDirection = -1;
 					}
 					
-					Vector3f vEye = GetClient()->GetEyePosition();
-					Vector3f vLook = pt.m_Pt - vEye;
-					float h, p, r, cl = Mathf::DegToRad(60.f);
-
-					if(m_LadderDirection > 0)
+					if( 2 * fHeight * fHeight > fDistSq2d //climb only if next waypoint is above or below player
+						|| m_LadderDirection > 0 && fHeight > -g_fTopWaypointOffset
+						|| m_LadderDirection < 0 && -fHeight > g_fTopWaypointOffset) 
 					{
-						GetClient()->PressButton(BOT_BUTTON_MOVEUP);
-						vLook.z += g_fTopWaypointOffset;
-						vLook.ToSpherical(h, p, r);
-						p = ClampT(p,-cl,cl);
-					}
-					else
-					{
-						GetClient()->PressButton(BOT_BUTTON_MOVEDN);
-						vLook.ToSpherical(h, p, r);
-						p = cl;
-					}
+						Vector3f vEye = GetClient()->GetEyePosition();
+						Vector3f vLook = pt.m_Pt - vEye;
+						float h, p, r, cl = Mathf::DegToRad(60.f);
 
-					vLook.FromSpherical(h, p, r);
-					m_LookAheadPt = vEye + vLook;
-					//Utils::DrawLine(vEye,m_LookAheadPt, (m_LadderDirection > 0) ? COLOR::GREEN : COLOR::RED,3.f);
+						if(m_LadderDirection > 0)
+						{
+							GetClient()->PressButton(BOT_BUTTON_MOVEUP);
+							vLook.z += g_fTopWaypointOffset;
+							vLook.ToSpherical(h, p, r);
+							p = ClampT(p,-cl,cl);
+						}
+						else
+						{
+							GetClient()->PressButton(BOT_BUTTON_MOVEDN);
+							vLook.ToSpherical(h, p, r);
+							p = cl;
+						}
+
+						vLook.FromSpherical(h, p, r);
+						m_LookAheadPt = vEye + vLook;
+						//Utils::DrawLine(vEye,m_LookAheadPt, (m_LadderDirection > 0) ? COLOR::GREEN : COLOR::RED,3.f);
+					}
 				}
 				else
 				{
