@@ -54,7 +54,7 @@ public:
 			QueryBadGroupExpression,
 		};
 
-		Query &Type(obuint32 _type);
+		Query &AddType(obuint32 _type);
 		Query &Team(int _team);
 		Query &Bot(Client *_client);
 		Query &TagName(const char *_tagname);
@@ -91,8 +91,11 @@ public:
 		const char *QueryErrorString();
 
 		MapGoalList		m_List;
+
+		enum { MaxGoalTypes = 8 };
 	private:
-		obuint32		m_GoalType;
+		int				m_NumTypes;
+		obuint32		m_GoalTypeList[MaxGoalTypes];
 		int				m_Team;
 		BitFlag32 		m_RoleMask;
 		Client *		m_Client;
