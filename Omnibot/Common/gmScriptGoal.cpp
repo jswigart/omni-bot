@@ -1003,14 +1003,40 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 
 	GoalManager::Query qry;
 
-	if(a_thread->GetNumParams() > 1 && a_thread->ParamType(1) == GM_INT)
+	if(GM_NUM_PARAMS > 1)
 	{
-		qry.Type(a_thread->Param(1).GetInt());
-	}
-	else
-	{
-		GM_STRING_PARAM(pExpr,1,0);
-		qry.Expression(pExpr);
+		switch(GM_THREAD_ARG->ParamType(1))
+		{
+		case GM_INT:
+			qry.AddType(GM_THREAD_ARG->ParamInt(1));
+			break;
+		case GM_STRING:
+			qry.Expression(GM_THREAD_ARG->ParamString(1,0));
+			break;
+		case GM_TABLE:
+			{
+				gmTableObject *typesTable = GM_THREAD_ARG->ParamTable(1);
+				if(typesTable->Count() > GoalManager::Query::MaxGoalTypes)
+				{
+					GM_EXCEPTION_MSG("maximum count of goal types in query is %d, got %d", GoalManager::Query::MaxGoalTypes, typesTable->Count());
+					return GM_EXCEPTION;
+				}
+				gmTableIterator tIt;
+				for(gmTableNode *pNode = typesTable->GetFirst(tIt); pNode; pNode = typesTable->GetNext(tIt))
+				{
+					if(pNode->m_value.m_type != GM_INT)
+					{
+						GM_EXCEPTION_MSG("expecting param 1 as table of int, got %s", GM_THREAD_ARG->GetMachine()->GetTypeName(pNode->m_value.m_type));
+						return GM_EXCEPTION;
+					}
+					qry.AddType(pNode->m_value.GetInt());
+				}
+			}
+			break;
+		default:
+			GM_EXCEPTION_MSG("expecting param 1 as string or int or table, got %s", GM_THREAD_ARG->ParamTypeName(1));
+			return GM_EXCEPTION;
+		}
 	}
 
 	qry.Bot(native->GetClient());

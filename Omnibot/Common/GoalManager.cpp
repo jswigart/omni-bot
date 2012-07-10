@@ -95,8 +95,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 
 GoalManager::Query::Query(obuint32 _type, Client *_client)
-	: m_GoalType(_type)
-	, m_Team(0)
+	: m_Team(0)
 	, m_RoleMask(-1)
 	, m_Client(_client)
 	, m_TagName(0)
@@ -109,12 +108,21 @@ GoalManager::Query::Query(obuint32 _type, Client *_client)
 	, m_CheckInRadius(false)
 	, m_CheckRangeProperty(false)
 {
+	if(_type){
+		m_GoalTypeList[0] = _type;
+		m_NumTypes = 1;
+	}else{
+		m_NumTypes = 0;
+	}
 	Bot(_client);
 }
 
-GoalManager::Query &GoalManager::Query::Type(obuint32 _type)
+GoalManager::Query &GoalManager::Query::AddType(obuint32 _type)
 {
-	m_GoalType = _type; 
+	if (m_NumTypes < MaxGoalTypes)
+	{
+		m_GoalTypeList[m_NumTypes++] = _type; 
+	}
 	return *this; 
 }
 
@@ -286,8 +294,13 @@ void GoalManager::Query::FromTable(gmMachine *a_machine, gmTableObject *a_table)
 
 bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 {
-	if(m_GoalType && m_GoalType!=mg->GetGoalTypeHash())
-		return false;
+	if(m_NumTypes > 0)
+	{
+		for(int i=0; m_GoalTypeList[i] != mg->GetGoalTypeHash(); )
+		{
+			if(++i==m_NumTypes) return false;
+		}
+	}
 
 	if(m_Team && !mg->IsAvailable(m_Team) && 
 		!(m_Client && mg->GetOwner() == m_Client->GetGameEntity()))
