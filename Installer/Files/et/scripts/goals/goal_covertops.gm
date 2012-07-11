@@ -427,7 +427,7 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
 {
 	// interrupt any active state if taking fire (from targets that are alive ...)
-	if ( this.IsActive() || this.HasBinoculars)
+	if ( this.Bot && this.IsActive() || this.HasBinoculars)
 	{
 		if ( Inflictor && !GetEntFlags(Inflictor, ENTFLAG.DEAD, ENTFLAG.LIMBO) ) {
 			inflictorClass = GetEntClass(Inflictor);

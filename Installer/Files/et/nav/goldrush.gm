@@ -664,7 +664,7 @@ global Map =
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Truck_Barrier2_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Truck_Escape_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Escape_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_allied );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_mg42_allied );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_2 );

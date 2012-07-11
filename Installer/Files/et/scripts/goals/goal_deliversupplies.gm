@@ -213,7 +213,7 @@ this.Update = function()
 				this.State = this.SWITCH_TO_SYRINGE;
 				this.CuringPoisonWithNeedle = true;
 			}
-			else if ( !this.KillTarget || !hasNeedle ) {
+			else if ( !this.KillTarget || !hasNeedle || this.Bot.HasTarget() ) {
 				this.State = this.DELIVER_PACKS;
 			}
 			else {

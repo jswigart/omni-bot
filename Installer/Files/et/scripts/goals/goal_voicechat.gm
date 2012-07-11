@@ -57,7 +57,9 @@ this.Randomize = function(frequency, source)
 	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
 	{
 		sleep(RandFloat(0.5, 1.0));
-		return true;
+		if (this.Bot) {
+			return true;
+		}
 	}
 
 	return false;
@@ -96,6 +98,8 @@ this.GetPriority = function()
 
 this.Events[EVENT.TEAM_VOICE] = function(source, id)
 {
+	if (!this.Bot) { return; }
+
 	cls = this.Bot.GetClass();
 
 	switch(id)
@@ -143,6 +147,8 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(source, id)
 {
 	sleep(RandFloat(0.01, 1.00));
 	
+	if (!this.Bot) { return; }
+
 	//print(this.Bot.Name, " can be changed = ", !Util.TeamBotChangeClassExecuted);
 	if(Util.TeamBotChangeClassExecuted == 1)
 	{
@@ -218,7 +224,7 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(source, id)
 
 this.Events[EVENT.REVIVED] = function(whoDoneIt)
 {
-	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
+	if ( this.Bot && whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.REVIVED_SAYTHANKS, whoDoneIt ) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
@@ -227,7 +233,7 @@ this.Events[EVENT.REVIVED] = function(whoDoneIt)
 
 this.Events[EVENT.HEALED] = function(whoDoneIt)
 {
-	if ( whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
+	if ( this.Bot && whoDoneIt != this.Bot.GetGameEntity() && this.Bot.IsAllied(whoDoneIt)
 		&& this.Randomize(this.HEALED_SAYTHANKS, whoDoneIt) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
@@ -236,7 +242,7 @@ this.Events[EVENT.HEALED] = function(whoDoneIt)
 
 this.Events[EVENT.AMMO_RECIEVED] = function(whoDoneIt)
 {
-	if ( whoDoneIt != this.Bot.GetGameEntity()
+	if ( this.Bot && whoDoneIt != this.Bot.GetGameEntity()
 		&& this.Randomize(this.AMMO_SAYTHANKS, whoDoneIt) == true )
 	{
 		this.Bot.SayVoice(VOICE.THANKS);
@@ -262,12 +268,13 @@ this.Events[EVENT.KILLEDSOMEONE] = function(victim, mod)
 	// cheer the revenge
 	if ( this.LastKiller && this.LastKiller == victim )
 	{
+		this.LastKiller = null; // always clear this
+
 		if ( this.Randomize(this.REVENGE_CHEER, victim) == true )
 		{
 			this.Bot.SayVoice( VOICE.G_CHEER );
 		}
 
-		this.LastKiller = null; // always clear this
 		return;
 	}
 
@@ -305,7 +312,7 @@ this.Events[EVENT.DEATH] = function(attacker, mod)
 
 this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
 {
-	if ( GetGameIdFromEntity(Inflictor) > 63 )
+	if ( !this.Bot || GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
 	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)
@@ -333,6 +340,8 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 
 this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 {
+	if (!this.Bot) { return; }
+
 	if (this.Bot.DelayResponse) {
 		sleep(this.Bot.DelayResponse);
 		this.Bot.DelayResponse = null;

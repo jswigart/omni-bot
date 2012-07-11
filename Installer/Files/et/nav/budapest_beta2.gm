@@ -6,13 +6,14 @@
 //------------------------------------------------------------------------------------------
 //	palota	1 May 2012	elevators, team doors, trams, DEFEND_axis_bridge, MOBILEMG42, PLANTMINE, MOUNT_boat, MaxViewDistance, TargetBreakableDist, BUILD goals range
 //	palota	13 June 2012	routes, roles, use points, cover spots, priorities, ATTACK_allies_defences
+//	palota	20 June 2012	fake ATTACK to destroy window at allied MG42, increased DEFENDER2 numbots, higher priority to plant bridge if not enough time left, bridge has random use points, snipe and artillery limited to 1 user 
 //
 //==========================================================================================
 //
 
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	//obj//
 	bridge_parts_destroyed = 0,//number of bridge parts destroyed
 	gates_destroyed = 0, //number of sewer gates destroyed
@@ -44,11 +45,12 @@ global Map =
 			},
 			DEFENDER1 =
 			{
-				numbots = 5,
+				numbots = 2,
+				crucialClass = CLASS.ENGINEER,
 			},
 			DEFENDER2 =
 			{
-				numbots = 6,
+				numbots = 10,
 			},
 		},
 		ALLIES =
@@ -396,10 +398,7 @@ global Map =
 		{
 			Enabled = true,
 			WaypointName = "garage_3",
-			LimitClass = (1<<CLASS.SOLDIER) |
-						(1<<CLASS.FIELDOPS) |
-						(1<<CLASS.MEDIC),
-			LimitDistance = 500,
+			LimitDistance = 600,
 		},
 	},
 
@@ -698,6 +697,7 @@ global Map =
 	},
 	South_Gate_Destroyed = function( trigger )
 	{
+		Util.EnableGoal("ROUTE_south_gate2");
 		Map.SetGateDestroyed("south");
 	},
 
@@ -714,6 +714,9 @@ global Map =
 		Wp.SetWaypointFlag("bridge_defences_door", "team1", false);
 		Map.defences_built = false;
 		SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_allies_defences.*");
+		if (GetGameTimeLeft() < 500) {
+			SetGoalPriority( "PLANT_.*_bridge_support.*", 0.81, TEAM.ALLIES);
+		}
 		Util.MapDebugPrint("Bridge_Defences_Destroyed");
 	},
 
@@ -786,9 +789,6 @@ global Map =
 		SetGoalPriority( "PLANT_Bridge_Defences", 0.81, TEAM.ALLIES);
 		SetGoalPriority( "PLANT_.*_S.*Gate", 0.81, TEAM.ALLIES);
 		SetGoalPriority( "PLANT_.*_bridge_support.*", 0.81, TEAM.ALLIES);
-		if (Map.gates_destroyed > 0){
-			SetGoalPriority( "PLANT_South_S.*Gate", 0.81, TEAM.ALLIES);
-		}
 
 		Util.MapDebugPrint("Allies_Capture_Flag");
 		sleep(15);
@@ -813,24 +813,26 @@ global Map =
 		Util.MapDebugPrint("Axis_Capture_Flag");
 	},
 
+	windowMG_Destroyed = function ( trigger )
+	{
+		Util.DisableGoal("ATTACK_allies_bridge_mg");
+		SetGoalPriority( "ATTACK_allies_bridge_mg", 0, TEAM.ALLIES);
+		Util.MapDebugPrint("windowMG_Destroyed");
+	}
 };
 
 global OnMapLoad = function()
 {
 	//use waypoints
-	Util.AddUseWp("PLANT_West_bridge_support", "west_bridge_front_plant");
-	Util.AddUseWp("PLANT_West_bridge_support", "west_bridge_bottom_plant");
-	Util.AddUseWp("PLANT_West_bridge_support", "west_bridge_rear_plant");
-	Util.AddUseWp("PLANT_East_bridge_support", "east_bridge_front_plant");
-	Util.AddUseWp("PLANT_East_bridge_support", "east_bridge_bottom_plant");
-	Util.AddUseWp("PLANT_East_bridge_support", "east_bridge_rear_plant");
-	Util.AddUseWp("PLANT_Bridge_Defences", "bridge_defences_plant");
-	Util.AddUseWp("PLANT_Bridge_Defences", "bridge_defences_plant2");
+	Util.AddUseWp("PLANT_West_bridge_support", { "west_bridge_front_plant", "west_bridge_rear_plant" });
+	Util.AddUseWp("PLANT_East_bridge_support", { "east_bridge_front_plant", "east_bridge_rear_plant" });
+	Util.AddUseWp("PLANT_Bridge_Defences", { "bridge_defences_plant", "bridge_defences_plant2" });
 	Util.AddUsePoint("PLANT_South_Sewer_Gate", { Vec3(-1612.847, -331.162, -1007.875), Vec3(-1621.703, -221.398, -999.729) });
 	Util.AddUsePoint("PLANT_East_Sewer_Gate", { Vec3(683.088, 3450.980, -973.875), Vec3(780.183, 3444.837, -973.700) });
 	Util.AddUsePoint("PLANT_West_Sewer_Gate", { Vec3(-1631.327, 2170.543, -973.875), Vec3(-1637.408, 2065.886, -973.875) });
 
 	//triger functions
+	OnTrigger( "GRENADE_allied_mg Exploded.", Map.windowMG_Destroyed );
 	//flag
 	OnTrigger("The Allies have captured the Forward Bunker!", Map.Allies_Capture_Flag);
 	OnTrigger("The Axis have captured the Forward Bunker!", Map.Axis_Capture_Flag);
@@ -893,6 +895,7 @@ global OnMapLoad = function()
 	Util.DisableGoal(".*", true);
 	Util.DisableGoal("ROUTE_elevator2");
 	Util.DisableGoal("ROUTE_ladder2");
+	Util.DisableGoal("ROUTE_south_gate2");
 	Util.EnableGoal(".*cabinet");
 	Groups.EnableAllies(Groups.group8);
 	Groups.EnableAxis(Groups.group9);
@@ -904,12 +907,14 @@ global OnMapLoad = function()
 	// ** PRIORITY ***//
 	SetGoalPriority( "BUILD_Bridge_Defences", 0.91 );
 	SetGoalPriority( "CHECKPOINT_forward_flag", 0.6 );
-	SetGoalPriority( "CHECKPOINT_forward_flag", 0.6 );
 	SetGoalPriority( "SNIPE_axis_palace.*", 0.81 );
+	SetGoalPriority( "ATTACK_allies_bridge_mg", 0.75, TEAM.ALLIES);
+	SetGoalPriority( "PLANT_Second_Elevator_Controls", 0.85, TEAM.ALLIES, CLASS.COVERTOPS);
 
 	// *** MAX USERS PER GOAL ***
 	foreach (goal in { "BUILD_Bridge_Defences", ".*_First_Elevator_Controls",
-		"REPAIR.*", "DEFEND_.*", "MOUNT.*" }){
+		"REPAIR.*", "DEFEND_.*", "MOUNT.*", "CALLARTILLERY.*", "SNIPE.*",
+		"PLANT_Second_Elevator_Controls" }){
 		Util.SetMaxUsersInProgress( 1, goal);
 	}
 
@@ -968,7 +973,10 @@ global OnMapLoad = function()
 				ROUTE_elevator2 =
 				{
 					ROUTE_sewer_split_1 = {
-						ROUTE_south_gate = {},
+						ROUTE_south_gate = {
+							Weight = 2,
+							ROUTE_south_gate2 = {}
+						},
 						ROUTE_east_sewer = {
 							ROUTE_east_balcony = {},
 							ROUTE_east_door = {},
@@ -1034,8 +1042,7 @@ global OnMapLoad = function()
 	MapRoutes.PLANT_Main_bridge_support.ROUTE_palace_spawn.ROUTE_main_split = MapRoutes.PLANT_Bridge_Defences.ROUTE_palace_spawn.ROUTE_main_split;
 	MapRoutes.PLANT_West_Sewer_Gate = MapRoutes.PLANT_East_Sewer_Gate;
 	MapRoutes["PLANT_South_S.*Gate"] = MapRoutes.PLANT_East_Sewer_Gate; // N!tmod has wrong goal name PLANT_South_SeGate
-	MapRoutes.PLANT_West_bridge_support = MapRoutes.PLANT_Main_bridge_support;
-	MapRoutes.PLANT_East_bridge_support = MapRoutes.PLANT_Main_bridge_support;
+	MapRoutes["PLANT_.*st_bridge_support.*"] = MapRoutes.PLANT_Main_bridge_support;
 	MapRoutes["ATTACK_allies_bridge.*"] = MapRoutes.PLANT_Main_bridge_support;
 	MapRoutes["ATTACK_allies_defences.*"] = MapRoutes.PLANT_Bridge_Defences;
 	Util.Routes(MapRoutes);
@@ -1048,7 +1055,7 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = 2800; //fog
-	bot.TargetBreakableDist = 100.0;
+	bot.TargetBreakableDist = 150.0;
 	Map.SetSpawn1(bot);
 };
 

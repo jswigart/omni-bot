@@ -51,6 +51,8 @@ this.Exit = function()
 
 this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
 {
-	this.PainInflictor = Inflictor;
+	if (this.Bot) {
+		this.PainInflictor = Inflictor;
+	}
 };
 

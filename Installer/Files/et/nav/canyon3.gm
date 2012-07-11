@@ -27,10 +27,11 @@ global Map =
 	hatchDestroyed = false,
 	neutralBridge = 0,
 
-	NavL = function(_this, x,y,z)
+	NavL = function(_this, x,y,z, t)
 	{
 		_this.AddAimRequest(Priority.High, "facing", Vector3(x,y,z));
-		sleep(5);
+		if(!t){ t=5; }
+		sleep(t);
 	},
 
 	Navigation =
@@ -40,7 +41,7 @@ global Map =
 			Map.NavL(t, 0.778, -0.598, 0.191);
 		}},
 		l2 = {navigate=function(t){
-			Map.NavL(t, -0.509, 0.840, 0.189);
+			Map.NavL(t, -0.509, 0.840, 0.189, 6);
 		}},
 		l3 = {navigate=function(_this){
 			_this.AddAimRequest(Priority.High, "facing", Vector3(0.7, 0, 0.8));

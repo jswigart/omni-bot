@@ -14,7 +14,7 @@
 /****************************************************
 Pathing updated and script by Mateos
 Correspondant WAY file size : -
-Last Update : 6th July 2012
+Last Update : 15th June 2012
 ****************************************************/
 
 global Map =
@@ -80,7 +80,7 @@ global Map =
 
 		if ( Map.TankStolen == 1 )
 		{
-			Util.ChangeSpawn(TEAM.AXIS, 3);		// Command Post Spawn
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
 		}
@@ -114,42 +114,45 @@ global Map =
 
 	Tank_Stolen = function( trigger )
 	{
-		Map.TankStolen = 1;	// Stolen by Allies
+		Map.TankStolen = 1;		// Stolen by Allies
 
-		Util.ChangeSpawn(TEAM.AXIS, 3);		// Command Post Spawn
+		Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bravo.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Alpha.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_footbridge" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Grate" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bravo.*" );
-		SetAvailableMapGoals (TEAM.ALLIES, true, "BUILD_Command_Post" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_Alpha.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alpha.*" );
-		SetAvailableMapGoals (TEAM.ALLIES, false, "BUILD_footbridge" );
-		SetAvailableMapGoals (TEAM.ALLIES, false, "GRENADE_Axis_North_Path" );
+		// Enable everything to make it usable on servers
+		SetAvailableMapGoals( TEAM.ALLIES, true, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alpha.*" );	// Not added yet, maybe not needed
 
 		Util.MapDebugPrint( "Tank_Stolen" );
 	},
 
 	TankPastFirstHouse = function( trigger )
 	{
-		Util.ChangeSpawn(TEAM.AXIS, 3);		// Command Post Spawn
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Charlie.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bravo.*" );
+
+		if ( Map.TankStolen == 1 && Map.AxisCPStatus == 1 )
+		{
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
+		}
 
 		Util.MapDebugPrint( "TankPasFirstHouse" );
 	},
 
 	TankNearTruckGate = function( trigger )
 	{
-		Util.ChangeSpawn(TEAM.AXIS, 3);		// Command Post Spawn
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_899" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Delta.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Charlie.*" );
 
-		Util.ChangeSpawn(TEAM.ALLIES, 3);	// Command Post Spawn
+		if ( Map.TankStolen == 1 && Map.AxisCPStatus == 1 )
+		{
+			Util.ChangeSpawn(TEAM.AXIS, 3);	// Command Post Spawn
+		}
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Grate" );
 
 		Util.MapDebugPrint( "TankNearTruckGate" );
@@ -165,11 +168,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Tank" );
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo1" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo2" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Bravo3" );
 
 		Util.MapDebugPrint( "Truck_Gate_Destroyed" );
 	},
@@ -248,18 +246,13 @@ global Map =
 
 	Axis_North_Path_Built = function( trigger )
 	{
-		if ( Map.TankStolen == 0 )
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Axis_North_Path" );
-		}
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Axis_North_Path" );
 
-		Util.MapDebugPrint( "Axis_North_Path_Built" );
+		Util.MapDebugPrint( "Axis_North_Path_Build" );
 	},
 
 	Axis_North_Path_Destroyed = function( trigger )
 	{
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_North_Path" );
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Anti_Tank_Gun" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_Axis_North_Path" );
 
@@ -315,10 +308,7 @@ global OnMapLoad = function()
 	// *** ALLIED GOALS ***
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Tank" );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_Alpha.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alpha.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alpha.*" );	// Not added yet, maybe not needed
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_footbridge" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Axis_North_Path" );
@@ -331,7 +321,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "GRENADE_.*" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
 	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
-	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC );
 	ETUtil.ExcludeClass( "MOUNTMG42_.*", CLASS.MEDIC, CLASS.ENGINEER );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
@@ -354,7 +343,7 @@ global OnBotJoin = function( bot )
 {
 	if ( Map.TankStolen == 1 && Map.AxisCPStatus == 1 )
 	{
-		Util.ChangeSpawn(TEAM.AXIS, 3);		//Command Post Spawn
+		Util.ChangeSpawn(TEAM.AXIS, 3);	//Command Post Spawn
 	}
 
 	// Make bots stop shooting the Movers targets
