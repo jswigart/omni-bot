@@ -5,4 +5,4 @@ export BOOST=/boost/boost_1_44_0
 
 cd /mnt/omnibot_svn_root/GameInterfaces/RTCW/src/
 
-bjam -a -q release
+bjam -a -q strip=on release
