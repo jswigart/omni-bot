@@ -59,7 +59,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 		entCat = this.GetPickupCategory(ent);
 		if ( entCat != -1 ) {
 			pos = GetEntPosition(ent);
-			if ( !pos || !this.Bot.HasLineOfSightTo(pos) || this.Bot.DistanceTo(pos) > this.Range ) {
+			if ( !pos || this.Bot.DistanceTo(pos) > this.Range ) {
 				return;
 			}
 

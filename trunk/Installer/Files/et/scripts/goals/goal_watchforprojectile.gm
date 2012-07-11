@@ -63,7 +63,7 @@ this.Update = function()
 		if (face.Length() > radius && found)
 		{
 			//crouch and wait
-			this.Goto(this.Bot.GetPosition());
+			this.Bot.MoveTowards(this.Bot.GetPosition());
 			this.AddAimRequest(Priority.Low, "position", avoidPos);
 			this.Bot.HoldButton(BTN.CROUCH, 10);
 			sleep(0.4);

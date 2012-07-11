@@ -49,7 +49,7 @@ global Map =
 		if (_this.Bot.GetTeam()==TEAM.ALLIES) {
 			_this.AddAimRequest(Priority.High, "position", Vector3(x,y,z));
 			sleep(0.1);
-			for(i=0; i<3; i+=1){
+			for(i=0; i<3 || i<15 && _this.Bot.GetHighLevelGoalName()=="UseCabinet"; i+=1){
 				_this.Bot.PressButton(BTN.USE);
 				sleep(1.5);
 			}
@@ -170,7 +170,7 @@ global Map =
 		}
 		SetAvailableMapGoals(TEAM.ALLIES, true, "GRENADE_grate" );
 
-		Util.ClearRoleForGoals("FLAG_counteragenta", ROLE.ATTACKER2 );
+		Util.ClearRoleForGoals(Map.FLAG_counteragenta, ROLE.ATTACKER2 );
 
 		Util.MapDebugPrint("WallBlown");
 	},
@@ -344,6 +344,15 @@ global OnMapLoad = function()
 	OnTriggerRegion(AABB(3311.637,4800,-406.445,5376.875,6621.153,600),RegionTrigger.DisableBotPush); //cargo and pipe
 	OnTriggerRegion(AABB(-2189.669,4031.125,-429.614,-1579.789,4360.875,-156.528),RegionTrigger.DisableBotPush); //pit
 
+	if (GetGoal("FLAG_counteragenta"))
+	{
+		//map with patch
+		Map.FLAG_counteragenta = "FLAG_counteragenta";
+	}else{
+		//map without patch
+		Map.FLAG_counteragenta = "FLAG_Chemical_Counter_Agent";
+	}
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.DisableGoal( "ROUTE_c_ladder.*" );
 	Util.DisableGoal( "ROUTE_wall" );
@@ -378,7 +387,7 @@ global OnMapLoad = function()
 	Util.SetRoleForTable({ "DEFEND_obj_b.*", "DEFEND_wall.*" }, ROLE.DEFENDER2 );
 	Util.SetRoleForTable({ "DEFEND_obj_c.*", "DEFEND_valve.*", "DEFEND_start.*" }, ROLE.DEFENDER3 );
 	Util.SetRoleForGoals("ATTACK_wall.*", ROLE.ATTACKER1 );
-	Util.SetRoleForGoals("FLAG_counteragenta", ROLE.ATTACKER2 );
+	Util.SetRoleForGoals(Map.FLAG_counteragenta, ROLE.ATTACKER2 );
 
 	Util.SetMaxUsers(1, "GRENADE_.*");
 	Util.SetMaxUsersInUse(1, "PLANT_Warehouse_Wall.*");
@@ -388,25 +397,6 @@ global OnMapLoad = function()
 
 	MapRoutes =
 	{
-		FLAG_counteragenta = {
-			ROUTE_allied_spawn = {
-				ROUTE_a_ladder1 = {},
-				ROUTE_a_ladder2 = {},
-				ROUTE_a_ladder3 = {},
-				ROUTE_a_ladder4 = {},
-			},
-			ROUTE_flag_spawn = {
-				ROUTE_a_west = {},
-				ROUTE_a_north_east = {
-					ROUTE_a_obj = {},
-					ROUTE_a_down = {
-						ROUTE_a_ladder1 = {},
-						ROUTE_a_ladder2 = {},
-						ROUTE_a_ladder3 = {},
-					},
-				},
-			},
-		},
 		FLAG_counteragentb = {
 			ROUTE_flag_spawn = {
 				ROUTE_cargo = {
@@ -520,6 +510,25 @@ global OnMapLoad = function()
 				ROUTE_center_shaft = { ROUTE_center_south_west = {}},
 				ROUTE_flag_stairs = { ROUTE_center_north_east = {}},
 			}
+		},
+	};
+	MapRoutes[Map.FLAG_counteragenta] = {
+		ROUTE_allied_spawn = {
+			ROUTE_a_ladder1 = {},
+			ROUTE_a_ladder2 = {},
+			ROUTE_a_ladder3 = {},
+			ROUTE_a_ladder4 = {},
+		},
+		ROUTE_flag_spawn = {
+			ROUTE_a_west = {},
+			ROUTE_a_north_east = {
+				ROUTE_a_obj = {},
+				ROUTE_a_down = {
+					ROUTE_a_ladder1 = {},
+					ROUTE_a_ladder2 = {},
+					ROUTE_a_ladder3 = {},
+				},
+			},
 		},
 	};
 	MapRoutes["DEFEND_obj_a.*"] = {

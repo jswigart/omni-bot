@@ -430,6 +430,23 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
 					COLOR.WHITE,
 					menuOptions);
 		}
+		else if(cmd == "wait")
+		{
+			this.Goto(this.Bot.GetPosition());
+		}
+		else if(cmd.Left(5) == "goto ")
+		{
+			sPos = cmd.RightAt(5);
+			vPos = ToVector(sPos);
+			if(IsVec3(vPos)){
+				if(this.Goto(vPos) == EVENT.PATH_FAILED)
+					{ this.Bot.Say("Path failed!"); }
+				else
+					{ this.Bot.Say("Path succeeded!"); }
+			}else{
+				print("invalid vector " + sPos);
+			}
+		}
 		else
 		{
 			this.Bot.Say("Command: ", cmd);

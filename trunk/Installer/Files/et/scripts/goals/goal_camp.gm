@@ -32,7 +32,8 @@ this.Initialize = function()
 
 this.Enter = function()
 {
-	this.WeaponRestricted = 0;
+	this.UsingWeapon = 0;
+	this.IsSniper = null;
 
 	// this should always return true, but in case it doesn't we'll have to finish it
 	// also blackboard delay it so they don't get the goal again right away
@@ -45,18 +46,15 @@ this.Enter = function()
 
 	if ( this.MapGoal.Weapons )
 	{
-		this.WeaponRestricted = tableCount(this.MapGoal.Weapons);
+		if (tableCount(this.MapGoal.Weapons) > 0)
+		{
+			this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
+			this.IsSniper = Util.IndexedSniperWeapons[this.UsingWeapon];
+		}
 	}
 	else if (this.Debug)
 	{
 		print(this.MapGoal.GetName() + " has no Weapons Table");
-	}
-
-	if ( this.WeaponRestricted > 0 )
-	{
-		//this.IsSniper = this.Bot.CanSnipe();
-		this.IsSniper = Util.CanBotSnipe(this.Bot);
-		this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
 	}
 };
 
@@ -124,7 +122,7 @@ this.Update = function()
 {
 	if(this.Debug)
 	{
-		print("camp goal update", this.WeaponRestricted, Util.WeaponName(this.UsingWeapon), this.UsingWeapon, this.IsSniper);
+		print("camp goal update", Util.WeaponName(this.UsingWeapon), this.UsingWeapon, this.IsSniper);
 	}
 
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
@@ -142,7 +140,7 @@ this.Update = function()
 			this.Bot.DisableCombatMovement = true;
 		}
 
-		if ( this.WeaponRestricted > 0 && this.UsingWeapon )
+		if ( this.UsingWeapon )
 		{
 			this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
 		}
@@ -153,6 +151,11 @@ this.Update = function()
 		{
 			if ( this.UsingWeapon && !this.Bot.HasAmmo(this.UsingWeapon) )
 			{
+				if(this.Debug)
+				{
+					print("camp goal has no ammo for", Util.WeaponName(this.UsingWeapon));
+				}
+				this.BlackboardDelay(20, this.MapGoal);
 				this.Finished();
 			}
 
@@ -180,7 +183,7 @@ this.Update = function()
 				}
 			}
 
-			if ( this.WeaponRestricted > 0 && this.IsSniper )
+			if ( this.IsSniper )
 			{
 				this.Bot.HoldButton(BTN.AIM,1.1);
 			}
@@ -195,6 +198,7 @@ this.Update = function()
 	{
 		this.BlackboardDelay(RandInt(7,15), this.MapGoal);
 		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		this.Finished();
 	}
 
 	// don't choose the same camp spot
