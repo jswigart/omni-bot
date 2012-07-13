@@ -27,6 +27,7 @@ State::State(const char * _name, const UpdateDelay &_ur)
 	, m_NameHash(0)
 	, m_DebugIcon(Ico_Default)
 	, m_SyncCrc( 0 )
+	, m_NumThreads(0)
 {
 	SetName(_name);
 	DebugExpand(true);
@@ -456,7 +457,7 @@ void State::InternalProcessEvent(const MessageHelper &_message, CallbackParamete
 void State::AddForkThreadId(int _threadId)
 {
 	int freeIndex = -1;
-	for(int i = 0; i < MaxThreads; ++i)
+	for(int i = 0; i < m_NumThreads; ++i)
 	{
 		if(m_ThreadList[i] == GM_INVALID_THREAD)
 		{
@@ -467,6 +468,10 @@ void State::AddForkThreadId(int _threadId)
 		if(m_ThreadList[i] == _threadId)
 			return;
 	}
+	if(freeIndex < 0 && m_NumThreads < MaxThreads)
+	{
+		freeIndex = m_NumThreads++;
+	}
 	OBASSERT(freeIndex != -1,"No Free Slots in m_ThreadList, max %d", MaxThreads);
 	if(freeIndex != -1)
 	{
@@ -474,20 +479,30 @@ void State::AddForkThreadId(int _threadId)
 	}
 }
 
+void State::ClearThreadReference(int index)
+{
+	m_ThreadList[index] = GM_INVALID_THREAD;
+	if(index == m_NumThreads-1)
+	{
+		do {
+			m_NumThreads--;
+		} while(m_NumThreads > 0 && m_ThreadList[m_NumThreads-1] == GM_INVALID_THREAD);
+	}
+}
+
 bool State::DeleteForkThread(int _threadId)
 {
-	bool b = false;
 	gmMachine * pM = ScriptManager::GetInstance()->GetMachine();
-	for(int i = 0; i < MaxThreads; ++i)
+	for(int i = 0; i < m_NumThreads; ++i)
 	{
 		if(m_ThreadList[i] == _threadId)
 		{
-			pM->KillThread(m_ThreadList[i]);
-			m_ThreadList[i] = GM_INVALID_THREAD;
-			b |= true;
+			pM->KillThread(_threadId);
+			ClearThreadReference(i);
+			return true;
 		}
 	}
-	return b;
+	return false;
 }
 
 bool State::RemoveThreadReference(const int * _threadId, int _numThreadIds)
@@ -495,12 +510,14 @@ bool State::RemoveThreadReference(const int * _threadId, int _numThreadIds)
 	bool b = false;
 	for(int t = 0; t < _numThreadIds; ++t)
 	{
-		for(int i = 0; i < MaxThreads; ++i)
+		int id = _threadId[t];
+		for(int i = 0; i < m_NumThreads; ++i)
 		{
-			if(m_ThreadList[i] == _threadId[t])
+			if(m_ThreadList[i] == id)
 			{
-				m_ThreadList[i] = GM_INVALID_THREAD;
-				b |= true;
+				ClearThreadReference(i);
+				b = true;
+				break;
 			}
 		}
 	}

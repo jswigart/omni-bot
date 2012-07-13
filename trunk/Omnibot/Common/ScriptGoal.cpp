@@ -191,7 +191,7 @@ namespace AiState
 				pMachine->Signal(_signal, m_ActiveThread[i], GM_INVALID_THREAD);
 			}
 		}
-		for(int i = 0; i < MaxThreads; ++i)
+		for(int i = 0; i < m_NumThreads; ++i)
 		{
 			if(m_ThreadList[i] != GM_INVALID_THREAD)
 			{
@@ -206,7 +206,7 @@ namespace AiState
 			m_ActiveThread[i].Kill();
 
 		gmMachine * pM = ScriptManager::GetInstance()->GetMachine();
-		for(int i = 0; i < MaxThreads; ++i)
+		for(int i = 0; i < m_NumThreads; ++i)
 		{
 			if(m_ThreadList[i] != GM_INVALID_THREAD)
 			{
@@ -214,6 +214,7 @@ namespace AiState
 				m_ThreadList[i] = GM_INVALID_THREAD;
 			}
 		}
+		m_NumThreads = 0;
 	}
 
 	bool ScriptGoal::Goto(const Vector3f &_pos, const MoveOptions &options)
