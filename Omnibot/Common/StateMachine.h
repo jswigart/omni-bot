@@ -328,12 +328,15 @@ protected:
 	State			*m_Root;
 
 	enum { MaxThreads = 128 };
+	int				m_NumThreads;
 	int				m_ThreadList[MaxThreads];
 	
 	gmGCRoot<gmTableObject>		m_EventTable;
 	gmGCRoot<gmTableObject>		m_CommandTable;
 	gmGCRoot<gmUserObject>		m_ScriptObject;
 private:
+	void ClearThreadReference(int index);
+
 	Client			*m_Client;
 	
 	obint32			m_NextUpdate;
