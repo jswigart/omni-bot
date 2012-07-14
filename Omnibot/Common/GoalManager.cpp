@@ -1222,9 +1222,20 @@ void GoalManager::Update()
 
 	//////////////////////////////////////////////////////////////////////////
 	// see which goal we should highlight, if any
+	bool render = false;
+	if(Utils::GetLocalEntity().IsValid())
+	{
+		for(MapGoalList::iterator it1 = m_MapGoalList.begin(); it1 != m_MapGoalList.end(); ++it1)
+		{
+			if((*it1)->GetRenderGoal()){
+				render = true;
+				break;
+			}
+		}
+	}
 	MapGoalPtr HighlightedGoal;
 	Vector3f AimPt;
-	if(Utils::GetLocalAimPoint(AimPt))
+	if(render && Utils::GetLocalAimPoint(AimPt))
 	{
 		HighlightedGoal = _GetGoalInRange(AimPt,256.f,true);
 	}
@@ -1239,8 +1250,8 @@ void GoalManager::Update()
 				COLOR::YELLOW,
 				IGame::GetDeltaTimeSecs()*2.f);
 		}		
+		m_HighlightedGoal = HighlightedGoal;
 	}
-	m_HighlightedGoal = HighlightedGoal;
 #ifdef ENABLE_DEBUG_WINDOW
 	DW.Hud.SetActiveMapGoal(m_HighlightedGoal);
 #endif
