@@ -3146,7 +3146,7 @@ public:
 			}
 		case AimerOwner:
 			{
-				return String(va("%s", Utils::HashToString(mAimRequests[i].m_Owner)));
+				return String(va("%s", Utils::HashToString(mAimRequests[i].m_Owner).c_str()));
 			}
 		case AimerType:
 			{
