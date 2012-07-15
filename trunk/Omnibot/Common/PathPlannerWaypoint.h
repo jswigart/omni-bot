@@ -222,11 +222,13 @@ protected:
 
 	WaypointList		m_Solution;
 	WaypointList		m_OpenList;
-	WaypointHashMap		m_ClosedList;
+	//WaypointHashMap		m_ClosedList;
+	int					m_OpenCount;
+	int					m_ClosedCount;
 
 	Client				*m_Client;
 	ClosestLink			m_Start;
-	ClosestLink			m_Goal;
+	//ClosestLink			m_Goal;
 
 	RegulatorPtr		m_BlockableRegulator;
 	RegulatorPtr		m_RadiusMarkRegulator;
@@ -362,13 +364,12 @@ protected:
 	Obstacle				Obstacles[MaxEntityConnections];
 
 	void _RunDijkstra(const NavFlags _team);
-	void _RunAStar(const NavFlags _team);
+	void _RunAStar(const NavFlags _team, const Vector3f &_goalPosition);
 
 	int m_PathSerial;
 
 	void _FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable);
 
-	void _PlanPathToGoal(Client *_client, const ClosestLink &_start, const ClosestLink &_goal, const NavFlags _team);
 	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
 	ClosestLink _GetClosestLink(const Vector3f &_pos, const NavFlags _team) const;
 	void HeapInsert(WaypointList &_wpl, Waypoint *_wp);

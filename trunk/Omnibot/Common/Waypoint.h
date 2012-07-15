@@ -53,7 +53,7 @@ public:
 	const PropertyMap &GetPropertyMap() const { return m_PropertyList; }
 	
 	// Accessors and modifiers
-	const Vector3f &GetPosition() const;
+	inline const Vector3f &GetPosition() const { return m_Position; }
 	const Vector3f &GetFacing() const;
 
 	inline const NavFlags &GetNavigationFlags() const { return m_NavigationFlags; }
