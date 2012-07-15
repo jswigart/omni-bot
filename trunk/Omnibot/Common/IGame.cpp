@@ -838,12 +838,19 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					const char *pClassName = FindClassName(m_GameEntities[index].m_EntityClass);
 					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
 #endif
-					NavigationManager::GetInstance()->GetCurrentPathPlanner()->EntityCreated(m_GameEntities[index]);
 
 					m_GameEntities[index].m_Entity.Reset();
 					m_GameEntities[index].m_EntityClass = 0;
 					m_GameEntities[index].m_EntityCategory.ClearAll();
 					m_GameEntities[index].m_TimeStamp = 0;
+
+					// decrease the upper limit if necessary.
+					if(m_MaxEntity == index+1)
+					{
+						do {
+							m_MaxEntity--;
+						} while(m_MaxEntity>0 && !m_GameEntities[m_MaxEntity-1].m_Entity.IsValid());
+					}
 				}
 
 				GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);
@@ -1887,7 +1894,7 @@ bool IGame::IterateEntity(IGame::EntityIterator &_it)
 
 void IGame::UpdateEntity(EntityInstance &_ent)
 {
-	if ( _ent.m_TimeStamp < IGame::GetTime() && _ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS ) {
+	if ( _ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS && _ent.m_TimeStamp < IGame::GetTime() ) {
 		_ent.m_EntityClass = g_EngineFuncs->GetEntityClass( _ent.m_Entity );
 		g_EngineFuncs->GetEntityCategory( _ent.m_Entity, _ent.m_EntityCategory );
 		_ent.m_TimeStamp = IGame::GetTime();
