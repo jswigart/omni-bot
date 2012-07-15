@@ -25,6 +25,7 @@ struct Event_EntityConnection;
 namespace gcn
 {
 	class Graphics;
+	class Widget;
 }
 
 namespace NavigationAssertions 

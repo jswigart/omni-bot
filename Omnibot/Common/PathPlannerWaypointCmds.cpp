@@ -215,14 +215,14 @@ void PathPlannerWaypoint::cmdWaypointDeleteX(const StringVector &_args)
 }
 void PathPlannerWaypoint::cmdWaypointStats(const StringVector &_args)
 {
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;
+	//if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
+	//	return;
 
 	EngineFuncs::ConsoleMessage("-= Waypoint Stats =-");
 	EngineFuncs::ConsoleMessage(va("Map : %s", g_EngineFuncs->GetMapName()));
 	EngineFuncs::ConsoleMessage(va("# Waypoints : %d", m_WaypointList.size()));		
-	EngineFuncs::ConsoleMessage(va("A* Open List : %d", m_OpenList.size()));
-	EngineFuncs::ConsoleMessage(va("A* Closed List : %d", m_ClosedList.size()));
+	EngineFuncs::ConsoleMessage(va("A* Open List : %d", m_OpenCount));
+	EngineFuncs::ConsoleMessage(va("A* Closed List : %d", m_ClosedCount));
 }
 
 void PathPlannerWaypoint::cmdWaypointSave(const StringVector &_args)
@@ -1384,7 +1384,7 @@ void PathPlannerWaypoint::_BenchmarkPathFinder(const StringVector &_args)
 	{
 		for(obint32 w2 = 0; w2 < iNumWaypoints; ++w2)
 		{
-			_PlanPathToGoal(NULL, m_WaypointList[w1], m_WaypointList[w2], 0);
+			PlanPathToGoal(NULL, m_WaypointList[w1]->GetPosition(), m_WaypointList[w2]->GetPosition(), 0);
 		}
 	}
 	dTimeTaken = tme.GetElapsedSeconds();

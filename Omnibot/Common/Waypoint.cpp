@@ -177,11 +177,6 @@ void Waypoint::AssignNewUID()
 	m_UID = m_NextUID++;
 }
 
-const Vector3f &Waypoint::GetPosition() const 
-{ 
-	return m_Position; 
-}
-
 const Vector3f &Waypoint::GetFacing() const 
 { 
 	return m_Facing; 
