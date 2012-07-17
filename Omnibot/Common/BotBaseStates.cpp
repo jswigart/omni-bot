@@ -1077,14 +1077,20 @@ namespace AiState
 
 	void FollowPath::Stop(bool _clearuser)
 	{
+		// _clearuser is true if HighLevel goal was aborted
 		if(m_PassThroughState && _clearuser)
 		{
-			// _clearuser is true if HighLevel goal was aborted,
-			// don't interrupt active paththrough
-			if(m_SavedQuery.m_User && m_SavedQuery.m_User!=m_Query.m_User) 
-				m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
-			m_SavedQuery.m_User = 0;
-			return;
+			if(m_Query.m_User && m_Query.m_User->GetFollowUserName() == m_PassThroughState)
+			{
+				// don't interrupt active paththrough
+				if(m_SavedQuery.m_User)
+				{
+					if(m_SavedQuery.m_User!=m_Query.m_User) 
+						m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
+					m_SavedQuery.m_User = 0;
+				}
+				return;
+			}
 		}
 
 		if(m_PathStatus == PathInProgress)
@@ -1227,23 +1233,26 @@ namespace AiState
 
 	bool FollowPath::Goto(FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/, bool _final /*= true*/)
 	{
-		if (_owner != m_Query.m_User)
+		if (m_PassThroughState && _owner != m_Query.m_User)
 		{
-			if (m_PassThroughState)
+			if(_owner->GetFollowUserName() == m_PassThroughState)
 			{
-				if(_owner->GetFollowUserName() != m_PassThroughState)
-				{
-					if (m_SavedQuery.m_User && _owner != m_SavedQuery.m_User)
-						m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
+				// paththrough called Goto,
+				// save HighLevel goal's query
+				SaveQuery();
+			}
+			else if(m_Query.m_User && m_Query.m_User->GetFollowUserName() == m_PassThroughState)
+			{
+				if (m_SavedQuery.m_User && _owner != m_SavedQuery.m_User)
+					m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
 
-					// remember current query and don't interrupt active paththrough
-					m_SavedQuery.m_User = _owner;
-					m_SavedQuery.m_Destination = _goals;
-					m_SavedQuery.m_MoveMode = _movemode;
-					m_SavedQuery.m_SkipLastPt = _skiplastpt;
-					m_SavedQuery.m_Final = _final;
-					return true;
-				}
+				// remember current query and don't interrupt active paththrough
+				m_SavedQuery.m_User = _owner;
+				m_SavedQuery.m_Destination = _goals;
+				m_SavedQuery.m_MoveMode = _movemode;
+				m_SavedQuery.m_SkipLastPt = _skiplastpt;
+				m_SavedQuery.m_Final = _final;
+				return true;
 			}
 		}
 
@@ -1420,20 +1429,35 @@ namespace AiState
 				State *pPathThrough = ll->FindState(m_PassThroughState);
 				if(!pPathThrough || (!pPathThrough->IsActive() && pPathThrough->GetLastPriority()<Mathf::EPSILON))
 				{
-					m_PassThroughState = 0;
-					if(m_Query.m_User != m_SavedQuery.m_User)
+					// paththrough state finished
+					if(m_Query.m_User && m_Query.m_User->GetFollowUserName() == m_PassThroughState)
 					{
-						// find new path to the current goal
-						RestoreQuery();
-						Repath();
-					}
-					else if(m_CurrentPath.GetCurrentPtIndex() != m_PathThroughPtIndex + 1)
-					{
-						// repath if the previous waypoint has paththrough which has been skipped
-						Path::PathPoint ptPrev;
-						if(m_CurrentPath.GetPreviousPt(ptPrev) && ptPrev.m_OnPathThrough && ptPrev.m_OnPathThroughParam)
+						m_PassThroughState = 0;
+
+						if(m_SavedQuery.m_User)
 						{
+							// find new path to the current HighLevel goal
+							RestoreQuery();
 							Repath();
+						}
+						else
+						{
+							Stop(false);
+							m_Query.m_User = 0;
+						}
+					}
+					else
+					{
+						m_PassThroughState = 0;
+
+						if(m_CurrentPath.GetCurrentPtIndex() != m_PathThroughPtIndex + 1)
+						{
+							// repath if the previous waypoint has paththrough which has been skipped
+							Path::PathPoint ptPrev;
+							if(m_CurrentPath.GetPreviousPt(ptPrev) && ptPrev.m_OnPathThrough && ptPrev.m_OnPathThroughParam)
+							{
+								Repath();
+							}
 						}
 					}
 				}
@@ -1543,11 +1567,10 @@ namespace AiState
 					State *pPathThrough = ll->FindState(pt.m_OnPathThrough);
 					if(pPathThrough)
 					{
-						SaveQuery();
-
 						String s = Utils::HashToString(pt.m_OnPathThroughParam);
 						if(pPathThrough->OnPathThrough(s))
 						{
+							m_SavedQuery.m_User = 0;
 							m_PassThroughState = pt.m_OnPathThrough;
 							m_PathThroughPtIndex = m_CurrentPath.GetCurrentPtIndex();
 						}
