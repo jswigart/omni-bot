@@ -1616,17 +1616,6 @@ void ClientBegin( int clientNum ) {
 	client->sess.botSuicidePersist = qfalse;
 	client->sess.botPush = ent->r.svFlags & SVF_BOT ? qtrue : qfalse;
 
-	// force team based smg when swapping teams and weapons are unlocked
-	if ( g_unlockWeapons.integer && (client->sess.playerWeapon == WP_THOMPSON || client->sess.playerWeapon == WP_MP40) ) {
-		if ( client->sess.sessionTeam == TEAM_RED ) {
-			client->pers.cmd.mpSetup |= 3 << MP_WEAPON_OFFSET;
-			client->ps.weapon = WP_MP40;
-		} else if ( client->sess.sessionTeam == TEAM_BLUE ) {
-			client->pers.cmd.mpSetup |= 4 << MP_WEAPON_OFFSET;
-			client->ps.weapon = WP_THOMPSON;
-		}
-	}
-
 	// locate ent at a spawn point
 	ClientSpawn( ent, qfalse );
 
@@ -2034,10 +2023,6 @@ void ClientDisconnect( int clientNum ) {
 	if ( ent->client->pers.connected == CON_CONNECTED
 		 && ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
 
-		// They don't get to take powerups with them!
-		// Especially important for stuff like CTF flags
-		TossClientItems( ent );
-
 		// New code for tossing flags
 		if ( g_gametype.integer >= GT_WOLF ) {
 			if ( ent->client->ps.powerups[PW_REDFLAG] ) {
@@ -2074,11 +2059,12 @@ void ClientDisconnect( int clientNum ) {
 	ent->classname = "disconnected";
 	ent->client->pers.connected = CON_DISCONNECTED;
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
+	ent->client->ps.persistant[PERS_HWEAPON_USE] = 0;
 	ent->client->sess.sessionTeam = TEAM_FREE;
 // JPW NERVE -- mg42 additions
 	ent->active = qfalse;
 // jpw
-    ent->r.svFlags &= ~SVF_BOT;
+	ent->r.svFlags &= ~SVF_BOT;
 
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "" );
 

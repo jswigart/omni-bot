@@ -157,7 +157,7 @@ void AddScore( gentity_t *ent, int score ) {
 =================
 TossClientItems
 
-Toss the weapon and powerups for the killed player
+Toss the weapon and items for the killed player
 =================
 */
 void MagicSink( gentity_t *self );
