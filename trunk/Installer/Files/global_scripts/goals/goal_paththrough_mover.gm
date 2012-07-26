@@ -37,10 +37,12 @@ this.Exit = function()
 
 this.Update = function()
 {
+	this.Goto(this.Bot.GetPosition());
+	
 	while ( this.mover.board(this) != true )
 	{
 		//stand in place ...
-		this.Goto(this.Bot.GetPosition());
+		this.Bot.MoveTowards(this.Bot.GetPosition());
 		yield();
 	}
 

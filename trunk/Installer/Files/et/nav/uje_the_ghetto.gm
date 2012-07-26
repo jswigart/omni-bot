@@ -646,7 +646,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNT_Tank", 0.50, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNT_Tank", 0.50, TEAM.AXIS, CLASS.COVERTOPS );
 	SetGoalPriority( "ESCORT_Tank", 0.50, TEAM.AXIS, CLASS.COVERTOPS );
-	
+	SetGoalPriority( "DEFUSE_Gate_.*", 1.10, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Bridge_.*", 1.15, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_.*", 1.20, TEAM.ALLIES, CLASS.ENGINEER, true );
 	
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );

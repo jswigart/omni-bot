@@ -434,6 +434,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_obj.*" );
 		Groups.DisableAxis(Groups.group8);
 		Groups.EnableAxis(Groups.group9);
 		Groups.EnableAllies(Groups.group10);
@@ -449,6 +451,7 @@ global Map =
 		Groups.DisableAxis(Groups.group9);
 		Groups.EnableAxis(Groups.group8);
 		Groups.DisableAllies(Groups.group10);
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_obj.*" );
 
 		Util.MapDebugPrint( "gold_Returned" );
 	},
@@ -594,11 +597,19 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=120, MaxCampTime=120});
 
 	// cs: set these as slightly higher priority so allies will favor assisting doc run
-	SetGoalPriority( "ATTACK_a_gold.*", 0.6, TEAM.ALLIES );
+	SetGoalPriority( "ATTACK_.*", 0.49, TEAM.ALLIES );
+	SetGoalPriority( "ATTACK_a_gold.*", 0.50, TEAM.ALLIES );
+	SetGoalPriority( "BUILD_Canyon_Rope_Bridge", 0.89, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFUSE_Tank_Bridge_.*", 1.10, TEAM.ALLIES, CLASS.ENGINEER, true );
 	
 	// bub: set priority to build tank barriers, first by CP, then by temple
-	SetGoalPriority( "BUILD_Tank_Barrier", 0.8, TEAM.AXIS );
-	SetGoalPriority( "BUILD_Tank_Barrier_1", 0.9, TEAM.AXIS );
+	SetGoalPriority( "BUILD_.*", 0.88, TEAM.AXIS );
+	SetGoalPriority( "BUILD_Tank_Barrier", 0.90, TEAM.AXIS );
+	SetGoalPriority( "BUILD_temple_wooden_barrier", 0.90, TEAM.AXIS );
+	SetGoalPriority( "BUILD_Tank_Barrier_1", 0.89, TEAM.AXIS );
+	SetGoalPriority( "DEFUSE_temple_wooden_barrier_.*", 1.25, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_1_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );

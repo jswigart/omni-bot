@@ -1657,6 +1657,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.MEDIC );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNTMG42_.*", 0.0, TEAM.AXIS, CLASS.COVERTOPS);
+	SetGoalPriority( "DEFUSE_Gun_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true);
+	SetGoalPriority( "DEFUSE_Gun_Controls_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true);
+	SetGoalPriority( "DEFUSE_Radar_Station_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true);
+	SetGoalPriority( "DEFUSE_Power_Supply_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true);
+	SetGoalPriority( "DEFUSE_Power_Supply_Door_.*", 1.00, TEAM.AXIS, CLASS.ENGINEER, true);
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_mainbunker_ammocabinet" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_mainbunker_healthcabinet" );

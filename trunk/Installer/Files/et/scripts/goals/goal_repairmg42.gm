@@ -23,7 +23,7 @@ this.GetPriority = function()
 	{
 		//if(this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		//{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"REPAIRMG42_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0x17929136 /* REPAIRMG42 */);
 			if ( count > 0 )
 			{
 				foreach ( goal in this.Bot.QueryGoalsTable )

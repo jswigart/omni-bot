@@ -1478,15 +1478,9 @@ member SetGoal = function( goalname, team )
 
 	if ( typeId( team ) == 0 )
 	{
-		SetAvailableMapGoals( 1, true, goalname );
-		SetAvailableMapGoals( 2, true, goalname );
-		SetAvailableMapGoals( 3, true, goalname );
-		SetAvailableMapGoals( 4, true, goalname );
+		team = 0;
 	}
-	else
-	{
-		SetAvailableMapGoals( team, true, goalname );
-	}
+	SetAvailableMapGoals( team, true, goalname );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1501,15 +1495,9 @@ member ClearGoal = function( goalname, team )
 
 	if ( typeId( team ) == 0 )
 	{
-		SetAvailableMapGoals( 1, false, goalname );
-		SetAvailableMapGoals( 2, false, goalname );
-		SetAvailableMapGoals( 3, false, goalname );
-		SetAvailableMapGoals( 4, false, goalname );
+		team = 0;
 	}
-	else
-	{
-		SetAvailableMapGoals( team, false, goalname );
-	}
+	SetAvailableMapGoals( team, false, goalname );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -37,58 +37,44 @@ this.Enter = function()
 this.Update = function()
 {
 	this.Bot.HoldButton(BTN.SPRINT, 3);
-	this.Goto(this.TargetPosition, 32);
+	pos = GetEntPosition(this.TargetEntity);
+	if ( pos ) {
+		this.Goto(pos, 32);
+	}
 	this.Finished();
 };
 
 this.Exit = function()
 {
 	this.Bot.ReleaseButton(BTN.SPRINT);
-	this.TargetPosition = null;
 	this.TargetEntity = null;
 };
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
-	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
+	if ( this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
 		return;
 	}
 
-	if ( ent )
+	entCat = this.GetPickupCategory(ent);
+
+	switch(entCat)
 	{
-		entCat = this.GetPickupCategory(ent);
-		if ( entCat != -1 ) {
-			pos = GetEntPosition(ent);
-			if ( !pos || this.Bot.DistanceTo(pos) > this.Range ) {
-				return;
-			}
-
-			this.TargetEntity = ent;
-			this.TargetPosition = pos;
-		}
-		else {
-			return;
-		}
-
-		priority = 0;
-		switch(entCat)
+		case CAT.PICKUP_WEAPON:
+		case CAT.PICKUP_AMMO:
 		{
-			case CAT.PICKUP_WEAPON:
-			case CAT.PICKUP_AMMO:
-			{
-				if ( this.NeedsAmmo(ent, entCat) ) {
-					priority = this.PickupPriority;
-				}
-			}
-			case CAT.PICKUP_HEALTH:
-			{
-				if ( this.Bot.Health < this.Bot.MaxHealth ) {
-					priority = this.PickupPriority;
-				}
+			if ( this.NeedsAmmo(ent, entCat) ) {
+				this.TargetEntity = ent;
+				this.Priority = this.PickupPriority;
 			}
 		}
-
-		this.Priority = priority;
+		case CAT.PICKUP_HEALTH:
+		{
+			if ( this.Bot.Health < this.Bot.MaxHealth ) {
+				this.TargetEntity = ent;
+				this.Priority = this.PickupPriority;
+			}
+		}
 	}
 };
 

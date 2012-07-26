@@ -3,6 +3,7 @@ this.Name = "CAMP";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.SkipGetPriorityWhenActive = true;
 this.Debug = false;
+this.query = { 0xa9ef3654 /* CAMP */, 0x4fed19c1 /* DEFEND */, 0x4595b8fd /* ATTACK */, 0xe8fbadc0 /* SNIPE */ };
 
 // cs: this is a hack to overcome limitations with LimitToWeapon
 this.CheckWeaponRestrictions = function(goal)
@@ -74,45 +75,20 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,"CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*");
+		count = this.QueryGoals(this.Bot.QueryGoalsTable, this.query);
 		if ( count > 0 )
 		{
-			topPriority = 0;
-			isRestricted = false;
-
 			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
-				if (!this.CheckWeaponRestrictions(goal) ) {
-					isRestricted = true;
-					continue;
-				}
-				// it's a sorted list
-				if ( topPriority == 0 )
+				if (this.CheckWeaponRestrictions(goal) )
 				{
-					if ( !isRestricted ) {
-						// the highest priority goals are chosen randomly by QueryGoals
-						this.MapGoal = goal;
-						this.Priority = goal.GetGoalPriority(this.Bot);
-						break;
-					}
-					topPriority = goal.GetGoalPriority(this.Bot);
-				}
-				else if ( goal.GetGoalPriority(this.Bot) < topPriority ) {
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
 					break;
 				}
-
-				this.Bot.UsableGoals[ tableCount(this.Bot.UsableGoals) ] = goal;
 			}
-
-			// this hackeration is sponsored by the evil bugfinding genius of palota
-			if ( topPriority > 0 ) {
-				this.MapGoal = Util.GetRandomTableValue(this.Bot.UsableGoals);
-				this.Priority = topPriority;
-				//this.Bot.Say("chose " + this.MapGoal.GetName());
-			}
-			tableClear(this.Bot.UsableGoals);
+			tableClear(this.Bot.QueryGoalsTable);
 		}
-		tableClear(this.Bot.QueryGoalsTable);
 
 		sleep(2);
 	}

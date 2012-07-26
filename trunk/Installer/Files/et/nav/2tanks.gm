@@ -5,6 +5,7 @@
 //	Who	When		What
 //------------------------------------------------------------------------------------------
 //	MickyP	21 June 2010	Initial Script
+//	palota	21 July 2012	command posts can be built by both teams, enabled health and ammo cabinets, fixed switches and tanks availabilities, ESCORT goals are not disabled if tank is damaged
 //
 //==========================================================================================
 //
@@ -60,7 +61,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
+		SetGoalPriority( "ESCORT_Allied_tank", 0.79);
 		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Destroy_Allied_tank" );
 		Map.AlliesTankBuilt = true;
 		Util.MapDebugPrint( "Allied_tank_Built" );
@@ -71,7 +72,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_tank" );
+		SetGoalPriority( "ESCORT_Allied_tank", 0.5);
 		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Destroy_Allied_tank" );
 		Map.AlliesTankBuilt = false;
 		Util.MapDebugPrint( "Allied_tank_Damaged" );
@@ -98,7 +99,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
+		SetGoalPriority( "ESCORT_Axis_tank", 0.79);
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Destroy_Axis_tank" );
 		Map.AxisTankBuilt = true;
 		Util.MapDebugPrint( "Axis_tank_Built" );
@@ -109,7 +110,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_tank" );
+		SetGoalPriority( "ESCORT_Axis_tank", 0.5);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Destroy_Axis_tank" );
 		Map.AxisTankBuilt = false;
 		Util.MapDebugPrint( "Axis_tank_Damaged" );
@@ -168,18 +169,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesPastTrack == true )
+		if (!Map.EastOpen)
 		{
-			return;
+			Util.SetRoleForGoals( "SWITCH_East_Track", ROLE.INFILTRATOR );
 		}
-
-		if ( Map.AlliesAtTrack == true )
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Signal_Box_Door" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track_Cov" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_East_Track" );
-		}
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_East_Signal_Box_Door" );
 		Map.EastDoorBuilt = true;
 		Util.MapDebugPrint( "East_Signal_Box_Door_Built" );
 	},
@@ -189,9 +182,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisPastTrack == true )
+		if ( Map.AlliesPastTrack )
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_East_Signal_Box_Door.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_East_Signal_Box_Door.*" );
 		}
 
 		Map.East_Signal_Box_Door_Dyno += 1;
@@ -212,68 +205,42 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesPastTrack == true )
-			{
-				return;
-			}
-		if ( Map.AlliesAtTrack == true )
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_East_Signal_Box_Door" );
-			if ( Map.EastOpen == true )
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_West_Track.*" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_West_Track" );
-			}
-		}
-		if ( Map.AlliesAtTrack == false )
-		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_East_Signal_Box_Door" );
-		}
+		Util.ClearRoleForGoals( "SWITCH_East_Track", ROLE.INFILTRATOR );
 		Map.EastDoorBuilt = false;
 		Util.MapDebugPrint( "East_Signal_Box_Door_Destroyed" );
 	},
 
 	Allies_tank_b1 =
- 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
- 		OnEnter = function(ent)
- 		{
-			SetGoalPriority( "BUILD_East_Signal_Box_Door", 0.92, TEAM.AXIS, CLASS.ENGINEER, true );
-			if ( Map.EastOpen == false )
+	{
+		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
+		OnEnter = function(ent)
+		{
+			SetGoalPriority( "BUILD_East_Signal_Box_Door", 0.92, TEAM.AXIS );
+			SetGoalPriority( "PLANT_East_Signal_Box_Door", 0.92, TEAM.ALLIES );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Signal_Box_Door" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_East_Track.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_East_Track.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_East_Tank_Barrier" );
+			if ( !Map.EastOpen )
 			{
-				if ( Map.EastDoorBuilt == true )
-					{
-						SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track_Cov" );
-						SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Signal_Box_Door" );
-					}
-				else
-					{
-						SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track" );
-					}
+				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_tank" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_tank" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_East_Track.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_East_Track.*" );
 			}
 			Map.AlliesAtTrack = true;
 			Util.MapDebugPrint( "Allies_tank_at_b1" );
 		},
- 		OnExit = function(ent)
- 		{
+		OnExit = function(ent)
+		{
 			Map.AlliesPastTrack = true;
-			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_East_Track.*" );
+			Map.AlliesAtTrack = false;
+			Util.DisableGoal( "SWITCH_East_Track" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_East_Signal_Box_Door" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_East_Track.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_v1_base_flag" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_East_Signal_Box_Door" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_East_Track.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_East_Track.*" );
 			Util.MapDebugPrint( "Allies_tank_passed_b1" );
- 		},
+		},
 	},
 
 	East_Track_Switch_Raised = function( trigger )
@@ -281,24 +248,13 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesPastTrack == true )
-		{
-			return;
-		}
-		if ( Map.AlliesPastTrack == false )
+		if ( !Map.AlliesPastTrack )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_East_Track" );
-
-			if ( Map.AlliesTankBuilt == false )
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_tank" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
-			}
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
 		}
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_East_Track.*" );
+		Util.ClearRoleForGoals( "SWITCH_East_Track", ROLE.INFILTRATOR );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_East_Track" );
 		Map.EastOpen = true;
 		Util.MapDebugPrint( "East_Track_Switch_Raised" );
 	},
@@ -308,20 +264,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesPastTrack == true )
+		if ( Map.EastDoorBuilt )
 		{
-			return;
+			Util.SetRoleForGoals( "SWITCH_East_Track", ROLE.INFILTRATOR );
 		}
-		else if ( Map.AlliesAtTrack == true )
+		if ( Map.AlliesAtTrack )
 		{
-			if ( Map.EastDoorBuilt == false )
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track_Cov" );
-			}
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_East_Track" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_tank" );
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_East_Track" );
 		Map.EastOpen = false;
@@ -333,15 +283,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisPastTrack == true )
+		if (!Map.WestOpen)
 		{
-			return;
-		}
-		if ( Map.AxisAtTrack == true )
-		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Signal_Box_Door" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track_Cov" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_West_Track" );
+			Util.SetRoleForGoals( "SWITCH_West_Track", ROLE.INFILTRATOR );
 		}
 		Map.WestDoorBuilt = true;
 		Util.MapDebugPrint( "West_Signal_Box_Door_Built" );
@@ -352,9 +296,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesPastTrack == true )
+		if ( Map.AxisPastTrack )
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_West_Signal_Box_Door.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_West_Signal_Box_Door.*" );
 		}
 
 		Map.West_Signal_Box_Door_Dyno += 1;
@@ -375,70 +319,42 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisPastTrack == true )
-		{
-			return;
-		}
-		if ( Map.AxisAtTrack == true )
-		{
-
-			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Signal_Box_Door" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_West_Track" );
-			if ( Map.WestOpen == true )
-			{
-				SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_West_Track.*" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track" );
-			}
-		}
-		if ( Map.AxisAtTrack == false )
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Signal_Box_Door" );
-		}
+		Util.ClearRoleForGoals( "SWITCH_West_Track", ROLE.INFILTRATOR );
 		Map.WestDoorBuilt = false;
 		Util.MapDebugPrint( "West_Signal_Box_Door_Destroyed" );
 	},
 
 	Axis_tank_b1 =
- 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank0").GetEntity(),
- 		OnEnter = function(ent)
- 		{
-			SetGoalPriority( "BUILD_West_Signal_Box_Door", 0.92, TEAM.ALLIES, CLASS.ENGINEER, true );
+	{
+		TriggerOnEntity = GetGoal("MOVER_tank0").GetEntity(),
+		OnEnter = function(ent)
+		{
+			SetGoalPriority( "BUILD_West_Signal_Box_Door", 0.92, TEAM.ALLIES );
+			SetGoalPriority( "PLANT_West_Signal_Box_Door", 0.92, TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Signal_Box_Door" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_West_Track.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_West_Track.*" );
-			if ( Map.WestOpen == false )
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Tank_Barrier" );
+			if ( !Map.WestOpen )
 			{
-				if ( Map.WestDoorBuilt == true )
-				{
-					SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track_Cov" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Signal_Box_Door" );
-				}
-				else
-				{
-					SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track" );
-				}
+				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_tank" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_tank" );
 			}
 			Map.AxisAtTrack = true;
 			Util.MapDebugPrint( "Axis_tank_at_b1" );
 		},
- 		OnExit = function(ent)
- 		{
+		OnExit = function(ent)
+		{
 			Map.AxisPastTrack = true;
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_West_Track.*" );
+			Map.AxisAtTrack = false;
+			Util.DisableGoal( "SWITCH_West_Track" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_West_Signal_Box_Door" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Tank_Barrier" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_East_Track.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_v1_base_flag" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_West_Signal_Box_Door" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_West_Track.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_West_Track.*" );
 			Util.MapDebugPrint( "Axis_tank_passed_b1" );
- 		},
+		},
 	},
 
 	West_Track_Switch_Raised = function( trigger )
@@ -446,24 +362,13 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisPastTrack == true )
-		{
-			return;
-		}
-		if ( Map.AxisPastTrack == false )
+		if ( !Map.AxisPastTrack )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_West_Track" );
-
-			if ( Map.AxisTankBuilt == false )
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_tank" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
-			}
+			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
 		}
-		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_West_Track.*" );
+		Util.ClearRoleForGoals( "SWITCH_West_Track", ROLE.INFILTRATOR );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_West_Track" );
 		Map.WestOpen = true;
 		Util.MapDebugPrint( "West_Track_Switch_Raised" );
 	},
@@ -473,20 +378,14 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisPastTrack == true )
+		if ( Map.WestDoorBuilt )
 		{
-			return;
+			Util.SetRoleForGoals( "SWITCH_West_Track", ROLE.INFILTRATOR );
 		}
-		else if ( Map.AxisAtTrack == true )
+		if ( Map.AxisAtTrack )
 		{
-			if ( Map.WestDoorBuilt == false )
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track_Cov" );
-			}
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_West_Track" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_tank" );
 		}
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_West_Track" );
 		Map.WestOpen = false;
@@ -498,11 +397,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesAtB2 == true )
+		if ( Map.AlliesAtB2 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Tank_Barrier" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_tank" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_tank" );
 		}
 
 		Map.EastB2Open = false;
@@ -532,16 +430,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AlliesAtB2 == true )
+		if ( Map.AlliesAtB2 )
 		{
-			if ( Map.AlliesTankBuilt == true )
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_tank" );
-			}
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
 		}
 
 		Map.EastB2Open = true;
@@ -549,24 +440,25 @@ global Map =
 	},
 
 	Allies_tank_b2 =
- 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
- 		OnEnter = function(ent)
- 		{
+	{
+		TriggerOnEntity = GetGoal("MOVER_tank1").GetEntity(),
+		OnEnter = function(ent)
+		{
 			Map.AlliesAtB2 = true;
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Axis" );
-			if ( Map.EastB2Open == false )
+			SetAvailableMapGoals( TEAM.AXIS, true, ".*MG42_Axis" );
+			SetGoalPriority( "PLANT_East_Tank_Barrier", 0.92);
+			if ( !Map.EastB2Open )
 			{
 				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Tank_Barrier" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_tank" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_tank" );
 			}
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_East_Barrier.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_East_Barrier.*" );
 			Util.MapDebugPrint( "Allies_tank_at_b2" );
 		},
- 		OnExit = function(ent)
- 		{
+		OnExit = function(ent)
+		{
+			Map.AlliesAtB2 = false;
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_East_Barrier.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_East_Barrier.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Final.*" );
@@ -579,11 +471,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisAtB2 == true )
+		if ( Map.AxisAtB2 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Tank_Barrier" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_tank" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_tank" );
 		}
 
 		Map.WestB2Open = false;
@@ -613,16 +504,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		if ( Map.AxisAtB2 == true )
+		if ( Map.AxisAtB2 )
 		{
-			if ( Map.AxisTankBuilt == true )
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
-			}
-			else
-			{
-				SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_tank" );
-			}
+			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
 		}
 
 		Map.WestB2Open = true;
@@ -630,20 +514,20 @@ global Map =
 	},
 
 	Axis_tank_b2 =
- 	{
- 		TriggerOnEntity = GetGoal("MOVER_tank0").GetEntity(),
+	{
+		TriggerOnEntity = GetGoal("MOVER_tank0").GetEntity(),
 		OnEnter = function(ent)
 		{
 			Map.AxisAtB2 = true;
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_West_Barrier.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_West_Barrier.*" );
-			if ( Map.WestB2Open == false )
+			SetAvailableMapGoals( TEAM.ALLIES, true, ".*MG42_Allied" );
+			SetGoalPriority( "PLANT_West_Tank_Barrier", 0.92);
+			if ( !Map.WestB2Open )
 			{
 				SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Tank_Barrier" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_tank" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_tank" );
 			}
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_West_Barrier.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_West_Barrier.*" );
 			Util.MapDebugPrint( "Axis_tank_at_b2" );
 		},
 		OnExit = function(ent)
@@ -660,7 +544,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_West_Tank_Barrier" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_West_Tank_Barrier" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_West_Barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_West_Barrier.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Final.*" );
@@ -689,6 +573,8 @@ global Map =
 			{ return; }
 
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
 
 		Util.MapDebugPrint( "Axis_Tank_At_Fuel_Dump" );
 	},
@@ -699,6 +585,8 @@ global Map =
 			{ return; }
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
 
 		Util.MapDebugPrint( "Allies_Tank_At_Fuel_Dump" );
 	},
@@ -766,59 +654,50 @@ global OnMapLoad = function()
 	OnTrigger( "The ^1Axis ^7got their tank to the Fuel Dump!", Map.Axis_Tank_At_Fuel_Dump );
 	OnTrigger( "The ^dAllies ^7got their tank to the Fuel Dump!", Map.Allies_Tank_At_Fuel_Dump );
 
-	Trigger1 = OnTriggerRegion(AABB(663.555,6734.264,177.125,885.929,6876.560,263.049),Map.Axis_tank_b1);
-	Trigger2 = OnTriggerRegion(AABB(5427.208,6811.568,177.125,5557.020,7013.329,251.688),Map.Allies_tank_b1);
-	Trigger4 = OnTriggerRegion(AABB(1933.874,3633.363,17.125,2164.083,3729.411,91.125),Map.Axis_tank_b2);
-	Trigger3 = OnTriggerRegion(AABB(4283.820,3723.101,17.125,4539.782,3978.472,96.046),Map.Allies_tank_b2);
+	OnTriggerRegion(AABB(663.555,6734.264,177.125,885.929,6876.560,263.049),Map.Axis_tank_b1);
+	OnTriggerRegion(AABB(5427.208,6811.568,177.125,5557.020,7013.329,251.688),Map.Allies_tank_b1);
+	OnTriggerRegion(AABB(1933.874,3633.363,17.125,2164.083,3729.411,91.125),Map.Axis_tank_b2);
+	OnTriggerRegion(AABB(4283.820,3723.101,17.125,4539.782,3978.472,96.046),Map.Allies_tank_b2);
 
 	Util.DisableGoal( ".*", true ); // all but routes
-	Util.DisableGoal( "ROUTE.*", true );
+	Util.EnableGoal( "AMMOCAB.*" );
+	Util.EnableGoal( "HEALTHCAB.*" );
 
 	Util.SetGoalPosition( 2097, 3250, 40, "PLANT_West_Tank_Barrier" );
 	Util.SetGoalPosition( 4400, 3250, 40, "PLANT_East_Tank_Barrier" );
 
 
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_West_Signal_Box_Door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Command_Post" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Base_Defence" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_v1_base_flag" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Command_Post" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Command_Post" );
 
+	SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_tank" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_East_Signal_Box_Door" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_West_Command_Post" ); // AXIS
+	SetAvailableMapGoals( TEAM.AXIS, true, ".*_Command_Post" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Base_Defence" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_v1_base_flag" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Command_Post" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_West_Command_Post" );
 
-	// Prioritys
+	// Priorities
 
-	SetGoalPriority( "ESCORT_Axis_tank", 0.78, TEAM.ALLIES, CLASS.FIELDOPS, true );
-	SetGoalPriority( "ESCORT_Allied_tank", 0.78, TEAM.AXIS, CLASS.FIELDOPS, true );
-	SetGoalPriority( "BUILD_Allied_tank", 0.91, TEAM.ALLIES, CLASS.ENGINEER, true );
-	SetGoalPriority( "BUILD_Allied_Base_Defence", 0.85, TEAM.ALLIES, CLASS.ENGINEER, true );
-	SetGoalPriority( "BUILD_Axis_tank", 0.91, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "BUILD_Axis_Base_Defence", 0.85, TEAM.AXIS, CLASS.ENGINEER, true );
-	SetGoalPriority( "SWITCH.*", 0.95 );
+	SetGoalPriority( "BUILD_Allied_tank", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Allied_Base_Defence", 0.85, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Axis_tank", 0.91, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Axis_Base_Defence", 0.85, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "SWITCH.*", 0.8 );
 
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
 	Util.SetMaxUsers( 1, "DEFEND_.*" );
-	Util.SetMaxUsers( 1, "GRENADE_.*" );
-	Util.SetMaxUsers( 1, "SNIPE_.*" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
-	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
-	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
-	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
-	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 4, "CHECKPOINT_.*" );
 
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
-	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
 	MapRoutes =
 	{

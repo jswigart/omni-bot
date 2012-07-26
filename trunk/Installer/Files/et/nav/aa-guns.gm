@@ -305,7 +305,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Tankpos_reset ( "at_plaza2" ) ;
+		//Map.Tankpos_reset ( "at_plaza2" ) ;
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Repair_Gate_MG_Nest );		//MG outside Bunker
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Gate_MG_Nest );		//MG outside Bunker
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_at_tanksupport1" );		//Support tank extra

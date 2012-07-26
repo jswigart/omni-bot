@@ -16,7 +16,7 @@ this.GetPriority = function()
 	{
 		if(Util.HasAmmoForWeapon(this.Bot, WEAPON.MOBILE_MG42))
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"MOBILEMG42_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xbe8488ed /* MOBILEMG42 */);
 			if ( count > 0 )
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )

@@ -21,7 +21,7 @@ this.Initialize = function()
 this.QueryReviveGoals = function(range, skipGoal)
 {
 	bestGoal = null;
-	count = this.QueryGoals(this.Bot.QueryGoalsTable,"REVIVE_.*");
+	count = this.QueryGoals(this.Bot.QueryGoalsTable,0x2086cdf0 /* REVIVE */);
 	if ( count > 0 )
 	{
 		closest = range + 1;
@@ -170,7 +170,7 @@ this.UpdateRevive = function()
 		this.ReleaseAimRequest();
 		this.ReleaseWeaponRequest();
 
-		if ( timeout > 0 ) {
+		if (timeout > 0 && health > 0) { // cs: added paranoid check for health
 			if (health < 100 && this.EvalDeliverSupplies()) { //skilled medic can revive to full health
 				// activate deliver supplies goal.
 				this.Bot.RevivedTargetEnt = this.TargetEntity;

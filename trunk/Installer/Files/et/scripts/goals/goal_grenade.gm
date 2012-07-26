@@ -73,7 +73,7 @@ this.GetPriority = function()
 	{
 		if ( Util.HasAmmoForWeapon(this.Bot, WEAPON.ALLY_GRENADE) || Util.HasAmmoForWeapon(this.Bot, WEAPON.AXIS_GRENADE) )
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"GRENADE_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xd988d8fd /* GRENADE */);
 			if ( count > 0 )
 			{
 				foreach ( goal in this.Bot.QueryGoalsTable )

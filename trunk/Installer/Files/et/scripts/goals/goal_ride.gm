@@ -24,7 +24,7 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,"RIDE_.*");
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,0x541798f /* RIDE */);
 		if ( count > 0 )
 		{
 			foreach ( id and goal in this.Bot.QueryGoalsTable )

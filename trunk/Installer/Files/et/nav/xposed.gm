@@ -425,6 +425,9 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=60, MaxCampTime=120});
 	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=30, MaxCampTime=60});
 	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+	
+	SetGoalPriority( "DEFUSE_Tank_Barrier_2_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_1_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	//clear all goals
 	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );

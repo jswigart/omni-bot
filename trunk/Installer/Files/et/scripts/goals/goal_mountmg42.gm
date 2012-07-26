@@ -15,7 +15,7 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,"MOUNTMG42_.*");
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,0xe1a2b09c /* MOUNTMG42 */);
 		if ( count > 0 )
 		{
 			foreach ( id and goal in this.Bot.QueryGoalsTable )

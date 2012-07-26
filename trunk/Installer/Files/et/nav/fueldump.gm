@@ -1,5 +1,7 @@
 global Map =
 {
+	Debug = false,
+	
 	Ammo_Cabinet_lms_ammocabinet = "AMMOCAB_lms_ammocabinet",
 	Ammo_Cabinet_tankbay_ammocabinet = "AMMOCAB_tankbay_ammocabinet",
 	Ammo_Cabinet_alliedhut_ammocabinet = "AMMOCAB_alliedhut_ammocabinet",
@@ -43,6 +45,9 @@ global Map =
 	DispenseHealthTime = 10.0,
 	DispenseAmmoTime = 1.0,
 	DefendingTeam = TEAM.AXIS,
+	
+	Defuse_Axis_Command_Post = true,
+	Defuse_Tunnel_MG = true,
 
 	Tunnel_Doors = true,
 	Depot_Gates = true,
@@ -194,6 +199,23 @@ global Map =
 			{ return; }
 
 		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		if ( Map.Defuse_Axis_Command_Post )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_Axis_Command_Post_.*" );
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Axis_Command_Post_.*" );
+		}
+
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
 	},
 
 	Axis_Command_Post_Destroyed = function( trigger )
@@ -496,6 +518,23 @@ global Map =
 		Util.MapDebugPrint( "Tunnel_MG_Built" );
 	},
 
+	Tunnel_MG_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		if ( Map.Defuse_Tunnel_MG )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_Tunnel_MG_.*" );
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Tunnel_MG_.*" );
+		}
+
+		Util.MapDebugPrint( "Tunnel_MG_Planted" );
+	},
+
 	Tunnel_MG_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -570,6 +609,9 @@ global Map =
 			{ return; }
 
 		Map.Tunnel_Doors = false;
+
+		Map.Defuse_Axis_Command_Post = false;
+		Map.Defuse_Tunnel_MG = false;
 
 		// delete the cov ops trigger region
 		DeleteTriggerRegion("AxisFallBack");
@@ -878,6 +920,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis team has constructed the Tunnel MG!", Map.Tunnel_MG_Built );
 	OnTrigger( "Axis team has constructed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Built );
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
 	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
 	OnTrigger( "Axis team has damaged the Bridge!",  Map.Bridge_Damaged );
 	OnTrigger( "Axis team has destroyed the Bridge!", Map.Bridge_Destroyed );
@@ -890,6 +933,7 @@ global OnMapLoad = function()
 	OnTrigger( "Axis team has destroyed the Road MG Nest!", Map.Road_MG_Destroyed );
 	OnTrigger( "Allied team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
 	OnTrigger( "Axis team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
+	OnTrigger( "Planted at the Tunnel MG.", Map.Tunnel_MG_Planted );
 	OnTrigger( "Allied team has destroyed the Tunnel MG!", Map.Tunnel_MG_Destroyed );
 	OnTrigger( "Allied team has damaged the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Damaged );
 	OnTrigger( "Allied team has destroyed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Destroyed );
@@ -972,6 +1016,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_roofclear.*", 0.76, TEAM.AXIS );
 	SetGoalPriority( "AIRSTRIKE_roofclear.*", 0.85, TEAM.AXIS, CLASS.FIELDOPS );
 	SetGoalPriority( "DEFEND_rTeamDoor.*", 0.75, TEAM.AXIS );
+	SetGoalPriority( "DEFUSE_Fuel_Dump_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Bridge_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+
 	ETUtil.LimitToClass( "DEFEND_rTeamDoor.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Util.DisableGoal( ".*", true ); // all but routes

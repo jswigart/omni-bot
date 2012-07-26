@@ -425,15 +425,21 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Jeep" );
 
 	// cs: was this intended? they would never build the jeep since it is never increased
-	//SetGoalPriority( "BUILD_jeep", 0.1, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( "BUILD_1st_Ramp", 1.0, TEAM.ALLIES, CLASS.ENGINEER );
-	SetGoalPriority( "BUILD_2nd_Ramp", 1.1, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_.*", 0.88, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_1st_Ramp", 0.89, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_2nd_Ramp", 0.89, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_jeep", 0.90, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "CHECKPOINT_flag", 0.7 );
 	SetGoalPriority( "PLANT_Market_Gate", 0.92 );
 	SetGoalPriority( "PLANT_Jeep_Barrier", 0.91 );
 	// Covert ops can't destroy the ramp:
 	SetGoalPriority( "PLANT_1st_Ramp", 0.0, TEAM.AXIS, CLASS.COVERTOPS );
 	SetGoalPriority( "PLANT_2nd_Ramp", 0.0, TEAM.AXIS, CLASS.COVERTOPS );
+	// Add higher priority defuse goals for Axis Engineers
+	SetGoalPriority( "DEFUSE_2nd_Ramp_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_1st_Ramp_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Jeep_Barrier_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Market_Gate_.*", 1.25, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	Util.SetGoalOffset( 0,10,-10, "PLANT_Tower_Wall" );
 
