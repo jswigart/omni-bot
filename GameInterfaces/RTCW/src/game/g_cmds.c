@@ -2853,6 +2853,11 @@ void Cmd_Buy_f( gentity_t* ent )
 		return;
 	}
 
+	if ( ent->client->ps.stats[STAT_HEALTH] <= 0 ) {
+		CP("print \"^dbuy: ^9you cannot buy while dead\n\"");
+		return;
+	}
+
 	// you must be in a team to be able to buy..
 	if ( ent->client->sess.sessionTeam != TEAM_RED && ent->client->sess.sessionTeam != TEAM_BLUE ) {
 		CP("print \"^dbuy: ^9you are not in a team\n\"");
