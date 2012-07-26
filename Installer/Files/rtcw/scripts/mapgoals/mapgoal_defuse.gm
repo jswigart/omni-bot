@@ -3,6 +3,7 @@ this.Version = 1;
 this.DefaultPriority = 1.0;
 this.DontSave = true;
 this.RolePriorityBonus = 0.1;
+this.Range = 5500.f; // cs: don't bother if they can't make it in time. 
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -21,7 +21,7 @@ this.Initialize = function()
 this.QueryReviveGoals = function(range, skipGoal)
 {
 	bestGoal = null;
-	count = this.QueryGoals(this.Bot.QueryGoalsTable,"REVIVE_.*");
+	count = this.QueryGoals(this.Bot.QueryGoalsTable,0x2086cdf0 /* REVIVE */);
 	if ( count > 0 )
 	{
 		closest = range + 1;

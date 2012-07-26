@@ -29,7 +29,7 @@ this.GetPriority = function()
 	{
 		if(this.Bot.IsWeaponCharged(WEAPON.SMOKE_GRENADE, 0))
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"AIRSTRIKE.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xc8998d3d /* AIRSTRIKE */);
 			if ( count > 0 )
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )
@@ -61,13 +61,13 @@ this.Update = function()
 			this.Bot.HoldButton(BTN.CROUCH, 1.1);
 		}
 
-		r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
-		this.AddAimRequest(Priority.High, "facing", this.MapGoal.AimVectors[ r ]);
+		this.AddAimRequest(Priority.High, "facing", Util.GetRandomTableValue(this.MapGoal.AimVectors));
 
 		this.AddWeaponRequest(Priority.High, WEAPON.SMOKE_GRENADE );
 		this.BlockForWeaponChange( WEAPON.SMOKE_GRENADE );
 		this.Bot.HoldButton(BTN.ATTACK1, 0.5 );
 		sleep(1);
+		this.BlackboardDelay(5, this.MapGoal);
 	}
 	else
 	{
@@ -75,7 +75,6 @@ this.Update = function()
 		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
 	}
 
-	this.BlackboardDelay(5, this.MapGoal);
 	this.Finished();
 };
 

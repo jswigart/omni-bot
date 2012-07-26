@@ -133,16 +133,7 @@ this.WeaponCheck = function()
 
 this.EntFlagCheck = function()
 {
-	//if ( this.Bot.HasAnyEntityFlag( ENTFLAG.MNT_MG42,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER ) ) {
-	//	return false;
-	//}
-	
-	// tmp workaround. HasAnyEntityFlag doesn't check past the first one in current build
-	if ( this.Bot.HasEntityFlag(ENTFLAG.MNT_MG42) || this.Bot.HasEntityFlag(ENTFLAG.ZOOMING) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) || this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) ) {
-		return false;
-	}
-
-	return true;
+	return !this.Bot.HasAnyEntityFlag(ENTFLAG.MNT_MG42,ENTFLAG.ZOOMING,ENTFLAG.INWATER,ENTFLAG.ON_LADDER);
 };
 
 this.hard = function( dist )

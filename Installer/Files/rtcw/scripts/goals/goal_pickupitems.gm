@@ -33,20 +33,22 @@ this.Enter = function()
 this.Update = function()
 {
 	this.Bot.HoldButton(BTN.SPRINT, 3);
-	this.Goto(this.TargetPosition, 32);
+	pos = GetEntPosition(this.TargetEntity);
+	if ( pos ) {
+		this.Goto(pos, 32);
+	}
 	this.Finished();
 };
 
 this.Exit = function()
 {
 	this.Bot.ReleaseButton(BTN.SPRINT);
-	this.TargetPosition = null;
 	this.TargetEntity = null;
 };
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
-	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) > this.Frequency ) {
+	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
 		return;
 	}
 
@@ -55,7 +57,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 		entCat = this.GetPickupCategory(ent);
 		if ( entCat != -1 ) {
 			pos = GetEntPosition(ent);
-			if ( !pos ) {
+			if ( !pos || this.Bot.DistanceTo(pos) > this.Range ) {
 				return;
 			}
 

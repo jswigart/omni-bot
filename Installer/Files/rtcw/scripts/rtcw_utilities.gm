@@ -866,8 +866,7 @@ member WinningChat = function( team )
 
 	foreach ( id and bot in BotTable ) {
 		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {
-			ind = Util.GetRandomFromTable(v);
-			bot.SayVoice(v[ind]);
+			bot.SayVoice(Util.GetRandomTableValue(v));
 			sleep(RandFloat(0.5, 1.0));
 		}
 	}
@@ -886,8 +885,7 @@ member LosingChat = function( team )
 
 	foreach ( id and bot in BotTable ) {
 		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {
-			ind = Util.GetRandomFromTable(v);
-			bot.SayVoice(v[ind]);
+			bot.SayVoice(Util.GetRandomTableValue(v));
 			sleep(RandFloat(0.5, 1.0));
 		}
 	}

@@ -1,6 +1,6 @@
 this.Name = "DEFUSE";
 this.Parent = "HighLevel";
-this.SkipGetPriorityWhenActive = true;
+this.SkipGetPriorityWhenActive = false; // cs: let them abort for higher priority defuses
 
 this.LimitToWeapon(WEAPON.PLIERS);
 
@@ -12,29 +12,44 @@ this.Initialize = function()
 
 this.GetPriority = function()
 {
+	// cs: GetPriority seems to be called the same frame as this.Finished(). need to wait a frame
+	//     so all the vars can be cleaned up. this.MapGoal is not null for example if goal is
+	//     aborted for a higher priority one; which causes evaluation for the new goal to happen twice
+	yield();
+
 	while(1)
 	{
 		count = this.QueryGoals(this.Bot.QueryGoalsTable,"DEFUSE_.*");
 		if ( count > 0 )
 		{
-			// always go for the closest one
+			// always go for the closest one of the highest priority
 			dist = null;
 			evalDist = null;
 			closestGoal = null;
+			priority = 0;
 
 			foreach ( id and goal in this.Bot.QueryGoalsTable )
 			{
 				evalDist = this.Bot.DistanceTo(goal.GetEntity());
+				evalPriority = goal.GetGoalPriority(this.Bot);
 
-				if ( !dist || evalDist < dist ) {
+				if ( !dist || (evalDist < dist && evalPriority >= priority) ) {
 					dist = evalDist;
 					closestGoal = goal;
+					priority = evalPriority;
 				}
 			}
 
-			if ( closestGoal ) {
+			if ( closestGoal && closestGoal != this.MapGoal ) {
+				// cs: this is temp. goals of the same type are not natively being aborted even for higher priority goals
+				//     but i think that they should be.
+				if ( this.MapGoal ) {
+					//if (this.DebugAbortForHigherPriority) { this.Bot.Say("aborting defuse for higher priority"); }
+					this.Finished();
+				}
+
 				this.MapGoal = closestGoal;
-				this.Priority = closestGoal.GetGoalPriority(this.Bot);
+				this.Priority = priority;
 			}
 		}
 
@@ -103,4 +118,5 @@ this.Exit = function()
 {
 	this.TargetEntity = null;
 	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.MapGoal = null;
 };
