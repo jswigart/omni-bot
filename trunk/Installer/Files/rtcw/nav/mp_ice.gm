@@ -60,8 +60,6 @@ global Map =
 		},
 	},
 
-	hill = { "hill1", "hill2", },
-
 	Navigation =
 	{
 		southladder =
