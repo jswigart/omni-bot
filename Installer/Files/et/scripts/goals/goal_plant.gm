@@ -65,9 +65,9 @@ this.GetPriority = function()
 	botClass = this.Bot.GetClass();
 	if (botClass == CLASS.ENGINEER)
 	{
-		query = "PLANT_.*\nDYNAMITE_.*";
+		query = { 0xbbcae592 /* PLANT */, 0xb9e32716 /* DYNAMITE */};
 	} else {
-		query = "PLANT_.*";
+		query = 0xbbcae592 /* PLANT */;
 	}
 
 	while(1)

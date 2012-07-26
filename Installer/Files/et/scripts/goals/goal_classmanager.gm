@@ -6,11 +6,14 @@ this.Parent = "LowLevel";
 this.AutoAdd = true;
 this.AlwaysRecieveEvents = false;
 this.OnlyWhileDead = true; // if set to false, they will /kill for class changes
+this.Interval = 6; // time between checks (when OnlyWhileDead is false)
+this.CanActivate = false; // delay activation even with maxbots -1
 
 this.GetPriority = function()
 {
-	if ( TestMapOn || DisableClassManager || TestBot ) {
-		sleep(5); // could block(0), but this allows it to resume on var change
+	if ( TestMapOn || DisableClassManager || TestBot || Server.CountedPlayers < Server.MaxBots || !this.CanActivate ) {
+		sleep(this.Interval);
+		this.CanActivate = true;
 		return;
 	}
 
@@ -25,14 +28,12 @@ this.Update = function()
 {
 	while(1)
 	{
-		sleep(2); // at map start all bots are returning class.soldier, so delay it a bit.
-
 		// cs: let them /kill in warmup so transitions from snipe or panzer maps wont take forever for correct classes to be used
 		if ( !this.OnlyWhileDead || GetGameState() != "Playing" ) {
 			this.CheckForClassChange();
 		}
-
-		sleep(3);
+		
+		sleep(this.Interval);
 	}
 };
 

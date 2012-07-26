@@ -1,5 +1,14 @@
+/******************************************************************
+UPDATED BY: BubbaG1 & **DRC**Stunner
+UPDATED: July 16, 2012
+- Disabled CP, Old City Water Pump, and Oasis Water Pump Defuse
+  goals so bots will focus on main objectives.  Regular players
+  can focus on the CP, if they want to.
+*******************************************************************/
 global Map =
 {
+	Debug = false,
+	
 	//set this to true if you want axis to try and dynamite water pump2
 	//after old city wall is destroyed.
 	DestroyWaterPumpAfterWall = false,
@@ -104,6 +113,16 @@ global Map =
 		Util.MapDebugPrint( "Allied_Command_Post_Built" );
 	},
 
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Allied_Command_Post_.*" );
+
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
 	Allied_Command_Post_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -171,6 +190,16 @@ global Map =
 		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
 	},
 
+	Oasis_Water_Pump_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Oasis_Water_Pump_.*" );
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Planted" );
+	},
+
 	Oasis_Water_Pump_Destroyed = function( trigger )
 	{
 		if ( TestMap )
@@ -190,6 +219,16 @@ global Map =
 		}
 
 		Util.MapDebugPrint( "Old_City_Water_Pump_Built" );
+	},
+
+	Old_City_Water_Pump_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Old_City_Water_Pump_.*" );
+
+		Util.MapDebugPrint( "Old_City_Water_Pump_Planted" );
 	},
 
 	Old_City_Water_Pump_Destroyed = function( trigger )
@@ -549,13 +588,16 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have built the Oasis Water Pump!", Map.Oasis_Water_Pump_Built );
 	OnTrigger( "The Old City MG Nest has been constructed!", Map.Old_City_MG_Nest_Built );
 	OnTrigger( "Allies have built the Old City Water Pump!", Map.Old_City_Water_Pump_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
 	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
 	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
 	OnTrigger( "The Garrison MG Nest has been damaged!", Map.Garrison_MG_Nest_Destroyed );
 	OnTrigger( "Allies have destroyed the North Anti-Tank Gun!", Map.North_Anti_Tank_Gun_Destroyed );
+	OnTrigger( "Planted at the Oasis Water Pump.", Map.Oasis_Water_Pump_Planted );
 	OnTrigger( "Axis have damaged the Oasis Water Pump!", Map.Oasis_Water_Pump_Destroyed );
 	OnTrigger( "The Old City MG Nest has been damaged!", Map.Old_City_MG_Nest_Destroyed );
 	OnTrigger( "Allies have breached the Old City wall", Map.Old_City_Wall_Destroyed );
+	OnTrigger( "Planted at the Old City Water Pump.", Map.Old_City_Water_Pump_Planted );
 	OnTrigger( "Axis have damaged the Old City Water Pump!", Map.Old_City_Water_Pump_Destroyed );
 	OnTrigger( "Allied team has destroyed the South Anti-Tank Gun!", Map.South_Anti_Tank_Gun_Destroyed );
 	OnTrigger( "Axis reclaim the Old City!", Map.oldcityflag_Axis_Captured );
@@ -626,6 +668,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_south_clear.*", 0.92 );
 	SetGoalPriority( "DEFEND_middle_patrol.*", 0.49 );
 	SetGoalPriority( "DEFEND_middle_patrol5", 0.55 ); // peak out the back for campers
+	SetGoalPriority( "DEFUSE_Old_City_Wall_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_North_Anti_Tank_Gun_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_South_Anti_Tank_Gun_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	Util.DisableGoal( ".*", true ); // all but routes
 

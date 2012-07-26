@@ -14,6 +14,8 @@ global Server =
 	BotTeam = -1,
 	HumanTeam = -1,
 	BotsPerHuman = 3,
+	InitialDelayTime = 2.1,
+	CountedPlayers = 0,
 
 	Team =
 	{
@@ -27,6 +29,7 @@ Server.BalanceTeams = ConfigGet("ServerManager","BalanceTeams", Server.BalanceTe
 Server.SaveConfigChanges = ConfigGet("ServerManager","SaveConfigChanges", Server.SaveConfigChanges);
 Server.CountSpectators = ConfigGet("ServerManager","CountSpectators", Server.CountSpectators);
 Server.SleepBots = ConfigGet("ServerManager","SleepBots", Server.SleepBots);
+Server.InitialDelayTime = ConfigGet("ServerManager","InitialDelayTime", Server.InitialDelayTime);
 Server.BotTeam = ConfigGet("Versus","BotTeam", Server.BotTeam);
 Server.HumanTeam = ConfigGet("Versus","HumanTeam", Server.HumanTeam);
 Server.BotsPerHuman = ConfigGet("Versus","BotsPerHuman", Server.BotsPerHuman);
@@ -140,6 +143,32 @@ Commands["balanceteams"] =
 	RunImmediate = true,
 };
 
+Commands["initialdelaytime"] =
+{
+	Func = function(_params)
+	{
+		type = typeId(_params[0]);
+		if ( type != 1 && type != 2 ) {
+			print( "InitialDelayTime is ", ConfigGet("ServerManager","InitialDelayTime", Server.InitialDelayTime) );
+			return;
+		}
+
+		Server.InitialDelayTime = _params[0];
+		print("Server.InitialDelayTime set to " + _params[0]);
+
+		if(Server.SaveConfigChanges) {
+			ConfigSet("ServerManager","InitialDelayTime", Server.InitialDelayTime);
+		}
+	},
+	Help =
+	{
+		"initial - sets delay time for server manager to execute on map changes",
+		"Usage: /bot delaytime 1",
+	},
+	RunImmediate = true,
+};
+Commands["idt"] = Commands["initialdelaytime"];
+
 ////////////////////////////////////////////////////////////
 global KickABotOnHeavyTeam = function()
 {
@@ -191,12 +220,13 @@ global BalanceTeams = function()
 };
 ////////////////////////////////////////////////////////////
 
-global ManagePlayersDelayed = false;
+global DelayManagePlayers = true;
 global ManagePlayers = function( playerinfo )
 {
-	if (ManagePlayersDelayed == false) {
-		sleep(2.1);
-		global ManagePlayersDelayed = true;
+	if (DelayManagePlayers) {
+		sleep(Server.InitialDelayTime);
+		global DelayManagePlayers = GetGameState() == "Intermission";
+		return;
 	}
 
 	CheckSleep();
@@ -209,17 +239,17 @@ global ManagePlayers = function( playerinfo )
 	// a bot will not be kicked until that player joins a team. For this reason it is a good idea to have several joinable slots
 	// open in the server, and not just 1, to prevent someone that stays in spectator from blocking any further joining players.
 	if ( Server.CountSpectators ) {
-		NumPlayers = Server.NumPlayers;
+		Server.CountedPlayers = Server.NumPlayers;
 	}
 	else {
-		NumPlayers = Server.NumPlayersNoSpec;
+		Server.CountedPlayers = Server.NumPlayersNoSpec;
 	}
 
 	if ( Server.BotTeam < 1 || Server.HumanTeam < 1 || Server.BotTeam == Server.HumanTeam || Server.BotsPerHuman < 1 ) {
-		MinAndMaxBots(NumPlayers);
+		MinAndMaxBots(Server.CountedPlayers);
 	}
 	else {
-		AdjustForBotTeam(NumPlayers);
+		AdjustForBotTeam(Server.CountedPlayers);
 	}
 };
 
@@ -421,7 +451,7 @@ Commands["humanteam"] =
 	Help =
 	{
 		"set the team the humans should be on in a humans vs bots game",
-	},	
+	},
 };
 
 Commands["botsperhuman"] =
@@ -436,5 +466,5 @@ Commands["botsperhuman"] =
 	Help =
 	{
 		"set the team the ratio of bots per humans in a humans vs bots game",
-	},	
+	},
 };

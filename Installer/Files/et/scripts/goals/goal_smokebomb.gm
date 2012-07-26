@@ -29,7 +29,7 @@ this.GetPriority = function()
 	{
 		if(this.Bot.IsWeaponCharged(WEAPON.SMOKE_GRENADE, 0))
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"SMOKEBOMB_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xfb64787a /* SMOKEBOMB */);
 			if ( count > 0 )
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )

@@ -1904,30 +1904,6 @@ global _MG =
 		Use = 1,
 		Version = 1,
 	},
-	SWITCH_East_Track_Cov = 
-	{
-		AimPosition = Vec3(5127.875, 5719.348, 432.940),
-		CreateOnLoad = 1,
-		Facing = Vec3(0.000, 0.000, 0.000),
-		GoalType = "SWITCH",
-		GroupName = "",
-		MinRadius = 32,
-		Name = "SWITCH_East_Track_Cov",
-		Orientation = Vec3(-1.624, -0.279, -0.000),
-		Position = Vec3(5005.357, 5725.850, 405.125),
-		Radius = 32,
-		Roles = 
-		{
-			[0] = "INFILTRATOR",
-		},
-		SerialNum = 47,
-		Stance = "stand",
-		TagName = "East_Track_Cov",
-		TeamAvailability = 30,
-		Timeout = 1500,
-		Use = 1,
-		Version = 1,
-	},
 	SWITCH_West_Track = 
 	{
 		AimPosition = Vec3(1272.125, 7080.875, 431.940),
@@ -1943,30 +1919,6 @@ global _MG =
 		SerialNum = 43,
 		Stance = "stand",
 		TagName = "West_Track",
-		TeamAvailability = 30,
-		Timeout = 1500,
-		Use = 1,
-		Version = 1,
-	},
-	SWITCH_West_Track_Cov = 
-	{
-		AimPosition = Vec3(1272.125, 7082.928, 426.681),
-		CreateOnLoad = 1,
-		Facing = Vec3(0.000, 0.000, 0.000),
-		GoalType = "SWITCH",
-		GroupName = "",
-		MinRadius = 32,
-		Name = "SWITCH_West_Track_Cov",
-		Orientation = Vec3(1.491, -0.341, -0.000),
-		Position = Vec3(1388.640, 7073.614, 405.125),
-		Radius = 32,
-		Roles = 
-		{
-			[0] = "INFILTRATOR",
-		},
-		SerialNum = 41,
-		Stance = "stand",
-		TagName = "West_Track_Cov",
 		TeamAvailability = 30,
 		Timeout = 1500,
 		Use = 1,

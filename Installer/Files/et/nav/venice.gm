@@ -847,6 +847,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bb1_attack.*", 0.6);
 	SetGoalPriority( "DEFEND_bb2_defend.*", 0.6);
 	SetGoalPriority( "ATTACK_bb2_attack.*", 0.6);
+	SetGoalPriority( "DEFUSE_Tank_Barrier_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Boat_Barrier_1_.*", 1.19, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Boat_Barrier_2_.*", 1.18, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	//clear all goals
 	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );

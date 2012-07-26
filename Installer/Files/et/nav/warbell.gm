@@ -562,6 +562,14 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_Bellrope", 0.6 );
 	SetGoalPriority( "DEFEND_Abbey_6", 0.52 );
 	SetGoalPriority( "DEFEND_BellMechanism_5", 0.52 );
+	
+	SetGoalPriority( "DEFUSE_Bell_Mechanism_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+
+	SetGoalPriority( "DEFUSE_Guard_House_Gate_.*", 1.10, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Hidden_Room_.*", 1.15, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Garden_Gate_.*", 1.20, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Crypt_Gate_.*", 1.20, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Abbey_Main_Gate_.*", 1.25, TEAM.ALLIES, CLASS.ENGINEER, true );
 
 	//Available map goals at start
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guard_House_Gate" );

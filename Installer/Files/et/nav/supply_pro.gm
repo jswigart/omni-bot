@@ -24,6 +24,7 @@
 //
 //==========================================================================================
 //	correction by crapshoot
+//	added defuse goal priorities by BubbaG1 13 July 2012
 
 global Map =
 {
@@ -1237,13 +1238,12 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_Forward_Gate", 0.85, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "MOUNTMG42_437", 0.50, TEAM.ALLIES, 0 );
 	SetGoalPriority( "MOUNTMG42_437", 0.70, TEAM.ALLIES, CLASS.SOLDIER );
+	SetGoalPriority( "DEFUSE_Crane_Controls_.*", 0.10, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Command_Post", 0.40, TEAM.AXIS, CLASS.ENGINEER );
-
 	SetGoalPriority( "DEFEND_start_11", 0.7, TEAM.AXIS, 0 );
-	//SetGoalPriority( "DEFEND_start_11", 0.4, TEAM.AXIS, CLASS.FIELDOPS );
-	//SetGoalPriority( "ROUTE_navigate_1", 1.2, TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, CLASS.FIELDOPS );
-	//SetGoalPriority( "ROUTE_navigate_1", 0.4, TEAM.AXIS, CLASS.ENGINEER );
-	//SetGoalPriority( "ROUTE_navigate_1", 0.0, TEAM.AXIS, CLASS.COVERTOPS );
+	SetGoalPriority( "DEFUSE_Depot_Gate_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Forward_Gate_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Forward_Spawn_exit_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	// Max users per goal
 	Util.SetMaxUsersInProgress( 2, "BUILD_.*" );
@@ -1267,7 +1267,7 @@ global OnMapLoad = function()
 	//Util.SetMaxUsers( 1, "ROUTE_navigate_1" );
 
 	// Camp times
-	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=60, MaxCampTime=180} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
 
 	Wp.SetWaypointFlag( "navigate_1", "closed", false);

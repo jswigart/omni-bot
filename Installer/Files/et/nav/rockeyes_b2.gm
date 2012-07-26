@@ -472,6 +472,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_a_gate.*" );
 
 	SetGoalPriority("PLANT_Side_Wall", 0.9);
+	SetGoalPriority( "DEFUSE_Forward_Bunker_Gate_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_North_Radar_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_South_Radar_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	// Max users per goal
 	Util.SetMaxUsers( 1, "BUILD_.*" );

@@ -11,6 +11,12 @@ UPDATED: August 16, 2011
 - Once bank doors are blown, at least half of allied bots will
   change to original spawn.
 *******************************************************************/
+/******************************************************************
+UPDATED BY: BubbaG1 & **DRC**Stunner
+UPDATED: July 16, 2012
+- Disabled CP Defuse goals so bots will focus on main objectives.
+  Regular players can focus on the CP, if they want to.
+*******************************************************************/
 
 global Map =
 {
@@ -53,19 +59,12 @@ global Map =
 	Snipe_870 = "SNIPE_870",
 	Mover_tank = "MOVER_tank",
 	Mover_truck = "MOVER_truck",
-	Plant_Mine_393 = "PLANTMINE_393",
-	Plant_Mine_823 = "PLANTMINE_823",
-	Plant_Mine_824 = "PLANTMINE_824",
-	Plant_Mine_849 = "PLANTMINE_849",
-	Plant_Mine_928 = "PLANTMINE_928",
-	Plant_Mine_96 = "PLANTMINE_96",
-	Plant_Mine_Depot_6 = "PLANTMINE_Depot_6",
-	Plant_Mine_Truck_Barrier1_3 = "PLANTMINE_Truck_Barrier1_3",
-	Plant_Mine_depotgate2 = "PLANTMINE_depotgate2",
 
-	start_of_map = true,
+	Allied_CP_Built = false,
+	Axis_CP_Built = false,
 	EndTankRun = false,
 	Escorting = false,
+	start_of_map = true,
 	TruckLoaded = false,
 
 	//set status' for conditionals
@@ -301,10 +300,22 @@ global Map =
 		}
 	},
 
-	Command_Post_Built = function( trigger )
+	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+
+		Map.Allied_CP_Built = true;
+
+	Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Built = true;
 
 		Util.MapDebugPrint( "Command_Post_Built" );
 	},
@@ -394,10 +405,39 @@ global Map =
 		Util.MapDebugPrint( "Truck_Barrier_2_Built" );
 	},
 
-	Command_Post_Destroyed = function( trigger )
+	Command_Post_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+			
+		if ( Map.Axis_CP_Built )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Command_Post_.*" );
+		}
+		if ( Map.Allied_CP_Built )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Command_Post_.*" );
+		}
+			
+		Util.MapDebugPrint( "Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Built = false;
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Built = false;
 
 		Util.MapDebugPrint( "Command_Post_Destroyed" );
 	},
@@ -488,7 +528,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+			
 		Util.OnTriggerPosition( Map.Mover_tank, "tankmarker1", 200.0,
 			Map.tank_at_barrier1 );
 
@@ -500,9 +540,12 @@ global Map =
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Depot_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_depot_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Command_Post );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Command_Post );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_tb1_.*" );
 
 		Util.MapDebugPrint( "allies_steal_tank" );
 	},
@@ -514,8 +557,7 @@ global Map =
 
 		Map.near_defense_one = false;
 
-		Util.OnTriggerPosition( Map.Mover_tank, "At Bridge MG", 200.0,
-			Map.tank_at_bridge_mg );
+		Util.OnTriggerPosition( Map.Mover_tank, "tank_at_bridge", 200.0, Map.tank_at_bridge );
 
 		// Allied goals
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Ammo_Cabinet_north_ammocabinet );
@@ -534,27 +576,62 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_Tank_Barrier2_.*" );
 
 		// Axis goals
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Ammo_Cabinet_south_ammocabinet );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_tb1_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_1 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bridge_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Ammo_Cabinet_south_ammocabinet );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_2 );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Health_Cabinet_south_healthcabinet );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_bridge );
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_bridge );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_bridge_.*" );
 
 		//make sure the tank repair goal is active
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Build_Tank );
 
 		Util.MapDebugPrint( "tank_past_barrier1" );
 	},
+	
+	tank_at_bridge = function()
+	{
+		Util.OnTriggerPosition( Map.Mover_tank, "tank_at_corner", 200.0, Map.tank_at_corner );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_bridge_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_bridge_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_corner_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_corner_.*" );
+
+		Util.MapDebugPrint("tank_at_bridge");
+	},
+
+	tank_at_corner = function()
+	{
+		Util.OnTriggerPosition( Map.Mover_tank, "tank_at_intersection", 200.0, Map.tank_at_intersection );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_corner_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_corner_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_int_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_int_.*" );
+
+		Util.MapDebugPrint("tank_at_corner");
+	},
+
+	tank_at_intersection = function()
+	{
+		Util.OnTriggerPosition( Map.Mover_tank, "At Bridge MG", 200.0, Map.tank_at_bridge_mg );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_int_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_int_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Tank_Barrier2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_tb2_.*" );
+
+		Util.MapDebugPrint("tank_at_intersection");
+	},
 
 	tank_at_bridge_mg = function()
 	{
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Build_Tank_Barrier_1 );
-
-		Util.OnTriggerPosition( Map.Mover_tank, "tankmarker2", 200.0,
-			Map.tank_at_barrier2 );
+		Util.OnTriggerPosition( Map.Mover_tank, "tankmarker2", 200.0, Map.tank_at_barrier2 );
 
 		Util.MapDebugPrint("tank_at_bridge_mg");
 	},
@@ -582,6 +659,7 @@ global Map =
 
 		// Axis goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Tank_Barrier2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_tb2_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_8" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Bank_9" );
@@ -1100,16 +1178,17 @@ global OnMapLoad = function()
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 
-	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
-	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
 	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
 	OnTrigger( "Tank Barrier #1 has been constructed.", Map.Tank_Barrier_1_Built );
 	OnTrigger( "Tank Barrier #2 has been constructed.", Map.Tank_Barrier_2_Built );
 	OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
 	OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_1_Built );
 	OnTrigger( "Truck Barrier #2 has been constructed.", Map.Truck_Barrier_2_Built );
-	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
-	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Planted at the Command Post.", Map.Command_Post_Planted );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
 	OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
 	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Tank_Barrier_1_Destroyed );
 	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Tank_Barrier_2_Destroyed );
@@ -1186,7 +1265,9 @@ global OnMapLoad = function()
 	// Allied goals
 	SetGoalPriority( Map.Flag_gold_crate, 0.92, TEAM.ALLIES );
 	SetGoalPriority( Map.Cappoint_Gold_Dropoff, 0.92, TEAM.ALLIES );
-	SetGoalPriority( Map.Build_Tank, 0.91, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD.*", 0.88, TEAM.ALLIES );
+	SetGoalPriority( Map.Build_Tank, 0.90, TEAM.ALLIES );
+	SetGoalPriority( Map.Build_Truck, 0.89, TEAM.ALLIES );
 	SetGoalPriority( Map.Plant_Command_Post, 0.0, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Tank_Barrier_1, 0.84, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Tank_Barrier_2, 0.83, TEAM.ALLIES, CLASS.ENGINEER );
@@ -1225,12 +1306,18 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
 
 	// Axis goals
-	SetGoalPriority( Map.Build_Tank_Barrier_1, 0.94, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Command_Post, 0.93, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Tank_Barrier_2, 0.92, TEAM.AXIS, CLASS.ENGINEER );
-	SetGoalPriority( Map.Build_Truck_Barrier_1, 0.91, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_.*", 0.88, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Tank_Barrier_1, 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Tank_Barrier_2, 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Truck_Barrier_1, 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Truck_Barrier_2, 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( Map.Build_Command_Post, 0.89, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( Map.Plant_Command_Post, 0.0, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_Depot_[14]", 0.6, TEAM.AXIS ); //try and keep these two occupied
+	SetGoalPriority( "DEFUSE_Tank_Barrier_1_.*", 1.25, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_2_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Truck_Barrier_1_.*", 1.15, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Truck_Barrier_2_.*", 1.10, TEAM.AXIS, CLASS.ENGINEER, true );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_north_ammocabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Ammo_Cabinet_south_ammocabinet );
@@ -1238,6 +1325,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_north_healthcabinet );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Health_Cabinet_south_healthcabinet );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_1 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Tank_Barrier_2 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_1 );
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Build_Truck_Barrier_2 );
@@ -1252,6 +1340,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_bank_mg" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Depot_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_depot_.*" );
 
 	Wp.SetWaypointFlag("closeddoor1", "closed", true);
 	Wp.SetWaypointFlag("closeddoor2", "closed", true);

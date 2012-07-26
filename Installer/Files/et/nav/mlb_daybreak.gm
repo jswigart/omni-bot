@@ -1,13 +1,15 @@
 /********************************************************
 Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
 
-Updated By: BubbaG1 - 5 July, 2012
+Updated By: BubbaG1 and **DRC**Stunner - 5 July 2012 &
+  16 July 2012
 Updated To: reorganize goals, improve goal management when
    players sneak ahead to perform goals out of order,
    add goals for Keycard, add routing for keycard and end-
    game, and added waypoints allowing allied bots to climb
    the ladder at the last spawn and get to the openeing to
-   defend the keycard cappoint.
+   defend the keycard cappoint.  Prioritizing DEFUSE goals
+   so bots will focus on main objectives.
 ********************************************************/
 
 global Map =
@@ -908,6 +910,8 @@ global OnMapLoad = function()
 	//set offset for better reachable
 	Util.SetGoalOffset( -240, -40, 0, "PLANT_Tank_Barrier_1" );
 	Util.SetGoalOffset( 0, 160, 0, "PLANT_Tank_Barrier" );
+	
+	Util.AddUsePoint( "PLANT_ancient_castle_wall", { Vec3(-246, -3756, 330), Vec3(10, -3762, 370) } );
 
 	//open path
 	Wp.SetWaypointFlag("c_ladder","closed",false);
@@ -924,10 +928,17 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInUse( 1, "SWITCH_.*" );
 	Util.SetMaxUsersInUse( 4, "SWITCH_s_end_detonator" );
 	
-	SetGoalPriority("SWITCH_GenDoor", 2.0);
-	SetGoalPriority("SWITCH_s_end_tokeycard_in", 2.0);
-	SetGoalPriority("SWITCH_s_end_tokeycard_out", 2.0);
-	SetGoalPriority("SWITCH_s_end_detonator", 2.0);
+	SetGoalPriority("SWITCH_.*", 0.69);
+	SetGoalPriority("SWITCH_GenDoor", 0.70);
+	SetGoalPriority("SWITCH_s_end_tokeycard_in", 0.70);
+	SetGoalPriority("SWITCH_s_end_tokeycard_out", 0.70);
+	SetGoalPriority("SWITCH_s_end_detonator", 0.70);
+
+	SetGoalPriority( "DEFUSE_rocket_base_gate_.*", 1.35, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_dam_access_gate_.*", 1.30, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_generator_.*", 1.25, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_.*", 1.15, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Tank_Barrier_1_.*", 1.10, TEAM.ALLIES, CLASS.ENGINEER, true );
 
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=30});
 	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=20, MaxCampTime=60});

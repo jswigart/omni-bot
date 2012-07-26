@@ -37,7 +37,7 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,"BUILD.*");
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,0xc39bf2a3 /* BUILD */);
 		if ( count > 0 )
 		{
 			foreach ( goal in this.Bot.QueryGoalsTable )

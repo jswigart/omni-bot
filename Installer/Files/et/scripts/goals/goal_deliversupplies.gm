@@ -74,13 +74,8 @@ this.Enter = function()
 	this.KillTarget = false;
 	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true && this.Bot.HasAmmo(WEAPON.SYRINGE))
 	{
-		// are they low enough on health?
-		hlth = Util.GetEntHealth(this.TargetEntity);
-		if ( hlth < 37 ) {
-			this.KillTarget = true;
-			this.AddFinishCriteria(this.TargetEntity,"health greaterthan",75);
-			this.Bot.KillingForRevive = true; // for voice chats
-		}
+		this.KillTarget = true;
+		this.AddFinishCriteria(this.TargetEntity,"health greaterthan",90);
 	}
 
 	if ( !this.KillTarget )
@@ -204,6 +199,24 @@ this.Update = function()
 			this.AddAimRequest(Priority.High, "position",pos);
 
 			hasNeedle = Util.HasAmmoForWeapon(this.Bot, WEAPON.SYRINGE) > 0;
+
+			if (this.KillTarget) {
+				hlth = Util.GetEntHealth(this.TargetEntity);
+
+				// cs: there is no finish criteria set when KillAndRevive is enabled
+				//     so we need to make sure that they are still alive.
+				//     a lack of finish criteria for health isn't critical because the medic will
+				//     have needed to be here to revive anyway.
+				if (hlth < 1) {
+					this.Finished();
+				}
+				else if (hlth < 37) {
+					this.Bot.KillingForRevive = true; // for voice chats
+				}
+				else {
+					this.KillTarget = false;
+				}
+			}
 
 			if ( hasNeedle && this.CanHealWithNeedle() ) {
 				this.State = this.SWITCH_TO_SYRINGE;

@@ -31,7 +31,7 @@ this.GetPriority = function()
 	{
 		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"TRIPMINE_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0x4e8856e1 /* TRIPMINE */);
 			if ( count > 0 )
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )

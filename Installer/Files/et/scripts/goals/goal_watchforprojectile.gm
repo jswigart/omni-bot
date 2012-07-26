@@ -126,7 +126,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 				}
 				this.AvoidEntClass = entClass;
 				this.Bot.AvoidEnt = ent;
-				this.Priority = 0.91;
+				this.Priority = 0.95;
 			}
 		}
 	}
