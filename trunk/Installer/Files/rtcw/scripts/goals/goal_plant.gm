@@ -24,7 +24,7 @@ this.GetPriority = function()
 	{
 		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"PLANT_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xbbcae592 /* PLANT */);
 			if ( count > 0 )
 			{
 				foreach ( id and goal in this.Bot.QueryGoalsTable )
@@ -283,8 +283,7 @@ this.UpdateDynamite = function()
 					}
 				}
 
-				r = Util.GetRandomFromTable(aimVectors);
-				this.AddAimRequest(Priority.Low, "facing", aimVectors[ r ]);
+				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(aimVectors));
 
 				sleep(0.75);
 

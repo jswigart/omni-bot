@@ -9,7 +9,7 @@ this.Initialize = function()
 	this.GoalEntity = null;
 
 	// check for entity status so we can finish if another player repairs it
-	this.LimitTo( this.CheckRepairableState, 2 );
+	this.LimitTo( this.CheckRepairableState, 2, true );
 };
 
 this.CheckRepairableState = function()
@@ -23,10 +23,10 @@ this.GetPriority = function()
 	{
 		//if(this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		//{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,"REPAIRMG42_.*");
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0x17929136 /* REPAIRMG42 */);
 			if ( count > 0 )
 			{
-				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
 					ent = goal.GetEntity();
 					if ( this.Bot.IsMG42Repairable(ent) ) {

@@ -71,13 +71,8 @@ this.Enter = function()
 	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true
 		&& this.Bot.HasAmmo(WEAPON.SYRINGE) && this.TargetEntity && !GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) )
 	{
-		// are they low enough on health?
-		hlth = Util.GetEntHealth(this.TargetEntity);
-		if ( hlth < 37 ) {
-			this.KillTarget = true;
-			this.AddFinishCriteria(this.TargetEntity,"health greaterthan",75);
-			this.Bot.KillingForRevive = true; // for voice chats
-		}
+		this.KillTarget = true;
+		this.AddFinishCriteria(this.TargetEntity,"health greaterthan",75);
 	}
 
 	if ( !this.KillTarget )
@@ -159,7 +154,22 @@ this.Update = function()
 				this.BlockForWeaponChange(this.Supply);
 			}
 			else {
-				this.State = this.KILL_TARGET;
+				hlth = Util.GetEntHealth(this.TargetEntity);
+
+				// cs: there is no finish criteria set when KillAndRevive is enabled
+				//     so we need to make sure that they are still alive.
+				//     a lack of finish criteria for health isn't critical because the medic will
+				//     have needed to be here to revive anyway.
+				if (hlth < 1) {
+					this.Finished();
+				}
+				else if (hlth < 37) {
+					this.Bot.KillingForRevive = true; // for voice chats
+					this.State = this.KILL_TARGET;
+				}
+				else {
+					this.State = this.DELIVER_PACKS;
+				}
 			}
 
 			while(this.PacksThrown < 2 && this.Bot.IsWeaponCharged(this.Supply))
@@ -315,6 +325,16 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 		this.TargetEntity = whoSaidIt;
 		this.Supply = packType;
 		this.Priority = this.DeliverPriority;
+		this.DelayNextResponse = true;
+		sleep(10);
+		if(this.DelayNextResponse) // can be null if bot disconnected
+		{
+			this.DelayNextResponse = false;
+			// if we haven't activated by now, don't bother
+			if(!this.IsActive()) {
+				this.Priority = 0;
+			}
+		}		
 	}
 };
 

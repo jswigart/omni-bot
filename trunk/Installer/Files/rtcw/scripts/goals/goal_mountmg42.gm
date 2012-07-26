@@ -16,7 +16,7 @@ this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,"MOUNTMG42_.*");
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,0xe1a2b09c /* MOUNTMG42 */);
 		if ( count > 0 )
 		{
 			foreach ( id and goal in this.Bot.QueryGoalsTable )
@@ -113,12 +113,12 @@ this.Update = function()
 						this.Facings[ 3 ] = Vec3FromSpherical(0, 0, this.MG42Info.MaxHorizontal);
 					}
 
-					r = Util.GetRandomFromTable(this.Facings);
-					this.AddAimRequest(Priority.Low, "facing", this.Facings[ r ]);
+					r = Util.GetRandomTableValue(vectors);
+					this.AddAimRequest(Priority.Low, "facing", r);
 
 					if ( this.Debug ) {
 						goalPos = this.MapGoal.GetPosition() + Vector3(0,0,12);
-						DrawArrow(goalPos,goalPos+this.Facings[ r ]*64,COLOR.YELLOW,2);
+						DrawArrow(goalPos,goalPos+r*64,COLOR.YELLOW,2);
 					}
 				}
 			}
@@ -165,6 +165,7 @@ this.Exit = function()
 	}
 	if (this.CombatMovementDisabled) {
 		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
 	}
 	if ( this.MG42Info ) {
 		tableClear(this.MG42Info);
