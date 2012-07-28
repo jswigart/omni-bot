@@ -1777,6 +1777,7 @@ char *BG_GetAnimString( int client, int anim ) {
 	//
 	if ( anim >= modelinfo->numAnimations ) {
 		BG_AnimParseError( "BG_GetAnimString: anim index is out of range" );
+		return NULL; // for compiler warning
 	}
 	//
 	return modelinfo->animations[anim].name;

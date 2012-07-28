@@ -709,6 +709,7 @@ Safe strncpy that ensures a trailing zero
 void Q_strncpyz( char *dest, const char *src, int destsize ) {
 	if ( !src ) {
 		Com_Error( ERR_FATAL, "Q_strncpyz: NULL src" );
+		return; // for compiler warning
 	}
 	if ( destsize < 1 ) {
 		Com_Error( ERR_FATAL,"Q_strncpyz: destsize < 1" );
@@ -928,6 +929,7 @@ char    * QDECL va( char *format, ... ) {
 
 	if ( ( len = strlen( temp_buffer ) ) >= MAX_VA_STRING ) {
 		Com_Error( ERR_DROP, "Attempted to overrun string in call to va()\n" );
+		return NULL; // for compiler warning
 	}
 
 	if ( len + index >= MAX_VA_STRING - 1 ) {

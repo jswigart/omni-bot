@@ -1611,8 +1611,7 @@ void Use_DamageInflictor( gentity_t *ent, gentity_t *other, gentity_t *activator
 	{
 		if ( daent == ent ) {
 			G_Printf( "Use_DamageInflictor damaging self.\n" );
-		} else
-		{
+		} else {
 			G_Damage( daent, ent, ent, NULL, NULL, 9999, 0, MOD_CRUSH );
 		}
 	}

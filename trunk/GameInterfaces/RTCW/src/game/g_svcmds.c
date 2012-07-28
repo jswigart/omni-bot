@@ -256,7 +256,7 @@ that prevents them from quitting a disconnecting
 =================
 */
 void AddMaxLivesGUID( char *str ) {
-	if ( numMaxLivesFilters == MAX_IPFILTERS ) {
+	if ( numMaxLivesFilters >= MAX_IPFILTERS - 1 ) {
 		G_Printf( "MaxLives GUID filter list is full\n" );
 		return;
 	}

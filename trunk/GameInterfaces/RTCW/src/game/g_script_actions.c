@@ -509,6 +509,7 @@ qboolean G_ScriptAction_Accum( gentity_t *ent, char *params ) {
 	bufferIndex = atoi( token );
 	if ( bufferIndex >= G_MAX_SCRIPT_ACCUM_BUFFERS ) {
 		G_Error( "G_Scripting: accum buffer is outside range (0 - %i)\n", G_MAX_SCRIPT_ACCUM_BUFFERS );
+		return qfalse; // for compiler warning
 	}
 
 	token = COM_ParseExt( &pString, qfalse );
