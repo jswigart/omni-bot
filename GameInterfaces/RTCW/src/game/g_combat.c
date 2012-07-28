@@ -1150,15 +1150,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( !skipHitsounds && attacker->client && targ != attacker && targ->client ) {
 		if ( !headShot ) {
 			if ( sameTeam ) {
-				attacker->client->ps.persistant[PERS_HITS] -= damage;
+				attacker->client->ps.persistant[PERS_HITS] -= take;
 			} else {
-				attacker->client->ps.persistant[PERS_HITS] += damage;
+				attacker->client->ps.persistant[PERS_HITS] += take;
 			}
 		} else {
 			if ( sameTeam ) {
-				attacker->client->ps.persistant[PERS_HITS] -= damage;
+				attacker->client->ps.persistant[PERS_HITS] -= take;
 			} else {
-				attacker->client->ps.persistant[PERS_BLEH_2] += damage;
+				attacker->client->ps.persistant[PERS_BLEH_2] += take;
 			}
 		}
 	}

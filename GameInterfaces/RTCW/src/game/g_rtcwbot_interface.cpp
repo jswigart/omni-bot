@@ -1695,7 +1695,7 @@ obResult GetEntityCategory( const GameEntity _ent, BitFlag32 &_category ) {
 		//	break;
 		//}
 		if ( pEnt->health > GIB_HEALTH ) {
-			if ( !pEnt->client->ps.powerups[PW_INVULNERABLE] ) {
+			if ( pEnt->client->ps.powerups[PW_INVULNERABLE] <= level.time ) {
 				_category.SetFlag( ENT_CAT_SHOOTABLE );
 			}
 
@@ -3517,9 +3517,6 @@ void Bot_Interface_Update() {
 			if ( g_entities[i].client->pers.connected != CON_CONNECTED ) {
 				continue;
 			}
-
-			/*if(i==1)
-			g_entities[i].flags |= FL_GODMODE;*/
 
 			// Send a spectated message to bots that are being spectated.
 			if ( ( g_entities[i].client->sess.sessionTeam == TEAM_SPECTATOR ) &&
