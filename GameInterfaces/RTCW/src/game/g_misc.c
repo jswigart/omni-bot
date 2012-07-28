@@ -1479,8 +1479,8 @@ void SP_Bubbles( gentity_t *ent ) {
 	ent->spawnflags |= 2;
 }
 
-static vec3_t forward, right, up;
-static vec3_t muzzle;
+static vec3_t sForward, sRight, sUp;
+static vec3_t sMuzzle;
 
 void flakPuff( vec3_t origin, qboolean sky ) {
 	gentity_t *tent;
@@ -1488,7 +1488,7 @@ void flakPuff( vec3_t origin, qboolean sky ) {
 
 	VectorCopy( origin, point );
 	if ( sky ) {
-		VectorMA( point, -256, forward, point );
+		VectorMA( point, -256, sForward, point );
 	}
 
 	point[2] += 16; // raise puff off the ground some
@@ -1523,13 +1523,13 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 	ent->s.eFlags |= EF_MG42_ACTIVE;
 	activator->s.eFlags |= EF_MG42_ACTIVE;
 
-	VectorMA( muzzle, 8192, forward, end );
-	VectorMA( end, r, right, end );
-	VectorMA( end, u, up, end );
+	VectorMA( sMuzzle, 8192, sForward, end );
+	VectorMA( end, r, sRight, end );
+	VectorMA( end, u, sUp, end );
 
 	// rain - use activator for historicaltrace, not ent which may be
 	// the weapon itself (e.g. for mg42s)
-	G_HistoricalTrace( activator, &tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
+	G_HistoricalTrace( activator, &tr, sMuzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
 
 	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
 // JPW NERVE added this event so tracers work if you're shooting mg42 into skybox, otherwise shouldn't ever see the event double-up
@@ -1544,7 +1544,7 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 	traceEnt = &g_entities[ tr.entityNum ];
 
 	// snap the endpos to integers, but nudged towards the line
-	SnapVectorTowards( tr.endpos, muzzle );
+	SnapVectorTowards( tr.endpos, sMuzzle );
 
 	// send bullet impact
 	if ( traceEnt->takedamage && traceEnt->client ) {
@@ -1566,8 +1566,8 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 
 		tent = G_TempEntity( tr.endpos, EV_MG42BULLET_HIT_WALL );
 
-		dot = DotProduct( forward, tr.plane.normal );
-		VectorMA( forward, -2 * dot, tr.plane.normal, reflect );
+		dot = DotProduct( sForward, tr.plane.normal );
+		VectorMA( sForward, -2 * dot, tr.plane.normal, reflect );
 		VectorNormalize( reflect );
 
 		tent->s.eventParm = DirToByte( reflect );
@@ -1577,7 +1577,7 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 	}
 
 	if ( traceEnt->takedamage ) {
-		G_Damage( traceEnt, ent, activator, forward, tr.endpos,
+		G_Damage( traceEnt, ent, activator, sForward, tr.endpos,
 				  damage, 0, MOD_MACHINEGUN );
 	}
 }
@@ -1670,17 +1670,17 @@ void mg42_fire( gentity_t *other ) {
 	self = &g_entities[other->client->ps.viewlocked_entNum];
 
 	//AngleVectors (self->s.apos.trBase, forward, right, up);
-	AngleVectors( other->client->ps.viewangles, forward, right, up );
-	VectorCopy( self->s.pos.trBase, muzzle );
+	AngleVectors( other->client->ps.viewangles, sForward, sRight, sUp );
+	VectorCopy( self->s.pos.trBase, sMuzzle );
 
 	// VectorMA (muzzle, 16, forward, muzzle); // JPW NERVE unnecessary and makes it so close-range enemies get missed
-	VectorMA( muzzle, 16, up, muzzle );
+	VectorMA( sMuzzle, 16, sUp, sMuzzle );
 
 	self->s.eFlags |= EF_MG42_ACTIVE;
 	other->s.eFlags |= EF_MG42_ACTIVE;
 
 	// snap to integer coordinates for more efficient network bandwidth usage
-	SnapVector( muzzle );
+	SnapVector( sMuzzle );
 
 	Fire_Lead( self, other, MG42_SPREAD_MP, MG42_DAMAGE_MP );
 }

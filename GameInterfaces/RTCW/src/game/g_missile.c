@@ -1013,7 +1013,7 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 		bolt->s.eFlags              = EF_BOUNCE_HALF | EF_BOUNCE;
 		addSmallBounds				= (g_kickItems.integer & KICK_AIRSTRIKE);
 
-		if ( ( g_smokeGrenades.integer ) && ( self->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) && ( self->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) ) {
+		if ( g_smokeGrenades.integer && self->client && ( self->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) && ( self->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) ) {
 			bolt->r.svFlags |= SVF_SMOKEGRENADE;
 			self->client->ps.powerups[PW_SMOKEGRENADE] = 0;
 		}
@@ -1025,7 +1025,7 @@ gentity_t *fire_grenade( gentity_t *self, vec3_t start, vec3_t dir, int grenadeW
 		bolt->accuracy = 0;     // JPW NERVE sets to score below if dynamite is in trigger_objective_info & it's an objective
 		trap_SendServerCommand( self - g_entities, "cp \"Dynamite is set, but NOT armed!\"" );
 		// differentiate non-armed dynamite with non-pulsing dlight
-		bolt->s.teamNum = self->client->sess.sessionTeam + 4;
+		bolt->s.teamNum = self->client ? self->client->sess.sessionTeam + 4 : 0;
 		bolt->classname             = "dynamite";
 		bolt->damage                = 0;
 		bolt->splashRadius          = 400;

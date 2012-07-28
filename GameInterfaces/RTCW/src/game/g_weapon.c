@@ -9,9 +9,9 @@
 #include "g_local.h"
 #include "g_rtcwbot_interface.h"
 
-static vec3_t forward, right, up;
-static vec3_t muzzleEffect;
-static vec3_t muzzleTrace;
+static vec3_t swForward, swRight, swUp;
+static vec3_t swMuzzleEffect;
+static vec3_t swMuzzleTrace;
 
 
 // forward dec
@@ -49,11 +49,11 @@ void Weapon_Knife( gentity_t *ent ) {
 		mod = MOD_KNIFE;
 	}
 
-	AngleVectors( ent->client->ps.viewangles, forward, right, up );
-	CalcMuzzlePoint( ent, ent->s.weapon, forward, right, up, muzzleTrace );
-	VectorMA( muzzleTrace, KNIFE_DIST, forward, end );
+	AngleVectors( ent->client->ps.viewangles, swForward, swRight, swUp );
+	CalcMuzzlePoint( ent, ent->s.weapon, swForward, swRight, swUp, swMuzzleTrace );
+	VectorMA( swMuzzleTrace, KNIFE_DIST, swForward, end );
 	//trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
-	G_HistoricalTrace(ent, &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT);
+	G_HistoricalTrace(ent, &tr, swMuzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT);
 
 	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
 		return;
@@ -295,17 +295,17 @@ void Weapon_Syringe( gentity_t *ent ) {
 	trace_t tr;
 	qboolean usedSyringe = qfalse;          // DHM - Nerve
 
-	AngleVectors( ent->client->ps.viewangles, forward, right, up );
-	CalcMuzzlePointForActivate( ent, forward, right, up, muzzleTrace );
+	AngleVectors( ent->client->ps.viewangles, swForward, swRight, swUp );
+	CalcMuzzlePointForActivate( ent, swForward, swRight, swUp, swMuzzleTrace );
 
 	// cs: changed from 48 to 64. original z was 24 high and changed to 8, so give the 16 back when reviving.
-	VectorMA( muzzleTrace, 64, forward, end );           // CH_ACTIVATE_DIST
+	VectorMA( swMuzzleTrace, 64, swForward, end );           // CH_ACTIVATE_DIST
 
-	trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
+	trap_Trace( &tr, swMuzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
 
 	if ( tr.startsolid ) {
-		VectorMA( muzzleTrace, 8, forward, end );            // CH_ACTIVATE_DIST
-		trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
+		VectorMA( swMuzzleTrace, 8, swForward, end );            // CH_ACTIVATE_DIST
+		trap_Trace( &tr, swMuzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
 	}
 
 	if ( tr.fraction < 1.0 ) {
@@ -435,17 +435,17 @@ void Weapon_Engineer( gentity_t *ent ) {
 		return;
 	}
 
-	AngleVectors( ent->client->ps.viewangles, forward, right, up );
-	VectorCopy( ent->client->ps.origin, muzzleTrace );
-	muzzleTrace[2] += ent->client->ps.viewheight;
+	AngleVectors( ent->client->ps.viewangles, swForward, swRight, swUp );
+	VectorCopy( ent->client->ps.origin, swMuzzleTrace );
+	swMuzzleTrace[2] += ent->client->ps.viewheight;
 
-	VectorMA( muzzleTrace, 64, forward, end );           // CH_BREAKABLE_DIST
-	trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT | CONTENTS_TRIGGER );
+	VectorMA( swMuzzleTrace, 64, swForward, end );           // CH_BREAKABLE_DIST
+	trap_Trace( &tr, swMuzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT | CONTENTS_TRIGGER );
 
 	if ( tr.entityNum < MAX_CLIENTS ) {
 		trap_UnlinkEntity( ent );
 		traceEnt = &g_entities[ tr.entityNum ];
-		trap_Trace( &tr, muzzleTrace, NULL, NULL, end, traceEnt->s.number, MASK_SHOT | CONTENTS_TRIGGER );
+		trap_Trace( &tr, swMuzzleTrace, NULL, NULL, end, traceEnt->s.number, MASK_SHOT | CONTENTS_TRIGGER );
 		trap_LinkEntity( ent );
 	}
 
@@ -501,7 +501,7 @@ void Weapon_Engineer( gentity_t *ent ) {
 			traceEnt->health += 3;
 		}
 	} else {
-		trap_Trace( &tr, muzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
+		trap_Trace( &tr, swMuzzleTrace, NULL, NULL, end, ent->s.number, MASK_SHOT );
 		if ( tr.surfaceFlags & SURF_NOIMPACT ) {
 			return;
 		}
@@ -937,12 +937,12 @@ void Weapon_Artillery( gentity_t *ent ) {
 		float traceheight, bottomtraceheight;
 		gentity_t *bomb,*bomb2,*te;
 
-		AngleVectors( ent->client->ps.viewangles, forward, right, up );
+		AngleVectors( ent->client->ps.viewangles, swForward, swRight, swUp );
 
 		VectorCopy( ent->r.currentOrigin, muzzlePoint );
 		muzzlePoint[2] += ent->client->ps.viewheight;
 
-		VectorMA( muzzlePoint, 8192, forward, end );
+		VectorMA( muzzlePoint, 8192, swForward, end );
 		trap_Trace( &trace, muzzlePoint, NULL, NULL, end, ent->s.number, MASK_SHOT );
 
 		if ( trace.surfaceFlags & SURF_NOIMPACT ) {
@@ -1265,11 +1265,11 @@ void Bullet_Endpos( gentity_t *ent, float spread, vec3_t *end ) {
 		randSpread = qfalse;
 	}
 
-	VectorMA( muzzleTrace, dist, forward, *end );
+	VectorMA( swMuzzleTrace, dist, swForward, *end );
 
 	if ( randSpread ) {
-		VectorMA( *end, r, right, *end );
-		VectorMA( *end, u, up, *end );
+		VectorMA( *end, r, swRight, *end );
+		VectorMA( *end, u, swUp, *end );
 	}
 }
 
@@ -1287,7 +1287,7 @@ void Bullet_Fire( gentity_t *ent, float spread, int damage ) {
 		G_HistoricalTraceBegin( ent );
 	}
 
-	Bullet_Fire_Extended( ent, ent, muzzleTrace, end, spread, damage );
+	Bullet_Fire_Extended( ent, ent, swMuzzleTrace, end, spread, damage );
 
 	if ( g_antilag.integer ) { 
 		G_HistoricalTraceEnd( ent );
@@ -1393,8 +1393,8 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 			tent->s.origin2[0] = 0;
 		}
 
-		dot = DotProduct( forward, tr.plane.normal );
-		VectorMA( forward, -2 * dot, tr.plane.normal, reflect );
+		dot = DotProduct( swForward, tr.plane.normal );
+		VectorMA( swForward, -2 * dot, tr.plane.normal, reflect );
 		VectorNormalize( reflect );
 
 		tent->s.eventParm = DirToByte( reflect );
@@ -1419,10 +1419,10 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 
 //----(SA)	modified to use extended version so attacker would pass through
 			Bullet_Endpos( traceEnt, spread, &reflect_end );
-			Bullet_Fire_Extended( traceEnt, attacker, muzzleTrace, reflect_end, spread, damage );
+			Bullet_Fire_Extended( traceEnt, attacker, swMuzzleTrace, reflect_end, spread, damage );
 //----(SA)	end
 		} else {
-			G_Damage( traceEnt, attacker, attacker, forward, tr.endpos, damage, 0, ammoTable[attacker->s.weapon].mod );
+			G_Damage( traceEnt, attacker, attacker, swForward, tr.endpos, damage, 0, ammoTable[attacker->s.weapon].mod );
 
 			// allow bullets to "pass through" func_explosives if they break by taking another simultanious shot
 			if ( Q_stricmp( traceEnt->classname, "func_explosive" ) == 0 ) {
@@ -1460,7 +1460,7 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 
 	// JPW NERVE -- smoke grenades always overhand
 	if ( pitch >= 0 ) {
-		forward[2] += 0.5f;
+		swForward[2] += 0.5f;
 		// Used later in underhand boost
 		pitch = 1.3f;
 	} else {
@@ -1468,14 +1468,14 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 		pitch = min( pitch, 30 );
 		pitch /= 30.f;
 		pitch = 1 - pitch;
-		forward[2] += ( pitch * 0.5f );
+		swForward[2] += ( pitch * 0.5f );
 
 		// Used later in underhand boost
 		pitch *= 0.3f;
 		pitch += 1.f;
 	}
 
-	VectorNormalizeFast( forward );         //	make sure forward is normalized
+	VectorNormalizeFast( swForward );         //	make sure forward is normalized
 
 	upangle = -( ent->s.apos.trBase[0] ); //	this will give between	-90 / 90
 	upangle = min( upangle, 50 );
@@ -1498,17 +1498,17 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 		upangle *= 400;
 	}
 
-	VectorCopy( muzzleEffect, tosspos );
+	VectorCopy( swMuzzleEffect, tosspos );
 
 	if ( underhand ) {
 		// move a little bit more away from the player (so underhand tosses don't get caught on nearby lips)
-		VectorMA( muzzleEffect, 8, forward, tosspos );
+		VectorMA( swMuzzleEffect, 8, swForward, tosspos );
 		tosspos[2] -= 8;    // lower origin for the underhand throw
 		upangle *= pitch;
 		SnapVector( tosspos );
 	}
 
-	VectorScale( forward, upangle, forward );
+	VectorScale( swForward, upangle, swForward );
 
 	// check for valid start spot (so you don't throw through or get stuck in a wall)
 	VectorCopy( ent->s.pos.trBase, viewpos );
@@ -1525,7 +1525,7 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 		SnapVectorTowards( tosspos, viewpos );
 	}
 
-	m = fire_grenade( ent, tosspos, forward, grenType );
+	m = fire_grenade( ent, tosspos, swForward, grenType );
 
 	m->damage = 0;  // Ridah, grenade's don't explode on contact
 
@@ -1581,7 +1581,7 @@ qboolean VenomPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 	}
 
 	if ( traceEnt->takedamage ) {
-		G_Damage( traceEnt, ent, ent, forward, tr.endpos, DEFAULT_VENOM_DAMAGE, 0, MOD_VENOM );
+		G_Damage( traceEnt, ent, ent, swForward, tr.endpos, DEFAULT_VENOM_DAMAGE, 0, MOD_VENOM );
 		if ( LogAccuracyHit( traceEnt, ent ) ) {
 			return qtrue;
 		}
@@ -1629,7 +1629,7 @@ void Weapon_Nailgun_Fire( gentity_t *ent ) {
 	int count;
 
 	for ( count = 0; count < NUM_NAILSHOTS; count++ ) {
-		fire_nail( ent, muzzleEffect, forward, right, up );
+		fire_nail( ent, swMuzzleEffect, swForward, swRight, swUp );
 	}
 }
 
@@ -1644,9 +1644,9 @@ PROXIMITY MINE LAUNCHER
 
 void weapon_proxlauncher_fire( gentity_t *ent ) {
 	// extra vertical velocity
-	forward[2] += 0.2f;
-	VectorNormalize( forward );
-	fire_prox( ent, muzzleTrace, forward );
+	swForward[2] += 0.2f;
+	VectorNormalize( swForward );
+	fire_prox( ent, swMuzzleTrace, swForward );
 }
 
 /*
@@ -1658,12 +1658,12 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 	gentity_t       *tent;
 
 	if ( fullmode ) {
-		tent = G_TempEntity( muzzleTrace, EV_VENOMFULL );
+		tent = G_TempEntity( swMuzzleTrace, EV_VENOMFULL );
 	} else {
-		tent = G_TempEntity( muzzleTrace, EV_VENOM );
+		tent = G_TempEntity( swMuzzleTrace, EV_VENOM );
 	}
 
-	VectorScale( forward, 4096, tent->s.origin2 );
+	VectorScale( swForward, 4096, tent->s.origin2 );
 	SnapVector( tent->s.origin2 );
 	tent->s.eventParm = rand() & 255;       // seed for spread pattern
 	tent->s.otherEntityNum = ent->s.number;
@@ -1684,11 +1684,11 @@ ROCKET
 */
 
 void Weapon_RocketLauncher_Fire( gentity_t *ent ) {
-	fire_rocket( ent, muzzleEffect, forward );
+	fire_rocket( ent, swMuzzleEffect, swForward );
 }
 
 gentity_t *Weapon_Panzerfaust_Fire( gentity_t *ent ) {
-	gentity_t   *m = fire_rocket( ent, muzzleEffect, forward );
+	gentity_t   *m = fire_rocket( ent, swMuzzleEffect, swForward );
 	return m;
 }
 
@@ -1735,13 +1735,13 @@ void Weapon_FlamethrowerFire( gentity_t *ent ) {
 	start[2] += ent->client->ps.viewheight;
 	VectorCopy( start, trace_start );
 
-	VectorMA( start, -8, forward, start );
-	VectorMA( start, 10, right, start );
-	VectorMA( start, -6, up, start );
+	VectorMA( start, -8, swForward, start );
+	VectorMA( start, 10, swRight, start );
+	VectorMA( start, -6, swUp, start );
 
 	// prevent flame thrower cheat, run & fire while aiming at the ground, don't get hurt
 	// 72 total box height, 18 xy -> 77 trace radius (from view point towards the ground) is enough to cover the area around the feet
-	VectorMA( trace_start, 77.0, forward, trace_end );
+	VectorMA( trace_start, 77.0, swForward, trace_end );
 	trap_Trace( &trace, trace_start, flameChunkMins, flameChunkMaxs, trace_end, ent->s.number, MASK_SHOT | MASK_WATER );
 	if ( trace.fraction != 1.0 ) {
 		// additional checks to filter out false positives
@@ -1756,7 +1756,7 @@ void Weapon_FlamethrowerFire( gentity_t *ent ) {
 		}
 	}
 
-	fire_flamechunk( ent, start, forward );
+	fire_flamechunk( ent, start, swForward );
 }
 
 //======================================================================
@@ -1888,14 +1888,14 @@ void CalcMuzzlePoints( gentity_t *ent, int weapon ) {
 
 
 	// set aiming directions
-	AngleVectors( viewang, forward, right, up );
+	AngleVectors( viewang, swForward, swRight, swUp );
 
 //----(SA)	modified the muzzle stuff so that weapons that need to fire down a perfect trace
 //			straight out of the camera (SP5, Mauser right now) can have that accuracy, but
 //			weapons that need an offset effect (bazooka/grenade/etc.) can still look like
 //			they came out of the weap.
-	CalcMuzzlePointForActivate( ent, forward, right, up, muzzleTrace );
-	CalcMuzzlePoint( ent, weapon, forward, right, up, muzzleEffect );
+	CalcMuzzlePointForActivate( ent, swForward, swRight, swUp, swMuzzleTrace );
+	CalcMuzzlePoint( ent, weapon, swForward, swRight, swUp, swMuzzleEffect );
 }
 
 /*
