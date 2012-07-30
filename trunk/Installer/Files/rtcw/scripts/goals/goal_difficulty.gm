@@ -7,20 +7,24 @@ this.AutoAdd = true;
 // initialize defaults in case the entry isn't in omni-bot.cfg
 this.CurrentDifficulty = 3;
 this.AdjustAim = true;
+this.DefenderSkillBonus = 0;
 
 this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
 this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
+this.DefenderSkillBonus = ConfigGet("Defender", "SkillBonus", this.DefenderSkillBonus);
 
 this.Initialize = function()
 {
-	// run it once at start
+	this.Bot.SkillBonus = 0;
+	this.MaxDifficulty = tableCount(this.difficulties) - 1;
 	this.FirstRun = true;
 };
 
 this.GetPriority = function()
 {
-	yield();
+	sleep(2);
 	if ( this.FirstRun ) {
+		this.AddDefenderSkillBonus();
 		this.FirstRun = false;
 		this.Priority = 1.0;
 	}
@@ -50,7 +54,7 @@ this.Update = function()
 		}
 		else
 		{
-			useDiff = this.Bot.aimskill;
+			useDiff = this.Bot.aimskill + this.Bot.SkillBonus;
 		}
 
 		if ( !this.difficulties[useDiff] )
@@ -246,7 +250,7 @@ this.difficulties =
 
 this.AdjustWeaponProperties = function(bot, skill)
 {
-	Debug_weaps = this.Debug;
+	Debug_weaps = false;
 
 	AdjustableWeapons =
 	{
@@ -285,6 +289,24 @@ this.AdjustWeaponProperties = function(bot, skill)
 	}
 };
 
+this.AddDefenderSkillBonus = function()
+{
+	if (this.Bot.HasRole(ROLE.DEFENDER)) {
+		maxDiff = this.MaxDifficulty - this.CurrentDifficulty;
+		if (this.DefenderSkillBonus > maxDiff) {
+			this.Bot.SkillBonus = maxDiff;
+		}
+		else {
+			this.Bot.SkillBonus = this.DefenderSkillBonus;
+		}
+
+		this.Bot.aimskill = null; // run update logic
+	}
+	else {
+		this.Bot.SkillBonus = 0;
+	}
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 
 this.Commands["difficulty"] =
@@ -302,10 +324,11 @@ this.Commands["difficulty"] =
 				print("Difficulty Changed", diff, " for ", this.Bot.Name);
 			}
 
-			this.Priority = 1.0; // run update
+			this.Priority = 1.0;
+			return;
 		}
 
-		diff = ConfigGet("Difficulty","CurrentDifficulty", diff);
+		diff = ConfigGet("Difficulty","CurrentDifficulty", 4);
 
 		if ( this.Debug ) {
 			print("Current difficulty is", diff);
@@ -315,5 +338,36 @@ this.Commands["difficulty"] =
 	Help =
 	{
 		"Sets the bots difficulty (-1...7), -1 is random, default 4",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+this.Commands["skillbonus"] =
+{
+	Func = function( _params )
+	{
+		bonus = ToInt(_params[0], null);
+		if(typeId(bonus) == 1)
+		{
+			ConfigSet("Defender","SkillBonus", bonus);
+			this.DefenderSkillBonus = bonus;
+
+			if ( this.Debug ) {
+				print("Defender Skill Bonus set to ", bonus, " for ", this.Bot.Name);
+			}
+
+			this.AddDefenderSkillBonus();
+			this.Priority = 1.0;
+			return;
+		}
+
+		skillbonus = ConfigGet("Defender","SkillBonus", bonus);
+		print("Current Defender Skill bonus is ", skillbonus);
+	},
+
+	Help =
+	{
+		"Sets the skill bonus for bots with the defender role",
 	},
 };
