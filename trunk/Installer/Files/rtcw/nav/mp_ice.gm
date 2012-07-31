@@ -257,14 +257,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Flag_axis_obj01 );
 		}
 
-		// *** Artillery
-		if ( !Map.DocStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_axis_nearspawn_1" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_axis_nearspawn_2" );
-		}
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_axis_nearspawn" );
-
 		// Allied Panzer
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_flag_allied" );
@@ -423,9 +415,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "AIRSTRIKE.*" );
 
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
-
-	//set up some routing
-	print( "Configuring Routes" );
 
 	MapRoutes =
 	{
