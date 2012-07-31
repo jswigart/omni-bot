@@ -53,7 +53,7 @@ global Map =
 			{
 				// this is just using the barrier as they eval since its simple
 				// others will need to eval other map vars
-				if ( !b2_status && Map.PanzGateBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+				if ( !Map.b2_status && Map.PanzGateBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
 					wpTable = Util.WpNameInfo( "rPanzGate" );
 					Map.PanzGateBots += 1;
 
@@ -86,7 +86,6 @@ global Map =
 					_this.Bot.MaxViewDistance = 10; //Martin - Don't let bots see enemies when they throw smoke
 					_this.Bot.HoldButton( BTN.SPRINT, 999 );
 					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
-						_this.Bot.ReleaseButton( BTN.SPRINT );
 						if ( _this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
 							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
 							_this.AddWeaponRequest( Priority.High, WEAPON.SMOKE_GRENADE );
@@ -94,9 +93,11 @@ global Map =
 							//sleep(0.3); // make sure its ready to fire
 							_this.Bot.HoldButton( BTN.ATTACK1, 0.5 );
 							sleep( 1 );
-							_this.Bot.MaxViewDistance = Map.ViewDistance;
 						}
 					}
+					
+					_this.Bot.ReleaseButton( BTN.SPRINT );
+					_this.Bot.MaxViewDistance = Map.ViewDistance;
 				}
 				yield();
 			},

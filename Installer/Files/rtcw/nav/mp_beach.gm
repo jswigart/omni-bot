@@ -7,6 +7,7 @@ global Map =
 	Suicide = MAP_SUICIDE,
 	TowerPlayers = 0,
 	DocsGone = false,
+	FirstWarRoomShift = false,
 
 	Airstrike =
 	{
@@ -51,6 +52,18 @@ global Map =
 			},
 		},
 	},
+	
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.MEDIC,
+			},
+		},
+	},	
 
 	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
 	Flag_War_Documents = "FLAG_War_Documents",
@@ -256,8 +269,7 @@ global Map =
 		//switch from sniper to other soldier weap
 		if ( Map.CompSettings ) {
 			RTCWUtil.SwitchWeapon( WEAPON.PANZERFAUST );
-		} else
-		{
+		} else {
 			RTCWUtil.StopSniping();
 		}
 
@@ -367,6 +379,7 @@ global Map =
 
 			// cs: moved this out. in both cases we want them out of war room ...
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_rWar.*" );
 
 			// cs: changed this. why would they defend trasmit when docs are returned?
 			if ( Map.DocStatus ) {
@@ -431,6 +444,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rUpper.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rWar.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTransmit.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
 
@@ -467,6 +481,12 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall_door.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rGrenadeDoor" );
+		
+		if (!Map.FirstWarRoomShift) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rWar.*" );
+			Map.FirstWarRoomShift = true;
+		}
+		
 		Util.MapDebugPrint( "door_planted" );
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
@@ -490,6 +510,12 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall_breach.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rGrenadeBreach" );
+		
+		if (!Map.FirstWarRoomShift) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rWar.*" );
+			Map.FirstWarRoomShift = true;
+		}
+
 		Util.MapDebugPrint( "breach_planted" );
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
@@ -637,6 +663,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rAlt.*", 0.45 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 	SetGoalPriority( "GRENADE_Barricade.*", 0.81 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
 
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.ENGINEER, CLASS.LIEUTENANT );
@@ -669,6 +696,8 @@ global OnMapLoad = function()
 	//copy the wall AS goal tables to the AS goal table to make them active
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as.*" );
+	
+	RTCWUtil.KillEntities( {120, 142, 143} );
 
 	MapRoutes =
 	{
