@@ -25,6 +25,7 @@ namespace Revision
 		size_t dateEnd = RevisionDate.find_last_of(")");
 		return RevisionDate.substr(dateStart,dateEnd-dateStart);
 	}
+
 };
 
 
