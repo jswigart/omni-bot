@@ -12,6 +12,8 @@ Waypoints and Script by BubbaG1, Crapshoot & MickyP
 
 global Map =
 {
+	Debug = 0,
+
 	ShowMovers = false,
 	Ammo_Cabinet_supply = "AMMOCAB_supply",
 	Ammo_Cabinet_t14 = "AMMOCAB_t14",
@@ -46,19 +48,6 @@ global Map =
 		"MOVER_jeep_mover",
 	},
 	
-	// cs: commented out as it does nothing.
-	/*JeepAtMarketGate = 
-	{
-		Name="JeepAtMarketGate",
-		TriggerOnEntity = GetGoal("MOVER_jeep_mover").GetEntity(),
-		OnEnter = function(ent)
-		{
-		},
-		OnExit = function(ent)
-		{
-		},
-	},*/
-
 	MarketGatePassed =
  	{
  		Name="MarketGatePassed",
@@ -66,7 +55,12 @@ global Map =
  		OnEnter = function(ent)
  		{
  			SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Market_Gate" );
-			
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Ladder" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_1st_Ramp" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_2nd_Ramp" );
+
  			Util.MapDebugPrint("MarketGatePassed");
 		},
  		OnExit = function(ent)
@@ -410,11 +404,17 @@ global OnMapLoad = function()
 	OnTrigger( "Allies have captured the Market Place!", Map.flag_Allies_Captured );
 	OnTrigger( "goldrush_allies_gold_get", Map.GoldAccessible );
 	OnTrigger( "Allies have stolen the second goldcrate!", Map.GoldSecured );
-
+	
+	Util.AddUsePoint( "BUILD_1st_Ramp", { Vec3(-50, 2591, -145) } );
+	
 	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_supply" ); // only enabled when command post is built
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Ladder" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_1st_Ramp" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_2nd_Ramp" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_health" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_Gold_MG );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Gold_MG );
 	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_supply" );
