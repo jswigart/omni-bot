@@ -47,6 +47,7 @@ this.GetPriority = function()
 				//     but i think that they should be.
 				if ( this.MapGoal ) {
 					//if (this.DebugAbortForHigherPriority) { this.Bot.Say("aborting defuse for higher priority"); }
+					tableClear(this.Bot.QueryGoalsTable);
 					this.Finished();
 				}
 

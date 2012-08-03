@@ -1,6 +1,6 @@
 global Map =
 {
-	Debug = true,
+	Debug = false,
 	
 	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
 	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
@@ -1065,7 +1065,6 @@ global OnMapLoad = function()
 	Util.AddUsePoint( "PLANT_Tank_Barrier_1", { Vec3(2452, 3762, 32), Vec3(2670, 3808, 31) } );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tiger_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tiger_Tank_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_1" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
@@ -1410,6 +1409,6 @@ global InitializeRoutes = function()
 
 global OnExit = function()
 {
-	threadKillAll;
+	threadKillAll();
 };
 
