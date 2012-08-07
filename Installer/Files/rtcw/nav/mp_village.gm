@@ -616,8 +616,17 @@ global OnMapLoad = function()
 		{
 			ROUTE_flagspawn =
 			{
-				ROUTE_nLadder = { Weight = 2, },
-				ROUTE_sLadder = {},
+				ROUTE_cellarhole =
+				{
+					Weight = 2,
+					ROUTE_nLadder = { Weight = 2, },
+					ROUTE_sLadder = {},
+				},
+				ROUTE_cellarsteps =
+				{
+					ROUTE_nLadder = { Weight = 2, },
+					ROUTE_sLadder = {},
+				},
 			},
 			ROUTE_bSpawn =
 			{
@@ -679,6 +688,8 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bCemetary6 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.MOUNTMG42_cemetary_mg = MapRoutes.FLAG_obj_item01;
 	MapRoutes.CALLARTILLERY_bCemetary_1 = MapRoutes.FLAG_obj_item01;
+	MapRoutes.PANZER_bSpawncamp1 = MapRoutes.FLAG_obj_item01;
+	MapRoutes.PANZER_bSpawncamp2 = MapRoutes.FLAG_obj_item01;
 
 	Util.Routes( MapRoutes );
 
