@@ -1,29 +1,34 @@
 global Map =
 {
-	Quiet = true,
 	FocusPrimary = true,
-	
-	//scripted defend spots for dual objective support
-	Defend =
+
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-		
-		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 4, // TODO: add more camp spots and increase
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			
+			// TODO: add another for upper objective.
+			// once one is destroyed, shift to other 
+		},
 	},
 	
-	portal = { "dual_portal_1", "dual_portal_2", "dual_portal_3", "dual_portal_4", "dual_portal_5", },
-	church = { "dual_church_1", "dual_church_2", "dual_church_3", "dual_church_4", "dual_church_5", },
-	
-
 	Switches =
 	{
 		lever1 =
@@ -150,7 +155,7 @@ global Map =
 	        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_of_the_Dead" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_book.*" );
 
-		print( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
 	},
 
 	Book_Of_The_Dead_Holding_Chamber_Planted = function( trigger )
@@ -158,9 +163,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-	      SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_eng_book.*" );
-
-		print( "Book_Of_The_Dead_Holding_Chamber_Planted" );
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Planted" );
 	},
 
 	Book_Of_The_Dead_Holding_Chamber_Defused = function( trigger )
@@ -168,9 +171,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-	      SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_book.*" );
-
-		print( "Book_Of_The_Dead_Holding_Chamber_Defused" );
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Defused" );
 	},
 
 	Guardhouse_Door_Destroyed = function( trigger )
@@ -179,7 +180,7 @@ global Map =
 			{ return; }
 
 		DynamicPathsUpdated(TEAM.ALLIES, TEAM.AXIS);
-		print( "Guardhouse_Door_Destroyed" );
+		Util.MapDebugPrint( "Guardhouse_Door_Destroyed" );
 	},
 
 	Hells_Spawn_Soul_Portal_Destroyed = function( trigger )
@@ -187,7 +188,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Hells_Spawn_Soul_Portal_Destroyed" );
+		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
 	},
 
 	Supply_Train_Control_Board_Destroyed = function( trigger )
@@ -195,7 +196,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Supply_Train_Control_Board_Destroyed" );
+		Util.MapDebugPrint( "Supply_Train_Control_Board_Destroyed" );
 	},
 
 	Book_of_the_Dead_Taken = function( trigger )
@@ -203,7 +204,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "Book_of_the_Dead_Taken" );
+		Util.MapDebugPrint( "Book_of_the_Dead_Taken" );
 	},
 
 	midflag_Axis_Captured = function( trigger )
@@ -211,7 +212,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "midflag_Axis_Captured" );
+		Util.MapDebugPrint( "midflag_Axis_Captured" );
 	},
 
 	midflag_Allies_Captured = function( trigger )
@@ -219,7 +220,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		print( "midflag_Allies_Captured" );
+		Util.MapDebugPrint( "midflag_Allies_Captured" );
 	},
 
  	guardhouse_door_open = function( trigger )
@@ -229,7 +230,7 @@ global Map =
 
 		Map.Switches.lever3.Enabled = false;
 
-		print("guardhouse door opening");	
+		Util.MapDebugPrint("guardhouse door opening");	
  	},
 
  	guardhouse_door_closed = function( trigger )
@@ -239,7 +240,7 @@ global Map =
 
 		Map.Switches.lever3.Enabled = true;
 
-		print("guardhouse door closing");
+		Util.MapDebugPrint("guardhouse door closing");
  	},
 
  	main_door_open = function( trigger )
@@ -250,7 +251,7 @@ global Map =
 		Map.Switches.lever1.Enabled = false;
 		Map.Switches.lever2.Enabled = false;
 
-		print("main door opening");	
+		Util.MapDebugPrint("main door opening");	
  	},
 
  	main_door_closed = function( trigger )
@@ -261,7 +262,7 @@ global Map =
 		Map.Switches.lever1.Enabled = true;
 		Map.Switches.lever2.Enabled = true;
 
-		print("main door closing");
+		Util.MapDebugPrint("main door closing");
  	},
 
  	lift1_down = function( trigger )
@@ -272,7 +273,7 @@ global Map =
 		sleep(1.7);
 		Map.Switches.lift1.Enabled = false;
 
-		print("lift1 down");	
+		Util.MapDebugPrint("lift1 down");	
  	},
 
  	lift1_up = function( trigger )
@@ -282,7 +283,7 @@ global Map =
 
 		Map.Switches.lift1.Enabled = true;
 
-		print("lift1 up");
+		Util.MapDebugPrint("lift1 up");
  	},
 
  	lift2_down = function( trigger )
@@ -293,7 +294,7 @@ global Map =
 		sleep(2);
 		Map.Switches.lift2.Enabled = false;
 
-		print("lift2 down");	
+		Util.MapDebugPrint("lift2 down");	
  	},
 
  	lift2_up = function( trigger )
@@ -303,7 +304,7 @@ global Map =
 
 		Map.Switches.lift2.Enabled = true;
 
-		print("lift2 up");
+		Util.MapDebugPrint("lift2 up");
  	},
 	
 	check_grate = function()
@@ -333,7 +334,7 @@ global Map =
 			 sleep(0.25);
 		}
 		
-		print( "grate_destroyed" );
+		Util.MapDebugPrint( "grate_destroyed" );
 	},
 };
 
@@ -374,26 +375,26 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
 
 	RTCWUtil.SetPrimaryGoals(1.0);
+	SetGoalPriority("CAMP_dual.*", 0.95);
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_portal.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_church.*" ); // TODO: shift when docs taken
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();
+	
+	RTCWUtil.KillEntities( { 341 } );
 
-	print( "OnMapLoad" );
+	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 300.0;
-	
-	//select spawn point and change class if necessary
-	RTCWUtil.SetDualObjective(bot);
 };
