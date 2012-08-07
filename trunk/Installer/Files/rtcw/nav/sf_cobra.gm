@@ -1,0 +1,250 @@
+// ***
+// WARNING: The map author designed 'checkpoint' mode to be played with g_gametype 5!
+// ***
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1, // give axis time to go call the arty
+	DontDispenseAmmo = false,
+	
+	// Martin - is it good that I was 0.001 different on the z value for both airstrikes on the first try?
+	Airstrike =
+	{
+		bmid1 =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.645, 0.098, 0.758 ),
+			NoPause = true,
+		},
+		bmid2 =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.487, 0.318, 0.814 ),
+			NoPause = true,
+		},
+		rmid1 =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ),
+			Facing = Vector3( -0.632, -0.158, 0.759 ),
+			NoPause = true,
+		},
+	},
+
+	Checkpoint1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint1_Axis_Captured" );
+	},
+
+	Checkpoint1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint1_Allies_Captured" );
+	},
+
+	Checkpoint2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint2_Axis_Captured" );
+	},
+
+	Checkpoint2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint2_Allies_Captured" );
+	},
+
+	Checkpoint3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint3_Axis_Captured" );
+		
+		Map.Airstrike.rmid1.Enabled = false;
+		Map.Airstrike.bmid1.Enabled = true;
+		Map.Airstrike.bmid2.Enabled = true;
+	},
+
+	Checkpoint3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint3_Allies_Captured" );
+		
+		Map.Airstrike.rmid1.Enabled = true;
+		Map.Airstrike.bmid1.Enabled = false;
+		Map.Airstrike.bmid2.Enabled = false;
+	},
+
+	Checkpoint4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint4_Axis_Captured" );
+	},
+
+	Checkpoint4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint4_Allies_Captured" );
+	},
+
+	Checkpoint5_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint5_Axis_Captured" );
+	},
+
+	Checkpoint5_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Checkpoint5_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis secure the Train line!", Map.Checkpoint1_Axis_Captured );
+	OnTrigger( "Allies secure the Train line!", Map.Checkpoint1_Allies_Captured );
+	OnTrigger( "Axis secure the open alley!", Map.Checkpoint2_Axis_Captured );
+	OnTrigger( "Allies secure the open alley!", Map.Checkpoint2_Allies_Captured );
+	OnTrigger( "Axis secured the main Street!", Map.Checkpoint3_Axis_Captured );
+	OnTrigger( "Allies secured the main Street!", Map.Checkpoint3_Allies_Captured );
+	OnTrigger( "Axis secured the Long street!", Map.Checkpoint4_Axis_Captured );
+	OnTrigger( "Allies secured the Long street!", Map.Checkpoint4_Allies_Captured );
+	OnTrigger( "Axis have captured the Cafe!", Map.Checkpoint5_Axis_Captured );
+	OnTrigger( "Allies have captured the Cafe!", Map.Checkpoint5_Allies_Captured );
+	
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*", true ); // all but routes
+	
+	//soldiers will use mg's && rear flags
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
+	
+	//priority should be based on closest available checkpoint
+	SetGoalPriority( "CHECKPOINT_Checkpoint5", 1.0, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_Checkpoint4", 0.95, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_Checkpoint3", 0.90, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_Checkpoint1", 1.0, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_Checkpoint2", 0.95, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_Checkpoint3", 0.90, TEAM.ALLIES );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+	SetGoalPriority( "CAMP_.*", 0.94 );
+	SetGoalPriority( "MOUNTMG42.*", 0.91 );
+	
+	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	
+	Util.EnableGoal( "CHECKPOINT.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rMid.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bMid.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bMid.*" );
+	
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
+	
+	MapRoutes =
+	{
+		CHECKPOINT_Checkpoint3 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_saxismain = {},
+				ROUTE_naxisrear = 
+				{
+					ROUTE_caxismid =
+					{
+						ROUTE_caxismain = {},
+					},
+					ROUTE_naxismid = 
+					{
+						ROUTE_naxismain = {},
+					},
+				},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_salliedmid = 
+				{
+					Weight = 2,
+					ROUTE_salliedmain = {},
+				},
+				ROUTE_alliedmid =
+				{
+					Weight = 2,
+					ROUTE_nalliedmain = {},
+				},
+				ROUTE_nalliedrear =
+				{
+					ROUTE_nalliedmain = {},
+				},
+			},
+		},
+		CHECKPOINT_Checkpoint1 = {ROUTE_rspawn={},},
+		CHECKPOINT_Checkpoint2 = {ROUTE_rspawn={},},
+		CHECKPOINT_Checkpoint4 = {ROUTE_bspawn={},},
+		CHECKPOINT_Checkpoint5 = {ROUTE_bspawn={},},
+	};
+	
+	MapRoutes.CHECKPOINT_Checkpoint1.ROUTE_rspawn = MapRoutes.CHECKPOINT_Checkpoint3.ROUTE_rspawn;
+	MapRoutes.CHECKPOINT_Checkpoint2.ROUTE_rspawn = MapRoutes.CHECKPOINT_Checkpoint3.ROUTE_rspawn;
+	MapRoutes.CHECKPOINT_Checkpoint4.ROUTE_bspawn = MapRoutes.CHECKPOINT_Checkpoint3.ROUTE_bspawn;
+	MapRoutes.CHECKPOINT_Checkpoint5.ROUTE_bspawn = MapRoutes.CHECKPOINT_Checkpoint3.ROUTE_bspawn;
+	MapRoutes.CAMP_bMid1 = MapRoutes.CHECKPOINT_Checkpoint3;
+	MapRoutes.CAMP_bMid2 = MapRoutes.CHECKPOINT_Checkpoint3;
+	MapRoutes.CAMP_rMid1 = MapRoutes.CHECKPOINT_Checkpoint3;
+	MapRoutes.CAMP_rMid2 = MapRoutes.CHECKPOINT_Checkpoint3;
+	
+	Util.Routes( MapRoutes );
+	
+	yield();yield();
+	EntityKill(235);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	bot.ChangeSpawnPoint( 0 );
+};
