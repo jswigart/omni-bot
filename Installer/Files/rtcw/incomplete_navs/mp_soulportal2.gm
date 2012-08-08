@@ -1,5 +1,6 @@
 global Map =
 {
+	Debug = 1,
 	FocusPrimary = true,
 
 	Roles =
@@ -17,15 +18,18 @@ global Map =
 
 		ALLIES =
 		{
-			DEFENDER =
+			DEFENDER = // portal
 			{
 				spawnpt = 2,
 				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
-			
-			// TODO: add another for upper objective.
-			// once one is destroyed, shift to other 
+			DEFENDER1 = // train controls
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
 		},
 	},
 	
@@ -187,6 +191,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+			
+		Util.DisableGroup("b_portal", TEAM.ALLIES);
+		Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);		
 
 		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
 	},
@@ -195,6 +202,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		Util.DisableGroup("b_traincontrol", TEAM.ALLIES);
+		Util.EnableGroup("b_portalshift", TEAM.ALLIES);
 
 		Util.MapDebugPrint( "Supply_Train_Control_Board_Destroyed" );
 	},
@@ -375,16 +385,18 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
 
 	RTCWUtil.SetPrimaryGoals(1.0);
-	SetGoalPriority("CAMP_dual.*", 0.95);
+	SetGoalPriority("CAMP_.*", 0.95);
+	SetGoalPriority("MOUNTMG42_tr_mg", 0.95);
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_portal.*" );
+	Util.EnableGroup( "b_portal", TEAM.ALLIES ); // DEFENDER
+	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES ); // DEFENDER1
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_church.*" ); // TODO: shift when docs taken
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_church.*" ); // TODO: shift when docs taken
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();
