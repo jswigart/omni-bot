@@ -45,7 +45,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_church_10",
-		Orientation = Vec3(0.514, 0.010, 0.000),
+		Orientation = Vec3(0.514, 0.010, -0.000),
 		Position = Vec3(2324.000, 2657.000, 254.000),
 		Radius = 32,
 		Roles = 
@@ -254,7 +254,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_church_7",
-		Orientation = Vec3(1.442, -0.027, 0.000),
+		Orientation = Vec3(1.442, -0.027, -0.000),
 		Position = Vec3(2122.000, 1715.000, 193.000),
 		Radius = 32,
 		Roles = 
@@ -314,7 +314,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_church_9",
-		Orientation = Vec3(0.046, 0.125, 0.000),
+		Orientation = Vec3(0.046, 0.125, -0.000),
 		Position = Vec3(2375.000, 2610.000, 468.000),
 		Radius = 32,
 		Roles = 
@@ -939,6 +939,217 @@ global _MG =
 		Radius = 35,
 		Stance = "stand",
 		TagName = "eng_book2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.988, 0.157, 0.004),
+			[1] = Vec3(0.665, -0.747, 0.027),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver1",
+		Orientation = Vec3(-1.413, 0.004, -0.000),
+		Position = Vec3(-2825.000, -2875.000, 591.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rDeliver1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.975, -0.219, 0.036),
+			[1] = Vec3(0.907, 0.417, 0.065),
+			[2] = Vec3(0.703, 0.708, 0.070),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver2",
+		Orientation = Vec3(-1.791, 0.036, -0.000),
+		Position = Vec3(-2819.000, -3138.000, 591.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rDeliver2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.841, 0.538, -0.049),
+			[1] = Vec3(0.182, 0.983, -0.022),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver3",
+		Orientation = Vec3(-1.002, -0.049, -0.000),
+		Position = Vec3(-2604.000, -3293.000, 591.000),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "rDeliver3",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver4 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.998, -0.067, -0.018),
+			[1] = Vec3(0.178, -0.983, 0.040),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver4",
+		Orientation = Vec3(-1.638, -0.018, -0.000),
+		Position = Vec3(-2587.000, -2770.000, 591.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rDeliver4",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver5 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.290, -0.957, -0.003),
+			[1] = Vec3(0.999, -0.035, -0.013),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver5",
+		Orientation = Vec3(-2.847, -0.003, -0.000),
+		Position = Vec3(-2347.000, -2770.000, 427.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rDeliver5",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver6 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.998, -0.004, -0.055),
+			[1] = Vec3(0.444, 0.874, 0.195),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver6",
+		Orientation = Vec3(-1.575, -0.055, -0.000),
+		Position = Vec3(-2337.000, -3097.000, 427.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rDeliver6",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver7 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.017, 0.954, -0.300),
+			[1] = Vec3(0.487, 0.873, 0.010),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver7",
+		Orientation = Vec3(0.017, -0.304, 0.000),
+		Position = Vec3(-2406.000, -3293.000, 573.000),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "rDeliver7",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rDeliver8 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.143, -0.926, -0.350),
+			[1] = Vec3(0.086, -0.942, -0.323),
+			[2] = Vec3(-0.439, -0.883, -0.165),
+			[3] = Vec3(1.000, 0.029, 0.001),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rDeliver8",
+		Orientation = Vec3(-2.988, -0.357, -0.000),
+		Position = Vec3(-2269.000, -2852.000, 594.000),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "rDeliver8",
 		TeamAvailability = 30,
 		Version = 1,
 		Weapons = 
