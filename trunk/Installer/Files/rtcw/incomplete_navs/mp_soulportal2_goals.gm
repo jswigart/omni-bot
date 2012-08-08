@@ -4,12 +4,13 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.751, 0.582, -0.312),
+			[0] = Vec3(0.955, 0.220, -0.198),
+			[1] = Vec3(0.682, 0.562, -0.467),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
 		GoalType = "CAMP",
-		GroupName = "",
+		GroupName = "r_church1",
 		MaxCampTime = 20,
 		MinCampTime = 10,
 		MinRadius = 20,
@@ -29,16 +30,77 @@ global _MG =
 		{
 		},
 	},
-	CAMP_church_2 = 
+	CAMP_church_10 = 
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.703, -0.711, -0.000),
+			[0] = Vec3(-0.491, 0.871, 0.010),
+			[1] = Vec3(-0.033, 0.914, 0.404),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
 		GoalType = "CAMP",
-		GroupName = "",
+		GroupName = "r_church3",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_10",
+		Orientation = Vec3(0.514, 0.010, 0.000),
+		Position = Vec3(2324.000, 2657.000, 254.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_10",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_11 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.053, -0.999, 0.012),
+			[1] = Vec3(0.497, -0.060, 0.866),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church3",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_11",
+		Orientation = Vec3(-3.089, 0.012, -0.000),
+		Position = Vec3(2162.000, 3361.000, 254.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_11",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.514, -0.858, -0.023),
+			[1] = Vec3(-0.977, -0.212, -0.017),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church1",
 		MaxCampTime = 20,
 		MinCampTime = 10,
 		MinRadius = 35,
@@ -63,11 +125,12 @@ global _MG =
 		AimVectors = 
 		{
 			[0] = Vec3(-0.997, -0.069, -0.022),
+			[1] = Vec3(-0.969, 0.247, -0.014),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
 		GoalType = "CAMP",
-		GroupName = "",
+		GroupName = "r_church1",
 		MaxCampTime = 20,
 		MinCampTime = 10,
 		MinRadius = 35,
@@ -91,12 +154,13 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.457, -0.890, -0.000),
+			[0] = Vec3(0.036, -0.999, -0.006),
+			[1] = Vec3(0.954, -0.295, 0.047),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
 		GoalType = "CAMP",
-		GroupName = "",
+		GroupName = "r_church1",
 		MaxCampTime = 20,
 		MinCampTime = 10,
 		MinRadius = 35,
@@ -120,12 +184,13 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.662, 0.749, -0.000),
+			[0] = Vec3(0.128, 0.990, -0.055),
+			[1] = Vec3(0.965, 0.256, 0.059),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
 		GoalType = "CAMP",
-		GroupName = "",
+		GroupName = "r_church1",
 		MaxCampTime = 20,
 		MinCampTime = 10,
 		MinRadius = 35,
@@ -140,6 +205,125 @@ global _MG =
 		Stance = "crouch",
 		TagName = "church_5",
 		TeamAvailability = 0,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_6 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.259, -0.966, 0.024),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church2",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_6",
+		Orientation = Vec3(2.880, 0.024, -0.000),
+		Position = Vec3(2119.000, 2541.000, 140.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_6",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_7 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.991, 0.128, -0.027),
+			[1] = Vec3(-0.207, 0.978, -0.035),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church2",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_7",
+		Orientation = Vec3(1.442, -0.027, 0.000),
+		Position = Vec3(2122.000, 1715.000, 193.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_7",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_8 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.518, -0.837, 0.176),
+			[1] = Vec3(-0.476, 0.872, 0.116),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church2",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_8",
+		Orientation = Vec3(2.587, 0.177, -0.000),
+		Position = Vec3(2125.000, 2088.000, 140.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_8",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_church_9 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.046, 0.991, 0.125),
+			[1] = Vec3(-0.482, 0.798, -0.363),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "CAMP",
+		GroupName = "r_church3",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_church_9",
+		Orientation = Vec3(0.046, 0.125, 0.000),
+		Position = Vec3(2375.000, 2610.000, 468.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "church_9",
+		TeamAvailability = 30,
 		Version = 1,
 		Weapons = 
 		{
@@ -523,7 +707,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_traincontrol_shift1",
-		Orientation = Vec3(0.432, -0.020, 0.000),
+		Orientation = Vec3(0.432, -0.020, -0.000),
 		Position = Vec3(-2601.000, -975.000, 897.000),
 		Radius = 32,
 		Roles = 
@@ -583,7 +767,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_traincontrol_shift3",
-		Orientation = Vec3(-0.426, -0.000, -0.000),
+		Orientation = Vec3(-0.426, 0.000, -0.000),
 		Position = Vec3(-3930.000, -498.000, 897.000),
 		Radius = 32,
 		Roles = 
@@ -613,7 +797,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_traincontrol_shift4",
-		Orientation = Vec3(0.585, -0.009, 0.000),
+		Orientation = Vec3(0.585, -0.009, -0.000),
 		Position = Vec3(-2696.000, -1430.000, 897.000),
 		Radius = 32,
 		Roles = 
@@ -643,7 +827,7 @@ global _MG =
 		MinCampTime = 10,
 		MinRadius = 32,
 		Name = "CAMP_traincontrol_shift5",
-		Orientation = Vec3(0.201, 0.005, 0.000),
+		Orientation = Vec3(0.201, 0.005, -0.000),
 		Position = Vec3(-2912.000, -1699.000, 897.000),
 		Radius = 32,
 		Roles = 

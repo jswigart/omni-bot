@@ -2,6 +2,7 @@ global Map =
 {
 	Debug = 1,
 	FocusPrimary = true,
+	DocsTaken = false,
 
 	Roles =
 	{
@@ -11,7 +12,7 @@ global Map =
 			DEFENDER =
 			{
 				spawnpt = 1,
-				numbots = 4, // TODO: add more camp spots and increase
+				numbots = 7,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
@@ -157,7 +158,9 @@ global Map =
 		RTCWUtil.EnableGoal("CAPPOINT_.*");
 
 	        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_of_the_Dead" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_book.*" );
+		
+		Util.DisableGroup( "r_church2", TEAM.AXIS ); 
+		Util.EnableGroup( "r_church3", TEAM.AXIS ); 
 
 		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
 	},
@@ -193,7 +196,10 @@ global Map =
 			{ return; }
 			
 		Util.DisableGroup("b_portal", TEAM.ALLIES);
-		Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);		
+		
+		if (!Map.DocsTaken) {
+			Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);		
+		}
 
 		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
 	},
@@ -214,8 +220,18 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.DocsTaken = true;
 		Util.MapDebugPrint( "Book_of_the_Dead_Taken" );
 	},
+	
+	Book_of_the_Dead_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.DocsTaken = false;
+		Util.MapDebugPrint( "Book_of_the_Dead_Returned" );
+	},	
 
 	midflag_Axis_Captured = function( trigger )
 	{
@@ -370,6 +386,7 @@ global OnMapLoad = function()
 	OnTrigger( "The Hells Spawn Soul Portal Destroyed.", Map.Hells_Spawn_Soul_Portal_Destroyed );
 	OnTrigger( "Axis team has destoyed the Supply Train Control Panel", Map.Supply_Train_Control_Board_Destroyed );
 	OnTrigger( "Allies have stolen Book of the Dead!", Map.Book_of_the_Dead_Taken );
+	OnTrigger( "Flag returned Book of the Dead!", Map.Book_of_the_Dead_Returned );
 	OnTrigger( "Guardhouse checkpoint overtaken by Axis forces", Map.midflag_Axis_Captured );
 	OnTrigger( "Guardhouse checkpoint claimed by Allie forces", Map.midflag_Allies_Captured );
 	OnTrigger( "guardhousedoor_Opening", Map.guardhouse_door_open );
@@ -396,7 +413,8 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_church.*" ); // TODO: shift when docs taken
+	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
+	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed 
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();
