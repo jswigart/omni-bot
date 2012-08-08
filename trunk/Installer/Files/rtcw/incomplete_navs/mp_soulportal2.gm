@@ -3,6 +3,26 @@ global Map =
 	Debug = 1,
 	FocusPrimary = true,
 	DocsTaken = false,
+	ChurchDoorDestroyed = false,
+
+	docsEscaped =
+	{
+		Name = "docsEscaped",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+		},
+		OnExit = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_church.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+					Util.MapDebugPrint( "docs escaped" );
+				}
+			}
+		},
+	},
 
 	Roles =
 	{
@@ -33,7 +53,7 @@ global Map =
 			},
 		},
 	},
-	
+
 	Switches =
 	{
 		lever1 =
@@ -45,7 +65,7 @@ global Map =
 			//LimitBots = 2,
 			LimitClass = Util.AllClasses,
 		},
-		
+
 		lever2 =
 		{
 			Enabled = true,
@@ -87,7 +107,7 @@ global Map =
 		},
 
 	},
-	
+
 	Navigation =
 	{
 		towerladder =
@@ -96,8 +116,8 @@ global Map =
 			{
 				_this.Bot.HoldButton(BTN.FORWARD, 2);
 				sleep(2);
-			},			
-		},	
+			},
+		},
 		roofjump =
 		{
 			navigate = function(_this)
@@ -108,7 +128,7 @@ global Map =
 				sleep(0.25);
 				_this.Bot.HoldButton(BTN.STRAFE_L, 0.25);
 				sleep(0.75);
-			},			
+			},
 		},
 		grenadegrate =
 		{
@@ -146,7 +166,7 @@ global Map =
 	Mount_belltower = "MOUNTMG42_belltower",
 	Repair_tr_mg = "REPAIRMG42_tr_mg",
 	Repair_belltower = "REPAIRMG42_belltower",
-	
+
 	Grate_Destroyed = false,
 	Grate_Bot_Count = 0,
 
@@ -155,12 +175,13 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		Map.ChurchDoorDestroyed = true;
 		RTCWUtil.EnableGoal("CAPPOINT_.*");
 
 	        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_of_the_Dead" );
-		
-		Util.DisableGroup( "r_church2", TEAM.AXIS ); 
-		Util.EnableGroup( "r_church3", TEAM.AXIS ); 
+
+		Util.DisableGroup( "r_church2", TEAM.AXIS );
+		Util.EnableGroup( "r_church3", TEAM.AXIS );
 
 		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
 	},
@@ -194,11 +215,11 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
+
 		Util.DisableGroup("b_portal", TEAM.ALLIES);
-		
+
 		if (!Map.DocsTaken) {
-			Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);		
+			Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);
 		}
 
 		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
@@ -208,7 +229,7 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-		
+
 		Util.DisableGroup("b_traincontrol", TEAM.ALLIES);
 		Util.EnableGroup("b_portalshift", TEAM.ALLIES);
 
@@ -221,17 +242,32 @@ global Map =
 			{ return; }
 
 		Map.DocsTaken = true;
+
+		// see docsEscaped region trigger for axis shift logic
+
 		Util.MapDebugPrint( "Book_of_the_Dead_Taken" );
 	},
-	
+
 	Book_of_the_Dead_Returned = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
 		Map.DocsTaken = false;
+
+		Util.EnableGroup( "r_church1", TEAM.AXIS );
+
+		if (Map.ChurchDoorDestroyed) {
+			Util.EnableGroup( "r_church3", TEAM.AXIS );
+		}
+		else {
+			Util.EnableGroup( "r_church2", TEAM.AXIS );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
+
 		Util.MapDebugPrint( "Book_of_the_Dead_Returned" );
-	},	
+	},
 
 	midflag_Axis_Captured = function( trigger )
 	{
@@ -256,7 +292,7 @@ global Map =
 
 		Map.Switches.lever3.Enabled = false;
 
-		Util.MapDebugPrint("guardhouse door opening");	
+		Util.MapDebugPrint("guardhouse door opening");
  	},
 
  	guardhouse_door_closed = function( trigger )
@@ -277,7 +313,7 @@ global Map =
 		Map.Switches.lever1.Enabled = false;
 		Map.Switches.lever2.Enabled = false;
 
-		Util.MapDebugPrint("main door opening");	
+		Util.MapDebugPrint("main door opening");
  	},
 
  	main_door_closed = function( trigger )
@@ -299,7 +335,7 @@ global Map =
 		sleep(1.7);
 		Map.Switches.lift1.Enabled = false;
 
-		Util.MapDebugPrint("lift1 down");	
+		Util.MapDebugPrint("lift1 down");
  	},
 
  	lift1_up = function( trigger )
@@ -320,7 +356,7 @@ global Map =
 		sleep(2);
 		Map.Switches.lift2.Enabled = false;
 
-		Util.MapDebugPrint("lift2 down");	
+		Util.MapDebugPrint("lift2 down");
  	},
 
  	lift2_up = function( trigger )
@@ -332,7 +368,7 @@ global Map =
 
 		Util.MapDebugPrint("lift2 up");
  	},
-	
+
 	check_grate = function()
 	{
 		wpOne = {};
@@ -340,26 +376,26 @@ global Map =
 		Wp.GetWaypointByName("barrier1", wpOne);
 		Wp.GetWaypointByName("barrier1_1", wpTwo);
 		offset = Vector3(0,0,10);
-		
+
 		while( !Map.Grate_Destroyed )
 		{
-			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false ); 
-			
+			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false );
+
 			 if ( tr.fraction < 1 )
 			 {
 				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.RED, 0.25);
 			 }
-			 else 
+			 else
 			 {
 				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25);
 				Map.Grate_Destroyed = true;
-				
+
 				// enable route or whatever here
 			 }
-			 
+
 			 sleep(0.25);
 		}
-		
+
 		Util.MapDebugPrint( "grate_destroyed" );
 	},
 };
@@ -370,10 +406,10 @@ global OnMapLoad = function()
 	Util.RemoveGoal("PLANT_sewer_grate_2");
 	Util.RemoveGoal("PLANT_sewer_grate_3");
 	Util.RemoveGoal("PLANT_sewer_grate_4");
-	
+
 	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book1");
 	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book2");
-	
+
 	thread(Map.check_grate);
 
 	if ( TestMapOn )
@@ -397,12 +433,19 @@ global OnMapLoad = function()
 	OnTrigger( "423_Closing", Map.lift1_up );
 	OnTrigger( "375_Opening", Map.lift2_down );
 	OnTrigger( "375_Closing", Map.lift2_up );
- 
+
+	// docs escaped triggers
+	roof = OnTriggerRegion(AABB(2041.000,3087.000,673.000,2431.000,3507.000,747.000),Map.docsEscaped);
+	belltower = OnTriggerRegion(AABB(612.000,2911.000,873.000,878.000,3102.000,993.000),Map.docsEscaped);
+	frontdoor = OnTriggerRegion(AABB(637.000,2879.000,193.000,858.000,3136.000,267.000),Map.docsEscaped);
+	sidedoor = OnTriggerRegion(AABB(1701.000,2439.000,208.000,1825.000,2594.000,334.000),Map.docsEscaped);
+
 	RTCWUtil.DisableGoal(".*", true); //all but routes
 	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
 
 	RTCWUtil.SetPrimaryGoals(1.0);
 	SetGoalPriority("CAMP_.*", 0.95);
+	SetGoalPriority("DEFEND_rDeliver.*", 0.7);
 	SetGoalPriority("MOUNTMG42_tr_mg", 0.95);
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
@@ -414,11 +457,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
 	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
-	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed 
+	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();
-	
+
 	RTCWUtil.KillEntities( { 341 } );
 
 	Util.MapDebugPrint( "OnMapLoad" );
@@ -426,5 +469,5 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 80.0;
 };
