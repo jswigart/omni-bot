@@ -22,7 +22,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_church_1",
+		TagName = "church_1",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -51,7 +51,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_church_2",
+		TagName = "church_2",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -80,7 +80,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_church_3",
+		TagName = "church_3",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -109,7 +109,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_church_4",
+		TagName = "church_4",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -138,7 +138,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_church_5",
+		TagName = "church_5",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -168,7 +168,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_portal_1",
+		TagName = "portal_1",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -198,7 +198,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_portal_2",
+		TagName = "portal_2",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -228,7 +228,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "stand",
-		TagName = "dual_portal_3",
+		TagName = "portal_3",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -258,7 +258,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_portal_4",
+		TagName = "portal_4",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
@@ -288,7 +288,7 @@ global _MG =
 			[0] = "DEFENDER",
 		},
 		Stance = "crouch",
-		TagName = "dual_portal_5",
+		TagName = "portal_5",
 		TeamAvailability = 0,
 		Version = 1,
 		Weapons = 
