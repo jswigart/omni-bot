@@ -1,3 +1,10 @@
+/*
+TODO:
+  routing
+  role for dedicated checkpoint bots
+  snipers
+  artillery and airstrikes
+*/
 global Map =
 {
 	Debug = 1,
@@ -35,10 +42,17 @@ global Map =
 				numbots = 7,
 				crucialClass = CLASS.ENGINEER,
 			},
+			ATTACKER =
+			{
+				spawnpt = 1,
+				numbots = 7,
+				crucialClass = CLASS.ENGINEER,
+			},
 		},
 
 		ALLIES =
 		{
+			AllBots = true,
 			DEFENDER = // portal
 			{
 				spawnpt = 2,
@@ -49,6 +63,12 @@ global Map =
 			{
 				spawnpt = 2,
 				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				spawnpt = 1,
+				numbots = 7,
 				crucialClass = CLASS.ENGINEER,
 			},
 		},
@@ -64,6 +84,7 @@ global Map =
 			LimitTeam = Util.AllTeams,
 			//LimitBots = 2,
 			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-1785.87, -1000.386, 326.974),
 		},
 
 		lever2 =
@@ -74,6 +95,7 @@ global Map =
 			LimitTeam = Util.AllTeams,
 			//LimitBots = 2,
 			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-1338.125, 73.323, 338.281),
 		},
 
 		lever3 =
@@ -84,6 +106,7 @@ global Map =
 			LimitTeam = Util.AllTeams,
 			//LimitBots = 2,
 			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(2921.875, -1452.641, 1132.969),
 		},
 
 		lift1 =
@@ -181,7 +204,12 @@ global Map =
 	        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_of_the_Dead" );
 
 		Util.DisableGroup( "r_church2", TEAM.AXIS );
-		Util.EnableGroup( "r_church3", TEAM.AXIS );
+
+		if ( !Map.DocsTaken ) {
+			Util.EnableGroup( "r_church3", TEAM.AXIS );
+		}
+
+		Util.DisableGroup( "b_church", TEAM.ALLIES );
 
 		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
 	},
@@ -217,10 +245,10 @@ global Map =
 			{ return; }
 
 		Util.DisableGroup("b_portal", TEAM.ALLIES);
+		Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);
 
-		if (!Map.DocsTaken) {
-			Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);
-		}
+		Util.DisableGroup( "r_portal", TEAM.AXIS );
+		Util.EnableGroup( "r_traincontrol_shift", TEAM.AXIS );
 
 		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
 	},
@@ -233,6 +261,9 @@ global Map =
 		Util.DisableGroup("b_traincontrol", TEAM.ALLIES);
 		Util.EnableGroup("b_portalshift", TEAM.ALLIES);
 
+		Util.DisableGroup( "r_traincontrol", TEAM.AXIS );
+		Util.EnableGroup( "r_portal_shift", TEAM.AXIS );
+
 		Util.MapDebugPrint( "Supply_Train_Control_Board_Destroyed" );
 	},
 
@@ -244,6 +275,8 @@ global Map =
 		Map.DocsTaken = true;
 
 		// see docsEscaped region trigger for axis shift logic
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDeliver.*" );
 
 		Util.MapDebugPrint( "Book_of_the_Dead_Taken" );
 	},
@@ -265,6 +298,7 @@ global Map =
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDeliver.*" );
 
 		Util.MapDebugPrint( "Book_of_the_Dead_Returned" );
 	},
@@ -406,6 +440,7 @@ global OnMapLoad = function()
 	Util.RemoveGoal("PLANT_sewer_grate_2");
 	Util.RemoveGoal("PLANT_sewer_grate_3");
 	Util.RemoveGoal("PLANT_sewer_grate_4");
+	Util.RemoveGoal("PLANT_223");
 
 	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book1");
 	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book2");
@@ -446,18 +481,24 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals(1.0);
 	SetGoalPriority("CAMP_.*", 0.95);
 	SetGoalPriority("DEFEND_rDeliver.*", 0.7);
+	SetGoalPriority("DEFEND_bDeliver.*", 0.7);
+	SetGoalPriority("PLANT_sewer_grate", 0.93); // do this first since it is near spawn
 	SetGoalPriority("MOUNTMG42_tr_mg", 0.95);
+	SetGoalPriority("CHECKPOINT.*", 0.4); // all of the overflow bots will fight over it
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
-	Util.EnableGroup( "b_portal", TEAM.ALLIES ); // DEFENDER
-	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES ); // DEFENDER1
+	Util.EnableGroup( "b_portal", TEAM.ALLIES );
+	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES );
+	Util.EnableGroup( "b_church", TEAM.ALLIES );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
 	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
 	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
+	Util.EnableGroup( "r_traincontrol", TEAM.AXIS );
+	Util.EnableGroup( "r_portal", TEAM.AXIS );
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();

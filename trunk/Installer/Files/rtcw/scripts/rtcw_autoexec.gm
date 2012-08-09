@@ -18,6 +18,14 @@ global ClassManager = import("rtcw_classmanager");
 global DEBUG_MAP_SCRIPTS = false;
 global DEBUG_GOAL_AVAILABILITY = false;
 
+global DEBUG_SCRIPT_GOALS = false;
+global DEBUG_SCRIPT_GOALS_FILTER = {};
+DEBUG_SCRIPT_GOALS_FILTER["pathfailed"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["timedout"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["disabled"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["regiontrigger"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["initialized"] = 1;
+
 global DisableClassManager = false;
 
 global MAP_TALK = true; // end round chats.
