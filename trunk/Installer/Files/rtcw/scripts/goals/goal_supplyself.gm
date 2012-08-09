@@ -16,7 +16,7 @@ this.Initialize = function()
 	this.HealthThreshold = 50.0;
 	this.DelayBetweenCalls = 15.0;
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

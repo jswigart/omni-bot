@@ -29,7 +29,7 @@ this.Initialize = function()
 
 	this.Bot.hadtarget = false;
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.GetPriority = function()

@@ -1,8 +1,14 @@
 // This script contains functionality to prioritize living targets over injured targets and ignore invulnerable ones
 
+// cs: this script is pretty expensive.
+//     ents should be filter in SensoryMemory in bot lib
+
+
 // These parameters are required
 this.Name = "PrioritizeTarget";		// The name of the goal.
 this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.DistanceLimited = true;   // might want to disable this.
 
 this.LimitToTargetClass( CLASS.ANYPLAYER );
 
@@ -11,21 +17,26 @@ this.GetPriority = function()
 	ignore = false;
 	t = this.Bot.GetTarget();
 
-	if ( GetEntFlags(t, ENTFLAG.INJURED) ) {
-		if ( this.Bot.DistanceTo(t) > 400 ) {
+	if ( t ) {
+		if ( this.DistanceLimited && GetEntFlags(t, ENTFLAG.INJURED) ) {
+			if ( this.Bot.DistanceTo(t) > 400 ) {
+				ignore = true;
+			}
+			else {
+				this.Priority = 1.0; // so it can enter and exit
+			}
+		}
+		else if ( GetEntPowerups(t, POWERUP.INVINCIBLE) ) {
 			ignore = true;
 		}
-		else {
-			this.Priority = 1.0; // so it can enter and exit
+
+		if (ignore) {
+			this.Bot.IgnoreTarget(t , this.Bot.AimPersistance);
 		}
-	}
-	else if ( GetEntPowerups(t, POWERUP.INVINCIBLE) ) {
-		ignore = true;
+	
 	}
 
-	if (ignore) {
-		this.Bot.IgnoreTarget(t , this.Bot.AimPersistance);
-	}
+	yield();
 };
 
 this.Enter = function()
@@ -45,5 +56,6 @@ this.Update = function()
 
 this.Exit = function()
 {
+	this.Target = null;
 	this.Bot.ReleaseButton(BTN.CROUCH);
 };
