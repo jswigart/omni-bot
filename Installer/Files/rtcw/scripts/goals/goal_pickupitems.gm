@@ -21,7 +21,7 @@ this.Initialize = function()
 	this.Bot.AmmoTable = {};
 	this.Bot.AmmoInfo = {};
 
-	Util.MapDebugPrint( this.Name + " Initialized", true );
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

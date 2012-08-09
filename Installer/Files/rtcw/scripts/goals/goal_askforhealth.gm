@@ -29,7 +29,7 @@ this.Initialize = function()
 		this.HealthThreshold = 200;
 	}
 
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.Enter = function()

@@ -21,7 +21,7 @@ this.REVIVE_TARGET = 4;
 this.Initialize = function()
 {
 	this.Respond = false;
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.GetPriority = function()

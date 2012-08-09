@@ -11,7 +11,7 @@ this.LimitToNoTarget();
 
 this.Initialize = function()
 {
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 // This callback is called when the bot spawns into the game. You may run this function as a thread,
