@@ -1,13 +1,12 @@
 /*
 TODO:
   routing
-  role for dedicated checkpoint bots
   snipers
   artillery and airstrikes
 */
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	FocusPrimary = true,
 	DocsTaken = false,
 	ChurchDoorDestroyed = false,
@@ -36,17 +35,24 @@ global Map =
 		AXIS =
 		{
 			AllBots = true,
-			DEFENDER =
+			DEFENDER = // church
+			{
+				spawnpt = 3,
+				numbots = 7,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER = // portal and train controls
 			{
 				spawnpt = 1,
 				numbots = 7,
 				crucialClass = CLASS.ENGINEER,
 			},
-			ATTACKER =
+			ATTACKER2 = // checkpoint
 			{
+				MinBotsForRole = 8,
 				spawnpt = 1,
-				numbots = 7,
-				crucialClass = CLASS.ENGINEER,
+				numbots = 3,
+				crucialClass = CLASS.LIEUTENANT, // a/s the spawn
 			},
 		},
 
@@ -65,11 +71,18 @@ global Map =
 				numbots = 3,
 				crucialClass = CLASS.ENGINEER,
 			},
-			ATTACKER =
+			ATTACKER = // church
 			{
 				spawnpt = 1,
 				numbots = 7,
 				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER2 = // checkpoint
+			{
+				MinBotsForRole = 8,
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.MEDIC,
 			},
 		},
 	},
@@ -475,6 +488,8 @@ global OnMapLoad = function()
 	frontdoor = OnTriggerRegion(AABB(637.000,2879.000,193.000,858.000,3136.000,267.000),Map.docsEscaped);
 	sidedoor = OnTriggerRegion(AABB(1701.000,2439.000,208.000,1825.000,2594.000,334.000),Map.docsEscaped);
 
+	cm2 = OnTriggerRegion(AABB(1621.000,2315.000,140.000,1988.000,2766.000,323.000),RegionTrigger.DisableCombatMovement);
+
 	RTCWUtil.DisableGoal(".*", true); //all but routes
 	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
 
@@ -483,8 +498,11 @@ global OnMapLoad = function()
 	SetGoalPriority("DEFEND_rDeliver.*", 0.7);
 	SetGoalPriority("DEFEND_bDeliver.*", 0.7);
 	SetGoalPriority("PLANT_sewer_grate", 0.93); // do this first since it is near spawn
+	SetGoalPriority("PLANT_Guardhouse_Door", 0.93);
 	SetGoalPriority("MOUNTMG42_tr_mg", 0.95);
-	SetGoalPriority("CHECKPOINT.*", 0.4); // all of the overflow bots will fight over it
+	SetGoalPriority("CHECKPOINT.*", 0.61);
+
+	Util.SetMaxUsers( 1, "PLANT_Guardhouse_Door" );
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
@@ -492,23 +510,39 @@ global OnMapLoad = function()
 	Util.EnableGroup( "b_portal", TEAM.ALLIES );
 	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES );
 	Util.EnableGroup( "b_church", TEAM.ALLIES );
+	Util.EnableGroup( "b_checkpoint", TEAM.ALLIES ); // dedicated checkpoint team
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guardhouse_Door" );
 	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
 	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
 	Util.EnableGroup( "r_traincontrol", TEAM.AXIS );
 	Util.EnableGroup( "r_portal", TEAM.AXIS );
+	Util.EnableGroup( "r_checkpoint", TEAM.AXIS ); // dedicated checkpoint team
 
 	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
 	Util.UpdateSwitchData();
 
 	RTCWUtil.KillEntities( { 341 } );
 
+	InitializeRoutes(); // TODO: should be called from bot lib
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 80.0;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CHECKPOINT_midflag =
+		{
+			ROUTE_alliedspawn = { ROUTE_portalsteps1 = { ROUTE_portalhall1 = { ROUTE_portalhall2 = {}, }, }, },
+		},
+	};
+	Util.Routes(MapRoutes);
 };
