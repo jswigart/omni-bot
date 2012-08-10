@@ -632,23 +632,6 @@ member IsPlantGoalAvailable = function()
 	return false;
 };
 
-member ManageEngineers = function( delay )
-{
-	while ( 1 )
-	{
-		if ( RTCWUtil.IsPlantGoalAvailable() ) {
-			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 1;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
-		} else // no plant goals = no engineers
-		{
-			Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 0;
-			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 0;
-		}
-
-		sleep( delay );
-	}
-};
-
 member IsTeamDead = function( team, minbots )
 {
 	numalive = 0;
