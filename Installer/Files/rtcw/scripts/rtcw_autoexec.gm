@@ -35,7 +35,6 @@ global PostMapLoad = function()
 {
 	OnTrigger("Round End.", RoundEnd);
 	Util.ProcessMovers();
-	thread( RTCWUtil.ManageEngineers, 5 );
 
 	// set up the minimum class counts for the game
 	if ( !Util.ClassTablesInitialized ) {
