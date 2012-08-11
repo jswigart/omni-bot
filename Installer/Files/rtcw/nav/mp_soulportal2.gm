@@ -8,7 +8,6 @@ global Map =
 
 	Classes = function()
 	{
-		print("running");
 		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
 		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
 		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 5;
@@ -83,12 +82,12 @@ global Map =
 			DEFENDER1 = // train controls
 			{
 				spawnpt = 2,
-				numbots = 3,
+				numbots = 4,
 				crucialClass = CLASS.ENGINEER,
 			},
 			ATTACKER2 = // checkpoint
 			{
-				MinBotsForRole = 8,
+				MinBotsForRole = 10,
 				spawnpt = 1,
 				numbots = 3,
 				crucialClass = CLASS.LIEUTENANT,
