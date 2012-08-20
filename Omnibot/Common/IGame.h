@@ -113,7 +113,7 @@ public:
 
 	virtual void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 	
-	virtual void CheckServerSettings();
+	virtual void CheckServerSettings(bool managePlayers = true);
 
 	inline bool DrawBlockableTests()				{ return m_bDrawBlockableTests; }
 
@@ -240,6 +240,7 @@ protected:
 
 	// Server settings
 	RegulatorPtr	m_SettingLimiter;
+	bool			m_PlayersChanged;
 
 	// Misc
 	bool			m_bDrawBlockableTests;
