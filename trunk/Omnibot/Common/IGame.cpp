@@ -642,9 +642,15 @@ void IGame::UpdateGame()
 
 	CheckGameState();
 
-	// TODO regulate the frequency this runs.
-	if(m_GameFrame > 0 && m_SettingLimiter && m_SettingLimiter->IsReady())
-		CheckServerSettings();
+	if(m_GameFrame > 0)
+	{
+		if(m_SettingLimiter && m_SettingLimiter->IsReady())
+			CheckServerSettings(true);
+		else if(m_PlayersChanged)
+			CheckServerSettings(false);
+		m_PlayersChanged = false;
+	}
+
 
 	// Check if we're dead or alive so we know what update function to call.
 	if(m_StateRoot)
@@ -779,12 +785,14 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 		{
 			const Event_SystemClientConnected *m = _message.Get<Event_SystemClientConnected>();
 			ClientJoined(m);
+			m_PlayersChanged = true;
 			break;
 		}
 	case GAME_CLIENTDISCONNECTED:
 		{
 			const Event_SystemClientDisConnected *m = _message.Get<Event_SystemClientDisConnected>();
 			ClientLeft(m);
+			m_PlayersChanged = true;
 			break;
 		}
 	case GAME_ENTITYCREATED:
@@ -1136,7 +1144,7 @@ void IGame::UpdateTime()
 	m_GameMsec = iCurrentTime;
 }
 
-void IGame::CheckServerSettings()
+void IGame::CheckServerSettings(bool managePlayers)
 {
 	Prof(CheckServerSettings);
 
@@ -1187,10 +1195,13 @@ void IGame::CheckServerSettings()
 		}
 	}
 
-	gmCall call;
-	if(call.BeginGlobalFunction(pM,"ManagePlayers"))
+	if(managePlayers)
 	{
-		call.End();
+		gmCall call;
+		if(call.BeginGlobalFunction(pM,"ManagePlayers"))
+		{
+			call.End();
+		}
 	}
 }
 
