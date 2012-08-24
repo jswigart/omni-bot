@@ -1561,6 +1561,11 @@ bool PathPlannerWaypoint::_ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2)
 		info.m_Connection = _wp2;
 		info.m_ConnectionFlags = 0;
 		_wp1->m_Connections.push_back(info);
+
+		if(_wp1->IsAnyFlagOn(m_BlockableMask) && _wp2->IsAnyFlagOn(m_BlockableMask))
+		{
+			m_BlockableList.push_back(std::make_pair(_wp1, &_wp1->m_Connections.back()));
+		}
 		return true;
 	}
 	return false;
