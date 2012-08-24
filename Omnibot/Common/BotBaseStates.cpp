@@ -1239,6 +1239,7 @@ namespace AiState
 			{
 				// paththrough called Goto,
 				// save HighLevel goal's query
+				OBASSERT(!m_SavedQuery.m_User, "m_SavedQuery overwritten");
 				SaveQuery();
 			}
 			else if(m_Query.m_User && m_Query.m_User->GetFollowUserName() == m_PassThroughState)
@@ -1288,7 +1289,7 @@ namespace AiState
 		{
 			m_PathStatus = PathNotFound;
 			NotifyUserFailed(FollowPathUser::NoPath);
-			m_Query.m_User = 0;
+			if(!m_PassThroughState) m_Query.m_User = 0;
 		}
 		return m_PathStatus < PathFinished;
 	}
