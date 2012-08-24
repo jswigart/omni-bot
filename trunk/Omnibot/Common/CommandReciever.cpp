@@ -85,16 +85,17 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 				{
 					for(obuint32 i = 1; i < _args.size(); ++i) 
 					{
-						int iNum;
+						char *endPtr;
+						const char *startPtr = _args[i].c_str();
+						long iNum = strtol(startPtr, &endPtr, 10);
 						double dNum;
-
-						if(Utils::ConvertString(_args[i], dNum))
+						if(endPtr != startPtr && !*endPtr)
+						{
+							pParamTable->Set(m_Machine, i-1, gmVariable((int)iNum));
+						}
+						else if(Utils::ConvertString(_args[i], dNum))
 						{
 							pParamTable->Set(m_Machine, i-1, gmVariable((float)dNum));
-						}
-						else if(Utils::ConvertString(_args[i], iNum))
-						{
-							pParamTable->Set(m_Machine, i-1, gmVariable(iNum));
 						}
 						else
 						{
