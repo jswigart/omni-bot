@@ -97,8 +97,6 @@ void Client::Update()
 	EngineFuncs::EntityWorldOBB(m_GameEntity, m_WorldBounds);
 	EngineFuncs::EntityGroundEntity(m_GameEntity, m_MoveEntity);
 
-	CheckStuck();
-
 	// Update the bots orientation if we haven't turned this frame(script might be controlling)
 	EngineFuncs::EntityOrientation(m_GameEntity, m_FacingVector, m_RightVector, m_UpVector);
 	m_Orientation = Matrix3f(m_RightVector,m_FacingVector,m_UpVector, true);
@@ -125,6 +123,8 @@ void Client::Update()
 	}
 	else
 	{
+		CheckStuck();
+
 		// Check for various events.
 		CheckTeamEvent();
 		CheckClassEvent();
