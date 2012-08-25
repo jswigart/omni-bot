@@ -2716,6 +2716,13 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 				if ( pWho->s.eType == ET_EXPLOSIVE ) {
 					func_explosive_explode(pWho, 0, 0, 1000, MOD_GRENADE);
 				}
+				else if (pWho->spawnflags & AXIS_OBJECTIVE || pWho->spawnflags & AXIS_OBJECTIVE) { // trigger_objective_info's
+					G_UseTargets( pWho,  NULL );
+					pWho->think = G_FreeEntity;
+					pWho->nextthink = level.time + FRAMETIME;
+
+					G_Script_ScriptEvent( pWho, "destroyed", "" );
+				}
 				else if ( pWho->takedamage ) {
 					G_Damage( pWho, NULL, NULL, NULL, NULL, 100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG );
 				}
