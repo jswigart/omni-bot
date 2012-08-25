@@ -41,19 +41,19 @@ void PathPlannerWaypoint::InitCommands()
 		this, &PathPlannerWaypoint::cmdWaypointLoad);
 	SetEx("waypoint_autobuild", "Auto-connect waypoints", 
 		this, &PathPlannerWaypoint::cmdWaypointAutoBuild);
-	SetEx("waypoint_addflag", "Adds a navigation flag to this waypoint", 
+	SetEx("waypoint_addflag", "Adds or removes navigation flags to this waypoint", 
 		this, &PathPlannerWaypoint::cmdWaypointAddFlag);
-	SetEx("waypoint_addflagx", "Adds a navigation flag to the waypoint in crosshairs", 
+	SetEx("waypoint_addflagx", "Adds or removes navigation flags to the waypoint in crosshairs", 
 		this, &PathPlannerWaypoint::cmdWaypointAddFlagX);
-	SetEx("waypoint_clearallflags", "Clears the flags from all waypoints", 
+	SetEx("waypoint_clearallflags", "Clears the flags from all or selected waypoints", 
 		this, &PathPlannerWaypoint::cmdWaypointClearAllFlags);
 	SetEx("waypoint_dcall", "Disconnect all waypoints", 
 		this, &PathPlannerWaypoint::cmdWaypointDisconnectAll);
 	SetEx("waypoint_view", "Turn on/off waypoint visibility", 
 		this, &PathPlannerWaypoint::cmdWaypointView);
-	SetEx("waypoint_autoflag", "Turn on/off waypoint visibility", 
+	SetEx("waypoint_autoflag", "Turn on/off waypoint auto flagging, not used", 
 		this, &PathPlannerWaypoint::cmdWaypointAutoFlag);
-	SetEx("waypoint_viewfacing", "Turn on/off waypoint auto flagging", 
+	SetEx("waypoint_viewfacing", "Turn on/off rendering of the facing vector", 
 		this, &PathPlannerWaypoint::cmdWaypointViewFacing);
 	SetEx("waypoint_connect", "Create a path between 2 waypoints", 
 		this, &PathPlannerWaypoint::cmdWaypointConnect);
@@ -101,9 +101,9 @@ void PathPlannerWaypoint::InitCommands()
 		this, &PathPlannerWaypoint::cmdWaypointColor);
 	SetEx("waypoint_select", "Select all waypoints within a radius.", 
 		this, &PathPlannerWaypoint::cmdSelectWaypoints);
-	SetEx("waypoint_lockselected", "Select all waypoints within a radius.", 
+	SetEx("waypoint_lockselected", "Selected waypoints will not be moved by waypoint_translate.", 
 		this, &PathPlannerWaypoint::cmdLockSelected);
-	SetEx("waypoint_unlockall", "Select all waypoints within a radius.", 
+	SetEx("waypoint_unlockall", "Unlocks all waypoints.", 
 		this, &PathPlannerWaypoint::cmdUnlockAll);
 	SetEx("waypoint_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.", 
 		this, &PathPlannerWaypoint::cmdAutoBuildFeatures);
