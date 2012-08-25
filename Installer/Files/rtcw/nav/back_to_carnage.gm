@@ -21,6 +21,7 @@ global Map =
 	Mount_t364 = "MOUNTMG42_t364",      // Back Bunker 2
 	Mount_t382 = "MOUNTMG42_t382",      // Front bunker - forwards
 	Mount_t383 = "MOUNTMG42_t383",      // Front bunker - side
+
 	GateStatus = false,
 	StairStatus = false,
 	TrenchStatus = false,
@@ -29,6 +30,7 @@ global Map =
 	RadioStatus = false,
 	WallStatus = false,
 	DontDispenseAmmo = true,
+	RemoveFirstWall = true,
 
 	bPanzers = 0,
 	bSnipers = 0,
@@ -74,7 +76,7 @@ global Map =
 		if ( TestMap ) {
 			return;
 		}
-		
+
 		// Axis should not go into the trenches...at all
 		Wp.SetWaypointFlag( "walljump1", "allies", false );
 		Wp.SetWaypointFlag( "walljump2", "allies", false );
@@ -87,7 +89,7 @@ global Map =
 		}
 
 		Map.GateStatus = true;
-		
+
 		// Axis should not go into the trenches...at all
 		Wp.SetWaypointFlag( "walljump1", "allies", true );
 		Wp.SetWaypointFlag( "walljump2", "allies", true );
@@ -143,7 +145,7 @@ global Map =
 
 		Map.StairStatus = true;
 		Util.EnableGoal( "ROUTE_steps" );
-		
+
 		Wp.SetWaypointFlag( "stairgate", "allies", true );
 	},
 
@@ -186,7 +188,7 @@ global Map =
 		}
 
 		Map.BunkerDoorStatus = true;
-		
+
 		// Axis should not be in the trenches
 		Wp.SetWaypointFlag( "bunkerdoor", "allies", true );
 
@@ -257,7 +259,7 @@ global Map =
 
 		Map.TrenchStatus = true;
 		RTCWUtil.StopSniping();     // Push on OBJs now
-		
+
 		// Axis should not go into the trenches...at all
 		Wp.SetWaypointFlag( "walljump1", "allies", true );
 		Wp.SetWaypointFlag( "walljump2", "allies", true );
@@ -499,7 +501,12 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bGenerator_5 = MapRoutes.ATTACK_bGenerator_1;
 	MapRoutes.ATTACK_bGenerator_6 = MapRoutes.ATTACK_bGenerator_1;
 	Util.Routes( MapRoutes );
-	print( "OnMapLoad" );
+
+	if (Map.RemoveFirstWall) {
+		EntityKill(217);
+	}
+
+	Util.MapDebugPrint( "OnMapLoad" );
 };
 
 global OnBotJoin = function( bot )
