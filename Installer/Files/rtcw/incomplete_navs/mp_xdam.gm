@@ -1,14 +1,6 @@
 global Map =
 {
-	Checkpoint_the_flag = "CHECKPOINT_the_flag",
-	Flag_Research_Documents = "FLAG_Research_Documents",
-	Plant_Blocked_Dam_Door = "PLANT_Blocked_Dam_Door",
-	Plant_Service_Entrance = "PLANT_Service_Entrance",
-	Plant_X_Lab_equipment = "PLANT_X_Lab_equipment",
-	Mount_193 = "MOUNTMG42_193",
-	Mount_5 = "MOUNTMG42_5",
-	Repair_193 = "REPAIRMG42_193",
-	Repair_5 = "REPAIRMG42_5",
+	DontDispenseAmmo = true,
 
 	Blocked_Dam_Door_Destroyed = function( trigger )
 	{
@@ -24,6 +16,8 @@ global Map =
 			{ return; }
 
 		print( "Service_Entrance_Destroyed" );
+		
+		// Axis need to switch to spawn pt 101 if they have the flag
 	},
 
 	X_Lab_equipment_Destroyed = function( trigger )
@@ -48,6 +42,7 @@ global Map =
 			{ return; }
 
 		print( "the_flag_Axis_Captured" );
+		// Axis need to switch to spawn pt 101 if service entrance is blown
 	},
 
 	the_flag_Allies_Captured = function( trigger )
@@ -73,9 +68,19 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.the_flag_Allies_Captured );
 	
 	RTCWUtil.SetPrimaryGoals( 1.0 );
+	
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	Util.DisableGoal( ".*", true ); //all but routes
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Blocked_Dam_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Service_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Research_Documents" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
 };

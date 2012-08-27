@@ -1,6 +1,6 @@
 global Map =
 {
-	Debug = 0, // please set to zero before distributing your script
+	Debug = 1, // please set to zero before distributing your script
 	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
@@ -47,7 +47,8 @@ global Map =
 			{ return; }
 		sleep(15);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bRoad.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bHospital.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHangar.*" );
 		Util.MapDebugPrint( "Sewer_Entrance_Destroyed" );
 	},
 	
