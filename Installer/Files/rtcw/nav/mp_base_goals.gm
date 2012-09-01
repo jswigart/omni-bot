@@ -36,7 +36,7 @@ global _MG =
 		MinRadius = 0,
 		Name = "ARTILLERY_S_bSouthArty",
 		Orientation = Vec3(-2.347, -1.533, -0.000),
-		Position = Vec3(1325.631, 781.694, 425.442),
+		Position = Vec3(1321.463, 785.993, 446.704),
 		Radius = 10,
 		TagName = "bSouthArty",
 		TeamAvailability = 30,
@@ -280,7 +280,7 @@ global _MG =
 			[0] = Vec3(0.582, 0.759, -0.292),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Attack",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -305,7 +305,7 @@ global _MG =
 			[0] = Vec3(0.704, 0.671, -0.231),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Attack",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -355,7 +355,7 @@ global _MG =
 			[0] = Vec3(0.920, -0.252, -0.300),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Attack",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -377,10 +377,10 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.923, -0.386, 0.007),
+			[0] = Vec3(0.998, -0.055, 0.025),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Attack",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -388,9 +388,9 @@ global _MG =
 		MinRadius = 30,
 		Name = "ATTACK_bSouth5",
 		Orientation = Vec3(-1.967, 0.007, -0.000),
-		Position = Vec3(883.875, 877.860, 8.125),
+		Position = Vec3(466.125, 415.797, 336.125),
 		Radius = 35,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "bSouth5",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1774,31 +1774,6 @@ global _MG =
 		{
 		},
 	},
-	DEFEND_engSouth_1 = 
-	{
-		AimVectors = 
-		{
-			[0] = Vec3(0.799, 0.586, 0.138),
-		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
-		GoalType = "Defend",
-		GroupName = "",
-		MaxCampTime = 40,
-		MinCampTime = 20,
-		MinRadius = 30,
-		Name = "DEFEND_engSouth_1",
-		Orientation = Vec3(-0.938, 0.138, -0.000),
-		Position = Vec3(466.125, 386.125, 336.125),
-		Radius = 30,
-		Stance = "crouch",
-		TagName = "engSouth_1",
-		TeamAvailability = 30,
-		Version = 1,
-		Weapons = 
-		{
-		},
-	},
 	DEFEND_rNorth_a1 = 
 	{
 		AimVectors = 
@@ -2615,6 +2590,16 @@ global _MG =
 	{
 		CoverSpots = 
 		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.684, 0.729, -0.000),
+					[1] = Vec3(0.991, 0.134, -0.000),
+				},
+				position = Vec3(82.125, 2290.125, 360.125),
+				stance = "stand",
+			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
@@ -2633,6 +2618,34 @@ global _MG =
 	{
 		CoverSpots = 
 		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.645, -0.756, 0.111),
+				},
+				position = Vec3(466.125, 557.875, 360.125),
+				stance = "stand",
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.725, 0.687, 0.044),
+				},
+				position = Vec3(1101.875, 109.875, 344.125),
+				stance = "crouch",
+			},
+			[2] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.794, 0.601, 0.094),
+					[1] = Vec3(0.048, 0.995, 0.092),
+				},
+				position = Vec3(626.125, 150.302, 344.125),
+				stance = "crouch",
+			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,

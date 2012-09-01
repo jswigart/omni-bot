@@ -12,6 +12,7 @@ global Map =
 	Repair_sentry_MG = "REPAIRMG42_sentry_MG",
 	Snipe_phase1_blue_snipe1 = "SNIPE_phase1_blue_snipe1",
 	Snipe_phase1_red_snipe1 = "SNIPE_phase1_red_snipe1",
+	FriendlyFire,
 
 	//initially disabled so they airstrike faster
 	DispenseAmmoDisable = true,
@@ -73,6 +74,9 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof.*" );
+		}
+		if ( Map.FriendlyFire < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 		}
 
 	},
@@ -342,6 +346,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 30, maxcamptime = 45} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 	SetGoalPriority( "DEFEND_phase1.south.*", 0.6 );
 	SetGoalPriority( "DEFEND_phase1.main.*", 0.6 );
 	SetGoalPriority( "DEFEND_docs.*", 0.6 );
