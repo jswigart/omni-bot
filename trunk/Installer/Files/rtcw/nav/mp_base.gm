@@ -136,6 +136,7 @@ global Map =
 
 		if ( !Map.SouthStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSouth.*" );
@@ -149,8 +150,6 @@ global Map =
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
 		SetGoalPriority( "ARTILLERY.*", 0.5, TEAM_AXIS );
-
-		Util.DisableGoal( "DEFEND_engNorth.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSouth.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rNorth.*" );
@@ -166,7 +165,6 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_North );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engNorth.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSouthArty.*" );
 
@@ -176,8 +174,6 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" ); //Martin - Put more arty on tunnel since allies push there more
 
 		Map.DispenseAmmoTime = 1;
-
-		Util.DisableGoal( "DEFEND_engSouth.*" );
 
 	},
 
@@ -217,7 +213,6 @@ global Map =
 
 		if ( !Map.NorthStatus ) {
 			Util.DisableGoal( "DEFUSE_South_Radar_02.*" );
-			Util.DisableGoal( "DEFEND_engSouth.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rSouth.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
 		}
@@ -299,6 +294,9 @@ global OnMapLoad = function()
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
+	
+	Util.AddUseWp( "PLANT_South_Radar_02", "plantsouth" );
+	Util.AddUseWp( "PLANT_North_Radar_01", "plantnorth" );
 
 	tTwo = OnTriggerRegion( AABB( 63.000,2271.000,335.000,192.000,2480.000,409.000 ), Map.North );
 	r1push = OnTriggerRegion( AABB( 498.000,1791.000,327.000,720.000,2178.000,417.000 ), RegionTrigger.DisableBotPush );
@@ -333,13 +331,13 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
-	Util.SetMaxUsersInProgress( 2, "ATTACK_bSouth[24]" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_bSouth.*" );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	//SetGoalPriority( "DEFEND_rNorth_a[16]", 0.60 );
 	SetGoalPriority( "DEFEND_rNorth_a[15]", 0.60 );
 	SetGoalPriority( "DEFEND_rNorth_c[3]", 0.60 );
-	SetGoalPriority( "ATTACK_bSouth[24]", 0.55 );
+	SetGoalPriority( "ATTACK_bSouth[245]", 0.55 );
 
 	Util.DisableGoal( ".*", true ); // all but routes
 
@@ -351,8 +349,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engSouth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[24]" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[245]" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSouthArty.*" );
 
 	// *** Artillery
