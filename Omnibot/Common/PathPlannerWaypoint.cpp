@@ -1261,6 +1261,7 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 		else
 		{
 			LOGERR(va("Unable to Load Waypoint: %s",_file.c_str()));
+			Unload();
 		}
 	} 
 	else
