@@ -630,6 +630,12 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 		return;
 	}
 
+	if(_args[2].empty())
+	{
+		cmdWaypointClearProperty(_args);
+		return;
+	}
+
 	Vector3f vLocalPos;
 	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vLocalPos)))
 	{
