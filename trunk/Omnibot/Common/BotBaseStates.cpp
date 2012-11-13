@@ -1030,6 +1030,7 @@ namespace AiState
 		, m_LookAheadPt(Vector3f::ZERO)
 		, m_PassThroughState(0)
 		, m_RayDistance(-1.0f)
+		, m_JumpTime(0)
 	{
 	}
 
@@ -1731,10 +1732,15 @@ namespace AiState
 	void FollowPath::CheckForLowJumps(const Vector3f &_destination)
 	{
 		Prof(CheckForLowJumps);
+
+		// bot MUST NOT press jump button every frame, otherwise he jumps only once
+		obint32 time = IGame::GetTime();
+		if(time - m_JumpTime < 100) return;
+
 		// todo: should be game dependant
 		const float fStepHeight = GetClient()->GetStepHeight();
-		const float fStepBoxWidth = 4.0f; // GAME DEP
-		const float fStepBoxHeight = 8.0f; // GAME DEP
+		const float fStepBoxWidth = 9.0f; // GAME DEP
+		const float fStepBoxHeight = 16.0f; // GAME DEP
 		const float fStepRayLength = 48.0f; // GAME DEP
 
 		// Calculate the vector we're wanting to move, this will be
@@ -1749,19 +1755,17 @@ namespace AiState
 
 		// Calculate the local AABB
 		const Vector3f &vPosition = GetClient()->GetPosition();
-		localAABB = worldAABB;
-		localAABB.UnTranslate(vPosition);
 
 		// Adjust the AABB mins to the step height
-		localAABB.m_Mins[2] += fStepHeight;
+		localAABB.m_Mins[2] = worldAABB.m_Mins[2] + fStepHeight - vPosition[2];
 		// Adjust the AABB mins to the step height + fStepBoxHeight
 		localAABB.m_Maxs[2] = localAABB.m_Mins[2] + fStepBoxHeight;
 		// Adjust the mins and max for the width of the box
 		localAABB.m_Mins[0] = localAABB.m_Mins[1] = -fStepBoxWidth;
-		localAABB.m_Mins[0] = localAABB.m_Maxs[1] = fStepBoxWidth;
+		localAABB.m_Maxs[0] = localAABB.m_Maxs[1] = fStepBoxWidth;
 
 		// Trace a line forward from the bot.
-		Vector3f vStartPos(Vector3f::ZERO);
+		Vector3f vStartPos;
 		worldAABB.CenterPoint(vStartPos);
 
 		// The end of the ray is out towards the move direction, fStepRayLength length
@@ -1776,6 +1780,7 @@ namespace AiState
 		if(tr.m_Fraction != 1.0f)
 		{
 			bHit = true;
+			m_JumpTime = time;
 			GetClient()->PressButton(BOT_BUTTON_JUMP);
 		}
 		
