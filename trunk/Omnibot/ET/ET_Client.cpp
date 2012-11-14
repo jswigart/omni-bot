@@ -15,6 +15,7 @@
 #include "ET_FilterClosest.h"
 #include "ET_Messages.h"
 #include "ET_BaseStates.h"
+#include "ET_Game.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS
@@ -330,6 +331,9 @@ float ET_Client::GetGameVar(GameVar _var) const
 
 float ET_Client::GetAvoidRadius(int _class) const
 {
+	if(_class < FilterSensory::ANYPLAYERCLASS && _class > 0)
+		return 16.0f;
+
 	switch(_class)
 	{
 	//case ENT_CLASS_GENERIC_BUTTON:
@@ -339,14 +343,8 @@ float ET_Client::GetAvoidRadius(int _class) const
 		return 5.0f;
 	}
 
-	switch(_class)
+	switch(_class - ET_Game::CLASSEXoffset)
 	{
-	case ET_CLASS_SOLDIER:
-	case ET_CLASS_MEDIC:
-	case ET_CLASS_ENGINEER:
-	case ET_CLASS_FIELDOPS:
-	case ET_CLASS_COVERTOPS:
-		return 16.0f;
 	case ET_CLASSEX_DYNAMITE:
 	case ET_CLASSEX_MINE:
 	case ET_CLASSEX_SATCHEL:

@@ -8,6 +8,7 @@
 
 #include "PrecompET.h"
 #include "ET_FilterClosest.h"
+#include "ET_Game.h"
 
 #include "ScriptManager.h"
 
@@ -19,7 +20,7 @@ ET_FilterClosest::ET_FilterClosest(Client *_client, AiState::SensoryMemory::Type
 bool ET_FilterClosest::CheckEx(const MemoryRecord &_record)
 {
 	// Special consideration for some entity types.
-	switch(_record.m_TargetInfo.m_EntityClass) 
+	switch(_record.m_TargetInfo.m_EntityClass - ET_Game::CLASSEXoffset) 
 	{
 	case ET_CLASSEX_VEHICLE_HVY:
 		{

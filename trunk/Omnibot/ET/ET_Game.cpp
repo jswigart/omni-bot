@@ -19,6 +19,8 @@
 #include "IGameManager.h"
 #include "gmETBinds.h"
 
+int ET_Game::CLASSEXoffset;
+
 IGame *CreateGameInstance()
 {
 	return new ET_Game;
@@ -94,6 +96,8 @@ GoalManager *ET_Game::GetGoalManager()
 bool ET_Game::Init() 
 {
 	SetRenderOverlayType(OVERLAY_OPENGL);
+
+	CLASSEXoffset = strcmp(g_EngineFuncs->GetModName(), "etblight") ? 0 : 2;
 
 	AiState::FollowPath::m_OldLadderStyle = false;
 
@@ -262,7 +266,14 @@ static IntEnum ET_ClassEnum[] =
 
 const char *ET_Game::FindClassName(obint32 _classId)
 {
-	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);	
+	if(ET_Game::CLASSEXoffset == 2) //ETBlight
+	{
+		if(_classId > 7 && _classId < 10000) _classId -= 2;
+		else if(_classId == 6) return "SCIENTIST";
+		else if(_classId == 7) return "SUPER_SOLDIER";
+	}
+
+	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);
 	for(int i = 0; i < iNumMappings; ++i)
 	{
 		if(ET_ClassEnum[i].m_Value == _classId)
@@ -275,15 +286,23 @@ void ET_Game::InitScriptClasses(gmMachine *_machine, gmTableObject *_table)
 {
 	IGame::InitScriptClasses(_machine, _table);
 
-	FilterSensory::ANYPLAYERCLASS = ET_CLASS_ANY;
+	FilterSensory::ANYPLAYERCLASS = ET_CLASS_ANY + ET_Game::CLASSEXoffset;
 
 	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);
 	for(int i = 0; i < iNumMappings; ++i)
 	{
-		_table->Set(_machine, ET_ClassEnum[i].m_Key, gmVariable(ET_ClassEnum[i].m_Value));
+		int value = ET_ClassEnum[i].m_Value;
+		if(value >= ET_CLASS_ANY) value += ET_Game::CLASSEXoffset;
+		_table->Set(_machine, ET_ClassEnum[i].m_Key, gmVariable(value));
 	}
 
-	InitScriptWeaponClasses(_machine,_table,ET_CLASSEX_WEAPON);
+	if(ET_Game::CLASSEXoffset == 2) //ETBlight
+	{
+		_table->Set(_machine, "SCIENTIST", gmVariable(6));
+		_table->Set(_machine, "SUPER_SOLDIER", gmVariable(7));
+	}
+
+	InitScriptWeaponClasses(_machine,_table, ET_CLASSEX_WEAPON + ET_Game::CLASSEXoffset);
 }
 
 void ET_Game::InitScriptSkills(gmMachine *_machine, gmTableObject *_table)
@@ -539,9 +558,6 @@ const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &
 {
 	switch(_target.m_EntityClass)
 	{
-	case ET_CLASSEX_BREAKABLE:
-		_distance = static_cast<const ET_Client*>(_client)->GetBreakableTargetDist();
-		break;
 	case ENT_CLASS_GENERIC_AMMO:
 		_distance = 2000.0f;
 		break;
@@ -549,7 +565,9 @@ const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &
 		_distance = 1000.0f;
 		break;
 	default:
-		if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
+		if(_target.m_EntityClass - ET_Game::CLASSEXoffset == ET_CLASSEX_BREAKABLE)
+			_distance = static_cast<const ET_Client*>(_client)->GetBreakableTargetDist();
+		else if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
 			_distance = 1500.0f;
 		else if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PROJECTILE))
 			_distance = 500.0f;
@@ -564,7 +582,7 @@ const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &
 */
 const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
-	if (_class > ET_CLASS_NULL && _class < ET_CLASS_MAX)
+	if (_class > ET_CLASS_NULL && _class < FilterSensory::ANYPLAYERCLASS)
 	{
 		if (_entflags.CheckFlag(ENT_FLAG_PRONED))
 			return 16.0f;
@@ -573,7 +591,7 @@ const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFla
 		return 48.0f;
 	}
 
-	switch(_class)
+	switch(_class - ET_Game::CLASSEXoffset)
 	{
 	case ET_CLASSEX_DYNAMITE:
 	case ET_CLASSEX_MINE:
@@ -594,7 +612,7 @@ const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFla
 */
 const float ET_Game::ET_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
 {
-	if (_class > ET_CLASS_NULL && _class < ET_CLASS_MAX)
+	if (_class > ET_CLASS_NULL && _class < FilterSensory::ANYPLAYERCLASS)
 	{
 		if (_entflags.CheckFlag(ENT_FLAG_PRONED))
 			return 8.0f;
@@ -608,7 +626,7 @@ const float ET_Game::ET_GetEntityClassAimOffset(const int _class, const BitFlag6
 
 const float ET_Game::ET_GetEntityClassAvoidRadius(const int _class)
 {
-	switch(_class) 
+	switch(_class - ET_Game::CLASSEXoffset) 
 	{
 	case ET_CLASSEX_DYNAMITE:		
 		return 400.0f;
@@ -628,8 +646,8 @@ const bool ET_Game::ET_CanSensoreEntity(const EntityInstance &_ent)
 		& _ent.m_EntityCategory.GetRawFlags()) == 0)
 		return false;
 
-	int c =_ent.m_EntityClass;
-	return c<ET_CLASS_MAX || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE && 
+	int c =_ent.m_EntityClass - ET_Game::CLASSEXoffset;
+	return c<ET_CLASS_ANY || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE && 
 		c!=ET_CLASSEX_ARTY && c!=ET_CLASSEX_SMOKEBOMB && c!=ET_CLASSEX_FLAMECHUNK && c!=ET_CLASSEX_ROCKET;
 }
 
