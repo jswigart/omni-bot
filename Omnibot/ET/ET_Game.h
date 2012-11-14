@@ -51,6 +51,8 @@ public:
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
 	
+	static int CLASSEXoffset;
+
 	ET_Game() {};
 	virtual ~ET_Game() {};
 protected:

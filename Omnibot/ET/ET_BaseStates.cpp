@@ -9,6 +9,7 @@
 #include "PrecompET.h"
 #include "ET_BaseStates.h"
 #include "ET_FilterClosest.h"
+#include "ET_Game.h"
 #include "WeaponDatabase.h"
 
 namespace AiState
@@ -381,7 +382,7 @@ namespace AiState
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
 				if(m != NULL && m->m_Projectile.IsValid())
 				{
-					if(InterfaceFuncs::GetEntityClass(m->m_Projectile) == ET_CLASSEX_MORTAR)
+					if(InterfaceFuncs::GetEntityClass(m->m_Projectile) - ET_Game::CLASSEXoffset == ET_CLASSEX_MORTAR)
 					{
 						m_CurrentAim = (m_CurrentAim+1)%m_NumMortarAims;
 						m_FireDelay = IGame::GetTime() + 2000;
@@ -508,8 +509,8 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		ET_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
 		filter.AddCategory(ENT_CAT_SHOOTABLE);
-		filter.AddClass(ET_CLASSEX_VEHICLE);
-		filter.AddClass(ET_CLASSEX_VEHICLE_HVY);
+		filter.AddClass(ET_CLASSEX_VEHICLE + ET_Game::CLASSEXoffset);
+		filter.AddClass(ET_CLASSEX_VEHICLE_HVY + ET_Game::CLASSEXoffset);
 		FINDSTATE(sensory,SensoryMemory,GetRootState());
 		if(sensory)
 		{
