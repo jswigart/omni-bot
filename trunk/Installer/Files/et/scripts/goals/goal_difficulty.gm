@@ -3,6 +3,7 @@ this.Name = "Difficulty";
 this.Parent = "LowLevel";
 this.Debug = false;
 this.AutoAdd = true;
+this.AlwaysRecieveEvents = true;
 
 // initialize defaults in case the entry isn't in omni-bot.cfg
 this.CurrentDifficulty = 4;
@@ -10,6 +11,7 @@ this.AdjustAim = true;
 
 this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
 this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
+this.UseWeaponSpecificTolerances = true;
 
 this.Initialize = function()
 {
@@ -66,13 +68,14 @@ this.Update = function()
 		this.Bot.AimStiffness = this.difficulties[useDiff].AimStiffness;
 		this.Bot.AimDamping = this.difficulties[useDiff].AimDamping;
 		this.Bot.AimTolerance = this.difficulties[useDiff].AimTolerance;
+		this.Bot.DefaultTolerance = this.Bot.AimTolerance;
+		this.Bot.WeaponTolerances = this.difficulties[useDiff].WeaponTolerances;
 
 		// don't accumulate percentages every difficulty change
 		if(!this.Bot.OriginalMaxView) { this.Bot.OriginalMaxView = this.Bot.MaxViewDistance; }
 		this.Bot.MaxViewDistance = this.Bot.OriginalMaxView * (this.difficulties[useDiff].MaxViewPercent * .01);
 
-		if ( this.Debug )
-		{
+		if ( this.Debug ) {
 			print( "--- " +this.Bot.Name + " Aim Properties ---" );
 			print( "Difficulty: " + useDiff );
 			print( "FieldOfView: " + this.Bot.FieldOfView );
@@ -87,10 +90,11 @@ this.Update = function()
 			print( "------------ " );
 		}
 
-		if ( this.AdjustAim )
-		{
+		if ( this.AdjustAim ) {
 			this.AdjustWeaponProperties(this.Bot, useDiff);
 		}
+
+		this.SetAimToleranceForWeapon(this.Bot.GetCurrentWeapon());
 	}
 
 	this.Finished();
@@ -114,6 +118,10 @@ this.difficulties =
 		AimOffsetY = 0,
 		AimOffsetZ = -15,
 		MaxViewPercent = 65,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 1
 	{
@@ -132,6 +140,10 @@ this.difficulties =
 		AimOffsetZ = -15,
 		MaxViewPercent = 65,
 		SnipeDelay = 2.0,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 2
 	{
@@ -150,6 +162,10 @@ this.difficulties =
 		AimOffsetZ = -15,
 		MaxViewPercent = 75,
 		SnipeDelay = 1.6,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 3
 	{
@@ -168,6 +184,10 @@ this.difficulties =
 		AimOffsetZ = -12,
 		MaxViewPercent = 85,
 		SnipeDelay = 0.8,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 4
 	{
@@ -186,6 +206,10 @@ this.difficulties =
 		AimOffsetZ = -10,
 		MaxViewPercent = 90,
 		SnipeDelay = 0.4,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 5
 	{
@@ -196,7 +220,7 @@ this.difficulties =
 		MaxTurnSpeed = 720.0,
 		AimStiffness = 75.0,
 		AimDamping = 10.0,
-		AimTolerance = 48,
+		AimTolerance = 64,
 		AimErrorX = 5,
 		AimErrorY = 5,
 		AimOffsetX = 0,
@@ -204,6 +228,10 @@ this.difficulties =
 		AimOffsetZ = -5,
 		MaxViewPercent = 100,
 		SnipeDelay = 0.2,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 	// Difficulty 6
 	{
@@ -214,7 +242,7 @@ this.difficulties =
 		MaxTurnSpeed = 720.0,
 		AimStiffness = 75.0,
 		AimDamping = 10.0,
-		AimTolerance = 48,
+		AimTolerance = 64,
 		AimErrorX = 0,
 		AimErrorY = 0,
 		AimOffsetX = 0,
@@ -222,6 +250,10 @@ this.difficulties =
 		AimOffsetZ = 0,
 		MaxViewPercent = 110,
 		SnipeDelay = 0.1,
+		WeaponTolerances =
+		{
+			VENOM = 128,
+		},
 	},
 };
 
@@ -276,7 +308,7 @@ this.Commands["difficulty"] =
 	{
 		if(typeId(_params[0]) != 0)
 		{
-			diff = Clamp( ToInt(_params[0], 4), 1, tableCount(this.difficulties) );
+			diff = Clamp( ToInt(_params[0], 4), -1, tableCount(this.difficulties) );
 
 			ConfigSet("Difficulty","CurrentDifficulty", diff);
 			this.CurrentDifficulty = diff;
@@ -290,6 +322,29 @@ this.Commands["difficulty"] =
 
 	Help =
 	{
-		"Sets the bots difficulty (-1...6), -1 is random, default 4",
+		"Sets the bots difficulty (-1...max), -1 is random, default 4",
 	},
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+this.SetAimToleranceForWeapon = function(weaponId)
+{
+	if (!this || !this.Bot || this.FirstRun || !this.UseWeaponSpecificTolerances ) { return; }
+
+	yield(); yield(); // need to make sure DefaultTolerance is set.
+	weaponName = Util.WeaponName(weaponId);
+	if ( this.Bot.WeaponTolerances && this.Bot.WeaponTolerances[weaponName] ) {
+		if ( this.Debug ) {
+			this.Bot.Say("changing aim tolerance to " + this.Bot.WeaponTolerances[weaponName] + " for " + weaponName);
+		}
+		this.Bot.AimTolerance = this.Bot.WeaponTolerances[weaponName];
+	} else {
+		if ( this.Debug ) {
+			this.Bot.Say(format("using default tolerance for %s",weaponName));
+		}
+		this.Bot.AimTolerance = this.Bot.DefaultTolerance;
+	}
+};
+
+this.Events[EVENT.WEAPON_CHANGE] = this.SetAimToleranceForWeapon;
