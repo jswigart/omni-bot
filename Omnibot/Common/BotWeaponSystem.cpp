@@ -773,7 +773,7 @@ namespace AiState
 		{
 			WeaponIds[NumWeaponIds++] = (*it)->GetWeaponID();
 		}		
-		return NumWeaponIds ? (WeaponIds[rand() & NumWeaponIds]) : 0;
+		return NumWeaponIds ? (WeaponIds[rand() % NumWeaponIds]) : 0;
 	}
 	
 };
