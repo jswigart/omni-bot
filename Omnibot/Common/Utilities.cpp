@@ -2076,12 +2076,12 @@ bool LimitWeapons::IsAllowed(Client *_client)
 	{
 		AiState::WeaponSystem *ws = _client->GetWeaponSystem();
 
-		BitFlag64 hasWeapons = (mFlags & ws->GetWeaponMask());
+		BitFlag128 hasWeapons = (mFlags & ws->GetWeaponMask());
 		if(!hasWeapons.AnyFlagSet())
 			return false;
 
 		bool bOutOfAmmo = true;
-		for(int i = 0; i < 64; ++i)
+		for(int i = 0; i < 128; ++i)
 		{
 			if(hasWeapons.CheckFlag(i))
 			{

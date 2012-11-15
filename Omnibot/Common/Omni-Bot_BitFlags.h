@@ -163,5 +163,56 @@ private:
 	obint64	m_Flags;
 };
 
+class BitFlag128
+{
+public:
+	bool AnyFlagSet() const
+	{
+		return (m_Lo|m_Hi) != 0;
+	}
+	bool CheckFlag(obint32 _flag) const
+	{
+		if(_flag < 64){
+			return (m_Lo & ((obint64)1<<_flag)) != 0;
+		}else{
+			return (m_Hi & ((obint64)1<<(_flag-64))) != 0;
+		}
+	}
+	void SetFlag(obint32 _flag)
+	{
+		if(_flag < 64){
+			m_Lo |= ((obint64)1<<_flag);
+		}else{
+			m_Hi |= ((obint64)1<<(_flag-64));
+		}
+	}
+	void SetFlag(obint32 _flag, bool _set)
+	{
+		if(_set)
+			SetFlag(_flag);
+		else
+			ClearFlag(_flag);
+	}
+	void ClearFlag(obint32 _flag)
+	{
+		if(_flag < 64){
+			m_Lo &= ~((obint64)1<<_flag);
+		}else{
+			m_Hi &= ~((obint64)1<<(_flag-64));
+		}
+	}
+	void ClearAll()
+	{
+		m_Lo = m_Hi = 0;
+	}
+	BitFlag128 operator&(const BitFlag128& rhs) const
+	{
+		return BitFlag128(m_Lo & rhs.m_Lo, m_Hi & rhs.m_Hi);
+	}
+	explicit BitFlag128(obint64 lo = 0, obint64 hi = 0) : m_Lo(lo),m_Hi(hi) {}
+private:
+	obint64	m_Lo, m_Hi;
+};
+
 
 #endif
