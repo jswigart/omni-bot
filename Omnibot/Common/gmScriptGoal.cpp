@@ -27,6 +27,7 @@ GMBIND_INIT_TYPE( gmScriptGoal, "Goal" );
 
 GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 	GMBIND_FUNCTION( "LimitToClass", gmfLimitToClass )
+	GMBIND_FUNCTION( "LimitToNoClass", gmfLimitToNoClass )
 	GMBIND_FUNCTION( "LimitToTeam", gmfLimitToTeam )
 	GMBIND_FUNCTION( "LimitToPowerUp", gmfLimitToPowerUp )
 	GMBIND_FUNCTION( "LimitToNoPowerup", gmfLimitToNoPowerup )	
@@ -175,6 +176,22 @@ int gmScriptGoal::gmfLimitToClass(gmThread *a_thread)
 		{
 			GM_CHECK_INT_PARAM(id, i);
 			native->LimitToClass().SetFlag(id);
+		}
+	}
+	return GM_OK; 
+}
+
+int gmScriptGoal::gmfLimitToNoClass(gmThread *a_thread)
+{
+	CHECK_THIS_SGOAL();
+	GM_CHECK_NUM_PARAMS(1);
+	if(native)
+	{
+		native->LimitToClass() = BitFlag32(~0);
+		for(int i = 0; i < a_thread->GetNumParams(); ++i)
+		{
+			GM_CHECK_INT_PARAM(id, i);
+			native->LimitToClass().ClearFlag(id);
 		}
 	}
 	return GM_OK; 
