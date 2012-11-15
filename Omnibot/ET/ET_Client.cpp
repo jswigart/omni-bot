@@ -90,6 +90,25 @@ void ET_Client::Init(int _gameid)
 	GetTargetingSystem()->SetDefaultTargetingFilter(filter);
 }
 
+void ET_Client::UpdateBotInput()
+{
+	//ETblight sniper hack
+	if(ET_Game::CLASSEXoffset == 2 && m_ClientInput.m_ButtonFlags.CheckFlag(BOT_BUTTON_AIM))
+	{
+		if(m_ClientInput.m_CurrentWeapon == 72) //MN PROTO
+		{
+			m_ClientInput.m_CurrentWeapon = 75;
+			m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+		}
+		if(m_ClientInput.m_CurrentWeapon == 79) //MP40SS
+		{
+			m_ClientInput.m_CurrentWeapon = 80;
+			m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+		}
+	}
+	Client::UpdateBotInput();
+}
+
 void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 {
 	switch(_message.GetMessageId())

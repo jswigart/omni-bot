@@ -178,6 +178,7 @@ public:
 	
 	virtual void Init(int _gameid);
 	virtual void Update();
+	virtual void UpdateBotInput();
 	virtual void Shutdown();
 
 	gmUserObject *GetScriptObject();
@@ -279,6 +280,8 @@ protected:
 
 	State			*m_StateRoot;
 
+	ClientInput		m_ClientInput;
+
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 	void ProcessEventImpl(const MessageHelper &_message, obuint32 _targetState);
 
@@ -324,8 +327,6 @@ private:
 	float			m_AimTolerance;
 
 	HoldButtons		m_HoldButtons;
-
-	ClientInput		m_ClientInput;
 
 	ProfileType		m_ProfileType;
 

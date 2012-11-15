@@ -20,6 +20,7 @@ public:
 	friend void gmBindETBotLibrary(gmMachine *_machine);
 
 	void Init(int _gameid);
+	void UpdateBotInput();
 
 	NavFlags GetTeamFlag();
 	NavFlags GetTeamFlag(int _team);

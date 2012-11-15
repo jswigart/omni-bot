@@ -182,7 +182,7 @@ void Client::Update()
 	m_ClientInput.m_CurrentWeapon	= GetWeaponSystem()->GetDesiredWeaponID();
 	{
 		Prof(UpdateBotInput);
-		g_EngineFuncs->UpdateBotInput(m_GameID, m_ClientInput);
+		UpdateBotInput();
 	}
 
 #ifdef _DEBUG
@@ -193,6 +193,12 @@ void Client::Update()
 	// controlling the bot will get overridden.
 	m_ButtonFlags.ClearAll();
 }
+
+void Client::UpdateBotInput()
+{
+	g_EngineFuncs->UpdateBotInput(m_GameID, m_ClientInput);
+}
+
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void Client::InternalSyncEntity( EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
