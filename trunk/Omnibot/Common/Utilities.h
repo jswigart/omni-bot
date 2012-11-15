@@ -471,11 +471,11 @@ class LimitChecker
 {
 public:
 	virtual bool IsAllowed(Client *_client) = 0;
-	BitFlag64 &Get() { return mFlags; }
+	BitFlag128 &Get() { return mFlags; }
 	int FromScript(gmThread *a_thread);
 	LimitChecker() { }
 protected:
-	BitFlag64		mFlags;
+	BitFlag128		mFlags;
 };
 
 class LimitWeapons : public LimitChecker

@@ -73,7 +73,7 @@ namespace AiState
 		bool UpdateWeaponRequest(obuint32 _owner, int _weaponId);
 		int GetWeaponNeedingReload();
 
-		BitFlag64 GetWeaponMask() const { return m_WeaponMask; }
+		BitFlag128 GetWeaponMask() const { return m_WeaponMask; }
 
 		// function: GrabAllWeapons
 		//		Gets a copy of all weapons from the weapon database.
@@ -237,7 +237,7 @@ namespace AiState
 		//		after the target leaves view.
 		int				m_AimPersistance;
 
-		BitFlag64		m_WeaponMask;
+		BitFlag128		m_WeaponMask;
 
 		// var: m_WeaponList
 		//		The list of all the bots current weapons

@@ -207,7 +207,7 @@ public:
 	BitFlag64 &LimitToNoEntFlag() { return m_OnlyNoEntFlag; }
 	BitFlag64 &LimitToNoPowerup() { return m_OnlyNoPowerUp; }
 	
-	BitFlag64 &LimitToWeapon() { return m_OnlyWeapon; }	
+	BitFlag128 &LimitToWeapon() { return m_OnlyWeapon; }	
 
 	BitFlag32 &LimitToTargetClass() { return m_OnlyTargetClass; }
 	BitFlag32 &LimitToTargetTeam() { return m_OnlyTargetTeam; }
@@ -309,7 +309,7 @@ protected:
 	BitFlag64		m_OnlyNoPowerUp;
 	BitFlag64		m_OnlyEntFlag;
 	BitFlag64		m_OnlyNoEntFlag;
-	BitFlag64		m_OnlyWeapon;
+	BitFlag128		m_OnlyWeapon;
 
 	BitFlag32		m_OnlyTargetClass;
 	BitFlag32		m_OnlyTargetTeam;

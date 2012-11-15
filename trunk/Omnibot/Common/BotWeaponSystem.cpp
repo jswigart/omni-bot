@@ -285,14 +285,14 @@ namespace AiState
 
 	void WeaponSystem::RefreshAllWeapons()
 	{
-		const BitFlag64 HasWeapons = m_WeaponMask;
+		const BitFlag128 HasWeapons = m_WeaponMask;
 
 		ClearWeapons();
 
 		m_AllWeaponList.clear();
 		g_WeaponDatabase.CopyAllWeapons(GetClient(), m_AllWeaponList);
 
-		for(int i = 0; i < 64; ++i)
+		for(int i = 0; i < 128; ++i)
 		{
 			if(HasWeapons.CheckFlag(i))
 				AddWeaponToInventory(i);

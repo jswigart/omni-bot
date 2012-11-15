@@ -598,12 +598,12 @@ State::noSelectReason_t State::CanBeSelected()
 	{
 		AiState::WeaponSystem *ws = GetClient()->GetWeaponSystem();
 
-		BitFlag64 hasWeapons = (m_OnlyWeapon & ws->GetWeaponMask());
+		BitFlag128 hasWeapons = (m_OnlyWeapon & ws->GetWeaponMask());
 		if(!hasWeapons.AnyFlagSet())
 			return NoSelectReason_OnlyWeapon;
 
 		bool bOutOfAmmo = true;
-		for(int i = 0; i < 64; ++i)
+		for(int i = 0; i < 128; ++i)
 		{
 			if(hasWeapons.CheckFlag(i))
 			{
