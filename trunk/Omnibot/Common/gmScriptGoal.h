@@ -20,6 +20,7 @@ public:
 
 	// Functions
 	static int gmfLimitToClass(gmThread *a_thread);
+	static int gmfLimitToNoClass(gmThread *a_thread);
 	static int gmfLimitToTeam(gmThread *a_thread);
 	static int gmfLimitToPowerUp(gmThread *a_thread);
 	static int gmfLimitToNoPowerup(gmThread *a_thread);
