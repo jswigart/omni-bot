@@ -8,9 +8,13 @@ this.AutoAdd = true;
 this.CurrentDifficulty = 3;
 this.AdjustAim = true;
 this.DefenderSkillBonus = 0;
+this.MinForRandom = 1;
+this.MaxForRandom = 7;
 
 this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
 this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
+this.MinForRandom = ConfigGet("Difficulty","MinForRandom", this.MinForRandom);
+this.MaxForRandom = ConfigGet("Difficulty","MaxForRandom", this.MaxForRandom);
 this.DefenderSkillBonus = ConfigGet("Defender", "SkillBonus", this.DefenderSkillBonus);
 
 this.Initialize = function()
@@ -34,11 +38,21 @@ this.GetPriority = function()
 this.Update = function()
 {
 	// if a bot profile sets a ProfileSkill, this will run only once per round.
-	if ( !this.Bot.LockSkill && this.CurrentDifficulty != this.Bot.aimskill )
+	if ( !this.Bot.LockSkill && (this.CurrentDifficulty != this.Bot.aimskill
+			|| (this.Bot.teamAimSkill && this.Bot.teamAimSkill != this.Bot.aimskill)
+			&& !this.Bot.ChoseRandomDiff) )
 	{
 		if (!this.Bot.ProfileSkill)
 		{
-			this.Bot.aimskill = this.CurrentDifficulty;
+			if ( this.Bot.teamAimSkill ) {
+				if ( this.Debug ) {
+					this.Bot.Say("changing to teamAimSkill " + this.Bot.teamAimSkill);
+				}
+				this.Bot.aimskill = this.Bot.teamAimSkill;
+			}
+			else {
+				this.Bot.aimskill = this.CurrentDifficulty;
+			}
 		}
 		else
 		{
@@ -49,17 +63,33 @@ this.Update = function()
 		if( this.Bot.aimskill < 0 )
 		{
 			n = tableCount(this.difficulties);
-			r = RandInt(0, n-1);
+			min = 0;
+			max = n-1;
+
+			if (this.difficulties[this.MinForRandom]) {
+				min = this.MinForRandom;
+			}
+			if (this.difficulties[this.MaxForRandom]) {
+				max = this.MaxForRandom;
+			}
+			r = RandInt(min, max);
+
+			if (this.Debug) {
+				this.Bot.Say("chose " + r + " randomly from " + min + " to " + max);
+			}
+			this.Bot.ChoseRandomDiff = true;
 			useDiff = r;
 		}
 		else
 		{
 			useDiff = this.Bot.aimskill + this.Bot.SkillBonus;
+			this.Bot.ChoseRandomDiff = false;
 		}
 
 		if ( !this.difficulties[useDiff] )
 		{
 			useDiff = 3; // use original default
+			this.Bot.ChoseRandomDiff = false;
 		}
 
 		this.Bot.FieldOfView = this.difficulties[useDiff].FieldOfView;
@@ -315,10 +345,11 @@ this.Commands["difficulty"] =
 	{
 		if(typeId(_params[0]) != 0)
 		{
-			diff = Clamp( ToInt(_params[0], 4), 1, tableCount(this.difficulties) );
+			diff = Clamp( ToInt(_params[0], 4), -1, tableCount(this.difficulties) );
 
 			ConfigSet("Difficulty","CurrentDifficulty", diff);
 			this.CurrentDifficulty = diff;
+			this.Bot.teamAimSkill = null;
 
 			if ( this.Debug ) {
 				print("Difficulty Changed", diff, " for ", this.Bot.Name);
@@ -338,6 +369,33 @@ this.Commands["difficulty"] =
 	Help =
 	{
 		"Sets the bots difficulty (-1...7), -1 is random, default 4",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+this.Commands["teamdifficulty"] =
+{
+	Func = function( _params )
+	{
+		if(typeId(_params[0]) != 0 && typeId(_params[1]) != 0 )
+		{
+			if (this.Bot.GetTeam() == _params[1]) {
+				diff = Clamp( ToInt(_params[0], 4), 1, tableCount(this.difficulties) );
+				this.Bot.teamAimSkill = diff;
+
+				if ( this.Debug ) {
+					print("Difficulty Changed", diff, " for ", this.Bot.Name);
+				}
+
+				this.Priority = 1.0;
+			}
+		}
+	},
+
+	Help =
+	{
+		"Sets the team bots difficulty (-1...7), -1 is random, default 4",
 	},
 };
 
@@ -369,5 +427,53 @@ this.Commands["skillbonus"] =
 	Help =
 	{
 		"Sets the skill bonus for bots with the defender role",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+this.Commands["minforrandom"] =
+{
+	Func = function( _params )
+	{
+		min = ToInt(_params[0], null);
+		if(typeId(min) == 1)
+		{
+			ConfigSet("Difficulty","MinForRandom", min);
+			this.MinForRandom = min;
+
+			this.Bot.ChoseRandomDiff = false; // reset so it calculates a new diff
+			this.Priority = 1.0;
+			return;
+		}
+	},
+
+	Help =
+	{
+		"Sets the minimum difficulty to be used when selecting random difficulty",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+this.Commands["maxforrandom"] =
+{
+	Func = function( _params )
+	{
+		max = ToInt(_params[0], null);
+		if(typeId(max) == 1)
+		{
+			ConfigSet("Difficulty","MaxForRandom", max);
+			this.MaxForRandom = max;
+
+			this.Bot.ChoseRandomDiff = false; // reset so it calculates a new diff
+			this.Priority = 1.0;
+			return;
+		}
+	},
+
+	Help =
+	{
+		"Sets the maximum difficulty to be used when selecting random difficulty",
 	},
 };
