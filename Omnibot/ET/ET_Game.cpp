@@ -20,6 +20,7 @@
 #include "gmETBinds.h"
 
 int ET_Game::CLASSEXoffset;
+bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
 
 IGame *CreateGameInstance()
 {
@@ -97,7 +98,10 @@ bool ET_Game::Init()
 {
 	SetRenderOverlayType(OVERLAY_OPENGL);
 
-	CLASSEXoffset = strcmp(g_EngineFuncs->GetModName(), "etblight") ? 0 : 2;
+	const char *modName = g_EngineFuncs->GetModName();
+	IsETBlight = !strcmp(modName, "etblight");
+	IsBastardmod = !strcmp(modName, "bastardmod");
+	CLASSEXoffset = IsETBlight ? 2 : 0;
 
 	AiState::FollowPath::m_OldLadderStyle = false;
 
