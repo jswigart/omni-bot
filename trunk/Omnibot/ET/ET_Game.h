@@ -52,6 +52,7 @@ public:
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
 	
 	static int CLASSEXoffset;
+	static bool IsETBlight, IsBastardmod;
 
 	ET_Game() {};
 	virtual ~ET_Game() {};

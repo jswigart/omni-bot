@@ -92,18 +92,28 @@ void ET_Client::Init(int _gameid)
 
 void ET_Client::UpdateBotInput()
 {
-	//ETblight sniper hack
-	if(ET_Game::CLASSEXoffset == 2 && m_ClientInput.m_ButtonFlags.CheckFlag(BOT_BUTTON_AIM))
+	//ETBlight and bastardmod sniper hack
+	if(m_ClientInput.m_ButtonFlags.CheckFlag(BOT_BUTTON_AIM))
 	{
-		if(m_ClientInput.m_CurrentWeapon == 72) //MN PROTO
+		if(ET_Game::IsETBlight)
 		{
-			m_ClientInput.m_CurrentWeapon = 75;
-			m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+			if(m_ClientInput.m_CurrentWeapon == 72) //MN PROTO
+			{
+				m_ClientInput.m_CurrentWeapon = 75;
+				m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+			}
+			if(m_ClientInput.m_CurrentWeapon == 79) //MP40SS
+			{
+				m_ClientInput.m_CurrentWeapon = 80;
+				m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+			}
 		}
-		if(m_ClientInput.m_CurrentWeapon == 79) //MP40SS
+		if(ET_Game::IsBastardmod)
 		{
-			m_ClientInput.m_CurrentWeapon = 80;
-			m_ClientInput.m_ButtonFlags.ClearFlag(BOT_BUTTON_AIM);
+			if(m_ClientInput.m_CurrentWeapon == 59) //BASTARD FG42
+			{
+				m_ClientInput.m_CurrentWeapon = 60;
+			}
 		}
 	}
 	Client::UpdateBotInput();
