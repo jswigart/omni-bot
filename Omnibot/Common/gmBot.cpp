@@ -1669,7 +1669,7 @@ int gmBot::gmfHasAnyWeapon(gmThread *a_thread)
 			CheckAmmo = chkAmmo.GetInt()!=0;
 
 		gmVariable chkCharged = params->Get(a_thread->GetMachine(),"CheckCharged");
-		if(chkAmmo.IsInt())
+		if(chkCharged.IsInt())
 			CheckCharged = chkCharged.GetInt()!=0;
 	}
 	//////////////////////////////////////////////////////////////////////////
