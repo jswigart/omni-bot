@@ -601,7 +601,12 @@ global OnMapLoad = function()
 				ROUTE_northentrance =
 				{
 					Weight = 3,
-					ROUTE_northgallery = {},
+					ROUTE_northgallery = 
+					{
+						Weight = 2,
+						ROUTE_door = {Weight = 3,},
+						ROUTE_rearaltar = {},
+					},
 					ROUTE_n_maingallery =
 					{
 						ROUTE_door = {},
@@ -671,6 +676,39 @@ global OnMapLoad = function()
 	EntityKill( 231 );
 	EntityKill( 341 );
 	EntityKill( 200 );
+	
+	// Extra entities for 1.0 fix
+	EntityKill( 503 );
+	EntityKill( 504 );
+	EntityKill( 505 );
+	EntityKill( 506 );
+	EntityKill( 379 );
+	EntityKill(350);
+	EntityKill(343);
+	EntityKill(344);
+	EntityKill(345);
+	EntityKill(346);
+	EntityKill(347);
+	EntityKill(348);
+	EntityKill(349);
+	EntityKill(372);
+	EntityKill(243);
+	EntityKill(242);
+	EntityKill(249);
+	EntityKill(244);
+	EntityKill(245);
+	EntityKill(246);
+	EntityKill(247);
+	EntityKill(248);
+	EntityKill(90);
+	EntityKill(507);
+	// Lightsfix ( prevents script errors)
+	EntityKill(144);
+	EntityKill(145);
+	EntityKill(146);
+	EntityKill(147);
+	EntityKill(143);
+	EntityKill(142);
 };
 
 global OnBotJoin = function( bot )
