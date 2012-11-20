@@ -82,7 +82,6 @@ global Map =
 				if ( Map.BridgeASBots == 0 && _this.Bot.HasWeapon( WEAPON.SMOKE_GRENADE ) ) {
 					wpTable = Util.WpNameInfo( "bridge_as" );
 					Map.BridgeASBots += 1;
-
 					_this.Bot.MaxViewDistance = 10; //Martin - Don't let bots see enemies when they throw smoke
 					_this.Bot.HoldButton( BTN.SPRINT, 999 );
 					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
@@ -95,7 +94,6 @@ global Map =
 							sleep( 1 );
 						}
 					}
-					
 					_this.Bot.ReleaseButton( BTN.SPRINT );
 					_this.Bot.MaxViewDistance = Map.ViewDistance;
 				}
@@ -554,6 +552,8 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rCrypt7" );
+	
+	Map.Airstrike.bridge.Enabled = true;
 
 	SetGoalPriority( "CALL.*", 0.7 );
 	SetGoalPriority( "ARTILLERY.*", 0.7 );

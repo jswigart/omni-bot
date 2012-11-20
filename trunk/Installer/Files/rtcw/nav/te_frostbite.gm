@@ -211,8 +211,7 @@ global Map =
 
 		if ( Map.DocStatus == 0 ) {
 			//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_flag" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 		}
 
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
@@ -464,8 +463,7 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Lower.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rflag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );

@@ -12,6 +12,8 @@ global Map =
 	NorthDyno = 0,
 	SouthDyno = 0,
 	Friendlyfire,
+	NETAxis = 0,
+	NETAllies = 0,
 
 	DispenseAmmoTime = 10, // give axis time to go call the arty
 	DontDispenseAmmo = true,
@@ -141,6 +143,9 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSouth.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth.*" );
+			
+			Wp.SetWaypointFlag( "r2block1", "allies", false );
+			Wp.SetWaypointFlag( "r2block2", "allies", false );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bNorth.*" );
@@ -286,7 +291,46 @@ global Map =
 			}
 		},
 	},
-
+	NET =
+	{
+		Name = "NET",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.NETAllies += 1;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.NETAxis += 1;
+			}
+			if (Map.NETAxis == 0 && Map.NETAllies > 1)
+			{
+				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are pushing NET" );
+			}
+			if (Map.NETAllies == 0 && Map.NETAxis > 1)
+			{
+				//RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Axis control NET" );
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.NETAllies -= 1;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.NETAxis -= 1;
+			}
+		},
+	},
 };
 
 global OnMapLoad = function()
@@ -302,6 +346,8 @@ global OnMapLoad = function()
 	r1push = OnTriggerRegion( AABB( 498.000,1791.000,327.000,720.000,2178.000,417.000 ), RegionTrigger.DisableBotPush );
 	spawnCombat = OnTriggerRegion( AABB( 2304.000,1855.000,-1.000,2944.000,2368.000,113.000 ), RegionTrigger.DisableBotPush );
 	bspawn = OnTriggerRegion(AABB(-2816.000,-1536.000,113.000,-2431.000,-48.000,427.000),RegionTrigger.DisableBotPush);
+	tinladder = OnTriggerRegion(AABB(1923.000,3114.000,14.000,2009.000,3200.000,411.000),RegionTrigger.DisableBotPush);
+	tNET = OnTriggerRegion(AABB(1120.000,1047.000,321.000,1824.000,1892.000,395.000),Map.NET);
 
 	OnTrigger( "Allied team has disabled the North Radar!", Map.North_Destroyed );
 	OnTrigger( "Planted at the North Radar [01].", Map.north_planted );
@@ -332,6 +378,11 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_bSouth.*" );
+	
+	//Close off south for bots
+	Wp.SetWaypointFlag( "r2block1", "allies", true );
+	Wp.SetWaypointFlag( "r2block2", "allies", true );
+	Wp.SetWaypointFlag( "tunnelblock1", "allies", true );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	//SetGoalPriority( "DEFEND_rNorth_a[16]", 0.60 );
@@ -405,7 +456,7 @@ global OnMapLoad = function()
 				},
 				ROUTE_ntunnel =
 				{
-					Weight = 3,
+					Weight = 2,
 					ROUTE_ntunnel_s = {},
 					ROUTE_ntunnel_n = {Weight = 2,},
 				},
