@@ -636,7 +636,7 @@ global OnBotJoin = function( bot )
 		}
 	}
 	else {
-		bot.ChangeSpawnPoint(2);
+		bot.ChangeSpawnPoint(0);
 	}
 };
 
