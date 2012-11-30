@@ -8,6 +8,7 @@ this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
 	this.TargetEntity = null;
+	this.NoGibbing = GetCvar("g_botgib") == 0;
 };
 
 this.GetPriority = function()
@@ -81,6 +82,30 @@ this.Update = function()
 
 		pos = GetEntPosition(this.TargetEntity);
 		this.AddAimRequest(Priority.High, "position", pos);
+
+		// when bot gib is disabled, humans are exploiting it by laying on top of dyno with /injure
+		// so let's force a gib
+		if (this.NoGibbing) {
+			gibTarget = null;
+			ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.ANYPLAYER, gibTarget);
+			dowhile(ent) {
+				if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 100 && !this.Bot.IsAllied(ent)
+					&& !GetEntFlags(ent, ENTFLAG.LIMBO) ){
+					gibTarget = ent;
+					break;
+				}
+				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.ANYPLAYER, ent);
+			}
+
+			if (gibTarget) {
+				this.AddWeaponRequest(Priority.High, this.Bot.GetCurrentWeapon() ); // don't reload
+				this.AddAimRequest(Priority.High, "position", GetEntPosition(gibTarget));
+				this.Bot.HoldButton(BTN.ATTACK1, 2);
+				sleep(2);
+				this.Finished(); // just reset the goal
+			}
+		}
+
 		this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
 		this.BlockForWeaponChange( WEAPON.PLIERS );
 
