@@ -398,6 +398,29 @@ Commands["draw_oids"] =
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+Commands["ignore"] =
+{
+	Func = function( _params )
+	{
+		if ( typeName(_params[0]) == "float" && _params[1] )
+		{
+			entId = ToInt(_params[0]);
+			time = ToFloat(_params[1]);
+			foreach ( id and bot in BotTable )
+			{
+				bot.IgnoreTarget(entId, time);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Ignore given entity for given time for debug purposes",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // dump goal definitions from a passed map table
 // /bot goaldef <table> <goal type>
 Commands["goaldef"] =
