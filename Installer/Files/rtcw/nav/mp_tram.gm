@@ -52,8 +52,8 @@ global Map =
 		{
 			navigate = function( _this )
 			{
-				_this.Bot.HoldButton( BTN.FORWARD, 1 );
-				sleep( 1 );
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
 			},
 		},
 		bjump =

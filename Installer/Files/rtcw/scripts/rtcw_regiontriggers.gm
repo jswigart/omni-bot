@@ -6,6 +6,18 @@
 
 if ( RegionTrigger == null ) {
 	global RegionTrigger = table();
+	
+	RegionTrigger.Create = function(bounds, type, name)
+	{
+		if (RegionTrigger[type]) {
+			trigger = tableDuplicate(RegionTrigger[type]);
+			if(name) {
+				trigger.Name = name;
+			}
+			OnTriggerRegion(bounds,trigger);
+		}
+	};
+
 	/*
 	    Name:		DisableBotPush
 	    Description:	Disables bot pushing and combat movement in the region. Enables on exit
@@ -188,5 +200,4 @@ if ( RegionTrigger == null ) {
 
 		},
 	};
-}
-;
+};
