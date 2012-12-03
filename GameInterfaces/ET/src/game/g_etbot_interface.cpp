@@ -1905,6 +1905,8 @@ public:
 		Info_SetValueForKey(userinfo, "snaps", "20");
 		Info_SetValueForKey(userinfo, "ip", "localhost");
 		Info_SetValueForKey(userinfo, "cl_guid", guid.str().c_str());
+		Info_SetValueForKey(userinfo, "cl_punkbuster", "0");
+		Info_SetValueForKey(userinfo, "cl_anonymous", "0");
 
 		trap_SetUserinfo(num, userinfo);
 
