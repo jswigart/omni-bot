@@ -131,11 +131,14 @@ function et_ClientCommand(clientNum)
 			userprint(clientNum, "chat", "^3" .. command .. ": ^7insufficient admin status")
 			return 1
 		end
-		if argv0 == "say" then
+		-- lets make announce only centerprint
+		if command == "announce" then
+			-- do nothing
+		elseif argv0 == "say" then
 			-- SAY_ALL		0
 			-- SAY_TEAM		1
 			-- SAY_TELL		2
-			-- SAY_LIMBO	3
+			-- SAY_LIMBO		3
 			et.G_Say(clientNum, 0, text)
 		elseif argv0 == "say_team" then
 			et.G_Say(clientNum, 1, text)			
@@ -221,10 +224,16 @@ function execcommand(command, clientNum, params)
 		announce(clientNum, params)
 	elseif command == "ban" then
 		ban(clientNum, params)
+	elseif command == "botkickall" then
+		botkickall()	
 	elseif command == "botplayers" then
 		botplayers(clientNum, params)
+	elseif command == "botteam" then
+		botteam(clientNum, params)
 	elseif command == "date" then
 		date(clientNum)
+	elseif command == "difficulty" then
+		difficulty(clientNum, params)
 	elseif command == "help" then
 		help(clientNum, params)
 	elseif command == "fling" then
@@ -512,7 +521,12 @@ function userprint(clientNum, area, text)
 	else
 		-- et.G_Print(et.Q_CleanStr(text) .. "\n")  -- questionable if im gonna leave this line in
 		-- et.trap_SendServerCommand(clientNum, area .. "\"" .. text .. " \"")
-		et.trap_SendServerCommand(clientNum, string.format('%s \"%s\"',area,text))
+		-- cs: lets give centprints a high priority
+		if area == "cp" then
+			et.trap_SendServerCommand(clientNum, string.format('%s \"%s\" 5',area,text))
+		else
+			et.trap_SendServerCommand(clientNum, string.format('%s \"%s\"',area,text))
+		end
 	end
 end
 
