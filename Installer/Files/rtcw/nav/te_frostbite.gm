@@ -38,6 +38,8 @@ global Map =
 	PanzHitlerBots = 0,
 	PanzLowerBots = 0,
 	PanzMainDoorBots = 0,
+	AlliesTop = 0,
+	PanzFlagBots = 0,
 
 	//set to false if you don't want axis /killing when docs are returned
 	Suicide = true,
@@ -94,6 +96,7 @@ global Map =
 				if ( !Map.PanzHitlerFired && Map.PanzHitlerBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
 					wpTable = Util.WpNameInfo( "bPanzHitler" );
 					Map.PanzHitlerBots += 1;
+					Map.PanzFlagBots += 1;
 					Map.PanzHitlerFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
 
 					_this.Bot.HoldButton( BTN.SPRINT, 999 );
@@ -104,11 +107,12 @@ global Map =
 							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
 							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
 							sleep( 0.3 ); // make sure its ready to fire
-							sleep( 4 ); // Wait for axis to arrive
+							sleep( 2 ); // Wait for axis to arrive
 							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
 							sleep( 2 );
 						}
 					}
+					Map.PanzFlagBots -= 1;
 					Map.PanzHitlerBots -= 1;
 				}
 				yield();
@@ -139,6 +143,31 @@ global Map =
 						}
 					}
 					Map.PanzLowerBots -= 1;
+				}
+				yield();
+			},
+		},
+		bpanzflag =
+		{
+			navigate = function( _this )
+			{
+				if ( Map.PanzFlagBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) && Map.AlliesTop == 0 && Map.FlagStatus != 2 ) {
+					wpTable = Util.WpNameInfo( "bpanzflag" );
+					Map.PanzFlagBots += 1;
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzFlagBots -= 1;
 				}
 				yield();
 			},
@@ -514,6 +543,26 @@ global Map =
 		},
 	},
 	
+	PanzFlag =
+	{
+		Name = "PanzFlag",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES && Map.fallback == false ) 
+			{
+				Map.AlliesTop += 1;
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES && Map.fallback == false ) 
+			{
+				Map.AlliesTop -= 1;
+			}
+		},
+	},
+	
 	sidewalltimer = function()
 	{
 		while ( 1 )
@@ -566,6 +615,7 @@ global OnMapLoad = function()
 	fallback2 = OnTriggerRegion( AABB( -417.000,-28.000,3.000,-375.000,220.000,77.000 ), Map.FallbackTrigger );
 	fallback3 = OnTriggerRegion( AABB( -381.000,-496.000,223.000,-255.000,-458.000,297.000 ), Map.FallbackTrigger );
 	fallback4 = OnTriggerRegion( AABB( -1286.000,1263.000,3.000,-1245.000,1456.000,77.000 ), Map.FallbackTrigger );
+	laddertop = OnTriggerRegion( AABB( -1908.000,-384.000,257.000,-1631.000,160.000,331.000 ), Map.PanzFlag );
 
 	thread( Map.sidewalltimer );
 
@@ -779,11 +829,11 @@ global OnMapLoad = function()
 		{
 			ROUTE_docpatrol = {},
 		},
-		DEFEND_Cp_Defense_1 =
+		DEFEND_CP_Defense_1 =
 		{
 			ROUTE_bStairs = {},
 		},
-		DEFEND_Cp_Defense_3 =
+		DEFEND_CP_Defense_3 =
 		{
 			ROUTE_office1 = {},
 		},
@@ -802,11 +852,11 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_CP_Attack_4 = MapRoutes.CHECKPOINT_forward_respawn;
 	MapRoutes.ATTACK_CP_Attack_5 = MapRoutes.CHECKPOINT_forward_respawn;
 	MapRoutes.ATTACK_CP_Attack_6 = MapRoutes.CHECKPOINT_forward_respawn;
-	MapRoutes.DEFEND_Cp_Defense_2 = MapRoutes.DEFEND_Cp_Defense_1;
-	MapRoutes.DEFEND_Cp_Defense_6 = MapRoutes.DEFEND_Cp_Defense_1;
-	MapRoutes.DEFEND_Cp_Defense_4 = MapRoutes.DEFEND_Cp_Defense_3;
-	MapRoutes.DEFEND_Cp_Defense_5 = MapRoutes.DEFEND_Cp_Defense_3;
-	MapRoutes.DEFEND_Cp_Defense_7 = MapRoutes.DEFEND_Cp_Defense_3;
+	MapRoutes.DEFEND_CP_Defense_2 = MapRoutes.DEFEND_CP_Defense_1;
+	MapRoutes.DEFEND_CP_Defense_6 = MapRoutes.DEFEND_CP_Defense_1;
+	MapRoutes.DEFEND_CP_Defense_4 = MapRoutes.DEFEND_CP_Defense_3;
+	MapRoutes.DEFEND_CP_Defense_5 = MapRoutes.DEFEND_CP_Defense_3;
+	MapRoutes.DEFEND_CP_Defense_8 = MapRoutes.DEFEND_CP_Defense_3;
 
 	Util.Routes( MapRoutes );
 
