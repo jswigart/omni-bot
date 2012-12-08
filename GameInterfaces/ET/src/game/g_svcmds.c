@@ -609,8 +609,13 @@ void	Svcmd_EntityList_f (void) {
 		}
 
 		if ( check->classname ) {
-			G_Printf("%s", check->classname);
+			G_Printf("%s   ", check->classname);
 		}
+
+		if ( check->scriptName && check->targetname ) {
+			G_Printf("^3(script: %s target: %s)^7", check->scriptName, check->targetname);
+		}
+
 		G_Printf("\n");
 	}
 }
