@@ -1,0 +1,168 @@
+this.Name = "EscortEngineer";
+this.Parent = "HighLevel";
+this.AutoAdd = false;
+this.SkipPriorityWhenActive = true;
+this.AlwaysRecieveEvents = false;
+this.LimitToClass(CLASS.MEDIC);
+this.Debug = false;
+
+this.Initialize = function()
+{
+	this.FOLLOW = 1;
+	this.GO_TO_COVER = 2;
+	this.COVER = 3;
+
+	Util.ScriptDebugPrint(this.Name, "initialized");
+};
+
+this.GetBotFromGameEntity = function(ent)
+{
+	entId = GetGameIdFromEntity(ent);
+	if (entId)
+	{
+		foreach (id and bot in BotTable)
+		{
+			if (bot.GetGameId() == entId)
+			{
+				return entId;
+			}
+		}
+	}
+	
+	return 0;
+};
+
+this.EvaluateBotEngineer = function(ent)
+{
+	bot = this.GetBotFromGameEntity(engineer);
+	return !bot.HasRole(ROLE.DEFENDER);
+	
+	// todo: evaluate for plant goal
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		engineer = this.Bot.GetNearestAlly(CAT.PLAYER, CLASS.ENGINEER);
+
+		// todo: check for alive
+		if ( engineer && (Util.IsHuman(engineer) || this.EvaluateBotEngineer(engineer)) )
+		{
+			if ( this.Bot.DistanceTo(engineer) <= 400 )
+			{
+				this.TargetEntity = engineer;
+				this.Priority = 0.9;
+			}
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	this.State = this.FOLLOW;
+};
+
+this.Update = function()
+{
+	while(1)
+	{
+		switch(this.State)
+		{
+			case this.FOLLOW:
+			{
+				this.UpdateFollow();
+			}
+			case this.GO_TO_COVER:
+			{
+				this.UpdateGotoCover();
+			}
+			case this.COVER:
+			{
+				this.UpdateCover();
+			}
+		}
+
+		yield();
+	}
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.TargetEntity = null;
+};
+
+
+this.UpdateFollow = function()
+{
+	if ( this.TargetEntity && GetEntVelocity(this.TargetEntity).IsZero() )
+	{
+		this.State = this.GO_TO_COVER;
+		return;
+	}
+
+	pos = GetEntPosition(this.TargetEntity);
+	if ( !pos || this.GotoAsync(pos, 128) == EVENT.PATH_FAILED )
+	{
+		this.Finished();
+		
+		// todo: store the target ent on bot for persistence
+	}
+};
+
+this.UpdateGotoCover = function()
+{
+	pos = GetEntPosition(this.TargetEntity);
+	foreach( ind and offset in this.CoverOffsets )
+	{
+		t = pos+offset;
+		if ( !this.Bot.HasLineOfSightTo(t) ) { continue; }
+		if ( this.Goto(t) == EVENT.PATH_SUCCESS )
+		{
+			this.State = this.COVER;
+			return;
+		}
+	}
+
+	// todo: store target ent on bot for persistence
+	this.Finished();
+};
+
+this.UpdateCover = function()
+{
+	dist = this.Bot.DistanceTo(this.TargetEntity);
+	if ( this.TargetEntity && !GetEntVelocity(this.TargetEntity).IsZero() || dist > 300 )
+	{
+		this.State = this.FOLLOW;
+		this.ReleaseAimRequest();
+		return;
+	}
+
+	// just face the opposite direction
+	tFacing = GetEntFacing(this.TargetEntity);
+	this.AddAimRequest(Priority.Medium, "facing", Vector3(tFacing.x * -1, tFacing.y * -1, 0));
+
+	if ( GetEntFlags(this.TargetEntity, ENTFLAG.CROUCHED) )
+	{
+		this.Bot.HoldButton(BTN.CROUCH, 0.25);
+	}
+
+	//this.Goto(this.Bot.GetPosition());
+	this.Bot.MoveTowards(this.Bot.GetPosition());
+};
+
+this.CoverOffsets =
+{
+	Vector3(128,128,0),
+	Vector3(-128,-128,0),
+	Vector3(-128,128,0),
+	Vector3(128,-128,0),
+	Vector3(64,64,0),
+	Vector3(-64,-64,0),
+	Vector3(-64,64,0),
+	Vector3(64,-64,0),
+};
