@@ -378,7 +378,7 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( gm, "trigger", "allied_object_stolen" );
 			}
 
-            Bot_Util_SendTrigger( ent, NULL, va( "Axis have stolen %s!", ent->message ), "stolen" );
+		    Bot_Util_SendTrigger( ent, NULL, va( "Axis have stolen %s!", ent->message ), "stolen" );
 
 		}
 		else {
@@ -392,7 +392,7 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( gm, "trigger", "axis_object_stolen" );
 			}
 
-            Bot_Util_SendTrigger( ent, NULL, va( "Allies have stolen %s!", ent->message ), "stolen" );
+		    Bot_Util_SendTrigger( ent, NULL, va( "Allies have stolen %s!", ent->message ), "stolen" );
 
 		}
 		// dhm

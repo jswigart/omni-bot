@@ -197,7 +197,7 @@ void P_WorldEffects( gentity_t *ent ) {
 
 
 	// poisoned
-	if ( ent->poisoned && ent->client ) {
+	if ( ent->poisoned && ent->client && (g_gamestate.integer == GS_PLAYING || g_warmupDamage.integer == 1) ) {
 		if ( ( level.time >= ( ent->lastPoisonTime + 1000 ) ) && ( ent->health > 0 ) ) {
 			int n = rand() % 3;
 			gentity_t *attacker = g_entities + ent->poisonEnt;
