@@ -1799,6 +1799,7 @@ void ExitLevel( void ) {
 	level.intermissiontime = 0;
 
 	// reset all the scores so we don't enter the intermission again
+	// cs: also reset the spawn point selection.
 	level.teamScores[TEAM_RED] = 0;
 	level.teamScores[TEAM_BLUE] = 0;
 	for ( i = 0 ; i < g_maxclients.integer ; i++ ) {
@@ -1806,6 +1807,7 @@ void ExitLevel( void ) {
 		if ( cl->pers.connected != CON_CONNECTED ) {
 			continue;
 		}
+		cl->sess.spawnObjectiveIndex = 0;
 		cl->ps.persistant[PERS_SCORE] = 0;
 	}
 
@@ -1817,7 +1819,7 @@ void ExitLevel( void ) {
 	for ( i = 0 ; i < g_maxclients.integer ; i++ ) {
 
 		if ( level.clients[i].pers.connected == CON_CONNECTED ) {
-			level.clients[i].pers.connected = CON_CONNECTING;
+		    level.clients[i].pers.connected = CON_CONNECTING;
 		}
 	}
 
