@@ -1670,7 +1670,7 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 	tent->s.otherEntityNum = ent->s.number;
 
 	if ( (g_unlockWeapons.integer & WEAPONUNLOCK_HANDICAP) && (ent->client && ent->client->ps.stats[STAT_PLAYER_CLASS] != PC_SOLDIER) ) {
-	    spread = 4000;
+	    spread *= 7;
 	}
 
 	if ( fullmode ) {
