@@ -20,8 +20,9 @@
 
 #define MAXBOTDIFFICULTY    7
 
-#define WEAPONUNLOCK_WEAPONS 1
-#define WEAPONUNLOCK_NOSPAWN 2
+#define WEAPONUNLOCK_WEAPONS  1 // any class can spawn with or pickup soldier weapons
+#define WEAPONUNLOCK_NOSPAWN  2 // can pickup, but cannot spawn with the weapon
+#define WEAPONUNLOCK_HANDICAP 4 // non-soldiers aren't as effective with soldier weapons
 
 #define BODY_QUEUE_SIZE     8
 
@@ -1329,6 +1330,8 @@ extern vmCvar_t g_kickItems;
 extern vmCvar_t g_binocs;
 extern vmCvar_t g_unlockWeapons;
 extern vmCvar_t g_flagLock;
+extern vmCvar_t g_venomSpread;
+extern vmCvar_t g_venomDamage;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;

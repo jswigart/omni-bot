@@ -860,6 +860,15 @@ fire_flamechunk
 */
 gentity_t *fire_flamechunk( gentity_t *self, vec3_t start, vec3_t dir ) {
 	gentity_t   *bolt;
+	float	    startSpeed = FLAME_START_SPEED;
+	float	    startSize = FLAME_START_SIZE;
+	int	    duration = 800;
+
+	if ( (g_unlockWeapons.integer & WEAPONUNLOCK_HANDICAP) && (self->client && self->client->ps.stats[STAT_PLAYER_CLASS] != PC_SOLDIER) ) {
+	    startSpeed = startSpeed / 4;
+	    duration = 200;
+	    startSize = 0.25;
+	}
 
 	// Only spawn every other frame
 	if ( self->count2 ) {
@@ -885,14 +894,14 @@ gentity_t *fire_flamechunk( gentity_t *self, vec3_t start, vec3_t dir ) {
 
 	bolt->s.pos.trType = TR_DECCELERATE;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;     // move a bit on the very first frame
-	bolt->s.pos.trDuration = 800;
+	bolt->s.pos.trDuration = duration;
 
 	// 'speed' will be the current size radius of the chunk
-	bolt->speed = FLAME_START_SIZE;
+	bolt->speed = startSize;
 	VectorSet( bolt->r.mins, -4, -4, -4 );
 	VectorSet( bolt->r.maxs, 4, 4, 4 );
 	VectorCopy( start, bolt->s.pos.trBase );
-	VectorScale( dir, FLAME_START_SPEED, bolt->s.pos.trDelta );
+	VectorScale( dir, startSpeed, bolt->s.pos.trDelta );
 
 	SnapVector( bolt->s.pos.trDelta );          // save net bandwidth
 	VectorCopy( start, bolt->r.currentOrigin );
@@ -1129,6 +1138,11 @@ fire_rocket
 */
 gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir ) {
 	gentity_t   *bolt;
+	int damage = G_GetWeaponDamage( WP_ROCKET_LAUNCHER );
+
+	if ( (g_unlockWeapons.integer & WEAPONUNLOCK_HANDICAP) && (self->client && self->client->ps.stats[STAT_PLAYER_CLASS] != PC_SOLDIER) ) {
+	    damage = (int)(damage / 2);
+	}
 
 	VectorNormalize( dir );
 
@@ -1142,8 +1156,8 @@ gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir ) {
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
 	bolt->damage = G_GetWeaponDamage( WP_ROCKET_LAUNCHER ); // JPW NERVE
-	bolt->splashDamage = G_GetWeaponDamage( WP_ROCKET_LAUNCHER ); // JPW NERVE
-	bolt->splashRadius = G_GetWeaponDamage( WP_ROCKET_LAUNCHER );
+	bolt->splashDamage = damage; // G_GetWeaponDamage( WP_ROCKET_LAUNCHER ); // JPW NERVE
+	bolt->splashRadius = damage; // G_GetWeaponDamage( WP_ROCKET_LAUNCHER );
 	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
 	bolt->clipmask = MASK_MISSILESHOT;
