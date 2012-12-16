@@ -564,7 +564,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			if ( attacker != self && level.warmupTime <= 0 ) {
 				if ( attacker->client->pers.localClient || ( attacker->r.svFlags & SVF_BOT ) ) {
 					//trap_SendServerCommand( self-g_entities, "complaint -4" );
-				} else {
+				} else if ( !(self->r.svFlags &SVF_BOT) ){
 					trap_SendServerCommand( self - g_entities, va( "complaint %i", attacker->s.number ) );
 					self->client->pers.complaintClient = attacker->s.clientNum;
 					self->client->pers.complaintEndTime = level.time + 20500;
