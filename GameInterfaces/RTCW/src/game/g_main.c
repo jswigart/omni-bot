@@ -83,6 +83,8 @@ vmCvar_t g_kickItems; // bit flagged. 0 disable 1 grenades 2 airstrike
 vmCvar_t g_binocs; // bit flagged. 0 disable 1 soldiers 2 engineers 4 medics
 vmCvar_t g_unlockWeapons;
 vmCvar_t g_flagLock; // checkpoints can't be recaptured
+vmCvar_t g_venomSpread;
+vmCvar_t g_venomDamage;
 
 // zinx etpro antiwarp
 vmCvar_t g_antiwarp;
@@ -365,9 +367,11 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_betting,                   "g_betting",                    "0",                    0,                                                  0,          qfalse },
 	{ &g_muteSpecs,                 "g_muteSpecs",                  "0",                    0,                                                  0,          qfalse },
 	{ &g_kickItems,                 "g_kickItems",                  "0",                    0,                                                  0,          qfalse },
-	{ &g_binocs,                    "g_binocs",						"0",                    0,                                                  0,          qfalse },
-	{ &g_unlockWeapons,             "g_unlockWeapons",				"0",                    0,                                                  0,          qfalse },
-	{ &g_flagLock,                  "g_flagLock",				    "0",                    CVAR_LATCH,                                         0,          qfalse },
+	{ &g_binocs,                    "g_binocs",                     "0",                    0,                                                  0,          qfalse },
+	{ &g_unlockWeapons,             "g_unlockWeapons",              "0",                    0,                                                  0,          qfalse },
+	{ &g_flagLock,                  "g_flagLock",                   "0",                    CVAR_LATCH,                                         0,          qfalse },
+	{ &g_venomSpread,               "g_venomSpread",                "600",                  0,                                                  0,          qfalse },
+	{ &g_venomDamage,               "g_venomDamage",                "20",                   0,                                                  0,          qfalse },
 
 	// zinx etpro antiwarp
 	{ &g_maxWarp,                   "g_maxWarp",                    "4",                    0 },
