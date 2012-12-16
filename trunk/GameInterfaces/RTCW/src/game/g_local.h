@@ -18,6 +18,8 @@
 #define GAMEVERSION "omnibot"
 // done.
 
+#define MAXBOTDIFFICULTY    7
+
 #define BODY_QUEUE_SIZE     8
 
 #define INFINITE            1000000
