@@ -20,6 +20,9 @@
 
 #define MAXBOTDIFFICULTY    7
 
+#define WEAPONUNLOCK_WEAPONS 1
+#define WEAPONUNLOCK_NOSPAWN 2
+
 #define BODY_QUEUE_SIZE     8
 
 #define INFINITE            1000000
