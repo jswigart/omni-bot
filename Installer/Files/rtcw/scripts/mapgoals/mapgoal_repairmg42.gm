@@ -28,6 +28,10 @@ this.UpgradeVersion = function(Props)
 			this.DisableGoal(true);
 		}
 	}
+	
+	//default these to off
+	this.SetAvailable(1, false);
+	this.SetAvailable(2, false);
 };
 
 //////////////////////////////////////////////////////////////////////////
