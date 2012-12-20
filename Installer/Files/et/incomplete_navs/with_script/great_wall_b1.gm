@@ -1,0 +1,374 @@
+//==========================================================================================
+//
+//	great_wall_b1.gm
+//
+//	Who	    When		         What
+//------------------------------------------------------------------------------------------
+//	BMW	    06 December 2012	 Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Allied_MG42_Construction_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Axis_MG42_Construction_Dyno = 0,
+	Decoder_Door_Dyno = 0,
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
+		
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Allied_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_Allied_MG42_Construction" );
+
+		Util.MapDebugPrint( "Allied_MG42_Construction_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_Allied_MG42_Construction" );
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Allied_MG42_Construction_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_MG42_Construction_Dyno += 1;
+		Util.MapDebugPrint( "Allied_MG42_Construction_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Axis_MG42_Construction_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_MG42_Construction_Dyno += 1;
+		Util.MapDebugPrint( "Axis_MG42_Construction_Planted" );
+	},
+
+	Decoder_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Decoder_Door_Dyno += 1;
+		Util.MapDebugPrint( "Decoder_Door_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Allied_MG42_Construction_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_MG42_Construction_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_MG42_Construction_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Axis_MG42_Construction_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_MG42_Construction_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_MG42_Construction_Defused" );
+	},
+
+	Decoder_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Decoder_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Decoder_Door_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Allied_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_MG42_Construction" );
+
+		Map.Allied_MG42_Construction_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_MG42_Construction_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_MG42_Construction" );
+
+		Map.Axis_MG42_Construction_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_MG42_Construction_Destroyed" );
+	},
+
+	Decoder_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Decoder_Door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_decoder" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_MG42_Construction" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_Allied_MG42_Construction" );
+
+		Map.Decoder_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Decoder_Door_Destroyed" );
+	},
+
+	allied_decoder_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_decoder" );
+
+		Util.MapDebugPrint( "allied_decoder_Taken" );
+	},
+
+	allied_decoder_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_truck" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_decoder" );
+
+		Util.MapDebugPrint( "allied_decoder_Returned" );
+	},
+
+	allied_decoder_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		//Axis win
+		
+		Util.MapDebugPrint( "allied_decoder_Secured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Allied Team have built the MG42 nest!!", Map.Allied_MG42_Construction_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Axis Team have built the MG42 nest!!", Map.Axis_MG42_Construction_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Allied MG42 Construction.", Map.Allied_MG42_Construction_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis MG42 Construction.", Map.Axis_MG42_Construction_Planted );
+	OnTrigger( "Planted at Decoder Door.", Map.Decoder_Door_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Allied MG42 Construction.", Map.Allied_MG42_Construction_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis MG42 Construction.", Map.Axis_MG42_Construction_Defused );
+	OnTrigger( "Defused at Decoder Door.", Map.Decoder_Door_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Axis have destroyed the MG42 Nest!!", Map.Allied_MG42_Construction_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allies have destroyed the MG42 Nest!!", Map.Axis_MG42_Construction_Destroyed );
+	OnTrigger( "The axis team have destroyed the decoder door!", Map.Decoder_Door_Destroyed );
+	OnTrigger( "The Axis have stolen the Allied decoder", Map.allied_decoder_Taken );
+	OnTrigger( "The Allies have retrieved the decoder", Map.allied_decoder_Returned );
+	OnTrigger( "The Axis have secured the Allied decoder!", Map.allied_decoder_Secured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DecoderDoor" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Decoder_Door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_MG42_Construction" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_Axis_MG42_Construction" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_DecoderDoor" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Allied_Command_Post =
+		{
+		},
+		BUILD_Axis_Command_Post =
+		{
+		},
+		BUILD_Allied_MG42_Construction =
+		{
+		},
+		BUILD_Axis_MG42_Construction =
+		{
+		},
+		PLANT_Axis_Command_Post =
+		{
+		},
+		PLANT_Decoder_Door =
+		{
+		},
+		PLANT_Allied_MG42_Construction =
+		{
+		},
+		PLANT_Allied_Command_Post =
+		{
+		},
+		PLANT_Axis_MG42_Construction =
+		{
+		},
+		FLAG_allied_decoder =
+		{
+		},
+		CAPPOINT_truck =
+		{
+			ROUTE_DecoderRoom =
+			{
+				ROUTE_stairs = { Weight = 2, },
+				ROUTE_ladder = {},
+			},
+		},
+	};
+	Util.Routes(MapRoutes);
+};

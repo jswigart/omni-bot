@@ -6,6 +6,7 @@ Script and waypoints made by  >WES< P!NNAN & >WES< GRANNY
 // use /bot tracearty or /bot tracearty all to see the problems
 
 //bub: updated so engineers will not focus on buildig tank barriers until group 4
+//     changed one-way connection to two-way at command post health/ammo cabinets so bots can leave the area
 
 global Map =
 {
@@ -223,6 +224,8 @@ global Map =
 		Groups.DisableAxis(Groups.group4);
 		Groups.EnableAllies(Groups.group5);
 		Groups.EnableAxis(Groups.group6);
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_fort_.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "Map.Call_Artillery_ar_call_10" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "Map.Call_Artillery_ar_call_11" );
@@ -516,6 +519,18 @@ global Map =
 	
 		Util.MapDebugPrint( "tank_reached_command_post_area" );
 	},
+	
+	tank_passed_first_barrier = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_a_barrier1_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_a_fort_.*" );
+	
+		Util.MapDebugPrint( "tank_passed_first_barrier" );
+	},
+	
 };
 
 global OnMapLoad = function()
@@ -554,6 +569,7 @@ global OnMapLoad = function()
 	OnTrigger( "The Tank has been damaged!", Map.Tank_Damaged );
 	OnTrigger( "tank at location", Map.tank_at_location );
 	OnTrigger( "The tank has reached the command post area", Map.tank_reached_command_post_area );
+	OnTrigger( "the tank has passed the first barrier", Map.tank_passed_first_barrier );
 
 	//set up a positional trigger for the tank
 	l1 = OnTriggerRegion(AABB(3189.990,6417.613,982.043,3386.819,6738.422,1084.557), RegionTrigger.VehicleTrigger);

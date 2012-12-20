@@ -4,6 +4,20 @@
 //
 //==========================================================================================
 
+member Create = function(bounds, type, name)
+{
+	if (RegionTrigger[type]) {
+		trigger = tableDuplicate(RegionTrigger[type]);
+		if(name) {
+			trigger.Name = format("%s: %s",type,name);
+		}
+		OnTriggerRegion(bounds,trigger);
+		return;
+	}
+	
+	Util.MapDebugPrint("RegionTrigger.Create -> Invalid type specified", true);
+};
+
 /*
 	Name:		DisableBotPush
 	Description:	Disables bot pushing and combat movement in the region. Enables on exit

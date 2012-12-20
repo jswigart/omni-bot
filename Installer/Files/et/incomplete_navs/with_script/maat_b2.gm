@@ -1,0 +1,200 @@
+//==========================================================================================
+//
+//	maat_b2.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	11 November 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_cp" );
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_cp" );
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		Util.DisableGoal("CAPPOINT_cp");
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Allied_Safe_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Documents" );
+		Util.MapDebugPrint( "Allied_Safe_Destroyed" );
+	},
+
+	Axis_Safe_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Documents" );
+		Util.MapDebugPrint( "Axis_Safe_Destroyed" );
+	},
+
+	Allied_Documents_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Documents_Taken" );
+	},
+
+	Axis_Documents_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Documents_Taken" );
+	},
+
+	Allied_Documents_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Documents_Returned" );
+	},
+
+	Axis_Documents_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Documents_Returned" );
+	},
+
+	Allied_Documents_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint( "Allied_Documents_Secured" );
+	},
+
+	Axis_Documents_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "Axis_Documents_Secured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+	OnTrigger( "Axis have destroyed the ^3Safe Door^1 !", Map.Allied_Safe_Destroyed );
+	OnTrigger( "Allies have destroyed the ^3Safe Door^1 !", Map.Axis_Safe_Destroyed );
+	OnTrigger( "Axis have stolen the Allied Documents!", Map.Allied_Documents_Taken );
+	OnTrigger( "Allies have stolen the Axis Documents!", Map.Axis_Documents_Taken );
+	OnTrigger( "Flag returned Allied Documents!", Map.Allied_Documents_Returned );
+	OnTrigger( "Flag returned Axis Documents!", Map.Axis_Documents_Returned );
+	OnTrigger( "The Allied have secured the docu's", Map.Axis_Documents_Secured );
+	OnTrigger( "The Axis have secured the docu's", Map.Allied_Documents_Secured );
+
+	Util.DisableGoal( ".*", true );
+	Util.EnableGoal( ".*_Command_Post");
+	Util.EnableGoal( "DEFEND_cp.*");
+	Util.EnableGoal( "SNIPE_.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Safe" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_x_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Safe" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_l_.*" );
+
+	SetGoalPriority( "BUILD_Command_Post", 0.81 );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Command_Post =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_l_south = { Weight=2,
+					ROUTE_x_cp = {},
+					ROUTE_l_cp = {},
+				},
+				ROUTE_east1 = {},
+				ROUTE_east2 = {},
+			},
+			ROUTE_axis_spawn = {
+				ROUTE_x_south = { Weight=2,
+					ROUTE_x_cp = {},
+					ROUTE_l_cp = {},
+				},
+				ROUTE_west1 = {},
+				ROUTE_west2 = {},
+			},
+		},
+		FLAG_Axis_Documents =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_l_north1 = {
+					ROUTE_x_bridge = {},
+					ROUTE_l_bridge = {},
+				},
+				ROUTE_l_north2 = {
+					ROUTE_x_door1 = {},
+					ROUTE_l_door1 = {},
+				},
+				ROUTE_center = {
+					ROUTE_x_door2 = {},
+					ROUTE_l_door2 = {},
+					ROUTE_inside = {},
+				},
+			}
+		},
+		FLAG_Allied_Documents =
+		{
+			ROUTE_axis_spawn = {
+				ROUTE_x_north1 = {
+					ROUTE_x_bridge = {},
+					ROUTE_l_bridge = {},
+				},
+				ROUTE_x_north2 = {
+					ROUTE_x_door1 = {},
+					ROUTE_l_door1 = {},
+				},
+				ROUTE_center = {
+					ROUTE_x_door2 = {},
+					ROUTE_l_door2 = {},
+					ROUTE_inside = {},
+				},
+			}
+		},
+		CAPPOINT_cp = {
+			ROUTE_x_safe = {
+				ROUTE_l_north1 = {
+					ROUTE_east1 = {},
+				},
+				ROUTE_l_north2 = {
+					ROUTE_l_south = {},
+				},
+			},
+			ROUTE_l_safe = {
+				ROUTE_x_north1 = {
+					ROUTE_west1 = {},
+				},
+				ROUTE_x_north2 = {
+					ROUTE_x_south = {},
+				},
+			},
+		},
+	};
+	MapRoutes.PLANT_Allied_Safe = MapRoutes.FLAG_Allied_Documents;
+	MapRoutes.PLANT_Axis_Safe = MapRoutes.FLAG_Axis_Documents;
+	MapRoutes.PLANT_Command_Post = MapRoutes.BUILD_Command_Post;
+	MapRoutes["DEFEND.*_cp.*"] = MapRoutes.BUILD_Command_Post;
+	MapRoutes["DEFEND_x_safe.*"] = MapRoutes.FLAG_Allied_Documents;
+	MapRoutes["DEFEND_l_safe.*"] = MapRoutes.FLAG_Axis_Documents;
+	Util.Routes(MapRoutes);
+};

@@ -15,10 +15,15 @@ this.PrimaryFire.WaterProof = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;
 
+mod=GetModName();
+if (mod!="etblight" && mod!="bastardmod") {
+	this.PrimaryFire.IgnoreReload = true;
+}
+
 this.PrimaryFire.MaxAimError = Vector2(0, 0);
 this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
 
-this.PrimaryFire.DefaultDesirability = 0.0;
+this.PrimaryFire.DefaultDesirability = 0.2;
 this.PrimaryFire.SetDesirabilityRange(0, 1500, 0.2);
 
 this.PrimaryFire.LowAmmoThreshold = 10;

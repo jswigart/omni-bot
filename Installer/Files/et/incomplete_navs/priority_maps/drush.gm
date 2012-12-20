@@ -1,0 +1,207 @@
+//==========================================================================================
+//
+//	D-Rush (Beta 2) - drush.gm
+//
+//	Who		When			What
+//------------------------------------------------------------------------------------------
+//	Mateos		19 August 2012		Initial Script
+//
+//==========================================================================================
+
+
+/****************************************************
+Pathing and script by Mateos
+Correspondant WAY file size : -
+Last Update : 19th August 2012
+****************************************************/
+
+global Map =
+{
+	Debug = 0, 		// Please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Ladder_Dyno = 0,
+	Cave_Wall_Dyno = 0,
+	Gate_Dyno = 0,
+
+	Allied_Ladder_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Ladder_Built" );
+	},
+
+	Allied_Ladder_Planted = function( trigger )
+	{
+		Map.Allied_Ladder_Dyno += 1;
+
+		Util.MapDebugPrint( "Allied_Ladder_Planted" );
+	},
+
+	Cave_Wall_Planted = function( trigger )
+	{
+		Map.Cave_Wall_Dyno += 1;
+
+		Util.MapDebugPrint( "Cave_Wall_Planted" );
+	},
+
+	Gate_Planted = function( trigger )
+	{
+		Map.Gate_Dyno += 1;
+
+		Util.MapDebugPrint( "Gate_Planted" );
+	},
+
+	Allied_Ladder_Defused = function( trigger )
+	{
+		Map.Allied_Ladder_Dyno -= 1;
+
+		Util.MapDebugPrint( "Allied_Ladder_Defused" );
+	},
+
+	Cave_Wall_Defused = function( trigger )
+	{
+		Map.Cave_Wall_Dyno -= 1;
+
+		Util.MapDebugPrint( "Cave_Wall_Defused" );
+	},
+
+	Gate_Defused = function( trigger )
+	{
+		Map.Gate_Dyno -= 1;
+
+		Util.MapDebugPrint( "Gate_Defused" );
+	},
+
+	Allied_Ladder_Destroyed = function( trigger )
+	{
+		Map.Allied_Ladder_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Ladder_Destroyed" );
+	},
+
+	Cave_Wall_Destroyed = function( trigger )
+	{
+		Map.Cave_Wall_Dyno = 0;
+
+		Util.MapDebugPrint( "Cave_Wall_Destroyed" );
+	},
+
+	Gate_Destroyed = function( trigger )
+	{
+		Map.Gate_Dyno = 0;
+
+		Util.MapDebugPrint( "Gate_Destroyed" );
+	},
+
+	gold_crate1_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate1_Taken" );
+	},
+
+	gold_crate2_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate2_Taken" );
+	},
+
+	gold_crate1_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate1_Returned" );
+	},
+
+	gold_crate2_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate2_Returned" );
+	},
+
+	gold_crate1_Secured = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate1_Secured" );
+	},
+
+	gold_crate2_Secured = function( trigger )
+	{
+		Util.MapDebugPrint( "gold_crate2_Secured" );
+	},
+
+	flag_Axis_Captured = function( trigger )
+	{
+		Util.MapDebugPrint( "flag_Axis_Captured" );
+	},
+
+	flag_Allies_Captured = function( trigger )
+	{
+		Util.MapDebugPrint( "flag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	// *** TRIGGERS ***
+	OnTrigger( "Allies have constructed the Ladder!", Map.Allied_Ladder_Built );
+	OnTrigger( "Planted at Allied Ladder.", Map.Allied_Ladder_Planted );
+	OnTrigger( "Planted at the Cave Wall.", Map.Cave_Wall_Planted );
+	OnTrigger( "Planted at the Gate.", Map.Gate_Planted );
+	OnTrigger( "Defused at Allied Ladder.", Map.Allied_Ladder_Defused );
+	OnTrigger( "Defused at the Cave Wall.", Map.Cave_Wall_Defused );
+	OnTrigger( "Defused at the Gate.", Map.Gate_Defused );
+	OnTrigger( "Axis have destroyed the Ladder!", Map.Allied_Ladder_Destroyed );
+	OnTrigger( "The Allies have destroyed Cave Wall!", Map.Cave_Wall_Destroyed );
+	OnTrigger( "The Allies have destroyed the Gate and secured the Spawn!", Map.Gate_Destroyed );
+	OnTrigger( "Allies have stolen the Gold Crate!", Map.gold_crate1_Taken );
+	OnTrigger( "Allies have stolen the Gold Crate!", Map.gold_crate2_Taken );	// Both have same wm_announce...
+	OnTrigger( "Axis have returned the Gold Crate!", Map.gold_crate1_Returned );
+	OnTrigger( "Axis have returned the Gold Crate!", Map.gold_crate2_Returned );	// Both have same wm_announce...
+	OnTrigger( "Allies have secured a Gold crate!", Map.gold_crate1_Secured );	// East one
+	OnTrigger( "Allies have secured a Gold Crate!", Map.gold_crate2_Secured );	// North one
+	OnTrigger( "The Axis have reclaim the Flag!", Map.flag_Axis_Captured );
+	OnTrigger( "The Allies have captured the Flag!", Map.flag_Allies_Captured );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Ladder" );	// Unreachable
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 3, "CHECKPOINT_.*" );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120} );
+
+	Util.MapDebugPrint( "Omni-bot map script for D-Rush (Beta 2) by Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Allied_Ladder =
+		{
+		},
+		PLANT_Cave_Wall =
+		{
+		},
+		PLANT_Gate =
+		{
+		},
+		PLANT_Allied_Ladder =
+		{
+		},
+		FLAG_gold_crate1 =
+		{
+		},
+		FLAG_gold_crate2 =
+		{
+		},
+		CHECKPOINT_flag =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

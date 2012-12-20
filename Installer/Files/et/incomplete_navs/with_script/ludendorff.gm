@@ -1,0 +1,288 @@
+//==========================================================================================
+//
+//	ludendorff.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	03 August 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	Movers = { "MOVER_tank0" },
+
+	eastExplosives = false,
+	westExplosives = false,
+	eastFlag = 0,
+	centerFlag = 0,
+	westFlag = 0,
+	alliedSpawn = 0,
+	axisSpawn = 0,
+
+	SetSpawn = function()
+	{
+		s=0;
+		if(Map.eastFlag==TEAM.AXIS){
+			s+=1;
+			if(Map.centerFlag==TEAM.AXIS){
+				s+=1;
+				if(Map.westFlag==TEAM.AXIS){
+					s+=1;
+				}
+			}
+		}
+		Map.axisSpawn = s;
+		s=0;
+		if(Map.westFlag==TEAM.ALLIES){
+			s+=1;
+			if(Map.centerFlag==TEAM.ALLIES){
+				s+=1;
+				if(Map.eastFlag==TEAM.ALLIES){
+					s+=1;
+				}
+			}
+		}
+		Map.alliedSpawn = s;
+
+		SetAvailableMapGoals( TEAM.AXIS, Map.alliedSpawn<3, "MOUNT_tank_axis" );
+		SetAvailableMapGoals( TEAM.ALLIES, Map.axisSpawn<3, "MOUNT_tank_allied" );
+		SetAvailableMapGoals( TEAM.AXIS, Map.axisSpawn==2, "BUILD_.*TibeT.*_Tank" );
+		//it's very hard for allied engineer to repair the tank, bots can't do it
+		//SetAvailableMapGoals( TEAM.ALLIES, Map.alliedSpawn==2, "BUILD_.*TibeT.*_Tank_1" );
+
+		SetAvailableMapGoals( TEAM.AXIS, Map.alliedSpawn==2, "BUILD_Axis_Defences" );
+		SetAvailableMapGoals( TEAM.ALLIES, Map.axisSpawn==2, "BUILD_Allied_Defences" );
+		SetAvailableMapGoals( TEAM.AXIS, Map.axisSpawn==3, "BUILD_Axis_Barricade" );
+		SetAvailableMapGoals( TEAM.ALLIES, Map.alliedSpawn==3, "BUILD_Allied_Barricade" );
+		SetAvailableMapGoals( TEAM.AXIS, Map.axisSpawn>1, "PLANT_Allied_Defences" );
+		SetAvailableMapGoals( TEAM.ALLIES, Map.alliedSpawn>1, "PLANT_Axis_Defences" );
+
+	},
+
+	East_Support_Explosives_Built = function( trigger )
+	{
+		Map.eastExplosives = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_East_Support_Explosives_1");
+		Util.MapDebugPrint( "East_Support_Explosives_Built" );
+	},
+
+	East_Support_Explosives_Defused = function( trigger )
+	{
+		Map.eastExplosives = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_East_Support_Explosives_1");
+		Util.MapDebugPrint( "East_Support_Explosives_Defused" );
+	},
+
+	West_Support_Explosives_Built = function( trigger )
+	{
+		Map.westExplosives = true;
+		Util.MapDebugPrint( "West_Support_Explosives_Built" );
+	},
+
+	West_Support_Explosives_Defused = function( trigger )
+	{
+		Map.westExplosives = false;
+		Util.MapDebugPrint( "West_Support_Explosives_Defused" );
+	},
+
+	flagWest_Axis_Captured = function( trigger )
+	{
+		Map.westFlag = TEAM.AXIS;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagWest_Axis_Captured" );
+	},
+
+	flagWest_Allies_Captured = function( trigger )
+	{
+		Map.westFlag = TEAM.ALLIES;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagWest_Allies_Captured" );
+	},
+
+	flagCenter_Axis_Captured = function( trigger )
+	{
+		Map.centerFlag = TEAM.AXIS;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagCenter_Axis_Captured" );
+	},
+
+	flagCenter_Allies_Captured = function( trigger )
+	{
+		Map.centerFlag = TEAM.ALLIES;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagCenter_Allies_Captured" );
+	},
+
+	flagEast_Axis_Captured = function( trigger )
+	{
+		Map.eastFlag = TEAM.AXIS;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagEast_Axis_Captured" );
+	},
+
+	flagEast_Allies_Captured = function( trigger )
+	{
+		Map.eastFlag = TEAM.ALLIES;
+		Map.SetSpawn();
+		Util.MapDebugPrint( "flagEast_Allies_Captured" );
+	},
+
+	tank_Damaged = function( trigger )
+	{
+		foreach(bot in BotTable)
+		{
+			Util.IgnoreTargetGoalTable(bot, Map.Movers);
+		}
+		Util.MapDebugPrint( "tank_Damaged" );
+	}
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "^3Axis have planted explosives on the Eastern Bridge Support!", Map.East_Support_Explosives_Built );
+	OnTrigger( "^3Allies have defused the explosives on the Eastern Bridge Support!", Map.East_Support_Explosives_Defused );
+	OnTrigger( "^3Axis have planted explosives on the Western Bridge Support!", Map.West_Support_Explosives_Built );
+	OnTrigger( "^3Allies have defused the explosives on the Western Bridge Support!", Map.West_Support_Explosives_Defused );
+	OnTrigger( "^4Allies ^7have captured the West Flag!", Map.flagWest_Allies_Captured );
+	OnTrigger( "^1Axis ^7have captured the West Flag!", Map.flagWest_Axis_Captured );
+	OnTrigger( "^4Allies ^7have captured the Centre Flag!", Map.flagCenter_Allies_Captured );
+	OnTrigger( "^1Axis ^7have captured the Centre Flag!", Map.flagCenter_Axis_Captured );
+	OnTrigger( "^4Allies ^7have captured the East Flag!", Map.flagEast_Allies_Captured );
+	OnTrigger( "^1Axis ^7have captured the East Flag!", Map.flagEast_Axis_Captured );
+	OnTrigger( "The Tank has been damaged!", Map.tank_Damaged );
+
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal("PLANT_.*Explosive.*");
+	Util.DisableGoal("PLANT_.*Tank.*");
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_East_Support_Explosives_1");
+
+	//TODO
+	Util.DisableGoal("MOBILEMG42.*");
+	Util.DisableGoal("DEFEND.*");
+	Util.DisableGoal("ATTACK.*");
+	Util.DisableGoal("SNIPE.*");
+
+	SetGoalPriority("CHECKPOINT_flag3", 0.71, TEAM.AXIS);
+	SetGoalPriority("CHECKPOINT_flag2", 0.70, TEAM.AXIS);
+	SetGoalPriority("CHECKPOINT_flag1", 0.69, TEAM.AXIS);
+	SetGoalPriority("CHECKPOINT_flag1", 0.71, TEAM.ALLIES);
+	SetGoalPriority("CHECKPOINT_flag2", 0.70, TEAM.ALLIES);
+	SetGoalPriority("CHECKPOINT_flag3", 0.69, TEAM.ALLIES);
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, ".*_Command_Post" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	// Use points
+	Util.AddUsePoint("BUILD_East_Support_Explosives", Vec3(13239.524, 10099.839, 1112.125));
+	Util.AddUsePoint("BUILD_West_Support_Explosives", Vec3(7123.574, 10103.079, 1116.229));
+	Util.AddUsePoint("BUILD_East_Support_Explosives_1", Vec3(13105.335, 10121.020, 1120.968));
+	Util.AddUsePoint("BUILD_West_Support_Explosives_1", Vec3(6997.468, 10109.968, 1125.265));
+	Util.AddUsePoint("CHECKPOINT_flag1", { Vec3(5418.442, 10111.377, 1141.181), Vec3(5365.740, 10111.273, 1141.337) });
+	Util.AddUsePoint("CHECKPOINT_flag2", { Vec3(10138.125, 10212.081, 1125.387), Vec3(10084.309, 10213.509, 1124.419) });
+	Util.AddUsePoint("CHECKPOINT_flag3", { Vec3(14837.775, 10111.268, 1141.381), Vec3(14890.361, 10111.821, 1141.238) });
+	Util.AddUsePoint("PLANT_Axis_Barricade", { Vec3(4952.698, 10203.309, 1096.125), Vec3(4894.721, 10196.272, 1096.125), Vec3(4909.167, 10009.425, 1096.125), Vec3(4962.195, 10016.314, 1096.125) });
+	Util.AddUsePoint("PLANT_Allied_Barricade", { Vec3(15286.667, 10007.559, 1096.126), Vec3(15281.120, 10202.682, 1096.126), Vec3(15224.378, 10198.723, 1096.276), Vec3(15215.844, 10012.477, 1096.301) });
+	Util.AddUsePoint("PLANT_Axis_Defences", { Vec3(13710.560, 10374.438, 1104.318), Vec3(13736.721, 10110.013, 1112.125), Vec3(13719.953, 9830.125, 1104.125) });
+	Util.AddUsePoint("PLANT_Allied_Defences", { Vec3(6495.567, 9844.332, 1104.125), Vec3(6519.085, 10111.563, 1112.125), Vec3(6516.322, 10391.933, 1104.125) });
+
+	SetMapGoalProperties( "BUILD_.*TibeT.*_Tank", { //only axis
+		Vehicle = "MOVER_tank0",
+		Offsets = {
+			Vec3(-1.267, 154.384, -45.656),
+			Vec3(-95.126, 33.438, -29.875),
+			Vec3(-95.126, -112.829, -29.875),
+			Vec3(-4.181, -188.249, -45.875),
+			Vec3(95.124, -95.277, -29.629),
+			Vec3(95.124, 50.143, -29.875),
+		}
+	});
+
+	Map.SetSpawn();
+
+	sleep(1);
+	Server.MinClassCount[TEAM.AXIS][CLASS.COVERTOPS] += 1;
+	Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] += 1;
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CHECKPOINT_flag1 =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_allied1 = {},
+				ROUTE_allied2 = {},
+				ROUTE_allied3 = {},
+				ROUTE_allied4 = {},
+				ROUTE_below_west = {},
+			},
+			ROUTE_flag2 = {
+				ROUTE_center_west1 = {},
+				ROUTE_center_west2 = {},
+				ROUTE_center_west3 = {},
+				ROUTE_center_west4 = {},
+				ROUTE_allied_out1 = {},
+				ROUTE_allied_out2 = {},
+			},
+		},
+		CHECKPOINT_flag3 =
+		{
+			ROUTE_axis_spawn = {
+				ROUTE_axis1 = {},
+				ROUTE_axis2 = {},
+				ROUTE_axis3 = {},
+				ROUTE_axis4 = {},
+				ROUTE_below_east = {},
+			},
+			ROUTE_flag2 = {
+				ROUTE_center_east1 = {},
+				ROUTE_center_east2 = {},
+				ROUTE_center_east3 = {},
+				ROUTE_center_east4 = {},
+				ROUTE_axis_out1 = {},
+				ROUTE_axis_out2 = {},
+			},
+		},
+		CHECKPOINT_flag2 =
+		{
+			ROUTE_flag1 = {
+				ROUTE_west1 = {},
+				ROUTE_west2 = {},
+				ROUTE_west3 = {},
+				ROUTE_west4 = {},
+			},
+			ROUTE_flag3 = {
+				ROUTE_east1 = {},
+				ROUTE_east2 = {},
+				ROUTE_east3 = {},
+				ROUTE_east4 = {},
+			},
+		},
+	};
+
+	MapRoutes.MOUNT_tank_axis = MapRoutes.CHECKPOINT_flag2;
+	MapRoutes.MOUNT_tank_allied = MapRoutes.CHECKPOINT_flag2;
+	Util.Routes(MapRoutes);
+};
