@@ -1,0 +1,232 @@
+//==========================================================================================
+//
+//	sandheli01b.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	23 August 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	helicopter_Dyno = 0,
+
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER = {
+				numbots = 9,
+			},
+			DEFENDER1 = {
+				numbots = 9,
+			},
+			DEFENDER2 = {
+				numbots = 9,
+			},
+			DEFENDER3 = {
+				numbots = 9,
+			},
+		},
+	},
+
+	Navigation =
+	{
+		barrier =
+		{
+			navigate = function(_this)
+			{
+				_this.Goto(_this.Bot.GetPosition());
+				_this.AddAimRequest(Priority.High, "facing", Vec3(-0.8,0,0.6));
+				_this.Bot.HoldButton(BTN.FORWARD, 0.6);
+				sleep(0.5);
+				_this.AddAimRequest(Priority.High, "facing", Vec3(-0.7,-0.7,0));
+				_this.Bot.HoldButton(BTN.STRAFE_R, 1.7);
+				sleep(1.5);
+				_this.ReleaseAimRequest();
+				sleep(0.5);
+			},
+		},
+		l1 = {
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vector3(0.6,0,0.8));
+				sleep(2);
+			},
+		},
+	},
+
+	North_Barrier_Built = function( trigger )
+	{
+		Util.DisableGoal("ROUTE_north_barrier");
+		Util.MapDebugPrint( "North_Barrier_Built" );
+	},
+
+	bunker_barrier_Built = function( trigger )
+	{
+		Util.DisableGoal("ROUTE_bunker.*");
+		Util.MapDebugPrint( "bunker_barrier_Built" );
+	},
+
+	North_Barrier_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_north_barrier");
+		Util.MapDebugPrint( "North_Barrier_Destroyed" );
+	},
+
+	bunker_barrier_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_bunker.*");
+		Util.MapDebugPrint( "bunker_barrier_Destroyed" );
+	},
+
+	North_wall_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_north_wall");
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_north_wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_north.*" );
+		Util.MapDebugPrint( "North_wall_Destroyed" );
+	},
+
+	South_wall_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_south_wall");
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_south_wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_south.*" );
+		Util.MapDebugPrint( "South_wall_Destroyed" );
+	},
+
+	helicopter_Planted = function( trigger )
+	{
+		Map.helicopter_Dyno += 1;
+		Util.MapDebugPrint( "helicopter_Planted" );
+	},
+
+	helicopter_Defused = function( trigger )
+	{
+		Map.helicopter_Dyno -= 1;
+		Util.MapDebugPrint( "helicopter_Defused" );
+	},
+
+	helicopter_Destroyed = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "helicopter_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "North Barrier has been constructed.", Map.North_Barrier_Built );
+	OnTrigger( "North Barrier has been destroyed.", Map.North_Barrier_Destroyed );
+	OnTrigger( "Axis team has built the Bunker Barrier!", Map.bunker_barrier_Built );
+	OnTrigger( "Allied team has built the Bunker Barrier!", Map.bunker_barrier_Built );
+	OnTrigger( "Axis team has destroyed the Bunker Barrier!", Map.bunker_barrier_Destroyed );
+	OnTrigger( "Allied team has destroyed the Bunker Barrier!", Map.bunker_barrier_Destroyed );
+	OnTrigger( "Allies have breached the North wall!", Map.North_wall_Destroyed );
+	OnTrigger( "Allies have breached the South wall!", Map.South_wall_Destroyed );
+	OnTrigger( "Allies have Destoyed the helicopter!", Map.helicopter_Destroyed );
+	OnTrigger( "Planted at the helicopter.", Map.helicopter_Planted );
+	OnTrigger( "Defused at the helicopter.", Map.helicopter_Defused );
+
+	OnTriggerRegion(AABB(5986.468,-768.874,-302.875,6327.359,-599.174,-120.440),RegionTrigger.DisableBotPush);
+
+	Util.DisableGoal( ".*", true );
+	Util.DisableGoal("ROUTE_north_wall");
+	Util.DisableGoal("ROUTE_south_wall");
+	Util.EnableGoal(".*_Command_Post");
+	Util.EnableGoal("AMMOCAB.*");
+	Util.EnableGoal("HEALTHCAB.*");
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_x.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_l.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
+
+	SetGoalPriority( "PLANT_Command_Post", 0.7, TEAM.AXIS );
+	SetGoalPriority( "PLANTMINE_.*wall.*", 0.9 );
+	SetGoalPriority( "DEFUSE_helicopter.*", 1.1, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_.*wall.*", 1.05, TEAM.AXIS, CLASS.ENGINEER, true );
+
+	Util.SetRoleForGoals("DEFEND_heli.*", ROLE.DEFENDER);
+	Util.SetRoleForGoals("DEFEND_north.*", ROLE.DEFENDER1);
+	Util.SetRoleForGoals("DEFEND_center.*", ROLE.DEFENDER2);
+	Util.SetRoleForGoals("DEFEND_south.*", ROLE.DEFENDER3);
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "PLANT_Command_Post" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=10, MaxCampTime=35} );
+	SetMapGoalProperties( "SNIPE_.*", {MinCampTime=20, MaxCampTime=60} );
+
+	Util.AddUsePoint("PLANT_North_Barrier", Vec3(5069.025, -901.454, -406.387));
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2100;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_helicopter =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_west = {
+					ROUTE_north_west = {
+						ROUTE_north_balcony = { Weight=0.4,
+							ROUTE_north_square2 = {}
+						},
+						ROUTE_north_door = {
+							ROUTE_north_square1 = {
+								ROUTE_north_cave = {
+									ROUTE_north_east1 = {},
+									ROUTE_north_east2 = {},
+								},
+							},
+							ROUTE_north_square2 = { ROUTE_north_cave = {}},
+							ROUTE_north_square3 = { Weight=0.7, ROUTE_north_cave = {}},
+						}
+					},
+				},
+				ROUTE_tower1 = {
+					ROUTE_north_west = {},
+					ROUTE_north_barrier = {},
+				},
+				ROUTE_tower2 = {
+					ROUTE_north_west = {},
+					ROUTE_north_barrier = {},
+				},
+				ROUTE_allied1 = { Weight=2.5,
+					ROUTE_bunker = { Weight=2,
+						ROUTE_bunker1 = { ROUTE_bunker_out = {}},
+						ROUTE_bunker2 = { ROUTE_bunker_out = {}},
+					},
+					ROUTE_hill = {},
+					ROUTE_north_barrier = {},
+				},
+				ROUTE_north_barrier = { Weight=0.5 },
+			}
+		},
+	};
+	MapRoutes["ATTACK_.*"] = MapRoutes.PLANT_helicopter;
+	Util.Routes(MapRoutes);
+};

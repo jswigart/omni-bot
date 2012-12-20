@@ -9,6 +9,8 @@ global Map =
 	Repair_allied_MG1 = "REPAIRMG42_179",
 	Repair_allied_MG2 = "REPAIRMG42_180",
 
+	Debug = false,
+	Talk = true,
 	ShowMovers = false,
 	GateIsBreached = false,
 	InnerSpawnPoint = 0, // 0: nobody, 1: Axis, 2: Allies
@@ -24,7 +26,7 @@ global Map =
 			Priority = 0, //crapshoot: always set to 0 when using path through
 			WaypointName = "door_switch1",
 			Timeout = 1000,
-			AimPosition = Vector3(-2379.8, -1832.0, 191),
+			AimPosition = Vector3(-2380, -1832, 191),
 			Wait = function()
 			{
 				if ( Map.Door1Status == 1 )
@@ -40,7 +42,7 @@ global Map =
 			Enabled = true,
 			Priority = 0,
 			WaypointName = "door_switch3_1",
-			AimPosition = Vector3(-236.1, 1476.1, -19.0),
+			AimPosition = Vector3(-236, 1476, -19),
 			Timeout = 1300,
 			Wait = function()
 			{
@@ -58,7 +60,7 @@ global Map =
 			Priority = 0,
 			WaypointName = "door_switch3_2",
 			Timeout = 1300,
-			AimPosition = Vector3(-70.7, 1415.9, -19.8),
+			AimPosition = Vector3(-71, 1416, -20),
 			Wait = function()
 			{
 				if ( Map.Door3Status == 1 )
@@ -75,7 +77,7 @@ global Map =
 			Priority = 0,
 			WaypointName = "door_switch4_1",
 			Timeout = 1300,
-			AimPosition = Vector3(129.8, 1015.8, 49.4),
+			AimPosition = Vector3(130, 1016, 50),
 			Wait = function()
 			{
 				if ( Map.Door4Status == 1 )
@@ -92,7 +94,7 @@ global Map =
 			Priority = 0,
 			WaypointName = "door_switch4_2",
 			Timeout = 1300,
-			AimPosition = Vector3(298.9, 902.1, 47.9),
+			AimPosition = Vector3(299, 902, 48),
 			Wait = function()
 			{
 				if ( Map.Door4Status == 1 )
@@ -103,6 +105,48 @@ global Map =
 				return false;
 			},
 		},
+	},
+
+	testTraceLineThread = function()
+	{
+		// two map coordinates at east side window:
+		start = Vec3(1357.5, -1830, 220);
+		end = Vec3(1357.5, -1845, 220);
+		while ( true )
+		{
+			tr = TraceLine( start, end, null, TRACE.SHOT, 0, false );
+			if( tr.fraction < 1 )
+			{
+				if( Map.Debug )
+					{ DrawDebugLine( start, end, COLOR.RED, 2 ); }
+			}
+			else
+			{
+				if( Map.Debug )
+					{ DrawDebugLine( start, end, COLOR.GREEN, 2 ); }
+				thread( Map.window_thread_func );
+				exit();
+			}
+			sleep(2);
+		}
+	},
+
+	window_thread_func = function()
+	{
+		window_pos = Vec3(1335, -1790, 200);
+		while ( true )
+		{
+			foreach ( id and bot in BotTable )
+			{
+				if ( bot.GetTeam() == TEAM.AXIS && bot.HasLineOfSightTo(window_pos) )
+				{
+					bot.SayTeam( "Achtung! The East window has been breached. Defend it!" );
+					Util.MapDebugPrint( "Axis bot is warning team members about broken window now." );
+					exit(); // once is enough, exit thread
+				}
+			}
+			sleep(5);
+		}
 	},
 
 	gate_Breached = function( trigger )
@@ -129,7 +173,7 @@ global Map =
 	{
 		//Util.MapDebugPrint( "docs_Returned" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_cappoint" );
-		if(Map.InnerSpawnPoint == 2)
+		if( Map.InnerSpawnPoint == 2 )
 		{
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_phase1.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_axis_MG1 );
@@ -172,7 +216,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_axis_MG2 );
 	},
 
-	Door1_Moving = function ( trigger )
+	Door1_Moving = function( trigger )
 	{
 		if ( trigger.Action == "opening" )
 		{
@@ -187,7 +231,7 @@ global Map =
 		}
 	},
 
-	Door3_Moving = function ( trigger )
+	Door3_Moving = function( trigger )
 	{
 		if ( trigger.Action == "opening" )
 		{
@@ -206,7 +250,7 @@ global Map =
 		}
 	},
 
-	Door4_Moving = function ( trigger )
+	Door4_Moving = function( trigger )
 	{
 		if ( trigger.Action == "opening" )
 		{
@@ -281,6 +325,10 @@ global OnMapLoad = function()
 	for ( i = 1; i < 10; i += 1 ) {
 		Wp.SetWaypointFlag( "tempsprint" + i, "sprint", false );
 	}
+
+	// monitor window status
+	if ( Map.Talk && MAP_TALK )
+		{ thread( Map.testTraceLineThread ); }
 
 	// *** ROUTES ***
 	Maproutes =

@@ -1,0 +1,303 @@
+//======================================================================================
+//
+//	Karsiah (Beta 3) - karsiah_b3.gm
+//
+//	Who			When			What
+//--------------------------------------------------------------------------------------
+//	Mateos			1st September 2012	Initial Script (From BubbaG&'s 0.66 GM)
+//
+//======================================================================================
+
+/****************************************************
+Pathing updated and script by Mateos
+Correspondant WAY file size : -
+Last Update : 3rd September 2012
+****************************************************/
+
+global Map =
+{
+	Debug = 0,		// Please set to zero before distributing your script
+	ShowMovers = false,
+
+	Old_City_Door_Dyno = 0,
+
+	Old_City_Door_Planted = function( trigger )
+	{
+		Map.Old_City_Door_Dyno += 1;
+
+		Util.MapDebugPrint( "Old_City_Door_Planted" );
+	},
+
+	Old_City_Door_Defused = function( trigger )
+	{
+		Map.Old_City_Door_Dyno -= 1;
+
+		Util.MapDebugPrint( "Old_City_Door_Defused" );
+	},
+
+	Old_City_Door_Destroyed = function( trigger )
+	{
+		Map.Old_City_Door_Dyno = 0;
+
+		// Flag Attack
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Flag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_SAHA.*" );
+
+		// Docs
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_BNSnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_BSSnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_ASnipe.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+
+		// First Stage Attack
+
+		// Allied Help Points
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Northhelp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Southhelp.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alatt.*" );
+
+		// Axis Defense First Stage
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Aatt.*" );
+
+		// Axis Mines First Stage
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_Amine.*" );
+
+		// Axis Artillery First Stage
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Aarty1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Aarty2" );
+
+		//////////////////////////////////////////////////
+		//		SECOND STAGE GOALS		//
+		//////////////////////////////////////////////////
+
+		// South Docs
+		SetGoalPriority( "MOBILEMG42_MG.*", 5.0 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_B.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ANdoc.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ASdoc.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOBILEMG42_MG.*" );
+
+		foreach ( gameId and bot in BotTable )
+		{
+			// Ensure the bot is set
+			if (bot)
+			{
+				if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.SOLDIER )
+				{
+					if ( bot.HasWeapon( WEAPON.FLAMETHROWER ) )
+					{
+						bot.PickNewPrimaryWeapon( WEAPON.WEAPON.MOBILE_MG42 );
+					}
+
+					if ( bot.HasWeapon( WEAPON.MORTAR ) )
+					{
+						bot.PickNewPrimaryWeapon( WEAPON.WEAPON.MOBILE_MG42 );
+					}
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "Old_City_Door_Destroyed" );
+	},
+
+	northdocs_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "northdocs_Taken" );
+	},
+
+	southdocs_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "southdocs_Taken" );
+	},
+
+	northdocs_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "northdocs_Returned" );
+	},
+
+	southdocs_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "southdocs_Returned" );
+	},
+
+	northdocs_Secured = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_BNSnipe.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_BNSnipe.*" );
+
+		// South Docs
+		SetGoalPriority( "ATTACK_ASdoc.*", 3.0 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ASdoc.*" );
+
+		// North Docs
+		Util.DisableGoal( "PLANTMINE_BMine1" );
+		Util.DisableGoal( "PLANTMINE_BMine6" );
+		Util.DisableGoal( "PLANTMINE_BMine7" );
+		Util.DisableGoal( "PLANTMINE_BMine8" );
+		Util.DisableGoal( "PLANTMINE_BMine9" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ANdoc.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_MG1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_MG4" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Northhelp.*" );
+
+		Util.MapDebugPrint( "northdocs_Secured" );
+	},
+
+	southdocs_Secured = function( trigger )
+	{
+		// South Docs
+		Util.DisableGoal( "PLANTMINE_BMine2" );
+		Util.DisableGoal( "PLANTMINE_BMine3" );
+		Util.DisableGoal( "PLANTMINE_BMine4" );
+		Util.DisableGoal( "PLANTMINE_BMine5" );
+		Util.DisableGoal( "PLANTMINE_BMine10" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_ASdoc.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_BSSnipe.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_BSSnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Southhelp.*" );
+
+		// North Docs
+		SetGoalPriority( "ATTACK_ANdoc1", 1.0 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_ANdoc.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMG42_MG2" );
+
+		Util.MapDebugPrint( "southdocs_Secured" );
+	},
+
+	spawnflag_Axis_Captured = function( trigger )
+	{
+		// Flag Attack
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Flag.*" );
+
+		SetGoalPriority( "ATTACK_SAHA.*", 0.75 );
+		SetGoalPriority( "ATTACK_Flag.*", 3.0 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Flag.*" );
+
+		Util.MapDebugPrint( "spawnflag_Axis_Captured" );
+	},
+
+	spawnflag_Allies_Captured = function( trigger )
+	{
+		// Flag Attack
+		SetGoalPriority( "ATTACK_Flag.*", 10.0 );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Flag.*" );
+
+		SetGoalPriority( "ATTACK_SAHA.*", 0.05 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Flag.*" );
+
+		Util.MapDebugPrint( "spawnflag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	// *** TRIGGERS ***
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Old_City_Door_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Old_City_Door_Defused );
+	OnTrigger( "Allies have destroyed the Old City Door!", Map.Old_City_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.northdocs_Taken );
+	OnTrigger( "MISSING_STRING", Map.southdocs_Taken );
+	OnTrigger( "MISSING_STRING", Map.northdocs_Returned );
+	OnTrigger( "MISSING_STRING", Map.southdocs_Returned );
+	OnTrigger( "Allies have transmitted the North Documents!", Map.northdocs_Secured );
+	OnTrigger( "Allies have transmitted the South Documents!", Map.southdocs_Secured );
+	OnTrigger( "Axis reclaimed the Old City!", Map.spawnflag_Axis_Captured );
+	OnTrigger( "Allies capture the Old City!", Map.spawnflag_Allies_Captured );
+
+	// *** CLEAR ALL GOALS FOR BOTH TEAMS ***
+	Util.DisableGoal( ".*", true );		// All but Routes
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Aatt.*" );
+	SetAvailableMapGoals (TEAM.AXIS, true, "SNIPE_ASnipe.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_Amine.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Aarty1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Aarty2" );
+
+	// *** ALLIED GOALS ***
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_65" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Flag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_SAHA.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alatt.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Old_City_Door" );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Some 0.66 crazy priorities restored (Not all), but not all... Useless?
+	// *** AXIS PRIORITIES ***
+	SetGoalPriority( "ATTACK_Aatt.*", 1.0 );
+	SetGoalPriority( "PLANTMINE_Amine.*", 1.0 );
+	SetGoalPriority( "ARTILLERY_S_Aarty1", 3.0 );
+	SetGoalPriority( "CALLARTILLERY_Aarty2", 10.0 );
+
+	// *** ALLIED PRIORITIES ***
+	SetGoalPriority( "ATTACK_SAHA.*", 0.75 );
+	SetGoalPriority( "ATTACK_Alatt.*", 1.0 );
+	SetGoalPriority( "CAPPOINT_65", 3.0 );
+	SetGoalPriority( "ATTACK_Flag.*", 3.0 );
+	SetGoalPriority( "PLANT_Old_City_Door", 3.0 );
+
+	// Camp times
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=60, MaxCampTime=120} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=60, MaxCampTime=120} );
+
+	Util.MapDebugPrint( "Omni-bot 0.82 map script for Karsiah TE by BubbaG1 & Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	ETUtil.SetCabinets();
+
+	foreach ( gameId and bot in BotTable )
+	{
+		// Ensure the bot is set
+		if (bot)
+		{
+			if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.SOLDIER )
+			{
+				SetGoalProperty( "HEALTHCAB", 0.0);
+
+				if ( bot.HasWeapon( WEAPON.FLAMETHROWER ) )
+				{
+					bot.PickNewPrimaryWeapon( WEAPON.PANZERFAUST );
+				}
+			}
+
+			if ( bot.GetTeam() == TEAM.AXIS && bot.GetClass() == CLASS.COVERTOPS  && bot.HasWeapon(WEAPON.STEN) )
+			{
+				bot.PickNewPrimaryWeapon( WEAPON.K43 );
+			}
+		}
+	}
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_Old_City_Door =
+		{
+		},
+		FLAG_northdocs =
+		{
+		},
+		FLAG_southdocs =
+		{
+		},
+		CHECKPOINT_spawnflag =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

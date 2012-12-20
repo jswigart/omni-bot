@@ -1,0 +1,376 @@
+//==========================================================================================
+//
+//	secradar3_final.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	29 August 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+
+	axisLadderDestroyed = true,
+	roofEntranceDestroyed = false,
+	stairsEntranceDestroyed = false,
+	flagAllied = false,
+	slideDoorUnlocked = false,
+	safeDestroyed = false,
+	docsTaken = false,
+
+	Navigation =
+	{
+		shaft =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "facing", Vec3(0,0,-1));
+				_this.AddWeaponRequest(Priority.High, WEAPON.KNIFE);
+				_this.BlockForWeaponChange(WEAPON.KNIFE);
+				for(i=0; _this.Bot.GetPosition().z > 350 && i<300; i+=1) {
+					_this.Bot.PressButton(BTN.ATTACK1,BTN.CROUCH);
+					yield();
+				}
+			},
+		},
+	},
+
+	Safe_Room =
+	{
+		Name = "Safe_Room",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function(ent)
+		{
+			bot = Util.IsBot(ent);
+			if(bot){
+				bot.SetRoles(ROLE.ATTACKER1);
+			}
+		},
+		OnExit = function(ent)
+		{
+			bot = Util.IsBot(ent);
+			if(bot){
+				bot.ClearRoles(ROLE.ATTACKER1);
+			}
+		},
+	},
+
+
+	SetAlliedRole = function(b, goal)
+	{
+		if(b){
+			SetAvailableMapGoals( TEAM.ALLIES, true, goal );
+			Util.ClearRoleForGoals( goal, ROLE.ATTACKER1);
+		}else{
+			Util.SetRoleForGoals( goal, ROLE.ATTACKER1);
+		}
+	},
+
+	SetGoals = function()
+	{
+		e = Map.roofEntranceDestroyed && Map.axisLadderDestroyed || Map.stairsEntranceDestroyed;
+		b = e && !Map.slideDoorUnlocked;
+		SetAvailableMapGoals( TEAM.ALLIES, b, "SWITCH_door_open" );
+		SetAvailableMapGoals( TEAM.AXIS, b, "DEFEND_switch.*" );
+		SetAvailableMapGoals( TEAM.AXIS, Map.slideDoorUnlocked, "SWITCH_door_close" );
+		SetAvailableMapGoals( TEAM.AXIS, !Map.stairsEntranceDestroyed || !Map.flagAllied, "DEFEND_stairs.*" );
+
+		b = e && Map.slideDoorUnlocked;
+		if(Map.safeDestroyed) {
+			Map.SetAlliedRole(Map.docsTaken || b, "FLAG_secret_documents");
+		} else {
+			Map.SetAlliedRole(b, "PLANT_secret_documents");
+		}
+		Map.SetAlliedRole(b, "BUILD_Axis_engine_room_door");
+	},
+
+	Stairs_Entry_Destroyed = function( trigger )
+	{
+		Map.stairsEntranceDestroyed = true;
+		Map.SetGoals();
+		Util.EnableGoal("ROUTE_stairs");
+		Util.MapDebugPrint( "Stairs_Entry_Destroyed" );
+	},
+
+	Roof_Entry_Destroyed = function( trigger )
+	{
+		Map.roofEntranceDestroyed = true;
+		Map.SetGoals();
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_entry_to_the_roof" );
+		SetAvailableMapGoals( 0, Map.axisLadderDestroyed, "ROUTE_roof_hatch" );
+		Util.MapDebugPrint( "Roof_Entry_Destroyed" );
+	},
+
+	Axis_Ladder_Built = function( trigger )
+	{
+		Map.axisLadderDestroyed = false;
+		Map.SetGoals();
+		Wp.SetWaypointFlag("axis_ladder", "closed", false);
+		Util.DisableGoal("ROUTE_roof_hatch");
+		Util.MapDebugPrint( "Axis_Ladder_Built" );
+	},
+
+	Axis_Ladder_Destroyed = function( trigger )
+	{
+		Map.axisLadderDestroyed = true;
+		Map.SetGoals();
+		Wp.SetWaypointFlag("axis_ladder", "closed", true);
+		SetAvailableMapGoals( 0, Map.roofEntranceDestroyed, "ROUTE_roof_hatch" );
+		Util.MapDebugPrint( "Axis_Ladder_Destroyed" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		Map.flagAllied = false;
+		Map.SetGoals();
+		Util.LimitToTeam(TEAM.AXIS, "DEFEND_roof.*");
+		Util.LimitToTeam(TEAM.AXIS, ".*MG42_roof.*");
+		SetAvailableMapGoals(TEAM.AXIS, true, ".*MG42_tower[12][nw].*" );
+		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		Map.flagAllied = true;
+		Map.SetGoals();
+		Util.LimitToTeam(TEAM.ALLIES, "DEFEND_roof.*");
+		Util.LimitToTeam(TEAM.ALLIES, ".*MG42_roof.*");
+		SetAvailableMapGoals(TEAM.AXIS, false, ".*MG42_tower.*" );
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Secured = function( trigger )
+	{
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Secured" );
+	},
+
+	Slide_Door_Unlocked = function( trigger )
+	{
+		Wp.SetWaypointFlag("slide_door", "closed", false);
+		Map.slideDoorUnlocked = true;
+		Map.SetGoals();
+		Util.MapDebugPrint( "Slide_Door_Unlocked" );
+	},
+
+	Slide_Door_Locked = function( trigger )
+	{
+		Map.slideDoorUnlocked = false;
+		Map.SetGoals();
+		Util.MapDebugPrint( "Slide_Door_Locked" );
+		sleep(2);
+		if(!Map.slideDoorUnlocked){
+			Wp.SetWaypointFlag("slide_door", "closed", true);
+		}
+	},
+
+	Safe_Destroyed = function( trigger )
+	{
+		Map.safeDestroyed = true;
+		Map.SetGoals();
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_ramp_to_the_Flag_and_big_radar_station" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Flak_cannon" );
+		Util.MapDebugPrint( "Safe_Destroyed" );
+	},
+
+	Team_Door_Built = function( trigger )
+	{
+		Wp.SetWaypointFlag("team_door", "closed", false);
+		Util.EnableGoal("ROUTE_engine_room");
+		Util.MapDebugPrint( "Team_Door_Built" );
+	},
+
+	ramp_to_the_Flag_and_big_radar_station_Built = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_flak_ramp");
+		Util.MapDebugPrint( "ramp_to_the_Flag_and_big_radar_station_Built" );
+	},
+
+	ramp_to_the_Flag_and_big_radar_station_Destroyed = function( trigger )
+	{
+		Util.DisableGoal("ROUTE_flak_ramp");
+		Util.MapDebugPrint( "ramp_to_the_Flag_and_big_radar_station_Destroyed" );
+	},
+
+	flak_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "flak_Destroyed" );
+	},
+
+	secret_documents_Taken = function( trigger )
+	{
+		Map.docsTaken = true;
+		Util.EnableGoal("DEFEND_radio.*");
+		Util.EnableGoal(".*MG42_flak.*");
+		Util.MapDebugPrint( "secret_documents_Taken" );
+	},
+
+	secret_documents_Returned = function( trigger )
+	{
+		Map.docsTaken = false;
+		Map.SetGoals();
+		Util.DisableGoal("DEFEND_radio.*");
+		Util.DisableGoal(".*MG42_flak.*");
+		Util.MapDebugPrint( "secret_documents_Returned" );
+	},
+
+	secret_documents_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "secret_documents_Secured" );
+	},
+
+	t60_Activated = function( trigger )
+	{
+		if (GetEntName(trigger.Entity) == "t59")
+		{
+			Util.MapDebugPrint( "door is opening", true );
+			sleep(3.8);
+		}
+		else
+		{
+			Util.MapDebugPrint( "red button pushed", true );
+		}
+		Map.Slide_Door_Locked(trigger);
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "the entry to the second floor Destroyed.", Map.Stairs_Entry_Destroyed );
+	OnTrigger( "Allied team has destroyed the entry to second floor!", Map.Roof_Entry_Destroyed );
+	OnTrigger( "The ladder and steel wall has been constructed!", Map.Axis_Ladder_Built );
+	OnTrigger( "Allied team has destroyed the ladder and steel wall to roof!", Map.Axis_Ladder_Destroyed );
+	OnTrigger( "Axis reclaim the Forward Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Spawn!", Map.forwardspawn1_flag_Allies_Captured );
+	OnTrigger( "Now Allies have forward spawn forever!", Map.forwardspawn1_flag_Allies_Secured );
+	OnTrigger( "Slide door for secret room is unlocked now!", Map.Slide_Door_Unlocked );
+	OnTrigger( "Allied team has destroyed the safe for secret documents!", Map.Safe_Destroyed );
+	OnTrigger( "Allies Team have built a team door!", Map.Team_Door_Built );
+	OnTrigger( "The ramp has been constructed!", Map.ramp_to_the_Flag_and_big_radar_station_Built );
+	OnTrigger( "Axis team has destroyed the ramp!", Map.ramp_to_the_Flag_and_big_radar_station_Destroyed );
+	OnTrigger( "Allied team has destroyed the flak cannon!", Map.flak_Destroyed );
+	OnTrigger( "Allies have stolen The secret documents!", Map.secret_documents_Taken );
+	OnTrigger( "Flag returned secret documents!", Map.secret_documents_Returned );
+	OnTrigger( "Allied team escaped with the secret documents!", Map.secret_documents_Secured );
+	OnTrigger( "t60 activated", Map.t60_Activated );
+	OnTrigger( "t61 activated", Map.Slide_Door_Locked );
+
+	OnTriggerRegion(AABB(61.125,-385.957,601.125,489.875,415.875,720.357),Map.Safe_Room);
+
+	Util.DisableGoal( ".*", true );
+	Util.DisableGoal("ROUTE_engine_room");
+	Util.DisableGoal("ROUTE_flak_ramp");
+	Util.DisableGoal("ROUTE_stairs");
+	Util.DisableGoal("ROUTE_roof_hatch");
+
+	Util.EnableGoal("AMMOCAB_.*");
+	Util.EnableGoal("HEALTHCAB_.*");
+	Util.DisableGoal("AMMOCAB_t86");
+	Util.EnableGoal("CHECKPOINT_forwardspawn1_flag");
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_radio" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_entry_to_the_second_floor" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_gate_to_second_floor" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, ".*MG42_tower2e" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_entry_to_the_roof" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_ramp_to_the_Flag_and_big_radar_station" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_roof.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_stairs.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, ".*MG42_tower[12][nw].*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, ".*MG42_inside" );
+
+	SetGoalPriority("BUILD_ramp_to_the_Flag_and_big_radar_station", 0.81);
+	SetGoalPriority("DEFEND_radio.*", 0.55);
+
+	Util.AddUsePoint("PLANT_entry_to_the_roof", {Vec3(706.875, 285.342, 624.139), Vec3(706.935, -250.474, 816.351) });
+
+	Wp.SetWaypointFlag("slide_door", "closed", true);
+	Wp.SetWaypointFlag("axis_ladder", "closed", true);
+	Wp.SetWaypointFlag("team_door", "closed", true);
+
+	Util.SetGoalOffset(0,-10,0,"MOUNTMG42_inside");
+	Util.SetGoalOffset(0,0,-216,"MOUNTMG42_tower2n_1");
+	Util.SetGoalOffset(0,0,-216,"REPAIRMG42_tower2n_1");
+
+	// Max users per goal
+	Util.SetMaxUsersInProgress( 5, "SWITCH_door_close" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=10, MaxCampTime=100} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	bot.MaxViewDistance = 2100;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CAPPOINT_radio = {
+			ROUTE_docs = {
+				ROUTE_west_tunnel = {},
+				ROUTE_flak_ramp = {},
+			}
+		},
+		FLAG_secret_documents = {
+			ROUTE_allied_spawn = {
+				ROUTE_stairs = {},
+				ROUTE_roof_hatch = {},
+			}
+		},
+		BUILD_entry_to_the_roof = {
+			ROUTE_axis_spawn = {
+				ROUTE_north_ladder = {},
+				ROUTE_south_ladder = {},
+			}
+		},
+		PLANT_entry_to_the_roof = {
+			ROUTE_allied_spawn = {
+				ROUTE_stairs = { Weight=2 },
+				ROUTE_north_ladder = {},
+				ROUTE_south_ladder = {},
+			},
+		},
+		PLANT_gate_to_second_floor = {
+			ROUTE_allied_spawn = {
+				ROUTE_north_ladder = {},
+				ROUTE_south_ladder = {},
+			},
+		},
+		CHECKPOINT_forwardspawn1_flag = {
+			ROUTE_allied_spawn = {
+				ROUTE_north_ladder = {
+					ROUTE_flag_nw = {},
+					ROUTE_flag_se = {},
+				},
+				ROUTE_south_ladder = {
+					ROUTE_flag_nw = {},
+					ROUTE_flag_se = {},
+				},
+			},
+			ROUTE_axis_spawn = {
+				ROUTE_north_ladder = {},
+				ROUTE_south_ladder = {},
+			},
+		},
+	};
+	MapRoutes.PLANT_secret_documents = MapRoutes.FLAG_secret_documents;
+	MapRoutes.BUILD_Axis_engine_room_door = MapRoutes.FLAG_secret_documents;
+	MapRoutes.SWITCH_door_open = MapRoutes.FLAG_secret_documents;
+	MapRoutes.SWITCH_door_close = MapRoutes.BUILD_entry_to_the_roof;
+	Util.Routes(MapRoutes);
+};

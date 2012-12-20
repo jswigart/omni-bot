@@ -1,0 +1,839 @@
+/********************************************************  
+ Original Waypoints and Script by **PCZ** >M@t3o$<.
+********************************************************/  
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Axis_safe_door_Dyno = 0,
+	Axis_sewer_barrier_Dyno = 0,
+	Farmhouse_Barrier_Dyno = 0,
+	cell_door_Dyno = 0,
+	Suicide = 1,
+	
+
+	Ammo_Cabinet_basement_ammocabinet = "AMMOCAB_basement_ammocabinet",
+	Ammo_Cabinet_warehouse_ammocabinet = "AMMOCAB_warehouse_ammocabinet",
+	Health_Cabinet_basement_healthcabinet = "HEALTHCAB_basement_healthcabinet",
+	Health_Cabinet_warehouse_healthcabinet = "HEALTHCAB_warehouse_healthcabinet",
+	Checkpoint_building_flag = "CHECKPOINT_building_flag",
+	Flag_goldbars1 = "FLAG_goldbars1",
+	Flag_prisoner1 = "FLAG_prisoner1",
+	Cappoint_Medical_Beds = "CAPPOINT_Medical_Beds",
+	Cappoint_Truck = "CAPPOINT_Truck",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Axis_sewer_barrier = "BUILD_Axis_sewer_barrier",
+	Build_Farmhouse_Barrier = "BUILD_Farmhouse_Barrier",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Axis_safe_door = "PLANT_Axis_safe_door",
+	Plant_Axis_sewer_barrier = "PLANT_Axis_sewer_barrier",
+	Plant_Farmhouse_Barrier = "PLANT_Farmhouse_Barrier",
+	Plant_cell_door = "PLANT_cell_door",
+	Mount_239 = "MOUNTMG42_239",
+	Mount_245 = "MOUNTMG42_245",
+	Mount_346 = "MOUNTMG42_346",
+	Mount_420 = "MOUNTMG42_420",
+	Mount_421 = "MOUNTMG42_421",
+	Mount_46 = "MOUNTMG42_46",
+	Mount_552 = "MOUNTMG42_552",
+	Mount_588 = "MOUNTMG42_588",
+	Mount_73 = "MOUNTMG42_73",
+	Mount_Gold_Crate = "MOUNTMG42_Gold_Crate",
+	Repair_239 = "REPAIRMG42_239",
+	Repair_245 = "REPAIRMG42_245",
+	Repair_346 = "REPAIRMG42_346",
+	Repair_420 = "REPAIRMG42_420",
+	Repair_421 = "REPAIRMG42_421",
+	Repair_46 = "REPAIRMG42_46",
+	Repair_552 = "REPAIRMG42_552",
+	Repair_588 = "REPAIRMG42_588",
+	Repair_73 = "REPAIRMG42_73",
+	Repair_Gold_Crate = "REPAIRMG42_Gold_Crate",
+	
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Built" ); }
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Built" ); }
+	},
+
+	Axis_sewer_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_sewer_barrier" );
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Built" ); }
+	},
+
+	Farmhouse_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, "ROUTE_AxisEscape2" );
+			
+			
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Built" ); }
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Planted" ); }
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Planted" ); }
+	},
+
+	Axis_safe_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS  && ( bot.GetClass() == CLASS.ENGINEER ))
+			{
+				bot.ChangeSpawnPoint( 2 );
+
+				//distance check instead?
+				if ( Map.Suicide && bot.GetReinforceTime() < 3 )
+				{
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Planted" ); }
+	},
+
+	Axis_sewer_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Planted" ); }
+	},
+
+	Farmhouse_Barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Planted" ); }
+	},
+
+	cell_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		foreach ( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.ALLIES  && ( bot.GetClass() == CLASS.ENGINEER ))
+			{
+				bot.ChangeSpawnPoint( 3 );
+
+				//distance check instead?
+				if ( Map.Suicide && bot.GetReinforceTime() < 3 )
+				{
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+		if ( Map.Debug )
+			{ print( "cell_door_Planted" ); }
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Defused" ); }
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Defused" ); }
+	},
+
+	Axis_safe_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Defused" ); }
+	},
+
+	Axis_sewer_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Defused" ); }
+	},
+
+	Farmhouse_Barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Defused" ); }
+	},
+
+	cell_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "cell_door_Defused" ); }
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Allied_Command_Post_Destroyed" ); }
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "Axis_Command_Post_Destroyed" ); }
+	},
+
+	Axis_safe_door_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_goldbars1" );
+		SetGoalPriority( "ATTACK.*", 0.35, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( "CAMP_.*", 0.35, TEAM.ALLIES, CLASS.ENGINEER );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Truck" );
+		SetGoalPriority( "MOUNTMG42.*", 0.55, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( "CHECKPOINT_.*", 0.3, TEAM.ALLIES, CLASS.ENGINEER );
+
+		if ( Map.Debug )
+			{ print( "Axis_safe_door_Destroyed" ); }
+	},
+
+	Axis_sewer_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_sewer_barrier" );
+		if ( Map.Debug )
+			{ print( "Axis_sewer_barrier_Destroyed" ); }
+	},
+
+	Farmhouse_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisEscape1" );
+//			SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_AxisEscape2" );
+
+		if ( Map.Debug )
+			{ print( "Farmhouse_Barrier_Destroyed" ); }
+	},
+
+	cell_door_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_prisoner1" );
+		SetGoalPriority( "ATTACK.*", 0.45, TEAM.AXIS, CLASS.ENGINEER );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_MedicalBeds" );
+		SetGoalPriority( "CAMP_.*", 0.35, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( "MOUNTMG42.*", 0.45, TEAM.AXIS, CLASS.ENGINEER );
+		SetGoalPriority( "CHECKPOINT_.*", 0.3, TEAM.AXIS, CLASS.ENGINEER );
+		
+
+		if ( Map.Debug )
+			{ print( "cell_door_Destroyed" ); }
+	},
+
+	goldbars1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			SetAvailableMapGoals( TEAM.AXIS, false, ".*" ); // remove axis goals
+			SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_.*" ); //  re-enable routes axis
+			
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_truck.*" );
+			Util.EnableGroup( "roof", TEAM.AXIS );
+			Util.DisableGoal( "CHECKPOINT_.*", true ); // remove flag spawn goal
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Allies.*" );  // axis attack allied attack points
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_safedoor.*" );  // 
+			
+			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis2" );
+	//		Util.ChangeSpawn(TEAM.AXIS, 2, 6);
+			Util.DisableGoal( "ATTACK_Allies16", true ); 
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_1205" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_552" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_under.*" );
+			Util.DisableGoal( "ATTACK_Allies6", true ); 
+			Util.DisableGoal( "ATTACK_Allies5", true ); 
+			Util.DisableGoal( "ATTACK_Allies13", true ); 
+			Util.DisableGoal( "ATTACK_Allies16", true ); 
+			Util.DisableGoal( "ATTACK_Allies10", true ); 
+			Util.DisableGoal( "ATTACK_Allies8", true ); 
+			SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_cell3" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_cell4" );
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Taken" ); }
+	},
+
+	prisoner1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			Util.EnableGroup( "bed", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_cell1" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_AXIS.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_bed.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_cell2" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Allies.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bed.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_celldoor.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_46" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_650" );
+			Util.DisableGoal( "CHECKPOINT_.*", true ); 
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_ally2" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_barrier.*" );
+			Util.DisableGroup( "cell", TEAM.ALLIES );
+	
+			
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Taken" ); }
+	},
+
+	goldbars1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_1205" );
+			Util.DisableGroup( "roof", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_552" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Axis.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_cell_door" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Allies.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_truck.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_MedicalBeds" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_safedoor.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_cell_door" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_celldoor.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Farmhouse_Barrier" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_under.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_cell3" );
+//			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_cell4" );
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Returned" ); }
+	},
+
+	prisoner1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			Util.DisableGroup( "bed", TEAM.AXIS );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allies.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bed.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_bed.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_celldoor.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_46" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_ally2" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_bed1" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ALLARTILLERY_S_bed1" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ALLARTILLERY_D_bed1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_650" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_barrier.*" );
+			Util.DisableGoal( "ATTACK_Allies16", true ); 
+			Util.DisableGoal( "ATTACK_Allies15", true ); 
+			Util.DisableGoal( "ATTACK_Allies14", true ); 
+			Util.DisableGoal( "ATTACK_Allies10", true ); 
+			Util.DisableGoal( "ATTACK_Allies6", true ); 
+			Util.DisableGoal( "ATTACK_Allies5", true ); 
+			Util.DisableGoal( "ATTACK_Allies8", true );
+			Util.EnableGroup( "cell", TEAM.ALLIES );
+//			SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_cell1" );
+//			SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_cell2" ); 
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Returned" ); }
+	},
+
+	goldbars1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "goldbars1_Secured" ); }
+	},
+
+	prisoner1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.Debug )
+			{ print( "prisoner1_Secured" ); }
+	},
+
+	building_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			
+
+		if ( Map.Debug )
+			{ print( "building_flag_Axis_Captured" ); }
+	},
+
+	building_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+			
+
+		if ( Map.Debug )
+			{ print( "building_flag_Allies_Captured" ); }
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** 	TRIGGERS ***
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Sewer grate has been constructed.", Map.Axis_sewer_barrier_Built );
+	OnTrigger( "Farmhouse tunnel barrier has been constructed.", Map.Farmhouse_Barrier_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis safe door.", Map.Axis_safe_door_Planted );
+	OnTrigger( "Planted at the Axis sewer barrier.", Map.Axis_sewer_barrier_Planted );
+	OnTrigger( "Planted at the Farmhouse barrier.", Map.Farmhouse_Barrier_Planted );
+	OnTrigger( "Planted at the cell door.", Map.cell_door_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis safe door.", Map.Axis_safe_door_Defused );
+	OnTrigger( "Defused at the Axis sewer barrier.", Map.Axis_sewer_barrier_Defused );
+	OnTrigger( "Defused at the Farmhouse barrier.", Map.Farmhouse_Barrier_Defused );
+	OnTrigger( "Defused at the cell door.", Map.cell_door_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allies destroyed the Axis safe", Map.Axis_safe_door_Destroyed );
+	OnTrigger( "Sewer grate has been destroyed.", Map.Axis_sewer_barrier_Destroyed );
+	OnTrigger( "Farmhouse tunnel barrier has been destroyed.", Map.Farmhouse_Barrier_Destroyed );
+	OnTrigger( "Axis destroyed the cell door", Map.cell_door_Destroyed );
+	OnTrigger( "Allies have stolen gold crate!", Map.goldbars1_Taken );
+	OnTrigger( "Axis have stolen axis prisoner!", Map.prisoner1_Taken );
+	OnTrigger( "Axis have returned gold crate!", Map.goldbars1_Returned );
+	OnTrigger( "Allies have returned axis prisoner!", Map.prisoner1_Returned );
+	OnTrigger( "The Allies have secured the good crate... AXIS are losers!", Map.goldbars1_Secured );
+	OnTrigger( "The Axis have rescued the prisoner... Allies are losers!", Map.prisoner1_Secured );
+	OnTrigger( "Axis capture the Forward Flag!", Map.building_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Flag!", Map.building_flag_Allies_Captured );
+	
+	// *** INITIAL AVAILABILITY OF GOALS ***
+	
+	Util.DisableGoal( ".*", true ); //All but routes
+	Util.EnableGoal( "HEALTHCAB.*", true ); 
+	Util.EnableGoal( "AMMOCAB.*", true ); 
+	Util.EnableGoal( "CHECKPOINT_.*", true ); 
+	
+//	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_cell3" ); // silent only, does not work with nitmod
+//	SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_cell4" );  // silent only, does not work with nitmod
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_sewer_barrier" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Axis.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_1205" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_552" );
+	
+	
+	
+	
+	Util.DisableGoal( "ATTACK_Axis10", true ); 
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_cell_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_celldoor.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Farmhouse_Barrier" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_barrier.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Farmhouse_Barrier" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_650" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_under.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_safedoor.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_cell1" );  // silent only, does not work with nitmod
+	SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_cell2" );  // silent only, does not work with nitmod
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_safe_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Allies.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_46" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_ally2" );
+	Util.EnableGroup( "cell", TEAM.ALLIES );
+	
+	Util.DisableGoal( "ATTACK_Allies14", true ); 
+	Util.DisableGoal( "ATTACK_Allies10", true ); 
+	Util.DisableGoal( "ATTACK_Allies6", true ); 
+	Util.DisableGoal( "ATTACK_Allies5", true ); 
+	Util.DisableGoal( "ATTACK_Allies8", true ); 
+	Util.DisableGoal( "ROUTE_AxisEscape1", true ); 
+	
+	
+	
+	
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=55, MaxCampTime=99} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=89, MaxCampTime=99} );
+	
+	Util.SetGoalPosition( 5172, -3082, -1384, "PLANT_Axis_safe_door" ) ;
+	Util.SetGoalPosition( -6684, -297, -800, "PLANT_Farmhouse_Barrier" ) ;
+	Util.SetGoalPosition( -6270, -4488, -760, "PLANT_cell_door" ) ;
+	Util.SetGoalPosition( 4703, -2807, -2130, "PLANT_Axis_sewer_barrier" ) ;
+	
+	Util.SetGoalPosition( 5983, -3000, -1066, "ATTACK_Axis1" ) ;
+	Util.SetGoalPosition( 5960, -3187, -1064, "ATTACK_Axis2" ) ;
+	Util.SetGoalPosition( 5442, -3401, -1384, "ATTACK_Axis3" ) ;
+	Util.SetGoalPosition( 6661, -3180, -1384, "ATTACK_Axis4" ) ;
+	Util.SetGoalPosition( 6682, -2604, -1379, "ATTACK_Axis7" ) ;
+	Util.SetGoalPosition( 6024, -2530, -1376, "ATTACK_Axis6" ) ;
+	Util.SetGoalPosition( 5541.5, -2406, -600, "ATTACK_Axis8" ) ;
+	Util.SetGoalPosition( -6069.2, -4340.6, -767.9, "ROUTE_Prisoner" ) ;
+	
+	
+	
+	
+	
+	// *** PRIORITY  CP ***
+	SetGoalPriority("BUILD_Axis_Command_Post", 0.55);
+	SetGoalPriority("PLANT_Axis_Command_Post", 0.55);
+	SetGoalPriority("BUILD_Allied_Command_Post", 0.4);
+	SetGoalPriority("PLANT_Allied_Command_Post", 0.4);
+	SetGoalPriority( "PLANT_Axis_Command_Post", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Allied_Command_Post", 0.0, TEAM.AXIS, CLASS.ENGINEER );
+	
+
+	// *** Barriers Pri *** 
+	SetGoalPriority("BUILD_Axis_sewer_barrier", 0.40);
+	SetGoalPriority("BUILD_Farmhouse_Barrier", 0.40);
+//	SetGoalPriority("PLANT_Farmhouse_Barrier", 0.99, TEAM.AXIS, CLASS.COVERTOPS);
+	SetGoalPriority("PLANT_Farmhouse_Barrier", 0.4, TEAM.AXIS, CLASS.ENGINEER);
+	SetGoalPriority( "PLANT_Axis_sewer_barrier", 0.0, TEAM.ALLIES, CLASS.ENGINEER );
+//	SetGoalPriority( "PLANT_Axis_sewer_barrier", 0.99, TEAM.ALLIES, CLASS.COVERTOPS );
+	
+	SetGoalPriority("CHECKPOINT_.*", 0.4);
+//	SetGoalPriority("FLAG_.*", 1.1); // necessary?
+	SetGoalPriority( "CHECKPOINT_.*", 0.0, 0, CLASS.ENGINEER );
+	SetGoalPriority( "ATTACK_.*", 0.0, 0, CLASS.ENGINEER );
+	SetGoalPriority( "CAMP_.*", 0.1, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "CAMP_.*", 0.1, TEAM.ALLIES, CLASS.ENGINEER );
+//	SetGoalPriority( "PLANT_.*", 1.0, 0, CLASS.ENGINEER );
+	
+	
+	
+	SetGoalPriority( "MOUNTMG42.*", 0.0, 0, CLASS.ENGINEER );
+	SetGoalPriority( "CAMP_celldoor", 0.0, 0, CLASS.ENGINEER );
+	SetGoalPriority( "CAMP_celldoor1", 0.0, 0, CLASS.ENGINEER );
+	
+	
+	
+	
+	
+
+//	SetGoalPriority("BUILD_Farmhouse_Barrier", 0.85);
+	
+	Util.SetMaxUsers( 1, "BUILD.*" );
+	Util.SetMaxUsers( 2, "FLAG_.*" );
+	Util.SetMaxUsers( 1, "CHECKPOINT.*" );
+	Util.SetMaxUsers( 1, "PLANT.*" );
+//	Util.SetMaxUsers( 2, "PLANT_Axis_safe_door" );
+//	Util.SetMaxUsers( 2, "PLANT_cell_door" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "CAMP_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	
+	
+	
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		CHECKPOINT_building_flag =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_AlliedMiddle1 =
+					{
+						ROUTE_AlliedMiddle2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+						ROUTE_AlliedMiddle3 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+					
+					ROUTE_AlliedRight1 =
+					{
+						ROUTE_AlliedRight2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+					
+					ROUTE_AlliedLeft1 =
+					{
+						ROUTE_AlliedLeft2 =
+						{
+							ROUTE_AlliedFlag ={},
+						},
+					},
+				},
+				
+				ROUTE_AlliedCPWay1 =
+				{
+					ROUTE_AlliedCPWay2 =
+					{
+						ROUTE_AlliedLeft1 =
+						{
+							ROUTE_AlliedLeft2 =
+							{
+								ROUTE_AlliedFlag ={}
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		PLANT_cell_door =
+		{
+			ROUTE_AxisSpawn1 =
+			{
+				ROUTE_Sewer1 =
+				{
+					ROUTE_Sewer2 =
+					{
+						ROUTE_Sewer3 =
+						{
+							ROUTE_Sewer4 =
+							{
+								ROUTE_Sewer5 =
+								{
+									ROUTE_Sewer6 =
+									{
+										ROUTE_AlliedCPWay2 =
+										{
+											ROUTE_fb1 = 
+											
+												{
+													ROUTE_fb2 = 
+													{
+														ROUTE_FarmhouseBarrier = 
+														 {
+															ROUTE_cell66 = {},
+														 },
+													},	 
+												},	
+										},    
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		PLANT_Axis_safe_door =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_66 =
+					{
+						ROUTE_87 = {},
+					},	
+				
+			},
+		},
+		
+		PLANT_Axis_sewer_barrier =
+		{
+			ROUTE_AlliedSpawn1 =
+			{
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_Under1 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under3 =
+							{
+								ROUTE_SewerBarrier = {},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		CAPPOINT_Truck =
+		{
+			ROUTE_GoldCrate =
+			{
+				ROUTE_truck99 =
+				{
+					ROUTE_Under3 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under1 =
+							{
+								ROUTE_AlliedPrincipal = {},
+							},
+						},
+					},
+				},
+			},
+		},
+		
+		CAPPOINT_MedicalBeds =
+		{
+			ROUTE_Prisoner =
+			{
+				
+				ROUTE_AxisEscape1 =
+				{
+					ROUTE_AxisEscape2 =
+					{
+						ROUTE_AlliedCPWay2 =
+						{
+							ROUTE_Sewer6 =
+							{
+								ROUTE_Sewer5 =
+								{
+									ROUTE_Sewer4 =
+									{
+										ROUTE_Sewer3 =
+										{
+											ROUTE_Sewer2 =
+											{
+												ROUTE_Sewer1 = {},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Weight = 4,
+				ROUTE_AlliedPrincipal =
+				{
+					ROUTE_Under1 =
+					{
+						ROUTE_Under2 =
+						{
+							ROUTE_Under3 = 
+							 {
+								ROUTE_bed88 = {},
+							 },	
+						},
+					},
+				},
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_Farmhouse_Barrier = MapRoutes.PLANT_cell_door;
+	MapRoutes.CAMP_celldoor1 = MapRoutes.PLANT_cell_door;
+	MapRoutes.CAMP_celldoor = MapRoutes.PLANT_cell_door;
+	MapRoutes.FLAG_prisoner1 = MapRoutes.PLANT_cell_door;
+	MapRoutes.CAMP_safedoor = MapRoutes.PLANT_Axis_safe_door;
+	MapRoutes.CAMP_safedoor1 = MapRoutes.PLANT_Axis_safe_door;
+	MapRoutes.FLAG_goldbars1 = MapRoutes.PLANT_Axis_safe_door;
+	
+	
+	
+	Util.Routes(MapRoutes);
+
+	print( "Omni-bot map script for Den Of Lions by **PCZ** >M@t3o$< Edited by [FL]Blindman." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 280.0;
+	bot.MaxViewDistance = 4800.0;
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.K43, WEAPON.BAR, WEAPON.STEN, WEAPON.MP34, WEAPON.BAR, WEAPON.STG44, WEAPON.FG42};
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.2);
+};

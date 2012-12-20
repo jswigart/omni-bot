@@ -1,0 +1,316 @@
+//==========================================================================================
+//
+//	uje_the_beast.gm
+//
+//	Who       	When		What
+//------------------------------------------------------------------------------------------
+//	[UJE]Niek	17 November 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_ForceField_Control_1_Dyno = 0,
+	Allied_ForceField_Control_2_Dyno = 0,
+	Bridge_Dyno = 0,
+	Command_Post_Dyno = 0,
+	Sideway_Up_Dyno = 0,
+
+	Beast_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Beast" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_beast" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_cage" );
+		
+		Util.MapDebugPrint( "Beast_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_FF2" );
+		
+		Util.MapDebugPrint( "Bridge_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+		
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+	
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Sideway_Up_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sideway_Up" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Sideway_Up" );
+		
+		Util.MapDebugPrint( "Sideway_Up_Built" );
+	},
+
+	Allied_ForceField_Control_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_ForceField_Control_1_Dyno = 0;
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_FF1" );
+		
+		Util.MapDebugPrint( "Allied_ForceField_Control_1_Destroyed" );
+	},
+
+	Allied_ForceField_Control_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_ForceField_Control_2_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_FF2" );
+		
+		Util.MapDebugPrint( "Allied_ForceField_Control_2_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bridge_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Bridge" );
+		
+		Util.MapDebugPrint( "Bridge_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Command_Post" );
+		
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+	
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
+		
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Sideway_Up_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Sideway_Up_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Sideway_Up" );
+		SetAvailableMapGoals( TEAM.ALLIES, fasle, "PLANT_Sideway_Up" );
+		
+		Util.MapDebugPrint( "Sideway_Up_Destroyed" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_oldcityflag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_oldcityflag" );
+		
+		Util.MapDebugPrint( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_oldcityflag" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_oldcityflag" );
+		
+		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
+	},
+	
+	Axis_Hold_Flag = function( trigger )
+	{
+		if( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_oldcityflag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_oldcityflag" );
+		
+		Util.MapDebugPrint( "Axis_Hold_Flag" );
+	},
+	
+	Beast_Damaged = function( trigger )
+	{
+		if( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Beast" );
+		
+		Util.MapDebugPrint( "Beast_Damaged" );
+	},
+	
+	Door_Damaged = function( trigger )
+	{
+		if( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_beast" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Sideway_Up" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_FF1" );
+		
+		Util.MapDebugPrint( "Door_Damaged" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "^5The Beast has revived", Map.Beast_Built );
+	OnTrigger( "^1The Bridge has been build.", Map.Bridge_Built );
+	OnTrigger( "^4Allied Command Post constructed", Map.Allied_Command_Post_Built );
+	OnTrigger( "^1Axis Command Post constructed", Map.Axis_Command_Post_Built );
+	OnTrigger( "^1The Sideway has been build.", Map.Sideway_Up_Built );
+	OnTrigger( "^1Axis have destroyed Forcefield Control 1", Map.Allied_ForceField_Control_1_Destroyed );
+	OnTrigger( "^1Axis have destroyed Forcefield Control 2", Map.Allied_ForceField_Control_2_Destroyed );
+	OnTrigger( "^3The Bridge has been destroyed.", Map.Bridge_Destroyed );
+	OnTrigger( "^1Axis team has destroyed the Allied Command Post", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "^4Allied team has destroyed the Axis Command Post", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "^3The Sideway has been destroyed.", Map.Sideway_Up_Destroyed );
+	OnTrigger( "Axis reclaim the Town!", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "Allies capture the Town!", Map.oldcityflag_Allies_Captured );
+	OnTrigger( "^1Axis hold the flag now", Map.Axis_Hold_Flag );
+	OnTrigger( "^1The beast has been damaged", Map.Beast_Damaged );
+	OnTrigger( "^3The Beast has broken into the Yard", Map.Door_Damaged );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_cage" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_oldcityflag" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_oldcityflag" );
+	
+	SetGoalPriority( "SWITCH_cage", 0.92, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Beast", 0.91, TEAM.AXIS, CLASS.ENGINEER );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Command_Post =
+		{
+		},
+		BUILD_Beast =
+		{
+		},
+		BUILD_Bridge =
+		{
+		},
+		BUILD_Sideway_Up =
+		{
+		},
+		PLANT_Allied_ForceField_Control_1 =
+		{
+		},
+		PLANT_Sideway_Up =
+		{
+		},
+		PLANT_Bridge =
+		{
+		},
+		PLANT_Allied_ForceField_Control_2 =
+		{
+		},
+		PLANT_Command_Post =
+		{
+		},
+		CHECKPOINT_oldcityflag =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

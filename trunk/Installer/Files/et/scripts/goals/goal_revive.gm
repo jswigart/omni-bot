@@ -183,6 +183,7 @@ this.UpdateRevive = function()
 		}
 	}
 	else {
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "position " + GetEntPosition(this.TargetEntity));
 		this.BBDelayTime = 10;
 	}
 	this.Finished();

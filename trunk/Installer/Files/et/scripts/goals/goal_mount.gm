@@ -98,27 +98,45 @@ this.Enter = function()
 		this.MapGoal.DisableGoal(true);
 		this.Finished();
 	}
-
-	this.AimPosition = null;
-	this.AimOpposite = false;
+	this.AimTime = 0;
 };
 
 this.Exit = function()
 {
-	this.Bot.PressButton(BTN.USE); // dismount
+	if (this.Bot.HasEntityFlag(ENTFLAG.MOUNTED)) {
+		this.Bot.PressButton(BTN.USE); // dismount
+	}
 
 	// stop ignoring it as a target
-	if ( this.VehicleEnt ) {
+	if ( this.VehicleEnt && GetEntTeam(this.VehicleEnt) ) {
 		this.Bot.IgnoreTarget(this.VehicleEnt, 0.1);
 	}
 };
 
 this.SetAimMode = function()
 {
-	// set the aim mode
-	if ( this.MapGoal.AimMode )
+	mode = this.MapGoal.AimMode;
+	if ( typeId(mode) == 6 ) { // table
+		currentTime = GetTime();
+		if(this.AimTime <= currentTime)
+		{
+			this.AimIndex = Util.GetRandomFromTable(mode);
+			this.AimTime = currentTime + this.AimAdjustDelay;
+		}
+		if (this.AimIndex >= 0 && this.AimIndex < tableCount(mode))
+		{
+			mode = mode[this.AimIndex];
+		}
+	}
+
+	// is it a position?
+	if ( typeId(mode) == 3 ) {
+		this.AimPosition = mode;
+		this.UseAimMode = null;
+	}
+	else
 	{
-		switch(this.MapGoal.AimMode)
+		switch(mode)
 		{
 			case "random":
 			{
@@ -129,21 +147,10 @@ this.SetAimMode = function()
 				this.AimOpposite = true;
 				this.UseAimMode = this.AimModes.vehicleVelocity;
 			}
-			case "velocity":
+			default: //"velocity"
 			{
 				this.AimOpposite = false;
 				this.UseAimMode = this.AimModes.vehicleVelocity;
-			}
-			default:
-			{
-				// is it a position?
-				if ( typeId(this.MapGoal.AimMode) == 3 ) {
-					this.AimPosition = this.MapGoal.AimMode;
-					this.UseAimMode = null;
-				}
-				else {
-					this.UseAimMode = this.AimModes.vehicleVelocity;
-				}
 			}
 		}
 	}
@@ -217,6 +224,14 @@ this.Update = function()
 						if ( this.Goto(offsetPos, 32.0) != EVENT.PATH_FAILED ) {
 							pathSuccess = true;
 							break;
+						} else if (this.Bot.DistanceTo(this.VehicleEnt) < 200) {
+							// try to mount if path failed near vehicle
+							this.Bot.PressButton(BTN.USE);
+							yield();
+							if (GetEntFlags( botEnt, ENTFLAG.MOUNTED )) {
+								pathSuccess = true;
+								break;
+							}
 						}
 					}
 				}
@@ -305,6 +320,7 @@ this.Update = function()
 
 					if ( ( mountcounter / 20 ) == this.Timeout )
 					{
+						this.BlackboardDelay(10, this.MapGoal);
 						this.Finished();
 					}
 				}
@@ -371,5 +387,3 @@ this.AimModes =
 		}
 	},
 };
-
-this.UseAimMode = this.AimModes.vehicleVelocity; // default aim mode

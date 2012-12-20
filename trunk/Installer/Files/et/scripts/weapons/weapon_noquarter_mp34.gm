@@ -1,5 +1,4 @@
-// The new weapon instance is passed to this function as the 'this'
-// Properties can be set like this.Property = x, or the this prefix can be left off.
+if (GetModName()!="noquarter") { return; }
 
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
@@ -20,3 +19,6 @@ this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
 
 this.PrimaryFire.DefaultDesirability = 0.7;
 this.PrimaryFire.SetDesirabilityRange(0, 2600, 0.7);
+
+this.PrimaryFire.LowAmmoThreshold = 5;
+this.PrimaryFire.LowAmmoPriority = 0.8;

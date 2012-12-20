@@ -1,11 +1,6 @@
-// The new weapon instance is passed to this function as the 'this'
-// Properties can be set like this.Property = x, or the this prefix can be left off.
+if (GetModName()!="noquarter") { return; }
 
 WEAPON.JOHNSON_SCOPED = 101;
-
-if ( GetModName() != "noquarter" ) {
-	WEAPON.JOHNSON_SCOPED = WEAPON.NONE;
-}
 
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.

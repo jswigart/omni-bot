@@ -1,0 +1,296 @@
+//==========================================================================================
+//
+//	todliche_final.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	04 December 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	bridgeBuilt = false,
+	footBridgeBuilt = false,
+	alliedCP = false,
+	supplyCrateDestroyed = false,
+	gateDestroyed = false,
+	mainGateDestroyed = false,
+
+	SetGoals = function()
+	{
+		b = !Map.alliedCP;
+		SetAvailableMapGoals( TEAM.AXIS, b, "DEFEND_bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, b, "DEFEND_command_post.*" );
+		b = Map.bridgeBuilt || Map.footBridgeBuilt || Map.alliedCP;
+		SetAvailableMapGoals( TEAM.AXIS, b, "DEFEND_crate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, b && !Map.gateDestroyed, "DEFEND_gate.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, !b, "ATTACK_bridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, b, "ATTACK_gate.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, b, ".*_Command_Post" );
+		if(!Map.supplyCrateDestroyed){ SetAvailableMapGoals( TEAM.ALLIES, b, "PLANT_Supply_Crate" ); }
+		if(!Map.mainGateDestroyed){ SetAvailableMapGoals( TEAM.ALLIES, b, "PLANT_Main_Gate" ); }
+		SetAvailableMapGoals( TEAM.ALLIES, b && Map.mainGateDestroyed, "PLANT_Main_Gate_Barrier" );
+		if(b){ b = Map.supplyCrateDestroyed || Map.gateDestroyed; }
+		SetAvailableMapGoals( TEAM.ALLIES, b, "FLAG_Gold_Crate" );
+		SetAvailableMapGoals( TEAM.ALLIES, b, "PLANT_West_Wall" );
+	},
+
+	Foot_Bridge_Built = function( trigger )
+	{
+		Map.footBridgeBuilt = true;
+		Util.EnableGoal( "ROUTE_foot_bridge" );
+		sleep(2);
+		Map.SetGoals();
+		Util.MapDebugPrint( "Foot_Bridge_Built" );
+	},
+
+	Foot_Bridge_Destroyed = function( trigger )
+	{
+		Map.footBridgeBuilt = false;
+		Map.SetGoals();
+		Util.DisableGoal( "ROUTE_foot_bridge" );
+		Util.MapDebugPrint( "Foot_Bridge_Destroyed" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		Map.bridgeBuilt = true;
+		Util.EnableGoal( "ROUTE_bridge" );
+		sleep(2);
+		Map.SetGoals();
+		Util.MapDebugPrint( "Bridge_Built" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		Map.bridgeBuilt = false;
+		Map.SetGoals();
+		Util.DisableGoal( "ROUTE_bridge" );
+		Util.MapDebugPrint( "Bridge_Destroyed" );
+	},
+
+	Guard_Tower_Built = function( trigger )
+	{
+		sleep(2);
+		SetAvailableMapGoals( TEAM.ALLIES, true, ".*MG42_Guard_Tower" );
+		Util.MapDebugPrint( "Guard_Tower_Built" );
+	},
+
+	Guard_Tower_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*MG42_Guard_Tower" );
+		Util.MapDebugPrint( "Guard_Tower_Destroyed" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		Map.alliedCP = true;
+		Map.SetGoals();
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		Map.alliedCP = false;
+		Map.SetGoals();
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		Map.gateDestroyed = true;
+		Map.mainGateDestroyed = true;
+		Map.SetGoals();
+		Util.EnableGoal( "ROUTE_main_gate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Main_Gate_Barrier" );
+		SetGoalPriority("FLAG_Gold_Crate", 0.7);
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+
+	Main_Gate_Barrier_Built = function( trigger )
+	{
+		Map.gateDestroyed = false;
+		Map.SetGoals();
+		Util.DisableGoal( "ROUTE_main_gate" );
+		SetGoalPriority("FLAG_Gold_Crate", 0.5);
+		Util.MapDebugPrint( "Main_Gate_Barrier_Built" );
+	},
+
+	Main_Gate_Barrier_Destroyed = function( trigger )
+	{
+		Map.gateDestroyed = true;
+		Map.SetGoals();
+		Util.EnableGoal( "ROUTE_main_gate" );
+		SetGoalPriority("FLAG_Gold_Crate", 0.7);
+		Util.MapDebugPrint( "Main_Gate_Barrier_Destroyed" );
+	},
+
+	Supply_Crate_Destroyed = function( trigger )
+	{
+		Map.supplyCrateDestroyed = true;
+		Map.SetGoals();
+		Util.EnableGoal( "ROUTE_supply_crate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold.*" );
+		Util.MapDebugPrint( "Supply_Crate_Destroyed" );
+	},
+
+	West_Wall_Built = function( trigger )
+	{
+		Util.DisableGoal( "ROUTE_west_wall" );
+		Util.MapDebugPrint( "West_Wall_Built" );
+	},
+
+	West_Wall_Destroyed = function( trigger )
+	{
+		Util.EnableGoal( "ROUTE_west_wall" );
+		Util.MapDebugPrint( "West_Wall_Destroyed" );
+	},
+
+	Gold_Crate_Taken = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gold.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_truck.*" );
+		Util.MapDebugPrint( "Gold_Crate_Taken" );
+	},
+
+	Gold_Crate_Returned = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_truck.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gold.*" );
+		Util.MapDebugPrint( "Gold_Crate_Returned" );
+	},
+
+	Gold_Crate_Secured = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "Gold_Crate_Secured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "The Allied team has destroyed the Main Gate!", Map.Main_Gate_Destroyed );
+	OnTrigger( "Allied team has constructed the Guard Tower!", Map.Guard_Tower_Built );
+	OnTrigger( "Axis team has destroyed the Guard Tower!", Map.Guard_Tower_Destroyed );
+	OnTrigger( "Allied team has constructed the Bridge!", Map.Bridge_Built );
+	OnTrigger( "The Allied team has constructed the Foot Bridge!", Map.Foot_Bridge_Built );
+	OnTrigger( "Axis team has constructed the Main Gate Barrier!", Map.Main_Gate_Barrier_Built );
+	OnTrigger( "The Axis team has constructed the West Wall!", Map.West_Wall_Built );
+	OnTrigger( "Axis team has destroyed the Bridge!", Map.Bridge_Destroyed );
+	OnTrigger( "The axis team has destroyed the foot bridge!", Map.Foot_Bridge_Destroyed );
+	OnTrigger( "Allied team has destroyed the Main Gate Barrier!", Map.Main_Gate_Barrier_Destroyed );
+	OnTrigger( "The Allied team has destroyed the Supply Crate!", Map.Supply_Crate_Destroyed );
+	OnTrigger( "The Allied team has destroyed the West Wall!", Map.West_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the Gold Crate!", Map.Gold_Crate_Taken );
+	OnTrigger( "Flag returned Gold Crate!", Map.Gold_Crate_Returned );
+	OnTrigger( "Allied team has escaped with the gold!", Map.Gold_Crate_Secured );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+
+	Util.DisableGoal( ".*", true );
+	Util.DisableGoal( "ROUTE_bridge" );
+	Util.DisableGoal( "ROUTE_foot_bridge" );
+	Util.DisableGoal( "ROUTE_main_gate" );
+	Util.DisableGoal( "ROUTE_supply_crate" );
+	Util.EnableGoal( "AMMOCAB_south_ammocabinet_1" );
+	Util.EnableGoal( "HEALTHCAB_south_healthcabinet_1" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, ".*_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Foot_Bridge" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guard_Tower" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_West_Wall" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_bridge.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Bridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Foot_Bridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Guard_Tower" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_south_ammocabinet" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bridge.*" );
+
+	SetGoalPriority("ATTACK_truck.*", 0.9);
+	SetGoalPriority("FLAG_Gold_Crate", 0.5);
+	SetGoalPriority("DEFEND_crate.*", 0.51);
+	SetGoalPriority("PLANT_Guard_Tower", 0.7);
+	SetGoalPriority("PLANT_.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER);
+
+	Util.SetMaxUsers( 1, "DEFEND_crate.*" );
+	Util.SetMaxUsers( 1, "BUILD_West_Wall" );
+
+	Util.AddUsePoint("PLANT_Main_Gate_Barrier", Vec3(-857.762, 842.015, 606.125));
+	Util.AddUsePoint("PLANT_Supply_Crate", Vec3(-1853.990, 1013.821, 704.125));
+	Util.AddUsePoint("PLANT_Bridge", Vec3(-408.285, -1319.707, 512.125));
+
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=10, maxcamptime=30} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 3000;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_Main_Gate =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_tunnel = {
+					ROUTE_bridge = {},
+				},
+				ROUTE_bridge = {},
+				ROUTE_foot_bridge = {},
+			}
+		},
+		FLAG_Gold_Crate =
+		{
+			ROUTE_allied_spawn = {
+				ROUTE_tunnel = {
+					ROUTE_bridge = {},
+				},
+				ROUTE_bridge = {
+					ROUTE_main_gate = {},
+					ROUTE_supply_crate = {},
+				},
+				ROUTE_foot_bridge = {},
+			},
+			ROUTE_commandpost_spawn = {
+				ROUTE_main_gate = {},
+				ROUTE_supply_crate = {},
+			},
+			ROUTE_supply_crate = {
+				ROUTE_west_wall = {},
+				ROUTE_gold_front = {},
+			},
+			ROUTE_main_gate = {
+				ROUTE_west_wall = {},
+				ROUTE_east_wall = {},
+				ROUTE_gold_front = {},
+			},
+		},
+		BUILD_Command_Post = {
+			ROUTE_axis_spawn = {
+				ROUTE_axis_door = {},
+			}
+		},
+	};
+	MapRoutes["ATTACK_bridge[1289]"] = {
+		ROUTE_allied_spawn = {
+			ROUTE_tunnel = {},
+		}
+	};
+	MapRoutes["ATTACK_gate.*"] = MapRoutes.PLANT_Main_Gate;
+	MapRoutes.PLANT_Main_Gate_Barrier = MapRoutes.PLANT_Main_Gate;
+	MapRoutes.PLANT_Command_Post = MapRoutes.BUILD_Command_Post;
+	Util.Routes(MapRoutes);
+};

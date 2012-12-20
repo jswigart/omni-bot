@@ -843,13 +843,13 @@ global OnMapLoad = function()
 	OnTrigger( "tank at location", Map.vehicle_at_location );
 	OnTrigger( "truck at location", Map.vehicle_at_location );
 
-	firstcorner = OnTriggerRegion(AABB(641.330,1526.699,184.529,952.875,1677.401,267.442), RegionTrigger.VehicleTrigger);
-	barrier1 = OnTriggerRegion(AABB(660.253,828.462,59.548,960.874,1040.700,173.040), RegionTrigger.VehicleTrigger);
-	bridgehill = OnTriggerRegion(AABB(2151.544,-64.875,-147.159,2313.876,184.875,-36.052), RegionTrigger.VehicleTrigger);
-	bridgemg = OnTriggerRegion(AABB(2223.261,938.122,-416.814,2471.191,1218.338,-342.679), RegionTrigger.VehicleTrigger);
-	barrier2 = OnTriggerRegion(AABB(1656.194,493.729,-416.801,2034.268,726.966,-337.425), RegionTrigger.VehicleTrigger);
-	barrier3 = OnTriggerRegion(AABB(480.061,-720.472,-332.313,634.705,-478.740,-222.440), RegionTrigger.VehicleTrigger);
-	barrier4 = OnTriggerRegion(AABB(-1818.902,-1406.621,-47.144,-1658.912,-1076.801,37.125), RegionTrigger.VehicleTrigger);
+	RegionTrigger.Create(AABB(641.330,1526.699,184.529,952.875,1677.401,267.442), "VehicleTrigger", "firstcorner");
+	RegionTrigger.Create(AABB(660.253,828.462,59.548,960.874,1040.700,173.040), "VehicleTrigger", "barrier1");
+	RegionTrigger.Create(AABB(2151.544,-64.875,-147.159,2313.876,184.875,-36.052), "VehicleTrigger", "bridgehill");
+	RegionTrigger.Create(AABB(2223.261,938.122,-416.814,2471.191,1218.338,-342.679), "VehicleTrigger", "bridgemg");
+	RegionTrigger.Create(AABB(1656.194,493.729,-416.801,2034.268,726.966,-337.425), "VehicleTrigger", "barrier2");
+	RegionTrigger.Create(AABB(480.061,-720.472,-332.313,634.705,-478.740,-222.440), "VehicleTrigger", "barrier3");
+	RegionTrigger.Create(AABB(-1818.902,-1406.621,-47.144,-1658.912,-1076.801,37.125), "VehicleTrigger", "barrier4");
 
 	// when tank is between barrier 2 and final spot, force allies anywhere but south stairs
 	Wp.SetWaypointFlag( "southstairs1", "axis", false );
