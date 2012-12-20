@@ -574,7 +574,16 @@ Commands["trigger_bounds"] =
 				assert( gmfile.Open( fileName, "text", false, true ) );
 			}
 
-			str = _params[0] + " = " + "OnTriggerRegion(AABB(" +  ToString(TRACE_TRIGGER) + ")," + "Map." + _params[0] + ");";
+			if (_params[1] && (_params[0] && RegionTrigger && RegionTrigger[_params[0]])) {
+				str = format("RegionTrigger.Create(AABB(%s), \"%s\", \"%s\");", ToString(TRACE_TRIGGER), _params[0], _params[1]);
+			}
+			else if (_params[0]) {
+				str = format("%s = OnTriggerRegion(AABB(%s), Map.%s);", _params[0], ToString(TRACE_TRIGGER), _params[0]);
+			}
+			else {
+				str = format("trigger = OnTriggerRegion(AABB(%s), Map.TRIGGERNAME); // CHANGE TRIGGER NAME", ToString(TRACE_TRIGGER));
+			}
+
 			assert( gmfile.Write( str, System.NewLine ) );
 			gmfile.Close();
 			global TRACE_TRIGGER = null;
@@ -1078,7 +1087,7 @@ Commands["ab"] =
 			else {
 				AddBot();
 			}
-			sleep(1); // give time for server manager to update bot counts
+			yield(); // give time for server manager to update bot counts
 		}
 	},
 
@@ -1156,9 +1165,11 @@ Commands["botgoal"] =
 		foreach ( id and bot in BotTable )
 		{
 			n = bot.Name;
-			if ( n.Find(_params[0])!= -1 )
+			if ( !_params[0] || n.Find(_params[0])!= -1 )
 			{
-				bot.Say("My high level goal is " + bot.GetHighLevelGoalName());
+				g = bot.GetMapGoalName();
+				if(!g){ g = bot.GetHighLevelGoalName(); }
+				bot.Say("My high level goal is " + g);
 			}
 		}
 	},
