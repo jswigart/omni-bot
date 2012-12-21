@@ -109,15 +109,19 @@ this.Update = function()
 		this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
 		this.BlockForWeaponChange( WEAPON.PLIERS );
 
-		eyePos = GetEntEyePosition(this.Bot.GetGameEntity());
-		if ( pos.z < eyePos.z && eyePos.z - pos.z > 48 ) {
-			this.Bot.HoldButton(BTN.CROUCH, 99);
-		}
-
 		while( this.TargetEntity && EntityIsValid(this.TargetEntity) ) { // goal deleted with entity
 			pos = GetEntPosition(this.TargetEntity);
 			if ( pos ) {
 				this.AddAimRequest(Priority.High, "position", pos + Vector3(0,0,12));
+
+				eyePos = GetEntEyePosition(this.Bot.GetGameEntity());
+				heightDiff = pos.z - eyePos.z;
+				if ( heightDiff > 20.f ) {
+					this.Bot.PressButton(BTN.JUMP);
+				}
+				else {
+					this.Bot.HoldButton(BTN.CROUCH, 0.5);
+				}
 
 				if ( this.Bot.DistanceTo(pos) > 64 ) {
 					this.Bot.MoveTowards(pos);
@@ -128,7 +132,7 @@ this.Update = function()
 			else {
 				this.Finished();
 			}
-			yield();
+			sleep(0.25);
 		}
 	}
 	else
