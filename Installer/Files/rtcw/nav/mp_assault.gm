@@ -154,10 +154,14 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_box.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_wh.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bTower.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_eng_tower.*" );
 				Map.Airstrike.stepstop.Enabled = true;
 
 			}
@@ -622,6 +626,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_hatch", 0.81 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.89 );	// Less than the gate flag
 	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "CAMP_eng_tower.*", 0.96 );
 	SetGoalPriority( "SWITCH_Gate1", 0.65 );
 	SetGoalPriority( "SWITCH_Gate2", 0.9 );
 	SetGoalPriority( "SWITCH_HangarDoor1", 0.65 );
@@ -641,6 +646,7 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_bTower.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_hatch", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
+	RTCWUtil.LimitToClass( "CAMP_eng_tower.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	Util.DisableGoal( ".*", true ); //all but the routes
 	Util.DisableGoal( "ROUTE_mwh.*" );
