@@ -226,15 +226,14 @@ vmCvar_t url;
 
 vmCvar_t g_dbgRevive;
 
-#ifdef _DEBUG
 vmCvar_t g_dynoFuseTime;
-#endif
+
 
 cvarTable_t gameCvarTable[] = {
 	// debug vars
-#ifdef _DEBUG
-	{ &g_dynoFuseTime,              "g_dynoFuseTime",               "30000",                0,                                                  0,          qfalse },
-#endif
+
+	{ &g_dynoFuseTime,              "g_dynoFuseTime",               "30000",                CVAR_CHEAT,                                         0,          qfalse },
+
 	// default vars
 	{ &g_cheats,                    "sv_cheats",                    "",                     0,                                                  0,          qfalse },
 	{ NULL,                         "gamename",                     GAMEVERSION,			CVAR_SERVERINFO | CVAR_ROM,							0,          qfalse },
