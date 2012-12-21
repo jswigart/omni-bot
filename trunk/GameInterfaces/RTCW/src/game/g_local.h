@@ -1333,6 +1333,10 @@ extern vmCvar_t g_flagLock;
 extern vmCvar_t g_venomSpread;
 extern vmCvar_t g_venomDamage;
 
+#ifdef _DEBUG
+    extern vmCvar_t g_dynoFuseTime;
+#endif
+
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;
 extern vmCvar_t g_maxWarp;
