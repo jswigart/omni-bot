@@ -547,11 +547,7 @@ void Weapon_Engineer( gentity_t *ent ) {
 
 				// ARM IT!
 				trap_SendServerCommand( ent - g_entities, "cp \"Dynamite is now armed with a 30 second timer!\" 1" );
-#ifdef _DEBUG
 				traceEnt->nextthink = level.time + g_dynoFuseTime.integer;
-#else
-				traceEnt->nextthink = level.time + 30000;
-#endif
 				traceEnt->think = G_ExplodeMissile;
 
 				// check if player is in trigger objective field
