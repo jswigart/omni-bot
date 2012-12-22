@@ -371,15 +371,17 @@ global Map =
 		Map.RoundStart = false;
 
 		if ( !Map.CryptStatus && !Map.GoldStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		}
 
 		if ( !Map.GoldStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCellar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCemetary_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTavern.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rCottage.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnCamp.*" );
@@ -388,16 +390,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCemetary_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bCemetary_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCemetary_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCemetary_.*" );
 
 			if ( Map.FriendlyFire < 1 ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
 			}
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 		if ( !Map.GoldStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			
 		}
 		Map.Airstrike.bridge.Enabled = false;
 	},
@@ -411,10 +411,8 @@ global Map =
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
-
 		if ( !Map.CryptStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Crypt );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnCamp.*" );
@@ -449,15 +447,7 @@ global Map =
 		Map.b3_status = true;
 		Util.EnableGoal( "ROUTE_block3" );
 	},
-	spawnkill = function()
-	{
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill_.*" );
-	},
+
 	CryptPlant =
 	{
 		Name = "CryptPlant",
@@ -563,21 +553,11 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
 
-	//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCottage.*" );
-	//SetMapGoalProperties( "ATTACK_rtest.*", {mincamptime=1, maxcamptime=1});
-
-	//SetGoalPriority( "ATTACK_rtest.*", 0.8 );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rtest.*" );
-
-	//Martin Testing
-	//Map.spawnkill();
-
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	//some triggers to help bots know when to aggressively defend crypt
 	tOne = OnTriggerRegion( Vector3( 67,3056,-110 ), 200, Map.CryptTrigger );
 	tTwo = OnTriggerRegion( Vector3( -1050,3674,-247 ), 275, Map.CryptTrigger );
-
 
 	MapRoutes =
 	{
