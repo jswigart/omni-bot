@@ -3708,9 +3708,9 @@ void PmoveSingle( pmove_t *pmove ) {
 					// ...if the velocity in this direction changed enough
 					if ( fabs( pm->ps->velocity[i] - pml.previous_velocity[i] ) > 0.5f / fac ) {
 						if ( pm->ps->velocity[i] < 0 ) {
-							pm->ps->velocity[i] -= 0.2f * fac; // was 0.5
+							pm->ps->velocity[i] -= 0.3f * fac; // was 0.5
 						} else {
-							pm->ps->velocity[i] += 0.2f * fac; // was 0.5
+							pm->ps->velocity[i] += 0.3f * fac; // was 0.5
 						}
 					}
 				}
