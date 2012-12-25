@@ -421,6 +421,27 @@ Commands["ignore"] =
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+// test command
+Commands["imoutside"] =
+{
+	Func = function( _params )
+	{
+		outside = EntityIsOutside(0);
+		msg = "you are inside";
+		if (outside) {
+			msg = "you are outside";
+		}
+		
+		EchoToScreen(10, msg);
+	},
+
+	Help =
+	{
+		"test EntityIsOutside function",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // dump goal definitions from a passed map table
 // /bot goaldef <table> <goal type>
 Commands["goaldef"] =
