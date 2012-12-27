@@ -46,7 +46,7 @@ public:
 protected:
 };
 
-class Incapacitated : public StateChild
+class Incapacitated : public StateSimultaneous
 {
 public:
 	obReal GetPriority() 
@@ -56,6 +56,7 @@ public:
 
 	State::StateStatus Update(float fDt) 
 	{
+		// TODO: move this logic to script.
 		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
 		{
 			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
@@ -67,7 +68,7 @@ public:
 		return State_Busy; 
 	}
 
-	Incapacitated() : StateChild("Incapacitated") 
+	Incapacitated() : StateSimultaneous("Incapacitated") 
 	{
 	}
 protected:

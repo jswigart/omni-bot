@@ -1,0 +1,29 @@
+this.Name = "Injured";
+this.Parent = "Incapacitated";
+this.AutoAdd = false;
+this.Debug = true;
+
+this.GetPriority = function()
+{
+	if (this.Debug) { this.Bot.Say("injured"); }
+	this.Priority = 1.0;
+	block(0);
+};
+
+this.Enter = function()
+{
+	if (this.Debug) { this.Bot.Say("injured: enter"); }
+};
+
+this.Update = function()
+{
+	while(1) {
+		if (this.Debug) { this.Bot.Say("injured: update"); }
+		sleep(1);
+	}
+};
+
+this.Exit = function()
+{
+	if (this.Debug) { this.Bot.Say("injured: exit"); }
+};
