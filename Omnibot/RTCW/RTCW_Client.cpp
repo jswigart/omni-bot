@@ -56,14 +56,6 @@ public:
 
 	State::StateStatus Update(float fDt) 
 	{
-		// TODO: move this logic to script.
-		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
-		{
-			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
-			{
-				InterfaceFuncs::GoToLimbo(GetClient());
-			}
-		}
 		GetClient()->SetMovementVector(Vector3f::ZERO);
 		return State_Busy; 
 	}

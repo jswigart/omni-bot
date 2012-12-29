@@ -567,23 +567,67 @@ static int gmfIsMG42Repairable(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: IsMedicNear
+//		Returns whether or not a Medic is nearby
+//		
+//
+// Parameters:
+//
+//		None
+//
+// Returns:
+//		1 if medic is near, 0 if not
+static int gmfIsMedicNear(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+
+	int medicNear = InterfaceFuncs::IsMedicNear(native) ? 1 : 0;
+	a_thread->PushInt(medicNear);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: GotoLimbo
+//		Instructs the bot to tap out
+//		
+//
+// Parameters:
+//
+//		None
+//
+// Returns:
+//		1 if successful, 0 if not
+static int gmfGoToLimbo(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+
+	int goLimbo = InterfaceFuncs::GoToLimbo(native) ? 1 : 0;
+	a_thread->PushInt(goLimbo);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 { 
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon, NULL},
 	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},	
 	{"GetReinforceTime",		gmfGetReinforceTime, NULL},
-	{"GetCursorHint",			gmfGetCurrentCursorHint, NULL},
+	{"GetCursorHint",		gmfGetCurrentCursorHint, NULL},
 	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},		
-	{"CanSnipe",				gmfCanSnipe, NULL},	
-	{"Snipe",					gmfSnipe, NULL},	
+	{"CanSnipe",			gmfCanSnipe, NULL},	
+	{"Snipe",			gmfSnipe, NULL},	
 	{"SendPrivateMessage",		gmfSendPrivateMessage, NULL},
-	{"GetSpawnPoint",			gmfGetSpawnPoint, NULL},
-	{"Suicide",					gmfSetSuicide, NULL},
-	{"DisableBotPush",			gmfDisableBotPush, NULL},
+	{"GetSpawnPoint",		gmfGetSpawnPoint, NULL},
+	{"Suicide",			gmfSetSuicide, NULL},
+	{"DisableBotPush",		gmfDisableBotPush, NULL},
 	{"GetExplosiveState",		gmfGetExplosiveState, NULL},
 	{"GetDestroyableState",		gmfGetDestroyableState, NULL},
-	{"GetMG42Info",				gmfGetMG42Info, NULL},
+	{"GetMG42Info",			gmfGetMG42Info, NULL},
 	{"IsMG42Repairable",		gmfIsMG42Repairable, NULL},
+	{"IsMedicNear",			gmfIsMedicNear, NULL},
+	{"GoToLimbo",			gmfGoToLimbo, NULL},
 };
 
 static gmFunctionEntry s_ExtendedBotLib[] =
