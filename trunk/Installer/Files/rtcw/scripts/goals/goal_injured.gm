@@ -1,7 +1,7 @@
 this.Name = "Injured";
 this.Parent = "Incapacitated";
-this.AutoAdd = false;
-this.Debug = true;
+this.AutoAdd = true;
+this.Debug = false;
 
 this.GetPriority = function()
 {
@@ -19,6 +19,10 @@ this.Update = function()
 {
 	while(1) {
 		if (this.Debug) { this.Bot.Say("injured: update"); }
+
+		if ( this.CheckForTapout() ) {
+			this.Bot.GoToLimbo();
+		}
 		sleep(1);
 	}
 };
@@ -27,3 +31,12 @@ this.Exit = function()
 {
 	if (this.Debug) { this.Bot.Say("injured: exit"); }
 };
+
+this.CheckForTapout = function()
+{
+	if ( this.Bot.GetReinforceTime() < 1.5  && !this.Bot.IsMedicNear() ) {
+		return true;
+	}
+	return false;
+};
+
