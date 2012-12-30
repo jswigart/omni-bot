@@ -889,7 +889,7 @@ member GetClosestAlly = function (bot, class, distLimit)
 
 	for ( i = 0; i < 64; i += 1 ) {
 		ent = GetGameEntityFromId(i);
-		if ( ent && GetEntTeam(ent) == botTeam && !GetEntFlags(ent, ENTFLAG.DEAD) ) {
+		if ( ent && GetEntTeam(ent) == botTeam && ent != bot.GetGameEntity() && !GetEntFlags(ent, ENTFLAG.DEAD) ) {
 			if ( !class || GetEntClass(i) == class ) {
 				dist = bot.DistanceTo(i);
 				if ( rtn.dist == 0 || (dist <= rtn.dist && (!distLimit || dist <= distLimit)) ) {
