@@ -3,6 +3,11 @@ this.Parent = "Incapacitated";
 this.AutoAdd = true;
 this.Debug = false;
 
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
 this.GetPriority = function()
 {
 	if (this.Debug) { this.Bot.Say("injured"); }
@@ -34,6 +39,22 @@ this.Exit = function()
 
 this.CheckForTapout = function()
 {
+
+	//tap out if the bot is lying on top of the dyno and an engineer is comming to defuse it
+	count = this.QueryGoals(this.Bot.QueryGoalsTable,"DEFUSE_.*");
+	if ( count > 0 ){
+		dynoDist = null;
+		foreach ( id and goal in this.Bot.QueryGoalsTable )	{
+			dynoDist = this.Bot.DistanceTo(goal.GetEntity());
+			ally = RTCWUtil.GetClosestAlly(this.Bot, CLASS.ENGINEER, 60);
+			if(dynoDist < 37 && ally && !GetEntFlags(ally.ent, ENTFLAG.INJURED)){
+				tableClear(this.Bot.QueryGoalsTable);
+				return true;
+			}
+		}
+	}
+	tableClear(this.Bot.QueryGoalsTable);
+
 	if ( this.Bot.GetReinforceTime() < 1.5  && !this.Bot.IsMedicNear() ) {
 		return true;
 	}
