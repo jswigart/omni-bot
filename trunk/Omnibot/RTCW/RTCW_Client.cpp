@@ -231,6 +231,25 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	{
 		PressButton(BOT_BUTTON_RSTRAFE);
 	}
+
+	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L && IGame::GetFrameNumber() % 20 == 0)
+	{
+		BitFlag64 b;
+		b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+
+		PressButton(BOT_BUTTON_SPRINT);
+		PressButton(BOT_BUTTON_JUMP);
+		HoldButton(b, 750);
+	}
+	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R && IGame::GetFrameNumber() % 20 == 0)
+	{
+		BitFlag64 b;
+		b.SetFlag(BOT_BUTTON_RSTRAFE,true);
+
+		PressButton(BOT_BUTTON_SPRINT);
+		PressButton(BOT_BUTTON_JUMP);
+		HoldButton(b, 750);
+	}
 }
 
 float RTCW_Client::GetGameVar(GameVar _var) const

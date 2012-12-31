@@ -659,6 +659,7 @@ member IsTeamClassDead = function( team, class )
 	// loop through the reserved player ents since there is no team table stored
 	for ( i = 0; i < 64; i = i + 1 )
 	{
+		if (!EntityIsValid(i)) { continue; }
 		cls = GetEntClass( i );
 
 		if ( cls != class ) {
