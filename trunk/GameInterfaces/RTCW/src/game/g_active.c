@@ -1155,7 +1155,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// fixed physics from sandmod
 	if ( ent->r.svFlags & SVF_BOT ) {
-		pm.fixedphysics = 1;
+		pm.fixedphysics = 99;
 		pm.fixedphysicsfps = 125;
 	} else
 	{
