@@ -232,23 +232,31 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 		PressButton(BOT_BUTTON_RSTRAFE);
 	}
 
-	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L && IGame::GetFrameNumber() % 20 == 0)
+	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
 	{
+	    if (IGame::GetFrameNumber() % 20 == 0)
+	    {
 		BitFlag64 b;
 		b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+		b.SetFlag(BOT_BUTTON_FWD,true);
 
-		PressButton(BOT_BUTTON_SPRINT);
 		PressButton(BOT_BUTTON_JUMP);
 		HoldButton(b, 750);
+	    }
+	    PressButton(BOT_BUTTON_SPRINT);
 	}
-	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R && IGame::GetFrameNumber() % 20 == 0)
+	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
 	{
+	    if (IGame::GetFrameNumber() % 20 == 0)
+	    {
 		BitFlag64 b;
-		b.SetFlag(BOT_BUTTON_RSTRAFE,true);
+		b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+		b.SetFlag(BOT_BUTTON_FWD,true);
 
-		PressButton(BOT_BUTTON_SPRINT);
 		PressButton(BOT_BUTTON_JUMP);
 		HoldButton(b, 750);
+	    }
+	    PressButton(BOT_BUTTON_SPRINT);
 	}
 }
 
