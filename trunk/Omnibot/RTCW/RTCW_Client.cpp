@@ -236,12 +236,17 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	{
 	    if (IGame::GetFrameNumber() % 20 == 0)
 	    {
-		BitFlag64 b;
-		b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-		b.SetFlag(BOT_BUTTON_FWD,true);
+		GameEntity targetent;
+		targetent = this->GetTargetingSystem()->GetCurrentTarget();
+		if (!targetent.IsValid())
+		{
+		    BitFlag64 b;
+		    b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+		    //b.SetFlag(BOT_BUTTON_FWD,true);
 
-		PressButton(BOT_BUTTON_JUMP);
-		HoldButton(b, 750);
+		    PressButton(BOT_BUTTON_JUMP);
+		    HoldButton(b, 750);
+		}
 	    }
 	    PressButton(BOT_BUTTON_SPRINT);
 	}
@@ -249,12 +254,17 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	{
 	    if (IGame::GetFrameNumber() % 20 == 0)
 	    {
-		BitFlag64 b;
-		b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-		b.SetFlag(BOT_BUTTON_FWD,true);
+		GameEntity targetent;
+		targetent = this->GetTargetingSystem()->GetCurrentTarget();
+		if (!targetent.IsValid())
+		{
+		    BitFlag64 b;
+		    b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+		    //b.SetFlag(BOT_BUTTON_FWD,true);
 
-		PressButton(BOT_BUTTON_JUMP);
-		HoldButton(b, 750);
+		    PressButton(BOT_BUTTON_JUMP);
+		    HoldButton(b, 750);
+		}
 	    }
 	    PressButton(BOT_BUTTON_SPRINT);
 	}
