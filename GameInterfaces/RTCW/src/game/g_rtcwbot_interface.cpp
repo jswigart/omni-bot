@@ -2812,41 +2812,43 @@ obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent
 	case GEN_MSG_ENTITYSTAT:
 	{
 		OB_GETMSG( Msg_EntityStat );
-		if ( pMsg ) {
-			if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "kills" ) ) {
+		if ( pMsg && pEnt && pEnt->client ) {
+			if ( !strcmp( pMsg->m_StatName, "kills" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.kills );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "deaths" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "deaths" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.deaths );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "gibs" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "gibs" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.gibs );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "shots" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "shots" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.acc_shots );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "hits" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "hits" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.acc_hits );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "headshots" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "headshots" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.headshots );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "ammo" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "ammo" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.ammoPacks );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "health" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "health" ) ) {
 				pMsg->m_Result = obUserData( pEnt->client->pers.medPacks );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "accuracy" ) ) {
+			} else if ( !strcmp( pMsg->m_StatName, "accuracy" ) ) {
 				float acc = 0.0f;
 				if ( pEnt->client->pers.acc_shots > 0 ) {
 					acc = ( (float)pEnt->client->pers.acc_hits / (float)pEnt->client->pers.acc_shots ) * 100.0f;
 				}
 				pMsg->m_Result = obUserData( acc );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "hspercent" ) )        {
+			} else if ( !strcmp( pMsg->m_StatName, "hspercent" ) )        {
 				float p = 0.0f;
 				if ( pEnt->client->pers.headshots > 0 ) {
 					p = ( (float)pEnt->client->pers.headshots / (float)pEnt->client->pers.acc_hits ) * 100.0f;
 				}
 				pMsg->m_Result = obUserData( p );
-			} else if ( pEnt && pEnt->client && !strcmp( pMsg->m_StatName, "killratio" ) )        {
+			} else if ( !strcmp( pMsg->m_StatName, "killratio" ) )        {
 				float kr = pEnt->client->pers.kills;
 				if ( pEnt->client->pers.deaths > 0 ) {
 					kr = (float)pEnt->client->pers.kills / (float)pEnt->client->pers.deaths;
 				}
 				pMsg->m_Result = obUserData( kr );
+			} else if ( !strcmp( pMsg->m_StatName, "respawns_left" ) ) {
+				pMsg->m_Result = obUserData( pEnt->client->ps.persistant[PERS_RESPAWNS_LEFT] );
 			}
 			//else if(pEnt && pEnt->client && !Q_strcmp(pMsg->m_StatName, "score"))
 			//	pMsg->m_Result = obUserData(0); // TODO:
