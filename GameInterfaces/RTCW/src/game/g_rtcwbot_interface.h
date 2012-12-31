@@ -27,6 +27,7 @@ enum BotFlagOptions
 	OBF_DONT_SHOW_BOTCOUNT  = ( 1 << 3 ), // Don't count bots
 	OBF_NEXT_FLAG           = ( 1 << 4 ), // mod specific flags start from here
 	OBF_NO_SPREE_ANNOUNCE	= ( 1 << 5 ), // no killing spree / multikill announce for bots
+	OBF_FAST_BOTS		= ( 1 << 6 ), // slightly faster movement for bots
 };
 //////////////////////////////////////////////////////////////////////////
 

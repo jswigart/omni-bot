@@ -1119,6 +1119,9 @@ void ClientThink_real( gentity_t *ent ) {
 	if ( client->ps.powerups[PW_HASTE] ) {
 		client->ps.speed *= 1.3;
 	}
+	else if ( (g_OmniBotFlags.integer & OBF_FAST_BOTS) && (ent->r.svFlags & SVF_BOT) ) {
+	    client->ps.speed *= 1.2;
+	}
 
 	// set up for pmove
 	oldEventSequence = client->ps.eventSequence;
