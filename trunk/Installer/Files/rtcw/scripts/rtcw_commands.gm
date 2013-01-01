@@ -140,6 +140,32 @@ Commands["moveskill"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Commands["strafejump"] =
+{
+	Func = function( _params )
+	{
+		if (typeId(_params[0]) != 0) {
+			enabled = ToInt(_params[0]);
+			ConfigSet("Navigation","StrafeJump", enabled);
+
+			foreach(id and bot in BotTable) {
+				if (!bot.ProfileStrafeJump) {
+					bot.StrafeJump = enabled;
+				}
+			}
+
+			print("bot strafe jumping set to " + enabled);
+		}
+	},
+
+	Help =
+	{
+		"Enable or Disable bots usage of strafe jump waypoint flags"
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 Commands["tracearty"] =
 {
 	Func = function( _params )

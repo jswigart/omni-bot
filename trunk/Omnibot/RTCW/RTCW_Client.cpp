@@ -73,7 +73,8 @@ RTCW_Client::RTCW_Client() :
 	m_HealthEntityDistance(1000.0f),
 	m_AmmoEntityDistance(2000.0f),
 	m_WeaponEntityDistance(1500.0f),
-	m_ProjectileEntityDistance(500.0f)
+	m_ProjectileEntityDistance(500.0f),
+	m_StrafeJump(0)
 {
 	m_StepHeight = 8.0f; // subtract a small value as a buffer to jump
 }
@@ -232,41 +233,44 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 		PressButton(BOT_BUTTON_RSTRAFE);
 	}
 
-	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
+	if (m_StrafeJump)
 	{
-	    if (IGame::GetFrameNumber() % 20 == 0)
+	    if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
 	    {
-		GameEntity targetent;
-		targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		if (!targetent.IsValid())
+		if (IGame::GetFrameNumber() % 20 == 0)
 		{
-		    BitFlag64 b;
-		    b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-		    //b.SetFlag(BOT_BUTTON_FWD,true);
+		    GameEntity targetent;
+		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
+		    if (!targetent.IsValid())
+		    {
+			BitFlag64 b;
+			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+			//b.SetFlag(BOT_BUTTON_FWD,true);
 
-		    PressButton(BOT_BUTTON_JUMP);
-		    HoldButton(b, 750);
+			PressButton(BOT_BUTTON_JUMP);
+			HoldButton(b, 750);
+		    }
 		}
+		PressButton(BOT_BUTTON_SPRINT);
 	    }
-	    PressButton(BOT_BUTTON_SPRINT);
-	}
-	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
-	{
-	    if (IGame::GetFrameNumber() % 20 == 0)
+	    else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
 	    {
-		GameEntity targetent;
-		targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		if (!targetent.IsValid())
+		if (IGame::GetFrameNumber() % 20 == 0)
 		{
-		    BitFlag64 b;
-		    b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-		    //b.SetFlag(BOT_BUTTON_FWD,true);
+		    GameEntity targetent;
+		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
+		    if (!targetent.IsValid())
+		    {
+			BitFlag64 b;
+			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+			//b.SetFlag(BOT_BUTTON_FWD,true);
 
-		    PressButton(BOT_BUTTON_JUMP);
-		    HoldButton(b, 750);
+			PressButton(BOT_BUTTON_JUMP);
+			HoldButton(b, 750);
+		    }
 		}
+		PressButton(BOT_BUTTON_SPRINT);
 	    }
-	    PressButton(BOT_BUTTON_SPRINT);
 	}
 }
 
