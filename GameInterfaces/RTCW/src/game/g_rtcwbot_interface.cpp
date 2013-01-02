@@ -2351,6 +2351,12 @@ obResult GetCurrentWeaponClip( const GameEntity _ent, FireMode _mode, int &_curc
 		case WP_GRENADE_LAUNCHER:
 			_maxclip = 0;
 			break;
+		case WP_VENOM:
+		    // ugly hack to keep them from reloading until low. should be a weapon property.
+		    if (_curclip > 75) {
+			_maxclip = _curclip;
+		    }
+		    break;
 		default:
 			_maxclip = GetAmmoTableData( iWeapon )->maxclip;
 		}
