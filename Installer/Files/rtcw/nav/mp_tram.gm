@@ -425,7 +425,7 @@ global Map =
 
 			leave = function( _this )
 			{
-				if ( Map.Tram4Pos == 1  && _this.HighLevelGoal == "TakeCheckPoint" ) {
+				if ( Map.Tram4Pos == 1  && _this.HighLevelGoal == "CHECKPOINT" ) {
 					Map.RideMovers.tram4bottom.exitwp = "t4mid";
 					return true;
 				}
@@ -822,6 +822,11 @@ global OnMapLoad = function()
 
 	docsbasement = OnTriggerRegion( AABB( 4063.000,374.000,1711.000,4195.000,417.000,1785.000 ), Map.DocsInCastle );
 	docsupper = OnTriggerRegion( AABB( 4594.000,-288.000,1967.000,4640.000,96.000,2041.000 ), Map.DocsInCastle );
+	
+	nopush = OnTriggerRegion(AABB(-7026.000,21.000,-574.000,-6769.000,244.000,-500.000), RegionTrigger.DisableBotPush);
+	nopush1 = OnTriggerRegion(AABB(-1248.000,-673.000,577.000,-831.000,-270.000,787.000), RegionTrigger.DisableBotPush);
+	//nopush2 = OnTriggerRegion(AABB(-926.000,-752.000,885.000,-766.000,-563.000,983.000), RegionTrigger.DisableBotPush);
+	//nopush3 = OnTriggerRegion(AABB(-1046.000,-1447.000,1009.000,-805.000,-1120.000,1147.000), RegionTrigger.DisableBotPush);
 
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
