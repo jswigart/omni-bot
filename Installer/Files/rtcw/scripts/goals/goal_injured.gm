@@ -61,7 +61,7 @@ this.CheckForTapout = function()
 		foreach ( id and goal in this.Bot.QueryGoalsTable )	{
 			dynoDist = this.Bot.DistanceTo(goal.GetEntity());
 			if(dynoDist < 37){
-				eng = RTCWUtil.GetClosestAlly(this.Bot, CLASS.ENGINEER, 60);
+				eng = RTCWUtil.GetClosestAlly(this.Bot, CLASS.ENGINEER, 150);
 				if (eng && !GetEntFlags(eng.ent, ENTFLAG.INJURED)) {
 					tableClear(this.Bot.QueryGoalsTable);
 					return true;
