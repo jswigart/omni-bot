@@ -2058,6 +2058,28 @@ global _MG =
 	{
 		CoverSpots = 
 		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.995, -0.101, 0.023),
+					[1] = Vec3(-0.996, -0.093, 0.010),
+					[2] = Vec3(-0.267, -0.963, 0.032),
+				},
+				position = Vec3(-10.734, 4767.467, -59.633),
+				stance = "crouch",
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.841, -0.541, -0.019),
+					[1] = Vec3(-0.871, -0.491, -0.016),
+					[2] = Vec3(-0.005, -1.000, 0.011),
+				},
+				position = Vec3(-178.125, 4915.269, -50.873),
+				stance = "crouch",
+			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
@@ -2251,7 +2273,7 @@ global _MG =
 		GroupName = "",
 		MinRadius = 32,
 		Name = "ROUTE_cellarsteps",
-		Orientation = Vec3(0.086, -0.276, 0.000),
+		Orientation = Vec3(0.086, -0.276, -0.000),
 		Position = Vec3(-1301.000, 3183.000, -310.000),
 		Radius = 125,
 		TagName = "cellarsteps",
