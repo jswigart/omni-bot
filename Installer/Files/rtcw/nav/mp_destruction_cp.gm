@@ -411,6 +411,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFirstspawn.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_c2d.*" );
 
+	RTCWUtil.KillEntities( {87,88,89,90} ); // the useless barriers
+
 	MapRoutes =
 	{
 		CHECKPOINT_checkpoint2 =    // Allied 2
