@@ -765,7 +765,6 @@ global OnMapLoad = function()
 					ROUTE_nApproach2 =
 					{
 						ROUTE_lowercp = {},
-						//ROUTE_uppercp = {},
 					},
 				},
 				ROUTE_sApproach =
@@ -780,7 +779,6 @@ global OnMapLoad = function()
 				ROUTE_mApproach =
 				{
 					ROUTE_lowercp = {},
-					//ROUTE_uppercp = {},
 				},
 			},
 			ROUTE_AllySpawn2 =
@@ -790,7 +788,6 @@ global OnMapLoad = function()
 					ROUTE_nApproach2 =
 					{
 						ROUTE_lowercp = {},
-						//ROUTE_uppercp = {},
 					},
 				},
 				ROUTE_sApproach =
@@ -808,17 +805,14 @@ global OnMapLoad = function()
 					ROUTE_uppercp = {},
 				},
 			},
-			ROUTE_approach =
+			// Martin - 1/21/13 - Whats the point of this. Bots already come frmo either route_allyspawn1 or route_allyspawn2. 
+			//Also some of these routes were located in the SERVICE hallway
+			/*ROUTE_approach =
 			{
 				ROUTE_lowercp = { },
-
-				ROUTE_uppercp =
-				{
-					ROUTE_northhall = { },
-					ROUTE_southhall = { },
-				},
+				ROUTE_uppercp =	{},
 				ROUTE_wallroute = {},
-			},
+			},*/
 			ROUTE_rSpawn1 =
 			{
 				ROUTE_bStairs = {},

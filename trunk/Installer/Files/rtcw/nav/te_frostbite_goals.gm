@@ -1293,20 +1293,6 @@ global _MG =
 		{
 		},
 	},
-	EXPLODE_180 = 
-	{
-		CreateOnLoad = 0,
-		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_180",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-2032.000, 384.000, 120.000),
-		Radius = 0,
-		TagName = "",
-		TeamAvailability = 30,
-		Version = 1,
-	},
 	EXPLODE_radio_clip = 
 	{
 		CreateOnLoad = 0,
