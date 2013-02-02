@@ -568,22 +568,16 @@ global OnMapLoad = function()
 				ROUTE_tower =
 				{
 					Weight = 2,
-					ROUTE_block3 = {},
-					ROUTE_bridge2 = {},
-				},
-				ROUTE_bridge =
-				{
-					ROUTE_block2 = { ROUTE_cottage = {}, },
-					ROUTE_closet = { ROUTE_ccyd = { ROUTE_cottage = {}, }, },
-				},
-			},
-			ROUTE_bSpawn2 =
-			{
-				ROUTE_tower =
-				{
-					ROUTE_block3 = {},
-					ROUTE_bridge2 = {},
-
+					ROUTE_block3 = 
+					{
+						ROUTE_wcourtyardeast = {},
+						ROUTE_wcourtyardwest = {},
+					},
+					ROUTE_bridge2 = 
+					{
+						ROUTE_wcourtyardeast = {},
+						ROUTE_wcourtyardwest = {},
+					},
 				},
 				ROUTE_bridge =
 				{
