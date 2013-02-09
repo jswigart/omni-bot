@@ -316,6 +316,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bCemetary.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_cemetary_mg" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bCottage.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCrypt.*" );
@@ -351,6 +353,8 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawncamp.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
@@ -415,7 +419,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnCamp.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawncamp.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
 
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCemetary_.*" );
@@ -426,9 +431,10 @@ global Map =
 				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt_.*" );
 			}
 		}
-
-		if ( !Map.GoldStatus ) {
-			
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bCottage.*" );
 		}
 		Map.Airstrike.bridge.Enabled = false;
 	},
@@ -446,7 +452,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Gold_Storage_Crypt" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCemetary.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_cemetary_mg" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnCamp.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawncamp.*" );
 		}
 	},
 
@@ -591,6 +598,7 @@ global OnMapLoad = function()
 	Util.DisableGoal( "ROUTE_block3" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_rCellar.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rCrypt7" );
 	
 	Map.Airstrike.bridge.Enabled = true;

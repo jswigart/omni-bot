@@ -1859,6 +1859,60 @@ global _MG =
 		TeamAvailability = 6,
 		Version = 1,
 	},
+	PANZER_bCottage1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.195, -0.958, -0.209),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "PANZER_bCottage1",
+		Orientation = Vec3(2.941, -0.211, -0.000),
+		Position = Vec3(644.000, 1598.000, 16.000),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "bCottage1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
+	PANZER_bCottage2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.082, -0.997, 0.003),
+			[1] = Vec3(-0.988, -0.146, 0.060),
+			[2] = Vec3(-0.135, -0.990, 0.031),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 1,
+		GoalType = "Panzer",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "PANZER_bCottage2",
+		Orientation = Vec3(3.060, 0.003, -0.000),
+		Position = Vec3(1193.000, 2413.000, -167.000),
+		Radius = 10,
+		Stance = "crouch",
+		TagName = "bCottage2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+			[6] = 1,
+		},
+	},
 	PANZER_bSpawncamp1 = 
 	{
 		AimVectors = 
