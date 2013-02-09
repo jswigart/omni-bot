@@ -491,8 +491,8 @@ global _MG =
 		MinRadius = 0,
 		Name = "CALLARTILLERY_rCemetary_1",
 		Orientation = Vec3(0.525, 0.052, -0.000),
-		Position = Vec3(58.263, 3606.821, -171.922),
-		Radius = 70,
+		Position = Vec3(207.924, 3597.428, -178.950),
+		Radius = 35,
 		TagName = "rCemetary_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -957,7 +957,7 @@ global _MG =
 			[0] = Vec3(-0.292, 0.950, -0.110),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 60,
@@ -1304,7 +1304,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.647, -0.759, 0.072),
+			[0] = Vec3(-0.688, -0.721, 0.076),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1329,10 +1329,10 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.158, -0.987, 0.024),
+			[0] = Vec3(-0.154, -0.988, -0.012),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 60,
@@ -1340,8 +1340,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_rTavern2",
 		Orientation = Vec3(2.983, 0.024, -0.000),
-		Position = Vec3(-2096.786, 2724.759, -159.875),
-		Radius = 35,
+		Position = Vec3(-2073.442, 2946.898, -119.875),
+		Radius = 10,
 		Stance = "crouch",
 		TagName = "rTavern2",
 		TeamAvailability = 30,
@@ -1354,10 +1354,10 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.615, -0.789, -0.019),
+			[0] = Vec3(0.733, -0.680, 0.018),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 60,
@@ -1365,8 +1365,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_rTavern3",
 		Orientation = Vec3(-2.480, -0.019, -0.000),
-		Position = Vec3(-2477.875, 2124.396, -159.875),
-		Radius = 20,
+		Position = Vec3(-2477.875, 2098.125, -159.875),
+		Radius = 10,
 		Stance = "stand",
 		TagName = "rTavern3",
 		TeamAvailability = 30,
@@ -1379,7 +1379,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.816, 0.571, 0.093),
+			[0] = Vec3(0.992, 0.027, 0.122),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1391,7 +1391,7 @@ global _MG =
 		Name = "DEFEND_rTavern4",
 		Orientation = Vec3(-0.960, 0.093, -0.000),
 		Position = Vec3(-2477.875, 1890.125, -159.844),
-		Radius = 35,
+		Radius = 10,
 		Stance = "crouch",
 		TagName = "rTavern4",
 		TeamAvailability = 30,
@@ -1404,7 +1404,8 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.428, -0.904, -0.000),
+			[0] = Vec3(-0.029, -1.000, -0.000),
+			[1] = Vec3(0.583, -0.813, -0.000),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1416,7 +1417,7 @@ global _MG =
 		Name = "DEFEND_rTavern5",
 		Orientation = Vec3(-2.699, 0.000, -0.000),
 		Position = Vec3(-2349.875, 2717.861, -159.875),
-		Radius = 20,
+		Radius = 10,
 		Stance = "stand",
 		TagName = "rTavern5",
 		TeamAvailability = 30,
@@ -1429,7 +1430,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.772, 0.630, 0.085),
+			[0] = Vec3(-0.998, 0.037, 0.059),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1441,7 +1442,7 @@ global _MG =
 		Name = "DEFEND_rTavern6",
 		Orientation = Vec3(0.886, 0.085, -0.000),
 		Position = Vec3(-2002.138, 1890.125, -159.875),
-		Radius = 35,
+		Radius = 10,
 		Stance = "crouch",
 		TagName = "rTavern6",
 		TeamAvailability = 30,
@@ -1650,20 +1651,6 @@ global _MG =
 		Position = Vec3(512.000, 608.000, -32.000),
 		Radius = 0,
 		TagName = "obj_block02",
-		TeamAvailability = 30,
-		Version = 1,
-	},
-	EXPLODE_obj_block03 = 
-	{
-		CreateOnLoad = 0,
-		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_obj_block03",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-1568.000, -960.001, -136.000),
-		Radius = 0,
-		TagName = "obj_block03",
 		TeamAvailability = 30,
 		Version = 1,
 	},
@@ -2162,23 +2149,9 @@ global _MG =
 		MinRadius = 32,
 		Name = "ROUTE_bSpawn",
 		Orientation = Vec3(-0.243, -0.132, -0.000),
-		Position = Vec3(358.332, -2023.903, -175.875),
+		Position = Vec3(428.764, -1851.025, -207.698),
 		Radius = 500,
 		TagName = "bSpawn",
-		TeamAvailability = 30,
-		Version = 1,
-	},
-	ROUTE_bSpawn2 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "ROUTE",
-		GroupName = "",
-		MinRadius = 32,
-		Name = "ROUTE_bSpawn2",
-		Orientation = Vec3(-1.579, -0.162, -0.000),
-		Position = Vec3(850.444, -1394.125, -175.875),
-		Radius = 500,
-		TagName = "bSpawn2",
 		TeamAvailability = 30,
 		Version = 1,
 	},
@@ -2445,6 +2418,34 @@ global _MG =
 		Position = Vec3(967.311, -897.847, -191.875),
 		Radius = 70,
 		TagName = "truck",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ROUTE_wcourtyardeast = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ROUTE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ROUTE_wcourtyardeast",
+		Orientation = Vec3(0.031, -0.216, -0.000),
+		Position = Vec3(-2030.000, 1184.000, -182.000),
+		Radius = 125,
+		TagName = "wcourtyardeast",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ROUTE_wcourtyardwest = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ROUTE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ROUTE_wcourtyardwest",
+		Orientation = Vec3(-0.019, -0.219, -0.000),
+		Position = Vec3(-2399.000, 1192.000, -190.000),
+		Radius = 125,
+		TagName = "wcourtyardwest",
 		TeamAvailability = 30,
 		Version = 1,
 	},
