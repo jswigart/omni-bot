@@ -1,12 +1,23 @@
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0,
 	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = false,
 	FlagStatus = -1,
 	FriendlyFire,
+	AxisInRuins = false,
+	LowerRuinsPlayers = 0,
 	
+	Airstrike =
+	{
+		rcoal1 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "rcoalas1",
+		},
+	},
 	Roles =
 	{
 		AXIS =
@@ -136,6 +147,7 @@ global Map =
 		Map.FlagStatus = TEAM.AXIS;
 		Map.DontDispenseAmmo = true;
 		
+		Map.Airstrike.rcoal1.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
@@ -151,7 +163,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
 		if ( Map.FriendlyFire < 1 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTrainyard.*" );
+			//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTrainyard.*" );
 		}
 
 		Util.MapDebugPrint( "flag_respawn_obj_Axis_Captured" );
@@ -165,6 +177,7 @@ global Map =
 		Map.FlagStatus = TEAM.ALLIES;
 		Map.DontDispenseAmmo = true;
 		
+		Map.Airstrike.rcoal1.Enabled = true;
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_coalyardmg" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn2" );
@@ -187,11 +200,83 @@ global Map =
 
 		Util.MapDebugPrint( "flag_respawn_obj_Allies_Captured" );
 	},
+	
+	LowerRuinsTrigger =
+	{
+		Name = "LowerRuinsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers -= 1;
+
+				if ( Map.LowerRuinsPlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+
+		},
+	},
+	
+	RuinsTrigger =
+	{
+		Name = "RuinsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				if ( Map.FlagStatus == 2 ) {
+					return;
+				}
+				Map.AxisInRuins = true;
+
+				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRuins.*" );
+
+				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
+				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
+				{
+					sleep( 1 );
+				}
+				Map.AxisInRuins = false;
+				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bRuins.*" );
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
 
 };
 
 global OnMapLoad = function()
 {
+	ruinstrigger = OnTriggerRegion( AABB( -816.000,-4736.000,337.000,-207.000,-3159.000,427.000 ), Map.RuinsTrigger );
+	lowerruins = OnTriggerRegion( AABB( -1984.000,-4448.000,49.000,-1543.000,-3359.000,159.000 ), Map.LowerRuinsTrigger );
 	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant1" );
 	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant2" );
 	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant1" );
@@ -249,13 +334,196 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bWarehouse.*" );	// This can also kill people in the club
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bTrainyard.*" );
 	
 	Util.SetMaxUsersInProgress( 1, "CAMP.*" );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	
+	MapRoutes =
+	{
+		PLANT_Anti_Aircraft_Gun =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_cargobay =
+				{
+					Weight = 2,
+					ROUTE_elevator = {},
+					ROUTE_ducts = {},
+					ROUTE_oldaa = {},
+				},
+				ROUTE_eastramp = {Weight = 2,},
+				ROUTE_axisgarageeast =
+				{
+					Weight = 2,
+					ROUTE_coalcart =
+					{
+						ROUTE_weaponfactory = 
+						{
+							ROUTE_spawnroof = {},
+							ROUTE_axiscc = {},
+						},
+					},
+					ROUTE_cyd2 =
+					{
+						ROUTE_westramp = {Weight = 2,},
+						ROUTE_cargomid = {},
+					},
+					ROUTE_westramp = {},
+				},
+				ROUTE_cyd1 =
+				{
+					Weight = 2,
+					ROUTE_cyd2 =
+					{
+						ROUTE_westramp = {Weight = 2,},
+						ROUTE_cargomid = {},
+					},
+				},
+				ROUTE_axisgaragewest =
+				{
+					ROUTE_coalcart =
+					{
+						ROUTE_weaponfactory = 
+						{
+							ROUTE_spawnroof = {},
+							ROUTE_axiscc = {},
+						},
+					},
+					ROUTE_cyd2 =
+					{
+						ROUTE_westramp = {Weight = 2,},
+						ROUTE_cargomid = {},
+					},
+					ROUTE_westramp = {},
+				},
+				ROUTE_trainmid =
+				{
+					ROUTE_coalcart =
+					{
+						ROUTE_weaponfactory = 
+						{
+							ROUTE_spawnroof = {},
+							ROUTE_axiscc = {},
+						},
+					},
+					ROUTE_cyd2 =
+					{
+						ROUTE_westramp = {Weight = 2,},
+						ROUTE_cargomid = {},
+					},
+					ROUTE_westramp = {},
+				},
+			},
+		},
+		PLANT_North_Gate =
+		{
+		},
+		PLANT_South_Gate =
+		{
+		},
+		PLANT_Allied_Field_Ops =
+		{
+			ROUTE_axisrearspawn = 
+			{
+				ROUTE_axisgarageeast =
+				{
+					ROUTE_eastalliedtrain = {},
+				},
+				ROUTE_weaponfactory =
+				{
+					ROUTE_axisgaragewest =
+					{
+						Weight = 2,
+						ROUTE_warehousenorth =
+						{
+							ROUTE_warehousesouth = {},
+						},
+						ROUTE_westalliedtrain =
+						{
+							ROUTE_office = 
+							{
+								ROUTE_warehousesouth = {},
+							},
+						},
+						ROUTE_ruins = 
+						{
+							ROUTE_trainyardmg = {},
+						},
+					},
+					ROUTE_axisgarageeast =
+					{
+						ROUTE_eastalliedtrain = {},
+					},
+				},
+			},
+			ROUTE_depotspawn =
+			{
+				ROUTE_axisgaragewest =
+				{
+					ROUTE_warehousenorth =
+					{
+						ROUTE_warehousesouth = {},
+					},
+					ROUTE_westalliedtrain =
+					{
+						ROUTE_office = 
+						{
+							ROUTE_warehousesouth = {},
+						},
+					},
+					ROUTE_ruins = 
+					{
+						ROUTE_trainyardmg = {},
+					},
+				},
+				ROUTE_axisgarageeast =
+				{
+					ROUTE_eastalliedtrain = {},
+				},
+			},
+			ROUTE_flagspawn =
+			{
+				ROUTE_westalliedtrain =
+				{
+					ROUTE_office = 
+					{
+						ROUTE_warehousesouth = {},
+					},
+				},
+				ROUTE_eastalliedtrain = {},
+				ROUTE_warehousenorth =
+				{
+					ROUTE_warehousesouth = {},
+				},
+				ROUTE_ruins = {},
+			},
+		},
+		CHECKPOINT_flag_respawn_obj =
+		{
+		},
+	};
+	/*MapRoutes.DEFEND_rOps2 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.DEFEND_rOps3 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.DEFEND_rOps4 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.DEFEND_rOps5 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.DEFEND_rOps6 = MapRoutes.PLANT_Allied_Field_Ops;*/
+	MapRoutes.ATTACK_rOps1 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_rOps2 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_rOps3 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_rOps4 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_rOps5 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_rOps6 = MapRoutes.PLANT_Allied_Field_Ops;
+	MapRoutes.ATTACK_bAA1 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	MapRoutes.ATTACK_bAA2 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	MapRoutes.ATTACK_bAA3 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	MapRoutes.ATTACK_bAA4 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	MapRoutes.ATTACK_bAA5 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	MapRoutes.ATTACK_bAA6 = MapRoutes.PLANT_Anti_Aircraft_Gun;
+	
+	Util.Routes(MapRoutes);
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
@@ -269,237 +537,5 @@ global OnBotJoin = function( bot )
 	
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
-};
-
-global InitializeRoutes = function()
-{
-	MapRoutes =
-	{
-		PLANT_Anti_Aircraft_Gun =
-		{
-		},
-		PLANT_North_Gate =
-		{
-		},
-		PLANT_South_Gate =
-		{
-		},
-		PLANT_Allied_Field_Ops =
-		{
-		},
-		AIRSTRIKE_rFlag1 =
-		{
-		},
-		AIRSTRIKE_rFlag2 =
-		{
-		},
-		REPAIRMG42_rspawn2 =
-		{
-		},
-		REPAIRMG42_mg2 =
-		{
-		},
-		REPAIRMG42_mg1 =
-		{
-		},
-		REPAIRMG42_rspawn1 =
-		{
-		},
-		REPAIRMG42_coalyardmg =
-		{
-		},
-		ROUTE_axis51 =
-		{
-		},
-		ROUTE_axis6 =
-		{
-		},
-		ROUTE_forwardflag2 =
-		{
-		},
-		ROUTE_axis_15 =
-		{
-		},
-		ROUTE_axis_13 =
-		{
-		},
-		SNIPE_snipe7 =
-		{
-		},
-		ROUTE_left2 =
-		{
-		},
-		ROUTE_axis_20 =
-		{
-		},
-		ROUTE_cp2 =
-		{
-		},
-		ROUTE_rright7 =
-		{
-		},
-		ROUTE_cp1 =
-		{
-		},
-		ROUTE_axis9 =
-		{
-		},
-		ROUTE_forwardflag1 =
-		{
-		},
-		ROUTE_aagun_right =
-		{
-		},
-		ROUTE_right1 =
-		{
-		},
-		ROUTE_845 =
-		{
-		},
-		MOUNTMG42_rspawn2 =
-		{
-		},
-		ROUTE_axis11 =
-		{
-		},
-		ROUTE_aagun_left =
-		{
-		},
-		ROUTE_fs3 =
-		{
-		},
-		ROUTE_allies3 =
-		{
-		},
-		ROUTE_left1 =
-		{
-		},
-		ROUTE_fs4 =
-		{
-		},
-		ROUTE_axis52 =
-		{
-		},
-		MOUNTMG42_rspawn1 =
-		{
-		},
-		ROUTE_axis1 =
-		{
-		},
-		MOUNTMG42_mg2 =
-		{
-		},
-		ROUTE_right3 =
-		{
-		},
-		ROUTE_axis_16 =
-		{
-		},
-		ROUTE_axis7 =
-		{
-		},
-		ROUTE_axis_12 =
-		{
-		},
-		ROUTE_forwardflag4 =
-		{
-		},
-		ROUTE_axis_21 =
-		{
-		},
-		ROUTE_rright4 =
-		{
-		},
-		SNIPE_snipe2 =
-		{
-		},
-		ROUTE_axis10 =
-		{
-		},
-		ROUTE_left3 =
-		{
-		},
-		ROUTE_forwardflag =
-		{
-		},
-		ROUTE_right2 =
-		{
-		},
-		ROUTE_axis_22 =
-		{
-		},
-		ROUTE_axis_14 =
-		{
-		},
-		ROUTE_axis53 =
-		{
-		},
-		ROUTE_axis54 =
-		{
-		},
-		ROUTE_forwardflag3 =
-		{
-		},
-		ROUTE_axis8 =
-		{
-		},
-		ROUTE_axis_23 =
-		{
-		},
-		MOUNTMG42_mg1 =
-		{
-		},
-		SNIPE_snipe4 =
-		{
-		},
-		ROUTE_rright6 =
-		{
-		},
-		ROUTE_axis5 =
-		{
-		},
-		ROUTE_rright5 =
-		{
-		},
-		MOUNTMG42_coalyardmg =
-		{
-		},
-		CHECKPOINT_flag_respawn_obj =
-		{
-		},
-		DEFEND_radio2 =
-		{
-		},
-		DEFEND_gun7 =
-		{
-		},
-		ATTACK_gun99 =
-		{
-		},
-		ATTACK_radio1 =
-		{
-		},
-		DEFEND_gun6 =
-		{
-		},
-		DEFEND_gun1 =
-		{
-		},
-		DEFEND_radio3 =
-		{
-		},
-		DEFEND_radio1 =
-		{
-		},
-		ATTACK_gun0 =
-		{
-		},
-		ATTACK_radio2 =
-		{
-		},
-		DEFEND_gun5 =
-		{
-		},
-	};
-	Util.Routes(MapRoutes);
+	RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 1 );
 };
