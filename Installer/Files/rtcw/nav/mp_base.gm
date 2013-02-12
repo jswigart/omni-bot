@@ -343,10 +343,10 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_jail" );
 				Map.Airstrike.rnet1.Enabled = false;
 			}
-				print("-----");
-				print("^4Allies: ", Map.NETAllies);
-				print("^1Axis: ", Map.NETAxis);
-				print("-----");
+			//print("-----");
+			//print("^4Allies: ", Map.NETAllies);
+			//print("^1Axis: ", Map.NETAxis);
+			//print("-----");
 		},
 		OnExit = function( ent )
 		{
@@ -359,10 +359,10 @@ global Map =
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.NETAxis -= 1;
 			}
-			print("-----");
-				print("^4Allies: ", Map.NETAllies);
-				print("^1Axis: ", Map.NETAxis);
-				print("-----");
+			//print("-----");
+			//print("^4Allies: ", Map.NETAllies);
+			//print("^1Axis: ", Map.NETAxis);
+			//print("-----");
 		},
 	},
 };
