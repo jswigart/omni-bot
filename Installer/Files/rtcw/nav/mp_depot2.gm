@@ -8,6 +8,9 @@ global Map =
 	FriendlyFire,
 	AxisInRuins = false,
 	LowerRuinsPlayers = 0,
+	DuctsPlayers = 0,
+	ClubPlayers = 0,
+	WarehousePlayers = 0,
 	
 	Airstrike =
 	{
@@ -236,6 +239,110 @@ global Map =
 		},
 	},
 	
+	ClubTrigger =
+	{
+		Name = "ClubTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.ClubPlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bclub" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.ClubPlayers -= 1;
+
+				if ( Map.ClubPlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bclub" );
+				}
+			}
+
+		},
+	},
+	
+	DuctsTrigger =
+	{
+		Name = "DuctsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.DuctsPlayers += 1;
+
+				if ( Map.FlagStatus == 2 ) {
+					SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rducts.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.DuctsPlayers -= 1;
+
+				if ( Map.DuctsPlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rducts.*" );
+				}
+			}
+
+		},
+	},
+	
+	WarehouseTrigger =
+	{
+		Name = "WarehouseTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.WarehousePlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.WarehousePlayers -= 1;
+
+				if ( Map.WarehousePlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bwhas.*" );
+				}
+			}
+
+		},
+	},
 	RuinsTrigger =
 	{
 		Name = "RuinsTrigger",
@@ -277,6 +384,10 @@ global OnMapLoad = function()
 {
 	ruinstrigger = OnTriggerRegion( AABB( -816.000,-4736.000,337.000,-207.000,-3159.000,427.000 ), Map.RuinsTrigger );
 	lowerruins = OnTriggerRegion( AABB( -1984.000,-4448.000,49.000,-1543.000,-3359.000,159.000 ), Map.LowerRuinsTrigger );
+	bclubnade = OnTriggerRegion( AABB( -2336.000,-4494.000,137.000,-2063.000,-4351.000,354.000 ), Map.ClubTrigger );
+	rductnade = OnTriggerRegion( AABB( 1039.000,1487.000,449.000,1440.000,1904.000,523.000 ), Map.DuctsTrigger );
+	//opsplant = OnTriggerRegion( AABB( -2560.000,-5437.000,-294.000,-2087.000,-5017.000,-44.000 ), Map.OpsTrigger );
+	opsplant = OnTriggerRegion( AABB( -3072.000,-4448.000,-343.000,-2047.000,-3997.000,-121.000 ), Map.WarehouseTrigger );
 	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant1" );
 	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant2" );
 	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant1" );
@@ -320,12 +431,17 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 	
 	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Gate" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkillrear.*" );
+	if ( Map.FriendlyFire < 1 ) {
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rOps.*" );
+	}
+	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkillrear.*" ); // martin - this does not really every kill anyone like an a/s would
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rAA.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_Gate" );
@@ -347,6 +463,11 @@ global OnMapLoad = function()
 		{
 			ROUTE_flagspawn =
 			{
+				ROUTE_axistunnel =
+				{
+					ROUTE_elevator ={},
+					ROUTE_oldaa = {},
+				},
 				ROUTE_cargobay =
 				{
 					Weight = 2,
@@ -417,17 +538,67 @@ global OnMapLoad = function()
 					ROUTE_westramp = {},
 				},
 			},
-		},
-		PLANT_North_Gate =
-		{
-		},
-		PLANT_South_Gate =
-		{
+			ROUTE_bspawn =
+			{
+				ROUTE_alliedtunnel =
+				{
+					ROUTE_axistunnel =
+					{
+						ROUTE_elevator ={},
+						ROUTE_oldaa = {},
+					},
+				},
+				ROUTE_westalliedtrain =
+				{
+					ROUTE_axisgaragewest =
+					{
+						ROUTE_coalcart =
+						{
+							ROUTE_weaponfactory = 
+							{
+								ROUTE_spawnroof = {},
+								ROUTE_axiscc = {},
+							},
+						},
+					},
+				},
+				ROUTE_eastalliedtrain =
+				{
+					ROUTE_axisgarageeast =
+					{
+						ROUTE_cyd2 =
+						{
+							ROUTE_westramp = {Weight = 2,},
+							ROUTE_cargomid = {},
+						},
+						ROUTE_westramp = {},
+					},
+				},
+				ROUTE_office =
+				{
+					ROUTE_alliedtunnel =
+					{
+						ROUTE_axistunnel = 
+						{
+							ROUTE_westramp = {},
+							ROUTE_elevator = {Weight = 3},
+							ROUTE_oldaa = {Weight = 2},
+						},
+					},
+				},
+			},
 		},
 		PLANT_Allied_Field_Ops =
 		{
 			ROUTE_axisrearspawn = 
 			{
+				ROUTE_axistunnel =
+				{
+					ROUTE_alliedtunnel =
+					{
+						ROUTE_ruins = {}, // martin - Axis can't get to the WH from the tunnel unless they jump from catwalk and then its -15 hp
+					},
+				},
 				ROUTE_axisgarageeast =
 				{
 					ROUTE_eastalliedtrain = {},
@@ -461,6 +632,18 @@ global OnMapLoad = function()
 			},
 			ROUTE_depotspawn =
 			{
+				ROUTE_axistunnel =
+				{
+					ROUTE_alliedtunnel =
+					{
+						ROUTE_warehousenorth =
+						{
+							Weight = 2,
+							ROUTE_warehousesouth = {},
+						},
+						ROUTE_ruins = {},
+					},
+				},
 				ROUTE_axisgaragewest =
 				{
 					ROUTE_warehousenorth =
@@ -505,6 +688,8 @@ global OnMapLoad = function()
 		{
 		},
 	};
+	MapRoutes.PLANT_Anti_Aircraft_Gun.ROUTE_bspawnrear = MapRoutes.PLANT_Anti_Aircraft_Gun.ROUTE_bspawn;
+	
 	/*MapRoutes.DEFEND_rOps2 = MapRoutes.PLANT_Allied_Field_Ops;
 	MapRoutes.DEFEND_rOps3 = MapRoutes.PLANT_Allied_Field_Ops;
 	MapRoutes.DEFEND_rOps4 = MapRoutes.PLANT_Allied_Field_Ops;
