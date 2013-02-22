@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f59e515d-3387-40c2-9ec0-1a78aa8df54d}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{3176702f-9835-4234-9394-f18eeb389ffb}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Menu Files">
+      <UniqueIdentifier>{3280236d-a261-40a5-baa8-f146db788b90}</UniqueIdentifier>
+      <Extensions>*.menu</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{e2760956-d5d7-4bef-b772-8e8b1ff2c16a}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\game\bg_campaign.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\bg_classes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\bg_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\bg_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\q_math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\q_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_atoms.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_gameinfo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_loadpanel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_players.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_syscalls.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ui.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\credits_activision.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\credits_additional.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\credits_idsoftware.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\credits_quit.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\credits_splashdamage.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\global.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\hostgame.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\hostgame_advanced.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\hostgame_advanced_default.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\hostgame_dedicated_warning.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_disconnect.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_main.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_messagemode.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_serverinfo.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_tapout.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_tapoutlms.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_disabled.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_map.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_misc.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_misc_refrcon.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_players.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\ingame_vote_players_warn.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\main.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\menus.txt">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_controls.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_controls_default.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_customise_game.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_customise_hud.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_system.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\options_system_gamma.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\playonline.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\playonline_connecttoip.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\playonline_disablepb.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\playonline_enablepb.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\playonline_serverinfo.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\popup_autoupdate.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\popup_errormessage.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\popup_errormessage_pb.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\popup_hostgameerrormessage.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\popup_password.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_create.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_create_error.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_create_initial.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_delete.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_delete_error.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\profile_rename.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\quit.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\rec_restart.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\vid_confirm.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\vid_restart.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\viewreplay.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\viewreplay_delete.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\wm_ftquickmessage.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\wm_ftquickmessageAlt.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\wm_quickmessage.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+    <None Include="..\..\etmain\ui\wm_quickmessageAlt.menu">
+      <Filter>Menu Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\game\bg_classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\bg_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keycodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\main\ui\menudef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\q_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\surfaceflags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cgame\tr_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\etmain\ui\menudef.h">
+      <Filter>Menu Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\etmain\ui\menumacros.h">
+      <Filter>Menu Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
