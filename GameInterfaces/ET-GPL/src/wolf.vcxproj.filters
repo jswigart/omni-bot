@@ -1,0 +1,625 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ab1ab5ad-fb79-4f32-8107-b01ca04bae39}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{05c940cf-8f4b-443e-8e79-8d44da6f761c}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{0ecc8e9a-faaa-42f6-9db3-5a57b7685a08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\ui">
+      <UniqueIdentifier>{574908d1-2dff-4af7-8d27-a11836b48d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\scripts">
+      <UniqueIdentifier>{77f70ba9-c322-4c98-aa48-a66332e5c396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{27eb88b5-0f22-42f8-87ef-cc72117fd174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="download">
+      <UniqueIdentifier>{f0935d84-28b7-40e0-ab18-93fecb9e00ad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="client\cl_cgame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_cin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_keys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_net_chan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_parse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_scrn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_ui.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_load.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_patch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_polylib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_trace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cmd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cvar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\files.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\huffman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\md4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\msg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\net_chan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="null\null_client.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="null\null_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="null\null_snddma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\q_math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\q_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\snd_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\snd_dma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\snd_mem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\snd_mix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client\snd_wavelet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_bot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_ccmds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_client.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_net_chan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_snapshot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_world.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\unzip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\vm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\vm_interpreted.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\vm_x86.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_eh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_net.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_snd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_syscon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_wndproc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\dl_main.c">
+      <Filter>download</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\dl_main_curl.c">
+      <Filter>download</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\dl_main_stubs.c">
+      <Filter>download</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game\bg_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="botai\botai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\botlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cgame\cg_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client\client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_patch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_polylib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\g_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\keycodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client\keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\q_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\qcommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\qfiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\qgl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="server\server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client\snd_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client\snd_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\surfaceflags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\tr_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\tr_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cgame\tr_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\unzip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\vm_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\win_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\main\ui\menudef.h">
+      <Filter>main\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\dl_local.h">
+      <Filter>download</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\dl_public.h">
+      <Filter>download</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\main\ui\addfilter.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\bookp.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\bookv.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\bookz.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\cdkey.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\cinematicmenu.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\clipboard.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\connect.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\controls.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\createfavorite.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\createserver.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\credit.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\default.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\demo.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\demo_quit.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\endofgame.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\error.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\fight.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\findplayer.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\help.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\hud.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\hud.txt">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame.txt">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_about.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_addbot.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_callvote.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_controls.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_help.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_join.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_leave.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_loadsave.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_options.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_orders.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_player.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_system.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ingame_vote.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\joinserver.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\load.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\main.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\menus.txt">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\min_hud.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\mod.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\multiplayer.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\notebook.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\options.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\ordershelp.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\password.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\play.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\player.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\powerup.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\quit.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\quitcredit.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\resetscore.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\score.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\serverinfo.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\setup.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\skirmish.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\system.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\teamscore.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\vid_restart.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\wm_limbo.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\wm_pickplayer.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\wm_pickteam.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\ui\wm_quickmessage.menu">
+      <Filter>main\ui</Filter>
+    </None>
+    <None Include="..\main\scripts\ai.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\alpha.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\blacksmokeanim.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\blacksmokeanimb.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\clipboard.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\common.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\cursorhints.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\decals.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\eerie.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\expblue.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\explode1.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\fijets.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\firest.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\flamethrower.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\funnel.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\gfx.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\heat.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\lights.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\liquid.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\maxx.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\menu.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\metal.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\models.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\netest.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\oldwolf.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\organics.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\particle.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\q3view.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\sfx.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\skin.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\sky.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\solo.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\terrain.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\test.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\twiltb.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\twiltb2.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\ui.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\ui_hud.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\ui_kc.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\ui_notebook.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\viewflames.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\walls.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="..\main\scripts\z_light.shader">
+      <Filter>main\scripts</Filter>
+    </None>
+    <None Include="docs\Changelog">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\Notes">
+      <Filter>docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>
