@@ -71,6 +71,20 @@ global _MG =
 		TeamAvailability = 30,
 		Version = 1,
 	},
+	ARTILLERY_S_bTunnel1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_bTunnel1",
+		Orientation = Vec3(-0.026, -0.089, -0.000),
+		Position = Vec3(79.953, 556.441, 543.875),
+		Radius = 0,
+		TagName = "bTunnel1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	ARTILLERY_S_rCourtyard_1 = 
 	{
 		CreateOnLoad = 1,
@@ -1292,6 +1306,20 @@ global _MG =
 		Weapons = 
 		{
 		},
+	},
+	EXPLODE_180 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "EXPLODE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "EXPLODE_180",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-2032.000, 384.000, 120.000),
+		Radius = 0,
+		TagName = "",
+		TeamAvailability = 30,
+		Version = 1,
 	},
 	EXPLODE_radio_clip = 
 	{
