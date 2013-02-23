@@ -636,6 +636,7 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_main_door );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_CP_attack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTunnel.*" );
 	if (!Map.FriendlyFire)
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
