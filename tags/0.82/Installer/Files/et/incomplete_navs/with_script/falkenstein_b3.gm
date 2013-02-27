@@ -1,0 +1,303 @@
+//==========================================================================================
+//
+//	Falkenstein (Beta 3) - falkenstein_b3.gm
+//
+//	Who		When			What
+//------------------------------------------------------------------------------------------
+//	MickyP		15 November 2010	Initial Script
+//	Mateos		19 December 2011	Missing Strings, script clearing, goals
+//
+//==========================================================================================
+
+global Map =
+{
+	Debug = 0, // Please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Axis_Construction_Dyno = 0,
+	allied_construction_Dyno = 0,
+	generator_Dyno = 0,
+	lower_entrance_Dyno = 0,
+	upper_entrance_Dyno = 0,
+
+	Navigation =
+	{
+		ladder_pt =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Construction_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Construction_Built" );
+	},
+
+	allied_construction_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "allied_construction_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		Map.Allied_Command_Post_Dyno += 1;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		Map.Axis_Command_Post_Dyno += 1;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Axis_Construction_Planted = function( trigger )
+	{
+		Map.Axis_Construction_Dyno += 1;
+
+		Util.MapDebugPrint( "Axis_Construction_Planted" );
+	},
+
+	allied_construction_Planted = function( trigger )
+	{
+		Map.allied_construction_Dyno += 1;
+
+		Util.MapDebugPrint( "allied_construction_Planted" );
+	},
+
+	generator_Planted = function( trigger )
+	{
+		Map.generator_Dyno += 1;
+
+		Util.MapDebugPrint( "generator_Planted" );
+	},
+
+	lower_entrance_Planted = function( trigger )
+	{
+		Map.lower_entrance_Dyno += 1;
+
+		Util.MapDebugPrint( "lower_entrance_Planted" );
+	},
+
+	upper_entrance_Planted = function( trigger )
+	{
+		Map.upper_entrance_Dyno += 1;
+
+		Util.MapDebugPrint( "upper_entrance_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		Map.Allied_Command_Post_Dyno -= 1;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		Map.Axis_Command_Post_Dyno -= 1;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Axis_Construction_Defused = function( trigger )
+	{
+		Map.Axis_Construction_Dyno -= 1;
+
+		Util.MapDebugPrint( "Axis_Construction_Defused" );
+	},
+
+	allied_construction_Defused = function( trigger )
+	{
+		Map.allied_construction_Dyno -= 1;
+
+		Util.MapDebugPrint( "allied_construction_Defused" );
+	},
+
+	generator_Defused = function( trigger )
+	{
+		Map.generator_Dyno -= 1;
+
+		Util.MapDebugPrint( "generator_Defused" );
+	},
+
+	lower_entrance_Defused = function( trigger )
+	{
+		Map.lower_entrance_Dyno -= 1;
+
+		Util.MapDebugPrint( "lower_entrance_Defused" );
+	},
+
+	upper_entrance_Defused = function( trigger )
+	{
+		Map.upper_entrance_Dyno -= 1;
+
+		Util.MapDebugPrint( "upper_entrance_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Axis_Construction_Destroyed = function( trigger )
+	{
+		Map.Axis_Construction_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Construction_Destroyed" );
+	},
+
+	allied_construction_Destroyed = function( trigger )
+	{
+		Map.allied_construction_Dyno = 0;
+
+		Util.MapDebugPrint( "allied_construction_Destroyed" );
+	},
+
+	generator_Destroyed = function( trigger )
+	{
+		Map.generator_Dyno = 0;
+
+		Util.DisableGoal( "CHECKPOINT_checkpoint1" );
+		Util.DisableGoal( "AMMOCAB_south_ammocabinet" );
+		Util.DisableGoal( "HEALTHCAB_south_healthcabinet" );
+
+		Util.MapDebugPrint( "generator_Destroyed" );
+	},
+
+	lower_entrance_Destroyed = function( trigger )
+	{
+		Map.lower_entrance_Dyno = 0;
+
+		Util.MapDebugPrint( "lower_entrance_Destroyed" );
+	},
+
+	upper_entrance_Destroyed = function( trigger )
+	{
+		Map.upper_entrance_Dyno = 0;
+
+		Util.MapDebugPrint( "upper_entrance_Destroyed" );
+	},
+
+	boxy_Taken = function( trigger )
+	{
+		Util.MapDebugPrint( "boxy_Taken" );
+	},
+
+	boxy_Returned = function( trigger )
+	{
+		Util.MapDebugPrint( "boxy_Returned" );
+	},
+
+	boxy_Secured = function( trigger )
+	{
+		Util.MapDebugPrint( "boxy_Secured" );
+	},
+
+	checkpoint1_Axis_Captured = function( trigger )
+	{
+		Util.MapDebugPrint( "checkpoint1_Axis_Captured" );
+	},
+
+	checkpoint1_Allies_Captured = function( trigger )
+	{
+		Util.MapDebugPrint( "checkpoint1_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	// The announcements are trimmed to 71 chars, the maximum supported by Omni-Bot.
+	OnTrigger( "Allied Command Post constructed. Allied spawn at the Command Post activ", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Allied Team have built the barrier near the train!", Map.Axis_Construction_Built );
+	OnTrigger( "Allied Team have built their access to the objective!", Map.allied_construction_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at Axis Construction.", Map.Axis_Construction_Planted );
+	OnTrigger( "Planted at allied construction.", Map.allied_construction_Planted );
+	OnTrigger( "Planted at the generator.", Map.generator_Planted );
+	OnTrigger( "Planted at lower entrance.", Map.lower_entrance_Planted );
+	OnTrigger( "Planted at the upper entrance.", Map.upper_entrance_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at Axis Construction.", Map.Axis_Construction_Defused );
+	OnTrigger( "Defused at allied construction.", Map.allied_construction_Defused );
+	OnTrigger( "Defused at the generator.", Map.generator_Defused );
+	OnTrigger( "Defused at the lower entrance.", Map.lower_entrance_Defused );
+	OnTrigger( "Defused at the upper entrance.", Map.upper_entrance_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post! Allies lost their spaw", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "allies have destroyed the barrier near the train!", Map.Axis_Construction_Destroyed );
+	OnTrigger( "Axis have destroyed allied access!", Map.allied_construction_Destroyed );
+	OnTrigger( "Allies gained access to the base", Map.generator_Destroyed );
+	OnTrigger( "Allies destroyed the lower entrance", Map.lower_entrance_Destroyed );
+	OnTrigger( "Allies destroyed the upper entrance", Map.upper_entrance_Destroyed );
+	OnTrigger( "Allies have stolen the PROTOTYPE!", Map.boxy_Taken );
+	OnTrigger( "Axis have returned the PROTOTYPE!", Map.boxy_Returned );
+	OnTrigger( "ALLIES ESCAPED WITH THE OBJECTIVE!", Map.boxy_Secured );
+	OnTrigger( "Axis capture the Depot Yard!", Map.checkpoint1_Axis_Captured );
+	OnTrigger( "Allies capture the Depot Yard!", Map.checkpoint1_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

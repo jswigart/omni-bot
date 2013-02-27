@@ -1,0 +1,414 @@
+//==========================================================================================
+//
+//	Christmas Hills - hills_beta.gm
+//
+//	Who            	When		What
+//------------------------------------------------------------------------------------------
+//	Mateos		22 December 2010	From cs initial script
+//	crapshoot	22 December 2010	Initial Script - replaced problematic goals
+//
+//==========================================================================================
+
+/****************************************************
+Pathing and script both updated by Mateos
+Correspondant WAY file size : -
+Last Update : 26 December 2010
+****************************************************/
+
+global Map =
+{
+	// Make bots plant only one dynamite per dynamitable goals
+	Command_Post_Dyno = 0,
+	Concrete_and_fire_tank_barrier_Dyno = 0,
+	Radio_Tower_Dyno = 0,
+	Rocky_Tank_Barrier_Dyno = 0,
+	Tunnel_access_to_radio_tower_Dyno = 0,
+	X_mas_Tree_Dyno = 0,
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post");
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post");
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Concrete_and_fire_tank_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Concrete_and_fire_tank_barrier" );
+
+		Util.MapDebugPrint( "Concrete_and_fire_tank_barrier_Built" );
+	},
+
+	EBs_Tankage_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "EBs_Tankage_Built" );
+	},
+
+	Radio_Tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Radio_Tower_Built" );
+	},
+
+	Rocky_Tank_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Rocky_tank_Barrier" );
+
+		Util.MapDebugPrint( "Rocky_Tank_Barrier_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	X_mas_Tree_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_X_mas_tree" );
+
+		Util.MapDebugPrint( "X_mas_Tree_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Concrete_and_fire_tank_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Concrete_and_fire_tank_barrier_Dyno += 1;
+
+		Util.MapDebugPrint( "Concrete_and_fire_tank_barrier_Planted" );
+	},
+
+	Radio_Tower_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Radio_Tower_Dyno += 1;
+
+		Util.MapDebugPrint( "Radio_Tower_Planted" );
+	},
+
+	Rocky_Tank_Barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Rocky_Tank_Barrier_Dyno += 1;
+
+		Util.MapDebugPrint( "Rocky_Tank_Barrier_Planted" );
+	},
+
+	Tunnel_access_to_radio_tower_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_access_to_radio_tower_Dyno += 1;
+
+		Util.MapDebugPrint( "Tunnel_access_to_radio_tower_Planted" );
+	},
+
+	X_mas_Tree_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.X_mas_Tree_Dyno += 1;
+
+		Util.MapDebugPrint( "X_mas_Tree_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Concrete_and_fire_tank_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Concrete_and_fire_tank_barrier_Dyno -= 1;
+
+		Util.MapDebugPrint( "Concrete_and_fire_tank_barrier_Defused" );
+	},
+
+	Radio_Tower_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Radio_Tower_Dyno -= 1;
+
+		Util.MapDebugPrint( "Radio_Tower_Defused" );
+	},
+
+	Rocky_Tank_Barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Rocky_Tank_Barrier_Dyno -= 1;
+
+		Util.MapDebugPrint( "Rocky_Tank_Barrier_Defused" );
+	},
+
+	Tunnel_access_to_radio_tower_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_access_to_radio_tower_Dyno -= 1;
+
+		Util.MapDebugPrint( "Tunnel_access_to_radio_tower_Defused" );
+	},
+
+	X_mas_Tree_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.X_mas_Tree_Dyno -= 1;
+
+		Util.MapDebugPrint( "X_mas_Tree_Defused" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Concrete_and_fire_tank_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Concrete_and_fire_tank_barrier_Dyno = 0;
+
+		Util.MapDebugPrint( "Concrete_and_fire_tank_barrier_Destroyed" );
+	},
+
+	Radio_Tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Radio_Tower_Dyno = 0;
+
+		Util.MapDebugPrint( "Radio_Tower_Destroyed" );
+	},
+
+	Rocky_Tank_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Rocky_Tank_Barrier_Dyno = 0;
+
+		Util.MapDebugPrint( "Rocky_Tank_Barrier_Destroyed" );
+	},
+
+	Tunnel_access_to_radio_tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Tunnel_access_to_radio_tower_Dyno = 0;
+
+		Util.MapDebugPrint( "Tunnel_access_to_radio_tower_Destroyed" );
+	},
+
+	Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Destroyed" );
+	},
+
+	X_mas_Tree_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.X_mas_Tree_Dyno = 0;
+
+		Util.MapDebugPrint( "X_mas_Tree_Destroyed" );
+	},
+
+	Allies_Win = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Win" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// *** TRIGGERS ***
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.Concrete_and_fire_tank_barrier_Built );
+	OnTrigger( "^dAllied team has Repaired the Tank!", Map.EBs_Tankage_Built );
+	OnTrigger( "MISSING_STRING", Map.Radio_Tower_Built );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.Rocky_Tank_Barrier_Built );
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Built );	// Is in hills_beta.script...
+	OnTrigger( "------^1Christmas ^2Tree ^7Setup!!! ^1The axis smile ^2with glee!!!------", Map.X_mas_Tree_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Concrete_and_fire_tank_barrier_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Radio_Tower_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Rocky_Tank_Barrier_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Tunnel_access_to_radio_tower_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.X_mas_Tree_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Concrete_and_fire_tank_barrier_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Radio_Tower_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Rocky_Tank_Barrier_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Tunnel_access_to_radio_tower_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.X_mas_Tree_Defused );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Concrete_and_fire_tank_barrier_Destroyed );
+	OnTrigger( "^1Allied team has destroyed the Axis Ba-humbug transmitter- ^2Now to setup the X-mas tree!!!!", Map.Radio_Tower_Destroyed );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Rocky_Tank_Barrier_Destroyed );
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+	OnTrigger( "^1Allied team has breached the access tunnel lock", Map.Tunnel_access_to_radio_tower_Destroyed );
+	OnTrigger( "------^2Tree destroyed!!!^7------", Map.X_mas_Tree_Destroyed );
+	OnTrigger( "^1Allies have ^2decorated the hills !!!", Map.Allies_Win );
+
+	// *** ALLIED GOALS ***
+	Util.DisableGoal( "MOUNTMG42.*", true );
+	Util.DisableGoal( "REPAIRMG42.*", true );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_EBs_Tankage" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	// cs: remove these goals with stupid names. replaced with user created ones in the goals file.
+	Util.RemoveGoal("PLANT_Radio_Tower_that_the_miserable_axis_use_to_spread_hate!");
+	Util.RemoveGoal("BUILD_Radio_Tower_that_the_miserable_axis_use_to_spread_hate!");
+
+
+	Util.MapDebugPrint( "Omni-bot map script for Christmas Hills by Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 6000;
+};

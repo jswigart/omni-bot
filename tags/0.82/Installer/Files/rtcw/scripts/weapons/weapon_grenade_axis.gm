@@ -1,0 +1,33 @@
+// The new weapon instance is passed to this function as the 'this'
+// Properties can be set like this.Property = x, or the this prefix can be left off.
+
+//////////////////////////////////////////////////////////////////////////
+// Overall weapon properties.
+this.Name = "Grenade Axis";
+this.WeaponId = WEAPON.AXIS_GRENADE;
+
+//////////////////////////////////////////////////////////////////////////
+// Set some weapon properties that affect some internal logic.
+this.PrimaryFire.WeaponType = "grenade";
+this.PrimaryFire.MaxEquipMoveMode = "still";
+this.PrimaryFire.ProjectileSpeed = 900;
+this.PrimaryFire.RequiresAmmo = true;
+this.PrimaryFire.WaterProof = true;
+this.PrimaryFire.SplashDamage = true;
+this.PrimaryFire.InheritsVelocity = false;
+this.PrimaryFire.ProjectileGravity = 1.0;
+this.PrimaryFire.NeedsInRange = true;
+this.PrimaryFire.MinRange = 0.0;
+this.PrimaryFire.MaxRange = 512.0;
+this.PrimaryFire.FuseTime = 4.0;
+this.PrimaryFire.FireOnRelease = true;
+
+this.PrimaryFire.MaxAimError = Vector2( 0, 0 );
+this.PrimaryFire.AimOffset = Vector3( 0, 0, 0 );
+
+this.PrimaryFire.DefaultDesirability = 0.0;
+this.PrimaryFire.SetDesirabilityRange( 0, 512, 0.2 );
+
+// don't use grenade to gib
+this.PrimaryFire.SetIgnoreEntFlags( ENTFLAG.INJURED );
+//this.PrimaryFire.SetTargetBias( CLASS.INJUREDPLAYER, 0 );

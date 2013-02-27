@@ -1,0 +1,22 @@
+# The server library.
+
+project game
+	: requirements <define>GAMEDLL
+	: requirements <define>NO_BOT_SUPPORT
+	: requirements <variant>debug:<define>DEBUG
+	: requirements <include>../botai
+	: requirements <include>../../../../Omnibot/Common
+	: requirements <include>../../../../Omnibot/ET	
+	;
+
+SOURCES = [ glob ../botai/ai_*.c ]
+		  [ glob bg_*.c ]
+		  [ glob g_*.c ]
+		  [ glob g_*.cpp ]
+		  [ glob ../../../../Omnibot/Common/BotLoadLibrary.cpp ]
+		  q_math.c
+		  q_shared.c
+		;
+
+lib qagame.mp.i386.so : $(SOURCES) ..//dl_lib : <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing ;
+

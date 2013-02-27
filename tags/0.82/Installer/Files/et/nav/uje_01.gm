@@ -1,0 +1,543 @@
+//==========================================================================================
+//
+//	uje_01.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	|TP|kaos	12 November 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_CP_Dyno = 0,
+	Axis_CP_Dyno = 0,
+	a_door_Dyno = 0,
+	a_fence_Dyno = 0,
+	a_ladder_Dyno = 0,
+	bridge_Dyno = 0,
+	well_Dyno = 0,
+
+	Ammo_Cabinet_ammo0 = "AMMOCAB_ammo0",
+	Ammo_Cabinet_ammo1 = "AMMOCAB_ammo1",
+	Ammo_Cabinet_ammo2 = "AMMOCAB_ammo2",
+	Ammo_Cabinet_ammo3 = "AMMOCAB_ammo3",
+	Health_Cabinet_health0 = "HEALTHCAB_health0",
+	Health_Cabinet_health1 = "HEALTHCAB_health1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Health_Cabinet_health3 = "HEALTHCAB_health3",
+	Checkpoint_tunnelspawnflag = "CHECKPOINT_tunnelspawnflag",
+	Build_Allied_CP = "BUILD_Allied_CP",
+	Build_Axis_CP = "BUILD_Axis_CP",
+	Build_VIP_lock = "BUILD_VIP_lock",
+	Build_a_door = "BUILD_a_door",
+	Build_a_fence = "BUILD_a_fence",
+	Build_a_ladder = "BUILD_a_ladder",
+	Build_bridge = "BUILD_bridge",
+	Build_bridge1 = "BUILD_bridge1",
+	Build_bridge2 = "BUILD_bridge2",
+	Build_well = "BUILD_well",
+	Build_arado = "BUILD_Arado",
+	Plant_Allied_CP = "PLANT_Allied_CP",
+	Plant_Axis_CP = "PLANT_Axis_CP",
+	Plant_a_door = "PLANT_a_door",
+	Plant_a_fence = "PLANT_a_fence",
+	Plant_a_ladder = "PLANT_a_ladder",
+	Plant_bridge = "PLANT_bridge",
+	Plant_well = "PLANT_well",
+	Hostage = "MOVER_hostage",
+	
+	MountVehicle =
+	{
+		Enabled = false,
+	},
+
+	Movers =
+	{
+		"MOVER_hostage",
+	},
+
+	Allied_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_CP_Built" );
+	},
+
+	Axis_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_CP_Built" );
+	},
+
+	VIP_ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		ETUtil.CountClass( TEAM.AXIS, CLASS.ENGINEER );
+				
+		Util.MapDebugPrint( "VIP_ready" );
+	},
+	
+	VIP_lock_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		ETUtil.CountClass( TEAM.AXIS, CLASS.MEDIC );
+		Util.DisableGoal( "BUILD_well", true );
+		Util.DisableGoal( "PLANT_well", true );
+		Util.DisableGoal( "BUILD_a_ladder", true );
+		Util.DisableGoal( "PLANT_a_ladder", true );
+		Util.DisableGoal( "BUILD_a_door", true );
+		Util.DisableGoal( "PLANT_a_door", true );
+		Util.DisableGoal( "CHECKPOINT_tunnelspawnflag" );
+		Util.DisableGoal( "SWITCH_tunneldoor_switch" );
+		Util.DisableGoal( "SWITCH_tunneldoor_switch1" );
+		SetGoalPriority( "BUILD_Allied_CP", 0.85);
+		SetGoalPriority( "BUILD_Axis_CP", 0.85);
+		SetGoalPriority( "ESCORT_hostage", 1.0, TEAM.AXIS, CLASS.MEDIC );
+		Util.DisableGoal( "BUILD_VIP_lock", true );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_bridge" );
+		
+		Util.MapDebugPrint( "VIP_lock_Built" );
+	},
+
+	VIP_killed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.MEDIC, true, 1 );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.FIELDOPS, CLASS.MEDIC, true, 1 );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.COVERTOPS, CLASS.MEDIC, true, 1 );
+		ETUtil.LimitToClass("ESCORT_hostage", TEAM.AXIS, CLASS.MEDIC);
+				
+		Util.MapDebugPrint( "VIP_killed" );
+	},
+	
+	VIP_revived = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		ETUtil.LimitToClass("ESCORT_hostage", TEAM.AXIS, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER, CLASS.FIELDOPS, CLASS.COVERTOPS);
+				
+		Util.MapDebugPrint( "VIP_revived" );
+	},
+	
+	a_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "a_door_Built" );
+	},
+
+	a_fence_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "a_fence_Built" );
+	},
+
+	a_ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "a_ladder_Built" );
+	},
+
+	Arado_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "BUILD_Arado", true );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, false, 1 );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.SOLDIER, CLASS.MEDIC, true, 1 );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.FIELDOPS, CLASS.MEDIC, true, 1 );
+		ETUtil.ChangeClass( TEAM.AXIS, CLASS.COVERTOPS, CLASS.MEDIC, true, 1 );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_bridge" );
+		
+		Util.MapDebugPrint( "arado_Built" );
+	},
+	
+		bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.MapDebugPrint( "bridge_Built" );
+	},
+
+	bridge1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.MapDebugPrint( "bridge1_Built" );
+	},
+
+	bridge2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge2_Built" );
+	},
+	
+	well_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "well_Built" );
+	},
+	
+	Allied_CP_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno += 1;
+		
+		Util.MapDebugPrint( "Allied_CP_Planted" );
+	},
+
+	Axis_CP_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno += 1;
+		
+		Util.MapDebugPrint( "Axis_CP_Planted" );
+	},
+
+	a_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_door_Dyno += 1;
+		
+		Util.MapDebugPrint( "a_door_Planted" );
+	},
+
+	a_fence_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_fence_Dyno += 1;
+		
+		Util.MapDebugPrint( "a_fence_Planted" );
+	},
+
+	a_ladder_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_ladder_Dyno += 1;
+		
+		Util.MapDebugPrint( "a_ladder_Planted" );
+	},
+
+	bridge_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.bridge_Dyno += 1;
+		
+		Util.MapDebugPrint( "bridge_Planted" );
+	},
+	
+	well_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.well_Dyno += 1;
+		
+		Util.MapDebugPrint( "well_Planted" );
+	},
+
+	Allied_CP_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno -= 1;
+		
+		Util.MapDebugPrint( "Allied_CP_Defused" );
+	},
+
+	Axis_CP_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno -= 1;
+		
+		Util.MapDebugPrint( "Axis_CP_Defused" );
+	},
+
+	a_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_door_Dyno -= 1;
+		
+		Util.MapDebugPrint( "a_door_Defused" );
+	},
+
+	a_fence_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_fence_Dyno -= 1;
+		
+		Util.MapDebugPrint( "a_fence_Defused" );
+	},
+
+	a_ladder_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_ladder_Dyno -= 1;
+		
+		Util.MapDebugPrint( "a_ladder_Defused" );
+	},
+
+	bridge_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.bridge_Dyno -= 1;
+		
+		Util.MapDebugPrint( "bridge_Defused" );
+	},
+	
+	well_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.well_Dyno -= 1;
+		
+		Util.MapDebugPrint( "well_Defused" );
+	},
+
+	Allied_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno = 0;
+		
+		Util.MapDebugPrint( "Allied_CP_Destroyed" );
+	},
+
+	Axis_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_CP_Destroyed" );
+	},
+
+	a_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_door_Dyno = 0;
+
+		Util.MapDebugPrint( "a_door_Destroyed" );
+	},
+
+	a_fence_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_fence_Dyno = 0;
+
+		Util.MapDebugPrint( "a_fence_Destroyed" );
+	},
+
+	a_ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.a_ladder_Dyno = 0;
+
+		Util.MapDebugPrint( "a_ladder_Destroyed" );
+	},
+
+	bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.bridge_Dyno = 0;
+
+		Util.MapDebugPrint( "bridge_Destroyed" );
+	},
+	
+	well_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.well_Dyno = 0;
+
+		Util.MapDebugPrint( "well_Destroyed" );
+	},
+
+	tunnelspawnflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tunnelspawnflag_Axis_Captured" );
+	},
+
+	tunnelspawnflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tunnelspawnflag_Allies_Captured" );
+	},
+	
+	Arado_Available = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		ETUtil.CountClass( TEAM.AXIS, CLASS.ENGINEER );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Arado" );
+		SetGoalPriority( "BUILD_Arado", 1.0);
+		
+		Util.MapDebugPrint( "Arado_Available" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "^5The Allied-CP has been constructed.", Map.Allied_CP_Built );
+	OnTrigger( "^5The Axis-CP has been constructed.", Map.Axis_CP_Built );
+	OnTrigger( "^5The V.I.P. has been taken hostage.", Map.VIP_ready );
+	OnTrigger( "^5The VIP has been released", Map.VIP_lock_Built );
+	OnTrigger( "^5The VIP has been killed..", Map.VIP_killed );
+	OnTrigger( "^5The VIP has been revived..", Map.VIP_revived );
+	OnTrigger( "^5The door has been repaired", Map.a_door_Built );
+	OnTrigger( "MISSING_STRING", Map.a_fence_Built );
+	OnTrigger( "MISSING_STRING", Map.a_ladder_Built );
+	OnTrigger( "MISSING_STRING", Map.bridge_Built );
+	OnTrigger( "The well-entrance is closed", Map.well_Built );
+	OnTrigger( "The floatplane has been repaired.", Map.Arado_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allied_CP_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_CP_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.a_door_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.a_fence_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.a_ladder_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.bridge_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.well_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allied_CP_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_CP_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.a_door_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.a_fence_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.a_ladder_Defused );
+	OnTrigger( "MISSING_STRING", Map.bridge_Built );
+	OnTrigger( "MISSING_STRING", Map.bridge1_Built );
+	OnTrigger( "MISSING_STRING", Map.bridge2_Built );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.well_Defused );
+	OnTrigger( "^5The Allied-CP has been destroyed.", Map.Allied_CP_Destroyed );
+	OnTrigger( "^5The Axis-CP has been destroyed.", Map.Axis_CP_Destroyed );
+	OnTrigger( "^5The door has been damaged", Map.a_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.a_fence_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.a_ladder_Destroyed );
+	OnTrigger( "uje_bridge_collapsed", Map.bridge_Destroyed );
+	OnTrigger( "The well-entrance is opened", Map.well_Destroyed );
+	OnTrigger( "The Axis sieged the tunnels.", Map.tunnelspawnflag_Axis_Captured );
+	OnTrigger( "The Axis Tunnel-spawns are disabled.", Map.tunnelspawnflag_Allies_Captured );
+	OnTrigger( "uje_repair_floatplane", Map.Arado_Available );
+	
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	//SetGoalPriority( ".*", 0.65);
+	//Util.SetGoalPosition( 1666.8, 2651.9, -279.875, "PLANT_.*" ) ;
+	//Util.DisableGoal( TEAM.AXIS, false, "CHECKPOINT_tunnelspawnflag", true );
+
+	//Goals Iniciales
+	Util.DisableGoal( "SWITCH_airalarm_switch" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Arado" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_tunneldoor_switch" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_tunneldoor_switch1" );
+	ETUtil.LimitToClass( "PLANT_Allied_CP", TEAM.AXIS, CLASS.COVERTOPS);
+	ETUtil.LimitToClass( "PLANT_Axis_CP", TEAM.ALLIES, CLASS.COVERTOPS);
+	SetGoalPriority( "BUILD_VIP_lock", 0.99);
+	Util.SetGoalPosition( 67.921, 6610.251, -652.520, "BUILD_Arado" ) ;
+	Util.SetGoalPosition( 228.187, 4707.434, -487.875, "PLANT_a_fence" ) ;
+	Util.SetGoalPosition( -1031.591, -913.651, 344.332, "BUILD_bridge1" ) ;
+	Util.SetGoalPosition( -837.315, -525.429, 344.332, "BUILD_bridge2" ) ;
+	Util.SetGoalPosition( -730.488, -275.719, -452.628, "PLANT_bridge" ) ;
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	mg = GetGoal("MOVER_hostage");
+	if ( bot.GetTeam() == TEAM.AXIS )
+	{ bot.IgnoreTarget(mg.GetEntity(), 9999); }
+	//bot.IgnoreTarget( GetGoal(Map.Hostage).GetEntity(), 9999 );
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

@@ -1,0 +1,397 @@
+//==========================================================================================
+//
+//	etcenter_final.gm
+//
+//	Who     	When		What
+//------------------------------------------------------------------------------------------
+//	#gTh'.MaNgO	14 October 2010	Initial Script
+//
+//==========================================================================================
+//
+// To Do:
+//
+// Defend spots
+// Routing
+// Plant Coverspots
+//
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	East_Axis_Base_Fortification_Dyno = 0,
+	Facility_Controls_Dyno = 0,
+	Main_Facility_Entrance_Dyno = 0,
+	Neutral_Command_Post_Dyno = 0,
+	Service_Door_Dyno = 0,
+	Storage_Wall_Dyno = 0,
+
+	East_Axis_Base_Fortification_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "East_Axis_Base_Fortification_Built" );
+	},
+
+	Facility_Controls_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Facility_Controls" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Door_Switch" );
+		Util.MapDebugPrint( "Facility_Controls_Built" );
+	},
+
+	Neutral_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Neutral_Command_Post_Built" );
+	},
+
+	East_Axis_Base_Fortification_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Axis_Base_Fortification_Dyno += 1;
+		Util.MapDebugPrint( "East_Axis_Base_Fortification_Planted" );
+	},
+
+	Facility_Controls_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Facility_Controls_Dyno += 1;
+		Util.MapDebugPrint( "Facility_Controls_Planted" );
+	},
+
+	Main_Facility_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Facility_Entrance_Dyno += 1;
+		Util.MapDebugPrint( "Main_Facility_Entrance_Planted" );
+	},
+
+	Neutral_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Neutral_Command_Post_Planted" );
+	},
+
+	Service_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Service_Door_Dyno += 1;
+		Util.MapDebugPrint( "Service_Door_Planted" );
+	},
+
+	Storage_Wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Storage_Wall_Dyno += 1;
+		Util.MapDebugPrint( "Storage_Wall_Planted" );
+	},
+
+	East_Axis_Base_Fortification_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Axis_Base_Fortification_Dyno -= 1;
+		Util.MapDebugPrint( "East_Axis_Base_Fortification_Defused" );
+	},
+
+	Facility_Controls_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Facility_Controls_Dyno -= 1;
+		Util.MapDebugPrint( "Facility_Controls_Defused" );
+	},
+
+	Main_Facility_Entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Facility_Entrance_Dyno -= 1;
+		Util.MapDebugPrint( "Main_Facility_Entrance_Defused" );
+	},
+
+	Neutral_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Neutral_Command_Post_Defused" );
+	},
+
+	Service_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Service_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Service_Door_Defused" );
+	},
+
+	Storage_Wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Storage_Wall_Dyno -= 1;
+		Util.MapDebugPrint( "Storage_Wall_Defused" );
+	},
+
+	East_Axis_Base_Fortification_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Axis_Base_Fortification_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+		Util.MapDebugPrint( "East_Axis_Base_Fortification_Destroyed" );
+	},
+
+	Facility_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Facility_Controls_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_Door_Switch" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Door_Switch" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Facility_Controls" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
+		Util.MapDebugPrint( "Facility_Controls_Destroyed" );
+	},
+
+	Main_Facility_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Facility_Entrance_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+		Util.MapDebugPrint( "Main_Facility_Entrance_Destroyed" );
+	},
+
+	Neutral_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Neutral_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Neutral_Command_Post_Destroyed" );
+	},
+
+	Service_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Service_Door_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Facility_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Storage_Wall" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Axis_Base_Fortification" );
+		Util.RemoveGoal( "SWITCH_Door_Switch" );
+		Util.RemoveGoal( "BUILD_Facility_Controls" );
+		Util.RemoveGoal( "PLANT_Facility_Controls" );
+
+		Util.MapDebugPrint( "Service_Door_Destroyed" );
+	},
+
+	Storage_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+				
+		Map.Storage_Wall_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+		Util.MapDebugPrint( "Storage_Wall_Destroyed" );
+	},
+
+	radarbox1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radarbox1_Taken" );
+	},
+
+	radarbox1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radarbox1_Returned" );
+	},
+
+	radarbox1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radarbox1_Secured" );
+	},
+
+	forwardspawn1_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn1_flag_Axis_Captured" );
+	},
+
+	forwardspawn1_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Service_Door" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_East_Axis_Base_Fortification" );
+		Util.MapDebugPrint( "forwardspawn1_flag_Allies_Captured" );
+	},
+	
+	loading_doors_opened = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+				
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Facility_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Storage_Wall" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Service_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Axis_Base_Fortification" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_Door_Switch" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_Door_Switch" );
+		Util.MapDebugPrint( "The loading doors are open" );
+	},
+	
+	loading_doors_closed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Door_Switch" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Door_Switch" );		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn1_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_radarbox1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Main_Facility_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Storage_Wall" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Service_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_East_Axis_Base_Fortification" );	
+		Util.MapDebugPrint( "The loading doors are closed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis team has constructed the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Built );
+	OnTrigger( "The Controls have been built, Doors Switch Activated!!!", Map.Facility_Controls_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Neutral_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Neutral_Command_Post_Built );
+	OnTrigger( "Planted at the East Axis Base Fortification.", Map.East_Axis_Base_Fortification_Planted );
+	OnTrigger( "Planted at The Facility Controls.", Map.Facility_Controls_Planted );
+	OnTrigger( "Planted at the Main Facility Entrance.", Map.Main_Facility_Entrance_Planted );
+	OnTrigger( "Planted at the Neutral Command Post.", Map.Neutral_Command_Post_Planted );
+	OnTrigger( "Planted at the Service Door.", Map.Service_Door_Planted );
+	OnTrigger( "Planted at Storage Wall.", Map.Storage_Wall_Planted );
+	OnTrigger( "Defused at the East Axis Base Fortification.", Map.East_Axis_Base_Fortification_Defused );
+	OnTrigger( "Defused at The Facility Controls.", Map.Facility_Controls_Defused );
+	OnTrigger( "Defused at the Main Facility Entrance.", Map.Main_Facility_Entrance_Defused );
+	OnTrigger( "Defused at the Neutral Command Post.", Map.Neutral_Command_Post_Defused );
+	OnTrigger( "Defused at the Service Door.", Map.Service_Door_Defused );
+	OnTrigger( "Defused at Storage Wall.", Map.Storage_Wall_Defused );
+	OnTrigger( "Allied team has damaged the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Destroyed );
+	OnTrigger( "The Controls Have Been Damaged, Door Switch Deactivated", Map.Facility_Controls_Destroyed );
+	OnTrigger( "Allies have breached the Control Bunker", Map.Main_Facility_Entrance_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "the Service Door Destroyed.", Map.Service_Door_Destroyed );
+	OnTrigger( "Allies have destroyed the Storage Entrance", Map.Storage_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the West Radar Parts!", Map.radarbox1_Taken );
+	OnTrigger( "Flag returned radarbox1!", Map.radarbox1_Returned );
+	OnTrigger( "Allies have secured the West Radar Parts!", Map.radarbox1_Secured );
+	OnTrigger( "axis_capture_forwardspawn1_flag", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "Axis reclaim the Forward Spawn!", Map.forwardspawn1_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Depot Yard!", Map.forwardspawn1_flag_Allies_Captured );
+	OnTrigger( "The Loading Doors are Opening!", Map.loading_doors_opened );
+	OnTrigger( "The Loading Doors are Closing!", Map.loading_doors_closed );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	//Disabling Goals
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_radarbox1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Main_Facility_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Storage_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_Door_Switch" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_East_Axis_Base_Fortification" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_truck" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_Door_Switch" );
+	
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

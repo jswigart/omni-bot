@@ -1,0 +1,375 @@
+global Map =
+{
+	RideVehicle =
+	{
+		Tug1 =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			LimitTeam = 0,
+			LimitClass = 0,
+			RideVehicleGoalName = "MOVER_train1",
+			SeatRadius = 90,
+			
+			Seat =
+			{
+				{
+					BoardPosition = Vector3(-128,64,0),
+					RidePosition = Vector3(-25,64,24),
+					FacePosition = Vector3(-128,64,55),
+				},
+				
+				{
+					BoardPosition = Vector3(128,64,0),
+					RidePosition = Vector3(25,64,24),
+					FacePosition = Vector3(128,64,55),
+				},
+			},
+			
+			AmmoLoaded = false,
+		},
+		Tug2 =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			LimitTeam = 0,
+			LimitClass = 0,
+			RideVehicleGoalName = "MOVER_train2",
+			SeatRadius = 90,
+			
+			Seat =
+			{
+				{
+					BoardPosition = Vector3(-128,-64,0),
+					RidePosition = Vector3(-25,-64,24),
+					FacePosition = Vector3(-128,-64,55),
+				},
+				
+				{
+					BoardPosition = Vector3(128,-64,0),
+					RidePosition = Vector3(25,-64,24),
+					FacePosition = Vector3(128,-64,55),
+				},
+			},
+		},
+	},
+	
+	Switches =
+	{
+		TrackSwitch =
+		{
+			Enabled = true,
+			Priority = 0.8,
+			WaypointName = "TrackSwitch",
+			LimitTeam = 0,
+			LimitClass = 0,
+		},
+		
+		RailgunControls = 
+		{
+			Enabled = true,
+			Priority = 0.8,
+			WaypointName = "Railgun Controls",
+			LimitTeam = 0,
+			LimitClass = 0,
+		},
+	},
+	
+	MapName = "railgun",
+	Quiet = true,
+	Ammo_Cabinet_t1170 = "AMMOCAB_t1170",
+	Health_Cabinet_t1171 = "HEALTHCAB_t1171",
+	Checkpoint_depotflag = "CHECKPOINT_depotflag",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Depot_Yard_MG_Nest = "BUILD_Depot_Yard_MG_Nest",
+	Build_Rail_Gun_Firing_Controls = "BUILD_Rail_Gun_Firing_Controls",
+	Build_Track_Switch_MG_Nest = "BUILD_Track_Switch_MG_Nest",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Depot_Yard_MG_Nest = "PLANT_Depot_Yard_MG_Nest",
+	Plant_Rail_Gun_Firing_Controls = "PLANT_Rail_Gun_Firing_Controls",
+	Plant_Track_Switch_MG_Nest = "PLANT_Track_Switch_MG_Nest",
+	Mount_Construction_Site_MG_nest = "MOUNTMG42_Construction_Site_MG_nest",
+	Mount_Depot_Yard_MG_Nest = "MOUNTMG42_Depot_Yard_MG_Nest",
+	Mount_Track_Switch_MG_Nest = "MOUNTMG42_Track_Switch_MG_Nest",
+	Mount_mg42_3 = "MOUNTMG42_mg42_3",
+	Repair_Construction_Site_MG_nest = "REPAIRMG42_Construction_Site_MG_nest",
+	Repair_Depot_Yard_MG_Nest = "REPAIRMG42_Depot_Yard_MG_Nest",
+	Repair_Track_Switch_MG_Nest = "REPAIRMG42_Track_Switch_MG_Nest",
+	Repair_mg42_3 = "REPAIRMG42_mg42_3",
+	Mover_train1 = "MOVER_train1",
+	Mover_train2 = "MOVER_train2",
+
+	Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Built" );
+	},
+
+	Depot_Yard_MG_Nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Depot_Yard_MG_Nest_Built" );
+	},
+
+	Rail_Gun_Firing_Controls_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Rail_Gun_Firing_Controls_Built" );
+	},
+
+	Track_Switch_MG_Nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Track_Switch_MG_Nest_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Depot_Yard_MG_Nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Depot_Yard_MG_Nest_Destroyed" );
+	},
+
+	Rail_Gun_Firing_Controls_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Rail_Gun_Firing_Controls_Destroyed" );
+	},
+
+	Track_Switch_MG_Nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Track_Switch_MG_Nest_Destroyed" );
+	},
+
+	depotflag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "depotflag_Axis_Captured" );
+	},
+
+	depotflag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "depotflag_Allies_Captured" );
+	},
+	
+	track_switch_raised = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "track_switch_raised" );
+	},
+
+	track_switch_lowered = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "track_switch_lowered" );
+	},
+
+	ammo_tug1 = function( trigger )
+	{
+		Util.OnTriggerPosition( Map.Mover_train1, "southofswitch", 200.0, TestMap.Pass );
+
+		print( "ammo_tug1" );
+	},
+
+	ammo_tug2 = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "ammo_tug2" );
+	},
+
+	ammo_loaded_railgun = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "ammo_loaded_railgun" );
+	},
+
+	railgun_fired = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "railgun_fired" );
+	},
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "The Depot Yard MG has been constructed.", Map.Depot_Yard_MG_Nest_Built );
+		OnTrigger( "The Depot Yard MG Nest has been constructed.", Map.Depot_Yard_MG_Nest_Built );
+		OnTrigger( "Rail Gun Firing Controls rebuilt!", Map.Rail_Gun_Firing_Controls_Built );
+		OnTrigger( "The Track Switch MG Nest has been constructed.", Map.Track_Switch_MG_Nest_Built );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "The Depot Yard MG has been destroyed.", Map.Depot_Yard_MG_Nest_Destroyed );
+		OnTrigger( "The Depot Yard MG Nest has been destroyed.", Map.Depot_Yard_MG_Nest_Destroyed );
+		OnTrigger( "Rail Gun Firing Controls destroyed!", Map.Rail_Gun_Firing_Controls_Destroyed );
+		OnTrigger( "The Track Switch MG Nest has been destroyed.", Map.Track_Switch_MG_Nest_Destroyed );
+		OnTrigger( "Axis captures the Depot Yard!", Map.depotflag_Axis_Captured );
+		OnTrigger( "Allies capture the Depot Yard!", Map.depotflag_Allies_Captured );
+		OnTrigger( "Track Switch raised!", Map.track_switch_raised );
+		OnTrigger( "Track Switch lowered!", Map.track_switch_lowered );
+		OnTrigger( "Axis loaded the Rail Gun Ammo onto the First Tug!", Map.ammo_tug1 );
+		OnTrigger( "Axis transferred the Ammo to the Second Tug!", Map.ammo_tug2 );
+		OnTrigger( "Axis team have loaded the Rail Gun!", Map.ammo_loaded_railgun );
+		OnTrigger( "Axis fired the Rail Gun!", Map.railgun_fired );
+		Util.OnTriggerPosition( Map.Mover_train1, "northofswitch", 200.0, TestMap.Pass );
+		Util.OnTriggerPosition( Map.Mover_train1, "southofswitch", 240.0, TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+		
+		Util.UpdateSwitchData();
+		
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoMG42 )
+			 { Map.MobileMG42Tests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_depotflag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Construction_Site_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Rail_Gun_Firing_Controls, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Construction_Site_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_depotflag, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Rail_Gun_Firing_Controls, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_depotflag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.TrackSwitch, 120, false, 0 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.TrackSwitch, 120, false, 0 );
+		Util.OnTriggerPosition( Map.Mover_train1, "northofswitch", 200.0, TestMap.Pass );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.TrackSwitch, 120, false, 0 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.TrackSwitch, 120, false, 0 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.RideVehicle.Tug2, 120 );
+		
+		// Covert ops tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		
+		// Repair tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Depot_Yard_MG_Nest, 120 );
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Construction_Site_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_3, 120 );
+		
+		Util.KillGoal( ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Construction_Site_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Depot_Yard_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Track_Switch_MG_Nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_3, 120 );
+		
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_train1, 120 );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_train2, 120 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	MobileMG42Tests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.RailgunControls, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.SOLDIER )
+		{ bot.ChangePrimaryWeapon( WEAPON.MOBILE_MG42 ); }
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 ); }
+	};
+};

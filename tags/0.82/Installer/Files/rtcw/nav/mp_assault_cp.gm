@@ -1,0 +1,129 @@
+global Map =
+{
+	Checkpoint_checkpoint1 = "CHECKPOINT_checkpoint1",
+	Checkpoint_checkpoint2 = "CHECKPOINT_checkpoint2",
+	Checkpoint_checkpoint3 = "CHECKPOINT_checkpoint3",
+	Checkpoint_checkpoint4 = "CHECKPOINT_checkpoint4",
+	Mount_tarmac_nest_1 = "MOUNTMG42_tarmac_nest_1",
+	Mount_tarmac_nest_2 = "MOUNTMG42_tarmac_nest_2",
+	Mount_tarmac_truck = "MOUNTMG42_tarmac_truck",
+	Mount_tower_mg = "MOUNTMG42_tower_mg",
+	Repair_tarmac_nest_1 = "REPAIRMG42_tarmac_nest_1",
+	Repair_tarmac_nest_2 = "REPAIRMG42_tarmac_nest_2",
+	Repair_tarmac_truck = "REPAIRMG42_tarmac_truck",
+	Repair_tower_mg = "REPAIRMG42_tower_mg",
+	Snipe_allies_1 = "SNIPE_allies_1",
+	Snipe_allies_2 = "SNIPE_allies_2",
+	Snipe_allies_3 = "SNIPE_allies_3",
+	Snipe_rDoor_s1 = "SNIPE_rDoor_s1",
+	Snipe_rDoor_s2 = "SNIPE_rDoor_s2",
+	Snipe_rDoor_s3 = "SNIPE_rDoor_s3",
+	Snipe_rDoor_s4 = "SNIPE_rDoor_s4",
+	Snipe_rGate_s1 = "SNIPE_rGate_s1",
+	Snipe_rGate_s2 = "SNIPE_rGate_s2",
+
+	checkpoint1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint1_Axis_Captured" );
+	},
+
+	checkpoint1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint1_Allies_Captured" );
+	},
+
+	checkpoint2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint2_Axis_Captured" );
+	},
+
+	checkpoint2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint2_Allies_Captured" );
+	},
+
+	checkpoint3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint3_Axis_Captured" );
+	},
+
+	checkpoint3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint3_Allies_Captured" );
+	},
+
+	checkpoint4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint4_Axis_Captured" );
+	},
+
+	checkpoint4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint4_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Wp.SetWaypointFlag( "tarmacladder", "closed", false );
+	Wp.SetWaypointFlag( "tarmacladder2", "closed", false );
+
+	OnTrigger( "MISSING_STRING", Map.checkpoint1_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint1_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint2_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint2_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint3_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint3_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint4_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.checkpoint4_Allies_Captured );
+
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = 4500;
+};

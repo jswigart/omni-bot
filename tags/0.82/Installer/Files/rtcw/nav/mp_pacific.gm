@@ -1,0 +1,313 @@
+global Map =
+{
+	Quiet = true,
+	DispenseAmmoTime = 15,
+	Plant_Radar_Array = "PLANT_Radar_Array",
+	Plant_Security_Wall = "PLANT_Security_Wall",
+
+	//set status' for conditionals
+	SecurityStatus = false, //intact
+
+	// Dyno counters - used to determine defensive shifts
+	SecurityDyno = 0,
+	RadarDyno = 0,
+
+	DontDispenseAmmo = true,
+
+	Navigation =
+	{
+		// 3 ladders use this one
+		ladder2 =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+
+		railjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.JUMP, 0.25 );
+				sleep( 0.25 );
+			},
+		},
+	},
+
+	Radar_Array_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Radar_Array_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.RadarDyno -= 1;
+
+		if ( Map.RadarDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rArray.*" );
+		}
+	},
+
+	Radar_Array_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.RadarDyno += 1;
+	},
+
+	Security_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.SecurityStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Array" );
+
+		Util.EnableGoal( "ROUTE_security" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bArray.*" );
+		Map.DontDispenseAmmo = false;
+	},
+
+	Security_Wall_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.SecurityDyno += 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Security_Wall_.*" );
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.RadarDyno >= 1 ) {
+			return;
+		}
+
+		foreach( id and bot in BotTable )
+		{
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
+			}
+			sleep( 0.5 );
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				if ( RandInt( 0,10 ) < 2 ) {
+					bot.SayVoice( VOICE.G_CHEER );
+				}
+				sleep( 0.5 );
+			}
+		}
+	},
+
+	ArrayTrigger =
+	{
+		Name = "ArrayTrigger",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+				sleep( 1 );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rArray.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( Map.RadarDyno < 1 ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rArray.*" );
+				}
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Radar Array Destroyed.", Map.Radar_Array_Destroyed );
+	OnTrigger( "Planted at the Radar Array.", Map.Radar_Array_Planted );
+	OnTrigger( "Defused at the Radar Array.", Map.Radar_Array_Defused );
+	OnTrigger( "Allied team has destroyed the Barricade", Map.Security_Wall_Destroyed );
+	OnTrigger( "Planted at the Security Wall.", Map.Security_Wall_Planted );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	tOne = OnTriggerRegion( AABB( 433,2481,1695,832,2976,2005 ), Map.ArrayTrigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*", true ); //all but routes
+
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+
+	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBoxes" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rForest_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzer.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Security_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_rArray.*", 0.8 );
+	SetGoalPriority( "ATTACK_bArray.*", 0.8 );
+	SetGoalPriority( "DEFEND_rRadar_4.*", 0.45 );
+
+	Util.AddUseWp( "PLANT_Radar_Array", "Radar_1" );
+	Util.AddUseWp( "PLANT_Radar_Array", "Radar_2" );
+
+	RTCWUtil.LimitToClass( "ATTACK_bArray_.*", TEAM.ALLIES, CLASS.ENGINEER );
+
+	MapRoutes =
+	{
+		ATTACK_bRadar_1 =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_forest =
+				{
+					ROUTE_lRadar =
+					{
+						Weight = 4,
+						ROUTE_spawnsteps = {},
+					},
+				},
+				ROUTE_security =
+				{
+					ROUTE_nLadder =
+					{
+						ROUTE_controlroom = {Weight = 3,},
+						ROUTE_outsidespawn =
+						{
+							ROUTE_spawnsteps = {},
+							ROUTE_lRadar = {Weight = 3,},
+						},
+					},
+					ROUTE_sLadder =
+					{
+						ROUTE_controlroom = {Weight = 3,},
+						ROUTE_outsidespawn =
+						{
+							ROUTE_spawnsteps = {},
+							ROUTE_lRadar = {Weight = 3,},
+						},
+					},
+				},
+			},
+		},
+		DEFEND_rRadar_1 =
+		{
+			ROUTE_rSpawnNorth =
+			{
+				ROUTE_spawnsteps = {Weight = 4,},
+				ROUTE_lRadar = {},
+			},
+			ROUTE_rSpawnSouth =
+			{
+				ROUTE_spawnsteps = {Weight = 2,},
+				ROUTE_outsidespawn =
+				{
+					ROUTE_controlroom = {}, // Semi-forced roam/patrol
+				},
+				ROUTE_lRadar = {Weight = 5,},
+			},
+		},
+		DEFEND_rLadder_1 =
+		{
+			ROUTE_rSpawnNorth =
+			{
+				ROUTE_spawnsteps =
+				{
+					Weight = 3,
+					ROUTE_controlroom = {},
+				},
+				ROUTE_outsidespawn = {},
+			},
+			ROUTE_rSpawnSouth =
+			{
+				ROUTE_spawnsteps =
+				{
+					ROUTE_controlroom = {},
+				},
+				ROUTE_outsidespawn = {Weight = 4,},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bRadar_2 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.ATTACK_bRadar_3 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.ATTACK_bRadar_4 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.ATTACK_bRadar_5 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.ATTACK_bRadar_6 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.ATTACK_bRadar_7 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.AIRSTRIKE_bSpawnkill_1 = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.PLANT_Radar_Array = MapRoutes.ATTACK_bRadar_1;
+	MapRoutes.DEFEND_rRadar_2 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_3 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_4 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_5 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_6 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_7 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rLadder_2 = MapRoutes.DEFEND_rLadder_1;
+	MapRoutes.DEFEND_rLadder_3 = MapRoutes.DEFEND_rLadder_1;
+
+	Util.Routes( MapRoutes );
+
+	Util.DisableGoal( "ROUTE_security" );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

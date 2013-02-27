@@ -1,0 +1,30 @@
+// The new weapon instance is passed to this function as the 'this'
+// Properties can be set like this.Property = x, or the this prefix can be left off.
+
+//////////////////////////////////////////////////////////////////////////
+// Overall weapon properties.
+WEAPON.KNIFE_KABAR = WEAPON.KNIFE; // don't change! this is intended
+
+this.Name = "Knife_kabar";
+this.WeaponId = WEAPON.KNIFE_KABAR;
+
+//////////////////////////////////////////////////////////////////////////
+// Set some weapon properties that affect some internal logic.
+this.PrimaryFire.WeaponType = "melee";
+this.PrimaryFire.RequiresAmmo = false;
+this.PrimaryFire.WaterProof = true;
+
+this.PrimaryFire.MaxAimError = Vector2(0, 0);
+this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+
+// class.anyplayer doesnt work - we don't want them targeting players with the knife
+this.PrimaryFire.SetTargetBias(CLASS.FIELDOPS, 0);
+this.PrimaryFire.SetTargetBias(CLASS.MEDIC, 0);
+this.PrimaryFire.SetTargetBias(CLASS.ENGINEER, 0);
+this.PrimaryFire.SetTargetBias(CLASS.COVERTOPS, 0);
+this.PrimaryFire.SetTargetBias(CLASS.SOLDIER, 0);
+
+this.PrimaryFire.DefaultDesirability = 0.1;
+this.PrimaryFire.SetDesirabilityRange(0, 48, 0.2);
+
+this.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.1);

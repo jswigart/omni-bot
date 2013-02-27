@@ -1,0 +1,196 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 6,   // Time to call arty
+	DontDispenseAmmo = false,
+
+	Airstrike =
+	{
+		stepsas =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "rstepsas_1",
+		},
+		stepstop =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bStepsAS",
+		},
+	},
+
+	Navigation =
+	{
+		midladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 1 );
+			},
+		},
+	},
+
+	ViewDistance = 5300,
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+	TarmacLadderTrigger =
+	{
+		Name = "TarmacLadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				//b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				//b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+	axis_wh = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_wh.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Warehouse" );
+	},
+
+	axis_flag = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_gate" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tarmac_nest_2" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Flag" );
+	},
+
+	allies_wh = function()
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_wh.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Warehouse" );
+	},
+
+	allies_flag = function()
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlagAS_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" ); // Use regular objective points.
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Flag" );
+	},
+
+	toggle_attack = function()
+	{
+		count = -1;
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+			if ( count % 120 == 0 ) {
+				attackPoint = RandInt( 0,2 );
+				//print(attackPoint);
+				if ( attackPoint == 0 ) {
+					Map.allies_wh();
+					Map.axis_wh();
+				} else
+				{
+					Map.allies_flag();
+					Map.axis_flag();
+				}
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Wp.SetWaypointFlag( "tarmacladder", "closed", true );
+	Wp.SetWaypointFlag( "tarmacladder2", "closed", true );
+
+	//focus bots on getting up the allied spawn ladder
+	ladder = OnTriggerRegion( AABB( 3694,1474,31,3732,1539,492 ), Map.LadderTrigger );
+	tarmacladder = OnTriggerRegion( AABB( 767.000,1743.000,-560.000,992.000,1968.000,122.000 ), Map.TarmacLadderTrigger );
+	gateladder = OnTriggerRegion( AABB( -1806.000,719.000,-560.000,-1581.000,944.000,115.000 ), Map.TarmacLadderTrigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+	thread( Map.toggle_attack );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	bot.MaxViewDistance = 5300;
+};

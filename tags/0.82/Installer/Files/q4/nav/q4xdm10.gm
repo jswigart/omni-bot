@@ -1,0 +1,37 @@
+global Map =
+{
+	Rune_1 = "FLAG_powerup_deadzone_3",
+	Rune_2 = "FLAG_powerup_deadzone_4",
+	Rune_3 = "FLAG_powerup_deadzone_6",
+
+	Zone_1 = "DEADZONE_trigger_controlzone_3",
+};
+
+global OnMapLoad = function()
+{
+	if(GetModName() == "DeadZone" )
+	{
+		Wp.SetWaypointFlag("DM_Blockable_1", "closed", false);
+		Wp.SetWaypointFlag("DM_Blockable_2", "closed", false);
+		Wp.SetWaypointFlag("DM_Blockable_3", "closed", false);
+		Wp.SetWaypointFlag("DM_Blockable_4", "closed", false);
+		
+		// This single zone is a split platform, so we need to add a couple different goto positions, using a waypoint as a marker.
+		Util.AddUsePtFromWp(Map.Zone_1, "deadzone1");
+		Util.AddUsePtFromWp(Map.Zone_1, "deadzone2");
+	}
+	else
+	{
+		Wp.SetWaypointFlag("DM_Blockable_1", "closed", true);
+		Wp.SetWaypointFlag("DM_Blockable_2", "closed", true);
+		Wp.SetWaypointFlag("DM_Blockable_3", "closed", true);
+		Wp.SetWaypointFlag("DM_Blockable_4", "closed", true);
+	}
+	
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.MapDebugPrint("OnBotJoin", true);
+};

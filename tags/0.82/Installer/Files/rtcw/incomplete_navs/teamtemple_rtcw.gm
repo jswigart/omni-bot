@@ -1,0 +1,83 @@
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 1,
+	Suicide = MAP_SUICIDE,
+
+	objective_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.SOLDIER, 0, 0 );
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.ENGINEER, 0, 0 );
+		}
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bWater.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDoor.*" );
+
+		Util.MapDebugPrint( "objective_1_Destroyed" );
+	},
+
+	objective_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "objective_2_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp( "PLANT_objective_2", "plantroof" );
+
+	// Register callback functions
+	//OnTrigger( "Planted at objective 1.", Map.objective_1_Planted );
+	OnTrigger( "objective 1 Destroyed.", Map.objective_1_Destroyed );
+	//OnTrigger( "MISSING_STRING", Map.objective_2_Planted );
+	OnTrigger( "MISSING_STRING", Map.objective_2_Destroyed );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
+	
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBase.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRoof.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRoof.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bWater.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDoor.*" );
+
+
+	yield(); yield();
+	/*if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.SOLDIER, 1, 1 );
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.ENGINEER, 1, 1 );
+	}*/
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+};

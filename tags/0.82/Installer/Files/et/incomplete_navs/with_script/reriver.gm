@@ -1,0 +1,96 @@
+//==================================================================================================
+//
+//	River War 2.0 - reriver.gm
+//
+//	Who  		When			What
+//--------------------------------------------------------------------------------------------------
+//	Mateos		28th December 2011	Script clearing, MaxViewDistance, Stuckage Fixes
+//	MickyP		?			Original script and waypoints
+//
+//==================================================================================================
+
+global Map =
+{
+	Debug = 0,
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Lab_Main_Gate_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "Lab_Main_Gate_Built" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Heavy_Water_Control_Pannel_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Heavy_Water_Control_Pannel_Destroyed" );
+	},
+
+	Lab_Main_Gate_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Lab_Main_Gate_Destroyed" );
+	},
+
+	Ventilation_Hatch_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "Ventilation_Hatch_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	// *** TRIGGERS ***
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "The Main Gate has been repaired!", Map.Lab_Main_Gate_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "The Control Panel has been destroyed!", Map.Heavy_Water_Control_Pannel_Destroyed );
+	OnTrigger( "The Main Gate has been destroyed!", Map.Lab_Main_Gate_Destroyed );
+	OnTrigger( "Allies have breached the Ventilation Hatch!", Map.Ventilation_Hatch_Destroyed );
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_allies_spawn_mg.*" );
+
+	// *** ALLIED GOALS ***
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42.*" );
+
+	Util.SetGoalOffset ( 30, 0, 0, "PLANT_Ventilation_Hatch" );
+
+	Util.MapDebugPrint( "Omni-bot map script for * by MickyP & Mateos" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2700;
+	bot.TargetBreakableDist = 100.0;
+
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.K43, WEAPON.BAR, WEAPON.STEN, WEAPON.MP34, WEAPON.BAR, WEAPON.STG44, WEAPON.FG42};
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
+};

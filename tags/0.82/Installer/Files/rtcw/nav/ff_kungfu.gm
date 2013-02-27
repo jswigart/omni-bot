@@ -1,0 +1,354 @@
+global Map =
+{
+	Quiet = true,
+
+	DocStatus = false, //home
+
+	Navigation =
+	{
+		jump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				yield();
+			},
+		},
+	},
+
+	Cappoint_89 = "CAPPOINT_89",
+	Checkpoint_toy_flag = "CHECKPOINT_toy_flag",
+	Flag_hose_head = "FLAG_hose_head",
+	Plant_East_Vent = "PLANT_East_Vent",
+	Plant_North_Vent = "PLANT_North_Vent",
+	Plant_South_Vent = "PLANT_South_Vent",
+
+	East_Vent_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_East_Vent_1" );
+		Util.SetMaxUsersInProgress( 1, Map.Defuse_East_Vent_1 );
+
+		Util.MapDebugPrint( "East_Vent_Planted" );
+	},
+
+	North_Vent_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
+
+		Util.MapDebugPrint( "North_Vent_Planted" );
+	},
+
+	South_Vent_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
+
+		Util.MapDebugPrint( "South_Vent_Planted" );
+	},
+
+	East_Vent_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "East_Vent_Defused" );
+	},
+
+	North_Vent_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "North_Vent_Defused" );
+	},
+
+	South_Vent_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "South_Vent_Defused" );
+	},
+
+	East_Vent_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.EnableGoal( "ROUTE_eastvent" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_South_Vent" );
+
+		Util.MapDebugPrint( "East_Vent_Destroyed" );
+	},
+
+	North_Vent_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_East_Vent" );
+
+		Util.MapDebugPrint( "North_Vent_Destroyed" );
+	},
+
+	South_Vent_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.EnableGoal( "ROUTE_southvent" );
+
+		Util.MapDebugPrint( "South_Vent_Destroyed" );
+	},
+
+	hose_head_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = true;
+
+		Util.ChangeSpawn( TEAM.AXIS, 2, 3 );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axhall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axroom.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axpcroom.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+		sleep( 10 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_alroom.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alpcroom.*" );
+
+		Util.MapDebugPrint( "hose_head_Taken" );
+	},
+
+	hose_head_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+
+		Util.ChangeSpawn( TEAM.AXIS, 1 );
+
+		//enable the wheel again
+		SetAvailableMapGoals( TEAM.AXIS, tree, "SWITCH_wheel" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_hose.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axpcroom.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axhall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_alpcroom.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
+
+		Util.MapDebugPrint( "hose_head_Returned" );
+	},
+
+	toy_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.DocStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		}
+
+		Util.SetGoalPosition( 3429, -141, -291, "PLANT_East_Vent" );
+
+		Util.MapDebugPrint( "toy_flag_Axis_Captured" );
+	},
+
+	toy_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.SetGoalPosition( 3436, -118, -429, "PLANT_East_Vent" );
+
+		Util.MapDebugPrint( "toy_flag_Allies_Captured" );
+	},
+
+	Nerf_Gun = function( trigger )
+	{
+		vel = ToVector( trigger.Action );
+
+
+		if ( vel.z < 0 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_nerf" );
+
+			Util.MapDebugPrint( "Nerf gun Fired" );
+		}
+
+	},
+
+	tank_lid = function( trigger )
+	{
+		//just disable it as soon as triggered
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_wheel" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_hose.*" );
+
+		Util.MapDebugPrint( "Tank Open" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Planted at the East Vent.", Map.East_Vent_Planted );
+	OnTrigger( "Planted at the North Vent.", Map.North_Vent_Planted );
+	OnTrigger( "Planted at the South Vent.", Map.South_Vent_Planted );
+	OnTrigger( "Defused at the East Vent.", Map.East_Vent_Defused );
+	OnTrigger( "Defused at the North Vent.", Map.North_Vent_Defused );
+	OnTrigger( "Defused at the South Vent.", Map.South_Vent_Defused );
+	OnTrigger( "the East Vent Destroyed.", Map.East_Vent_Destroyed );
+	OnTrigger( "the North Vent Destroyed.", Map.North_Vent_Destroyed );
+	OnTrigger( "the South Vent Destroyed.", Map.South_Vent_Destroyed );
+	OnTrigger( "Axis have stolen the CD-Key!", Map.hose_head_Taken );
+	OnTrigger( "Flag returned hose_head!", Map.hose_head_Returned );
+	OnTrigger( "Axis capture the Playboy!", Map.toy_flag_Axis_Captured );
+	OnTrigger( "Allies reclaim the Playboy!", Map.toy_flag_Allies_Captured );
+	OnTrigger( "dartMover1_goto", Map.Nerf_Gun );
+	OnTrigger( "LidMoveNow", Map.tank_lid );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	//SetMapGoalProperties( "PANZER_.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_eastvent" );
+	Util.DisableGoal( "ROUTE_southvent" );
+	Util.EnableGoal( "CAPPOINT_.*" );
+
+	SetGoalPriority( "SWITCH.*", 0.7 );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Vent" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axhall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_wheel" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_nerf" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alsnipe.*" );
+
+	Util.SetMaxUsersInProgress( 2, Map.Flag_hose_head );
+
+	Util.SetGoalPosition( 3436, -118, -429, "PLANT_East_Vent" );
+	Util.SetGoalPosition( -801, -2033, -429, "PLANT_South_Vent" );
+
+	MapRoutes =
+	{
+		CHECKPOINT_toy_flag =
+		{
+			ROUTE_axspawn =
+			{
+				ROUTE_eastvent = {},
+				ROUTE_hall = {},
+			},
+		},
+
+		CAPPOINT_89 =
+		{
+			ROUTE_objgrab =
+			{
+				ROUTE_hall = {},
+				ROUTE_bed =
+				{
+					ROUTE_eastvent =
+					{
+						ROUTE_southvent = {},
+						ROUTE_northvent = {},
+					},
+				},
+			},
+		},
+
+		ATTACK_axpcroom1 =
+		{
+			ROUTE_axspawn2 =
+			{
+				ROUTE_hall = {},
+				ROUTE_eastvent =
+				{
+					ROUTE_southvent = {},
+					ROUTE_northvent = {},
+				},
+			},
+		},
+
+		SWITCH_wheel =
+		{
+			ROUTE_axspawn2 =
+			{
+				ROUTE_web = {},
+				ROUTE_tank = {},
+			},
+		},
+	};
+
+	MapRoutes.FLAG_hose_head = MapRoutes.CHECKPOINT_toy_flag;
+	MapRoutes.ATTACK_axroom1 = MapRoutes.CHECKPOINT_toy_flag;
+	MapRoutes.ATTACK_axroom2 = MapRoutes.CHECKPOINT_toy_flag;
+	MapRoutes.ATTACK_axpcroom2 = MapRoutes.ATTACK_axpcroom1;
+	MapRoutes.ATTACK_axpcroom3 = MapRoutes.ATTACK_axpcroom1;
+	MapRoutes.ATTACK_axpcroom4 = MapRoutes.ATTACK_axpcroom1;
+	MapRoutes.ATTACK_axpcroom5 = MapRoutes.ATTACK_axpcroom1;
+	MapRoutes.ATTACK_axpcroom6 = MapRoutes.ATTACK_axpcroom1;
+
+	Util.Routes( MapRoutes );
+
+	timelimit = GetCvar( "timelimit" );
+	if ( timelimit > 15 ) {
+		SetCvar( "timelimit", "15" );
+	}
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+
+	class = bot.GetClass();
+
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
+		RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+	}
+	if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER ) {
+		RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	}
+};

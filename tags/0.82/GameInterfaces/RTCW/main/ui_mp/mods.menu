@@ -1,0 +1,125 @@
+#include "ui_mp/menudef.h"
+
+{
+\\ SETUP MENU \\
+
+	menuDef {
+    	name "mods_menu"
+    	visible 0
+    	fullscreen 0
+		rect 100 125 443 340
+    	focusColor 1 1 1 1
+    	style 1
+    	border 1
+		onOpen { 
+			setitemcolor fadebox backcolor 0 0 0 1 ; 
+			fadeout fadebox ; 
+			hide grpfinish ;
+			uiScript loadMods
+		}
+		onEsc { close mods_menu ; close setup_menu ; open main }
+
+
+		itemDef {
+			name window
+			group grpSystembutton
+			rect 0 2 443 300	
+			style WINDOW_STYLE_FILLED
+			border 1
+			bordercolor .5 .5 .5 .5
+			forecolor 1 1 1 1
+			backcolor 0 0 0 .25
+			visible 1
+			decoration
+		}
+
+		itemDef {
+			name default
+			text "MODS"
+ 			type 1
+			style 0	
+			textstyle 6
+			rect 221 -12 64 14 
+			textalign ITEM_ALIGN_CENTER
+			textfont UI_FONT_NORMAL
+			textscale .25		
+			textalignx 2
+			textaligny 12
+			forecolor .9 .9 .9 1
+			visible 1 
+			decoration
+		}
+
+		itemDef {
+			name modlist
+			rect 3 4 437 249
+			type ITEM_TYPE_LISTBOX
+			style WINDOW_STYLE_FILLED
+			elementwidth 120
+			elementheight 20
+			textscale .25
+			elementtype LISTBOX_TEXT
+			feeder FEEDER_MODS
+			textalign 1
+			textalignx 0
+			textaligny -8
+			border 1
+			bordercolor .5 .5 .5 .5
+			forecolor 1 1 1 1
+			backcolor 0.08 0.25 0.05 0.15
+			outlinecolor .25 .45 .15 .20
+			visible 1
+			doubleClick { uiScript RunMod }
+			mouseEnter	{ show floater_message }
+			mouseExit	{ hide floater_message } 
+		}
+
+		itemDef {
+			name accept
+			text "Launch"
+			type 1
+			group grpcdkey
+			textscale .3
+			style WINDOW_STYLE_FILLED		
+			rect 176 268 100 20
+			textalign 1
+			textalignx 48
+			textaligny 14
+			//forecolor 1 1 1 1
+			backcolor .3 0.5 0.2 .25
+			border 1
+			bordercolor .1 .1 .1 .3
+			visible 1
+			action { uiScript RunMod }		
+		}
+
+		itemDef {
+			name floater_message
+			rect 0 322 640 30 
+			text "Select MOD name to Launch"      
+			forecolor 1 .75 0 1
+			textfont UI_FONT_NORMAL
+			textscale .25
+			textalignx 221
+			textalign 1
+			textaligny 20
+			visible 0
+			decoration 
+		}
+
+		itemDef {
+   	 		name fadebox
+   			style WINDOW_STYLE_FILLED
+ 			background "ui_mp/assets/fadebox.tga"
+			forecolor 0 0 0 1
+			backcolor 0 0 0 1
+			rect 0 0 640 480
+   	   		visible 1 
+			decoration
+    	}
+	}
+}
+
+
+
+

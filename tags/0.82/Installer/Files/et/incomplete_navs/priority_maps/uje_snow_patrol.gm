@@ -1,0 +1,362 @@
+//==========================================================================================
+//
+//	uje_snow_patrol.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	24 October 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+	MapStart = 1,
+	TankAtB1 = 0,
+	B1Built = 0,
+	TankAtB2 = 0,
+	B2Built = 0,
+	TankAtB3 = 0,
+	B3Built = 0,
+
+	Allied_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_CP_Built" );
+	},
+
+	Allied_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_CP_Destroyed" );
+	},
+
+	Axis_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_CP_Built" );
+	},
+
+	Axis_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_CP_Destroyed" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+	
+	Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Map.MapStart == 1 )
+			{
+				Map.MapStart = 0;
+				return;
+			}
+
+		Util.MapDebugPrint( "Tank_Destroyed" );
+	},
+	
+	Baricade1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Baricade1_Built" );
+	},
+
+	Baricade1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Baricade1_Destroyed" );
+	},
+
+	Tank_At_Barrier_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TankAtB1 = 1;
+		
+		if ( Map.B1Built == 1 )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+			}
+			
+		Util.MapDebugPrint( "Tank_At_Barrier_1" );
+	},
+
+	Tank_Past_Barrier_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TankAtB1 = 0;
+		
+//		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_TankBarrier_1" );
+		
+//		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_TankBarrier_1" );
+		
+		Util.MapDebugPrint( "Tank_Past_Barrier_1" );
+
+	},
+
+	Baricade2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Baricade2_Built" );
+	},
+
+	Baricade2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Baricade2_Dyno = 0;
+
+		Util.MapDebugPrint( "Baricade2_Destroyed" );
+	},
+
+	Tank_At_Barrier_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.TankAtB2 = 1;		
+		
+		if ( Map.B2Built == 1 )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+			}
+			
+		Util.MapDebugPrint( "Tank_At_Barrier_2" );
+	},
+
+	Tank_Past_Barrier_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TankAtB2 = 0;
+		
+//		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Bar.*" );
+//		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Yard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_TankBarrier_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Tank_Barrier_3" );
+		
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_TankBarrier_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank_Barrier_3" );
+//		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Bar.*" );
+//		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_CP" );
+//		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Yard.*" );
+//		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Arch.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_factory_side_door" );
+
+		Util.MapDebugPrint( "Tank_Past_Barrier_2" );
+	},
+
+	Baricade3_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Baricade3_Built" );
+	},
+
+	Baricade3_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Baricade3_Dyno = 0;
+
+		Util.MapDebugPrint( "Baricade3_Destroyed" );
+	},
+
+	Tank_At_Barrier_3 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TankAtB3 = 1;		
+		
+		if ( Map.B3Built == 1 )
+			{
+				SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+			}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Yard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_End.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_factory_side_door" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Yard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_End.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_factory_side_door" );
+		
+		Util.MapDebugPrint( "Tank_At_Barrier_3" );
+	},
+
+	Tank_Past_Barrier_3 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.TankAtB3 = 0;
+		
+		Util.MapDebugPrint( "Tank_Past_Barrier_3" );
+
+	},
+
+	factory_side_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.EnableGoal( "ROUTE_Side_Door" );
+		Util.MapDebugPrint( "factory_side_door_Built" );
+	},
+
+	factory_side_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "ROUTE_Side_Door" );
+		Util.MapDebugPrint( "factory_side_door_Destroyed" );
+	},
+
+	vehicle_at_location = function( trigger )
+	{
+		switch(Map.VehicleLocation)
+		{
+			case 1:
+			{
+				Map.Tank_At_Barrier_1();
+			}
+			case 2:
+			{
+				Map.Tank_At_Barrier_2();
+			}
+			case 3:
+			{
+				Map.Tank_At_Barrier_3();
+			}
+		}
+		Util.MapDebugPrint("vehicle at location " + Map.VehicleLocation, true);
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "^4Allied ^7Command Post constructed. Charge speed increased!", Map.Allied_CP_Built );
+	OnTrigger( "^1Axis ^7team has destroyed the ^4Allied ^7Command Post!", Map.Allied_CP_Destroyed );
+	OnTrigger( "^1Axis ^7Command Post constructed. Charge speed increased!", Map.Axis_CP_Built );
+	OnTrigger( "^4Allied ^7team has destroyed the ^1Axis^7 Command Post!", Map.Axis_CP_Destroyed );
+	OnTrigger( "^7The Tank has been repaired", Map.Tank_Built );
+	OnTrigger( "^7The tank has been damaged", Map.Tank_Destroyed );
+	OnTrigger( "^1Barrier ^31 ^7has been constructed.", Map.Baricade1_Built );
+	OnTrigger( "^1Barrier ^31 ^7has been destroyed.", Map.Baricade1_Destroyed );
+	OnTrigger( "^7The tank is past the first barrier.", Map.Tank_Past_Barrier_1 );
+	
+//	^4Allies ^7spawn back to ^1Santa's ^7Courtyard!
+//	^1Axis ^7spawn into the Streets
+	
+	OnTrigger( "^1Barrier ^32 ^7has been constructed.", Map.Baricade2_Built );
+	OnTrigger( "^1Barrier ^32 ^7has been destroyed.", Map.Baricade2_Destroyed );
+	OnTrigger( "^7The tank is past the second barrier.", Map.Tank_Past_Barrier_2 );
+	
+//	^1Axis ^7have a new Spawn
+//	^4Allies ^7spawn back inside ^1Santa's ^7Factory!
+
+	OnTrigger( "^1Barrier ^33 ^7has been constructed.", Map.Baricade3_Built );
+	OnTrigger( "^1Barrier ^33 ^7has been destroyed.", Map.Baricade3_Destroyed );
+	OnTrigger( "^7The tank is past the last barrier.", Map.Tank_Past_Barrier_3 );
+	
+//	^7Axis have stolen all the ^1Christmas ^3Presents!
+
+	OnTrigger( "^7the side door has been contructed", Map.factory_side_door_Built );
+	OnTrigger( "^7the side door has been destroyed", Map.factory_side_door_Destroyed );
+	OnTrigger( "tank at location", Map.vehicle_at_location );
+
+//	AtB1	= OnTriggerRegion(AABB(704.498,-53.113,-210.875,913.125,16.611,-101.875),	RegionTrigger.VehicleTrigger);
+//	AtB2	= OnTriggerRegion(AABB(1854.185,423.866,-132.009,2060.078,496.671,-32.510),	RegionTrigger.VehicleTrigger);
+//	AtB3	= OnTriggerRegion(AABB(-672.875,2268.633,105.213,-617.805,2612.659,179.926),	RegionTrigger.VehicleTrigger);
+
+/*
+^7The Axis are moving the Tank!
+
+
+*/
+
+
+
+	
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	SetGoalPriority( "PLANT_TankBarrier_1", 0.82, TEAM.AXIS );
+	SetGoalPriority( "BUILD_TankBarrier_1", 0.91, TEAM.ALLIES );
+	SetGoalPriority( "BUILD_factory_side_door", 0.80, TEAM.ALLIES );
+	SetGoalPriority( "BUILD_Allied_CP", 0.79, TEAM.ALLIES );
+	SetGoalPriority( "PLANT_Allied_CP", 0.80, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "BUILD_Axis_CP", 0.80, TEAM.AXIS );
+	SetGoalPriority( "PLANT_Axis_CP", 0.80, TEAM.ALLIES, CLASS.ENGINEER, true );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

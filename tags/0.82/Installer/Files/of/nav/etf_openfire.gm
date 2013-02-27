@@ -1,0 +1,107 @@
+// Map Script for ETF_Openfire
+
+global OnBlueLaser = function(trigger)
+{	
+	if(trigger.action == "invisible")
+	{
+		print("Blue Laser Down!");
+		
+		// Enable the flag.
+		flag = GetGoal("FL_blueflag");
+		if(flag != NULL)
+		{
+			flag.SetAvailable(TEAM.RED, true);
+		}
+		
+		// Disable the button
+		btn = GetGoal("GO_blue_button");
+		if(btn != NULL)
+		{
+			btn.SetAvailable(TEAM.RED, false);
+		}
+	} 
+	else if(trigger.action == "inactive")
+	{
+		print("Blue Laser Up!");	
+		
+		// Disable the flag.
+		flag = GetGoal("FL_blueflag");
+		if(flag != NULL)
+		{
+			flag.SetAvailable(TEAM.RED, false);
+		}
+		
+		// Enable the button
+		btn = GetGoal("GO_blue_button");
+		if(btn != NULL)
+		{
+			btn.SetAvailable(TEAM.RED, true);
+		}
+	}
+};
+
+global OnRedLaser = function(trigger)
+{
+	print("OnRedLaser");
+	
+	if(trigger.action == "invisible")
+	{
+		print("Red Laser Down!");
+		
+		// Enable the flag.
+		flag = GetGoal("FL_redflag");
+		if(flag != NULL)
+		{
+			flag.SetAvailable(TEAM.BLUE, true);
+		}
+		
+		// Disable the button
+		btn = GetGoal("GO_red_button");
+		if(btn != NULL)
+		{
+			btn.SetAvailable(TEAM.BLUE, false);
+		}
+	} 
+	else if(trigger.action == "inactive")
+	{
+		print("Red Laser Up!");	
+		
+		// Disable the flag.
+		flag = GetGoal("FL_redflag");
+		if(flag != NULL)
+		{
+			flag.SetAvailable(TEAM.BLUE, false);
+		}
+		
+		// Enable the button
+		btn = GetGoal("GO_red_button");
+		if(btn != NULL)
+		{
+			btn.SetAvailable(TEAM.BLUE, true);
+		}
+	}	
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger("blue_forcefield", OnBlueLaser);
+	OnTrigger("red_forcefield", OnRedLaser);
+	
+	// Initialize the starting states.
+	
+	redflag = GetGoal("FL_redflag");
+	if(redflag != NULL)
+	{
+		redflag.SetAvailable(TEAM.BLUE, false);
+	}
+	
+	blueflag = GetGoal("FL_blueflag");
+	if(blueflag != NULL)
+	{
+		blueflag.SetAvailable(TEAM.RED, false);
+	}
+};
+
+
+
+

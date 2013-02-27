@@ -1,0 +1,224 @@
+//==========================================================================================
+//
+//	nightcrawlers.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	28 October 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	antenna_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "antenna_Built" );
+	},
+
+	bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_Built" );
+	},
+
+	command_post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "command_post_Built" );
+	},
+
+	protection_doors_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "protection_doors_Built" );
+	},
+
+	side_platform_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_platform_Built" );
+	},
+
+	antenna_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.antenna_Dyno = 0;
+
+		Util.MapDebugPrint( "antenna_Destroyed" );
+	},
+
+	bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.bridge_Dyno = 0;
+
+		Util.MapDebugPrint( "bridge_Destroyed" );
+	},
+
+	command_post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.command_post_Dyno = 0;
+
+		Util.MapDebugPrint( "command_post_Destroyed" );
+	},
+
+	main_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Wood" );
+		Map.main_door_Dyno = 0;
+
+		Util.MapDebugPrint( "main_door_Destroyed" );
+	},
+
+	protection_doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.protection_doors_Dyno = 0;
+
+		Util.MapDebugPrint( "protection_doors_Destroyed" );
+	},
+
+	side_platform_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.side_platform_Dyno = 0;
+
+		Util.MapDebugPrint( "side_platform_Destroyed" );
+	},
+
+	briefcase_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "briefcase_Taken" );
+	},
+
+	briefcase_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "briefcase_Returned" );
+	},
+
+	briefcase_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetGoalPriority( "BUILD_antenna", 0.91 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Send" );
+		Util.MapDebugPrint( "briefcase_Secured" );
+	},
+
+	barracks_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barracks_flag_Axis_Captured" );
+	},
+
+	barracks_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barracks_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "The antenna has been constructed", Map.antenna_Built );
+	OnTrigger( "The bridge has been constructed", Map.bridge_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.command_post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.command_post_Built );
+	OnTrigger( "Protection doors have been constructed", Map.protection_doors_Built );
+	OnTrigger( "The platform has been constructed", Map.side_platform_Built );
+	OnTrigger( "The antenna has been destroyed", Map.antenna_Destroyed );
+	OnTrigger( "The bridge has been destroyed", Map.bridge_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.command_post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.command_post_Destroyed );
+	OnTrigger( "Allies have breached the Main Entrance!", Map.main_door_Destroyed );
+	OnTrigger( "The platform has been destroyed", Map.protection_doors_Destroyed );
+	OnTrigger( "The platform has been destroyed", Map.side_platform_Destroyed );
+	OnTrigger( "Allies have stolen Briefcase!", Map.briefcase_Taken );
+	OnTrigger( "Flag returned briefcase!", Map.briefcase_Returned );
+	OnTrigger( "Allies have secured the briefcase!", Map.briefcase_Secured );
+	OnTrigger( "Axis reclaimed the Barrack!", Map.barracks_flag_Axis_Captured );
+	OnTrigger( "Allies captured the Barrack!", Map.barracks_flag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	Util.DisableGoal( "SWITCH_Send" );
+	Util.DisableGoal( "GRENADE_Wood" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	SetGoalPriority( "PLANT_main_door", 0.91 );
+	SetGoalPriority( "GRENADE_Wood", 0.81 );
+	
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 150.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

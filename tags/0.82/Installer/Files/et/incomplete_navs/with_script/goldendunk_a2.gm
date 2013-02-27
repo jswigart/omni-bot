@@ -1,0 +1,72 @@
+global Map =
+{
+	Ammo_Cabinet_ammo_al_cabinet = "AMMOCAB_ammo_al_cabinet",
+	Ammo_Cabinet_ammo_ax_cabinet = "AMMOCAB_ammo_ax_cabinet",
+	Health_Cabinet_health_al_cabinet = "HEALTHCAB_health_al_cabinet",
+	Health_Cabinet_health_ax_cabinet = "HEALTHCAB_health_ax_cabinet",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Command_Post_1 = "BUILD_Command_Post_1",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Command_Post_1 = "PLANT_Command_Post_1",
+	Flag_gold_ax = "FLAG_gold_ax",
+	Flag_gold_al = "FLAG_gold_al",
+	Cappoint_262 = "CAPPOINT_262",
+	Cappoint_93 = "CAPPOINT_93",
+	Cappoint_85 = "CAPPOINT_85",
+	Cappoint_254 = "CAPPOINT_254",
+
+	cp_ax_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cp_ax_built_Built" );
+	},
+
+	cp_al_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cp_al_built_Built" );
+	},
+
+	cp_ax_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cp_ax_built_Destroyed" );
+	},
+
+	cp_al_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "cp_al_built_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "^5ALLIES ^7--- ^33 points", Map.cp_al_built_Built );
+	OnTrigger( "^6AXIS ^7--- ^33 points", Map.cp_ax_built_Built );
+	OnTrigger( "^6AXIS ^7--- ^33 points", Map.cp_al_built_Destroyed );
+	OnTrigger( "^5ALLIES ^7--- ^33 points", Map.cp_ax_built_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

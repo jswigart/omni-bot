@@ -1,0 +1,13 @@
+1. Re-Enabled AI Script Validation
+2. Added script validation support for default action test
+3. Added script validation support for set_Map_Has_Vehicle
+4. Added script validation support for set_Vehicle_Number
+5. Added script validation support for set_Vehicle_Owner
+6. Added script validation support for kill_action
+7. Added event_explode and event_expire to the scriptable action list for validation
+8. Added Action validation for action_plant_construct
+9. Added Action validation for action_event_explode
+10. Added event_expire and event_explode to the allowable list for if_action_true / false validation
+11. Added Action validation for action_event_expire
+12. Fixed if_<team>_cp_built_<true/false> validation
+13. Updated aiscript.xshd for syntax highlighting of added keywords

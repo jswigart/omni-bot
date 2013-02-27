@@ -1,0 +1,595 @@
+global Map =
+{
+	Quiet = true,
+	FocusPrimary = false,
+	DispenseAmmoTime = 1,
+	Debug = false,
+	RoundTime = 0,
+
+	Checkpoint = "CHECKPOINT_flag_respawn_obj",
+	Flag_allied_obj1 = "FLAG_allied_obj1",
+	Cappoint_cap1 = "CAPPOINT_cap1",
+	Cappoint_cap1 = "CAPPOINT_cap2",
+	Plant_Cellar_Door = "PLANT_Cellar_Door",
+	Plant_Main_Door = "PLANT_Main_Door",
+
+	FlagStatus = 0, //nobody owns it
+	MainStatus = false, //intact
+	CellarStatus = false, //intact
+	DocStatus = false, //home
+	DefenseShifted = false,
+	DontDispenseAmmo = true,
+	DocsGone=false,
+
+	MainDyno = 0,
+
+	Navigation =
+	{
+		railjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+			},
+		},
+		ladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+	},
+
+	TriggerOne =
+	{
+		Name = "TriggerOne",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap || Map.DefenseShifted ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.DefenseShifted = true;
+
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_cellar_door" );
+				RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayVoice( VOICE.DEFEND_OBJECTIVE );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	Cellar_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.CellarStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allied_obj1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bMain.*" );
+		Util.EnableGoal( Map.Checkpoint );
+		Util.EnableGoal( "ROUTE_cellardoor" );
+
+		if ( !Map.MainStatus && !Map.DefenseShifted ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCellar.*" );
+		} else if ( !Map.DocStatus && !Map.DefenseShifted )                                                                                                                {
+			Map.DefenseShifted = true;
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_cellar_door" );
+			RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+		}
+	},
+
+	cellar_planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EvalDefuse();
+	},
+
+	cellar_defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.MainStatus = true;
+		Map.MainDyno = 0; //clear it
+
+		//plant main first
+		//SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Cellar_Door );	//Martin - 12/20/09 - Planting here makes it easier for axis upon doc steal
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allied_obj1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bMain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_spot_cellar" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bCellar.*");
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_door_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT_side.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_target_allies_cellar" );
+		Util.EnableGoal( Map.Checkpoint );
+
+		// Artillery
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_main" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_main" );
+		Map.DontDispenseAmmo = false;   // pass out the goods
+	},
+
+	main_planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.MainDyno += 1;
+		Map.EvalDefuse();
+
+		//SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_spot_cellar" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_door_2" );
+		//SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_target_allies_cellar" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_cellar_door" );
+
+		//start setting up the flag defense
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rFlag.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_cellar_door" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT_side.*" );
+		
+		// Martin - Prevent Axis medics from jumping down and axis from going outside when door blows to get ammo
+		Map.DisableAxisCourtyardAccess();
+	},
+
+	main_defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.MainDyno -= 1;
+	},
+
+	EvalDefuse = function()
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// for now, just dont even try to defuse
+		Util.DisableGoal( "DEFUSE.*" );
+	},
+
+	obj_taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = true;
+		//disable the main door airstrikes
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		
+		Map.EnableAxisCourtyardAccess();
+		
+		// martin: just exit right away if docs are returned
+		while ( Map.DocsGone == false && Map.DocStatus == true )
+		{
+			sleep( 1 );
+		}	
+
+		// cs: changed this. why would they defend trasmit when docs are returned?
+		if (Map.DocStatus)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+			//both teams will use these
+			Util.EnableGoal( "DEFEND_rDeliver.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+		}
+
+		
+	},
+
+	obj_secure = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+		Map.DocsGone = false;
+
+		Util.DisableGoal( "DEFEND_rDeliver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+
+		// Artillery
+		if ( !Map.DefenseShifted ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_door_2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		}
+
+		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	},
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+
+		// Artillery
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_door_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_door_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
+		
+		Map.EnableAxisCourtyardAccess();
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//time is low, so start focusing on main obj
+		Map.FocusPrimary = true;
+	},
+	
+	DocsTrigger =
+	{
+		Name = "DocsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					//docs are gone
+					Map.DocsGone = true;
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	
+	sidewalltimer = function()
+	{
+		while ( 1 )
+		{
+			if ( Map.RoundTime >= 150 && !Map.CellarStatus && !Map.DefenseShifted )
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Cellar_Door" );
+				sleep(30); // Don't keep spamming this 
+			}
+			Map.RoundTime += 1;
+			sleep( 1 );
+		}
+	},
+	// Let the axis out
+	EnableAxisCourtyardAccess = function()
+	{
+		Map.DontDispenseAmmo = false;
+		Util.MapDebugPrint( "EnableAxisCourtyardAccess" );
+		Wp.SetWaypointFlag( "frontdoor", "allies", false );
+		Wp.SetWaypointFlag( "spawnjump", "allies", false );
+	},
+	// Axis should not try to go outside due to artillery fire.
+	DisableAxisCourtyardAccess = function()
+	{
+		Map.DontDispenseAmmo = true;
+		Util.MapDebugPrint( "DisableAxisCourtyardAccess" );
+		Wp.SetWaypointFlag( "frontdoor", "allies", true );
+		Wp.SetWaypointFlag( "spawnjump", "allies", true );
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalOffset( 0, 0, -50, "CHECKPOINT_flag_respawn_obj" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Cellar Door Destroyed.", Map.Cellar_Door_Destroyed );
+	OnTrigger( "the Main Door Destroyed.", Map.Main_Door_Destroyed );
+	OnTrigger( "Allies have stolen the War Documents!", Map.obj_taken );
+	OnTrigger( "Flag returned allied_obj1!", Map.obj_secure );
+	OnTrigger( "Allies capture the Grand Staircase!", Map.Allies_Capture_Flag );
+	OnTrigger( "Axis reclaims the Grand Staircase!", Map.Axis_Capture_Flag );
+	OnTrigger( "Planted at the Main Door.", Map.main_planted );
+	OnTrigger( "Defused at the Main Door.", Map.main_defused );
+	OnTrigger( "Planted at the Cellar Door.", Map.cellar_planted );
+	OnTrigger( "Defused at the Cellar Door.", Map.cellar_defused );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	cellar = OnTriggerRegion( AABB( -2264, 2289, -192, -2135, 2385, -118 ), Map.TriggerOne );
+	storage = OnTriggerRegion( AABB( -3712, 2438, -17, -3583, 2519, 57 ), Map.TriggerOne );
+	westhall = OnTriggerRegion( AABB( -3730, 2079, 367, -3657, 2256, 441 ), Map.TriggerOne );
+	easthall = OnTriggerRegion( AABB( -2064, 2075, 367, -1992, 2264, 441 ), Map.TriggerOne );
+	
+	elibrary = OnTriggerRegion( AABB( -2473.000,3123.000,369.000,-2431.000,3266.000,443.000 ), Map.DocsTrigger );
+	slibrary = OnTriggerRegion( AABB( -3004.000,3042.000,369.000,-2883.000,3082.000,443.000 ), Map.DocsTrigger );
+	nlibrary = OnTriggerRegion( AABB( -3462.000,3127.000,369.000,-3424.000,3256.000,443.000 ), Map.DocsTrigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 90} );
+	SetMapGoalProperties( "DEFEND_rRoam.*", {mincamptime = 0, maxcamptime = 1} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT.*" );
+	Util.DisableGoal( "ROUTE_cellardoor" );
+
+	SetGoalPriority( Map.Plant_Main_Door, 0.93 ); //plant this first
+	SetGoalPriority( "DEFEND_rFlag.*", 0.55 );
+	SetGoalPriority( "DEFEND_rCellar.*", 0.55 );
+	SetGoalPriority( "DEFEND_rDeliver[12]", 0.55 );
+	SetGoalPriority( "DEFEND_rRoam.*", 0.48 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "DEFEND_rLT_side.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
+
+	RTCWUtil.LimitToClass( "DEFEND_rLT_side.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCellar.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_door" );
+
+	// Artillery
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_cellar" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_target_allies_cellar" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_cellar_door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_door_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	
+	Map.EnableAxisCourtyardAccess();
+	
+	// Thread for side wall timer
+	thread( Map.sidewalltimer );
+	
+	MapRoutes =
+	{
+		CHECKPOINT_flag_respawn_obj  =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_village =
+				{
+					ROUTE_cellardoor = { Weight = 3, ROUTE_cellar2 = {}, },
+					ROUTE_maindoor = {},
+				},
+				ROUTE_maindoor = {Weight = 3,},
+			},
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_cellardoor = {},
+			},
+			ROUTE_rSpawn2 =
+			{
+				ROUTE_flagreclaim = {},
+			}
+		},
+		FLAG_allied_obj1 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_westhall =
+				{
+					Weight = 2,
+					ROUTE_westhall2 = {},
+				},
+				ROUTE_piano =
+				{
+					ROUTE_balcony = {},
+					ROUTE_roof = {Weight=2,},
+				},
+				ROUTE_easthall =
+				{
+					Weight = 2,
+					ROUTE_easthall2 = {},
+				},
+				ROUTE_dining =
+				{
+					ROUTE_balcony = {},
+					ROUTE_roof = {},
+				},
+			},
+			ROUTE_bSpawn =
+			{
+				ROUTE_village =
+				{
+					ROUTE_cellardoor =
+					{
+						ROUTE_cellar = { ROUTE_balcony = {}, },
+					},
+				},
+				ROUTE_westhall = { ROUTE_westhall2 = {}, },
+				ROUTE_piano =
+				{
+					ROUTE_balcony = {},
+					ROUTE_westhall2 = {},
+				},
+				ROUTE_easthall = { ROUTE_easthall2 = {}, },
+				ROUTE_dining =
+				{
+					ROUTE_balcony = {},
+					ROUTE_easthall2 = {},
+				},
+			},
+		},
+		CAPPOINT_cap1 =
+		{
+			ROUTE_caproute =
+			{
+				ROUTE_balcony = {},
+				ROUTE_westhall2 =
+				{
+					ROUTE_piano = { ROUTE_stairs = {}, },
+				},
+			},
+		},
+		PLANT_Cellar_Door =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_maindoor = { },
+				ROUTE_village = { ROUTE_village2 = {}, },
+			},
+		},
+		DEFEND_rMain1 =
+		{
+			ROUTE_rSpawn2 =
+			{
+				ROUTE_stairs = {},
+			}
+		},
+		PANZER_rSpawnkill_1 =
+		{
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_village2 = {ROUTE_village = {},},
+			},
+			ROUTE_rSpawn2 =
+			{
+				ROUTE_village2 = {ROUTE_village = {},},
+			},
+		},
+		DEFEND_rDocs1 =
+		{
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_northeastcorner = {},
+			},
+			ROUTE_rSpawn2 =
+			{
+				ROUTE_westhall2 = {},
+			},
+		}
+	};
+
+	MapRoutes.CAPPOINT_cap2 = MapRoutes.CAPPOINT_cap2;
+	MapRoutes.ATTACK_bMain1 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bMain2 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bMain3 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bMain4 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bMain5 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bMain6 = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.CALLARTILLERY_spot_cellar = MapRoutes.PLANT_Cellar_Door;
+	MapRoutes.ATTACK_bDocs1 = MapRoutes.FLAG_allied_obj1;
+	MapRoutes.ATTACK_bDocs2 = MapRoutes.FLAG_allied_obj1;
+	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_allied_obj1;
+	MapRoutes.ATTACK_bDocs4 = MapRoutes.FLAG_allied_obj1;
+	MapRoutes.ATTACK_bDocs5 = MapRoutes.FLAG_allied_obj1;
+	MapRoutes.FLAG_allied_obj1.ROUTE_Flag = MapRoutes.FLAG_allied_obj1.ROUTE_flagspawn;
+	MapRoutes.DEFEND_rMain2 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain3 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain4 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain5 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rDocs2 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs3 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs4 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs5 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs6 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs7 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rRoam_1 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.AIRSTRIKE_red_as1_door = MapRoutes.DEFEND_rMain1;
+	MapRoutes.CALLARTILLERY_spot_cellar_door = MapRoutes.DEFEND_rMain1;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	RTCWUtil.NoSnipe( bot );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	bot.RemoveState("WatchForProjectile");
+};

@@ -1,0 +1,217 @@
+//==========================================================================================
+//
+//	1944_omaha_b3.gm
+//
+//	Who                    	When			What
+//------------------------------------------------------------------------------------------
+//	MickyP			04 November 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	Movers = 
+	{ 
+	"MOVER_south_ammocabinet_clip",
+	"MOVER_north_healthcabinet_clip",
+	"MOVER_tower",
+	"MOVER_tower_base",
+	"MOVER_aagun_1_clip",
+	}, 
+	
+	
+	Alllied_Transmitter_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Alllied_Transmitter_Built" );
+	},
+
+	Axis_Bunker_Doors_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Bunker_Doors_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tower_Built" );
+	},
+
+	Gun88_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
+	
+		Util.MapDebugPrint( "Gun88_Destroyed" );
+	},
+
+	Alllied_Transmitter_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Alllied_Transmitter_Destroyed" );
+	},
+
+	Axis_Bunker_Doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_Bunker_Doors_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Beach_House_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Alllied_Transmitter.*" );
+		Util.MapDebugPrint( "Beach_House_Door_Destroyed" );
+	},
+
+	tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "tower_Destroyed" );
+	},
+
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		Util.MapDebugPrint( "documents_Taken" );
+	},
+
+	documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Returned" );
+	},
+
+	documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Secured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "tower has been constructed", Map.Alllied_Transmitter_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Bunker_Doors_Built );
+	OnTrigger( "axis_hq_compost_contructed", Map.Axis_Command_Post_Built );
+	OnTrigger( "allies_hq_tank_repaired", Map.Tank_Built );
+	OnTrigger( "MISSING_STRING", Map.tower_Built );
+	OnTrigger( "Allies have destroyed the 88 Gun! The Allied Tank is now ready to move!", Map.Gun88_Destroyed );
+	//OnTrigger( "1234567890123456789012345678901234567890123456789012345678901234567890", Map.Gun88_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Alllied_Transmitter_Destroyed );
+	OnTrigger( "the Axis Bunker Door has been destroyed.", Map.Axis_Bunker_Doors_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "the Beach House Door has been destroyed.", Map.Beach_House_Door_Destroyed );
+	OnTrigger( "the Axis Tower has been destroyed.", Map.tower_Destroyed );
+	OnTrigger( "Allies have stolen the documents!", Map.documents_Taken );
+	OnTrigger( "Documents returned!", Map.documents_Returned );
+	OnTrigger( "Allies have transmitted the documents!", Map.documents_Secured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Alllied_Transmitter.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Barge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Barge.*" );
+	
+	Util.SetGoalOffset( -30, 0, 0, "PLANT_Axis_Bunker_Doors" );
+	Util.SetGoalOffset( 0, 30, 0, "PLANT_Beach_House_Doors" );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.IgnoreTargetGoalTable(bot, Map.Movers);
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

@@ -1,0 +1,422 @@
+#include "ui_mp/menudef.h"
+
+#define GLOBAL_TEXTSCALE1	0.25
+#define GLOBAL_TEXTSCALE2	0.3
+#define GLOBAL_TEXTSCALE3	0.4
+
+{
+\\ Server Join \\
+
+  menuDef {
+    	name			"multi_setup"
+    	visible			0
+    	fullscreen		0
+    	rect			100 115 443 480	
+	focusColor		1 .75 0 1		
+    	style			1
+   	
+	onOpen {		
+		uiScript UpdateFilter ;		
+		hide accept_alt ; 
+		show accept ;
+		hide back_alt ;
+		show back ;
+		show grpControls
+	}
+	
+	onEsc {
+		uiScript closeJoin
+		close multi_setup ;
+		close multi_menu ;
+		open main
+	}
+
+itemDef 
+	{
+	name window
+	group grpSystembutton
+	rect 0 0 443 300	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+	}
+
+	itemDef 
+	{
+		name window
+		group ingamebox2
+		text "Multiplayer Options"
+		textalignx 160
+		textfont	UI_FONT_NORMAL
+		textaligny 13
+		textscale GLOBAL_TEXTSCALE1
+		rect 2 2 439 20	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .2
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .25
+		visible 1
+		decoration
+	}
+
+
+//	Multiplayer Setup Menu	//
+
+
+	itemDef {
+		name misc		
+		type ITEM_TYPE_BIND
+		text "Open Limbo Menu:"
+		cvar "OpenLimboMenu"
+		rect 99 105 256 12
+		textfont	UI_FONT_NORMAL
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 128
+		textaligny 10
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07            
+		forecolor 1 1 1 1
+		visible 1 
+		mouseenter { show keyBindStatus }
+		mouseexit { hide keyBindStatus }
+    		}
+
+	itemDef {
+		name misc		
+		type ITEM_TYPE_BIND
+		text "Show Scores:"
+		cvar "+scores"
+		rect 99 135 256 12
+		textalign ITEM_ALIGN_RIGHT
+		textfont	UI_FONT_NORMAL
+		textalignx 128 
+		textaligny 10
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07                    
+		forecolor 1 1 1 1
+		visible 1 
+ 		mouseenter { show keyBindStatus }
+		mouseexit { hide keyBindStatus }
+    		}
+
+itemDef {
+	name chat	
+	type ITEM_TYPE_BIND
+	text "Chat:"
+	cvar "messagemode"
+	rect 99 30 256 12
+	textfont	UI_FONT_NORMAL
+      	textalign ITEM_ALIGN_RIGHT
+      	textalignx 128
+      	textaligny 10
+	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED
+	backcolor 1 1 1 .07           
+      	forecolor 1 1 1 1
+      	visible 1
+	mouseenter { show keyBindStatus }
+	mouseexit { hide keyBindStatus }
+	}
+
+	itemDef {
+		name chat		
+		type ITEM_TYPE_BIND
+		text "Team Chat:"
+		cvar "messagemode2"
+		rect 99 45 256 12
+      		textalign ITEM_ALIGN_RIGHT
+		textfont	UI_FONT_NORMAL
+      		textalignx 128
+      		textaligny 10
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07           
+      		forecolor 1 1 1 1
+      		visible 1
+		mouseenter { show keyBindStatus }
+		mouseexit { hide keyBindStatus }
+    		}
+
+	itemDef {
+		name chat		
+		type ITEM_TYPE_BIND
+		text "Quick Chat:"
+		cvar "mp_QuickMessage"
+		rect 99 60 256 12
+			textalign ITEM_ALIGN_RIGHT
+			textalignx 128
+			textaligny 10
+		textfont	UI_FONT_NORMAL
+			textscale GLOBAL_TEXTSCALE1
+			style WINDOW_STYLE_FILLED
+			backcolor 1 1 1 .07            
+			forecolor 1 1 1 1
+			visible 1 
+		mouseenter { show keyBindStatus }
+		mouseexit { hide keyBindStatus }
+    		}
+
+	itemDef {
+		name chat		
+		type ITEM_TYPE_MULTI
+		text "Quick Chat Mode:"
+		textfont	UI_FONT_NORMAL
+		cvar "cg_quickMessageAlt"
+		cvarFloatList { "Alpha" 0 "Numeric" 1 }
+		rect 99 75 256 12
+			textalign ITEM_ALIGN_RIGHT
+			textalignx 128
+			textaligny 10
+			textscale GLOBAL_TEXTSCALE1
+			style WINDOW_STYLE_FILLED
+			backcolor 1 1 1 .07            
+			forecolor 1 1 1 1
+			visible 1 
+		mouseenter { show keyBindStatus }
+		mouseexit { hide keyBindStatus }
+    		}
+
+
+
+	itemDef {
+		name view
+		type ITEM_TYPE_MULTI		
+		text "Show compass:"
+		textfont	UI_FONT_NORMAL
+		rect 99 150 256 12
+		cvar "cg_drawCompass"
+		cvarFloatList { "Off" 0 "On" 1 }
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 128 
+		textaligny 10
+		textscale GLOBAL_TEXTSCALE1    
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07    
+		forecolor 1 1 1 1
+		visible 1
+   		}
+
+	itemDef {
+		name view
+		type ITEM_TYPE_MULTI		
+		text "Team Overlay:"
+		rect 99 90 256 12
+		textfont	UI_FONT_NORMAL
+		cvar "cg_drawteamoverlay"
+		cvarFloatList { "Off" 0 "Short" 1 "Long" 2 }
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 128
+		textaligny 10
+		textscale GLOBAL_TEXTSCALE1    
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07    
+		forecolor 1 1 1 1
+		visible 1
+   		}
+
+	itemDef {
+		name view
+		type ITEM_TYPE_MULTI		
+		text "Chat Icon Time:"
+		rect 99 120 256 12
+		cvar "cg_voicespritetime"
+		cvarFloatList { "Short" 3000 "Normal" 6000 "Long" 12000 "Really Long" 24000 }
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 128
+		textaligny 10
+		textscale GLOBAL_TEXTSCALE1    
+		textfont	UI_FONT_NORMAL
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07    
+		forecolor 1 1 1 1
+		visible 1
+   		}
+
+	itemDef {
+		name other		
+		type ITEM_TYPE_MULTI
+		text "Net Data Rate:"
+		cvar "rate"
+		cvarFloatList { "<=28.8k" 2500 "33.6k" 3000 "56k" 4000 "ISDN" 5000 "LAN/CABLE/xDSL" 25000  }
+		rect 99 165 256 12
+		textalign ITEM_ALIGN_RIGHT
+		textalignx 128
+		textaligny 10
+		textfont	UI_FONT_NORMAL
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07 		  
+		forecolor 1 1 1 1
+		visible 1 
+		action { uiScript update ui_setRate }
+		}
+
+	itemDef {
+   		name view
+   		type ITEM_TYPE_MULTI
+		text "Language:"
+		cvar "cl_language"
+		cvarFloatList { "English" 0 "French" 1 "German" 2 "Italian" 3 "Spanish" 4 }
+		rect 99 195 256 12
+   		textalign ITEM_ALIGN_RIGHT
+   		textalignx 128
+   		textaligny 10
+		textfont	UI_FONT_NORMAL
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07           
+   		forecolor 1 1 1 1
+   		visible 1 
+//		action { uiScript update ui_setRate }
+   	}
+
+itemDef {
+		name			allow_download
+		rect			99 180 256 12		
+		textfont		UI_FONT_NORMAL
+		type			ITEM_TYPE_MULTI
+ 		style			WINDOW_STYLE_FILLED
+		text			"Allow Downloads:"
+		cvar			"cl_allowdownload"
+		cvarFloatList { "Off" 0 "On" 1 }
+		textscale		GLOBAL_TEXTSCALE1
+		textalign		ITEM_ALIGN_RIGHT	
+		textalignx		128
+		textaligny		10
+		backcolor		1 1 1 .07 		  
+		forecolor		1 1 1 1
+		visible			1
+	}
+
+itemDef {
+		name			window_limbo_name
+		visible			1
+		rect			99 215 256 15		
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		outlinecolor		1 1 0 .5
+		textfont	UI_FONT_NORMAL
+		type			ITEM_TYPE_EDITFIELD
+ 		style			0
+   		border			1
+		bordercolor		.5 .5 .5 .5
+		maxChars		32
+		maxpaintchars		18
+		text			"Player Name:"
+		cvar			"name"
+		textscale		GLOBAL_TEXTSCALE1
+		textalign		ITEM_ALIGN_RIGHT	
+		textalignx		126
+		textaligny		11
+	}
+
+
+
+
+//	BACK AND NEXT BUTTONS	//
+
+
+itemDef {
+	name back
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 334 40 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 6
+	textaligny 12
+	forecolor .9 .9 .9 .9
+	visible 1
+	//border 1
+	//bordercolor 1 1 1 1
+
+     	action {
+		close createserver ;
+		close joinserver ;
+		close multi_setup;
+		close multi_menu ;
+		open main
+	}	
+    }
+
+itemDef {
+	name back_alt
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 334 40 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 6
+	textaligny 12
+	forecolor .6 .6 .6 .6
+	visible 1
+	type ITEM_TYPE_BUTTON
+	//border 1
+	//bordercolor 1 1 1 1
+
+	action {		
+		close createserver ;
+		close joinserver ;
+		close multi_setup;
+		close multi_menu ;
+		open main
+	}  	  
+    }
+
+
+
+
+//	MESSAGES	//
+
+itemDef {
+	name message_back
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Exit to Main Menu"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_accept
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Play Wolf"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+
+}
+
+
+}
+
+

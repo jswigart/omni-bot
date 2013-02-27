@@ -1,0 +1,1509 @@
+global Docs = 
+{
+	KeyListener = 
+	{
+		[0] = 
+		{
+			Name = "KeyListener",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "OnKeyPressed",
+			Type = "callback",
+			Comment = "Function to call when a key is pressed.",
+		},
+		[2] = 
+		{
+			Name = "OnKeyReleased",
+			Type = "callback",
+			Comment = "Function to call when a key is released.",
+		},
+	},
+	Container = 
+	{
+		[0] = 
+		{
+			Name = "Container",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "Add",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Add a widget to the container.",
+		},
+		[2] = 
+		{
+			Name = "AddXY",
+			Type = "function",
+			Arguments = 3,
+			Comment = "Add a widget to the container at a position.",
+		},
+		[3] = 
+		{
+			Name = "Remove",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes a widget from the container.",
+		},
+		[4] = 
+		{
+			Name = "Clear",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Clears all widgets from the container.",
+		},
+		[5] = 
+		{
+			Name = "SetOpaque",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Checks if the widget is opaque.",
+		},
+		[6] = 
+		{
+			Name = "IsOpaque",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Set the widget to be opaque.",
+		},
+	},
+	MapGoal = 
+	{
+		[0] = 
+		{
+			Name = "PointFacing",
+			Type = "<constructor>",
+			Comment = "",
+		},
+	},
+	Tab = 
+	{
+		[0] = 
+		{
+			Name = "Tab",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetTabbedArea",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the tabbed area for the tab.",
+		},
+		[2] = 
+		{
+			Name = "GetTabbedArea",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the tabbed area for the tab.",
+		},
+		[3] = 
+		{
+			Name = "SetCaption",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the tab title text.",
+		},
+		[4] = 
+		{
+			Name = "GetCaption",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the tab title text.",
+		},
+	},
+	TabbedArea = 
+	{
+		[0] = 
+		{
+			Name = "TabbedArea",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "AddTabWithWidget",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Add tab to area and widget into tab.",
+		},
+		[2] = 
+		{
+			Name = "AddTabNameWithWidget",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Add tab to area by name and widget into tab.",
+		},
+		[3] = 
+		{
+			Name = "RemoveTabByIndex",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Remove a tab by its index.",
+		},
+		[4] = 
+		{
+			Name = "RemoveTab",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Remove a specific tab.",
+		},
+		[5] = 
+		{
+			Name = "IsTabSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Checks if a tab is selected.",
+		},
+		[6] = 
+		{
+			Name = "IsTabIndexSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Checks if a tab is selected by index.",
+		},
+		[7] = 
+		{
+			Name = "SetSelectedTab",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the selected tab directly.",
+		},
+		[8] = 
+		{
+			Name = "SetSelectedTabIndex",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the selected tab by index.",
+		},
+		[9] = 
+		{
+			Name = "GetSelectedTabIndex",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets index of selected tab.",
+		},
+		[10] = 
+		{
+			Name = "GetSelectedTab",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the selected tab.",
+		},
+	},
+	DialogPanel = 
+	{
+		[0] = 
+		{
+			Name = "DialogPanel",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "AddOption",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Add an option to the dialog panel.",
+		},
+	},
+	Widget = 
+	{
+		[0] = 
+		{
+			Name = "IsVisible",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if the widget is visible.",
+		},
+		[1] = 
+		{
+			Name = "SetVisible",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the visibility state of the widget.",
+		},
+		[2] = 
+		{
+			Name = "SetWidth",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the width of the widget.",
+		},
+		[3] = 
+		{
+			Name = "GetWidth",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the width of the widget.",
+		},
+		[4] = 
+		{
+			Name = "SetHeight",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the height of the widget.",
+		},
+		[5] = 
+		{
+			Name = "GetHeight",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the height of the widget.",
+		},
+		[6] = 
+		{
+			Name = "SetSize",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Sets the size of the widget.",
+		},
+		[7] = 
+		{
+			Name = "SetX",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Set the x position of the widget.",
+		},
+		[8] = 
+		{
+			Name = "GetX",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Get the x position of the widget.",
+		},
+		[9] = 
+		{
+			Name = "SetY",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Set the y position of the widget.",
+		},
+		[10] = 
+		{
+			Name = "GetY",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Get the y position of the widget.",
+		},
+		[11] = 
+		{
+			Name = "SetPosition",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Set the position of the widget.",
+		},
+		[12] = 
+		{
+			Name = "IsEnabled",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if the widget is enabled.",
+		},
+		[13] = 
+		{
+			Name = "SetEnabled",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the enabled state of the widget.",
+		},
+		[14] = 
+		{
+			Name = "SetFrameSize",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the widget frame size.",
+		},
+		[15] = 
+		{
+			Name = "GetFrameSize",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the widget frame size.",
+		},
+		[16] = 
+		{
+			Name = "GetActionEventId",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the action event id of the widget.",
+		},
+		[17] = 
+		{
+			Name = "SetActionEventId",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the action event id of the widget.",
+		},
+		[18] = 
+		{
+			Name = "AddActionListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Adds an action listener to the widget.",
+		},
+		[19] = 
+		{
+			Name = "RemoveActionListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes an action listener from the widget.",
+		},
+		[20] = 
+		{
+			Name = "AddKeyListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Adds a key listener to the widget.",
+		},
+		[21] = 
+		{
+			Name = "RemoveKeyListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes a key listener from the widget.",
+		},
+		[22] = 
+		{
+			Name = "AddMouseListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Adds a mouse listener to the widget.",
+		},
+		[23] = 
+		{
+			Name = "RemoveMouseListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes a mouse listener from the widget.",
+		},
+		[24] = 
+		{
+			Name = "AddDeathListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Adds a death listener to the widget.",
+		},
+		[25] = 
+		{
+			Name = "RemoveDeathListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes a death listener from the widget.",
+		},
+		[26] = 
+		{
+			Name = "AddFocusListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Adds a focus listener to the widget.",
+		},
+		[27] = 
+		{
+			Name = "RemoveFocusListener",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Removes a focus listener from the widget.",
+		},
+	},
+	FocusListener = 
+	{
+		[0] = 
+		{
+			Name = "FocusListener",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "OnFocusGained",
+			Type = "callback",
+			Comment = "Function to call when focus is gained.",
+		},
+		[2] = 
+		{
+			Name = "OnFocusLost",
+			Type = "callback",
+			Comment = "Function to call when focus is lost.",
+		},
+	},
+	Image = 
+	{
+		[0] = 
+		{
+			Name = "Image",
+			Type = "<constructor>",
+			Comment = "",
+		},
+	},
+	TextField = 
+	{
+		[0] = 
+		{
+			Name = "TextField",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetText",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the text box text.",
+		},
+		[2] = 
+		{
+			Name = "GetText",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the text box text.",
+		},
+		[3] = 
+		{
+			Name = "GetCaretPos",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the position of the caret.",
+		},
+		[4] = 
+		{
+			Name = "SetCaretPos",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the position of the caret.",
+		},
+	},
+	BasicContainer = 
+	{
+		[0] = 
+		{
+			Name = "MoveToTop",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Moves a widget to the top of the container.",
+		},
+		[1] = 
+		{
+			Name = "MoveToBottom",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Moves a widget to the bottom of the container.",
+		},
+	},
+	ScrollArea = 
+	{
+		[0] = 
+		{
+			Name = "ScrollArea",
+			Type = "<constructor>",
+			Comment = "",
+		},
+	},
+	Button = 
+	{
+		[0] = 
+		{
+			Name = "Button",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetCaption",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the button text.",
+		},
+		[2] = 
+		{
+			Name = "GetCaption",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the button text.",
+		},
+		[3] = 
+		{
+			Name = "SetAlignment",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the text alignment.",
+		},
+		[4] = 
+		{
+			Name = "GetAlignment",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the text alignment.",
+		},
+	},
+	Label = 
+	{
+		[0] = 
+		{
+			Name = "Label",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetCaption",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the label text.",
+		},
+		[2] = 
+		{
+			Name = "GetCaption",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the label text.",
+		},
+		[3] = 
+		{
+			Name = "SetAlignment",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the text alignment.",
+		},
+		[4] = 
+		{
+			Name = "GetAlignment",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the text alignment.",
+		},
+	},
+	FireMode = 
+	{
+		[0] = 
+		{
+			Name = "SetDesirabilityRange",
+			Type = "function",
+			Arguments = 3,
+			Comment = "Set the desirability for a target within a certain min/max range.",
+		},
+		[1] = 
+		{
+			Name = "SetBurstRange",
+			Type = "function",
+			Arguments = 5,
+			Comment = "Set a burst shot behavior for a target within a certain min/max range.",
+		},
+		[2] = 
+		{
+			Name = "SetTargetBias",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Set a desirability multiplier versus a target class.",
+		},
+		[3] = 
+		{
+			Name = "WeaponType",
+			Type = "string",
+			Comment = "melee, instant, projectile, or grenade",
+		},
+		[4] = 
+		{
+			Name = "ShootButton",
+			Type = "int",
+			Comment = "The button to press to fire the weapon. Default ATTACK1.",
+		},
+		[5] = 
+		{
+			Name = "ZoomButton",
+			Type = "int",
+			Comment = "The button to press to zoom the weapon. Default AIM.",
+		},
+		[6] = 
+		{
+			Name = "LowAmmoThreshold",
+			Type = "int",
+			Comment = "Bot will desire ammo if <= to this value.",
+		},
+		[7] = 
+		{
+			Name = "LowAmmoPriority",
+			Type = "float",
+			Comment = "The priority to get ammo when the threshold is met.",
+		},
+		[8] = 
+		{
+			Name = "LowAmmoGetAmmoAmount",
+			Type = "int",
+			Comment = "How much ammo to get to satisfy.",
+		},
+		[9] = 
+		{
+			Name = "FuseTime",
+			Type = "float",
+			Comment = "Fuse time to predict when ChargeToIntercept is set.",
+		},
+		[10] = 
+		{
+			Name = "ProjectileSpeed",
+			Type = "float",
+			Comment = "How fast the projectile moves. Used for prediction.",
+		},
+		[11] = 
+		{
+			Name = "ProjectileGravity",
+			Type = "float",
+			Comment = "Gravity multiplier for how projectile is effected by gravity.",
+		},
+		[12] = 
+		{
+			Name = "SplashRadius",
+			Type = "float",
+			Comment = "The radius of the hits splash damage.",
+		},
+		[13] = 
+		{
+			Name = "MinChargeTime",
+			Type = "float",
+			Comment = "Minimum time to charge FireOnRelease Shots",
+		},
+		[14] = 
+		{
+			Name = "MaxChargeTime",
+			Type = "float",
+			Comment = "Maximum time to charge FireOnRelease Shots",
+		},
+		[15] = 
+		{
+			Name = "DelayAfterFiring",
+			Type = "float",
+			Comment = "Time after shooting to delay choosing this weapon again.",
+		},
+		[16] = 
+		{
+			Name = "DefaultDesirability",
+			Type = "float",
+			Comment = "Desirability vs no target.",
+		},
+		[17] = 
+		{
+			Name = "Bias",
+			Type = "float",
+			Comment = "Multiplier to final desirability.",
+		},
+		[18] = 
+		{
+			Name = "MinAimAdjustmentTime",
+			Type = "float",
+			Comment = "Minimum time between aim adjustments.",
+		},
+		[19] = 
+		{
+			Name = "MaxAimAdjustmentTime",
+			Type = "float",
+			Comment = "Maximum time between aim adjustments.",
+		},
+		[20] = 
+		{
+			Name = "MaxAimError",
+			Type = "vec3",
+			Comment = "Horizontal and vertical aim error.",
+		},
+		[21] = 
+		{
+			Name = "AimOffset",
+			Type = "vec3",
+			Comment = "Offset added to targeting aim point.",
+		},
+		[22] = 
+		{
+			Name = "PitchOffset",
+			Type = "float",
+			Comment = "Pitch offset to projectile spawn point.",
+		},
+		[23] = 
+		{
+			Name = "MinLeadError",
+			Type = "float",
+			Comment = "Minimum lead time error when firing weapon.",
+		},
+		[24] = 
+		{
+			Name = "MaxLeadError",
+			Type = "float",
+			Comment = "Maximum lead time error when firing weapon.",
+		},
+		[25] = 
+		{
+			Name = "CalculateDefaultDesirability",
+			Type = "Callback",
+			Comment = "Allows weapon to calculate default desirability.",
+		},
+		[26] = 
+		{
+			Name = "CalculateDesirability",
+			Type = "Callback",
+			Comment = "Allows weapon to calculate desirability.",
+		},
+		[27] = 
+		{
+			Name = "CalculateAimPoint",
+			Type = "Callback",
+			Comment = "Allows weapon to calculate aim point.",
+		},
+		[28] = 
+		{
+			Name = "RequiresAmmo",
+			Type = "bool",
+			Comment = "Weapon requires ammo to use. False means ammo is always assumed.",
+		},
+		[29] = 
+		{
+			Name = "WaterProof",
+			Type = "bool",
+			Comment = "Weapon may be used the user is underwater.",
+		},
+		[30] = 
+		{
+			Name = "HasClip",
+			Type = "bool",
+			Comment = "Weapon has a clip. False means it simply has an ammo repository and doesn't need to reload.",
+		},
+		[31] = 
+		{
+			Name = "HasZoom",
+			Type = "bool",
+			Comment = "Weapon has zoom functionality.",
+		},
+		[32] = 
+		{
+			Name = "InheritsVelocity",
+			Type = "bool",
+			Comment = "Weapon projectile inherits user velocity.",
+		},
+		[33] = 
+		{
+			Name = "ManualDetonation",
+			Type = "bool",
+			Comment = "Weapon projectiles must be manually detonated.",
+		},
+		[34] = 
+		{
+			Name = "MustBeOnGround",
+			Type = "bool",
+			Comment = "Weapon can only fire if user is on ground.",
+		},
+		[35] = 
+		{
+			Name = "FireOnRelease",
+			Type = "bool",
+			Comment = "Weapon fires when the ShootButton is released, as opposed to when pressed.",
+		},
+		[36] = 
+		{
+			Name = "ManageHeat",
+			Type = "bool",
+			Comment = "Weapon may overheat, so user should fan the fire button to prevent.",
+		},
+		[37] = 
+		{
+			Name = "IgnoreReload",
+			Type = "bool",
+			Comment = "Weapon should not be checked for reload.",
+		},
+		[38] = 
+		{
+			Name = "UseMortarTrajectory",
+			Type = "bool",
+			Comment = "Weapon should use mortar trajectory in prediction checks.",
+		},
+		[39] = 
+		{
+			Name = "RequiresTargetOutside",
+			Type = "bool",
+			Comment = "Weapon cannot fire on target unless it is outside.",
+		},
+		[40] = 
+		{
+			Name = "RequiresShooterOutside",
+			Type = "bool",
+			Comment = "Weapon cannot fire unless user is outside.",
+		},
+		[41] = 
+		{
+			Name = "ChargeToIntercept",
+			Type = "bool",
+			Comment = "Weapon should be 'primed' with MinChargeTime/MaxChargeTime before firing.",
+		},
+		[42] = 
+		{
+			Name = "MeleeWeapon",
+			Type = "bool",
+			Comment = "Weapon is a melee weapon, user should use melee attack behavior.",
+		},
+		[43] = 
+		{
+			Name = "WalkWhileZoomed",
+			Type = "bool",
+			Comment = "Weapon requires user to hold walk key when zoomed.",
+		},
+		[44] = 
+		{
+			Name = "StopWhileZoomed",
+			Type = "bool",
+			Comment = "Weapon requires user to stop moving when zoomed.",
+		},
+		[45] = 
+		{
+			Name = "CrouchToMoveWhenZoomed",
+			Type = "bool",
+			Comment = "Weapon requires user to crouch to move when zoomed.",
+		},
+	},
+	Icon = 
+	{
+		[0] = 
+		{
+			Name = "Icon",
+			Type = "<constructor>",
+			Comment = "",
+		},
+	},
+	Window = 
+	{
+		[0] = 
+		{
+			Name = "Window",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetAlignment",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the text alignment.",
+		},
+		[2] = 
+		{
+			Name = "GetAlignment",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the text alignment.",
+		},
+		[3] = 
+		{
+			Name = "SetPadding",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the window padding.",
+		},
+		[4] = 
+		{
+			Name = "GetPadding",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the window padding.",
+		},
+		[5] = 
+		{
+			Name = "SetTitleBarHeight",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the window title bar height.",
+		},
+		[6] = 
+		{
+			Name = "GetTitleBarHeight",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the window title bar height.",
+		},
+		[7] = 
+		{
+			Name = "SetMovable",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets whether the window is movable or not.",
+		},
+		[8] = 
+		{
+			Name = "IsMovable",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks whether the window is movable.",
+		},
+		[9] = 
+		{
+			Name = "IsOpaque",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Set the widget to be opaque.",
+		},
+		[10] = 
+		{
+			Name = "SetOpaque",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Set the widget to be opaque.",
+		},
+		[11] = 
+		{
+			Name = "ResizeToContent",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Resizes window to the size of the content.",
+		},
+	},
+	ListBox = 
+	{
+		[0] = 
+		{
+			Name = "ListBox",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "GetSelected",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the index of the selected option.",
+		},
+		[2] = 
+		{
+			Name = "SetSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the index of the selected option.",
+		},
+		[3] = 
+		{
+			Name = "SetListModel",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the list model to display in the listbox.",
+		},
+		[4] = 
+		{
+			Name = "GetListModel",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the list model to display in the listbox.",
+		},
+		[5] = 
+		{
+			Name = "AdjustSize",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Adjust the size of the listbox.",
+		},
+		[6] = 
+		{
+			Name = "IsWrappingKeyboardSelection",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if selection wrapping is enabled.",
+		},
+		[7] = 
+		{
+			Name = "SetWrappingKeyboardSelection",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets whether selection wrapping is enabled.",
+		},
+	},
+	TextBox = 
+	{
+		[0] = 
+		{
+			Name = "TextBox",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetText",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the text box text.",
+		},
+		[2] = 
+		{
+			Name = "GetText",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the text box text.",
+		},
+		[3] = 
+		{
+			Name = "SetTextRow",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Sets the text of a given row.",
+		},
+		[4] = 
+		{
+			Name = "GetTextRow",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Gets the text of a given row.",
+		},
+		[5] = 
+		{
+			Name = "GetNumRows",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the number of rows in the text.",
+		},
+		[6] = 
+		{
+			Name = "GetCaretPos",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the position of the caret.",
+		},
+		[7] = 
+		{
+			Name = "SetCaretPos",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the position of the caret.",
+		},
+		[8] = 
+		{
+			Name = "GetCaretRow",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the row of the caret.",
+		},
+		[9] = 
+		{
+			Name = "SetCaretRow",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the row of the caret.",
+		},
+		[10] = 
+		{
+			Name = "GetCaretColumn",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the column of the caret.",
+		},
+		[11] = 
+		{
+			Name = "SetCaretColumn",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the column of the caret.",
+		},
+		[12] = 
+		{
+			Name = "SetCaretRowColumn",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Sets the caret row and column.",
+		},
+		[13] = 
+		{
+			Name = "ScrollToCaret",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Scrolls the text box to the caret.",
+		},
+		[14] = 
+		{
+			Name = "IsEditable",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if the text box is editable.",
+		},
+		[15] = 
+		{
+			Name = "SetEditable",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets whether the text box is editable or not.",
+		},
+		[16] = 
+		{
+			Name = "AddRow",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Append a row to the text box.",
+		},
+		[17] = 
+		{
+			Name = "IsOpaque",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Set the widget to be opaque.",
+		},
+		[18] = 
+		{
+			Name = "SetOpaque",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Checks if the widget is opaque.",
+		},
+	},
+	CheckBox = 
+	{
+		[0] = 
+		{
+			Name = "CheckBox",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetCaption",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the checkbox text.",
+		},
+		[2] = 
+		{
+			Name = "GetCaption",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the checkbox text.",
+		},
+		[3] = 
+		{
+			Name = "IsSelected",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if the box is selected.",
+		},
+		[4] = 
+		{
+			Name = "SetSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the box selected state.",
+		},
+	},
+	Color = 
+	{
+		[0] = 
+		{
+			Name = "Color",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "r",
+			Type = "int",
+			Comment = "red color component",
+		},
+		[2] = 
+		{
+			Name = "g",
+			Type = "int",
+			Comment = "green color component",
+		},
+		[3] = 
+		{
+			Name = "b",
+			Type = "int",
+			Comment = "blue color component",
+		},
+		[4] = 
+		{
+			Name = "a",
+			Type = "int",
+			Comment = "alpha color component",
+		},
+	},
+	ListModel = 
+	{
+		[0] = 
+		{
+			Name = "ListModel",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "ListTable",
+			Type = "table",
+			Comment = "Table to display in the list.",
+		},
+	},
+	RadioButton = 
+	{
+		[0] = 
+		{
+			Name = "RadioButton",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetCaption",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the button text.",
+		},
+		[2] = 
+		{
+			Name = "GetCaption",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the button text.",
+		},
+		[3] = 
+		{
+			Name = "IsSelected",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Checks if the button is selected.",
+		},
+		[4] = 
+		{
+			Name = "SetSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the button selected state.",
+		},
+		[5] = 
+		{
+			Name = "SetGroup",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the radio button group.",
+		},
+		[6] = 
+		{
+			Name = "GetGroup",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the radio button group.",
+		},
+	},
+	ActionListener = 
+	{
+		[0] = 
+		{
+			Name = "ActionListener",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "OnAction",
+			Type = "callback",
+			Comment = "Function to call when the listener is triggered.",
+		},
+	},
+	MouseListener = 
+	{
+		[0] = 
+		{
+			Name = "MouseListener",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "OnMouseEntered",
+			Type = "callback",
+			Comment = "Function to call when the mouse enters a widget.",
+		},
+		[2] = 
+		{
+			Name = "OnMouseExited",
+			Type = "callback",
+			Comment = "Function to call when the mouse exits a widget.",
+		},
+		[3] = 
+		{
+			Name = "OnMousePressed",
+			Type = "callback",
+			Comment = "Function to call when the mouse is pressed.",
+		},
+		[4] = 
+		{
+			Name = "OnMouseReleased",
+			Type = "callback",
+			Comment = "Function to call when the mouse is released.",
+		},
+		[5] = 
+		{
+			Name = "OnMouseClicked",
+			Type = "callback",
+			Comment = "Function to call when the mouse clicks.",
+		},
+		[6] = 
+		{
+			Name = "OnMouseWheel",
+			Type = "callback",
+			Comment = "Function to call when the mouse wheel is moved.",
+		},
+		[7] = 
+		{
+			Name = "OnMouseMoved",
+			Type = "callback",
+			Comment = "Function to call when the mouse is moved.",
+		},
+		[8] = 
+		{
+			Name = "OnMouseDragged",
+			Type = "callback",
+			Comment = "Function to call when the mouse is dragged.",
+		},
+	},
+	DeathListener = 
+	{
+		[0] = 
+		{
+			Name = "DeathListener",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "OnDeath",
+			Type = "callback",
+			Comment = "Function to call when the listener is triggered.",
+		},
+	},
+	Weapon = 
+	{
+		[0] = 
+		{
+			Name = "Name",
+			Type = "string",
+			Comment = "Name of the weapon.",
+		},
+		[1] = 
+		{
+			Name = "WeaponId",
+			Type = "int",
+			Comment = "Numeric Id of the weapon.",
+		},
+		[2] = 
+		{
+			Name = "WeaponAliasId",
+			Type = "int",
+			Comment = "",
+		},
+		[3] = 
+		{
+			Name = "MinUseTime",
+			Type = "float",
+			Comment = "Weapon must be used for a minimum amount of time when chosen.",
+		},
+		[4] = 
+		{
+			Name = "PrimaryFire",
+			Type = "firemode",
+			Comment = "Access to primary fire mode.",
+		},
+		[5] = 
+		{
+			Name = "SecondaryFire",
+			Type = "firemode",
+			Comment = "Access to secondary fire mode.",
+		},
+	},
+	AdjustingContainer = 
+	{
+		[0] = 
+		{
+			Name = "AdjustingContainer",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "SetNumberOfColumns",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Gets the number of columns.",
+		},
+		[2] = 
+		{
+			Name = "SetColumnAlignment",
+			Type = "function",
+			Arguments = 2,
+			Comment = "Sets the alignment of a column.",
+		},
+		[3] = 
+		{
+			Name = "SetPadding",
+			Type = "function",
+			Arguments = 4,
+			Comment = "Sets the padding of the container.",
+		},
+		[4] = 
+		{
+			Name = "SetVerticalSpacing",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the vertical spacing between elements.",
+		},
+		[5] = 
+		{
+			Name = "SetHorizontalSpacing",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the horizontal spacing between elements.",
+		},
+		[6] = 
+		{
+			Name = "AdjustContent",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Adjust the content in the container.",
+		},
+	},
+	DropDown = 
+	{
+		[0] = 
+		{
+			Name = "DropDown",
+			Type = "<constructor>",
+			Comment = "",
+		},
+		[1] = 
+		{
+			Name = "GetSelected",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the index of the selected option.",
+		},
+		[2] = 
+		{
+			Name = "SetSelected",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the index of the selected option.",
+		},
+		[3] = 
+		{
+			Name = "SetListModel",
+			Type = "function",
+			Arguments = 1,
+			Comment = "Sets the list model to display in the dropdown.",
+		},
+		[4] = 
+		{
+			Name = "GetListModel",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Gets the list model to display in the dropdown.",
+		},
+		[5] = 
+		{
+			Name = "AdjustHeight",
+			Type = "function",
+			Arguments = 0,
+			Comment = "Adjust the height of the drop down.",
+		},
+	},
+};

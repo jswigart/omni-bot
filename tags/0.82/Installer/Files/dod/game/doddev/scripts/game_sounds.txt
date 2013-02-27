@@ -1,0 +1,454 @@
+// VOL_NORM		1.0f
+
+// Channels
+//	CHAN_AUTO		= 0,
+//	CHAN_WEAPON		= 1,
+//	CHAN_VOICE		= 2,
+//	CHAN_ITEM		= 3,
+//	CHAN_BODY		= 4,
+//	CHAN_STREAM		= 5,		// allocate stream channel from the static or dynamic area
+//	CHAN_STATIC		= 6,		// allocate channel from the static area 
+// these can be set with "channel" "2" or "channel" "chan_voice"
+
+//-----------------------------------------------------------------------------
+// common attenuation values
+//-----------------------------------------------------------------------------
+
+// DON'T USE THESE - USE SNDLVL_ INSTEAD!!!
+//	ATTN_NONE		0.0f	
+//	ATTN_NORM		0.8f
+//	ATTN_IDLE		2.0f
+//	ATTN_STATIC		1.25f 
+//	ATTN_RICOCHET	1.5f
+//	ATTN_GUNFIRE	0.27f
+
+//	SNDLVL_NONE		= 0,
+//	SNDLVL_25dB		= 25,
+//	SNDLVL_30dB		= 30,
+//	SNDLVL_35dB		= 35,
+//	SNDLVL_40dB		= 40,
+//	SNDLVL_45dB		= 45,
+//	SNDLVL_50dB		= 50,	// 3.9
+//	SNDLVL_55dB		= 55,	// 3.0
+//	SNDLVL_IDLE		= 60,	// 2.0
+//	SNDLVL_TALKING	= 60,	// 2.0
+//	SNDLVL_60dB		= 60,	// 2.0
+//	SNDLVL_65dB		= 65,	// 1.5
+//	SNDLVL_STATIC	= 66,	// 1.25
+//	SNDLVL_70dB		= 70,	// 1.0
+//	SNDLVL_NORM		= 75,
+//	SNDLVL_75dB		= 75,	// 0.8
+//	SNDLVL_80dB		= 80,	// 0.7
+//	SNDLVL_85dB		= 85,	// 0.6
+//	SNDLVL_90dB		= 90,	// 0.5
+//	SNDLVL_95dB		= 95,
+//	SNDLVL_100dB	= 100,	// 0.4
+//	SNDLVL_105dB	= 105,
+//	SNDLVL_120dB	= 120,
+//	SNDLVL_130dB	= 130,
+//	SNDLVL_GUNFIRE	= 140,	// 0.27
+//	SNDLVL_140dB	= 140,	// 0.2
+//	SNDLVL_150dB	= 150,	// 0.2
+
+
+"Game.GermanWin"
+{
+	"channel"		"CHAN_AUTO"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_140dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"	"#ambient/german_win.mp3"
+}
+
+"Game.USWin"
+{
+	"channel"		"CHAN_AUTO"
+	"volume"		"1"
+	"soundlevel"	"SNDLVL_140dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"	"#ambient/us_win.mp3"
+}
+
+"HudChat.Message"
+{
+	"channel"	"CHAN_ITEM"
+	"volume"	"VOL_NORM"
+	"soundlevel"  "SNDLVL_NONE"
+	"pitch"	"PITCH_NORM"
+
+	"wave"	"common/null.wav"
+}
+
+
+"DoorSound.Null"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.0"
+	"pitch"			"100"
+	"soundlevel"	"SNDLVL_NORM"
+	"wave"	"common/null.wav" 
+}
+
+"RotDoorSound.DefaultLocked"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.2"
+	"soundlevel"	"SNDLVL_75dB"
+	"wave"	"doors/default_locked.wav" 
+}
+
+"RotDoorSound.DefaultMove"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.2"
+	"soundlevel"	"SNDLVL_75dB"
+	"wave"	"doors/default_move.wav" 
+}
+
+"RotDoorSound.DefaultArrive"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.2"
+	"soundlevel"	"SNDLVL_75dB"
+	"wave"	"common/null.wav" 
+}
+
+"Ambient.Flag"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".65"
+	"soundlevel"	"SNDLVL_65dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/flag.wav"
+}
+
+"Ambient.Fire"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/fire.wav"
+}
+
+"Ambient.FlyOver1"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/flyover1.wav"
+}
+
+"Ambient.FlyOver2"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_150dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/flyover2.wav"
+}
+
+"Ambient.Bell"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1.0"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/bell.wav"
+}
+
+"Fire.Plasma"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/fire.wav"
+}
+
+"Ambient.BurnedOut"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/burnedout.wav"
+}
+
+"Ambient.HeavyWind"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".5"
+	"soundlevel"	"SNDLVL_58dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/heavywind.wav"
+}
+
+"Ambient.HeavyWind2"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"soundlevel"	"SNDLVL_65dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/heavywind2.wav"
+}
+
+"Ambient.LandingCraft"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_70dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/landingcraft.wav"
+}
+
+"Ambient.LightHum"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".5"
+	"soundlevel"	"SNDLVL_58dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/lighthum.wav"
+}
+
+"Ambient.WaterWheel"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/waterwheel.wav"
+}
+
+"Ambient.LightWaves"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".4"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/lightwaves.wav"
+}
+
+
+"Ambient.PoleCreak"
+{
+
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"pitch"		"100"
+	"soundlevel"	"SNDLVL_65dB"
+	
+	"wave"		"ambient/polecreak1.wav"
+}
+
+
+"Ambient.TreeCreak"
+{
+
+	"channel"	"CHAN_STATIC"
+	"volume"	".2"
+	"pitch"		"100"
+	"soundlevel"	"SNDLVL_75dB"
+	
+	"wave"		"ambient/treecreak1.wav"
+}
+
+"Ambient.GermanRadio"
+{
+
+	"channel"	"CHAN_STATIC"	
+	"volume"	".5"
+	"pitch"		"100"
+	"soundlevel"	"SNDLVL_75dB"
+	
+	"wave"		"ambient/germanradio.wav"
+}
+
+"General.BurningFlesh"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"0.6"
+	"pitch"		"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"		 "npc/headcrab/headcrab_burning_loop2.wav" 
+}
+
+"General.BurningObject"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"VOL_NORM"
+	"pitch"		"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"		 "ambient/fire/fire_small_loop2.wav" 
+}
+
+"General.StopBurning"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"VOL_NORM"
+	"pitch"		"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"		 "common/null.wav" 
+}
+
+
+"PropaneTank.Burst"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1.0"
+	"pitch"		"95,105"
+	"soundlevel"	"SNDLVL_90db"
+	"wave"		"ambient/fire/gascan_ignite1.wav"
+}
+
+"Splash.SplashSound"
+{
+	"channel"	"CHAN_AUTO"
+	"volume"	"0.75"
+	"soundlevel"  "SNDLVL_75dB"
+	"pitch"	"90, 100"
+
+	"rndwave"
+	{
+		"wave"	"ambient/water/water_spray1.wav"
+		"wave"	"ambient/water/water_spray2.wav"
+		"wave"	"ambient/water/water_spray3.wav"
+	}
+}
+
+
+"Geiger.BeepLow"
+{
+	"channel"	"CHAN_STATIC"
+	"soundlevel"	"SNDLVL_NONE"
+	"pitch"			"PITCH_NORM"
+
+	"rndwave"
+	{
+		"wave"	"player/geiger1.wav"
+		"wave"	"player/geiger2.wav"
+	}
+}
+
+Ambient.KaltWheelCreak
+{
+
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"pitch"		"100"
+	"soundlevel"	"SNDLVL_65dB"
+	
+	"wave"		"ambient/polecreak1.wav"
+}
+
+"Ambient.DistantExplosion"
+{
+	"channel"		"CHAN_STATIC"
+	"soundlevel"	"SNDLVL_85dB"
+	"pitch"		"PITCH_NORM"
+
+	"rndwave"
+	{
+		"wave"	"ambient/distantexplosion1.wav"
+		"wave"	"ambient/distantexplosion2.wav"
+		"wave"	"ambient/distantexplosion3.wav"
+	}
+}
+
+
+"Ambient.WindGust"
+{
+	"channel"	"CHAN_STATIC"
+	"time"		"15,20"
+	"volume"	".5"
+	"pitch"		"100"
+	"rndwave"
+	{
+		"wave"		"ambient/windgust1.wav"
+		"wave"		"ambient/windgust2.wav"
+		"wave"		"ambient/windgust3.wav"
+	}
+}
+
+"Ambient.Generator"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_70dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/lighthum.wav"
+}
+
+"Ambient.LightHum"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	".75"
+	"soundlevel"	"SNDLVL_70dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/generator.wav"
+}
+
+"Ambient.GeneratorLight"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_70dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/generatorlight.wav"
+}
+
+"Ambient.Kubelwagon"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/idlekubelwagon.wav"
+}
+
+
+"Ambient.Halftrack"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/idlehalftrack.wav"
+}
+
+"Ambient.Tank"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1"
+	"soundlevel"	"SNDLVL_75dB"
+	"pitch"		"PITCH_NORM"
+
+	"wave"		"ambient/tank.wav"
+}

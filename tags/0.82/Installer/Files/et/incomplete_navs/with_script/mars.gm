@@ -1,0 +1,122 @@
+//==========================================================================================
+//
+//	mars.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	Martin	05 October 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	Hilltop_MG_42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Hilltop_MG_42_Built" );
+	},
+
+	Hilltop_MG_42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Hilltop_MG_42_Dyno = 0;
+
+		Util.MapDebugPrint( "Hilltop_MG_42_Destroyed" );
+	},
+
+	Secret_Office_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_document" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Radar" );
+		Util.MapDebugPrint( "Secret_Office_Door_Destroyed" );
+	},
+
+	axis_document_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.EnableGoal( "DEFEND_Radar.*", true );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Office.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Office.*" );
+		Util.MapDebugPrint( "axis_document_Taken" );
+	},
+
+	axis_document_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "DEFEND_Radar.*", true );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Office.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Office.*" );
+		Util.MapDebugPrint( "axis_document_Returned" );
+	},
+
+	axis_document_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_document_Secured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied team has built the hilltop MG-42!", Map.Hilltop_MG_42_Built );
+	OnTrigger( "Axis team has destroyed the hilltop MG-42!", Map.Hilltop_MG_42_Destroyed );
+	OnTrigger( "The Allies have destroyed the Office Door!", Map.Secret_Office_Door_Destroyed );
+	OnTrigger( "The Allies have stolen the Secret Document", Map.axis_document_Taken );
+	OnTrigger( "The Axis have retrieved the Secret Document", Map.axis_document_Returned );
+	OnTrigger( "The Allies have transmitted the Secret Document", Map.axis_document_Secured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Office.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Office.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Secret_Office_Door" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

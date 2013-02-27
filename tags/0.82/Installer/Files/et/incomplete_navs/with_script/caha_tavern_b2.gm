@@ -1,0 +1,349 @@
+//==========================================================================================
+//
+//	caha_tavern_b2.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP	6 Febuary 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+	BUILD_1st_Floor_ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_1st_Floor_ladder_Built" );
+	},
+
+	BUILD_3rd_Floor_ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_3rd_Floor_ladder_Built" );
+	},
+
+	BUILD_4th_Floor_ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_4th_Floor_ladder_Built" );
+	},
+
+	Stairs_Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Stairs_Wall_Built" );
+	},
+
+	Stairs_Wall_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Stairs_Wall_1_Built" );
+	},
+
+	ladder_Fence_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ladder_Fence_Built" );
+	},
+
+	PLANT_1st_Floor_ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "1st_Floor_ladder_Destroyed" );
+	},
+
+	PLANT_3rd_Floor_ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "3rd_Floor_ladder_Destroyed" );
+	},
+
+	PLANT_4th_Floor_ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "4th_Floor_ladder_Destroyed" );
+	},
+
+	Cellar_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Fake.*" );
+		Map.WallTraceLineThreadId = thread(Map.WallTraceLineThread);
+		Util.MapDebugPrint( "Cellar_Wall_Destroyed" );
+	},
+
+	Security_Power_Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Security_Power_Generator_Destroyed" );
+	},
+
+	Security_Power_Generator_B_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Security_Power_Generator_B_Destroyed" );
+	},
+
+	Stairs_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Stairs_Wall_Destroyed" );
+	},
+
+	Stairs_Wall_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Stairs_Wall_1_Destroyed" );
+	},
+
+	ladder_Fence_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ladder_Fence_Destroyed" );
+	},
+
+	Spy_Lists_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Spy_Lists_Taken" );
+	},
+
+	Spy_Lists_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Spy_Lists_Returned" );
+	},
+
+	Spy_Lists_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Spy_Lists_Secured" );
+	},
+
+	floor1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor1_Axis_Captured" );
+	},
+
+	floor1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor1_Allies_Captured" );
+	},
+
+	floor2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor2_Axis_Captured" );
+	},
+
+	floor2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor2_Allies_Captured" );
+	},
+
+	floor3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor3_Axis_Captured" );
+	},
+
+	floor3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor3_Allies_Captured" );
+	},
+
+	floor4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor4_Axis_Captured" );
+	},
+
+	floor4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "floor4_Allies_Captured" );
+	},
+
+	Security_Power_disabled = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		sleep(15);
+		Wp.SetWaypointFlag( "LockDoor", "closed", false );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Wall" );
+
+		Util.MapDebugPrint( "Security_Power_disabled" );
+	},
+	
+	WallTraceLineThread = function()
+	{
+	// two map coordinates:
+	start = Vector3(730.779, 930.043, -201.875);
+	end = Vector3(880.478, 934.870, -279.875);
+	while (1)
+		{
+		tr = TraceLine(start, end, null, TRACE.SHOT, 0, false);
+		// The tr.fraction value tells us of a collision or not.
+		// If it's 1, there was no  collision. If less than 1 there was a collision.
+		if(tr.fraction < 1)
+			{
+			//print("Wall_built");
+			DrawDebugLine(start, end, COLOR.RED, 2);
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Fake.*" );
+			Map.Wall_Built();
+			}
+		else
+			{
+			//print("Not_built");
+			DrawDebugLine(start, end, COLOR.GREEN, 2);
+			}
+		sleep(2);
+		}
+	},
+	
+	Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wall_Built" );
+		threadKill(Map.WallTraceLineThreadId);
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis team has built the ^31st. ^7Floor ladder!", Map.BUILD_1st_Floor_ladder_Built );
+	OnTrigger( "Axis team has built the ^x3rd. ^7Floor ladder!", Map.BUILD_3rd_Floor_ladder_Built );
+	OnTrigger( "Axis team has built the ^14th. ^7Floor ladder!", Map.BUILD_4th_Floor_ladder_Built );
+	OnTrigger( "Allied team has built the ^xStairs Wall^7!", Map.Stairs_Wall_Built );
+	OnTrigger( "MISSING_STRING", Map.Stairs_Wall_1_Built );
+	OnTrigger( "Allied team has built the ladder ^xFence^7!", Map.ladder_Fence_Built );
+	OnTrigger( "Allied team has destroyed the ^31st. ^7Floor ladder!", Map.PLANT_1st_Floor_ladder_Destroyed );
+	OnTrigger( "Allied team has destroyed the ^x3rd. ^7Floor ladder!", Map.PLANT_3rd_Floor_ladder_Destroyed );
+	OnTrigger( "Allied team has destroyed the ^14th. ^7Floor ladder!", Map.PLANT_4th_Floor_ladder_Destroyed );
+	OnTrigger( "^1Objective Info: ^7Axis have breached the Cellar Wall!", Map.Cellar_Wall_Destroyed );
+	OnTrigger( "^1Objective Info: ^7Axis have destroyed the Power Generator A!", Map.Security_Power_Generator_Destroyed );
+	OnTrigger( "^1Objective info: ^7Axis has blown up the Power Generator B!", Map.Security_Power_Generator_B_Destroyed );
+	OnTrigger( "Axis team has destroyed the ^xStairs Wall^7!", Map.Stairs_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Stairs_Wall_1_Destroyed );
+	OnTrigger( "Axis team has destroyed the ladder ^xFence^7!", Map.ladder_Fence_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Spy_Lists_Taken );
+	OnTrigger( "MISSING_STRING", Map.Spy_Lists_Returned );
+	OnTrigger( "Axis team has escaped with the Spy Lists!", Map.Spy_Lists_Secured );
+	OnTrigger( "Axis capture the ^31st ^7Floor Spawn!", Map.floor1_Axis_Captured );
+	OnTrigger( "Allies reclaim the ^31st ^7Floor Spawn!", Map.floor1_Allies_Captured );
+	//Axis now own the ^31st. ^7Floor spawn!
+	OnTrigger( "Axis capture the ^a2nd ^7Floor Spawn!", Map.floor2_Axis_Captured );
+	OnTrigger( "Allies reclaim the ^a2nd ^7Floor Spawn!", Map.floor2_Allies_Captured );
+	//Axis now own the ^a2nd. ^7Floor spawn!
+	OnTrigger( "Axis capture the ^x3rd ^7Floor Spawn!", Map.floor3_Axis_Captured );
+	OnTrigger( "Allies reclaim the ^x3rd ^7Floor Spawn!", Map.floor3_Allies_Captured );
+	//Axis now own the ^x3rd. ^7Floor spawn!
+	OnTrigger( "Axis capture the ^14th ^7Floor Spawn!", Map.floor4_Axis_Captured );
+	OnTrigger( "Allies reclaim the ^14th ^7Floor Spawn!", Map.floor4_Allies_Captured );
+	//Axis now own the ^14th. ^7Floor spawn!
+
+	OnTrigger( "Allied spawntime changed to 20 seconds.", Map.Security_Power_disabled );
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	Wp.SetWaypointFlag( "LockDoor", "closed", true );
+	Util.DisableGoal( "GRENADE_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Stairs_Wall_1" ); //Duplicate
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Security_Power_Generator_B" ); //Unbuildable
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Stairs_Wall_1" ); //Duplicate
+	
+	SetGoalPriority( "CAPPOINT_Fake", 0.79, TEAM.AXIS);
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

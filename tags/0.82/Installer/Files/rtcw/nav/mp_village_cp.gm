@@ -1,0 +1,171 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
+	Flag_obj_item01 = "FLAG_obj_item01",
+	Cappoint_truck = "CAPPOINT_truck",
+	Mount_cemetary_mg = "MOUNTMG42_cemetary_mg",
+	Mount_central_cyd_mg = "MOUNTMG42_central_cyd_mg",
+	Mount_cottage_mg = "MOUNTMG42_cottage_mg",
+	Mount_west_cyd_mg = "MOUNTMG42_west_cyd_mg",
+	Repair_cemetary_mg = "REPAIRMG42_cemetary_mg",
+	Repair_central_cyd_mg = "REPAIRMG42_central_cyd_mg",
+	Repair_cottage_mg = "REPAIRMG42_cottage_mg",
+	Repair_west_cyd_mg = "REPAIRMG42_west_cyd_mg",
+
+	obj_item01_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "obj_item01_Taken" );
+	},
+
+	truck_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "truck_Captured" );
+	},
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+	checkpoint05_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Axis_Captured" );
+	},
+
+	checkpoint05_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Wp.SetWaypointFlag( "cpspawn1", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn2", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn3", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn4", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn5", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn6", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn7", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn8", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn9", "closed", false );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	//OnTrigger( "MISSING_STRING", Map.obj_item01_Taken );
+	//OnTrigger( "MISSING_STRING", Map.truck_Captured );
+	OnTrigger( "Axis takes the Southeast City Exit!", Map.checkpoint01_Axis_Captured );
+	OnTrigger( "Allies take the Southeast City Exit!", Map.checkpoint01_Allies_Captured );
+	OnTrigger( "Axis takes the Southwest Courtyard!", Map.checkpoint02_Axis_Captured );
+	OnTrigger( "Allies take the Southwest Courtyard!", Map.checkpoint02_Allies_Captured );
+	OnTrigger( "Axis takes the Central Courtyard!", Map.checkpoint03_Axis_Captured );
+	OnTrigger( "Allies take the Central Courtyard!", Map.checkpoint03_Allies_Captured );
+	OnTrigger( "Axis takes the Northeast Cemetary!", Map.checkpoint04_Axis_Captured );
+	OnTrigger( "Allies take the Northeast Cemetary!", Map.checkpoint04_Allies_Captured );
+	OnTrigger( "Axis takes the Northwest Courtyard!", Map.checkpoint05_Axis_Captured );
+	OnTrigger( "Allies take the Northwest Courtyard!", Map.checkpoint05_Allies_Captured );
+
+
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+};

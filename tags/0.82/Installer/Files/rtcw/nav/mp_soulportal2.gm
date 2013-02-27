@@ -1,0 +1,830 @@
+global Map =
+{
+	Debug = 0,
+	FocusPrimary = true,
+	DocsTaken = false,
+	DontDispenseAmmo = true,
+	ChurchDoorDestroyed = false,
+
+	Classes = function()
+	{
+		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 5;
+		Server.MinClassCount[TEAM.AXIS][CLASS.LIEUTENANT] = 2;
+
+		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 5;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.LIEUTENANT] = 2;
+	},
+
+	docsEscaped =
+	{
+		Name = "docsEscaped",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+		},
+		OnExit = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_church.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+					Util.MapDebugPrint( "docs escaped" );
+				}
+			}
+		},
+	},
+
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER = // church
+			{
+				spawnpt = 3,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER = // portal and train controls
+			{
+				spawnpt = 1,
+				numbots = 8,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER2 = // checkpoint
+			{
+				MinBotsForRole = 8,
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.LIEUTENANT, // a/s the spawn
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER = // portal
+			{
+				spawnpt = 2,
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER = // church
+			{
+				spawnpt = 1,
+				numbots = 7,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // train controls
+			{
+				spawnpt = 2,
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER2 = // checkpoint
+			{
+				MinBotsForRole = 10,
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.LIEUTENANT,
+			},
+		},
+	},
+
+	Switches =
+	{
+		lever1 =
+		{
+			Enabled = true,
+			//Priority = 0,
+			WaypointName = "lever1",
+			LimitTeam = Util.AllTeams,
+			//LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-1785.87, -1000.386, 326.974),
+		},
+
+		lever2 =
+		{
+			Enabled = true,
+			//Priority = 0,
+			WaypointName = "lever2",
+			LimitTeam = Util.AllTeams,
+			//LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(-1338.125, 73.323, 338.281),
+		},
+
+		lever3 =
+		{
+			Enabled = true,
+			//Priority = 0,
+			WaypointName = "lever3",
+			LimitTeam = Util.AllTeams,
+			//LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			AimPosition = Vector3(2921.875, -1452.641, 1132.969),
+		},
+
+		lift1 =
+		{
+			Enabled = true,
+			//Priority = 0,
+			WaypointName = "lift1",
+			LimitTeam = Util.AllTeams,
+			//LimitBots = 2,
+			LimitClass = Util.AllClasses,
+		},
+
+		lift2 =
+		{
+			Enabled = true,
+			//Priority = 0,
+			WaypointName = "lift2",
+			LimitTeam = Util.AllTeams,
+			//LimitBots = 2,
+			LimitClass = Util.AllClasses,
+		},
+
+	},
+
+	Navigation =
+	{
+		towerladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				sleep(2);
+			},
+		},
+		roofjump =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 1);
+				//_this.Bot.HoldButton(BTN.JUMP, 0.25);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 0.25);
+				sleep(0.25);
+				_this.Bot.HoldButton(BTN.STRAFE_L, 0.25);
+				sleep(0.75);
+			},
+		},
+		grenadegrate =
+		{
+			navigate = function(_this)
+			{
+				if ( !Map.Grate_Destroyed && Map.Grate_Bot_Count == 0 && _this.Bot.HasWeapon( WEAPON.ALLY_GRENADE ) )
+				{
+					wpTable = {};
+					Wp.GetWaypointByName("grenadegrate", wpTable);
+					Map.Grate_Bot_Count += 1;
+					if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+					{
+						_this.AddAimRequest(Priority.High, "facing", wpTable.facing);
+						_this.AddWeaponRequest(Priority.High, WEAPON.ALLY_GRENADE );
+						_this.BlockForWeaponChange( WEAPON.ALLY_GRENADE );
+						_this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+						sleep(3);
+					}
+					Map.Grate_Bot_Count -= 1;
+				}
+				yield();
+			},
+		},
+	},
+
+	Checkpoint_midflag = "CHECKPOINT_midflag",
+	Cappoint_136 = "CAPPOINT_136",
+	Flag_Book_of_the_Dead = "FLAG_Book_of_the_Dead",
+	Plant_Book_Of_The_Dead_Holding_Chamber = "PLANT_Book_Of_The_Dead_Holding_Chamber",
+	Plant_Guardhouse_Door = "PLANT_Guardhouse_Door",
+	Plant_Hells_Spawn_Soul_Portal = "PLANT_Hells_Spawn_Soul_Portal",
+	Plant_Supply_Train_Control_Board = "PLANT_Supply_Train_Control_Board",
+	Explode_1 = "EXPLODE_1",
+	Mount_tr_mg = "MOUNTMG42_tr_mg",
+	Mount_belltower = "MOUNTMG42_belltower",
+	Repair_tr_mg = "REPAIRMG42_tr_mg",
+	Repair_belltower = "REPAIRMG42_belltower",
+
+	Grate_Destroyed = false,
+	Grate_Bot_Count = 0,
+
+	Book_Of_The_Dead_Holding_Chamber_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ChurchDoorDestroyed = true;
+		Util.EnableGoal("CAPPOINT_.*");
+		Util.EnableGoal("ROUTE_churchroof2");
+
+	        SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Book_of_the_Dead" );
+
+		Util.DisableGroup( "r_church2", TEAM.AXIS );
+
+		if ( !Map.DocsTaken ) {
+			Util.EnableGroup( "r_church3", TEAM.AXIS );
+		}
+
+		Util.DisableGroup( "b_church", TEAM.ALLIES );
+
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Destroyed" );
+	},
+
+	Book_Of_The_Dead_Holding_Chamber_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Planted" );
+	},
+
+	Book_Of_The_Dead_Holding_Chamber_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Defused" );
+	},
+
+	Guardhouse_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		DynamicPathsUpdated(TEAM.ALLIES, TEAM.AXIS);
+		Util.MapDebugPrint( "Guardhouse_Door_Destroyed" );
+	},
+
+	Hells_Spawn_Soul_Portal_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGroup("b_portal", TEAM.ALLIES);
+		Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);
+
+		Util.DisableGroup( "r_portal", TEAM.AXIS );
+		Util.EnableGroup( "r_traincontrol_shift", TEAM.AXIS );
+
+		Util.MapDebugPrint( "Hells_Spawn_Soul_Portal_Destroyed" );
+	},
+
+	Supply_Train_Control_Board_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGroup("b_traincontrol", TEAM.ALLIES);
+		Util.EnableGroup("b_portalshift", TEAM.ALLIES);
+
+		Util.DisableGroup( "r_traincontrol", TEAM.AXIS );
+		Util.EnableGroup( "r_portal_shift", TEAM.AXIS );
+
+		Util.MapDebugPrint( "Supply_Train_Control_Board_Destroyed" );
+	},
+
+	Book_of_the_Dead_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.DocsTaken = true;
+
+		// see docsEscaped region trigger for axis shift logic
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDeliver.*" );
+
+		Util.MapDebugPrint( "Book_of_the_Dead_Taken" );
+	},
+
+	Book_of_the_Dead_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.DocsTaken = false;
+
+		Util.EnableGroup( "r_church1", TEAM.AXIS );
+
+		if (Map.ChurchDoorDestroyed) {
+			Util.EnableGroup( "r_church3", TEAM.AXIS );
+		}
+		else {
+			Util.EnableGroup( "r_church2", TEAM.AXIS );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bDeliver.*" );
+
+		Util.MapDebugPrint( "Book_of_the_Dead_Returned" );
+	},
+
+	midflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.ClearRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 ); // allies should focus on it
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_alliedroof.*" );
+		Util.MapDebugPrint( "midflag_Axis_Captured" );
+	},
+
+	midflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 ); // limited bots will go for it
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alliedroof.*" );
+		Util.MapDebugPrint( "midflag_Allies_Captured" );
+	},
+
+ 	guardhouse_door_open = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lever3.Enabled = false;
+
+		Util.MapDebugPrint("guardhouse door opening");
+ 	},
+
+ 	guardhouse_door_closed = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lever3.Enabled = true;
+
+		Util.MapDebugPrint("guardhouse door closing");
+ 	},
+
+ 	main_door_open = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lever1.Enabled = false;
+		Map.Switches.lever2.Enabled = false;
+
+		Util.MapDebugPrint("main door opening");
+ 	},
+
+ 	main_door_closed = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lever1.Enabled = true;
+		Map.Switches.lever2.Enabled = true;
+
+		Util.MapDebugPrint("main door closing");
+ 	},
+
+ 	lift1_down = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		sleep(1.7);
+		Map.Switches.lift1.Enabled = false;
+
+		Util.MapDebugPrint("lift1 down");
+ 	},
+
+ 	lift1_up = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lift1.Enabled = true;
+
+		Util.MapDebugPrint("lift1 up");
+ 	},
+
+ 	lift2_down = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		sleep(2);
+		Map.Switches.lift2.Enabled = false;
+
+		Util.MapDebugPrint("lift2 down");
+ 	},
+
+ 	lift2_up = function( trigger )
+ 	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Switches.lift2.Enabled = true;
+
+		Util.MapDebugPrint("lift2 up");
+ 	},
+
+	check_grate = function()
+	{
+		wpOne = {};
+		wpTwo = {};
+		Wp.GetWaypointByName("barrier1", wpOne);
+		Wp.GetWaypointByName("barrier1_1", wpTwo);
+		offset = Vector3(0,0,10);
+
+		while( !Map.Grate_Destroyed )
+		{
+			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false );
+
+			 if ( tr.fraction < 1 )
+			 {
+				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.RED, 0.25);
+			 }
+			 else
+			 {
+				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25);
+				Map.Grate_Destroyed = true;
+
+				// enable route or whatever here
+			 }
+
+			 sleep(0.25);
+		}
+
+		Util.MapDebugPrint( "grate_destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.RemoveGoal("PLANT_sewer_grate_1");
+	Util.RemoveGoal("PLANT_sewer_grate_2");
+	Util.RemoveGoal("PLANT_sewer_grate_3");
+	Util.RemoveGoal("PLANT_sewer_grate_4");
+	Util.RemoveGoal("PLANT_223");
+
+	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book1");
+	Util.AddUseWp("PLANT_Book_Of_The_Dead_Holding_Chamber", "book2");
+
+	thread(Map.check_grate);
+
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allies have breached the Inner Church Door!", Map.Book_Of_The_Dead_Holding_Chamber_Destroyed );
+	OnTrigger( "Planted at The Book Of The Dead Holding Chamber.", Map.Book_Of_The_Dead_Holding_Chamber_Planted );
+	OnTrigger( "Defused at The Book Of The Dead Holding Chamber.", Map.Book_Of_The_Dead_Holding_Chamber_Defused );
+	OnTrigger( "Axis has destroyed the Guardhouse door", Map.Guardhouse_Door_Destroyed );
+	OnTrigger( "The Hells Spawn Soul Portal Destroyed.", Map.Hells_Spawn_Soul_Portal_Destroyed );
+	OnTrigger( "Axis team has destoyed the Supply Train Control Panel", Map.Supply_Train_Control_Board_Destroyed );
+	OnTrigger( "Allies have stolen Book of the Dead!", Map.Book_of_the_Dead_Taken );
+	OnTrigger( "Flag returned Book of the Dead!", Map.Book_of_the_Dead_Returned );
+	OnTrigger( "Guardhouse checkpoint overtaken by Axis forces", Map.midflag_Axis_Captured );
+	OnTrigger( "Guardhouse checkpoint claimed by Allie forces", Map.midflag_Allies_Captured );
+	OnTrigger( "guardhousedoor_Opening", Map.guardhouse_door_open );
+	OnTrigger( "guardhousedoor_Closing", Map.guardhouse_door_closed );
+	OnTrigger( "maindoor_Opening", Map.main_door_open );
+	OnTrigger( "maindoor_Closing", Map.main_door_closed );
+	OnTrigger( "423_Opening", Map.lift1_down );
+	OnTrigger( "423_Closing", Map.lift1_up );
+	OnTrigger( "375_Opening", Map.lift2_down );
+	OnTrigger( "375_Closing", Map.lift2_up );
+
+	// docs escaped triggers
+	roof = OnTriggerRegion(AABB(2041.000,3087.000,673.000,2431.000,3507.000,747.000),Map.docsEscaped);
+	belltower = OnTriggerRegion(AABB(612.000,2911.000,873.000,878.000,3102.000,993.000),Map.docsEscaped);
+	frontdoor = OnTriggerRegion(AABB(637.000,2879.000,193.000,858.000,3136.000,267.000),Map.docsEscaped);
+	sidedoor = OnTriggerRegion(AABB(1701.000,2439.000,208.000,1825.000,2594.000,334.000),Map.docsEscaped);
+
+	cm2 = OnTriggerRegion(AABB(1621.000,2315.000,140.000,1988.000,2766.000,323.000),RegionTrigger.DisableCombatMovement);
+
+	Util.DisableGoal(".*", true); //all but routes
+	Util.DisableGoal("ROUTE_churchroof2");
+
+	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
+
+	RTCWUtil.SetPrimaryGoals(1.0);
+	SetGoalPriority("CAMP_.*", 0.95);
+	SetGoalPriority("DEFEND_rDeliver.*", 0.7);
+	SetGoalPriority("DEFEND_bDeliver.*", 0.7);
+	SetGoalPriority("PLANT_sewer_grate", 0.93); // do this first since it is near spawn
+	SetGoalPriority("PLANT_Guardhouse_Door", 0.93);
+	SetGoalPriority("MOUNTMG42_tr_mg", 0.95);
+	SetGoalPriority("REPAIRMG42_tr_mg", 0.951);
+	SetGoalPriority("CHECKPOINT.*", 0.61);
+	SetGoalPriority("AIRSTRIKE.*", 0.60);
+	SetGoalPriority( "DEFUSE_Guardhouse_Door.*", 0, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Supply_Train_Control_Board.*", 1.4, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "SNIPE_.*", 1.1 ); // they can't be bothered with anything else
+
+	Util.SetMaxUsers( 1, "PLANT_Guardhouse_Door" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_tr_mg" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	Util.SetRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 );
+
+	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alliedroof.*" );
+	Util.EnableGroup( "b_portal", TEAM.ALLIES );
+	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES );
+	Util.EnableGroup( "b_church", TEAM.ALLIES );
+	Util.EnableGroup( "b_checkpoint", TEAM.ALLIES ); // dedicated checkpoint team
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guardhouse_Door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_nemountain.*" );
+	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
+	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
+	Util.EnableGroup( "r_traincontrol", TEAM.AXIS );
+	Util.EnableGroup( "r_portal", TEAM.AXIS );
+	Util.EnableGroup( "r_checkpoint", TEAM.AXIS ); // dedicated checkpoint team
+
+	Util.SetGoalPosition( 2087, 3005, 317, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
+	Util.UpdateSwitchData();
+
+	RTCWUtil.KillEntities( { 341 } );
+
+	InitializeRoutes(); // TODO: should be called from bot lib
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CHECKPOINT_midflag =
+		{
+			ROUTE_alliedspawn = { ROUTE_portalsteps1 = { ROUTE_portalhall1 = { ROUTE_portalhall2 = {}, }, }, },
+			ROUTE_axisspawn =
+			{
+				ROUTE_ngraveyard2 = { ROUTE_churchsteps1 = { ROUTE_churchbridge = {}, }, },
+				ROUTE_cgraveyard1 =
+				{
+					ROUTE_nmainbridge =
+					{
+						ROUTE_frontgate = { ROUTE_frontgatewall = {}, },
+					},
+				},
+				ROUTE_trainbridge = {},
+			},
+		},
+		PLANT_Guardhouse_Door =
+		{
+			ROUTE_axisspawn = { ROUTE_ngraveyard2 = { ROUTE_churchsteps1 = {}, }, },
+		},
+		PLANT_Supply_Train_Control_Board =
+		{
+			ROUTE_axisspawn =
+			{
+				ROUTE_cgraveyard1 =
+				{
+					ROUTE_nmainbridge =
+					{
+						ROUTE_frontgate = { ROUTE_trainroomsteps = {}, },
+						ROUTE_waterladder = {},
+					},
+				},
+				ROUTE_trainbridge = {},
+				ROUTE_ntrain = { ROUTE_strain = {}, },
+			},
+			ROUTE_flagspawn1 =
+			{
+				ROUTE_portalhall2 =
+				{
+					ROUTE_portalhall1 = { ROUTE_portalhall = {} },
+				},
+				ROUTE_flagsteps =
+				{
+					ROUTE_frontgate = {},
+				},
+			},
+		},
+		PLANT_Hells_Spawn_Soul_Portal =
+		{
+			ROUTE_axisspawn =
+			{
+				ROUTE_cgraveyard1 =
+				{
+					ROUTE_nmainbridge =
+					{
+						ROUTE_frontgate =
+						{
+							ROUTE_portalsteps2 =
+							{
+								ROUTE_portalhall =
+								{
+									ROUTE_wportal = {},
+									ROUTE_eportal = {},
+									ROUTE_controlpanel = {},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_trainbridge = { ROUTE_lift1 = {}, },
+				ROUTE_ntrain =
+				{
+					ROUTE_strain =
+					{
+						ROUTE_lift1 =
+						{
+							ROUTE_portalsteps2 =
+							{
+								ROUTE_portalhall =
+								{
+									ROUTE_wportal = {},
+									ROUTE_eportal = {},
+									ROUTE_controlpanel = {},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_ngraveyard2 =
+				{
+					ROUTE_churchsteps1 =
+					{
+						ROUTE_churchbridge =
+						{
+							ROUTE_portalhall2 =
+							{
+								ROUTE_wportal = {},
+								ROUTE_eportal = {},
+								ROUTE_controlpanel = {},
+							},
+						},
+					},
+				},
+			},
+			ROUTE_flagspawn1 =
+			{
+				ROUTE_portalhall2 =
+				{
+					Weight = 2,
+					ROUTE_wportal = {},
+					ROUTE_eportal = {},
+					ROUTE_controlpanel = {},
+				},
+				ROUTE_flagsteps =
+				{
+					ROUTE_frontgate =
+					{
+						ROUTE_portalsteps2 =
+						{
+							ROUTE_portalhall =
+							{
+								ROUTE_wportal = {},
+								ROUTE_eportal = {},
+								ROUTE_controlpanel = {},
+							},
+						},
+					},
+				},
+			},
+		},
+		PLANT_Book_Of_The_Dead_Holding_Chamber =
+		{
+			ROUTE_alliedspawn =
+			{
+				ROUTE_nmainbridge =
+				{
+					ROUTE_cgraveyard1 =
+					{
+						ROUTE_cgraveyard2 =
+						{
+							ROUTE_church1 = {},
+							ROUTE_sgraveyard3 = {},
+						},
+					},
+					ROUTE_sgraveyard2 =
+					{
+						ROUTE_church1 = {},
+						ROUTE_sgraveyard3 = {},
+					},
+					ROUTE_churchtunnel = {},
+				},
+
+				ROUTE_guardhouse =
+				{
+					ROUTE_churchbridge =
+					{
+						ROUTE_churchside = {},
+						ROUTE_churchroof1 =
+						{
+							ROUTE_churchroof2 = {},
+							ROUTE_churchfront = {},
+						},
+					},
+				},
+			},
+			ROUTE_flagspawn1 =
+			{
+				ROUTE_frontgate =
+				{
+					ROUTE_cgraveyard1 =
+					{
+						ROUTE_cgraveyard2 =
+						{
+							ROUTE_church1 = {},
+							ROUTE_sgraveyard3 = {},
+						},
+					},
+					ROUTE_sgraveyard2 =
+					{
+						ROUTE_church1 = {},
+						ROUTE_sgraveyard3 = {},
+					},
+					ROUTE_churchtunnel = {},
+				},
+				ROUTE_churchbridge =
+				{
+					ROUTE_churchside = {},
+					ROUTE_churchroof1 =
+					{
+						ROUTE_churchroof2 = {},
+						ROUTE_churchfront = {},
+					},
+				},
+			},
+		},
+		CAPPOINT_136 =
+		{
+			ROUTE_docroute =
+			{
+				ROUTE_churchroof3 =
+				{
+					ROUTE_churchbridge =
+					{
+						ROUTE_flagsteps = { ROUTE_portalsteps1 = {}, },
+						ROUTE_portalhall2 = {},
+					},
+				},
+				ROUTE_churchbridge =
+				{
+					ROUTE_flagsteps = { ROUTE_portalsteps1 = {}, },
+					ROUTE_portalhall2 = {},
+				},
+				ROUTE_churchtunnel =
+				{
+					ROUTE_frontgate = { ROUTE_portalsteps1 = {}, },
+				},
+			},
+		},
+	};
+
+	MapRoutes.PLANT_Hells_Spawn_Soul_Portal.ROUTE_flagspawn2 = MapRoutes.PLANT_Hells_Spawn_Soul_Portal.ROUTE_flagspawn1;
+	MapRoutes.PLANT_Hells_Spawn_Soul_Portal.ROUTE_flagspawn3 = MapRoutes.PLANT_Hells_Spawn_Soul_Portal.ROUTE_flagspawn1;
+	MapRoutes.PLANT_Supply_Train_Control_Board.ROUTE_flagspawn2 = MapRoutes.PLANT_Supply_Train_Control_Board.ROUTE_flagspawn1;
+	MapRoutes.PLANT_Supply_Train_Control_Board.ROUTE_flagspawn3 = MapRoutes.PLANT_Supply_Train_Control_Board.ROUTE_flagspawn1;
+	MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber.ROUTE_flagspawn2 = MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber.ROUTE_flagspawn1;
+	MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber.ROUTE_flagspawn3 = MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber.ROUTE_flagspawn1;
+	MapRoutes.FLAG_Book_Of_The_Dead = MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber;
+
+	MapRoutes["ATTACK_rTrainControl.*"] = MapRoutes.PLANT_Supply_Train_Control_Board;
+	MapRoutes["ATTACK_rPortal.*"] = MapRoutes.PLANT_Hells_Spawn_Soul_Portal;
+	MapRoutes["ATTACK_rDeliver.*"] = MapRoutes.PLANT_Hells_Spawn_Soul_Portal;
+	MapRoutes["ATTACK_b_church.*"] = MapRoutes.PLANT_Book_Of_The_Dead_Holding_Chamber;
+
+	MapRoutes["CAMP_traincontrol.*"] =
+	{
+		ROUTE_alliedspawn =
+		{
+			ROUTE_warehouse = { ROUTE_lift1 = {}, },
+			ROUTE_frontgate = {},
+		},
+	};
+
+	MapRoutes["CAMP_portal.*"] =
+	{
+		ROUTE_alliedspawn =
+		{
+			ROUTE_portalsteps1 =
+			{
+				ROUTE_wportal = {},
+				ROUTE_eportal = {},
+			},
+			ROUTE_portalsteps2 =
+			{
+				ROUTE_wportal = {},
+				ROUTE_eportal = {},
+			},
+		},
+	};
+
+	Util.Routes(MapRoutes);
+};

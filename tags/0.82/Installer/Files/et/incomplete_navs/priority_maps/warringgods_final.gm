@@ -1,0 +1,605 @@
+//==========================================================================================
+//
+//	warringgods_final.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	19 September 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	
+	mainliftPos = "bottom", //lift at bottom
+	axisliftPos = "bottom", //lift at bottom
+	alliedliftPos = "bottom", //lift at bottom
+	Allied_Ladder_Dyno = 0,
+	Axis_Ladder_Dyno = 0,
+	
+	Movers =
+	{
+		"MOVER_lift",
+		"MOVER_allied_lift",
+		"MOVER_axis_lift",	
+	},
+	
+	Switches =
+	{
+		aidown1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "aidown1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(3871.918, 637.875, -157.846),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:aidown1
+		},
+		aidown2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "aidown2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(4061.875, 768.978, 96.624),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:aidown2
+		},
+		aiup1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "aiup1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(3906.125, 744.264, -153.270),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:aiup1
+		},
+		aiup2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "aiup2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(4061.875, 880.312, 97.158),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:aiup2
+		},
+		axdown1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "axdown1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(-3871.883, 637.875, -152.485),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:axdown1
+		},
+		axdown2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "axdown2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(-4061.875, 772.965, 105.302),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:axdown2
+		},
+		axup1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "axup1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(-3906.125, 759.933, -154.103),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:axup1
+		},
+		axup2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "axup2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(-4061.875, 685.113, 101.731),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:axup2
+		},
+		midown1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "midown1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(31.993, 706.125, -155.203),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:midown1
+		},
+		midown2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "midown2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(26.125, 772.524, 100.879),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:midown2			
+		},
+		miup1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "miup1",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(189.875, 759.849, -153.070),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:miup1			
+		},
+		miup2 =
+		{
+			Enabled = true,
+			Priority = 0.0, // leave for paththrough
+			WaypointName = "miup2",
+			PressOnce = true,
+			Timeout = 1500,
+			AimPosition = Vec3(26.125, 655.236, 103.190),
+			// /bot waypoint_setproperty paththrough UseSwitch_PT:miup2
+		},		
+	},
+	
+	Navigation =
+	{
+		wait =
+		{
+			navigate = function(_this)
+			{
+				timeout = 1;
+				while ( timeout > 0 ) {
+					_this.Goto(_this.Bot.GetPosition());
+					sleep(1);
+					timeout -= 1;
+				}
+			},
+		},
+		// /bot waypoint_setproperty paththrough Navigation_PT:wait
+	},
+	
+	mainlift = function(trigger)
+	{
+		Map.mainliftPos = "moving";
+		Map.Switches.miup1.Disabled = true;
+		Map.Switches.miup2.Disabled = true;
+		Map.Switches.midown1.Disabled = true;
+		Map.Switches.midown2.Disabled = true;
+		sleep(1);	
+		Util.MapDebugPrint("Main Lift moving");
+
+		vel = ToVector(trigger.Action);
+
+		if (vel.z < 0)
+		{
+			Map.mainliftPos = "bottom";
+			Map.Switches.miup1.Enabled = true;
+			Map.Switches.miup2.Enabled = true;
+			Map.Switches.midown1.Disabled = true;
+
+			Util.MapDebugPrint("Main lift at bottom");
+		}
+		else if (vel.z > 0)
+		{
+			Map.mainliftPos = "top";
+			Map.Switches.midown1.Enabled = true;
+			Map.Switches.midown2.Enabled = true;
+			Map.Switches.miup2.Disabled = true;
+
+			Util.MapDebugPrint("Main lift at top");
+		}		
+	},
+	
+	axislift = function(trigger)
+	{
+		Map.axisliftPos = "moving";
+		Map.Switches.axdown1.Disabled = true;
+		Map.Switches.axup1.Disabled = true;
+		Map.Switches.axdown2.Disabled = true;
+		Map.Switches.axup2.Disabled = true;
+		sleep(1);
+		Util.MapDebugPrint("Axis Lift Moving");
+		
+		vel = ToVector(trigger.Action);
+
+		if (vel.z < 0)
+		{
+			Map.axisliftPos = "bottom";
+			Map.Switches.axup1.Enabled = true;
+			Map.Switches.axup2.Enabled = true;
+			Map.Switches.axdown1.Disabled = true;
+			
+			Util.MapDebugPrint("Axis lift at bottom");
+		}
+		else if (vel.z > 0)
+		{
+			Map.axisliftPos = "top";
+			Map.Switches.axdown1.Enabled = true;
+			Map.Switches.axdown2.Enabled = true;
+			Map.Switches.axup2.Disabled = true;
+			
+			Util.MapDebugPrint("Axis lift at top");
+		}
+	},
+	
+	alliedlift = function(trigger)
+	{
+		Map.alliedliftPos = "moving";
+		Map.Switches.aidown1.Disabled = true;
+		Map.Switches.aidown2.Disabled = true;
+		Map.Switches.aiup1.Disabled = true;
+		Map.Switches.aiup2.Disabled = true;
+		sleep(1);
+		Util.MapDebugPrint("Allied Lift Moving");
+		
+		
+		vel = ToVector(trigger.Action);
+
+		if (vel.z < 0)
+		{
+			Map.alliedliftPos = "bottom";
+			Map.Switches.aiup1.Enabled = true;
+			Map.Switches.aiup2.Enabled = true;
+			Map.Switches.aidown1.Disabled = true;
+			
+			Util.MapDebugPrint("Allied lift at bottom");
+		}
+		else if (vel.z > 0)
+		{
+			Map.alliedliftPos = "top";
+			Map.Switches.aidown1.Enabled = true;
+			Map.Switches.aidown2.Enabled = true;
+			Map.Switches.aiup2.Disabled = true;
+			
+			Util.MapDebugPrint("Allied lift at top");
+		}
+	},	
+	
+	Allied_Ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Ladder_Built" );
+	},
+
+	Axis_Ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Ladder_Built" );
+	},
+
+	Allied_Ladder_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Ladder_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Ladder_Planted" );
+	},
+
+	Axis_Ladder_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Ladder_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Ladder_Planted" );
+	},
+
+	Allied_Ladder_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Ladder_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Ladder_Defused" );
+	},
+
+	Axis_Ladder_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Ladder_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Ladder_Defused" );
+	},
+
+	Allied_Ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Ladder_Destroyed" );
+	},
+
+	Axis_Ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Ladder_Destroyed" );
+	},
+	
+	allies_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Taken" );
+	},
+	
+	allies_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Returned" );
+	},
+	
+	allies_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured" );
+	},
+
+	allies_gold_crate_1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_1_Secured" );
+	},
+
+	allies_gold_crate_2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_2_Secured" );
+	},
+
+	allies_gold_crate_3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_3_Secured" );
+	},
+
+	allies_gold_crate_4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_4_Secured" );
+	},
+
+	allies_gold_crate_5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_5_Secured" );
+	},
+
+	allies_gold_crate_6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_6_Secured" );
+	},
+
+	allies_gold_crate_7_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_7_Secured" );
+	},
+	
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Taken" );
+	},
+	
+	axis_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Returned" );
+	},
+	
+	axis_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured" );
+	},
+
+	axis_gold_crate_1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_1_Secured" );
+	},
+
+	axis_gold_crate_2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_2_Secured" );
+	},
+
+	axis_gold_crate_3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_3_Secured" );
+	},
+
+	axis_gold_crate_4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_4_Secured" );
+	},
+
+	axis_gold_crate_5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_5_Secured" );
+	},
+
+	axis_gold_crate_6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_6_Secured" );
+	},
+
+	axis_gold_crate_7_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_7_Secured" );
+	},
+	
+	The_Axis_win = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "CAPPOINT_AlliedStore" );
+		Util.DisableGoal( "FLAG_allies.*" );
+
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint( "The Axis win!!" );
+	},
+
+	The_Allies_win = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "CAPPOINT_AxisStore" );
+		Util.DisableGoal( "FLAG_axis.*" );
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "The Allies win!!" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Team Have Built The Ladder!", Map.Allied_Ladder_Built );
+	OnTrigger( "Axis Team Have Built The Ladder!", Map.Axis_Ladder_Built );
+	OnTrigger( "Planted at the Allied Ladder.", Map.Allied_Ladder_Planted );
+	OnTrigger( "Planted at the Axis Ladder.", Map.Axis_Ladder_Planted );
+	OnTrigger( "Defused at the Allied Ladder.", Map.Allied_Ladder_Defused );
+	OnTrigger( "Defused at the Axis Ladder.", Map.Axis_Ladder_Defused );
+	OnTrigger( "Axis Team Have Destroyed The Ladder!", Map.Allied_Ladder_Destroyed );
+	OnTrigger( "Allied Team Have Destroyed The Ladder!", Map.Axis_Ladder_Destroyed );
+	OnTrigger( "Axis have returned The Allied Gold Crate!", Map.allies_gold_crate_Returned  );
+	OnTrigger( "Allies have returned The Axis Gold Crate!", Map.axis_gold_crate_Returned  );
+	OnTrigger( "^4Allied Have secured The First Gold Crate!", Map.allies_gold_crate_Secured );
+	OnTrigger( "^4Allied Have secured The Second Gold Crate!", Map.allies_gold_crate_1_Secured );
+	OnTrigger( "^4Allied Have secured The Third Gold Crate!", Map.allies_gold_crate_2_Secured );
+	OnTrigger( "^4Allied Have secured The Forth Gold Crate!", Map.allies_gold_crate_3_Secured );
+	OnTrigger( "^4Allied Have secured The Fifth Gold Crate!", Map.allies_gold_crate_4_Secured );
+	OnTrigger( "^4Allied Have secured The Sixth Gold Crate!", Map.allies_gold_crate_5_Secured );
+	OnTrigger( "^4Allied Have secured The Seventh Gold Crate!", Map.allies_gold_crate_6_Secured );
+	OnTrigger( "^4Allied Have secured The Last Gold Crate!", Map.allies_gold_crate_7_Secured );
+	OnTrigger( "^1Axis Have secured The First Gold Crate!", Map.axis_gold_crate_Secured );
+	OnTrigger( "^1Axis Have secured The Second Gold Crate!", Map.axis_gold_crate_1_Secured );
+	OnTrigger( "^1Axis Have secured The Third Gold Crate!", Map.axis_gold_crate_2_Secured );
+	OnTrigger( "^1Axis Have secured The Forth Gold Crate!", Map.axis_gold_crate_3_Secured );
+	OnTrigger( "^1Axis Have secured The Fifth Gold Crate!", Map.axis_gold_crate_4_Secured );
+	OnTrigger( "^1Axis Have secured The Sixth Gold Crate!", Map.axis_gold_crate_5_Secured );
+	OnTrigger( "^1Axis Have secured The Seventh Gold Crate!", Map.axis_gold_crate_6_Secured );
+	OnTrigger( "^1Axis Have secured The Last Gold Crate!", Map.axis_gold_crate_7_Secured );
+	OnTrigger( "Allies have stolen The Allied Gold Crate!", Map.allies_gold_crate_Taken );
+	OnTrigger( "Axis have stolen The Axis Gold Crate!", Map.axis_gold_crate_Taken );
+	OnTrigger( "^1The Axis win!!", Map.The_Axis_win );
+	OnTrigger( "^4The Allies win!!", Map.The_Allies_win );
+	// lift's	
+	OnTrigger( "lift_goto", Map.mainlift );
+	OnTrigger( "axis_goto", Map.axislift );
+	OnTrigger( "allied_goto", Map.alliedlift );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+
+	Util.EnableGoal ("AMMOCAB.*");
+	Util.EnableGoal	("HEALTHCAB.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allies.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_AxisStore" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_AlliedStore" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
+	//SwitchData
+	Util.UpdateSwitchData();
+	//
+	Util.AddUsePoint( "PLANT_Allied_Ladder", { Vec3(-3686,656,-199), Vec3(-3743,596,56), Vec3(-3681,596,-199), Vec3(-3737,663,-199) } );
+	Util.AddUsePoint( "PLANT_Axis_Ladder", { Vec3(3639,-571,-199), Vec3(3661,-635,-199), Vec3(3716,-647,-199), Vec3(3720,-592,-199), Vec3(3726,-571,56) } );
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 2400;
+};

@@ -1,0 +1,38 @@
+// The new weapon instance is passed to this function as the 'this'
+// Properties can be set like this.Property = x, or the this prefix can be left off.
+
+//////////////////////////////////////////////////////////////////////////
+// Overall weapon properties.
+this.Name = "Smoke Marker";
+this.WeaponId = WEAPON.SMOKE_MARKER;
+
+//////////////////////////////////////////////////////////////////////////
+// Set some weapon properties that affect some internal logic.
+this.PrimaryFire.WeaponType = "grenade";
+this.PrimaryFire.ProjectileSpeed = 1000;
+this.PrimaryFire.RequiresAmmo = true;
+this.PrimaryFire.WaterProof = false;
+this.PrimaryFire.InheritsVelocity = false;
+this.PrimaryFire.SplashRadius = 256.0;
+this.PrimaryFire.ProjectileGravity = 1.0;
+this.PrimaryFire.FireOnRelease = true;
+this.PrimaryFire.IgnoreReload = true;
+
+this.PrimaryFire.MaxAimError = Vector2(0, 0);
+this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+
+this.PrimaryFire.SetTargetBias(CLASS.VEHICLE_HVY, 1);
+
+// class.anyplayer doesnt work - disabling until some avoidance logic is available
+// uncomment the next five lines if you want them to target players with cannisters
+this.PrimaryFire.SetTargetBias(CLASS.FIELDOPS, 0);
+this.PrimaryFire.SetTargetBias(CLASS.MEDIC, 0);
+this.PrimaryFire.SetTargetBias(CLASS.ENGINEER, 0);
+this.PrimaryFire.SetTargetBias(CLASS.COVERTOPS, 0);
+this.PrimaryFire.SetTargetBias(CLASS.SOLDIER, 0);
+
+this.PrimaryFire.DefaultDesirability = 0.0;
+this.PrimaryFire.SetDesirabilityRange(500, 1400, 0.8);
+
+this.PrimaryFire.RequiresTargetOutside = true;
+this.PrimaryFire.RequiresShooterOutside = false;

@@ -1,0 +1,57 @@
+# $LastChangedBy$
+# $LastChangedDate$
+# $LastChangedRevision$
+
+# Root jam file for Omni-bot.
+
+import modules ;
+
+BOOST = [ modules.peek : BOOST ] ; 
+
+# define requirements common to all subprojects
+project Omnibot
+	: build-dir ./build
+	: requirements 
+	 <include>$(BOOST)
+	 <include>dependencies/iprof
+	 <include>dependencies/wildmagic
+	 <include>dependencies/gmsrc_ex/src/3rdParty/mathlib
+	 <include>dependencies/gmsrc_ex/src/platform/win32gcc
+	 <include>dependencies/gmsrc_ex/src/gm
+	 <include>dependencies/gmsrc_ex/src/binds
+	 <include>dependencies/gmsrc_ex/src/3rdParty/gmbinder2
+	 <toolset>msvc:<include>dependencies/gmsrc_ex/src/platform/win32msvc
+	 <toolset>gcc:<include>dependencies/gmsrc_ex/src/platform/win32gcc
+	 <toolset>darwin:<include>dependencies/gmsrc_ex/src/platform/osx
+	 <toolset>msvc:<define>WIN32
+	 <toolset>gcc:<define>__linux__
+	 <toolset>darwin:<define>__osx__
+	 <variant>debug:<define>_DEBUG
+	 <variant>release:<define>NDEBUG
+	;
+
+# define external libs
+lib boost_filesystem : : <variant>release <file>$(BOOST)/lib/libboost_filesystem-gcc41-mt-1_44.a ;
+lib boost_regex : : <variant>release <file>$(BOOST)/lib/libboost_regex-gcc41-mt-1_44.a ;
+lib boost_thread : : <variant>release <file>$(BOOST)/lib/libboost_thread-gcc41-mt-1_44.a ;
+lib boost_datetime : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-mt-1_44.a ;
+lib boost_system : : <variant>release <file>$(BOOST)/lib/libboost_system-gcc41-mt-1_44.a ;
+
+# define aliases for convenience and to force static linking
+alias boost_fs : boost_filesystem : <link>static ;
+alias boost_regx : boost_regex : <link>static ;
+alias boost_th : boost_thread : <link>static ;
+alias boost_dt : boost_datetime : <link>static ;
+alias boost_sys : boost_system : <link>static ;
+
+build-project Common ; 
+#build-project MC ;
+build-project ET ;
+#build-project RTCW ; 
+#build-project TeamFortressLib ; 
+#build-project FF ; 
+#build-project D3 ; 
+#build-project Q4 ; 
+#build-project HL2DM ; 
+#build-project SKELETON ; 
+

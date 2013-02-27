@@ -1,0 +1,206 @@
+#include "ui_mp/menudef.h"
+
+#define DEFAULT_TEXT_SCALE 0.25
+
+{
+	menuDef
+	{
+		name			"wm_pickteam"
+		visible			0
+		fullscreen		0
+		rect			172 114 308 320
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 .4
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/team_background.tga"
+
+		onEsc {
+			close wm_pickteam
+		}
+
+	itemDef {
+		name		window
+		type		1
+		rect		20 4 85 20
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"TEAM"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		20 25 85 20
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		cvar		mp_mapTitle
+		textscale	0.4 //DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		20 55 200 200
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		cvar		mp_mapDesc
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+		autowrapped
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		52 228 98 28
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"1. Allies"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		52 281 98 28
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"2. Axis"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		193 228 98 28
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"3. Auto Select"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		193 281 98 28
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"4. Spectate"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+
+	itemDef {
+		name		window
+		type		1
+		rect		4 207 147 55
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		background	"ui_mp/assets/blank.tga"
+
+		action		{ setcvar mp_team blue; uiScript wm_showPickPlayer; }
+
+		mouseEnter	{ setbackground "ui_mp/assets/team_hilight2.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/blank.tga" }
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		4 260 147 55
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		background	"ui_mp/assets/blank.tga"
+
+		action		{ setcvar mp_team red; uiScript wm_showPickPlayer; }
+
+		mouseEnter	{ setbackground "ui_mp/assets/team_hilight2.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/blank.tga" }
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		144 207 147 55
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		background	"ui_mp/assets/blank.tga"
+
+		action		{ setcvar mp_team free; uiScript wm_showPickPlayer; }
+
+		mouseEnter	{ setbackground "ui_mp/assets/team_hilight2.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/blank.tga" }
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		144 260 147 55
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		background	"ui_mp/assets/blank.tga"
+
+		action		{ setcvar mp_team s; uiScript startMultiplayer; }
+
+		mouseEnter	{ setbackground "ui_mp/assets/team_hilight2.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/blank.tga" }
+	}
+}

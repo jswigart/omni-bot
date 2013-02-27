@@ -1,0 +1,5 @@
+# Omni-bot paths
+OMNIBOT_INST=D:\CVS\Omnibot\head\Installer\Files
+
+# Game Specific paths
+D3DIR=E:\games\Doom 3

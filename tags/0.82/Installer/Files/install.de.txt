@@ -1,0 +1,37 @@
+Installation unter Linux
+---------------------------------------------------------------
+
+1. Die enthaltenen Ordner in das ET Verzeichnis kopieren.
+
+2. Omni-bot ausführen, indem "+set fs_game omnibot" zu der ET
+   Befehlszeile hinzugefügt wrid. Falls ETPub gestartet werden
+   soll, stattdessen "+set fs_game etpub" anhängen. Für
+   dedizierte Server sollte "etded" und nicht "et" zum Starten
+   verwendet werden.
+
+Anforderungen
+---------------------------------------------------------------
+
+Zur Zeit benötigt Omni-bot glibc-2.2 oder neuer!
+
+
+Zusätzliche Anmerkungen
+---------------------------------------------------------------
+
+Für Hilfe zu ETPub, bitte die ETPub Homepage (www.etpub.org)
+konsultieren.
+Omni-bot sollte im "pure" Server Modus ausgeführt werden.
+Näheres dazu bitte dem ET manual entnehmen!
+Bei Bug Reports bitte beachten, dass Omni-bot noch immer "beta"
+ist und noch nicht alle Features enthält. Es ist sehr
+wahrscheinlich, dass es sich bei den meisten "Fehlern" nicht um
+einen Bug, sondern um ein Feature handelt, das wir noch nicht
+implementiert haben.
+
+ETF spezifische Anmerkungen
+---------------------------------------------------------------
+Bitte vor der Installation die mit dem ETF Installer
+ausgelieferte Version der Omni-bot Bibliothek aus dem ET
+Wurzelverzeichnis entfernen (omnibot_etf.so). Außerdem die
+Verzeichnisse "nav" und "scripts" aus dem ETF Verzeichnis
+löschen. Vorher eigene Skripte oder Wegpunkte-Dateien sichern!

@@ -1,0 +1,105 @@
+global Map =
+{
+	Quiet = true,
+
+	Checkpoint_the_flag = "CHECKPOINT_the_flag",
+	Flag_War_Documents = "FLAG_War_Documents",
+	Cappoint_86 = "CAPPOINT_86",
+	Plant_Base_Wall = "PLANT_Base_Wall",
+	Plant_Storage_Room_Wall = "PLANT_Storage_Room_Wall",
+	Mount_123 = "MOUNTMG42_123",
+	Mount_45 = "MOUNTMG42_45",
+	Mount_55 = "MOUNTMG42_55",
+	Repair_123 = "REPAIRMG42_123",
+	Repair_45 = "REPAIRMG42_45",
+	Repair_55 = "REPAIRMG42_55",
+
+	Base_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Storage_Room_Wall );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_War_Documents );
+
+		Util.MapDebugPrint( "Base_Wall_Destroyed" );
+	},
+
+	Storage_Room_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Storage_Room_Wall_Destroyed" );
+	},
+
+	War_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "War_Documents_Taken" );
+	},
+
+	War_Documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "War_Documents_Returned" );
+	},
+
+	the_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "the_flag_Axis_Captured" );
+	},
+
+	the_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "the_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "the Base Wall Destroyed.", Map.Base_Wall_Destroyed );
+	OnTrigger( "the Storage Room Wall Destroyed.", Map.Storage_Room_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the War Documents!", Map.War_Documents_Taken );
+	OnTrigger( "Flag returned War Documents!", Map.War_Documents_Returned );
+	OnTrigger( "Axis capture the Fortress!", Map.the_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Fortress!", Map.the_flag_Allies_Captured );
+
+	RTCWUtil.DisableGoal(".*", true); //all but routes
+	RTCWUtil.EnableGoal("CAPPOINT_.*");
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Base_Wall );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_the_flag );
+	
+	// remove the barrier
+	RTCWUtil.KillEntities({127,145,146,147});
+	
+	InitializeRoutes();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 75.0;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes = {
+	};
+	Util.Routes(MapRoutes);
+};

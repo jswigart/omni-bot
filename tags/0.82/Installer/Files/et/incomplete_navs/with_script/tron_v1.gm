@@ -1,0 +1,134 @@
+//==========================================================================================
+//
+//	tron_v1.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	Martin	04 October 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	barricade_Dyno = 0,
+	master_control_program_Dyno = 0,
+
+	barricade_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barricade_Built" );
+	},
+
+	barricade_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barricade_Dyno += 1;
+		Util.MapDebugPrint( "barricade_Planted" );
+	},
+
+	master_control_program_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.master_control_program_Dyno += 1;
+		Util.MapDebugPrint( "master_control_program_Planted" );
+	},
+
+	barricade_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barricade_Dyno -= 1;
+		Util.MapDebugPrint( "barricade_Defused" );
+	},
+
+	master_control_program_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.master_control_program_Dyno -= 1;
+		Util.MapDebugPrint( "master_control_program_Defused" );
+	},
+
+	barricade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barricade_Dyno = 0;
+
+		Util.MapDebugPrint( "barricade_Destroyed" );
+	},
+
+	master_control_program_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.master_control_program_Dyno = 0;
+
+		Util.MapDebugPrint( "master_control_program_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.barricade_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.barricade_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.master_control_program_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.barricade_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.master_control_program_Defused );
+	OnTrigger( "MISSING_STRING", Map.barricade_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.master_control_program_Destroyed );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_master_control_program" );
+	SetGoalPriority( "DEFUSE_master_control_program.*", 0.0, TEAM.AXIS, CLASS.ENGINEER, true );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

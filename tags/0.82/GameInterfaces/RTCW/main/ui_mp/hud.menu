@@ -1,0 +1,319 @@
+#include "ui_mp/menudef.h"
+
+// (SA) example HUD
+//
+// fyi, I tried to lay this out so the HUD elements 
+// go left to right so it's easier to find stuff
+//
+// so stamina -> health -> ... -> ammo
+//
+
+// green text from MK mockup	- (61 64 36)	= (.24 .25 .14) (too light, using +0.1 (.34 .35 .24))
+// orange text from MK mockup	- (161 121 65)	= (.63 .47 .25)
+// white text from MK mockup	- (161 150 145)	= (.63 .59 .57)
+
+
+// 
+// defines from ui_shared.h
+
+{
+	assetGlobalDef {
+		cursor "ui_mp/assets/3_cursor3"	// cursor	
+		gradientBar "ui_mp/assets/gradientbar2.tga"	// gradient bar
+		fadeClamp 1.0					// sets the fadeup alpha
+		fadeCycle 1						// how often fade happens in milliseconds
+		fadeAmount 0.1					// amount to adjust alpha per cycle
+
+		shadowX  5						// x amount for shadow offset
+		shadowY  5						// y amount for shadow offset
+		shadowColor 0.1 0.1 0.1 0.25	// shadow color
+
+		font "fonts/impact.ttf" 16		// font
+		smallFont "fonts/impact.ttf" 12	// font
+		bigFont "fonts/impact.ttf" 20	// font
+	}
+
+
+
+
+
+
+	// STAMINA BAR	// // actual tex is 24x109
+	menuDef {
+    	name "Stamina"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+		style WINDOW_STYLE_EMPTY
+		border 0
+		bordersize 0
+		bordercolor .34 .35 .24 1
+    	rect 5 390 16 80
+
+		itemDef {
+			name "stambar"
+			decoration
+			visible 1
+			rect 0 0 16 80
+			ownerdraw CG_STAMINA
+			addColorRangerel 0.0 0.25	1 0.1 0.1 0.5	// 0-25%
+			addColorRangerel 0.25 1.0	0.1 1 0.1 0.5	// 25-100%
+		}
+		itemDef {
+			name "stambar_image"
+			decoration
+			visible 1
+			rect 0 0 16 80
+			style	WINDOW_STYLE_SHADER
+			background "ui_mp/assets/hudsprint.tga"
+		}
+	}
+
+
+
+
+							   
+	//	PLAYER STATUS	//
+	menuDef {
+    	name "Status"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+    	rect 40 438 172 32
+
+		// health text
+		itemDef {
+ 			name "a"
+			rect -10 7 32 32
+			visible 1
+			textstyle ITEM_TEXTSTYLE_SHADOWEDMORE
+			decoration
+			textscale .8
+//			forecolor .63 .47 .25 1
+			forecolor 1 1 1 1
+			ownerdraw CG_PLAYER_HEALTH
+			addColorRange 10 999 .63 .47 .25 1	// healthy
+			addColorRange -999 10 1 0 0 1	// hurting
+		}
+
+		// armor text
+		itemDef {
+ 			name "a"
+			rect 140 8 32 32
+			visible 1
+			textstyle ITEM_TEXTSTYLE_SHADOWEDMORE
+			decoration
+			textscale .5
+			forecolor .34 .35 .24 1
+			ownerdraw CG_PLAYER_ARMOR_VALUE
+			addColorRange -999 999 .34 .35 .24 1
+		}
+	}
+
+
+	// THE HEAD //
+
+
+
+
+
+	//	CURSOR HINTS	//
+	menuDef {
+    	name "Cursorhints"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+    	rect 296 260 48 48
+
+		itemDef {
+			name "chRect"
+			decoration
+			visible 1
+			rect 0 0 48 48
+			ownerdraw CG_CURSORHINT
+		}
+	}
+
+	menuDef {
+    	name "stability"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+//    	rect 50 176 10 64	// bar anchored at bottom, fills up
+    	rect 50 208 10 64	// bar anchored in center, fills up/down
+
+		itemDef {
+			name "stabRect"
+			decoration
+			visible MENU_TRUE
+
+//			addColorRange	0 128	0 1 0 1
+//			addColorRange	128 255	0 0 1 1
+
+			addColorRange	0 128	.24 .4 .14 1
+			addColorRange	128 255	.24 .14 .4 1
+
+			rect 0 0 5 64
+			ownerdraw CG_PLAYER_WEAPON_STABILITY
+		}
+	}
+
+
+
+	//	POWERUP AREA	//
+
+
+
+	//	AMMO	//
+	menuDef {
+    	name "Ammo"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+    	rect 490 410 114 65
+
+		// heat indicator	
+		itemDef {
+			name "heat"
+			decoration
+			visible MENU_TRUE
+			rect 35 -10 80 40		// horizontal version
+			align HUD_HORIZONTAL
+			ownerdraw CG_PLAYER_WEAPON_HEAT
+		}
+
+		// ammo icon
+		itemDef {
+			name "a"
+			rect 35 -10 80 40		// taking into account 'wide' weapon icons (wide weaps fill box, narrow weaps are currently left-justified)
+			visible 1
+			decoration
+			align ITEM_ALIGN_RIGHT
+			ownerdraw CG_PLAYER_WEAPON_ICON2D
+		}
+
+		// ammo text
+		itemDef {
+ 			name "amtex"
+			ownerdraw CG_PLAYER_AMMO_VALUE
+			ownerdrawflag CG_SHOW_NOT_V_BINOC
+			rect 120 35 34 0		// taking into account 'wide' weapon icons
+			visible 1
+			textstyle ITEM_TEXTSTYLE_SHADOWEDMORE
+			align ITEM_ALIGN_RIGHT
+			decoration
+			textscale .8
+			forecolor .63 .59 .57 1
+			//addColorRangerel 0.0	0.1		1 0 0 1		// alert!			
+			//addColorRangerel 0.1	1		.63 .47 .25 1	// warning!
+		}
+
+		//divider
+//		itemDef {
+ //			name "divider"
+//			rect 50 -22 16 28	
+//			visible 1	
+//			style	WINDOW_STYLE_SHADER
+//			background "gfx/2d/numbers/slash"
+//			decoration			
+//			forecolor .63 .59 .57 1		
+//		}
+
+		// clip count text
+		itemDef {
+ 			name "cliptex"
+			rect 110 35 40 0
+			visible 1
+			textstyle ITEM_TEXTSTYLE_SHADOWEDMORE
+			ownerdraw CG_PLAYER_AMMOCLIP_VALUE
+			ownerdrawflag CG_SHOW_NOT_V_BINOC
+			decoration
+			align ITEM_ALIGN_RIGHT
+			textscale .8
+			forecolor .63 .59 .57 1
+			addColorRangerel 0.0	0.4		1 0 0  1		// alert!			
+			addColorRangerel 0.4	1.0		.63 .47 .25 1		// haha!
+		}
+
+
+}
+
+	// PLAYER WEAPON RECHARGE BAR	//
+	menuDef {
+    	name "Weapon Recharge"
+    	fullScreen MENU_FALSE
+    	visible MENU_TRUE
+		style WINDOW_STYLE_EMPTY
+		//border 1
+		//bordersize 1
+		//bordercolor .75 .75 .75 1
+		//rect 628 400 10 70
+		rect 619 390 16 80
+
+		itemDef {
+			name "weaprechargebar"
+			decoration
+			visible 1
+			rect 0 0 16 80
+			ownerdraw CG_PLAYER_WEAPON_RECHARGE
+		}
+		itemDef {
+			name "weaprechargebar_image"
+			decoration
+			visible 1
+			rect 0 0 16 80
+			style	WINDOW_STYLE_SHADER
+			background "ui_mp/assets/hudtrim.tga"
+		}
+	}
+
+
+	//	HOLDABLE	//
+//	menuDef {
+//    	name "Holdables"
+//    	fullScreen MENU_FALSE
+//    	visible MENU_TRUE
+//  	rect 606 310 24 48
+//
+//		itemDef {
+//			name "w_holdable"
+//			rect 0 0 24 48
+//			visible MENU_TRUE
+//			decoration
+//			ownerdraw CG_PLAYER_HOLDABLE
+//		}
+//	}
+
+//	menuDef {
+//		name "weapon area"
+//		fullScreen MENU_FALSE
+//		visible MENU_TRUE
+//		rect 550 0 50 100
+//
+//		itemDef {
+//			name "weaponArea"
+//			rect 0 0 40 40
+//			style 4
+//			visible 1
+//			decoration
+//			ownerdraw CG_AREA_WEAPON
+//			special 4			// spacing
+//			align HUD_VERTICAL
+//		}
+//	}
+//
+//	menuDef {
+//		name "holdable area"
+//		fullScreen MENU_FALSE
+//		visible MENU_TRUE
+// 		rect 606 310 24 48
+//
+//		itemDef {
+//			name "holdableArea"
+//			rect 0 0 24 48
+//			visible 1
+//			style 4
+//			decoration
+//			ownerdraw CG_AREA_HOLDABLE
+//			special 4			// spacing
+//			align HUD_VERTICAL
+//		}
+//	}
+
+
+}

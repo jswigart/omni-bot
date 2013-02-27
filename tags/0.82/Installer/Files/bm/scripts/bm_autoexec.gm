@@ -1,0 +1,85 @@
+// Load any other scripts that we will need.
+//ExecScript("commands.gm");
+//ExecScript("difficulty.gm");
+//ExecScript("server_manager.gm");
+
+// New module format
+global Util = import("utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// Set up a list of Names, optionally associated with a script.
+Names["[BOT]Walter"] = "def_bot.gm";
+Names["[BOT]Fred"] = "def_bot.gm";
+Names["[BOT]Morgan"] = "def_bot.gm";
+Names["[BOT]Lawrence"] = "def_bot.gm";
+Names["[BOT]Richard"] = "def_bot.gm";
+Names["[BOT]Michael"] = "def_bot.gm";
+Names["[BOT]Brad"] = "def_bot.gm";
+Names["[BOT]George"] = "def_bot.gm";
+Names["[BOT]Anton"] = "def_bot.gm";
+Names["[BOT]Monty"] = "def_bot.gm";
+Names["[BOT]Bean"] = "def_bot.gm";
+Names["[BOT]Sean"] = "def_bot.gm";
+Names["[BOT]Backfire"] = "def_bot.gm";
+Names["[BOT]Halfwit"] = "def_bot.gm";
+Names["[BOT]Halfbaked"] = "def_bot.gm";
+Names["[BOT]Fullmonty"] = "def_bot.gm";
+Names["[BOT]Nohope"] = "def_bot.gm";
+Names["[BOT]Hitnrun"] = "def_bot.gm";
+Names["[BOT]Missnrun"] = "def_bot.gm";
+Names["[BOT]Oysterhead"] = "def_bot.gm";
+Names["[BOT]Fullthrottle"] = "def_bot.gm";
+Names["[BOT]Noammo"] = "def_bot.gm";
+Names["[BOT]Bullseye"] = "def_bot.gm";
+Names["[BOT]Aimless"] = "def_bot.gm";
+Names["[BOT]Blackadder"] = "def_bot.gm";
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+//Names["samplebot"] = "sample.gm";
+
+/////////////////////////////////////////////////////////////////////
+
+
+// This function runs an infinite loop of adding and kicking bots. It is used to illustrate
+// how custom script functions can be run continuously to provide custom control over
+// things like the number of bots. Additional behaviors like forcing bots to 1 team can be 
+// implemented by starting a similar function to this from a custom command.
+global stresstest = function()
+{
+	sleep(10.0);
+	dowhile(1)
+	{
+		//DumpGlobals("globals.txt");
+   
+		ran = UnitRandom();
+		if(ran > 0.98)
+		{
+			//KickAll();
+		}
+		else if(ran < 0.5)
+		{
+			AddBot();
+		}
+		else
+		{
+			foreach ( gameId and bot in BotTable )
+			{
+				if(bot)
+				{
+					print(bot);
+					KickBot(bot.Name);
+					break;
+				}                     
+			}      
+		}      
+	      // Pause for 10 seconds between loop iterations.
+	      sleep(RandRange(0.0, 3.0));      
+	}
+};
+
+// This is a Game Monkey Script function that creates a thread using the function we defined above.
+// Uncomment the following line if you want to run the function above.
+//thread(stresstest); 

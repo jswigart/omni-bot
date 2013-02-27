@@ -1,0 +1,283 @@
+//==============================================================================================
+//
+//	Santa's Grotto 1.2 - santas_grotto_v1_2
+//
+//	Who			When		What
+//----------------------------------------------------------------------------------------------
+//	Mateos			21/04/2010	Added _goals.gm + Routing to secure the Key Card
+//
+//==============================================================================================
+
+global Map =
+{
+	Ammo_Cabinet_t19 = "AMMOCAB_t19",
+	Ammo_Cabinet_t2 = "AMMOCAB_t2",
+	Ammo_Cabinet_t22 = "AMMOCAB_t22",
+	Ammo_Cabinet_t25 = "AMMOCAB_t25",
+	Ammo_Cabinet_t6 = "AMMOCAB_t6",
+	Ammo_Cabinet_t66 = "AMMOCAB_t66",
+	Health_Cabinet_t1 = "HEALTHCAB_t1",
+	Health_Cabinet_t20 = "HEALTHCAB_t20",
+	Health_Cabinet_t23 = "HEALTHCAB_t23",
+	Health_Cabinet_t26 = "HEALTHCAB_t26",
+	Health_Cabinet_t67 = "HEALTHCAB_t67",
+	Health_Cabinet_t7 = "HEALTHCAB_t7",
+	Checkpoint_north_pole_flag = "CHECKPOINT_north_pole_flag",
+	Flag_gate_key = "FLAG_gate_key",
+	Flag_sack = "FLAG_sack",
+	Cappoint_Secondgate = "CAPPOINT_Secondgate",
+	Cappoint_sackdest = "CAPPOINT_sackdest",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Fuse_Box = "BUILD_Fuse_Box",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_First_Gate = "PLANT_First_Gate",
+	Mount_1067 = "MOUNTMG42_1067",
+	Repair_1067 = "REPAIRMG42_1067",
+
+	Allies_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},	
+	
+	Fuse_Box_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+	Wp.SetWaypointFlag( "3rd_door_1", "axis", false );
+	Wp.SetWaypointFlag( "3rd_door_2", "axis", false );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_1067" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_1067" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_northpole" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_northpole" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_TG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_TG.*" );
+
+		Util.MapDebugPrint( "Fuse_Box_Built" );
+	},
+
+	Allies_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},	
+	
+	First_Gate_Destroyed = function( trigger )
+	{
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Gate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Gate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_SG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_SG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gate_key" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Secondgate" );
+		
+//		ETUtil.ShowActiveGoals();
+		Util.MapDebugPrint( "First_Gate_Destroyed" );
+	},
+
+	gate_key_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_SG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_SG.*" );			
+			
+		Util.MapDebugPrint( "gate_key_Taken" );
+	},
+	
+	gate_key_returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_SG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_SG.*" );
+			
+		Util.MapDebugPrint( "gate_key_ret" );
+	},
+
+	sack_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_1067" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_1067" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_SD.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_SD.*" );
+
+		Util.MapDebugPrint( "sack_Taken" );
+	},
+	
+	sack_returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_1067" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_1067" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Sack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_SD.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_SD.*" );
+			
+		Util.MapDebugPrint( "sack_ret" );
+	},
+
+	Secondgate_Captured = function( trigger )
+	{
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_SFB.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Secondgate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Fuse_Box" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_sackdest" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_sack" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_northpole" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_TG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_TG.*" );
+
+		Util.MapDebugPrint( "Secondgate_Captured" );
+	},
+
+	sackdest_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "sackdest_Captured" );
+	},
+
+	north_pole_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_northpole" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_northpole" );
+
+		Util.MapDebugPrint( "north_pole_flag_Axis_Captured" );
+	},
+
+	north_pole_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_northpole" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_northpole" );
+		
+		Util.MapDebugPrint( "north_pole_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allies_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );	
+	OnTrigger( "^1Fuse Box has been repaired", Map.Fuse_Box_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allies_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "^1Allies have blown the First Gate!", Map.First_Gate_Destroyed );
+	OnTrigger( "^1Key for the Second Gate has been stolen by Allies!", Map.gate_key_Taken );
+	OnTrigger( "^1Key for the Second Gate has been returned to the House!", Map.gate_key_returned );
+	OnTrigger( "^1Allies have got Santa's Sack!", Map.sack_Taken );
+	OnTrigger( "^1Santa's Sack has been taken back to the Factory!", Map.sack_returned );
+	OnTrigger( "^1Second Gate Key has been secured, Second Gate opening!", Map.Secondgate_Captured );
+	OnTrigger( "^1Santa's Sack has been returned to Santa, Christmas can continue! :D", Map.sackdest_Captured );
+	OnTrigger( "^1Axis have captured the North Pole!", Map.north_pole_flag_Axis_Captured );
+	OnTrigger( "^1Allies have Captured the North Pole!", Map.north_pole_flag_Allies_Captured );
+
+	Util.DisableGoal( ".*", true );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Gate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Gate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_First_Gate" );
+	Util.EnableGoal("HEALTHCAB_.*"); //enables for both teams
+	Util.EnableGoal("AMMOCAB_.*"); //enables for both teams
+	Util.EnableGoal("CHECKPOINT_.*"); //enables for both teams
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+	Wp.SetWaypointFlag( "3rd_door_1", "axis", true );
+	Wp.SetWaypointFlag( "3rd_door_2", "axis", true );
+	
+	// *** ROUTING ***
+	MapRoutes =
+	{
+		CAPPOINT_Secondgate = 
+		{
+			ROUTE_GateKeyTaken  = 
+			{
+				ROUTE_KeyToSafe1  = 
+				{
+					ROUTE_KeyToSafe2  = 
+					{
+						ROUTE_KeyToSafe3  = 
+						{
+							ROUTE_KeyToSafe4  = 
+							{
+								ROUTE_KeyToSafe5  = 
+								{
+									ROUTE_KeyToSafe6  = 
+									{
+										ROUTE_KeyToSafe7  = 
+										{
+											ROUTE_KeySecured  = {},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	 bot.TargetBreakableDist = 300.0;
+};

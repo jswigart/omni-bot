@@ -1,0 +1,235 @@
+global _MG = 
+{
+	ATTACK_Top1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.099, 0.943, -0.319),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Attack",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "ATTACK_Top1",
+		Orientation = Vec3(0.104, -0.324, 0.000),
+		Position = Vec3(1038.621, 841.053, 1313.625),
+		Radius = 32,
+		SerialNum = 60,
+		Stance = "stand",
+		TagName = "Top1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	ATTACK_Top2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.010, -0.879, -0.477),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Attack",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "ATTACK_Top2",
+		Orientation = Vec3(-3.130, -0.497, -0.000),
+		Position = Vec3(1004.100, 1189.681, 1313.625),
+		Radius = 32,
+		SerialNum = 62,
+		Stance = "stand",
+		TagName = "Top2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	BUILD_Command_Post = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "BUILD",
+		GroupName = "",
+		IgnoreTargets = 0,
+		MinRadius = 0,
+		Mobile = 0,
+		Name = "BUILD_Command_Post",
+		Offsets = 
+		{
+		},
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1025.000, 70.000, 52.000),
+		Radius = 0,
+		SerialNum = 48,
+		Stance = "crouch",
+		TagName = "Command Post",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	CAMP_TopFlag = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.087, 0.991, -0.100),
+			[1] = Vec3(-0.063, -0.993, -0.103),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_TopFlag",
+		Orientation = Vec3(-0.087, -0.100, -0.000),
+		Position = Vec3(1021.449, 1070.321, 1313.625),
+		Radius = 32,
+		SerialNum = 58,
+		Stance = "stand",
+		TagName = "TopFlag",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CHECKPOINT_win = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "CHECKPOINT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CHECKPOINT_win",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1024.000, 1026.000, 1376.500),
+		Radius = 0,
+		SerialNum = 36,
+		TagName = "win",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	DEFEND_LowerMedic = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.419, -0.898, -0.134),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_LowerMedic",
+		Orientation = Vec3(2.705, -0.134, -0.000),
+		Position = Vec3(939.281, 1907.859, 553.125),
+		Radius = 32,
+		SerialNum = 68,
+		Stance = "stand",
+		TagName = "LowerMedic",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_LowerMedic2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.009, 0.959, -0.282),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_LowerMedic2",
+		Orientation = Vec3(0.010, -0.286, 0.000),
+		Position = Vec3(929.947, 137.766, 553.125),
+		Radius = 32,
+		SerialNum = 70,
+		Stance = "stand",
+		TagName = "LowerMedic2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_Top1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.965, -0.062, -0.254),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_Top1",
+		Orientation = Vec3(1.635, -0.257, -0.000),
+		Position = Vec3(1223.874, 1023.748, 1313.625),
+		Radius = 32,
+		SerialNum = 66,
+		Stance = "stand",
+		TagName = "Top1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_Top2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.958, -0.015, -0.288),
+		},
+		CreateOnLoad = 1,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_Top2",
+		Orientation = Vec3(-1.587, -0.292, -0.000),
+		Position = Vec3(808.982, 991.409, 1313.625),
+		Radius = 32,
+		SerialNum = 64,
+		Stance = "stand",
+		TagName = "Top2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	PLANT_Command_Post = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 3,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Command_Post",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1028.000, 40.500, 52.000),
+		Radius = 0,
+		SerialNum = 50,
+		TagName = "Command Post",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

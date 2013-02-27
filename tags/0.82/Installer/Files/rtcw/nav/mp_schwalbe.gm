@@ -1,0 +1,618 @@
+global Map =
+{
+	// Martin - Allies MUST have ME262 blown before can score w/ docs
+	Quiet = true,
+	WestDoorStatus = "closed",
+	EastDoorStatus = "closed",
+
+	Checkpoint_mine_flag = "CHECKPOINT_mine_flag",
+	Flag_Plans = "FLAG_Plans",
+	Cappoint_189 = "CAPPOINT_189",
+	Plant_East_Station_Door = "PLANT_East_Station_Door",
+	Plant_Footbridge = "PLANT_Footbridge",
+	Plant_ME262 = "PLANT_ME262",
+	Plant_Station_Door = "PLANT_Station_Door",
+	Explode_292 = "EXPLODE_292",
+	Explode_351 = "EXPLODE_351",
+	Explode_47 = "EXPLODE_47",
+	Mount_198 = "MOUNTMG42_198",
+	Mount_25 = "MOUNTMG42_25",
+	Mount_260 = "MOUNTMG42_260",
+	Mount_eastmg = "MOUNTMG42_eastmg",
+	Mount_westmg = "MOUNTMG42_westmg",
+	Mount_me262mg = "MOUNTMG42_me262mg",
+	Repair_198 = "REPAIRMG42_198",
+	Repair_25 = "REPAIRMG42_25",
+	Repair_260 = "REPAIRMG42_260",
+	Repair_eastmg = "REPAIRMG42_eastmg",
+	Repair_westmg = "REPAIRMG42_westmg",
+	Repair_me262mg = "REPAIRMG42_me262mg",
+
+	DontDispenseAmmo = true,
+
+	DocStatus = false,
+	PlaneStatus = false,
+	FootbridgeStatus = false,
+	bPanzers = 0,
+	Duct_Destroyed = false,
+	Duct_Bot_Count = 0,
+
+	Navigation =
+	{
+		ducts =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.CROUCH, 1 );
+				sleep( 1 );
+			},
+		},
+		grenade_duct =
+		{
+			navigate = function( _this )
+			{
+				if ( !Map.Duct_Destroyed && Map.Duct_Bot_Count == 0 ) {
+					if ( _this.Bot.HasWeapon( WEAPON.ALLY_GRENADE ) || _this.Bot.HasWeapon( WEAPON.AXIS_GRENADE ) ) {
+						wpTable = Util.WpNameInfo( "grenade_duct" );
+						Map.Duct_Bot_Count += 1;
+						if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+
+							if ( _this.Bot.GetTeam() == TEAM.ALLIES ) {
+								_this.AddWeaponRequest( Priority.High, WEAPON.ALLY_GRENADE );
+								_this.BlockForWeaponChange( WEAPON.ALLY_GRENADE );
+							} else
+							{
+								_this.AddWeaponRequest( Priority.High, WEAPON.AXIS_GRENADE );
+								_this.BlockForWeaponChange( WEAPON.AXIS_GRENADE );
+							}
+
+							_this.Bot.HoldButton( BTN.ATTACK1, 3.5 ); // cs: prime it a bit
+							sleep( 4.5 );
+						}
+						Map.Duct_Bot_Count -= 1;
+					} else // knife it
+					{
+						wpTable = Util.WpNameInfo( "duct_1" );
+						Map.Duct_Bot_Count += 1;
+						if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.KNIFE );
+							_this.BlockForWeaponChange( WEAPON.KNIFE );
+
+							while ( !Map.Duct_Destroyed )
+							{
+								_this.Bot.HoldButton( BTN.ATTACK1, 0.25 );
+								yield();
+							};
+
+							yield();
+						}
+						Map.Duct_Bot_Count -= 1;
+					}
+				}
+				yield();
+			},
+		},
+	},
+
+	Switches =
+	{
+		button1 =
+		{
+			Debug = false,
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "button1",
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitBots = 1,
+			LimitClass = Util.AllClasses,
+			TimeOut = 1500, // this is in milliseconds; the amount of time to wait for the first bot to hit switch
+			WaitForSwitch = function()
+			{
+				if ( Map.WestDoorStatus == "Opened" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+		button2 =
+		{
+			Debug = false,
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "button2",
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitBots = 1,
+			LimitClass = Util.AllClasses,
+			TimeOut = 1500,
+			WaitForSwitch = function()
+			{
+				if ( Map.EastDoorStatus == "Opened" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+	},
+
+	mapstart = true,
+
+	check_grate = function()
+	{
+		wpOne = {};
+		wpTwo = {};
+		Wp.GetWaypointByName( "duct_1", wpOne );
+		Wp.GetWaypointByName( "ducts", wpTwo );
+		offset = Vector3( 0,0,10 );
+
+		while ( !Map.Duct_Destroyed )
+		{
+			tr = TraceLine( wpOne.position + offset, wpTwo.position + offset, null, TRACE.ALL, 0, false );
+
+			if ( tr.fraction < 1 ) {
+				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.RED, 0.25);
+			} else
+			{
+				//DrawDebugLine(wpOne.position + offset, wpTwo.position + offset, COLOR.GREEN, 0.25);
+				Map.Duct_Destroyed = true;
+
+				Util.EnableGoal( "ROUTE_ducts" );
+			}
+
+			sleep( 0.25 );
+		}
+	},
+
+	East_Station_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_ME262" );
+	},
+
+	East_Station_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_East_Station_Door.*" );
+	},
+
+	Footbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FootbridgeStatus = true;
+
+		Wp.SetWaypointFlag( "bridgehack", "closed", true );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEngFootbridge.*" );
+	},
+
+	ME262_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.PlaneStatus = true;
+
+		if ( Map.DocStatus == true ) {
+			Map.DeliverDefense();
+		} else
+		{
+			Map.DocDefense();
+		}
+	},
+
+	Station_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Station_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Station_Door.*" );
+	},
+
+	Plans_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = true;
+		if ( Map.PlaneStatus == true ) {
+			Map.DeliverDefense();
+		}
+	},
+
+	Plans_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+			}
+		}
+		if ( Map.PlaneStatus == true ) {
+			Map.DocDefense();
+		} else
+		{
+			Map.PlaneDefense();
+		}
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+
+				if ( bot.GetReinforceTime() < 8 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+	},
+
+	mine_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	mine_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade[23]" );
+		Map.DontDispenseAmmo = false;
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bStation.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bStation.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT.*" );
+
+		if ( Map.PlaneStatus == true ) {
+			Map.DocDefense();
+		} else if ( Map.DocStatus == false )      { // Plane isnt blown...protect it
+			Map.PlaneDefense();
+		} else
+		{
+			Map.DeliverDefense();
+		}
+	},
+
+	east_door_opening = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.Switches.button2.Enabled = false;
+		Map.EastDoorStatus = "Opened";
+	},
+
+	east_door_closing = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.Switches.button2.Enabled = true;
+		Map.EastDoorStatus = "Closed";
+	},
+
+	west_door_opening = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.Switches.button1.Enabled = false;
+		Map.WestDoorStatus = "Opened";
+	},
+
+	west_door_closing = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.Switches.button1.Enabled = true;
+		Map.WestDoorStatus = "Closed";
+	},
+
+	barrier1_destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	},
+
+	barrier2_destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	},
+
+	barrier3_destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	},
+	DocDefense = function()     // Sets up defend/attacks for documents ONLY (aka once plane is blown)
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocsArty.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocsAS_.*" );
+
+		if ( Map.FootbridgeStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Footbridge" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEngFootbridge.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Plans" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bFlag.*" );
+	},
+	PlaneDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPlane.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_me626mg" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_me626mg" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Footbridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rPlaneAS_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_Plans" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlane.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_ME262" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bFlag.*" );
+	},
+	DeliverDefense = function()
+	{
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIR.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_deliver.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Footbridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_deliver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bFlag.*" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+	thread( Map.check_grate );
+
+	OnTrigger( "The East Station Door Destroyed.", Map.East_Station_Door_Destroyed );
+	OnTrigger( "Planted at The East Station Door.", Map.East_Station_Door_Planted );
+	OnTrigger( "The Footbridge Destroyed.", Map.Footbridge_Destroyed );
+	OnTrigger( "ME262 Destroyed.", Map.ME262_Destroyed );
+	OnTrigger( "The Station Door Destroyed.", Map.Station_Door_Destroyed );
+	OnTrigger( "Planted at The Station Door.", Map.Station_Door_Planted );
+	OnTrigger( "Allies have stolen The Plans!", Map.Plans_Taken );
+	OnTrigger( "Flag returned Plans!", Map.Plans_Returned );
+	OnTrigger( "Axis reclaims the mine!", Map.mine_flag_Axis_Captured );
+	OnTrigger( "Allies capture the mine!", Map.mine_flag_Allies_Captured );
+	OnTrigger( "station_door_east_Opening", Map.east_door_opening );
+	OnTrigger( "station_door_east_Closing", Map.east_door_closing );
+	OnTrigger( "station_door_west_Opening", Map.west_door_opening );
+	OnTrigger( "station_door_west_Closing", Map.west_door_closing );
+	OnTrigger( "Explode_144 Exploded", Map.barrier1_destroyed );
+	OnTrigger( "Explode_121 Exploded", Map.barrier2_destroyed );
+	OnTrigger( "Explode_122 Exploded", Map.barrier3_destroyed );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 25, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
+	SetMapGoalProperties( "ATTACK_deliver.*", {mincamptime = 10, maxcamptime = 20} );
+	SetMapGoalProperties( "DEFEND_deliver.*", {mincamptime = 15, maxcamptime = 30} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	//disable all goals at start
+	Util.DisableGoal( ".*", true ); //all but routes
+
+	Util.EnableGoal( "CAPPOINT_.*" );
+	Util.EnableGoal( "CHECKPOINT_.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CHECKPOINT.*", 0.9 ); // So only one player goes for flag
+	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
+	SetGoalPriority( "PANZER_bSpawnkill.*", 0.7 );  // Above regular attacks
+	SetGoalPriority( "SNIPE_bFlag.*", 0.7 );    // Above regular attacks
+	SetGoalPriority( "GRENADE_Barricade.*", 0.9 );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Station_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Station_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bStation.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bStation.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade1" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+
+	Util.AddUseWp( "PLANT_ME262", "plane_1" );
+	Util.AddUseWp( "PLANT_ME262", "plane_2" );
+
+	Wp.SetWaypointFlag( "bridgehack", "closed", false );
+	Util.UpdateSwitchData();
+
+	MapRoutes =
+	{
+		PLANT_ME262 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_mineeast =
+				{
+					ROUTE_ducts = {},
+					ROUTE_bunkerroof = {Weight = 2,},
+					ROUTE_hangermain = {Weight = 3,},
+				},
+				ROUTE_minenorth =
+				{
+					ROUTE_ducts = {},
+					ROUTE_bunkerroof = {Weight = 2,},
+					ROUTE_hangermain = {Weight = 3},
+				},
+			},
+		},
+		FLAG_Plans =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_mineeast =
+				{
+					ROUTE_bunkerroof = {Weight = 3,},
+					ROUTE_bunkerdoor = {Weight = 2,},
+				},
+				ROUTE_minenorth =
+				{
+					ROUTE_bunkerroof = {Weight = 3,},
+					ROUTE_bunkerdoor = {Weight = 2,},
+				},
+			},
+		},
+		CAPPOINT_dinghy =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_bunkerroof =
+				{
+					Weight = 3,
+					ROUTE_minenorth =
+					{
+						ROUTE_alliedmine = {},
+					},
+				},
+				ROUTE_steps =
+				{
+					Weight = 2,
+					ROUTE_eaststation = {},
+				},
+			},
+		},
+		PLANT_Footbridge =
+		{
+			ROUTE_rearaxis =
+			{
+				ROUTE_bunkerdoor = {},  // Martin - just as long as they dont try going via spawn flag route
+			},
+		},
+		CHECKPOINT_mine_flag =
+		{
+			ROUTE_rearaxis =
+			{
+				ROUTE_bunkerdoor =
+				{
+					ROUTE_eaststation = {},
+					ROUTE_weststation = {},
+				},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bPlane_1 = MapRoutes.PLANT_ME262;
+	MapRoutes.ATTACK_bPlane_2 = MapRoutes.PLANT_ME262;
+	MapRoutes.ATTACK_bPlane_3 = MapRoutes.PLANT_ME262;
+	MapRoutes.ATTACK_bPlane_4 = MapRoutes.PLANT_ME262;
+	MapRoutes.ATTACK_bPlane_5 = MapRoutes.PLANT_ME262;
+	Util.Routes( MapRoutes );
+
+	print( "OnMapLoad" );
+};
+
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	class = bot.GetClass();
+
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
+		if ( Map.bPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.bPanzers += 1;
+		}
+	}
+	if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER ) {
+		if ( Map.rPanzers == 0 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.rPanzers += 1;
+		}
+	}
+};

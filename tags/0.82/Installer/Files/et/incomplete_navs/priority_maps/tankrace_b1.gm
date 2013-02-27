@@ -1,0 +1,334 @@
+//==========================================================================================
+//
+//	tankrace_b1.gm
+//
+//	Who                    	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP			19 May 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+	Allied_Tank_At_Barrier = 0,
+	Axis_Tank_At_Barrier = 0,
+	Next_Allied_Barrier = 1,
+	Next_Axis_Barrier = 1,
+
+	Movers =
+	{
+		"MOVER_tank",
+		"MOVER_tank2",
+	},
+
+
+	Allied_Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Allied_Tank" );
+
+		Util.MapDebugPrint( "Allied_Tank_Built" );
+	},
+
+	Allied_Tank_Damaged = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Allied_Tank" );
+
+		Util.MapDebugPrint( "Allied_Tank_Damaged" );
+	},
+
+	Allies_Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Tank_Barrier_1_Built" );
+	},
+
+	Allies_Tank_at_Barrier = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		//		print(trigger.Entity);
+		//		print(GetGameIdFromEntity(trigger.Entity));
+		//		print( "Allies_Tank_at_Barrier" );
+
+		if ( GetGameIdFromEntity(trigger.Entity) == 177 )
+		{
+			if (Map.Next_Axis_Barrier == 1 )
+			{
+				Util.MapDebugPrint( "Allies_Tank_at_Barrier_1" );
+			}
+			else
+			{
+				Util.MapDebugPrint( "Allies_Tank_at_Barrier_2" );
+			}
+		}
+	},
+
+	Allies_Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Tank_Barrier_1_Destroyed" );
+	},
+
+	Allies_Tank_Past_Barrier_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Next_Allied_Barrier = 2;
+		Util.MapDebugPrint( "Allies_Tank_Past_Barrier_1" );
+	},
+
+	Allies_Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Tank_Barrier_2_Built" );
+	},
+
+	Allies_Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Tank_Barrier_2_Destroyed" );
+	},
+
+	Allies_Tank_Past_Barrier_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_Tank_Past_Barrier_2" );
+	},
+
+	Axis_Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Axis_Tank" );
+
+		Util.MapDebugPrint( "Axis_Tank_Built" );
+	},
+
+	Axis_Tank_Damaged = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Axis_Tank" );
+
+		Util.MapDebugPrint( "Axis_Tank_Damaged" );
+	},
+
+	Axis_Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Tank_Barrier_1_Built" );
+	},
+
+	Axis_Tank_at_Barrier = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		//		print(trigger.Entity);
+		//		print(GetGameIdFromEntity(trigger.Entity));
+
+		if ( GetGameIdFromEntity(trigger.Entity) == 189 )
+		{
+			if (Map.Next_Allied_Barrier == 1 )
+			{
+				Util.MapDebugPrint( "Axis_Tank_at_Barrier_1" );
+			}
+			else
+			{
+				Util.MapDebugPrint( "Axis_Tank_at_Barrier_2" );
+			}
+		}
+	},
+
+	Axis_Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Tank_Barrier_1_Destroyed" );
+	},
+
+	Axis_Tank_Past_Barrier_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Next_Axis_Barrier = 2;
+		Util.MapDebugPrint( "Axis_Tank_Past_Barrier_1" );
+	},
+
+	Axis_Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Tank_Barrier_2_Built" );
+	},
+
+	Axis_Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Tank_Barrier_2_Destroyed" );
+	},
+
+	
+
+	Axis_Tank_Past_Barrier_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Tank_Past_Barrier_2" );
+	},
+
+	Neutral_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	//	Util.MapDebugPrint( "Neutral_Command_Post_Built" );
+	},
+
+	Neutral_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	//	Util.MapDebugPrint( "Neutral_Command_Post_Destroyed" );
+	},
+
+	Allied_Sewer_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	//	Util.MapDebugPrint( "Allied_Sewer_Wall_Destroyed" );
+	},
+
+	Axis_Sewer_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	//	Util.MapDebugPrint( "Axis_Sewer_Wall_Destroyed" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+	{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "The Tank has been repaired!", Map.Allied_Tank_Built );
+	OnTrigger( "The Allied Tank has been damaged!", Map.Allied_Tank_Damaged );
+
+	OnTrigger( "Allied Tank Barrier #1 has been constructed.", Map.Allies_Tank_Barrier_1_Built );
+	OnTrigger( "allies_destroy_barrier", Map.Allies_Tank_at_Barrier );
+	OnTrigger( "Allied Tank Barrier #1 has been destroyed.", Map.Allies_Tank_Barrier_1_Destroyed );
+	OnTrigger( "allies_tank_past_first", Map.Allies_Tank_Past_Barrier_1 );
+	OnTrigger( "Allied Tank Barrier #2 has been constructed.", Map.Allies_Tank_Barrier_2_Built );
+	OnTrigger( "Allied Tank Barrier #2 has been destroyed.", Map.Allies_Tank_Barrier_2_Destroyed );
+	OnTrigger( "allies_tank_past_sec", Map.Allies_Tank_Past_Barrier_2 );
+
+	OnTrigger( "The Axis Tank has been repaired!", Map.Axis_Tank_Built );
+	OnTrigger( "The Axis Tank has been damaged!", Map.Axis_Tank_Damaged );
+
+	OnTrigger( "Axis Tank Barrier #1 has been constructed.", Map.Axis_Tank_Barrier_1_Built );
+	OnTrigger( "axis_destroy_barrier", Map.Axis_Tank_at_Barrier );
+	OnTrigger( "Axis Tank Barrier #1 has been destroyed.", Map.Axis_Tank_Barrier_1_Destroyed );
+	OnTrigger( "axis_tank_past_first", Map.Axis_Tank_Past_Barrier_1 );
+	OnTrigger( "Axis Tank Barrier #2 has been constructed.", Map.Axis_Tank_Barrier_2_Built );
+	OnTrigger( "Axis Tank Barrier #2 has been destroyed.", Map.Axis_Tank_Barrier_2_Destroyed );
+	OnTrigger( "axis_tank_past_sec", Map.Axis_Tank_Past_Barrier_2 );
+
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Neutral_Command_Post_Built );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Neutral_Command_Post_Built );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Neutral_Command_Post_Destroyed );
+
+	OnTrigger( "The Allies have breached the Sewer Wall!", Map.Allied_Sewer_Wall_Destroyed );
+	OnTrigger( "The Axis have breached the Sewer Wall!", Map.Axis_Sewer_Wall_Destroyed );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Allies_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Allies_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Axis_Sewer_Wall" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Axis_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Axis_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_south_ammocabinet_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_south_healthcabinet_1" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Axis_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Axis_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Allied_Sewer_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Allies_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Allies_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_south_ammocabinet" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_south_healthcabinet" );
+
+	Util.SetGoalOffset( -50, 0, 0, "PLANT_Axis_Sewer_Wall" );
+	Util.SetGoalOffset( 50, 0, 0, "PLANT_Allied_Sewer_Wall" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

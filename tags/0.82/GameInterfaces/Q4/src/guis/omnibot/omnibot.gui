@@ -1,0 +1,38 @@
+windowDef Desktop
+{
+	rect	0,0,640,480
+	visible	1
+	noCursor	1
+	windowDef crosshair
+	{
+		rect	304,224,32,32
+		background	"gfx/guis/crosshairs/crosshair_machinegun.tga"
+		visible	1
+		notime	1
+	}
+	windowDef title
+	{
+		rect	200,258,242,120
+		visible	1
+		windowDef botname
+		{
+			rect	0,-7,242,26
+			visible	1
+			forecolor	1,1,1,1
+			text	"gui::botname"
+			textscale	0.3
+			font	"fonts/marine"
+			textalign	1
+		}
+		windowDef hudtext
+		{
+			rect	0,17,241,100
+			visible	2
+			forecolor	.8,.8,.8,1
+			text	"gui::hudtext"
+			textscale	0.25
+			font	"fonts/marine"
+			textalign	1
+		}
+	}
+}

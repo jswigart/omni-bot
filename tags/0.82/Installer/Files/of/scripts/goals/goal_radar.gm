@@ -1,0 +1,49 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "Radar";			// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.LimitToClass(CLASS.SCOUT);
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.RadarPulseDelay = 5;
+	
+	//print(this.Name, " Initialized");
+};
+
+this.OnSpawn = function()
+{
+};
+
+this.GetPriority = function()
+{
+	// Wait until I see someone before starting radar pulses to conserve cells
+	// in  my own base.
+	while(!this.Bot.GetTarget()) 
+	{
+		sleep(this.RadarPulseDelay); 
+	}
+	
+	this.Priority = 1;
+	block(0);
+};
+
+// this.Enter = function()
+// {
+// };
+
+// this.Exit = function()
+// {
+// };
+
+this.Update = function()
+{
+	while(true)
+	{
+		this.Bot.PressButton(BTN.RADAR);
+		sleep(this.RadarPulseDelay);
+	}
+};

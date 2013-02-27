@@ -1,0 +1,474 @@
+//waypoint & scripting by C3R14L.K1L4 
+//version of Mon Oct 06 00:34:57 2008
+//OB 0.7
+global Map =
+{
+	Allies_Attack = "ATTACK_ALLIES_OFFENSE.*",
+	All_Goals = ".*",
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Axis_Attack = "ATTACK_AXIS_OFFENSE.*",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Construction_MG = "BUILD_Construction_MG",
+	Build_Oasis_Water_Pump = "BUILD_Oasis_Water_Pump",
+	Cappoint_2 = "CAPPOINT_ALLIES_CAPPOINT",
+	Flag_allied_gold = "FLAG_allied_gold",
+	Gold_Recover = "DEFEND_AXIS_RECOVER.*",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Mount_Construction_MG = "MOUNTMG42_Construction_MG",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Construction_MG = "PLANT_Construction_MG",
+	Plant_Oasis_Water_Pump = "PLANT_Oasis_Water_Pump",
+	Plant_Palace_Door = "PLANT_Palace_Door",
+	Repair_Construction_MG = "REPAIRMG42_Construction_MG",
+	
+	allied_gold_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		//forget about all
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.All_Goals );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Gold_Recover );
+
+		Util.MapDebugPrint( "allied_gold_Taken" );
+	},
+	
+	Oasis_Water_Pump_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
+	},
+
+	Oasis_Water_Pump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Destroyed" );
+	},
+
+	Palace_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Palace_Door_Destroyed" );
+	},
+
+
+	allied_gold_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.All_Goals );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Gold_Recover );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Construction_MG );
+
+		Util.MapDebugPrint( "allied_gold_Returned" );
+	},
+
+	CAPPOINT_2_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_2_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=5, MaxCampTime=10});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=60, MaxCampTime=120});
+		
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 2, "DEFUSE.*" );
+	Util.SetMaxUsersInProgress( 2, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 2, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, Map.Mount_Construction_MG );
+	
+	Util.SetGoalPosition( 895, -667, 25, Map.Plant_Palace_Door );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Allies_Attack );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Axis_Attack );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Gold_Recover );
+	SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_Construction_MG );
+	
+	SetGoalPriority(Map.Build_Construction_MG, 0.50, TEAM.ALLIES, 0, true);
+	SetGoalPriority(Map.Build_Command_Post, 0.85, TEAM.ALLIES, 0, true);
+	SetGoalPriority(Map.Gold_Recover, 1.50, TEAM.AXIS, 0, true);
+	SetGoalPriority(Map.Plant_Command_Post, 0.53, TEAM.ALLIES, 0, true);
+	SetGoalPriority(Map.Plant_Command_Post, 0.53, TEAM.AXIS, 0, true);
+	SetGoalPriority(Map.Plant_Construction_MG, 0.50, TEAM.AXIS, 0, true);
+
+	OnTrigger( "Allies have built the Oasis Water Pump!", Map.Oasis_Water_Pump_Built );
+	OnTrigger( "Axis have damaged the Oasis Water Pump!", Map.Oasis_Water_Pump_Destroyed );
+	OnTrigger( "Allies have blown open the Palace Door!", Map.Palace_Door_Destroyed );
+	OnTrigger( "The Allies have stolen the Axis gold", Map.allied_gold_Taken );
+	OnTrigger( "Gold returned! Protect the gold", Map.allied_gold_Returned );
+	OnTrigger( "The Allies have secured the Axis gold", Map.CAPPOINT_2_Captured );
+	
+	MapRoutes =
+    {
+		BUILD_Construction_MG =
+		{
+			ROUTE_AS =	{
+				ROUTE_J = {},
+				ROUTE_I = {},
+				ROUTE_B1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+				ROUTE_A1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+			},
+			//--------------
+			ROUTE_C = {
+				ROUTE_J = {},
+				ROUTE_I = {},
+				ROUTE_B1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+				ROUTE_A1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+			},
+			//--------------
+			ROUTE_B1 = {
+				ROUTE_J = {},
+				ROUTE_I = {},
+				ROUTE_B1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+				ROUTE_A1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+			},
+			//--------------
+			ROUTE_A1 = {
+				ROUTE_J = {},
+				ROUTE_I = {},
+				ROUTE_B1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+				ROUTE_A1 =	{
+					ROUTE_D = 	{
+						ROUTE_E =	{
+							ROUTE_K = {},
+						},
+					},
+				},
+			},
+		},
+		BUILD_Oasis_Water_Pump = {
+			ROUTE_AS = {
+				ROUTE_B1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_A1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_I = {},
+				ROUTE_J = {},
+			},
+			//--------------
+			ROUTE_B1 =	{
+				ROUTE_B1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_A1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_G = {},
+				ROUTE_I = {},
+				ROUTE_J = {},
+			},
+ 			//--------------
+ 			ROUTE_A1 =	{
+				ROUTE_B1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_A1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_G = {},
+				ROUTE_I = {},
+				ROUTE_J = {},
+			},
+ 			//--------------
+			ROUTE_C =	{
+				ROUTE_B1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_A1 = {
+					ROUTE_D = {
+						ROUTE_E = {},
+					},
+				},
+				ROUTE_G = {},
+				ROUTE_I = {},
+				ROUTE_J = {},
+			},
+ 			//--------------
+		},
+		FLAG_allied_gold = {
+			ROUTE_AS = {
+				ROUTE_G = {
+					ROUTE_Q = {},
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+				},
+				ROUTE_Y = {
+					ROUTE_Q = {},
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+				},
+				ROUTE_T = {
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+					ROUTE_L = {
+						ROUTE_Q = {},
+						ROUTE_N = {},
+						ROUTE_F = {
+							ROUTE_N = {},
+						},
+						ROUTE_Q = {},
+					},
+				},
+			},
+			//----------------
+			ROUTE_C = {
+				ROUTE_G = {
+					ROUTE_N = {},
+					ROUTE_Q = {},
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+				},
+				ROUTE_Y = {
+					ROUTE_N = {},
+					ROUTE_Q = {},
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+				},
+				ROUTE_T = {
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+					ROUTE_L = {
+						ROUTE_Q = {},
+						ROUTE_N = {},
+						ROUTE_F = {
+							ROUTE_N = {},
+						},
+						ROUTE_Q = {},
+					},
+				},
+			},
+			//----------------
+			ROUTE_D = {
+				ROUTE_E = {
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+					ROUTE_Q = {},
+					ROUTE_N = {},
+					ROUTE_T = {
+						ROUTE_X = {
+							ROUTE_U = {},
+						},
+					},
+				},
+				ROUTE_N = {},
+				ROUTE_G = {
+					ROUTE_N = {},
+					ROUTE_Q = {},
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+				},
+				ROUTE_T = {
+					ROUTE_X = {
+						ROUTE_U = {},
+					},
+					ROUTE_L = {
+						ROUTE_Q = {},
+						ROUTE_N = {},
+						ROUTE_F = {
+							ROUTE_N = {},
+						},
+						ROUTE_Q = {},
+					},
+				},
+			},
+		},
+		CAPPOINT_ALLIES_CAPPOINT = {
+			ROUTE_P = {
+				ROUTE_V = {
+					ROUTE_X = {
+						ROUTE_Z = {
+							ROUTE_Y = {},
+						},
+					},
+					ROUTE_S = {
+						ROUTE_K = {},
+					},
+				},
+				ROUTE_W = {
+					ROUTE_N = {
+						ROUTE_D = {
+							ROUTE_B1 = {},
+							ROUTE_A1 = {},
+						},
+						ROUTE_O = {},
+						ROUTE_F= {
+							ROUTE_D = {
+								ROUTE_B1 = {},
+								ROUTE_A1 = {},
+							},
+							ROUTE_K = {},
+							ROUTE_L = {
+								ROUTE_Y = {
+									ROUTE_C = {},
+								},
+							},
+						},
+					},
+					ROUTE_O = {
+						ROUTE_B1 = {},
+						ROUTE_A1 = {},
+						ROUTE_K = {},
+					},
+					ROUTE_K = {},
+					ROUTE_R = {
+						ROUTE_T = {
+							ROUTE_C = {},
+						},
+					},
+					ROUTE_Z = {
+						ROUTE_C = {},
+					},
+				},
+			},
+			//----------------
+			ROUTE_W = {
+				ROUTE_N = {
+					ROUTE_D = {
+						ROUTE_B1 = {},
+						ROUTE_A1 = {},
+					},
+					ROUTE_O = {},
+					ROUTE_F= {
+						ROUTE_D = {
+							ROUTE_B1 = {},
+							ROUTE_A1 = {},
+						},
+						ROUTE_K = {},
+						ROUTE_L = {
+							ROUTE_Y = {
+								ROUTE_C = {},
+							},
+						},
+					},
+				},
+				ROUTE_O = {
+					ROUTE_B1 = {},
+					ROUTE_A1 = {},
+					ROUTE_K = {},
+				},
+				ROUTE_K = {},
+				ROUTE_R = {
+					ROUTE_T = {
+						ROUTE_C = {},
+					},
+				},
+				ROUTE_Z = {
+					ROUTE_C = {},
+				},
+			},
+			//----------------
+			ROUTE_U = {
+				ROUTE_V = {
+					ROUTE_X = {
+						ROUTE_Z = {
+							ROUTE_Y = {},
+						},
+					},
+					ROUTE_S = {
+						ROUTE_K = {},
+					},
+				},
+			},
+		},
+	};
+	
+    Util.Routes(MapRoutes);
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 2048;
+	bot.TargetBreakableDist = 350;
+	weapon = bot.GetWeapon( WEAPON.KNIFE );
+	weapon.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.1);
+	weapon = bot.GetWeapon( WEAPON.MP40 );
+	weapon.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.3);
+	weapon = bot.GetWeapon( WEAPON.THOMPSON );
+	weapon.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.3);
+	
+};

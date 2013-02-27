@@ -1,0 +1,194 @@
+global Map =
+{
+	Navigation =
+	{
+		trainyardele =
+		{
+			gotowp = "tyeletop",
+
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3);
+			},			
+		},
+		
+		tyelemid =
+		{
+			//gotowp = "tyelemid",
+
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 4);
+				sleep(4);
+			},			
+		},
+		
+		aaele =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 3);
+				sleep(3);
+			},			
+		},
+
+		cyladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 1.5);
+				sleep(1.5);
+			},			
+		},			
+		
+		trainbox =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.PressButton(BTN.JUMP);
+				sleep(0.25);
+				_this.Bot.HoldButton(BTN.SPRINT, 3);
+				_this.Bot.HoldButton(BTN.CROUCH, 1);
+				sleep(3);
+			},
+		},
+		
+	},
+	
+	MapName = "mp_depot",
+	Quiet = true,
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Plant_Allied_Field_Operations = "PLANT_Allied_Field_Operations",
+	Plant_Anti_Aircraft_Gun = "PLANT_Anti_Aircraft_Gun",
+	Plant_East_Gate = "PLANT_East_Gate",
+	Plant_West_Gate = "PLANT_West_Gate",
+	Mount_cymg = "MOUNTMG42_cymg",
+	Mount_opsmg = "MOUNTMG42_opsmg",
+	Repair_cymg = "REPAIRMG42_cymg",
+	Repair_opsmg = "REPAIRMG42_opsmg",
+	Snipe_bTrain = "SNIPE_bTrain",
+	Snipe_bruinsnipe = "SNIPE_bruinsnipe",
+	Snipe_rTrain = "SNIPE_rTrain",
+	Snipe_rcysnipe1 = "SNIPE_rcysnipe1",
+	Snipe_rcysnipe2 = "SNIPE_rcysnipe2",
+
+	Allied_Field_Operations_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_Field_Operations_Destroyed" );
+	},
+
+	Anti_Aircraft_Gun_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Anti_Aircraft_Gun_Destroyed" );
+	},
+
+	East_Gate_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "East_Gate_Destroyed" );
+	},
+
+	West_Gate_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "West_Gate_Destroyed" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Axis team destroyed the Allied Field Operations!", Map.Allied_Field_Operations_Destroyed );
+		OnTrigger( "Allied team destoyed the Anti-Aircraft gun!", Map.Anti_Aircraft_Gun_Destroyed );
+		OnTrigger( "Allies have breached the East Gate!", Map.East_Gate_Destroyed );
+		OnTrigger( "Axis has breached the West Gate!", Map.West_Gate_Destroyed );
+		OnTrigger( "Axis captures the Forward Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
+		OnTrigger( "Allies capture the Forward Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_cymg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_West_Gate, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_opsmg, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_opsmg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_cymg, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_opsmg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_East_Gate, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_flag_respawn_obj, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_cymg, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_cymg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_opsmg, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bTrain, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bruinsnipe, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rTrain, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rcysnipe1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rcysnipe2, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bTrain, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bruinsnipe, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rTrain, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rcysnipe1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rcysnipe2, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Anti_Aircraft_Gun, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

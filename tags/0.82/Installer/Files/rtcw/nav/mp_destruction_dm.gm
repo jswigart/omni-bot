@@ -1,0 +1,123 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+
+	Navigation =
+	{
+		ladders =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime = 60, maxcamptime = 90} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCourtyard_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCourtyard" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCheckpoint4.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCheckpoint4_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bCourtyard" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCourtyard_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCheckpoint3.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCheckpoint3_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCourtyard" );
+
+	// Alternate spawnkill play
+	/*SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill" );*/
+
+	MapRoutes =
+	{
+		DEFEND_rCheckpoint3_1 =
+		{
+			ROUTE_rSpawn =
+			{
+				ROUTE_eRoad = {},
+				ROUTE_nAlleyway = {Weight = 3,},
+			},
+		},
+		DEFEND_bCheckpoint4_1 =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wRoad = {},
+				ROUTE_sAlleyway = {Weight = 3,},
+			},
+		},
+	};
+
+	MapRoutes.AIRSTRIKE_rCourtyard_1 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.AIRSTRIKE_rCourtyard_2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CALLARTILLERY_rCourtyard = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.MOUNTMG42_rCourtyard = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_3 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_4 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_5 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_6 = MapRoutes.DEFEND_rCheckpoint3_1;
+
+	MapRoutes.AIRSTRIKE_bCourtyard_1 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CALLARTILLERY_bCourtyard = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.MOUNTMG42_bCourtyard = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_2 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_3 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_4 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_5 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_6 = MapRoutes.DEFEND_bCheckpoint4_1;
+
+	Util.Routes( MapRoutes );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = 3500;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

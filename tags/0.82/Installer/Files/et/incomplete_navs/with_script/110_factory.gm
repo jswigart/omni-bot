@@ -1,0 +1,403 @@
+//==========================================================================================
+//
+//	110_factory.gm
+//
+//	Who	When			What
+//------------------------------------------------------------------------------------------
+//	jaskot	02/03/09		Converted old script to new format
+//	MickyP	19 October 2010		Paththou & Minor script updates
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	DoorStatus = 0,
+
+	Movers =
+	{
+		"MOVER_plane1_engine1",
+		"MOVER_plane1_engine2",
+		"MOVER_plane2_engine1",
+		"MOVER_plane2_engine2",
+		"MOVER_plane3_engine1",
+		"MOVER_plane3_engine2",
+		"MOVER_plane4_engine1",
+		"MOVER_plane4_engine2",
+		"MOVER_plane5_engine1",
+		"MOVER_plane5_engine2",
+	},
+
+	Switches =
+	{
+		outside =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "Outside",
+			Timeout = 2000,
+			AimPosition = Vec3(10829.165, 12304.125, 54.814),
+			LimitBots = 1,
+		},
+		inside =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "Inside",
+			Timeout = 2000,
+			AimPosition = Vec3(10828.303, 12223.875, 54.483),
+			LimitBots = 1,
+		},
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Compound_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Compound_Door_Built" );
+	},
+
+	Escape_Ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Escape", "closed", false );
+		Util.MapDebugPrint( "Escape_Ladder_Built" );
+	},
+
+	Island_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Island_MG42_Built" );
+	},
+
+	Side_Entrance_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Side_Entrance_Built" );
+	},
+
+	front_barbed_wire_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "front_barbed_wire_Built" );
+	},
+
+	side_barbed_wire_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "side_barbed_wire_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno = 0;
+
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Compound_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Compound_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Compound_Door_Destroyed" );
+	},
+
+	Escape_Ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Wp.SetWaypointFlag( "Escape", "closed", true );
+		Map.Escape_Ladder_Dyno = 0;
+
+		Util.MapDebugPrint( "Escape_Ladder_Destroyed" );
+	},
+
+	Island_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Island_MG42_Dyno = 0;
+
+		Util.MapDebugPrint( "Island_MG42_Destroyed" );
+	},
+
+	Main_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_front_barbed_wire" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_side_barbed_wire" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_forward_bunker_flag" );
+
+
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Island_MG42" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_Island_MG42" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_Island_MG42" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_front_barbed_wire" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_side_barbed_wire" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_forward_bunker_flag" );
+
+
+
+		Util.MapDebugPrint( "Main_Entrance_Destroyed" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
+	},
+
+	front_barbed_wire_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "front_barbed_wire_Destroyed" );
+	},
+
+	side_barbed_wire_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+
+		Util.MapDebugPrint( "side_barbed_wire_Destroyed" );
+	},
+
+	radar_pickup_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_pickup_Taken" );
+	},
+
+	radar_pickup_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_pickup_Returned" );
+	},
+
+	radar_pickup_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_pickup_Secured" );
+	},
+
+	forward_bunker_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_bunker_flag_Axis_Captured" );
+	},
+
+	forward_bunker_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_bunker_flag_Allies_Captured" );
+	},
+
+	electric_fence_on = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "electric_fence_on" );
+	},
+
+	electric_fence_off = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "electric_fence_off" );
+	},
+
+	door_trigger = function( trigger )
+	{
+         vel = ToVector(trigger.Action);
+
+         if ( vel.x > 0 )
+		{
+		Map.Switches.outside.Enabled = true;
+		Map.Switches.inside.Enabled = true;
+		Map.DoorStatus = 0;
+		Util.MapDebugPrint( "door closed" );
+		}
+         else if ( vel.x < 0 )
+		{
+		Map.Switches.outside.Enabled = false;
+		Map.Switches.inside.Enabled = false;
+		Map.DoorStatus = 1;
+		Util.MapDebugPrint( "door open" );
+		}
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "^3Allies have built the Assault Ramp!", Map.Assault_Ramp_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Axis have built the reinforced Compound Door!  It is secure against dis", Map.Compound_Door_Built );
+	OnTrigger( "^3Allies have built the Escape Ladder!", Map.Escape_Ladder_Built );
+	OnTrigger( "Allies have built the Island MG42!", Map.Island_MG42_Built );
+	OnTrigger( "Axis have built the Side Entrance Door!  It is secure against disguised", Map.Side_Entrance_Built );
+	OnTrigger( "^3The Axis have built the front barbed wire defences!", Map.front_barbed_wire_Built );
+	OnTrigger( "^3The Axis have built the side barbed wire defences!", Map.side_barbed_wire_Built );
+	OnTrigger( "^3Axis have destroyed the Assault Ramp!", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allies have ^3permanently ^7destroyed the reinforced Compound Door!!", Map.Compound_Door_Destroyed );
+	OnTrigger( "^3Axis have destroyed the Escape Ladder!", Map.Escape_Ladder_Destroyed );
+	OnTrigger( "Axis have destroyed the Island MG42!", Map.Island_MG42_Destroyed );
+	OnTrigger( "^3Timelimit extended by 10 minutes!", Map.Main_Entrance_Destroyed );
+	OnTrigger( "Allies have destroyed the Side Entrance Door!!", Map.Side_Entrance_Destroyed );
+	OnTrigger( "^3The Allies have destroyed the front barbed wire defences!", Map.front_barbed_wire_Destroyed );
+	OnTrigger( "^3The Allies have destroyed the side barbed wire defences!", Map.side_barbed_wire_Destroyed );
+	OnTrigger( "axis_110_factory_radar_taken", Map.radar_pickup_Taken );
+	OnTrigger( "axis_110_factory_radar_returned", Map.radar_pickup_Returned );
+	OnTrigger( "The Allies got the radar parts to the halftrack!!!", Map.radar_pickup_Secured );
+	OnTrigger( "^3Power is back on for the compound electric fence", Map.electric_fence_on );
+	OnTrigger( "^3Power for the compound electric fence has been cut", Map.electric_fence_off );
+	OnTrigger( "radar_axis_bunker_reclaimed", Map.forward_bunker_flag_Axis_Captured );
+	OnTrigger( "radar_allies_bunker_captured", Map.forward_bunker_flag_Allies_Captured );
+	OnTrigger( "door1_left_goto", Map.door_trigger );
+
+//	OnTrigger( "12345678901234567890123456789012345678901234567890123456789012345678901", Map.Max );
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_Ramp" );
+
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Island_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_Island_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Assault_Ramp" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Island_MG42" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_Island_MG42" );
+	Util.DisableGoal( "MOVER_.*" );
+
+	Wp.SetWaypointFlag( "Escape", "closed", true );
+
+	Util.AddUseWp( "PLANT_Side_Entrance", "Side1" );
+	Util.AddUseWp( "PLANT_Side_Entrance", "Side2" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	Util.UpdateSwitchData();
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+	Util.IgnoreTargetGoalTable( bot, Map.Movers );
+};

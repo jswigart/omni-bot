@@ -1,0 +1,1036 @@
+global Map =
+{
+	MapName = "fueldump",
+	Quiet = true,
+	Ammo_Cabinet_alliedhut_ammocabinet = "AMMOCAB_alliedhut_ammocabinet",
+	Ammo_Cabinet_lms_ammocabinet = "AMMOCAB_lms_ammocabinet",
+	Ammo_Cabinet_tankbay_ammocabinet = "AMMOCAB_tankbay_ammocabinet",
+	Health_Cabinet_alliedhut_healthcabinet = "HEALTHCAB_alliedhut_healthcabinet",
+	Health_Cabinet_lms_healthcabinet = "HEALTHCAB_lms_healthcabinet",
+	Health_Cabinet_tankbay_healthcabinet = "HEALTHCAB_tankbay_healthcabinet",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Bridge = "BUILD_Bridge",
+	Build_East_Axis_Base_Fortification = "BUILD_East_Axis_Base_Fortification",
+	Build_Foot_Bridge = "BUILD_Foot_Bridge",
+	Build_Road_MG = "BUILD_Road_MG",
+	Build_Side_MG = "BUILD_Side_MG",
+	Build_Tank = "BUILD_Tank",
+	Build_Tunnel_MG = "BUILD_Tunnel_MG",
+	Build_West_Axis_Base_Fortification = "BUILD_West_Axis_Base_Fortification",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_East_Axis_Base_Fortification = "PLANT_East_Axis_Base_Fortification",
+	Plant_Foot_Bridge = "PLANT_Foot_Bridge",
+	Plant_Fuel_Dump = "PLANT_Fuel_Dump",
+	Plant_Road_MG = "PLANT_Road_MG",
+	Plant_Side_MG = "PLANT_Side_MG",
+	Plant_Tunnel_MG = "PLANT_Tunnel_MG",
+	Plant_West_Axis_Base_Fortification = "PLANT_West_Axis_Base_Fortification",
+	Mount_Road_MG = "MOUNTMG42_Road_MG",
+	Mount_Side_MG = "MOUNTMG42_Side_MG",
+	Mount_Side_MG_1 = "MOUNTMG42_Side_MG_1",
+	Mount_Tunnel_MG = "MOUNTMG42_Tunnel_MG",
+	Mount_alliedtunnel_mg42 = "MOUNTMG42_alliedtunnel_mg42",
+	Mount_axisbase_mg42 = "MOUNTMG42_axisbase_mg42",
+	Repair_Road_MG = "REPAIRMG42_Road_MG",
+	Repair_Side_MG = "REPAIRMG42_Side_MG",
+	Repair_Side_MG_1 = "REPAIRMG42_Side_MG_1",
+	Repair_Tunnel_MG = "REPAIRMG42_Tunnel_MG",
+	Repair_alliedtunnel_mg42 = "REPAIRMG42_alliedtunnel_mg42",
+	Repair_axisbase_mg42 = "REPAIRMG42_axisbase_mg42",
+	Mobile_MG42_1023 = "MOBILEMG42_1023",
+	Mobile_MG42_1038 = "MOBILEMG42_1038",
+	Mobile_MG42_1039 = "MOBILEMG42_1039",
+	Mobile_MG42_1040 = "MOBILEMG42_1040",
+	Mobile_MG42_1048 = "MOBILEMG42_1048",
+	Mobile_MG42_1049 = "MOBILEMG42_1049",
+	Mobile_MG42_1051 = "MOBILEMG42_1051",
+	Mobile_MG42_1063 = "MOBILEMG42_1063",
+	Mobile_MG42_1068 = "MOBILEMG42_1068",
+	Mobile_MG42_1077 = "MOBILEMG42_1077",
+	Mobile_MG42_1079 = "MOBILEMG42_1079",
+	Mobile_MG42_1080 = "MOBILEMG42_1080",
+	Mobile_MG42_1086 = "MOBILEMG42_1086",
+	Mobile_MG42_1101 = "MOBILEMG42_1101",
+	Mobile_MG42_1103 = "MOBILEMG42_1103",
+	Mobile_MG42_1108 = "MOBILEMG42_1108",
+	Mobile_MG42_1109 = "MOBILEMG42_1109",
+	Mobile_MG42_1110 = "MOBILEMG42_1110",
+	Mobile_MG42_1111 = "MOBILEMG42_1111",
+	Mobile_MG42_1112 = "MOBILEMG42_1112",
+	Mobile_MG42_1123 = "MOBILEMG42_1123",
+	Mobile_MG42_1170 = "MOBILEMG42_1170",
+	Mobile_MG42_1213 = "MOBILEMG42_1213",
+	Mobile_MG42_1235 = "MOBILEMG42_1235",
+	Mobile_MG42_1244 = "MOBILEMG42_1244",
+	Mobile_MG42_148 = "MOBILEMG42_148",
+	Mobile_MG42_268 = "MOBILEMG42_268",
+	Mobile_MG42_289 = "MOBILEMG42_289",
+	Mobile_MG42_292 = "MOBILEMG42_292",
+	Mobile_MG42_340 = "MOBILEMG42_340",
+	Mobile_MG42_381 = "MOBILEMG42_381",
+	Mobile_MG42_398 = "MOBILEMG42_398",
+	Mobile_MG42_453 = "MOBILEMG42_453",
+	Mobile_MG42_474 = "MOBILEMG42_474",
+	Mobile_MG42_536 = "MOBILEMG42_536",
+	Mobile_MG42_561 = "MOBILEMG42_561",
+	Mobile_MG42_598 = "MOBILEMG42_598",
+	Mobile_MG42_600 = "MOBILEMG42_600",
+	Mobile_MG42_601 = "MOBILEMG42_601",
+	Mobile_MG42_748 = "MOBILEMG42_748",
+	Mobile_MG42_764 = "MOBILEMG42_764",
+	Mobile_MG42_772 = "MOBILEMG42_772",
+	Mobile_MG42_875 = "MOBILEMG42_875",
+	Mobile_MG42_891 = "MOBILEMG42_891",
+	Mobile_MG42_896 = "MOBILEMG42_896",
+	Mobile_MG42_908 = "MOBILEMG42_908",
+	Mobile_MG42_912 = "MOBILEMG42_912",
+	Mobile_MG42_914 = "MOBILEMG42_914",
+	Mobile_MG42_915 = "MOBILEMG42_915",
+	Mobile_MG42_931 = "MOBILEMG42_931",
+	Mobile_MG42_944 = "MOBILEMG42_944",
+	Mobile_MG42_950 = "MOBILEMG42_950",
+	Mobile_MG42_954 = "MOBILEMG42_954",
+	Mobile_MG42_963 = "MOBILEMG42_963",
+	Mobile_MG42_964 = "MOBILEMG42_964",
+	Mobile_MG42_969 = "MOBILEMG42_969",
+	Mobile_MG42_972 = "MOBILEMG42_972",
+	Mobile_MG42_973 = "MOBILEMG42_973",
+	Mobile_MG42_976 = "MOBILEMG42_976",
+	Mobile_MG42_977 = "MOBILEMG42_977",
+	Mobile_MG42_978 = "MOBILEMG42_978",
+	Mobile_MG42_Axis_CP_Snipe_Spot = "MOBILEMG42_Axis_CP_Snipe_Spot",
+	Mobile_MG42_Bridge_1 = "MOBILEMG42_Bridge_1",
+	Mobile_MG42_Bridge_11 = "MOBILEMG42_Bridge_11",
+	Mobile_MG42_Bridge_5 = "MOBILEMG42_Bridge_5",
+	Mobile_MG42_Bridge_6 = "MOBILEMG42_Bridge_6",
+	Mobile_MG42_CP_Defence_3 = "MOBILEMG42_CP_Defence_3",
+	Mobile_MG42_Dump_Defence_6 = "MOBILEMG42_Dump_Defence_6",
+	Mobile_MG42_Fuel_Dump_1 = "MOBILEMG42_Fuel_Dump_1",
+	Mobile_MG42_Fuel_Dump_2 = "MOBILEMG42_Fuel_Dump_2",
+	Mobile_MG42_Rear_Hill_Arty_Point_2 = "MOBILEMG42_Rear_Hill_Arty_Point_2",
+	Mobile_MG42_Side_Bridge_Arty_Spot_1 = "MOBILEMG42_Side_Bridge_Arty_Spot_1",
+	Mobile_MG42_Side_Bridge_Arty_Spot_3 = "MOBILEMG42_Side_Bridge_Arty_Spot_3",
+	Mobile_MG42_Side_Bridge_Arty_Spot_8 = "MOBILEMG42_Side_Bridge_Arty_Spot_8",
+	Mobile_MG42_Tunnel_Defence_5 = "MOBILEMG42_Tunnel_Defence_5",
+	Mobile_MG42_Tunnel_Doors_10 = "MOBILEMG42_Tunnel_Doors_10",
+	Mobile_MG42_Tunnel_Doors_6 = "MOBILEMG42_Tunnel_Doors_6",
+	Mobile_MG42_Tunnel_Doors_9 = "MOBILEMG42_Tunnel_Doors_9",
+	Mobile_MG42_Tunnel_Exit_Arty_Spot_3 = "MOBILEMG42_Tunnel_Exit_Arty_Spot_3",
+	Mobile_MG42_Tunnel_Exit_Arty_Spot_4 = "MOBILEMG42_Tunnel_Exit_Arty_Spot_4",
+	Mobile_MG42_Tunnel_Grate_1 = "MOBILEMG42_Tunnel_Grate_1",
+	Mobile_MG42_northtunnel = "MOBILEMG42_northtunnel",
+	Snipe_1008 = "SNIPE_1008",
+	Snipe_1013 = "SNIPE_1013",
+	Snipe_1023 = "SNIPE_1023",
+	Snipe_1024 = "SNIPE_1024",
+	Snipe_1029 = "SNIPE_1029",
+	Snipe_1038 = "SNIPE_1038",
+	Snipe_1039 = "SNIPE_1039",
+	Snipe_1040 = "SNIPE_1040",
+	Snipe_1047 = "SNIPE_1047",
+	Snipe_1048 = "SNIPE_1048",
+	Snipe_1049 = "SNIPE_1049",
+	Snipe_1051 = "SNIPE_1051",
+	Snipe_1063 = "SNIPE_1063",
+	Snipe_1068 = "SNIPE_1068",
+	Snipe_1075 = "SNIPE_1075",
+	Snipe_1077 = "SNIPE_1077",
+	Snipe_1079 = "SNIPE_1079",
+	Snipe_1080 = "SNIPE_1080",
+	Snipe_1086 = "SNIPE_1086",
+	Snipe_1096 = "SNIPE_1096",
+	Snipe_1097 = "SNIPE_1097",
+	Snipe_1101 = "SNIPE_1101",
+	Snipe_1103 = "SNIPE_1103",
+	Snipe_1108 = "SNIPE_1108",
+	Snipe_1109 = "SNIPE_1109",
+	Snipe_1110 = "SNIPE_1110",
+	Snipe_1111 = "SNIPE_1111",
+	Snipe_1112 = "SNIPE_1112",
+	Snipe_1123 = "SNIPE_1123",
+	Snipe_1170 = "SNIPE_1170",
+	Snipe_1181 = "SNIPE_1181",
+	Snipe_1213 = "SNIPE_1213",
+	Snipe_1217 = "SNIPE_1217",
+	Snipe_1218 = "SNIPE_1218",
+	Snipe_1233 = "SNIPE_1233",
+	Snipe_1235 = "SNIPE_1235",
+	Snipe_1244 = "SNIPE_1244",
+	Snipe_148 = "SNIPE_148",
+	Snipe_202 = "SNIPE_202",
+	Snipe_206 = "SNIPE_206",
+	Snipe_236 = "SNIPE_236",
+	Snipe_240 = "SNIPE_240",
+	Snipe_268 = "SNIPE_268",
+	Snipe_274 = "SNIPE_274",
+	Snipe_289 = "SNIPE_289",
+	Snipe_292 = "SNIPE_292",
+	Snipe_322 = "SNIPE_322",
+	Snipe_331 = "SNIPE_331",
+	Snipe_339 = "SNIPE_339",
+	Snipe_340 = "SNIPE_340",
+	Snipe_381 = "SNIPE_381",
+	Snipe_398 = "SNIPE_398",
+	Snipe_453 = "SNIPE_453",
+	Snipe_474 = "SNIPE_474",
+	Snipe_485 = "SNIPE_485",
+	Snipe_515 = "SNIPE_515",
+	Snipe_536 = "SNIPE_536",
+	Snipe_561 = "SNIPE_561",
+	Snipe_565 = "SNIPE_565",
+	Snipe_57 = "SNIPE_57",
+	Snipe_598 = "SNIPE_598",
+	Snipe_600 = "SNIPE_600",
+	Snipe_601 = "SNIPE_601",
+	Snipe_61 = "SNIPE_61",
+	Snipe_63 = "SNIPE_63",
+	Snipe_635 = "SNIPE_635",
+	Snipe_699 = "SNIPE_699",
+	Snipe_702 = "SNIPE_702",
+	Snipe_748 = "SNIPE_748",
+	Snipe_764 = "SNIPE_764",
+	Snipe_772 = "SNIPE_772",
+	Snipe_871 = "SNIPE_871",
+	Snipe_875 = "SNIPE_875",
+	Snipe_890 = "SNIPE_890",
+	Snipe_891 = "SNIPE_891",
+	Snipe_896 = "SNIPE_896",
+	Snipe_908 = "SNIPE_908",
+	Snipe_912 = "SNIPE_912",
+	Snipe_913 = "SNIPE_913",
+	Snipe_914 = "SNIPE_914",
+	Snipe_915 = "SNIPE_915",
+	Snipe_922 = "SNIPE_922",
+	Snipe_925 = "SNIPE_925",
+	Snipe_931 = "SNIPE_931",
+	Snipe_944 = "SNIPE_944",
+	Snipe_950 = "SNIPE_950",
+	Snipe_954 = "SNIPE_954",
+	Snipe_963 = "SNIPE_963",
+	Snipe_964 = "SNIPE_964",
+	Snipe_969 = "SNIPE_969",
+	Snipe_972 = "SNIPE_972",
+	Snipe_973 = "SNIPE_973",
+	Snipe_976 = "SNIPE_976",
+	Snipe_977 = "SNIPE_977",
+	Snipe_978 = "SNIPE_978",
+	Snipe_Axis_CP_Arty_Spot = "SNIPE_Axis_CP_Arty_Spot",
+	Snipe_Axis_CP_Snipe_Spot = "SNIPE_Axis_CP_Snipe_Spot",
+	Snipe_Axis_MG_Tower_1 = "SNIPE_Axis_MG_Tower_1",
+	Snipe_Axis_MG_Tower_2 = "SNIPE_Axis_MG_Tower_2",
+	Snipe_Bridge_1 = "SNIPE_Bridge_1",
+	Snipe_Bridge_11 = "SNIPE_Bridge_11",
+	Snipe_Bridge_5 = "SNIPE_Bridge_5",
+	Snipe_Bridge_6 = "SNIPE_Bridge_6",
+	Snipe_Bridge_7 = "SNIPE_Bridge_7",
+	Snipe_CP_Defence_3 = "SNIPE_CP_Defence_3",
+	Snipe_Depot_Gates_10 = "SNIPE_Depot_Gates_10",
+	Snipe_Dump_Defence_6 = "SNIPE_Dump_Defence_6",
+	Snipe_Fuel_Dump_1 = "SNIPE_Fuel_Dump_1",
+	Snipe_Fuel_Dump_2 = "SNIPE_Fuel_Dump_2",
+	Snipe_Rear_Hill_Arty_Point_2 = "SNIPE_Rear_Hill_Arty_Point_2",
+	Snipe_Rear_Hill_Arty_Point_4 = "SNIPE_Rear_Hill_Arty_Point_4",
+	Snipe_Side_Bridge_Arty_Spot_1 = "SNIPE_Side_Bridge_Arty_Spot_1",
+	Snipe_Side_Bridge_Arty_Spot_3 = "SNIPE_Side_Bridge_Arty_Spot_3",
+	Snipe_Side_Bridge_Arty_Spot_8 = "SNIPE_Side_Bridge_Arty_Spot_8",
+	Snipe_Tunnel_Defence_5 = "SNIPE_Tunnel_Defence_5",
+	Snipe_Tunnel_Doors_1 = "SNIPE_Tunnel_Doors_1",
+	Snipe_Tunnel_Doors_10 = "SNIPE_Tunnel_Doors_10",
+	Snipe_Tunnel_Doors_6 = "SNIPE_Tunnel_Doors_6",
+	Snipe_Tunnel_Doors_9 = "SNIPE_Tunnel_Doors_9",
+	Snipe_Tunnel_Exit_Arty_Spot_2 = "SNIPE_Tunnel_Exit_Arty_Spot_2",
+	Snipe_Tunnel_Exit_Arty_Spot_3 = "SNIPE_Tunnel_Exit_Arty_Spot_3",
+	Snipe_Tunnel_Exit_Arty_Spot_4 = "SNIPE_Tunnel_Exit_Arty_Spot_4",
+	Snipe_Tunnel_Grate_1 = "SNIPE_Tunnel_Grate_1",
+	Snipe_mainbridgeRoute3 = "SNIPE_mainbridgeRoute3",
+	Snipe_northtunnel = "SNIPE_northtunnel",
+	Mover_tank = "MOVER_tank",
+	Plant_Mine_1179 = "PLANTMINE_1179",
+	Plant_Mine_1180 = "PLANTMINE_1180",
+	Plant_Mine_1182 = "PLANTMINE_1182",
+	Plant_Mine_1214 = "PLANTMINE_1214",
+	Plant_Mine_1219 = "PLANTMINE_1219",
+	Plant_Mine_1225 = "PLANTMINE_1225",
+	Plant_Mine_1226 = "PLANTMINE_1226",
+	Plant_Mine_1227 = "PLANTMINE_1227",
+	Plant_Mine_1228 = "PLANTMINE_1228",
+	Plant_Mine_1236 = "PLANTMINE_1236",
+	Plant_Mine_1237 = "PLANTMINE_1237",
+	Plant_Mine_1238 = "PLANTMINE_1238",
+	Plant_Mine_1239 = "PLANTMINE_1239",
+	Plant_Mine_1249 = "PLANTMINE_1249",
+	Plant_Mine_1250 = "PLANTMINE_1250",
+	Plant_Mine_1255 = "PLANTMINE_1255",
+	Plant_Mine_1256 = "PLANTMINE_1256",
+	Plant_Mine_1258 = "PLANTMINE_1258",
+	Plant_Mine_1259 = "PLANTMINE_1259",
+	Plant_Mine_Depot_Gates_1 = "PLANTMINE_Depot_Gates_1",
+	Plant_Mine_Depot_Gates_8 = "PLANTMINE_Depot_Gates_8",
+	Plant_Mine_Dump_Mine_2 = "PLANTMINE_Dump_Mine_2",
+	Plant_Mine_Dump_Mine_3 = "PLANTMINE_Dump_Mine_3",
+	Plant_Mine_Dump_Mine_4 = "PLANTMINE_Dump_Mine_4",
+	Plant_Mine_Dump_Mine_5 = "PLANTMINE_Dump_Mine_5",
+	Plant_Mine_Dump_Mine_7 = "PLANTMINE_Dump_Mine_7",
+	Plant_Mine_Fuel_Dump_5 = "PLANTMINE_Fuel_Dump_5",
+	Plant_Mine_Fuel_Dump_7 = "PLANTMINE_Fuel_Dump_7",
+	Plant_Mine_Side_Bridge_Arty_Spot_7 = "PLANTMINE_Side_Bridge_Arty_Spot_7",
+	Plant_Mine_Side_Bridge_Mine_1 = "PLANTMINE_Side_Bridge_Mine_1",
+	Plant_Mine_Wall_Mine_1 = "PLANTMINE_Wall_Mine_1",
+	Plant_Mine_Wall_Mine_2 = "PLANTMINE_Wall_Mine_2",
+	Plant_Mine_Wall_Mine_3 = "PLANTMINE_Wall_Mine_3",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Bridge_Built" );
+	},
+
+	East_Axis_Base_Fortification_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "East_Axis_Base_Fortification_Built" );
+	},
+
+	Foot_Bridge_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Foot_Bridge_Built" );
+	},
+
+	Road_MG_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Road_MG_Built" );
+	},
+
+	Side_MG_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Side_MG_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Built" );
+	},
+
+	Tunnel_MG_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tunnel_MG_Built" );
+	},
+
+	West_Axis_Base_Fortification_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "West_Axis_Base_Fortification_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Bridge_Destroyed" );
+	},
+
+	East_Axis_Base_Fortification_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "East_Axis_Base_Fortification_Destroyed" );
+	},
+
+	Foot_Bridge_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Foot_Bridge_Destroyed" );
+	},
+
+	Fuel_Dump_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Fuel_Dump_Destroyed" );
+	},
+
+	Road_MG_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Road_MG_Destroyed" );
+	},
+
+	Side_MG_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Side_MG_Destroyed" );
+	},
+	
+	Tank_Destroyed = function ( trigger )
+	{
+		Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+		
+		print( "Tank_Destroyed" );
+	},
+
+	Tunnel_MG_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tunnel_MG_Destroyed" );
+	},
+
+	West_Axis_Base_Fortification_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "West_Axis_Base_Fortification_Destroyed" );
+	},
+	
+	Tunnel_Grate_Breached = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tunnel_Grate_Breached" );
+	},
+	
+	Tunnel_Doors_Breached = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tunnel_Doors_Breached" );
+	},
+	
+	Depot_Gates_Breached = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Depot_Gates_Breached" );
+	},
+	
+	Depot_Side_Wall_Breached = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Depot_Side_Wall_Breached" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+		OnTrigger( "Allied team has reinforced the Bridge!", Map.Bridge_Built );
+		OnTrigger( "Axis team has constructed the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Built );
+		OnTrigger( "Allied team has constructed the Foot Bridge!", Map.Foot_Bridge_Built );
+		OnTrigger( "Allied team has constructed the Road MG Nest!", Map.Road_MG_Built );
+		OnTrigger( "Allied team has constructed the Side MG Nest!", Map.Side_MG_Built );
+		OnTrigger( "Axis team has constructed the Side MG Nest!", Map.Side_MG_Built );
+		OnTrigger( "The Tank has been repaired", Map.Tank_Built );
+		OnTrigger( "Axis team has constructed the Tunnel MG!", Map.Tunnel_MG_Built );
+		OnTrigger( "Axis team has constructed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Built );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+		OnTrigger( "Axis team has damaged the Bridge!", Map.Bridge_Destroyed );
+		OnTrigger( "Allied team has damaged the East Axis Base Fortification!", Map.East_Axis_Base_Fortification_Destroyed );
+		OnTrigger( "Axis team has destroyed the Foot Bridge!", Map.Foot_Bridge_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Fuel Dump!", Map.Fuel_Dump_Destroyed );
+		OnTrigger( "Axis team has destroyed the Road MG Nest!", Map.Road_MG_Destroyed );
+		OnTrigger( "Axis team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
+		OnTrigger( "Allied team has destroyed the Side MG Nest!", Map.Side_MG_Destroyed );
+		OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+		OnTrigger( "Allied team has destroyed the Tunnel MG!", Map.Tunnel_MG_Destroyed );
+		OnTrigger( "Allied team has damaged the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Destroyed );
+		OnTrigger( "Allied team has breached the Tunnel Grate!", Map.Tunnel_Grate_Breached );
+		OnTrigger( "Allied team has breached the Tunnel Doors!", Map.Tunnel_Doors_Breached );
+		OnTrigger( "Allied team has breached the Depot Gates!", Map.Depot_Gates_Breached );
+		OnTrigger( "Allied team has breached the Depot Side Wall!", Map.Depot_Side_Wall_Breached );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		
+		SetGoalPriority( ".*", 1.0 );
+		
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoMG42 )
+			 { Map.MobileMG42Tests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Foot_Bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_alliedtunnel_mg42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Road_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Road_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Bridge, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_West_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_East_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Tunnel_MG, 120, false, 4 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Command_Post, 120 );
+		Util.IgnoreTargetGoalAll( Map.Mover_tank );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_alliedtunnel_mg42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Road_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Road_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Bridge, 120, false, 2 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Foot_Bridge, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Side_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Side_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Side_MG_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_axisbase_mg42, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_axisbase_mg42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Side_MG_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Allied_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_East_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_West_Axis_Base_Fortification, 120 );
+		
+		// Covert ops tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Foot_Bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Road_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Road_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Foot_Bridge, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Allied_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_West_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_East_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Tunnel_MG, 120, false, 4 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Axis_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Side_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_East_Axis_Base_Fortification, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_West_Axis_Base_Fortification, 120 );
+		
+		// Repair tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Road_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_axisbase_mg42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Side_MG_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Road_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_alliedtunnel_mg42, 120 );
+		
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Tunnel_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Road_MG, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_alliedtunnel_mg42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Side_MG_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_axisbase_mg42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Tank, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Side_MG, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Side_MG, 120 );
+		Util.KillGoal( Map.Build_Side_MG );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Side_MG, 120 );
+		
+		Util.KillGoal( Map.Build_Side_MG );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Side_MG, 120 );
+		
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1008, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1013, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1023, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1024, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1029, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1038, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1039, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1040, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1047, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1048, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1049, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1051, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1063, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1068, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1075, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1077, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1079, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1080, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1086, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1096, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1097, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1101, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1103, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1108, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1109, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1110, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1111, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1170, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1181, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1213, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1217, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1218, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1233, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1235, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_1244, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_148, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_202, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_206, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_236, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_240, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_268, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_274, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_289, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_292, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_322, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_331, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_339, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_340, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_381, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_398, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_453, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_474, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_485, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_515, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_536, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_561, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_565, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_57, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_598, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_600, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_601, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_61, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_63, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_635, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_699, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_702, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_748, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_764, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_772, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_871, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_875, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_890, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_891, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_896, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_908, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_912, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_913, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_914, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_915, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_922, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_925, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_931, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_944, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_950, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_954, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_963, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_964, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_969, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_972, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_973, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_976, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_977, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_978, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Axis_CP_Arty_Spot, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Axis_CP_Snipe_Spot, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Axis_MG_Tower_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Axis_MG_Tower_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Bridge_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Bridge_11, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Bridge_5, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Bridge_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Bridge_7, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_CP_Defence_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Depot_Gates_10, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Dump_Defence_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Fuel_Dump_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Fuel_Dump_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Rear_Hill_Arty_Point_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Rear_Hill_Arty_Point_4, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_8, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Defence_5, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_10, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_9, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Exit_Arty_Spot_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Exit_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_Tunnel_Grate_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_mainbridgeRoute3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_northtunnel, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1013, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1023, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1024, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1029, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1038, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1039, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1040, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1047, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1048, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1049, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1051, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1063, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1068, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1075, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1079, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1080, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1086, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1096, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1097, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1103, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1108, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1109, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1110, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1111, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1112, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1123, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1170, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1181, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1213, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1217, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1218, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1233, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1235, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_1244, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_148, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_202, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_206, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_236, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_240, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_268, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_274, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_289, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_322, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_331, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_339, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_340, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_381, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_398, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_453, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_515, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_536, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_565, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_57, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_598, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_600, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_601, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_699, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_702, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_764, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_772, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_871, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_875, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_890, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_891, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_908, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_912, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_914, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_915, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_922, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_925, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_931, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_944, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_950, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_954, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_963, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_964, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_969, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_972, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_973, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_976, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_977, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_978, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Axis_CP_Arty_Spot, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Axis_CP_Snipe_Spot, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Axis_MG_Tower_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Axis_MG_Tower_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Bridge_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Bridge_11, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Bridge_5, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Bridge_6, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Bridge_7, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_CP_Defence_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Depot_Gates_10, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Fuel_Dump_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Fuel_Dump_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Rear_Hill_Arty_Point_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Rear_Hill_Arty_Point_4, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Side_Bridge_Arty_Spot_8, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Defence_5, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_10, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_6, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Doors_9, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Exit_Arty_Spot_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Exit_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Exit_Arty_Spot_4, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_Tunnel_Grate_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_mainbridgeRoute3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_northtunnel, 120 );
+
+	},
+
+	MobileMG42Tests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1023, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1038, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1039, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1040, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1048, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1049, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1051, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1063, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1068, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1077, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1079, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1080, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1086, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1101, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1103, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1108, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1109, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1110, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1111, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1170, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1213, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1235, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_1244, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_148, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_268, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_289, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_292, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_340, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_381, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_398, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_453, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_474, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_536, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_561, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_598, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_600, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_601, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_748, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_764, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_772, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_875, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_891, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_896, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_908, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_912, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_914, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_915, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_931, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_944, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_950, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_954, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_963, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_964, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_969, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_972, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_973, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_976, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_977, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_978, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Axis_CP_Snipe_Spot, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_11, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_5, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_CP_Defence_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Dump_Defence_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Fuel_Dump_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Fuel_Dump_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Rear_Hill_Arty_Point_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_8, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Defence_5, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_10, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_6, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_9, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Exit_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Grate_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Mobile_MG42_northtunnel, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1023, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1038, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1039, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1040, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1048, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1049, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1051, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1063, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1068, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1079, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1080, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1086, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1103, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1108, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1109, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1110, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1111, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1112, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1123, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1170, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1213, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1235, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_1244, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_148, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_268, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_289, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_340, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_381, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_398, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_453, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_536, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_598, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_600, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_601, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_764, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_772, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_875, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_891, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_908, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_912, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_914, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_915, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_931, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_944, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_950, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_954, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_963, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_964, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_969, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_972, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_973, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_976, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_977, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_978, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Axis_CP_Snipe_Spot, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_11, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_5, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Bridge_6, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_CP_Defence_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Fuel_Dump_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Fuel_Dump_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Rear_Hill_Arty_Point_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Side_Bridge_Arty_Spot_8, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Defence_5, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_10, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_6, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Doors_9, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Exit_Arty_Spot_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Exit_Arty_Spot_4, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_Tunnel_Grate_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mobile_MG42_northtunnel, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Fuel_Dump, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.SOLDIER )
+		{ bot.ChangePrimaryWeapon( WEAPON.MOBILE_MG42 ); }
+	
+	if ( class == CLASS.ENGINEER )
+		{	if ( team == TEAM.AXIS )
+				{ bot.ChangePrimaryWeapon( WEAPON.MP40 ); } }
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 ); }
+	};
+};

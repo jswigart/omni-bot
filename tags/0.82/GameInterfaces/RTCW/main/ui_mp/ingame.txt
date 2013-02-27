@@ -1,0 +1,16 @@
+// menu defs
+// 
+{	
+ 	loadMenu { "ui_mp/ingame.menu" }
+	loadMenu { "ui_mp/ingame_controls.menu" }
+	loadMenu { "ui_mp/ingame_options.menu" }
+	loadMenu { "ui_mp/ingame_system.menu" }
+	loadMenu { "ui_mp/ingame_leave.menu" }
+	loadMenu { "ui_mp/ingame_callvote.menu" }
+
+	// NERVE - SMF
+	loadMenu { "ui_mp/wm_limbo.menu" }
+	loadMenu { "ui_mp/wm_quickmessage.menu" }
+	loadMenu { "ui_mp/wm_quickmessageAlt.menu" }
+	// -NERVE - SMF
+}

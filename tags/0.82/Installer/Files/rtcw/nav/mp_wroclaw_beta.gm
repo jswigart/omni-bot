@@ -1,0 +1,360 @@
+global Map =
+{
+	Quiet = true,
+
+	Plant_allied_communication_ops = "PLANT_allied_communication_ops",
+	Plant_axis_communication_ops = "PLANT_axis_communication_ops",
+	Plant_central_access_door = "PLANT_central_access_door",
+	Plant_lower_access_door_1 = "PLANT_lower_access_door_1",
+	Plant_lower_access_door_2 = "PLANT_lower_access_door_2",
+	Plant_rear_access_door = "PLANT_rear_access_door",
+	Mount_199 = "MOUNTMG42_199",
+	Repair_199 = "REPAIRMG42_199",
+
+	KillZone =
+	{
+		Name = "KillZone1",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				sleep( 1 );
+				b.ExecCommand( "kill" );
+			}
+		},
+		OnExit = function( ent )
+		{
+
+		},
+	},
+
+	Switches =
+	{
+		lever1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever1",
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+		// Axis should close it when they run by to slow down allies
+		lever2 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever2",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitClass = Util.AllClasses,
+		},
+	},	
+
+	Navigation =
+	{
+		boxjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 0.1 );
+				_this.Bot.HoldButton( BTN.JUMP, 1 );
+
+			},
+		},
+
+		resetstuck =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.ResetStuckTime();
+				sleep( 1 );
+			}
+		},
+	},
+
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	allied_communication_ops_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	axis_communication_ops_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	central_access_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.EnableGoal( "ROUTE_axcenter" );
+		Util.EnableGoal( "ROUTE_alcenter2" );
+	},
+
+	central_access_door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.SetMaxUsersInProgress( 1, "DEFUSE_central.*" );
+	},
+
+	lower_access_door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.DisableGoal( "ROUTE_rearladder" );
+		Util.EnableGoal( "ROUTE_lower1" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axatt7" );
+	},
+
+	lower_access_door_1_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.SetMaxUsersInProgress( 1, "DEFUSE_lower.*" );
+	},
+
+	lower_access_door_2_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.DisableGoal( "ROUTE_rearladder" );
+		Util.EnableGoal( "ROUTE_lower2" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axatt8" );
+	},
+
+	lower_access_door_2_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.SetMaxUsersInProgress( 1, "DEFUSE_lower.*" );
+	},
+
+	rear_access_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.EnableGoal( "ROUTE_alrear3" );
+	},
+
+	rear_access_door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.SetMaxUsersInProgress( 1, "DEFUSE_rear.*" );
+	},
+
+	spawn_gate = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Gate Opening
+		if ( vel.z > 0 ) {
+			//SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
+			Map.Switches.lever1.Enabled = false;
+			Map.Switches.lever2.Enabled = true;
+		}
+		// Gate Closing
+		else
+		{
+			//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
+			Map.Switches.lever1.Enabled = true;
+			Map.Switches.lever2.Enabled = false;
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+	
+	Util.SetGoalPosition( 121, -1618, 184, Map.Plant_allied_communication_ops ) ;
+
+	OnTrigger( "Axis have destroyed the allied communication ops!", Map.allied_communication_ops_Destroyed );
+	OnTrigger( "Allies have destroyed the axis communication ops!", Map.axis_communication_ops_Destroyed );
+	OnTrigger( "central access door Destroyed.", Map.central_access_door_Destroyed );
+	OnTrigger( "lower access door 1 Destroyed.", Map.lower_access_door_1_Destroyed );
+	OnTrigger( "lower access door 2 Destroyed.", Map.lower_access_door_2_Destroyed );
+	OnTrigger( "the rear access door Destroyed.", Map.rear_access_door_Destroyed );
+	OnTrigger( "base_lever1_goto", Map.spawn_gate );
+	OnTrigger( "Planted at central access door.", Map.central_access_door_Planted );
+	OnTrigger( "Planted at lower access door 1.", Map.lower_access_door_1_Planted );
+	OnTrigger( "Planted at lower access door 2.", Map.lower_access_door_2_Planted );
+	OnTrigger( "Planted at the rear access door.", Map.rear_access_door_Planted );
+
+	SetMapGoalProperties( "ATTACK.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "DEFEND.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE.*", {mincamptime = 60, maxcamptime = 90} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_alrear3" );
+	Util.DisableGoal( "ROUTE_alcenter2" );
+	Util.DisableGoal( "ROUTE_axcenter" );
+	Util.DisableGoal( "ROUTE_lower.*" );
+	Util.EnableGoal( "MOUNTMG42_axmg" );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	kz = OnTriggerRegion( AABB( -203,-1535,-370,60,-1326,-96 ), Map.KillZone );
+	nopush = OnTriggerRegion(AABB(-1968.000,1695.000,25.000,-1295.000,2205.000,99.000),RegionTrigger.DisableBotPush);
+
+	SetGoalPriority( "REPAIRMG42_.*", 0.96 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "SWITCH_lever1", 0.4 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_central_access_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_rear_access_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_communication_ops" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alatt.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_alPanz.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_ald.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" ); // unused.
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_lower_access_door_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_communication_ops" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axatt.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axPanz.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_axmg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_axd.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSK.*" );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
+	Util.UpdateSwitchData();
+
+	MapRoutes =
+	{
+		PLANT_lower_access_door_1 =
+		{
+			ROUTE_axsp =
+			{
+				ROUTE_axrear = {},
+				ROUTE_axwaterway = {},
+			},
+		},
+
+		ATTACK_axatt1 =
+		{
+			ROUTE_axsp =
+			{
+				ROUTE_axrear =
+				{
+					ROUTE_lower1 = {},
+					ROUTE_lower2 = {},
+				},
+				ROUTE_axwaterway =
+				{
+					ROUTE_rearladder = {},
+					ROUTE_lower1 = {},
+					ROUTE_lower2 = {},
+				},
+				ROUTE_axwesthall = {},
+				ROUTE_axcenter = {},
+			},
+		},
+
+		ATTACK_alatt1 =
+		{
+			ROUTE_alsp2 =
+			{
+				ROUTE_alcenter1 =
+				{
+					ROUTE_alwesthall =
+					{
+						ROUTE_vents1 = {},
+						ROUTE_vents2 = {},
+					},
+					ROUTE_alcenter2 = {},
+				},
+				ROUTE_alwaterway1 =
+				{
+					ROUTE_alwaterway2 = {},
+				},
+				ROUTE_alrear1 =
+				{
+					ROUTE_alrear2 = {},
+					ROUTE_alrear3 = {},
+				},
+			},
+		},
+	};
+
+	MapRoutes.PLANT_lower_access_door_2 = MapRoutes.PLANT_lower_access_door_1;
+	MapRoutes.ATTACK_axatt7 = MapRoutes.PLANT_lower_access_door_1;
+	MapRoutes.ATTACK_axatt8 = MapRoutes.PLANT_lower_access_door_1;
+	MapRoutes.ATTACK_axatt2 = MapRoutes.ATTACK_axatt1;
+	MapRoutes.ATTACK_axatt3 = MapRoutes.ATTACK_axatt1;
+	MapRoutes.ATTACK_axatt4 = MapRoutes.ATTACK_axatt1;
+	MapRoutes.ATTACK_axatt5 = MapRoutes.ATTACK_axatt1;
+	MapRoutes.ATTACK_axatt6 = MapRoutes.ATTACK_axatt1;
+	MapRoutes.PLANT_allied_communication_ops = MapRoutes.ATTACK_axatt1;
+	MapRoutes.ATTACK_alatt2 = MapRoutes.ATTACK_alatt1;
+	MapRoutes.ATTACK_alatt3 = MapRoutes.ATTACK_alatt1;
+	MapRoutes.ATTACK_alatt4 = MapRoutes.ATTACK_alatt1;
+	MapRoutes.ATTACK_alatt5 = MapRoutes.ATTACK_alatt1;
+	MapRoutes.ATTACK_alatt6 = MapRoutes.ATTACK_alatt1;
+	MapRoutes.PLANT_axis_communication_ops = MapRoutes.ATTACK_alatt1;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.MAUSER );
+};

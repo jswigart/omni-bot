@@ -1,0 +1,432 @@
+//==========================================================================================
+//
+//	the_town.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	BubbaG1	14 July 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Axis_Team_Door_Dyno = 0,
+	Axis_Team_Door_1_Dyno = 0,
+	Barrier_Defenses_Dyno = 0,
+	Command_Post_Dyno = 0,
+	First_Barrier_Defenses_Dyno = 0,
+	Oasis_Water_Pump_Dyno = 0,
+	Secret_Door_Dyno = 0,
+	tunnel_barrier_Dyno = 0,
+
+	Barrier_Defenses_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Barrier_Defenses_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	First_Barrier_Defenses_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "First_Barrier_Defenses_Built" );
+	},
+
+	Oasis_Water_Pump_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Built" );
+	},
+
+	tunnel_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tunnel_barrier_Built" );
+	},
+
+	Barrier_Defenses_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barrier_Defenses_Dyno += 1;
+		Util.MapDebugPrint( "Barrier_Defenses_Planted" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	First_Barrier_Defenses_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Barrier_Defenses_Dyno += 1;
+		Util.MapDebugPrint( "First_Barrier_Defenses_Planted" );
+	},
+
+	Oasis_Water_Pump_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Oasis_Water_Pump_Dyno += 1;
+		Util.MapDebugPrint( "Oasis_Water_Pump_Planted" );
+	},
+
+	Secret_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Secret_Door_Dyno += 1;
+		Util.MapDebugPrint( "Secret_Door_Planted" );
+	},
+
+	tunnel_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tunnel_barrier_Dyno += 1;
+		Util.MapDebugPrint( "tunnel_barrier_Planted" );
+	},
+
+	Barrier_Defenses_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barrier_Defenses_Dyno -= 1;
+		Util.MapDebugPrint( "Barrier_Defenses_Defused" );
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Command_Post_Defused" );
+	},
+
+	First_Barrier_Defenses_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Barrier_Defenses_Dyno -= 1;
+		Util.MapDebugPrint( "First_Barrier_Defenses_Defused" );
+	},
+
+	Oasis_Water_Pump_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Oasis_Water_Pump_Dyno -= 1;
+		Util.MapDebugPrint( "Oasis_Water_Pump_Defused" );
+	},
+
+	Secret_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Secret_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Secret_Door_Defused" );
+	},
+
+	tunnel_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tunnel_barrier_Dyno -= 1;
+		Util.MapDebugPrint( "tunnel_barrier_Defused" );
+	},
+
+	Axis_Team_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Team_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Team_Door_Destroyed" );
+	},
+
+	Axis_Team_Door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Team_Door_1_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Team_Door_1_Destroyed" );
+	},
+
+	Barrier_Defenses_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barrier_Defenses_Dyno = 0;
+
+		Util.MapDebugPrint( "Barrier_Defenses_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	First_Barrier_Defenses_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.First_Barrier_Defenses_Dyno = 0;
+
+		Util.MapDebugPrint( "First_Barrier_Defenses_Destroyed" );
+	},
+
+	Oasis_Water_Pump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Oasis_Water_Pump_Dyno = 0;
+
+		Util.MapDebugPrint( "Oasis_Water_Pump_Destroyed" );
+	},
+
+	Secret_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Secret_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Secret_Door_Destroyed" );
+	},
+
+	tunnel_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tunnel_barrier_Dyno = 0;
+
+		Util.MapDebugPrint( "tunnel_barrier_Destroyed" );
+	},
+
+	axisdocuments_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axisdocuments_Taken" );
+	},
+
+	axisdocuments_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axisdocuments_Returned" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_spawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "barrier_defenses", Map.Barrier_Defenses_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "barrier_defenses1", Map.First_Barrier_Defenses_Built );
+	OnTrigger( "Allies have built the Oasis Water Pump!", Map.Oasis_Water_Pump_Built );
+	OnTrigger( "Axis team has built the tunnel barrier!", Map.tunnel_barrier_Built );
+	OnTrigger( "Planted at The Barrier Defenses.", Map.Barrier_Defenses_Planted );
+	OnTrigger( "Planted at The First Barrier Defenses.", Map.First_Barrier_Defenses_Planted );
+	OnTrigger( "Planted at the Oasis Water Pump.", Map.Oasis_Water_Pump_Planted );
+	OnTrigger( "Planted at The Secret Door.", Map.Secret_Door_Planted );
+	OnTrigger( "Planted at the tunnel barrier.", Map.tunnel_barrier_Planted );
+	OnTrigger( "Defused at The First Barrier Defenses.", Map.First_Barrier_Defenses_Defused );
+	OnTrigger( "Defused at the Oasis Water Pump.", Map.Oasis_Water_Pump_Defused );
+	OnTrigger( "Defused at The Secret Door.", Map.Secret_Door_Defused );
+	OnTrigger( "Defused at the tunnel barrier.", Map.tunnel_barrier_Defused );
+	OnTrigger( "Allies have destroyed the Axis team door!!", Map.Axis_Team_Door_Destroyed );
+	OnTrigger( "Allied team has destroyed the barrier defenses! Action: announce Entity: (298:1)", Map.Barrier_Defenses_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the barrier defenses! Action: announce Entity: (311:1)", Map.First_Barrier_Defenses_Destroyed );
+	OnTrigger( "Axis have damaged the Oasis Water Pump!", Map.Oasis_Water_Pump_Destroyed );
+	OnTrigger( "the secret door has been destroyed", Map.Secret_Door_Destroyed );
+	OnTrigger( "Allied team has destroyed the tunnel barrier!", Map.tunnel_barrier_Destroyed );
+	OnTrigger( "Allies has stolen the Documents!", Map.axisdocuments_Taken );
+	OnTrigger( "Axis have returned Axis Documents!", Map.axisdocuments_Returned );
+	OnTrigger( "Allies lose the forward spawn!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies capture the forward spawn!", Map.forward_spawn_Allies_Captured );
+
+	SetGoalPriority( "DEFUSE_First_Barrier_Defenses_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Barrier_Defenses_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Axis_Team_Door_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Secret_Door_.*", 1.20, TEAM.AXIS, CLASS.ENGINEER, true );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Barrier_Defenses =
+		{
+		},
+		BUILD_Oasis_Water_Pump =
+		{
+		},
+		BUILD_tunnel_barrier =
+		{
+		},
+		BUILD_Command_Post =
+		{
+		},
+		BUILD_First_Barrier_Defenses =
+		{
+		},
+		PLANT_Oasis_Water_Pump =
+		{
+		},
+		PLANT_Axis_Team_Door =
+		{
+		},
+		PLANT_Command_Post =
+		{
+		},
+		PLANT_Secret_Door =
+		{
+		},
+		PLANT_tunnel_barrier =
+		{
+		},
+		PLANT_Axis_Team_Door_1 =
+		{
+		},
+		PLANT_Barrier_Defenses =
+		{
+		},
+		PLANT_First_Barrier_Defenses =
+		{
+		},
+		FLAG_axisdocuments =
+		{
+		},
+		CHECKPOINT_forward_spawn =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

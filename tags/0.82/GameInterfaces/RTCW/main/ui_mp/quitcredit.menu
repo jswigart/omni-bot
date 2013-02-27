@@ -1,0 +1,330 @@
+#include "ui_mp/menudef.h"
+
+{
+\\ QUIT CREDIT \\
+
+  menuDef {
+    	name "quitCredit"
+    	visible 0
+    	fullscreen 1
+    	rect 0 0 640 480
+//    	background "menuback_a"
+    	focusColor 1 .67 0 1
+    	style 1
+    	border 1
+	onEsc { uiScript "quit" }
+	onOpen { setitemcolor fadebox backcolor 0 0 0 1 ; 
+	fadeout fadebox ; 
+	show grpidcredit }
+
+////////////////////////////// maxx ///////////////////
+
+
+
+
+itemDef {
+	name mappreview
+	style WINDOW_STYLE_CINEMATIC
+	cinematic "menu.roq"
+	rect 0 80 640 400
+	backcolor 1 1 1 .25
+	border 1
+	bordersize 1	
+	bordercolor .1 .1 .1 1
+	decoration
+	visible 1
+	}
+
+itemDef {
+	name mappreview
+	style WINDOW_STYLE_FILLED		
+	rect 0 80 640 400	
+	backcolor .0 .0 .0 1
+	forecolor 1 1 1 0
+	decoration
+	visible 1
+	}
+
+itemDef {
+	name mappreview
+	style WINDOW_STYLE_SHADER
+	background "filmnoise"	
+	rect 0 80 640 400	
+	decoration
+	visible 1
+	}
+
+
+
+//////////////// new wolf
+
+itemDef {
+      	name menu_select					// menu_select
+      	style WINDOW_STYLE_SHADER
+      	rect 0 0 640 480
+     	background "menu_select"
+      	visible 0
+	decoration
+    	}
+
+
+
+
+//itemDef {
+//      name band2					// band2
+//      style WINDOW_STYLE_SHADER
+//      rect 360 20 128 640
+//    	background "band2"
+//     	visible 1
+//	decoration
+//}
+
+
+//itemDef {
+//      	name bands					// bands
+//      	style WINDOW_STYLE_SHADER
+//      	rect 0 -480 640 1024
+//     	background "bands"
+//      	visible 1
+//	decoration
+//    	}
+
+
+itemDef {
+		name BLACKGRAD					// BLACKGRAD
+		style WINDOW_STYLE_SHADER
+		rect 0 -4 640 132
+		background "BLACKGRAD"
+		visible 1
+		decoration
+		}
+
+itemDef {
+		name BLACKGRAD2					// BLACKGRAD
+		style WINDOW_STYLE_SHADER
+		rect 0 420 640 -128
+		background "BLACKGRAD"
+		visible 1
+		decoration
+		}
+
+
+itemDef {
+		name FLAME					// FLAME
+		style WINDOW_STYLE_SHADER
+		rect 210 20 220 67
+		background "fLAME"
+		visible 1
+		decoration
+		}
+
+itemDef {
+		name WOLFFLAMELOGO					// WOLFFLAMELOGO
+		style WINDOW_STYLE_SHADER
+		rect 200 -5 240 120
+		background "WOLFFLAMELOGO"
+		visible 1
+		decoration
+		}
+
+itemDef {
+		name gold_line					// gold_line
+		style WINDOW_STYLE_SHADER
+		rect 0 76 226 10
+		background "gold_line"
+		visible 1
+		decoration
+		}
+
+itemDef {
+		name gold_line					// gold_line
+		style WINDOW_STYLE_SHADER
+		rect 414 76 230 10
+		background "gold_line"
+		visible 1
+		decoration
+		}
+
+////////////////// added ///////////////
+
+
+itemDef {
+      	name demo_only
+      	style WINDOW_STYLE_EMPTY
+	rect 0 0 640 480
+	type 1
+      	visible 1 
+	action { play "sound/misc/nomenu.wav" ; 
+	close quitCredit ;
+	uiScript "quit"	
+	}
+    	}
+
+    
+
+// LEVEL SELECTION BAR	//
+
+//itemDef {
+//      name teamarenaart
+//	group grpidcredit
+//	style WINDOW_STYLE_SHADER
+//	background "ui_mp/assets/teamarenaimage2.tga"
+//     	rect 64 0 512 150
+//     	visible 0 
+//	decoration  	  
+//    	}
+
+
+
+itemDef {
+	name nerve_credits
+	group grpidcredit
+	style 1
+	textfile "ui_mp/nerve_credit.txt"
+	autowrapped
+	textfont UI_FONT_NORMAL
+	textscale	.24	
+	rect 135 180 400 64	
+	forecolor 1 1 1 .7
+	decoration 
+	visible 1
+	}
+
+
+itemDef {
+	name stuff	
+	rect 320 400 300 20
+	style 1
+	border 0
+	textfont	UI_FONT_NORMAL
+	bordercolor 1 1 1 1	
+	textscale .3
+	textalign ITEM_ALIGN_CENTER
+	text "id Software"
+	forecolor 1 1 1 .7
+	decoration 
+	visible 1
+	}
+
+itemDef {
+		name win1		
+		style 0 
+		rect 80 420 640 200
+		textfile "text/EnglishUSA/credit_id.txt"
+		textfont UI_FONT_NORMAL		
+		textscale .25
+		forecolor 1 1 1 .7
+		visible 1
+		autowrapped
+		decoration
+		visible 1
+	}
+
+itemDef {
+	name nerve_logo
+	group grpidcredit
+	style WINDOW_STYLE_SHADER
+	background "ui_mp/assets/nerve_logo"
+	rect 192 100 256 64	
+	forecolor 1 1 1 1
+	decoration 
+	visible 1
+	}
+
+/*
+itemDef {
+	name id_logo
+	group grpidcredit
+	style WINDOW_STYLE_SHADER
+	background "ui_mp/assets/id_logo"
+	rect 256 300 128 128	
+	forecolor 1 1 1 1
+	decoration 
+	visible 1
+	}
+*/
+
+//itemDef {
+//	name activision_logo
+//	group grpidcredit
+//	style WINDOW_STYLE_SHADER
+//	background "ui_mp/assets/activision_logo"
+//	rect 192 220 256 64	
+//	forecolor 1 1 1 1
+//	decoration 
+//	visible 1
+//	}
+
+//itemDef {
+//	name gm_logo
+//	group grpidcredit
+//	style WINDOW_STYLE_SHADER
+//	background "ui_mp/assets/gm_logo"
+//	rect 192 186 256 128	
+//	forecolor 1 1 1 1
+//	decoration 
+//	visible 1
+//	}
+
+//itemDef {
+//	name exitbttn
+//    	group grpidcredit
+//      	rect 256 400 128 16
+//	type 1  	
+//	style WINDOW_STYLE_FILLED
+//	background "ui_mp/assets/click_exit"	
+//    	visible 0
+//	decoration	
+//	action { play "sound/misc/nomenu.wav" }		
+//	}
+
+
+itemDef {
+      	name copyright2
+      	text "www.castlewolfenstein.com"
+      	style 0
+      	textscale .17
+      	rect 0 430 640 40
+      	textalign 1	
+      	textaligny 32
+      	textalignx 320 
+      	forecolor .6 .6 .6 .75
+      	visible 1 
+      	decoration 
+	}
+
+itemDef {
+      	name copyright
+      	text "RETURN TO CASTLE WOLFENSTEIN Copyright 2001 Id Software, Inc. All rights reserved"
+      	style 0
+      	textscale .17
+      	rect 0 440 640 40
+      	textalign 1	
+      	textaligny 32
+      	textalignx 320 
+      	forecolor .6 .6 .6 .75
+      	visible 1 
+      	decoration 
+	}
+
+
+
+//itemDef {
+//      name fadebox
+//      style WINDOW_STYLE_FILLED
+// 	background "ui_mp/assets/fadebox.tga"
+//	forecolor 0 0 0 1
+//	backcolor 0 0 0 1
+//	rect 0 0 640 480
+///     visible 1 
+//	decoration
+//    	}
+
+
+
+
+
+}
+
+}
+}

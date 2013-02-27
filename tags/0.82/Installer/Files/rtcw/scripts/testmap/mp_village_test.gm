@@ -1,0 +1,211 @@
+global Map =
+{
+	MapName = "mp_village",
+	Quiet = true,
+	Call_Artillery_bCemetary_1 = "CALLARTILLERY_bCemetary_1",
+	Call_Artillery_rCemetary_1 = "CALLARTILLERY_rCemetary_1",
+	Call_Artillery_rCemetary_2 = "CALLARTILLERY_rCemetary_2",
+	Artillery_S_bCemetary_1 = "ARTILLERY_S_bCemetary_1",
+	Artillery_S_rCemetary_1 = "ARTILLERY_S_rCemetary_1",
+	Checkpoint_allied_flag01 = "CHECKPOINT_allied_flag01",
+	Flag_obj_item01 = "FLAG_obj_item01",
+	Cappoint_truck = "CAPPOINT_truck",
+	Plant_Gold_Storage_Crypt = "PLANT_Gold_Storage_Crypt",
+	Explode_obj_block01 = "EXPLODE_obj_block01",
+	Explode_obj_block02 = "EXPLODE_obj_block02",
+	Explode_obj_block03 = "EXPLODE_obj_block03",
+	Explode_t296 = "EXPLODE_t296",
+	Explode_t298 = "EXPLODE_t298",
+	Explode_t418 = "EXPLODE_t418",
+	Explode_t430 = "EXPLODE_t430",
+	Mount_cemetary_mg = "MOUNTMG42_cemetary_mg",
+	Mount_central_cyd_mg = "MOUNTMG42_central_cyd_mg",
+	Mount_cottage_mg = "MOUNTMG42_cottage_mg",
+	Mount_west_cyd_mg = "MOUNTMG42_west_cyd_mg",
+	Repair_cemetary_mg = "REPAIRMG42_cemetary_mg",
+	Repair_central_cyd_mg = "REPAIRMG42_central_cyd_mg",
+	Repair_cottage_mg = "REPAIRMG42_cottage_mg",
+	Repair_west_cyd_mg = "REPAIRMG42_west_cyd_mg",
+
+	Target =
+	{
+		Barricade1 =
+		{
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_obj_block01",
+			LimitBots = 1,
+			LimitTeam = (1<<TEAM.AXIS),
+			Offset = 
+			{
+				Vector3(350,-40,0),
+			}
+		},
+		Barricade2 =
+		{
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_obj_block02",
+			Priority = 0.95,
+			LimitBots = 1,
+			LimitTeam = (1<<TEAM.ALLIES),
+			Offset = 
+			{
+				Vector3(350,-20,0),
+			}
+		},
+		Barricade3 =
+		{
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_obj_block03",
+			Priority = 1.0,
+			LimitBots = 1,
+			LimitTeam = (1<<TEAM.ALLIES),
+			Offset = 
+			{
+				Vector3(0,300,0),
+			}
+		},
+	},
+
+	Gold_Storage_Crypt_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Gold_Storage_Crypt_Destroyed" );
+	},
+
+	obj_item01_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "obj_item01_Taken" );
+	},
+
+	truck_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "truck_Captured" );
+	},
+
+	allied_flag01_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allied_flag01_Axis_Captured" );
+	},
+
+	allied_flag01_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allied_flag01_Allies_Captured" );
+	},
+
+	block1 = function( trigger )
+	{
+		Map.Target.Barricade1.Enabled = false;
+		TestMap.Pass();
+
+		print( "Explode_obj_block01 Exploded" );
+	},
+
+	block2 = function( trigger )
+	{
+		Map.Target.Barricade2.Enabled = false;
+		TestMap.Pass();
+
+		print( "Explode_obj_block02 Exploded" );
+	},
+
+	block3 = function( trigger )
+	{
+		Map.Target.Barricade3.Enabled = false;
+		TestMap.Pass();
+
+		print( "Explode_obj_block03 Exploded" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Allies have broken into the Crypt!", Map.Gold_Storage_Crypt_Destroyed );
+		OnTrigger( "Allies have stolen the Gold!", Map.obj_item01_Taken );
+		OnTrigger( "Axis reclaims the Northwest Courtyard!", Map.allied_flag01_Axis_Captured );
+		OnTrigger( "Allies capture the Northwest Courtyard!", Map.allied_flag01_Allies_Captured );
+		OnTrigger( "The Allies have escaped with the Gold!", Map.truck_Captured );
+		OnTrigger( "Explode_obj_block01 Exploded.", Map.block1 );
+		OnTrigger( "Explode_obj_block02 Exploded.", Map.block2 );
+		OnTrigger( "Explode_obj_block03 Exploded.", Map.block3 );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		Map.Target.Barricade1.Enabled = true;
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Explode_obj_block01, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_cemetary_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_cottage_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_central_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_west_cyd_mg, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_cemetary_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_cottage_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_central_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_west_cyd_mg, 120 );		
+
+		Map.Target.Barricade3.Enabled = true;
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Explode_obj_block03, 120 );
+		Map.Target.Barricade2.Enabled = true;
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Explode_obj_block02, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_central_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_west_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_allied_flag01, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Gold_Storage_Crypt, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_cemetary_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_cottage_mg, 120 );
+		Util.KillGoal( ".*" );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_allied_flag01, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_central_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_west_cyd_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_cemetary_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_cottage_mg, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_obj_item01, 120 );
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_truck, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

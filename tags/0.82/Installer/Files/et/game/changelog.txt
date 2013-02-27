@@ -1,0 +1,92 @@
+0.81 ET Change Log
+
+
+=== BOT ===
+Fixed kickbot crash in older Windows versions
+Fixed pathfinder crash
+Fixed region trigger related crashes
+Fixed SetAvailableMapGoals
+Fixed SetGoalPriority
+Fixed SetGoalGroup
+Fixed goals being interrupted by other goal types with same priority as current goal
+Fixed script goals being activated too early when bots spawned
+Fixed InWater flag not being auto added to waypoints
+Fixed issues with GetNearest related to entities that shared a classname with weapons
+Fixed GetRandomDestination to only return reachable points
+Fixed ScriptGoal event threads not being killed on bot exit
+Added bots will press jump when headed towards waypoints with the InWater flag
+Added goal loading time output
+Added SetIgnoreEntFlags weapon property
+Added rendering of RegionTrigger names
+Improved ladder navigation
+Updated boost libraries to version 1_44_0
+
+=== MODS ===
+Fixed goal names to not include color strings
+Added support for NoQuarter WP_JOHNSON (thx Irata)
+Added conversion of panzerfaust request to bazooka for allied bots in NoQuarter
+
+=== GOALS ===
+Moved MountMg42 goal to script and added support for user defined facings
+Moved MobileMG42 goal to script
+Fixed version number in mapgoal_capturehold
+Fixed random aim mode for mount goal
+Fixed goal_paththrough_artillery to abort if no line of sight to an arty target
+Fixed gotowp support in goal_paththrough_navigation
+Fixed goal_combatmovement to ensure that GetTargetInfo returns valid data
+Fixed velocity check in goal_indisguise
+Fixed mapgoal_explosive to not create on load
+Fixed manually added health and ammo cabinet goals to create on load
+Fixed region trigger name in mapgoal_plantmine
+Fixed plant goal coverspot occupied flag not being cleared on bot death
+Fixed bots to not use rifle nades when they have a plant goal active
+Fixed revive goal sometimes never enabled (thx 0x0000 and Demetrius)
+Fixed InProgress limitations for FLAG_ goals
+Fixed issues with askforammo and askforhealth goals
+Fixed potential issues with ammo and health cabinet goals
+Added paththrough function to goal_build for custom behavior scripting (thx palota)
+Added bots planting dynamite will abort if a teammate drops a satchel (thx palota)
+Added mapgoal_dynamite for use when target has no usable OID
+Added cure poison with needle support to goal_deliversupplies
+Added caching of trace results in goal_paththrough_artillery
+Added ability to force routing to build goals with offsets defined
+Added missing finish criteria in goal_covertops
+Added cover spot timeout to plant goal(s)
+Added jump stance property to build goal for build goals in water (thx palota)
+Changed stuckage check goal to write separate logs for each map
+Changed paththrough_useswitch goal so that the wait function overrides any exit conditions
+Changed plant goal coverspot selection to be random rather than sequential (thx palota)
+Improved goal_escort to allow escorting bots to assist in building of vehicle (thx palota)
+Improved bots ability to mount mg42's
+Improved plant goal aim location (thx palota)
+Increased priority of deliver supplies goal and limited distance to 1500 units
+Lowered default priority of repairMG42 goal
+
+=== SCRIPT ===
+Fixed MapGoal.GetPriority
+Fixed role manager to auto increment class manager minclass counts when crucialClass is set
+Fixed role manager crucialClass
+Added Util.BotChat function
+Added Util.CatName function
+Added Util.SetCustomProperty function
+Added ETUtil.WinningChat and ETUtil.LosingChat functions
+Added EvalFunc support to goal_paththrough_navigation
+Added spawn point and voice macro support to role manager
+Added optional viewDistance parameter to Util.ChangeToSniperWeapons
+Added CLASS.DYNAMITE_ENT, CLASS.MORTAR_ENT, CLASS.SATCHEL_ENT, and CLASS.LANDMINE_ENT
+Added re-usable region triggers for spotting and announcing enemies or all clear (thx d00d)
+Added waypoint GUID support to the warpto command (thx d00d)
+Moved class manager to script goal with several functional improvements (thx palota)
+
+=== COMMANDS ===
+Added optional filter param for debugtriggers
+Added fix_waterwps to add InWater flag to waypoints near water surface
+Added draw_paththrough 0|1 for rendering 3D text over paththrough waypoints
+
+=== WAYPOINTS ===
+Several fixes, updates, and new maps supported. See the Assembla repository logs for details.
+
+=== TOOLS ===
+Updated DMS (thx MickyP)
+Updated Notepad++ for omnibot (thx d00d)
+

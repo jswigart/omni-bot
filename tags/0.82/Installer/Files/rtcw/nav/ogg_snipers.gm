@@ -1,0 +1,83 @@
+global Map =
+{
+	Quiet = true,
+	SnipeMap = true,
+
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_1_1 = "MOUNTMG42_mg42_1_1",
+	Mount_mg42_1_2 = "MOUNTMG42_mg42_1_2",
+	Mount_mg42_1_3 = "MOUNTMG42_mg42_1_3",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_1_1 = "REPAIRMG42_mg42_1_1",
+	Repair_mg42_1_2 = "REPAIRMG42_mg42_1_2",
+	Repair_mg42_1_3 = "REPAIRMG42_mg42_1_3",
+	Snipe_bSnipe_1 = "SNIPE_bSnipe_1",
+	Snipe_bSnipe_10 = "SNIPE_bSnipe_10",
+	Snipe_bSnipe_11 = "SNIPE_bSnipe_11",
+	Snipe_bSnipe_12 = "SNIPE_bSnipe_12",
+	Snipe_bSnipe_13 = "SNIPE_bSnipe_13",
+	Snipe_bSnipe_14 = "SNIPE_bSnipe_14",
+	Snipe_bSnipe_15 = "SNIPE_bSnipe_15",
+	Snipe_bSnipe_16 = "SNIPE_bSnipe_16",
+	Snipe_bSnipe_17 = "SNIPE_bSnipe_17",
+	Snipe_bSnipe_2 = "SNIPE_bSnipe_2",
+	Snipe_bSnipe_3 = "SNIPE_bSnipe_3",
+	Snipe_bSnipe_4 = "SNIPE_bSnipe_4",
+	Snipe_bSnipe_5 = "SNIPE_bSnipe_5",
+	Snipe_bSnipe_6 = "SNIPE_bSnipe_6",
+	Snipe_bSnipe_7 = "SNIPE_bSnipe_7",
+	Snipe_bSnipe_8 = "SNIPE_bSnipe_8",
+	Snipe_bSnipe_9 = "SNIPE_bSnipe_9",
+	Snipe_rSnipe_1 = "SNIPE_rSnipe_1",
+	Snipe_rSnipe_10 = "SNIPE_rSnipe_10",
+	Snipe_rSnipe_11 = "SNIPE_rSnipe_11",
+	Snipe_rSnipe_12 = "SNIPE_rSnipe_12",
+	Snipe_rSnipe_13 = "SNIPE_rSnipe_13",
+	Snipe_rSnipe_14 = "SNIPE_rSnipe_14",
+	Snipe_rSnipe_15 = "SNIPE_rSnipe_15",
+	Snipe_rSnipe_16 = "SNIPE_rSnipe_16",
+	Snipe_rSnipe_17 = "SNIPE_rSnipe_17",
+	Snipe_rSnipe_18 = "SNIPE_rSnipe_18",
+	Snipe_rSnipe_19 = "SNIPE_rSnipe_19",
+	Snipe_rSnipe_2 = "SNIPE_rSnipe_2",
+	Snipe_rSnipe_20 = "SNIPE_rSnipe_20",
+	Snipe_rSnipe_21 = "SNIPE_rSnipe_21",
+	Snipe_rSnipe_22 = "SNIPE_rSnipe_22",
+	Snipe_rSnipe_23 = "SNIPE_rSnipe_23",
+	Snipe_rSnipe_3 = "SNIPE_rSnipe_3",
+	Snipe_rSnipe_4 = "SNIPE_rSnipe_4",
+	Snipe_rSnipe_5 = "SNIPE_rSnipe_5",
+	Snipe_rSnipe_6 = "SNIPE_rSnipe_6",
+	Snipe_rSnipe_7 = "SNIPE_rSnipe_7",
+	Snipe_rSnipe_8 = "SNIPE_rSnipe_8",
+	Snipe_rSnipe_9 = "SNIPE_rSnipe_9",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Util.DisableGoal( ".*", true );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 90} );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	Util.ChangeToSniperWeapons( bot );
+	bot.MaxViewDistance = 6500; // no visual hinderences
+
+	if ( bot.GetTeam() == TEAM.ALLIES ) {
+		bot.ChangeSpawnPoint( 2 );
+	} else
+	{
+		bot.ChangeSpawnPoint( 0 );
+	}
+};

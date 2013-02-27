@@ -1,0 +1,97 @@
+this.Name = "CheckStuck";
+this.Parent = "LowLevel";
+this.AutoAdd = true;
+this.KillWhenStuck = true;
+this.Interval = 0.6;
+this.KillTime = 5.0; // time before /killing
+this.Debug = false;
+
+this.Initialize = function()
+{
+	if ( GetGameState() != "Playing" ) {
+		this.Disable = true;
+	}
+};
+
+this.GetPriority = function()
+{
+	while ( 1 )
+	{
+		if ( Server.SleepBots == true && Server.NumPlayers == Server.NumBots ) {
+			sleep( 5 );
+			return;
+		}
+
+		if ( this.JustSpawned ) {
+			for (i = 0; i < 3; i += 1) {
+				sleep(1.2);
+				// player cannot move while standing up after he is revived,
+				// reset stuck timer to prevent pathfailed errors immediately after revive
+				this.Bot.ResetStuckTime();
+			}
+			this.JustSpawned = false;
+		}
+
+		if ( this.Bot.IsStuck( this.Interval ) ) {
+			nearestPlayer = this.Bot.GetNearest( CAT.PLAYER );
+
+			if ( this.Debug && nearestPlayer ) {
+				DrawEntityAABB( nearestPlayer, 30.0, COLOR.RED );
+				DrawEntityAABB( this.Bot.GetGameEntity(), 30.0, COLOR.BLUE );
+			}
+
+			// is the bot blocked by a player?
+			if ( nearestPlayer && this.Bot.DistanceTo( nearestPlayer ) < 65 && this.Bot.InFieldOfView( GetEntPosition( nearestPlayer ), 180.0 ) ) {
+				this.Bot.HoldButton( BTN.STRAFE_L, 0.5 );
+
+				if ( this.Debug ) {
+					this.Bot.Say( "side stepping player" );
+				}
+
+				// reset the stuck timer so they don't get a new goal
+				this.Bot.ResetStuckTime();
+
+				sleep( 0.5 );
+				return;
+			}
+			else {
+				// stuck time gets reset for each new path, so lets accumulate our own
+				this.Bot.Stucktime += this.Interval;
+
+				if ( this.Debug ) {
+					this.Bot.Say( "i've been stuck for " + this.Bot.Stucktime + " seconds" );
+				}
+				if ( this.Bot.Stucktime >= this.KillTime ) {
+					if ( this.KillWhenStuck ) {
+						this.Bot.ExecCommand( "kill" );
+					}
+				} else
+				{
+					this.Bot.StuckPos = this.Bot.GetPosition();
+					// hack. either they get out of stuckage or they fall off and try again.
+					if ( this.Bot.HasEntityFlag( ENTFLAG.ON_LADDER ) ) {
+						//this.Bot.Say("stuck on ladder");
+						this.Bot.PressButton( BTN.STRAFE_R );
+					}
+					else {
+						this.Bot.PressButton( BTN.JUMP );
+					}
+				}
+			}
+		} else
+		{
+			if ( this.Bot.StuckPos && this.Bot.DistanceTo( this.Bot.StuckPos ) > 100 ) {
+				this.Bot.StuckPos = null;
+				this.Bot.Stucktime = 0;
+			}
+		}
+
+		sleep( this.Interval );
+	}
+};
+
+this.OnSpawn = function()
+{
+	this.JustSpawned = true;
+	this.Bot.Stucktime = 0;
+};

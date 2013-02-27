@@ -1,0 +1,97 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet = "AMMO_CABINET_north_ammocabinet",
+	Checkpoint_cityflag = "CHECKPOINT_cityflag",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTH_CABINET_north_healthcabinet",
+	Build_barrier = "MAP_CONSTRUCTION_barrier",
+	Build_gate = "MAP_CONSTRUCTION_gate",
+	Build_houseMG42 = "MAP_CONSTRUCTION_houseMG42",
+	Build_tank_construct = "MAP_CONSTRUCTION_tank_construct",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Build_bridge = "MAP_CONSTRUCTION_bridge",
+	Build_bridgeMG42 = "MAP_CONSTRUCTION_bridgeMG42",
+	Destroy_bridge = "MAP_DYNAMITE_TARGET_bridge",
+	Destroy_bridgeMG42 = "MAP_DYNAMITE_TARGET_bridgeMG42",
+	Destroy_gate = "MAP_DYNAMITE_TARGET_gate",
+	Destroy_houseMG42 = "MAP_DYNAMITE_TARGET_houseMG42",
+	Destroy_barrier = "MAP_DYNAMITE_TARGET_barrier",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Mount_bridgeMG42_model = "MAP_MOUNTABLE_MG42_bridgeMG42_model",
+	Mount_houseMG42_model = "MAP_MOUNTABLE_MG42_houseMG42_model",
+	Repair_houseMG42_model = "MAP_REPAIR_MG42_houseMG42_model",
+	Repair_bridgeMG42_model = "MAP_REPAIR_MG42_bridgeMG42_model",
+	Vehicle_tank = "MAP_MOVER_tank",
+	Flag_maps = "MAP_FLAG_maps",
+	Cappoint_708 = "MAP_CAPPOINT_708",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been constructed.", TestMap.Pass );
+		OnTrigger( "Allied team has built the bridge mg42!", TestMap.Pass );
+		OnTrigger( "The Tank has been repaired!", TestMap.Pass );
+		OnTrigger( "The bridge has been repaired.", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allied team has rebuilt the gate!", TestMap.Pass );
+		OnTrigger( "Allied team has built the house mg42!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been destroyed.", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "The bridge has been damaged.", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the house mg42!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the gate!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the bridge mg42!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "Axis team has broken into Battalion Headquarters!", TestMap.Pass );
+		OnTrigger( "Axis have stolen The Combat Maps!", TestMap.Pass );
+		//~ OnTrigger( "Allies reclaim the town!", TestMap.Pass );
+		//~ OnTrigger( "Axis captured the town!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.SetOffsetGoal( 0, 0, 240, Map.Destroy_bridge );
+		Util.SetOffsetGoal( 0, -50, -24, Map.Build_bridge );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_north_ammocabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_north_healthcabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_gate, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_houseMG42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_houseMG42_model, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_gate, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_bridgeMG42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_bridgeMG42_model, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_barrier, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_bridge, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_houseMG42_model, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_houseMG42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_bridge, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_bridgeMG42_model, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_bridgeMG42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_barrier, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_tank_construct, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_tank, 480 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_maps, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_708, 120 );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

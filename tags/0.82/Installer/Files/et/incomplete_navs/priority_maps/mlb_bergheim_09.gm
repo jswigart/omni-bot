@@ -1,0 +1,309 @@
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+
+	Axis_Command_Post_Dyno = 0,
+	Command_Post_Dyno = 0,
+	Fortress_Forward_Gate_Dyno = 0,
+	Fortress_Side_Gate_Dyno = 0,
+	factory_mg_nest_Dyno = 0,
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	factory_mg_nest_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "factory_mg_nest_Built" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Fortress_Forward_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fortress_Forward_Gate_Dyno += 1;
+		Util.MapDebugPrint( "Fortress_Forward_Gate_Planted" );
+	},
+
+	Fortress_Side_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fortress_Side_Gate_Dyno += 1;
+		Util.MapDebugPrint( "Fortress_Side_Gate_Planted" );
+	},
+
+	factory_mg_nest_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.factory_mg_nest_Dyno += 1;
+		Util.MapDebugPrint( "factory_mg_nest_Planted" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Fortress_Forward_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fortress_Forward_Gate_Dyno -= 1;
+		Util.MapDebugPrint( "Fortress_Forward_Gate_Defused" );
+	},
+
+	Fortress_Side_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Fortress_Side_Gate_Dyno -= 1;
+		Util.MapDebugPrint( "Fortress_Side_Gate_Defused" );
+	},
+
+	factory_mg_nest_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.factory_mg_nest_Dyno -= 1;
+		Util.MapDebugPrint( "factory_mg_nest_Defused" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Fortress_Forward_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.AXIS, true, "DEFEND_DEF_2");
+		
+		Map.Fortress_Forward_Gate_Dyno = 0;
+
+		Util.MapDebugPrint( "Fortress_Forward_Gate_Destroyed" );
+	},
+
+	Fortress_Side_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_DEF_2");
+		Map.Fortress_Side_Gate_Dyno = 0;
+
+		Util.MapDebugPrint( "Fortress_Side_Gate_Destroyed" );
+	},
+
+	factory_mg_nest_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.factory_mg_nest_Dyno = 0;
+
+		Util.MapDebugPrint( "factory_mg_nest_Destroyed" );
+	},
+
+	fortress_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "fortress_flag_Axis_Captured" );
+	},
+
+	fortress_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "fortress_flag_Allies_Captured" );
+	},
+
+	inn_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "inn_flag_Axis_Captured" );
+	},
+
+	inn_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "inn_flag_Allies_Captured" );
+	},
+
+	station_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "station_flag_Axis_Captured" );
+	},
+
+	station_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "station_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "axis_hq_compost_constructed", Map.Axis_Command_Post_Built );
+	OnTrigger( "allies_hq_compost_contructed", Map.Allied_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.factory_mg_nest_Built );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Fortress_Forward_Gate_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Fortress_Side_Gate_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.factory_mg_nest_Planted );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Fortress_Forward_Gate_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Fortress_Side_Gate_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.factory_mg_nest_Defused );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "radar_allies_entrance1_destroyed", Map.Fortress_Forward_Gate_Destroyed );
+	OnTrigger( "radar_allies_entrance2_destroyed", Map.Fortress_Side_Gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.factory_mg_nest_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.fortress_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.fortress_flag_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.inn_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.inn_flag_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.station_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.station_flag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	Util.SetGoalOffset( 30, 0, 0, "PLANT_Fortress_Forward_Gate" );
+	Util.SetGoalOffset( 32, 0, 0, "PLANT_Fortress_Side_Gate" );
+	
+	SetAvailableMapGoals(TEAM.AXIS, false, "MOUNTMG42.*");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "MOUNTMG42.*");
+	SetAvailableMapGoals(TEAM.AXIS, false, "DEFEND_DEF_2");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "BUILD_factory_mg_nest");
+	SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_factory_mg_nest");
+	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_FLAG_2");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_FLAG_2");
+	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_FLAG_3");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_FLAG_3");
+	SetAvailableMapGoals(TEAM.AXIS, false, "ATTACK_FLAG_4");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "ATTACK_FLAG_4");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "CHECKPOINT_inn_flag");
+	SetAvailableMapGoals(TEAM.AXIS, false, "CHECKPOINT_inn_flag");
+	SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND.*");
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

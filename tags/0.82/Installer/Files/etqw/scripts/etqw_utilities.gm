@@ -1,0 +1,502 @@
+// This script contains useful utility scripts for performing common actions.
+	
+Util.NoTimeLimit = "si_timelimit 0";
+Util.TimeLimit1 = "si_timelimit 1";
+
+member numallies = 0;
+member numaxis = 0;
+
+member AlliedNames = { "", "allied_soldier", "allied_medic", "allied_engineer", 
+				"allied_fieldops", "allied_covertops", };
+			
+member AxisNames = { "", "axis_soldier", "axis_medic", "axis_engineer", 
+				"axis_fieldops", "axis_covertops", };
+
+///////////////////////////////////////////////////////////////////////////////
+// The DebugBotAim function runs this thread on the bots.
+
+member DebugBotAimThread = function( _targetpos )
+{
+	block( EVENT.SPAWNED );
+	
+	this.SetScriptControlled( true );
+	this.EnableShooting( false );
+	
+	// Repeat until we get there.
+	while(1)
+	{
+		print( "Going to " + _targetpos );
+		this.GoTo( _targetpos );
+		
+		if( block(EVENT.GOAL_SUCCESS, EVENT.GOAL_FAILED) == EVENT.GOAL_SUCCESS )
+		{
+			break;
+		}
+	}
+	
+	this.SetDebugFlag( DEBUG.AIM, true );
+			
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// This function adds 2 bots to the game, disables their 
+
+member DebugBotAim = function( _range )
+{
+	// Pick a default range to use if none is provided.
+	if( _range == null )
+	{
+		_range = 20;
+	}
+
+	print( "Range " + _range );
+	
+	KickAll();
+
+	AddBot( TEAM.ALLIES, CLASS.SOLDIER );
+	AddBot( TEAM.AXIS, CLASS.SOLDIER );
+	
+	// Get a target position for 2 bots.
+	localHost = GetGameEntityFromId(0);
+	localHostPos = localHost.GetPosition();
+	localHostFacing = localHost.GetFacing();
+	
+	sleep(5.0);
+		
+	// calculate 2 points on each side of the localhost to send the bots to.
+	aimPoints = table();
+	aimPoints[0] = localHostPos + ( localHostFacing * _range );
+	aimPoints[1] = localHostPos - ( localHostFacing * _range );
+	
+	print( "Creating bot threads." );
+	iCurrentBot = 0;
+	foreach ( gameId and bot in BotTable )
+	{
+		print( aimPoints[iCurrentBot] );
+		bot:thread( this.DebugBotAimThread, aimPoints[iCurrentBot] );
+		iCurrentBot += 1;
+		if(iCurrentBot >= 2)
+		{
+			break;
+		}
+	}	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member TestMap = function( _params )
+{
+	if ( GetGameState() == "Playing" )
+	{
+		ExecScript( "testmap.gm" );
+		TestMap.RunTests( _params );
+	}
+	else
+	{
+		print( "Can't run command during warmup" );
+		EchoToScreen( 0, 3, "Can't run command during warmup" );
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member AutoTestMap = function()
+{
+	if ( GetGameState() == "Playing" )
+	{
+		yield();
+		this.TestMap();
+		sleep( 2 );
+		exit();
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member AddBotTester = function( team, class, name )
+{
+	// Add Tester bot
+	sleep( 1 );
+	AddBot(team, class, name);
+	sleep( 1 );
+	
+	botPtr = Util.GetBotPointer( name );
+	botId = Util.GetBotId( name );
+	botstats = GetEntHealthAndArmor( botId );
+
+	while ( !botstats.Health )
+		{ sleep( 1 ); }
+		
+	return botPtr;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ClearMainGoals = function()
+{
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_CONSTRUCTION.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_CONSTRUCTION.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_DYNAMITE.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_DYNAMITE.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOUNTABLE_MG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_MOUNTABLE_MG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOVER.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_MOVER.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_FLAG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMO_CABINET.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AMMO_CABINET.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTH_CABINET.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTH_CABINET.*" );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ClearSecondaryGoals = function()
+{
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTH.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTH.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMO.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AMMO.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_REPAIR.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_REPAIR.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_MINE.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_MINE.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOBILE_MG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_MOBILE_MG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_ARTY.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_ARTY.*" );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//Disable a goal for both teams
+member DisableGoal = function( goal )
+{
+	SetAvailableMapGoals( TEAM.ALLIES, false, goal );
+	SetAvailableMapGoals( TEAM.AXIS, false, goal );	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//Enable a goal for both teams
+member EnableGoal = function( goal )
+{
+	SetAvailableMapGoals( TEAM.ALLIES, true, goal );
+	SetAvailableMapGoals( TEAM.AXIS, true, goal );	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CheckVehiclePathFlag = true;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CheckVehiclePath = function( _params )
+{
+	if ( !CheatsEnabled() )
+	{
+		print("^1cheats must be enabled to use this command");
+		print("type /devmap", GetMapName(), "in console");
+		return;
+	}
+
+	goalname = _params[ 0 ];
+	goal = GetGoal( goalname );
+	
+	if ( !goal )
+	{
+		print( "CheckVehiclePath: No such goal" );
+		return;
+	}
+		
+	if ( goal.IsAvailable( TEAM.ALLIES ) )
+	{
+		print("Allied objective");
+		team = TEAM.ALLIES;
+		botname = "allied_engineer";
+	}
+	else
+	{
+		if ( goal.IsAvailable( TEAM.AXIS ) )
+		{
+			print("Axis objective");
+			team = TEAM.AXIS;
+			botname = "axis_engineer";
+		}
+		else
+		{
+			print( "CheckVehiclePath: Goal:", goalname, "not available" );
+			return;
+		}
+	}
+	
+	this.CheckVehiclePathFlag = true;
+	SetAvailableMapGoals( team, false, ".*" );
+	SetAvailableMapGoals( team, true, goalname );
+	AddBot( team, CLASS.ENGINEER, botname );
+	
+	goalname2 = _params[ 1 ];
+	goal2 = GetGoal( goalname2 );
+	entity2 = goal2.GetEntity();
+	vehiclestats = GetEntHealthAndArmor( entity2 );
+	
+	if ( typeId( _params[ 2 ] ) == 0 )
+		{ sleeptime = 2; }
+	else
+		{ sleeptime = _params[ 2 ]; }
+	
+	print( "Started checking vehicle path for:", goalname2 );
+	
+	if ( vehiclestats.Health <= 0 )
+		{ EntityKill( entity2 ); }
+	
+	while ( this.CheckVehiclePathFlag )
+	{
+		while ( vehiclestats.Health <= 0 && this.CheckVehiclePathFlag )
+		{
+			yield();
+		}
+		
+		if ( !this.CheckVehiclePathFlag )
+			{ break; }
+			
+		Util.StopAllBots();
+		sleep( sleeptime );
+		EntityKill( entity2 );
+		Util.StartAllBots();
+	}
+	
+	print( "Finished checking vehicle path for:", goalname2 );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member CheckVehiclePathOff = function()
+{
+	this.CheckVehiclePathFlag = false;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member BuildVehiclePathFlag = true;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member BuildVehiclePath = function( _params )
+{
+	if ( !CheatsEnabled() )
+	{
+		print("^1cheats must be enabled to use this command");
+		print("type /devmap", GetMapName(), "in console");
+		return;
+	}
+
+	goalname = _params[ 0 ];
+	goal = GetGoal( goalname );
+	
+	if ( !goal )
+	{
+		print( "BuildVehiclePath: No such goal:", goalname );
+		return;
+	}
+	
+	this.BuildVehiclePathFlag = true;
+
+	goalname2 = _params[ 1 ];
+	goal2 = GetGoal( goalname2 );
+	entity2 = goal2.GetEntity();
+	vehiclestats = GetEntHealthAndArmor( entity2 );
+	
+	if ( typeId( _params[ 2 ] ) == 0 )
+		{ sleeptime = 2; }
+	else
+		{ sleeptime = _params[ 2 ]; }
+	
+	print( "Started build vehicle path for:", goalname2 );
+	
+	if ( vehiclestats.Health <= 0 )
+		{ EntityKill( entity2 ); }
+	
+	while ( this.BuildVehiclePathFlag )
+	{
+		while ( vehiclestats.Health <= 0 && this.BuildVehiclePathFlag )
+		{
+			yield();
+		}
+		
+		if ( !this.BuildVehiclePathFlag )
+			{ break; }
+			
+		sleep( sleeptime );
+		EntityKill( entity2 );
+	}
+	
+	print( "Finished buidling vehicle path for:", goalname2 );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member BuildVehiclePathOff = function()
+{
+	this.BuildVehiclePathFlag = false;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member ShowActiveGoals = function()
+{
+	GoalTable = table();
+	GetGoals( GoalTable, 0, ".*" );
+
+	ActiveAxis = table();
+	ActiveAllies = table();
+
+	goalsActive = false;
+	
+	foreach ( id and Goal in GoalTable )
+	{
+		if ( Goal.IsAvailable(TEAM.AXIS) && Goal.IsAvailable(TEAM.ALLIES) )
+		{
+			goalsActive = true;
+			numaxis = tableCount(ActiveAxis);
+			numallies = tableCount(ActiveAllies);
+
+			if ( numaxis != 0 )
+				{ ActiveAxis[numaxis + 1] = Goal; } 
+			else
+				{ ActiveAxis[0] = Goal; }
+
+			if ( numallies != 0 )
+				{ ActiveAllies[numallies + 1] = Goal; } 
+			else
+				{ ActiveAllies[0] = Goal; }
+			
+			continue;
+		}
+		
+		if ( Goal.IsAvailable(TEAM.AXIS) )
+		{
+			goalsActive = true;
+			numaxis = tableCount(ActiveAxis);
+			
+			if ( numaxis != 0 )
+				{ ActiveAxis[numaxis + 1] = Goal; } 
+			else
+				{ ActiveAxis[0] = Goal; }
+
+		}
+		else if ( Goal.IsAvailable(TEAM.ALLIES) )
+		{
+			goalsActive = true;
+			numallies = tableCount(ActiveAllies);
+
+			if ( numallies != 0 )
+				{ ActiveAllies[numallies + 1] = Goal; } 
+			else
+				{ ActiveAllies[0] = Goal; }
+		}			
+	}
+
+	if ( !goalsActive )
+		{ print("ShowActiveGoals: no goals active"); }
+	else
+	{
+		foreach ( id and axisgoal in ActiveAxis )
+		{
+			axisgoalname = axisgoal.GetName();
+			print("AXIS:", axisgoalname, "is active");
+		}
+
+		foreach ( id and alliesgoal in ActiveAllies )
+		{
+			alliesgoalname = alliesgoal.GetName();
+			print("ALLIES:", alliesgoalname, "is active");
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member WarpTo = function( _params )
+{
+	if ( !CheatsEnabled() )
+	{
+		print("^1cheats must be enabled to use this command");
+		print("type /devmap", GetMapName(), "in console");
+		return;
+	}
+
+	goalname = _params[0];
+		goal = GetGoal( goalname );
+
+		if ( goal )
+		{
+				goalpos = goal.GetPosition(); 
+				s = "setviewpos " + goalpos[0] + " " + goalpos[1] + " " + goalpos[2] + " " + " 0";
+				print(s);
+
+				ExecCommandOnClient(Util.GetPlayerEntity(), s);
+		}
+		else
+		{ print("WarpTo: Invalid Goal"); }
+};
+///////////////////////////////////////////////////////////////////////////////
+//
+member CountClass = function( team, class )
+{
+	count = 0;
+	foreach ( id and bot in BotTable )
+	{
+		if ( bot.GetTeam() == team && bot.GetClass() == class )
+			{ count += 1; }
+	}
+	
+	return count;
+};
+///////////////////////////////////////////////////////////////////////////////
+//
+member CountTeam = function( team )
+{
+	count = 0;
+	foreach ( id and bot in BotTable )
+	{
+		if ( bot.GetTeam() == team )
+			{ count += 1; }
+	}
+	
+	return count;
+};
+///////////////////////////////////////////////////////////////////////////////
+//
+member ChangeClass = function( team, originalclass, newclass, revert, maxbots )
+{
+	numbots = 0;
+
+	foreach ( id and bot in BotTable )
+	{
+		if ( !GetEntFlags(bot.GetGameEntity(), ENTFLAG.CARRYINGGOAL) 
+			&& bot.GetTeam() == team  )
+		{
+			if ( bot.PrimaryClass == null )
+				{ bot.PrimaryClass = bot.GetClass(); }
+
+			if ( bot.PrimaryClass == originalclass && !revert && !bot.ClassChanged )
+			{
+				if ( numbots < maxbots )
+				{
+					numbots += 1;
+					bot.ClassChanged = true;
+					bot.ChangeClass(newclass);
+				}
+			}
+
+			if ( bot.ClassChanged && revert && bot.PrimaryClass == originalclass 
+				&& bot.GetClass() == newclass )
+			{
+				bot.ClassChanged = false;
+				bot.ChangeClass(bot.PrimaryClass);
+			} 
+		}
+	}
+};

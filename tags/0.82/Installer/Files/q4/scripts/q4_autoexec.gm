@@ -1,0 +1,222 @@
+// Load any other scripts that we will need.
+ExecScript("q4_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("difficulty.gm");
+ExecScript("server_manager.gm");
+ExecScript("q4_commands.gm");
+
+// New module format
+global Util = import("utilities");
+global QUtil = import("q4_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// Set up a list of Names, optionally associated with a script.
+Names["Walter"] = "";
+Names["Fred"] = "";
+Names["Morgan"] = "";
+Names["Lawrence"] = "";
+Names["Richard"] = "";
+Names["Michael"] = "";
+Names["Brad"] = "";
+Names["George"] = "";
+Names["Anton"] = "";
+Names["Monty"] = "";
+Names["Bean"] = "";
+Names["Sean"] = "";
+Names["Backfire"] = "";
+Names["Halfwit"] = "";
+Names["Halfbaked"] = "";
+Names["Fullmonty"] = "";
+Names["Nohope"] = "";
+Names["Hitnrun"] = "";
+Names["Missnrun"] = "";
+Names["Oysterhead"] = "";
+Names["Fullthrottle"] = "";
+Names["Noammo"] = "";
+Names["Bullseye"] = "";
+Names["Aimless"] = "";
+Names["Blackadder"] = "";
+Names["Cledus"] = "";
+Names["Newbie"] = "";
+Names["Chimichanga"] = "";
+Names["Razor"] = "";
+Names["Tanz"] = "";
+Names["Vic"] = "";
+Names["Malin"] = "";
+Names["Thor"] = "";
+Names["Grog"] = "";
+Names["Drago"] = "";
+Names["Stinger"] = "";
+Names["Tarnok"] = "";
+Names["Wens"] = "";
+Names["Brohn"] = "";
+Names["Ivor"] = "";
+Names["Gordac"] = "";
+Names["Bortack"] = "";
+Names["Morgriff"] = "";
+Names["Kole"] = "";
+Names["Garbok"] = "";
+Names["Korv"] = "";
+Names["Vokur"] = "";
+Names["Gali"] = "";
+Names["Beelz"] = "";
+Names["CraigChrist"] = "";
+Names["WhittlinMan"] = "";
+Names["SpecialEd"] = "";
+Names["Flint"] = "";
+Names["Argo"] = "";
+Names["Milius"] = "";
+Names["Vera"] = "";
+Names["Merki"] = "";
+Names["Tarnen"] = "";
+Names["Royen"] = "";
+Names["Kaolin"] = "";
+Names["Nandet"] = "";
+Names["Nundak"] = "";
+Names["Ryver"] = "";
+Names["Mungri"] = "";
+Names["Chan"] = "";
+Names["Phi"] = "";
+Names["Amadi"] = "";
+Names["Zarna"] = "";
+Names["PillowPants"] = "";
+Names["ListerFiend"] = "";
+Names["Ilikechocmilk"] = "";
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+//Names["samplebot"] = "sample.gm";
+
+/////////////////////////////////////////////////////////////////////
+
+print("Q4 Script Executed");
+
+// This function runs an infinite loop of adding and kicking bots. It is used to illustrate
+// how custom script functions can be run continuously to provide custom control over
+// things like the number of bots. Additional behaviors like forcing bots to 1 team can be 
+// implemented by starting a similar function to this from a custom command.
+global stresstest = function()
+{
+	sleep(10.0);
+	dowhile(1)
+	{
+		//DumpGlobals("globals.txt");
+   
+		ran = UnitRandom();
+		if(ran > 0.98)
+		{
+			//KickAll();
+		}
+		else if(ran < 0.5)
+		{
+			AddBot();
+		}
+		else
+		{
+			foreach ( gameId and bot in BotTable )
+			{
+				if(bot)
+				{
+					print(bot);
+					KickBot(bot.Name);
+					break;
+				}                     
+			}      
+		}      
+	      // Pause for 10 seconds between loop iterations.
+	      sleep(RandRange(0.0, 3.0));      
+	}
+};
+
+// This is a Game Monkey Script function that creates a thread using the function we defined above.
+// Uncomment the following line if you want to run the function above.
+//thread(stresstest); 
+
+global Q4ChatIcons =
+{
+	// Weapons
+	Gauntlet 			= "^iw00",
+	Machinegun 			= "^iw01",
+	Shotgun 			= "^iw02",
+	Hyperblaster 		= "^iw03",
+	GrenadeLauncher 	= "^iw04",
+	Nailgun 			= "^iw05",
+	RocketLauncher	 	= "^iw06",	
+	Railgun 			= "^iw07",
+	LightningGun 		= "^iw08",
+	DarkMatterGun 		= "^iw09",
+
+	// Player
+	VoiceDisabled		= "^ivcd",
+	VoiceEnabled		= "^ivce",
+	FriendDisabled		= "^ifdd",
+	FriendEnabled		= "^ifde",
+	SelfKill			= "^idm0",
+	Telefrag			= "^idm1",
+
+	// CTF
+	StroggFlag			= "^ifls",
+	MarineFlag			= "^iflm",
+	AmmoRegen			= "^irgn",
+	Doubler				= "^idbl",
+	Guard				= "^igrd",
+	Scout				= "^isct",
+
+	// Server
+	PunkbusterEnabled	= "^ipbe",
+	DedServerEnabled	= "^idse",
+	PadlockEnabled		= "^ipse",
+	FavoriteEnabled		= "^ifve",
+
+	// Misc
+	RightArrow			= "^iarr",
+};
+
+// The method of death string sent with EVENT.DEATH is somewhat detailed, so this function will convert it to a chat icon.
+global Q4ModToIcon = function(_mod)
+{
+	if(_mod.Find("pellet") != -1)
+	{
+		return Q4ChatIcons.Shotgun;
+	}
+	if(_mod.Find("machinegun") != -1)
+	{
+		return Q4ChatIcons.Machinegun;
+	}
+	if(_mod.Find("gauntlet") != -1)
+	{
+		return Q4ChatIcons.Gauntlet;
+	}
+	if(_mod.Find("hyperblaster") != -1)
+	{
+		return Q4ChatIcons.Hyperblaster;
+	}
+	if(_mod.Find("grenade") != -1)
+	{
+		return Q4ChatIcons.GrenadeLauncher;
+	}
+	if(_mod.Find("rocket") != -1)
+	{
+		return Q4ChatIcons.RocketLauncher;
+	}
+	if(_mod.Find("nail") != -1)
+	{
+		return Q4ChatIcons.Nailgun;
+	}
+	if(_mod.Find("rail") != -1)
+	{
+		return Q4ChatIcons.Railgun;
+	}
+	if(_mod.Find("lightning") != -1)
+	{
+		return Q4ChatIcons.LightningGun;
+	}
+	if(_mod.Find("dmg") != -1)
+	{
+		return Q4ChatIcons.DarkMatterGun;
+	}
+	print("no match for", _mod);
+	return "";
+};

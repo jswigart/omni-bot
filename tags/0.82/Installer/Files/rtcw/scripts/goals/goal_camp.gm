@@ -1,0 +1,153 @@
+// These parameters are required
+this.Name = "CAMP";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.Debug = false;
+this.query = { 0xa9ef3654 /* CAMP */, 0x4fed19c1 /* DEFEND */, 0x4595b8fd /* ATTACK */, 0xe8fbadc0 /* SNIPE */, 0x731f6315 /* PANZER */, 0x9fa9940a /* VENOM */, 0x86584d00 /* FLAME */ };
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.Enter = function()
+{
+	this.UsingWeapon = 0;
+	this.IsSniper = null;
+
+	// this should always return true, but in case it doesn't we'll have to finish it
+	// also blackboard delay it so they don't get the goal again right away
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+
+	this.CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
+
+	if ( this.MapGoal.Weapons )
+	{
+		if (tableCount(this.MapGoal.Weapons) > 0)
+		{
+			this.UsingWeapon = this.Bot.HasAnyWeapon(this.MapGoal.Weapons);
+			this.IsSniper = this.Bot.CanSnipe();
+		}
+	}
+	else
+	{
+		Util.MapDebugPrint(this.MapGoal.GetName() + " has no Weapons Table", true);
+	}
+};
+
+this.Exit = function()
+{
+	this.UsingWeapon = null;
+	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.ReleaseWeaponRequest();
+
+	// restore combat movement restrictions
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
+	}
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		count = this.QueryGoals(this.Bot.QueryGoalsTable, this.query);
+		if ( count > 0 )
+		{
+			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			{
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
+			}
+		}
+
+		tableClear(this.Bot.QueryGoalsTable);
+
+		sleep(2);
+	}
+};
+
+this.Update = function()
+{
+	if(this.Debug)
+	{
+		print("camp goal update", Util.WeaponName(this.UsingWeapon), this.UsingWeapon, this.IsSniper);
+	}
+
+	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	{
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		if (this.MapGoal.DisableCM > 0 && !this.Bot.DisableCombatMovement)
+		{
+			this.CombatMovementDisabled = true;
+			this.Bot.DisableCombatMovement = true;
+		}
+
+		if ( this.UsingWeapon )
+		{
+			if ( this.IsSniper ) {
+				this.AddWeaponRequest( Priority.Medium, WEAPON.SNIPERRIFLE );
+			}
+			else {
+				this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
+			}
+		}
+
+		timeout = 0;
+		while( timeout < this.CampTime )
+		{
+			if ( this.UsingWeapon && (!this.Bot.HasAmmo(this.UsingWeapon) || (this.UsingWeapon == WEAPON.PANZERFAUST && !this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0))) )
+			{
+				this.BlackboardDelay(20, this.MapGoal);
+				this.Finished();
+			}
+
+			switch (this.MapGoal.Stance)
+			{
+				case "crouch":
+				{
+					this.Bot.HoldButton(BTN.CROUCH, 1.1);
+				}
+				case "peek":
+				{
+					if ( timeout % RandInt(2,4) == 0 ) {
+						// stand
+					}
+					else { // hide
+						this.Bot.HoldButton(BTN.CROUCH, 1.1);
+					}
+				}
+			}
+
+			//if ( this.WeaponRestricted > 0 && this.IsSniper )
+			//{
+			//	this.Bot.HoldButton(BTN.AIM,1.1);
+			//}
+
+			this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.AimVectors));
+			timeout += 1;
+
+			sleep(1);
+		}
+	}
+	else
+	{
+		this.BlackboardDelay(RandInt(7,15), this.MapGoal);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		this.Finished();
+	}
+
+	// don't choose the same camp spot
+	this.BlackboardDelay(5, this.MapGoal);
+	this.Finished();
+};
+

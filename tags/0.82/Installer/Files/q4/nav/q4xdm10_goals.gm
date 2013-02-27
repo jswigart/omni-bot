@@ -1,0 +1,185 @@
+global _MG = 
+{
+	CAMP_dz1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.834, -0.552, -0.016),
+			[1] = Vec3(-0.619, -0.785, -0.030),
+			[2] = Vec3(-0.958, -0.282, -0.047),
+			[3] = Vec3(0.843, -0.536, -0.048),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz1",
+		Orientation = Vec3(2.155, -0.016, -0.000),
+		Position = Vec3(669.001, 155.176, 383.250),
+		Radius = 32,
+		SerialNum = 29,
+		Stance = "stand",
+		TagName = "dz1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.816, 0.550, 0.179),
+			[1] = Vec3(-0.642, 0.749, 0.165),
+			[2] = Vec3(-0.017, 0.991, 0.132),
+			[3] = Vec3(0.764, 0.643, -0.046),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz2",
+		Orientation = Vec3(0.977, 0.180, 0.000),
+		Position = Vec3(642.540, -688.961, 255.250),
+		Radius = 32,
+		SerialNum = 31,
+		Stance = "stand",
+		TagName = "dz2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.803, 0.595, -0.026),
+			[1] = Vec3(0.949, 0.315, -0.036),
+			[2] = Vec3(0.625, 0.779, -0.051),
+			[3] = Vec3(-0.767, 0.640, -0.039),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz3",
+		Orientation = Vec3(-0.933, -0.026, -0.000),
+		Position = Vec3(-663.125, -677.879, 383.250),
+		Radius = 32,
+		SerialNum = 33,
+		Stance = "stand",
+		TagName = "dz3",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	CAMP_dz4 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.925, -0.347, 0.152),
+			[1] = Vec3(0.715, -0.672, 0.191),
+			[2] = Vec3(-0.015, -0.991, 0.132),
+			[3] = Vec3(-0.878, -0.477, -0.029),
+		},
+		CreateOnLoad = 1,
+		GoalType = "CAMP",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "CAMP_dz4",
+		Orientation = Vec3(-1.929, 0.153, -0.000),
+		Position = Vec3(-613.931, 145.680, 255.250),
+		Radius = 32,
+		SerialNum = 35,
+		Stance = "stand",
+		TagName = "dz4",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEADZONE_trigger_controlzone_3 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "DEADZONE",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "DEADZONE_trigger_controlzone_3",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		PatrolPoints = 
+		{
+			[0] = Vec3(212.575, -391.409, 382.250),
+			[1] = Vec3(191.330, -260.418, 382.250),
+			[2] = Vec3(181.219, -144.785, 382.250),
+			[3] = Vec3(-194.220, -104.121, 382.250),
+			[4] = Vec3(-215.201, -242.326, 382.250),
+			[5] = Vec3(-183.155, -360.729, 382.250),
+		},
+		Position = Vec3(8.000, -248.000, 440.000),
+		Radius = 0,
+		SerialNum = 27,
+		TagName = "trigger_controlzone_3",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	FLAG_powerup_deadzone_3 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_powerup_deadzone_3",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(1152.000, -1248.000, 145.411),
+		Radius = 0,
+		SerialNum = 25,
+		TagName = "powerup_deadzone_3",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	FLAG_powerup_deadzone_4 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_powerup_deadzone_4",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(0.000, 496.000, 279.071),
+		Radius = 0,
+		SerialNum = 23,
+		TagName = "powerup_deadzone_4",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	FLAG_powerup_deadzone_6 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_powerup_deadzone_6",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-1215.000, 448.000, 272.277),
+		Radius = 0,
+		SerialNum = 21,
+		TagName = "powerup_deadzone_6",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

@@ -1,0 +1,353 @@
+global Map =
+{
+	JoinedBots = 0,
+	SpawnsSet = 0,
+	
+	// Spawn numbers
+	// 1 - Wall
+	// 2 - Hill
+	// 3 - Tank
+	// 4 - Side Wall
+	// 5 - Center Fort
+	// 6 - Fort
+
+	TankStatus = 0,
+	
+	WallFlagStatus = 0,
+	HillFlagStatus = 0,
+	
+	MainGateStatus = 0,
+	WallStatus = 0,
+	GeneratorStatus = 0,
+	
+	NorthStatus = 0,
+	SouthStatus = 0,
+
+	
+	Tank_Repaired = function( trigger )
+	{
+		Map.TankStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank" );
+		if( Map.WallStatus == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true , "MOVER_tank" );
+		}
+		Util.MapDebugPrint( "Tank_Repaired" );
+	},
+	Tank_Destroyed = function( trigger )
+	{
+		Map.TankStatus = 0;
+		if( Map.WallStatus == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true , "BUILD_Tank" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOVER_tank" );
+		}
+		print("Tank_Destroyed");
+	},
+
+	
+	
+	Wall_Destroyed = function( trigger )
+	{
+		Map.WallStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_wall_spawn_flag" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "CHECKPOINT_wall_spawn_flag" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "MOVER_tank" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true , "PLANTMINE_Stairs_North_.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_Wall_Flag_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Wall_Flag_.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_Tower_T_L" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "SNIPE_Tower_B_L" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_Tank_Arty_S_1" );
+	
+		
+		if( Map.GeneratorStatus == 0 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 1, 2, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 4, 6, 0, 0, 0 );
+		}
+		if( Map.GeneratorStatus == 1 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 4, 1, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 6, 5, 0, 0, 0 );
+		}
+		Util.MapDebugPrint( "Wall_Destroyed" );
+	},
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		Map.MainGateStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANT_Main_Gate" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANT_North_PAK_75mm_Gun" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "PLANT_South_PAK_75mm_Gun" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true , "PLANTMINE_Stairs_Center_.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_Main_Gate_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_South_.*" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_North_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Main_Gate_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "DEFEND_South_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "DEFEND_North_.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_Tower_T_R" );
+		SetAvailableMapGoals( TEAM.ALLIES, true , "SNIPE_Tower_B_R" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true , "ARTILLERY_D_Gate_Arty_D_1" );
+		
+		Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 6, 5, 0, 0, 0 );
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		Map.GeneratorStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANT_Water_Pump" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_Generator_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_Generator_.*" );
+		
+		if( Map.MainGateStatus == 0 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 4, 3, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 1, 5, 0, 0, 0 );
+		}
+		if( Map.MainGateStatus == 1 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 4, 1, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 6, 5, 0, 0, 0 );
+		}
+		Util.MapDebugPrint( "Generator_Destroyed" );
+	},
+	
+	
+	
+	Wall_Spawn_Axis = function( trigger )
+	{
+		Map.WallFlagStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, true , "CHECKPOINT_wall_spawn_flag" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "CHECKPOINT_wall_spawn_flag" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_Wall_Flag_.*" );
+		
+		if( Map.GeneratorStatus == 0 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 1, 2, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 4, 6, 0, 0, 0 );
+		}
+		if( Map.GeneratorStatus == 1 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 4, 1, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 6, 5, 0, 0, 0 );
+		}
+		Util.MapDebugPrint( "Wall_Spawn_Axis" );
+	},
+	Wall_Spawn_Allies = function( trigger )
+	{
+		Map.WallFlagStatus = 2;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_wall_spawn_flag" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "CHECKPOINT_wall_spawn_flag" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_Wall_Flag_.*" );
+		
+		if( Map.GeneratorStatus == 0 && Map.MainGateStatus == 0 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 3, 2, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 4, 1, 0, 0, 0 );
+		}
+		if( Map.GeneratorStatus == 1 && Map.MainGateStatus == 0 )
+		{
+			Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 4, 3, 0, 0, 0 );
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 1, 1, 0, 0, 0, 0 );
+		}
+		Util.MapDebugPrint( "Wall_Spawn_Allies" );
+	},
+	
+	Hill_Spawn_Axis = function( trigger )
+	{
+		Map.HillFlagStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, true , "CHECKPOINT_hill_spawn_flag" );
+		SetAvailableMapGoals( TEAM.AXIS  , false, "CHECKPOINT_hill_spawn_flag" );
+		Util.MapDebugPrint( "Hill_Spawn_Axis" );
+	},
+	Hill_Spawn_Allies = function( trigger )
+	{
+		Map.HillFlagStatus = 2;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_hill_spawn_flag" );
+		SetAvailableMapGoals( TEAM.AXIS  , true , "CHECKPOINT_hill_spawn_flag" );
+		Util.MapDebugPrint( "Hill_Spawn_Allies" );
+	},
+	
+	
+	
+	North_Gun_Destroyed = function( trigger )
+	{
+		Map.NorthStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANT_North_PAK_75mm_Gun" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_North_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_North_.*" );
+		
+		if( Map.MainGateStatus == 1 && Map.GeneratorStatus == 1)
+		{
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 1, 5, 0, 0, 0, 0 );
+		}
+		Util.MapDebugPrint( "North_Gun_Destroyed" );
+	},
+	South_Gun_Destroyed = function( trigger )
+	{
+		Map.SouthStatus = 1;
+		SetAvailableMapGoals( TEAM.AXIS  , false, "PLANT_South_PAK_75mm_Gun" );
+		
+		SetAvailableMapGoals( TEAM.AXIS  , false, "ATTACK_South_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_South_.*" );
+		
+		if( Map.MainGateStatus == 1 && Map.GeneratorStatus == 1)
+		{
+			Map.DivideBotsToSpawns( TEAM.ALLIES, 1, 6, 0, 0, 0, 0 );
+		}
+		
+		Util.MapDebugPrint( "South_Gun_Destroyed" );
+	},
+};
+
+// Divides team t between c spawn(s)
+// c = 1, divides bots between 1 spawn: s1 (all bots go to s1)
+// c = 2, divides bots between 2 spawn: s1 & s2
+// ...
+// c = 5, divides bots between 5 spawn: s1 & s2 & s3 & s4 & s5
+// Note: if s2..s5 are not defined then script may halt when c is bigger than 1
+// t - team
+// c - between how many spawns bots has to be divided
+// s1..s5 - spawn numbers
+Map.DivideBotsToSpawns = function( t, c, s1, s2, s3, s4, s5 )
+{	
+	foreach ( id and bot in BotTable )
+	{
+		if( bot.GetTeam() == t )
+		{
+			r = RandInt(0,c-1);
+			if( r == 0 || bot.GetClass() == TEAM.ENGINEER )
+			{
+				bot.ChangeSpawnPoint( s1 );
+			}
+			if( r == 1 )
+			{
+				bot.ChangeSpawnPoint( s2 );
+			}
+			if( r == 2 )
+			{
+				bot.ChangeSpawnPoint( s3 );
+			}
+			if( r == 3 )
+			{
+				bot.ChangeSpawnPoint( s4 );
+			}
+			if( r == 4 )
+			{
+				bot.ChangeSpawnPoint( s5 );
+			}
+		}
+	}
+	Util.MapDebugPrint( "Team",t,"bots divided between",c,"spawn(s)." );
+};
+
+
+global OnMapLoad = function()
+{
+	SetAvailableMapGoals( 3 , false, ".*" );
+	SetAvailableMapGoals( 4 , false, ".*" );
+	
+	
+	OnTrigger( "The Tank has been repaired!", Map.Tank_Repaired );
+	OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+	
+	OnTrigger( "Wall has been destroyed!", Map.Wall_Destroyed );
+
+	OnTrigger( "Axis captured Wall spawn!", Map.Wall_Spawn_Axis );
+	OnTrigger( "Allies reclaimed Wall spawn!", Map.Wall_Spawn_Allies );
+	
+	OnTrigger( "Axis captured Hill spawn!", Map.Hill_Spawn_Axis );
+	OnTrigger( "Allies reclaimed Hill spawn!", Map.Hill_Spawn_Allies );
+	
+	OnTrigger( "Water Pump has been destroyed!", Map.Generator_Destroyed );
+	
+	OnTrigger( "Main Gate has been destroyed!", Map.Main_Gate_Destroyed );
+	
+	OnTrigger( "Axis have destroyed the North Anti-Tank Gun!", Map.North_Gun_Destroyed );
+	OnTrigger( "Axis team has destroyed the South Anti-Tank Gun!", Map.South_Gun_Destroyed );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	Util.SetGoalOffset( 50, 0, 0, "PLANT_North_PAK_75mm_Gun" );
+	Util.SetGoalOffset( 50, 0, 0, "PLANT_South_PAK_75mm_Gun" );
+	
+	// Allied goals
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true , "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_first_healthcabinet" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_first_ammocabinet" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true , "DEFEND_Generator_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "DEFEND_Main_Gate_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "DEFEND_Wall_Flag_.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true , "SNIPE_Tower_T_L" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "SNIPE_Tower_T_R" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "ARTILLERY_S_Tank_Arty_S_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true , "CALLARTILLERY_.*" );
+	
+	// Axis goals
+	SetAvailableMapGoals( TEAM.AXIS  , false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS  , true , "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.AXIS  , false, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "CHECKPOINT_wall_spawn_flag" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "PLANT_Water_Pump" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "PLANT_Main_Gate" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "AMMOCAB_first_ammocabinet" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "HEALTHCAB_first_healthcabinet" );
+	
+	SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_Generator_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_Main_Gate_.*" );
+	SetAvailableMapGoals( TEAM.AXIS  , true , "ATTACK_Wall_Flag_.*" );
+
+	
+    //MapRoutes =
+    //{
+    //};
+	//Util.Routes(MapRoutes);
+	
+	Util.MapDebugPrint( "OnMapLoad!" );
+}; 
+
+
+global OnBotJoin = function( bot )
+{
+	Map.JoinedBots = Map.JoinedBots + 1;
+	if( Map.JoinedBots == ETUtil.CountTeam(1) + ETUtil.CountTeam(2) && Map.SpawnsSet == 0)
+	{
+		Map.SpawnsSet = 1;
+		Map.DivideBotsToSpawns( TEAM.AXIS  , 2, 3, 2, 0, 0, 0 );
+		Map.DivideBotsToSpawns( TEAM.ALLIES, 2, 4, 1, 0, 0, 0 );
+	}
+	
+	bot.TargetBreakableDist = 300.0;
+};

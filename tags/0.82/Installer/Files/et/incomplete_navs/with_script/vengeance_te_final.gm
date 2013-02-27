@@ -1,0 +1,281 @@
+// =========================================================================================
+// ********   Vengeance TE Final Omni-Bot 0.81 Script & Waypoints by AliceInChains   *******
+// =========================================================================================
+// Spawns:
+// Forward Spawn, spawnpoint 1 ( Starting spawn for Allies, capturable. Becomes permanent Axis after Bunker Door is destroyed )
+// Allied Spawn, spawnpoint 2 ( Second spawn for Allies )
+// West Spawn, spawnpoint 3 ( 2 of 2 Starting Sspawn for Axis )
+// Allied CP, spawnpoint 4 ( Available from start )
+// Axis CP, spawnpoint 5 ( Becomes available after building Command Post )
+// East Spawn, spawnpoint 6 ( 1 of 2 Starting spawn for Axis )
+
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	// Conditionals
+    Command_Post_Status = 0, // 0 = Neutral, 1 = Axis, 2 = Allies
+    Bunker_Door = true,
+    Main_Gate = true, 
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+        
+        Map.Command_Post_Status = 2;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+    
+    Axis_Command_Post_Built = function( trigger )
+    {
+		if ( TestMap )
+			{ return; }
+        
+        Map.Command_Post_Status = 1;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Bunker_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bunker_Door_Dyno += 1;
+		Util.MapDebugPrint( "Bunker_Door_Planted" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+    
+    Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Main_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Gate_Dyno += 1;
+		Util.MapDebugPrint( "Main_Gate_Planted" );
+	},
+
+	Bunker_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bunker_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Bunker_Door_Defused" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+    
+    Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Main_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Gate_Dyno -= 1;
+		Util.MapDebugPrint( "Main_Gate_Defused" );
+	},
+
+	Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bunker_Door_Dyno = 0;
+        
+        sleep(1.5);
+        
+        // Axis Goals
+        SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Control_Console" );
+        SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_control_codes" );
+
+		Util.MapDebugPrint( "Bunker_Door_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+    
+    Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Main_Gate_Dyno = 0;
+        
+        sleep(1.5); // Pathing will fail otherwise
+        
+        // Allied Goals
+        SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_south_bunker_mg" );
+
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+
+	control_codes_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "control_codes_Taken" );
+	},
+
+	control_codes_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "control_codes_Returned" );
+	},
+
+	control_codes_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "control_codes_Secured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_spawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+    OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Planted at the Bunker Door.", Map.Bunker_Door_Planted );
+	OnTrigger( "Planted at the Command Post.", Map.Allied_Command_Post_Planted );
+    OnTrigger( "Planted at the Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Main Gate.", Map.Main_Gate_Planted );
+	OnTrigger( "Defused at the Bunker Door.", Map.Bunker_Door_Defused );
+	OnTrigger( "Defused at the Command Post.", Map.Allied_Command_Post_Defused );
+    OnTrigger( "Defused at the Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Main Gate.", Map.Main_Gate_Defused );
+	OnTrigger( "The Axis have breached the bunker door", Map.Bunker_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Destroyed );
+    OnTrigger( "", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis have breached the Main Gate", Map.Main_Gate_Destroyed );
+	OnTrigger( "The Axis have stolen the Control Codes", Map.control_codes_Taken );
+	OnTrigger( "The Allies have returned the COntrol Codes", Map.control_codes_Returned );
+	OnTrigger( "^1ALERT! HANGER DOORS ARE OPENING!", Map.control_codes_Secured );
+	OnTrigger( "Axis capture the Ammo Depot!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_spawn_Allies_Captured );
+
+    Util.SetGoalPosition( 270, -1402, 94, "PLANT_Main_Gate" );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+    
+    // Allied Goals
+    SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_spawn" );
+    SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allies_Bunker_Door.*" );
+    SetAvailableMapGoals( TEAM.ALLIES, true, ".*_Allies_Main_Gate.*" );
+    
+    // Axis Goals
+    SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bunker_Door" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Main_Gate" );
+    SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_spawn" );
+    SetAvailableMapGoals( TEAM.AXIS, true, ".*_Axis_Main_Gate.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+    SetMapGoalProperties( "DEFEND_.*", {MinCampTime=20, MaxCampTime=30} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=45, MaxCampTime=60} );
+    
+    MapRoutes = 
+    {
+        
+    };
+    
+    Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

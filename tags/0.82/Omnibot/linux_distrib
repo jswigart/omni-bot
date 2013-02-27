@@ -1,0 +1,5 @@
+echo Copying Linux Binaries to Releases
+cp ./build/D3/gcc/release/libomnibot_d3.so ../../Releases/Installer/Files/omnibot_d3.so
+cp ./build/ET/gcc/release/libomnibot_et.so ../../Releases/Installer/Files/omnibot_et.so
+cp ./build/FF/gcc/release/libomnibot_ff.so ../../Releases/Installer/Files/omnibot_ff.so
+cp ./build/Q4/gcc/release/libomnibot_q4.so ../../Releases/Installer/Files/omnibot_q4.so

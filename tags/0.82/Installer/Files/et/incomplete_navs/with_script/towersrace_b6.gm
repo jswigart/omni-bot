@@ -1,0 +1,618 @@
+//==========================================================================================
+//
+//	towersrace_b6.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	Martin	01 April 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	ShowMovers = false,
+
+	Allies_human_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_human_barrier_Built" );
+	},
+
+	Axis_human_barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_human_barrier_Built" );
+	},
+
+	Wall_jump_machine_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wall_jump_machine_Built" );
+	},
+
+	roof_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "roof_MG42_Built" );
+	},
+
+	Allies_human_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_human_barrier_Planted" );
+	},
+
+	Axis_human_barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_human_barrier_Planted" );
+	},
+
+	Wall_jump_machine_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wall_jump_machine_Planted" );
+	},
+
+	roof_MG42_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "roof_MG42_Planted" );
+	},
+
+	Allies_human_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_human_barrier_Defused" );
+	},
+
+	Axis_human_barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_human_barrier_Defused" );
+	},
+
+	Wall_jump_machine_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wall_jump_machine_Defused" );
+	},
+
+	roof_MG42_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "roof_MG42_Defused" );
+	},
+
+	Allies_human_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_human_barrier_Destroyed" );
+	},
+
+	Axis_human_barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_human_barrier_Destroyed" );
+	},
+
+	Wall_jump_machine_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Wall_jump_machine_Destroyed" );
+	},
+
+	roof_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "roof_MG42_Destroyed" );
+	},
+
+	bunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bunker_Axis_Captured" );
+	},
+
+	bunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bunker_Allies_Captured" );
+	},
+
+	Allies_Have_Box_Defence = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+//		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allies_Box_Defence" ); //Not working
+		
+		Util.MapDebugPrint( "Allies_Have_Box_Defence" );
+	},
+	
+	Allies_Box_Defence_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+//		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allies_Box_Defence" ); //Not working
+//		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allies_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.AXIS, true, "DYNAMITE_Allies_Box_Defence" ); //Half fix for PLANT goal
+
+		Util.MapDebugPrint( "Allies_Box_Defence_Built" );
+	},
+	
+	Allies_Box_Defence_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allies_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allies_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.AXIS, false, "DYNAMITE_Allies_Box_Defence" ); //Half fix for PLANT goal
+
+		Util.MapDebugPrint( "Allies_Box_Defence_Destroyed" );
+	},
+
+	Axis_Have_Box_Defence = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Box_Defence" ); //Not working
+
+		Util.MapDebugPrint( "Axis_Have_Box_Defence" );
+	},
+	
+	Axis_Box_Defence_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DYNAMITE_Axis_Box_Defence" ); //Half fix for PLANT goal
+
+		Util.MapDebugPrint( "Axis_Box_Defence_Built" );
+	},
+	
+	Axis_Box_Defence_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Box_Defence" ); //Not working
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DYNAMITE_Axis_Box_Defence" ); //Half fix for PLANT goal
+
+		Util.MapDebugPrint( "Axis_Box_Defence_Destroyed" );
+	},
+	
+	
+	Allies_Tower_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Tower" );
+		Util.MapDebugPrint( "Allies_Tower_Cappoint_Captured" );
+	},
+
+	Allies_Tower_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_Tower" );
+		Util.MapDebugPrint( "Allies_Tower_Cappoint_Ready" );
+	},
+
+	Allies_EastWall_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_East_Wall" );
+		Util.MapDebugPrint( "Allies_EastWall_Cappoint_Captured" );
+	},
+
+	Allies_EastWall_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_East_Wall" );
+		Util.MapDebugPrint( "Allies_EastWall_Cappoint_Ready" );
+	},
+
+	Allies_NorthWall_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_North_Wall" );
+		Util.MapDebugPrint( "Allies_NorthWall_Cappoint_Captured" );
+	},
+
+	Allies_NorthWall_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_North_Wall" );
+		Util.MapDebugPrint( "Allies_EastWall_Cappoint_Ready" );
+	},
+
+	Allies_Door_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Door" );
+		Util.MapDebugPrint( "Allies_Door_Cappoint_Captured" );
+	},
+
+	Allies_Door_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_Door" );
+		Util.MapDebugPrint( "Allies_Door_Cappoint_Ready" );
+	},
+
+	Allies_Barrack_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Barrack" );
+		Util.MapDebugPrint( "Allies_Barrack_Cappoint_Captured" );
+	},
+
+	Allies_Barrack_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Allies_Barrack" );
+		Util.MapDebugPrint( "Allies_Barrack_Cappoint_Ready" );
+	},
+
+	Axis_Tower_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Tower" );
+		Util.MapDebugPrint( "Axis_Tower_Cappoint_Captured" );
+	},
+
+	Axis_Tower_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_Tower" );
+		Util.MapDebugPrint( "Axis_Tower_Cappoint_Ready" );
+	},
+
+	Axis_WestWall_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_West_Wall" );
+		Util.MapDebugPrint( "Axis_WestWall_Cappoint_Captured" );
+	},
+
+	Axis_WestWall_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_West_Wall" );
+		Util.MapDebugPrint( "Axis_WestWall_Cappoint_Ready" );
+	},
+
+	Axis_SouthWall_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_South_Wall" );
+		Util.MapDebugPrint( "Axis_SouthWall_Cappoint_Captured" );
+	},
+
+	Axis_SouthWall_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_South_Wall" );
+		Util.MapDebugPrint( "Axis_SouthWall_Cappoint_Ready" );
+	},
+
+	Axis_Door_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Door" );
+		Util.MapDebugPrint( "Axis_Door_Cappoint_Captured" );
+	},
+
+	Axis_Door_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_Door" );
+		Util.MapDebugPrint( "Axis_Door_Cappoint_Ready" );
+	},
+
+	Axis_Barrack_Cappoint_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Barrack" );
+		Util.MapDebugPrint( "Axis_Barrack_Cappoint_Captured" );
+	},
+
+	Axis_Barrack_Cappoint_Ready = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_Axis_Barrack" );
+		Util.MapDebugPrint( "Axis_Barrack_Cappoint_Ready" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied team has constructed the Allied [human] barrier!", Map.Allies_human_barrier_Built );
+	OnTrigger( "Axis team has constructed the Axis [human] barrier!", Map.Axis_human_barrier_Built );
+	OnTrigger( "^3The wall jump machine constructed! ^4(Allies)", Map.Wall_jump_machine_Built );
+	OnTrigger( "^3The wall jump machine constructed! ^1(Axis)", Map.Wall_jump_machine_Built );
+	OnTrigger( "^3The roof mg42 constructed! ^4(Allies)", Map.roof_MG42_Built );
+	OnTrigger( "^3The roof mg42 constructed! ^1(Axis)", Map.roof_MG42_Built );
+	OnTrigger( "Axis team has damaged the Allied [human] barrier!", Map.Allies_human_barrier_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis [human] barrier!", Map.Axis_human_barrier_Destroyed );
+	OnTrigger( "^3The wall jump machine destroyed!", Map.Wall_jump_machine_Destroyed );
+	OnTrigger( "^3The roof mg42 destroyed!", Map.roof_MG42_Destroyed );
+	OnTrigger( "^1Axis captured the west bunker!", Map.bunker_Axis_Captured );
+	OnTrigger( "^4Allies captured the west bunker!", Map.bunker_Allies_Captured );
+
+	OnTrigger( "^4Allies have gotten box defense.", Map.Allies_Have_Box_Defence );
+	OnTrigger( "^dAllied team has constructed the Box defense!", Map.Allies_Box_Defence_Built );
+	OnTrigger( "^1Axis team has destroyed the Box defense!", Map.Allies_Box_Defence_Destroyed );
+	
+	OnTrigger( "^1Axis have gotten box defense.", Map.Axis_Have_Box_Defence );
+	OnTrigger( "^1Axis team has constructed the Box defense!", Map.Axis_Box_Defence_Built );
+	OnTrigger( "^4Allies captured the west bunker!", Map.Axis_Box_Defence_Destroyed );
+	
+	//Allies Tower
+	OnTrigger( "^7Allies is constructing tower base! (10 sec)", Map.Allies_Tower_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 1 tower! (20 sec)", Map.Allies_Tower_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 tower! (30 sec)", Map.Allies_Tower_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 3 tower! (40 sec)", Map.Allies_Tower_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 4 tower! (50 sec)", Map.Allies_Tower_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 5 tower! (60 sec)", Map.Allies_Tower_Cappoint_Captured );
+
+	OnTrigger( "^4Allies constructed tower base!", Map.Allies_Tower_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 1 tower!", Map.Allies_Tower_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 tower!", Map.Allies_Tower_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 3 tower!", Map.Allies_Tower_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 4 tower!", Map.Allies_Tower_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 5 tower!", Map.Allies_Tower_Cappoint_Captured );
+
+	//Allies East Wall
+	OnTrigger( "^7Allies is constructing east wall base! (10 sec)", Map.Allies_EastWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 1 east wall! (15 sec)", Map.Allies_EastWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 east wall! (20 sec)", Map.Allies_EastWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 3 east wall! (25 sec)", Map.Allies_EastWall_Cappoint_Captured );
+
+	OnTrigger( "^4Allies constructed east wall base!", Map.Allies_EastWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 1 east wall!", Map.Allies_EastWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 east wall!", Map.Allies_EastWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 3 east wall!", Map.Allies_EastWall_Cappoint_Captured );
+
+	//Allies North Wall
+	OnTrigger( "^7Allies is constructing north wall base! (10 sec)", Map.Allies_NorthWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 1 north wall! (15 sec)", Map.Allies_NorthWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 north wall! (20 sec)", Map.Allies_NorthWall_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 3 north wall! (25 sec)", Map.Allies_NorthWall_Cappoint_Captured );
+
+	OnTrigger( "^4Allies constructed north wall base!", Map.Allies_NorthWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 1 north wall!", Map.Allies_NorthWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 north wall!", Map.Allies_NorthWall_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 3 north wall!", Map.Allies_NorthWall_Cappoint_Captured );
+
+	//Allies Door
+	OnTrigger( "^7Allies is constructing door high wall! (10 sec)", Map.Allies_Door_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 1 door! (15 sec)", Map.Allies_Door_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 door! (20 sec)", Map.Allies_Door_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 door mg42! (10 sec)", Map.Allies_Door_Cappoint_Captured );
+
+	OnTrigger( "^4Allies constructed door high wall!", Map.Allies_Door_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 1 door!", Map.Allies_Door_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 door!", Map.Allies_Door_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 door mg42!", Map.Allies_Door_Cappoint_Captured );
+
+	//Allies Barrack
+	OnTrigger( "^4Allies added new construction - barrack!", Map.Allies_Barrack_Cappoint_Ready );
+	
+	OnTrigger( "^7Allies is constructing barrack base! (10 sec)", Map.Allies_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 1 barrack! (20 sec)", Map.Allies_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 2 barrack! (35 sec)", Map.Allies_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 3 barrack! (50 sec)", Map.Allies_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 4 barrack! (65 sec)", Map.Allies_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Allies is constructing rank 5 barrack! (80 sec)", Map.Allies_Barrack_Cappoint_Captured );
+
+	OnTrigger( "^4Allies constructed barrack base!", Map.Allies_Barrack_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 1 barrack!", Map.Allies_Barrack_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 2 barrack!", Map.Allies_Barrack_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 3 barrack!", Map.Allies_Barrack_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 4 barrack!", Map.Allies_Barrack_Cappoint_Ready );
+	OnTrigger( "^4Allies constructed rank 5 barrack!", Map.Allies_Barrack_Cappoint_Captured );
+
+	//Axis Tower
+	OnTrigger( "^7Axis is constructing tower base! (10 sec)", Map.Axis_Tower_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 1 tower! (20 sec)", Map.Axis_Tower_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 tower! (30 sec)", Map.Axis_Tower_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 3 tower! (40 sec)", Map.Axis_Tower_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 4 tower! (50 sec)", Map.Axis_Tower_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 5 tower! (60 sec)", Map.Axis_Tower_Cappoint_Captured );
+
+	OnTrigger( "^1Axis constructed tower base!", Map.Axis_Tower_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 1 tower!", Map.Axis_Tower_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 tower!", Map.Axis_Tower_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 3 tower!", Map.Axis_Tower_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 4 tower!", Map.Axis_Tower_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 5 tower!", Map.Axis_Tower_Cappoint_Captured );
+
+	//Axis West Wall
+	OnTrigger( "^7Axis is constructing west wall base! (10 sec)", Map.Axis_WestWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 1 west wall! (15 sec)", Map.Axis_WestWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 west wall! (20 sec)", Map.Axis_WestWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 3 west wall! (25 sec)", Map.Axis_WestWall_Cappoint_Captured );
+
+	OnTrigger( "^1Axis constructed west wall base!", Map.Axis_WestWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 1 west wall!", Map.Axis_WestWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 west wall!", Map.Axis_WestWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 3 west wall!", Map.Axis_WestWall_Cappoint_Captured );
+
+	//Axis North Wall
+	OnTrigger( "^7Axis is constructing south wall base! (10 sec)", Map.Axis_SouthWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 1 south wall! (15 sec)", Map.Axis_SouthWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 south wall! (20 sec)", Map.Axis_SouthWall_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 3 south wall! (25 sec)", Map.Axis_SouthWall_Cappoint_Captured );
+
+	OnTrigger( "^1Axis constructed south wall base!", Map.Axis_SouthWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 1 south wall!", Map.Axis_SouthWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 south wall!", Map.Axis_SouthWall_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 3 south wall!", Map.Axis_SouthWall_Cappoint_Captured );
+
+	//Axis Door
+	OnTrigger( "^7Axis is constructing door high wall! (10 sec)", Map.Axis_Door_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 1 door! (15 sec)", Map.Axis_Door_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 door! (20 sec)", Map.Axis_Door_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 door mg42! (10 sec)", Map.Axis_Door_Cappoint_Captured );
+
+	OnTrigger( "^1Axis constructed door high wall!", Map.Axis_Door_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 1 door!", Map.Axis_Door_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 door!", Map.Axis_Door_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 door mg42!", Map.Axis_Door_Cappoint_Captured );
+
+	//Axis Barrack
+	OnTrigger( "^1Axis added new construction - barrack!", Map.Axis_Barrack_Cappoint_Ready );
+	
+	OnTrigger( "^7Axis is constructing barrack base! (10 sec)", Map.Axis_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 1 barrack! (20 sec)", Map.Axis_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 2 barrack! (35 sec)", Map.Axis_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 3 barrack! (50 sec)", Map.Axis_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 4 barrack! (65 sec)", Map.Axis_Barrack_Cappoint_Captured );
+	OnTrigger( "^7Axis is constructing rank 5 barrack! (80 sec)", Map.Axis_Barrack_Cappoint_Captured );
+
+	OnTrigger( "^1Axis constructed barrack base!", Map.Axis_Barrack_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 1 barrack!", Map.Axis_Barrack_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 2 barrack!", Map.Axis_Barrack_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 3 barrack!", Map.Axis_Barrack_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 4 barrack!", Map.Axis_Barrack_Cappoint_Ready );
+	OnTrigger( "^1Axis constructed rank 5 barrack!", Map.Axis_Barrack_Cappoint_Captured );
+
+	//A few places where combat movements need disabling
+	Trigger1 = OnTriggerRegion(AABB(-3095.289,2581.291,1.125,-2051.835,3406.669,75.125),	RegionTrigger.DisableCombatMovement);
+	Trigger2 = OnTriggerRegion(AABB(147.954,1060.880,1.125,272.568,1485.547,75.125),	RegionTrigger.DisableCombatMovement);
+	Trigger3 = OnTriggerRegion(AABB(-255.584,-1421.673,1.125,-156.424,-1047.957,75.125),	RegionTrigger.DisableCombatMovement);
+	
+	Util.SetGoalOffset( -40, -40, 0, "PLANT_Axis_human_barrier" );
+	
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	Util.DisableGoal( "DYNAMITE.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Allies.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_Axis_Barrack" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Allies_Barrack" );
+	
+//	Issue getting these to work
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Axis_Box_Defence" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allies_Box_Defence" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allies_Box_Defence" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Box_Defence" );
+	
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

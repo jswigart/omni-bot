@@ -1,0 +1,557 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DontDispenseAmmo = true,
+	Checkpoint_flag = "CHECKPOINT_forwardflag",
+	FlagStatus = false,
+	MainGateDyno = 0,
+	East = 0,
+	West = 0,
+	AllCommand = 0,
+	FirstGate = 0,
+	DocStatus = false,
+	DepotStatus = false,
+	WallStatus = false,
+	SpawnPlanted = false,
+	Suicide = MAP_SUICIDE,
+
+	Navigation =
+	{
+		tablejump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.JUMP, 0.25 );
+				sleep( 0.25 );
+			},
+		},
+	},
+
+	forwardflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+		
+		Map.FlagStatus = false;
+	},
+
+	forwardflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = true;
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
+		if ( Map.DepotStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGateAS_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bGate.*" );
+		}
+		if ( Map.SpawnPlanted == true ) {
+			Map.FlagSK();
+		}
+	},
+
+	Supply_Documents_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = true;
+		Map.TransmitDefense();
+	},
+	Supply_Documents_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+		Map.InnerDefense();
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTransmit_.*" );
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				if ( bot.GetReinforceTime() < 11 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+	},
+	Forward_Spawn_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bEngSpawn.*" );
+	},
+	Forward_Spawn_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.SpawnPlanted = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Forward_Spawn_Door.*" );
+		Map.FlagSK();
+	},
+	Depot_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// only try to defuse if depot hasn't been breached
+		Map.EvalDefuse( "DEFUSE_Depot_Gate.*" );
+		Map.GateDefense();
+	},
+	Depot_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Util.EnableGoal( "ROUTE_depotgate" );
+		Map.DepotStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bGate.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Supply_Documents" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+		Util.SetMaxUsersInProgress( 64, "FLAG_Supply_Documents" );  // Everyone can go for it.
+
+		if ( Map.DocStatus == false ) {
+			Map.InnerDefense();
+		}
+	},
+	East_Depot_Wall_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// only try to defuse if depot hasn't been breached
+		Map.EvalDefuse( "DEFUSE_East_Depot_Wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEngEast_.*" );
+	},
+	East_Depot_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Util.EnableGoal( "ROUTE_eastwall" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Supply_Documents" );
+		if ( Map.DepotStatus == false ) {
+			Util.SetMaxUsersInProgress( 3, "FLAG_Supply_Documents" );
+		}
+
+		if ( Map.DocStatus == false ) {
+			Map.InnerDefense();
+		}
+		Map.WallStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bEngEast_.*" );
+	},
+	West_Depot_Wall_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// only try to defuse if depot hasn't been breached
+		Map.EvalDefuse( "DEFUSE_West_Depot_Wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEngWest_.*" );
+	},
+	West_Depot_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Util.EnableGoal( "ROUTE_westwall" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Supply_Documents" );
+		if ( Map.DepotStatus == false ) {
+			Util.SetMaxUsersInProgress( 3, "FLAG_Supply_Documents" );
+		}
+		if ( Map.DocStatus == false ) {
+			Map.InnerDefense();
+		}
+
+		Map.WallStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bEngWest_.*" );
+	},
+	EvalDefuse = function( goal )
+	{
+		if ( Map.DepotStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, goal );
+		}
+	},
+	DocsDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocsAS_.*" );
+	},
+	FlagSK = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlagSK.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rTunnel.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagSKAS_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+	},
+	GateDefense = function()
+	{
+		if ( Map.DocStatus == true ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEngWall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGate.*" );
+	},
+	TransmitDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit_.*" );
+	},
+	InnerDefense = function()
+	{
+		if ( Map.DocStatus == true ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rInner.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_.*" );
+	},
+	EvalFallback = function()
+	{
+		if ( Map.DocStatus == true || Map.DepotStatus == true || Map.WallStatus == true ) {
+			return;
+		}
+
+		Map.GateDefense();
+	},
+	DepotTrigger1 =
+	{
+		Name = "DepotTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( Map.DocStatus == false ) {
+					Map.DocsDefense();  // Fallback into the compound!
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+	FallbackTrigger1 =
+	{
+		Name = "DepotTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( Map.DocStatus == false ) {
+					Map.EvalFallback(); // Fallback into the compound!
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Allied team breached the Forward Spawn Door!", Map.Forward_Spawn_Door_Destroyed );
+	OnTrigger( "Planted at The Forward Spawn Door.", Map.Forward_Spawn_Door_Planted );
+	OnTrigger( "Allies capture the Forward Bunker flag!", Map.forwardflag_Allies_Captured );
+	OnTrigger( "Axis capture the Forward Bunker Flag!", Map.forwardflag_Axis_Captured );
+	OnTrigger( "Allied team breached the Depot Gate!", Map.Depot_Gate_Destroyed );
+	OnTrigger( "Planted at The Depot Gate.", Map.Depot_Gate_Planted );
+	OnTrigger( "Allied team breached the Depot East wall!", Map.East_Depot_Wall_Destroyed );
+	OnTrigger( "Planted at The East Depot Wall.", Map.East_Depot_Wall_Planted );
+	OnTrigger( "Planted at The West Depot Wall.", Map.West_Depot_Wall_Planted );
+	OnTrigger( "Allied team breached the Depot West wall!", Map.West_Depot_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the Supply Documents!", Map.Supply_Documents_Taken );
+	OnTrigger( "Flag returned Supply Documents!", Map.Supply_Documents_Returned );
+
+	t1 = OnTriggerRegion( AABB( 1028.000,-1152.000,15.000,1152.000,-1025.000,89.000 ), Map.DepotTrigger1 );
+	t2 = OnTriggerRegion( AABB( 374.000,-1045.000,15.000,543.000,-998.000,89.000 ), Map.DepotTrigger1 );
+	t3 = OnTriggerRegion( AABB( 192.000,-1646.000,-1.000,370.000,-1575.000,73.000 ), Map.DepotTrigger1 );
+	t4 = OnTriggerRegion( AABB( 794.000,-1839.000,15.000,832.000,-1701.000,89.000 ), Map.DepotTrigger1 );
+
+	g1 = OnTriggerRegion( AABB( -143.000,1231.000,129.000,-99.000,1424.000,247.000 ), Map.FallbackTrigger1 );
+	g2 = OnTriggerRegion( AABB( 831.000,1159.000,175.000,1736.000,1205.000,316.000 ), Map.FallbackTrigger1 );
+
+	// if debugging, draw the triggers
+	if ( Map.Debug ) {
+		ExecCommand( "drawtriggers" );
+	}
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );    // Martin - Fewer allies go for taking it
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	//Attack
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEngSpawn.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Forward_Spawn_Door" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rTunnel.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
+
+	Util.EnableGoal( "CHECKPOINT_forwardflag" );
+	Util.EnableGoal( "CAPPOINT_transmitter" );
+	Util.EnableGoal( "ROUTE.*" );
+	Util.DisableGoal( "ROUTE_westwall" );
+	Util.DisableGoal( "ROUTE_eastwall" );
+	Util.DisableGoal( "ROUTE_depotgate" );
+
+	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 ); // More than docs
+	SetGoalPriority( "DEFEND_rEng.*", 0.90 );
+	SetGoalPriority( "ATTACK_bEng.*", 0.90 );
+
+	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+
+	MapRoutes =
+	{
+		CHECKPOINT_forwardflag =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_mainroad =
+				{
+					Weight = 2,
+					ROUTE_highroad1 = { ROUTE_highroad2 = {},},
+					ROUTE_midroad = {Weight = 2, ROUTE_garage = {},},
+					ROUTE_southroad = {Weight = 2, ROUTE_garage = {},},
+				},
+				ROUTE_cavelow = {ROUTE_garage = {},},
+				ROUTE_cavehigh = {ROUTE_garage = {},},
+			},
+		},
+		DEFEND_rGate_1 =
+		{
+			ROUTE_rRearspawn =
+			{
+				ROUTE_westaxis = {ROUTE_weststeps = {},},
+				ROUTE_eastaxis = {},
+			},
+		},
+		ATTACK_bGate_1 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_tunnel = {ROUTE_tunnel2 = {},},
+				ROUTE_gateroad = {},
+				ROUTE_gatemountain = {},
+				ROUTE_gatetransmit = {},
+			},
+		},
+		CAPPOINT_transmitter =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_ladder =
+				{
+					ROUTE_westwall =
+					{
+						ROUTE_outsidewall =
+						{
+							ROUTE_tunnel = {},
+						},
+					},
+					ROUTE_eastwall = {},
+				},
+				ROUTE_stairwell =
+				{
+					ROUTE_westaxis =
+					{
+						ROUTE_depotgate = {},
+						ROUTE_westwall =
+						{
+							ROUTE_outsidewall = {},
+						},
+					},
+					ROUTE_eastaxis =
+					{
+						ROUTE_eastwall = {},
+						ROUTE_depotgate = {},
+					},
+					ROUTE_axisdoors =
+					{
+						ROUTE_eastwall = {},
+						ROUTE_westwall =
+						{
+							ROUTE_outsidewall = {},
+						},
+					},
+				},
+			},
+
+		},
+		FLAG_Supply_Documents =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_tunnel =
+				{
+					ROUTE_westwall =
+					{
+						Weight = 3,
+						ROUTE_ladder = {Weight = 3,},
+						ROUTE_axisdoors =
+						{
+							Weight = 2,
+							ROUTE_stairwell = {},
+						},
+					},
+					ROUTE_depotgate =
+					{
+						ROUTE_westaxis =
+						{
+							ROUTE_stairwell = {},
+						},
+						ROUTE_eastaxis =
+						{
+							ROUTE_stairwell = {},
+						},
+						ROUTE_ladder = {},
+					},
+				},
+				ROUTE_gatemountain =
+				{
+					ROUTE_depotgate =
+					{
+						Weight = 2,
+						ROUTE_westaxis =
+						{
+							ROUTE_stairwell = {},
+						},
+						ROUTE_eastaxis =
+						{
+							ROUTE_stairwell = {},
+						},
+						ROUTE_ladder = {},
+					},
+					ROUTE_eastwall =
+					{
+						ROUTE_axisdoors =
+						{
+							Weight = 2,
+							ROUTE_stairwell = {},
+						},
+						ROUTE_eastaxis = {},
+					},
+				},
+			},
+		},
+		DEFEND_rDocs_1 =
+		{
+			ROUTE_rRearspawn =
+			{
+				ROUTE_stairwell = {},
+			},
+		},
+	};
+	MapRoutes.FLAG_Supply_Documents.ROUTE_gateroad = MapRoutes.FLAG_Supply_Documents.ROUTE_gatemountain;
+	MapRoutes.FLAG_Supply_Documents.ROUTE_gatetransmit = MapRoutes.FLAG_Supply_Documents.ROUTE_gatemountain;
+	MapRoutes.DEFEND_rGate_2 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_3 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_4 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_5 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_6 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_7 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.DEFEND_rGate_8 = MapRoutes.DEFEND_rGate_1;
+	MapRoutes.ATTACK_bGate_2 = MapRoutes.ATTACK_bGate_1;
+	MapRoutes.ATTACK_bGate_3 = MapRoutes.ATTACK_bGate_1;
+	MapRoutes.ATTACK_bGate_4 = MapRoutes.ATTACK_bGate_1;
+	MapRoutes.ATTACK_bGate_5 = MapRoutes.ATTACK_bGate_1;
+	MapRoutes.ATTACK_bGate_6 = MapRoutes.ATTACK_bGate_1;
+	MapRoutes.DEFEND_rDocs_2 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_3 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_4 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_5 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_6 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_7 = MapRoutes.DEFEND_rDocs_1;
+	
+	Util.Routes( MapRoutes );
+	
+	yield();yield();
+	
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+	
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	//ignore the retarded radio for targeting
+	bot.IgnoreTarget( 154, 9999 );
+};

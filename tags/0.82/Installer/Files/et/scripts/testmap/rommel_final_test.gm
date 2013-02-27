@@ -1,0 +1,52 @@
+global Map =
+{
+	Ammo_Cabinet_t26 = "AMMO_CABINET_t26",
+	Ammo_Cabinet_t24 = "AMMO_CABINET_t24",
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Health_Cabinet_t25 = "HEALTH_CABINET_t25",
+	Health_Cabinet_t22 = "HEALTH_CABINET_t22",
+	Build_allied_compost_built = "MAP_CONSTRUCTION_allied_compost_built",
+	Build_axis_compost_built = "MAP_CONSTRUCTION_axis_compost_built",
+	Destroy_east_gate = "MAP_DYNAMITE_TARGET_east_gate",
+	Destroy_allied_compost_built = "MAP_DYNAMITE_TARGET_allied_compost_built",
+	Destroy_west_gate = "MAP_DYNAMITE_TARGET_west_gate",
+	Flag_access_codes = "MAP_FLAG_access_codes",
+	Cappoint_gate = "MAP_CAPPOINT_gate",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allied passage thru Tank Depot doors ^2ENABLED", TestMap.Pass );
+		OnTrigger( "Allied passage thru Tank Depot doors ^1DENIED", TestMap.Pass );
+		OnTrigger( "Allies have breached the East Gate", TestMap.Pass );
+		OnTrigger( "Allies have breached the West Gate", TestMap.Pass );
+		OnTrigger( "Allies capture the Forward spawn!", TestMap.Pass );
+		OnTrigger( "Axis capture the Forward spawn!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_t24, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_t24, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_t26, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_t26, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_t25, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_t25, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_t22, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_t22, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_compost_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_west_gate, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_compost_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_east_gate, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_access_codes, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_gate, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_gate, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,35 @@
+global Map =
+{
+	Quiet = true,
+	Mount_mg = "MOUNTMG42_mg",
+	Repair_mg = "REPAIRMG42_mg",
+
+	Navigation =
+	{
+		jpad1 =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.SPRINT, 0.25 );
+				sleep( 0.5 );
+				_this.Bot.HoldButton( BTN.FORWARD, 0.5 );
+				sleep( 0.5 );
+			},
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInUse( 1, "MOUNT.*" );
+
+	print( "OnMapLoad" );
+};
+
+
+global OnBotJoin = function( bot )
+{
+
+};

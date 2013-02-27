@@ -1,0 +1,59 @@
+this.SetBaseGoalType("mapgoal_camp.gm");
+
+this.GoalType = "Snipe";
+
+//////////////////////////////////////////////////////////////////////////
+this.BaseInitNewGoal = this.InitNewGoal;
+this.InitNewGoal = function()
+{
+	// call the base goal init before we do custom stuff.
+	if(this.BaseInitNewGoal)
+	{
+		this.BaseInitNewGoal();
+	}
+
+	// fill in all the known sniper weapons by default
+	foreach(i and wpnId in Util.SniperWeapons)
+	{
+		this.Weapons[wpnId] = 1;
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+this.BaseUpgradeVersion = this.UpgradeVersion;
+this.UpgradeVersion = function(Props)
+{
+	initWeaponTable = false;
+	if(Props.Version==0)
+	{
+		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
+		initWeaponTable = true;
+	}
+
+	// call base goal upgrade
+	if(this.BaseUpgradeVersion)
+	{
+		this.BaseUpgradeVersion(Props);
+	}
+
+	if(initWeaponTable)
+	{
+		// fill in all the known sniper weapons by default
+		Props.Weapons = {};
+
+		if (Util.SniperWeapons)
+		{
+			foreach(i and wpnId in Util.SniperWeapons)
+			{
+				Props.Weapons[wpnId] = 1;
+			}
+		}
+		else
+		{
+			Util.MapDebugPrint(this.GoalType + ": Error : No Util.SniperWeapons table");
+		}
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////

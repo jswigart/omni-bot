@@ -1,0 +1,725 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+	FriendlyFire,
+	AxisCaseDyno = 0,
+	AlliedCaseDyno = 0,
+	AxisRamp = 0,
+	FlagStatus = 0,
+	
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 4,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 101,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+	
+	Switches =
+	{
+		// North Gate
+		gate_n_out =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "gate_n_out",
+			LimitClass = Util.AllClasses,
+		},
+		gate_n_in =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "gate_n_in",
+			LimitClass = Util.AllClasses,
+		},
+		// South Gate
+		gate_s_out =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "gate_s_out",
+			LimitClass = Util.AllClasses,
+		},
+		gate_s_in =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "gate_s_in",
+			LimitClass = Util.AllClasses,
+		},
+		bspawnladder =
+		{
+			Enabled = true,
+			Priority = 1.6,
+			WaypointName = "bspawnladder",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.ALLIES ), // Allies should try to keep this open always
+			LimitClass = Util.AllClasses,
+		},
+		trainladder =
+		{
+			Enabled = true,
+			Priority = 0.51,
+			WaypointName = "trainswitch",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.ALLIES ), // Allies should try to keep this open always
+			LimitClass = Util.AllClasses,
+		},		
+		coalramp =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "coalrampswitch",
+			LimitBots = 1,
+			LimitClass = Util.AllClasses,
+		},
+		axisramp =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "coalrampswitch",
+			LimitBots = 1,
+			LimitClass = Util.AllClasses,
+		},
+	},
+	
+	Allied_Packing_Case_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.AlliedCaseDyno -= 1;
+		
+		if (Map.AlliedCaseDyno < 1)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rCover.*" );
+		}
+
+		print( "Allied_Packing_Case_Defused" );
+	},
+	
+	Allied_Packing_Case_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.AlliedCaseDyno += 1;
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCover.*" );
+
+		print( "Allied_Packing_Case_Planted" );
+	},
+	
+	Allied_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Packing_Case_Destroyed" );
+	},
+
+	Axis_Packing_Case_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.AxisCaseDyno -= 1;
+		
+		if (Map.AxisCaseDyno < 1)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bCover.*" );
+		}
+
+		print( "Axis_Packing_Case_Defused" );
+	},
+	
+	Axis_Packing_Case_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.AxisCaseDyno += 1;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCover.*" );
+		
+		print( "Axis_Packing_Case_Planted" );
+	},
+	
+	Axis_Packing_Case_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Packing_Case_Destroyed" );
+	},
+
+	Central_Foundry_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_Destroyed" );
+	},
+	
+	Central_Foundry_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_Planted" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Central_Foundry_Door.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Central_Foundry_Door.*" );
+	},
+
+	Central_Foundry_Door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Central_Foundry_Door_1_Destroyed" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bswatrium" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+		Map.FlagStatus = TEAM.AXIS;
+
+		print( "flag_respawn_obj_Axis_Captured" );
+		
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bswatrium" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
+		Map.FlagStatus = TEAM.ALLIES;
+
+		print( "flag_respawn_obj_Allies_Captured" );
+	},
+	
+	gate_north = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Gate Opening
+		if ( vel.x < 0 ) {
+			Util.MapDebugPrint( "North Opening" );
+			Map.Switches.gate_n_out.Enabled = false;
+			Map.Switches.gate_n_in.Enabled = false;
+		}
+		// Gate Closing
+		else
+		{
+			Util.MapDebugPrint( "North Closing" );
+			Map.Switches.gate_n_out.Enabled = true;
+			Map.Switches.gate_n_in.Enabled = true;
+		}
+	},
+	gate_south = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Gate Opening
+		if ( vel.x > 0 ) {
+			Util.MapDebugPrint( "South Opening" );
+			Map.Switches.gate_s_out.Enabled = false;
+			Map.Switches.gate_s_in.Enabled = false;
+		}
+		// Gate Closing
+		else
+		{
+			Util.MapDebugPrint( "South Closing" );
+			Map.Switches.gate_s_out.Enabled = true;
+			Map.Switches.gate_s_in.Enabled = true;
+		}
+	},
+	allied_ladder = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Ladder Lowering
+		if ( vel.z < 0 ) {
+			Util.MapDebugPrint( "Spawn Ladder Lowering" );
+			Map.Switches.trainladder.Priority = 0;
+			Map.Switches.bspawnladder.LimitTeam = ( 1 << TEAM.AXIS );
+		}
+		// Ladder Raising
+		else
+		{
+			Util.MapDebugPrint( "Spawn Ladder Raising" );
+			Map.Switches.trainladder.Priority = 0.6;
+			Map.Switches.bspawnladder.LimitTeam = ( 1 << TEAM.ALLIES );
+		}
+	},
+	
+	train_ladder = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Ladder Lowering
+		if ( vel.z < 0 ) {
+			Util.MapDebugPrint( "Train Ladder Lowering" );
+			Map.Switches.trainladder.Priority = 0;
+			Map.Switches.trainladder.LimitTeam = ( 1 << TEAM.AXIS );
+		}
+		// Ladder Raising
+		else
+		{
+			Util.MapDebugPrint( "Train Ladder Raising" );
+			Map.Switches.trainladder.Priority = 0.51;
+			Map.Switches.trainladder.LimitTeam = ( 1 << TEAM.ALLIES );
+		}
+	},
+	coal_ramp = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Ramp Lowering
+		if ( vel.z < 0 ) {
+			Util.MapDebugPrint( "Coal Ramp Lowering" );
+			Wp.SetWaypointFlag( "coalramp1", "closed", false );
+			Wp.SetWaypointFlag( "coalramp2", "closed", false );
+		}
+		// Ramp Raising
+		else
+		{
+			Util.MapDebugPrint( "Coal Ramp Raising" );
+			Wp.SetWaypointFlag( "coalramp1", "closed", true );
+			Wp.SetWaypointFlag( "coalramp2", "closed", true );
+		}
+	},
+	
+	axis_ramp = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		
+		//Map.AxisRamp == 0 ? 1 : 0;
+		if (Map.AxisRamp == 0){
+			Map.AxisRamp = 1;}
+		else{
+			Map.AxisRamp = 0;}
+		
+
+		vel = ToVector( trigger.Action );
+		// Ramp Lowering
+		if ( Map.AxisRamp ) {
+			Util.MapDebugPrint( "Axis Ramp Lowering" );
+		}
+		// Ramp Raising
+		else
+		{
+			Util.MapDebugPrint( "Axis Ramp Raising" );
+		}
+	},
+	
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+				b.DisableBotPush( true );
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+				b.DisableBotPush( false );
+			}
+		},
+	},
+	
+	AlliedCase =
+	{
+		Name = "AlliedCase",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.ALLIES ) {
+						bot.SayTeam( "Axis are planting at the Packing Case!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	
+	AxisCase =
+	{
+		Name = "AlliedCase",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at the Packing Case!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp("PLANT_Allied_Packing_Case", "bcase");
+	Util.AddUseWp("PLANT_Axis_Packing_Case", "rcase");
+	Util.AddUseWp("PLANT_Central_Foundry_Door", "door1");
+	Util.AddUseWp("PLANT_Central_Foundry_Door", "door2");
+	
+	Wp.SetWaypointFlag( "coalramp1", "closed", true );
+	Wp.SetWaypointFlag( "coalramp2", "closed", true );
+	
+	tTurntable = OnTriggerRegion( AABB( 1192.000,-8904.000,66.000,2152.000,-7978.000,150.000 ), Map.DisableCombatMove );
+	
+	bCaseMsg = OnTriggerRegion( AABB( 1565.000,-9768.000,52.000,1813.000,-9526.000,140.000 ), Map.AlliedCase );
+	rCaseMsg = OnTriggerRegion( AABB( 636.000,1064.000,66.000,866.000,1307.000,141.000 ), Map.AxisCase );
+		
+	OnTrigger( "Defused at the Allied Packing Case.", Map.Allied_Packing_Case_Defused );
+	OnTrigger( "Planted at the Allied Packing Case.", Map.Allied_Packing_Case_Planted );
+	OnTrigger( "MISSING_STRING", Map.Allied_Packing_Case_Destroyed );
+	OnTrigger( "Defused at the Axis Packing Case.", Map.Axis_Packing_Case_Defused );
+	OnTrigger( "Planted at the Axis Packing Case.", Map.Axis_Packing_Case_Planted );
+	OnTrigger( "MISSING_STRING", Map.Axis_Packing_Case_Destroyed );
+	OnTrigger( "the Central Foundry Door Destroyed.", Map.Central_Foundry_Door_Destroyed );
+	OnTrigger( "Planted at the Central Foundry Door.", Map.Central_Foundry_Door_Planted );
+	//OnTrigger( "MISSING_STRING", Map.Central_Foundry_Door_1_Destroyed );
+	OnTrigger( "Axis captures the Foundry Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "Allies capture the Foundry Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "southdoor1_goto", Map.gate_south );
+	OnTrigger( "northdoor1_goto", Map.gate_north );
+	OnTrigger( "ladder1_goto", Map.allied_ladder );
+	OnTrigger( "ladder3_goto", Map.train_ladder );
+	OnTrigger( "ladder4_goto", Map.coal_ramp );
+	OnTrigger( "ladder2activate", Map.axis_ramp );
+	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "CAMP.*", {mincamptime=15, maxcamptime=25});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});	
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+	RTCWUtil.SetPrimaryGoals(1.0);
+	
+	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCover.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Central_Foundry_Door" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rdual.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCover.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Central_Foundry_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bdual.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_bspawnladder" );
+	
+	SetGoalPriority("ATTACK.*", 0.45);
+	SetGoalPriority( "CAMP.*", 0.95); // dedicated defends
+	SetGoalPriority( "AIRSTRIKE.*", 0.94 );
+	SetGoalPriority( "AIRSTRIKE_bswatrium", 0.93 ); //Less than cover at OBJ
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
+	
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "CAMP.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT_Central.*" );
+	
+	MapRoutes =
+	{
+		PLANT_Allied_Packing_Case =
+		{
+			ROUTE_flagspawn = 
+			{
+				ROUTE_supper =
+				{
+					ROUTE_motorpoolupper =
+					{
+						ROUTE_bsidehall =
+						{
+							Weight = 2,
+							ROUTE_turntablen = {},
+							ROUTE_swtunnel = {},
+						},
+						ROUTE_turntablenw = {},
+						ROUTE_turntabletunnel = {},
+					},
+					ROUTE_upperdeliveryroom =
+					{
+						ROUTE_turntablene = {},
+					},
+					ROUTE_centralsteps =
+					{
+						ROUTE_smidtrain = 
+						{
+							ROUTE_turntablene = {},
+						},
+					},
+				},
+				ROUTE_sleepingquarters =
+				{
+					ROUTE_deliveryroom =
+					{
+						ROUTE_turntablene = {},
+					},
+				},
+				ROUTE_swatrium =
+				{
+					ROUTE_turntablenw = {},
+					ROUTE_turntabletunnel = {},
+				},
+			},
+			ROUTE_rspawnmid =
+			{
+				ROUTE_nmidtrain = {},
+				ROUTE_nwatrium =
+				{
+					ROUTE_sleepingquarters = {},
+					ROUTE_swatrium = {},
+				},
+				ROUTE_switchroom =
+				{
+					ROUTE_nupper =
+					{
+						ROUTE_supper = {},
+					},
+				},
+			},
+		},
+		PLANT_Axis_Packing_Case =
+		{
+			ROUTE_flagspawn = 
+			{
+				ROUTE_nwatrium = 
+				{
+					Weight = 2,
+					ROUTE_swboxes =
+					{
+						ROUTE_axistrain = {},
+						ROUTE_axistrees = {},
+						ROUTE_rwesttunnel = {},
+						ROUTE_axisbasement =
+						{
+							ROUTE_rearhut = {ROUTE_neconnection={},},
+						},
+					},
+				},
+				ROUTE_cafeteria =
+				{
+					ROUTE_storageroom =
+					{
+						ROUTE_seboxes =
+						{
+							ROUTE_axistrain = {},
+							ROUTE_axistrees = {},
+							ROUTE_rwesttunnel = {},
+							ROUTE_axisbasement =
+							{
+								ROUTE_rearhut = {ROUTE_neconnection={},},
+							},
+						},
+						ROUTE_rsouthtunnel = {ROUTE_rwesttunnel={},},
+					},
+				},
+				ROUTE_nupper =
+				{
+					Weight = 2,
+					ROUTE_coalupper =
+					{
+						ROUTE_swboxes =
+						{
+							ROUTE_axistrain = {},
+							ROUTE_axistrees = {},
+							ROUTE_rwesttunnel = {},
+						},
+					},
+					ROUTE_boxcarupper =
+					{
+						Weight = 2,
+						ROUTE_seboxes =
+						{
+							ROUTE_axistrain = {},
+							ROUTE_axistrees = {},
+							ROUTE_rwesttunnel = {},
+						},
+						ROUTE_rsouthtunnel = {ROUTE_rwesttunnel={},},
+						ROUTE_switchroom =
+						{
+							Weight = 3,
+							ROUTE_rearhut = {ROUTE_neconnection={},},
+						},
+					},
+					ROUTE_centralsteps =
+					{
+						ROUTE_nmidtrain =
+						{
+							ROUTE_seboxes =
+							{
+								ROUTE_axistrain = {},
+								ROUTE_axistrees = {},
+								ROUTE_rwesttunnel = {},
+							},
+							ROUTE_rsouthtunnel = {ROUTE_rwesttunnel={},},
+						},
+					},
+				},
+			},
+			ROUTE_bspawnmid =
+			{
+				ROUTE_smidtrain = {},
+				ROUTE_swatrium =
+				{
+					ROUTE_cafeteria = {},
+					ROUTE_nwatrium = {},
+				},
+				ROUTE_turntablen =
+				{
+					ROUTE_bsidehall =
+					{
+						ROUTE_nupper = {},
+					},
+				},
+				ROUTE_nupper = {},
+			},
+		},
+	};
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_smidtrain = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_centralsteps;
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_nupper = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_nupper;
+	MapRoutes.PLANT_Axis_Packing_Case.ROUTE_bspawnmid.ROUTE_turntablen.ROUTE_bsidehall.ROUTE_nupper = MapRoutes.PLANT_Axis_Packing_Case.ROUTE_flagspawn.ROUTE_nupper;
+	
+	MapRoutes.PLANT_Allied_Packing_Case.ROUTE_rspawnmid.ROUTE_nmidtrain = MapRoutes.PLANT_Allied_Packing_Case.ROUTE_flagspawn.ROUTE_centralsteps;
+	MapRoutes.PLANT_Allied_Packing_Case.ROUTE_rspawnmid.ROUTE_switchroom.ROUTE_nupper.ROUTE_supper = MapRoutes.PLANT_Allied_Packing_Case.ROUTE_flagspawn.ROUTE_supper;
+	
+	
+	MapRoutes.DEFEND_rCover1 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.DEFEND_rCover2 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.DEFEND_rCover3 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.DEFEND_rCover4 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.DEFEND_rCover5 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.ATTACK_rAttack_1 = MapRoutes.PLANT_Allied_Packing_Case;
+	MapRoutes.AIRSTRIKE_rCover1 = MapRoutes.PLANT_Allied_Packing_Case;
+	
+	MapRoutes.DEFEND_bCover1 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.DEFEND_bCover2 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.DEFEND_bCover3 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.DEFEND_bCover4 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.DEFEND_bCover5 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.ATTACK_bAttack_1 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.AIRSTRIKE_bCover1 = MapRoutes.PLANT_Axis_Packing_Case;
+	MapRoutes.AIRSTRIKE_bCover2 = MapRoutes.PLANT_Axis_Packing_Case;
+	//MapRoutes.ROUTE_bspawnmid.ROUTE_swatrium
+	
+	Util.Routes( MapRoutes );	
+	Util.UpdateSwitchData();
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	
+	//select spawn point and change class if necessary
+	//RTCWUtil.SetDualObjective(bot);
+};

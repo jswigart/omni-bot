@@ -1,0 +1,294 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+
+	Airstrike =
+	{
+		bsk1 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bASsk_1",
+		},
+		bsk2 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bASsk_2",
+		},
+		bsk3 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bASsk_3",
+		},
+	},
+
+	Navigation =
+	{
+		spawnjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				sleep( 0.5 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 0.25 );
+				sleep( 3 );
+			},
+		},
+		ladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+	},
+
+	Switches =
+	{
+		gate1 =
+		{
+			Enabled = true,
+			Priority = 0.0, // paththrough
+			WaypointName = "gate1",
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitBots = 2,
+		},
+		gate2 =
+		{
+			Enabled = false,
+			Priority = 0.0, // paththrough
+			WaypointName = "gate2",
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitBots = 2,
+		},
+	},
+
+	gate_lever = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+
+		Map.Switches.gate1.Enabled = false;
+		Map.Switches.gate2.Enabled = false;
+	},
+
+	gate_trigger = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+
+		if ( vel.y < 0 ) {
+			Map.Switches.gate1.Enabled = false;
+			Map.Switches.gate2.Enabled = false;
+		} else if ( vel.y > 0 )   {
+			Map.Switches.gate1.Enabled = true;
+			Map.Switches.gate2.Enabled = true;
+		}
+	},
+	allies_uoffice = function()
+	{
+		print( "allies - Upper Office" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_uoffice.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Upper Office" );
+	},
+	allies_nwc = function()
+	{
+		print( "Allies - NWC" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_NWC.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp NWC" );
+	},
+	allies_loffice = function()
+	{
+		print( "allies - Lower Office" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_loffice.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Lower Office" );
+	},
+	allies_net = function()
+	{
+		print( "allies - NET" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_net.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp NET" );
+	},
+	allies_r1 = function()
+	{
+		print( "allies - r1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_r1.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Radar 1" );
+	},
+	allies_steps = function()
+	{
+		print( "allies - steps" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_steps.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Steps" );
+	},
+	allies_r2 = function()
+	{
+		print( "allies - r2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_r2.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Radar 2" );
+	},
+	allies_wh = function()
+	{
+		print( "allies - r2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_wh.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Warehouse" );
+	},
+	// Martin - Axis Camps
+	axis_uoffice = function()
+	{
+		print( "Axis - Upper Office" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_uoffice.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Upper Office" );
+	},
+	axis_nwc = function()
+	{
+		print( "Axis - NWC" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_NWC.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp NWC" );
+	},
+	axis_loffice = function()
+	{
+		print( "Axis - Lower Office" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_loffice.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Lower Office" );
+	},
+	axis_net = function()
+	{
+		print( "Axis - NET" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_net.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp NET" );
+	},
+	axis_r1 = function()
+	{
+		print( "Axis - r1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_r1.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Radar 1" );
+	},
+	axis_r2 = function()
+	{
+		print( "Axis - r2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_r2.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Radar 2" );
+	},
+	axis_steps = function()
+	{
+		print( "Axis - steps" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_steps.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Steps" );
+	},
+	axis_wh = function()
+	{
+		print( "Axis - r2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_wh.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Warehouse" );
+	},
+
+	toggle_attack = function()
+	{
+		count = -1;
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+			if ( count % 120 == 0 ) {
+				attackPoint = RandInt( 0,8 );
+				//print("toggling");
+				if ( attackPoint == 0 ) {
+					Map.allies_uoffice();
+					Map.axis_uoffice();
+				} else if ( attackPoint == 1 )   {
+					Map.allies_nwc();
+					Map.axis_nwc();
+				} else if ( attackPoint == 2 )   {
+					Map.allies_loffice();
+					Map.axis_loffice();
+				} else if ( attackPoint == 3 )   {
+					Map.allies_net();
+					Map.axis_net();
+				} else if ( attackPoint == 4 )   {
+					Map.allies_r1();
+					Map.axis_r1();
+				} else if ( attackPoint == 5 )   {
+					Map.allies_r2();
+					Map.axis_r2();
+				} else if ( attackPoint == 6 )   {
+					Map.allies_steps();
+					Map.axis_steps();
+				} else
+				{
+					Map.allies_wh();
+					Map.axis_wh();
+				}
+
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "base_lever1_goto", Map.gate_lever );
+	OnTrigger( "base_gate1_goto", Map.gate_trigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+	thread( Map.toggle_attack );
+
+	Util.UpdateSwitchData();
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	//RTCWUtil.SelectSoldierWeapons(0, bot, WEAPON.VENOM, WEAPON.FLAMETHROWER);
+};
