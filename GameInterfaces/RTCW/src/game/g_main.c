@@ -83,8 +83,6 @@ vmCvar_t g_kickItems; // bit flagged. 0 disable 1 grenades 2 airstrike
 vmCvar_t g_binocs; // bit flagged. 0 disable 1 soldiers 2 engineers 4 medics
 vmCvar_t g_unlockWeapons;
 vmCvar_t g_flagLock; // checkpoints can't be recaptured
-vmCvar_t g_venomSpread;
-vmCvar_t g_venomDamage;
 
 // zinx etpro antiwarp
 vmCvar_t g_antiwarp;
@@ -226,14 +224,7 @@ vmCvar_t url;
 
 vmCvar_t g_dbgRevive;
 
-vmCvar_t g_dynoFuseTime;
-
-
 cvarTable_t gameCvarTable[] = {
-	// debug vars
-
-	{ &g_dynoFuseTime,              "g_dynoFuseTime",               "30000",                CVAR_CHEAT,                                         0,          qfalse },
-
 	// default vars
 	{ &g_cheats,                    "sv_cheats",                    "",                     0,                                                  0,          qfalse },
 	{ NULL,                         "gamename",                     GAMEVERSION,			CVAR_SERVERINFO | CVAR_ROM,							0,          qfalse },
@@ -374,11 +365,9 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_betting,                   "g_betting",                    "0",                    0,                                                  0,          qfalse },
 	{ &g_muteSpecs,                 "g_muteSpecs",                  "0",                    0,                                                  0,          qfalse },
 	{ &g_kickItems,                 "g_kickItems",                  "0",                    0,                                                  0,          qfalse },
-	{ &g_binocs,                    "g_binocs",                     "0",                    0,                                                  0,          qfalse },
-	{ &g_unlockWeapons,             "g_unlockWeapons",              "0",                    0,                                                  0,          qfalse },
-	{ &g_flagLock,                  "g_flagLock",                   "0",                    CVAR_LATCH,                                         0,          qfalse },
-	{ &g_venomSpread,               "g_venomSpread",                "600",                  0,                                                  0,          qfalse },
-	{ &g_venomDamage,               "g_venomDamage",                "20",                   0,                                                  0,          qfalse },
+	{ &g_binocs,                    "g_binocs",						"0",                    0,                                                  0,          qfalse },
+	{ &g_unlockWeapons,             "g_unlockWeapons",				"0",                    0,                                                  0,          qfalse },
+	{ &g_flagLock,                  "g_flagLock",				    "0",                    CVAR_LATCH,                                         0,          qfalse },
 
 	// zinx etpro antiwarp
 	{ &g_maxWarp,                   "g_maxWarp",                    "4",                    0 },
@@ -1810,7 +1799,6 @@ void ExitLevel( void ) {
 	level.intermissiontime = 0;
 
 	// reset all the scores so we don't enter the intermission again
-	// cs: also reset the spawn point selection.
 	level.teamScores[TEAM_RED] = 0;
 	level.teamScores[TEAM_BLUE] = 0;
 	for ( i = 0 ; i < g_maxclients.integer ; i++ ) {
@@ -1818,7 +1806,6 @@ void ExitLevel( void ) {
 		if ( cl->pers.connected != CON_CONNECTED ) {
 			continue;
 		}
-		cl->sess.spawnObjectiveIndex = 0;
 		cl->ps.persistant[PERS_SCORE] = 0;
 	}
 
@@ -1830,7 +1817,7 @@ void ExitLevel( void ) {
 	for ( i = 0 ; i < g_maxclients.integer ; i++ ) {
 
 		if ( level.clients[i].pers.connected == CON_CONNECTED ) {
-		    level.clients[i].pers.connected = CON_CONNECTING;
+			level.clients[i].pers.connected = CON_CONNECTING;
 		}
 	}
 

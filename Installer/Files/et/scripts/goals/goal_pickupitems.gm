@@ -52,7 +52,7 @@ this.Exit = function()
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
-	if ( !this.Bot || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
+	if ( this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
 		return;
 	}
 
@@ -72,7 +72,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 		{
 			if ( this.Bot.Health < this.Bot.MaxHealth ) {
 				this.TargetEntity = ent;
-				this.Priority = 1.2 - 0.7 * this.Bot.Health / this.Bot.MaxHealth;
+				this.Priority = this.PickupPriority;
 			}
 		}
 	}

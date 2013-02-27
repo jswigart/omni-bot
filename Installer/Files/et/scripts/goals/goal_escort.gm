@@ -195,10 +195,8 @@ this.Update = function()
 		}
 
 		deadCheckInterval = 20; // frames
-		stuckCheckInterval = 0;
-		jumpCounter = 0;
 //		res = null;
-		while(1)
+		while(!this.Bot.IsStuck(2))
 		{
 			// check every second (20 frames) so they can leave if damaged while already escorting
 			deadCheckInterval -= 1;
@@ -231,24 +229,15 @@ this.Update = function()
 				dist = this.Bot.DistanceTo(offsetPos);
 				if ( dist < 128 ) {
 					this.Bot.MoveTowards(offsetPos, 8, MoveMode.Walk);
-					stuckCheckInterval = 0;
+				}
+				else if ( dist > 128 && dist < 512 ){
+					this.Bot.MoveTowards(offsetPos, 8, MoveMode.Run);
 				}
 				else {
-					this.Bot.MoveTowards(offsetPos, 8, MoveMode.Run);
-					stuckCheckInterval += 1;
-					if ( stuckCheckInterval > 40 ) {
-						stuckCheckInterval = 0;
-						if (jumpCounter < 2) {
-							jumpCounter += 1;
-							this.Bot.PressButton(BTN.JUMP);
-						} else {
-							jumpCounter = 0;
-							// repath
-							this.ReleaseAimRequest();
-							if ( this.Goto(offsetPos) == EVENT.PATH_FAILED ) {
-								this.Finished();
-							}
-						}
+					// repath
+					this.ReleaseAimRequest();
+					if ( this.Goto(offsetPos) == EVENT.PATH_FAILED ) {
+						this.Finished();
 					}
 				}
 			}

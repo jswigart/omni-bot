@@ -33,10 +33,6 @@ this.Initialize = function()
 		this.TestPrivateVoice = false;
 		this.TestSpawnEvent = false;
 		this.TestChangeTeam = false;
-		this.TestScriptMsg = false;
-		this.TestDisconnected = false;
-		this.TestChangeClass = false;
-		this.TestWeaponChange = false;
 	}
 	else
 	{
@@ -98,7 +94,7 @@ this.Events[EVENT.TEAM_VOICE] = function(whosaidit, id)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-this.Events[EVENT.PRIVATE_VOICE] = function(whosaidit, id)
+this.Events[EVENT.PRIVATE_VOICE ] = function(whosaidit, id)
 {
 	if ( this.TestAll == true || this.TestPrivateVoice == true )
 	{
@@ -195,57 +191,18 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 {
 	if ( this.TestAll == true || this.TestWeaponFire == true )
 	{
-		print(this.Bot.Name, " WEAPON FIRE ", Util.WeaponName(weaponId), projectileEntity);
+		print(this.Bot.Name, " WEAPON FIRE ", weaponId, projectileEntity);
 	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////////
+
 
 this.Events[EVENT.CHANGETEAM] = function(team)
 {
 	if ( this.TestAll == true || this.TestChangeTeam == true )
 	{
 		print(this.Bot.Name, " changed team to", Util.TeamName(team));
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////////
-
-this.Events[EVENT.SCRIPTMSG] = function(msg, data1, data2, data3)
-{
-	if ( this.TestAll || this.TestScriptMsg )
-	{
-		print(this.Bot.Name, " script messsage", msg, data1, data2, data3);
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////////
-
-this.Events[EVENT.DISCONNECTED] = function()
-{
-	if ( this.TestAll || this.TestDisconnected )
-	{
-		print(this.Bot.Name, " EVENT.DISCONNECTED");
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////////
-
-this.Events[EVENT.CHANGECLASS] = function(newclass)
-{
-	if ( this.TestAll || this.TestChangeClass )
-	{
-		print(this.Bot.Name, " changed class to", Util.ClassName(newclass));
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////////
-
-this.Events[EVENT.WEAPON_CHANGE] = function(weapon)
-{
-	if ( this.TestAll || this.TestWeaponChange )
-	{
-		print(this.Bot.Name, " changed weapon", Util.WeaponName(weapon));
 	}
 };
 

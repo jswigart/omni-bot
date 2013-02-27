@@ -20,7 +20,7 @@ this.PrimaryFire.MaxAimError = Vector2(0, 0);
 this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
 
 this.PrimaryFire.SetTargetBias(CLASS.VEHICLE_HVY, 1);
-this.PrimaryFire.DefaultDesirability = 0.2;
+this.PrimaryFire.DefaultDesirability = 0.0;
 //~ this.PrimaryFire.SetDesirabilityRange(256, 500, 0.4);
 this.PrimaryFire.SetDesirabilityRange(400, 4000, 0.8);
 

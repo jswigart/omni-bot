@@ -13,8 +13,12 @@ this.PrimaryFire.WeaponType = "instant";
 this.PrimaryFire.ProjectileSpeed = 1000;
 this.PrimaryFire.RequiresAmmo = true;
 this.PrimaryFire.WaterProof = false;
+this.PrimaryFire.SplashDamage = false;
 this.PrimaryFire.InheritsVelocity = false;
 this.PrimaryFire.ProjectileGravity = 0.0;
+this.PrimaryFire.NeedsInRange = false;
+this.PrimaryFire.MinRange = 0.0;
+this.PrimaryFire.MaxRange = 1000.0;
 this.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.0);
 
 this.PrimaryFire.MaxAimError = Vector2(0, 0);

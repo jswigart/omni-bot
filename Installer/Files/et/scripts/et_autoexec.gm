@@ -46,15 +46,11 @@ global PostMapLoad = function()
 		Util.InitializeClassTables();
 	}
 
-	if ( Map && Map.SnipeMap
-		|| GetModName()=="Jaymod" && GetCvar("g_sniperwar")==1
-		|| GetModName()=="nitmod" && GetCvar("g_war")==2 )
+	if ( Map && Map.SnipeMap )
 	{
 		Util.SnipeMap();
 	}
-	else if ( Map && Map.PanzerMap
-		|| GetModName()=="Jaymod" && GetCvar("g_panzerwar")==1
-		|| GetModName()=="nitmod" && GetCvar("g_war")==1 )
+	else if ( Map && Map.PanzerMap )
 	{
 		ETUtil.PanzerMap();
 	}
@@ -91,17 +87,6 @@ global PostMapLoad = function()
 			Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 2;
 			Server.MinClassCount[TEAM.ALLIES][CLASS.COVERTOPS] = 1;
 			Server.MinClassCount[TEAM.ALLIES][CLASS.FIELDOPS] = 2;
-
-			if (CLASS.SCIENTIST)
-			{
-				Server.MinClassCount[TEAM.AXIS][CLASS.SCIENTIST] = 1;
-				Server.MinClassCount[TEAM.ALLIES][CLASS.SCIENTIST] = 1;
-			}
-			if (CLASS.SUPER_SOLDIER)
-			{
-				Server.MinClassCount[TEAM.AXIS][CLASS.SUPER_SOLDIER] = 1;
-				Server.MinClassCount[TEAM.ALLIES][CLASS.SUPER_SOLDIER] = 1;
-			}
 		}
 	}
 

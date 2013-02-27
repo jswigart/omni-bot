@@ -18,12 +18,6 @@
 #define GAMEVERSION "omnibot"
 // done.
 
-#define MAXBOTDIFFICULTY    7
-
-#define WEAPONUNLOCK_WEAPONS  1 // any class can spawn with or pickup soldier weapons
-#define WEAPONUNLOCK_NOSPAWN  2 // can pickup, but cannot spawn with the weapon
-#define WEAPONUNLOCK_HANDICAP 4 // non-soldiers aren't as effective with soldier weapons
-
 #define BODY_QUEUE_SIZE     8
 
 #define INFINITE            1000000
@@ -417,25 +411,25 @@ typedef struct {
 // time and reading them back at connection time.  Anything added here
 // MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData()
 typedef struct {
-    team_t sessionTeam;
-    int spectatorTime;              // for determining next-in-line to play
-    spectatorState_t spectatorState;
-    int spectatorClient;            // for chasecam and follow mode
-    int wins, losses;               // tournament stats
-    int playerType;                 // DHM - Nerve :: for GT_WOLF
-    int playerWeapon;               // DHM - Nerve :: for GT_WOLF
-    int playerWeapon2;
-    int playerItem;                 // DHM - Nerve :: for GT_WOLF
-    int playerSkin;                 // DHM - Nerve :: for GT_WOLF
-    int spawnObjectiveIndex;         // JPW NERVE index of objective to spawn nearest to (returned from UI)
-    int latchPlayerType;            // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerWeapon;          // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerWeapon2;
-    int latchPlayerItem;            // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerSkin;            // DHM - Nerve :: for GT_WOLF not archived
-    qboolean botSuicide;            // CS: if true, bots will /kill 2 seconds before their next spawn
-    qboolean botSuicidePersist;
-    qboolean botPush;               // CS: in some cases we don't want bots pushing
+	team_t sessionTeam;
+	int spectatorTime;              // for determining next-in-line to play
+	spectatorState_t spectatorState;
+	int spectatorClient;            // for chasecam and follow mode
+	int wins, losses;               // tournament stats
+	int playerType;                 // DHM - Nerve :: for GT_WOLF
+	int playerWeapon;               // DHM - Nerve :: for GT_WOLF
+	int playerWeapon2;
+	int playerItem;                 // DHM - Nerve :: for GT_WOLF
+	int playerSkin;                 // DHM - Nerve :: for GT_WOLF
+	int spawnObjectiveIndex;         // JPW NERVE index of objective to spawn nearest to (returned from UI)
+	int latchPlayerType;            // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerWeapon;          // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerWeapon2;
+	int latchPlayerItem;            // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerSkin;            // DHM - Nerve :: for GT_WOLF not archived
+	qboolean botSuicide;            // CS: if true, bots will /kill 2 seconds before their next spawn
+	qboolean botSuicidePersist;
+	qboolean botPush;               // CS: in some cases we don't want bots pushing
     int credits;
     gentity_t *currentBetTarget;
     int currentBetAmount;
@@ -1330,9 +1324,6 @@ extern vmCvar_t g_kickItems;
 extern vmCvar_t g_binocs;
 extern vmCvar_t g_unlockWeapons;
 extern vmCvar_t g_flagLock;
-extern vmCvar_t g_venomSpread;
-extern vmCvar_t g_venomDamage;
-extern vmCvar_t g_dynoFuseTime;
 
 // zinx etpro antiwarp
 extern vmCvar_t g_antiwarp;

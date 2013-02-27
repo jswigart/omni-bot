@@ -607,7 +607,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_allied_.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Assault_Ramp" );
-	ETUtil.LimitToClass( "RIDE_truck", TEAM.ALLIES, CLASS.ENGINEER );
+	ETUtil.LimitToClass( "RIDE_truck", CLASS.ENGINEER );
 
 	// Flag communication cable waypoint closed until cables are built
 	Wp.SetWaypointFlag("cables1", "closed", true);

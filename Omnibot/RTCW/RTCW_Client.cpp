@@ -46,7 +46,7 @@ public:
 protected:
 };
 
-class Incapacitated : public StateSimultaneous
+class Incapacitated : public StateChild
 {
 public:
 	obReal GetPriority() 
@@ -56,11 +56,18 @@ public:
 
 	State::StateStatus Update(float fDt) 
 	{
+		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
+		{
+			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
+			{
+				InterfaceFuncs::GoToLimbo(GetClient());
+			}
+		}
 		GetClient()->SetMovementVector(Vector3f::ZERO);
 		return State_Busy; 
 	}
 
-	Incapacitated() : StateSimultaneous("Incapacitated") 
+	Incapacitated() : StateChild("Incapacitated") 
 	{
 	}
 protected:
@@ -73,8 +80,7 @@ RTCW_Client::RTCW_Client() :
 	m_HealthEntityDistance(1000.0f),
 	m_AmmoEntityDistance(2000.0f),
 	m_WeaponEntityDistance(1500.0f),
-	m_ProjectileEntityDistance(500.0f),
-	m_StrafeJump(0)
+	m_ProjectileEntityDistance(500.0f)
 {
 	m_StepHeight = 8.0f; // subtract a small value as a buffer to jump
 }
@@ -232,46 +238,6 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	{
 		PressButton(BOT_BUTTON_RSTRAFE);
 	}
-
-	if (m_StrafeJump)
-	{
-	    if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
-	    {
-		if (IGame::GetFrameNumber() % 20 == 0)
-		{
-		    GameEntity targetent;
-		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		    if (!targetent.IsValid())
-		    {
-			BitFlag64 b;
-			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-			//b.SetFlag(BOT_BUTTON_FWD,true);
-
-			PressButton(BOT_BUTTON_JUMP);
-			HoldButton(b, 750);
-		    }
-		}
-		PressButton(BOT_BUTTON_SPRINT);
-	    }
-	    else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
-	    {
-		if (IGame::GetFrameNumber() % 20 == 0)
-		{
-		    GameEntity targetent;
-		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		    if (!targetent.IsValid())
-		    {
-			BitFlag64 b;
-			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-			//b.SetFlag(BOT_BUTTON_FWD,true);
-
-			PressButton(BOT_BUTTON_JUMP);
-			HoldButton(b, 750);
-		    }
-		}
-		PressButton(BOT_BUTTON_SPRINT);
-	    }
-	}
 }
 
 float RTCW_Client::GetGameVar(GameVar _var) const
@@ -387,5 +353,9 @@ void RTCW_Client::SetupBehaviorTree()
 	delete GetStateRoot()->ReplaceState("Dead", new Limbo);
 	GetStateRoot()->InsertAfter("Limbo", new Incapacitated);
 
+	//GetStateRoot()->AppendTo("HighLevel", new RepairMg42);
+	//GetStateRoot()->AppendTo("HighLevel", new TakeCheckPoint);
+	//GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);
+	//GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
 	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
 }

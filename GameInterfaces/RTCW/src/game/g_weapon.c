@@ -336,7 +336,7 @@ void Weapon_Syringe( gentity_t *ent ) {
 				memcpy( weapons,traceEnt->client->ps.weapons,sizeof( int ) * ( MAX_WEAPONS / ( sizeof( int ) * 8 ) ) );
 
 				// cancel a complaint if active for the reviver
-				if ( traceEnt->client->pers.complaintClient == ent-g_entities) {
+				if ( traceEnt->client->pers.complaintClient == ent->s.clientNum ) {
 					traceEnt->client->pers.complaintEndTime = -1;
 					traceEnt->client->pers.complaintClient = -1;
 					trap_SendServerCommand( ent - g_entities, "complaint -2" );
@@ -547,7 +547,7 @@ void Weapon_Engineer( gentity_t *ent ) {
 
 				// ARM IT!
 				trap_SendServerCommand( ent - g_entities, "cp \"Dynamite is now armed with a 30 second timer!\" 1" );
-				traceEnt->nextthink = level.time + g_dynoFuseTime.integer;
+				traceEnt->nextthink = level.time + 30000;
 				traceEnt->think = G_ExplodeMissile;
 
 				// check if player is in trigger objective field
@@ -1132,7 +1132,7 @@ int G_GetWeaponDamage( int weapon ) {
 	case WP_COLT: return 18;
 	case WP_AKIMBO: return 18;      //----(SA)	added
 	case WP_VENOM_FULL: return 10;
-	case WP_VENOM: return g_venomDamage.integer;
+	case WP_VENOM: return 20;
 	case WP_MP40: return 14;
 	case WP_THOMPSON: return 18;
 	case WP_STEN: return 14;
@@ -1180,7 +1180,7 @@ float G_GetWeaponSpread( int weapon ) {
 	case WP_SILENCER: return 900;
 	case WP_COLT: return 800;
 	case WP_AKIMBO: return 800;     //----(SA)added
-	case WP_VENOM: return (float)g_venomSpread.integer;
+	case WP_VENOM: return 600;
 	case WP_MP40: return 400;
 	case WP_FG42SCOPE:
 	case WP_FG42:   return 500;
@@ -1656,7 +1656,6 @@ weapon_venom_fire
 */
 void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale ) {
 	gentity_t       *tent;
-	float spread =	VENOM_SPREAD;
 
 	if ( fullmode ) {
 		tent = G_TempEntity( swMuzzleTrace, EV_VENOMFULL );
@@ -1669,14 +1668,10 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 	tent->s.eventParm = rand() & 255;       // seed for spread pattern
 	tent->s.otherEntityNum = ent->s.number;
 
-	if ( (g_unlockWeapons.integer & WEAPONUNLOCK_HANDICAP) && (ent->client && ent->client->ps.stats[STAT_PLAYER_CLASS] != PC_SOLDIER) ) {
-	    spread *= 7;
-	}
-
 	if ( fullmode ) {
 		VenomPattern( tent->s.pos.trBase, tent->s.origin2, tent->s.eventParm, ent );
 	} else {
-		Bullet_Fire( ent, spread * aimSpreadScale, VENOM_DAMAGE );
+		Bullet_Fire( ent, VENOM_SPREAD * aimSpreadScale, VENOM_DAMAGE );
 	}
 }
 

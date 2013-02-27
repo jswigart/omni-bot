@@ -265,7 +265,7 @@ global MinAndMaxBots = function(NumPlayers)
 	}
 
 	// minbots
-	if(Server.MinBots > 0 && Server.NumBots < Server.MinBots && NumPlayers < Server.MaxPlayers) {
+	if(Server.Minbots > 0 && Server.NumBots < Server.MinBots && NumPlayers < Server.MaxPlayers) {
 		if(OnBotAutoJoin) {
 			// OnBotAutoJoin should give us a table of bot info to use
 			t = OnBotAutoJoin();

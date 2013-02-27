@@ -38,7 +38,6 @@ this.UpgradeVersion = function(Props)
 
 		if ( this.Weapons && tableCount(this.Weapons) > 0 )
 		{
-			this.LimitToWeapon(this.Weapons);
 			this.DefaultPriority += 0.2;
 		}
 

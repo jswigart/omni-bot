@@ -5,6 +5,26 @@ this.SkipGetPriorityWhenActive = true;
 this.Debug = false;
 this.query = { 0xa9ef3654 /* CAMP */, 0x4fed19c1 /* DEFEND */, 0x4595b8fd /* ATTACK */, 0xe8fbadc0 /* SNIPE */ };
 
+// cs: this is a hack to overcome limitations with LimitToWeapon
+this.CheckWeaponRestrictions = function(goal)
+{
+	if ( !goal.Weapons || tableCount(goal.Weapons) < 1 ) {
+		return true;
+	}
+
+	if (goal.Weapons[WEAPON.PANZERFAUST]) {
+		goal.Weapons[WeaponTable.AlliedPanzer] = 1;
+	}
+
+	foreach ( weap and exp in goal.Weapons ) {
+		if ( this.Bot.HasWeapon(weap) ) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
 this.Initialize = function()
 {
 	this.Bot.QueryGoalsTable = table();
@@ -49,15 +69,6 @@ this.Exit = function()
 		this.Bot.DisableCombatMovement = false;
 		this.CombatMovementDisabled = false;
 	}
-
-	// restore weapon desirability
-	wpn = this.DesirableWeapon;
-	if (wpn) {
-		this.DesirableWeapon = null;
-		//command /bot reload_weapons causes error "getdot failed on null user type"
-		wpn.PrimaryFire.DefaultDesirability = this.OldDesirability;
-		this.OldDesirability = null;
-	}
 };
 
 this.GetPriority = function()
@@ -69,9 +80,12 @@ this.GetPriority = function()
 		{
 			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
-				this.MapGoal = goal;
-				this.Priority = goal.GetGoalPriority(this.Bot);
-				break;
+				if (this.CheckWeaponRestrictions(goal) )
+				{
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
 			}
 			tableClear(this.Bot.QueryGoalsTable);
 		}
@@ -102,25 +116,9 @@ this.Update = function()
 			this.Bot.DisableCombatMovement = true;
 		}
 
-		if (!this.DesirableWeapon)
+		if ( this.UsingWeapon )
 		{
-			wpn = this.UsingWeapon;
-			if (!wpn) {
-				wpn = ETUtil.GetBotPrimaryWeapon(this.Bot);
-			}
-			// AddWeaponRequest cannot be used because it ignores ammo and charge
-			if (wpn) {
-				weap = this.Bot.GetWeapon(wpn);
-				if (weap) {
-					this.OldDesirability = weap.PrimaryFire.DefaultDesirability;
-					this.DesirableWeapon = weap;
-					if (this.UsingWeapon) {
-						weap.PrimaryFire.DefaultDesirability = 0.9;
-					} else {
-						weap.PrimaryFire.DefaultDesirability = this.OldDesirability + 0.15;
-					}
-				}
-			}
+			this.AddWeaponRequest( Priority.Medium, this.UsingWeapon );
 		}
 
 		timeout = 0;

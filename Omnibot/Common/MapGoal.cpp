@@ -320,15 +320,7 @@ bool MapGoal::IsAvailable(int _team) const
 
 void MapGoal::SetAvailable(int _team, bool _available)
 {
-	if (_team == 0)
-	{
-	    for(int t = 1; t <= 4; ++t)
-		    m_AvailableTeams.SetFlag(t,_available);
-	}
-	else
-	{
-	    m_AvailableTeams.SetFlag(_team,_available);
-	}
+	m_AvailableTeams.SetFlag(_team,_available);
 }
 
 bool MapGoal::IsAvailableInitial(int _team) const
@@ -338,15 +330,7 @@ bool MapGoal::IsAvailableInitial(int _team) const
 
 void MapGoal::SetAvailableInitial(int _team, bool _available)
 {
-	if (_team == 0)
-	{
-	    for(int t = 1; t <= 4; ++t)
-		    m_AvailableTeamsInit.SetFlag(t,_available);
-	}
-	else
-	{
-	    m_AvailableTeamsInit.SetFlag(_team,_available);
-	}
+	m_AvailableTeamsInit.SetFlag(_team,_available);
 }
 
 void MapGoal::Update()

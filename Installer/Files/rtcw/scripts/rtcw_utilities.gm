@@ -659,7 +659,6 @@ member IsTeamClassDead = function( team, class )
 	// loop through the reserved player ents since there is no team table stored
 	for ( i = 0; i < 64; i = i + 1 )
 	{
-		if (!EntityIsValid(i)) { continue; }
 		cls = GetEntClass( i );
 
 		if ( cls != class ) {
@@ -873,73 +872,4 @@ member LosingChat = function( team )
 			sleep(RandFloat(0.5, 1.0));
 		}
 	}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// alternative to the native function which doesn't rely on line of site
-member GetClosestAlly = function (bot, class, distLimit)
-{
-	rtn = {};
-	rtn.dist = 0;
-	rtn.ent = null;
-	botTeam = bot.GetTeam();
-
-	if (distLimit) {
-		rtn.dist = distLimit;
-	}
-
-	for ( i = 0; i < 64; i += 1 ) {
-		ent = GetGameEntityFromId(i);
-		if ( ent && GetEntTeam(ent) == botTeam && ent != bot.GetGameEntity() && !GetEntFlags(ent, ENTFLAG.DEAD) ) {
-			if ( !class || GetEntClass(i) == class ) {
-				dist = bot.DistanceTo(i);
-				if ( rtn.dist == 0 || (dist <= rtn.dist && (!distLimit || dist <= distLimit)) ) {
-					rtn.dist = dist;
-					rtn.ent = ent;
-				}
-			}
-		}
-	}
-
-	if (rtn.ent) {
-		return rtn;
-	}
-
-	return null;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// alternative to the native function which doesn't rely on line of site
-member GetClosestEnemy = function (bot, class, distLimit)
-{
-	rtn = {};
-	rtn.dist = 0;
-	rtn.ent = null;
-	botTeam = bot.GetTeam();
-
-	if (distLimit) {
-		rtn.dist = distLimit;
-	}
-
-	for ( i = 0; i < 64; i += 1 ) {
-		ent = GetGameEntityFromId(i);
-		if ( ent ) {
-			team = GetEntTeam(ent);
-			if ( team != botTeam && team != TEAM.SPECTATOR && !GetEntFlags(ent, ENTFLAG.DEAD) ) {
-				if ( !class || GetEntClass(i) == class ) {
-					dist = bot.DistanceTo(i);
-					if ( rtn.dist == 0 || (dist <= rtn.dist && (!distLimit || dist <= distLimit)) ) {
-						rtn.dist = dist;
-						rtn.ent = ent;
-					}
-				}
-			}
-		}
-	}
-
-	if (rtn.ent) {
-		return rtn;
-	}
-
-	return null;
 };

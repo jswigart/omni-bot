@@ -1753,15 +1753,6 @@ global _MG =
 	{
 		CoverSpots = 
 		{
-			[0] = 
-			{
-				AimVectors = 
-				{
-					[0] = Vec3(-0.866, -0.499, 0.019),
-				},
-				position = Vec3(4198.019, 615.256, 1692.125),
-				stance = "crouch",
-			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
@@ -1780,24 +1771,6 @@ global _MG =
 	{
 		CoverSpots = 
 		{
-			[0] = 
-			{
-				AimVectors = 
-				{
-					[0] = Vec3(-0.372, -0.927, 0.051),
-				},
-				position = Vec3(-1235.537, 722.617, 87.831),
-				stance = "crouch",
-			},
-			[1] = 
-			{
-				AimVectors = 
-				{
-					[0] = Vec3(0.753, -0.607, 0.255),
-				},
-				position = Vec3(-1840.321, 1047.829, -102.286),
-				stance = "stand",
-			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
@@ -1816,27 +1789,6 @@ global _MG =
 	{
 		CoverSpots = 
 		{
-			[0] = 
-			{
-				AimVectors = 
-				{
-					[0] = Vec3(-0.076, -0.997, -0.030),
-					[1] = Vec3(-0.986, -0.164, 0.003),
-					[2] = Vec3(-0.152, -0.988, 0.005),
-				},
-				position = Vec3(-850.125, 389.463, 728.125),
-				stance = "crouch",
-			},
-			[1] = 
-			{
-				AimVectors = 
-				{
-					[0] = Vec3(0.679, -0.730, 0.079),
-					[1] = Vec3(0.919, -0.390, 0.051),
-				},
-				position = Vec3(-1226.152, 397.875, 728.125),
-				stance = "crouch",
-			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,

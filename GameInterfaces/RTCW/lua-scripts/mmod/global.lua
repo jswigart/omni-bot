@@ -4,14 +4,6 @@ modname = "mmod"
 dbname = et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/mmod.db'
 RecordsDBName = et.trap_Cvar_Get("fs_homepath") .. '/' .. et.trap_Cvar_Get("fs_game") .. '/mmod/maprecords.db'
 
--- some constants
-TEAMS = {
-	"axis",
-	"allies",
-}
-
-MAX_DIFFICULTY = 7
-
 global_admin_table = {}
 global_config_table = {}
 global_level_table = {}
@@ -23,11 +15,8 @@ commandflags["admindel"] = "Q"
 commandflags["admintest"] = "a"
 commandflags["announce"] = "f"
 commandflags["ban"] = "b"
-commandflags["botkickall"] = "o"
 commandflags["botplayers"] = "o"
-commandflags["botteam"] = "o"
 commandflags["date"] = "C"
-commandflags["difficulty"] = "o"
 commandflags["gib"] = "g"
 commandflags["fling"] = "l"
 commandflags["flinga"] = "L"
@@ -68,9 +57,7 @@ commandhelp["admintest"] = "^3usage: ^7!admintest or !admintest [name|slot] \n^3
 commandhelp["announce"] = "^3usage: ^7!announce [msg] \n^3function: ^7announces message in centerprint"
 commandhelp["ban"] = "^3usage: ^7!ban [name|slot] [reason] \n^3function: ^7bans the player and gives them a reason"
 commandhelp["botplayers"] = "^3usage: ^7!botplayers [number of bots] \n^3function: ^7changes value of omnibots maxbots"
-commandhelp["botteam"] = "^3usage: ^7!botteam [0|1|2] \n^3function: ^7enables or disables bots vs humans 0 disables, 1 = bots on axis, 2 = bots on allies"
 commandhelp["date"] = "^3usage: ^7!date \n^3function: ^7prints out local date of the server"
-commandhelp["difficulty"] = "^3usage: ^7!difficulty [-1|" .. MAX_DIFFICULTY .. "] \n^3function: ^7changes the bot difficulty"
 commandhelp["fling"] = "^3usage: ^7!fling [name|slot] \n^3function: ^7send the player flying."
 commandhelp["flinga"] = "^3usage: ^7!flinga \n^3function: ^7sends everyone flying."
 commandhelp["gib"] = "^3usage: ^7!gib [name|slot] [reason] \n^3function: ^7kills and gibs the player"
@@ -132,5 +119,4 @@ recordTypeMap = {
 
 -- note: length must match the arrays above
 currentMapRecords = { 0,0,0,0,0,0,0,0,0 }
-
 

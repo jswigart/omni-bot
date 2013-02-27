@@ -855,10 +855,10 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 		// jpw
 
 		// 2 handed weapons
-		if ( pc == PC_SOLDIER || pc == PC_LT || !(g_unlockWeapons.integer & WEAPONUNLOCK_NOSPAWN) ) {
+		if ( pc == PC_SOLDIER || pc == PC_LT || g_unlockWeapons.integer ) {
 
 			// JPW NERVE -- if LT is selected but illegal weapon, set to team-specific SMG
-			if ( !(g_unlockWeapons.integer & WEAPONUNLOCK_WEAPONS) && ( pc == PC_LT ) && ( client->sess.playerWeapon > 5 ) ) {
+			if ( !g_unlockWeapons.integer && ( pc == PC_LT ) && ( client->sess.playerWeapon > 5 ) ) {
 				if ( client->sess.sessionTeam == TEAM_RED ) {
 					client->sess.playerWeapon = 3;
 				} else {

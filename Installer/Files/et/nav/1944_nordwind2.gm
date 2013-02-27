@@ -12,7 +12,7 @@
 /****************************************************
 Pathing and script by Mateos
 Correspondant WAY file size : 53,7 Ko (55 047 octets)
-Last Update : 06th Dec 2012
+Last Update : 22th May 2012
 ****************************************************/
 
 global Map =
@@ -100,12 +100,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT_Tank" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ESCORT_Tank" );
 		}
-		else
-		{
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT_Tank" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Tank" );
-		}
-		
+
 		Util.MapDebugPrint( "Jagdpanther_Built" );
 	},
 
@@ -269,7 +264,7 @@ global Map =
 
 	Truckyard_Gate_Destroyed = function( trigger )
 	{
-		Map.truckyard_gate_status = 1;
+		truckyard_gate_status = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Golf.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Jagdpanther" );

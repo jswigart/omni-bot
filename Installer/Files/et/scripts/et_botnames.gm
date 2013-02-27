@@ -1,9 +1,10 @@
 /////////////////////////////////////////////////////////////////////
 // Register default profiles for the game classes.
-foreach (cls in Util.PlayerClassTable)
-{
-	RegisterDefaultProfile(cls, "def_bot.gm");
-}
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.FIELDOPS, "def_bot.gm");
+RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
 
 // Register a bot with a script. Uncomment this line to try the sample bot.
 //Names["samplebot"] = "sample.gm";

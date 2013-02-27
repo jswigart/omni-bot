@@ -1,0 +1,505 @@
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+	FlagStatus = -1,
+	FriendlyFire,
+	
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			/*ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER1 = // ruins airstrikes
+			{
+				numbots = 1,
+				crucialClass = CLASS.LIEUTENANT,
+			},*/
+		},
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},/*
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},*/
+		},
+	},
+	
+	Allied_Field_Ops_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Field_Ops_Planted" );
+	},
+	
+	Allied_Field_Ops_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Field_Ops_Defused" );
+	},
+	
+	Allied_Field_Ops_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Field_Ops_Destroyed" );
+	},
+	
+	Anti_Aircraft_Gun_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Anti_Aircraft_Gun_Planted" );
+	},
+	
+	Anti_Aircraft_Gun_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Anti_Aircraft_Gun_Defused" );
+	},
+	
+	Anti_Aircraft_Gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Anti_Aircraft_Gun_Destroyed" );
+	},
+
+	North_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Field_Ops" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "North_Gate_Destroyed" );
+	},
+
+	South_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Anti_Aircraft_Gun" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "South_Gate_Destroyed" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.FlagStatus = TEAM.AXIS;
+		Map.DontDispenseAmmo = true;
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
+		if ( Map.FriendlyFire < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTrainyard.*" );
+		}
+
+		Util.MapDebugPrint( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.FlagStatus = TEAM.ALLIES;
+		Map.DontDispenseAmmo = true;
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_coalyardmg" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
+		if ( Map.FriendlyFire < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
+		}
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
+
+		Util.MapDebugPrint( "flag_respawn_obj_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant1" );
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant2" );
+	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant1" );
+	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant2" );
+	
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.Allied_Field_Ops_Planted );
+	OnTrigger( "MISSING_STRING", Map.Allied_Field_Ops_Defused );
+	OnTrigger( "MISSING_STRING", Map.Allied_Field_Ops_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Anti_Aircraft_Gun_Planted );
+	OnTrigger( "MISSING_STRING", Map.Anti_Aircraft_Gun_Defused );
+	OnTrigger( "MISSING_STRING", Map.Anti_Aircraft_Gun_Destroyed );
+	// Planted at the South Gate.
+	// Planted at the North Gate.
+	OnTrigger( "the North Gate Destroyed.", Map.North_Gate_Destroyed );
+	OnTrigger( "the South Gate Destroyed.", Map.South_Gate_Destroyed );
+	OnTrigger( "Axis captures the Forward Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+
+	Util.DisableGoal( ".*", true ); //all but the routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_opscamper.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_btrainpanz.*", {mincamptime = 60, maxcamptime = 90} );
+	
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
+	
+	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CALLARTILLERY.*", 1.0 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
+	
+	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Gate" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkillrear.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rAA.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_Gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkillrear.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bWarehouse.*" );	// This can also kill people in the club
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bTrainyard.*" );
+	
+	Util.SetMaxUsersInProgress( 1, "CAMP.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+	
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_Anti_Aircraft_Gun =
+		{
+		},
+		PLANT_North_Gate =
+		{
+		},
+		PLANT_South_Gate =
+		{
+		},
+		PLANT_Allied_Field_Ops =
+		{
+		},
+		AIRSTRIKE_rFlag1 =
+		{
+		},
+		AIRSTRIKE_rFlag2 =
+		{
+		},
+		REPAIRMG42_rspawn2 =
+		{
+		},
+		REPAIRMG42_mg2 =
+		{
+		},
+		REPAIRMG42_mg1 =
+		{
+		},
+		REPAIRMG42_rspawn1 =
+		{
+		},
+		REPAIRMG42_coalyardmg =
+		{
+		},
+		ROUTE_axis51 =
+		{
+		},
+		ROUTE_axis6 =
+		{
+		},
+		ROUTE_forwardflag2 =
+		{
+		},
+		ROUTE_axis_15 =
+		{
+		},
+		ROUTE_axis_13 =
+		{
+		},
+		SNIPE_snipe7 =
+		{
+		},
+		ROUTE_left2 =
+		{
+		},
+		ROUTE_axis_20 =
+		{
+		},
+		ROUTE_cp2 =
+		{
+		},
+		ROUTE_rright7 =
+		{
+		},
+		ROUTE_cp1 =
+		{
+		},
+		ROUTE_axis9 =
+		{
+		},
+		ROUTE_forwardflag1 =
+		{
+		},
+		ROUTE_aagun_right =
+		{
+		},
+		ROUTE_right1 =
+		{
+		},
+		ROUTE_845 =
+		{
+		},
+		MOUNTMG42_rspawn2 =
+		{
+		},
+		ROUTE_axis11 =
+		{
+		},
+		ROUTE_aagun_left =
+		{
+		},
+		ROUTE_fs3 =
+		{
+		},
+		ROUTE_allies3 =
+		{
+		},
+		ROUTE_left1 =
+		{
+		},
+		ROUTE_fs4 =
+		{
+		},
+		ROUTE_axis52 =
+		{
+		},
+		MOUNTMG42_rspawn1 =
+		{
+		},
+		ROUTE_axis1 =
+		{
+		},
+		MOUNTMG42_mg2 =
+		{
+		},
+		ROUTE_right3 =
+		{
+		},
+		ROUTE_axis_16 =
+		{
+		},
+		ROUTE_axis7 =
+		{
+		},
+		ROUTE_axis_12 =
+		{
+		},
+		ROUTE_forwardflag4 =
+		{
+		},
+		ROUTE_axis_21 =
+		{
+		},
+		ROUTE_rright4 =
+		{
+		},
+		SNIPE_snipe2 =
+		{
+		},
+		ROUTE_axis10 =
+		{
+		},
+		ROUTE_left3 =
+		{
+		},
+		ROUTE_forwardflag =
+		{
+		},
+		ROUTE_right2 =
+		{
+		},
+		ROUTE_axis_22 =
+		{
+		},
+		ROUTE_axis_14 =
+		{
+		},
+		ROUTE_axis53 =
+		{
+		},
+		ROUTE_axis54 =
+		{
+		},
+		ROUTE_forwardflag3 =
+		{
+		},
+		ROUTE_axis8 =
+		{
+		},
+		ROUTE_axis_23 =
+		{
+		},
+		MOUNTMG42_mg1 =
+		{
+		},
+		SNIPE_snipe4 =
+		{
+		},
+		ROUTE_rright6 =
+		{
+		},
+		ROUTE_axis5 =
+		{
+		},
+		ROUTE_rright5 =
+		{
+		},
+		MOUNTMG42_coalyardmg =
+		{
+		},
+		CHECKPOINT_flag_respawn_obj =
+		{
+		},
+		DEFEND_radio2 =
+		{
+		},
+		DEFEND_gun7 =
+		{
+		},
+		ATTACK_gun99 =
+		{
+		},
+		ATTACK_radio1 =
+		{
+		},
+		DEFEND_gun6 =
+		{
+		},
+		DEFEND_gun1 =
+		{
+		},
+		DEFEND_radio3 =
+		{
+		},
+		DEFEND_radio1 =
+		{
+		},
+		ATTACK_gun0 =
+		{
+		},
+		ATTACK_radio2 =
+		{
+		},
+		DEFEND_gun5 =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

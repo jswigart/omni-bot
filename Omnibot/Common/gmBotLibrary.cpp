@@ -2693,22 +2693,6 @@ static int GM_CDECL gmfCreateMapGoal(gmThread *a_thread)
 	return GM_OK;
 }
 
-static int GM_CDECL gmfEntityIsOutside(gmThread *a_thread)
-{
-	GM_CHECK_NUM_PARAMS(1);
-
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
-	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-
-	Vector3f v = Vector3f::ZERO;
-	if(gameEnt.IsValid() && EngineFuncs::EntityPosition(gameEnt, v))
-	{
-	    a_thread->PushInt(InterfaceFuncs::IsOutSide(v));
-	}
-	return GM_OK;
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -2831,8 +2815,7 @@ static gmFunctionEntry s_botLib[] =
 	{"GetEntTeam",				gmfGetEntityTeam},
 	{"GetEntClass",				gmfGetEntityClass},
 	{"GetEntCategory",			gmfGetEntCategory},
-	{"EntityIsValid",			gmfEntityIsValid},
-	{"EntityIsOutside",			gmfEntityIsOutside},
+	{"EntityIsValid",			gmfEntityIsValid},	
 
 	{"GetClassNameFromId",		gmfGetClassNameFromId},	
 	{"GetWeaponIdFromClassId",	gmfGetWeaponIdFromClassId},	

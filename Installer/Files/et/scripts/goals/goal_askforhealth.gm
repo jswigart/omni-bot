@@ -10,7 +10,7 @@ if(!BB.PICKUPHEALTH) {
 }
 
 // These parameters are optional
-this.LimitToNoClass(CLASS.MEDIC); //Medics shouldn't call for health
+this.LimitToClass( CLASS.FIELDOPS, CLASS.COVERTOPS, CLASS.ENGINEER, CLASS.SOLDIER ); //Medics shouldn't call for health
 
 this.Initialize = function()
 {

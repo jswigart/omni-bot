@@ -140,32 +140,6 @@ Commands["moveskill"] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Commands["strafejump"] =
-{
-	Func = function( _params )
-	{
-		if (typeId(_params[0]) != 0) {
-			enabled = ToInt(_params[0]);
-			ConfigSet("Navigation","StrafeJump", enabled);
-
-			foreach(id and bot in BotTable) {
-				if (!bot.ProfileStrafeJump) {
-					bot.StrafeJump = enabled;
-				}
-			}
-
-			print("bot strafe jumping set to " + enabled);
-		}
-	},
-
-	Help =
-	{
-		"Enable or Disable bots usage of strafe jump waypoint flags"
-	},
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 Commands["tracearty"] =
 {
 	Func = function( _params )
@@ -420,50 +394,6 @@ Commands["draw_oids"] =
 	{
 		"Draw Objective Info Displays, waypoint tool. draws the bounds of all OID's in the map",
 		"Usage: /bot draw_oids",
-	},
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-Commands["ignore"] =
-{
-	Func = function( _params )
-	{
-		if ( typeName(_params[0]) == "float" && _params[1] )
-		{
-			entId = ToInt(_params[0]);
-			time = ToFloat(_params[1]);
-			foreach ( id and bot in BotTable )
-			{
-				bot.IgnoreTarget(entId, time);
-			}
-		}
-	},
-
-	Help =
-	{
-		"Ignore given entity for given time for debug purposes",
-	},
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// test command
-Commands["imoutside"] =
-{
-	Func = function( _params )
-	{
-		outside = EntityIsOutside(0);
-		msg = "you are inside";
-		if (outside) {
-			msg = "you are outside";
-		}
-		
-		EchoToScreen(10, msg);
-	},
-
-	Help =
-	{
-		"test EntityIsOutside function",
 	},
 };
 

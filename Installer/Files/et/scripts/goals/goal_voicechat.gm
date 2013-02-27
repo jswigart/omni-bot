@@ -54,7 +54,7 @@ this.Randomize = function(frequency, source)
 	frequency = frequency - ( tableCount(BotTable) * this.FrequencyReductionPerBot );
 	if ( frequency < 1 && this.Frequency > 0 ) { frequency = 1; }
 
-	if ( RandFloat(0, 10) < frequency  )
+	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
 	{
 		sleep(RandFloat(0.5, 1.0));
 		if (this.Bot) {
@@ -315,7 +315,7 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	if ( !this.Bot || GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
-	if ( !this.responding_to_teamdamage && this.Bot.IsAllied(Inflictor)
+	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)
 		&& Inflictor != this.Bot.GetGameEntity()  )
 	{
 		isBot = Util.IsBot(Inflictor);
@@ -323,15 +323,18 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 			return;
 		}
 
-		this.responding_to_teamdamage = true;
 		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, Inflictor) == true )
 		{
 			if ( this.Bot.HasEntityFlag( ENTFLAG.DISGUISED ) )
 				{ this.Bot.SayVoice( VOICE.IMA_COVERTOPS ); }
 			else
 				{ this.Bot.SayVoice( VOICE.HOLD_FIRE ); }
+			this.responded_to_teamdamage = true;
 		}
-		if (this.Bot){ this.responding_to_teamdamage = false; }
+		else
+		{
+			this.responded_to_teamdamage = false;
+		}
 	}
 };
 
@@ -360,5 +363,5 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 		this.Bot.SayVoice(VOICE.G_HI);
 	}
 
-	if (this.Bot){ this.Bot.DelayResponse = 5; }
+	this.Bot.DelayResponse = 5;
 };

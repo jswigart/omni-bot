@@ -37,7 +37,5 @@ static const NavFlags F_RTCW_NAV_STRAFE_R		= (F_NAV_NEXT<<20);
 static const NavFlags F_RTCW_NAV_USERGOAL		= (F_NAV_NEXT<<21);
 static const NavFlags F_RTCW_NAV_USEPATH		= (F_NAV_NEXT<<22);
 static const NavFlags F_RTCW_NAV_VENOM			= (F_NAV_NEXT<<23);
-static const NavFlags F_RTCW_NAV_STRAFE_JUMP_L		= (F_NAV_NEXT<<24);
-static const NavFlags F_RTCW_NAV_STRAFE_JUMP_R		= (F_NAV_NEXT<<25);
 
 #endif

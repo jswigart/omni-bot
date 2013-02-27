@@ -177,77 +177,33 @@ function ban(clientNum, params)
     return
 end
 
-function botkickall()
-	et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot kickall")
-end
-
 function botplayers(clientNum, params)
-	local header = "^3botplayers: ^7"
+    local header = "^3botplayers: ^7"
 	local bplayer = params[1]
 	local maxclients = tonumber(et.trap_Cvar_Get("sv_maxclients"))
-
-	if bplayer ~= nil then
+    
+    if bplayer ~= nil then
 		if isNumeric(bplayer) then
 			bplayer = tonumber(bplayer)
-			if (bplayer < 1) or  (bplayer > (maxclients - 1)) then 
+            if (bplayer < 1) or  (bplayer > (maxclients - 1)) then 
 				userprint(clientNum, "chat", header .. "must be between 1 and " .. tostring(maxclients - 1))
-				return
-			end
-			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot minbots -1")
+                return
+            end
 			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot maxbots " .. bplayer)	
 			userprint(-1, "chat", header .. "maxbots changed to " .. bplayer)
 		else
 			userprint(clientNum, "chat", "^3botplayers: ^5" .. bplayer .. " ^7is not a number")
 			return
 		end
-	else
-		userprint(clientNum, "chat", commandhelp["botplayers"])
-	end
-end
-
-function botteam(clientNum, params)
-	local team = params[1]
-	
-	if team ~= nil and isNumeric(team) then
-		team = tonumber(team)
-		if team >= 0 and team < 3 then
-			if team > 0 then
-				et.trap_Cvar_Set("g_teamForceBalance", "0")
-				et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot balanceteams 0")
-				userprint(-1, "cp", "^3bots vs humans enabled. bots are set to the " .. TEAMS[team] .. " team.")
-			else
-				et.trap_Cvar_Set("g_teamForceBalance", "1")
-				et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot balanceteams 1")
-				userprint(-1, "cp", "^3bots vs humans disabled. bots will balance teams.")			
-			end
-			
-			et.trap_Cvar_Set("g_botteam", team)
-			return
-		end
-	end
-	
-	userprint(clientNum, "chat", commandhelp["botteam"])
+    else
+        userprint(clientNum, "chat", commandhelp["botplayers"])
+    end
 end
 
 function date(clientNum)
 	local date = os.date("%A, %B %d, %Y")
 	userprint(-1, "chat", "^3date: ^7The server date is " .. date)
     return
-end
-
-function difficulty(clientNum, params)
-	local difficulty = params[1]
-	
-	if difficulty ~= nil and isNumeric(difficulty) then
-		difficulty = tonumber(difficulty)
-		if difficulty >= -1 and difficulty <= MAX_DIFFICULTY then
-			et.trap_SendConsoleCommand(et.EXEC_INSERT, "bot difficulty " .. difficulty)
-			userprint(-1, "cp", "^3bot difficulty set to " .. difficulty)
-			return
-		end
-	end
-	
-	userprint(clientNum, "chat", commandhelp["difficulty"])
 end
 
 function fling(clientNum, params)

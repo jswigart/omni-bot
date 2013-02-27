@@ -58,7 +58,6 @@ protected:
 	float		m_AmmoEntityDistance;
 	float		m_WeaponEntityDistance;
 	float		m_ProjectileEntityDistance;
-	int		m_StrafeJump;
 };
 
 #endif

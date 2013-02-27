@@ -11,7 +11,7 @@
 
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = true, // please set to zero before distributing your script
 	ShowMovers = false,
 
 	Allied_Command_Post_Dyno = 0,
@@ -155,8 +155,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 			
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
-			
 		Util.MapDebugPrint( "Old_City_Gate_Destroyed" );
 	},
 	
@@ -165,13 +163,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_513" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_West_Axis_Base_Fortification" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_generator_.*" );
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
-
 		Util.MapDebugPrint( "Bridg_Doors_Destroyed" );
 	},
 	
@@ -180,9 +171,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 			
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Axis_Base_Fortification" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
-
 		Util.MapDebugPrint( "Generator_Gates_Destroyed" );
 	},
 	
@@ -191,11 +179,6 @@ global Map =
 		if ( TestMap )
 			{ return; }
 		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
-
 		Util.MapDebugPrint( "Generator_Side_Wall_Destroyed" );
 	},
 	
@@ -291,24 +274,9 @@ global OnMapLoad = function()
 	OnTrigger( "The Tank has been damaged", Map.Tank_Destroyed );
 	OnTrigger( "Allied team has destroyed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Destroyed );
 
-	Util.AddUsePoint( "BUILD_West_Axis_Base_Fortification", { Vec3(2136, 861, -444), Vec3(2088, 912, -444) } );
-	Util.AddUsePoint( "PLANT_Axis_Command_Post", { Vec3(-2750, 2060, 184), Vec3(-2698, 2097, 184) } );
-	
-	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_513" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
 
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );

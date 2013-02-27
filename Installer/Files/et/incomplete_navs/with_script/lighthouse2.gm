@@ -25,13 +25,6 @@ global Map =
 	tower_climbing_ropes_Dyno = 0,
 	west_ropes_Dyno = 0,
 
-	Destroyed_Comms = 0,
-	Destroyed_Gate = 0,
-	Destroyed_Gun = 0,
-	Destroyed_Light = 0,
-	Destroyed_Main_Door = 0,
-	Destroyed_Wall = 0,
-	
 	Allied_Command_Post_Built = function( trigger )
 	{
 		if ( TestMap )
@@ -62,8 +55,6 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-			
-		Wp.SetWaypointFlag(956, "closed", false);
 
 		Util.MapDebugPrint( "tower_climbing_ropes_Built" );
 	},
@@ -284,12 +275,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Gun = 1;
-
 		Map.anti_ship_gun_Dyno = 0;
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_gun_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_gun_.*" );
 
 		Util.MapDebugPrint( "anti_ship_gun_Destroyed" );
 	},
@@ -299,12 +285,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Comms = 1;
-
 		Map.comms_bunker_Dyno = 0;
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_comms_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_comms_.*" );
 
 		Util.MapDebugPrint( "comms_bunker_Destroyed" );
 	},
@@ -314,34 +295,8 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Gate = 1;
-	
 		Map.compound_gate_Dyno = 0;
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_gate_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_gate_.*" );
-
-		if(Map.Destroyed_Light==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
-		}
-		if(Map.Destroyed_Comms==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
-		}
-		if(Map.Destroyed_Gate==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
-		}
-		if (Map.Destroyed_Gun==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gun_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gun_.*" );
-		}
-		
 		Util.MapDebugPrint( "compound_gate_Destroyed" );
 	},
 
@@ -350,28 +305,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Wall = 1;
-
 		Map.compound_wall_Dyno = 0;
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_wall_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_wall_.*" );
-		
-		if(Map.Destroyed_Light==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
-		}
-		if(Map.Destroyed_Comms==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
-		}
-		if(Map.Destroyed_Gate==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
-		}
 
 		Util.MapDebugPrint( "compound_wall_Destroyed" );
 	},
@@ -381,12 +315,7 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Light = 1;
-
 		Map.light_Dyno = 0;
-
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_light_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_light_.*" );
 
 		Util.MapDebugPrint( "light_Destroyed" );
 	},
@@ -396,42 +325,10 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.Destroyed_Main_Door = 1;
-
 		Map.main_entrance_Dyno = 0;
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_ropes" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_west_ropes" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_main_door_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_allies_main_door_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_main_door_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_main_door_.*" );
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forwardspawn" );
-
-		if (Map.Destroyed_Gun==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gun_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gun_.*" );
-		}
-		if(Map.Destroyed_Gate==0)
-		{
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
-		}
-		else
-		{
-			if(Map.Destroyed_Light==0)
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
-			}
-			if(Map.Destroyed_Comms==0)
-			{
-				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
-			}
-		}
-		
 		Util.MapDebugPrint( "main_entrance_Destroyed" );
 	},
 
@@ -454,8 +351,6 @@ global Map =
 
 		Map.tower_climbing_ropes_Dyno = 0;
 
-		Wp.SetWaypointFlag(956, "closed", true);
-		
 		Util.MapDebugPrint( "tower_climbing_ropes_Destroyed" );
 	},
 
@@ -535,20 +430,12 @@ global OnMapLoad = function()
 	OnTrigger( "Axis capture forward bunker - ammo bunker door open!", Map.forwardspawn_Axis_Captured );
 	OnTrigger( "Allies capture forward bunker - ammo bunker door closed!", Map.forwardspawn_Allies_Captured );
 
-	Util.DisableGoal( ".*", true ); // all but routes
+	//~Util.DisableGoal( ".*", true ); // all but routes
 	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_main_door_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_wall_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_main_door_.*" );
-
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_main_door_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_wall_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_ropes" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_west_ropes" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_main_door_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_ropes" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_west_ropes" );
 	
 	// Max users per goal
 	Util.SetMaxUsers( 1, "ATTACK_.*" );
@@ -560,16 +447,11 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
 	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
 	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
-	Util.SetMaxUsers( 1, "PLANT_main_entrance");
-	Util.SetMaxUsers( 1, "PLANT_compound_wall");
 
 	Util.SetGoalPosition( -1122, -322, 2648, "PLANT_light" );
 	Util.SetGoalPosition( -72, 317, 1088, "PLANT_compound_gate" );
 	Util.SetGoalPosition( -316, -676, 1075, "PLANT_compound_wall" );
 	
-	Util.SetRoleForGoals( "ATTACK_axis_.*", ROLE.ATTACKER );
-
-	Wp.SetWaypointFlag(956, "closed", true);
 	Wp.SetWaypointFlag(1043, "closed", true);
 	Wp.SetWaypointFlag(1044, "closed", true);
 	Wp.SetWaypointFlag("cliff_ropes_bottom", "closed", true);
@@ -577,6 +459,7 @@ global OnMapLoad = function()
 	// Camp times
 	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
 	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };

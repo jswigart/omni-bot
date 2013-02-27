@@ -28,19 +28,30 @@ this.UpgradeVersion = function(Props)
 	{
 		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
+		initWeaponTable = true;
 	}
 
-	if(!Props.Weapons || tableCount(Props.Weapons)==0 || tableCount(Props.Weapons) > 2)
+	if(initWeaponTable)
 	{
 		// fill in all the known sniper weapons by default
-		if (Util.IndexedSniperWeapons)
+		Props.Weapons = {};
+
+		if (Util.SniperWeapons)
 		{
-			Props.Weapons = tableDuplicate(Util.IndexedSniperWeapons);
+			foreach(i and wpnId in Util.SniperWeapons)
+			{
+				Props.Weapons[wpnId] = 1;
+			}
 		}
 		else
 		{
-			Util.MapDebugPrint(this.GoalType + ": Error : No Util.IndexedSniperWeapons table");
+			Util.MapDebugPrint(this.GoalType + ": Error : No Util.SniperWeapons table");
 		}
+	}
+
+	// handle etnam specific sniper weapon. thx palota.
+	if ( Props.Weapons && !Props.Weapons[111] ) {
+		Props.Weapons[111] = 1;
 	}
 
 	// call base goal upgrade. cs: do this last so LimitToWeapon includes all weapons.

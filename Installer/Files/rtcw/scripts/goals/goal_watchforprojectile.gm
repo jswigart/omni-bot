@@ -34,14 +34,6 @@ this.Enter = function()
 	else {
 		this.Finished();
 	}
-	
-	//change radius if the can is inside the building
-	if ( EntityIsOutside(this.Bot.AvoidEnt) ) {
-		this.AvoidRadius[ CLASS.AIRSTRIKE ] = 470;
-	}
-	else{
-		this.AvoidRadius[ CLASS.AIRSTRIKE ] = 165;
-	}
 };
 
 this.Exit = function()

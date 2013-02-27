@@ -564,7 +564,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			if ( attacker != self && level.warmupTime <= 0 ) {
 				if ( attacker->client->pers.localClient || ( attacker->r.svFlags & SVF_BOT ) ) {
 					//trap_SendServerCommand( self-g_entities, "complaint -4" );
-				} else if ( !(self->r.svFlags &SVF_BOT) ){
+				} else {
 					trap_SendServerCommand( self - g_entities, va( "complaint %i", attacker->s.number ) );
 					self->client->pers.complaintClient = attacker->s.clientNum;
 					self->client->pers.complaintEndTime = level.time + 20500;
@@ -940,7 +940,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	// the intermission has allready been qualified for, so don't
 	// allow any extra scoring
-	if ( level.intermissionQueued || (g_gamestate.integer != GS_PLAYING && g_warmupDamage.integer == 0 && targ->client) ) {
+	if ( level.intermissionQueued || (g_gamestate.integer != GS_PLAYING && g_warmupDamage.integer == 0) ) {
 		return;
 	}
 
@@ -1507,13 +1507,22 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 	for ( e = 0 ; e < numListedEntities ; e++ ) {
 		ent = &g_entities[entityList[ e ]];
 
+		// explode any other dyno's
+		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
+		    // cs: only if it is a teammates dyno
+		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
+		        // and not if they both went to spec ...
+		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+                    ent->nextthink = level.time + 250;
+		        }
+		    }
+		}
+
 		if ( ent == ignore ) {
 			continue;
 		}
 		if ( !ent->takedamage ) {
-			if (mod != MOD_DYNAMITE_SPLASH && ent->s.weapon != WP_DYNAMITE) {
-			    continue;
-			}
+			continue;
 		}
 
 		if ( !ent->r.bmodel ) {
@@ -1533,17 +1542,6 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage, float
 		dist = VectorLength( v );
 		if ( dist >= radius ) {
 			continue;
-		}
-
-		// explode any other dyno's
-		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
-		    // cs: only if it is a teammates dyno
-		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
-		        // and not if they both went to spec ...
-		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-			    ent->nextthink = level.time + 250;
-		        }
-		    }
 		}
 
 // JPW NERVE -- different radiusdmg behavior for MP -- big explosions should do less damage (over less distance) through failed traces
@@ -1628,13 +1626,22 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 	for ( e = 0 ; e < numListedEntities ; e++ ) {
 		ent = &g_entities[entityList[ e ]];
 
+		// explode any other dyno's
+		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
+		    // cs: only if it is a teammates dyno
+		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
+		        // and not if they both went to spec ...
+		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+                    ent->nextthink = level.time + 250;
+		        }
+		    }
+		}
+
 		if ( ent == ignore ) {
 			continue;
 		}
 		if ( !ent->takedamage && ( !ent->dmgparent || !ent->dmgparent->takedamage ) ) {
-			if (mod != MOD_DYNAMITE_SPLASH && ent->s.weapon != WP_DYNAMITE) {
-			    continue;
-			}
+			continue;
 		}
 
 		G_AdjustedDamageVec( ent, origin, v );
@@ -1642,17 +1649,6 @@ qboolean G_ET_RadiusDamage( vec3_t origin, gentity_t *inflictor, gentity_t *atta
 		dist = VectorLength( v );
 		if ( dist >= radius ) {
 			continue;
-		}
-
-		// explode any other dyno's
-		if ( mod == MOD_DYNAMITE_SPLASH && ent->s.weapon == WP_DYNAMITE ) {
-		    // cs: only if it is a teammates dyno
-		    if ( ent->parent && ent->parent->client && attacker->client && ent->parent->client->sess.sessionTeam == attacker->client->sess.sessionTeam ) {
-		        // and not if they both went to spec ...
-		        if ( attacker->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-			    ent->nextthink = level.time + 250;
-		        }
-		    }
 		}
 
 		if ( CanDamage( ent, origin ) ) {

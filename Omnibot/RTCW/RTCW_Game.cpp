@@ -423,8 +423,6 @@ void RTCW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("FLAME",			F_RTCW_NAV_FLAMETHROWER);
 	_planner->RegisterNavFlag("UGOAL",			F_RTCW_NAV_USERGOAL);
 	_planner->RegisterNavFlag("USEPATH",		F_RTCW_NAV_USEPATH);
-	_planner->RegisterNavFlag("STRAFE_JUMP_L",	F_RTCW_NAV_STRAFE_JUMP_L);
-	_planner->RegisterNavFlag("STRAFE_JUMP_R",	F_RTCW_NAV_STRAFE_JUMP_R);
 }
 
 void RTCW_Game::InitCommands()

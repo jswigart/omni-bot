@@ -9,10 +9,11 @@ AlliedBots = table();
 
 /////////////////////////////////////////////////////////////////////
 // Register default profiles for the game classes.
-foreach (cls in Util.PlayerClassTable)
-{
-	RegisterDefaultProfile(cls, "def_bot.gm");
-}
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.FIELDOPS, "def_bot.gm");
+RegisterDefaultProfile(CLASS.COVERTOPS, "def_bot.gm");
 
 /////////////////////////////////////////////////////////////////////
 // optionally assign a prefix for the bot name. set to "" for no prefix

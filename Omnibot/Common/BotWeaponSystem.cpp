@@ -31,16 +31,7 @@ namespace AiState
 
 			FINDSTATE(wsys, WeaponSystem, GetParent());
 			if(wsys)
-			{
-				int wpn = wsys->GetWeaponNeedingReload();
-				if(wpn!=m_WeaponNeedsReloading)
-				{
-					if(wpn && m_WeaponNeedsReloading){
-						wsys->UpdateWeaponRequest(GetNameHash(), wpn);	
-					}
-					m_WeaponNeedsReloading = wpn;
-				}
-			}
+				m_WeaponNeedsReloading = wsys->GetWeaponNeedingReload();
 			return m_WeaponNeedsReloading ? 1.f : 0.f;
 		}
 		void Enter()

@@ -334,14 +334,6 @@ global OnMapLoad = function()
 				},
 			},
 		},
-		DEFEND_rTruck1 =
-		{
-			ROUTE_rspawn =
-			{
-				ROUTE_courtyard = {},
-				ROUTE_courtyard2 = {},
-			},
-		},
 	};
 
 	MapRoutes.PLANT_Southwest_Gate = MapRoutes.PLANT_Southeast_Gate;
@@ -374,13 +366,6 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rMain6 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_gatepatrol1 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_rRoof_1 = MapRoutes.DEFEND_rMain1;
-	MapRoutes.DEFEND_rTruck2 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck3 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck4 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck5 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck6 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck7 = MapRoutes.DEFEND_rTruck1;
-	MapRoutes.DEFEND_rTruck8 = MapRoutes.DEFEND_rTruck1;
 
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );

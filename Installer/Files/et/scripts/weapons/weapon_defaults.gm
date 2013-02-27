@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
 this.Name = "Shotgun";				// Name is used for debug output and other readable outputs.
-this.WeaponId = WEAPON.NONE;		// This Id MUST match the numeric weapon id expected by the interface.
+this.WeaponId = -1;		// This Id MUST match the numeric weapon id expected by the interface.
 this.MinUseTime = 2.0;				// The min amount of time a weapon is used. Useful for reducing weapon switching oscillations.
 
 //////////////////////////////////////////////////////////////////////////

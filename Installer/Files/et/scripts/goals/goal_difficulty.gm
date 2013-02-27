@@ -322,7 +322,7 @@ this.Commands["difficulty"] =
 
 	Help =
 	{
-		"Sets the bots difficulty (-1...6), -1 is random, default 4",
+		"Sets the bots difficulty (-1...max), -1 is random, default 4",
 	},
 };
 
@@ -330,10 +330,9 @@ this.Commands["difficulty"] =
 
 this.SetAimToleranceForWeapon = function(weaponId)
 {
-	if (this.FirstRun || !this.UseWeaponSpecificTolerances ) { return; }
-	yield(); yield(); // need to make sure DefaultTolerance is set.
-	if (!this.Bot) { return; }
+	if (!this || !this.Bot || this.FirstRun || !this.UseWeaponSpecificTolerances ) { return; }
 
+	yield(); yield(); // need to make sure DefaultTolerance is set.
 	weaponName = Util.WeaponName(weaponId);
 	if ( this.Bot.WeaponTolerances && this.Bot.WeaponTolerances[weaponName] ) {
 		if ( this.Debug ) {

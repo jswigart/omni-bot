@@ -18,16 +18,6 @@ this.AimDamping = 10.0;
 // default max view distance. map scripts can override this
 this.MaxViewDistance = 4500;
 
-// whether or not this bot will perform strafe jumps when moving towards waypoints with either strafe jump flag
-// set this in the omni-bot.cfg or by using the command /bot strafejump
-// if you set this in a specific bot profile and don't want the command to overwrite it, set ProfileStrafeJump to 1
-this.StrafeJump = ConfigGet( "Navigation","StrafeJump", 0 );
-this.ProfileStrafeJump = 0;
-
-// example of profile specific strafe jump enabling. replace the above with this.
-//this.StrafeJump = 1;
-//this.ProfileStrafeJump = 1;
-
 // optionally set a fixed skill level for this bot
 // this will ensure that any global difficulty changes will not effect it
 // default difficulty levels are between 1 and 6 with 1 being the easiest

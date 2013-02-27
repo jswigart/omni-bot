@@ -5,7 +5,7 @@
 // A user mod should never modify this file
 
 #define Q3_VERSION      "Wolf 1.41-MP"
-#define OB_VERSION      "0.83"
+#define OB_VERSION      "0.82b"
 #define OMNIBOT_URL "www.omni-bot.com"
 // 1.4-MP : (== 1.34)
 // 1.3-MP : final for release
@@ -1590,7 +1590,6 @@ typedef enum {
 #define VOTEFLAGS_TYPE          ( 1 << 5 )
 #define VOTEFLAGS_KICK          ( 1 << 6 )
 #define VOTEFLAGS_MAP           ( 1 << 7 )
-#define VOTEFLAGS_BOTDIFFICULTY ( 1 << 8 )
 
 //////////////////////////////////////////////////////////////////////////
 

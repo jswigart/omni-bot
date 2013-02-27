@@ -113,13 +113,11 @@ this.UpgradeVersion = function(Props)
 		// convert from indexed table to weapon id keyed table
 		this.Weapons = Props.Weapons;
 
+		// cs: we cant do this unless a major rewrite to support big bitfields :(
+		//this.LimitToWeapon(this.Weapons);
+
 		if ( this.Weapons && tableCount(this.Weapons) > 0 )
 		{
-			if (this.Weapons[WEAPON.PANZERFAUST]) {
-				this.Weapons[WeaponTable.AlliedPanzer] = 1;
-			}
-			this.LimitToWeapon(this.Weapons);
-
 			this.DefaultPriority += 0.2;
 		}
 
@@ -242,13 +240,13 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("     facing - Direction the bot should face");
+	print("		facing - Direction the bot should face");
 	print("Optional:");
-	print("     stance - stand, crouch, prone, peek");
-	print("     weapon - only this weapon is usable here, supports multiple");
-	print("     mincamptime - minimum time a bot should camp at the goal");
-	print("     maxcamptime - maximum time a bot should camp at the goal");
-	print("     disablecm - disable combat movement at this goal");
+	print("		stance - stand, crouch, prone, peek");
+	print("		weapon - only this weapon is usable here, supports multiple");
+	print("		mincamptime - minimum time a bot should camp at the goal");
+	print("		maxcamptime - maximum time a bot should camp at the goal");
+	print("		disablecm - disable combat movement at this goal");
 };
 
 //////////////////////////////////////////////////////////////////////////

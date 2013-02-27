@@ -14,7 +14,7 @@ this.UsingWeapons[ TEAM.AXIS ] = {};
 this.Initialize = function()
 {
 	if ( Map && (Map.DontSelectWeapons || Map.PanzerMap) ) {
-		this.Disable = true;
+		this.Disable = true; 
 		return;
 	}
 
@@ -30,7 +30,6 @@ this.Initialize = function()
 	this.EXCLUDE_SNIPE = {};
 	this.EXCLUDE_SNIPE [WEAPON.GARAND] = true;
 	this.EXCLUDE_SNIPE [WEAPON.K43] = true;
-	this.EXCLUDE_SNIPE [WEAPON.PROTO] = true;
 };
 
 // Count the number of users for a particular weapon id
@@ -113,20 +112,6 @@ this.Update = function()
 				else if(Server.NumPlayers >= MinPlayersForMobileMG && numMg42Users <= numMg42Goals && (numMg42Users < numMg42Goals || lastWeapon == WEAPON.MOBILE_MG42))
 				{
 					newWeapon = WEAPON.MOBILE_MG42;
-
-					//enable mid-clip reload for skilled soldier
-					modName = GetModName();
-					if (modName == "noquarter" || modName == "nitmod")
-					{
-						skills = {};
-						this.Bot.GetSkills(skills);
-						if (skills[SKILL.HEAVY_WEAPONS] > 4) {
-							wpn = this.Bot.GetWeapon(WEAPON.MOBILE_MG42);
-							if (wpn) {
-								wpn.PrimaryFire.IgnoreReload = false;
-							}
-						}
-					}
 				}
 				else
 				{
@@ -164,7 +149,7 @@ this.Update = function()
 				newWeapon = this.Bot.ClassPrimaryWeaponChoice(null);
 			}
 		}
-
+		
 		if (newWeapon)
 		{
 			//WeaponTable.SetWeaponAvailability can be called anytime from triggers,

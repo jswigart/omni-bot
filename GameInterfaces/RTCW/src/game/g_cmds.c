@@ -1481,8 +1481,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		mask = VOTEFLAGS_RESETMATCH;
 	} else if ( !Q_stricmp( arg1, "swap_teams" ) ) {        // NERVE - SMF
 		mask = VOTEFLAGS_SWAP;
-	} else if ( !Q_stricmp( arg1, "difficulty" ) ) {
-		mask = VOTEFLAGS_BOTDIFFICULTY;
 // JPW NERVE
 #ifndef PRE_RELEASE_DEMO
 	} else if ( !Q_stricmp( arg1, testid1 ) ) {
@@ -1492,7 +1490,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 // jpw
 	} else {
 		trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
-		trap_SendServerCommand( ent - g_entities, "print \"Vote commands are: map_restart, nextmap, start_match, swap_teams, reset_match, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, difficulty\n\"" );
+		trap_SendServerCommand( ent - g_entities, "print \"Vote commands are: map_restart, nextmap, start_match, swap_teams, reset_match, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>\n\"" );
 		return;
 	}
 
@@ -1573,17 +1571,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 			return;
 		}
 // jpw
-	} else if ( !Q_stricmp( arg1, "difficulty" ) ) {
-		int botDifficulty = atoi(arg2);
-
-		if ( botDifficulty < -1 || botDifficulty == 0 || botDifficulty > MAXBOTDIFFICULTY ) {
-		    trap_SendServerCommand( ent - g_entities, va( "print \"^3Difficulty must be -1 for random or between 1 and %i^7\n\"", MAXBOTDIFFICULTY ) );
-		    return;
-		}
-
-		Com_sprintf( level.voteString, sizeof( level.voteString ),"bot difficulty %i", botDifficulty );
-		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
-
 	} else {
 		Com_sprintf( level.voteString, sizeof( level.voteString ), "%s \"%s\"", arg1, arg2 );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );

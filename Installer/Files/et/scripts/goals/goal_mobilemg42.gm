@@ -56,6 +56,12 @@ this.Enter = function()
 
 this.Update = function()
 {
+	weapon = ETUtil.GetBotSideArm(this.Bot);
+	if (weapon)
+	{
+		this.AddWeaponRequest(Priority.Medium, weapon);
+	}
+
 	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
 	{
 		if(!this.MarkInUse(this.MapGoal))
@@ -87,7 +93,7 @@ this.Update = function()
 		this.AddWeaponRequest(Priority.High, WEAPON.MOBILE_MG42 );
 		this.BlockForWeaponChange( WEAPON.MOBILE_MG42 );
 
-		this.Bot.HoldButton(BTN.PRONE, 9999);
+		this.Bot.HoldButton(BTN.PRONE, 999);
 
 		this.AddWeaponRequest(Priority.High, WEAPON.MOBILE_MG42_SET );
 		this.BlockForWeaponChange( WEAPON.MOBILE_MG42_SET );

@@ -3699,9 +3699,6 @@ void PmoveSingle( pmove_t *pmove ) {
 			} else {
 				int i;
 				float fac;
-				float err;
-
-				err = pm->fixedphysics == 99 ? 0.5f : 0.3f; // 99 is a bot
 
 				//fac = (float)pml.msec / 8.0f;
 				fac = (float)pml.msec / ( 1000.0f / (float)pm->fixedphysicsfps );
@@ -3711,9 +3708,9 @@ void PmoveSingle( pmove_t *pmove ) {
 					// ...if the velocity in this direction changed enough
 					if ( fabs( pm->ps->velocity[i] - pml.previous_velocity[i] ) > 0.5f / fac ) {
 						if ( pm->ps->velocity[i] < 0 ) {
-							pm->ps->velocity[i] -= err * fac; // was 0.5
+							pm->ps->velocity[i] -= 0.5f * fac;
 						} else {
-							pm->ps->velocity[i] += err * fac; // was 0.5
+							pm->ps->velocity[i] += 0.5f * fac;
 						}
 					}
 				}

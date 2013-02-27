@@ -32,13 +32,6 @@ this.GetPriority = function()
 {
 	t = this.Bot.GetTarget();
 
-	if (GetEntClass(t) == CLASS.SUPER_SOLDIER)
-	{
-		//super soldier is invisible
-		this.Bot.IgnoreTarget( t, 1 );
-		block(0);
-	}
-
 	// if they are close to a primary goal, just have the bots shoot them
 	foreach ( position in Map.PrimaryGoalPositions )
 	{

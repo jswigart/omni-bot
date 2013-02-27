@@ -1,5 +1,7 @@
-if (GetModName()!="etpub" || GetCvar("g_etnamFlags")==0){ return; }
-
+//#M#095#
+//////////////////////////////////////////////////////////////////////////
+// The new weapon instance is passed to this function as the 'this'
+// Properties can be set like this.Property = x, or the this prefix can be left off.
 //////////////////////////////////////////////////////////////////////////
 
 WEAPON.SAK47 = 110; 					// Defined into g_etbot_interface.cpp

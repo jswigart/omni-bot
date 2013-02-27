@@ -96,25 +96,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// logging options
-	Options::SetValue("Log","LogInfo","true",false);
-	Options::SetValue("Log","LogWarnings","true",false);
-	Options::SetValue("Log","LogErrors","true",false);
-	Options::SetValue("Log","LogCriticalErrors","true",false);
-
-	g_Logger.LogMask() = 0;
-	bool l = true;
-	if(Options::GetValue("Log","LogInfo",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_INFO;
-	if(Options::GetValue("Log","LogWarnings",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_WARN;
-	if(Options::GetValue("Log","LogErrors",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_ERR;
-	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_CRIT;
-
-	//////////////////////////////////////////////////////////////////////////
 	// Initialize the Scripting System.
 	m_ScriptManager = ScriptManager::GetInstance();
 	m_ScriptManager->Init();
@@ -135,11 +116,29 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("Downloader","DownloadMissingNav","true",false);
 #endif
 
+	Options::SetValue("Log","LogInfo","true",false);
+	Options::SetValue("Log","LogWarnings","true",false);
+	Options::SetValue("Log","LogErrors","true",false);
+	Options::SetValue("Log","LogCriticalErrors","true",false);
+
 #ifdef ENABLE_REMOTE_DEBUGGING
 	Options::SetValue("RemoteWindow","Enabled",0,false);
 	Options::SetValue("RemoteWindow","Port",m_Remote.getPort(),false);
 #endif
 	
+	//////////////////////////////////////////////////////////////////////////
+	// logging options
+	g_Logger.LogMask() = 0;
+
+	bool l = true;
+	if(Options::GetValue("Log","LogInfo",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_INFO;
+	if(Options::GetValue("Log","LogWarnings",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_WARN;
+	if(Options::GetValue("Log","LogErrors",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_ERR;
+	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_CRIT;
 	//////////////////////////////////////////////////////////////////////////
 
 	bool EnableIpc = false;

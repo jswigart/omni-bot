@@ -48,8 +48,7 @@ this.Update = function()
 	sleep(1); // give it some time to update internally
 	goalEnt = this.GetEntity();
 	if ( (this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER))
-			|| (!GetEntFlags(goalEnt, ENTFLAG.DEAD) && Util.GetEntHealth(goalEnt) > 0)
-			|| GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
+			|| !GetEntFlags(goalEnt, ENTFLAG.DEAD) || GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
 	{
 		this.SetAvailable(0, false);
 		this.SetRemoveFlag(true);
@@ -59,7 +58,7 @@ this.Update = function()
 		if(this.IsDisabled())
 		{
 			entPos = GetEntPosition(this.GetEntity());
-			if(this.EntPosition == entPos)
+			if(entPos == this.EntPosition)
 			{
 				this.DisableGoal(false);
 				// cs: actually can't block here or the goal will never get removed.

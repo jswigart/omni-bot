@@ -5,7 +5,7 @@ this.Name = "AskForAmmo";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 
 // These parameters are optional
-this.LimitToNoClass(CLASS.FIELDOPS); //Fieldops shouldn't call for ammo
+this.LimitToClass( CLASS.MEDIC, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.COVERTOPS ); //Fieldops shouldn't call for ammo
 this.SkipGetPriorityWhenActive = true;
 
 if(!BB.PICKUPAMMO) {

@@ -10,11 +10,6 @@ Util.PlayerClassTable =
 	CLASS.FIELDOPS,
 	CLASS.COVERTOPS,
 };
-if (GetModName() == "etblight")
-{
-	Util.PlayerClassTable[5] = CLASS.SCIENTIST;
-	Util.PlayerClassTable[6] = CLASS.SUPER_SOLDIER;
-}
 
 Util.AllTeamPlayers = 32;
 
@@ -25,29 +20,27 @@ Util.WaypointGoalOffset = Vector3(0,0,-24);
 
 Util.AllTeams = (1 << TEAM.AXIS) | (1 << TEAM.ALLIES);
 
-Util.AllClasses = 0;
-foreach (cls in Util.PlayerClassTable)
-{
-	Util.AllClasses |= 1 << cls;
-}
+Util.AllClasses =
+	(1 << CLASS.SOLDIER) |
+	(1 << CLASS.MEDIC) |
+	(1 << CLASS.ENGINEER) |
+	(1 << CLASS.FIELDOPS) |
+	(1 << CLASS.COVERTOPS);
 
 Util.FlagCarrier = "CLASS.ENGINEER";
 Util.Sniper = "CLASS.COVERTOPS"; // should this be in quotes? leaving for now
 Util.SniperClass = CLASS.COVERTOPS;
 
-Util.PrimaryRouteGoalQuery = "BUILD_.*\nPLANT_.*\nFLAG_.*\nCHECKPOINT_.*";
-
 Util.SniperWeapons =
 {
-	//these values are for bot.HasWeapon
 	WEAPON.FG42_SCOPE,
 	WEAPON.K43_SCOPE,
 	WEAPON.GARAND_SCOPE,
+	111, //WEAPON.SAK47SCOPE,
 };
 
 Util.TeamSniperWeapons =
 {
-	//these values are for bot.ChangePrimaryWeapon
 	AXIS =
 	{
 		WEAPON.K43,
@@ -58,24 +51,17 @@ Util.TeamSniperWeapons =
 		WEAPON.GARAND,
 	},
 };
+
+Util.PrimaryRouteGoalQuery = "BUILD_.*\nPLANT_.*\nFLAG_.*\nCHECKPOINT_.*";
+
 if (GetModName() != "noquarter") {
 	Util.TeamSniperWeapons["ALLIES"][1] = WEAPON.FG42;
 }
+
 if (GetModName() == "etpub" && GetCvar("g_etnamFlags") > 0) {
-	Util.AddToTable(Util.SniperWeapons, WEAPON.SAK47SCOPED);
-	Util.TeamSniperWeapons["AXIS"][1] = WEAPON.SAK47;
+	Util.TeamSniperWeapons["AXIS"][1] = 110; //WEAPON.SAK47;
 } else {
 	Util.TeamSniperWeapons["AXIS"][1] = WEAPON.FG42;
-}
-if (GetModName() == "etblight") {
-	Util.AddToTable(Util.SniperWeapons, WEAPON.PROTO);
-	Util.AddToTable(Util.SniperWeapons, WEAPON.MP40SS);
-	// TeamSniperWeapons are only for COVERTOPS
-	Util.TeamSniperWeapons["AXIS"][2] = WEAPON.PROTO;
-	Util.TeamSniperWeapons["ALLIES"][2] = WEAPON.PROTO;
-}
-if (GetModName() == "bastardmod") {
-	Util.AddToTable(Util.SniperWeapons, WEAPON.BASTARD_FG42_SCOPE);
 }
 
 Util.TeamSideArms =
@@ -99,11 +85,13 @@ Util.TeamSideArms =
 	},
 };
 
-Util.IndexedSniperWeapons = {};
-foreach (i in Util.SniperWeapons)
+Util.IndexedSniperWeapons =
 {
-	Util.IndexedSniperWeapons[i] = 1;
-}
+	[22] = 1,
+	[29] = 1,
+	[33] = 1,
+	[111] = 1,
+};
 
 Util.CanBotSnipe = function(bot)
 {
@@ -114,6 +102,14 @@ Util.CanBotSnipe = function(bot)
 	}
 	return false;
 };
+
+// this errors
+//Util.IndexedSniperWeapons =
+//{
+//	[WEAPON.FG42_SCOPE] = 1,
+//	[WEAPON.K43_SCOPE] = 1,
+//	[WEAPON.GARAND_SCOPE] = 1,
+//};
 
 Util.HaveTeam = { false, true, true, false, false };
 
@@ -378,7 +374,7 @@ member WarpTo = function( _params )
 
 	pos = null;
 
-	if ( typeName( _params[0] ) == "float" || typeName( _params[0] ) == "int"  ) // try wp guid first
+	if ( typeName( _params[0] ) == "float" ) // try wp guid first
 	{
 		wpguid = ToInt(_params[0]);
 		pos = Util.GetWpGUIDPosition(wpguid);
@@ -960,7 +956,7 @@ member IsTeamDead = function(team, minbots)
 	// loop through the reserved player ents since there is no team table stored
 	for ( i = 0; i < 64; i = i + 1 )
 	{
-		if (EntityIsValid(i) && GetEntTeam(i) == team && !GetEntFlags(i, ENTFLAG.DEAD, ENTFLAG.LIMBO) && GetEntClass(i) != CLASS.INJUREDPLAYER)
+		if(GetEntTeam(i) == team && !GetEntFlags(i, ENTFLAG.DEAD, ENTFLAG.LIMBO) && GetEntClass(i) != CLASS.INJUREDPLAYER)
 		{
 			numalive += 1;
 			if (!minbots)
@@ -1069,7 +1065,6 @@ member SetAimModeForMount = function(goalName, aimType)
 	if ( goal ) {
 		if ( aimType == "opposite"
 			|| typeId(aimType) == 3 // Vec3
-			|| typeId(aimType) == 6 // table
 			|| aimType == "random"
 			|| aimType == "velocity" )
 		{
@@ -1136,17 +1131,6 @@ member GetBotSideArm = function(bot)
 	}
 
 	// shouldn't get here
-	return 0;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member GetBotPrimaryWeapon = function(bot)
-{
-	tbl = WeaponTable.GetPrimaryWeapons(bot.GetTeam(), bot.GetClass());
-	if (tbl) {
-		 return bot.HasAnyWeapon(tbl, { CheckCharged=false });
-	}
 	return 0;
 };
 

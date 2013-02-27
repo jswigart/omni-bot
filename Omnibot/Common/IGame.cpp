@@ -63,7 +63,7 @@ IGame::~IGame()
 
 const char *IGame::GetVersion() const
 {
-	return "0.83";
+	return "0.82";
 }
 
 bool IGame::CheckVersion(int _version)

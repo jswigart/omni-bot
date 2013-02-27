@@ -197,7 +197,7 @@ void P_WorldEffects( gentity_t *ent ) {
 
 
 	// poisoned
-	if ( ent->poisoned && ent->client && (g_gamestate.integer == GS_PLAYING || g_warmupDamage.integer == 1) ) {
+	if ( ent->poisoned && ent->client ) {
 		if ( ( level.time >= ( ent->lastPoisonTime + 1000 ) ) && ( ent->health > 0 ) ) {
 			int n = rand() % 3;
 			gentity_t *attacker = g_entities + ent->poisonEnt;
@@ -1119,9 +1119,6 @@ void ClientThink_real( gentity_t *ent ) {
 	if ( client->ps.powerups[PW_HASTE] ) {
 		client->ps.speed *= 1.3;
 	}
-	else if ( (g_OmniBotFlags.integer & OBF_FAST_BOTS) && (ent->r.svFlags & SVF_BOT) ) {
-	    client->ps.speed *= 1.2;
-	}
 
 	// set up for pmove
 	oldEventSequence = client->ps.eventSequence;
@@ -1155,7 +1152,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// fixed physics from sandmod
 	if ( ent->r.svFlags & SVF_BOT ) {
-		pm.fixedphysics = 99;
+		pm.fixedphysics = 1;
 		pm.fixedphysicsfps = 125;
 	} else
 	{

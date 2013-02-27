@@ -4,14 +4,8 @@
 this.Name = "TRIPMINE";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 this.SkipGetPriorityWhenActive = true;
-if (WEAPON.TRIPMINE)
-{
-	this.LimitToWeapon(WEAPON.TRIPMINE);
-}
-else
-{
-	this.AutoAdd = false;
-}
+this.LimitToWeapon(WEAPON.TRIPMINE);
+this.AutoAdd = GetModName() == "silEnT" && (GetCvar("g_friendlyFireOpts") & 8);
 
 
 // define some goal states
