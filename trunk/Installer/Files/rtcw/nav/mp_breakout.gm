@@ -477,6 +477,9 @@ global OnMapLoad = function()
 	botpush3 = OnTriggerRegion( AABB( 4563.000,3063.000,219.000,4747.000,3488.000,293.000 ), RegionTrigger.DisableBotPush );
 	// Allies AS Spawnkill House
 	botpush3 = OnTriggerRegion( AABB( 3279.000,2471.000,219.000,4196.000,2776.000,336.000 ), RegionTrigger.DisableBotPush );
+	
+	// hole into sewer
+	botpush4 = OnTriggerRegion( AABB( 1599.000,1111.000,61.000,1940.000,1341.000,163.000 ), RegionTrigger.DisableBotPush );
 
 	aaplant = OnTriggerRegion( AABB( 4816.000,2361.000,75.000,5045.000,2609.000,196.000 ), Map.AA );
 	opsplant = OnTriggerRegion( AABB( -3171.000,879.000,407.000,-2902.000,1027.000,481.000 ), Map.Ops );
