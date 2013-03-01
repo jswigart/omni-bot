@@ -247,6 +247,8 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rBridge_5 = MapRoutes.PLANT_Bridge;
 	MapRoutes.ATTACK_rBridge_6 = MapRoutes.PLANT_Bridge;
 	Util.Routes( MapRoutes );
+	
+	// EntityKill( 146 ); // sewer obj. remove for tweaking pathing
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 
