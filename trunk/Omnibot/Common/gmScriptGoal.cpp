@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "gmScriptGoal.h"
 #include "gmBotLibrary.h"
+#include "BotWeaponSystem.h"
+#include "IGameManager.h"
 
 using namespace AiState;
 

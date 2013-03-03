@@ -1,6 +1,8 @@
 #ifndef __RENDER_OVERLAY_H__
 #define __RENDER_OVERLAY_H__
 
+#include "common.h"
+
 struct ReferencePoint 
 {
 	Vector3f	EyePos;

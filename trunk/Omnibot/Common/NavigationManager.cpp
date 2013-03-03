@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "NavigationManager.h"
 #include "IGameManager.h"
 #include "IGame.h"
@@ -28,7 +27,7 @@ NavigationManager::~NavigationManager()
 	DeletePathPlanner();
 }
 
-bool NavigationManager::CreatePathPlanner(NavigatorID _navid)
+bool NavigationManager::CreatePathPlanner( IGame * game, NavigatorID _navid)
 {
 	switch(_navid)
 	{
@@ -52,7 +51,7 @@ bool NavigationManager::CreatePathPlanner(NavigatorID _navid)
 	if(m_PathPlanner && m_PathPlanner->Init())
 	{
 		// Allow the game to set up its navigation flags.
-		IGameManager::GetInstance()->GetGame()->RegisterNavigationFlags(m_PathPlanner);
+		game->RegisterNavigationFlags(m_PathPlanner);
 		return true;
 	}
 

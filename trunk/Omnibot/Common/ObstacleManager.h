@@ -9,6 +9,8 @@
 #ifndef __OBSTACLEMANAGER_H__
 #define __OBSTACLEMANAGER_H__
 
+#include "common.h"
+
 class ObstacleManager
 {
 public:

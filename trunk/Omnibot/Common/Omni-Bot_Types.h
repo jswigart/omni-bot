@@ -269,8 +269,16 @@ typedef struct AABB_t
 	{
 		for(int i = 0; i < 3; ++i)
 		{
-			m_Mins[i] = _min[i] < _max[i] ? _min[i] : _max[i];
-			m_Maxs[i] = _min[i] > _max[i] ? _min[i] : _max[i];
+			m_Mins[i] = _min[i];
+			m_Maxs[i] = _max[i];
+		}
+	}
+	void FixMinMax()
+	{
+		for(int i = 0; i < 3; ++i)
+		{
+			m_Mins[i] = m_Mins[i] < m_Maxs[i] ? m_Mins[i] : m_Maxs[i];
+			m_Maxs[i] = m_Mins[i] > m_Maxs[i] ? m_Mins[i] : m_Maxs[i];
 		}
 	}
 	void CenterPoint(float _out[3]) const
@@ -394,6 +402,15 @@ typedef struct AABB_t
 			m_Mins[i] -= _expand;
 			m_Maxs[i] += _expand;
 		}
+	}
+	void Expand(float _expandX, float _expandY, float _expandZ)
+	{
+		m_Mins[0] -= _expandX;
+		m_Maxs[0] += _expandX;
+		m_Mins[1] -= _expandY;
+		m_Maxs[1] += _expandY;
+		m_Mins[2] -= _expandZ;
+		m_Maxs[2] += _expandZ;
 	}
 	void ExpandAxis(int _axis, float _expand)
 	{
@@ -1230,6 +1247,12 @@ typedef struct
 	char			m_Buffer[BufferSize];
 	int				m_Color;
 } IPC_DebugTextMessage;
+
+typedef struct
+{
+	int			m_NumDebugMessages;
+	int			m_MaxDebugMessages;
+} IPC_DebugDrawHeader;
 
 typedef struct
 {

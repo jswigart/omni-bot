@@ -6,15 +6,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompMC.h"
 #include "MC_Game.h"
 #include "MC_Client.h"
 
 #include "gmMCBinds.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
+#include "FilterSensory.h"
+#include "BotSensoryMemory.h"
 #include "ScriptManager.h"
+
+#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -508,28 +509,9 @@ const float MC_Game::MC_GetEntityClassAimOffset(const int _class, const BitFlag6
 	return 0.0f;
 }
 
-PathPlannerWaypoint::BlockableStatus WOLF_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus MC_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
 {
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
-	//BotTraceResult tr;
-
-	//if(_wp1->IsFlagOn(F_FF_NAV_DETPACK) && _wp2->IsFlagOn(F_FF_NAV_DETPACK))
-	//{
-	//	EngineFuncs::TraceLine(tr, 
-	//		(_wp1->GetPosition() + Vector3f(0,0,40)),
-	//		(_wp2->GetPosition() + Vector3f(0,0,40)), 
-	//		NULL, TR_MASK_SOLID, -1, True);
-
-	//	return (tr.m_Fraction == 1.0f);
-	//}
-	//else
-	//{
-	//	DEBUG_ONLY(std::cout << "Invalid flag combination in PathCheck detected!" << std::endl);
-	//}
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;
-}
-
-void MC_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = WOLF_PathCheck;
 }

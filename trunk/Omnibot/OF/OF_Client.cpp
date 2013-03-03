@@ -6,14 +6,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompOF.h"
 #include "OF_Client.h"
 #include "TF_NavigationFlags.h"
-#include "OF_Messages.h"
+#include "TF_InterfaceFuncs.h"
 #include "TF_BaseStates.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
+#include "FilterClosestOF.h"
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +45,24 @@ void OF_Client::Init(int _gameid)
 	ws->AddWeaponToInventory(TF_WP_GRENADE1);
 	ws->AddWeaponToInventory(TF_WP_GRENADE2);
 	}*/
+}
+
+NavFlags OF_Client::GetTeamFlag(int _team)
+{
+	static const NavFlags defaultTeam = 0;
+	switch(_team)
+	{
+	case OF_TEAM_BLUE:
+		return F_NAV_TEAM1;
+	case OF_TEAM_RED:
+		return F_NAV_TEAM2;
+	case OF_TEAM_YELLOW:
+		return F_NAV_TEAM3;
+	case OF_TEAM_GREEN:
+		return F_NAV_TEAM4;
+	default:
+		return defaultTeam;
+	}
 }
 
 float OF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 

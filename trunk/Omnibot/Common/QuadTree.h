@@ -9,6 +9,8 @@
 #ifndef __QUADTREE_H__
 #define __QUADTREE_H__
 
+#include "common.h"
+
 class QuadTree
 {
 public:

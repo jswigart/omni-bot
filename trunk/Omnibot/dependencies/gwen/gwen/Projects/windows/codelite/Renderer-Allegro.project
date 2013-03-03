@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Renderer-Allegro">
+  <VirtualDirectory Name="Renderers">
+    <VirtualDirectory Name="Allegro">
+      <File Name="../../../Renderers/Allegro/Allegro.cpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Settings Type="Static Library">
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libGWEN-Renderer-Allegro.a" IntermediateDirectory="obj/Release/Renderer-Allegro" Command="./libGWEN-Renderer-Allegro.a" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse;-O2;-ffast-math">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="NDEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libGWEND-Renderer-Allegrod" IntermediateDirectory="obj/Debug/Renderer-Allegro" Command="./libGWEND-Renderer-Allegrod" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="_DEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies name="Release">
+  </Dependencies>
+  <Dependencies name="Debug">
+  </Dependencies>
+</CodeLite_Project>

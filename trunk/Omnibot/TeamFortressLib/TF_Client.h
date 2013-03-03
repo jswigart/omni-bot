@@ -30,10 +30,7 @@ public:
 	void Init(int _gameid);
 
 	void Update();
-
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
-
+	
 	void SendVoiceMacro(int _macroId) {};
 
 	float GetGameVar(GameVar _var) const;

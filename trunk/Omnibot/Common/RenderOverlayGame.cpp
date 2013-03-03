@@ -1,7 +1,10 @@
-#include "PrecompCommon.h"
+
 #include "RenderOverlay.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
+
+#include "DebugWindow.h"
+#include "IGame.h"
 
 #include <DebugDraw.h>
 

@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_InterfaceFuncs.h"
+#include "JA_Client.h"
+
+#include "MessageHelper.h"
 
 namespace InterfaceFuncs
 {

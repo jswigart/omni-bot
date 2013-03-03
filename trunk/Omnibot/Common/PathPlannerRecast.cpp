@@ -6,16 +6,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "PathPlannerRecast.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "GoalManager.h"
 #include "NavigationFlags.h"
-#include "AStarSolver.h"
+#include "Path.h"
 #include "gmUtilityLib.h"
 
 #include "RecastInterfaces.h"
+#include "DebugWindow.h"
 
 #include <DebugDraw.h>
 

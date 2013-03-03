@@ -9,6 +9,8 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
+#include "common.h"
+
 // class: Path
 //		This class represents a traversable path through the environment.
 class Path

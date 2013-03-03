@@ -6,8 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ETQW_BaseStates.h"
+#include "ETQW_InterfaceFuncs.h"
+
+#include "BotWeaponSystem.h"
+#include "BotSteeringSystem.h"
+#include "BotTargetingSystem.h"
 
 namespace AiState
 {

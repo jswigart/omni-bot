@@ -11,9 +11,13 @@
 
 #include "CommandReciever.h"
 #include "EventReciever.h"
-#include "PathPlannerWaypoint.h"
+#include "PathPlannerWaypointInterface.h"
 #include "MessageManager.h"
 #include "Weapon.h"
+#include "Module.h"
+#include "Base_Messages.h"
+#include "PropertyBinding.h"
+#include "Regulator.h"
 
 class State;
 class Client;
@@ -25,8 +29,6 @@ class Network;
 class gmMachine;
 class gmTableObject;
 class gmFunctionObject;
-
-extern BlackBoard g_Blackboard;
 
 typedef boost::shared_ptr<Client> ClientPtr;
 typedef boost::weak_ptr<Client> ClientWPtr;
@@ -46,7 +48,10 @@ struct EntityInstance
 //		This class provides common functionality for various game types.
 //		Specific games will derive from this class to expand and implement
 //		their required functionality.
-class IGame : public CommandReciever, public EventReciever
+class IGame : 
+	public CommandReciever, 
+	public EventReciever,
+	public PathPlannerWaypointInterface // waypoint system specific callbacks
 {
 public:
 	struct GameVars 
@@ -64,12 +69,11 @@ public:
 	virtual void NewRound();
 	virtual void StartTraining();
 	virtual void RegisterNavigationFlags(PathPlannerBase *_planner);
-	virtual void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck) { }
 	virtual void InitMapScript();
 
 	virtual void ClientJoined(const Event_SystemClientConnected *_msg);
 	virtual void ClientLeft(const Event_SystemClientDisConnected *_msg);
-
+	
 	void UpdateTime();
 	static inline obint32 GetTime()				{ return m_GameMsec; };
 	static inline obReal GetTimeSecs()			{ return (float)m_GameMsec / 1000.f; };
@@ -162,9 +166,9 @@ public:
 	virtual const char * RemoteConfigName() const { return "Omnibot"; }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	void UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db );
-	void SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
-	virtual void InternalSyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
+	void UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & cached, Remote::Game & update );
+	void SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection, Remote::Entity & cachedEntity, Remote::Entity & entityUpdate );
+	virtual void InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection );
 #endif
 
 	IGame();
@@ -189,6 +193,8 @@ protected:
 	static bool			m_BotJoining;
 
 	static GameVars		m_GameVars;
+
+	Module				m_AttachedGui;
 
 	enum { MaxDeletedThreads = 1024 };
 	int			m_DeletedThreads[MaxDeletedThreads];

@@ -9,7 +9,8 @@
 #ifndef __MC_INTERFACEFUNCS_H__
 #define __MC_INTERFACEFUNCS_H__
 
-#include "BotWeaponSystem.h"
+#include "InterfaceFuncs.h"
+#include "MC_Messages.h"
 
 namespace InterfaceFuncs
 {	

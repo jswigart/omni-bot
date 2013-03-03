@@ -70,7 +70,7 @@ namespace RemoteLib
 		bool write( const char * data, uint32 numBytes );
 		bool read( char * data, uint32 numBytes );
 
-		bool append( DataBuffer & db );
+		bool append( const DataBuffer & db );
 
 		//////////////////////////////////////////////////////////////////////////
 		// template to auto convert
@@ -289,40 +289,5 @@ namespace RemoteLib
 
 		values_t		buffer[ _size_ ];
 		int				numRecords;
-	};
-	//////////////////////////////////////////////////////////////////////////
-	class SyncVarBase {
-	public:
-		friend class SyncableEntity;
-		
-		virtual bool UpdateSync( DataBuffer & db ) = 0;
-
-		SyncVarBase( const char * name ) : nextVar( NULL ), varName( name ) {}
-		virtual ~SyncVarBase() {}
-	protected:
-		const char *			varName;
-		SyncVarBase *			nextVar;
-	};
-	
-	//////////////////////////////////////////////////////////////////////////
-	class SyncInt : public SyncVarBase {
-	public:
-		virtual bool UpdateSync( DataBuffer & db );
-		SyncInt( const char * name, int32 & val );
-	private:
-		int32 &				currentValue;
-		int32				syncedValue;
-
-		SyncInt & operator=( const SyncInt & other );
-	};
-	class SyncFloat : public SyncVarBase {
-	public:
-		virtual bool UpdateSync( DataBuffer & db );
-		SyncFloat( const char * name, float & val );
-	private:
-		float &				currentValue;
-		float				syncedValue;
-
-		SyncFloat & operator=( const SyncFloat & other );
 	};
 };

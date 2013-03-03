@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "Waypoint.h"
 #include "NavigationFlags.h"
 
@@ -129,39 +129,39 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 			}
 		}
 
-		if ( fullSync ) {
-			ci.snapShot.Clear();
-		}
+		//if ( fullSync ) {
+		//	ci.snapShot.Clear();
+		//}
 
-		ConnectionInfo::ConnectionSnapShot newSnapShot = ci.snapShot;
+		//ConnectionInfo::ConnectionSnapShot newSnapShot = ci.snapShot;
 
-		RemoteLib::DataBufferStatic<2048> localBuffer;
-		localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		newSnapShot.Sync( "fromx", GetPosition().x, localBuffer );
-		newSnapShot.Sync( "fromy", GetPosition().y, localBuffer );
-		newSnapShot.Sync( "fromz", GetPosition().z + g_fTopPathOffset, localBuffer );
-		newSnapShot.Sync( "tox", ci.m_Connection->GetPosition().x, localBuffer );
-		newSnapShot.Sync( "toy", ci.m_Connection->GetPosition().y, localBuffer );
-		newSnapShot.Sync( "toz", ci.m_Connection->GetPosition().z + g_fBottomPathOffset, localBuffer );
-		newSnapShot.Sync( "color", linkColor.rgba(), localBuffer );
-		
-		const uint32 writeErrors = localBuffer.endWrite();
-		assert( writeErrors == 0 );
+		//RemoteLib::DataBufferStatic<2048> localBuffer;
+		//localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		//newSnapShot.Sync( "fromx", GetPosition().x, localBuffer );
+		//newSnapShot.Sync( "fromy", GetPosition().y, localBuffer );
+		//newSnapShot.Sync( "fromz", GetPosition().z + g_fTopPathOffset, localBuffer );
+		//newSnapShot.Sync( "tox", ci.m_Connection->GetPosition().x, localBuffer );
+		//newSnapShot.Sync( "toy", ci.m_Connection->GetPosition().y, localBuffer );
+		//newSnapShot.Sync( "toz", ci.m_Connection->GetPosition().z + g_fBottomPathOffset, localBuffer );
+		//newSnapShot.Sync( "color", linkColor.rgba(), localBuffer );
+		//
+		//const uint32 writeErrors = localBuffer.endWrite();
+		//assert( writeErrors == 0 );
 
-		if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
-			db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-			db.startSizeHeader();
-			db.writeInt32( RemoteLib::ID_qmlComponent );
-			db.writeInt32( GetUID() | ( index<<30 ) );
-			db.writeSmallString( "connection" );
-			db.append( localBuffer );
-			db.endSizeHeader();
+		//if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
+		//	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		//	db.startSizeHeader();
+		//	db.writeInt32( RemoteLib::ID_qmlComponent );
+		//	db.writeInt32( GetUID() | ( index<<30 ) );
+		//	db.writeSmallString( "connection" );
+		//	db.append( localBuffer );
+		//	db.endSizeHeader();
 
-			if ( db.endWrite() == 0 ) {
-				// mark the stuff we synced as done so we don't keep spamming it
-				ci.snapShot = newSnapShot;
-			}
-		}
+		//	if ( db.endWrite() == 0 ) {
+		//		// mark the stuff we synced as done so we don't keep spamming it
+		//		ci.snapShot = newSnapShot;
+		//	}
+		//}
 	}
 }
 #endif

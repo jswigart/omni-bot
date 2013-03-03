@@ -12,6 +12,11 @@
 #include "messageTags.h"
 #include "socket.h"
 
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/message.h"
+#include "google/protobuf/text_format.h"
+
 #include "remotedebugwindow.h"
 
 enum UserDataKeys { EntityHandle = 1 };
@@ -49,8 +54,8 @@ RemoteDebugWindow::RemoteDebugWindow(QWidget *parent, Qt::WFlags flags)
 	//////////////////////////////////////////////////////////////////////////
 	//ui.declarativeView->engine()->setBaseUrl(QUrl::fromLocalFile("./qml/"));
 
-	QDeclarativeEngine * engine = ui.declarativeMap->engine();
-	//engine->addImportPath( "" );
+	//QDeclarativeEngine * engine = ui.declarativeMap->engine();
+	QDeclarativeEngine * engine = new QDeclarativeEngine( ui.declarativeMap );
 
 	QGLWidget * glWidget = new QGLWidget;
 	glWidget->qglClearColor( QColor( "cyan" ) );
@@ -323,68 +328,72 @@ QModelIndex RemoteDebugWindow::findNodeForPath( const QString & path ) {
 }
 
 void RemoteDebugWindow::processMessages() {
-	RemoteLib::DataBuffer db( recvdData.data(), 
-		recvdData.size(),
-		RemoteLib::DataBuffer::ModeRead );
-
-	db.setAssertOnError();
-	while( db.getReadBytesLeft() >= 4 ) {
-		const uint32 baseBytes = db.getBytesRead();
-		db.beginRead( RemoteLib::DataBuffer::ReadModeAllOrNone );
-
-		int32 tagId = 0, blockSize = 0;
-		db.readInt32( blockSize );
-
-		if ( !db.canRead( blockSize ) ) {
-			db.endRead( true );
-			break;
-		}
-
-		db.readInt32( tagId );
-		
-		switch( tagId )
-		{
-		case RemoteLib::ID_configName:
-			{
-				msgConfigName( db );
-				break;
-			}
-		case RemoteLib::ID_ack:
-			{
-				int sz = 4;
-				// keepalive
-				tcpSocket->write( (char*)&sz, 4 );
-				tcpSocket->write( (char*)&tagId, 4 );
-				break;
-			}
-		case RemoteLib::ID_qmlComponent:
-			{
-				updateComponent( db, blockSize-4 );				
-				break;
-			}
-		case RemoteLib::ID_delete:
-			{
-				int entityHandle = 0;
-				if ( db.readInt32( entityHandle ) ) {
-					deleteEntity( entityHandle );
-				}
-				break;
-			}
-		case RemoteLib::ID_treeNode:
-			{
-				msgTreeNode( db );
-				break;
-			}
-		default:
-			Q_ASSERT_X( 0, __FUNCTION__, "unhandled message type" );
-			break;
-		}
-
-		const uint32 blockBytesRead = db.getBytesRead() - baseBytes;
-		Q_ASSERT_X( blockBytesRead == blockSize+4, __FUNCTION__, "databuffer read error" );
-		db.endRead();
+	if ( recvdData.isEmpty() ) {
+		return;
 	}
-	recvdData.remove( 0, db.getBytesRead() );
+
+	using namespace google::protobuf;
+	io::CodedInputStream stream( (google::protobuf::uint8*)recvdData.data(), recvdData.size() );
+
+	google::protobuf::uint32 msgSize = 0, bytesRead = 0;
+	while( stream.ReadVarint32( &msgSize ) && msgSize > 0 ) {
+		if ( stream.BytesUntilLimit() >= msgSize ) {
+			const io::CodedInputStream::Limit lastLimit = stream.PushLimit( msgSize );
+
+			Remote::Packet packet;
+			if ( packet.ParseFromCodedStream( &stream ) ) {
+				switch( packet.payloadformat() ) {
+					case Remote::PACKET_GAME:
+						{
+							Remote::Game msg;
+
+							bool parsed = false;
+							if ( packet.payloadformat() == Remote::PAYLOAD_TEXT ) {
+								parsed = TextFormat::ParseFromString( packet.payloaddata(), &msg );
+							} else {
+								parsed = msg.ParseFromString( packet.payloaddata() );
+							}
+
+							if ( parsed ) {
+								//ReflectMessageToQML( entity );
+							} else {
+								qDebug() << "Error Parsing Game Message\n";
+							}
+							break;
+						}
+					case Remote::PACKET_ENTITY:
+						{
+							Remote::Entity msg;
+
+							bool parsed = false;
+							if ( packet.payloadformat() == Remote::PAYLOAD_TEXT ) {
+								parsed = TextFormat::ParseFromString( packet.payloaddata(), &msg );
+							} else {
+								parsed = msg.ParseFromString( packet.payloaddata() );
+							}
+
+							if ( parsed ) {
+								ReflectMessageToQML( msg );
+							} else {
+								qDebug() << "Error Parsing Entity Message\n";
+							}
+							break;
+						}
+				}	
+			} else {
+				qDebug() << "Error Parsing Packet\n";
+			}
+			stream.PopLimit( lastLimit );
+
+			bytesRead += msgSize + io::CodedOutputStream::VarintSize32( msgSize );
+		} else {
+			// the complete message is not in the buffer
+			break;
+		}
+	}
+
+	// remove all we could process at this time
+	recvdData.remove( 0, bytesRead );
 }
 
 bool RemoteDebugWindow::msgConfigName( RemoteLib::DataBuffer & db ) {
@@ -434,6 +443,25 @@ bool RemoteDebugWindow::msgTreeNode( RemoteLib::DataBuffer & db ) {
 
 //////////////////////////////////////////////////////////////////////////
 
+bool RemoteDebugWindow::msgScriptPrint( RemoteLib::DataBuffer & db ) {
+	QString msg;
+	enum { BufferSz = 2048 };
+	char buffer[ BufferSz ] = {};
+
+	int32 rgba = 0;
+	db.readInt32( rgba );
+	db.readString( buffer, BufferSz ); msg = buffer;
+
+	QString html;
+	QTextStream stream( &html );
+	stream << buffer;
+	
+	ui.scriptOutput->append( html );
+	return !db.hasReadError();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 QGraphicsObject * RemoteDebugWindow::entityFromHandle( int handle ) {
 	QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(objViewPort);
 	const QObjectList & children = rootItem->children();
@@ -454,23 +482,13 @@ void RemoteDebugWindow::deleteEntity( int entityHandle ) {
 	delete entity;
 }
 
-void RemoteDebugWindow::updateComponent( RemoteLib::DataBuffer & db, int blockSize ) {
-	const uint32 baseBytes = db.getBytesRead();
-
-	// there should ALWAYS be an entity handle
-	int32 entityHandle = 0;
-	if(!db.readInt32(entityHandle)) {
-		return;
-	}
-	enum { MaxPropertySize = 256 };
-	char componentName[ MaxPropertySize ] = {};
-	db.readSmallString( componentName, MaxPropertySize );
-
-	QDeclarativeComponent * component = FindComponentType( componentName );
+void RemoteDebugWindow::ReflectMessageToQML( const Remote::Entity & msg ) {
+	
+	QDeclarativeComponent * component = FindComponentType( "entity" );
 	if ( component == NULL ) {
 		QMessageBox msgBox(this);
 		msgBox.setText("Unknown Component type, disconnecting...");
-		msgBox.setInformativeText( QString("Component Type Not Found: ") + componentName );
+		msgBox.setInformativeText( QString("Component Type Not Found: ") + "entity" );
 		msgBox.setStandardButtons(QMessageBox::Ok);
 		msgBox.exec();
 
@@ -480,93 +498,145 @@ void RemoteDebugWindow::updateComponent( RemoteLib::DataBuffer & db, int blockSi
 
 	bool finishEntity = false;
 
-	QGraphicsObject * entity = entityFromHandle( entityHandle );
+	QGraphicsObject * entity = entityFromHandle( msg.uid() );
 	if ( !entity ) {
 		QDeclarativeItem * rootItem = qobject_cast<QDeclarativeItem*>(objViewPort);
 		QDeclarativeItem * item = qobject_cast<QDeclarativeItem*>(component->beginCreate(mainContext));
 		item->setParentItem( rootItem );
 		item->setParent( rootItem );
-		item->setData(EntityHandle,entityHandle);
+		item->setData( EntityHandle, msg.uid() );
 		entity = item;
 
-		entity->setProperty( "handle", entityHandle );
+		entity->setProperty( "handle", msg.uid() );
 
 		finishEntity = true;
 	}
 
-	uint32 blockBytesRead = 0;
+	if ( msg.position().has_x() ) {
+		entity->setProperty( "x", msg.position().x() );
+	}
+	if ( msg.position().has_y() ) {
+		entity->setProperty( "y", msg.position().y() );
+	}
+	if ( msg.position().has_z() ) {
+		entity->setProperty( "z", msg.position().z() );
+	}
 
-	char propertyName[ MaxPropertySize ] = {};
-	while( db.readSmallString( propertyName, MaxPropertySize ) ) {
-		QVariant prop = entity->property( propertyName );
-		if ( prop.isNull() ) {
-			QMessageBox msgBox(this);
-			msgBox.setText("Unknown Property.");
-			msgBox.setInformativeText( "Received Unknown Property: " + QString(propertyName) + " unable to continue." );
-			msgBox.setStandardButtons(QMessageBox::Ok);
-			msgBox.exec();
+	using namespace google::protobuf;
+	const Reflection * reflection = msg.GetReflection();
 
-			tcpSocket->disconnect();
-			db.clear();
-			return;
-		} else {
-			QVariant::Type propType = prop.type();
-			switch( propType )
-			{
-			case QVariant::Int:
-				{
-					int32 val = 0.0f;
-					if ( db.read32( val ) ) {
-						if ( prop != val ) {
-							entity->setProperty( propertyName, val );
-						}
-					}
-					break;
-				}
-			case QVariant::String:
-				{
-					enum { MaxPropertySize = 256 };
-					char val[ MaxPropertySize ];
-					if ( db.readSmallString( val, MaxPropertySize ) ) {
-						if ( prop != val ) {
-							entity->setProperty( propertyName, val );
-						}
-					}
-					break;
-				}
-			case QMetaType::Float:
-			case QMetaType::Double:
-				{
-					float val = 0.0f;
-					if ( db.readFloat32( val ) ) {
-						if ( prop != val ) {
-							entity->setProperty( propertyName, val );
-						}
-					}
-					break;
-				}
-			case QMetaType::QColor:
-				{
-					int val = 0;
-					if ( db.readInt32( val ) ) {
-						QColor newColor( val );
-						if ( prop != val ) {
-							entity->setProperty( propertyName, val );
-						}
-					}
-					break;
-				}
-			default:
-				{
-					QString propTypeName = prop.typeName();
-					Q_ASSERT_X( 0, __FUNCTION__, "unhandled property type" );
-				}
-			}
-		}
+	typedef std::vector<const FieldDescriptor*> FieldDescList;
+	FieldDescList descriptors;
+	reflection->ListFields( msg, &descriptors );
+	for ( int i = 0; i < descriptors.size(); ++i ) {
+		std::string fieldName = descriptors[ i ]->name();
 
-		blockBytesRead = db.getBytesRead() - baseBytes;
-		if ( blockBytesRead >= blockSize ) {
-			break;
+		switch( descriptors[ i ]->type() ) {
+			case FieldDescriptor::TYPE_DOUBLE:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetDouble( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_FLOAT:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetFloat( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_INT64:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt64( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_UINT64:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetUInt64( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_INT32:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt32( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_FIXED64:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetUInt64( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_FIXED32:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetUInt32( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_BOOL:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetBool( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_STRING:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetString( msg, descriptors[ i ] ).c_str() );
+					break;
+				}
+			case FieldDescriptor::TYPE_GROUP:
+				{
+					// todo
+					break;
+				}
+			case FieldDescriptor::TYPE_MESSAGE:
+				{
+					const Message & subMsg = reflection->GetMessage( msg, descriptors[ i ] );
+					const Reflection * subMsgReflection = subMsg.GetReflection();
+					
+					/*QVariant currentProp = entity->property( fieldName.c_str() );
+					if ( currentProp.type() == QVariant::Vector3D ) {
+						subMsgReflection->flo
+					}*/
+
+					
+					
+					FieldDescList subMsgFields;
+					subMsgReflection->ListFields( subMsg, &subMsgFields );
+
+					// todo
+					break;
+				}
+			case FieldDescriptor::TYPE_BYTES:
+				{
+					const std::string byteString = reflection->GetString( msg, descriptors[ i ] );
+					entity->setProperty( fieldName.c_str(), QByteArray( byteString.c_str(), byteString.size() ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_UINT32:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetUInt32( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_ENUM:
+				{
+					const EnumValueDescriptor * enumval = reflection->GetEnum( msg, descriptors[ i ] );
+					entity->setProperty( fieldName.c_str(), enumval->name().c_str() );
+					break;
+				}
+			case FieldDescriptor::TYPE_SFIXED32:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt32( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_SFIXED64:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt64( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_SINT32:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt32( msg, descriptors[ i ] ) );
+					break;
+				}
+			case FieldDescriptor::TYPE_SINT64:
+				{
+					entity->setProperty( fieldName.c_str(), reflection->GetInt64( msg, descriptors[ i ] ) );
+					break;
+				}
 		}
 	}
 

@@ -6,18 +6,19 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
 #include "ET_Game.h"
 #include "ET_GoalManager.h"
 #include "ET_NavigationFlags.h"
 #include "ET_VoiceMacros.h"
+#include "ET_InterfaceFuncs.h"
+#include "ET_Client.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
+#include "BotBaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "IGameManager.h"
 #include "gmETBinds.h"
+
+#include "PathPlannerWaypoint.h"
 
 int ET_Game::CLASSEXoffset;
 bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
@@ -293,7 +294,7 @@ const char *ET_Game::FindClassName(obint32 _classId)
 		else if(_classId == 7) return "SUPER_SOLDIER";
 	}
 
-	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);
+	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);	
 	for(int i = 0; i < iNumMappings; ++i)
 	{
 		if(ET_ClassEnum[i].m_Value == _classId)
@@ -320,7 +321,7 @@ void ET_Game::InitScriptClasses(gmMachine *_machine, gmTableObject *_table)
 	{
 		_table->Set(_machine, "SCIENTIST", gmVariable(6));
 		_table->Set(_machine, "SUPER_SOLDIER", gmVariable(7));
-	}
+}
 
 	InitScriptWeaponClasses(_machine,_table, ET_CLASSEX_WEAPON + ET_Game::CLASSEXoffset);
 }
@@ -700,10 +701,11 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 	}	
 }
 
-PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
 {
 	static bool bRender = false;
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 
 	Vector3f vStart, vEnd;
 
@@ -714,7 +716,7 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 		AABB aabb(vMins, vMaxs);
 		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
 		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-		
+
 		if(bRender)
 		{
 			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
@@ -722,10 +724,10 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
 	}
 
-	if(res != PathPlannerWaypoint::B_PATH_CLOSED && _wp1->IsFlagOn(F_ET_NAV_BRIDGE) && _wp2->IsFlagOn(F_ET_NAV_BRIDGE))
+	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp1->IsFlagOn(F_ET_NAV_BRIDGE) && _wp2->IsFlagOn(F_ET_NAV_BRIDGE))
 	{
 		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
 		vEnd = vStart +  Vector3f(0,0,-48);
@@ -737,10 +739,10 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
 	}
 
-	if(res != PathPlannerWaypoint::B_PATH_CLOSED && _wp2->IsFlagOn(F_ET_NAV_WATERBLOCKABLE))
+	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp2->IsFlagOn(F_ET_NAV_WATERBLOCKABLE))
 	{
 		vStart = _wp1->GetPosition();
 		vEnd = vStart + Vector3f(0.0f, 0.0f, 5.0f);
@@ -751,19 +753,14 @@ PathPlannerWaypoint::BlockableStatus ET_PathCheck(const Waypoint* _wp1, const Wa
 		}
 
 		int iContents = g_EngineFuncs->GetPointContents(vStart);		
-		res = (iContents & CONT_WATER) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
+		res = (iContents & CONT_WATER) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
 	}
-	
-	if(_draw && (res != PathPlannerWaypoint::B_INVALID_FLAGS))
+
+	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
 	{
 		Utils::DrawLine(vStart, vEnd, 
-			(res == PathPlannerWaypoint::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
+			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
 	}
 
 	return res;
-}
-
-void ET_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = ET_PathCheck;
 }

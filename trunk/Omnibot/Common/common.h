@@ -17,7 +17,6 @@
 
 //#include "CodeAnalysis.h"
 
-
 // Disable some compiler warnings.
 #ifdef _WIN32
 #pragma warning(   error: 4002 )	// Too many actual parameters for macro: promoted to be an error
@@ -54,8 +53,6 @@
 
 // :note
 //	Commonly included STL headers.
-#include <iostream>
-#include <iomanip>
 #include <vector>
 #include <string>
 #include <list>
@@ -90,30 +87,6 @@ typedef std::list<String> StringList;
 #include <omp.h>
 #endif
 
-#ifdef WIN32
-	#include <hash_map>
-#else
-	#if defined (__GNUC__) && (__GNUC__ <= 2)
-		#include <hash_map.h>
-		#include <function.h>
-		namespace stdext
-		{
-			using ::hash_map;
-			using ::hash
-			using ::equal_to;
-		};
-	#else
-		#include <ext/hash_map> // cs: deprecated message recommends unordered_map, but that relies on experimental -std=c++0x. tr1/unordered_map is an option ...
-		#include <ext/functional>
-		namespace stdext
-		{
-			using __gnu_cxx::hash_map;
-			using __gnu_cxx::hash;
-			using __gnu_cxx::equal_to;
-		};
-	#endif
-#endif
-
 // Boost
 #if _MSC_VER == 1600 // cs: ffs
 #include <boost/version.hpp>
@@ -127,6 +100,9 @@ typedef std::list<String> StringList;
 // stfu boost
 #pragma warning( disable: 4244 )
 #pragma warning( disable: 4265 )
+#pragma warning( disable: 6334 )
+#pragma warning( disable: 6011 )
+#pragma warning( disable: 4913 )
 #endif //_WIN32
 
 #include <boost/filesystem/convenience.hpp>
@@ -175,6 +151,7 @@ using namespace Wm3;
 #include "Logger.h"
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
+#include "Omni-Bot_Color.h"
 #include "CallbackParameters.h"
 
 #include "EngineFuncs.h"
@@ -184,15 +161,16 @@ using namespace Wm3;
 
 #ifdef WIN32
 	//#define ENABLE_REMOTE_DEBUGGER
-	//#define ENABLE_DEBUG_WINDOW
+	#define ENABLE_DEBUG_WINDOW
 	//#define ENABLE_FILE_DOWNLOADER
 	//#define ENABLE_REMOTE_DEBUGGING
 #endif
 
+//#define ENABLE_REMOTE_DEBUGGING
+
 // remote debug
 #ifdef ENABLE_REMOTE_DEBUGGING
-#include "connection.h"
-#include "messageTags.h"
+	#include "DebugConnection.h"
 #endif
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality

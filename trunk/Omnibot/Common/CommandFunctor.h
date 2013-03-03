@@ -9,6 +9,7 @@
 #ifndef __COMMAND_FUNCTOR_H__
 #define __COMMAND_FUNCTOR_H__
 
+#include "common.h"
 #include "gmbinder2_functraits.h"
 
 // class: ICommandFunctor

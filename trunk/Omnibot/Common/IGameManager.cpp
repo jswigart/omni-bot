@@ -6,23 +6,26 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "mdump.h"
 
+#include "TaskManager.h"
 #include "NavigationManager.h"
 #include "GoalManager.h"
 #include "TriggerManager.h"
 #include "ScriptManager.h"
 #include "Timer.h"
-#include "Interprocess.h"
 #include "DebugWindow.h"
+
+#include "RenderBuffer.h"
 
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
 #include "FileDownloader.h"
-#include "ChunkedFile.h"
+#include "PathPlannerBase.h"
+
+IEngineInterface *g_EngineFuncs = 0;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +38,7 @@ IGameManager::IGameManager()
 	, m_PathPlanner(0)
 	, m_GoalManager(0)
 	, m_Game(0)
+	, m_TaskManager(0)
 #ifdef ENABLE_REMOTE_DEBUGGING
 	, m_Remote( 0 )
 #endif
@@ -96,25 +100,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// logging options
-	Options::SetValue("Log","LogInfo","true",false);
-	Options::SetValue("Log","LogWarnings","true",false);
-	Options::SetValue("Log","LogErrors","true",false);
-	Options::SetValue("Log","LogCriticalErrors","true",false);
-
-	g_Logger.LogMask() = 0;
-	bool l = true;
-	if(Options::GetValue("Log","LogInfo",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_INFO;
-	if(Options::GetValue("Log","LogWarnings",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_WARN;
-	if(Options::GetValue("Log","LogErrors",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_ERR;
-	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_CRIT;
-
-	//////////////////////////////////////////////////////////////////////////
 	// Initialize the Scripting System.
 	m_ScriptManager = ScriptManager::GetInstance();
 	m_ScriptManager->Init();
@@ -128,12 +113,16 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("Script","Debug","true",false);
 	Options::SetValue("Script","EnableRemoteDebugger","true",false);
 	Options::SetValue("Debug Render","EnableInterProcess","true",false);
-
 #ifdef ENABLE_FILE_DOWNLOADER
 	Options::SetValue("Downloader","Server","",false);
 	Options::SetValue("Downloader","Script","",false);
 	Options::SetValue("Downloader","DownloadMissingNav","true",false);
 #endif
+
+	Options::SetValue("Log","LogInfo","true",false);
+	Options::SetValue("Log","LogWarnings","true",false);
+	Options::SetValue("Log","LogErrors","true",false);
+	Options::SetValue("Log","LogCriticalErrors","true",false);
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	Options::SetValue("RemoteWindow","Enabled",0,false);
@@ -141,11 +130,20 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 #endif
 	
 	//////////////////////////////////////////////////////////////////////////
+	// logging options
+	g_Logger.LogMask() = 0;
 
-	bool EnableIpc = false;
-	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
-	InterProcess::Enable(EnableIpc);
-
+	bool l = true;
+	if(Options::GetValue("Log","LogInfo",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_INFO;
+	if(Options::GetValue("Log","LogWarnings",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_WARN;
+	if(Options::GetValue("Log","LogErrors",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_ERR;
+	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
+		g_Logger.LogMask() |= Logger::LOG_CRIT;
+	//////////////////////////////////////////////////////////////////////////
+	
 #ifdef ENABLE_REMOTE_DEBUGGING
 	{
 		int numConnections = 0;
@@ -161,8 +159,10 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	}
 #endif
 
+	RenderBuffer::Init();
+
 	// Create the requested path planner.
-	if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game->GetDefaultNavigator()))
+	if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game, m_Game->GetDefaultNavigator()))
 	{
 		m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
 		m_PathPlanner->RegisterScriptFunctions(m_ScriptManager->GetMachine());
@@ -205,6 +205,8 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 #ifdef ENABLE_FILE_DOWNLOADER
 	FileDownloader::Init();
 #endif
+	
+	//m_TaskManager = new TaskManager();
 
 	// Load the waypoints for this map.
 	if(m_PathPlanner->Load(String(g_EngineFuncs->GetMapName())))
@@ -224,14 +226,14 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 
 void IGameManager::UpdateGame()
 {
-	InterProcess::Update();
-
 #ifdef ENABLE_DEBUG_WINDOW
 	DebugWindow::Update();
 #endif
 
 	{
 		Prof(Omnibot);
+
+		RenderBuffer::BeginFrame();
 
 		m_Game->UpdateTime();
 		m_ScriptManager->Update();
@@ -261,9 +263,9 @@ void IGameManager::UpdateGame()
 			Prof(RemoteSync);
 			m_Remote.updateConnections( this );
 			for( int i = 0; i < m_Remote.getNumConnections(); ++i ) {
-				RemoteLib::Connection * conn = m_Remote.getConnection( i );
+				RemoteLib::DebugConnection * conn = static_cast<RemoteLib::DebugConnection*>( m_Remote.getConnection( i ) );
 				if ( conn->isConnected() ) {
-					RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
+					/*RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
 					// keep alive
 					if ( IGame::GetTime() > conn->getUserData() ) {
 						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
@@ -272,23 +274,13 @@ void IGameManager::UpdateGame()
 						sendBuffer.endSizeHeader();
 						sendBuffer.endWrite();
 						conn->setUserData( IGame::GetTime() + 5000 );
-					}
-
-					if ( conn->isNewConnection() ) {
-						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-						sendBuffer.startSizeHeader();
-						sendBuffer.writeInt32( RemoteLib::ID_configName );
-						sendBuffer.writeString( m_Game->RemoteConfigName() );
-						sendBuffer.endSizeHeader();
-						sendBuffer.endWrite();
-
-						m_SnapShots.Clear();
-					}
+					}*/
 					
-					m_Game->UpdateSync( m_SnapShots, sendBuffer );
-					m_PathPlanner->Sync( sendBuffer, conn->isNewConnection() );
-					m_GoalManager->Sync( sendBuffer, conn->isNewConnection() );
-					conn->clearNewConnection();
+					conn->updateState.Clear();
+
+					m_Game->UpdateSync( conn, conn->cachedState, conn->updateState );
+					//m_PathPlanner->Sync( conn );
+					m_GoalManager->Sync( conn );
 				}
 			}
 		}
@@ -306,6 +298,8 @@ void IGameManager::UpdateGame()
 
 void IGameManager::Shutdown()
 {
+	OB_DELETE( m_TaskManager );
+
 #ifdef ENABLE_FILE_DOWNLOADER
 	FileDownloader::Shutdown();
 #endif
@@ -324,7 +318,7 @@ void IGameManager::Shutdown()
 		RemoveUpdateFunction((*m_UpdateMap.begin()).first);
 
 	LOGFUNCBLOCK;
-    
+	
 	// Get rid of the path planner.
 	NavigationManager::DeleteInstance();	
 	m_PathPlanner = 0;
@@ -345,9 +339,7 @@ void IGameManager::Shutdown()
 
 	ScriptManager::GetInstance()->Shutdown();
 	ScriptManager::DeleteInstance();
-
-	InterProcess::Shutdown();
-
+	
 	MiniDumper::Shutdown();
 
 	Options::Shutdown();
@@ -450,7 +442,7 @@ void IGameManager::cmdNavSystem(const StringVector &_args)
 		NavigationManager::GetInstance()->DeletePathPlanner();
 
 		// Create the requested path planner.
-		if(NavigationManager::GetInstance()->CreatePathPlanner(navId))
+		if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game, navId))
 		{
 			m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
 			m_PathPlanner->RegisterScriptFunctions(m_ScriptManager->GetMachine());
@@ -516,13 +508,11 @@ bool IGameManager::RemoveUpdateFunction(const String &_name)
 	return false;
 }
 
+#ifdef ENABLE_REMOTE_DEBUGGING
 void IGameManager::SyncRemoteDelete( int entityHandle ) 
 {
-#ifdef ENABLE_REMOTE_DEBUGGING
-	if ( m_Remote.getNumConnections() > 0 ) {
-		enum { BufferSize = 128 };
-		char buffer[BufferSize] = {};
-		RemoteLib::DataBuffer db( buffer, BufferSize );
+	/*if ( m_Remote.getNumConnections() > 0 ) {
+		RemoteLib::DataBufferStatic<128> db;
 
 		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 		db.startSizeHeader();
@@ -531,18 +521,15 @@ void IGameManager::SyncRemoteDelete( int entityHandle )
 		db.endSizeHeader();
 		db.endWrite();
 		m_Remote.sendToAll( db );
-	}
-#endif
+	}*/
 }
 
-#ifdef ENABLE_REMOTE_DEBUGGING
-void IGameManager::OnConnect( RemoteLib::Connection * conn ) {
-	EngineFuncs::ConsoleMessage( va( "Connecting to %s", conn->getIp() ) );
+void IGameManager::SyncRemoteMessage( const RemoteLib::DataBuffer & db ) {
+	m_Remote.sendToAll( db );
 }
-void IGameManager::OnDisConnect( RemoteLib::Connection * conn ) {
-	EngineFuncs::ConsoleMessage( va( "Remote disconnected %s", conn->getIp() ) );
+
+RemoteLib::Connection * IGameManager::CreateNewConnection( RemoteLib::TcpSocket & socket ) {
+	return new RemoteLib::DebugConnection( socket );
 }
-void IGameManager::OnAcceptConnection( RemoteLib::Connection * conn ) {
-	EngineFuncs::ConsoleMessage( va( "Remote connected to %s", conn->getIp() ) );
-}
-#endif // ENABLE_REMOTE_DEBUGGING
+
+#endif

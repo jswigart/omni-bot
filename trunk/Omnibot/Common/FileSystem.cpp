@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "FileSystem.h"
 
 #include "physfs.h"
@@ -222,7 +222,11 @@ bool FileSystem::UnMount(const fs::path &_path)
 
 bool FileSystem::SetWriteDirectory(const fs::path &_dir)
 {
-	if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
+	char buffer[ 1024 ] = {};
+	const int len = wcstombs( buffer, _dir.native().c_str(), _dir.native().length() );
+
+	if(len == 0 || !PHYSFS_setWriteDir( buffer ))
+	//if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
 	{
 		LOG("PhysFS: Error Setting Write Directory: " << PHYSFS_getLastError());
 		return false;
@@ -317,8 +321,8 @@ obuint32 FileSystem::GetFileCrc(const String &_file)
 
 		crc = CRC_INIT_VAL;
 
-		obuint64 rd = 0;
-		while((rd = f.Read(buffer, 1, iBufferSize)) != 0)
+		obint64 rd = 0;
+		while((rd = f.Read(buffer, 1, iBufferSize)) > 0)
 		{
 			crc = CrcUpdate(crc, buffer, (size_t)rd);
 		}
@@ -419,7 +423,7 @@ void FileSystem::MountArchives(const char *_folder, const char *_mountpoint)
 	catch(const std::exception & ex)
 	{
 		//ex;
-		SOFTASSERTALWAYS(0, "Filesystem: ", ex.what());
+		SOFTASSERTALWAYS(0, "Filesystem: %s", ex.what());
 	}
 }
 
@@ -747,7 +751,7 @@ bool File::ReadFloat(float &f)
 	return false;
 }
 
-obuint64 File::Read(void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
+obint64 File::Read(void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
 {
 	return m_pFile->m_pPrivate && _size != 0 ? PHYSFS_read(m_pFile->m_pPrivate, _buffer, _size, _numitems) : 0;
 }
@@ -757,10 +761,10 @@ obuint64 File::ReadWholeFile(String &_readto)
 	enum { BufferSize = 4096 };
 	char buffer[BufferSize] = {};
 
-	obuint32 readBytes = 0, totalBytes = 0;
-	while((readBytes = (obuint32)Read(buffer,1,BufferSize)))
+	obint64  readBytes = 0, totalBytes = 0;
+	while((readBytes = Read(buffer,1,BufferSize)) > 0)
 	{
-		_readto.append(buffer,readBytes);
+		_readto.append(buffer,(unsigned int)readBytes);
 		totalBytes += readBytes;
 	}
 	return totalBytes;
@@ -774,11 +778,11 @@ bool File::ReadString(String &_str)
 		if(m_TextMode)
 		{
 			char ch;
-			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && !Utils::IsWhiteSpace(ch))
+			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && !Utils::IsWhiteSpace(ch))
 				_str.push_back(ch);
 
 			// eat white space.			
-			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
+			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
 			// go back by 1
 			Seek(Tell()-1);
 		}
@@ -815,11 +819,11 @@ bool File::ReadLine(String &_str)
 				return false;
 
 			char ch;
-			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && ch != cr && ch != '\n')
+			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && ch != cr && ch != '\n')
 				_str.push_back(ch);
 
 			// eat white space.
-			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
+			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
 
 			// go back by 1
 			Seek(Tell()-1);

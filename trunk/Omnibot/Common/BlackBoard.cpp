@@ -6,10 +6,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "BlackBoard.h"
+#include "BlackBoardItems.h"
+#include "IGame.h"
+#include "gmbinder2.h"
 
 static int g_NextScriptItem = bbk_FirstScript;
+
+BlackBoard	g_Blackboard;
 
 BlackBoard::BlackBoard()
 {

@@ -6,13 +6,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompHL2DM.h"
 #include "HL2DM_Game.h"
 #include "HL2DM_Client.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
 #include "ScriptManager.h"
+
+#include "BotSensoryMemory.h"
+#include "FilterSensory.h"
+
+#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -184,28 +186,9 @@ const float HL2DM_Game::HL2DM_GetEntityClassAimOffset(const int _class, const Bi
 	return 0.0f;
 }
 
-PathPlannerWaypoint::BlockableStatus HL2DM_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus HL2DM_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
 {
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
-	//BotTraceResult tr;
-
-	//if(_wp1->IsFlagOn(F_FF_NAV_DETPACK) && _wp2->IsFlagOn(F_FF_NAV_DETPACK))
-	//{
-	//	EngineFuncs::TraceLine(tr, 
-	//		(_wp1->GetPosition() + Vector3f(0,0,40)),
-	//		(_wp2->GetPosition() + Vector3f(0,0,40)), 
-	//		NULL, TR_MASK_SOLID, -1, True);
-
-	//	return (tr.m_Fraction == 1.0f);
-	//}
-	//else
-	//{
-	//	DEBUG_ONLY(std::cout << "Invalid flag combination in PathCheck detected!" << std::endl);
-	//}
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;
-}
-
-void HL2DM_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = HL2DM_PathCheck;
 }

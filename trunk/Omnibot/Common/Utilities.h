@@ -13,11 +13,13 @@
 #include <stdarg.h>
 
 #include "Trajectory.h"
+#include "gmGCRoot.h"
 
 #include <stdlib.h> //#include <malloc.h> 
 #define StackAlloc alloca 
 
 class File;
+class Client;
 class TargetInfo;
 
 //////////////////////////////////////////////////////////////////////////
@@ -517,5 +519,7 @@ private:
 	const obuint32 m_BufferSize;
 	const obuint32 m_MaxStrings;
 };
+
+obColor GetCoolWarmColor( float scalar );
 
 #endif

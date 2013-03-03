@@ -25,15 +25,12 @@ namespace RemoteLib
 		sndBuffer.init( NULL, SendBufferSize );
 
 		autoConnect = false;
-		newConnection = true;
-		userData = 0;
 	}
 
 	Connection::Connection( const char * ip, unsigned short port ) {
 		socket.init();
 		internalInit( ip, port );
 		autoConnect = true;
-		userData = 0;
 	}
 
 	Connection::~Connection() {
@@ -58,22 +55,17 @@ namespace RemoteLib
 	}
 
 	void Connection::update( ConnectionCallbacks * cb ) {
+		cb;
 		if ( socket.isConnected() ) {
 			sendAndRecieveData();
 
 			if ( socket.getSocketError() == TcpSocket::SocketDisconnected ) {
 				onDisconnect();
-				if ( cb ) {
-					cb->OnDisConnect( this );
-				}
 			}
 		} else {
 			if ( autoConnect ) {
 				if ( tryToConnect() ) {
 					onConnect();
-					if ( cb ) {
-						cb->OnConnect( this );
-					}
 				}
 			}
 		}
@@ -206,11 +198,11 @@ namespace RemoteLib
 		}
 	}
 
-	void ConnectionManager::sendToAll( DataBuffer & db ) {
+	void ConnectionManager::sendToAll( const DataBuffer & db ) {
 		if( db.getReadBytesLeft() > 0 ) {
 			for( int i = 0; i < maxConnections; ++i ) {
 				if ( connections[ i ] != NULL && connections[ i ]->isConnected() ) {
-					connections[ i ]->getSendBuffer().append( db );
+					//connections[ i ]->getSendBuffer().append( db );
 				}
 			}
 		}
@@ -244,10 +236,8 @@ namespace RemoteLib
 			if ( connections[ i ] == NULL ) {
 				TcpSocket newClient;
 				if ( server.accept( newClient ) ) {
-					connections[ i ] = new Connection( newClient );
-					if ( cb ) {
-						cb->OnAcceptConnection( connections[ i ] );
-					}
+					connections[ i ] = cb->CreateNewConnection( newClient );
+					connections[ i ]->onConnect();
 					break;
 				}
 			}

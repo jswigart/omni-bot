@@ -33,7 +33,6 @@
 #ifndef	_H_LOGGER
 #define _H_LOGGER
 
-#include <time.h>
 #include <string>
 
 #include "CodeAnalysis.h"

@@ -6,8 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "FilterClosest.h"
+#include "BotWeaponSystem.h"
 
 FilterClosest::FilterClosest(Client *_client, AiState::SensoryMemory::Type _type) :
 	FilterSensory(_client, _type),

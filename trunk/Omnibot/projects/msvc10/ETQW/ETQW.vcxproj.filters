@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\ETQW\ETQW_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\GameInterfaces\ETQW\game\omnibot\omnibot_interface.cpp">
       <Filter>_Interface</Filter>
     </ClCompile>
@@ -43,9 +40,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ETQW\ETQW_VoiceMacros.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\ETQW\PrecompETQW.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ETQW\ETQW_BaseStates.cpp">
@@ -78,9 +72,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ETQW\ETQW_VoiceMacros.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\ETQW\PrecompETQW.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ETQW\ETQW_BaseStates.h">

@@ -9,6 +9,8 @@
 #ifndef __FILESYSTEM_H__
 #define __FILESYSTEM_H__
 
+#include "common.h"
+
 // class: FileSystem
 //		Wraps filesystem functionality including searching archives and search paths for files.
 class FileSystem
@@ -84,7 +86,7 @@ public:
 	bool ReadInt32(obuint32 &i);
 	bool ReadInt64(obuint64 &i);
 	bool ReadFloat(float &f);
-	obuint64 Read(void *_buffer, obuint32 _size, obuint32 _numitems = 1);
+	obint64 Read(void *_buffer, obuint32 _size, obuint32 _numitems = 1);
 	bool ReadString(String &_str);
 	bool ReadLine(String &_str);
 

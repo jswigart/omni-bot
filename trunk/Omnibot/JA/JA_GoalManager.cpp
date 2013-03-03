@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_GoalManager.h"
 #include "JA_NavigationFlags.h"
+
+#include "PathPlannerWaypoint.h"
 
 JA_GoalManager::JA_GoalManager()
 {

@@ -24,7 +24,6 @@ public:
 	bool Init();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
 	virtual Client *CreateGameClient();
 
@@ -47,6 +46,9 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
+	
+	// PathPlannerWaypointInterface
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
 
 	JA_Game() {};
 	virtual ~JA_Game() {};

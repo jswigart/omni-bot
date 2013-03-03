@@ -12,6 +12,8 @@
 #include "DebugDraw.h"
 #include "Recast.h"
 #include "RecastDump.h"
+#include "Timer.h"
+#include "FileSystem.h"
 
 // Recast build context.
 class RecastBuildContext : public rcContext

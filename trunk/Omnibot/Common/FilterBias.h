@@ -9,6 +9,8 @@
 #ifndef __FILTERBIAS_H__
 #define __FILTERBIAS_H__
 
+#include "BotSensoryMemory.h"
+
 class Client;
 
 // class: FilterBias

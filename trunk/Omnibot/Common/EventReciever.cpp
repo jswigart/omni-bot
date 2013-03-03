@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "EventReciever.h"
 #include "IGame.h"
 #include "ScriptManager.h"
@@ -31,3 +31,9 @@ void EventReciever::ProcessEventImpl(const MessageHelper &_message, obuint32 _ta
 	CallbackParameters cb(_message.GetMessageId(), pMachine);
 	ProcessEvent(_message, cb);
 }
+
+void EventReciever::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+{
+	_message; _cb; 
+}
+

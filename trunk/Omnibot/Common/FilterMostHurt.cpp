@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "FilterMostHurt.h"
+#include "TargetInfo.h"
+#include "InterfaceFuncs.h"
 
 FilterMostHurt::FilterMostHurt(Client *_client, AiState::SensoryMemory::Type _type) :
 	FilterSensory(_client, _type),

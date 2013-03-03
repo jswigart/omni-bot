@@ -285,18 +285,29 @@ template <class Real>
 void Matrix3<Real>::SetColumn (int iCol, const Vector3<Real>& rkV)
 {
     assert( 0 <= iCol && iCol < 3 );
-    for (int iRow = 0, i = iCol; iRow < 3; iRow++, i += 3)
-        m_afEntry[i] = rkV[iRow];
+
+	rkV = Vector3<Real>::ZERO;
+
+	if ( 0 <= iCol && iCol < 3 )
+	{
+		for (int iRow = 0, i = iCol; iRow < 3; iRow++, i += 3)
+			m_afEntry[i] = rkV[iRow];
+	}
 }
 //----------------------------------------------------------------------------
 template <class Real>
 Vector3<Real> Matrix3<Real>::GetColumn (int iCol) const
 {
     assert( 0 <= iCol && iCol < 3 );
-    Vector3<Real> kV;
-    for (int iRow = 0, i = iCol; iRow < 3; iRow++, i += 3)
-        kV[iRow] = m_afEntry[i];
-    return kV;
+
+	Vector3<Real> kV = Vector3<Real>::ZERO;
+
+	if ( 0 <= iCol && iCol < 3 )
+	{
+		for (int iRow = 0, i = iCol; iRow < 3; iRow++, i += 3)
+			kV[iRow] = m_afEntry[i];
+	}
+	return kV;
 }
 //----------------------------------------------------------------------------
 template <class Real>

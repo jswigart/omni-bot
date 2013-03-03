@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "RTCW_VoiceMacros.h"
+#include "RTCW_Client.h"
+
+#include "common.h"
 
 const char *strVoiceMacros[] =
 {

@@ -6,11 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
 #include "ET_FilterClosest.h"
+#include "ET_InterfaceFuncs.h"
+#include "ET_Client.h"
 #include "ET_Game.h"
-
-#include "ScriptManager.h"
 
 ET_FilterClosest::ET_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type) :
 	FilterClosest				(_client, _type)

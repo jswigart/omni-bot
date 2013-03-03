@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "RTCW_FilterClosest.h"
+#include "RTCW_InterfaceFuncs.h"
 //#include "RTCW_Goal_MountMG42.h"
+#include "RTCW_Client.h"
 
 #include "ScriptManager.h"
 

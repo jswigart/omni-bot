@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+#include "common.h"
 #include "gmConfig.h"
 #include "gmThread.h"
 #include "gmMachine.h"

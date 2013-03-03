@@ -9,6 +9,8 @@
 #ifndef __CRITERIA_H__
 #define __CRITERIA_H__
 
+#include "common.h"
+
 //////////////////////////////////////////////////////////////////////////
 
 #define HANDLE_OPERATORS(VAR,OPERAND0,OPERAND1) \
@@ -63,8 +65,7 @@ namespace Criteria
 	};
 };
 
-
-//////////////////////////////////////////////////////////////////////////
+class CheckCriteria;
 typedef bool (*pfnCheckCriteria)(CheckCriteria &crit, Client * bot);
 
 class CheckCriteria

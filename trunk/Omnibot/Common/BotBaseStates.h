@@ -14,6 +14,8 @@
 #include "ScriptManager.h"
 #include "TriggerManager.h"
 #include "Criteria.h"
+#include "MapGoal.h"
+#include "FilterSensory.h"
 
 class gmScriptGoal;
 

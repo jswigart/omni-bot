@@ -6,11 +6,20 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "MapGoal.h"
+#include "gmBind.h"
 #include "gmbinder2_class.h"
 #include "ScriptManager.h"
 #include "NavigationManager.h"
+#include "PathPlannerBase.h"
+#include "InterfaceFuncs.h"
+#include "TriggerManager.h"
+#include "IGameManager.h"
+#include "Path.h"
+#include "RenderBuffer.h"
+
+#include "gmCall.h"
+#include "gmBot.h"
 #include "gmSchemaLib.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
@@ -1124,16 +1133,16 @@ void MapGoal::RenderDefault()
 	if(bf.CheckFlag(DrawRadius))
 	{
 		if(GetRadius() != 0.f)
-			Utils::DrawRadius(GetPosition(), GetRadius(), COLOR::ORANGE, 2.f);
+			RenderBuffer::AddCircle( GetPosition(), COLOR::ORANGE, GetRadius() );
 		else
-			Utils::DrawLine(GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine( GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, COLOR::ORANGE );
 	}
 
 	// use pts
 	for(int i = 0; i < GetNumUsePoints(); ++i)
 	{
-		Vector3f vUsePt = GetWorldUsePoint(i);
-		Utils::DrawLine(vUsePt, vUsePt + Vector3f::UNIT_Z * 32.f, COLOR::GREEN, 2.f);
+		const Vector3f vUsePt = GetWorldUsePoint(i);
+		RenderBuffer::AddLine( vUsePt, vUsePt + Vector3f::UNIT_Z * 32.f, COLOR::GREEN );
 	}
 
 	if(bf.CheckFlag(DrawDisabled))
@@ -1157,12 +1166,7 @@ void MapGoal::RenderDefault()
 		}
 	}
 
-	Utils::PrintText(
-		vRenderPos,
-		vRenderColor,
-		2.f,
-		"%s",
-		txtOut.c_str());
+	RenderBuffer::AddString( vRenderPos, vRenderColor, txtOut.c_str() );
 }
 
 Vector3f MapGoal::CalculateFarthestFacing()
@@ -1415,27 +1419,6 @@ void MapGoal::CheckForPersistentPriority()
 	}
 }
 
-//void MapGoal::DrawBounds(int _color, float _duration)
-//{
-//	Utils::OutlineAABB(GetWorldBounds(), _color, _duration);
-//}
-//
-//void MapGoal::DrawRadius(int _color, float _duration)
-//{
-//	if(GetRadius() != 0.f)
-//		Utils::DrawRadius(GetPosition(), GetRadius(), _color, _duration);
-//	else
-//		Utils::DrawLine(GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, _color, _duration);
-//}
-//
-//void MapGoal::DrawUsePoints(int _color, float _duration)
-//{
-//	for(int i = 0; i < GetNumUsePoints(); ++i)
-//	{
-//		Vector3f vUsePt = GetWorldUsePoint(i);
-//		Utils::DrawLine(vUsePt, vUsePt + Vector3f::UNIT_Z * 32.f, _color, _duration);
-//	}
-//}
 void MapGoal::DrawRoute(int _color, float _duration)
 {
 	PathPlannerBase *planner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
@@ -1874,58 +1857,58 @@ void MapGoal::action(const gcn::ActionEvent& actionEvent)
 #endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void MapGoal::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
-	if ( fullSync || m_NeedsSynced ) {
-		snapShot.Clear();
-	}
+void MapGoal::Sync( RemoteLib::DebugConnection * connection ) {
+	//if ( fullSync || m_NeedsSynced ) {
+	//	snapShot.Clear();
+	//}
 
-	RemoteLib::DataBufferStatic<2048> localBuffer;
-	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	//RemoteLib::DataBufferStatic<2048> localBuffer;
+	//localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
 
-	MapGoalSnapshot newSnapShot = snapShot;
+	//MapGoalSnapshot newSnapShot = snapShot;
 
-	const Box3f worldbounds = GetWorldBounds();
-	const float heading = Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() );
-	const float pitch = Mathf::RadToDeg( worldbounds.Axis[ 0 ].GetPitch() );
+	//const Box3f worldbounds = GetWorldBounds();
+	//const float heading = Mathf::RadToDeg( worldbounds.Axis[ 0 ].XYHeading() );
+	//const float pitch = Mathf::RadToDeg( worldbounds.Axis[ 0 ].GetPitch() );
 
-	newSnapShot.Sync( "name", GetName().c_str(), localBuffer );
-	newSnapShot.Sync( "tagName", GetTagName().c_str(), localBuffer );
-	newSnapShot.Sync( "entityid", GetEntity().AsInt(), localBuffer );
-	newSnapShot.Sync( "ownerid", GetOwner().AsInt(), localBuffer );
-	newSnapShot.Sync( "x", worldbounds.Center.x, localBuffer );
-	newSnapShot.Sync( "y", worldbounds.Center.y, localBuffer );
-	newSnapShot.Sync( "z", worldbounds.Center.z, localBuffer );
-	newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
-	newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
-	newSnapShot.Sync( "sizex", worldbounds.Extent[ 0 ], localBuffer );
-	newSnapShot.Sync( "sizey", worldbounds.Extent[ 1 ], localBuffer );
-	newSnapShot.Sync( "sizez", worldbounds.Extent[ 2 ], localBuffer );
-	newSnapShot.Sync( "defaultPriority", GetDefaultPriority(), localBuffer );	
-	newSnapShot.Sync( "usersInProgress", GetCurrentUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
-	newSnapShot.Sync( "maxUsersInProgress", GetMaxUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
-	newSnapShot.Sync( "usersInUse", GetCurrentUsers( MapGoal::TRACK_INUSE ), localBuffer );
-	newSnapShot.Sync( "maxUsersInUse", GetMaxUsers( MapGoal::TRACK_INUSE ), localBuffer );
-	newSnapShot.Sync( "availableTeamMask", GetAvailableFlags().GetRawFlags(), localBuffer );
-	newSnapShot.Sync( "roleMask", GetRoleMask().GetRawFlags(), localBuffer );
-	// todo: routes, team/class priorities, etc
+	//newSnapShot.Sync( "name", GetName().c_str(), localBuffer );
+	//newSnapShot.Sync( "tagName", GetTagName().c_str(), localBuffer );
+	//newSnapShot.Sync( "entityid", GetEntity().AsInt(), localBuffer );
+	//newSnapShot.Sync( "ownerid", GetOwner().AsInt(), localBuffer );
+	//newSnapShot.Sync( "x", worldbounds.Center.x, localBuffer );
+	//newSnapShot.Sync( "y", worldbounds.Center.y, localBuffer );
+	//newSnapShot.Sync( "z", worldbounds.Center.z, localBuffer );
+	//newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
+	//newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
+	//newSnapShot.Sync( "sizex", worldbounds.Extent[ 0 ], localBuffer );
+	//newSnapShot.Sync( "sizey", worldbounds.Extent[ 1 ], localBuffer );
+	//newSnapShot.Sync( "sizez", worldbounds.Extent[ 2 ], localBuffer );
+	//newSnapShot.Sync( "defaultPriority", GetDefaultPriority(), localBuffer );	
+	//newSnapShot.Sync( "usersInProgress", GetCurrentUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
+	//newSnapShot.Sync( "maxUsersInProgress", GetMaxUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
+	//newSnapShot.Sync( "usersInUse", GetCurrentUsers( MapGoal::TRACK_INUSE ), localBuffer );
+	//newSnapShot.Sync( "maxUsersInUse", GetMaxUsers( MapGoal::TRACK_INUSE ), localBuffer );
+	//newSnapShot.Sync( "availableTeamMask", GetAvailableFlags().GetRawFlags(), localBuffer );
+	//newSnapShot.Sync( "roleMask", GetRoleMask().GetRawFlags(), localBuffer );
+	//// todo: routes, team/class priorities, etc
 
-	const uint32 writeErrors = localBuffer.endWrite();
-	assert( writeErrors == 0 );
+	//const uint32 writeErrors = localBuffer.endWrite();
+	//assert( writeErrors == 0 );
 
-	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_qmlComponent );
-		db.writeInt32( GetSerialNum() );
-		db.writeSmallString( "mapgoal" );
-		db.append( localBuffer );
-		db.endSizeHeader();
+	//if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
+	//	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	//	db.startSizeHeader();
+	//	db.writeInt32( RemoteLib::ID_qmlComponent );
+	//	db.writeInt32( GetSerialNum() );
+	//	db.writeSmallString( "mapgoal" );
+	//	db.append( localBuffer );
+	//	db.endSizeHeader();
 
-		if ( db.endWrite() == 0 ) {
-			// mark the stuff we synced as done so we don't keep spamming it
-			snapShot = newSnapShot;
-		}
-	}
+	//	if ( db.endWrite() == 0 ) {
+	//		// mark the stuff we synced as done so we don't keep spamming it
+	//		snapShot = newSnapShot;
+	//	}
+	//}
 }
 #endif
 

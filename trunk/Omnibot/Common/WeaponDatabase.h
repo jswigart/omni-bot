@@ -9,6 +9,9 @@
 #ifndef __WEAPONDATABASE_H__
 #define __WEAPONDATABASE_H__
 
+#include "Weapon.h"
+#include "BotWeaponSystem.h"
+
 typedef std::map<int, WeaponPtr> WeaponMap;
 
 // class: WeaponDatabase

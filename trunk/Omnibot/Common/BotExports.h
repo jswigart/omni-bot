@@ -41,6 +41,8 @@ extern "C"
 	//		Allow the bot dll to fill in a struct of bot functions the interface
 	//		can then call.
 	OMNIBOT_API eomnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs_t *_pBotFuncs, int _size);
+
+	OMNIBOT_API void RenderOpenGL();
 #ifdef __cplusplus
 }
 #endif

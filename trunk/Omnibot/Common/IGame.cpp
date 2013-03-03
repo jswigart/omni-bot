@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "NameManager.h"
 #include "ScriptManager.h"
 #include "NavigationManager.h"
@@ -19,8 +19,14 @@
 #include "BotGlobalStates.h"
 #include "BotSteeringSystem.h"
 #include "ScriptGoal.h"
+#include "PathPlannerBase.h"
+#include "ObstacleManager.h"
+#include "InterfaceFuncs.h"
+#include "IGameManager.h"
+#include "gmCall.h"
 
-BlackBoard	g_Blackboard;
+// temp
+//#include "D:/Sourcecode/RemoteDebugger/RemoteDebugger/guiinterface.h"
 
 obint32 IGame::m_GameMsec = 0;
 obint32 IGame::m_DeltaMsec = 0;
@@ -47,7 +53,8 @@ typedef boost::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
 typedef std::list<ScriptGoalPtr> ScriptGoalList;
 ScriptGoalList g_ScriptGoalList;
 
-//SoundDepot g_SoundDepot;
+#include "google/protobuf/text_format.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 
 IGame::IGame()
 	: m_StateRoot(0)
@@ -103,6 +110,8 @@ bool IGame::Init()
 
 	// Reset the global blackboard.
 	g_Blackboard.RemoveAllBBRecords(bbk_All);
+
+	//m_AttachedGui.Load( "" );
 
 	//////////////////////////////////////////////////////////////////////////
 	/*m_StateRoot = new AiState::GlobalRoot;
@@ -678,19 +687,84 @@ void IGame::UpdateGame()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void IGame::UpdateSync( RemoteSnapShots & snapShots, RemoteLib::DataBuffer & db ) {
+void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & cached, Remote::Game & update ) {
+	SET_IF_DIFF( cached, update, RemoteConfigName(), name );
+
 	// draw the entities registered with the system
 	IGame::EntityIterator ent;
 	while( IGame::IterateEntity( ent ) ) {
-		SyncEntity( ent.GetEnt(), snapShots.entitySnapShots[ ent.GetIndex() ], db );
+		
+		// make sure there's enough room for the entity at this index
+		if ( cached.entities().Capacity() <= ent.GetIndex() ) {
+			cached.mutable_entities()->Reserve( ent.GetIndex() + 1 );
+		}
+
+		while ( cached.entities_size() <= ent.GetIndex() ) {
+			cached.add_entities();
+		}
+
+		if ( update.entities().Capacity() <= ent.GetIndex() ) {
+			update.mutable_entities()->Reserve( ent.GetIndex() + 1 );
+		}
+
+		while ( update.entities_size() <= ent.GetIndex() ) {
+			update.add_entities();
+		}
+
+		Remote::Entity * cachedEntity = cached.mutable_entities( ent.GetIndex() );
+		Remote::Entity * entityUpdate = update.mutable_entities( ent.GetIndex() );
+		
+		entityUpdate->Clear();
+
+		SyncEntity( ent.GetEnt(), connection, *cachedEntity, *entityUpdate );
+
+		using namespace google::protobuf;
+
+		std::vector<const FieldDescriptor*> fieldList;
+		entityUpdate->GetReflection()->ListFields( *entityUpdate, &fieldList );
+
+		if ( fieldList.size() > 0 ) {
+			entityUpdate->set_uid( ent.GetEnt().m_Entity.AsInt() );
+
+			OBASSERT( entityUpdate->IsInitialized(), "Error Building Entity Message:" );
+
+			const int bufferSize = 32;
+			char buffer[ bufferSize ];
+			io::ArrayOutputStream arrayStream( buffer, bufferSize );
+			io::CodedOutputStream codedStream( &arrayStream );
+						
+			String serialized;
+
+			const Remote::PayloadFormat msgformat = Remote::PAYLOAD_TEXT;
+			if ( msgformat == Remote::PAYLOAD_TEXT ) {
+				TextFormat::PrintToString( *entityUpdate, &serialized );
+			} else {
+				entityUpdate->SerializeToString( &serialized );
+			}
+			
+			Remote::Packet packet;
+			packet.set_packettype( Remote::PACKET_ENTITY );
+			packet.set_payloadformat( msgformat );
+			packet.set_payloadsize( serialized.size() );
+			packet.set_payloaddata( serialized.c_str(), serialized.size() );
+
+			String serializedPacket;
+			packet.SerializeToString( &serializedPacket );
+
+			codedStream.WriteVarint32( serializedPacket.size() );
+
+			connection->getSendBuffer().beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+			connection->getSendBuffer().write( buffer, codedStream.ByteCount() );
+			connection->getSendBuffer().write( serializedPacket.c_str(), serializedPacket.size() );
+
+			if ( connection->getSendBuffer().endWrite() == 0 ) {
+				// TEMP, this wont work right when repeated fields are in use
+				cachedEntity->MergeFrom( *entityUpdate );
+			}
+		}
 	}
 }
-void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
-	RemoteLib::DataBufferStatic<2048> localBuffer;
-	localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-
-	EntitySnapShot newSnapShot = snapShot;
-
+void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection, Remote::Entity & cachedEntity, Remote::Entity & entityUpdate ) {
 	//////////////////////////////////////////////////////////////////////////
 	// check for values that have changed
 	{
@@ -702,62 +776,42 @@ void IGame::SyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, R
 		Msg_HealthArmor hlth;
 		EngineFuncs::EntityPosition( ent.m_Entity, entPosition );
 		const int entClass = InterfaceFuncs::GetEntityClass( ent.m_Entity );
+		const int entTeam = InterfaceFuncs::GetEntityTeam( ent.m_Entity );
 		const String entName = EngineFuncs::EntityName( ent.m_Entity );
-		//Box3f worldBounds;
-		AABB localBounds;
+
 		EngineFuncs::EntityOrientation( ent.m_Entity, facingVector, rightVector, upVector );
+		
+		SET_IF_DIFF( cachedEntity, entityUpdate, entName.c_str(), name );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.x, x );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.y, y );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.z, z );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.x, x );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.y, y );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.z, z );
+		SET_IF_DIFF( cachedEntity, entityUpdate, entClass, classid );
+		SET_IF_DIFF( cachedEntity, entityUpdate, entTeam, teamid );
 
-		newSnapShot.Sync( "name", entName.c_str(), localBuffer );
-		newSnapShot.Sync( "x", entPosition.x, localBuffer );
-		newSnapShot.Sync( "y", entPosition.y, localBuffer );
-		newSnapShot.Sync( "z", entPosition.z, localBuffer );
-		newSnapShot.Sync( "classid", entClass, localBuffer );
-
-		const float heading = Mathf::RadToDeg( facingVector.XYHeading() );
-		const float pitch = Mathf::RadToDeg( facingVector.GetPitch() );
-
-		newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
-		newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
-		newSnapShot.Sync( "teamid", InterfaceFuncs::GetEntityTeam( ent.m_Entity ), localBuffer );
 		if ( InterfaceFuncs::GetHealthAndArmor( ent.m_Entity, hlth ) ) {
-			newSnapShot.Sync( "health", hlth.m_CurrentHealth, localBuffer );
-			newSnapShot.Sync( "maxhealth", hlth.m_MaxHealth, localBuffer );
-			newSnapShot.Sync( "armor", hlth.m_CurrentArmor, localBuffer );
-			newSnapShot.Sync( "maxarmor", hlth.m_MaxArmor, localBuffer );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_CurrentHealth, health );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_MaxHealth, healthmax );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_CurrentArmor, armor );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_MaxArmor, armormax );
 		}
 
 		Box3f worldBounds;
 		if ( EngineFuncs::EntityWorldOBB( ent.m_Entity, worldBounds ) ) {
-			newSnapShot.Sync( "entSizeX", worldBounds.Extent[0], localBuffer );
-			newSnapShot.Sync( "entSizeY", worldBounds.Extent[1], localBuffer );
-			newSnapShot.Sync( "entSizeZ", worldBounds.Extent[2], localBuffer );
+			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[0], x );
+			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[1], y );
+			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[2], z );
 		}
 
 		ClientPtr bot = GetClientByIndex( ent.m_Entity.GetIndex() );
 		if ( bot ) {
-			bot->InternalSyncEntity( newSnapShot, localBuffer );
-		}
-	}
-	
-	const uint32 writeErrors = localBuffer.endWrite();
-	assert( writeErrors == 0 );
-
-	if ( localBuffer.getBytesWritten() > 0 && writeErrors == 0 ) {
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_qmlComponent );
-		db.writeInt32( ent.m_Entity.AsInt() );
-		db.writeSmallString( "entity" );
-		db.append( localBuffer );
-		db.endSizeHeader();
-
-		if ( db.endWrite() == 0 ) {
-			// mark the stuff we synced as done so we don't keep spamming it
-			snapShot = newSnapShot;
+			bot->InternalSyncEntity( connection, cachedEntity, entityUpdate );
 		}
 	}
 }
-void IGame::InternalSyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
+void IGame::InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection ) {
 	// for derived classes
 }
 #endif

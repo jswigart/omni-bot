@@ -10,6 +10,7 @@
 #define __BASE_MESSAGES_H__
 
 #include "Omni-Bot_Types.h"
+#include "Omni-Bot_BitFlags.h"
 
 #pragma pack(push)
 #pragma pack(4)

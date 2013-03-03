@@ -6,16 +6,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "GoalManager.h"
 #include "NavigationFlags.h"
 #include "Waypoint.h"
 #include "Client.h"
 #include "ScriptManager.h"
 #include "NavigationManager.h"
+#include "MapGoal.h"
 #include "MapGoalDatabase.h"
-
 #include "gmUtilityLib.h"
+#include "gmCall.h"
+#include "Timer.h"
+#include "RenderBuffer.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1244,11 +1246,10 @@ void GoalManager::Update()
 	{
 		if(HighlightedGoal)
 		{
-			Utils::DrawRadius(
+			RenderBuffer::AddCircle( 
 				HighlightedGoal->GetPosition()+Vector3f(0,0,32.f),
-				HighlightedGoal->GetRadius(),
 				COLOR::YELLOW,
-				IGame::GetDeltaTimeSecs()*2.f);
+				HighlightedGoal->GetRadius() );
 		}		
 		m_HighlightedGoal = HighlightedGoal;
 	}
@@ -1287,11 +1288,11 @@ void GoalManager::Update()
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void GoalManager::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
+void GoalManager::Sync( RemoteLib::DebugConnection * connection ) {
 	for( MapGoalList::iterator it = m_MapGoalList.begin();
 		it != m_MapGoalList.end(); 
 		++it ) {
-		(*it)->Sync( db, fullSync );
+		(*it)->Sync( connection );
 	}
 }
 #endif

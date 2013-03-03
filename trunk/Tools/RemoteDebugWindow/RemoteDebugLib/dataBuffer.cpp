@@ -296,7 +296,7 @@ namespace RemoteLib
 		return true;
 	}
 
-	bool DataBuffer::append( DataBuffer & db ) {
+	bool DataBuffer::append( const DataBuffer & db ) {
 		if ( isWriting() ) {
 			return write( db.readPtr, db.getBytesWritten() );
 		} else {

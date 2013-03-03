@@ -6,12 +6,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+#include "gmDebugWindow.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
 
 #include <guichan.hpp>
+#include "FileSystem.h"
+#include "DebugWindow.h"
+#include "ScriptManager.h"
 #include "gmbinder2.h"
+#include "gmCall.h"
 
 //////////////////////////////////////////////////////////////////////////
 #define GETMACHINE() ScriptManager::GetInstance()->GetMachine()

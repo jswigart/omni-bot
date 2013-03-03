@@ -6,10 +6,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompQ4.h"
 #include "Q4_GoalManager.h"
 #include "Q4_Config.h"
 #include "Q4_NavigationFlags.h"
+
+#include "PathPlannerWaypoint.h"
 
 Q4_GoalManager::Q4_GoalManager()
 {

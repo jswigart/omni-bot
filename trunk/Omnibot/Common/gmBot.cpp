@@ -6,8 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-
 #include "gmBotLibrary.h"
 #include "gmBot.h"
 #include "gmHelpers.h"
@@ -15,8 +13,11 @@
 #include "gmTargetInfo.h"
 #include "gmUtilityLib.h"
 #include "BotBaseStates.h"
-
-#include "BotBaseStates.h"
+#include "FilterClosest.h"
+#include "FilterAllType.h"
+#include "BotWeaponSystem.h"
+#include "BotTargetingSystem.h"
+#include "InterfaceFuncs.h"
 
 using namespace AiState;
 

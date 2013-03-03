@@ -9,6 +9,9 @@
 #ifndef __INTERFACEFUNCS_H__
 #define __INTERFACEFUNCS_H__
 
+#include "common.h"
+#include "Base_Messages.h"
+
 obResult InterfaceMsg(const MessageHelper &_data, const GameEntity _ent = GameEntity());
 
 namespace InterfaceFuncs

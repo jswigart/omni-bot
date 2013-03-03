@@ -9,7 +9,7 @@
 #ifndef __TRACKABLE_H__
 #define __TRACKABLE_H__
 
-#include "Omni-Bot_Events.h"
+#include "common.h"
 
 // class: Trackable
 class Trackable

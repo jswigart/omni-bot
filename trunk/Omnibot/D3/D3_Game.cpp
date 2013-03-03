@@ -6,14 +6,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompD3.h"
 #include "D3_Game.h"
 #include "D3_Client.h"
 
-#include "NavigationManager.h"
 #include "PathPlannerWaypoint.h"
 #include "ScriptManager.h"
+
 #include "gmD3Binds.h"
+
+#include "FilterSensory.h"
+#include "BotSensoryMemory.h"
+#include "BotTargetingSystem.h"
 
 IGame *CreateGameInstance()
 {
@@ -253,11 +256,6 @@ void D3_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("BLUE", F_NAV_TEAM2);
 }
 
-void D3_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	//_pfnPathCheck = D3_PathCheck;
-}
-
 const float D3_Game::D3_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
 	if (_class > D3_CLASS_NULL && _class < D3_CLASS_MAX)
@@ -282,22 +280,9 @@ const float D3_Game::D3_GetEntityClassAimOffset(const int _class, const BitFlag6
 	return 0.0f;
 }
 
-bool D3_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus D3_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
 {
-	//BotTraceResult tr;
-
-	//if(_wp1->IsFlagOn(F_FF_NAV_DETPACK) && _wp2->IsFlagOn(F_FF_NAV_DETPACK))
-	//{
-	//	EngineFuncs::TraceLine(tr, 
-	//		(_wp1->GetPosition() + Vector3f(0,0,40)),
-	//		(_wp2->GetPosition() + Vector3f(0,0,40)), 
-	//		NULL, TR_MASK_SOLID, -1, True);
-
-	//	return (tr.m_Fraction == 1.0f);
-	//}
-	//else
-	//{
-	//	DEBUG_ONLY(std::cout << "Invalid flag combination in PathCheck detected!" << std::endl);
-	//}
-	return false;
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
+	return res;
 }

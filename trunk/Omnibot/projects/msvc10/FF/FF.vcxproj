@@ -109,9 +109,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompFF.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)PrecompFF.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -134,9 +131,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompFF.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)PrecompFF.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -158,9 +152,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompFF.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)PrecompFF.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -182,9 +173,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompFF.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)PrecompFF.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -202,8 +190,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\BotExports.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -216,8 +202,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       </PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderOutputFile>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,42 +215,22 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\ff\omnibot\omnibot_interface.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FF\FF_BatchBuild.cpp" />
-    <ClCompile Include="..\..\..\FF\FF_Game.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FF\PrecompFF.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\FF\FF_Client.cpp" />
+    <ClCompile Include="..\..\..\FF\FF_Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FF\FF_Client.h" />
     <ClInclude Include="..\..\..\FF\FF_Config.h" />
     <ClInclude Include="..\..\..\FF\FF_Game.h" />
-    <ClInclude Include="..\..\..\FF\PrecompFF.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FF\Jamfile" />
     <None Include="..\..\..\FF\Omni-Bot_FF_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\dependencies\gmsrc_ex\src\gm\gm2010.vcxproj">
-      <Project>{8c9cc332-d582-453a-af10-20b100857587}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{2740aa5f-ab52-4d24-ae5a-97033aaecd7a}</Project>
     </ProjectReference>

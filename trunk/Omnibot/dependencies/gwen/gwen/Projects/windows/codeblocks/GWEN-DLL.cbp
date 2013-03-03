@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GWEN-DLL" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../lib/windows/codeblocks/gwen.dll" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Release/GWEN-DLL" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="0" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DGWEN_COMPILE_DLL" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-shared" />
+					<Add option="-Wl,--out-implib=&quot;../../../lib/windows/codeblocks/libgwen.a&quot;" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../lib/windows/codeblocks/gwend" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Debug/GWEN-DLL" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="0" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DGWEN_COMPILE_DLL" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-shared" />
+					<Add option="-Wl,--out-implib=&quot;../../../lib/windows/codeblocks/libgwend&quot;" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../src/Anim.cpp">
+		</Unit>
+		<Unit filename="../../../src/BaseRender.cpp">
+		</Unit>
+		<Unit filename="../../../src/ControlList.cpp">
+		</Unit>
+		<Unit filename="../../../src/DragAndDrop.cpp">
+		</Unit>
+		<Unit filename="../../../src/events.cpp">
+		</Unit>
+		<Unit filename="../../../src/Gwen.cpp">
+		</Unit>
+		<Unit filename="../../../src/Hook.cpp">
+		</Unit>
+		<Unit filename="../../../src/inputhandler.cpp">
+		</Unit>
+		<Unit filename="../../../src/Skin.cpp">
+		</Unit>
+		<Unit filename="../../../src/ToolTip.cpp">
+		</Unit>
+		<Unit filename="../../../src/Utility.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Base.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Button.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Canvas.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/CheckBox.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/CollapsibleCategory.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ColorControls.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ColorPicker.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ComboBox.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/CrossSplitter.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/DockBase.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/DockedTabControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Dragger.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/GroupBox.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/HorizontalScrollBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/HorizontalSlider.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/HSVColorPicker.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ImagePanel.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Label.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/LabelClickable.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ListBox.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Menu.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/MenuItem.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/MenuStrip.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/NumericUpDown.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/PageControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ProgressBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Properties.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/PropertyTree.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/RadioButton.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/RadioButtonController.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Rectangle.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ResizableControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Resizer.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/RichLabel.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ScrollBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ScrollBarBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ScrollBarButton.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/ScrollControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Slider.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/SplitterBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TabButton.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TabControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TabStrip.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Text.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TextBox.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TextBoxNumeric.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TreeControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/TreeNode.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/VerticalScrollBar.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/VerticalSlider.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/WindowCanvas.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/WindowControl.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Dialog/FileOpen.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Dialog/FileSave.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Dialog/FolderOpen.cpp">
+		</Unit>
+		<Unit filename="../../../src/Controls/Dialog/Query.cpp">
+		</Unit>
+		<Unit filename="../../../src/Platforms/Null.cpp">
+		</Unit>
+		<Unit filename="../../../src/Platforms/Windows.cpp">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Align.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Anim.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/BaseRender.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Config.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/ControlList.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/DragAndDrop.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Events.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Exports.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Font.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Gwen.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Hook.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/InputHandler.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Macros.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Platform.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Skin.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Structures.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/TextObject.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Texture.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/ToolTip.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/UserData.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Utility.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/WindowProvider.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Base.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Button.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Canvas.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/CheckBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/CollapsibleCategory.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/CollapsibleList.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ColorControls.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ColorPicker.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ComboBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/CrossSplitter.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/DockBase.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/DockedTabControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Dragger.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/FieldLabel.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/FilePicker.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/FolderPicker.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/GroupBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Highlight.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/HorizontalScrollBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/HorizontalSlider.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/HSVColorPicker.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ImagePanel.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Label.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/LabelClickable.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ListBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Menu.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/MenuItem.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/MenuStrip.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Modal.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/NumericUpDown.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/PageControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ProgressBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Properties.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/PropertyTree.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/RadioButton.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/RadioButtonController.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Rectangle.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ResizableControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Resizer.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/RichLabel.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ScrollBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ScrollBarBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ScrollBarButton.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ScrollControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Slider.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/SplitterBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Splitters.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/StatusBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TabButton.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TabControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TabStrip.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TabTitleBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Text.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TextBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/ToolBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TreeControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/TreeNode.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/VerticalScrollBar.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/VerticalSlider.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/WindowButtons.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/WindowCanvas.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/WindowControl.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Dialogs/FileOpen.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Dialogs/FileSave.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Dialogs/FolderOpen.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Dialogs/Query.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Layout/Position.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Layout/Table.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Layout/Tile.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/BaseProperty.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/Checkbox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/ColorSelector.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/ComboBox.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/File.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/Folder.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Controls/Property/Text.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Input/Allegro.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Input/SDL13.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Input/SFML.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Input/Windows.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/Allegro.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/Direct2D.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/DirectX9.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/GDIPlus.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/OpenGL.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/OpenGL_DebugFont.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Renderers/SFML.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Skins/Simple.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Skins/TexturedBase.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Skins/Texturing.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/UnitTest/UnitTest.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Util/ControlFactory.h">
+		</Unit>
+		<Unit filename="../../../include/Gwen/Util/ImportExport.h">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

@@ -6,15 +6,19 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "ScriptManager.h"
 
 #include "JA_Client.h"
 #include "JA_NavigationFlags.h"
 #include "JA_VoiceMacros.h"
 #include "JA_FilterClosest.h"
-#include "JA_Messages.h"
 #include "JA_BaseStates.h"
+#include "JA_InterfaceFuncs.h"
+
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
+
+#include "PathPlannerWaypoint.h"
 
 JA_Client::JA_Client() :
 	m_BreakableTargetDistance(0.f)

@@ -1025,6 +1025,9 @@ void SV_ShutdownGameProgs( void ) {
 	if ( !gvm ) {
 		return;
 	}
+
+	Sys_OmnibotUnLoad();
+
 	VM_Call( gvm, GAME_SHUTDOWN, qfalse );
 	VM_Free( gvm );
 	gvm = NULL;
@@ -1067,6 +1070,10 @@ void SV_RestartGameProgs( void ) {
 	if ( !gvm ) {
 		return;
 	}
+
+	// unload the refs during a restart
+	Sys_OmnibotUnLoad();
+
 	VM_Call( gvm, GAME_SHUTDOWN, qtrue );
 
 	// do a restart instead of a free
@@ -1097,6 +1104,9 @@ void SV_InitGameProgs( void ) {
 	}
 
 	SV_InitGameVM( qfalse );
+
+	// unload the refs during a map change
+	Sys_OmnibotLoad();
 }
 
 

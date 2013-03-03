@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompQ4.h"
 #include "gmConfig.h"
 #include "gmThread.h"
 #include "gmMachine.h"
@@ -15,7 +14,7 @@
 
 #include "gmQ4Binds.h"
 #include "Q4_Client.h"
-#include "Q4_Config.h"
+#include "Q4_InterfaceFuncs.h"
 
 // Title: Q4 Script Bindings
 

@@ -9,15 +9,19 @@
 #ifndef __PATHPLANNERWAYPOINT_H__
 #define __PATHPLANNERWAYPOINT_H__
 
+#include "platformspecifics.h"
+
 #include "PathPlannerBase.h"
 #include "Timer.h"
 #include "Waypoint.h"
 #include "gmbinder2.h"
+#include "Regulator.h"
 
 #include <boost/pool/pool_alloc.hpp>
 
 class Waypoint;
 class WaypointSerializerImp;
+class PathPlannerWaypointInterface;
 
 // class: PathPlannerWaypoint
 //		Waypoint-based Path Planning Implementation
@@ -68,14 +72,7 @@ public:
 	// typedef: ConnectionList
 	typedef std::pair<Waypoint*, Waypoint::ConnectionInfo*> Link;
 	typedef std::vector<Link> ConnectionList;
-
-	typedef enum
-	{
-		B_PATH_OPEN,
-		B_PATH_CLOSED,
-		B_INVALID_FLAGS
-	} BlockableStatus;
-
+	
 	struct ClosestLink
 	{
 		enum { NumWps = 2 };
@@ -90,11 +87,7 @@ public:
 			m_Wp[1] = _wp2;
 		}
 	};
-
-	// typedef: pfbWpPathCheck
-	//		A callback function to perform tests on a pair of waypoints.
-	typedef BlockableStatus (*pfbWpPathCheck)(const Waypoint*, const Waypoint*, bool _draw);
-
+	
 	bool Init();
 	void Update();
 	void Shutdown();
@@ -247,7 +240,7 @@ protected:
 	int					m_GoodPathQueries;
 	int					m_BadPathQueries;
 
-	pfbWpPathCheck		m_PathCheckCallback;
+	PathPlannerWaypointInterface * m_PlannerWpInterface;
 
 	// typedef: VisibilityTable
 	//		List of bitsets for determining visibility between waypoints

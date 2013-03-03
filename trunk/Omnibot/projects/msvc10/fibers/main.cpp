@@ -6,6 +6,9 @@
 #include <assert.h>
 #include <iostream>
 
+//#include "common.pb.h"
+#include <google/protobuf/text_format.h>
+
 //////////////////////////////////////////////////////////////////////////
 
 class Fiber
@@ -37,6 +40,8 @@ protected:
 private:
 	void *			fiber;	
 };
+
+//////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -126,6 +131,58 @@ private:
 
 int main(int argc,const char **argv)
 {
+	//Remote::Game game;
+	////game.set_name( "Test Game" );
+	////google::protobuf::C
+	//for ( int i = 0; i < 1024; ++i ) {
+	//	Remote::Waypoint * wp = game.add_waypoints();
+	//	wp->set_uid( i );
+	//	wp->mutable_position()->set_x( 10 );
+	//	wp->mutable_position()->set_y( 20 );
+	//	wp->mutable_position()->set_z( 30 );
+	//	
+	//	wp->mutable_facing()->set_x( 10 );
+	//	wp->mutable_facing()->set_y( 20 );
+	//	wp->mutable_facing()->set_z( 30 );
+
+	//	//wp->set_name( "Test Wp" );
+	//	wp->set_radius( 90 );
+	//}
+	//for ( int i = 0; i < 1024; ++i ) {
+	//	Remote::Entity * ent = game.add_entities();
+	//	ent->set_uid( i );
+	//	ent->mutable_position()->set_x( 10 );
+	//	ent->mutable_position()->set_y( 20 );
+	//	ent->mutable_position()->set_z( 30 );
+
+	//	ent->mutable_facing()->set_x( 10 );
+	//	ent->mutable_facing()->set_y( 20 );
+	//	ent->mutable_facing()->set_z( 30 );
+
+	//	ent->set_classid( 3034 );
+	//	ent->set_teamid( 200 );
+
+	//	ent->set_health( 100 );
+	//	ent->set_healthmax( 100 );
+
+	//	ent->set_armor( 100 );
+	//	ent->set_armormax( 100 );
+
+	//	ent->mutable_size()->set_x( 64 );
+	//	ent->mutable_size()->set_y( 64 );
+	//	ent->mutable_size()->set_z( 64 );
+
+	//	ent->set_fov( 90 );
+
+
+	//	//ent->set_name( "Entity Name" );
+	//}
+
+	//const int memSize = game.ByteSize();
+	//
+	//std::string stringOutput;
+	//google::protobuf::TextFormat::PrintToString( game, &stringOutput );
+
 	FiberManager fiberMan;
 
 	fiberMan.Init();

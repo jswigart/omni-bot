@@ -6,10 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
+#include "BotSensoryMemory.h"
 #include "IGameManager.h"
 #include "ScriptManager.h"
-#include "Base_Messages.h"
+#include "FilterSensory.h"
+#include "InterfaceFuncs.h"
 
 namespace AiState
 {

@@ -151,7 +151,7 @@ public:
 	void RemoveGoalByName( const char *_goalname );
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync );
+	virtual void Sync( RemoteLib::DebugConnection * connection );
 #endif
 
 	GoalManager();

@@ -21,9 +21,6 @@
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\MC\MC_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\MC\MC_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -31,9 +28,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\MC\MC_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\MC\PrecompMC.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\MC\gmMCBinds.cpp">
@@ -71,9 +65,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\MC\MC_Messages.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\MC\PrecompMC.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\MC\gmMCBinds.h">

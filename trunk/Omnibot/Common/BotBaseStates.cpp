@@ -6,9 +6,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
+#include "BotSteeringSystem.h"
+#include "BotWeaponSystem.h"
+#include "BotTargetingSystem.h"
+#include "IGameManager.h"
+#include "InterfaceFuncs.h"
+#include "NavigationFlags.h"
+#include "PathPlannerBase.h"
+#include "RenderBuffer.h"
 
 const obReal ROAM_GOAL_PRIORITY = 0.05f;
 const obReal CTF_PRIORITY = 0.55f;
@@ -365,7 +373,7 @@ namespace AiState
 	//	if(IsActive())
 	//	{
 	//		Utils::OutlineAABB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, MIN_RENDER_TIME);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,MIN_RENDER_TIME);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,MIN_RENDER_TIME);
 	//		m_TargetZone.RenderDebug();
 	//	}
 	//}
@@ -522,8 +530,8 @@ namespace AiState
 	{
 		if(m_MapGoal)
 		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
-			Utils::DrawLine(GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA, MIN_RENDER_TIME);
+			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME); // todo: convert to renderbuffer
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA );
 		}
 	}
 
@@ -1044,12 +1052,12 @@ namespace AiState
 
 	void FollowPath::RenderDebug()
 	{
-		Utils::DrawLine(GetClient()->GetPosition(), m_PtOnPath, COLOR::BLUE, MIN_RENDER_TIME);
-		Utils::DrawLine(GetClient()->GetPosition(), m_LookAheadPt, COLOR::MAGENTA, MIN_RENDER_TIME);
+		RenderBuffer::AddLine(GetClient()->GetPosition(), m_PtOnPath, COLOR::BLUE );
+		RenderBuffer::AddLine(GetClient()->GetPosition(), m_LookAheadPt, COLOR::MAGENTA );
 		m_CurrentPath.DebugRender(COLOR::RED, MIN_RENDER_TIME);
 		Path::PathPoint pt;
 		m_CurrentPath.GetCurrentPt(pt);
-		Utils::DrawRadius(pt.m_Pt, pt.m_Radius, COLOR::GREEN, MIN_RENDER_TIME);
+		RenderBuffer::AddCircle( pt.m_Pt, COLOR::GREEN, pt.m_Radius );
 	}
 
 	bool FollowPath::GetAimPosition(Vector3f &_aimpos)
@@ -1688,7 +1696,7 @@ namespace AiState
 
 						vLook.FromSpherical(h, p, r);
 						m_LookAheadPt = vEye + vLook;
-						//Utils::DrawLine(vEye,m_LookAheadPt, (m_LadderDirection > 0) ? COLOR::GREEN : COLOR::RED,3.f);
+						//RenderBuffer::AddLine(vEye,m_LookAheadPt, (m_LadderDirection > 0) ? COLOR::GREEN : COLOR::RED,3.f);
 					}
 				}
 				else
@@ -1722,9 +1730,9 @@ namespace AiState
 		
 		const bool bMover = InterfaceFuncs::IsMoverAt(pos1,pos2);
 
-		if(DebugDrawingEnabled())
+		if( DebugDrawingEnabled() )
 		{
-			Utils::DrawLine(pos1,pos2,bMover?COLOR::GREEN:COLOR::RED,0.5f);
+			RenderBuffer::AddLine( pos1,pos2,bMover?COLOR::GREEN:COLOR::RED );
 		}		
 		return bMover;
 	}
@@ -1787,20 +1795,20 @@ namespace AiState
 		if(DebugDrawingEnabled())
 		{
 			// Line Ray
-			Utils::DrawLine(vStartPos, vEndPos, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
+			RenderBuffer::AddLine(vStartPos, vEndPos, 
+				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vBottomStartLine(vStartPos), vBottomEndLine(vEndPos);
 			vBottomStartLine.z += localAABB.m_Mins[2];
 			vBottomEndLine.z += localAABB.m_Mins[2];
-			Utils::DrawLine(vBottomStartLine, vBottomEndLine, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
+			RenderBuffer::AddLine(vBottomStartLine, vBottomEndLine, 
+				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vTopStartLine(vStartPos), vTopEndLine(vEndPos);
 			vTopStartLine.z += localAABB.m_Maxs[2];
 			vTopEndLine.z += localAABB.m_Maxs[2];
-			Utils::DrawLine(vTopStartLine, vTopEndLine, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
+			RenderBuffer::AddLine(vTopStartLine, vTopEndLine, 
+				bHit ? COLOR::RED : COLOR::GREEN );
 		}
 	}
 
@@ -1822,7 +1830,7 @@ namespace AiState
 		vEndPos.z -= fEndDownOffset;
 
 		// Trace a line downward to see the distance below us.
-		//DEBUG_ONLY(Utils::DrawLine(vStartPos, vEndPos, COLOR::RED));
+		//DEBUG_ONLY(RenderBuffer::AddLine(vStartPos, vEndPos, COLOR::RED));
 
 		// Trace a line directly underneath us to try and detect rapid drops in elevation.
 		obTraceResult tr;
@@ -2019,9 +2027,9 @@ namespace AiState
 			{
 				obColor c = pCurrent==&m_AimRequests[i] ? COLOR::MAGENTA : COLOR::WHITE;
 				if(m_AimRequests[i].m_AimType!=WorldFacing)
-					Utils::DrawLine(GetClient()->GetEyePosition(),m_AimRequests[i].m_AimVector, c, MIN_RENDER_TIME);
+					RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_AimRequests[i].m_AimVector, c );
 				else
-					Utils::DrawLine(GetClient()->GetEyePosition(),GetClient()->GetEyePosition()+GetClient()->GetFacingVector() * 128.f, c, MIN_RENDER_TIME);
+					RenderBuffer::AddLine(GetClient()->GetEyePosition(),GetClient()->GetEyePosition()+GetClient()->GetFacingVector() * 128.f, c );
 			}
 		}
 	}
@@ -2299,11 +2307,11 @@ namespace AiState
 				for(int p = 0; p < m_Triggers[i].m_SensoryFilter->GetNumPositions(); ++p)
 				{
 					float r = Mathf::Max(m_Triggers[i].m_SensoryFilter->GetMaxDistance(), 10.f);
-					Utils::DrawRadius(
+					
+					RenderBuffer::AddCircle(
 						m_Triggers[i].m_SensoryFilter->GetPosition(p),
-						r, 
 						COLOR::MAGENTA, 
-						MIN_RENDER_TIME);
+						r );
 				}
 			}
 		}
@@ -2437,18 +2445,15 @@ namespace AiState
 		{
 			if(m_TargetZones[i].m_InUse)
 			{
-				Utils::DrawRadius(
+				RenderBuffer::AddCircle(
 					m_TargetZones[i].m_Position,
-					m_Radius, 
 					COLOR::MAGENTA, 
-					MIN_RENDER_TIME);
+					m_Radius );
 
-				Utils::PrintText(
+				RenderBuffer::AddString(
 					m_TargetZones[i].m_Position,
 					COLOR::WHITE,
-					1.f, 
-					"%d",
-					m_TargetZones[i].m_TargetCount);
+					va( "%d", m_TargetZones[i].m_TargetCount ) );
 			}
 		}
 	}
@@ -2878,7 +2883,7 @@ namespace AiState
 											tn.MinOffset.Y = tn.MaxOffset.Y = y;
 											tn.Height = s.Height;
 											Vector3f vMissing = _GetNodePosition(tn);
-											Utils::DrawLine(
+											RenderBuffer::AddLine(
 												vMissing,
 												vMissing + Vector3f(0,0,64),
 												COLOR::ORANGE,
@@ -2910,7 +2915,7 @@ namespace AiState
 											tn.MinOffset.Y = tn.MaxOffset.Y = y;
 											tn.Height = s.Height;
 											Vector3f vMissing = _GetNodePosition(tn);
-											Utils::DrawLine(
+											RenderBuffer::AddLine(
 												vMissing,
 												vMissing + Vector3f(0,0,64),
 												COLOR::ORANGE,
@@ -3014,7 +3019,7 @@ namespace AiState
 						}
 						if(fFurthestPoints>0.f)
 						{
-							Utils::DrawLine(
+							RenderBuffer::AddLine(
 								vP1 + Vector3f(0,0,64),
 								vP2 + Vector3f(0,0,64),
 								COLOR::BLUE,RT);
@@ -3112,7 +3117,7 @@ namespace AiState
 					if(node.Connections[d].Destination)
 					{						
 						Vector3f vNeighbor = _GetNodePosition(*node.Connections[d].Destination);
-						Utils::DrawLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol, RENDER_TIME);
+						RenderBuffer::AddLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol, RENDER_TIME);
 
 						const float fDist = Length(vNodePos, vNeighbor);
 						if(fDist > 128.f)
@@ -3142,11 +3147,10 @@ namespace AiState
 									Vector3f vNeighborPos = vNodePos2;
 									vNeighborPos.x += (Radius*2.f) * Offset[j][0];
 									vNeighborPos.y += (Radius*2.f) * Offset[j][1];
-									Utils::DrawLine(
+									RenderBuffer::AddLine(
 										vNodePos2 + Vector3f(0.f,0.f,32.f),
 										vNeighborPos + Vector3f(0.f,0.f,32.f),
-										COLOR::BLUE,
-										RENDER_TIME);
+										COLOR::BLUE );
 								}
 							}
 						}
@@ -3169,7 +3173,7 @@ namespace AiState
 				"%d, sid %d",
 				pNearestSector-Nodes,
 				pNearestSector->Sectorized?pNearestSector->SectorId:-1);
-			Utils::DrawLine(vNodePos, vNodePos + Vector3f(0,0,32.f),COLOR::CYAN,RENDER_TIME);
+			RenderBuffer::AddLine(vNodePos, vNodePos + Vector3f(0,0,32.f),COLOR::CYAN );
 		}
 	}
 

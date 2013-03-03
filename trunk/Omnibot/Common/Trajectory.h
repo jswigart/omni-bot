@@ -9,6 +9,11 @@
 #ifndef __TRAJECTORY_H__
 #define __TRAJECTORY_H__
 
+#include "common.h"
+
+class gmThread;
+class gmTableObject;
+
 // namespace: Trajectory
 //		This class simulates a trajectory of a projectile
 namespace Trajectory

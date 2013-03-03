@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ETQW_VoiceMacros.h"
+#include "ETQW_Client.h"
+
+#include "common.h"
 
 const char *strVoiceMacros[] =
 {

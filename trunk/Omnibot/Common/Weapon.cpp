@@ -6,10 +6,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "Weapon.h"
-#include "gmWeapon.h"
+#include "Client.h"
 #include "ScriptManager.h"
+#include "MemoryRecord.h"
+#include "TargetInfo.h"
+#include "InterfaceFuncs.h"
+#include "BotTargetingSystem.h"
+
+#include "gmbinder2.h"
+#include "gmbinder2_class.h"
+#include "gmCall.h"
+#include "gmWeapon.h"
 
 //////////////////////////////////////////////////////////////////////////
 

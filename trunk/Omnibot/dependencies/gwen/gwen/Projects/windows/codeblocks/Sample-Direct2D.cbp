@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Sample-Direct2D" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../bin/Direct2DSample.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Release/Sample-Direct2D" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEN-Renderer-Direct2D" />
+					<Add library="gwen_static" />
+					<Add library="d2d1" />
+					<Add library="dwrite" />
+					<Add library="windowscodecs" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../bin/Direct2DSample_Dd" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Debug/Sample-Direct2D" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEND-Renderer-Direct2D" />
+					<Add library="gwen_static" />
+					<Add library="d2d1" />
+					<Add library="dwrite" />
+					<Add library="windowscodecs" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../Samples/Direct2D/Direct2DSample.cpp">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

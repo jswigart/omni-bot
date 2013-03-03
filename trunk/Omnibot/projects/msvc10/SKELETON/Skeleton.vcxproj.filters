@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SKELETON\PrecompSkeleton.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SKELETON\Skeleton_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -24,14 +21,8 @@
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SKELETON\Skeleton_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SKELETON\PrecompSkeleton.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SKELETON\Skeleton_Client.h">
       <Filter>Core</Filter>
     </ClInclude>

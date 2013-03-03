@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "FilterBias.h"
 
 FilterBiasEntityFlag::FilterBiasEntityFlag(const int _entflags, const float _multiplier) :

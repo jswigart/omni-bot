@@ -598,7 +598,7 @@ void RE_EndFrame( int *frontEndMsec, int *backEndMsec ) {
 	if ( !tr.registered ) {
 		return;
 	}
-
+	
 	// Needs to use reserved space, so no R_GetCommandBuffer.
 	cmdList = &backEndData[tr.smpFrame]->commands;
 	assert( cmdList );

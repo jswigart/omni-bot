@@ -9,6 +9,8 @@
 #ifndef __CALLBACKPARAMETERS_H__
 #define __CALLBACKPARAMETERS_H__
 
+#include "common.h"
+
 class Client;
 class gmMachine;
 class gmUserObject;

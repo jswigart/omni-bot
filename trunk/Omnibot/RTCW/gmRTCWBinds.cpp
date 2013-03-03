@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "gmRTCWBinds.h"
+#include "RTCW_Client.h"
+#include "RTCW_InterfaceFuncs.h"
 
 #include "gmConfig.h"
 #include "gmThread.h"
@@ -54,7 +55,7 @@ static int GM_CDECL gmfSendPrivateMessage(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			int len = strlen(pAsString);
+			size_t len = strlen(pAsString);
 			if(chatMsgSize - iMsgPos > len)
 			{
 				Utils::StringCopy(&targName[iMsgPos], pAsString, len);
@@ -69,7 +70,7 @@ static int GM_CDECL gmfSendPrivateMessage(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				size_t len = strlen(pAsString);
 				if(chatMsgSize - iMsgPos > len)
 				{
 					Utils::StringCopy(&chatMsg[iMsgPos], pAsString, len);
@@ -313,7 +314,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			int len = strlen(pAsString);
+			size_t len = strlen(pAsString);
 			if(cvarSize - iPos > len)
 			{
 				Utils::StringCopy(&cvar[iPos], pAsString, len);
@@ -328,7 +329,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				int len = strlen(pAsString);
+				size_t len = strlen(pAsString);
 				if(valueSize - iPos > len)
 				{
 					Utils::StringCopy(&value[iPos], pAsString, len);
@@ -372,7 +373,7 @@ static int GM_CDECL gmfGetCvar(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			int len = strlen(pAsString);
+			size_t len = strlen(pAsString);
 			if(cvarSize - iPos > len)
 			{
 				Utils::StringCopy(&cvar[iPos], pAsString, len);

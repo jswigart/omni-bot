@@ -6,11 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_BaseStates.h"
 #include "JA_NavigationFlags.h"
-#include "ScriptManager.h"
-#include "gmScriptGoal.h"
+#include "JA_Client.h"
+
+#include "BotBaseStates.h"
+#include "BotSteeringSystem.h"
 
 namespace AiState
 {

@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompMC.h"
 #include "gmConfig.h"
 #include "gmBot.h"
 #include "gmMCBinds.h"
@@ -14,6 +13,9 @@
 #include "gmMachine.h"
 #include "gmGameEntity.h"
 #include "gmBotLibrary.h"
+
+#include "MC_Client.h"
+#include "MC_InterfaceFuncs.h"
 
 #define CHECK_THIS_BOT() \
 	MC_Client *native = static_cast<MC_Client*>(gmBot::GetThisObject( a_thread )); \

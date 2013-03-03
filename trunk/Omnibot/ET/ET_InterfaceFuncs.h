@@ -9,7 +9,8 @@
 #ifndef __ET_INTERFACEFUNCS_H__
 #define __ET_INTERFACEFUNCS_H__
 
-#include "BotWeaponSystem.h"
+#include "InterfaceFuncs.h"
+#include "ET_Messages.h"
 
 namespace InterfaceFuncs
 {	

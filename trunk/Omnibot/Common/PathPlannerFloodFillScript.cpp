@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "PathPlannerFloodFill.h"
 #include "NavigationManager.h"
 
@@ -234,27 +234,6 @@ int GM_CDECL gmfFloodFillFloodFill(gmThread *a_thread)
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-// function: TrimSectors
-//		Begins navigation generation using flood fill algorithm.
-//
-// Parameters:
-//
-//		none
-//
-// Returns:
-//		none
-int GM_CDECL gmfFloodFillTrimSectors(gmThread *a_thread)
-{
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_FLOAT_OR_INT_PARAM(trimarea, 0);
-	PathPlannerFloodFill *pPlanner = GetNavPlanner();
-	if(pPlanner)
-		pPlanner->TrimSectors(trimarea);
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: Global Waypoint Pathplanner Functions
 static gmFunctionEntry s_floodfillLib[] = 
@@ -270,9 +249,7 @@ static gmFunctionEntry s_floodfillLib[] =
 
 	{"SaveFloodStarts",		gmfFloodFillSaveFloodStarts},
 	{"LoadFloodStarts",		gmfFloodFillLoadFloodStarts},
-
-	{"TrimSectors",			gmfFloodFillTrimSectors},
-
+	
 	{"FloodFill",			gmfFloodFillFloodFill},
 };
 

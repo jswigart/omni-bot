@@ -18,18 +18,10 @@
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\ff\omnibot\omnibot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FF\FF_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\FF\FF_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FF\PrecompFF.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\FF\FF_Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc">
@@ -43,9 +35,7 @@
     <ClInclude Include="..\..\..\FF\FF_Game.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\FF\PrecompFF.h">
-      <Filter>Core</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\..\FF\FF_Client.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FF\Jamfile" />

@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "EngineFuncs.h"
 #include "Utilities.h"
 
@@ -226,11 +226,37 @@ namespace EngineFuncs
 	{
 		g_EngineFuncs->PrintMessage(_msg);
 		//ThreadAddMessage(_msg);
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+		/*RemoteLib::DataBufferStatic<2048> db;
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_scriptPrint );
+		db.writeInt32( COLOR::BLACK.rgba() );
+		db.writeString( _msg );
+		db.endSizeHeader();
+		if ( db.endWrite() == 0 ) {
+			IGameManager::GetInstance()->SyncRemoteMessage( db );
+		}*/
+#endif
 	}
 
 	void ConsoleError(const char* _msg)
 	{
 		g_EngineFuncs->PrintError(_msg);
 		//ThreadAddError(_msg);
+
+#ifdef ENABLE_REMOTE_DEBUGGING
+		/*RemoteLib::DataBufferStatic<2048> db;
+		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+		db.startSizeHeader();
+		db.writeInt32( RemoteLib::ID_scriptPrint );
+		db.writeInt32( COLOR::RED.rgba() );
+		db.writeString( _msg );
+		db.endSizeHeader();
+		if ( db.endWrite() == 0 ) {
+			IGameManager::GetInstance()->SyncRemoteMessage( db );
+		}*/
+#endif
 	}
 };

@@ -1,14 +1,15 @@
-#include "PrecompCommon.h"
+
 #include "RenderOverlay.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
 
-#include "detours.h"
+#include <windows.h>
 #include <DebugDraw.h>
 
-#pragma comment(lib,"opengl32.lib")
+//#pragma comment(lib,"opengl32.lib")
 //#pragma comment(lib,"freetype.lib")
 
+#include "DebugWindow.h"
 #include <guichan/sfml.hpp>
 #include <guichan/opengl.hpp>
 
@@ -39,160 +40,13 @@ public:
 	void DrawAABB(const AABB &aabb, const Vector3f &pos, const Matrix3f &orientation);
 	
 	~RenderOverlayOpenGL();
-
 private:
 };
 
-//////////////////////////////////////////////////////////////////////////
-// Hooked functions
-
-static BOOL (WINAPI * trueSwapBuffers)(HDC) = SwapBuffers;
-static void (WINAPI * truegluPerspective)(GLdouble,GLdouble,GLdouble,GLdouble) = gluPerspective;
-static void (WINAPI * trueglFrustum)(GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble) = glFrustum;
-static void (WINAPI * trueglViewPort)(GLint x, GLint y, GLsizei width, GLsizei height) = glViewport;
-static void (WINAPI * trueglLoadMatrixf)(const GLfloat *m) = glLoadMatrixf;
-static void (WINAPI * trueglVertex3f)(GLfloat x, GLfloat y, GLfloat z) = glVertex3f;
-static void (WINAPI * trueglVertex3fv)(const GLfloat *v) = glVertex3fv;
-
-struct  
+RenderOverlay *CreateOpenGLRenderOverlay()
 {
-	GLdouble left;
-	GLdouble right;
-	GLdouble bottom;
-	GLdouble top;
-	GLdouble zNear;
-	GLdouble zFar;
-} Frustum;
-
-struct
-{
-	GLdouble fovy;
-	GLdouble aspect;
-	GLdouble zNear;
-	GLdouble zFar;
-} Perspective;
-
-struct
-{
-	GLint x;
-	GLint y;
-	GLsizei width;
-	GLsizei height;
-} ViewPort;
-
-struct
-{
-	GLfloat Projection[16];
-	GLfloat ModelView[16];
-	GLfloat ModelViewLast[16];
-} Matrices;
-
-GLint lastMatrixMode = 0;
-
-int CountProjection = 0;
-int CountModelView = 0;
-
-int RecordProjection = 0;
-int RecordModelView = 0;
-
-namespace Hooked
-{
-	void WINAPI gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
-	{
-		Perspective.fovy = fovy;
-		Perspective.aspect = aspect;
-		Perspective.zNear = zNear;
-		Perspective.zFar = zFar;	
-		truegluPerspective(fovy,aspect,zNear,zFar);
-	}
-	void WINAPI glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
-	{
-		Frustum.left = left;
-		Frustum.right = right;
-		Frustum.bottom = bottom;
-		Frustum.top = top;
-		Frustum.zNear = zNear;
-		Frustum.zFar = zFar;
-		trueglFrustum(left,right,bottom,top,zNear,zFar);
-	}
-	void WINAPI glViewPort(GLint x, GLint y, GLsizei width, GLsizei height)
-	{
-		// did the resolution change?
-		if(ViewPort.width != width || ViewPort.height != height)
-		{
-			gcn::OpenGLGraphics *glGraphics = static_cast<gcn::OpenGLGraphics*>(DW.Core.mGraphics);
-			glGraphics->setTargetPlane(width,height);
-
-			//DW.Core.mMainWindow->setSize(width,height);
-			DW.Core.mGui->getTop()->setSize(width,height);
-		}
-
-		ViewPort.x = x;
-		ViewPort.y = y;
-		ViewPort.width = width;
-		ViewPort.height = height;
-		trueglViewPort(x,y,width,height);
-	}
-	void WINAPI glLoadMatrixf(const GLfloat *m)
-	{
-		GLint param;
-		glGetIntegerv(GL_MATRIX_MODE,&param);
-		switch(param)
-		{
-		case GL_PROJECTION:
-			{
-				if(CountProjection==RecordProjection)
-				{
-					memcpy(Matrices.Projection,m,sizeof(GLfloat)*16);
-				}
-				++CountProjection;
-				break;
-			}
-		case GL_MODELVIEW:
-			{
-				if(CountModelView==RecordModelView)
-				{
-					memcpy(Matrices.ModelView,m,sizeof(GLfloat)*16);
-				}
-				memcpy(Matrices.ModelViewLast,m,sizeof(GLfloat)*16);
-				++CountModelView;
-				break;
-			}
-		}
-		lastMatrixMode = param;
-		trueglLoadMatrixf(m);
-	}
-	BOOL WINAPI SwapBuffers(HDC dc)
-	{
-		static_cast<RenderOverlayOpenGL*>(gOverlay)->Render();
-		return trueSwapBuffers(dc);
-	}
-
-	/*void WINAPI glVertex3f (GLfloat x, GLfloat y, GLfloat z)
-	{
-		switch(gOverlay->GetXForm())
-		{
-		case RenderOverlay::XFORM_RECAST:
-			trueglVertex3f(x,z,y);
-			break;
-		case RenderOverlay::XFORM_NONE:
-		default:
-			trueglVertex3f(x,y,z);
-		}
-	}
-	void WINAPI glVertex3fv (const GLfloat *v)
-	{
-		switch(gOverlay->GetXForm())
-		{
-		case RenderOverlay::XFORM_RECAST:
-			trueglVertex3f(v[0],v[2],v[1]);
-			break;
-		case RenderOverlay::XFORM_NONE:
-		default:
-			trueglVertex3fv(v);
-		}
-	}*/
-};
+	return new RenderOverlayOpenGL;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // recast uses a different coordinate system than omni-bot, so we need to
@@ -248,24 +102,25 @@ void RenderOverlayOpenGL::StartFrame()
 
 bool RenderOverlayOpenGL::Initialize()
 {
-	DetourRestoreAfterWith();
+	return false;
+	//DetourRestoreAfterWith();
 
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
+	//DetourTransactionBegin();
+	//DetourUpdateThread(GetCurrentThread());
 
-	DetourAttach(&(PVOID&)trueSwapBuffers, Hooked::SwapBuffers);
-	DetourAttach(&(PVOID&)truegluPerspective, Hooked::gluPerspective);
-	DetourAttach(&(PVOID&)trueglFrustum, Hooked::glFrustum);
-	DetourAttach(&(PVOID&)trueglViewPort, Hooked::glViewPort);
-	DetourAttach(&(PVOID&)trueglLoadMatrixf, Hooked::glLoadMatrixf);
-	//DetourAttach(&(PVOID&)trueglVertex3f, Hooked::glVertex3f);
-	//DetourAttach(&(PVOID&)trueglVertex3fv, Hooked::glVertex3fv);
+	//DetourAttach(&(PVOID&)trueSwapBuffers, Hooked::SwapBuffers);
+	//DetourAttach(&(PVOID&)truegluPerspective, Hooked::gluPerspective);
+	//DetourAttach(&(PVOID&)trueglFrustum, Hooked::glFrustum);
+	//DetourAttach(&(PVOID&)trueglViewPort, Hooked::glViewPort);
+	//DetourAttach(&(PVOID&)trueglLoadMatrixf, Hooked::glLoadMatrixf);
+	////DetourAttach(&(PVOID&)trueglVertex3f, Hooked::glVertex3f);
+	////DetourAttach(&(PVOID&)trueglVertex3fv, Hooked::glVertex3fv);
 
-	const LONG error = DetourTransactionCommit();
-	OBASSERT(error == NO_ERROR,"DetourTransactionCommit: %d",error);
+	//const LONG error = DetourTransactionCommit();
+	//OBASSERT(error == NO_ERROR,"DetourTransactionCommit: %d",error);
 
 	//////////////////////////////////////////////////////////////////////////
-	const int Width = 800;
+	/*const int Width = 800;
 	const int Height = 600;
 
 	HWND wnd = GetForegroundWindow();
@@ -281,24 +136,24 @@ bool RenderOverlayOpenGL::Initialize()
 	extern duDebugDraw * gDDraw;
 	gDDraw = &gOpenGLRenderer;
 
-	return error==NO_ERROR;
+	return error==NO_ERROR;*/
 }
 
 RenderOverlayOpenGL::~RenderOverlayOpenGL()
 {
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
+	//DetourTransactionBegin();
+	//DetourUpdateThread(GetCurrentThread());
 
-	DetourDetach(&(PVOID&)trueSwapBuffers, Hooked::SwapBuffers);
-	DetourDetach(&(PVOID&)truegluPerspective, Hooked::gluPerspective);
-	DetourDetach(&(PVOID&)trueglFrustum, Hooked::glFrustum);
-	DetourDetach(&(PVOID&)trueglViewPort, Hooked::glViewPort);
-	DetourDetach(&(PVOID&)trueglLoadMatrixf, Hooked::glLoadMatrixf);
-	//DetourDetach(&(PVOID&)trueglVertex3f, Hooked::glVertex3f);
-	//DetourDetach(&(PVOID&)trueglVertex3fv, Hooked::glVertex3fv);
+	//DetourDetach(&(PVOID&)trueSwapBuffers, Hooked::SwapBuffers);
+	//DetourDetach(&(PVOID&)truegluPerspective, Hooked::gluPerspective);
+	//DetourDetach(&(PVOID&)trueglFrustum, Hooked::glFrustum);
+	//DetourDetach(&(PVOID&)trueglViewPort, Hooked::glViewPort);
+	//DetourDetach(&(PVOID&)trueglLoadMatrixf, Hooked::glLoadMatrixf);
+	////DetourDetach(&(PVOID&)trueglVertex3f, Hooked::glVertex3f);
+	////DetourDetach(&(PVOID&)trueglVertex3fv, Hooked::glVertex3fv);
 
-	const LONG error = DetourTransactionCommit();
-	OBASSERT(error == NO_ERROR,"DetourTransactionCommit: %d",error);
+	//const LONG error = DetourTransactionCommit();
+	//OBASSERT(error == NO_ERROR,"DetourTransactionCommit: %d",error);
 }
 
 void RenderOverlayOpenGL::PostInitialize()
@@ -330,75 +185,7 @@ void RenderOverlayOpenGL::Translate(const Vector3f &v)
 
 void RenderOverlayOpenGL::Render()
 {
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-
-	glDisable(GL_LIGHTING);
-	glDisable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_TEXTURE_2D);
-
-	glEnable(GL_SCISSOR_TEST);
-	glPointSize(2.0);
-	glLineWidth(2.0);
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glMatrixMode(GL_TEXTURE);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	trueglLoadMatrixf(Matrices.Projection);
-
-	/*static float fov = 90.f;
-	GLdouble aspect = (GLdouble)ViewPort.width / (GLdouble)ViewPort.height;
-	gluPerspective(fov,aspect,1,5000);*/
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	if(RenderOverlayOpenGLUseViewer)
-	{
-		Vector3f p0 = Viewer.EyePos;
-		Vector3f p1 = Viewer.EyePos + Viewer.Facing;
-		gluLookAt(
-			p0.x,
-			p0.y,
-			p0.z,
-			p1.x,
-			p1.y,
-			p1.z,
-			0.f,
-			0.f,
-			1.f);
-	}
-	else
-	{
-		trueglLoadMatrixf(Matrices.ModelView);
-	}
-
-	RenderOverlayUser::OverlayRenderAll(this,Viewer);
-
-	//////////////////////////////////////////////////////////////////////////
-
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-
-	glMatrixMode(GL_TEXTURE);
-	glPopMatrix();
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	glPopAttrib();
-
-	DW.Core.mGui->draw();
-
-	CountProjection = 0;
-	CountModelView = 0;
+	
 }
 
 void RenderOverlayOpenGL::Update()
@@ -552,10 +339,5 @@ void RenderOverlayOpenGL::DrawAABB(const AABB &aabb, const Vector3f &pos, const 
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-RenderOverlay *CreateOpenGLRenderOverlay()
-{
-	return new RenderOverlayOpenGL;
-}
 
 #endif //#ifdef ENABLE_DEBUG_WINDOW

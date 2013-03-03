@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "gmConfig.h"
 #include "gmBot.h"
 #include "gmTFBinds.h"
@@ -14,7 +13,10 @@
 #include "gmMachine.h"
 #include "gmGameEntity.h"
 #include "gmBotLibrary.h"
+
+#include "TF_Client.h"
 #include "TF_BaseStates.h"
+#include "TF_InterfaceFuncs.h"
 
 #define CHECK_THIS_BOT() \
 	Client *native = gmBot::GetThisObject( a_thread ); \
@@ -187,7 +189,7 @@ static int GM_CDECL gmfDisguiseOptions(gmThread *a_thread)
 	gmTableObject *pTeamTbl = pMachine->AllocTableObject();
 	gmTableObject *pClassTbl = pMachine->AllocTableObject();
 
-	for(int t = TF_TEAM_BLUE; t <= TF_TEAM_GREEN; ++t)
+	for(int t = 0; t <= 4; ++t)
 		pTeamTbl->Set(pMachine, t, gmVariable(disguiseOptions.m_Team[t] == True ? 1 : 0));
 
 	for(int c = TF_CLASS_SCOUT; c <= TF_CLASS_CIVILIAN; ++c)

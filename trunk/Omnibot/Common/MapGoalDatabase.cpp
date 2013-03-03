@@ -6,11 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-
 #include "ScriptManager.h"
 #include "gmWeapon.h"
+
+#include "MapGoal.h"
 #include "MapGoalDatabase.h"
+#include "FileSystem.h"
 
 MapGoalDatabase g_MapGoalDatabase;
 

@@ -14,8 +14,10 @@
 #ifndef __WEAPON_H__
 #define __WEAPON_H__
 
+#include "Base_Messages.h"
 #include "PIDController.h"
 #include "gmGCRoot.h"
+#include "ScriptManager.h"
 
 class Client;
 class TargetInfo;

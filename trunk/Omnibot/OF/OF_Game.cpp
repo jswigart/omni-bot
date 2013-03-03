@@ -6,16 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompOF.h"
 #include "OF_Game.h"
 #include "OF_Client.h"
 #include "TF_BaseStates.h"
 
 #include "gmTFBinds.h"
 
-#include "NameManager.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
+#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -29,7 +27,7 @@ int OF_Game::GetVersionNum() const
 
 Client *OF_Game::CreateGameClient()
 {
-	return new TF_Client;
+	return new OF_Client;
 }
 
 const char *OF_Game::GetModSubFolder() const
@@ -95,6 +93,11 @@ bool OF_Game::Init()
 	TF_Options::GRENADE_VELOCITY = 650.f;
 	TF_Options::PIPE_MAX_DEPLOYED = 6;
 
+	TF_Options::DisguiseTeamFlags[ OF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
+	TF_Options::DisguiseTeamFlags[ OF_TEAM_RED ] = TF_PWR_DISGUISE_RED;
+	TF_Options::DisguiseTeamFlags[ OF_TEAM_GREEN ] = TF_PWR_DISGUISE_GREEN;
+	TF_Options::DisguiseTeamFlags[ OF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
+
 	return true;
 }
 
@@ -107,6 +110,22 @@ void OF_Game::InitScriptBinds(gmMachine *_machine)
 {
 	LOG("Binding OF Library...");
 	gmBindTFLibrary(_machine);
+}
+
+static IntEnum OF_TeamEnum[] =
+{
+	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
+	IntEnum("NONE",OF_TEAM_NONE),
+	IntEnum("RED",OF_TEAM_RED),
+	IntEnum("BLUE",OF_TEAM_BLUE),
+	IntEnum("YELLOW",OF_TEAM_YELLOW),
+	IntEnum("GREEN",OF_TEAM_GREEN),
+};
+
+void OF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
+{
+	num = sizeof(OF_TeamEnum) / sizeof(OF_TeamEnum[0]);
+	_ptr = OF_TeamEnum;	
 }
 
 void OF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)

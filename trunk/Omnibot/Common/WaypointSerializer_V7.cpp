@@ -6,9 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "WaypointSerializer_V7.h"
 #include "Waypoint.h"
+#include "FileSystem.h"
 
 // temp
 #include "gmMachine.h"

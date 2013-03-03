@@ -6,18 +6,21 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ETQW_Game.h"
 #include "ETQW_GoalManager.h"
 #include "ETQW_NavigationFlags.h"
 #include "ETQW_VoiceMacros.h"
+#include "ETQW_InterfaceFuncs.h"
+#include "ETQW_Client.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "IGameManager.h"
 #include "gmETQWBinds.h"
+
+#include "BotSensoryMemory.h"
+#include "FilterSensory.h"
+
+#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -542,68 +545,9 @@ void ETQW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 	}	
 }
 
-PathPlannerWaypoint::BlockableStatus ETQW_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus ETQW_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
 {
-	static bool bRender = false;
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_ETQW_NAV_WALL) &&*/ _wp2->IsFlagOn(F_ETQW_NAV_WALL))
-	{
-		static float fOffset = 25.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-		
-		if(bRender)
-		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
-	}
-	else if(_wp1->IsFlagOn(F_ETQW_NAV_BRIDGE) && _wp2->IsFlagOn(F_ETQW_NAV_BRIDGE))
-	{
-		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
-		vEnd = vStart +  Vector3f(0,0,-48);
-
-		if(bRender)
-		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
-	}
-	else if(_wp2->IsFlagOn(F_ETQW_NAV_WATERBLOCKABLE))
-	{
-		vStart = _wp1->GetPosition();
-		vEnd = vStart + Vector3f(0.0f, 0.0f, 5.0f);
-
-		if(bRender)
-		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		int iContents = g_EngineFuncs->GetPointContents(vStart);		
-		res = (iContents & CONT_WATER) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
-	}
-	
-	if(_draw && (res != PathPlannerWaypoint::B_INVALID_FLAGS))
-	{
-		Utils::DrawLine(vStart, vEnd, 
-			(res == PathPlannerWaypoint::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
-	}
-
-	return res;
-}
-
-void ETQW_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = ETQW_PathCheck;
+	// todo
+	return PathPlannerWaypointInterface::B_PATH_OPEN;
 }

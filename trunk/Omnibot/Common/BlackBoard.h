@@ -9,6 +9,7 @@
 #ifndef __BLACKBOARD_H__
 #define __BLACKBOARD_H__
 
+#include "common.h"
 #include "Omni-Bot_Events.h"
 
 class bbItem;
@@ -55,5 +56,7 @@ protected:
 
 	BlackBoardDatabase m_DB;
 };
+
+extern BlackBoard g_Blackboard;
 
 #endif

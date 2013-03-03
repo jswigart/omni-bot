@@ -22,4 +22,11 @@
 		Value="$(SolutionDir)RemoteDebugLib"
 		PerformEnvironmentSet="true"
 	/>
+	<UserMacro
+		Name="PROTO_BUFF"
+		Value="$(SolutionDir)..\protobuf"
+		InheritsFromParent="true"
+		Delimiter=";"
+		PerformEnvironmentSet="true"
+	/>
 </VisualStudioPropertySheet>

@@ -35,6 +35,8 @@ public:
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "of"; }
 
+	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+
 	OF_Game() { }
 	virtual ~OF_Game() {}
 protected:

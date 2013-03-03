@@ -6,18 +6,20 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_Game.h"
 #include "JA_GoalManager.h"
 #include "JA_NavigationFlags.h"
 #include "JA_VoiceMacros.h"
+#include "JA_InterfaceFuncs.h"
+#include "JA_Client.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "IGameManager.h"
-//#include "gmJABinds.h"
+
+#include "FilterSensory.h"
+#include "BotSensoryMemory.h"
+
+#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -469,10 +471,11 @@ void JA_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 	}	
 }
 
-PathPlannerWaypoint::BlockableStatus JA_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
 {
 	static bool bRender = false;
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 
 	Vector3f vStart, vEnd;
 
@@ -483,7 +486,7 @@ PathPlannerWaypoint::BlockableStatus JA_PathCheck(const Waypoint* _wp1, const Wa
 		AABB aabb(vMins, vMaxs);
 		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
 		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-		
+
 		if(bRender)
 		{
 			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
@@ -491,7 +494,7 @@ PathPlannerWaypoint::BlockableStatus JA_PathCheck(const Waypoint* _wp1, const Wa
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
 	}
 	else if(_wp1->IsFlagOn(F_JA_NAV_BRIDGE) && _wp2->IsFlagOn(F_JA_NAV_BRIDGE))
 	{
@@ -505,19 +508,14 @@ PathPlannerWaypoint::BlockableStatus JA_PathCheck(const Waypoint* _wp1, const Wa
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_CLOSED : PathPlannerWaypoint::B_PATH_OPEN;
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
 	}
-	
-	if(_draw && (res != PathPlannerWaypoint::B_INVALID_FLAGS))
+
+	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
 	{
 		Utils::DrawLine(vStart, vEnd, 
-			(res == PathPlannerWaypoint::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
+			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
 	}
 
 	return res;
-}
-
-void JA_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = JA_PathCheck;
 }

@@ -9,6 +9,9 @@
 #ifndef __TARGETINFO_H__
 #define __TARGETINFO_H__
 
+#include "common.h"
+#include "gmGCRoot.h"
+
 class gmUserObject;
 
 // class: TargetInfo

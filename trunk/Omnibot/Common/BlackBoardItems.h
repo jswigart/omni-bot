@@ -9,8 +9,8 @@
 #ifndef __BLACKBOARDITEMS_H__
 #define __BLACKBOARDITEMS_H__
 
+#include "common.h"
 #include "Omni-Bot_Events.h"
-
 #include "gmGCRoot.h"
 
 class gmMachine;

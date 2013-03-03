@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ETQW_InterfaceFuncs.h"
+#include "ETQW_Client.h"
+
+#include "MessageHelper.h"
 
 namespace InterfaceFuncs
 {

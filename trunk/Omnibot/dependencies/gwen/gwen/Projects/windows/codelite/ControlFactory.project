@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="ControlFactory">
+  <VirtualDirectory Name="Util">
+    <VirtualDirectory Name="ControlFactory">
+      <File Name="../../../Util/ControlFactory/Base_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/Button_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/CheckBox_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/ComboBox_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/ControlFactory.cpp"/>
+      <File Name="../../../Util/ControlFactory/DesignerCanvas_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/FilePicker_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/FolderPicker_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/Image_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/Label_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/ListBox_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/MenuStrip_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/PageControl_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/ProgressBar_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/Rectangle_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/Slider_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/TextBox_Factory.cpp"/>
+      <File Name="../../../Util/ControlFactory/VerticalSplitter_Factory.cpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Settings Type="Static Library">
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libcontrolfactory.a" IntermediateDirectory="obj/Release/ControlFactory" Command="./libcontrolfactory.a" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse;-O2;-ffast-math">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="NDEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libcontrolfactoryd" IntermediateDirectory="obj/Debug/ControlFactory" Command="./libcontrolfactoryd" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="_DEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies name="Release">
+  </Dependencies>
+  <Dependencies name="Debug">
+  </Dependencies>
+</CodeLite_Project>

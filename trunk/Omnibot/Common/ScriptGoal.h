@@ -14,6 +14,7 @@
 #include "ScriptManager.h"
 #include "TriggerManager.h"
 #include "Criteria.h"
+#include "BotBaseStates.h"
 
 class gmScriptGoal;
 
@@ -32,6 +33,10 @@ namespace AiState
 		void FromTable(gmMachine *a_machine, gmTableObject *a_table);
 
 		MoveOptions();
+	};
+
+	class FiberState : public StateChild, public FollowPathUser, public AimerUser {
+	public:
 	};
 
 	class ScriptGoal : public StateChild, public FollowPathUser, public AimerUser

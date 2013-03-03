@@ -9,11 +9,10 @@
 #ifndef _GMSYSTEMLIB_H_
 #define _GMSYSTEMLIB_H_
 
-#include "gmConfig.h"
-
 class gmMachine;
-
+#include "gmConfig.h"
 #include "gmBind.h"
+#include "FileSystem.h"
 
 class gmFile : public gmBind<File, gmFile>
 {

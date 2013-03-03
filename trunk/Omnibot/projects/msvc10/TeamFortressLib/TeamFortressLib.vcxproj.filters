@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\..\TeamFortressLib\TF_BatchBuild.cpp">
       <Filter>_Build</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TeamFortressLib\PrecompTF.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\TeamFortressLib\TF_BaseStates.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\TeamFortressLib\PrecompTF.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\TeamFortressLib\TF_BaseStates.h">
       <Filter>Core</Filter>
     </ClInclude>

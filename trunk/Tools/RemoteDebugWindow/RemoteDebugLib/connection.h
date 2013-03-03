@@ -7,16 +7,9 @@
 
 namespace RemoteLib
 {
-	class Connection;
-	class ConnectionCallbacks
-	{
-	public:
-		virtual void OnConnect( Connection * conn ) = 0;
-		virtual void OnDisConnect( Connection * conn ) = 0;
-		virtual void OnAcceptConnection( Connection * conn ) = 0;
-		virtual ~ConnectionCallbacks()  {}
-	};
-	
+	class TcpSocket;
+	class ConnectionCallbacks;
+		
 	//////////////////////////////////////////////////////////////////////////
 
 	class Connection
@@ -44,13 +37,7 @@ namespace RemoteLib
 		// Notifications for sub classes.
 		virtual void onConnect() {}
 		virtual void onDisconnect() {}
-
-		bool isNewConnection() const { return newConnection; }
-		void clearNewConnection() { newConnection = false; }
-
-		void setUserData( int data ) { userData = data; }
-		int getUserData() const { return userData; }
-
+				
 		explicit Connection( TcpSocket & sock );
 		Connection( const char * ip, unsigned short port = TcpSocket::DefaultPort );
 		virtual ~Connection();
@@ -67,10 +54,7 @@ namespace RemoteLib
 		DataBuffer			sndBuffer;
 		
 		bool				autoConnect;
-		bool				newConnection;
-
-		int					userData; // meh
-
+		
 		bool				tryToConnect();
 		void				sendAndRecieveData();
 	private:
@@ -89,7 +73,7 @@ namespace RemoteLib
 
 		void setMaxConnections( unsigned short maxConn );
 
-		void sendToAll( DataBuffer & db );
+		void sendToAll( const DataBuffer & db );
 
 		void addConnection( Connection * conn );
 
@@ -122,5 +106,12 @@ namespace RemoteLib
 	protected:
 		uint16				listenPort;
 		TcpSocket			server;
+	};
+
+	class ConnectionCallbacks {
+	public:
+		virtual Connection * CreateNewConnection( TcpSocket & socket ) = 0;
+
+		virtual ~ConnectionCallbacks() {}
 	};
 };

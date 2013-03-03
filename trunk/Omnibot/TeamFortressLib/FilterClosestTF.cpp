@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "TF_Config.h"
+#include "TF_InterfaceFuncs.h"
 #include "FilterClosestTF.h"
+#include "BotTargetingSystem.h"
 
 // class: FilterClosestTF
 //		This filter is specific to team fortress, and should take into account additional sensory considerations,

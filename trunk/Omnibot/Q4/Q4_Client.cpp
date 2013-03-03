@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompQ4.h"
 #include "Q4_Client.h"
 #include "Q4_NavigationFlags.h"
 #include "Q4_Messages.h"

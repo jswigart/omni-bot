@@ -6,10 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+#include "Omni-Bot_BitFlags.h"
 #include "StateMachine.h"
 #include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
 #include "DebugWindow.h"
+#include "InterfaceFuncs.h"
+#include "BlackBoardItems.h"
+#include "gmCall.h"
 
 State::State(const char * _name, const UpdateDelay &_ur)
 	: m_Sibling(0)
@@ -850,8 +854,8 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 #endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath ) {
-	String pth = va( "%s/%s", statePath, GetName().c_str() );
+void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & cached, Remote::Behavior & update ) {
+	//String pth = va( "%s/%s", statePath, GetName().c_str() );
 
 	StringStr s;
 	GetDebugString(s);
@@ -860,35 +864,33 @@ void State::Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * stateP
 		renderColor = obColor(255,255,255);
 	if(IsDisabled())
 		renderColor = obColor(255,0,0);
+		
+	SET_IF_DIFF( cached, update, GetName().c_str(), name );
+	SET_IF_DIFF( cached, update, (int)renderColor, color );
+	SET_IF_DIFF( cached, update, s.str().c_str(), info );
 
-	enum { LocalBufferSize = 256 };
-	char localBuffer[ LocalBufferSize ] = {};
-	RemoteLib::DataBuffer localDb( localBuffer, LocalBufferSize );
-	localDb.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	localDb.startSizeHeader();
-	localDb.writeInt32( RemoteLib::ID_treeNode );
-	localDb.writeString( pth.c_str() );
-	localDb.writeString( va( "%s (%.2f)", GetName().c_str(), GetLastPriority() ) );
-	localDb.writeString( s.str().c_str() );
-	localDb.writeInt8( renderColor.r() );
-	localDb.writeInt8( renderColor.g() );
-	localDb.writeInt8( renderColor.b() );
-	localDb.writeInt8( renderColor.a() );
-	localDb.endSizeHeader();
-	localDb.endWrite();
-
-	const obuint32 crc = FileSystem::CalculateCrc( localBuffer, localDb.getBytesWritten() );
-	if ( fullSync || crc != m_SyncCrc ) {
-		if ( db.append( localDb ) ) {
-			m_SyncCrc = crc;
-		} else {
-			m_SyncCrc = 0;
+	int childIndex = 0;
+	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling) {
+		if ( cached.children().Capacity() <= childIndex ) {
+			cached.mutable_children()->Reserve( childIndex + 1 );
 		}
+
+		while ( cached.children_size() <= childIndex ) {
+			cached.add_children();
+		}
+
+		if ( update.children().Capacity() <= childIndex ) {
+			update.mutable_children()->Reserve( childIndex + 1 );
+		}
+
+		while ( update.children_size() <= childIndex ) {
+			update.add_children();
+		}
+
+		Remote::Behavior * cachedChild = cached.mutable_children( childIndex );
+		Remote::Behavior * updateChild = update.mutable_children( childIndex );
+		pState->Sync( connection, *cachedChild, *updateChild );
 	}
-
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->Sync( db, fullSync, pth.c_str() );
-
 }
 #endif
 

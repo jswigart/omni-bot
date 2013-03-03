@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
+#include "InterfaceFuncs.h"
 #include "TF_Messages.h"
 #include "TF_InterfaceFuncs.h"
+#include "TF_BaseStates.h"
 
 namespace InterfaceFuncs
 {
@@ -43,17 +44,16 @@ namespace InterfaceFuncs
 	void GetDisguiseInfo(const BitFlag64 &_flags, int &_team, int &_class)
 	{
 		// Check team.	
-		if(_flags.CheckFlag(TF_PWR_DISGUISE_BLUE))
-			_team = TF_TEAM_BLUE;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_RED))
-			_team = TF_TEAM_RED;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_YELLOW))
-			_team = TF_TEAM_YELLOW;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_GREEN))
-			_team = TF_TEAM_GREEN;
-		else 
-			_team = TF_TEAM_NONE;
-
+		_team = TF_TEAM_NONE;
+		for ( int i = 0; i < TF_TEAM_MAX; ++i )
+		{
+			if(_flags.CheckFlag( TF_Options::DisguiseTeamFlags[ i ] ) )
+			{
+				_team = i;
+				break;
+			}
+		}
+		
 		// Check class.
 		if(_flags.CheckFlag(TF_PWR_DISGUISE_SCOUT))
 			_class = TF_CLASS_SCOUT;
