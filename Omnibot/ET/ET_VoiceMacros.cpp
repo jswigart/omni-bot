@@ -6,12 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
+#include "common.h"
+
 #include "ET_VoiceMacros.h"
+#include "ET_Client.h"
 
 const char *strVoiceMacros[] =
 {
-	NULL,
+	0,
 
 	// Execute these using VoiceTeamChat
 	"PathCleared",
@@ -68,7 +70,7 @@ const char *strVoiceMacros[] =
 	"IamFieldOps",
 	"IamCovertOps",
 
-	NULL,
+	0,
 
 	// Execute with VoiceChat
 	"Affirmative",
@@ -85,7 +87,7 @@ const char *strVoiceMacros[] =
 	"HoldFire",
 	"GoodGame",
 
-	NULL,
+	0,
 	
 	"FTMortar",
 	"FTHealSquad",
@@ -110,7 +112,7 @@ const char *strVoiceMacros[] =
 	"FTAttack",
 	"FTFallBack",
 
-	NULL
+	0
 	//"wm_sayPlayerClass",
 };
 

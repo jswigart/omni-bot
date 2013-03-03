@@ -6,11 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-
 #include "ScriptManager.h"
-#include "gmWeapon.h"
 #include "WeaponDatabase.h"
+#include "IGameManager.h"
+#include "gmWeapon.h"
 
 WeaponDatabase g_WeaponDatabase;
 

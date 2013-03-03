@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "RTCW_GoalManager.h"
 #include "RTCW_NavigationFlags.h"
+
+#include "PathPlannerWaypoint.h"
 
 RTCW_GoalManager::RTCW_GoalManager()
 {

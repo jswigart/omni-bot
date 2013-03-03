@@ -1,6 +1,11 @@
 #ifndef __DEBUGWINDOW_H__
 #define __DEBUGWINDOW_H__
 
+#include "common.h"
+#include "GoalManager.h"
+
+#include "gmGCRoot.h"
+
 enum RenderOverlayType
 {
 	OVERLAY_OPENGL,
@@ -10,13 +15,6 @@ enum RenderOverlayType
 void SetRenderOverlayType(RenderOverlayType _t);
 
 #ifdef ENABLE_DEBUG_WINDOW
-
-// Include all necessary headers.
-// Sometimes windows.h defines DELETE which causes a compilation
-// error in a Guichan header.
-#if defined (DELETE)
-#undef DELETE 
-#endif
 
 #include <iostream>
 #include <guichan.hpp>
@@ -309,7 +307,7 @@ namespace DebugWindow
 {
 	void Create(int _width = 800, int _height = 600, int _bpp = 32);
 	void Destroy();
-	//void Render();
+	void Render();
 	void Update();
 };
 

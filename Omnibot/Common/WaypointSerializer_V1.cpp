@@ -6,9 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "WaypointSerializer_V1.h"
 #include "Waypoint.h"
+#include "FileSystem.h"
 
 typedef struct 
 {

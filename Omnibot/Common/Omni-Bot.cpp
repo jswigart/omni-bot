@@ -12,7 +12,7 @@
 // TODO: linux shit here
 #endif
 
-#include "PrecompCommon.h"
+
 #include "Omni-Bot.h"
 
 #include "IGame.h"

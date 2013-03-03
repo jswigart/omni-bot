@@ -11,7 +11,9 @@
 #ifndef __ET_MESSAGES_H__
 #define __ET_MESSAGES_H__
 
+#include "Omni-Bot_Color.h"
 #include "Base_Messages.h"
+#include "TF_Config.h"
 
 #pragma pack(push)
 #pragma pack(4)

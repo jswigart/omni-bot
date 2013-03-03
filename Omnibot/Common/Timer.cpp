@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "Timer.h"
+#include "IGame.h"
+#include "Utilities.h"
 
 #ifdef WIN32
 #ifndef WIN32_LEAN_AND_MEAN

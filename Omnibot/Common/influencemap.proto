@@ -1,0 +1,36 @@
+package InfluenceMapIO;
+
+option optimize_for = SPEED;
+
+message Vec3 
+{
+	optional float x							= 1;
+	optional float y							= 2;
+	optional float z							= 3;
+}
+
+message Header 
+{
+	required Vec3		boundsMin				= 1;
+	required Vec3		boundsMax				= 2;
+	required float		cellSize				= 3;
+	required int32		numCellsX				= 4;
+	required int32		numCellsY				= 5;
+}
+
+message Span
+{
+	required float		min						= 1;
+	required float		max						= 2;
+}
+
+message SpanColumn
+{
+	repeated Span		spans					= 1;
+}
+
+message InfluenceMap 
+{
+	required Header			header = 1;
+	repeated SpanColumn		sectors = 2;
+}

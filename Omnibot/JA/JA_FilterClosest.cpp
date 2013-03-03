@@ -6,10 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_FilterClosest.h"
+#include "JA_InterfaceFuncs.h"
 
-#include "ScriptManager.h"
+#include "BotTargetingSystem.h"
 
 JA_FilterClosest::JA_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type) :
 	FilterClosest				(_client, _type)

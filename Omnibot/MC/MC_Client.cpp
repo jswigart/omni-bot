@@ -6,10 +6,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompMC.h"
 #include "MC_Client.h"
 #include "MC_Messages.h"
 #include "MC_InterfaceFuncs.h"
+
+#include "NavigationFlags.h"
 
 #include "IGame.h"
 #include "IGameManager.h"

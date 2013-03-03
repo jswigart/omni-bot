@@ -2073,6 +2073,9 @@ void	trap_SnapVector( float *v );
 void		trap_SendMessage( int clientNum, char *buf, int buflen );
 messageStatus_t	trap_MessageStatus( int clientNum );
 
+typedef void (*pfnDebugCallback)();
+void	trap_SetDebugFunctionCallback( pfnDebugCallback callback );
+
 void G_ExplodeMissile( gentity_t *ent );
 
 void Svcmd_StartMatch_f(void);

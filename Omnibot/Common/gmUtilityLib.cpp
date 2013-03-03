@@ -6,12 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-
 #include "gmUtilityLib.h"
 #include "ScriptManager.h"
-
-#undef GetObject
+#include "FileSystem.h"
 
 #define GM_PATHSTRING		  "_GM_PATH"
 #define GM_REQUIRETABLE		  "_GM_REQUIRE"

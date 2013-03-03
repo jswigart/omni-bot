@@ -6,8 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "FilterAllType.h"
+#include "BotWeaponSystem.h"
 
 FilterAllType::FilterAllType(Client *_client, AiState::SensoryMemory::Type _type, MemoryRecords &_list) :
 	FilterSensory	(_client, _type),

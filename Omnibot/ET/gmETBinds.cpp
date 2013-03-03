@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
 #include "gmETBinds.h"
+
+#include "ET_InterfaceFuncs.h"
+#include "ET_Client.h"
 
 #include "gmBotLibrary.h"
 #include "gmConfig.h"

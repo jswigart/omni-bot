@@ -6,10 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
 #include "ScriptGoal.h"
+#include "Client.h"
+#include "BotWeaponSystem.h"
 
 namespace AiState
 {

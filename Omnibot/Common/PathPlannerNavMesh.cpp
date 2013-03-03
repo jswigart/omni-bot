@@ -6,23 +6,38 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+#include "platformspecifics.h"
 #include "PathPlannerNavMesh.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "GoalManager.h"
 #include "NavigationFlags.h"
-#include "AStarSolver.h"
+#include "FileSystem.h"
+#include "Path.h"
 #include "gmUtilityLib.h"
 
-#include "QuadTree.h"
-using namespace std;
+#include "RenderBuffer.h"
+
+#include "clipper.hpp"
+#include "polypartition.h"
+
+// Protocol buffers
+#include "google/protobuf/text_format.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
+
+#include "Opcode.h"
+#include "OPC_IceHook.h"
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-const float k_fWorldExtent = 1000.0f;
-const float k_fGroundExtent = 10.0f;
+void PathPlannerNavMesh::CollisionData::Free()
+{
+	OB_DELETE( m_CollisionTree );
+	OB_DELETE( m_MeshInterface );
+	OB_ARRAY_DELETE( m_Verts );
+	OB_ARRAY_DELETE( m_TriSectorMap );
+}
 
 //////////////////////////////////////////////////////////////////////////
 namespace NavigationMeshOptions
@@ -411,241 +426,65 @@ private:
 
 PathFindNavMesh g_PathFind;
 
-//////////////////////////////////////////////////////////////////////////
-//Vector3f Convert(const TA::Vec3 &v)
-//{
-//	return Vector3f(v.x,v.y,v.z);
-//}
-//TA::Vec3 Convert(const Vector3f &v)
-//{
-//	return TA::Vec3(v.x,v.y,v.z);
-//}
-//////////////////////////////////////////////////////////////////////////
-
-Vector3List		g_Vertices;
-PolyIndexList	g_Indices;
-
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-
-//bool TA_CALL_BACK ColCb(TA::PreCollision& collision)
-//{
-//	return true;
-//}
-
-void PathPlannerNavMesh::InitCollision()
-{
-	if(m_NavSectors.empty())
-		return;
-
-	m_ActiveNavSectors.resize(0);
-
-	ReleaseCollision();
-
-	//////////////////////////////////////////////////////////////////////////
-	/*TA::Physics::CreateInstance();
-	TA::Physics& physics = TA::Physics::GetInstance();
-	physics.SetPreProcessCollisionCallBack(ColCb);
-	//////////////////////////////////////////////////////////////////////////
-
-	TA::StaticObject* NavMesh = NavMesh = TA::StaticObject::CreateNew();
-
-	obuint32 iNumIndices = 0;
-
-	TA::AABB aabb;
-
-	g_Vertices.clear();
-	g_Indices.clear();
-
-	//////////////////////////////////////////////////////////////////////////
-	std::vector<TA::u32> Attribs;
-	//////////////////////////////////////////////////////////////////////////
-	// Build the active sector list, includes mirrored sectors.
-	PolyAttrib attrib;
-	for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
-	{
-		const NavSector &ns = m_NavSectors[s];
-
-		attrib.Attrib = 0;
-
-		attrib.Fields.Mirrored = false;
-		attrib.Fields.ActiveId = m_ActiveNavSectors.size();
-		attrib.Fields.SectorId = s;
-		Attribs.push_back(attrib.Attrib);
-		
-		m_ActiveNavSectors.push_back(ns);
-		m_ActiveNavSectors.back().m_Id = attrib.Fields.ActiveId;
-		m_ActiveNavSectors.back().m_Middle = Utils::AveragePoint(m_ActiveNavSectors.back().m_Boundary);
-
-		if(ns.m_Mirror != NavSector::MirrorNone)
-		{
-			attrib.Fields.Mirrored = true;
-			attrib.Fields.ActiveId = m_ActiveNavSectors.size();
-			attrib.Fields.SectorId = s;
-			Attribs.push_back(attrib.Attrib);
-
-			m_ActiveNavSectors.push_back(ns.GetMirroredCopy(m_MapCenter));
-			m_ActiveNavSectors.back().m_Id = attrib.Fields.ActiveId;
-			m_ActiveNavSectors.back().m_Middle = Utils::AveragePoint(m_ActiveNavSectors.back().m_Boundary);
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////
-
-	for(obuint32 s = 0; s < m_ActiveNavSectors.size(); ++s)
-	{
-		const NavSector &ns = m_ActiveNavSectors[s];
-
-		IndexList il;
-
-		// Add the vertices and build the index list.
-		for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
-		{
-			il.push_back(g_Vertices.size());
-			g_Vertices.push_back(ns.m_Boundary[v]);
-			aabb.ExpandToFit(Convert(ns.m_Boundary[v]));
-		}
-
-		iNumIndices += il.size();
-
-		std::reverse(il.begin(),il.end());
-		g_Indices.push_back(il);
-	}
-
-	physics.SetWorldDimensions(aabb);
-	physics.SetGravity(TA::Vec3(0.0f, IGame::GetGravity(), 0.0f));
-	physics.SetupSimulation();
-
-	//////////////////////////////////////////////////////////////////////////
-
-	TA::CollisionObjectAABBMesh* StaticCollisionObject = TA::CollisionObjectAABBMesh::CreateNew();
-	StaticCollisionObject->Initialise(
-		g_Vertices.size(),
-		g_Indices.size(),
-		iNumIndices); 
-
-	// Add all verts
-	for(obuint32 v = 0; v < g_Vertices.size(); ++v)
-	{
-		const Vector3f &vec = g_Vertices[v];
-		StaticCollisionObject->AddVertex(Convert(vec));
-	}
-
-	// Add all polygons
-	for(obuint32 p = 0; p < g_Indices.size(); ++p)
-	{
-		const IndexList &il = g_Indices[p];
-		StaticCollisionObject->AddPolygon(il.size(), &il[0], Attribs[p]);	
-	}
-	StaticCollisionObject->FinishedAddingGeometry();
-
-	// Initialise the static object with the collision object.
-	NavMesh->Initialise(StaticCollisionObject);
-
-	StaticCollisionObject->Release();
-	StaticCollisionObject = 0;
-
-	physics.AddStaticObject(NavMesh);
-	
-	NavMesh->Release();
-	NavMesh = 0;*/
-}
-
 PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3f &_from, const Vector3f &_to)
 {
-	/*if(!m_ActiveNavSectors.empty())
+	if ( m_CollisionData.m_CollisionTree != NULL )
 	{
-		TA::Vec3 vFrom = Convert(_from);
-		TA::Vec3 vTo = Convert(_to);
+		Vector3f dir = _to - _from;
+		const float distance = dir.Normalize() * 16.0f;
 
-		TA::Collision col = TA::Physics::GetInstance().TestLineForCollision(vFrom, vTo, TA::Physics::FLAG_ALL_OBJECTS);
+		IceMaths::Ray ray;
+		ray.mOrig.Set( _from.x, _from.y, _from.z );
+		ray.mDir.Set( dir.x, dir.y, dir.z );
 
-		if(col.CollisionOccurred())
+		Opcode::CollisionFaces faces;
+		Opcode::RayCollider rayCol;
+		rayCol.SetDestination( &faces );
+		rayCol.SetMaxDist( distance );
+		rayCol.SetClosestHit( true );
+		rayCol.Collide( ray, *m_CollisionData.m_CollisionTree );
+
+		//udword		mFaceID;				//!< Index of touched face
+		//float		mDistance;				//!< Distance from collider to hitpoint
+		//float		mU, mV;	
+		const Opcode::CollisionFace * hitFace = faces.GetFaces();
+		if ( hitFace != NULL )
 		{
-			return NavCollision(true, Convert(col.GetPosition()), Convert(col.GetNormal()), col.GetAttributeB());
-		}
-	}*/
-	return NavCollision(false);
-}
+			Opcode::VertexPointers v;		
+			m_CollisionData.m_CollisionTree->GetMeshInterface()->GetTriangle( v, hitFace->mFaceID );
+						
+			/*Vector3List pts( 3 );
+			pts.push_back( Vector3f( v.Vertex[ 0 ]->x, v.Vertex[ 0 ]->y, v.Vertex[ 0 ]->z ) );
+			pts.push_back( Vector3f( v.Vertex[ 1 ]->x, v.Vertex[ 1 ]->y, v.Vertex[ 1 ]->z ) );
+			pts.push_back( Vector3f( v.Vertex[ 2 ]->x, v.Vertex[ 2 ]->y, v.Vertex[ 2 ]->z ) );
+			Utils::DrawPolygon( pts, COLOR::MAGENTA, 2.0 );*/
 
-void PathPlannerNavMesh::ReleaseCollision()
-{
-	//TA::Physics::DestroyInstance();
+			const PolyAttrib faceAttrib = m_CollisionData.m_TriSectorMap[ hitFace->mFaceID ];
+
+			IceMaths::Point normal = v.Normal();
+
+			return NavCollision( true, 
+				_from + dir * hitFace->mDistance, 
+				Vector3f( normal.x, normal.y, normal.z ),
+				faceAttrib );
+		}
+	}
+	return NavCollision(false);
 }
 
 PathPlannerNavMesh::NavSector *PathPlannerNavMesh::GetSectorAt(const Vector3f &_pos, float _distance)
 {
 	const float CHAR_HALF_HEIGHT = NavigationMeshOptions::CharacterHeight /** 0.5f*/;
-	return GetSectorAtFacing(_pos+Vector3f(0,0,CHAR_HALF_HEIGHT), -Vector3f::UNIT_Z, _distance);
-}
 
-PathPlannerNavMesh::NavSector *PathPlannerNavMesh::GetSectorAtFacing(const Vector3f &_pos, const Vector3f &_facing, float _distance)
-{
-	if(!m_ActiveNavSectors.empty())
+	Vector3f raySrc = _pos+Vector3f(0,0,CHAR_HALF_HEIGHT);
+	Vector3f rayDst = raySrc - Vector3f::UNIT_Z * _distance;
+	NavCollision nc = FindCollision(raySrc, rayDst);
+	if(nc.DidHit())
 	{
-		/*TA::Vec3 vFrom = Convert(_pos);
-		TA::Vec3 vTo = Convert(_pos + _facing * _distance);
-
-		TA::Collision col = TA::Physics::GetInstance().TestLineForCollision(
-			vFrom, vTo, TA::Physics::FLAG_ALL_OBJECTS);
-
-		if(col.CollisionOccurred())
-		{
-			PolyAttrib attr;
-			attr.Attrib = col.GetAttributeB();
-			return &m_ActiveNavSectors[attr.Fields.ActiveId];
-		}*/
+		return &m_ActiveNavSectors[ nc.HitAttrib().Fields.ActiveId ];
 	}
 	return NULL;
 }
-
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-class NavigationMesh
-{
-public:
-
-	bool SaveNavigationMesh(const String &_filename) { return true; }
-	bool LoadNavigationMesh(const String &_filename) { return true; }
-
-	obuint64 CalculateMemoryUsage() 
-	{
-		obuint64 iSize = m_NavigationSectors.size() * sizeof(NavSector);
-
-		NavSectors::const_iterator cIt = m_NavigationSectors.begin(), cItEnd = m_NavigationSectors.end();
-		for(; cIt != cItEnd; ++cIt)
-			iSize += (*cIt).m_Connections.size() * sizeof(NavLink);
-
-		return iSize;
-	}
-
-	struct NavLink
-	{
-		int			m_TargetNavSector;
-		Vector3f	m_FromPosition;
-		Vector3f	m_ToPosition;
-
-		// Connection Flags
-		bool		m_Jump : 1;
-		bool		m_Ladder : 1;
-		bool		m_Teleporter : 1;
-
-		bool		m_RocketJump : 1;
-		bool		m_ConcJump : 1;
-	};
-	typedef std::vector<NavLink> NavLinks;
-
-	struct NavSector
-	{
-		AABB		m_Bounds;
-		NavLinks	m_Connections;
-	};
-	typedef std::vector<NavSector> NavSectors;
-private:
-
-	NavSectors	m_NavigationSectors;
-};
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -659,7 +498,14 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 
 	m_MapCenter = Vector3f::ZERO;
 
+	m_ToolCancelled = false;
+
+	m_SpanMap = NULL;
+	m_Influence = NULL;
+
 	g_PlannerNavMesh = this;
+
+	mInfluenceBufferId = 0;
 }
 
 PathPlannerNavMesh::~PathPlannerNavMesh()
@@ -668,36 +514,46 @@ PathPlannerNavMesh::~PathPlannerNavMesh()
 	g_PlannerNavMesh = 0;
 }
 
-int PathPlannerNavMesh::GetLatestFileVersion() const
+Vector3f PathPlannerNavMesh::NavSector::CalculateCenter() const
 {
-	return 1; // TODO
+	Vector3f center = Vector3f::ZERO;
+	if ( m_Boundary.size() > 0 )
+	{
+		center = m_Boundary[ 0 ];
+		for ( size_t i = 1; i < m_Boundary.size(); ++i )
+			center += m_Boundary[ i ];
+		center /= (float)m_Boundary.size();
+	}
+	return center;
 }
 
 PathPlannerNavMesh::NavSector PathPlannerNavMesh::NavSector::GetMirroredCopy(const Vector3f &offset) const
 {
 	NavSector ns;
-	ns.m_Mirror = NavSector::MirrorNone;
+	ns.m_Mirror = NavmeshIO::Sector_MirrorDir_MirrorNone;
 
 	Vector3f vAxis;
 	switch(m_Mirror)
 	{
-	case NavSector::MirrorX:
+	case NavmeshIO::Sector_MirrorDir_MirrorX:
 		vAxis = Vector3f::UNIT_X;
 		break;
-	case NavSector::MirrorNX:
+	case NavmeshIO::Sector_MirrorDir_MirrorNX:
 		vAxis = -Vector3f::UNIT_X;
 		break;
-	case NavSector::MirrorY:
+	case NavmeshIO::Sector_MirrorDir_MirrorY:
 		vAxis = Vector3f::UNIT_Y;
 		break;
-	case NavSector::MirrorNY:
+	case NavmeshIO::Sector_MirrorDir_MirrorNY:
 		vAxis = -Vector3f::UNIT_Y;
 		break;
-	case NavSector::MirrorZ:
+	case NavmeshIO::Sector_MirrorDir_MirrorZ:
 		vAxis = Vector3f::UNIT_Z;
 		break;
-	case NavSector::MirrorNZ:
+	case NavmeshIO::Sector_MirrorDir_MirrorNZ:
 		vAxis = -Vector3f::UNIT_Z;
+		break;
+	case NavmeshIO::Sector_MirrorDir_MirrorNone:
 		break;
 	}
 
@@ -734,6 +590,61 @@ bool PathPlannerNavMesh::Init()
 	return true;
 }
 
+static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, const TPPLPoly & poly, float offset, obColor color, float dur, float vertSize )
+{
+	Vector3List polyList;
+	for ( int i = 0; i < poly.GetNumPoints(); ++i )
+	{
+		Vector3f vec3d( (float)poly[ i ].x, (float)poly[ i ].y, 0.0f );
+		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+		vec3d.z += offset;
+		polyList.push_back( vec3d );
+	}
+	/*if ( solid )
+		Utils::DrawPolygon( polyList, color, dur );
+	else
+		Utils::DrawLine( polyList, color, dur, vertSize );*/
+
+	if ( solid )
+		RenderBuffer::AddPolygonFilled( polyList, color );
+	else
+		RenderBuffer::AddPolygonSilouette( polyList, color );
+
+	if ( vertSize > 0.0 )
+	{
+		RenderBuffer::AddPoints( polyList, COLOR::MAGENTA, vertSize );
+	}
+}
+
+static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, const ClipperLib::Polygon & poly, float offset, obColor color, float dur, float vertSize )
+{
+	Vector3List polyList;
+	for ( ClipperLib::Polygon::const_iterator it = poly.begin();
+		it != poly.end();
+		++it )
+	{
+		const ClipperLib::IntPoint & pt = *it;
+		Vector3f vec3d( (float)pt.X, (float)pt.Y, 0.0f );
+		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+		vec3d.z += offset;
+		polyList.push_back( vec3d );
+	}
+	/*if ( solid )
+		Utils::DrawPolygon( polyList, color, dur );
+	else
+		Utils::DrawLine( polyList, color, dur, vertSize );*/
+
+	if ( solid )
+		RenderBuffer::AddPolygonFilled( polyList, color );
+	else
+		RenderBuffer::AddPolygonSilouette( polyList, color );
+
+	if ( vertSize > 0.0 )
+	{
+		RenderBuffer::AddPoints( polyList, COLOR::MAGENTA, vertSize );
+	}
+}
+
 void PathPlannerNavMesh::Update()
 {
 	Prof(PathPlannerNavMesh);
@@ -750,14 +661,21 @@ void PathPlannerNavMesh::Update()
 		Utils::GetLocalFacing(vLocalAim);
 		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal))
 		{
-			Utils::DrawLine(vAimPos, 
+			RenderBuffer::AddLine(vAimPos, 
+				vAimPos + vAimNormal * 16.f, 
+				m_CursorColor);
+
+			RenderBuffer::AddLine(vAimPos, 
+				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor);
+
+			/*Utils::DrawLine(vAimPos, 
 				vAimPos + vAimNormal * 16.f, 
 				m_CursorColor, 
 				IGame::GetDeltaTimeSecs()*2.f);
 
 			Utils::DrawLine(vAimPos, 
 				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor, 
-				IGame::GetDeltaTimeSecs()*2.f);
+				IGame::GetDeltaTimeSecs()*2.f);*/
 		}
 		m_CursorColor = COLOR::BLUE; // back to default
 		//////////////////////////////////////////////////////////////////////////
@@ -769,6 +687,13 @@ void PathPlannerNavMesh::Update()
 		}
 		//////////////////////////////////////////////////////////////////////////
 
+		bool influenceDone = true;
+		if ( m_Influence )
+		{
+			static int iterations = 200;
+			influenceDone = m_Influence->UpdateInfluences( iterations );
+		}
+
 		NavSector nsMirrored;
 
 		static int iLastSector = -1;
@@ -779,51 +704,172 @@ void PathPlannerNavMesh::Update()
 		{
 			iLastSector = iCurrentSector;
 			iNextCurSectorTimeUpdate = IGame::GetTime() + 500;
-			Utils::DrawPolygon(m_ActiveNavSectors[iCurrentSector].m_Boundary, COLOR::RED, 0.5f, false);
+			//Utils::DrawPolygon(m_ActiveNavSectors[iCurrentSector].m_Boundary, COLOR::RED, 0.5f, false);
 		}
 
 		static int iNextTimeUpdate = 0;
 		if(IGame::GetTime() >= iNextTimeUpdate)
 		{
-			iNextTimeUpdate = IGame::GetTime() + 2000;
+			iNextTimeUpdate = IGame::GetTime() + 0;//2000;
 			//////////////////////////////////////////////////////////////////////////
 			// Draw our nav sectors
-			Utils::DrawPolygon(m_CurrentSector, COLOR::GREEN.fade(100), 2.f, false);
-			Utils::DrawLine(m_CurrentSector, COLOR::GREEN, 2.f, 2.f, COLOR::MAGENTA, true);
-
-			for(obuint32 i = 0; i < m_NavSectors.size(); ++i)
+			for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
 			{
-				const NavSector &ns = m_NavSectors[i];
-				obColor col = COLOR::GREEN;
-				Utils::DrawLine(ns.m_Boundary, col, 2.f, 2.f, COLOR::MAGENTA, true);
-				
-				//////////////////////////////////////////////////////////////////////////
-				Vector3f vMid = Vector3f::ZERO;
-				for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
-					vMid += ns.m_Boundary[v];
-				vMid /= (float)ns.m_Boundary.size();
+				const NavSector &ns = m_ActiveNavSectors[i];
 
-				const char *pMir[] =
-				{
-					0,
-					"x",
-					"-x",
-					"y",
-					"-y",
-					"z",
-					"-z",
-				};
+				// mirrored sectors are contiguous at the end of
+				// the m_ActiveNavSectors list, so draw them differently
+				obColor SEC_COLOR = COLOR::GREEN;
+				if ( i >= m_NavSectors.size() )
+					SEC_COLOR = COLOR::CYAN;
 
-				if(pMir[ns.m_Mirror])
+				//////////////////////////////////////////////////////////////////////////							
+				// Draw sector obstacles
+				if ( ns.m_Obstacles.size() > 0 )
 				{
-					nsMirrored = ns.GetMirroredCopy(m_MapCenter);
-					Utils::DrawLine(nsMirrored.m_Boundary, COLOR::CYAN, 2.f, 2.f, COLOR::MAGENTA, true);
+					ClipperLib::Polygon sectorPoly;
+					for ( size_t i = 0; i < ns.m_Boundary.size(); ++i )
+					{
+						sectorPoly.push_back( ClipperLib::IntPoint(
+							(ClipperLib::long64)ns.m_Boundary[i].x, 
+							(ClipperLib::long64)ns.m_Boundary[i].y ) );
+					}
+
+					ClipperLib::Polygons obstaclePolys;
+					for ( size_t o = 0; o < ns.m_Obstacles.size(); ++o )
+					{
+						obstaclePolys.push_back( ClipperLib::Polygon() );
+
+						ClipperLib::Polygon & obs = obstaclePolys.back();
+						for ( size_t ov = 0; ov < ns.m_Obstacles[o].mPolyVerts.size(); ++ov )
+						{
+							obs.push_back( ClipperLib::IntPoint( 
+								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].x, 
+								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].y ) );
+						}
+					}
+
+					//////////////////////////////////////////////////////////////////////////
+					// generate the union of the obstacles in case there is overlap
+					//static bool mergeObstacles = false;
+					//if ( mergeObstacles && obstaclePolys.size() > 0 )
+					//{
+					//	static ClipperLib::ClipType ct = ClipperLib::ctUnion;
+					//	static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
+
+					//	ClipperLib::Clipper obsUnion;
+					//	obsUnion.AddPolygon( obstaclePolys[0], ClipperLib::ptSubject );
+					//	obsUnion.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+					//	if ( obsUnion.Execute( ct, pft ) )
+					//	{
+					//		obstaclePolys.resize( 0 );
+
+					//		ClipperLib::Polygon poly;
+					//		for ( size_t i = 0; i < obsUnion.GetNumPolysOut(); ++i )
+					//		{
+					//			bool polyIsHole = false;
+					//			if ( obsUnion.GetPolyOut( i, poly, polyIsHole ) )
+					//			{
+					//				//assert( ClipperLib::Orientation( poly ) );
+					//				if ( !ClipperLib::Orientation( poly ) )
+					//				{
+					//					DrawPoly( true, ns, poly, 12, COLOR::WHITE, 2.0f, 4.0f );
+					//				}
+					//				obstaclePolys.push_back( poly );
+					//			}
+					//		}
+					//	}
+					//}
+					//////////////////////////////////////////////////////////////////////////
+					assert ( ClipperLib::Orientation( sectorPoly ) );
+
+					static ClipperLib::ClipType ct = ClipperLib::ctDifference;
+					static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
+					static ClipperLib::PolyFillType cft = ClipperLib::pftNonZero;
+
+					ClipperLib::Clipper obsNav;
+					obsNav.AddPolygon( sectorPoly, ClipperLib::ptSubject );
+					obsNav.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+					if ( obsNav.Execute( ct, pft, cft ) )
+					{
+						typedef std::list<TPPLPoly> PolyList;
+						PolyList inputPolys;
+						PolyList subPolys;
+
+						// add all the solution polygons to the input polygons
+						// of the partition list
+						ClipperLib::Polygon poly;
+						for ( size_t i = 0; i < obsNav.GetNumPolysOut(); ++i )
+						{
+							bool polyIsHole = false;
+							if ( obsNav.GetPolyOut( i, poly, polyIsHole ) )
+							{
+								inputPolys.push_back( TPPLPoly() );
+								inputPolys.back().Init( poly.size() );
+
+								Vector3List drawList;
+
+								for ( size_t j = 0; j < poly.size(); ++j )
+								{
+									const ClipperLib::IntPoint & pt = poly[ j ];
+
+									TPPLPoint & tpp = inputPolys.back()[ j ];
+									tpp.x = (float)pt.X;
+									tpp.y = (float)pt.Y;
+
+									//////////////////////////////////////////////////////////////////////////
+									Vector3f vec3d( (float)tpp.x, (float)tpp.y, 0.0f );
+									ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+									drawList.push_back( vec3d );
+									//////////////////////////////////////////////////////////////////////////
+								}
+
+								inputPolys.back().SetHole( polyIsHole );
+								inputPolys.back().SetOrientation( polyIsHole ? TPPL_CW : TPPL_CCW );
+							}
+						}
+
+						TPPLPartition partition;
+						if ( partition.ConvexPartition_HM( &inputPolys, &subPolys ) != 0 )
+						{
+							// translate it back to sector space
+							for ( PolyList::iterator it = subPolys.begin();
+								it != subPolys.end();
+								++it )
+							{
+								const TPPLPoly & ply = *it;
+								for ( int i = 0; i < ply.GetNumPoints(); ++i )
+								{
+									Vector3f vec3d( (float)ply[ i ].x, (float)ply[ i ].y, 0.0f );
+									ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+								}
+
+								DrawPoly( true, ns, ply, 0.0f, SEC_COLOR.fade(100), 2.0f, 4.0f );
+								DrawPoly( false, ns, ply, 0.0f, SEC_COLOR, 2.0f, 4.0f );
+							}	
+						}
+						else
+						{
+							const NavSector &ns = m_ActiveNavSectors[i];
+
+							Utils::DrawLine(ns.m_Boundary, COLOR::RED.fade( 100 ), 2.f, 2.f, COLOR::MAGENTA, true);
+							
+							// Draw the error input poly line
+							for ( PolyList::iterator p = inputPolys.begin();
+								p != inputPolys.end();
+								++p )
+							{
+								DrawPoly( false, ns, (*p), 6.0f, COLOR::MAGENTA, 2.0f, 4.0f );
+							}
+						}
+					}	
 				}
-
-				/*if(pMir[ns.m_Mirror])
-					Utils::PrintText(vMid, 2.f, "%d m(%s)", i, pMir[ns.m_Mirror]);
 				else
-					Utils::PrintText(vMid, 2.f, "%d", i);*/
+				{
+					//RenderBuffer::AddPolygonFilled( ns.m_Boundary, SEC_COLOR.fade(100) );
+					/*RenderBuffer::AddPolygonSilouette( ns.m_Boundary, SEC_COLOR );
+					RenderBuffer::AddPoints( ns.m_Boundary, COLOR::MAGENTA, 5.0f );*/
+				}
 			}
 
 			if(m_PlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS))
@@ -832,19 +878,78 @@ void PathPlannerNavMesh::Update()
 				for(; pIt != m_NavPortals.end(); ++pIt)
 				{
 					const NavPortal &portal = (*pIt);
-					Utils::DrawLine(portal.m_Segment.GetPosEnd(),
+					
+					/*Utils::DrawLine(portal.m_Segment.GetPosEnd(),
 						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
 					Utils::DrawLine(portal.m_Segment.GetNegEnd(),
-						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);*/
+
+					RenderBuffer::AddLine( portal.m_Segment.GetPosEnd(),
+						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA );
+					RenderBuffer::AddLine( portal.m_Segment.GetNegEnd(),
+						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA );
+				}
+			}
+			//////////////////////////////////////////////////////////////////////////
+			if ( m_SpanMap != NULL )
+			{
+				struct RenderSpanCell : SpanMap::RenderFunctor
+				{
+				public:
+					RenderSpanCell( RenderBuffer::QuadList & lst ) 
+						: mList( lst ) { }
+					
+					virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
+					{
+						static obuint8 alpha = 255;
+						
+						RenderBuffer::Quad q;
+						q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
+						q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
+						q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
+						q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
+						q.c = GetCoolWarmColor( influenceRatio ).fade( alpha );
+						mList.push_back( q );
+					}
+
+					RenderBuffer::QuadList & mList;
+				};
+
+				float influenceMinWeight = 0.0f;
+				float influenceMaxWeight = 1.0f;
+				if ( m_Influence )
+				{
+					m_Influence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
+				}
+				
+				if ( mInfluenceBufferId == 0 && m_SpanMap->GetNumSpans() > 0 )
+				{
+					RenderBuffer::QuadList prims;
+					prims.reserve( m_SpanMap->GetNumSpans() * 2 );
+
+					RenderSpanCell renderCb( prims );
+					m_SpanMap->RenderWithCallback( renderCb, influenceDone ? m_Influence : NULL );
+
+					RenderBuffer::StaticBufferCreate( mInfluenceBufferId, prims );
+				}
+
+				if ( mInfluenceBufferId != 0 )
+				{
+					RenderBuffer::StaticBufferDraw( mInfluenceBufferId );
 				}
 			}
 			//////////////////////////////////////////////////////////////////////////
 		}
-
 		//////////////////////////////////////////////////////////////////////////
 
-		if(!m_WorkingSector.empty())
-			Utils::DrawPolygon(m_WorkingSector, COLOR::GREEN.fade(100), 0.1f, false);
+		if(!m_WorkingSector.m_Boundary.empty())
+		{
+			//Utils::DrawPolygon(m_WorkingSector.m_Boundary, COLOR::GREEN.fade(100), 0.1f, false);
+			RenderBuffer::AddPolygonFilled( m_WorkingSector.m_Boundary, COLOR::GREEN );
+			if ( m_WorkingSector.IsMirrored() )
+				RenderBuffer::AddPolygonFilled( m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN );
+				//Utils::DrawPolygon(m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN.fade(100), 0.1f, false);
+		}
 	}
 }
 
@@ -858,101 +963,80 @@ bool PathPlannerNavMesh::Load(const String &_mapname, bool _dl)
 	if(_mapname.empty())
 		return false;
 
-	gmMachine *pM = new gmMachine;
-	pM->SetDebugMode(true);
-	DisableGCInScope gcEn(pM);
+	m_ActiveNavSectors.clear();
+	m_NavSectors.clear();
 
-	String waypointName		= _mapname + ".nav";
-
-	File InFile;
-
-	char strbuffer[1024] = {};
-	sprintf(strbuffer, "nav/%s", waypointName.c_str());
-	InFile.OpenForRead(strbuffer, File::Binary);
-	if(InFile.IsOpen())
+	try
 	{
-		obuint32 fileSize = (obuint32)InFile.FileLength();
-		boost::shared_array<char> pBuffer(new char[fileSize+1]);
+		using namespace google::protobuf;
 
-		InFile.Read(pBuffer.get(), fileSize);
-		pBuffer[fileSize] = 0;
-		InFile.Close();
+		const String navPathText	= String("nav/") + _mapname + ".nm";
+		const String navPathBinary	= String("nav/") + _mapname + ".nmb";	
 
-		int errors = pM->ExecuteString(pBuffer.get());
-		if(errors)
+		NavmeshIO::NavigationMesh nm;
+
+		String fileContents;
+
+		File navFile;
+		if ( navFile.OpenForRead( navPathBinary.c_str(), File::Binary) )
 		{
-			ScriptManager::LogAnyMachineErrorMessages(pM);
-			delete pM;
+			navFile.ReadWholeFile( fileContents );
+
+			if ( !nm.ParseFromString( fileContents ) )
+				return false;
+		}
+		else if( navFile.OpenForRead( navPathText.c_str(), File::Text ) )
+		{
+			navFile.ReadWholeFile( fileContents );
+
+			if ( !TextFormat::ParseFromString( fileContents, &nm ) )
+				return false;
+		} else
+		{
 			return false;
 		}
-	}
 
-	//////////////////////////////////////////////////////////////////////////
-	bool bSuccess = true;
-	//////////////////////////////////////////////////////////////////////////
-	NavSectorList loadSectors;
-	gmTableObject *pNavTbl = pM->GetGlobals()->Get(pM, "Navigation").GetTableObjectSafe();
-	if(pNavTbl)
-	{
-		gmVariable vCenter = pNavTbl->Get(pM,"MapCenter");
-		if(vCenter.IsVector())
-			vCenter.GetVector(m_MapCenter);
-		else
-			m_MapCenter = Vector3f::ZERO;
+		m_MapCenter.x = nm.header().mapcenter().x();
+		m_MapCenter.y = nm.header().mapcenter().y();
+		m_MapCenter.z = nm.header().mapcenter().z();
 
-		gmTableObject *pSectorsTable = pNavTbl->Get(pM, "Sectors").GetTableObjectSafe();
-		if(pSectorsTable != NULL && bSuccess)
+		m_NavSectors.clear();
+		m_NavSectors.reserve( nm.sectors_size() );
+
+		for ( int i = 0; i < nm.sectors_size(); ++i )
 		{
-			gmTableIterator sectorIt;
-			for(gmTableNode *pSectorNode = pSectorsTable->GetFirst(sectorIt);
-				pSectorNode && bSuccess;
-				pSectorNode = pSectorsTable->GetNext(sectorIt))
+			const NavmeshIO::Sector & s = nm.sectors( i );
+
+			NavSector sector;
+			sector.m_Mirror = s.sectormirrored();
+			if ( s.has_sectordata() )
 			{
-				gmTableObject *pSector = pSectorNode != NULL ? pSectorNode->m_value.GetTableObjectSafe() : NULL;
-				if(pSector)
-				{
-					NavSector ns;
-
-					//const char *pSectorName = pSector->Get(pM, "Name").GetCStringSafe();
-
-					gmVariable vMirror = pSector->Get(pM, "Mirror");
-					ns.m_Mirror = vMirror.IsInt() ? vMirror.GetInt() : NavSector::MirrorNone;
-
-					gmTableObject *pVertTable = pSector->Get(pM, "Vertices").GetTableObjectSafe();
-					if(pVertTable != NULL && bSuccess)
-					{
-						gmTableIterator vertIt;
-						for(gmTableNode *pVertNode = pVertTable->GetFirst(vertIt);
-							pVertNode && bSuccess;
-							pVertNode = pVertTable->GetNext(vertIt))
-						{
-							Vector3f v;
-							if(pVertNode != NULL && pVertNode->m_value.IsVector() && pVertNode->m_value.GetVector(v.x, v.y, v.z))
-								ns.m_Boundary.push_back(v);
-							else
-								bSuccess = false;
-						}
-					}
-
-					//////////////////////////////////////////////////////////////////////////
-					if(bSuccess)
-						loadSectors.push_back(ns);
-					//////////////////////////////////////////////////////////////////////////
-				}
 			}
+			if ( s.has_sectordatamirrored() )
+			{
+			}
+
+			for ( int i = 0; i < s.vertices_size(); ++i )
+			{
+				const NavmeshIO::SectorVert & v = s.vertices( i );
+				sector.m_Boundary.push_back( Vector3f(
+					v.position().x(), 
+					v.position().y(), 
+					v.position().z() ) );
+			}
+			
+			m_NavSectors.push_back( sector );
 		}
 	}
-
-	if(bSuccess)
+	catch (std::exception* e)
 	{
-		m_NavSectors.swap(loadSectors);
-		InitCollision();
+		LOG("PathPlannerNavMesh::Load ERROR: " << e->what() );
+		return false;
 	}
-	//////////////////////////////////////////////////////////////////////////
 
-	delete pM;
+	InitSectors();
 
-	return bSuccess;
+	return true;
 }
 
 bool PathPlannerNavMesh::Save(const String &_mapname)
@@ -960,43 +1044,73 @@ bool PathPlannerNavMesh::Save(const String &_mapname)
 	if(_mapname.empty())
 		return false;
 
-	String waypointName		= _mapname + ".nav";
-	String navPath	= String("nav/") + waypointName;
-
-	gmMachine *pM = new gmMachine;
-	pM->SetDebugMode(true);
-	DisableGCInScope gcEn(pM);
-
-	gmTableObject *pNavTbl = pM->AllocTableObject();
-	pM->GetGlobals()->Set(pM, "Navigation", gmVariable(pNavTbl));
-
-	pNavTbl->Set(pM,"MapCenter",gmVariable(m_MapCenter));
-
-	gmTableObject *pSectorsTable = pM->AllocTableObject();
-	pNavTbl->Set(pM, "Sectors", gmVariable(pSectorsTable));
+	NavmeshIO::NavigationMesh nm;
+	nm.mutable_header(); // header is required
+	
+	if ( !m_MapCenter.IsZero() )
+	{
+		nm.mutable_header()->mutable_mapcenter()->set_x( m_MapCenter.x );
+		nm.mutable_header()->mutable_mapcenter()->set_y( m_MapCenter.y );
+		nm.mutable_header()->mutable_mapcenter()->set_z( m_MapCenter.z );
+	}
 
 	for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
 	{
 		const NavSector &ns = m_NavSectors[s];
 
-		gmTableObject *pSector = pM->AllocTableObject();
-		pSectorsTable->Set(pM, s, gmVariable(pSector));
-
-		// NavSector properties
-		pSector->Set(pM, "Mirror", gmVariable((obint32)ns.m_Mirror));
-
-		gmTableObject *pSectorVerts = pM->AllocTableObject();
-		pSector->Set(pM, "Vertices", gmVariable(pSectorVerts));
-
+		NavmeshIO::Sector* sectorOut = nm.add_sectors();
 		for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
 		{
-			pSectorVerts->Set(pM,v,gmVariable(ns.m_Boundary[v]));
-		}		
+			NavmeshIO::SectorVert * sectorVertOut = sectorOut->add_vertices();
+			sectorVertOut->mutable_position()->set_x( ns.m_Boundary[v].x );
+			sectorVertOut->mutable_position()->set_y( ns.m_Boundary[v].y );
+			sectorVertOut->mutable_position()->set_z( ns.m_Boundary[v].z );
+
+			/*sectorOut->mutable_sectordata()
+			sectorOut->mutable_sectordatamirrored()*/
+			if ( ns.m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
+			{
+				sectorOut->set_sectormirrored( ns.m_Mirror );
+				//sectorOut->mutable_sectordatamirrored();
+			}
+		}
 	}
 
-	gmUtility::DumpTable(pM,navPath.c_str(),"Navigation",gmUtility::DUMP_ALL);
-	delete pM;
+	String outBuffer;
 
+	using namespace google::protobuf;
+	io::StringOutputStream outputStream( &outBuffer );
+	io::CodedOutputStream codedStream( &outputStream );
+
+	String serializeBinary, serializeText;
+
+	try
+	{
+		nm.SerializeToString( &serializeBinary );
+		TextFormat::PrintToString( nm, &serializeText );
+
+		const String navPathText	= String("nav/") + _mapname + ".nm";
+		const String navPathBinary	= String("nav/") + _mapname + ".nmb";	
+
+		File outFileBinary;
+		if ( outFileBinary.OpenForWrite(navPathBinary.c_str(), File::Binary) )
+		{
+			outFileBinary.Write( serializeBinary.c_str(), serializeBinary.length(), 1 );
+			outFileBinary.Close();
+		}
+
+		File outFileText;
+		if( outFileText.OpenForWrite(navPathText.c_str(), File::Text) )
+		{
+			outFileText.Write( serializeText.c_str(), serializeText.length(), 1 );
+			outFileText.Close();
+		}
+	}
+	catch (std::exception* e)
+	{
+		LOG("PathPlannerNavMesh::Save ERROR: " << e->what() );
+	}
+			
 	return true;
 }
 
@@ -1065,6 +1179,129 @@ bool PathPlannerNavMesh::FoundGoal() const
 
 void PathPlannerNavMesh::Unload()
 {	
+	OB_DELETE( m_Influence );
+	OB_DELETE( m_SpanMap );
+
+	m_CollisionData.Free();
+}
+
+void PathPlannerNavMesh::InitSectors()
+{
+	m_CollisionData.Free();
+
+	m_ActiveNavSectors.clear();
+	
+	NavSectorList					allSectors;
+
+	std::vector<IceMaths::Point>	vertices;
+	std::vector<PolyAttrib>			triSectors;
+	
+	// create the active sector list and the collision data at the same time so we can create a proper mapping
+	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
+	{
+		PolyAttrib attr;
+		attr.Fields.ActiveId = allSectors.size();
+		attr.Fields.SectorId = i;
+		attr.Fields.Mirrored = 0;
+
+		allSectors.push_back( m_NavSectors[ i ] );
+		allSectors.back().m_Id = attr.Fields.SectorId;
+
+		//////////////////////////////////////////////////////////////////////////		
+		Vector3f center = allSectors.back().CalculateCenter();
+		for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
+		{
+			triSectors.push_back( attr );
+
+			vertices.push_back( IceMaths::Point(
+				center.x, center.y, center.z ) );
+
+			vertices.push_back( IceMaths::Point( 
+				allSectors.back().m_Boundary[ v-1 ].x,
+				allSectors.back().m_Boundary[ v-1 ].y,
+				allSectors.back().m_Boundary[ v-1 ].z ) );
+
+			vertices.push_back( IceMaths::Point( 
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );	
+
+			if ( v == 1 )
+			{
+				allSectors.back().m_Plane = Plane3f(
+					center, 
+					allSectors.back().m_Boundary[ v-1 ],
+					allSectors.back().m_Boundary[ v ] );
+			}
+		}
+	}
+
+	// do another pass for the mirrored set
+	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
+	{
+		if ( m_NavSectors[ i ].m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
+		{
+			PolyAttrib attr;
+			attr.Fields.ActiveId = allSectors.size();
+			attr.Fields.SectorId = i;
+			attr.Fields.Mirrored = 1;
+
+			allSectors.push_back( m_NavSectors[ i ].GetMirroredCopy( m_MapCenter ) );
+			allSectors.back().m_Id = attr.Fields.SectorId;
+
+			//////////////////////////////////////////////////////////////////////////
+			Vector3f center = allSectors.back().CalculateCenter();			
+			for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
+			{
+				triSectors.push_back( attr );
+
+				vertices.push_back( IceMaths::Point(
+					center.x, center.y, center.z ) );
+
+				vertices.push_back( IceMaths::Point( 
+					allSectors.back().m_Boundary[ v-1 ].x,
+					allSectors.back().m_Boundary[ v-1 ].y,
+					allSectors.back().m_Boundary[ v-1 ].z ) );
+
+				vertices.push_back( IceMaths::Point( 
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );	
+
+				if ( v == 1 )
+				{
+					allSectors.back().m_Plane = Plane3f(
+						center, 
+						allSectors.back().m_Boundary[ v-1 ],
+						allSectors.back().m_Boundary[ v ] );
+				}
+			}
+			//////////////////////////////////////////////////////////////////////////
+		}
+	}
+
+	m_ActiveNavSectors.swap( allSectors );
+
+	m_CollisionData.m_Verts = new IceMaths::Point[ vertices.size() ];
+	m_CollisionData.m_TriSectorMap = new PolyAttrib[ triSectors.size() ];
+
+	memcpy( m_CollisionData.m_Verts, &vertices[0], sizeof(IceMaths::Point) * vertices.size() );
+	memcpy( m_CollisionData.m_TriSectorMap, &triSectors[0], sizeof(unsigned int) * triSectors.size() );
+
+	m_CollisionData.m_MeshInterface = new Opcode::MeshInterface();
+	m_CollisionData.m_MeshInterface->SetNbTriangles( vertices.size() / 3 );
+	m_CollisionData.m_MeshInterface->SetNbVertices( vertices.size() );
+	m_CollisionData.m_MeshInterface->SetPointers( NULL, m_CollisionData.m_Verts );
+	m_CollisionData.m_MeshInterface->SetInterfaceType( Opcode::MESH_TRIANGLE );
+	
+	Opcode::OPCODECREATE parms;
+	parms.mIMesh = m_CollisionData.m_MeshInterface;
+	m_CollisionData.m_CollisionTree = new Opcode::Model();
+	if ( !m_CollisionData.m_CollisionTree->Build( parms ) )
+	{
+		m_CollisionData.Free();
+		return;
+	}
 }
 
 void PathPlannerNavMesh::RegisterGameGoals()
@@ -1136,7 +1373,6 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 
 bool PathPlannerNavMesh::GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name)
 {
-
 	return false;
 }
 

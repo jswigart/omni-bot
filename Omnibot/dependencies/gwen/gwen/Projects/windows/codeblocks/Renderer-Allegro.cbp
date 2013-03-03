@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Renderer-Allegro" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../lib/windows/codeblocks/libGWEN-Renderer-Allegro.a" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Release/Renderer-Allegro" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../lib/windows/codeblocks/libGWEND-Renderer-Allegrod" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Debug/Renderer-Allegro" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../Renderers/Allegro/Allegro.cpp">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

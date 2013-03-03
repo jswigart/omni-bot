@@ -6,46 +6,61 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "TF_BaseStates.h"
 #include "TF_NavigationFlags.h"
 #include "TF_Game.h"
+#include "TF_InterfaceFuncs.h"
+#include "FilterClosestTF.h"
+
+#include "BotSteeringSystem.h"
+#include "BotWeaponSystem.h"
+#include "BotTargetingSystem.h"
+
 #include "ScriptManager.h"
+#include "FilterAllType.h"
 #include "gmScriptGoal.h"
 
 const obReal SENTRY_UPGRADE_PRIORITY = 0.5f;
 
+namespace TF_Options
+{
+	int BUILD_AMMO_TYPE = TF_WP_SPANNER;
+
+	int SENTRY_BUILD_AMMO = 130;
+	int SENTRY_UPGRADE_AMMO = 130;
+	int SENTRY_REPAIR_AMMO = 20;
+	int SENTRY_UPGRADE_WPN = TF_WP_SPANNER;
+
+	int BUILD_ATTEMPT_DELAY = 1000;
+
+	int TELEPORT_BUILD_AMMO = 125;
+	int DISPENSER_BUILD_AMMO = 100;
+
+	int PIPE_WEAPON = TF_WP_PIPELAUNCHER;
+	int PIPE_WEAPON_WATCH = TF_WP_GRENADE_LAUNCHER;
+	int PIPE_AMMO = TF_WP_GRENADE_LAUNCHER;
+	int PIPE_MAX_DEPLOYED = 8;
+
+	int ROCKETJUMP_WPN = TF_WP_ROCKET_LAUNCHER;
+
+	float GRENADE_VELOCITY = 500.f;
+
+	bool POLL_SENTRY_STATUS = false;
+
+	bool REPAIR_ON_SABOTAGED = false;
+
+	int DisguiseTeamFlags[TF_TEAM_MAX] = 
+	{
+		TF_TEAM_NONE,
+		TF_TEAM_NONE,
+		TF_TEAM_NONE,
+		TF_TEAM_NONE,
+		TF_TEAM_NONE,
+	};
+};
+
 namespace AiState
 {
-	//////////////////////////////////////////////////////////////////////////
-	namespace TF_Options
-	{
-		int BUILD_AMMO_TYPE = TF_WP_SPANNER;
-		
-		int SENTRY_BUILD_AMMO = 130;
-		int SENTRY_UPGRADE_AMMO = 130;
-		int SENTRY_REPAIR_AMMO = 20;
-		int SENTRY_UPGRADE_WPN = TF_WP_SPANNER;
-
-		int BUILD_ATTEMPT_DELAY = 1000;
-		
-		int TELEPORT_BUILD_AMMO = 125;
-		int DISPENSER_BUILD_AMMO = 100;
-
-		int PIPE_WEAPON = TF_WP_PIPELAUNCHER;
-		int PIPE_WEAPON_WATCH = TF_WP_GRENADE_LAUNCHER;
-		int PIPE_AMMO = TF_WP_GRENADE_LAUNCHER;
-		int PIPE_MAX_DEPLOYED = 8;
-
-		int ROCKETJUMP_WPN = TF_WP_ROCKET_LAUNCHER;
-
-		float GRENADE_VELOCITY = 500.f;
-
-		bool POLL_SENTRY_STATUS = false;
-
-		bool REPAIR_ON_SABOTAGED = false;
-	};
-	//////////////////////////////////////////////////////////////////////////
 	int SentryBuild::BuildEquipWeapon = TF_WP_NONE;
 
 	SentryBuild::SentryBuild() 
@@ -2641,6 +2656,8 @@ namespace AiState
 		m_MapGoalTeleExit.reset();
 
 		FINDSTATE(tp,Teleporter,GetParent());
+		if ( tp == NULL )
+			return 0.0f;
 
 		if(!tp->HasTeleporterEntrance())
 		{
@@ -2694,6 +2711,8 @@ namespace AiState
 	State::StateStatus TeleporterBuild::Update(float fDt)
 	{
 		FINDSTATE(tp,Teleporter,GetParent());
+		if ( tp == NULL )
+			return State_Finished;
 
 		switch(m_State)
 		{

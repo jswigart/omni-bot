@@ -7,6 +7,8 @@
 #include <QTcpSocket>
 #include <QSystemTrayIcon>
 
+#include "common.pb.h"
+
 class QStandardItemModel;
 class QDeclarativeComponent;
 
@@ -56,7 +58,7 @@ private:
 	void CacheComponent(QDeclarativeEngine *engine, QDeclarativeComponent *& component, const QString & file );
 
 	void deleteEntity( int entityHandle );
-	void updateComponent( RemoteLib::DataBuffer & db, int blockSize );
+	void ReflectMessageToQML( const Remote::Entity & msg );
 
 	QGraphicsObject * entityFromHandle( int handle );
 private slots:
@@ -64,6 +66,7 @@ private slots:
 
 	bool msgConfigName( RemoteLib::DataBuffer & db );
 	bool msgTreeNode( RemoteLib::DataBuffer & db );
+	bool msgScriptPrint( RemoteLib::DataBuffer & db );
 
 	QDeclarativeComponent * FindComponentType( const QString & componentName );
 

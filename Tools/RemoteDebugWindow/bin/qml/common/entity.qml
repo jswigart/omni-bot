@@ -54,6 +54,8 @@ Item3D {
             'className' : className
         }
         //entList.addEntity(entAttribs);
+	
+	console.debug( "x " + x );
     }
     Component.onDestruction: {
         //entList.detroyEntity(entity.handle);
@@ -101,7 +103,7 @@ Item3D {
     onYawChanged: {
         //console.debug( "x " + x + " y " + y );
         //mapView.setCameraFocus(x, y, 0)
-         //console.debug( "yaw " + yaw );
+        console.debug( "yaw " + entity.yaw );
     }
     onHealthChanged: {
         //entList.updateEntity( { 'handle' : handle, 'health' : health } )

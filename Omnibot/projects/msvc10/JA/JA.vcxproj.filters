@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\..\..\GameInterfaces\ensimod\codemp\game\g_jabot_interface.cpp">
       <Filter>_Interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\JA\JA_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\JA\JA_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\JA\JA_VoiceMacros.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\JA\PrecompJA.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\JA\JA_BaseStates.cpp">
@@ -80,9 +74,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JA\JA_VoiceMacros.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\JA\PrecompJA.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JA\JA_BaseStates.h">

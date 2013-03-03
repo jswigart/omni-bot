@@ -6,9 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
 #include "ET_GoalManager.h"
 #include "ET_NavigationFlags.h"
+
+#include "PathPlannerWaypoint.h"
 
 ET_GoalManager::ET_GoalManager()
 {

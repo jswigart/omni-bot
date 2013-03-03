@@ -28,7 +28,6 @@ public:
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
 	virtual Client *CreateGameClient();
 
@@ -47,6 +46,9 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
+
+	// PathPlannerWaypointInterface
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
 
 	Q4_Game() {};
 	virtual ~Q4_Game() {};

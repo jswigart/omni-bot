@@ -9,6 +9,7 @@
 #ifndef __ENGINEFUNCS_H__
 #define __ENGINEFUNCS_H__
 
+#include "common.h"
 #include "IEngineInterface.h"
 
 namespace EngineFuncs

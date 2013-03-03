@@ -26,10 +26,7 @@ public:
 	void Shutdown();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
-
-	virtual Client *CreateGameClient();
-	
+		
 	GoalManager *GetGoalManager();
 
 	const char *FindClassName(obint32 _classId);
@@ -39,15 +36,15 @@ public:
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
 	static obReal _GetDesirabilityFromTargetClass(int _grentype, int _class);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+	
+	// PathPlannerWaypointInterface
+	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw);
 
 	TF_Game() {};
 	virtual ~TF_Game() {};
 protected:
 	// Script support.
 	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptTeams(gmMachine *_machine, gmTableObject *_table);
 	void InitScriptCategories(gmMachine *_machine, gmTableObject *_table);
 	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
 	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);

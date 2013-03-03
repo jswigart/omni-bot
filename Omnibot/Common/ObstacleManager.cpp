@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "ObstacleManager.h"
+#include "IGame.h"
+#include "Client.h"
 
 ObstacleManager obstacleManager;
 

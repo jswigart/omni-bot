@@ -9,6 +9,8 @@
 #ifndef __THREATZONE_H__
 #define __THREATZONE_H__
 
+#include "common.h"
+
 // class: ThreatZone
 //		This class marks an area as dangerous.
 class ThreatZone

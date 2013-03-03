@@ -9,10 +9,11 @@
 #ifndef __GMMATRIX3_H__
 #define __GMMATRIX3_H__
 
+#include "common.h"
+
 #include "gmBind.h"
 
 // Handy typedef if we want to easily change which Wm3Vector template we want to use.
-
 typedef Matrix3f gmMat3Type;
 
 class gmMatrix3 : public gmBind< gmMat3Type, gmMatrix3 >

@@ -8,8 +8,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "PathPlannerBase.h"
+#include "FileSystem.h"
+#include "IGame.h"
 
 void PathPlannerBase::InitCommands()
 {

@@ -6,8 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "Path.h"
+#include "RenderBuffer.h"
 
 Path::Path() :
 	m_CurrentPt		(0),
@@ -140,7 +140,7 @@ void Path::DebugRender(obColor _color, float _duration)
 {
 	for(obint32 i = 1; i < m_NumPts; ++i)
 	{
-		Utils::DrawLine(m_Pts[i-1].m_Pt, m_Pts[i].m_Pt, _color, _duration);
+		RenderBuffer::AddLine( m_Pts[i-1].m_Pt, m_Pts[i].m_Pt, _color, 2.0f );
 	}
 }
 

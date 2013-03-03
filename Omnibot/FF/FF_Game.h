@@ -37,6 +37,8 @@ public:
 
 	ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 
+	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+
 	FF_Game() { }
 	virtual ~FF_Game() {}
 protected:

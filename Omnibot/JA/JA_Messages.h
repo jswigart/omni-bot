@@ -12,6 +12,7 @@
 #define __JA_MESSAGES_H__
 
 #include "Base_Messages.h"
+#include "JA_Config.h"
 
 #pragma pack(push)
 #pragma pack(4)

@@ -13,9 +13,6 @@
     <Filter Include="_Interface">
       <UniqueIdentifier>{b88272bd-cedd-41ad-9da2-b3a551164952}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Build">
-      <UniqueIdentifier>{75c676b3-704e-4a45-a34c-64367329f605}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\BotExports.cpp">
@@ -30,17 +27,11 @@
     <ClCompile Include="..\..\..\D3\D3_InterfaceFuncs.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\D3\PrecompD3.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\D3\gmD3Binds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\GameInterfaces\D3\game\omnibot\omnibot_interface.cpp">
       <Filter>_Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\D3\D3_BatchBuild.cpp">
-      <Filter>_Build</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +53,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\D3\D3_Messages.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\D3\PrecompD3.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\D3\gmD3Binds.h">

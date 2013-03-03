@@ -6,17 +6,22 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "Client.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "ScriptManager.h"
 #include "WeaponDatabase.h"
 #include "BotBaseStates.h"
+#include "BotTargetingSystem.h"
+#include "BotSteeringSystem.h"
 #include "MovementCaps.h"
-#include "gmBot.h"
+#include "InterfaceFuncs.h"
 #include "ScriptGoal.h"
+
+#include "gmBot.h"
 #include "gmScriptGoal.h"
+#include "gmCall.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -201,8 +206,12 @@ void Client::UpdateBotInput()
 
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void Client::InternalSyncEntity( EntitySnapShot & snapShot, RemoteLib::DataBuffer & db ) {
-	snapShot.Sync( "fov", GetFieldOfView(), db );
+void Client::InternalSyncEntity( RemoteLib::DebugConnection * connection, Remote::Entity & cached, Remote::Entity & update ) {
+	SET_IF_DIFF( cached, update, GetFieldOfView(), fov );
+
+	/*if ( m_StateRoot != NULL ) {
+		m_StateRoot->Sync( connection, *cached.mutable_behaviors(), *update.mutable_behaviors() );	
+	}*/
 }
 #endif
 
@@ -581,7 +590,9 @@ void Client::Init(int _gameid)
 
 void Client::Shutdown()
 {
+#ifdef ENABLE_REMOTE_DEBUGGING
 	IGameManager::GetInstance()->SyncRemoteDelete( GetGameEntity().AsInt() );
+#endif
 
 	//////////////////////////////////////////////////////////////////////////	
 	// Call any map callbacks.

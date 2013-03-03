@@ -29,6 +29,19 @@ typedef enum eOF_Version
 #endif
 #define MAX_DEMO_TEAM_PIPES 10
 
+// enumerations: OF_Team
+typedef enum eOF_Team
+{
+	OF_TEAM_NONE = OB_TEAM_NONE,
+	OF_TEAM_BLUE,
+	OF_TEAM_RED,
+	OF_TEAM_YELLOW,
+	OF_TEAM_GREEN,
+
+	// THIS MUST STAY LAST
+	OF_TEAM_MAX
+} OF_Team;
+
 typedef enum eOF_Weapon
 {
 	OF_WP_GRENADE_FLASH = TF_WP_GRENADE_CALTROPS // remapping this

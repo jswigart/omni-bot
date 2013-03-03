@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompD3.h"
 #include "gmConfig.h"
 #include "gmThread.h"
 #include "gmMachine.h"
@@ -15,6 +14,7 @@
 #include "gmD3Binds.h"
 #include "D3_Client.h"
 #include "D3_Config.h"
+#include "D3_InterfaceFuncs.h"
 
 // Title: D3 Script Bindings
 

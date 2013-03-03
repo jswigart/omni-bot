@@ -9,6 +9,8 @@
 #ifndef __REGULATOR_H__
 #define __REGULATOR_H__
 
+#include "common.h"
+
 // class: Regulator
 //		Simple Regulator class that simply provides a true/false return
 //		type through IsReady() for simple checking if time interval has elapsed

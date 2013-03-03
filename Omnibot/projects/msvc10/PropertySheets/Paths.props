@@ -2,21 +2,36 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-	<REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
-	<BOOST>$(REPO_ROOT)\libs\boost\boost_1_44</BOOST>
-	<InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
-	<OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
-	<REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
-	<ETDIR>C:\games\Wolfenstein - Enemy Territory</ETDIR>
-	<RTCWDIR>C:\games\Return to Castle Wolfenstein</RTCWDIR>
+    <RTCWDIR>C:\games\Return to Castle Wolfenstein</RTCWDIR>
+    <DEPENDENCIES>$(SolutionDir)../../dependencies</DEPENDENCIES>
+    <PROTO_BUFF>$(DEPENDENCIES)\protobuf-2.4.1</PROTO_BUFF>
+    <REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
+    <BOOST>$(REPO_ROOT)\libs\boost\boost_1_53_0</BOOST>
+    <InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
+    <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
+    <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
+    <ETDIR>D:\Games\WET</ETDIR>
   </PropertyGroup>
   <PropertyGroup />
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <ClCompile />
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <BuildMacro Include="DEPENDENCIES">
+      <Value>$(DEPENDENCIES)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PROTO_BUFF">
+      <Value>$(PROTO_BUFF)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
     <BuildMacro Include="REPO_ROOT">
       <Value>$(REPO_ROOT)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>  
+    </BuildMacro>
     <BuildMacro Include="BOOST">
       <Value>$(BOOST)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
@@ -36,6 +51,6 @@
     <BuildMacro Include="ETDIR">
       <Value>$(ETDIR)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>	
+    </BuildMacro>
   </ItemGroup>
 </Project>

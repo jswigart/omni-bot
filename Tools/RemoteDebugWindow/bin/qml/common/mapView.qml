@@ -23,16 +23,16 @@ Viewport {
     anchors.bottom: parent.bottom
     anchors.top: parent.top
 
-    property double camX : 7960;
-    property double camY : 3160;
-    property double camZ : 5000;
+    property double camX : 0;
+    property double camY : 0;
+    property double camZ : 500;
 
     property alias scene: root;
 
     camera: Camera {
         id: cam
-        eye: Qt.vector3d(viewport.camX, viewport.camY, viewport.camZ)
-        center: Qt.vector3d(viewport.camX, viewport.camY, -viewport.camZ)
+        eye: Qt.vector3d( viewport.camX, viewport.camY, viewport.camZ )
+        center: Qt.vector3d( 0, 0, 0 )
         farPlane: 10000
     }
 
@@ -49,48 +49,47 @@ Viewport {
     }
 
     ///////////////////////////////////////////
-//    Sphere {
-//         radius: 20
-//         effect: Effect {
-//             color: "cyan"
-//         }
+    Sphere {
+         radius: 20
+         effect: Effect {
+             color: "cyan"
+         }
+         Component.onCompleted: {
+             console.debug( "Sphere parent " + parent );
+             console.debug( "Sphere x " + x + " y " + y );
+         }
+     }
+    Sphere {
+        radius: 10
+        x: 100
+        y: 100
+        effect: Effect {
+            color: "cyan"
+        }
 
-//         Component.onCompleted: {
-//             console.debug( "Sphere parent " + parent );
-//             console.debug( "Sphere x " + x + " y " + y );
-//         }
-//     }
-//    Sphere {
-//        radius: 10
-//        x: 100
-//        y: 100
-//        effect: Effect {
-//            color: "cyan"
-//        }
+        Component.onCompleted: {
+            console.debug( "Sphere parent " + parent );
+            console.debug( "Sphere x " + x + " y " + y );
+         }
+     }
 
-//        Component.onCompleted: {
-//            console.debug( "Sphere parent " + parent );
-//            console.debug( "Sphere x " + x + " y " + y );
-//         }
-//     }
+    Item3D {
+        Cube  {
+            x: 50
+            y: 50
+            scale: 32
+            effect: Effect {
+                blending: true
+                color: "cyan"
+                texture: "../images/ent_dogtags.png"
+            }
 
-//    Item3D {
-//        Cube  {
-//            x: 50
-//            y: 50
-//            scale: 32
-//            effect: Effect {
-//                blending: true
-//                color: "cyan"
-//                texture: "../images/ent_dogtags.png"
-//            }
-
-//            Component.onCompleted: {
-//                console.debug( "Cube parent " + parent );
-//                console.debug( "Cube x " + x + " y " + y );
-//             }
-//        }
-//    }
+            Component.onCompleted: {
+                console.debug( "Cube parent " + parent );
+                console.debug( "Cube x " + x + " y " + y );
+             }
+        }
+    }
     ///////////////////////////////////////////
 
     function setCameraFocus(camX, camY, camZ) {
@@ -106,7 +105,7 @@ Viewport {
         //drag.filterChildren: true
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-        //hoverEnabled: true
+        hoverEnabled: true
         onClicked: {
             if ( mouse.button == Qt.RightButton ) {
                 console.debug( "onClicked " );
@@ -154,15 +153,23 @@ Viewport {
         }
 
         if (event.key == Qt.Key_Right) {
+		cam.eye.x += stepSize;
         } else if (event.key == Qt.Key_Left) {
+		cam.eye.x -= stepSize;		
         } else if (event.key == Qt.Key_Up) {
+		cam.eye.y -= stepSize;
         } else if (event.key == Qt.Key_Down) {
+		cam.eye.y += stepSize;
         } else if (event.key == Qt.Key_Plus) {
             event.accepted = true;
-            cam.eye.z = cam.eye.z + stepSize;
+            //cam.eye.z = cam.eye.z + stepSize;
+	    
+	    cam.fieldOfView  += 1;
         } else if (event.key == Qt.Key_Minus) {
             event.accepted = true;
-            cam.eye.z = cam.eye.z - stepSize;
+            //cam.eye.z = cam.eye.z - stepSize;
+	    
+	    cam.fieldOfView  -= 1;
         }
     }
 }

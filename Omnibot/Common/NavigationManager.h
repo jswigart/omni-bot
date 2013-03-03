@@ -9,6 +9,11 @@
 #ifndef __NAVIGATIONMANAGER_H__
 #define __NAVIGATIONMANAGER_H__
 
+#include "Omni-Bot_Types.h"
+
+class PathPlannerBase;
+class IGame;
+
 // class: Navigation Manager
 //		This class is responsible for creating and initializing the desired 
 //		path planner for the bot to use. Singleton for easy access.
@@ -18,7 +23,7 @@ public:
 
 	// function: CreatePathPlanner
 	//		Creates a path planner from an enumerated type
-	bool CreatePathPlanner(NavigatorID _navid);
+	bool CreatePathPlanner( IGame * game, NavigatorID _navid );
 
 	// function: DeletePathPlanner
 	//		Deletes the current path planner

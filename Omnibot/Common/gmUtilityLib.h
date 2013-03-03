@@ -19,6 +19,7 @@ Version History:
 
 */
 
+#include "common.h"
 #include "gmVariable.h"
 
 namespace gmUtility

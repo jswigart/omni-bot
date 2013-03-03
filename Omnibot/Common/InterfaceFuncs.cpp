@@ -6,8 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "InterfaceFuncs.h"
+#include "Client.h"
 
 extern float g_fTopWaypointOffset;
 extern float g_fBottomWaypointOffset;

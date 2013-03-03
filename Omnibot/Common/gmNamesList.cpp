@@ -6,13 +6,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "gmNamesList.h"
 #include "ScriptManager.h"
 #include "NameManager.h"
 #include "gmThread.h"
-
-#undef GetObject
 
 // script: NameList
 //		Script bindings for <NameManager>

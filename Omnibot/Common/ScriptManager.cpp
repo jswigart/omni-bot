@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "ScriptManager.h"
 
 #include "Client.h"
@@ -17,7 +16,7 @@
 #include "Weapon.h"
 
 // Custom script libraries
-#undef GetObject //Argh Windows defines this in WINGDI.H
+#include "gmCall.h"
 #include "gmDebug.h"
 #include "gmSystemLibApp.h"
 #include "gmMathLibrary.h"
@@ -355,6 +354,8 @@ void ScriptManager::Shutdown()
 	}
 #endif
 	
+	m_ScriptEngine->CollectGarbage( true );
+
 	gmGCRootManager::Get()->DestroyMachine(m_ScriptEngine);
 	gmGCRootManager::Destroy();
 

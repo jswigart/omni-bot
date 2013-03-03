@@ -6,10 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ETQW_FilterClosest.h"
-
-#include "ScriptManager.h"
+#include "ETQW_InterfaceFuncs.h"
+#include "ETQW_Client.h"
 
 ETQW_FilterClosest::ETQW_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type) :
 	FilterClosest				(_client, _type)

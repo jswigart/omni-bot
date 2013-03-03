@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "ScriptManager.h"
 
 #include "RTCW_Client.h"
@@ -15,7 +14,12 @@
 #include "RTCW_FilterClosest.h"
 #include "RTCW_Messages.h"
 #include "RTCW_BaseStates.h"
+#include "RTCW_InterfaceFuncs.h"
 
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
+
+#include "PathPlannerWaypoint.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS

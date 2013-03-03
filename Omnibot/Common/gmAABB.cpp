@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "gmAABB.h"
+
+#include "gmbinder2.h"
+#include "gmbinder2_class.h"
 
 #define CHECK_THIS_AABB() \
 	AABB *pNative = gmAABB::GetThisObject( a_thread ); \

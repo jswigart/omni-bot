@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "TF_GoalManager.h"
 #include "TF_NavigationFlags.h"
 #include "Waypoint.h"

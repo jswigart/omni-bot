@@ -201,7 +201,7 @@
       <Filter>omnibot</Filter>
     </ClCompile>
     <ClCompile Include="$(REPO_ROOT)\Omnibot\Common\BotLoadLibrary.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>omnibot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

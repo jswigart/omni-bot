@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompJA.h"
 #include "JA_VoiceMacros.h"
+#include "JA_Client.h"
+
+#include "common.h"
 
 const char *strVoiceMacros[] =
 {

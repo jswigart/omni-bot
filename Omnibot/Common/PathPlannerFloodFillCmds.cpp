@@ -6,19 +6,23 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-#include <limits>
-
 #include "PathPlannerFloodFill.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
 #include "Waypoint.h"
 #include "IGame.h"
 #include "Client.h"
+#include "Timer.h"
 
 using namespace std;
 
 extern float g_fBottomWaypointOffset;
+
+extern float g_CharacterHeight;;
+extern float g_CharacterCrouchHeight;;
+extern float g_CharacterStepHeight;
+extern float g_CharacterJumpHeight;
+extern float g_GridRadius;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -48,8 +52,6 @@ void PathPlannerFloodFill::InitCommands()
 		this, &PathPlannerFloodFill::cmdSaveFloodStarts);
 	SetEx("nav_loadfloodstart", "Load all flood fill starts from <mapname>.navstarts.", 
 		this, &PathPlannerFloodFill::cmdLoadFloodStarts);
-	SetEx("nav_trimsectors", "Trims all sectors less than a given area.", 
-		this, &PathPlannerFloodFill::cmdNavMeshTrimSectors);	
 	SetEx("nav_floodfill", "Start the flood fill process.", 
 		this, &PathPlannerFloodFill::cmdNavMeshFloodFill);
 	//////////////////////////////////////////////////////////////////////////
@@ -204,14 +206,14 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 		"> charactercrouchheight: the height the character",
 		"> characterheight: the height the character",
 	};
-
+	
 	PRINT_USAGE(strUsage);
 
-	OPTIONAL_FLOAT_PARAM(fGridRadius, 1, m_FloodFillOptions.m_GridRadius);
-	OPTIONAL_FLOAT_PARAM(fStepHeight, 2, m_FloodFillOptions.m_CharacterStepHeight);
-	OPTIONAL_FLOAT_PARAM(fJumpHeight, 3, m_FloodFillOptions.m_CharacterJumpHeight);
-	OPTIONAL_FLOAT_PARAM(fCrouchHeight, 4, m_FloodFillOptions.m_CharacterCrouchHeight);
-	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, m_FloodFillOptions.m_CharacterHeight);
+	OPTIONAL_FLOAT_PARAM(fGridRadius, 1, g_GridRadius);
+	OPTIONAL_FLOAT_PARAM(fStepHeight, 2, g_CharacterStepHeight);
+	OPTIONAL_FLOAT_PARAM(fJumpHeight, 3, g_CharacterJumpHeight);
+	OPTIONAL_FLOAT_PARAM(fCrouchHeight, 4, g_CharacterCrouchHeight);
+	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, g_CharacterHeight);
 	
 	ScriptManager::GetInstance()->ExecuteStringLogged(
 		(String)va("Nav.FloodFill( %f, %f, %f, %f, %f );", 
@@ -222,23 +224,6 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 		fCharacterHeight));
 }
 
-void PathPlannerFloodFill::cmdNavMeshTrimSectors(const StringVector &_args)
-{
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;
-
-	const char *strUsage[] = 
-	{ 
-		"nav_trimsectors area[#]",
-		"> area: delete sectors with area less than this",
-	};
-
-	CHECK_NUM_PARAMS(_args, 5, strUsage);
-	CHECK_FLOAT_PARAM(fTrimArea, 1, strUsage);
-		ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.TrimSectors( %f );", fTrimArea));
-}
-
 //////////////////////////////////////////////////////////////////////////
 
 void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
@@ -246,7 +231,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const int iMaxFeatures = 1024;
+	const int iMaxFeatures = 128;
 	AutoNavFeature features[iMaxFeatures];
 	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 	for(int i = 0; i < iNumFeatures; ++i)

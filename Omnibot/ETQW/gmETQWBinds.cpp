@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "gmETQWBinds.h"
+#include "ETQW_InterfaceFuncs.h"
+#include "ETQW_Client.h"
 
 #include "gmConfig.h"
 #include "gmThread.h"

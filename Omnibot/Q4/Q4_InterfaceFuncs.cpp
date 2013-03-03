@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompQ4.h"
 #include "Q4_InterfaceFuncs.h"
+
+#include "BotWeaponSystem.h"
 
 namespace InterfaceFuncs
 {

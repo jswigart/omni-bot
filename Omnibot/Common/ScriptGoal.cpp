@@ -6,10 +6,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
+#include "IGameManager.h"
+#include "BotWeaponSystem.h"
+#include "BotTargetingSystem.h"
+#include "PathPlannerBase.h"
 #include "gmScriptGoal.h"
+#include "gmCall.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -537,6 +542,7 @@ namespace AiState
 #ifdef Prof_ENABLED
 		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
 #endif
+		//Fiber * fiber = new Fiber<ScriptGoal, ScriptGoal::Enter>( this, &ScriptGoal::Enter );
 
 		{
 			Prof(Enter);

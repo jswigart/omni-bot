@@ -10,6 +10,13 @@
 #define __MEMORYRECORD_H__
 
 #include "TargetInfo.h"
+#include "StateMachine.h"
+#include "IGame.h"
+
+namespace AiState
+{
+	class SensoryMemory;
+}
 
 // class: MemoryRecord
 //		Represents an element in a bots memory system.

@@ -249,7 +249,7 @@ public:
 #endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync, const char * statePath );
+	virtual void Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & cached, Remote::Behavior & update );
 #endif
 
 	//////////////////////////////////////////////////////////////////////////

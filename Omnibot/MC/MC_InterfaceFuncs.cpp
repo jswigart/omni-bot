@@ -6,8 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompMC.h"
 #include "MC_InterfaceFuncs.h"
+#include "MessageHelper.h"
 
 namespace InterfaceFuncs
 {

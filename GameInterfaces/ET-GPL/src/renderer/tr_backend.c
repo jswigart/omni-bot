@@ -431,7 +431,7 @@ void RB_BeginDrawingView( void ) {
 ////////// (SA) modified to ensure one glclear() per frame at most
 
 	// clear relevant buffers
-	clearBits = 0;
+	clearBits = GL_COLOR_BUFFER_BIT;
 
 	if ( r_measureOverdraw->integer || r_shadows->integer == 2 ) {
 		clearBits |= GL_STENCIL_BUFFER_BIT;
@@ -1478,6 +1478,7 @@ void RB_ExecuteRenderCommands( const void *data ) {
 			break;
 		case RC_DRAW_SURFS:
 			data = RB_DrawSurfs( data );
+			Sys_OmnibotRender();
 			break;
 		case RC_DRAW_BUFFER:
 			data = RB_DrawBuffer( data );

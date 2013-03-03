@@ -6,10 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "TF_Client.h"
 #include "TF_NavigationFlags.h"
 #include "TF_BaseStates.h"
+#include "FilterClosestTF.h"
+
+#include "TF_InterfaceFuncs.h"
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -391,29 +395,6 @@ void TF_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 		//////////////////////////////////////////////////////////////////////////
 	}
 	Client::ProcessEvent(_message, _cb);
-}
-
-NavFlags TF_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags TF_Client::GetTeamFlag(int _team)
-{
-	static const NavFlags defaultTeam = 0;
-	switch(_team)
-	{
-	case TF_TEAM_BLUE:
-		return F_NAV_TEAM1;
-	case TF_TEAM_RED:
-		return F_NAV_TEAM2;
-	case TF_TEAM_YELLOW:
-		return F_NAV_TEAM3;
-	case TF_TEAM_GREEN:
-		return F_NAV_TEAM4;
-	default:
-		return defaultTeam;
-	}
 }
 
 float TF_Client::GetGameVar(GameVar _var) const

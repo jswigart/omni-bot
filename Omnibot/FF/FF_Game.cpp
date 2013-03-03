@@ -6,15 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompFF.h"
 #include "FF_Game.h"
 #include "FF_Config.h"
+#include "TF_BaseStates.h"
+#include "FF_Client.h"
 
-#include "TF_Client.h"
-
-#include "NameManager.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
+
+BOOST_STATIC_ASSERT( FF_TEAM_MAX == TF_TEAM_MAX );
 
 IGame *CreateGameInstance()
 {
@@ -28,7 +27,7 @@ int FF_Game::GetVersionNum() const
 
 Client *FF_Game::CreateGameClient()
 {
-	return new TF_Client;
+	return new FF_Client;
 }
 
 const char *FF_Game::GetModSubFolder() const
@@ -85,7 +84,28 @@ bool FF_Game::Init()
 	int threadId;
 	ScriptManager::GetInstance()->ExecuteFile("scripts/ff_autoexec.gm", threadId);
 
+	TF_Options::DisguiseTeamFlags[ FF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
+	TF_Options::DisguiseTeamFlags[ FF_TEAM_RED ] = TF_PWR_DISGUISE_RED;
+	TF_Options::DisguiseTeamFlags[ FF_TEAM_GREEN ] = TF_PWR_DISGUISE_GREEN;
+	TF_Options::DisguiseTeamFlags[ FF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
+
 	return true;
+}
+
+static IntEnum FF_TeamEnum[] =
+{
+	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
+	IntEnum("NONE",FF_TEAM_NONE),
+	IntEnum("RED",FF_TEAM_RED),
+	IntEnum("BLUE",FF_TEAM_BLUE),
+	IntEnum("YELLOW",FF_TEAM_YELLOW),
+	IntEnum("GREEN",FF_TEAM_GREEN),
+};
+
+void FF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
+{
+	num = sizeof(FF_TeamEnum) / sizeof(FF_TeamEnum[0]);
+	_ptr = FF_TeamEnum;	
 }
 
 void FF_Game::GetGameVars(GameVars &_gamevars)

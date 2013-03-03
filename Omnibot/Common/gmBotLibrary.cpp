@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "Client.h"
 #include "CommandReciever.h"
 #include "TriggerManager.h"
@@ -17,7 +16,9 @@
 #include "IGame.h"
 #include "DebugWindow.h"
 #include "MapGoalDatabase.h"
+#include "InterfaceFuncs.h"
 #include "Revision.h"
+#include "RenderBuffer.h"
 
 #include "WeaponDatabase.h"
 
@@ -1033,8 +1034,7 @@ static int GM_CDECL gmfDrawDebugText3d(gmThread *a_thread)
 		}
 	}
 
-	Vector3f vec(v);
-	Utils::PrintText(vec,obColor(color),duration,msg);
+	RenderBuffer::AddString( Vector3f(v), obColor(color), msg );
 	return GM_OK;
 }
 

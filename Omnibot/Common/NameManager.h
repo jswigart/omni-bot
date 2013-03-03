@@ -9,6 +9,8 @@
 #ifndef __NAMEMANAGER_H__
 #define __NAMEMANAGER_H__
 
+#include "common.h"
+
 class NameReference
 {
 public:

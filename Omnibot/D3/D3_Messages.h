@@ -12,6 +12,7 @@
 #define __D3_MESSAGES_H__
 
 #include "Base_Messages.h"
+#include "D3_Config.h"
 
 #pragma pack(push)
 #pragma pack(4)

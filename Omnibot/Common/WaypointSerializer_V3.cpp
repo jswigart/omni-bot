@@ -6,9 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
 #include "WaypointSerializer_V3.h"
 #include "Waypoint.h"
+#include "FileSystem.h"
 
 bool WaypointSerializer_V3::Load(File &_file, PathPlannerWaypoint::WaypointList &_wpl)
 {

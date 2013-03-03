@@ -9,11 +9,13 @@
 #ifndef __PATHPLANNERNAVMESH_H__
 #define __PATHPLANNERNAVMESH_H__
 
+#include <queue>
+
 #include "PathPlannerBase.h"
 #include "InternalFsm.h"
+#include "SpanHeightMap.h"
 
-class QuadTree;
-typedef boost::shared_ptr<QuadTree> QuadTreePtr;
+#include "navmesh.pb.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +32,7 @@ enum ToolStateNavMesh
 	CommitSector,
 	MirrorSectors,
 	PlaceBorder,
+	FloodSpanMap,
 	NumToolStates
 };
 
@@ -37,6 +40,17 @@ namespace NavigationMeshOptions
 {
 	extern float CharacterHeight;
 };
+
+namespace Opcode
+{
+	class Model;
+	class MeshInterface;
+}
+
+namespace IceMaths
+{
+	class Point;
+}
 
 // class: PathPlannerNavMesh
 //		Path planner interface for the navmesh system for hl2
@@ -59,25 +73,39 @@ public:
 	};
 
 	//////////////////////////////////////////////////////////////////////////
+	struct Obstacle
+	{
+		Vector3List	mPolyVerts;
+	};
+	typedef std::vector<Obstacle> ObstacleList;
 
 	struct NavSector
 	{
-		int				m_Id;
-		int				m_StartPortal;
-		int				m_NumPortals;
-		Vector3f		m_Middle;
-		Vector3List		m_Boundary;
+		int								m_Id;
+		int								m_StartPortal;
+		int								m_NumPortals;
 
-		enum eMirror { MirrorNone,MirrorX,MirrorNX,MirrorY,MirrorNY,MirrorZ,MirrorNZ };
-		obuint32		m_Mirror : 3;
+		Vector3List						m_Boundary;
+		NavmeshIO::Sector_MirrorDir		m_Mirror;
+
+		Plane3f							m_Plane;
+
+		ObstacleList					m_Obstacles;
+
+		bool IsMirrored() const
+		{
+			return m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone;
+		}
+
 		NavSector()
 			: m_Id(0)
 			, m_StartPortal(0)
 			, m_NumPortals(0)
-			, m_Mirror(MirrorNone)
+			, m_Mirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
 		{
 		}
 
+		Vector3f CalculateCenter() const;
 		NavSector GetMirroredCopy(const Vector3f &offset) const;
 		SegmentList GetEdgeSegments() const;
 		void GetEdgeSegments(SegmentList &_list) const;
@@ -91,18 +119,15 @@ public:
 
 		BitFlag64		m_LinkFlags;
 	};
-
-	bool DoesSectorAlreadyExist(const NavSector &_ns);
-
+	
 	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
-	NavSector *GetSectorAtFacing(const Vector3f &_pos, const Vector3f &_facing, float _distance = 1024.f);
 
 	bool Init();
 	void Update();
 	void Shutdown();
 	bool IsReady() const;
 
-	int GetLatestFileVersion() const;
+	int GetLatestFileVersion() const { return 1; }
 
 	Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team);
 
@@ -168,6 +193,15 @@ protected:
 	void cmdGroundSector(const StringVector &_args);
 	void cmdSectorCreateConnections(const StringVector &_args);
 	void cmdSetMapCenter(const StringVector &_args);
+
+	void cmdObstacleAdd(const StringVector &_args);
+
+	void cmdInfluenceMapCreate(const StringVector &_args);
+	void cmdInfluenceMapSeed(const StringVector &_args);
+	void cmdInfluenceMapMem(const StringVector &_args);
+	void cmdInfluenceMapSave(const StringVector &_args);
+	void cmdInfluenceMapLoad(const StringVector &_args);
+	void cmdInfluenceMapFlood(const StringVector &_args);
 	
 	void cmdNext(const StringVector &_args);
 
@@ -195,6 +229,8 @@ protected:
 	{
 		obuint32		Attrib;
 		AttribFields	Fields;
+
+		PolyAttrib() : Attrib( 0 ) {}
 	};
 	//////////////////////////////////////////////////////////////////////////
 	class NavCollision
@@ -206,34 +242,30 @@ protected:
 		const Vector3f &HitPosition() const { return m_HitPosition; }
 		const Vector3f &HitNormal() const { return m_HitNormal; }
 
-		NavCollision(bool _hit, const Vector3f &_pos = Vector3f::ZERO, const Vector3f &_normal = Vector3f::ZERO, obint32 _attrib = 0)
+		NavCollision(bool _hit, const Vector3f &_pos = Vector3f::ZERO, const Vector3f &_normal = Vector3f::ZERO, PolyAttrib _attrib = PolyAttrib() )
 			: m_HitPosition(_pos)
 			, m_HitNormal(_normal)
 			, m_HitSomething(_hit)
+			, m_HitAttrib( _attrib )
 		{
-			m_HitAttrib.Attrib = _attrib;
 		}
 	private:
 		Vector3f	m_HitPosition;
 		Vector3f	m_HitNormal;
-		PolyAttrib  m_HitAttrib;
+		obuint32	m_ActiveSectorId;
+		PolyAttrib	m_HitAttrib;
 		bool		m_HitSomething : 1;
 
 		NavCollision();
 	};
-	void InitCollision();
-	enum ColFlags { IgnoreMirrored=1, };
+	
 	NavCollision FindCollision(const Vector3f &_from, const Vector3f &_to);
-	void ReleaseCollision();
 
 	//////////////////////////////////////////////////////////////////////////
 	Vector3f			m_MapCenter;
 
 	typedef std::vector<NavSector> NavSectorList;
 	NavSectorList		m_NavSectors;
-	Vector3List			m_CurrentSector;
-	Vector3f			m_CurrentSectorStart;
-
 	NavSectorList		m_ActiveNavSectors;
 
 	typedef std::vector<NavPortal> NavPortalList;	
@@ -251,11 +283,12 @@ protected:
 	STATE_PROTOTYPE(CommitSector);
 	STATE_PROTOTYPE(MirrorSectors);
 	STATE_PROTOTYPE(PlaceBorder);
+	STATE_PROTOTYPE(FloodSpanMap);	
 
 	//////////////////////////////////////////////////////////////////////////
 	// Current tool variables
 	obColor				m_CursorColor;
-	Vector3List			m_WorkingSector;
+	NavSector			m_WorkingSector;
 	Vector3f			m_WorkingSectorStart;
 	Vector3f			m_WorkingSectorNormal;
 
@@ -265,6 +298,35 @@ protected:
 	Plane3f				m_WorkingSlicePlane;
 
 	bool				m_ToolCancelled;
+
+	typedef SpanHeightMap<obuint8> SpanMap;
+	SpanMap *				m_SpanMap;
+	SpanMap::InfluenceMap *	m_Influence;
+	std::queue<Vector3f>	m_SpanFrontier;
+	struct CollisionData
+	{
+		CollisionData() 
+			: m_CollisionTree( NULL )
+			, m_MeshInterface( NULL )
+			, m_Verts( NULL )
+			, m_TriSectorMap( NULL )
+		{
+		}
+		~CollisionData()
+		{
+			Free();
+		}
+		void Free();
+
+		Opcode::Model *				m_CollisionTree;
+		Opcode::MeshInterface *		m_MeshInterface;
+		IceMaths::Point *			m_Verts;
+		PolyAttrib *				m_TriSectorMap;
+	}	m_CollisionData;
+	
+	obuint32	mInfluenceBufferId;
+
+	void InitSectors();
 
 	Vector3f _SectorVertWithin(const Vector3f &_pos1, const Vector3f &_pos2, float _range, bool *_snapped = NULL);
 

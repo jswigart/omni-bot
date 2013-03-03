@@ -125,10 +125,8 @@ typedef enum
 class ET_VoiceMacros
 {
 public:
-
 	static int GetVChatId(const char *_string);
 	static void SendVoiceMacro(Client *_bot, int _msg);
-
 protected:
 };
 

@@ -10,6 +10,7 @@
 #define __TFBaseStates_H__
 
 #include "StateMachine.h"
+#include "BotBaseStates.h"
 #include "Path.h"
 #include "ScriptManager.h"
 #include "TF_Messages.h"
@@ -17,35 +18,36 @@
 
 class gmScriptGoal;
 
+namespace TF_Options
+{
+	extern int BUILD_AMMO_TYPE;
+
+	extern int SENTRY_BUILD_AMMO;
+	extern int SENTRY_UPGRADE_AMMO;
+	extern int SENTRY_REPAIR_AMMO;
+	extern int SENTRY_UPGRADE_WPN;
+
+	extern int BUILD_ATTEMPT_DELAY;
+
+	extern int TELEPORT_BUILD_AMMO;
+	extern int DISPENSER_BUILD_AMMO;
+
+	extern int PIPE_WEAPON;
+	extern int PIPE_WEAPON_WATCH;
+	extern int PIPE_AMMO;
+	extern int PIPE_MAX_DEPLOYED;
+
+	extern int ROCKETJUMP_WPN;
+	extern float GRENADE_VELOCITY;
+
+	extern bool POLL_SENTRY_STATUS;
+	extern bool REPAIR_ON_SABOTAGED;
+
+	extern int DisguiseTeamFlags[TF_TEAM_MAX];
+};
+
 namespace AiState
 {
-	//////////////////////////////////////////////////////////////////////////
-	namespace TF_Options
-	{
-		extern int BUILD_AMMO_TYPE;
-		
-		extern int SENTRY_BUILD_AMMO;
-		extern int SENTRY_UPGRADE_AMMO;
-		extern int SENTRY_REPAIR_AMMO;
-		extern int SENTRY_UPGRADE_WPN;
-
-		extern int BUILD_ATTEMPT_DELAY;
-
-		extern int TELEPORT_BUILD_AMMO;
-		extern int DISPENSER_BUILD_AMMO;
-
-		extern int PIPE_WEAPON;
-		extern int PIPE_WEAPON_WATCH;
-		extern int PIPE_AMMO;
-		extern int PIPE_MAX_DEPLOYED;
-
-		extern int ROCKETJUMP_WPN;
-		extern float GRENADE_VELOCITY;
-
-		extern bool POLL_SENTRY_STATUS;
-		extern bool REPAIR_ON_SABOTAGED;
-	};
-	//////////////////////////////////////////////////////////////////////////
 	enum SentryBuildState
 	{
 		SG_NONE,

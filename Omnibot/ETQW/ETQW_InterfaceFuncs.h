@@ -9,7 +9,9 @@
 #ifndef __ETQW_INTERFACEFUNCS_H__
 #define __ETQW_INTERFACEFUNCS_H__
 
-#include "BotWeaponSystem.h"
+#include "ETQW_Messages.h"
+
+class Client;
 
 namespace InterfaceFuncs
 {	

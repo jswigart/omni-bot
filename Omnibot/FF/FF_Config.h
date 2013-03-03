@@ -40,4 +40,21 @@ typedef enum eFF_Version
 	FF_VERSION_LATEST = FF_VERSION_LAST - 1
 } FF_Version;
 
+// enumerations: FF_Team
+//		FF_TEAM_BLUE - Blue team.
+//		FF_TEAM_RED - Red team.
+//		FF_TEAM_YELLOW - Yellow team.
+//		FF_TEAM_GREEN - Green team.
+typedef enum eFF_Team
+{
+	FF_TEAM_NONE = OB_TEAM_NONE,
+	FF_TEAM_BLUE,
+	FF_TEAM_RED,
+	FF_TEAM_YELLOW,
+	FF_TEAM_GREEN,
+
+	// THIS MUST STAY LAST
+	FF_TEAM_MAX
+} FF_Team;
+
 #endif

@@ -6,9 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-#include <limits>
-
 #include "PathPlannerWaypoint.h"
 #include "IGameManager.h"
 #include "IGame.h"
@@ -16,6 +13,8 @@
 #include "GoalManager.h"
 #include "Path.h"
 #include "FileDownloader.h"
+#include "InterfaceFuncs.h"
+#include "RenderBuffer.h"
 
 #include "NavigationFlags.h"
 
@@ -85,7 +84,7 @@ PathPlannerWaypoint::PathPlannerWaypoint()
 	, m_NextUID					(0)
 	, m_GoodPathQueries			(0)
 	, m_BadPathQueries			(0)
-	, m_PathCheckCallback		(0)
+	, m_PlannerWpInterface		(0)
 	, m_WaypointMark			(0)
 	, m_MovingWaypointIndex		(-1)
 	, m_BoxStart				(Vector3f::ZERO)
@@ -126,7 +125,7 @@ bool PathPlannerWaypoint::Init()
 	InitCommands();
 
 	// Allow the game to register a path check callback.
-	IGameManager::GetInstance()->GetGame()->RegisterPathCheck(m_PathCheckCallback);
+	m_PlannerWpInterface = IGameManager::GetInstance()->GetGame();
 
 	// todo, any data structure initialization
 	return true;
@@ -173,11 +172,10 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 
 			if(!flagString.empty())
 			{
-				Utils::PrintText(
+				RenderBuffer::AddString(
 					pWaypoint->GetPosition() + Vector3f::UNIT_Z * g_fWaypointTextOffset,
 					COLOR::WHITE,
-					g_fWaypointTextDuration,
-					flagString.c_str());
+					flagString.c_str() );
 			}
 		}
 	}
@@ -457,24 +455,24 @@ void PathPlannerWaypoint::Update()
 		UpdateNavRender();
 
 	// TODO: run any time spliced paths.
-	if(m_BlockableRegulator->IsReady() && m_PathCheckCallback)
+	if(m_BlockableRegulator->IsReady() && m_PlannerWpInterface)
 	{
 		bool bDrawTests = IGameManager::GetInstance()->GetGame()->DrawBlockableTests();
 
 		ConnectionList::iterator it = m_BlockableList.begin(), itEnd = m_BlockableList.end();
 		for( ; it != itEnd; ++it)
 		{
-			BlockableStatus bl = m_PathCheckCallback((*it).first, (*it).second->m_Connection, bDrawTests);
+			PathPlannerWaypointInterface::BlockableStatus bl = m_PlannerWpInterface->WaypointPathCheck((*it).first, (*it).second->m_Connection, bDrawTests);
 
 			switch(bl)
 			{
-			case B_PATH_OPEN:
+			case PathPlannerWaypointInterface::B_PATH_OPEN:
 				if ((*it).second->m_ConnectionFlags & F_LNK_CLOSED)
 				{
 					(*it).second->m_ConnectionFlags &= ~F_LNK_CLOSED;
 				}
 				break;
-			case B_PATH_CLOSED:
+			case PathPlannerWaypointInterface::B_PATH_CLOSED:
 				if (!((*it).second->m_ConnectionFlags & F_LNK_CLOSED))
 				{
 					(*it).second->m_ConnectionFlags |= F_LNK_CLOSED;
@@ -485,7 +483,7 @@ void PathPlannerWaypoint::Update()
 						MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)));
 				}
 				break;
-			case B_INVALID_FLAGS:
+			case PathPlannerWaypointInterface::B_INVALID_FLAGS:
 				/*DEBUG_ONLY(std::cout << "Invalid flag combination in PathCheck detected!" << std::endl);
 				EngineFuncs::ConsoleError(
 				"Invalid flag combination detected. Please check \"blockable\" waypoints!");*/

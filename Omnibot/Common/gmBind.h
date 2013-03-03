@@ -673,7 +673,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __GAMEMONKEY_BINDING_TEMPLATE_GMBIND_H__
 #define __GAMEMONKEY_BINDING_TEMPLATE_GMBIND_H__
 
-#include <stddef.h>
+//#include <stddef.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -683,8 +683,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "gmThread.h"
 
 #define GMBIND_VERSION "0.9.5"
-
-#undef GetObject //Argh Windows defines this in WINGDI.H
 
 template <class T>
 class gmBindHashMap

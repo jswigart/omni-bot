@@ -10,6 +10,7 @@
 #define __RTCWBaseStates_H__
 
 #include "StateMachine.h"
+#include "BotBaseStates.h"
 
 namespace AiState
 {

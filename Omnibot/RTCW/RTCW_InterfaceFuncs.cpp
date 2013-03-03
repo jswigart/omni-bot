@@ -6,12 +6,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "RTCW_InterfaceFuncs.h"
+#include "RTCW_Client.h"
+
+#include "BotWeaponSystem.h"
 
 namespace InterfaceFuncs
 {
-
 	bool SendPrivateMessage(Client *_bot, char *_targName, char *_message)
 	{
 		if (_targName && _message)

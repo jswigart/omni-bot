@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompETQW.h"
 #include "ScriptManager.h"
 
 #include "ETQW_Client.h"
@@ -15,6 +14,12 @@
 #include "ETQW_FilterClosest.h"
 #include "ETQW_Messages.h"
 #include "ETQW_BaseStates.h"
+#include "ETQW_InterfaceFuncs.h"
+
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
+
+#include "Path.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS

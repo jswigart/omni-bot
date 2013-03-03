@@ -11,6 +11,10 @@
 
 #include "StateMachine.h"
 
+#include "BotSteeringSystem.h"
+#include "BotTargetingSystem.h"
+#include "BotWeaponSystem.h"
+
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////

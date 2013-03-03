@@ -6,11 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "BotSteeringSystem.h"
 #include "Client.h"
 #include "IGame.h"
 #include "IGameManager.h"
+#include "BotBaseStates.h"
 
 namespace AiState
 {

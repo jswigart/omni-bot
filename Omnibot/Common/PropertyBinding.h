@@ -9,6 +9,9 @@
 #ifndef __PROPERTYBINDING_H__
 #define __PROPERTYBINDING_H__
 
+#include "common.h"
+#include "CommandFunctor.h"
+
 class Property;
 
 #ifdef ENABLE_DEBUG_WINDOW

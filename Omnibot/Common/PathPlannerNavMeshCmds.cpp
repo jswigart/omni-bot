@@ -6,15 +6,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-#include <limits>
-
 #include "PathPlannerNavMesh.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
 #include "Waypoint.h"
 #include "IGame.h"
 #include "Client.h"
+#include "Timer.h"
+
+#include "RenderBuffer.h"
 
 using namespace std;
 
@@ -89,6 +89,25 @@ void PathPlannerNavMesh::InitCommands()
 	SetEx("nav_setmapcenter", "Sets the map center.", 
 		this, &PathPlannerNavMesh::cmdSetMapCenter);
 
+
+	SetEx("nav_obstacleadd", "Creates an obstacle.", 
+		this, &PathPlannerNavMesh::cmdObstacleAdd);
+
+
+	SetEx("nav_mapcreate", "Creates an influence map.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapCreate);
+	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapSeed);
+	SetEx("nav_mapmem", "Shows the memory usage of the map.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapMem);
+	SetEx("nav_mapsave", "Saves the influence map.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapSave);
+	SetEx("nav_mapload", "Load the influence map.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapLoad);
+
+	SetEx("nav_mapflood", "Load the influence map.", 
+		this, &PathPlannerNavMesh::cmdInfluenceMapFlood);
+	
 	REGISTER_STATE(PathPlannerNavMesh,NoOp);
 	REGISTER_STATE(PathPlannerNavMesh,PlaceSector);
 	REGISTER_STATE(PathPlannerNavMesh,SliceSector);
@@ -100,6 +119,7 @@ void PathPlannerNavMesh::InitCommands()
 	REGISTER_STATE(PathPlannerNavMesh,CommitSector);
 	REGISTER_STATE(PathPlannerNavMesh,MirrorSectors);
 	REGISTER_STATE(PathPlannerNavMesh,PlaceBorder);
+	REGISTER_STATE(PathPlannerNavMesh,FloodSpanMap);
 
 	SetNextState(NoOp);
 }
@@ -194,7 +214,7 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const int iMaxFeatures = 1024;
+	const int iMaxFeatures = 128;
 	AutoNavFeature features[iMaxFeatures];
 	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 	for(int i = 0; i < iNumFeatures; ++i)
@@ -285,267 +305,6 @@ void PathPlannerNavMesh::cmdUndoPoly(const StringVector &_args)
 	if(m_WorkingManualSector.empty() && GetCurrentStateId()==TraceSector)
 		SetNextState(NoOp);
 }
-
-//void PathPlannerNavMesh::cmdLoadObj(const StringVector &_args)
-//{
-//	String s = "J:/CVS/decompilers/" + String(g_EngineFuncs->GetMapName()) + ".obj";
-//	String line;
-//	char trash;
-//
-//	m_PolyIndexList.clear();
-//
-//	std::fstream f;
-//	f.open(s.c_str(), std::ios_base::in);
-//	if(f.is_open())
-//	{
-//		while(!f.eof())
-//		{
-//			std::getline(f, line);
-//			if(line[0] == '#')
-//				continue;
-//			if(line.empty())
-//				continue;
-//
-//			if(line.compare(0,1,"v",0,1) == 0)
-//			{
-//				Vector3f v;
-//
-//				StringStr st;
-//				st << line;
-//				st >> trash >> v;
-//
-//				m_Vertices.push_back(v);
-//				continue;
-//			}
-//
-//			if(line.compare(0,2,"vt",0,2) == 0)
-//			{
-//				// textures
-//				continue;
-//			}
-//
-//			if(line.compare(0,2,"vn",0,2) == 0)
-//			{
-//				// normals
-//				continue;
-//			}
-//
-//			if(line.compare(0,1,"f",0,1) == 0)
-//			{
-//				StringList tokens;
-//				String buffer;
-//				StringStr st;
-//				st << line;
-//				while(st >> buffer)
-//					tokens.push_back(buffer);
-//
-//				int vindex, tindex, nindex;
-//				IndexList il;
-//
-//				StringList::iterator it = tokens.begin(), itEnd = tokens.end();
-//				for(; it != itEnd; ++it)
-//				{
-//					const String &token = (*it);
-//					if(token == "f")
-//						continue;
-//
-//					StringStr st;
-//					st << token;
-//
-//					obuint32 c = std::count(token.begin(), token.end(), '/');
-//					switch(c)
-//					{
-//					case 0:
-//						st >> vindex;
-//						il.push_back(vindex-1);
-//						break;
-//					case 1:
-//						st >> vindex >> trash >> tindex;
-//						il.push_back(vindex-1);
-//						break;
-//					case 3:
-//						st >> vindex >> trash >> tindex >> trash >> nindex;
-//						il.push_back(vindex-1);
-//						break;
-//					}
-//				}
-//
-//				// Skip all with a bad normal.
-//				obuint32 c = 0;
-//				Vector3f vNormal = Vector3f::ZERO;
-//				while(vNormal == Vector3f::ZERO)
-//				{
-//					Vector3f v1 = m_Vertices[il[c+1]] - m_Vertices[il[c]];
-//					Vector3f v2 = m_Vertices[il[c+2]] - m_Vertices[il[c]];
-//					vNormal = v1.UnitCross(v2);
-//					++c;
-//				}
-//
-//				if(Utils::AngleBetween(vNormal, Vector3f::UNIT_Z) > Mathf::DegToRad(45.f))
-//					continue;
-//
-//				m_PolyIndexList.push_back(il);
-//				continue;
-//			}
-//		}
-//		f.close();
-//	}
-//}
-
-//void PathPlannerNavMesh::cmdLoadMap(const StringVector &_args)
-//{
-//	//String s = "J:/CVS/decompilers/" + String(g_EngineFuncs->GetMapName()) + ".map";
-//	String s = "J:/CVS/decompilers/q4ctf1.map";
-//	
-//	String line, tmp;
-//	char trash;
-//	int versionnum = 3;
-//	//int bracket = 0;
-//
-//	m_NavSectors.clear();
-//	ReleaseCollision();
-//
-//	enum MapMode
-//	{
-//		MAP_UNKNOWN,
-//		MAP_PRIMITIVE,
-//	};
-//
-//	MapMode m = MAP_UNKNOWN;
-//
-//	obuint32 iNumBrushes = 0;
-//
-//	std::fstream f;
-//	f.open(s.c_str(), std::ios_base::in);
-//	if(f.is_open())
-//	{
-//		while(!f.eof())
-//		{
-//			std::getline(f, line);
-//			if(line[0] == '/' && line[1] == '/')
-//				continue;
-//			if(line.empty())
-//				continue;
-//
-//			if(line.compare(0,7,"Version",0,7) == 0)
-//			{
-//				StringStr st;
-//				st << line;
-//				st >> tmp >> versionnum;
-//				continue;
-//			}
-//
-//			if(line[0]=='{' || line[0]=='}')
-//				continue;
-//
-//			int c = 0;
-//			while(line[c] == ' ') 
-//				++c;
-//
-//			if(line.compare(0,11,"\"classname\"",0,11) == 0)
-//			{
-//				continue;
-//			}
-//
-//			/*if(line[c]=='{')
-//				bracket++;
-//			if(line[c]=='}')
-//				bracket--;*/
-//
-//			if(c != 0)
-//				line.erase(0,c);
-//
-//			if(line.compare(0,8,"brushDef",0,8) == 0)
-//			{
-//				m = MAP_PRIMITIVE;
-//				continue;
-//			}
-//
-//			if(line[0]=='{')
-//			{
-//				switch(m)
-//				{
-//				case MAP_PRIMITIVE:
-//					{
-//						++iNumBrushes;
-//
-//						PlaneList planes;
-//
-//						while(line[0]!='}')
-//						{
-//							std::getline(f, line);
-//
-//							Plane3f pl;
-//
-//							StringStr st;
-//							st << line;
-//							st >> trash >> pl >> trash;
-//							if(st.good())
-//								planes.push_back(pl);
-//						}
-//						
-//						// contruct polys from the list
-//						obuint32 wp = 0;
-//						bool bDidSomething = true;
-//						while(bDidSomething)
-//						{
-//							m_CurrentSector.clear();
-//							bDidSomething = false;
-//
-//							for(; wp < planes.size(); ++wp)
-//							{
-//								if(Utils::AngleBetween(planes[wp].Normal, Vector3f::UNIT_Z) > Mathf::DegToRad(45.f))
-//									continue;
-//
-//								// build a poly from this walkface
-//								bDidSomething = true;
-//								m_CurrentSector = Utils::CreatePolygon(planes[wp].Normal*planes[wp].Constant, planes[wp].Normal);
-//								break;
-//							}
-//
-//							// Clip the polygon
-//							if(!m_CurrentSector.empty())
-//							{
-//								for(obuint32 p = 0; p < planes.size(); ++p)
-//								{
-//									if(wp==p)
-//										continue;
-//
-//									if(planes[p].Normal == planes[wp].Normal ||
-//										planes[p].Normal == -planes[wp].Normal)
-//										continue;
-//
-//									m_CurrentSector = Utils::ClipPolygonToPlanes(m_CurrentSector, planes[p], true);
-//
-//									if(m_CurrentSector.empty())
-//										break;
-//								}
-//							}
-//
-//							// Commit the polygon
-//							if(m_CurrentSector.size() > 2)
-//							{
-//								NavSector ns;
-//								ns.m_Boundary = m_CurrentSector;
-//								m_NavSectors.push_back(ns);
-//
-//								m_CurrentSector.clear();
-//							}
-//
-//							++wp;
-//						}
-//						break;
-//					}
-//				case MAP_UNKNOWN:
-//					continue;
-//				}
-//			}
-//		}
-//		f.close();
-//	}
-//
-//	InitCollision();
-//}
 
 void PathPlannerNavMesh::cmdCreatePlanePoly(const StringVector &_args)
 {
@@ -658,7 +417,7 @@ void PathPlannerNavMesh::cmdDeleteSector(const StringVector &_args)
 	}
 
 	m_NavSectors.erase(m_NavSectors.begin() + nc.HitAttrib().Fields.SectorId);
-	InitCollision();
+	InitSectors();
 }
 
 void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
@@ -678,16 +437,17 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 	if(_args[1].find('-') != std::string::npos)
 		bNeg = true;
 
-	NavSector::eMirror mir = NavSector::MirrorNone;
+	
+	NavmeshIO::Sector_MirrorDir mir = NavmeshIO::Sector_MirrorDir_MirrorNone;
 
 	if(_args[1].find('x') != std::string::npos)
-		mir = bNeg ? NavSector::MirrorNX : NavSector::MirrorX;
+		mir = bNeg ?  NavmeshIO::Sector_MirrorDir_MirrorNX :  NavmeshIO::Sector_MirrorDir_MirrorX;
 	if(_args[1].find('y') != std::string::npos)
-		mir = bNeg ? NavSector::MirrorNY : NavSector::MirrorY;
+		mir = bNeg ?  NavmeshIO::Sector_MirrorDir_MirrorNY :  NavmeshIO::Sector_MirrorDir_MirrorY;
 	if(_args[1].find('z') != std::string::npos)
-		mir = bNeg ? NavSector::MirrorNZ : NavSector::MirrorZ;
+		mir = bNeg ?  NavmeshIO::Sector_MirrorDir_MirrorNZ :  NavmeshIO::Sector_MirrorDir_MirrorZ;
 	if(_args[1].find('o') != std::string::npos)
-		mir = NavSector::MirrorNone;
+		mir = NavmeshIO::Sector_MirrorDir_MirrorNone;
 
 	if(bAll)
 	{
@@ -721,7 +481,7 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 		pNavSector->m_Mirror = mir;
 	}
 
-	InitCollision();
+	InitSectors();
 }
 
 void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
@@ -836,7 +596,7 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 	}
 
 	m_MapCenter = vMapCenter;
-	InitCollision();
+	InitSectors();
 }
 
 
@@ -871,6 +631,161 @@ void PathPlannerNavMesh::cmdSectorSetProperty(const StringVector &_args)
 	// TODO:
 }
 
+void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
+{
+	if(_args.size() < 3)
+	{
+		EngineFuncs::ConsoleError("nav_obstacleadd length width");
+		return;
+	}
+	
+	const float len = (float)atof( _args[ 1 ].c_str() );
+	const float wid = (float)atof( _args[ 2 ].c_str() );
+
+	if ( len == 0.0 || wid == 0.0 )
+		return;
+		
+	Vector3f vObsPoint, vObsNormal;
+	Utils::GetLocalAimPoint( vObsPoint, &vObsNormal );
+	NavSector * sector = GetSectorAt( vObsPoint );
+	if ( sector != NULL )
+	{
+		Obstacle obs;
+		obs.mPolyVerts.push_back( vObsPoint + Vector3f( -len, -wid, 0.0f ) );
+		obs.mPolyVerts.push_back( vObsPoint + Vector3f(  len, -wid, 0.0f ) );
+		obs.mPolyVerts.push_back( vObsPoint + Vector3f(  len,  wid, 0.0f ) );
+		obs.mPolyVerts.push_back( vObsPoint + Vector3f( -len,  wid, 0.0f ) );
+		sector->m_Obstacles.push_back( obs );
+	}
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapCreate(const StringVector &_args)
+{
+	const float fmin = std::numeric_limits<float>::lowest();
+	const float fmax = std::numeric_limits<float>::max();
+
+	AABB mapbounds;
+	mapbounds.Set( Vector3f( fmax,fmax,fmax ), Vector3f( fmin, fmin, fmin ) );
+	for ( NavSectorList::iterator s = m_ActiveNavSectors.begin(); s != m_ActiveNavSectors.end(); ++s)
+	{
+		for ( Vector3List::iterator v = s->m_Boundary.begin(); v != s->m_Boundary.end(); ++v)
+		{
+			mapbounds.Expand( *v );
+		}
+	}
+
+	m_SpanFrontier.swap( std::queue<Vector3f>() );
+
+	m_SpanMap = new SpanMap();
+	m_SpanMap->Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
+
+	EngineFuncs::ConsoleMessage(va("Created %d x %d span map", 
+		m_SpanMap->GetNumCellsX(), m_SpanMap->GetNumCellsY() ) );
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapSeed(const StringVector &_args)
+{
+	/*Vector3f eyePos;
+	if ( Utils::GetLocalEyePosition(eyePos) )
+		m_SpanFrontier.push( eyePos );*/
+
+	enum { MaxFeatures = 64 };
+	AutoNavFeature features[ MaxFeatures ];
+	const int numFeatures = g_EngineFuncs->GetAutoNavFeatures( features, MaxFeatures );
+	for ( int i = 0; i < numFeatures; ++i )
+	{
+		m_SpanFrontier.push( features[ i ].m_Position );
+		m_SpanFrontier.push( features[ i ].m_TargetPosition );
+	}
+
+	if ( m_SpanMap == NULL )
+		EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
+	else if ( GetCurrentStateId() != FloodSpanMap )
+		SetNextState( FloodSpanMap );
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapMem(const StringVector &_args)
+{
+	if ( m_SpanMap != NULL )
+	{
+		EngineFuncs::ConsoleMessage(va("Influence Map %d x %d ( %s )", 
+			m_SpanMap->GetNumCellsX(), 
+			m_SpanMap->GetNumCellsY(),
+			Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
+	}
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapSave(const StringVector &_args)
+{
+	if ( m_SpanMap != NULL )
+	{
+		const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + ".influence";
+
+		String data;
+		if ( m_SpanMap->Serialize( data ) )
+		{
+			File f;
+			if(f.OpenForWrite( filePath.c_str() ,File::Binary ) )
+			{
+				f.Write( data.c_str(), data.length() );
+			}
+		}
+	}
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapLoad(const StringVector &_args)
+{
+	if ( m_SpanMap == NULL )
+		m_SpanMap = new SpanMap();
+
+	const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + ".influence";
+
+	m_SpanMap->Clear();
+
+	File f;
+	if(!f.OpenForRead( filePath.c_str() ,File::Binary ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ) );
+		return;
+	}
+	
+	String data;
+	if (!f.ReadWholeFile( data ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ) );
+		return;
+	}
+
+	if ( !m_SpanMap->DeSerialize( data ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map Parse Error %s", filePath.c_str() ) );
+		return;
+	}
+}
+
+void PathPlannerNavMesh::cmdInfluenceMapFlood(const StringVector &_args)
+{
+	Vector3f vAimPt;
+	if ( !Utils::GetLocalAimPoint( vAimPt ))
+		return;
+	NavSector * ns = GetSectorAt(vAimPt);
+	if ( ns == NULL )
+		return;
+
+	m_Influence = m_SpanMap->CreateInfluenceLayer();
+	m_Influence->Reset();
+	m_Influence->AddSeed( vAimPt, 0.0f );
+	Timer t;
+	while( !m_Influence->UpdateInfluences( std::numeric_limits<int>::max() ) )
+	{
+	}
+	
+
+	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )", 
+		t.GetElapsedSeconds(),
+		Utils::FormatByteString( m_Influence->CalculateMemUsage() ).c_str() ) );
+}
+
 void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 {
 	EngineFuncs::ConsoleMessage("-= NavMesh PathFind Benchmark =-");
@@ -885,13 +800,13 @@ void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 	{
 		for(obint32 w2 = 0; w2 < iNumSectors; ++w2)
 		{
-			const NavSector &pS1 = m_ActiveNavSectors[w1];
+			/*const NavSector &pS1 = m_ActiveNavSectors[w1];
 			const NavSector &pS2 = m_ActiveNavSectors[w2];
 			
 			PlanPathToGoal(NULL,
 				pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
 				pS2.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
-				0);
+				0);*/
 		}
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
@@ -986,19 +901,19 @@ STATE_UPDATE(PathPlannerNavMesh, PlaceSector)
 		vPos, 
 		m_WorkingSectorPlane.Normal,
 		32768.f);
-
-	Utils::DrawPolygon(poly, COLOR::GREEN.fade(100), 0.1f, false);
+	
+	RenderBuffer::AddPolygonFilled( poly, COLOR::GREEN.fade(100) );
 }
 
 STATE_EXIT(PathPlannerNavMesh, PlaceSector)
 {
 	if(m_ToolCancelled)
 	{
-		m_WorkingSector.clear();
+		m_WorkingSector = NavSector();
 		return;
 	}
 
-	m_WorkingSector = Utils::CreatePolygon(
+	m_WorkingSector.m_Boundary = Utils::CreatePolygon(
 		m_WorkingSectorPlane.Normal*-m_WorkingSectorPlane.Constant, 
 		m_WorkingSectorPlane.Normal,
 		32768.f);
@@ -1008,7 +923,7 @@ STATE_EXIT(PathPlannerNavMesh, PlaceSector)
 
 STATE_ENTER(PathPlannerNavMesh, SliceSector)
 {
-	if(m_WorkingSector.empty())
+	if(m_WorkingSector.m_Boundary.empty())
 	{
 		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
@@ -1040,7 +955,7 @@ STATE_UPDATE(PathPlannerNavMesh, SliceSector)
 		m_WorkingSlicePlane.Normal,
 		1024.f);
 
-	Utils::DrawPolygon(slicePoly, COLOR::RED.fade(100), IGame::GetDeltaTimeSecs()*2.f, false);
+	RenderBuffer::AddPolygonFilled( slicePoly, COLOR::GREEN.fade(100) );
 }
 
 STATE_EXIT(PathPlannerNavMesh, SliceSector)
@@ -1052,14 +967,14 @@ STATE_EXIT(PathPlannerNavMesh, SliceSector)
 	if(!bClipFront && m_WorkingSlicePlane.WhichSide(m_WorkingSectorStart) < 0)
 		bClipFront = true;
 
-	m_WorkingSector = Utils::ClipPolygonToPlanes(m_WorkingSector, m_WorkingSlicePlane, bClipFront);
+	m_WorkingSector.m_Boundary = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, bClipFront);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
 {
-	if(m_WorkingSector.empty())
+	if(m_WorkingSector.m_Boundary.empty())
 	{
 		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
@@ -1090,7 +1005,7 @@ STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
 	if(!bClipFront && m_WorkingSlicePlane.WhichSide(m_WorkingSectorStart) < 0)
 		bClipFront = true;
 
-	m_WorkingSector = Utils::ClipPolygonToPlanes(m_WorkingSector, m_WorkingSlicePlane, bClipFront);
+	m_WorkingSector.m_Boundary = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, bClipFront);
 
 	SetNextState(NoOp);
 }
@@ -1130,10 +1045,10 @@ STATE_UPDATE(PathPlannerNavMesh, EditSector)
 	}
 
 	m_WorkingSectorStart = nc.HitPosition();
-	m_WorkingSector = m_NavSectors[nc.HitAttrib().Fields.SectorId].m_Boundary;
+	m_WorkingSector = m_NavSectors[nc.HitAttrib().Fields.SectorId];
 	m_NavSectors.erase(m_NavSectors.begin() + nc.HitAttrib().Fields.SectorId);
 
-	InitCollision();
+	InitSectors();
 
 	SetNextState(NoOp);
 }
@@ -1146,7 +1061,7 @@ STATE_EXIT(PathPlannerNavMesh, EditSector)
 
 STATE_ENTER(PathPlannerNavMesh, SplitSector)
 {
-	if(m_WorkingSector.empty())
+	if(m_WorkingSector.m_Boundary.empty())
 	{
 		EngineFuncs::ConsoleError("No Active Sector");
 		SetNextState(NoOp);
@@ -1172,7 +1087,7 @@ STATE_UPDATE(PathPlannerNavMesh, SplitSector)
 		m_WorkingSlicePlane.Normal,
 		1024.f);
 
-	Utils::DrawPolygon(slicePoly, COLOR::RED.fade(100), IGame::GetDeltaTimeSecs()*2.f, false);
+	RenderBuffer::AddPolygonFilled( slicePoly, COLOR::RED.fade(100) );
 }
 
 STATE_EXIT(PathPlannerNavMesh, SplitSector)
@@ -1180,26 +1095,25 @@ STATE_EXIT(PathPlannerNavMesh, SplitSector)
 	if(m_ToolCancelled)
 		return;
 
-	Vector3List s = m_WorkingSector;
-	Vector3List s1 = Utils::ClipPolygonToPlanes(s, m_WorkingSlicePlane, true);
-	Vector3List s2 = Utils::ClipPolygonToPlanes(s, m_WorkingSlicePlane, false);
-
-	m_WorkingSector.resize(0);
-
+	Vector3List s1 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, true);
+	Vector3List s2 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, false);
+	
 	// add the 2 new sectors
-	NavSector ns;
+	NavSector ns = m_WorkingSector;
 	if(!s1.empty())
 	{
-		ns.m_Boundary = s1;
-		m_NavSectors.push_back(ns);
+		m_WorkingSector.m_Boundary = s1;
+		m_NavSectors.push_back(m_WorkingSector);
 	}
 	if(!s2.empty())
 	{
-		ns.m_Boundary = s2;
-		m_NavSectors.push_back(ns);
+		m_WorkingSector.m_Boundary = s2;
+		m_NavSectors.push_back(m_WorkingSector);
 	}
 	
-	InitCollision();
+	m_WorkingSector = NavSector();
+
+	InitSectors();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1217,14 +1131,14 @@ STATE_ENTER(PathPlannerNavMesh, TraceSector)
 		{
 			m_WorkingManualSector.pop_back(); // remove the last pt
 			vAimPos = m_WorkingManualSector[0];
-			m_WorkingSector = m_WorkingManualSector;
+			m_WorkingSector.m_Boundary = m_WorkingManualSector;
 			m_WorkingManualSector.resize(0);
 			SetNextState(NoOp);
 			return;
 		}
 	}	
 	
-	vAimPos = _SectorVertWithin(vEye, vAimPos,SNAP_RADIUS);
+	vAimPos = _SectorVertWithin(vEye, vAimPos, SNAP_RADIUS);
 
 	if(m_WorkingManualSector.empty())
 	{
@@ -1263,7 +1177,7 @@ STATE_UPDATE(PathPlannerNavMesh, TraceSector)
 	// update the last point
 	m_WorkingManualSector[m_WorkingManualSector.size()-1] = vAimPos;
 
-	Utils::DrawLine(m_WorkingManualSector, COLOR::GREEN, IGame::GetDeltaTimeSecs());
+	RenderBuffer::AddPolygonSilouette( m_WorkingManualSector, COLOR::GREEN );
 }
 
 STATE_EXIT(PathPlannerNavMesh, TraceSector)
@@ -1303,26 +1217,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 
 	NavSector &ns = m_NavSectors[nc.HitAttrib().Fields.SectorId];
 
-	obTraceResult tr;
-
-	/*for(obuint32 i = 0; i < ns.m_Boundary.size(); ++i)
-	{
-		const obuint32 x1 = i;
-		const obuint32 x2 = i-1 < 0 ? ns.m_Boundary.size()-1 : i-1;
-
-		Vector3f vMidPt = (ns.m_Boundary[x1] + ns.m_Boundary[x2]) * 0.5f;
-		EngineFuncs::TraceLine(tr,
-			vMidPt+Vector3f(0.f,0.f,1.f),
-			vMidPt+Vector3f(0.f,0.f,-1024.f),
-			NULL,
-			TR_MASK_FLOODFILL,
-			-1,
-			False);
-
-		ns.m_Boundary[x1].z = tr.m_Endpos[2];
-		ns.m_Boundary[x2].z = tr.m_Endpos[2];
-	}*/
-
+	obTraceResult tr;	
 	for(obuint32 i = 0; i < ns.m_Boundary.size(); ++i)
 	{
 		Vector3f vPt = ns.m_Boundary[i];
@@ -1337,7 +1232,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 		ns.m_Boundary[i].z = tr.m_Endpos[2];
 	}
 
-	InitCollision();
+	InitSectors();
 
 	SetNextState(NoOp);
 }
@@ -1354,18 +1249,16 @@ STATE_ENTER(PathPlannerNavMesh, CommitSector)
 
 STATE_UPDATE(PathPlannerNavMesh, CommitSector)
 {
-	bool bInitCollision = false;
+	bool bInitSectors = false;
 
 	//////////////////////////////////////////////////////////////////////////
 
-	if(m_WorkingSector.size() > 2)
+	if(m_WorkingSector.m_Boundary.size() > 2)
 	{
-		NavSector ns;
-		ns.m_Boundary = m_WorkingSector;
-		m_NavSectors.push_back(ns);
-		bInitCollision = true;
+		m_NavSectors.push_back(m_WorkingSector);
+		bInitSectors = true;
 	}
-	m_WorkingSector.resize(0);
+	m_WorkingSector = NavSector();
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -1374,13 +1267,13 @@ STATE_UPDATE(PathPlannerNavMesh, CommitSector)
 		NavSector ns;
 		ns.m_Boundary = m_WorkingManualSector;
 		m_NavSectors.push_back(ns);
-		bInitCollision = true;
+		bInitSectors = true;
 	}
 	m_WorkingManualSector.resize(0);
 
-	if(bInitCollision)
+	if(bInitSectors)
 	{
-		InitCollision();
+		InitSectors();
 	}
 }
 
@@ -1416,3 +1309,109 @@ STATE_EXIT(PathPlannerNavMesh, MirrorSectors)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+const float SpanHeightMin = 32.0f;
+const float SpanStepHeight = 32.0f;
+
+static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
+{
+	const Vector3f dn0(0.f,0.f,SpanStepHeight);
+	const Vector3f dn1(0.f,0.f,-1024.f);
+
+	const Vector3f up0(0.f,0.f,1.f);
+	const Vector3f up1(0.f,0.f,1024.f);
+
+	obTraceResult tr;
+	EngineFuncs::TraceLine(tr,spanPos+dn0,spanPos+dn1,NULL,TR_MASK_FLOODFILL,-1,False);
+	if ( tr.m_Fraction < 1.0f )
+	{
+		if ( tr.m_Normal[ 2 ] < 0.707f )
+			return false;
+
+		spanPos = tr.m_Endpos;
+		EngineFuncs::TraceLine(tr,spanPos+up0,spanPos+up1,NULL,TR_MASK_FLOODFILL,-1,False);
+
+		spanHeight = (spanPos+up1).z - spanPos.z;
+		if ( tr.m_Fraction < 1.0f )
+			spanHeight = tr.m_Endpos[2] - spanPos.z;
+
+		if ( spanHeight > SpanHeightMin )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+STATE_ENTER(PathPlannerNavMesh, FloodSpanMap)
+{
+	EngineFuncs::ConsoleMessage( "Flooding Influence Map..." );
+	m_ToolCancelled = false;
+}
+
+STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
+{
+	if ( m_SpanFrontier.empty() )
+		SetNextState( NoOp );
+	
+	const float cs = m_SpanMap->GetCellSize();
+	
+	const Vector3f step[] = 
+	{
+		Vector3f( -cs, 0.0f, SpanStepHeight ),
+		Vector3f(  cs, 0.0f, SpanStepHeight ),
+		Vector3f( 0.0f, -cs, SpanStepHeight ),
+		Vector3f( 0.0f,  cs, SpanStepHeight ),
+	};
+	const int stepdirs = sizeof(step) / sizeof(step[0]);
+	
+	static int maxIterations = std::numeric_limits<int>::max();
+	int iterations = maxIterations;
+	while ( !m_SpanFrontier.empty() && (iterations--) > 0 )
+	{
+		Vector3f spanPos = m_SpanFrontier.front();
+		m_SpanFrontier.pop();
+
+		float spanHeight = 0.0f;
+		if ( TestForValidNode( spanPos, spanHeight ) && m_SpanMap->AddOpenSpan( spanPos, spanHeight ) )
+		{
+			//Utils::DrawRadius( spanPos, 16.0f, COLOR::GREEN, 0.1f );
+
+			for ( int i = 0; i < stepdirs; ++i )
+			{
+				Vector3f expandPos = spanPos + step[ i ];
+
+				obTraceResult tr;
+				EngineFuncs::TraceLine(tr,
+					spanPos + Vector3f(0,0,4),
+					expandPos,
+					NULL,
+					TR_MASK_FLOODFILL,
+					-1,
+					False);
+
+				if ( tr.m_Fraction == 1.0f )
+					m_SpanFrontier.push( expandPos );
+			}
+		}
+	}
+}
+
+STATE_EXIT(PathPlannerNavMesh, FloodSpanMap)
+{
+	if ( m_ToolCancelled )
+	{
+		OB_DELETE( m_SpanMap );
+		OB_DELETE( m_Influence );
+		return;
+	}
+
+	unsigned int numIndices = m_SpanMap->IndexSpanNodes();
+
+	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )", 
+		m_SpanMap->GetNumCellsX(), 
+		m_SpanMap->GetNumCellsY(),
+		numIndices,
+		Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
+}

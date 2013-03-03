@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "ThreatZone.h"
 
 ThreatZone::ThreatZone(obuint32 _navId, obint32 _weaponId, obint32 _classId) :

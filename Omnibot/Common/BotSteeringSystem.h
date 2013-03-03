@@ -9,6 +9,9 @@
 #ifndef __BOTSTEERINGSYSTEM_H__
 #define __BOTSTEERINGSYSTEM_H__
 
+#include "StateMachine.h"
+#include "MemoryRecord.h"
+
 class Client;
 
 namespace AiState

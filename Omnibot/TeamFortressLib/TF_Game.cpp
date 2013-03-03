@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompTF.h"
 #include "TF_Game.h"
 #include "TF_GoalManager.h"
 
@@ -17,10 +16,11 @@
 #include "ScriptManager.h"
 #include "NameManager.h"
 
-Client *TF_Game::CreateGameClient()
-{
-	return new TF_Client;
-}
+#include "BotSensoryMemory.h"
+#include "BotSteeringSystem.h"
+#include "FilterSensory.h"
+
+#include "PathPlannerWaypoint.h"
 
 GoalManager *TF_Game::GetGoalManager()
 {
@@ -48,38 +48,13 @@ bool TF_Game::Init()
 
 void TF_Game::Shutdown()
 {
+	IGame::Shutdown();
 }
 
 void TF_Game::InitScriptBinds(gmMachine *_machine)
 {
 	LOG("Binding TF Library...");
     gmBindTFLibrary(_machine);
-}
-
-static IntEnum TF_TeamEnum[] =
-{
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
-	IntEnum("NONE",TF_TEAM_NONE),
-	IntEnum("RED",TF_TEAM_RED),
-	IntEnum("BLUE",TF_TEAM_BLUE),
-	IntEnum("YELLOW",TF_TEAM_YELLOW),
-	IntEnum("GREEN",TF_TEAM_GREEN),
-};
-
-void TF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
-{
-	num = sizeof(TF_TeamEnum) / sizeof(TF_TeamEnum[0]);
-	_ptr = TF_TeamEnum;	
-}
-
-void TF_Game::InitScriptTeams(gmMachine *_machine, gmTableObject *_table)
-{
-	_table->Set(_machine, "SPECTATOR",		gmVariable(OB_TEAM_SPECTATOR));
-	_table->Set(_machine, "NONE",			gmVariable(TF_TEAM_NONE));
-	_table->Set(_machine, "RED",			gmVariable(TF_TEAM_RED));
-	_table->Set(_machine, "BLUE",			gmVariable(TF_TEAM_BLUE));
-	_table->Set(_machine, "YELLOW",			gmVariable(TF_TEAM_YELLOW));
-	_table->Set(_machine, "GREEN",			gmVariable(TF_TEAM_GREEN));
 }
 
 static IntEnum TF_WeaponEnum[] =
@@ -399,7 +374,7 @@ void TF_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 
 const float TF_Game::TF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
-	if(InRangeT<int>(_class, TF_TEAM_NONE, TF_CLASS_MAX))
+	if(InRangeT<int>(_class, 0, 4))
 	{
 		if (_entflags.CheckFlag(ENT_FLAG_PRONED))
 			return 0.0f;
@@ -509,7 +484,7 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 								pWaypoint->AddFlag(F_TF_NAV_TELE_EXIT);
 							}
 
-							ClientPtr cl(new TF_Client);
+							ClientPtr cl(CreateGameClient()); // FIXME
 							NavFlags teamFlags = cl->GetTeamFlag(g_EngineFuncs->GetEntityTeam(m->m_Entity));
 							if(teamFlags)
 								pWaypoint->AddFlag(teamFlags);
@@ -543,42 +518,6 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-}
-
-PathPlannerWaypoint::BlockableStatus TF_PathCheck(const Waypoint* _wp1, const Waypoint* _wp2, bool _draw)
-{
-	static bool bRender = false;
-	PathPlannerWaypoint::BlockableStatus res = PathPlannerWaypoint::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_TF_NAV_WALL) &&*/ _wp2->IsFlagOn(F_TF_NAV_WALL))
-	{
-		static float fOffset = 0.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
-	}
-	else if(_wp1->IsFlagOn(F_TF_NAV_DETPACK) && _wp2->IsFlagOn(F_TF_NAV_DETPACK))
-	{
-		Vector3f vStart = _wp1->GetPosition() + Vector3f(0, 0, 40.0f);
-		Vector3f vEnd = _wp2->GetPosition() + Vector3f(0, 0, 40.0f);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypoint::B_PATH_OPEN : PathPlannerWaypoint::B_PATH_CLOSED;
-	}
-	return res;
-}
-
-void TF_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck)
-{
-	_pfnPathCheck = TF_PathCheck;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -742,3 +681,36 @@ obReal TF_Game::_GetDesirabilityFromTargetClass(int _grentype, int _class)
 	}
 	return 0.f;
 }
+
+// PathPlannerWaypointInterface
+PathPlannerWaypointInterface::BlockableStatus TF_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
+{
+	static bool bRender = false;
+	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
+
+	Vector3f vStart, vEnd;
+
+	if(/*_wp1->IsFlagOn(F_TF_NAV_WALL) &&*/ _wp2->IsFlagOn(F_TF_NAV_WALL))
+	{
+		static float fOffset = 0.0f;
+		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
+		AABB aabb(vMins, vMaxs);
+		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
+		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
+
+		obTraceResult tr;
+		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
+	}
+	else if(_wp1->IsFlagOn(F_TF_NAV_DETPACK) && _wp2->IsFlagOn(F_TF_NAV_DETPACK))
+	{
+		Vector3f vStart = _wp1->GetPosition() + Vector3f(0, 0, 40.0f);
+		Vector3f vEnd = _wp2->GetPosition() + Vector3f(0, 0, 40.0f);
+
+		obTraceResult tr;
+		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
+		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
+	}
+	return res;
+}
+

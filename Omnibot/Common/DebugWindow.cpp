@@ -1,4 +1,4 @@
-#include "PrecompCommon.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -9,6 +9,13 @@
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
 #include "ScriptManager.h"
+#include "Client.h"
+#include "IGameManager.h"
+#include "MapGoal.h"
+#include "BotBaseStates.h"
+#include "BotWeaponSystem.h"
+#include "BotSensoryMemory.h"
+#include "InterfaceFuncs.h"
 #include "Revision.h"
 
 static RenderOverlayType gOverlayType = OVERLAY_GAME;
@@ -26,11 +33,14 @@ void SetRenderOverlayType(RenderOverlayType _t)
 
 #ifdef ENABLE_DEBUG_WINDOW
 
-#include <SFML/Graphics.hpp>
+// Include all necessary headers.
+// Sometimes windows.h defines DELETE which causes a compilation
+// error in a Guichan header.
+#if defined (DELETE)
+#undef DELETE 
+#endif
+
 #include <guichan/sfml.hpp>
-
-#include "detours.h"
-
 #include <SFML/Graphics.hpp>
 //#pragma comment(lib,"sfml-main.lib")
 #pragma comment(lib,"sfml-window.lib")
@@ -39,6 +49,8 @@ void SetRenderOverlayType(RenderOverlayType _t)
 //#pragma comment(lib,"freetype.lib")
 
 //////////////////////////////////////////////////////////////////////////
+
+#undef DELETE
 
 DebugWindow_s DW = {};
 
@@ -154,25 +166,24 @@ namespace Listeners
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
+
 		virtual void keyPressed(gcn::KeyEvent& keyEvent)
 		{
-			using namespace gcn;
-
-			Key key = keyEvent.getKey();
+			gcn::Key key = keyEvent.getKey();
 			switch(key.getValue())
 			{
-			case Key::TAB:
+			case gcn::Key::TAB:
 				{
 					DW.Console.UpdateWordAtCaret();
 					keyEvent.consume();
 					break;
 				}
-			case Key::ALT_GR:
+			case gcn::Key::ALT_GR:
 				{
 					DW.Console.mInput->setText("");
 					break;
 				}
-			case Key::ENTER:
+			case gcn::Key::ENTER:
 				{
 					keyEvent.consume();
 					String s = DW.Console.mInput->getText();
@@ -182,19 +193,19 @@ namespace Listeners
 					m_History.push_back(s);
 					break;
 				}
-			case Key::UP:
+			case gcn::Key::UP:
 				{
 					int iSel = DW.Console.mAutoComplete->getSelected();
 					DW.Console.mAutoComplete->setSelected(iSel-1);
 					break;
 				}
-			case Key::DOWN:
+			case gcn::Key::DOWN:
 				{
 					int iSel = DW.Console.mAutoComplete->getSelected();
 					DW.Console.mAutoComplete->setSelected(iSel+1);
 					break;
 				}
-			case Key::PAGE_UP:
+			case gcn::Key::PAGE_UP:
 				if(!m_History.empty())
 				{
 					keyEvent.consume();
@@ -204,7 +215,7 @@ namespace Listeners
 					m_History.pop_back();
 					break;
 				}
-			case Key::PAGE_DOWN:
+			case gcn::Key::PAGE_DOWN:
 				if(!m_History.empty())
 				{
 					keyEvent.consume();
@@ -213,7 +224,7 @@ namespace Listeners
 					m_History.pop_front();
 					break;
 				}
-			case Key::DELETE:
+			case gcn::Key::DELETE:
 				{
 					if(keyEvent.isShiftPressed())
 					{
@@ -2193,8 +2204,58 @@ namespace DebugWindow
 #endif
 	}
 	//////////////////////////////////////////////////////////////////////////
+	void Render()
+	{
+		Vector3f vEye, vEyeDir, vAimPt;
+		Utils::GetLocalEyePosition( vEye );
+		Utils::GetLocalFacing( vEyeDir );
+		Utils::GetLocalAimPoint( vAimPt );
+
+		const float aimDist = ( vEye - vAimPt ).Length();
+
+		Vector3f vSide = vEyeDir.Cross( Vector3f::UNIT_Z );
+		Vector3f vUp = vSide.Cross( vEyeDir );
+
+		glPushMatrix();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+		glDisable(GL_LIGHTING);
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_TEXTURE_2D);
+
+		glPointSize(1.0f);
+		glLineWidth(1.0f);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		Vector3f pt = vEye + vEyeDir * 128.0f;
+
+		static float gsize = 16.0f;
+
+		glColor3ub( 0, 0, 255 );
+		glPointSize( 5.0f );
+
+		glBegin( GL_POINTS );
+		for ( int i = 0; i < 20; ++i )
+		{
+			glVertex3f( 
+				vAimPt.x,
+				vAimPt.y + Mathf::SymmetricRandom() * gsize,
+				vAimPt.z + Mathf::SymmetricRandom() * gsize );
+		}
+		glEnd();
+
+		glBegin( GL_LINES );
+		glVertex3fv( vEye - Vector3f::UNIT_Z );
+		glVertex3fv( pt );
+		glEnd();
+
+		glPopAttrib();
+	}
 	//////////////////////////////////////////////////////////////////////////
 };
+
 
 void drawCircle(gcn::Graphics *graphics, const Vector3f &p, float radius, gcn::Color color)
 {

@@ -9,6 +9,8 @@
 #ifndef __GM_AABB_H__
 #define __GM_AABB_H__
 
+#include "common.h"
+#include "Omni-Bot_Types.h"
 #include "gmBind.h"
 
 class gmAABB : public gmBind<AABB, gmAABB>

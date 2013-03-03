@@ -9,6 +9,8 @@
 #ifndef _GM_TRIGGERINFO_H_
 #define _GM_TRIGGERINFO_H_
 
+#include "Omni-Bot_Types.h"
+
 #include "gmBind.h"
 
 class gmTriggerInfo : public gmBind<TriggerInfo, gmTriggerInfo>

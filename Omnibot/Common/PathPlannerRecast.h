@@ -10,6 +10,7 @@
 #define __PATHPLANNERRECAST_H__
 
 #include "PathPlannerBase.h"
+#include "RenderOverlay.h"
 #include "InternalFsm.h"
 
 //////////////////////////////////////////////////////////////////////////

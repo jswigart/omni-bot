@@ -6,12 +6,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-
-#include "Interprocess.h"
 #include "IGame.h"
 #include "IGameManager.h"
 #include "KeyValueIni.h"
+#include "DebugWindow.h"
+#include "TargetInfo.h"
+#include "BotWeaponSystem.h"
+
+#ifdef WIN32
+#include "windows.h"	
+#endif
+
+#undef DrawText
 
 #if defined WIN32
 #define PATHDELIMITER ";"
@@ -572,14 +578,14 @@ namespace Utils
 
 	void DrawLine(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time)
 	{
-		if(!g_EngineFuncs->DebugLine(_start, _end, _color, _time))
-			InterProcess::DrawLine(_start, _end, _color, _time);
+		/*if(!g_EngineFuncs->DebugLine(_start, _end, _color, _time))
+			InterProcess::DrawLine(_start, _end, _color, _time);*/
 	}
 
 	void DrawArrow(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time)
 	{
-		if(!g_EngineFuncs->DebugArrow(_start, _end, _color, _time))
-			InterProcess::DrawLine(_start, _end, _color, _time);
+		/*if(!g_EngineFuncs->DebugArrow(_start, _end, _color, _time))
+			InterProcess::DrawLine(_start, _end, _color, _time);*/
 	}
 
 	void DrawLine(const Vector3List &_list, obColor _color, float _time, float _vertheight, obColor _vertcolor, bool _closed)
@@ -620,9 +626,77 @@ namespace Utils
 
 	void DrawRadius(const Vector3f &_pos, float _radius, obColor _color, float _time)
 	{
-		if(!g_EngineFuncs->DebugRadius(_pos, _radius, _color, _time))
-			InterProcess::DrawRadius(_pos, _radius, _color, _time);
+		/*if(!g_EngineFuncs->DebugRadius(_pos, _radius, _color, _time))
+			InterProcess::DrawRadius(_pos, _radius, _color, _time);*/
 	}
+
+	/*bool IsPolygonConvex( const Vector3List & poly )
+	{
+		if ( poly.size() > 1 )
+		{
+			Vector3 edge0 = poly[ 1 ] - poly[ 0 ];
+
+			size_t ( i = 2; i < poly.size(); ++i )
+			{
+				Vector3 edge1 = poly[ i ] - poly[ i-1 ];
+				if ( edge0.Cross( edge1 ).z < 0.0 )
+					return false;
+			}
+		}
+		return false;
+	}*/
+
+	//void PolygonPartition( const Vector3List & _poly, std::vector<Vector3List> & polysOut )
+	//{
+	//	if ( IsPolygonConvex( _poly ) )
+	//	{
+	//		polysOut.push_back( _poly );
+	//		return;
+	//	}
+	//	
+	//	// test if its convex
+	//	if ( poly.size() > 1 )
+	//	{
+	//		Vector3 edge0 = poly[ 0 ] - poly[ poly.size()-1 ];
+
+	//		bool isConvex = true;
+	//		size_t ( i = 1; i < poly.size(); ++i )
+	//		{
+	//			Vector3 edge1 = poly[ i ] - poly[ i-1 ];
+	//			if ( edge0.Cross( edge1 ).z < 0.0 )
+	//			{
+	//				isConvex = false;
+	//			}
+	//		}
+	//		
+	//		if ( isConvex == false )
+	//		{
+	//			float nearestDist = std::numeric_limits<float>::max();
+	//			std::pair<int,int> vertPair;
+
+	//			// find the pair with the nearest verts to use as a split point
+	//			size_t ( i = 0; i < poly.size(); ++j )
+	//			{
+	//				size_t ( j = 0; j < poly.size(); ++j )
+	//				{
+	//					// we can't pick neighboring verts
+	//					// they are already connected
+	//					if ( i == j || (i==0 && j==poly.size()-1) || (j==0 && i==poly.size()-1) || (abs( i-j ) == 1) )
+	//						continue;
+
+	//					const float dsq = ( poly[ i ] - poly[ j ] ).SquaredLength();
+	//					if ( dsq < nearestDist )
+	//					{
+	//						vertPair = std::make_pair(i,j);
+	//						nearestDist = dsq;
+	//					}
+	//				}
+	//			}
+
+	//			
+	//		}
+	//	}
+	//}
 
 	void DrawPolygon(const Vector3List &_vertices, obColor _color, float _time, bool depthTest)
 	{
@@ -634,8 +708,8 @@ namespace Utils
 		if(depthTest)
 			flags|=IEngineInterface::DR_NODEPTHTEST;
 
-		if(!g_EngineFuncs->DebugPolygon((obVec3*)&_vertices[0], (int)_vertices.size(), _color, _time, flags))
-			InterProcess::DrawPolygon(_vertices, _color, _time);
+		/*if(!g_EngineFuncs->DebugPolygon((obVec3*)&_vertices[0], (int)_vertices.size(), _color, _time, flags))
+			InterProcess::DrawPolygon(_vertices, _color, _time);*/
 	}
 
 	void GetAABBBoundary(const AABB &_aabb, Vector3List &_list)
@@ -707,8 +781,8 @@ namespace Utils
 				Utils::DrawLine(vVertex[7], vVertex[3], _color, _time);
 			}
 		}
-		else
-			InterProcess::DrawBounds(_aabb, _color, _time, _dir);
+		/*else
+			InterProcess::DrawBounds(_aabb, _color, _time, _dir);*/
 	}
 
 	void OutlineOBB(const Box3f &_obb, const obColor &_color, float _time, AABB::Direction _dir)
@@ -757,8 +831,8 @@ namespace Utils
 #endif
 		va_end(list);
 
-		if(!g_EngineFuncs->PrintScreenText(_pos, _duration, _color, buffer))
-			InterProcess::DrawText(_pos, buffer, _color, _duration);
+		/*if(!g_EngineFuncs->PrintScreenText(_pos, _duration, _color, buffer))
+			InterProcess::DrawText(_pos, buffer, _color, _duration);*/
 	}
 
 	const char *FindClassName(obint32 _classId)
@@ -2200,3 +2274,275 @@ const char *StringBuffer::Find(const String & _str)
 	}
 	return 0;
 }
+
+obColor GetCoolWarmColor( float scalar )
+{
+	const obColor mapping[] = {
+		obColor( 59, 76, 192 ),
+		obColor( 60, 78, 194 ),
+		obColor( 61, 80, 195 ),
+		obColor( 62, 81, 197 ),
+		obColor( 63, 83, 198 ),
+		obColor( 64, 85, 200 ),
+		obColor( 66, 87, 201 ),
+		obColor( 67, 88, 203 ),
+		obColor( 68, 90, 204 ),
+		obColor( 69, 92, 206 ),
+		obColor( 70, 93, 207 ),
+		obColor( 71, 95, 209 ),
+		obColor( 73, 97, 210 ),
+		obColor( 74, 99, 211 ),
+		obColor( 75, 100, 213 ),
+		obColor( 76, 102, 214 ),
+		obColor( 77, 104, 215 ),
+		obColor( 79, 105, 217 ),
+		obColor( 80, 107, 218 ),
+		obColor( 81, 109, 219 ),
+		obColor( 82, 110, 221 ),
+		obColor( 84, 112, 222 ),
+		obColor( 85, 114, 223 ),
+		obColor( 86, 115, 224 ),
+		obColor( 87, 117, 225 ),
+		obColor( 89, 119, 226 ),
+		obColor( 90, 120, 228 ),
+		obColor( 91, 122, 229 ),
+		obColor( 93, 123, 230 ),
+		obColor( 94, 125, 231 ),
+		obColor( 95, 127, 232 ),
+		obColor( 96, 128, 233 ),
+		obColor( 98, 130, 234 ),
+		obColor( 99, 131, 235 ),
+		obColor( 100, 133, 236 ),
+		obColor( 102, 135, 237 ),
+		obColor( 103, 136, 238 ),
+		obColor( 104, 138, 239 ),
+		obColor( 106, 139, 239 ),
+		obColor( 107, 141, 240 ),
+		obColor( 108, 142, 241 ),
+		obColor( 110, 144, 242 ),
+		obColor( 111, 145, 243 ),
+		obColor( 112, 147, 243 ),
+		obColor( 114, 148, 244 ),
+		obColor( 115, 150, 245 ),
+		obColor( 116, 151, 246 ),
+		obColor( 118, 153, 246 ),
+		obColor( 119, 154, 247 ),
+		obColor( 120, 156, 247 ),
+		obColor( 122, 157, 248 ),
+		obColor( 123, 158, 249 ),
+		obColor( 124, 160, 249 ),
+		obColor( 126, 161, 250 ),
+		obColor( 127, 163, 250 ),
+		obColor( 129, 164, 251 ),
+		obColor( 130, 165, 251 ),
+		obColor( 131, 167, 252 ),
+		obColor( 133, 168, 252 ),
+		obColor( 134, 169, 252 ),
+		obColor( 135, 171, 253 ),
+		obColor( 137, 172, 253 ),
+		obColor( 138, 173, 253 ),
+		obColor( 140, 174, 254 ),
+		obColor( 141, 176, 254 ),
+		obColor( 142, 177, 254 ),
+		obColor( 144, 178, 254 ),
+		obColor( 145, 179, 254 ),
+		obColor( 147, 181, 255 ),
+		obColor( 148, 182, 255 ),
+		obColor( 149, 183, 255 ),
+		obColor( 151, 184, 255 ),
+		obColor( 152, 185, 255 ),
+		obColor( 153, 186, 255 ),
+		obColor( 155, 187, 255 ),
+		obColor( 156, 188, 255 ),
+		obColor( 158, 190, 255 ),
+		obColor( 159, 191, 255 ),
+		obColor( 160, 192, 255 ),
+		obColor( 162, 193, 255 ),
+		obColor( 163, 194, 255 ),
+		obColor( 164, 195, 254 ),
+		obColor( 166, 196, 254 ),
+		obColor( 167, 197, 254 ),
+		obColor( 168, 198, 254 ),
+		obColor( 170, 199, 253 ),
+		obColor( 171, 199, 253 ),
+		obColor( 172, 200, 253 ),
+		obColor( 174, 201, 253 ),
+		obColor( 175, 202, 252 ),
+		obColor( 176, 203, 252 ),
+		obColor( 178, 204, 251 ),
+		obColor( 179, 205, 251 ),
+		obColor( 180, 205, 251 ),
+		obColor( 182, 206, 250 ),
+		obColor( 183, 207, 250 ),
+		obColor( 184, 208, 249 ),
+		obColor( 185, 208, 248 ),
+		obColor( 187, 209, 248 ),
+		obColor( 188, 210, 247 ),
+		obColor( 189, 210, 247 ),
+		obColor( 190, 211, 246 ),
+		obColor( 192, 212, 245 ),
+		obColor( 193, 212, 245 ),
+		obColor( 194, 213, 244 ),
+		obColor( 195, 213, 243 ),
+		obColor( 197, 214, 243 ),
+		obColor( 198, 214, 242 ),
+		obColor( 199, 215, 241 ),
+		obColor( 200, 215, 240 ),
+		obColor( 201, 216, 239 ),
+		obColor( 203, 216, 238 ),
+		obColor( 204, 217, 238 ),
+		obColor( 205, 217, 237 ),
+		obColor( 206, 217, 236 ),
+		obColor( 207, 218, 235 ),
+		obColor( 208, 218, 234 ),
+		obColor( 209, 219, 233 ),
+		obColor( 210, 219, 232 ),
+		obColor( 211, 219, 231 ),
+		obColor( 213, 219, 230 ),
+		obColor( 214, 220, 229 ),
+		obColor( 215, 220, 228 ),
+		obColor( 216, 220, 227 ),
+		obColor( 217, 220, 225 ),
+		obColor( 218, 220, 224 ),
+		obColor( 219, 220, 223 ),
+		obColor( 220, 221, 222 ),
+		obColor( 221, 221, 221 ),
+		obColor( 222, 220, 219 ),
+		obColor( 223, 220, 218 ),
+		obColor( 224, 219, 216 ),
+		obColor( 225, 219, 215 ),
+		obColor( 226, 218, 214 ),
+		obColor( 227, 218, 212 ),
+		obColor( 228, 217, 211 ),
+		obColor( 229, 216, 209 ),
+		obColor( 230, 216, 208 ),
+		obColor( 231, 215, 206 ),
+		obColor( 232, 215, 205 ),
+		obColor( 232, 214, 203 ),
+		obColor( 233, 213, 202 ),
+		obColor( 234, 212, 200 ),
+		obColor( 235, 212, 199 ),
+		obColor( 236, 211, 197 ),
+		obColor( 236, 210, 196 ),
+		obColor( 237, 209, 194 ),
+		obColor( 238, 209, 193 ),
+		obColor( 238, 208, 191 ),
+		obColor( 239, 207, 190 ),
+		obColor( 240, 206, 188 ),
+		obColor( 240, 205, 187 ),
+		obColor( 241, 204, 185 ),
+		obColor( 241, 203, 184 ),
+		obColor( 242, 202, 182 ),
+		obColor( 242, 201, 181 ),
+		obColor( 243, 200, 179 ),
+		obColor( 243, 199, 178 ),
+		obColor( 244, 198, 176 ),
+		obColor( 244, 197, 174 ),
+		obColor( 245, 196, 173 ),
+		obColor( 245, 195, 171 ),
+		obColor( 245, 194, 170 ),
+		obColor( 245, 193, 168 ),
+		obColor( 246, 192, 167 ),
+		obColor( 246, 191, 165 ),
+		obColor( 246, 190, 163 ),
+		obColor( 246, 188, 162 ),
+		obColor( 247, 187, 160 ),
+		obColor( 247, 186, 159 ),
+		obColor( 247, 185, 157 ),
+		obColor( 247, 184, 156 ),
+		obColor( 247, 182, 154 ),
+		obColor( 247, 181, 152 ),
+		obColor( 247, 180, 151 ),
+		obColor( 247, 178, 149 ),
+		obColor( 247, 177, 148 ),
+		obColor( 247, 176, 146 ),
+		obColor( 247, 174, 145 ),
+		obColor( 247, 173, 143 ),
+		obColor( 247, 172, 141 ),
+		obColor( 247, 170, 140 ),
+		obColor( 247, 169, 138 ),
+		obColor( 247, 167, 137 ),
+		obColor( 247, 166, 135 ),
+		obColor( 246, 164, 134 ),
+		obColor( 246, 163, 132 ),
+		obColor( 246, 161, 131 ),
+		obColor( 246, 160, 129 ),
+		obColor( 245, 158, 127 ),
+		obColor( 245, 157, 126 ),
+		obColor( 245, 155, 124 ),
+		obColor( 244, 154, 123 ),
+		obColor( 244, 152, 121 ),
+		obColor( 244, 151, 120 ),
+		obColor( 243, 149, 118 ),
+		obColor( 243, 147, 117 ),
+		obColor( 242, 146, 115 ),
+		obColor( 242, 144, 114 ),
+		obColor( 241, 142, 112 ),
+		obColor( 241, 141, 111 ),
+		obColor( 240, 139, 109 ),
+		obColor( 240, 137, 108 ),
+		obColor( 239, 136, 106 ),
+		obColor( 238, 134, 105 ),
+		obColor( 238, 132, 103 ),
+		obColor( 237, 130, 102 ),
+		obColor( 236, 129, 100 ),
+		obColor( 236, 127, 99 ),
+		obColor( 235, 125, 97 ),
+		obColor( 234, 123, 96 ),
+		obColor( 233, 121, 95 ),
+		obColor( 233, 120, 93 ),
+		obColor( 232, 118, 92 ),
+		obColor( 231, 116, 90 ),
+		obColor( 230, 114, 89 ),
+		obColor( 229, 112, 88 ),
+		obColor( 228, 110, 86 ),
+		obColor( 227, 108, 85 ),
+		obColor( 227, 106, 83 ),
+		obColor( 226, 104, 82 ),
+		obColor( 225, 102, 81 ),
+		obColor( 224, 100, 79 ),
+		obColor( 223, 98, 78 ),
+		obColor( 222, 96, 77 ),
+		obColor( 221, 94, 75 ),
+		obColor( 220, 92, 74 ),
+		obColor( 218, 90, 73 ),
+		obColor( 217, 88, 71 ),
+		obColor( 216, 86, 70 ),
+		obColor( 215, 84, 69 ),
+		obColor( 214, 82, 67 ),
+		obColor( 213, 80, 66 ),
+		obColor( 212, 78, 65 ),
+		obColor( 210, 75, 64 ),
+		obColor( 209, 73, 62 ),
+		obColor( 208, 71, 61 ),
+		obColor( 207, 69, 60 ),
+		obColor( 205, 66, 59 ),
+		obColor( 204, 64, 57 ),
+		obColor( 203, 62, 56 ),
+		obColor( 202, 59, 55 ),
+		obColor( 200, 57, 54 ),
+		obColor( 199, 54, 53 ),
+		obColor( 198, 51, 52 ),
+		obColor( 196, 49, 50 ),
+		obColor( 195, 46, 49 ),
+		obColor( 193, 43, 48 ),
+		obColor( 192, 40, 47 ),
+		obColor( 190, 37, 46 ),
+		obColor( 189, 34, 45 ),
+		obColor( 188, 30, 44 ),
+		obColor( 186, 26, 43 ),
+		obColor( 185, 22, 41 ),
+		obColor( 183, 17, 40 ),
+		obColor( 181, 11, 39 ),
+		obColor( 180, 4, 38 ),
+	};
+	const int numMappings = sizeof(mapping)/sizeof(mapping[0]);
+	return mapping[ ClampT<int>( scalar * numMappings, 0, numMappings ) ];
+
+
+
+
+}
+
+
+

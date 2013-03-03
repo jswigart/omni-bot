@@ -133,20 +133,26 @@
     <Filter Include="3rdParty\Recast\DebugUtils">
       <UniqueIdentifier>{5446d01a-88c7-4c9d-b209-9e5e917bd139}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\detours">
-      <UniqueIdentifier>{a04e1269-3576-4086-b1d8-278ef9829af6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Miscellaneous">
       <UniqueIdentifier>{a306b4d7-8a57-480e-8632-1435af31257d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dll">
       <UniqueIdentifier>{93b3626c-940a-477d-a1e8-f2bceb73fccb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Build">
-      <UniqueIdentifier>{69469551-3cce-4e2a-8a0b-2c54d8f572a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RemoteDebug">
       <UniqueIdentifier>{13065e1d-94ef-4870-80e5-0200fd2708ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol Buffer Files">
+      <UniqueIdentifier>{c22826b0-61fd-4c2f-9704-66ba6383ee85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol Buffer Files\autogen">
+      <UniqueIdentifier>{497f8beb-9507-44e4-b556-2e0e9db03483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RemoteDebugger">
+      <UniqueIdentifier>{059725f0-d21f-4d4c-8058-8469057dfc06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Concurrency">
+      <UniqueIdentifier>{eaeb32c9-c4ff-41b9-9fe7-361fe59b762b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\MapGoalDatabase.cpp">
       <Filter>Core\MapGoals</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\AStarSolver.cpp">
-      <Filter>Core\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\NavigationManager.cpp">
       <Filter>Core\Navigation</Filter>
@@ -247,9 +250,6 @@
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\PathPlannerNavMesh.cpp">
-      <Filter>Core\Navigation\PathPlannerNavMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\PathPlannerNavMeshBuilder.cpp">
       <Filter>Core\Navigation\PathPlannerNavMesh</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\PathPlannerNavMeshCmds.cpp">
@@ -380,9 +380,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\WeaponDatabase.cpp">
       <Filter>Core\Weapons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\obParser.cpp">
-      <Filter>Core\Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Math.cpp">
       <Filter>3rdParty\WildMagic\Math</Filter>
@@ -780,31 +777,10 @@
     <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDump.cpp">
       <Filter>3rdParty\Recast\DebugUtils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\creatwth.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\detoured.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\detours.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\disasm.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\image.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Detours Express 2.1\src\modules.cpp">
-      <Filter>3rdParty\detours</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\BotLoadLibrary.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\CallbackParameters.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\ChunkedFile.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\CommandReciever.cpp">
@@ -816,9 +792,6 @@
     <ClCompile Include="..\..\..\Common\EngineFuncs.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Error.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\FileDownloader.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
@@ -826,9 +799,6 @@
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\InterfaceFuncs.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\Interprocess.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\KeyValueIni.cpp">
@@ -846,9 +816,6 @@
     <ClCompile Include="..\..\..\Common\NameManager.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\PrecompCommon.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\PropertyBinding.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
@@ -856,9 +823,6 @@
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Regulator.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\ResponseCurve.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Revision.cpp">
@@ -884,9 +848,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Omni-Bot.cpp">
       <Filter>Dll</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\BatchBuild.cpp">
-      <Filter>_Build</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">
       <Filter>3rdParty\Recast\Recast</Filter>
@@ -917,6 +878,36 @@
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourObstacleAvoidance.cpp">
       <Filter>3rdParty\Recast\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FiberManager.cpp">
+      <Filter>Core\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FiberState.cpp">
+      <Filter>Core\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\common.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\DebugConnection.cpp">
+      <Filter>Core\RemoteDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Module.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\influencemap.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\TaskManager.cpp">
+      <Filter>Core\Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\RenderBuffer.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -982,9 +973,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\MessageHelper.h">
       <Filter>Core\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\AStarSolver.h">
-      <Filter>Core\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\NavigationManager.h">
       <Filter>Core\Navigation</Filter>
@@ -1556,19 +1544,10 @@
     <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDump.h">
       <Filter>3rdParty\Recast\DebugUtils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\Detours Express 2.1\src\detoured.h">
-      <Filter>3rdParty\detours</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\Detours Express 2.1\src\detours.h">
-      <Filter>3rdParty\detours</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\Bezier.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\CallbackParameters.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\ChunkedFile.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\CommandFunctor.h">
@@ -1586,9 +1565,6 @@
     <ClInclude Include="..\..\..\Common\EngineFuncs.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\Error.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\FileDownloader.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
@@ -1602,9 +1578,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\InterfaceFuncs.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\Interprocess.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\KeyValueIni.h">
@@ -1634,9 +1607,6 @@
     <ClInclude Include="..\..\..\Common\PIDController.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\PrecompCommon.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\PropertyBinding.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
@@ -1644,9 +1614,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Regulator.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\ResponseCurve.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Revision.h">
@@ -1715,6 +1682,48 @@
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h">
       <Filter>3rdParty\Recast\Detour</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Common\FiberManager.h">
+      <Filter>Core\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FiberState.h">
+      <Filter>Core\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\common.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\DebugConnection.h">
+      <Filter>Core\RemoteDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Module.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\navmesh.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ConcurrentQueue.h">
+      <Filter>Core\Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\SpanHeightMap.h">
+      <Filter>Core\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\floodfill.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\platformspecifics.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerWaypointInterface.h">
+      <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\influencemap.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TaskManager.h">
+      <Filter>Core\Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\RenderBuffer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\dependencies\wildmagic\Wm3Box3.inl">
@@ -1759,8 +1768,17 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuildStep Include="..\..\..\Common\obParser.h">
-      <Filter>Core\Tools</Filter>
-    </CustomBuildStep>
+    <CustomBuild Include="..\..\..\Common\common.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\navmesh.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\floodfill.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\influencemap.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

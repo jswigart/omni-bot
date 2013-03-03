@@ -6,9 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompRTCW.h"
 #include "RTCW_BaseStates.h"
 #include "RTCW_FilterClosest.h"
+#include "RTCW_InterfaceFuncs.h"
 #include "WeaponDatabase.h"
 
 namespace AiState

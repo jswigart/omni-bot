@@ -9,8 +9,9 @@
 #ifndef __WAYPOINT_H__
 #define __WAYPOINT_H__
 
+#include "common.h"
+
 #include "NavigationFlags.h"
-#include <stdint.h>
 
 // class: Waypoint
 //		3d waypoint within the game for the waypoint path planner.
@@ -41,11 +42,6 @@ public:
 		bool CheckFlag(unsigned int _flag) const { return CheckBitT<unsigned int>(m_ConnectionFlags, _flag); }
 		void SetFlag(unsigned int _flag) { SetBitT<unsigned int>(m_ConnectionFlags, _flag); }
 		void ClearFlag(unsigned int _flag) { ClearBitT<unsigned int>(m_ConnectionFlags, _flag); }
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-		typedef RemoteLib::SyncSnapshot<12> ConnectionSnapShot;
-		ConnectionSnapShot	snapShot;
-#endif
 	} ConnectionInfo;
 	typedef std::list<ConnectionInfo> ConnectionList;
 	

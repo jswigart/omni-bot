@@ -6,8 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
+#include "BotTargetingSystem.h"
 #include "Client.h"
+#include "FilterClosest.h"
 
 namespace AiState
 {

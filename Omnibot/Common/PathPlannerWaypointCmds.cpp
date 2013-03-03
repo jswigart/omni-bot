@@ -6,15 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
-#include <limits>
-
 #include "PathPlannerWaypoint.h"
 #include "IGameManager.h"
 #include "Waypoint.h"
 #include "IGame.h"
 #include "Client.h"
 #include "ScriptManager.h"
+#include "InterfaceFuncs.h"
+#include "RenderBuffer.h"
 
 using namespace std;
 
@@ -902,7 +901,7 @@ void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
 		}
 		if(!flagString.empty())
 		{
-			Utils::PrintText(pClosest->GetPosition(),COLOR::WHITE,2.f,flagString.c_str());
+			RenderBuffer::AddString(pClosest->GetPosition(),COLOR::WHITE,flagString.c_str());
 		}
 	}
 }
@@ -1914,7 +1913,7 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const int iMaxFeatures = 1024;
+	const int iMaxFeatures = 128;
 	AutoNavFeature features[iMaxFeatures];
 	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 	for(int i = 0; i < iNumFeatures; ++i)

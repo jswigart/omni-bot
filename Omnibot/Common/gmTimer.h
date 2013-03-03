@@ -10,6 +10,7 @@
 #define __GM_TIMER_H__
 
 #include "gmBind.h"
+#include "Timer.h"
 
 class gmTimer : public gmBind<Timer, gmTimer>
 {

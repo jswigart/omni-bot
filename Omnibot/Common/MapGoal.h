@@ -398,10 +398,7 @@ public:
 	void CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema);
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	void Sync( RemoteLib::DataBuffer & db, bool fullSync );
-
-	typedef RemoteLib::SyncSnapshot<32> MapGoalSnapshot;
-	MapGoalSnapshot	snapShot;
+	void Sync( RemoteLib::DebugConnection * connection );
 #endif
 
 	MapGoal(const char *_goaltype);

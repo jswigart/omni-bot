@@ -6,13 +6,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompD3.h"
 #include "D3_Client.h"
 #include "D3_NavigationFlags.h"
 #include "D3_Messages.h"
+#include "D3_InterfaceFuncs.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
+#include "BotWeaponSystem.h"
+#include "BotTargetingSystem.h"
+#include "FilterAllType.h"
 
 namespace AiState
 {

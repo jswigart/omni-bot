@@ -201,6 +201,7 @@ typedef enum eTF_EntityFlags
 	TF_ENT_FLAG_BUILDINPROGRESS,
 	TF_ENT_FLAG_LEVEL2,
 	TF_ENT_FLAG_LEVEL3,
+	TF_LAST_FLAG
 } TF_EntityFlags;
 
 // enumerations: TF_Powerups
@@ -347,14 +348,8 @@ typedef enum eTF_ItemTypes
 //		TF_TEAM_GREEN - Green team.
 typedef enum eTF_Team
 {
-	TF_TEAM_NONE = OB_TEAM_NONE,
-	TF_TEAM_BLUE,
-	TF_TEAM_RED,
-	TF_TEAM_YELLOW,
-	TF_TEAM_GREEN,
-
-	// THIS MUST STAY LAST
-	TF_TEAM_MAX
+	TF_TEAM_NONE = 0,
+	TF_TEAM_MAX = 5
 } TF_Team;
 
 // typedef: TF_Events

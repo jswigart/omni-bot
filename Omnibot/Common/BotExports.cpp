@@ -10,13 +10,15 @@
 
 #include "BotExports.h"
 #include "Omni-Bot.h"
-
+#include "RenderBuffer.h"
 //#include <stdio.h>
 
 #ifdef WIN32
 #include <Windows.h>
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID )
 {
+	hModule;
+
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
@@ -58,4 +60,9 @@ OMNIBOT_API eomnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs_t *_pBotFun
 		return BOT_ERROR_NONE;
 	}
 	return BOT_ERROR_BAD_INTERFACE;
+}
+
+OMNIBOT_API void RenderOpenGL()
+{
+	RenderBuffer::RenderToOpenGL();
 }

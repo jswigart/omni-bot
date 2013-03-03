@@ -14,6 +14,8 @@
 #include "StateMachine.h"
 #include "DebugWindow.h"
 #include "NameManager.h"
+#include "BlackBoard.h"
+#include "FileSystem.h"
 
 class BotItemSystem;
 namespace AiState
@@ -24,6 +26,7 @@ namespace AiState
 	class SteeringSystem;
 }
 
+class Path;
 class gmThread;
 class gmTableObject;
 class gmMachine;
@@ -212,7 +215,7 @@ public:
 	inline int GetStuckTime() const { return m_StuckTime; }
 	inline void ResetStuckTime() { m_StuckTime = 0; }
 
-	virtual NavFlags GetTeamFlag() = 0;
+	virtual NavFlags GetTeamFlag() { return GetTeamFlag(GetTeam()); }
 	virtual NavFlags GetTeamFlag(int _team) = 0;
 
 	inline BlackBoard &GetBB()						{ return m_Blackboard; }
@@ -265,7 +268,7 @@ public:
 	bool DistributeUnhandledCommand(const StringVector &_args);
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void InternalSyncEntity( EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
+	virtual void InternalSyncEntity( RemoteLib::DebugConnection * connection, Remote::Entity & cached, Remote::Entity & update );
 #endif
 
 	Client();

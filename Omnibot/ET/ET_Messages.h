@@ -12,6 +12,7 @@
 #define __TF_MESSAGES_H__
 
 #include "Base_Messages.h"
+#include "ET_Config.h"
 
 #pragma pack(push)
 #pragma pack(4)

@@ -24,20 +24,17 @@
     <ClCompile Include="..\..\..\Common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Q4\PrecompQ4.cpp">
+    <ClCompile Include="..\..\..\..\GameInterfaces\Q4\mpgame\omnibot\omnibot_interface.cpp">
+      <Filter>_Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Q4\Q4_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Q4\Q4_Game.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_InterfaceFuncs.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Q4\gmQ4Binds.cpp">
-      <Filter>Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_BaseStates.cpp">
       <Filter>Core\Goals</Filter>
@@ -45,11 +42,8 @@
     <ClCompile Include="..\..\..\Q4\Q4_GoalManager.cpp">
       <Filter>Core\Goals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\Q4\mpgame\omnibot\omnibot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Q4\Q4_BatchBuild.cpp">
-      <Filter>_Build</Filter>
+    <ClCompile Include="..\..\..\Q4\gmQ4Binds.cpp">
+      <Filter>Core\Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,9 +52,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Q4\PrecompQ4.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Q4\Q4_Client.h">
       <Filter>Core</Filter>
     </ClInclude>

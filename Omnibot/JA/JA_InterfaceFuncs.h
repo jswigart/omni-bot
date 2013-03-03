@@ -9,7 +9,8 @@
 #ifndef __JA_INTERFACEFUNCS_H__
 #define __JA_INTERFACEFUNCS_H__
 
-#include "BotWeaponSystem.h"
+#include "InterfaceFuncs.h"
+#include "JA_Messages.h"
 
 namespace InterfaceFuncs
 {	

@@ -6,11 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "CallbackParameters.h"
 
 #include "gmMachine.h"
 #include "gmTableObject.h"
+#include "gmCall.h"
 
 CallbackParameters::CallbackParameters(int _messageId, gmMachine *_machine) 
 	: m_MessageId(_messageId)

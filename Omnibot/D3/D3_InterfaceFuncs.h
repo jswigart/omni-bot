@@ -9,7 +9,8 @@
 #ifndef __D3_INTERFACEFUNCS_H__
 #define __D3_INTERFACEFUNCS_H__
 
-#include "BotWeaponSystem.h"
+#include "InterfaceFuncs.h"
+#include "D3_Messages.h"
 
 namespace InterfaceFuncs
 {

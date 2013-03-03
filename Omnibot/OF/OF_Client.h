@@ -20,6 +20,9 @@ public:
 	void Init(int _gameid);
 
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to);
+	
+
+	NavFlags GetTeamFlag(int _team);
 
 	OF_Client();
 	virtual ~OF_Client();

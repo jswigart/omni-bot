@@ -9,29 +9,16 @@
 #ifndef __BOTSENSORYMEMORY_H__
 #define __BOTSENSORYMEMORY_H__
 
+#include "platformspecifics.h"
+
+#include "Omni-Bot_Types.h"
+#include "MemoryRecord.h"
 #include "Client.h"
 #include "IGame.h"
-#include "MemoryRecord.h"
 
 #include <boost/pool/pool_alloc.hpp>
 
 class FilterSensory;
-
-//////////////////////////////////////////////////////////////////////////
-//#ifdef __linux__
-//namespace __gnu_cxx
-//{
-//	template<> 
-//	struct stdext::hash<GameEntity>
-//	{
-//		size_t operator()(const GameEntity& x) const
-//		{
-//			return stdext::hash<unsigned long>()((unsigned long)x.AsInt());
-//		}
-//	};
-//};
-//#endif
-//////////////////////////////////////////////////////////////////////////
 
 namespace AiState
 {

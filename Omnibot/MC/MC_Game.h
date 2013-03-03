@@ -26,7 +26,6 @@ public:
 	void InitScriptBinds(gmMachine *_machine);
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
 	virtual Client *CreateGameClient();
 
@@ -46,6 +45,9 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
+
+	// PathPlannerWaypointInterface
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
 
 	MC_Game() {};
 	virtual ~MC_Game() {};

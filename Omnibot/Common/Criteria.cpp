@@ -6,8 +6,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompCommon.h"
+
 #include "Criteria.h"
+#include "Client.h"
+#include "IGame.h"
+#include "BotWeaponSystem.h"
+#include "InterfaceFuncs.h"
 
 bool CheckCriteria::ParseOperator(obuint32 sHash)
 {

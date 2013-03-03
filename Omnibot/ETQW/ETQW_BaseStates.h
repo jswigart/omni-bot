@@ -9,7 +9,8 @@
 #ifndef __ETQWBaseStates_H__
 #define __ETQWBaseStates_H__
 
-#include "StateMachine.h"
+#include "BotBaseStates.h"
+#include "MapGoal.h"
 
 namespace AiState
 {

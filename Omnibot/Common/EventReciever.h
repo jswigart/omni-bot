@@ -9,6 +9,10 @@
 #ifndef __EVENTRECIEVER_H__
 #define __EVENTRECIEVER_H__
 
+#include "Omni-Bot_BasicTypes.h"
+#include "MessageHelper.h"
+
+
 class CallbackParameters;
 
 #define HANDLER(evt) case evt: if(_message.GetMessageId()==evt) _cb.DebugName(#evt);
@@ -25,7 +29,7 @@ public:
 	virtual ~EventReciever();
 protected:
 	virtual void ProcessEventImpl(const MessageHelper &_message, obuint32 _targetState);
-	virtual void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb) {}
+	virtual void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 };
 
 #endif

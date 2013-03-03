@@ -9,6 +9,8 @@
 #ifndef __GMBOTLIBRARY_H__
 #define __GMBOTLIBRARY_H__
 
+class gmMachine;
+
 #define GM_CHECK_GAMEENTITY_FROM_PARAM(ent, paramnum) \
 	if(a_thread->ParamType(paramnum) == GM_ENTITY) \
 	{ \
