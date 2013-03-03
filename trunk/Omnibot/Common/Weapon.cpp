@@ -856,7 +856,10 @@ bool Weapon::CanShoot(FireMode _mode, const TargetInfo &_targetinfo)
 	if(!_MeetsRequirements(_mode, _targetinfo))
 		return false;
 
-	if(GetFireMode(_mode).CalculateDesirability(m_Client, _targetinfo) == 0.f)
+	WeaponFireMode &fireMode = GetFireMode(_mode);
+	obReal d = fireMode.CalculateDesirability(m_Client, _targetinfo);
+	if(d == 0.f) return false;
+	if(fireMode.m_WeaponType == Melee && d == fireMode.m_DefaultDesirability * fireMode.m_WeaponBias)
 		return false;
 
 	return true;
