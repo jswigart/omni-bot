@@ -73,16 +73,16 @@ namespace Utils
 	inline bool InFieldOfView(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
 	{
 		float fFovInRadians = Mathf::DegToRad(_fovAngles);
-		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f));
+		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f) * _face1.Length() * _face2.Length());
 	}
 
 	inline bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles) 
 	{ 
-		Vector3f v1 = _face1; v1.z = 0.f; 
-		Vector3f v2 = _face2; v2.z = 0.f; 
+		Vector2f v1 = _face1;
+		Vector2f v2 = _face2;
 
 		float fFovInRadians = Mathf::DegToRad(_fovAngles); 
-		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f)); 
+		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
 	}
 
 	inline float AngleBetween(const Vector3f &_v1, const Vector3f &_v2)

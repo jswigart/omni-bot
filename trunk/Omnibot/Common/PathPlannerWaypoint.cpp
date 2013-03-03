@@ -299,7 +299,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 
 	//////////////////////////////////////////////////////////////////////////
 	Vector3f vPosition, vFacing;
-	g_EngineFuncs->GetEntityPosition(ge, vPosition);
+	g_EngineFuncs->GetEntityEyePosition(ge, vPosition);
 	g_EngineFuncs->GetEntityOrientation(ge, vFacing, 0, 0);
 
 	Timer tme;
