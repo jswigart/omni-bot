@@ -89,6 +89,22 @@ bool ET_Game::ReadyForDebugWindow() const
 	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING; 
 }
 
+const char *ET_Game::IsDebugDrawSupported() const 
+{ 
+	if(InterfaceFuncs::GetCvar("dedicated")!=0)
+		return "Can't draw waypoints on dedicated server.";
+	if(strcmp(g_EngineFuncs->GetModName(), "etmain"))
+		return "Only omnibot mod can draw waypoints.";
+	bool EnableIpc = false;
+	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
+	if(!EnableIpc) 
+		return "Waypoints are not visible because option EnableInterProcess in file omni-bot.cfg is false.";
+	if(InterfaceFuncs::GetCvar("cg_omnibotdrawing")==0) 
+		return "Waypoints are not visible because cg_omnibotdrawing is \"0\".";
+	return NULL;
+}
+
+
 GoalManager *ET_Game::GetGoalManager()
 {
 	return new ET_GoalManager;

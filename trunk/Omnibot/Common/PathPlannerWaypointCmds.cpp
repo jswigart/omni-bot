@@ -566,11 +566,16 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 {
 	if(_args.size() >= 2)
 	{
-		if(!m_PlannerFlags.CheckFlag(NAV_VIEW) && Utils::StringToTrue(_args[1]))
+		if(Utils::StringToTrue(_args[1]))
 		{
 			m_PlannerFlags.SetFlag(NAV_VIEW);
+			const char * msg = IGameManager::GetInstance()->GetGame()->IsDebugDrawSupported();
+			if(msg){
+				EngineFuncs::ConsoleError(msg);
+				return;
+			}
 		}
-		else if(m_PlannerFlags.CheckFlag(NAV_VIEW) && Utils::StringToFalse(_args[1]))
+		else if(Utils::StringToFalse(_args[1]))
 		{
 			m_PlannerFlags.ClearFlag(NAV_VIEW);
 		}
