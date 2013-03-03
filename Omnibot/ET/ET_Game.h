@@ -37,6 +37,7 @@ public:
 	const char *GetGameDatabaseAbbrev() const { return "et"; }
 	eNavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
+	virtual const char *IsDebugDrawSupported() const;
 
 	GoalManager *GetGoalManager();
 

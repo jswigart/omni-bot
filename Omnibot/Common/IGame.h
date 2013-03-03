@@ -96,6 +96,7 @@ public:
 	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_RECAST; }
 
 	virtual bool ReadyForDebugWindow() const { return true; }
+	virtual const char *IsDebugDrawSupported() const { return NULL; }
 
 	ClientPtr GetClientByGameId(int _gameId);
 	ClientPtr GetClientByIndex(int _index);
