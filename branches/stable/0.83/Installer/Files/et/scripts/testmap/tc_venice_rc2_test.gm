@@ -1,0 +1,94 @@
+global Map =
+{
+	Ammo_Cabinet_campo_ammocabinet = "AMMO_CABINET_campo_ammocabinet",
+	Ammo_Cabinet_island_ammocabinet = "AMMO_CABINET_island_ammocabinet",
+	Checkpoint_endcanal = "CHECKPOINT_endcanal",
+	Health_Cabinet_island_healthcabinet = "HEALTH_CABINET_island_healthcabinet",
+	Health_Cabinet_campo_healthcabinet = "HEALTH_CABINET_campo_healthcabinet",
+	Build_footbridge = "MAP_CONSTRUCTION_footbridge",
+	Build_axis_radio_built = "MAP_CONSTRUCTION_axis_radio_built",
+	Build_boat_construct = "MAP_CONSTRUCTION_boat_construct",
+	Build_side_entrance = "MAP_CONSTRUCTION_side_entrance",
+	Build_axislibmg42nest = "MAP_CONSTRUCTION_axislibmg42nest",
+	Build_allied_radio_built = "MAP_CONSTRUCTION_allied_radio_built",
+	Build_lib_side_wall = "MAP_CONSTRUCTION_lib_side_wall",
+	Destroy_side_entrance = "MAP_DYNAMITE_TARGET_side_entrance",
+	Destroy_axis_radio_built = "MAP_DYNAMITE_TARGET_axis_radio_built",
+	Destroy_boat_construct = "MAP_DYNAMITE_TARGET_boat_construct",
+	Destroy_tank_crate = "MAP_DYNAMITE_TARGET_tank_crate",
+	Destroy_allied_radio_built = "MAP_DYNAMITE_TARGET_allied_radio_built",
+	Destroy_lib_side_wall = "MAP_DYNAMITE_TARGET_lib_side_wall",
+	Destroy_axislibmg42nest = "MAP_DYNAMITE_TARGET_axislibmg42nest",
+	Destroy_footbridge = "MAP_DYNAMITE_TARGET_footbridge",
+	Mount_axislibmg42 = "MAP_MOUNTABLE_MG42_axislibmg42",
+	Mount_axischurchmg42 = "MAP_MOUNTABLE_MG42_axischurchmg42",
+	Repair_axischurchmg42 = "MAP_REPAIR_MG42_axischurchmg42",
+	Repair_axislibmg42 = "MAP_REPAIR_MG42_axislibmg42",
+	Vehicle_church_rubble = "MAP_MOVER_church_rubble",
+	Vehicle_tank = "MAP_MOVER_tank",
+	Flag_relic = "MAP_FLAG_relic",
+	Cappoint_relic_cap = "MAP_CAPPOINT_relic_cap",
+
+	Tests = function()
+	{
+		OnTrigger( "MISSING_STRING", Map.boat_construct_Built );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "MISSING_STRING", Map.side_entrance_Built );
+		OnTrigger( "MISSING_STRING", Map.lib_side_wall_Built );
+		OnTrigger( "Allied team has constructed the Foot Bridge!", TestMap.Pass );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Axis team has constructed the Library MG Nest!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "MISSING_STRING", Map.boat_construct_Destroyed );
+		OnTrigger( "Axis team has destroyed the Foot Bridge!", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Tank crate", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Library MG Nest!", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Side Entrance!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Library Side Wall!", TestMap.Pass );
+		OnTrigger( "Allies capture the Forward Bunker!", TestMap.Pass );
+		OnTrigger( "Axis reclaim the Forward Bunker!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_island_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_island_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_campo_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_campo_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_island_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_island_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_campo_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_campo_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_boat_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_footbridge, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_side_entrance, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_lib_side_wall, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axislibmg42nest, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_footbridge, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_boat_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axislibmg42nest, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_side_entrance, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_tank_crate, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_lib_side_wall, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_axischurchmg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_axischurchmg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_axislibmg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_axislibmg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_tank, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_church_rubble, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_church_rubble, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_relic, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_relic_cap, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_relic_cap, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

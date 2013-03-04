@@ -1,0 +1,70 @@
+global Map =
+{
+	Ammo_Cabinet_depot_ammotrigger = "AMMO_CABINET_depot_ammotrigger",
+	Checkpoint_forwardflag = "CHECKPOINT_forwardflag",
+	Health_Cabinet_depot_healthtrigger = "HEALTH_CABINET_depot_healthtrigger",
+	Build_allied_cp_open = "MAP_CONSTRUCTION_allied_cp_open",
+	Build_axis_cp_open = "MAP_CONSTRUCTION_axis_cp_open",
+	Build_construction_script = "MAP_CONSTRUCTION_construction_script",
+	Destroy_blowside = "MAP_DYNAMITE_TARGET_blowside",
+	Destroy_axis_cp_open = "MAP_DYNAMITE_TARGET_axis_cp_open",
+	Destroy_construction_script = "MAP_DYNAMITE_TARGET_construction_script",
+	Destroy_blowmain = "MAP_DYNAMITE_TARGET_blowmain",
+	Destroy_allied_cp_open = "MAP_DYNAMITE_TARGET_allied_cp_open",
+	Mount_325 = "MAP_MOUNTABLE_MG42_325",
+	Mount_construction_mg42 = "MAP_MOUNTABLE_MG42_construction_mg42",
+	Repair_325 = "MAP_REPAIR_MG42_325",
+	Repair_construction_mg42 = "MAP_REPAIR_MG42_construction_mg42",
+	Flag_axis_obj01 = "MAP_FLAG_axis_obj01",
+	Cappoint_Axis_Transmitter = "MAP_CAPPOINT_Axis_Transmitter",
+
+	Tests = function()
+	{
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "^1Allied team has built the side MG!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "^1Axis team has destroyed the side MG!", TestMap.Pass );
+		OnTrigger( "^1The Axis have blown the Side Wall!", TestMap.Pass );
+		OnTrigger( "^1The Axis have blown the Main Entrance!", TestMap.Pass );
+		OnTrigger( "Axis have stolen ^1Allied Documents!", TestMap.Pass );
+		OnTrigger( "^1The Axis team has transmited the Secret War Documents!", TestMap.Pass );
+		//~ OnTrigger( "^1Allies have reclaimed the Forward Bunker!", TestMap.Pass );
+		//~ OnTrigger( "^1Axis have captured the Forward Bunker!", TestMap.Pass );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		
+		Util.SetOffsetGoal( 0, -28, 0, Map.Destroy_blowside );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_depot_ammotrigger, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_depot_ammotrigger, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_depot_healthtrigger, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_depot_healthtrigger, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_325, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_cp_open, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_blowmain, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_blowside, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_construction_script, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_construction_mg42, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_cp_open, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_cp_open, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_325, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_construction_mg42, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_construction_script, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_axis_obj01, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_cp_open, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_Axis_Transmitter, 120, true );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Axis_Transmitter, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

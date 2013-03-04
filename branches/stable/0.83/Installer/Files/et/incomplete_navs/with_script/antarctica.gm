@@ -1,0 +1,195 @@
+//==========================================================================================
+//
+//	antarctica.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//	jaskot			02/05/09	Added trigger strings and GoForIceFlag thread for
+//						unopposed offense
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	flag1 = 0,
+	flag2 = 0,
+	flag3 = 0,
+	flag4 = 0,
+	flag5 = 0,
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Checkpoint_flag1 = "CHECKPOINT_flag1",
+	Checkpoint_flag2 = "CHECKPOINT_flag2",
+	Checkpoint_flag3 = "CHECKPOINT_flag3",
+	Checkpoint_flag4 = "CHECKPOINT_flag4",
+	Checkpoint_flag5 = "CHECKPOINT_flag5",
+	Mount_231 = "MOUNTMG42_231",
+	Mount_352 = "MOUNTMG42_352",
+	Mount_386 = "MOUNTMG42_386",
+	Mount_836 = "MOUNTMG42_836",
+	Repair_231 = "REPAIRMG42_231",
+	Repair_352 = "REPAIRMG42_352",
+	Repair_386 = "REPAIRMG42_386",
+	Repair_836 = "REPAIRMG42_836",
+
+	flag1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag1 = TEAM.AXIS;
+		
+		print( "flag1_Axis_Captured" );
+	},
+
+	flag1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag1 = TEAM.ALLIES;
+		
+		print( "flag1_Allies_Captured" );
+	},
+
+	flag2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag2 = TEAM.AXIS;
+		
+		print( "flag2_Axis_Captured" );
+	},
+
+	flag2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag2 = TEAM.ALLIES;
+		
+		print( "flag2_Allies_Captured" );
+	},
+
+	flag3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag3 = TEAM.AXIS;
+		
+		print( "flag3_Axis_Captured" );
+	},
+
+	flag3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag3 = TEAM.ALLIES;
+		
+		print( "flag3_Allies_Captured" );
+	},
+
+	flag4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag4 = TEAM.AXIS;
+		
+		print( "flag4_Axis_Captured" );
+	},
+
+	flag4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag4 = TEAM.ALLIES;
+		
+		print( "flag4_Allies_Captured" );
+	},
+
+	flag5_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag5 = TEAM.AXIS;
+		
+		print( "flag5_Axis_Captured" );
+	},
+
+	flag5_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.flag5 = TEAM.ALLIES;
+		
+		print( "flag5_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "^1Axis ^6capture the South-West Flag", Map.flag1_Axis_Captured );
+	OnTrigger( "^4Allies ^6capture the South-West Flag", Map.flag1_Allies_Captured );
+	OnTrigger( "^1Axis ^6capture the Center Flag", Map.flag2_Axis_Captured );
+	OnTrigger( "^4Allies ^6capture the Center Flag", Map.flag2_Allies_Captured );
+	OnTrigger( "^1Axis ^6capture the South-East Flag", Map.flag3_Axis_Captured );
+	OnTrigger( "^4Allies ^6capture the South-East Flag", Map.flag3_Allies_Captured );
+	OnTrigger( "^1Axis ^6capture the North-West Flag", Map.flag4_Axis_Captured );
+	OnTrigger( "^4Allies ^6capture the North-West Flag", Map.flag4_Allies_Captured );
+	OnTrigger( "^1Axis ^6capture the North-East Flag", Map.flag5_Axis_Captured );
+	OnTrigger( "^4Allies ^6capture the North-East Flag", Map.flag5_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	thread( GoForIceFlag );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};
+
+global GoForIceFlag = function()
+{
+	while ( true )
+	{
+		if ( Map.flag1 == TEAM.AXIS && Map.flag3 == TEAM.AXIS &&
+		     Map.flag4 == TEAM.AXIS && Map.flag5 == TEAM.AXIS )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag2 );
+			return;
+		}
+		
+		if ( Map.flag1 == TEAM.ALLIES && Map.flag3 == TEAM.ALLIES &&
+		     Map.flag4 == TEAM.ALLIES && Map.flag5 == TEAM.ALLIES )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag2 );
+			return;
+		}
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag2 );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag2 );
+		
+		sleep( 1 );
+	}
+};

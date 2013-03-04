@@ -1,0 +1,1181 @@
+global Map =
+{
+	Quiet = true,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Plant_Field_Ops = "PLANT_Allied_Field_Operations",
+	Plant_AA_Gun = "PLANT_Anti_Aircraft_Gun",
+	Plant_East_Gate = "PLANT_East_Gate",
+	Plant_West_Gate = "PLANT_West_Gate",
+	Mount_cymg = "MOUNTMG42_cymg",
+	Mount_opsmg = "MOUNTMG42_opsmg",
+	Repair_cymg = "REPAIRMG42_cymg",
+	Repair_opsmg = "REPAIRMG42_opsmg",
+
+	FlagStatus = 0,
+	EastGateStatus = false,
+	WestGateStatus = false,
+	RuinsASTimer = 0,
+	WarehouseASTimer = 0,
+	AxisInRuins = false,
+	AxisInWarehouse = false,
+
+	AADyno = 0,
+	OpsDyno = 0,
+	WestDyno = 0,
+	EastDyno = 0,
+
+        alsoldiers = 0,
+        axsoldiers = 0,
+
+	FriendlyFire,
+
+	Airstrike =
+	{
+		ascoal =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "ascoalflag",
+		},
+	},
+
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER1 = // ruins airstrikes
+			{
+				numbots = 1,
+				crucialClass = CLASS.LIEUTENANT,
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			DEFENDER1 = // flex spots
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	Navigation =
+	{
+		trainyardele =
+		{
+			gotowp = "tyeletop",
+
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+
+		tyelemid =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 6 );
+				sleep( 4 );
+			},
+		},
+
+		tyelebotfull =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.STRAFE_R, 0.5 );
+				sleep(0.5);
+				_this.Bot.HoldButton( BTN.FORWARD, 9 );
+				sleep( 9 );
+			},
+		},
+
+		tyelebothalf =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 8 );
+				sleep( 8 );
+			},
+		},
+
+		elejump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				yield(); yield();
+			},
+		},
+
+		aaele2 =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 5 );
+				sleep( 5 );
+			},
+		},
+
+		aaele =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+
+		aaeledown =
+		{
+			navigate = function( _this )
+			{
+				_this.AddAimRequest(Priority.High, "position", Vector3(-12403, 6133, -271));
+				sleep( 2 );
+				_this.ReleaseAimRequest();
+			},
+		},
+
+		cyladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+				sleep( 1.5 );
+			},
+		},
+
+		trainbox =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				_this.Bot.HoldButton( BTN.CROUCH, 1 );
+				sleep( 3 );
+			},
+		},
+
+		roofjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.STRAFE_L, 0.5 );
+				_this.Bot.HoldButton( BTN.FORWARD, 2.5 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				sleep( 3 );
+				_this.Bot.SayVoice( VOICE.G_CHEER );
+			},
+		},
+
+		onroof =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 3 );
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+
+		quickjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+			},
+		},
+
+		strafeljump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				yield();
+				_this.Bot.HoldButton( BTN.STRAFE_L, 1 );
+				sleep( 1 );
+			},
+		},
+	},
+
+	Ops_Destroyed = function( trigger )
+	{
+		if ( TestMap || Map.Ended ) {
+			return;
+		}
+
+		Map.Ended = true;
+
+		Util.MapDebugPrint( "Ops_Destroyed" );
+	},
+
+	Ops_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.OpsDyno += 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_ops.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_opscover.*" );
+	},
+
+	Ops_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.OpsDyno -= 1;
+
+		if ( Map.OpsDyno < 1 && Map.FlagStatus == 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_opscover.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			if ( Map.FlagStatus == 1 ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
+			}
+		}
+	},
+
+	AA_Destroyed = function( trigger )
+	{
+		if ( TestMap || Map.Ended ) {
+			return;
+		}
+
+		Map.Ended = true;
+
+		Util.MapDebugPrint( "AA_Destroyed" );
+	},
+
+	AA_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.AADyno += 1;
+
+		if ( Map.FriendlyFire < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_as_aa.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_aacover.*" );
+	},
+
+	AA_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.AADyno -= 1;
+
+		if ( Map.AADyno < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_aacover.*" );
+		}
+	},
+
+	West_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestGateStatus = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Field_Ops );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
+	},
+
+	West_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestDyno += 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_westgate.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_West.*" );
+	},
+
+	West_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestDyno -= 1;
+
+		if ( Map.WestDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
+		}
+	},
+
+	East_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EastGateStatus = true;
+
+		//path through gate instead of over boxes
+		Wp.SetWaypointFlag( "spawnboxes", "closed", true );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_AA_Gun );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
+	},
+
+	East_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EastDyno += 1;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_eng_eastgate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_East.*" );
+	},
+
+	East_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EastDyno -= 1;
+
+		if ( Map.WestDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
+		}
+	},
+
+	CP_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = TEAM.AXIS;
+		Map.DontDispenseAmmo = true;
+
+		Wp.SetWaypointFlag( "ruinsdrop", "closed", true );   //Dont allow axis to drop down
+
+		//axis
+		Map.Airstrike.ascoal.Enabled = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rcy.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rcypanz.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
+
+		//allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_btrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRockpath.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCommand.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
+	},
+
+	CP_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = TEAM.ALLIES;
+		Map.DontDispenseAmmo = true;
+
+		Wp.SetWaypointFlag( "ruinsdrop", "closed", false );  //Let them drop to fallback faster
+
+
+		//axis
+		Map.Airstrike.ascoal.Enabled = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rasspawn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rOps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcy.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rcypanz.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
+
+		if ( Map.FriendlyFire < 1 ) {
+
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
+
+		}
+
+		//allies
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_btrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bOps.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRockpath.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
+
+		if ( Map.FriendlyFire < 1 ) {
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCommand.*" );
+
+		}
+	},
+
+	RuinsTrigger =
+	{
+		Name = "RuinsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				if ( Map.FlagStatus == 2 ) {
+					return;
+				}
+				Map.AxisInRuins = true;
+
+				//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bruinsas.*" );
+
+				Map.RuinsASTimer = GetTime() + 30;  //Martin - GetTime is in SECONDS.
+				while ( ( GetTime() < Map.RuinsASTimer ) && ( Map.FlagStatus != 2 ) )
+				{
+					sleep( 1 );
+				}
+
+				Map.AxisInRuins = false;
+
+				//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bruinsas.*" );
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+
+	WarehousePlayers = 0,
+	WarehouseTrigger =
+	{
+		Name = "WarehouseTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.WarehousePlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bwhas.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.WarehousePlayers -= 1;
+
+				if ( Map.WarehousePlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bwhas.*" );
+				}
+			}
+
+		},
+	},
+	
+	LowerRuinsPlayers = 0,
+	LowerRuinsTrigger =
+	{
+		Name = "LowerRuinsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers += 1;
+
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.LowerRuinsPlayers -= 1;
+
+				if ( Map.LowerRuinsPlayers < 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bloweras.*" );
+				}
+			}
+
+		},
+	},
+	
+	Ops =
+	{
+		Name = "Ops",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.ALLIES ) {
+						bot.SayTeam( "Axis are planting at Ops!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	AA =
+	{
+		Name = "AA",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at AA Gun!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aa1" );
+	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aa2" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops1" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops2" );
+	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops3" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Allied team destoyed the Anti-Aircraft gun!", Map.AA_Destroyed );
+	OnTrigger( "Planted at the Anti-Aircraft Gun.", Map.AA_Planted );
+	OnTrigger( "Defused at the Anti-Aircraft Gun.", Map.AA_Defused );
+	OnTrigger( "Axis team destroyed the Allied Field Operations!", Map.Ops_Destroyed );
+	OnTrigger( "Planted at the Allied Field Operations.", Map.Ops_Planted );
+	OnTrigger( "Defused at the Allied Field Operations.", Map.Ops_Defused );
+	OnTrigger( "Axis has breached the West Gate!", Map.West_Gate_Destroyed );
+	OnTrigger( "Planted at the West Gate.", Map.West_Gate_Planted );
+	OnTrigger( "Defused at the West Gate.", Map.West_Gate_Defused );
+	OnTrigger( "Allies have breached the East Gate!", Map.East_Gate_Destroyed );
+	OnTrigger( "Planted at the East Gate.", Map.East_Gate_Planted );
+	OnTrigger( "Defused at the East Gate.", Map.East_Gate_Defused );
+	OnTrigger( "Axis captures the Forward Deployment Area!", Map.CP_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Deployment Area!", Map.CP_Allies_Captured );
+
+	tOne = OnTriggerRegion( AABB( -8514,3503,287,-8496,3638,392 ), Map.RuinsTrigger );
+	tTwo = OnTriggerRegion( AABB(-8048.000,1135.000,-254.000,-7623.000,2160.000,-180.000), Map.WarehouseTrigger );
+	tThree = OnTriggerRegion( AABB( -8032.000,3701.000,287.000,-7855.000,3741.000,409.000 ), Map.RuinsTrigger );
+	lowerruins = OnTriggerRegion( AABB( -8768, 2239, 1, -7615, 2592, 163 ), Map.LowerRuinsTrigger );
+	tFour = OnTriggerRegion( AABB( -11912.000,5605.000,591.000,-11627.000,5798.000,701.000 ), Map.AA );
+	tFive = OnTriggerRegion( AABB( -6965.000,1591.000,-292.000,-6558.000,2157.000,-78.000 ), Map.Ops );
+	tyele = OnTriggerRegion(AABB(-10204.000,1679.000,-822.000,-9874.000,1832.000,330.000),RegionTrigger.DisableBotPush);
+	nopush1 = OnTriggerRegion(AABB(-12480.000,4105.000,-758.000,-12294.000,4293.000,-449.000),RegionTrigger.DisableBotPush);
+	nopush2 = OnTriggerRegion(AABB(-12071.000,4143.000,-566.000,-11888.000,4261.000,-220.000),RegionTrigger.DisableBotPush);
+	nopush3 = OnTriggerRegion(AABB(-12466.000,5925.000,-758.000,-12285.000,6088.000,-111.000),RegionTrigger.DisableBotPush);
+	nopush4 = OnTriggerRegion(AABB(-9253.000,2989.000,-316.000,-9005.000,3136.000,-174.000),RegionTrigger.DisableBotPush);
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
+//	SetMapGoalProperties( "FLAME_axiscamper.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_opscamper.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_btrainpanz.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "PANZER_rcypanz.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+
+	//open up some airstrike goals if ff is off
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	Util.DisableGoal( ".*", true ); //all but the routes
+	RTCWUtil.LimitToClass( "DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_reastgate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_beastgate.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+	SetGoalPriority( "DEFEND_eng_westgate.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_eng_opscover.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
+	SetGoalPriority( "DEFEND_eng_eastgate.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_eng_aacover.*", 0.7, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
+	SetGoalPriority( "AIRSTRIKE_bwhas.*", 0.94 ); // focus on higher threat
+	SetGoalPriority( "AIRSTRIKE_blower.*", 0.94 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "MOUNTMG42_opsmg", 0.95 );
+	SetGoalPriority( "REPAIRMG42_opsmg", 0.96 );
+	SetGoalPriority( "DEFUSE_Allied_Field_Operations*", 1.2, TEAM.ALLIES, CLASS.ENGINEER, true );
+
+	// treat attack goals as secondary 'roams' for when all the defend goals are occupied
+	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "DEFEND_bAA.*", 0.48 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_reastgate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_beastgate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_opsmg" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_opsmg" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
+
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
+
+	Wp.SetWaypointFlag( "spawnboxes", "closed", false );
+
+	Util.SetMaxUsersInProgress( 2, Map.Checkpoint_flag_respawn_obj );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "FLAME_axiscamper.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_opscamper.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_btrainpanz.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_rcypanz.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 2, "ROUTE_cynw" );
+
+	Util.SetMaxUsersInUse( 1, "FLAME_axiscamper.*" );
+	Util.SetMaxUsersInUse( 1, "PANZER_opscamper.*" );
+
+	MapRoutes =
+	{
+		DEFEND_rOps1 =
+		{
+			ROUTE_axisrearspawn =
+			{
+				ROUTE_ltwest =
+				{
+					ROUTE_ltsouth =
+					{
+						ROUTE_ruins = {},
+						ROUTE_wh = {},
+					},
+				},
+				ROUTE_eastlongtrain =
+				{
+					ROUTE_shorttrain = {},
+					ROUTE_rearwh = { ROUTE_wh = {}, },
+				},
+			},
+			ROUTE_forwardspawn2 =
+			{
+				ROUTE_ruins = {},
+				ROUTE_rearwh = { ROUTE_wh = {}, },
+				ROUTE_shorttrain =
+				{
+					ROUTE_office = { ROUTE_whexit = {}, },
+				},
+				ROUTE_westlongtrain = {},
+				ROUTE_cyconnect =
+				{
+					ROUTE_ltsouth =
+					{
+						ROUTE_ruins = {},
+						ROUTE_rearwh = { ROUTE_wh = {}, },
+					},
+				},
+			},
+		},
+		CAMP_aaflex1 =
+		{
+			ROUTE_adspawn1 = { ROUTE_radioroom = {}, },
+		},
+		CAMP_opsflex3 =
+		{
+			ROUTE_arspawn1 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
+			},
+			ROUTE_arspawn2 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
+			},
+			ROUTE_arspawn3 =
+			{
+				ROUTE_office = {},
+				ROUTE_shorttrain = { ROUTE_rearwh = {}, },
+				ROUTE_whexit = {},
+			},
+		},
+		DEFEND_bAA1 =
+		{
+			ROUTE_adspawn1 =
+			{
+				ROUTE_ltsouth =
+				{
+					ROUTE_cyconnect = {},
+					ROUTE_ltnorth =
+					{
+						ROUTE_aaele =
+						{
+							ROUTE_aaele2 = {},
+							ROUTE_ducts = {},
+						},
+					},
+				},
+				ROUTE_westlongtrain =
+				{
+					ROUTE_tgarage1 =
+					{
+						ROUTE_cargo =
+						{
+							ROUTE_radioroom =
+							{
+								ROUTE_aaele2 = {},
+								ROUTE_ducts = {},
+							},
+						},
+						ROUTE_rockpath = { Weight = 2, },
+						ROUTE_lcargo =
+						{
+							ROUTE_radioroom =
+							{
+								ROUTE_aaele2 = {},
+								ROUTE_ducts = {},
+							},
+						},
+					},
+					ROUTE_tgarage2 =
+					{
+						ROUTE_cargo =
+						{
+							ROUTE_radioroom =
+							{
+								ROUTE_aaele2 = {},
+								ROUTE_ducts = {},
+							},
+						},
+						ROUTE_rockpath = { Weight = 2, },
+						ROUTE_lcargo =
+						{
+							ROUTE_radioroom =
+							{
+								ROUTE_aaele2 = {},
+								ROUTE_ducts = {},
+							},
+						},
+					},
+				},
+			},
+			ROUTE_forwardspawn1 =
+			{
+				ROUTE_flagspawnunstuck =
+				{
+					Weight = 2,
+					ROUTE_midlongtrain =
+					{
+						ROUTE_eastlongtrain =
+						{
+							ROUTE_tgarage2 =
+							{
+								ROUTE_cargo =
+								{
+									ROUTE_radioroom =
+									{
+										ROUTE_aaele2 = {},
+										ROUTE_ducts = {},
+									},
+								},
+								ROUTE_rockpath = {},
+							},
+						},
+					},
+					ROUTE_ltsouth =
+					{
+						ROUTE_cyconnect = {},
+						ROUTE_ltnorth = { ROUTE_aaele = {}, },
+					},
+				},
+				ROUTE_tgarage1 =
+				{
+					Weight = 2,
+					ROUTE_cargo =
+					{
+						ROUTE_radioroom =
+						{
+							ROUTE_aaele2 = {},
+							ROUTE_ducts = {},
+						},
+					},
+					ROUTE_tgaragemid =
+					{
+						ROUTE_tgarage2 =
+						{
+							ROUTE_cargo =
+							{
+								ROUTE_radioroom =
+								{
+									ROUTE_aaele2 = {},
+									ROUTE_ducts = {},
+								},
+							},
+							ROUTE_rockpath = {},
+						},
+					},
+				},
+				ROUTE_cynw =
+				{
+					ROUTE_lcargo =
+					{
+						ROUTE_radioroom =
+						{
+							ROUTE_aaele2 = {},
+							ROUTE_ducts = {},
+						},
+					},
+					ROUTE_rockpath = {},
+				},
+			},
+			ROUTE_forwardspawn2 =
+			{
+				ROUTE_flagspawnunstuck =
+				{
+					Weight = 2,
+					ROUTE_midlongtrain =
+					{
+						ROUTE_eastlongtrain =
+						{
+							ROUTE_tgarage2 =
+							{
+								ROUTE_cargo =
+								{
+									ROUTE_radioroom =
+									{
+										ROUTE_aaele2 = {},
+										ROUTE_ducts = {},
+									},
+								},
+								ROUTE_rockpath = {},
+							},
+						},
+					},
+					ROUTE_ltsouth =
+					{
+						ROUTE_cyconnect = {},
+						ROUTE_ltnorth =
+						{
+							ROUTE_aaele =
+							{
+								ROUTE_aaele2 = {},
+								ROUTE_ducts = {},
+							},
+						},
+					},
+				},
+				ROUTE_tgarage1 =
+				{
+					Weight = 2,
+					ROUTE_cargo =
+					{
+						ROUTE_radioroom =
+						{
+							ROUTE_aaele2 = {},
+							ROUTE_ducts = {},
+						},
+					},
+					ROUTE_tgaragemid =
+					{
+						ROUTE_tgarage2 =
+						{
+							ROUTE_cargo =
+							{
+								ROUTE_radioroom =
+								{
+									ROUTE_aaele2 = {},
+									ROUTE_ducts = {},
+								},
+							},
+							ROUTE_rockpath = {},
+						},
+					},
+				},
+				ROUTE_cynw =
+				{
+					ROUTE_lcargo =
+					{
+						ROUTE_radioroom =
+						{
+							ROUTE_aaele2 = {},
+							ROUTE_ducts = {},
+						},
+					},
+					ROUTE_rockpath = {},
+				},
+			},
+		},
+		DEFEND_btrain1 =
+		{
+			ROUTE_adspawn1 =
+			{
+				ROUTE_shorttrain2 = {},
+				ROUTE_opsy = { ROUTE_wh = {}, },
+			},
+			ROUTE_adspawn2 =
+			{
+				ROUTE_shorttrain2 = {},
+				ROUTE_opsy = { ROUTE_wh = {}, },
+			},
+			ROUTE_arspawn1 =
+			{
+				ROUTE_shorttrain2 = {},
+				ROUTE_wh = {},
+			},
+			ROUTE_arspawn2 =
+			{
+				ROUTE_shorttrain2 = {},
+				ROUTE_wh = {},
+			},
+			ROUTE_arspawn3 =
+			{
+				ROUTE_shorttrain2 = {},
+				ROUTE_wh = {},
+			},
+		},
+	};
+
+	MapRoutes.DEFEND_rOps1.ROUTE_depotspawn = MapRoutes.DEFEND_rOps1.ROUTE_axisrearspawn;
+	MapRoutes.DEFEND_rOps2 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.DEFEND_rOps3 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.DEFEND_rOps4 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.DEFEND_rOps5 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.DEFEND_rOps6 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.ATTACK_rOps7 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.ATTACK_rOps8 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.ATTACK_rOps9 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.ATTACK_rOps10 = MapRoutes.DEFEND_rOps1;
+	MapRoutes.PLANT_Allied_Field_Operations = MapRoutes.DEFEND_rOps1;
+	MapRoutes.DEFEND_bAA1.ROUTE_adspawn2 = MapRoutes.DEFEND_bAA1.ROUTE_adspawn1;
+	MapRoutes.DEFEND_bAA1.ROUTE_arspawn1 = MapRoutes.DEFEND_bAA1.ROUTE_adspawn1;
+	MapRoutes.DEFEND_bAA1.ROUTE_arspawn2 = MapRoutes.DEFEND_bAA1.ROUTE_adspawn1;
+	MapRoutes.DEFEND_bAA1.ROUTE_arspawn3 = MapRoutes.DEFEND_bAA1.ROUTE_adspawn1;
+	MapRoutes.PLANT_Anti_Aircraft_Gun = MapRoutes.DEFEND_bAA1;
+	MapRoutes.DEFEND_bAA2 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.DEFEND_bAA3 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.DEFEND_bAA4 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.DEFEND_bAA5 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.ATTACK_bAA6 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.ATTACK_bAA7 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.ATTACK_bAA8 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.ATTACK_bAA9 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.ATTACK_bAA10 = MapRoutes.DEFEND_bAA1;
+	MapRoutes.DEFEND_btrain2 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.DEFEND_btrain3 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.DEFEND_btrain4 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.DEFEND_btrain5 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.DEFEND_btrain6 = MapRoutes_DEFEND_btrain1;
+	MapRoutes.CAMP_aaflex2 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_aaflex3 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_aaflex4 = MapRoutes.CAMP_aaflex1;
+	MapRoutes.CAMP_opsflex4 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsflex6 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsd3 = MapRoutes.CAMP_opsflex3;
+	MapRoutes.CAMP_opsd6 = MapRoutes.CAMP_opsflex3;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+        bot.MaxViewDistance = 2500;
+
+  	class = bot.GetClass();
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER )
+	{
+		if ( Map.alsoldiers == 1 ) {
+
+			RTCWUtil.SelectWeapon( bot, WEAPON.VENOM );
+			Map.alsoldiers += 1;
+		}
+		else if ( Map.alsoldiers == 2 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.alsoldiers += 1;
+		}
+		else if ( Map.alsoldiers == 3 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.alsoldiers += 1;
+
+		}
+		else if ( Map.alsoldiers == 4 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+//			Map.alsoldiers += 1;
+			Map.alsoldiers = 0;
+		}
+		else {
+//			RTCWUtil.SelectSoldierWeapons(TEAM.ALLIES, bot, WEAPON.FLAMETHROWER, WEAPON.VENOM, WEAPON.PANZERFAUST, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.alsoldiers += 1;
+		}
+	}
+	else if ( bot.GetTeam() == TEAM.AXIS && class == CLASS.SOLDIER )
+	{
+		if ( Map.axsoldiers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 2 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.VENOM );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 3 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.axsoldiers += 1;
+		}
+		else if ( Map.axsoldiers == 4 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+//			Map.axsoldiers += 1;
+			Map.axsoldiers = 0;
+		}
+		else {
+//			RTCWUtil.SelectSoldierWeapons(TEAM.AXIS, bot, WEAPON.FLAMETHROWER, WEAPON.VENOM, WEAPON.PANZERFAUST, WEAPON.MAUSER);
+			RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+			Map.axsoldiers += 1;
+		}
+	}
+};

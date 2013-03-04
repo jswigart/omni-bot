@@ -1,0 +1,268 @@
+//==========================================================================================
+//
+//	warringgods.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	23 July 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	allies_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Taken" );
+	},
+	
+	allies_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Returned" );
+	},
+	
+	allies_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured" );
+	},
+
+	allies_gold_crate_1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_1_Secured" );
+	},
+
+	allies_gold_crate_2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_2_Secured" );
+	},
+
+	allies_gold_crate_3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_3_Secured" );
+	},
+
+	allies_gold_crate_4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_4_Secured" );
+	},
+
+	allies_gold_crate_5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_5_Secured" );
+	},
+
+	allies_gold_crate_6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_6_Secured" );
+	},
+
+	allies_gold_crate_7_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_7_Secured" );
+	},
+	
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Taken" );
+	},
+	
+	axis_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Returned" );
+	},
+	
+	axis_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured" );
+	},
+
+	axis_gold_crate_1_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_1_Secured" );
+	},
+
+	axis_gold_crate_2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_2_Secured" );
+	},
+
+	axis_gold_crate_3_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_3_Secured" );
+	},
+
+	axis_gold_crate_4_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_4_Secured" );
+	},
+
+	axis_gold_crate_5_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_5_Secured" );
+	},
+
+	axis_gold_crate_6_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_6_Secured" );
+	},
+
+	axis_gold_crate_7_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_7_Secured" );
+	},
+	
+	The_Axis_win = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "CAPPOINT_AlliedStore" );
+		Util.DisableGoal( "FLAG_allies.*" );
+
+		ETUtil.WinningChat( TEAM.AXIS );
+		ETUtil.LosingChat( TEAM.ALLIES );
+		Util.MapDebugPrint( "The Axis win!!" );
+	},
+
+	The_Allies_win = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.DisableGoal( "CAPPOINT_AxisStore" );
+		Util.DisableGoal( "FLAG_axis.*" );
+
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "The Allies win!!" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Axis have returned The Allied Gold Crate!", Map.allies_gold_crate_Returned  );
+	OnTrigger( "Allies have returned The Axis Gold Crate!", Map.axis_gold_crate_Returned  );
+	OnTrigger( "^4Allied Have secured The First Gold Crate!", Map.allies_gold_crate_Secured );
+	OnTrigger( "^4Allied Have secured The Second Gold Crate!", Map.allies_gold_crate_1_Secured );
+	OnTrigger( "^4Allied Have secured The Third Gold Crate!", Map.allies_gold_crate_2_Secured );
+	OnTrigger( "^4Allied Have secured The Forth Gold Crate!", Map.allies_gold_crate_3_Secured );
+	OnTrigger( "^4Allied Have secured The Fifth Gold Crate!", Map.allies_gold_crate_4_Secured );
+	OnTrigger( "^4Allied Have secured The Sixth Gold Crate!", Map.allies_gold_crate_5_Secured );
+	OnTrigger( "^4Allied Have secured The Seventh Gold Crate!", Map.allies_gold_crate_6_Secured );
+	OnTrigger( "^4Allied Have secured The Last Gold Crate!", Map.allies_gold_crate_7_Secured );
+	OnTrigger( "^1Axis Have secured The First Gold Crate!", Map.axis_gold_crate_Secured );
+	OnTrigger( "^1Axis Have secured The Second Gold Crate!", Map.axis_gold_crate_1_Secured );
+	OnTrigger( "^1Axis Have secured The Third Gold Crate!", Map.axis_gold_crate_2_Secured );
+	OnTrigger( "^1Axis Have secured The Forth Gold Crate!", Map.axis_gold_crate_3_Secured );
+	OnTrigger( "^1Axis Have secured The Fifth Gold Crate!", Map.axis_gold_crate_4_Secured );
+	OnTrigger( "^1Axis Have secured The Sixth Gold Crate!", Map.axis_gold_crate_5_Secured );
+	OnTrigger( "^1Axis Have secured The Seventh Gold Crate!", Map.axis_gold_crate_6_Secured );
+	OnTrigger( "^1Axis Have secured The Last Gold Crate!", Map.axis_gold_crate_7_Secured );
+	OnTrigger( "Allies have stolen The Allied Gold Crate!", Map.allies_gold_crate_Taken );
+	OnTrigger( "Axis have stolen The Axis Gold Crate!", Map.axis_gold_crate_Taken );
+	OnTrigger( "^1The Axis win!!", Map.The_Axis_win );
+	OnTrigger( "^4The Allies win!!", Map.The_Allies_win );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+
+	Util.EnableGoal ("AMMOCAB.*");
+	Util.EnableGoal	("HEALTHCAB.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allies.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis.*");
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_AxisStore" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_AlliedStore" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 2400;
+};

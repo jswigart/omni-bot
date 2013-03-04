@@ -1,0 +1,478 @@
+//==========================================================================================
+//
+//	t_spookyb2.gm
+//
+//	Who            	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	12 October 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allies_wall_Dyno = 0,
+	Axis_Crossover_Dyno = 0,
+	Axis_Door_Block_Dyno = 0,
+	Bridge_Crossover_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Allied_Command_Post_Dyno = 0,
+	Side_blockade_Dyno = 0,
+	Side_blockade_1_Dyno = 0,
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+	
+	Allies_wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allies_wall_Built" );
+	},
+
+	Axis_Crossover_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Crossover_Built" );
+	},
+
+	Axis_Door_Block_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Door_Block_Built" );
+	},
+
+	Bridge_Crossover_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Bridge_Crossover_Built" );
+	},
+
+	Allies_wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allies_wall_Dyno += 1;
+		Util.MapDebugPrint( "Allies_wall_Planted" );
+	},
+
+	Axis_Crossover_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Crossover_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Crossover_Planted" );
+	},
+
+	Axis_Door_Block_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Door_Block_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Door_Block_Planted" );
+	},
+
+	Bridge_Crossover_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bridge_Crossover_Dyno += 1;
+		Util.MapDebugPrint( "Bridge_Crossover_Planted" );
+	},
+
+	Side_blockade_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_Dyno += 1;
+		Util.MapDebugPrint( "Side_blockade_Planted" );
+	},
+
+	Side_blockade_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_1_Dyno += 1;
+		Util.MapDebugPrint( "Side_blockade_1_Planted" );
+	},
+
+	Allies_wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allies_wall_Dyno -= 1;
+		Util.MapDebugPrint( "Allies_wall_Defused" );
+	},
+
+	Axis_Crossover_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Crossover_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Crossover_Defused" );
+	},
+
+	Axis_Door_Block_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Door_Block_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Door_Block_Defused" );
+	},
+
+	Bridge_Crossover_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bridge_Crossover_Dyno -= 1;
+		Util.MapDebugPrint( "Bridge_Crossover_Defused" );
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Command_Post_Defused" );
+	},
+
+	Side_blockade_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_Dyno -= 1;
+		Util.MapDebugPrint( "Side_blockade_Defused" );
+	},
+
+	Side_blockade_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_1_Dyno -= 1;
+		Util.MapDebugPrint( "Side_blockade_1_Defused" );
+	},
+
+	Allies_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allies_wall_Dyno = 0;
+
+		Util.MapDebugPrint( "Allies_wall_Destroyed" );
+	},
+
+	Axis_Crossover_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Crossover_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Crossover_Destroyed" );
+	},
+
+	Axis_Door_Block_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Door_Block_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Door_Block_Destroyed" );
+	},
+
+	Bridge_Crossover_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bridge_Crossover_Dyno = 0;
+
+		Util.MapDebugPrint( "Bridge_Crossover_Destroyed" );
+	},
+
+	Side_blockade_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_Dyno = 0;
+
+		Util.MapDebugPrint( "Side_blockade_Destroyed" );
+	},
+
+	Side_blockade_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_blockade_1_Dyno = 0;
+
+		Util.MapDebugPrint( "Side_blockade_1_Destroyed" );
+	},
+
+	allies_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Taken" );
+	},
+
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Taken" );
+	},
+
+	allies_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Returned" );
+	},
+
+	axis_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Returned" );
+	},
+
+	allies_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured" );
+	},
+
+	axis_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured" );
+	},
+	
+	allies_gold_crate_Secured_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured_1" );
+	},
+
+	axis_gold_crate_Secured_1 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured_1" );
+	},
+	
+	allies_gold_crate_Secured_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allies_gold_crate_Secured_2" );
+	},
+
+	axis_gold_crate_Secured_2 = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured_2" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "The Allies wall has been built.", Map.Allies_wall_Built );
+	OnTrigger( "The axis bridge side has been repaired.", Map.Axis_Crossover_Built );
+	OnTrigger( "The Main Axis wall has been built.", Map.Axis_Door_Block_Built );
+	OnTrigger( "The allies bridge side has been repaired.", Map.Bridge_Crossover_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allies_wall_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_Crossover_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_Door_Block_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Bridge_Crossover_Planted );
+	OnTrigger( "Planted at the Allied Command Post!", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post!", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Side_blockade_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Side_blockade_1_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allies_wall_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_Crossover_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_Door_Block_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Bridge_Crossover_Defused );
+	OnTrigger( "Defused at the Allied Command Post!", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post!", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Side_blockade_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Side_blockade_1_Defused );
+	OnTrigger( "The Allies wall has been destroyed.", Map.Allies_wall_Destroyed );
+	OnTrigger( "The Axis side of the bridge is destroyed.", Map.Axis_Crossover_Destroyed );
+	OnTrigger( "The Main Axis wall has been destroyed.", Map.Axis_Door_Block_Destroyed );
+	OnTrigger( "The Allies side of the bridge is destroyed.", Map.Bridge_Crossover_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis have blown up the secret Allies blockade!", Map.Side_blockade_Destroyed );
+	OnTrigger( "Allies have blown up the Axis secret side blockade!", Map.Side_blockade_1_Destroyed );
+	
+	OnTrigger( "Axis team has secured the first Ring of Power!", Map.axis_gold_crate_Secured );
+	OnTrigger( "Axis team has secured the second Ring of Power!", Map.axis_gold_crate_Secured_1 );
+	OnTrigger( "Axis team has secured the last Ring of Power!", Map.axis_gold_crate_Secured_2 );
+	OnTrigger( "Allied team has secured the first Ring of Power!", Map.allies_gold_crate_Secured );
+	OnTrigger( "Allied team has secured the second Ring of Power!", Map.allies_gold_crate_Secured_1 );
+	OnTrigger( "Allied team has secured the last Ring of Power!", Map.allies_gold_crate_Secured_2 );
+	
+	OnTrigger( "Allies have stolen the axis Ring of Power!", Map.allies_gold_crate_Taken );
+	OnTrigger( "Axis have stolen the allied Ring of Power!", Map.axis_gold_crate_Taken );
+	OnTrigger( "Allies have returned allied Ring of Power!", Map.allies_gold_crate_Returned );
+	OnTrigger( "Axis have returned axis Ring of Power!", Map.axis_gold_crate_Returned );
+
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	
+	Util.EnableGoal ("AMMOCAB.*");
+	Util.EnableGoal	("HEALTHCAB.*");
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_alliedshrine" );
+	Util.EnableGoal	( "PLANT_.*" );
+	Util.EnableGoal	( "BUILD_.*" );
+	Util.EnableGoal	( "FLAG_.*" );
+	Util.EnableGoal	( "MOUNTMG42_.*" );
+	Util.EnableGoal	( "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_axisshrine" );
+//Add Use Wp
+	Util.AddUseWp("PLANT_Axis_Door_Block", "axiswall");
+	Util.AddUseWp("PLANT_Allies_wall", "alliedwall");	
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 1, "PLANTMINE_.*" );
+	Util.SetMaxUsers( 2, "BUILD_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 2400;
+};

@@ -1,0 +1,127 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+
+	allies_filt = function()
+	{
+		print( "Allies - Filtration" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_filt.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Filtration" );
+	},
+	allies_flag = function()
+	{
+		print( "Allies - Flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_flag.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Flag" );
+	},
+	allies_wh = function()
+	{
+		print( "allies - Warehouse" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_wh.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Warehouse" );
+	},
+
+	axis_filt = function()
+	{
+		print( "Axis - Filtration" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_filt.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Filtration" );
+	},
+	axis_flag = function()
+	{
+		print( "Axis - Flag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_flag.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Flag" );
+	},
+	axis_wh = function()
+	{
+		print( "axis - Warehouse" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_wh.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Warehouse" );
+	},
+
+	toggle_attack = function()
+	{
+		count = -1;
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+			if ( count % 120 == 0 ) {
+				attackPoint = RandInt( 0,3 );
+				//print(attackPoint);
+				if ( attackPoint == 0 ) {
+					Map.allies_wh();
+					Map.axis_wh();
+				} else if ( attackPoint == 1 )   {
+					Map.allies_flag();
+					Map.axis_flag();
+				} else
+				{
+					Map.allies_filt();
+					Map.axis_filt();
+				}
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	Wp.SetWaypointFlag( "cpspawn1", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn2", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn3", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn4", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn5", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn6", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn7", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn8", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn9", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn10", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn11", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn12", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn13", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn14", "closed", false );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+	thread( Map.toggle_attack );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

@@ -1,0 +1,166 @@
+global Map =
+{
+	MapName = "tundra_rush_beta",
+	Quiet = true,
+	Call_Artillery_bSpawn = "CALLARTILLERY_bSpawn",
+	Call_Artillery_rFlag_1 = "CALLARTILLERY_rFlag_1",
+	Artillery_S_bRadio = "ARTILLERY_S_bRadio",
+	Artillery_S_rFlag = "ARTILLERY_S_rFlag",
+	Checkpoint_tunnelflag = "CHECKPOINT_tunnelflag",
+	Flag_Docs = "FLAG_Docs",
+	Cappoint_radio = "CAPPOINT_radio",
+	Plant_Radio = "PLANT_Radio",
+	Mount_barrack_mg = "MOUNTMG42_barrack_mg",
+	Mount_north_mg = "MOUNTMG42_north_mg",
+	Mount_south_mg = "MOUNTMG42_south_mg",
+	Repair_barrack_mg = "REPAIRMG42_barrack_mg",
+	Repair_north_mg = "REPAIRMG42_north_mg",
+	Repair_south_mg = "REPAIRMG42_south_mg",
+	Snipe_604 = "SNIPE_604",
+	Snipe_bHouse1 = "SNIPE_bHouse1",
+	Snipe_bHouse2 = "SNIPE_bHouse2",
+
+	Navigation =
+	{
+		//all three long ladders use this
+		compoundladder =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.HoldButton(BTN.FORWARD, 6);
+				sleep(6);
+			},			
+		},			
+		
+		jumpfacing = Vector3(0.008215, 0.996369, -0.084747) * 1024,
+		ljump =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.Low, "facing", Map.jumpfacing);
+				_this.Bot.PressButton(BTN.JUMP);
+				_this.Bot.HoldButton(BTN.FORWARD, 2);
+				_this.Bot.HoldButton(BTN.STRAFE_L, 0.25);
+				sleep(0.25);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 0.75);
+				sleep(2);
+				_this.ReleaseAimRequest();
+			},			
+		},			
+
+		njump =
+		{
+			navigate = function(_this)
+			{
+				_this.Bot.PressButton(BTN.JUMP);
+				_this.Bot.HoldButton(BTN.SPRINT, 1);
+				_this.Bot.HoldButton(BTN.STRAFE_R, 1);
+				sleep(1);
+				_this.Bot.PressButton(BTN.JUMP);
+			},			
+		},				
+	},
+
+	Radio_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Radio_Destroyed" );
+	},
+
+	Docs_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Docs_Taken" );
+	},
+
+	radio_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "radio_Captured" );
+	},
+
+	tunnelflag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "tunnelflag_Axis_Captured" );
+	},
+
+	tunnelflag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "tunnelflag_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Compound Gate has been breached!", Map.Radio_Destroyed );
+		OnTrigger( "Allies have stolen The Docs!", Map.Docs_Taken );
+		OnTrigger( "Axis control the Tunnel!", Map.tunnelflag_Axis_Captured );
+		OnTrigger( "Allies control the Tunnel!", Map.tunnelflag_Allies_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Mount_barrack_mg, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Checkpoint_tunnelflag, 120 );
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Radio, 120 );
+
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_north_mg, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_south_mg, 120 );
+
+		//TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_north_mg, 120 );
+		//TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_south_mg, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_Docs, 120 );
+		
+		sleep( 2 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bHouse1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bHouse2, 120 );
+
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_radio, 120 );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
+};

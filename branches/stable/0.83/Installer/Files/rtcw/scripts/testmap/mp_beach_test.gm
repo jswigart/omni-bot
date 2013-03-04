@@ -1,0 +1,233 @@
+global Map =
+{
+	Target =
+	{
+		Barricade1 =
+		{
+			Priority = 0.67,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_barrier1",
+			LimitTeam = (1<<TEAM.ALLIES),
+			Offset = 
+			{
+				Vector3(0, -400, 0),
+			}
+		},
+		Barricade2 =
+		{
+			Priority = 0.66,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_barrier2",
+			LimitTeam = (1<<TEAM.ALLIES),
+			Offset = 
+			{
+				Vector3(0, -500, 0),
+			}
+		},
+		Barricade3 =
+		{
+			Priority = 0.65,
+			Enabled = false,
+			GrenadeTargetGoalName = "EXPLODE_barrier3",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 1,
+			Offset = 
+			{
+				Vector3(-300, -300, 0),
+			}
+		},
+	},
+	
+	MapName = "mp_beach",
+	Quiet = true,
+	Call_Artillery_breach_spot_axis = "CALLARTILLERY_breach_spot_axis",
+	Call_Artillery_spot_beach_1 = "CALLARTILLERY_spot_beach_1",
+	Call_Artillery_spot_beach_2 = "CALLARTILLERY_spot_beach_2",
+	Call_Artillery_spot_beach_3 = "CALLARTILLERY_spot_beach_3",
+	Call_Artillery_spot_beach_4 = "CALLARTILLERY_spot_beach_4",
+	Call_Artillery_spot_beach_5 = "CALLARTILLERY_spot_beach_5",
+	Call_Artillery_spot_beach_6 = "CALLARTILLERY_spot_beach_6",
+	Call_Artillery_spot_beach_7 = "CALLARTILLERY_spot_beach_7",
+	Call_Artillery_spot_beach_8 = "CALLARTILLERY_spot_beach_8",
+	Call_Artillery_spot_door = "CALLARTILLERY_spot_door",
+	Call_Artillery_trenches_spot_allies = "CALLARTILLERY_trenches_spot_allies",
+	Call_Artillery_ubase_spot_axis_1 = "CALLARTILLERY_ubase_spot_axis_1",
+	Call_Artillery_ubase_spot_axis_2 = "CALLARTILLERY_ubase_spot_axis_2",
+	Artillery_S_breach_target_axis = "ARTILLERY_S_breach_target_axis",
+	Artillery_S_door_target_allies = "ARTILLERY_S_door_target_allies",
+	Artillery_S_door_target_axis = "ARTILLERY_S_door_target_axis",
+	Artillery_S_tower_target_allies = "ARTILLERY_S_tower_target_allies",
+	Artillery_S_trench_target_axis_1 = "ARTILLERY_S_trench_target_axis_1",
+	Artillery_S_trench_target_axis_2 = "ARTILLERY_S_trench_target_axis_2",
+	Artillery_S_ubase_target_allies_1 = "ARTILLERY_S_ubase_target_allies_1",
+	Artillery_S_ubase_target_allies_2 = "ARTILLERY_S_ubase_target_allies_2",
+	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
+	Flag_War_Documents = "FLAG_War_Documents",
+	Cappoint_Transmitter = "CAPPOINT_Transmitter",
+	Plant_Sea_Wall_breach = "PLANT_Sea_Wall_breach",
+	Plant_Sea_Wall_door = "PLANT_Sea_Wall_door",
+	Explode_barrier1 = "EXPLODE_barrier1",
+	Explode_barrier2 = "EXPLODE_barrier2",
+	Explode_barrier3 = "EXPLODE_barrier3",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",
+	Mount_mg42_2 = "MOUNTMG42_mg42_2",
+	Mount_mg42_3 = "MOUNTMG42_mg42_3",
+	Mount_t364 = "MOUNTMG42_t364",
+	Mount_t367 = "MOUNTMG42_t367",
+	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	Repair_mg42_2 = "REPAIRMG42_mg42_2",
+	Repair_mg42_3 = "REPAIRMG42_mg42_3",
+	Repair_t364 = "REPAIRMG42_t364",
+	Repair_t367 = "REPAIRMG42_t367",
+	Snipe_bBeach_s1 = "SNIPE_bBeach_s1",
+	Snipe_bBeach_s2 = "SNIPE_bBeach_s2",
+	Snipe_bBeach_s3 = "SNIPE_bBeach_s3",
+	Snipe_bBeach_s4 = "SNIPE_bBeach_s4",
+	Snipe_rBeach_s1 = "SNIPE_rBeach_s1",
+	Snipe_rBeach_s2 = "SNIPE_rBeach_s2",
+	Snipe_rBeach_s3 = "SNIPE_rBeach_s3",
+	Snipe_rBeach_s4 = "SNIPE_rBeach_s4",
+
+	Sea_Wall_breach_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Sea_Wall_breach_Destroyed" );
+	},
+
+	Sea_Wall_door_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Sea_Wall_door_Destroyed" );
+	},
+
+	War_Documents_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "War_Documents_Taken" );
+	},
+
+	Transmitter_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Transmitter_Captured" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beach_flag_Axis_Captured" );
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "beach_flag_Allies_Captured" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Sea Wall Door has been breached!", Map.Sea_Wall_door_Destroyed );
+		OnTrigger( "The Sea Wall has been breached!", Map.Sea_Wall_breach_Destroyed );
+ 		OnTrigger( "Allies capture the Forward Bunker!", Map.beach_flag_Allies_Captured );
+ 		OnTrigger( "Axis reclaims the Forward Bunker!", Map.beach_flag_Axis_Captured );
+		OnTrigger( "Allies have stolen the War Documents!", Map.War_Documents_Taken );
+		OnTrigger( "Allies transmitted the documents!", Map.Transmitter_Captured );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.Barricade1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.Barricade2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Target.Barricade3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Sea_Wall_door, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Sea_Wall_breach, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_beach_flag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t364, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_t367, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_3, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_t367, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_t364, 120, false, 4 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_1, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t367, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_beach_flag, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_t364, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_1, 120 );
+		Util.KillGoal( ".*" );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_1, 120, false, 4 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_t364, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_t367, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_3, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_War_Documents, 120 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bBeach_s1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bBeach_s2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bBeach_s3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_bBeach_s4, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_s1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_s2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_s3, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.SOLDIER, Map.Snipe_rBeach_s4, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_s1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_s2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_s3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_bBeach_s4, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rBeach_s1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rBeach_s2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rBeach_s3, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.SOLDIER, Map.Snipe_rBeach_s4, 120 );
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Transmitter, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+};

@@ -1,0 +1,19 @@
+// The new weapon instance is passed to this function as the 'this'
+// Properties can be set like this.Property = x, or the this prefix can be left off.
+
+//////////////////////////////////////////////////////////////////////////
+// Overall weapon properties.
+this.Name = "Rocket Launcher";
+this.WeaponId = WEAPON.RPG;
+
+//////////////////////////////////////////////////////////////////////////
+// Set some weapon properties that affect some internal logic.
+this.PrimaryFire.WeaponType = "projectile";
+this.PrimaryFire.ProjectileSpeed = 900;
+this.PrimaryFire.SplashRadius = 256.0;
+
+this.PrimaryFire.MaxAimError = Vector2(0, 0);
+this.PrimaryFire.AimOffset = Vector3(0, 0, 0);
+
+this.PrimaryFire.DefaultDesirability = 0.5;
+this.PrimaryFire.SetDesirabilityRange(250, 1250, 1.0);

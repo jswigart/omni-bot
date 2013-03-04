@@ -1,0 +1,232 @@
+global Map =
+{
+	Flag_team_ctf_blueflag_2 = "FLAG_team_ctf_blueflag_2",
+	Flag_team_ctf_redflag_1 = "FLAG_team_ctf_redflag_1",
+	Cappoint_trigger_ctf_blueflag_1 = "CAPPOINT_trigger_ctf_blueflag_1",
+	Cappoint_trigger_ctf_redflag_1 = "CAPPOINT_trigger_ctf_redflag_1",
+
+	Navigation =
+	{
+		lift =
+		{
+			navigate = function(_this) 
+			{
+				if( !_this.Bot.Waiting )
+				{
+					_this.Bot.Waiting = true;
+					timer = 0;
+					while(timer < 5)
+					{
+						timer += 1;
+						_this.Goto(_this.Bot.GetPosition() + Vector3(0,0,64));
+						yield();
+					}
+					_this.Bot.Waiting = false;
+				}
+				yield();
+			},
+		},
+	},		
+
+	team_ctf_blueflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Defend.Blue = {};
+		Util.MapDebugPrint( "team_ctf_blueflag_Taken" );
+	},
+	
+	team_ctf_blueflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.MapDebugPrint( "trigger_ctf_blueflag_Dropped" );
+	},
+
+	trigger_ctf_blueflag_Returned  = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Defend.Blue = Map.BlueDefends;
+		Util.MapDebugPrint( "trigger_ctf_blueflag_Returned " );
+	},	
+
+	team_ctf_redflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Defend.Red = {};
+		Util.MapDebugPrint( "team_ctf_redflag_Taken" );
+	},
+	
+	team_ctf_redflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "team_ctf_redflag_Dropped" );
+	},
+	
+	trigger_ctf_redflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Defend.Red = Map.RedDefends;
+		Util.MapDebugPrint( "trigger_ctf_redflag_Returned" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Flag team_ctf_blueflag_2 pickedup", Map.team_ctf_blueflag_Taken );
+	OnTrigger( "Flag team_ctf_blueflag_2 dropped", Map.team_ctf_blueflag_Dropped );
+	OnTrigger( "Flag team_ctf_blueflag_2 returned", Map.trigger_ctf_blueflag_Returned );
+	OnTrigger( "Flag team_ctf_redflag_1 pickedup", Map.team_ctf_redflag_Taken );
+	OnTrigger( "Flag team_ctf_redflag_1 dropped", Map.team_ctf_redflag_Dropped );
+	OnTrigger( "Flag team_ctf_redflag_1 returned", Map.trigger_ctf_redflag_Returned );
+	
+	//set up some routing
+	MapRoutes =
+	{
+		FLAG_team_ctf_blueflag_2 =
+		{
+			ROUTE_rs_1 = 
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},				
+			},
+		},
+		FLAG_team_ctf_redflag_1 =
+		{
+			ROUTE_bs_1 = 
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},				
+			},
+		},	
+		CAPPOINT_trigger_ctf_blueflag_1 =
+		{
+			ROUTE_rFlag =
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_blue1 = {},
+					ROUTE_blue2 = {},
+					ROUTE_blue3 = {},
+					ROUTE_blue4 = {},
+				},				
+			},
+		},
+		CAPPOINT_trigger_ctf_redflag_1 =
+		{
+			ROUTE_bFlag =
+			{
+				ROUTE_mid1 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},
+				ROUTE_mid2 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},
+				ROUTE_mid3 = 
+				{
+					ROUTE_red1 = {},
+					ROUTE_red2 = {},
+					ROUTE_red3 = {},
+					ROUTE_red4 = {},
+				},			
+			},
+		},
+	};
+
+	//copy some routes
+	MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_2 = MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_1;
+	MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_3 = MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_1;
+	MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_4 = MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_1;
+	MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_5 = MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_1;
+	MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rFlag = MapRoutes.FLAG_team_ctf_blueflag_2.ROUTE_rs_1;
+
+	MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_2 = MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_1;
+	MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_3 = MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_1;
+	MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_4 = MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_1;
+	MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_5 = MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_1;
+	MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bFlag = MapRoutes.FLAG_team_ctf_redflag_1.ROUTE_bs_1;
+
+	Util.Routes(MapRoutes);	
+	D3Util.InitDualObjective(); 
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	D3Util.SetDualObjective(bot);
+	Util.MapDebugPrint( "OnBotJoin", true );
+};

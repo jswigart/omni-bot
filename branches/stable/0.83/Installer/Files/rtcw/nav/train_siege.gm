@@ -1,0 +1,232 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	//DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	SwitchesAvailable = false, // True when allies have a path to switches.
+	Suicide = true,
+
+	Plant_Loose_Lumber = "PLANT_Loose_Lumber",
+	Plant_Weak_Train_Roof = "PLANT_Weak_Train_Roof",
+
+	Navigation =
+	{
+		traindoor =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.USE );
+				//_this.Bot.SayTeam("Activating");
+				sleep( 5 );
+
+				//_this.Bot.HoldButton(BTN.CROUCH, 1);
+				//sleep(1);
+			},
+		},
+	},
+
+	Loose_Lumber_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Wp.SetWaypointFlag( "woodbridge", "closed", false );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+
+		if ( Map.SwitchesAvailable == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBoxcar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoalcar.*" );
+			Map.SwitchesAvailable = true;
+		}
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		Util.MapDebugPrint( "Loose_Lumber_Destroyed" );
+	},
+
+	Loose_Lumber_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "Loose_Lumber_Planted" );
+	},
+
+	Weak_Train_Roof_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+
+		if ( Map.SwitchesAvailable == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBoxcar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoalcar.*" );
+			Map.SwitchesAvailable = true;
+		}
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		Util.MapDebugPrint( "Weak_Train_Roof_Destroyed" );
+	},
+
+	Weak_Train_Roof_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "Weak_Train_Roof_Planted" );
+	},
+
+	coalcar_switched = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_coalcar" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCoalcar.*" );
+		Util.MapDebugPrint( "coalcar_switched" );
+	},
+
+	boxcar1_switched = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar1" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar1.*" );
+		Util.MapDebugPrint( "boxcar1_switched" );
+	},
+
+	boxcar2_switched = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar2" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar2.*" );
+		Util.MapDebugPrint( "boxcar2_switched" );
+	},
+
+	boxcar3_switched = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_boxcar3" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBoxcar3.*" );
+		Util.MapDebugPrint( "boxcar3_switched" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Util.SetGoalPosition( -490, 3247, 268, "PLANT_Weak_Train_Roof" );
+
+	OnTrigger( "The Loose Lumber Destroyed.", Map.Loose_Lumber_Destroyed );
+	OnTrigger( "Planted at The Loose Lumber.", Map.Loose_Lumber_Planted );
+	OnTrigger( "Weak Train Roof Destroyed.", Map.Weak_Train_Roof_Destroyed );
+	OnTrigger( "Planted at Weak Train Roof.", Map.Weak_Train_Roof_Planted );
+	OnTrigger( "Coal Car Switch Thrown", Map.coalcar_switched );
+	OnTrigger( "Box Car 1 Switch Thrown!", Map.boxcar1_switched );
+	OnTrigger( "Box Car 2 Switch Thrown!", Map.boxcar2_switched );
+	OnTrigger( "Box Car 3 Switch Thrown!", Map.boxcar3_switched );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 25, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 25, maxcamptime = 45} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "SWITCH_.*", 0.8 );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_.*" );
+
+	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rPlant.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTest.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPlant.*" );
+
+	SetGoalPriority( "DEFEND_rCoalcar.*", 0.45 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_rBoxcar1_[12]", 0.55 );
+	SetGoalPriority( "DEFEND_rBoxcar2_[13]", 0.55 );
+	SetGoalPriority( "DEFEND_rBoxcar3_[13]", 0.55 );
+
+
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+
+	Wp.SetWaypointFlag( "woodbridge", "closed", true );
+
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+	MapRoutes =
+	{
+		SWITCH_coalcar =
+		{
+			ROUTE_bspawn1 =
+			{
+				ROUTE_roof = {Weight = 4,},
+				ROUTE_wood = {},
+			},
+		},
+		SWITCH_boxcar1 =
+		{
+			ROUTE_bspawn1 =
+			{
+				ROUTE_roof = {},
+				ROUTE_wood = {Weight = 3,},
+			},
+		},
+		SWITCH_boxcar2 =
+		{
+			ROUTE_bspawn1 =
+			{
+				ROUTE_roof = {},
+				ROUTE_wood = {Weight = 3,},
+			},
+		},
+		SWITCH_boxcar3 =
+		{
+			ROUTE_bspawn1 =
+			{
+				ROUTE_roof = {},
+				ROUTE_wood = {Weight = 3,},
+			},
+		},
+	};
+
+	MapRoutes.SWITCH_coalcar.ROUTE_bspawn2 = MapRoutes.SWITCH_coalcar.ROUTE_bspawn1;
+	MapRoutes.SWITCH_coalcar.ROUTE_bspawn3 = MapRoutes.SWITCH_coalcar.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar1.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar1.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar1.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar1.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar2.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar2.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar2.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar2.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar3.ROUTE_bspawn2 = MapRoutes.SWITCH_boxcar3.ROUTE_bspawn1;
+	MapRoutes.SWITCH_boxcar3.ROUTE_bspawn3 = MapRoutes.SWITCH_boxcar3.ROUTE_bspawn1;
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.ChangeSpawnPoint( 0 );
+	bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = 1500;
+
+	RTCWUtil.NoSnipe( bot );
+
+	//just remove the state if its not going to be used at all
+	bot.RemoveState( "CombatMovement" );
+};

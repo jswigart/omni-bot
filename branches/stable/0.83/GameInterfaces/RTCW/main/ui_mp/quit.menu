@@ -1,0 +1,116 @@
+#include "ui_mp/menudef.h"
+
+{
+\\ QUIT POPUP MENU \\
+
+menuDef {
+	name "quit_popmenu"
+    	visible 0
+    	fullscreen 0
+    	//rect 217 200 210 85
+	rect 204 160 235 135
+	focusColor 1 .75 0 1
+    	style 1
+    	border 1
+	popup
+	onESC { close quit_popmenu ; open main }
+
+	itemDef 
+	{
+		name window
+		group grpControlbutton
+		rect 0 2 235 135
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .5 .5 .5 .5
+		forecolor 1 1 1 1
+		backcolor 0 0 0 .25
+		visible 1
+		decoration
+	}
+
+	itemDef 
+	{
+		name window2
+		group grpControlbutton
+		rect 2 4 231 20	
+		style WINDOW_STYLE_FILLED
+		border 1
+		bordercolor .1 .1 .1 .2
+		forecolor 1 1 1 1
+		backcolor .3 0.5 0.2 .25
+		visible 1
+		decoration
+	}
+
+	// QUIT	//
+
+itemDef {
+	name confirm
+	text "Chickening out already?" 
+	style 0
+	textscale .25 
+	textstyle 3
+	rect 116 20 110 20
+	textalign 1
+	textalignx 0
+	textaligny 0
+	textfont UI_FONT_NORMAL
+	decoration
+	forecolor 1 1 1 1
+	visible 1
+	}
+
+
+itemDef {
+	name yes
+	text "YES"
+	type 1
+	textscale .3
+	style WINDOW_STYLE_FILLED
+	rect 45 60 50 20
+	textalign 1
+	textalignx 25
+	textaligny 15
+	textfont UI_FONT_NORMAL
+	forecolor 1 1 1 1
+	backcolor .3 0.5 0.2 .25
+	border 1	
+	bordercolor .1 .1 .1 .3
+	visible 1
+	action { play "sound/misc/nomenu.wav"; 
+	close main ;
+	close quit_popmenu ; 
+	open quitCredit  }	
+	}
+
+
+
+
+itemDef {
+	name no
+	text "NO"
+	type 1
+	textscale .3
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .3
+	rect 142 60 50 20
+	textalign 1
+	textalignx 25
+	textaligny 15
+	textfont UI_FONT_NORMAL
+	forecolor 1 1 1 1
+	backcolor .3 0.5 0.2 .25
+	visible 1
+	action { play "sound/misc/nomenu.wav" ; 
+	close quit_popmenu ; open main } 		
+	}
+
+
+}
+
+
+}
+
+

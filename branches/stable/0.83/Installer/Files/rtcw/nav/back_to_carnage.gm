@@ -1,0 +1,539 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
+	Plant_Axis_Transmission_Radio = "PLANT_Axis_Transmission_Radio",
+	Plant_Axis_base_gate = "PLANT_Axis_base_gate",
+	Plant_Axis_staircase_gate = "PLANT_Axis_staircase_gate",
+	Plant_Sea_Wall = "PLANT_Sea_Wall",
+	Plant_bunker_door = "PLANT_bunker_door",
+	Plant_power_generator = "PLANT_power_generator",
+	Explode_103 = "EXPLODE_103",
+	Explode_37 = "EXPLODE_37",
+	Explode_622 = "EXPLODE_622",
+	Explode_624 = "EXPLODE_624",
+	Explode_678 = "EXPLODE_678",
+	Explode_685 = "EXPLODE_685",
+	Explode_t543 = "EXPLODE_t543",
+	Mount_219 = "MOUNTMG42_219",        // Inside axis gate (sandbaged)
+	Mount_597 = "MOUNTMG42_597",        // On Flag Bunker
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",  // Back Bunker 1
+	Mount_t364 = "MOUNTMG42_t364",      // Back Bunker 2
+	Mount_t382 = "MOUNTMG42_t382",      // Front bunker - forwards
+	Mount_t383 = "MOUNTMG42_t383",      // Front bunker - side
+
+	GateStatus = false,
+	StairStatus = false,
+	TrenchStatus = false,
+	BunkerDoorStatus = false,
+	GeneratorStatus = false,
+	RadioStatus = false,
+	WallStatus = false,
+	DontDispenseAmmo = true,
+	RemoveFirstWall = true,
+
+	bPanzers = 0,
+	bSnipers = 0,
+	rSnipers = 0,
+	rFlamers = 0,
+
+	Axis_Transmission_Radio_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "Axis_Transmission_Radio_Destroyed" );
+		Map.RadioStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGenerator.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorEng.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGenerator.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGenerator.*" );
+		foreach( id and bot in BotTable )   // Axis should spawn closer to generator
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 2 );
+			}
+		}
+	},
+
+	Axis_Transmission_Radio_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Axis_base_gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", false );
+		Wp.SetWaypointFlag( "walljump2", "allies", false );
+	},
+
+	Axis_base_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.GateStatus = true;
+
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", true );
+		Wp.SetWaypointFlag( "walljump2", "allies", true );
+
+		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, false );        // Let axis use smarter combat techniques
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+
+		if ( Map.RadioStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWall.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_219" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_219" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRadioAS_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
+			print( "here" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+
+		//switch from sniper to other soldier weap
+		RTCWUtil.StopSniping();
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		Util.EnableGoal( "ROUTE_basegate" );
+		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+
+		if ( Map.GeneratorStatus == true ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bEngGate.*" );
+	},
+
+	Axis_staircase_gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Axis_staircase_gate.*" );
+	},
+
+	Axis_staircase_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.StairStatus = true;
+		Util.EnableGoal( "ROUTE_steps" );
+
+		Wp.SetWaypointFlag( "stairgate", "allies", true );
+	},
+
+	Sea_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WallStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_trenchbarricade" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beach_flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSeawall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
+		Util.EnableGoal( "ROUTE_sBeach" );
+		Util.EnableGoal( "ROUTE_nBeach" );
+		Map.DontDispenseAmmo = false;
+	},
+
+	Sea_Wall_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall.*" );
+	},
+
+	bunker_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BunkerDoorStatus = true;
+
+		// Axis should not be in the trenches
+		Wp.SetWaypointFlag( "bunkerdoor", "allies", true );
+
+		Util.EnableGoal( "ROUTE_bunkerdoor" );
+
+		if ( Map.GeneratorStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGenerator.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTrenches.*" );
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_power_generator" );
+		RTCWUtil.StopSniping();
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT.*" );
+
+		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	},
+
+	bunker_door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_bunker_door.*" );
+	},
+
+	power_generator_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.GeneratorStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGenerator.*" );
+		if ( Map.GateStatus == true ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Transmission_Radio" ); // Blow the wall first
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_RadioEng.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSteps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rGenerator.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rGate.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bAxisSpawn.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_RadioEng.*" );
+	},
+
+	power_generator_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.RadioStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_power_generator.*" );
+		}
+	},
+
+	trench_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.TrenchStatus = true;
+		RTCWUtil.StopSniping();     // Push on OBJs now
+
+		// Axis should not go into the trenches...at all
+		Wp.SetWaypointFlag( "walljump1", "allies", true );
+		Wp.SetWaypointFlag( "walljump2", "allies", true );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_staircase_gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_base_gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEngGate.*" );
+
+		if ( Map.RadioStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSteps.*" );
+		}
+		if ( Map.GateStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWall.*" );  // Fallback to the wall to protect
+		}
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" ); // Forget about the flag
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beach_flag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.GateStatus == false && Map.BunkerStatus == false && Map.WallStatus == true ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrenches.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrenches.*" );
+		}
+
+		// Go for just the flag again
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrenches.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_t543" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_597" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTrenches.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		if ( Map.WallStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		}
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_597" ); // On top of FB
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_t543" );
+
+		if ( Map.GateStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate_.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+
+		//disable crouching in combatmovement for axis
+		RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, true );
+
+		if ( Map.BunkerDoorStatus == false && Map.GateStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTrenches.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrenches.*" );
+		}
+
+		if ( Map.TrenchStatus == true ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchSpam_.*" );
+		}
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTrenches.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTrenches.*" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Allies have disabled the axis radio equipment", Map.Axis_Transmission_Radio_Destroyed );
+	OnTrigger( "Planted at the Axis Transmission Radio.", Map.Axis_Transmission_Radio_Planted );
+	OnTrigger( "Allies have destroyed the axis base gate", Map.Axis_base_gate_Destroyed );
+	OnTrigger( "Planted at the Axis base gate.", Map.Axis_base_gate_Planted );
+	OnTrigger( "Planted at the Axis staircase gate.", Map.Axis_staircase_gate_Planted );
+	OnTrigger( "Allies have destroyed the radio stairs gate", Map.Axis_staircase_gate_Destroyed );
+	OnTrigger( "Allies have breached the Sea wall", Map.Sea_Wall_Destroyed );
+	OnTrigger( "Planted at the Sea Wall.", Map.Sea_Wall_Planted );
+	OnTrigger( "Planted at the bunker door.", Map.bunker_door_Planted );
+	OnTrigger( "Allies have blown the main beach bunker door", Map.bunker_door_Destroyed );
+	OnTrigger( "Allies have disabled the Axis Power generator", Map.power_generator_Destroyed );
+	OnTrigger( "Planted at the power generator.", Map.power_generator_Planted );
+	OnTrigger( "Axis reclaims the trenches flag!", Map.beach_flag_Axis_Captured );
+	OnTrigger( "Allies capture the trenches flag!", Map.beach_flag_Allies_Captured );
+	OnTrigger( "Explode_t543 Exploded.", Map.trench_door_Destroyed );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_RadioEng.*", 0.8 );
+	SetGoalPriority( "ATTACK_RadioEng.*", 0.8 );
+	SetGoalPriority( "DEFEND_rGeneratorEng.*", 0.8 );
+	SetGoalPriority( "ATTACK_bEngGate.*", 0.8 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+
+	RTCWUtil.LimitToClass( "DEFEND_rGeneratorEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_RadioEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "ATTACK_RadioEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "ATTACK_bEngGate.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	SetGoalPriority( "PLANT_t543", 1.0 );       // trench door
+	SetGoalPriority( "DEFEND_rGenerator.*", 0.6 );  // Higher priority on defending our main obj
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_219" );  // Inside gate
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beach_flag" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSeawall_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rWallAS_.*" );
+
+	Util.AddUseWp( "PLANT_power_generator", "plant_gen1" );
+	Util.AddUseWp( "PLANT_power_generator", "plant_gen2" );
+	Util.AddUseWp( "PLANT_Axis_base_gate", "plant_basegate" );
+
+	Util.DisableGoal( "ROUTE_basegate" );
+	Util.DisableGoal( "ROUTE_steps" );
+	Util.DisableGoal( "ROUTE_bunkerdoor" );
+
+	MapRoutes =
+	{
+		CHECKPOINT_beach_flag =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_nBeach =
+				{
+					ROUTE_frontdoor = {},
+					ROUTE_nforwardbunker =
+					{
+						ROUTE_backdoor = {},
+					},
+				},
+				ROUTE_sBeach =
+				{
+					ROUTE_frontdoor = {},
+					ROUTE_sforwardbunker =
+					{
+						ROUTE_backdoor = {},
+					},
+				},
+			},
+		},
+		PLANT_Axis_Transmission_Radio =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_steps = {Weight = 3,},
+				ROUTE_basegate = {Weight = 5,},
+			},
+		},
+		PLANT_power_generator =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_bunkerdoor =
+				{
+					Weight = 4,
+					ROUTE_sgenerator = {Weight = 4,},
+					ROUTE_genducts = {},
+					ROUTE_ngenerator = {},
+				},
+			},
+
+		},
+		ATTACK_bRadio_1 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_steps = {Weight = 2,},
+				ROUTE_basegate = {Weight = 5,},
+			},
+		},
+		ATTACK_bGenerator_1 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_basegate =
+				{
+					ROUTE_sgenerator = {},
+					ROUTE_ngenerator = {},
+				},
+				ROUTE_steps =
+				{
+					ROUTE_sgenerator = {},
+					ROUTE_ngenerator = {},
+				},
+				ROUTE_bunkerdoor =
+				{
+					Weight = 4,
+					ROUTE_sgenerator = {Weight = 4,},
+					ROUTE_ngenerator = {},
+					ROUTE_genducts = {},
+				},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bRadio_2 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bRadio_3 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bRadio_4 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bRadio_5 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bRadio_6 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bRadio_7 = MapRoutes.ATTACK_bRadio_1;
+	MapRoutes.ATTACK_bGenerator_2 = MapRoutes.ATTACK_bGenerator_1;
+	MapRoutes.ATTACK_bGenerator_3 = MapRoutes.ATTACK_bGenerator_1;
+	MapRoutes.ATTACK_bGenerator_4 = MapRoutes.ATTACK_bGenerator_1;
+	MapRoutes.ATTACK_bGenerator_5 = MapRoutes.ATTACK_bGenerator_1;
+	MapRoutes.ATTACK_bGenerator_6 = MapRoutes.ATTACK_bGenerator_1;
+	Util.Routes( MapRoutes );
+
+	if (Map.RemoveFirstWall) {
+		EntityKill(217);
+	}
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	class = bot.GetClass();
+
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
+		if ( Map.bPanzers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+		} else
+		{
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.bPanzers += 1;
+		}
+	} else    // Axis
+	{
+		if ( class == CLASS.SOLDIER ) {
+			if ( Map.rFlamers == 1 ) {
+				RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			} else
+			{
+				RTCWUtil.SelectWeapon( bot, WEAPON.FLAMETHROWER );
+				Map.rFlamers += 1;
+			}
+		}
+	}
+	bot.ChangeSpawnPoint( 0 );
+};

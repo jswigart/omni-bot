@@ -1,0 +1,1219 @@
+#include "ui_mp/menudef.h"
+
+#define GLOBAL_TEXTSCALE1	0.25
+#define GLOBAL_TEXTSCALE2	0.3
+#define GLOBAL_TEXTSCALE3	0.4
+
+{
+\\ Server Join \\
+
+  menuDef {
+    	name			"joinserver"
+    	visible			0
+    	fullscreen		0
+    	rect			20 115 600 480
+		focusColor		1 .75 0 1
+    	style			1
+
+	onOpen {		
+		uiScript UpdateFilter ;		
+		hide accept_alt ; 
+		show accept ;
+		hide back_alt ;
+		show back ;
+		hide grpmessage
+	}
+
+	onEsc {
+		uiScript closeJoin
+		close joinserver ;
+		close multi_menu ;
+		open main
+	}
+
+itemDef 
+	{
+	name window
+	group grpSystembutton
+	rect 0 0 600 300	
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .5 .5 .5 .5
+	forecolor 1 1 1 1
+	backcolor 0 0 0 .25
+	visible 1
+	decoration
+	}
+
+
+// DATE AND MESSAGE OF THE DAY	//
+
+itemDef {
+	name datewindow
+	rect 0 299 265 17
+	style WINDOW_STYLE_FILLED	
+	border 1
+	textfont	UI_FONT_NORMAL
+	bordercolor .5 .5 .5 .5
+	backcolor 0 0 0 .15
+	visible 1
+	}
+
+itemDef {
+	name messagewindow
+	rect 264 299 336 17
+	style WINDOW_STYLE_FILLED	
+	border 1
+	bordercolor .5 .5 .5 .5
+	backcolor 0 0 0 .15
+	visible 1
+	}
+
+itemDef {
+      	name refreshdate
+		ownerdraw UI_SERVERREFRESHDATE
+		textfont	UI_FONT_NORMAL
+      	textscale GLOBAL_TEXTSCALE1
+      	rect 0 300 265 25
+		textalign 0
+      	textalignx 5		
+      	textaligny 13
+      	forecolor 1 1 1 1
+      	visible 1
+		decoration 
+    	}
+
+itemDef {
+      	name messageoftheday
+		ownerdraw UI_SERVERMOTD
+		textfont	UI_FONT_NORMAL
+      	textscale GLOBAL_TEXTSCALE2
+		textalign 0
+      	textalignx -4		
+      	textaligny 13
+      	rect 270 280 345 25
+      	forecolor 1 1 1 1
+      	visible 1 
+		decoration
+ 	}
+
+// map selection
+
+
+itemDef {
+      	name gametypefield
+      	style 0	
+	textfont	UI_FONT_NORMAL
+ 	ownerdraw UI_NETSOURCE
+    	rect 20 0 134 25 
+	textstyle 6
+      	textalign ITEM_ALIGN_LEFT		
+      	textalignx 10     
+      	textaligny 20    
+	textscale GLOBAL_TEXTSCALE2     
+      	forecolor 1 1 1 1
+     	visible 1 
+	action { play "sound/misc/kcaction.wav" }
+	mouseEnter { show message_source }
+      	mouseExit { hide message_source }
+    	}
+
+//itemDef {
+//     	name gametypefield
+//     	style 0	
+//	textstyle 6
+//	ownerdraw UI_NETFILTER
+//	textfont	UI_FONT_NORMAL
+//    	rect 220 0 120 25
+//    	textalign ITEM_ALIGN_LEFT		
+//     	textalignx 2     
+//    	textaligny 20    
+//	textscale GLOBAL_TEXTSCALE2     
+//  	forecolor 1 1 1 1
+//  	visible 1 
+//	action { play "sound/misc/kcaction.wav" }
+//	mouseEnter { show message_gamefilter }
+//	mouseExit { hide message_gamefilter }
+//  	}
+
+itemDef {
+	name gametypefield
+	style 0	
+	textstyle 6
+	text "Type:"
+	ownerdraw UI_JOINGAMETYPE
+	textfont	UI_FONT_NORMAL
+    	rect 375 0 160 25
+    	textalign ITEM_ALIGN_LEFT		
+    	textalignx 2     
+    	textaligny 20    
+	textscale GLOBAL_TEXTSCALE2     
+      	forecolor 1 1 1 1
+      	border 0
+      	bordercolor 0 0 0 0
+      	visible 1 
+	action { play "sound/misc/kcaction.wav" }
+	mouseEnter { show message_typefilter }
+      	mouseExit { hide message_typefilter }
+    }
+
+itemDef {
+      	name mappreview
+      	style 0	
+ 	ownerdraw UI_NETMAPCINEMATIC
+	textfont	UI_FONT_NORMAL
+      	rect 497 3 100 80
+      	border 1
+      	bordercolor .1 .1 .1 .40
+      	visible 1 
+    }
+
+itemDef {
+      	name mappreview
+	style WINDOW_STYLE_FILLED	
+      	rect 497 3 100 80 
+      	border 1
+      	bordercolor .1 .1 .1 .40
+      	visible 1 
+    }
+
+
+
+itemDef {
+	name horizontalseparators
+	rect 1 101 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+
+itemDef {
+	name horizontalseparators
+	rect 1 131 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+itemDef {
+	name horizontalseparators
+	rect 1 161 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+itemDef {
+	name horizontalseparators
+	rect 1 191 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+itemDef {
+	name horizontalseparators
+	rect 1 221 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+itemDef {
+	name horizontalseparators
+	rect 1 251 581 15
+	style WINDOW_STYLE_FILLED
+	border 0
+	backcolor .5 .5 .5 .25
+	visible 1
+	decoration
+  }
+
+//	COLUMNS	//
+
+
+
+itemDef {
+	name serverColumn
+	group grpColumn
+	rect 0 100 255 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	//bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+
+itemDef {
+	name mapColumn
+	group grpColumn
+	rect 254 100 115 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+itemDef {
+	name playerColumn
+	group grpColumn
+	rect 368 100 65 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+itemDef {
+	name typeColumn
+	group grpColumn
+	rect 432 100 84 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+
+itemDef {
+	name pingColumn
+	group grpColumn
+	rect 515 100 36 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+
+itemDef {
+	name punkbusterColumn
+	group grpColumn
+	rect 550 100 32 165
+	style WINDOW_STYLE_FILLED
+	border 1
+	backcolor 0 0 0 0
+	bordersize 1
+	bordercolor .5 .5 .5 .5
+	visible 1
+	decoration
+  }
+
+
+ itemDef {
+	name serverlist
+	rect 0 100 600 165
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 120
+	elementheight 15
+	textfont	UI_FONT_NORMAL
+	border 1
+	bordercolor .5 .5 .5 .5
+	textalign 1
+	textalignx 0
+	textaligny -3
+	textscale GLOBAL_TEXTSCALE1	
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_SERVERS		
+	forecolor 1 1 1 1
+	backcolor .5 .5 .5 .2
+	outlinecolor .7 .7 0 .25
+	visible 1
+	// 	numcols     xpos  xwitdth   textlen
+	columns 6       0     40        40
+		            260	  40        20
+			        375   5         10
+			        437   20        10
+			        518   20        20
+					552   20		20
+	doubleClick { uiScript JoinServer }
+  }
+
+
+
+
+
+//	SORT TABS	//
+
+
+ itemDef {
+      	name server
+	group grpTabs
+      	text "Server Name"
+	type ITEM_TYPE_BUTTON
+      	textscale GLOBAL_TEXTSCALE1
+	textfont	UI_FONT_NORMAL
+      	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .25	
+      	rect 0 85 255 15
+	textalign 1
+      	textalignx 120		// center
+      	textaligny 10
+      	forecolor 1 1 1 1
+	backcolor .3 .5 .2 .3
+      	visible 1 
+      	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 0 ; 
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor server backcolor .1 .2 .37 1 ; 
+		setitemcolor grpColumn backcolor 0 0 0 0 ; 
+		setitemcolor serverColumn backcolor 0 0 0.8 .25 }
+	mouseEnter { show message_sort ; setitemcolor serverColumn bordercolor 1 1 1 1 }
+      	mouseExit { hide message_sort ; setitemcolor serverColumn bordercolor .5 .5 .5 .5 }  
+    }
+
+
+
+ itemDef {
+      	name map
+	group grpTabs
+	type ITEM_TYPE_BUTTON
+      	text "Map Name"
+      	textscale GLOBAL_TEXTSCALE1
+	textfont	UI_FONT_NORMAL
+	style WINDOW_STYLE_FILLED	
+      	rect 254 85 115 15
+	textalign 1
+      	textalignx 55		// center
+      	textaligny 10
+	border 1
+	bordercolor .1 .1 .1 .25
+	backcolor .3 .5 .2 .3
+      	forecolor 1 1 1 1
+      	visible 1 
+      	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 1 ; 
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor map backcolor .1 .2 .37 1 ; 
+		setitemcolor grpColumn backcolor 0 0 0 0 ; 
+		setitemcolor mapColumn backcolor 0 0 1 .25 }
+	mouseEnter { show message_sort ; setitemcolor mapColumn bordercolor 1 1 1 1 }
+      	mouseExit { hide message_sort ; setitemcolor mapColumn bordercolor .5 .5 .5 .5 }	  	  
+    }
+
+
+
+ itemDef {
+	name Players
+	group grpTabs
+	text "#Players"
+	type ITEM_TYPE_BUTTON
+	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED	
+	textfont	UI_FONT_NORMAL
+	rect 368 85 65 15
+	textalign 1
+	textalignx 30		// center
+	textaligny 10
+	border 1
+	bordercolor .1 .1 .1 .25
+	forecolor 1 1 1 1
+	backcolor .3 .5 .2 .3
+	visible 1 
+	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 2 ;
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor Players backcolor .1 .2 .37 1 ;  
+		setitemcolor grpColumn backcolor 0 0 0 0 ; 
+		setitemcolor playerColumn backcolor 0 0 1 .25 }
+	mouseEnter { show message_sort ; setitemcolor playerColumn bordercolor 1 1 1 1 }
+      	mouseExit { hide message_sort ; setitemcolor playerColumn bordercolor .5 .5 .5 .5 }  	  
+    }
+
+
+itemDef {
+	name Type
+	group grpTabs
+	text "Type"
+	textfont	UI_FONT_NORMAL
+	textscale GLOBAL_TEXTSCALE1
+	type ITEM_TYPE_BUTTON
+	style WINDOW_STYLE_FILLED	
+	rect 432 85 84 15
+	textalign 1
+	textalignx 42		// center
+	textaligny 10
+	border 1	
+	bordercolor .1 .1 .1 .25	
+	backcolor .3 .5 .2 .3
+	forecolor 1 1 1 1
+	visible 1 
+	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 3 ;
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor Type backcolor .1 .2 .37 1 ;  
+		setitemcolor grpColumn backcolor 0 0 0 0 ; 
+		setitemcolor typeColumn backcolor 0 0 1 .25 }
+	mouseEnter { show message_sort ; setitemcolor typeColumn bordercolor 1 1 1 1 }
+      	mouseExit { hide message_sort ; setitemcolor typeColumn bordercolor .5 .5 .5 .5 }	  	  
+    }
+
+
+itemDef {
+	name Ping
+	group grpTabs
+	text "Ping"
+	type ITEM_TYPE_BUTTON
+	textscale GLOBAL_TEXTSCALE1
+	textfont	UI_FONT_NORMAL
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .25		
+	rect 515 85 36 15
+	textalign 1
+	textalignx 18		// center
+	textaligny 10
+	backcolor .3 .5 .2 .3
+	forecolor 1 1 1 1
+	visible 1 
+	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 4 ;
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor Ping backcolor .1 .2 .37 1 ;  
+		setitemcolor grpColumn backcolor 0 0 0 0 ;
+		setitemcolor pingColumn backcolor 0 0 1 .25 }
+	mouseEnter { show message_sort ; setitemcolor pingColumn bordercolor 1 1 1 1 }
+      	mouseExit { hide message_sort ; setitemcolor pingColumn bordercolor .5 .5 .5 .5 }	  
+    }
+
+itemDef {
+	name PunkBuster
+	group grpTabs2
+	//text "PB"
+	background "ui_mp/assets/pblogo.tga"
+	type ITEM_TYPE_BUTTON
+	textscale GLOBAL_TEXTSCALE1
+	textfont	UI_FONT_NORMAL
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .25		
+	rect 550 85 32 15
+	textalign 1
+	textalignx 16		// center
+	textaligny 10
+	backcolor 1 1 1 1
+	forecolor 1 1 1 1
+	visible 1 
+	action { play "sound/misc/nomenu.wav" ; 
+		uiScript ServerSort 5 ;
+		setitemcolor grpTabs backcolor .3 .5 .2 .3 ; 
+		setitemcolor grpColumn backcolor 0 0 0 0 ;
+		setitemcolor punkbusterColumn backcolor 0 0 1 .25 }
+		mouseEnter { show message_sort ; setitemcolor punkbusterColumn bordercolor 1 1 1 1 }
+		mouseExit { hide message_sort ; setitemcolor punkbusterColumn bordercolor .5 .5 .5 .5 }	  
+    }
+
+
+// 	BUTTONS		//
+
+itemDef {
+      	name refreshSource
+      	text "Get New List"
+	type ITEM_TYPE_BUTTON
+      	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED	
+	//background "ui_mp/assets/button_red.tga"
+	border 1
+	bordercolor .1 .1 .1 .25
+      	rect 10 38 105 15
+	textalign 1
+      	textalignx 52		// center
+      	textaligny 11
+	textfont	UI_FONT_NORMAL
+	backcolor .3 .5 .2 .3
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseEnter { show message_refreshSOurce ; setitemcolor refreshSource backcolor .1 .2 .37 1 }
+      	mouseExit { hide message_refreshSource ; setitemcolor refreshSource backcolor .3 .5 .2 .3 }
+	action { play "sound/misc/nomenu.wav" ; 
+	uiScript RefreshServers }	  	  
+    	}
+
+
+itemDef {
+      	name refreshFilter
+      	text "Refresh List"
+      	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED
+	textfont	UI_FONT_NORMAL
+	type ITEM_TYPE_BUTTON
+	border 1
+	bordercolor .1 .1 .1 .25
+      	rect 126 38 94 15
+	textalign 1
+      	textalignx 46		// center
+      	textaligny 11
+	backcolor .3 .5 .2 .3 
+      	forecolor 1 1 1 1
+      	visible 1 
+	mouseEnter { show message_refreshFilter ; setitemcolor refreshFilter backcolor .1 .2 .37 1 }
+      	mouseExit { hide message_refreshFilter ; setitemcolor refreshFilter backcolor .3 .5 .2 .3 }	  	  
+	action { play "sound/misc/nomenu.wav" ; 
+	uiScript RefreshFilter }	  	  
+    	}
+
+	itemDef {
+		name			filterServers
+		text			"Filter Servers"
+		type			ITEM_TYPE_BUTTON
+		textfont		UI_FONT_NORMAL
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			230 38 100 15
+		textalign		1
+		textalignx		51		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play "sound/misc/kcaction.wav" ; 
+			open filter_popmenu
+		}
+
+		mouseEnter		{ show message_filterServers ; setitemcolor filterServers backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_filterServers ; setitemcolor filterServers backcolor .3 .5 .2 .3 }
+	}
+
+
+	itemDef {
+		name			PunkBusterInfo
+		group			pbgrp
+		text			"PunkBuster"
+		type			ITEM_TYPE_BUTTON
+		textfont		UI_FONT_NORMAL
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			340 38 140 15
+		textalign		1
+		textalignx		44		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play "sound/misc/kcaction.wav" ; 
+			conditionalopen cl_punkbuster pbdisable_popmenu pbenable_popmenu
+		}
+
+		mouseEnter		{ setitemcolor PunkBusterInfo backcolor .1 .2 .37 1 }
+		mouseExit		{ setitemcolor PunkBusterInfo backcolor .3 .5 .2 .3 }
+	}
+
+	itemDef {
+		name			pbstatus
+		group			pbgrp
+		type			ITEM_TYPE_MULTI
+		text			""
+		cvar			"cl_punkbuster"
+		cvarFloatList	{ "Disabled" 0 "Enabled" 1 }
+		rect			395 38 100 15
+		textalign		ITEM_ALIGN_CENTER
+		textalignx		21
+		textaligny		13
+		textfont		UI_FONT_NORMAL
+		textscale		.25 		 
+		forecolor		1 1 1 1
+		style			WINDOW_STYLE_FILLED
+		backcolor		0 0 0 0
+		visible			1
+		decoration
+	}
+
+
+	itemDef {
+		name			password
+		text			"Password"
+		type			ITEM_TYPE_BUTTON
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		textfont		UI_FONT_NORMAL
+		bordercolor		.1 .1 .1 .25
+		rect			10 270 100 15
+		textalign		1
+		textalignx		50		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play "sound/misc/kcaction.wav" ; 
+			open password_popmenu
+		}
+
+		mouseEnter		{ show message_password ; setitemcolor password backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_password ; setitemcolor password backcolor .3 .5 .2 .3 }
+	}
+
+	itemDef {
+		name			createFavorite
+		text			"New Favorite"
+		type			ITEM_TYPE_BUTTON
+		textfont		UI_FONT_NORMAL
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			180 270 100 15
+		textalign		1
+		textalignx		51		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play "sound/misc/kcaction.wav" ; 
+			open createfavorite_popmenu
+		}
+
+		mouseEnter		{ show message_createFavorite ; setitemcolor createFavorite backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_createFavorite ; setitemcolor createFavorite backcolor .3 .5 .2 .3 }				  
+	}
+
+	itemDef {
+		name			addFavorite
+		text			"Add To Favorites"
+		type			ITEM_TYPE_BUTTON
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		bordercolor		.1 .1 .1 .25
+		ownerdrawFlag	UI_SHOW_NOTFAVORITESERVERS
+		rect			310 270 110 15
+		textfont		UI_FONT_NORMAL
+		textalign		1
+		textalignx		54		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+
+		action {
+			play "sound/misc/nomenu.wav" ; 
+			uiScript addFavorite
+		}
+
+		visible			0
+
+		mouseEnter		{ show message_addFavorite ; setitemcolor addFavorite backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_addFavorite ; setitemcolor addFavorite backcolor .3 .5 .2 .3 } 	  
+	}
+
+	itemDef {
+		name			delfavorite
+		text			"Del. Favorite"
+		type			ITEM_TYPE_BUTTON
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		textfont		UI_FONT_NORMAL
+		ownerdrawFlag	UI_SHOW_FAVORITESERVERS
+		border			1
+		bordercolor		.1 .1 .1 .25
+		rect			310 270 110 15
+		textalign		1
+		textalignx		50		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play		"sound/misc/nomenu.wav" ;
+			uiScript	DeleteFavorite ;
+			uiScript	UpdateFilter
+		}
+
+		mouseEnter		{ show message_delFavorite ; setitemcolor delfavorite backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_delFavorite ; setitemcolor delfavorite backcolor .3 .5 .2 .3 }
+	}
+
+	itemDef {
+		name			serverinfo
+		text			"Server Info"
+		type			ITEM_TYPE_BUTTON
+		textscale		GLOBAL_TEXTSCALE1
+		style			WINDOW_STYLE_FILLED
+		border			1
+		textfont		UI_FONT_NORMAL
+		bordercolor		.1 .1 .1 .25
+		rect			487 270 100 15
+		textalign		1
+		textalignx		50		// center
+		textaligny		11
+		backcolor		.3 .5 .2 .3
+		forecolor		1 1 1 1
+		visible			1
+
+		action {
+			play "sound/misc/kcaction.wav" ; 
+			open serverinfo_popmenu
+		}
+
+		mouseEnter		{ show message_password ; setitemcolor serverinfo backcolor .1 .2 .37 1 }
+		mouseExit		{ hide message_password ; setitemcolor serverinfo backcolor .3 .5 .2 .3 }
+	}
+
+itemDef {
+      	name serverinfo
+      	text "Server Info"
+	type ITEM_TYPE_BUTTON
+	textfont	UI_FONT_NORMAL
+      	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .25
+      	rect 384 270 92 15
+	textalign 1
+      	textalignx 46		// center
+      	textaligny 11
+	backcolor .3 .5 .2 .3
+      	forecolor 1 1 1 1
+      	visible 0 
+      	action { play "sound/misc/kcaction.wav" ; 
+	open serverinfo_popmenu }
+	mouseEnter { show message_serverinfo ; setitemcolor serverinfo backcolor .1 .2 .37 1 }
+      	mouseExit { hide message_serverinfo ; setitemcolor serverinfo backcolor .3 .5 .2 .3 }	  	  
+    	}
+
+itemDef {
+      	name findplayer
+      	text "Find Friend"
+	type ITEM_TYPE_BUTTON
+	textfont	UI_FONT_NORMAL
+      	textscale GLOBAL_TEXTSCALE1
+	style WINDOW_STYLE_FILLED
+	border 1
+	bordercolor .1 .1 .1 .25
+      	rect 502 270 92 15
+	textalign 1
+      	textalignx 46		// center
+      	textaligny 11
+	backcolor .3 .5 .2 .3
+      	forecolor 1 1 1 1
+      	visible 0
+      	action { play "sound/misc/kcaction.wav" ; 
+	open findplayer_popmenu }
+	mouseEnter { show message_findplayer ; setitemcolor findplayer backcolor .1 .2 .37 1 }
+      	mouseExit { hide message_findplayer ; setitemcolor findplayer backcolor .3 .5 .2 .3 }	  	  
+    	}
+
+//	BACK AND NEXT BUTTONS	//
+
+
+itemDef {
+	name back
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 334 40 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 6
+	textaligny 12
+	forecolor .9 .9 .9 .9
+	visible 1
+	//border 1
+	//bordercolor 1 1 1 1
+
+     	action {
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		open main
+	}	
+    }
+
+itemDef {
+	name back_alt
+	text " "
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 10 334 40 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 6
+	textaligny 12
+	forecolor .6 .6 .6 .6
+	visible 1
+	type ITEM_TYPE_BUTTON
+	//border 1
+	//bordercolor 1 1 1 1
+
+	action {		
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		open main
+	}  	  
+    }
+
+//	next	//
+
+
+itemDef {
+	name accept
+	text "ACCEPT"
+ 	type 1
+	textfont	UI_FONT_NORMAL
+	style 0	
+	textstyle 6
+	rect 535 334 60 14 
+	textalign 0
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 5
+	textaligny 12
+	forecolor .9 .9 .9 .9
+	visible 1
+	//border 1
+	//bordercolor 1 1 1 1
+	
+	
+	mouseEnter {
+		hide accept ;
+		show accept_alt		
+	}
+
+     	action {
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		uiScript JoinServer
+	}	
+    }
+
+itemDef {
+	name accept_alt
+	text "ACCEPT"
+ 	type 1
+	style 0	
+	textstyle 6
+	rect 535 334 60 14 
+	textalign 0
+	textfont	UI_FONT_NORMAL
+	textscale GLOBAL_TEXTSCALE1		
+	textalignx 5
+	textaligny 12
+	forecolor .6 .6 .6 .6
+	visible 1 
+	type ITEM_TYPE_BUTTON
+	//border 1
+	//bordercolor 1 1 1 1
+
+	mouseExit {
+		hide accept_alt ;
+		show accept		
+	}
+
+	action {
+		hide grpControls ;
+		close createserver ;
+		close joinserver ;
+		close multi_menu ;
+		uiScript JoinServer
+	}  	  
+    }
+
+//	VIEW OPTIONS	//
+itemDef {
+     		name dataratesetting		
+     		type ITEM_TYPE_MULTI
+		text "Connection Type:"
+		cvar "rate"
+		cvarFloatList { "<=28.8k" 2500 "33.6k" 3000 "56k" 4000 "ISDN" 5000 "LAN/CABLE/xDSL" 25000  }
+		rect 10 65 250 12
+     		textalign ITEM_ALIGN_RIGHT
+     		textalignx 117
+     		textaligny 10
+		textfont	UI_FONT_NORMAL
+		textscale GLOBAL_TEXTSCALE1
+		style WINDOW_STYLE_FILLED
+		backcolor 1 1 1 .07           
+     		forecolor 1 1 1 1
+     		visible 1 
+		action { uiScript update ui_setRate }
+   	}
+
+//	MESSAGES	//
+
+itemDef {
+	name message_back
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textfont	UI_FONT_NORMAL
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Exit to Main Menu"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_accept
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textalignx 0
+	textstyle 1
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Play Wolf"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_source
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Set Source"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_gamefilter
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Set to Filter for Specific Game Mods"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_typefilter
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Set to Filter for Specific Game Types"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_sort
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Sort Column"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_refreshSource
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Get Updated Server List from Current Source"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_refreshFilter
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Refresh All Currently Filtered Servers"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_addFavorite
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Add Selected Server to Favorites"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_delFavorite
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Delete Selected Server from Favorites"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_createFavorite
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	textfont	UI_FONT_NORMAL
+	text "Enter IP Address of Favorite Server"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_addfilter
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Enter Four Letter Filter and Description"
+	textfont	UI_FONT_NORMAL
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+itemDef {
+	name message_password
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Enter Password for Protected Servers"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_serverinfo
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textfont	UI_FONT_NORMAL
+	textalign 1
+	textstyle 1
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Display Server Information"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+itemDef {
+	name message_findplayer
+	group grpmessage
+	style 0 
+	rect 320 430 128 30
+	textalign 1
+	textstyle 1
+	textfont	UI_FONT_NORMAL
+	textalignx 0
+	textaligny 25
+	textscale GLOBAL_TEXTSCALE3
+	text "Search Current Server List for Friends"
+	forecolor 1 1 1 1
+	decoration 
+	visible 0
+	}
+
+
+
+}
+
+
+}
+
+

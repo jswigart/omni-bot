@@ -1,0 +1,185 @@
+// This script provides functionality for the bots to pickup close weapons, health, and ammo if they aren't at max levels
+
+this.Name = "PickupItems";
+this.Parent = "HighLevel";
+this.AlwaysRecieveEvents = true;
+this.AutoAdd = true;
+this.PickupPriority = 1.05;
+this.Range = 300;
+this.Frequency = 10; // 1 to 10, 0 to disable
+this.Debug = false;
+
+this.Initialize = function()
+{
+	watchParams = {
+		Radius = this.Range,
+		Category = CAT.PICKUP,
+		//RequireLOS = TRACE.VISIBLE,
+	};
+	this.WatchForEntityCategory(watchParams);
+	this.Bot.AmmoTable = {};
+	this.Bot.AmmoInfo = {};
+	
+	// initialize once, since we can't initialize indexed arrays
+	if ( !this.AmmoToWeapon )
+	{
+		this.AmmoToWeapon = table();
+		this.AmmoToWeapon[CLASS.AMMO_MACHINEGUN] = WEAPON.MACHINEGUN;
+		this.AmmoToWeapon[CLASS.AMMO_NAILGUN] = WEAPON.NAILGUN;
+		this.AmmoToWeapon[CLASS.AMMO_RAILGUN] = WEAPON.RAILGUN;
+		this.AmmoToWeapon[CLASS.AMMO_SHOTGUN] = WEAPON.SHOTGUN;
+		this.AmmoToWeapon[CLASS.AMMO_HYPERBLASTER] = WEAPON.HYPERBLASTER;
+		this.AmmoToWeapon[CLASS.AMMO_ROCKETLAUNCHER] = WEAPON.ROCKETLAUNCHER;
+		this.AmmoToWeapon[CLASS.AMMO_GRENADELAUNCHER] = WEAPON.GRENADELAUNCHER;
+		this.AmmoToWeapon[CLASS.AMMO_LIGHTNINGGUN] = WEAPON.LIGHTNINGGUN;
+		this.AmmoToWeapon[CLASS.AMMO_NAPALMGUN] = WEAPON.NAPALMGUN;
+		this.AmmoToWeapon[CLASS.AMMO_DARKMATTERGUN] = WEAPON.DARKMATTERGUN;
+	}	
+
+	Util.MapDebugPrint( this.Name + " Initialized", true );
+};
+
+this.Enter = function()
+{
+	this.AddFinishCriteria(this.TargetEntity, "deleted");
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DISABLED);
+};
+
+this.Update = function()
+{
+	this.Bot.HoldButton(BTN.SPRINT, 3);
+	this.Goto(this.TargetPosition, 32);
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.SPRINT);
+	this.TargetPosition = null;
+	this.TargetEntity = null;
+};
+
+this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
+{
+	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) > this.Frequency ) {
+		return;
+	}
+
+	if ( ent )
+	{
+		entCat = this.GetPickupCategory(ent);
+
+		if ( entCat != -1 ) {
+			pos = GetEntPosition(ent);
+			if ( !pos ) {
+				return;
+			}
+
+			this.TargetEntity = ent;
+			this.TargetPosition = pos;
+		}
+		else {
+			return;
+		}
+
+		priority = 0;
+		switch(entCat)
+		{
+			case CAT.PICKUP_WEAPON:
+			case CAT.PICKUP_AMMO:
+			{
+				if ( this.NeedsAmmo(ent, entCat) ) {
+					priority = this.PickupPriority;
+				}
+			}
+			case CAT.PICKUP_HEALTH:
+			{
+				if ( this.Bot.Health < this.Bot.MaxHealth ) {
+					if ( this.Debug ) {
+						s = format("picking up health. current: %d max: %d", this.Bot.Health, this.Bot.MaxHealth);
+						this.Bot.Say( s );
+					}				
+					priority = this.PickupPriority;
+				}
+			}
+			case CAT.PICKUP_ARMOR:
+			{
+				if ( this.Bot.Armor < this.Bot.MaxArmor ) {
+					if ( this.Debug ) {
+						s = format("picking up armor. current: %d max: %d", this.Bot.Armor, this.Bot.MaxArmor);
+						this.Bot.Say( s );
+					}
+					priority = this.PickupPriority;
+				}
+			}
+		}
+
+		this.Priority = priority;
+	}
+};
+
+this.NeedsAmmo = function(ent, entCat)
+{
+	switch( entCat )
+	{
+		case CAT.PICKUP_WEAPON:
+		{
+			weapClass = GetEntClass(ent);
+			if ( weapClass ) {
+				weaponId = GetWeaponIdFromClassId( weapClass );
+
+				if ( weaponId && !this.Bot.HasWeapon(weaponId) ) {
+					if ( this.Debug ) {
+						this.Bot.Say( "picking up weap " + Util.WeaponName(weaponId) );
+					}
+					return true;
+				}
+			}
+		}
+		case CAT.PICKUP_AMMO:
+		{
+			ammoClass = GetEntClass(ent);
+			weaponId = this.AmmoToWeapon[ammoClass];
+			if ( weaponId )
+			{	
+				tableClear(this.Bot.AmmoTable);
+				if (this.Bot.GetCurrentAmmo(this.Bot.AmmoTable, 0, weaponId)) {
+					if ( (this.Bot.AmmoTable.CurrentAmmo / this.Bot.AmmoTable.MaxAmmo) < 0.5 ) {
+						if ( this.Debug ) {
+							s = format("ammo for weap: %s current: %d max: %d", Util.WeaponName(weaponId), this.Bot.AmmoTable.CurrentAmmo, this.Bot.AmmoTable.MaxAmmo);
+							this.Bot.Say( s );
+						}
+						return true;
+					}
+				}
+			}
+		}
+	}
+	
+	return false;
+};
+
+this.GetPickupCategory = function(ent)
+{
+	if ( GetEntCategory(ent, CAT.PICKUP_HEALTH) == 1 ) {
+		return CAT.PICKUP_HEALTH;
+	}
+
+	if ( GetEntCategory(ent, CAT.PICKUP_WEAPON) == 1 ) {
+		return CAT.PICKUP_WEAPON;
+	}
+
+	if ( GetEntCategory(ent, CAT.PICKUP_AMMO) == 1 ) {
+		return CAT.PICKUP_AMMO;
+	}
+
+	if ( GetEntCategory(ent, CAT.PICKUP_ARMOR) == 1 ) {
+		return CAT.PICKUP_ARMOR;
+	}
+
+	if ( GetEntCategory(ent, CAT.PICKUP_ENERGY) == 1 ) {
+		return CAT.PICKUP_ENERGY;
+	}
+
+	return -1;
+};

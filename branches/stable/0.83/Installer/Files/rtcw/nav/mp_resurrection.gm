@@ -1,0 +1,456 @@
+//==========================================================================================
+//
+//	mp_resurrection.gm
+//
+//	Who        	When		What
+//------------------------------------------------------------------------------------------
+//	^0MARTIN ^?>:(	14 August 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	FogViewDistance = 1400,
+	NormalViewDistance = 5000,
+	DocStatus = false,
+	FlagStatus = 0,
+	Suicide = MAP_SUICIDE,
+	DocsGone = false,
+
+	Airstrike =
+	{
+		bsk1 =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( -0.361, 0.417, 0.834 ),
+			NoPause = true,
+		},
+	},
+
+	catacomb_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "catacomb_door_Destroyed" );
+	},
+
+	main_gate_power_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "main_gate_power_Destroyed" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bMain.*" );
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
+	},
+
+	waterway_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rMain.*" );
+
+		Util.MapDebugPrint( "waterway_door_Destroyed" );
+	},
+
+	Book_of_the_Resurrection_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Wp.SetWaypointFlag( "towerjump", "closed", true );
+		Wp.SetWaypointFlag( "cagejump", "closed", true );
+		Map.DocStatus = false;
+		Map.DocsGone = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				if ( Map.Suicide && bot.GetReinforceTime() < 8 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "Book_of_the_Resurrection_Secured" );
+	},
+
+	Book_of_the_Resurrection_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Wp.SetWaypointFlag( "towerjump", "closed", false );
+		Wp.SetWaypointFlag( "cagejump", "closed", false );
+		Map.DocStatus = true;
+		if (Map.DocsGone)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+		}
+
+		Util.MapDebugPrint( "Book_of_the_Resurrection_Taken" );
+	},
+
+	room_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.FlagStatus = 1;
+
+		Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "room_flag_Axis_Captured" );
+	},
+
+	room_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.FlagStatus = 2;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_catacomb_door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bMain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bMain.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "room_flag_Allies_Captured" );
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	ReduceView =
+	{
+		Name = "ReduceView",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.FogViewDistance;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.NormalViewDistance;
+			}
+		},
+	},
+	Cage =
+	{
+		Name = "Cage",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) )
+			{
+				Map.DocsGone = true;
+				Wp.SetWaypointFlag( "cagejump", "closed", true );
+				b = Util.GetBotByName( GetEntName( ent ) );
+				if ( b ) {
+					b.SayTeam( "I'm dropping the objective at the cage!" );
+				}
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Docs are at the cage!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			/*b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.HoldButton( BTN.JUMP, 3 );
+				b.SayTeam( "JUMPING LOL" );
+			}*/
+		},
+	},
+	// Triggers axis to protect the transmitter and not push into basement
+	DocsGone =
+	{
+		Name = "DocsGone",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) )
+			{
+				Map.DocsGone = true;
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						if ( Map.Suicide && bot.GetReinforceTime() < 8 ) {
+							bot.ExecCommand( "kill" );
+						}
+					}
+				}
+				Util.MapDebugPrint( "DocsGone" );
+			}
+		},
+		OnExit = function( ent )
+		{},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	tower1 = OnTriggerRegion( AABB( -3472.000,-2608.000,-30.000,-3119.000,-1999.000,44.000 ), Map.DisableCombatMove );
+	tower2 = OnTriggerRegion( AABB( -3472.000,-1288.000,-30.000,-3127.000,-743.000,44.000 ), Map.DisableCombatMove );
+	fog = OnTriggerRegion(AABB( 775.000,-2176.000,-1470.000,5696.000,640.000,-1332.000 ), Map.ReduceView );
+	cage = OnTriggerRegion(AABB( -166.000,-1507.000,-965.000,-108.000,-1448.000,-891.000 ), Map.Cage );
+	gone1 = OnTriggerRegion(AABB( 3393.000,-1256.000,-950.000,3432.000,-1175.000,-876.000 ), Map.DocsGone );
+	gone2 = OnTriggerRegion(AABB( 2250.000,26.000,-1470.000,2288.000,109.000,-1396.000 ), Map.DocsGone );
+
+	// Register callback functions
+	OnTrigger( "the catacomb door Destroyed.", Map.catacomb_door_Destroyed );
+	OnTrigger( "The Main Gate has been breached!", Map.main_gate_power_Destroyed );
+	OnTrigger( "Allies Breached the waterway entrance", Map.waterway_door_Destroyed );
+	OnTrigger( "Flag returned Book of the Resurrection!", Map.Book_of_the_Resurrection_Secured );
+	OnTrigger( "Allies have stolen Book of the Resurrection!", Map.Book_of_the_Resurrection_Taken );
+	OnTrigger( "Axis reclaims the Forward room!", Map.room_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward room!", Map.room_flag_Allies_Captured );
+	// "Planted at the waterway door."
+	// "Planted at the main gate power."
+	// "Flag returned Book of the Resurrection!"
+	// "Planted at the catacomb door."
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "VENOM_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_transmitter" );
+
+	RTCWUtil.LimitToClass( "GRENADE_rMain.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "MOUNTMG42_rMain.*", TEAM.AXIS, CLASS.LIEUTENANT );
+
+	Util.SetMaxUsersInProgress( 1, "GRENADE_rMain" );
+	Util.SetMaxUsersInProgress( 1, "PANZER_bSpawnkill.*" );
+	Util.SetMaxUsersInProgress( 2, "PLANT_waterway_door" );
+	Util.SetMaxUsersInProgress( 2, "PLANT_main_gate_power" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_main_gate_power" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_waterway_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bMain.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rMain.*" );
+
+	Wp.SetWaypointFlag( "towerjump", "closed", true );
+	Wp.SetWaypointFlag( "cagejump", "closed", true );
+
+	MapRoutes =
+	{
+		CAPPOINT_transmitter =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_cagesteps = {}, // This is a suicide route just to move it forward quick
+				ROUTE_southobjsteps =
+				{
+					Weight = 2,
+					ROUTE_basementsidedoor =
+					{
+						ROUTE_courtyard = {ROUTE_towerjump = {},},
+						ROUTE_grandfatherclock = {ROUTE_towerjump = {},},
+						ROUTE_maingate = {},
+						ROUTE_waterwaydoor = {ROUTE_maingate = {},},
+					},
+					ROUTE_sidedoor =
+					{
+						ROUTE_courtyard = {ROUTE_towerjump = {},},
+						ROUTE_grandfatherclock = {ROUTE_towerjump = {},},
+						ROUTE_maingate = {},
+					},
+				},
+				ROUTE_scatacombs =
+				{
+					Weight = 2,
+					ROUTE_catacombdoor =
+					{
+						ROUTE_basementwaterhall =
+						{
+							ROUTE_courtyard = {ROUTE_towerjump = {},},
+							ROUTE_grandfatherclock = {ROUTE_towerjump = {},},
+						},
+						ROUTE_basementbridge =
+						{
+							ROUTE_maingate = {},
+						},
+					},
+				},
+			},
+
+		},
+		FLAG_Book_of_the_Resurrection =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_flagsideexit =
+				{
+					Weight = 2,
+					ROUTE_catacombdoor =
+					{
+						ROUTE_ncatacombs = {},
+						ROUTE_scatacombs = {},
+					},
+					ROUTE_sidedoor =
+					{
+						ROUTE_southobjsteps = {},
+						ROUTE_northobjsteps = {},
+					},
+					ROUTE_basementsidedoor =
+					{
+						ROUTE_southobjsteps = {},
+						ROUTE_northobjsteps = {},
+					},
+				},
+				ROUTE_courtyard =
+				{
+					ROUTE_sidedoor =
+					{
+						ROUTE_southobjsteps = {},
+						ROUTE_northobjsteps = {},
+					},
+					ROUTE_basementsidedoor =
+					{
+						ROUTE_southobjsteps = {},
+						ROUTE_northobjsteps = {},
+					},
+				},
+			},
+			ROUTE_bspawn =
+			{
+
+				ROUTE_maingate =
+				{
+					ROUTE_courtyard =
+					{
+						ROUTE_sidedoor =
+						{
+							ROUTE_southobjsteps = {},
+							ROUTE_northobjsteps = {},
+						},
+						ROUTE_basementsidedoor =
+						{
+							ROUTE_southobjsteps = {},
+							ROUTE_northobjsteps = {},
+						},
+					},
+					ROUTE_basementbridge =
+					{
+						ROUTE_catacombdoor =
+						{
+							ROUTE_ncatacombs = {},
+							ROUTE_scatacombs = {},
+						},
+					},
+				},
+				ROUTE_waterwaydoor =
+				{
+					ROUTE_basementbridge =
+					{
+						ROUTE_catacombdoor =
+						{
+							ROUTE_ncatacombs = {},
+							ROUTE_scatacombs = {},
+						},
+					},
+				},
+			},
+			ROUTE_rspawn =
+			{
+				ROUTE_catacombdoor =
+				{
+					ROUTE_ncatacombs = {},
+					ROUTE_scatacombs = {},
+				},
+				ROUTE_southobjsteps = {},
+				ROUTE_northobjsteps = {},
+			},
+		},
+	};
+	MapRoutes.CAPPOINT_transmitter.ROUTE_docgrab.ROUTE_ncatacombs = MapRoutes.CAPPOINT_transmitter.ROUTE_docgrab.ROUTE_scatacombs;
+	MapRoutes.CAPPOINT_transmitter.ROUTE_docgrab.ROUTE_northobjsteps = MapRoutes.CAPPOINT_transmitter.ROUTE_docgrab.ROUTE_southobjsteps;
+	MapRoutes.FLAG_Book_of_the_Resurrection.ROUTE_flagspawn.ROUTE_grandfatherclock = MapRoutes.FLAG_Book_of_the_Resurrection.ROUTE_flagspawn.ROUTE_courtyard;
+	MapRoutes.FLAG_Book_of_the_Resurrection.ROUTE_bspawn.ROUTE_maingate.ROUTE_grandfatherclock = MapRoutes.FLAG_Book_of_the_Resurrection.ROUTE_bspawn.ROUTE_maingate.ROUTE_courtyard;
+
+	Util.Routes( MapRoutes );
+	yield(); yield();
+
+	// Martin - moving so it gets enabled
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.StopSniping();
+};

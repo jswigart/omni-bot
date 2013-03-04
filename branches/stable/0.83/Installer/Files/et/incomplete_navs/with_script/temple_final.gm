@@ -1,0 +1,267 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
+	Checkpoint_flag1 = "CHECKPOINT_flag1",
+	Flag_gold = "FLAG_gold",
+	Cappoint_Dropoff_1 = "CAPPOINT_Dropoff_1",
+	Cappoint_Dropoff_2 = "CAPPOINT_Dropoff_2",
+	Cappoint_Dropoff_3 = "CAPPOINT_Dropoff_3",
+	Cappoint_Dropoff_4 = "CAPPOINT_Dropoff_4",
+	Build_Canyon_Rope_Bridge = "BUILD_Canyon_Rope_Bridge",
+	Build_Canyon_Tank_Bridge = "BUILD_Canyon_Tank_Bridge",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Escape_caves_scaffolding = "BUILD_Escape_caves_scaffolding",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_Barrier = "BUILD_Tank_Barrier",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Build_Temple_MG_Nest = "BUILD_Temple_MG_Nest",
+	Build_temple_wooden_barrier = "BUILD_temple_wooden_barrier",
+	Plant_Canyon_Rope_Bridge = "PLANT_Canyon_Rope_Bridge",
+	Plant_Canyon_Tank_Bridge = "PLANT_Canyon_Tank_Bridge",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Escape_caves_scaffolding = "PLANT_Escape_caves_scaffolding",
+	Plant_Tank_Barrier = "PLANT_Tank_Barrier",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_Temple_MG_Nest = "PLANT_Temple_MG_Nest",
+	Plant_floor_breach_to_the_escape_caves = "PLANT_floor_breach_to_the_escape_caves",
+	Plant_temple_caves_access_breach = "PLANT_temple_caves_access_breach",
+	Plant_temple_corrdior_wall_crack = "PLANT_temple_corrdior_wall_crack",
+	Plant_temple_wooden_barrier = "PLANT_temple_wooden_barrier",
+	Mount_587 = "MOUNTMG42_587",
+	Mount_588 = "MOUNTMG42_588",
+	Mount_589 = "MOUNTMG42_589",
+	Mount_Temple_MG_Nest = "MOUNTMG42_Temple_MG_Nest",
+	Repair_587 = "REPAIRMG42_587",
+	Repair_588 = "REPAIRMG42_588",
+	Repair_589 = "REPAIRMG42_589",
+	Repair_Temple_MG_Nest = "REPAIRMG42_Temple_MG_Nest",
+
+	defense1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense1_Built" );
+	},
+
+	barrier2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "barrier2_Built" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_compost_built_Built" );
+	},
+
+	defense3_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense3_Built" );
+	},
+
+	defense2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense2_Built" );
+	},
+
+	tank_construct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tank_construct_Built" );
+	},
+
+	basemg_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "basemg_Built" );
+	},
+
+	barrier1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "barrier1_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_compost_built_Built" );
+	},
+
+	tb_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tb_Built" );
+	},
+
+	barrier2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "barrier2_Destroyed" );
+	},
+
+	tb_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "tb_Destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_compost_built_Destroyed" );
+	},
+
+	barrier1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "barrier1_Destroyed" );
+	},
+
+	dalle_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "dalle_Destroyed" );
+	},
+
+	defense2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense2_Destroyed" );
+	},
+
+	defense1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense1_Destroyed" );
+	},
+
+	wall1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "wall1_Destroyed" );
+	},
+
+	wall2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "wall2_Destroyed" );
+	},
+
+	defense3_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "defense3_Destroyed" );
+	},
+
+	basemg_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "basemg_Destroyed" );
+	},
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Capture_Flag" );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Capture_Flag" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "the escape tunnels' scaffolding has been constructed", Map.defense3_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_compost_built_Built );
+	OnTrigger( "The Tank has been repaired!", Map.tank_construct_Built );
+	OnTrigger( "the canyon rope bridge has been constructed", Map.defense2_Built );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.barrier1_Built );
+	OnTrigger( "Temple MG42 Nest constructed.", Map.basemg_Built );
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.barrier2_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_compost_built_Built );
+	OnTrigger( "the temple wooden barrier has been contructed", Map.tb_Built );
+	OnTrigger( "The Canyon main bridge has been constructed", Map.defense1_Built );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.barrier1_Destroyed );
+	OnTrigger( "the escape tunnels' scaffolding has been destroyed", Map.defense3_Destroyed );
+	OnTrigger( "Allies have breached the temple corridor wall!!!!", Map.wall1_Destroyed );
+	OnTrigger( "the canyon main bridge has been destroyed", Map.defense1_Destroyed );
+	OnTrigger( "Allies have breached the wall access to the caves!!!!", Map.wall2_Destroyed );
+	OnTrigger( "the canyon rope bridge has been destroyed", Map.defense2_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_compost_built_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.barrier2_Destroyed );
+	OnTrigger( "Allies have breached the floor access to the caves!!!!", Map.dalle_Destroyed );
+	OnTrigger( "Temple MG42 Nest destroyed.", Map.basemg_Destroyed );
+	OnTrigger( "the temple wooden barrier has been destroyed", Map.tb_Destroyed );
+	OnTrigger( "^3Allies have captured the church ruins", Map.Allies_Capture_Flag );
+	OnTrigger( "^3Axis have reclaimed the church ruins", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,211 @@
+//==========================================================================================
+//
+//	tm_jungle_b2.gm
+//
+//	Who      	When		    What
+//------------------------------------------------------------------------------------------
+//	BMW	21 November 2012	    Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Side_Entrance_Dyno = 0,
+
+	Side_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_Entrance_Dyno += 1;
+		
+		Util.MapDebugPrint( "Side_Entrance_Planted" );
+	},
+
+	Side_Entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_Entrance_Dyno -= 1;
+		Util.MapDebugPrint( "Side_Entrance_Defused" );
+	},
+
+	Side_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_Entrance_Dyno = 0;
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_sideentrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Side_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_roadbunker" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_roadbunker" ); 
+
+		Util.MapDebugPrint( "Side_Entrance_Destroyed" );
+	},
+
+	radarbox1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_radarbox1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_boat" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+		SetGoalPriority( "ATTACK_.*", 0.80 );
+		
+
+		Util.MapDebugPrint( "radarbox1_Taken" );
+	},
+
+	radarbox1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetGoalPriority( "ATTACK_.*", 0.50 );
+		
+		Util.MapDebugPrint( "radarbox1_Returned" );
+	},
+
+	roadbunker_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_roadbunker" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_roadbunker" );
+		
+		Util.MapDebugPrint( "roadbunker_Axis_Captured" );
+	},
+
+	roadbunker_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_roadbunker" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_roadbunker" );
+
+		Util.MapDebugPrint( "roadbunker_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Planted at the Side Entrance.", Map.Side_Entrance_Planted );
+	OnTrigger( "Defused at the Side Entrance.", Map.Side_Entrance_Defused );
+	OnTrigger( "Allies have breached the Main Entrance and secured the Forward Bunker!", Map.Side_Entrance_Destroyed );
+	OnTrigger( "Allies have stolen the West Radar Parts!", Map.radarbox1_Taken );
+	OnTrigger( "Axis have returned the West Radar Parts!", Map.radarbox1_Returned );
+	OnTrigger( "Axis reclaim the Forward Bunker!", Map.roadbunker_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker!", Map.roadbunker_Allies_Captured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_sideentrance" ); //disable until door is blown
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_roadbunker" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_roadbunker" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_objhacab3" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_objhacab3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_radarbox1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_objhacab4" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_objhacab4" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=30} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=15, MaxCampTime=30} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_Side_Entrance =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_right =
+				{
+					ROUTE_rightfrombunker = {},
+					ROUTE_tunnelfrombunker = {},
+				},
+				ROUTE_tunnel =
+				{
+					ROUTE_rightfrombunker = {},
+					ROUTE_tunnelfrombunker = {},
+				},
+			},
+		},
+		FLAG_radarbox1 =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_tunnel =
+				{
+					ROUTE_rightfrombunker =
+					{
+						ROUTE_sideentrance = {},
+						ROUTE_mainentranceright = {},
+					},
+					ROUTE_tunnelfrombunker = {},
+				},
+				ROUTE_right =
+				{
+					ROUTE_rightfrombunker =
+					{
+						ROUTE_sideentrance = {},
+						ROUTE_mainentranceright = {},
+					},
+					ROUTE_tunnelfrombunker = {},
+				},
+			},
+		},
+		CHECKPOINT_roadbunker =
+		{
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_tunnel = {},
+				ROUTE_right = {},
+			},
+		},
+	};
+	Util.Routes(MapRoutes);
+};

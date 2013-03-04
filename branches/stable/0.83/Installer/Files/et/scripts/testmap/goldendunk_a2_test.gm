@@ -1,0 +1,65 @@
+global Map =
+{
+	Ammo_Cabinet_ammo_ax_cabinet = "AMMO_CABINET_ammo_ax_cabinet",
+	Ammo_Cabinet_ammo_al_cabinet = "AMMO_CABINET_ammo_al_cabinet",
+	Health_Cabinet_health_al_cabinet = "HEALTH_CABINET_health_al_cabinet",
+	Health_Cabinet_health_ax_cabinet = "HEALTH_CABINET_health_ax_cabinet",
+	Build_cp_ax_built = "MAP_CONSTRUCTION_cp_ax_built",
+	Build_cp_al_built = "MAP_CONSTRUCTION_cp_al_built",
+	Destroy_cp_al_built = "MAP_DYNAMITE_TARGET_cp_al_built",
+	Destroy_cp_ax_built = "MAP_DYNAMITE_TARGET_cp_ax_built",
+	Flag_gold_ax = "MAP_FLAG_gold_ax",
+	Flag_gold_al = "MAP_FLAG_gold_al",
+	Cappoint_262 = "MAP_CAPPOINT_262",
+	Cappoint_93 = "MAP_CAPPOINT_93",
+	Cappoint_85 = "MAP_CAPPOINT_85",
+	Cappoint_254 = "MAP_CAPPOINT_254",
+
+	Tests = function()
+	{
+		OnTrigger( "^5ALLIES ^7--- ^33 points", TestMap.Pass );
+		OnTrigger( "^6AXIS ^7--- ^33 points", TestMap.Pass );
+		OnTrigger( "Allies have stolen ^5ALLIES^7's Gold!", TestMap.Pass );
+		OnTrigger( "^5ALLIES ^7--- ^32 points", TestMap.Pass );
+		OnTrigger( "Axis have stolen ^6AXIS^7's Gold!", TestMap.Pass );
+		OnTrigger( "^6AXIS ^7--- ^32 points", TestMap.Pass );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_ammo_al_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_ammo_al_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_ammo_ax_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_ammo_ax_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_health_ax_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_health_ax_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_health_al_cabinet, 120, true );
+		//~ TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_health_al_cabinet, 120, true );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_cp_al_built, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_gold_al, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_254, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_gold_al, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_262, 120, true );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_cp_ax_built, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_gold_ax, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_85, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Flag_gold_ax, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_93, 120 );
+		Wp.SetWaypointFlag( "Axis Gold", "allies", true );
+		Wp.SetWaypointFlag( "Allies Gold", "allies", true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_cp_al_built, 120, true );
+		
+		Wp.SetWaypointFlag( "Axis Gold", "allies", false );
+		Wp.SetWaypointFlag( "Allies Gold", "allies", false );
+		Wp.SetWaypointFlag( "Axis Gold", "axis", true );
+		Wp.SetWaypointFlag( "Allies Gold", "axis", true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_cp_ax_built, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,201 @@
+global _MG = 
+{
+	MOUNTMG42_255 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_255",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-48.000, -318.000, 190.000),
+		Radius = 0,
+		SerialNum = 34,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_256 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_256",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(2530.000, 206.000, 250.000),
+		Radius = 0,
+		SerialNum = 38,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_mg42_1 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_mg42_1",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-797.000, -1872.000, 128.000),
+		Radius = 0,
+		SerialNum = 46,
+		TagName = "mg42_1",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	MOUNTMG42_t364 = 
+	{
+		AimVectors = 
+		{
+		},
+		CreateOnLoad = 0,
+		GoalType = "MOUNTMG42",
+		GroupName = "",
+		MaxCampTime = 30,
+		MinCampTime = 15,
+		MinRadius = 0,
+		Name = "MOUNTMG42_t364",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-797.000, -1712.000, 128.000),
+		Radius = 0,
+		SerialNum = 42,
+		TagName = "t364",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	PLANT_North_Wharehouse_Door = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_North_Wharehouse_Door",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1320.000, 408.000, 88.000),
+		Radius = 0,
+		SerialNum = 32,
+		TagName = "North Wharehouse Door",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_Radio_Tower = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_Radio_Tower",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-992.000, -1792.000, 546.000),
+		Radius = 0,
+		SerialNum = 28,
+		TagName = "Radio Tower",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	PLANT_South_Wharehouse_Door = 
+	{
+		CoverSpots = 
+		{
+		},
+		CreateOnLoad = 0,
+		ExplosiveType = 1,
+		GoalType = "PLANT",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "PLANT_South_Wharehouse_Door",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(1320.000, -96.000, 88.000),
+		Radius = 0,
+		SerialNum = 30,
+		TagName = "South Wharehouse Door",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	REPAIRMG42_255 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_255",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-48.000, -318.000, 190.000),
+		Radius = 0,
+		SerialNum = 36,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_256 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_256",
+		Orientation = Vec3(1.571, -0.000, 0.000),
+		Position = Vec3(2530.000, 206.000, 250.000),
+		Radius = 0,
+		SerialNum = 40,
+		TagName = "",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_mg42_1 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_mg42_1",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-797.000, -1872.000, 128.000),
+		Radius = 0,
+		SerialNum = 48,
+		TagName = "mg42_1",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	REPAIRMG42_t364 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "REPAIRMG42",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "REPAIRMG42_t364",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-797.000, -1712.000, 128.000),
+		Radius = 0,
+		SerialNum = 44,
+		TagName = "t364",
+		TeamAvailability = 6,
+		Version = 1,
+	},
+	Version = 1,
+};

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="omnibot-rtcw">
+		<Project filename="ui/ui.cbp" />
+		<Project filename="cgame/cgame.cbp" />
+		<Project filename="game/game.cbp" active="1" />
+	</Workspace>
+</CodeBlocks_workspace_file>

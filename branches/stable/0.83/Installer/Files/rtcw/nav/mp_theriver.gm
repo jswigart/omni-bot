@@ -1,0 +1,415 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
+	Cappoint_6 = "CAPPOINT_6",
+	Flag_War_Documents = "FLAG_War_Documents",
+	Plant_Bridge_Controls = "PLANT_Bridge_Controls",
+	Plant_Front_Wall_breach = "PLANT_Front_Wall_breach",
+	Mount_mg42_2 = "MOUNTMG42_mg42_2",  // Outside allied spawn
+	Mount_mg42_2_1 = "MOUNTMG42_mg42_2_1",
+	Repair_mg42_2 = "REPAIRMG42_mg42_2",
+	Repair_mg42_2_1 = "REPAIRMG42_mg42_2_1",
+	DontDispenseAmmo = true,
+
+	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
+	DocStatus = false, //home
+	BridgeStatus = false, //intact
+	WallStatus = false, //intact
+
+	ElePosition = "Top",
+	EleMoving = false,
+
+	Bridge_Controls_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Bridge_Controls.*" );   // Easier for spawning axis to get to cappoint if this is blown
+	},
+
+	Bridge_Controls_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BridgeStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Bridge_Controls" );
+	},
+
+	Front_Wall_breach_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WallStatus = true;
+
+		Map.DontDispenseAmmo = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bWall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
+		if ( Map.BridgeStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bridge_Controls" );
+		}
+		if ( Map.DocStatus == false && Map.FlagStatus != 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBridge.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+		}
+		Util.EnableGoal( "ROUTE_wall" );
+		Util.EnableGoal( "ROUTE_eFootbridge" );
+		Util.EnableGoal( "ROUTE_wFootbridge" );
+	},
+
+	War_Documents_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.DocStatus ) {
+			Map.DocStatus = true;
+
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_2_1" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
+
+			timeout = 0;
+			while ( timeout <= 5 && Map.DocStatus == true )
+			{
+				timeout += 1;
+				sleep( 1 );
+			}
+
+			if ( Map.DocStatus ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+			}
+		}
+	},
+	War_Documents_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+
+		if ( Map.WallStatus == true || Map.FlagStatus == 2 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		} else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastern.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_2_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		if ( Map.WallStatus == true && Map.DocStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+		}
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer_1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rWall" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzer.*" );
+
+		if ( Map.BridgeStatus == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bridge_Controls" );
+		}
+		if ( Map.DocStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+		}
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );    // Only one allied player goes for spawnflag.
+	},
+
+	Elevator_Trigger = function()
+	{
+		Map.Switches.switch1.Enabled = false;
+		Map.Switches.switch2.Enabled = false;
+		Map.EleMoving = true;
+		sleep( 10 );
+
+		// blind toggle ...
+		if ( Map.ElePosition == "Top" ) {
+			Map.Switches.switch1.Enabled = false;
+			Map.Switches.switch2.Enabled = true;
+			Map.ElePosition = "Bottom";
+		} else
+		{
+			Map.Switches.switch1.Enabled = true;
+			Map.Switches.switch2.Enabled = false;
+			Map.ElePosition = "Top";
+		}
+
+		Map.EleMoving = false;
+	},
+
+	Switches =
+	{
+		switch1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "switch1",
+			Wait = function()
+			{
+				if ( Map.ElePosition == "Bottom" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+		switch2 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "switch2",
+			Wait = function()
+			{
+				if ( Map.ElePosition == "Top" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+	},
+
+	Navigation =
+	{
+		waitforele =
+		{
+			navigate = function( _this )
+			{
+				if ( Map.ElePosition != "Bottom" ) {
+					wpinfo = Util.WpNameInfo( "elewait" );
+
+					if ( _this.Goto( wpinfo.position ) == EVENT.PATH_SUCCESS ) {
+						while ( Map.ElePosition != "Bottom" )
+						{
+							_this.Goto( _this.Bot.GetPosition() );
+							yield();
+						}
+					}
+				}
+				yield();
+			},
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Planted at the Bridge Controls.", Map.Bridge_Controls_Planted );
+	OnTrigger( "Bridge is Down", Map.Bridge_Controls_Destroyed );
+	OnTrigger( "The Front Wall has been breached!", Map.Front_Wall_breach_Destroyed );
+	OnTrigger( "Allies have stolen the War Documents!", Map.War_Documents_Taken );
+	OnTrigger( "Flag returned War Documents!", Map.War_Documents_Returned );
+	OnTrigger( "Axis reclaims the Spawn Flag!", Map.beach_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Spawn Flag!", Map.beach_flag_Allies_Captured );
+	OnTrigger( "base_gate1_goto", Map.Elevator_Trigger );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_6" );
+	Util.DisableGoal( "ROUTE_wall" );
+	Util.DisableGoal( "ROUTE_eFootbridge" );
+	Util.DisableGoal( "ROUTE_wFootbridge" );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+
+	Util.AddUseWp( "PLANT_Front_Wall_breach", "inside_1" );
+	Util.AddUseWp( "PLANT_Front_Wall_breach", "inside_2" );
+	Util.AddUseWp( "PLANT_Front_Wall_breach", "outside" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_2" );  // Covers eng plant
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Front_Wall_breach" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_War_Documents" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beach_flag" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bWall_eng.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_War_Documents" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beach_flag" );   // test once
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastern.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpot.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "ATTACK_bWall_eng_.*", TEAM.ALLIES, CLASS.ENGINEER );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "ATTACK_bWall_eng.*", 0.91 );
+	SetGoalPriority( "PLANT_Bridge_Controls", 0.90 );
+	SetGoalPriority( "DEFEND_rDocs.*", 0.7 );
+	SetGoalPriority( "DEFEND_rEastern.*", 0.6 );
+
+	Util.UpdateSwitchData();
+
+	MapRoutes =
+	{
+		CHECKPOINT_beach_flag =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_bridge = {},
+			},
+		},
+		FLAG_War_Documents =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_bridge = {},
+				ROUTE_wFootbridge =
+				{
+					Weight = 3,
+					ROUTE_wall =
+					{
+						ROUTE_stairway = {Weight = 3,},
+						ROUTE_axisladder = {},
+					},
+				},
+				ROUTE_eFootbridge =
+				{
+					Weight = 3,
+					ROUTE_wall =
+					{
+						ROUTE_stairway = {Weight = 3,},
+						ROUTE_axisladder = {},
+					},
+				},
+				ROUTE_eastdam = {Weight = 2,},
+			},
+			ROUTE_bFlag =
+			{
+				ROUTE_stairway = {Weight = 5,},
+				ROUTE_outsideaxis =
+				{
+					ROUTE_axisladder = {},
+				},
+				ROUTE_wall =
+				{
+					ROUTE_eFootbridge =
+					{
+						ROUTE_eastdam = {},
+					},
+				},
+				ROUTE_elevator = {Weight = 2,},
+			},
+		},
+		CAPPOINT_6 =
+		{
+			ROUTE_docsteal =
+			{
+				ROUTE_wFootbridge = {Weight = 5,},
+				ROUTE_eastdam = {Weight = 2,},
+				ROUTE_elevator = {},
+			},
+		},
+		PLANT_Front_Wall_breach =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wFootbridge = {},
+				ROUTE_eFootbridge = {},
+			},
+		},
+		DEFEND_rDeliver_1 =
+		{
+			ROUTE_rSpawn =
+			{
+				ROUTE_bridge = {},
+				ROUTE_wFootbridge = {},
+			},
+		},
+		DEFEND_rDocs_1 =
+		{
+			ROUTE_rSpawn =
+			{
+				ROUTE_stairway = {},
+				ROUTE_axisladder = {Weight = 3,},
+			},
+		},
+	};
+	MapRoutes.DEFEND_rDeliver_2 = MapRoutes.DEFEND_rDeliver_1;
+	MapRoutes.DEFEND_rDeliver_3 = MapRoutes.DEFEND_rDeliver_1;
+	MapRoutes.DEFEND_rDeliver_4 = MapRoutes.DEFEND_rDeliver_1;
+	MapRoutes.DEFEND_rDeliver_5 = MapRoutes.DEFEND_rDeliver_1;
+	MapRoutes.DEFEND_rDocs_2 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_3 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_4 = MapRoutes.DEFEND_rDocs_1;
+	MapRoutes.DEFEND_rDocs_5 = MapRoutes.DEFEND_rDocs_1;
+
+	Util.Routes( MapRoutes );
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 4000; // Fog
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	bot.ChangeSpawnPoint( 0 );
+};

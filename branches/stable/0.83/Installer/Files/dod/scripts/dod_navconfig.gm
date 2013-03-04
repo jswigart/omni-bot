@@ -1,0 +1,14 @@
+// Waypoint system options.
+// Make sure the global Wp table exists before calling the setup functions
+if(Wp)
+{
+	Wp.TopWaypointOffset = 72;
+	Wp.BottomWaypointOffset = 0;
+	Wp.TopPathOffset = 70;
+	Wp.BottomPathOffset = 36;
+	Wp.BlockablePathOffset = 20;
+	Wp.FacingOffset = 18;
+	Wp.TextOffset = 10;
+	Wp.TextDuration = 2;
+	Wp.PathLevelOffset = 0.75;
+}

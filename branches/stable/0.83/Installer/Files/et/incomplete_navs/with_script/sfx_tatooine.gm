@@ -1,0 +1,175 @@
+//==========================================================================================
+//
+//	sfx_tatooine.gm
+//
+//	Who                      	When		What
+//------------------------------------------------------------------------------------------
+//	MickyP				04 October 2010	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+
+	APC_Barrier_1_Dyno = 0,
+	APC_Barrier_2_Dyno = 0,
+	Charge_Booster_Dyno = 0,
+
+	APC_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "APC_Built" );
+	},
+
+	APC_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "APC_Barrier_1_Built" );
+	},
+
+	APC_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "APC_Barrier_2_Built" );
+	},
+
+	Charge_Booster_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Charge_Booster_Built" );
+	},
+
+	APC_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.APC_Barrier_1_Dyno = 0;
+
+		Util.MapDebugPrint( "APC_Barrier_1_Destroyed" );
+	},
+
+	APC_Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.APC_Barrier_2_Dyno = 0;
+
+		Util.MapDebugPrint( "APC_Barrier_2_Destroyed" );
+	},
+
+	Charge_Booster_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Charge_Booster_Dyno = 0;
+
+		Util.MapDebugPrint( "Charge_Booster_Destroyed" );
+	},
+
+	axis_gold_crate_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Taken" );
+	},
+
+	axis_gold_crate_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Returned" );
+	},
+
+	axis_gold_crate_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_gold_crate_Secured" );
+	},
+
+	Doors_Blown = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_APC" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_APC" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+		
+		Util.MapDebugPrint( "Doors_Blown" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "The APC has been repaired!", Map.APC_Built );
+	OnTrigger( "APC Barrier #1 has been constructed.", Map.APC_Barrier_1_Built );
+	OnTrigger( "APC Barrier #2 has been constructed.", Map.APC_Barrier_2_Built );
+	OnTrigger( "Troopers Charge Booster constructed. Charge speed increased !", Map.Charge_Booster_Built );
+	OnTrigger( "Raiders Charge Booster constructed. Charge speed increased !", Map.Charge_Booster_Built );
+	OnTrigger( "First APC Barrier destroyed.", Map.APC_Barrier_1_Destroyed );
+	OnTrigger( "Second APC Barrier destroyed.", Map.APC_Barrier_2_Destroyed );
+	OnTrigger( "Raiders have destroyed the Troopers Charge Booster !", Map.Charge_Booster_Destroyed );
+	OnTrigger( "Troopers have destroyed the Charge Booster !", Map.Charge_Booster_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Taken );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Returned );
+	OnTrigger( "MISSING_STRING", Map.axis_gold_crate_Secured );
+	OnTrigger( "Allied team has destroyed the Warehouse Doors!", Map.Doors_Blown );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_APC" );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	if ( Map.Debug > 1 )
+		{ Util.ShowActiveGoals(); }
+
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

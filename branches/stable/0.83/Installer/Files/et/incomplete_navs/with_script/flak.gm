@@ -1,0 +1,273 @@
+//==========================================================================================
+//
+//	flak.gm
+//
+//	Who                    	When		What
+//------------------------------------------------------------------------------------------
+//	^1>^7|^4S^7|^1<G^03^1N*^0X	30 April 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	3rd_Flak_Cannon_Dyno = 0,
+	4th_Flak_Cannon_Dyno = 0,
+	Command_Post_Dyno = 0,
+	Security_Sidewall_Dyno = 0,
+	escape_hatch_Dyno = 0,
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Command_Post_Built" );
+	},
+
+	escape_hatch_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "escape_hatch_Built" );
+	},
+
+	3rd_Flak_Cannon_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.3rd_Flak_Cannon_Dyno += 1;
+		Util.MapDebugPrint( "3rd_Flak_Cannon_Planted" );
+	},
+
+	4th_Flak_Cannon_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.4th_Flak_Cannon_Dyno += 1;
+		Util.MapDebugPrint( "4th_Flak_Cannon_Planted" );
+	},
+
+	Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Command_Post_Planted" );
+	},
+
+	Security_Sidewall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Security_Sidewall_Dyno += 1;
+		Util.MapDebugPrint( "Security_Sidewall_Planted" );
+	},
+
+	escape_hatch_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.escape_hatch_Dyno += 1;
+		Util.MapDebugPrint( "escape_hatch_Planted" );
+	},
+
+	3rd_Flak_Cannon_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.3rd_Flak_Cannon_Dyno -= 1;
+		Util.MapDebugPrint( "3rd_Flak_Cannon_Defused" );
+	},
+
+	4th_Flak_Cannon_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.4th_Flak_Cannon_Dyno -= 1;
+		Util.MapDebugPrint( "4th_Flak_Cannon_Defused" );
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Command_Post_Defused" );
+	},
+
+	Security_Sidewall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Security_Sidewall_Dyno -= 1;
+		Util.MapDebugPrint( "Security_Sidewall_Defused" );
+	},
+
+	escape_hatch_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.escape_hatch_Dyno -= 1;
+		Util.MapDebugPrint( "escape_hatch_Defused" );
+	},
+
+	3rd_Flak_Cannon_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.3rd_Flak_Cannon_Dyno = 0;
+
+		Util.MapDebugPrint( "3rd_Flak_Cannon_Destroyed" );
+	},
+
+	4th_Flak_Cannon_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.4th_Flak_Cannon_Dyno = 0;
+
+		Util.MapDebugPrint( "4th_Flak_Cannon_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Command_Post_Destroyed" );
+	},
+
+	Security_Sidewall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Security_Sidewall_Dyno = 0;
+
+		Util.MapDebugPrint( "Security_Sidewall_Destroyed" );
+	},
+
+	escape_hatch_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.escape_hatch_Dyno = 0;
+
+		Util.MapDebugPrint( "escape_hatch_Destroyed" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
+	},
+
+	wsf_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "wsf_Axis_Captured" );
+	},
+
+	wsf_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "wsf_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post Constructed", Map.Command_Post_Built );
+	OnTrigger( "Axis Command Post Constructed", Map.Command_Post_Built );
+        OnTrigger( "The Axis have sealed the Escape Hatch", Map.escape_hatch_Built );
+	OnTrigger( "Planted at the 3rd Flak Cannon.", Map.3rd_Flak_Cannon_Planted );
+	OnTrigger( "Planted at the 4th Flak Cannon.", Map.4th_Flak_Cannon_Planted );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Command_Post_Planted );
+        OnTrigger( "Planted at the Axis Command Post.", Map.Command_Post_Planted ); 
+	OnTrigger( "Planted at the Security Sidewall.", Map.Security_Sidewall_Planted );
+	OnTrigger( "Planted at the Escape Hatch.", Map.escape_hatch_Planted );
+	OnTrigger( "Defused at the the 3rd Flak Cannon.", Map.3rd_Flak_Cannon_Defused );
+	OnTrigger( "Defused at the 4th Flak Cannon.", Map.4th_Flak_Cannon_Defused );
+	OnTrigger( "Defused at the Command Post.", Map.Command_Post_Defused );
+	OnTrigger( "Defused at the Security Sidewall.", Map.Security_Sidewall_Defused );
+	OnTrigger( "Defused at the Escape Hatch.", Map.escape_hatch_Defused );
+	OnTrigger( "Allies have destroyer the 3rd Flak Cannon", Map.PLANT_3rd_Flak_Cannon_Destroyed );
+	OnTrigger( "Allies have destroyer the 4th Flak Cannon", Map.PLANT_4th_Flak_Cannon_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post", Map.Command_Post_Destroyed );
+        OnTrigger( "Axis team has destroyed the Allied Command Post", Map.Command_Post_Destroyed );
+	OnTrigger( "Allies have breached the Security Sidewall", Map.Security_Sidewall_Destroyed );
+	OnTrigger( "Allies have destroyed the Escape Hatch", Map.escape_hatch_Destroyed );
+	OnTrigger( "Axis reclaim the Forward Bunker", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Bunker", Map.oldcityflag_Allies_Captured );
+	OnTrigger( "Axis reclaim the Weapons Storage Facility", Map.wsf_Axis_Captured );
+	OnTrigger( "Allies capture the Weapons Storage Facility", Map.wsf_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

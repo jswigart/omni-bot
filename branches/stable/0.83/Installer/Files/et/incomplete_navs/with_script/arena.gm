@@ -1,0 +1,44 @@
+//==========================================================================================
+//
+//	arena.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	jaskot			02/04/09	Created original script with makegm
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet2 = "AMMOCAB_south_ammocabinet2",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet2 = "HEALTHCAB_south_healthcabinet2",
+	Snipe_888 = "SNIPE_888",
+	Snipe_889 = "SNIPE_889",
+	Plant_Mine_887 = "PLANTMINE_887",
+	Plant_Mine_888 = "PLANTMINE_888",
+	Plant_Mine_889 = "PLANTMINE_889",
+	Plant_Mine_890 = "PLANTMINE_890",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,76 @@
+global talk = 1; // set to 0 if you want silent bots
+
+global OnBotJoin = function( bot)
+{
+      bot.TargetBreakableDist = 100.0;
+
+      r = RandRange(0,10);
+      if( r < 1 && talk == 1 )
+      {
+        bot.SayVoice(VOICE.LETS_GO);
+      }
+};
+
+global AlliesWon = function( trigger )
+{
+  foreach ( id and bot in BotTable )
+  {
+    r = RandRange(0,10);
+    if ( bot.GetTeam() == TEAM.ALLIES && talk == 1)
+    {
+      if( r < 2 )
+      {
+        bot.SayVoice(VOICE.G_GOODGAME);
+      }
+      else if( r > 8 )
+      {
+        bot.SayVoice(VOICE.G_CHEER);
+      }
+    }
+    else if ( talk == 1 && r > 8)
+    {
+      bot.Say("Verdammt!");
+    }
+  }
+};
+
+global AxisWon = function( trigger )
+{
+  foreach ( id and bot in BotTable )
+  {
+    r = RandRange(0,10);
+    if ( bot.GetTeam() == TEAM.AXIS && talk == 1)
+    {
+      if( r < 2 )
+      {
+        bot.SayVoice(VOICE.G_GOODGAME);
+      }
+      else if( r > 8 )
+      {
+        bot.SayVoice(VOICE.G_CHEER);
+      }
+    }
+    else if ( talk == 1 && r > 8)
+    {
+      bot.Say("Damn!");
+    }
+  }
+};
+
+global OnMapLoad = function()
+{
+  OnTrigger("^dAllies ^7have destroyed the ^1Axis ^7radio equipment!", AlliesWon);
+  OnTrigger("^1Axis ^7have destroyed the ^dAllied ^7radio equipment!", AxisWon);
+
+  Util.SetGoalOffset( 0, 20, 0, "PLANT_Allied_door" );
+  SetAvailableMapGoals(TEAM.ALLIES, true, ".*allies.*");
+  SetAvailableMapGoals(TEAM.ALLIES, false, ".*axis.*");
+  SetAvailableMapGoals(TEAM.AXIS, true, ".*axis.*");
+  SetAvailableMapGoals(TEAM.AXIS, false, ".*allies.*");
+  SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_Allied_door");
+  SetAvailableMapGoals(TEAM.AXIS, true, "PLANT_allies_radio");
+  SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_Axis_door");
+  SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_axis_radio");
+  
+  ETUtil.DisableGoal("PLANTMINE.*");
+};

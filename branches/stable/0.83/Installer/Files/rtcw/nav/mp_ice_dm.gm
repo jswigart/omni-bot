@@ -1,0 +1,151 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+
+	Navigation =
+	{
+		southladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+		bpnzflag =
+		{
+			navigate = function( _this )
+			{
+				yield();
+				return;
+			},
+		},
+		rpnzsouth =
+		{
+			navigate = function( _this )
+			{
+				yield();
+				return;
+			},
+		},
+		rpnznorth =
+		{
+			navigate = function( _this )
+			{
+				yield();
+				return;
+			},
+		},
+	},
+
+	axis_flag = function()
+	{
+		print( "Axis - Flag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_flag.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Flag" );
+	},
+
+	allies_flag = function()
+	{
+		print( "Allies - Flag" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_flag.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Flag" );
+	},
+
+	axis_nboxroom = function()
+	{
+		print( "Axis - North Boxroom" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_nboxroom.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp North Boxroom" );
+	},
+
+	allies_nboxroom = function()
+	{
+		print( "Allies - North Boxroom" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_nboxroom.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp North Boxroom" );
+	},
+
+	allies_stronghold = function()
+	{
+		print( "Allies - Stronghold" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Doc_Defense.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Stronghold" );
+	},
+
+	axis_stronghold = function()
+	{
+		print( "Axis - Stronghold" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Stronghold" );
+	},
+
+	toggle_attack = function()
+	{
+		count = -1;
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+			if ( count % 120 == 0 ) {
+				attackPoint = RandInt( 0,3 );
+				if ( attackPoint == 0 ) {
+					Map.allies_stronghold();
+					Map.axis_stronghold();
+				} else if ( attackPoint == 1 )   {
+					Map.allies_nboxroom();
+					Map.axis_nboxroom();
+				} else
+				{
+					Map.allies_flag();
+					Map.axis_flag();
+				}
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+	thread( Map.toggle_attack );
+
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.NoSnipe( bot );
+};

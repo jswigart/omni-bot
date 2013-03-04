@@ -1,0 +1,62 @@
+// This script provides functionality for the bots to pickup close weapons, health, and ammo if they aren't at max levels
+
+this.Name = "DeadZone";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+this.AutoAdd = true;
+this.Debug = false;
+
+this.LimitToPowerUp(POWERUP.DEADZONE);
+
+this.Initialize = function()
+{
+	Util.MapDebugPrint( this.Name + " Initialized", true );
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		count = this.QueryGoals(this.Bot.QueryGoalsTable,"DEADZONE_.*");
+		if ( count > 0 )
+		{
+			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			{
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
+			}
+		}
+
+		tableClear(this.Bot.QueryGoalsTable);
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.HasPatrolPoints = tableCount(this.MapGoal.PatrolPoints) > 0;
+};
+
+this.Update = function()
+{
+	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	{
+		while ( 1 ) // loss of powerup auto finishes
+		{
+			if ( this.HasPatrolPoints ) {
+				r = Util.GetRandomFromTable(this.MapGoal.PatrolPoints);
+				this.Goto(this.MapGoal.PatrolPoints[ r ]);
+			}
+			else {
+				this.Goto(this.Bot.GetPosition());
+				sleep(0.5);
+			}
+		}
+	}
+	else
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.MapDebugPrint( this.MapGoal.GetName() + " path failed, check reachability!", true );
+	}
+};

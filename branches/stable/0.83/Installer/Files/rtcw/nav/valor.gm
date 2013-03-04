@@ -1,0 +1,447 @@
+global Map =
+{
+	Quiet = true,
+	FocusPrimary = false,
+	ViewDistance = 5000,
+	Suicide = MAP_SUICIDE,
+
+	Checkpoint_beacheadspawn = "CHECKPOINT_beacheadspawn",
+	Plant_Trench = "PLANT_Trench_Grate",
+	Plant_Wall = "PLANT_Beach_Head_Wall",
+	Plant_Breach = "PLANT_Bunker_Breach",
+	Plant_Cyanide = "PLANT_Cyanide_Drums",
+
+	//set status' for conditionals
+	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
+	CyanideStatus = false, //home
+	TrenchStatus = false, //intact
+	WallStatus = false, //intact
+	BunkerStatus = false, // intact
+	DocStatus = false, //at home
+	DoorStatus = false, // intact
+	TwoMinWarn = false,
+	CyanideDyno = 0,
+	rPanzers = 0,
+	rSnipers = 0,
+	bPanzers = 0,
+	bSnipers = 0,
+	DontDispenseAmmo = true,
+
+	Trench_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.TrenchStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Beach_Head_Wall" );
+	},
+
+	Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WallStatus = true;
+		// Force allies inside a bit
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBase.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bunker_Breach" );
+		Util.EnableGoal( Map.Checkpoint_beach_flag );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beacheadspawn" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beacheadspawn" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_eastbunker" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+	},
+
+	Bunker_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+
+		Map.BunkerStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Cyanide_Drums" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCyanide.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoamCyanide" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBase.*" );   // Just push inside...
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCyanide.*" );
+		RTCWUtil.StopSniping(); // Push inside
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p[12]" );
+	},
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_westbunker" );       // dont try to get back in here
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_eastbunker" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall_Main.*" );    // Concentrate fire
+		RTCWUtil.LimitToClass( "CHECKPOINT_beacheadspawn", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.BunkerStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBunker.*" );
+		}
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+	},
+
+	Trench_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Trench.*" );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+	},
+
+
+	Wall_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Wall_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Bunker_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+	},
+
+	Bunker_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Cyanide_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBase.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBunker.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCyanide.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p[12]" );
+		Map.CyanideDyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_beacheadspawn );
+		SetGoalPriority( "CALL.*", 0.4 );
+		SetGoalPriority( "ARTILLERY.*", 0.4 );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beacheadspawn" );
+	},
+
+	Cyanide_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p1" );
+
+		Map.CyanideDyno -= 1;
+		if ( Map.CyanideDyno == 0 ) {
+			if ( Map.WallStatus == true ) {
+				if ( Map.TwoMinWarn == false ) {
+					SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beacheadspawn" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
+				}
+			}
+		}
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//time is low, so start focusing on main obj
+		Map.FocusPrimary = true;
+		if ( Map.BunkerStatus == true ) {
+			//switch from sniper to other soldier weap
+			RTCWUtil.StopSniping();
+			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_beacheadspawn" );
+			Map.TwoMinWarn = true;
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBase.*" );
+		}
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.CyanideDyno >= 1 ) {
+			return;
+		}
+
+		foreach( id and bot in BotTable )
+		{
+			if ( RandInt( 0,10 ) < 2 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
+			}
+			sleep( 0.5 );
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				if ( RandInt( 0,10 ) < 2 ) {
+					bot.SayVoice( VOICE.G_CHEER );
+				}
+				sleep( 0.5 );
+			}
+		}
+	},
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition( 87, 1487, 391, "PLANT_Beach_Head_Wall" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Map.CyanideDyno = 0;        // Sanity
+
+	Ladder1 = OnTriggerRegion( AABB( 531.000,2175.000,447.000,569.000,2240.000,746.000 ), Map.LadderTrigger );
+	Ladder2 = OnTriggerRegion( AABB( -383.000,2179.000,447.000,-339.000,2240.000,743.000 ), Map.LadderTrigger );
+
+	OnTrigger( "The Trench-Grate! Destroyed.", Map.Trench_Destroyed );
+	OnTrigger( "The Beach-Head Wall Has Been Breached", Map.Wall_Destroyed );
+	OnTrigger( "The Bunker Has Been Comprimised !!!", Map.Bunker_Destroyed );
+	OnTrigger( "Allies Sieze The Beach-Head !!", Map.Allies_Capture_Flag );
+	OnTrigger( "Axis Secure The Beach-Head!!", Map.Axis_Capture_Flag );
+	OnTrigger( "Planted at The Trench-Grate!.", Map.Trench_Planted );
+	OnTrigger( "Planted at The Beach-Head Wall.", Map.Wall_Planted );
+	OnTrigger( "Planted at The Bunker-Breach.", Map.Bunker_Planted );
+	OnTrigger( "Planted at The Cyanide-Drums.", Map.Cyanide_Planted );
+	OnTrigger( "Defused at The Cyanide-Drums.", Map.Cyanide_Defused );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CHECKPOINT.*", 0.9 );
+	SetGoalPriority( "DEFEND_rCyanide_[346]", 0.6 );
+	SetGoalPriority( "ATTACK_bCyanide_[7]", 0.6 );
+	SetGoalPriority( "ATTACK_bRoamCyanide", 0.59 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.67 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.66 );
+	SetGoalPriority( "GRENADE_Barricade1", 0.65 );
+
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade2", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Trench_Grate" );        // Plant here then wall
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as1_p.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBunker.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_westbunker" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_eastbunker" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mainbunker_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_p.*" );
+
+	// *** Artillery
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bBeach.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBunker.*" );
+
+	// Now some targets...
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBunker.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag_1" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
+	// *** End Arty
+
+	MapRoutes =
+	{
+		PLANT_Cyanide_Drums =
+		{
+			ROUTE_forward_spawn =
+			{
+				ROUTE_radar =
+				{
+					ROUTE_ladderWest = { },
+
+				},
+				ROUTE_eastmountain =
+				{
+					ROUTE_ladderEast = { Weight = 3 },
+					ROUTE_ladderWest = {},
+				},
+				ROUTE_bunkerbreach = { Weight = 3, },
+			},
+			ROUTE_beachspawn =
+			{
+				ROUTE_trenchgrate =
+				{
+					ROUTE_radar =
+					{
+						ROUTE_ladderWest = { },
+
+					},
+					ROUTE_eastmountain =
+					{
+						ROUTE_ladderEast = { Weight = 3 },
+						ROUTE_ladderWest = {},
+					},
+					ROUTE_bunkerbreach = { Weight = 4, },
+				},
+				ROUTE_eastbeach =
+				{
+					ROUTE_radar =
+					{
+						ROUTE_ladderWest = { },
+
+					},
+					ROUTE_eastmountain =
+					{
+						ROUTE_ladderEast = { Weight = 3 },
+						ROUTE_ladderWest = {},
+					},
+					ROUTE_bunkerbreach = { Weight = 4, },
+				},
+			},
+		},
+	};
+	MapRoutes.PLANT_Cyanide_Drums.ROUTE_beachspawn = MapRoutes.PLANT_Cyanide_Drums.ROUTE_forward_spawn;
+	MapRoutes.ATTACK_bCyanide_1 = MapRoutes.PLANT_Cyanide_Drums;
+	MapRoutes.ATTACK_bCyanide_2 = MapRoutes.PLANT_Cyanide_Drums;
+	MapRoutes.ATTACK_bCyanide_3 = MapRoutes.PLANT_Cyanide_Drums;
+	MapRoutes.ATTACK_bCyanide_4 = MapRoutes.PLANT_Cyanide_Drums;
+	MapRoutes.ATTACK_bCyanide_5 = MapRoutes.PLANT_Cyanide_Drums;
+	MapRoutes.ATTACK_bCyanide_6 = MapRoutes.PLANT_Cyanide_Drums;
+
+	Util.Routes( MapRoutes );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = Map.ViewDistance;
+	bot.TargetBreakableDist = 80.0;
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+
+	class = bot.GetClass();
+
+	//RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
+	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER  ) {
+		if ( Map.bSnipers == 0 || Map.bPanzers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.bSnipers += 1;
+		} else
+		{
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.bPanzers += 1;
+		}
+	} else if ( class == CLASS.SOLDIER )   {
+		if ( Map.rSnipers == 0 || Map.rPanzers == 1 ) {
+			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+			Map.rSnipers += 1;
+		} else
+		{
+			RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+			Map.rPanzers += 1;
+		}
+	}
+};

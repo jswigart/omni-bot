@@ -1,0 +1,254 @@
+//==========================================================================================
+//
+//	jailbus_b2.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------
+//	blindman		2 12 10
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_389 = "AMMOCAB_389",
+	Ammo_Cabinet_391 = "AMMOCAB_391",
+	Ammo_Cabinet_393 = "AMMOCAB_393",
+	Ammo_Cabinet_395 = "AMMOCAB_395",
+	Ammo_Cabinet_414 = "AMMOCAB_414",
+	Health_Cabinet_388 = "HEALTHCAB_388",
+	Health_Cabinet_390 = "HEALTHCAB_390",
+	Health_Cabinet_392 = "HEALTHCAB_392",
+	Health_Cabinet_394 = "HEALTHCAB_394",
+	Health_Cabinet_413 = "HEALTHCAB_413",
+	Flag_bus_key = "FLAG_bus_key",
+	Build_1The_Axis_3Backyard_MG42_Construction = "BUILD_1The_Axis_3Backyard_MG42_Construction",
+	Build_1the_Axis_3Watchtower_MG42_Construction = "BUILD_1the_Axis_3Watchtower_MG42_Construction",
+	Build_2Henschel_Trolleybus_Barrier_1 = "BUILD_2Henschel_Trolleybus_Barrier_1",
+	Build_2Henschel_Trolleybus__Barrier_2 = "BUILD_2Henschel_Trolleybus__Barrier_2",
+	Build_2the_Command_Post = "BUILD_2the_Command_Post",
+	Build_2the_Henschel_Trolleybus = "BUILD_2the_Henschel_Trolleybus",
+	Build_4The_Allied_3Road_MG42_Construction = "BUILD_4The_Allied_3Road_MG42_Construction",
+	Build_4the_Allied_3Watchtower_MG42_Construction = "BUILD_4the_Allied_3Watchtower_MG42_Construction",
+	Plant_1The_Axis_3Backyard_MG42_Construction = "PLANT_1The_Axis_3Backyard_MG42_Construction",
+	Plant_1the_Axis_3Watchtower_MG42_Construction = "PLANT_1the_Axis_3Watchtower_MG42_Construction",
+	Plant_2Henschel_Trolleybus_Barrier_1 = "PLANT_2Henschel_Trolleybus_Barrier_1",
+	Plant_2Henschel_Trolleybus__Barrier_2 = "PLANT_2Henschel_Trolleybus__Barrier_2",
+	Plant_2the_Command_Post = "PLANT_2the_Command_Post",
+	Plant_4The_Allied_3Road_MG42_Construction = "PLANT_4The_Allied_3Road_MG42_Construction",
+	Plant_4the_Allied_3Watchtower_MG42_Construction = "PLANT_4the_Allied_3Watchtower_MG42_Construction",
+	Plant_8The_1Axis_8Back_Door = "PLANT_8The_1Axis_8Back_Door",
+	Plant_8The_1Axis_8Back_Door_1 = "PLANT_8The_1Axis_8Back_Door_1",
+	Plant_8The_1Axis_8MainBack_Door = "PLANT_8The_1Axis_8MainBack_Door",
+	Plant_8The_1Axis_8MainBack_Door2 = "PLANT_8The_1Axis_8MainBack_Door2",
+	Mount_1the_Axis_3Watchtower_MG42_Construction = "MOUNTMG42_1the_Axis_3Watchtower_MG42_Construction",
+	Mount_4The_Allied_3Road_MG42_Construction = "MOUNTMG42_4The_Allied_3Road_MG42_Construction",
+	Mount_4the_Allied_3Watchtower_MG42_Construction = "MOUNTMG42_4the_Allied_3Watchtower_MG42_Construction",
+	Mount_axisconstruct1_track = "MOUNTMG42_axisconstruct1_track",
+	Mount_axisconstruct1_track_1 = "MOUNTMG42_axisconstruct1_track_1",
+	Repair_1the_Axis_3Watchtower_MG42_Construction = "REPAIRMG42_1the_Axis_3Watchtower_MG42_Construction",
+	Repair_4The_Allied_3Road_MG42_Construction = "REPAIRMG42_4The_Allied_3Road_MG42_Construction",
+	Repair_4the_Allied_3Watchtower_MG42_Construction = "REPAIRMG42_4the_Allied_3Watchtower_MG42_Construction",
+	Repair_axisconstruct1_track = "REPAIRMG42_axisconstruct1_track",
+	Repair_axisconstruct1_track_1 = "REPAIRMG42_axisconstruct1_track_1",
+	Mover_tank = "MOVER_tank",
+
+	BUILD_1The_Axis_3Backyard_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_1The_Axis_3Backyard_MG42_Construction_Built" );
+	},
+
+	BUILD_1the_Axis_3Watchtower_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_1the_Axis_3Watchtower_MG42_Construction_Built" );
+	},
+
+	BUILD_2Henschel_Trolleybus_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_2Henschel_Trolleybus_Barrier_1_Built" );
+	},
+
+	BUILD_2Henschel_Trolleybus__Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_2Henschel_Trolleybus__Barrier_2_Built" );
+	},
+
+	BUILD_2the_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_2the_Command_Post_Built" );
+	},
+
+	BUILD_2the_Henschel_Trolleybus_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_2the_Henschel_Trolleybus_Built" );
+	},
+
+	BUILD_4The_Allied_3Road_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_4The_Allied_3Road_MG42_Construction_Built" );
+	},
+
+	BUILD_4the_Allied_3Watchtower_MG42_Construction_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BUILD_4the_Allied_3Watchtower_MG42_Construction_Built" );
+	},
+
+	PLANT_1The_Axis_3Backyard_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_1The_Axis_3Backyard_MG42_Construction_Destroyed" );
+	},
+
+	PLANT_1the_Axis_3Watchtower_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_1the_Axis_3Watchtower_MG42_Construction_Destroyed" );
+	},
+
+	PLANT_2Henschel_Trolleybus_Barrier_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_2Henschel_Trolleybus_Barrier_1_Destroyed" );
+	},
+
+	PLANT_2Henschel_Trolleybus__Barrier_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_2Henschel_Trolleybus__Barrier_2_Destroyed" );
+	},
+
+	PLANT_2the_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_2the_Command_Post_Destroyed" );
+	},
+
+	PLANT_4The_Allied_3Road_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_4The_Allied_3Road_MG42_Construction_Destroyed" );
+	},
+
+	PLANT_4the_Allied_3Watchtower_MG42_Construction_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_4the_Allied_3Watchtower_MG42_Construction_Destroyed" );
+	},
+
+	PLANT_8The_1Axis_8Back_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_8The_1Axis_8Back_Door_Destroyed" );
+	},
+
+	PLANT_8The_1Axis_8Back_Door_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_8The_1Axis_8Back_Door_1_Destroyed" );
+	},
+
+	PLANT_8The_1Axis_8MainBack_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_8The_1Axis_8MainBack_Door_Destroyed" );
+	},
+
+	PLANT_8The_1Axis_8MainBack_Door2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "PLANT_8The_1Axis_8MainBack_Door2_Destroyed" );
+	},
+
+	bus_key_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bus_key_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.BUILD_1The_Axis_3Backyard_MG42_Construction_Built );
+	OnTrigger( "MISSING_STRING", Map.BUILD_1the_Axis_3Watchtower_MG42_Construction_Built );
+	OnTrigger( "Trolleybus Barrier #1 has been constructed.", Map.BUILD_2Henschel_Trolleybus_Barrier_1_Built );
+	OnTrigger( "Trolleybus Barrier #2 has been constructed.", Map.BUILD_2Henschel_Trolleybus__Barrier_2_Built );
+	OnTrigger( "MISSING_STRING", Map.BUILD_2the_Command_Post_Built );
+	OnTrigger( "Allied team has secure the key and stolen the trolleyBus!", Map.BUILD_2the_Henschel_Trolleybus_Built );
+	OnTrigger( "MISSING_STRING", Map.BUILD_4The_Allied_3Road_MG42_Construction_Built );
+	OnTrigger( "MISSING_STRING", Map.BUILD_4the_Allied_3Watchtower_MG42_Construction_Built );
+	OnTrigger( "MISSING_STRING", Map.PLANT_1The_Axis_3Backyard_MG42_Construction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_1the_Axis_3Watchtower_MG42_Construction_Destroyed );
+	OnTrigger( "Trolleybus Barrier #1 has been destroyed.", Map.PLANT_2Henschel_Trolleybus_Barrier_1_Destroyed );
+	OnTrigger( "Trolleybus Barrier #2 has been destroyed.", Map.PLANT_2Henschel_Trolleybus__Barrier_2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_2the_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_4The_Allied_3Road_MG42_Construction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_4the_Allied_3Watchtower_MG42_Construction_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_8The_1Axis_8Back_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_8The_1Axis_8Back_Door_1_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_8The_1Axis_8MainBack_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.PLANT_8The_1Axis_8MainBack_Door2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.bus_key_Taken );
+/*
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+*/
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+global OnBotJoin = function( bot )
+{
+
+	// Uncomment for shootable breakables
+	 bot.TargetBreakableDist = 300.0;
+};

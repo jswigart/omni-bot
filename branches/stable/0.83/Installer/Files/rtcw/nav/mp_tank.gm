@@ -1,0 +1,793 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DontDispenseAmmo = true,
+	FriendlyFire,
+
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Flag_Allies_War_Documents = "FLAG_Allies_War_Documents",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Map_Room = "PLANT_Map_Room",
+	Plant_Map_Room_1 = "PLANT_Map_Room_1",
+	Plant_Prototype_Tank = "PLANT_Prototype_Tank",
+	Plant_Sub_Garage_Door = "PLANT_Sub_Garage_Door",
+	Plant_bridge_obj = "PLANT_bridge_obj",
+	Plant_bridge_obj3 = "PLANT_bridge_obj3",
+	Mount_157 = "MOUNTMG42_157",
+	Mount_cpmg = "MOUNTMG42_cpmg",
+	Mount_easttunnelmg = "MOUNTMG42_easttunnelmg",
+	Mount_eb1 = "MOUNTMG42_eb1",
+	Mount_eb2 = "MOUNTMG42_eb2",
+	Mount_valleymg = "MOUNTMG42_valleymg",
+	Mount_wb1 = "MOUNTMG42_wb1",
+	Mount_wb2 = "MOUNTMG42_wb2",
+	Repair_157 = "REPAIRMG42_157",
+	Repair_cpmg = "REPAIRMG42_cpmg",
+	Repair_easttunnelmg = "REPAIRMG42_easttunnelmg",
+	Repair_eb1 = "REPAIRMG42_eb1",
+	Repair_eb2 = "REPAIRMG42_eb2",
+	Repair_valleymg = "REPAIRMG42_valleymg",
+	Repair_wb1 = "REPAIRMG42_wb1",
+	Repair_wb2 = "REPAIRMG42_wb2",
+
+	Barrier1 = false,
+	Barrier1_Bots = 0,
+	tankDyno = 0,
+	garageDyno = 0,
+	RoundStart = true,
+	FlagStatus = 0,
+	Bridge3 = false,
+
+	ViewDistance = 3400, // region trigger uses this, so use Map.ViewDistance for val if setting in OnBotJoin
+
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	Navigation =
+	{
+		nadebarrier =
+		{
+			navigate = function( _this )
+			{
+				if ( !Map.Barrier1 && Map.Barrier1_Bots == 0 && _this.Bot.HasWeapon( WEAPON.AXIS_GRENADE ) ) {
+					wpTable = Util.WpNameInfo( "nadebarrier" );
+					Map.Barrier1_Bots += 1;
+
+					_this.AddWeaponRequest( Priority.High, WEAPON.AXIS_GRENADE );
+					_this.BlockForWeaponChange( WEAPON.AXIS_GRENADE );
+					_this.Bot.HoldButton( BTN.ATTACK1, 3 );
+
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+						sleep( 1.5 );
+					}
+					Map.Barrier1_Bots -= 1;
+				}
+				yield();
+			},
+		},
+		// ladders
+		onesec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 1 );
+			},
+		},
+		twosec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+		threesec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 3 );
+				sleep( 3 );
+			},
+		},
+		foursec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 4 );
+				sleep( 4 );
+			},
+		},
+		fivesec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 5 );
+				sleep( 5 );
+			},
+		},
+		// jumps
+		quickjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+			},
+		},
+		sprintjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 2 );
+				sleep( 2 );
+			},
+		},
+		straferjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 2 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 1 );
+				sleep( 2 );
+			},
+		},
+		strafeljump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 2 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 1 );
+				sleep( 2 );
+			},
+		},
+	},
+
+	Prototype_Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.tankDyno = 0;
+
+	},
+
+	Prototype_Tank_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.tankDyno += 1;
+
+	},
+
+	Prototype_Tank_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.tankDyno -= 1;
+
+	},
+
+	Sub_Garage_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.garageDyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTank.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Prototype_Tank" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEng_Tank.*" );
+	},
+
+	Sub_Garage_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.garageDyno += 1;
+
+	},
+
+	Sub_Garage_Door_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.garageDyno -= 1;
+
+	},
+
+	Map_Room_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.DisableGoal( "DEFUSE_Map.*" );
+
+	},
+
+	//Stage 1 destroyed
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge_obj" );
+
+	},
+
+	//Stage 2 destroyed
+	bridge_obj_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge.*" );
+		Wp.SetWaypointFlag( "bluejump", "jump", true );
+		Wp.SetWaypointFlag( "redjump", "closed", false );
+
+	},
+
+	//Stage 3 destroyed
+	bridge_obj3_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.Bridge3 = true;
+		Wp.SetWaypointFlag( "bjump", "jump", true );
+		Wp.SetWaypointFlag( "bluejump", "closed", true );
+		Wp.SetWaypointFlag( "redjump", "closed", true );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_Bridge.*" );
+	},
+
+	Allies_War_Documents_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_transmit.*" );
+	},
+
+	Allies_War_Documents_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs.*" );
+
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.FlagStatus = 1;
+
+		if ( Map.RoundStart == false ) {
+			Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+		}
+
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.RoundStart = false;
+		Map.FlagStatus = 2;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_valleymg" );
+		if ( Map.FriendlyFire < 1 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCP.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_cpmg.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_wb2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rBridge.*" );
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+
+	},
+
+	barrierOne = function()
+	{
+		Map.Barrier1 = true;
+	},
+
+	WaterTrigger =
+	{
+		Name = "WaterTrigger",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.AddUseWp( "PLANT_Prototype_Tank", "tank1" );
+	Util.AddUseWp( "PLANT_Prototype_Tank", "tank2" );
+	//Util.AddUseWp("PLANT_Prototype_Tank", "tank3");
+	//Util.AddUseWp("PLANT_Prototype_Tank", "tank4");
+	//Util.AddUseWp("PLANT_Bridge", "dbridge1");
+	Util.SetGoalPosition( -4278,3022,-165, "PLANT_bridge_obj3" );
+	Util.SetGoalPosition( -4133.291,2992.747,-155.466, "PLANT_Bridge" );
+	Util.SetGoalPosition( -4133.291,2992.747,-155.466, "PLANT_bridge_obj" );
+	Wp.SetWaypointFlag( "bjump", "jump", false );
+	Wp.SetWaypointFlag( "bluejump", "jump", false );
+	Wp.SetWaypointFlag( "bluejump", "closed", false );
+	Wp.SetWaypointFlag( "redjump", "closed", true );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	//Martin - Second and Third bridge plants do not have a trigger...
+	OnTrigger( "Bridge Destroyed.", Map.Bridge_Destroyed );             //First
+	//OnTrigger( "Planted at Bridge.", Map.Bridge_Planted );				//First
+	OnTrigger( "bridge_obj Destroyed.", Map.bridge_obj_Destroyed );     //Second
+	OnTrigger( "bridge_obj3 Destroyed.", Map.bridge_obj3_Destroyed );   //Third
+	OnTrigger( "Prototype Tank Destroyed.", Map.Prototype_Tank_Destroyed );
+	OnTrigger( "Planted at Prototype Tank.", Map.Prototype_Tank_Planted );
+	OnTrigger( "Defused at Prototype Tank.", Map.Prototype_Tank_Defused );
+	OnTrigger( "Sub Garage Door Destroyed.", Map.Sub_Garage_Door_Destroyed );
+	OnTrigger( "Planted at Sub Garage Door.", Map.Sub_Garage_Door_Planted );
+	OnTrigger( "Defused at Sub Garage Door.", Map.Sub_Garage_Door_Defused );
+	OnTrigger( "Planted at Map Room.", Map.Map_Room_Planted );
+	OnTrigger( "Axis have stolen Allies War Documents!", Map.Allies_War_Documents_Taken );
+	OnTrigger( "Flag returned Allies War Documents!", Map.Allies_War_Documents_Returned );
+	OnTrigger( "axis_capture_flag_respawn_obj", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "allies_reclaims_flag_respawn_obj", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "allies_capture_flag_respawn_obj", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "GRENADE_barrier Exploded.", Map.barrierOne );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42_cpmg", {mincamptime = 300, maxcamptime = 300} );
+
+	tOne = OnTriggerRegion( AABB( -1643.000,2831.000,-973.000,-1567.000,2869.000,-855.000 ), Map.WaterTrigger );
+	bridgejump = OnTriggerRegion( AABB( -4314.000,1937.000,-307.000,-4133.000,3050.000,-72.000 ), RegionTrigger.DisableCombatMovement );
+	tunnelentrance = OnTriggerRegion( AABB( -1117.000,-884.000,-538.000,-915.000,-755.000,83.000 ), RegionTrigger.DisableCombatMovement );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	SetGoalPriority( "MOUNTMG42_cpmg", 0.91 );
+	SetGoalPriority( "MOUNTMG42_valleymg", 0.91 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "DEFEND_bEng.*", 0.9 );
+	SetGoalPriority( "DEFEND_rEng.*", 0.9 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CHECKPOINT.*" );
+	Util.EnableGoal( "CAPPOINT.*" );
+	RTCWUtil.LimitToClass( "FLAG.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );  //Martin - Engies should NOT try to get docs, just protect the base
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+
+	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsers( 1, "SNIPE.*" );
+	Util.SetMaxUsers( 1, "PANZER.*" );
+	Util.SetMaxUsers( 1, "VENOM.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_flag_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );    //Martin - This is the first one to die
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCP.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Bridge.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sub_Garage_Door" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Prototype_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_valleymg" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs_.*" );
+	
+	// remove some func_explosives
+	RTCWUtil.KillEntities( {460, 461, 475, 476, 477, 79, 80, 81, 349} );
+
+	MapRoutes =
+	{
+		CAPPOINT_transmit =
+		{
+			ROUTE_docgrab  =
+			{
+				ROUTE_docdoor  =
+				{
+					ROUTE_brearspawn  =
+					{
+						Weight = 3,
+						ROUTE_alliedwater  =
+						{
+						},
+					},
+					ROUTE_bfrontspawn  =
+					{
+						ROUTE_oilstation  =
+						{
+							ROUTE_axiseast  =
+							{
+							},
+						},
+					},
+					ROUTE_westbridge  =
+					{
+					},
+				},
+			},
+		},
+		FLAG_Allies_War_Documents =
+		{
+			ROUTE_rfrontspawn  =
+			{
+				ROUTE_westpillbox  =
+				{
+					ROUTE_westdam  =
+					{
+						ROUTE_bfrontspawn  =
+						{
+							ROUTE_docdoor  =
+							{
+							},
+							ROUTE_ducts  =
+							{
+							},
+						},
+					},
+				},
+				ROUTE_alliedwater  =
+				{
+					ROUTE_spawnducts  =
+					{
+					},
+					ROUTE_docdoor  =
+					{
+					},
+				},
+			},
+		},
+		PLANT_Sub_Garage_Door =
+		{
+			ROUTE_flagspawn  =
+			{
+				ROUTE_bridgetunnel  =
+				{
+					//Weight = 3,
+					ROUTE_eastbridge  =
+					{
+					},
+					ROUTE_westbridge  =
+					{
+					},
+				},
+				ROUTE_spawnsteps  =
+				{
+					Weight = 3,
+					//ROUTE_westbridge  = {},
+					ROUTE_westdam  =
+					{
+						//Weight = 3,
+						ROUTE_westpillbox  = {},
+					},
+				},
+				//ROUTE_oilstation  = {},
+			},
+		},
+		CHECKPOINT_flag_respawn_obj =
+		{
+			ROUTE_rfrontspawn  =
+			{
+				ROUTE_westpillbox  =
+				{
+					ROUTE_westdam  = {},
+				},
+				ROUTE_westbridge  =
+				{
+					ROUTE_spawnsteps  = {},
+				},
+				ROUTE_eastbridge  =
+				{
+					ROUTE_oilstation  =
+					{
+					},
+				},
+			},
+		},
+		PLANT_Prototype_Tank =
+		{
+			ROUTE_bfrontspawn  =
+			{
+				ROUTE_brearspawn  =
+				{
+					ROUTE_alliedwater  =
+					{
+						ROUTE_axiseast  =
+						{
+							ROUTE_elevator  =
+							{
+							},
+							ROUTE_weststeps  =
+							{
+								ROUTE_garageduct  =
+								{
+								},
+								ROUTE_westoverlook  =
+								{
+								},
+							},
+						},
+					},
+				},
+				ROUTE_oilstation  =
+				{
+					ROUTE_axiseast  =
+					{
+						ROUTE_elevator  =
+						{
+						},
+						ROUTE_weststeps  =
+						{
+							ROUTE_garageduct  =
+							{
+							},
+							ROUTE_westoverlook  =
+							{
+							},
+						},
+					},
+					ROUTE_eastbridge  =
+					{
+						ROUTE_garagedoor  =
+						{
+							ROUTE_elevator  =
+							{
+							},
+						},
+					},
+				},
+				ROUTE_eastbridge  =
+				{
+					ROUTE_garagedoor  =
+					{
+						ROUTE_elevator  =
+						{
+						},
+					},
+				},
+				ROUTE_westbridge  =
+				{
+					ROUTE_garagedoor  =
+					{
+						ROUTE_elevator  =
+						{
+						},
+					},
+				},
+				ROUTE_spawnsteps  =
+				{
+					ROUTE_westdam  =
+					{
+						ROUTE_westpillbox  =
+						{
+							ROUTE_topelevator  =
+							{
+							},
+							ROUTE_garagedoor  =
+							{
+							},
+						},
+					},
+				},
+			},
+			ROUTE_flagspawn =
+			{
+				ROUTE_oilstation  =
+				{
+					ROUTE_axiseast  =
+					{
+						ROUTE_elevator  =
+						{
+						},
+						ROUTE_weststeps  =
+						{
+							ROUTE_garageduct  =
+							{
+							},
+							ROUTE_westoverlook  =
+							{
+							},
+						},
+					},
+				},
+				ROUTE_eastbridge  =
+				{
+					ROUTE_garagedoor  =
+					{
+						ROUTE_elevator  =
+						{
+						},
+					},
+				},
+				ROUTE_bridgetunnel =
+				{
+					ROUTE_eastbridge  =
+					{
+						ROUTE_garagedoor  =
+						{
+							ROUTE_elevator  =
+							{
+							},
+						},
+					},
+					ROUTE_westbridge  =
+					{
+						ROUTE_garagedoor  =
+						{
+							ROUTE_elevator  =
+							{
+							},
+						},
+					},
+					ROUTE_axiseast  =
+					{
+						Weight = 2,
+						ROUTE_elevator  =
+						{
+						},
+						ROUTE_weststeps  =
+						{
+							ROUTE_garageduct  =
+							{
+							},
+							ROUTE_westoverlook  =
+							{
+							},
+						},
+					},
+				},
+				ROUTE_spawnsteps  =
+				{
+					ROUTE_westdam  =
+					{
+						ROUTE_westpillbox  =
+						{
+							ROUTE_topelevator  =
+							{
+							},
+							ROUTE_garagedoor  =
+							{
+							},
+						},
+					},
+				},
+			},
+		},
+		CAMP_dual_tank_1 =
+		{
+			ROUTE_rfrontspawn =
+			{
+				ROUTE_eaststairs = {},
+			},
+			ROUTE_rrearspawn =
+			{
+				ROUTE_eaststairs = {},
+			},
+		},
+	};
+
+	MapRoutes.FLAG_Allies_War_Documents.ROUTE_rrearspawn = MapRoutes.FLAG_Allies_War_Documents.ROUTE_rfrontspawn;
+	MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_rrearspawn = MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_rfrontspawn;
+	MapRoutes.PLANT_Sub_Garage_Door.ROUTE_bfrontspawn = MapRoutes.PLANT_Sub_Garage_Door.ROUTE_flagspawn;
+	MapRoutes.PLANT_Sub_Garage_Door.ROUTE_brearspawn = MapRoutes.PLANT_Sub_Garage_Door.ROUTE_flagspawn;
+	MapRoutes.PLANT_Prototype_Tank.ROUTE_bfrontspawn = MapRoutes.PLANT_Prototype_Tank.ROUTE_flagspawn;
+	MapRoutes.PLANT_Prototype_Tank.ROUTE_brearspawn = MapRoutes.PLANT_Prototype_Tank.ROUTE_flagspawn;
+	MapRoutes.DEFEND_bGarage_1 = MapRoutes.PLANT_Sub_Garage_Door;
+	MapRoutes.DEFEND_bGarage_2 = MapRoutes.PLANT_Sub_Garage_Door;
+	MapRoutes.DEFEND_bGarage_3 = MapRoutes.PLANT_Sub_Garage_Door;
+	MapRoutes.DEFEND_bGarage_4 = MapRoutes.PLANT_Sub_Garage_Door;
+	MapRoutes.DEFEND_bGarage_5 = MapRoutes.PLANT_Sub_Garage_Door;
+	MapRoutes.DEFEND_bTank_1 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.DEFEND_bTank_2 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.DEFEND_bTank_3 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.DEFEND_bTank_4 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.DEFEND_bTank_5 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.DEFEND_bTank_6 = MapRoutes.PLANT_Prototype_Tank;
+	MapRoutes.CAMP_dual_tank_2 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_3 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_4 = MapRoutes.CAMP_dual_tank_1;
+	MapRoutes.CAMP_dual_tank_5 = MapRoutes.CAMP_dual_tank_1;
+
+	Util.Routes( MapRoutes );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = Map.ViewDistance;
+
+	//RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
+};

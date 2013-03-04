@@ -1,0 +1,456 @@
+//
+// Martin - 8/2012 - This map and v1 should not be worked on. The forward spawn flag does not work
+// correctly and only 0-3 players spawn there on a team with 16, making each spawn a painful
+// run back to the action.
+// 
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	Suicide = MAP_SUICIDE,
+	DontDispenseAmmo = true,
+
+	Lower_Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Lower_Bunker_Door_Destroyed" );
+	},
+
+	axis_radio_transmitter_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_radio_transmitter_Destroyed" );
+	},
+
+	main_base_bunker_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "main_base_bunker_door_Destroyed" );
+	},
+
+	main_base_wall_breach_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "main_base_wall_breach_Destroyed" );
+	},
+
+	sea_wall_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "sea_wall_door_Destroyed" );
+	},
+
+	beach_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "beach_flag_Axis_Captured" );
+	},
+
+	beach_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.Lower_Bunker_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_radio_transmitter_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.main_base_bunker_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.main_base_wall_breach_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.sea_wall_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.beach_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.beach_flag_Allies_Captured );
+	
+	Util.DisableGoal( ".*", true ); // all but routes
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "VENOM_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.EnableGoal( "CHECKPOINT.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sea_wall_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower_Bunker_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBeach.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t462" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t364" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t378" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t379" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_t380" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_sandbagmg" );
+	
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+	
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	RTCWUtil.KillEntities( {94, 143, 96, 461, 460, 459, 90, 636, 637} );
+	
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_main_base_bunker_door =
+		{
+		},
+		PLANT_axis_radio_transmitter =
+		{
+		},
+		PLANT_Lower_Bunker_Door =
+		{
+		},
+		PLANT_sea_wall_door =
+		{
+		},
+		PLANT_main_base_wall_breach =
+		{
+		},
+		REPAIRMG42_t458 =
+		{
+		},
+		REPAIRMG42_mg42_1 =
+		{
+		},
+		REPAIRMG42_t381 =
+		{
+		},
+		REPAIRMG42_t436 =
+		{
+		},
+		REPAIRMG42_t378 =
+		{
+		},
+		REPAIRMG42_t379 =
+		{
+		},
+		REPAIRMG42_531 =
+		{
+		},
+		REPAIRMG42_t364 =
+		{
+		},
+		REPAIRMG42_t382 =
+		{
+		},
+		REPAIRMG42_t459 =
+		{
+		},
+		REPAIRMG42_t462 =
+		{
+		},
+		REPAIRMG42_c_cpTunnel =
+		{
+		},
+		REPAIRMG42_t380 =
+		{
+		},
+		REPAIRMG42_t440 =
+		{
+		},
+		MOUNTMG42_t381 =
+		{
+		},
+		MOUNTMG42_c_cpTunnel =
+		{
+		},
+		ROUTE_r_entrance3a =
+		{
+		},
+		MOUNTMG42_t436 =
+		{
+		},
+		ROUTE_flagspawn =
+		{
+		},
+		ROUTE_r_ramp2b =
+		{
+		},
+		MOUNTMG42_t380 =
+		{
+		},
+		MOUNTMG42_mg42_1 =
+		{
+		},
+		SNIPE_s_bunker2 =
+		{
+		},
+		MOUNTMG42_t459 =
+		{
+		},
+		ROUTE_r_entrance2a =
+		{
+		},
+		ROUTE_r_cp2 =
+		{
+		},
+		ROUTE_r_entrance2b =
+		{
+		},
+		ROUTE_r_tube1 =
+		{
+		},
+		SNIPE_s_radar2 =
+		{
+		},
+		ROUTE_cp_spawn =
+		{
+		},
+		ROUTE_r_entrance1 =
+		{
+		},
+		MOUNTMG42_531 =
+		{
+		},
+		MOUNTMG42_t382 =
+		{
+		},
+		SNIPE_s_beach1 =
+		{
+		},
+		SNIPE_s_boat2 =
+		{
+		},
+		ROUTE_r_entrance3b =
+		{
+		},
+		ROUTE_r_cp1 =
+		{
+		},
+		ROUTE_r_ramp1 =
+		{
+		},
+		MOUNTMG42_t364 =
+		{
+		},
+		SNIPE_s_boat1 =
+		{
+		},
+		SNIPE_s_beach2 =
+		{
+		},
+		MOUNTMG42_t440 =
+		{
+		},
+		MOUNTMG42_t378 =
+		{
+		},
+		SNIPE_s_radar1 =
+		{
+		},
+		SNIPE_s_bunker1 =
+		{
+		},
+		ROUTE_r_ramp2a =
+		{
+		},
+		MOUNTMG42_t458 =
+		{
+		},
+		SNIPE_s_flag1 =
+		{
+		},
+		MOUNTMG42_t462 =
+		{
+		},
+		MOUNTMG42_t379 =
+		{
+		},
+		CHECKPOINT_beach_flag =
+		{
+		},
+		DEFEND_d_lowerside4 =
+		{
+		},
+		ATTACK_a_bunker1 =
+		{
+		},
+		DEFEND_d_top1 =
+		{
+		},
+		DEFEND_s_flag1 =
+		{
+		},
+		DEFEND_d_radar1 =
+		{
+		},
+		DEFEND_d_wall2 =
+		{
+		},
+		ATTACK_a_lower2 =
+		{
+		},
+		ATTACK_a_gen1 =
+		{
+		},
+		ATTACK_a_gen3 =
+		{
+		},
+		ATTACK_a_radar3 =
+		{
+		},
+		DEFEND_d_top2 =
+		{
+		},
+		DEFEND_d_wall1 =
+		{
+		},
+		ATTACK_a_radar4 =
+		{
+		},
+		DEFEND_d_lowerside1 =
+		{
+		},
+		DEFEND_d_lowerside3 =
+		{
+		},
+		ATTACK_a_front1 =
+		{
+		},
+		DEFEND_d_radar2 =
+		{
+		},
+		DEFEND_d_flag2_1 =
+		{
+		},
+		DEFEND_d_gen2 =
+		{
+		},
+		ATTACK_a_gen2 =
+		{
+		},
+		DEFEND_d_radar4 =
+		{
+		},
+		DEFEND_d_lowerside2 =
+		{
+		},
+		DEFEND_d_gen3 =
+		{
+		},
+		DEFEND_d_flag2_2 =
+		{
+		},
+		DEFEND_d_radar3 =
+		{
+		},
+		DEFEND_d_stairs1 =
+		{
+		},
+		DEFEND_d_inside_wall =
+		{
+		},
+		ATTACK_a_bunker2 =
+		{
+		},
+		ATTACK_a_lower3 =
+		{
+		},
+		DEFEND_d_flag1b =
+		{
+		},
+		ATTACK_a_radar2 =
+		{
+		},
+		ATTACK_a_entrance =
+		{
+		},
+		DEFEND_d_inside_entrance =
+		{
+		},
+		DEFEND_d_lower_inside =
+		{
+		},
+		DEFEND_d_stairs2 =
+		{
+		},
+		ATTACK_a_lower1 =
+		{
+		},
+		ATTACK_a_bunker_l2 =
+		{
+		},
+		ATTACK_a_bunker_window =
+		{
+		},
+		DEFEND_d_gen1 =
+		{
+		},
+		DEFEND_d_flag1a =
+		{
+		},
+		ATTACK_a_radar1 =
+		{
+		},
+		DEFEND_d_front_inside =
+		{
+		},
+		ATTACK_a_basementdoor =
+		{
+		},
+		ATTACK_a_bunker3 =
+		{
+		},
+		ATTACK_a_stair_ramp =
+		{
+		},
+		EXPLODE_473 =
+		{
+		},
+		EXPLODE_526 =
+		{
+		},
+		EXPLODE_52 =
+		{
+		},
+		EXPLODE_510 =
+		{
+		},
+		EXPLODE_322 =
+		{
+		},
+		EXPLODE_350 =
+		{
+		},
+		EXPLODE_1262 =
+		{
+		},
+		EXPLODE_1255 =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

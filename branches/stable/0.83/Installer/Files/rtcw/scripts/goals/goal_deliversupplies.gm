@@ -1,0 +1,347 @@
+// This script contains functionality to allow medic bots to deliver ammo to people that request it.
+
+// These parameters are required
+this.Name = "DeliverSupplies";	// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.KillAndRevive = true;
+
+this.AlwaysRecieveEvents = true;
+
+// possible options
+this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
+this.DeliverPriority = 1.1;
+this.RangeLimit = 1500;
+
+// states
+this.DELIVER_PACKS = 1;
+this.KILL_TARGET = 2;
+this.SWITCH_TO_SYRINGE = 3;
+this.REVIVE_TARGET = 4;
+
+this.Initialize = function()
+{
+	this.Respond = false;
+	Util.ScriptDebugPrint(this.Name, "initialized");
+};
+
+this.GetPriority = function()
+{
+	block( this.Bot.Name + "_deliversupplies" );
+
+	sleep(0.5);
+	if ( this.Bot.RevivedTargetEnt ) {
+		this.TargetEntity =  this.Bot.RevivedTargetEnt;
+		this.Bot.RevivedTargetEnt = null;
+		this.Supply = WEAPON.MEDKIT;
+		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
+
+		// cs: if we've activated from a revive goal, lets give it a higher priority than normal.
+		this.Priority = this.DeliverPriority + 0.2;
+	}
+};
+
+this.Enter = function()
+{
+	this.FriendlyFire = GetCvar("g_friendlyfire");
+	this.PacksThrown = 0;
+	this.TargetPosition = GetEntPosition(this.TargetEntity);
+	this.StartPosition = this.TargetPosition; // don't chase them across the entire map
+	this.OnTarget = false;
+
+	if ( this.Respond )
+	{
+		targetName = GetEntName(this.TargetEntity);
+
+		if(this.Supply == WEAPON.AMMO_PACK)
+		{
+			this.Bot.SayTeam("Coming with Ammo, ^7", targetName, "^5!^2");
+		}
+		else if(this.Supply == WEAPON.MEDKIT)
+		{
+			this.Bot.SayTeam("Coming with Health, ^7", targetName, "^5!^2");
+		}
+	}
+
+	// Set up some finish criteria
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
+	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", this.Supply);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+
+	this.KillTarget = false;
+	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true
+		&& this.Bot.HasAmmo(WEAPON.SYRINGE) && this.TargetEntity && !GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) )
+	{
+		this.KillTarget = true;
+		this.AddFinishCriteria(this.TargetEntity,"health greaterthan",75);
+	}
+
+	if ( !this.KillTarget )
+	{
+		this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
+	}
+
+	this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+};
+
+this.Exit = function()
+{
+	if ( this.DynamicGotoThread )
+		{ this.KillThread(this.DynamicGotoThread); }
+
+	this.TargetEntity = null;
+	this.TargetPosition = null;
+	this.OnTarget = false;
+	this.Bot.KillingForRevive = false; // allow appropriate voice chats again
+};
+
+this.DynamicGoto = function()
+{
+	if(this.Goto(this.TargetPosition, 128.f) == EVENT.PATH_SUCCESS)
+	{
+		this.OnTarget = true;
+	}
+	else
+	{
+		this.Finished();
+	}
+};
+
+this.Update = function()
+{
+	while(1)
+	{
+		entPos = GetEntPosition(this.TargetEntity);
+		if ( entPos.IsZero() )
+			{ this.Finished(); }
+
+		// reset if they chose a closer target
+		if ( this.ChangedTarget ) {
+			this.TargetPosition = entPos;
+			this.ChangedTarget = false;
+			if ( this.DynamicGotoThread )
+				{ this.KillThread(this.DynamicGotoThread); }
+			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+		}
+
+		dStart = DistanceBetween(entPos,this.StartPosition);
+		if ( dStart > 1500 )
+		{
+			//stop chasing
+			//this.Bot.SayTeam("stop moving if you want packs " + GetEntName(this.TargetEntity));
+			this.Finished();
+		}
+
+		d = DistanceBetween(entPos,this.TargetPosition);
+		if( d > 128 )
+		{
+			if ( this.DynamicGotoThread )
+				{ this.KillThread(this.DynamicGotoThread); }
+			this.TargetPosition = entPos;
+			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+		}
+
+		if ( this.OnTarget )
+		{
+			this.Priority = 2.0;
+
+			// aim at target while waiting for weapon change
+			pos = GetEntEyePosition(this.TargetEntity);
+			this.AddAimRequest(Priority.High, "position",pos);
+
+			if ( !this.KillTarget ) {
+				this.State = this.DELIVER_PACKS;
+				this.AddWeaponRequest(Priority.High, this.Supply);
+				this.BlockForWeaponChange(this.Supply);
+			}
+			else {
+				hlth = Util.GetEntHealth(this.TargetEntity);
+
+				// cs: there is no finish criteria set when KillAndRevive is enabled
+				//     so we need to make sure that they are still alive.
+				//     a lack of finish criteria for health isn't critical because the medic will
+				//     have needed to be here to revive anyway.
+				if (hlth < 1) {
+					this.Finished();
+				}
+				else if (hlth < 37) {
+					this.Bot.KillingForRevive = true; // for voice chats
+					this.State = this.KILL_TARGET;
+				}
+				else {
+					this.State = this.DELIVER_PACKS;
+				}
+			}
+
+			while(this.PacksThrown < 2 && this.Bot.IsWeaponCharged(this.Supply))
+			{
+				switch(this.State)
+				{
+					case this.DELIVER_PACKS:
+					{
+						this.UpdateDeliverPacks();
+					}
+					case this.KILL_TARGET:
+					{
+						this.UpdateKillTarget();
+					}
+					case this.SWITCH_TO_SYRINGE:
+					{
+						this.UpdateSwitchToSyringe();
+					}
+					case this.REVIVE_TARGET:
+					{
+						this.UpdateReviveTarget();
+					}
+				}
+				yield();
+			}
+
+			this.Finished();
+		}
+
+		yield();
+	}
+};
+
+this.UpdateDeliverPacks = function()
+{
+	if ( this.Bot.GetCurrentWeapon() != this.Supply ) {
+		this.AddWeaponRequest(Priority.High, this.Supply);
+		this.BlockForWeaponChange(this.Supply);
+	}
+
+	pos = GetEntEyePosition(this.TargetEntity);
+	if (pos)
+	{
+		//move towards them while giving packs
+		this.AddAimRequest(Priority.High, "position",pos);
+		this.Bot.MoveTowards(pos);
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+	}
+	else
+	{
+		this.Finished();
+	}
+	sleep(0.25);
+};
+
+this.UpdateKillTarget = function()
+{
+	hlth = Util.GetEntHealth(this.TargetEntity);
+	if ( hlth < 1 ) {
+		this.Bot.KilledForRevive = true; // for voice chats
+		this.State = this.SWITCH_TO_SYRINGE;
+		return;
+	}
+
+	pos = GetEntEyePosition(this.TargetEntity);
+	if (pos)
+	{
+		// shoot at their head
+		this.AddAimRequest(Priority.High, "position",pos);
+		this.Bot.MoveTowards(pos);
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+	}
+	else
+	{
+		this.Finished();
+	}
+	yield();
+};
+
+this.UpdateSwitchToSyringe = function()
+{
+	this.AddWeaponRequest(Priority.High, WEAPON.SYRINGE);
+	this.BlockForWeaponChange(WEAPON.SYRINGE);
+	this.State = this.REVIVE_TARGET;
+};
+
+this.UpdateReviveTarget = function()
+{
+	hlth = Util.GetEntHealth(this.TargetEntity);
+	if ( hlth > 0 ) {
+		this.State = this.DELIVER_PACKS;
+
+		// move off them
+		pos = GetEntEyePosition(this.TargetEntity) + Vector3(48,48,0);
+		if ( pos )
+		{
+			this.Goto(pos);
+		}
+		else
+		{
+			this.Finished();
+		}
+
+		return;
+	}
+
+	pos = GetEntEyePosition(this.TargetEntity);
+	if (pos)
+	{
+		this.AddAimRequest(Priority.High, "position",pos);
+		this.Bot.MoveTowards(pos);
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+	}
+	else
+	{
+		this.Finished();
+	}
+	yield();
+};
+
+this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
+{
+	packType = null;
+	if(macroId == VOICE.NEED_AMMO && this.Bot.GetClass() == CLASS.LIEUTENANT) {
+		packType = WEAPON.AMMO_PACK;
+	}
+	else if(macroId == VOICE.NEED_MEDIC && this.Bot.GetClass() == CLASS.MEDIC) {
+		packType = WEAPON.MEDKIT;
+	}
+	else
+	{ 
+		return;
+	}
+	
+	dist = this.Bot.DistanceTo(whoSaidIt);
+	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD) || dist > this.RangeLimit )
+	{
+		return;
+	}
+
+	if ( this.TargetEntity && this.TargetEntity == whoSaidIt ) {
+		return;
+	}
+	else if ( this.TargetEntity ) {
+		// store previous ents and collect targets to deliver to?
+		if ( dist < this.Bot.DistanceTo(this.TargetEntity) ) {
+			this.ChangedTarget = true;
+		}
+	}
+
+	if (this.Bot.IsWeaponCharged(packType))
+	{
+		this.TargetEntity = whoSaidIt;
+		this.Supply = packType;
+		this.Priority = this.DeliverPriority;
+		this.DelayNextResponse = true;
+		sleep(10);
+		if(this.DelayNextResponse) // can be null if bot disconnected
+		{
+			this.DelayNextResponse = false;
+			// if we haven't activated by now, don't bother
+			if(!this.IsActive()) {
+				this.Priority = 0;
+			}
+		}		
+	}
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	if(weaponId == this.Supply)
+	{
+		this.PacksThrown += 1;
+	}
+ };

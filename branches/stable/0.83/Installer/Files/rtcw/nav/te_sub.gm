@@ -1,0 +1,283 @@
+global Map =
+{
+	Quiet = true,
+
+	Checkpoint_flag_respawn = "CHECKPOINT_flag_respawn",
+	Plant_Axis_Submarine = "PLANT_Axis_Submarine",
+	Plant_Filtration_Door = "PLANT_Filtration_Door",
+	Plant_Storage_Door = "PLANT_Storage_Door",
+
+	FocusPrimary = false,
+	StorageStatus = false,
+	FiltStatus = false,
+	SubDyno = 0,
+
+	Axis_Submarine_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SubDyno = 0;
+	},
+
+	Submarine_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
+
+		Map.SubDyno += 1;
+	},
+
+	Submarine_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SubDyno -= 1;
+	},
+
+	Filtration_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FiltStatus = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_storage" );
+
+		if ( Map.FocusPrimary || Map.StorageStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Submarine );
+		}
+	},
+
+	Filtration_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//don't bother defusing this
+		Util.DisableGoal( "DEFUSE_Filtration_.*" );
+
+		//open up the route nodes for the back way from flag
+		Util.EnableGroup( "backroutes" );
+
+		if ( Map.StorageStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_.*" );
+		}
+	},
+
+	Storage_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.StorageStatus = true;
+
+		if ( Map.FocusPrimary || Map.FiltStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Submarine );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_filtration" );
+	},
+
+	Storage_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//don't bother defusing this
+		Util.DisableGoal( "DEFUSE_Storage_.*" );
+
+		if ( Map.FiltStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_.*" );
+		}
+	},
+
+	flag_respawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	flag_respawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.FiltStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn );
+		}
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//time is low, so start focusing on main obj
+		Map.FocusPrimary = true;
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.SybDyno > 1 ) {
+			return;
+		}
+
+		foreach( id and bot in BotTable )
+		{
+			if ( RandInt( 0,10 ) < 4 ) {
+				bot.SayVoice( VOICE.G_GOODGAME );
+			}
+			sleep( 1.0 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition( 974, 2559, 386, "PLANT_Axis_Submarine" );
+
+	Util.AddUseWp( "PLANT_Axis_Submarine", "frontsub" );
+	Util.AddUseWp( "PLANT_Axis_Submarine", "midsub" );
+	Util.AddUseWp( "PLANT_Axis_Submarine", "backsub" );
+	Util.AddUseWp( "PLANT_Storage_Door", "insidestoragedoor" );
+	Util.AddUseWp( "PLANT_Storage_Door", "outsidestoragedoor" );
+
+	Wp.SetWaypointFlag( "cpspawn1", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn2", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn3", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn4", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn5", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn6", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn7", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn8", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn9", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn10", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn11", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn12", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn13", "closed", true );
+	Wp.SetWaypointFlag( "cpspawn14", "closed", true );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Axis Submarine Destroyed.", Map.Axis_Submarine_Destroyed );
+	OnTrigger( "Planted at the Axis Submarine.", Map.Submarine_Planted );
+	OnTrigger( "Defused at the Axis Submarine.", Map.Submarine_Defused );
+	OnTrigger( "Filtration Door Destroyed.", Map.Filtration_Door_Destroyed );
+	OnTrigger( "Planted at Filtration Door.", Map.Filtration_Door_Planted );
+	OnTrigger( "Storage Door Destroyed.", Map.Storage_Door_Destroyed );
+	OnTrigger( "Planted at Storage Door.", Map.Storage_Door_Planted );
+	OnTrigger( "Axis reclaims the Central Access Room!", Map.flag_respawn_Axis_Captured );
+	OnTrigger( "Allies capture the Central Access Room!", Map.flag_respawn_Allies_Captured );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+
+	rtGrp =
+	{
+		"ROUTE_centralaccess",
+		"ROUTE_mainstorage",
+		"ROUTE_filtration",
+	};
+
+	SetGoalGroup( rtGrp, "backroutes" );
+	Util.DisableGroup( "backroutes" );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	//eng camp spots to wait for recharge
+	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSub.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Filtration_Door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Storage_Door );
+
+	MapRoutes =
+	{
+		PLANT_Axis_Submarine =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_chamber3 =
+				{
+					Weight = 4,
+					ROUTE_stairs = { ROUTE_storage = {}, },
+					ROUTE_front = {},
+				},
+				ROUTE_water = {},
+				ROUTE_centralaccess =
+				{
+					ROUTE_mainstorage = { ROUTE_filtration = {}, },
+				},
+			},
+			ROUTE_bSpawn1 =
+			{
+				ROUTE_chamber3 =
+				{
+					ROUTE_stairs = { ROUTE_storage = {}, },
+					ROUTE_front = {},
+				},
+				ROUTE_mainstorage = { ROUTE_filtration = {}, },
+			},
+		},
+	};
+
+	MapRoutes.ATTACK_bSub1 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.ATTACK_bSub2 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.ATTACK_bSub3 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.ATTACK_bSub4 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.ATTACK_bSub5 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.ATTACK_bSub6 = MapRoutes.PLANT_Axis_Submarine;
+	MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn2 = MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn1;
+	MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn3 = MapRoutes.PLANT_Axis_Submarine.ROUTE_bSpawn1;
+
+	Util.Routes( MapRoutes );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

@@ -1,0 +1,62 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "DispenseAmmo";	// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// possible options
+this.LimitToClass(CLASS.FIELDOPS);
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	
+	print(this.Name, " Initialized");
+};
+
+// This callback is called when the bot spawns into the game. You may run this function as a thread,
+// however it should be kept in mind that the goal tracks the thread, and will kill the thread and re-run
+// this callback upon each spawn. If you need a persistant thread, you should spawn one yourself.
+// NOTE: This function won't be called if the bot doesn't match the allowed classes set up above.
+this.OnSpawn = function()
+{
+	sleep(5);
+	this.Priority = 1;
+};
+
+// Don't need a GetPriority function since we're using the OnSpawn callback as a controller for this goal.
+
+//this.GetPriority = function(goal)
+//{	
+//};
+
+this.Enter = function()
+{
+	// This goal is going to be manipulating the bots aim, so create an aim request to do so.
+	//this.Bot.AddAimRequest(Priority.High, this.Name, "casual", "movedirection");
+	this.AddAimRequest(Priority.High, "movedirection");
+};
+
+this.Exit = function()
+{
+	// Release the aim request so other goals can assume control.S
+	this.ReleaseAimRequest();	
+	this.ReleaseWeaponRequest();
+};
+
+this.Update = function()
+{
+	// Say something annoying so we know the script got here.
+	this.Bot.SayTeam("Ammo for everyone!");
+	
+	this.AddWeaponRequest(Priority.High, WEAPON.AMMO_PACK );
+	this.BlockForWeaponChange(WEAPON.AMMO_PACK );
+	
+	this.Bot.HoldButton(BTN.ATTACK1, 5);
+	sleep(5);
+	
+	// This is needed in order to finish the goal. Without it, the goal will continue to have Update called on it.
+	this.Finished();
+};
+

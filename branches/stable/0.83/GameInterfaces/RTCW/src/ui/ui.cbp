@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ui" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../build/Debug/ui.mp.i386.so" prefix_auto="0" extension_auto="0" />
+				<Option object_output="../build/ui/Debug" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-W" />
+					<Add option="-O0" />
+					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DUI_EXPORTS" />
+					<Add option="-D_CRT_SECURE_NO_DEPRECATE" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../detours" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../build/Release/ui.mp.i386.so" prefix_auto="0" extension_auto="0" />
+				<Option object_output="../build/ui/Release" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-W" />
+					<Add option="-fno-strict-aliasing" />
+					<Add option="-m32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_USRDLL" />
+					<Add option="-DUI_EXPORTS" />
+					<Add option="-D_CRT_SECURE_NO_DEPRECATE" />
+					<Add directory="../detours" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../detours" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../main/ui/menudef.h">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/auto_update.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/cdkey.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/connect.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/controls.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/createfavorite.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/createserver.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/credit.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/default.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/error.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/filter.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/hud.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/hud.txt">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/in_rec_restart.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame.txt">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame_callvote.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame_controls.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame_leave.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame_options.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/ingame_system.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/joinserver.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/main.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/menudef.h">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/menus.txt">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/mods.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/multi.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/multi_setup.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/nerve_credit.txt">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/options.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/password.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/pbinfo.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/quit.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/quitcredit.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/rec_restart.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/serverinfo.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/setup.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/single_player.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/system.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/vid_restart.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/wm_limbo.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/wm_pickplayer.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/wm_pickteam.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/wm_quickmessage.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../../main/ui_mp/wm_quickmessageAlt.menu">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../cgame/tr_types.h" />
+		<Unit filename="../downlib/downlib.h">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="../game/bg_lib.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="../game/bg_misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../game/bg_public.h" />
+		<Unit filename="../game/q_math.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../game/q_shared.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../game/q_shared.h" />
+		<Unit filename="../game/surfaceflags.h" />
+		<Unit filename="Jamfile">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="keycodes.h" />
+		<Unit filename="ui.def" />
+		<Unit filename="ui_atoms.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_gameinfo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_local.h" />
+		<Unit filename="ui_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_players.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_public.h" />
+		<Unit filename="ui_shared.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_shared.h" />
+		<Unit filename="ui_syscalls.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

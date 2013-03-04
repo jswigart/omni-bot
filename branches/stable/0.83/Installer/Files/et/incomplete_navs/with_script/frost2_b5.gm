@@ -1,0 +1,349 @@
+//==========================================================================================
+//
+//	frost2_b5.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	12 November 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	CastleDoorOpened = false,
+	towerDestroyed = 0,
+	phase = 0,
+
+	SetSpawn1 = function(bot)
+	{
+		if (bot.GetTeam() == TEAM.ALLIES){
+			if (Map.phase >= 30 && Map.phase < 50){
+				bot.ChangeSpawnPoint(RandInt(1,2)*4-3); //1 and 5, towers
+			} else {
+				bot.ChangeSpawnPoint(4); //village
+			}
+		}else{
+         r=1;
+			if (Map.phase >= 20){ r=6; }
+			if (Map.phase >= 30){ r=10; }
+			if (Map.phase >= 40){ r=3; }
+			if (Map.phase >= 50){ r=0; }
+			if (RandInt(0,9) < r){
+				bot.ChangeSpawnPoint(3); //castle
+			} else {
+				bot.ChangeSpawnPoint(2); //village
+			}
+		}
+	},
+
+	SetSpawn = function()
+	{
+		foreach(bot in BotTable)
+		{
+			Map.SetSpawn1(bot);
+		}
+	},
+
+	Village_Door_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_village_door");
+		Util.MapDebugPrint( "Village_Door_Destroyed" );
+	},
+
+	tower_Destroyed = function( trigger )
+	{
+		sleep(1);
+		Map.towerDestroyed += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_supply4xxx" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_health3xxx" );
+		Util.ClearRoleForGoals("SWITCH_gate", ROLE.INFILTRATOR);
+
+		if(Map.phase < 40)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Door_Controls" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Graveyard_Gate" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_gold_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Door_Controls" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Graveyard_Gate" );
+			if(Map.towerDestroyed > 1)
+			{
+				Map.phase = 30;
+				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_castle.*" );
+			} else {
+				Map.phase = 20;
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj[12]_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_castle.*" );
+			}
+		}
+
+		if(Map.towerDestroyed > 1)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_tower.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_village_door.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_tower.*" );
+		}
+
+		Map.SetSpawn();
+		Util.MapDebugPrint( "tower_Destroyed" );
+	},
+
+	castleGate_Open = function( trigger )
+	{
+		Map.CastleDoorOpened = true;
+		Util.LimitToTeam(TEAM.AXIS, "SWITCH_gate");
+		Util.ClearRoleForGoals("SWITCH_gate", ROLE.INFILTRATOR);
+		Util.MapDebugPrint( "castleGate_Open" );
+	},
+
+	castleGate_Closed = function( trigger )
+	{
+		Map.CastleDoorOpened = false;
+		Util.LimitToTeam(TEAM.ALLIES, "SWITCH_gate");
+		if(!Map.towerDestroyed){
+			Util.SetRoleForGoals("SWITCH_gate", ROLE.INFILTRATOR);
+		}
+		Util.MapDebugPrint( "castleGate_Closed" );
+	},
+
+	obj1_Stolen = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj1_.*" );
+		Util.MapDebugPrint( "obj1_Stolen" );
+	},
+
+	obj2_Stolen = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj2_.*" );
+		Util.MapDebugPrint( "obj2_Stolen" );
+	},
+
+	obj1_Returned = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj1_.*" );
+		Util.MapDebugPrint( "obj1_Returned" );
+	},
+
+	obj2_Returned = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj2_.*" );
+		Util.MapDebugPrint( "obj2_Returned" );
+	},
+
+	doorcontrols_Built = function( trigger )
+	{
+		Util.DisableGoal("ROUTE_front_gate.*");
+		Util.DisableGoal("ROUTE_west_gate");
+		SetGoalPriority("DEFEND_obj[12]_4", 0.4);
+		Util.MapDebugPrint( "doorcontrols_Built" );
+	},
+
+	doorcontrols_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_front_gate.*");
+		Util.EnableGoal("ROUTE_west_gate");
+		SetGoalPriority("DEFEND_obj[12]_4", 0.5);
+		Util.MapDebugPrint( "doorcontrols_Destroyed" );
+	},
+
+	sidegate_Built = function( trigger )
+	{
+		Util.DisableGoal("ROUTE_side_gate");
+		Util.MapDebugPrint( "sidegate_Built" );
+	},
+
+	sidegate_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_side_gate");
+		Util.MapDebugPrint( "sidegate_Destroyed" );
+	},
+
+	truckEscaping = function( trigger )
+	{
+		Map.phase = 40;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_castle.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Door_Controls" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Graveyard_Gate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_barrier.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_tower[34]" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_castle.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Door_Controls" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Graveyard_Gate" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		SetGoalPriority("BUILD_Truck_Barrier_2", 0.9);
+		Util.OnTriggerPosition( "MOVER_truck", "TruckPassedCastle", 200.0, Map.truck_passed_castle );
+		Map.SetSpawn();
+		Util.MapDebugPrint( "truckEscaping" );
+	},
+
+	truck_passed_castle = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Truck_Barrier_2" );
+		SetGoalPriority("SWITCH_gate", 0);
+		Util.MapDebugPrint( "truck_passed_castle" );
+	},
+
+	barrier_Built = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_Built" );
+	},
+
+	barrier_Destroyed = function( trigger )
+	{
+		Util.MapDebugPrint( "barrier_Destroyed" );
+	},
+
+	Truck_Passed_Bridge = function( trigger )
+	{
+		SetGoalPriority("PLANT_Truck_Barrier_2", 0.95);
+		Util.OnTriggerPosition( "MOVER_truck", "barrier", 300.0, Map.truck_passed_barrier );
+		Util.MapDebugPrint( "Truck_Passed_Bridge" );
+	},
+
+	truck_passed_barrier = function( trigger )
+	{
+		Map.phase = 50;
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Truck_Barrier_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_barrier.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_tower.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_end.*" );
+		Map.SetSpawn();
+		Util.MapDebugPrint( "truck_passed_barrier" );
+	},
+
+	alliedEscaped = function( trigger )
+	{
+		ETUtil.WinningChat( TEAM.ALLIES );
+		ETUtil.LosingChat( TEAM.AXIS );
+		Util.MapDebugPrint( "alliedEscaped" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "^3Allies have destroyed the North Tower Wall!", Map.tower_Destroyed );
+	OnTrigger( "^3Allies have destroyed the South Tower Wall!", Map.tower_Destroyed );
+	OnTrigger( "^3Castle Gate is now open!", Map.castleGate_Open );
+	OnTrigger( "^1Castle Gate is now closed!", Map.castleGate_Closed );
+	OnTrigger( "^3Allied team has stolen Prototype X!", Map.obj1_Stolen );
+	OnTrigger( "^3Allied team has stolen Prototype Y!", Map.obj2_Stolen );
+	OnTrigger( "Flag returned gold_crate!", Map.obj1_Returned );
+	OnTrigger( "Flag returned gold_crate2!", Map.obj2_Returned );
+	OnTrigger( "^2Allied team is escaping with the Radar Prototypes!", Map.truckEscaping );
+	OnTrigger( "^3Allied team escapes with the Radar Prototypes!", Map.alliedEscaped );
+
+	OnTrigger( "^3The Truck has passed the Bridge!", Map.Truck_Passed_Bridge );
+	OnTrigger( "^3Allies have destroyed the Village Door!", Map.Village_Door_Destroyed );
+	OnTrigger( "^1Axis have built the Door Controls!", Map.doorcontrols_Built );
+	OnTrigger( "^3Allies have destroyed the Door Controls!", Map.doorcontrols_Destroyed );
+	OnTrigger( "^1The Side Gate has been constructed !", Map.sidegate_Built );
+	OnTrigger( "^3The Side Gate has been destroyed.", Map.sidegate_Destroyed );
+	OnTrigger( "^1The Truck Barrier has been constructed.", Map.barrier_Built );
+	OnTrigger( "^3The Truck Barrier has been destroyed.", Map.barrier_Destroyed );
+
+	Util.DisableGoal( ".*", true );
+	Util.DisableGoal("ROUTE_front_gate.*");
+	Util.DisableGoal("ROUTE_west_gate");
+	Util.DisableGoal("ROUTE_side_gate");
+	Util.DisableGoal("ROUTE_village_door");
+
+	Util.EnableGoal( ".*_Command_Post");
+	Util.EnableGoal( "HEALTHCAB_keg");
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_supply4xxx" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_health3xxx" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_tower.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_village_door.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Truck_Barrier_2" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_North_Tower" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_Tower" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Village_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_tower.*" );
+
+	SetGoalPriority("DEFEND_obj[12]_4", 0.4);
+	SetGoalPriority("BUILD_Command_Post", 0.81, TEAM.ALLIES);
+	SetGoalPriority("PLANT_Command_Post", 0.8, TEAM.ALLIES, CLASS.ENGINEER);
+	SetGoalPriority("BUILD_Truck_Barrier_2", 0.7);
+
+	Util.SetRoleForGoals("SWITCH_gate", ROLE.INFILTRATOR);
+
+	Util.AddUsePoint("PLANT_South_Tower", Vec3(-828.747, -1074.035, 696.615));
+	Util.AddUsePoint("PLANT_Truck_Barrier_2", { Vec3(2245.260, 31.715, 742.658), Vec3(2515.809, -1.275, 733.071) });
+
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30} );
+
+	Map.SetSpawn();
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		FLAG_gold_crate =
+		{
+			ROUTE_tower_north_spawn = {
+				ROUTE_castle_north = {
+					ROUTE_shaft = {},
+					ROUTE_west_gate = {},
+				},
+				ROUTE_castle_south = {
+					ROUTE_side_gate = {},
+					ROUTE_west_gate = {},
+				},
+				ROUTE_front_gate = { ROUTE_front_gate2 = {
+					ROUTE_side_gate = {},
+					ROUTE_west_gate = {},
+				}},
+			},
+		},
+		FLAG_gold_crate2 =
+		{
+			ROUTE_tower_north_spawn = {
+				ROUTE_castle_north = {
+					ROUTE_shaft = {},
+					ROUTE_west_gate = {},
+				},
+				ROUTE_castle_south = {
+					ROUTE_side_gate = {},
+					ROUTE_west_gate = {},
+				},
+				ROUTE_front_gate = { ROUTE_front_gate2 = {
+					ROUTE_side_gate = {},
+					ROUTE_west_gate = {},
+				}},
+			}
+		},
+		CAPPOINT_truck = {
+			ROUTE_obj1 = {
+				ROUTE_castle_north = {
+				},
+				ROUTE_castle_south = {
+				},
+				ROUTE_front_gate2 = { ROUTE_front_gate = {}},
+			},
+			ROUTE_obj2 = {
+				ROUTE_castle_north = {
+				},
+				ROUTE_castle_south = {
+				},
+				ROUTE_front_gate2 = { ROUTE_front_gate = {}},
+			},
+		},
+	};
+	MapRoutes.FLAG_gold_crate.ROUTE_tower_south_spawn = MapRoutes.FLAG_gold_crate.ROUTE_tower_north_spawn;
+	MapRoutes.FLAG_gold_crate2.ROUTE_tower_south_spawn = MapRoutes.FLAG_gold_crate2.ROUTE_tower_north_spawn;
+	Util.Routes(MapRoutes);
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 100.0;
+	Map.SetSpawn1(bot);
+};

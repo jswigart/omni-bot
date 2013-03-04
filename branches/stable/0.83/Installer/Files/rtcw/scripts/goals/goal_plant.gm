@@ -1,0 +1,349 @@
+// This script contains functionality to allow bots to dynamite goals
+
+// These parameters are required
+this.Name = "PLANT";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.LimitToClass(CLASS.ENGINEER);
+
+
+// define some goal states
+this.LAY_EXPLOSIVE = 0;
+this.ARM_EXPLOSIVE = 1;
+this.COVER_DYNAMITE = 2;
+this.LOOK_FOR_DYNO = 3;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+		{
+			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xbbcae592 /* PLANT */);
+			if ( count > 0 )
+			{
+				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				{
+					if (goal.ExplosiveType && !(goal.ExplosiveType & goal.ExplosiveTypeDynamite)) {
+						continue;
+					}
+
+					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 ) {
+						if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 ) {
+							continue;
+						}
+					} else {
+						goalEnt = goal.GetEntity();
+
+						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 ) {
+							continue;
+						}
+					}
+
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
+			}
+
+			tableClear(this.Bot.QueryGoalsTable);
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	this.GoalState = this.LOOK_FOR_DYNO;
+	this.ExplosiveEntity = null;
+
+	if ( this.MapGoal.TraceEntity ) {
+		this.GoalEntity = this.MapGoal.TraceEntity;
+	}
+	else {
+		this.GoalEntity = this.MapGoal.GetEntity();
+	}
+
+	this.Goal_Name = this.MapGoal.GetName();
+	this.Goal_Position = this.MapGoal.GetPosition();
+
+	if ( !this.GoalEntity ) {
+		Util.MapDebugPrint(this.Goal_Name + " entered with no entity!", true);
+		this.MapGoal.DisableGoal(true);
+		this.Finished();
+	}
+
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+
+	this.UpdateDebugString();
+};
+
+this.Update = function()
+{
+	if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
+		Util.MapDebugPrint( this.MapGoal.GetName() + " aborting, no charge", true );
+		this.Finished();
+	}
+
+	if ( this.RouteTo(this.MapGoal, 64.0) == EVENT.PATH_SUCCESS ) {
+		if(!this.MarkInUse(this.MapGoal)) {
+			this.BlackboardDelay(5, this.MapGoal);
+			this.Finished();
+		}
+
+		this.UpdateDynamite();
+	}
+	else {
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+	}
+
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.CROUCH);
+	this.ReleaseAimRequest();
+	this.ReleaseWeaponRequest();
+
+	this.GoalState = this.LAY_EXPLOSIVE;
+	this.GoalEntity = null;
+	this.ExplosiveEntity = null;
+
+	// clear the occupied flag
+	if ( this.MapGoal && typeId(this.spotIndex) != 0 ) {
+		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
+		this.spotIndex = null;
+	}
+};
+
+this.UpdateDynamite = function()
+{
+	hasCoverSpot = false;
+	aimVectors = null;
+	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
+
+	while(1)
+	{
+		if ( !this.GoalEntity || !EntityIsValid(this.GoalEntity) || this.Bot.GetDestroyableState(this.GoalEntity) < 1 )
+		{
+			this.Finished();
+		}
+
+		switch(this.GoalState)
+		{
+			case this.LOOK_FOR_DYNO:
+			{
+				this.UpdateDebugString();
+				foundDyno = false;
+				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
+				dowhile(ent) {
+					if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 200 && this.Bot.IsAllied(ent)
+							&& this.Bot.GetExplosiveState(ent) == 1 ) {
+						foundDyno = true;
+						break;
+					}
+					ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, ent);
+				}
+
+				if ( foundDyno ) {
+					this.ExplosiveEntity = ent;
+					this.GoalState = this.ARM_EXPLOSIVE;
+				}
+				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
+					this.GoalState = this.LAY_EXPLOSIVE;
+				}
+				else if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 ) {
+					this.GoalState = this.COVER_DYNAMITE;
+				}
+				else {
+					if (this.ExplosiveEntity) {
+						this.BlackboardDelay(35, this.MapGoal);
+					}
+					this.Finished();
+				}
+			}
+			case this.LAY_EXPLOSIVE:
+			{
+				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+				{
+					this.Finished();
+				}
+
+				this.Bot.HoldButton(BTN.CROUCH, 99);
+				this.Priority = 2.0;
+
+				// for voice chat 'cover me'
+				signal(this.Bot.Name + "_plant");
+
+				goalPos = this.MapGoal.GetPosition();
+				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
+				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
+				this.BlockForWeaponChange( WEAPON.DYNAMITE );
+				this.Bot.PressButton(BTN.ATTACK1);
+			}
+			case this.ARM_EXPLOSIVE:
+			{
+				this.UpdateDebugString();
+
+				if ( !EntityIsValid(this.ExplosiveEntity) )
+				{
+					this.Finished();
+				}
+
+				// crouch to arm others dyno too.
+				if ( !this.Bot.HasEntityFlag(ENTFLAG.CROUCHED) ) {
+					this.Bot.HoldButton(BTN.CROUCH, 99);
+				}
+
+				this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
+				this.BlockForWeaponChange( WEAPON.PLIERS );
+
+				while ( EntityIsValid(this.ExplosiveEntity) && this.Bot.GetExplosiveState(this.ExplosiveEntity) == 1 )
+				{
+					dynoPosition = GetEntPosition(this.ExplosiveEntity);
+					this.AddAimRequest(Priority.High, "position", dynoPosition);
+					this.Bot.MoveTowards(dynoPosition);
+					this.Bot.PressButton(BTN.ATTACK1);
+					yield();
+				}
+
+				this.ReleaseWeaponRequest();
+				this.ReleaseAimRequest();
+				this.Bot.ReleaseButton(BTN.CROUCH);
+
+				// look for other close by dynos to arm
+				this.GoalState = this.LOOK_FOR_DYNO;
+			}
+			case this.COVER_DYNAMITE:
+			{
+				this.UpdateDebugString();
+
+				if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
+				{
+					this.Finished();
+				}
+
+				//don't plant another dynamite after coverTimeout or if all coverspots are occupied
+				this.BlackboardDelay(35, this.MapGoal);
+
+				// pick a cover spot
+				if (!hasCoverSpot) {
+
+					// choose spot which is not occupied
+					maxval = -1;
+					foreach ( id and spot in this.MapGoal.CoverSpots ) {
+						if (spot.occupied ) {
+							continue;
+						}
+						val = UnitRandom();
+						if (val > maxval) {
+							maxval = val;
+							this.spotIndex = id;
+						}
+					}
+
+					// no more cover spots available
+					if (typeId(this.spotIndex) == 0) { this.Finished(); }
+
+					spot = this.MapGoal.CoverSpots[ this.spotIndex ];
+					spot.occupied = true;
+
+					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
+						aimVectors = spot.AimVectors;
+						hasCoverSpot = true;
+					}
+					else {
+						Util.MapDebugPrint(this.Goal_Name, ": Cover Spot has no AimVectors!");
+						this.Finished();
+					}
+
+					this.Goto(spot.position, 32.0);
+
+					switch (spot.stance)
+					{
+						case "crouch":
+						{
+							this.Bot.HoldButton(BTN.CROUCH, 99);
+						}
+						case "prone":
+						{
+							this.Bot.HoldButton(BTN.PRONE, 99);
+						}
+					}
+				}
+
+				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(aimVectors));
+
+				sleep(0.75);
+
+				coverTimeout -= 1;
+				if ( coverTimeout <= 0 ) {
+					this.Finished();
+				}
+			}
+			default:
+			{
+				this.Finished();
+			}
+		}
+
+		sleep(0.25);
+	}
+};
+
+this.UpdateDebugString = function()
+{
+	switch(this.GoalState)
+	{
+		case this.LOOK_FOR_DYNO:
+		{
+			stateString = "LOOK_FOR_DYNO";
+		}
+		case this.LAY_EXPLOSIVE:
+		{
+			stateString = "LAY_EXPLOSIVE";
+		}
+		case this.ARM_EXPLOSIVE:
+		{
+			stateString = "ARM_EXPLOSIVE";
+		}
+		case this.COVER_DYNAMITE:
+		{
+			stateString = "COVER_DYNAMITE";
+		}
+		default:
+		{
+			stateString = "";
+		}
+	}
+
+	// for /bot debugbot <bot or all> fpinfo prints
+	this.DebugString = this.Goal_Name + " : " + stateString;
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	switch(weaponId)
+	{
+		case WEAPON.DYNAMITE:
+		{
+			this.ExplosiveEntity = projectileEntity;
+			this.GoalState = this.ARM_EXPLOSIVE;
+		}
+		default:
+		{
+		}
+	}
+};
+

@@ -1,0 +1,214 @@
+global Map =
+{
+	Ammo_Cabinet_first_ammocabinet = "AMMO_CABINET_first_ammocabinet",
+	Ammo_Cabinet_first_ammocabinet = "AMMO_CABINET_first_ammocabinet",
+	Ammo_Cabinet_first_ammocabinet = "AMMO_CABINET_first_ammocabinet",
+	Ammo_Cabinet_first_ammocabinet = "AMMO_CABINET_first_ammocabinet",
+	Health_Cabinet_first_healthcabinet = "HEALTH_CABINET_first_healthcabinet",
+	Health_Cabinet_first_healthcabinet = "HEALTH_CABINET_first_healthcabinet",
+	Health_Cabinet_first_healthcabinet = "HEALTH_CABINET_first_healthcabinet",
+	Health_Cabinet_first_healthcabinet = "HEALTH_CABINET_first_healthcabinet",
+	Build_barrier2 = "MAP_CONSTRUCTION_barrier2",
+	Build_barrier1 = "MAP_CONSTRUCTION_barrier1",
+	Build_axis_mg42 = "MAP_CONSTRUCTION_axis_mg42",
+	Build_axis_cp_open = "MAP_CONSTRUCTION_axis_cp_open",
+	Build_allies_cp_open = "MAP_CONSTRUCTION_allied_cp_open",
+	Build_tank_construct = "MAP_CONSTRUCTION_tank_construct",
+	Destroy_allied_cp_open = "MAP_DYNAMITE_TARGET_allied_cp_open",
+	Destroy_gun_3 = "MAP_DYNAMITE_TARGET_gun_3",
+	Destroy_gun_1 = "MAP_DYNAMITE_TARGET_gun_1",
+	Destroy_axis_mg42 = "MAP_DYNAMITE_TARGET_axis_mg42",
+	Destroy_axis_cp_open = "MAP_DYNAMITE_TARGET_axis_cp_open",
+	Destroy_gun_2 = "MAP_DYNAMITE_TARGET_gun_2",
+	Destroy_barrier1 = "MAP_DYNAMITE_TARGET_barrier1",
+	Destroy_barrier2 = "MAP_DYNAMITE_TARGET_barrier2",
+	Mount_741 = "MAP_MOUNTABLE_MG42_741",
+	Mount_752 = "MAP_MOUNTABLE_MG42_752",
+	Mount_751 = "MAP_MOUNTABLE_MG42_751",
+	Mount_mg421 = "MAP_MOUNTABLE_MG42_mg421",
+	Repair_752 = "MAP_REPAIR_MG42_752",
+	Repair_mg421 = "MAP_REPAIR_MG42_mg421",
+	Repair_751 = "MAP_REPAIR_MG42_751",
+	Repair_741 = "MAP_REPAIR_MG42_741",
+	Mover_tank = "MAP_MOVER_tank",
+
+	barrier2_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "barrier2_Built" );
+	},
+
+	tank_construct_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "tank_construct_Built" );
+	},
+
+	axis_cp_open_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "axis_cp_open_Built" );
+	},
+
+	allied_cp_open_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "allied_cp_open_Built" );
+	},
+	
+	axis_mg42_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "axis_mg42_Built" );
+	},
+
+	barrier1_Built = function( trigger )
+	{
+
+		Util.MapDebugPrint( "barrier1_Built" );
+	},
+
+	axis_cp_open_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "axis_cp_open_Destroyed" );
+	},
+
+	allies_cp_open_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "allies_cp_open_Destroyed" );
+	},
+	
+	gun_1_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_1_Destroyed" );
+	},
+
+	axis_mg42_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "axis_mg42_Destroyed" );
+	},
+
+	allied_cp_open_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "allied_cp_open_Destroyed" );
+	},
+
+	gun_2_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_2_Destroyed" );
+	},
+
+	barrier2_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "barrier2_Destroyed" );
+	},
+
+	barrier1_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "barrier1_Destroyed" );
+	},
+
+	barrier1_Passed = function( trigger )
+	{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MAP_CONSTRUCTION_allied_cp_open" );
+			
+		Util.MapDebugPrint( "barrier1_Passed" );
+	},
+	
+	barrier2_Passed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "barrier2_Passed" );
+	},
+	
+	spawn2_enabled = function( trigger )
+	{
+			SetAvailableMapGoals( TEAM.AXIS, true, "MAP_CONSTRUCTION_barrier2" );
+
+		Util.MapDebugPrint( "spawn2_enabled" );		
+	},
+
+	wall_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_MOVER_tank" );
+		
+		Util.MapDebugPrint( "wall_Destroyed" );
+	},
+
+	gun_3_Destroyed = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_3_Destroyed" );
+	},
+
+	gun_1_Planted = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_1_Planted" );
+	},
+	
+	gun_2_Planted = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_2_Planted" );
+	},
+	
+	gun_3_Planted = function( trigger )
+	{
+
+		Util.MapDebugPrint( "gun_3_Planted" );
+	},
+};
+
+global OnMapLoad = function()
+{
+
+	OnTrigger( "Tank Barrier #1 has been constructed.", Map.barrier1_Built );
+	OnTrigger( "Tank Barrier #2 has been constructed.", Map.barrier2_Built );
+	OnTrigger( "Axis have constructed the MG42 !", Map.axis_mg42_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_cp_open_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_cp_open_Built );	
+	OnTrigger( "The Tank has been repaired!", Map.tank_construct_Built );
+	OnTrigger( "The Allies have destroyed the Axis gun nr 3", Map.gun_3_Destroyed );
+	OnTrigger( "Axis MG42 destroyed!", Map.axis_mg42_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_cp_open_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.axis_cp_open_Destroyed );
+	OnTrigger( "The Allies have destroyed the Axis gun nr 1", Map.gun_1_Destroyed );
+	OnTrigger( "The Allies have destroyed the Axis gun nr 2", Map.gun_2_Destroyed );
+	OnTrigger( "Tank Barrier #1 has been destroyed.", Map.barrier1_Destroyed );
+	OnTrigger( "Tank Barrier #2 has been destroyed.", Map.barrier2_Destroyed );
+	OnTrigger( "the tank has passed the first barrier", Map.barrier1_Passed );
+	OnTrigger( "the tank has passed the second barrier", Map.barrier2_Passed );
+	OnTrigger( "^4*^1*^4*^1* ^5Allies advanced to a new spawning point! ^1*^4*^1*^4*", Map.spawn2_enabled );
+	OnTrigger( "The tank has destroyed a part of the axis wall!", Map.wall_Destroyed );	
+	OnTrigger( "Planted at gun 1.", Map.gun_1_Planted );
+	OnTrigger( "Planted at the gun 2.", Map.gun_2_Planted );
+	OnTrigger( "Planted at 3rd gun.", Map.gun_3_Planted );
+	// Allies Map startup goals
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_CONSTRUCTION_allied_cp_open" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MAP_REPAIR_MG42.*" );
+//	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	
+	// Axis Map startup goals
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "MAP_CONSTRUCTION_barrier2" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+	
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

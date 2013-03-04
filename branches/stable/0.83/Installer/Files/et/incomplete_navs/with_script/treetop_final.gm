@@ -1,0 +1,540 @@
+//==========================================================================================
+//
+//	treetop_final.gm
+//
+//	Who			When			What
+//------------------------------------------------------------------------------------------
+//	**DRC**BubbaG1		06 October 2011		Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Roof_MG_Dyno = 0,
+	Assault_Ramp_Dyno = 0,
+	Command_Post_Dyno = 0,
+	Crate_Barrier_Dyno = 0,
+	Elevator_Power_Box_Dyno = 0,
+	Front_Door_Dyno = 0,
+	Missile_Base_Door_Dyno = 0,
+	Ropes_Dyno = 0,
+	Treetop_Bridge_Dyno = 0,
+
+	Allied_Roof_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Roof_MG_Built" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Assault_Ramp_Built" );
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Elevator_Power_Box_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Elevator_Power_Box_Built" );
+	},
+
+	Ropes_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Ropes_Built" );
+	},
+
+	Treetop_Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Treetop_Bridge_Built" );
+	},
+
+	Allied_Roof_MG_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Roof_MG_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Roof_MG_Planted" );
+	},
+
+	Assault_Ramp_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno += 1;
+		Util.MapDebugPrint( "Assault_Ramp_Planted" );
+	},
+
+	Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Command_Post_Planted" );
+	},
+
+	Crate_Barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Crate_Barrier_Dyno += 1;
+		Util.MapDebugPrint( "Crate_Barrier_Planted" );
+	},
+
+	Elevator_Power_Box_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Elevator_Power_Box_Dyno += 1;
+		Util.MapDebugPrint( "Elevator_Power_Box_Planted" );
+	},
+
+	Front_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Front_Door_Dyno += 1;
+		Util.MapDebugPrint( "Front_Door_Planted" );
+	},
+
+	Missile_Base_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Missile_Base_Door_Dyno += 1;
+		Util.MapDebugPrint( "Missile_Base_Door_Planted" );
+	},
+
+	Ropes_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Ropes_Dyno += 1;
+		Util.MapDebugPrint( "Ropes_Planted" );
+	},
+
+	Treetop_Bridge_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Treetop_Bridge_Dyno += 1;
+		Util.MapDebugPrint( "Treetop_Bridge_Planted" );
+	},
+
+	Allied_Roof_MG_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Roof_MG_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Roof_MG_Defused" );
+	},
+
+	Assault_Ramp_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno -= 1;
+		Util.MapDebugPrint( "Assault_Ramp_Defused" );
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Command_Post_Defused" );
+	},
+
+	Crate_Barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Crate_Barrier_Dyno -= 1;
+		Util.MapDebugPrint( "Crate_Barrier_Defused" );
+	},
+
+	Elevator_Power_Box_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Elevator_Power_Box_Dyno -= 1;
+		Util.MapDebugPrint( "Elevator_Power_Box_Defused" );
+	},
+
+	Front_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Front_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Front_Door_Defused" );
+	},
+
+	Missile_Base_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Missile_Base_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Missile_Base_Door_Defused" );
+	},
+
+	Ropes_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Ropes_Dyno -= 1;
+		Util.MapDebugPrint( "Ropes_Defused" );
+	},
+
+	Treetop_Bridge_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Treetop_Bridge_Dyno -= 1;
+		Util.MapDebugPrint( "Treetop_Bridge_Defused" );
+	},
+
+	Allied_Roof_MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Roof_MG_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Roof_MG_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Assault_Ramp_Dyno = 0;
+
+		Util.MapDebugPrint( "Assault_Ramp_Destroyed" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Crate_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Crate_Barrier_Dyno = 0;
+
+		Util.MapDebugPrint( "Crate_Barrier_Destroyed" );
+	},
+
+	Elevator_Power_Box_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Elevator_Power_Box_Dyno = 0;
+
+		Util.MapDebugPrint( "Elevator_Power_Box_Destroyed" );
+	},
+
+	Front_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Front_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Front_Door_Destroyed" );
+	},
+
+	Missile_Base_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Missile_Base_Door_Dyno = 0;
+
+		Util.MapDebugPrint( "Missile_Base_Door_Destroyed" );
+	},
+
+	Ropes_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Ropes_Dyno = 0;
+
+		Util.MapDebugPrint( "Ropes_Destroyed" );
+	},
+
+	Treetop_Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Treetop_Bridge_Dyno = 0;
+
+		Util.MapDebugPrint( "Treetop_Bridge_Destroyed" );
+	},
+
+	the_key_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "the_key_Taken" );
+	},
+
+	transmitter_flag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "transmitter_flag_Taken" );
+	},
+
+	the_key_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "the_key_Returned" );
+	},
+
+	transmitter_flag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "transmitter_flag_Returned" );
+	},
+
+	the_key_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		/* Update Axis Goals */
+		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_ammocab3" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Treetop_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_lock" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Crate_Barrier" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_elevator_.*" );
+		
+		/* Update Allied Goals */
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Treetop_Bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_elevator_.*" );
+
+		
+		Util.MapDebugPrint( "the_key_Secured" );
+	},
+
+	transmitter_flag_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		/* Update Axis Goals */
+		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_ammocab3" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_ammocab3" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_transmitter" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_healthcab3" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Elevator_Power_Box" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Roof_MG" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Front_Door" );
+		
+		/* Update Allied Goals */
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_ammocab3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_healthcab3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_Roof_MG" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Assault_Ramp" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Elevator_Power_Box" );
+
+		Util.MapDebugPrint( "transmitter_flag_Secured" );
+	},
+	
+	launch_doors_Opening = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "launch_doors_Opening" );
+	},
+	
+	launch_doors_Closing = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "launch_doors_Closing" );
+	},
+	
+	countdown_Activated = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "countdown_Activated" );
+	},
+	
+	countdown_Interrupted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "countdown_Interrupted" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allies have built the MG42 Nest!", Map.Allied_Roof_MG_Built );
+	OnTrigger( "The Axis has constructed the Assault Ramp", Map.Assault_Ramp_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "The axis have repaired the Power Grid", Map.Elevator_Power_Box_Built );
+	OnTrigger( "The Axis have constructed the Climbable Ropes", Map.Ropes_Built );
+	OnTrigger( "Bridge Constructed!!", Map.Treetop_Bridge_Built );
+	OnTrigger( "Planted at the Allied Roof MG.", Map.Allied_Roof_MG_Planted );
+	OnTrigger( "Planted at the Assault Ramp.", Map.Assault_Ramp_Planted );
+	OnTrigger( "Planted at the Command Post.", Map.Command_Post_Planted );
+	OnTrigger( "Planted at the Crate Barrier.", Map.Crate_Barrier_Planted );
+	OnTrigger( "Planted at the Elevator Power Box.", Map.Elevator_Power_Box_Planted );
+	OnTrigger( "Planted at the Front Door.", Map.Front_Door_Planted );
+	OnTrigger( "Planted at the Missle Base Door.", Map.Missile_Base_Door_Planted );
+	OnTrigger( "Planted at the Ropes.", Map.Ropes_Planted );
+	OnTrigger( "Planted at the Treetop Bridge.", Map.Treetop_Bridge_Planted );
+	OnTrigger( "Defused at the Allied Roof MG.", Map.Allied_Roof_MG_Defused );
+	OnTrigger( "Defused at the Assault Ramp.", Map.Assault_Ramp_Defused );
+	OnTrigger( "Defused at the Command Post.", Map.Command_Post_Defused );
+	OnTrigger( "Defused at the Crate Barrier.", Map.Crate_Barrier_Defused );
+	OnTrigger( "Defused at the Elevator Power Box.", Map.Elevator_Power_Box_Defused );
+	OnTrigger( "Defused at the Front Door.", Map.Front_Door_Defused );
+	OnTrigger( "Defused at the Missle Base Door.", Map.Missile_Base_Door_Defused );
+	OnTrigger( "Defused at the Ropes.", Map.Ropes_Defused );
+	OnTrigger( "Defused at the Treetop Bridge.", Map.Treetop_Bridge_Defused );
+	OnTrigger( "Axis have destroyed the Allied Mg42 Nest!", Map.Allied_Roof_MG_Destroyed );
+	OnTrigger( "The Allied have destroyed the Assault Ramp", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "The Axis have destroyed the Crate Barrier", Map.Crate_Barrier_Destroyed );
+	OnTrigger( "The allies have destroyed the Power Grid", Map.Elevator_Power_Box_Destroyed );
+	OnTrigger( "The Axis have breached the front gate.", Map.Front_Door_Destroyed );
+	OnTrigger( "The Axis have breached the door to the underground base!!!!", Map.Missile_Base_Door_Destroyed );
+	OnTrigger( "The Allies have destroyed the Climbable Ropes", Map.Ropes_Destroyed );
+	OnTrigger( "allies_bridge_destroyed", Map.Treetop_Bridge_Destroyed );
+	OnTrigger( "The Axis have stolen the Key!!!!", Map.the_key_Taken );
+	OnTrigger( "The Axis have stolen the Transmitter Parts!!!!", Map.transmitter_flag_Taken );
+	OnTrigger( "The Key has been returned!!!!", Map.the_key_Returned );
+	OnTrigger( "The Transmitter Parts have been returned!!!!", Map.transmitter_flag_Returned );
+	OnTrigger( "The Axis have unlocked the Stairway Door!!", Map.the_key_Secured );
+	OnTrigger( "The Axis have activated the transmitter!!", Map.transmitter_flag_Secured );
+	OnTrigger( "The Axis are opening the Missle Launch Doors!!!!!", Map.launch_doors_Opening );
+	OnTrigger( "The Doors are closing again.", Map.launch_doors_Closing );
+	OnTrigger( "Countdown activated", Map.countdown_Activated );
+	OnTrigger( "Countdown interrupted", Map.countdown_Interrupted );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

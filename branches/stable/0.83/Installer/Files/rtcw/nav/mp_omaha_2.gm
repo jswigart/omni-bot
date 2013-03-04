@@ -1,0 +1,316 @@
+global Map =
+{
+	Quiet = true,
+	Flag_Secret_Documents = "FLAG_Secret_Documents",
+	Plant_Sea_Wall_breach = "PLANT_Sea_Wall_breach",
+	Plant_a_weak_stair = "PLANT_a_weak_stair",
+	Plant_a_weak_stair_1 = "PLANT_a_weak_stair_1",
+	Plant_wooden_gate = "PLANT_wooden_gate",
+	Mount_mg42_1 = "MOUNTMG42_mg42_1",  //above gatesandbag
+	Mount_mg42_1_4 = "MOUNTMG42_mg42_1_4",  //Sandbag by gate
+	Mount_mg42_1_5 = "MOUNTMG42_mg42_1_5",  //Above barbwire
+
+	DocStatus = false,
+	WoodStatus = false,
+	TwoMins = false,
+
+	DontDispenseAmmo = true,
+
+	Sea_Wall_breach_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Secret_Documents" );
+		if ( Map.WoodStatus == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_8" );  // Pillbox facing far side
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_9" );  // Pillbox facing far side
+		}
+	},
+	Sea_Wall_breach_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Sea_Wall_breach.*" );
+	},
+
+	a_weak_stair_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	a_weak_stair_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	wooden_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.WoodStatus = true;
+
+		RTCWUtil.StopSniping();
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Secret_Documents" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bBase.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+		Map.DontDispenseAmmo = false;
+
+
+		if ( Map.TwoMins == true ) {
+			Map.DocsDefense();
+		} else {
+			Map.CourtyardDefense();
+		}
+	},
+	wooden_gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_wooden_gate.*" );
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+		Util.ChangeSpawn( TEAM.AXIS, 2 );
+	},
+	Secret_Documents_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.DocStatus = false;
+
+		if ( Map.TwoMins == true ) {
+			Map.DocsDefense();
+		} else {
+			Map.CourtyardDefense();
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+
+		Util.ChangeSpawn( TEAM.AXIS, 0 );
+	},
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.TwoMins = true;
+		if ( Map.DocStatus == false ) {
+			Map.DocsDefense();
+		}
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( Map.DocStatus == false ) {
+			Map.DocsDefense();
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+	},
+	DocsTrigger1 =
+	{
+		Name = "DocsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( Map.DocStatus == false ) {
+					Map.DocsDefense();
+				}
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					Map.TransmitDefense();  //They are escaping with objective!
+					if ( b ) {
+						b = Util.GetBotByName( GetEntName( ent ) );
+						b.SayVoice( VOICE.COVER_ME );
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+	DocsDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+	},
+	TransmitDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+	},
+	CourtyardDefense = function()
+	{
+		if ( Map.DocStatus == true ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGateAS_1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMainyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSteps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rMainyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_4" );  // Sandbag
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );    //Above sandbag
+	}
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Sea Wall breach Destroyed.", Map.Sea_Wall_breach_Destroyed );
+	OnTrigger( "Planted at the Sea Wall breach.", Map.Sea_Wall_breach_Planted );
+	OnTrigger( "a weak stair Destroyed.", Map.a_weak_stair_Destroyed );
+	OnTrigger( "Planted at a weak stair.", Map.a_weak_stair_Planted );
+	OnTrigger( "the wooden gate Destroyed.", Map.wooden_gate_Destroyed );
+	OnTrigger( "Planted at the wooden gate.", Map.wooden_gate_Planted );
+	OnTrigger( "Allies have stolen the Secret Documents!", Map.Secret_Documents_Taken );
+	OnTrigger( "Flag returned Secret Documents!", Map.Secret_Documents_Returned );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	Util.AddUseWp( "PLANT_a_weak_stair", "weak" );
+
+	t1 = OnTriggerRegion( AABB( 3007.000,143.000,1087.000,3061.000,273.000,1199.000 ), Map.DocsTrigger1 );
+	t2 = OnTriggerRegion( AABB( 2687.000,1280.000,983.000,2816.000,1318.000,1101.000 ), Map.DocsTrigger1 );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "EXPLODE.*", 1.0 );
+	SetGoalPriority( "DEFEND_rStepsAlt.*", 0.4 );
+	SetGoalPriority( "ATTACK_bDocs.*", 0.86 );  // More than docs
+	SetGoalPriority( "GRENADE_barbwireLow", 0.67 );
+
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM_AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT, CLASS.SOLDIER );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_Wall_breach" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_wooden_gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBase.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "EXPLODE_bBeachAS_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_barbwireLow" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBeachAS_.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_.*" );
+
+	Util.EnableGoal( "CAPPOINT_deliver" );
+
+	MapRoutes =
+	{
+		FLAG_Secret_Documents =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_gate =
+				{
+					Weight = 2,
+					ROUTE_mainentrance =
+					{
+						Weight = 3,
+						ROUTE_ducts = {},
+						ROUTE_warehouse = {Weight = 3,},
+					},
+					ROUTE_backentrance =
+					{
+						ROUTE_showers = {},
+						ROUTE_steps = {Weight = 3,},
+					},
+				},
+				ROUTE_seawall =
+				{
+					ROUTE_mainentrance =
+					{
+						ROUTE_ducts = {},
+						ROUTE_warehouse = {Weight = 3,},
+					},
+					ROUTE_backentrance =
+					{
+						Weight = 3,
+						ROUTE_showers = {},
+						ROUTE_steps = {Weight = 2,},
+					},
+				},
+			},
+		},
+		CAPPOINT_deliver =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_steps =
+				{
+					Weight = 3,
+					ROUTE_backentrance = {ROUTE_barbwire = {},},
+				},
+				ROUTE_showers =
+				{
+					ROUTE_backentrance = {ROUTE_barbwire = {},},
+				},
+				ROUTE_warehouse = {Weight = 3,},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bDocs_1 = MapRoutes.FLAG_Secret_Documents;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
+};

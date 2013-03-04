@@ -1,0 +1,551 @@
+global Map =
+{
+	Quiet = true,
+	FocusPrimary = false,
+	Debug = false,
+
+	Checkpoint_tunnelflag = "CHECKPOINT_tunnelflag",
+	Flag_Docs = "FLAG_Docs",
+	Plant_Radio = "PLANT_Radio",
+	Mount_North_mg = "MOUNTMG42_North_mg",
+	Mount_South_mg = "MOUNTMG42_South_mg",
+	Mount_barrack_mg = "MOUNTMG42_barrack_mg",
+	Repair_North_mg = "REPAIRMG42_North_mg",
+	Repair_South_mg = "REPAIRMG42_South_mg",
+	Repair_barrack_mg = "REPAIRMG42_barrack_mg",
+	Cap_Radio = "CAPPOINT_radio",
+	PanzRadioFired = false,
+	PanzRadioBots = 0,
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 1,
+
+
+	AxisShift = false,
+	FlagStatus = 0, //no team owns it
+	GateStatus = false, //intact
+	DocStatus = false, //home
+
+	Roles =
+	{
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				crucialClass = CLASS.ENGINEER,
+				numbots = 3,
+			},
+		},
+	},
+
+	Navigation =
+	{
+		//all three long ladders use this
+		compoundladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 6 );
+				sleep( 6 );
+			},
+		},
+
+		jumpfacing = Vector3( 0.008215, 0.996369, -0.084747 ) * 1024,
+		ljump =
+		{
+			navigate = function( _this )
+			{
+				_this.AddAimRequest( Priority.Low, "facing", Map.jumpfacing );
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 0.25 );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 0.75 );
+				sleep( 2 );
+				_this.ReleaseAimRequest();
+			},
+		},
+
+		njump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.SPRINT, 1 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 1 );
+				sleep( 1 );
+				_this.Bot.PressButton( BTN.JUMP );
+			},
+		},
+		bpanzradio =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !Map.PanzRadioFired && Map.PanzRadioBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "bPanzRadio" );
+					Map.PanzRadioBots += 1;
+					Map.PanzRadioFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							//sleep(4); // Wait for axis to arrive
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzRadioBots -= 1;
+				}
+				yield();
+			},
+		},
+	},
+
+	Radio_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.GateStatus = true;
+
+		SetGoalPriority( "DEFEND_rDocs1", 0.6 );
+		SetGoalPriority( "DEFEND_rDocs5", 0.58 );
+		SetGoalPriority( "DEFEND_rDocs6", 0.59 );
+
+		RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_tunnelflag );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_barrack_mg );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
+
+		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
+		sleep( 1 );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Docs );
+		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" ); // Getting the docs is the high priority.  Also reduces impact of human flag runs
+	},
+
+	Radio_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.DocStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		}
+	},
+
+	Radio_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+	},
+
+	Docs_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.DocStatus ) {
+			Map.DocStatus = true;
+
+			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_tunnelflag );
+
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
+			Util.DisableGroup( "gatemgs" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmitAS.*" );
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzTransmit.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+
+			// some axis should wait around a bit to try and catch runner
+			timeout = 0;
+			while ( timeout <= 5 && Map.DocStatus == true )
+			{
+				timeout += 1;
+				sleep( 1 );
+			}
+
+			if ( Map.DocStatus ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
+			}
+			
+			foreach( id and bot in BotTable )
+			{
+				if ( bot.GetTeam() == TEAM.AXIS ) {
+					bot.ChangeSpawnPoint( 2 );
+				}
+			}
+		}
+
+		Util.MapDebugPrint( "Docs_Taken" );
+	},
+
+	Docs_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = false;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bPanzTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBackhall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+			}
+		}
+
+		Util.MapDebugPrint( "Docs_Returned" );
+	},
+
+	tunnelflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
+		RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
+	},
+
+	tunnelflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+		Map.DontDispenseAmmo = false;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Docs );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Radio );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+
+		if ( !Map.GateStatus && !Map.DocStatus ) {
+			RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.MAUSER );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bHouse.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
+
+			if ( !Map.AxisShift ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_tunnelflag );
+			}
+		} else
+		{
+			RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRadio" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//time is low, so start focusing on main obj
+		Map.FocusPrimary = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Docs );
+	},
+
+	HallTrigger =
+	{
+		Name = "HallTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !Map.AxisShift && GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.AxisShift = true;
+
+				if ( !Map.GateStatus && !Map.DocStatus ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_tunnelflag );
+					SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_barrack_mg );
+					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+					Util.EnableGroup( "gatemgs", TEAM.AXIS );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	BackHallTrigger =
+	{
+		Name = "BackHallTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBackhall.*" );
+
+					foreach( id and bot in BotTable )
+					{
+						if ( bot.GetTeam() == TEAM.AXIS ) {
+							bot.SayTeam( "Docs are going short!" );
+							break;
+						}
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	thirty_second = function( trigger )
+	{
+		// better go short with docs now
+		Util.DisableGoal( "ROUTE_sidewall" );
+	},
+	
+	ViewDistance = 8000,
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+	
+	transladder = OnTriggerRegion( AABB( 2293.000,3291.000,437.000,2366.000,3418.000,800.000 ), Map.LadderTrigger );
+	transplatform = OnTriggerRegion( AABB( 2379.000,3284.000,729.000,2809.000,4017.000,803.000 ), Map.DisableCombatMove );
+
+	OnTrigger( "The Compound Gate has been breached!", Map.Radio_Destroyed );
+	OnTrigger( "Planted at The Radio.", Map.Radio_Planted );
+	OnTrigger( "Defused at The Radio.", Map.Radio_Defused );
+	OnTrigger( "Allies have stolen The Docs!", Map.Docs_Taken );
+	OnTrigger( "Flag returned Docs!", Map.Docs_Returned );
+	OnTrigger( "Axis control the Tunnel!", Map.tunnelflag_Axis_Captured );
+	OnTrigger( "Allies control the Tunnel!", Map.tunnelflag_Allies_Captured );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	htrigger = OnTriggerRegion( AABB( 3538,4083,727, 3769, 4159, 832 ), Map.HallTrigger );
+	bhtrigger = OnTriggerRegion( AABB( 4783,5134,847, 4838, 5272, 921 ), Map.BackHallTrigger );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "CAPPOINT.*" );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	GateMgs =
+	{
+		"MOUNTMG42_south_mg",
+		"REPAIRMG42_south_mg",
+		"MOUNTMG42_north_mg",
+		"REPAIRMG42_north_mg",
+	};
+
+	SetGoalGroup( GateMgs, "gatemgs" );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 90} );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	//these get set higher after the gate has been destroyed
+	SetGoalPriority( "DEFEND_rDocs1", 0.45 );
+	SetGoalPriority( "DEFEND_rDocs5", 0.45 );
+	SetGoalPriority( "DEFEND_rDocs6", 0.45 );
+	SetGoalPriority( "DEFEND_rBackhall", 0.6 );
+	SetGoalPriority( "CAMP_bGate.*", 0.75 ); // less than plant! note 0.1 is added for role bonus too.
+
+	RTCWUtil.ExcludeClass( "FLAG_Docs", TEAM.ALLIES, CLASS.SOLDIER );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_tunnelflag );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadio" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_barrack_mg );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rflag_as.*" );
+
+	MapRoutes =
+	{
+		DEFEND_rFlag1 =
+		{
+			ROUTE_rSpawn1 = { ROUTE_rflag_rlong = {}, },
+			ROUTE_rSpawn2 = { ROUTE_rflag_rlong = {}, },
+		},
+		MOUNTMG42_north_mg =
+		{
+			ROUTE_asroutemg = { ROUTE_antenna = {}, },
+		},
+		AIRSTRIKE_rgate_as1 =
+		{
+			ROUTE_mgrouteas = { ROUTE_antenna = {}, },
+		},
+		CHECKPOINT_tunnelflag =
+		{
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_rflag_rlong = {},
+				ROUTE_backhall = { Weight = 2, },
+			},
+			ROUTE_rSpawn2 =
+			{
+				ROUTE_rflag_rlong = {},
+				ROUTE_backhall = { Weight = 2, },
+			},
+		},
+		FLAG_Docs =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_optunnel =
+				{
+					ROUTE_southhill = {},
+					ROUTE_midhill = {},
+					ROUTE_wsewer =
+					{
+						ROUTE_csewer =
+						{
+							ROUTE_nwall = {},
+						},
+					},
+				},
+				ROUTE_backhall = {},
+			},
+		},
+		CAPPOINT_radio =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_sidewall =
+				{
+					Weight = 4,
+					ROUTE_northmgroute =
+					{
+						ROUTE_optunnel = {},
+					},
+				},
+				ROUTE_backhall = {},
+			},
+		},
+	};
+
+	MapRoutes.DEFEND_rFlag2 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag3 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag4 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag5 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag6 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.AIRSTRIKE_rgate_as2 = MapRoutes.AIRSTRIKE_rgate_as1;
+	MapRoutes.ATTACK_bDocs1 = MapRoutes.FLAG_Docs;
+	MapRoutes.ATTACK_bDocs2 = MapRoutes.FLAG_Docs;
+	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_Docs;
+
+	Util.Routes( MapRoutes );
+	
+	EntityKill( 239);
+	EntityKill( 158);
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+};

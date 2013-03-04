@@ -1,0 +1,387 @@
+global Map =
+{
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 1,
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DocStatus = 0,
+	Suicide = MAP_SUICIDE,
+	DocsGone = false,
+	PanzWindowBots = 0,
+	PanzWindowFired = false, 
+	
+	Switches =
+	{
+		button1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "button1",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+		// Axis should close it when they run by to slow down allies
+		button2 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "button2",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitClass = Util.AllClasses,
+		},
+	},
+	
+	Navigation =
+	{
+		bpanzwindow =
+		{
+			navigate = function( _this )
+			{
+				if ( !Map.PanzWindowFired && Map.PanzWindowBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "bPanzWindow" );
+					Map.PanzWindowBots += 1;
+					Map.PanzWindowFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzWindowBots -= 1;
+				}
+				yield();
+			},
+		},
+	},
+	
+	garagedoor = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		// Door Opening
+		if ( vel.x < 0 ) {
+			//SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" );
+			Map.Switches.button1.Enabled = false;
+			Map.Switches.button2.Enabled = true;
+		}
+		// Door Closing
+		else
+		{
+			//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_lever1" );
+			Map.Switches.button1.Enabled = true;
+			Map.Switches.button2.Enabled = false;
+		}
+	},
+
+	Lower_Access_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if (!Map.DocStatus)
+		{
+			Map.DefendDocs();
+		}
+		
+		Util.EnableGoal( "ROUTE_lowsteps" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+		Util.MapDebugPrint( "Lower_Access_Door_Destroyed" );
+	},
+	
+	Lower_Access_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if (!Map.DocStatus)
+		{
+			Map.DefendDocs();
+		}
+		
+		Util.MapDebugPrint( "Lower_Access_Door_Planted" );
+	},
+	
+	Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if (!Map.DocStatus)
+		{
+			Map.DefendDocs();
+		}
+		
+		Util.EnableGoal( "ROUTE_warehouse" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower_Access_Door" );
+
+		Util.MapDebugPrint( "Grate_Destroyed" );
+	},
+	
+	Grate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE.*" );
+		Util.MapDebugPrint( "Grate_Planted" );
+	},
+
+	War_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = 1;
+		Wp.SetWaypointFlag( "docroomjump", "allies", false );
+		
+		Util.ChangeSpawn( TEAM.ALLIES, 1 );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+		
+		while ( Map.DocsGone == false && Map.DocStatus == 1 ){sleep( 1 );}
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWHConnector.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
+		Map.PanzWindowFired = false; // Panzer the window again (stops humans camping up here)
+
+		Util.MapDebugPrint( "War_Documents_Taken" );
+	},
+	
+	War_Documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = 0;
+		Map.DefendDocs();
+		
+		Util.ChangeSpawn( TEAM.ALLIES, 0 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bDocs.*" );
+		Map.PanzWindowFired = true;
+		
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+
+				//distance check instead?
+				if ( Map.Suicide && bot.GetReinforceTime() < 8 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+
+		Util.MapDebugPrint( "War_Documents_Secured" );
+	},
+
+	forward_respawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_respawn_Axis_Captured" );
+	},
+
+	forward_respawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if (!Map.DocStatus)
+		{
+			Map.DefendDocs();
+		}
+
+		Util.MapDebugPrint( "forward_respawn_Allies_Captured" );
+	},
+	
+	DocsTrigger =
+	{
+		Name = "DocsTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}		
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					//docs are gone
+					Map.DocsGone = true;
+				}
+			}
+		},
+	},
+	
+	DefendDocs = function()
+	{
+		Wp.SetWaypointFlag( "docroomjump", "allies", true ); // Make the axis stay up there and not draw out all the medics
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSewer.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSewer.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSewer.*" );
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp( "PLANT_Lower_Access_Door", "lowdoor1" );
+	Util.AddUseWp( "PLANT_Lower_Access_Door", "lowdoor2" );
+
+	// Register callback functions
+	OnTrigger( "the Lower Access Door Destroyed.", Map.Lower_Access_Door_Destroyed );
+	OnTrigger( "Planted at the Lower Access Door.", Map.Lower_Access_Door_Planted );
+	OnTrigger( "Planted at the Grate.", Map.Grate_Planted );
+	OnTrigger( "the Grate Destroyed.", Map.Grate_Destroyed );
+	OnTrigger( "Allies have stolen the War Documents!", Map.War_Documents_Taken );
+	OnTrigger( "Flag returned War Documents!", Map.War_Documents_Secured );
+	OnTrigger( "MISSING_STRING", Map.forward_respawn_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_respawn_Allies_Captured );
+	OnTrigger( "main_door_left_goto", Map.garagedoor );
+	
+	tOne = OnTriggerRegion( AABB( -95.000,2109.000,129.000,376.000,2864.000,203.000 ), Map.DocsTrigger );
+	// 
+	//  (docs room)
+	// 
+	// 
+	// 
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( "ROUTE_warehouse");
+	Util.DisableGoal( "ROUTE_lowsteps");
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGarage.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGrate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rGrate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGarage.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rGarage.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_garagemg.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Grate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bDocs.*" );
+	
+	Util.EnableGoal( "CAPPOINT_transmitter" );
+	
+	RTCWUtil.LimitToClass( "GRENADE_rGrate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	
+	Util.SetMaxUsers( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsers( 1, "GRENADE.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsers( 1, "PANZER_bDocs.*" );
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "PANZER_bDocs.*", 0.86 );
+	
+	MapRoutes =
+	{
+		FLAG_War_Documents =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_lowsteps =
+				{
+					Weight = 3,
+					ROUTE_eaststeps = {},
+				},
+				ROUTE_sewerboxes = {Weight = 2,},
+				ROUTE_weststeps = {ROUTE_rspawn = {},},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_eaststeps = {},
+				ROUTE_warehouse = {},
+			},
+		},
+		CHECKPOINT_foward_respawn =
+		{
+			ROUTE_bspawn =
+			{
+				ROUTE_garagedoor =
+				{
+					ROUTE_lowsteps = {},
+				},
+				ROUTE_warehouse = {},
+			},
+		},
+		CAPPOINT_transmitter =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_walljump = {},
+				ROUTE_garagedoor = {},
+			},
+		},
+	};
+	
+	Util.Routes( MapRoutes );
+	Util.UpdateSwitchData();
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	bot.ChangeSpawnPoint( 0 );
+	bot.RemoveState("WatchForProjectile");	// Martin - Just makes axis in WR go crazy and doesnt help allies
+};

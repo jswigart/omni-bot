@@ -1,0 +1,156 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
+	Flag_axis_obj01 = "FLAG_axis_obj01",
+	Cappoint_130 = "CAPPOINT_130",
+	Mount_tower_mg = "MOUNTMG42_tower_mg",
+	Mount_truck_mg = "MOUNTMG42_truck_mg",
+	Repair_tower_mg = "REPAIRMG42_tower_mg",
+	Repair_truck_mg = "REPAIRMG42_truck_mg",
+
+	axis_obj01_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "axis_obj01_Taken" );
+	},
+
+	CAPPOINT_130_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "CAPPOINT_130_Captured" );
+	},
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+	checkpoint05_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Axis_Captured" );
+	},
+
+	checkpoint05_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	//OnTrigger( "MISSING_STRING", Map.axis_obj01_Taken );
+	//OnTrigger( "MISSING_STRING", Map.CAPPOINT_130_Captured );
+	OnTrigger( "Axis captures the Allied Stronghold!", Map.checkpoint01_Axis_Captured );
+	OnTrigger( "Allies capture the Allied Stronghold!", Map.checkpoint01_Allies_Captured );
+	OnTrigger( "Axis captures the Old Allied Storage!", Map.checkpoint02_Axis_Captured );
+	OnTrigger( "Allies capture the Old Allied Storage!", Map.checkpoint02_Allies_Captured );
+	OnTrigger( "Axis captures the Service Halls!", Map.checkpoint03_Axis_Captured );
+	OnTrigger( "Allies capture the Service Halls!", Map.checkpoint03_Allies_Captured );
+	OnTrigger( "Axis captures the Axis Lookout Post!", Map.checkpoint04_Axis_Captured );
+	OnTrigger( "Allies capture the Axis Lookout Post!", Map.checkpoint04_Allies_Captured );
+	OnTrigger( "Axis captures the Axis Transmitter!", Map.checkpoint05_Axis_Captured );
+	OnTrigger( "Allies capture the Axis Transmitter!", Map.checkpoint05_Allies_Captured );
+
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+};

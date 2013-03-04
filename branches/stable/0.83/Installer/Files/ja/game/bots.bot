@@ -1,0 +1,671 @@
+[bot]
+name        = Alora
+model       = alora
+sex         = female
+color1      = 0
+color2      = 0
+saber1      = single_4
+saber2      = single_4
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Cultist
+model       = cultist
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_9
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Desann
+model       = desann
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_8
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033210232000021323
+
+[bot]
+name        = Galak Fyarr
+model       = galak
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330022000032321
+
+[bot]
+name        = Lannik Racto
+model       = human_merc
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_8
+saber2      = single_8
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330022000032321
+
+[bot]
+name        = Imperial Officer
+model       = imperial
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_7
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000033220
+
+[bot]
+name        = Imperial Saboteur
+model       = saboteur
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_6
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Imperial Worker
+model       = imperial_worker
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_5
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330322000013221
+
+[bot]
+name        = New Reborn
+model       = reborn_new
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_3
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000031312
+
+[bot]
+name        = Rax Joris
+model       = rax_joris
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_3
+saber2      = single_6
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233332000230003220
+
+[bot]
+name        = Reborn
+model       = reborn
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_9
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000031312
+
+[bot]
+name        = Reborn Master
+model       = reborn_twin
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_7
+saber2      = single_7
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000031312
+
+[bot]
+name        = Reborn Twin
+model       = reborn_twin
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000031312
+
+[bot]
+name        = Shadowtrooper
+model       = shadowtrooper
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_6
+saber2      = single_6
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330222000031312
+
+[bot]
+name        = Snowtrooper
+model       = snowtrooper
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030000
+
+[bot]
+name        = Stormtrooper
+model       = stormtrooper
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-010000000000000000
+
+[bot]
+name        = Swamptrooper
+model       = swamptrooper
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033130312000012323
+
+[bot]
+name        = Tavion
+model       = tavion_new
+sex         = female
+color1      = 0
+color2      = 0
+saber1      = single_9
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-032320321000022332
+
+[bot]
+name        = TIE Pilot
+model       = stormpilot
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030000
+
+[bot]
+name        = Boba Fett
+model       = boba_fett
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = dual_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033310203000013322
+
+[bot]
+name        = Chiss
+model       = chiss
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_4
+saber2      = single_7
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033320232000023221
+
+[bot]
+name        = Gran
+model       = gran
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-333332000210003310
+
+[bot]
+name        = Mercenary
+model       = human_merc
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Noghri
+model       = noghri
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_3
+saber2      = single_5
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Reelo
+model       = reelo
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330322000012321
+
+[bot]
+name        = Rodian
+model       = rodian
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330320000023222
+
+[bot]
+name        = Trandoshan
+model       = trandoshan
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-033330220000033222
+
+[bot]
+name        = Tusken Raider
+model       = tusken
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_3
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033300332000030330
+
+[bot]
+name        = Weequay
+model       = weequay
+sex         = male
+color1      = 0
+color2      = 0
+saber1      = single_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-032320221000033232
+
+[bot]
+name        = Bespin Cop
+model       = bespin_cop
+sex         = male
+color1      = 5
+color2      = 5
+saber1      = single_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233332000230003220
+
+[bot]
+name        = Chewbacca
+model       = chewbacca
+sex         = male
+color1      = 1
+color2      = 1
+saber1      = dual_3
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-332212000220001333
+
+[bot]
+name        = Jan Ors
+model       = jan
+sex         = female
+color1      = 2
+color2      = 2
+saber1      = dual_5
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-333332000220001123
+
+[bot]
+name        = Jedi
+model       = jedi
+sex         = male
+color1      = 1
+color2      = 5
+saber1      = single_2
+saber2      = single_3
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-332321000220003322
+
+[bot]
+name        = Jedi Trainer
+model       = jeditrainer
+sex         = male
+color1      = 2
+color2      = 2
+saber1      = dual_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-232222000230002332
+
+[bot]
+name        = Kyle Katarn
+model       = kyle
+sex         = male
+color1      = 4
+color2      = 4
+saber1      = single_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233212000320001332
+
+[bot]
+name        = Luke Skywalker
+model       = luke
+sex         = male
+color1      = 3
+color2      = 3
+saber1      = single_7
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-332212000220001333
+
+[bot]
+name        = Mon Mothma
+model       = monmothma
+sex         = female
+color1      = 4
+color2      = 4
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233332000130003212
+
+[bot]
+name        = Morgan Katarn
+model       = morgan
+sex         = male
+color1      = 1
+color2      = 1
+saber1      = dual_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233102000230000333
+
+[bot]
+name        = Prisoner
+model       = prisoner
+sex         = male
+color1      = 5
+color2      = 5
+saber1      = single_1
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-233331000320003221
+
+[bot]
+name        = Rebel
+model       = rebel
+sex         = male
+color1      = 2
+color2      = 2
+saber1      = single_2
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-232322000230003231
+
+[bot]
+name        = Rebel Pilot
+model       = rebel_pilot
+sex         = male
+color1      = 3
+color2      = 3
+saber1      = single_3
+saber2      = single_5
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-332212000220001333
+
+[bot]
+name        = Rosh Penin
+model       = rosh_penin
+sex         = male
+color1      = 2
+color2      = 2
+saber1      = single_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033320302300030330
+
+[bot]
+name        = Ugnaught
+model       = ugnaught
+sex         = male
+color1      = 1
+color2      = 1
+saber1      = single_3
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-010000000000000000
+
+[bot]
+name        = Jawa
+model       = jawa
+sex         = male
+color1      = 2
+color2      = 2
+saber1      = single_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-033320302300030330
+
+[bot]
+name        = ^1S^2i^3n^4n^6a
+model       = jedi_hf/head_b3|torso_d2|lower_d2
+sex         = female
+color1      = 5
+color2      = 5
+saber1      = single_8
+saber2      = single_7
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-112332000330001330
+
+[bot]
+name        = ^6Jessica
+model       = jedi_hf/head_b4|torso_g1|lower_e1
+sex         = female
+color1      = 3
+color2      = 3
+saber1      = dual_4
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-112332000330001330
+
+[bot]
+name        = ^6stormy
+model       = jedi_hf/head_b2|torso_e2|lower_d1
+sex         = female
+color1      = 5
+color2      = 5
+saber1      = single_3
+saber2      = single_3
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-1-112332000330001330
+
+[bot]
+name        = ^0<^1j^5e^1n^0>
+model       = jedi_hf/head_b4|torso_e2|lower_b2
+sex         = female
+color1      = 0
+color2      = 0
+saber1      = katarn
+saber2      = none
+rgb_color1  = 255,0,0
+rgb_color2  = 0,255,255
+rgb_script1 = none
+rgb_script2 = none
+forcepowers = 7-2-022330332000021330

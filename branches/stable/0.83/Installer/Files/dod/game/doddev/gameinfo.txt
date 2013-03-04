@@ -1,0 +1,34 @@
+"GameInfo"
+{
+	game	"Day of Defeat Source"
+	title	"[DAY-OV-DEFEAT]"
+	title2	"source"
+	type multiplayer_only
+	nomodels 1
+	nohimodel 1
+	nocrosshair 1
+	advcrosshair 1
+	
+	hidden_maps
+	{
+		"test_speakers"		1
+		"test_hardware"		1
+	}
+	nodegraph 0
+
+
+	FileSystem
+	{
+		SteamAppId				218		// This will mount all the GCFs we need (240=CS:S, 220=HL2).
+		ToolsAppId				211		// Tools will load this (ie: source SDK caches) to get things like materials\debug, materials\editor, etc.
+		//Tony; the new sdk allows an extra appid to be defined here to mount additional content. 240 is countr-strike: source
+		AdditionalContentId			300
+
+		SearchPaths
+		{
+			Game				|gameinfo_path|.
+			Game				|all_source_engine_paths|dod
+			Game				|all_source_engine_paths|hl2
+		}
+	}
+}

@@ -1,0 +1,376 @@
+//==========================================================================================
+//
+//	rushers11.gm
+//
+//	Who		When		What
+//------------------------------------------------------------------------------------------
+//	BubbaG1		21 July 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Generator_Dyno = 0,
+	Road_MG_Dyno = 0,
+	West_Axis_Base_Fortification_Dyno = 0,
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Road_MG_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Road_MG_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Built" );
+	},
+
+	West_Axis_Base_Fortification_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "West_Axis_Base_Fortification_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Generator_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno += 1;
+		Util.MapDebugPrint( "Generator_Planted" );
+	},
+
+	Road_MG_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Road_MG_Dyno += 1;
+		Util.MapDebugPrint( "Road_MG_Planted" );
+	},
+
+	West_Axis_Base_Fortification_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Axis_Base_Fortification_Dyno += 1;
+		Util.MapDebugPrint( "West_Axis_Base_Fortification_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Generator_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno -= 1;
+		Util.MapDebugPrint( "Generator_Defused" );
+	},
+
+	Road_MG_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Road_MG_Dyno -= 1;
+		Util.MapDebugPrint( "Road_MG_Defused" );
+	},
+
+	West_Axis_Base_Fortification_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Axis_Base_Fortification_Dyno -= 1;
+		Util.MapDebugPrint( "West_Axis_Base_Fortification_Defused" );
+	},
+
+	Old_City_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Command_Post" );
+			
+		Util.MapDebugPrint( "Old_City_Gate_Destroyed" );
+	},
+	
+	Bridg_Doors_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_513" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_Command_Post" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_West_Axis_Base_Fortification" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_generator_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
+
+		Util.MapDebugPrint( "Bridg_Doors_Destroyed" );
+	},
+	
+	Generator_Gates_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Axis_Base_Fortification" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Generator" );
+
+		Util.MapDebugPrint( "Generator_Gates_Destroyed" );
+	},
+	
+	Generator_Side_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOVER_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT_tank" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_tank" );
+
+		Util.MapDebugPrint( "Generator_Side_Wall_Destroyed" );
+	},
+	
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Generator_Dyno = 0;
+
+		Util.MapDebugPrint( "Generator_Destroyed" );
+	},
+
+	Road_MG_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Road_MG_Dyno = 0;
+
+		Util.MapDebugPrint( "Road_MG_Destroyed" );
+	},
+
+	Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Tank_Destroyed" );
+	},
+
+	West_Axis_Base_Fortification_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Axis_Base_Fortification_Dyno = 0;
+
+		Util.MapDebugPrint( "West_Axis_Base_Fortification_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Allied team has constructed the Road MG Nest!", Map.Road_MG_Built );
+	OnTrigger( "The Tank has been repaired", Map.Tank_Built );
+	OnTrigger( "Axis team has constructed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Built );
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Generator.", Map.Generator_Planted );
+	OnTrigger( "Planted at the Road MG.", Map.Road_MG_Planted );
+	OnTrigger( "Planted at the West Axis Base Fortification.", Map.West_Axis_Base_Fortification_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Generator.", Map.Generator_Defused );
+	OnTrigger( "Defused at the Road MG.", Map.Road_MG_Defused );
+	OnTrigger( "Defused at the West Axis Base Fortification.", Map.West_Axis_Base_Fortification_Defused );
+	OnTrigger( "Allied team has breached the Old city Gate!", Map.Old_City_Gate_Destroyed );
+	OnTrigger( "Allied team has breached the Bridg Doors!", Map.Bridg_Doors_Destroyed );
+	OnTrigger( "Allied team has breached the Generator Gates!", Map.Generator_Gates_Destroyed );
+	OnTrigger( "Allied team has breached the Generator Side Wall!", Map.Generator_Side_Wall_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Generator!", Map.Generator_Destroyed );
+	OnTrigger( "Axis team has destroyed the Road MG Nest!", Map.Road_MG_Destroyed );
+	OnTrigger( "The Tank has been damaged", Map.Tank_Destroyed );
+	OnTrigger( "Allied team has destroyed the West Axis Base Fortification!", Map.West_Axis_Base_Fortification_Destroyed );
+
+	Util.AddUsePoint( "BUILD_West_Axis_Base_Fortification", { Vec3(2136, 861, -444), Vec3(2088, 912, -444) } );
+	Util.AddUsePoint( "PLANT_Axis_Command_Post", { Vec3(-2750, 2060, 184), Vec3(-2698, 2097, 184) } );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_513" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Post" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOVER_tank" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNT_tank" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_West_Axis_Base_Fortification =
+		{
+		},
+		BUILD_Axis_Command_Post =
+		{
+		},
+		BUILD_Allied_Command_Post =
+		{
+		},
+		BUILD_Road_MG =
+		{
+		},
+		BUILD_Tank =
+		{
+		},
+		PLANT_Generator =
+		{
+		},
+		PLANT_Road_MG =
+		{
+		},
+		PLANT_West_Axis_Base_Fortification =
+		{
+		},
+		PLANT_Allied_Command_Post =
+		{
+		},
+		PLANT_Axis_Command_Post =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

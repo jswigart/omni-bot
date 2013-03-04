@@ -1,0 +1,44 @@
+# -*- mode: python -*-
+# Quake4 build script
+# TTimo <ttimo@idsoftware.com>
+# http://scons.sourceforge.net
+
+import sys, os
+import scons_utils
+
+Import( 'GLOBALS' )
+Import( GLOBALS )
+
+if ( local_mpgame == 1 ):
+	proj_list = scons_utils.ExtractSource( File( '#mpgame.vcproj' ).abspath )
+else:
+	proj_list = scons_utils.ExtractSource( File( '#game.vcproj' ).abspath )
+
+for i in range( len( proj_list ) ):
+	proj_list[ i ] = '../../' + proj_list[ i ]
+
+local_env = g_game_env.Copy()
+
+if ( local_mpgame == 1 ):
+	local_env.Append( CPPDEFINES = [ 'GAME_MPAPI' ] )
+
+if ( local_demo == 1 ):
+	local_env.Append( CPPDEFINES = [ 'ID_DEMO_BUILD' ] )
+
+if ( local_gamedll == 1 ):
+	local_env.Append( CPPDEFINES = [ 'GAME_DLL' ] )
+	if ( local_mpgame == 1 ):
+		ret = local_env.SharedLibrarySafe( local_env, 'mpgame', proj_list + idlib_objects )
+	else:
+		ret = local_env.SharedLibrarySafe( local_env, 'game', proj_list + idlib_objects )
+	if ( OSX_BUILDSTYLE == '2' ):
+		local_env.Append( CPPFLAGS = [ '-fvisibility=hidden' ] )
+	Return( 'ret' )
+else:
+	local_env.Append( CPPDEFINES = [ 'GAME_MONO' ] )
+	ret_list = []
+	for i in proj_list:
+		ret_list += local_env.StaticObject( source = i )
+	Return( 'ret_list' )
+
+

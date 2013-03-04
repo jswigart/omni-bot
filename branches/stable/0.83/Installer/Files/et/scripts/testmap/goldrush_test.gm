@@ -1,0 +1,353 @@
+global Map =
+{
+	EscortVehicle =
+	{
+		Truck =
+		{
+			EscortVehicleGoalName = "MOVER_truck",
+			Offset = 
+			{
+				Vector3(0,-40,0),
+			}
+		},
+	},
+	
+	MapName = "goldrush",
+	bank_doors = false,
+	Quiet = true,
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Flag_gold_crate = "FLAG_gold_crate",
+	Cappoint_Gold_Dropoff = "CAPPOINT_Gold_Dropoff",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_Barrier_1 = "BUILD_Tank_Barrier_1",
+	Build_Tank_Barrier_2 = "BUILD_Tank_Barrier_2",
+	Build_Truck = "BUILD_Truck",
+	Build_Truck_Barrier_1 = "BUILD_Truck_Barrier_1",
+	Build_Truck_Barrier_2 = "BUILD_Truck_Barrier_2",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Tank_Barrier_1 = "PLANT_Tank_Barrier_1",
+	Plant_Tank_Barrier_2 = "PLANT_Tank_Barrier_2",
+	Plant_Truck_Barrier_1 = "PLANT_Truck_Barrier_1",
+	Plant_Truck_Barrier_2 = "PLANT_Truck_Barrier_2",
+	Mount_mg42_allied = "MOUNTMG42_mg42_allied",
+	Mount_mg42_bank = "MOUNTMG42_mg42_bank",
+	Mount_mg42_bridge = "MOUNTMG42_mg42_bridge",
+	Repair_mg42_allied = "REPAIRMG42_mg42_allied",
+	Repair_mg42_bank = "REPAIRMG42_mg42_bank",
+	Repair_mg42_bridge = "REPAIRMG42_mg42_bridge",
+	Snipe_246 = "SNIPE_246",
+	Snipe_349 = "SNIPE_349",
+	Snipe_362 = "SNIPE_362",
+	Snipe_825 = "SNIPE_825",
+	Snipe_826 = "SNIPE_826",
+	Snipe_829 = "SNIPE_829",
+	Snipe_830 = "SNIPE_830",
+	Snipe_870 = "SNIPE_870",
+	Mover_tank = "MOVER_tank",
+	Mover_truck = "MOVER_truck",
+	Plant_Mine_393 = "PLANTMINE_393",
+	Plant_Mine_823 = "PLANTMINE_823",
+	Plant_Mine_824 = "PLANTMINE_824",
+	Plant_Mine_849 = "PLANTMINE_849",
+	Plant_Mine_928 = "PLANTMINE_928",
+	Plant_Mine_96 = "PLANTMINE_96",
+	Plant_Mine_Depot_6 = "PLANTMINE_Depot_6",
+	Plant_Mine_Truck_Barrier1_3 = "PLANTMINE_Truck_Barrier1_3",
+	Plant_Mine_depotgate2 = "PLANTMINE_depotgate2",
+
+	Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Built" );
+	},
+
+	Tank_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Built" );
+	},
+
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_2_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Barrier_2_Built" );
+	},
+
+	Truck_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Truck_Built" );
+	},
+
+	Truck_Barrier_1_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Truck_Barrier_1_Built" );
+	},
+
+	Truck_Barrier_2_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Truck_Barrier_2_Built" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Tank_Barrier_1_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Barrier_1_Destroyed" );
+	},
+
+	Tank_Barrier_2_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Tank_Barrier_2_Destroyed" );
+	},
+
+	Truck_Barrier_1_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Truck_Barrier_1_Destroyed" );
+	},
+
+	Truck_Barrier_2_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Truck_Barrier_2_Destroyed" );
+	},
+
+	gold_crate_Taken = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "gold_crate_Taken" );
+	},
+
+	Gold_Dropoff_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Gold_Dropoff_Captured" );
+	},
+	
+	bank_doors_blown = function( trigger )
+	{
+		Map.bank_doors = true;
+		
+		TestMap.Pass();
+
+		print( "bank_doors_blown" );
+	},
+
+	allies_escape_with_gold = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "allies_escape_with_gold" );
+	},
+	
+	Tank_Destroyed = function ( trigger )
+	{
+		Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+		
+		print( "Tank_Destroyed" );
+	},
+
+	Truck_Destroyed = function ( trigger )
+	{
+		Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck );
+		
+		print( "Truck_Destroyed" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "The Tank has been repaired!", Map.Tank_Built );
+		OnTrigger( "Tank Barrier #1 has been constructed.", Map.Tank_Barrier_1_Built );
+		OnTrigger( "Tank Barrier #2 has been constructed.", Map.Tank_Barrier_2_Built );
+		OnTrigger( "The Truck has been repaired!", Map.Truck_Built );
+		OnTrigger( "Truck Barrier #1 has been constructed.", Map.Truck_Barrier_1_Built );
+		OnTrigger( "Truck Barrier #2 has been constructed.", Map.Truck_Barrier_2_Built );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "Tank Barrier #1 has been destroyed.", Map.Tank_Barrier_1_Destroyed );
+		OnTrigger( "Tank Barrier #2 has been destroyed.", Map.Tank_Barrier_2_Destroyed );
+		OnTrigger( "Truck Barrier #1 has been destroyed.", Map.Truck_Barrier_1_Destroyed );
+		OnTrigger( "Truck Barrier #2 has been destroyed.", Map.Truck_Barrier_2_Destroyed );
+		OnTrigger( "goldrush_allies_gold1_taken", Map.gold_crate_Taken );
+		OnTrigger( "goldrush_allies_gold2_taken", Map.gold_crate_Taken );
+		OnTrigger( "Allied team has secured the first Gold Crate!", Map.Gold_Dropoff_Captured );
+		OnTrigger( "Allied team has secured the second Gold Crate!", Map.Gold_Dropoff_Captured );
+		OnTrigger( "Allied team has destroyed the Bank Doors!", Map.bank_doors_blown );
+		OnTrigger( "Allied team escaped with the Gold Crates!", Map.allies_escape_with_gold );
+		OnTrigger( "The Tank has been damaged!", Map.Tank_Destroyed );
+		OnTrigger( "The Truck has been damaged!", Map.Truck_Destroyed );
+
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+		Util.SetPositionGoal( Map.Build_Tank, Map.Mover_tank );
+		Util.SetPositionGoal( Map.Build_Truck, Map.Mover_truck ); 
+
+		SetGoalPriority( ".*", 1.0 );
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoMG42 )
+			 { Map.MobileMG42Tests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Tank_Barrier_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_bridge, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Tank_Barrier_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_bank, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Truck_Barrier_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_mg42_allied, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Truck_Barrier_2, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Tank_Barrier_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Tank_Barrier_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_bank, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Truck_Barrier_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_mg42_allied, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Truck_Barrier_2, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Tank, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_gold_crate, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Gold_Dropoff, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_gold_crate, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_Gold_Dropoff, 120 );
+		
+		// Covert ops tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		
+		// Repair tests
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_bridge, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_bank, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_mg42_allied, 120 );
+
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_bridge, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_bank, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Truck, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_mg42_allied, 120 );
+
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_246, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_349, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_362, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_825, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_826, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_829, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_830, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Snipe_870, 120 );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_246, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_349, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_362, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_825, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_826, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_829, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_830, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Snipe_870, 120 );
+
+	},
+
+	MobileMG42Tests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_truck, 180, true );
+	},
+
+	OpenUpMap = function()
+	{
+		if ( !Map.bank_doors )
+		{
+			TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Tank, 120 );
+			TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mover_tank, 480 );
+		}
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.SOLDIER )
+		{ bot.ChangePrimaryWeapon( WEAPON.MOBILE_MG42 ); }
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 ); }
+	};
+};

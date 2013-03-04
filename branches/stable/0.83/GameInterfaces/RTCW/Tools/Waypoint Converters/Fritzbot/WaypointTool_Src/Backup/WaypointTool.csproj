@@ -1,0 +1,550 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{B1164A90-DE70-4385-988D-162E6D04DC49}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = "ET_1.ico"
+                AssemblyKeyContainerName = ""
+                AssemblyName = "WaypointTool"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "WinExe"
+                PreBuildEvent = ""
+                PostBuildEvent = "copy $(ProjectDir)Info.txt $(TargetDir)Info.txt&#xd;&#xa;copy $(ProjectDir)Todo.txt $(TargetDir)Todo.txt&#xd;&#xa;copy $(ProjectDir)Changes.txt $(TargetDir)Changes.txt&#xd;&#xa;copy $(ProjectDir)aiscript.xshd $(TargetDir)aiscript.xshd"
+                RootNamespace = "WaypointTool"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "system.web.services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\windows\assembly\gac\system.web.services\1.0.5000.0__b03f5f7f11d50a3a\system.web.services.dll"
+                />
+                <Reference
+                    Name = "crystaldecisions.shared"
+                    AssemblyName = "CrystalDecisions.Shared"
+                    HintPath = "..\..\windows\assembly\gac\crystaldecisions.shared\9.1.5000.0__692fbea5521e1304\crystaldecisions.shared.dll"
+                />
+                <Reference
+                    Name = "crystaldecisions.crystalreports.engine"
+                    AssemblyName = "CrystalDecisions.CrystalReports.Engine"
+                    HintPath = "..\..\windows\assembly\gac\crystaldecisions.crystalreports.engine\9.1.5000.0__692fbea5521e1304\crystaldecisions.crystalreports.engine.dll"
+                />
+                <Reference
+                    Name = "crystaldecisions.reportsource"
+                    AssemblyName = "CrystalDecisions.ReportSource"
+                    HintPath = "..\..\windows\assembly\gac\crystaldecisions.reportsource\9.1.5000.0__692fbea5521e1304\crystaldecisions.reportsource.dll"
+                />
+                <Reference
+                    Name = "icsharpcode.texteditor"
+                    AssemblyName = "ICSharpCode.TextEditor"
+                    HintPath = "lib\icsharpcode.texteditor.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AboutDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AboutDialog.resx"
+                    DependentUpon = "AboutDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Action.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ActionControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ActionControl.resx"
+                    DependentUpon = "ActionControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ActionDifference.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ActionPrinter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Actions.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "Actions.cs"
+                />
+                <File
+                    RelPath = "Actions.cs"
+                    DependentUpon = "Actions.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "Actions.xsx"
+                    DependentUpon = "Actions.xsd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "aiscript.xshd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "AIScriptEditor.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AIScriptEditor.resx"
+                    DependentUpon = "AIScriptEditor.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AIScriptFoldingStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AIScriptValidationMessage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AIScriptValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AlternatingBotRowCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "AppData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bits.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BotReader.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bots.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "Bots.cs"
+                />
+                <File
+                    RelPath = "Bots.cs"
+                    DependentUpon = "Bots.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "Bots.xsx"
+                    DependentUpon = "Bots.xsd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "BotsControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BotsControl.resx"
+                    DependentUpon = "BotsControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "BspEntity.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BspReader.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BspReaderControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BspReaderControl.resx"
+                    DependentUpon = "BspReaderControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Changes.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "CodeHelperDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CodeHelperDialog.resx"
+                    DependentUpon = "CodeHelperDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ConfigWriter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Conversion.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataGridComboBoxColumn.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Enumerations.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FormMain.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FormMain.resx"
+                    DependentUpon = "FormMain.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Hex.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Info.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "IPrintableUserControl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Keyword.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordComparer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordCompletionData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordCompletionDataProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordInput.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "KeywordInsightDataProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NavigationCompareControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NavigationCompareControl.resx"
+                    DependentUpon = "NavigationCompareControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NavigationDiff.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NavigationElementBase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NavigationReader.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NewAIScriptDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NewAIScriptDialog.resx"
+                    DependentUpon = "NewAIScriptDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Node.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NodeControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NodeControl.resx"
+                    DependentUpon = "NodeControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NodeDifference.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NodePrinter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Nodes.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "Nodes.cs"
+                />
+                <File
+                    RelPath = "Nodes.cs"
+                    DependentUpon = "Nodes.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "Nodes.xsx"
+                    DependentUpon = "Nodes.xsd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Project.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "Project.cs"
+                />
+                <File
+                    RelPath = "Project.cs"
+                    DependentUpon = "Project.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "Project.xsx"
+                    DependentUpon = "Project.xsd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Route.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RouteControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RouteControl.resx"
+                    DependentUpon = "RouteControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "RouteDifference.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RoutePrinter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Routes.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "Routes.cs"
+                />
+                <File
+                    RelPath = "Routes.cs"
+                    DependentUpon = "Routes.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "Routes.xsx"
+                    DependentUpon = "Routes.xsd"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Todo.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "TreeViewDragDrop.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UserData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "WaypointControl.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "WaypointControl.resx"
+                    DependentUpon = "WaypointControl.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

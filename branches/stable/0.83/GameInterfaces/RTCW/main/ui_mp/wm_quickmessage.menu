@@ -1,0 +1,1200 @@
+#include "ui_mp/menudef.h"
+
+#define DEFAULT_TEXT_SCALE 0.25
+
+#define ORIGIN_QUICKMESSAGE		10 110
+
+{
+	menuDef {
+		name			"wm_quickmessage"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"S. Statements"
+		decoration
+	}
+	execKey "s" { close wm_quickmessage; open wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"R. Requests"
+		decoration
+	}
+	execKey "r" { close wm_quickmessage; open wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"C. Commands"
+		decoration
+	}
+	execKey "c" { close wm_quickmessage; open wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"T. Talk"
+		decoration
+	}
+	execKey "t" { close wm_quickmessage; open wm_quicktalk }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"G. Global"
+		decoration
+	}
+	execKey "g" { close wm_quickmessage; open wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"F. Function"
+		decoration
+		group			ingamebox
+	}
+	execKey "f" { uiScript wm_sayPlayerClass; close wm_quickmessage }
+//	execKey "c" { open wm_quickstatus; close wm_quickmessage }
+}
+
+// ================
+// QUICK GLOBALS -- menu text is yellow to signify global JPW
+// ================
+{
+	menuDef {
+		name			"wm_quickglobal"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 0 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"Y. Yes (Global)"
+		decoration
+	}
+	execKey "y" { exec "VoiceChat Affirmative"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"N. No (Global)"
+		decoration
+	}
+	execKey "n" { exec "VoiceChat Negative"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"W. Enemy Weak (Global)"
+		decoration
+		group			ingamebox
+	}
+	execKey "w" { exec "VoiceChat EnemyWeak"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"H. Hi!"
+		decoration
+	}
+	execKey "h" { exec "VoiceChat Hi"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"B. Bye"
+		decoration
+	}
+
+	execKey "b" { exec "VoiceChat Bye"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"S. Great Shot!"
+		decoration
+		group			ingamebox
+	}
+	execKey "s" { exec "VoiceChat GreatShot"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 136 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"C. Cheer/Celebrate"
+		decoration
+		group			ingamebox
+	}
+	execKey "c" { exec "VoiceChat Cheer"; close wm_quickglobal }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 152 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"G. More global chats"
+		decoration
+		group			ingamebox
+	}
+	execKey "g" { close wm_quickglobal; open wm_quickglobal2 }
+
+
+}
+
+// ================
+// QUICK GLOBALS -- menu text is yellow to signify global JPW
+// ================
+{
+	menuDef {
+		name			"wm_quickglobal2"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 0 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"T. Thanks"
+		decoration
+	}
+	execKey "t" { exec "VoiceChat Thanks"; close wm_quickglobal2 }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"W. Welcome"
+		decoration
+	}
+	execKey "w" { exec "VoiceChat Welcome"; close wm_quickglobal2 }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"O. Oops"
+		decoration
+	}
+	execKey "o" { exec "VoiceChat Oops"; close wm_quickglobal2 }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"S. Sorry"
+		decoration
+	}
+
+	execKey "s" { exec "VoiceChat Sorry"; close wm_quickglobal2 }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"H. Hold Fire"
+		decoration
+		group			ingamebox
+	}
+	execKey "h" { exec "VoiceChat HoldYourFire"; close wm_quickglobal2 }
+
+
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 0 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"G. Good game"
+		decoration
+		group			ingamebox
+	}
+	execKey "g" { exec "VoiceChat GoodGame"; close wm_quickglobal2 }
+
+//	itemDef {
+//		name			"window"
+//		visible			1
+//		rect			10 136 128 16
+//		origin			ORIGIN_QUICKMESSAGE
+//		forecolor		1 1 0 1
+//		backcolor		0 0 0 0
+//		textfont	UI_FONT_NORMAL
+//		textscale	.25
+//		textalign		ITEM_ALIGN_LEFT
+//		text			"S. Great shot!"
+//		decoration
+//		group			ingamebox
+//	}
+//	execKey "s" { exec "VoiceChat GreatShot"; close wm_quickglobal2 }
+
+//	itemDef {
+//		name			"window"
+//		visible			1
+//		rect			10 152 128 16
+//		origin			ORIGIN_QUICKMESSAGE
+//		forecolor		1 1 0 1
+//		backcolor		0 0 0 0
+//		textfont	UI_FONT_NORMAL
+//		textscale	.25
+//		textalign		ITEM_ALIGN_LEFT
+//		text			"C. Cheer/Celebrate"
+//		decoration
+//		group			ingamebox
+//	}
+//	execKey "c" { exec "VoiceChat Cheer"; close wm_quickglobal2 }
+
+}
+
+// ================
+// QUICK STATEMENTS
+// ================
+{
+	menuDef {
+		name			"wm_quickstatements"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"P. Path Cleared."
+		decoration
+		group			ingamebox
+	}
+	execKey "p" { exec "VoiceTeamChat PathCleared"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"W. Enemy weak!"
+		decoration
+		group			ingamebox
+	}
+	execKey "w" { exec "VoiceTeamChat EnemyWeak"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"C. All clear"
+		decoration
+		group			ingamebox
+	}
+	execKey "c" { exec "VoiceTeamChat AllClear"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"I. Incoming"
+		decoration
+		group			ingamebox
+	}
+	execKey "i" { exec "VoiceTeamChat Incoming"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"F. Fire in the hole!"
+		decoration
+		group			ingamebox
+	}
+	execKey "f" { exec "VoiceTeamChat FireInTheHole"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 136 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"A. I'm attacking."
+		decoration
+		group			ingamebox
+	}
+	execKey "a" { exec "VoiceTeamChat OnOffense"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"D. I'm on defense."
+		decoration
+		group			ingamebox
+	}
+	execKey "d" { exec "VoiceTeamChat OnDefense"; close wm_quickstatements }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 152 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"T. Taking Fire!"
+		decoration
+		group			ingamebox
+	}
+	execKey "t" { exec "VoiceTeamChat TakingFire"; close wm_quickstatements }
+
+
+}
+
+// ================
+// QUICK TALK
+// ================
+{
+	menuDef {
+		name			"wm_quicktalk"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"Y. Yes (Team)"
+		decoration
+	}
+	execKey "y" { exec "VoiceTeamChat Affirmative"; close wm_quicktalk }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"N. No (Team)"
+		decoration
+	}
+	execKey "n" { exec "VoiceTeamChat Negative"; close wm_quicktalk }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"T. Thanks"
+		decoration
+		group			ingamebox
+	}
+	execKey "t" { exec "VoiceTeamChat Thanks"; close wm_quicktalk }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"W. You're welcome"
+		decoration
+		group			ingamebox
+	}
+	execKey "w" { exec "VoiceTeamChat Welcome"; close wm_quicktalk }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"S. Sorry"
+		decoration
+		group			ingamebox
+	}
+	execKey "s" { exec "VoiceTeamChat Sorry"; close wm_quicktalk }
+
+}
+
+
+// ================
+// QUICK REQUESTS
+// ================
+{
+	menuDef {
+		name			"wm_quickrequests"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"M. Medic!"
+		decoration
+	}
+	execKey "m" { exec "VoiceTeamChat Medic"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"A. Ammo!"
+		decoration
+	}
+	execKey "a" { exec "VoiceTeamChat NeedAmmo"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"B. I need backup!"
+		decoration
+		group			ingamebox
+	}
+	execKey "b" { exec "VoiceTeamChat NeedBackup"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"E. Need an engineer!"
+		decoration
+		group			ingamebox
+	}
+	execKey "e" { exec "VoiceTeamChat NeedEngineer"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"C. Cover me!"
+		decoration
+		group			ingamebox
+	}
+	execKey "c" { exec "VoiceTeamChat CoverMe"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"H. Hold your fire!"
+		decoration
+		group			ingamebox
+	}
+	execKey "h" { exec "VoiceTeamChat HoldYourFire"; close wm_quickrequests }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 136 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"W. Where to?"
+		decoration
+		group			ingamebox
+	}
+	execKey "w" { exec "VoiceTeamChat WhereTo"; close wm_quickrequests }
+}
+
+// ================
+// QUICK COMMANDS
+// ================
+{
+	menuDef {
+		name			"wm_quickcommand"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"F. Follow me!"
+		decoration
+	}
+	execKey "f" { exec "VoiceTeamChat FollowMe"; close wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"G. Let's go!"
+		decoration
+	}
+	execKey "g" { exec "VoiceTeamChat LetsGo"; close wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"M. Move!"
+		decoration
+		group			ingamebox
+	}
+	execKey "m" { exec "VoiceTeamChat Move"; close wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"C. Clear the path!"
+		decoration
+		group			ingamebox
+	}
+	execKey "c" { exec "VoiceTeamChat ClearPath"; close wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 104 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"O. Defend our objective"
+		decoration
+		group			ingamebox
+	}
+	execKey "o" { exec "VoiceTeamChat DefendObjective"; close wm_quickcommand }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 120 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"D. Disarm dynamite!"
+		decoration
+		group			ingamebox
+	}
+	execKey "d" { exec "VoiceTeamChat DisarmDynamite"; close wm_quickcommand }
+
+}
+
+// ================
+// QUICK STATUS
+// ================
+{
+	menuDef {
+		name			"wm_quickstatus"
+		visible			0
+		fullscreen		0
+		rect			0 100 640 380
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onOpen			{ setCvar cl_bypassMouseInput "1" }
+		onClose			{ setCvar cl_bypassMouseInput "0" }
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 170 170
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/quickmessage_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			37 14 128 20
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		text			"Message"
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_CENTER
+		decoration
+	}
+
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 40 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"S. I'm a soldier"
+		decoration
+		group			ingamebox
+	}
+	execKey "s" { uiScript wm_sayPlayerClass; close wm_quickstatus }
+//	execKey "s" { exec "VoiceTeamChat IamSoldier"; close wm_quickstatus }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 56 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"E. I'm an engineer"
+		decoration
+	}
+	execKey "e" { exec "VoiceTeamChat IamEngineer"; close wm_quickstatus }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 72 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"M.  I'm a medic"
+		decoration
+	}
+	execKey "m" { exec "VoiceTeamChat IamMedic"; close wm_quickstatus }
+
+	itemDef {
+		name			"window"
+		visible			1
+		rect			10 88 128 16
+		origin			ORIGIN_QUICKMESSAGE
+		forecolor		1 1 1 1
+		backcolor		0 0 0 0
+		textfont	UI_FONT_NORMAL
+		textscale	.25
+		textalign		ITEM_ALIGN_LEFT
+		text			"L.  I'm a lieutenant."
+		decoration
+		group			ingamebox
+	}
+	execKey "l" { exec "VoiceTeamChat IamLieutenant"; close wm_quickstatus }
+
+}
+
+
+

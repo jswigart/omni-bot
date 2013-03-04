@@ -1,0 +1,74 @@
+global Map =
+{
+	Quiet = true,
+	Plant_Gas_Mask_Supplies = "PLANT_Gas_Mask_Supplies",
+	Plant_Lower_Bunker_Supplies = "PLANT_Lower_Bunker_Supplies",
+	Explode_175 = "EXPLODE_175",
+	Explode_573 = "EXPLODE_573",
+
+
+	Gas_Mask_Supplies_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Gas_Mask_Supplies_Destroyed" );
+	},
+
+	Lower_Bunker_Supplies_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Lower_Bunker_Supplies_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Gas_Mask_Supplies_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Lower_Bunker_Supplies_Destroyed );
+	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=25, maxcamptime=30});
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "MOUNT.*", {mincamptime=60, maxcamptime=90});
+	
+	RTCWUtil.SetPrimaryGoals(1.0);
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLLERY.*", 1.0 );
+	SetGoalPriority( "MOUNT.*", 0.71 );
+	
+	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	
+//	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGas.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTrenches.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFront.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rMine.*" );
+	
+	RTCWUtil.TeamDisableCombatCrouch( TEAM.AXIS, true);		// Let axis use smarter combat techniques
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 1000;
+//	bot.TargetBreakableDist = 300.0;
+};

@@ -1,0 +1,752 @@
+#include "ui_mp/menudef.h"
+
+#define DEFAULT_TEXT_SCALE 0.25
+
+{
+	menuDef {
+		name			"wm_pickplayer"
+		visible			0
+		fullscreen		0
+		rect			170 115 508 341
+//		rect			90 115 508 341
+		focusColor		1 1 1 1
+		disablecolor	0 0 0 0
+		backcolor		0 0 0 0
+ 		style			WINDOW_STYLE_FILLED
+   		border			1
+
+		onEsc {
+			close wm_pickteam
+		}
+
+		onOpen {
+//			setcvar mp_playerType 0;
+//			uiScript changePlayerType;
+
+			hide "window_weap";
+			hide "weap_*";
+
+			uiScript wm_pickitem WM_SELECT_CLASS WM_START_SELECT;
+		}
+
+	itemDef {
+		name			window
+		visible			1
+		rect			0 0 304 318
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/player_background.tga"
+		decoration
+	}
+	itemDef {
+		name			window_weap
+		visible			0
+		rect			312 0 130 318
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/weapon_background.tga"
+		decoration
+	}
+	itemDef {
+		name			window_pickplayer
+		visible			0
+		rect			312 0 130 318
+		forecolor		1 1 1 1
+		backcolor		0 0 0 1
+ 		style			WINDOW_STYLE_SHADER
+   		border			1
+		background		"ui_mp/assets/weapon_background.tga"
+		decoration
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		227 298 55 20
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		border		0
+		text		"PLAY!"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+
+		action		{ uiScript startMultiplayer; }
+	}
+
+	itemDef {
+		name		window
+		type		1
+//		rect		13 240 27 47
+		rect		12 239 266 49
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	1 0 0 0
+		visible		1
+		border		0
+		cvar		mp_itemDesc
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+		autowrapped
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		20 4 85 20
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"TEAM"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+
+		action		{ uiScript wm_showPickTeam; }
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		104 4 85 20
+		style		WINDOW_STYLE_FILLED
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+		text		"PLAYER"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	12
+		decoration
+	}
+
+	// CHARACTER CLASS VIEW
+	itemDef {
+		name			player_window_soldier
+		type			1
+		rect			17 30 104 185
+		style			WINDOW_STYLE_SHADER
+		visible			1
+		background		"ui_mp/assets/axis_soldier.tga"
+		decoration
+	}
+	itemDef {
+		name			player_window_medic
+		type			1
+		rect			17 30 104 185
+		style			WINDOW_STYLE_SHADER
+		visible			0
+		background		"ui_mp/assets/axis_medic.tga"
+		decoration
+	}
+	itemDef {
+		name			player_window_lieutenant
+		type			1
+		rect			17 30 104 185
+		style			WINDOW_STYLE_SHADER
+		visible			0
+		background		"ui_mp/assets/axis_lieutenant.tga"
+		decoration
+	}
+	itemDef {
+		name			player_window_engineer
+		type			1
+		rect			17 30 104 185
+		style			WINDOW_STYLE_SHADER
+		visible			0
+		background		"ui_mp/assets/axis_engineer.tga"
+		decoration
+	}
+
+	itemDef {
+		name			window
+		type			1
+		rect			18 31 105 184
+		style			WINDOW_STYLE_SHADER
+		visible			1
+		background		"ui_mp/assets/item_none.tga"
+		mouseEnter		{ setbackground "ui_mp/assets/button_glow128_tall.tga" }
+		mouseExit		{ setbackground "ui_mp/assets/item_none.tga" }
+		action			{ uiScript wm_pickitem WM_SELECT_CLASS WM_START_SELECT }
+	}
+
+	// WEAPONS VIEW
+	itemDef {
+		name		window_knife_pic
+		type		1
+		rect		162 157 58 58
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 1
+		visible		1
+		decoration
+		background	"ui_mp/assets/weapon_knife.tga"
+	}
+	itemDef {
+		name		window_pistol_pic
+		type		1
+		rect		161 93 58 58
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 1
+		visible		1
+		background	"ui_mp/assets/weapon_colt1911.tga"
+		decoration
+	}
+	itemDef {
+		name		window_item1_pic
+		type		1
+		rect		231 93 58 58
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 1
+		visible		1
+		background	"ui_mp/assets/weapon_grenade.tga"
+		decoration
+	}
+	itemDef {
+		name		window_item2_pic
+		type		1
+		rect		231 156 58 58
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 1
+		visible		0
+		background	"ui_mp/assets/weapon_grenade.tga"
+		decoration
+	}
+	itemDef {
+		name		window_weapon_pic
+		type		1
+		rect		161 29 127 56
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 1
+		visible		1
+		background	"ui_mp/assets/weapon_mauser.tga"
+		decoration
+	}
+
+	itemDef {
+		name		window_weapon
+		type		1
+		rect		161 30 127 57
+		style		WINDOW_STYLE_SHADER
+		background	"ui_mp/assets/item_none.tga"
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		1
+//		mouseEnter	{ setcolor backcolor .5 .5 .5 .5 }
+//		mouseExit	{ setcolor backcolor 0 0 0 0 }
+		mouseEnter	{ setbackground "ui_mp/assets/button_glow128.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_START_SELECT }
+	}
+	itemDef {
+		name		window_pistol
+		type		1
+		rect		161 94 58 57
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		background	"ui_mp/assets/item_none.tga"
+		visible		1
+		mouseEnter	{ setbackground "ui_mp/assets/button_glow.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga" }
+		action		{ uiScript wm_pickitem WM_SELECT_PISTOL WM_START_SELECT }
+	}
+	itemDef {
+		name		window_grenade
+		type		1
+		rect		230 94 58 57
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 00
+		background	"ui_mp/assets/item_none.tga"
+		visible		1
+//		mouseEnter	{ setcolor backcolor .5 .5 .5 .5 }
+//		mouseExit	{ setcolor backcolor 0 0 0 0 }
+		mouseEnter	{ setbackground "ui_mp/assets/button_glow.tga" }
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga" }
+		action		{ uiScript wm_pickitem WM_SELECT_GRENADE WM_START_SELECT }
+	}
+
+	// WEAPON TEXT
+	itemDef {
+		name		window
+		type		1
+		rect		324 31 109 22
+		style		WINDOW_STYLE_SHADER		
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"MP40"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "MP40  Ammo Type: 9mm  Cyclic rate: 500rds/min MP40 is a great all purpose submachine-gun.";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_MP40 }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 56 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Thompson"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Thompson M1A1  Ammo Type: .45 Caliber  Cyclic rate: 700rds/min Good close to medium range gun.";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_THOMPSON }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 81 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"STEN MK 2"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "STEN Mk2  Ammo Type: 9mm  Cyclic rate: 450rds/min  still being worked on";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_STEN }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 105 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Mauser"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_MAUSER }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 130 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Garand"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_GARAND }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 154 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Panzerfaust"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_PANZERFAUST }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 179 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Minigun"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_VENOM }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 204 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Flamethrower"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_soldier
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_FLAMETHROWER }
+	}
+
+	itemDef {
+		name		window
+		type		1
+		rect		324 31 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"MP40"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_lieutenant
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_MP40 }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 56 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Thompson"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_lieutenant
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_THOMPSON }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 81 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"STEN MK 2"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		weap_lieutenant
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_WEAPON WM_WEAPON_STEN }
+	}
+
+	// PISTOL TEXT
+	itemDef {
+		name		window
+		type		1
+		rect		324 31 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"1911"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		pistol_all
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_PISTOL WM_PISTOL_1911 }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 56 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Luger"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		pistol_all
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_PISTOL WM_PISTOL_LUGER }
+	}
+
+	// GRENADE TEXT
+	itemDef {
+		name		window
+		type		1
+		rect		324 31 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Pineapple"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		grenade_all
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_GRENADE WM_PINEAPPLE_GRENADE }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 56 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Stick"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		grenade_all
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Blah";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_GRENADE WM_STICK_GRENADE }
+	}
+
+	// PLAYER TYPE TEXT
+	itemDef {
+		name		window
+		type		1
+		rect		324 31 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Soldier"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		player_type
+		background	"ui_mp/assets/item_none.tga"
+
+		mouseEnter	{ 
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Soldiers can carry a wide array of weapons.";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_CLASS WM_SOLDIER }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 56 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Medic"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		player_type
+		background	"ui_mp/assets/item_none.tga"
+		mouseEnter	{
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Medics can heal wounded soldiers on the battlefield and toss out medic packs.";
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_CLASS WM_MEDIC }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 81 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Engineer"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		player_type
+		background	"ui_mp/assets/item_none.tga"
+		mouseEnter	{
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Engineers can set and diffuse bombs as well as build things."
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_CLASS WM_ENGINEER }
+	}
+	itemDef {
+		name		window
+		type		1
+		rect		324 105 109 22
+		style		WINDOW_STYLE_SHADER
+		forecolor	1 1 1 1
+		backcolor	0 0 0 0
+		visible		0
+		text		"Lieutenant"
+		textfont	UI_FONT_NORMAL
+		textscale	DEFAULT_TEXT_SCALE
+		textalign	0 //ITEM_ALIGN_CENTER
+		textalignx	5
+		textaligny	16
+		group		player_type
+		background	"ui_mp/assets/item_none.tga"
+		mouseEnter	{
+			setbackground "ui_mp/assets/button_glow128.tga";
+			setcvar mp_itemDesc "Lieutenants can call airstrikes and throw smoke grenades."
+		}
+		mouseExit	{ setbackground "ui_mp/assets/item_none.tga"; setcvar mp_itemDesc "" }
+		action		{ uiScript wm_pickitem WM_SELECT_CLASS WM_LIEUTENANT }
+	}
+}

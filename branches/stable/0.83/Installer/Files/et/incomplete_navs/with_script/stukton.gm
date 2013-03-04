@@ -1,0 +1,273 @@
+//==========================================================================================
+//
+//	stukton.gm
+//
+//	Who            	When		What
+//------------------------------------------------------------------------------------------
+//	^4Tardis	01 January 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Broken_Wall_Dyno = 0,
+	Safe_Door_Dyno = 0,
+	
+	Talk = true, //set Talk to false if you don't want the bots to cheer after winning game:
+	trip = true, //set trip to false if you want tripmines off
+	
+	Broken_Wall_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.MapDebugPrint( "Broken_Wall_Built" );
+	},
+
+	Safe_Door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetGoalPriority( "PLANT_Safe_Door", 0.85, TEAM.AXIS, CLASS.ENGINEER, true );
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_drop.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_safe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_trisafe.*" );
+		
+		Util.MapDebugPrint( "Safe_Door_Built" );
+	},
+
+	Broken_Wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Broken_Wall_Dyno += 1;
+		Util.MapDebugPrint( "Broken_Wall_Planted" );
+	},
+
+	Safe_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Safe_Door_Dyno += 1;
+		Util.MapDebugPrint( "Safe_Door_Planted" );
+	},
+
+	Broken_Wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Broken_Wall_Dyno -= 1;
+		Util.MapDebugPrint( "Broken_Wall_Defused" );
+	},
+
+	Safe_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Safe_Door_Dyno -= 1;
+		Util.MapDebugPrint( "Safe_Door_Defused" );
+	},
+
+	Broken_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Broken_Wall_Dyno = 0;
+
+		Util.MapDebugPrint( "Broken_Wall_Destroyed" );
+	},
+
+	Safe_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Safe_Door_Dyno = 0;
+		
+		SetGoalPriority( "BUILD_Safe_Door", 0.95, TEAM.ALLIES, CLASS.ENGINEER, true );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_drop.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_safe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_trisafe.*" );
+
+		Util.MapDebugPrint( "Safe_Door_Destroyed" );
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_drop.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_safe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANTMINE_yard.*" );
+		
+		
+		Util.MapDebugPrint( "Secret_Documents_Taken" );
+	},
+
+	Secret_Documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_drop.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_safe.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_yard.*" );
+		
+		
+		Util.MapDebugPrint( "Secret_Documents_Returned" );
+	},
+
+	Secret_Documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Util.DisableGoal( "CAPPOINT.*" );
+		Util.DisableGoal( "FLAG.*" );
+		
+		if ( Map.Talk && MAP_TALK )
+		{
+			ETUtil.WinningChat( TEAM.ALLIES );
+			ETUtil.LosingChat( TEAM.AXIS );
+		}
+		
+		Util.MapDebugPrint( "Secret_Documents_Secured" );
+	},
+
+	oldcityflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_flag.*" );
+		if ( Map.trip )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "TRIPMINE_triflag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "TRIPMINE_triflag.*" );
+		}
+		
+		Util.MapDebugPrint( "oldcityflag_Axis_Captured" );
+	},
+
+	oldcityflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if ( Map.trip )
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_triflag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "TRIPMINE_triflag.*" );
+		}
+		
+		Util.MapDebugPrint( "oldcityflag_Allies_Captured" );
+	},
+	
+	oldcityflag_got = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.DisableGoal( "DEFEND_flag.*" );
+		Util.DisableGoal( "CHECKPOINT_.*" );
+		Util.DisableGoal( "PLANTMINE_flag.*" );
+		
+		if ( Map.trip )
+		{
+			Util.DisableGoal( "TRIPMINE_triflag.*" );
+		}
+		
+		Util.MapDebugPrint( "oldcityflag_got" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Team have Built the Broken Wall!", Map.Broken_Wall_Built );
+	OnTrigger( "Allies team has built the Safe Door for Secret Documents!", Map.Safe_Door_Built );
+	OnTrigger( "Planted at the Broken_Wall.", Map.Broken_Wall_Planted );
+	OnTrigger( "Planted at the Safe_Door.", Map.Safe_Door_Planted );
+	OnTrigger( "Defused at the Broken_Wall.", Map.Broken_Wall_Defused );
+	OnTrigger( "Defused at the Safe_Door.", Map.Safe_Door_Defused );
+	OnTrigger( "Axis have destroyed the Broken Wall!", Map.Broken_Wall_Destroyed );
+	OnTrigger( "Axis team has destroyed the Safe Door for Secret Documents!", Map.Safe_Door_Destroyed );
+	OnTrigger( "^1The Axis Have Stolen The Documents!", Map.Secret_Documents_Taken );
+	OnTrigger( "^4The Aliies Have Returned The Documents!", Map.Secret_Documents_Returned );
+	OnTrigger( "^1Axis Team Escaped With The Secret Documents!", Map.Secret_Documents_Secured );
+	OnTrigger( "^rAxis capture the Old City!", Map.oldcityflag_Axis_Captured );
+	OnTrigger( "^rAllies reclaim the Old City!", Map.oldcityflag_Allies_Captured );
+	OnTrigger( "^1Now Axis have the Old City Forever!", Map.oldcityflag_got );
+//Priority's
+	SetGoalPriority( "BUILD_Safe_Door", 0.91, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Safe_Door", 0.82, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANT_Broken_Wall", 0.79, TEAM.AXIS, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANTMINE_phone.*", 0.78, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "PLANTMINE_yard.*", 0.79, TEAM.ALLIES, CLASS.ENGINEER, true );
+	
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal ("FLAG.*");
+	Util.EnableGoal ("AMMOCAB.*");
+	Util.EnableGoal	("HEALTHCAB.*");
+	Util.EnableGoal	("BUILD.*");
+	Util.EnableGoal	("CAPPOINT.*");
+	Util.EnableGoal	("PLANT.*");
+	Util.EnableGoal	("CHECKPOINT.*");
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_1005" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_yard.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_phone.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANTMINE_flag.*" );
+	if ( Map.trip )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, true, "TRIPMINE_trisafe.*" );
+	}
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+	Util.SetMaxUsers( 1, "PLANT_.*" );
+	Util.SetMaxUsers( 3, "CHECKPOINT_.*" );
+	Util.SetMaxUsers( 2, "FLAG_.*" );
+	
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+	//
+	Util.AddUseWp("PLANT_Safe_Door", "safe");
+	Util.SetGoalOffset( -10, 0, -50, "PLANT_Safe_Door" );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

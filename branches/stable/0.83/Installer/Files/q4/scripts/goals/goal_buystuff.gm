@@ -1,0 +1,154 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "BuyStuff";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+//this.AlwaysRecieveEvents = true;	// Recieve events even when not active. Normally events are only called when goal is active.
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.Debug = true;
+	this.DelayBetweenCalls = 2.0;
+	
+	if(GetModName() == "Deathmatch" || GetModName() == "Tourney")
+	{
+		this.Disable = true;
+	}
+	
+	Util.MapDebugPrint( this.Name + " Initialized", true );
+};
+
+this.OnSpawn = function()
+{
+	// Initialize a copy of the buy once menu
+	if(tableCount(this.BUY_ONCE_MENU) > 0) {
+		this.myBuyTable = tableRandom(this.BUY_ONCE_MENU);
+	}
+};
+
+this.GetPriority = function()
+{
+	this.Priority = 1;
+	block(0);
+};
+
+// this.Enter = function()
+// {	
+// };
+
+// this.Exit = function()
+// {
+// };
+
+this.Update = function()
+{
+	while(1)
+	{
+		if(IsBuyingAllowed())
+		{
+			// Attempt to buy any buyonce items we can.
+			////////////////////////////////////////////////////
+			myCash = this.Bot.GetCredits();
+			foreach ( index and buyTable in this.myBuyTable )
+			{
+				//this.Bot.Say("Credits ", myCash, " wanting ", buyTable.name);
+				if(myCash >= buyTable.cost)
+				{
+					if(this.Bot.Buy(buyTable.item))
+					{
+						this.Bot.Say("Bought Weapon ", buyTable.name);
+						this.myBuyTable[index] = null; // remove from the table, we bought it.
+					}
+					else if (GetGameState() == "Playing")
+					{
+						this.myBuyTable[index] = null; // remove from the table, we bought it.
+					}
+						
+				}
+				// it's a priority list, so only try the first in the list and break every time.
+				break;
+			}
+			sleep(2);
+			
+			/////////////////////////////////////
+			if(desiredTeamPowerUp)
+			{
+				myCash = this.Bot.GetCredits();
+				if(myCash >= desiredTeamPowerUp.cost && !this.HasPowerUp(desiredTeamPowerUp.PowerUp))
+				{
+					if(this.Buy(desiredTeamPowerUp.item))
+					{
+						this.Bot.Say("Bought Team Powerup ", desiredTeamPowerUp.name);
+						desiredTeamPowerUp = this.BUY_TEAM_MENU[ RandInt(0, tableCount(this.BUY_TEAM_MENU)-1) ];
+					}
+				}
+			}
+			sleep(2);
+			
+			////////////////////////////////////////////////////
+			// Do we need(and can afford) any of the buy many items?
+			foreach ( index and buyTable in this.BUY_MANY_MENU )
+			{
+				myCash = this.Bot.GetCredits();
+				if(myCash >= buyTable.cost)
+				{
+					// Call the function to evaluate if we should buy this item.
+					if(buyTable.eval(this))
+					{
+						this.Bot.Say("Bought Item ", buyTable.name);
+						this.Bot.Buy(buyTable.item);						
+					}
+				}
+				break; // only try the first in the list, so break every time.	
+			}
+		}
+		
+		sleep(this.DelayBetweenCalls);
+	}
+	this.Finished();
+};
+
+//////////////////////////////////////////////////////////////////////////
+this.EVAL_AMMO_REFILL = function(bot)
+{
+	return false;
+};
+
+this.EVAL_ARMOR_YELLOW = function(bot)
+{
+	return bot.Armor < 60;
+};
+
+this.EVAL_ARMOR_RED = function(bot)
+{
+	return bot.Armor < 20;
+};
+
+this.BUY_MANY_MENU =
+{
+	{ item=BUY.AMMO_REFILL, cost=200, eval=this.EVAL_AMMO_REFILL, name="Ammo Refill" },
+	{ item=BUY.ARMOR_YELLOW, cost=300, eval=this.EVAL_ARMOR_YELLOW, name="Yellow Armor" },
+	{ item=BUY.ARMOR_RED, cost=600, eval=this.EVAL_ARMOR_RED, name="Red Armor" },
+};
+
+this.BUY_TEAM_MENU =
+{
+	{ item=BUY.AMMO_REGEN, cost=1000, team = true, name="Ammo Regen", PowerUp = POWERUP.TEAM_AMMOREGEN },
+	{ item=BUY.HEALTH_REGEN, cost=2000, team = true, name="Health Regen", PowerUp = POWERUP.TEAM_HEALTHREGEN },
+	{ item=BUY.DAMAGE_BOOST, cost=3000, team = true, name="Damage Boost", PowerUp = POWERUP.TEAM_DAMAGEMOD },
+};
+
+this.BUY_ONCE_MENU =
+{
+ 	{ item=BUY.MACHINEGUN, cost=500, name="Machinegun" },
+	{ item=BUY.SHOTGUN, cost=600, name="Shotgun" },
+	{ item=BUY.GRENADELAUNCHER, cost=700, name="Grenade Launcher" },
+	{ item=BUY.NAILGUN, cost=1200, name="Nailgun" },
+	{ item=BUY.HYPERBLASTER, cost=1500, name="HyperBlaster" },
+	{ item=BUY.LIGHTNINGGUN, cost=2000, name="Lightning Gun" },
+	{ item=BUY.ROCKETLAUNCHER, cost=2750, name="Rocket Launcher" },
+	{ item=BUY.RAILGUN, cost=2750, name="Railgun" },
+	{ item=BUY.NAPALMGUN, cost=3500, name="Napalm Gun" },
+};

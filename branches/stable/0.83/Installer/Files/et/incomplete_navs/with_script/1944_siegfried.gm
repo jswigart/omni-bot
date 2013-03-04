@@ -1,0 +1,160 @@
+//==========================================================================================
+//
+//	1944_siegfried.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Ammo_Cabinet_north_ammocabinet_1 = "AMMOCAB_north_ammocabinet_1",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Health_Cabinet_north_healthcabinet_1 = "HEALTHCAB_north_healthcabinet_1",
+	Flag_allied_documents = "FLAG_allied_documents",
+	Flag_axis_documents = "FLAG_axis_documents",
+	Cappoint_Transmitter = "CAPPOINT_Transmitter",
+	Build_Allied_Grate = "BUILD_Allied_Grate",
+	Build_Axis_Grate = "BUILD_Axis_Grate",
+	Build_Neutral_Command_Post = "BUILD_Neutral_Command_Post",
+	Plant_Allied_Grate = "PLANT_Allied_Grate",
+	Plant_Allied_Wall = "PLANT_Allied_Wall",
+	Plant_Axis_Grate = "PLANT_Axis_Grate",
+	Plant_Axis_Wall = "PLANT_Axis_Wall",
+	Plant_Neutral_Command_Post = "PLANT_Neutral_Command_Post",
+	Mount_680 = "MOUNTMG42_680",
+	Mount_748 = "MOUNTMG42_748",
+	Repair_680 = "REPAIRMG42_680",
+	Repair_748 = "REPAIRMG42_748",
+
+	Allied_Grate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+		
+		print( "Allied_Grate_Built" );
+	},
+
+	Axis_Grate_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+		
+		print( "Axis_Grate_Built" );
+	},
+
+	Neutral_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Neutral_Command_Post_Built" );
+	},
+
+	Allied_Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Grate_Destroyed" );
+	},
+
+	Allied_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Allied_Wall );
+		
+		print( "Allied_Wall_Destroyed" );
+	},
+
+	Axis_Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Grate_Destroyed" );
+	},
+
+	Axis_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Wall );
+		
+		print( "Axis_Wall_Destroyed" );
+	},
+
+	Neutral_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Neutral_Command_Post_Destroyed" );
+	},
+
+	allied_documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_documents_Taken" );
+	},
+
+	axis_documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_documents_Taken" );
+	},
+
+	Transmitter_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Transmitter_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "the Allied Grate has been constructed.", Map.Allied_Grate_Built );
+	OnTrigger( "the Axis Grate has been constructed.", Map.Axis_Grate_Built );
+	OnTrigger( "MISSING_STRING", Map.Neutral_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Allied_Grate_Destroyed );
+	OnTrigger( "the Allied Wall has been destroyed!", Map.Allied_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Grate_Destroyed );
+	OnTrigger( "the Axis Wall has been destroyed!", Map.Axis_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Neutral_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.axis_documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.Transmitter_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

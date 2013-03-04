@@ -1,0 +1,11 @@
+Requested Waypoints text file by Mateos
+
+Last Updated: 17/11/2012
+
+This file lists the waypoints requested but not done at any state yet. Map versions could be old. Feel free to update it! :)
+
+axs_elsenheim_beta2
+baserace2_b1
+Craterlake_2 (Moved Craterlake Final to priority maps, maybe related?)
+marketgarden_et_r2 (Seems to be same as marketgarden_et, in 0.8/et/nav)
+wf_mlb_temple_b10

@@ -1,0 +1,923 @@
+global Map =
+{
+	Quiet = true,
+
+	AxisInLower = {},
+	AlliesInLower = {},
+	NumAxisInLower = 0,
+	NumAlliesInLower = 0,
+
+	WatchLower = function()
+	{
+		while ( true )
+		{
+			Map.NumAxisInLower = tableCount( Map.AxisInLower );
+			Map.NumAlliesInLower = tableCount( Map.AlliesInLower );
+
+			foreach( entTable in Map.AxisInLower )
+			{
+				if ( Util.GetEntHealth(entTable.entity) < 1 || entTable.toggle == 0 ) {
+					Map.NumAxisInLower -= 1;
+				}
+			}
+
+			foreach( entTable in Map.AlliesInLower )
+			{
+				if ( Util.GetEntHealth(entTable.entity) < 1 || entTable.toggle == 0 ) {
+					Map.NumAlliesInLower -= 1;
+				}
+			}
+
+			//put the shift stuff here
+			if ( !Map.EnigmaStatus && Map.NumAlliesInLower > 0 ) {
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+			} else if ( !Map.FlagStatus )   {
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng2_.*" );
+			}
+
+			sleep( 1 );
+		}
+	},
+
+	LowerTrigger =
+	{
+		Name = "LowerTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( !Map.AlliesInLower[ent] ) {
+					Map.AlliesInLower[ent] = table();
+					Map.AlliesInLower[ent].entity = ent;
+				}
+				Map.AlliesInLower[ent].toggle = 1;
+			} else
+			{
+				if ( !Map.AxisInLower[ent] ) {
+					Map.AxisInLower[ent] = table();
+					Map.AxisInLower[ent].entity = ent;
+				}
+				Map.AxisInLower[ent].toggle = 1;
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			//clear the ent from the table
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( Map.AlliesInLower[ent] && Map.AlliesInLower[ent].toggle ) {
+					Map.AlliesInLower[ent].toggle = 0;
+				} else if ( Map && Map.NumAxisInLower )                                                                                                       {
+					Map.NumAxisInLower -= 1;
+				}                                 //switched teams
+			} else if ( GetEntTeam( ent ) == TEAM.AXIS )     {
+				if ( Map.AxisInLower[ent] && Map.AxisInLower[ent].toggle ) {
+					Map.AxisInLower[ent].toggle = 0;
+				} else if ( Map && Map.NumAlliesInLower )                                                                                                 {
+					Map.NumAlliesInLower -= 1;
+				}                                   //switched teams
+			}
+		}
+	},
+
+	Navigation =
+	{
+		bunkersnipe =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 1 );
+				sleep( 1 );
+			},
+		},
+
+		vententrance =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.25 );
+			},
+		},
+
+		accessladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 1 );
+				sleep( 1 );
+			},
+		},
+
+		accessladder2 =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 1 );
+				sleep( 1 );
+			},
+		},
+	},
+
+	ViewDistance = 2500,
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+			}
+		},
+	},
+
+	Target =
+	{
+		Barricade1 =
+		{
+			Priority = 0.65,
+			Enabled = true,
+			GrenadeTargetGoalName = "EXPLODE_barrier1",
+			LimitBots = 1,
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = ( 1 << CLASS.MEDIC ) | ( 1 << CLASS.SOLDIER ) | ( 1 << CLASS.LIEUTENANT ),
+			Offset =
+			{
+				Vector3( 120, -70, 0 ),
+			}
+		},
+
+	},
+
+	Switches =
+	{
+		lever1 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever1",
+			LimitTeam = ( 1 << TEAM.ALLIES ),
+			LimitClass = Util.AllClasses,
+		},
+
+		lever2 =
+		{
+			Enabled = true,
+			Priority = 0.65,
+			WaypointName = "lever2",
+			LimitTeam = ( 1 << TEAM.AXIS ),
+			LimitBots = 1,
+			LimitClass = ( 1 << CLASS.MEDIC ) |
+						 ( 1 << CLASS.LIEUTENANT ),
+		},
+
+		lever3 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever3",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Bottom" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+		lever4 =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "lever4",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Top" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+		lever5 =
+		{
+			Enabled = false,
+			Priority = 0,
+			WaypointName = "lever5",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Top" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+		lever6 =
+		{
+			Enabled = true,
+			Priority = 0,
+			WaypointName = "lever6",
+			LimitTeam = Util.AllTeams,
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+			Wait = function()
+			{
+				if ( Map.ElevatorStatus == "Bottom" ) {
+					return true;
+				}
+				return false;
+			},
+		},
+
+	},
+
+	mapstart = true,
+
+	DoorStatus = false, //closed
+	ElevatorStatus = "Top",
+	BunkerStatus = false, //intact
+	VaultStatus = false, //intact
+	FlagStatus = false, //false axis, true allies
+	EnigmaStatus = false, //at home
+	BarrierStatus = false, //intact
+	DontDispenseAmmo = true,
+
+	Checkpoint_forward_spawn = "CHECKPOINT_forward_spawn",
+	Flag_Enigma_Machine = "FLAG_Enigma_Machine",
+	Plant_Vault_Door = "PLANT_Vault_Door",
+	Plant_bunker_entrance = "PLANT_bunker_entrance",
+	Cappoint_423 = "CAPPOINT_423",
+	Explode_502 = "EXPLODE_502",
+	Mount_15 = "MOUNTMG42_15",
+	Mount_40 = "MOUNTMG42_40",
+	Mount_40_1 = "MOUNTMG42_40_1",
+	Mount_42 = "MOUNTMG42_42",
+	Mount_42_1 = "MOUNTMG42_42_1",
+	Repair_15 = "REPAIRMG42_15",
+	Repair_40 = "REPAIRMG42_40",
+	Repair_40_1 = "REPAIRMG42_40_1",
+	Repair_42 = "REPAIRMG42_42",
+	Repair_42_1 = "REPAIRMG42_42_1",
+
+	Vault_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.VaultStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Enigma_Machine" );
+		Util.SetMaxUsersInProgress( 15, Map.Flag_Enigma_Machine );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+	},
+
+	Vault_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Vault_Door_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	bunker_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.BunkerStatus = true;
+		Util.EnableGoal( "ROUTE_mainent" );
+		Util.EnableGoal( "ROUTE_mainent2" );
+		Util.EnableGoal( "ROUTE_mainent3" );
+		Util.DisableGoal( "SWITCH_lever2" );
+
+		if ( !Map.EnigmaStatus && !Map.FlagStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axmain_.*" );
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_osatt_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Vault_Door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_tunnelnest" );
+	},
+
+	bunker_entrance_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.FlagStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_bunker.*" );
+			Util.SetMaxUsersInProgress( 1, "DEFUSE_bunker.*" );
+		}
+	},
+
+	bunker_entrance_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	Enigma_Machine_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EnigmaStatus = true;
+
+		Util.EnableGoal( "DEFEND_enidef.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_forward_spawn" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ax1stfl_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_osdef_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axmain_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axsn_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_axflame1_.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+	},
+
+	Enigma_Machine_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.EnigmaStatus = false;
+
+		if ( Map.FlagStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_spawn" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ax1stfl_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+		} else if ( !Map.FlagStatus )   {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsn_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+		}
+
+		if ( Map.BunkerStatus && !Map.FlagStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axmain_.*" );
+		}
+
+		Util.DisableGoal( "DEFEND_enidef.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart2_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_main" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = false;
+
+		SetAvailableMapGoals( TEAM.ALLIES, !Map.BarrierStatus, "GRENADE_barrier" );
+
+		if ( !Map.BunkerStatus && Map.DoorStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_lever2" );
+		}
+
+		if ( !Map.BunkerStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tunnelnest" );
+		}
+
+		if ( !Map.VaultStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+		}
+
+		if ( !Map.EnigmaStatus && Map.BunkerStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axmain_.*" );
+		}
+
+		if ( !Map.EnigmaStatus  ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsn_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+		} else if ( Map.EnigmaStatus )   {
+			Util.EnableGoal( "DEFEND_enidef.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+		}
+
+		Util.SetMaxUsersInProgress( 15, Map.Checkpoint_forward_spawn );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ax1stfl_.*" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = true;
+
+		Util.DisableGoal( "GRENADE_barrier" );
+
+		if ( !Map.VaultStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_al1stfl_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_al2ndfl_.*" );
+		}
+
+		if ( !Map.EnigmaStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_spawn" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ax1stfl_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+		} else if ( Map.EnigmaStatus )   {
+			Util.EnableGoal( "DEFEND_enidef.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
+
+		Util.SetMaxUsersInProgress( 1, Map.Checkpoint_forward_spawn );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_osatt_.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_bunker.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_osdef_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axmain_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axsn_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_axflame1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart1_.*" );
+	},
+
+	// called from the switch triggers
+	evaluate_door = function()
+	{
+		if ( Map.DoorStatus && !Map.FlagStatus ) { //door is open and axis want it shut
+			//axis should close it
+			if ( !Map.BunkerStatus ) {
+				Map.Switches.lever1.Enabled = false;
+				SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_lever2" );
+			} else if ( Map.BunkerStatus )   {
+				Map.Switches.lever1.Enabled = false;
+			}
+		} else if ( !Map.DoorStatus )   { //only allies should open
+			Map.Switches.lever1.Enabled = true;
+			SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
+		}
+	},
+
+	FrontGates = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		if ( vel.y < 0 ) {
+			Map.DoorStatus = true;
+			print( "front gates opening" );
+		} else
+		{
+			Map.DoorStatus = false;
+			print( "front gates closing" );
+		}
+
+		Map.evaluate_door();
+	},
+
+	barrier_gone = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BarrierStatus = true;
+		Util.DisableGoal( "GRENADE_barrier" );
+		Util.EnableGoal( "ROUTE_acctunn" );
+	},
+
+	elevator_buttons = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//disable all the ele switches while it's moving
+		Map.Switches.lever3.Enabled = false;
+		Map.Switches.lever6.Enabled = false;
+		Map.Switches.lever4.Enabled = false;
+		Map.Switches.lever5.Enabled = false;
+		Map.ElevatorStatus = "Moving";
+
+		//don't let them path through
+		Wp.SetWaypointFlag( "eletoggle", "closed", true );
+	},
+
+	elevator_trigger = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+		if ( vel.z > 0 ) {
+			sleep( 6 );
+			Map.Switches.lever3.Enabled = true;
+			Map.Switches.lever6.Enabled = true;
+			sleep( 1 );
+			Map.ElevatorStatus = "Top";
+			Wp.SetWaypointFlag( "eletoggle", "closed", false );
+		} else if ( vel.z < 0 )   {
+			sleep( 6 );
+			Map.Switches.lever4.Enabled = true;
+			Map.Switches.lever5.Enabled = true;
+			sleep( 1 );
+			Map.ElevatorStatus = "Bottom";
+			Wp.SetWaypointFlag( "eletoggle", "closed", false );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	thread( Map.WatchLower );
+	OnTrigger( "The vault door has been destroyed!", Map.Vault_Door_Destroyed );
+	OnTrigger( "Planted at the Vault Door!.", Map.Vault_Door_Planted );
+	OnTrigger( "Defused at the Vault Door!.", Map.Vault_Door_Defused );
+	OnTrigger( "The bunker entrance has been breached!", Map.bunker_entrance_Destroyed );
+	OnTrigger( "Planted at the bunker entrance!.", Map.bunker_entrance_Planted );
+	OnTrigger( "Defused at the bunker entrance!.", Map.bunker_entrance_Defused );
+	OnTrigger( "Allies have stolen the Enigma Machine!", Map.Enigma_Machine_Taken );
+	OnTrigger( "Flag returned Enigma Machine!", Map.Enigma_Machine_Returned );
+	OnTrigger( "Axis have secured the bunker entrance!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies captured the bunker entrance!", Map.forward_spawn_Allies_Captured );
+	OnTrigger( "gate_right_door_faceangle", Map.FrontGates );
+	OnTrigger( "Explode_502 Exploded", Map.barrier_gone );
+	OnTrigger( "elevator_body_goto", Map.elevator_trigger );
+	OnTrigger( "elevator_body_Opening", Map.elevator_buttons );
+
+	RTCWUtil.KillEntities( { 624, 626 } ); // the gate out front by the mg42 nests
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_mainent" );
+	Util.DisableGoal( "ROUTE_mainent2" );
+	Util.DisableGoal( "ROUTE_mainent3" );
+	Util.DisableGoal( "ROUTE_acctunn" );
+	Util.EnableGoal( "CAPPOINT_.*" );
+	RTCWUtil.SetPrimaryGoals( 1.1 );
+	RTCWUtil.LimitToClass( "DEFEND_axeng1_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "DEFEND_axeng2_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "DEFEND_osdef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	RTCWUtil.LimitToClass( "DEFEND_ax1stfl_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	RTCWUtil.LimitToClass( "DEFEND_enidef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	RTCWUtil.LimitToClass( "MOUNTMG42_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.MEDIC );
+	RTCWUtil.LimitToClass( "ROUTE_elevator", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 9999, maxcamptime = 9999} );
+	SetMapGoalProperties( "FLAME_.*", {mincamptime = 9999, maxcamptime = 9999} );
+
+	SetGoalPriority( "PLANT.*", 1.0 );
+	SetGoalPriority( "PANZER_.*", 0.65 );
+	SetGoalPriority( "FLAME_.*", 0.65 );
+	SetGoalPriority( "SWITCH_lever2", 0.65 );
+	SetGoalPriority( "GRENADE_barrier", 1.1 );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_spawn" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_osatt_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_barrier" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tunnelnest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+
+	// Artillery
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_gate" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_tunnel" );
+
+	Util.SetMaxUsersInProgress( 1, Map.Mount_tunnelnest );
+	Util.SetMaxUsersInProgress( 1, Map.Mount_outsidenest );
+	Util.SetMaxUsersInProgress( 15, Map.Checkpoint_forward_spawn );
+	Util.SetMaxUsersInProgress( 15, Map.Flag_Enigma_Machine );
+	Util.SetMaxUsersInProgress( 1, "GRENADE_barrier" );
+	Util.UpdateSwitchData();
+
+	//while ele is moving, don't let them path through it
+	Wp.SetWaypointFlag( "eletoggle", "closed", false );
+
+	lt1 = OnTriggerRegion( AABB( -2546,1724,-896,163,3584,-454 ), Map.LowerTrigger );
+	ladder1 = OnTriggerRegion( AABB( 336,1770,322,552,1936,429 ), Map.LadderTrigger );
+	ladder2 = OnTriggerRegion( AABB( -1450,1774,335,-1259,1932,429 ), Map.LadderTrigger );
+
+	MapRoutes =
+	{
+		CHECKPOINT_forward_spawn =
+		{
+			ROUTE_alsp =
+			{
+				ROUTE_acctunn =
+				{
+					ROUTE_eastladder = {},
+					ROUTE_westladder = {},
+					ROUTE_mainent = {Weight = 2,},
+				},
+				ROUTE_maindoor =
+				{
+					ROUTE_eastladder = {},
+					ROUTE_westladder = {},
+					ROUTE_mainent = {Weight = 2,},
+				},
+			},
+		},
+
+		FLAG_Enigma_Machine =
+		{
+			ROUTE_flagsp =
+			{
+				ROUTE_secacctunn =
+				{
+					Weight = 2,
+					ROUTE_1stfl_r = {},
+					ROUTE_1stfl_l = {},
+				},
+				ROUTE_stairs =
+				{
+					Weight = 2,
+					ROUTE_1stfl_r = {},
+					ROUTE_1stfl_l = {},
+					ROUTE_vlttunn = {},
+				},
+				ROUTE_elevator =
+				{
+					ROUTE_1stfl_r = {},
+					ROUTE_1stfl_l = {},
+					ROUTE_vlttunn = {},
+				},
+			},
+
+			ROUTE_alsp =
+			{
+				ROUTE_acctunn =
+				{
+					ROUTE_eastladder =
+					{
+						ROUTE_elevator = {},
+						ROUTE_stairs = {Weight = 2,},
+						ROUTE_secacctunn = {Weight = 2,},
+					},
+					ROUTE_westladder =
+					{
+						ROUTE_secacctunn = {},
+					},
+					ROUTE_mainent =
+					{
+						ROUTE_stairs = {},
+						ROUTE_secacctunn = {},
+					},
+				},
+				ROUTE_maindoor =
+				{
+					ROUTE_eastladder =
+					{
+						ROUTE_elevator = {},
+						ROUTE_stairs = {Weight = 2,},
+						ROUTE_secacctunn = {Weight = 2,},
+					},
+					ROUTE_westladder =
+					{
+						ROUTE_secacctunn = {},
+					},
+					ROUTE_mainent =
+					{
+						ROUTE_stairs = {},
+						ROUTE_secacctunn = {},
+					},
+				},
+			},
+		},
+
+		DEFEND_osdef_1 =
+		{
+			ROUTE_axsp =
+			{
+				ROUTE_eastladder = {},
+				ROUTE_westladder = {},
+				ROUTE_mainent3 = {Weight = 1,},
+			},
+		},
+
+		DEFEND_enidef_1 =
+		{
+			ROUTE_flagsp =
+			{
+				ROUTE_eastladder = {Weight = 1,},
+				ROUTE_westladder = {},
+				ROUTE_mainent3 = {Weight = 1,},
+			},
+
+			ROUTE_alsp =
+			{
+				ROUTE_acctunn = {},
+				ROUTE_maindoor = {},
+			},
+		},
+
+		DEFEND_ax1stfl_1 =
+		{
+			ROUTE_axsp =
+			{
+				ROUTE_secacctunn = {Weight = 2,},
+				ROUTE_stairs = {Weight = 3,},
+			},
+		},
+
+		CAPPOINT_423 =
+		{
+			ROUTE_enigrab =
+			{
+				ROUTE_1stfl_r =
+				{
+					ROUTE_elevator2 =
+					{
+						ROUTE_mainent3 =
+						{
+							Weight = 2,
+							ROUTE_mainent2 = {},
+						},
+						ROUTE_eastladder =
+						{
+							ROUTE_eastladder2 = {},
+						},
+					},
+					ROUTE_stairs =
+					{
+						Weight = 2,
+						ROUTE_mainent3 =
+						{
+							Weight = 2,
+							ROUTE_mainent2 = {},
+						},
+						ROUTE_eastladder =
+						{
+							ROUTE_eastladder2 = {},
+						},
+					},
+					ROUTE_secacctunn =
+					{
+						Weight = 3,
+						ROUTE_mainent3 = {},
+						ROUTE_westladder = {},
+					},
+				},
+				ROUTE_1stfl_l =
+				{
+					ROUTE_elevator2 =
+					{
+						ROUTE_mainent3 =
+						{
+							Weight = 2,
+							ROUTE_mainent2 = {},
+						},
+						ROUTE_eastladder =
+						{
+							ROUTE_eastladder2 = {},
+						},
+					},
+					ROUTE_stairs =
+					{
+						Weight = 2,
+						ROUTE_mainent3 =
+						{
+							Weight = 2,
+							ROUTE_mainent2 = {},
+						},
+						ROUTE_eastladder =
+						{
+							ROUTE_eastladder2 = {},
+						},
+					},
+					ROUTE_secacctunn =
+					{
+						Weight = 3,
+						ROUTE_mainent3 = {},
+						ROUTE_westladder = {},
+					},
+				},
+			},
+		},
+	};
+
+	MapRoutes.PLANT_Vault_Door = MapRoutes.FLAG_Enigma_Machine;
+	MapRoutes.PLANT_Vault_Door = MapRoutes.CHECKPOINT_forward_spawn;
+	MapRoutes.DEFEND_osdef_2 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_osdef_3 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_osdef_4 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_enidef_1 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_enidef_2 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_enidef_3 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_enidef_4 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_enidef_5 = MapRoutes.DEFEND_osdef_1;
+	MapRoutes.DEFEND_ax1stfl_2 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_ax1stfl_3 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_ax1stfl_4 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_ax1stfl_5 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_axeng2_1 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_axeng2_2 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_axeng2_3 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.ATTACK_al1stfl_1 = MapRoutes.FLAG_Enigma_Machine;
+	MapRoutes.ATTACK_al1stfl_2 = MapRoutes.FLAG_Enigma_Machine;
+	MapRoutes.ATTACK_al1stfl_3 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.ATTACK_al1stfl_4 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.ATTACK_al1stfl_5 = MapRoutes.DEFEND_ax1stfl_1;
+	MapRoutes.DEFEND_enidef_2 = MapRoutes.DEFEND_enidef_1;
+	MapRoutes.DEFEND_enidef_3 = MapRoutes.DEFEND_enidef_1;
+	MapRoutes.DEFEND_enidef_4 = MapRoutes.DEFEND_enidef_1;
+	MapRoutes.DEFEND_enidef_5 = MapRoutes.DEFEND_enidef_1;
+
+	Util.Routes( MapRoutes );
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = Map.ViewDistance;
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.FLAMETHROWER );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};
+

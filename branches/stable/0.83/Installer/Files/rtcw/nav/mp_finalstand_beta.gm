@@ -1,0 +1,258 @@
+global Map =
+{
+	DontDispenseAmmo = true,
+	Quiet = true,
+	Checkpoint_court_flag = "CHECKPOINT_court_flag",
+	Plant_Alley_Gate = "PLANT_Alley_Gate",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Sewer_Hatch = "PLANT_Sewer_Hatch",
+	Explode_82 = "EXPLODE_82",
+	Explode_9 = "EXPLODE_9",
+	Explode_91 = "EXPLODE_91",
+	Mount_bridge = "MOUNTMG42_bridge",
+	Repair_bridge = "REPAIRMG42_bridge",
+
+	FlagStatus = 0,
+	GateStatus = false,
+	SewerStatus = false,
+	BridgeDyno = 0,
+
+	Alley_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Gate.*" );
+	},
+
+	Alley_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.GateStatus = true;
+
+		print( "Alley_Gate_Destroyed" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_Gate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
+
+		Map.EvalDefense();
+
+		Util.EnableGoal( "ROUTE_gate" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BridgeDyno = 0;
+
+	},
+
+	Bridge_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Alley.*" );
+
+		Map.BridgeDyno += 1;
+	},
+
+	Bridge_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BridgeDyno -= 1;
+	},
+
+	Sewer_Hatch_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Sewer.*" );
+	},
+
+	Sewer_Hatch_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.SewerStatus = true;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Alley_Gate" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSewer.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rGate.*" );
+		Util.EnableGoal( "ROUTE_sewer" );
+
+	},
+
+	court_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.FlagStatus = 1;
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	},
+
+	court_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		Map.FlagStatus = 2;
+
+		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	},
+
+	EvalDefense = function()
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+
+		if ( Map.GateStatus == true ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bPreBridge.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bPreBridgeAS_.*" );
+		}
+		else    //Bridge defense
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRear.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Alley Gate Destroyed.", Map.Alley_Gate_Destroyed );
+	OnTrigger( "Planted at the Alley Gate.", Map.Alley_Gate_Planted );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
+	OnTrigger( "Planted at the Bridge.", Map.Bridge_Planted );
+	OnTrigger( "Defused at the Bridge.", Map.Bridge_Defused );
+	OnTrigger( "the Sewer Hatch Destroyed.", Map.Sewer_Hatch_Destroyed );
+	OnTrigger( "Planted at the Sewer Hatch.", Map.Sewer_Hatch_Planted );
+	OnTrigger( "Axis captures the Tavern Courtyard!", Map.court_flag_Axis_Captured );
+	OnTrigger( "Allies reclaim the Tavern Courtyard!", Map.court_flag_Allies_Captured );
+
+	Util.AddUseWp( "PLANT_Bridge", "bridge1" );
+	Util.AddUseWp( "PLANT_Bridge", "bridge2" );
+
+	botpush = OnTriggerRegion( AABB( -1824.000,-2455.000,-392.000,-1473.000,-1942.000,10.000 ), RegionTrigger.DisableBotPush );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	Util.DisableGoal( ".*", true ); //all but the routes
+	Util.DisableGoal( "ROUTE_gate" );
+	Util.DisableGoal( "ROUTE_sewer" );
+
+	SetGoalPriority( "DEFEND_bLTGate.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT );
+	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "GRENADE_Barricade1", 0.67 );
+	SetGoalPriority( "GRENADE_Barricade", 0.68 );
+	SetGoalPriority( "GRENADE_Barricade", 0.68 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.94 );
+
+	RTCWUtil.LimitToClass( "DEFEND_bLTGate.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
+
+	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Sewer_Hatch" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Barricade.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bStreet.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_streetAS" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLTGate.*" );
+
+	MapRoutes =
+	{
+		PLANT_Bridge =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_sewer =
+				{
+					ROUTE_sewerexit = {},
+					ROUTE_sewerladder = {Weight = 3,},
+				},
+				ROUTE_flagstreet =
+				{
+					ROUTE_flagbuilding = {},
+					ROUTE_gate = {},
+					ROUTE_street = {},
+				},
+			},
+			ROUTE_flagspawn =
+			{
+				ROUTE_flagbuilding = {},
+				ROUTE_gate = {},
+				ROUTE_street = {},
+				ROUTE_sewer =
+				{
+					ROUTE_sewerexit = {},
+					ROUTE_sewerladder = {Weight = 3,},
+				},
+			},
+		},
+		CHECKPOINT_court_flag =
+		{
+			ROUTE_bspawn =
+			{
+				ROUTE_sewerexit = {},
+			},
+		},
+	};
+
+	MapRoutes.ATTACK_rBridge_1 = MapRoutes.PLANT_Bridge;
+	MapRoutes.ATTACK_rBridge_2 = MapRoutes.PLANT_Bridge;
+	MapRoutes.ATTACK_rBridge_3 = MapRoutes.PLANT_Bridge;
+	MapRoutes.ATTACK_rBridge_4 = MapRoutes.PLANT_Bridge;
+	MapRoutes.ATTACK_rBridge_5 = MapRoutes.PLANT_Bridge;
+	MapRoutes.ATTACK_rBridge_6 = MapRoutes.PLANT_Bridge;
+	Util.Routes( MapRoutes );
+	
+	// EntityKill( 146 ); // sewer obj. remove for tweaking pathing
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+};

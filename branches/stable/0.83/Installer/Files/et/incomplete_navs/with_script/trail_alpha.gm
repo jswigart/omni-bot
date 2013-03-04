@@ -1,0 +1,270 @@
+//==========================================================================================
+//
+//	trail_alpha.gm
+//
+//	Who      	When		  What
+//------------------------------------------------------------------------------------------
+//	BMW	16 November 2012	  Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+
+
+	Tank_Barrier_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_Tank_Barrier_1");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_Tank_Barrier_1");
+		Util.MapDebugPrint( "Tank_Barrier_1_Built" );
+	},
+
+	Tank_Barrier_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals(TEAM.AXIS, false, "BUILD_Tank_Barrier_2");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "PLANT_Tank_Barrier_2");
+		Util.MapDebugPrint( "Tank_Barrier_2_Built" );
+	},
+
+	Tank_Barrier_3_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Tank_Barrier_3" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Tank_Barrier_3" );
+		Util.MapDebugPrint( "Tank_Barrier_3_Built" );
+	},
+
+	truck_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+		Util.MapDebugPrint( "truck_Built" );
+	},
+
+	Truck_Damaged = function ( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_truck" );
+		Util.MapDebugPrint( "Truck_Damaged" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Barricade 1 has been constructed.", Map.Tank_Barrier_1_Built );
+	OnTrigger( "Barricade 2 has been constructed.", Map.Tank_Barrier_2_Built );
+	OnTrigger( "Barricade 3 has been constructed.", Map.Tank_Barrier_3_Built );
+	OnTrigger( "The truck has been repaired!", Map.truck_Built );
+	OnTrigger( "^5The truck has been damaged", Map.Truck_Damaged );
+	//Set available goals
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Axis_CP" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_2" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Tank_Barrier_3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Allied_CP" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_AxisSpawn" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
+	//The map does not display a message when command posts are built
+	//so we will just enable planting at CP always
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_CP" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_CP" );
+	
+	//Axis priorities
+	SetGoalPriority( "MOUNTMG42_.*", 0.79 );
+	SetGoalPriority( "BUILD_Tank_Barrier_1", 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Axis_CP", 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Tank_Barrier_2", 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Tank_Barrier_3", 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Allied_CP", 0.80, TEAM.AXIS, CLASS.ENGINEER );
+	//Allied priorities
+	SetGoalPriority( "ESCORT_truck", 0.88, TEAM.ALLIES, CLASS.MEDIC, true );
+	SetGoalPriority( "ESCORT_truck", 0.88, TEAM.ALLIES, CLASS.FIELDOPS, true );
+	SetGoalPriority( "ATTACK_.*", 0.88, TEAM.ALLIES, CLASS.SOLDIER, true );
+	SetGoalPriority( "ATTACK_.*", 0.88, TEAM.ALLIES, CLASS.COVERTOPS, true );
+	SetGoalPriority( "BUILD_truck", 0.89, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Allied_CP", 0.88, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "SNIPE_AxisSpawn", 0.88, TEAM.ALLIES, CLASS.COVERTOPS, true );
+	SetGoalPriority( "PLANT_Tank_Barrier_1", 0.88, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Tank_Barrier_2", 0.90, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Tank_Barrier_3", 0.88, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_Axis_CP", 0.80, TEAM.ALLIES, CLASS.ENGINEER );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=45} );
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		ATTACK_AxisSpawn =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_Tunnel = 
+				{
+					ROUTE_Tunnel2 = {},
+				},
+			},
+		},
+		BUILD_truck =
+		{
+		},
+		BUILD_Tank_Barrier_3 =
+		{
+		},
+		BUILD_Tank_Barrier_1 =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Corner2 =
+				{
+					ROUTE_MiddlePath = {},
+				},
+				ROUTE_Straight2 =
+				{
+					ROUTE_MiddlePath = {},
+				},
+				ROUTE_BehindAxisCP = {},
+			},
+		},
+		BUILD_Tank_Barrier_2 =
+		{
+		},
+		BUILD_Allied_CP =
+		{
+			ROUTE_AllySpawn = 
+			{
+				ROUTE_right = {},
+				ROUTE_left = { Weight = 2, },
+			},
+		},
+		BUILD_Axis_CP =
+		{
+			ROUTE_AxisSpawn = { Weight = 2, },
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Corner2 =
+				{
+					ROUTE_MiddlePath = {},
+				},
+				ROUTE_Straight2 =
+				{
+					ROUTE_MiddlePath = {},
+				},
+			},
+		},
+		PLANT_Tank_Barrier_3 =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_Corner = {},
+			},
+		},
+		PLANT_Allied_CP =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_Corner2 =
+				{
+					Weight = 3,
+					ROUTE_Straight = { Weight = 3 },
+					ROUTE_MiddlePath =
+					{
+						ROUTE_Corner = {},
+					},
+				},
+				ROUTE_Straight2 =
+				{
+					Weight = 2,
+					ROUTE_MiddlePath =
+					{
+						ROUTE_Corner = {},
+					},
+				},
+				ROUTE_BehindAxisCP =
+				{
+					ROUTE_Corner = {},
+				},
+			},
+		},
+		PLANT_Tank_Barrier_1 =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_Corner = {},
+				ROUTE_Straight = { Weight = 2, },
+			},
+			
+		},
+		PLANT_Tank_Barrier_2 =
+		{
+			ROUTE_AllySpawn =
+			{
+				ROUTE_Straight =
+				{
+					ROUTE_Corner2 = { Weight = 2, },
+					ROUTE_Straight2 = {},
+				},
+				ROUTE_Corner =
+				{
+					ROUTE_Straight2 = { Weight = 2, },
+					ROUTE_Corner2 = {},
+				},
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_Axis_CP = MapRoutes.PLANT_Tank_Barrier_3;
+	MapRoutes.ATTACK_AxisSpawn2 = MapRoutes.ATTACK_AxisSpawn;
+	
+	Util.Routes(MapRoutes);
+};

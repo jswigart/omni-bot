@@ -1,0 +1,163 @@
+global Map =
+{
+	Checkpoint_forwardspawn1_flag = "CHECKPOINT_forwardspawn1_flag",
+	Build_allied_cp_open = "BUILD_Command_Post",
+	Build_footbridge = "BUILD_footbridge",
+	Build_axis_cp_open = "BUILD_Command_Post",
+	Destroy_allied_cp_open = "PLANT_Command_Post",
+	Destroy_axis_cp_open = "PLANT_Command_Post",
+	Destroy_footbridge = "PLANT_footbridge",
+	Destroy_north_entrance = "PLANT_North_Entrance",
+	Destroy_south_entrance = "PLANT_South_Entrance",
+	Destroy_fuel_supply = "PLANT_fuel_tank",
+	Destroy_radio_equipment = "PLANT_radio_equipment",
+	Mount_351 = "MOUNTMG42_351",
+	Repair_351 = "REPAIRMG42_351",
+
+	allied_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_cp_open_Built" );
+	},
+
+	axis_cp_open_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_cp_open_Built" );
+	},
+
+	footbridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "footbridge_Built" );
+	},
+
+	footbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "footbridge_Destroyed" );
+	},
+
+	allied_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "allied_cp_open_Destroyed" );
+	},
+
+	axis_cp_open_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "axis_cp_open_Destroyed" );
+	},
+
+	radio_equipment_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "radio_equipment_Destroyed" );
+	},
+
+	south_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "south_entrance_Destroyed" );
+	},
+
+	north_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "north_entrance_Destroyed" );
+	},
+
+	fuel_supply_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "fuel_supply_Destroyed" );
+	},
+
+//~ 	Allies_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		print( "Allies_Capture_Flag" );
+//~ 	},
+
+//~ 	Axis_Capture_Flag = function( trigger )
+//~ 	{
+//~ 		if ( TestMapOn )
+//~ 			{ ETUtil.AutoTestMap(); }
+//~ 
+//~ 		print( "Axis_Capture_Flag" );
+//~ 	},
+};
+
+global OnMapLoad = function()
+{
+	Util.SetGoalPosition(-2537,1973,605, "PLANT_North_Entrance");
+	Util.SetGoalPosition(-2557,-2648,576, "PLANT_South_Entrance");
+	Util.SetGoalPosition( -288, 240, 635, "BUILD_footbridge" );
+	
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.axis_cp_open_Built );
+	OnTrigger( "Allies have built the footbridge!", Map.footbridge_Built );
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.allied_cp_open_Built );
+	OnTrigger( "Axis have destroyed the footbridge!", Map.footbridge_Destroyed );
+	OnTrigger( "Allies have destroyed the South Entrance!", Map.south_entrance_Destroyed );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.allied_cp_open_Destroyed );
+	OnTrigger( "Allies have destroyed the North Entrance!", Map.north_entrance_Destroyed );
+	OnTrigger( "Allies have destroyed the radio equipment!", Map.radio_equipment_Destroyed );
+	OnTrigger( "Allies have destroyed the fuel tank!", Map.fuel_supply_Destroyed );
+//~ 	OnTrigger( "Allies capture the Temple Spawn!", Map.Allies_Capture_Flag );
+//~ 	OnTrigger( "Axis reclaim the Temple Spawn!", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+
+	// Allies Goals
+
+	SetGoalPriority( Map.Build_footbridge, 1.9 );
+	SetGoalPriority( Map.Destroy_north_entrance, 1.7 );
+	SetGoalPriority( Map.Destroy_south_entrance, 1.7 );
+	SetGoalPriority( Map.Build_allied_cp_open, 1.2 );
+	SetGoalPriority( Map.Destroy_fuel_supply, 1.5 );
+	SetGoalPriority( Map.Destroy_radio_equipment, 1.5 );
+
+	// Axis Goals
+
+	SetGoalPriority( Map.Destroy_footbridge, 1.5 );
+	SetGoalPriority( Map.Mount_351, 1.5 );
+
+	
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

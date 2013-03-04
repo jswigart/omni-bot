@@ -1,0 +1,229 @@
+//==========================================================================================
+//
+//	fort_paderborn.gm
+//
+//	Who          	When		What
+//------------------------------------------------------------------------------------------
+//	^8'^0StoerFaktoR	29 January 2012	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	left_Main_gate_Dyno = 0,
+	left_door_Dyno = 0,
+	right_Main_gate_Dyno = 0,
+	right_door_Dyno = 0,
+
+	left_Main_gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_Main_gate_Dyno += 1;
+		Util.MapDebugPrint( "left_Main_gate_Planted" );
+	},
+
+	left_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_door_Dyno += 1;
+		Util.MapDebugPrint( "left_door_Planted" );
+	},
+
+	right_Main_gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_Main_gate_Dyno += 1;
+		Util.MapDebugPrint( "right_Main_gate_Planted" );
+	},
+
+	right_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_door_Dyno += 1;
+		Util.MapDebugPrint( "right_door_Planted" );
+	},
+
+	left_Main_gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_Main_gate_Dyno -= 1;
+		Util.MapDebugPrint( "left_Main_gate_Defused" );
+	},
+
+	left_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_door_Dyno -= 1;
+		Util.MapDebugPrint( "left_door_Defused" );
+	},
+
+	right_Main_gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_Main_gate_Dyno -= 1;
+		Util.MapDebugPrint( "right_Main_gate_Defused" );
+	},
+
+	right_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_door_Dyno -= 1;
+		Util.MapDebugPrint( "right_door_Defused" );
+	},
+
+	left_Main_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_Main_gate_Dyno = 0;
+
+		Util.MapDebugPrint( "left_Main_gate_Destroyed" );
+	},
+
+	left_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.left_door_Dyno = 0;
+
+		Util.MapDebugPrint( "left_door_Destroyed" );
+	},
+
+	right_Main_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_Main_gate_Dyno = 0;
+
+		Util.MapDebugPrint( "right_Main_gate_Destroyed" );
+	},
+
+	right_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.right_door_Dyno = 0;
+
+		Util.MapDebugPrint( "right_door_Destroyed" );
+	},
+
+	scr_SECRET_DOCS_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "scr_SECRET_DOCS_Taken" );
+	},
+
+	scr_SECRET_DOCS_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "scr_SECRET_DOCS_Returned" );
+	},
+
+	scr_SECRET_DOCS_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "scr_SECRET_DOCS_Secured" );
+	},
+
+	forward_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_flag_Axis_Captured" );
+	},
+
+	forward_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forward_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Planted at the MISSING_STRING.", Map.left_Main_gate_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.left_door_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.right_Main_gate_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.right_door_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.left_Main_gate_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.left_door_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.right_Main_gate_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.right_door_Defused );
+	OnTrigger( "MISSING_STRING", Map.left_Main_gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.left_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.right_Main_gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.right_door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.scr_SECRET_DOCS_Taken );
+	OnTrigger( "MISSING_STRING", Map.scr_SECRET_DOCS_Returned );
+	OnTrigger( "MISSING_STRING", Map.scr_SECRET_DOCS_Secured );
+	OnTrigger( "MISSING_STRING", Map.forward_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.forward_flag_Allies_Captured );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

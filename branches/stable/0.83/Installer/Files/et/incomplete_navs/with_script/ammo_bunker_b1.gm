@@ -1,0 +1,75 @@
+global Map =
+{
+	Ammo_Cabinet_north_ammocabinet = "AMMOCAB_north_ammocabinet",
+	Health_Cabinet_north_healthcabinet = "HEALTHCAB_north_healthcabinet",
+	Build_Command_Post = "BUILD_Command_Post",
+	Plant_Ammo_Storage = "PLANT_Ammo_Storage",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_North_bunker_wall = "PLANT_North_bunker_wall",
+	Plant_South_wall = "PLANT_South_wall",
+
+	Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Built" );
+	},
+
+	Ammo_Storage_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Ammo_Storage_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	North_bunker_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "North_bunker_wall_Destroyed" );
+	},
+
+	South_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "South_wall_Destroyed" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Ammo_Storage_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.North_bunker_wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.South_wall_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

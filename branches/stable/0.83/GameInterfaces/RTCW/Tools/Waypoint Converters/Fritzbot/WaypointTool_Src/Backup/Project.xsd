@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="Project" targetNamespace="http://tempuri.org/Project.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/Project.xsd" xmlns:mstns="http://tempuri.org/Project.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="Project" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Files">
+					<xs:complexType>
+						<xs:sequence />
+						<xs:attribute name="nodes" type="xs:string" />
+						<xs:attribute name="actions" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

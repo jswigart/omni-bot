@@ -1,0 +1,291 @@
+//==========================================================================================
+//
+//	beach_bbq_a1.gm
+//
+//	Who	   When		          What
+//------------------------------------------------------------------------------------------
+//	BMW	   04 December 2012	  Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	Beer = 0, //0=returned or captured 1=stolen
+	Sausages = 0,
+
+	Barbeque_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Barbeque" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Barbeque" );
+		
+		Util.MapDebugPrint( "Barbeque_Built" );
+	},
+
+	Deck_Extension_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Deck_Extension" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Deck_Extension" );
+
+		Util.MapDebugPrint( "Deck_Extension_Built" );
+	},
+
+	MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_MG42" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_MG42" );
+		
+		Util.MapDebugPrint( "MG42_Built" );
+	},
+
+	Barbeque_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barbeque" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Barbeque" );
+
+		Util.MapDebugPrint( "Barbeque_Destroyed" );
+	},
+
+	MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_MG42" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_MG42" );
+
+		Util.MapDebugPrint( "MG42_Destroyed" );
+	},
+
+	Side_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_SideWallRoom" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Side_Wall" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_Fridge" );
+
+		Util.MapDebugPrint( "Side_Wall_Destroyed" );
+	},
+
+	beer_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_bbq" );
+		Beer = 1;
+			
+		Util.MapDebugPrint( "beer_Taken" );
+	},
+
+	sausages_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_bbq" );
+		Sausages = 1;
+
+		Util.MapDebugPrint( "sausages_Taken" );
+	},
+
+	beer_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		if ( Sausages == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_bbq" );
+		}
+		Beer = 0;
+		
+		Util.MapDebugPrint( "beer_Returned" );
+	},
+
+	sausages_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		if ( Beer == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_bbq" );
+		}
+		Sausages = 0;
+		
+		Util.MapDebugPrint( "sausages_Returned" );
+	},
+
+	beer_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		if ( Sausages == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_bbq" );
+		}
+		Beer = 0;
+		
+		Util.MapDebugPrint( "beer_Secured" );
+	},
+
+	sausages_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		if ( Beer == 0 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_bbq" );
+		}
+		Sausages = 0;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_bbq" );
+
+		Util.MapDebugPrint( "sausages_Secured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "The Axis have built the Barbeque!", Map.Barbeque_Built );
+	OnTrigger( "The Axis have built the Deck Extension!", Map.Deck_Extension_Built );
+	OnTrigger( "The Allies have built the MG42!", Map.MG42_Built );
+	OnTrigger( "The Allies have destroyed the Barbeque!", Map.Barbeque_Destroyed );
+	OnTrigger( "The Axis have destroyed the MG42!", Map.MG42_Destroyed );
+	OnTrigger( "The Axis have destroyed the Side Wall!", Map.Side_Wall_Destroyed );
+	OnTrigger( "Axis have stolen the Beer!", Map.beer_Taken );
+	OnTrigger( "Axis have stolen the Sausages!", Map.sausages_Taken );
+	OnTrigger( "Allies have returned the Beer!", Map.beer_Returned );
+	OnTrigger( "Allies have returned the Sausages!", Map.sausages_Returned );
+	OnTrigger( "The Axis have secured the Beer!", Map.beer_Secured );
+	OnTrigger( "The Axis have secured the Sausages!", Map.sausages_Secured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Side_Wall" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Barbeque" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Deck_Extension" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AMMOCAB_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "HEALTHCAB_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_MG42" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_.*" );
+
+	SetGoalPriority( "PLANT_Side_Wall", 0.90, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_bbq", 0.91, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "BUILD_Deck_Extension", 0.84, TEAM.AXIS, CLASS.ENGINEER );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=60} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		BUILD_Barbeque =
+		{
+			ROUTE_AxisSpawn = {},
+		},
+		BUILD_MG42 =
+		{
+		},
+		BUILD_Deck_Extension =
+		{
+			ROUTE_AxisSpawn = {},
+		},
+		PLANT_Barbeque =
+		{
+		},
+		PLANT_Side_Wall =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_FarRight = { Weight = 2, },
+				ROUTE_Mid = {},
+			},
+		},
+		PLANT_MG42 =
+		{
+		},
+		PLANT_Deck_Extension =
+		{
+		},
+		FLAG_beer =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_FarRight = { Weight = 2, },
+				ROUTE_Mid = {},
+			},
+		},
+		FLAG_sausages =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_FarRight = { Weight = 2, },
+				ROUTE_Mid = {},
+			},
+		},
+		CAPPOINT_bbq =
+		{
+			ROUTE_Fridge =
+			{
+				ROUTE_LeftFromHouse = { Weight = 2, },
+				ROUTE_RightFromHouse = {},
+			},
+		},
+	};
+	Util.Routes(MapRoutes);
+};

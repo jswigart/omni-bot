@@ -1,0 +1,118 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Explode_173 = "EXPLODE_173",
+	Explode_174 = "EXPLODE_174",
+	Explode_175 = "EXPLODE_175",
+	Explode_396 = "EXPLODE_396",
+	Explode_413 = "EXPLODE_413",
+	Explode_634 = "EXPLODE_634",
+	Explode_635 = "EXPLODE_635",
+	Mount_224 = "MOUNTMG42_224",
+	Mount_254 = "MOUNTMG42_254",
+	Repair_224 = "REPAIRMG42_224",
+	Repair_254 = "REPAIRMG42_254",
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Axis takes the Main Tunnel!", Map.checkpoint01_Axis_Captured );
+	OnTrigger( "Allies take the Main Tunnel!", Map.checkpoint01_Allies_Captured );
+	OnTrigger( "Axis takes the Generator Controls!", Map.checkpoint02_Axis_Captured );
+	OnTrigger( "Allies take the Generator Controls!", Map.checkpoint02_Allies_Captured );
+	OnTrigger( "Axis takes the Radio Room!", Map.checkpoint03_Axis_Captured );
+	OnTrigger( "Allies take the Radio Room!", Map.checkpoint03_Allies_Captured );
+	OnTrigger( "Axis takes the Observation Tower!", Map.checkpoint04_Axis_Captured );
+	OnTrigger( "Allies take the Observation Tower!", Map.checkpoint04_Allies_Captured );
+
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+};

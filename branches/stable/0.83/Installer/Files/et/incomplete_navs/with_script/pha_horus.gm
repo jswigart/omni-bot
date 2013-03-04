@@ -1,0 +1,256 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+	
+	truck_construct_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "truck_construct_Built" );
+	},
+
+	allied_obj12_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_obj12_Built" );
+	},
+
+	allied_obj22_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+	Util.MapDebugPrint( "allied_obj22_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	alliedbridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "alliedbridge_Built" );
+	},
+
+	allied_obj21_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_obj21_Built" );
+	},
+
+	allied_obj2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_obj2_Built" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	alliedbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "alliedbridge_Destroyed" );
+	},
+
+	allied_obj22_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_obj22_Destroyed" );
+	},
+
+	allied_obj2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "obj2 destroyed" );
+	},
+
+	allied_obj12_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_allied_obelisk" );
+
+		Util.MapDebugPrint( "main tunnel destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+
+	allied_obj1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_alliedflag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Upper_Center_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Allied_Left_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Upper_Right_Entrance" );
+
+		Util.MapDebugPrint( "The Tunnel Sealing has been breached !" );
+	},
+
+	allied_obj21_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_obj21_Destroyed" );
+	},
+
+	obj_taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_truck1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_truck2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_alliedflag" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj2" );
+
+		Util.MapDebugPrint( "obj_taken" );
+	},
+
+	obj_ret = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_alliedflag" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj2" );
+
+		Util.MapDebugPrint( "obj_returned" );
+	},
+
+	obj_secure = function( trigger )
+	{
+	
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Upper_Right_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Allied_Left_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Upper_Center_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Tunnel_Sealing" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Allied__Tunnel_Main_Entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Allied_cave_bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_alliedflag" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ESCORT_Truck" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Truck" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck2" );
+		
+		Util.MapDebugPrint( "obj_secure" );
+	},
+
+
+	Allies_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_obj2" );
+		Util.MapDebugPrint( "Allies_Capture_Flag" );
+	},
+
+	Axis_Capture_Flag = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+	 Util.MapDebugPrint( "Axis_Capture_Flag" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+		}
+
+	OnTrigger( "MISSING_STRING", Map.allied_obj21_Built );
+	OnTrigger( "Allies have stolen the Obelisk!", Map.obj_taken );
+	OnTrigger( "Axis have returned the Obelisk!", Map.obj_ret );
+	OnTrigger( "Allied team has secured the Obelisk!", Map.obj_secure );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.truck_construct_Built );
+	OnTrigger( "MISSING_STRING", Map.axis_compost_built_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_obj12_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_obj2_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_obj22_Built );
+	OnTrigger( "MISSING_STRING", Map.alliedbridge_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_obj2_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_obj22_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.alliedbridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_obj21_Destroyed );
+	OnTrigger( "^1The Tunnel Sealing has been breached !", Map.allied_obj1_Destroyed );
+	OnTrigger( "The Allied have destroyed the ^3Main Tunnel Entrance.", Map.allied_obj12_Destroyed );
+ 	OnTrigger( "Allies captured the desert-outpost!", Map.Allies_Capture_Flag );
+ 	OnTrigger( "Axis reclaimed the desert-outpost!", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_truck1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_truck2" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_truck2" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj1" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_obj2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_obj1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_obj2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_alliedflag" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Upper_Center_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Allied_Left_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Upper_Right_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_allied_obelisk" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ESCORT_Truck" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_Truck" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Truck" );
+
+	Util.SetGoalOffset( -15, 0, 0, "PLANT_Tunnel_Sealing" );
+	Util.SetGoalOffset( -25, 0, 0, "PLANT_Allied__Tunnel_Main_Entrance" );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	
+	// Only set on maps with limited sight (e.g. fog)
+	bot.MaxViewDistance = 2400;
+};

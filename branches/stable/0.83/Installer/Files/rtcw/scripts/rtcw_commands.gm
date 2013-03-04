@@ -1,0 +1,656 @@
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["warpto"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTo( _params );
+	},
+
+	Help =
+	{
+		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
+		"Usage: /bot warpto <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wt"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTo( _params );
+	},
+
+	Help =
+	{
+		"Warp To, will teleport player to given goal or waypoint name if cheats are enabled",
+		"Usage: /bot wt <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wb"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.WarpTestBot( _params );
+	},
+
+	Help =
+	{
+		"Warp Test Bot, will teleport testbot to given waypoint name if cheats are enabled",
+		"Usage: /bot wt <goalname|wpname>",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["rollcall"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.RollCall();
+	},
+
+	Help =
+	{
+		"Roll Call, lists each bots name, team, class, and entity",
+		"Usage: /bot rollcall",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["convert"] =
+{
+	Func = function( _params )
+	{
+		ExecScript( "filename.gm" );
+	},
+
+	Help =
+	{
+		"Convert, this command is for developers only",
+		"Usage: /bot convert",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["testsuicide"] =
+{
+	Func = function( _params )
+	{
+		foreach( id and bot in BotTable )
+		{
+			bot.Suicide( _params[0], _params[1] );
+		}
+	},
+
+	Help =
+	{
+		"Set Suicide, sets botSuicide session variable to given param",
+		"Bots will /kill 2 seconds before next spawn",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["moveskill"] =
+{
+	Func = function( _params )
+	{
+		if ( !_params[0] ) {
+			ms = ConfigGet( "CombatMovement","moveskill", ms );
+			print( "Combat Movement Difficulty is", ms );
+			return;
+		}
+
+		if ( _params[0] < 0 || _params[0] > 4 ) {
+			print( "^1ERROR: Invalid moveskill. Valid values are from 0 to 4 " );
+			return;
+		}
+
+		ConfigSet( "CombatMovement","moveskill", _params[0] );
+
+		foreach( id and bot in BotTable )
+		{
+			if ( _params[0] == 4 ) {
+				r = RandInt( 0, 3 );
+				bot.moveskill = r;
+				continue;
+			}
+
+			bot.moveskill = _params[0];
+		}
+
+		print( "Combat Movement difficulty set to ", _params[0] );
+	},
+
+	Help =
+	{
+		"Combat Difficulty, sets persistent combat movement difficulty",
+		"0 = off, 1 = easy, 2 = medium, 3 = hard, 4 = random",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["strafejump"] =
+{
+	Func = function( _params )
+	{
+		if (typeId(_params[0]) != 0) {
+			enabled = ToInt(_params[0]);
+			ConfigSet("Navigation","StrafeJump", enabled);
+
+			foreach(id and bot in BotTable) {
+				if (!bot.ProfileStrafeJump) {
+					bot.StrafeJump = enabled;
+				}
+			}
+
+			print("bot strafe jumping set to " + enabled);
+		}
+	},
+
+	Help =
+	{
+		"Enable or Disable bots usage of strafe jump waypoint flags"
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["tracearty"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.TraceArty( _params[ 0 ] );
+	},
+
+	Help =
+	{
+		"Runs a trace to find arty targets from closest arty goal",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["wp_check"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.FindDuplicateWaypoints( _params[0] );
+	},
+
+	Help =
+	{
+		"Finds any waypoints that have the same position as others",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["checkbots"] =
+{
+	Func = function( _params )
+	{
+		foreach( id and bot in BotTable )
+		{
+			print( bot.Name, bot.GetTeam(), bot.GetClass() );
+		}
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// /bot say <partial name> <string1> <string2> ...
+Commands["say"] =
+{
+	Func = function( _params )
+	{
+		n = "";
+		// find the bot
+		foreach( id and bot in BotTable )
+		{
+			n = bot.Name;
+			if ( n.Find( _params[0] ) != -1 ) {
+				foundMatch = true;
+				break;
+			}
+		}
+
+		if ( foundMatch ) {
+			// build the string with remaining params
+			length = tableCount( _params );
+			s = "";
+			for ( i = 1; i < length; i += 1 ) {
+				s += ( _params[i] + " " );
+			}
+			b = Util.GetBotByName( n );
+			b.Say( s.TrimRight() );
+		}
+	},
+};
+
+Commands["fgs"] =
+{
+	Func = function( _params )
+	{
+		wpTable = table();
+
+		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nPANZER.*\nVENOM.*\nFLAME.*");
+
+		foreach ( id and goal in goalTable )
+		{
+			oldtag = goal.GetTagName();
+			type = goal.GetGoalType();
+			pos = goal.GetPosition();
+			tag = oldtag.ReplaceCharsInSet().TrimRight(); // replaces spaces with _
+
+			if ( Wp.GetWaypointByName(oldtag, wpTable) )
+			{
+				foreach( flag and set in wpTable.flags )
+				{
+					stanceChanged = false;
+					if ( !flag.CompareNoCase(type) )
+					{
+						foreach ( ptype and value in wpTable.property )
+						{
+							if ( ptype == "stance" )
+							{
+								goal.SetProperty("Stance", value);
+								stanceChanged = true;
+								goal.RenderGoal = true;
+								print(goal.GetName(), "stance changed to", value);
+							}
+						}
+					}
+
+					if ( _params[0] == 1 && set == 1 && (flag == "crouch" || flag == "prone" ) )
+					{
+						// can we remove the flag?
+						removeFlag = false;
+						offset = Vector3(0,0,200);
+						tr = TraceLine( wpTable.position, wpTable.position + offset, 0, TRACE.SHOT, 0, false );
+
+						if ( !tr.end )
+						{
+							dist = 200;
+						}
+						else
+						{
+							dist = DistanceBetween(wpTable.position, tr.end);
+						}
+
+						if ( dist > 70 )
+						{
+							removeFlag = true;
+						}
+						else if ( dist > 40 && flag == "prone" )
+						{
+							removeFlag = true;
+						}
+
+						if ( removeFlag )
+						{
+							Wp.SetWaypointFlag(oldtag, flag, false);
+
+							// set the property too so it works without a goals file
+							Wp.SetWaypointProperty(oldtag, "stance", flag);
+
+							print( "waypoint flag", flag, "removed from", tag );
+						}
+
+						// default to property setting
+						if ( !stanceChanged )
+						{
+							goal.SetProperty("Stance", flag);
+							stanceChanged = true;
+							goal.RenderGoal = true;
+							print(goal.GetName(), "stance changed to", flag);
+						}
+					}
+				}
+			}
+
+			tableClear(wpTable);
+		}
+
+		if ( _params[0] == 1) {
+			print("all stances fixed based on waypoint properties and waypoint flags");
+		}
+		else {
+			print("all stances fixed based on waypoint properties. note: use /bot fgs 1 to fix based on flags and properties");
+		}
+
+		ExecCommand("goal_save");
+	},
+
+	Help =
+	{
+		" fix waypoint based goal stances. optionally use /bot fgs 1 to check for waypoint flags",
+	},
+};
+
+Commands["fgp"] =
+{
+	Func = function( _params )
+	{
+		wpTable = table();
+
+		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nROUTE.*\nCAPPOINT.*\n.*ART.*");
+
+		foreach ( id and goal in goalTable )
+		{
+			tag = goal.GetTagName();
+			type = goal.GetGoalType();
+			pos = goal.GetPosition();
+
+			if ( Wp.GetWaypointByName(tag, wpTable) )
+			{
+				foreach( flag and set in wpTable.flags )
+				{
+					if ( !flag.CompareNoCase(type) )
+					{
+						// tagname == wp name and goal type == wp flag. woot
+						// so it's a match. now check z coord for the fubar ones
+						if ( wpTable.position.z - pos.z > 54 )
+						{
+							goal.SetPosition(wpTable.position + Util.WaypointGoalOffset);
+							goal.RenderGoal = true;
+							print ( goal.GetName(), "needs checked. it was detected as being too low and moved" );
+						}
+					}
+				}
+			}
+
+			tableClear(wpTable);
+		}
+
+	},
+
+	Help =
+	{
+		" fix waypoint based goal positions that were incorectly set to ground position",
+	},
+};
+
+Commands["draw_spawns"] =
+{
+	Func = function( _params )
+	{
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (GetEntClass(i) == CLASS.PLAYERSTART)
+			{
+				pos = GroundPoint(GetEntPosition(i));
+				DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Draw spawn points, waypoint tool. draws the bounds of all spawn points in the map",
+		"Usage: /bot draw_spawns",
+	},
+};
+
+Commands["draw_oids"] =
+{
+	Func = function( _params )
+	{
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (GetEntClass(i) == CLASS.GOAL)
+			{
+				DrawEntityAABB( i, 60, COLOR.RED );
+				center = GetEntWorldAABB(i).CenterPoint();
+				DrawText3d(center, i + " : " + GetEntName(i) ,COLOR.WHITE,60,textDrawRadius);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Draw Objective Info Displays, waypoint tool. draws the bounds of all OID's in the map",
+		"Usage: /bot draw_oids",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["ignore"] =
+{
+	Func = function( _params )
+	{
+		if ( typeName(_params[0]) == "float" && _params[1] )
+		{
+			entId = ToInt(_params[0]);
+			time = ToFloat(_params[1]);
+			foreach ( id and bot in BotTable )
+			{
+				bot.IgnoreTarget(entId, time);
+			}
+		}
+	},
+
+	Help =
+	{
+		"Ignore given entity for given time for debug purposes",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// test command
+Commands["imoutside"] =
+{
+	Func = function( _params )
+	{
+		outside = EntityIsOutside(0);
+		msg = "you are inside";
+		if (outside) {
+			msg = "you are outside";
+		}
+		
+		EchoToScreen(10, msg);
+	},
+
+	Help =
+	{
+		"test EntityIsOutside function",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// dump goal definitions from a passed map table
+// /bot goaldef <table> <goal type>
+Commands["goaldef"] =
+{
+	Func = function( _params )
+	{
+		goals = table();
+
+		if ( Map && Map[ _params[0] ] )
+		{
+			switch(_params[1])
+			{
+				case "defend":
+				{
+					foreach ( id and wpName in Map[ _params[ 0 ] ] ) {
+						wpTable = table();
+						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
+
+						if ( tableCount(wpTable) > 0 ) {
+							goals[ id ] = table();
+							goals[ id ].GoalType = "CAMP";
+							goals[ id ].Name = format("CAMP_%s", wpName);
+							goals[ id ].TagName = wpName;
+							goals[ id ].Radius = wpTable.radius;
+							goals[ id ].MinRadius = wpTable.radius;
+							goals[ id ].Stance = "crouch";
+							goals[ id ].AimVectors = table();
+							goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+							goals[ id ].Roles = table();
+							goals[ id ].Roles[ 0 ] = "DEFENDER";
+							goals[ id ].Position = GroundPoint(wpTable.position);
+							goals[ id ].Weapons = table();
+						}
+						else {
+							print(format("Cannot find waypoint %s, aborting", wpName));
+							return;
+						}
+					}
+				}
+				case "as":
+				{
+					foreach ( id and wpName in Map[ _params[ 0 ] ] ) {
+						wpTable = table();
+						wpInfo = Wp.GetWaypointByName( wpName, wpTable );
+
+						if ( tableCount(wpTable) > 0 ) {
+							goals[ id ] = table();
+							goals[ id ].GoalType = "AIRSTRIKE";
+							goals[ id ].Name = format("AIRSTRIKE_%s", wpName);
+							goals[ id ].TagName = wpName;
+							goals[ id ].Radius = wpTable.radius;
+							goals[ id ].MinRadius = wpTable.radius;
+							goals[ id ].Stance = "stand";
+							goals[ id ].AimVectors = table();
+							goals[ id ].AimVectors[ 0 ] = wpTable.facing;
+							goals[ id ].Position = GroundPoint(wpTable.position);
+						}
+						else {
+							print(format("Cannot find waypoint %s, aborting", wpName));
+							return;
+						}
+					}
+				}
+				case "grenade":
+				{
+					if ( !Map.Target ) {
+						print( "expecting Map.Target table for grenade goal type" );
+						return;
+					}
+
+					foreach( id and def in Map.Target ) {
+						goals[ id ] = table();
+						goals[ id ].GoalType = "GRENADE";
+						goals[ id ].IgnoreDead = 0;
+						goals[ id ].Name = format("GRENADE_%s", id);
+						goals[ id ].TargetGoal = def.GrenadeTargetGoalName;
+						goals[ id ].Radius = 32;
+						goals[ id ].MinRadius = 32;
+						goals[ id ].Stance = "stand";
+						goals[ id ].TagName = id;
+
+						if ( def.PrimeGrenade ) {
+							goals[ id ].PrimeGrenade = def.PrimeGrenade;
+						} else {
+							goals[ id ].PrimeGrenade = 1;
+						}
+
+						goals[ id ].Position = GroundPoint(GetEntityWorldSpace( GetGoal(goals[ id ].TargetGoal).GetEntity(), def.Offset[ 0 ] ));
+						goals[ id ].Facing = (GetGoal(def.GrenadeTargetGoalName).GetPosition() - goals[ id ].Position).Normalize();
+					}
+				}
+				default:
+				{
+					print( "invalid goal type for param 1. expecting \"defend\", \"as\" or \"grenade\"" );
+				}
+			}
+
+			Commands["goaldef"].writeGoalDefs(goals, _params[0]);
+		}
+		else
+		{
+			print( format("map table %s does not exist", _params[ 0 ]) );
+		}
+	},
+
+	writeGoalDefs = function(goals, type)
+	{
+		print("writing goal defs");
+
+		gmfile = File();
+		fileName = format("%s_%s_converted.gm", GetMapName(), type);
+		assert( gmfile.Open( fileName, "text", false ) );
+
+		foreach( id and goal in goals ) {
+			str = format("\t%s =", goal.Name);
+			assert( gmfile.Write( str, System.NewLine ) );
+			assert( gmfile.Write( "\t{", System.NewLine ) );
+
+			// add some common props
+			goal.CreateOnLoad = 1;
+			goal.GroupName = "";
+			goal.Orientation = Vector3(0,0,0);
+			goal.TeamAvailability = 0;
+			goal.Version = 1;
+
+			foreach ( property and value in goal ) {
+
+				switch(typeName(value))
+				{
+					case "int":
+					{
+						str = format("\t\t%s = %d,", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
+					}
+					case "float":
+					{
+						str = format("\t\t%s = %f,", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
+					}
+					case "string":
+					{
+						str = format("\t\t%s = \"%s\",", property, value);
+						assert( gmfile.Write( str, System.NewLine ) );
+					}
+					case "vector3":
+					{
+						str = format("\t\t%s = Vec3(%f,%f,%f),", property, value.x, value.y, value.z);
+						assert( gmfile.Write( str, System.NewLine ) );
+					}
+					case "table":
+					{
+						str = format("\t\t%s = ", property);
+						assert( gmfile.Write( str, System.NewLine ) );
+						assert( gmfile.Write( "\t\t{", System.NewLine ) );
+
+						foreach( xid and val in value ) {
+
+							switch(typeName(val))
+							{
+								case "vector3":
+								{
+									str = format("\t\t\t[%d] = Vec3(%f,%f,%f),", xid, val.x, val.y, val.z);
+									assert( gmfile.Write( str, System.NewLine ) );
+								}
+								case "string":
+								{
+									str = format("\t\t\t[%d] = \"%s\",", xid, val);
+									assert( gmfile.Write( str, System.NewLine ) );
+								}
+							};
+						}
+
+						assert( gmfile.Write( "\t\t},", System.NewLine ) );
+					}
+				};
+			}
+
+			assert( gmfile.Write( "\t},", System.NewLine ) );
+		}
+
+		gmfile.Close();
+
+		print("finished writing goal defs");
+	},
+};
+

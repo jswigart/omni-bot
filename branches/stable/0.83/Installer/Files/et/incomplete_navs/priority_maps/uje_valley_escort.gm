@@ -1,0 +1,558 @@
+//==========================================================================================
+//
+//	uje_valley_escort.gm
+//
+//	Who  	When		What
+//------------------------------------------------------------------------------------------
+//	|TP|kaos	11 September 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_CP_Dyno = 0,
+	Axis_CP_Dyno = 0,
+	Axis_MG42_Dyno = 0,
+	Barricade_2_Dyno = 0,
+	barrier_Dyno = 0,
+	generator_1_Dyno = 0,
+	generator_2_Dyno = 0,
+	generator_door_Dyno = 0,
+	tower_door_Dyno = 0,
+
+	Ammo_Cabinet_ammo2 = "AMMOCAB_ammo2",
+	Ammo_Cabinet_east_ammocabinet = "AMMOCAB_east_ammocabinet",
+	Ammo_Cabinet_east_ammocabinet_1 = "AMMOCAB_east_ammocabinet_1",
+	Ammo_Cabinet_west_ammocabinet = "AMMOCAB_west_ammocabinet",
+	Health_Cabinet_757 = "HEALTHCAB_757",
+	Health_Cabinet_east_healthcabinet = "HEALTHCAB_east_healthcabinet",
+	Health_Cabinet_east_healthcabinet_1 = "HEALTHCAB_east_healthcabinet_1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Health_Cabinet_west_healthcabinet = "HEALTHCAB_west_healthcabinet",
+	Artillery_D_246 = "ARTILLERY_D_246",
+	Artillery_D_28 = "ARTILLERY_D_28",
+	Checkpoint_spawnflag = "CHECKPOINT_spawnflag",
+	Build_Allied_CP = "BUILD_Allied_CP",
+	Build_Axis_CP = "BUILD_Axis_CP",
+	Build_Axis_MG42 = "BUILD_Axis_MG42",
+	Build_Barricade_2 = "BUILD_Barricade_2",
+	Build_UJE_tank = "BUILD_UJE_tank",
+	Build_barrier = "BUILD_barrier",
+	Build_generator_1 = "BUILD_generator_1",
+	Build_generator_2 = "BUILD_generator_2",
+	Build_generator_door = "BUILD_generator_door",
+	Build_minecart = "BUILD_minecart",
+	Build_tower_door = "BUILD_tower_door",
+	Plant_Allied_CP = "PLANT_Allied_CP",
+	Plant_Axis_CP = "PLANT_Axis_CP",
+	Plant_Axis_MG42 = "PLANT_Axis_MG42",
+	Plant_Barricade_2 = "PLANT_Barricade_2",
+	Plant_barrier = "PLANT_barrier",
+	Plant_generator_1 = "PLANT_generator_1",
+	Plant_generator_2 = "PLANT_generator_2",
+	Plant_generator_door = "PLANT_generator_door",
+	Plant_tower_door = "PLANT_tower_door",
+	Mount_216 = "MOUNTMG42_216",
+	Mount_246 = "MOUNTMG42_246",
+	Mount_Axis_MG42 = "MOUNTMG42_Axis_MG42",
+	Repair_216 = "REPAIRMG42_216",
+	Repair_246 = "REPAIRMG42_246",
+	Repair_Axis_MG42 = "REPAIRMG42_Axis_MG42",
+	Mobile_MG42_656 = "MOBILEMG42_656",
+	Snipe_488 = "SNIPE_488",
+	Snipe_536 = "SNIPE_536",
+	Snipe_619 = "SNIPE_619",
+	Snipe_651 = "SNIPE_651",
+	Snipe_uptowerguard = "SNIPE_uptowerguard",
+	Snipe_wall1 = "SNIPE_wall1",
+	Defend_Barrier_Plant = "DEFEND_Barrier_Plant",
+	Defend_tower1 = "DEFEND_tower1",
+	Defend_tower2 = "DEFEND_tower2",
+	Defend_wall1 = "DEFEND_wall1",
+	Defend_wall2 = "DEFEND_wall2",
+	Mover_tank = "MOVER_tank",
+	Plant_Mine_anticart1 = "PLANTMINE_anticart1",
+	Plant_Mine_anticart2 = "PLANTMINE_anticart2",
+
+	Allied_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_CP_Built" );
+	},
+
+	Axis_CP_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_CP_Built" );
+	},
+
+	Axis_MG42_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_MG42_Built" );
+	},
+
+	Barricade_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Barricade_2_Built" );
+	},
+
+	UJE_tank_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "UJE_tank_Built" );
+	},
+
+	barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "barrier_Built" );
+	},
+
+	generator_1_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "generator_1_Built" );
+	},
+
+	generator_2_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "generator_2_Built" );
+	},
+
+	generator_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "generator_door_Built" );
+	},
+
+	minecart_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "minecart_Built" );
+	},
+
+	tower_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "tower_door_Built" );
+	},
+
+	Allied_CP_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno += 1;
+		Util.MapDebugPrint( "Allied_CP_Planted" );
+	},
+
+	Axis_CP_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno += 1;
+		Util.MapDebugPrint( "Axis_CP_Planted" );
+	},
+
+	Axis_MG42_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_MG42_Dyno += 1;
+		Util.MapDebugPrint( "Axis_MG42_Planted" );
+	},
+
+	Barricade_2_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barricade_2_Dyno += 1;
+		Util.MapDebugPrint( "Barricade_2_Planted" );
+	},
+
+	barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barrier_Dyno += 1;
+		Util.MapDebugPrint( "barrier_Planted" );
+	},
+
+	generator_1_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_1_Dyno += 1;
+		Util.MapDebugPrint( "generator_1_Planted" );
+	},
+
+	generator_2_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_2_Dyno += 1;
+		Util.MapDebugPrint( "generator_2_Planted" );
+	},
+
+	generator_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_door_Dyno += 1;
+		Util.MapDebugPrint( "generator_door_Planted" );
+	},
+
+	tower_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_door_Dyno += 1;
+		Util.MapDebugPrint( "tower_door_Planted" );
+	},
+
+	Allied_CP_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_CP_Defused" );
+	},
+
+	Axis_CP_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_CP_Defused" );
+	},
+
+	Axis_MG42_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_MG42_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_MG42_Defused" );
+	},
+
+	Barricade_2_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barricade_2_Dyno -= 1;
+		Util.MapDebugPrint( "Barricade_2_Defused" );
+	},
+
+	barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barrier_Dyno -= 1;
+		Util.MapDebugPrint( "barrier_Defused" );
+	},
+
+	generator_1_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_1_Dyno -= 1;
+		Util.MapDebugPrint( "generator_1_Defused" );
+	},
+
+	generator_2_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_2_Dyno -= 1;
+		Util.MapDebugPrint( "generator_2_Defused" );
+	},
+
+	generator_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_door_Dyno -= 1;
+		Util.MapDebugPrint( "generator_door_Defused" );
+	},
+
+	tower_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_door_Dyno -= 1;
+		Util.MapDebugPrint( "tower_door_Defused" );
+	},
+
+	Allied_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_CP_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_CP_Destroyed" );
+	},
+
+	Axis_CP_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_CP_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_CP_Destroyed" );
+	},
+
+	Axis_MG42_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_MG42_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_MG42_Destroyed" );
+	},
+
+	Barricade_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Barricade_2_Dyno = 0;
+
+		Util.MapDebugPrint( "Barricade_2_Destroyed" );
+	},
+
+	barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.barrier_Dyno = 0;
+
+		Util.MapDebugPrint( "barrier_Destroyed" );
+	},
+
+	generator_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_1_Dyno = 0;
+
+		Util.MapDebugPrint( "generator_1_Destroyed" );
+	},
+
+	generator_2_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_2_Dyno = 0;
+
+		Util.MapDebugPrint( "generator_2_Destroyed" );
+	},
+
+	generator_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.generator_door_Dyno = 0;
+
+		Util.MapDebugPrint( "generator_door_Destroyed" );
+	},
+
+	tower_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_door_Dyno = 0;
+
+		Util.MapDebugPrint( "tower_door_Destroyed" );
+	},
+
+	spawnflag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_.*" );
+
+		Util.MapDebugPrint( "spawnflag_Axis_Captured" );
+	},
+
+	spawnflag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+
+		Util.MapDebugPrint( "spawnflag_Allies_Captured" );
+	},
+	
+	MinecarrierAtGen = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "MinecarrierAtGen" );
+	},
+	
+	TankAtBase = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ESCORT_tank" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_UJE_tank" );
+		Util.RemoveGoal("MOVER_tank");
+		print( "TankAtBase" );
+	},
+	
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allies CP constructed.", Map.Allied_CP_Built );
+	OnTrigger( "Axis CP constructed.", Map.Axis_CP_Built );
+	OnTrigger( "Axis Team have built the MG42!!", Map.Axis_MG42_Built );
+	OnTrigger( "MISSING_STRING", Map.Barricade_2_Built );
+	OnTrigger( "MISSING_STRING", Map.UJE_tank_Built );
+	OnTrigger( "^2The barrier has been constructed.", Map.barrier_Built );
+	OnTrigger( "MISSING_STRING", Map.generator_1_Built );
+	OnTrigger( "MISSING_STRING", Map.generator_2_Built );
+	OnTrigger( "MISSING_STRING", Map.generator_door_Built );
+	OnTrigger( "MISSING_STRING", Map.minecart_Built );
+	OnTrigger( "MISSING_STRING", Map.tower_door_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allied_CP_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_CP_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_MG42_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Barricade_2_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.barrier_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.generator_1_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.generator_2_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.generator_door_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.tower_door_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allied_CP_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_CP_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_MG42_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Barricade_2_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.barrier_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.generator_1_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.generator_2_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.generator_door_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.tower_door_Defused );
+	OnTrigger( "MISSING_STRING", Map.Allied_CP_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_CP_Destroyed );
+	OnTrigger( "Allies have destroyed the MG42!!", Map.Axis_MG42_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Barricade_2_Destroyed );
+	OnTrigger( "^2The barrier has been destroyed.", Map.barrier_Destroyed );
+	OnTrigger( "^2The 1st generator has been destroyed.", Map.generator_1_Destroyed );
+	OnTrigger( "^2The 2nd generator has been destroyed.", Map.generator_2_Destroyed );
+	OnTrigger( "^2The door at the 1st generator has been destroyed.", Map.generator_door_Destroyed );
+	OnTrigger( "^2The door at the 2nd generator has been destroyed.", Map.tower_door_Destroyed );
+	OnTrigger( "^2The Axis have captured the flag.", Map.spawnflag_Axis_Captured );
+	OnTrigger( "^2The Allies have captured the flag.", Map.spawnflag_Allies_Captured );
+	OnTrigger( "^2The tank has been escorted to the allied base.", Map.TankAtBase );
+	OnTrigger( "^2The Axis have gained access to the 1st generator-room.", Map.MinecarrierAtGen );
+	
+	Util.SetGoalPosition( -4466.125, -353.567, 28.868, "PLANT_barrier" );
+	Util.SetGoalPosition( 428.389, -104.850, 216.125, "PLANT_generator_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_generator_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_generator_2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_generator_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_tower_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "AMMOCAB_east_ammocabinet_1" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "HEALTHCAB_east_healthcabinet_1" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "AMMOCAB_east_ammocabinet" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "HEALTHCAB_east_healthcabinet" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allied_CP" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_CP" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANTMINE_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "PLANTMINE_.*" );
+
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

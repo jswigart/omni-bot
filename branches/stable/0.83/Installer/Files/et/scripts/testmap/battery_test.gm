@@ -1,0 +1,487 @@
+global Map =
+{
+	Switches =
+	{
+		FrontDoor =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Front Door Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitBots = 2,
+			LimitClass = 0,
+		},
+		
+		LeftDoor =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Left Door Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitBots = 2,
+			LimitClass = 0,
+		},
+
+		RightDoor =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Right Door Switch",
+			LimitTeam = 0, // disabled initially.
+			LimitBots = 2,
+			LimitClass = 0,
+		},
+		
+		Hatch =
+		{
+			Enabled = false,
+			Priority = 0.65,
+			WaypointName = "Hatch",
+			LimitTeam = 0, // disabled initially.
+			LimitBots = 2,
+			LimitClass = 0,
+		},
+	},
+	
+	MapName = "battery",
+	Quiet = true,
+	beach_assault_ramp,
+	generator,
+	Ammo_Cabinet_eastbunker_ammocabinet = "AMMOCAB_eastbunker_ammocabinet",
+	Ammo_Cabinet_mainbunker_ammocabinet = "AMMOCAB_mainbunker_ammocabinet",
+	Health_Cabinet_eastbunker_healthcabinet = "HEALTHCAB_eastbunker_healthcabinet",
+	Health_Cabinet_mainbunker_healthcabinet = "HEALTHCAB_mainbunker_healthcabinet",
+	Checkpoint_westbunker_flag = "CHECKPOINT_westbunker_flag",
+	Build_Allied_Beach_Assault_Ramp = "BUILD_Allied_Beach_Assault_Ramp",
+	Build_Allied_East_beach_MG_nest = "BUILD_Allied_East_beach_MG_nest",
+	Build_Allied_West_beach_MG_nest = "BUILD_Allied_West_beach_MG_nest",
+	Build_Axis_Main_Bunker_MG_nest = "BUILD_Axis_Main_Bunker_MG_nest",
+	Build_Axis_North_West_MG_nest = "BUILD_Axis_North_West_MG_nest",
+	Build_Axis_South_East_MG_nest = "BUILD_Axis_South_East_MG_nest",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_Generator = "BUILD_Generator",
+	Plant_Allied_Beach_Assault_Ramp = "PLANT_Allied_Beach_Assault_Ramp",
+	Plant_Allied_East_beach_MG_nest = "PLANT_Allied_East_beach_MG_nest",
+	Plant_Allied_West_beach_MG_nest = "PLANT_Allied_West_beach_MG_nest",
+	Plant_Axis_Main_Bunker_MG_nest = "PLANT_Axis_Main_Bunker_MG_nest",
+	Plant_Axis_North_West_MG_nest = "PLANT_Axis_North_West_MG_nest",
+	Plant_Axis_South_East_MG_nest = "PLANT_Axis_South_East_MG_nest",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_Generator = "PLANT_Generator",
+	Plant_Gun_Controls = "PLANT_Gun_Controls",
+	Mount_Allied_East_beach_MG_nest = "MOUNTMG42_Allied_East_beach_MG_nest",
+	Mount_Allied_West_beach_MG_nest = "MOUNTMG42_Allied_West_beach_MG_nest",
+	Mount_Axis_Main_Bunker_MG_nest = "MOUNTMG42_Axis_Main_Bunker_MG_nest",
+	Mount_Axis_North_West_MG_nest = "MOUNTMG42_Axis_North_West_MG_nest",
+	Mount_Axis_South_East_MG_nest = "MOUNTMG42_Axis_South_East_MG_nest",
+	Mount_eastbunker_mg42_1 = "MOUNTMG42_eastbunker_mg42_1",
+	Mount_eastbunker_mg42_2 = "MOUNTMG42_eastbunker_mg42_2",
+	Mount_westbunker_mg42_1 = "MOUNTMG42_westbunker_mg42_1",
+	Mount_westbunker_mg42_2 = "MOUNTMG42_westbunker_mg42_2",
+	Repair_Allied_East_beach_MG_nest = "REPAIRMG42_Allied_East_beach_MG_nest",
+	Repair_Allied_West_beach_MG_nest = "REPAIRMG42_Allied_West_beach_MG_nest",
+	Repair_Axis_Main_Bunker_MG_nest = "REPAIRMG42_Axis_Main_Bunker_MG_nest",
+	Repair_Axis_North_West_MG_nest = "REPAIRMG42_Axis_North_West_MG_nest",
+	Repair_Axis_South_East_MG_nest = "REPAIRMG42_Axis_South_East_MG_nest",
+	Repair_eastbunker_mg42_1 = "REPAIRMG42_eastbunker_mg42_1",
+	Repair_eastbunker_mg42_2 = "REPAIRMG42_eastbunker_mg42_2",
+	Repair_westbunker_mg42_1 = "REPAIRMG42_westbunker_mg42_1",
+	Repair_westbunker_mg42_2 = "REPAIRMG42_westbunker_mg42_2",
+
+	Allied_Beach_Assault_Ramp_Built = function( trigger )
+	{
+		Map.beach_assault_ramp = true;
+		
+		TestMap.Pass();
+
+		print( "Allied_Beach_Assault_Ramp_Built" );
+	},
+
+	Allied_East_beach_MG_nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_East_beach_MG_nest_Built" );
+	},
+
+	Allied_West_beach_MG_nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_West_beach_MG_nest_Built" );
+	},
+
+	Axis_Main_Bunker_MG_nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_Main_Bunker_MG_nest_Built" );
+	},
+
+	Axis_North_West_MG_nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_North_West_MG_nest_Built" );
+	},
+
+	Axis_South_East_MG_nest_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_South_East_MG_nest_Built" );
+	},
+
+	Command_Post_Built = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Built" );
+	},
+
+	Generator_Built = function( trigger )
+	{
+		Map.generator = true;
+		
+		TestMap.Pass();
+
+		print( "Generator_Built" );
+	},
+
+	Allied_Beach_Assault_Ramp_Destroyed = function( trigger )
+	{
+		Map.beach_assault_ramp = false;
+		
+		TestMap.Pass();
+
+		print( "Allied_Beach_Assault_Ramp_Destroyed" );
+	},
+
+	Allied_East_beach_MG_nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_East_beach_MG_nest_Destroyed" );
+	},
+
+	Allied_West_beach_MG_nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Allied_West_beach_MG_nest_Destroyed" );
+	},
+
+	Axis_Main_Bunker_MG_nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_Main_Bunker_MG_nest_Destroyed" );
+	},
+
+	Axis_North_West_MG_nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_North_West_MG_nest_Destroyed" );
+	},
+
+	Axis_South_East_MG_nest_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Axis_South_East_MG_nest_Destroyed" );
+	},
+
+	Command_Post_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Command_Post_Destroyed" );
+	},
+
+	Generator_Destroyed = function( trigger )
+	{
+		Map.generator = false;
+		
+		TestMap.Pass();
+
+		print( "Generator_Destroyed" );
+	},
+
+	Gun_Controls_Destroyed = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "Gun_Controls_Destroyed" );
+	},
+
+	westbunker_flag_Axis_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "westbunker_flag_Axis_Captured" );
+	},
+
+	westbunker_flag_Allies_Captured = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "westbunker_flag_Allies_Captured" );
+	},
+	
+	front_door = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "front_door" );
+	},
+
+	left_door = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "left_door" );
+	},
+
+	right_door = function( trigger )
+	{
+		TestMap.Pass();
+
+		print( "right_door" );
+	},
+	
+	hatch_start = function( trigger )
+	{
+		if ( Map.Hatch )
+		{ 
+			Map.Hatch = false;
+			Wp.SetWaypointFlag( "Base Hatch 1", "closed", true );
+			Wp.SetWaypointFlag( "Base Hatch 2", "closed", true );
+			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+		}
+		else
+		{
+			Map.Hatch = true;
+			Wp.SetWaypointFlag( "Base Hatch 1", "closed", false );
+			Wp.SetWaypointFlag( "Base Hatch 2", "closed", false );
+			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+		}
+		
+		TestMap.Pass();
+
+		print( "hatch_start" );
+	},
+	
+	hatch_stop = function( trigger )
+	{
+		//~ TestMap.Pass();
+		
+		print( "hatch_stop" );
+	},
+
+
+	Tests = function()
+	{
+		OnTrigger( "The Allied Beach Assault Ramp has been constructed.", Map.Allied_Beach_Assault_Ramp_Built );
+		OnTrigger( "The Allied East beach MG Nest has been constructed.", Map.Allied_East_beach_MG_nest_Built );
+		OnTrigger( "The Allied West beach MG Nest has been constructed.", Map.Allied_West_beach_MG_nest_Built );
+		OnTrigger( "The Axis Main Bunker MG Nest has been constructed.", Map.Axis_Main_Bunker_MG_nest_Built );
+		OnTrigger( "The Axis North-West MG Nest has been constructed.", Map.Axis_North_West_MG_nest_Built );
+		OnTrigger( "The Axis South-East MG Nest has been constructed.", Map.Axis_South_East_MG_nest_Built );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Command_Post_Built );
+		OnTrigger( "Axis have constructed the Door Controls Generator!", Map.Generator_Built );
+		OnTrigger( "Axis have destroyed the Allied Beach Assault Ramp.", Map.Allied_Beach_Assault_Ramp_Destroyed );
+		OnTrigger( "The Allied East beach MG Nest has been destroyed.", Map.Allied_East_beach_MG_nest_Destroyed );
+		OnTrigger( "The Allied West beach MG Nest has been destroyed.", Map.Allied_West_beach_MG_nest_Destroyed );
+		OnTrigger( "The Axis Main Bunker MG Nest has been destroyed.", Map.Axis_Main_Bunker_MG_nest_Destroyed );
+		OnTrigger( "The Axis North-West MG Nest has been destroyed.", Map.Axis_North_West_MG_nest_Destroyed );
+		OnTrigger( "The Axis South-East MG Nest has been destroyed.", Map.Axis_South_East_MG_nest_Destroyed );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Command_Post_Destroyed );
+		OnTrigger( "Allied team has destroyed the Door Controls Generator!", Map.Generator_Destroyed );
+		OnTrigger( "Allies have destroyed the gun tracking", Map.Gun_Controls_Destroyed );
+		OnTrigger( "Axis capture the West Bunker!", Map.westbunker_flag_Axis_Captured );
+		OnTrigger( "Allies capture the Forward Bunker!", Map.westbunker_flag_Allies_Captured );
+		OnTrigger( "frontdoor_lever1_goto", Map.front_door );
+		OnTrigger( "leftdoor_lever1_goto", Map.left_door );
+		OnTrigger( "rightdoor_lever1_goto", Map.right_door );
+		OnTrigger( "hatch_start", Map.hatch_start );
+		OnTrigger( "hatch_stop", Map.hatch_stop );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		
+		SetGoalPriority( ".*", 1.0 );
+		
+		Util.UpdateSwitchData();
+
+		if ( TestMap.DoObj )
+			 { Map.ObjectiveTests(); }
+
+		if ( TestMap.DoSnipe )
+			 { Map.SnipeTests(); }
+
+		if ( TestMap.DoMG42 )
+			 { Map.MobileMG42Tests(); }
+
+		if ( TestMap.DoObj )
+			 { Map.LastObjectiveTest(); }
+	},
+
+	ObjectiveTests = function()
+	{
+		Wp.SetWaypointFlag( "West Bunker 1", "axis", true );
+		Wp.SetWaypointFlag( "West Bunker 2", "axis", true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_eastbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_eastbunker_mg42_2, 120 );
+		Wp.SetWaypointFlag( "West Bunker 1", "axis", false );
+		Wp.SetWaypointFlag( "West Bunker 2", "axis", false );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Beach_Assault_Ramp, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_westbunker_flag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.FrontDoor, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.Hatch, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.LeftDoor, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Switches.RightDoor, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Generator, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Checkpoint_westbunker_flag, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_westbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_westbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Generator, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.LeftDoor, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.RightDoor, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.Hatch, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Switches.FrontDoor, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_eastbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_eastbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Plant_Allied_Beach_Assault_Ramp, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Beach_Assault_Ramp, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Checkpoint_westbunker_flag, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_westbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_westbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Axis_South_East_MG_nest, 120 );
+		
+		// Covert ops tests
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Generator, 120, false, 6 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Command_Post, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Command_Post, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.COVERTOPS, Map.Plant_Allied_Beach_Assault_Ramp, 120 );
+		
+		// Repair tests
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Beach_Assault_Ramp, 120 );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_Axis_South_East_MG_nest, 120 );
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Allied_West_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_westbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_westbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_eastbunker_mg42_1, 120, false, 2 );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Repair_eastbunker_mg42_2, 120 );
+		
+		Util.KillGoal( ".*" );
+		
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_westbunker_mg42_1, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_westbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Axis_North_West_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Axis_Main_Bunker_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Axis_South_East_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_eastbunker_mg42_1, 120, false, 2 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_eastbunker_mg42_2, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Allied_East_beach_MG_nest, 120 );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Repair_Allied_West_beach_MG_nest, 120 );
+		
+	},
+
+	SnipeTests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	MobileMG42Tests = function()
+	{
+		Map.OpenUpMap();
+	},
+
+	LastObjectiveTest = function()
+	{
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Gun_Controls, 120, true );
+	},
+
+	OpenUpMap = function()
+	{
+		if ( !Map.beach_assault_ramp )
+			{ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_Allied_Beach_Assault_Ramp, 120 ); }
+			
+		if ( !Map.generator )
+			{ TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Plant_Generator, 120 ); }
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+	team = bot.GetTeam();
+	class = bot.GetClass();
+
+	if ( class == CLASS.SOLDIER )
+		{ bot.ChangePrimaryWeapon( WEAPON.MOBILE_MG42 ); }
+
+	if ( class == CLASS.COVERTOPS )
+	{
+		if ( team == TEAM.ALLIES )
+			{ bot.ChangePrimaryWeapon( WEAPON.GARAND ); }
+		else if ( team == TEAM.AXIS )
+			{ bot.ChangePrimaryWeapon( WEAPON.K43 ); }
+	};
+};

@@ -1,0 +1,276 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	
+	Airstrike =
+	{
+		rbridge =
+		{
+			Enabled = true,
+			//Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "rbridge",
+		},
+		bmineladder =
+		{
+			Enabled = true,
+			//Team = ( 1 << TEAM.AXIS ),
+			Waypoint = "bbridge",
+		},
+	},
+	
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+			/*DEFENDER1 = // flex spots
+			{
+				spawnpt = 1,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},*/
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+			/*DEFENDER1 = // flex spots
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},*/
+		},
+	},
+
+	Allied_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Entrance_Destroyed" );
+	},
+
+	Axis_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Entrance_Destroyed" );
+	},
+
+	Allied_Teams_Gold__Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Teams_Gold__Taken" );
+	},
+
+	Axis_Teams_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Teams_Documents_Taken" );
+	},
+
+	bg_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bg_flag_Axis_Captured" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	},
+
+	bg_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bg_flag_Allies_Captured" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	// // bridge disableCM, push
+	ras = OnTriggerRegion( AABB( -335.000,-1179.000,86.000,228.000,-929.000,171.000 ), Map.DisableCombatMove );
+
+	// Register callback functions
+	OnTrigger( "Allied Entrance Destroyed.", Map.Allied_Entrance_Destroyed );
+	OnTrigger( "Axis Entrance Destroyed.", Map.Axis_Entrance_Destroyed );
+	// Planted at Axis Entrance.
+	// Planted at Allied Entrance.
+	OnTrigger( "MISSING_STRING", Map.Allied_Teams_Gold__Taken );
+	OnTrigger( "MISSING_STRING", Map.Axis_Teams_Documents_Taken );
+	OnTrigger( "axis_reclaims_bg_flag", Map.bg_flag_Axis_Captured );
+	OnTrigger( "allies_reclaims_bg_flag", Map.bg_flag_Allies_Captured );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "MOUNTMG42.*", 0.89 );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "CHECKPOINT.*" );
+	
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Entrance" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Teams_Gold_" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWatchtower.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPlant.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Teams_Documents" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bPlant.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
+
+	MapRoutes =
+	{
+		PLANT_Allied_Entrance =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_rmineramp =
+				{
+					ROUTE_rmineladder = 
+					{
+						ROUTE_bmineramp = {},
+					},
+					ROUTE_bmineladder = 
+					{
+						ROUTE_bmineramp = {},
+					},
+				},
+				ROUTE_rfort = {},
+			},
+			ROUTE_rflagspawn = 
+			{
+			
+			},
+		},
+		PLANT_Axis_Entrance =
+		{
+			ROUTE_bspawn =
+			{
+				ROUTE_bentrance =
+				{
+					ROUTE_bmineramp = 
+					{
+						ROUTE_rmineladder = 
+						{
+							ROUTE_rmineramp = {},
+						},
+						ROUTE_bmineladder = 
+						{
+							ROUTE_rmineramp = {},
+						},
+					},
+					ROUTE_bfort = {},
+				},
+			},
+			ROUTE_bflagspawn = 
+			{
+			
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_Axis_Entrance.ROUTE_bjump = MapRoutes.PLANT_Axis_Entrance.ROUTE_bentrance;
+	MapRoutes.FLAG_Axis_Teams_Documents = MapRoutes.PLANT_Axis_Entrance;
+	MapRoutes.FLAG_Allied_Teams_Gold_ = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant1 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant2 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant3 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant4 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant5 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant6 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_bPlant7 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant1 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant2 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant3 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant4 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant5 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant6 = MapRoutes.PLANT_Allied_Entrance;
+	MapRoutes.ATTACK_rPlant7 = MapRoutes.PLANT_Allied_Entrance;
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};

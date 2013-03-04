@@ -1,0 +1,41 @@
+// CSTRIKE DEDICATED SERVER CONFIGURATION SPECIFICATION FOR GUI
+"GameServerConfig"
+{
+	"mp_warmup_time"
+	{
+		"name"	"Warmup time (seconds)"
+		"type"	"string"
+	}
+	"mp_timelimit"
+	{
+		"name"	"Time per map (minutes)"
+		"type"	"string"
+	}
+	"mp_winlimit"
+	{
+		"name" "Win limit (rounds)"
+		"type" "string"
+	}
+
+	"mp_friendlyfire"
+	{
+		"name" "Friendly fire"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1"	"Enabled"
+		}
+	}
+
+	"mp_flashlight"
+	{
+		"name" "Allow flashlight"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1"	"Enabled"
+		}
+	}
+}

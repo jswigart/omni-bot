@@ -1,0 +1,398 @@
+global Map =
+{
+	Quiet = true,
+	Flag_obj_item01 = "FLAG_obj_item01",
+	Plant_Southeast_Gate = "PLANT_Southeast_Gate",
+	Plant_Southwest_Gate = "PLANT_Southwest_Gate",
+	ViewDistance = 4000,
+	DispenseAmmoTime = 1,
+	Debug = false,
+
+	OBStatus = false,
+	SWStatus = false,
+	SEStatus = false,
+	SWDyno = 0,
+	SEDyno = 0,
+
+	Southeast_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SEStatus = true;
+		Map.SEDyno = 0;
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
+	},
+
+	Southeast_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SEDyno += 1;
+	},
+
+	Southeast_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SEDyno -= 1;
+	},
+
+	Southwest_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SWStatus = true;
+		Map.SWDyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
+	},
+
+	Southwest_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SWDyno += 1;
+	},
+
+	Southwest_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SWDyno -= 1;
+	},
+
+	obj_item01_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.OBStatus = true;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTruck.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransArty.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTranscall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_stairs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gatepatrol.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rRoof.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTruck.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bMain.*" );
+
+		// Roof Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLTDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRoofASDocs_.*" );
+	},
+
+	obj_item01_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.OBStatus = false;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTruck.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLadderTruck.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransArty.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTranscall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gatepatrol.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_stairs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTruck.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
+
+		// Roof Allies
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bLTDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_.*" );
+	},
+
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+	LedgeTrigger =
+	{
+		Name = "LedgeTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+	// cover truck ladder if docs are being returned along outer wall
+	DocCarrier =
+	{
+		Name = "DocCarrier",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES && GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+				Util.BotChat( TEAM.AXIS, "sayteam", "Docs are up top!", 1 );
+				//immediate shift
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+				yield();
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLadderTruck.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTruck.*" );
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	Util.AddUseWp( "PLANT_Southeast_Gate", "segate1" );
+	Util.AddUseWp( "PLANT_Southeast_Gate", "segate2" );
+	Util.AddUseWp( "PLANT_Southwest_Gate", "swgate1" );
+	Util.AddUseWp( "PLANT_Southwest_Gate", "swgate2" );
+
+	SpawnLadder = OnTriggerRegion( AABB( -9084.000,-1550.000,-322.000,-9027.000,-1479.000,-22.000 ), Map.LadderTrigger );
+	SpawnLadder2 = OnTriggerRegion( AABB( -9708.000,-906.000,-128.000,-9655.000,-830.000,201.000 ), Map.LadderTrigger );
+
+	Ledge1 = OnTriggerRegion( AABB( -8897.000,-379.000,351.000,-8356.000,107.000,609.000 ), Map.LedgeTrigger );
+	Ledge2 = OnTriggerRegion( AABB( -9676.000,-893.000,351.000,-9507.000,-824.000,441.000 ), Map.LedgeTrigger );
+	Ledge3 = OnTriggerRegion( AABB( -9456.000,-1168.000,351.000,-9309.000,-980.000,425.000 ), Map.LedgeTrigger );
+	Ledge4 = OnTriggerRegion( AABB( -8502.000,-764.000,351.000,-8433.000,-515.000,425.000 ), Map.LedgeTrigger );
+
+	outerwall2 = OnTriggerRegion(AABB( -8104.000,655.000,65.000,-7936.000,768.000,139.000),Map.DocCarrier );
+	outerwall3 = OnTriggerRegion(AABB( -7534.000,-1971.000,65.000,-7345.000,-1854.000,139.000),Map.DocCarrier );
+
+	push = OnTriggerRegion(AABB(-9088.000,-2176.000,-222.000,-8703.000,-1879.000,-84.000),RegionTrigger.DisableBotPush);
+
+	OnTrigger( "the Southeast Gate Destroyed.", Map.Southeast_Gate_Destroyed );
+	OnTrigger( "Planted at the Southeast Gate.", Map.Southeast_Gate_Planted );
+	OnTrigger( "the Southwest Gate Destroyed.", Map.Southwest_Gate_Destroyed );
+	OnTrigger( "Planted at the Southwest Gate.", Map.Southwest_Gate_Planted );
+	OnTrigger( "Allies have stolen the Sacred Obelisk!", Map.obj_item01_Taken );
+	OnTrigger( "Flag returned obj_item01!", Map.obj_item01_Returned );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "ATTACK_bLT.*", {mincamptime = 25, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "DEFEND_gatepatrol.*", {mincamptime = 5, maxcamptime = 10} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.EnableGoal( "CAPPOINT.*" );
+	//Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	Util.SetMaxUsers( 1, "PANZER.*" );
+	Util.SetMaxUsers( 1, "DEFEND_rMain.*" );
+	Util.SetMaxUsers( 1, "GRENADE_stairs.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoof.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gatepatrol.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_stairs.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLTMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Southeast_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Southwest_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_broofAS_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower" );
+
+	SetGoalPriority( "ATTACK_bLTMain.*", 0.55 );
+	SetGoalPriority( "ATTACK_bLTDocs.*", 0.57 );
+	SetGoalPriority( "ATTACK_bLTMain[14]", 0.56 );
+	SetGoalPriority( "DEFEND_LadderTruck.*", 0.6 );
+	RTCWUtil.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
+
+	MapRoutes =
+	{
+		PLANT_Southeast_Gate =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_well =
+				{
+					Weight = 2,
+					ROUTE_westapproach =
+					{
+						ROUTE_keepentrance =
+						{
+							Weight = 3,
+							ROUTE_radio =
+							{
+								ROUTE_westtower = {},
+							},
+						},
+						ROUTE_courtyard =
+						{
+							ROUTE_terraceladder = {},
+							ROUTE_terrace = {},
+						},
+					},
+				},
+				ROUTE_rubble = {},
+				ROUTE_chamber =
+				{
+					ROUTE_towerstairs = {},
+					ROUTE_terrace = { ROUTE_terraceladder = {}, },
+				},
+				ROUTE_westtower =
+				{
+					Weight = 2,
+					ROUTE_secondfloor = {},
+					ROUTE_chamber =
+					{
+						ROUTE_towerstairs = {},
+						ROUTE_terrace = { ROUTE_terraceladder = {}, },
+					},
+				},
+			},
+		},
+		CAPPOINT_truck =
+		{
+			ROUTE_steal =
+			{
+				ROUTE_terraceladder =
+				{
+					ROUTE_southwall = { ROUTE_southwall2 = {}, },
+				},
+				ROUTE_rubble = { ROUTE_radio = {}, },
+				ROUTE_bSpawn =
+				{
+					ROUTE_well = { ROUTE_westapproach = {}, },
+				},
+			},
+		},
+		ATTACK_bTruck1 =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_well = { ROUTE_westapproach = {}, },
+				ROUTE_rubble = { ROUTE_radio = {}, },
+			},
+		},
+		DEFEND_rMain1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_terraceladder = {},
+				ROUTE_towerstairs = {},
+				ROUTE_courtyard =
+				{
+					ROUTE_radio = {},
+				},
+			},
+		},
+		DEFEND_rTruck1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_courtyard = {},
+				ROUTE_courtyard2 = {},
+			},
+		},
+	};
+
+	MapRoutes.PLANT_Southwest_Gate = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.FLAG_obj_item01 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain2 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain3 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain4 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain5 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bMain6 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTMain1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTMain2 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTMain3 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTMain4 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTDocs_1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTDocs_2 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bLTDocs_3 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_broofAS_1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_bRoofASDocs_1 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.AIRSTRIKE_broofAS_2 = MapRoutes.PLANT_Southeast_Gate;
+	MapRoutes.ATTACK_bTruck2 = MapRoutes.ATTACK_bTruck1;
+	MapRoutes.ATTACK_bTruck3 = MapRoutes.ATTACK_bTruck1;
+	MapRoutes.ATTACK_bTruck4 = MapRoutes.ATTACK_bTruck1;
+	MapRoutes.ATTACK_bTruck5 = MapRoutes.ATTACK_bTruck1;
+	MapRoutes.ATTACK_bTruck6 = MapRoutes.ATTACK_bTruck1;
+	MapRoutes.DEFEND_rMain2 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain3 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain4 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain5 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rMain6 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_gatepatrol1 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rRoof_1 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.DEFEND_rTruck2 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck3 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck4 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck5 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck6 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck7 = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.DEFEND_rTruck8 = MapRoutes.DEFEND_rTruck1;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = Map.ViewDistance;
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+
+	RTCWUtil.NoSnipe( bot );
+};

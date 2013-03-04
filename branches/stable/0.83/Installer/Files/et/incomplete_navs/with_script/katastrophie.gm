@@ -1,0 +1,171 @@
+//==========================================================================================
+//
+//	katastrophie.gm
+//
+//	Who	When		What
+//------------------------------------------------------------------------------------------
+//	palota	09 May 2011	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Shield_Generator_Dyno = 0,
+
+
+	Ceiling_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_ceiling");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_ceiling" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Shield_Generator" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_classroom" );
+		Util.MapDebugPrint( "Ceiling_Destroyed" );
+	},
+
+	Vent_House_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_vent_house" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_vent_shaft" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Shield_Generator" );
+		Util.MapDebugPrint( "Vent_House_Destroyed" );
+	},
+
+	Vent_Destroyed = function( trigger )
+	{
+		Util.EnableGoal("ROUTE_vent");
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_vent_shaft" );
+		SetAvailableMapGoals( TEAM.AXIS, true, ".*MG42_generator.*" );
+		Util.MapDebugPrint( "Vent_Destroyed" );
+	},
+
+	Shield_Generator_Planted = function( trigger )
+	{
+		Map.Shield_Generator_Dyno += 1;
+		Util.MapDebugPrint( "Shield_Generator_Planted" );
+	},
+
+	Shield_Generator_Defused = function( trigger )
+	{
+		Map.Shield_Generator_Dyno -= 1;
+		Util.MapDebugPrint( "Shield_Generator_Defused" );
+	},
+
+	Shield_Generator_Destroyed = function( trigger )
+	{
+		Map.Shield_Generator_Dyno = 0;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_generator.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*MG42_generator.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generator.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_inducer.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_inducer.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_inducer" );
+
+		Util.MapDebugPrint( "Shield_Generator_Destroyed" );
+	},
+
+	Shield_Generator_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_inducer.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_inducer.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_inducer" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_generator.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, ".*MG42_generator.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_generator.*" );
+		Util.MapDebugPrint( "Shield_Generator_Built" );
+	},
+
+	Inducer_Planted = function( trigger )
+	{
+		Util.MapDebugPrint( "Inducer_Planted" );
+	},
+
+	Inducer_Defused = function( trigger )
+	{
+		Util.MapDebugPrint( "Inducer_Defused" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "^1The underground classroom has been breached!", Map.Ceiling_Destroyed );
+	OnTrigger( "^1The ventilation housing has been destroyed!", Map.Vent_House_Destroyed );
+	OnTrigger( "^1The vent has been destroyed!", Map.Vent_Destroyed );
+	OnTrigger( "^3Dynamite planted at the shield generator.", Map.Shield_Generator_Planted );
+	OnTrigger( "^3Dynamite defused at the shield generator.", Map.Shield_Generator_Defused );
+	OnTrigger( "^1Shield Generator has been destroyed.", Map.Shield_Generator_Destroyed );
+	OnTrigger( "^1Shield Generator has been constructed.", Map.Shield_Generator_Built );
+	OnTrigger( "^3Dynamite planted at the EMF inducer.", Map.Inducer_Planted );
+	OnTrigger( "^3Dynamite defused at the EMF inducer.", Map.Inducer_Defused );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal("ROUTE_ceiling");
+	Util.DisableGoal("ROUTE_vent");
+	Util.EnableGoal("AMMOCAB_.*");
+	Util.EnableGoal("HEALTHCAB_.*");
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_generator.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Shield_Generator" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_generator.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_ceiling" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_vent_house" );
+
+
+	// Max users per goal
+	foreach (goal in { "DEFEND_.*", ".*MG42_.*", "GRENADE_.*",
+		"PLANT_ceiling", "PLANT_vent_house", "PLANT_vent_shaft" }){
+		Util.SetMaxUsers(1, goal);
+	}
+
+	// Camp times
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=10, MaxCampTime=60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	MapRoutes =
+	{
+		PLANT_Shield_Generator = {
+			ROUTE_allied_spawn = {
+				ROUTE_ceiling = {
+				},
+				ROUTE_vent = {
+				},
+				ROUTE_north_east = { ROUTE_south_east = {}},
+				ROUTE_south_west = { ROUTE_south_east = {}},
+				ROUTE_south_east = {
+				},
+			}
+		},
+		PLANT_inducer = {
+			ROUTE_allied_spawn = {
+				ROUTE_ceiling = {
+				},
+				ROUTE_vent = {
+				},
+				ROUTE_north_east = { ROUTE_south_east = {}},
+				ROUTE_south_west = { ROUTE_south_east = {}},
+				ROUTE_south_east = {
+				},
+			}
+		},
+	};
+	MapRoutes.ATTACK_generator1 = MapRoutes.PLANT_Shield_Generator;
+	MapRoutes.ATTACK_generator2 = MapRoutes.ATTACK_generator1;
+	MapRoutes.ATTACK_inducer1 = MapRoutes.PLANT_inducer;
+	MapRoutes.ATTACK_inducer2 = MapRoutes.ATTACK_inducer1;
+	MapRoutes.ATTACK_inducer3 = MapRoutes.ATTACK_inducer1;
+	MapRoutes.ATTACK_inducer4 = MapRoutes.ATTACK_inducer1;
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	bot.MaxViewDistance = 2900;
+};

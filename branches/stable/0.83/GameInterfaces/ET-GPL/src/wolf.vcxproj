@@ -1,0 +1,582 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Dedicated|Win32">
+      <Configuration>Debug Dedicated</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Dedicated|Win32">
+      <Configuration>Release Dedicated</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B604B554-38D6-4BC8-9F7F-D6BC8719A653}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">.\Debug_Dedicated\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">.\Debug_Dedicated\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">.\Release_Dedicated\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">.\Release_Dedicated\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/wolf.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Debug/wolf.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <ResourceOutputFileName>win32\winquake.res</ResourceOutputFileName>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Message>compile libcurl</Message>
+      <Command>cd curl-7.12.2\lib
+nmake /f Makefile.vc6 CFG=debug
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>dinput8.lib;winmm.lib;wsock32.lib;Iphlpapi.lib;curl-7.12.2\lib\libcurld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Debug/ET.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/ET.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Debug/ET.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug_Dedicated/wolf.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DEDICATED;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Debug_Dedicated/wolf.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug_Dedicated/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug_Dedicated/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug_Dedicated/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <ResourceOutputFileName>win32\winquake.res</ResourceOutputFileName>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;wsock32.lib;.\botlib\Debug\botlib.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Debug_Dedicated/WolfDED.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug_Dedicated/WolfDED.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Debug_Dedicated/WolfDED.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <CustomBuildStep>
+      <Command>cd curl-7.12.2
+cd lib
+nmake /f Makefile.vc6 CFG=release
+</Command>
+      <Outputs>libcurl.lib;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/wolf.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Release/wolf.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Message>compile libcurl</Message>
+      <Command>cd curl-7.12.2\lib
+nmake /f Makefile.vc6 CFG=release
+</Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>dinput8.lib;winmm.lib;wsock32.lib;Iphlpapi.lib;curl-7.12.2\lib\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/ET.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libc;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Release/ET.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Release/ET.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release_Dedicated/wolf.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;DEDICATED;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Release_Dedicated/wolf.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release_Dedicated/</AssemblerListingLocation>
+      <ObjectFileName>.\Release_Dedicated/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release_Dedicated/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;wsock32.lib;.\botlib\Release\botlib.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release_Dedicated/WolfDED.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libc;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Release_Dedicated/WolfDED.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>.\Release_Dedicated/WolfDED.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="client\cl_cgame.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_cin.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_console.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_input.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_keys.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_net_chan.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_parse.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_scrn.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\cl_ui.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_load.c" />
+    <ClCompile Include="qcommon\cm_patch.c" />
+    <ClCompile Include="qcommon\cm_polylib.c" />
+    <ClCompile Include="qcommon\cm_test.c" />
+    <ClCompile Include="qcommon\cm_trace.c" />
+    <ClCompile Include="qcommon\cmd.c" />
+    <ClCompile Include="qcommon\common.c" />
+    <ClCompile Include="qcommon\cvar.c" />
+    <ClCompile Include="qcommon\files.c" />
+    <ClCompile Include="qcommon\huffman.c" />
+    <ClCompile Include="qcommon\md4.c" />
+    <ClCompile Include="qcommon\msg.c" />
+    <ClCompile Include="qcommon\net_chan.c" />
+    <ClCompile Include="null\null_client.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="null\null_input.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="null\null_snddma.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="game\q_math.c" />
+    <ClCompile Include="game\q_shared.c" />
+    <ClCompile Include="client\snd_adpcm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\snd_dma.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\snd_mem.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\snd_mix.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="client\snd_wavelet.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\sv_bot.c" />
+    <ClCompile Include="server\sv_ccmds.c" />
+    <ClCompile Include="server\sv_client.c" />
+    <ClCompile Include="server\sv_game.c" />
+    <ClCompile Include="server\sv_init.c" />
+    <ClCompile Include="server\sv_main.c" />
+    <ClCompile Include="server\sv_net_chan.c" />
+    <ClCompile Include="server\sv_snapshot.c" />
+    <ClCompile Include="server\sv_world.c" />
+    <ClCompile Include="qcommon\unzip.c" />
+    <ClCompile Include="qcommon\vm.c" />
+    <ClCompile Include="qcommon\vm_interpreted.c" />
+    <ClCompile Include="qcommon\vm_x86.c" />
+    <ClCompile Include="win32\win_eh.cpp" />
+    <ClCompile Include="win32\win_input.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="win32\win_main.c" />
+    <ClCompile Include="win32\win_net.c" />
+    <ClCompile Include="win32\win_shared.c" />
+    <ClCompile Include="win32\win_snd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="win32\win_syscon.c" />
+    <ClCompile Include="win32\win_wndproc.c" />
+    <ClCompile Include="qcommon\dl_main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="qcommon\dl_main_curl.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="qcommon\dl_main_stubs.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game\bg_public.h" />
+    <ClInclude Include="botai\botai.h" />
+    <ClInclude Include="game\botlib.h" />
+    <ClInclude Include="cgame\cg_public.h" />
+    <ClInclude Include="client\client.h" />
+    <ClInclude Include="qcommon\cm_local.h" />
+    <ClInclude Include="qcommon\cm_patch.h" />
+    <ClInclude Include="qcommon\cm_polylib.h" />
+    <ClInclude Include="qcommon\cm_public.h" />
+    <ClInclude Include="game\g_public.h" />
+    <ClInclude Include="ui\keycodes.h" />
+    <ClInclude Include="client\keys.h" />
+    <ClInclude Include="game\q_shared.h" />
+    <ClInclude Include="qcommon\qcommon.h" />
+    <ClInclude Include="qcommon\qfiles.h" />
+    <ClInclude Include="renderer\qgl.h" />
+    <ClInclude Include="server\server.h" />
+    <ClInclude Include="client\snd_local.h" />
+    <ClInclude Include="client\snd_public.h" />
+    <ClInclude Include="game\surfaceflags.h" />
+    <ClInclude Include="renderer\tr_local.h" />
+    <ClInclude Include="renderer\tr_public.h" />
+    <ClInclude Include="cgame\tr_types.h" />
+    <ClInclude Include="ui\ui_public.h" />
+    <ClInclude Include="qcommon\unzip.h" />
+    <ClInclude Include="qcommon\vm_local.h" />
+    <ClInclude Include="win32\win_local.h" />
+    <ClInclude Include="..\main\ui\menudef.h" />
+    <ClInclude Include="qcommon\dl_local.h" />
+    <ClInclude Include="qcommon\dl_public.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\main\ui\addfilter.menu" />
+    <None Include="..\main\ui\bookp.menu" />
+    <None Include="..\main\ui\bookv.menu" />
+    <None Include="..\main\ui\bookz.menu" />
+    <None Include="..\main\ui\cdkey.menu" />
+    <None Include="..\main\ui\cinematicmenu.menu" />
+    <None Include="..\main\ui\clipboard.menu" />
+    <None Include="..\main\ui\connect.menu" />
+    <None Include="..\main\ui\controls.menu" />
+    <None Include="..\main\ui\createfavorite.menu" />
+    <None Include="..\main\ui\createserver.menu" />
+    <None Include="..\main\ui\credit.menu" />
+    <None Include="..\main\ui\default.menu" />
+    <None Include="..\main\ui\demo.menu" />
+    <None Include="..\main\ui\demo_quit.menu" />
+    <None Include="..\main\ui\endofgame.menu" />
+    <None Include="..\main\ui\error.menu" />
+    <None Include="..\main\ui\fight.menu" />
+    <None Include="..\main\ui\findplayer.menu" />
+    <None Include="..\main\ui\help.menu" />
+    <None Include="..\main\ui\hud.menu" />
+    <None Include="..\main\ui\hud.txt" />
+    <None Include="..\main\ui\ingame.menu" />
+    <None Include="..\main\ui\ingame.txt" />
+    <None Include="..\main\ui\ingame_about.menu" />
+    <None Include="..\main\ui\ingame_addbot.menu" />
+    <None Include="..\main\ui\ingame_callvote.menu" />
+    <None Include="..\main\ui\ingame_controls.menu" />
+    <None Include="..\main\ui\ingame_help.menu" />
+    <None Include="..\main\ui\ingame_join.menu" />
+    <None Include="..\main\ui\ingame_leave.menu" />
+    <None Include="..\main\ui\ingame_loadsave.menu" />
+    <None Include="..\main\ui\ingame_options.menu" />
+    <None Include="..\main\ui\ingame_orders.menu" />
+    <None Include="..\main\ui\ingame_player.menu" />
+    <None Include="..\main\ui\ingame_system.menu" />
+    <None Include="..\main\ui\ingame_vote.menu" />
+    <None Include="..\main\ui\joinserver.menu" />
+    <None Include="..\main\ui\load.menu" />
+    <None Include="..\main\ui\main.menu" />
+    <None Include="..\main\ui\menus.txt" />
+    <None Include="..\main\ui\min_hud.menu" />
+    <None Include="..\main\ui\mod.menu" />
+    <None Include="..\main\ui\multiplayer.menu" />
+    <None Include="..\main\ui\notebook.menu" />
+    <None Include="..\main\ui\options.menu" />
+    <None Include="..\main\ui\ordershelp.menu" />
+    <None Include="..\main\ui\password.menu" />
+    <None Include="..\main\ui\play.menu" />
+    <None Include="..\main\ui\player.menu" />
+    <None Include="..\main\ui\powerup.menu" />
+    <None Include="..\main\ui\quit.menu" />
+    <None Include="..\main\ui\quitcredit.menu" />
+    <None Include="..\main\ui\resetscore.menu" />
+    <None Include="..\main\ui\score.menu" />
+    <None Include="..\main\ui\serverinfo.menu" />
+    <None Include="..\main\ui\setup.menu" />
+    <None Include="..\main\ui\skirmish.menu" />
+    <None Include="..\main\ui\system.menu" />
+    <None Include="..\main\ui\teamscore.menu" />
+    <None Include="..\main\ui\vid_restart.menu" />
+    <None Include="..\main\ui\wm_limbo.menu" />
+    <None Include="..\main\ui\wm_pickplayer.menu" />
+    <None Include="..\main\ui\wm_pickteam.menu" />
+    <None Include="..\main\ui\wm_quickmessage.menu" />
+    <None Include="..\main\scripts\ai.shader" />
+    <None Include="..\main\scripts\alpha.shader" />
+    <None Include="..\main\scripts\blacksmokeanim.shader" />
+    <None Include="..\main\scripts\blacksmokeanimb.shader" />
+    <None Include="..\main\scripts\clipboard.shader" />
+    <None Include="..\main\scripts\common.shader" />
+    <None Include="..\main\scripts\cursorhints.shader" />
+    <None Include="..\main\scripts\decals.shader" />
+    <None Include="..\main\scripts\eerie.shader" />
+    <None Include="..\main\scripts\expblue.shader" />
+    <None Include="..\main\scripts\explode1.shader" />
+    <None Include="..\main\scripts\fijets.shader" />
+    <None Include="..\main\scripts\firest.shader" />
+    <None Include="..\main\scripts\flamethrower.shader" />
+    <None Include="..\main\scripts\funnel.shader" />
+    <None Include="..\main\scripts\gfx.shader" />
+    <None Include="..\main\scripts\heat.shader" />
+    <None Include="..\main\scripts\lights.shader" />
+    <None Include="..\main\scripts\liquid.shader" />
+    <None Include="..\main\scripts\maxx.shader" />
+    <None Include="..\main\scripts\menu.shader" />
+    <None Include="..\main\scripts\metal.shader" />
+    <None Include="..\main\scripts\models.shader" />
+    <None Include="..\main\scripts\netest.shader" />
+    <None Include="..\main\scripts\oldwolf.shader" />
+    <None Include="..\main\scripts\organics.shader" />
+    <None Include="..\main\scripts\particle.shader" />
+    <None Include="..\main\scripts\q3view.shader" />
+    <None Include="..\main\scripts\sfx.shader" />
+    <None Include="..\main\scripts\skin.shader" />
+    <None Include="..\main\scripts\sky.shader" />
+    <None Include="..\main\scripts\solo.shader" />
+    <None Include="..\main\scripts\terrain.shader" />
+    <None Include="..\main\scripts\test.shader" />
+    <None Include="..\main\scripts\twiltb.shader" />
+    <None Include="..\main\scripts\twiltb2.shader" />
+    <None Include="..\main\scripts\ui.shader" />
+    <None Include="..\main\scripts\ui_hud.shader" />
+    <None Include="..\main\scripts\ui_kc.shader" />
+    <None Include="..\main\scripts\ui_notebook.shader" />
+    <None Include="..\main\scripts\viewflames.shader" />
+    <None Include="..\main\scripts\walls.shader" />
+    <None Include="..\main\scripts\z_light.shader" />
+    <None Include="docs\Changelog" />
+    <None Include="docs\Notes" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="botlib\botlib.vcxproj">
+      <Project>{efa65954-05a8-43c4-b4fe-fafe8e678ab7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="renderer\renderer.vcxproj">
+      <Project>{7906cc4f-e230-4049-a3ef-ea7f64e73dde}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="splines\Splines.vcxproj">
+      <Project>{0c24e6e9-2b9f-43ae-adb7-b7693966f41e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

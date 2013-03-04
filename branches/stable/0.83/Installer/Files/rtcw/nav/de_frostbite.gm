@@ -1,0 +1,748 @@
+global Map =
+{
+	Quiet = true,
+	FocusPrimary = false,
+	DispenseAmmoTime = 1,
+	Debug = false,
+	DontDispenseAmmo = true,
+
+	Destroy_service_door = "PLANT_service_door",
+	Destroy_wall = "PLANT_storage_wall",
+	Destroy_main_door = "PLANT_main_door",
+	Mount_spawn_truck_mg = "MOUNTMG42_spawn_truck_mg",
+	Repair_wall_truck_mg = "REPAIRMG42_wall_truck_mg",
+	Mount_spawn_truck_mg = "MOUNTMG42_spawn_truck_mg",
+	Repair_wall_truck_mg = "REPAIRMG42_wall_truck_mg",
+	Checkpoint = "CHECKPOINT_forward_respawn",
+	FLAG_War_Documents = "FLAG_War_Documents",
+	Cappoint_Transmitter = "CAPPOINT_Transmitter",
+
+	//set status' for conditionals
+	MainDoorStatus = 0, //intact
+	ServiceDoorStatus = 0, //intact
+	WallStatus = 0, //intact
+	FlagStatus = 0, //0 nobody, 1 axis, 2 allies
+	DocStatus = 0, //home
+	AxisPushedForward = true, // they start pushed forward
+	PanzHitlerFired = false, // Bots have not cleared hitler room yet
+	PanzLowerFired = false,
+	fallback = false,
+
+	//Dyno Counters
+	MainDoorDyno = 0,
+	ServiceDoorDyno = 0,
+	WallDyno = 0,
+	PanzHitlerBots = 0,
+	PanzLowerBots = 0,
+
+	//set to false if you don't want axis /killing when docs are returned
+	Suicide = MAP_SUICIDE,
+
+	Airstrike =
+	{
+		garageas =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
+			Waypoint = "door_as_1", // optional: defining this will have them go to given waypoint and then throw a/s
+		},
+	},
+
+
+	Navigation =
+	{
+		transladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+		railjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.PressButton( BTN.JUMP );
+				sleep( 0.5 );
+			},
+		},
+		rampjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				sleep( 0.25 );
+				_this.Bot.PressButton( BTN.JUMP );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 0.25 );
+				sleep( 0.26 );
+				_this.Bot.HoldButton( BTN.JUMP, 3 );
+
+				sleep( 3 );
+			},
+		},
+		bpanzhitler =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !Map.PanzHitlerFired && Map.PanzHitlerBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "bPanzHitler" );
+					Map.PanzHitlerBots += 1;
+					Map.PanzHitlerFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							sleep( 4 ); // Wait for axis to arrive
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzHitlerBots -= 1;
+				}
+				yield();
+			},
+		},
+		bpanzlower =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !Map.PanzLowerFired && Map.PanzLowerBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "bpanzlower" );
+					Map.PanzLowerBots += 1;
+					Map.PanzLowerFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							sleep( 2 ); // Wait for axis to arrive
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.PanzLowerBots -= 1;
+				}
+				yield();
+			},
+		},
+	},
+
+	allies_capture = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+		Map.DontDispenseAmmo = false;
+
+		//move on to service door
+		if ( !Map.FocusPrimary ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_service_door );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
+
+		//focus the action on the documents
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Cp_Attack.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlagArt.*" );
+
+		Map.Airstrike.garageas.Enabled = false;
+
+		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	},
+
+	axis_capture = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+
+		if ( Map.DocStatus == 0 ) {
+			//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_flag" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_2" );
+		}
+
+		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
+	},
+
+	main_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.MainDoorStatus = 1;
+		Util.EnableGoal( "ROUTE_lowercp" );
+		Wp.SetWaypointFlag( "lowerhack", "closed", false );
+		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
+
+		if ( Map.DocStatus == 0 && Map.AxisPushedForward == true ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_CP_Lower.*" );
+		}
+	},
+
+	Dyno_Plant_Main = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//bots shouldnt attempt defuse
+		Util.DisableGoal( "DEFUSE_main.*" );
+
+		Map.MainDoorDyno += 1;
+	},
+
+	Dyno_Defuse_Main = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.MainDoorDyno -= 1;
+	},
+
+	wall_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WallStatus = 1;
+		Util.EnableGoal( "ROUTE_wallroute" );
+		Wp.SetWaypointFlag( "wallhack", "closed", false );
+		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_wallroute" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		Wp.SetWaypointFlag( "WallJump","closed",true );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+	},
+
+	Dyno_Plant_Wall = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//bots shouldnt attempt defuse
+		Util.DisableGoal( "DEFUSE_storage.*" );
+
+		Map.WallDyno += 1;
+	},
+
+	Dyno_Defuse_Wall = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WallDyno -= 1;
+	},
+
+	service_door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.ServiceDoorStatus = 1;
+
+		//move on to storage wall
+		if ( !Map.FocusPrimary ) {
+			//SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_wall );	// Martin - 12/20/09 - Makes it much easier for axis if this is blown
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_office" );
+	},
+
+	Dyno_Plant_Service = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		//bots shouldnt attempt defuse if they don't own flag
+		if ( Map.FlagStatus != 1 ) {
+			Util.DisableGoal( "DEFUSE_service.*" );
+		}
+
+		Map.ServiceDoorDyno += 1;
+	},
+
+	Dyno_Defuse_Service = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.ServiceDoorDyno -= 1;
+	},
+
+	Documents_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = 1;
+
+		//focus on transmitter
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Deliver_Defense.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Deliver_Support.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Doc_Attack.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Doc_Defense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rCourtyard" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCourtyard.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Defense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bGarage" );
+
+		Map.AxisPushedForward = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		//axis should spawn at garage
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 2 );
+			}
+		}
+
+	},
+
+	Documents_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.DocStatus = 0;
+
+		//back to doc area
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Deliver_Defense.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Deliver_Support.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bGarage" );
+
+		//if allowed, axis should /kill and spawn back at default (if close enough to spawn time)
+		//axis should spawn at default
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+
+				//distance check instead?
+				if ( Map.Suicide && bot.GetReinforceTime() < 8 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_service_door );
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_wall );
+
+		Map.FocusPrimary = true;
+	},
+
+	// if allies are all down, axis will push forward
+	alive_watch = function()
+	{
+		while ( 1 )
+		{
+			if ( Map.DocStatus == 0 && !Map.AxisPushedForward && RTCWUtil.IsTeamDead( TEAM.ALLIES ) ) {
+				// guess there should be a spawn time check too ...
+				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "push forward!" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Cp_Defense.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint );
+				Map.AxisPushedForward = true;
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
+			}
+
+			sleep( 1 );
+		}
+	},
+	Fallback =
+	{
+		Name = "Fallback",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( GetEntTeam( ent ) == TEAM.ALLIES && Map.fallback == false ) {
+				Util.MapDebugPrint( "Falling back!" );
+				Map.fallback = true;
+				Map.AxisPushedForward = false;
+
+				if ( Map.DocStatus == 0 ) {
+					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
+				}
+
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Lower.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
+				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+
+
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	ViewDstance = 10000,
+	SpawnTrigger =
+	{
+		Name = "SpawnTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = 100;
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.MaxViewDistance = Map.ViewDistance;
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	Util.AddUseWp( "PLANT_storage_wall", "wallplant" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Allies capture the Upper Complex!", Map.allies_capture );
+	OnTrigger( "Axis reclaims the Upper Complex!", Map.axis_capture );
+	OnTrigger( "The Service Door has been breached!", Map.service_door_Destroyed );
+	OnTrigger( "The Main Door has been breached!", Map.main_door_Destroyed );
+	OnTrigger( "The Storage Wall has been breached!", Map.wall_Destroyed );
+	OnTrigger( "Planted at the main door.", Map.Dyno_Plant_Main );
+	OnTrigger( "Defused at the main door.", Map.Dyno_Defuse_Main );
+	OnTrigger( "Planted at the storage wall.", Map.Dyno_Plant_Wall );
+	OnTrigger( "Defused at the storage wall.", Map.Dyno_Defuse_Wall );
+	OnTrigger( "Planted at the service door.", Map.Dyno_Plant_Service );
+	OnTrigger( "Defused at the service door.", Map.Dyno_Defuse_Service );
+	OnTrigger( "Allies have stolen the War Documents!", Map.Documents_Taken );
+	OnTrigger( "Flag returned War Documents!", Map.Documents_Returned );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	//OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	// Martin - testing with this disabled
+	//bsouthspawnpush = OnTriggerRegion(AABB(-4573.000,-491.000,-192.000,-4375.000,-303.000,-118.000), Map.SpawnTrigger);
+	//bnorthspawnpush = OnTriggerRegion(AABB(-4968.000,-104.000,-192.000,-4571.000,360.000,-118.000), Map.SpawnTrigger);
+	wallpush = OnTriggerRegion( AABB( -2872.000,1470.000,-152.000,-2639.000,1768.000,121.000 ), RegionTrigger.DisableBotPush );
+	fallback1 = OnTriggerRegion( AABB( -567.000,675.000,255.000,-529.000,736.000,329.000 ), Map.Fallback );
+	fallback2 = OnTriggerRegion( AABB( -417.000,-28.000,3.000,-375.000,220.000,77.000 ), Map.Fallback );
+	fallback3 = OnTriggerRegion( AABB( -381.000,-496.000,223.000,-255.000,-458.000,297.000 ), Map.Fallback );
+	fallback4 = OnTriggerRegion( AABB( -1286.000,1263.000,3.000,-1245.000,1456.000,77.000 ), Map.Fallback );
+
+	thread( Map.alive_watch );
+
+	Wp.SetWaypointFlag( "WallJump","closed",false );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "DEFEND_Doc_Defense_4", 0.65 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( "ROUTE_lowercp" );
+	Util.DisableGoal( "ROUTE_wallroute" );
+	Util.DisableGoal( "ROUTE_office" );
+
+	Util.EnableGoal( Map.Checkpoint );
+	Util.EnableGoal( "CAPPOINT_.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_main_door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_CP_attack.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_CP_defense.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_bGarage" );
+
+	// Artillery
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlagArty.*" );
+
+	SetGoalPriority( "CALL.*", 0.7 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
+
+	// Special defend points
+	SetGoalPriority( "DEFEND_CP_Defense_[368]", 0.55 );
+	SetGoalPriority( "DEFEND_Docs_Defense_[49]", 0.55 );
+
+	// faster pathfinding through door
+	Wp.SetWaypointFlag( "lowerhack", "closed", true );
+	Wp.SetWaypointFlag( "wallhack", "closed", true );
+	Wp.SetWaypointFlag( "WallJump","closed",false );
+
+	if ( Map && Map.Debug ) {
+		RTCWUtil.ShowActiveGoals();
+	}
+
+	// Max users per goal
+	if ( RTCWUtil.CountTeam( TEAM.AXIS ) < 8 ) {
+		Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	} else
+	{ Util.SetMaxUsersInProgress( 2, "DEFEND_.*" ); }
+
+	if ( RTCWUtil.CountTeam( TEAM.ALLIES ) < 8 ) {
+		Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	} else
+	{ Util.SetMaxUsersInProgress( 2, "ATTACK_.*" ); }
+
+	Util.SetMaxUsersInProgress( 15, "FLAG_.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+
+	//set up some routing
+	print( "Configuring Routes" );
+
+	MapRoutes =
+	{
+		FLAG_War_Documents =
+		{
+			ROUTE_AllySpawn1 =
+			{
+				ROUTE_lowercp = { ROUTE_central = {}, },
+
+				ROUTE_uppercp =
+				{
+					ROUTE_northhall = { },
+					ROUTE_southhall = { },
+				},
+				ROUTE_wallroute = {},
+			},
+			ROUTE_AllySpawn2 =
+			{
+				ROUTE_lowercp = { ROUTE_central = {}, },
+
+				ROUTE_uppercp =
+				{
+					ROUTE_northhall = { },
+					ROUTE_southhall = { },
+					ROUTE_central = {},
+				},
+				ROUTE_wallroute = {},
+			},
+			ROUTE_CpSpawn =
+			{
+				ROUTE_bStairs =
+				{
+					Weight = 2,
+					ROUTE_central = {},
+				},
+				ROUTE_northhall = {},
+				ROUTE_southhall = {},
+			},
+			ROUTE_approach =
+			{
+				ROUTE_lowercp = { ROUTE_central = {}, },
+
+				ROUTE_uppercp =
+				{
+					ROUTE_northhall = { },
+					ROUTE_southhall = { },
+				},
+				ROUTE_wallroute = {},
+			},
+		},
+		CAPPOINT_Transmitter =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_southhall2 =
+				{
+					Weight = 3,
+					ROUTE_office =
+					{
+						ROUTE_hilljump =
+						{
+							ROUTE_uppertrans = { Weight = 3 },
+							ROUTE_lowertrans = {},
+						},
+					},
+				},
+				ROUTE_central =
+				{
+					ROUTE_uppertrans = { Weight = 3 },
+					ROUTE_lowertrans = {},
+				},
+			},
+		},
+		CHECKPOINT_forward_respawn =
+		{
+			ROUTE_AllySpawn1 =
+			{
+				ROUTE_nApproach =
+				{
+					ROUTE_nApproach2 =
+					{
+						ROUTE_lowercp = {},
+						//ROUTE_uppercp = {},
+					},
+				},
+				ROUTE_sApproach =
+				{
+					Weight = 2,
+					ROUTE_sApproach2 =
+					{
+						ROUTE_lowercp = {},
+						ROUTE_uppercp = {},
+					},
+				},
+				ROUTE_mApproach =
+				{
+					ROUTE_lowercp = {},
+					//ROUTE_uppercp = {},
+				},
+			},
+			ROUTE_AllySpawn2 =
+			{
+				ROUTE_nApproach =
+				{
+					ROUTE_nApproach2 =
+					{
+						ROUTE_lowercp = {},
+						//ROUTE_uppercp = {},
+					},
+				},
+				ROUTE_sApproach =
+				{
+					Weight = 2,
+					ROUTE_sApproach2 =
+					{
+						ROUTE_lowercp = {},
+						ROUTE_uppercp = {},
+					},
+				},
+				ROUTE_mApproach =
+				{
+					ROUTE_lowercp = {},
+					ROUTE_uppercp = {},
+				},
+			},
+			ROUTE_approach =
+			{
+				ROUTE_lowercp = { },
+
+				ROUTE_uppercp =
+				{
+					ROUTE_northhall = { },
+					ROUTE_southhall = { },
+				},
+				ROUTE_wallroute = {},
+			},
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_bStairs = {},
+				ROUTE_office1 = {},
+			},
+		},
+		DEFEND_Doc_Defense_6 =
+		{
+			ROUTE_docpatrol = {},
+		},
+		DEFEND_Cp_Defense_1 =
+		{
+			ROUTE_bStairs = {},
+		},
+		DEFEND_Cp_Defense_3 =
+		{
+			ROUTE_office1 = {},
+		},
+	};
+
+	//copy some routes
+	MapRoutes.ATTACK_Doc_Attack_1 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_Doc_Attack_2 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_Doc_Attack_3 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_Doc_Attack_4 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_Doc_Attack_5 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_Doc_Attack_6 = MapRoutes.FLAG_War_Documents;
+	MapRoutes.ATTACK_CP_Attack_1 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.ATTACK_CP_Attack_2 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.ATTACK_CP_Attack_3 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.ATTACK_CP_Attack_4 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.ATTACK_CP_Attack_5 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.ATTACK_CP_Attack_6 = MapRoutes.CHECKPOINT_forward_respawn;
+	MapRoutes.DEFEND_Cp_Defense_2 = MapRoutes.DEFEND_Cp_Defense_1;
+	MapRoutes.DEFEND_Cp_Defense_6 = MapRoutes.DEFEND_Cp_Defense_1;
+	MapRoutes.DEFEND_Cp_Defense_4 = MapRoutes.DEFEND_Cp_Defense_3;
+	MapRoutes.DEFEND_Cp_Defense_5 = MapRoutes.DEFEND_Cp_Defense_3;
+	MapRoutes.DEFEND_Cp_Defense_7 = MapRoutes.DEFEND_Cp_Defense_3;
+
+	Util.Routes( MapRoutes );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

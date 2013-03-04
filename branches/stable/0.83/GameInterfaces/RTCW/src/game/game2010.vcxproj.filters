@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7c27f2ab-3060-4a35-9d73-49f95c559dc5}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{858b2e06-4a25-43c7-803e-b2483a7ffa59}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Omnibot">
+      <UniqueIdentifier>{9ab704be-4851-4089-bc2b-78bf361030bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua API">
+      <UniqueIdentifier>{187b20f5-2535-433b-bfdd-2917a7f58ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua API\Header Files">
+      <UniqueIdentifier>{0e7504b9-ad32-4e05-a78c-a2690022cf81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sqlite">
+      <UniqueIdentifier>{4ca33f99-d112-4436-8dd7-223b2437c0b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{88d9ef0d-d057-498c-b4b2-302e4319e49d}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bg_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bg_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_public.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_team.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\botai\inv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\botai\match.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="q_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaceflags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\botai\syn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_rtcwbot_interface.h">
+      <Filter>Omnibot</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Omnibot\Common\BotLoadLibrary.cpp">
+      <Filter>Omnibot</Filter>
+    </ClCompile>
+    <ClCompile Include="g_rtcwbot_interface.cpp">
+      <Filter>Omnibot</Filter>
+    </ClCompile>
+    <ClCompile Include="g_lua.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_animation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_pmove.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_slidemove.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="et-antiwarp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_active.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_alarm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_antilag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_awards.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_client.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_cmds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_combat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_items.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_mem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_missile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_mover.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_props.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_script.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_script_actions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_session.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_sha1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_spawn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_svcmds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_syscalls.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_target.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_team.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_tramcar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_trigger.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_weapon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="q_math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="q_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sha-1\sha1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sqlite\lsqlite3.c">
+      <Filter>sqlite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sqlite\sqlite3.c">
+      <Filter>sqlite</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Jamfile" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\lua\libs\win32\lua5.1.lib">
+      <Filter>Lua API</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="g_lua.h">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\lua\lauxlib.h">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\lua\lua.h">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\lua\lua.hpp">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\lua\luaconf.h">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\lua\lualib.h">
+      <Filter>Lua API\Header Files</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\sqlite\lsqlite3.h">
+      <Filter>sqlite</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\sqlite\sqlite3.h">
+      <Filter>sqlite</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\sqlite\sqlite3ext.h">
+      <Filter>sqlite</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

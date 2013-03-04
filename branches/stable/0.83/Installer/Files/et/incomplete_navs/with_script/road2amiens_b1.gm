@@ -1,0 +1,521 @@
+global Map =
+{
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Bunker_Door_Dyno = 0,
+	Compound_Gate_Dyno = 0,
+	East_Tower_Dyno = 0,
+	Old_West_Tower_Barrier_Dyno = 0,
+	Old_West_Tower_Ladder_Dyno = 0,
+	Side_Wall_Dyno = 0,
+	West_Ramp_Dyno = 0,
+	West_Tower_Dyno = 0,
+	Ammo_Cabinet_409 = "AMMOCAB_409",
+	Ammo_Cabinet_498 = "AMMOCAB_498",
+	Ammo_Cabinet_564 = "AMMOCAB_564",
+	Ammo_Cabinet_supply_axis_cp_cabinet_ammo = "AMMOCAB_supply_axis_cp_cabinet_ammo",
+	Ammo_Cabinet_supply_bunker_wall_west_ammo2 = "AMMOCAB_supply_bunker_wall_west_ammo2",
+	Ammo_Cabinet_supply_caves_entry_ammo1 = "AMMOCAB_supply_caves_entry_ammo1",
+	Ammo_Cabinet_supply_caves_entry_ammo2 = "AMMOCAB_supply_caves_entry_ammo2",
+	Ammo_Cabinet_supply_central_script = "AMMOCAB_supply_central_script",
+	Ammo_Cabinet_supply_hq_floor2_ammo = "AMMOCAB_supply_hq_floor2_ammo",
+	Ammo_Cabinet_supply_jail_cabinet_ammo = "AMMOCAB_supply_jail_cabinet_ammo",
+	Ammo_Cabinet_tankbay_ammocabinet = "AMMOCAB_tankbay_ammocabinet",
+	Health_Cabinet_supply_axis_cp_cabinet_health = "HEALTHCAB_supply_axis_cp_cabinet_health",
+	Health_Cabinet_supply_bunker_wall_west_health = "HEALTHCAB_supply_bunker_wall_west_health",
+	Health_Cabinet_supply_caves_entry_health1 = "HEALTHCAB_supply_caves_entry_health1",
+	Health_Cabinet_supply_caves_entry_health2 = "HEALTHCAB_supply_caves_entry_health2",
+	Health_Cabinet_supply_caves_niche = "HEALTHCAB_supply_caves_niche",
+	Health_Cabinet_supply_central_script = "HEALTHCAB_supply_central_script",
+	Health_Cabinet_supply_hq_floor2_health = "HEALTHCAB_supply_hq_floor2_health",
+	Health_Cabinet_supply_jail_cabinet_health = "HEALTHCAB_supply_jail_cabinet_health",
+	Health_Cabinet_tankbay_healthcabinet = "HEALTHCAB_tankbay_healthcabinet",
+	Checkpoint_spawn_forward = "CHECKPOINT_spawn_forward",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_East_Tower = "BUILD_East_Tower",
+	Build_Old_West_Tower_Barrier = "BUILD_Old_West_Tower_Barrier",
+	Build_Old_West_Tower_Ladder = "BUILD_Old_West_Tower_Ladder",
+	Build_West_Ramp = "BUILD_West_Ramp",
+	Build_West_Tower = "BUILD_West_Tower",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Bunker_Door = "PLANT_Bunker_Door",
+	Plant_Compound_Gate = "PLANT_Compound_Gate",
+	Plant_East_Tower = "PLANT_East_Tower",
+	Plant_Old_West_Tower_Barrier = "PLANT_Old_West_Tower_Barrier",
+	Plant_Old_West_Tower_Ladder = "PLANT_Old_West_Tower_Ladder",
+	Plant_Side_Wall = "PLANT_Side_Wall",
+	Plant_West_Ramp = "PLANT_West_Ramp",
+	Plant_West_Tower = "PLANT_West_Tower",
+	Mount_450 = "MOUNTMG42_450",
+	Mount_451 = "MOUNTMG42_451",
+	Mount_452 = "MOUNTMG42_452",
+	Mount_596 = "MOUNTMG42_596",
+	Mount_mg_allied_roof_mg42_track = "MOUNTMG42_mg_allied_roof_mg42_track",
+	Repair_450 = "REPAIRMG42_450",
+	Repair_451 = "REPAIRMG42_451",
+	Repair_452 = "REPAIRMG42_452",
+	Repair_596 = "REPAIRMG42_596",
+	Repair_mg_allied_roof_mg42_track = "REPAIRMG42_mg_allied_roof_mg42_track",
+	Mobile_MG42_641 = "MOBILEMG42_641",
+	Mobile_MG42_644 = "MOBILEMG42_644",
+	Snipe_604 = "SNIPE_604",
+	Snipe_605 = "SNIPE_605",
+	Snipe_607 = "SNIPE_607",
+	Snipe_608 = "SNIPE_608",
+	Snipe_612 = "SNIPE_612",
+	Snipe_613 = "SNIPE_613",
+	Snipe_632 = "SNIPE_632",
+	Snipe_633 = "SNIPE_633",
+	Snipe_634 = "SNIPE_634",
+	Snipe_635 = "SNIPE_635",
+	Snipe_636 = "SNIPE_636",
+	Snipe_637 = "SNIPE_637",
+	Snipe_638 = "SNIPE_638",
+	Snipe_641 = "SNIPE_641",
+	Snipe_644 = "SNIPE_644",
+	Snipe_646 = "SNIPE_646",
+	Snipe_647 = "SNIPE_647",
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	East_Tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Tower_Built" );
+	},
+
+	Old_West_Tower_Barrier_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Old_West_Tower_Barrier_Built" );
+	},
+
+	Old_West_Tower_Ladder_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Old_West_Tower_Ladder_Built" );
+	},
+
+	West_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Ramp_Built" );
+	},
+
+	West_Tower_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Tower_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Allied_Command_Post );
+		print( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Axis_Command_Post );
+		print( "Axis_Command_Post_Planted" );
+	},
+
+	Bunker_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bunker_Door_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Bunker_Door );
+		print( "Bunker_Door_Planted" );
+	},
+
+	Compound_Gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Compound_Gate_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Compound_Gate );
+		print( "Compound_Gate_Planted" );
+	},
+
+	East_Tower_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Tower_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_East_Tower );
+		print( "East_Tower_Planted" );
+	},
+
+	Old_West_Tower_Barrier_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_West_Tower_Barrier_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Old_West_Tower_Barrier );
+		print( "Old_West_Tower_Barrier_Planted" );
+	},
+
+	Old_West_Tower_Ladder_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_West_Tower_Ladder_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_Old_West_Tower_Ladder );
+		print( "Old_West_Tower_Ladder_Planted" );
+	},
+
+	Side_Wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_Wall_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_Side_Wall );
+		print( "Side_Wall_Planted" );
+	},
+
+	West_Ramp_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Ramp_Dyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_West_Ramp );
+		print( "West_Ramp_Planted" );
+	},
+
+	West_Tower_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Tower_Dyno += 1;
+		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Plant_West_Tower );
+		print( "West_Tower_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		if ( Map.Allied_Command_Post_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Allied_Command_Post ); }
+		print( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		if ( Map.Axis_Command_Post_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Command_Post ); }
+		print( "Axis_Command_Post_Defused" );
+	},
+
+	Bunker_Door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Bunker_Door_Dyno -= 1;
+		if ( Map.Bunker_Door_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Bunker_Door ); }
+		print( "Bunker_Door_Defused" );
+	},
+
+	Compound_Gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Compound_Gate_Dyno -= 1;
+		if ( Map.Compound_Gate_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Compound_Gate ); }
+		print( "Compound_Gate_Defused" );
+	},
+
+	East_Tower_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.East_Tower_Dyno -= 1;
+		if ( Map.East_Tower_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Tower ); }
+		print( "East_Tower_Defused" );
+	},
+
+	Old_West_Tower_Barrier_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_West_Tower_Barrier_Dyno -= 1;
+		if ( Map.Old_West_Tower_Barrier_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Old_West_Tower_Barrier ); }
+		print( "Old_West_Tower_Barrier_Defused" );
+	},
+
+	Old_West_Tower_Ladder_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Old_West_Tower_Ladder_Dyno -= 1;
+		if ( Map.Old_West_Tower_Ladder_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Old_West_Tower_Ladder ); }
+		print( "Old_West_Tower_Ladder_Defused" );
+	},
+
+	Side_Wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Side_Wall_Dyno -= 1;
+		if ( Map.Side_Wall_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Side_Wall ); }
+		print( "Side_Wall_Defused" );
+	},
+
+	West_Ramp_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Ramp_Dyno -= 1;
+		if ( Map.West_Ramp_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Ramp ); }
+		print( "West_Ramp_Defused" );
+	},
+
+	West_Tower_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.West_Tower_Dyno -= 1;
+		if ( Map.West_Tower_Dyno < 1 )
+			{ SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_West_Tower ); }
+		print( "West_Tower_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Bunker_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bunker_Door_Destroyed" );
+	},
+
+	Compound_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Compound_Gate_Destroyed" );
+	},
+
+	East_Tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "East_Tower_Destroyed" );
+	},
+
+	Old_West_Tower_Barrier_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Old_West_Tower_Barrier_Destroyed" );
+	},
+
+	Old_West_Tower_Ladder_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Old_West_Tower_Ladder_Destroyed" );
+	},
+
+	Side_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Side_Wall_Destroyed" );
+	},
+
+	West_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Ramp_Destroyed" );
+	},
+
+	West_Tower_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "West_Tower_Destroyed" );
+	},
+
+	spawn_forward_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawn_forward_Axis_Captured" );
+	},
+
+	spawn_forward_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "spawn_forward_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.East_Tower_Built );
+	OnTrigger( "MISSING_STRING", Map.Old_West_Tower_Barrier_Built );
+	OnTrigger( "MISSING_STRING", Map.Old_West_Tower_Ladder_Built );
+	OnTrigger( "MISSING_STRING", Map.West_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.West_Tower_Built );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the MISSING_STRING.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at the Bunker Door.", Map.Bunker_Door_Planted );
+	OnTrigger( "Planted at the Compund Gate.", Map.Compound_Gate_Planted );
+	OnTrigger( "Planted at the East Tower.", Map.East_Tower_Planted );
+	OnTrigger( "Planted at the Old West Tower Barrier.", Map.Old_West_Tower_Barrier_Planted );
+	OnTrigger( "Planted at the Old West Tower Ladder.", Map.Old_West_Tower_Ladder_Planted );
+	OnTrigger( "Planted at the Side Wall.", Map.Side_Wall_Planted );
+	OnTrigger( "Planted at the West Ramp.", Map.West_Ramp_Planted );
+	OnTrigger( "Planted at the West Tower.", Map.West_Tower_Planted );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the MISSING_STRING.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at the Bunker Door.", Map.Bunker_Door_Defused );
+	OnTrigger( "Defused at the Compound Gate.", Map.Compound_Gate_Defused );
+	OnTrigger( "Defused at the East Tower.", Map.East_Tower_Defused );
+	OnTrigger( "Defused at the Old West Tower Barrier.", Map.Old_West_Tower_Barrier_Defused );
+	OnTrigger( "Defused at the Old West Tower Ladder.", Map.Old_West_Tower_Ladder_Defused );
+	OnTrigger( "Defused at the Side Wall.", Map.Side_Wall_Defused );
+	OnTrigger( "Defused at the West Ramp.", Map.West_Ramp_Defused );
+	OnTrigger( "Defused at the West Tower.", Map.West_Tower_Defused );
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bunker_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Compound_Gate_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.East_Tower_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Old_West_Tower_Barrier_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Old_West_Tower_Ladder_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Side_Wall_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.West_Tower_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.spawn_forward_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.spawn_forward_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	SetGoalPriority( "BUILD_.*", 0.8, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "PLANT_.*", 0.8, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( Map.Plant_Bunker_Door, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFUSE_West_Ramp.*", 0.75, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Old_West_Tower_Ladder.*", 0.75, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( "DEFUSE_Allied_Command_Post.*", 0.75, TEAM.ALLIES, CLASS.ENGINEER, true );
+	SetGoalPriority( Map.Plant_Side_Wall, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+	if ( RandInt(0,3) == 1 )
+	{
+		SetGoalPriority( Map.Plant_West_Tower, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( Map.Plant_Old_West_Tower_Barrier, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( Map.Build_Old_West_Tower_Ladder, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( "DEFUSE_Old_West_Tower_Ladder.*", 0.81, TEAM.ALLIES, CLASS.ENGINEER, true );
+	}
+	else
+	{
+		SetGoalPriority( Map.Plant_East_Tower, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( Map.Plant_Side_Wall, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+		SetGoalPriority( Map.Plant_Compound_Gate, 0.81, TEAM.ALLIES, CLASS.ENGINEER );
+	}
+
+	print( "Omni-bot map script for road2amiens_b1 executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~ bot.TargetBreakableDist = 90.0;
+};

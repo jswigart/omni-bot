@@ -1,0 +1,1063 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+
+	ShowMovers = false,
+	Movers =
+	{
+		"MOVER_tramcar_1",
+		"MOVER_tramcar_2",
+		"MOVER_tramcar_3",
+		"MOVER_tramcar_4",
+	},
+
+	Checkpoint_flag_respawn_obj = "CHECKPOINT_flag_respawn_obj",
+	Radio_Codes = "FLAG_Radio_Codes_Booklet",
+	Plant_Castle_Basement_Door = "PLANT_Castle_Basement_Door",
+	Plant_Lower_Access_Door = "PLANT_Lower_Access_Door",
+	Plant_Supply_Room_Door = "PLANT_Supply_Room_Door",
+	Mount_232 = "MOUNTMG42_382",
+	Mount_271 = "MOUNTMG42_432",
+	Mount_382 = "MOUNTMG42_snowhut",
+	Mount_387 = "MOUNTMG42_507",
+	Mount_409 = "MOUNTMG42_lowerouthouse",
+	Repair_232 = "REPAIRMG42_382",
+	Repair_271 = "REPAIRMG42_432",
+	Repair_382 = "REPAIRMG42_snowhut",
+	Repair_387 = "REPAIRMG42_507",
+	Repair_409 = "REPAIRMG42_lowerouthouse",
+
+	BookStatus = false, //home
+	BasementStatus = false, //intact
+	LowerStatus = false,
+	SupplyStatus = false,
+	thirtysecond = false,
+	twominute = false,
+	FlagStatus = 0,
+	DocsInCastle = false,
+	ViewDistance = 2700,
+
+	BasementDyno = 0,
+	LowerDyno = 0,
+	SupplyDyno = 0,
+	AlliedPanzBots = 0,
+	AlliedPanzFired = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+
+	Navigation =
+	{
+		opladder =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+		bjump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				_this.Bot.HoldButton( BTN.STRAFE_L, 0.25 );
+				sleep( 1 );
+			},
+		},
+		tablejump =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.JUMP, 0.25 );
+				sleep( 0.25 );
+			},
+		},
+
+		bpanz =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !Map.AlliedPanzFired && Map.AlliedPanzBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "alliedpanz" );
+					Map.AlliedPanzBots += 1;
+					Map.AlliedPanzFired = true; // Even if he doesnt make it, don't try doing it again because teammates will be there by then
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 4 ); // Wait for axis to arrive
+							_this.Bot.SayVoice( VOICE.FIRE_IN_THE_HOLE );
+							Util.MapDebugPrint( "Fire in the hole!" );
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 2 );
+						}
+					}
+					Map.AlliedPanzBots -= 1;
+				}
+				yield();
+			},
+		},
+	},
+
+	RoundStairs =
+	{
+		Name = "RoundStairs",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					// Martin - Let bots tell teammates where documents are going
+					b = Util.GetBotByName( GetEntName( ent ) );
+					if ( b ) {
+						b.SayTeam( "I'm going round stairs!" );
+					}
+					foreach( id and bot in BotTable )
+					{
+						if ( bot.GetTeam() == TEAM.AXIS ) {
+							bot.SayTeam( "Docs are going round stairs!" );
+							break;
+						}
+					}
+				}
+
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	SquareStairs =
+	{
+		Name = "SquareStairs",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					// Martin - Let bots tell teammates where documents are going
+					b = Util.GetBotByName( GetEntName( ent ) );
+					if ( b ) {
+						b.SayTeam( "I'm going square stairs!" );
+					}
+					foreach( id and bot in BotTable )
+					{
+						if ( bot.GetTeam() == TEAM.AXIS ) {
+							bot.SayTeam( "Docs are going square stairs!" );
+							break;
+						}
+					}
+				}
+
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	Castle_Basement_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BasementStatus = true;
+		Map.BasementDyno = 0;
+
+		Util.EnableGoal( "ROUTE_basement" );
+		//SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_snowhut" );
+	},
+
+	Castle_Basement_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BasementDyno += 1;
+	},
+
+	Castle_Basement_Door_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BasementDyno -= 1;
+	},
+
+	Lower_Access_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.LowerStatus = true;
+		Map.LowerDyno = 0;
+
+		Util.EnableGoal( "ROUTE_engineroom1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bLower.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Supply_Room_Door );
+
+		if ( !Map.SupplyStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLowerInside.*" );
+		}
+	},
+
+	Lower_Access_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.LowerDyno += 1;
+	},
+
+	Lower_Access_Door_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.LowerDyno -= 1;
+	},
+
+	Supply_Room_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SupplyStatus = true;
+		Map.SupplyDyno = 0;
+		Map.DontDispenseAmmo = true;
+
+		// disable all goals for both teams
+		Util.DisableGoal( ".*", true );  //all but routes
+		Util.DisableGoal( "ROUTE_basement" );
+
+		DeleteTriggerRegion( "SupplyRoom" );
+
+		//axis should kill out at next spawn
+		RTCWUtil.SetTeamSuicide( TEAM.AXIS, true, false );
+
+		if ( !Map.twominute ) {
+			RTCWUtil.ExcludeClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Radio_Codes );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Castle_Basement_Door );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoam_Radio.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_snowhut" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Castle.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMid.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBasement.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadio.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam_Radio.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Mid.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSecondHalf.*" );
+		//Martin - These allied support fires are worthless...no kills, ever
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_bSecondHalf.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSecondHalf.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCastleSpot.*" );
+	},
+
+	Supply_Room_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SupplyDyno += 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDynoSupply.*" );
+	},
+
+	Supply_Room_Door_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.SupplyDyno -= 1;
+
+		if ( Map.SupplyDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDynoSupply.*" );
+		}
+	},
+
+	Radio_Codes_Booklet_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.BookStatus = true;
+	},
+
+	Radio_Codes_Booklet_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSecondHalf.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCastleSpot.*" );
+
+		Map.BookStatus = false;
+		Map.DocsInCastle = false;
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+
+		if ( !Map.SupplyStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Flag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Flag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlagCall.*" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLowerInside.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSupply.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bSnipe_Supply.*" );
+		//SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSnipe_Supply.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_artyflag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_supplycall.*" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+
+		if ( !Map.SupplyStatus ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSupply.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Supply.*" );
+			//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Supply.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_artyflag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_supplycall.*" );
+
+			if ( !Map.LowerStatus ) {
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLower_.*" );
+			} else
+			{ SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLowerInside.*" ); }
+
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bSnipe_Flag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSnipe_Flag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rAlliesRear" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlagCall.*" );
+	},
+
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.twominute = true;
+
+		if ( Map.SupplyStatus ) {
+			SetGoalPriority( "FLAG.*", 1.0, TEAM.ALLIES, CLASS.SOLDIER );
+		}
+
+		if ( !Map.SupplyStatus ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Supply_Room_Door );
+		}
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.thirtysecond = true;
+	},
+
+	RideMovers =
+	{
+		tram4bottom =
+		{
+			movergoal = "MOVER_tramcar_4",
+			rideposition = Vector3( -62,-63,-343 ),
+			stance = BTN.CROUCH,
+			startwp = "t4bottom",
+			exitwp = null,
+			board = function( _this )
+			{
+				if ( Map.Tram4Pos == 0 ) {
+					return true;
+				}
+				return false;
+			},
+
+			leave = function( _this )
+			{
+				if ( Map.Tram4Pos == 1  && _this.HighLevelGoal == "CHECKPOINT" ) {
+					Map.RideMovers.tram4bottom.exitwp = "t4mid";
+					return true;
+				}
+
+				if ( Map.Tram4Pos == 2 && _this.Bot.GetTeam() == TEAM.ALLIES ) {
+					Map.RideMovers.tram4bottom.exitwp = "t4top";
+					return true;
+				}
+
+				if ( Map.Tram4Pos == 2 && _this.Bot.GetTeam() == TEAM.AXIS ) {
+					Map.RideMovers.tram4bottom.exitwp = "t4bottom";
+					return true;
+				}
+
+				return false;
+			},
+		},
+
+		tram3top =
+		{
+			movergoal = "MOVER_tramcar_3",
+			rideposition = Vector3( -358.482,69.851,-343.769 ),
+			stance = BTN.CROUCH,
+			startwp = "t3top",
+			exitwp = null,
+			board = function( _this )
+			{
+				if ( Map.Tram3Pos == 2 ) {
+					return true;
+				}
+				return false;
+			},
+
+			leave = function( _this )
+			{
+				if ( Map.Tram3Pos == 1  ) {
+					Map.RideMovers.tram3top.exitwp = "t4mid";
+					return true;
+				}
+
+				if ( Map.Tram3Pos == 0 && _this.Bot.GetTeam() == TEAM.AXIS ) {
+					Map.RideMovers.tram3top.exitwp = "t3bottom";
+					return true;
+				}
+
+				if ( Map.Tram3Pos == 2 && _this.Bot.GetTeam() == TEAM.ALLIES ) {
+					Map.RideMovers.tram3top.exitwp = "t3top";
+					return true;
+				}
+
+				return false;
+			},
+		},
+
+		tram1bottom =
+		{
+			movergoal = "MOVER_tramcar_1",
+			rideposition = Vector3( -63.114,-69.875,-343.875 ),
+			stance = BTN.CROUCH,
+			startwp = "t1bottom",
+			exitwp = null,
+			board = function( _this )
+			{
+				if ( Map.Tram1Pos == 0 ) {
+					return true;
+				}
+				return false;
+			},
+
+			leave = function( _this )
+			{
+				if ( Map.Tram1Pos == 0 && _this.Bot.GetTeam() == TEAM.AXIS ) {
+					Map.RideMovers.tram1bottom.exitwp = "t1bottom";
+					return true;
+				}
+
+				if ( Map.Tram1Pos == 2 && _this.Bot.GetTeam() == TEAM.ALLIES ) {
+					Map.RideMovers.tram1bottom.exitwp = "t1top";
+					return true;
+				}
+
+				return false;
+			},
+		},
+	},
+
+	HalfTrigger =
+	{
+		Name = "HalfTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSecondHalf.*" );
+					//SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCastle.*" );	//Paththrough...
+
+					if ( Map.Debug ) {
+						print( "Docs are halfway" );
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+
+	Tram4Pos = -1,
+	Tram4Bottom =
+	{
+		Name = "Tram4Bottom",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram4Pos = 0;
+			if ( Map.Debug ) {
+				print( "^4Tram4Bottom^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram4Pos = -1;
+		},
+	},
+
+	Tram4Mid =
+	{
+		Name = "Tram4Mid",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			sleep( 1 );
+			Map.Tram4Pos = 1;
+			if ( Map.Debug ) {
+				print( "^4Tram4Mid^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram4Pos = -1;
+		},
+	},
+
+	Tram4Top =
+	{
+		Name = "Tram4Top",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram4Pos = 2;
+			DynamicPathsUpdated( TEAM.AXIS, TEAM.ALLIES );
+			if ( Map.Debug ) {
+				print( "^4Tram4Top^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram4Pos = -1;
+		},
+	},
+
+	Tram3Pos = -1,
+	Tram3Bottom =
+	{
+		Name = "Tram3Bottom",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram3Pos = 0;
+			if ( Map.Debug ) {
+				print( "^3Tram3Bottom^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram3Pos = -1;
+		},
+	},
+
+	Tram3Mid =
+	{
+		Name = "Tram3Mid",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram3Pos = 1;
+			if ( Map.Debug ) {
+				print( "^3Tram3Mid^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram3Pos = -1;
+		},
+	},
+
+	Tram3Top =
+	{
+		Name = "Tram3Top",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram3Pos = 2;
+			if ( Map.Debug ) {
+				print( "^3Tram3Top^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram3Pos = -1;
+		},
+	},
+
+	Tram2Pos = -1,
+	Tram2Bottom =
+	{
+		Name = "Tram2Bottom",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram2Pos = 0;
+			if ( Map.Debug ) {
+				print( "^2Tram2Bottom^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram2Pos = -1;
+		},
+	},
+
+	Tram2Mid =
+	{
+		Name = "Tram2Mid",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram2Pos = 1;
+			if ( Map.Debug ) {
+				print( "^2Tram2Mid^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram2Pos = -1;
+		},
+	},
+
+	Tram2Top =
+	{
+		Name = "Tram2Top",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram2Pos = 2;
+			if ( Map.Debug ) {
+				print( "^2Tram2Top^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram2Pos = -1;
+		},
+	},
+
+	Tram1Pos = -1,
+	Tram1Bottom =
+	{
+		Name = "Tram1Bottom",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram1Pos = 0;
+			if ( Map.Debug ) {
+				print( "^1Tram1Bottom^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram1Pos = -1;
+		},
+	},
+
+	Tram1Mid =
+	{
+		Name = "Tram1Mid",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram1Pos = 1;
+			if ( Map.Debug ) {
+				print( "^1Tram1Mid^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram1Pos = -1;
+		},
+	},
+
+	Tram1Top =
+	{
+		Name = "Tram1Top",
+		TriggerOnClass = CLASS.VEHICLE,
+		OnEnter = function( ent )
+		{
+			Map.Tram1Pos = 2;
+			if ( Map.Debug ) {
+				print( "^1Tram1Top^2" );
+			}
+		},
+		OnExit = function( ent ) {
+			Map.Tram1Pos = -1;
+		},
+	},
+
+	SupplyRoom =
+	{
+		Name = "SupplyRoom",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at the Supply Room Door!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+
+	DocsInCastle =
+	{
+		Name = "DocsInCastle",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.DocsInCastle = true;
+
+				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
+					b = Util.GetBotByName( GetEntName( ent ) );
+					if ( b ) {
+						b.SayTeam( "I'm going short!" );
+					}
+
+					foreach( id and bot in BotTable )
+					{
+						if ( bot.GetTeam() == TEAM.AXIS ) {
+							bot.SayTeam( "Docs are inside the Castle!" );
+							break;
+						}
+					}
+					SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCastleSpot.*" );
+
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+		},
+	},
+};
+
+global OnMapLoad = function()
+{
+	// tram triggers
+	t4_bottom = OnTriggerRegion( AABB( -6254,-210,-629, -6252, -208, -434 ), Map.Tram4Bottom );
+	t4_mid = OnTriggerRegion( AABB( -3593,-281,-372, -3591, -279, 248 ), Map.Tram4Mid );
+	t4_top = OnTriggerRegion( AABB( -1031,-238,-481, -1029, -236, 1007 ), Map.Tram4Top );
+
+	t3_bottom = OnTriggerRegion( AABB( -6260,72,-670, -6239, 76, -331 ), Map.Tram3Bottom );
+	t3_mid = OnTriggerRegion( AABB( -3579,46,-390, -3577, 48, 320 ), Map.Tram3Mid );
+	t3_top = OnTriggerRegion( AABB( -1054,83,-446, -1052, 85, 1041 ), Map.Tram3Top );
+
+	t2_bottom = OnTriggerRegion( AABB( -23,87,541, -21, 89, 998 ), Map.Tram2Bottom );
+	t2_mid = OnTriggerRegion( AABB( 2038,62,1211, 2040, 64, 1870 ), Map.Tram2Mid );
+	t2_top = OnTriggerRegion( AABB( 4296,68,1768, 4298, 70, 2219 ), Map.Tram2Top );
+
+	t1_bottom = OnTriggerRegion( AABB( -27,-230,-505, -25, -228, 1040 ), Map.Tram1Bottom );
+	t1_mid = OnTriggerRegion( AABB( 2041,-204,1396, 2043, -202, 1903 ), Map.Tram1Mid );
+	t1_top = OnTriggerRegion( AABB( 4288,-233,1797, 4290, -231, 2198 ), Map.Tram1Top );
+
+	tdocs_1 = OnTriggerRegion( AABB( 5248.000,911.000,1711.000,5289.000,1008.000,1814.000 ), Map.RoundStairs );
+	tdocs_2 = OnTriggerRegion( AABB( 4697.000,1405.000,1711.000,4806.000,1443.000,1834.000 ), Map.SquareStairs );
+
+	supplyplant = OnTriggerRegion( AABB( -1204.000,320.000,703.000,-1035.000,422.000,785.000 ), Map.SupplyRoom );
+
+	docsbasement = OnTriggerRegion( AABB( 4063.000,374.000,1711.000,4195.000,417.000,1785.000 ), Map.DocsInCastle );
+	docsupper = OnTriggerRegion( AABB( 4594.000,-288.000,1967.000,4640.000,96.000,2041.000 ), Map.DocsInCastle );
+	
+	nopush = OnTriggerRegion(AABB(-7026.000,21.000,-574.000,-6769.000,244.000,-500.000), RegionTrigger.DisableBotPush);
+	nopush1 = OnTriggerRegion(AABB(-1248.000,-673.000,577.000,-831.000,-270.000,787.000), RegionTrigger.DisableBotPush);
+	//nopush2 = OnTriggerRegion(AABB(-926.000,-752.000,885.000,-766.000,-563.000,983.000), RegionTrigger.DisableBotPush);
+	//nopush3 = OnTriggerRegion(AABB(-1046.000,-1447.000,1009.000,-805.000,-1120.000,1147.000), RegionTrigger.DisableBotPush);
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Castle Basement Door Destroyed.", Map.Castle_Basement_Door_Destroyed );
+	OnTrigger( "Planted at the Castle Basement Door.", Map.Castle_Basement_Door_Planted );
+	OnTrigger( "Defused at the Castle Basement Door.", Map.Castle_Basement_Door_Defused );
+	OnTrigger( "the Lower Access Door Destroyed.", Map.Lower_Access_Door_Destroyed );
+	OnTrigger( "Planted at the Lower Access Door.", Map.Lower_Access_Door_Planted );
+	OnTrigger( "Defused at the Lower Access Door.", Map.Lower_Access_Door_Defused );
+	OnTrigger( "the Supply Room Door Destroyed.", Map.Supply_Room_Door_Destroyed );
+	OnTrigger( "Planted at the Supply Room Door.", Map.Supply_Room_Door_Planted );
+	OnTrigger( "Defused at the Supply Room Door.", Map.Supply_Room_Door_Defused );
+	OnTrigger( "Allies have stolen the Radio Codes Booklet!", Map.Radio_Codes_Booklet_Taken );
+	OnTrigger( "Flag returned Radio Codes Booklet!", Map.Radio_Codes_Booklet_Returned );
+	OnTrigger( "Axis gains control of the Village Tram Tower!", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "Allies gain control of the Village Tram Tower!", Map.flag_respawn_obj_Allies_Captured );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	// trigger for when docs are halfway up second half
+	middle = OnTriggerRegion( AABB( 1481, -1234, 634, 1698, 1686, 1960 ), Map.HalfTrigger );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_rRoam.*", {mincamptime = 0, maxcamptime = 1} );
+	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
+
+	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 3, "FLAG.*" ); // Martin - 3 people go for it (now includes after dropped)
+
+	Util.DisableGoal( ".*", true );
+	RTCWUtil.SetPrimaryGoals( 1 );
+
+	SetGoalPriority( "DEFEND_rRoam.*", 0.48 );
+	SetGoalPriority( "DEFEND_bRoam.*", 0.48 );
+	SetGoalPriority( "DEFEND_rLower_.*", 0.54 );
+	SetGoalPriority( "DEFEND_rLowerInside.*", 0.49 );
+	SetGoalPriority( "DEFEND_rDynoSupply.*", 0.6 );
+	SetGoalPriority( "DEFEND_rRadio.*", 0.6 );
+	SetGoalPriority( "DEFEND_rBasement.*", 0.6 );
+	SetGoalPriority( "ATTACK_bSupply[123]", 0.54 );
+	SetGoalPriority( "ATTACK_bLower[123]", 0.54 );
+	SetGoalPriority( "CHECKPOINT.*", 1.1, TEAM.AXIS, CLASS.MEDIC, CLASS.LIEUTENANT );
+	SetGoalPriority( "CHECKPOINT.*", 1.1, TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+
+	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	SetGoalPriority( "DEFEND_rEng.*", 0.6, TEAM.AXIS, CLASS.ENGINEER );
+
+	// Martin - Why should soldiers not go for it?
+	// Medics are more valuable and should not be sent on flag runs.
+	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC );
+	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+
+	Util.DisableGoal( "ROUTE_engineroom1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam_supply.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Flag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlagCall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK.*" );	//Martin - Why were they ALL on at once?
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSupply.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoam_Supply.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Flag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_lowerouthouse.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Lower_Access_Door );
+
+	MapRoutes =
+	{
+		DEFEND_rFlag1 =
+		{
+			ROUTE_opspawn1 =
+			{
+				ROUTE_spiral =
+				{
+					Weight = 2,
+					ROUTE_supplyroute = {},
+				},
+				ROUTE_spiraldoor = {},
+			},
+			ROUTE_opspawn2 =
+			{
+				ROUTE_spiral =
+				{
+					Weight = 2,
+					ROUTE_supplyroute = {},
+				},
+				ROUTE_spiraldoor = {},
+			},
+		},
+		ATTACK_bSupply1 =
+		{
+			ROUTE_bFlagSpawn =
+			{
+				ROUTE_lowersupply = { },
+				ROUTE_engineroom1 = {},
+				ROUTE_uppersupply = {},
+			},
+			ROUTE_bSpawn1 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+			ROUTE_bSpawn2 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+			ROUTE_bSpawn3 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+		},
+		PLANT_Lower_Access_Door =
+		{
+			ROUTE_bSpawn1 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+			ROUTE_bSpawn2 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+			ROUTE_bSpawn3 =
+			{
+				ROUTE_lowervalley1 = {},
+				ROUTE_tramtower = {},
+			},
+		},
+
+		ATTACK_bRadio1 =
+		{
+			ROUTE_opspawn1 =
+			{
+				ROUTE_scastlehill = {},
+				ROUTE_secastlehill = {},
+				ROUTE_upperbridge = {},
+				ROUTE_castlevalley =
+				{
+					ROUTE_basement =
+					{
+						Weight = 3,
+						ROUTE_southstairs = {},
+						ROUTE_weststairs = {},
+					},
+					ROUTE_castlegears = {},
+				},
+			},
+			ROUTE_opspawn2 =
+			{
+				ROUTE_scastlehill = {},
+				ROUTE_secastlehill = {},
+				ROUTE_upperbridge = {},
+				ROUTE_castlevalley =
+				{
+					ROUTE_basement =
+					{
+						Weight = 3,
+						ROUTE_southstairs = {},
+						ROUTE_weststairs = {},
+					},
+					ROUTE_castlegears = {},
+				},
+			},
+		},
+		CAPPOINT_radio =
+		{
+			ROUTE_docgrab =
+			{
+				ROUTE_tramroute = {},
+				ROUTE_upperbridge = {Weight = 3,},
+				ROUTE_castlevalley =
+				{
+					Weight = 3,
+					ROUTE_basement =
+					{
+						ROUTE_southstairs = {},
+						ROUTE_weststairs = {},
+					},
+				},
+			},
+		},
+	};
+
+	MapRoutes.DEFEND_rFlag2 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag3 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag4 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag5 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.DEFEND_rFlag6 = MapRoutes.DEFEND_rFlag1;
+	MapRoutes.ATTACK_bSupply2 = MapRoutes.ATTACK_bSupply1;
+	MapRoutes.ATTACK_bSupply3 = MapRoutes.ATTACK_bSupply1;
+	MapRoutes.ATTACK_bSupply4 = MapRoutes.ATTACK_bSupply1;
+	MapRoutes.ATTACK_bSupply5 = MapRoutes.ATTACK_bSupply1;
+	MapRoutes.ATTACK_bSupply6 = MapRoutes.ATTACK_bSupply1;
+	MapRoutes.ATTACK_bRadio2 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRadio3 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRoam_Radio1 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRoam_Radio2 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRoam_Radio3 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRoam_Radio4 = MapRoutes.ATTACK_bRadio1;
+	MapRoutes.ATTACK_bRoam_Radio5 = MapRoutes.ATTACK_bRadio1;
+
+	Util.Routes( MapRoutes );
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = Map.ViewDistance;
+
+	//only use mausers and panzers
+	//RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.MAUSER, WEAPON.PANZERFAUST );
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

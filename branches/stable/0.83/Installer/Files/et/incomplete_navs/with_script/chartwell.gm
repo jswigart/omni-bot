@@ -1,0 +1,537 @@
+/*****************************************************************************************************************************
+	Filename: chartwell.gm
+	Created by: Advieszeur
+	Updated by: Mateos
+	Last Updated: 18th August 2012
+
+	Changelog, additions after Advieszeur waypoints :
+	- Updated to version 1.4.0.
+	- Moved Docs dropoff to the new CP location, also Defend spots that goes with it.
+	- Ameliorated pathing a lot.
+	- Corrected stuckage.
+	- Some tactic addings.
+
+	---  DEFEND SPOTS  Allies :  ----
+
+	DEFEND_studydoors_allies	// Defend the study-doors	        (Toggle by stealing and returning docs)
+	DEFEND_studydoors_allies2	// Defend the study-doors		(Toggle by stealing and returning docs)
+	DEFEND_keys_allies		// Defend the keys			(Disable at start and steal keys, Enable at destroy studydoor)
+	DEFEND_keys_allies2		// Defend the keys and a side door	(Disable at start and steal keys, Enable at destroy studydoor)
+	DEFEND_plans_allies		// Defend the safe			(Disable at start, toggle by stealing and returning docs)
+	DEFEND_compost_allies		// Defend the CommandPost		(Disable at start, toggle by stealing and returning docs)
+	DEFEND_compost_allies2		// Defend the CommandPost		(Disable at start, toggle by stealing and returning docs)
+	DEFEND_maindoor_mg_allies	// Defend the Maindoor			(Enable at start, Disable when maindoor is destroyed)
+
+******************************************************************************************************************************/
+
+global Map =
+{
+	Debug = 1,
+
+	MainDoorStatus = 0,	// Not destroyed
+	Maindoor_MgStatus = 0,	// Not build
+	StudyDoorStatus = 0,	// Not Destroyed
+	SafeStatus = 0,		// Not Open
+	PlanStatus = 0,		// Not Taken
+
+	PlansPosition = null,
+	Navigation =
+	{
+		takeplans =
+		{
+			navigate = function(_this)
+			{
+				// cs: cache the position of the plans for aim position
+				if (!Map.PlansPosition) {
+					Map.PlansPosition = GetGoal("FLAG_plans").GetPosition();
+				}
+
+				// cs: don't run it if the safe isn't open, plans are gone, or it's an allied bot
+				if ( Map.SafeStatus == 0 || Map.PlanStatus == 1 || _this.Bot.GetTeam() == TEAM.ALLIES ) {
+					yield();
+					return;
+				}
+
+				// cs: aim at the plans
+				_this.AddAimRequest(Priority.High, "position", Map.PlansPosition);
+
+				// cs: loop until docs are taken, pressing use every other frame
+				frameCounter = 0;
+				while(Map.PlanStatus == 0) {
+					frameCounter += 1;
+
+					if ( frameCounter % 2 == 0 ) {
+						_this.Bot.PressButton(BTN.USE);
+					}
+					yield();
+				}
+
+				yield();
+			},
+		},
+	},
+
+	// The Allied MG
+	CustomBuildGoals =
+	{
+		MG =
+		{
+			Enabled = true,
+			Priority = 0.6,
+			WaypointName = "Build Allied MG",
+			LimitTeam = (1<<TEAM.ALLIES),
+			LimitBots = 2,
+			Timeout /*in milliseconds*/ = 15000,
+			Stance = BTN.CROUCH,
+		},
+	},
+
+	maindoor_Destroyed = function( trigger )
+	{
+		map.MainDoorStatus = 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendMainDoorDyna" );
+
+		// Reset defond spot Allies  (keys and plan defend spots are more important)
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+
+		Util.MapDebugPrint( "Main_Door_Destroyed" );
+	},
+
+
+	MgSet = function( trigger )
+	{
+		Maindoor_MgStatus  = 1;
+
+		Map.CustomBuildGoals.MG.Enabled = false;
+
+		Util.MapDebugPrint( "Main_Door_MG_Available" );
+	},
+
+
+	MgReset = function( trigger )
+	{
+		Maindoor_MgStatus  = 0;
+
+		Map.CustomBuildGoals.MG.Enabled = true;
+
+		Util.MapDebugPrint( "Main_Door_MG_Disabled" );
+	},
+
+	// Phase 1: Destroy Doors to Study
+
+	East_Study_Door_Destroyed = function( trigger )
+	{
+		map.StudyDoorStatus   = 1;      //Studydoor destroyed
+
+		// Add goal keys for Axis
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_keyondesk" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendEastDyna" );
+
+		//Add defendspot extra at the keys for Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_keys_allies.*" );
+
+		//If the studydoor is open, defending the key become more important
+		if ( map.StudyDoorStatus == 1 )
+		{
+			//Change priority of defending key
+			SetGoalPriority( "DEFEND_keys_allies2", 1.5 );
+		}
+
+		Util.MapDebugPrint( "East_Study_Door_Destroyed" );
+	},
+
+	South_Study_Door_Destroyed = function( trigger )
+	{
+		map.StudyDoorStatus   = 1;      //Studydoor destroyed
+
+		// Add goal keys for Axis
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_keyondesk" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendSouthDyna" );
+
+		//Add defend spot Allies from outside to inside study (easy access)
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_plans_allies.*" );
+
+		//Add defendspot extra at the keys for Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_keys_allies.*" );
+
+		Util.MapDebugPrint( "South_Study_Door_Destroyed" );
+	},
+
+	KeysStolen = function(trigger)
+	{
+		// Disable one key defend spot (the other defends the door also
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_keys_allies");
+
+		// If the studydoor is open, defending the study become more important
+		if ( map.StudyDoorStatus == 1 )
+		{
+			// change priority of defending study
+			SetGoalPriority( "DEFEND_studydoors_plans", 1.5 );
+			SetGoalPriority( "DEFEND_StudyDoors", 1.5 );
+		}
+
+		Util.MapDebugPrint( "Keys_Stolen" );
+	},
+
+	KeysReturned = function(trigger)
+	{
+		// Enable one key defend spot (the other defends the door also
+		SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_keys_allies");
+
+		// change priority of defending study to normal
+		SetGoalPriority( "DEFEND_studydoors_plans", 1.0 );
+		SetGoalPriority( "DEFEND_StudyDoors", 1.0 );
+
+		Util.MapDebugPrint( "Keys_Returned" );
+	},
+
+	// Phase 2: Get keys to safe
+
+	SafeOpened = function(trigger)
+	{
+		Map.SafeStatus = 1;
+
+		// Move cappoint and add goal Axis
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_plans" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_compost" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_safe" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_AxisKeys" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_PreventMGSpot" );
+
+		// Add Commandpost destroy en repair as goal for Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Neutral_Command_Post" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Neutral_Command_Post" );
+
+		// Disable all defend spots and MG for Allies
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_allied_MG_track" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_allied_MG_track" );
+
+		// Enable plans defend spots for Allies
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_plans_allies.*" );
+
+		Util.MapDebugPrint( "Safe_Opened" );
+	},
+
+
+	//Phase 3: Get Plans to Command Post
+
+	PlansStolen = function(trigger)
+	{
+		Map.PlanStatus = 1;
+
+		// Disable the plan defend spots  (outside and inside the study-room)
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_StudyDoors");
+		SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_plans_allies.*");
+
+		// Enable the commandpost defend spots and the maindoor defend
+		SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_compost_allies");
+		SetAvailableMapGoals(TEAM.ALLIES, true, "DEFEND_compost_allies2");
+
+
+		// If the maindoor is not an escape route, or the MG is not available
+		// The defendspot can be disabled
+		if ( Map.MainDoorStatus != 1 && Maindoor_MgStatus != 1)
+		{
+			SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+		}
+
+		Util.MapDebugPrint( "Plans_Stolen" );
+	},
+
+	PlansReturned = function(trigger)
+	{
+		Map.PlanStatus = 0;
+
+		//Changing goals
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_plans" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_compost_allies" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_compost_allies2" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_plans_allies.*" );
+
+		// The defendspot for guard the maindoor must be enabled when MG is available
+		if ( Map.Maindoor_MgStatus == 1)
+		{
+			SetAvailableMapGoals(TEAM.ALLIES, false, "DEFEND_maindoor_mg_allies");
+		}
+
+		Util.MapDebugPrint( "Plans_Returned" );
+	},
+
+	// Make Axis engineers defend their dynamites
+	// To be replaced with Camp Spots
+
+	AA_Gun_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DefendAAGunDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Planted" );
+	},
+
+	Main_Door_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DefendMainDoorDyna" );
+
+		Util.MapDebugPrint( "Main_Door_Planted" );
+	},
+
+	AA_Gun_Controls_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DefendAAGunControlsDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Controls_Planted" );
+	},
+
+	East_Study_Door_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DefendEastDyna" );
+
+		Util.MapDebugPrint( "East_Study_Door_Planted" );
+	},
+
+	South_Study_Door_Planted = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_DefendSouthDyna" );
+
+		Util.MapDebugPrint( "South_Study_Door_Planted" );
+	},
+
+	AA_Gun_Defused = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendAAGunDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Defused" );
+	},
+
+	Main_Door_Defused = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendMainDoorDyna" );
+
+		Util.MapDebugPrint( "Main_Door_Defused" );
+	},
+
+	AA_Gun_Controls_Defused = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendAAGunControlsDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Controls_Defused" );
+	},
+
+	East_Study_Door_Defused = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendEastDyna" );
+
+		Util.MapDebugPrint( "East_Study_Door_Defused" );
+	},
+
+	South_Study_Door_Defused = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendSouthDyna" );
+
+		Util.MapDebugPrint( "South_Study_Door_Defused" );
+	},
+
+	AA_Gun_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendAAGunDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Destroyed" );
+	},
+
+	AA_Gun_Controls_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, Map.Plant_AA_gun_controls );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_DefendAAGunControlsDyna" );
+
+		Util.MapDebugPrint( "AA_Gun_Controls_Destroyed" );
+	},
+
+	AA_Gun_Controls_Built = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_AA_gun_controls );
+
+		Util.MapDebugPrint( "AA_Gun_Controls_Built" );
+	},
+};
+
+
+global OnMapLoad = function()
+{
+	// *** TRIGGERS ***
+	//Omni-Bot supports 71 chars maximum, that's why theses triggers are cutted
+	OnTrigger( "^3*** ^7The Allies have repaired the AA gun controls! ^3***", Map.AA_Gun_Controls_Built );
+
+	OnTrigger( "^3*** ^7Axis have destroyed the East Study Door! ^3***", Map.East_Study_Door_Destroyed );
+	OnTrigger( "^3*** ^7Axis have destroyed the South Study Door! ^3***", Map.South_Study_Door_Destroyed );
+	OnTrigger( "^3*** ^7Axis have destroyed the Main Door! ^3***", Map.maindoor_Destroyed );
+	OnTrigger( "^3*** ^7Allies have built the MG emplacement! ^3***", Map.MgSet );
+	OnTrigger( "^3*** ^7Axis have destroyed the MG emplacement ^3***!", Map.MgReset );
+	OnTrigger( "^3*** ^7Axis have destroyed the AA gun - Axis paratroops can attack! ^3", Map.AA_Gun_Destroyed );
+	OnTrigger( "^3*** ^7Axis have destroyed the AA gun controls - Axis paratroops can a", Map.AA_Gun_Controls_Destroyed );
+
+	OnTrigger( "^3*** ^7Axis have stolen the Key to the Safe! ^3***", Map.KeysStolen );
+	OnTrigger( "^3*** ^7The Allies have returned the Safe Key to the Dining Room! ^3***", Map.KeysReturned );
+	OnTrigger( "^3*** ^7Axis got the Key to the Safe - the Safe is opening! ^3***", Map.SafeOpened );
+	OnTrigger( "^3*** ^7Axis have stolen the D-Day Plans! ^3***", Map.PlansStolen );
+	OnTrigger( "^3*** ^7The D-Day Plans have been returned to the Study! ^3***", Map.PlansReturned );
+
+	OnTrigger( "Planted at the AA gun.", Map.AA_Gun_Planted );
+	OnTrigger( "Planted at the Main Door.", Map.Main_Door_Planted );
+	OnTrigger( "Planted at the AA gun controls.", Map.AA_Gun_Controls_Planted );
+	OnTrigger( "Planted at the East Study Door.", Map.East_Study_Door_Planted );
+	OnTrigger( "Planted at the South Study Door.", Map.South_Study_Door_Planted );
+
+	OnTrigger( "Defused at the AA gun.", Map.AA_Gun_Defused );
+	OnTrigger( "Defused at the Main Door.", Map.Main_Door_Defused );
+	OnTrigger( "Defused at the AA gun controls.", Map.AA_Gun_Controls_Defused );
+	OnTrigger( "Defused at the East Study Door.", Map.East_Study_Door_Defused );
+	OnTrigger( "Defused at the South Study Door.", Map.South_Study_Door_Defused );
+
+	// TO BE CLEARED SOON
+	ETUtil.DisableGoal( "MOUNTMG42.*" );
+	ETUtil.DisableGoal( "REPAIRMG42.*" );
+	ETUtil.DisableGoal( "ATTACK_Defend.*" );
+	ETUtil.DisableGoal( "CHECKPOINT_pavilion_flag" );
+
+	// *** AXIS GOALS ***
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_AxisKeys" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_PreventMGSpot" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_plans" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_keyondesk" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_compost" );
+
+	// *** ALLIED GOALS ***
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_allied_MG_track" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_allied_MG_track" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_keys_allies.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_plans_allies.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_compost_allies" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_compost_allies2" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD_Neutral_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Neutral_Command_Post" );
+
+	// A utility that is required for the custom build goal
+	if(Util.UpdateConstrData)
+	{
+		Util.UpdateConstrData();
+	}
+
+	// *** AXIS GOALS PRIORITY ***
+
+	//d00d: the following goals do not exist in the Map table
+	//d00d: try: SetGoalPriority( "Plant_AA_gun", 0.5 );
+	//d00d: see: http://www.omni-bot.de/e107/e107_plugins/forum/forum_viewtopic.php?15018
+
+	SetGoalPriority( "Plant_AA_gun", 0.5 );
+	SetGoalPriority( "Plant_AA_gun_controls", 0.5 );
+	SetGoalPriority( "Plant_East_Stairwell_Door", 0.5 );
+	SetGoalPriority( "Plant_West_Stairwell_Door", 0.5 );
+	SetGoalPriority( "Plant_South_Study_Door", 0.6 );
+	SetGoalPriority( "Plant_East_Study_Door", 0.7 );
+	SetGoalPriority( "Plant_Main_Door", 0.8 );
+	SetGoalPriority( "Build_Command_Post", 0.9 );
+
+	// Just for Axis engineers
+	SetGoalPriority( "ATTACK_Defend.*", 0.0 );
+	SetGoalPriority( "ATTACK_Defend.*", 2.0, TEAM.AXIS, CLASS.ENGINEER );
+
+	// *** ALLIED GOALS ***
+	SetGoalPriority( "DEFEND_.*", 0.4 );
+	SetGoalPriority( "Build_Command_Post", 0.5 );
+	// Allied MG has 0.6 of priority
+	SetGoalPriority( "Build_East_Stairwell_Door", 0.7 );
+	SetGoalPriority( "Build_West_Stairwell_Door", 0.7 );
+
+	// *** GOALS PROPERTIES ***
+	Util.SetMaxUsersInProgress( 1, "BUILD.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_.*" );
+	Util.SetMaxUsersInProgress( 1, "REPAIR.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsersInProgress( 1, "CHECKPOINT_.*" );
+	Util.SetGoalOffset( 0, 0, -60, "BUILD_East_Stairwell_Door" );
+	Util.SetGoalOffset( 200, 60, -40, "REPAIRMG42_allied_MG_track" );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=60, maxcamptime=120});
+	SetMapGoalProperties( "MOBILEMG42_.*", {mincamptime=60, maxcamptime=120});
+
+	Util.MapDebugPrint( "Omni-bot map script for Chartwell 1.4.0 by Advieszeur and Mateos" );
+
+	// *** ROUTES ***
+	MapRoutes =
+	{
+		CAPPOINT_safe =
+		{
+			ROUTE_KeysStart  =
+			{
+				ROUTE_KeysPath1  =
+				{
+					ROUTE_KeysPath2  = {},
+				},
+			},
+		},
+
+		CAPPOINT_compost =
+		{
+			ROUTE_RouteToCP1  =
+			{
+				ROUTE_KeysPath2  =
+				{
+					ROUTE_RouteToCP2  =
+					{
+						ROUTE_RouteToCP3  = {},
+					},
+				},
+			},
+		},
+		BUILD_East_Stairwell_Door =
+		{
+			ROUTE_AlliedSpawn  =
+			{
+				ROUTE_SideObjs1  =
+				{
+					ROUTE_SideObjs2  = {},
+				},
+			},
+		},
+	};
+
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Routing enabled!" );
+};
+
+global OnBotJoin = function( bot )
+{
+	team = bot.GetTeam();
+
+	// Much windows for better defend spots must be broken
+	bot.TargetBreakableDist = 150.0;
+	weaps = { WEAPON.THOMPSON, WEAPON.MP40, WEAPON.SHOTGUN, WEAPON.M97, WEAPON.M7, WEAPON.GARAND, WEAPON.K43, WEAPON.STEN, WEAPON.FG42, WEAPON.MP34, WEAPON.BAR, WEAPON.STG44};
+
+	foreach( id and weap in weaps )
+	{
+		w = bot.GetWeapon(weap);
+		w.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 1.2);
+	}
+
+	w = bot.GetWeapon(WEAPON.KNIFE);
+	w.PrimaryFire.SetDesirabilityRange(0, 48, 0.6);
+
+	// No need to count, just make the first one a covert
+	if ( !Map.AxisCovert && team == TEAM.AXIS )
+	{
+		bot.ChangeClass(CLASS.COVERTOPS);
+		Map.AxisCovert = true;
+	}
+	else if ( !Map.AlliesCovert && team == TEAM.ALLIES )
+	{
+		bot.ChangeClass(CLASS.COVERTOPS);
+		Map.AlliesCovert = true;
+	}
+};

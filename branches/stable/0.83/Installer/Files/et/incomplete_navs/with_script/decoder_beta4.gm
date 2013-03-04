@@ -1,0 +1,151 @@
+global Map =
+{
+	fenceConstructionScript_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "fenceConstructionScript_Built" );
+	},
+
+	rampConstructionScript_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "rampConstructionScript_Built" );
+	},
+
+	axis_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_compost_built_Built" );
+	},
+
+	allied_compost_built_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Built" );
+	},
+
+	BoxC_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BoxC_Destroyed" );
+	},
+
+	BoxB_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BoxB_Destroyed" );
+	},
+
+	rampConstructionScript_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "rampConstructionScript_Destroyed" );
+	},
+
+	dynoteamdoor_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "dynoteamdoor_Destroyed" );
+	},
+
+	allied_compost_built_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_compost_built_Destroyed" );
+	},
+
+	axisGate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axisGate_Destroyed" );
+	},
+
+	fenceConstructionScript_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "fenceConstructionScript_Destroyed" );
+	},
+
+	BoxA_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "BoxA_Destroyed" );
+	},
+
+ 	Allies_Capture_Flag = function( trigger )
+ 	{
+ 		if ( TestMap )
+			{ return; }
+ 
+ 		Util.MapDebugPrint( "Allies_Capture_Flag" );
+ 	},
+
+ 	Axis_Capture_Flag = function( trigger )
+ 	{
+ 		if ( TestMap )
+			{ return; }
+ 
+ 		Util.MapDebugPrint( "Axis_Capture_Flag" );
+ 	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ ETUtil.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.axis_compost_built_Built );
+	OnTrigger( "The axis have built the fence!", Map.fenceConstructionScript_Built );
+	OnTrigger( "MISSING_STRING", Map.rampConstructionScript_Built );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Built );
+	OnTrigger( "decoder_allies_entrance1_destroyed", Map.axisGate_Destroyed );
+	OnTrigger( "The axis have destroyed the ramp!", Map.rampConstructionScript_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.allied_compost_built_Destroyed );
+	OnTrigger( "The allies have destroyed the fence!", Map.fenceConstructionScript_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.BoxC_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.BoxA_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.BoxB_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.dynoteamdoor_Destroyed );
+ 	OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+ 	OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	bot.TargetBreakableDist = 300.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

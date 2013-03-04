@@ -1,0 +1,134 @@
+global Map =
+{
+	Ammo_Cabinet_campo_ammocabinet = "AMMO_CABINET_campo_ammocabinet",
+	Ammo_Cabinet_island_ammocabinet = "AMMO_CABINET_island_ammocabinet",
+	Health_Cabinet_island_healthcabinet = "HEALTH_CABINET_island_healthcabinet",
+	Health_Cabinet_campo_healthcabinet = "HEALTH_CABINET_campo_healthcabinet",
+	Build_alliedcampomg42nest = "MAP_CONSTRUCTION_alliedcampomg42nest",
+	Build_axischurchmg42nest = "MAP_CONSTRUCTION_axischurchmg42nest",
+	Build_lib_side_wall = "MAP_CONSTRUCTION_lib_side_wall",
+	Build_gun_construct = "MAP_CONSTRUCTION_gun_construct",
+	Build_boatbarrier2 = "MAP_CONSTRUCTION_boatbarrier2",
+	Build_tank_construct = "MAP_CONSTRUCTION_tank_construct",
+	Build_side_entrance = "MAP_CONSTRUCTION_side_entrance",
+	Build_axislibmg42nest = "MAP_CONSTRUCTION_axislibmg42nest",
+	Build_boatbarrier1 = "MAP_CONSTRUCTION_boatbarrier1",
+	Build_tankbarrier = "MAP_CONSTRUCTION_tankbarrier",
+	Build_boat_construct = "MAP_CONSTRUCTION_boat_construct",
+	Build_allied_radio_built = "MAP_CONSTRUCTION_allied_radio_built",
+	Build_axis_radio_built = "MAP_CONSTRUCTION_axis_radio_built",
+	Build_footbridge = "MAP_CONSTRUCTION_footbridge",
+	Destroy_axis_radio_built = "MAP_DYNAMITE_TARGET_axis_radio_built",
+	Destroy_gun_construct = "MAP_DYNAMITE_TARGET_gun_construct",
+	Destroy_tankbarrier = "MAP_DYNAMITE_TARGET_tankbarrier",
+	Destroy_allied_radio_built = "MAP_DYNAMITE_TARGET_allied_radio_built",
+	Destroy_lib_side_wall = "MAP_DYNAMITE_TARGET_lib_side_wall",
+	Destroy_footbridge = "MAP_DYNAMITE_TARGET_footbridge",
+	Destroy_axislibmg42nest = "MAP_DYNAMITE_TARGET_axislibmg42nest",
+	Destroy_axischurchmg42nest = "MAP_DYNAMITE_TARGET_axischurchmg42nest",
+	Destroy_boatbarrier1 = "MAP_DYNAMITE_TARGET_boatbarrier1",
+	Destroy_side_entrance = "MAP_DYNAMITE_TARGET_side_entrance",
+	Destroy_boatbarrier2 = "MAP_DYNAMITE_TARGET_boatbarrier2",
+	Destroy_alliedcampomg42nest = "MAP_DYNAMITE_TARGET_alliedcampomg42nest",
+	Mount_axischurchmg42 = "MAP_MOUNTABLE_MG42_axischurchmg42",
+	Mount_axislibmg42 = "MAP_MOUNTABLE_MG42_axislibmg42",
+	Mount_alliedcampomg42 = "MAP_MOUNTABLE_MG42_alliedcampomg42",
+	Repair_alliedcampomg42 = "MAP_REPAIR_MG42_alliedcampomg42",
+	Repair_axislibmg42 = "MAP_REPAIR_MG42_axislibmg42",
+	Repair_axischurchmg42 = "MAP_REPAIR_MG42_axischurchmg42",
+	Vehicle_tank = "MAP_MOVER_tank",
+	Vehicle_at_gun = "MAP_MOVER_at_gun",
+	Vehicle_boat = "MAP_MOVER_boat",
+	Vehicle_church_rubble = "MAP_MOVER_church_rubble",
+	Flag_relic = "MAP_FLAG_relic",
+	Cappoint_429 = "MAP_CAPPOINT_429",
+
+	Tests = function()
+	{
+		OnTrigger( "Allied team has constructed the Campo MG Nest!", TestMap.Pass );
+		OnTrigger( "The AT Gun has been repaired!", TestMap.Pass );
+		OnTrigger( "Boat Barrier #1 has been constructed.", TestMap.Pass );
+		OnTrigger( "Axis Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been constructed.", TestMap.Pass );
+		OnTrigger( "Axis team has constructed the Church MG Nest!", TestMap.Pass );
+		OnTrigger( "Axis team has constructed the Library MG Nest!", TestMap.Pass );
+		OnTrigger( "MISSING_STRING", Map.lib_side_wall_Built );
+		OnTrigger( "Allied team has constructed the Foot Bridge!", TestMap.Pass );
+		OnTrigger( "The Boat has been repaired!", TestMap.Pass );
+		OnTrigger( "Allied Command Post constructed. Charge speed increased!", TestMap.Pass );
+		OnTrigger( "Boat Barrier #2 has been constructed.", TestMap.Pass );
+		OnTrigger( "The Tank has been repaired", TestMap.Pass );
+		OnTrigger( "MISSING_STRING", Map.side_entrance_Built );
+		OnTrigger( "Boat Barrier #2 has been destroyed.", TestMap.Pass );
+		OnTrigger( "Boat Barrier #1 has been destroyed.", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Side Entrance!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Church MG Nest!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Axis Command Post!", TestMap.Pass );
+		OnTrigger( "Allied team has destroyed the Library MG Nest!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Allied Command Post!", TestMap.Pass );
+		OnTrigger( "The AT Gun has been damaged!", TestMap.Pass );
+		OnTrigger( "Tank Barrier has been destroyed.", TestMap.Pass );
+		OnTrigger( "Allies have destroyed the Library Side Wall!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Foot Bridge!", TestMap.Pass );
+		OnTrigger( "Axis team has destroyed the Campo MG Nest!", TestMap.Pass );
+//~ 		OnTrigger( "MISSING_STRING", Map.Allies_Capture_Flag );
+//~ 		OnTrigger( "MISSING_STRING", Map.Axis_Capture_Flag );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_island_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_island_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Ammo_Cabinet_campo_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Ammo_Cabinet_campo_ammocabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_campo_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_campo_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Health_Cabinet_island_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Health_Cabinet_island_healthcabinet, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_boatbarrier2, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_alliedcampomg42nest, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_gun_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_boat_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_footbridge, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axislibmg42nest, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Build_tank_construct, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_lib_side_wall, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_tankbarrier, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_boatbarrier1, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_axischurchmg42nest, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Build_side_entrance, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_boatbarrier2, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_footbridge, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_gun_construct, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axischurchmg42nest, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_tankbarrier, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_allied_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axislibmg42nest, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Destroy_alliedcampomg42nest, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_lib_side_wall, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_axis_radio_built, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_side_entrance, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Destroy_boatbarrier1, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_axischurchmg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_axischurchmg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_axislibmg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_axislibmg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Mount_alliedcampomg42, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Mount_alliedcampomg42, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_boat, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_church_rubble, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_church_rubble, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Vehicle_at_gun, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Vehicle_tank, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Flag_relic, 120, true );
+		TestMap.RunTest( TEAM.ALLIES, CLASS.ENGINEER, Map.Cappoint_429, 120, true );
+		TestMap.RunTest( TEAM.AXIS, CLASS.ENGINEER, Map.Cappoint_429, 120, true );
+	},
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

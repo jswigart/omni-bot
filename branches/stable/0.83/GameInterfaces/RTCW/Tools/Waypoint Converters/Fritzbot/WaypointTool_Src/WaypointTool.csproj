@@ -1,0 +1,400 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B1164A90-DE70-4385-988D-162E6D04DC49}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>ET_1.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>WaypointTool</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WaypointTool</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="ICSharpCode.TextEditor">
+      <Name>icsharpcode.texteditor</Name>
+      <HintPath>lib\icsharpcode.texteditor.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Name>system.web.services</Name>
+      <HintPath>..\..\windows\assembly\gac\system.web.services\1.0.5000.0__b03f5f7f11d50a3a\system.web.services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Action.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ActionDifference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionPrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Actions.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="AIScriptEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AIScriptFoldingStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AIScriptValidationMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AIScriptValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AlternatingBotRowCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AppData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bits.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BotReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bots.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Bots.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BotsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BspEntity.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BspReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BspReaderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CodeHelperDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Conversion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CsvWriter.cs" />
+    <Compile Include="DataGridComboBoxColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Enumerations.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Hex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPrintableUserControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Keyword.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordCompletionData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordCompletionDataProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordInput.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeywordInsightDataProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NavigationCompareControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NavigationDiff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NavigationElementBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NavigationReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NewAIScriptDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Node.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeDifference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodePrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Nodes.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Project.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Project.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Route.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RouteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RouteDifference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RoutePrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Routes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Routes.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewDragDrop.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WaypointControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <EmbeddedResource Include="AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ActionControl.resx">
+      <DependentUpon>ActionControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AIScriptEditor.resx">
+      <DependentUpon>AIScriptEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BotsControl.resx">
+      <DependentUpon>BotsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BspReaderControl.resx">
+      <DependentUpon>BspReaderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeHelperDialog.resx">
+      <DependentUpon>CodeHelperDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NavigationCompareControl.resx">
+      <DependentUpon>NavigationCompareControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewAIScriptDialog.resx">
+      <DependentUpon>NewAIScriptDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeControl.resx">
+      <DependentUpon>NodeControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RouteControl.resx">
+      <DependentUpon>RouteControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaypointControl.resx">
+      <DependentUpon>WaypointControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="Actions.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Actions.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App.ico" />
+    <Content Include="Bots.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Bots.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Changes.txt" />
+    <Content Include="Info.txt" />
+    <Content Include="Nodes.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Nodes.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Project.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Project.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Routes.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Routes.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Todo.txt" />
+    <None Include="Actions.xsx">
+      <DependentUpon>Actions.xsd</DependentUpon>
+    </None>
+    <None Include="aiscript.xshd" />
+    <None Include="Bots.xsx">
+      <DependentUpon>Bots.xsd</DependentUpon>
+    </None>
+    <None Include="Nodes.xsc">
+      <DependentUpon>Nodes.xsd</DependentUpon>
+    </None>
+    <None Include="Nodes.xss">
+      <DependentUpon>Nodes.xsd</DependentUpon>
+    </None>
+    <None Include="Nodes.xsx">
+      <DependentUpon>Nodes.xsd</DependentUpon>
+    </None>
+    <None Include="Project.xsx">
+      <DependentUpon>Project.xsd</DependentUpon>
+    </None>
+    <None Include="Routes.xsx">
+      <DependentUpon>Routes.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

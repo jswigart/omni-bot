@@ -1,0 +1,531 @@
+//==========================================================================================
+//
+//	mt_whoverest_b4_6.gm
+//	(Mt. Whoverest)
+//
+//	Who     When             What
+//------------------------------------------------------------------------------------------
+//	d00d    24 October 2012  Resolved most navigational issues by paththrough
+//	d00d    14 October 2012  Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Allied_Command_Post_Dyno = 0,
+	Axis_Command_Post_Dyno = 0,
+	Documents_door_Dyno = 0,
+	main_door_Dyno = 0,
+	vent_Dyno = 0,
+
+	door_closed = true,
+
+	Navigation =
+	{
+		trap_door =
+		{
+			navigate = function( _this )
+			{
+				wpTable = {};
+				Wp.GetWaypointByName( "trapdoor", wpTable );
+				if ( _this.Goto(wpTable.position) == EVENT.PATH_SUCCESS )
+				{
+					if ( !Map.door_closed )
+					{
+						_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+						sleep(0.8);
+						_this.Bot.HoldButton( BTN.CROUCH, 1.5 );
+						_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+						sleep(1.5);
+						_this.Bot.HoldButton( BTN.CROUCH, 1.5 );
+						_this.Bot.ReleaseButton( BTN.FORWARD );
+						_this.ReleaseAimRequest();
+					}
+					else
+					{
+						// aim at door
+						_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+						sleep(0.4);
+						Map.door_closed = false;
+						_this.Bot.HoldButton( BTN.USE, 0.5 ); // open the door
+						sleep(1);
+						_this.Bot.HoldButton( BTN.USE, 0.5 );
+						sleep(0.5);
+						// we are trough the door by now, aim at bottom end of ladder
+						_this.AddAimRequest( Priority.High, "position", Vec3(2580,-100,-190) );
+						_this.Bot.HoldButton( BTN.CROUCH, 1.5 );
+						_this.Bot.HoldButton( BTN.WALK, 1.5 );
+						_this.Bot.HoldButton( BTN.FORWARD, 1.5 );
+						sleep(1.2);
+						Map.door_closed = true;
+						sleep(0.3);
+						_this.Bot.ReleaseButton( BTN.WALK );
+						_this.Bot.ReleaseButton( BTN.CROUCH );
+						_this.Bot.ReleaseButton( BTN.FORWARD );
+						_this.ReleaseAimRequest();
+					}
+				}
+			},
+		},
+		objective_door =
+		{
+			navigate = function( _this )
+			{
+				// do nothing, this was solved in the waypoints
+				return;
+			}
+		},
+	},
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	Documents_door_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Documents_door_Built" );
+	},
+
+	Allied_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Planted" );
+	},
+
+	Axis_Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Planted" );
+	},
+
+	Documents_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Documents_door_Dyno += 1;
+		Util.MapDebugPrint( "Documents_door_Planted" );
+	},
+
+	main_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_door_Dyno += 1;
+		Util.MapDebugPrint( "main_door_Planted" );
+	},
+
+	vent_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.vent_Dyno += 1;
+		Util.MapDebugPrint( "vent_Planted" );
+	},
+
+	Allied_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Allied_Command_Post_Defused" );
+	},
+
+	Axis_Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Axis_Command_Post_Defused" );
+	},
+
+	Documents_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Documents_door_Dyno -= 1;
+		Util.MapDebugPrint( "Documents_door_Defused" );
+	},
+
+	main_door_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_door_Dyno -= 1;
+		Util.MapDebugPrint( "main_door_Defused" );
+	},
+
+	vent_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.vent_Dyno -= 1;
+		Util.MapDebugPrint( "vent_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Allied_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Axis_Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	Documents_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Documents_door_Dyno = 0;
+
+		Util.MapDebugPrint( "Documents_door_Destroyed" );
+	},
+
+	main_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_door_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_docs2" );
+		Util.MapDebugPrint( "main_door_Destroyed" );
+	},
+
+	vent_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.vent_Dyno = 0;
+		Wp.SetWaypointFlag( "vent", "closed", false );
+
+		Util.MapDebugPrint( "vent_Destroyed" );
+	},
+
+	allied_docs_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_docs_Taken" );
+	},
+
+	allied_docs2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_docs2_Taken" );
+	},
+
+	axis_docs_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_docs_Taken" );
+	},
+
+	axis_docs2_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_docs2_Taken" );
+	},
+
+	allied_docs_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_docs_Returned" );
+	},
+
+	allied_docs2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_docs2_Returned" );
+	},
+
+	axis_docs_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_docs_Returned" );
+	},
+
+	axis_docs2_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_docs2_Returned" );
+	},
+
+	allied_docs_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_docs2" );
+		Util.MapDebugPrint( "allied_docs_Secured" );
+	},
+
+	allied_docs2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_docs2_Secured" );
+	},
+
+	axis_docs_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_docs_Secured" );
+	},
+
+	axis_docs2_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_axis_docs" );
+		Util.MapDebugPrint( "axis_docs2_Secured" );
+	},
+
+	mid_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "mid_spawn_Axis_Captured" );
+	},
+
+	mid_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "mid_spawn_Allies_Captured" );
+	},
+
+	electric_doors_opening = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_mg42_3_track" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_3_track" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_door_switch" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_door_switch" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_allied_docs" );
+		Util.MapDebugPrint( "electric_doors_opening" );
+	},
+
+	electric_doors_closing = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_door_switch" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_door_switch" );
+		Util.MapDebugPrint( "electric_doors_closing" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Documents_door_Built ); // This one doesn't seem to have a trigger.
+	OnTrigger( "Planted at the Allied Command Post.", Map.Allied_Command_Post_Planted );
+	OnTrigger( "Planted at the Axis Command Post.", Map.Axis_Command_Post_Planted );
+	OnTrigger( "Planted at Documents door.", Map.Documents_door_Planted );
+	OnTrigger( "Planted at the main door.", Map.main_door_Planted );
+	OnTrigger( "Planted at the vent.", Map.vent_Planted );
+	OnTrigger( "Defused at the Allied Command Post.", Map.Allied_Command_Post_Defused );
+	OnTrigger( "Defused at the Axis Command Post.", Map.Axis_Command_Post_Defused );
+	OnTrigger( "Defused at Documents door.", Map.Documents_door_Defused );
+	OnTrigger( "Defused at the main door.", Map.main_door_Defused );
+	OnTrigger( "Defused at the vent.", Map.vent_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "The door to the douments has been destroyed!", Map.Documents_door_Destroyed );
+	OnTrigger( "Axis have blown the Main door", Map.main_door_Destroyed );
+	OnTrigger( "Axis have blown the vent", Map.vent_Destroyed );
+	OnTrigger( "Axis have stolen the secret documents!", Map.allied_docs_Taken );
+	OnTrigger( "Axis have stolen the encryption key!", Map.allied_docs2_Taken );
+	OnTrigger( "Allies have stolen Decoder!", Map.axis_docs_Taken );
+	OnTrigger( "Allies have stolen Spy book!", Map.axis_docs2_Taken );
+	OnTrigger( "Flag returned allied_docs!", Map.allied_docs_Returned );
+	OnTrigger( "Flag returned allied_docs2!", Map.allied_docs2_Returned );
+	OnTrigger( "Flag returned axis_docs!", Map.axis_docs_Returned );
+	OnTrigger( "Flag returned axis_docs2!", Map.axis_docs2_Returned );
+	OnTrigger( "Axis have secured the documents", Map.allied_docs_Secured );
+	OnTrigger( "Axis have secured the encryption key!", Map.allied_docs2_Secured );
+	OnTrigger( "MISSING_STRING", Map.axis_docs_Secured ); // This one doesn't seem to have a trigger.
+	OnTrigger( "The Spy book is encoded, recover the decoder!", Map.axis_docs2_Secured );
+	OnTrigger( "Allies take the Forward spawn!", Map.mid_spawn_Allies_Captured );
+	OnTrigger( "Axis capture the Forward spawn!", Map.mid_spawn_Axis_Captured );
+	OnTrigger( "Electric doors opening", Map.electric_doors_opening );
+	OnTrigger( "Electric doors closing", Map.electric_doors_closing );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_axis" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_docs" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_door_switch" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_door_switch" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_docs" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CAPPOINT_allies" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_allied_docs2" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", { MinCampTime=15, MaxCampTime=90 } );
+	SetMapGoalProperties( "MOBILEMG42_.*", { MinCampTime=10, MaxCampTime=60 } );
+
+	// Misc.
+	Wp.SetWaypointFlag( "vent", "closed", true );
+	Util.AddUsePoint( "PLANT_main_door", {Vec3(652,215,50), Vec3(837,237,50), Vec3(782,282,50)} );
+
+	// Region Triggers
+	trapdoor = OnTriggerRegion( AABB(2449,-163,140, 2742,17,307), RegionTrigger.DisableCombatMovement );
+
+	// Priorities
+	SetGoalPriority( "SWITCH_door_switch", 0.0, 0, 0 ); 
+	SetGoalPriority( "SWITCH_door_switch", 0.8, 0, CLASS.ENGINEER ); 
+	SetGoalPriority( "DEFUSE_vent_.*", 0.0, TEAM.ALLIES, CLASS.ENGINEER, true ); 
+
+	Util.MapDebugPrint( "Omni-bot map script for Mount Whoverest executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	bot.MaxViewDistance = 2600;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes = // TODO
+	{
+		BUILD_Documents_door =
+		{
+		},
+		BUILD_Allied_Command_Post =
+		{
+		},
+		BUILD_Axis_Command_Post =
+		{
+		},
+		PLANT_main_door =
+		{
+		},
+		PLANT_Axis_Command_Post =
+		{
+		},
+		PLANT_vent =
+		{
+		},
+		PLANT_Allied_Command_Post =
+		{
+		},
+		PLANT_Documents_door =
+		{
+		},
+		FLAG_allied_docs2 =
+		{
+		},
+		FLAG_axis_docs2 =
+		{
+		},
+		FLAG_allied_docs =
+		{
+		},
+		FLAG_axis_docs =
+		{
+		},
+		CHECKPOINT_mid_spawn =
+		{
+		},
+		CAPPOINT_axis =
+		{
+		},
+		CAPPOINT_allies =
+		{
+		}
+	};
+	Util.Routes(MapRoutes);
+};

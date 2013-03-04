@@ -1,0 +1,1073 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	Checkpoint_building_flag = "CHECKPOINT_building_flag",
+	Plant_Allied_munitions = "PLANT_Allied_munitions",
+	Plant_radar_equip = "PLANT_radar_equip",
+	Plant_sewer_bars = "PLANT_sewer_bars",
+	Plant_sewer_bars_1 = "PLANT_sewer_bars_1",
+	Explode_755 = "EXPLODE_755",
+	Explode_768 = "EXPLODE_768",
+	FlagStatus = 0,
+	DontDispenseAmmo = true,
+	FriendlyFire,
+
+	Roles =
+	{
+		AXIS = // Team
+		{
+			AllBots = true, // each bot is considered for a role
+			DEFENDER = // the DEFENDER role
+			{
+				voice = "defend", 		// signals voice chat to randomly announce
+				spawnpt = 2,			// users of this role will choose spawnpt 2
+				numbots = 4,			// maximum of 5 bots
+				crucialClass = CLASS.ENGINEER,	// first bot
+			},
+
+			// focus on the Barn
+			ATTACKER =
+			{
+				voice = "attack",
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+
+			ATTACKER1 =
+			{
+				numbots = 3,
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				voice = "defend",
+				spawnpt = 3,
+				numbots = 5,
+				crucialClass = CLASS.ENGINEER,
+			},
+
+			// focus on the Radar Equipment
+			ATTACKER =
+			{
+				voice = "attack",
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+
+			// an empty role for the other bots to make sure all are not attack / defend
+			ATTACKER1 =
+			{
+				numbots = 3,
+			},
+		},
+	},
+
+	Navigation =
+	{
+		fuckingladder =
+		{
+			navigate = function(_this)
+			{
+				_this.AddAimRequest(Priority.High, "position", Vector3(8012.084,3290.748,-603.568));
+				_this.Bot.PressButton(BTN.JUMP);
+				sleep(3);
+			},
+		},
+		fivesec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 5 );
+				sleep( 5 );
+			},
+		},
+		ninesec =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 9 );
+				sleep( 9 );
+			},
+		},
+	},
+
+	Allied_munitions_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_munitions_Destroyed" );
+	},
+
+	Allied_munitions_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_munitions_Planted" );
+	},
+
+	Allied_munitions_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_munitions_Defused" );
+	},
+
+	radar_equip_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_equip_Destroyed" );
+	},
+	radar_equip_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_equip_Planted" );
+	},
+	radar_equip_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "radar_equip_Defused" );
+	},
+
+	sewer_bars_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_munitions" );
+		Util.EnableGoal("ROUTE_CentralSewer");
+
+		Util.MapDebugPrint( "sewer_bars_Destroyed" );
+	},
+
+
+	sewer_bars_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_sewer_bars_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_sewer_bars_.*" );
+
+		Util.MapDebugPrint( "sewer_bars_Planted" );
+	},
+
+	sewer_bars_1_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "sewer_bars_1_Destroyed" );
+	},
+
+	building_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.FlagStatus = TEAM.AXIS;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAmmoAS_.*" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMGCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_r_lt_barn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rRadar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rRadar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRadar.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bRadarAS_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGAmmo.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzFlagSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bRadar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_lt_radar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRadar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bRadar.*" );
+
+		Util.MapDebugPrint( "building_flag_Axis_Captured" );
+	},
+
+	building_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.FlagStatus = TEAM.ALLIES;
+
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rAmmoAS_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRadar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMGRadar_2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_lt_barn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+		if ( Map.FriendlyFire < 1 )
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRadar.*" );
+		}
+
+		// cs: this is supposed to be commented out?
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRadarAS_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRadar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_b_lt_radar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCourtyard.*" );
+		//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bRadar.*" );
+
+		Util.MapDebugPrint( "building_flag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	Util.AddUseWp("PLANT_sewer_bars", "sewerbars");
+	Util.AddUseWp("PLANT_Allied_munitions", "ammo1");
+	Util.AddUseWp("PLANT_Allied_munitions", "ammo2");
+	Util.AddUseWp("PLANT_radar_equip", "radarplant1");
+
+	OnTrigger( "MISSING_STRING", Map.Allied_munitions_Destroyed );
+	OnTrigger( "Planted at the Allied munitions.", Map.Allied_munitions_Planted );
+	OnTrigger( "Defused at the Allied munitions.", Map.Allied_munitions_Defused );
+	OnTrigger( "MISSING_STRING", Map.radar_equip_Destroyed );
+	OnTrigger( "Planted at the radar equip.", Map.radar_equip_Planted );
+	OnTrigger( "Defused at the radar equip.", Map.radar_equip_Defused );
+	OnTrigger( "the sewer bars Destroyed.", Map.sewer_bars_Destroyed );
+	OnTrigger( "Planted at the sewer bars.", Map.sewer_bars_Planted );
+	//OnTrigger( "MISSING_STRING", Map.sewer_bars_1_Destroyed );
+	OnTrigger( "Axis reclaims the Forward Flag!", Map.building_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Flag!", Map.building_flag_Allies_Captured );
+
+	nopush = OnTriggerRegion( AABB( 8196,3094,-1090,9045,3618,-419 ), RegionTrigger.DisableBotPush );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
+
+	Util.DisableGoal(".*", true); //all but the routes
+	RTCWUtil.SetPrimaryGoals(1.0);
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass("DEFEND_r_lt_barn.*", TEAM.AXIS, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("DEFEND_b_lt_radar.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+
+	SetGoalPriority("DEFEND_r_lt_barn.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT);
+	SetGoalPriority("DEFEND_b_lt_radar.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT);
+	SetGoalPriority("ATTACK.*", 0.45); //roams
+	SetGoalPriority("CAMP_dual.*", 0.95); // dedicated defends
+	SetGoalPriority("CAMP_att_.*", 0.91); // dedicated attackers. less than plant, more than flag.
+	SetGoalPriority("ARTILLERY.*", 1.0);
+	SetGoalPriority("CALLARTILLERY.*", 0.94);
+	SetGoalPriority("AIRSTRIKE.*", 0.94);
+	SetGoalPriority("REPAIRMG42.*", 0.93); // Higher than plant, so they actually get repaired
+
+	//Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" ); // limited by Attacker1 role now (3 bots)
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+	Util.SetMaxUsersInProgress( 1, "PLANT_sewer_bars" );
+	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );
+
+	Util.EnableGoal("CHECKPOINT.*");
+	Util.DisableGoal("ROUTE_CentralSewer");
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBarn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_att_rBarn.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ammo_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equip" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_att_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMGAmmo_1" ); // This is very helpful in defending the barnyard
+
+
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	//run a thread to toggle flag availability every 5 minutes
+	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
+
+	// this map spawns a ton of entities. remove some so it is less likely G_Spawn no free entities errors occur
+	killEnts =
+	{
+		// wooden barriers, barrels, and chairs
+		369, 370, 300, 301, 448, 287, 380, 381, 382, 383, 384, 385, 450,
+
+		// speakers and coronas
+		563, 452, 453, 367, 368, 210, 211, 151, 152,
+
+		// a table represents a range of entity numbers. these should only have a start and end entity in them.
+		{568,578}, {556,559}, {543,554}, {528,541}, {460,526},
+		{386,407}, {349,364}, {302,310}, {272,297}, {235,264},
+		{214,233}, {162,169}, {132,150}, {127,130}, {123,125},
+		{112,119},
+
+	};
+	RTCWUtil.KillEntities( killEnts );
+
+	InitializeRoutes();
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+// main objectives
+		CHECKPOINT_building_flag =
+		{
+			ROUTE_alliedSpawn =
+			{
+				ROUTE_FarmSpawnExitWest =
+				{
+					Weight = 3,
+					ROUTE_FarmYardMidEntrance =
+					{
+						Weight = 4,
+						ROUTE_CYBldgNorth =
+						{
+							ROUTE_FlagExitNW = {},
+							ROUTE_FlagExitNorth = {},
+						},
+						ROUTE_CYBldgNE =
+						{
+							ROUTE_FlagExitSW = {},
+							ROUTE_FlagExitNW = {},
+						},
+						ROUTE_CYBldgSE =
+						{
+							ROUTE_FlagExitSW = {},
+							ROUTE_FlagExitSouth = {},
+						},
+						ROUTE_MidFloorCYBldg =
+						{
+							ROUTE_FlagExitSW = {},
+							ROUTE_FlagExitSouth = {},
+						},
+					},
+					ROUTE_FarmYardSouthRope =
+					{
+						Weight = 2,
+						ROUTE_FlagExitSW = {},
+						ROUTE_FlagExitSouth = {},
+						ROUTE_SewerSouthEntrance = {Weight = 3,},
+					},
+					ROUTE_FarmYardNorthRope =
+					{
+						ROUTE_FlagExitNW = {},
+						ROUTE_FlagExitNorth = {},
+					},
+				},
+			},
+
+			ROUTE_axisSpawn =
+			{
+				ROUTE_rSpawnNE =
+				{
+					ROUTE_lion =
+					{
+						ROUTE_MidFloorNorth = {},
+						ROUTE_UpperFloorNorth =
+						{
+							Weight = 3,
+							ROUTE_FlagExitNorth = {},
+						},
+						ROUTE_SewerEastEntrance =
+						{
+							ROUTE_FlagExitSW = {},
+							ROUTE_FlagExitSouth = {},
+						},
+					},
+				},
+				ROUTE_rSpawnSE =
+				{
+					ROUTE_MidFloorSouth =
+					{
+						ROUTE_FlagExitSW = {},
+						ROUTE_FlagExitSouth = {},
+					},
+				},
+				ROUTE_rSpawnSW =
+				{
+					Weight = 2,
+					ROUTE_MidFloorSouth =
+					{
+						ROUTE_FlagExitSW = {},
+						ROUTE_FlagExitSouth = {},
+					},
+				},
+			},
+		},
+
+		PLANT_Allied_munitions =
+		{
+			ROUTE_axisSpawn =
+			{
+				ROUTE_rSpawnNE =
+				{
+					ROUTE_lion =
+					{
+						ROUTE_MidFloorNorth = {},
+						ROUTE_UpperFloorNorth =
+						{
+							Weight = 3,
+							ROUTE_FlagExitNorth =
+							{
+								ROUTE_CYBldgNorth =
+								{
+									ROUTE_CYBldgCave =
+									{
+										ROUTE_NoMansLandNorthEntrance =
+										{
+											ROUTE_FarmTunnelNorth =
+											{
+												Weight = 3,
+												ROUTE_FarmTunnelSouth = {},
+											},
+											ROUTE_FarmYardNorthWestEntrance = {},
+											ROUTE_FarmYardNorthEastEntrance = {},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_rSpawnSE =
+				{
+					ROUTE_MidFloorSouth =
+					{
+						ROUTE_CentralSewer =
+						{
+							ROUTE_SewerWestEntrance =
+							{
+								ROUTE_NoMansLandNorthEntrance =
+								{
+									ROUTE_FarmTunnelNorth =
+									{
+										Weight = 3,
+										ROUTE_FarmTunnelSouth = {},
+									},
+									ROUTE_FarmYardNorthWestEntrance = {},
+									ROUTE_FarmYardNorthEastEntrance = {},
+								},
+							},
+						},
+						ROUTE_hideout =
+						{
+							ROUTE_MidFloorCYBldg =
+							{
+								ROUTE_FarmYardMidEntrance = {},
+								ROUTE_CYBldgCave =
+								{
+									ROUTE_NoMansLandNorthEntrance =
+									{
+										ROUTE_FarmTunnelNorth =
+										{
+											Weight = 3,
+											ROUTE_FarmTunnelSouth = {},
+										},
+										ROUTE_FarmYardNorthWestEntrance = {},
+										ROUTE_FarmYardNorthEastEntrance = {},
+									},
+								},
+							},
+						},
+					},
+				},
+				ROUTE_rSpawnSW =
+				{
+					Weight = 2,
+					ROUTE_MidFloorSouth =
+					{
+						ROUTE_CentralSewer =
+						{
+							ROUTE_SewerWestEntrance =
+							{
+								ROUTE_NoMansLandNorthEntrance =
+								{
+									ROUTE_FarmTunnelNorth =
+									{
+										Weight = 3,
+										ROUTE_FarmTunnelSouth = {},
+									},
+									ROUTE_FarmYardNorthWestEntrance = {},
+									ROUTE_FarmYardNorthEastEntrance = {},
+								},
+							},
+						},
+						ROUTE_hideout =
+						{
+							ROUTE_MidFloorCYBldg =
+							{
+								ROUTE_FarmYardMidEntrance = {},
+								ROUTE_CYBldgCave =
+								{
+									ROUTE_NoMansLandNorthEntrance =
+									{
+										ROUTE_FarmTunnelNorth =
+										{
+											Weight = 3,
+											ROUTE_FarmTunnelSouth = {},
+										},
+										ROUTE_FarmYardNorthWestEntrance = {},
+										ROUTE_FarmYardNorthEastEntrance = {},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			ROUTE_flagSpawn =
+			{
+				ROUTE_FlagExitSouth =
+				{
+					ROUTE_MidFloorCYBldg =
+					{
+						ROUTE_FarmYardMidEntrance = {},
+					},
+				},
+				ROUTE_FlagExitSW =
+				{
+					ROUTE_CYBldgSE = {ROUTE_FarmYardMidEntrance = {},},
+					ROUTE_CYBldgNE = {ROUTE_FarmYardMidEntrance = {},},
+				},
+				ROUTE_FlagExitNW =
+				{
+					ROUTE_CYBldgNE = {ROUTE_FarmYardMidEntrance = {},},
+					ROUTE_CYBldgNorth =
+					{
+						ROUTE_CYBldgCave =
+						{
+							ROUTE_NoMansLandNorthEntrance =
+							{
+								ROUTE_FarmTunnelNorth =
+								{
+									Weight = 3,
+									ROUTE_FarmTunnelSouth = {},
+								},
+								ROUTE_FarmYardNorthWestEntrance = {},
+								ROUTE_FarmYardNorthEastEntrance = {},
+							},
+						},
+					},
+					ROUTE_CYLadderNorth =
+					{
+						ROUTE_NoMansLandOverlook =
+						{
+							ROUTE_FarmTunnelNorth =
+							{
+								Weight = 3,
+								ROUTE_FarmTunnelSouth = {},
+							},
+							ROUTE_FarmYardNorthWestEntrance = {},
+							ROUTE_FarmYardNorthEastEntrance = {},
+						},
+					},
+				},
+				ROUTE_FlagExitNorth =
+				{
+					ROUTE_CYBldgNE = {ROUTE_FarmYardMidEntrance = {},},
+					ROUTE_CYBldgNorth =
+					{
+						ROUTE_CYBldgCave =
+						{
+							ROUTE_NoMansLandNorthEntrance =
+							{
+								ROUTE_FarmTunnelNorth =
+								{
+									Weight = 3,
+									ROUTE_FarmTunnelSouth = {},
+								},
+								ROUTE_FarmYardNorthWestEntrance = {},
+								ROUTE_FarmYardNorthEastEntrance = {},
+							},
+						},
+					},
+					ROUTE_CYLadderNorth =
+					{
+						ROUTE_NoMansLandOverlook =
+						{
+							ROUTE_FarmTunnelNorth =
+							{
+								Weight = 3,
+								ROUTE_FarmTunnelSouth = {},
+							},
+							ROUTE_FarmYardNorthWestEntrance = {},
+							ROUTE_FarmYardNorthEastEntrance = {},
+						},
+					},
+				},
+			},
+		},
+
+		PLANT_radar_equip =
+		{
+			ROUTE_alliedSpawn =
+			{
+				ROUTE_FarmSpawnExitWest =
+				{
+					Weight = 3,
+					ROUTE_FarmYardMidEntrance =
+					{
+						ROUTE_CYBldgNorth =
+						{
+							ROUTE_FlagExitNorth =
+							{
+								ROUTE_UpperFloorNorth =
+								{
+									ROUTE_MidFloorSouth = {},
+									ROUTE_TopFloorNorthEast =
+									{
+										Weight = 2,
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_MidFloorNorthEast =
+									{
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_lion = {},
+								},
+							},
+						},
+					},
+					ROUTE_MidFloorCYBldg =
+					{
+						ROUTE_MidFloorSouth = {},
+						ROUTE_MidFloorNorth =
+						{
+							ROUTE_BaseYardNorthEast = {},
+							ROUTE_lionNorth = {},
+						},
+					},
+				},
+				ROUTE_FarmSpawnExitEast =
+				{
+					Weight = 2,
+					ROUTE_FarmYardMidEntrance =
+					{
+						ROUTE_CYBldgNorth =
+						{
+							ROUTE_FlagExitNorth =
+							{
+								ROUTE_UpperFloorNorth =
+								{
+									ROUTE_MidFloorSouth = {},
+									ROUTE_TopFloorNorthEast =
+									{
+										Weight = 2,
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_MidFloorNorthEast =
+									{
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_lion = {},
+								},
+							},
+						},
+					},
+					ROUTE_MidFloorCYBldg =
+					{
+						ROUTE_MidFloorSouth = {},
+						ROUTE_MidFloorNorth =
+						{
+							ROUTE_BaseYardNorthEast = {},
+							ROUTE_lionNorth = {},
+						},
+					},
+				},
+				ROUTE_FarmSpawnExitLadder =
+				{
+					ROUTE_FarmYardMidEntrance =
+					{
+						Weight = 2,
+						ROUTE_CYBldgNorth =
+						{
+							ROUTE_FlagExitNorth =
+							{
+								ROUTE_UpperFloorNorth =
+								{
+									ROUTE_MidFloorSouth = {},
+									ROUTE_TopFloorNorthEast =
+									{
+										Weight = 2,
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_MidFloorNorthEast =
+									{
+										ROUTE_BaseYardNorthEast = {},
+										ROUTE_lionNorth = {},
+									},
+									ROUTE_lion = {},
+								},
+							},
+						},
+					},
+					ROUTE_MidFloorCYBldg =
+					{
+						Weight = 2,
+						ROUTE_MidFloorSouth = {},
+						ROUTE_MidFloorNorth =
+						{
+							ROUTE_BaseYardNorthEast = {},
+							ROUTE_lionNorth = {},
+						},
+					},
+					ROUTE_FarmTunnelSouth =
+					{
+						ROUTE_FarmTunnelNorth =
+						{
+							ROUTE_NoMansLandNorthEntrance =
+							{
+								ROUTE_CYBldgNorth =
+								{
+									ROUTE_FlagExitNorth =
+									{
+										ROUTE_UpperFloorNorth =
+										{
+											ROUTE_MidFloorSouth = {},
+											ROUTE_TopFloorNorthEast =
+											{
+												Weight = 2,
+												ROUTE_BaseYardNorthEast = {},
+												ROUTE_lionNorth = {},
+											},
+											ROUTE_MidFloorNorthEast =
+											{
+												ROUTE_BaseYardNorthEast = {},
+												ROUTE_lionNorth = {},
+											},
+											ROUTE_lion = {},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			ROUTE_flagSpawn =
+			{
+				ROUTE_FlagExitNorth =
+				{
+					ROUTE_UpperFloorNorth =
+					{
+						ROUTE_MidFloorSouth = {},
+						ROUTE_TopFloorNorthEast =
+						{
+							Weight = 2,
+							ROUTE_BaseYardNorthEast = {},
+							ROUTE_lionNorth = {},
+						},
+						ROUTE_MidFloorNorthEast =
+						{
+							ROUTE_BaseYardNorthEast = {},
+							ROUTE_lionNorth = {},
+						},
+						ROUTE_lion = {},
+					},
+				},
+				ROUTE_FlagExitSouth =
+				{
+					ROUTE_SewerSouthEntrance =
+					{
+						ROUTE_SewerEastEntrance =
+						{
+							ROUTE_lion = {},
+						},
+					},
+					ROUTE_MidFloorSouth = {},
+					ROUTE_MidFloorNorth =
+					{
+						ROUTE_BaseYardNorthEast = {},
+						ROUTE_lionNorth = {},
+						ROUTE_lion = {},
+					},
+				},
+				ROUTE_FlagExitMid =
+				{
+					Weight = 2,
+					ROUTE_TopFloorNorthEast =
+					{
+						ROUTE_BaseYardNorthEast = {},
+						ROUTE_lionNorth = {},
+					},
+					ROUTE_MidFloorNorthEast =
+					{
+						ROUTE_BaseYardNorthEast = {},
+						ROUTE_lionNorth = {},
+					},
+					ROUTE_MidFloorSouth = {},
+					ROUTE_lion = {},
+				},
+			},
+		},
+// axis camps
+		CAMP_dual_radar_1 =
+		{
+			ROUTE_axisSpawn =
+			{
+				ROUTE_rSpawnNE = {},
+				ROUTE_rSpawnSE = {},
+				ROUTE_rSpawnSW = {},
+			},
+		},
+
+		DEFEND_rRadar_1 =
+		{
+			ROUTE_axisSpawn =
+			{
+				ROUTE_rSpawnNE = {},
+				ROUTE_rSpawnSE = {},
+				ROUTE_rSpawnSW = {},
+			},
+		},
+
+		SNIPE_rCourtyard_1 =
+		{
+			ROUTE_flagSpawn = // needed?
+			{
+			},
+		},
+		DEFEND_r_lt_barn_1 =
+		{
+			ROUTE_flagSpawn =
+			{
+				ROUTE_FlagExitSouth = {ROUTE_CYLadderSouth = {},},
+				ROUTE_FlagExitSW = {ROUTE_CYLadderSouth = {},},
+				ROUTE_FlagExitNW = {ROUTE_CYLadderNorth = {},},
+				ROUTE_FlagExitNorth = {ROUTE_CYLadderNorth = {},},
+			},
+		},
+
+// allied camps
+		CAMP_dual_ammo_1 =
+		{
+			ROUTE_alliedSpawn =
+			{
+				ROUTE_FarmSpawnExitWest = {},
+				ROUTE_FarmSpawnExitEast = {},
+				ROUTE_FarmSpawnExitLadder = {},
+			},
+		},
+
+		DEFEND_bCourtyard_1 =
+		{
+			ROUTE_alliedSpawn =
+			{
+				ROUTE_FarmSpawnExitWest =
+				{
+					Weight = 3,
+					ROUTE_FarmYardMidEntrance =
+					{
+						Weight = 4,
+						ROUTE_CYBldgNorth =
+						{
+						},
+						ROUTE_CYBldgNE =
+						{
+						},
+						ROUTE_CYBldgSE =
+						{
+						},
+					},
+					ROUTE_FarmYardSouthRope =
+					{
+					},
+				},
+				ROUTE_FarmSpawnExitEast =
+				{
+					Weight = 2,
+					ROUTE_FarmYardMidEntrance =
+					{
+						Weight = 4,
+						ROUTE_CYBldgNorth =
+						{
+						},
+						ROUTE_CYBldgNE =
+						{
+						},
+						ROUTE_CYBldgSE =
+						{
+						},
+					},
+					ROUTE_FarmYardSouthRope =
+					{
+					},
+				},
+				ROUTE_FarmSpawnExitLadder =
+				{
+					ROUTE_FarmYardMidEntrance =
+					{
+						Weight = 4,
+						ROUTE_CYBldgNorth =
+						{
+						},
+						ROUTE_CYBldgNE =
+						{
+						},
+						ROUTE_CYBldgSE =
+						{
+						},
+					},
+					ROUTE_FarmYardSouthRope =
+					{
+					},
+				},
+			},
+		},
+	};
+// CHECKPOINT_building_flag
+	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitEast = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;
+	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitEast.Weight = 2;
+	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder = MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitWest;
+	MapRoutes.CHECKPOINT_building_flag.ROUTE_alliedSpawn.ROUTE_FarmSpawnExitLadder.Weight = 1;
+
+// CAMP_dual_radar
+	MapRoutes.CAMP_dual_radar_2 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_3 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_4 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_5 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_6 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_7 = MapRoutes.CAMP_dual_radar_1;
+	MapRoutes.CAMP_dual_radar_8 = MapRoutes.CAMP_dual_radar_1;
+// CAMP_dual_ammo
+	MapRoutes.CAMP_dual_ammo_2 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_3 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_4 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_5 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_6 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_7 = MapRoutes.CAMP_dual_ammo_1;
+	MapRoutes.CAMP_dual_ammo_8 = MapRoutes.CAMP_dual_ammo_1;
+// DEFEND_rBarn
+	MapRoutes.DEFEND_rBarn_1 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.DEFEND_rBarn_2 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.DEFEND_rBarn_3 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.DEFEND_rBarn_4 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.DEFEND_rBarn_5 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.DEFEND_rBarn_6 = MapRoutes.PLANT_Allied_munitions;
+// ATTACK_rBarn
+	MapRoutes.ATTACK_rBarn_1 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_2 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_3 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_4 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_5 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.ATTACK_rBarn_6 = MapRoutes.PLANT_Allied_munitions;
+// DEFEND_bRadar
+	MapRoutes.DEFEND_bRadar_1 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.DEFEND_bRadar_2 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.DEFEND_bRadar_3 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.DEFEND_bRadar_4 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.DEFEND_bRadar_5 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.DEFEND_bRadar_6 = MapRoutes.PLANT_radar_equip;
+// ATTACK_bRadar
+	MapRoutes.ATTACK_bRadar_1 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_2 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_3 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_4 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_5 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.ATTACK_bRadar_6 = MapRoutes.PLANT_radar_equip;
+// DEFEND_rRadar
+	MapRoutes.DEFEND_rRadar_2 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_3 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_4 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_5 = MapRoutes.DEFEND_rRadar_1;
+	MapRoutes.DEFEND_rRadar_6 = MapRoutes.DEFEND_rRadar_1;
+// DEFEND_bCourtyard
+	MapRoutes.DEFEND_bCourtyard_2 = MapRoutes.DEFEND_bCourtyard_1;
+	MapRoutes.DEFEND_bCourtyard_3 = MapRoutes.DEFEND_bCourtyard_1;
+	MapRoutes.DEFEND_bCourtyard_4 = MapRoutes.DEFEND_bCourtyard_1;
+	MapRoutes.DEFEND_bCourtyard_5 = MapRoutes.DEFEND_bCourtyard_1;
+	MapRoutes.DEFEND_bCourtyard_6 = MapRoutes.DEFEND_bCourtyard_1;
+// SNIPE_bCourtyard
+	MapRoutes.SNIPE_bCourtyard_1 = MapRoutes.DEFEND_bCourtyard_1;
+	MapRoutes.SNIPE_bCourtyard_2 = MapRoutes.DEFEND_bCourtyard_1;
+// SNIPE_rCourtyard
+	MapRoutes.SNIPE_rCourtyard_2 = MapRoutes.SNIPE_rCourtyard_1;
+// SNIPE_bRadar
+	MapRoutes.SNIPE_bRadar_2 = MapRoutes.SNIPE_bRadar_1;
+	MapRoutes.SNIPE_bRadar_3 = MapRoutes.SNIPE_bRadar_1;
+//DEFEND_r_lt_barn
+	MapRoutes.DEFEND_r_lt_barn_2 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_3 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_4 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_5 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_6 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_7 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_8 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_9 = MapRoutes.DEFEND_r_lt_barn_1;
+	MapRoutes.DEFEND_r_lt_barn_10 = MapRoutes.DEFEND_r_lt_barn_1;
+// CAMP_att_bRadar
+	MapRoutes.CAMP_att_bRadar1 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar2 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar3 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar4 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar5 = MapRoutes.PLANT_radar_equip;
+	MapRoutes.CAMP_att_bRadar6 = MapRoutes.PLANT_radar_equip;
+// CAMP_att_rBarn
+	MapRoutes.CAMP_att_rBarn1 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn2 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn3 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn4 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn5 = MapRoutes.PLANT_Allied_munitions;
+	MapRoutes.CAMP_att_rBarn6 = MapRoutes.PLANT_Allied_munitions;
+
+	Util.Routes(MapRoutes);
+};

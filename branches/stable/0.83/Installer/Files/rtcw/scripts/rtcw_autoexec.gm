@@ -1,0 +1,76 @@
+// Load any other scripts that we will need.
+ExecScript( "rtcw_navconfig.gm" );
+ExecScript( "commands.gm" );
+ExecScript( "rtcw_commands.gm" );
+ExecScript( "server_manager.gm" );
+ExecScript( "rtcw_regiontriggers.gm" );
+ExecScript( "rtcw_botnames.gm" );
+
+//sysSetDesiredMemoryUsageHard(5);
+//yield();
+//print("desired hard mem " + sysGetDesiredMemoryUsageHard());
+// New module format
+global Util = import("utilities");
+global RTCWUtil = import("rtcw_utilities");
+global ClassManager = import("rtcw_classmanager");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = false;
+global DEBUG_GOAL_AVAILABILITY = false;
+
+global DEBUG_SCRIPT_GOALS = false;
+global DEBUG_SCRIPT_GOALS_FILTER = {};
+DEBUG_SCRIPT_GOALS_FILTER["pathfailed"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["timedout"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["disabled"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["regiontrigger"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["initialized"] = 1;
+
+global DisableClassManager = false;
+
+global MAP_TALK = true; // end round chats.
+global MAP_SUICIDE = false; // kill out for charge, etc
+
+global PostMapLoad = function()
+{
+	OnTrigger("Round End.", RoundEnd);
+	Util.ProcessMovers();
+
+	// set up the minimum class counts for the game
+	if ( !Util.ClassTablesInitialized ) {
+		Util.InitializeClassTables();
+	}
+
+	if ( Map && Map.SnipeMap ) {
+		Util.SnipeMap();
+	} else if ( Map && Map.Classes )   {
+		Map.Classes();
+	}
+	else {
+		Server.MinClassCount[TEAM.AXIS][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.AXIS][CLASS.ENGINEER] = 1;
+		Server.MinClassCount[TEAM.AXIS][CLASS.LIEUTENANT] = 2;
+
+		Server.MinClassCount[TEAM.ALLIES][CLASS.SOLDIER] = 1;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.MEDIC] = 2;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.ENGINEER] = 1;
+		Server.MinClassCount[TEAM.ALLIES][CLASS.LIEUTENANT] = 2;
+	}
+};
+
+global RoundEnd = function(trigger)
+{
+	winner = ToInt(trigger.Action);
+	if ( winner == TEAM.AXIS ) {
+		loser = TEAM.ALLIES;
+	}
+	else {
+		loser = TEAM.AXIS;
+	}
+
+	RTCWUtil.WinningChat(winner);
+	RTCWUtil.LosingChat(loser);
+};
+
+print( "RTCW Script Executed" );

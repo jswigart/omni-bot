@@ -1,0 +1,127 @@
+#include "ui_mp/menudef.h"
+
+{
+ // VID_RESTART POPUP MENU \\
+
+menuDef {
+	name "rec_restart_popmenu"
+    	visible 0
+    	fullscreen 0
+    	//rect 217 200 210 85
+	rect 204 122 235 235
+	//outOfBoundsClick			// this closes the window if it gets a click out of the rectangle
+    	focusColor 1 .75 0 1
+    	style 1
+    	border 1
+	popup
+	onESC { close rec_restart_popmenu ; 
+	open setup_menu ;  
+	open system_menu }
+
+
+
+
+
+
+
+	// Rec_RESTART	//
+
+itemDef {
+	name confirm
+	text "This will Set"
+	style 0
+	textscale .23 
+	textstyle 3
+	rect 30 135 110 20
+	textalign 1
+	textalignx 100
+	textaligny 15
+	decoration
+	forecolor 1 1 1 1
+	visible 1
+	}
+itemDef {
+	name confirm
+	text "recommended video settings"
+	style 0
+	textscale .23 
+	textstyle 3
+	rect 30 150 110 20
+	textalign 1
+	textalignx 100
+	textaligny 15
+	decoration
+	forecolor 1 1 1 1
+	visible 1
+	}
+itemDef {
+	name confirm
+	text "and return to the Main Menu." 
+	style 0
+	textscale .23 
+	textstyle 3
+	rect 30 165 110 20
+	textalign 1
+	textalignx 100
+	textaligny 15
+	decoration
+	forecolor 1 1 1 1
+	visible 1
+	}
+
+itemDef {
+	name yes
+	text "YES"
+	type 1
+	textfont UI_FONT_NORMAL
+	textscale .25
+	style WINDOW_STYLE_FILLED
+	rect 50 190 70 26
+	textalign 1
+	textalignx 32
+	textaligny 20
+	forecolor 1 1 1 1
+	backcolor  .1 .1 .1 .1  
+	visible 1
+	border 1
+	bordercolor .5 .5 .5 .5 
+	action { play "sound/misc/nomenu.wav" ; 
+	close rec_restart_popmenu ; 
+	exec "setRecommended" ;
+	exec "vid_restart" }
+	mouseEnter { setitemcolor yes backcolor .3 0.5 0.2 .25 } 
+	mouseExit { setitemcolor yes backcolor  .1 .1 .1 .1  } 	
+	}
+	
+
+
+itemDef {
+	name no
+	text "NO"
+	type 1
+	textfont UI_FONT_NORMAL
+	textscale .25
+	style WINDOW_STYLE_FILLED
+	rect 140 190 70 26
+	textalign 1
+	textalignx 35
+	textaligny 20
+	forecolor 1 1 1 1
+	backcolor  .1 .1 .1 .1  
+	visible 1
+		border 1
+		bordercolor .5 .5 .5 .5 
+	action { play "sound/misc/nomenu.wav" ;
+	close rec_restart_popmenu ;  
+	open setup_menu ; 
+	open system_menu }
+	mouseEnter { setitemcolor no backcolor .3 0.5 0.2 .25 } 
+	mouseExit { setitemcolor no backcolor  .1 .1 .1 .1  } 		
+	}
+
+}
+
+
+}
+
+

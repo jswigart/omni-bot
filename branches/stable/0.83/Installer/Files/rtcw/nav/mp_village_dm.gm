@@ -1,0 +1,220 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = false,
+	PanzGateBots = 0,
+	BridgeASBots = 0,
+	ViewDistance = 3750,
+
+	Airstrike =
+	{
+		sladder =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
+			Facing = Vector3( 0.521, -0.200, 0.830 ), // use this if no goto waypoint. /bot mypos shows facing
+			NoPause = true, // optional: set this if you want them throw while running
+			//Waypoint = "spot_r2", // optional: defining this will have them go to given waypoint and then throw a/s
+		},
+		bridge =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.AXIS ), // or (1<<TEAM.AXIS) or (1<<TEAM.ALLIES)
+			//Facing = Vector3(-0.593,-0.392,0.703), // use this if no goto waypoint. /bot mypos shows facing
+			//NoPause = true, // optional: set this if you want them throw while running
+			Waypoint = "bridge_as", // optional: defining this will have them go to given waypoint and then throw a/s
+		},
+		cottage =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.925, 0.040, 0.377 ),
+			NoPause = true,
+		},
+	},
+
+	Navigation =
+	{
+		rpanzgate =
+		{
+			navigate = function( _this )
+			{
+				// this is just using the barrier as they eval since its simple
+				// others will need to eval other map vars
+				if ( !b2_status && Map.PanzGateBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) {
+					wpTable = Util.WpNameInfo( "rPanzGate" );
+					Map.PanzGateBots += 1;
+
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.PANZERFAUST );
+							_this.BlockForWeaponChange( WEAPON.PANZERFAUST );
+							sleep( 0.3 ); // make sure its ready to fire
+							_this.Bot.HoldButton( BTN.ATTACK1, 2 );
+							sleep( 5 );
+						}
+					}
+					Map.PanzGateBots -= 1;
+				}
+				yield();
+			},
+		},
+		// Martin - lets have axis LT run like crazy to the airstrike
+		rbridgeas =
+		{
+			navigate = function( _this )
+			{
+				if ( Map.BridgeASBots == 0 && _this.Bot.HasWeapon( WEAPON.SMOKE_GRENADE ) ) {
+					wpTable = Util.WpNameInfo( "bridge_as" );
+					Map.BridgeASBots += 1;
+
+					_this.Bot.MaxViewDistance = 10; //Martin - Don't let bots see enemies when they throw smoke
+					_this.Bot.HoldButton( BTN.SPRINT, 999 );
+					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
+						_this.Bot.ReleaseButton( BTN.SPRINT );
+						if ( _this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
+							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
+							_this.AddWeaponRequest( Priority.High, WEAPON.SMOKE_GRENADE );
+							_this.BlockForWeaponChange( WEAPON.SMOKE_GRENADE );
+							//sleep(0.3); // make sure its ready to fire
+							_this.Bot.HoldButton( BTN.ATTACK1, 0.5 );
+							sleep( 1 );
+							_this.Bot.MaxViewDistance = Map.ViewDistance;
+						}
+					}
+				}
+				yield();
+			},
+		},
+
+		// cs: from ledge by destroyed cottage to boxes
+		tjump =
+		{
+			navigate = function( _this )
+			{
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.JUMP, 0.5 );
+				_this.Bot.HoldButton( BTN.SPRINT, 3 );
+				sleep( 0.25 );
+				_this.Bot.HoldButton( BTN.STRAFE_R, 0.5 );
+				sleep( 0.51 );
+				_this.Bot.HoldButton( BTN.JUMP, 2 );
+				_this.Bot.HoldButton( BTN.FORWARD, 1 );
+				sleep( 3 );
+			},
+		},
+	},
+
+	allies_swc = function()
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_rcyd.*" ); // Use regular objective points.
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Southwest Courtyard" );
+		Util.MapDebugPrint( "Allies - SWC" );
+	},
+
+	allies_tavern = function()
+	{
+		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_tavern.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Tavern" );
+		Util.MapDebugPrint( "Allies - Tavern" );
+	},
+
+	axis_swc = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcyd.*" ); // Use regular objective points.
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Southwest Courtyard" );
+		Util.MapDebugPrint( "Axis - SWC" );
+	},
+
+	axis_tavern = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
+		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Tavern" );
+		Util.MapDebugPrint( "Axis - Tavern" );
+	},
+
+	toggle_attack = function()
+	{
+		count = -1;
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+			if ( count % 120 == 0 ) {
+				attackPoint = RandInt( 0,2 );
+				//Util.MapDebugPrint(attackPoint);
+				if ( attackPoint == 0 ) {
+					Map.allies_swc();
+					Map.axis_swc();
+				} else
+				{
+					Map.allies_tavern();
+					Map.axis_tavern();
+				}
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Wp.SetWaypointFlag( "cpspawn1", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn2", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn3", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn4", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn5", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn6", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn7", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn8", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn9", "closed", false );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*" );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+
+	// Disable pushing near the south ladder cemetary entrance
+	botpush = OnTriggerRegion( AABB( -813.000,3599.000,-133.000,-665.000,3840.000,-24.000 ), RegionTrigger.DisableBotPush );
+
+	yield(); yield();
+	RTCWUtil.StopSniping();
+	thread( Map.toggle_attack );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = Map.ViewDistance;
+	RTCWUtil.NoSnipe( bot );
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	//RTCWUtil.SelectSoldierWeapons(0, bot, WEAPON.VENOM, WEAPON.FLAMETHROWER);
+};

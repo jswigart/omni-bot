@@ -1,0 +1,550 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>mmod ReadMe file</title>
+	</head>
+
+	<body>
+		<a href="#about">About</a><br>
+		<a href="#install">Installation</a><br>
+		<a href="#config">Configurable Variables</a><br>
+		<a href="#levels">Setting mmod Levels</a><br>
+		<a href="#flags">Commands and Flags</a><br>
+		<a href="#credits">Credits</a><br>
+		<hr>
+
+		<a name="about"></a>
+		<h2>About</h2>
+		Made to give RTCW easy to use admin commands.<br>
+		Questions or help: goto <a href="http://www.thelunaticfam.com/" target="_blank">www.thelunaticfam.com</a> and post on the forum with your questions.<br>
+		<b>NOTE:</b> mmod will only work in the <a href="http://www.omni-bot.com/" target="_blank">OmniBot .82 mod for RTCW</a>.
+		<hr>
+		<a name="install"></a>
+		<h2>Installation</h2>
+		Extract the zip to your omnibot directory and add "mmod.lua" to your lua_modules cvar.<br>
+		Setting your level for the first time, use /rcon !setlevel [name] [level]<br>
+		<b>Example:</b> /rcon !setlevel mario 5<br>
+		<hr>
+		<a name="config"></a>
+		<h2>Configurable Variables</h2>
+		Open the /mmod/config.cfg file in a text editor (notepad)<br><br>
+		<table cellspacing=0 cellpadding=3 border=1>
+		<tr><td>slapdamage 		= 15</td>   <td>slap damage for !slap command</td></tr>
+		<tr><td>showkillerhp 	= 1</td>    <td>show your killer's hp 1 = on, 0 = off</td></tr>
+		<tr><td>kicktime 		= 2</td>    <td>minutes that player can rejoin after kick, player will get a temporary ban message on reconnect</td></tr>
+		</table>
+		<hr>
+		<a name="levels"></a>
+		<h2>Setting mmod Levels</h2>
+		To set levels open the /mmod/levels.cfg file in a text editor (notepad)<br>
+		<br>
+		<table cellspacing=0 cellpadding=3 border=1><tr>
+		<td>
+		level = [level number]<br>
+		name = [level's name]<br>
+		flags = [flags defining permissions of this level]
+		</td>
+		<td>
+		level    = 0<br>
+		name     = Noob<br>
+		flags    = aCh<br>
+		<br>
+		level    = 1<br>
+		name     = Clan Friend<br>
+		flags    = aChitB<br>
+		<br>
+		level    = 2<br>
+		name     = Trusted Friend<br>
+		flags    = aChitBqmnAPRpf<br>
+		<br>
+		level    = 3<br>
+		name     = Semi Moderator<br>
+		flags    = aChitBqmnAPRgkNswToplSfxr<br>
+		<br>
+		level    = 4<br>
+		name     = Full Moderator<br>
+		flags    = aChitBqmnAPRgkNswTobpQlLSfxr<br>
+		<br>
+		level    = 5<br>
+		name     = King Admin<br>
+		flags    = *<br>
+		</td>
+		</tr></table>
+		<hr>
+		<a name="flags"></a>
+		<h2>Commands and Flags for mmod</h2>
+		<table cellspacing=0 cellpadding=3 border=1>
+		<tr>
+			<td><b>COMMAND</b></td>
+			<td><b>FLAG</b></td>
+			<td><b>USAGE</b></td>
+			<td><b>DESCRIPTION</b></td>
+		</tr>
+
+		<tr><td>
+			!admindel
+			</td><td>
+			Q
+			</td><td>
+			!admindel [ADMIN NUMBER]
+			</td><td>
+			removes the admin that !listadmins lists as ADMIN NUMBER.
+		</td></tr>
+
+		<tr><td>
+			!admintest
+			</td><td>
+			a
+			</td><td>
+			!admintest or !admintest [NAME|SLOT]
+			</td><td>
+			prints out player's current mmod admin level in global chat.
+			When the NAME or SLOT are added and the user has the right mmod
+			permissions, the level of another player will be shown.
+		</td></tr>
+		
+		<tr><td>
+			!announce
+			</td><td>
+			f
+			</td><td>
+			!announce [MSG]
+			</td><td>
+			announces message in centerprint.
+		</td></tr>
+
+		<tr><td>
+			!ban
+			</td><td>
+			b
+			</td><td nowrap>
+			!ban [NAME|SLOT]<br>[TIME_WITH_MODIFIER] [REASON]
+			</td><td>
+			Kicks the player in slot number SLOT or with name containing
+			NAME off the server and will not let them connect again for
+			time with modifier (s, m, h, d, or w).  For example:<br><br>
+			90s = 90 seconds<br>
+			15m = 15 minutes<br>
+			3h = 3 hours<br>
+			5d = 5 days<br>
+			1w = 1 week<br><br>
+			If no time is specified then it is a permanent ban, example !ban [NAME|SLOT]
+		</td></tr>
+
+		<tr><td>
+			!botplayers
+			</td><td>
+			o
+			</td><td>
+			!botplayers [NUMBER OF BOTS]
+			</td><td>
+			changes value of maxbots.
+		</td></tr>
+
+		<tr><td>
+			!date
+			</td><td>
+			C
+			</td><td>
+			!date
+			</td><td>
+			prints out local date of the server in global chat.
+		</td></tr>
+
+		<tr><td>
+			!fling
+			</td><td>
+			l
+			</td><td>
+			!fling [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing
+			NAME.
+		</td></tr>
+		
+		<tr><td>
+			!flinga
+			</td><td>
+			L
+			</td><td>
+			!flinga
+			</td><td>
+			send everyone flying
+		</td></tr>
+		
+		<tr><td>
+			!gib
+			</td><td>
+			g
+			</td><td>
+			!gib [NAME|SLOT] [REASON]
+			</td><td>
+			kills and gibs the player in slot number SLOT or with name containing
+			NAME.  If REASON is specified it is center-printed to the
+			victim.
+		</td></tr>
+
+		<tr><td>
+			!help
+			</td><td>
+			h
+			</td><td>
+			!help or !help [COMMAND]
+			</td><td>
+			lists all available mmod commands.
+		</td></tr>
+
+		<tr><td>
+			!kick
+			</td><td>
+			k
+			</td><td>
+			!kick [NAME|SLOT] [REASON]
+			</td><td>
+			kicks the player in slot number SLOT or with name containing NAME off
+			off the server.  REASON is given to the client as the drop message.
+			The client will be banned for 2 minutes.
+		</td></tr>
+		
+		<tr><td>
+			!launch
+			</td><td>
+			l
+			</td><td>
+			!launch [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing NAME.
+		</td></tr>
+		
+		<tr><td>
+			!launcha
+			</td><td>
+			L
+			</td><td>
+			!launcha
+			</td><td>
+			send everyone flying
+		</td></tr>
+
+		<tr><td>
+			!listadmins
+			</td><td>
+			q
+			</td><td>
+			!listadmins or !listadmins [SKIP]
+			</td><td>
+			lists up to 15 admins.  columns are
+			<table border=1>
+			<tr><td>admin number</td></tr>
+			<tr><td>admin level</td></tr>
+			<tr><td>admin level name</td></tr>
+			<tr><td>admin name</td></tr>
+			</table>
+			If SKIP is provided, admin number's less than that number are skipped before
+			printing starts.
+		</td></tr>
+		
+		<tr><td>
+			!listplayers
+			</td><td>
+			i
+			</td><td>
+			!listplayers
+			</td><td>
+			prints out a list of information about the connected players.  the
+			columns are:<br>
+			<table border=1>
+			<tr><td>slot number</td></tr>
+			<tr><td>team R=axis B=allies S=spectator C=connecting</td></tr>
+			<tr><td>admin level (and level name)</td></tr>
+			<tr><td>last 8 digits of guid</td></tr>
+			<tr><td>M if muted</td></tr>
+			<tr><td>name</td></tr>
+			</table>
+		</td></tr>
+				
+		<tr><td>
+			!lol
+			</td><td>
+			x
+			</td><td>
+			!lol [NAME|SLOT]
+			</td><td>
+			make player drop grenades in slot number SLOT or with name containing NAME.
+		</td></tr>
+
+		<tr><td>
+			!map
+			</td><td>
+			M
+			</td><td>
+			!map [MAP NAME]
+			</td><td>
+			change map to [MAP NAME].  i.e. !map mp_beach
+		</td></tr>
+		
+		<tr><td>
+			!maprecords
+			</td><td>
+			t
+			</td><td>
+			!maprecords
+			</td><td>
+			display a list of records for current map.
+		</td></tr>
+
+		<tr><td>
+			!mute
+			</td><td>
+			m
+			</td><td nowrap>
+			!mute [NAME|SLOT] [REASON]
+			</td><td>
+			mute the player in slot SLOT or with name
+			containing NAME.  If REASON is specified it is center-printed to the
+			victim.
+		</td></tr>
+
+		<tr><td>
+			!nextmap
+			</td><td>
+			n
+			</td><td>
+			!nextmap
+			</td><td>
+			moves to the next map in rotation.
+		</td></tr>
+
+		<tr><td>
+			!putteam
+			</td><td>
+			p
+			</td><td>
+			!putteam [NAME|SLOT] [r|b|s]
+			</td><td>
+			puts the player in slot number SLOT or with name containing NAME on
+			the indicated team.<br>
+			r - AXIS<br>
+			b - ALLIES<br>
+			s - SPECTATORS
+		</td></tr>
+
+		<tr><td>
+			!rename
+			</td><td>
+			N
+			</td><td>
+			!rename [NAME|SLOT] [NEW NAME]
+			</td><td>
+			sets the player in slot number SLOT or with name containing NAME
+			to NEWNAME.
+		</td></tr>
+		
+		<tr><td>
+			!reset
+			</td><td>
+			r
+			</td><td>
+			!reset
+			</td><td>
+			reset the match
+		</td></tr>
+		
+		<tr><td>
+			!restart
+			</td><td>
+			r
+			</td><td>
+			!restart
+			</td><td>
+			restart the map
+		</td></tr>
+
+		<tr><td>
+			!serverrecords
+			</td><td>
+			t
+			</td><td>
+			!serverrecords
+			</td><td>
+			display a list of records for all maps on server.
+		</td></tr>
+
+		<tr><td>
+			!setlevel
+			</td><td>
+			s
+			</td><td nowrap>
+			!setlevel [NAME|SLOT] [LEVEL]
+			</td><td>
+			sets the connected player in slot number SLOT or with name
+			containing NAME to the level indicated by LEVEL.  A player cannot
+			!setlevel another player to a lever higher than him/herself.
+		</td></tr>
+
+		<tr><td>
+			!showbans
+			</td><td>
+			B
+			</td><td>
+			!showbans or !showbans [SKIP]
+			</td><td>
+			lists up to 15 bans currently in effect.  columns are
+			<table border=1>
+			<tr><td>ban number</td></tr>
+			<tr><td>banned player's name</td></tr>
+			<tr><td>date of the ban</td></tr>
+			<tr><td>name of the banning admin</td></tr>
+			<tr><td>when the ban will expire</td></tr>
+			<tr><td>reason for the ban</td></tr>
+			</table>
+			If SKIP is provided, ban numbers less than that number are skipped before
+			printing starts.
+		</td></tr>
+		
+		<tr><td>
+			!shuffle
+			</td><td>
+			S
+			</td><td>
+			!shuffle
+			</td><td>
+			shuffles teams
+		</td></tr>
+
+		<tr><td>
+			!slap
+			</td><td>
+			A
+			</td><td nowrap>
+			!slap [NAME|SLOT] [REASON]
+			</td><td>
+			does damage (default 15) to player in slot SLOT or with name
+			containing NAME.  If REASON is specified it is center-printed to the
+			victim.
+		</td></tr>
+
+		<tr><td>
+			!spec999
+			</td><td>
+			P
+			</td><td>
+			!spec999
+			</td><td>
+			moves all players with ping of 999 to the spectators team.
+		</td></tr>
+
+		<tr><td>
+			!stats
+			</td><td>
+			t
+			</td><td>
+			!stats or !stats [NAME|SLOT]
+			</td><td>
+			prints out your stats for current map. When the NAME or SLOT are added and the user has the right mmod
+			permissions, the stats of another player will be shown.
+		</td></tr>
+
+		<tr><td>
+			!swap
+			</td><td>
+			w
+			</td><td>
+			!swap
+			</td><td>
+			moves all players to the opposite team.
+		</td></tr>
+
+		<tr><td>
+			!time
+			</td><td>
+			C
+			</td><td>
+			!time
+			</td><td>
+			prints out local time of the server in global chat.
+		</td></tr>
+
+		<tr><td>
+			!timelimit
+			</td><td>
+			T
+			</td><td>
+			!timelimit [MINUTES]
+			</td><td>
+			changes the time limit of current map to MINUTES.
+		</td></tr>
+		
+		<tr><td>
+			!throw
+			</td><td>
+			l
+			</td><td>
+			!throw [NAME|SLOT]
+			</td><td>
+			send player flying in slot number SLOT or with name containing
+			NAME.
+		</td></tr>
+		
+		<tr><td>
+			!throwa
+			</td><td>
+			L
+			</td><td>
+			!throwa
+			</td><td>
+			send everyone flying
+		</td></tr>
+
+		<tr><td>
+			!unban
+			</td><td>
+			b
+			</td><td>
+			!unban [BAN NUMBER]
+			</td><td>
+			removes the ban that !showbans lists as BAN_NUMBER.
+		</td></tr>
+
+		<tr><td>
+			!unmute
+			</td><td>
+			m
+			</td><td nowrap>
+			!unmute [NAME|SLOT]
+			</td><td>
+			unmute the player in slot SLOT or with name
+			containing NAME.
+		</td></tr>
+
+		<tr><td>
+			!warn
+			</td><td>
+			R
+			</td><td>
+			!warn [NAME|SLOT] [WARNING]
+			</td><td>
+			center-prints WARNING to the player
+			in slot number SLOT or with name containing NAME.
+		</td></tr>
+
+		<tr><td>
+			<br>
+			</td><td>
+			*
+			</td><td>
+			<br>
+			</td><td>
+			admin has use of all commands.
+		</td></tr>
+		</table>
+		<hr>
+		<a name="credits"></a>
+		<h2>Credits</h2>
+		<ul>
+			<li>(LuNaTiC)*Marcus - mmod creator</li>
+			<li>crapshoot - testing, suggestions, made !maprecords, !serverrecords, and !announce commands, and rtcw omni-bot mod creator</li>
+			<li>Necromancer - let me use some code from Kmod+</li>
+			<li>madaaron - feature requests</li>
+		</ul>
+	</body>
+</html>

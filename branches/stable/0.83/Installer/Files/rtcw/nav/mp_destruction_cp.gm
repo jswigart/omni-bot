@@ -1,0 +1,545 @@
+global Map =
+{
+	Quiet = true,
+
+	checkpoint1 = "CHECKPOINT_checkpoint1", //allied 1
+	checkpoint2 = "CHECKPOINT_checkpoint2", //allied 2
+	checkpoint3 = "CHECKPOINT_checkpoint3", //allied 3
+	checkpoint4 = "CHECKPOINT_checkpoint4", //axis 3
+	checkpoint5 = "CHECKPOINT_checkpoint5", //axis 2
+	checkpoint6 = "CHECKPOINT_checkpoint6", //axis 1
+	Explode_87 = "EXPLODE_87",
+	Explode_88 = "EXPLODE_88",
+	Explode_89 = "EXPLODE_89",
+	Explode_90 = "EXPLODE_90",
+	Mount_east_cyd_mg = "MOUNTMG42_east_cyd_mg",
+	Mount_east_mg = "MOUNTMG42_east_mg",
+	Mount_west_cyd_mg = "MOUNTMG42_west_cyd_mg",
+	Mount_west_mg = "MOUNTMG42_west_mg",
+	Repair_east_cyd_mg = "REPAIRMG42_east_cyd_mg",
+	Repair_east_mg = "REPAIRMG42_east_mg",
+	Repair_west_cyd_mg = "REPAIRMG42_west_cyd_mg",
+	Repair_west_mg = "REPAIRMG42_west_mg",
+
+	spawnkill = false,  // Turn this off to stop the bots from spawnkilling and win the round instead.
+	thirtysecond = false,
+	c1status = 0,
+	c2status = 0,
+	c3status = 0,
+	c4status = 0,
+	c5status = 0,
+	c6status = 0,
+	DispenseAmmoTime = 1,
+
+	Navigation =
+	{
+		ladders =
+		{
+			navigate = function( _this )
+			{
+				_this.Bot.HoldButton( BTN.FORWARD, 2 );
+				sleep( 2 );
+			},
+		},
+	},
+
+	checkpoint1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c1status = 1;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c1status = 2;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c2status = 1;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c2status = 2;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint3_Axis_Captured = function( trigger )     // Allied 3rd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c3status = 1;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCheckpoint3.*" );
+		if ( Map.spawnkill == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_checkpoint1" );
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCheckpoint2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bCourtyard" );
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint3_Allies_Captured = function( trigger )   // Allied 3rd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c3status = 2;
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCheckpoint3.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCourtyard_.*" );
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint4_Axis_Captured = function( trigger )     // Axis 3rd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c4status = 1;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCheckpoint4.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCourtyard_.*" );
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint4_Allies_Captured = function( trigger )   // Axis 3rd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c4status = 2;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCheckpoint4.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_checkpoint5" );
+		if ( Map.spawnkill == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_checkpoint6" );
+		}
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint5_Axis_Captured = function( trigger )     // Axis 2nd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c5status = 1;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint5_Allies_Captured = function( trigger )   // Axis 2nd
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c5status = 2;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint6_Axis_Captured = function( trigger )     // Axis 1st
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c6status = 1;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	checkpoint6_Allies_Captured = function( trigger )   // Axis 1st
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.c6status = 2;
+
+		Map.EvalSpawnkill();
+		Map.ToggleDefends();
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.thirtysecond = true;
+
+		//abandon scripted defends at this point
+		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+
+		//let the soldiers grab the flags
+		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.AXIS, CLASS.SOLDIER );
+		SetGoalPriority( "CHECKPOINT.*", 1.0, TEAM.ALLIES, CLASS.SOLDIER );
+
+		// make sure all flags are active
+		Util.EnableGoal( "CHECKPOINT.*" );
+	},
+
+	ToggleDefends = function()
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.c1status == 2 && Map.c2status == 2 && Map.c3status == 2 && Map.c4status == 2 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDefend.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rCheckpoint5" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_c2d.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCheckpoint2" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bCourtyard" );
+		}
+
+		if ( Map.c6status == 1 && Map.c5status == 1 && Map.c4status == 1 && Map.c3status == 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDefend.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rCheckpoint5" );
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_c5d.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rCourtyard" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCheckpoint5" );
+		}
+	},
+
+	EvalSpawnkill = function()
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( !Map.spawnkill ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+
+		if ( Map.c1status == 2 && Map.c2status == 2 && Map.c3status == 2 && Map.c4status == 2 ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_checkpoint6" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
+			Wp.SetWaypointFlag( "axisflag", "axis", true );
+			/*SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );*/
+			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
+
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bSpawnkill_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bSpawnkill.*" );
+			Wp.SetWaypointFlag( "axisflag", "axis", false );
+			/*SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bSpawnkill" );*/
+		}
+
+		if ( Map.c6status == 1 && Map.c5status == 1 && Map.c4status == 1 && Map.c3status == 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_checkpoint1" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
+			/*SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );*/
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
+		}
+		else
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSpawnkill_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnkill.*" );
+			/*SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill" );*/
+		}
+	},
+
+	LedgeTrigger =
+	{
+		Name = "LedgeTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Axis take the Northern Control Point!", Map.checkpoint6_Axis_Captured );
+	OnTrigger( "Allies take the Northern Control Point!", Map.checkpoint6_Allies_Captured );
+	OnTrigger( "Axis take the Eastern Control Point!", Map.checkpoint5_Axis_Captured );
+	OnTrigger( "Allies take the Eastern Control Point!", Map.checkpoint5_Allies_Captured );
+	OnTrigger( "Axis take the Eastern Courtyard!", Map.checkpoint4_Axis_Captured );
+	OnTrigger( "Allies take the Eastern Courtyard!", Map.checkpoint4_Allies_Captured );
+	OnTrigger( "Axis take the Western Courtyard!", Map.checkpoint3_Axis_Captured );
+	OnTrigger( "Allies take the Western Courtyard!", Map.checkpoint3_Allies_Captured );
+	OnTrigger( "Axis take the Western Control Point!", Map.checkpoint2_Axis_Captured );
+	OnTrigger( "Allies take the Western Control Point!", Map.checkpoint2_Allies_Captured );
+	OnTrigger( "Axis take the Southern Control Point!", Map.checkpoint1_Axis_Captured );
+	OnTrigger( "Allies take the Southern Control Point!", Map.checkpoint1_Allies_Captured );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	Ledge1 = OnTriggerRegion( AABB( 975.000,143.000,79.000,1152.000,432.000,153.000 ), Map.LedgeTrigger );
+	Ledge2 = OnTriggerRegion( AABB( 1359.000,165.000,175.000,1664.000,432.000,249.000 ), Map.LedgeTrigger );
+	Ledge3 = OnTriggerRegion( AABB( 1679.000,127.000,63.000,2272.000,368.000,145.000 ), Map.LedgeTrigger );
+	Ledge4 = OnTriggerRegion( AABB( 847.000,911.000,-128.000,1200.000,1160.000,-54.000 ), Map.LedgeTrigger );
+	Ledge5 = OnTriggerRegion( AABB( 974.000,911.000,31.000,1200.000,1072.000,105.000 ), Map.LedgeTrigger );
+
+	//priority should be based on closest available checkpoint
+	SetGoalPriority( Map.checkpoint6, 1.0, TEAM.AXIS );
+	SetGoalPriority( Map.checkpoint5, 0.95, TEAM.AXIS );
+	SetGoalPriority( Map.checkpoint4, 0.90, TEAM.AXIS );
+	SetGoalPriority( Map.checkpoint1, 1.0, TEAM.ALLIES );
+	SetGoalPriority( Map.checkpoint2, 0.95, TEAM.ALLIES );
+	SetGoalPriority( Map.checkpoint3, 0.90, TEAM.ALLIES );
+
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 45, maxcamptime = 60} );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_rSpawnkill.*", 0.6 );
+	SetGoalPriority( "DEFEND_bSpawnkill.*", 0.6 );
+	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
+	SetGoalPriority( "CAMP_.*", 0.94 );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+
+	Util.DisableGoal( ".*", true );
+
+	//soldiers will use mg's && rear flags
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint6", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
+
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCheckpoint5" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFirstspawn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_c5d.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCheckpoint2" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFirstspawn.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_c2d.*" );
+
+	RTCWUtil.KillEntities( {87,88,89,90} ); // the useless barriers
+
+	MapRoutes =
+	{
+		CHECKPOINT_checkpoint2 =    // Allied 2
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wRoad = {},
+			},
+		},
+		CHECKPOINT_checkpoint3 =    // Allied 3
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wRoad = {},
+				ROUTE_sAlleyway = {Weight = 3,},
+			},
+			ROUTE_rSpawn =
+			{
+				ROUTE_eRoad =
+				{
+					ROUTE_srCourtyard = 
+					{
+						Weight = 2,
+						ROUTE_sCourtyard ={},
+					},
+					ROUTE_Courtyard = {Weight = 3,},
+					ROUTE_nCourtyard = {},
+				},
+				ROUTE_nAlleyway =
+				{
+					Weight = 3,
+					ROUTE_srCourtyard = {ROUTE_sCourtyard={},},
+					ROUTE_Courtyard = {Weight = 4,},
+					ROUTE_nCourtyard = {Weight = 2,},
+				},
+			},
+		},
+		CHECKPOINT_checkpoint4 =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wRoad =
+				{
+					ROUTE_sCourtyard = {},
+					ROUTE_Courtyard = {Weight = 3,},
+					ROUTE_nCourtyard = {Weight = 2,},
+				},
+				ROUTE_sAlleyway =
+				{
+					ROUTE_sCourtyard = {},
+					ROUTE_Courtyard = {Weight = 4,},
+					ROUTE_nCourtyard = {Weight = 2,},
+				},
+			},
+			ROUTE_rSpawn =
+			{
+				ROUTE_eRoad = {},
+				ROUTE_nAlleyway = {Weight = 3,},
+			},
+		},
+		DEFEND_rCheckpoint3_1 =
+		{
+			ROUTE_rSpawn =
+			{
+				ROUTE_eRoad = {},
+				ROUTE_nAlleyway = {Weight = 3,},
+			},
+		},
+		DEFEND_bCheckpoint4_1 =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_wRoad =
+				{
+					ROUTE_sCourtyard = {},
+					ROUTE_Courtyard = {Weight = 3,},
+					ROUTE_nCourtyard = {Weight = 2,},
+				},
+				ROUTE_sAlleyway =
+				{
+					ROUTE_sCourtyard = {},
+					ROUTE_Courtyard = {Weight = 4,},
+					ROUTE_nCourtyard = {Weight = 2,},
+				},
+			},
+		},
+	};
+
+	MapRoutes.DEFEND_rCheckpoint3_2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_3 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_4 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_5 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rCheckpoint3_6 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rSpawnkill_1 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rSpawnkill_2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rSpawnkill_3 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_rSpawnkill_4 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.DEFEND_bCheckpoint4_2 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_3 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_4 = MapRoutes.DEFEND_bCheckpoint4_1;
+//	MapRoutes.DEFEND_bCheckpoint4_5 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bCheckpoint4_6 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bSpawnkill_1 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bSpawnkill_2 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bSpawnkill_3 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.DEFEND_bSpawnkill_4 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CAMP_rDefend1 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CAMP_rDefend2 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CAMP_rDefend3 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CAMP_rDefend4 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CAMP_rDefend5 = MapRoutes.DEFEND_rCheckpoint3_1;
+	MapRoutes.CAMP_bDefend1 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CAMP_bDefend2 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CAMP_bDefend3 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CAMP_bDefend4 = MapRoutes.DEFEND_bCheckpoint4_1;
+	MapRoutes.CAMP_bDefend5 = MapRoutes.DEFEND_bCheckpoint4_1;
+
+	Util.Routes( MapRoutes );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = 3500;
+
+	//RTCWUtil.NoSnipe( bot );      // Not exactly a great sniping map is it...
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+};

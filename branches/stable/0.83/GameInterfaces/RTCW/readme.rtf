@@ -1,0 +1,33 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f28\fswiss\fcharset0\fprq2{\*\panose 020e0705020206020404}Copperplate Gothic Bold;}
+{\f102\froman\fcharset238\fprq2 Times New Roman CE;}{\f103\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f105\froman\fcharset161\fprq2 Times New Roman Greek;}{\f106\froman\fcharset162\fprq2 Times New Roman Tur;}
+{\f107\froman\fcharset177\fprq2 Times New Roman (Hebrew);}{\f108\froman\fcharset178\fprq2 Times New Roman (Arabic);}{\f109\froman\fcharset186\fprq2 Times New Roman Baltic;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;
+\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;
+\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\ql \li0\ri0\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}{
+\s15\ql \li0\ri0\sb100\sa100\sbauto1\saauto1\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \sbasedon0 \snext15 Normal (Web);}{\*\cs16 \additive \ul\cf2 \sbasedon10 Hyperlink;}}{\info
+{\title Return to Castle Wolfenstein}{\author Jonathan}{\operator Activision}{\creatim\yr2002\mo4\dy10\hr15\min6}{\revtim\yr2002\mo4\dy11\hr11\min56}{\version4}{\edmins75}{\nofpages1}{\nofwords0}{\nofchars0}{\*\company Activision}{\nofcharsws0}
+{\vern8299}}\widowctrl\ftnbj\aenddoc\noxlattoyen\expshrtn\noultrlspc\dntblnsbdb\nospaceforul\hyphcaps0\formshade\horzdoc\dgmargin\dghspace180\dgvspace180\dghorigin1800\dgvorigin1440\dghshow1\dgvshow1
+\jexpand\viewkind1\viewscale100\pgbrdrhead\pgbrdrfoot\splytwnine\ftnlytwnine\htmautsp\nolnhtadjtbl\useltbaln\alntblind\lytcalctblwd\lyttblrtgr\lnbrkrule \fet0\sectd \linex0\endnhere\sectlinegrid360\sectdefaultcl {\*\pnseclvl1
+\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5
+\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \s15\ql \li0\ri0\sb100\sa100\sbauto1\saauto1\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 
+\fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\b\f28\fs32 Return to Castle Wolfenstein}{\f28\super tm}{\b\fs32 \line Source Code - Readme
+\par }\pard\plain \ql \li0\ri0\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {
+\par 
+\par This code may only be used under the terms specified in the license.txt file.  No support will be provided by id, Gray Matter, Nerve, or Activision.  However, help is available.  We suggest you investigate the various user communities available through li
+nks at }{\field{\*\fldinst { HYPERLINK "http://www.CastleWolfenstein.com" }{{\*\datafield 
+00d0c9ea79f9bace118c8200aa004ba90b02000000170000001a0000007700770077002e0043006100730074006c00650057006f006c00660065006e0073007400650069006e002e0063006f006d000000e0c9ea79f9bace118c8200aa004ba90b4400000068007400740070003a002f002f007700770077002e0063006100
+730074006c00650077006f006c00660065006e0073007400650069006e002e0063006f006d002f00000000000900892c9a}}}{\fldrslt {\cs16\ul\cf2 www.CastleWolfenstein.com}}}{.
+\par 
+\par During development of Return to Castle Wolfenstein, we split the code between single and multiplayer to allow specialization.  Although very similar overall, there are speci
+fic differences between the code.  Both the source for the SP and MP code is provided here.
+\par 
+\par }{\cf1 Changes (adding or removing functions) in the game-side of single player code will require a pre-build process, \'93Extractfuncs.bat\'94.  This is run automatically when
+ compiling, and will generate two header files (g_funcs.h and g_func_decs.h), which are used by the game for savegame functionality.  If game code has changed, two \lquote builds\rquote 
+ will be necessary; one to generate the new header files, then another to complete the compilation of the game.  Because these files are updated automatically, they should remain writable (not locked, or \'93read only\'94
+).  If this automatic process appears to not want to compile and the compiler refers to either of these header files, or \'93g_save.obj\'94
+, first manually delete the header files, then run extractfuncs.bat from the command line or double-click it in windows.  This happens rarely, and this procedure should always remedy the problem.
+\par 
+\par 
+\par 
+\par }{
+\par }}

@@ -1,0 +1,454 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	FlagStatus = 0,
+
+	DispenseAmmoTime = 1, //Start passing it out right away
+	DontDispenseAmmo = true,
+
+	FirstSpawn = true,
+
+	Roles =
+	{
+		AXIS =
+		{
+			DEFENDER =
+			{
+				spawnpt = 1,
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			DEFENDER =
+			{
+				spawnpt = 2,
+				numbots = 3,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	Allied_Command_Center_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "Allied_Command_Center_Destroyed" );
+	},
+
+	Bridge_Detonator_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "Bridge_Detonator_Destroyed" );
+	},
+
+	Water_Tower_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.EnableGoal( "FLAG.*" );  //Enable the flag goal
+
+		Util.MapDebugPrint( "Water_Tower_Door_Destroyed" );
+	},
+
+	Water_Tower_Door_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "Water_Tower_Door_Planted" );
+	},
+
+	obj_trigger01_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Util.MapDebugPrint( "obj_trigger01_Taken" );
+	},
+
+	flag_respawn_obj_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 1;
+
+		/*if (Map.FirstSpawn == true)
+		{
+		    Map.FirstSpawn = false;
+		    Util.MapDebugPrint("FirstSpawn Sleep");
+		    sleep(20);
+		    Util.MapDebugPrint("Stop Sleeping");
+		}*/
+
+
+
+		//if (Map.FlagStatus == 1)
+		//{
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bBridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_townsquaremg.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
+		if ( Map.FirstSpawn == false ) {
+			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+			Util.MapDebugPrint( "Disabling CHECKPOINT for ALLIES" );
+		}
+		//}
+
+		Util.MapDebugPrint( "flag_respawn_obj_Axis_Captured" );
+	},
+
+	flag_respawn_obj_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.FlagStatus = 2;
+
+		/*if (Map.FirstSpawn == true)
+		{
+		    Map.FirstSpawn = false;
+		    Util.MapDebugPrint("FirstSpawn Sleep");
+		    sleep(15);
+		    Util.MapDebugPrint("Stop Sleeping");
+		}*/
+
+
+		//Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+
+		//if (Map.FlagStatus == 2)
+		//{
+		//RTCWUtil.ChangeSpawnNoDefenders(TEAM.AXIS, 0);	// Martin - Spawn at bridge to prevent flank
+		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoad.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRoad.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoad.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truckmg" );
+		if ( Map.FirstSpawn == false ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+			Util.MapDebugPrint( "Disabling CHECKPOINT for AXIS" );
+		}
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBridge.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		//}
+
+		Util.MapDebugPrint( "flag_respawn_obj_Allies_Captured" );
+	},
+
+	toggle_flag = function()
+	{
+		count = 1;
+		//swap availablilty every 5 minutes
+		while ( 1 )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			count += 1;
+
+			//Util.MapDebugPrint(count);
+
+			if ( count == 120 && Map.FirstSpawn == true ) {
+				Map.FirstSpawn = false;
+				Util.SetMaxUsersInProgress( 2, "CHECKPOINT_.*" );
+				Util.MapDebugPrint( "toggle_flag: first spawn off" );
+			}
+
+			if ( count % 300 == 0 ) {
+				Util.MapDebugPrint( "Toggling Flag." );
+				if ( Map.FlagStatus == 1 ) {
+					SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+					Util.MapDebugPrint( "Allies attack flag." );
+				} else
+				{
+					SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+					Util.MapDebugPrint( "Axis attack flag." );
+				}
+
+				count = 1;
+			}
+			sleep( 1 );
+		}
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "MISSING_STRING", Map.Allied_Command_Center_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Detonator_Destroyed );
+	OnTrigger( "the Water Tower Door Destroyed.", Map.Water_Tower_Door_Destroyed );
+	OnTrigger( "Planted at the Water Tower Door", Map.Water_Tower_Door_Planted );
+	OnTrigger( "Allied team defused the Bridge Detonator!", Map.obj_trigger01_Taken );
+	OnTrigger( "Axis capture the Forward Deployment Area!", Map.flag_respawn_obj_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Deployment Area!", Map.flag_respawn_obj_Allies_Captured );
+
+	WaterTower = OnTriggerRegion( AABB( 7549.000,-2061.000,1375.000,7788.000,-1782.000,1449.000 ), RegionTrigger.DisableCombatMovement );
+
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+
+	Util.DisableGoal( ".*", true ); //all but the routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "DEFEND_rEng.*", 0.9, TEAM.AXIS, CLASS.ENGINEER );
+	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "CAMP_.*", 0.95 );
+
+	RTCWUtil.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Water_Tower_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag_respawn_obj" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBridge.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBridge.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ops_.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Center" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag_respawn_obj" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_bridge_.*" );
+
+	Util.SetMaxUsersInProgress( 64, "CHECKPOINT_.*" );
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
+
+	//run a thread to toggle flag availability
+	thread( Map.toggle_flag );
+
+	MapRoutes =
+	{
+		CHECKPOINT_flag_respawn_obj =
+		{
+			ROUTE_rmidspawn  =
+			{
+				ROUTE_sflagroad  = {},
+				ROUTE_courtyard  = {},
+			},
+			ROUTE_bmidspawn  =
+			{
+				ROUTE_canalbridge  =
+				{
+					ROUTE_nflagroad  = {Weight = 3,},
+					ROUTE_nalleywaysteps = {},
+				},
+				ROUTE_sewerexit  =
+				{
+					ROUTE_flagladder  = {},
+				},
+			},
+			ROUTE_commandspawn =
+			{
+				ROUTE_chandelier =
+				{
+					Weight = 2,
+					ROUTE_canalbridge =
+					{
+						Weight = 3,
+						ROUTE_nflagroad = {},
+					},
+					ROUTE_sewerexit = {},
+				},
+				ROUTE_sgatehouse =
+				{
+					ROUTE_gardens =
+					{
+						ROUTE_church = {},
+					},
+					ROUTE_church =
+					{
+						Weight = 2,
+						ROUTE_nflagroad = {},
+					},
+					ROUTE_sewerexit = {},
+				},
+			},
+		},
+		PLANT_Allied_Command_Center =
+		{
+			ROUTE_flagspawn  =
+			{
+				ROUTE_nflagroad  =
+				{
+					ROUTE_nalleyway  =
+					{
+						ROUTE_canaljump  =
+						{
+							ROUTE_ncanal  =
+							{
+							},
+							ROUTE_scanal  =
+							{
+							},
+						},
+					},
+					ROUTE_canalbridge  =
+					{
+						ROUTE_chandelier  = {},
+						ROUTE_ngatehouse  = {},
+					},
+					ROUTE_church  =
+					{
+						ROUTE_gardens  =
+						{
+							Weight = 2,
+							ROUTE_ngatehouse  = {},
+							ROUTE_sgatehouse  = {},
+						},
+						ROUTE_ngatehouse  = {},
+						ROUTE_sgatehouse  = {},
+					},
+				},
+				ROUTE_flagladder  =
+				{
+					ROUTE_sewerexit  =
+					{
+						ROUTE_scanal  =
+						{
+							Weight = 3,
+							ROUTE_ngatehouse  = {},
+							ROUTE_sgatehouse  = {},
+						},
+						ROUTE_ncanal  =
+						{
+							ROUTE_chandelier  = {},
+						},
+					},
+				},
+			},
+		},
+		PLANT_Water_Tower_Door =
+		{
+			ROUTE_flagspawn  =
+			{
+				ROUTE_sflagroad  =
+				{
+					ROUTE_belltower  =
+					{
+						ROUTE_sriver  = {},
+					},
+					ROUTE_bridge  =
+					{
+						Weight = 2,
+						ROUTE_bridgeside = {},
+					},
+					ROUTE_ladder  = {},
+				},
+				ROUTE_nflagroad  =
+				{
+					ROUTE_nalleyway  =
+					{
+						ROUTE_courtyard  =
+						{
+							ROUTE_nprebridge  =
+							{
+								ROUTE_nriver  =
+								{
+								},
+								ROUTE_ladder  =
+								{
+								},
+							},
+							ROUTE_bridgeside  =
+							{
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+	MapRoutes.PLANT_Allied_Command_Center.ROUTE_rmidspawn = MapRoutes.PLANT_Allied_Command_Center.ROUTE_flagspawn;
+	MapRoutes.PLANT_Allied_Command_Center.ROUTE_bridgespawn = MapRoutes.PLANT_Allied_Command_Center.ROUTE_flagspawn;
+	MapRoutes.PLANT_Allied_Command_Center.ROUTE_bridgespawn.ROUTE_courtyard = MapRoutes.PLANT_Allied_Command_Center.ROUTE_flagspawn.ROUTE_nflagroad;
+	MapRoutes.FLAG_obj_trigger01 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_bridgespawn = MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_rmidspawn;
+	MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_commandspawn.ROUTE_ngatehouse = MapRoutes.CHECKPOINT_flag_respawn_obj.ROUTE_commandspawn.ROUTE_sgatehouse;
+	MapRoutes.DEFEND_rOps1 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_rOps2 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_rOps3 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_rOps4 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_rOps5 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_rOps6 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps1 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps2 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps3 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps4 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps5 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.ATTACK_rOps6 = MapRoutes.PLANT_Allied_Command_Center;
+	MapRoutes.DEFEND_bBridge_1 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.DEFEND_bBridge_2 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.DEFEND_bBridge_3 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.DEFEND_bBridge_4 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.DEFEND_bBridge_5 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.DEFEND_bBridge_6 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_1 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_2 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_3 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_4 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_5 = MapRoutes.PLANT_Water_Tower_Door;
+	MapRoutes.ATTACK_bBridge_6 = MapRoutes.PLANT_Water_Tower_Door;
+
+	Util.Routes( MapRoutes );
+
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		bot.ChangeSpawnPoint( 2 );
+	}
+	bot.TargetBreakableDist = 80.0;
+};

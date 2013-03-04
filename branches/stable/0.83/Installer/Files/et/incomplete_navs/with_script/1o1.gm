@@ -1,0 +1,50 @@
+//==========================================================================================
+//
+//	1o1.gm
+//
+//	Who			When		What
+//------------------------------------------------------------------------------------------------------------
+//	jaskot			02/03/09	Converted old script to new format
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Mobile_MG42_allied = "MOBILEMG42_allied",
+	Mobile_MG42_axis = "MOBILEMG42_axis",
+	Snipe_allied_1 = "SNIPE_allied_1",
+	Snipe_allied_2 = "SNIPE_allied_2",
+	Snipe_allied_3 = "SNIPE_allied_3",
+	Snipe_axis_1 = "SNIPE_axis_1",
+	Snipe_axis_2 = "SNIPE_axis_2",
+	Snipe_axis_3 = "SNIPE_axis_3",
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, ".*allied.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, ".*axis.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

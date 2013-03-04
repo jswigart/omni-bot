@@ -1,0 +1,27 @@
+//waypoint & scripting by C3R14L.K1L4 
+//version of 15:17 12-11-2008
+//OB 0.71
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+	{
+		Util.AutoTestMap();
+	}
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime=3, maxcamptime=6});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=20, maxcamptime=30});
+};
+
+global IgnoreEntities = function (bot)
+{
+	bot.IgnoreTarget(107,3600);
+	bot.IgnoreTarget(109,3600);
+	bot.IgnoreTarget(110,3600);
+	bot.IgnoreTarget(112,3600);
+};
+
+global OnBotJoin = function( bot )
+{
+	IgnoreEntities(bot);
+	bot.MaxViewDistance = 4095;
+};

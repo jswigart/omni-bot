@@ -1,0 +1,113 @@
+// This script provides functionality for better weapon handling for soldiers
+
+// These parameters are required
+this.Name = "HeavyWeapons";	// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.LimitToClass(CLASS.SOLDIER);
+this.LimitToNoTarget(); // let weapon system take over when they have a target
+this.LimitToNoEntityFlag(ENTFLAG.MNT_MG42);
+
+this.Initialize = function()
+{
+	this.AmmoInfo = {};
+	this.Toggle = 0;
+};
+
+this.GetPriority = function()
+{
+	this.Priority = 1.0;
+	block(0);
+};
+
+this.SwitchToSideArm = function()
+{
+	if ( !this.Bot.HasTarget() ) {
+		sideArm = WEAPON.LUGER;
+		if ( this.Bot.GetTeam() == TEAM.ALLIES ) {
+			sideArm = WEAPON.COLT;
+		}
+
+		this.AddWeaponRequest(Priority.Low, sideArm);
+	}
+};
+
+this.OnSpawn = function()
+{
+	if (this.Bot.HasWeapon(WEAPON.PANZERFAUST))
+	{
+		this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
+		sleep(1);
+		this.ReleaseWeaponRequest();
+	}
+};
+
+this.Update = function()
+{
+	while(1) {
+		this.CheckSoldierWeapon();
+		sleep(1);
+	}
+};
+
+this.Exit = function()
+{
+	this.ReleaseWeaponRequest();
+};
+
+this.CheckSoldierWeapon = function()
+{
+	if ( !this.CheckAmmo() ) {
+		this.SwitchToSideArm();
+		return;
+	}
+
+	if ( this.Bot.HasEntityFlag(ENTFLAG.ON_LADDER) || this.Bot.HasEntityFlag(ENTFLAG.INWATER) ) {
+		this.SwitchToSideArm();
+	}
+	else if ( this.Bot.GetVelocity().IsZero() ) {
+		if (this.Bot.HasWeapon(WEAPON.PANZERFAUST) && this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0)){
+			this.AddWeaponRequest(Priority.Low, WEAPON.PANZERFAUST );
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.VENOM) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.VENOM );
+			this.BlockForWeaponChange(WEAPON.VENOM);
+
+			this.SpinVenom();
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.FLAMETHROWER) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.FLAMETHROWER );
+		}
+		else if ( this.Bot.HasWeapon(WEAPON.MAUSER) ){
+			this.AddWeaponRequest(Priority.Low, WEAPON.MAUSER );
+		}
+		else {
+			this.SwitchToSideArm();
+		}
+	}
+	else {
+		this.SwitchToSideArm();
+	}	
+};
+
+this.CheckAmmo = function()
+{
+	this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
+
+	if(this.AmmoInfo.Desire > 0.9) {
+		return false;
+	}
+
+	return true;
+};
+
+this.SpinVenom = function()
+{
+	if(this.Toggle == 1) {
+		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		this.Toggle = 0;
+	}
+	else {
+		this.Toggle = 1;
+	}
+};

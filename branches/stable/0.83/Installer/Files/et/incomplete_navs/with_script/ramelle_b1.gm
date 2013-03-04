@@ -1,0 +1,119 @@
+global Map =
+{
+	Checkpoint_Flag1 = "CHECKPOINT_Flag1",
+	Checkpoint_Flag2 = "CHECKPOINT_Flag2",
+	Checkpoint_Flag3 = "CHECKPOINT_Flag3",
+	Checkpoint_Flag4 = "CHECKPOINT_Flag4",
+	Mount_315 = "MOUNTMG42_315",
+	Mount_354 = "MOUNTMG42_354",
+	Repair_315 = "REPAIRMG42_315",
+	Repair_354 = "REPAIRMG42_354",
+	Mobile_MG42_121 = "MOBILEMG42_121",
+	Mobile_MG42_122 = "MOBILEMG42_122",
+	Mobile_MG42_130 = "MOBILEMG42_130",
+	Mobile_MG42_406 = "MOBILEMG42_406",
+	Mobile_MG42_416 = "MOBILEMG42_416",
+	Mobile_MG42_421 = "MOBILEMG42_421",
+	Snipe_173 = "SNIPE_173",
+	Snipe_174 = "SNIPE_174",
+	Snipe_189 = "SNIPE_189",
+	Snipe_404 = "SNIPE_404",
+	Snipe_414 = "SNIPE_414",
+	Snipe_416 = "SNIPE_416",
+	Snipe_417 = "SNIPE_417",
+	Snipe_421 = "SNIPE_421",
+	Snipe_422 = "SNIPE_422",
+	Snipe_423 = "SNIPE_423",
+	Snipe_north_west1 = "SNIPE_north_west1",
+	Snipe_north_west2 = "SNIPE_north_west2",
+
+	Flag1_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag1_Axis_Captured" );
+	},
+
+	Flag1_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag1_Allies_Captured" );
+	},
+
+	Flag2_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag2_Axis_Captured" );
+	},
+
+	Flag2_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag2_Allies_Captured" );
+	},
+
+	Flag3_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag3_Axis_Captured" );
+	},
+
+	Flag3_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag3_Allies_Captured" );
+	},
+
+	Flag4_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag4_Axis_Captured" );
+	},
+
+	Flag4_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Flag4_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Flag1_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag1_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag2_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag2_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag3_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag3_Allies_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag4_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.Flag4_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

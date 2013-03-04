@@ -1,0 +1,928 @@
+//Mapscript for AmmoDepot
+//made for OmniBot version 0.52beta4
+//Using this with other OB-Versions could break the script as the Goalnames are different between the 2Versions
+//Author: Red Dwarf aka Roter Zwerch
+//E-Mail: geckohead@gmx.de
+
+global OnBotJoin = function( _param )
+{
+    //loop through the BotTable and set TargetBreakableDist for every bot in it.
+    foreach ( gameId and bot in BotTable )
+    {
+        //ensure the bot is set
+        if (bot)
+        {
+            bot.MaxViewDistance = 3500.0;
+        }
+    }
+};
+
+global Eastdoor = 0;
+global Westdoor = 0;
+global Sandstat = 0;
+
+global OnWestDoor = function(trigger)
+{
+	global Westdoor = Westdoor + 1;
+	if (Eastdoor == 0)
+	{	
+		dETD = GetGoal("PLANT_East_Anti_Tank_Door");
+	if (dETD)
+	{
+		dETD.SetAvailable(TEAM.ALLIES, true);
+		dETD.Bias = 2.0;
+	}
+		
+		//Axis-Attack
+	aFAA = GetGoal ("ATTACK_FirstRoof_1");
+	if (aFAA)
+	{
+		aFAA.SetAvailable(TEAM.ALLIES, false);
+		aFAA.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAB = GetGoal ("ATTACK_FirstRoof_2");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAC = GetGoal ("ATTACK_FirstRoof_3");
+	if (aFAC)
+	{
+		aFAC.SetAvailable(TEAM.ALLIES, false);
+		aFAC.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAD = GetGoal ("ATTACK_FirstRoof_4");
+	if (aFAD)
+	{
+		aFAD.SetAvailable(TEAM.ALLIES, false);
+		aFAD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAE = GetGoal ("ATTACK_FirstRoof_5");
+	if (aFAE)
+	{
+		aFAE.SetAvailable(TEAM.ALLIES, false);
+		aFAE.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aWD = GetGoal ("ATTACK_Westdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, false);
+		aWD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	//Allied-Attack
+	
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, true);
+		aSB.SetAvailable(TEAM.AXIS, false);
+	}
+	}
+	
+	dSB = GetGoal("PLANT_Sand_Barricade");
+	if (dSB)
+	{
+		dSB.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	//Allied.MG
+	
+	cMGAA = GetGoal("BUILD_Allied_MG42");
+	if (cMGAA)
+	{
+		cMGAA.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	mMGAA = GetGoal ("MOUNTMG42_Allied_MG42");
+	if (mMGAA)
+	{
+		mMGAA.SetAvailable(TEAM.ALLIES, true);
+		mMGAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Axis-Attack
+	aFAA = GetGoal ("ATTACK_FirstRoof_1");
+	if (aFAA)
+	{
+		aFAA.SetAvailable(TEAM.ALLIES, false);
+		aFAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAB = GetGoal ("ATTACK_FirstRoof_2");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAC = GetGoal ("ATTACK_FirstRoof_3");
+	if (aFAC)
+	{
+		aFAC.SetAvailable(TEAM.ALLIES, false);
+		aFAC.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAD = GetGoal ("ATTACK_FirstRoof_4");
+	if (aFAD)
+	{
+		aFAD.SetAvailable(TEAM.ALLIES, false);
+		aFAD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAE = GetGoal ("ATTACK_FirstRoof_5");
+	if (aFAE)
+	{
+		aFAE.SetAvailable(TEAM.ALLIES, false);
+		aFAE.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aWD = GetGoal ("ATTACK_Westdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, false);
+		aWD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+};
+
+global OnEastDoor = function(trigger)
+{
+	global Eastdoor = Eastdoor + 1;
+	if (Westdoor == 0)
+	{	
+		dETD = GetGoal("PLANT_West_Anti_Tank_Door");
+	if (dETD)
+	{
+		dETD.SetAvailable(TEAM.ALLIES, true);
+		dETD.Bias = 2.0;
+	}
+		
+		//Axis-Attack
+	aFAA = GetGoal ("ATTACK_FirstRoof_1");
+	if (aFAA)
+	{
+		aFAA.SetAvailable(TEAM.ALLIES, false);
+		aFAA.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAB = GetGoal ("ATTACK_FirstRoof_2");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAC = GetGoal ("ATTACK_FirstRoof_3");
+	if (aFAC)
+	{
+		aFAC.SetAvailable(TEAM.ALLIES, false);
+		aFAC.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAD = GetGoal ("ATTACK_FirstRoof_4");
+	if (aFAD)
+	{
+		aFAD.SetAvailable(TEAM.ALLIES, false);
+		aFAD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAE = GetGoal ("ATTACK_FirstRoof_5");
+	if (aFAE)
+	{
+		aFAE.SetAvailable(TEAM.ALLIES, false);
+		aFAE.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aWD = GetGoal ("ATTACK_Eastdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, false);
+		aWD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	//Allied-Attack
+	
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, true);
+		aSB.SetAvailable(TEAM.AXIS, false);
+	}
+	}
+	
+	dSB = GetGoal("PLANT_Sand_Barricade");
+	if (dSB)
+	{
+		dSB.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	//Allied.MG
+	
+	cMGAA = GetGoal("BUILD_Allied_MG42");
+	if (cMGAA)
+	{
+		cMGAA.SetAvailable(TEAM.ALLIES, true);
+		cMGAA.Bias = 0.75;
+	}
+	
+	mMGAA = GetGoal ("MOUNTMG42_Allied_MG42");
+	if (mMGAA)
+	{
+		mMGAA.SetAvailable(TEAM.ALLIES, true);
+		mMGAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Axis-Attack
+	aFAA = GetGoal ("ATTACK_FirstRoof_1");
+	if (aFAA)
+	{
+		aFAA.SetAvailable(TEAM.ALLIES, false);
+		aFAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAB = GetGoal ("ATTACK_FirstRoof_2");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAC = GetGoal ("ATTACK_FirstRoof_3");
+	if (aFAC)
+	{
+		aFAC.SetAvailable(TEAM.ALLIES, false);
+		aFAC.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAD = GetGoal ("ATTACK_FirstRoof_4");
+	if (aFAD)
+	{
+		aFAD.SetAvailable(TEAM.ALLIES, false);
+		aFAD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aFAE = GetGoal ("ATTACK_FirstRoof_5");
+	if (aFAE)
+	{
+		aFAE.SetAvailable(TEAM.ALLIES, false);
+		aFAE.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aED = GetGoal ("ATTACK_Eastdoor_1");
+	if (aED)
+	{
+		aED.SetAvailable(TEAM.ALLIES, false);
+		aED.SetAvailable(TEAM.AXIS, true);
+	}
+};
+
+global OnSand = function(trigger)
+{
+	global Sandstat = Sandstat + 1;
+	//Engie Stuff
+	
+	dDG = GetGoal("PLANT_Depot_gates");
+	if (dDG)
+	{
+		dDG.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dBW = GetGoal("PLANT_Bunker_entrance");
+	if (dBW)
+	{
+		dBW.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dAS = GetGoal("PLANT_Ammo_Shipment");
+	if (dAS)
+	{
+		dAS.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dRR = GetGoal("PLANT_Anttena_Base");
+	if (dRR)
+	{
+		dRR.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	//MG-Stuff
+	
+	//AXIS.MG
+	
+	mMGA = GetGoal ("MOUNTMG42_481");
+	if (mMGA)
+	{
+		mMGA.SetAvailable(TEAM.ALLIES, false);
+		mMGA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGB = GetGoal ("MOUNTMG42_482");
+	if (mMGB)
+	{
+		mMGB.SetAvailable(TEAM.ALLIES, false);
+		mMGB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGC = GetGoal ("MOUNTMG42_483");
+	if (mMGC)
+	{
+		mMGC.SetAvailable(TEAM.ALLIES, false);
+		mMGC.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGD = GetGoal ("MOUNTMG42_484");
+	if (mMGD)
+	{
+		mMGD.SetAvailable(TEAM.ALLIES, false);
+		mMGD.SetAvailable(TEAM.AXIS, true);
+		mMGD.Bias = 3.0;
+	}
+	
+	mMGE = GetGoal ("MOUNTMG42_485");
+	if (mMGE)
+	{
+		mMGE.SetAvailable(TEAM.ALLIES, false);
+		mMGE.SetAvailable(TEAM.AXIS, true);
+		mMGE.Bias = 3.0;
+	}
+	
+	//Attack_stuff
+	
+	aED = GetGoal ("ATTACK_Eastdoor_1");
+	if (aED)
+	{
+		aED.SetAvailable(TEAM.ALLIES, false);
+		aED.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aWD = GetGoal ("ATTACK_Westdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, false);
+		aWD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, false);
+		aSB.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	//Depotgates
+	
+	aDG = GetGoal ("ATTACK_Depotgates");
+	if (aDG)
+	{
+		aDG.SetAvailable(TEAM.ALLIES, true);
+		aDG.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//AmmoDepot
+	
+	aAD = GetGoal ("ATTACK_Ammodepot");
+	if (aAD)
+	{
+		aAD.SetAvailable(TEAM.ALLIES, true);
+		aAD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//MobilMG-Spot
+	
+	mMGSpot = GetGoal ("MOBILEMG42_710");
+	if (mMGSpot)
+	{
+		mMGSpot.SetAvailable(TEAM.ALLIES, false);
+		mMGSpot.SetAvailable(TEAM.AXIS, true);
+		mMGSpot.Bias = 3.0;
+	}
+};
+
+global OnDepotGatesdown = function(trigger)
+{
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, false);
+		aSB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Depotgates
+	
+	aDG = GetGoal ("ATTACK_Depotgates");
+	if (aDG)
+	{
+		aDG.SetAvailable(TEAM.ALLIES, false);
+		aDG.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	//AmmoDepot
+	
+	aAD = GetGoal ("ATTACK_Ammodepot");
+	if (aAD)
+	{
+		aAD.SetAvailable(TEAM.ALLIES, true);
+		aAD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	dAS = GetGoal("PLANT_Ammo_Shipment");
+	if (dAS)
+	{
+		dAS.SetAvailable(TEAM.ALLIES, true);
+		dAS.Bias = 5.0;
+	}
+	
+	dRR = GetGoal("PLANT_Anttena_Base");
+	if (dRR)
+	{
+		dRR.SetAvailable(TEAM.ALLIES, true);
+		dRR.Bias = 1.5;
+	}
+	
+	//Allied MG
+	
+	mMGAA = GetGoal ("MOUNTMG42_Allied_MG42");
+	if (mMGAA)
+	{
+		mMGAA.SetAvailable(TEAM.ALLIES, false);
+		mMGAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Axis MG
+	mMGC = GetGoal ("MOUNTMG42_483");
+	if (mMGC)
+	{
+		mMGC.SetAvailable(TEAM.ALLIES, true);
+		mMGC.SetAvailable(TEAM.AXIS, true);
+		mMGC.Bias = 5.0;
+	}
+	
+	mMGD = GetGoal ("MOUNTMG42_484");
+	if (mMGD)
+	{
+		mMGD.SetAvailable(TEAM.ALLIES, false);
+		mMGD.SetAvailable(TEAM.AXIS, true);
+		mMGD.Bias = 3.0;
+	}
+	
+	mMGE = GetGoal ("MOUNTMG42_485");
+	if (mMGE)
+	{
+		mMGE.SetAvailable(TEAM.ALLIES, false);
+		mMGE.SetAvailable(TEAM.AXIS, true);
+		mMGE.Bias = 3.0;
+	}
+	
+};
+
+global OnDepotGatesbuild = function(trigger)
+{
+	if (Sandstat == 1)
+	{
+		dDG = GetGoal("PLANT_Depot_gates");
+	if (dDG)
+	{
+		dDG.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dBW = GetGoal("PLANT_Bunker_entrance");
+	if (dBW)
+	{
+		dBW.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dAS = GetGoal("PLANT_Ammo_Shipment");
+	if (dAS)
+	{
+		dAS.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dRR = GetGoal("PLANT_Anttena_Base");
+	if (dRR)
+	{
+		dRR.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	//MG-Stuff
+	
+	//AXIS.MG
+	
+	mMGA = GetGoal ("MOUNTMG42_481");
+	if (mMGA)
+	{
+		mMGA.SetAvailable(TEAM.ALLIES, false);
+		mMGA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGB = GetGoal ("MOUNTMG42_482");
+	if (mMGB)
+	{
+		mMGB.SetAvailable(TEAM.ALLIES, false);
+		mMGB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGC = GetGoal ("MOUNTMG42_483");
+	if (mMGC)
+	{
+		mMGC.SetAvailable(TEAM.ALLIES, false);
+		mMGC.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGD = GetGoal ("MOUNTMG42_484");
+	if (mMGD)
+	{
+		mMGD.SetAvailable(TEAM.ALLIES, false);
+		mMGD.SetAvailable(TEAM.AXIS, true);
+		mMGD.Bias = 3.0;
+	}
+	
+	mMGE = GetGoal ("MOUNTMG42_485");
+	if (mMGE)
+	{
+		mMGE.SetAvailable(TEAM.ALLIES, false);
+		mMGE.SetAvailable(TEAM.AXIS, true);
+		mMGE.Bias = 3.0;
+	}
+	
+	//Attack_stuff
+	
+	aED = GetGoal ("ATTACK_Eastdoor_1");
+	if (aED)
+	{
+		aED.SetAvailable(TEAM.ALLIES, false);
+		aED.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aWD = GetGoal ("ATTACK_Westdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, false);
+		aWD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, false);
+		aSB.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	//Depotgates
+	
+	aDG = GetGoal ("ATTACK_Depotgates");
+	if (aDG)
+	{
+		aDG.SetAvailable(TEAM.ALLIES, true);
+		aDG.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//AmmoDepot
+	
+	aAD = GetGoal ("ATTACK_Ammodepot");
+	if (aAD)
+	{
+		aAD.SetAvailable(TEAM.ALLIES, true);
+		aAD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//MobilMG-Spot
+	
+	mMGSpot = GetGoal ("MOBILEMG42_710");
+	if (mMGSpot)
+	{
+		mMGSpot.SetAvailable(TEAM.ALLIES, false);
+		mMGSpot.SetAvailable(TEAM.AXIS, true);
+		mMGSpot.Bias = 3.0;
+	}
+	}
+};
+global OnMapLoad = function()
+{
+	
+	//OnTrigger-Section	
+	OnTrigger("Allies have breached the West Anti-Tank Door!!", OnWestDoor);
+	OnTrigger("Allies have breached the East Anti-Tank Door!!", OnEastDoor);
+	OnTrigger("Allied enginers have busted thought the Sand barricade!!", OnSand);
+	OnTrigger("Allies have destroyed the Axis Depot gates.", OnDepotGatesdown);
+	OnTrigger("The Depot gates have been constructed.", OnDepotGatesbuild);
+	
+	/*
+	ATTACK_FirstRoof_1 -> 1111 0000 bias 1.00
+	ATTACK_FirstRoof_4 -> 1111 0000 bias 1.00
+	ATTACK_FirstRoof_3 -> 1111 0000 bias 1.00
+	ATTACK_FirstRoof_2 -> 1111 0000 bias 1.00
+	ATTACK_FirstRoof_5 -> 1111 0000 bias 1.00
+	SNIPE_FirstRoof_6 -> 1000 0000 bias 1.00
+	
+	SNIPE_Eastdoorbreach_1 -> 1000 0000 bias 1.00
+	ATTACK_Eastdoor_1 -> 1000 0000 bias 1.00
+	ATTACK_Westdoor_1 -> 1000 0000 bias 1.00
+	
+	ATTACK_Sandbarrier -> 1111 0000 bias 1.00
+	MOBILEMG42_710 -> 1000 0000 bias 1.00
+	ATTACK_Depotgates -> 0100 0000 bias 1.00
+	ATTACK_Ammodepot -> 1111 0000 bias 1.00
+	
+	//depotgates + BarbedWire top
+	BUILD_Bunker_entrance -> 1000 0000 bias 1.00
+	PLANT_Bunker_entrance -> 0100 0000 bias 1.00
+	BUILD_Depot_gates -> 1000 0000 bias 1.00
+	PLANT_Depot_gates -> 0100 0000 bias 1.00
+	
+	
+	
+	//CommandPost
+	BUILD_Command_Post -> 1000 0000 bias 1.00
+	BUILD_Command_Post -> 0100 0000 bias 1.00
+	PLANT_Command_Post -> 0100 0000 bias 1.00
+	PLANT_Command_Post -> 1000 0000 bias 1.00
+	
+	//dynoTargets
+	PLANT_Anttena_Base -> 0100 0000 bias 1.00
+	PLANT_West_Anti_Tank_Door -> 0100 0000 bias 1.00
+	PLANT_East_Anti_Tank_Door -> 0100 0000 bias 1.00
+	PLANT_Ammo_Shipment -> 0100 0000 bias 1.00
+	PLANT_Sand_Barricade -> 0100 0000 bias 1.00
+	
+	
+	//MG Axis
+	MOUNTMG42_481 -> 1100 0000 bias 1.00
+	MOUNTMG42_482 -> 1100 0000 bias 1.00
+	MOUNTMG42_483 -> 1100 0000 bias 1.00
+	MOUNTMG42_484 -> 1100 0000 bias 1.00
+	MOUNTMG42_485 -> 1100 0000 bias 1.00
+	
+	//Allie MG
+	BUILD_Allied_MG42 -> 0100 0000 bias 1.00
+	PLANT_Allied_MG42 -> 1000 0000 bias 1.00
+	MOUNTMG42_Allied_MG42 -> 1100 0000 bias 1.00
+
+*/
+	//EngieStuff
+	
+	cDG = GetGoal("BUILD_Depot_gates");
+	if (cDG)
+	{
+		cDG.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	cBW = GetGoal("BUILD_Bunker_entrance");
+	if (cBW)
+	{
+		cBW.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	dDG = GetGoal("PLANT_Depot_gates");
+	if (dDG)
+	{
+		dDG.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	dBW = GetGoal("PLANT_Bunker_entrance");
+	if (dBW)
+	{
+		dBW.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	//dyno-obj.
+	
+	dETD = GetGoal("PLANT_East_Anti_Tank_Door");
+	if (dETD)
+	{
+		dETD.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dWTD = GetGoal("PLANT_West_Anti_Tank_Door");
+	if (dWTD)
+	{
+		dWTD.SetAvailable(TEAM.ALLIES, true);
+	}
+	
+	dSB = GetGoal("PLANT_Sand_Barricade");
+	if (dSB)
+	{
+		dSB.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	dAS = GetGoal("PLANT_Ammo_Shipment");
+	if (dAS)
+	{
+		dAS.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	dRR = GetGoal("PLANT_Anttena_Base");
+	if (dRR)
+	{
+		dRR.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	//CommandPost
+	
+	cCPA = GetGoal ("BUILD_Command_Post");
+	if (cCPA)
+	{
+		cCPA.SetAvailable(TEAM.AXIS, true);
+		cCPA.Bias = 0.5;
+	}
+	
+	cCPB = GetGoal ("BUILD_Command_Post");
+	if (cCPB)
+	{
+		cCPB.SetAvailable(TEAM.ALLIES, true);
+		cCPB.Bias = 0.5;
+	}
+	
+	dCPA = GetGoal ("PLANT_Command_Post");
+	if (dCPA)
+	{
+		dCPA.SetAvailable(TEAM.AXIS, false);
+		dCPA.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	dCPB = GetGoal ("PLANT_Command_Post");
+	if (dCPB)
+	{
+		dCPB.SetAvailable(TEAM.ALLIES, false);
+		dCPB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//MG-Stuff
+	//AXIS.MG
+	
+	mMGA = GetGoal ("MOUNTMG42_481");
+	if (mMGA)
+	{
+		mMGA.SetAvailable(TEAM.ALLIES, false);
+		mMGA.SetAvailable(TEAM.AXIS, true);
+		mMGA.Bias = 2.0;
+	}
+	
+	mMGB = GetGoal ("MOUNTMG42_482");
+	if (mMGB)
+	{
+		mMGB.SetAvailable(TEAM.ALLIES, false);
+		mMGB.SetAvailable(TEAM.AXIS, true);
+		mMGB.Bias = 2.0;
+	}
+	
+	mMGC = GetGoal ("MOUNTMG42_483");
+	if (mMGC)
+	{
+		mMGC.SetAvailable(TEAM.ALLIES, false);
+		mMGC.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGD = GetGoal ("MOUNTMG42_484");
+	if (mMGD)
+	{
+		mMGD.SetAvailable(TEAM.ALLIES, false);
+		mMGD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGE = GetGoal ("MOUNTMG42_485");
+	if (mMGE)
+	{
+		mMGE.SetAvailable(TEAM.ALLIES, false);
+		mMGE.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Allied.MG
+	
+	cMGAA = GetGoal("BUILD_Allied_MG42");
+	if (cMGAA)
+	{
+		cMGAA.SetAvailable(TEAM.ALLIES, false);
+	}
+	
+	dMGAA = GetGoal("PLANT_Allied_MG42");
+	if (dMGAA)
+	{
+		dMGAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	mMGAA = GetGoal ("MOUNTMG42_Allied_MG42");
+	if (mMGAA)
+	{
+		mMGAA.SetAvailable(TEAM.ALLIES, false);
+		mMGAA.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Attack_stuff
+	
+	aFAA = GetGoal ("ATTACK_FirstRoof_1");
+	if (aFAA)
+	{
+		aFAA.SetAvailable(TEAM.ALLIES, false);
+		aFAA.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAB = GetGoal ("ATTACK_FirstRoof_2");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAC = GetGoal ("ATTACK_FirstRoof_3");
+	if (aFAC)
+	{
+		aFAC.SetAvailable(TEAM.ALLIES, false);
+		aFAC.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAD = GetGoal ("ATTACK_FirstRoof_4");
+	if (aFAD)
+	{
+		aFAD.SetAvailable(TEAM.ALLIES, false);
+		aFAD.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAE = GetGoal ("ATTACK_FirstRoof_5");
+	if (aFAE)
+	{
+		aFAE.SetAvailable(TEAM.ALLIES, false);
+		aFAE.SetAvailable(TEAM.AXIS, true);
+	}
+	
+	aFAB = GetGoal ("SNIPE_FirstRoof_6");
+	if (aFAB)
+	{
+		aFAB.SetAvailable(TEAM.ALLIES, false);
+		aFAB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//AttackDoorbreach disabled
+	
+	aED = GetGoal ("ATTACK_Eastdoor_1");
+	if (aED)
+	{
+		aED.SetAvailable(TEAM.ALLIES, true);
+		aED.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aWD = GetGoal ("ATTACK_Westdoor_1");
+	if (aWD)
+	{
+		aWD.SetAvailable(TEAM.ALLIES, true);
+		aWD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	aEDB = GetGoal ("SNIPE_Eastdoorbreach_1");
+	if (aEDB)
+	{
+		aEDB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Sandbarricade
+	
+	aSB = GetGoal ("ATTACK_Sandbarrier");
+	if (aSB)
+	{
+		aSB.SetAvailable(TEAM.ALLIES, false);
+		aSB.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//Depotgates
+	
+	aDG = GetGoal ("ATTACK_Depotgates");
+	if (aDG)
+	{
+		aDG.SetAvailable(TEAM.ALLIES, false);
+		aDG.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//AmmoDepot
+	
+	aAD = GetGoal ("ATTACK_Ammodepot");
+	if (aAD)
+	{
+		aAD.SetAvailable(TEAM.ALLIES, false);
+		aAD.SetAvailable(TEAM.AXIS, false);
+	}
+	
+	//MobilMG-Spot
+	
+	mMGSpot = GetGoal ("MOBILEMG42_710");
+	if (mMGSpot)
+	{
+		mMGSpot.SetAvailable(TEAM.ALLIES, false);
+		mMGSpot.SetAvailable(TEAM.AXIS, false);
+	}
+};

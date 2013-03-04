@@ -1,0 +1,562 @@
+global Map =
+{
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 1,
+	//set this to false if you don't like bots /killing
+	Suicide = MAP_SUICIDE,
+	Debug = false,
+	Quiet = true,
+	Flag_Sacred_Obelisk = "FLAG_Sacred_Obelisk",
+	Plant_Coffin = "PLANT_Coffin",
+	Plant_Hallway_Gate = "PLANT_Hallway_Gate",
+	Plant_West_Gate = "PLANT_West_Gate",
+
+	CoffinStatus = false,
+	HallwayStatus = false,
+	WestStatus = false,
+	CoffinDefense = false,
+
+	CoffinDyno = 0,
+	HallwayDyno = 0,
+	WestDyno = 0,
+	FriendlyFire,
+
+	Roles =
+	{
+		AXIS =
+		{
+			// courtyard defense
+			DEFENDER =
+			{
+				numbots = 7,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	Airstrike =
+	{
+		ascrypt_1 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Waypoint = "bascrypt_1",
+		},
+		ascrypt_2 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( -0.010,0.997,-0.077 ),
+		},
+		ascrypt_3 =
+		{
+			Enabled = false,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( 0.985,0.166,-0.047 ),
+		},
+	},
+
+	Coffin_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// this region trigger isn't needed anymore
+		DeleteTriggerRegion( "Coffin" );
+
+		Map.CoffinStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Sacred_Obelisk" );
+		Map.checkCoffinFallback();
+
+		// make sure these are off
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDefuseAssist.*" );
+	},
+
+	Coffin_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.CoffinDyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Let eng defuse!
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rCoffinSpam.*" );
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		Map.EnableAxisCoffinAccess();
+
+		// if the d hasn't fallen back already, send the courtyard defense
+		if ( !Map.CoffinDefense ) {
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtYard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDefuseAssist.*" );
+		}
+	},
+
+	Coffin_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.CoffinDyno -= 1;
+		if ( Map.CoffinDyno < 1 ) {
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" ); // Let it rain again
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
+			if ( Map.Suicide ) {
+				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+			}
+
+			Map.DisableAxisCoffinAccess();
+		}
+		else if ( !Map.CoffinDefense ) {
+			// push back out to courtyard
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtYard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDefuseAssist.*" );
+		}
+	},
+
+	Hallway_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.HallwayStatus = true;
+		Map.checkCoffinFallback();
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bHallway.*" );
+		if ( Map.FriendlyFire == 0 ) {
+			Map.Airstrike.ascrypt_1.Enabled = true;
+			Map.Airstrike.ascrypt_2.Enabled = true;
+			Map.Airstrike.ascrypt_3.Enabled = true;
+		}
+	},
+
+	Hallway_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.HallwayDyno += 1;
+	},
+
+	Hallway_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.HallwayDyno -= 1;
+	},
+
+	West_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestStatus = true;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGate.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rHallway.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rsealtar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rHallway.*" );
+		Map.checkCoffinFallback();
+	},
+
+	West_Gate_Planted = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestDyno += 1;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_West_Gate.*" );
+	},
+
+	West_Gate_Defused = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		Map.WestDyno -= 1;
+	},
+
+	Sacred_Obelisk_Taken = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Focus on obelisk
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rCoffinSpam.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );      // Get to transmitter FAST
+
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+
+		Map.EnableAxisCoffinAccess();
+
+		// Don't /kill because its faster to chase, but spawn closer to transmit.
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 2 );
+			}
+		}
+	},
+
+	Sacred_Obelisk_Returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rHallway.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
+
+		// /kill spam for axis lt's
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+		}
+
+		Map.DisableAxisCoffinAccess();
+
+		// /kill once docs are returned so we can spawn closer
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+
+				//distance check instead?
+				if ( Map.Suicide && bot.GetReinforceTime() < 6 ) {
+					bot.ExecCommand( "kill" );
+				}
+			}
+		}
+	},
+	two_minute = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		// better just focus on the coffin now
+		SetGoalPriority( "ATTACK_bHallway.*", 0.49 );
+		SetGoalPriority( "ATTACK_bGate.*", 0.49 );
+		SetGoalPriority( "PLANT_Coffin", 0.93 );
+	},
+
+	thirty_second = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+	},
+
+	checkCoffinFallback = function()    // incase they blow hallway first..
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		if ( Map.HallwayStatus == true || Map.CryptDyno > 0 || Map.CryptStatus == true ) { // Fallback since hallway is gone
+			Map.CoffinDefense = true;
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rsealtar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCoffin.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCoffinSpam.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCoffin.*" );
+			Map.DisableAxisCoffinAccess();
+			// /kill spam for axis lt's
+			if ( Map.Suicide ) {
+				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+			}
+		}
+	},
+	Coffin =
+	{
+		Name = "Coffin",
+		TriggerOnClass = CLASS.ENGINEER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+
+			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
+				return;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				foreach( id and bot in BotTable )
+				{
+					if ( bot.GetTeam() == TEAM.AXIS ) {
+						bot.SayTeam( "Allies are planting at the Coffin!" );
+						break;
+					}
+				}
+			}
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+		},
+	},
+	// Let the axis down
+	EnableAxisCoffinAccess = function()
+	{
+		Map.DontDispenseAmmo = false;
+		Util.MapDebugPrint( "EnableAxisCoffinAccess" );
+		Wp.SetWaypointFlag( "jump1", "allies", false );
+		Wp.SetWaypointFlag( "jump2", "allies", false );
+		Wp.SetWaypointFlag( "jump3", "allies", false );
+		Wp.SetWaypointFlag( "jump4", "allies", false );
+		Wp.SetWaypointFlag( "jump5", "allies", false );
+		Wp.SetWaypointFlag( "jump6", "allies", false );
+		Wp.SetWaypointFlag( "jump7", "allies", false );
+		Wp.SetWaypointFlag( "crypt1", "allies", false );
+		Wp.SetWaypointFlag( "crypt2", "allies", false );
+		Wp.SetWaypointFlag( "crypt3", "allies", false );
+	},
+	// Axis should not try to get down to the coffin area due to artillery fire.
+	DisableAxisCoffinAccess = function()
+	{
+		Map.DontDispenseAmmo = true;
+		Util.MapDebugPrint( "DisableAxisCoffinAccess" );
+		Wp.SetWaypointFlag( "jump1", "allies", true );
+		Wp.SetWaypointFlag( "jump2", "allies", true );
+		Wp.SetWaypointFlag( "jump3", "allies", true );
+		Wp.SetWaypointFlag( "jump4", "allies", true );
+		Wp.SetWaypointFlag( "jump5", "allies", true );
+		Wp.SetWaypointFlag( "jump6", "allies", true );
+		Wp.SetWaypointFlag( "jump7", "allies", true );
+		Wp.SetWaypointFlag( "crypt1", "allies", true );
+		Wp.SetWaypointFlag( "crypt2", "allies", true );
+		Wp.SetWaypointFlag( "crypt3", "allies", true );
+	},
+};
+
+global OnMapLoad = function()
+{
+	tOne = OnTriggerRegion( AABB( 991.000,1270.000,15.000,1186.000,1486.000,89.000 ), Map.Coffin );
+
+	//set up some use points so they can plant either side of the gates
+	//or points around the coffin
+	Util.AddUseWp( "PLANT_West_Gate", "west1" );
+	Util.AddUseWp( "PLANT_West_Gate", "west2" );
+	Util.AddUseWp( "PLANT_Hallway_Gate", "hallway1" );
+	Util.AddUseWp( "PLANT_Coffin", "coffin1" );
+	Util.AddUseWp( "PLANT_Coffin", "coffin2" );
+	Util.AddUseWp( "PLANT_Coffin", "coffin3" );
+	Util.AddUseWp( "PLANT_Coffin", "coffin4" );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "the Coffin Destroyed.", Map.Coffin_Destroyed );
+	OnTrigger( "Planted at the Coffin.", Map.Coffin_Planted );
+	OnTrigger( "Defused at the Coffin.", Map.Coffin_Defused );
+	OnTrigger( "the Hallway Gate Destroyed.", Map.Hallway_Gate_Destroyed );
+	OnTrigger( "Planted at the Hallway Gate.", Map.Hallway_Gate_Planted );
+	OnTrigger( "Defused at the Hallway Gate.", Map.Hallway_Gate_Defused );
+	OnTrigger( "the West Gate Destroyed.", Map.West_Gate_Destroyed );
+	OnTrigger( "Planted at the West Gate.", Map.West_Gate_Planted );
+	OnTrigger( "Defused at the West Gate.", Map.West_Gate_Defused );
+	OnTrigger( "Allies have stolen the Sacred Obelisk!", Map.Sacred_Obelisk_Taken );
+	OnTrigger( "Flag returned Sacred Obelisk!", Map.Sacred_Obelisk_Returned );
+	OnTrigger( "two minute warning.", Map.two_minute );
+	OnTrigger( "thirty second warning.", Map.thirty_second );
+
+	//open up some airstrike goals if ff is off
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	Util.DisableGoal( ".*", true ); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 20, maxcamptime = 45} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+
+	// these ones roam around looking for the engineer(s) that planted
+	SetMapGoalProperties( "DEFEND_rDefuseAssist.*", {mincamptime = 1, maxcamptime = 2} );
+
+	Util.SetMaxUsers( 1, "ATTACK_bGate.*" );
+	Util.SetMaxUsers( 1, "ATTACK_bHallway.*" );
+	Util.SetMaxUsers( 1, "PLANT_West_Gate" );
+	Util.SetMaxUsers( 1, "PLANT_Hallway_Gate" );
+
+	// cs: enabled all plant goals at start now to avoid allies getting locked at west gate
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Hallway_Gate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Coffin" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bHallway.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCoffin.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_transmit" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bCoffin.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "ATTACK_bHallway.*", 0.7 );
+	SetGoalPriority( "ATTACK_bCoffin_[568].*", 0.69 );
+	SetGoalPriority( "ATTACK_bGate.*", 0.69 );  //Take hallway first
+
+	Map.EnableAxisCoffinAccess();
+
+	MapRoutes =
+	{
+		PLANT_West_Gate =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_swladder = {},
+				ROUTE_northstairwell = {},
+			},
+		},
+		PLANT_Hallway_Gate =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_swladder =
+				{
+					ROUTE_gate = {},
+				},
+				ROUTE_northstairwell = {},
+			},
+		},
+		PLANT_Coffin =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_swladder =
+				{
+					ROUTE_gate =
+					{
+						Weight = 3,
+						ROUTE_abovecoffin = {},
+						ROUTE_hallway = {Weight = 2,},
+					},
+					ROUTE_attic = {},
+					ROUTE_sealtar =
+					{
+						ROUTE_altarmainhall = {Weight = 2,},
+						ROUTE_eastaccesshall = {},
+					},
+				},
+				ROUTE_northstairwell =
+				{
+					ROUTE_gate =
+					{
+						ROUTE_sealtar =
+						{
+							ROUTE_altarmainhall = {Weight = 2,},
+							ROUTE_eastaccesshall = {},
+						},
+					},
+					ROUTE_hallway = {Weight = 3,},
+					ROUTE_abovecoffin = {Weight = 2,},
+				},
+			},
+		},
+		DEFEND_rHallway_1 =
+		{
+			ROUTE_rSpawnrear =
+			{
+				ROUTE_abovecoffin = {},
+			},
+		},
+		DEFEND_rCourtyard_1 =
+		{
+			ROUTE_rSpawnrear =
+			{
+				ROUTE_sealtar = {},
+			},
+		},
+		CAPPOINT_transmit =
+		{
+			ROUTE_obeliskgrab =
+			{
+				ROUTE_altarmainhall = {Weight = 2,},
+				ROUTE_hallway = {Weight = 2,},
+				ROUTE_eastaccesshall = {},
+			}
+		},
+		DEFEND_rTransmit_1 =
+		{
+			ROUTE_rSpawnrear =
+			{
+				ROUTE_sealtar =
+				{
+					ROUTE_swladder = {},
+				},
+				ROUTE_hallway =
+				{
+					ROUTE_northstairwell = {},
+				},
+			},
+		},
+	};
+	MapRoutes.DEFEND_rHallway_2 = MapRoutes.DEFEND_rHallway_1;
+	MapRoutes.DEFEND_rHallway_3 = MapRoutes.DEFEND_rHallway_1;
+	MapRoutes.DEFEND_rCourtyard_2 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_3 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_4 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_5 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_6 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_7 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.DEFEND_rCourtyard_8 = MapRoutes.DEFEND_rCourtyard_1;
+	MapRoutes.PANZER_rHallway = MapRoutes.DEFEND_rHallway_1;
+	MapRoutes.FLAG_Sacred_Obelisk = MapRoutes.PLANT_Coffin;
+	MapRoutes.DEFEND_rTransmit_2 = MapRoutes.DEFEND_rTransmit_1;
+	MapRoutes.DEFEND_rTransmit_3 = MapRoutes.DEFEND_rTransmit_1;
+	MapRoutes.DEFEND_rTransmit_4 = MapRoutes.DEFEND_rTransmit_1;
+	MapRoutes.DEFEND_rTransmit_5 = MapRoutes.DEFEND_rTransmit_1;
+	MapRoutes.DEFEND_rTransmit_6 = MapRoutes.DEFEND_rTransmit_1;
+	MapRoutes.ATTACK_bCoffin_1 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_2 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_3 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_4 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_5 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_6 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_7 = MapRoutes.PLANT_Coffin;
+	MapRoutes.ATTACK_bCoffin_8 = MapRoutes.PLANT_Coffin;
+
+	Util.Routes( MapRoutes );
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+	bot.MaxViewDistance = 3500;
+
+	RTCWUtil.NoSnipe( bot );      // Not exactly a great sniping map is it...
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+	bot.RemoveState("WatchForProjectile");
+};
+

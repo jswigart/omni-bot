@@ -1,0 +1,171 @@
+// This script contains functionality to trigger any available switches as set up in the global map table.
+
+// This goal uses the global blackboard, so let's register a key for it.
+if(!BB.SWITCHUSER)
+{
+	BB.SWITCHUSER = Blackboard.MakeKey();
+}
+
+// These parameters are required
+this.Name = "UseSwitch";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.GetPriorityDelay = 5;		// Delay between calls to GetPriority
+
+this.Initialize = function()
+{
+	// Internal variables
+	
+	// If there is no global map or switches table this script goal is useless, 
+	// so lets disable it from consideration.
+	if(!Map || !Map.Switches)
+	{
+		this.Disable = true;
+	}
+	else
+	{
+		// If not otherwise defined, set a high bot limit for the switches.
+		foreach ( switchTable in Map.Switches )
+		{
+			if ( typeId( switchTable.Priority ) == 0 )
+				{ switchTable.Priority = 0.65; }
+
+			if ( typeId( switchTable.LimitBots ) == 0 )
+				{ switchTable.LimitBots = Util.AllTeamPlayers; }
+			
+			if ( typeId( switchTable.LimitTeam ) == 0 )
+				{ switchTable.LimitTeam = Util.AllTeams; }
+			
+			if ( typeId( switchTable.LimitClass ) == 0 )
+				{ switchTable.LimitClass = Util.AllClasses; }
+		}
+	}
+	
+	if (!Map || !Map.Quiet)
+		{ print(this.Name, " Initialized"); }
+};
+
+//this.OnSpawn = function()
+//{
+//};
+
+this.GetPriority = function()
+{
+	myTeamMask = (1<<this.Bot.GetTeam());
+	myClassMask = (1<<this.Bot.GetClass());
+	
+	if(!this.IsActive())
+	{
+		// Look for a switch we can go for.
+		foreach ( i and switch in Map.Switches )
+		{
+			numBotsOnSwitch = Blackboard.GetNumRecords(BB.SWITCHUSER, switch.Serial);
+			
+			if( 	( switch.Enabled ) &&
+				( switch.LimitTeam & myTeamMask ) && 
+				( switch.LimitClass & myClassMask ) &&
+				( numBotsOnSwitch < switch.LimitBots ) &&
+				( !this.BlackboardIsDelayed(switch.Serial) ))
+			{
+				this.CurrentSwitch = i;
+				this.Priority = switch.Priority;
+				this.DebugString = switch.WaypointName;
+				return;
+			}
+			sleep(0.2);
+		}
+	}
+	else
+	{
+		// Abort if the goal disabled
+		switch = Map.Switches[this.CurrentSwitch];
+		if(switch && !switch.Enabled)
+		{
+			this.Priority = 0;
+		}
+	}
+};
+
+this.Enter = function()
+{
+	switch = Map.Switches[this.CurrentSwitch];
+	
+	bbRecord =
+	{
+		Owner = this.Bot.GetGameId(),
+		Target = switch.Serial,
+	};
+	Blackboard.PostRecord(BB.SWITCHUSER, bbRecord);
+};
+
+this.Exit = function()
+{
+	// Remove myself from the blackboard for using this switch
+	Blackboard.RemoveByPoster(this.Bot.GetGameId(), BB.SWITCHUSER);
+};
+
+this.Update = function()
+{
+	//print(this.Bot.Name, "UseSwitch Update", threadId());
+
+	switch = Map.Switches[this.CurrentSwitch];
+        	
+	wpPos = switch.Waypoint.position;
+	radius = switch.Waypoint.radius;
+	wpFacing = switch.Waypoint.facing;
+
+	if ( switch.LimitDistance > 0  )
+	{
+		dist = this.Bot.DistanceTo(wpPos);
+							
+		if ( switch.Debug )
+			{ print(this.Bot.Name, "^2is", dist, "away from", switch.WaypointName); }
+
+		if ( dist > switch.LimitDistance )
+			{ this.Finished(); }
+		else if ( switch.Debug )
+			{ print( this.Bot.Name, " heading to ", switch.WaypointName ); }
+	}
+	
+	if( this.Goto(wpPos, radius) == EVENT.PATH_SUCCESS )
+	{		
+		switch = Map.Switches[this.CurrentSwitch];
+		pos = switch.Waypoint.position;
+		facing = switch.Waypoint.facing;
+		
+		assert(pos && facing);
+		this.AddAimRequest(Priority.High, "facing", facing);
+				
+		myTeamMask = (1<<this.Bot.GetTeam());
+		myClassMask = (1<<this.Bot.GetClass()) ;                        
+
+		while( !exitCondition && switch.Enabled && ( switch.LimitTeam & myTeamMask ) && ( switch.LimitClass & myClassMask) )
+		{
+			//print(this.Bot.Name, "BTN.USE(", threadId(), ") t(", sysTime(),") LimitTeam", switch.LimitTeam);
+			this.Bot.PressButton( BTN.USE);
+
+			if ( switch.ExitConditions )
+			{
+				foreach ( id and func in switch.ExitConditions )
+				{
+					if ( func(this.Bot) == true )
+					{ 
+						if ( switch.Debug )
+							{ print(this.Bot.Name, "^2exit condition met for", switch.WaypointName); }
+
+						exitCondition = true;
+						break;
+					}
+				}				
+			}
+
+			sleep(0.25);
+                }                  
+	}
+	else
+	{
+		this.BlackboardDelay(30, switch.Serial);
+	}
+	
+        // Finish the state.
+	this.Finished();
+};

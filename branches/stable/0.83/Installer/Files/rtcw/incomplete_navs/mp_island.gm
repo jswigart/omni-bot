@@ -1,0 +1,64 @@
+global Map =
+{
+	Checkpoint_prison_flag = "CHECKPOINT_prison_flag",
+	Plant_Eastern_Ammo_Dump = "PLANT_Eastern_Ammo_Dump",
+	Plant_Western_Ammo_Dump = "PLANT_Western_Ammo_Dump",
+	Explode_319 = "EXPLODE_319",
+	Explode_444 = "EXPLODE_444",
+
+	Eastern_Ammo_Dump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Eastern_Ammo_Dump_Destroyed" );
+	},
+
+	Western_Ammo_Dump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Western_Ammo_Dump_Destroyed" );
+	},
+
+	prison_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "prison_flag_Axis_Captured" );
+	},
+
+	prison_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "prison_flag_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Eastern_Ammo_Dump_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Western_Ammo_Dump_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.prison_flag_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.prison_flag_Allies_Captured );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

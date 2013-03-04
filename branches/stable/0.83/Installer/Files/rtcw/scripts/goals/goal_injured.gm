@@ -1,0 +1,79 @@
+this.Name = "Injured";
+this.Parent = "Incapacitated";
+this.AutoAdd = true;
+this.Debug = false;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+	this.LimitedLives = GetCvar("g_maxlives") > 0;
+};
+
+this.GetPriority = function()
+{
+	if (this.Debug) { this.Bot.Say("injured"); }
+	this.Priority = 1.0;
+	block(0);
+};
+
+this.Enter = function()
+{
+	if (this.Debug) { this.Bot.Say("injured: enter"); }
+};
+
+this.Update = function()
+{
+	while(1) {
+		if (this.Debug) { this.Bot.Say("injured: update"); }
+
+		if ( this.CheckForTapout() ) {
+			this.Bot.GoToLimbo();
+		}
+		sleep(1);
+	}
+};
+
+this.Exit = function()
+{
+	if (this.Debug) { this.Bot.Say("injured: exit"); }
+};
+
+this.CheckForTapout = function()
+{
+	if (this.LimitedLives) {
+		// don't tap on last life
+		if ( this.Bot.NoMoreDeployments || GetEntityStat(this.Bot.GetGameEntity(), "respawns_left") < 1) {
+			this.Bot.NoMoreDeployments = true; // don't call the interface function anymore
+			return false;
+		}
+
+		// don't tap if a non-injured medic is around
+		medic = RTCWUtil.GetClosestAlly(this.Bot, CLASS.MEDIC, 2000);
+		if (medic && !GetEntFlags(medic.ent, ENTFLAG.INJURED)) {
+			return false;
+		}
+	}
+
+	//tap out if the bot is lying on top of the dyno and an engineer is comming to defuse it
+	count = this.QueryGoals(this.Bot.QueryGoalsTable,"DEFUSE_.*");
+	if ( count > 0 ){
+		dynoDist = null;
+		foreach ( id and goal in this.Bot.QueryGoalsTable )	{
+			dynoDist = this.Bot.DistanceTo(goal.GetEntity());
+			if(dynoDist < 37){
+				eng = RTCWUtil.GetClosestAlly(this.Bot, CLASS.ENGINEER, 150);
+				if (eng && !GetEntFlags(eng.ent, ENTFLAG.INJURED)) {
+					tableClear(this.Bot.QueryGoalsTable);
+					return true;
+				}
+			}
+		}
+		tableClear(this.Bot.QueryGoalsTable);
+	}
+
+	if ( this.Bot.GetReinforceTime() < 1.5  && !this.Bot.IsMedicNear() ) {
+		return true;
+	}
+	return false;
+};
+

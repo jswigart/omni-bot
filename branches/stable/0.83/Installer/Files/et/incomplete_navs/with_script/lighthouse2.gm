@@ -1,0 +1,590 @@
+//==========================================================================================
+//
+//	lighthouse2.gm
+//
+//	Who		When			What
+//------------------------------------------------------------------------------------------
+//	BubbaG1		16 August 2011		Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	Command_Post_Dyno = 0,
+	anti_ship_gun_Dyno = 0,
+	comms_bunker_Dyno = 0,
+	compound_gate_Dyno = 0,
+	compound_wall_Dyno = 0,
+	light_Dyno = 0,
+	main_entrance_Dyno = 0,
+	ropes_Dyno = 0,
+	tower_climbing_ropes_Dyno = 0,
+	west_ropes_Dyno = 0,
+
+	Destroyed_Comms = 0,
+	Destroyed_Gate = 0,
+	Destroyed_Gun = 0,
+	Destroyed_Light = 0,
+	Destroyed_Main_Door = 0,
+	Destroyed_Wall = 0,
+	
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	ropes_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Wp.SetWaypointFlag("cliff_ropes_bottom", "closed", false);
+
+		Util.MapDebugPrint( "ropes_Built" );
+	},
+
+	tower_climbing_ropes_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Wp.SetWaypointFlag(956, "closed", false);
+
+		Util.MapDebugPrint( "tower_climbing_ropes_Built" );
+	},
+
+	west_ropes_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Wp.SetWaypointFlag(1043, "closed", false);
+		Wp.SetWaypointFlag(1044, "closed", false);
+
+		Util.MapDebugPrint( "west_ropes_Built" );
+	},
+
+	Command_Post_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno += 1;
+		Util.MapDebugPrint( "Command_Post_Planted" );
+	},
+
+	anti_ship_gun_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.anti_ship_gun_Dyno += 1;
+		Util.MapDebugPrint( "anti_ship_gun_Planted" );
+	},
+
+	comms_bunker_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.comms_bunker_Dyno += 1;
+		Util.MapDebugPrint( "comms_bunker_Planted" );
+	},
+
+	compound_gate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.compound_gate_Dyno += 1;
+		Util.MapDebugPrint( "compound_gate_Planted" );
+	},
+
+	compound_wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.compound_wall_Dyno += 1;
+		Util.MapDebugPrint( "compound_wall_Planted" );
+	},
+
+	light_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.light_Dyno += 1;
+		Util.MapDebugPrint( "light_Planted" );
+	},
+
+	main_entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_entrance_Dyno += 1;
+		Util.MapDebugPrint( "main_entrance_Planted" );
+	},
+
+	ropes_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ropes_Dyno += 1;
+		Util.MapDebugPrint( "ropes_Planted" );
+	},
+
+	tower_climbing_ropes_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_climbing_ropes_Dyno += 1;
+		Util.MapDebugPrint( "tower_climbing_ropes_Planted" );
+	},
+
+	west_ropes_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.west_ropes_Dyno += 1;
+		Util.MapDebugPrint( "west_ropes_Planted" );
+	},
+
+	Command_Post_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno -= 1;
+		Util.MapDebugPrint( "Command_Post_Defused" );
+	},
+
+	anti_ship_gun_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.anti_ship_gun_Dyno -= 1;
+		Util.MapDebugPrint( "anti_ship_gun_Defused" );
+	},
+
+	comms_bunker_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.comms_bunker_Dyno -= 1;
+		Util.MapDebugPrint( "comms_bunker_Defused" );
+	},
+
+	compound_gate_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.compound_gate_Dyno -= 1;
+		Util.MapDebugPrint( "compound_gate_Defused" );
+	},
+
+	compound_wall_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.compound_wall_Dyno -= 1;
+		Util.MapDebugPrint( "compound_wall_Defused" );
+	},
+
+	light_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.light_Dyno -= 1;
+		Util.MapDebugPrint( "light_Defused" );
+	},
+
+	main_entrance_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.main_entrance_Dyno -= 1;
+		Util.MapDebugPrint( "main_entrance_Defused" );
+	},
+
+	ropes_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ropes_Dyno -= 1;
+		Util.MapDebugPrint( "ropes_Defused" );
+	},
+
+	tower_climbing_ropes_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_climbing_ropes_Dyno -= 1;
+		Util.MapDebugPrint( "tower_climbing_ropes_Defused" );
+	},
+
+	west_ropes_Defused = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.west_ropes_Dyno -= 1;
+		Util.MapDebugPrint( "west_ropes_Defused" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Command_Post_Dyno = 0;
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+
+	anti_ship_gun_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Gun = 1;
+
+		Map.anti_ship_gun_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_gun_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_gun_.*" );
+
+		Util.MapDebugPrint( "anti_ship_gun_Destroyed" );
+	},
+
+	comms_bunker_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Comms = 1;
+
+		Map.comms_bunker_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_comms_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_comms_.*" );
+
+		Util.MapDebugPrint( "comms_bunker_Destroyed" );
+	},
+
+	compound_gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Gate = 1;
+	
+		Map.compound_gate_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_gate_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_gate_.*" );
+
+		if(Map.Destroyed_Light==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
+		}
+		if(Map.Destroyed_Comms==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
+		}
+		if(Map.Destroyed_Gate==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
+		}
+		if (Map.Destroyed_Gun==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gun_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gun_.*" );
+		}
+		
+		Util.MapDebugPrint( "compound_gate_Destroyed" );
+	},
+
+	compound_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Wall = 1;
+
+		Map.compound_wall_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_wall_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_wall_.*" );
+		
+		if(Map.Destroyed_Light==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
+		}
+		if(Map.Destroyed_Comms==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
+		}
+		if(Map.Destroyed_Gate==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
+		}
+
+		Util.MapDebugPrint( "compound_wall_Destroyed" );
+	},
+
+	light_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Light = 1;
+
+		Map.light_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_light_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_light_.*" );
+
+		Util.MapDebugPrint( "light_Destroyed" );
+	},
+
+	main_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.Destroyed_Main_Door = 1;
+
+		Map.main_entrance_Dyno = 0;
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_allies_main_door_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_allies_main_door_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axis_main_door_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_main_door_.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forwardspawn" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forwardspawn" );
+
+		if (Map.Destroyed_Gun==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gun_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gun_.*" );
+		}
+		if(Map.Destroyed_Gate==0)
+		{
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_gate_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_gate_.*" );
+		}
+		else
+		{
+			if(Map.Destroyed_Light==0)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_light_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_light_.*" );
+			}
+			if(Map.Destroyed_Comms==0)
+			{
+				SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_comms_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_comms_.*" );
+			}
+		}
+		
+		Util.MapDebugPrint( "main_entrance_Destroyed" );
+	},
+
+	ropes_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.ropes_Dyno = 0;
+		
+		Wp.SetWaypointFlag("cliff_ropes_bottom", "closed", true);
+
+		Util.MapDebugPrint( "ropes_Destroyed" );
+	},
+
+	tower_climbing_ropes_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.tower_climbing_ropes_Dyno = 0;
+
+		Wp.SetWaypointFlag(956, "closed", true);
+		
+		Util.MapDebugPrint( "tower_climbing_ropes_Destroyed" );
+	},
+
+	west_ropes_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.west_ropes_Dyno = 0;
+
+		Wp.SetWaypointFlag(1043, "closed", true);
+		Wp.SetWaypointFlag(1044, "closed", true);
+
+		Util.MapDebugPrint( "west_ropes_Destroyed" );
+	},
+
+	forwardspawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn_Axis_Captured" );
+	},
+
+	forwardspawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "forwardspawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "Axis team has built the cliff assault ropes!", Map.ropes_Built );
+	OnTrigger( "Axis team has built the lighthouse tower assault ropes!", Map.tower_climbing_ropes_Built );
+	OnTrigger( "Axis team has built the 2nd cliff assault ropes!", Map.west_ropes_Built );
+	OnTrigger( "Planted at the Command Post.", Map.Command_Post_Planted );
+	OnTrigger( "Planted at the anti ship gun.", Map.anti_ship_gun_Planted );
+	OnTrigger( "Planted at the comms bunker.", Map.comms_bunker_Planted );
+	OnTrigger( "Planted at the compound gate.", Map.compound_gate_Planted );
+	OnTrigger( "Planted at the compound wall.", Map.compound_wall_Planted );
+	OnTrigger( "Planted at the light.", Map.light_Planted );
+	OnTrigger( "Planted at the main entrance.", Map.main_entrance_Planted );
+	OnTrigger( "Planted at the ropes.", Map.ropes_Planted );
+	OnTrigger( "Planted at tower climbing ropes.", Map.tower_climbing_ropes_Planted );
+	OnTrigger( "Planted at the west ropes.", Map.west_ropes_Planted );
+	OnTrigger( "Defused at the Command Post.", Map.Command_Post_Defused );
+	OnTrigger( "Defused at the anti ship gun.", Map.anti_ship_gun_Defused );
+	OnTrigger( "Defused at the comms bunker.", Map.comms_bunker_Defused );
+	OnTrigger( "Defused at the compound gate.", Map.compound_gate_Defused );
+	OnTrigger( "Defused at the compound wall.", Map.compound_wall_Defused );
+	OnTrigger( "Defused at the light.", Map.light_Defused );
+	OnTrigger( "Defused at the main entrance.", Map.main_entrance_Defused );
+	OnTrigger( "Defused at the ropes.", Map.ropes_Defused );
+	OnTrigger( "Defused at tower climbing ropes.", Map.tower_climbing_ropes_Defused );
+	OnTrigger( "Defused at the west ropes.", Map.west_ropes_Defused );
+	OnTrigger( "Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "Axis have destroyed MAIN OBJECTIVE 2 the Anti-Ship Gun!", Map.anti_ship_gun_Destroyed );
+	OnTrigger( "Axis have destroyed MAIN OBJECTIVE 3 the Command Bunker!", Map.comms_bunker_Destroyed );
+	OnTrigger( "Axis team has breached the compound gate", Map.compound_gate_Destroyed );
+	OnTrigger( "Axis team has breached the compound wall", Map.compound_wall_Destroyed );
+	OnTrigger( "Axis have destroyed MAIN OBJECTIVE 1 the Light!", Map.light_Destroyed );
+	OnTrigger( "Axis team has breached the main entrance", Map.main_entrance_Destroyed );
+	OnTrigger( "Allied team has destroyed the assault ropes!", Map.ropes_Destroyed );
+	OnTrigger( "Allied team has destroyed the lighthouse tower assault ropes!", Map.tower_climbing_ropes_Destroyed );
+	OnTrigger( "Allied team has destroyed the 2nd assault ropes!", Map.west_ropes_Destroyed );
+	OnTrigger( "Axis capture forward bunker - ammo bunker door open!", Map.forwardspawn_Axis_Captured );
+	OnTrigger( "Allies capture forward bunker - ammo bunker door closed!", Map.forwardspawn_Allies_Captured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "BUILD_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_main_door_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_allies_wall_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANTMINE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_main_door_.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_main_door_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axis_wall_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_ropes" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_west_ropes" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_main_door_.*" );
+	
+	// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "PLANT_main_entrance");
+	Util.SetMaxUsers( 1, "PLANT_compound_wall");
+
+	Util.SetGoalPosition( -1122, -322, 2648, "PLANT_light" );
+	Util.SetGoalPosition( -72, 317, 1088, "PLANT_compound_gate" );
+	Util.SetGoalPosition( -316, -676, 1075, "PLANT_compound_wall" );
+	
+	Util.SetRoleForGoals( "ATTACK_axis_.*", ROLE.ATTACKER );
+
+	Wp.SetWaypointFlag(956, "closed", true);
+	Wp.SetWaypointFlag(1043, "closed", true);
+	Wp.SetWaypointFlag(1044, "closed", true);
+	Wp.SetWaypointFlag("cliff_ropes_bottom", "closed", true);
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	// Uncomment for shootable breakables
+	//~bot.TargetBreakableDist = 90.0;
+	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
+	//~bot.MaxViewDistance = 2400;
+};

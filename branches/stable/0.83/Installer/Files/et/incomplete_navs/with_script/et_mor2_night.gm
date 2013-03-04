@@ -1,0 +1,170 @@
+global Map =
+{
+	Ammo_Cabinet_ammo1 = "AMMOCAB_ammo1",
+	Ammo_Cabinet_ammo2 = "AMMOCAB_ammo2",
+	Health_Cabinet_health1 = "HEALTHCAB_health1",
+	Health_Cabinet_health2 = "HEALTHCAB_health2",
+	Flag_case1 = "FLAG_case1",
+	Cappoint_TRUCKGOAL = "CAPPOINT_TRUCKGOAL",
+	Build_Allied_Command_Post = "BUILD_Allied_Command_Post",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_MG2 = "BUILD_MG2",
+	Build_North_market_MG_nest = "BUILD_North_market_MG_nest",
+	Build_Tank = "BUILD_Tank",
+	Build_Tank_defences_bridge = "BUILD_Tank_defences_bridge",
+	Build_Wire_Swing_Gate = "BUILD_Wire_Swing_Gate_(neutral)",
+	Build_barricade_materials = "BUILD_barricade_materials",
+	Build_lab_barricade_materials = "BUILD_lab_barricade_materials",
+	Build_villa_courtyard_gate = "BUILD_villa_courtyard_gate",
+	Plant_Allied_Command_Post = "PLANT_Allied_Command_Post",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Laboratory_Entrance = "PLANT_Laboratory_Entrance",
+	Plant_MG2 = "PLANT_MG2",
+	Plant_North_market_MG_nest = "PLANT_North_market_MG_nest",
+	Plant_Tank_defences_bridge = "PLANT_Tank_defences_bridge",
+	Plant_Wire_Swing_Gate = "PLANT_Wire_Swing_Gate_(neutral)",
+	Plant_back_door = "PLANT_back_door",
+	Plant_barricade_materials = "PLANT_barricade_materials",
+	Plant_lab_barricade_materials = "PLANT_lab_barricade_materials",
+	Plant_villa_courtyard_gate = "PLANT_villa_courtyard_gate",
+	Mount_MG2 = "MOUNTMG42_MG2",
+	Mount_North_market_MG_nest = "MOUNTMG42_North_market_MG_nest",
+	Repair_MG2 = "REPAIRMG42_MG2",
+	Repair_North_market_MG_nest = "REPAIRMG42_North_market_MG_nest",
+	Mobile_MG42_313 = "MOBILEMG42_313",
+	Mobile_MG42_333 = "MOBILEMG42_333",
+	Mobile_MG42_337 = "MOBILEMG42_337",
+	Mobile_MG42_563 = "MOBILEMG42_563",
+	Mobile_MG42_577 = "MOBILEMG42_577",
+	Mobile_MG42_axis_objective9 = "MOBILEMG42_axis_objective9",
+	Mover_tank = "MOVER_tank",
+
+	EscortVehicle =
+	{
+		Tank =
+		{
+			EscortVehicleGoalName = "MOVER_tank",
+			Offset = 
+			{
+				Vector3(15,-40,0),
+				Vector3(-15,-40,0),
+			}
+		},
+	},
+
+	main_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_MG2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOBILEMORTAR_axis_start.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_MG2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_MG2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_start.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axis_start.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_objective.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_Wire_Swing_Gate_(neutral)" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_villa_courtyard_gate" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "BUILD_North_market_MG_nest" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_MG2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
+		SetGoalPriority( "BUILD_lab_barricade_materials", 0.9 );
+		SetGoalPriority( "PLANT_Axis_Command_Post", 0.7 );
+		SetGoalPriority( "BUILD_Allied_Command_Post", 0.7 );
+		SetGoalPriority( "PLANT_Laboratory_Entrance", 0.9 );
+	
+	Map.EscortVehicle.Tank.Enabled = false;
+		//print( "main door" );
+	},
+
+	tank_past_bridge = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_bridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Tank_defences_bridge" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start2" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start3" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start4" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start7" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start8" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_start9" );
+
+		//print( "tank_past_bridge" );
+	},
+
+	Laboratory_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		//print( "Laboratory_Entrance_Destroyed" );
+	},
+
+	case1_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_cappoint.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_cappoint.*" );
+		//print( "case1_Taken" );
+	},
+
+	case1_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_cappoint.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_cappoint.*" );
+		//print( "case1_Returned" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Util.AddInvVehicle("MOVER_tank");
+	Util.SetGoalPosition( -378, -1983, 72, "PLANT_back_door" );
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	//OnTrigger( "The Allied Tank is nearly at the town gate!!!", Map.tank_past_bridge );
+	OnTrigger( "Allies have destroyed the Main town gate!!", Map.main_door_Destroyed );
+	OnTrigger( "Allies have destroyed the Laboratory Entrance", Map.Laboratory_Entrance_Destroyed );
+	OnTrigger( "Allies have stolen the Document Case!", Map.case1_Taken );
+	OnTrigger( "Flag returned case1!", Map.case1_Returned );
+
+	Util.SetGoalOffset( 20, 0, 0, "BUILD_MG2" );
+	myEnt = GetGoal("MOVER_tank").GetEntity();
+	Util.OnTriggerPosition( myEnt, "bridge_trigger", 100.0, Map.tank_past_bridge );
+
+	SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*allies.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_Wire_Swing_Gate_(neutral)" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_villa_courtyard_gate" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "BUILD_North_market_MG_nest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_start.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_bridge.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOBILEMORTAR_axis_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIRMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_allies_start.*" );
+
+	print( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+};

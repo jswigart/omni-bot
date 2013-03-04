@@ -1,0 +1,178 @@
+global Map =
+{
+	Switches =
+	{
+		door1 =
+		{
+			WaypointName = "door1",
+			LimitTeam = 0, 
+			LimitClass = 0,
+			LimitBots = 8,
+			Enabled = true,
+			
+		},
+		
+	},	
+	Ammo_Cabinet_t1075 = "AMMOCAB_t1075",
+	Health_Cabinet_t3 = "HEALTHCAB_t3",
+	Build_Allies_Command_Post = "BUILD_Allies_Command_Post",
+	Build_Assault_Ramp = "BUILD_Assault_Ramp",
+	Build_Axis_Command_Post = "BUILD_Axis_Command_Post",
+	Build_Bridge = "BUILD_Bridge",
+	Build_Well_Cover = "BUILD_Well_Cover",
+	Plant_Allies_Command_Post = "PLANT_Allies_Command_Post",
+	Plant_Assault_Ramp = "PLANT_Assault_Ramp",
+	Plant_Axis_Command_Post = "PLANT_Axis_Command_Post",
+	Plant_Bridge = "PLANT_Bridge",
+	Plant_Fuel_Tank = "PLANT_Fuel_Tank",
+	Plant_Main_Door = "PLANT_Main_Door",
+	Plant_Missile = "PLANT_Missile",
+	Plant_Well_Cover = "PLANT_Well_Cover",
+
+	Allies_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Command_Post_Built" );
+	},
+
+	Assault_Ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Built" );
+	},
+
+	Bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Built" );
+	},
+
+	Well_Cover_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Well_Cover_Built" );
+	},
+
+	Allies_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Allies_Command_Post_Destroyed" );
+	},
+
+	Assault_Ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Assault_Ramp_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Axis_Command_Post_Destroyed" );
+	},
+
+	Bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Bridge_Destroyed" );
+	},
+
+	Fuel_Tank_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Fuel_Tank_Destroyed" );
+	},
+
+	Main_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Main_Door_Destroyed" );
+	},
+
+	Missile_Destroyed = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_missile" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_missile2" );
+
+		print( "Missile_Destroyed" );
+	},
+
+	Well_Cover_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Well_Cover_Destroyed" );
+	},
+	
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "MISSING_STRING", Map.Allies_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Built );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Built );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Built );
+	OnTrigger( "MISSING_STRING", Map.Well_Cover_Built );
+	OnTrigger( "MISSING_STRING", Map.Allies_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Assault_Ramp_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Fuel_Tank_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Main_Door_Destroyed );
+	OnTrigger( "The Missile destroyed!", Map.Missile_Destroyed );
+	OnTrigger( "The Well Cover has been destroyed.", Map.Well_Cover_Destroyed );
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_Allies_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Axis_Command_Post" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+	SetMapGoalProperties( "DEFEND_fuel", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_fuel2", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_missile2", {mincamptime=30, maxcamptime=200});
+	SetMapGoalProperties( "DEFEND_missile", {mincamptime=30, maxcamptime=200});
+	Util.SetGoalOffset( 0, 0, 350, "PLANT_Bridge" );
+	Util.UpdateSwitchData();
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 900.0;
+};

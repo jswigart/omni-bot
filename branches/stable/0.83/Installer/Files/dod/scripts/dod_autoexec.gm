@@ -1,0 +1,122 @@
+// Load any other scripts that we will need.
+ExecScript("dod_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("dod_commands.gm");
+ExecScript("difficulty.gm");
+ExecScript("server_manager.gm");
+
+// New module format
+global Util = import("utilities");
+global DODUtil = import("dod_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+/////////////////////////////////////////////////////////////////////
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.RIFLEMAN, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ASSAULT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SUPPORT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SNIPER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MACHINEGUNNER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ROCKET, "def_bot.gm");
+
+/////////////////////////////////////////////////////////////////////
+
+// Set up a list of Names, optionally associated with a script.
+
+// Color key for ET
+// ^0 = Black
+// ^1 = Red
+// ^2 = Green
+// ^3 = Yellow
+//  = Blue
+// ^5 = Light blue
+// ^6 = Pink
+//  = White 
+
+Names["[BOT]Walter"] = "";
+Names["[BOT]Fred"] = "";
+Names["[BOT]Morgan"] = "";
+Names["[BOT]Lawrence"] = "";
+Names["[BOT]Richard"] = "";
+Names["[BOT]Michael"] = "";
+Names["[BOT]Brad"] = "";
+Names["[BOT]George"] = "";
+Names["[BOT]Anton"] = "";
+Names["[BOT]Monty"] = "";
+Names["[BOT]Bean"] = "";
+Names["[BOT]Sean"] = "";
+Names["[BOT]Backfire"] = "";
+Names["[BOT]Halfwit"] = "";
+Names["[BOT]Halfbaked"] = "";
+Names["[BOT]Fullmonty"] = "";
+Names["[BOT]Nohope"] = "";
+Names["[BOT]Hitnrun"] = "";
+Names["[BOT]Missnrun"] = "";
+Names["[BOT]Oysterhead"] = "";
+Names["[BOT]Fullthrottle"] = "";
+Names["[BOT]Noammo"] = "";
+Names["[BOT]Bullseye"] = "";
+Names["[BOT]Aimless"] = "";
+Names["[BOT]Blackadder"] = "";
+Names["[BOT]Cledus"] = "";
+Names["[BOT]Newbie"] = "";
+Names["[BOT]Chimichanga"] = "";
+Names["[BOT]Razor"] = "";
+Names["[BOT]Tanz"] = "";
+Names["[BOT]Vic"] = "";
+Names["[BOT]Malin"] = "";
+Names["[BOT]Thor"] = "";
+Names["[BOT]Grog"] = "";
+Names["[BOT]Drago"] = "";
+Names["[BOT]Stinger"] = "";
+Names["[BOT]Tarnok"] = "";
+Names["[BOT]Wens"] = "";
+Names["[BOT]Brohn"] = "";
+Names["[BOT]Ivor"] = "";
+Names["[BOT]Gordac"] = "";
+Names["[BOT]Bortack"] = "";
+Names["[BOT]Morgriff"] = "";
+Names["[BOT]Kole"] = "";
+Names["[BOT]Garbok"] = "";
+Names["[BOT]Korv"] = "";
+Names["[BOT]Vokur"] = "";
+Names["[BOT]Gali"] = "";
+Names["[BOT]Beelz"] = "";
+Names["[BOT]CraigChrist"] = "";
+Names["[BOT]WhittlinMan"] = "";
+Names["[BOT]SpecialEd"] = "";
+Names["[BOT]Flint"] = "";
+Names["[BOT]Argo"] = "";
+Names["[BOT]Milius"] = "";
+Names["[BOT]Vera"] = "";
+Names["[BOT]Merki"] = "";
+Names["[BOT]Tarnen"] = "";
+Names["[BOT]Royen"] = "";
+Names["[BOT]Kaolin"] = "";
+Names["[BOT]Nandet"] = "";
+Names["[BOT]Nundak"] = "";
+Names["[BOT]Ryver"] = "";
+Names["[BOT]Mungri"] = "";
+Names["[BOT]Chan"] = "";
+Names["[BOT]Phi"] = "";
+Names["[BOT]Amadi"] = "";
+Names["[BOT]Zarna"] = "";
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+//Names["samplebot"] = "sample.gm";
+
+// Set minbots/maxbots on map start
+//MinBots(30);
+//MaxBots(12);
+
+//~ global TestMapOn = true;
+
+global PostMapLoad = function()
+{
+	Util.ProcessMovers();
+};
+
+print("DOD Script Executed");

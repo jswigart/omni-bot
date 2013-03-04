@@ -1,0 +1,181 @@
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	
+	Switches =
+	{
+		/*hospitaldoor =
+		{
+			Enabled = true,
+			Priority = 0.84,
+			//WaypointName = "lowerdoor",
+			LimitBots = 2,
+			LimitClass = Util.AllClasses,
+		},*/
+		garagedoor =
+		{
+			Enabled = true,
+			Priority = 0.0,
+			WaypointName = "garagedoor",
+			LimitBots = 1,
+			LimitClass = Util.AllClasses,
+		},
+	},
+
+	Hospital_Storage_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Hospital_Storage_Door_Destroyed" );
+	},
+	
+	Hospital_Storage_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Hospital_Storage_Door_Planted" );
+	},
+
+	Sewer_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		sleep(15);
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bRoad.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bHospital.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHangar.*" );
+		Util.MapDebugPrint( "Sewer_Entrance_Destroyed" );
+	},
+	
+	Sewer_Entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Sewer.*" );
+		Util.MapDebugPrint( "Sewer_Entrance_Planted" );
+	},
+
+	documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Taken" );
+	},
+	
+	documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "documents_Secured" );
+	},
+
+	FDA_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "FDA_Axis_Captured" );
+	},
+
+	FDA_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "FDA_Allies_Captured" );
+	},
+	hospitaldoor = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+
+		if ( vel.z > 0 ) {
+			Map.Switches.hospitaldoor.Enabled = false;
+		} else if ( vel.z < 0 )   {
+			Map.Switches.hospitaldoor.Enabled = true;
+		}
+	},
+	garagedoor = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		vel = ToVector( trigger.Action );
+
+		if ( vel.z > 0 ) {
+			Map.Switches.garagedoor.Enabled = false;
+		} else if ( vel.z < 0 )   {
+			Map.Switches.garagedoor.Enabled = true;
+		}
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "the Hospital Storage Door Destroyed.", Map.Hospital_Storage_Door_Destroyed );
+	OnTrigger( "Planted at Hospital Storage Door.", Map.Hospital_Storage_Door_Planted );
+	OnTrigger( "the Sewer Entrance Destroyed.", Map.Sewer_Entrance_Destroyed );
+	OnTrigger( "Planted at the Sewer Entrance.", Map.Sewer_Entrance_Planted );
+	OnTrigger( "Axis have stolen the documents!", Map.documents_Taken );
+	OnTrigger( "Flag returned documents!", Map.documents_Secured );
+	OnTrigger( "Axis capture the Hospital Storage!", Map.FDA_Axis_Captured );
+	OnTrigger( "MISSING_STRING", Map.FDA_Allies_Captured );
+	OnTrigger( "door2mover_goto", Map.hospitaldoor );
+	OnTrigger( "door1mover_goto", Map.garagedoor );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "GRENADE_rHangar", 0.94 );
+	SetGoalPriority( "PLANT_Sewer_Entrance", 0.93 );
+	
+	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+
+	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.EnableGoal( "CAPPOINT_transmit", true );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_documents" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rHangar" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRoad.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bRoad.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRoad.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHospital.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bHospital.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hospital" );
+	
+	Util.UpdateSwitchData();
+	yield(); yield();
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 90.0;
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.NoSnipe( bot );
+};

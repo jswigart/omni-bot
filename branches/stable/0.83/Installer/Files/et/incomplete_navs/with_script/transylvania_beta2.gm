@@ -1,0 +1,306 @@
+global Map =
+{
+	Ammo_Cabinet_south_ammocabinet = "AMMOCAB_south_ammocabinet",
+	Ammo_Cabinet_south_ammocabinet_1 = "AMMOCAB_south_ammocabinet_1",
+	Health_Cabinet_south_healthcabinet = "HEALTHCAB_south_healthcabinet",
+	Health_Cabinet_south_healthcabinet_1 = "HEALTHCAB_south_healthcabinet_1",
+	Checkpoint_f_flag = "CHECKPOINT_f_flag",
+	Flag_spike = "FLAG_spike",
+	Cappoint_600 = "CAPPOINT_600",
+	Build_Command_Post = "BUILD_Command_Post",
+	Build_bridge = "BUILD_bridge",
+	Build_footbridge = "BUILD_footbridge",
+	Build_ramp = "BUILD_ramp",
+	Plant_Command_Post = "PLANT_Command_Post",
+	Plant_bridge = "PLANT_bridge",
+	Plant_entrance = "PLANT_entrance",
+	Plant_footbridge = "PLANT_footbridge",
+	Plant_ramp = "PLANT_ramp",
+	Mount_526 = "MOUNTMG42_526",
+	Repair_526 = "REPAIRMG42_526",
+
+	lifttop = 1,
+	
+	Switches =
+	{	
+		liftsw =
+		{
+			Enabled = true,
+			Priority = 0.0,
+			WaypointName = "liftsw",
+			AimPosition = Vec3(2905.383, 2227.875, 2310.797),
+			LimitBots = 1,
+		}
+	},
+	
+	Navigation =
+	{
+		wait =
+		{
+			navigate = function(_this)
+			{
+				timeout = 1;
+				while ( timeout > 0 ) {
+					_this.Goto(_this.Bot.GetPosition());
+					sleep(6);
+					timeout -= 1;
+				}
+			},
+		},
+	},
+	
+
+	Allied_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Built" );
+	},
+
+	Axis_Command_Post_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Built" );
+	},
+
+	bridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_Built" );
+	},
+
+	footbridge_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "footbridge_Built" );
+	},
+
+	ramp_Built = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ramp_Built" );
+	},
+
+	Allied_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Command_Post_Destroyed" );
+	},
+
+	Axis_Command_Post_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Command_Post_Destroyed" );
+	},
+	
+	bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "bridge_Destroyed" );
+	},
+
+	entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, "BUILD.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "BUILD.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PLANT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIR.*" );
+		Wp.SetWaypointFlag( "LiftArea1", "closed", true );
+		Wp.SetWaypointFlag( "LiftArea2", "closed", true );
+		Wp.SetWaypointFlag( "LiftArea3", "closed", true );
+		ExecCommand( "kt 1" );
+		ExecCommand( "kt 2" );
+		Util.MapDebugPrint( "entrance_Destroyed" );
+	},
+
+	footbridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "footbridge_Destroyed" );
+	},
+
+	ramp_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "ramp_Destroyed" );
+	},
+
+	spike_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "spike_Taken" );
+	},
+
+	CAPPOINT_Dracula = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "CAPPOINT_Dracula" );
+	},
+
+	f_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "f_flag_Axis_Captured" );
+	},
+
+	f_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "f_flag_Allies_Captured" );
+	},
+
+	plant_main = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "plant_main" );
+	},
+	
+	lift_moving_down = function( trigger )
+	{
+
+	Map.lifttop = 0;
+	Wp.SetWaypointFlag( "LiftDoor", "closed", true );
+	Map.Switches.liftsw.Enabled = false;
+	Util.MapDebugPrint( "lift_moving_down" );
+	},
+	
+	lift_moving_up = function( trigger )
+	{
+	sleep(4.5);
+	Map.lifttop = 1;
+	Map.Switches.liftsw.Enabled = true;
+	Wp.SetWaypointFlag( "LiftDoor", "closed", false );		
+	Util.MapDebugPrint( "lift_moving_up" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "^?Allied Command Post constructed. Charge speed increased!", Map.Allied_Command_Post_Built );
+	OnTrigger( "^?Axis Command Post constructed. Charge speed increased!", Map.Axis_Command_Post_Built );
+	OnTrigger( "^?Bridge constructed!", Map.bridge_Built );
+	OnTrigger( "^?Footbridge constructed!", Map.footbridge_Built );
+	OnTrigger( "^?Ramp constructed!", Map.ramp_Built );
+	OnTrigger( "^?Axis team has destroyed the Allied Command Post!", Map.Allied_Command_Post_Destroyed );
+	OnTrigger( "^?Allied team has destroyed the Axis Command Post!", Map.Axis_Command_Post_Destroyed );
+	OnTrigger( "^?Bridge destroyed!", Map.bridge_Destroyed );
+	OnTrigger( "^?The entrance destroyed!", Map.entrance_Destroyed );
+	OnTrigger( "^?Footbridge destroyed!", Map.footbridge_Destroyed );
+	OnTrigger( "^?Ramp destroyed!", Map.ramp_Destroyed );
+	OnTrigger( "Allies have stolen The spike!", Map.spike_Taken );
+	OnTrigger( "^?Allies have killed count Dracula!!!", Map.CAPPOINT_Dracula );
+	OnTrigger( "^?Axis reclaim the graveyard!", Map.f_flag_Axis_Captured );
+	OnTrigger( "^?Allies capture the graveyard!", Map.f_flag_Allies_Captured );
+	OnTrigger( "Planted at The main entrance.", Map.plant_main );
+	OnTrigger( "^?Elevator goes down in : ^q 3 sec!", Map.lift_moving_down );
+	OnTrigger( "^?Elevator goes up in : ^q 1 sec!", Map.lift_moving_up );
+
+
+	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, false, "PLANT_bridge" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, false, "REPAIR.*" );
+
+	SetGoalPriority( "BUILD_bridge", 0.91 );
+	
+	Util.SetGoalOffset( -10, 0, 0, "PLANT_entrance" );
+	
+	
+	Wp.SetWaypointFlag( "LiftDoor", "closed", false );
+	Wp.SetWaypointFlag( "LiftArea1", "closed", false );
+	Wp.SetWaypointFlag( "LiftArea2", "closed", false );
+	Wp.SetWaypointFlag( "LiftArea3", "closed", false );
+	
+		// Max users per goal
+	Util.SetMaxUsers( 1, "ATTACK_.*" );
+	Util.SetMaxUsers( 1, "DEFEND_.*" );
+	Util.SetMaxUsers( 1, "GRENADE_.*" );
+	Util.SetMaxUsers( 1, "SNIPE_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMG42_.*" );
+	Util.SetMaxUsers( 1, "MOBILEMORTAR_.*" );
+	Util.SetMaxUsers( 1, "AIRSTRIKE_.*" );
+	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
+	Util.SetMaxUsers( 1, "BUILD_.*" );
+
+	// Camp times
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=15, MaxCampTime=90} );
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=10, MaxCampTime=60} );
+		MapRoutes =
+	{
+		CHECKPOINT_f_flag = 
+		{
+			ROUTE_Allies1stSpawn  = 
+			{
+				ROUTE_Bridge  = 
+				{
+					ROUTE_FootBridge  = 
+					{
+					},
+					ROUTE_MainPath  = 
+					{
+					},
+				},
+				ROUTE_Ladder  = 
+				{
+					ROUTE_MainPath  = 
+					{
+					},
+				},
+			},
+		},
+	};
+
+	Util.Routes(MapRoutes);
+	Util.UpdateSwitchData();
+	
+	print( "Omni-bot map script for " + GetMapName() + " executed." );
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 300.0;
+};

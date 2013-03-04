@@ -1,0 +1,145 @@
+global Map =
+{
+	Quiet = true,
+	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
+	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
+	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
+	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
+	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
+
+	checkpoint01_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Axis_Captured" );
+	},
+
+	checkpoint01_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint01_Allies_Captured" );
+	},
+
+	checkpoint02_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Axis_Captured" );
+	},
+
+	checkpoint02_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint02_Allies_Captured" );
+	},
+
+	checkpoint03_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Axis_Captured" );
+	},
+
+	checkpoint03_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint03_Allies_Captured" );
+	},
+
+	checkpoint04_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Axis_Captured" );
+	},
+
+	checkpoint04_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint04_Allies_Captured" );
+	},
+
+	checkpoint05_Axis_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Axis_Captured" );
+	},
+
+	checkpoint05_Allies_Captured = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+
+		print( "checkpoint05_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	Wp.SetWaypointFlag( "cpspawn1", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn2", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn3", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn4", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn5", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn6", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn7", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn8", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn9", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn10", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn11", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn12", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn13", "closed", false );
+	Wp.SetWaypointFlag( "cpspawn14", "closed", false );
+
+	if ( TestMapOn ) {
+		Util.AutoTestMap();
+	}
+
+	OnTrigger( "Axis takes the Submarine Storage Facility!", Map.checkpoint01_Axis_Captured );
+	OnTrigger( "Allies take the Submarine Storage Facility!", Map.checkpoint01_Allies_Captured );
+	OnTrigger( "Axis takes the Filtration Room!", Map.checkpoint02_Axis_Captured );
+	OnTrigger( "Allies take the Filtration Room!", Map.checkpoint02_Allies_Captured );
+	OnTrigger( "Axis takes the Receiving Room [02]!", Map.checkpoint03_Axis_Captured );
+	OnTrigger( "Allies take the Receiving Room [02]!", Map.checkpoint03_Allies_Captured );
+	OnTrigger( "Axis takes the Generator Room!", Map.checkpoint04_Axis_Captured );
+	OnTrigger( "Allies take the Generator Room!", Map.checkpoint04_Allies_Captured );
+	OnTrigger( "Axis takes the Main Storage Room!", Map.checkpoint05_Axis_Captured );
+	OnTrigger( "Allies take the Main Storage Room!", Map.checkpoint05_Allies_Captured );
+
+	Util.DisableGoal( ".*" );
+	Util.EnableGoal( "CHECKPOINT.*" );
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	//~ bot.TargetBreakableDist = 80.0;
+};

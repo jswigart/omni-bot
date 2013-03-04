@@ -1,0 +1,13 @@
+Martin - Aug 2, 2009
+
+1. Open a command prompt and navigate to the location of WpsRead.exe
+
+2. Make sure the waypoint you want converted is in this folder.
+
+3. Run WpsRead.  Format: WpsRead.exe <wps-file> [txt-file]
+
+4. Take the output, rename to filename.gm and move it to "omnibot-rtcw\omni-bot\rtcw\scripts"
+
+5. Open the desired map and issue command "bot convert"
+
+6. Done.
