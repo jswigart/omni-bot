@@ -24,7 +24,6 @@ public:
 	bool Init();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
 	virtual Client *CreateGameClient();
 
@@ -54,6 +53,8 @@ public:
 	
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
+
+	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw);
 
 	ET_Game() {};
 	virtual ~ET_Game() {};

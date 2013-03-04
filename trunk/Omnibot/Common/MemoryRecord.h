@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,9 +9,8 @@
 #ifndef __MEMORYRECORD_H__
 #define __MEMORYRECORD_H__
 
+#include "Omni-Bot_Types.h"
 #include "TargetInfo.h"
-#include "StateMachine.h"
-#include "IGame.h"
 
 namespace AiState
 {
@@ -22,7 +21,7 @@ namespace AiState
 //		Represents an element in a bots memory system.
 class MemoryRecord
 {
-public:	
+public:
 	friend class AiState::SensoryMemory;
 
 	// var: m_TargetInfo
@@ -35,13 +34,13 @@ public:
 	inline int GetTimeBecameVisible() const { return m_TimeBecameVisible; }
 	inline int GetTimeLastVisible() const { return m_TimeLastVisible; }
 
-	inline int GetTimeTargetHasBeenVisible() const { return IsInFOV() ? IGame::GetTime() - GetTimeBecameVisible() : 0; }
-	inline int GetTimeHasBeenOutOfView() const { return IGame::GetTime() - GetTimeLastVisible(); }
+	int GetTimeTargetHasBeenVisible() const;
+	int GetTimeHasBeenOutOfView() const;
 	inline int GetIgnoreTargetTime() const { return m_IgnoreForTargeting; }
 
-	inline void IgnoreAsTarget(bool _ignore) { m_IgnoreAsTarget = _ignore; } 
-	inline void IgnoreAsTargetForTime(int _milliseconds) { m_IgnoreForTargeting = IGame::GetTime() + _milliseconds; }
-	inline bool ShouldIgnore() const { return m_IgnoreAsTarget || m_IgnoreForTargeting > IGame::GetTime(); }
+	inline void IgnoreAsTarget(bool _ignore) { m_IgnoreAsTarget = _ignore; }
+	void IgnoreAsTargetForTime(int _milliseconds);
+	bool ShouldIgnore() const;
 
 	inline const Vector3f &GetLastSensedPosition() const { return m_TargetInfo.m_LastPosition; }
 	inline const Vector3f &GetLastSensedVelocity() const { return m_TargetInfo.m_LastVelocity; }
@@ -53,8 +52,8 @@ public:
 
 	bool IsMovingTowards(const Vector3f &_pos) const;
 
-	int GetAge() const { return IGame::GetTime() - m_TimeLastUpdated; }
-	void MarkUpdated() { m_TimeLastUpdated = IGame::GetTime(); }
+	int GetAge() const;
+	void MarkUpdated();
 
 	void Reset(GameEntity _ent = GameEntity());
 
@@ -70,7 +69,7 @@ private:
 	GameEntity		m_Entity;
 
 	// int: m_TimeLastSensed
-	//		Records the time the entity was last sensed (seen or heard). 
+	//		Records the time the entity was last sensed (seen or heard).
 	//		Used to determine if a bot can 'remember' this record or not.
 	int				m_TimeLastSensed;
 

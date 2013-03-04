@@ -64,7 +64,9 @@ public:
 		};
 		void Reset()
 		{
-			mSearchFrontier.swap( std::queue<SpanWeight>() );
+			SearchQueue empty;
+			mSearchFrontier.swap( empty );
+
 			mInfluences.assign( mInfluences.size(), std::numeric_limits<float>::max() );
 			
 			mMinValue = std::numeric_limits<float>::max();
@@ -140,7 +142,9 @@ public:
 		float						mMaxValue;
 
 		const SpanHeightMap<Data> * mSpanMap;
-		std::queue<SpanWeight>		mSearchFrontier;
+
+		typedef std::queue<SpanWeight> SearchQueue;
+		SearchQueue					mSearchFrontier;
 
 		std::vector<float>			mInfluences;
 	};

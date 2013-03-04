@@ -6,8 +6,38 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "MemoryRecord.h"
+#include "IGame.h"
+
+int MemoryRecord::GetTimeTargetHasBeenVisible() const 
+{
+	return IsInFOV() ? IGame::GetTime() - GetTimeBecameVisible() : 0; 
+}
+
+int MemoryRecord::GetTimeHasBeenOutOfView() const 
+{
+	return IGame::GetTime() - GetTimeLastVisible(); 
+}
+
+void MemoryRecord::IgnoreAsTargetForTime(int _milliseconds)
+{
+	m_IgnoreForTargeting = IGame::GetTime() + _milliseconds; 
+}
+
+bool MemoryRecord::ShouldIgnore() const
+{
+	return m_IgnoreAsTarget || m_IgnoreForTargeting > IGame::GetTime();
+}
+
+int MemoryRecord::GetAge() const
+{
+	return IGame::GetTime() - m_TimeLastUpdated; 
+}
+
+void MemoryRecord::MarkUpdated() 
+{
+	m_TimeLastUpdated = IGame::GetTime(); 
+}
 
 Vector3f MemoryRecord::PredictPosition(float _time) const
 {

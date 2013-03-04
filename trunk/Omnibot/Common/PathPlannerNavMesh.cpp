@@ -728,11 +728,11 @@ void PathPlannerNavMesh::Update()
 				if ( ns.m_Obstacles.size() > 0 )
 				{
 					ClipperLib::Polygon sectorPoly;
-					for ( size_t i = 0; i < ns.m_Boundary.size(); ++i )
+					for ( size_t b = 0; b < ns.m_Boundary.size(); ++b )
 					{
 						sectorPoly.push_back( ClipperLib::IntPoint(
-							(ClipperLib::long64)ns.m_Boundary[i].x, 
-							(ClipperLib::long64)ns.m_Boundary[i].y ) );
+							(ClipperLib::long64)ns.m_Boundary[b].x, 
+							(ClipperLib::long64)ns.m_Boundary[b].y ) );
 					}
 
 					ClipperLib::Polygons obstaclePolys;
@@ -799,10 +799,10 @@ void PathPlannerNavMesh::Update()
 						// add all the solution polygons to the input polygons
 						// of the partition list
 						ClipperLib::Polygon poly;
-						for ( size_t i = 0; i < obsNav.GetNumPolysOut(); ++i )
+						for ( size_t p = 0; p < obsNav.GetNumPolysOut(); ++p )
 						{
 							bool polyIsHole = false;
-							if ( obsNav.GetPolyOut( i, poly, polyIsHole ) )
+							if ( obsNav.GetPolyOut( p, poly, polyIsHole ) )
 							{
 								inputPolys.push_back( TPPLPoly() );
 								inputPolys.back().Init( poly.size() );
@@ -838,9 +838,9 @@ void PathPlannerNavMesh::Update()
 								++it )
 							{
 								const TPPLPoly & ply = *it;
-								for ( int i = 0; i < ply.GetNumPoints(); ++i )
+								for ( int p = 0; p < ply.GetNumPoints(); ++p )
 								{
-									Vector3f vec3d( (float)ply[ i ].x, (float)ply[ i ].y, 0.0f );
+									Vector3f vec3d( (float)ply[ p ].x, (float)ply[ p ].y, 0.0f );
 									ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
 								}
 

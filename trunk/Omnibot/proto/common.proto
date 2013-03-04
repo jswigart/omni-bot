@@ -1,0 +1,73 @@
+package Remote;
+
+option optimize_for = SPEED;
+
+message Vec3 {
+	optional float x = 1;
+	optional float y = 2;
+	optional float z = 3;
+}
+
+message Waypoint {
+	required int32			uid			= 1;
+	optional Vec3			position	= 2;
+	optional Vec3			facing		= 3;
+
+	optional string			name		= 20;
+	optional float			radius		= 21;
+
+	message Connections {
+		optional int32 		to			= 1;
+	}
+	repeated Connections	links		= 22;
+}
+
+message Behavior {
+	optional string		name		= 1;
+	optional int32		color		= 2;
+	optional string		info		= 3;
+	repeated Behavior	children	= 4;
+}
+
+message Entity {
+	required int32		uid			= 1;
+	optional Vec3		position	= 2;
+	optional Vec3		facing		= 3;
+	optional int32		classId		= 4;
+	optional int32		teamId		= 5;
+
+	optional int32		health		= 6;
+	optional int32		healthMax	= 7;
+	optional int32		armor		= 8;
+	optional int32		armorMax	= 9;
+	optional Vec3		size		= 10;
+	optional float		fov			= 11;
+
+	optional string		name		= 20;
+	optional bool		deleted		= 21;
+
+	optional Behavior	behaviors	= 22;
+}
+
+message Game {
+	optional string		name		= 1;
+	repeated Entity		entities	= 2;
+	repeated Waypoint	waypoints	= 3;
+}
+
+enum PacketType {
+	PACKET_GAME = 1;
+	PACKET_ENTITY = 2;
+}
+
+enum PayloadFormat {
+	PAYLOAD_BINARY = 1;
+	PAYLOAD_TEXT = 2;
+}
+
+message Packet {
+	required PacketType		packetType = 1;
+	required PayloadFormat	payloadFormat = 2;
+	required uint32			payloadSize = 3;
+	optional bytes			payloadData = 4;
+}

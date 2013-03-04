@@ -1,0 +1,56 @@
+package NavmeshIO;
+
+option optimize_for = SPEED;
+
+message Vec3 
+{
+	optional float x							= 1;
+	optional float y							= 2;
+	optional float z							= 3;
+}
+
+message Header 
+{
+	optional Vec3		mapCenter				= 1;
+}
+
+message SectorVert
+{
+	required Vec3		position				= 1;
+}
+
+message SectorData
+{
+	optional bool		enabled					= 1 [default = true];		// is this enabled for use?
+	optional bool		team1					= 2 [default = false];		// only usable by team 1
+	optional bool		team2					= 3 [default = false];		// only usable by team 2
+	optional bool		team3					= 4 [default = false];		// only usable by team 3
+	optional bool		team4					= 5 [default = false];		// only usable by team 4
+	optional bool		inwater					= 6 [default = false];		// sector is in water(shallow)
+	optional bool		underwater				= 7 [default = false];		// sector is under water(swimming)		
+}
+
+message Sector 
+{
+	enum MirrorDir
+	{
+		MirrorNone		= 0;
+		MirrorX			= 1;
+		MirrorNX		= 2;
+		MirrorY			= 3;
+		MirrorNY		= 4;
+		MirrorZ			= 5;
+		MirrorNZ		= 6;
+	}
+
+	repeated SectorVert			vertices			= 1;
+	optional MirrorDir			sectorMirrored		= 2 [default=MirrorNone];
+	optional SectorData			sectorData			= 3; // data markup for this sector
+	optional SectorData			sectorDataMirrored	= 4; // data markup for the mirrored copy
+}
+
+message NavigationMesh 
+{
+	required Header			header = 1;
+	repeated Sector			sectors = 2;
+}

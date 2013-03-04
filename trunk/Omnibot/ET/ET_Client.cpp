@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PrecompET.h"
 #include "ScriptManager.h"
 
 #include "ET_Client.h"
@@ -15,7 +14,10 @@
 #include "ET_FilterClosest.h"
 #include "ET_Messages.h"
 #include "ET_BaseStates.h"
+#include "ET_InterfaceFuncs.h"
 #include "ET_Game.h"
+
+#include "PathPlannerWaypoint.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS
