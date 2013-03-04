@@ -1,0 +1,381 @@
+1>------ Build started: Project: game, Configuration: Debug Win32 ------
+2>------ Build started: Project: cgame, Configuration: Debug Win32 ------
+3>------ Build started: Project: ui, Configuration: Debug Win32 ------
+1>  ai_cmd.c
+2>  bg_animation.c
+1>  ai_dmgoal_mp.c
+2>  bg_animgroup.c
+3>  bg_campaign.c
+1>  ai_dmnet_mp.c
+1>  ai_dmq3.c
+2>  bg_campaign.c
+2>  bg_character.c
+3>  bg_classes.c
+3>  bg_misc.c
+3>  q_math.c
+2>  bg_classes.c
+3>  q_shared.c
+3>  ui_atoms.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_animgroup.c(158): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_animgroup.c(179): warning C4706: assignment within conditional expression
+2>  bg_misc.c
+2>  bg_pmove.c
+2>  bg_slidemove.c
+2>  bg_sscript.c
+3>  ui_gameinfo.c
+3>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3499): warning C4706: assignment within conditional expression
+3>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3596): warning C4706: assignment within conditional expression
+3>  ui_loadpanel.c
+3>  ui_main.c
+2>  bg_stats.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(193): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(207): warning C4706: assignment within conditional expression
+2>  bg_tracemap.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(430): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(480): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(508): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(663): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(688): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(745): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(772): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(802): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1585): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1660): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1738): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1826): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1960): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1991): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2043): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2143): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2159): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2240): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2416): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(2514): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmgoal_mp.c(1704): warning C4701: potentially uninitialized local variable 'bestTarget' used
+1>  ai_main.c
+1>  ai_script.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3499): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3596): warning C4706: assignment within conditional expression
+2>  cg_atmospheric.c
+3>  ui_players.c
+2>  cg_character.c
+2>  cg_commandmap.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(628): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(732): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(3726): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4028): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4054): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4138): warning C4701: potentially uninitialized local variable 'moveresult' used
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4302): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4367): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(4586): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmnet_mp.c(5158): warning C4706: assignment within conditional expression
+3>  ui_shared.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(436): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(1141): warning C4706: assignment within conditional expression
+1>  ai_script_actions.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(2079): warning C4706: assignment within conditional expression
+2>  cg_consolecmds.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(2597): warning C4706: assignment within conditional expression
+3>  ui_syscalls.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5618): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5676): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5735): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5790): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5823): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5916): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5936): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(6018): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(353): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(6026): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(5978): warning C4701: potentially uninitialized local variable 'tr' used
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(6789): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(7157): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(7163): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(7170): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_dmq3.c(7183): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(359): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(382): warning C4706: assignment within conditional expression
+1>  ai_team.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(388): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(395): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(399): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(500): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_character.c(504): warning C4706: assignment within conditional expression
+2>  cg_debriefing.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_main.c(2188): warning C4706: assignment within conditional expression
+1>  bg_animation.c
+2>  cg_draw.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(430): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(532): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(554): warning C4706: assignment within conditional expression
+3>  ui_util.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(724): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(1068): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script.c(1091): warning C4706: assignment within conditional expression
+1>  bg_animgroup.c
+3>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\ui\ui_util.c(9): warning C4206: nonstandard extension used : translation unit is empty
+2>  cg_drawtools.c
+3>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\ui\ui_main.c(3932): warning C4706: assignment within conditional expression
+1>  bg_campaign.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_animgroup.c(181): warning C4706: assignment within conditional expression
+1>  bg_character.c
+2>  cg_effects.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(97): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(224): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(518): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(630): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(790): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(1151): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_script_actions.c(1288): warning C4706: assignment within conditional expression
+1>  bg_classes.c
+2>  cg_ents.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_debriefing.c(2167): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_debriefing.c(2427): warning C4706: assignment within conditional expression
+1>  bg_misc.c
+2>  cg_event.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(392): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_draw.c(4723): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(647): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(687): warning C4701: potentially uninitialized local variable 'flagGoal' used
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_draw.c(4724): warning C4204: nonstandard extension used : non-constant aggregate initializer
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_draw.c(4725): warning C4204: nonstandard extension used : non-constant aggregate initializer
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_draw.c(4726): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(848): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(865): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(870): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(924): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(929): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(1189): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(1479): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(1891): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(1936): warning C4701: potentially uninitialized local variable 'target' used
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(1985): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(2127): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(2270): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\botai\ai_team.c(2295): warning C4706: assignment within conditional expression
+1>  bg_pmove.c
+1>  bg_slidemove.c
+1>  bg_sscript.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3499): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\bg_misc.c(3596): warning C4706: assignment within conditional expression
+2>  cg_fireteamoverlay.c
+1>  bg_stats.c
+1>  bg_tracemap.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_ents.c(2438): warning C4706: assignment within conditional expression
+1>  g_active.c
+2>  cg_fireteams.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_effects.c(1162): warning C4701: potentially uninitialized local variable 'tr' used
+2>  cg_flamethrower.c
+1>  g_alarm.c
+2>  cg_info.c
+1>  g_antilag.c
+1>  g_bot.c
+2>  cg_limbopanel.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(934): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'name'
+2>  cg_loadpanel.c
+2>  cg_localents.c
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(898) : see declaration of 'name'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(934): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(935): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'skill'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(900) : see declaration of 'skill'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(935): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(936): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'team'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(901) : see declaration of 'team'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(936): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(937): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'pClass'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(902) : see declaration of 'pClass'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(937): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>  g_buddy_list.c
+1>  g_character.c
+1>  g_client.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(938): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'pWeapon'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(903) : see declaration of 'pWeapon'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(938): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(939): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'spawnPoint'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(904) : see declaration of 'spawnPoint'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(939): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(940): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'respawn'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(905) : see declaration of 'respawn'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(940): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(941): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'scriptName'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(906) : see declaration of 'scriptName'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(941): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(942): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'characterFile'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(907) : see declaration of 'characterFile'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(942): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(944): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'rank'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(910) : see declaration of 'rank'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(944): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(945): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'botSkills'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(911) : see declaration of 'botSkills'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(945): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(947): warning C4221: nonstandard extension used : 'string' : cannot be initialized using address of automatic variable 'pow'
+1>          d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(914) : see declaration of 'pow'
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(947): warning C4204: nonstandard extension used : non-constant aggregate initializer
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_fireteamoverlay.c(159): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_fireteamoverlay.c(271): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_fireteamoverlay.c(468): warning C4706: assignment within conditional expression
+2>  cg_main.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(707): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(766): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(1580): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(1596): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_bot.c(1718): warning C4706: assignment within conditional expression
+1>  g_cmds.c
+1>  g_cmds_ext.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_loadpanel.c(496): warning C4706: assignment within conditional expression
+2>  cg_marks.c
+2>  cg_missionbriefing.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_character.c(160): warning C4706: assignment within conditional expression
+1>  g_combat.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_limbopanel.c(1420): warning C4706: assignment within conditional expression
+2>  cg_multiview.c
+1>  g_config.c
+1>  g_fireteams.c
+2>  cg_newDraw.c
+2>  cg_omnibot.c
+2>  cg_particles.c
+1>  g_items.c
+1>  g_main.c
+2>  cg_players.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_omnibot.c(620): warning C4204: nonstandard extension used : non-constant aggregate initializer
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_omnibot.c(620): warning C4204: nonstandard extension used : non-constant aggregate initializer
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_omnibot.c(620): warning C4204: nonstandard extension used : non-constant aggregate initializer
+1>  g_match.c
+2>  cg_playerstate.c
+1>  g_mem.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_main.c(779): warning C4706: assignment within conditional expression
+2>  cg_polybus.c
+2>  cg_popupmessages.c
+1>  g_misc.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_match.c(363): warning C4389: '==' : signed/unsigned mismatch
+1>  g_missile.c
+1>  g_mover.c
+2>  cg_predict.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_players.c(2036): warning C4706: assignment within conditional expression
+2>  cg_scoreboard.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_players.c(1336): warning C4706: assignment within conditional expression
+1>  g_multiview.c
+2>  cg_servercmds.c
+3>     Creating library .\Debug/ui_mp_x86.lib and object .\Debug/ui_mp_x86.exp
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_popupmessages.c(110): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_popupmessages.c(153): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_popupmessages.c(164): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_popupmessages.c(213): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_popupmessages.c(271): warning C4706: assignment within conditional expression
+2>  cg_snapshot.c
+1>  g_props.c
+1>  g_referee.c
+2>  cg_sound.c
+1>  g_save.c
+2>  cg_spawn.c
+1>  g_script.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_save.c(2025): warning C4206: nonstandard extension used : translation unit is empty
+1>  g_script_actions.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_mover.c(5262): warning C4706: assignment within conditional expression
+2>  cg_statsranksmedals.c
+1>  g_session.c
+1>  g_spawn.c
+2>  cg_syscalls.c
+2>  cg_trails.c
+2>  cg_view.c
+1>  g_stats.c
+1>  g_sv_entities.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script.c(601): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script.c(919): warning C4706: assignment within conditional expression
+1>  g_svcmds.c
+2>  cg_weapons.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_sound.c(268): warning C4701: potentially uninitialized local variable 'sound' used
+2>  cg_window.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(82): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(250): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(450): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(611): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(974): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(1114): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(1153): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(1155): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(1416): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(2084): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(2278): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(2335): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(2808): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3246): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3420): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3685): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3707): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3767): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3803): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3827): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3846): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3873): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3905): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3933): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3961): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(3989): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(4018): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(4047): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_script_actions.c(4203): warning C4706: assignment within conditional expression
+1>  g_syscalls.c
+2>  q_math.c
+1>  g_systemmsg.c
+1>  g_target.c
+1>  g_team.c
+2>  q_shared.c
+2>  ui_shared.c
+1>  g_teammapdata.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3497): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3502): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3541): warning C4706: assignment within conditional expression
+1>  g_trigger.c
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3546): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3572): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3577): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3677): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3682): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3718): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3723): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3745): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(3750): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(4057): warning C4706: assignment within conditional expression
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\cg_weapons.c(4062): warning C4706: assignment within conditional expression
+1>  g_utils.c
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_target.c(660): warning C4706: assignment within conditional expression
+1>  g_vote.c
+1>  g_weapon.c
+1>  q_math.c
+1>  q_shared.c
+2>  Omnibot_Interprocess.cpp
+1>  BotLoadLibrary.cpp
+1>  g_etbot_interface.cpp
+2>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\cgame\omnibot_interprocess.cpp(14): fatal error C1083: Cannot open include file: 'boost/interprocess/ipc/message_queue.hpp': No such file or directory
+3>     Creating library .\Debug/ui_mp_x86.lib and object .\Debug/ui_mp_x86.exp
+3>  ui_2010.vcxproj -> D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\ui\..\build2010\ui\Debug\ui_mp_x86.dll
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_etbot_interface.cpp(183): warning C4706: assignment within conditional expression
+1>d:\cvs\omnibot\trunk\gameinterfaces\et\2.60\src\game\g_etbot_interface.cpp(4954): warning C4706: assignment within conditional expression
+1>     Creating library .\Debug/qagame_mp_x86.lib and object .\Debug/qagame_mp_x86.exp
+1>     Creating library .\Debug/qagame_mp_x86.lib and object .\Debug/qagame_mp_x86.exp
+1>  game_2010.vcxproj -> D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\game\..\build2010\game\Debug\qagame_mp_x86.dll
+1>  The system cannot find the path specified.
+1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(113,5): error MSB3073: The command "..\..\..\..\..\Build_Scripts\post_build.bat D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\game\..\build2010\game\Debug\qagame_mp_x86.dll et debug noaddpkfile
+1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(113,5): error MSB3073: :VCEnd" exited with code 3.
+========== Build: 1 succeeded, 2 failed, 0 up-to-date, 0 skipped ==========
+
+D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\cgame\cgame_2010.vcxproj : error  : The imported project "D:\CVS\omnibot\trunk\Omnibot\projects\msvc10\PropertySheets\Boost.props" was not found. Confirm that the path in the <Import> declaration is correct, and that the file exists on disk.  D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\cgame\cgame_2010.vcxproj
+
+
+One or more projects in the solution were not loaded correctly.
+Please see the Output Window for details.1>------ Build started: Project: game, Configuration: Debug Win32 ------
+2>------ Build started: Project: ui, Configuration: Debug Win32 ------
+1>  The system cannot find the path specified.
+1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(113,5): error MSB3073: The command "..\..\..\..\..\Build_Scripts\post_build.bat D:\CVS\omnibot\trunk\GameInterfaces\ET\2.60\src\game\..\build2010\game\Debug\qagame_mp_x86.dll et debug noaddpkfile
+1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(113,5): error MSB3073: :VCEnd" exited with code 3.
+========== Build: 1 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
+
+
+The following files were specified on the command line:
+
+	D:\CVS\omnibot\trunk\Omnibot\projects\msvc10\..\..\..\GameInterfacesGameInterfaces\ET\2.60\src\wolf_2010.sln
+
+These files could not be found and will not be loaded.

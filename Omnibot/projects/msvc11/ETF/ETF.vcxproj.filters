@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Dlls">
+      <UniqueIdentifier>{45cbf79b-aa1f-444d-a2ec-c620dcba3326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8ebe8a49-9758-4337-a55d-02ab5f50e1fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Filters">
+      <UniqueIdentifier>{4eea2450-1279-4c51-b95e-7f6d131b009e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Interface">
+      <UniqueIdentifier>{c3d3982f-9138-4048-89ed-146d2daf37df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Build">
+      <UniqueIdentifier>{4cb681a1-a25e-4f37-93ef-12c94b006830}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\BotExports.cpp">
+      <Filter>Dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ETF\ETF_Client.cpp" />
+    <ClCompile Include="..\..\..\ETF\ETF_Game.cpp" />
+    <ClCompile Include="..\..\..\ETF\FilterClosestETF.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Common.rc">
+      <Filter>Dlls</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\ETF\ETF_Client.h" />
+    <ClInclude Include="..\..\..\ETF\ETF_Config.h" />
+    <ClInclude Include="..\..\..\ETF\ETF_Game.h" />
+    <ClInclude Include="..\..\..\ETF\FilterClosestETF.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\ETF\Jamfile" />
+    <None Include="..\..\..\ETF\Omni-Bot_ETF_TODO.txt" />
+  </ItemGroup>
+</Project>

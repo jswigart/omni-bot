@@ -300,9 +300,11 @@ protected:
 	bool				m_ToolCancelled;
 
 	typedef SpanHeightMap<obuint8> SpanMap;
+	typedef std::queue<Vector3f> VectorQueue;
+
 	SpanMap *				m_SpanMap;
 	SpanMap::InfluenceMap *	m_Influence;
-	std::queue<Vector3f>	m_SpanFrontier;
+	VectorQueue				m_SpanFrontier;
 	struct CollisionData
 	{
 		CollisionData() 

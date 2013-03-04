@@ -1,0 +1,23 @@
+package FloodFillIO;
+
+option optimize_for = SPEED;
+
+message Vec3 
+{
+	optional float x							= 1;
+	optional float y							= 2;
+	optional float z							= 3;
+}
+
+message Header 
+{
+	required Vec3		mapMins				= 1;
+	required Vec3		mapMaxs				= 2;
+}
+
+message NavigationMesh 
+{
+	required Header			header = 1;
+	repeated Vec3			seedPoints = 2;
+}
+

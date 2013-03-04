@@ -11,8 +11,6 @@
 
 #include "StateMachine.h"
 #include "Path.h"
-#include "ScriptManager.h"
-#include "TriggerManager.h"
 #include "Criteria.h"
 #include "MapGoal.h"
 #include "FilterSensory.h"

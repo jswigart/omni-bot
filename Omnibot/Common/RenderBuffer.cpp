@@ -567,10 +567,8 @@ void RenderBuffer::RenderToOpenGL()
 		glDisableClientState(GL_FOG_COORD_ARRAY);
 		glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 
-		static GLuint batchSize = 42401;
-
-		const size_t offsetP = offsetof( VBOVert, p );
-		const size_t offsetC = offsetof( VBOVert, c );
+		/*const size_t offsetP = offsetof( VBOVert, p );
+		const size_t offsetC = offsetof( VBOVert, c );*/
 
 		for ( size_t i = 0; i < mVBOList.size(); ++i )
 		{

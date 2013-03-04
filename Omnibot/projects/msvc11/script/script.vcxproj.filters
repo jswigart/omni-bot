@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="scriptmain.cpp" />
+    <ClCompile Include="scriptdllentry.cpp" />
+    <ClCompile Include="scriptinterface.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="libs">
+      <UniqueIdentifier>{05a389c5-9169-4730-89bf-4998ff36c7f0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="scriptinterface.h" />
+  </ItemGroup>
+</Project>

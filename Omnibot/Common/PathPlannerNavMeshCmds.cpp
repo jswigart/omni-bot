@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -26,96 +26,94 @@ void PathPlannerNavMesh::InitCommands()
 {
 	PathPlannerBase::InitCommands();
 
-	SetEx("nav_save", "Save current navigation to disk", 
+	SetEx("nav_save", "Save current navigation to disk",
 		this, &PathPlannerNavMesh::cmdNavSave);
-	SetEx("nav_load", "Load last saved navigation from disk", 
+	SetEx("nav_load", "Load last saved navigation from disk",
 		this, &PathPlannerNavMesh::cmdNavLoad);
-	SetEx("nav_view", "Turn on/off navmesh visibility.", 
+	SetEx("nav_view", "Turn on/off navmesh visibility.",
 		this, &PathPlannerNavMesh::cmdNavView);
-	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.", 
+	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.",
 		this, &PathPlannerNavMesh::cmdNavViewConnections);
-	
+
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_enablestep", "Enable step by step generation process.", 
+	SetEx("nav_enablestep", "Enable step by step generation process.",
 		this, &PathPlannerNavMesh::cmdNavEnableStep);
-	SetEx("nav_step", "Step to the next nav process.", 
+	SetEx("nav_step", "Step to the next nav process.",
 		this, &PathPlannerNavMesh::cmdNavStep);
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.", 
+	SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.",
 		this, &PathPlannerNavMesh::cmdAutoBuildFeatures);
 
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_startpoly", "Starts a sector polygon.", 
+	SetEx("nav_startpoly", "Starts a sector polygon.",
 		this, &PathPlannerNavMesh::cmdStartPoly);
-	SetEx("nav_undopoly", "Starts a sector polygon.", 
+	SetEx("nav_undopoly", "Starts a sector polygon.",
 		this, &PathPlannerNavMesh::cmdUndoPoly);
 
-	/*SetEx("nav_loadobj", "Loads navmesh from obj file.", 
-		this, &PathPlannerNavMesh::cmdLoadObj);
-	SetEx("nav_loadmap", "Loads navmesh from map file.", 
-		this, &PathPlannerNavMesh::cmdLoadMap);*/
+	/*SetEx("nav_loadobj", "Loads navmesh from obj file.",
+	this, &PathPlannerNavMesh::cmdLoadObj);
+	SetEx("nav_loadmap", "Loads navmesh from map file.",
+	this, &PathPlannerNavMesh::cmdLoadMap);*/
 
-	SetEx("nav_pp", "Creates a plane from a point and normal.", 
+	SetEx("nav_pp", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCreatePlanePoly);
-	SetEx("nav_sp", "Creates a plane from a point and normal.", 
+	SetEx("nav_sp", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCreateSlicePoly);
-	SetEx("nav_ss", "Slices working sector with the sector being aimed at.", 
+	SetEx("nav_ss", "Slices working sector with the sector being aimed at.",
 		this, &PathPlannerNavMesh::cmdCreateSliceSector);
-	
-	SetEx("nav_commit", "Creates a plane from a point and normal.", 
-		this, &PathPlannerNavMesh::cmdCommitPoly);
-	SetEx("nav_editsector", "Begins editing a sector so further slicing may be done.", 
-		this, &PathPlannerNavMesh::cmdEditSector);	
-	SetEx("nav_splitsector", "Splits a sector into 2 sectors along a plane.", 
-		this, &PathPlannerNavMesh::cmdSplitSector);	
-	SetEx("nav_groundsector", "Grounds all the vertices in the sector.", 
-		this, &PathPlannerNavMesh::cmdGroundSector);		
 
-	SetEx("nav_next", "Steps the current tool to the next operation.", 
+	SetEx("nav_commit", "Creates a plane from a point and normal.",
+		this, &PathPlannerNavMesh::cmdCommitPoly);
+	SetEx("nav_editsector", "Begins editing a sector so further slicing may be done.",
+		this, &PathPlannerNavMesh::cmdEditSector);
+	SetEx("nav_splitsector", "Splits a sector into 2 sectors along a plane.",
+		this, &PathPlannerNavMesh::cmdSplitSector);
+	SetEx("nav_groundsector", "Grounds all the vertices in the sector.",
+		this, &PathPlannerNavMesh::cmdGroundSector);
+
+	SetEx("nav_next", "Steps the current tool to the next operation.",
 		this, &PathPlannerNavMesh::cmdNext);
-	
-	SetEx("nav_delsector", "Deletes a sector by its id number.", 
+
+	SetEx("nav_delsector", "Deletes a sector by its id number.",
 		this, &PathPlannerNavMesh::cmdDeleteSector);
 
-	SetEx("nav_mirrorsectors", "Mirrors all sectors across a specified axis.", 
+	SetEx("nav_mirrorsectors", "Mirrors all sectors across a specified axis.",
 		this, &PathPlannerNavMesh::cmdMirrorSectors);
 
-	SetEx("sector_setproperty", "Sets a property of the current sector.", 
+	SetEx("sector_setproperty", "Sets a property of the current sector.",
 		this, &PathPlannerNavMesh::cmdSectorSetProperty);
 
-	SetEx("sector_createconnections", "Sets a property of the current sector.", 
+	SetEx("sector_createconnections", "Sets a property of the current sector.",
 		this, &PathPlannerNavMesh::cmdSectorCreateConnections);
 
-	SetEx("nav_setmapcenter", "Sets the map center.", 
+	SetEx("nav_setmapcenter", "Sets the map center.",
 		this, &PathPlannerNavMesh::cmdSetMapCenter);
 
-
-	SetEx("nav_obstacleadd", "Creates an obstacle.", 
+	SetEx("nav_obstacleadd", "Creates an obstacle.",
 		this, &PathPlannerNavMesh::cmdObstacleAdd);
 
-
-	SetEx("nav_mapcreate", "Creates an influence map.", 
+	SetEx("nav_mapcreate", "Creates an influence map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapCreate);
-	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.", 
+	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapSeed);
-	SetEx("nav_mapmem", "Shows the memory usage of the map.", 
+	SetEx("nav_mapmem", "Shows the memory usage of the map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapMem);
-	SetEx("nav_mapsave", "Saves the influence map.", 
+	SetEx("nav_mapsave", "Saves the influence map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapSave);
-	SetEx("nav_mapload", "Load the influence map.", 
+	SetEx("nav_mapload", "Load the influence map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapLoad);
 
-	SetEx("nav_mapflood", "Load the influence map.", 
+	SetEx("nav_mapflood", "Load the influence map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapFlood);
-	
+
 	REGISTER_STATE(PathPlannerNavMesh,NoOp);
 	REGISTER_STATE(PathPlannerNavMesh,PlaceSector);
 	REGISTER_STATE(PathPlannerNavMesh,SliceSector);
-	REGISTER_STATE(PathPlannerNavMesh,SliceSectorWithSector);	
+	REGISTER_STATE(PathPlannerNavMesh,SliceSectorWithSector);
 	REGISTER_STATE(PathPlannerNavMesh,EditSector);
-	REGISTER_STATE(PathPlannerNavMesh,SplitSector);	
-	REGISTER_STATE(PathPlannerNavMesh,TraceSector);	
-	REGISTER_STATE(PathPlannerNavMesh,GroundSector);		
+	REGISTER_STATE(PathPlannerNavMesh,SplitSector);
+	REGISTER_STATE(PathPlannerNavMesh,TraceSector);
+	REGISTER_STATE(PathPlannerNavMesh,GroundSector);
 	REGISTER_STATE(PathPlannerNavMesh,CommitSector);
 	REGISTER_STATE(PathPlannerNavMesh,MirrorSectors);
 	REGISTER_STATE(PathPlannerNavMesh,PlaceBorder);
@@ -145,15 +143,15 @@ void PathPlannerNavMesh::cmdNavLoad(const StringVector &_args)
 	if(Load(g_EngineFuncs->GetMapName()))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Nav.");
-	} 
+	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Nav.");
 }
 
 void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_view enable[bool]",
 		"> enable: Enable nav rendering. true/false/on/off/1/0",
 	};
@@ -161,14 +159,14 @@ void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableView( %s );", 
+		(String)va("Nav.EnableView( %s );",
 		bEnable ? "true" : "false"));
 }
 
 void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_viewconnections enable[bool]",
 		"> enable: Enable nav connection rendering. true/false/on/off/1/0",
 	};
@@ -176,7 +174,7 @@ void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableViewConnection( %s );", 
+		(String)va("Nav.EnableViewConnection( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -185,8 +183,8 @@ void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_enablestep enable[bool]",
 		"> enable: Enable step by step nav generation. true/false/on/off/1/0",
 	};
@@ -194,7 +192,7 @@ void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableStep( %s );", 
+		(String)va("Nav.EnableStep( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -221,7 +219,7 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 	{
 		const float fTime = 30.f;
 
-		Vector3f vPos(features[i].m_Position);		
+		Vector3f vPos(features[i].m_Position);
 		Vector3f vFace(features[i].m_Facing);
 		Vector3f vTarget(features[i].m_TargetPosition);
 
@@ -437,7 +435,6 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 	if(_args[1].find('-') != std::string::npos)
 		bNeg = true;
 
-	
 	NavmeshIO::Sector_MirrorDir mir = NavmeshIO::Sector_MirrorDir_MirrorNone;
 
 	if(_args[1].find('x') != std::string::npos)
@@ -566,7 +563,6 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 		{
 			if(_args[1]=="<position>" && Utils::GetLocalPosition(vMapCenter))
 			{
-
 			}
 			else
 			{
@@ -588,7 +584,7 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 			break;
 		}
 	}
-	
+
 	if(bError)
 	{
 		EngineFuncs::ConsoleError("Invalid Parameters");
@@ -598,7 +594,6 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 	m_MapCenter = vMapCenter;
 	InitSectors();
 }
-
 
 void PathPlannerNavMesh::cmdSectorSetProperty(const StringVector &_args)
 {
@@ -638,13 +633,13 @@ void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
 		EngineFuncs::ConsoleError("nav_obstacleadd length width");
 		return;
 	}
-	
+
 	const float len = (float)atof( _args[ 1 ].c_str() );
 	const float wid = (float)atof( _args[ 2 ].c_str() );
 
 	if ( len == 0.0 || wid == 0.0 )
 		return;
-		
+
 	Vector3f vObsPoint, vObsNormal;
 	Utils::GetLocalAimPoint( vObsPoint, &vObsNormal );
 	NavSector * sector = GetSectorAt( vObsPoint );
@@ -674,12 +669,13 @@ void PathPlannerNavMesh::cmdInfluenceMapCreate(const StringVector &_args)
 		}
 	}
 
-	m_SpanFrontier.swap( std::queue<Vector3f>() );
+	VectorQueue empty;
+	m_SpanFrontier.swap( empty );
 
 	m_SpanMap = new SpanMap();
 	m_SpanMap->Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
 
-	EngineFuncs::ConsoleMessage(va("Created %d x %d span map", 
+	EngineFuncs::ConsoleMessage(va("Created %d x %d span map",
 		m_SpanMap->GetNumCellsX(), m_SpanMap->GetNumCellsY() ) );
 }
 
@@ -687,7 +683,7 @@ void PathPlannerNavMesh::cmdInfluenceMapSeed(const StringVector &_args)
 {
 	/*Vector3f eyePos;
 	if ( Utils::GetLocalEyePosition(eyePos) )
-		m_SpanFrontier.push( eyePos );*/
+	m_SpanFrontier.push( eyePos );*/
 
 	enum { MaxFeatures = 64 };
 	AutoNavFeature features[ MaxFeatures ];
@@ -708,8 +704,8 @@ void PathPlannerNavMesh::cmdInfluenceMapMem(const StringVector &_args)
 {
 	if ( m_SpanMap != NULL )
 	{
-		EngineFuncs::ConsoleMessage(va("Influence Map %d x %d ( %s )", 
-			m_SpanMap->GetNumCellsX(), 
+		EngineFuncs::ConsoleMessage(va("Influence Map %d x %d ( %s )",
+			m_SpanMap->GetNumCellsX(),
 			m_SpanMap->GetNumCellsY(),
 			Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
 	}
@@ -748,7 +744,7 @@ void PathPlannerNavMesh::cmdInfluenceMapLoad(const StringVector &_args)
 		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ) );
 		return;
 	}
-	
+
 	String data;
 	if (!f.ReadWholeFile( data ) )
 	{
@@ -779,9 +775,8 @@ void PathPlannerNavMesh::cmdInfluenceMapFlood(const StringVector &_args)
 	while( !m_Influence->UpdateInfluences( std::numeric_limits<int>::max() ) )
 	{
 	}
-	
 
-	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )", 
+	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )",
 		t.GetElapsedSeconds(),
 		Utils::FormatByteString( m_Influence->CalculateMemUsage() ).c_str() ) );
 }
@@ -793,7 +788,7 @@ void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 	double dTimeTaken = 0.0f;
 	obint32 iNumSectors = (obint32)m_ActiveNavSectors.size();
 	obint32 iNumPaths = iNumSectors * iNumSectors;
-	
+
 	Timer tme;
 	tme.Reset();
 	for(obint32 w1 = 0; w1 < iNumSectors; ++w1)
@@ -802,16 +797,16 @@ void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 		{
 			/*const NavSector &pS1 = m_ActiveNavSectors[w1];
 			const NavSector &pS2 = m_ActiveNavSectors[w2];
-			
+
 			PlanPathToGoal(NULL,
-				pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
-				pS2.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
-				0);*/
+			pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
+			pS2.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
+			0);*/
 		}
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec",
 		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
@@ -835,25 +830,25 @@ void PathPlannerNavMesh::_BenchmarkGetNavPoint(const StringVector &_args)
 	tme.Reset();
 	for(obuint32 i = 0; i < iNumIterations; ++i)
 	{
-		for(obuint32 w1 = 0; w1 < iNumWaypoints; ++w1)
-		{
-			NavSector *pSector = m_ActiveNavSectors[w1];
+	for(obuint32 w1 = 0; w1 < iNumWaypoints; ++w1)
+	{
+	NavSector *pSector = m_ActiveNavSectors[w1];
 
-			Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
-			if(pClosest)
-				++iHits;
-			else
-				++iMisses;
-		}
+	Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
+	if(pClosest)
+	++iHits;
+	else
+	++iMisses;
+	}
 	}
 
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
-		iNumWaypoints * iNumIterations, 
-		iHits, 
-		iMisses, 
-		dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	*/
+	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second",
+	iNumWaypoints * iNumIterations,
+	iHits,
+	iMisses,
+	dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	*/
 }
 
 void PathPlannerNavMesh::cmdNext(const StringVector &_args)
@@ -898,10 +893,10 @@ STATE_UPDATE(PathPlannerNavMesh, PlaceSector)
 	m_WorkingSectorPlane = Utils::PlaneFromPoint(vPos, m_WorkingSectorPlane.Normal);
 
 	Vector3List poly = Utils::CreatePolygon(
-		vPos, 
+		vPos,
 		m_WorkingSectorPlane.Normal,
 		32768.f);
-	
+
 	RenderBuffer::AddPolygonFilled( poly, COLOR::GREEN.fade(100) );
 }
 
@@ -914,7 +909,7 @@ STATE_EXIT(PathPlannerNavMesh, PlaceSector)
 	}
 
 	m_WorkingSector.m_Boundary = Utils::CreatePolygon(
-		m_WorkingSectorPlane.Normal*-m_WorkingSectorPlane.Constant, 
+		m_WorkingSectorPlane.Normal*-m_WorkingSectorPlane.Constant,
 		m_WorkingSectorPlane.Normal,
 		32768.f);
 }
@@ -951,7 +946,7 @@ STATE_UPDATE(PathPlannerNavMesh, SliceSector)
 	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, m_WorkingSlicePlane.Normal);
 
 	Vector3List slicePoly = Utils::CreatePolygon(
-		vPos, 
+		vPos,
 		m_WorkingSlicePlane.Normal,
 		1024.f);
 
@@ -1016,13 +1011,12 @@ STATE_UPDATE(PathPlannerNavMesh, SliceSectorWithSector)
 
 STATE_EXIT(PathPlannerNavMesh, SliceSectorWithSector)
 {
-
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 STATE_ENTER(PathPlannerNavMesh, EditSector)
-{	
+{
 }
 
 STATE_UPDATE(PathPlannerNavMesh, EditSector)
@@ -1083,7 +1077,7 @@ STATE_UPDATE(PathPlannerNavMesh, SplitSector)
 	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, m_WorkingSlicePlane.Normal);
 
 	Vector3List slicePoly = Utils::CreatePolygon(
-		vPos, 
+		vPos,
 		m_WorkingSlicePlane.Normal,
 		1024.f);
 
@@ -1097,7 +1091,7 @@ STATE_EXIT(PathPlannerNavMesh, SplitSector)
 
 	Vector3List s1 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, true);
 	Vector3List s2 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, false);
-	
+
 	// add the 2 new sectors
 	NavSector ns = m_WorkingSector;
 	if(!s1.empty())
@@ -1110,7 +1104,7 @@ STATE_EXIT(PathPlannerNavMesh, SplitSector)
 		m_WorkingSector.m_Boundary = s2;
 		m_NavSectors.push_back(m_WorkingSector);
 	}
-	
+
 	m_WorkingSector = NavSector();
 
 	InitSectors();
@@ -1118,7 +1112,7 @@ STATE_EXIT(PathPlannerNavMesh, SplitSector)
 
 //////////////////////////////////////////////////////////////////////////
 
-STATE_ENTER(PathPlannerNavMesh, TraceSector) 
+STATE_ENTER(PathPlannerNavMesh, TraceSector)
 {
 	Vector3f vEye, vAimPos;
 	Utils::GetLocalEyePosition(vEye);
@@ -1136,8 +1130,8 @@ STATE_ENTER(PathPlannerNavMesh, TraceSector)
 			SetNextState(NoOp);
 			return;
 		}
-	}	
-	
+	}
+
 	vAimPos = _SectorVertWithin(vEye, vAimPos, SNAP_RADIUS);
 
 	if(m_WorkingManualSector.empty())
@@ -1187,12 +1181,11 @@ STATE_EXIT(PathPlannerNavMesh, TraceSector)
 		m_WorkingManualSector.resize(0);
 		return;
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-STATE_ENTER(PathPlannerNavMesh, GroundSector) 
+STATE_ENTER(PathPlannerNavMesh, GroundSector)
 {
 }
 
@@ -1217,7 +1210,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 
 	NavSector &ns = m_NavSectors[nc.HitAttrib().Fields.SectorId];
 
-	obTraceResult tr;	
+	obTraceResult tr;
 	for(obuint32 i = 0; i < ns.m_Boundary.size(); ++i)
 	{
 		Vector3f vPt = ns.m_Boundary[i];
@@ -1243,7 +1236,7 @@ STATE_EXIT(PathPlannerNavMesh, GroundSector)
 
 //////////////////////////////////////////////////////////////////////////
 
-STATE_ENTER(PathPlannerNavMesh, CommitSector) 
+STATE_ENTER(PathPlannerNavMesh, CommitSector)
 {
 }
 
@@ -1354,10 +1347,10 @@ STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
 {
 	if ( m_SpanFrontier.empty() )
 		SetNextState( NoOp );
-	
+
 	const float cs = m_SpanMap->GetCellSize();
-	
-	const Vector3f step[] = 
+
+	const Vector3f step[] =
 	{
 		Vector3f( -cs, 0.0f, SpanStepHeight ),
 		Vector3f(  cs, 0.0f, SpanStepHeight ),
@@ -1365,7 +1358,7 @@ STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
 		Vector3f( 0.0f,  cs, SpanStepHeight ),
 	};
 	const int stepdirs = sizeof(step) / sizeof(step[0]);
-	
+
 	static int maxIterations = std::numeric_limits<int>::max();
 	int iterations = maxIterations;
 	while ( !m_SpanFrontier.empty() && (iterations--) > 0 )
@@ -1409,8 +1402,8 @@ STATE_EXIT(PathPlannerNavMesh, FloodSpanMap)
 
 	unsigned int numIndices = m_SpanMap->IndexSpanNodes();
 
-	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )", 
-		m_SpanMap->GetNumCellsX(), 
+	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )",
+		m_SpanMap->GetNumCellsX(),
 		m_SpanMap->GetNumCellsY(),
 		numIndices,
 		Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
