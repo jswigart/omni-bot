@@ -1061,7 +1061,7 @@ void _UI_Shutdown( void ) {
 	if ( !Q_stricmp( httpdown.version, "Wolf 1.4-MP win-x86 Oct 28 2002" ) ||
 		 !Q_stricmp( httpdown.version, "Wolf 1.41-MP win-x86 Dec 4 2002" ) ||
 		 !Q_stricmp( httpdown.version, "Wolf 1.41b-MP win-x86 May 8 2006" ) ) {
-		DetourRemove( (PBYTE)orig_BeginDownload,(PBYTE)hook_BeginDownload );
+		DetourDetach( (PBYTE)orig_BeginDownload,(PBYTE)hook_BeginDownload );
 	}
 #endif
 }
@@ -6158,7 +6158,6 @@ UI_Init
 */
 void _UI_Init( qboolean inGameLoad ) {
 	int start;
-	char version[128];
 
 	UI_RegisterCvars();
 	UI_InitMemory();
@@ -6288,11 +6287,11 @@ void _UI_Init( qboolean inGameLoad ) {
 #ifdef _WIN32
 	trap_Cvar_VariableStringBuffer( "version", httpdown.version, sizeof( httpdown.version ) );
 	if ( !Q_stricmp( httpdown.version, "Wolf 1.4-MP win-x86 Oct 28 2002" ) || !Q_stricmp( httpdown.version, "Wolf 1.41-MP win-x86 Dec 4 2002" ) ) {
-		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourFunction( (LPBYTE)0x0040C670, (LPBYTE) hook_BeginDownload );
+		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourAttach( (LPBYTE)0x0040C670, (LPBYTE) hook_BeginDownload );
 	} else if ( !Q_stricmp( httpdown.version, "Wolf 1.41b-MP win-x86 May 8 2006" ) )     {
-		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourFunction( (LPBYTE)0x0040BC90, (LPBYTE) hook_BeginDownload );
+		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourAttach( (LPBYTE)0x0040BC90, (LPBYTE) hook_BeginDownload );
 	} else {
-		trap_Print( va( S_COLOR_RED "HTTP Downloader: RTCW Version(%s) is not supported!\n", version ) );
+		trap_Print( va( S_COLOR_RED "HTTP Downloader: RTCW Version(%s) is not supported!\n", httpdown.version ) );
 	}
 #endif
 }
