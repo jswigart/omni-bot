@@ -8,7 +8,7 @@
     <DebuggerFlavor Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">+set fs_game omnibot +map oasis</LocalDebuggerCommandArguments>
     <LocalDebuggerCommandArguments Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">+set fs_game omnibot +map oasis</LocalDebuggerCommandArguments>
-    <LocalDebuggerCommand Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Games\WET\ET.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Games\WET\ETOMNI.exe</LocalDebuggerCommand>
     <LocalDebuggerCommand Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Games\WET\ETDED.exe</LocalDebuggerCommand>
   </PropertyGroup>
 </Project>
