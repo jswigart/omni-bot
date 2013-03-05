@@ -16,9 +16,6 @@
     <Filter Include="_Interface">
       <UniqueIdentifier>{e20902ba-0697-423b-b5cf-a65df30c89fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Build">
-      <UniqueIdentifier>{d2f0a761-4ded-42fd-97d7-6fa3f13efc84}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\BotExports.cpp">
