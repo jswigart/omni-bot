@@ -40,7 +40,7 @@ console doesn't pause the game.
 
 =============================================================================
 */
-void OmnibotRenderDebugLines();
+
 /*
 =================
 CG_TestModel_f
@@ -1860,10 +1860,6 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 			DEBUGTIME
 
 			CG_AddAtmosphericEffects();
-
-			if ( cgs.localServer ) { 
-				OmnibotRenderDebugLines();
-			}
 		}
 		
 		// Rafael mg42
