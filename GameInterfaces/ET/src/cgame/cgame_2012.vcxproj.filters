@@ -9,9 +9,6 @@
       <UniqueIdentifier>{41d1c0aa-0410-4b26-960f-e16670d59f5e}</UniqueIdentifier>
       <Extensions>h</Extensions>
     </Filter>
-    <Filter Include="Omnibot">
-      <UniqueIdentifier>{da7c9250-ed20-4b41-ae33-651803565d9e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\game\bg_animation.c">
@@ -116,9 +113,6 @@
     <ClCompile Include="cg_newDraw.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_omnibot.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cg_particles.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -179,9 +173,6 @@
     <ClCompile Include="..\ui\ui_shared.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Omnibot_Interprocess.cpp">
-      <Filter>Omnibot</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_classes.h">
@@ -216,9 +207,6 @@
     </ClInclude>
     <ClInclude Include="..\ui\ui_shared.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Omnibot_Interprocess.h">
-      <Filter>Omnibot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
