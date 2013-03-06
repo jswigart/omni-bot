@@ -340,7 +340,6 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
     <ClCompile Include="cg_missionbriefing.c" />
     <ClCompile Include="cg_multiview.c" />
     <ClCompile Include="cg_newDraw.c" />
-    <ClCompile Include="cg_omnibot.c" />
     <ClCompile Include="cg_particles.c" />
     <ClCompile Include="cg_players.c" />
     <ClCompile Include="cg_playerstate.c" />
@@ -361,7 +360,6 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
     <ClCompile Include="..\game\q_math.c" />
     <ClCompile Include="..\game\q_shared.c" />
     <ClCompile Include="..\ui\ui_shared.c" />
-    <ClCompile Include="Omnibot_Interprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_classes.h" />
@@ -375,7 +373,6 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
     <ClInclude Include="..\game\surfaceflags.h" />
     <ClInclude Include="tr_types.h" />
     <ClInclude Include="..\ui\ui_shared.h" />
-    <ClInclude Include="Omnibot_Interprocess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cgame.def" />
