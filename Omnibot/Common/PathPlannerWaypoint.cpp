@@ -189,11 +189,6 @@ void PathPlannerWaypoint::UpdateNavRender()
 	if(!ge.IsValid())
 		return;
 
-	float fWaypointDuration = 2.f;
-
-	static int iNextStart = 0;
-	static int i = 0;
-
 	if(!m_CreatingSector.m_SectorBounds.IsZero())
 	{
 		Vector3f vAimPos;
@@ -302,20 +297,10 @@ void PathPlannerWaypoint::UpdateNavRender()
 
 	Timer tme;
 
-	int iNumWps = (int)m_WaypointList.size();
-	//for(int i = 0; i < iNumWps; ++i)
-	while(iNumWps)
+	UpdateSelectedWpRender();
+
+	for ( size_t i = 0; i < m_WaypointList.size(); ++i)
 	{
-		i %= iNumWps;
-
-		if(i==0)
-		{
-			if(iNextStart > IGame::GetTime())
-				break;
-			iNextStart = IGame::GetTime() + Utils::SecondsToMilliseconds(fWaypointDuration);
-			UpdateSelectedWpRender();
-		}
-
 		Waypoint *pWp = m_WaypointList[i];
 
 		obColor wpColor = g_WaypointColor;
@@ -336,29 +321,22 @@ void PathPlannerWaypoint::UpdateNavRender()
 			wpColor = g_SelectedWaypoint;
 
 		//g_EngineFuncs->AddDisplayLine(LINE_WAYPOINT, pWp->GetPosition(), pWp->GetPosition(), wpColor);
-		if(Utils::InFieldOfView(vFacing, pWp->GetPosition()-vPosition, 120.0f))
-		{
-			RenderBuffer::AddLine(
-				pWp->GetPosition() + Vector3f(0.f, 0.f, g_fTopWaypointOffset),
-				pWp->GetPosition() + Vector3f(0.f, 0.f, g_fBottomWaypointOffset),
-				wpColor,
-				fWaypointDuration);
+		RenderBuffer::AddLine(
+			pWp->GetPosition() + Vector3f(0.f, 0.f, g_fTopWaypointOffset),
+			pWp->GetPosition() + Vector3f(0.f, 0.f, g_fBottomWaypointOffset),
+			wpColor);
 
-			if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) &&
-				pWp->GetFacing() != Vector3f::ZERO)
-			{
-				Vector3f vStart = pWp->GetPosition() + Vector3f(0.f, 0.f, g_fFacingOffset);
-				RenderBuffer::AddLine(
-					vStart,
-					vStart + pWp->GetFacing() * 32.f,
-					g_ShowFacingColor,
-					fWaypointDuration);
-			}
+		if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) &&
+			pWp->GetFacing() != Vector3f::ZERO)
+		{
+			Vector3f vStart = pWp->GetPosition() + Vector3f(0.f, 0.f, g_fFacingOffset);
+			RenderBuffer::AddLine( vStart, vStart + pWp->GetFacing() * 32.f, g_ShowFacingColor);
 		}
 
 		// Add the paths
-		Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin();
-		while(it != pWp->m_Connections.end())
+		for ( Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin();
+			it != pWp->m_Connections.end();
+			++it )
 		{
 			obColor pathColor = it->m_Connection->IsConnectedTo(pWp) ? g_LinkColor2Way : g_LinkColor1Way;
 
@@ -367,30 +345,15 @@ void PathPlannerWaypoint::UpdateNavRender()
 			else if(it->CheckFlag(F_LNK_TELEPORT))
 				pathColor = g_LinkTeleport;
 
-			//////////////////////////////////////////////////////////////////////////
 			Vector3f vP1 = pWp->GetPosition() + Vector3f(0.f, 0.f, g_fTopPathOffset);
 			Vector3f vP2 = it->m_Connection->GetPosition() + Vector3f(0.f, 0.f, g_fBottomPathOffset);
-			if(Utils::InFieldOfView(vFacing, vP1-vPosition, 120.0f) ||
-				Utils::InFieldOfView(vFacing, vP2-vPosition, 120.0f))
-			{
-				RenderBuffer::AddLine(
-					vP1,
-					vP2,
-					pathColor,
-					fWaypointDuration);
-			}
-			//////////////////////////////////////////////////////////////////////////
 
-			++it;
+			RenderBuffer::AddLine(vP1,vP2,pathColor);
 		}
-
-		++i;
-		if(tme.GetElapsedSeconds() > 0.02)
-			break;
 	}
 
 	// render entity connections.
-	for(int i = 0; i < MaxEntityConnections; ++i)
+	for ( int i = 0; i < MaxEntityConnections; ++i )
 	{
 		if(EntityConnections[i].Entity.IsValid())
 		{
@@ -433,13 +396,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 							}
 						}
 
-						obColor c = COLOR::CYAN;
-
-						RenderBuffer::AddLine(
-							vStart,
-							vEnd,
-							c,
-							IGame::GetDeltaTimeSecs() * 2.f);
+						RenderBuffer::AddLine( vStart, vEnd, COLOR::CYAN );
 					}
 				}
 			}

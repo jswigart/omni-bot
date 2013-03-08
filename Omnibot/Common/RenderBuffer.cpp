@@ -527,7 +527,7 @@ void RenderBuffer::RenderToOpenGL()
 
 	glPushAttrib( GL_ALL_ATTRIB_BITS );
 
-	/*glDisable( GL_TEXTURE_2D );
+	glDisable( GL_TEXTURE_2D );
 	glDisable( GL_LIGHTING );
 	glDisable( GL_CULL_FACE );
 	glDisable( GL_ALPHA_TEST );
@@ -537,148 +537,148 @@ void RenderBuffer::RenderToOpenGL()
 
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc( GL_LEQUAL );*/
+	glDepthFunc( GL_LEQUAL );
 
 	obColor col = COLOR::CYAN;
 	CheckColor( col, COLOR::WHITE );
 
-	//if ( mPointList.size() > 0 )
-	//{
-	//	float sz = 0.0;
-	//	CheckPointSize( sz, 1.0 );
+	if ( mPointList.size() > 0 )
+	{
+		float sz = 0.0;
+		CheckPointSize( sz, 1.0 );
 
-	//	glBegin( GL_POINTS );
-	//	for( size_t i = 0; i < mPointList.size(); ++i )
-	//	{
-	//		const Point & prim = mPointList[ i ];
-	//		CheckPointSize( sz, prim.pointSize );
-	//		CheckColor( col, prim.c );
-	//		glVertex3fv( prim.v[0] );
-	//	}
-	//	glEnd();
-	//}
+		glBegin( GL_POINTS );
+		for( size_t i = 0; i < mPointList.size(); ++i )
+		{
+			const Point & prim = mPointList[ i ];
+			CheckPointSize( sz, prim.pointSize );
+			CheckColor( col, prim.c );
+			glVertex3fv( prim.v[0] );
+		}
+		glEnd();
+	}
 
-	//if ( mLineList.size() > 0 )
-	//{
-	//	float sz = 0.0;
-	//	CheckLineWidth( sz, 1.0 );
+	if ( mLineList.size() > 0 )
+	{
+		float sz = 0.0;
+		CheckLineWidth( sz, 1.0 );
 
-	//	glBegin( GL_LINES );
-	//	for( size_t i = 0; i < mLineList.size(); ++i )
-	//	{
-	//		const Line & prim = mLineList[ i ];
-	//		CheckLineWidth( sz, prim.lineWidth );
-	//		CheckColor( col, prim.c );
-	//		glVertex3fv( prim.v[0] );
-	//		glVertex3fv( prim.v[1] );
-	//	}
-	//	glEnd();
-	//}
+		glBegin( GL_LINES );
+		for( size_t i = 0; i < mLineList.size(); ++i )
+		{
+			const Line & prim = mLineList[ i ];
+			CheckLineWidth( sz, prim.lineWidth );
+			CheckColor( col, prim.c );
+			glVertex3fv( prim.v[0] );
+			glVertex3fv( prim.v[1] );
+		}
+		glEnd();
+	}
 
-	//if ( mTriList.size() > 0 )
-	//{
-	//	glBegin( GL_TRIANGLES );
-	//	for( size_t i = 0; i < mTriList.size(); ++i )
-	//	{
-	//		const Triangle & prim = mTriList[ i ];
-	//		CheckColor( col, prim.c );
-	//		glVertex3fv( prim.v[0] );
-	//		glVertex3fv( prim.v[1] );
-	//		glVertex3fv( prim.v[2] );
-	//	}
-	//	glEnd();
-	//}
+	if ( mTriList.size() > 0 )
+	{
+		glBegin( GL_TRIANGLES );
+		for( size_t i = 0; i < mTriList.size(); ++i )
+		{
+			const Triangle & prim = mTriList[ i ];
+			CheckColor( col, prim.c );
+			glVertex3fv( prim.v[0] );
+			glVertex3fv( prim.v[1] );
+			glVertex3fv( prim.v[2] );
+		}
+		glEnd();
+	}
 
-	//if ( mQuadList.size() > 0 )
-	//{
-	//	glBegin( GL_QUADS );
-	//	for( size_t i = 0; i < mQuadList.size(); ++i )
-	//	{
-	//		const Quad & prim = mQuadList[ i ];
-	//		CheckColor( col, prim.c );
-	//		glVertex3fv( prim.v[0] );
-	//		glVertex3fv( prim.v[1] );
-	//		glVertex3fv( prim.v[2] );
-	//		glVertex3fv( prim.v[3] );
-	//	}
-	//	glEnd();
-	//}
+	if ( mQuadList.size() > 0 )
+	{
+		glBegin( GL_QUADS );
+		for( size_t i = 0; i < mQuadList.size(); ++i )
+		{
+			const Quad & prim = mQuadList[ i ];
+			CheckColor( col, prim.c );
+			glVertex3fv( prim.v[0] );
+			glVertex3fv( prim.v[1] );
+			glVertex3fv( prim.v[2] );
+			glVertex3fv( prim.v[3] );
+		}
+		glEnd();
+	}
 
-	//if ( mCircleList.size() > 0 )
-	//{
-	//	GLUquadric * q = gluNewQuadric();
-	//	gluQuadricDrawStyle( q, GLU_SILHOUETTE );
-	//	for( size_t i = 0; i < mCircleList.size(); ++i )
-	//	{
-	//		const Circle & prim = mCircleList[ i ];
-	//		CheckColor( col, prim.c );
-	//		gluDisk( q, 0, prim.radius, 12, 1 );
-	//	}
-	//	gluDeleteQuadric( q );
-	//}
+	if ( mCircleList.size() > 0 )
+	{
+		GLUquadric * q = gluNewQuadric();
+		gluQuadricDrawStyle( q, GLU_SILHOUETTE );
+		for( size_t i = 0; i < mCircleList.size(); ++i )
+		{
+			const Circle & prim = mCircleList[ i ];
+			CheckColor( col, prim.c );
+			gluDisk( q, 0, prim.radius, 12, 1 );
+		}
+		gluDeleteQuadric( q );
+	}
 
-	//if ( mStringList.size() > 0 && textListBase != 0 )
-	//{
-	//	static const float textScale = 5.0f;
-	//	static const float textDistance = 2048.0f;
+	if ( mStringList3d.size() > 0 && textListBase != 0 )
+	{
+		static const float textScale = 5.0f;
+		static const float textDistance = 2048.0f;
 
-	//	glPushMatrix();
-	//	glPushAttrib( GL_LIST_BIT ); // save the base list
-	//	glListBase( textListBase );
+		glPushMatrix();
+		glPushAttrib( GL_LIST_BIT ); // save the base list
+		glListBase( textListBase );
 
-	//	for( size_t i = 0; i < mStringList.size(); ++i )
-	//	{
-	//		const Str & prim = mStringList[ i ];
+		for( size_t i = 0; i < mStringList3d.size(); ++i )
+		{
+			const Str3d & prim = mStringList3d[ i ];
 
-	//		if ( ( vEyePos - prim.v ).Length() > textDistance )
-	//			continue;
+			if ( ( vEyePos - prim.v ).Length() > textDistance )
+				continue;
 
-	//		CheckColor( col, prim.c );
+			CheckColor( col, prim.c );
 
-	//		StringVector lines;
-	//		Utils::Tokenize( prim.str, "\n", lines );
+			StringVector lines;
+			Utils::Tokenize( prim.str, "\n", lines );
 
-	//		for ( size_t l = 0; l < lines.size(); ++l )
-	//		{
-	//			float lineWidth = 0.0f;
-	//			float lineHeight = 0.0f;
-	//			for ( size_t j = 0; j < lines[ l ].length(); ++j )
-	//			{
-	//				lineWidth += glyphMetrics[ lines[ l ][ j ] ].gmfCellIncX;
-	//				lineHeight = std::max( lineHeight, glyphMetrics[ lines[ l ][ j ] ].gmfBlackBoxY );
-	//			}
+			for ( size_t l = 0; l < lines.size(); ++l )
+			{
+				float lineWidth = 0.0f;
+				float lineHeight = 0.0f;
+				for ( size_t j = 0; j < lines[ l ].length(); ++j )
+				{
+					lineWidth += glyphMetrics[ lines[ l ][ j ] ].gmfCellIncX;
+					lineHeight = std::max( lineHeight, glyphMetrics[ lines[ l ][ j ] ].gmfBlackBoxY );
+				}
 
-	//			lineWidth *= textScale;
-	//			lineHeight *= textScale;
+				lineWidth *= textScale;
+				lineHeight *= textScale;
 
-	//			glPushMatrix();
+				glPushMatrix();
 
-	//			// calculate a bill board matrix so the text always faces the camera
-	//			Vector3f look = vEyePos - prim.v;
-	//			look.z = 0.0f;
-	//			look.Normalize();
-	//			Vector3f right = Vector3f::UNIT_Z.Cross( look );
+				// calculate a bill board matrix so the text always faces the camera
+				Vector3f look = vEyePos - prim.v;
+				look.z = 0.0f;
+				look.Normalize();
+				Vector3f right = Vector3f::UNIT_Z.Cross( look );
 
-	//			const GLfloat bb[16] =
-	//			{
-	//				right.x,	right.y,	right.z,	0.0f,
-	//				0.0f,		0.0f,		1.0f,		0.0f,
-	//				look.x,		look.y,		look.z,		0.0f,
-	//				prim.v.x,	prim.v.y,	prim.v.z,	1.0f
-	//			};
-	//			glMultMatrixf( bb );
-	//			glTranslatef(
-	//				- lineWidth * 0.5f,
-	//				- (float)l * lineHeight,
-	//				0.0f );
-	//			glScalef( textScale, textScale, textScale );
-	//			glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );
-	//			glPopMatrix();
-	//		}
-	//	}
-	//	glPopMatrix();
-	//	glPopAttrib(); // list base
-	//}
+				const GLfloat bb[16] =
+				{
+					right.x,	right.y,	right.z,	0.0f,
+					0.0f,		0.0f,		1.0f,		0.0f,
+					look.x,		look.y,		look.z,		0.0f,
+					prim.v.x,	prim.v.y,	prim.v.z,	1.0f
+				};
+				glMultMatrixf( bb );
+				glTranslatef(
+					- lineWidth * 0.5f,
+					- (float)l * lineHeight,
+					0.0f );
+				glScalef( textScale, textScale, textScale );
+				glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );
+				glPopMatrix();
+			}
+		}
+		glPopMatrix();
+		glPopAttrib(); // list base
+	}
 
 	//mStringList2d TODO
 

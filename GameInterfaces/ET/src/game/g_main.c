@@ -30,6 +30,7 @@ mapEntityData_Team_t mapEntityData[2];
 // omnibot
 vmCvar_t	g_OmniBotPath;
 vmCvar_t	g_OmniBotEnable;
+vmCvar_t	g_OmniBotLibrary;
 vmCvar_t	g_OmniBotFlags;
 vmCvar_t	g_OmniBotPlaying;
 // end omnibot
@@ -171,7 +172,6 @@ vmCvar_t		vote_limit;
 vmCvar_t		vote_percent;
 vmCvar_t		z_serverflags;
 
-
 vmCvar_t		g_covertopsChargeTime;
 vmCvar_t		refereePassword;
 vmCvar_t		g_debugConstruct;
@@ -218,7 +218,6 @@ vmCvar_t		g_nextmap;
 vmCvar_t		g_nextcampaign;
 
 vmCvar_t		g_disableComplaints;
-
 
 cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -279,7 +278,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_userTimeLimit, "g_userTimeLimit", "0", 0, 0, qfalse, qtrue },
 	{ &g_userAlliedRespawnTime, "g_userAlliedRespawnTime", "0", 0, 0, qfalse, qtrue },
 	{ &g_userAxisRespawnTime, "g_userAxisRespawnTime", "0", 0, 0, qfalse, qtrue },
-	
+
 	{ &g_swapteams, "g_swapteams", "0", CVAR_ROM, 0, qfalse, qtrue },
 	// -NERVE - SMF
 
@@ -298,7 +297,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue, qtrue },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue },
-	
+
 	{ &g_needpass, "g_needpass", "0", CVAR_SERVERINFO | CVAR_ROM, 0, qtrue },
 	{ &g_balancedteams, "g_balancedteams", "0", CVAR_SERVERINFO | CVAR_ROM, 0, qtrue },
 	{ &g_forcerespawn, "g_forcerespawn", "0", 0, 0, qtrue },
@@ -398,7 +397,7 @@ cvarTable_t		gameCvarTable[] = {
 //	{ &g_movespeed, "g_movespeed", "127", CVAR_CHEAT, 0, qfalse },
 	{ &g_movespeed, "g_movespeed", "76", CVAR_CHEAT, 0, qfalse },
 
-	// Arnout: LMS	
+	// Arnout: LMS
 	{ &g_lms_teamForceBalance,	"g_lms_teamForceBalance",	"1",	CVAR_ARCHIVE },
 	{ &g_lms_roundlimit,		"g_lms_roundlimit",			"3",	CVAR_ARCHIVE },
 	{ &g_lms_matchlimit,		"g_lms_matchlimit",			"2",	CVAR_ARCHIVE },
@@ -413,7 +412,6 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_oldCampaign,			"g_oldCampaign",			"",		CVAR_ROM, 0, },
 	{ &g_currentCampaign,		"g_currentCampaign",		"",		CVAR_WOLFINFO | CVAR_ROM, 0, },
 	{ &g_currentCampaignMap,	"g_currentCampaignMap",		"0",	CVAR_WOLFINFO | CVAR_ROM, 0, },
-	
 
 #ifdef SAVEGAME_SUPPORT
 	{ &g_reloading, "g_reloading", "0", CVAR_ROM },
@@ -441,8 +439,9 @@ cvarTable_t		gameCvarTable[] = {
 	// omnibot
 	{ &g_OmniBotPath, "omnibot_path", "", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
-	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },	
+	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
+	{ &g_OmniBotLibrary, "omnibot_library", "omnibot_et", CVAR_ROM, 0, qfalse},
 	// end omnibot
 
 	//CS: Waypointing Tool only, not for other mods
@@ -453,7 +452,6 @@ cvarTable_t		gameCvarTable[] = {
 
 // bk001129 - made static to avoid aliasing
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[0] );
-
 
 void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
@@ -613,7 +611,6 @@ void QDECL G_Error( const char *fmt, ... ) {
 //bani
 void QDECL G_Error( const char *fmt, ... )_attribute((format(printf,1,2)));
 
-
 #define CH_KNIFE_DIST		48	// from g_weapon.c
 #define CH_LADDER_DIST		100
 #define CH_WATER_DIST		100
@@ -628,7 +625,7 @@ void QDECL G_Error( const char *fmt, ... )_attribute((format(printf,1,2)));
 
 /*
 ==============
-G_CursorHintIgnoreEnt: returns whether the ent should be ignored 
+G_CursorHintIgnoreEnt: returns whether the ent should be ignored
 for cursor hint purpose (because the ent may have the designed content type
 but nevertheless should not display any cursor hint)
 ==============
@@ -647,7 +644,7 @@ G_CheckForCursorHints
 
 	traceEnt is the ent hit by the trace, checkEnt is the ent that is being
 	checked against (in case the traceent was an invisible_user or something)
-	
+
 ==============
 */
 
@@ -675,7 +672,7 @@ qboolean G_EmplacedGunIsMountable( gentity_t* ent, gentity_t* other ) {
 	if( ent->r.currentOrigin[2] - other->r.currentOrigin[2] >= 40 ) {
 		return qfalse;
 	}
-	
+
 	if( ent->r.currentOrigin[2] - other->r.currentOrigin[2] < 0 ) {
 		return qfalse;
 	}
@@ -778,7 +775,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 	// reset all
 	hintType	= ps->serverCursorHint		= HINT_NONE;
 	hintVal		= ps->serverCursorHintVal	= 0;
-	
+
 	dist = VectorDistanceSquared( offset, tr->endpos );
 
 	if( zooming ) {
@@ -842,11 +839,11 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 		if ( traceEnt->client && traceEnt->client->sess.sessionTeam == ent->client->sess.sessionTeam) {
 			if(ps->stats[ STAT_PLAYER_CLASS ] == PC_MEDIC && traceEnt->client->ps.pm_type == PM_DEAD && !( traceEnt->client->ps.pm_flags & PMF_LIMBO ) ) {
-					hintDist	= 48; // JPW NERVE matches weapon_syringe in g_weapon.c 
+					hintDist	= 48; // JPW NERVE matches weapon_syringe in g_weapon.c
 					hintType	= HINT_REVIVE;
 			}
 		} else if(traceEnt->client && traceEnt->client->isCivilian) {
-			// xkan, 1/6/2003 - check for civilian, show neutral cursor (no matter which team)		
+			// xkan, 1/6/2003 - check for civilian, show neutral cursor (no matter which team)
 			hintType = HINT_PLYR_NEUTRAL;
 			hintDist = CH_FRIENDLY_DIST;	// far, since this will be used to determine whether to shoot bullet weaps or not
 		}
@@ -862,7 +859,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 		// on that ent, but rather on what they are targeting.
 		// so find the target and set checkEnt to that to show the proper hint.
 		if( traceEnt->s.eType == ET_GENERAL ) {
-
 			// ignore trigger_aidoor.  can't just not trace for triggers, since I need invisible_users...
 			// damn, I would like to ignore some of these triggers though.
 
@@ -888,9 +884,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 			}
 		}
 
-
 		if(checkEnt) {
-
 			// TDF This entire function could be the poster boy for converting to OO programming!!!
 			// I'm making this into a switch in a vain attempt to make this readable so I can find which
 			// brackets don't match!!!
@@ -917,7 +911,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 					if( G_EmplacedGunIsMountable( traceEnt, ent) ) {
 						hintDist = CH_ACTIVATE_DIST;
-						hintType = HINT_MG42;	
+						hintType = HINT_MG42;
 						hintVal = 0;
 					} else {
 						if( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER && G_EmplacedGunIsRepairable( traceEnt, ent)) {
@@ -982,7 +976,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 					break;
 				}
-				case ET_CONSTRUCTIBLE:					
+				case ET_CONSTRUCTIBLE:
 					if( G_ConstructionIsPartlyBuilt( checkEnt ) && !(checkEnt->spawnflags & CONSTRUCTIBLE_INVULNERABLE) ) {
 						// only show hint for players who can blow it up
 						if( checkEnt->s.teamNum != ent->client->sess.sessionTeam ) {
@@ -1023,7 +1017,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 					}
 					break;
 
-				case ET_ITEM: 
+				case ET_ITEM:
 				{
 					gitem_t* it = &bg_itemlist[checkEnt->item - bg_itemlist];
 
@@ -1054,10 +1048,10 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 								}
 								break;
 							}
-						case IT_AMMO:	
+						case IT_AMMO:
 							hintType = HINT_AMMO;
 							break;
-						case IT_ARMOR:	
+						case IT_ARMOR:
 							hintType = HINT_ARMOR;
 							break;
 						case IT_HOLDABLE:
@@ -1112,11 +1106,11 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 						hintDist = CH_BREAKABLE_DIST*2;
 						hintType = HINT_BREAKABLE;
 					}
-					
+
 					break;
 				case ET_MISSILE:
 				case ET_BOMB:
-					if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER ) 
+					if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER )
 					{
 						hintDist	= CH_BREAKABLE_DIST;
 						hintType	= HINT_DISARM;
@@ -1124,7 +1118,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 						if ( hintVal > 255 )
 							hintVal = 255;
 					}
-					
 
 					// hint icon specified in entity (and proper contact was made, so hintType was set)
 					// first try the checkent...
@@ -1147,7 +1140,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 				// zooming can eat a lot of potential hints
 				switch(hintType) {
-
 					// allow while zooming
 					case HINT_PLAYER:
 					case HINT_TREASURE:
@@ -1165,13 +1157,12 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 				}
 			}
 		}
-	} 
+	}
 
 	if( dist <= Square( hintDist )) {
 		ps->serverCursorHint = hintType;
 		ps->serverCursorHintVal = hintVal;
 	}
-
 }
 
 void G_SetTargetName( gentity_t* ent, char* targetname ) {
@@ -1204,25 +1195,25 @@ void G_FindTeams( void ) {
 	for ( i=1, e=g_entities+i ; i < level.num_entities ; i++,e++ ){
 		if (!e->inuse)
 			continue;
-		
+
 		if (!e->team)
 			continue;
 
 		if (e->flags & FL_TEAMSLAVE)
 			continue;
-		
+
 		if (!Q_stricmp (e->classname, "func_tramcar"))
 		{
 			if (e->spawnflags & 8) // leader
 			{
 				e->teammaster = e;
 			}
-			else 
+			else
 			{
 				continue;
 			}
 		}
-		
+
 		c++;
 		c2++;
 		for (j=i+1, e2=e+1 ; j < level.num_entities ; j++,e2++)
@@ -1246,11 +1237,11 @@ void G_FindTeams( void ) {
 				{
 					trap_UnlinkEntity (e2);
 				}
-		
+
 				// make sure that targets only point at the master
 				if ( e2->targetname ) {
 					G_SetTargetName( e, e2->targetname );
-					
+
 					// Rafael
 					// note to self: added this because of problems
 					// pertaining to keys and double doors
@@ -1264,7 +1255,6 @@ void G_FindTeams( void ) {
 		G_Printf ("%i teams with %i entities\n", c, c2);
 }
 
-
 /*
 ==============
 G_RemapTeamShaders
@@ -1272,7 +1262,6 @@ G_RemapTeamShaders
 */
 void G_RemapTeamShaders() {
 }
-
 
 /*
 =================
@@ -1323,7 +1312,6 @@ void G_RegisterCvars( void )
 	} else if(pmove_msec.integer > 33) {
 		trap_Cvar_Set("pmove_msec", "33");
 	}
-
 }
 
 /*
@@ -1400,7 +1388,6 @@ void G_UpdateCvars( void )
 					trap_Cvar_LatchedVariableStringBuffer( "g_gametype", buffer, sizeof( buffer ) );
 					gametype = atoi( buffer );
 
-
 					if( gametype == GT_WOLF_CAMPAIGN && gametype != g_gametype.integer ) {
 						if( !G_MapIsValidCampaignStartMap() ) {
 							gt = g_gametype.integer;
@@ -1418,12 +1405,11 @@ void G_UpdateCvars( void )
 						continue;
 					}
 
-					if(!level.latchGametype && g_gamestate.integer == GS_PLAYING && 
-					  ( ( ( g_gametype.integer == GT_WOLF || g_gametype.integer == GT_WOLF_CAMPAIGN ) && (worldspawnflags & NO_GT_WOLF)) ||	
+					if(!level.latchGametype && g_gamestate.integer == GS_PLAYING &&
+					  ( ( ( g_gametype.integer == GT_WOLF || g_gametype.integer == GT_WOLF_CAMPAIGN ) && (worldspawnflags & NO_GT_WOLF)) ||
 					  (g_gametype.integer == GT_WOLF_STOPWATCH && (worldspawnflags & NO_STOPWATCH)) ||
 					  (g_gametype.integer == GT_WOLF_LMS && (worldspawnflags & NO_LMS)) )
 					  ) {
-
 						if( !(worldspawnflags & NO_GT_WOLF) ) {
 							gt = GT_WOLF;	// Default wolf
 						} else {
@@ -1442,7 +1428,6 @@ void G_UpdateCvars( void )
 					}
 				}
 
-
 				// OSP - Update vote info for clients, if necessary
 				else if(!G_IsSinglePlayerGame()) {
 					if(cv->vmCvar == &vote_allow_comp			|| cv->vmCvar == &vote_allow_gametype		||
@@ -1460,7 +1445,6 @@ void G_UpdateCvars( void )
 						fToggles = (G_checkServerToggle(cv->vmCvar) || fToggles);
 					}
 				}
-
 			}
 		}
 	}
@@ -1524,7 +1508,7 @@ char *strcut( char *dest, char *src, int num ) {
 			*dest = *src;
 			dest++;
 			src++;
-		} else { 
+		} else {
 			break;
 		}
 	}
@@ -1636,17 +1620,17 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	G_RegisterCvars();
 
-	// Xian enforcemaxlives stuff	
+	// Xian enforcemaxlives stuff
 	/*
 	we need to clear the list even if enforce maxlives is not active
 	in case the g_maxlives was changed, and a map_restart happened
 	*/
 	ClearMaxLivesBans();
-	
+
 	// just for verbosity
 	if( g_gametype.integer != GT_WOLF_LMS ) {
 		if( g_enforcemaxlives.integer &&
-			( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) { 
+			( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) {
 			G_Printf ( "EnforceMaxLives-Cleared GUID List\n" );
 		}
 	}
@@ -1750,7 +1734,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		bani_clearmapxp();
 	}
 
-
 	trap_GetServerinfo( cs, sizeof( cs ) );
 	Q_strncpyz( level.rawmapname, Info_ValueForKey( cs, "mapname" ), sizeof(level.rawmapname) );
 
@@ -1824,7 +1807,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	level.num_entities = MAX_CLIENTS;
 
 	// let the server system know where the entites are
-	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
+	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ),
 		&level.clients[0].ps, sizeof( level.clients[0] ) );
 
 	if (g_gametype.integer == GT_SINGLE_PLAYER) {
@@ -1857,7 +1840,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 #endif // USEXPSTORAGE
 
 	// START	Mad Doctor I changes, 8/21/2002
-	// This needs to be called before G_SpawnEntitiesFromString, or the 
+	// This needs to be called before G_SpawnEntitiesFromString, or the
 	// bot entities get trashed.
 	//initialize the bot game entities
 //	BotInitBotGameEntities();
@@ -1935,22 +1918,18 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	G_spawnPrintf(DP_MVSPAWN, level.time + 2000, NULL);
 }
 
-
-
 /*
 =================
 G_ShutdownGame
 =================
 */
 void G_ShutdownGame( int restart ) {
-
 	// Arnout: gametype latching
-	if	( 
+	if	(
 		( ( g_gametype.integer == GT_WOLF || g_gametype.integer == GT_WOLF_CAMPAIGN ) && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_GT_WOLF)) ||
 		(g_gametype.integer == GT_WOLF_STOPWATCH && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_STOPWATCH)) ||
-		(g_gametype.integer == GT_WOLF_LMS && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_LMS))		
+		(g_gametype.integer == GT_WOLF_LMS && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_LMS))
 		) {
-
 		if ( !(g_entities[ENTITYNUM_WORLD].r.worldflags & NO_GT_WOLF) )
 			trap_Cvar_Set( "g_gametype", va("%i", GT_WOLF) );
 		else
@@ -1980,8 +1959,6 @@ void G_ShutdownGame( int restart ) {
 #endif // NO_BOT_SUPPORT
 }
 
-
-
 //===================================================================
 
 #ifndef GAME_HARD_LINKED
@@ -2010,7 +1987,7 @@ void QDECL Com_Printf( const char *msg, ... ) {
 
 	G_Printf ("%s", text);
 }
-//bani  
+//bani
 void QDECL Com_Printf( const char *msg, ... )_attribute((format(printf,1,2)));
 
 #endif
@@ -2050,7 +2027,6 @@ int QDECL SortRanks( const void *a, const void *b ) {
 	if ( cb->pers.connected == CON_CONNECTING ) {
 		return -1;
 	}
-
 
 	// then spectators
 	if ( ca->sess.sessionTeam == TEAM_SPECTATOR && cb->sess.sessionTeam == TEAM_SPECTATOR ) {
@@ -2184,10 +2160,10 @@ void CalculateRanks( void ) {
 
 			if ( team != TEAM_SPECTATOR ) {
 				level.numNonSpectatorClients++;
-			
+
 				// OSP
 				Q_strcat(teaminfo[team], sizeof(teaminfo[team])-1, va("%d ", level.numConnectedClients));
-			
+
 				// decide if this should be auto-followed
 				if ( level.clients[i].pers.connected == CON_CONNECTED ) {
 					int teamIndex = level.clients[i].sess.sessionTeam == TEAM_AXIS ? 0 : 1;
@@ -2229,7 +2205,7 @@ void CalculateRanks( void ) {
 		if(0 == teaminfo[i][0]) Q_strncpyz(teaminfo[i], "(None)", sizeof(teaminfo[i]));
 	}
 
-	qsort( level.sortedClients, level.numConnectedClients, 
+	qsort( level.sortedClients, level.numConnectedClients,
 		sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
@@ -2264,7 +2240,6 @@ void CalculateRanks( void ) {
 		CheckExitRules();
 	}
 }
-
 
 /*
 ========================================================================
@@ -2311,7 +2286,7 @@ void MoveClientToIntermission( gentity_t *ent ) {
 
 	/*if ( ent->client->sess.sessionTeam == TEAM_AXIS || ent->client->sess.sessionTeam == TEAM_ALLIES ) {
 		timeLived = (level.time - ent->client->pers.lastSpawnTime) * 0.001f;
-	
+
 		G_AddExperience( ent, min((timeLived * timeLived) * 0.00005f, 5) );
 	}*/
 
@@ -2373,7 +2348,6 @@ void FindIntermissionPoint( void ) {
 		winner = TEAM_ALLIES;
 	}
 
-
 	if( !ent ) {
 		ent = G_Find( NULL, FOFS(classname), "info_player_intermission" );
 		while( ent ) {
@@ -2399,7 +2373,6 @@ void FindIntermissionPoint( void ) {
 			}
 		}
 	}
-
 }
 
 /*
@@ -2432,16 +2405,14 @@ void BeginIntermission( void ) {
 
 	// send the current scoring to all clients
 	SendScoreboardMessageToAllClients();
-
 }
-
 
 /*
 =============
 ExitLevel
 
 When the intermission has been exited, the server is either killed
-or moved to a new level based on the "nextmap" cvar 
+or moved to a new level based on the "nextmap" cvar
 
 =============
 */
@@ -2511,7 +2482,6 @@ void ExitLevel (void) {
 	// change all client states to connecting, so the early players into the
 	// next level will know the others aren't done reconnecting
 	for (i=0 ; i< g_maxclients.integer ; i++) {
-
 		if ( level.clients[i].pers.connected == CON_CONNECTED ) {
 			level.clients[i].pers.connected = CON_CONNECTING;
 			trap_UnlinkEntity(&g_entities[i]);
@@ -2744,7 +2714,6 @@ void LogExit( const char *string ) {
 			trap_Cvar_Update( &g_currentRound );
 		}
 	} else if( g_gametype.integer == GT_WOLF ) {
-
 		//bani - #113
 		bani_storemapxp();
 	}
@@ -2754,7 +2723,6 @@ void LogExit( const char *string ) {
 	// end omnibot
 	G_BuildEndgameStats();
 }
-
 
 /*
 =================
@@ -2800,7 +2768,6 @@ void CheckIntermissionExit( void ) {
 			notReady++;
 		}
 	}
-
 
 	// rain - #105 - use the same code as the beginning of round ready to
 	// decide whether enough players are ready to exceed
@@ -2917,7 +2884,7 @@ void CheckExitRules( void ) {
 					return;
 				}
 			} else {
-				// check for sudden death 
+				// check for sudden death
 				if ( ScoreIsTied() ) {
 					// score is tied, so don't end the game
 					return;
@@ -2985,8 +2952,6 @@ void CheckExitRules( void ) {
 	}
 }
 
-
-
 /*
 ========================================================================
 
@@ -2994,7 +2959,6 @@ FUNCTIONS CALLED EVERY FRAME
 
 ========================================================================
 */
-
 
 /*
 =============
@@ -3021,9 +2985,8 @@ void CheckGameState() {
 		}
 	}
 
-	if ( current_gs == GS_WAITING_FOR_PLAYERS && g_minGameClients.integer > 1 && 
+	if ( current_gs == GS_WAITING_FOR_PLAYERS && g_minGameClients.integer > 1 &&
 		level.numPlayingClients >= g_minGameClients.integer && level.lastRestartTime + 1000 < level.time ) {
-
 		level.lastRestartTime = level.time;
 		trap_SendConsoleCommand( EXEC_APPEND, va( "map_restart 0 %i\n", GS_WARMUP ) );
 	}
@@ -3079,7 +3042,6 @@ void CheckWolfMP() {
 	if ( level.warmupTime == 0 ) {
 		return;
 	}
-
 
 	// Only do the restart for MP
 	if(g_gametype.integer != GT_SINGLE_PLAYER && g_gametype.integer != GT_COOP)
@@ -3190,7 +3152,6 @@ void CheckVote( void ) {
 
 			// Perform the passed vote
 			level.voteInfo.vote_fn(NULL, 0, NULL, NULL, qfalse);
-
 		} else if(level.voteInfo.voteNo && level.voteInfo.voteNo >= (100-pcnt)*total/100) {
 			// same behavior as a no response vote
 			AP(va("cpm \"^2Vote FAILED! ^3(%s)\n\"", level.voteInfo.voteString));
@@ -3216,17 +3177,14 @@ void G_CheckReloadStatus(void) {
 	if(g_reloading.integer) {
 		if (level.reloadDelayTime) {
 			if (level.reloadDelayTime < level.time) {
-
 				/*if (g_reloading.integer == RELOAD_NEXTMAP_WAITING) {
 					trap_Cvar_Set( "g_reloading", va("%d", RELOAD_NEXTMAP) );	// set so sv_map_f will know it's okay to start a map
 					if (g_cheats.integer)
 						trap_SendConsoleCommand( EXEC_APPEND, va("spdevmap %s\n", level.nextMap) );
 					else
 						trap_SendConsoleCommand( EXEC_APPEND, va("spmap %s\n", level.nextMap ) );
-
 				}*//* else if(g_reloading.integer == RELOAD_ENDGAME) {
 					G_EndGame();	// kick out to the menu and start the "endgame" menu (credits, etc)
-
 				}*/// else {
 					// set the loadgame flag, and restart the server
 					trap_Cvar_Set( "savegame_loading", "2" );	// 2 means it's a restart, so stop rendering until we are loaded
@@ -3311,7 +3269,6 @@ static void G_CheckLoadGame(void) {
 			Bot_ScriptThink();
 		}
 	} else {
-
 		ready = qtrue;
 		if ((ent = BotFindEntityForName("player")) == NULL)
 			ready = qfalse;
@@ -3403,7 +3360,7 @@ void G_RunThink (gentity_t *ent) {
 	if (thinktime > level.time) {
 		return;
 	}
-	
+
 	ent->nextthink = 0;
 	if (!ent->think) {
 		G_Error ( "NULL ent->think");
@@ -3425,7 +3382,7 @@ qboolean G_PositionEntityOnTag( gentity_t *entity, gentity_t* parent, char *tagN
 	AnglesToAxis( parent->r.currentAngles, axis );
 
 	VectorCopy( parent->r.currentOrigin, entity->r.currentOrigin );
-	
+
 	if(!trap_GetTag( -1, parent->tagNumber, tagName, &tag )) {
 		return qfalse;
 	}
@@ -3501,7 +3458,6 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			} else {
 				frac = ((ent->backdelta * (MAX_SPLINE_SEGMENTS)) - pos) * ent->backspline->segments[pos].length;
 			}
-			
 
 			VectorMA( ent->backspline->segments[pos].start, frac, ent->backspline->segments[pos].v_norm, v );
 			if(parent->s.apos.trBase[0]) {
@@ -3509,7 +3465,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			}
 
 			VectorCopy( v, origin );
-			
+
 			if(ent->s.angles2[0]) {
 				BG_LinearPathOrigin2( ent->s.angles2[0], &ent->backspline, &ent->backdelta, v, ent->back );
 			}
@@ -3539,7 +3495,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			ent->backspline =	parent->backspline;
 
 			VectorCopy( v, origin );
-			
+
 			if(ent->s.angles2[0]) {
 				BG_LinearPathOrigin2( ent->s.angles2[0], &ent->backspline, &ent->backdelta, v, ent->back );
 			}
@@ -3548,7 +3504,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 
 			if(	ent->s.angles2[0] < 0 ) {
 				VectorSubtract( v, origin, v );
-				vectoangles( v, angles );				
+				vectoangles( v, angles );
 			} else if( ent->s.angles2[0] > 0 ){
 				VectorSubtract( origin, v, v );
 				vectoangles( v, angles );
@@ -3595,7 +3551,6 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 	}
 
 	if( ent->tagParent ) {
-
 		G_RunEntity( ent->tagParent, msec );
 
 		if( ent->tagParent ) {
@@ -3611,7 +3566,6 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 			}
 		}
 	} else if (ent->s.eFlags & EF_PATH_LINK ) {
-
 		G_TagLinkEntity( ent, msec );
 	}
 
@@ -3626,7 +3580,6 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 			ent->s.eFlags &= ~EF_NODRAW;
 		}
 	}
-
 
 	// clear events that are too old
 	if ( level.time - ent->eventTime > EVENT_VALID_MSEC ) {
@@ -3663,14 +3616,13 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 		return;
 	}
 
-	if ( ent->s.eType == ET_MISSILE 
-		|| ent->s.eType == ET_FLAMEBARREL 
+	if ( ent->s.eType == ET_MISSILE
+		|| ent->s.eType == ET_FLAMEBARREL
 		|| ent->s.eType == ET_FP_PARTS
 		|| ent->s.eType == ET_FIRE_COLUMN
 		|| ent->s.eType == ET_FIRE_COLUMN_SMOKE
 		|| ent->s.eType == ET_EXPLO_PART
 		|| ent->s.eType == ET_RAMJET) {
-
 		// OSP - pausing
 		if( level.match_pause == PAUSE_NONE ) {
 			G_RunMissile( ent );
@@ -3691,42 +3643,42 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 	// DHM - Nerve :: Server-side collision for flamethrower
 	if( ent->s.eType == ET_FLAMETHROWER_CHUNK ) {
 		G_RunFlamechunk( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
 	if( ent->s.eType == ET_ITEM || ent->physicsObject ) {
 		G_RunItem( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
 	if ( ent->s.eType == ET_MOVER || ent->s.eType == ET_PROP)
 	{
 		G_RunMover( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
-	
+
 	if( ent-g_entities < MAX_CLIENTS ) {
 		G_RunClient( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
@@ -3741,7 +3693,7 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 	}
 
 	G_RunThink( ent );
-		
+
 	// ydnar: hack for instantaneous velocity
 	VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 	VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
@@ -3792,7 +3744,7 @@ void G_RunFrame( int levelTime ) {
 	if( level.alliedBombCounter < 0 ) {
 		level.alliedBombCounter = 0;
 	}
-	
+
 #if 0
 	if(trap_Cvar_VariableIntegerValue( "dbg_spam" )) {
 		trap_SetConfigstring( CS_VOTE_STRING, va(
@@ -3809,7 +3761,7 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 );
 	}
 #endif
- 
+
 #ifdef SAVEGAME_SUPPORT
 	G_CheckLoadGame();
 #endif // SAVEGAME_SUPPORT
@@ -3825,7 +3777,6 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 	for( i = 0; i < level.num_entities; i++ ) {
 		G_RunEntity( &g_entities[ i ], msec );
 	}
-
 
 	for( i = 0; i < level.numConnectedClients; i++ ) {
 		ClientEndFrame(&g_entities[level.sortedClients[i]]);
