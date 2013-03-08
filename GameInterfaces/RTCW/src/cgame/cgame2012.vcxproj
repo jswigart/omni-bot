@@ -249,7 +249,6 @@ copy "$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3" "$(RTCWDIR)\omnibot"
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="cg_omnibot.c" />
     <ClCompile Include="cg_particles.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -314,7 +313,6 @@ copy "$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3" "$(RTCWDIR)\omnibot"
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="Omnibot_Interprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_local.h" />
@@ -327,7 +325,6 @@ copy "$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3" "$(RTCWDIR)\omnibot"
     <ClInclude Include="..\game\surfaceflags.h" />
     <ClInclude Include="tr_types.h" />
     <ClInclude Include="..\ui\ui_shared.h" />
-    <ClInclude Include="Omnibot_Interprocess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cgame.def" />

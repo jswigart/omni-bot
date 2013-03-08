@@ -2,21 +2,21 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{88db6326-568f-4206-b690-4d8ea2a662d9}</UniqueIdentifier>
+      <UniqueIdentifier>{5c761d72-b660-4bf9-9d54-bae5819f45a1}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{e2f8fc7b-83f5-4ca4-b172-1b1c37b76815}</UniqueIdentifier>
+      <UniqueIdentifier>{a67a772a-622f-4795-b3ea-421e86a05dc2}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
     <Filter Include="jpeg">
-      <UniqueIdentifier>{f0a8c012-531b-4f40-a3e0-e826f5e0bf5d}</UniqueIdentifier>
+      <UniqueIdentifier>{d01dfa29-8808-4bc6-bc24-56643d56f00f}</UniqueIdentifier>
     </Filter>
     <Filter Include="jpeg\Source Files No. 1">
-      <UniqueIdentifier>{d4285294-a1ee-4d6e-ada1-fb4407b0cdd4}</UniqueIdentifier>
+      <UniqueIdentifier>{d0083c9a-21c1-4611-93d9-ab2c76888b0e}</UniqueIdentifier>
     </Filter>
     <Filter Include="jpeg\Header Files No. 1">
-      <UniqueIdentifier>{26145a0a-2ec3-492c-9410-1d8d2ed8dcc2}</UniqueIdentifier>
+      <UniqueIdentifier>{f2e8851d-e082-4892-8f78-1fe90b183661}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
