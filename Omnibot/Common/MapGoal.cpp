@@ -904,8 +904,6 @@ void MapGoal::SetProperty(const std::string &_propname, const obUserData &_val)
 		EngineFuncs::ConsoleError(va("%s",err.str().c_str()));
 }
 
-extern int NextDrawTime;
-
 void MapGoal::RenderDebug(bool _editing, bool _highlighted)
 {
 	Prof_Scope(MapGoal);
@@ -946,10 +944,7 @@ void MapGoal::RenderDebug(bool _editing, bool _highlighted)
 			}
 			else
 			{
-				if(IGame::GetTime() > NextDrawTime)
-				{
-					RenderDefault();
-				}
+				RenderDefault();
 			}
 		}
 		else
@@ -958,12 +953,9 @@ void MapGoal::RenderDebug(bool _editing, bool _highlighted)
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if(IGame::GetTime() > NextDrawTime)
+		if(GetRenderRoutes())
 		{
-			if(GetRenderRoutes())
-			{
-				DrawRoute(COLOR::GREEN,2.f);
-			}
+			DrawRoute(COLOR::GREEN,2.f);
 		}
 	}
 }

@@ -72,7 +72,7 @@ this.Render = function()
 			}
 		}
 
-		sleep(2);
+		yield();
 	}
 };
 

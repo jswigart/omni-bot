@@ -61,8 +61,6 @@ protected:
 	void cmdDebugTriggers(const StringVector &_args);
 	void cmdDrawTriggers(const StringVector &_args);
 
-	int		m_NextDrawTime;
-
 	std::string 	m_DebugTriggersExpr;
 
 	bool	m_DebugTriggers;

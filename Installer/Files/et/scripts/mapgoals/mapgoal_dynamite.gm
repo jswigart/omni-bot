@@ -100,7 +100,7 @@ this.Render = function(editMode)
 			}
 		}
 
-		sleep(2);
+		yield();
 	}
 };
 

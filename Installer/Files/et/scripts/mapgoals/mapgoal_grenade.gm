@@ -132,7 +132,7 @@ this.Render = function(editMode)
 			entPos = GetEntPosition(this.TraceEntity);
 		}
 
-		sleep(2);
+		yield();
 	}
 };
 
