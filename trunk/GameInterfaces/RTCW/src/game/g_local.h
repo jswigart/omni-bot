@@ -1273,6 +1273,7 @@ extern gentity_t       *g_camEnt;
 
 #define FOFS( x ) ( (int)&( ( (gentity_t *)0 )->x ) )
 
+extern vmCvar_t	g_OmniBotLibrary;
 extern vmCvar_t g_OmniBotPath;
 extern vmCvar_t g_OmniBotEnable;
 extern vmCvar_t g_OmniBotFlags;
@@ -1529,6 +1530,9 @@ qboolean G_EmplacedGunIsRepairable( gentity_t* ent, gentity_t* other );
 qboolean G_EmplacedGunIsMountable( gentity_t* ent, gentity_t* other );
 
 void    trap_SnapVector( float *v );
+
+typedef void (*pfnDebugCallback)();
+void	trap_SetDebugFunctionCallback( pfnDebugCallback callback );
 
 typedef enum
 {

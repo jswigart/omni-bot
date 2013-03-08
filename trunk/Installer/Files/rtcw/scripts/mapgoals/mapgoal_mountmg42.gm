@@ -101,7 +101,7 @@ this.Render = function(editMode)
 				DrawText3d(goalPos+face*64,ToString(id),COLOR.WHITE,2,512);
 			}
 		}
-		sleep(2);
+		yield();
 	}
 };
 

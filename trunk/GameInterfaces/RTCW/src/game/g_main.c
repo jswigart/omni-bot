@@ -26,6 +26,7 @@ gentity_t       *g_camEnt = NULL;   //----(SA)	script camera
 extern int bg_pmove_gameskill_integer;
 // done
 
+vmCvar_t g_OmniBotLibrary;
 vmCvar_t g_OmniBotPath;
 vmCvar_t g_OmniBotEnable;
 vmCvar_t g_OmniBotFlags;
@@ -320,6 +321,7 @@ cvarTable_t gameCvarTable[] = {
 	{ &g_dbgRevive,                 "g_dbgRevive",                  "0",                    0,                                                  0,          qfalse },
 
 	// mod vars
+	{ &g_OmniBotLibrary,			"omnibot_library",				"omnibot_rtcw",			CVAR_ROM,											0,			qfalse },
 	{ &g_OmniBotPath,               "omnibot_path",                 "",                     CVAR_ARCHIVE | CVAR_NORESTART,                      0,          qfalse },
 	{ &g_OmniBotEnable,             "omnibot_enable",               "1",                    CVAR_ARCHIVE | CVAR_NORESTART,                      0,          qfalse },
 	{ &g_OmniBotPlaying,            "omnibot_playing",              "0",                    CVAR_SERVERINFO | CVAR_ROM,                         0,          qfalse },
