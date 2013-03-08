@@ -2,24 +2,24 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{dee38b43-a21f-472c-928c-0530a9547408}</UniqueIdentifier>
+      <UniqueIdentifier>{88127a54-45ba-4613-9f96-6cdec9b17f21}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{eb6ccdc5-0352-47e9-8706-3fe53453567b}</UniqueIdentifier>
+      <UniqueIdentifier>{955a87ba-f8cc-46ef-8844-d694bf5e2db2}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
     </Filter>
     <Filter Include="main">
-      <UniqueIdentifier>{db795818-8dc2-44ff-8b1c-2376d5a4bb15}</UniqueIdentifier>
+      <UniqueIdentifier>{ece632dd-e4e9-4898-aadf-50dd89145a42}</UniqueIdentifier>
     </Filter>
     <Filter Include="main\ui">
-      <UniqueIdentifier>{217cfb6c-322c-4e7d-b014-8ea34bc0e6e0}</UniqueIdentifier>
+      <UniqueIdentifier>{7738e66e-73af-4533-a68e-0d61ed7a3746}</UniqueIdentifier>
     </Filter>
     <Filter Include="main\scripts">
-      <UniqueIdentifier>{bb0ca1aa-304a-4caf-932b-9c6c6925912a}</UniqueIdentifier>
+      <UniqueIdentifier>{e3ad6b57-f8fc-400e-94f9-51f68c4e9bbb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Misc">
-      <UniqueIdentifier>{6287ad7a-73e7-4a9e-869e-9e38646537ef}</UniqueIdentifier>
+      <UniqueIdentifier>{1a729afd-6326-45c7-8e09-c45a9894fe42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
