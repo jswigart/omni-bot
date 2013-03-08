@@ -7,9 +7,6 @@
     <Filter Include="Core\Blackboard">
       <UniqueIdentifier>{5b1bec30-e778-436f-93ec-d7fe23a5ac13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\DebugConsole">
-      <UniqueIdentifier>{1b9aaae5-3142-4c10-aa81-d635fb779925}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\EventReciever">
       <UniqueIdentifier>{57890cca-7c59-4b16-aa4d-c2fde6eb817b}</UniqueIdentifier>
     </Filter>
@@ -106,21 +103,6 @@
     <Filter Include="3rdParty\iprof">
       <UniqueIdentifier>{6422aa7a-bc29-411a-ae13-74792666b2ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\guichan">
-      <UniqueIdentifier>{d0458f4c-e63d-4882-a5a1-f95be952c708}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\guichan\opengl">
-      <UniqueIdentifier>{04d6027e-7c42-4e3f-bb46-39bd9f4eb583}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\guichan\widgets">
-      <UniqueIdentifier>{09c5f233-53a5-4637-abb6-53c030949a01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\guichan\sdl">
-      <UniqueIdentifier>{78cbe88d-9fd0-4d0b-8c5b-2d8e6137e037}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\guichan\sfml">
-      <UniqueIdentifier>{128443f6-676d-417b-8a38-9fe9f57f61f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty\Recast">
       <UniqueIdentifier>{73c805af-51f3-4da7-bb52-7bbd3f9a8087}</UniqueIdentifier>
     </Filter>
@@ -165,18 +147,6 @@
     <ClCompile Include="..\..\..\Common\BlackBoardItems.cpp">
       <Filter>Core\Blackboard</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\DebugWindow.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\RenderOverlay.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\RenderOverlayGame.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\RenderOverlayOpenGL.cpp">
-      <Filter>Core\DebugConsole</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\EventReciever.cpp">
       <Filter>Core\EventReciever</Filter>
     </ClCompile>
@@ -190,9 +160,6 @@
       <Filter>Core\MapGoals</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\NavigationManager.cpp">
-      <Filter>Core\Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\ObstacleManager.cpp">
       <Filter>Core\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Path.cpp">
@@ -280,9 +247,6 @@
       <Filter>Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\gmBotLibrary.cpp">
-      <Filter>Core\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\gmDebugWindow.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\gmGameEntity.cpp">
@@ -558,168 +522,6 @@
     <ClCompile Include="..\..\..\dependencies\iprof\prof_win32.c">
       <Filter>3rdParty\iprof</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\actionevent.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\basiccontainer.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\cliprectangle.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\color.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\defaultfont.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\event.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\exception.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\focushandler.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\font.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\genericinput.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\graphics.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\gui.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\guichan.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\image.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\imagefont.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\inputevent.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\key.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\keyevent.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\keyinput.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\mouseevent.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\mouseinput.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\rectangle.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\selectionevent.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widget.cpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\opengl.cpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\openglgraphics.cpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\openglimage.cpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\addons\adjustingcontainer\adjustingcontainer.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\button.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\checkbox.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\container.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\dropdown.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\icon.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\imagebutton.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\label.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\listbox.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\addons\propertysheet\propertysheet.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\radiobutton.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\scrollarea.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\slider.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\tab.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\tabbedarea.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\textbox.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\textfield.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\window.cpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdl.cpp">
-      <Filter>3rdParty\guichan\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlgraphics.cpp">
-      <Filter>3rdParty\guichan\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlimage.cpp">
-      <Filter>3rdParty\guichan\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlimageloader.cpp">
-      <Filter>3rdParty\guichan\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlinput.cpp">
-      <Filter>3rdParty\guichan\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfml.cpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlimage.cpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlimageloader.cpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlinput.cpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp">
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClCompile>
@@ -804,16 +606,10 @@
     <ClCompile Include="..\..\..\Common\mdump.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\MessageManager.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\NameManager.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\PropertyBinding.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\QuadTree.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Regulator.cpp">
@@ -932,12 +728,6 @@
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h">
       <Filter>Core\Blackboard</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\DebugWindow.h">
-      <Filter>Core\DebugConsole</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\RenderOverlay.h">
-      <Filter>Core\DebugConsole</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\EventReciever.h">
       <Filter>Core\EventReciever</Filter>
     </ClInclude>
@@ -957,9 +747,6 @@
       <Filter>Core\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\NavigationManager.h">
-      <Filter>Core\Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\ObstacleManager.h">
       <Filter>Core\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Path.h">
@@ -1023,9 +810,6 @@
       <Filter>Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\gmBotLibrary.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\gmDebugWindow.h">
       <Filter>Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\gmGameEntity.h">
@@ -1307,198 +1091,6 @@
     <ClInclude Include="..\..\..\dependencies\iprof\prof_win32.h">
       <Filter>3rdParty\iprof</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\actionevent.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\actionlistener.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\allegro.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\basiccontainer.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\cliprectangle.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\color.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\deathlistener.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\defaultfont.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\event.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\exception.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\focushandler.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\focuslistener.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\font.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\genericinput.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\glut.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\graphics.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\gui.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\image.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\imagefont.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\imageloader.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\input.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\inputevent.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\key.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keyevent.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keyinput.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keylistener.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\listmodel.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouseevent.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouseinput.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouselistener.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\platform.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\rectangle.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sdl.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widget.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\x.hpp">
-      <Filter>3rdParty\guichan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglgraphics.hpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglimage.hpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglsdlimageloader.hpp">
-      <Filter>3rdParty\guichan\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\addons\adjustingcontainer\adjustingcontainer.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\button.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\checkbox.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\container.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\dropdown.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\icon.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\imagebutton.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\label.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\listbox.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\addons\propertysheet\propertysheet.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\radiobutton.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\scrollarea.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\selectionevent.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\selectionlistener.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\slider.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\tab.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\tabbedarea.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\textbox.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\textfield.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgetlistener.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\window.hpp">
-      <Filter>3rdParty\guichan\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimage.hpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimageloader.hpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlinput.hpp">
-      <Filter>3rdParty\guichan\sfml</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h">
       <Filter>3rdParty\Recast\Recast</Filter>
     </ClInclude>
@@ -1574,9 +1166,6 @@
     <ClInclude Include="..\..\..\Common\MessageFunctor.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\MessageManager.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\NameManager.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
@@ -1590,9 +1179,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\PropertyBinding.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\QuadTree.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Regulator.h">

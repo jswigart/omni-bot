@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "gmMatrix3.h"
 #include "gmHelpers.h"
 
@@ -25,7 +24,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmMatrix3 )
 	// function: Inverse
 	//		Inverts this matrix.
 	GMBIND_FUNCTION( "Inverse", gmfInverse )
-GMBIND_FUNCTION_MAP_END();
+	GMBIND_FUNCTION_MAP_END();
 
 GMBIND_PROPERTY_MAP_BEGIN( gmMatrix3 )
 	GMBIND_PROPERTY("ZERO", gmfGetZero, NULL )
@@ -33,13 +32,13 @@ GMBIND_PROPERTY_MAP_BEGIN( gmMatrix3 )
 	GMBIND_PROPERTY("X", gmfGetX, NULL )
 	GMBIND_PROPERTY("Y", gmfGetY, NULL )
 	GMBIND_PROPERTY("Z", gmfGetZ, NULL )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
-GMBIND_OPERATOR_MAP_BEGIN( gmMatrix3 )	
+GMBIND_OPERATOR_MAP_BEGIN( gmMatrix3 )
 	GMBIND_OPERATOR_MUL	( opMul )
 	GMBIND_OPERATOR_EQ	( opIsEqual )
 	GMBIND_OPERATOR_NEQ	( opIsNotEqual )
-GMBIND_OPERATOR_MAP_END();
+	GMBIND_OPERATOR_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
 // Functions
@@ -62,10 +61,10 @@ GMBIND_OPERATOR_MAP_END();
 //
 // Returns:
 //		The newly constructed <Vector3>
-gmMat3Type *gmMatrix3::Constructor(gmThread *a_thread) 
+gmMat3Type *gmMatrix3::Constructor(gmThread *a_thread)
 {
 	gmMat3Type *pNewMat = NULL;
-	
+
 	if(a_thread)
 	{
 		if(a_thread->GetNumParams() == 3)
@@ -132,7 +131,7 @@ gmMat3Type *gmMatrix3::Constructor(gmThread *a_thread)
 	{
 		pNewMat = new gmMat3Type(gmMat3Type::IDENTITY);
 	}
-	return pNewMat; 
+	return pNewMat;
 }
 
 void gmMatrix3::Destructor(gmMat3Type *_native)
@@ -156,7 +155,7 @@ void gmMatrix3::AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen
 }
 
 void gmMatrix3::DebugInfo(gmUserObject *a_object, gmMachine *a_machine, gmChildInfoCallback a_infoCallback)
-{	
+{
 	const int iBufferSize = 256;
 	char buffer[iBufferSize];
 
@@ -177,7 +176,7 @@ int gmMatrix3::gmfTransformVector(gmThread *a_thread)
 	Vector3f vt(v.x,v.y,v.z);
 	vt = *native * vt;
 	a_thread->PushVector(vt.x, vt.y, vt.z);
-	return GM_OK; 
+	return GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,11 +188,11 @@ int gmMatrix3::gmfInverseTransformVector(gmThread *a_thread)
 	GM_CHECK_VECTOR_PARAM(v,0);
 
 	Matrix3f mInv = native->Inverse();
-	
+
 	Vector3f vt(v.x,v.y,v.z);
 	vt = mInv * vt;
 	a_thread->PushVector(vt.x, vt.y, vt.z);
-	return GM_OK; 
+	return GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -204,7 +203,7 @@ int gmMatrix3::gmfInverse(gmThread *a_thread)
 	gmMat3Type* native = gmMatrix3::GetThisObject( a_thread );
 	Matrix3f mInv = native->Inverse();
 	gmMatrix3::PushObject(a_thread, mInv);
-	return GM_OK; 
+	return GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,14 +215,14 @@ bool gmMatrix3::opMul( gmThread *a_thread, gmVariable *a_operands )
 	{
 		// Get operands
 		gmMat3Type *vecObjA = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[0].m_value.m_ref));
-		
+
 		float fScalar = 0.0f;
 		if(!gmGetFloatOrIntParamAsFloat(a_operands[1], fScalar))
 		{
 			return false;
 		}
 
-		gmMat3Type vVec = (*vecObjA) * fScalar;	
+		gmMat3Type vVec = (*vecObjA) * fScalar;
 		gmMatrix3::SetObject(a_thread->GetMachine(), a_operands[0], vVec);
 	}
 	else if((a_operands[0].m_type != gmMatrix3::GetType()) && a_operands[1].m_type == gmMatrix3::GetType())
@@ -236,8 +235,8 @@ bool gmMatrix3::opMul( gmThread *a_thread, gmVariable *a_operands )
 		{
 			return false;
 		}
-		
-		gmMat3Type vVec = fScalar * (*vecObjB);	
+
+		gmMat3Type vVec = fScalar * (*vecObjB);
 		gmMatrix3::SetObject(a_thread->GetMachine(), a_operands[0], vVec);
 	}
 	else
@@ -311,8 +310,8 @@ bool gmMatrix3::gmfGetIdentity( gmMat3Type *a_native, gmThread *a_thread, gmVari
 bool gmMatrix3::gmfGetX( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(0).x, 
-		a_native->GetColumn(0).y, 
+		a_native->GetColumn(0).x,
+		a_native->GetColumn(0).y,
 		a_native->GetColumn(0).z);
 	return true;
 }
@@ -320,8 +319,8 @@ bool gmMatrix3::gmfGetX( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a
 bool gmMatrix3::gmfGetY( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(1).x, 
-		a_native->GetColumn(1).y, 
+		a_native->GetColumn(1).x,
+		a_native->GetColumn(1).y,
 		a_native->GetColumn(1).z);
 	return true;
 }
@@ -329,8 +328,8 @@ bool gmMatrix3::gmfGetY( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a
 bool gmMatrix3::gmfGetZ( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(2).x, 
-		a_native->GetColumn(2).y, 
+		a_native->GetColumn(2).x,
+		a_native->GetColumn(2).y,
 		a_native->GetColumn(2).z);
 	return true;
 }

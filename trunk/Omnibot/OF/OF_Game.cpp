@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -12,8 +12,8 @@
 
 #include "gmTFBinds.h"
 
-#include "ScriptManager.h"
 #include "PathPlannerWaypoint.h"
+#include "ScriptManager.h"
 
 IGame *CreateGameInstance()
 {
@@ -71,7 +71,7 @@ const char *OF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool OF_Game::Init() 
+bool OF_Game::Init()
 {
 	if(!TF_Game::Init())
 		return false;
@@ -84,7 +84,7 @@ bool OF_Game::Init()
 	int threadId;
 	ScriptManager::GetInstance()->ExecuteFile("scripts/of_autoexec.gm", threadId);
 
-	PathPlannerWaypoint::m_CallbackFlags = 
+	PathPlannerWaypoint::m_CallbackFlags =
 		F_TF_NAV_ROCKETJUMP |
 		F_TF_NAV_CONCJUMP;
 
@@ -114,7 +114,7 @@ void OF_Game::InitScriptBinds(gmMachine *_machine)
 
 static IntEnum OF_TeamEnum[] =
 {
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
+	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
 	IntEnum("NONE",OF_TEAM_NONE),
 	IntEnum("RED",OF_TEAM_RED),
 	IntEnum("BLUE",OF_TEAM_BLUE),
@@ -125,7 +125,7 @@ static IntEnum OF_TeamEnum[] =
 void OF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(OF_TeamEnum) / sizeof(OF_TeamEnum[0]);
-	_ptr = OF_TeamEnum;	
+	_ptr = OF_TeamEnum;
 }
 
 void OF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)

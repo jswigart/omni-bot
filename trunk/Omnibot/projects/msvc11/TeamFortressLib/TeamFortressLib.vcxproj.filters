@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\TeamFortressLib\TF_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\TeamFortressLib\TF_BaseStates.cpp">
       <Filter>Core</Filter>
     </ClCompile>

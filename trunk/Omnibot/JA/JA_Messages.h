@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: JA Message Structure Definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __JA_MESSAGES_H__
 #define __JA_MESSAGES_H__
@@ -50,10 +52,10 @@ struct JA_SelectWeapon
 
 /*struct JA_ReinforceTime
 {
-	int			m_ReinforceTime;
+int			m_ReinforceTime;
 };*/
 
-typedef struct 
+typedef struct
 {
 	int			m_Force;
 	int			m_KnownBits;

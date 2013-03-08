@@ -234,12 +234,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\ET\src\game\g_etbot_interface.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_Client.cpp" />
     <ClCompile Include="..\..\..\ET\ET_Game.cpp" />
     <ClCompile Include="..\..\..\ET\ET_InterfaceFuncs.cpp" />
@@ -253,13 +247,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
     <ResourceCompile Include="..\Common\Common.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuildStep Include="ET_BuildInterface.results">
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </CustomBuildStep>
     <None Include="..\..\..\ET\ET_Notes.txt" />
     <None Include="..\..\..\ET\Jamfile" />
   </ItemGroup>
@@ -276,18 +263,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
     <ClInclude Include="..\..\..\ET\ET_BaseStates.h" />
     <ClInclude Include="..\..\..\ET\ET_GoalManager.h" />
     <ClInclude Include="..\..\..\ET\ET_FilterClosest.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildExternal Include="..\..\..\ET\ET_BuildInterface.bld">
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(InterfaceDir)GameInterfaces\ET\2.60\src\wolf_2010.sln</Solution>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </BuildExternal>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

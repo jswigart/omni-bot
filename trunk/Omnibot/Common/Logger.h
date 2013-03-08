@@ -1,34 +1,36 @@
 /* ---------------------------------------------------------------------------------------------------------------------------------
-  _                                 _     
- | |                               | |    
- | | ___   __ _  __ _  ___ _ __    | |__  
- | |/ _ \ / _` |/ _` |/ _ \ '__|   | '_ \ 
- | | (_) | (_| | (_| |  __/ |    _ | | | |
- |_|\___/ \__, |\__, |\___|_|   (_)|_| |_|
-           __/ | __/ |                    
-          |___/ |___/                     
+_                                 _
+| |                               | |
+| | ___   __ _  __ _  ___ _ __    | |__
+| |/ _ \ / _` |/ _` |/ _ \ '__|   | '_ \
+| | (_) | (_| | (_| |  __/ |    _ | | | |
+|_|\___/ \__, |\__, |\___|_|   (_)|_| |_|
+__/ | __/ |
+|___/ |___/
 
- Generic informational logging class
+Generic informational logging class
 
- ---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
 
- Restrictions & freedoms pertaining to usage and redistribution of this software:
+Restrictions & freedoms pertaining to usage and redistribution of this software:
 
-  * This software is 100% free
-  * If you use this software (in part or in whole) you must credit the author.
-  * This software may not be re-distributed (in part or in whole) in a modified
-    form without clear documentation on how to obtain a copy of the original work.
-  * You may not use this software to directly or indirectly cause harm to others.
-  * This software is provided as-is and without warrantee. Use at your own risk.
+* This software is 100% free
+* If you use this software (in part or in whole) you must credit the author.
+* This software may not be re-distributed (in part or in whole) in a modified
+form without clear documentation on how to obtain a copy of the original work.
+* You may not use this software to directly or indirectly cause harm to others.
+* This software is provided as-is and without warrantee. Use at your own risk.
 
- For more information, visit HTTP://www.FluidStudios.com
+For more information, visit HTTP://www.FluidStudios.com
 
- ---------------------------------------------------------------------------------------------------------------------------------
- Originally created on 07/06/2000 by Paul Nettle
- Modified Heavily by Jeremy Swigart
+---------------------------------------------------------------------------------------------------------------------------------
+Originally created on 07/06/2000 by Paul Nettle
+Modified Heavily by Jeremy Swigart
 
- Copyright 2000, Fluid Studios, Inc., all rights reserved.
- --------------------------------------------------------------------------------------------------------------------------------- */
+Copyright 2000, Fluid Studios, Inc., all rights reserved.
+--------------------------------------------------------------------------------------------------------------------------------- */
+
+#pragma once
 
 #ifndef	_H_LOGGER
 #define _H_LOGGER
@@ -82,10 +84,9 @@ extern Logger g_Logger;
 #define	UNDENT		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__,g_Logger.Undent
 #define	LOGBLOCK	g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogBlock __lb__
 
-
 //#ifndef __linux__
-	#define	LOGFUNC		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogFlow __lf__(__FUNCTION__)
-	#define	LOGFUNCBLOCK g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogBlock __lb__(__FUNCTION__)
+#define	LOGFUNC		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogFlow __lf__(__FUNCTION__)
+#define	LOGFUNCBLOCK g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogBlock __lb__(__FUNCTION__)
 //#else
 //	#define	LOGFUNC		g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogFlow __lf__(__func__)
 //	#define	LOGFUNCBLOCK g_Logger.SourceLine() = __LINE__, g_Logger.SourceFile() = __FILE__;LogBlock __lb__(__func__)
@@ -169,7 +170,6 @@ private:
 	int				m_LogMask;
 	int				m_OutMask;
 	bool			m_LineCharsFlag;
-
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ class LogBlock
 {
 public:
 	inline LogBlock(const std::string &_s)/* :
-		m_Str(_s)*/
+										  m_Str(_s)*/
 	{
 		g_Logger.Indent("Begin block: " + _s, Logger::LOG_INDENT);
 	}
@@ -189,7 +189,7 @@ public:
 		g_Logger.Undent("", Logger::LOG_UNDENT);
 	}
 private:
-	//string		m_Str;
+	//std::string		m_Str;
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ class LogFlow
 {
 public:
 	inline LogFlow(const std::string &_function)/* :
-		m_Str(_function)*/
+												m_Str(_function)*/
 	{
 		g_Logger.Indent(_function, Logger::LOG_FLOW);
 	}
@@ -209,7 +209,7 @@ public:
 		g_Logger.Undent("", Logger::LOG_FLOW);
 	}
 private:
-	//string		m_Str;
+	//std::string		m_Str;
 };
 
 #endif

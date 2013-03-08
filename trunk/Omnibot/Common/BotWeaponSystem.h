@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BOTWEAPONSYSTEM_H__
 #define __BOTWEAPONSYSTEM_H__
@@ -28,7 +30,7 @@ namespace AiState
 	public:
 
 		void RenderDebug();
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		obReal GetPriority();
 		void Enter();
@@ -68,7 +70,7 @@ namespace AiState
 		};
 
 		bool AddWeaponRequest(Priority::ePriority _prio, obuint32 _owner, int _weaponId);
-		void ReleaseWeaponRequest(const String &_owner);
+		void ReleaseWeaponRequest(const std::string &_owner);
 		void ReleaseWeaponRequest(obuint32 _owner);
 		bool UpdateWeaponRequest(obuint32 _owner, int _weaponId);
 		int GetWeaponNeedingReload();
@@ -164,27 +166,27 @@ namespace AiState
 
 		// function: CurrentWeaponIs
 		//		Accessor to check if the current weapon is a particular weapon
-		inline bool CurrentWeaponIs(int _weaponid) const 
+		inline bool CurrentWeaponIs(int _weaponid) const
 		{
 			const int wId = m_CurrentWeapon ? m_CurrentWeapon->GetWeaponID() : 0;
-			return wId && wId==_weaponid; 
+			return wId && wId==_weaponid;
 		}
 
 		inline bool CurrentWeaponIsAttackReady() const
 		{
 			if(m_CurrentWeapon)
 			{
-				return 
-					m_CurrentWeapon->IsWeapon(GetDefaultWeaponID()) || 
+				return
+					m_CurrentWeapon->IsWeapon(GetDefaultWeaponID()) ||
 					m_CurrentWeapon->IsWeapon(GetDesiredWeaponID());
 			}
 			return false;
 			/*const int wId = m_CurrentWeapon ? m_CurrentWeapon->GetWeaponID() : 0;
 			return wId && (
-				wId==GetDefaultWeaponID() || 
-				wId==GetOverrideWeaponID() || 
-				wId==GetDesiredWeaponID()
-				); */
+			wId==GetDefaultWeaponID() ||
+			wId==GetOverrideWeaponID() ||
+			wId==GetDesiredWeaponID()
+			); */
 		}
 
 		// function: GetCurrentWeapon
@@ -210,7 +212,7 @@ namespace AiState
 		inline int GetReactionTime() const				{ return m_ReactionTimeInMS; }
 		inline void SetReactionTime(int _reactionms)	{ m_ReactionTimeInMS = _reactionms; }
 
-		void GetSpectateMessage(StringStr &_outstring);
+		void GetSpectateMessage(std::stringstream &_outstring);
 
 		WeaponList &GetWeaponList() { return m_WeaponList; }
 
@@ -221,7 +223,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update(float fDt);
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		const WeaponRequest &GetHighestWeaponRequest();
 
@@ -262,7 +264,7 @@ namespace AiState
 		// function: _UpdateWeaponFromGame
 		//		Asks the game what weapon the bot currently has
 		//		We do this because the game ultimately has authority
-		//		and for various reasons the server may not always allow the 
+		//		and for various reasons the server may not always allow the
 		//		bot to have the weapon it asks for from the game.
 		WeaponStatus _UpdateWeaponFromGame();
 

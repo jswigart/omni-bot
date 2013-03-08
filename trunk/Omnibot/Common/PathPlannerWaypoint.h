@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PATHPLANNERWAYPOINT_H__
 #define __PATHPLANNERWAYPOINT_H__
@@ -37,9 +39,9 @@ public:
 		WAYPOINT_DRAWAVOIDLEVEL,
 	};
 
-	typedef std::map<String, const NavFlags> FlagMap;
+	typedef std::map<std::string, const NavFlags> FlagMap;
 
-	// typedef: WaypointSerializers 
+	// typedef: WaypointSerializers
 	//	A map that allows a serializer implementation to be looked
 	//	up using the file version as the key. Used to allow backwards
 	//	compatibility between each waypoint format by allowing each format
@@ -65,14 +67,14 @@ public:
 
 	// typedef: WaypointFlagMap
 	//		Allows fast loopup of waypoints by flags, for a quick first step
-	//		in checking if a waypoint with a required flag exists instead of 
+	//		in checking if a waypoint with a required flag exists instead of
 	//		doing an exhaustive search for one.
 	typedef std::multimap<NavFlags, Waypoint*> WaypointFlagMap;
-	
+
 	// typedef: ConnectionList
 	typedef std::pair<Waypoint*, Waypoint::ConnectionInfo*> Link;
 	typedef std::vector<Link> ConnectionList;
-	
+
 	struct ClosestLink
 	{
 		enum { NumWps = 2 };
@@ -87,7 +89,7 @@ public:
 			m_Wp[1] = _wp2;
 		}
 	};
-	
+
 	bool Init();
 	void Update();
 	void Shutdown();
@@ -95,15 +97,15 @@ public:
 
 	int GetLatestFileVersion() const;
 
-	bool SetWaypointName(Waypoint *_wp, const String &_name);
-	bool SetWaypointName(int _index, const String &_name);
-	bool GetNavFlagByName(const String &_flagname, NavFlags &_flag) const;
+	bool SetWaypointName(Waypoint *_wp, const std::string &_name);
+	bool SetWaypointName(int _index, const std::string &_name);
+	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
 	inline const FlagMap &GetNavFlagMap() const { return m_WaypointFlags; }
 
-	Waypoint *GetWaypointByName(const String &_name) const;
+	Waypoint *GetWaypointByName(const std::string &_name) const;
 	Waypoint *GetWaypointByGUID(obuint32 _uid) const;
 
 	void RunPathQuery(const PathQuery &_qry);
@@ -116,8 +118,8 @@ public:
 
 	bool IsDone() const;
 	bool FoundGoal() const;
-	bool Load(const String &_mapname, bool _dl = true);
-	bool Save(const String &_mapname);
+	bool Load(const std::string &_mapname, bool _dl = true);
+	bool Save(const std::string &_mapname);
 	void Unload();
 
 	void GetPath(Path &_path, int _smoothiterations);
@@ -126,23 +128,19 @@ public:
 	Waypoint *AddWaypoint(const Vector3f &_pos, const Vector3f &_facing = Vector3f::ZERO, bool _blockdupe = false);
 	bool DeleteWaypoint(const Vector3f &_pos);
 
-	void RegisterNavFlag(const String &_name, const NavFlags &_func);
-	//void RegisterLinkFlag(const String &_name, const NavFlags &_func);
+	void RegisterNavFlag(const std::string &_name, const NavFlags &_func);
+	//void RegisterLinkFlag(const std::string &_name, const NavFlags &_func);
 
 	void RegisterGameGoals();
 	void RegisterScriptFunctions(gmMachine *a_machine);
 
-	bool GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name);
+	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
 
 	void EntityCreated(const EntityInstance &ei);
 	void EntityDeleted(const EntityInstance &ei);
-
-#ifdef ENABLE_DEBUG_WINDOW
-	void RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics);
-#endif
 
 	const WaypointList &GetWaypointList() const { return m_WaypointList; }
 	const WaypointList &GetSelectedWaypointList() const { return m_SelectedWaypoints; }
@@ -160,9 +158,9 @@ public:
 	//	the version of the waypoints so that it can use the proper
 	//	serializer.
 	//	#pragma pack(1)'d to eliminate any compiler padding.
-	//	
+	//
 #pragma pack(1)
-	typedef struct 
+	typedef struct
 	{
 		unsigned char		m_WaypointVersion;
 		unsigned int		m_NumWaypoints;
@@ -173,7 +171,7 @@ public:
 #pragma pack() // go back to default
 
 #pragma pack(1)
-	typedef struct 
+	typedef struct
 	{
 		unsigned char		m_VisVersion;
 		unsigned int		m_NumWaypoints;
@@ -190,7 +188,7 @@ public:
 	typedef std::vector<Sector> SectorList;
 	SectorList g_SectorList;
 	Sector m_CreatingSector;
-	
+
 	static NavFlags			m_CallbackFlags;
 	static NavFlags			m_BlockableMask;
 
@@ -208,7 +206,7 @@ public:
 	PathPlannerWaypoint();
 	virtual ~PathPlannerWaypoint();
 protected:
-	WaypointList		m_WaypointList;	
+	WaypointList		m_WaypointList;
 	WaypointFlagMap		m_WaypointFlagMap;
 	ConnectionList		m_BlockableList;
 	WaypointList		m_SelectedWaypoints;
@@ -241,12 +239,6 @@ protected:
 	int					m_BadPathQueries;
 
 	PathPlannerWaypointInterface * m_PlannerWpInterface;
-
-	// typedef: VisibilityTable
-	//		List of bitsets for determining visibility between waypoints
-	//		Arranged for easy bit operations.
-	/*typedef std::vector<boost::dynamic_bitset<obuint64> > VisibilityTable;
-	VisibilityTable	m_VisTable;*/
 
 	// Utility Functions
 	void BuildSpatialDatabase();
@@ -285,7 +277,7 @@ protected:
 	void cmdWaypointGoto(const StringVector &_args);
 	void cmdWaypointAddFlag(const StringVector &_args);
 	void cmdWaypointAddFlagX(const StringVector &_args);
-	void cmdWaypointAddFlag_Helper(const StringVector &_args, Waypoint *_waypoint);	
+	void cmdWaypointAddFlag_Helper(const StringVector &_args, Waypoint *_waypoint);
 	void cmdWaypointClearAllFlags(const StringVector &_args);
 	void cmdWaypointClearConnections(const StringVector &_args);
 	void cmdWaypointSetName(const StringVector &_args);
@@ -334,7 +326,7 @@ protected:
 		GameEntity					Entity;
 		int							ConnectionId;
 		ConnDir						Direction;
-		
+
 		Waypoint *					Wp;
 
 		EntityConnection()
@@ -375,13 +367,13 @@ protected:
 	bool _ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
 	bool _DisConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
 
-	bool LoadFromFile(const String &_file);
+	bool LoadFromFile(const std::string &_file);
 
-	//bool _LoadVisFromFile(const String &_file);
-	//bool _SaveVisToFile(const String &_file);
+	//bool _LoadVisFromFile(const std::string &_file);
+	//bool _SaveVisToFile(const std::string &_file);
 
-	/*bool _SaveVis(const String &_file, File &_proxy);
-	bool _LoadVis(const String &_file, File &_proxy);*/
+	/*bool _SaveVis(const std::string &_file, File &_proxy);
+	bool _LoadVis(const std::string &_file, File &_proxy);*/
 	int	m_MovingWaypointIndex;
 
 	Vector3f	m_BoxStart;
@@ -394,12 +386,12 @@ protected:
 	gmGCRoot<gmUserObject> m_WpRef;
 
 	// Internal Implementations of base class functionality
-	String _GetNavFileExtension() { return ".way"; }
+	std::string _GetNavFileExtension() { return ".way"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 };
 
-namespace NavigationAssertions 
+namespace NavigationAssertions
 {
 	BOOST_STATIC_ASSERT(sizeof(PathPlannerWaypoint::Waypoint_Header) == 293);
 }

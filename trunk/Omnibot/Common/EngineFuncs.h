@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ENGINEFUNCS_H__
 #define __ENGINEFUNCS_H__
@@ -14,10 +16,10 @@
 
 namespace EngineFuncs
 {
-	bool TraceLine(obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end, 
+	bool TraceLine(obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
 		const AABB *_aabb, int _mask, int _user, obBool _usepvs);
 
-	String EntityName(const GameEntity _ent, const char *_default = "");
+	std::string EntityName(const GameEntity _ent, const char *_default = "");
 	GameEntity EntityOwner(const GameEntity _ent);
 	bool EntityPosition(const GameEntity _ent, Vector3f &_pos);
 	bool EntityEyePosition(const GameEntity _ent, Vector3f &_pos);

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerNavMesh.h"
 #include "NavigationManager.h"
@@ -118,19 +117,19 @@ int GM_CDECL gmfNavMeshStep(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: Global Waypoint Pathplanner Functions
-static gmFunctionEntry s_navmeshLib[] = 
+static gmFunctionEntry s_navmeshLib[] =
 {
 	{"EnableView",			gmfNavMeshView},
 	{"EnableViewConnection",gmfNavMeshViewConnections},
-	
+
 	{"EnableStep",			gmfNavMeshEnableStep},
-	{"Step",				gmfNavMeshStep},	
+	{"Step",				gmfNavMeshStep},
 };
 
 void PathPlannerNavMesh::RegisterScriptFunctions(gmMachine *a_machine)
 {
 	a_machine->RegisterLibrary(
-		s_navmeshLib, 
-		sizeof(s_navmeshLib) / sizeof(s_navmeshLib[0]), 
+		s_navmeshLib,
+		sizeof(s_navmeshLib) / sizeof(s_navmeshLib[0]),
 		"Nav");
 }

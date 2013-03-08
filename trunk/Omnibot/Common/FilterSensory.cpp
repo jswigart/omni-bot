@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -10,7 +10,7 @@
 
 int FilterSensory::ANYPLAYERCLASS = 0;
 
-FilterSensory::FilterSensory(Client *_client, AiState::SensoryMemory::Type _type) 
+FilterSensory::FilterSensory(Client *_client, AiState::SensoryMemory::Type _type)
 	: m_Client			(_client)
 	, m_NumPositions	(0)
 	, m_MaxDistance		(-1.f)

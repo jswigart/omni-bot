@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -91,7 +91,7 @@ const char *strVoiceMacros[] =
 	//"wm_sayPlayerClass",
 };
 
-namespace RTCW_VoiceChatAssertions 
+namespace RTCW_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
 	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_RTCW_VCHATS);
@@ -99,7 +99,7 @@ namespace RTCW_VoiceChatAssertions
 
 int RTCW_VoiceMacros::GetVChatId(const char *_string)
 {
-	// Search for the string and return the index.
+	// Search for the std::string and return the index.
 	for(int i = VCHAT_NONE; i < NUM_RTCW_VCHATS; ++i)
 	{
 		if(strVoiceMacros[i] && strcmp(strVoiceMacros[i], _string)==0)

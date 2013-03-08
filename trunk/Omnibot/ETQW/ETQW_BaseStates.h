@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ETQWBaseStates_H__
-#define __ETQWBaseStates_H__
+#pragma once
+
+#ifndef __ETQWBASESTATES_H__
+#define __ETQWBASESTATES_H__
 
 #include "BotBaseStates.h"
 #include "MapGoal.h"
@@ -90,7 +92,7 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -132,7 +134,7 @@ namespace AiState
 
 		Vector3f			m_GunCenterArc;
 		Vector3f			m_CurrentMountedAngles;
-		
+
 		Vector3f			m_ScanLeft;
 		Vector3f			m_ScanRight;
 
@@ -229,7 +231,6 @@ namespace AiState
 
 		Trackers			Tracker;
 		MapGoalPtr			m_MapGoal;
-
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -243,7 +244,7 @@ namespace AiState
 			HEALING,
 		} GoalState;
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();

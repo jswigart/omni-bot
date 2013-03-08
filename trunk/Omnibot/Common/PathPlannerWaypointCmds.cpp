@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -24,103 +24,102 @@ void PathPlannerWaypoint::InitCommands()
 {
 	PathPlannerBase::InitCommands();
 
-	SetEx("waypoint_add", "Adds a waypoint at the current position", 
+	SetEx("waypoint_add", "Adds a waypoint at the current position",
 		this, &PathPlannerWaypoint::cmdWaypointAdd);
-	SetEx("waypoint_del", "Deletes a waypoint from the current position", 
+	SetEx("waypoint_del", "Deletes a waypoint from the current position",
 		this, &PathPlannerWaypoint::cmdWaypointDelete);
-	SetEx("waypoint_addx", "Adds a waypoint at the current aim position", 
+	SetEx("waypoint_addx", "Adds a waypoint at the current aim position",
 		this, &PathPlannerWaypoint::cmdWaypointAddX);
-	SetEx("waypoint_delx", "Deletes a waypoint from the current aim position", 
+	SetEx("waypoint_delx", "Deletes a waypoint from the current aim position",
 		this, &PathPlannerWaypoint::cmdWaypointDeleteX);
-	SetEx("waypoint_stats", "Prints all waypoint stats", 
+	SetEx("waypoint_stats", "Prints all waypoint stats",
 		this, &PathPlannerWaypoint::cmdWaypointStats);
-	SetEx("waypoint_save", "Save current waypoints to disk", 
+	SetEx("waypoint_save", "Save current waypoints to disk",
 		this, &PathPlannerWaypoint::cmdWaypointSave);
-	SetEx("waypoint_load", "Load last saved waypoints from disk", 
+	SetEx("waypoint_load", "Load last saved waypoints from disk",
 		this, &PathPlannerWaypoint::cmdWaypointLoad);
-	SetEx("waypoint_autobuild", "Auto-connect waypoints", 
+	SetEx("waypoint_autobuild", "Auto-connect waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointAutoBuild);
-	SetEx("waypoint_addflag", "Adds or removes navigation flags to this waypoint", 
+	SetEx("waypoint_addflag", "Adds or removes navigation flags to this waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointAddFlag);
-	SetEx("waypoint_addflagx", "Adds or removes navigation flags to the waypoint in crosshairs", 
+	SetEx("waypoint_addflagx", "Adds or removes navigation flags to the waypoint in crosshairs",
 		this, &PathPlannerWaypoint::cmdWaypointAddFlagX);
-	SetEx("waypoint_clearallflags", "Clears the flags from all or selected waypoints", 
+	SetEx("waypoint_clearallflags", "Clears the flags from all or selected waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointClearAllFlags);
-	SetEx("waypoint_dcall", "Disconnect all waypoints", 
+	SetEx("waypoint_dcall", "Disconnect all waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointDisconnectAll);
-	SetEx("waypoint_view", "Turn on/off waypoint visibility", 
+	SetEx("waypoint_view", "Turn on/off waypoint visibility",
 		this, &PathPlannerWaypoint::cmdWaypointView);
-	SetEx("waypoint_autoflag", "Turn on/off waypoint auto flagging, not used", 
+	SetEx("waypoint_autoflag", "Turn on/off waypoint auto flagging, not used",
 		this, &PathPlannerWaypoint::cmdWaypointAutoFlag);
-	SetEx("waypoint_viewfacing", "Turn on/off rendering of the facing vector", 
+	SetEx("waypoint_viewfacing", "Turn on/off rendering of the facing vector",
 		this, &PathPlannerWaypoint::cmdWaypointViewFacing);
-	SetEx("waypoint_connect", "Create a path between 2 waypoints", 
+	SetEx("waypoint_connect", "Create a path between 2 waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointConnect);
-	SetEx("waypoint_connectx", "Create a path between 2 waypoints in crosshairs", 
+	SetEx("waypoint_connectx", "Create a path between 2 waypoints in crosshairs",
 		this, &PathPlannerWaypoint::cmdWaypointConnectX);
-	SetEx("waypoint_biconnect", "Create a bi-directional path between 2 waypoints", 
+	SetEx("waypoint_biconnect", "Create a bi-directional path between 2 waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointConnect2Way);
-	SetEx("waypoint_biconnectx", "Create a bi-directional path between 2 waypoints in crosshairs", 
+	SetEx("waypoint_biconnectx", "Create a bi-directional path between 2 waypoints in crosshairs",
 		this, &PathPlannerWaypoint::cmdWaypointConnect2WayX);
-	SetEx("waypoint_setdefaultradius", "Sets the radius for any future waypoints", 
+	SetEx("waypoint_setdefaultradius", "Sets the radius for any future waypoints",
 		this, &PathPlannerWaypoint::cmdWaypointSetDefaultRadius);
-	SetEx("waypoint_setradius", "Sets the radius for the closest waypoint", 
+	SetEx("waypoint_setradius", "Sets the radius for the closest waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointSetRadius);
-	SetEx("waypoint_changeradius", "Changes the radius by a specified value", 
+	SetEx("waypoint_changeradius", "Changes the radius by a specified value",
 		this, &PathPlannerWaypoint::cmdWaypointChangeRadius);
-	SetEx("waypoint_setfacing", "Sets the facing for the closest waypoint", 
+	SetEx("waypoint_setfacing", "Sets the facing for the closest waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointSetFacing);
-	SetEx("waypoint_info", "Prints information about the nearest waypoint", 
+	SetEx("waypoint_info", "Prints information about the nearest waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointInfo);
-	SetEx("waypoint_goto", "Teleports local player to specified waypoint", 
+	SetEx("waypoint_goto", "Teleports local player to specified waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointGoto);
-	SetEx("waypoint_setname", "Assigns a name to closest waypoint", 
+	SetEx("waypoint_setname", "Assigns a name to closest waypoint",
 		this, &PathPlannerWaypoint::cmdWaypointSetName);
-	SetEx("waypoint_setproperty", "Sets a user defined property of the closest waypoint.", 
+	SetEx("waypoint_setproperty", "Sets a user defined property of the closest waypoint.",
 		this, &PathPlannerWaypoint::cmdWaypointSetProperty);
-	SetEx("waypoint_showproperty", "Shows all properties on the current waypoint.", 
+	SetEx("waypoint_showproperty", "Shows all properties on the current waypoint.",
 		this, &PathPlannerWaypoint::cmdWaypointShowProperty);
-	SetEx("waypoint_clearproperty", "Clears a user defined property of the closest waypoint.", 
+	SetEx("waypoint_clearproperty", "Clears a user defined property of the closest waypoint.",
 		this, &PathPlannerWaypoint::cmdWaypointClearProperty);
-	SetEx("waypoint_autoradius", "Automatically adjusts waypoint radius.", 
+	SetEx("waypoint_autoradius", "Automatically adjusts waypoint radius.",
 		this, &PathPlannerWaypoint::cmdWaypointAutoRadius);
-	SetEx("waypoint_move", "Move a waypoint, keeping connections.", 
+	SetEx("waypoint_move", "Move a waypoint, keeping connections.",
 		this, &PathPlannerWaypoint::cmdWaypointMove);
-	SetEx("waypoint_mirror", "Mirrors all current waypoints across a specified axis.", 
+	SetEx("waypoint_mirror", "Mirrors all current waypoints across a specified axis.",
 		this, &PathPlannerWaypoint::cmdWaypointMirror);
-	SetEx("waypoint_deleteaxis", "Deletes all waypoints across a specified axis.", 
+	SetEx("waypoint_deleteaxis", "Deletes all waypoints across a specified axis.",
 		this, &PathPlannerWaypoint::cmdWaypointDeleteAxis);
-	SetEx("waypoint_clearcon", "Clears the connections from a waypoint.", 
+	SetEx("waypoint_clearcon", "Clears the connections from a waypoint.",
 		this, &PathPlannerWaypoint::cmdWaypointClearConnections);
-	SetEx("waypoint_shownames", "Prints all waypoint id's and names that optionally match an expression", 
+	SetEx("waypoint_shownames", "Prints all waypoint id's and names that optionally match an expression",
 		this, &PathPlannerWaypoint::cmdWaypointGetWpNames);
-	SetEx("waypoint_translate", "Translates all waypoints by a given amount.", 
+	SetEx("waypoint_translate", "Translates all waypoints by a given amount.",
 		this, &PathPlannerWaypoint::cmdWaypointTranslate);
-	SetEx("waypoint_color", "Customize color of various waypoints.", 
+	SetEx("waypoint_color", "Customize color of various waypoints.",
 		this, &PathPlannerWaypoint::cmdWaypointColor);
-	SetEx("waypoint_select", "Select all waypoints within a radius.", 
+	SetEx("waypoint_select", "Select all waypoints within a radius.",
 		this, &PathPlannerWaypoint::cmdSelectWaypoints);
-	SetEx("waypoint_lockselected", "Selected waypoints will not be moved by waypoint_translate.", 
+	SetEx("waypoint_lockselected", "Selected waypoints will not be moved by waypoint_translate.",
 		this, &PathPlannerWaypoint::cmdLockSelected);
-	SetEx("waypoint_unlockall", "Unlocks all waypoints.", 
+	SetEx("waypoint_unlockall", "Unlocks all waypoints.",
 		this, &PathPlannerWaypoint::cmdUnlockAll);
-	SetEx("waypoint_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.", 
+	SetEx("waypoint_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.",
 		this, &PathPlannerWaypoint::cmdAutoBuildFeatures);
-	SetEx("waypoint_boxselect", "Begin/end a box waypoint select.", 
+	SetEx("waypoint_boxselect", "Begin/end a box waypoint select.",
 		this, &PathPlannerWaypoint::cmdBoxSelect);
-	SetEx("waypoint_boxselectroom", "Selects all waypoints in an auto created 'room'.", 
+	SetEx("waypoint_boxselectroom", "Selects all waypoints in an auto created 'room'.",
 		this, &PathPlannerWaypoint::cmdBoxSelectRoom);
-	SetEx("waypoint_minradius", "Clamps all waypoints minimum radius to this value", 
+	SetEx("waypoint_minradius", "Clamps all waypoints minimum radius to this value",
 		this, &PathPlannerWaypoint::cmdMinRadius);
-	SetEx("waypoint_maxradius", "Clamps all waypoints maximum radius to this value", 
+	SetEx("waypoint_maxradius", "Clamps all waypoints maximum radius to this value",
 		this, &PathPlannerWaypoint::cmdMaxRadius);
-	SetEx("waypoint_slice", "Slices a connection so that it doesn't exceed a specified length.", 
+	SetEx("waypoint_slice", "Slices a connection so that it doesn't exceed a specified length.",
 		this, &PathPlannerWaypoint::cmdWaypointSlice);
-	SetEx("waypoint_split", "Splits a connection to 2 parts at player position.", 
+	SetEx("waypoint_split", "Splits a connection to 2 parts at player position.",
 		this, &PathPlannerWaypoint::cmdWaypointSplit);
-	SetEx("waypoint_ground", "Grounds all waypoints based on the navigation rendering offsets.", 
+	SetEx("waypoint_ground", "Grounds all waypoints based on the navigation rendering offsets.",
 		this, &PathPlannerWaypoint::cmdWaypointGround);
-	
 }
 
 void PathPlannerWaypoint::cmdWaypointAdd(const StringVector &_args)
@@ -135,7 +134,7 @@ void PathPlannerWaypoint::cmdWaypointAdd(const StringVector &_args)
 
 	// Add this waypoint to the list.
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );", 
+		(std::string)va("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );",
 		vPosition.x, vPosition.y, vPosition.z,
 		vFacing.x, vFacing.y, vFacing.z));
 }
@@ -179,7 +178,7 @@ void PathPlannerWaypoint::cmdWaypointDelete(const StringVector &_args)
 	{
 		while(!m_SelectedWaypoints.empty())
 			DeleteWaypoint(m_SelectedWaypoints.back()->GetPosition());
-	}	
+	}
 }
 
 void PathPlannerWaypoint::cmdWaypointDeleteX(const StringVector &_args)
@@ -197,11 +196,11 @@ void PathPlannerWaypoint::cmdWaypointDeleteX(const StringVector &_args)
 
 		obTraceResult tr;
 		g_EngineFuncs->TraceLine(tr,
-			vEyePosition, 
+			vEyePosition,
 			vEyePosition + vFacing * 1000.f,
-			NULL, 
-			TR_MASK_SHOT, 
-			Utils::GetLocalGameId(), 
+			NULL,
+			TR_MASK_SHOT,
+			Utils::GetLocalGameId(),
 			False);
 
 		if(tr.m_Fraction < 1.f)
@@ -219,7 +218,7 @@ void PathPlannerWaypoint::cmdWaypointStats(const StringVector &_args)
 
 	EngineFuncs::ConsoleMessage("-= Waypoint Stats =-");
 	EngineFuncs::ConsoleMessage(va("Map : %s", g_EngineFuncs->GetMapName()));
-	EngineFuncs::ConsoleMessage(va("# Waypoints : %d", m_WaypointList.size()));		
+	EngineFuncs::ConsoleMessage(va("# Waypoints : %d", m_WaypointList.size()));
 	EngineFuncs::ConsoleMessage(va("A* Open List : %d", m_OpenCount));
 	EngineFuncs::ConsoleMessage(va("A* Closed List : %d", m_ClosedCount));
 }
@@ -229,7 +228,7 @@ void PathPlannerWaypoint::cmdWaypointSave(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	String strFile = g_EngineFuncs->GetMapName();
+	std::string strFile = g_EngineFuncs->GetMapName();
 	OPTIONAL_STRING_PARAM(ex,1,"");
 	strFile += ex;
 
@@ -241,7 +240,7 @@ void PathPlannerWaypoint::cmdWaypointSave(const StringVector &_args)
 		BuildSpatialDatabase();
 	}
 	else
-		EngineFuncs::ConsoleError("ERROR Saving Waypoints.");			
+		EngineFuncs::ConsoleError("ERROR Saving Waypoints.");
 }
 
 void PathPlannerWaypoint::cmdWaypointLoad(const StringVector &_args)
@@ -249,14 +248,14 @@ void PathPlannerWaypoint::cmdWaypointLoad(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	String strFile = g_EngineFuncs->GetMapName();
+	std::string strFile = g_EngineFuncs->GetMapName();
 	OPTIONAL_STRING_PARAM(ex,1,"");
 	strFile += ex;
 
 	if(Load(strFile))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Waypoints.");
-	} 
+	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
 }
@@ -276,8 +275,8 @@ void PathPlannerWaypoint::cmdWaypointSetName(const StringVector &_args)
 		return;
 	}
 
-	// Append the rest of the tokens into the string
-	String newName;
+	// Append the rest of the tokens into the std::string
+	std::string newName;
 	if(_args.size() > 1)
 	{
 		for(int i = 1; i < (int)_args.size(); ++i)
@@ -288,7 +287,7 @@ void PathPlannerWaypoint::cmdWaypointSetName(const StringVector &_args)
 		}
 		SetWaypointName(pWaypoint, newName);
 		EngineFuncs::ConsoleMessage(va("Waypoint name set to \"%s\"", newName.c_str()));
-	} 
+	}
 	else
 	{
 		EngineFuncs::ConsoleMessage("Clearing waypoint name.");
@@ -301,8 +300,8 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_autoradius all/cur height[#] minradius[#] maxradius[#]",
 		"> all or cur: autoradius all waypoints or only nearest",
 		"> minradius: minimum radius to use",
@@ -349,9 +348,9 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 	};
 
 	EngineFuncs::ConsoleMessage(va("autoradius: %s height[%f] minradius[%f] maxradius[%f]",
-		mode == All_Wp ? "all wps" : "current wp", 
+		mode == All_Wp ? "all wps" : "current wp",
 		fTestHeight,
-		fMinRadius, 
+		fMinRadius,
 		fMaxRadius));
 
 	Waypoint *pClosestWp = 0;
@@ -387,7 +386,7 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 
 		Vector3f vEndPosition = vStartPosition + (-Vector3f::UNIT_Z * 1000.0f);
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStartPosition, vEndPosition, NULL, TR_MASK_SOLID, 0, False);	
+		EngineFuncs::TraceLine(tr, vStartPosition, vEndPosition, NULL, TR_MASK_SOLID, 0, False);
 		if(tr.m_Fraction < 1.0)
 		{
 			vStartPosition = Vector3f(tr.m_Endpos) + Vector3f::UNIT_Z * fTestHeight;
@@ -407,15 +406,15 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 				float fDistance = (start - end).Length() * tr.m_Fraction;
 				if(fDistance < fClosestHit)
 				{
-					fClosestHit = fDistance;					
+					fClosestHit = fDistance;
 				}
 			}
 		}
 
 		float fNewRadius = Mathf::Max(fMaxRadius, fClosestHit);
-		EngineFuncs::ConsoleMessage(va("#%d Changed Radius from %f to %f", 
-			(*it)->GetUID(), 
-			(*it)->GetRadius(), 
+		EngineFuncs::ConsoleMessage(va("#%d Changed Radius from %f to %f",
+			(*it)->GetUID(),
+			(*it)->GetRadius(),
 			fNewRadius));
 		(*it)->SetRadius(fNewRadius);
 	}
@@ -492,13 +491,13 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 			obTraceResult tr;
 
 			// Use the bounding box if iUseBBox is enabled
-			EngineFuncs::TraceLine(tr, 
+			EngineFuncs::TraceLine(tr,
 				(m_WaypointList[i]->GetPosition() + Vector3f(0,0,40)),
-				(m_WaypointList[j]->GetPosition() + Vector3f(0,0,40)), 
+				(m_WaypointList[j]->GetPosition() + Vector3f(0,0,40)),
 				(bUseBBox ? &bbox : NULL), (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
 			++iNumRayCasts;
 
-			//Utils::DrawLine(0, (m_WaypointList[i]->GetPosition() + Vector3f(0,0,40)),
+			//RenderBuffer::AddLine(0, (m_WaypointList[i]->GetPosition() + Vector3f(0,0,40)),
 			//	tr.m_Endpos, COLOR::GREEN);
 
 			// is it clear?
@@ -525,7 +524,7 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 				if(fCurrentDist > fLongestDist)
 				{
 					longestIter = it;
-					fLongestDist = fCurrentDist;                    
+					fLongestDist = fCurrentDist;
 				}
 				++it;
 			}
@@ -625,8 +624,8 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	String propertyName;
-	String propertyValue;
+	std::string propertyName;
+	std::string propertyValue;
 
 	if(_args.size() < 3)
 	{
@@ -671,7 +670,7 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 			{
 				if(propertyName == "paththrough") pClosest->PostLoad();
 
-				EngineFuncs::ConsoleMessage(va("property set: %s, %s", 
+				EngineFuncs::ConsoleMessage(va("property set: %s, %s",
 					propertyName.c_str(), propertyValue.c_str()));
 			}
 			return;
@@ -685,9 +684,9 @@ void PathPlannerWaypoint::cmdWaypointShowProperty(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	/*String propertyName;
+	/*std::string propertyName;
 	if(_args.size() >= 2)
-		propertyName = _args[1];*/
+	propertyName = _args[1];*/
 
 	Vector3f vLocalPos;
 	if(Utils::GetLocalPosition(vLocalPos))
@@ -699,7 +698,7 @@ void PathPlannerWaypoint::cmdWaypointShowProperty(const StringVector &_args)
 			PropertyMap::ValueMap::const_iterator cIt = pm.begin();
 			for(; cIt != pm.end(); ++cIt)
 			{
-				EngineFuncs::ConsoleMessage(va("property: %s = %s", 
+				EngineFuncs::ConsoleMessage(va("property: %s = %s",
 					(*cIt).first.c_str(), (*cIt).second.c_str()));
 			}
 			return;
@@ -713,7 +712,7 @@ void PathPlannerWaypoint::cmdWaypointClearProperty(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	String propertyName;
+	std::string propertyName;
 
 	if(_args.size() < 2)
 	{
@@ -778,7 +777,7 @@ void PathPlannerWaypoint::cmdWaypointSetRadius(const StringVector &_args)
 				if(pClosest)
 				{
 					pClosest->m_Radius = fWaypointRadius;
-					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f",
 						pClosest->GetUID(), fWaypointRadius));
 				}
 			}
@@ -787,7 +786,7 @@ void PathPlannerWaypoint::cmdWaypointSetRadius(const StringVector &_args)
 				for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 				{
 					m_SelectedWaypoints[i]->m_Radius = fWaypointRadius;
-					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+					EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f",
 						m_SelectedWaypoints[i]->GetUID(), fWaypointRadius));
 				}
 			}
@@ -822,30 +821,30 @@ void PathPlannerWaypoint::cmdWaypointChangeRadius(const StringVector &_args)
 		if(pClosest)
 		{
 			pClosest->m_Radius += fChangeBy;
-			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f",
 				pClosest->GetUID(), pClosest->m_Radius));
-		}	
+		}
 	}
 	else
 	{
 		for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 		{
 			m_SelectedWaypoints[i]->m_Radius += fChangeBy;
-			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f", 
+			EngineFuncs::ConsoleMessage(va("Waypoint %d radius changed to %f",
 				m_SelectedWaypoints[i]->GetUID(), m_SelectedWaypoints[i]->m_Radius));
 		}
 	}
 	m_SelectedWaypoint = -1;
 }
 void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
-{	
+{
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
 	Vector3f vFacing;
 	Vector3f vLocalPos;
 
-	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vLocalPos)) && 
+	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vLocalPos)) &&
 		SUCCESS(g_EngineFuncs->GetEntityOrientation(Utils::GetLocalEntity(), vFacing, 0, 0)))
 	{
 		if(m_SelectedWaypoints.empty())
@@ -856,7 +855,7 @@ void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
 			if(pClosest)
 			{
 				pClosest->m_Facing = vFacing;
-				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
+				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)",
 					pClosest->GetUID(), vFacing[0], vFacing[1], vFacing[2]));
 			}
 		}
@@ -865,7 +864,7 @@ void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
 			for(obuint32 i = 0; i < m_SelectedWaypoints.size(); ++i)
 			{
 				m_SelectedWaypoints[i]->m_Facing += vFacing;
-				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)", 
+				EngineFuncs::ConsoleMessage(va("Waypoint %d facing changed to Vector3(%f,%f,%f)",
 					m_SelectedWaypoints[i]->GetUID(), vFacing[0], vFacing[1], vFacing[2]));
 			}
 		}
@@ -873,7 +872,7 @@ void PathPlannerWaypoint::cmdWaypointSetFacing(const StringVector &_args)
 }
 
 void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
-{	
+{
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
@@ -886,10 +885,10 @@ void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
 	// Print the info for this waypoint.
 	if(pClosest)
 	{
-		String flagString = va("Waypoint #%d, radius %f, #connections %d\n", 
+		std::string flagString = va("Waypoint #%d, radius %f, #connections %d\n",
 			pClosest->GetUID(), pClosest->m_Radius, (unsigned int)pClosest->m_Connections.size()).c_str();
 
-		// Build a string with the flags
+		// Build a std::string with the flags
 		FlagMap::const_iterator flagIt = m_WaypointFlags.begin();
 		for( ; flagIt != m_WaypointFlags.end(); ++flagIt)
 		{
@@ -901,13 +900,13 @@ void PathPlannerWaypoint::cmdWaypointInfo(const StringVector &_args)
 		}
 		if(!flagString.empty())
 		{
-			RenderBuffer::AddString(pClosest->GetPosition(),COLOR::WHITE,flagString.c_str());
+			RenderBuffer::AddString3d(pClosest->GetPosition(),COLOR::WHITE,flagString.c_str());
 		}
 	}
 }
 
 void PathPlannerWaypoint::cmdWaypointGoto(const StringVector &_args)
-{	
+{
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
@@ -918,12 +917,12 @@ void PathPlannerWaypoint::cmdWaypointGoto(const StringVector &_args)
 	}
 
 	obuint32 uid;
-	
+
 	Utils::ConvertString(_args[1], uid);
 
 	Waypoint *pTravelTo = GetWaypointByGUID(uid);
 
-	String m_Message;
+	std::string m_Message;
 
 	if(!pTravelTo)
 	{
@@ -992,7 +991,7 @@ void PathPlannerWaypoint::cmdWaypointTranslate(const StringVector &_args)
 	}
 
 	double dX, dY, dZ;
-	if(Utils::ConvertString(_args[1], dX) && 
+	if(Utils::ConvertString(_args[1], dX) &&
 		Utils::ConvertString(_args[2], dY) &&
 		Utils::ConvertString(_args[3], dZ))
 	{
@@ -1011,7 +1010,7 @@ void PathPlannerWaypoint::cmdWaypointTranslate(const StringVector &_args)
 			it = m_SelectedWaypoints.begin();
 			itEnd = m_SelectedWaypoints.end();
 		}
-		
+
 		for( ; it != itEnd; ++it)
 		{
 			Waypoint *pWp = (*it);
@@ -1062,7 +1061,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 	}
 
 	EngineFuncs::ConsoleMessage(va("mirroring waypoints around %s", _args[1].c_str()));
-	
+
 	WaypointList mirroredWaypoints;
 
 	WaypointList::iterator it, itEnd;
@@ -1078,7 +1077,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 		it = m_SelectedWaypoints.begin();
 		itEnd = m_SelectedWaypoints.end();
 	}
-	
+
 	for( ; it != itEnd; ++it)
 	{
 		Waypoint *pWp = new Waypoint;
@@ -1144,7 +1143,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 		WaypointList::iterator it = mirroredWaypoints.begin(), itEnd = mirroredWaypoints.end();
 		for( ; it != itEnd; ++it)
 		{
-			Waypoint::ConnectionList::iterator conIt = (*it)->m_Connections.begin(), 
+			Waypoint::ConnectionList::iterator conIt = (*it)->m_Connections.begin(),
 				conItEnd = (*it)->m_Connections.end();
 
 			for(; conIt != conItEnd; ++conIt)
@@ -1159,7 +1158,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 						break;
 					}
 				}
-				
+
 				if(index != -1)
 				{
 					conIt->m_Connection = mirroredWaypoints[index];
@@ -1181,8 +1180,8 @@ class DisconnectWaypoint
 {
 public:
 	// Constructor initializes the value to multiply by
-	DisconnectWaypoint(const Waypoint *_wp) : 
-		m_Target(_wp) 
+	DisconnectWaypoint(const Waypoint *_wp) :
+		m_Target(_wp)
 	{
 	}
 
@@ -1198,8 +1197,8 @@ private:
 
 void PathPlannerWaypoint::cmdWaypointDeleteAxis(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_deleteaxis axis"
 		"> axis: x, y, z, -x, -y, -z",
 	};
@@ -1241,7 +1240,7 @@ void PathPlannerWaypoint::cmdWaypointDeleteAxis(const StringVector &_args)
 		if(vAxis.x != 0.0f)
 		{
 			bRemoveMe = Mathf::Sign((*it)->GetPosition().x) != Mathf::Sign(vAxis.x);
-		} 
+		}
 		else if(vAxis.y != 0.0f)
 		{
 			bRemoveMe = Mathf::Sign((*it)->GetPosition().y) != Mathf::Sign(vAxis.y);
@@ -1260,7 +1259,7 @@ void PathPlannerWaypoint::cmdWaypointDeleteAxis(const StringVector &_args)
 		else
 			++it;
 	}
-	
+
 	EngineFuncs::ConsoleMessage(va("deleted %d waypoints around axis: %s",iDeleted,_args[1].c_str()));
 }
 
@@ -1304,12 +1303,12 @@ void PathPlannerWaypoint::cmdWaypointConnect_Helper(const StringVector &_args, W
 			// See if the first waypoint is already connected to this one.
 			if(_DisConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d",
 					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 			else if(_ConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d",
 					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 
@@ -1354,23 +1353,23 @@ void PathPlannerWaypoint::cmdWaypointConnect2Way_Helper(const StringVector &_arg
 		{
 			if(_DisConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d",
 					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 			else if(_ConnectWaypoints(m_ConnectWp, _waypoint))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d",
 					m_ConnectWp->GetUID(), _waypoint->GetUID()));
 			}
 
 			if(_DisConnectWaypoints(_waypoint, m_ConnectWp))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Disconnected: %d-%d",
 					_waypoint->GetUID(), m_ConnectWp->GetUID()));
 			}
 			else if(_ConnectWaypoints(_waypoint, m_ConnectWp))
 			{
-				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d", 
+				EngineFuncs::ConsoleMessage(va("Waypoint Connected: %d-%d",
 					_waypoint->GetUID(), m_ConnectWp->GetUID()));
 			}
 
@@ -1399,7 +1398,7 @@ void PathPlannerWaypoint::_BenchmarkPathFinder(const StringVector &_args)
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec",
 		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
@@ -1434,13 +1433,13 @@ void PathPlannerWaypoint::_BenchmarkGetNavPoint(const StringVector &_args)
 				++iMisses;
 		}
 	}
-	
+
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage(va("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
-		iNumWaypoints * iNumIterations, 
-		iHits, 
-		iMisses, 
+	EngineFuncs::ConsoleMessage(va("_GetClosest() %d calls, %d hits, %d misses : avg %f per second",
+		iNumWaypoints * iNumIterations,
+		iHits,
+		iMisses,
 		dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f));
 }
 
@@ -1509,7 +1508,7 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 					{
 						_waypoint->AddFlag(it->second);
 						EngineFuncs::ConsoleMessage(va("%s Flag added to waypoint.", _args[iToken].c_str()));
-					} 
+					}
 					else
 					{
 						_waypoint->RemoveFlag(it->second);
@@ -1548,15 +1547,15 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 					BuildSpatialDatabase();
 				}
 				bPrintFlagList = false;
-			} 
+			}
 			else
 			{
 				EngineFuncs::ConsoleError(va("Invalid flag: %s.", _args[iToken].c_str()));
 			}
-		}		
+		}
 	} else
 	{
-		EngineFuncs::ConsoleError("No Flags specified.");		
+		EngineFuncs::ConsoleError("No Flags specified.");
 	}
 
 	// Print out the available flags.
@@ -1634,10 +1633,10 @@ void PathPlannerWaypoint::cmdWaypointClearAllFlags(const StringVector &_args)
 						(*it)->RemoveFlag(flagIt->second);
 					}
 				}
-				EngineFuncs::ConsoleMessage(va("Removed flag %s from %d waypoints.", 
+				EngineFuncs::ConsoleMessage(va("Removed flag %s from %d waypoints.",
 					_args[iToken].c_str(), iNumWps));
 			}
-		}		
+		}
 	}
 	else
 	{
@@ -1662,7 +1661,7 @@ void PathPlannerWaypoint::cmdWaypointClearAllFlags(const StringVector &_args)
 			(*it)->ClearFlags();
 		}
 		EngineFuncs::ConsoleMessage(va("Cleared all flags from %d waypoints.", iNum));
-	}	
+	}
 }
 
 bool _NameLT(const Waypoint *_pt1, const Waypoint *_pt2)
@@ -1675,7 +1674,7 @@ void PathPlannerWaypoint::cmdWaypointGetWpNames(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	String exp = ".*";
+	std::string exp = ".*";
 	if(_args.size() < 1)
 		exp = _args[0];
 
@@ -1721,11 +1720,11 @@ extern obColor		g_Team4;
 void PathPlannerWaypoint::cmdWaypointColor(const StringVector &_args)
 {
 	/*if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;*/
+	return;*/
 
-	const char *strUsage[] = 
-	{ 
-		"waypoint_color type[string] red[#] green[#] blue[#]",
+	const char *strUsage[] =
+	{
+		"waypoint_color type[std::string] red[#] green[#] blue[#]",
 		"> type: one of the following",
 		"    waypoint_color",
 		"    waypoint_selected",
@@ -1744,15 +1743,15 @@ void PathPlannerWaypoint::cmdWaypointColor(const StringVector &_args)
 	};
 
 	CHECK_NUM_PARAMS(_args, 5, strUsage);
-	const String strType = _args[1];
+	const std::string strType = _args[1];
 	CHECK_INT_PARAM(iRed, 2, strUsage);
 	CHECK_INT_PARAM(iGreen, 3, strUsage);
 	CHECK_INT_PARAM(iBlue, 4, strUsage);
 	OPTIONAL_INT_PARAM(iAlpha, 5, 255);
 
 	obColor newColor(
-		(obuint8)ClampT(iRed, 0, 255), 
-		(obuint8)ClampT(iGreen, 0, 255), 
+		(obuint8)ClampT(iRed, 0, 255),
+		(obuint8)ClampT(iGreen, 0, 255),
 		(obuint8)ClampT(iBlue, 0, 255),
 		(obuint8)ClampT(iAlpha, 0, 255));
 
@@ -1805,8 +1804,8 @@ void PathPlannerWaypoint::cmdSelectWaypoints_Helper(const Vector3f &_pos, float 
 
 void PathPlannerWaypoint::cmdSelectWaypoints(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_select radius[#]"
 		"> radius: radius around you to select waypoints within",
 	};
@@ -1821,7 +1820,7 @@ void PathPlannerWaypoint::cmdSelectWaypoints(const StringVector &_args)
 	}
 
 	CHECK_FLOAT_PARAM(fRadius, 1, strUsage);
-	
+
 	Vector3f vPos;
 	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPos)))
 	{
@@ -1860,8 +1859,8 @@ void PathPlannerWaypoint::cmdUnlockAll(const StringVector &_args)
 
 void PathPlannerWaypoint::cmdMinRadius(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_minradius radius[#]"
 		"> radius: minimum radius to clamp all waypoints to",
 	};
@@ -1885,8 +1884,8 @@ void PathPlannerWaypoint::cmdMinRadius(const StringVector &_args)
 
 void PathPlannerWaypoint::cmdMaxRadius(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_maxradius radius[#]"
 		"> radius: maximum radius to clamp all waypoints to",
 	};
@@ -1920,7 +1919,7 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 	{
 		const float fTime = 30.f;
 
-		Vector3f vPos(features[i].m_Position);		
+		Vector3f vPos(features[i].m_Position);
 		Vector3f vFace(features[i].m_Facing);
 		Vector3f vTarget(features[i].m_TargetPosition);
 
@@ -1946,18 +1945,18 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 			Waypoint *pTarget = AddWaypoint(vTarget, Vector3f::ZERO, true);
 			pFeature->ConnectTo(pTarget);
 		}
-		
+
 		//////////////////////////////////////////////////////////////////////////
-		Utils::DrawLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
+		RenderBuffer::AddLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
 		if(vPos != vTarget)
 		{
-			Utils::DrawLine(vPos, vTarget, COLOR::MAGENTA, fTime);
-			Utils::DrawLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
+			RenderBuffer::AddLine(vPos, vTarget, COLOR::MAGENTA, fTime);
+			RenderBuffer::AddLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
 		}
 		if(!features[i].m_Bounds.IsZero())
-			Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
+			RenderBuffer::AddAABB(features[i].m_Bounds, COLOR::GREEN);
 		if(!features[i].m_TargetBounds.IsZero())
-			Utils::OutlineAABB(features[i].m_TargetBounds, COLOR::ORANGE, fTime);
+			RenderBuffer::AddAABB(features[i].m_TargetBounds, COLOR::ORANGE);
 		//////////////////////////////////////////////////////////////////////////
 	}
 	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
@@ -1979,7 +1978,7 @@ void PathPlannerWaypoint::cmdBoxSelect(const StringVector &_args)
 		else
 		{
 			AABB boxselect(m_BoxStart, vAimPos);
-			Utils::OutlineAABB(boxselect, COLOR::MAGENTA, 2.f,AABB::DIR_BOTTOM);
+			RenderBuffer::AddAABB(boxselect, COLOR::MAGENTA, AABB::DIR_BOTTOM);
 
 			boxselect.m_Mins[2] = -4096.f;
 			boxselect.m_Maxs[2] = 4096.f;
@@ -2006,7 +2005,7 @@ void PathPlannerWaypoint::cmdBoxSelectRoom(const StringVector &_args)
 	{
 		g_SectorList.push_back(m_CreatingSector);
 
-		Utils::OutlineAABB(m_CreatingSector.m_SectorBounds, COLOR::GREEN, 10.f, AABB::DIR_BOTTOM);
+		RenderBuffer::AddAABB(m_CreatingSector.m_SectorBounds, COLOR::GREEN, AABB::DIR_BOTTOM);
 
 		/*obuint32 iNumSelected = SelectWaypoints(boxselect);
 		EngineFuncs::ConsoleMessage("Selected %d waypoints.", iNumSelected);*/
@@ -2021,8 +2020,8 @@ void PathPlannerWaypoint::cmdWaypointSlice(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"waypoint_slice maxsegmentlength[#]",
 		"> maxsegmentlength: max length allowed in slices",
 	};
@@ -2052,17 +2051,17 @@ void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
 		return;
 
 	ClosestLink l = _GetClosestLink(p,F_NAV_TEAM1|F_NAV_TEAM2|F_NAV_TEAM3|F_NAV_TEAM4);
-	Waypoint *wp0 = l.m_Wp[0]; 
+	Waypoint *wp0 = l.m_Wp[0];
 	Waypoint *wp1 = l.m_Wp[1];
 	if(!wp0 || !wp1)
 	{
 		EngineFuncs::ConsoleError("You must stand at a connection between waypoints.");
 		return;
 	}
-	
-	Vector3f p0 = wp0->GetPosition(); 
-	Vector3f p1 = wp1->GetPosition(); 
-	
+
+	Vector3f p0 = wp0->GetPosition();
+	Vector3f p1 = wp1->GetPosition();
+
 	const float fMid = (g_fTopWaypointOffset + g_fBottomWaypointOffset) / 2;
 	p0 += Vector3f(0.f,0.f,fMid);
 	p1 += Vector3f(0.f,0.f,fMid);
@@ -2081,7 +2080,7 @@ void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
 	Vector3f g;
 	if(GroundPosition(g, p)) p = g;
 
-	Waypoint *wp = AddWaypoint(p,Vector3f::ZERO);			
+	Waypoint *wp = AddWaypoint(p,Vector3f::ZERO);
 
 	if(wp0->IsConnectedTo(wp1)){
 		wp0->DisconnectFrom(wp1);
@@ -2102,9 +2101,9 @@ void PathPlannerWaypoint::cmdWaypointGround(const StringVector &_args)
 
 	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
 
-	/*const char *strUsage[] = 
-	{ 
-		"waypoint_ground",
+	/*const char *strUsage[] =
+	{
+	"waypoint_ground",
 	};*/
 
 	WaypointList::iterator it = m_WaypointList.begin();

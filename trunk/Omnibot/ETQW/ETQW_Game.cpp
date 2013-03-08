@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -19,7 +19,6 @@
 
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
-
 #include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
@@ -78,9 +77,9 @@ const char *ETQW_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool ETQW_Game::ReadyForDebugWindow() const 
-{ 
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING; 
+bool ETQW_Game::ReadyForDebugWindow() const
+{
+	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
 GoalManager *ETQW_Game::GetGoalManager()
@@ -88,10 +87,8 @@ GoalManager *ETQW_Game::GetGoalManager()
 	return new ETQW_GoalManager;
 }
 
-bool ETQW_Game::Init() 
+bool ETQW_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_GAME);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ETQW_Game::ETQW_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ETQW_Game::ETQW_GetEntityClassAimOffset);
@@ -103,7 +100,7 @@ bool ETQW_Game::Init()
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/etqw_autoexec.gm", threadId);	
+	ScriptManager::GetInstance()->ExecuteFile("scripts/etqw_autoexec.gm", threadId);
 
 	return true;
 }
@@ -129,7 +126,7 @@ static IntEnum ETQW_TeamEnum[] =
 void ETQW_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(ETQW_TeamEnum) / sizeof(ETQW_TeamEnum[0]);
-	_ptr = ETQW_TeamEnum;	
+	_ptr = ETQW_TeamEnum;
 }
 
 static IntEnum ETQW_WeaponEnum[] =
@@ -168,7 +165,7 @@ static IntEnum ETQW_WeaponEnum[] =
 void ETQW_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(ETQW_WeaponEnum) / sizeof(ETQW_WeaponEnum[0]);
-	_ptr = ETQW_WeaponEnum;	
+	_ptr = ETQW_WeaponEnum;
 }
 
 static IntEnum ETQW_ClassEnum[] =
@@ -176,9 +173,9 @@ static IntEnum ETQW_ClassEnum[] =
 	IntEnum("SOLDIER",			ETQW_CLASS_SOLDIER),
 	IntEnum("MEDIC",				ETQW_CLASS_MEDIC),
 	IntEnum("ENGINEER",			ETQW_CLASS_ENGINEER),
-	IntEnum("FIELDOPS",			ETQW_CLASS_FIELDOPS),	
+	IntEnum("FIELDOPS",			ETQW_CLASS_FIELDOPS),
 	IntEnum("COVERTOPS",			ETQW_CLASS_COVERTOPS),
-	IntEnum("ANYPLAYER",			ETQW_CLASS_ANY),	
+	IntEnum("ANYPLAYER",			ETQW_CLASS_ANY),
 	IntEnum("MG42MOUNT",			ETQW_CLASSEX_MG42MOUNT),
 	IntEnum("DYNAMITE",			ETQW_CLASSEX_DYNAMITE),
 	IntEnum("LANDMINE",			ETQW_CLASSEX_MINE),
@@ -291,7 +288,7 @@ void ETQW_Game::InitVoiceMacros(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "REPAIR_VEHICLE",		gmVariable(VCHAT_TEAM_REPAIRVEHICLE));
 	_table->Set(_machine, "DESTROY_VEHICLE",	gmVariable(VCHAT_TEAM_DESTROYVEHICLE));
 	_table->Set(_machine, "ESCORT_VEHICLE",		gmVariable(VCHAT_TEAM_ESCORTVEHICLE));
-	
+
 	_table->Set(_machine, "IMA_SOLDIER",		gmVariable(VCHAT_IMA_SOLDIER));
 	_table->Set(_machine, "IMA_MEDIC",			gmVariable(VCHAT_IMA_MEDIC));
 	_table->Set(_machine, "IMA_ENGINEER",		gmVariable(VCHAT_IMA_ENGINEER));
@@ -320,7 +317,7 @@ void ETQW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 	if(!_addbot.m_Name[0])
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
-		String name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
+		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 		Utils::StringCopy(_addbot.m_Name, name.c_str(), sizeof(_addbot.m_Name));
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -349,14 +346,14 @@ void ETQW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		if(cp->m_DesiredTeam == -1)
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectTeam");
 			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
 		if(cp->m_DesiredClass == -1)
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectClass");
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
@@ -400,7 +397,7 @@ void ETQW_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table
 	_table->Set(_machine, "MNT_MG42",		gmVariable(ETQW_ENT_FLAG_MNT_MG42));
 	_table->Set(_machine, "MNT_TANK",		gmVariable(ETQW_ENT_FLAG_MNT_TANK));
 	_table->Set(_machine, "MNT_AAGUN",		gmVariable(ETQW_ENT_FLAG_MNT_AAGUN));
-	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(ETQW_ENT_FLAG_CARRYINGGOAL));	
+	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(ETQW_ENT_FLAG_CARRYINGGOAL));
 	_table->Set(_machine, "LIMBO",			gmVariable(ETQW_ENT_FLAG_INLIMBO));
 	_table->Set(_machine, "MOUNTABLE",		gmVariable(ETQW_ENT_FLAG_ISMOUNTABLE));
 	_table->Set(_machine, "POISONED",		gmVariable(ETQW_ENT_FLAG_POISONED));
@@ -431,18 +428,18 @@ void ETQW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("WALL",			F_ETQW_NAV_WALL);
 	_planner->RegisterNavFlag("BRIDGE",			F_ETQW_NAV_BRIDGE);
 
-	_planner->RegisterNavFlag("SPRINT",			F_ETQW_NAV_SPRINT);	
+	_planner->RegisterNavFlag("SPRINT",			F_ETQW_NAV_SPRINT);
 	_planner->RegisterNavFlag("PRONE",			F_NAV_PRONE);
 
 	_planner->RegisterNavFlag("WATERBLOCKABLE", F_ETQW_NAV_WATERBLOCKABLE);
 
-	_planner->RegisterNavFlag("CAPPOINT",		F_ETQW_NAV_CAPPOINT);	
+	_planner->RegisterNavFlag("CAPPOINT",		F_ETQW_NAV_CAPPOINT);
 
-	_planner->RegisterNavFlag("ARTY_SPOT",		F_ETQW_NAV_ARTSPOT);	
-	_planner->RegisterNavFlag("ARTY_TARGETQW_S",	F_ETQW_NAV_ARTYTARGETQW_S);	
-	_planner->RegisterNavFlag("ARTY_TARGETQW_D",	F_ETQW_NAV_ARTYTARGETQW_D);	
+	_planner->RegisterNavFlag("ARTY_SPOT",		F_ETQW_NAV_ARTSPOT);
+	_planner->RegisterNavFlag("ARTY_TARGETQW_S",	F_ETQW_NAV_ARTYTARGETQW_S);
+	_planner->RegisterNavFlag("ARTY_TARGETQW_D",	F_ETQW_NAV_ARTYTARGETQW_D);
 
-	_planner->RegisterNavFlag("DISGUISE",		F_ETQW_NAV_DISGUISE);	
+	_planner->RegisterNavFlag("DISGUISE",		F_ETQW_NAV_DISGUISE);
 }
 
 void ETQW_Game::InitCommands()
@@ -450,11 +447,11 @@ void ETQW_Game::InitCommands()
 	IGame::InitCommands();
 }
 
-/*	
-	bounding boxes for et
-	standing	(-18, -18, -24) x (18, 18, 48)
-	crouched	(-18, -18, -24) x (18, 18, 24)
-	proned		(-18, -18, -24) x (18, 18, 16)
+/*
+bounding boxes for et
+standing	(-18, -18, -24) x (18, 18, 48)
+crouched	(-18, -18, -24) x (18, 18, 24)
+proned		(-18, -18, -24) x (18, 18, 16)
 */
 const float ETQW_Game::ETQW_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -472,7 +469,7 @@ const float ETQW_Game::ETQW_GetEntityClassTraceOffset(const int _class, const Bi
 	case ETQW_CLASSEX_DYNAMITE:
 	case ETQW_CLASSEX_MINE:
 	case ETQW_CLASSEX_SATCHEL:
-	case ETQW_CLASSEX_SMOKEBOMB:		
+	case ETQW_CLASSEX_SMOKEBOMB:
 	case ETQW_CLASSEX_CORPSE:
 		return 2.0f;
 	}
@@ -480,11 +477,11 @@ const float ETQW_Game::ETQW_GetEntityClassTraceOffset(const int _class, const Bi
 	return 0.0f;
 }
 
-/*	
-	bounding boxes for et
-	standing	(-18, -18, -24) x (18, 18, 48)
-	crouched	(-18, -18, -24) x (18, 18, 24)
-	proned		(-18, -18, -24) x (18, 18, 16)
+/*
+bounding boxes for et
+standing	(-18, -18, -24) x (18, 18, 48)
+crouched	(-18, -18, -24) x (18, 18, 24)
+proned		(-18, -18, -24) x (18, 18, 16)
 */
 const float ETQW_Game::ETQW_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -502,9 +499,9 @@ const float ETQW_Game::ETQW_GetEntityClassAimOffset(const int _class, const BitF
 
 const float ETQW_Game::ETQW_GetEntityClassAvoidRadius(const int _class)
 {
-	switch(_class) 
+	switch(_class)
 	{
-	case ETQW_CLASSEX_DYNAMITE:		
+	case ETQW_CLASSEX_DYNAMITE:
 		return 400.0f;
 	case ETQW_CLASSEX_MINE:
 		return 225.0f;
@@ -542,7 +539,7 @@ void ETQW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
-	}	
+	}
 }
 
 // PathPlannerWaypointInterface

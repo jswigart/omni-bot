@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "gmConfig.h"
 #include "gmSystemLibApp.h"
@@ -42,20 +41,20 @@ GMBIND_FUNCTION_MAP_BEGIN( gmFile )
 	GMBIND_FUNCTION( "ReadByte", gmfReadInt8 )
 	GMBIND_FUNCTION( "ReadFloat", gmfReadFloat )
 	GMBIND_FUNCTION( "ReadString", gmfReadString )
-	GMBIND_FUNCTION( "ReadLine", gmfReadLine )	
+	GMBIND_FUNCTION( "ReadLine", gmfReadLine )
 
-	GMBIND_FUNCTION( "Write", gmfWrite )	
-GMBIND_FUNCTION_MAP_END();
+	GMBIND_FUNCTION( "Write", gmfWrite )
+	GMBIND_FUNCTION_MAP_END();
 
 GMBIND_PROPERTY_MAP_BEGIN( gmFile )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
 
 File *gmFile::Constructor(gmThread *a_thread)
 {
-	File *pNewFile = new File;	
+	File *pNewFile = new File;
 	return pNewFile;
 }
 
@@ -93,7 +92,7 @@ int gmfUnMount(gmThread *a_thread)
 //
 // Parameters:
 //
-//		<string> - Filename to look for.
+//		<std::string> - Filename to look for.
 //
 // Returns:
 //		<int> - True if file exists, False if not.
@@ -125,7 +124,7 @@ static int GM_CDECL gmfFileExists(gmThread * a_thread)
 //
 // Parameters:
 //
-//		<string> - Filename to delete.
+//		<std::string> - Filename to delete.
 //
 // Returns:
 //		<int> - True if success, False if not.
@@ -190,7 +189,7 @@ void ScriptEnumerateCallback(void *data, const char *origdir, const char *str)
 //
 // Parameters:
 //
-//		<string> - Directory to enumerate.
+//		<std::string> - Directory to enumerate.
 //		<function> - Script function to call back.
 //
 // Returns:
@@ -205,7 +204,7 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 	try
 	{
 		fs::path filepath("user/", fs::native);
-		filepath /= fs::path(dir, fs::native);		
+		filepath /= fs::path(dir, fs::native);
 		PHYSFS_enumerateFilesCallback(filepath.string().c_str(), ScriptEnumerateCallback, callback);
 	}
 	catch ( const std::exception & ex )
@@ -225,11 +224,11 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 //
 // Parameters:
 //
-//		<string> - OPTIONAL - relative path to look for file in.
-//		<string> - OPTIONAL - file extension to look for.
+//		<std::string> - OPTIONAL - relative path to look for file in.
+//		<std::string> - OPTIONAL - file extension to look for.
 //
 // Returns:
-//		<string> - File path + name.
+//		<std::string> - File path + name.
 //static int GM_CDECL gmfFindFiles(gmThread * a_thread)
 //{
 //	GM_STRING_PARAM(fileextension, 0, "*.*");
@@ -270,7 +269,7 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 //
 // Parameters:
 //
-//		<string> - Filename to open.
+//		<std::string> - Filename to open.
 //		<int> - OPTIONAL - readonly mode, default true
 //		<int> - OPTIONAL - append mode, default false, only valid for write mode
 //
@@ -457,14 +456,14 @@ int gmFile::gmfFlush(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: GetLastError
-//		Gets a string describing the last error.
+//		Gets a std::string describing the last error.
 //
 // Parameters:
 //
 //		none
 //
 // Returns:
-//		<string> - Last error string.
+//		<std::string> - Last error std::string.
 int gmFile::gmfGetLastError(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
@@ -491,7 +490,7 @@ int gmFile::gmfReadInt32(gmThread *a_thread)
 
 	obuint32 out;
 	if(pNative->ReadInt32(out))
-		a_thread->PushInt(out);	
+		a_thread->PushInt(out);
 	else
 		a_thread->PushNull();
 
@@ -516,7 +515,7 @@ int gmFile::gmfReadInt16(gmThread *a_thread)
 
 	obuint16 out;
 	if(pNative->ReadInt16(out))
-		a_thread->PushInt(out);	
+		a_thread->PushInt(out);
 	else
 		a_thread->PushNull();
 
@@ -541,7 +540,7 @@ int gmFile::gmfReadInt8(gmThread *a_thread)
 
 	obuint8 out;
 	if(pNative->ReadInt8(out))
-		a_thread->PushInt(out);	
+		a_thread->PushInt(out);
 	else
 		a_thread->PushNull();
 
@@ -566,7 +565,7 @@ int gmFile::gmfReadFloat(gmThread *a_thread)
 
 	float out;
 	if(pNative->ReadFloat(out))
-		a_thread->PushFloat(out);	
+		a_thread->PushFloat(out);
 	else
 		a_thread->PushNull();
 
@@ -576,22 +575,22 @@ int gmFile::gmfReadFloat(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: ReadString
-//		Reads a string value from a file.
+//		Reads a std::string value from a file.
 //
 // Parameters:
 //
 //		none
 //
 // Returns:
-//		<string> - String read from file.
+//		<std::string> - std::string read from file.
 int gmFile::gmfReadString(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
-	String out;
+	std::string out;
 	if(pNative->ReadString(out))
-		a_thread->PushNewString(out.c_str());	
+		a_thread->PushNewString(out.c_str());
 	else
 		a_thread->PushNull();
 
@@ -608,15 +607,15 @@ int gmFile::gmfReadString(gmThread *a_thread)
 //		none
 //
 // Returns:
-//		<string> - Line read from file.
+//		<std::string> - Line read from file.
 int gmFile::gmfReadLine(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
-	String out;
+	std::string out;
 	if(pNative->ReadLine(out))
-		a_thread->PushNewString(out.c_str());	
+		a_thread->PushNewString(out.c_str());
 	else
 		a_thread->PushNull();
 
@@ -637,7 +636,7 @@ int gmFile::gmfWrite(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	File *pNative = gmFile::GetThisObject( a_thread );
-	
+
 	int nParams = a_thread->GetNumParams();
 	for(obint32 i = 0; i < nParams; ++i)
 	{
@@ -666,11 +665,11 @@ int gmFile::gmfWrite(gmThread *a_thread)
 				pNative->WriteNewLine();
 				break;
 			}
-			GM_EXCEPTION_MSG("Expected int, float, or string");
+			GM_EXCEPTION_MSG("Expected int, float, or std::string");
 			return GM_EXCEPTION;
 		}
 	}
-	a_thread->PushInt(1);	
+	a_thread->PushInt(1);
 	return GM_OK;
 }
 
@@ -692,7 +691,7 @@ static int GM_CDECL gmfSystemTime(gmThread * a_thread)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-static gmFunctionEntry s_systemLib[] = 
+static gmFunctionEntry s_systemLib[] =
 {
 	{"FileExists", gmfFileExists},
 	{"FileDelete", gmfFileDelete},
@@ -716,4 +715,3 @@ void gmBindSystemLib(gmMachine * a_machine)
 		gmVariable( a_machine->AllocUserObject(0,GM_NEWLINE)));
 	gmFile::Initialise(a_machine, false);
 }
-

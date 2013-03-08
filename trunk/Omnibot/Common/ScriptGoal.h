@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ScriptGoal_H__
-#define __ScriptGoal_H__
+#pragma once
+
+#ifndef __SCRIPTGOAL_H__
+#define __SCRIPTGOAL_H__
 
 #include "StateMachine.h"
 #include "Path.h"
@@ -20,7 +22,7 @@ class gmScriptGoal;
 
 namespace AiState
 {
-	struct MoveOptions 
+	struct MoveOptions
 	{
 		float		Radius;
 		int			ThreadId;
@@ -45,7 +47,7 @@ namespace AiState
 		friend class gmScriptGoal;
 		friend class ScriptGoals;
 
-		enum FunctionCallback 
+		enum FunctionCallback
 		{
 			ON_INIT,
 			ON_SPAWN,
@@ -57,7 +59,7 @@ namespace AiState
 			NUM_CALLBACKS
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -77,7 +79,7 @@ namespace AiState
 		void SetScriptPriority(obReal _p) { m_ScriptPriority = _p; }
 		void SetFinished() { m_Finished = true; }
 
-		bool OnPathThrough(const String &_s);
+		bool OnPathThrough(const std::string &_s);
 		void EndPathThrough();
 
 		gmGCRoot<gmFunctionObject> GetCallback(FunctionCallback cb) { return m_Callbacks[cb]; }
@@ -112,7 +114,7 @@ namespace AiState
 
 		void AutoReleaseWeapon(bool _b) { m_AutoReleaseWpn = _b; }
 		bool AutoReleaseWeapon() { return m_AutoReleaseWpn; }
-		
+
 		void AutoReleaseTracker(bool _b) { m_AutoReleaseTracker = _b; }
 		bool AutoReleaseTracker() { return m_AutoReleaseTracker; }
 
@@ -124,10 +126,10 @@ namespace AiState
 
 		void AutoFinishOnNoUseSlots(bool _b) { m_AutoFinishOnNoUseSlots = _b; }
 		bool AutoFinishOnNoUseSlots() const { return m_AutoFinishOnNoUseSlots; }
-		
+
 		void SkipGetPriorityWhenActive(bool _b) { m_SkipGetPriorityWhenActive = _b; }
 		bool SkipGetPriorityWhenActive() const { return m_SkipGetPriorityWhenActive; }
-		
+
 		bool AddFinishCriteria(const CheckCriteria &_crit);
 		void ClearFinishCriteria(bool _clearpersistent = false);
 
@@ -150,15 +152,15 @@ namespace AiState
 		MapGoal *GetMapGoalPtr() { return m_MapGoal.get(); }
 
 		void SetParentName(const char *_str);
-		String GetParentName() const;
+		std::string GetParentName() const;
 		obuint32 GetParentNameHash() const { return m_ParentNameHash; }
 
 		void SetInsertBeforeName(const char *_str);
-		String GetInsertBeforeName() const;
+		std::string GetInsertBeforeName() const;
 		obuint32 GetInsertBeforeHash() const { return m_InsertBeforeHash; }
 
 		void SetInsertAfterName(const char *_str);
-		String GetInsertAfterName() const;
+		std::string GetInsertAfterName() const;
 		obuint32 GetInsertAfterHash() const { return m_InsertAfterHash; }
 
 		gmUserObject *GetScriptObject(gmMachine *_machine);
@@ -188,7 +190,7 @@ namespace AiState
 		bool MarkInUse(MapGoalPtr _p);
 
 		//////////////////////////////////////////////////////////////////////////
-		void SetProfilerZone(const String &_name);
+		void SetProfilerZone(const std::string &_name);
 
 		ScriptGoal *Clone();
 		ScriptGoal(const char *_name);
@@ -205,18 +207,18 @@ namespace AiState
 		obReal						m_ScriptPriority;
 		obReal						m_MinRadius;
 
-		gmGCRoot<gmFunctionObject>	m_Callbacks[NUM_CALLBACKS];		
+		gmGCRoot<gmFunctionObject>	m_Callbacks[NUM_CALLBACKS];
 		ThreadScoper				m_ActiveThread[NUM_CALLBACKS];
 
 		gmGCRoot<gmStringObject>	m_DebugString;
 
 		obuint32					m_ParentNameHash;
 		obuint32					m_InsertBeforeHash;
-		obuint32					m_InsertAfterHash;		
+		obuint32					m_InsertAfterHash;
 
 		obint32						m_NextGetPriorityUpdate;
 		obint32						m_NextGetPriorityDelay;
-		
+
 		struct WatchEntity
 		{
 			enum { MaxEntities=64 };
@@ -273,8 +275,6 @@ namespace AiState
 
 		ScriptGoal();
 	};
-
 };
 
 #endif
-

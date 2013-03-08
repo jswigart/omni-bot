@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GM_BOT_H__
 #define __GM_BOT_H__
@@ -75,10 +77,10 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Utilities
 	static int gmfToLocalSpace(gmThread *a_thread);
-	static int gmfToWorldSpace(gmThread *a_thread);	
+	static int gmfToWorldSpace(gmThread *a_thread);
 	static int gmfDumpBotTable(gmThread *a_thread);
 	static int gmfDistanceTo(gmThread *a_thread);
-		
+
 	//////////////////////////////////////////////////////////////////////////
 	// Actions
 	static int gmfExecCommand(gmThread *a_thread);
@@ -91,7 +93,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Weapon System Functions
 	static int gmfClearWeapons(gmThread *a_thread);
-	static int gmfFireWeapon(gmThread *a_thread);	
+	static int gmfFireWeapon(gmThread *a_thread);
 	static int gmfGetCurrentWeapon(gmThread *a_thread);
 	static int gmfGetAmmo(gmThread *a_thread);
 	static int gmfHasWeapon(gmThread *a_thread);
@@ -123,7 +125,7 @@ public:
 	// Property Accessors
 	static bool getName( Client *a_native, gmThread *a_thread, gmVariable *a_operands );
 	static bool setName( Client *a_native, gmThread *a_thread, gmVariable *a_operands );
-	
+
 	static bool getMemorySpan( Client *a_native, gmThread *a_thread, gmVariable *a_operands );
 	static bool setMemorySpan( Client *a_native, gmThread *a_thread, gmVariable *a_operands );
 	static bool getAimPersistance( Client *a_native, gmThread *a_thread, gmVariable *a_operands );
@@ -138,4 +140,3 @@ public:
 };
 
 #endif
-

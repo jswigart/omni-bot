@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,25 +9,16 @@
 #include "IGame.h"
 #include "IGameManager.h"
 #include "KeyValueIni.h"
-#include "DebugWindow.h"
 #include "TargetInfo.h"
 #include "BotWeaponSystem.h"
 
 #ifdef WIN32
-#include "windows.h"	
-#endif
-
-#undef DrawText
-
-#if defined WIN32
-#define PATHDELIMITER ";"
-#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
-#define PATHDELIMITER ":"
+#include "windows.h"
 #endif
 
 typedef std::map<obuint32, obuint32> HashIndexMap;
 static HashIndexMap		g_HashIndexMap;
-static String			g_StringRepository;
+static std::string			g_StringRepository;
 
 //////////////////////////////////////////////////////////////////////////
 // turn radius
@@ -38,7 +29,7 @@ namespace Priority
 {
 	const char *AsString(int n)
 	{
-		static const char *str[] = 
+		static const char *str[] =
 		{
 			"Zero",
 			"Min",
@@ -62,16 +53,16 @@ namespace Priority
 
 namespace Utils
 {
-	bool RegexMatch( const char * exp, const char * str ) {		
+	bool RegexMatch( const char * exp, const char * str ) {
 		try
 		{
 			boost::regex expression( exp, REGEX_OPTIONS );
 			return boost::regex_match( str, expression );
 		}
-		catch(const std::exception&e)
+		catch(const std::exception & ex)
 		{
-			_UNUSED(e);
-			OBASSERT(0, e.what());
+			ex;
+			OBASSERT(0, ex.what());
 		}
 		return false;
 	}
@@ -90,25 +81,25 @@ namespace Utils
 
 	obint32 StringCompareNoCase(const char *_s1, const char *_s2)
 	{
-#ifdef __GNUC__ 
+#ifdef __GNUC__
 		return strcasecmp(_s1, _s2);
-#else 
+#else
 		return stricmp(_s1, _s2);
 #endif
 	}
 
-	obint32 StringCompare(const String &_s1, const String &_s2)
+	obint32 StringCompare(const std::string &_s1, const std::string &_s2)
 	{
 		return StringCompare(_s1.c_str(), _s2.c_str());
 	}
-	obint32 StringCompareNoCase(const String &_s1, const String &_s2)
+	obint32 StringCompareNoCase(const std::string &_s1, const std::string &_s2)
 	{
 		return StringCompareNoCase(_s1.c_str(), _s2.c_str());
 	}
 
-	String StringToLower(const String &_s1)
+	std::string StringToLower(const std::string &_s1)
 	{
-		String s = _s1;
+		std::string s = _s1;
 		std::transform(s.begin(), s.end(), s.begin(), toLower());
 		return s;
 	}
@@ -134,7 +125,7 @@ namespace Utils
 		return MakeId32(_st[0], _st[1], _st[2], _st[3]);
 	}
 
-	obuint32 MakeHash32(const String &_str, bool _log /*= true*/)
+	obuint32 MakeHash32(const std::string &_str, bool _log /*= true*/)
 	{
 		if(_str.empty())
 			return 0;
@@ -144,18 +135,18 @@ namespace Utils
 		return Hash32(_str.c_str());
 	}
 
-	String FormatEntityString(GameEntity _e)
+	std::string FormatEntityString(GameEntity _e)
 	{
-		return String(va("%d:%d", _e.GetIndex(), _e.GetSerial()));
+		return std::string(va("%d:%d", _e.GetIndex(), _e.GetSerial()));
 	}
-	String FormatVectorString(const Vector3f &v)
+	std::string FormatVectorString(const Vector3f &v)
 	{
-		return String(va("(%.3f, %.3f, %.3f)",v.x,v.y,v.z));
+		return std::string(va("(%.3f, %.3f, %.3f)",v.x,v.y,v.z));
 	}
 
-	String FormatMatrixString(const Matrix3f &m)
+	std::string FormatMatrixString(const Matrix3f &m)
 	{
-		return String(va("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
+		return std::string(va("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
 			m.GetColumn(0).x,m.GetColumn(0).y,m.GetColumn(0).z,
 			m.GetColumn(1).x,m.GetColumn(1).y,m.GetColumn(1).z,
 			m.GetColumn(2).x,m.GetColumn(2).y,m.GetColumn(2).z));
@@ -170,8 +161,8 @@ namespace Utils
 		const obuint32 FNV1A_32_INIT = ((obuint32)0x811c9dc5);
 
 		const char *s = _name;
-		obuint32 hval = FNV1A_32_INIT;		
-		while (*s) 
+		obuint32 hval = FNV1A_32_INIT;
+		while (*s)
 		{
 			char c = (char)tolower(*s++);
 			hval ^= (obuint32)c;
@@ -189,7 +180,7 @@ namespace Utils
 
 		const char *s = _name;
 		obuint64 hval = FNV1A_64_INIT;
-		while (*s) 
+		while (*s)
 		{
 			char c = (char)tolower(*s++);
 			hval ^= (obuint64)c;
@@ -198,7 +189,7 @@ namespace Utils
 		return hval;
 	}
 
-	void AddHashedString(const String &_str)
+	void AddHashedString(const std::string &_str)
 	{
 		obuint32 hash = Hash32(_str.c_str());
 		HashIndexMap::iterator it = g_HashIndexMap.find(hash);
@@ -210,7 +201,7 @@ namespace Utils
 		}
 	}
 
-	String HashToString(obuint32 _hash)
+	std::string HashToString(obuint32 _hash)
 	{
 		HashIndexMap::iterator it = g_HashIndexMap.find(_hash);
 		if(it != g_HashIndexMap.end())
@@ -220,41 +211,41 @@ namespace Utils
 				return &g_StringRepository[it->second];
 			}
 		}
-		return String(va("%x", _hash));
+		return std::string(va("%x", _hash));
 	}
 
 	bool IsWhiteSpace(const char _ch)
 	{
 		const obuint8 cr = 0x0D;
 		const obuint8 lf = 0x0A;
-		return 
-			_ch == cr || 
+		return
+			_ch == cr ||
 			_ch == lf ||
 			_ch == '\t' ||
 			_ch == '\n' ||
 			_ch == ' ';
 	}
 
-	void Tokenize(const String &_s, const String &_separators, StringVector &_tokens)
+	void Tokenize(const std::string &_s, const std::string &_separators, StringVector &_tokens)
 	{
 		size_t pos_start, pos_end;
 
 		pos_start = _s.find_first_not_of(_separators);
-		if (pos_start == String::npos)
+		if (pos_start == std::string::npos)
 			return;
 
 		pos_end = _s.find_first_of(_separators, pos_start);
-		if (pos_end == String::npos) 
+		if (pos_end == std::string::npos)
 		{
 			_tokens.push_back(_s);
 			return;
 		}
 		_tokens.push_back(_s.substr(pos_start, pos_end - pos_start));
 
-		while ((pos_start = _s.find_first_not_of (_separators, pos_end)) != String::npos) 
+		while ((pos_start = _s.find_first_not_of (_separators, pos_end)) != std::string::npos)
 		{
 			pos_end = _s.find_first_of(_separators, pos_start);
-			if (pos_end == String::npos) {
+			if (pos_end == std::string::npos) {
 				_tokens.push_back(_s.substr (pos_start));
 				return;
 			}
@@ -267,7 +258,7 @@ namespace Utils
 		va_list list;
 		va_start(list, _msg);
 #ifdef WIN32
-		_vsnprintf(_outbuffer, _buffsize, _msg, list);	
+		_vsnprintf(_outbuffer, _buffsize, _msg, list);
 #else
 		vsnprintf(_outbuffer, _buffsize, _msg, list);
 #endif
@@ -292,136 +283,12 @@ namespace Utils
 		va_list list;
 		va_start(list, _msg);
 #ifdef WIN32
-		_vsnprintf(buffer, BufferSize, _msg, list);	
+		_vsnprintf(buffer, BufferSize, _msg, list);
 #else
 		vsnprintf(buffer, BufferSize, _msg, list);
 #endif
 		va_end(list);
 		OutputDebugBasic(_type,buffer);
-	}
-
-	fs::path FindFile(const fs::path &_file)
-	{
-		try
-		{
-			// Look for JUST the file in the current folder first.
-			if(fs::exists(_file.leaf()))
-				return _file.leaf();
-
-			// Look for the file using the full provided path, if it differs from just the filename
-			if((_file.string() != _file.leaf()) && fs::exists(_file))
-				return _file;
-
-			// Look in the system path for the file.
-			StringVector pathList;
-			const char* pPathVariable = getenv("OMNIBOTFOLDER");
-			if(pPathVariable)
-				Utils::Tokenize(pPathVariable, PATHDELIMITER, pathList);
-			pPathVariable = getenv("PATH");
-			if(pPathVariable)
-				Utils::Tokenize(pPathVariable, PATHDELIMITER, pathList);
-				StringVector::const_iterator it = pathList.begin();
-				for( ; it != pathList.end(); ++it)
-				{
-					try
-					{
-						// search for the just the file or the whole path
-						fs::path checkPath = fs::path(*it, fs::native) / fs::path(_file.leaf());
-						if(fs::exists(checkPath) && !fs::is_directory(checkPath))
-							return checkPath;
-
-						if (_file.string() != _file.leaf())
-						{
-							checkPath = fs::path(*it, fs::native) / fs::path(_file);
-							if(fs::exists(checkPath) && !fs::is_directory(checkPath))
-								return checkPath;
-						}
-					}
-					catch(const std::exception & ex)
-					{
-						const char *pErr = ex.what();
-						LOG("Filesystem Exception: " << pErr);
-					}
-				}
-			}
-		catch(const std::exception & ex)
-		{
-			const char *pErr = ex.what();
-			LOG("Filesystem Exception: " << pErr);
-		}
-
-		// Not found, give back an empty path.
-		return fs::path();
-	}
-
-	fs::path GetModFolder()
-	{
-		fs::path navFolder = GetBaseFolder();
-
-		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
-		{
-			// Append the script subfolder
-			navFolder /= fs::path(pGame->GetModSubFolder(), fs::native);
-			return navFolder;
-		}
-
-		return fs::path();
-	}
-
-	fs::path GetNavFolder()
-	{
-		fs::path navFolder = GetBaseFolder();
-
-		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
-		{
-			// Append the script subfolder
-			navFolder /= fs::path(pGame->GetNavSubfolder(), fs::native);
-			return navFolder;
-		}
-
-		return fs::path();
-	}
-
-	fs::path GetScriptFolder()
-	{
-		fs::path scriptFolder = GetBaseFolder();
-
-		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
-		{
-			// Append the script subfolder
-			scriptFolder /= fs::path(pGame->GetScriptSubfolder(), fs::native);
-			return scriptFolder;
-		}
-
-		return fs::path();
-	}
-
-	fs::path GetBaseFolder()
-	{
-		fs::path basePath;
-
-		// First try to get a path from the game.
-		const char *pPathOverride = g_EngineFuncs->GetBotPath();
-		try
-		{
-			fs::path pathOverride(pPathOverride, fs::native);
-			if(fs::exists(pathOverride) && !fs::is_directory(pathOverride))
-			{
-				basePath = fs::path(pPathOverride, fs::native);
-				basePath = basePath.branch_path();
-			}
-
-			if(basePath.empty())
-			{
-				basePath = Utils::FindFile(pathOverride.leaf());
-				basePath = basePath.branch_path();
-			}
-		}
-		catch(const std::exception & ex)
-		{
-			LOG("Bad Override Path: " << ex.what());
-		}
-		return basePath;
 	}
 
 	int GetLocalGameId()
@@ -445,7 +312,7 @@ namespace Utils
 		Vector3f vPos;
 		if(GetLocalEyePosition(vPos))
 		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f, 
+			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False);
 
 			if(tr.m_Fraction < 1.f)
@@ -463,7 +330,7 @@ namespace Utils
 		Vector3f vPos;
 		if(GetLocalEyePosition(vPos))
 		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f, 
+			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False);
 
 			if(tr.m_Fraction < 1.f)
@@ -502,10 +369,10 @@ namespace Utils
 		obTraceResult tr;
 		Vector3f vNewStart, vPos, vFace;
 		if(GetLocalEyePosition(vPos) &&
-			GetLocalFacing(vFace) && 
+			GetLocalFacing(vFace) &&
 			GetNearestNonSolid(vNewStart, vPos, vPos + vFace * 4096.f, _tracemask))
 		{
-			EngineFuncs::TraceLine(tr, vNewStart, vNewStart + vFace * 4096.f, 
+			EngineFuncs::TraceLine(tr, vNewStart, vNewStart + vFace * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False);
 
 			if(tr.m_Fraction < 1.f)
@@ -534,7 +401,7 @@ namespace Utils
 		const float fStepSize = 32.f;
 		while(fLength > 0.f)
 		{
-			EngineFuncs::TraceLine(tr, vStart, vEnd, 
+			EngineFuncs::TraceLine(tr, vStart, vEnd,
 				NULL, _tracemask, GetLocalGameId(), False);
 
 			if(!tr.m_StartSolid)
@@ -549,9 +416,9 @@ namespace Utils
 		return false;
 	}
 
-	String FormatByteString(obuint64 _bytes)
+	std::string FormatByteString(obuint64 _bytes)
 	{
-		const char * byteUnits[] = 
+		const char * byteUnits[] =
 		{
 			" bytes",
 			" KB",
@@ -576,142 +443,6 @@ namespace Utils
 		return str.str();
 	}
 
-	void DrawLine(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time)
-	{
-		/*if(!g_EngineFuncs->DebugLine(_start, _end, _color, _time))
-			InterProcess::DrawLine(_start, _end, _color, _time);*/
-	}
-
-	void DrawArrow(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time)
-	{
-		/*if(!g_EngineFuncs->DebugArrow(_start, _end, _color, _time))
-			InterProcess::DrawLine(_start, _end, _color, _time);*/
-	}
-
-	void DrawLine(const Vector3List &_list, obColor _color, float _time, float _vertheight, obColor _vertcolor, bool _closed)
-	{
-		if(_list.size()>1)
-		{
-			if(_vertheight > 0.f)
-				DrawLine(_list[0], _list[0] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
-			for(obuint32 i = 1; i < _list.size(); ++i)
-			{
-				Utils::DrawLine(_list[i-1], _list[i], _color, _time);
-
-				if(_vertheight > 0.f)
-					DrawLine(_list[i], _list[i] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
-			}
-			if(_closed)
-				DrawLine(_list.back(), _list.front(), _color, _time);
-		}
-	}
-
-	void DrawLine(const Vector3List &_vertices, const IndexList &_indices, obColor _color, float _time, float _vertheight, obColor _vertcolor, bool _closed)
-	{
-		if(_indices.size()>1)
-		{
-			if(_vertheight > 0.f)
-				DrawLine(_vertices[_indices[0]], _vertices[_indices[0]] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
-			for(obuint32 i = 1; i < _indices.size(); ++i)
-			{
-				Utils::DrawLine(_vertices[_indices[i-1]], _vertices[_indices[i]], _color, _time);
-
-				if(_vertheight > 0.f)
-					DrawLine(_vertices[_indices[i]], _vertices[_indices[i]] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
-			}
-			if(_closed)
-				DrawLine(_vertices[_indices.front()], _vertices[_indices.back()], _color, _time);
-		}
-	}
-
-	void DrawRadius(const Vector3f &_pos, float _radius, obColor _color, float _time)
-	{
-		/*if(!g_EngineFuncs->DebugRadius(_pos, _radius, _color, _time))
-			InterProcess::DrawRadius(_pos, _radius, _color, _time);*/
-	}
-
-	/*bool IsPolygonConvex( const Vector3List & poly )
-	{
-		if ( poly.size() > 1 )
-		{
-			Vector3 edge0 = poly[ 1 ] - poly[ 0 ];
-
-			size_t ( i = 2; i < poly.size(); ++i )
-			{
-				Vector3 edge1 = poly[ i ] - poly[ i-1 ];
-				if ( edge0.Cross( edge1 ).z < 0.0 )
-					return false;
-			}
-		}
-		return false;
-	}*/
-
-	//void PolygonPartition( const Vector3List & _poly, std::vector<Vector3List> & polysOut )
-	//{
-	//	if ( IsPolygonConvex( _poly ) )
-	//	{
-	//		polysOut.push_back( _poly );
-	//		return;
-	//	}
-	//	
-	//	// test if its convex
-	//	if ( poly.size() > 1 )
-	//	{
-	//		Vector3 edge0 = poly[ 0 ] - poly[ poly.size()-1 ];
-
-	//		bool isConvex = true;
-	//		size_t ( i = 1; i < poly.size(); ++i )
-	//		{
-	//			Vector3 edge1 = poly[ i ] - poly[ i-1 ];
-	//			if ( edge0.Cross( edge1 ).z < 0.0 )
-	//			{
-	//				isConvex = false;
-	//			}
-	//		}
-	//		
-	//		if ( isConvex == false )
-	//		{
-	//			float nearestDist = std::numeric_limits<float>::max();
-	//			std::pair<int,int> vertPair;
-
-	//			// find the pair with the nearest verts to use as a split point
-	//			size_t ( i = 0; i < poly.size(); ++j )
-	//			{
-	//				size_t ( j = 0; j < poly.size(); ++j )
-	//				{
-	//					// we can't pick neighboring verts
-	//					// they are already connected
-	//					if ( i == j || (i==0 && j==poly.size()-1) || (j==0 && i==poly.size()-1) || (abs( i-j ) == 1) )
-	//						continue;
-
-	//					const float dsq = ( poly[ i ] - poly[ j ] ).SquaredLength();
-	//					if ( dsq < nearestDist )
-	//					{
-	//						vertPair = std::make_pair(i,j);
-	//						nearestDist = dsq;
-	//					}
-	//				}
-	//			}
-
-	//			
-	//		}
-	//	}
-	//}
-
-	void DrawPolygon(const Vector3List &_vertices, obColor _color, float _time, bool depthTest)
-	{
-		if(_vertices.empty())
-			return;
-
-		int flags = 0;
-
-		if(depthTest)
-			flags|=IEngineInterface::DR_NODEPTHTEST;
-
-		/*if(!g_EngineFuncs->DebugPolygon((obVec3*)&_vertices[0], (int)_vertices.size(), _color, _time, flags))
-			InterProcess::DrawPolygon(_vertices, _color, _time);*/
-	}
-
 	void GetAABBBoundary(const AABB &_aabb, Vector3List &_list)
 	{
 		Vector3f vVertex[8] = { Vector3f::ZERO };
@@ -732,115 +463,12 @@ namespace Utils
 		_list.push_back(vVertex[3]);
 	}
 
-	void OutlineAABB(const AABB &_aabb, const obColor &_color, float _time, AABB::Direction _dir/* = AABB::DIR_ALL*/)
-	{
-		if(g_EngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
-		{
-			if(_dir == AABB::DIR_ALL)
-			{
-				g_EngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,_time);
-				return;
-			}
-
-			Vector3f vVertex[8] = { Vector3f::ZERO };
-
-			vVertex[0] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-			vVertex[1] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-			vVertex[2] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
-			vVertex[3] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
-
-			vVertex[4] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-			vVertex[5] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-			vVertex[6] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
-			vVertex[7] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
-
-			// Top
-			if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
-			{
-				Utils::DrawLine(vVertex[4], vVertex[5], _color, _time);
-				Utils::DrawLine(vVertex[5], vVertex[6], _color, _time);
-				Utils::DrawLine(vVertex[6], vVertex[7], _color, _time);
-				Utils::DrawLine(vVertex[7], vVertex[4], _color, _time);
-			}		
-
-			// Bottom
-			if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
-			{
-				Utils::DrawLine(vVertex[0], vVertex[1], _color, _time);
-				Utils::DrawLine(vVertex[1], vVertex[2], _color, _time);
-				Utils::DrawLine(vVertex[2], vVertex[3], _color, _time);
-				Utils::DrawLine(vVertex[3], vVertex[0], _color, _time);
-			}
-
-			// Sides
-			if(_dir == AABB::DIR_ALL)
-			{
-				Utils::DrawLine(vVertex[4], vVertex[0], _color, _time);
-				Utils::DrawLine(vVertex[5], vVertex[1], _color, _time);
-				Utils::DrawLine(vVertex[6], vVertex[2], _color, _time);
-				Utils::DrawLine(vVertex[7], vVertex[3], _color, _time);
-			}
-		}
-		/*else
-			InterProcess::DrawBounds(_aabb, _color, _time, _dir);*/
-	}
-
-	void OutlineOBB(const Box3f &_obb, const obColor &_color, float _time, AABB::Direction _dir)
-	{
-		Vector3f vertices[8];
-		_obb.ComputeVertices(vertices);
-
-		// bottom
-		if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
-		{
-			Utils::DrawLine(vertices[0], vertices[1], _color, _time);
-			Utils::DrawLine(vertices[1], vertices[2], _color, _time);
-			Utils::DrawLine(vertices[2], vertices[3], _color, _time);
-			Utils::DrawLine(vertices[3], vertices[0], _color, _time);
-		}
-
-		// top
-		if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
-		{
-			Utils::DrawLine(vertices[4], vertices[5], _color, _time);
-			Utils::DrawLine(vertices[5], vertices[6], _color, _time);
-			Utils::DrawLine(vertices[6], vertices[7], _color, _time);
-			Utils::DrawLine(vertices[7], vertices[4], _color, _time);
-		}		
-
-		//verts
-		if(_dir == AABB::DIR_ALL)
-		{
-			Utils::DrawLine(vertices[0], vertices[4], _color, _time);
-			Utils::DrawLine(vertices[1], vertices[5], _color, _time);
-			Utils::DrawLine(vertices[2], vertices[6], _color, _time);
-			Utils::DrawLine(vertices[3], vertices[7], _color, _time);
-		}
-	}
-
-	void PrintText(const Vector3f &_pos, obColor _color, float _duration, const char *_msg, ...)
-	{
-		const int iBufferSize = 2048;
-		char buffer[iBufferSize] = {0};
-		va_list list;
-		va_start(list, _msg);
-#ifdef WIN32
-		_vsnprintf(buffer, iBufferSize, _msg, list);	
-#else
-		vsnprintf(buffer, iBufferSize, _msg, list);
-#endif
-		va_end(list);
-
-		/*if(!g_EngineFuncs->PrintScreenText(_pos, _duration, _color, buffer))
-			InterProcess::DrawText(_pos, buffer, _color, _duration);*/
-	}
-
 	const char *FindClassName(obint32 _classId)
 	{
 		return IGameManager::GetInstance()->GetGame()->FindClassName(_classId);
 	}
 
-	obint32 GetRoleMask(const String &_name)
+	obint32 GetRoleMask(const std::string &_name)
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		gmTableObject *pTbl = pMachine->GetGlobals()->Get(pMachine,"Role").GetTableObjectSafe();
@@ -928,7 +556,7 @@ namespace Utils
 	Vector3f PredictFuturePositionOfTarget(
 		const Vector3f &_mypos,
 		float _projspeed,
-		const Vector3f &_tgpos, 
+		const Vector3f &_tgpos,
 		const Vector3f &_tgvel)
 	{
 		//if the target is ahead and facing the agent shoot at its current pos
@@ -944,7 +572,7 @@ namespace Utils
 	}
 
 	Vector3f PredictFuturePositionOfTarget(
-		const Vector3f &_mypos, 
+		const Vector3f &_mypos,
 		float _projspeed,
 		const TargetInfo &_tg,
 		const Vector3f &_extravelocity,
@@ -972,8 +600,8 @@ namespace Utils
 		//{
 		//	//vPredictedPos.z -= _tg.m_LastVelocity.z + IGame::GetGravity() * fLookAheadTime;
 		//	vPredictedPos.z = Trajectory::HeightForTrajectory(
-		//		vPredictedPos, 
-		//		_tg.m_LastVelocity.z, 
+		//		vPredictedPos,
+		//		_tg.m_LastVelocity.z,
 		//		IGame::GetGravity(),
 		//		fLookAheadTime);
 		//}
@@ -1003,16 +631,16 @@ namespace Utils
 		return vAvg;
 	}
 
-	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2) 
-	{ 
+	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2)
+	{
 		Vector3f dv = aV1 - aV2;
-		float dv2 = dv.Dot(dv); 
+		float dv2 = dv.Dot(dv);
 		if(dv2 < Mathf::EPSILON)
-			return 0.0; 
-		return -(aP1 - aP2).Dot(dv) / dv2; 
+			return 0.0;
+		return -(aP1 - aP2).Dot(dv) / dv2;
 	}
 
-	void StringTrimCharacters(String &_out, const String &_trim)
+	void StringTrimCharacters(std::string &_out, const std::string &_trim)
 	{
 		obuint32 i;
 		for(obuint32 t = 0; t < _trim.size(); ++t)
@@ -1022,12 +650,12 @@ namespace Utils
 		}
 	}
 
-	bool StringToTrue(const String &_str)
+	bool StringToTrue(const std::string &_str)
 	{
 		return (_str == "1" || _str == "on" || _str == "true");
 	}
 
-	bool StringToFalse(const String &_str)
+	bool StringToFalse(const std::string &_str)
 	{
 		return (_str == "0" || _str == "off" || _str == "false");
 	}
@@ -1041,15 +669,15 @@ namespace Utils
 			va_list list;
 			va_start(list, _msg);
 #ifdef WIN32
-			_vsnprintf(buffer, BufferSize, _msg, list);	
+			_vsnprintf(buffer, BufferSize, _msg, list);
 #else
 			vsnprintf(buffer, BufferSize, _msg, list);
 #endif
 			va_end(list);
 
-#ifdef WIN32			
+#ifdef WIN32
 			char strBigBuffer[BufferSize] = {};
-			sprintf(strBigBuffer, "Assertion: %s\n%s\n%s : %d\nAbort to break\nRetry to continue\nIgnore to ignore this assert", 
+			sprintf(strBigBuffer, "Assertion: %s\n%s\n%s : %d\nAbort to break\nRetry to continue\nIgnore to ignore this assert",
 				_exp, buffer, _file, _line);
 			int iRes = MessageBox(NULL, strBigBuffer, "Omni-bot: Assertion Failed", MB_ABORTRETRYIGNORE | MB_ICONWARNING);
 			if(iRes == IDABORT)
@@ -1073,18 +701,18 @@ namespace Utils
 			va_list list;
 			va_start(list, _msg);
 #ifdef WIN32
-			_vsnprintf(buffer, BufferSize, _msg, list);	
+			_vsnprintf(buffer, BufferSize, _msg, list);
 #else
 			vsnprintf(buffer, BufferSize, _msg, list);
 #endif
 			va_end(list);
 
 			char strBigBuffer[BufferSize] = {};
-			sprintf(strBigBuffer, "--------------------\nAssertion: %s\n%s\n%s : %d\n--------------------\n", 
+			sprintf(strBigBuffer, "--------------------\nAssertion: %s\n%s\n%s : %d\n--------------------\n",
 				_exp, buffer, _file, _line);
 			/*int iRes = MessageBox(NULL, strBigBuffer, "Omni-bot: Assertion Failed", MB_ABORTRETRYIGNORE | MB_ICONWARNING);
 			if(iRes == IDABORT)
-			DebugBreak();*/			
+			DebugBreak();*/
 #ifdef _WIN32
 			OutputDebugString(strBigBuffer);
 			return _mode != FireOnce;
@@ -1096,11 +724,11 @@ namespace Utils
 		return true;
 	}
 
-	String FindOpenPlayerName()
+	std::string FindOpenPlayerName()
 	{
 		// FIX THIS! CHECK WITH ENGINE
 		static int nextIndex = 0;
-		return String(va("OmniBot[%i]", nextIndex++));
+		return std::string(va("OmniBot[%i]", nextIndex++));
 	}
 
 	bool TestSegmentForOcclusion(const Segment3f &seg)
@@ -1119,13 +747,13 @@ namespace Utils
 	{
 		static float DotThreshold = -0.98f;
 		//static float DistanceThreshold = 8.f;
-		
+
 		// TODO: move these out.
 		static float MinOverlapWidth = 10.f;
 		static float MaxStepHeight = 20.f;
 		static float MaxDropHeight = 32.f;
 
-		static float MaxHorizontalDist = 32.f;		
+		static float MaxHorizontalDist = 32.f;
 
 		// make sure the direction is proper
 		const float fDot = _seg1.Direction.Dot(_seg2.Direction);
@@ -1166,7 +794,7 @@ namespace Utils
 		}
 		else
 			OBASSERT(0,"Unexpected");
-		
+
 		fT = ClosestPtOnLine_Unclamped(_seg1.GetNegEnd(),_seg1.GetPosEnd(),_seg2.GetPosEnd(),cp);
 		if(fT < 0.f)
 		{
@@ -1182,26 +810,26 @@ namespace Utils
 		/*fT = ClosestPtOnLine_Unclamped(_seg2.GetPosEnd(),_seg2.GetNegEnd(),_seg1.GetPosEnd(),cp);
 		if(fT > 1.f)
 		{
-			vMax = _seg1.GetPosEnd();
+		vMax = _seg1.GetPosEnd();
 		}
 		else if(fT > 0.f)
 		{
-			vMax = _seg2.GetNegEnd();
+		vMax = _seg2.GetNegEnd();
 		}
 		else
-			OBASSERT(0,"Unexpected");
+		OBASSERT(0,"Unexpected");
 
 		fT = ClosestPtOnLine_Unclamped(_seg2.GetPosEnd(),_seg2.GetNegEnd(),_seg1.GetPosEnd(),cp);
 		if(fT < 0.f)
 		{
-			vMin = _seg2.GetNegEnd();
+		vMin = _seg2.GetNegEnd();
 		}
 		else if(fT < 1.f)
 		{
-			vMin = _seg1.GetPosEnd();
+		vMin = _seg1.GetPosEnd();
 		}
 		else
-			OBASSERT(0,"Unexpected");*/
+		OBASSERT(0,"Unexpected");*/
 		//////////////////////////////////////////////////////////////////////////
 
 		out = MakeSegment(vMin,vMax);
@@ -1210,37 +838,36 @@ namespace Utils
 			return false;
 
 		/*Vector3f cp;
-		
-		const fT1p = Utils::ClosestPtOnLine(
-			_seg2.GetPosEnd(),
-			_seg2.GetNegEnd(),
-			_seg1.GetPosEnd(),
-			cp);
-		const fT1e = Utils::ClosestPtOnLine(
-			_seg2.GetPosEnd(),
-			_seg2.GetNegEnd(),
-			_seg1.GetNegEnd(),
-			cp);
-		const fT2p = Utils::ClosestPtOnLine(
-			_seg1.GetPosEnd(),
-			_seg1.GetNegEnd(),
-			_seg2.GetPosEnd(),
-			cp);
-		const fT2e = Utils::ClosestPtOnLine(
-			_seg1.GetPosEnd(),
-			_seg1.GetNegEnd(),
-			_seg2.GetNegEnd(),
-			cp);*/
 
+		const fT1p = Utils::ClosestPtOnLine(
+		_seg2.GetPosEnd(),
+		_seg2.GetNegEnd(),
+		_seg1.GetPosEnd(),
+		cp);
+		const fT1e = Utils::ClosestPtOnLine(
+		_seg2.GetPosEnd(),
+		_seg2.GetNegEnd(),
+		_seg1.GetNegEnd(),
+		cp);
+		const fT2p = Utils::ClosestPtOnLine(
+		_seg1.GetPosEnd(),
+		_seg1.GetNegEnd(),
+		_seg2.GetPosEnd(),
+		cp);
+		const fT2e = Utils::ClosestPtOnLine(
+		_seg1.GetPosEnd(),
+		_seg1.GetNegEnd(),
+		_seg2.GetNegEnd(),
+		cp);*/
 
 		return true;
 	}
 
-	float ClosestPtOnLine(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp) 
-	{ 
-		Vector3f norm = p2 - p1; 
+	float ClosestPtOnLine(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp)
+	{
+		Vector3f norm = p2 - p1;
 		float len = norm.Normalize();
-		float t = norm.Dot(p - p1); 
+		float t = norm.Dot(p - p1);
 		if(t <= 0.f || len <= Mathf::EPSILON)
 		{
 			t = 0.f;
@@ -1259,14 +886,14 @@ namespace Utils
 		return t;
 	}
 
-	float ClosestPtOnLine_Unclamped(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp) 
-	{ 
-		Vector3f norm = p2 - p1; 
+	float ClosestPtOnLine_Unclamped(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp)
+	{
+		Vector3f norm = p2 - p1;
 		float len = norm.Normalize();
-		float t = norm.Dot(p - p1); 
-				
+		float t = norm.Dot(p - p1);
+
 		cp = p1 + norm * t;
-		t /= len;		
+		t /= len;
 		return t;
 	}
 
@@ -1286,7 +913,7 @@ namespace Utils
 		Vector3f vClosestPt, vPtOnLine;
 		float fClosestDist = Utils::FloatMax;
 		for(obuint32 v = 0; v < list.size()-1; ++v)
-		{			
+		{
 			Utils::ClosestPtOnLine(list[v], list[v+1],pos,vPtOnLine);
 
 			float fDist = SquaredLength(pos,vPtOnLine);
@@ -1311,7 +938,6 @@ namespace Utils
 		cp =  vClosestPt;
 		return true;
 	}
-
 
 	Vector3List CreatePolygon(const Vector3f &_pos, const Vector3f &_normal, float _size)
 	{
@@ -1450,14 +1076,14 @@ namespace Utils
 		}
 		return 0;
 	}
-	
-	inline float dot(const Vector3f &u,const Vector3f &v) 
+
+	inline float dot(const Vector3f &u,const Vector3f &v)
 	{
-		return ((u).x * (v).x + (u).y * (v).y + (u).z * (v).z); 
+		return ((u).x * (v).x + (u).y * (v).y + (u).z * (v).z);
 	}
-	inline float perp(const Vector3f &u,const Vector3f &v) 
+	inline float perp(const Vector3f &u,const Vector3f &v)
 	{
-		return ((u).x * (v).y - (u).y * (v).x); 
+		return ((u).x * (v).y - (u).y * (v).x);
 	}
 	// intersect2D_2Segments(): the intersection of 2 finite 2D segments
 	//    Input:  two finite segments S1 and S2
@@ -1476,7 +1102,7 @@ namespace Utils
 		// test if they are parallel (includes either being a point)
 		if (fabs(D) < Mathf::EPSILON)
 		{          // S1 and S2 are parallel
-			if (perp(u,w) != 0 || perp(v,w) != 0) 
+			if (perp(u,w) != 0 || perp(v,w) != 0)
 			{
 				return 0;                   // they are NOT collinear
 			}
@@ -1491,14 +1117,14 @@ namespace Utils
 				*I0 = S1.GetNegEnd();                // they are the same point
 				return 1;
 			}
-			if (du==0) 
+			if (du==0)
 			{                    // S1 is a single point
 				if (inSegment(S1.GetNegEnd(), S2) == 0)  // but is not in S2
 					return 0;
 				*I0 = S1.GetNegEnd();
 				return 1;
 			}
-			if (dv==0) 
+			if (dv==0)
 			{                    // S2 a single point
 				if (inSegment(S2.GetNegEnd(), S1) == 0)  // but is not in S1
 					return 0;
@@ -1508,27 +1134,27 @@ namespace Utils
 			// they are collinear segments - get overlap (or not)
 			float t0, t1;                   // endpoints of S1 in eqn for S2
 			Vector3f w2 = S1.GetPosEnd() - S2.GetNegEnd();
-			if (v.x != 0) 
+			if (v.x != 0)
 			{
 				t0 = w.x / v.x;
 				t1 = w2.x / v.x;
 			}
-			else 
+			else
 			{
 				t0 = w.y / v.y;
 				t1 = w2.y / v.y;
 			}
-			if (t0 > t1) 
+			if (t0 > t1)
 			{                  // must have t0 smaller than t1
 				float t=t0; t0=t1; t1=t;    // swap if not
 			}
-			if (t0 > 1 || t1 < 0) 
+			if (t0 > 1 || t1 < 0)
 			{
 				return 0;     // NO overlap
 			}
 			t0 = t0<0? 0 : t0;              // clip to min 0
 			t1 = t1>1? 1 : t1;              // clip to max 1
-			if (t0 == t1) 
+			if (t0 == t1)
 			{                 // intersect is a point
 				*I0 = S2.GetNegEnd() + t0 * v;
 				return 1;
@@ -1550,9 +1176,9 @@ namespace Utils
 
 		// get the intersect parameter for S2
 		float     tI = perp(u,w) / D;
-		
+
 		// no intersect with S2
-		if (tI < 0.f) 
+		if (tI < 0.f)
 		{
 			*I0 = S2.GetNegEnd();
 			return 1;
@@ -1566,7 +1192,6 @@ namespace Utils
 		*I0 = S1.GetNegEnd() + sI * u;               // compute S1 intersect point
 		return 1;
 	}
-
 
 	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud)
 	{
@@ -1599,7 +1224,7 @@ namespace Utils
 					pTbl->Set(_machine, i, gmVariable(bud.Get4ByteFlags()[i]));
 				return gmVariable(pTbl);
 			}
-		case obUserData::dt3_Strings: 
+		case obUserData::dt3_Strings:
 			{
 				gmTableObject *pTbl = _machine->AllocTableObject();
 				for(int i = 0; i < 3; ++i)
@@ -1633,7 +1258,7 @@ va::va(const char* msg, ...)
 	va_list list;
 	va_start(list, msg);
 #ifdef WIN32
-	_vsnprintf(buffer, BufferSize, msg, list);	
+	_vsnprintf(buffer, BufferSize, msg, list);
 #else
 	vsnprintf(buffer, BufferSize, msg, list);
 #endif
@@ -1652,7 +1277,7 @@ filePath::filePath(const char* msg, ...)
 	va_list list;
 	va_start(list, msg);
 #ifdef WIN32
-	_vsnprintf(buffer, BufferSize, msg, list);	
+	_vsnprintf(buffer, BufferSize, msg, list);
 #else
 	vsnprintf(buffer, BufferSize, msg, list);
 #endif
@@ -1660,7 +1285,7 @@ filePath::filePath(const char* msg, ...)
 	FixPath();
 }
 
-String filePath::FileName() const
+std::string filePath::FileName() const
 {
 	const char * fileName = buffer;
 	const char *pC = buffer;
@@ -1699,7 +1324,7 @@ std::ostream& operator <<(std::ostream& _o, const filePath& _filePath) {
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PropertyMap::AddProperty(const String &_name, const String &_data)
+bool PropertyMap::AddProperty(const std::string &_name, const std::string &_data)
 {
 	if(_name.empty())
 	{
@@ -1722,17 +1347,17 @@ bool PropertyMap::AddProperty(const String &_name, const String &_data)
 	return true;
 }
 
-void PropertyMap::DelProperty(const String &_name)
+void PropertyMap::DelProperty(const std::string &_name)
 {
 	ValueMap::iterator iter = m_Properties.find(_name);
 	if(iter != m_Properties.end())
 		m_Properties.erase(iter);
 }
 
-String PropertyMap::GetProperty(const String &_name) const
+std::string PropertyMap::GetProperty(const std::string &_name) const
 {
 	ValueMap::const_iterator iter = m_Properties.find(_name);
-	return (iter != m_Properties.end()) ? iter->second : String();
+	return (iter != m_Properties.end()) ? iter->second : std::string();
 }
 
 void PropertyMap::GetAsKeyVal(KeyVals &kv)
@@ -1753,7 +1378,7 @@ std::ostream& operator <<(std::ostream& _o, const obUserData_t& _bud)
 		_o << "dtNone";
 		break;
 	case obUserData_t::dtVector:
-		_o << "dtVector, " << 
+		_o << "dtVector, " <<
 			_bud.udata.m_Vector[0] <<  ", " <<
 			_bud.udata.m_Vector[1] <<  ", " <<
 			_bud.udata.m_Vector[2];
@@ -1846,14 +1471,14 @@ void Options::Shutdown()
 	}
 }
 
-bool Options::LoadConfigFile(const String &_file)
+bool Options::LoadConfigFile(const std::string &_file)
 {
 	obuint32 NumSections = 0;
 
 	File f;
 	if(f.OpenForRead(_file.c_str(),File::Text))
 	{
-		String contents;
+		std::string contents;
 		const obuint64 FileSize = f.ReadWholeFile(contents);
 		if(FileSize)
 		{
@@ -1870,7 +1495,7 @@ bool Options::LoadConfigFile(const String &_file)
 	return false;
 }
 
-bool Options::SaveConfigFile(const String &_file)
+bool Options::SaveConfigFile(const std::string &_file)
 {
 	if(FileOptions)
 	{
@@ -1890,7 +1515,7 @@ bool Options::SaveConfigFile(const String &_file)
 	return false;
 }
 
-bool Options::SaveConfigFileIfChanged(const String &_file) 
+bool Options::SaveConfigFileIfChanged(const std::string &_file)
 {
 	if(OptionsChanged)
 	{
@@ -1898,7 +1523,6 @@ bool Options::SaveConfigFileIfChanged(const String &_file)
 		return SaveConfigFile(_file);
 	}
 	return false;
-
 }
 
 const char *Options::GetRawValue(const char *_section, const char *_key)
@@ -1934,7 +1558,7 @@ bool Options::GetValue(const char *_section, const char *_key, bool &_out)
 bool Options::GetValue(const char *_section, const char *_key, int &_out)
 {
 	const char *Value = GetRawValue(_section,_key);
-	if(Value && Utils::ConvertString(String(Value),_out))
+	if(Value && Utils::ConvertString(std::string(Value),_out))
 	{
 		return true;
 	}
@@ -1944,14 +1568,14 @@ bool Options::GetValue(const char *_section, const char *_key, int &_out)
 bool Options::GetValue(const char *_section, const char *_key, float &_out)
 {
 	const char *Value = GetRawValue(_section,_key);
-	if(Value && Utils::ConvertString(String(Value),_out))
+	if(Value && Utils::ConvertString(std::string(Value),_out))
 	{
 		return true;
 	}
 	return false;
 }
 
-bool Options::GetValue(const char *_section, const char *_key, String &_out)
+bool Options::GetValue(const char *_section, const char *_key, std::string &_out)
 {
 	const char *Value = GetRawValue(_section,_key);
 	if(Value)
@@ -1964,13 +1588,13 @@ bool Options::GetValue(const char *_section, const char *_key, String &_out)
 
 bool Options::SetValue(const char *_section, const char *_key, bool _val, bool _overwrite)
 {
-	String sVal = _val?"true":"false";
+	std::string sVal = _val?"true":"false";
 	return SetValue(_section,_key,sVal,_overwrite);
 }
 
 bool Options::SetValue(const char *_section, const char *_key, int _val, bool _overwrite)
 {
-	String s;
+	std::string s;
 	if(Utils::ConvertString(_val,s))
 		return SetValue(_section,_key,s,_overwrite);
 	return false;
@@ -1978,7 +1602,7 @@ bool Options::SetValue(const char *_section, const char *_key, int _val, bool _o
 
 bool Options::SetValue(const char *_section, const char *_key, float _val, bool _overwrite)
 {
-	String s;
+	std::string s;
 	if(Utils::ConvertString(_val,s))
 		return SetValue(_section,_key,s,_overwrite);
 	return false;
@@ -1986,10 +1610,10 @@ bool Options::SetValue(const char *_section, const char *_key, float _val, bool 
 
 bool Options::SetValue(const char *_section, const char *_key, const char *_val, bool _overwrite)
 {
-	return SetValue(_section,_key,String(_val),_overwrite);
+	return SetValue(_section,_key,std::string(_val),_overwrite);
 }
 
-bool Options::SetValue(const char *_section, const char *_key, const String &_val, bool _overwrite)
+bool Options::SetValue(const char *_section, const char *_key, const std::string &_val, bool _overwrite)
 {
 	if(!FileOptions)
 		FileOptions = createKeyValueIni();
@@ -2034,12 +1658,12 @@ bool Utils::ClassExists(obint32 _class)
 	return false;
 }
 
-String Utils::GetTeamString(obint32 _team)
+std::string Utils::GetTeamString(obint32 _team)
 {
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
 	gmTableObject *pTeams = pM->GetGlobals()->Get(pM,"TEAM").GetTableObjectSafe();
 
-	String sOut;
+	std::string sOut;
 
 	bool bAllTeams = true;
 	bool bNoTeams = true;
@@ -2059,7 +1683,7 @@ String Utils::GetTeamString(obint32 _team)
 			}
 			else
 				bAllTeams = false;
-		}		
+		}
 		pNode = pTeams->GetNext(tit);
 	}
 
@@ -2071,11 +1695,11 @@ String Utils::GetTeamString(obint32 _team)
 	return sOut;
 }
 
-String Utils::GetClassString(obint32 _class)
+std::string Utils::GetClassString(obint32 _class)
 {
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 
-	String sOut;
+	std::string sOut;
 	bool bAllClasses = true;
 
 	// append all effecting classes
@@ -2112,7 +1736,6 @@ void Utils::KeyValsToTable(const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmM
 				);
 		}
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2141,7 +1764,7 @@ int LimitChecker::FromScript(gmThread *a_thread)
 			Get().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 bool LimitWeapons::IsAllowed(Client *_client)
@@ -2184,28 +1807,28 @@ void ErrorObj::AddInfo(const char* _msg, ...)
 	va_list list;
 	va_start(list, _msg);
 #ifdef WIN32
-	_vsnprintf(buffer, 8192, _msg, list);	
+	_vsnprintf(buffer, 8192, _msg, list);
 #else
 	vsnprintf(buffer, 8192, _msg, list);
 #endif
 	va_end(list);
 
-	mInfo.push_back(buffer); 
+	mInfo.push_back(buffer);
 }
 
-void ErrorObj::AddError(const char* _msg, ...) 
-{ 
+void ErrorObj::AddError(const char* _msg, ...)
+{
 	char buffer[8192] = {0};
 	va_list list;
 	va_start(list, _msg);
 #ifdef WIN32
-	_vsnprintf(buffer, 8192, _msg, list);	
+	_vsnprintf(buffer, 8192, _msg, list);
 #else
 	vsnprintf(buffer, 8192, _msg, list);
 #endif
 	va_end(list);
 
-	mErrors.push_back(buffer); 
+	mErrors.push_back(buffer);
 }
 
 void ErrorObj::PrintToConsole()
@@ -2243,7 +1866,7 @@ StringBuffer::~StringBuffer()
 	delete [] m_Buffer;
 }
 
-const char *StringBuffer::AddUniqueString(const String & _str)
+const char *StringBuffer::AddUniqueString(const std::string & _str)
 {
 	const char * exists = Find(_str);
 	if(exists)
@@ -2265,7 +1888,7 @@ const char *StringBuffer::AddUniqueString(const String & _str)
 	return NULL;
 }
 
-const char *StringBuffer::Find(const String & _str)
+const char *StringBuffer::Find(const std::string & _str)
 {
 	for(obuint32 s = 0; s < m_MaxStrings; ++s)
 	{
@@ -2538,11 +2161,4 @@ obColor GetCoolWarmColor( float scalar )
 	};
 	const int numMappings = sizeof(mapping)/sizeof(mapping[0]);
 	return mapping[ ClampT<int>( scalar * numMappings, 0, numMappings ) ];
-
-
-
-
 }
-
-
-

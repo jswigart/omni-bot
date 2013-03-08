@@ -161,7 +161,7 @@ namespace RemoteLib
 
 		memcpy( writePtr, &v, sizeof( int8 ) );
 		writePtr += sizeof( int8 );
-		
+
 		VALIDATEBUFFER;
 		return true;
 	}
@@ -189,7 +189,7 @@ namespace RemoteLib
 		v = SystemLib::hostToNetByteOrder( v );
 		*( (int16*)writePtr ) = v;
 		writePtr += sizeof( int16 );
-		
+
 		VALIDATEBUFFER;
 		return true;
 	}
@@ -217,7 +217,7 @@ namespace RemoteLib
 		v = SystemLib::hostToNetByteOrder( v );
 		*( (int32*)writePtr ) = v;
 		writePtr += sizeof( int32 );
-		
+
 		VALIDATEBUFFER;
 		return true;
 	}
@@ -253,7 +253,7 @@ namespace RemoteLib
 	bool DataBuffer::writeString( const char * str ) {
 		const int16 len =(int16)strlen( str ) + 1;
 		if ( !checkWrite( len + sizeof( int16 ) ) ) { return false; }
-		
+
 		return writeInt16( len ) && write( str, len );
 	}
 
@@ -281,7 +281,7 @@ namespace RemoteLib
 
 		memcpy( writePtr, data, numBytes );
 		writePtr += numBytes;
-		
+
 		VALIDATEBUFFER;
 		return true;
 	}
@@ -394,8 +394,8 @@ namespace RemoteLib
 		const int32 FNV1A_32_INIT = ((int32)0x811c9dc5);
 
 		const char *s = _str;
-		int32 hval = FNV1A_32_INIT;		
-		while (*s) 
+		int32 hval = FNV1A_32_INIT;
+		while (*s)
 		{
 			char c = (char)tolower(*s++);
 			hval ^= (int32)c;

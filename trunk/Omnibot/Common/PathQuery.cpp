@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerBase.h"
 #include "PathQuery.h"
@@ -24,25 +23,25 @@ PathQuery::PathQuery(Client *_client) :
 PathQuery &PathQuery::Starts(const DestinationVector *_starts)
 {
 	m_Starts = _starts;
-	return *this; 
+	return *this;
 }
 
 PathQuery &PathQuery::Goals(const DestinationVector *_goals)
 {
 	m_Goals = _goals;
-	return *this; 
+	return *this;
 }
 
 PathQuery &PathQuery::AddTeam(int _team)
 {
 	m_Team.SetFlag(_team, true);
-	return *this; 
+	return *this;
 }
 
 PathQuery &PathQuery::AddClass(int _class)
 {
 	m_Class.SetFlag(_class, true);
-	return *this; 
+	return *this;
 }
 
 PathQuery &PathQuery::SetMovementCaps(const BitFlag32 &_caps)

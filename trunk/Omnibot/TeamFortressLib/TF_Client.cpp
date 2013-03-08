@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -41,8 +41,8 @@ void TF_Client::Init(int _gameid)
 	FINDSTATE(ws,WeaponSystem,GetStateRoot());
 	if(ws)
 	{
-		ws->AddWeaponToInventory(TF_WP_GRENADE1);
-		ws->AddWeaponToInventory(TF_WP_GRENADE2);
+	ws->AddWeaponToInventory(TF_WP_GRENADE1);
+	ws->AddWeaponToInventory(TF_WP_GRENADE2);
 	}*/
 }
 
@@ -290,7 +290,7 @@ void TF_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			_cb.CallScript();
 			//DBG_MSG(0, m_Client, kNormal, "Dispenser Can't Build");
 			break;
-		}			
+		}
 		HANDLER(TF_MSG_DISPENSER_BUILDING)
 		{
 			_cb.CallScript();
@@ -408,7 +408,7 @@ float TF_Client::GetGameVar(GameVar _var) const
 }
 
 float TF_Client::GetAvoidRadius(int _class) const
-{	
+{
 	switch(_class)
 	{
 	case TF_CLASS_SCOUT:
@@ -425,7 +425,7 @@ float TF_Client::GetAvoidRadius(int _class) const
 	case TF_CLASSEX_SENTRY:
 		return 32.0f;
 	case TF_CLASSEX_DISPENSER:
-		return 20.0f;		
+		return 20.0f;
 	}
 	return 0.0f;
 }
@@ -435,7 +435,7 @@ bool TF_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 	return _mapgoal ? _mapgoal->GetOwner() == GetGameEntity() : false;
 }
 
-bool TF_Client::CanBotSnipe() 
+bool TF_Client::CanBotSnipe()
 {
 	if(GetClass() == TF_CLASS_SNIPER)
 	{
@@ -463,13 +463,13 @@ bool TF_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 	return false;
 }
 
-float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
-	
+
 	WeaponSystem *wsys = GetWeaponSystem();
 	if(_flag & F_TF_NAV_ROCKETJUMP)
-	{		
+	{
 		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
 			return 1.f;
 	}
@@ -482,7 +482,7 @@ float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to
 
 	if(_flag & F_NAV_TELEPORT)
 	{
-		// todo:		
+		// todo:
 		return 1.f;
 	}
 
@@ -512,7 +512,7 @@ void TF_Client::ProcessGotoNode(const Path &_path)
 			const Vector3f Vel = Normalize(GetVelocity());
 			const Vector3f IdealVel = Normalize(pt.m_Pt - GetPosition());
 			const float fDot = IdealVel.Dot(Vel);
-			
+
 			if(OnGround && fDot > 0.9f)
 			{
 				m_DoubleJumping = true;
@@ -547,14 +547,14 @@ void TF_Client::SetupBehaviorTree()
 {
 	using namespace AiState;
 	delete GetStateRoot()->RemoveState("ReturnTheFlag");
-	
+
 	GetStateRoot()->AppendTo("HighLevel", new Sentry);
 	GetStateRoot()->AppendTo("HighLevel", new Dispenser);
 	GetStateRoot()->AppendTo("HighLevel", new Detpack);
 	GetStateRoot()->AppendTo("HighLevel", new PipeTrap);
 	GetStateRoot()->AppendTo("MotorControl", new RocketJump);
 	GetStateRoot()->AppendTo("MotorControl", new ConcussionJump);
-	GetStateRoot()->AppendTo("LowLevel", new ThrowGrenade);	
+	GetStateRoot()->AppendTo("LowLevel", new ThrowGrenade);
 }
 
 void TF_Client::Update()

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -90,9 +90,9 @@ void TF_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 		Definition[NumDefs++].Props.SetString("Type","teleexit");
 	}
-	
+
 	RegisterWaypointGoals(_wp,Definition,NumDefs);
-	
+
 	// Allow the base class to process it.
 	GoalManager::CheckWaypointForGoal(_wp, _used);
 }

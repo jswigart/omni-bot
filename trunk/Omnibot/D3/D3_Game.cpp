@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,11 +9,11 @@
 #include "D3_Game.h"
 #include "D3_Client.h"
 
-#include "PathPlannerWaypoint.h"
 #include "ScriptManager.h"
 
 #include "gmD3Binds.h"
 
+#include "PathPlannerWaypoint.h"
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
 #include "BotTargetingSystem.h"
@@ -66,21 +66,14 @@ const char *D3_Game::GetScriptSubfolder() const
 	return "d3\\scripts\\";
 }
 
-eNavigatorID D3_Game::GetDefaultNavigator() const 
+eNavigatorID D3_Game::GetDefaultNavigator() const
 {
 	//return NAVID_RECAST;
-	return NAVID_WP; 
+	return NAVID_WP;
 }
 
-bool D3_Game::Init() 
+bool D3_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_OPENGL);
-
-#ifdef ENABLE_DEBUG_WINDOW
-	extern bool RenderOverlayOpenGLUseViewer;
-	RenderOverlayOpenGLUseViewer = true;
-#endif
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(D3_Game::D3_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(D3_Game::D3_GetEntityClassAimOffset);
@@ -127,7 +120,7 @@ static IntEnum D3_TeamEnum[] =
 void D3_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(D3_TeamEnum) / sizeof(D3_TeamEnum[0]);
-	_ptr = D3_TeamEnum;	
+	_ptr = D3_TeamEnum;
 }
 
 static IntEnum D3_WeaponEnum[] =
@@ -152,7 +145,7 @@ static IntEnum D3_WeaponEnum[] =
 void D3_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(D3_WeaponEnum) / sizeof(D3_WeaponEnum[0]);
-	_ptr = D3_WeaponEnum;	
+	_ptr = D3_WeaponEnum;
 }
 
 static IntEnum D3_ClassEnum[] =
@@ -173,7 +166,7 @@ static IntEnum D3_ClassEnum[] =
 	D3_WP_CHAINGUN,
 	D3_WP_HANDGRENADE,
 	D3_WP_PLASMAGUN,
-	D3_WP_ROCKETLAUNCHER,	
+	D3_WP_ROCKETLAUNCHER,
 	D3_WP_BFG,
 	D3_WP_SOULCUBE,*/
 

@@ -1,21 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "BotSteeringSystem.h"
 #include "Client.h"
 #include "IGame.h"
 #include "IGameManager.h"
 #include "BotBaseStates.h"
+#include "RenderBuffer.h"
 
 namespace AiState
 {
-	SteeringSystem::SteeringSystem() 
+	SteeringSystem::SteeringSystem()
 		: StateChild("SteeringSystem")
 		, m_TargetVector	(Vector3f::ZERO)
 		, m_TargetRadius	(32.f)
@@ -35,7 +35,7 @@ namespace AiState
 
 	void SteeringSystem::RenderDebug()
 	{
-		Utils::DrawLine(GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f);
+		RenderBuffer::AddLine(GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f);
 	}
 
 	bool SteeringSystem::InTargetRadius() const
@@ -50,7 +50,7 @@ namespace AiState
 
 	bool SteeringSystem::SetTarget(const Vector3f &_pos, float _radius, MoveMode _movemode, bool _in3d)
 	{
-		m_TargetVector = _pos;	
+		m_TargetVector = _pos;
 		m_TargetRadius = _radius;
 		m_TargetVector3d = _in3d;
 		m_MoveMode = _movemode;
@@ -60,7 +60,7 @@ namespace AiState
 
 	void SteeringSystem::SetNoAvoidTime(int _time)
 	{
-		m_NoAvoidTime = IGame::GetTime() + _time; 
+		m_NoAvoidTime = IGame::GetTime() + _time;
 	}
 
 	void SteeringSystem::UpdateSteering()
@@ -108,7 +108,7 @@ namespace AiState
 		if(GetClient()->IsDebugEnabled(BOT_DEBUG_MOVEVEC))
 		{
 			Vector3f vPos = GetClient()->GetPosition();
-			Utils::DrawLine(vPos, vPos+m_MoveVec * 64.f, COLOR::GREEN, 0.1f);
+			RenderBuffer::AddLine(vPos, vPos+m_MoveVec * 64.f, COLOR::GREEN, 0.1f);
 		}
 
 		if(GetClient()->HasEntityFlag(ENT_FLAG_ON_ICE))

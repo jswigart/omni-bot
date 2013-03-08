@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerRecast.h"
 #include "IGameManager.h"
@@ -16,7 +15,8 @@
 #include "gmUtilityLib.h"
 
 #include "RecastInterfaces.h"
-#include "DebugWindow.h"
+
+#include "RenderBuffer.h"
 
 #include <DebugDraw.h>
 
@@ -81,7 +81,7 @@ struct RecastStats_t
 	int		BorderCells;
 	double	FloodTime;
 
-	RecastStats_t() 
+	RecastStats_t()
 		: ExploredCells(0)
 		, BorderCells(0)
 		, FloodTime(0.0)
@@ -248,7 +248,7 @@ void PathPlannerRecast::Update()
 		for( int i = 0; i < buildContext.getLogCount(); ++i ) {
 			const char * logTxt = buildContext.getLogText( i );
 			EngineFuncs::ConsoleMessage(logTxt);
-		}		
+		}
 		buildContext.resetLog();
 
 		// surface probe
@@ -257,11 +257,11 @@ void PathPlannerRecast::Update()
 		if(Utils::GetLocalAimPoint(vAimPt, &vAimNormal, TR_MASK_FLOODFILL, &contents, &surface))
 		{
 			obColor clr = COLOR::WHITE;
-			if(surface & SURFACE_LADDER) 
+			if(surface & SURFACE_LADDER)
 			{
 				clr = COLOR::ORANGE;
 			}
-			Utils::DrawLine(vAimPt, vAimPt + vAimNormal * 16.f, clr, IGame::GetDeltaTimeSecs()*2.f);
+			RenderBuffer::AddLine(vAimPt, vAimPt + vAimNormal * 16.f, clr, IGame::GetDeltaTimeSecs()*2.f);
 		}
 	}
 }
@@ -271,15 +271,15 @@ void PathPlannerRecast::Shutdown()
 	Unload();
 }
 
-bool PathPlannerRecast::Load(const String &_mapname, bool _dl)
+bool PathPlannerRecast::Load(const std::string &_mapname, bool _dl)
 {
 	Unload();
 
-	String waypointName	= _mapname + ".nav";
-	String navPath	= String("nav/") + waypointName;
-	String error;
+	std::string waypointName	= _mapname + ".nav";
+	std::string navPath	= std::string("nav/") + waypointName;
+	std::string error;
 
-	dtFreeNavMesh( DetourNavmesh ); 
+	dtFreeNavMesh( DetourNavmesh );
 	DetourNavmesh = NULL;
 
 	File f;
@@ -330,11 +330,11 @@ errorLabel:
 	return false;
 }
 
-bool PathPlannerRecast::Save(const String &_mapname)
+bool PathPlannerRecast::Save(const std::string &_mapname)
 {
-	String waypointName	= _mapname + ".nav";
-	String navPath	= String("nav/") + waypointName;
-	
+	std::string waypointName	= _mapname + ".nav";
+	std::string navPath	= std::string("nav/") + waypointName;
+
 	const dtNavMesh * SaveMesh = DetourNavmesh;
 
 	if(SaveMesh)
@@ -344,7 +344,7 @@ bool PathPlannerRecast::Save(const String &_mapname)
 		{
 			f.WriteInt32(NAVMESH_MAGIC);
 			f.WriteInt32(NAVMESH_VERSION);
-			
+
 			int numTiles = 0;
 			for(int t = 0; t < SaveMesh->getMaxTiles(); ++t)
 			{
@@ -366,7 +366,7 @@ bool PathPlannerRecast::Save(const String &_mapname)
 				if( !tile || !tile->header || !tile->dataSize ) {
 					continue;
 				}
-			
+
 				dtTileRef tileRef = SaveMesh->getTileRef( tile );
 				const int tileDataSize = tile->dataSize;
 
@@ -386,8 +386,8 @@ bool PathPlannerRecast::IsReady() const
 	return DetourNavmesh && DetourNavmesh->getMaxTiles() > 0;
 }
 
-bool PathPlannerRecast::GetNavFlagByName(const String &_flagname, NavFlags &_flag) const
-{	
+bool PathPlannerRecast::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
+{
 	_flag = 0;
 	return false;
 }
@@ -568,7 +568,7 @@ int PathPlannerRecast::Process_FloodFill()
 
 			FloodHeightField = rcAllocHeightfield();
 			DetourNavmesh = dtAllocNavMesh();
-			
+
 			buildContext.enableLog( true );
 			buildContext.resetLog();
 			buildContext.enableTimer( true );
@@ -583,23 +583,23 @@ int PathPlannerRecast::Process_FloodFill()
 			RecastCfg.bmin[2] = mapSize.m_Mins[1];
 			RecastCfg.bmax[0] = mapSize.m_Maxs[0];
 			RecastCfg.bmax[1] = 4096.f;//mapSize.m_Maxs[2];
-			RecastCfg.bmax[2] = mapSize.m_Maxs[1];	
+			RecastCfg.bmax[2] = mapSize.m_Maxs[1];
 
 			rcCalcGridSize(
-				RecastCfg.bmin, 
-				RecastCfg.bmax, 
-				RecastCfg.cs, 
-				&RecastCfg.width, 
+				RecastCfg.bmin,
+				RecastCfg.bmax,
+				RecastCfg.cs,
+				&RecastCfg.width,
 				&RecastCfg.height);
 
 			rcCreateHeightfield(
 				&buildContext,
-				*FloodHeightField, 
-				RecastCfg.width, 
-				RecastCfg.height, 
-				RecastCfg.bmin, 
-				RecastCfg.bmax, 
-				RecastCfg.cs, 
+				*FloodHeightField,
+				RecastCfg.width,
+				RecastCfg.height,
+				RecastCfg.bmin,
+				RecastCfg.bmax,
+				RecastCfg.cs,
 				RecastCfg.ch);
 
 			//////////////////////////////////////////////////////////////////////////
@@ -609,7 +609,7 @@ int PathPlannerRecast::Process_FloodFill()
 			int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 			for(int i = 0; i < iNumFeatures; ++i)
 			{
-				Vector3f vPos(features[i].m_Position);		
+				Vector3f vPos(features[i].m_Position);
 				Vector3f vFace(features[i].m_Facing);
 				Vector3f vTarget(features[i].m_TargetPosition);
 
@@ -624,7 +624,7 @@ int PathPlannerRecast::Process_FloodFill()
 				{
 					AddFloodEntityBounds(features[i].m_Bounds);
 
-					//Utils::OutlineAABB(features[i].m_Bounds,COLOR::MAGENTA,30.f);
+					//RenderBuffer::AddOBB(features[i].m_Bounds,COLOR::MAGENTA,30.f);
 					continue;
 				}
 
@@ -643,9 +643,9 @@ int PathPlannerRecast::Process_FloodFill()
 				case ENT_CLASS_GENERIC_LADDER:
 					OffMeshConnectionFlags[OffMeshConnectionNum] = NAV_FLAG_LADDER;
 					break;
-				/*case ENT_CLASS_GENERIC_LIFT:
-				case ENT_CLASS_GENERIC_MOVER:
-				case ENT_CLASS_GENERIC_JUMPPAD:
+					/*case ENT_CLASS_GENERIC_LIFT:
+					case ENT_CLASS_GENERIC_MOVER:
+					case ENT_CLASS_GENERIC_JUMPPAD:
 					break;*/
 				default:
 					OffMeshConnectionFlags[OffMeshConnectionNum] = 0;
@@ -722,7 +722,7 @@ int PathPlannerRecast::Process_FloodFill()
 					False);
 
 				if(trFloor.m_Surface & SURFACE_LADDER) {
-					Utils::DrawLine(
+					RenderBuffer::AddLine(
 						Vector3f(trFloor.m_Endpos),
 						Vector3f(trFloor.m_Endpos)+Vector3f(trFloor.m_Normal),
 						COLOR::ORANGE,
@@ -744,7 +744,7 @@ int PathPlannerRecast::Process_FloodFill()
 						obTraceResult trWall;
 						Vector3f vWall = currentNode.Pos;
 
-						do 
+						do
 						{
 							rcRasterizeVertex( &buildContext,
 								ToRecast( vWall ),
@@ -767,8 +767,7 @@ int PathPlannerRecast::Process_FloodFill()
 								RecastExploredList.push_back(rcn);
 							}
 							RecastStats.ExploredCells++;
-
-						} while(trFloor.m_StartSolid && (vWall.z - currentNode.Pos.z) <= 512.f);					
+						} while(trFloor.m_StartSolid && (vWall.z - currentNode.Pos.z) <= 512.f);
 
 						// if we found a non solid, add it to the open list to explore further.
 						if(!trFloor.m_StartSolid)
@@ -786,7 +785,7 @@ int PathPlannerRecast::Process_FloodFill()
 					area |= (obuint8)RC_WALKABLE_AREA;
 				//if(trFloor.m_Contents & CONT_WATER)
 
-				const Vector3f floorPos(trFloor.m_Endpos);				
+				const Vector3f floorPos(trFloor.m_Endpos);
 				if( !rcRasterizeVertex( &buildContext, ToRecast(floorPos), area, *FloodHeightField ) )
 					continue;
 
@@ -808,15 +807,15 @@ int PathPlannerRecast::Process_FloodFill()
 						const Vector3f ceilPos(trCeiling.m_Endpos);
 						rcRasterizeVertex(&buildContext,ToRecast(ceilPos),RC_NULL_AREA,*FloodHeightField);
 					}
-				}				
+				}
 
 				// explore neighbors
 				const Vector3f Expand[4] =
 				{
 					Vector3f(1.0f, 0.0f, 0.0f),
 					Vector3f(0.0f, 1.0f, 0.0f),
-					Vector3f(-1.0f, 0.0f, 0.0f),		
-					Vector3f(0.0f, -1.0f, 0.0f),		
+					Vector3f(-1.0f, 0.0f, 0.0f),
+					Vector3f(0.0f, -1.0f, 0.0f),
 				};
 
 				for(int d = 0; d < 4; ++d)
@@ -858,7 +857,7 @@ int PathPlannerRecast::Process_FloodFill()
 		{
 			dtFreeNavMesh( DetourNavmesh );
 			DetourNavmesh = NULL;
-			
+
 			DetourNavmesh = dtAllocNavMesh();
 
 			BuildData.push_back(rcBuildData());
@@ -884,15 +883,15 @@ int PathPlannerRecast::Process_FloodFill()
 					&buildContext,
 					RecastCfg.walkableHeight,
 					*FloodHeightField);
-			}			
+			}
 
-			rcFilterLowHangingWalkableObstacles( &buildContext, 
-				RecastCfg.walkableClimb, 
+			rcFilterLowHangingWalkableObstacles( &buildContext,
+				RecastCfg.walkableClimb,
 				*FloodHeightField );
 
-			rcFilterLedgeSpans( &buildContext, 
+			rcFilterLedgeSpans( &buildContext,
 				RecastCfg.walkableHeight,
-				RecastCfg.walkableClimb, 
+				RecastCfg.walkableClimb,
 				*FloodHeightField );
 
 			rcFilterWalkableLowHeightSpans( &buildContext,
@@ -941,7 +940,7 @@ int PathPlannerRecast::Process_FloodFill()
 			if(!rcBuildRegions(&buildContext,
 				*build.Chf,
 				RecastCfg.borderSize,
-				RecastCfg.minRegionSize, 
+				RecastCfg.minRegionSize,
 				RecastCfg.mergeRegionSize))
 			{
 				gFloodStatus = Process_FinishedNavMesh;
@@ -950,8 +949,8 @@ int PathPlannerRecast::Process_FloodFill()
 
 			if(!rcBuildContours(&buildContext,
 				*build.Chf,
-				RecastCfg.maxSimplificationError, 
-				RecastCfg.maxEdgeLen, 
+				RecastCfg.maxSimplificationError,
+				RecastCfg.maxEdgeLen,
 				*build.Contour))
 			{
 				gFloodStatus = Process_FinishedNavMesh;
@@ -968,7 +967,7 @@ int PathPlannerRecast::Process_FloodFill()
 			}
 
 			if ( DUMP_OBJS ) {
-				FileIO obj;			
+				FileIO obj;
 				if ( obj.openForWrite( va( "%s_pm.obj", g_EngineFuncs->GetMapName() ) ) )
 					duDumpPolyMeshToObj( *build.PolyMesh, &obj );
 			}
@@ -985,7 +984,7 @@ int PathPlannerRecast::Process_FloodFill()
 			}
 
 			if ( DUMP_OBJS ) {
-				FileIO obj;			
+				FileIO obj;
 				if ( obj.openForWrite( va( "%s_pmd.obj", g_EngineFuncs->GetMapName() ) ) )
 					duDumpPolyMeshDetailToObj( *build.PolyMeshDetail, &obj );
 			}
@@ -1018,12 +1017,12 @@ int PathPlannerRecast::Process_FloodFill()
 
 			rcVcopy(params.bmin, build.PolyMesh->bmin);
 			rcVcopy(params.bmax, build.PolyMesh->bmax);
-			
+
 			unsigned char* navData = 0;
 			int navDataSize = 0;
 			if(!dtCreateNavMeshData(&params, &navData, &navDataSize))
 			{
-				buildContext.log( RC_LOG_ERROR, "Could not build Detour NavMesh." );				
+				buildContext.log( RC_LOG_ERROR, "Could not build Detour NavMesh." );
 				gFloodStatus = Process_FinishedNavMesh;
 				break;
 			}
@@ -1081,17 +1080,17 @@ int PathPlannerRecast::Process_FloodFill()
 			//		rcBuildData &build = BuildData.back();
 
 			//		// grab a piece of the global map
-			//		float mins[3] = 
+			//		float mins[3] =
 			//		{
 			//			FloodHeightField.bmin[0]+x*ts,
 			//			FloodHeightField.bmin[1],
-			//			FloodHeightField.bmin[2]+y*ts 
+			//			FloodHeightField.bmin[2]+y*ts
 			//		};
-			//		float maxs[3] = 
-			//		{ 
+			//		float maxs[3] =
+			//		{
 			//			mins[0] + ts,
-			//			FloodHeightField.bmax[1], 
-			//			mins[2] + ts 
+			//			FloodHeightField.bmax[1],
+			//			mins[2] + ts
 			//		};
 
 			//		mins[0] -= tileCfg.borderSize*tileCfg.cs;
@@ -1112,9 +1111,9 @@ int PathPlannerRecast::Process_FloodFill()
 			//			gFloodStatus = Process_FinishedNavMesh;
 			//			break;
 			//		}
-			//		
+			//
 			//		//////////////////////////////////////////////////////////////////////////
-			//		
+			//
 			//		if(!rcBuildDistanceField(build.Chf))
 			//		{
 			//			gFloodStatus = Process_FinishedNavMesh;
@@ -1122,9 +1121,9 @@ int PathPlannerRecast::Process_FloodFill()
 			//		}
 
 			//		if(!rcBuildRegions(build.Chf,
-			//			tileCfg.walkableRadius, 
+			//			tileCfg.walkableRadius,
 			//			tileCfg.borderSize,
-			//			tileCfg.minRegionSize, 
+			//			tileCfg.minRegionSize,
 			//			tileCfg.mergeRegionSize))
 			//		{
 			//			gFloodStatus = Process_FinishedNavMesh;
@@ -1132,8 +1131,8 @@ int PathPlannerRecast::Process_FloodFill()
 			//		}
 
 			//		if(!rcBuildContours(build.Chf,
-			//			tileCfg.maxSimplificationError, 
-			//			tileCfg.maxEdgeLen, 
+			//			tileCfg.maxSimplificationError,
+			//			tileCfg.maxEdgeLen,
 			//			build.Contour))
 			//		{
 			//			gFloodStatus = Process_FinishedNavMesh;
@@ -1169,7 +1168,7 @@ int PathPlannerRecast::Process_FloodFill()
 			//		unsigned char *navData = 0;
 			//		int navDataSize = 0;
 			//		if (!dtCreateNavMeshTileData(
-			//			build.PolyMesh.verts, 
+			//			build.PolyMesh.verts,
 			//			build.PolyMesh.nverts,
 			//			build.PolyMesh.polys,
 			//			build.PolyMesh.npolys,
@@ -1179,13 +1178,13 @@ int PathPlannerRecast::Process_FloodFill()
 			//			build.PolyMeshDetail.nverts,
 			//			build.PolyMeshDetail.tris,
 			//			build.PolyMeshDetail.ntris,
-			//			build.Chf.bmin, 
+			//			build.Chf.bmin,
 			//			build.Chf.bmax,
-			//			tileCfg.cs, 
-			//			tileCfg.ch, 
+			//			tileCfg.cs,
+			//			tileCfg.ch,
 			//			ts,
-			//			tileCfg.walkableClimb, 
-			//			&navData, 
+			//			tileCfg.walkableClimb,
+			//			&navData,
 			//			&navDataSize))
 			//		{
 			//			if (rcGetLog())
@@ -1279,15 +1278,13 @@ void PathPlannerRecast::BuildNav()
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerRecast::GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name)
+bool PathPlannerRecast::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name)
 {
-
 	return false;
 }
 
 void PathPlannerRecast::AddEntityConnection(const Event_EntityConnection &_conn)
 {
-
 }
 
 void PathPlannerRecast::RemoveEntityConnection(GameEntity _ent)
@@ -1318,28 +1315,28 @@ void PathPlannerRecast::_BenchmarkPathFinder(const StringVector &_args)
 	tme.Reset();
 	for(obint32 w1 = 0; w1 < NumPolys; ++w1)
 	{
-		for(obint32 w2 = 0; w2 < NumPolys; ++w2)
-		{
-			const dtMeshTile *tile0 = DetourNavmesh->getTileByRef(polys[w1],0);
-			const dtMeshTile *tile1 = DetourNavmesh->getTileByRef(polys[w2],0);
-			const dtPoly * poly0 = DetourNavmesh->getPolyByRef(polys[w1]);
-			const dtPoly * poly1 = DetourNavmesh->getPolyByRef(polys[w2]);
+	for(obint32 w2 = 0; w2 < NumPolys; ++w2)
+	{
+	const dtMeshTile *tile0 = DetourNavmesh->getTileByRef(polys[w1],0);
+	const dtMeshTile *tile1 = DetourNavmesh->getTileByRef(polys[w2],0);
+	const dtPoly * poly0 = DetourNavmesh->getPolyByRef(polys[w1]);
+	const dtPoly * poly1 = DetourNavmesh->getPolyByRef(polys[w2]);
 
-			float v0[3] = {};
-			float v1[3] = {};
+	float v0[3] = {};
+	float v1[3] = {};
 
-			calcPolyCenter(v0,poly0->verts,poly0->vertCount,tile0->header->verts);
-			calcPolyCenter(v1,poly1->verts,poly1->vertCount,tile1->header->verts);
+	calcPolyCenter(v0,poly0->verts,poly0->vertCount,tile0->header->verts);
+	calcPolyCenter(v1,poly1->verts,poly1->vertCount,tile1->header->verts);
 
-			PlanPathToGoal(NULL,
-				Vector3f(v0[0],v0[2],v0[1]),
-				Vector3f(v1[0],v1[2],v1[1]),
-				0);
-		}
+	PlanPathToGoal(NULL,
+	Vector3f(v0[0],v0[2],v0[1]),
+	Vector3f(v1[0],v1[2],v1[1]),
+	0);
+	}
 	}
 	double dTimeTaken = tme.GetElapsedSeconds();
-	EngineFuncs::ConsoleMessage("generated %d paths in %f seconds: %f paths/sec", 
-		NumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)NumPaths / dTimeTaken : 0.0f);*/
+	EngineFuncs::ConsoleMessage("generated %d paths in %f seconds: %f paths/sec",
+	NumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)NumPaths / dTimeTaken : 0.0f);*/
 }
 
 void PathPlannerRecast::_BenchmarkGetNavPoint(const StringVector &_args)
@@ -1381,10 +1378,10 @@ void PathPlannerRecast::_BenchmarkGetNavPoint(const StringVector &_args)
 
 		dTimeTaken = tme.GetElapsedSeconds();
 
-		EngineFuncs::ConsoleMessage("findNearestPoly() %d calls, %d hits, %d misses : avg %f per second", 
-		NumPolys * iNumIterations, 
-		iHits, 
-		iMisses, 
+		EngineFuncs::ConsoleMessage("findNearestPoly() %d calls, %d hits, %d misses : avg %f per second",
+		NumPolys * iNumIterations,
+		iHits,
+		iMisses,
 		dTimeTaken != 0.0f ? ((float)(NumPolys * iNumIterations) / dTimeTaken) : 0.0f);	*/
 	}
 	else if(CurrentNavMeshType == NavMeshTiled)
@@ -1436,224 +1433,224 @@ void PathPlannerRecast::EntityDeleted(const EntityInstance &ei)
 		}
 	}
 }
-
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-void PathPlannerRecast::OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer)
-{
-	AABB voxel;
-	voxel.m_Mins[0] = -(RecastCfg.cs * 0.5f);
-	voxel.m_Mins[1] = -(RecastCfg.cs * 0.5f);
-	voxel.m_Mins[2] = -(RecastCfg.cs * 0.5f);
-	voxel.m_Maxs[0] =  (RecastCfg.cs * 0.5f);
-	voxel.m_Maxs[1] =  (RecastCfg.cs * 0.5f);
-	voxel.m_Maxs[2] =  (RecastCfg.cs * 0.5f);
-
-	//////////////////////////////////////////////////////////////////////////
-	// render explored nodes for visualization
-	for(RecastNodeList::iterator it = RecastExploredList.begin();
-		it != RecastExploredList.end();
-		++it)
-	{
-		AABB voxelWorld = voxel;
-		voxelWorld.Translate((*it).Pos);
-		overlay->SetColor(COLOR::GREEN);
-		overlay->DrawAABB(voxelWorld);
-	}
-	RecastExploredList.clear();
-	//////////////////////////////////////////////////////////////////////////
-	if(RecastOptions.DrawSolidNodes)
-	{
-		for(RecastNodeList::iterator it = RecastSolidList.begin();
-			it != RecastSolidList.end();
-			++it)
-		{
-			AABB voxelWorld = voxel;
-			voxelWorld.Translate((*it).Pos);
-			overlay->SetColor(COLOR::RED);
-			overlay->DrawAABB(voxelWorld);
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////
-	if ( m_PlannerFlags.CheckFlag(NAV_VIEW) )
-	{
-		overlay->PushMatrix();
-		overlay->Translate(Vector3f(0,0,RecastOptions.DrawOffset));
-
-		//gDDraw->StartFrame();
-
-		// attempt to render from the cache, if implemented.
-		//if(!gDDraw->RenderCache())
-		{
-			//gDDraw->StartCache();
-
-			switch(RecastOptions.RenderMode)
-			{
-			case RecastOptions_t::DRAWMODE_NAVMESH:
-				if ( DetourNavmesh )
-					duDebugDrawNavMesh(gDDraw,*DetourNavmesh,DU_DRAWNAVMESH_OFFMESHCONS);
-				break;
-			case RecastOptions_t::DRAWMODE_NAVMESH_BVTREE:
-				if ( DetourNavmesh )
-					duDebugDrawNavMeshBVTree(gDDraw,*DetourNavmesh);
-				break;
-			case RecastOptions_t::DRAWMODE_VOXELS:
-				if ( FloodHeightField )
-					duDebugDrawHeightfieldSolid(gDDraw,*FloodHeightField);
-				break;
-			case RecastOptions_t::DRAWMODE_VOXELS_WALKABLE:
-				if ( FloodHeightField )
-					duDebugDrawHeightfieldWalkable(gDDraw,*FloodHeightField);
-				break;
-			case RecastOptions_t::DRAWMODE_COMPACT:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawCompactHeightfieldSolid(gDDraw,*it->Chf);
-				}		
-				break;
-			case RecastOptions_t::DRAWMODE_COMPACT_DISTANCE:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawCompactHeightfieldDistance(gDDraw,*it->Chf);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_COMPACT_REGIONS:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawCompactHeightfieldRegions(gDDraw,*it->Chf);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_REGION_CONNECTIONS:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawRegionConnections(gDDraw,*it->Contour);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_RAW_CONTOURS:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawRawContours(gDDraw,*it->Contour);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_BOTH_CONTOURS:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawRawContours(gDDraw,*it->Contour);
-					duDebugDrawContours(gDDraw,*it->Contour);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_CONTOURS:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawContours(gDDraw,*it->Contour);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_POLYMESH:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawPolyMesh(gDDraw,*it->PolyMesh);
-				}
-				break;
-			case RecastOptions_t::DRAWMODE_POLYMESH_DETAIL:
-				for(BuildDataList::iterator it = BuildData.begin();
-					it != BuildData.end();
-					++it)
-				{
-					duDebugDrawPolyMeshDetail(gDDraw,*it->PolyMeshDetail);
-				}
-				break;
-			default:
-				break;
-			}
-
-			/*overlay->SetColor(COLOR::MAGENTA);
-			for(int i = 0; i < LinkData.size(); ++i)
-			{
-			overlay->DrawLine(LinkData[i].start,LinkData[i].end);
-			}*/
-			//gDDraw->EndCache();
-		}
-		overlay->PopMatrix();
-	
-		for(obuint32 i = 0; i < ladders.size(); ++i)
-		{
-			ladders[i].Render(overlay);
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	// Highlight obstacles.
-	for(int i = 0; i < MaxObstacles; ++i)
-	{
-		if(gNavObstacles[i].Entity.IsValid())
-		{
-			obColor color = COLOR::CYAN;
-			switch(gNavObstacles[i].State)
-			{
-			case NavObstacles::OBS_NONE:
-				color = COLOR::RED;
-				break;
-			case NavObstacles::OBS_PENDING:
-				color = COLOR::YELLOW;
-				break;
-			case NavObstacles::OBS_ADDING:
-				color = COLOR::MAGENTA;
-				break;
-			case NavObstacles::OBS_ADDED:
-				color = COLOR::GREEN;
-				break;
-			case NavObstacles::OBS_REMOVING:
-				color = COLOR::ORANGE;
-				break;
-			}
-
-			AABB localbounds;
-			EngineFuncs::EntityLocalAABB(gNavObstacles[i].Entity,localbounds);
-
-			Vector3f pos, fwd, right, up;
-			EngineFuncs::EntityPosition(gNavObstacles[i].Entity,pos);
-			EngineFuncs::EntityOrientation(gNavObstacles[i].Entity,fwd, right, up);
-
-			static float offsetZ = 0.f;
-			Vector3f st = pos + up * offsetZ;
-
-			static bool matrixmode = false;
-			static bool renderbox = false;
-			if(renderbox)
-			{
-				gOverlay->SetColor(color);
-				gOverlay->DrawAABB(localbounds,pos,Matrix3f(right,fwd,up,matrixmode));
-			}			
-
-			gOverlay->SetColor(COLOR::BLUE);
-			//gOverlay->DrawLine(st,st+fwd*128.f);
-			gOverlay->DrawLine(st+fwd*localbounds.m_Mins[0],st+fwd*localbounds.m_Maxs[0]);
-			gOverlay->SetColor(COLOR::RED);
-			//gOverlay->DrawLine(st,st+right*128.f);
-			gOverlay->DrawLine(st+right*localbounds.m_Mins[1],st+right*localbounds.m_Maxs[1]);
-			gOverlay->SetColor(COLOR::GREEN);
-			//gOverlay->DrawLine(st,st+up*128.f);
-			gOverlay->DrawLine(st+up*localbounds.m_Mins[2],st+up*localbounds.m_Maxs[2]);
-		}
-	}
-}
+//
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+//
+//void PathPlannerRecast::OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer)
+//{
+//	AABB voxel;
+//	voxel.m_Mins[0] = -(RecastCfg.cs * 0.5f);
+//	voxel.m_Mins[1] = -(RecastCfg.cs * 0.5f);
+//	voxel.m_Mins[2] = -(RecastCfg.cs * 0.5f);
+//	voxel.m_Maxs[0] =  (RecastCfg.cs * 0.5f);
+//	voxel.m_Maxs[1] =  (RecastCfg.cs * 0.5f);
+//	voxel.m_Maxs[2] =  (RecastCfg.cs * 0.5f);
+//
+//	//////////////////////////////////////////////////////////////////////////
+//	// render explored nodes for visualization
+//	for(RecastNodeList::iterator it = RecastExploredList.begin();
+//		it != RecastExploredList.end();
+//		++it)
+//	{
+//		AABB voxelWorld = voxel;
+//		voxelWorld.Translate((*it).Pos);
+//		overlay->SetColor(COLOR::GREEN);
+//		overlay->DrawAABB(voxelWorld);
+//	}
+//	RecastExploredList.clear();
+//	//////////////////////////////////////////////////////////////////////////
+//	if(RecastOptions.DrawSolidNodes)
+//	{
+//		for(RecastNodeList::iterator it = RecastSolidList.begin();
+//			it != RecastSolidList.end();
+//			++it)
+//		{
+//			AABB voxelWorld = voxel;
+//			voxelWorld.Translate((*it).Pos);
+//			overlay->SetColor(COLOR::RED);
+//			overlay->DrawAABB(voxelWorld);
+//		}
+//	}
+//	//////////////////////////////////////////////////////////////////////////
+//	if ( m_PlannerFlags.CheckFlag(NAV_VIEW) )
+//	{
+//		overlay->PushMatrix();
+//		overlay->Translate(Vector3f(0,0,RecastOptions.DrawOffset));
+//
+//		//gDDraw->StartFrame();
+//
+//		// attempt to render from the cache, if implemented.
+//		//if(!gDDraw->RenderCache())
+//		{
+//			//gDDraw->StartCache();
+//
+//			switch(RecastOptions.RenderMode)
+//			{
+//			case RecastOptions_t::DRAWMODE_NAVMESH:
+//				if ( DetourNavmesh )
+//					duDebugDrawNavMesh(gDDraw,*DetourNavmesh,DU_DRAWNAVMESH_OFFMESHCONS);
+//				break;
+//			case RecastOptions_t::DRAWMODE_NAVMESH_BVTREE:
+//				if ( DetourNavmesh )
+//					duDebugDrawNavMeshBVTree(gDDraw,*DetourNavmesh);
+//				break;
+//			case RecastOptions_t::DRAWMODE_VOXELS:
+//				if ( FloodHeightField )
+//					duDebugDrawHeightfieldSolid(gDDraw,*FloodHeightField);
+//				break;
+//			case RecastOptions_t::DRAWMODE_VOXELS_WALKABLE:
+//				if ( FloodHeightField )
+//					duDebugDrawHeightfieldWalkable(gDDraw,*FloodHeightField);
+//				break;
+//			case RecastOptions_t::DRAWMODE_COMPACT:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawCompactHeightfieldSolid(gDDraw,*it->Chf);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_COMPACT_DISTANCE:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawCompactHeightfieldDistance(gDDraw,*it->Chf);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_COMPACT_REGIONS:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawCompactHeightfieldRegions(gDDraw,*it->Chf);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_REGION_CONNECTIONS:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawRegionConnections(gDDraw,*it->Contour);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_RAW_CONTOURS:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawRawContours(gDDraw,*it->Contour);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_BOTH_CONTOURS:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawRawContours(gDDraw,*it->Contour);
+//					duDebugDrawContours(gDDraw,*it->Contour);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_CONTOURS:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawContours(gDDraw,*it->Contour);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_POLYMESH:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawPolyMesh(gDDraw,*it->PolyMesh);
+//				}
+//				break;
+//			case RecastOptions_t::DRAWMODE_POLYMESH_DETAIL:
+//				for(BuildDataList::iterator it = BuildData.begin();
+//					it != BuildData.end();
+//					++it)
+//				{
+//					duDebugDrawPolyMeshDetail(gDDraw,*it->PolyMeshDetail);
+//				}
+//				break;
+//			default:
+//				break;
+//			}
+//
+//			/*overlay->SetColor(COLOR::MAGENTA);
+//			for(int i = 0; i < LinkData.size(); ++i)
+//			{
+//			overlay->DrawLine(LinkData[i].start,LinkData[i].end);
+//			}*/
+//			//gDDraw->EndCache();
+//		}
+//		overlay->PopMatrix();
+//
+//		for(obuint32 i = 0; i < ladders.size(); ++i)
+//		{
+//			ladders[i].Render(overlay);
+//		}
+//	}
+//
+//	//////////////////////////////////////////////////////////////////////////
+//	// Highlight obstacles.
+//	for(int i = 0; i < MaxObstacles; ++i)
+//	{
+//		if(gNavObstacles[i].Entity.IsValid())
+//		{
+//			obColor color = COLOR::CYAN;
+//			switch(gNavObstacles[i].State)
+//			{
+//			case NavObstacles::OBS_NONE:
+//				color = COLOR::RED;
+//				break;
+//			case NavObstacles::OBS_PENDING:
+//				color = COLOR::YELLOW;
+//				break;
+//			case NavObstacles::OBS_ADDING:
+//				color = COLOR::MAGENTA;
+//				break;
+//			case NavObstacles::OBS_ADDED:
+//				color = COLOR::GREEN;
+//				break;
+//			case NavObstacles::OBS_REMOVING:
+//				color = COLOR::ORANGE;
+//				break;
+//			}
+//
+//			AABB localbounds;
+//			EngineFuncs::EntityLocalAABB(gNavObstacles[i].Entity,localbounds);
+//
+//			Vector3f pos, fwd, right, up;
+//			EngineFuncs::EntityPosition(gNavObstacles[i].Entity,pos);
+//			EngineFuncs::EntityOrientation(gNavObstacles[i].Entity,fwd, right, up);
+//
+//			static float offsetZ = 0.f;
+//			Vector3f st = pos + up * offsetZ;
+//
+//			static bool matrixmode = false;
+//			static bool renderbox = false;
+//			if(renderbox)
+//			{
+//				gOverlay->SetColor(color);
+//				gOverlay->DrawAABB(localbounds,pos,Matrix3f(right,fwd,up,matrixmode));
+//			}
+//
+//			gOverlay->SetColor(COLOR::BLUE);
+//			//gOverlay->DrawLine(st,st+fwd*128.f);
+//			gOverlay->DrawLine(st+fwd*localbounds.m_Mins[0],st+fwd*localbounds.m_Maxs[0]);
+//			gOverlay->SetColor(COLOR::RED);
+//			//gOverlay->DrawLine(st,st+right*128.f);
+//			gOverlay->DrawLine(st+right*localbounds.m_Mins[1],st+right*localbounds.m_Maxs[1]);
+//			gOverlay->SetColor(COLOR::GREEN);
+//			//gOverlay->DrawLine(st,st+up*128.f);
+//			gOverlay->DrawLine(st+up*localbounds.m_Mins[2],st+up*localbounds.m_Maxs[2]);
+//		}
+//	}
+//}
 
 #ifdef ENABLE_DEBUG_WINDOW
 class RecastActionListener : public gcn::ActionListener
@@ -1784,7 +1781,7 @@ void PathPlannerRecast::CreateGui()
 	navMeshType->getScrollArea()->setDimension(navMeshType->getListBox()->getDimension());
 	navMeshType->setWidth(navMeshType->getListBox()->getWidth());
 	navMeshType->setId("navtype");
-	propsheet->addProperty("NavMesh Type",navMeshType);	
+	propsheet->addProperty("NavMesh Type",navMeshType);
 
 	gcn::DropDown *drawOptions = new gcn::DropDown(&DrawOptionsRecast);
 	drawOptions->getScrollArea()->setDimension(drawOptions->getListBox()->getDimension());
@@ -1920,7 +1917,7 @@ void PathPlannerRecast::CreateGui()
 		cb->setId("draw_solids");
 		options->add(cb);
 
-		propsheet->addProperty("Options",options);	
+		propsheet->addProperty("Options",options);
 	}
 }
 
@@ -1933,7 +1930,7 @@ void PathPlannerRecast::UpdateGui()
 	gcn::TextBox *stats = static_cast<gcn::TextBox*>(ps->findWidgetById("stats"));
 	if(stats)
 	{
-		String str = va(
+		std::string str = va(
 			"Explored Cells: %d\nBorder Cells: %d\nCells/Sec: %.2f\nOpen Nodes: %d\n",
 			RecastStats.ExploredCells,
 			RecastStats.BorderCells,
@@ -1966,7 +1963,7 @@ void PathPlannerRecast::UpdateGui()
 
 	// rendering stuff.
 	RecastOptions_t::DrawMode OldRenderMode = RecastOptions.RenderMode;
-	RecastOptions.RenderMode = 
+	RecastOptions.RenderMode =
 		(RecastOptions_t::DrawMode)static_cast<gcn::DropDown*>(ps->findWidgetById("drawOptions"))->getSelected();
 	if(OldRenderMode != RecastOptions.RenderMode)
 	{
@@ -2058,7 +2055,7 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//		Vector3f v1 = Vector3f(DetourNavmesh.getVertex(p->v[j-1]));
 	//		Vector3f v2 = Vector3f(DetourNavmesh.getVertex(p->v[j]));
 	//		Vector2f vP0 = FromWorld(navextents, ToRecast(v0)).As2d();
-	//		Vector2f vP1 = FromWorld(navextents, ToRecast(v1)).As2d(); 
+	//		Vector2f vP1 = FromWorld(navextents, ToRecast(v1)).As2d();
 	//		Vector2f vP2 = FromWorld(navextents, ToRecast(v2)).As2d();
 	//		//graphics->drawLine((int)vP1.x, (int)vP1.y, (int)vP2.x, (int)vP2.y);
 
@@ -2085,7 +2082,6 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//		}
 	//	}
 	//}
-
 
 	//for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
 	//{
@@ -2150,12 +2146,12 @@ bool PathPlannerRecast::ladder_t::OverLaps(const ladder_t & other) const
 	return myBounds.Intersects(otherBounds);
 }
 
-void PathPlannerRecast::ladder_t::Render(RenderOverlay *overlay) const
-{
-	Vector3f midPt = top.MidPoint(bottom);
-	Vector3f side = Normalize(top-bottom).Cross(normal);
-
-	overlay->SetColor(COLOR::GREEN);
-	overlay->DrawLine(top,bottom);	
-	overlay->DrawLine(midPt+side*width*0.5f,midPt-side*width*0.5f);
-}
+//void PathPlannerRecast::ladder_t::Render(RenderOverlay *overlay) const
+//{
+//	Vector3f midPt = top.MidPoint(bottom);
+//	Vector3f side = Normalize(top-bottom).Cross(normal);
+//
+//	overlay->SetColor(COLOR::GREEN);
+//	overlay->DrawLine(top,bottom);
+//	overlay->DrawLine(midPt+side*width*0.5f,midPt-side*width*0.5f);
+//}

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <boost/interprocess/ipc/message_queue.hpp>
@@ -48,7 +47,7 @@ namespace Ipc {
 	class MessageQueue {
 	public:
 		// blocks if full
-		void send( const T & msg, unsigned int priority = 0 ) {		
+		void send( const T & msg, unsigned int priority = 0 ) {
 			queue.send(&msg, sizeof(T), priority);
 		}
 		bool trySend( const T & msg, unsigned int priority = 0 ) {
@@ -66,7 +65,7 @@ namespace Ipc {
 		unsigned int getMaxMsgSize() const { return queue.get_max_msg_size(); }
 		unsigned int getNumMsgs() const { return queue.get_num_msg(); }
 
-		MessageQueue( const char * name, bool removeOnExit = false ) 
+		MessageQueue( const char * name, bool removeOnExit = false )
 			: queueName( name )
 			, queue( open_or_create, name, MaxMessages, sizeof( T ) )
 			, delQueue( removeOnExit ) {
@@ -84,7 +83,7 @@ namespace Ipc {
 
 	typedef MessageQueue<StateTreeMsg, 256>	StateNodeQueue;
 	typedef MessageQueue<GraphicsMsg, 512>	GraphicsQueue;
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// client should instantiate one of these structs
 	// to initialize all necessary message queues

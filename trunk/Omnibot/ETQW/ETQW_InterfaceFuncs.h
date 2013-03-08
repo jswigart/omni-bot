@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ETQW_INTERFACEFUNCS_H__
 #define __ETQW_INTERFACEFUNCS_H__
@@ -14,7 +16,7 @@
 class Client;
 
 namespace InterfaceFuncs
-{	
+{
 	bool IsWeaponOverheated(Client *_bot, ETQW_Weapon _weapon);
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max);
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite);
@@ -34,7 +36,7 @@ namespace InterfaceFuncs
 	int GetGunHealth(Client *_client, const GameEntity _gun);
 	void GetCurrentCursorHint(Client *_bot, int &_type, int &_val);
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint);
-	bool GetMg42Properties(Client *_bot, ETQW_MG42Info &data);	
+	bool GetMg42Properties(Client *_bot, ETQW_MG42Info &data);
 };
 
 #endif

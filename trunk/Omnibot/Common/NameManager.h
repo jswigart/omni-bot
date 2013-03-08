@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __NAMEMANAGER_H__
 #define __NAMEMANAGER_H__
@@ -16,34 +18,33 @@ class NameReference
 public:
 	friend class NameManager;
 
-	const String &GetName() { return m_Name; }
-	const String &GetProfileName() { return m_ProfileName; }
+	const std::string &GetName() { return m_Name; }
+	const std::string &GetProfileName() { return m_ProfileName; }
 
-	NameReference(const String &_name = "", const String &_profile = "");
+	NameReference(const std::string &_name = "", const std::string &_profile = "");
 	~NameReference();
 private:
-	String		m_Name;
-	String		m_ProfileName;
+	std::string		m_Name;
+	std::string		m_ProfileName;
 };
 
 typedef boost::shared_ptr<NameReference> NamePtr;
-
 
 // class: NameManager
 class NameManager
 {
 public:
-	
-	bool AddName(const String &_name, const String &_profile);
-	void DeleteName(const String &_name);
+
+	bool AddName(const std::string &_name, const std::string &_profile);
+	void DeleteName(const std::string &_name);
 	void ClearNames();
-    
-	void SetProfileForClass(const int _class, const String &_name);
 
-	NamePtr GetName(const String &_preferred = "");
+	void SetProfileForClass(const int _class, const std::string &_name);
 
-	const String GetProfileForName(const String &_name) const;
-	const String GetProfileForClass(int _class) const;
+	NamePtr GetName(const std::string &_preferred = "");
+
+	const std::string GetProfileForName(const std::string &_name) const;
+	const std::string GetProfileForClass(int _class) const;
 
 	//void LoadBotNames();
 
@@ -51,12 +52,12 @@ public:
 	static void DeleteInstance();
 protected:
 
-	typedef std::map<String, NamePtr> NamesMap;
+	typedef std::map<std::string, NamePtr> NamesMap;
 
 	NamesMap	m_NamesMap;
 
 	// typedef: DefaultProfileMap
-	typedef std::map<int, String> DefaultProfileMap;
+	typedef std::map<int, std::string> DefaultProfileMap;
 	DefaultProfileMap		m_ProfileMap;
 
 	static NameManager		*m_Instance;
@@ -66,4 +67,3 @@ protected:
 };
 
 #endif
-

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
@@ -22,10 +21,10 @@ Prof_Define(ScriptGoal);
 
 namespace AiState
 {
-	MoveOptions::MoveOptions() 
+	MoveOptions::MoveOptions()
 		: Radius(32.f)
 		, ThreadId(GM_INVALID_THREAD)
-		, Mode(Run) 
+		, Mode(Run)
 		, NumAvoid(0)
 	{
 	}
@@ -53,11 +52,10 @@ namespace AiState
 
 				pNode = avoidTable->GetNext(tIt);
 			}
-
 		}
 	}
 
-	ScriptGoal::ScriptGoal(const char *_name) 
+	ScriptGoal::ScriptGoal(const char *_name)
 		: StateChild(_name)
 		, FollowPathUser(_name)
 		, m_AimVector(Vector3f::ZERO)
@@ -87,7 +85,7 @@ namespace AiState
 		SetScriptGoal(true);
 	}
 
-	void ScriptGoal::SetProfilerZone(const String &_name)
+	void ScriptGoal::SetProfilerZone(const std::string &_name)
 	{
 #ifdef Prof_ENABLED
 		m_ProfZone = gDynamicZones.FindZone(_name.c_str());
@@ -104,7 +102,7 @@ namespace AiState
 		}
 	}
 
-	void ScriptGoal::GetDebugString(StringStr &out)
+	void ScriptGoal::GetDebugString(std::stringstream &out)
 	{
 		if(m_DebugString)
 			out << m_DebugString->GetString();
@@ -116,7 +114,7 @@ namespace AiState
 	{
 		/*if(IsActive())
 		{
-		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
 		}*/
 	}
 
@@ -128,7 +126,7 @@ namespace AiState
 
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		gmTableObject *pTheirTable = gmScriptGoal::GetUserTable(GetScriptObject(pMachine));
-		gmScriptGoal::gmBindUserObject *pObj = 
+		gmScriptGoal::gmBindUserObject *pObj =
 			gmScriptGoal::GetUserBoundObject(pMachine, pNewGoal->GetScriptObject(pMachine));
 		pObj->m_table = pTheirTable->Duplicate(pMachine);
 
@@ -140,7 +138,7 @@ namespace AiState
 		m_ParentNameHash = Utils::MakeHash32(_str);
 	}
 
-	String ScriptGoal::GetParentName() const
+	std::string ScriptGoal::GetParentName() const
 	{
 		return Utils::HashToString(GetParentNameHash());
 	}
@@ -150,7 +148,7 @@ namespace AiState
 		m_InsertBeforeHash = Utils::MakeHash32(_str);
 	}
 
-	String ScriptGoal::GetInsertBeforeName() const
+	std::string ScriptGoal::GetInsertBeforeName() const
 	{
 		return Utils::HashToString(GetInsertBeforeHash());
 	}
@@ -160,7 +158,7 @@ namespace AiState
 		m_InsertAfterHash = Utils::MakeHash32(_str);
 	}
 
-	String ScriptGoal::GetInsertAfterName() const
+	std::string ScriptGoal::GetInsertAfterName() const
 	{
 		return Utils::HashToString(GetInsertAfterHash());
 	}
@@ -178,7 +176,7 @@ namespace AiState
 		return m_ScriptObject;
 	}
 
-	void ScriptGoal::InternalExit() 
+	void ScriptGoal::InternalExit()
 	{
 		State::InternalExit();
 		// always kill goal threads on an exit, we may not actually be active
@@ -278,7 +276,7 @@ namespace AiState
 		{
 			_final = false;
 		}
-		else 
+		else
 		{
 			_final = true;
 		}
@@ -441,7 +439,7 @@ namespace AiState
 		InternalSignal(_var);
 	}
 
-	bool ScriptGoal::OnPathThrough(const String &_s)
+	bool ScriptGoal::OnPathThrough(const std::string &_s)
 	{
 		Prof_Scope(ScriptGoal);
 
@@ -473,7 +471,7 @@ namespace AiState
 							SetScriptPriority(1.f);
 							SetLastPriority(1.f);
 							return true;
-						}						
+						}
 					}
 				}
 			}
@@ -481,7 +479,7 @@ namespace AiState
 		}
 	}
 
-	void ScriptGoal::EndPathThrough() 
+	void ScriptGoal::EndPathThrough()
 	{
 		SetScriptPriority(0.f);
 		SetLastPriority(0.f);
@@ -672,7 +670,7 @@ namespace AiState
 				}
 
 				UpdateMapGoalsInRadius();
-				
+
 				if(!m_Finished && m_Callbacks[ON_UPDATE])
 				{
 					if(!m_ActiveThread[ON_UPDATE].IsActive())
@@ -704,18 +702,18 @@ namespace AiState
 		m_Tracker.InProgress.Reset();
 		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) > 0)
 		{
-			m_Tracker.InProgress = _p; 
+			m_Tracker.InProgress = _p;
 			return true;
 		}
 		return false;
 	}
 
-	bool ScriptGoal::MarkInUse(MapGoalPtr _p) 
+	bool ScriptGoal::MarkInUse(MapGoalPtr _p)
 	{
 		m_Tracker.InUse.Reset();
 		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INUSE) > 0)
 		{
-			m_Tracker.InUse = _p; 
+			m_Tracker.InUse = _p;
 			return true;
 		}
 		return false;
@@ -749,7 +747,7 @@ namespace AiState
 		{
 			if(_type==Aimer::MoveDirection)
 				return aim->AddAimMoveDirRequest(_prio,GetNameHash());
-			else 
+			else
 				return aim->AddAimRequest(_prio,this,GetNameHash());
 		}
 		return false;
@@ -801,7 +799,7 @@ namespace AiState
 				m_WatchEntities.m_Category,
 				records,
 				SensoryMemory::NumRecords);
-			
+
 			// figure out which ones just entered, and which ones left so we can send the appropriate events
 			for(int e = 0; e < numEnts; ++e)
 			{
@@ -827,7 +825,7 @@ namespace AiState
 						m_WatchEntities.m_Entry[i].m_TimeStamp = IGame::GetTime();
 						found = true;
 						break;
-					} 
+					}
 					else if(!m_WatchEntities.m_Entry[i].m_Ent.IsValid() && emptySlot==-1)
 					{
 						emptySlot = i;
@@ -850,7 +848,7 @@ namespace AiState
 			// check for anyone that needs exiting
 			for(int i = 0; i < WatchEntity::MaxEntities; ++i)
 			{
-				if(m_WatchEntities.m_Entry[i].m_Ent.IsValid() && 
+				if(m_WatchEntities.m_Entry[i].m_Ent.IsValid() &&
 					m_WatchEntities.m_Entry[i].m_TimeStamp != IGame::GetTime())
 				{
 					Event_EntLeaveRadius data = { m_WatchEntities.m_Entry[i].m_Ent };

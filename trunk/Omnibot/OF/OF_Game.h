@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __FF_GAME_H__
-#define __FF_GAME_H__
+#pragma once
+
+#ifndef __OF_GAME_H__
+#define __OF_GAME_H__
 
 class Waypoint;
 class gmMachine;
@@ -23,7 +25,7 @@ class OF_Game : public TF_Game
 public:
 	bool Init();
 
-	//void AddBot(const String &_name, int _team, int _class, const String _profile, bool _createnow);
+	//void AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow);
 
 	virtual Client *CreateGameClient();
 

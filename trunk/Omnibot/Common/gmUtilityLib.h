@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GMUTILITYLIBRARY_H__
 #define __GMUTILITYLIBRARY_H__
@@ -15,7 +17,6 @@ Version History:
 
 09/12/2005 Version 0.9.5 OJW
 - Initial Release
-
 
 */
 
@@ -34,9 +35,9 @@ namespace gmUtility
 	};
 
 	// Utility functions
-	bool DumpGlobals(const String &_file, int _flags);
-	bool DumpTable(gmMachine *_machine, const String &_file, const String &_name, int _flags);
-	bool DumpTable(gmMachine *_machine, File &outFile, const String &_name, gmTableObject *_tbl, int _flags);
+	bool DumpGlobals(const std::string &_file, int _flags);
+	bool DumpTable(gmMachine *_machine, const std::string &_file, const std::string &_name, int _flags);
+	bool DumpTable(gmMachine *_machine, File &outFile, const std::string &_name, gmTableObject *_tbl, int _flags);
 	void DumpTableInfo(gmMachine *_machine, const int _flags, gmTableObject *_table, char *_buffer, int _buflen, int _lvl, File &_file);
 };
 

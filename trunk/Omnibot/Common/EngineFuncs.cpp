@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "EngineFuncs.h"
 #include "Utilities.h"
+#include "RenderBuffer.h"
 
 namespace EngineFuncs
 {
 	Prof_Define(EngineFuncs);
 
-	bool TraceLine(obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end, 
+	bool TraceLine(obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
 		const AABB *_aabb, int _mask, int _user, obBool _usepvs)
 	{
 		//Prof_Scope(EngineFuncs);
@@ -24,7 +24,7 @@ namespace EngineFuncs
 		{
 			if(bDraw)
 			{
-				Utils::DrawLine(_start, _end, COLOR::BLUE, 0.02f);
+				RenderBuffer::AddLine(_start, _end, COLOR::BLUE, 0.02f);
 			}
 		}
 
@@ -32,8 +32,8 @@ namespace EngineFuncs
 		_tr.m_Endpos[1] = _start.y;
 		_tr.m_Endpos[2] = _start.z;
 		return SUCCESS(g_EngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
-	}	
-	String EntityName(const GameEntity _ent, const char *_default)
+	}
+	std::string EntityName(const GameEntity _ent, const char *_default)
 	{
 		//Prof_Scope(EngineFuncs);
 		{
@@ -131,15 +131,15 @@ namespace EngineFuncs
 		//Prof_Scope(EngineFuncs);
 		{
 			Prof(EntityWorldOBB);
-			if(SUCCESS(g_EngineFuncs->GetEntityWorldOBB(_ent, 
+			if(SUCCESS(g_EngineFuncs->GetEntityWorldOBB(_ent,
 				_bounds.Center,
 				_bounds.Axis[0],
 				_bounds.Axis[1],
 				_bounds.Axis[2],
 				_bounds.Extent))) {
-				return true;
+					return true;
 			}
-			return false;		
+			return false;
 		}
 	}
 	bool EntityGroundEntity(const GameEntity _ent, GameEntity &moveent)
@@ -167,8 +167,8 @@ namespace EngineFuncs
 			Prof(GroundPosition);
 
 			obTraceResult tr;
-			EngineFuncs::TraceLine(tr, 
-				_pos + Vector3f(0.f, 0.f, _offset), 
+			EngineFuncs::TraceLine(tr,
+				_pos + Vector3f(0.f, 0.f, _offset),
 				_pos - Vector3f::UNIT_Z * 2048.f,
 				NULL,
 				TR_MASK_FLOODFILL, -1, False);
@@ -189,13 +189,13 @@ namespace EngineFuncs
 
 	//TryMutex			g_MessageMutex;
 
-	void ThreadAddMessage(const String &_msg)
+	void ThreadAddMessage(const std::string &_msg)
 	{
 		//TryMutex::scoped_lock sl(g_MessageMutex);
 		//g_ThreadMessages.push_back(_msg);
 	}
 
-	void ThreadAddError(const String &_msg)
+	void ThreadAddError(const std::string &_msg)
 	{
 		//TryMutex::scoped_lock sl(g_MessageMutex);
 		//g_ThreadErrors.push_back(_msg);
@@ -206,17 +206,17 @@ namespace EngineFuncs
 		/*TryMutex::scoped_try_lock sl(g_MessageMutex,boost::defer_lock);
 		if(sl.try_lock())
 		{
-			while(!g_ThreadErrors.empty())
-			{
-				g_EngineFuncs->PrintError(g_ThreadErrors.front().c_str());
-				g_ThreadErrors.pop_front();
-			}
-			while(!g_ThreadMessages.empty())
-			{
-				g_EngineFuncs->PrintMessage(g_ThreadMessages.front().c_str());
-				g_ThreadMessages.pop_front();
-			}
-			sl.unlock();
+		while(!g_ThreadErrors.empty())
+		{
+		g_EngineFuncs->PrintError(g_ThreadErrors.front().c_str());
+		g_ThreadErrors.pop_front();
+		}
+		while(!g_ThreadMessages.empty())
+		{
+		g_EngineFuncs->PrintMessage(g_ThreadMessages.front().c_str());
+		g_ThreadMessages.pop_front();
+		}
+		sl.unlock();
 		}*/
 	}
 
@@ -236,7 +236,7 @@ namespace EngineFuncs
 		db.writeString( _msg );
 		db.endSizeHeader();
 		if ( db.endWrite() == 0 ) {
-			IGameManager::GetInstance()->SyncRemoteMessage( db );
+		IGameManager::GetInstance()->SyncRemoteMessage( db );
 		}*/
 #endif
 	}
@@ -255,7 +255,7 @@ namespace EngineFuncs
 		db.writeString( _msg );
 		db.endSizeHeader();
 		if ( db.endWrite() == 0 ) {
-			IGameManager::GetInstance()->SyncRemoteMessage( db );
+		IGameManager::GetInstance()->SyncRemoteMessage( db );
 		}*/
 #endif
 	}

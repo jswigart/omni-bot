@@ -1,13 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __GOALMANAGER_H__
 #define __GOALMANAGER_H__
+
+#include <set>
 
 #include "CommandReciever.h"
 
@@ -28,12 +32,12 @@ typedef std::set<MapGoalPtr> MapGoalSet;
 
 // class: GoalManager
 //		The goal manager is responsible for keeping track of various goals,
-//		from flags to capture points. Bots can request goals from the goal 
+//		from flags to capture points. Bots can request goals from the goal
 //		manager and the goal manager can assign goals to the bot based on
 //		the needs of the game, and optionally the bot properties
 class GoalManager : public CommandReciever
 {
-public:	
+public:
 	//////////////////////////////////////////////////////////////////////////
 	class Query
 	{
@@ -47,7 +51,7 @@ public:
 			SORT_RANDOM_FULL
 		};
 
-		enum QueryError 
+		enum QueryError
 		{
 			QueryOk,
 			QueryBadNameExpression,
@@ -106,8 +110,8 @@ public:
 		Vector3f		m_Position;
 		float			m_Radius;
 
-		String			m_NameExp;
-		String			m_GroupExp;
+		std::string			m_NameExp;
+		std::string			m_GroupExp;
 
 		QueryError		m_Error;
 
@@ -127,24 +131,24 @@ public:
 	void Shutdown();
 	void Reset();
 
-	bool Load(const String &_map, ErrorObj &_err);
-	bool Save(const String &_map, ErrorObj &_err);
+	bool Load(const std::string &_map, ErrorObj &_err);
+	bool Save(const std::string &_map, ErrorObj &_err);
 
 	MapGoalPtr AddGoal(const MapGoalDef &goaldef);
 
 	void RemoveGoalsByType(const char *_goaltype);
 	void RemoveGoalByEntity(GameEntity _ent);
-	
+
 	void GetGoals(Query &_qry);
 
-	MapGoalPtr GetGoal(const String &_goalname);
+	MapGoalPtr GetGoal(const std::string &_goalname);
 	MapGoalPtr GetGoal(int _serialNum);
 
 	virtual void CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used = BitFlag64());
 	void RegisterWaypointGoals(Waypoint *_wp, MapGoalDef *_def, int _num);
 
 	const MapGoalList &GetGoalList() const { return m_MapGoalList; }
-	
+
 	static GoalManager *GetInstance();
 	static void DeleteInstance();
 	void UpdateGoalEntity( GameEntity oldent, GameEntity newent );
@@ -176,7 +180,7 @@ protected:
 	void cmdGoalRemoveAll(const StringVector &_args);
 	void cmdGoalMove(const StringVector &_args);
 
-	enum EditMode 
+	enum EditMode
 	{
 		EditNone,
 		EditMove,

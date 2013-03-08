@@ -212,12 +212,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClCompile Include="..\..\..\D3\D3_Game.cpp" />
     <ClCompile Include="..\..\..\D3\D3_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\D3\gmD3Binds.cpp" />
-    <ClCompile Include="..\..\..\..\GameInterfaces\D3\game\omnibot\omnibot_interface.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc" />
@@ -231,21 +225,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\D3\gmD3Binds.h" />
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\D3\D3_BuildInterface.bld">
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(InterfaceDir)GameInterfaces\D3\D3Game2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InterfaceDir)GameInterfaces\D3\D3Game2010.sln</Solution>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</Config>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</Config>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(InterfaceDir)GameInterfaces\D3\D3Game2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(InterfaceDir)GameInterfaces\D3\D3Game2010.sln</Solution>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="D3_BuildInterface.results" />
     <None Include="..\..\..\D3\Jamfile" />
   </ItemGroup>
   <ItemGroup>

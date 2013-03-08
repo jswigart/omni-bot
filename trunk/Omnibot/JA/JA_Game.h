@@ -1,11 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
 
 #ifndef __JA_GAME_H__
 #define __JA_GAME_H__
@@ -46,7 +47,7 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-	
+
 	// PathPlannerWaypointInterface
 	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
 

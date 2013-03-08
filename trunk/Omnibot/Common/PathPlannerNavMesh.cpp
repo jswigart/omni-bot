@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -42,7 +42,7 @@ void PathPlannerNavMesh::CollisionData::Free()
 //////////////////////////////////////////////////////////////////////////
 namespace NavigationMeshOptions
 {
-	float CharacterHeight = 64.f;	
+	float CharacterHeight = 64.f;
 };
 //////////////////////////////////////////////////////////////////////////
 
@@ -168,7 +168,7 @@ public:
 				fl.Finished = true;
 
 				m_Solution.resize(0);
-				
+
 				// add all the nodes, goal->start
 				while(pCurNode)
 				{
@@ -198,7 +198,7 @@ public:
 					col = COLOR::GREEN;
 
 				if(pNode->Parent)
-					Utils::DrawLine(pNode->Position,pNode->Parent->Position,col,2.f);
+					RenderBuffer::AddLine(pNode->Position,pNode->Parent->Position,col,2.f);
 			}
 		}
 	}
@@ -218,7 +218,7 @@ private:
 
 	enum		{ MaxNodes=2048 };
 	PlanNode	m_Nodes[MaxNodes];
-	int			m_UsedNodes;	
+	int			m_UsedNodes;
 
 	static bool NAV_COMP(const PlanNode* _n1, const PlanNode* _n2)
 	{
@@ -248,7 +248,7 @@ private:
 
 	int									FoundGoalIndex;
 
-	struct  
+	struct
 	{
 		obuint32							Finished : 1;
 	} fl;
@@ -285,9 +285,9 @@ private:
 		NodeClosedList::iterator itEnd = m_ClosedList.upper_bound(_node->Sector->m_Id);
 		while(it != itEnd)
 		{
-			if(SquaredLength(_node->Position,it->second->Position) < 32.f)
-				return it;
-			++it;
+		if(SquaredLength(_node->Position,it->second->Position) < 32.f)
+		return it;
+		++it;
 		}
 		return m_ClosedList.end();*/
 	}
@@ -305,7 +305,7 @@ private:
 				if(fSqDist < fClosest)
 				{
 					fClosest = fSqDist;
-					itRet = it;					
+					itRet = it;
 				}
 			}
 		}
@@ -323,7 +323,6 @@ private:
 		std::push_heap(_wpl.begin(), _wpl.end(), node_compare);
 	}
 
-
 	void _ExpandNode(PlanNode *_node, GoalLocation *_goal)
 	{
 		if(_goal)
@@ -332,7 +331,7 @@ private:
 			pNextNode->Portal = 0;
 			pNextNode->Parent = _node;
 			pNextNode->Sector = _node->Sector;
-			pNextNode->Position = _goal->Position; // TODO: branch more			
+			pNextNode->Position = _goal->Position; // TODO: branch more
 			pNextNode->CostHeuristic = 0;
 			pNextNode->CostGiven = _node->CostGiven + Length(_node->Position, pNextNode->Position);
 			pNextNode->CostFinal = pNextNode->CostHeuristic + pNextNode->CostGiven;
@@ -340,8 +339,8 @@ private:
 			return;
 		}
 
-		for(int p = _node->Sector->m_StartPortal; 
-			p < _node->Sector->m_StartPortal+_node->Sector->m_NumPortals; 
+		for(int p = _node->Sector->m_StartPortal;
+			p < _node->Sector->m_StartPortal+_node->Sector->m_NumPortals;
 			++p)
 		{
 			const PathPlannerNavMesh::NavPortal &portal = g_PlannerNavMesh->m_NavPortals[p];
@@ -354,13 +353,13 @@ private:
 			tmpNext.Portal = &portal;
 			tmpNext.Parent = _node;
 			tmpNext.Sector = &g_PlannerNavMesh->m_ActiveNavSectors[portal.m_DestSector];
-			tmpNext.Position = portal.m_Segment.Origin; // TODO: branch more		
+			tmpNext.Position = portal.m_Segment.Origin; // TODO: branch more
 
 			//if(m_CurrentGoals.size()==1)
 			//	tmpNext.CostHeuristic = Length(m_CurrentGoals.front().Position,tmpNext.Position); // USE IF 1 GOAL!
 			//else
-				tmpNext.CostHeuristic = 0;
-			
+			tmpNext.CostHeuristic = 0;
+
 			tmpNext.CostGiven = _node->CostGiven + Length(_node->Position, tmpNext.Position);
 			tmpNext.CostFinal = tmpNext.CostHeuristic + tmpNext.CostGiven;
 
@@ -391,7 +390,7 @@ private:
 				PlanNode *pOnOpen = (*openIt);
 				if(pOnOpen->CostGiven > tmpNext.CostGiven)
 				{
-					// Update the open list					
+					// Update the open list
 					*pOnOpen = tmpNext;
 
 					// Remove it from the open list first.
@@ -446,13 +445,13 @@ PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3
 
 		//udword		mFaceID;				//!< Index of touched face
 		//float		mDistance;				//!< Distance from collider to hitpoint
-		//float		mU, mV;	
+		//float		mU, mV;
 		const Opcode::CollisionFace * hitFace = faces.GetFaces();
 		if ( hitFace != NULL )
 		{
-			Opcode::VertexPointers v;		
+			Opcode::VertexPointers v;
 			m_CollisionData.m_CollisionTree->GetMeshInterface()->GetTriangle( v, hitFace->mFaceID );
-						
+
 			/*Vector3List pts( 3 );
 			pts.push_back( Vector3f( v.Vertex[ 0 ]->x, v.Vertex[ 0 ]->y, v.Vertex[ 0 ]->z ) );
 			pts.push_back( Vector3f( v.Vertex[ 1 ]->x, v.Vertex[ 1 ]->y, v.Vertex[ 1 ]->z ) );
@@ -463,8 +462,8 @@ PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3
 
 			IceMaths::Point normal = v.Normal();
 
-			return NavCollision( true, 
-				_from + dir * hitFace->mDistance, 
+			return NavCollision( true,
+				_from + dir * hitFace->mDistance,
 				Vector3f( normal.x, normal.y, normal.z ),
 				faceAttrib );
 		}
@@ -489,7 +488,7 @@ PathPlannerNavMesh::NavSector *PathPlannerNavMesh::GetSectorAt(const Vector3f &_
 //////////////////////////////////////////////////////////////////////////
 
 PathPlannerNavMesh::PathPlannerNavMesh()
-{	
+{
 	// TEMP
 	m_PlannerFlags.SetFlag(NAV_VIEW);
 	m_PlannerFlags.SetFlag(NAVMESH_STEPPROCESS);
@@ -585,7 +584,7 @@ SegmentList PathPlannerNavMesh::NavSector::GetEdgeSegments() const
 }
 
 bool PathPlannerNavMesh::Init()
-{	
+{
 	InitCommands();
 	return true;
 }
@@ -601,9 +600,9 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 		polyList.push_back( vec3d );
 	}
 	/*if ( solid )
-		Utils::DrawPolygon( polyList, color, dur );
+	Utils::DrawPolygon( polyList, color, dur );
 	else
-		Utils::DrawLine( polyList, color, dur, vertSize );*/
+	RenderBuffer::AddLine( polyList, color, dur, vertSize );*/
 
 	if ( solid )
 		RenderBuffer::AddPolygonFilled( polyList, color );
@@ -630,9 +629,9 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 		polyList.push_back( vec3d );
 	}
 	/*if ( solid )
-		Utils::DrawPolygon( polyList, color, dur );
+	Utils::DrawPolygon( polyList, color, dur );
 	else
-		Utils::DrawLine( polyList, color, dur, vertSize );*/
+	RenderBuffer::AddLine( polyList, color, dur, vertSize );*/
 
 	if ( solid )
 		RenderBuffer::AddPolygonFilled( polyList, color );
@@ -661,21 +660,21 @@ void PathPlannerNavMesh::Update()
 		Utils::GetLocalFacing(vLocalAim);
 		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal))
 		{
-			RenderBuffer::AddLine(vAimPos, 
-				vAimPos + vAimNormal * 16.f, 
+			RenderBuffer::AddLine(vAimPos,
+				vAimPos + vAimNormal * 16.f,
 				m_CursorColor);
 
-			RenderBuffer::AddLine(vAimPos, 
+			RenderBuffer::AddLine(vAimPos,
 				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor);
 
-			/*Utils::DrawLine(vAimPos, 
-				vAimPos + vAimNormal * 16.f, 
-				m_CursorColor, 
-				IGame::GetDeltaTimeSecs()*2.f);
+			/*RenderBuffer::AddLine(vAimPos,
+			vAimPos + vAimNormal * 16.f,
+			m_CursorColor,
+			IGame::GetDeltaTimeSecs()*2.f);
 
-			Utils::DrawLine(vAimPos, 
-				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor, 
-				IGame::GetDeltaTimeSecs()*2.f);*/
+			RenderBuffer::AddLine(vAimPos,
+			vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor,
+			IGame::GetDeltaTimeSecs()*2.f);*/
 		}
 		m_CursorColor = COLOR::BLUE; // back to default
 		//////////////////////////////////////////////////////////////////////////
@@ -697,7 +696,7 @@ void PathPlannerNavMesh::Update()
 		NavSector nsMirrored;
 
 		static int iLastSector = -1;
-		
+
 		static int iNextCurSectorTimeUpdate = 0;
 		if(iCurrentSector != -1 &&
 			(iLastSector != iCurrentSector || IGame::GetTime() >= iNextCurSectorTimeUpdate))
@@ -723,7 +722,7 @@ void PathPlannerNavMesh::Update()
 				if ( i >= m_NavSectors.size() )
 					SEC_COLOR = COLOR::CYAN;
 
-				//////////////////////////////////////////////////////////////////////////							
+				//////////////////////////////////////////////////////////////////////////
 				// Draw sector obstacles
 				if ( ns.m_Obstacles.size() > 0 )
 				{
@@ -731,7 +730,7 @@ void PathPlannerNavMesh::Update()
 					for ( size_t b = 0; b < ns.m_Boundary.size(); ++b )
 					{
 						sectorPoly.push_back( ClipperLib::IntPoint(
-							(ClipperLib::long64)ns.m_Boundary[b].x, 
+							(ClipperLib::long64)ns.m_Boundary[b].x,
 							(ClipperLib::long64)ns.m_Boundary[b].y ) );
 					}
 
@@ -743,8 +742,8 @@ void PathPlannerNavMesh::Update()
 						ClipperLib::Polygon & obs = obstaclePolys.back();
 						for ( size_t ov = 0; ov < ns.m_Obstacles[o].mPolyVerts.size(); ++ov )
 						{
-							obs.push_back( ClipperLib::IntPoint( 
-								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].x, 
+							obs.push_back( ClipperLib::IntPoint(
+								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].x,
 								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].y ) );
 						}
 					}
@@ -846,14 +845,14 @@ void PathPlannerNavMesh::Update()
 
 								DrawPoly( true, ns, ply, 0.0f, SEC_COLOR.fade(100), 2.0f, 4.0f );
 								DrawPoly( false, ns, ply, 0.0f, SEC_COLOR, 2.0f, 4.0f );
-							}	
+							}
 						}
 						else
 						{
 							const NavSector &ns = m_ActiveNavSectors[i];
 
-							Utils::DrawLine(ns.m_Boundary, COLOR::RED.fade( 100 ), 2.f, 2.f, COLOR::MAGENTA, true);
-							
+							RenderBuffer::AddLine(ns.m_Boundary, COLOR::RED.fade( 100 ));
+
 							// Draw the error input poly line
 							for ( PolyList::iterator p = inputPolys.begin();
 								p != inputPolys.end();
@@ -862,7 +861,7 @@ void PathPlannerNavMesh::Update()
 								DrawPoly( false, ns, (*p), 6.0f, COLOR::MAGENTA, 2.0f, 4.0f );
 							}
 						}
-					}	
+					}
 				}
 				else
 				{
@@ -878,11 +877,11 @@ void PathPlannerNavMesh::Update()
 				for(; pIt != m_NavPortals.end(); ++pIt)
 				{
 					const NavPortal &portal = (*pIt);
-					
-					/*Utils::DrawLine(portal.m_Segment.GetPosEnd(),
-						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-					Utils::DrawLine(portal.m_Segment.GetNegEnd(),
-						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);*/
+
+					/*RenderBuffer::AddLine(portal.m_Segment.GetPosEnd(),
+					portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+					RenderBuffer::AddLine(portal.m_Segment.GetNegEnd(),
+					portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);*/
 
 					RenderBuffer::AddLine( portal.m_Segment.GetPosEnd(),
 						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA );
@@ -896,13 +895,13 @@ void PathPlannerNavMesh::Update()
 				struct RenderSpanCell : SpanMap::RenderFunctor
 				{
 				public:
-					RenderSpanCell( RenderBuffer::QuadList & lst ) 
+					RenderSpanCell( RenderBuffer::QuadList & lst )
 						: mList( lst ) { }
-					
+
 					virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
 					{
 						static obuint8 alpha = 255;
-						
+
 						RenderBuffer::Quad q;
 						q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
 						q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
@@ -921,7 +920,7 @@ void PathPlannerNavMesh::Update()
 				{
 					m_Influence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
 				}
-				
+
 				if ( mInfluenceBufferId == 0 && m_SpanMap->GetNumSpans() > 0 )
 				{
 					RenderBuffer::QuadList prims;
@@ -948,7 +947,7 @@ void PathPlannerNavMesh::Update()
 			RenderBuffer::AddPolygonFilled( m_WorkingSector.m_Boundary, COLOR::GREEN );
 			if ( m_WorkingSector.IsMirrored() )
 				RenderBuffer::AddPolygonFilled( m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN );
-				//Utils::DrawPolygon(m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN.fade(100), 0.1f, false);
+			//Utils::DrawPolygon(m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN.fade(100), 0.1f, false);
 		}
 	}
 }
@@ -958,7 +957,7 @@ void PathPlannerNavMesh::Shutdown()
 	Unload();
 }
 
-bool PathPlannerNavMesh::Load(const String &_mapname, bool _dl)
+bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 {
 	if(_mapname.empty())
 		return false;
@@ -970,12 +969,12 @@ bool PathPlannerNavMesh::Load(const String &_mapname, bool _dl)
 	{
 		using namespace google::protobuf;
 
-		const String navPathText	= String("nav/") + _mapname + ".nm";
-		const String navPathBinary	= String("nav/") + _mapname + ".nmb";	
+		const std::string navPathText	= std::string("nav/") + _mapname + ".nm";
+		const std::string navPathBinary	= std::string("nav/") + _mapname + ".nmb";
 
 		NavmeshIO::NavigationMesh nm;
 
-		String fileContents;
+		std::string fileContents;
 
 		File navFile;
 		if ( navFile.OpenForRead( navPathBinary.c_str(), File::Binary) )
@@ -1020,11 +1019,11 @@ bool PathPlannerNavMesh::Load(const String &_mapname, bool _dl)
 			{
 				const NavmeshIO::SectorVert & v = s.vertices( i );
 				sector.m_Boundary.push_back( Vector3f(
-					v.position().x(), 
-					v.position().y(), 
+					v.position().x(),
+					v.position().y(),
 					v.position().z() ) );
 			}
-			
+
 			m_NavSectors.push_back( sector );
 		}
 	}
@@ -1039,14 +1038,14 @@ bool PathPlannerNavMesh::Load(const String &_mapname, bool _dl)
 	return true;
 }
 
-bool PathPlannerNavMesh::Save(const String &_mapname)
+bool PathPlannerNavMesh::Save(const std::string &_mapname)
 {
 	if(_mapname.empty())
 		return false;
 
 	NavmeshIO::NavigationMesh nm;
 	nm.mutable_header(); // header is required
-	
+
 	if ( !m_MapCenter.IsZero() )
 	{
 		nm.mutable_header()->mutable_mapcenter()->set_x( m_MapCenter.x );
@@ -1076,21 +1075,21 @@ bool PathPlannerNavMesh::Save(const String &_mapname)
 		}
 	}
 
-	String outBuffer;
+	std::string outBuffer;
 
 	using namespace google::protobuf;
 	io::StringOutputStream outputStream( &outBuffer );
 	io::CodedOutputStream codedStream( &outputStream );
 
-	String serializeBinary, serializeText;
+	std::string serializeBinary, serializeText;
 
 	try
 	{
 		nm.SerializeToString( &serializeBinary );
 		TextFormat::PrintToString( nm, &serializeText );
 
-		const String navPathText	= String("nav/") + _mapname + ".nm";
-		const String navPathBinary	= String("nav/") + _mapname + ".nmb";	
+		const std::string navPathText	= std::string("nav/") + _mapname + ".nm";
+		const std::string navPathBinary	= std::string("nav/") + _mapname + ".nmb";
 
 		File outFileBinary;
 		if ( outFileBinary.OpenForWrite(navPathBinary.c_str(), File::Binary) )
@@ -1110,7 +1109,7 @@ bool PathPlannerNavMesh::Save(const String &_mapname)
 	{
 		LOG("PathPlannerNavMesh::Save ERROR: " << e->what() );
 	}
-			
+
 	return true;
 }
 
@@ -1119,8 +1118,8 @@ bool PathPlannerNavMesh::IsReady() const
 	return !m_ActiveNavSectors.empty();
 }
 
-bool PathPlannerNavMesh::GetNavFlagByName(const String &_flagname, NavFlags &_flag) const
-{	
+bool PathPlannerNavMesh::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
+{
 	_flag = 0;
 	return false;
 }
@@ -1128,7 +1127,7 @@ bool PathPlannerNavMesh::GetNavFlagByName(const String &_flagname, NavFlags &_fl
 Vector3f PathPlannerNavMesh::GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team)
 {
 	Vector3f dest = _start;
-	
+
 	if(!m_ActiveNavSectors.empty())
 	{
 		const NavSector &randSector = m_ActiveNavSectors[rand()%m_ActiveNavSectors.size()];
@@ -1178,7 +1177,7 @@ bool PathPlannerNavMesh::FoundGoal() const
 }
 
 void PathPlannerNavMesh::Unload()
-{	
+{
 	OB_DELETE( m_Influence );
 	OB_DELETE( m_SpanMap );
 
@@ -1190,12 +1189,12 @@ void PathPlannerNavMesh::InitSectors()
 	m_CollisionData.Free();
 
 	m_ActiveNavSectors.clear();
-	
+
 	NavSectorList					allSectors;
 
 	std::vector<IceMaths::Point>	vertices;
 	std::vector<PolyAttrib>			triSectors;
-	
+
 	// create the active sector list and the collision data at the same time so we can create a proper mapping
 	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
 	{
@@ -1207,7 +1206,7 @@ void PathPlannerNavMesh::InitSectors()
 		allSectors.push_back( m_NavSectors[ i ] );
 		allSectors.back().m_Id = attr.Fields.SectorId;
 
-		//////////////////////////////////////////////////////////////////////////		
+		//////////////////////////////////////////////////////////////////////////
 		Vector3f center = allSectors.back().CalculateCenter();
 		for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
 		{
@@ -1216,20 +1215,20 @@ void PathPlannerNavMesh::InitSectors()
 			vertices.push_back( IceMaths::Point(
 				center.x, center.y, center.z ) );
 
-			vertices.push_back( IceMaths::Point( 
+			vertices.push_back( IceMaths::Point(
 				allSectors.back().m_Boundary[ v-1 ].x,
 				allSectors.back().m_Boundary[ v-1 ].y,
 				allSectors.back().m_Boundary[ v-1 ].z ) );
 
-			vertices.push_back( IceMaths::Point( 
+			vertices.push_back( IceMaths::Point(
 				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
 				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );	
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );
 
 			if ( v == 1 )
 			{
 				allSectors.back().m_Plane = Plane3f(
-					center, 
+					center,
 					allSectors.back().m_Boundary[ v-1 ],
 					allSectors.back().m_Boundary[ v ] );
 			}
@@ -1250,7 +1249,7 @@ void PathPlannerNavMesh::InitSectors()
 			allSectors.back().m_Id = attr.Fields.SectorId;
 
 			//////////////////////////////////////////////////////////////////////////
-			Vector3f center = allSectors.back().CalculateCenter();			
+			Vector3f center = allSectors.back().CalculateCenter();
 			for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
 			{
 				triSectors.push_back( attr );
@@ -1258,20 +1257,20 @@ void PathPlannerNavMesh::InitSectors()
 				vertices.push_back( IceMaths::Point(
 					center.x, center.y, center.z ) );
 
-				vertices.push_back( IceMaths::Point( 
+				vertices.push_back( IceMaths::Point(
 					allSectors.back().m_Boundary[ v-1 ].x,
 					allSectors.back().m_Boundary[ v-1 ].y,
 					allSectors.back().m_Boundary[ v-1 ].z ) );
 
-				vertices.push_back( IceMaths::Point( 
+				vertices.push_back( IceMaths::Point(
 					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
 					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );	
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );
 
 				if ( v == 1 )
 				{
 					allSectors.back().m_Plane = Plane3f(
-						center, 
+						center,
 						allSectors.back().m_Boundary[ v-1 ],
 						allSectors.back().m_Boundary[ v ] );
 				}
@@ -1293,7 +1292,7 @@ void PathPlannerNavMesh::InitSectors()
 	m_CollisionData.m_MeshInterface->SetNbVertices( vertices.size() );
 	m_CollisionData.m_MeshInterface->SetPointers( NULL, m_CollisionData.m_Verts );
 	m_CollisionData.m_MeshInterface->SetInterfaceType( Opcode::MESH_TRIANGLE );
-	
+
 	Opcode::OPCODECREATE parms;
 	parms.mIMesh = m_CollisionData.m_MeshInterface;
 	m_CollisionData.m_CollisionTree = new Opcode::Model();
@@ -1341,10 +1340,10 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 					// adjust the node position
 					if(SquaredLength(intr,pMid->Position) > Mathf::Sqr(16.f))
 					{
-						//Utils::DrawLine(pMid->Position+Vector3f(0,0,32),intr,COLOR::YELLOW,15.f);
+						//RenderBuffer::AddLine(pMid->Position+Vector3f(0,0,32),intr,COLOR::YELLOW,15.f);
 						bSmoothed = true;
 						pMid->Position = intr;
-					}					
+					}
 				}
 			}
 
@@ -1371,19 +1370,17 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerNavMesh::GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name)
+bool PathPlannerNavMesh::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name)
 {
 	return false;
 }
 
 void PathPlannerNavMesh::AddEntityConnection(const Event_EntityConnection &_conn)
 {
-
 }
 
 void PathPlannerNavMesh::RemoveEntityConnection(GameEntity _ent)
 {
-
 }
 
 Vector3f PathPlannerNavMesh::GetDisplayPosition(const Vector3f &_pos)

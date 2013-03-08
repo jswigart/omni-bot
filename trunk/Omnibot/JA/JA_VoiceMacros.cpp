@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -55,7 +55,7 @@ const char *strVoiceMacros[] =
 	NULL,
 };
 
-namespace JA_VoiceChatAssertions 
+namespace JA_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
 	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_JA_VCHATS);
@@ -63,7 +63,7 @@ namespace JA_VoiceChatAssertions
 
 int JA_VoiceMacros::GetVChatId(const char *_string)
 {
-	// Search for the string and return the index.
+	// Search for the std::string and return the index.
 	for(int i = VCHAT_NONE; i < NUM_JA_VCHATS; ++i)
 	{
 		if(strVoiceMacros[i] && !strcmp(strVoiceMacros[i], _string))
@@ -83,7 +83,7 @@ void JA_VoiceMacros::SendVoiceMacro(Client *_bot, int _msg)
 	}
 	/*else if((_msg < VCHAT_GLOBAL_NUMMESSAGES) && (_msg > VCHAT_TEAM_NUMMESSAGES))
 	{ // no global chatting for now
-		sprintf(buffer, "vsay %s", strVoiceMacros[_msg]);
-		g_EngineFuncs->BotCommand(_bot->GetGameID(), buffer);
+	sprintf(buffer, "vsay %s", strVoiceMacros[_msg]);
+	g_EngineFuncs->BotCommand(_bot->GetGameID(), buffer);
 	}*/
 }

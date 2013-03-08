@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -114,7 +114,7 @@ void ET_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 	// NOTE: pay attention to MaxGoals / NumDefs!!
 
 	RegisterWaypointGoals(_wp,Definition,NumDefs);
-	
+
 	// Allow the base class to process it.
 	GoalManager::CheckWaypointForGoal(_wp, _used);
 }

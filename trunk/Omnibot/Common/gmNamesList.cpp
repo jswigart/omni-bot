@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "gmNamesList.h"
 #include "ScriptManager.h"
@@ -44,7 +43,7 @@ static int GM_CDECL gmfNameListGetInd(gmThread * a_thread, gmVariable * a_operan
 		// Return the profile that goes with this name
 		if(stringObj != NULL && stringObj->GetString())
 		{
-			String strProfileName = NameManager::GetInstance()->GetProfileForName(stringObj->GetString());
+			std::string strProfileName = NameManager::GetInstance()->GetProfileForName(stringObj->GetString());
 
 			gmStringObject *pString = a_thread->GetMachine()->AllocStringObject(strProfileName.c_str());
 			a_operands[0].SetString(pString);
@@ -70,14 +69,14 @@ static int GM_CDECL gmfNameListSetInd(gmThread * a_thread, gmVariable * a_operan
 		}
 		return GM_OK;
 	}
-	a_thread->GetMachine()->GetLog().LogEntry("expected string index");
+	a_thread->GetMachine()->GetLog().LogEntry("expected std::string index");
 	return GM_EXCEPTION;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-static gmFunctionEntry s_namesLib[] = 
-{ 
+static gmFunctionEntry s_namesLib[] =
+{
 	{"Clear", gmfClearNames},
 };
 

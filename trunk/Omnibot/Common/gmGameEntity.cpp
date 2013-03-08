@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "ScriptManager.h"
 
@@ -24,7 +23,7 @@ static int gmEntityOpEQ2(gmThread * a_thread, gmVariable * a_operands)
 			}
 		case GM_INT:
 			{
-				GameEntity ent0; 
+				GameEntity ent0;
 				ent0.FromInt(a_operands[0].m_value.m_enthndl);
 				GameEntity ent1 = g_EngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
 				a_operands[0].SetInt(ent0 == ent1 ? 1 : 0);
@@ -44,7 +43,7 @@ static int gmEntityOpEQ2(gmThread * a_thread, gmVariable * a_operands)
 		case GM_INT:
 			{
 				GameEntity ent0 = g_EngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
-				GameEntity ent1; 
+				GameEntity ent1;
 				ent1.FromInt(a_operands[1].m_value.m_enthndl);
 				a_operands[0].SetInt(ent0 == ent1 ? 1 : 0);
 				return GM_OK;
@@ -73,7 +72,7 @@ static int gmEntityOpNEQ2(gmThread * a_thread, gmVariable * a_operands)
 			}
 		case GM_INT:
 			{
-				GameEntity ent0; 
+				GameEntity ent0;
 				ent0.FromInt(a_operands[0].m_value.m_enthndl);
 				GameEntity ent1 = g_EngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
 				a_operands[0].SetInt(ent0 != ent1 ? 1 : 0);
@@ -93,7 +92,7 @@ static int gmEntityOpNEQ2(gmThread * a_thread, gmVariable * a_operands)
 		case GM_INT:
 			{
 				GameEntity ent0 = g_EngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
-				GameEntity ent1; 
+				GameEntity ent1;
 				ent1.FromInt(a_operands[1].m_value.m_enthndl);
 				a_operands[0].SetInt(ent0 != ent1 ? 1 : 0);
 				return GM_OK;
@@ -110,7 +109,7 @@ static int gmEntityOpNEQ2(gmThread * a_thread, gmVariable * a_operands)
 }
 
 void BindEntityStackCustom(gmMachine *a_machine)
-{	
+{
 	a_machine->RegisterTypeOperator(GM_ENTITY, O_EQ, 0, gmEntityOpEQ2);
 	a_machine->RegisterTypeOperator(GM_ENTITY, O_NEQ, 0, gmEntityOpNEQ2);
 }

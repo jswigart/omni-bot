@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-//
 
 #include "gmWeapon.h"
 
@@ -17,7 +16,7 @@
 //GMBIND_PROPERTY_MAP_BEGIN( gmWeapon )
 //	GMBIND_PROPERTY( "Name", getName, setName )
 //
-//	GMBIND_AUTOPROPERTY("WeaponId", GM_INT, m_WeaponID, 0);	
+//	GMBIND_AUTOPROPERTY("WeaponId", GM_INT, m_WeaponID, 0);
 //	GMBIND_AUTOPROPERTY("MinUseTime", GM_FLOAT, m_MinUseTime, 0);
 //
 //	GMBIND_PROPERTY( "PrimaryFire", getPrimaryFire, NULL )
@@ -25,7 +24,7 @@
 //GMBIND_PROPERTY_MAP_END();
 //
 //// properties: Weapon Properties
-////		Name - The name of the weapon overall. <string>
+////		Name - The name of the weapon overall. <std::string>
 ////		WeaponId - The numeric id for the weapon. Must match interface. <int>
 ////		MinUseTime - The minimum time the bot is allowed to equip the weapon. <float>
 ////		PrimaryFire - Accessor to the primary fire mode. <FireMode>
@@ -70,7 +69,7 @@
 //
 //GMBIND_INIT_TYPE( gmFireMode, "FireMode" );
 //
-//GMBIND_FUNCTION_MAP_BEGIN( gmFireMode )	
+//GMBIND_FUNCTION_MAP_BEGIN( gmFireMode )
 //	GMBIND_FUNCTION( "SetDesirabilityRange", gmfSetDesirabilityRange );
 //	GMBIND_FUNCTION( "SetBurstRange", gmfSetBurstRange );
 //
@@ -84,10 +83,10 @@
 //	GMBIND_PROPERTY("HasZoom", getHasZoom, setHasZoom)
 //	GMBIND_PROPERTY("HasClip", getHasClip, setHasClip)
 //	GMBIND_PROPERTY("Stealth", getStealth, setStealth)
-//	GMBIND_PROPERTY("InheritsVelocity", getInheritsVelocity, setInheritsVelocity)	
-//	GMBIND_PROPERTY("NeedsInRange", getNeedsInRange, setNeedsInRange)	
-//	GMBIND_PROPERTY("ManageHeat", getManageHeat, setManageHeat)	
-//	GMBIND_PROPERTY("IgnoreReload", getIgnoreReload, setIgnoreReload)	
+//	GMBIND_PROPERTY("InheritsVelocity", getInheritsVelocity, setInheritsVelocity)
+//	GMBIND_PROPERTY("NeedsInRange", getNeedsInRange, setNeedsInRange)
+//	GMBIND_PROPERTY("ManageHeat", getManageHeat, setManageHeat)
+//	GMBIND_PROPERTY("IgnoreReload", getIgnoreReload, setIgnoreReload)
 //	GMBIND_PROPERTY("RequiresTargetOutside", getRequiresTargetOutside, setRequiresTargetOutside)
 //	GMBIND_PROPERTY("RequiresShooterOutside", getRequiresShooterOutside, setRequiresShooterOutside)
 //
@@ -95,7 +94,7 @@
 //	//GMBIND_PROPERTY("MaxEquipMoveMode", getMaxEquipMoveMode, setMaxEquipMoveMode)
 //
 //	GMBIND_PROPERTY("ManualDetonation", getManualDetonation, setManualDetonation)
-//	GMBIND_PROPERTY("MustBeOnGround", getMustBeOnGround, setMustBeOnGround)	
+//	GMBIND_PROPERTY("MustBeOnGround", getMustBeOnGround, setMustBeOnGround)
 //	GMBIND_PROPERTY("FireOnRelease", getFireOnRelease, setFireOnRelease)
 //	GMBIND_PROPERTY("UseMortarTrajectory", getUseMortarTrajectory, setUseMortarTrajectory)
 //	GMBIND_PROPERTY("ChargeToIntercept", getChargeToIntercept, setChargeToIntercept)
@@ -127,7 +126,7 @@
 //
 //	GMBIND_AUTOPROPERTY("MinAimAdjustmentTime", GM_FLOAT, m_MinAimAdjustmentSecs, 0);
 //	GMBIND_AUTOPROPERTY("MaxAimAdjustmentTime", GM_FLOAT, m_MaxAimAdjustmentSecs, 0);
-//	
+//
 //	// Functions
 //	GMBIND_PROPERTY( "CalculateDefaultDesirability", NULL, setCalculateDefaultDesirability )
 //	GMBIND_PROPERTY( "CalculateDesirability", NULL, setCalculateDesirability )
@@ -219,11 +218,11 @@
 ////}
 //
 //// properties: FireMode properties
-////		WeaponType - What type of fire mode is this? <string> "melee", "projectile", "instant", "grenade"
+////		WeaponType - What type of fire mode is this? <std::string> "melee", "projectile", "instant", "grenade"
 ////		AmmoType - What type of ammo does the weapon use? <int>
 ////		ProjectileSpeed - The speed the projectile travels. <float>
 ////		ProjectileGravity - Amount of gravity applied to projectile. <float>
-////		MaxEquipMoveMode - The fastest we should attempt to move when equipped. <string> "run", "walk", "still"
+////		MaxEquipMoveMode - The fastest we should attempt to move when equipped. <std::string> "run", "walk", "still"
 ////		RequiresAmmo - Does the weapon require ammunition to use? <bool>
 ////		WaterProof - Can the weapon fire when the user is underwater? <bool>
 ////		SplashDamage - Does the weapon produce splash damage? <bool>
@@ -258,7 +257,7 @@
 //}
 //
 //bool gmFireMode::getRequiresAmmo( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
-//{	
+//{
 //	a_operands[0].SetInt(a_native->CheckFlag(Weapon::RequiresAmmo) ? 1 : 0);
 //	return true;
 //}
@@ -477,7 +476,7 @@
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
 //		a_native->m_AimErrorMax = Vector2f(
-//			a_operands[1].m_value.m_vec3.x, 
+//			a_operands[1].m_value.m_vec3.x,
 //			a_operands[1].m_value.m_vec3.y);
 //	}
 //	return true;
@@ -494,7 +493,7 @@
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
 //		a_native->m_AimOffset = Vector3f(
-//			a_operands[1].m_value.m_vec3.x, 
+//			a_operands[1].m_value.m_vec3.x,
 //			a_operands[1].m_value.m_vec3.y,
 //			a_operands[1].m_value.m_vec3.z);
 //	}
@@ -573,7 +572,7 @@
 //	Weapon::WeaponFireMode *native = gmFireMode::GetThisObject( a_thread );
 //	if(!native)
 //	{
-//		GM_EXCEPTION_MSG("Script Function on NULL object"); 
+//		GM_EXCEPTION_MSG("Script Function on NULL object");
 //		return GM_EXCEPTION;
 //	}
 //	native->SetDesirabilityWindow(windowmin, windowmax, desir);
@@ -604,7 +603,7 @@
 //	Weapon::WeaponFireMode *native = gmFireMode::GetThisObject( a_thread );
 //	if(!native)
 //	{
-//		GM_EXCEPTION_MSG("Script Function on NULL object"); 
+//		GM_EXCEPTION_MSG("Script Function on NULL object");
 //		return GM_EXCEPTION;
 //	}
 //	native->SetBurstWindow(windowmin, windowmax, burstrounds, mindelay, maxdelay);
@@ -626,7 +625,7 @@
 //	Weapon::WeaponFireMode *native = gmFireMode::GetThisObject( a_thread );
 //	if(!native)
 //	{
-//		GM_EXCEPTION_MSG("Script Function on NULL object"); 
+//		GM_EXCEPTION_MSG("Script Function on NULL object");
 //		return GM_EXCEPTION;
 //	}
 //

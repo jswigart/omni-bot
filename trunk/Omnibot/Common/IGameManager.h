@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __IGAMEMANAGER_H__
 #define __IGAMEMANAGER_H__
@@ -29,44 +31,44 @@ class IGameManager : public CommandReciever
 {
 public:
 	/*
-		Function: CreateGame
-				Initializes the bot library based on the provided game type
-		Parameters:
-				_pEngineFuncs - The filled in struct of functions from the game
-				_version - The version number we're attempting to load.
-		Returns:
-				omnibot_error BOT_ERROR_NONE if successful
+	Function: CreateGame
+	Initializes the bot library based on the provided game type
+	Parameters:
+	_pEngineFuncs - The filled in struct of functions from the game
+	_version - The version number we're attempting to load.
+	Returns:
+	omnibot_error BOT_ERROR_NONE if successful
 	*/
 	omnibot_error CreateGame(IEngineInterface *_pEngineFuncs, int _version);
-	
+
 	/*
-		Function: Shutdown
-				Shuts down the bot library and frees memory		
-		Returns:
-				1 if successful, 0 if error.
-	*/	
+	Function: Shutdown
+	Shuts down the bot library and frees memory
+	Returns:
+	1 if successful, 0 if error.
+	*/
 	void Shutdown();
 
 	/*
-		Function: UpdateGame
-				Updates the bot library and allows the bots to perform their AI.
-				This should be called at regular intervals moderately often.
-	*/	
+	Function: UpdateGame
+	Updates the bot library and allows the bots to perform their AI.
+	This should be called at regular intervals moderately often.
+	*/
 	void UpdateGame();
 
-	inline IGame *GetGame()					{ return m_Game; } 	
+	inline IGame *GetGame()					{ return m_Game; }
 	inline PathPlannerBase *GetNavSystem()	{ return m_PathPlanner; }
 	inline TaskManager * GetTaskMgr()		{ return m_TaskManager; }
 
-	bool AddUpdateFunction(const String &_name, FunctorPtr _func);
-	bool RemoveUpdateFunction(const String &_name);
+	bool AddUpdateFunction(const std::string &_name, FunctorPtr _func);
+	bool RemoveUpdateFunction(const std::string &_name);
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void SyncRemoteDelete( int entityHandle );
 	void SyncRemoteMessage( const RemoteLib::DataBuffer & db );
 #endif
 	// Singleton Accessors
 	static IGameManager *GetInstance();
-	static void DeleteInstance();	
+	static void DeleteInstance();
 protected:
 
 	ScriptManager						*m_ScriptManager;
@@ -79,7 +81,7 @@ protected:
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	RemoteLib::ConnectionManagerServer	m_Remote;
-	
+
 	RemoteLib::Connection *			CreateNewConnection( class RemoteLib::TcpSocket & socket );
 #endif
 
@@ -100,7 +102,7 @@ protected:
 	IGameManager &operator=(const IGameManager&);
 };
 
-void ThreadAddMessage(const String &_msg);
-void ThreadAddError(const String &_msg);
+void ThreadAddMessage(const std::string &_msg);
+void ThreadAddError(const std::string &_msg);
 
 #endif

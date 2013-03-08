@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __MAPGOALDATABASE_H__
 #define __MAPGOALDATABASE_H__
@@ -16,12 +18,12 @@ class MapGoalDatabase
 {
 public:
 
-	void RegisterMapGoal(const String &_type, const MapGoalPtr &_wpn);
-	gmGCRoot<gmUserObject> CreateMapGoalType(const String &_typename);
+	void RegisterMapGoal(const std::string &_type, const MapGoalPtr &_wpn);
+	gmGCRoot<gmUserObject> CreateMapGoalType(const std::string &_typename);
 
-	String GetWeaponName(int _weaponId);
+	std::string GetWeaponName(int _weaponId);
 
-	MapGoalPtr GetNewMapGoal(const String &_type);
+	MapGoalPtr GetNewMapGoal(const std::string &_type);
 
 	void LoadMapGoalDefinitions(bool _clearall);
 	void Unload();

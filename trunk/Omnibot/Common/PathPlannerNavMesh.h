@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PATHPLANNERNAVMESH_H__
 #define __PATHPLANNERNAVMESH_H__
@@ -16,6 +18,8 @@
 #include "SpanHeightMap.h"
 
 #include "navmesh.pb.h"
+
+typedef std::vector<Segment3f> SegmentList;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -119,7 +123,7 @@ public:
 
 		BitFlag64		m_LinkFlags;
 	};
-	
+
 	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
 
 	bool Init();
@@ -135,32 +139,28 @@ public:
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team);
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team);
 
-	bool GetNavFlagByName(const String &_flagname, NavFlags &_flag) const;
+	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
 	bool IsDone() const;
 	bool FoundGoal() const;
-	bool Load(const String &_mapname, bool _dl = true);
-	bool Save(const String &_mapname);
+	bool Load(const std::string &_mapname, bool _dl = true);
+	bool Save(const std::string &_mapname);
 	void Unload();
-	bool SetFileComments(const String &_text);
+	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
 	void GetPath(Path &_path, int _smoothiterations);
 
-	virtual void RegisterNavFlag(const String &_name, const NavFlags &_bits) {}
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) {}
 
 	void RegisterScriptFunctions(gmMachine *a_machine);
 
-	bool GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name);
+	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
-
-#ifdef ENABLE_DEBUG_WINDOW
-	void RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics);
-#endif
 
 	const char *GetPlannerName() const { return "Navigation Mesh Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_NAVMESH; };
@@ -202,7 +202,7 @@ protected:
 	void cmdInfluenceMapSave(const StringVector &_args);
 	void cmdInfluenceMapLoad(const StringVector &_args);
 	void cmdInfluenceMapFlood(const StringVector &_args);
-	
+
 	void cmdNext(const StringVector &_args);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -219,7 +219,7 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	struct AttribFields
-	{		
+	{
 		obuint32		Mirrored : 1;
 		obuint32		ActiveId : 12;
 		obuint32		SectorId : 12;
@@ -258,7 +258,7 @@ protected:
 
 		NavCollision();
 	};
-	
+
 	NavCollision FindCollision(const Vector3f &_from, const Vector3f &_to);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -268,8 +268,8 @@ protected:
 	NavSectorList		m_NavSectors;
 	NavSectorList		m_ActiveNavSectors;
 
-	typedef std::vector<NavPortal> NavPortalList;	
-	NavPortalList		m_NavPortals;	
+	typedef std::vector<NavPortal> NavPortalList;
+	NavPortalList		m_NavPortals;
 	//////////////////////////////////////////////////////////////////////////
 	// Tool state machine
 	STATE_PROTOTYPE(NoOp);
@@ -279,11 +279,11 @@ protected:
 	STATE_PROTOTYPE(EditSector);
 	STATE_PROTOTYPE(SplitSector);
 	STATE_PROTOTYPE(TraceSector);
-	STATE_PROTOTYPE(GroundSector);	
+	STATE_PROTOTYPE(GroundSector);
 	STATE_PROTOTYPE(CommitSector);
 	STATE_PROTOTYPE(MirrorSectors);
 	STATE_PROTOTYPE(PlaceBorder);
-	STATE_PROTOTYPE(FloodSpanMap);	
+	STATE_PROTOTYPE(FloodSpanMap);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Current tool variables
@@ -307,7 +307,7 @@ protected:
 	VectorQueue				m_SpanFrontier;
 	struct CollisionData
 	{
-		CollisionData() 
+		CollisionData()
 			: m_CollisionTree( NULL )
 			, m_MeshInterface( NULL )
 			, m_Verts( NULL )
@@ -325,7 +325,7 @@ protected:
 		IceMaths::Point *			m_Verts;
 		PolyAttrib *				m_TriSectorMap;
 	}	m_CollisionData;
-	
+
 	obuint32	mInfluenceBufferId;
 
 	void InitSectors();
@@ -334,7 +334,7 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Implementations of base class functionality
-	String _GetNavFileExtension() { return ".nav"; }
+	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 };

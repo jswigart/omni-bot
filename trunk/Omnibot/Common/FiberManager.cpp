@@ -1,13 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: ken.nickel $
 // $LastChangedDate: 2011-08-15 23:47:44 -0500 (Mon, 15 Aug 2011) $
 // $LastChangedRevision: 351 $
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-#define _CRT_SECURE_NO_WARNINGS
-
 
 #include "FiberManager.h"
 
@@ -17,7 +14,7 @@
 #include <assert.h>
 #include <iostream>
 
-void Fiber::FiberRun( void * data ) 
+void Fiber::FiberRun( void * data )
 {
 	Fiber * fiber = static_cast<Fiber*>( data );
 	fiber->Run();
@@ -29,12 +26,12 @@ void Fiber::FiberRun( void * data )
 Fiber::Fiber() :
 	fiber( NULL ),
 	lastFiber( NULL ),
-	fiberState( FIBER_RUNNING ) 
-{	
+	fiberState( FIBER_RUNNING )
+{
 	const int STACK_SIZE = 1024 * 1024;
 	fiber = CreateFiber( STACK_SIZE, (LPFIBER_START_ROUTINE)Fiber::FiberRun, this );
 }
-Fiber::~Fiber() 
+Fiber::~Fiber()
 {
 	DeleteFiber( fiber );
 }
@@ -44,11 +41,11 @@ Fiber::FiberState Fiber::Execute()
 	SwitchToFiber( lastFiber );
 	return fiberState;
 }
-void Fiber::WaitFrame() 
+void Fiber::WaitFrame()
 {
 	SwitchToFiber( lastFiber );
 }
-void Fiber::Wait( float timeSeconds ) 
+void Fiber::Wait( float timeSeconds )
 {
 	timeSeconds;
 	// todo: set delay until run again

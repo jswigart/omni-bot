@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __REGULATOR_H__
 #define __REGULATOR_H__
@@ -25,10 +27,10 @@ public:
 	int GetInterval() const { return m_UpdateInterval; }
 
 	Regulator(int _msInterval = 0) :
-			m_UpdateInterval(_msInterval),
-			m_NextUpdateTime(0)
-	  {
-	  }
+		m_UpdateInterval(_msInterval),
+		m_NextUpdateTime(0)
+	{
+	}
 protected:
 	int		m_UpdateInterval;
 	int		m_NextUpdateTime;

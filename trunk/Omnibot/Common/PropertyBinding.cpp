@@ -1,17 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "PropertyBinding.h"
 
 //////////////////////////////////////////////////////////////////////////
 
-enum PropType 
+enum PropType
 {
 	PropBool,
 	PropCString,
@@ -30,8 +29,8 @@ enum PropType
 static const char *dbgNames[] =
 {
 	"boolean",
-	"string",
-	"string",
+	"std::string",
+	"std::string",
 	"vector",
 	"int",
 	"bitflag",
@@ -43,42 +42,33 @@ static const char *dbgNames[] =
 };
 BOOST_STATIC_ASSERT(sizeof(dbgNames)/sizeof(dbgNames[0]) == PropNum);
 //////////////////////////////////////////////////////////////////////////
-#ifdef ENABLE_DEBUG_WINDOW
-class Property : public gcn::ActionListener
-#else
 class Property
-#endif
 {
 public:
 	virtual PropType GetPropertyType() const = 0;
-	String GetDebugTypeName() { return dbgNames[GetPropertyType()]; }
-	
-	String GetName() const { return m_Name; }
+	std::string GetDebugTypeName() { return dbgNames[GetPropertyType()]; }
+
+	std::string GetName() const { return m_Name; }
 	bool Check(obuint32 _f) const { return (m_Flags&_f)!=0; }
 
-	virtual bool FromString(const String &_str) = 0;
+	virtual bool FromString(const std::string &_str) = 0;
 	virtual bool FromGMVar(gmMachine *_m, const gmVariable &_str) = 0;
-	
+
 	//void SetBinding(PropertyBinding *_bind) { m_Binding = _bind; }
 	//PropertyBinding *GetBinding() const { return m_Binding; }
-	Property(const String &_name, obuint32 _flags) 
+	Property(const std::string &_name, obuint32 _flags)
 		: m_Flags(_flags)
 		, m_Name(_name)
 	{
 	}
 	virtual ~Property() {}
 
-	protected:
-		obuint32							m_Flags;
-	private:
-		String								m_Name;
-		//PropertyBinding						*m_Binding;
+protected:
+	obuint32							m_Flags;
+private:
+	std::string								m_Name;
+	//PropertyBinding						*m_Binding;
 public:
-#ifdef ENABLE_DEBUG_WINDOW
-	virtual void AddToGui(gcn::contrib::PropertySheet *_propsheet) { }
-	virtual void DeAllocGui() {}
-	virtual void UpdateToGui() {}
-#endif
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,7 +77,7 @@ class PropertyBool : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropBool; }
 	bool GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		if(Utils::StringToFalse(_str))
 			m_Value = false;
@@ -103,7 +93,7 @@ public:
 		{
 			m_Value = _v.GetInt()!=0;
 			return true;
-		}		
+		}
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -114,7 +104,7 @@ public:
 			m_Value = m_CheckBox->isSelected();
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_CheckBox = new gcn::CheckBox;
 		if(Check(Prop::PF_READONLY))
@@ -125,7 +115,7 @@ public:
 	{
 		OB_DELETE(m_CheckBox);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_CheckBox)
 		{
@@ -135,7 +125,7 @@ public:
 		}
 	}
 #endif
-	PropertyBool(const String &_name, bool &v, obuint32 _flags = 0) 
+	PropertyBool(const std::string &_name, bool &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -158,19 +148,19 @@ public:
 
 	const char *GetValue() const { return m_Value; }
 
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		return false;
 	}
 	bool FromGMVar(gmMachine *_m, const gmVariable &_v)
-	{		
+	{
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
 	void action(const gcn::ActionEvent& actionEvent)
 	{
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_TextField = new gcn::TextField;
 		m_TextField->setEnabled(false);
@@ -181,7 +171,7 @@ public:
 	{
 		OB_DELETE(m_TextField);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
@@ -190,9 +180,9 @@ public:
 		}
 	}
 #endif
-	PropertyCString(const String &_name, const char *&v, obuint32 _flags = 0) 
+	PropertyCString(const std::string &_name, const char *&v, obuint32 _flags = 0)
 		: Property(_name,_flags)
-		, m_Value(v) 
+		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
 		, m_TextField(0)
 #endif
@@ -211,9 +201,9 @@ class PropertyString : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropString; }
 
-	String GetValue() const { return m_Value; }
+	std::string GetValue() const { return m_Value; }
 
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		m_Value = _str;
 		return true;
@@ -225,7 +215,7 @@ public:
 		{
 			m_Value = s;
 			return true;
-		}		
+		}
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -236,7 +226,7 @@ public:
 			m_Value = m_TextField->getText();
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_TextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -247,7 +237,7 @@ public:
 	{
 		OB_DELETE(m_TextField);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
@@ -256,7 +246,7 @@ public:
 		}
 	}
 #endif
-	PropertyString(const String &_name, String &v, obuint32 _flags = 0) 
+	PropertyString(const std::string &_name, std::string &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -266,7 +256,7 @@ public:
 	}
 	~PropertyString() {}
 private:
-	String &		m_Value;
+	std::string &		m_Value;
 #ifdef ENABLE_DEBUG_WINDOW
 	gcn::TextField *m_TextField;
 #endif
@@ -277,7 +267,7 @@ class PropertyVector : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropVector; }
 	Vector3f GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		Vector3f v;
 		if(Utils::ConvertString(_str,v))
@@ -293,7 +283,7 @@ public:
 		{
 			_v.GetVector(m_Value);
 			return true;
-		}		
+		}
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -312,7 +302,7 @@ public:
 			Utils::GetLocalAimPoint(m_Value);
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_Container = new gcn::contrib::AdjustingContainer;
 
@@ -335,7 +325,7 @@ public:
 
 		_propsheet->addProperty(GetName(),m_Container);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
@@ -344,7 +334,7 @@ public:
 		}
 	}
 #endif
-	PropertyVector(const String &_name, Vector3f &v, obuint32 _flags = 0) 
+	PropertyVector(const std::string &_name, Vector3f &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -373,13 +363,13 @@ class PropertyMatrix : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropMat; }
 	Matrix3f GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		/*Matrix3f v;
 		if(Utils::ConvertString(_str,v))
 		{
-			m_Value = v;
-			return true;
+		m_Value = v;
+		return true;
 		}*/
 		return false;
 	}
@@ -387,16 +377,16 @@ public:
 	{
 		/*if(_v.IsVector())
 		{
-			_v.GetVector(m_Value);
-			return true;
-		}	*/	
+		_v.GetVector(m_Value);
+		return true;
+		}	*/
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
 	void action(const gcn::ActionEvent& actionEvent)
 	{
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_TextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -410,7 +400,7 @@ public:
 		OB_DELETE(m_Button3);
 		OB_DELETE(m_TextField);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
@@ -419,7 +409,7 @@ public:
 		}
 	}
 #endif
-	PropertyMatrix(const String &_name, Matrix3f &v, obuint32 _flags = 0) 
+	PropertyMatrix(const std::string &_name, Matrix3f &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -450,7 +440,7 @@ class PropertyInt : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropInt; }
 	int GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		int v;
 		if(Utils::ConvertString(_str,v))
@@ -484,7 +474,7 @@ public:
 			else
 				m_Value = _v.GetInt();
 			return true;
-		} 
+		}
 		else if(m_Enum && m_EnumNum)
 		{
 			const char *key = _v.GetCStringSafe(0);
@@ -508,7 +498,7 @@ public:
 	{
 		if(actionEvent.getSource()==m_DropDown)
 		{
-			m_Value = m_DropDown->getSelected();			
+			m_Value = m_DropDown->getSelected();
 		}
 		if(actionEvent.getSource()==m_TextField)
 		{
@@ -519,7 +509,7 @@ public:
 			m_Value = (int)val;
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		if(!m_TextField)
 		{
@@ -552,7 +542,7 @@ public:
 			}
 		}
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_Enum)
 		{
@@ -561,18 +551,18 @@ public:
 		else if(m_TextField)
 		{
 			if(Check(Prop::PF_MS_TO_SECONDS))
-				m_TextField->setText((String)va("%g",(float)m_Value / 1000.f));
+				m_TextField->setText((std::string)va("%g",(float)m_Value / 1000.f));
 			else
-				m_TextField->setText((String)va("%d",m_Value));
+				m_TextField->setText((std::string)va("%d",m_Value));
 			//m_TextField->adjustSize();
 		}
 	}
 #endif
 	int getNumberOfElements() { return m_EnumNum; }
 	std::string getElementAt(int i, int column) { return m_Enum[i%m_EnumNum].m_Key; }
-	PropertyInt(const String &_name, int &v, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0) 
+	PropertyInt(const std::string &_name, int &v, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0)
 		: Property(_name,_flags)
-		, m_Value(v) 
+		, m_Value(v)
 		, m_Enum(_enum)
 		, m_EnumNum(_numenum)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -601,14 +591,14 @@ class PropertyBitflag32 : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropIntBitflag32; }
 	BitFlag32 GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		if(m_Enum && m_EnumNum)
 		{
 			StringVector sv;
 			Utils::Tokenize(_str,"|,:",sv);
 
-			// for each string in the token
+			// for each std::string in the token
 			BitFlag32 bf;
 			for(obuint32 s = 0; s < sv.size(); ++s)
 			{
@@ -642,7 +632,7 @@ public:
 		{
 			m_Value = BitFlag32(_v.GetInt());
 			return true;
-		} 
+		}
 		else if(m_Enum && m_EnumNum)
 		{
 			const char *key = _v.GetCStringSafe(0);
@@ -651,7 +641,7 @@ public:
 				StringVector sv;
 				Utils::Tokenize(key,"|,:",sv);
 
-				// for each string in the token
+				// for each std::string in the token
 				BitFlag32 bf;
 				for(obuint32 s = 0; s < sv.size(); ++s)
 				{
@@ -689,27 +679,27 @@ public:
 		const int bit = atoi(actionEvent.getId().c_str());
 		m_Value.SetFlag(bit, cb->isSelected());
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_Container = new gcn::contrib::AdjustingContainer;
 		m_Container->setNumberOfColumns(2);
 		for(int i = 0; i < m_EnumNum; ++i)
 		{
 			gcn::CheckBox *cb = new gcn::CheckBox(m_Enum[i].m_Key,m_Value.CheckFlag(i));
-			cb->setId((String)va("%d",i));
+			cb->setId((std::string)va("%d",i));
 			m_Container->add(cb);
 		}
 		_propsheet->addProperty(GetName(),m_Container);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 	}
 #endif
 	int getNumberOfElements() { return m_EnumNum; }
 	std::string getElementAt(int i, int column) { return m_Enum[i%m_EnumNum].m_Key; }
-	PropertyBitflag32(const String &_name, BitFlag32 &v, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0) 
+	PropertyBitflag32(const std::string &_name, BitFlag32 &v, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0)
 		: Property(_name,_flags)
-		, m_Value(v) 
+		, m_Value(v)
 		, m_Enum(_enum)
 		, m_EnumNum(_numenum)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -732,7 +722,7 @@ class PropertyFloat : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropFloat; }
 	float GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		float v;
 		if(Utils::ConvertString(_str,v))
@@ -748,7 +738,7 @@ public:
 		{
 			m_Value = _v.GetFloatSafe();
 			return true;
-		}		
+		}
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -759,7 +749,7 @@ public:
 			m_Value = (float)atof(m_TextField->getText().c_str());
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_TextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -770,15 +760,15 @@ public:
 	{
 		OB_DELETE(m_TextField);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
-			m_TextField->setText((String)va("%g",m_Value));
+			m_TextField->setText((std::string)va("%g",m_Value));
 		}
 	}
 #endif
-	PropertyFloat(const String &_name, float &v, obuint32 _flags = 0) 
+	PropertyFloat(const std::string &_name, float &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -799,7 +789,7 @@ class PropertyEntity : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropEntity; }
 	GameEntity GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		int v;
 		if(Utils::ConvertString(_str,v))
@@ -815,7 +805,7 @@ public:
 		{
 			m_Value.FromInt(_v.GetEntity());
 			return true;
-		}		
+		}
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -825,7 +815,7 @@ public:
 		{
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_TextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -836,7 +826,7 @@ public:
 	{
 		OB_DELETE(m_TextField);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField)
 		{
@@ -845,7 +835,7 @@ public:
 		}
 	}
 #endif
-	PropertyEntity(const String &_name, GameEntity &v, obuint32 _flags = 0) 
+	PropertyEntity(const std::string &_name, GameEntity &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -866,13 +856,13 @@ class PropertyAABB : public Property
 public:
 	virtual PropType GetPropertyType() const { return PropAABB; }
 	AABB GetValue() const { return m_Value; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		/*AABB v;
 		if(Utils::ConvertString(_str,v))
 		{
-			m_Value = v;
-			return true;
+		m_Value = v;
+		return true;
 		}*/
 		return false;
 	}
@@ -880,9 +870,9 @@ public:
 	{
 		/*if(_v.IsNumber())
 		{
-			m_Value = _v.GetFloatSafe();
-			return true;
-		}*/		
+		m_Value = _v.GetFloatSafe();
+		return true;
+		}*/
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
@@ -895,7 +885,7 @@ public:
 		{
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		/*m_TextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -907,7 +897,7 @@ public:
 		OB_DELETE(m_TextField_Mins);
 		OB_DELETE(m_TextField_Maxs);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 		if(m_TextField_Mins)
 		{
@@ -921,9 +911,9 @@ public:
 		}
 	}
 #endif
-	PropertyAABB(const String &_name, AABB &v, obuint32 _flags = 0) 
+	PropertyAABB(const std::string &_name, AABB &v, obuint32 _flags = 0)
 		: Property(_name,_flags)
-		, m_Value(v) 
+		, m_Value(v)
 #ifdef ENABLE_DEBUG_WINDOW
 		, m_TextField_Mins(0)
 		, m_TextField_Maxs(0)
@@ -943,7 +933,7 @@ class PropertyFunction : public Property
 {
 public:
 	virtual PropType GetPropertyType() const { return PropFunc; }
-	bool FromString(const String &_str)
+	bool FromString(const std::string &_str)
 	{
 		return false;
 	}
@@ -957,10 +947,10 @@ public:
 		if(evt.getSource()==m_Button)
 		{
 			StringVector params;
-			(*m_Function)(params);			
+			(*m_Function)(params);
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet) 
+	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
 	{
 		m_Button = new gcn::Button;
 		if(Check(Prop::PF_READONLY))
@@ -972,11 +962,11 @@ public:
 	{
 		OB_DELETE(m_Button);
 	}
-	void UpdateToGui() 
+	void UpdateToGui()
 	{
 	}
 #endif
-	PropertyFunction(const String &_name, CommandFunctorPtr _ptr, obuint32 _flags = 0) 
+	PropertyFunction(const std::string &_name, CommandFunctorPtr _ptr, obuint32 _flags = 0)
 		: Property(_name,_flags)
 		, m_Function(_ptr)
 #ifdef ENABLE_DEBUG_WINDOW
@@ -992,45 +982,45 @@ private:
 #endif
 };
 //////////////////////////////////////////////////////////////////////////
-PropertyBinding::PropertyBinding() 
+PropertyBinding::PropertyBinding()
 {
 }
 
-bool PropertyBinding::FromPropertyMap(const PropertyMap &_propmap, StringStr &errorOut)  
-{  
+bool PropertyBinding::FromPropertyMap(const PropertyMap &_propmap, std::stringstream &errorOut)
+{
 	bool bGood = true;
-	bool bHandelledProp = false; 
-	PropertyList::iterator it = m_PropertyList.begin();  
-	for(; it != m_PropertyList.end(); ++it)  
-	{  
-		String n = (*it)->GetName();
-		OBASSERT(!n.empty(),"Unknown String Hash");  
+	bool bHandelledProp = false;
+	PropertyList::iterator it = m_PropertyList.begin();
+	for(; it != m_PropertyList.end(); ++it)
+	{
+		std::string n = (*it)->GetName();
+		OBASSERT(!n.empty(),"Unknown std::string Hash");
 
-		PropertyMap::ValueMap::const_iterator pIt = _propmap.GetProperties().begin();  
-		for(; pIt != _propmap.GetProperties().end(); ++pIt)  
-		{  
-			if(!Utils::StringCompareNoCase(pIt->first.c_str(),n.c_str()))  
-			{  
-				const bool bSuccess = (*it)->FromString(pIt->second);  
-				bHandelledProp |= bSuccess; 
+		PropertyMap::ValueMap::const_iterator pIt = _propmap.GetProperties().begin();
+		for(; pIt != _propmap.GetProperties().end(); ++pIt)
+		{
+			if(!Utils::StringCompareNoCase(pIt->first.c_str(),n.c_str()))
+			{
+				const bool bSuccess = (*it)->FromString(pIt->second);
+				bHandelledProp |= bSuccess;
 
-				if(!bSuccess && (*it)->Check(Prop::PF_REQUIRED))  
-				{                      
-					String t = (*it)->GetDebugTypeName();  
-					errorOut << "Required Property " << n.c_str() << " as " << t.c_str() << std::endl;  
-					bGood = false;  
-				}  
+				if(!bSuccess && (*it)->Check(Prop::PF_REQUIRED))
+				{
+					std::string t = (*it)->GetDebugTypeName();
+					errorOut << "Required Property " << n.c_str() << " as " << t.c_str() << std::endl;
+					bGood = false;
+				}
 			}
-		}  
+		}
 	}
 
-	if(!bHandelledProp) 
+	if(!bHandelledProp)
 		bGood = false;
 
-	return bGood;  
-} 
+	return bGood;
+}
 
-bool PropertyBinding::FromScriptTable(gmMachine *_machine, gmTableObject *_tbl, StringStr &errorOut)
+bool PropertyBinding::FromScriptTable(gmMachine *_machine, gmTableObject *_tbl, std::stringstream &errorOut)
 {
 	bool bGood = true;
 
@@ -1044,17 +1034,17 @@ bool PropertyBinding::FromScriptTable(gmMachine *_machine, gmTableObject *_tbl, 
 			FromScriptVar(_machine,PropName,pNode->m_value,errorOut);
 		}
 		pNode = _tbl->GetNext(tIt);
-	}	
+	}
 	return bGood;
 }
 
-bool PropertyBinding::FromScriptVar(gmMachine *_machine, const char *_key, gmVariable &_var, StringStr &errorOut)
+bool PropertyBinding::FromScriptVar(gmMachine *_machine, const char *_key, gmVariable &_var, std::stringstream &errorOut)
 {
 	bool bGood = false;
 	PropertyList::iterator it = m_PropertyList.begin();
 	for(; it != m_PropertyList.end(); ++it)
 	{
-		String n = (*it)->GetName();
+		std::string n = (*it)->GetName();
 		if(!Utils::StringCompareNoCase(n,_key))
 		{
 			const bool bSuccess = (*it)->FromGMVar(_machine,_var);
@@ -1064,7 +1054,7 @@ bool PropertyBinding::FromScriptVar(gmMachine *_machine, const char *_key, gmVar
 			}
 			else
 			{
-				String t = (*it)->GetDebugTypeName();
+				std::string t = (*it)->GetDebugTypeName();
 				errorOut << "Expected Property " << n.c_str() << " as " << t.c_str() << std::endl;
 			}
 		}
@@ -1072,66 +1062,66 @@ bool PropertyBinding::FromScriptVar(gmMachine *_machine, const char *_key, gmVar
 	return bGood;
 }
 
-void PropertyBinding::BindProperty(const String &_name, bool &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, bool &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyBool(_name,_val)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, const char *&_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, const char *&_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyCString(_name,_val)));
 	//m_PropertyList.back()->SetBinding(this);
 }
 
-void PropertyBinding::BindProperty(const String &_name, String &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, std::string &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyString(_name,_val,_flags)));
 	//m_PropertyList.back()->SetBinding(this);
 }
 
-void PropertyBinding::BindProperty(const String &_name, Vector3f &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, Vector3f &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyVector(_name,_val,_flags)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, Matrix3f &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, Matrix3f &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyMatrix(_name,_val,_flags)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, int &_val, obuint32 _flags, const IntEnum *_enum, int _numenum)
+void PropertyBinding::BindProperty(const std::string &_name, int &_val, obuint32 _flags, const IntEnum *_enum, int _numenum)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyInt(_name,_val,_flags,_enum,_numenum)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, BitFlag32 &_val, obuint32 _flags, const IntEnum *_enum, int _numenum)
+void PropertyBinding::BindProperty(const std::string &_name, BitFlag32 &_val, obuint32 _flags, const IntEnum *_enum, int _numenum)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyBitflag32(_name,_val,_flags,_enum,_numenum)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, float &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, float &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyFloat(_name,_val,_flags)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, GameEntity &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, GameEntity &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyEntity(_name,_val)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindProperty(const String &_name, AABB &_val, obuint32 _flags)
+void PropertyBinding::BindProperty(const std::string &_name, AABB &_val, obuint32 _flags)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyAABB(_name,_val,_flags)));
 	//m_PropertyList.back()->SetBinding(this);
 }
-void PropertyBinding::BindFunction(const String _name, CommandFunctorPtr _functor)
+void PropertyBinding::BindFunction(const std::string _name, CommandFunctorPtr _functor)
 {
 	m_PropertyList.push_back(PropertyPtr(new PropertyFunction(_name,_functor,0)));
 	//m_PropertyList.back()->SetBinding(this);
 }
 //////////////////////////////////////////////////////////////////////////
 
-PropertyBinding::PropertyPtr PropertyBinding::Get(const String &_name)
+PropertyBinding::PropertyPtr PropertyBinding::Get(const std::string &_name)
 {
 	PropertyList::iterator it = m_PropertyList.begin();
 	for(; it != m_PropertyList.end(); ++it)
@@ -1142,7 +1132,7 @@ PropertyBinding::PropertyPtr PropertyBinding::Get(const String &_name)
 	return PropertyPtr();
 }
 
-bool PropertyBinding::GetProperty(const String &_name, bool &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, bool &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropBool)
@@ -1154,7 +1144,7 @@ bool PropertyBinding::GetProperty(const String &_name, bool &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, const char *&_val)
+bool PropertyBinding::GetProperty(const std::string &_name, const char *&_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropCString)
@@ -1166,7 +1156,7 @@ bool PropertyBinding::GetProperty(const String &_name, const char *&_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, String &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, std::string &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropString)
@@ -1178,7 +1168,7 @@ bool PropertyBinding::GetProperty(const String &_name, String &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, Vector3f &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, Vector3f &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropVector)
@@ -1190,7 +1180,7 @@ bool PropertyBinding::GetProperty(const String &_name, Vector3f &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, int &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, int &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropInt)
@@ -1202,7 +1192,7 @@ bool PropertyBinding::GetProperty(const String &_name, int &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, float &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, float &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropFloat)
@@ -1214,7 +1204,7 @@ bool PropertyBinding::GetProperty(const String &_name, float &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, GameEntity &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, GameEntity &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropEntity)
@@ -1226,7 +1216,7 @@ bool PropertyBinding::GetProperty(const String &_name, GameEntity &_val)
 	return false;
 }
 
-bool PropertyBinding::GetProperty(const String &_name, AABB &_val)
+bool PropertyBinding::GetProperty(const std::string &_name, AABB &_val)
 {
 	PropertyPtr pp = Get(_name);
 	if(pp && pp->GetPropertyType()==PropAABB)

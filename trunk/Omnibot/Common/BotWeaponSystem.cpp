@@ -1,19 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
+#include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
 #include "Client.h"
 #include "WeaponDatabase.h"
 #include "ScriptManager.h"
 #include "BotBaseStates.h"
-#include "BotTargetingSystem.h"
 #include "InterfaceFuncs.h"
+#include "RenderBuffer.h"
 
 namespace AiState
 {
@@ -21,7 +21,7 @@ namespace AiState
 	class ReloadOther : public StateChild
 	{
 	public:
-		void GetDebugString(StringStr &out)
+		void GetDebugString(std::stringstream &out)
 		{
 			out << g_WeaponDatabase.GetWeaponName(m_WeaponNeedsReloading);
 		}
@@ -38,7 +38,7 @@ namespace AiState
 				if(wpn!=m_WeaponNeedsReloading)
 				{
 					if(wpn && m_WeaponNeedsReloading){
-						wsys->UpdateWeaponRequest(GetNameHash(), wpn);	
+						wsys->UpdateWeaponRequest(GetNameHash(), wpn);
 					}
 					m_WeaponNeedsReloading = wpn;
 				}
@@ -76,7 +76,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	AttackTarget::AttackTarget() 
+	AttackTarget::AttackTarget()
 		: StateChild("AttackTarget")
 		, m_AimPosition(Vector3f::ZERO)
 		, m_CurrentWeaponHash(0)
@@ -111,12 +111,12 @@ namespace AiState
 			Vector3f vRght = qr.Rotate(vGunCenter);
 
 			Vector3f vEye = GetClient()->GetEyePosition();
-			Utils::DrawLine(vEye,vEye+vGunCenter*64.f,COLOR::ORANGE,0.1f);
-			Utils::DrawLine(vEye,vEye+vLeft*64.f,COLOR::RED,0.1f);
-			Utils::DrawLine(vEye,vEye+vRght*64.f,COLOR::RED,0.1f);
+			RenderBuffer::AddLine(vEye,vEye+vGunCenter*64.f,COLOR::ORANGE,0.1f);
+			RenderBuffer::AddLine(vEye,vEye+vLeft*64.f,COLOR::RED,0.1f);
+			RenderBuffer::AddLine(vEye,vEye+vRght*64.f,COLOR::RED,0.1f);
 		}
 	}
-	void AttackTarget::GetDebugString(StringStr &out)
+	void AttackTarget::GetDebugString(std::stringstream &out)
 	{
 		out << Utils::HashToString(m_CurrentWeaponHash);
 	}
@@ -147,7 +147,7 @@ namespace AiState
 
 			// Add the aim request when reaction time has been met
 			FINDSTATE(wsys, WeaponSystem, GetParent());
-			if( wsys != NULL && 
+			if( wsys != NULL &&
 				(pRecord->GetTimeTargetHasBeenVisible() >= wsys->GetReactionTime()) &&
 				(pRecord->IsShootable() || (pRecord->GetTimeHasBeenOutOfView() < wsys->GetAimPersistance())))
 			{
@@ -180,7 +180,7 @@ namespace AiState
 				m_CurrentWeaponHash = wpn->GetWeaponNameHash();
 
 				// Calculate the position the bot will aim at, the weapon itself should account
-				// for any leading that may need to take place 
+				// for any leading that may need to take place
 				m_AimPosition = wpn->GetAimPoint(Primary, vTargetEnt, targetInfo);
 				wpn->AddAimError(Primary, m_AimPosition, targetInfo);
 				_aimpos = m_AimPosition;
@@ -249,7 +249,7 @@ namespace AiState
 		m_WeaponId = 0;
 	}
 
-	WeaponSystem::WeaponSystem() 
+	WeaponSystem::WeaponSystem()
 		: StateFirstAvailable("WeaponSystem")
 		, m_ReactionTimeInMS	(0)
 		, m_AimPersistance		(2000)
@@ -428,12 +428,12 @@ namespace AiState
 
 	bool WeaponSystem::HasWeapon(int _weaponId) const
 	{
-		return GetWeapon(_weaponId);	
+		return GetWeapon(_weaponId);
 	}
 
 	bool WeaponSystem::HasAmmo(FireMode _mode) const
 	{
-		return m_CurrentWeapon && m_CurrentWeapon->GetFireMode(_mode).IsDefined() ? 
+		return m_CurrentWeapon && m_CurrentWeapon->GetFireMode(_mode).IsDefined() ?
 			m_CurrentWeapon->GetFireMode(_mode).HasAmmo() : false;
 	}
 
@@ -469,7 +469,7 @@ namespace AiState
 
 	WeaponStatus WeaponSystem::_UpdateWeaponFromGame()
 	{
-		return InterfaceFuncs::GetEquippedWeapon(GetClient()->GetGameEntity());	
+		return InterfaceFuncs::GetEquippedWeapon(GetClient()->GetGameEntity());
 	}
 
 	void WeaponSystem::_UpdateCurrentWeapon(FireMode _mode)
@@ -570,21 +570,21 @@ namespace AiState
 		return fMostDesirable;
 	}
 
-	void WeaponSystem::GetSpectateMessage(StringStr &_outstring)
+	void WeaponSystem::GetSpectateMessage(std::stringstream &_outstring)
 	{
 		if(m_CurrentWeapon)
 			m_CurrentWeapon->GetSpectateMessage(_outstring);
 
-		String desired = g_WeaponDatabase.GetWeaponName(m_DesiredWeaponID);
+		std::string desired = g_WeaponDatabase.GetWeaponName(m_DesiredWeaponID);
 		_outstring << " Desired: " << desired.c_str() << " ";
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
-	void WeaponSystem::GetDebugString(StringStr &out)
+	void WeaponSystem::GetDebugString(std::stringstream &out)
 	{
-		out << 
-			Utils::HashToString(m_CurrentRequestOwner) << 
+		out <<
+			Utils::HashToString(m_CurrentRequestOwner) <<
 			" : " <<
 			g_WeaponDatabase.GetWeaponName(m_DesiredWeaponID);
 	}
@@ -743,7 +743,7 @@ namespace AiState
 					iBestWeaponID = (*it)->GetWeaponID();
 				}
 			}
-		} 
+		}
 		else
 		{
 			// Are we idly holding a weapon?
@@ -753,8 +753,8 @@ namespace AiState
 			/*FireMode m = m_CurrentWeapon ? m_CurrentWeapon->CanReload() : InvalidFireMode;
 			if(m != InvalidFireMode)
 			{
-				m_CurrentWeapon->ReloadWeapon(m);
-			} 
+			m_CurrentWeapon->ReloadWeapon(m);
+			}
 			else*/
 			{
 				// Look for other weapons that need reloading.
@@ -783,8 +783,7 @@ namespace AiState
 		for( ; it != itEnd; ++it)
 		{
 			WeaponIds[NumWeaponIds++] = (*it)->GetWeaponID();
-		}		
+		}
 		return NumWeaponIds ? (WeaponIds[rand() % NumWeaponIds]) : 0;
 	}
-	
 };

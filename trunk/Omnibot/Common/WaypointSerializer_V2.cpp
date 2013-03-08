@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -15,7 +15,7 @@ bool WaypointSerializer_V2::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	// temporary structure for reading in the connection indices since we
 	// can't set up the correct pointers till after the waypoints have all
 	// been read in and created.
-	
+
 	typedef std::multimap<unsigned int, WaypointConnection> WaypointConnections;
 	WaypointConnections connections;
 
@@ -27,9 +27,9 @@ bool WaypointSerializer_V2::Load(File &_file, PathPlannerWaypoint::WaypointList 
 		// Read the position in.
 		CHECK_READ(_file.Read(&pCurrentWp->m_Position, sizeof(pCurrentWp->m_Position)));
 		pCurrentWp->m_Position.z += 24.0f;
-		
+
 		CHECK_READ(_file.ReadInt64(pCurrentWp->m_NavigationFlags));
-		
+
 		obuint8 iNumConnections = 0;
 		CHECK_READ(_file.ReadInt8(iNumConnections));
 
@@ -63,14 +63,14 @@ bool WaypointSerializer_V2::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	for(obuint32 i = 0; i < _wpl.size(); ++i)
 	{
 		WaypointConnections::iterator it;
-		for (it = connections.lower_bound(i); 
-			it != connections.upper_bound(i); 
-			++it) 
+		for (it = connections.lower_bound(i);
+			it != connections.upper_bound(i);
+			++it)
 		{
 			Waypoint::ConnectionInfo conn = { _wpl[it->second.m_Index], it->second.m_ConnectionFlags };
 			if(it->second.m_Index < _wpl.size())
 				_wpl[i]->m_Connections.push_back(conn);
-			else 
+			else
 				return false;
 		}
 	}
@@ -82,4 +82,3 @@ bool WaypointSerializer_V2::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	OBASSERT(0, "This Shouldn't get called!");
 	return false;
 }
-

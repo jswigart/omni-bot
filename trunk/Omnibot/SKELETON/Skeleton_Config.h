@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // about: Skeleton game definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __SKELETON_EVENTS_H__
 #define __SKELETON_EVENTS_H__
@@ -26,7 +28,7 @@ typedef enum eSkeleton_Version
 typedef enum
 {
 	SKELETON_MESSAGE_BEGIN = EVENT_NUM_EVENTS,
-	
+
 	SKELETON_MESSAGE_END
 } Skeleton_Events;
 
@@ -41,7 +43,7 @@ typedef enum
 
 // typedef: Skeleton_PlayerClass_enum
 //		The available classes for this gametype
-typedef enum 
+typedef enum
 {
 	SKELETON_CLASS_NULL = 0,
 	SKELETON_CLASS_PLAYER,
@@ -59,7 +61,7 @@ typedef enum
 typedef enum
 {
 	SKELETON_WP_NONE = INVALID_WEAPON,
-	SKELETON_WP_SMG,	
+	SKELETON_WP_SMG,
 	SKELETON_WP_RPG,
 	SKELETON_WP_MAX
 } Skeleton_Weapon;

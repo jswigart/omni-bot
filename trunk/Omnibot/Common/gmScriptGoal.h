@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GM_SCRIPTGOAL_H__
 #define __GM_SCRIPTGOAL_H__
@@ -60,7 +62,7 @@ public:
 	static int gmfBlockForWeaponChange(gmThread *a_thread);
 	static int gmfBlockForWeaponFire(gmThread *a_thread);
 	static int gmfBlockForVoiceMacro(gmThread *a_thread);
-	
+
 	static int gmfThreadFork(gmThread *a_thread);
 	static int gmfThreadKill(gmThread *a_thread);
 	static int gmfSignal(gmThread *a_thread);
@@ -93,7 +95,7 @@ public:
 	static bool setDisable(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);
 	static bool getAutoAdd(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);
 	static bool setAutoAdd(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);
-	
+
 	static bool getInitializeFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);
 	static bool setInitializeFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);
 	static bool getSpawnFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands);

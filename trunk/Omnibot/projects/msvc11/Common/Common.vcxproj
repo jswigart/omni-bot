@@ -223,7 +223,6 @@
     <ClCompile Include="..\..\..\Common\IGameManager.cpp" />
     <ClCompile Include="..\..\..\Common\BlackBoard.cpp" />
     <ClCompile Include="..\..\..\Common\BlackBoardItems.cpp" />
-    <ClCompile Include="..\..\..\Common\DebugWindow.cpp" />
     <ClCompile Include="..\..\..\Common\Module.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -237,15 +236,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\RenderBuffer.cpp" />
-    <ClCompile Include="..\..\..\Common\RenderOverlay.cpp" />
-    <ClCompile Include="..\..\..\Common\RenderOverlayGame.cpp" />
-    <ClCompile Include="..\..\..\Common\RenderOverlayOpenGL.cpp" />
     <ClCompile Include="..\..\..\Common\EventReciever.cpp" />
     <ClCompile Include="..\..\..\Common\GoalManager.cpp" />
     <ClCompile Include="..\..\..\Common\MapGoal.cpp" />
     <ClCompile Include="..\..\..\Common\MapGoalDatabase.cpp" />
     <ClCompile Include="..\..\..\Common\NavigationManager.cpp" />
-    <ClCompile Include="..\..\..\Common\ObstacleManager.cpp" />
     <ClCompile Include="..\..\..\Common\Path.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerBase.cpp" />
     <ClCompile Include="..\..\..\Common\PathQuery.cpp" />
@@ -279,7 +274,6 @@
     <ClCompile Include="..\..\..\Common\gmAABB.cpp" />
     <ClCompile Include="..\..\..\Common\gmBot.cpp" />
     <ClCompile Include="..\..\..\Common\gmBotLibrary.cpp" />
-    <ClCompile Include="..\..\..\Common\gmDebugWindow.cpp" />
     <ClCompile Include="..\..\..\Common\gmGameEntity.cpp" />
     <ClCompile Include="..\..\..\Common\gmMathLibrary.cpp" />
     <ClCompile Include="..\..\..\Common\gmMatrix3.cpp" />
@@ -970,566 +964,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\actionevent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\basiccontainer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\cliprectangle.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\color.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\defaultfont.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\event.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\exception.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\focushandler.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\font.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\genericinput.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\graphics.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\gui.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\guichan.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\image.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\imagefont.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\inputevent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\key.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\keyevent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\keyinput.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\mouseevent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\mouseinput.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\rectangle.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\selectionevent.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widget.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\opengl.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\openglgraphics.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\opengl\openglimage.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\addons\adjustingcontainer\adjustingcontainer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\button.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\checkbox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\container.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\dropdown.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\icon.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\imagebutton.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\label.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\listbox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\addons\propertysheet\propertysheet.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\radiobutton.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\scrollarea.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\slider.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\tab.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\tabbedarea.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\textbox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\textfield.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\widgets\window.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdl.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlgraphics.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlimage.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlimageloader.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sdl\sdlinput.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfml.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlimage.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlimageloader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\guichan-0.7.1\src\sfml\sfmlinput.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -1731,10 +1165,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\MessageManager.cpp" />
     <ClCompile Include="..\..\..\Common\NameManager.cpp" />
     <ClCompile Include="..\..\..\Common\PropertyBinding.cpp" />
-    <ClCompile Include="..\..\..\Common\QuadTree.cpp" />
     <ClCompile Include="..\..\..\Common\Regulator.cpp" />
     <ClCompile Include="..\..\..\Common\Revision.cpp" />
     <ClCompile Include="..\..\..\Common\Timer.cpp" />
@@ -1788,12 +1220,10 @@
     <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h" />
     <ClInclude Include="..\..\..\Common\BlackBoard.h" />
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h" />
-    <ClInclude Include="..\..\..\Common\DebugWindow.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerWaypointInterface.h" />
     <ClInclude Include="..\..\..\Common\platformspecifics.h" />
     <ClInclude Include="..\..\..\Common\RecastInterfaces.h" />
     <ClInclude Include="..\..\..\Common\RenderBuffer.h" />
-    <ClInclude Include="..\..\..\Common\RenderOverlay.h" />
     <ClInclude Include="..\..\..\Common\EventReciever.h" />
     <ClInclude Include="..\..\..\Common\GoalManager.h" />
     <ClInclude Include="..\..\..\Common\MapGoal.h" />
@@ -1801,7 +1231,6 @@
     <ClInclude Include="..\..\..\Common\Base_Messages.h" />
     <ClInclude Include="..\..\..\Common\MessageHelper.h" />
     <ClInclude Include="..\..\..\Common\NavigationManager.h" />
-    <ClInclude Include="..\..\..\Common\ObstacleManager.h" />
     <ClInclude Include="..\..\..\Common\Path.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerBase.h" />
     <ClInclude Include="..\..\..\Common\PathQuery.h" />
@@ -1825,7 +1254,6 @@
     <ClInclude Include="..\..\..\Common\gmBind.h" />
     <ClInclude Include="..\..\..\Common\gmBot.h" />
     <ClInclude Include="..\..\..\Common\gmBotLibrary.h" />
-    <ClInclude Include="..\..\..\Common\gmDebugWindow.h" />
     <ClInclude Include="..\..\..\Common\gmGameEntity.h" />
     <ClInclude Include="..\..\..\Common\gmMathLibrary.h" />
     <ClInclude Include="..\..\..\Common\gmMatrix3.h" />
@@ -1924,70 +1352,6 @@
     <ClInclude Include="..\..\..\dependencies\iprof\prof_gather.h" />
     <ClInclude Include="..\..\..\dependencies\iprof\prof_internal.h" />
     <ClInclude Include="..\..\..\dependencies\iprof\prof_win32.h" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\actionevent.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\actionlistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\allegro.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\basiccontainer.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\cliprectangle.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\color.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\deathlistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\defaultfont.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\event.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\exception.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\focushandler.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\focuslistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\font.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\genericinput.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\glut.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\graphics.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\gui.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\image.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\imagefont.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\imageloader.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\input.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\inputevent.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\key.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keyevent.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keyinput.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\keylistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\listmodel.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouseevent.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouseinput.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\mouselistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\platform.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\rectangle.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sdl.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widget.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\x.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglgraphics.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglimage.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\opengl\openglsdlimageloader.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\addons\adjustingcontainer\adjustingcontainer.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\button.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\checkbox.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\container.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\dropdown.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\icon.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\imagebutton.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\label.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\listbox.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\addons\propertysheet\propertysheet.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\radiobutton.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\scrollarea.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\selectionevent.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\selectionlistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\slider.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\tab.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\tabbedarea.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\textbox.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\textfield.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgetlistener.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\widgets\window.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimage.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlimageloader.hpp" />
-    <ClInclude Include="..\..\..\dependencies\guichan-0.7.1\include\guichan\sfml\sfmlinput.hpp" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastTimer.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourCommon.h" />
@@ -2013,13 +1377,11 @@
     <ClInclude Include="..\..\..\Common\Logger.h" />
     <ClInclude Include="..\..\..\Common\mdump.h" />
     <ClInclude Include="..\..\..\Common\MessageFunctor.h" />
-    <ClInclude Include="..\..\..\Common\MessageManager.h" />
     <ClInclude Include="..\..\..\Common\NameManager.h" />
     <ClInclude Include="..\..\..\Common\ObjFunctor.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Color.h" />
     <ClInclude Include="..\..\..\Common\PIDController.h" />
     <ClInclude Include="..\..\..\Common\PropertyBinding.h" />
-    <ClInclude Include="..\..\..\Common\QuadTree.h" />
     <ClInclude Include="..\..\..\Common\Regulator.h" />
     <ClInclude Include="..\..\..\Common\Revision.h" />
     <ClInclude Include="..\..\..\Common\Timer.h" />

@@ -23,8 +23,8 @@ int main(int argc,const char **argv)
 	{
 		std::cout << "gmCompiler.exe inputfile - expected 1 arg" << std::endl;
 		return Error;
-	}	
-	
+	}
+
 	const char *CompileFile = argv[1];
 	if(!CompileFile)
 	{
@@ -49,7 +49,7 @@ int main(int argc,const char **argv)
 
 	// get the file size
 	fileIn.seekg(0, std::ios::end);
-	const int fileSize = fileIn.tellg();
+	size_t fileSize = (size_t)fileIn.tellg();
 	fileIn.seekg(0, std::ios::beg);
 	char * buffer = new char[fileSize+1];
 	memset(buffer,0,sizeof(char)*(fileSize+1));
@@ -67,7 +67,6 @@ int main(int argc,const char **argv)
 		const char *pMessage = 0;
 		while((pMessage =  machine.GetLog().GetEntry(bFirst)))
 		{
-			
 			std::cout << pMessage;
 		}
 		machine.GetLog().Reset();
@@ -83,6 +82,6 @@ int main(int argc,const char **argv)
 	}
 
 	std::cout << CompileFile << "compiled successfully!" << std::endl;
-	
+
 	return Success;
 }

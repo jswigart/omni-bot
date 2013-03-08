@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BLACKBOARDITEMS_H__
 #define __BLACKBOARDITEMS_H__
@@ -22,7 +24,7 @@ class bbItem
 {
 public:
 	int		m_Owner;
-	int		m_Target;	
+	int		m_Target;
 	int		m_ExpireTime;
 	bool	m_DeleteOnExpire : 1;
 	bool	m_DeleteOnRefCount1 : 1;
@@ -71,7 +73,7 @@ public:
 class bbScriptItem : public bbItem
 {
 public:
-	
+
 	virtual bool FromScriptTable(gmMachine *_machine, gmTableObject *_from);
 	virtual bool ToScriptTable(gmMachine *_machine, gmTableObject *&_to);
 

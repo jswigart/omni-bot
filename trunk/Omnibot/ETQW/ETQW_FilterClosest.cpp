@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -18,7 +18,7 @@ ETQW_FilterClosest::ETQW_FilterClosest(Client *_client, AiState::SensoryMemory::
 bool ETQW_FilterClosest::CheckEx(const MemoryRecord &_record)
 {
 	// Special consideration for some entity types.
-	switch(_record.m_TargetInfo.m_EntityClass) 
+	switch(_record.m_TargetInfo.m_EntityClass)
 	{
 	case ETQW_CLASSEX_VEHICLE_HVY:
 		{
@@ -47,4 +47,3 @@ bool ETQW_FilterClosest::CheckEx(const MemoryRecord &_record)
 
 	return true;
 }
-

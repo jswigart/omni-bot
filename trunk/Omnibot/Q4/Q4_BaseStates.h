@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __DODBaseStates_H__
-#define __DODBaseStates_H__
+#pragma once
+
+#ifndef __DODBASESTATES_H__
+#define __DODBASESTATES_H__
 
 #include "StateMachine.h"
 #include "Path.h"

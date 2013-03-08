@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __OMNIBOT_TYPES_H__
 #define __OMNIBOT_TYPES_H__
@@ -113,7 +115,7 @@ typedef enum eobBool
 typedef enum eobFunctionStatus
 {
 	Function_Finished,
-	Function_InProgress,	
+	Function_InProgress,
 } obFunctionStatus;
 
 // enumerations: obResult
@@ -250,7 +252,7 @@ typedef struct AABB_t
 	{
 		for(int i = 0; i < 3; ++i)
 		{
-			if(m_Mins[i] != 0.f || 
+			if(m_Mins[i] != 0.f ||
 				m_Maxs[i] != 0.f)
 				return false;
 		}
@@ -519,7 +521,7 @@ typedef struct AABB_t
 //		BOT_BUTTON_AIM - If the bot wants to drop current item.
 //		BOT_BUTTON_RESPAWN - Bot wants to respawn.
 typedef enum eButtonFlags
-{	
+{
 	BOT_BUTTON_ATTACK1 = 0,
 	BOT_BUTTON_ATTACK2,
 	BOT_BUTTON_JUMP,
@@ -572,16 +574,16 @@ typedef enum eEntityFlag
 	ENT_FLAG_TEAM1,
 	ENT_FLAG_TEAM2,
 	ENT_FLAG_TEAM3,
-	ENT_FLAG_TEAM4,	
+	ENT_FLAG_TEAM4,
 	ENT_FLAG_VISTEST,
 	ENT_FLAG_DISABLED,
-	ENT_FLAG_PRONED,	
-	ENT_FLAG_CROUCHED,	
-    ENT_FLAG_CARRYABLE,	
-	ENT_FLAG_DEAD,	
-	ENT_FLAG_INWATER,	
-	ENT_FLAG_UNDERWATER,	
-	ENT_FLAG_ZOOMING,	
+	ENT_FLAG_PRONED,
+	ENT_FLAG_CROUCHED,
+	ENT_FLAG_CARRYABLE,
+	ENT_FLAG_DEAD,
+	ENT_FLAG_INWATER,
+	ENT_FLAG_UNDERWATER,
+	ENT_FLAG_ZOOMING,
 	ENT_FLAG_ONLADDER,
 	ENT_FLAG_ONGROUND,
 	ENT_FLAG_RELOADING,
@@ -604,7 +606,7 @@ typedef enum ePowerups
 	PWR_NONE = 0,
 	PWR_INVINCIBLE,
 
-	// THIS MUST BE LAST	
+	// THIS MUST BE LAST
 	PWR_FIRST_USER		= 8,
 } Powerups;
 
@@ -782,8 +784,8 @@ typedef enum eSkeletonBone
 //		NAVID_NAVMESH - Navigation mesh path planning implementation.
 typedef enum eNavigatorID
 {
-	NAVID_NONE,	
-	NAVID_WP,	
+	NAVID_NONE,
+	NAVID_WP,
 	NAVID_NAVMESH,
 	NAVID_FLOODFILL,
 	NAVID_RECAST,
@@ -849,56 +851,56 @@ typedef struct obUserData_t
 	//obUserData_t(obint64 _int) : DataType(dtInt64) { udata.m_Int64 = _int; };
 	obUserData_t(float _float) : DataType(dtFloat) { udata.m_Float = _float; };
 	obUserData_t(const GameEntity &_ent) : DataType(dtEntity) { udata.m_Entity = _ent.AsInt(); };
-	obUserData_t(float _x, float _y, float _z) : 
-		DataType(dtVector) 
+	obUserData_t(float _x, float _y, float _z) :
+		DataType(dtVector)
 	{
-		udata.m_Vector[0] = _x; 
-		udata.m_Vector[1] = _y; 
+		udata.m_Vector[0] = _x;
+		udata.m_Vector[1] = _y;
 		udata.m_Vector[2] = _z;
 	};
-	obUserData_t(float *_v) : 
-		DataType(dtVector) 
+	obUserData_t(float *_v) :
+		DataType(dtVector)
 	{
-		udata.m_Vector[0] = _v[0]; 
-		udata.m_Vector[1] = _v[1]; 
-		udata.m_Vector[2] = _v[2]; 
+		udata.m_Vector[0] = _v[0];
+		udata.m_Vector[1] = _v[1];
+		udata.m_Vector[2] = _v[2];
 	};
 	obUserData_t(int _v0, int _v1, int _v2) : DataType(dt3_4byteFlags)
 	{
-		udata.m_4ByteFlags[0] = _v0; 
-		udata.m_4ByteFlags[1] = _v1; 
+		udata.m_4ByteFlags[0] = _v0;
+		udata.m_4ByteFlags[1] = _v1;
 		udata.m_4ByteFlags[2] = _v2;
 	};
 	obUserData_t(char *_v0, char *_v1, char *_v2) : DataType(dt3_Strings)
 	{
-		udata.m_CharPtrs[0] = _v0; 
-		udata.m_CharPtrs[1] = _v1; 
+		udata.m_CharPtrs[0] = _v0;
+		udata.m_CharPtrs[1] = _v1;
 		udata.m_CharPtrs[2] = _v2;
 	};
-	obUserData_t(short _v0, short _v1, short _v2, short _v3, short _v4, short _v5) : 
+	obUserData_t(short _v0, short _v1, short _v2, short _v3, short _v4, short _v5) :
 		DataType(dt6_2byteFlags)
 	{
-		udata.m_2ByteFlags[0] = _v0; 
-		udata.m_2ByteFlags[1] = _v1; 
+		udata.m_2ByteFlags[0] = _v0;
+		udata.m_2ByteFlags[1] = _v1;
 		udata.m_2ByteFlags[2] = _v2;
-		udata.m_2ByteFlags[3] = _v3; 
-		udata.m_2ByteFlags[4] = _v4; 
+		udata.m_2ByteFlags[3] = _v3;
+		udata.m_2ByteFlags[4] = _v4;
 		udata.m_2ByteFlags[5] = _v5;
 	};
-	obUserData_t(char _v0, char _v1, char _v2, char _v3, char _v4, char _v5, char _v6, char _v7, char _v8, char _v9, char _v10, char _v11) : 
+	obUserData_t(char _v0, char _v1, char _v2, char _v3, char _v4, char _v5, char _v6, char _v7, char _v8, char _v9, char _v10, char _v11) :
 		DataType(dt12_1byteFlags)
 	{
-		udata.m_1ByteFlags[0] = _v0; 
-		udata.m_1ByteFlags[1] = _v1; 
+		udata.m_1ByteFlags[0] = _v0;
+		udata.m_1ByteFlags[1] = _v1;
 		udata.m_1ByteFlags[2] = _v2;
-		udata.m_1ByteFlags[3] = _v3; 
-		udata.m_1ByteFlags[4] = _v4; 
+		udata.m_1ByteFlags[3] = _v3;
+		udata.m_1ByteFlags[4] = _v4;
 		udata.m_1ByteFlags[5] = _v5;
-		udata.m_1ByteFlags[6] = _v6; 
-		udata.m_1ByteFlags[7] = _v7; 
+		udata.m_1ByteFlags[6] = _v6;
+		udata.m_1ByteFlags[7] = _v7;
 		udata.m_1ByteFlags[8] = _v8;
-		udata.m_1ByteFlags[9] = _v9; 
-		udata.m_1ByteFlags[10] = _v10; 
+		udata.m_1ByteFlags[9] = _v9;
+		udata.m_1ByteFlags[10] = _v10;
 		udata.m_1ByteFlags[11] = _v11;
 	};
 	// Function: IsNone
@@ -949,20 +951,20 @@ typedef struct obUserData_t
 	inline const int *Get4ByteFlags() const { return udata.m_4ByteFlags; };
 	inline const short *Get2ByteFlags() const { return udata.m_2ByteFlags; };
 	inline const char *Get1ByteFlags() const { return udata.m_1ByteFlags; };
-	inline float GetNumAsFloat() const 
-	{ 
-		if(IsFloat()) 
-			return GetFloat(); 
-		if(IsInt()) 
+	inline float GetNumAsFloat() const
+	{
+		if(IsFloat())
+			return GetFloat();
+		if(IsInt())
 			return (float)GetInt();
 		return 0.0f;
 	};
-	inline int GetNumAsInt() const 
-	{ 
-		if(IsFloat()) 
-			return (int)GetFloat(); 
-		if(IsInt()) 
-			return GetInt(); 
+	inline int GetNumAsInt() const
+	{
+		if(IsFloat())
+			return (int)GetFloat();
+		if(IsInt())
+			return GetInt();
 		return 0;
 	};
 
@@ -1046,7 +1048,7 @@ private:
 class Seconds
 {
 public:
-	int GetMs() const { return m_Ms; } 
+	int GetMs() const { return m_Ms; }
 	Seconds(float _seconds = 0.f) : m_Ms((int)(_seconds*1000.f)) {}
 private:
 	int		m_Ms;
@@ -1084,8 +1086,8 @@ typedef struct TriggerInfo_t
 			m_Action[i] = _ti.m_Action[i];
 		}
 	}
-	TriggerInfo_t(GameEntity _ent, GameEntity _activator) : 
-		m_Entity(_ent), m_Activator(_activator) 
+	TriggerInfo_t(GameEntity _ent, GameEntity _activator) :
+		m_Entity(_ent), m_Activator(_activator)
 	{
 		m_TagName[0] = m_Action[0] = 0;
 	}
@@ -1097,7 +1099,7 @@ typedef struct MapGoalDef_t
 {
 	KeyVals			Props;
 #ifdef __cplusplus
-	
+
 	void Reset()
 	{
 		Props.Reset();
@@ -1185,8 +1187,8 @@ class Arguments
 {
 public:
 	enum { MaxArgs = 64, MaxArgLength = 128, };
-	
-	Arguments() : m_NumArgs(0) 
+
+	Arguments() : m_NumArgs(0)
 	{
 		for(int i = 0; i < MaxArgs; ++i)
 			m_Args[i][0] = 0;
@@ -1214,7 +1216,7 @@ typedef vector_t vector3_t[3];
 
 typedef struct
 {
-	obVec3			m_Start, m_End;	
+	obVec3			m_Start, m_End;
 	int				m_Color;
 } IPC_DebugLineMessage;
 
@@ -1227,7 +1229,7 @@ typedef struct
 
 typedef struct
 {
-	obVec3			m_Mins, m_Maxs;	
+	obVec3			m_Mins, m_Maxs;
 	int				m_Color;
 	int				m_Sides;
 } IPC_DebugAABBMessage;
@@ -1235,12 +1237,12 @@ typedef struct
 typedef struct
 {
 	enum { MaxPolyVerts=32 };
-	obVec3			m_Verts[MaxPolyVerts];	
+	obVec3			m_Verts[MaxPolyVerts];
 	int				m_NumVerts;
 	int				m_Color;
 } IPC_DebugPolygonMessage;
 
-typedef struct  
+typedef struct
 {
 	enum { BufferSize=256 };
 	obVec3			m_Pos;
@@ -1267,7 +1269,6 @@ typedef struct
 
 	int				m_Duration;
 	DebugMsgType	m_Debugtype;
-	
 } IPC_DebugDrawMsg;
 //////////////////////////////////////////////////////////////////////////
 

@@ -1,16 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __PATHPLANNERFLOODFILL_H__
 #define __PATHPLANNERFLOODFILL_H__
 
 #include "PathPlannerBase.h"
-#include "RenderOverlay.h"
 #include "InternalFsm.h"
 #include "SpanHeightMap.h"
 
@@ -18,7 +19,7 @@
 
 // class: PathPlannerFloodFill
 //		Path planner interface for the navmesh system for hl2
-class PathPlannerFloodFill : public PathPlannerBase, public RenderOverlayUser//, public InternalFSM<PathPlannerFloodFill,NumToolStates>
+class PathPlannerFloodFill : public PathPlannerBase
 {
 public:
 	enum NavMeshFlags
@@ -35,7 +36,7 @@ public:
 		float		m_CharacterJumpHeight;
 		float		m_GridRadius;
 	};
-	
+
 	struct CellData
 	{
 		enum
@@ -50,48 +51,42 @@ public:
 
 		unsigned int	mCellFlags;
 	};
-		
+
 	//////////////////////////////////////////////////////////////////////////
 
 	bool Init();
 	void Update();
 	void Shutdown();
 	bool IsReady() const;
-	
+
 	Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team);
 
 	void PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team);
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team);
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team);
 
-	bool GetNavFlagByName(const String &_flagname, NavFlags &_flag) const;
+	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
 	bool IsDone() const;
 	bool FoundGoal() const;
-	bool Load(const String &_mapname, bool _dl = true);
-	bool Save(const String &_mapname);
+	bool Load(const std::string &_mapname, bool _dl = true);
+	bool Save(const std::string &_mapname);
 	void Unload();
-	bool SetFileComments(const String &_text);
+	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
 	void GetPath(Path &_path, int _smoothiterations);
 
-	virtual void RegisterNavFlag(const String &_name, const NavFlags &_bits) {}
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) {}
 
 	void RegisterScriptFunctions(gmMachine *a_machine);
 
-	bool GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name);
+	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
-
-#ifdef ENABLE_DEBUG_WINDOW
-	void CreateGui();
-	void UpdateGui();
-	void RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics);
-#endif
 
 	const char *GetPlannerName() const { return "Flood Fill Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_FLOODFILL; };
@@ -114,7 +109,7 @@ protected:
 	void cmdSaveFloodStarts(const StringVector &_args);
 	void cmdLoadFloodStarts(const StringVector &_args);
 	void cmdNavMeshFloodFill(const StringVector &_args);
-	void cmdAutoBuildFeatures(const StringVector &_args);	
+	void cmdAutoBuildFeatures(const StringVector &_args);
 	void cmdSectorSetProperty(const StringVector &_args);
 
 	void cmdNext(const StringVector &_args);
@@ -146,7 +141,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////////
 
 	Vector3List			m_StartPositions;
-	
+
 	typedef SpanHeightMap< CellData > SpanMap;
 	SpanMap				mSpanMap;
 
@@ -160,13 +155,11 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Implementations of base class functionality
-	String _GetNavFileExtension() { return ".nav"; }
+	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 
 	void _Render();
-private:
-	void OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer);
 };
 
 #endif

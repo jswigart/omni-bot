@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // about: Q4 game definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __Q4_EVENTS_H__
 #define __Q4_EVENTS_H__
@@ -32,7 +34,7 @@ typedef enum eQ4_Version
 //		the global events.
 typedef enum eQ4_Events
 {
-	Q4_EVENT_BEGIN = EVENT_NUM_EVENTS,	
+	Q4_EVENT_BEGIN = EVENT_NUM_EVENTS,
 	Q4_EVENT_END
 } Q4_Events;
 
@@ -71,7 +73,7 @@ typedef enum eQ4_Weapon
 	Q4_WP_ROCKETLAUNCHER,
 	Q4_WP_LIGHTNINGGUN,
 	Q4_WP_GRENADELAUNCHER,
-	Q4_WP_GAUNTLET,	
+	Q4_WP_GAUNTLET,
 	Q4_WP_DMG,
 	Q4_WP_RAILGUN,
 	Q4_WP_NAPALMGUN,
@@ -104,8 +106,8 @@ typedef enum eQ4_PlayerClass_enum
 	Q4_CLASSEX_AMMOEND = Q4_CLASSEX_AMMO+Q4_WP_MAX,
 
 	// powerups
-	Q4_CLASSEX_POWERUP_MEGAHEALTH, 
-	Q4_CLASSEX_POWERUP_QUADDAMAGE, 
+	Q4_CLASSEX_POWERUP_MEGAHEALTH,
+	Q4_CLASSEX_POWERUP_QUADDAMAGE,
 	Q4_CLASSEX_POWERUP_HASTE,
 	Q4_CLASSEX_POWERUP_REGENERATION,
 	Q4_CLASSEX_POWERUP_INVISIBILITY,
@@ -171,22 +173,22 @@ typedef enum eQ4_EntityFlags
 //		Q4_PWR_GOTONEFLAG - This entity is carrying the one flag
 //		Q4_PWR_GOTQUAD - This entity has quad damage
 //		Q4_PWR_HASTE - This entity has haste
-//		Q4_PWR_REGEN - Accelerates all weapons, projectiles and even your movement rate by two. 
-//					Player has smoke trails when the powerup is active. 
-//		Q4_PWR_INVIS - Looks like the effect in Predator with shimmering distortion of textures 
-//					around the player using the powerup. You can still hear the player. 
-//		Q4_PWR_AMMOREGEN - Regenerates ammunition at a steady rate and appears to increases 
+//		Q4_PWR_REGEN - Accelerates all weapons, projectiles and even your movement rate by two.
+//					Player has smoke trails when the powerup is active.
+//		Q4_PWR_INVIS - Looks like the effect in Predator with shimmering distortion of textures
+//					around the player using the powerup. You can still hear the player.
+//		Q4_PWR_AMMOREGEN - Regenerates ammunition at a steady rate and appears to increases
 //					firing and reload rate by one third. This powerup stays with you until you are fragged
-//		Q4_PWR_GUARD - Similar to Autodoc in Quake2 and Guard in Quake3 Team Arena. 
-//					This powerup immediately raises your health and armour to 200 on pickup. 
-//					Regenerates your health to 200 after taking damage but does not regenerate armour, 
-//					it only allows armour to reach a maximum of 200 without it counting down to 100. 
+//		Q4_PWR_GUARD - Similar to Autodoc in Quake2 and Guard in Quake3 Team Arena.
+//					This powerup immediately raises your health and armour to 200 on pickup.
+//					Regenerates your health to 200 after taking damage but does not regenerate armour,
+//					it only allows armour to reach a maximum of 200 without it counting down to 100.
 //					This powerup stays with you until you are fragged
-//		Q4_PWR_DOUBLER - Similar to PowerAmplifier in Quake2 and the Doubler in Quake3 Team arena. 
-//					This powerup allows any weapon to do double damage. 
+//		Q4_PWR_DOUBLER - Similar to PowerAmplifier in Quake2 and the Doubler in Quake3 Team arena.
+//					This powerup allows any weapon to do double damage.
 //					This powerup stays with you until you are fragged
-//		Q4_PWR_SCOUT - Similar to Haste in Quake3 and Scout in Quake3 Team Arena. 
-//					This powerup allows movement and firing at double the normal speed but removes all armour. 
+//		Q4_PWR_SCOUT - Similar to Haste in Quake3 and Scout in Quake3 Team Arena.
+//					This powerup allows movement and firing at double the normal speed but removes all armour.
 //					This powerup stays with you until you are fragged
 //		Q4_PWR_DEADZONE - Powerup for deadzone gametype.
 //		Q4_PWR_TEAM_AMMO_REGEN - Ammo regen for the entire team.

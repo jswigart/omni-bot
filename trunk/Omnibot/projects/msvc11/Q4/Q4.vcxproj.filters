@@ -13,16 +13,10 @@
     <Filter Include="Core\Goals">
       <UniqueIdentifier>{ea548e00-5a4f-43a2-8f47-0cb4e2d85f37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Interface">
-      <UniqueIdentifier>{e20902ba-0697-423b-b5cf-a65df30c89fa}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\BotExports.cpp">
       <Filter>Dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\Q4\mpgame\omnibot\omnibot_interface.cpp">
-      <Filter>_Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_Game.cpp">
       <Filter>Core</Filter>
@@ -78,14 +72,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\Q4\Q4_BuildInterface.bld">
-      <Filter>_Interface</Filter>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Q4_BuildInterface.results">
-      <Filter>_Interface</Filter>
-    </None>
     <None Include="..\..\..\Q4\Jamfile" />
   </ItemGroup>
 </Project>

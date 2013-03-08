@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ENGINE_INTERFACE_H__
 #define __ENGINE_INTERFACE_H__
@@ -14,13 +16,11 @@
 #include "Omni-Bot_Color.h"
 #include "MessageHelper.h"
 
-#define _UNUSED(x) ((void)x) // cs: for gcc warnings
-
 // Title: Engine Interface
 
 // struct: EntityInfo
 //		Used to store information about an entity
-typedef struct 
+typedef struct
 {
 	// BitFlag32: m_Team
 	//		If this != 0, this entity should only be visible to certain teams.
@@ -86,7 +86,7 @@ public:
 	//		Flags representing the surface struct by the trace.
 	int			m_Surface;
 
-	obTraceResult() : 
+	obTraceResult() :
 		m_Fraction	(0.f),
 		m_StartSolid(0),
 		m_Contents	(0),
@@ -100,7 +100,7 @@ class obPlayerInfo
 public:
 	enum { MaxPlayers=64,MaxTeams=6 };
 	enum Controller { Bot = 0, Human, Both };
-	struct PInfo 
+	struct PInfo
 	{
 		int			m_Team;
 		int			m_Class;
@@ -151,7 +151,7 @@ public:
 };
 
 // typedef: IEngineInterface
-//		This struct defines all the function that the game will implement 
+//		This struct defines all the function that the game will implement
 //		and give to the bot so that the bot may perform generic
 //		actions without caring about the underlying engine or game.
 class IEngineInterface
@@ -166,7 +166,7 @@ public:
 	//		This function should add a bot to the game with the name specified,
 	//		and return the bots GameID
 	virtual int AddBot(const MessageHelper &_data) = 0;
-	
+
 	// Function: RemoveBot
 	//		This function should remove/kick a bot from the game by its name or id
 	virtual void RemoveBot(const MessageHelper &_data) = 0;
@@ -236,7 +236,7 @@ public:
 	// Function: GetEntityOrientation
 	//		This function should return the orientation of a <GameEntity> as fwd, right, up vectors
 	virtual obResult GetEntityOrientation(const GameEntity _ent, float _fwd[3], float _right[3], float _up[3]) = 0;
-	
+
 	// Function: GetEntityVelocity
 	//		This function should return the velocity of a <GameEntity> in world space
 	virtual obResult GetEntityVelocity(const GameEntity _ent, float _velocity[3]) = 0;
@@ -300,39 +300,39 @@ public:
 
 	// Function: DebugLine
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time) 
-	{ _UNUSED(_start); _UNUSED(_end); _UNUSED(_color); _UNUSED(_time); return false; }
-	
+	virtual bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time)
+	{ _start; _end; _color; _time; return false; }
+
 	// Function: DebugBox
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugBox(const float _mins[3], const float _maxs[3], const obColor &_color, float _time) 
-	{ _UNUSED(_mins); _UNUSED(_maxs); _UNUSED(_color); _UNUSED(_time); return false; }
+	virtual bool DebugBox(const float _mins[3], const float _maxs[3], const obColor &_color, float _time)
+	{ _mins; _maxs; _color; _time; return false; }
 
 	// Function: DebugArrow
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugArrow(const float _start[3], const float _end[3], const obColor &_color, float _time) 
+	virtual bool DebugArrow(const float _start[3], const float _end[3], const obColor &_color, float _time)
 	{ return DebugLine(_start, _end, _color, _time); }
 
 	// Function: DebugRadius
 	//		Adds a radius indicator to be displayed at a certain position with radius and color
 	virtual bool DebugRadius(const float _pos[3], const float _radius, const obColor &_color, float _time)
-	{ _UNUSED(_pos); _UNUSED(_radius); _UNUSED(_color); _UNUSED(_time); return false; }
+	{ _pos; _radius; _color; _time; return false; }
 
 	// Function: DebugPolygon
 	//		Draw a shaded polygon.
 	virtual bool DebugPolygon(const obVec3 *_verts, const int _numverts, const obColor &_color, float _time, int _flags)
-	{ _UNUSED(_verts); _UNUSED(_numverts); _UNUSED(_color); _UNUSED(_time); _UNUSED(_flags); return false; }
+	{ _verts; _numverts; _color; _time; _flags; return false; }
 
 	// Function: PrintScreenMessage
 	//		This function should print a message the the game screen if possible
 	virtual bool PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg)
-	{ _UNUSED(_pos); _UNUSED(_duration); _UNUSED(_color); _UNUSED(_msg); return false; }
+	{ _pos; _duration; _color; _msg; return false; }
 
 	// Function: PrintError
 	//		This function should print an error the the game however desired,
 	//		whether it be to the console, messagebox,...
 	virtual void PrintError(const char *_error) = 0;
-	
+
 	// Function: PrintMessage
 	//		This function should print a message the the game however desired,
 	//		whether it be to the console, messagebox,...

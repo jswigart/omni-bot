@@ -1,12 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-#include "ScriptManager.h"
 
 #include "RTCW_Client.h"
 #include "RTCW_NavigationFlags.h"
@@ -28,9 +26,9 @@ class Limbo : public StateSimultaneous
 {
 public:
 
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return GetClient()->HasEntityFlag(RTCW_ENT_FLAG_INLIMBO) ? 1.f : 0.f;		
+		return GetClient()->HasEntityFlag(RTCW_ENT_FLAG_INLIMBO) ? 1.f : 0.f;
 	}
 
 	void Exit()
@@ -38,13 +36,13 @@ public:
 		GetRootState()->OnSpawn();
 	}
 
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		// need to do something special here?
-		return State_Busy; 
+		return State_Busy;
 	}
 
-	Limbo() : StateSimultaneous("Limbo") 
+	Limbo() : StateSimultaneous("Limbo")
 	{
 	}
 protected:
@@ -53,18 +51,18 @@ protected:
 class Incapacitated : public StateSimultaneous
 {
 public:
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f; 
+		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		GetClient()->SetMovementVector(Vector3f::ZERO);
-		return State_Busy; 
+		return State_Busy;
 	}
 
-	Incapacitated() : StateSimultaneous("Incapacitated") 
+	Incapacitated() : StateSimultaneous("Incapacitated")
 	{
 	}
 protected:
@@ -95,7 +93,6 @@ void RTCW_Client::Init(int _gameid)
 	filter->AddCategory(ENT_CAT_SHOOTABLE);
 	GetTargetingSystem()->SetDefaultTargetingFilter(filter);
 }
-
 
 void RTCW_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 {
@@ -130,13 +127,13 @@ NavFlags RTCW_Client::GetTeamFlag(int _team)
 	case RTCW_TEAM_AXIS:
 		return F_NAV_TEAM1;
 	case RTCW_TEAM_ALLIES:
-		return F_NAV_TEAM2;	
+		return F_NAV_TEAM2;
 	default:
 		return defaultTeam;
 	}
 }
 
-void RTCW_Client::SendVoiceMacro(int _macroId) 
+void RTCW_Client::SendVoiceMacro(int _macroId)
 {
 	RTCW_VoiceMacros::SendVoiceMacro(this, _macroId);
 }
@@ -144,70 +141,70 @@ void RTCW_Client::SendVoiceMacro(int _macroId)
 int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 {
 	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-	
+
 	int iVoiceId = RTCW_VoiceMacros::GetVChatId(m->m_MacroString);
 	/*switch(iVoiceId)
 	{
-		case VCHAT_TEAM_PATHCLEARED:
-		case VCHAT_TEAM_ENEMYWEAK:
-		case VCHAT_TEAM_ALLCLEAR:
-		case VCHAT_TEAM_INCOMING:
-		case VCHAT_TEAM_FIREINTHEHOLE:
-		case VCHAT_TEAM_ONDEFENSE:
-		case VCHAT_TEAM_ONOFFENSE:
-		case VCHAT_TEAM_TAKINGFIRE:
-		case VCHAT_TEAM_MINESCLEARED:
-		case VCHAT_TEAM_ENEMYDISGUISED:
-		case VCHAT_TEAM_MEDIC:
-		case VCHAT_TEAM_NEEDAMMO:
-		case VCHAT_TEAM_NEEDBACKUP:
-		case VCHAT_TEAM_NEEDENGINEER:
-		case VCHAT_TEAM_COVERME:
-		case VCHAT_TEAM_HOLDFIRE:
-		case VCHAT_TEAM_WHERETO:
-		case VCHAT_TEAM_NEEDOPS:
-		case VCHAT_TEAM_FOLLOWME:
-		case VCHAT_TEAM_LETGO:
-		case VCHAT_TEAM_MOVE:
-		case VCHAT_TEAM_CLEARPATH:
-		case VCHAT_TEAM_DEFENDOBJECTIVE:
-		case VCHAT_TEAM_DISARMDYNAMITE:
-		case VCHAT_TEAM_CLEARMINES:
-		case VCHAT_TEAM_REINFORCE_OFF:
-		case VCHAT_TEAM_REINFORCE_DEF:
-		case VCHAT_TEAM_AFFIRMATIVE:
-		case VCHAT_TEAM_NEGATIVE:
-		case VCHAT_TEAM_THANKS:
-		case VCHAT_TEAM_WELCOME:
-		case VCHAT_TEAM_SORRY:
-		case VCHAT_TEAM_OOPS:
+	case VCHAT_TEAM_PATHCLEARED:
+	case VCHAT_TEAM_ENEMYWEAK:
+	case VCHAT_TEAM_ALLCLEAR:
+	case VCHAT_TEAM_INCOMING:
+	case VCHAT_TEAM_FIREINTHEHOLE:
+	case VCHAT_TEAM_ONDEFENSE:
+	case VCHAT_TEAM_ONOFFENSE:
+	case VCHAT_TEAM_TAKINGFIRE:
+	case VCHAT_TEAM_MINESCLEARED:
+	case VCHAT_TEAM_ENEMYDISGUISED:
+	case VCHAT_TEAM_MEDIC:
+	case VCHAT_TEAM_NEEDAMMO:
+	case VCHAT_TEAM_NEEDBACKUP:
+	case VCHAT_TEAM_NEEDENGINEER:
+	case VCHAT_TEAM_COVERME:
+	case VCHAT_TEAM_HOLDFIRE:
+	case VCHAT_TEAM_WHERETO:
+	case VCHAT_TEAM_NEEDOPS:
+	case VCHAT_TEAM_FOLLOWME:
+	case VCHAT_TEAM_LETGO:
+	case VCHAT_TEAM_MOVE:
+	case VCHAT_TEAM_CLEARPATH:
+	case VCHAT_TEAM_DEFENDOBJECTIVE:
+	case VCHAT_TEAM_DISARMDYNAMITE:
+	case VCHAT_TEAM_CLEARMINES:
+	case VCHAT_TEAM_REINFORCE_OFF:
+	case VCHAT_TEAM_REINFORCE_DEF:
+	case VCHAT_TEAM_AFFIRMATIVE:
+	case VCHAT_TEAM_NEGATIVE:
+	case VCHAT_TEAM_THANKS:
+	case VCHAT_TEAM_WELCOME:
+	case VCHAT_TEAM_SORRY:
+	case VCHAT_TEAM_OOPS:
 
-		// Command related
-		case VCHAT_TEAM_COMMANDACKNOWLEDGED:
-		case VCHAT_TEAM_COMMANDDECLINED:
-		case VCHAT_TEAM_COMMANDCOMPLETED:
-		case VCHAT_TEAM_DESTROYPRIMARY:
-		case VCHAT_TEAM_DESTROYSECONDARY:
-		case VCHAT_TEAM_DESTROYCONSTRUCTION:
-		case VCHAT_TEAM_CONSTRUCTIONCOMMENCING:
-		case VCHAT_TEAM_REPAIRVEHICLE:
-		case VCHAT_TEAM_DESTROYVEHICLE:
-		case VCHAT_TEAM_ESCORTVEHICLE:
+	// Command related
+	case VCHAT_TEAM_COMMANDACKNOWLEDGED:
+	case VCHAT_TEAM_COMMANDDECLINED:
+	case VCHAT_TEAM_COMMANDCOMPLETED:
+	case VCHAT_TEAM_DESTROYPRIMARY:
+	case VCHAT_TEAM_DESTROYSECONDARY:
+	case VCHAT_TEAM_DESTROYCONSTRUCTION:
+	case VCHAT_TEAM_CONSTRUCTIONCOMMENCING:
+	case VCHAT_TEAM_REPAIRVEHICLE:
+	case VCHAT_TEAM_DESTROYVEHICLE:
+	case VCHAT_TEAM_ESCORTVEHICLE:
 
-		// Global messages
-		case VCHAT_GLOBAL_AFFIRMATIVE:
-		case VCHAT_GLOBAL_NEGATIVE:
-		case VCHAT_GLOBAL_ENEMYWEAK:
-		case VCHAT_GLOBAL_HI:
-		case VCHAT_GLOBAL_BYE:
-		case VCHAT_GLOBAL_GREATSHOT:
-		case VCHAT_GLOBAL_CHEER:
-		case VCHAT_GLOBAL_THANKS:
-		case VCHAT_GLOBAL_WELCOME:
-		case VCHAT_GLOBAL_OOPS:
-		case VCHAT_GLOBAL_SORRY:
-		case VCHAT_GLOBAL_HOLDFIRE:
-		case VCHAT_GLOBAL_GOODGAME:
+	// Global messages
+	case VCHAT_GLOBAL_AFFIRMATIVE:
+	case VCHAT_GLOBAL_NEGATIVE:
+	case VCHAT_GLOBAL_ENEMYWEAK:
+	case VCHAT_GLOBAL_HI:
+	case VCHAT_GLOBAL_BYE:
+	case VCHAT_GLOBAL_GREATSHOT:
+	case VCHAT_GLOBAL_CHEER:
+	case VCHAT_GLOBAL_THANKS:
+	case VCHAT_GLOBAL_WELCOME:
+	case VCHAT_GLOBAL_OOPS:
+	case VCHAT_GLOBAL_SORRY:
+	case VCHAT_GLOBAL_HOLDFIRE:
+	case VCHAT_GLOBAL_GOODGAME:
 	}*/
 	return iVoiceId;
 }
@@ -229,7 +226,7 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	}
 
 	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_L)
-	{		
+	{
 		PressButton(BOT_BUTTON_LSTRAFE);
 	}
 	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_R)
@@ -239,42 +236,42 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 
 	if (m_StrafeJump)
 	{
-	    if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
-	    {
-		if (IGame::GetFrameNumber() % 20 == 0)
+		if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
 		{
-		    GameEntity targetent;
-		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		    if (!targetent.IsValid())
-		    {
-			BitFlag64 b;
-			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-			//b.SetFlag(BOT_BUTTON_FWD,true);
+			if (IGame::GetFrameNumber() % 20 == 0)
+			{
+				GameEntity targetent;
+				targetent = this->GetTargetingSystem()->GetCurrentTarget();
+				if (!targetent.IsValid())
+				{
+					BitFlag64 b;
+					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+					//b.SetFlag(BOT_BUTTON_FWD,true);
 
-			PressButton(BOT_BUTTON_JUMP);
-			HoldButton(b, 750);
-		    }
+					PressButton(BOT_BUTTON_JUMP);
+					HoldButton(b, 750);
+				}
+			}
+			PressButton(BOT_BUTTON_SPRINT);
 		}
-		PressButton(BOT_BUTTON_SPRINT);
-	    }
-	    else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
-	    {
-		if (IGame::GetFrameNumber() % 20 == 0)
+		else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
 		{
-		    GameEntity targetent;
-		    targetent = this->GetTargetingSystem()->GetCurrentTarget();
-		    if (!targetent.IsValid())
-		    {
-			BitFlag64 b;
-			b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-			//b.SetFlag(BOT_BUTTON_FWD,true);
+			if (IGame::GetFrameNumber() % 20 == 0)
+			{
+				GameEntity targetent;
+				targetent = this->GetTargetingSystem()->GetCurrentTarget();
+				if (!targetent.IsValid())
+				{
+					BitFlag64 b;
+					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+					//b.SetFlag(BOT_BUTTON_FWD,true);
 
-			PressButton(BOT_BUTTON_JUMP);
-			HoldButton(b, 750);
-		    }
+					PressButton(BOT_BUTTON_JUMP);
+					HoldButton(b, 750);
+				}
+			}
+			PressButton(BOT_BUTTON_SPRINT);
 		}
-		PressButton(BOT_BUTTON_SPRINT);
-	    }
 	}
 }
 
@@ -292,7 +289,7 @@ float RTCW_Client::GetAvoidRadius(int _class) const
 {
 	switch(_class)
 	{
-	//case ENT_CLASS_GENERIC_BUTTON:
+		//case ENT_CLASS_GENERIC_BUTTON:
 	case ENT_CLASS_GENERIC_HEALTH:
 	case ENT_CLASS_GENERIC_AMMO:
 	case ENT_CLASS_GENERIC_ARMOR:
@@ -323,12 +320,12 @@ bool RTCW_Client::IsFlagGrabbable(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::ItemCanBeGrabbed(this, _mapgoal->GetEntity());
 }
 
-bool RTCW_Client::CanBotSnipe() 
+bool RTCW_Client::CanBotSnipe()
 {
 	if(GetClass() == RTCW_CLASS_SOLDIER)
 	{
 		// Make sure we have a sniping weapon.
-		if (GetWeaponSystem()->HasAmmo(RTCW_WP_MAUSER) || 
+		if (GetWeaponSystem()->HasAmmo(RTCW_WP_MAUSER) ||
 			GetWeaponSystem()->HasAmmo(RTCW_WP_SNIPERRIFLE))
 			return true;
 	}
@@ -352,27 +349,27 @@ bool RTCW_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 	return false;
 }
 
-float RTCW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float RTCW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
-	String gn;
+	std::string gn;
 
 	if(_flag & F_RTCW_NAV_USEPATH)
 	{
 		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
 		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
 		FINDSTATE(hl,HighLevel,this->GetStateRoot());
-		
+
 		if(hl && hl->GetActiveState())
 		{
 			gn = Utils::StringToLower(hl->GetActiveState()->GetName());
 
 			//EngineFuncs::ConsoleMessage("current goal: %s", gn.c_str());
-			
+
 			for(; cIt != pm.end(); ++cIt)
 			{
-			//	EngineFuncs::ConsoleMessage("property: %s = %s", 
-			//		(*cIt).first.c_str(), (*cIt).second.c_str());
+				//	EngineFuncs::ConsoleMessage("property: %s = %s",
+				//		(*cIt).first.c_str(), (*cIt).second.c_str());
 
 				if ( gn == (*cIt).first && (*cIt).second == "true" )
 					return 1.0f;

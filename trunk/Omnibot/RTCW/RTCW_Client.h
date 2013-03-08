@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __RTCW_CLIENT_H__
 #define __RTCW_CLIENT_H__
@@ -16,7 +18,7 @@
 //		Extended client class for Return to Castle Wolfenstein.
 class RTCW_Client : public Client
 {
-public:	
+public:
 	friend void gmBindRTCWBotLibrary(gmMachine *_machine);
 
 	void Init(int _gameid);
@@ -46,7 +48,7 @@ public:
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
 	void SetupBehaviorTree();
-	
+
 	RTCW_Client();
 	virtual ~RTCW_Client();
 protected:

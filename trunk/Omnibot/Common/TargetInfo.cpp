@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "TargetInfo.h"
 #include "ScriptManager.h"
@@ -22,7 +21,7 @@ TargetInfo::TargetInfo() :
 {
 }
 
-TargetInfo::~TargetInfo() 
+TargetInfo::~TargetInfo()
 {
 	if(m_ScriptObject)
 	{

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -17,7 +17,7 @@ FilterAllType::FilterAllType(Client *_client, AiState::SensoryMemory::Type _type
 
 void FilterAllType::Check(int _index, const MemoryRecord &_record)
 {
-	if(m_MemorySpan==0) 
+	if(m_MemorySpan==0)
 		m_MemorySpan = m_Client->GetSensoryMemory()->GetMemorySpan();
 
 	if(_record.m_TargetInfo.m_EntityCategory.CheckFlag(ENT_CAT_STATIC) ||
@@ -75,7 +75,7 @@ void FilterAllType::Check(int _index, const MemoryRecord &_record)
 		{
 			if(_record.m_TargetInfo.m_EntityClass >= ANYPLAYERCLASS)
 				return;
-		} 
+		}
 		else if(!PassesFilter(_record.m_TargetInfo.m_EntityClass))
 			return;
 
@@ -86,7 +86,7 @@ void FilterAllType::Check(int _index, const MemoryRecord &_record)
 		// Make sure it isn't disabled.
 		if(_record.m_TargetInfo.m_EntityFlags.CheckFlag(ENT_FLAG_DISABLED))
 			return;
-		
+
 		if(!CheckEx(_record))
 			return;
 
@@ -116,32 +116,31 @@ void FilterAllType::Check(int _index, const MemoryRecord &_record)
 			fCurDistanceToSq;
 			for(obuint32 i = 0; i < m_List.size(); ++i)
 			{
-				switch(m_SortType)
-				{
-				case Sort_NearToFar:
-					{
-						const MemoryRecord *pRec = 
-						float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
-						if(fCurDistanceToSq < fDistSq)
-						{
-							m_List.insert(i, &_record);
-							break;
-						}
-						break;
-					}
-				case Sort_FarToNear:
-					{
-						float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
-						if(fCurDistanceToSq > fDistSq)
-						{
-
-						}
-						break;
-					}
-				case Sort_None:
-				default:
-					break;
-				}
+			switch(m_SortType)
+			{
+			case Sort_NearToFar:
+			{
+			const MemoryRecord *pRec =
+			float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
+			if(fCurDistanceToSq < fDistSq)
+			{
+			m_List.insert(i, &_record);
+			break;
+			}
+			break;
+			}
+			case Sort_FarToNear:
+			{
+			float fDistSq = (m_Position - m_List[i]->GetLastSensedPosition()).SquaredLength();
+			if(fCurDistanceToSq > fDistSq)
+			{
+			}
+			break;
+			}
+			case Sort_None:
+			default:
+			break;
+			}
 			}*/
 		}
 	}

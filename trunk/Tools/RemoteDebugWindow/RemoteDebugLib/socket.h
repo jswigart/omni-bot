@@ -3,7 +3,7 @@
 namespace RemoteLib
 {
 	class TcpSocketImpl;
-	
+
 	class TcpSocket
 	{
 	public:
@@ -25,7 +25,7 @@ namespace RemoteLib
 		void destroy();
 
 		bool isValid() const { return impl != 0; }
-		
+
 		// server functions
 		bool listen( unsigned short port = DefaultPort );
 		bool accept( TcpSocket & acceptSocket );
@@ -49,7 +49,7 @@ namespace RemoteLib
 		void swap( TcpSocket & sock );
 
 		TcpSocket & operator=( const TcpSocket & socket ); // not allowed
-		
+
 		TcpSocket();
 		TcpSocket( TcpSocketImpl * impl );
 		virtual ~TcpSocket();

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "mdump.h"
 
-String		g_AppName;
+std::string		g_AppName;
 
 #ifdef WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -46,7 +46,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 	LONG retval = EXCEPTION_CONTINUE_SEARCH;
 	//HWND hParent = NULL;						// find a better value for your app
 
-	String DumpPath;
+	std::string DumpPath;
 	bool EnableDump = false, EnableDumpDialog = false;
 	Options::GetValue("Debug","DumpFileEnable",EnableDump);
 	Options::GetValue("Debug","DumpFileDialog",EnableDumpDialog);
@@ -55,7 +55,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 		return retval;
 
 	// firstly see if dbghelp.dll is around and has the function we need
-	// look next to the EXE first, as the one in System32 might be old 
+	// look next to the EXE first, as the one in System32 might be old
 	// (e.g. Windows 2000)
 	HMODULE hDll = NULL;
 	char szDbgHelpPath[_MAX_PATH];
@@ -89,19 +89,19 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 			// Get System Time for filename
 			SYSTEMTIME pTime;
 			GetSystemTime( &pTime );
-			sprintf( szDumpPath, "%s%s_%d.%d.%d.%d.%d.%d.r%s.dmp", 
-				"", 
-				g_AppName.c_str(), 
-				pTime.wMonth, 
+			sprintf( szDumpPath, "%s%s_%d.%d.%d.%d.%d.%d.r%s.dmp",
+				"",
+				g_AppName.c_str(),
+				pTime.wMonth,
 				pTime.wDay,
 				pTime.wYear,
 				pTime.wHour,
 				pTime.wMinute,
-				pTime.wSecond, 
+				pTime.wSecond,
 				Revision::Number().c_str());
 
 			// ask the user if they want to save a dump file
-			if (!EnableDumpDialog || ::MessageBox( NULL, 
+			if (!EnableDumpDialog || ::MessageBox( NULL,
 				"Crash detected, would you like to save a dump file?", g_AppName.c_str(), MB_YESNO )==IDYES)
 			{
 				// create the file
@@ -189,4 +189,3 @@ namespace MiniDumper
 };
 
 #endif
-

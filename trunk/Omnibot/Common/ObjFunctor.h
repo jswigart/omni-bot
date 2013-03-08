@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __OBJFUNCTOR_H__
 #define __OBJFUNCTOR_H__
@@ -17,18 +19,18 @@ class ObjFunctor : public Functor
 {
 public:
 	typedef int (T::*funcType)();
-    ObjFunctor(T *o, funcType f) 
-    { 
-        obj = o; 
-        m_Function = f;
-    }
-    int operator ()()
-    {
-        return (obj->*m_Function)(); 
-    }
+	ObjFunctor(T *o, funcType f)
+	{
+		obj = o;
+		m_Function = f;
+	}
+	int operator ()()
+	{
+		return (obj->*m_Function)();
+	}
 protected:
 	T *obj;
-	
+
 	funcType m_Function;
 };
 

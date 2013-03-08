@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -26,13 +26,12 @@
 	}
 
 #define VERIFY_MODULE_ID(id) if(id<0 || id >= MC_MODULE_MAX) { \
-		GM_EXCEPTION_MSG("Invalid Module Id!"); \
-		return GM_EXCEPTION; }
+	GM_EXCEPTION_MSG("Invalid Module Id!"); \
+	return GM_EXCEPTION; }
 
 #define VERIFY_UPGRADE_ID(id) if(id<0 || id >= MC_UPGRADE_MAX) { \
 	GM_EXCEPTION_MSG("Invalid Module Id!"); \
 	return GM_EXCEPTION; }
-
 
 // Title: MC Script Bindings
 
@@ -154,7 +153,7 @@ static int GM_CDECL gmfCanPhysPickup(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GameEntity pickup;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(pickup, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(pickup, 0);
 
 	a_thread->PushInt(InterfaceFuncs::CanPhysPickup(native->GetGameEntity(),pickup)?1:0);
 	return GM_OK;
@@ -208,14 +207,14 @@ static int GM_CDECL gmfGetChargerStatus(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 // package: Modular Combat Bot Library Functions
-static gmFunctionEntry s_MCbotLib[] = 
-{ 
-//	{"LockPlayerPosition",		gmfLockPlayerPosition},
-//	{"HudHint",					gmfHudHint},
-//	{"HudMessage",				gmfHudTextBox},	
-//	{"HudAlert",				gmfHudAlert},	
-//	{"HudMenu",					gmfHudMenu},	
-//	{"HudTextMsg",				gmfHudTextMsg},
+static gmFunctionEntry s_MCbotLib[] =
+{
+	//	{"LockPlayerPosition",		gmfLockPlayerPosition},
+	//	{"HudHint",					gmfHudHint},
+	//	{"HudMessage",				gmfHudTextBox},
+	//	{"HudAlert",				gmfHudAlert},
+	//	{"HudMenu",					gmfHudMenu},
+	//	{"HudTextMsg",				gmfHudTextMsg},
 
 	{"GetChargerStatus",		gmfGetChargerStatus},
 };
@@ -229,9 +228,9 @@ static gmFunctionEntry s_MCbotTypeLib[] =
 	{"UpgradeModule",			gmfUpgradeModule},
 
 	{"GetUpgradeInfo",			gmfGetWeaponUpgrade},
-	{"UpgradeWeapon",			gmfUpgradeWeapon},	
+	{"UpgradeWeapon",			gmfUpgradeWeapon},
 
-	{"CanPhysPickup",			gmfCanPhysPickup},	
+	{"CanPhysPickup",			gmfCanPhysPickup},
 	{"GetPhysGunInfo",			gmfPhysGunInfo},
 };
 
@@ -373,7 +372,7 @@ bool gmBindMCLibrary(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_MCbotLib, sizeof(s_MCbotLib) / sizeof(s_MCbotLib[0]));
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_MCbotTypeLib, sizeof(s_MCbotTypeLib) / sizeof(s_MCbotTypeLib[0]));
 
 	gmBot::registerProperty("TotalXp",getTotalXp,NULL);
@@ -387,6 +386,6 @@ bool gmBindMCLibrary(gmMachine *_machine)
 	gmBot::registerProperty("AuxPower",getAuxPower,NULL);
 	gmBot::registerProperty("AuxPowerMax",getAuxPowerMax,NULL);
 	gmBot::registerProperty("AuxRegenRate",getAuxPowerRegen,NULL);
-	
+
 	return true;
 }

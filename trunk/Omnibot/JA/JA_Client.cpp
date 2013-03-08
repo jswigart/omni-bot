@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -44,7 +44,7 @@ void JA_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 {
 	switch(_message.GetMessageId())
 	{
-	HANDLER(JA_PERCEPT_FEEL_FORCE)
+		HANDLER(JA_PERCEPT_FEEL_FORCE)
 		{
 			const Event_ForceInflicted *m = _message.Get<Event_ForceInflicted>();
 			_cb.CallScript();
@@ -56,7 +56,7 @@ void JA_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 				GetSensoryMemory()->UpdateWithTouchSource(m->m_Inflictor);
 			}
 			break;
-		}	
+		}
 	}
 	Client::ProcessEvent(_message, _cb);
 }
@@ -74,13 +74,13 @@ NavFlags JA_Client::GetTeamFlag(int _team)
 	case JA_TEAM_RED:
 		return F_NAV_TEAM1;
 	case JA_TEAM_BLUE:
-		return F_NAV_TEAM2;	
+		return F_NAV_TEAM2;
 	default:
 		return defaultTeam;
 	}
 }
 
-void JA_Client::SendVoiceMacro(int _macroId) 
+void JA_Client::SendVoiceMacro(int _macroId)
 {
 	JA_VoiceMacros::SendVoiceMacro(this, _macroId);
 }
@@ -142,7 +142,7 @@ bool JA_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::HasFlag(this);
 }
 
-bool JA_Client::CanBotSnipe() 
+bool JA_Client::CanBotSnipe()
 {
 	// Make sure we have the disuptor and ammo.
 	if (GetWeaponSystem()->HasAmmo(JA_WP_DISRUPTOR))
@@ -164,10 +164,10 @@ bool JA_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 	return false;
 }
 
-float JA_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float JA_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
-	
+
 	if(_flag & F_JA_NAV_FORCEJUMP)
 	{
 		int iForceJumpLevel = InterfaceFuncs::GetForceLevel(this, JA_FP_LEVITATION);
@@ -201,7 +201,6 @@ float JA_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to
 	}
 	return 0.f;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 

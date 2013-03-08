@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "CallbackParameters.h"
 
@@ -13,7 +12,7 @@
 #include "gmTableObject.h"
 #include "gmCall.h"
 
-CallbackParameters::CallbackParameters(int _messageId, gmMachine *_machine) 
+CallbackParameters::CallbackParameters(int _messageId, gmMachine *_machine)
 	: m_MessageId(_messageId)
 	, m_NumParameters(0)
 	, m_Machine(_machine)
@@ -72,7 +71,7 @@ void CallbackParameters::PrintDebug()
 		case GM_STRING:
 			{
 				gmStringObject *pStr = m_Variables[i].GetStringObjectSafe();
-				EngineFuncs::ConsoleMessage(va("	+ String: %s, \"%s\"\n", m_DebugNames[i], pStr->GetString()));
+				EngineFuncs::ConsoleMessage(va("	+ std::string: %s, \"%s\"\n", m_DebugNames[i], pStr->GetString()));
 				break;
 			}
 		case GM_TABLE:
@@ -87,7 +86,7 @@ void CallbackParameters::PrintDebug()
 				break;
 			}
 		default:
-			{				
+			{
 				EngineFuncs::ConsoleMessage(va("	+ UserObj: %s, %X\n", m_DebugNames[i], m_Variables[i].m_value.m_ref));
 			}
 		}
@@ -193,8 +192,8 @@ void CallbackParameters::AddTable(const char *_name, gmTableObject *_param)
 }
 
 int CallbackParameters::CallFunction(gmFunctionObject *_func,
-									  const gmVariable &a_thisVar, 
-									  bool a_delayExecuteFlag) const
+									 const gmVariable &a_thisVar,
+									 bool a_delayExecuteFlag) const
 {
 	gmCall call;
 	if(call.BeginFunction(m_Machine, _func, a_thisVar, a_delayExecuteFlag))

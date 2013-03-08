@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __WAYPOINT_H__
 #define __WAYPOINT_H__
@@ -18,7 +20,7 @@
 //		Represents a point in the game where
 //		the bot can travel. Also holds connections to other waypoints to ultimately
 //		create a large graph of waypoints that can be used in A* to find specific goals.
-//		Can also hold flags or designators to give the waypoint additional properties 
+//		Can also hold flags or designators to give the waypoint additional properties
 //		that the A* search should take into account.
 class Waypoint
 {
@@ -44,10 +46,10 @@ public:
 		void ClearFlag(unsigned int _flag) { ClearBitT<unsigned int>(m_ConnectionFlags, _flag); }
 	} ConnectionInfo;
 	typedef std::list<ConnectionInfo> ConnectionList;
-	
+
 	PropertyMap &GetPropertyMap() { return m_PropertyList; }
 	const PropertyMap &GetPropertyMap() const { return m_PropertyList; }
-	
+
 	// Accessors and modifiers
 	inline const Vector3f &GetPosition() const { return m_Position; }
 	const Vector3f &GetFacing() const;
@@ -63,8 +65,8 @@ public:
 	inline float GetRadius() const { return m_Radius; }
 	inline void SetRadius(float _rad) { m_Radius = _rad; }
 
-	inline void SetName( const String & s ) { m_WaypointName = s; }
-	inline const String &GetName() const { return m_WaypointName; }
+	inline void SetName( const std::string & s ) { m_WaypointName = s; }
+	inline const std::string &GetName() const { return m_WaypointName; }
 	inline int GetUID() const { return (int)m_UID; }
 	inline uintptr_t GetHash() const { return (uintptr_t)this; }
 	inline void SetEntity(GameEntity _ent) { m_Entity = _ent; }
@@ -109,7 +111,7 @@ protected:
 	Vector3f			m_Position;
 	Vector3f			m_Facing;
 	float				m_Radius;
-	obuint32			m_Mark;	
+	obuint32			m_Mark;
 	obuint32			m_UID;
 	GameEntity			m_Entity;
 
@@ -117,17 +119,16 @@ protected:
 	obuint32			m_OnPathThroughParam;
 
 	// Other
-	String				m_WaypointName;
+	std::string				m_WaypointName;
 	ConnectionList		m_Connections;
 	PropertyMap			m_PropertyList;
 
 	bool				m_Locked : 1;
-	
+
 #ifdef ENABLE_REMOTE_DEBUGGING
 	typedef RemoteLib::SyncSnapshot<16> WaypointSnapShot;
 	WaypointSnapShot	snapShot;
 #endif
-
 
 	static obuint32		m_NextUID;
 private:

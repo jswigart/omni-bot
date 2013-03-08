@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __CALLBACKPARAMETERS_H__
 #define __CALLBACKPARAMETERS_H__
@@ -24,7 +26,7 @@ class CallbackParameters
 {
 public:
 	enum { MaxVariables = 8 };
-	
+
 	void CallScript(bool _immediate = false) { m_ShouldCallScript = true; m_CallImmediate = _immediate; }
 	bool CallImmediate() const { return m_CallImmediate; }
 	void DontPropogateEvent() { m_PropogateEvent = false; }
@@ -50,7 +52,7 @@ public:
 	void AddTable(const char *_name, gmTableObject *_param);
 
 	int CallFunction(gmFunctionObject *_func,
-		const gmVariable &a_thisVar = gmVariable::s_null, 
+		const gmVariable &a_thisVar = gmVariable::s_null,
 		bool a_delayExecuteFlag = false) const;
 
 	CallbackParameters(int _messageId, gmMachine *_machine);

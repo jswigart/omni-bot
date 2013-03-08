@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GM_WEAPON_H__
 #define __GM_WEAPON_H__
@@ -17,7 +19,7 @@
 //public:
 //	GMBIND_DECLARE_FUNCTIONS( );
 //	GMBIND_DECLARE_PROPERTIES( );
-//	
+//
 //	//////////////////////////////////////////////////////////////////////////
 //	// Property Accessors
 //	static bool setWeaponType( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
@@ -56,7 +58,7 @@
 //	static bool setIgnoreReload( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 //	static bool getIgnoreReload( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 //	static bool setUseMortarTrajectory( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
-//	static bool getUseMortarTrajectory( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );	
+//	static bool getUseMortarTrajectory( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 //	static bool getRequiresTargetOutside( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 //	static bool setRequiresTargetOutside( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 //	static bool getRequiresShooterOutside( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
@@ -90,7 +92,7 @@
 //
 //	//////////////////////////////////////////////////////////////////////////
 //	// Functions
-//	
+//
 //	//////////////////////////////////////////////////////////////////////////
 //	// Property Accessors
 //	static bool getName( Weapon *a_native, gmThread *a_thread, gmVariable *a_operands );

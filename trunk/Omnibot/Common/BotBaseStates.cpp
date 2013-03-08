@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -24,15 +24,13 @@ const obReal SNIPE_PRIORITY = 0.7f;
 const obReal ATTACK_GOAL_PRIORITY = 0.5f;
 const obReal DEFEND_GOAL_PRIORITY = 0.5f;
 
-const float MIN_RENDER_TIME = 0.05f;
-
 extern float g_fTopWaypointOffset;
 extern float g_fBottomWaypointOffset;
 
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
-	CaptureTheFlag::CaptureTheFlag() 
+	CaptureTheFlag::CaptureTheFlag()
 		: StateChild("CaptureTheFlag")
 		, FollowPathUser("CaptureTheFlag")
 		, m_GoalState(Idle)
@@ -41,11 +39,11 @@ namespace AiState
 	{
 	}
 
-	void CaptureTheFlag::GetDebugString(StringStr &out)
+	void CaptureTheFlag::GetDebugString(std::stringstream &out)
 	{
 		if(!IsActive())
 			return;
-		
+
 		switch(m_GoalState)
 		{
 		case Idle:
@@ -82,11 +80,11 @@ namespace AiState
 	{
 		if(m_MapGoalFlag)
 		{
-			Utils::OutlineOBB(m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
+			RenderBuffer::AddOBB(m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN);
 		}
 		if(m_MapGoalCap)
 		{
-			Utils::OutlineOBB(m_MapGoalCap->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
+			RenderBuffer::AddOBB(m_MapGoalCap->GetWorldBounds(), COLOR::GREEN);
 		}
 	}
 
@@ -159,7 +157,7 @@ namespace AiState
 				{
 					m_GoalState = GettingFlag;
 					m_MapGoalFlag = available;
-				}		
+				}
 			}
 
 			if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag) && !m_MapGoalCap)
@@ -195,7 +193,7 @@ namespace AiState
 
 		m_GoalState = Idle;
 		m_NextMoveTime = 0;
-		
+
 		m_MapGoalFlag.reset();
 		m_MapGoalCap.reset();
 
@@ -228,17 +226,17 @@ namespace AiState
 					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
 				}
 				else
-				{	
+				{
 					/*if(m_MapGoalFlag)
 					{
-						const int flagState = m_MapGoalFlag->GetGoalState();
-						if(flagState != m_LastFlagState)
-						{
-							FINDSTATEIF(FollowPath,GetRootState(),Stop());
-							return State_Finished;
-						}
+					const int flagState = m_MapGoalFlag->GetGoalState();
+					if(flagState != m_LastFlagState)
+					{
+					FINDSTATEIF(FollowPath,GetRootState(),Stop());
+					return State_Finished;
+					}
 					}*/
-					
+
 					// Someone else grab it?
 					if(m_MapGoalFlag->GetGoalState() == S_FLAG_CARRIED)
 					{
@@ -255,7 +253,7 @@ namespace AiState
 				}
 
 				// Doing this last so we can change state before finishing
-				// flag may be disabled as part of pickup process, and we 
+				// flag may be disabled as part of pickup process, and we
 				// want to be able to go into the cap state before that.
 				if(m_MapGoalFlag && !m_MapGoalFlag->IsAvailable(GetClient()->GetTeam()))
 					return State_Finished;
@@ -362,7 +360,7 @@ namespace AiState
 	//{
 	//}
 
-	//void Snipe::GetDebugString(StringStr &out)
+	//void Snipe::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -371,7 +369,7 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineAABB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, MIN_RENDER_TIME);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, MIN_RENDER_TIME);
 	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,MIN_RENDER_TIME);
 	//		m_TargetZone.RenderDebug();
 	//	}
@@ -382,7 +380,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -493,7 +491,7 @@ namespace AiState
 	//			m_NextScanTime = IGame::GetTime()+Mathf::IntervalRandomInt(2000,4000);
 	//			m_TargetZone.UpdateAimPosition();
 	//		}
-	//		
+	//
 	//		if(m_TargetZone.HasAim())
 	//			m_AimPosition = m_TargetZone.GetAimPosition();
 
@@ -508,16 +506,16 @@ namespace AiState
 	//}
 	//////////////////////////////////////////////////////////////////////////
 
-	ReturnTheFlag::ReturnTheFlag() 
+	ReturnTheFlag::ReturnTheFlag()
 		: StateChild("ReturnTheFlag")
 		, FollowPathUser("ReturnTheFlag")
 	{
 		m_LastGoalPosition = Vector3f::ZERO;
 	}
 
-	/*void ReturnTheFlag::GetDebugString(StringStr &out)
+	/*void ReturnTheFlag::GetDebugString(std::stringstream &out)
 	{
-		return "";
+	return "";
 	}*/
 
 	MapGoal *ReturnTheFlag::GetMapGoalPtr()
@@ -529,7 +527,7 @@ namespace AiState
 	{
 		if(m_MapGoal)
 		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME); // todo: convert to renderbuffer
+			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN); // todo: convert to renderbuffer
 			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA );
 		}
 	}
@@ -627,7 +625,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	//Defend::Defend() 
+	//Defend::Defend()
 	//	: StateChild("Defend")
 	//	, FollowPathUser("Attack")
 	//	, m_MinCampTime(2.f)
@@ -638,7 +636,7 @@ namespace AiState
 	//{
 	//}
 
-	//void Defend::GetDebugString(StringStr &out)
+	//void Defend::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -792,7 +790,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	//Attack::Attack() 
+	//Attack::Attack()
 	//	: StateChild("Attack")
 	//	, FollowPathUser("Attack")
 	//	, m_MinCampTime(2.f)
@@ -803,7 +801,7 @@ namespace AiState
 	//{
 	//}
 
-	//void Attack::GetDebugString(StringStr &out)
+	//void Attack::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -954,7 +952,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	Roam::Roam() 
+	Roam::Roam()
 		: StateChild("Roam")
 		, FollowPathUser("Roam")
 	{
@@ -962,7 +960,7 @@ namespace AiState
 
 	obReal Roam::GetPriority()
 	{
-		return ROAM_GOAL_PRIORITY; 
+		return ROAM_GOAL_PRIORITY;
 	}
 
 	void Roam::Exit()
@@ -980,7 +978,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	HighLevel::HighLevel() 
+	HighLevel::HighLevel()
 		: StatePrioritized("HighLevel")
 	{
 		AppendState(new CaptureTheFlag);
@@ -991,15 +989,15 @@ namespace AiState
 
 	/*obReal HighLevel::GetPriority()
 	{
-		if(IGame::GetGameState() != IGame::GetLastGameState())
-			return 0.f;
+	if(IGame::GetGameState() != IGame::GetLastGameState())
+	return 0.f;
 
-		return StatePrioritized::GetPriority();
+	return StatePrioritized::GetPriority();
 	}*/
-	
+
 	//////////////////////////////////////////////////////////////////////////
 
-	FollowPathUser::FollowPathUser(const String &_user)
+	FollowPathUser::FollowPathUser(const std::string &_user)
 		: m_UserName(0)
 		, m_CallingThread(GM_INVALID_THREAD)
 		, m_DestinationIndex(0)
@@ -1021,7 +1019,7 @@ namespace AiState
 		m_UserName = _name;
 	}
 
-	void FollowPathUser::SetFollowUserName(const String &_name)
+	void FollowPathUser::SetFollowUserName(const std::string &_name)
 	{
 		SetFollowUserName(Utils::MakeHash32(_name));
 	}
@@ -1030,7 +1028,7 @@ namespace AiState
 
 	bool FollowPath::m_OldLadderStyle = false;
 
-	FollowPath::FollowPath() 
+	FollowPath::FollowPath()
 		: StateChild("FollowPath")
 		, m_PathStatus(PathFinished)
 		, m_PtOnPath(Vector3f::ZERO)
@@ -1041,7 +1039,7 @@ namespace AiState
 	{
 	}
 
-	void FollowPath::GetDebugString(StringStr &out)
+	void FollowPath::GetDebugString(std::stringstream &out)
 	{
 		if(m_Query.m_User && IsActive())
 			out << Utils::HashToString(m_Query.m_User->GetFollowUserName());
@@ -1053,7 +1051,7 @@ namespace AiState
 	{
 		RenderBuffer::AddLine(GetClient()->GetPosition(), m_PtOnPath, COLOR::BLUE );
 		RenderBuffer::AddLine(GetClient()->GetPosition(), m_LookAheadPt, COLOR::MAGENTA );
-		m_CurrentPath.DebugRender(COLOR::RED, MIN_RENDER_TIME);
+		m_CurrentPath.DebugRender(COLOR::RED);
 		Path::PathPoint pt;
 		m_CurrentPath.GetCurrentPt(pt);
 		RenderBuffer::AddCircle( pt.m_Pt, COLOR::GREEN, pt.m_Radius );
@@ -1093,7 +1091,7 @@ namespace AiState
 				// don't interrupt active paththrough
 				if(m_SavedQuery.m_User)
 				{
-					if(m_SavedQuery.m_User!=m_Query.m_User) 
+					if(m_SavedQuery.m_User!=m_Query.m_User)
 						m_SavedQuery.m_User->OnPathFailed(FollowPathUser::Interrupted);
 					m_SavedQuery.m_User = 0;
 				}
@@ -1151,7 +1149,7 @@ namespace AiState
 		{
 			HANDLER(MESSAGE_DYNAMIC_PATHS_CHANGED)
 			{
-				using namespace AiState;			
+				using namespace AiState;
 				const Event_DynamicPathsChanged *m = _message.Get<Event_DynamicPathsChanged>();
 				if(m != NULL && (m->m_TeamMask & 1<<GetClient()->GetTeam()))
 				{
@@ -1227,7 +1225,7 @@ namespace AiState
 	{
 		DestinationVector destlist;
 		for(obuint32 i = 0; i < _goals.size(); ++i)
-		    destlist.push_back(Destination(_goals[i],_radius));
+			destlist.push_back(Destination(_goals[i],_radius));
 		return Goto(_owner, destlist, _movemode, _skiplastpt);
 	}
 
@@ -1325,9 +1323,9 @@ namespace AiState
 	{
 		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
 		int iDestIndex = pPathPlanner->PlanPathToNearest(
-			0, 
-			GetClient()->GetPosition(), 
-			_goals, 
+			0,
+			GetClient()->GetPosition(),
+			_goals,
 			GetClient()->GetTeamFlag());
 
 		if(pPathPlanner->FoundGoal())
@@ -1337,7 +1335,7 @@ namespace AiState
 			if(!m_Query.m_SkipLastPt)
 			{
 				m_CurrentPath.AddPt(
-					_goals[iDestIndex].m_Position, 
+					_goals[iDestIndex].m_Position,
 					_goals[iDestIndex].m_Radius);
 			}
 		}
@@ -1394,13 +1392,13 @@ namespace AiState
 					if(m_CurrentPath.GetCurrentPt(pt))
 						Dest = pt.m_Pt;
 
-					f.WriteString("{"); 
+					f.WriteString("{");
 					f.WriteNewLine();
-					
+
 					f.Printf("\tType = \"%s\",",FailType); f.WriteNewLine();
 					f.Printf("\tP = Vector3(%f,%f,%f),",Position.x,Position.y,Position.z);
 					f.WriteNewLine();
-					
+
 					if(_how == FollowPathUser::NoPath)
 					{
 						f.WriteString("\tDest = {"); f.WriteNewLine();
@@ -1428,7 +1426,7 @@ namespace AiState
 		}
 	}
 
-	obReal FollowPath::GetPriority() 
+	obReal FollowPath::GetPriority()
 	{
 		// always want to do this, if state active or not
 		if(m_PassThroughState)
@@ -1472,7 +1470,7 @@ namespace AiState
 				}
 			}
 		}
-		return m_PathStatus < PathFinished ? (obReal)1.0 : (obReal)0.0; 
+		return m_PathStatus < PathFinished ? (obReal)1.0 : (obReal)0.0;
 	}
 
 	Vector3f RawWpPos(const Path::PathPoint &pp)
@@ -1520,7 +1518,7 @@ namespace AiState
 				GetClient()->PressButton(BOT_BUTTON_WALK);
 			if(pt.m_NavFlags & F_NAV_ELEVATOR)
 			{
-				if(!CheckForMover(pt.m_Pt) && 
+				if(!CheckForMover(pt.m_Pt) &&
 					!CheckForMover(GetClient()->GetPosition()))
 				{
 					GetClient()->ResetStuckTime();
@@ -1576,7 +1574,7 @@ namespace AiState
 					State *pPathThrough = ll->FindState(pt.m_OnPathThrough);
 					if(pPathThrough)
 					{
-						String s = Utils::HashToString(pt.m_OnPathThroughParam);
+						std::string s = Utils::HashToString(pt.m_OnPathThroughParam);
 						if(pPathThrough->OnPathThrough(s))
 						{
 							m_SavedQuery.m_User = 0;
@@ -1619,8 +1617,8 @@ namespace AiState
 				m_PathStatus = PathFinished;
 				return State_Finished;
 			}
-			
-			FINDSTATEIF(SteeringSystem, GetRootState(), 
+
+			FINDSTATEIF(SteeringSystem, GetRootState(),
 				SetTarget(vGotoTarget,
 				pt.m_Radius,
 				m_Query.m_MoveMode,
@@ -1628,8 +1626,8 @@ namespace AiState
 
 			//if(pt.m_NavFlags & F_NAV_UNDERWATER)
 			//{
-				//b3dMovement = true;
-				//if(NeedsAir())
+			//b3dMovement = true;
+			//if(NeedsAir())
 			//}
 
 			if(pt.m_NavFlags & F_NAV_JUMP && (fDistanceSq <= Mathf::Sqr(pt.m_Radius)))
@@ -1651,7 +1649,7 @@ namespace AiState
 				if(GetClient()->HasEntityFlag(ENT_FLAG_ONLADDER))
 				{
 					float fHeight = pt.m_Pt.z - vPos.z;
-					
+
 					if(m_LadderDirection == 0)
 					{
 						if(fDistanceSq < fWpRadiusSq * 4)
@@ -1670,10 +1668,10 @@ namespace AiState
 						if (fHeight > 0) m_LadderDirection = 1;
 						else m_LadderDirection = -1;
 					}
-					
+
 					if( 2 * fHeight * fHeight > fDistSq2d //climb only if next waypoint is above or below player
 						|| m_LadderDirection > 0 && fHeight > -g_fTopWaypointOffset
-						|| m_LadderDirection < 0 && -fHeight > g_fTopWaypointOffset) 
+						|| m_LadderDirection < 0 && -fHeight > g_fTopWaypointOffset)
 					{
 						Vector3f vEye = GetClient()->GetEyePosition();
 						Vector3f vLook = pt.m_Pt - vEye;
@@ -1726,13 +1724,13 @@ namespace AiState
 		pos1.z -= (fWpHeight * 0.5f);
 		Vector3f pos2 = pos1;
 		pos2.z -= fWpHeight;
-		
+
 		const bool bMover = InterfaceFuncs::IsMoverAt(pos1,pos2);
 
 		if( DebugDrawingEnabled() )
 		{
 			RenderBuffer::AddLine( pos1,pos2,bMover?COLOR::GREEN:COLOR::RED );
-		}		
+		}
 		return bMover;
 	}
 
@@ -1780,7 +1778,7 @@ namespace AiState
 
 		// Trace a line start to end to see if it hits anything.
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStartPos, vEndPos, 
+		EngineFuncs::TraceLine(tr, vStartPos, vEndPos,
 			&localAABB, TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), False);
 
 		bool bHit = false;
@@ -1790,23 +1788,23 @@ namespace AiState
 			m_JumpTime = time;
 			GetClient()->PressButton(BOT_BUTTON_JUMP);
 		}
-		
+
 		if(DebugDrawingEnabled())
 		{
 			// Line Ray
-			RenderBuffer::AddLine(vStartPos, vEndPos, 
+			RenderBuffer::AddLine(vStartPos, vEndPos,
 				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vBottomStartLine(vStartPos), vBottomEndLine(vEndPos);
 			vBottomStartLine.z += localAABB.m_Mins[2];
 			vBottomEndLine.z += localAABB.m_Mins[2];
-			RenderBuffer::AddLine(vBottomStartLine, vBottomEndLine, 
+			RenderBuffer::AddLine(vBottomStartLine, vBottomEndLine,
 				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vTopStartLine(vStartPos), vTopEndLine(vEndPos);
 			vTopStartLine.z += localAABB.m_Maxs[2];
 			vTopEndLine.z += localAABB.m_Maxs[2];
-			RenderBuffer::AddLine(vTopStartLine, vTopEndLine, 
+			RenderBuffer::AddLine(vTopStartLine, vTopEndLine,
 				bHit ? COLOR::RED : COLOR::GREEN );
 		}
 	}
@@ -1823,7 +1821,7 @@ namespace AiState
 		//const float fStartUpOffset = 5.0f;
 		static const float fEndDownOffset = GetClient()->GetGameVar(Client::JumpGapOffset);
 		Vector3f vStartPos(Vector3f::ZERO);
-		aabb.CenterPoint(vStartPos); 
+		aabb.CenterPoint(vStartPos);
 
 		Vector3f vEndPos(vStartPos);
 		vEndPos.z -= fEndDownOffset;
@@ -1833,7 +1831,7 @@ namespace AiState
 
 		// Trace a line directly underneath us to try and detect rapid drops in elevation.
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStartPos, vEndPos, NULL, 
+		EngineFuncs::TraceLine(tr, vStartPos, vEndPos, NULL,
 			TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), False);
 
 		Vector3f trEnd(tr.m_Endpos);
@@ -1870,11 +1868,11 @@ namespace AiState
 		m_Owner = 0;
 		m_Priority = Priority::Zero;
 		m_AimVector = Vector3f::ZERO;
-		m_AimType = WorldPosition;		
+		m_AimType = WorldPosition;
 		m_AimerUser = NULL;
 	}
 
-	Aimer::Aimer() 
+	Aimer::Aimer()
 		: StateChild("Aimer")
 		, m_BestAimOwner(0)
 	{
@@ -1995,7 +1993,7 @@ namespace AiState
 		}
 	}
 
-	void Aimer::GetDebugString(StringStr &out)
+	void Aimer::GetDebugString(std::stringstream &out)
 	{
 		out << Utils::HashToString(m_BestAimOwner);
 	}
@@ -2099,7 +2097,7 @@ namespace AiState
 				{
 					Prof(UserCallback);
 					OBASSERT(curAim->m_AimerUser, "No Aim User");
-					if(curAim->m_AimerUser && 
+					if(curAim->m_AimerUser &&
 						curAim->m_AimerUser->GetAimPosition(curAim->m_AimVector) &&
 						GetClient()->TurnTowardPosition(curAim->m_AimVector))
 					{
@@ -2114,7 +2112,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	LookAround::LookAround() 
+	LookAround::LookAround()
 		: StateChild("LookAround")
 		, m_NextLookTime(0)
 	{
@@ -2138,7 +2136,7 @@ namespace AiState
 			if(fp)
 			{
 				Path::PathPoint pp;
-				if(fp->IsMoving() && fp->GetCurrentPath().GetCurrentPt(pp) && 
+				if(fp->IsMoving() && fp->GetCurrentPath().GetCurrentPt(pp) &&
 					(pp.m_NavFlags & (F_NAV_CLIMB|F_NAV_DOOR) ))
 				{
 					m_NextLookTime = GetNextLookTime();
@@ -2174,8 +2172,8 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	MotorControl::MotorControl() 
-		: StateSimultaneous("MotorControl") 
+	MotorControl::MotorControl()
+		: StateSimultaneous("MotorControl")
 	{
 		AppendState(new FollowPath);
 		AppendState(new SteeringSystem);
@@ -2187,8 +2185,8 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	LowLevel::LowLevel() 
-		: StateSimultaneous("LowLevel") 
+	LowLevel::LowLevel()
+		: StateSimultaneous("LowLevel")
 	{
 		AppendState(new MotorControl);
 		AppendState(new WeaponSystem);
@@ -2200,12 +2198,12 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	Main::Main() 
+	Main::Main()
 		: StateSimultaneous("Main"),
 		m_OnSpawnCalled(false)
 	{
 		AppendState(new LowLevel);
-		AppendState(new HighLevel);		
+		AppendState(new HighLevel);
 	}
 
 	obReal Main::GetPriority()
@@ -2233,54 +2231,54 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	Dead::Dead() 
+	Dead::Dead()
 		: StateChild("Dead")
 		, bForceActivate(true)
 	{
 	}
 
-	obReal Dead::GetPriority() 
+	obReal Dead::GetPriority()
 	{
 		if(bForceActivate)
 		{
 			bForceActivate = false;
 			return 1.f;
 		}
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f; 
+		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Dead::Update(float fDt) 
+	State::StateStatus Dead::Update(float fDt)
 	{
 		if(IGame::GetFrameNumber() & 2)
 		{
 			GetClient()->PressButton(BOT_BUTTON_RESPAWN);
 		}
 		GetClient()->SetMovementVector(Vector3f::ZERO);
-		return State_Busy; 
+		return State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	
-	Warmup::Warmup() 
-		: StateChild("Warmup") 
+
+	Warmup::Warmup()
+		: StateChild("Warmup")
 	{
 	}
 
-	obReal Warmup::GetPriority() 
+	obReal Warmup::GetPriority()
 	{
-		GameState gs = InterfaceFuncs::GetGameState();		
-		return (gs != GAME_STATE_PLAYING && gs != GAME_STATE_SUDDENDEATH) ? 1.f : 0.f;		
+		GameState gs = InterfaceFuncs::GetGameState();
+		return (gs != GAME_STATE_PLAYING && gs != GAME_STATE_SUDDENDEATH) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Warmup::Update(float fDt) 
+	State::StateStatus Warmup::Update(float fDt)
 	{
 		// need to do something special here?
-		return State_Busy; 
+		return State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
-	Root::Root() : StateFirstAvailable("Root") 
+	Root::Root() : StateFirstAvailable("Root")
 	{
 		AppendState(new Dead);
 		AppendState(new Main);
@@ -2306,10 +2304,10 @@ namespace AiState
 				for(int p = 0; p < m_Triggers[i].m_SensoryFilter->GetNumPositions(); ++p)
 				{
 					float r = Mathf::Max(m_Triggers[i].m_SensoryFilter->GetMaxDistance(), 10.f);
-					
+
 					RenderBuffer::AddCircle(
 						m_Triggers[i].m_SensoryFilter->GetPosition(p),
-						COLOR::MAGENTA, 
+						COLOR::MAGENTA,
 						r );
 				}
 			}
@@ -2418,7 +2416,7 @@ namespace AiState
 			{
 				fTotalWeight += (float)m_TargetZones[i].m_TargetCount;
 				iNumZones++;
-			}			
+			}
 		}
 
 		float fRand = Mathf::IntervalRandom(0.f, fTotalWeight);
@@ -2446,10 +2444,10 @@ namespace AiState
 			{
 				RenderBuffer::AddCircle(
 					m_TargetZones[i].m_Position,
-					COLOR::MAGENTA, 
+					COLOR::MAGENTA,
 					m_Radius );
 
-				RenderBuffer::AddString(
+				RenderBuffer::AddString3d(
 					m_TargetZones[i].m_Position,
 					COLOR::WHITE,
 					va( "%d", m_TargetZones[i].m_TargetCount ) );
@@ -2503,7 +2501,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	DeferredCaster::DeferredCaster() 
+	DeferredCaster::DeferredCaster()
 		: StateChild("DeferredCaster")
 		, CastReadPosition(0)
 		, CastWritePosition(0)
@@ -2548,18 +2546,15 @@ namespace AiState
 
 	DeferredCaster::Status DeferredCaster::GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts)
 	{
-
 		return Pending;
 	}
 
-	void DeferredCaster::GetDebugString(StringStr &out)
+	void DeferredCaster::GetDebugString(std::stringstream &out)
 	{
-
 	}
 
 	void DeferredCaster::RenderDebug()
 	{
-
 	}
 
 	obReal DeferredCaster::GetPriority()
@@ -2568,11 +2563,9 @@ namespace AiState
 	}
 	void DeferredCaster::Enter()
 	{
-
 	}
 	void DeferredCaster::Exit()
 	{
-
 	}
 	State::StateStatus DeferredCaster::Update(float fDt)
 	{
@@ -2614,7 +2607,7 @@ namespace AiState
 	const float MIN_COVER_HEIGHT = 40.f;
 	const float MAX_COVER_HEIGHT = 60.f;
 
-	FloodFiller::FloodFiller() 
+	FloodFiller::FloodFiller()
 		: StateChild("FloodFiller")
 	{
 		Reset();
@@ -2624,7 +2617,7 @@ namespace AiState
 	Vector3f FloodFiller::_GetNodePosition(const Node &_Node)
 	{
 		Vector3f vNodePos = Start;
-		
+
 		const float nX = (float)(_Node.MinOffset.X + _Node.MaxOffset.X) * 0.5f;
 		const float nY = (float)(_Node.MinOffset.Y + _Node.MaxOffset.Y) * 0.5f;
 
@@ -2639,7 +2632,7 @@ namespace AiState
 	{
 		for(int i = 0; i < FreeNode; ++i)
 		{
-			if(Nodes[i].MinOffset.X >= _X && Nodes[i].MinOffset.Y >= _Y && 
+			if(Nodes[i].MinOffset.X >= _X && Nodes[i].MinOffset.Y >= _Y &&
 				Nodes[i].MaxOffset.X <= _X && Nodes[i].MaxOffset.Y <= _Y)
 			{
 				if(Mathf::FAbs(_Height-Nodes[i].Height) < CHARACTER_HEIGHT)
@@ -2655,7 +2648,7 @@ namespace AiState
 		{
 			if(Nodes[i].Open)
 			{
-				return &Nodes[i];					
+				return &Nodes[i];
 			}
 		}
 		return NULL;
@@ -2666,12 +2659,12 @@ namespace AiState
 		Vector3f vPos = _GetNodePosition(*_Node);
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, 
+		EngineFuncs::TraceLine(tr,
 			vPos,
 			vPos,
 			&FloodBlock,
 			TR_MASK_FLOODFILL,
-			-1, 
+			-1,
 			False);
 
 		return (tr.m_Fraction == 1.0f);
@@ -2690,12 +2683,12 @@ namespace AiState
 		static float END_OFFSET = -fDropDistance;
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, 
+		EngineFuncs::TraceLine(tr,
 			vPos + Vector3f(0.f,0.f,START_OFFSET),
 			vPos + Vector3f(0.f,0.f,END_OFFSET),
 			&bounds,
 			TR_MASK_FLOODFILL,
-			-1, 
+			-1,
 			False);
 
 		bool bGood = true;
@@ -2715,7 +2708,7 @@ namespace AiState
 		{
 			_NodeA->Connections[_Dir].Destination = _NodeB;
 			_NodeA->Connections[_Dir].Jump = (_NodeB->Height - _NodeA->Height) >= CHARACTER_STEPHEIGHT;
-			
+
 			if((_NodeB->Height - _NodeA->Height) >= MIN_COVER_HEIGHT &&
 				(_NodeB->Height - _NodeA->Height) <= MAX_COVER_HEIGHT)
 			{
@@ -2725,7 +2718,7 @@ namespace AiState
 
 		{
 			//// connect the opposite direction
-			//Direction Opposite[DIR_NUM] = 
+			//Direction Opposite[DIR_NUM] =
 			//{
 			//	DIR_SOUTH,
 			//	DIR_WEST,
@@ -2833,10 +2826,10 @@ namespace AiState
 			//////////////////////////////////////////////////////////////////////////
 			if(pLargestNode)
 			{
-				/*Utils::PrintText(
-					_GetNodePosition(*pLargestNode) + Vector3f(0,0,64),
-					30.f,
-					"%d",NextSectorId);*/
+				/*RenderBuffer::AddString3d(
+				_GetNodePosition(*pLargestNode) + Vector3f(0,0,64),
+				30.f,
+				"%d",NextSectorId);*/
 
 				pLargestNode->Sectorized = true;
 				pLargestNode->SectorId = NextSectorId;
@@ -2883,10 +2876,10 @@ namespace AiState
 											tn.Height = s.Height;
 											Vector3f vMissing = _GetNodePosition(tn);
 											RenderBuffer::AddLine(
-												vMissing,
-												vMissing + Vector3f(0,0,64),
-												COLOR::ORANGE,
-												20.f);*/
+											vMissing,
+											vMissing + Vector3f(0,0,64),
+											COLOR::ORANGE,
+											20.f);*/
 
 											ExpansionMask &= ~(1<<d);
 											break;
@@ -2915,11 +2908,10 @@ namespace AiState
 											tn.Height = s.Height;
 											Vector3f vMissing = _GetNodePosition(tn);
 											RenderBuffer::AddLine(
-												vMissing,
-												vMissing + Vector3f(0,0,64),
-												COLOR::ORANGE,
-												20.f);*/
-
+											vMissing,
+											vMissing + Vector3f(0,0,64),
+											COLOR::ORANGE,
+											20.f);*/
 
 											ExpansionMask &= ~(1<<d);
 											break;
@@ -2977,7 +2969,7 @@ namespace AiState
 						{
 							bHasDirectionConnection = true;
 							if(MergeNodes[s]->SectorId != MergeNodes[s]->Connections[d].Destination->SectorId)
-							{								
+							{
 								EdgeNodes[d][NumEdges[d]++] = MergeNodes[s];
 							}
 						}
@@ -3057,27 +3049,18 @@ namespace AiState
 		State = FillInit;
 	}
 
-	void FloodFiller::GetDebugString(StringStr &out)
+	void FloodFiller::GetDebugString(std::stringstream &out)
 	{
-
 	}
 
 	void FloodFiller::RenderDebug()
 	{
-		static int MS_DELAY = 1000;
-		static int NEXT_UPDATE = 0;
-		if(IGame::GetTime() < NEXT_UPDATE)
-			return;
-
 		Vector3f vAim;
 		Utils::GetLocalAimPoint(vAim);
 
 		float fNearestSector = 99999999.f;
 		const Node *pNearestSector = 0;
 
-		NEXT_UPDATE = IGame::GetTime() + MS_DELAY;
-
-		const float RENDER_TIME = Utils::MillisecondsToSeconds(MS_DELAY);
 		for(int i = 0; i < FreeNode; ++i)
 		{
 			//if(FloodNode[i].OffsetX && FloodNode[i].OffsetY)
@@ -3089,20 +3072,19 @@ namespace AiState
 					nodeCol = COLOR::MAGENTA;
 				if(node.NearObject)
 					nodeCol = COLOR::RED;
-				
+
 				Vector3f vNodePos = _GetNodePosition(node);
 
-				static bool RenderOpenness = false;
+				/*static bool RenderOpenness = false;
 				if (RenderOpenness)
 				{
-					Utils::PrintText(
-						vNodePos,
-						COLOR::WHITE,
-						RENDER_TIME,
-						"%d",
-						node.OpenNess);
-				}
-				
+				RenderBuffer::AddString3d(
+				vNodePos,
+				COLOR::WHITE,
+				RENDER_TIME,
+				"%d",
+				node.OpenNess);
+				}*/
 
 				float fSectorDist = Length(vNodePos,vAim);
 				if(fSectorDist < fNearestSector)
@@ -3114,9 +3096,9 @@ namespace AiState
 				for(int d = 0; d < DIR_NUM; ++d)
 				{
 					if(node.Connections[d].Destination)
-					{						
+					{
 						Vector3f vNeighbor = _GetNodePosition(*node.Connections[d].Destination);
-						RenderBuffer::AddLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol, RENDER_TIME);
+						RenderBuffer::AddLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol);
 
 						const float fDist = Length(vNodePos, vNeighbor);
 						if(fDist > 128.f)
@@ -3165,13 +3147,10 @@ namespace AiState
 				if(pNearestSector->Connections[d].Destination)
 					++iNumConnections;
 			Vector3f vNodePos = _GetNodePosition(*pNearestSector);
-			Utils::PrintText(
+			RenderBuffer::AddString3d(
 				vNodePos+Vector3f(0,0,32),
 				COLOR::WHITE,
-				RENDER_TIME,
-				"%d, sid %d",
-				pNearestSector-Nodes,
-				pNearestSector->Sectorized?pNearestSector->SectorId:-1);
+				va("%d, sid %d",pNearestSector-Nodes,pNearestSector->Sectorized?pNearestSector->SectorId:-1));
 			RenderBuffer::AddLine(vNodePos, vNodePos + Vector3f(0,0,32.f),COLOR::CYAN );
 		}
 	}
@@ -3186,7 +3165,7 @@ namespace AiState
 		DebugDraw(true);
 	}
 	void FloodFiller::Exit()
-	{	
+	{
 		//DebugDraw(false);
 	}
 	State::StateStatus FloodFiller::Update(float fDt)
@@ -3243,7 +3222,7 @@ namespace AiState
 
 				if(FreeNode==NumSectors)
 				{
-					_MergeSectors();					
+					_MergeSectors();
 
 					// fail if that didn't free up anything.
 					if(FreeNode==NumSectors)
@@ -3299,7 +3278,6 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		if(State == FillDone)
 		{
-
 		}
 		return State_Busy;
 	}

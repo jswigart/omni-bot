@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -17,13 +17,13 @@
 
 struct SubscriberHandle
 {
-	union 
+	union
 	{
 		struct
 		{
 			short m_MessageId;
 			short m_SerialNum;
-		} split;		
+		} split;
 		int	m_Int;
 	} u;
 };
@@ -55,7 +55,7 @@ public:
 	{
 		return (m_MessageId != 0);
 	}
-	
+
 	MessageHelper(int _msgId, void *_void = 0, obuint32 _size = 0) :
 		m_MessageId	(_msgId),
 		m_pVoid		(_void),

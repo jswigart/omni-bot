@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -32,9 +32,9 @@
 //		This function executes a private message for this bot.
 //
 // Parameters:
-//	
+//
 //		char   - partial name match for target client(s)
-//		string - message to send
+//		std::string - message to send
 //
 //
 // Returns:
@@ -105,7 +105,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (RTCW_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (RTCW_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -127,7 +127,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (RTCW_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (RTCW_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -147,7 +147,7 @@ static int GM_CDECL gmfGetReinforceTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushFloat(InterfaceFuncs::GetReinforceTime(native));
 	return GM_OK;
 }
@@ -168,7 +168,6 @@ static int GM_CDECL gmfGetCurrentCursorHint(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_TABLE_PARAM(hint, 0);
-
 
 	int iHintType = 0, iHintValue = 0;
 	InterfaceFuncs::GetCurrentCursorHint(native, iHintType, iHintValue);
@@ -199,9 +198,6 @@ static int GM_CDECL gmfChangeSpawnPoint(gmThread *a_thread)
 	InterfaceFuncs::ChangeSpawnPoint(native, spawnpoint);
 	return GM_OK;
 }
-
-
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -240,17 +236,17 @@ static int GM_CDECL gmfSnipe(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(2);
-/*	GM_CHECK_VECTOR_PARAM(x1,y1,z1,0);
+	/*	GM_CHECK_VECTOR_PARAM(x1,y1,z1,0);
 	GM_CHECK_VECTOR_PARAM(x2,y2,z2,1);
 	GM_FLOAT_PARAM(rad, 2, 32.f);
 
 	Client *native = gmBot::GetThisObject( a_thread );
 	if(!native)
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL object"); 
-		return GM_EXCEPTION;
+	GM_EXCEPTION_MSG("Script Function on NULL object");
+	return GM_EXCEPTION;
 	}
-	
+
 	RTCW_Goal_Snipe::GoalInfo goalInfo;
 
 	MapGoalPtr mg(new ET_SniperGoal());
@@ -280,7 +276,7 @@ static int GM_CDECL gmfSnipe(gmThread *a_thread)
 static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushInt(InterfaceFuncs::GetGameType());
 	return GM_OK;
 }
@@ -291,7 +287,7 @@ static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 //		This function will set a game cvar
 //
 // Parameters:
-//	
+//
 //		char   - the cvar to set
 //		char   - the value of the cvar to be set
 //
@@ -353,7 +349,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 //		This function will get the value of a game cvar
 //
 // Parameters:
-//	
+//
 //		char   - the cvar to get
 //
 //
@@ -404,7 +400,7 @@ static int GM_CDECL gmfGetSpawnPoint(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushInt(InterfaceFuncs::GetSpawnPoint(native));
 	return GM_OK;
 }
@@ -413,7 +409,7 @@ static int GM_CDECL gmfGetSpawnPoint(gmThread *a_thread)
 
 // function: Suicide
 //		Set the bots suicide flag.
-//		
+//
 //
 // Parameters:
 //
@@ -437,7 +433,7 @@ static int GM_CDECL gmfSetSuicide(gmThread *a_thread)
 
 // function: BotPush
 //		Set the bots push flag.
-//		
+//
 //
 // Parameters:
 //
@@ -459,7 +455,7 @@ static int GM_CDECL gmfDisableBotPush(gmThread *a_thread)
 
 // function: GetExplosiveState
 //		Return the state of the explosive; unarmed, armed, invalid.
-//		
+//
 //
 // Parameters:
 //
@@ -480,7 +476,7 @@ static int GM_CDECL gmfGetExplosiveState(gmThread *a_thread)
 
 // function: GetDestroyableState
 //		Return if the target is destroyable.
-//		
+//
 //
 // Parameters:
 //
@@ -503,7 +499,7 @@ static int GM_CDECL gmfGetDestroyableState(gmThread *a_thread)
 
 // function: GetMG42Info
 //		Returns currently mounted mg42 info for the bot
-//		
+//
 //
 // Parameters:
 //
@@ -516,7 +512,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
-	
+
 	GM_CHECK_TABLE_PARAM(tbl,0);
 
 	DisableGCInScope gcEn(a_thread->GetMachine());
@@ -545,7 +541,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 
 // function: IsMG42Repairable
 //		Returns whether or not the MG42 is repairable
-//		
+//
 //
 // Parameters:
 //
@@ -556,7 +552,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 static int gmfIsMG42Repairable(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
@@ -570,7 +566,7 @@ static int gmfIsMG42Repairable(gmThread *a_thread)
 
 // function: IsMedicNear
 //		Returns whether or not a Medic is nearby
-//		
+//
 //
 // Parameters:
 //
@@ -591,7 +587,7 @@ static int gmfIsMedicNear(gmThread *a_thread)
 
 // function: GotoLimbo
 //		Instructs the bot to tap out
-//		
+//
 //
 // Parameters:
 //
@@ -611,14 +607,14 @@ static int gmfGoToLimbo(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
-{ 
+{
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon, NULL},
-	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},	
+	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},
 	{"GetReinforceTime",		gmfGetReinforceTime, NULL},
 	{"GetCursorHint",		gmfGetCurrentCursorHint, NULL},
-	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},		
-	{"CanSnipe",			gmfCanSnipe, NULL},	
-	{"Snipe",			gmfSnipe, NULL},	
+	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},
+	{"CanSnipe",			gmfCanSnipe, NULL},
+	{"Snipe",			gmfSnipe, NULL},
 	{"SendPrivateMessage",		gmfSendPrivateMessage, NULL},
 	{"GetSpawnPoint",		gmfGetSpawnPoint, NULL},
 	{"Suicide",			gmfSetSuicide, NULL},
@@ -642,7 +638,7 @@ void gmBindRTCWBotLibrary(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
 
 	// Register additional bot properties

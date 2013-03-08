@@ -231,7 +231,7 @@ namespace RemoteLib
 			return false;
 		}
 		bool Sync( const char * name, const char * val, DataBuffer & db, bool force = false ) {
-			// hash string
+			// hash std::string
 			const int32 stringHash = HashString32( val );
 			
 			int i = 0;

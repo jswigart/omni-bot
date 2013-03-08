@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -30,7 +30,7 @@
 static int GM_CDECL gmfUnitRandom(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	a_thread->PushFloat(Mathf::UnitRandom());	
+	a_thread->PushFloat(Mathf::UnitRandom());
 	return GM_OK;
 }
 
@@ -48,7 +48,7 @@ static int GM_CDECL gmfUnitRandom(gmThread *a_thread)
 static int GM_CDECL gmfSymmetricRandom(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	a_thread->PushFloat(Mathf::SymmetricRandom());	
+	a_thread->PushFloat(Mathf::SymmetricRandom());
 	return GM_OK;
 }
 
@@ -74,7 +74,7 @@ static int GM_CDECL gmfRandFloat(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fMin, 0);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fMax, 1);
-	a_thread->PushFloat(Mathf::IntervalRandom(fMin, fMax));	
+	a_thread->PushFloat(Mathf::IntervalRandom(fMin, fMax));
 	return GM_OK;
 }
 
@@ -114,7 +114,7 @@ static int GM_CDECL gmfSin(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::Sin(fValue));	
+	a_thread->PushFloat(Mathf::Sin(fValue));
 	return GM_OK;
 }
 
@@ -133,7 +133,7 @@ static int GM_CDECL gmfASin(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::ASin(fValue));	
+	a_thread->PushFloat(Mathf::ASin(fValue));
 	return GM_OK;
 }
 
@@ -152,7 +152,7 @@ static int GM_CDECL gmfCos(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::Cos(fValue));	
+	a_thread->PushFloat(Mathf::Cos(fValue));
 	return GM_OK;
 }
 
@@ -171,7 +171,7 @@ static int GM_CDECL gmfACos(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::ACos(fValue));	
+	a_thread->PushFloat(Mathf::ACos(fValue));
 	return GM_OK;
 }
 
@@ -190,7 +190,7 @@ static int GM_CDECL gmfTan(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::Tan(fValue));	
+	a_thread->PushFloat(Mathf::Tan(fValue));
 	return GM_OK;
 }
 
@@ -209,7 +209,7 @@ static int GM_CDECL gmfATan(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(fValue, 0);
-	a_thread->PushFloat(Mathf::ATan(fValue));	
+	a_thread->PushFloat(Mathf::ATan(fValue));
 	return GM_OK;
 }
 
@@ -301,18 +301,18 @@ static int GM_CDECL gmfDegToRad(gmThread *a_thread)
 //		float - converted value
 static int GM_CDECL gmfSign(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 
-	if(a_thread->ParamType(0) == GM_INT) 
+	if(a_thread->ParamType(0) == GM_INT)
 		a_thread->PushInt(Mathf::Sign(a_thread->Param(0).m_value.m_int));
 	else if(a_thread->ParamType(0) == GM_FLOAT)
 		a_thread->PushFloat(Mathf::Sign(a_thread->Param(0).m_value.m_float));
 	else
 	{
 		GM_EXCEPTION_MSG("Invalid Param type in %s", __FUNCTION__);
-		return GM_EXCEPTION;	
+		return GM_EXCEPTION;
 	}
-	
+
 	return GM_OK;
 }
 
@@ -323,7 +323,7 @@ static int GM_CDECL gmfSign(gmThread *a_thread)
 //
 // Parameters:
 //
-//		float, int or string - what to convert to a int
+//		float, int or std::string - what to convert to a int
 //
 // Returns:
 //		int - converted value
@@ -340,7 +340,7 @@ static int GM_CDECL gmfToBool(gmThread *a_thread)
 	case GM_STRING:
 		{
 			gmStringObject *pString = a_thread->Param(0).GetStringObjectSafe();
-			String s = pString->GetString();
+			std::string s = pString->GetString();
 			if(Utils::StringToTrue(s))
 				a_thread->PushInt(1);
 			else if(Utils::StringToFalse(s))
@@ -349,7 +349,7 @@ static int GM_CDECL gmfToBool(gmThread *a_thread)
 				a_thread->PushNull();
 			break;
 		}
-	}	
+	}
 	return GM_OK;
 }
 
@@ -375,7 +375,7 @@ static int GM_CDECL gmfAbs(gmThread * a_thread)
 		return GM_OK;
 	}
 	else if(a_thread->ParamType(0) == GM_FLOAT)
-	{		
+	{
 		float floatValue = a_thread->Param(0).GetFloat();
 		a_thread->PushFloat((float)Mathf::FAbs(floatValue));
 		return GM_OK;
@@ -622,8 +622,8 @@ int GM_CDECL gmfToString(gmThread * a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
-static gmFunctionEntry s_mathLib[] = 
-{ 
+static gmFunctionEntry s_mathLib[] =
+{
 	{"UnitRandom",			gmfUnitRandom},
 	{"SymmetricRandom",		gmfSymmetricRandom},
 	{"RandRange",			gmfRandFloat},
@@ -638,23 +638,23 @@ static gmFunctionEntry s_mathLib[] =
 	{"ATan",				gmfATan},
 	{"RadToDeg",			gmfRadToDeg},
 	{"DegToRad",			gmfDegToRad},
-	{"Sign",				gmfSign},	
-	{"ToBool",				gmfToBool},	
+	{"Sign",				gmfSign},
+	{"ToBool",				gmfToBool},
 	{"Abs",					gmfAbs},
 	{"Sqrt",				gmfSqrt},
-	{"Min",					gmfMin},	
+	{"Min",					gmfMin},
 	{"Max",					gmfMax},
-	{"Floor",				gmfFloor},	
-	{"Ceil",				gmfCeil},	
+	{"Floor",				gmfFloor},
+	{"Ceil",				gmfCeil},
 	{"Round",				gmfRound},
 	{"UnitCircleNormalize", gmfUnitCircleNormalize},
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-static gmFunctionEntry s_numLib[] = 
-{ 
-	{"String", gmfToString},
+static gmFunctionEntry s_numLib[] =
+{
+	{"std::string", gmfToString},
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -668,6 +668,3 @@ void gmBindMathLibrary(gmMachine * a_machine)
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-
-

@@ -232,7 +232,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FF\Jamfile" />
-    <None Include="..\..\..\FF\Omni-Bot_FF_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

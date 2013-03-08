@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "FilterBias.h"
 
@@ -18,7 +17,7 @@ FilterBiasEntityFlag::FilterBiasEntityFlag(const int _entflags, const float _mul
 float FilterBiasEntityFlag::CheckBias(const AiState::SensoryMemory::MemoryMap::const_iterator &_it)
 {
 	if(_it->second.m_TargetInfo.m_EntityFlags.CheckFlag(m_EntityFlag))
-		return m_DistanceMultiplier;	
+		return m_DistanceMultiplier;
 	return 1.0f;
 }
 

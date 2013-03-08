@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -13,12 +13,13 @@
 #include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
 
+#include "RenderBuffer.h"
+
+#include "PathPlannerWaypoint.h"
 #include "BotBaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
 #include "gmETBinds.h"
-
-#include "PathPlannerWaypoint.h"
 
 int ET_Game::CLASSEXoffset;
 bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
@@ -79,42 +80,39 @@ const char *ET_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID ET_Game::GetDefaultNavigator() const 
+eNavigatorID ET_Game::GetDefaultNavigator() const
 {
 	//return NAVID_RECAST;
-	return NAVID_WP; 
+	return NAVID_WP;
 }
 
-bool ET_Game::ReadyForDebugWindow() const 
-{ 
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING; 
+bool ET_Game::ReadyForDebugWindow() const
+{
+	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
-const char *ET_Game::IsDebugDrawSupported() const 
-{ 
+const char *ET_Game::IsDebugDrawSupported() const
+{
 	if(InterfaceFuncs::GetCvar("dedicated")!=0)
 		return "Can't draw waypoints on dedicated server.";
 	if(strcmp(g_EngineFuncs->GetModName(), "etmain"))
 		return "Only omnibot mod can draw waypoints.";
 	bool EnableIpc = false;
 	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
-	if(!EnableIpc) 
+	if(!EnableIpc)
 		return "Waypoints are not visible because option EnableInterProcess in file omni-bot.cfg is false.";
-	if(InterfaceFuncs::GetCvar("cg_omnibotdrawing")==0) 
+	if(InterfaceFuncs::GetCvar("cg_omnibotdrawing")==0)
 		return "Waypoints are not visible because cg_omnibotdrawing is \"0\".";
 	return NULL;
 }
-
 
 GoalManager *ET_Game::GetGoalManager()
 {
 	return new ET_GoalManager;
 }
 
-bool ET_Game::Init() 
+bool ET_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_OPENGL);
-
 	const char *modName = g_EngineFuncs->GetModName();
 	IsETBlight = !strcmp(modName, "etblight");
 	IsBastardmod = !strcmp(modName, "bastardmod");
@@ -136,7 +134,7 @@ bool ET_Game::Init()
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/et_autoexec.gm", threadId);	
+	ScriptManager::GetInstance()->ExecuteFile("scripts/et_autoexec.gm", threadId);
 
 	return true;
 }
@@ -162,7 +160,7 @@ static IntEnum ET_TeamEnum[] =
 void ET_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(ET_TeamEnum) / sizeof(ET_TeamEnum[0]);
-	_ptr = ET_TeamEnum;	
+	_ptr = ET_TeamEnum;
 }
 
 void ET_Game::InitScriptCategories(gmMachine *_machine, gmTableObject *_table)
@@ -216,7 +214,7 @@ static IntEnum ET_WeaponEnum[128] =
 	IntEnum("GPG40",ET_WP_GPG40),
 	IntEnum("CARBINE",ET_WP_CARBINE),
 	IntEnum("M7",ET_WP_M7),
-	IntEnum("MOUNTABLE_MG42",ET_WP_MOUNTABLE_MG42),	
+	IntEnum("MOUNTABLE_MG42",ET_WP_MOUNTABLE_MG42),
 };
 
 void ET_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
@@ -231,7 +229,7 @@ void ET_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 		}
 	}
 	num = n;
-	_ptr = ET_WeaponEnum;	
+	_ptr = ET_WeaponEnum;
 }
 
 bool ET_Game::AddWeaponId(const char * weaponName, int weaponId)
@@ -243,7 +241,7 @@ bool ET_Game::AddWeaponId(const char * weaponName, int weaponId)
 	{
 		if(!ET_WeaponEnum[i].m_Key)
 		{
-			ET_WeaponEnum[i].m_Key = wpnName;			
+			ET_WeaponEnum[i].m_Key = wpnName;
 			ET_WeaponEnum[i].m_Value = weaponId;
 			return true;
 		}
@@ -256,9 +254,9 @@ static IntEnum ET_ClassEnum[] =
 	IntEnum("SOLDIER",			ET_CLASS_SOLDIER),
 	IntEnum("MEDIC",			ET_CLASS_MEDIC),
 	IntEnum("ENGINEER",			ET_CLASS_ENGINEER),
-	IntEnum("FIELDOPS",			ET_CLASS_FIELDOPS),	
+	IntEnum("FIELDOPS",			ET_CLASS_FIELDOPS),
 	IntEnum("COVERTOPS",		ET_CLASS_COVERTOPS),
-	IntEnum("ANYPLAYER",		ET_CLASS_ANY),	
+	IntEnum("ANYPLAYER",		ET_CLASS_ANY),
 	IntEnum("MG42MOUNT",		ET_CLASSEX_MG42MOUNT),
 	IntEnum("DYNAMITE_ENT",		ET_CLASSEX_DYNAMITE),
 	IntEnum("LANDMINE_ENT",		ET_CLASSEX_MINE),
@@ -294,7 +292,7 @@ const char *ET_Game::FindClassName(obint32 _classId)
 		else if(_classId == 7) return "SUPER_SOLDIER";
 	}
 
-	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);	
+	obint32 iNumMappings = sizeof(ET_ClassEnum) / sizeof(ET_ClassEnum[0]);
 	for(int i = 0; i < iNumMappings; ++i)
 	{
 		if(ET_ClassEnum[i].m_Value == _classId)
@@ -321,7 +319,7 @@ void ET_Game::InitScriptClasses(gmMachine *_machine, gmTableObject *_table)
 	{
 		_table->Set(_machine, "SCIENTIST", gmVariable(6));
 		_table->Set(_machine, "SUPER_SOLDIER", gmVariable(7));
-}
+	}
 
 	InitScriptWeaponClasses(_machine,_table, ET_CLASSEX_WEAPON + ET_Game::CLASSEXoffset);
 }
@@ -389,7 +387,7 @@ void ET_Game::InitVoiceMacros(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "REPAIR_VEHICLE",		gmVariable(VCHAT_TEAM_REPAIRVEHICLE));
 	_table->Set(_machine, "DESTROY_VEHICLE",	gmVariable(VCHAT_TEAM_DESTROYVEHICLE));
 	_table->Set(_machine, "ESCORT_VEHICLE",		gmVariable(VCHAT_TEAM_ESCORTVEHICLE));
-	
+
 	_table->Set(_machine, "IMA_SOLDIER",		gmVariable(VCHAT_IMA_SOLDIER));
 	_table->Set(_machine, "IMA_MEDIC",			gmVariable(VCHAT_IMA_MEDIC));
 	_table->Set(_machine, "IMA_ENGINEER",		gmVariable(VCHAT_IMA_ENGINEER));
@@ -441,7 +439,7 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 	if(!_addbot.m_Name[0])
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
-		String name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
+		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 		Utils::StringCopy(_addbot.m_Name, name.c_str(), sizeof(_addbot.m_Name));
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -470,14 +468,14 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		if(cp->m_DesiredTeam == -1)
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectTeam");
 			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
 		if(cp->m_DesiredClass == -1)
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectClass");
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
@@ -486,7 +484,7 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
 		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
-		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);		
+		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -499,7 +497,7 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 //		Custom Events for Enemy Territory. Also see <Common Script Events>
 void ET_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 {
-	_table->Set(_machine, "FIRETEAM_CHAT_MSG", gmVariable(PERCEPT_HEAR_PRIVCHATMSG));	
+	_table->Set(_machine, "FIRETEAM_CHAT_MSG", gmVariable(PERCEPT_HEAR_PRIVCHATMSG));
 
 	_table->Set(_machine, "PRETRIGGERED_MINE", gmVariable(ET_EVENT_PRETRIGGER_MINE));
 	_table->Set(_machine, "POSTTRIGGERED_MINE", gmVariable(ET_EVENT_POSTTRIGGER_MINE));
@@ -510,7 +508,7 @@ void ET_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "FIRETEAM_JOINED", gmVariable(ET_EVENT_FIRETEAM_JOINED));
 	_table->Set(_machine, "FIRETEAM_LEFT", gmVariable(ET_EVENT_FIRETEAM_LEFT));
 	_table->Set(_machine, "FIRETEAM_INVITED", gmVariable(ET_EVENT_FIRETEAM_INVITED));
-	_table->Set(_machine, "FIRETEAM_PROPOSAL", gmVariable(ET_EVENT_FIRETEAM_PROPOSAL));	
+	_table->Set(_machine, "FIRETEAM_PROPOSAL", gmVariable(ET_EVENT_FIRETEAM_PROPOSAL));
 	_table->Set(_machine, "FIRETEAM_WARNED", gmVariable(ET_EVENT_FIRETEAM_WARNED));
 	_table->Set(_machine, "AMMO_RECIEVED", gmVariable(ET_EVENT_RECIEVEDAMMO));
 
@@ -526,7 +524,7 @@ void ET_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "MNT_MG42",		gmVariable(ET_ENT_FLAG_MNT_MG42));
 	_table->Set(_machine, "MNT_TANK",		gmVariable(ET_ENT_FLAG_MNT_TANK));
 	_table->Set(_machine, "MNT_AAGUN",		gmVariable(ET_ENT_FLAG_MNT_AAGUN));
-	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(ET_ENT_FLAG_CARRYINGGOAL));	
+	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(ET_ENT_FLAG_CARRYINGGOAL));
 	_table->Set(_machine, "LIMBO",			gmVariable(ET_ENT_FLAG_INLIMBO));
 	_table->Set(_machine, "MOUNTABLE",		gmVariable(ET_ENT_FLAG_ISMOUNTABLE));
 	_table->Set(_machine, "POISONED",		gmVariable(ET_ENT_FLAG_POISONED));
@@ -558,8 +556,8 @@ void ET_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("SPRINT",			F_ET_NAV_SPRINT);
 	_planner->RegisterNavFlag("PRONE",			F_NAV_PRONE);
 	_planner->RegisterNavFlag("CAPPOINT",		F_ET_NAV_CAPPOINT);
-	_planner->RegisterNavFlag("CALLARTILLERY",	F_ET_NAV_ARTSPOT);	
-	_planner->RegisterNavFlag("ARTILLERY_S",	F_ET_NAV_ARTYTARGET_S);	
+	_planner->RegisterNavFlag("CALLARTILLERY",	F_ET_NAV_ARTSPOT);
+	_planner->RegisterNavFlag("ARTILLERY_S",	F_ET_NAV_ARTYTARGET_S);
 	_planner->RegisterNavFlag("ARTILLERY_D",	F_ET_NAV_ARTYTARGET_D);
 	_planner->RegisterNavFlag("DISGUISE",		F_ET_NAV_DISGUISE);
 	_planner->RegisterNavFlag("FLAME",			F_ET_NAV_FLAMETHROWER);
@@ -595,11 +593,11 @@ const void ET_Game::ET_GetEntityVisDistance(float &_distance, const TargetInfo &
 	}
 }
 
-/*	
-	bounding boxes for et
-	standing	(-18, -18, -24) x (18, 18, 48)
-	crouched	(-18, -18, -24) x (18, 18, 24)
-	proned		(-18, -18, -24) x (18, 18, 16)
+/*
+bounding boxes for et
+standing	(-18, -18, -24) x (18, 18, 48)
+crouched	(-18, -18, -24) x (18, 18, 24)
+proned		(-18, -18, -24) x (18, 18, 16)
 */
 const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -617,7 +615,7 @@ const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFla
 	case ET_CLASSEX_DYNAMITE:
 	case ET_CLASSEX_MINE:
 	case ET_CLASSEX_SATCHEL:
-	case ET_CLASSEX_SMOKEBOMB:		
+	case ET_CLASSEX_SMOKEBOMB:
 	case ET_CLASSEX_CORPSE:
 		return 2.0f;
 	}
@@ -625,11 +623,11 @@ const float ET_Game::ET_GetEntityClassTraceOffset(const int _class, const BitFla
 	return 0.0f;
 }
 
-/*	
-	bounding boxes for et
-	standing	(-18, -18, -24) x (18, 18, 48)
-	crouched	(-18, -18, -24) x (18, 18, 24)
-	proned		(-18, -18, -24) x (18, 18, 16)
+/*
+bounding boxes for et
+standing	(-18, -18, -24) x (18, 18, 48)
+crouched	(-18, -18, -24) x (18, 18, 24)
+proned		(-18, -18, -24) x (18, 18, 16)
 */
 const float ET_Game::ET_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -647,9 +645,9 @@ const float ET_Game::ET_GetEntityClassAimOffset(const int _class, const BitFlag6
 
 const float ET_Game::ET_GetEntityClassAvoidRadius(const int _class)
 {
-	switch(_class - ET_Game::CLASSEXoffset) 
+	switch(_class - ET_Game::CLASSEXoffset)
 	{
-	case ET_CLASSEX_DYNAMITE:		
+	case ET_CLASSEX_DYNAMITE:
 		return 400.0f;
 	case ET_CLASSEX_MINE:
 		return 225.0f;
@@ -668,7 +666,7 @@ const bool ET_Game::ET_CanSensoreEntity(const EntityInstance &_ent)
 		return false;
 
 	int c =_ent.m_EntityClass - ET_Game::CLASSEXoffset;
-	return c<ET_CLASS_ANY || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE && 
+	return c<ET_CLASS_ANY || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE &&
 		c!=ET_CLASSEX_ARTY && c!=ET_CLASSEX_SMOKEBOMB && c!=ET_CLASSEX_FLAMECHUNK && c!=ET_CLASSEX_ROCKET;
 }
 
@@ -694,11 +692,11 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 
 			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
 			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
-			
+
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
-	}	
+	}
 }
 
 // PathPlannerWaypointInterface
@@ -719,7 +717,7 @@ PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const W
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
 		obTraceResult tr;
@@ -734,7 +732,7 @@ PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const W
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
 		obTraceResult tr;
@@ -749,16 +747,16 @@ PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const W
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
-		int iContents = g_EngineFuncs->GetPointContents(vStart);		
+		int iContents = g_EngineFuncs->GetPointContents(vStart);
 		res = (iContents & CONT_WATER) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
 	}
 
 	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
 	{
-		Utils::DrawLine(vStart, vEnd, 
+		RenderBuffer::AddLine(vStart, vEnd,
 			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
 	}
 

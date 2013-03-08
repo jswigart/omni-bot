@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -11,6 +11,8 @@
 //		all the common stuff.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __COMMON_H__
 #define __COMMON_H__
@@ -39,9 +41,7 @@
 #pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
 #endif // _WIN32
 
-#define _UNUSED(x) ((void)x) // cs: for gcc warnings
-
-// Enable some useful ones that are disabled by default 
+// Enable some useful ones that are disabled by default
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
 #pragma warning( default: 4062)		// enumerator 'identifier' in switch of enum 'enumeration' is not handled
 #pragma warning( default: 4265)		// class has virtual functions, but destructor is not virtual
@@ -50,38 +50,6 @@
 // Disable if these get annoying.
 #pragma warning( default: 4710 )	// function '...' not inlined
 #pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
-
-// :note
-//	Commonly included STL headers.
-#include <vector>
-#include <string>
-#include <list>
-#include <map>
-#include <set>
-#include <memory>
-#include <fstream>
-//#include <strstream>
-#include <sstream>
-#include <limits>
-#include <algorithm>
-#include <cmath>
-#include <bitset>
-
-// typedef: String
-//		Simple typedef for String
-typedef std::string String;
-
-// typedef: StringStr
-//		Simple typedef for String Stream
-typedef std::stringstream StringStr;
-
-// typedef: StringVector
-//		This type is defined as a vector of strings for various usages
-typedef std::vector<String> StringVector;
-
-// typedef: StringList
-//		This type is defined as a vector of strings for various usages
-typedef std::list<String> StringList;
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -113,7 +81,6 @@ typedef std::list<String> StringList;
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/dynamic_bitset.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -125,16 +92,12 @@ typedef std::list<String> StringList;
 #pragma warning( pop )
 #endif // _WIN32
 
-namespace fs = boost::filesystem;
-
 // typedef: Thread
 //		Simpler typedef for boost::thread.
-typedef boost::thread Thread;
-typedef boost::thread_group ThreadGroup;
-typedef boost::mutex Mutex;
-typedef boost::try_mutex TryMutex;
-
-
+//typedef boost::thread Thread;
+//typedef boost::thread_group ThreadGroup;
+//typedef boost::mutex Mutex;
+//typedef boost::try_mutex TryMutex;
 
 // Wild Magic Math Libraries
 #include "WildMagic3Math.h"
@@ -160,69 +123,26 @@ using namespace Wm3;
 #include "prof.h"
 
 #ifdef WIN32
-	//#define ENABLE_REMOTE_DEBUGGER
-	//#define ENABLE_DEBUG_WINDOW
-	//#define ENABLE_FILE_DOWNLOADER
-	//#define ENABLE_REMOTE_DEBUGGING
+//#define ENABLE_REMOTE_DEBUGGER
+//#define ENABLE_FILE_DOWNLOADER
+//#define ENABLE_REMOTE_DEBUGGING
 #endif
 
 //#define ENABLE_REMOTE_DEBUGGING
 
 // remote debug
 #ifdef ENABLE_REMOTE_DEBUGGING
-	#include "DebugConnection.h"
+#include "DebugConnection.h"
 #endif
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality
 //		can be used from anywhere
 extern IEngineInterface *g_EngineFuncs;
 
-// typedef: PathList
-//		This type is defined as a vector of paths
-typedef std::vector<fs::path> DirectoryList;
-
-// typedef: EntityList
-//		This type is defined as a vector of GameEntities for various usages
-typedef std::vector<GameEntity> EntityList;
-
-// typedef: Vector3List
-//		Vector of 3d points.
-typedef std::vector<Vector3f> Vector3List;
-typedef std::vector<obint32> IndexList;
-typedef std::vector<IndexList> PolyIndexList;
-typedef std::vector<Plane3f> PlaneList;
-typedef std::vector<Segment3f> SegmentList;
-
 #ifdef Prof_ENABLED
 typedef ProfileZones<> CustomProfilerZone;
 extern CustomProfilerZone gDynamicZones;
 #endif
-
-struct PointFacing
-{
-	Vector3f mPosition;
-	Vector3f mFacing;
-};
-typedef std::vector<PointFacing> PointFacingList;
-
-// typedef: Destination
-//		Position, radius pair.
-struct Destination
-{
-	Vector3f	m_Position;
-	float		m_Radius;
-
-	Destination() : m_Position(0.f,0.f,0.f), m_Radius(0.f) {}
-	Destination(const Vector3f &_pos, float _radius)
-		: m_Position(_pos)
-		, m_Radius(_radius)
-	{
-	}
-};
-typedef std::vector<Destination> DestinationVector;
-
-typedef boost::dynamic_bitset<obuint32> DynBitSet32;
-//typedef boost::dynamic_bitset<obuint64> DynBitSet64;
 
 #define REGEX_OPTIONS boost::regex::basic|boost::regex::icase|boost::regex::grep
 
@@ -230,59 +150,6 @@ typedef boost::dynamic_bitset<obuint32> DynBitSet32;
 #define OB_ARRAY_DELETE(p)   { if(p) { delete [] (p); (p)=NULL; } }
 #define OB_MIN(a, b)  (((a) < (b)) ? (a) : (b))
 #define OB_MAX(a, b)  (((a) > (b)) ? (a) : (b))
-
-#define NO_OPTIMIZE #pragma optimize("", off)
-
-// namespace: TR_COLOR
-//		Predefined colors for use in traces, wrapped in namespace for isolation
-namespace COLOR
-{
-	// const: RED
-	//		Constant RGB for the color <RED>
-	const obColor RED		= obColor(255, 0, 0);
-	// const: GREEN
-	//		Constant RGB for the color <GREEN>
-	const obColor GREEN		= obColor(0, 255, 0);
-	// const: BLUE
-	//		Constant RGB for the color <BLUE>
-	const obColor BLUE		= obColor(0, 0, 255);
-	// const: BLACK
-	//		Constant RGB for the color <BLACK>
-	const obColor BLACK		= obColor(0, 0, 0);
-	// const: WHITE
-	//		Constant RGB for the color <WHITE>
-	const obColor WHITE		= obColor(255, 255, 255);
-	// const: MAGENTA
-	//		Constant RGB for the color <MAGENTA>
-	const obColor MAGENTA	= obColor(255, 0, 255);
-	// const: GREY
-	//		Constant RGB for the color <GREY>
-	const obColor GREY		= obColor(127, 127, 127);
-	// const: LIGHT_GREY
-	//		Constant RGB for the color <LIGHT_GREY>
-	const obColor LIGHT_GREY= obColor(211, 211, 211);
-	// const: ORANGE
-	//		Constant RGB for the color <ORANGE>
-	const obColor ORANGE	= obColor(255, 127, 0);
-	// const: YELLOW
-	//		Constant RGB for the color <YELLOW>
-	const obColor YELLOW	= obColor(255, 255, 0);
-	// const: CYAN
-	//		Constant RGB for the color <CYAN>
-	const obColor CYAN	= obColor(0, 255, 255);
-	// const: PINK
-	//		Constant RGB for the color <PINK>
-	const obColor PINK	= obColor(255, 20, 147);
-	// const: BROWN
-	//		Constant RGB for the color <BROWN>
-	const obColor BROWN	= obColor(165, 42, 42);
-	// const: AQUAMARINE
-	//		Constant RGB for the color <AQUAMARINE>
-	const obColor AQUAMARINE = obColor(127, 255, 212);
-	// const: LAVENDER
-	//		Constant RGB for the color <LAVENDER>
-	const obColor LAVENDER = obColor(230, 230, 250);
-}
 
 enum MoveMode
 {
@@ -292,7 +159,7 @@ enum MoveMode
 };
 
 #define DBG_MSG(debugflag, bot, type, msg) \
-	if((debugflag)==0 || (bot)->IsDebugEnabled((debugflag))) { (bot)->OutputDebug((type), (msg)); } 
+	if((debugflag)==0 || (bot)->IsDebugEnabled((debugflag))) { (bot)->OutputDebug((type), (msg)); }
 
 // macro: DEBUG_ONLY
 //		A macro that can be used to only allow the contained functionality
@@ -306,7 +173,7 @@ enum MoveMode
 #include "Utilities.h"
 
 // cs: FIXME: debug version of OBASSERT doesnt build in linux. doesn't like __VA_ARGS__
-#ifdef __linux__ 
+#ifdef __linux__
 #define OBASSERT(f, sz, ...) {}	// cs: for gcc warnings, was (f)
 #else // !__linux__
 #ifdef	_DEBUG

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GM_TIMER_H__
 #define __GM_TIMER_H__
@@ -21,7 +23,6 @@ public:
 	// Functions
 	static int gmfResetTimer(gmThread *a_thread);
 	static int gmfGetElapsedTime(gmThread *a_thread);
-
 };
 
 #endif

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 static int GM_CDECL gmfGetLocation(gmThread *a_thread)
-{	
+{
 	Vector3f vPosition;
 	if(a_thread->GetNumParams() == 1)
 	{
@@ -49,7 +49,7 @@ static int GM_CDECL gmfGetLocation(gmThread *a_thread)
 }
 
 static int GM_CDECL gmfIsBuyingAllowed(gmThread *a_thread)
-{	
+{
 	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushInt(InterfaceFuncs::IsBuyingAllowed() ? 1 : 0);
 	return GM_OK;
@@ -59,27 +59,27 @@ static int GM_CDECL gmfIsBuyingAllowed(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 static int GM_CDECL gmfGetCash(gmThread *a_thread)
-{	
+{
 	GM_CHECK_NUM_PARAMS(0);
 	Client *native = gmBot::GetThisObject( a_thread );
 	if(!native)
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL object"); 
+		GM_EXCEPTION_MSG("Script Function on NULL object");
 		return GM_EXCEPTION;
 	}
-	
+
 	a_thread->PushFloat(InterfaceFuncs::GetPlayerCash(native->GetGameEntity()));
 	return GM_OK;
 }
 
 static int GM_CDECL gmfBuy(gmThread *a_thread)
-{	
+{
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(itm, 0);
 	Client *native = gmBot::GetThisObject( a_thread );
 	if(!native)
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL object"); 
+		GM_EXCEPTION_MSG("Script Function on NULL object");
 		return GM_EXCEPTION;
 	}
 
@@ -89,8 +89,8 @@ static int GM_CDECL gmfBuy(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 // package: Q4 Global Functions
-static gmFunctionEntry s_ExtendedBotLib[] = 
-{ 
+static gmFunctionEntry s_ExtendedBotLib[] =
+{
 	// Function: GetLocation
 	//		Gets the location name for a point.
 	{"GetLocation",			gmfGetLocation},
@@ -100,8 +100,8 @@ static gmFunctionEntry s_ExtendedBotLib[] =
 	{"IsBuyingAllowed",		gmfIsBuyingAllowed},
 };
 
-static gmFunctionEntry s_ExtendedBotTypeLib[] = 
-{ 
+static gmFunctionEntry s_ExtendedBotTypeLib[] =
+{
 	// Function: GetCredits
 	//		Gets the cash for the bot.
 	{"GetCredits",			gmfGetCash},
@@ -115,7 +115,7 @@ bool gmBindQ4BotLibrary(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
 	return true;
 }

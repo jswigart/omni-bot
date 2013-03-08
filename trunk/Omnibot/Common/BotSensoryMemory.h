@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BOTSENSORYMEMORY_H__
 #define __BOTSENSORYMEMORY_H__
@@ -23,7 +25,7 @@ class FilterSensory;
 namespace AiState
 {
 	// class: SensoryMemory
-	//		Contains information about what a bot 'knows' about any entity it 
+	//		Contains information about what a bot 'knows' about any entity it
 	//		has sensed
 	class SensoryMemory : public StateChild
 	{
@@ -151,10 +153,10 @@ namespace AiState
 		//
 		// Returns:
 		//		Vector3 - A point along the targets current velocity to aim towards.
-		int CheckTargetsInRadius(const Vector3f &_pos, float _radius, 
+		int CheckTargetsInRadius(const Vector3f &_pos, float _radius,
 			SensoryMemory::Type _type, const BitFlag64 &_category);
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		void Enter();

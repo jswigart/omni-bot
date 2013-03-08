@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart $
 // $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
 // $LastChangedRevision: 32 $
@@ -65,13 +65,13 @@ NavFlags ETF_Client::GetTeamFlag(int _team)
 	}
 }
 
-float ETF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float ETF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
 
 	WeaponSystem *wsys = GetWeaponSystem();
 	if(_flag & F_TF_NAV_ROCKETJUMP)
-	{		
+	{
 		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
 			return 1.f;
 	}

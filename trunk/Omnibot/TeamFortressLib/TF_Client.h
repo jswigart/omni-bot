@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TF_CLIENT_H__
 #define __TF_CLIENT_H__
@@ -30,7 +32,7 @@ public:
 	void Init(int _gameid);
 
 	void Update();
-	
+
 	void SendVoiceMacro(int _macroId) {};
 
 	float GetGameVar(GameVar _var) const;

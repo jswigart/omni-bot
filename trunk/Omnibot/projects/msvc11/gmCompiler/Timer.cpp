@@ -1,30 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart@gmail.com $
 // $LastChangedDate: 2013-03-03 17:41:14 -0600 (Sun, 03 Mar 2013) $
 // $LastChangedRevision: 817 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Timer.h"
 
 #ifdef WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#ifndef NOWINRES
-#define NOWINRES
-#endif
-#ifndef NOSERVICE
-#define NOSERVICE
-#endif
-#ifndef NOMCX
-#define NOMCX
-#endif
-#ifndef NOIME
-#define NOIME
-#endif
 #include <windows.h>
 #else
 #include <time.h>
@@ -33,7 +17,7 @@
 bool initialized = false; // a bit lame but whatever
 
 #ifdef WIN32
-	LARGE_INTEGER iCounterFrequency;
+LARGE_INTEGER iCounterFrequency;
 #endif
 
 void Init()
@@ -71,8 +55,8 @@ void Timer::Reset()
 
 /*
 Function: GetElapsedSeconds
-Description:		
-Returns: 
+Description:
+Returns:
 Returns the elapsed seconds since the timer was last reset.
 */
 double Timer::GetElapsedSeconds()

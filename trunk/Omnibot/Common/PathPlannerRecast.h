@@ -1,25 +1,26 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __PATHPLANNERRECAST_H__
 #define __PATHPLANNERRECAST_H__
 
 #include "PathPlannerBase.h"
-#include "RenderOverlay.h"
 #include "InternalFsm.h"
 
 //////////////////////////////////////////////////////////////////////////
 
 // class: PathPlannerRecast
 //		Path planner interface for the navmesh system for hl2
-class PathPlannerRecast : public PathPlannerBase, public RenderOverlayUser//, public InternalFSM<PathPlannerRecast,NumToolStates>
+class PathPlannerRecast : public PathPlannerBase
 {
-public:	
+public:
 	//////////////////////////////////////////////////////////////////////////
 
 	bool Init();
@@ -35,42 +36,36 @@ public:
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team);
 	int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team);
 
-	bool GetNavFlagByName(const String &_flagname, NavFlags &_flag) const;
+	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
 	bool IsDone() const;
 	bool FoundGoal() const;
-	bool Load(const String &_mapname, bool _dl = true);
-	bool Save(const String &_mapname);
+	bool Load(const std::string &_mapname, bool _dl = true);
+	bool Save(const std::string &_mapname);
 	void Unload();
-	bool SetFileComments(const String &_text);
+	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
 	void GetPath(Path &_path, int _smoothiterations);
 
-	virtual void RegisterNavFlag(const String &_name, const NavFlags &_bits) {}
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) {}
 
 	void RegisterScriptFunctions(gmMachine *a_machine);
 
-	bool GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name);
+	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
 	void EntityCreated(const EntityInstance &ei);
 	void EntityDeleted(const EntityInstance &ei);
 
-#ifdef ENABLE_DEBUG_WINDOW
-	void CreateGui();
-	void UpdateGui();
-	void RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics);
-#endif
-
 	void FloodFill();
 	void BuildNav();
 
 	void AddFloodSeed(const Vector3f &_vec);
-	void AddFloodEntityBounds(const AABB &_bnds);	
+	void AddFloodEntityBounds(const AABB &_bnds);
 
 	const char *GetPlannerName() const { return "Recast Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_RECAST; };
@@ -84,7 +79,7 @@ protected:
 	void cmdNavLoad(const StringVector &_args);
 	void cmdNavView(const StringVector &_args);
 	void cmdNavViewConnections(const StringVector &_args);
-	
+
 	void cmdAddFloodSeed(const StringVector &_args);
 	void cmdFloodFill(const StringVector &_args);
 	void cmdBuildNav(const StringVector &_args);
@@ -93,7 +88,7 @@ protected:
 
 	// Process Functions
 	int Process_FloodFill();
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// Friend functions
 	friend int GM_CDECL gmfRecastView(gmThread *a_thread);
@@ -112,13 +107,11 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Implementations of base class functionality
-	String _GetNavFileExtension() { return ".nav"; }
+	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 
 private:
-	void OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer);
-
 	struct ladder_t {
 		Vector3f	top;
 		Vector3f	bottom;
@@ -126,7 +119,7 @@ private:
 		float		width;
 
 		bool OverLaps(const ladder_t & other) const;
-		void Render(RenderOverlay *overlay) const;
+		//void Render(RenderOverlay *overlay) const;
 	};
 	typedef std::vector<ladder_t> LadderList;
 	LadderList	ladders;

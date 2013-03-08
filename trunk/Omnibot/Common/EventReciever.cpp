@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "EventReciever.h"
 #include "IGame.h"
@@ -34,6 +33,5 @@ void EventReciever::ProcessEventImpl(const MessageHelper &_message, obuint32 _ta
 
 void EventReciever::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 {
-	_message; _cb; 
+	_message; _cb;
 }
-

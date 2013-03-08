@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -26,7 +26,7 @@ MapGoalDatabase::MapGoalDatabase()
 MapGoalDatabase::~MapGoalDatabase()
 {
 }
-//MapGoalPtr MapGoalDatabase::GetMapGoal(const String &_type)
+//MapGoalPtr MapGoalDatabase::GetMapGoal(const std::string &_type)
 //{
 //	const obuint32 typeHash = Utils::Hash32(_type.c_str());
 //	MapGoalMap::const_iterator it = m_MapGoalMap.find(typeHash);
@@ -34,7 +34,7 @@ MapGoalDatabase::~MapGoalDatabase()
 //		return it->second;
 //	return MapGoalPtr();
 //}
-MapGoalPtr MapGoalDatabase::GetNewMapGoal(const String &_type)
+MapGoalPtr MapGoalDatabase::GetNewMapGoal(const std::string &_type)
 {
 	MapGoalPtr ptr;
 
@@ -49,7 +49,7 @@ MapGoalPtr MapGoalDatabase::GetNewMapGoal(const String &_type)
 	return ptr;
 }
 
-void MapGoalDatabase::RegisterMapGoal(const String &_type, const MapGoalPtr &_mg)
+void MapGoalDatabase::RegisterMapGoal(const std::string &_type, const MapGoalPtr &_mg)
 {
 	const obuint32 typeHash = Utils::Hash32(_type.c_str());
 	MapGoalMap::const_iterator it = m_MapGoalMap.find(typeHash);
@@ -72,7 +72,7 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 	DirectoryList mapgoalFiles;
 	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, "mapgoal_.*.gm");
 
-	LOG("Loading " << mapgoalFiles.size() << 
+	LOG("Loading " << mapgoalFiles.size() <<
 		" MapGoals from: global_scripts/mapgoals & scripts/mapgoals");
 	DirectoryList::const_iterator cIt = mapgoalFiles.begin(), cItEnd = mapgoalFiles.end();
 	for(; cIt != cItEnd; ++cIt)
@@ -88,7 +88,7 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 	}
 }
 
-gmGCRoot<gmUserObject> MapGoalDatabase::CreateMapGoalType(const String &_typename)
+gmGCRoot<gmUserObject> MapGoalDatabase::CreateMapGoalType(const std::string &_typename)
 {
 	MapGoalPtr mg(new MapGoal(_typename.c_str()));
 	RegisterMapGoal(mg->GetGoalType(),mg);

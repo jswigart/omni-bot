@@ -13,7 +13,6 @@ for the user to override any of the functions exposed by the template.
 By using this method, users can provide their own custom constructors,
 destructors and property access methods.
 
-
 *********************************************************
 
 Version History:
@@ -116,15 +115,12 @@ contains a property table as well as it's basic functionality
 25/09/2004 Version 0.5.0 PR
 - 0.5PR sent to GameMonkey authors for previewing/feedback
 
-
 *********************************************************
 
 gmBind Public interface documentation:
 
-
 Main API functions
 ------------------
-
 
 void Initialise( gmMachine *a_machine, bool a_extensible = true );
 
@@ -137,14 +133,10 @@ by adding their own methods and properties. A non-extensible type will perform
 no action if the user tries to extend the type in script. The default is that all
 gmBind types are extensible.
 
-
-
 gmType GetType();
 
 Retrieves the gmType that was created when the type was initialised. This function
 is inlined for performance.
-
-
 
 obj *CreateObject( gmMachine * a_machine, const char *a_name );
 
@@ -158,7 +150,6 @@ should not be deleted without calling OwnObject(); At present there is no way of
 supplying parameters to CreateObject, although this feature is planned for a later
 version.
 
-
 bool DestroyObject( gmMachine * a_machine, const char *a_name );
 
 a_machine - The GameMonkey Script machine to use
@@ -169,7 +160,6 @@ will be freed for garbage collection, meaning that it will be destroyed on the n
 GC sweep. You should no longer consider references to this object as being valid
 and unless you own the pointer to the native object, that will be destroyed too.
 
-
 gmUserObject *WrapObject( gmMachine *a_machine, T_NATIVE *a_object );
 
 a_machine - The GameMonkey Script machine to use
@@ -177,23 +167,19 @@ a_object - The native object to wrap
 
 WrapObject will wrap a native object pointer in a gmBind type. The returned
 object is a gmUserObject, which can then be used in function calls and utilities
-such as gmCall. The gmUserObject being returned may be susceptible to Garbage 
-Collection and therefore it's the native program's responsibility to make it 
+such as gmCall. The gmUserObject being returned may be susceptible to Garbage
+Collection and therefore it's the native program's responsibility to make it
 persistent. Note that if this object is garbage collected, the native pointer it
 referrs to will remain unaffected.
-
-
 
 obj *GetObject( gmMachine * a_machine, const char *a_name );
 
 a_machine - The GameMonkey Script machine to use
 a_name - The name of the object variable to use
 
-GetObject will retreive a native pointer to a **globally** created object of this 
-type from a_machine. If the specified variable doesn't exist or if it is of the 
+GetObject will retreive a native pointer to a **globally** created object of this
+type from a_machine. If the specified variable doesn't exist or if it is of the
 wrong type then NULL will be returned.
-
-
 
 bool OwnObject( gmMachine * a_machine, const char *a_name, bool a_flag );
 
@@ -203,11 +189,9 @@ a_flag - The ownership setting you wish to pass (true = host owns object)
 
 OwnObject will change the ownership status of an object created by or registered
 with gmBind. An object created with CreateObject() is owned by gmBind so shouldn't
-be freed within your program. Use OwnObject with a flag setting of 'true' to 
+be freed within your program. Use OwnObject with a flag setting of 'true' to
 force gmBind to release the pointer to you. This is useful in allowing GM scripts
 to create game objects that should persist after the script has ended.
-
-
 
 bool IsOwned( gmMachine * a_machine, const char *a_name, bool &a_flag );
 
@@ -218,13 +202,9 @@ a_flag - The boolean flag to set
 Will return the gmBind ownership flag of an object. Will return false if the
 object doesn't exist.
 
-
-
 bool IsExtensible();
 
 Will return whether the type is user extensible or not
-
-
 
 bool GetProperty( gmMachine * a_machine, const char *a_name, const char *a_property, int &a_value );
 bool GetProperty( gmMachine * a_machine, const char *a_name, const char *a_property, float &a_value );
@@ -237,13 +217,11 @@ a_value - Reference to the value to fill with the property data
 
 The GetProperty set of functions will retreive the value of an object's
 extended property. Like GetObject, the object must exist globally in the machine
-context. If the object or property doesn't exist or the value is of an incorrect 
-type the call will return false, otherwise the reference value is set and true 
-is returned. When using the char* version the string returned should be copied
+context. If the object or property doesn't exist or the value is of an incorrect
+type the call will return false, otherwise the reference value is set and true
+is returned. When using the char* version the std::string returned should be copied
 immediately in order to prevent garbage collection; preferably GC for the gmMachine
-should be disabled until you have copied the string.
-
-
+should be disabled until you have copied the std::string.
 
 bool SetProperty( gmMachine *a_machine, const char *a_name, const char *a_property, float a_value );
 bool SetProperty( gmMachine *a_machine, const char *a_name, const char *a_property, int a_value );
@@ -257,13 +235,8 @@ a_value - Value to assign to the property
 The SetProperty functions work in the same way as GetProperty, except the
 property is assigned instead of being retrieved.
 
-
-
-
-
 Proxy API Functions & Macros
 ----------------------------
-
 
 Declaration:    None
 
@@ -275,8 +248,6 @@ a_name - The name of the type to declare to GameMonkey
 This macro is used within the implementation of a proxy class. gmBind classes
 will NOT compile without this declaration.
 
-
-
 Declaration:    GMBIND_DECLARE_FUNCTIONS( );
 
 GMBIND_FUNCTION_MAP_BEGIN( a_class );
@@ -286,10 +257,9 @@ GMBIND_FUNCTION_MAP_END();
 a_class - The gmBind derived class to use for this proxy
 
 This macro pair forms the function map to be used for this type. If
-GMBIND_DECLARE_FUNCTIONS() is not declared within the class definition the 
+GMBIND_DECLARE_FUNCTIONS() is not declared within the class definition the
 map will not compile. Only use a function map if your exported type
 has native-bound functions.
-
 
 GMBIND_FUNCTION( a_name, a_gmdeclFunction )
 
@@ -304,8 +274,6 @@ _cdecl int function( gmThread * a_thread );
 Please note that when declaring functions within the map, no semi colons or commas
 are needed.
 
-
-
 Declaration:    GMBIND_DECLARE_PROPERTIES( );
 
 GMBIND_PROPERTY_MAP_BEGIN( a_class );
@@ -315,10 +283,9 @@ GMBIND_PROPERTY_MAP_END();
 a_class - The gmBind derived class to use for this proxy
 
 This macro pair forms the property map to be used for this type. If
-GMBIND_DECLARE_PROPERTIES() is not declared within the class definition the 
+GMBIND_DECLARE_PROPERTIES() is not declared within the class definition the
 map will not compile. Only use a property map if your exported type
 has native-bound properties.
-
 
 GMBIND_PROPERTY( a_name, a_getter, a_setter )
 
@@ -341,8 +308,6 @@ Generally, with a 'Get' call, a_operands[0] is the value to be populated. When
 assigned, this value is what gets passed back to GM. With a 'Set' call, a_operands[1]
 is the first value passed to the property to be assigned.
 
-
-
 Declaration:	GMBIND_DECLARE_OPERATORS( );
 
 GMBIND_OPERATOR_MAP_BEGIN( a_class );
@@ -352,7 +317,7 @@ GMBIND_OPERATOR_MAP_END();
 a_class - The gmBind derived class to use for this proxy
 
 This macro pair forms the operator map to be used for this type. If
-GMBIND_DECLARE_OPERATORS() is not declared within the class definition the 
+GMBIND_DECLARE_OPERATORS() is not declared within the class definition the
 map will not compile. Only use a operator map if your exported type requires
 the user to hook operator calls
 
@@ -380,11 +345,7 @@ a_native is a pointer to the native object associated with the gmBind type.
 a_thread is the current calling thread context
 a_operands is the operands associated with the call
 
-
-
-
 Public overloads:
-
 
 _cdecl r_native *Constructor();
 
@@ -399,22 +360,18 @@ control over how your object types are constructed. At present these is no way o
 passing parameters to the constructor but this feature is planned for a future release
 of gmBind.
 
-
 _cdecl void Destructor(obj *a_native);
 
-a_native - The native object ready to be destructed. The destructor method 
+a_native - The native object ready to be destructed. The destructor method
 is called after your object has been garbage collected within the gmMachine and
-only if gmBind owns the pointer to the native object. If the pointer is not owned, 
+only if gmBind owns the pointer to the native object. If the pointer is not owned,
 it is the responsibility of the host program to delete the object! The default gmBind
 destructor will call 'delete' on the native object - this method should be overloaded
 if you require control of how your objects are destroyed.
 
-
-
 a_native *GetThisObject( gmThread * a_thread );
 
 a_native - Pointer to the native object returned.
-
 
 GetThisObject should be used exclusivley within GM function callbacks on
 gmBind proxy objects. This function replaces the gmThread::ThisUser type functions
@@ -424,9 +381,6 @@ structure that is responsible for managing the properties and the native pointer
 to your object. GetThisObject refers to this structure and retrieves this pointer
 for you. It is not advisable to alter the gmBind internal pointer in any way
 and failure to use this method could result in a crash.
-
-
-
 
 A simple usage example
 ----------------------
@@ -456,7 +410,7 @@ if (!isExploded)
 {
 std::cout << "BOOM!" << std::endl;
 isExploded = 1;
-} 
+}
 else
 {
 std::cout << "Already exploded, dude" << std::endl;
@@ -496,7 +450,6 @@ static bool getExploded( bomb *a_native, gmThread * a_thread, gmVariable * a_ope
 static bool setExploded( bomb *a_native, gmThread * a_thread, gmVariable * a_operands );
 };
 
-
 //	gmBomb.cpp
 
 #include "gmBomb.h"
@@ -531,7 +484,7 @@ bomb* native = gmBomb::GetThisObject( a_thread );
 // Call the native object's explode method!
 native->explode();
 // return OK, all is well
-return GM_OK; 
+return GM_OK;
 }
 
 bool gmBomb::getExploded( bomb *a_native, gmThread * a_thread, gmVariable * a_operands )
@@ -564,7 +517,6 @@ a_native->isExploded = (a_operands[1].m_value.m_int ? 1 : 0);
 return true;
 }
 
-
 // main.cpp
 
 #include <iostream>
@@ -583,7 +535,7 @@ gmMachine   *gm = new gmMachine();
 gmBomb::Initialise( gm );
 
 // Create a global bomb object called 'boomer'
-gmBomb::CreateObject( gm, "boomer" );    
+gmBomb::CreateObject( gm, "boomer" );
 // This object can now be used within your scripts
 //
 // GM Example
@@ -606,7 +558,7 @@ gmBomb::OwnObject( gm, "boomer", false );
 // We no longer own the pointer to myBomb, so it could be GC'd and deleted
 
 // Let's create an extended property on boomer for fun
-// Create a string property called "MyName" and assign it a value
+// Create a std::string property called "MyName" and assign it a value
 gmBomb::SetProperty( gm, "boomer", "MyName", "BOOMER!" );
 
 // Execute a script to display boomer's name
@@ -632,11 +584,9 @@ std::cout << "boomer's name is " << name << std::endl;
 delete gm;
 
 // Too much fun, bye bye. Don't worry about boomer, he'll be GC'd
-// and his native pointer deleted    
-return 0;  
-}; 
-
-
+// and his native pointer deleted
+return 0;
+};
 
 *********************************************************
 
@@ -647,15 +597,15 @@ GameMonkey C++ Class Binding Template
 Copyright (c) 2004 Oliver Wilkinson
 
 Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the 
+obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
 Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, 
-distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is 
+the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice 
+The above copyright notice and this permission notice
 shall be included in all copies or substantial portions of
 the Software.
 
@@ -663,12 +613,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **********************************************************/
+
+#pragma once
 
 #ifndef __GAMEMONKEY_BINDING_TEMPLATE_GMBIND_H__
 #define __GAMEMONKEY_BINDING_TEMPLATE_GMBIND_H__
@@ -735,7 +687,7 @@ public:
 		if ( it == m_map.end() )
 			return T();
 		return it->second;
-	}	
+	}
 
 private:
 	tMap		m_map;
@@ -743,24 +695,16 @@ private:
 	int	_hashFunc(const char *text)
 	{
 		// http://www.flipcode.com/cgi-bin/msg.cgi?showThread=Tip-HashString&forum=totd&id=-1
-		unsigned int iHash = 5381; 
+		unsigned int iHash = 5381;
 		int c; int index = 0;
-		while( text[index] != '\0' ) 
-		{ 
-			c = text[index] ; ++index; 
-			iHash = ((iHash << 5) + iHash) + c; 
-		} 
+		while( text[index] != '\0' )
+		{
+			c = text[index] ; ++index;
+			iHash = ((iHash << 5) + iHash) + c;
+		}
 		return( iHash );
 	}
-
 };
-
-
-
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class:	 gmBind
@@ -796,7 +740,7 @@ public:
 
 	//////////////////////////////////////////////////////
 	// Parameterised contructor
-	// Is called instead of the default if parameters are passed by GM	
+	// Is called instead of the default if parameters are passed by GM
 	static T_NATIVE *Constructor( gmThread *a_thread )
 	{
 		return new T_NATIVE();
@@ -804,7 +748,7 @@ public:
 
 	//////////////////////////////////////////////////////
 	// AsString callback
-	// Called whenever the scripting system wishes to create a string
+	// Called whenever the scripting system wishes to create a std::string
 	// for an instance of the object
 	static void AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen)
 	{
@@ -835,7 +779,7 @@ public:
 				const char *pVar = pNode->m_key.AsString(a_machine, buffVar, buffSize);
 				const char *pVal = pNode->m_value.AsString(a_machine, buffVal, buffSize);
 				a_infoCallback(
-					pVar, 
+					pVar,
 					pVal,
 					a_machine->GetTypeName(pNode->m_value.m_type),
 					pNode->m_value.IsReference() ? pNode->m_value.m_value.m_ref : 0);
@@ -869,11 +813,11 @@ public:
 	// Method:		Initialise
 	//
 	// Initialise function, to be called ONCE to initialise the class in the GM machine
-	// Handles registration of types and sets the get/set dot operators to allows 
+	// Handles registration of types and sets the get/set dot operators to allows
 	// the user to hook callbacks
 	//
 	// Parameters:
-	// 
+	//
 	// a_machine - The gmMachine instance that the class is registered to
 	//
 	static void Initialise( gmMachine *a_machine, bool a_extensible = true )
@@ -886,7 +830,7 @@ public:
 		a_machine->RegisterLibrary( T_API::m_gmTypeLib, 1 );
 		// Create the new user type
 		m_gmType = a_machine->CreateUserType( m_gmTypeName );
-		
+
 		m_extensible = a_extensible;
 
 		//
@@ -964,7 +908,6 @@ public:
 			a_machine->RegisterTypeOperator( m_gmType, O_NOT, NULL, gmOpNot);
 	}
 
-
 	////////////////////////////////////////////////////////
 	// Method:		IsExtensible
 	//
@@ -981,7 +924,7 @@ public:
 	//{
 	//	// Return NULL immediately if the type hasn't been initialised
 	//	if ( GetType() == GM_NULL )
-	//		return 0;   
+	//		return 0;
 
 	//	a_machine->AdjustKnownMemoryUsed( sizeof( gmBindUserObject ) );
 	//	// Create a new machine variable
@@ -1001,28 +944,25 @@ public:
 	//	return p;
 	//}
 
-	
-	
-	
 	static void SetGlobalObject( gmMachine * a_machine, const char *a_name, gmUserObject *a_object )
 	{
 		gmTableObject *table = a_machine->GetGlobals();
 		table->Set( a_machine, a_name, gmVariable( GetType(), (gmptr)a_object ) );
 	}
-	
+
 	static bool RenameGlobalObject( gmMachine * a_machine, const char *a_name, const char *a_new_name )
 	{
 		gmTableObject *table = a_machine->GetGlobals();
 		gmVariable old( table->Get( a_machine, a_name ) );
-		
+
 		if (old.m_type == GM_NULL)
-            return false;
-		
+			return false;
+
 		table->Set( a_machine, a_new_name, gmVariable::s_null );
 		table->Set( a_machine, a_name, old );
 		return true;
 	}
-	
+
 	////////////////////////////////////////////////////////
 	// Method:		CreateObject
 	//
@@ -1032,7 +972,7 @@ public:
 	{
 		// Return NULL immediately if the type hasn't been initialised
 		if ( GetType() == GM_NULL )
-			return 0;   
+			return 0;
 
 		a_machine->AdjustKnownMemoryUsed( sizeof( gmBindUserObject ) );
 
@@ -1043,7 +983,7 @@ public:
 
 		return p;
 	}
-	
+
 	////////////////////////////////////////////////////////
 	// Method:      CreateGmUserObject
 	//
@@ -1055,16 +995,16 @@ public:
 	{
 		// Return NULL immediately if the type hasn't been initialised
 		if ( GetType() == GM_NULL )
-			return 0;   
+			return 0;
 
 		a_machine->AdjustKnownMemoryUsed( sizeof( gmBindUserObject ) );
 
 		// Native object to bind
 		T_NATIVE *p = T_API::Constructor( 0 );
-		
+
 		// Create holding object
 		gmBindUserObject *gmbUser = _allocObject( a_machine, p, !a_gm_owned );
-        
+
 		return a_machine->AllocUserObject( gmbUser, GetType() );
 	}
 
@@ -1077,7 +1017,7 @@ public:
 	{
 		// Return NULL immediately if the type hasn't been initialised
 		if ( GetType() == GM_NULL )
-			return;   
+			return;
 
 		gmMachine *pMachine = a_thread->GetMachine();
 		pMachine->AdjustKnownMemoryUsed( sizeof( gmBindUserObject ) );
@@ -1107,7 +1047,7 @@ public:
 	{
 		// Return NULL immediately if the type hasn't been initialised
 		if ( GetType() == GM_NULL )
-			return;   
+			return;
 
 		a_machine->AdjustKnownMemoryUsed( sizeof( gmBindUserObject ) );
 
@@ -1139,8 +1079,8 @@ public:
 		// Create holding object
 		gmBindUserObject *gmbUser = _allocObject( a_machine, a_object, true );
 
-		gmUserObject *usr = a_machine->AllocUserObject( gmbUser, GetType() );      
-		return usr;  
+		gmUserObject *usr = a_machine->AllocUserObject( gmbUser, GetType() );
+		return usr;
 	}
 
 	////////////////////////////////////////////////////////
@@ -1166,21 +1106,20 @@ public:
 		return true;
 	}
 
-
 	///////////////////////////////////////////////////////
 	// Method:		GetThisObject
 	//
-	// Used in thread calls to return the user object 
+	// Used in thread calls to return the user object
 	//
 	//
 	static GM_INLINE T_NATIVE *GetThisObject( gmThread * a_thread )
-	{          
+	{
 		gmBindUserObject	*gmbUser = (gmBindUserObject *)a_thread->ThisUser_NoChecks();
 		return gmbUser->m_object;
 	}
 
 	static GM_INLINE T_NATIVE *GetThisObjectSafe( gmThread * a_thread )
-	{          
+	{
 		gmBindUserObject	*gmbUser = (gmBindUserObject *)a_thread->ThisUserCheckType(GetType());
 		return gmbUser ? gmbUser->m_object : 0;
 	}
@@ -1188,11 +1127,11 @@ public:
 	///////////////////////////////////////////////////////
 	// Method:		GetThisTable
 	//
-	// Used in thread calls to return the user object 
+	// Used in thread calls to return the user object
 	//
 	//
 	static GM_INLINE gmTableObject *GetThisTable( gmThread * a_thread )
-	{          
+	{
 		gmBindUserObject *gmbUser = static_cast<gmBindUserObject*>(a_thread->ThisUser_NoChecks());
 		return gmbUser->m_table;
 	}
@@ -1217,13 +1156,13 @@ public:
 	// Returns null if not found
 	//
 	static T_NATIVE *GetObject( gmMachine * a_machine, const char *a_name )
-	{        
+	{
 		gmTableObject *table = a_machine->GetGlobals();
 		gmVariable	var = table->Get(a_machine, a_name);
 		if (var.m_type != GetType())
 			return 0;
 		// Look it up in our table
-		
+
 		gmUserObject *user = var.GetUserObjectSafe();
 		gmBindUserObject *gmbUser = static_cast<gmBindUserObject*>(user->m_user);
 		return (T_NATIVE *)gmbUser->m_object;
@@ -1255,18 +1194,17 @@ public:
 		return true;
 	}
 
-    static bool GM_INLINE SetObjectOwnershipNative( gmMachine * a_machine, const char *a_name )
-    {
-    	return OwnObject(a_machine, a_name, true);
-    }
-    
-    static bool GM_INLINE SetObjectOwnershipGM( gmMachine * a_machine, const char *a_name )
-    {
-    	return OwnObject(a_machine, a_name, false);
-    }
-    
+	static bool GM_INLINE SetObjectOwnershipNative( gmMachine * a_machine, const char *a_name )
+	{
+		return OwnObject(a_machine, a_name, true);
+	}
 
-    static bool GM_INLINE OwnObject( gmMachine * a_machine, gmUserObject *a_object, bool a_flag )
+	static bool GM_INLINE SetObjectOwnershipGM( gmMachine * a_machine, const char *a_name )
+	{
+		return OwnObject(a_machine, a_name, false);
+	}
+
+	static bool GM_INLINE OwnObject( gmMachine * a_machine, gmUserObject *a_object, bool a_flag )
 	{
 		if (a_object->GetType() != GetType())
 			return false;
@@ -1281,15 +1219,15 @@ public:
 		return true;
 	}
 
-    static bool GM_INLINE SetObjectOwnershipNative( gmMachine * a_machine, gmUserObject *a_object )
-    {
-    	return OwnObject(a_machine, a_object, true);
-    }
-    
-    static bool GM_INLINE SetObjectOwnershipGM( gmMachine * a_machine, gmUserObject *a_object )
-    {
-    	return OwnObject(a_machine, a_object, false);
-    }
+	static bool GM_INLINE SetObjectOwnershipNative( gmMachine * a_machine, gmUserObject *a_object )
+	{
+		return OwnObject(a_machine, a_object, true);
+	}
+
+	static bool GM_INLINE SetObjectOwnershipGM( gmMachine * a_machine, gmUserObject *a_object )
+	{
+		return OwnObject(a_machine, a_object, false);
+	}
 
 	////////////////////////////////////////////////////////
 	// Method:		IsOwned
@@ -1308,7 +1246,7 @@ public:
 		// If native = false then the object is owned
 		a_flag = (gmbUser->m_native);
 		return true;
-	}    
+	}
 
 	static bool IsOwned( gmMachine * a_machine, gmUserObject *a_object, bool &a_flag )
 	{
@@ -1319,7 +1257,7 @@ public:
 		// If native = false then the object is owned
 		a_flag = (gmbUser->m_native);
 		return true;
-	} 
+	}
 
 	////////////////////////////////////////////////////////
 	// Method:		GetProperty
@@ -1378,7 +1316,7 @@ public:
 
 		gmFunctionObject *f = var.GetFunctionObjectSafe();
 		a_value = f;
-		return true;	
+		return true;
 	}
 
 	static bool GetPropertyTable( gmMachine * a_machine, const char *a_name, const char *a_property, gmTableObject *&a_value )
@@ -1389,7 +1327,7 @@ public:
 
 		gmTableObject *t = var.GetTableObjectSafe();
 		a_value = t;
-		return true;	
+		return true;
 	}
 
 	static bool GetPropertyUser( gmMachine * a_machine, const char *a_name, const char *a_property, gmUserObject *&a_value )
@@ -1400,16 +1338,15 @@ public:
 
 		gmUserObject *t = var.GetUserObjectSafe();
 		a_value = t;
-		return true;	
+		return true;
 	}
-	
-	
+
 	///////////////////////////////////////////////
 	// Method:      GetProperty
 	//
 	// These methods work on a gmUserObject holding a pointer to a gmUserBoundObject
 	//
-	
+
 	static bool GetProperty( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, int &a_value )
 	{
 		gmVariable var = gmGetObjectProperty( a_machine, a_object, a_property );
@@ -1418,7 +1355,7 @@ public:
 		a_value = var.m_value.m_int;
 		return true;
 	}
-	
+
 	static bool GetProperty( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, float &a_value )
 	{
 		gmVariable var = gmGetObjectProperty( a_machine, a_object, a_property );
@@ -1427,7 +1364,7 @@ public:
 		a_value = var.m_value.m_float;
 		return true;
 	}
-	
+
 	static bool GetProperty( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, const char *&a_value )
 	{
 		gmVariable var = gmGetObjectProperty( a_machine, a_object, a_property );
@@ -1437,8 +1374,7 @@ public:
 		a_value = str->GetString();
 		return true;
 	}
-	
-	
+
 	static bool GetPropertyFunction( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmFunctionObject *&a_value )
 	{
 		gmVariable var = gmGetObjectProperty( a_machine, a_object, a_property );
@@ -1447,7 +1383,7 @@ public:
 
 		gmFunctionObject *f = var.GetFunctionObjectSafe();
 		a_value = f;
-		return true;	
+		return true;
 	}
 
 	static bool GetPropertyTable( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmTableObject *&a_value )
@@ -1458,9 +1394,9 @@ public:
 
 		gmTableObject *t = var.GetTableObjectSafe();
 		a_value = t;
-		return true;	
+		return true;
 	}
-	
+
 	static bool GetPropertyUser( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmUserObject *&a_value )
 	{
 		gmVariable var = gmGetObjectProperty( a_machine, a_object, a_property );
@@ -1469,9 +1405,8 @@ public:
 
 		gmUserObject *t = var.GetUserObjectSafe();
 		a_value = t;
-		return true;	
+		return true;
 	}
-	
 
 	////////////////////////////////////////////////////////
 	// Method:		SetProperty
@@ -1529,7 +1464,7 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
 
 	static bool SetPropertyTable( gmMachine * a_machine, const char *a_name, const char *a_property, gmTableObject *a_value )
@@ -1541,7 +1476,7 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
 
 	static bool SetPropertyUser( gmMachine * a_machine, const char *a_name, const char *a_property, gmUserObject *a_value )
@@ -1553,16 +1488,15 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
-	
-	
-    ///////////////////////////////////////////////
+
+	///////////////////////////////////////////////
 	// Method:      SetProperty
 	//
 	// These methods work on a gmUserObject holding a pointer to a gmUserBoundObject
 	//
-	
+
 	static bool SetProperty( gmMachine *a_machine, gmUserObject *a_object, const char *a_property, float a_value )
 	{
 		gmBindUserObject *gmbUser = gmGetUserBoundObject( a_machine, a_object );
@@ -1576,7 +1510,7 @@ public:
 		return true;
 	}
 
-    static bool SetProperty( gmMachine *a_machine, gmUserObject *a_object, const char *a_property, int a_value )
+	static bool SetProperty( gmMachine *a_machine, gmUserObject *a_object, const char *a_property, int a_value )
 	{
 		gmBindUserObject *gmbUser = gmGetUserBoundObject( a_machine, a_object );
 		if (!gmbUser)
@@ -1588,7 +1522,7 @@ public:
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
 		return true;
 	}
-	
+
 	static bool SetProperty( gmMachine *a_machine, gmUserObject *a_object, const char *a_property, const char *a_value )
 	{
 		gmBindUserObject *gmbUser = gmGetUserBoundObject( a_machine, a_object );
@@ -1596,12 +1530,12 @@ public:
 			return false;
 
 		// Find the property
-        gmVariable userVar( a_machine->AllocStringObject( a_value ) );
+		gmVariable userVar( a_machine->AllocStringObject( a_value ) );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
 		return true;
 	}
-	
-    static bool SetPropertyFunction( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmFunctionObject *a_value )
+
+	static bool SetPropertyFunction( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmFunctionObject *a_value )
 	{
 		gmBindUserObject *gmbUser = gmGetUserBoundObject( a_machine, a_object );
 		if (!gmbUser)
@@ -1610,7 +1544,7 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
 
 	static bool SetPropertyTable( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmTableObject *a_value )
@@ -1622,9 +1556,9 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
-	
+
 	static bool SetPropertyUser( gmMachine * a_machine, gmUserObject *a_object, const char *a_property, gmUserObject *a_value )
 	{
 		gmBindUserObject *gmbUser = gmGetUserBoundObject( a_machine, a_object );
@@ -1634,7 +1568,7 @@ public:
 		// Find the property
 		gmVariable userVar( a_value );
 		gmbUser->m_table->Set( a_machine, a_property, userVar );
-		return true;	
+		return true;
 	}
 
 	/////////////////////////////////////////////////////////
@@ -1645,7 +1579,7 @@ public:
 	// WARNING: USE WITH CARE - Do not free or delete this object, table or user pointer
 	//
 	// Made public in 0.9.4c
-	//	
+	//
 	static gmBindUserObject *GetUserBoundObject( gmMachine *a_machine, const char *objName )
 	{
 		return gmGetUserBoundObject( a_machine, objName );
@@ -1658,7 +1592,7 @@ public:
 		gmBindUserObject *gmbUser = (gmBindUserObject *)_userObj->m_user;
 		return gmbUser;
 	}
-	
+
 	static gmBindUserObject *GetUserBoundObject( gmMachine *a_machine, gmVariable &_var )
 	{
 		gmUserObject *user = _var.GetUserObjectSafe(GetType());
@@ -1675,7 +1609,7 @@ public:
 	// Returns the gmTableObject of the gmBind object instance
 	//
 	// WARNING: USE WITH CARE - Do not free or delete this table
-	//	
+	//
 	static gmTableObject *GetUserTable( gmUserObject *_userObj )
 	{
 		if (_userObj->GetType() != GetType())
@@ -1689,18 +1623,17 @@ public:
 	// Method:      NullifyObject
 	//
 	// Nullifies the object pointed to by this object.
-	//	
+	//
 	static void NullifyObject( gmUserObject *_userObj )
 	{
 		GM_ASSERT(_userObj->GetType() == GetType());
 		if (_userObj->GetType() == GetType())
 		{
 			gmBindUserObject *gmbUser = (gmBindUserObject *)_userObj->m_user;
-			GM_ASSERT(gmbUser->m_native); 
+			GM_ASSERT(gmbUser->m_native);
 			gmbUser->m_object = NULL;
 		}
 	}
-
 
 	/////////////////////////////////////////////////////////
 	// Method:		GetType
@@ -1723,13 +1656,13 @@ public:
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	// Type:	gmBindPropertyFP 
+	// Type:	gmBindPropertyFP
 	//
 	// Typedef for the function pointer to the property callbacks
 	typedef bool ( *gmBindPropertyFP )( T_NATIVE *p, gmThread * a_thread, gmVariable * a_operands );
 	//
 	//////////////////////////////////////////////////////////////////////////
-	// Type:	gmBindOperatorFP 
+	// Type:	gmBindOperatorFP
 	//
 	// Typedef for the function pointer to the property callbacks
 	typedef bool ( *gmBindOperatorFP )( gmThread * a_thread, gmVariable * a_operands );
@@ -1771,7 +1704,7 @@ public:
 		// O_DIV,              // op1, op2
 		gmBindOperatorFP	opDiv;
 		// O_NEG,              // op1
-		gmBindOperatorFP	opNeg;			
+		gmBindOperatorFP	opNeg;
 		// O_REM,              // op1, op2
 		gmBindOperatorFP	opRem;
 		// O_BIT_OR,           // op1, op2
@@ -1802,8 +1735,8 @@ public:
 		gmBindOperatorFP	opPos;
 		// O_NOT,              // op1
 		gmBindOperatorFP	opNot;
-		// O_GETIND,           // object, index 
-		gmBindOperatorFP	opGetIndex;	
+		// O_GETIND,           // object, index
+		gmBindOperatorFP	opGetIndex;
 		// O_SETIND,           // object, index, value
 		gmBindOperatorFP	opSetIndex;
 	};
@@ -1825,7 +1758,7 @@ protected:
 	// by the macro call GMBIND_INIT_TYPE
 	//
 	static gmFunctionEntry m_gmTypeLib[1];
-	//	
+	//
 	//////////////////////////////////////////////
 	// Variable:	m_propertyFunctions
 	//
@@ -1970,7 +1903,7 @@ protected:
 
 	////////////////////////////////
 	// Method:		gmGetObjectProperty
-	// 
+	//
 	// Will retrieve a property (as a gmVariable) of a global user-bound object
 	//
 	static GM_INLINE gmVariable gmGetObjectProperty( gmMachine * a_machine, const char *objName, const char *propName )
@@ -1998,7 +1931,7 @@ protected:
 
 	////////////////////////////////
 	// Method:		gmGetUserBoundObject
-	// 
+	//
 	// Will look up the user bound object in the global machine table
 	//
 	static GM_INLINE gmBindUserObject *gmGetUserBoundObject( gmMachine *a_machine, const char *objName )
@@ -2015,7 +1948,7 @@ protected:
 	}
 
 	static GM_INLINE gmBindUserObject *gmGetUserBoundObject( gmMachine *a_machine, gmUserObject *a_object )
-    {
+	{
 		if (a_object->GetType() != GetType())
 			return 0;
 		// Look it up in our table
@@ -2108,7 +2041,7 @@ protected:
 		a_operands[0].SetUser( (gmUserObject*)a_native );
 		return true;
 	}
-	
+
 	static bool _autoprop_getFloat( T_NATIVE *a_native, gmThread * a_thread, gmVariable * a_operands )
 	{
 		a_operands[0].SetFloat( (*(float *)a_native) );
@@ -2167,7 +2100,6 @@ private:
 		a_machine->AdjustKnownMemoryUsed( sizeof( T_NATIVE ) );
 		return gmb;
 	}
-
 
 	//////////////////////////////////////////////////////
 	// Method:		gmfConstructor
@@ -2232,11 +2164,10 @@ private:
 		m_gmUserObjects.Free( gmbUser );
 	}
 
-
 	///////////////////////////////////////////////////////
 	// Method:		gmfTrace
 	//
-	// Function called by the Garbage Collector. Must trace the table and the 
+	// Function called by the Garbage Collector. Must trace the table and the
 	// user object as in addition to this object
 	//
 	static bool gmfTrace( gmMachine * a_machine, gmUserObject* a_object, gmGarbageCollector* a_gc, const int a_workLeftToGo, int& a_workDone )
@@ -2277,7 +2208,7 @@ private:
 		// Ensure the operation is being performed on our type
 		GM_ASSERT(a_operands[0].m_type == m_gmType);
 		gmBindUserObject *gmbUser = GetUserBoundObject(a_thread->GetMachine(),a_operands[0]);
-		// ensure the property being 'got' is defined as a string
+		// ensure the property being 'got' is defined as a std::string
 		GM_ASSERT(a_operands[1].IsString());
 		gmStringObject* stringObj = a_operands[1].GetStringObjectSafe();
 		const char* cstr = stringObj->GetString();
@@ -2298,9 +2229,9 @@ private:
 	static int GM_CDECL gmOpSetDot(gmThread * a_thread, gmVariable * a_operands)
 	{
 		// ensure the type being set is our type
-		GM_ASSERT(a_operands[0].m_type == m_gmType);		
+		GM_ASSERT(a_operands[0].m_type == m_gmType);
 		gmBindUserObject *gmbUser = GetUserBoundObject(a_thread->GetMachine(),a_operands[0]);
-		// Ensure the value set is a string (eg: property)
+		// Ensure the value set is a std::string (eg: property)
 		GM_ASSERT(a_operands[2].IsString());
 		gmStringObject* stringObj = a_operands[2].GetStringObjectSafe();
 		const char* cstr = stringObj->GetString();
@@ -2324,7 +2255,7 @@ private:
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpSetInd(gmThread * a_thread, gmVariable * a_operands)
@@ -2345,7 +2276,7 @@ private:
 	{
 		if (m_operatorFunctions.opNeg )
 		{
-            m_operatorFunctions.opNeg( a_thread, a_operands );
+			m_operatorFunctions.opNeg( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2366,7 +2297,7 @@ private:
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpDiv(gmThread * a_thread, gmVariable * a_operands)
@@ -2380,37 +2311,37 @@ private:
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpSub(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opSub)
 		{
-            m_operatorFunctions.opSub( a_thread, a_operands );
+			m_operatorFunctions.opSub( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpAdd(gmThread *a_thread, gmVariable *a_operands)
 	{
-		// Special case for string values. Append a string representation of us.
+		// Special case for std::string values. Append a std::string representation of us.
 		//if(a_operands[0].m_type == GM_STRING)
 		//{
-		//	// TODO: concat the pOp and the buffer string
+		//	// TODO: concat the pOp and the buffer std::string
 		//	gmStringObject *pOp = reinterpret_cast<gmStringObject*>(a_operands[0].m_value.m_ref);
-		//	
+		//
 		//	gmMachine *pMachine = GM_THREAD_ARG->GetMachine();
 		//	const int iAsStringBuffSize = 256;
 		//	char bufAsString[iAsStringBuffSize] = {0};
 		//	T_API::AsString(reinterpret_cast<gmUserObject*>(a_operands[1].m_value.m_ref), bufAsString, iAsStringBuffSize);
 
-		//	// Build the final string
+		//	// Build the final std::string
 		//	const int iBufferSize = 1024;
 		//	char buffer[iBufferSize] = {0};
 		//	_gmsnprintf(buffer, iBufferSize, "%s%s", pOp ? pOp->GetString() : "", bufAsString);
@@ -2422,63 +2353,63 @@ private:
 
 		if (m_operatorFunctions.opAdd)
 		{
-            m_operatorFunctions.opAdd( a_thread, a_operands );
+			m_operatorFunctions.opAdd( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpRem(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opRem)
 		{
-            m_operatorFunctions.opRem( a_thread, a_operands );
+			m_operatorFunctions.opRem( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpBitOr(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opBitOr)
 		{
-           m_operatorFunctions.opBitOr( a_thread, a_operands );
-		   return GM_OK;
-		}
-		else
-		{
-			a_operands[0].Nullify();
-			return GM_EXCEPTION;
-		}		
-	}
-
-	static int GM_CDECL gmOpBitXOr(gmThread * a_thread, gmVariable * a_operands)
-	{
-		if (m_operatorFunctions.opBitXOr)
-		{
-            m_operatorFunctions.opBitXOr( a_thread, a_operands );
+			m_operatorFunctions.opBitOr( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
+	}
+
+	static int GM_CDECL gmOpBitXOr(gmThread * a_thread, gmVariable * a_operands)
+	{
+		if (m_operatorFunctions.opBitXOr)
+		{
+			m_operatorFunctions.opBitXOr( a_thread, a_operands );
+			return GM_OK;
+		}
+		else
+		{
+			a_operands[0].Nullify();
+			return GM_EXCEPTION;
+		}
 	}
 
 	static int GM_CDECL gmOpBitAnd(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opBitAnd)
 		{
-            m_operatorFunctions.opBitAnd( a_thread, a_operands );
+			m_operatorFunctions.opBitAnd( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2492,21 +2423,21 @@ private:
 	{
 		if (m_operatorFunctions.opBitShiftLeft)
 		{
-            m_operatorFunctions.opBitShiftLeft( a_thread, a_operands );
+			m_operatorFunctions.opBitShiftLeft( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpBitShiftR(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opBitShiftRight)
 		{
-            m_operatorFunctions.opBitShiftRight( a_thread, a_operands );
+			m_operatorFunctions.opBitShiftRight( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2520,28 +2451,28 @@ private:
 	{
 		if (m_operatorFunctions.opBitInv)
 		{
-            m_operatorFunctions.opBitInv( a_thread, a_operands );
+			m_operatorFunctions.opBitInv( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpLT(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opLessThan)
 		{
-            m_operatorFunctions.opLessThan( a_thread, a_operands );
+			m_operatorFunctions.opLessThan( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpGT(gmThread * a_thread, gmVariable * a_operands)
@@ -2555,14 +2486,14 @@ private:
 		{
 			a_operands[0].Nullify();
 			return GM_EXCEPTION;
-		}		
+		}
 	}
 
 	static int GM_CDECL gmOpLTE(gmThread * a_thread, gmVariable * a_operands)
 	{
 		if (m_operatorFunctions.opLessThanOrEqual)
 		{
-            m_operatorFunctions.opLessThanOrEqual( a_thread, a_operands );
+			m_operatorFunctions.opLessThanOrEqual( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2590,7 +2521,7 @@ private:
 	{
 		if (m_operatorFunctions.opIsEqual)
 		{
-            m_operatorFunctions.opIsEqual( a_thread, a_operands );
+			m_operatorFunctions.opIsEqual( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2601,10 +2532,10 @@ private:
 	}
 
 	static int GM_CDECL gmOpIsNotEq(gmThread * a_thread, gmVariable * a_operands)
-	{		
+	{
 		if (m_operatorFunctions.opIsNotEqual)
 		{
-            m_operatorFunctions.opIsNotEqual( a_thread, a_operands );
+			m_operatorFunctions.opIsNotEqual( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2618,7 +2549,7 @@ private:
 	{
 		if (m_operatorFunctions.opPos)
 		{
-            m_operatorFunctions.opPos( a_thread, a_operands );
+			m_operatorFunctions.opPos( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2632,7 +2563,7 @@ private:
 	{
 		if (m_operatorFunctions.opNot)
 		{
-            m_operatorFunctions.opNot( a_thread, a_operands );
+			m_operatorFunctions.opNot( a_thread, a_operands );
 			return GM_OK;
 		}
 		else
@@ -2650,9 +2581,7 @@ private:
 	static const char *m_gmTypeName;
 
 	static gmMemFixed m_gmUserObjects;
-
 };  // END gmBind
-
 
 /////////////////////////////////////////////
 // Template static property section
@@ -2673,7 +2602,6 @@ typename gmBind< T_NATIVE, T_API >::gmBindOperatorMap gmBind< T_NATIVE, T_API >:
 template < typename T_NATIVE, typename T_API >
 gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 
-
 //////////////////////////////////////////////
 // Macro section
 //
@@ -2693,7 +2621,7 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 	\
 	template<> \
 	gmFunctionEntry api::T_OBJ::m_gmTypeLib[1] = {   \
-{ api::T_OBJ::m_gmTypeName, api::gmfConstructor } };	
+{ api::T_OBJ::m_gmTypeName, api::gmfConstructor } };
 
 //////////////////////////////////////////////////
 // Method:	GMBIND_DECLARE_FUNCTIONS
@@ -2703,12 +2631,12 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 // public section of the proxy API class
 //
 #define GMBIND_DECLARE_FUNCTIONS()		\
-	static void registerFunctions( gmMachine *a_machine );	
+	static void registerFunctions( gmMachine *a_machine );
 ///////////////////////////////////////////////////
 // Method:	GMBIND_FUNCTION_MAP_BEGIN
 //
 // Macro to implement the registerFunctions() method of the template
-// class. This section basically constructs a function that is called 
+// class. This section basically constructs a function that is called
 // when the class is declared to GameMonkey
 //
 // Parameters:
@@ -2745,7 +2673,6 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 #define GMBIND_FUNCTION_MAP_END()				\
 };
 
-
 /////////////////////////////////////////////////////
 // Method:	GMBIND_DECLARE_PROPERTIES
 //
@@ -2768,7 +2695,7 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 //
 #define GMBIND_PROPERTY_MAP_BEGIN(api)		\
 	void api::registerProperties()				\
-{										
+{
 //
 //////////////////////////////////////////////////////
 // Method:	GMBIND_PROPERTY
@@ -2787,7 +2714,7 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 //
 #define GMBIND_PROPERTY( name, getFunc, setFunc )		\
 	registerProperty( name, getFunc, setFunc );
-//		
+//
 #define GMBIND_AUTOPROPERTY( name, propType, propNative, propFlags )		\
 	registerAutoProperty( name, propType, offsetof( T_NATIVETYPE, propNative ), propFlags );
 //
@@ -2798,7 +2725,6 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 //
 #define GMBIND_PROPERTY_MAP_END()				\
 };
-
 
 /////////////////////////////////////////////////////
 // Method:	GMBIND_DECLARE_OPERATORS
@@ -2953,43 +2879,42 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
 #define GMBIND_OPERATOR_MAP_END()				\
 };
 
-
 /// A baseclass for C++ classes to inherit from to automatically tell gmBind to
 /// unhook them from GM
 template <class T_API>
 class gmBindBase
 {
 public:
-    gmBindBase() : gmb_UserObject(0), gmb_Machine(0) { }
-    virtual ~gmBindBase()
-    {
-        gmbReleaseObject();
-    }
+	gmBindBase() : gmb_UserObject(0), gmb_Machine(0) { }
+	virtual ~gmBindBase()
+	{
+		gmbReleaseObject();
+	}
 
-    void gmbInitObject( gmMachine *a_machine, gmUserObject *a_user, const char *a_global_name )
-    {
-    	gmbSetMachine(a_machine); gmbSetUserObject( a_user ); gmbSetGlobalName( a_global_name );
-    }
-    
-    void gmbReleaseObject()
-    {
-    	if (gmb_GlobalName.length() > 0 && gmb_Machine != 0)
-        {
-            T_API::DestroyObject( gmb_Machine, gmb_GlobalName.c_str() );
-        }
-    }
+	void gmbInitObject( gmMachine *a_machine, gmUserObject *a_user, const char *a_global_name )
+	{
+		gmbSetMachine(a_machine); gmbSetUserObject( a_user ); gmbSetGlobalName( a_global_name );
+	}
 
-    void gmbSetUserObject( gmUserObject *a_user ) { gmb_UserObject = a_user; }
-    gmUserObject *gmb_GetUserObject( ) const { return gmb_UserObject; }
-    void gmbSetMachine( gmMachine *a_machine ) { gmb_Machine = a_machine; }
-    
-    void gmbSetGlobalName( const char *a_name ) { gmb_GlobalName = a_name; }
-    const char *gmbGetGlobalName() const { return gmb_GlobalName.c_str(); }
-    
+	void gmbReleaseObject()
+	{
+		if (gmb_GlobalName.length() > 0 && gmb_Machine != 0)
+		{
+			T_API::DestroyObject( gmb_Machine, gmb_GlobalName.c_str() );
+		}
+	}
+
+	void gmbSetUserObject( gmUserObject *a_user ) { gmb_UserObject = a_user; }
+	gmUserObject *gmb_GetUserObject( ) const { return gmb_UserObject; }
+	void gmbSetMachine( gmMachine *a_machine ) { gmb_Machine = a_machine; }
+
+	void gmbSetGlobalName( const char *a_name ) { gmb_GlobalName = a_name; }
+	const char *gmbGetGlobalName() const { return gmb_GlobalName.c_str(); }
+
 protected:
 
-    gmUserObject *gmb_UserObject;
-    gmMachine    *gmb_Machine;
+	gmUserObject *gmb_UserObject;
+	gmMachine    *gmb_Machine;
 	std::string   gmb_GlobalName;
 };
 
@@ -2998,7 +2923,7 @@ protected:
 
 #define GM_CHECK_GMBIND_PARAM(OBJECT, TYPE, VAR, PARAM) \
 	if(GM_THREAD_ARG->ParamType((PARAM)) != (TYPE::GetType())) \
-	{ char buffer[256]; GM_EXCEPTION_MSG("expecting param %d as user type %s, got %s", (PARAM), (TYPE::GetTypeName()), GM_THREAD_ARG->Param((PARAM)).AsStringWithType(GM_THREAD_ARG->GetMachine(), buffer, 256)); return GM_EXCEPTION; } \
+{ char buffer[256]; GM_EXCEPTION_MSG("expecting param %d as user type %s, got %s", (PARAM), (TYPE::GetTypeName()), GM_THREAD_ARG->Param((PARAM)).AsStringWithType(GM_THREAD_ARG->GetMachine(), buffer, 256)); return GM_EXCEPTION; } \
 	OBJECT VAR = (OBJECT)TYPE::GetNative(reinterpret_cast<gmUserObject*>(GM_THREAD_ARG->Param(PARAM).m_value.m_ref));
 
 #endif   // __GAMEMONKEY_BINDING_TEMPLATE_GMBIND_H__

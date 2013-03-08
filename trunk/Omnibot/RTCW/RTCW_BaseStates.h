@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __RTCWBaseStates_H__
-#define __RTCWBaseStates_H__
+#pragma once
+
+#ifndef __RTCWBASESTATES_H__
+#define __RTCWBASESTATES_H__
 
 #include "StateMachine.h"
 #include "BotBaseStates.h"
@@ -20,7 +22,7 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __GM_AABB_H__
 #define __GM_AABB_H__
@@ -43,7 +45,6 @@ public:
 
 	static void AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen);
 };
-
 
 void BindAABB(gmMachine *a_machine);
 

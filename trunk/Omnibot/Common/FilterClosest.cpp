@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -27,7 +27,7 @@ void FilterClosest::Reset()
 
 void FilterClosest::Check(int _index, const MemoryRecord &_record)
 {
-	if(m_MemorySpan==0) 
+	if(m_MemorySpan==0)
 		m_MemorySpan = m_Client->GetSensoryMemory()->GetMemorySpan();
 
 	const bool bIsStatic = _record.m_TargetInfo.m_EntityCategory.CheckFlag(ENT_CAT_STATIC);
@@ -46,7 +46,7 @@ void FilterClosest::Check(int _index, const MemoryRecord &_record)
 		case AiState::SensoryMemory::EntAny:
 			break;
 		}
-		
+
 		if(IsBeingIgnored(_record.GetEntity()))
 			return;
 
@@ -71,7 +71,7 @@ void FilterClosest::Check(int _index, const MemoryRecord &_record)
 					m_ClosestPosition = p;
 				}
 			}
-		}		
+		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// Distance
@@ -93,7 +93,7 @@ void FilterClosest::Check(int _index, const MemoryRecord &_record)
 		{
 			if(_record.m_TargetInfo.m_EntityClass >= ANYPLAYERCLASS)
 				return;
-		} 
+		}
 		else if(!PassesFilter(_record.m_TargetInfo.m_EntityClass))
 			return;
 
@@ -121,11 +121,11 @@ void FilterClosest::Check(int _index, const MemoryRecord &_record)
 				return;
 		}
 
-		// Get the distance to this person.		
+		// Get the distance to this person.
 		if(CheckEx(_record))
 		{
 			m_BestDistanceSq = fDistanceSq;
 			m_BestEntity = _record.GetEntity();
-		}			
+		}
 	}
 }

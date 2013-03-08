@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -19,7 +19,7 @@ ET_FilterClosest::ET_FilterClosest(Client *_client, AiState::SensoryMemory::Type
 bool ET_FilterClosest::CheckEx(const MemoryRecord &_record)
 {
 	// Special consideration for some entity types.
-	switch(_record.m_TargetInfo.m_EntityClass - ET_Game::CLASSEXoffset) 
+	switch(_record.m_TargetInfo.m_EntityClass - ET_Game::CLASSEXoffset)
 	{
 	case ET_CLASSEX_VEHICLE_HVY:
 		{
@@ -51,4 +51,3 @@ bool ET_FilterClosest::CheckEx(const MemoryRecord &_record)
 
 	return true;
 }
-

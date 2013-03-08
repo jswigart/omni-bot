@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
-// title: Path Planner Interface
-//
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PATHPLANNER_H__
 #define __PATHPLANNER_H__
@@ -22,13 +22,7 @@ struct Event_EntityConnection;
 #include "CommandReciever.h"
 #include "PathQuery.h"
 
-namespace gcn
-{
-	class Graphics;
-	class Widget;
-}
-
-namespace NavigationAssertions 
+namespace NavigationAssertions
 {
 	BOOST_STATIC_ASSERT(sizeof(NavFlags) == 8); // 8 bytes = 64 bits
 	//BOOST_STATIC_ASSERT(sizeof(obUserData) == 16); // cs: FIXME 64 bit struct size is different. do we really need this?
@@ -39,7 +33,7 @@ struct EntityInstance;
 
 // class: PathPlannerBase
 //		Abstract Base Class for Path Planning
-//		Provides the interface functions for running a pathfinding query. 
+//		Provides the interface functions for running a pathfinding query.
 //		Shouldn't care about the underlying implementation of the pathing system.
 class PathPlannerBase : public CommandReciever
 {
@@ -69,7 +63,7 @@ public:
 	virtual int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team) = 0;
 	virtual int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team) = 0;
 
-	virtual bool GetNavFlagByName(const String &_flagname, NavFlags &_flag) const = 0;
+	virtual bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const = 0;
 
 	virtual Vector3f GetDisplayPosition(const Vector3f &_pos) = 0; // deprecated
 
@@ -80,8 +74,8 @@ public:
 	virtual bool IsDone() const= 0;
 	virtual bool FoundGoal() const = 0;
 	virtual bool Load(bool _dl = true);
-	virtual bool Load(const String &_mapname,bool _dl = true) = 0;
-	virtual bool Save(const String &_mapname) = 0;
+	virtual bool Load(const std::string &_mapname,bool _dl = true) = 0;
+	virtual bool Save(const std::string &_mapname) = 0;
 	virtual void Unload() = 0;
 
 	virtual int GetLatestFileVersion() const = 0;
@@ -92,17 +86,11 @@ public:
 	virtual const char *GetPlannerName() const = 0;
 	virtual int GetPlannerType() const = 0;
 
-	virtual void RegisterNavFlag(const String &_name, const NavFlags &_bits) = 0;
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) = 0;
 
 	virtual void RegisterScriptFunctions(gmMachine *a_machine) = 0;
 
-#ifdef ENABLE_DEBUG_WINDOW
-	virtual void CreateGui() {}
-	virtual void UpdateGui() {}
-	virtual void RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics) {}
-#endif 
-
-	struct AvoidData 
+	struct AvoidData
 	{
 		int		m_Team;
 		float	m_Radius;
@@ -111,7 +99,7 @@ public:
 
 	virtual void MarkAvoid(const Vector3f &_pos, const AvoidData&_data) {}
 
-	virtual bool GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name) = 0;
+	virtual bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name) = 0;
 
 	virtual void AddEntityConnection(const Event_EntityConnection &_conn) = 0;
 	virtual void RemoveEntityConnection(GameEntity _ent) = 0;
@@ -151,9 +139,9 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Required subclass functions
-	virtual String _GetNavFileExtension() = 0;
+	virtual std::string _GetNavFileExtension() = 0;
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 };
 
-#endif 
+#endif

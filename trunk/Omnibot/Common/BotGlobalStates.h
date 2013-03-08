@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BotGlobalStates_H__
-#define __BotGlobalStates_H__
+#pragma once
+
+#ifndef __BOTGLOBALSTATES_H__
+#define __BOTGLOBALSTATES_H__
 
 #include "StateMachine.h"
 #include "ScriptManager.h"

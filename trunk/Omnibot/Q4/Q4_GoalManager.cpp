@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -42,4 +42,3 @@ void Q4_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 	// Allow the base class to process it.
 	GoalManager::CheckWaypointForGoal(_wp, _used);
 }
-

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -11,10 +11,9 @@
 
 #include "ScriptManager.h"
 
+#include "PathPlannerBase.h"
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
-
-#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -38,7 +37,6 @@ const char *HL2DM_Game::GetDLLName() const
 #else
 	return "omni-bot/omnibot_hl2dm.so";
 #endif
-	
 }
 
 const char *HL2DM_Game::GetGameName() const
@@ -65,7 +63,7 @@ const char *HL2DM_Game::GetScriptSubfolder() const
 	return "hl2dm\\scripts\\";
 }
 
-bool HL2DM_Game::Init() 
+bool HL2DM_Game::Init()
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(HL2DM_Game::HL2DM_GetEntityClassTraceOffset);
@@ -96,7 +94,7 @@ static IntEnum HL2DM_TeamEnum[] =
 void HL2DM_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(HL2DM_TeamEnum) / sizeof(HL2DM_TeamEnum[0]);
-	_ptr = HL2DM_TeamEnum;	
+	_ptr = HL2DM_TeamEnum;
 }
 
 static IntEnum HL2DM_WeaponEnum[] =
@@ -106,13 +104,13 @@ static IntEnum HL2DM_WeaponEnum[] =
 	IntEnum("FISTS",HL2DM_WP_PISTOL),
 	IntEnum("CHAINSAW",HL2DM_WP_SMG),
 	IntEnum("PISTOL",HL2DM_WP_PULSERIFLE),
-	IntEnum("SHOTGUN",HL2DM_WP_SHOTGUN),	
+	IntEnum("SHOTGUN",HL2DM_WP_SHOTGUN),
 };
 
 void HL2DM_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(HL2DM_WeaponEnum) / sizeof(HL2DM_WeaponEnum[0]);
-	_ptr = HL2DM_WeaponEnum;	
+	_ptr = HL2DM_WeaponEnum;
 }
 
 IntEnum g_HL2DMClassMappings[] =

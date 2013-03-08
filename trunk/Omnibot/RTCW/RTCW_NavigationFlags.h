@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // File: RTCW Navigation Flags
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __RTCW_NAVIGATIONFLAGS_H__
 #define __RTCW_NAVIGATIONFLAGS_H__
@@ -29,7 +31,7 @@ static const NavFlags F_RTCW_NAV_SATCHELSPOT	= (F_NAV_NEXT<<12);
 static const NavFlags F_RTCW_NAV_ARTSPOT		= (F_NAV_NEXT<<13);
 static const NavFlags F_RTCW_NAV_ARTYTARGET_S	= (F_NAV_NEXT<<14);
 static const NavFlags F_RTCW_NAV_ARTYTARGET_D	= (F_NAV_NEXT<<15);
-//static const NavFlags F_RTCW_NAV_DISGUISE		= (F_NAV_NEXT<<16); 
+//static const NavFlags F_RTCW_NAV_DISGUISE		= (F_NAV_NEXT<<16);
 static const NavFlags F_RTCW_NAV_FLAMETHROWER	= (F_NAV_NEXT<<17);
 static const NavFlags F_RTCW_NAV_PANZER			= (F_NAV_NEXT<<18);
 static const NavFlags F_RTCW_NAV_STRAFE_L		= (F_NAV_NEXT<<19);

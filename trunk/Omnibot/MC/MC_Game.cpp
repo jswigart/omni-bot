@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -11,11 +11,10 @@
 
 #include "gmMCBinds.h"
 
+#include "PathPlannerWaypoint.h"
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
 #include "ScriptManager.h"
-
-#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -32,7 +31,7 @@ Client *MC_Game::CreateGameClient()
 	return new MC_Client;
 }
 
-eNavigatorID MC_Game::GetDefaultNavigator() const 
+eNavigatorID MC_Game::GetDefaultNavigator() const
 {
 	return NAVID_RECAST;
 }
@@ -43,7 +42,7 @@ const char *MC_Game::GetDLLName() const
 	return "omni-bot\\omnibot_mc.dll";
 #else
 	return "omni-bot/omnibot_mc.so";
-#endif	
+#endif
 }
 
 const char *MC_Game::GetGameName() const
@@ -70,10 +69,8 @@ const char *MC_Game::GetScriptSubfolder() const
 	return "mc\\scripts\\";
 }
 
-bool MC_Game::Init() 
+bool MC_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_GAME);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(MC_Game::MC_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(MC_Game::MC_GetEntityClassAimOffset);
@@ -111,9 +108,9 @@ void MC_Game::GetGameVars(GameVars &_gamevars)
 	_gamevars.mPlayerHeight = 72.f;
 }
 
-ClientPtr &MC_Game::GetClientFromCorrectedGameId(int _gameid) 
+ClientPtr &MC_Game::GetClientFromCorrectedGameId(int _gameid)
 {
-	return m_ClientList[_gameid-1]; 
+	return m_ClientList[_gameid-1];
 }
 
 static IntEnum MC_TeamEnum[] =
@@ -127,7 +124,7 @@ static IntEnum MC_TeamEnum[] =
 void MC_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(MC_TeamEnum) / sizeof(MC_TeamEnum[0]);
-	_ptr = MC_TeamEnum;	
+	_ptr = MC_TeamEnum;
 }
 
 static IntEnum MC_WeaponEnum[] =
@@ -150,21 +147,21 @@ static IntEnum MC_WeaponEnum[] =
 void MC_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(MC_WeaponEnum) / sizeof(MC_WeaponEnum[0]);
-	_ptr = MC_WeaponEnum;	
+	_ptr = MC_WeaponEnum;
 }
 
 void MC_Game::InitScriptCategories(gmMachine *_machine, gmTableObject *_table)
 {
 	IGame::InitScriptCategories(_machine, _table);
 
-	_table->Set(_machine, "PHYSPICKUP", gmVariable(MC_ENT_CAT_PHYSPICKUP));	
-	_table->Set(_machine, "WALLUNIT", gmVariable(MC_ENT_CAT_WALLUNIT));	
+	_table->Set(_machine, "PHYSPICKUP", gmVariable(MC_ENT_CAT_PHYSPICKUP));
+	_table->Set(_machine, "WALLUNIT", gmVariable(MC_ENT_CAT_WALLUNIT));
 }
 
 static IntEnum MC_ClassEnum[] =
 {
 	IntEnum("DEFAULT",			MC_CLASS_DEFAULT),
-	IntEnum("ANYPLAYER",			MC_CLASS_ANY),	
+	IntEnum("ANYPLAYER",			MC_CLASS_ANY),
 
 	IntEnum("NPC_ZOMBIE",			MC_CLASSEX_ZOMBIE),
 	IntEnum("NPC_ZOMBIE_FAST",	MC_CLASSEX_ZOMBIE_FAST),
@@ -208,7 +205,7 @@ static IntEnum MC_ClassEnum[] =
 
 	IntEnum("TRIPMINE",			MC_CLASSEX_TRIPMINE),
 	IntEnum("MAGMINE",			MC_CLASSEX_MAGMINE),
-	IntEnum("TURRET",				MC_CLASSEX_TURRET),	
+	IntEnum("TURRET",				MC_CLASSEX_TURRET),
 };
 
 const char *MC_Game::FindClassName(obint32 _classId)
@@ -265,13 +262,13 @@ void MC_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "LONG_JUMP",	gmVariable(MC_BOT_BUTTON_MODULE_LONGJUMP));
 	_table->Set(_machine, "MIRV",	gmVariable(MC_BOT_BUTTON_MODULE_MIRV));
 	_table->Set(_machine, "POISON_GRENADE",	gmVariable(MC_BOT_BUTTON_MODULE_POISON_SPIT));
-		
+
 	_table->Set(_machine, "TELEPORT",	gmVariable(MC_BOT_BUTTON_MODULE_TELEPORT));
 	_table->Set(_machine, "WEAKEN",	gmVariable(MC_BOT_BUTTON_MODULE_WEAKEN));
 	_table->Set(_machine, "LASER",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_LASER));
 	_table->Set(_machine, "MAGMINE",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_MAGNETIC_MINE));
 	_table->Set(_machine, "TURRET",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_TURRET));
-	
+
 	_table->Set(_machine, "CROW",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_CROW));
 	_table->Set(_machine, "MINION_FASTHEADCRAB",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_FAST_HEADCRAB));
 	_table->Set(_machine, "MINION_ZOMBIE",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_ZOMBIE));
@@ -280,7 +277,6 @@ void MC_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "MINION_ANTLION_WORKER",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_ANTLION_WORKER));
 	_table->Set(_machine, "MINION_VORTIGAUNT",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_VORTIGAUNT));
 	_table->Set(_machine, "MINION_MANHACK",	gmVariable(MC_BOT_BUTTON_MODULE_SPAWN_MANHACK));
-	
 }
 
 void MC_Game::InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table)
@@ -362,7 +358,7 @@ void MC_Game::InitScriptUpgrades(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "357_POWER", gmVariable(MC_UPGRADE_357_POWER));
 	_table->Set(_machine, "357_DOUBLE", gmVariable(MC_UPGRADE_357_DOUBLE));
 	_table->Set(_machine, "357_KNOCKBACK", gmVariable(MC_UPGRADE_357_KNOCKBACK));
-	_table->Set(_machine, "357_PENETRATION", gmVariable(MC_UPGRADE_357_PENETRATION));	
+	_table->Set(_machine, "357_PENETRATION", gmVariable(MC_UPGRADE_357_PENETRATION));
 	_table->Set(_machine, "357_SILENCER", gmVariable(MC_UPGRADE_357_SILENCER));
 
 	_table->Set(_machine, "SMG_DAMAGE", gmVariable(MC_UPGRADE_SMG_DAMAGE));

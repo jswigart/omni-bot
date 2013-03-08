@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: ken.nickel $
 // $LastChangedDate: 2011-08-15 23:47:44 -0500 (Mon, 15 Aug 2011) $
 // $LastChangedRevision: 351 $
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __FIBERMANAGER_H__
 #define __FIBERMANAGER_H__
@@ -17,7 +19,7 @@ public:
 		FIBER_RUNNING,
 		FIBER_FINISHED,
 	};
-	
+
 	FiberState Execute();
 	void WaitFrame();
 	void Wait( float timeSeconds );
@@ -30,7 +32,7 @@ private:
 	FiberState		fiberState;
 	void *			fiber;
 	void *			lastFiber;
-	
+
 	static void __stdcall FiberRun( void * data );
 };
 
@@ -63,7 +65,6 @@ private:
 //};
 
 //////////////////////////////////////////////////////////////////////////
-
 
 //template <typename FiberClass, typename Fn>
 //class FiberT : public Fiber {

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BOTSTEERINGSYSTEM_H__
 #define __BOTSTEERINGSYSTEM_H__
@@ -14,6 +16,8 @@
 
 class Client;
 
+typedef std::vector<GameEntity> EntityList;
+
 namespace AiState
 {
 	// class: SteeringSystem
@@ -21,8 +25,8 @@ namespace AiState
 	class SteeringSystem : public StateChild
 	{
 	public:
-		
-		typedef enum 
+
+		typedef enum
 		{
 			Normal,
 			Arrive,
@@ -34,7 +38,7 @@ namespace AiState
 		void UpdateSteering();
 
 		// function: SetTarget
-		//		Sets <m_TargetVector>, which is the goal point the bot 
+		//		Sets <m_TargetVector>, which is the goal point the bot
 		//		should be heading for.
 		bool SetTarget(const Vector3f &_pos, float _radius = 32.f, MoveMode _movemode = Run, bool _in3d = false);
 

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
@@ -19,7 +18,7 @@ namespace AiState
 	int ScriptGoal::gmfFinished(gmThread *a_thread)
 	{
 		SetFinished();
-		return GM_SYS_KILL; 
+		return GM_SYS_KILL;
 	}
 	int ScriptGoal::gmfGoto(gmThread *a_thread)
 	{
@@ -47,7 +46,7 @@ namespace AiState
 				return GM_SYS_YIELD;
 		}
 		a_thread->Push(gmVariable(PATH_FAILED));
-		return GM_OK; 
+		return GM_OK;
 	}
 	int ScriptGoal::gmfGotoAsync(gmThread *a_thread)
 	{
@@ -67,7 +66,7 @@ namespace AiState
 
 		bool b = Goto(Vector3f(v.x,v.y,v.z), opn);
 		a_thread->Push(gmVariable(b?1:0));
-		return GM_OK; 
+		return GM_OK;
 	}
 	int ScriptGoal::gmfAddAimRequest(gmThread *a_thread)
 	{
@@ -251,5 +250,4 @@ namespace AiState
 			//.var()
 			;
 	}
-
 };

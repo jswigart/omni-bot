@@ -1,4 +1,3 @@
-
 #include "Module.h"
 
 #ifdef __linux__
@@ -37,7 +36,6 @@ bool Module::Load( const char * moduleName )
 #else
 		mModule = LoadLibrary( moduleName );
 #endif
-		
 	}
 	return mModule != NULL;
 }
@@ -50,7 +48,7 @@ void Module::Unload()
 		mModule = dlclose( mModule );
 #else
 		FreeLibrary( (HMODULE)mModule );
-#endif		
+#endif
 		mModule = NULL;
 	}
 }
@@ -66,6 +64,5 @@ void * Module::GetFunc( const char * funcName )
 	return dlsym( mModule );
 #else
 	return GetProcAddress( (HMODULE)mModule, funcName );
-#endif	
-	
+#endif
 }

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -15,14 +15,14 @@ bool WaypointSerializer_V5::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	// temporary structure for Reading in the connection indices since we
 	// can't set up the correct pointers till after the waypoints have all
 	// been Read in and created.
-	
+
 	typedef std::multimap<obuint32, WaypointConnection> WaypointConnections;
 	WaypointConnections connections;
-	
+
 	Waypoint *pCurrentWp = NULL;
 
 	// Save the next GUID
-	CHECK_READ(_file.ReadInt32(Waypoint::m_NextUID));	
+	CHECK_READ(_file.ReadInt32(Waypoint::m_NextUID));
 
 	obuint32 iSize = (obuint32)_wpl.size();
 	for(obuint32 i = 0; i < iSize; ++i)
@@ -32,7 +32,7 @@ bool WaypointSerializer_V5::Load(File &_file, PathPlannerWaypoint::WaypointList 
 		CHECK_READ(_file.Read(&pCurrentWp->m_Position, sizeof(pCurrentWp->m_Position)));
 		CHECK_READ(_file.ReadInt64(pCurrentWp->m_NavigationFlags));
 		CHECK_READ(_file.ReadString(pCurrentWp->m_WaypointName));
-		
+
 		// Read the number of properties.
 		obuint8 iNumProperties = 0;
 		CHECK_READ(_file.ReadInt8(iNumProperties));
@@ -42,7 +42,7 @@ bool WaypointSerializer_V5::Load(File &_file, PathPlannerWaypoint::WaypointList 
 			char strname[512] = {0};
 			obUserData bud;
 
-			// Read the string length, and string
+			// Read the std::string length, and std::string
 			obuint8 iPropNameLength = 0;
 			CHECK_READ(_file.ReadInt8(iPropNameLength));
 			OBASSERT(iPropNameLength > 0, "Invalid Name Length");
@@ -88,14 +88,14 @@ bool WaypointSerializer_V5::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	for(unsigned int i = 0; i < _wpl.size(); ++i)
 	{
 		WaypointConnections::iterator it;
-		for (it = connections.lower_bound(i); 
-			it != connections.upper_bound(i); 
-			++it) 
+		for (it = connections.lower_bound(i);
+			it != connections.upper_bound(i);
+			++it)
 		{
 			Waypoint::ConnectionInfo conn = { _wpl[it->second.m_Index], it->second.m_ConnectionFlags };
 			if(it->second.m_Index < _wpl.size())
 				_wpl[i]->m_Connections.push_back(conn);
-			else 
+			else
 				return false;
 		}
 	}

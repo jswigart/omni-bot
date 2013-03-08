@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -10,6 +10,8 @@
 #include "D3_NavigationFlags.h"
 #include "D3_Messages.h"
 #include "D3_InterfaceFuncs.h"
+
+#include "RenderBuffer.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -29,11 +31,11 @@ namespace AiState
 			{
 				AABB aabb;
 				EngineFuncs::EntityWorldAABB(m_ShootBarrel, aabb);
-				Utils::OutlineAABB(aabb, COLOR::GREEN, 0.2f);
+				RenderBuffer::AddAABB(aabb, COLOR::GREEN);
 			}
 		}
 
-		obReal GetPriority() 
+		obReal GetPriority()
 		{
 			const MemoryRecord *pTarget = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
 			if(!pTarget)
@@ -86,11 +88,11 @@ namespace AiState
 			FINDSTATEIF(Aimer, GetParent(), ReleaseAimRequest(GetNameHash()));
 		}
 
-		State::StateStatus Update(float fDt) 
+		State::StateStatus Update(float fDt)
 		{
 			if(!m_ShootBarrel.IsValid() || !InterfaceFuncs::IsAlive(m_ShootBarrel))
 				return State_Finished;
-			return State_Busy; 
+			return State_Busy;
 		}
 
 		bool GetAimPosition(Vector3f &_aimpos)
@@ -98,7 +100,7 @@ namespace AiState
 			AABB aabb;
 			if(m_ShootBarrel.IsValid() && EngineFuncs::EntityWorldAABB(m_ShootBarrel, aabb))
 			{
-				Vector3f vAimPos;				
+				Vector3f vAimPos;
 				aabb.CenterPoint(vAimPos);
 				_aimpos = vAimPos;
 				return true;

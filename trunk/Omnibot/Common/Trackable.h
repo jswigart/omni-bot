@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TRACKABLE_H__
 #define __TRACKABLE_H__
@@ -27,7 +29,7 @@ public:
 	virtual ~Trackable();
 protected:
 	void _CheckIndex(obuint32 _type);
-	
+
 	typedef std::vector<obint32> TrackList;
 	TrackList	m_TrackList;
 };

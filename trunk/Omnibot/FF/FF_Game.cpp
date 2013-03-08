@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -71,7 +71,7 @@ const char *FF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool FF_Game::Init() 
+bool FF_Game::Init()
 {
 	if(!TF_Game::Init())
 		return false;
@@ -94,7 +94,7 @@ bool FF_Game::Init()
 
 static IntEnum FF_TeamEnum[] =
 {
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
+	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
 	IntEnum("NONE",FF_TEAM_NONE),
 	IntEnum("RED",FF_TEAM_RED),
 	IntEnum("BLUE",FF_TEAM_BLUE),
@@ -105,7 +105,7 @@ static IntEnum FF_TeamEnum[] =
 void FF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(FF_TeamEnum) / sizeof(FF_TeamEnum[0]);
-	_ptr = FF_TeamEnum;	
+	_ptr = FF_TeamEnum;
 }
 
 void FF_Game::GetGameVars(GameVars &_gamevars)
@@ -139,12 +139,12 @@ void FF_Game::GetGameVars(GameVars &_gamevars)
 //	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
 //}
 
-ClientPtr &FF_Game::GetClientFromCorrectedGameId(int _gameid) 
+ClientPtr &FF_Game::GetClientFromCorrectedGameId(int _gameid)
 {
-	return m_ClientList[_gameid-1]; 
+	return m_ClientList[_gameid-1];
 }
 
-//void FF_Game::AddBot(const String &_name, int _team, int _class, const String _profile, bool _createnow)
+//void FF_Game::AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow)
 //{
 //	// Attempt to spawn a bot into the game.
 //	if(_createnow)
@@ -169,14 +169,14 @@ ClientPtr &FF_Game::GetClientFromCorrectedGameId(int _gameid)
 //		if(m_ClientList[iGameID-1]->m_DesiredTeam == -1)
 //		{
 //			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-//				m_ClientList[iGameID-1].get(), 
+//				m_ClientList[iGameID-1].get(),
 //				"SelectTeam");
 //			m_ClientList[iGameID-1]->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 //		}
 //		if(m_ClientList[iGameID-1]->m_DesiredClass == -1)
 //		{
 //			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-//				m_ClientList[iGameID-1].get(), 
+//				m_ClientList[iGameID-1].get(),
 //				"SelectClass");
 //			m_ClientList[iGameID-1]->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 //		}

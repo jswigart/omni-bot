@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -17,7 +17,7 @@
 
 NavigationManager *NavigationManager::m_Instance = 0;
 
-NavigationManager::NavigationManager() : 
+NavigationManager::NavigationManager() :
 	m_PathPlanner(0)
 {
 }
@@ -32,7 +32,7 @@ bool NavigationManager::CreatePathPlanner( IGame * game, NavigatorID _navid)
 	switch(_navid)
 	{
 	case NAVID_WP:
-		m_PathPlanner = new PathPlannerWaypoint;		
+		m_PathPlanner = new PathPlannerWaypoint;
 		break;
 	case NAVID_NAVMESH:
 		m_PathPlanner = new PathPlannerNavMesh;
@@ -84,4 +84,3 @@ void NavigationManager::DeleteInstance()
 {
 	OB_DELETE(m_Instance);
 }
-

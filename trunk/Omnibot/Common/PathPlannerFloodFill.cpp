@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -15,7 +15,8 @@
 #include "FileSystem.h"
 #include "gmUtilityLib.h"
 
-#include "QuadTree.h"
+#include "RenderBuffer.h"
+
 using namespace std;
 
 float g_CharacterHeight = 64.0f;
@@ -40,9 +41,8 @@ PathPlannerFloodFill::~PathPlannerFloodFill()
 	Shutdown();
 }
 
-
 bool PathPlannerFloodFill::Init()
-{	
+{
 	InitCommands();
 	return true;
 }
@@ -61,17 +61,17 @@ void PathPlannerFloodFill::Update()
 		Utils::GetLocalFacing(vLocalAim);
 		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal))
 		{
-			Utils::DrawLine(vAimPos, 
-				vAimPos + vAimNormal * 16.f, 
-				m_CursorColor, 
+			RenderBuffer::AddLine(vAimPos,
+				vAimPos + vAimNormal * 16.f,
+				m_CursorColor,
 				IGame::GetDeltaTimeSecs()*2.f);
 
-			Utils::DrawLine(vAimPos, 
-				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor, 
+			RenderBuffer::AddLine(vAimPos,
+				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor,
 				IGame::GetDeltaTimeSecs()*2.f);
 		}
 		m_CursorColor = COLOR::BLUE; // back to default
-		
+
 		//////////////////////////////////////////////////////////////////////////
 
 		Vector3List::const_iterator cIt = m_StartPositions.begin();
@@ -82,7 +82,7 @@ void PathPlannerFloodFill::Update()
 			aabb.Expand(Vector3f(-g_GridRadius, -g_GridRadius, 0.0f));
 			aabb.m_Maxs[2] = g_CharacterHeight - g_CharacterStepHeight;
 			aabb.Translate(*cIt);
-			Utils::OutlineAABB(aabb, COLOR::BLACK, 0.1f);
+			RenderBuffer::AddAABB(aabb, COLOR::BLACK);
 		}
 
 		_Render();
@@ -109,7 +109,7 @@ void PathPlannerFloodFill::Shutdown()
 	Unload();
 }
 
-bool PathPlannerFloodFill::Load(const String &_mapname, bool _dl)
+bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
 {
 	if(_mapname.empty())
 		return false;
@@ -118,7 +118,7 @@ bool PathPlannerFloodFill::Load(const String &_mapname, bool _dl)
 	pM->SetDebugMode(true);
 	DisableGCInScope gcEn(pM);
 
-	String waypointName		= _mapname + ".nav";
+	std::string waypointName		= _mapname + ".nav";
 
 	File InFile;
 
@@ -127,32 +127,32 @@ bool PathPlannerFloodFill::Load(const String &_mapname, bool _dl)
 	InFile.OpenForRead(strbuffer, File::Binary);
 	if(InFile.IsOpen())
 	{
-		obuint32 fileSize = (obuint32)InFile.FileLength();
-		boost::shared_array<char> pBuffer(new char[fileSize+1]);
+	obuint32 fileSize = (obuint32)InFile.FileLength();
+	boost::shared_array<char> pBuffer(new char[fileSize+1]);
 
-		InFile.Read(pBuffer.get(), fileSize);
-		pBuffer[fileSize] = 0;
-		InFile.Close();
+	InFile.Read(pBuffer.get(), fileSize);
+	pBuffer[fileSize] = 0;
+	InFile.Close();
 
-		int errors = pM->ExecuteString(pBuffer.get());
-		if(errors)
-		{
-			ScriptManager::LogAnyMachineErrorMessages(pM);
-			delete pM;
-			return false;
-		}
+	int errors = pM->ExecuteString(pBuffer.get());
+	if(errors)
+	{
+	ScriptManager::LogAnyMachineErrorMessages(pM);
+	delete pM;
+	return false;
+	}
 	}*/
-	
+
 	return false;
 }
 
-bool PathPlannerFloodFill::Save(const String &_mapname)
+bool PathPlannerFloodFill::Save(const std::string &_mapname)
 {
 	if(_mapname.empty())
 		return false;
 
-	//String waypointName		= _mapname + ".nav";
-	//String navPath	= String("nav/") + waypointName;
+	//std::string waypointName		= _mapname + ".nav";
+	//std::string navPath	= std::string("nav/") + waypointName;
 
 	/*gmMachine *pM = new gmMachine;
 	pM->SetDebugMode(true);
@@ -180,8 +180,8 @@ bool PathPlannerFloodFill::IsReady() const
 	return true;//!m_ActiveNavSectors.empty();
 }
 
-bool PathPlannerFloodFill::GetNavFlagByName(const String &_flagname, NavFlags &_flag) const
-{	
+bool PathPlannerFloodFill::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
+{
 	_flag = 0;
 	return false;
 }
@@ -189,11 +189,11 @@ bool PathPlannerFloodFill::GetNavFlagByName(const String &_flagname, NavFlags &_
 Vector3f PathPlannerFloodFill::GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team)
 {
 	Vector3f dest = _start;
-	
+
 	/*if(!m_ActiveNavSectors.empty())
 	{
-		const NavSector &randSector = m_ActiveNavSectors[rand()%m_ActiveNavSectors.size()];
-		dest = Utils::AveragePoint(randSector.m_Boundary);
+	const NavSector &randSector = m_ActiveNavSectors[rand()%m_ActiveNavSectors.size()];
+	dest = Utils::AveragePoint(randSector.m_Boundary);
 	}*/
 	return dest;
 }
@@ -214,10 +214,10 @@ int PathPlannerFloodFill::PlanPathToNearest(Client *_client, const Vector3f &_st
 	g_PathFinder.AddStart(_start);
 
 	for(obuint32 i = 0; i < _goals.size(); ++i)
-		g_PathFinder.AddGoal(_goals[i].m_Position);
+	g_PathFinder.AddGoal(_goals[i].m_Position);
 
 	while(!g_PathFinder.IsFinished())
-		g_PathFinder.Iterate();
+	g_PathFinder.Iterate();
 
 	return g_PathFinder.GetGoalIndex();*/
 	return -1;
@@ -242,7 +242,7 @@ bool PathPlannerFloodFill::FoundGoal() const
 }
 
 void PathPlannerFloodFill::Unload()
-{	
+{
 }
 
 void PathPlannerFloodFill::RegisterGameGoals()
@@ -282,10 +282,10 @@ void PathPlannerFloodFill::GetPath(Path &_path, int _smoothiterations)
 	//				// adjust the node position
 	//				if(SquaredLength(intr,pMid->Position) > Mathf::Sqr(16.f))
 	//				{
-	//					//Utils::DrawLine(pMid->Position+Vector3f(0,0,32),intr,COLOR::YELLOW,15.f);
+	//					//RenderBuffer::AddLine(pMid->Position+Vector3f(0,0,32),intr,COLOR::YELLOW,15.f);
 	//					bSmoothed = true;
 	//					pMid->Position = intr;
-	//				}					
+	//				}
 	//			}
 	//		}
 
@@ -316,7 +316,7 @@ static bool GetGroundPos( const Vector3f & pos, Vector3f & groundPosOut )
 		pos - Vector3f::UNIT_Z * 100000.0f,
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
-		-1, 
+		-1,
 		False);
 	if ( tr.m_Fraction > 0.0f && tr.m_Fraction < 1.0f )
 	{
@@ -334,7 +334,7 @@ static bool GetHeightAtPos( const Vector3f & pos, float & height )
 		pos + Vector3f::UNIT_Z * 100000.0f,
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
-		-1, 
+		-1,
 		False);
 	if ( tr.m_Fraction > 0.0f && tr.m_Fraction < 1.0f )
 	{
@@ -362,8 +362,8 @@ int PathPlannerFloodFill::Process_FloodFill()
 	//////////////////////////////////////////////////////////////////////////
 	static FloodFillStatus status = Process_PrepareData;
 	/*if(!m_FloodFillData)
-		status = Process_PrepareData;*/
-	
+	status = Process_PrepareData;*/
+
 	switch(status)
 	{
 	case Process_PrepareData:
@@ -380,7 +380,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 				}
 			}
 			status = Process_FloodFill;
-						
+
 			EngineFuncs::ConsoleMessage("Initializing Flood Fill.");
 			break;
 		}
@@ -423,7 +423,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 					break;
 			}
 			break;
-		}	
+		}
 	case Process_FloodBorder:
 		{
 			Prof(FloodBorder);
@@ -431,7 +431,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//Timer tme;
 			//for(obuint32 i = 0; i < m_FloodFillData->m_NodeIndex; ++i)
 			//{
-			//	if(m_FloodFillData->m_Nodes[i].m_NearSolid || 
+			//	if(m_FloodFillData->m_Nodes[i].m_NearSolid ||
 			//		m_FloodFillData->m_Nodes[i].m_NearVoid)
 			//	{
 			//		m_FloodFillData->m_Nodes[i].m_DistanceFromEdge = 1;
@@ -532,7 +532,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//				{
 			//					m_FloodFillData->m_Nodes[neighbor].m_Region = CurrentRegion;
 			//					il.push_back(neighbor);
-			//				}							
+			//				}
 			//			}
 			//		}
 
@@ -551,7 +551,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			////////////////////////////////////////////////////////////////////////////
 			//for(obuint32 i = 0; i < m_FloodFillData->m_NodeIndex; ++i)
 			//{
-			//	if(m_FloodFillData->m_Nodes[i].m_NearSolid || 
+			//	if(m_FloodFillData->m_Nodes[i].m_NearSolid ||
 			//		m_FloodFillData->m_Nodes[i].m_NearVoid ||
 			//		HandledCells.test(i))
 			//	{
@@ -588,7 +588,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//	int iDeepestNode = -1;
 			//	for(obuint32 i = 0; i < m_FloodFillData->m_NodeIndex; ++i)
 			//	{
-			//		if((m_FloodFillData->m_Nodes[i].m_DistanceFromEdge > iNodeDepth) && 
+			//		if((m_FloodFillData->m_Nodes[i].m_DistanceFromEdge > iNodeDepth) &&
 			//			!m_FloodFillData->m_Nodes[i].m_Sectorized)
 			//		{
 			//			iDeepestNode = i;
@@ -633,7 +633,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//{
 			//	Sector &currentSector = m_Sectors[ConnectSector];
 
-			//	CellSet::iterator cIt = currentSector.m_ContainingCells.begin(), 
+			//	CellSet::iterator cIt = currentSector.m_ContainingCells.begin(),
 			//		cItEnd = currentSector.m_ContainingCells.end();
 			//	for(; cIt != cItEnd; ++cIt)
 			//	{
@@ -670,14 +670,14 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//for(obuint32 s = 0; s < m_Sectors.size(); ++s)
 			//	iSize += m_Sectors[s].m_SectorLinks.size() * sizeof(NavigationMeshFF::NavLink);
 
-			//EngineFuncs::ConsoleMessage(va("Approx size of stored Navigation Mesh: %s", 
+			//EngineFuncs::ConsoleMessage(va("Approx size of stored Navigation Mesh: %s",
 			//	Utils::FormatByteString(iSize).c_str()));
 
 			status = Process_Cleanup;
 			break;
 		}
 	case Process_Cleanup:
-		{			
+		{
 			// Print status
 			//int iNumGood = 0, iNumBad = 0;
 			//for(obuint32 i = 0; i < m_FloodFillData->m_NodeIndex; ++i)
@@ -688,9 +688,9 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//		iNumBad++;
 			//}
 
-			//EngineFuncs::ConsoleMessage(va("%d good nodes, %d bad nodes, in %f seconds", 
-			//	iNumGood, 
-			//	iNumBad, 
+			//EngineFuncs::ConsoleMessage(va("%d good nodes, %d bad nodes, in %f seconds",
+			//	iNumGood,
+			//	iNumBad,
 			//	m_FloodFillData->m_Stats.m_TotalTime));
 
 			//// Release the node data.
@@ -698,7 +698,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 
 			////////////////////////////////////////////////////////////////////////////
 
-			//String strMap = g_EngineFuncs->GetMapName();
+			//std::string strMap = g_EngineFuncs->GetMapName();
 			//strMap += ".off";
 			//fs::path filepath = Utils::GetNavFolder() / strMap;
 
@@ -708,8 +708,8 @@ int PathPlannerFloodFill::Process_FloodFill()
 			//{
 			//	fl << "OFF" << std::endl;
 
-			//	fl << m_FloodFillData->m_VertIndex << " " << 
-			//		m_FloodFillData->m_FaceIndex << " " << 
+			//	fl << m_FloodFillData->m_VertIndex << " " <<
+			//		m_FloodFillData->m_FaceIndex << " " <<
 			//		m_FloodFillData->m_FaceIndex * 4 << std::endl << std::endl;
 
 			//	for(obuint32 i = 0; i < m_FloodFillData->m_VertIndex; ++i)
@@ -761,7 +761,7 @@ void PathPlannerFloodFill::ClearFloodStarts()
 
 void PathPlannerFloodFill::SaveFloodStarts()
 {
-	String strMap = g_EngineFuncs->GetMapName();
+	std::string strMap = g_EngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
 	char strBuffer[1024] = {};
@@ -782,13 +782,13 @@ void PathPlannerFloodFill::SaveFloodStarts()
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessage(va("Saved %d nav starts from %s", 
+	EngineFuncs::ConsoleMessage(va("Saved %d nav starts from %s",
 		m_StartPositions.size(), strMap.c_str()));
 }
 
 void PathPlannerFloodFill::LoadFloodStarts()
 {
-	String strMap = g_EngineFuncs->GetMapName();
+	std::string strMap = g_EngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
 	char strBuffer[1024] = {};
@@ -814,7 +814,7 @@ void PathPlannerFloodFill::LoadFloodStarts()
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessage(va("Loaded %d nav starts from %s", 
+	EngineFuncs::ConsoleMessage(va("Loaded %d nav starts from %s",
 		m_StartPositions.size(), strMap.c_str()));
 }
 
@@ -829,7 +829,7 @@ void PathPlannerFloodFill::FloodFill(const FloodFillOptions &_options)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerFloodFill::GetNavInfo(const Vector3f &pos,obint32 &_id,String &_name)
+bool PathPlannerFloodFill::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name)
 {
 	return false;
 }
@@ -845,42 +845,4 @@ void PathPlannerFloodFill::RemoveEntityConnection(GameEntity _ent)
 Vector3f PathPlannerFloodFill::GetDisplayPosition(const Vector3f &_pos)
 {
 	return _pos;
-}
-
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-void PathPlannerFloodFill::OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer)
-{
-	const Vector3f expansion( mSpanMap.GetCellSize() * 0.5f, mSpanMap.GetCellSize() * 0.5f, 0.0f );
-
-	const float cs = mSpanMap.GetCellSize();
-	const float hcs = mSpanMap.GetCellSize() * 0.5f;
-
-	for ( int x = 0; x < mSpanMap.GetNumCellsX(); ++x )
-	{
-		for ( int y = 0; y < mSpanMap.GetNumCellsY(); ++y )
-		{
-			const SpanMap::Span * s = mSpanMap.GetSpan( x, y );
-			while ( s )
-			{
-				Vector3f baseVec = mSpanMap.GetBoundsMin();
-				baseVec.x += ( x * cs ) + hcs; 
-				baseVec.y += ( y * cs ) + hcs;
-				baseVec.z = s->mMin;
-				
-				AABB box;
-				box.Set( baseVec );
-				box.Expand( hcs, hcs, 0.0f );
-
-				obColor col = COLOR::WHITE;
-				if ( s->mData.mCellFlags & CellData::WATER )
-					col = COLOR::BLUE;
-
-				overlay->SetColor( col );
-				overlay->DrawAABB( box );
-				s = s->mNext;
-			}
-		}
-	}
 }

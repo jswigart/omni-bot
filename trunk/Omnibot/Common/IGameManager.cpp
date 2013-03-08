@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -16,7 +16,6 @@
 #include "TriggerManager.h"
 #include "ScriptManager.h"
 #include "Timer.h"
-#include "DebugWindow.h"
 
 #include "RenderBuffer.h"
 
@@ -33,7 +32,7 @@ IGameManager *IGameManager::m_Instance = 0;
 
 IGame *CreateGameInstance();
 
-IGameManager::IGameManager() 
+IGameManager::IGameManager()
 	: m_ScriptManager(0)
 	, m_PathPlanner(0)
 	, m_GoalManager(0)
@@ -49,7 +48,7 @@ IGameManager::IGameManager()
 omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _version)
 {
 	MiniDumper::Init("Omni-bot");
-	
+
 	Timer loadTime;
 
 	LOGFUNCBLOCK;
@@ -62,7 +61,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 
 	// Attempt to create the proper instance of IGame based on the game requested.
 	m_Game = CreateGameInstance();
-	
+
 	// Verify the version is correct.
 	if(!m_Game->CheckVersion(_version))
 	{
@@ -73,7 +72,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	if(!FileSystem::InitFileSystem())
 		return BOT_ERROR_FILESYSTEM;
 
-	FileSystem::SetWriteDirectory(Utils::GetModFolder());
+	FileSystem::SetWriteDirectory(FileSystem::GetModFolder());
 
 	FileSystem::MakeDirectory("user");
 	FileSystem::MakeDirectory("nav");
@@ -128,7 +127,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("RemoteWindow","Enabled",0,false);
 	Options::SetValue("RemoteWindow","Port",m_Remote.getPort(),false);
 #endif
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// logging options
 	g_Logger.LogMask() = 0;
@@ -143,7 +142,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
 		g_Logger.LogMask() |= Logger::LOG_CRIT;
 	//////////////////////////////////////////////////////////////////////////
-	
+
 #ifdef ENABLE_REMOTE_DEBUGGING
 	{
 		int numConnections = 0;
@@ -195,7 +194,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		LOG("Created Game Interface : " << m_Game->GetGameName());
 		LOG("Game Interface : " << g_EngineFuncs->GetGameName());
 		LOG("Mod Interface : " << g_EngineFuncs->GetModName());
-	} 
+	}
 	else
 	{
 		LOGERR("Unable to CreateGame() : " << m_Game->GetGameName());
@@ -205,14 +204,14 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 #ifdef ENABLE_FILE_DOWNLOADER
 	FileDownloader::Init();
 #endif
-	
+
 	//m_TaskManager = new TaskManager();
 
 	// Load the waypoints for this map.
-	if(m_PathPlanner->Load(String(g_EngineFuncs->GetMapName())))
+	if(m_PathPlanner->Load(std::string(g_EngineFuncs->GetMapName())))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Waypoints.");
-	} 
+	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
 
@@ -226,10 +225,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 
 void IGameManager::UpdateGame()
 {
-#ifdef ENABLE_DEBUG_WINDOW
-	DebugWindow::Update();
-#endif
-
 	{
 		Prof(Omnibot);
 
@@ -238,7 +233,7 @@ void IGameManager::UpdateGame()
 		m_Game->UpdateTime();
 		m_ScriptManager->Update();
 		m_PathPlanner->Update();
-		m_Game->UpdateGame();		
+		m_Game->UpdateGame();
 		m_GoalManager->Update();
 		TriggerManager::GetInstance()->Update();
 
@@ -268,14 +263,14 @@ void IGameManager::UpdateGame()
 					/*RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
 					// keep alive
 					if ( IGame::GetTime() > conn->getUserData() ) {
-						sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-						sendBuffer.startSizeHeader();
-						sendBuffer.writeInt32( RemoteLib::ID_ack );
-						sendBuffer.endSizeHeader();
-						sendBuffer.endWrite();
-						conn->setUserData( IGame::GetTime() + 5000 );
+					sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+					sendBuffer.startSizeHeader();
+					sendBuffer.writeInt32( RemoteLib::ID_ack );
+					sendBuffer.endSizeHeader();
+					sendBuffer.endWrite();
+					conn->setUserData( IGame::GetTime() + 5000 );
 					}*/
-					
+
 					conn->updateState.Clear();
 
 					m_Game->UpdateSync( conn, conn->cachedState, conn->updateState );
@@ -304,9 +299,6 @@ void IGameManager::Shutdown()
 	FileDownloader::Shutdown();
 #endif
 
-#ifdef ENABLE_DEBUG_WINDOW
-	DebugWindow::Destroy();
-#endif
 #ifdef ENABLE_REMOTE_DEBUGGING
 	m_Remote.shutdown();
 #endif
@@ -318,9 +310,9 @@ void IGameManager::Shutdown()
 		RemoveUpdateFunction((*m_UpdateMap.begin()).first);
 
 	LOGFUNCBLOCK;
-	
+
 	// Get rid of the path planner.
-	NavigationManager::DeleteInstance();	
+	NavigationManager::DeleteInstance();
 	m_PathPlanner = 0;
 
 	// Shutdown and clean up the goal manager.
@@ -339,7 +331,7 @@ void IGameManager::Shutdown()
 
 	ScriptManager::GetInstance()->Shutdown();
 	ScriptManager::DeleteInstance();
-	
+
 	MiniDumper::Shutdown();
 
 	Options::Shutdown();
@@ -361,21 +353,21 @@ void IGameManager::DeleteInstance()
 
 void IGameManager::InitCommands()
 {
-	Set("version", "Prints out the bot version number.", 
+	Set("version", "Prints out the bot version number.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdVersion)));
-	Set("stopprocess", "Stops a process by its name.", 
+	Set("stopprocess", "Stops a process by its name.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdStopProcess)));
-	Set("showprocesses", "Shows current proccesses.", 
+	Set("showprocesses", "Shows current proccesses.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdShowProcesses)));
-	Set("navsystem", "Creates a navigation system of a specified type.", 
+	Set("navsystem", "Creates a navigation system of a specified type.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdNavSystem)));
-	Set("printfs", "Prints the whole file system.", 
+	Set("printfs", "Prints the whole file system.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdPrintAllFiles)));
 
 #ifdef ENABLE_FILE_DOWNLOADER
-	Set("update_nav", "Checks the remote waypoint database for updated navigation.", 
+	Set("update_nav", "Checks the remote waypoint database for updated navigation.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdUpdateNavFile)));
-	Set("update_all_nav", "Attempts to download all nav files from the database, including updating existing files.", 
+	Set("update_all_nav", "Attempts to download all nav files from the database, including updating existing files.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdUpdateAllNavFiles)));
 #endif
 }
@@ -414,8 +406,8 @@ void IGameManager::cmdStopProcess(const StringVector &_args)
 
 void IGameManager::cmdNavSystem(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"navsystem type[wp, navmesh, flood]",
 		"> type: the type of navigation system to use",
 	};
@@ -463,8 +455,8 @@ void IGameManager::cmdPrintAllFiles(const StringVector &_args)
 #ifdef ENABLE_FILE_DOWNLOADER
 void IGameManager::cmdUpdateNavFile(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"update_nav mapname",
 		"> mapname: the name of the map to update",
 	};
@@ -484,7 +476,7 @@ void IGameManager::cmdUpdateAllNavFiles(const StringVector &_args)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool IGameManager::AddUpdateFunction(const String &_name, FunctorPtr _func)
+bool IGameManager::AddUpdateFunction(const std::string &_name, FunctorPtr _func)
 {
 	if(m_UpdateMap.find(_name) != m_UpdateMap.end())
 	{
@@ -496,7 +488,7 @@ bool IGameManager::AddUpdateFunction(const String &_name, FunctorPtr _func)
 	return true;
 }
 
-bool IGameManager::RemoveUpdateFunction(const String &_name)
+bool IGameManager::RemoveUpdateFunction(const std::string &_name)
 {
 	FunctorMap::iterator it = m_UpdateMap.find(_name);
 	if(it != m_UpdateMap.end())
@@ -509,18 +501,18 @@ bool IGameManager::RemoveUpdateFunction(const String &_name)
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-void IGameManager::SyncRemoteDelete( int entityHandle ) 
+void IGameManager::SyncRemoteDelete( int entityHandle )
 {
 	/*if ( m_Remote.getNumConnections() > 0 ) {
-		RemoteLib::DataBufferStatic<128> db;
+	RemoteLib::DataBufferStatic<128> db;
 
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_delete );
-		db.writeInt32( entityHandle );
-		db.endSizeHeader();
-		db.endWrite();
-		m_Remote.sendToAll( db );
+	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
+	db.startSizeHeader();
+	db.writeInt32( RemoteLib::ID_delete );
+	db.writeInt32( entityHandle );
+	db.endSizeHeader();
+	db.endWrite();
+	m_Remote.sendToAll( db );
 	}*/
 }
 

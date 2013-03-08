@@ -11,16 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\..\Common\common.proto">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </CustomBuild>
     <CustomBuild Include="..\..\..\Common\floodfill.proto">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
@@ -47,13 +37,11 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Common\common.pb.cc" />
     <ClCompile Include="..\..\..\Common\floodfill.pb.cc" />
     <ClCompile Include="..\..\..\Common\influencemap.pb.cc" />
     <ClCompile Include="..\..\..\Common\navmesh.pb.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Common\common.pb.h" />
     <ClInclude Include="..\..\..\Common\floodfill.pb.h" />
     <ClInclude Include="..\..\..\Common\influencemap.pb.h" />
     <ClInclude Include="..\..\..\Common\navmesh.pb.h" />

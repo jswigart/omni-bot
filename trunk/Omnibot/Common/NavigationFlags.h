@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: Generic Navigation Flags
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __NAVIGATIONFLAGS_H__
 #define __NAVIGATIONFLAGS_H__
@@ -72,7 +74,6 @@ typedef enum
 	F_LNK_DONTSAVE	= (1<<12),
 
 	F_LNK_NEXT		= (1<<16),
-	
 } LinkFlags;
 
 // NEW RECAST STUFF

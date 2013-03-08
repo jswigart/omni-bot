@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -21,7 +21,7 @@ namespace gmUtility
 {
 	struct TableInfo_t
 	{
-		String			name;
+		std::string			name;
 		gmTableNode *	node;
 	};
 	typedef std::vector<TableInfo_t> TableInfoList;
@@ -35,7 +35,7 @@ namespace gmUtility
 	{
 		TableInfoList nodeList;
 		nodeList.reserve(_table->Count());
-		
+
 		// copy the nodes to a list, so we can sort them by default
 		{
 			gmTableIterator tIt;
@@ -44,7 +44,7 @@ namespace gmUtility
 			{
 				char tmpName[256] = {};
 				const char * str = pNode->m_key.AsString(_machine,tmpName,256);
-				OBASSERT(*str != NULL && str != NULL,"Error getting key string of gm var");
+				OBASSERT(*str != NULL && str != NULL,"Error getting key std::string of gm var");
 				if(str != NULL)
 				{
 					TableInfo_t ti;
@@ -151,7 +151,7 @@ namespace gmUtility
 						_file.WriteString("}");
 						_file.WriteString(_lvl != 0 ? "," : ";");
 						_file.WriteNewLine();
-					}				
+					}
 					break;
 				}
 			case GM_FUNCTION:
@@ -162,7 +162,7 @@ namespace gmUtility
 						if(fn)
 						{
 							_file.WriteString(" <function> ");
-							
+
 							// write function header
 							//_file.WriteString(" = function(");
 							//for(int p = 0; p < fn->GetNumParams(); ++p)
@@ -207,7 +207,7 @@ namespace gmUtility
 							//_file.WriteString("\n");
 							//_file.WriteString("}");
 							//_file.WriteString("\n");
-							
+
 							_file.WriteNewLine();
 						}
 					}
@@ -233,7 +233,7 @@ namespace gmUtility
 		}
 	}
 
-	bool DumpGlobals(gmMachine *_machine, const String &_file, int _flags)
+	bool DumpGlobals(gmMachine *_machine, const std::string &_file, int _flags)
 	{
 		char strBuffer[1024] = {};
 		sprintf(strBuffer, "user/%s", _file.c_str());
@@ -266,11 +266,11 @@ namespace gmUtility
 						outFile.WriteString(", Functions ");
 						outFile.WriteNewLine();
 						outFile.WriteString("// {");
-						outFile.WriteNewLine();						
+						outFile.WriteNewLine();
 						DumpTableInfo(_machine, _flags, pTable, buffer, BUF_SIZE, 1, outFile);
 						outFile.WriteString("// }");
 						outFile.WriteNewLine();
-					}			
+					}
 					++type;
 				}
 			}
@@ -279,7 +279,7 @@ namespace gmUtility
 		return false;
 	}
 
-	bool DumpTable(gmMachine *_machine, const String &_file, const String &_name, int _flags)
+	bool DumpTable(gmMachine *_machine, const std::string &_file, const std::string &_name, int _flags)
 	{
 		char strBuffer[1024] = {};
 		sprintf(strBuffer, "user/%s", _file.c_str());
@@ -311,7 +311,7 @@ namespace gmUtility
 		return false;
 	}
 
-	bool DumpTable(gmMachine *_machine, File &outFile, const String &_name, gmTableObject *_tbl, int _flags)
+	bool DumpTable(gmMachine *_machine, File &outFile, const std::string &_name, gmTableObject *_tbl, int _flags)
 	{
 		if(outFile.IsOpen())
 		{
@@ -338,12 +338,12 @@ namespace gmUtility
 	//////////////////////////////////////////////////////////////////////////
 
 	// function: dumpGlobals
-	//		This function will recursively dump all the global variables, types & functions 
+	//		This function will recursively dump all the global variables, types & functions
 	//		to the game console and optionally a file.
 	//
 	// Parameters:
 	//
-	//		string - The filename to dump to
+	//		std::string - The filename to dump to
 	//		int - The bitflags of things to dump. See the global DUMP table.
 	//
 	// Returns:
@@ -357,7 +357,7 @@ namespace gmUtility
 			return GM_EXCEPTION;
 		}
 
-		GM_CHECK_STRING_PARAM(filename, 0);	
+		GM_CHECK_STRING_PARAM(filename, 0);
 		int iFlags = a_thread->ParamInt(1, gmUtility::DUMP_ALL);
 		DumpGlobals(a_thread->GetMachine(), filename, iFlags);
 
@@ -371,8 +371,8 @@ namespace gmUtility
 	//
 	// Parameters:
 	//
-	//		string - The filename to dump to
-	//		string - The table to dump
+	//		std::string - The filename to dump to
+	//		std::string - The table to dump
 	//		int - The bitflags of things to dump. See the global DUMP table.
 	//
 	// Returns:
@@ -427,25 +427,25 @@ namespace gmUtility
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: Global Bot Library Functions
-static gmFunctionEntry s_UtilityLib[] = 
+static gmFunctionEntry s_UtilityLib[] =
 {
 	/*gm
 	\function dumpGlobals
 	\brief dump global variables based on bit masks
-	\param string
+	\param std::string
 	*/
 	{"dumpGlobals", gmUtility::gmfDumpGlobals},
 	/*gm
 	\function dumpTable
 	\brief dump the contents of a single table
-	\param string
-	\param string
+	\param std::string
+	\param std::string
 	*/
 	{"dumpTable", gmUtility::gmfDumpTable},
 	/*gm
 	\function echoTable
 	\brief echo the contents of a single table
-	\param string table name
+	\param std::string table name
 	*/
 	{"echoTable", gmUtility::gmfEchoTable},
 	/*gm
@@ -457,13 +457,13 @@ static gmFunctionEntry s_UtilityLib[] =
 	/*gm
 	\function require
 	\brief functions like the lua version
-	\param string
+	\param std::string
 	*/
 	//{"require", gmUtility::gmRequire},
 	/*gm
 	\function abort
 	\brief throws an exception for the current thread
-	\param string error message
+	\param std::string error message
 	*/
 	//{"abort", gmUtility::gmfAbort},
 };
@@ -491,7 +491,7 @@ static int GM_CDECL gmStringTokenize(gmThread * a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
-static gmFunctionEntry s_stringLib[] =  
+static gmFunctionEntry s_stringLib[] =
 {
 	{"Tokenize", gmStringTokenize},
 };
@@ -506,9 +506,9 @@ void gmBindUtilityLib(gmMachine * a_machine)
 	a_machine->GetGlobals()->Set(a_machine, GM_REQUIRETABLE, gmVariable(a_machine->AllocTableObject()));
 
 	// Register the bot functions.
-	a_machine->RegisterLibrary(s_UtilityLib, sizeof(s_UtilityLib) / sizeof(s_UtilityLib[0]));	
+	a_machine->RegisterLibrary(s_UtilityLib, sizeof(s_UtilityLib) / sizeof(s_UtilityLib[0]));
 
-	// extra string utilities
+	// extra std::string utilities
 	a_machine->RegisterTypeLibrary(GM_STRING, s_stringLib, sizeof(s_stringLib) / sizeof(s_stringLib[0]));
 
 	// Create the dump flag table.

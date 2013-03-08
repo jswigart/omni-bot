@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -24,10 +24,10 @@ using namespace AiState;
 #define CHECK_THIS_BOT() \
 	Client *native = gmBot::GetThisObject( a_thread ); \
 	if(!native) \
-	{ \
-		GM_EXCEPTION_MSG("Script Function on NULL object"); \
-		return GM_EXCEPTION; \
-	}
+{ \
+	GM_EXCEPTION_MSG("Script Function on NULL object"); \
+	return GM_EXCEPTION; \
+}
 
 // script: Bot
 //		Script bindings for <Client>
@@ -38,14 +38,14 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 
 	GMBIND_FUNCTION( "CanSnipe", gmfCanSnipe );
 
-	GMBIND_FUNCTION( "ChangeTeam", gmfChangeTeam );
-	GMBIND_FUNCTION( "ChangeClass", gmfChangeClass );
-	GMBIND_FUNCTION( "ExecCommand", gmfExecCommand )
+GMBIND_FUNCTION( "ChangeTeam", gmfChangeTeam );
+GMBIND_FUNCTION( "ChangeClass", gmfChangeClass );
+GMBIND_FUNCTION( "ExecCommand", gmfExecCommand )
 	GMBIND_FUNCTION( "FireWeapon", gmfFireWeapon )
 	GMBIND_FUNCTION( "GetCurrentAmmo", gmfGetAmmo )
-	GMBIND_FUNCTION( "GetClass", gmfGetClassId )	
-	GMBIND_FUNCTION( "GetCurrentWeapon", gmfGetCurrentWeapon )		
-	GMBIND_FUNCTION( "GetTeam", gmfGetTeam )	
+	GMBIND_FUNCTION( "GetClass", gmfGetClassId )
+	GMBIND_FUNCTION( "GetCurrentWeapon", gmfGetCurrentWeapon )
+	GMBIND_FUNCTION( "GetTeam", gmfGetTeam )
 	GMBIND_FUNCTION( "GetGameEntity", gmfGetGameEntity )
 	GMBIND_FUNCTION( "GetGameId", gmfGetGameId )
 	GMBIND_FUNCTION( "GetPosition", gmfGetPosition )
@@ -102,18 +102,18 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 
 	GMBIND_FUNCTION( "HoldButton", gmfHoldButton )
 	GMBIND_FUNCTION( "ReleaseButton", gmfReleaseButton )
-	
+
 	GMBIND_FUNCTION( "ReloadProfile", gmfReloadProfile )
 	GMBIND_FUNCTION( "Say", gmfSay )
 	GMBIND_FUNCTION( "SayTeam", gmfSayTeam )
-	GMBIND_FUNCTION( "SayVoice", gmfSayVoice )	
+	GMBIND_FUNCTION( "SayVoice", gmfSayVoice )
 	GMBIND_FUNCTION( "SetDebugFlag", gmfSetDebugFlag )
 
 	GMBIND_FUNCTION( "ToLocalSpace", gmfToLocalSpace )
 	GMBIND_FUNCTION( "ToWorldSpace", gmfToWorldSpace )
 	GMBIND_FUNCTION( "DistanceTo", gmfDistanceTo )
 
-	GMBIND_FUNCTION( "DumpBotTable", gmfDumpBotTable )	
+	GMBIND_FUNCTION( "DumpBotTable", gmfDumpBotTable )
 
 	GMBIND_FUNCTION( "Enable", gmfEnable )
 	GMBIND_FUNCTION( "EnableShooting", gmfSetEnableShooting )
@@ -124,15 +124,15 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "AddScriptGoal", gmfAddScriptGoal )
 	GMBIND_FUNCTION( "FindState", gmfFindState )
 	GMBIND_FUNCTION( "RemoveState", gmfRemoveState )
-	GMBIND_FUNCTION( "SetStateEnabled", gmfSetStateEnabled )	
+	GMBIND_FUNCTION( "SetStateEnabled", gmfSetStateEnabled )
 
 	GMBIND_FUNCTION( "PlaySound", gmfPlaySound )
 	GMBIND_FUNCTION( "StopSound", gmfStopSound )
 
 	GMBIND_FUNCTION( "ScriptEvent", gmfScriptEvent )
-	GMBIND_FUNCTION( "ScriptMessage", gmfScriptMessage )	
+	GMBIND_FUNCTION( "ScriptMessage", gmfScriptMessage )
 
-GMBIND_FUNCTION_MAP_END();
+	GMBIND_FUNCTION_MAP_END();
 
 // property: Field Of View
 //		<Field Of View> is the angle(in degrees) that the bot can 'see' in front of them.
@@ -169,7 +169,7 @@ GMBIND_FUNCTION_MAP_END();
 
 GMBIND_PROPERTY_MAP_BEGIN(gmBot)
 	// var: Name
-	//		string - The bots current name. READ ONLY
+	//		std::string - The bots current name. READ ONLY
 	GMBIND_PROPERTY( "Name", getName, setName )
 	// var: MemorySpan
 	//		float - The bots current <Memory Span>, in seconds.
@@ -179,7 +179,7 @@ GMBIND_PROPERTY_MAP_BEGIN(gmBot)
 	GMBIND_PROPERTY( "AimPersistance", getAimPersistance, setAimPersistance )
 	// var: ReactionTime
 	//		float - The bots current <Reaction Time>
-	GMBIND_PROPERTY( "ReactionTime", getReactionTime, setReactionTime )	
+	GMBIND_PROPERTY( "ReactionTime", getReactionTime, setReactionTime )
 	//////////////////////////////////////////////////////////////////////////
 	// var: Team
 	//		int - The bots current <Team>
@@ -188,7 +188,7 @@ GMBIND_PROPERTY_MAP_BEGIN(gmBot)
 	//		float - The bots current <Field Of View>, in degrees.
 	GMBIND_AUTOPROPERTY( "FieldOfView", GM_FLOAT, m_FieldOfView, 0 )
 	// var: MaxTurnSpeed
-	//		float - The bots <Max Turn Speed>. 
+	//		float - The bots <Max Turn Speed>.
 	GMBIND_AUTOPROPERTY( "MaxTurnSpeed", GM_FLOAT, m_MaxTurnSpeed, 0 )
 	// var: AimStiffness
 	//		float - The bots <Aim Stiffness>.
@@ -214,12 +214,12 @@ GMBIND_PROPERTY_MAP_BEGIN(gmBot)
 	// var: MaxArmor
 	//		float - The bots current <MaxArmor> READ ONLY
 	GMBIND_AUTOPROPERTY( "MaxArmor", GM_INT, m_HealthArmor.m_MaxArmor, gmBot::AUTO_PROP_READONLY )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
 // ctr/dtr
 
-Client *gmBot::Constructor(gmThread *a_thread) 
-{ 
+Client *gmBot::Constructor(gmThread *a_thread)
+{
 	return NULL;
 }
 
@@ -233,7 +233,7 @@ void gmBot::DebugInfo(gmUserObject *a_object, gmMachine *a_machine, gmChildInfoC
 	if(pNative)
 	{
 		a_infoCallback("Name", pNative->GetName(), a_machine->GetTypeName(GM_STRING), 0);
-	}	
+	}
 }
 
 // function: GetGameEntity
@@ -244,14 +244,14 @@ void gmBot::DebugInfo(gmUserObject *a_object, gmMachine *a_machine, gmChildInfoC
 //		None
 //
 // Returns:
-//		<GameEntity> - The for this specific bot. It is usually not safe to 
-//		keep this value for long. It could quickly become totally invalid, 
+//		<GameEntity> - The for this specific bot. It is usually not safe to
+//		keep this value for long. It could quickly become totally invalid,
 //		or reference a completely different entity.
 int gmBot::gmfGetGameEntity(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	gmVariable v;
 	v.SetEntity(native->GetGameEntity().AsInt());
 	a_thread->Push(v);
@@ -332,7 +332,6 @@ int gmBot::gmfGetFacing(gmThread *a_thread)
 	a_thread->PushVector(v.x, v.y, v.z);
 	return GM_OK;
 }
-
 
 // function: GetVelocity
 //		This function gets the <Vector3> velocity for this bot.
@@ -439,7 +438,7 @@ int gmBot::gmfGetClassId(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string - string to execute for this bot
+//		std::string - std::string to execute for this bot
 //
 // Returns:
 //		None
@@ -478,7 +477,7 @@ int gmBot::gmfSayVoice(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string - the string of what you want the bot to <Say>
+//		std::string - the std::string of what you want the bot to <Say>
 //
 // Returns:
 //		None
@@ -494,7 +493,7 @@ int gmBot::gmfSay(gmThread *a_thread)
 		const int chatMsgSize = 2048;
 		char chatMsg[chatMsgSize] = {0};
 
-		// build the string
+		// build the std::string
 		for(int i = 0; i < a_thread->GetNumParams(); ++i)
 		{
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
@@ -522,7 +521,7 @@ int gmBot::gmfSay(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string - the string of what you want the bot to <SayTeam>
+//		std::string - the std::string of what you want the bot to <SayTeam>
 //
 // Returns:
 //		None
@@ -538,7 +537,7 @@ int gmBot::gmfSayTeam(gmThread *a_thread)
 		const int chatMsgSize = 2048;
 		char chatMsg[chatMsgSize] = {0};
 
-		// build the string
+		// build the std::string
 		for(int i = 0; i < a_thread->GetNumParams(); ++i)
 		{
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
@@ -570,13 +569,13 @@ int gmBot::gmfSetGoal_GetAmmo(gmThread *a_thread)
 
 	if(native->GetBrain())
 	{
-		native->GetBrain()->ResetSubgoals("Script GetAmmo");
-		Goal_GetAmmo::GoalInfo gi;
-		gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
+	native->GetBrain()->ResetSubgoals("Script GetAmmo");
+	Goal_GetAmmo::GoalInfo gi;
+	gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
 
-		GoalPtr g(new Goal_GetAmmo(native, ammotype, gi));
-		g->SignalStatus(true);
-		native->GetBrain()->InsertSubgoal(g);
+	GoalPtr g(new Goal_GetAmmo(native, ammotype, gi));
+	g->SignalStatus(true);
+	native->GetBrain()->InsertSubgoal(g);
 	}*/
 	return GM_OK;
 }
@@ -589,13 +588,13 @@ int gmBot::gmfSetGoal_GetArmor(gmThread *a_thread)
 
 	if(native->GetBrain())
 	{
-		native->GetBrain()->ResetSubgoals("Script GetArmor");
-		Goal_GetArmor::GoalInfo gi;
-		gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
+	native->GetBrain()->ResetSubgoals("Script GetArmor");
+	Goal_GetArmor::GoalInfo gi;
+	gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
 
-		GoalPtr g(new Goal_GetArmor(native, gi));
-		g->SignalStatus(true);
-		native->GetBrain()->InsertSubgoal(g);
+	GoalPtr g(new Goal_GetArmor(native, gi));
+	g->SignalStatus(true);
+	native->GetBrain()->InsertSubgoal(g);
 	}*/
 	return GM_OK;
 }
@@ -608,13 +607,13 @@ int gmBot::gmfSetGoal_GetHealth(gmThread *a_thread)
 
 	if(native->GetBrain())
 	{
-		native->GetBrain()->ResetSubgoals("Script GetHealth");
-		Goal_GetHealth::GoalInfo gi;
-		gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
+	native->GetBrain()->ResetSubgoals("Script GetHealth");
+	Goal_GetHealth::GoalInfo gi;
+	gi.m_MaxCampTime = Utils::SecondsToMilliseconds(camptime);
 
-		GoalPtr g(new Goal_GetHealth(native, GameEntity(), gi));
-		g->SignalStatus(true);
-		native->GetBrain()->InsertSubgoal(g);
+	GoalPtr g(new Goal_GetHealth(native, GameEntity(), gi));
+	g->SignalStatus(true);
+	native->GetBrain()->InsertSubgoal(g);
 	}*/
 	return GM_OK;
 }
@@ -779,7 +778,7 @@ int gmBot::gmfGetAllType(gmThread *a_thread)
 //
 // Returns:
 //		<GameEntity> - The current target entity
-//		- OR - 
+//		- OR -
 //		null - If the bot has no target
 int gmBot::gmfGetTarget(gmThread *a_thread)
 {
@@ -806,7 +805,7 @@ int gmBot::gmfGetTarget(gmThread *a_thread)
 //
 // Returns:
 //		<GameEntity> - The current target entity
-//		- OR - 
+//		- OR -
 //		null - If the bot has no target
 int gmBot::gmfGetLastTarget(gmThread *a_thread)
 {
@@ -834,7 +833,7 @@ int gmBot::gmfGetLastTarget(gmThread *a_thread)
 //
 // Returns:
 //		<GameEntity> - The current target entity
-//		- OR - 
+//		- OR -
 //		null - If the bot has no target
 int gmBot::gmfForceTarget(gmThread *a_thread)
 {
@@ -842,7 +841,7 @@ int gmBot::gmfForceTarget(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 
 	if(gameEnt.IsValid())
@@ -856,19 +855,19 @@ int gmBot::gmfForceTarget(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to use
-//		- OR - 
+//		- OR -
 //		<int> - The gameId for the entity to use
 //
 // Returns:
 //		<TargetInfo> - The current target entity
-//		- OR - 
+//		- OR -
 //		null - If the bot has no target
 int gmBot::gmfGetTargetInfo(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 
 	const TargetInfo *pTargetInfo = native->GetSensoryMemory()->GetTargetInfo(gameEnt);
@@ -885,7 +884,7 @@ int gmBot::gmfGetTargetInfo(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to use
-//		- OR - 
+//		- OR -
 //		<int> - The gameId for the entity to use
 //		float/int - The number of seconds to ignore target
 //
@@ -896,12 +895,12 @@ int gmBot::gmfIgnoreTargetForTime(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(2);
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 	GM_CHECK_FLOAT_OR_INT_PARAM(ignoreTime, 1);
-	
+
 	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord(gameEnt, true);
-	if(pRecord)	
+	if(pRecord)
 		pRecord->IgnoreAsTargetForTime(Utils::SecondsToMilliseconds(ignoreTime));
 	return GM_OK;
 }
@@ -912,7 +911,7 @@ int gmBot::gmfIgnoreTargetForTime(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to use
-//		- OR - 
+//		- OR -
 //		<int> - The gameId for the entity to use
 //		<int> - - OPTIONAL - true to ignore, false to disable ignore. default true.
 //
@@ -923,12 +922,12 @@ int gmBot::gmfIgnoreTarget(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 	GM_INT_PARAM(ignore, 1, 1);
 
 	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord(gameEnt, true);
-	if(pRecord)	
+	if(pRecord)
 		pRecord->IgnoreAsTarget(ignore != 0);
 	return GM_OK;
 }
@@ -965,7 +964,7 @@ int gmBot::gmfAddScriptGoal(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_STRING_PARAM(name,0);
-	
+
 	bool bSuccess = native->AddScriptGoal(name);
 	a_thread->PushInt(bSuccess ? 1 : 0);
 	return GM_OK;
@@ -993,7 +992,7 @@ int gmBot::gmfSetStateEnabled(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_STRING_PARAM(name,0);
 	GM_CHECK_INT_PARAM(en,1)
-	State *pState = native->GetStateRoot()->FindState(name);
+		State *pState = native->GetStateRoot()->FindState(name);
 	if(pState)
 		pState->SetUserDisabled(en==0);
 	else
@@ -1049,7 +1048,7 @@ int gmBot::gmfScriptMessage(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	//GM_CHECK_STRING_PARAM(name,0);
-	
+
 	return GM_OK;
 }
 
@@ -1078,7 +1077,7 @@ int gmBot::gmfGetIsAllied(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushInt(native->IsAllied(gameEnt) ? 1 : 0);	
+	a_thread->PushInt(native->IsAllied(gameEnt) ? 1 : 0);
 	return GM_OK;
 }
 
@@ -1213,7 +1212,7 @@ int gmBot::gmfToWorldSpace(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v,0);
-	
+
 	Vector3f vw = native->ToWorldSpace(Vector3f(v.x, v.y, v.z));
 	a_thread->PushVector(vw.x,vw.y,vw.z);
 	return GM_OK;
@@ -1227,7 +1226,7 @@ int gmBot::gmfToWorldSpace(gmThread *a_thread)
 //		<Vector3> - The 3d vector to convert to calculate distance to.
 //		 - OR -
 //		<GameEntity> - The entity to calculate distance to.
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to calculate distance to.
 //		<int> - OPTIONAL - true to use eye position, false to use entity position(default false)
 //
@@ -1251,7 +1250,7 @@ int gmBot::gmfDistanceTo(gmThread *a_thread)
 		GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 		if(!EngineFuncs::EntityPosition(gameEnt, vPosition2))
 		{
-			GM_EXCEPTION_MSG("Invalid Entity Provided!"); 
+			GM_EXCEPTION_MSG("Invalid Entity Provided!");
 			return GM_EXCEPTION;
 		}
 	}
@@ -1317,11 +1316,10 @@ int gmBot::gmfGetCurrentWeapon(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushInt(native->GetWeaponSystem()->GetCurrentWeaponID());
 	return GM_OK;
 }
-
 
 // function: GetBestWeapon
 //		This function gets the weaponId of the best default weapon, or best weapon versus a target if provided.
@@ -1340,7 +1338,7 @@ int gmBot::gmfGetBestWeapon(gmThread *a_thread)
 	GameEntity ent;
 	GM_GAMEENTITY_FROM_PARAM(ent, 0, GameEntity())
 
-	a_thread->PushInt(native->GetWeaponSystem()->SelectBestWeapon(ent));
+		a_thread->PushInt(native->GetWeaponSystem()->SelectBestWeapon(ent));
 	return GM_OK;
 }
 int gmBot::gmfGetRandomWeapon(gmThread *a_thread)
@@ -1366,16 +1364,16 @@ int gmBot::gmfGetRandomWeapon(gmThread *a_thread)
 //
 // Returns:
 //		table - Ammo table. Contains CurrentAmmo, MaxAmmo, CurrentClips, MaxClips
-//		- OR - 
+//		- OR -
 //		null - If the bot doesn't have a weapon or the requested weapon.
 int gmBot::gmfGetAmmo(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_TABLE_PARAM(ammotbl,0);
-	
+
 	WeaponPtr curWeapon;
 	FireMode m = InvalidFireMode;
-	switch(a_thread->GetNumParams()) 
+	switch(a_thread->GetNumParams())
 	{
 	case 1:
 		{
@@ -1402,9 +1400,9 @@ int gmBot::gmfGetAmmo(gmThread *a_thread)
 		GM_EXCEPTION_MSG("Expected 0-2(int firemode, int weaponId) parameters");
 		return GM_EXCEPTION;
 	}
-	
+
 	if(curWeapon && m != InvalidFireMode)
-	{		
+	{
 		curWeapon->UpdateAmmo(m);
 		gmMachine *pMachine = a_thread->GetMachine();
 		DisableGCInScope gcEn(pMachine);
@@ -1418,7 +1416,7 @@ int gmBot::gmfGetAmmo(gmThread *a_thread)
 	else
 	{
 		a_thread->PushInt(0);
-	}	
+	}
 	return GM_OK;
 }
 
@@ -1436,7 +1434,7 @@ int gmBot::gmfHasWeapon(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
-	
+
 	a_thread->PushInt(native->GetWeaponSystem()->HasWeapon(weaponId) ? 1 : 0);
 	return GM_OK;
 }
@@ -1458,16 +1456,16 @@ int gmBot::gmfInFieldOfView(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v,0);
 	GM_FLOAT_OR_INT_PARAM(fov, 1, native->GetFieldOfView());
-	
+
 	Vector3f toTarget = (Vector3f(v.x,v.y,v.z) - native->GetPosition());
-	toTarget.Normalize();	
+	toTarget.Normalize();
 	a_thread->PushInt(Utils::InFieldOfView2d(native->GetFacingVector(), toTarget, fov) ? 1 : 0);
 	return GM_OK;
 }
 
 // function: HasLineOfSightTo
 //		This functions checks whether the bot has line of sight to a 3d position.
-//		This function does not account for field of view, simply does a raycast for 
+//		This function does not account for field of view, simply does a raycast for
 //		obstructions between the bots eye position and the provided position. To account
 //		for field of view, use <InFieldOfView>. If an entity or gameId is provided as the 2nd parameter,
 //		the function will return true if the raycast hits nothing on its way to the position OR
@@ -1485,7 +1483,7 @@ int gmBot::gmfHasLineOfSightTo(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v,0);
-	
+
 	GameEntity gameEnt;
 	if(a_thread->GetNumParams() == 2)
 	{
@@ -1526,7 +1524,7 @@ int gmBot::gmfGetMostDesiredAmmo(gmThread *a_thread)
 // Parameters:
 //
 //		int - ammo Id to check. Use values from the global AMMO table.
-//		- OR - 
+//		- OR -
 //		None - uses the current weapon.
 //
 // Returns:
@@ -1644,7 +1642,7 @@ int gmBot::gmfHasEntityFlagAny(gmThread *a_thread)
 //
 // Parameters:
 //
-//		table - table of weapon ids to check for. 
+//		table - table of weapon ids to check for.
 //		table - optional table to provide additional parameters
 //		table - optional table to fill in with a list of all owned weapons from the input table
 //
@@ -1700,7 +1698,7 @@ int gmBot::gmfHasAnyWeapon(gmThread *a_thread)
 						weaponlist->Set(a_thread->GetMachine(),WeaponId,gmVariable(1));
 					}
 
-					else 
+					else
 						break;
 				}
 			}
@@ -1711,8 +1709,6 @@ int gmBot::gmfHasAnyWeapon(gmThread *a_thread)
 	a_thread->PushInt(WeaponIdFirstFound);
 	return GM_OK;
 }
-
-
 
 // function: HasTarget
 //		This functions gets whether the bot has a target.
@@ -1877,7 +1873,7 @@ int gmBot::gmfIsWeaponCharged(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string - filename to dump to
+//		std::string - filename to dump to
 //
 // Returns:
 //		int - bot version number
@@ -1898,7 +1894,7 @@ int gmBot::gmfDumpBotTable(gmThread *a_thread)
 
 		const int BUF_SIZE = 512;
 		char buffer[BUF_SIZE] = {0};
-		gmUtility::DumpTableInfo(a_thread->GetMachine(), 
+		gmUtility::DumpTableInfo(a_thread->GetMachine(),
 			gmUtility::DUMP_ALL, pTbl, buffer, BUF_SIZE, 0, outFile);
 
 		outFile.Close();
@@ -2071,7 +2067,7 @@ bool gmBot::setName( Client *a_native, gmThread *a_thread, gmVariable *a_operand
 bool gmBot::getMemorySpan( Client *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	if(a_native && a_native->GetSensoryMemory())
-        a_operands[0].SetFloat((float)a_native->GetSensoryMemory()->GetMemorySpan() / 1000.0f);
+		a_operands[0].SetFloat((float)a_native->GetSensoryMemory()->GetMemorySpan() / 1000.0f);
 	else
 		a_operands[0].Nullify();
 	return true;
@@ -2145,4 +2141,3 @@ bool gmBot::setReactionTime( Client *a_native, gmThread *a_thread, gmVariable *a
 
 //////////////////////////////////////////////////////////////////////////
 // Operators
-

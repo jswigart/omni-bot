@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TFBaseStates_H__
-#define __TFBaseStates_H__
+#pragma once
+
+#ifndef __TFBASESTATES_H__
+#define __TFBASESTATES_H__
 
 #include "StateMachine.h"
 #include "BotBaseStates.h"
@@ -61,15 +63,15 @@ namespace AiState
 		SG_DONE,
 		SG_NUMBUILDSTATES,
 	};
-	class SentryBuild : 
-		public StateChild, 
-		public FollowPathUser, 
-		public AimerUser, 
+	class SentryBuild :
+		public StateChild,
+		public FollowPathUser,
+		public AimerUser,
 		public InternalFSM<SentryBuild,SG_NUMBUILDSTATES>
 	{
 	public:
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		MapGoalPtr GetBuiltSentryMapGoal() const { return m_BuiltSentry; }
 
@@ -126,7 +128,7 @@ namespace AiState
 			RESUPPLY,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		obReal GetPriority();
 		void Enter();
@@ -160,7 +162,7 @@ namespace AiState
 			DISP_NUMBUILDSTATES,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		obReal GetPriority();
 		void Enter();
@@ -192,8 +194,8 @@ namespace AiState
 	class Sentry : public StatePrioritized
 	{
 	public:
-		typedef struct 
-		{		
+		typedef struct
+		{
 			TF_BuildableStatus	m_Status;
 			GameEntity			m_Entity;
 			Vector3f			m_Position;
@@ -219,7 +221,7 @@ namespace AiState
 			}
 		} SentryStatus;
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		bool SentryFullyBuilt() const { return (m_SentryStatus.m_Status == BUILDABLE_BUILT); }
 		bool HasSentry() const { return m_SentryStatus.m_Entity.IsValid(); }
@@ -242,7 +244,7 @@ namespace AiState
 	class Dispenser : public StatePrioritized
 	{
 	public:
-		typedef struct 
+		typedef struct
 		{
 			TF_BuildableStatus	m_Status;
 			GameEntity			m_Entity;
@@ -272,7 +274,7 @@ namespace AiState
 			}
 		} DispenserStatus;
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		bool DispenserFullyBuilt() const { return (m_DispenserStatus.m_Status == BUILDABLE_BUILT); }
 		bool HasDispenser() const { return m_DispenserStatus.m_Entity.IsValid(); }
@@ -301,7 +303,7 @@ namespace AiState
 			DETPACK_BUILDING,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		obReal GetPriority();
 		void Enter();
@@ -330,7 +332,7 @@ namespace AiState
 	class Detpack : public StatePrioritized
 	{
 	public:
-		typedef struct 
+		typedef struct
 		{
 			TF_BuildableStatus	m_Status;
 			GameEntity			m_Entity;
@@ -419,7 +421,7 @@ namespace AiState
 		int GetPipeCount() const { return m_Pipes.m_PipeCount; }
 
 		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -466,7 +468,7 @@ namespace AiState
 	class RocketJump : public StateChild, public AimerUser
 	{
 	public:
-		
+
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -523,7 +525,7 @@ namespace AiState
 			GRENADE_RID,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -570,7 +572,7 @@ namespace AiState
 	class Teleporter : public StatePrioritized
 	{
 	public:
-		typedef struct 
+		typedef struct
 		{
 			TF_BuildableStatus	m_StatusEntrance;
 			TF_BuildableStatus	m_StatusExit;
@@ -627,7 +629,7 @@ namespace AiState
 			TELE_BUILDING_EXIT,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		obReal GetPriority();
 		void Enter();
@@ -658,7 +660,6 @@ namespace AiState
 		SubState		m_State;
 		bool			m_CantBuild : 1;
 	};
-
 };
 
 #endif

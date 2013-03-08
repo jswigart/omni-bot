@@ -4,9 +4,6 @@
     <Filter Include="Dlls">
       <UniqueIdentifier>{0428c558-8b13-43fa-bf3c-5890a0d9b0ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Interface">
-      <UniqueIdentifier>{281427ee-83fc-4e28-944d-c98f894e937e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{66fc8ec1-3296-4c60-b07b-c801bd333ffe}</UniqueIdentifier>
     </Filter>
@@ -47,9 +44,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\ET\src\game\g_etbot_interface.cpp">
-      <Filter>_Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,15 +92,5 @@
     <ClInclude Include="..\..\..\ET\ET_FilterClosest.h">
       <Filter>Core\Filters</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="ET_BuildInterface.results">
-      <Filter>_Interface</Filter>
-    </CustomBuildStep>
-  </ItemGroup>
-  <ItemGroup>
-    <BuildExternal Include="..\..\..\ET\ET_BuildInterface.bld">
-      <Filter>_Interface</Filter>
-    </BuildExternal>
   </ItemGroup>
 </Project>

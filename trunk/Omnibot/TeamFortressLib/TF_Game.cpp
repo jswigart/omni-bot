@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -27,19 +27,19 @@ GoalManager *TF_Game::GetGoalManager()
 	return new TF_GoalManager;
 }
 
-bool TF_Game::Init() 
+bool TF_Game::Init()
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(TF_Game::TF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(TF_Game::TF_GetEntityClassAimOffset);
 
-	PathPlannerWaypoint::m_CallbackFlags = 
+	PathPlannerWaypoint::m_CallbackFlags =
 		F_TF_NAV_ROCKETJUMP |
 		F_TF_NAV_CONCJUMP |
 		F_NAV_TELEPORT |
 		F_TF_NAV_DOUBLEJUMP;
 
-	PathPlannerWaypoint::m_BlockableMask = 
+	PathPlannerWaypoint::m_BlockableMask =
 		F_TF_NAV_WALL |
 		F_TF_NAV_DETPACK;
 
@@ -54,7 +54,7 @@ void TF_Game::Shutdown()
 void TF_Game::InitScriptBinds(gmMachine *_machine)
 {
 	LOG("Binding TF Library...");
-    gmBindTFLibrary(_machine);
+	gmBindTFLibrary(_machine);
 }
 
 static IntEnum TF_WeaponEnum[] =
@@ -95,14 +95,14 @@ static IntEnum TF_WeaponEnum[] =
 void TF_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(TF_WeaponEnum) / sizeof(TF_WeaponEnum[0]);
-	_ptr = TF_WeaponEnum;	
+	_ptr = TF_WeaponEnum;
 }
 
 void TF_Game::InitScriptCategories(gmMachine *_machine, gmTableObject *_table)
 {
 	IGame::InitScriptCategories(_machine, _table);
 
-	_table->Set(_machine, "BUILDABLE", gmVariable(TF_ENT_CAT_BUILDABLE));	
+	_table->Set(_machine, "BUILDABLE", gmVariable(TF_ENT_CAT_BUILDABLE));
 }
 
 IntEnum g_TFClassMappings[] =
@@ -121,14 +121,14 @@ IntEnum g_TFClassMappings[] =
 	IntEnum("ANYPLAYER",		TF_CLASS_ANY),
 	IntEnum("SENTRY",			TF_CLASSEX_SENTRY),
 	IntEnum("DISPENSER",		TF_CLASSEX_DISPENSER),
-	IntEnum("TELEPORTER_ENTRANCE",	TF_CLASSEX_TELEPORTER_ENTRANCE),	
+	IntEnum("TELEPORTER_ENTRANCE",	TF_CLASSEX_TELEPORTER_ENTRANCE),
 	IntEnum("TELEPORTER_EXIT",		TF_CLASSEX_TELEPORTER_EXIT),
 	IntEnum("DETPACK",			TF_CLASSEX_DETPACK),
 	IntEnum("PIPEBOMB",			TF_CLASSEX_PIPE),
 	IntEnum("GLGREN",			TF_CLASSEX_GLGRENADE),
 	IntEnum("ROCKET",			TF_CLASSEX_ROCKET),
 	IntEnum("NAPALM_ROCKET",	TF_CLASSEX_NAPALM),
-	IntEnum("SYRINGE",			TF_CLASSEX_SYRINGE),	
+	IntEnum("SYRINGE",			TF_CLASSEX_SYRINGE),
 	IntEnum("GRENADE",			TF_CLASSEX_GRENADE),
 	IntEnum("EMP_GRENADE",		TF_CLASSEX_EMP_GRENADE),
 	IntEnum("NAIL_GRENADE",		TF_CLASSEX_NAIL_GRENADE),
@@ -139,7 +139,7 @@ IntEnum g_TFClassMappings[] =
 	IntEnum("CONC_GRENADE",		TF_CLASSEX_CONC_GRENADE),
 	IntEnum("CALTROP",			TF_CLASSEX_CALTROP),
 	IntEnum("TURRET",			TF_CLASSEX_TURRET),
-	IntEnum("RESUPPLY",			TF_CLASSEX_RESUPPLY),	
+	IntEnum("RESUPPLY",			TF_CLASSEX_RESUPPLY),
 	IntEnum("BACKPACK",			TF_CLASSEX_BACKPACK),
 	IntEnum("BACKPACK_AMMO",	TF_CLASSEX_BACKPACK_AMMO),
 	IntEnum("BACKPACK_HEALTH",	TF_CLASSEX_BACKPACK_HEALTH),
@@ -176,7 +176,7 @@ void TF_Game::InitScriptClasses(gmMachine *_machine, gmTableObject *_table)
 void TF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 {
 	IGame::InitScriptEntityFlags(_machine, _table);
-	
+
 	_table->Set(_machine, "NEED_HEALTH",	gmVariable(TF_ENT_FLAG_SAVEME));
 	_table->Set(_machine, "NEED_ARMOR",		gmVariable(TF_ENT_FLAG_ARMORME));
 	_table->Set(_machine, "BURNING",		gmVariable(TF_ENT_FLAG_BURNING));
@@ -214,7 +214,7 @@ void TF_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "DISGUISE_PYRO",		gmVariable(TF_PWR_DISGUISE_PYRO));
 	_table->Set(_machine, "DISGUISE_ENGINEER",	gmVariable(TF_PWR_DISGUISE_ENGINEER));
 	_table->Set(_machine, "DISGUISE_SPY",		gmVariable(TF_PWR_DISGUISE_SPY));
-	_table->Set(_machine, "DISGUISE_CIVILIAN",	gmVariable(TF_PWR_DISGUISE_CIVILIAN));	
+	_table->Set(_machine, "DISGUISE_CIVILIAN",	gmVariable(TF_PWR_DISGUISE_CIVILIAN));
 }
 
 // package: TF Script Events
@@ -239,7 +239,7 @@ void TF_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 
 	// event: BUILD_NOTONGROUND
 	//		The bot must be on ground to build(currently isn't).
-	_table->Set(_machine, "BUILD_NOTONGROUND",	gmVariable(TF_MSG_BUILD_MUSTBEONGROUND));	
+	_table->Set(_machine, "BUILD_NOTONGROUND",	gmVariable(TF_MSG_BUILD_MUSTBEONGROUND));
 	// event: RADAR_DETECTENEMY
 	//		Radar detected enemy entity.
 	//
@@ -262,7 +262,7 @@ void TF_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "DETPACK_DETONATED",	gmVariable(TF_MSG_DETPACK_DETONATED));
 
 	_table->Set(_machine, "PIPE_PROXIMITY",		gmVariable(TF_MSG_PIPE_PROXIMITY));
-	
+
 	//TF_MSG_DETPIPES,		// The bot has detected the desire to det pipes.
 	//TF_MSG_DETPIPESNOW,		// Configurable delayed message for the actual detting.
 	//TF_MSG_DEMOMAN_END,
@@ -271,9 +271,9 @@ void TF_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "MEDIC_CALLED",		gmVariable(TF_MSG_CALLFORMEDIC));
 
 	// HW-Guy
-	
+
 	// Pyro
-	
+
 	// Spy
 	_table->Set(_machine, "INVALID_DISGUISE_TEAM",gmVariable(TF_MSG_CANTDISGUISE_AS_TEAM));
 	_table->Set(_machine, "INVALID_DISGUISE_CLASS",gmVariable(TF_MSG_CANTDISGUISE_AS_CLASS));
@@ -285,7 +285,7 @@ void TF_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "UNCLOAKED",			gmVariable(TF_MSG_UNCLOAKED));
 	_table->Set(_machine, "SABOTAGED_SENTRY",	gmVariable(TF_MSG_SABOTAGED_SENTRY));
 	_table->Set(_machine, "SABOTAGED_DISPENSER",gmVariable(TF_MSG_SABOTAGED_DISPENSER));
-	
+
 	// Engineer
 	_table->Set(_machine, "SENTRY_NOAMMO",		gmVariable(TF_MSG_SENTRY_NOTENOUGHAMMO));
 	_table->Set(_machine, "SENTRY_ALREADYBUILT",gmVariable(TF_MSG_SENTRY_ALREADYBUILT));
@@ -312,9 +312,8 @@ void TF_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "DISPENSER_STATS",	gmVariable(TF_MSG_DISPENSER_STATS));
 	_table->Set(_machine, "DISPENSER_DETONATED",gmVariable(TF_MSG_DISPENSER_DETONATED));
 	_table->Set(_machine, "DISPENSER_DISMANTLED",gmVariable(TF_MSG_DISPENSER_DISMANTLED));
-		
+
 	// Civilian
-	
 }
 
 void TF_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
@@ -323,7 +322,7 @@ void TF_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 
 	_table->Set(_machine, "GREN1",	gmVariable(TF_BOT_BUTTON_GREN1));
 	_table->Set(_machine, "GREN2",	gmVariable(TF_BOT_BUTTON_GREN2));
-	
+
 	_table->Set(_machine, "DROP_ITEM",gmVariable(TF_BOT_BUTTON_DROPITEM));
 	_table->Set(_machine, "DROP_AMMO",gmVariable(TF_BOT_BUTTON_DROPAMMO));
 
@@ -365,7 +364,7 @@ void TF_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("DISPENSER",	F_TF_NAV_DISPENSER);
 	_planner->RegisterNavFlag("PIPETRAP",	F_TF_NAV_PIPETRAP);
 	_planner->RegisterNavFlag("DETPACK",	F_TF_NAV_DETPACK);
-	_planner->RegisterNavFlag("CAPPOINT",	F_TF_NAV_CAPPOINT);	
+	_planner->RegisterNavFlag("CAPPOINT",	F_TF_NAV_CAPPOINT);
 	_planner->RegisterNavFlag("GRENADES",	F_TF_NAV_GRENADES);
 	_planner->RegisterNavFlag("ROCKETJUMP",	F_TF_NAV_ROCKETJUMP);
 	_planner->RegisterNavFlag("CONCJUMP",	F_TF_NAV_CONCJUMP);
@@ -425,7 +424,7 @@ extern float g_fBottomWaypointOffset;
 void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 {
 	IGame::ProcessEvent(_message,_cb);
-	
+
 	PathPlannerBase *pPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
 	if(pPlanner->IsViewOn() && pPlanner->IsAutoDetectFlagsOn())
 	{
@@ -446,9 +445,9 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 
 						EngineFuncs::EntityPosition(Utils::GetLocalEntity(), vWpPosition);
 						EngineFuncs::EntityOrientation(Utils::GetLocalEntity(), vWpFacing, NULL, NULL);
-						
+
 						//Utils::GetLocalEntity();
-						//Utils::DrawLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
+						//RenderBuffer::AddLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
 
 						// Auto Nav
 						if(pPlanner->GetPlannerType() == NAVID_WP)
@@ -458,7 +457,7 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 
 							PathPlannerWaypoint *pWp = static_cast<PathPlannerWaypoint*>(pPlanner);
 							Waypoint *pWaypoint = pWp->AddWaypoint(vWpPosition, vWpFacing, true);
-							
+
 							pWaypoint->GetPropertyMap().AddPropertyT("BuildPosition", vEntPosition);
 
 							if(m->m_EntityClass == TF_CLASSEX_SENTRY)
@@ -492,7 +491,7 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 					}
 				}
 				break;
-			}	
+			}
 		case GAME_ENTITYDELETED:
 			{
 				const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
@@ -501,13 +500,13 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 					/*int index = m->m_Entity.GetIndex();
 					if(m_GameEntities[index].m_Entity.IsValid())
 					{
-#ifdef _DEBUG
-						const char *pClassName = FindClassName(m_GameEntities[index].m_EntityClass);
-						Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
-#endif
-						m_GameEntities[index].m_Entity.Reset();
-						m_GameEntities[index].m_EntityClass = 0;
-						m_GameEntities[index].m_EntityCategory.ClearAll();
+					#ifdef _DEBUG
+					const char *pClassName = FindClassName(m_GameEntities[index].m_EntityClass);
+					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
+					#endif
+					m_GameEntities[index].m_Entity.Reset();
+					m_GameEntities[index].m_EntityClass = 0;
+					m_GameEntities[index].m_EntityCategory.ClearAll();
 					}
 
 					GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);*/
@@ -713,4 +712,3 @@ PathPlannerWaypointInterface::BlockableStatus TF_Game::WaypointPathCheck(const W
 	}
 	return res;
 }
-

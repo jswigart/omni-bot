@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -21,7 +21,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-Weapon::WeaponFireMode::WeaponFireMode() 
+Weapon::WeaponFireMode::WeaponFireMode()
 	: m_WeaponType			(None)
 	, m_WeaponFlags			(0)
 	, m_ShootButton			(BOT_BUTTON_ATTACK1)
@@ -62,7 +62,7 @@ Weapon::WeaponFireMode::WeaponFireMode()
 	// Initialize Default Properties
 	SetFlag(Waterproof, true);
 	SetFlag(RequiresAmmo, true);
-	
+
 	for(int i = 0; i < MaxDesirabilities; ++i)
 	{
 		m_Desirabilities[i].m_MinRange = 0.f;
@@ -112,10 +112,10 @@ Weapon::WeaponFireMode &Weapon::WeaponFireMode::operator=(const WeaponFireMode &
 		m_BurstWindows[i] = _rh.m_BurstWindows[i];
 
 	/*for(int i = 0; i < NumStances; ++i)
-		m_StancePreference[i] = _rh.m_StancePreference[i];*/
+	m_StancePreference[i] = _rh.m_StancePreference[i];*/
 
 	m_PitchOffset = _rh.m_PitchOffset;
-	
+
 	m_MinLeadError = _rh.m_MinLeadError;
 	m_MaxLeadError = _rh.m_MaxLeadError;
 
@@ -139,7 +139,7 @@ Weapon::WeaponFireMode &Weapon::WeaponFireMode::operator=(const WeaponFireMode &
 	m_LastDesirability = _rh.m_LastDesirability;
 	m_DefaultDesirability = _rh.m_DefaultDesirability;
 	m_WeaponBias = _rh.m_WeaponBias;
-	
+
 	m_scrCalcDefDesir = _rh.m_scrCalcDefDesir;
 	m_scrCalcDesir = _rh.m_scrCalcDesir;
 	m_scrCalcAimPoint = _rh.m_scrCalcAimPoint;
@@ -158,7 +158,7 @@ bool Weapon::WeaponFireMode::HasAmmo(int _amount) const
 		if(_amount>0)
 			return (m_AmmoCurrent >= _amount) || (m_ClipCurrent >= _amount);
 		return (m_AmmoCurrent > 0) || (m_ClipCurrent > 0);
-	}	
+	}
 	return true;
 }
 
@@ -205,7 +205,7 @@ obReal Weapon::WeaponFireMode::CalculateDefaultDesirability(Client *_bot)
 
 			if(!call.GetReturnedFloat(m_DefaultDesirability))
 			{
-				Utils::OutputDebug(kError, "Invalid Return Value From CalculateDefaultDesirability");				
+				Utils::OutputDebug(kError, "Invalid Return Value From CalculateDefaultDesirability");
 			}
 		}
 		else
@@ -237,10 +237,10 @@ obReal Weapon::WeaponFireMode::CalculateDesirability(Client *_bot, const TargetI
 
 			if(!call.GetReturnedFloat(m_LastDesirability))
 			{
-				Utils::OutputDebug(kError, "Invalid Return Value From CalculateDesirability");				
+				Utils::OutputDebug(kError, "Invalid Return Value From CalculateDesirability");
 			}
 			m_LastDesirability *= m_WeaponBias;
-			return m_LastDesirability;	
+			return m_LastDesirability;
 		}
 		else
 		{
@@ -268,7 +268,7 @@ obReal Weapon::WeaponFireMode::CalculateDesirability(Client *_bot, const TargetI
 		}
 	}
 	m_LastDesirability *= m_WeaponBias;
-	return m_LastDesirability;	
+	return m_LastDesirability;
 }
 
 void Weapon::WeaponFireMode::UpdateBurstWindow(const TargetInfo *_targetinfo)
@@ -289,10 +289,10 @@ void Weapon::WeaponFireMode::UpdateBurstWindow(const TargetInfo *_targetinfo)
 	}
 }
 
-//obReal Weapon::WeaponFireMode::CalculateAmmoDesirability(int &_ammotype) 
+//obReal Weapon::WeaponFireMode::CalculateAmmoDesirability(int &_ammotype)
 //{
 //	// TODO? OR DELETE
-//	return 0.0; 
+//	return 0.0;
 //}
 
 bool Weapon::WeaponFireMode::SetDesirabilityWindow(float _minrange, float _maxrange, float _desir)
@@ -381,7 +381,7 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint(Client *_bot, const GameEntity &_ta
 			}
 			else
 			{
-				Utils::OutputDebug(kError, "Invalid Return Value From CalculateAimPoint");				
+				Utils::OutputDebug(kError, "Invalid Return Value From CalculateAimPoint");
 			}
 		}
 		else
@@ -390,7 +390,7 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint(Client *_bot, const GameEntity &_ta
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	switch(m_WeaponType)
 	{
 	case Melee:
@@ -430,8 +430,8 @@ Vector3f Weapon::WeaponFireMode::_GetAimPoint_Projectile(Client *_bot, const Gam
 	const Vector3f vEyePos = _bot->GetPosition();
 	const Vector3f vMyVelocity = CheckFlag(InheritsVelocity) ? _bot->GetVelocity() : Vector3f::ZERO;
 	Vector3f vAimPt = Utils::PredictFuturePositionOfTarget(
-		vEyePos, 
-		m_ProjectileSpeed, 
+		vEyePos,
+		m_ProjectileSpeed,
 		_targetinfo,
 		vMyVelocity,
 		m_MinLeadError,
@@ -461,10 +461,10 @@ Vector3f Weapon::WeaponFireMode::_GetAimPoint_Projectile(Client *_bot, const Gam
 
 		Trajectory::AimTrajectory traj[2];
 		int t = Trajectory::Calculate(
-			vEyePos, 
-			vAimPt, 
-			m_ProjectileSpeed, 
-			IGame::GetGravity() * m_ProjectileGravity, 
+			vEyePos,
+			vAimPt,
+			m_ProjectileSpeed,
+			IGame::GetGravity() * m_ProjectileGravity,
 			traj);
 
 		// TODO: test each trajectory
@@ -534,7 +534,7 @@ static int GM_CDECL gmfSetIgnoreEntFlags(gmThread *a_thread) {
 	Weapon::WeaponFireMode *NativePtr = 0;
 	if(!gmBind2::Class<Weapon::WeaponFireMode>::FromThis(a_thread,NativePtr) || !NativePtr)
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL MapGoal"); 
+		GM_EXCEPTION_MSG("Script Function on NULL MapGoal");
 		return GM_EXCEPTION;
 	}
 
@@ -553,10 +553,10 @@ bool Weapon::WeaponFireMode::IsDefined() const
 	return m_WeaponType != 0;
 }
 
-bool Weapon::WeaponFireMode::CheckDefined() const 
+bool Weapon::WeaponFireMode::CheckDefined() const
 {
 	OBASSERT(IsDefined(), "Weapon Fire Mode Not Defined!");
-	return IsDefined(); 
+	return IsDefined();
 }
 
 gmGCRoot<gmUserObject> Weapon::WeaponFireMode::GetScriptObject(gmMachine *_machine) const
@@ -581,7 +581,7 @@ void Weapon::WeaponFireMode::OnChargeWeapon(Weapon *_weapon, Client *_client)
 		_client->PressButton(m_ShootButton);
 		if(!IsCharging())
 		{
-			m_ChargeTime = IGame::GetTime() + 
+			m_ChargeTime = IGame::GetTime() +
 				Utils::SecondsToMilliseconds(Mathf::IntervalRandom(m_MinChargeTime, m_MaxChargeTime));
 		}
 		else
@@ -607,7 +607,7 @@ void Weapon::WeaponFireMode::OnStartShooting(Weapon *_weapon, Client *_client)
 
 	if(CheckFlag(MustBeOnGround) && !_client->HasEntityFlag(ENT_FLAG_ONGROUND))
 		return;
-	
+
 	if(IsBurstDelaying())
 		return;
 
@@ -627,14 +627,14 @@ void Weapon::WeaponFireMode::OnStartShooting(Weapon *_weapon, Client *_client)
 					Vector3f vFirePos = _client->GetEyePosition();
 					Vector3f vFacing = _client->GetFacingVector();
 					Vector3f v2dFacing = vFacing.Flatten();
-					
+
 					Vector3f vDetPos = _client->GetEyePosition() + (v2dFacing*m_ProjectileSpeed) * fTimeToDet;
 					float fExplodeDistToTarget = (vDetPos - vFirePos).Length();
 
 					float fGrenadeRange = fTimeToDet * m_ProjectileSpeed;
 
-					/*Utils::OutputDebug(kDebug,"fTimeToDet: %f, fExplodeDistToTarget: %f / %f", 
-						fTimeToDet, fExplodeDistToTarget, fGrenadeRange);*/
+					/*Utils::OutputDebug(kDebug,"fTimeToDet: %f, fExplodeDistToTarget: %f / %f",
+					fTimeToDet, fExplodeDistToTarget, fGrenadeRange);*/
 
 					if(fExplodeDistToTarget >= fGrenadeRange)
 						bThrow = true;
@@ -665,7 +665,7 @@ void Weapon::WeaponFireMode::OnStartShooting(Weapon *_weapon, Client *_client)
 			}
 			else
 			{
-				m_ChargeTime = IGame::GetTime() + 
+				m_ChargeTime = IGame::GetTime() +
 					Utils::SecondsToMilliseconds(Mathf::IntervalRandom(m_MinChargeTime, m_MaxChargeTime));
 			}
 		}
@@ -705,7 +705,7 @@ void Weapon::WeaponFireMode::OnShotFired(Weapon *_weapon, Client *_client, GameE
 	{
 		if(++m_BurstRound >= w.m_BurstRounds)
 		{
-			m_BurstTime = IGame::GetTime() + 
+			m_BurstTime = IGame::GetTime() +
 				Utils::SecondsToMilliseconds(Mathf::IntervalRandom(w.m_MinBurstDelay, w.m_MaxBurstDelay));
 			m_BurstRound = 0;
 		}
@@ -713,7 +713,7 @@ void Weapon::WeaponFireMode::OnShotFired(Weapon *_weapon, Client *_client, GameE
 	m_DelayChooseTime = IGame::GetTime() + Utils::SecondsToMilliseconds(m_DelayAfterFiring);
 }
 
-bool Weapon::WeaponFireMode::IsCharging() const 
+bool Weapon::WeaponFireMode::IsCharging() const
 {
 	return m_ChargeTime != 0;
 }
@@ -723,9 +723,9 @@ bool Weapon::WeaponFireMode::HasChargeTimes() const
 	return m_MinChargeTime && m_MaxChargeTime;
 }
 
-bool Weapon::WeaponFireMode::IsBurstDelaying() const 
+bool Weapon::WeaponFireMode::IsBurstDelaying() const
 {
-	return m_BurstTime > IGame::GetTime(); 
+	return m_BurstTime > IGame::GetTime();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -740,10 +740,10 @@ Weapon::Weapon(Client *_client/* = 0*/)
 	, m_LastAmmoUpdate		(0)
 	, m_ScriptObject		(0)
 {
-	memset(&m_WeaponLimits, 0, sizeof(m_WeaponLimits));	
+	memset(&m_WeaponLimits, 0, sizeof(m_WeaponLimits));
 }
 
-Weapon::Weapon(Client *_client, const Weapon *_wpn) 
+Weapon::Weapon(Client *_client, const Weapon *_wpn)
 	: m_Client				(_client)
 	, m_WeaponID			(0)
 	, m_WeaponLockTime		(0)
@@ -761,8 +761,8 @@ Weapon::Weapon(Client *_client, const Weapon *_wpn)
 
 	ScriptResource::operator=(*_wpn);
 
-	memset(&m_WeaponLimits, 0, sizeof(m_WeaponLimits));	
-	
+	memset(&m_WeaponLimits, 0, sizeof(m_WeaponLimits));
+
 	// duplicate the script table
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
 	gmBind2::Class<Weapon>::CloneTable(pM,_wpn->GetScriptObject(pM),GetScriptObject(pM));
@@ -782,14 +782,14 @@ Weapon::~Weapon()
 	}
 }
 
-String Weapon::GetWeaponName() const 
+std::string Weapon::GetWeaponName() const
 {
 	return Utils::HashToString(m_WeaponNameHash);
 }
 
 void Weapon::SetWeaponName(const char *_name)
 {
-	m_WeaponNameHash = _name ? Utils::MakeHash32(_name) : 0; 
+	m_WeaponNameHash = _name ? Utils::MakeHash32(_name) : 0;
 }
 
 gmGCRoot<gmUserObject> Weapon::GetScriptObject(gmMachine *_machine) const
@@ -799,9 +799,9 @@ gmGCRoot<gmUserObject> Weapon::GetScriptObject(gmMachine *_machine) const
 	return m_ScriptObject;
 }
 
-void Weapon::GetSpectateMessage(StringStr &_outstring)
+void Weapon::GetSpectateMessage(std::stringstream &_outstring)
 {
-	_outstring << "Weapon: " << GetWeaponName() << " ";	
+	_outstring << "Weapon: " << GetWeaponName() << " ";
 	for(int i = 0; i < Num_FireModes; ++i)
 	{
 		FireMode m = GetFireMode(i);
@@ -827,8 +827,8 @@ obReal Weapon::LowOnAmmoPriority(FireMode _mode, int &_ammotype, int &_getammo)
 	if(GetFireMode(_mode).IsDefined())
 	{
 		_ammotype = GetWeaponID();//GetFireMode(_mode).m_AmmoType;
-	
-		// _getammo must be greater than threshold, otherwise UseCabinet goal would be 
+
+		// _getammo must be greater than threshold, otherwise UseCabinet goal would be
 		// immediately aborted after path to cabinet is found
 		int threshold = GetFireMode(_mode).GetLowAmmoThreshold();
 		_getammo = MaxT(threshold + 1, GetFireMode(_mode).GetLowAmmoGetAmmoAmount());
@@ -895,15 +895,15 @@ void Weapon::ShotFired(FireMode _mode, GameEntity _projectile)
 
 void Weapon::Shoot(FireMode _mode, const TargetInfo *_target)
 {
-	if(GetFireMode(_mode).EmptyClip() && 
-		GetFireMode(_mode).NeedsAmmo()) 
+	if(GetFireMode(_mode).EmptyClip() &&
+		GetFireMode(_mode).NeedsAmmo())
 	{
-		if(GetFireMode(_mode).EnoughAmmoToReload()) 
+		if(GetFireMode(_mode).EnoughAmmoToReload())
 		{
 			ReloadWeapon(_mode);
 		}
-	} 
-	else 
+	}
+	else
 	{
 		bool bFire = true;
 		if(GetFireMode(_mode).CheckFlag(ManageHeat))
@@ -924,8 +924,8 @@ void Weapon::Shoot(FireMode _mode, const TargetInfo *_target)
 void Weapon::StopShooting(FireMode _mode)
 {
 	GetFireMode(_mode).OnStopShooting(this, m_Client);
-	if(GetFireMode(_mode).EmptyClip() && 
-		GetFireMode(_mode).NeedsAmmo() && 
+	if(GetFireMode(_mode).EmptyClip() &&
+		GetFireMode(_mode).NeedsAmmo() &&
 		GetFireMode(_mode).EnoughAmmoToReload())
 	{
 		ReloadWeapon(_mode);
@@ -938,9 +938,9 @@ void Weapon::UpdateClipAmmo(FireMode _mode)
 	if(GetFireMode(_mode).CheckFlag(RequiresAmmo))
 	{
 		g_EngineFuncs->GetCurrentWeaponClip(
-			m_Client->GetGameEntity(), 
-			_mode, 
-			GetFireMode(_mode).m_ClipCurrent, 
+			m_Client->GetGameEntity(),
+			_mode,
+			GetFireMode(_mode).m_ClipCurrent,
 			GetFireMode(_mode).m_ClipMax);
 	}
 }
@@ -955,9 +955,9 @@ void Weapon::UpdateAmmo(FireMode _mode)
 	{
 		g_EngineFuncs->GetCurrentAmmo(
 			m_Client->GetGameEntity(),
-			GetWeaponID(), 
+			GetWeaponID(),
 			_mode,
-			GetFireMode(_mode).m_AmmoCurrent, 
+			GetFireMode(_mode).m_AmmoCurrent,
 			GetFireMode(_mode).m_AmmoMax);
 	}
 }
@@ -973,7 +973,7 @@ void Weapon::Update(FireMode _mode)
 
 	/*if(GetFireMode(_mode).IsCharging())
 	{
-		GetFireMode(_mode).OnStartShooting(this,m_Client);
+	GetFireMode(_mode).OnStartShooting(this,m_Client);
 	}*/
 }
 
@@ -985,15 +985,15 @@ Weapon::MoveOptions Weapon::UpdateMoveMode()
 		if(m_Client->GetEntityFlags().CheckFlag(ENT_FLAG_AIMING))
 		{
 			if(GetFireMode(Primary).CheckFlag(StopWhileZoomed))
-			{			
+			{
 				_options.MustStop = true;
 			}
 			else if(GetFireMode(Primary).CheckFlag(WalkWhileZoomed))
-			{			
+			{
 				_options.MustWalk = true;
 			}
 			else if(GetFireMode(Primary).CheckFlag(CrouchToMoveWhenZoomed))
-			{			
+			{
 				_options.CrouchToMove = true;
 			}
 		}
@@ -1111,13 +1111,13 @@ obReal Weapon::CalculateDesirability(const TargetInfo &_targetinfo)
 			}
 		}
 	}
-	return fBestDesir;	
+	return fBestDesir;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 bool Weapon::_MeetsRequirements(FireMode _mode)
-{	
+{
 	if(!GetFireMode(_mode).CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
 		return false;
 
@@ -1199,7 +1199,7 @@ bool Weapon::WeaponFireMode::setMaxAimError( Weapon::WeaponFireMode *a_native, g
 	if(a_operands[1].IsVector())
 	{
 		a_native->m_AimErrorMax = Vector2f(
-			a_operands[1].m_value.m_vec3.x, 
+			a_operands[1].m_value.m_vec3.x,
 			a_operands[1].m_value.m_vec3.y);
 	}
 	return true;
@@ -1216,7 +1216,7 @@ bool Weapon::WeaponFireMode::setAimOffset( Weapon::WeaponFireMode *a_native, gmT
 	if(a_operands[1].IsVector())
 	{
 		a_native->m_AimOffset = Vector3f(
-			a_operands[1].m_value.m_vec3.x, 
+			a_operands[1].m_value.m_vec3.x,
 			a_operands[1].m_value.m_vec3.y,
 			a_operands[1].m_value.m_vec3.z);
 	}
@@ -1231,8 +1231,8 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.func(&WeaponFireMode::SetTargetBias,				"SetTargetBias","Set a desirability multiplier versus a target class.")
 		.func(gmfSetIgnoreEntFlags,							"SetIgnoreEntFlags","Sets one or more entity flags that should be ignored for this weapon.")
 
-		.var(getType,setType,								"WeaponType","string","melee, instant, projectile, or grenade")
-		
+		.var(getType,setType,								"WeaponType","std::string","melee, instant, projectile, or grenade")
+
 		.var(&WeaponFireMode::m_ShootButton,				"ShootButton",0,"The button to press to fire the weapon. Default ATTACK1.")
 		.var(&WeaponFireMode::m_ZoomButton,					"ZoomButton",0,"The button to press to zoom the weapon. Default AIM.")
 
@@ -1246,7 +1246,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.var(&WeaponFireMode::m_ProjectileSpeed,			"ProjectileSpeed",0,"How fast the projectile moves. Used for prediction.")
 		.var(&WeaponFireMode::m_ProjectileGravity,			"ProjectileGravity",0,"Gravity multiplier for how projectile is effected by gravity.")
 		.var(&WeaponFireMode::m_SplashRadius,				"SplashRadius",0,"The radius of the hits splash damage.")
-		
+
 		.var(&WeaponFireMode::m_MinChargeTime,				"MinChargeTime",0,"Minimum time to charge FireOnRelease Shots")
 		.var(&WeaponFireMode::m_MaxChargeTime,				"MaxChargeTime",0,"Maximum time to charge FireOnRelease Shots")
 
@@ -1263,7 +1263,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		// aiming
 		.var(getMaxAimError,setMaxAimError,					"MaxAimError","vec3","Horizontal and vertical aim error.")
 		.var(getAimOffset,setAimOffset,						"AimOffset","vec3","Offset added to targeting aim point.")
-		
+
 		.var(&WeaponFireMode::m_PitchOffset,				"PitchOffset",0,"Pitch offset to projectile spawn point.")
 
 		.var(&WeaponFireMode::m_MinLeadError,				"MinLeadError",0,"Minimum lead time error when firing weapon.")
@@ -1275,7 +1275,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.var(&WeaponFireMode::m_scrCalcAimPoint,			"CalculateAimPoint", "Callback", "Allows weapon to calculate aim point.")
 
 		.var_bitfield(&WeaponFireMode::m_WeaponFlags,RequiresAmmo,			"RequiresAmmo",0,"Weapon requires ammo to use. False means ammo is always assumed.")
-		.var_bitfield(&WeaponFireMode::m_WeaponFlags,Waterproof,			"WaterProof",0,"Weapon may be used the user is underwater.")		
+		.var_bitfield(&WeaponFireMode::m_WeaponFlags,Waterproof,			"WaterProof",0,"Weapon may be used the user is underwater.")
 		.var_bitfield(&WeaponFireMode::m_WeaponFlags,HasClip,				"HasClip",0,"Weapon has a clip. False means it simply has an ammo repository and doesn't need to reload.")
 		/*replace with zoomfov?*/
 		.var_bitfield(&WeaponFireMode::m_WeaponFlags,HasZoom,				"HasZoom",0,"Weapon has zoom functionality.")
@@ -1330,10 +1330,10 @@ void Weapon::Bind(gmMachine *_m)
 
 	gmBind2::Class<Weapon>("Weapon",_m)
 		//.constructor()
-		.var(getName, setName,			"Name","string","Name of the weapon.")
+		.var(getName, setName,			"Name","std::string","Name of the weapon.")
 		.var(&Weapon::m_WeaponID,		"WeaponId","int","Numeric Id of the weapon.")
 		.var(&Weapon::m_WeaponAliasID,	"WeaponAliasId","Numeric Id that will also match to this weapon.")
-		
+
 		.var(&Weapon::m_MinUseTime,		"MinUseTime","float","Weapon must be used for a minimum amount of time when chosen.")
 		.var(getPrimaryFire, NULL,		"PrimaryFire","firemode","Access to primary fire mode.")
 		.var(getSecondaryFire, NULL,	"SecondaryFire","firemode","Access to secondary fire mode.")

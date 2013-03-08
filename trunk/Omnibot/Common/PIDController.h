@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PIDCONTROLLER_H__
 #define __PIDCONTROLLER_H__
@@ -20,7 +22,6 @@ public:
 		m_E2 = 0.f;
 		m_ControlValue = 0.f;
 	}
-	
 
 	void Update( float _target, float _current, float _dt )
 	{

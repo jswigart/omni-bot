@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,11 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifdef WIN32
-#include "windows.h"	
+#include "windows.h"
 #else
 // TODO: linux shit here
 #endif
-
 
 #include "Omni-Bot.h"
 
@@ -67,9 +66,9 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 	SetThreadName ((DWORD)-1, "MainThread");
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_CHECK_ALWAYS_DF|_CRTDBG_CHECK_CRT_DF|_CRTDBG_LEAK_CHECK_DF);
 #endif
-	
+
 	g_Logger.Start(
-		(String)va("%s/omnibot_%s.log", 
+		(std::string)va("%s/omnibot_%s.log",
 		_pEngineFuncs->GetLogPath(),
 		_pEngineFuncs->GetMapName()), true);
 
@@ -102,7 +101,7 @@ void BotConsoleCommand(const Arguments &_args)
 	StringVector tokList;
 	for(int i = 0; i < _args.m_NumArgs; ++i)
 	{
-		String str = _args.m_Args[i];
+		std::string str = _args.m_Args[i];
 
 		if(i==0)
 		{
@@ -119,7 +118,7 @@ void BotConsoleCommand(const Arguments &_args)
 	CommandReciever::DispatchCommand(tokList);
 }
 
-void BotSendEvent(int _dest, const MessageHelper &_message) 
+void BotSendEvent(int _dest, const MessageHelper &_message)
 {
 	IGameManager::GetInstance()->GetGame()->DispatchEvent(_dest, _message);
 }

@@ -13,7 +13,7 @@ class Task
 public:
 	friend class TaskManager;
 
-	Task( const std::string & taskname = "Worker" ) 
+	Task( const std::string & taskname = "Worker" )
 		: mTaskName( taskname )
 		, mTaskFinished( false )
 	{
@@ -22,7 +22,7 @@ public:
 
 	const char * GetTaskName() const { return mTaskName.c_str(); }
 	virtual bool IsFinished() const { return mTaskFinished; }
-	
+
 	virtual void RunTask() = 0;
 protected:
 	std::string		mTaskName;
@@ -40,7 +40,7 @@ public:
 protected:
 private:
 	static void TaskThreadFunc( TaskManager * taskMan );
-	
+
 	ConcurrentQueue< TaskPtr >	mTaskQueue;
 	boost::thread_group			mThreadGroup;
 };
