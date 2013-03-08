@@ -17,4 +17,3 @@ namespace RemoteLib
 		void formatByteString( uint32 _bytes, char * str, int maxSize );
 	};
 }
-

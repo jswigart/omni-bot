@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __COMMAND_FUNCTOR_H__
 #define __COMMAND_FUNCTOR_H__
@@ -30,14 +32,14 @@ public:
 
 	void operator()(const StringVector &_args)
 	{
-		(m_Object->*m_Function)(_args); 
+		(m_Object->*m_Function)(_args);
 	}
 
 	CommandFunctorT(T *_object, pfnClassMessageFunction _func) :
 		m_Object	(_object),
 		m_Function	(_func)
 	{
-	}	
+	}
 protected:
 	T						*m_Object;
 	pfnClassMessageFunction	m_Function;
@@ -51,9 +53,9 @@ class Delegate : public ICommandFunctor
 public:
 	void operator()(const StringVector &_args)
 	{
-		(m_Object->*m_Function)(_args); 
+		(m_Object->*m_Function)(_args);
 	}
-	Delegate(T *obj, Fn fnc) 
+	Delegate(T *obj, Fn fnc)
 		: m_Object(obj)
 		, m_Function(fnc)
 	{
@@ -71,9 +73,9 @@ class Delegate0 : public ICommandFunctor
 public:
 	void operator()(const StringVector &_args)
 	{
-		(m_Object->*m_Function)(); 
+		(m_Object->*m_Function)();
 	}
-	Delegate0(T *obj, Fn fnc) 
+	Delegate0(T *obj, Fn fnc)
 		: m_Object(obj)
 		, m_Function(fnc)
 	{

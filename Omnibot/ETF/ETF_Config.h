@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart $
 // $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
 // $LastChangedRevision: 32 $
@@ -7,6 +7,8 @@
 // Title: ETF Config
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ETF_CONFIG_H__
 #define __ETF_CONFIG_H__
@@ -22,7 +24,6 @@ typedef enum eETF_Version
 	ETF_VERSION_LAST,
 	ETF_VERSION_LATEST = ETF_VERSION_LAST - 1
 } ETF_Version;
-
 
 // enumerations: TF_Team
 //		ETF_TEAM_BLUE - Blue team.

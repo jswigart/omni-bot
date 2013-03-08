@@ -40,16 +40,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\MC\MC_BuildInterface.bld">
-      <Filter>_Interface</Filter>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="MC_BuildInterface.results">
-      <Filter>_Interface</Filter>
-    </None>
     <None Include="..\..\..\MC\Jamfile" />
-    <None Include="..\..\..\MC\Omni-Bot_MC_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\MC\MC_Client.h">

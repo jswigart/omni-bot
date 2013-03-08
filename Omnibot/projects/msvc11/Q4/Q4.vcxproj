@@ -222,12 +222,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClCompile Include="..\..\..\Q4\gmQ4Binds.cpp" />
     <ClCompile Include="..\..\..\Q4\Q4_BaseStates.cpp" />
     <ClCompile Include="..\..\..\Q4\Q4_GoalManager.cpp" />
-    <ClCompile Include="..\..\..\..\GameInterfaces\Q4\mpgame\omnibot\omnibot_interface.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc" />
@@ -244,23 +238,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\Q4\Q4_GoalManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\Q4\Q4_BuildInterface.bld">
-      <Config Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2</Config>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">2</Config>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(InterfaceDir)GameInterfaces\Q4\q4sdk2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InterfaceDir)GameInterfaces\Q4\q4sdk2010.sln</Solution>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</Config>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</Config>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(InterfaceDir)GameInterfaces\Q4\q4sdk2010.sln</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(InterfaceDir)GameInterfaces\Q4\q4sdk2010.sln</Solution>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Q4_BuildInterface.results" />
     <None Include="..\..\..\Q4\Jamfile" />
   </ItemGroup>
   <ItemGroup>

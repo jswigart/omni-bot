@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -34,7 +34,7 @@
 bool initialized = false; // a bit lame but whatever
 
 #ifdef WIN32
-	LARGE_INTEGER iCounterFrequency;
+LARGE_INTEGER iCounterFrequency;
 #endif
 
 void Init()
@@ -72,8 +72,8 @@ void Timer::Reset()
 
 /*
 Function: GetElapsedSeconds
-Description:		
-Returns: 
+Description:
+Returns:
 Returns the elapsed seconds since the timer was last reset.
 */
 double Timer::GetElapsedSeconds()
@@ -93,7 +93,7 @@ double Timer::GetElapsedSeconds()
 
 //////////////////////////////////////////////////////////////////////////
 
-GameTimer::GameTimer() 
+GameTimer::GameTimer()
 	: m_TriggerTime(0)
 {
 }

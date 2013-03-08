@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __FILTERSENSORY_H__
 #define __FILTERSENSORY_H__
@@ -32,17 +34,17 @@ public:
 	void ResetCategory();
 	void ResetIgnoreEntity();
 
-	inline bool PassesFilter(int _class) const 
+	inline bool PassesFilter(int _class) const
 	{
 		if(m_ClassType[0]==0)
 			return true;
 
 		for(int i = 0; i < MaxClassType; ++i)
 		{
-			if(m_ClassType[i] && m_ClassType[i] == _class) 
-				return true; 
+			if(m_ClassType[i] && m_ClassType[i] == _class)
+				return true;
 		}
-		return false; 
+		return false;
 	}
 
 	inline void SetSortType(SortType _sort) { m_SortType = _sort; }
@@ -52,7 +54,7 @@ public:
 	const Vector3f &GetPosition(int i) const { return m_Position[i]; }
 	int GetNumPositions() const { return m_NumPositions; }
 	const Vector3f &GetTriggerPosition() const { return m_Position[m_ClosestPosition]; }
-	
+
 	obReal GetMaxDistance() const { return m_MaxDistance; }
 	void SetMaxDistance(obReal _rad) { m_MaxDistance = _rad; }
 
@@ -88,7 +90,7 @@ protected:
 	int									m_ClassType[MaxClassType];
 	BitFlag32							m_Category;
 	GameEntity							m_IgnoreEntity[MaxIgnoreEntity];
-	
+
 	GameEntity							m_BestEntity;
 
 	SortType							m_SortType;

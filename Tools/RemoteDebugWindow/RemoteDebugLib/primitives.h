@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __REMOTELIB_PRIMITIVES_H__
 #define __REMOTELIB_PRIMITIVES_H__
 

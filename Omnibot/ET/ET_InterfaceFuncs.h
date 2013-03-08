@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ET_INTERFACEFUNCS_H__
 #define __ET_INTERFACEFUNCS_H__
@@ -13,7 +15,7 @@
 #include "ET_Messages.h"
 
 namespace InterfaceFuncs
-{	
+{
 	bool IsWeaponOverheated(Client *_bot, ET_Weapon _weapon);
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max);
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite);
@@ -35,7 +37,7 @@ namespace InterfaceFuncs
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint);
 	bool GetMg42Properties(Client *_bot, ET_MG42Info &data);
 	bool GetCabinetData(GameEntity _ent, ET_CabinetData &data);
-	
+
 	bool FireTeamCreate(Client *_bot);
 	bool FireTeamDisband(Client *_bot);
 	bool FireTeamLeave(Client *_bot);

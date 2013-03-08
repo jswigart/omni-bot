@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: TF Message Structure Definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TF_MESSAGES_H__
 #define __TF_MESSAGES_H__
@@ -189,7 +191,7 @@ struct Event_FireTeamCreated
 };
 
 struct Event_FireTeamDisbanded
-{	
+{
 };
 
 struct Event_FireTeamJoined

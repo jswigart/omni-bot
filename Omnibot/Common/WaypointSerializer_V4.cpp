@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #include "WaypointSerializer_V4.h"
 #include "Waypoint.h"
@@ -15,7 +17,7 @@ bool WaypointSerializer_V4::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	// temporary structure for Reading in the connection indices since we
 	// can't set up the correct pointers till after the waypoints have all
 	// been Read in and created.
-	
+
 	typedef std::multimap<unsigned int, WaypointConnection> WaypointConnections;
 	WaypointConnections connections;
 
@@ -39,7 +41,7 @@ bool WaypointSerializer_V4::Load(File &_file, PathPlannerWaypoint::WaypointList 
 			char strname[512] = {0};
 			obUserData bud;
 
-			// Read the string length, and string
+			// Read the std::string length, and std::string
 			obuint8 iPropNameLength = 0;
 			CHECK_READ(_file.ReadInt8(iPropNameLength));
 			OBASSERT(iPropNameLength > 0, "Invalid Name Length");
@@ -84,14 +86,14 @@ bool WaypointSerializer_V4::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	for(unsigned int i = 0; i < _wpl.size(); ++i)
 	{
 		WaypointConnections::iterator it;
-		for (it = connections.lower_bound(i); 
-			it != connections.upper_bound(i); 
-			++it) 
+		for (it = connections.lower_bound(i);
+			it != connections.upper_bound(i);
+			++it)
 		{
 			Waypoint::ConnectionInfo conn = { _wpl[it->second.m_Index], it->second.m_ConnectionFlags };
 			if(it->second.m_Index < _wpl.size())
 				_wpl[i]->m_Connections.push_back(conn);
-			else 
+			else
 				return false;
 		}
 	}
@@ -131,10 +133,10 @@ bool WaypointSerializer_V4::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	//	PropertyMap::const_iterator pIt = pCurrentWp->m_PropertyList.begin();
 	//	for( ; pIt != pCurrentWp->m_PropertyList.end(); ++pIt)
 	//	{
-	//		const String &strName = pIt->first;
+	//		const std::string &strName = pIt->first;
 	//		const BotUserData &bud = pIt->second;
-	//		
-	//		// Write the string length, and string
+	//
+	//		// Write the std::string length, and std::string
 	//		if(strName.length() > std::numeric_limits<unsigned char>::max())
 	//		{
 	//			LOGERR("> 256 characters in property name");
@@ -153,7 +155,7 @@ bool WaypointSerializer_V4::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	//		return false;
 
 	//	unsigned char iNumOutput = (unsigned char)iNumConnections;
-	//	
+	//
 	//	// Write out the number of connections(unsigned char 1 byte, shouldn't be more than 255 connections)
 	//	CHECK_WRITE(_file.Write((char *)&iNumOutput, sizeof(iNumOutput)));
 
@@ -176,7 +178,7 @@ bool WaypointSerializer_V4::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	//				break;
 	//			}
 	//		}
-	//		
+	//
 	//		if(!bFound)
 	//			return false;
 

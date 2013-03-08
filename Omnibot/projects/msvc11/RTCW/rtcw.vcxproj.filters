@@ -4,9 +4,6 @@
     <Filter Include="Dlls">
       <UniqueIdentifier>{ee9638a3-e8bb-41e1-ba6a-23f134fb68a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Interface">
-      <UniqueIdentifier>{c20fe3de-0ec0-492c-9c81-8819b237becc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2f35eb8e-af91-426c-8dbc-5a713af3724a}</UniqueIdentifier>
     </Filter>
@@ -48,7 +45,6 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\MP\WolfMP-Source\src\game\g_rtcwbot_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc">
@@ -95,15 +91,5 @@
     <ClInclude Include="..\..\..\RTCW\RTCW_FilterClosest.h">
       <Filter>Core\Filters</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="RTCW_BuildInterface.results">
-      <Filter>_Interface</Filter>
-    </CustomBuildStep>
-  </ItemGroup>
-  <ItemGroup>
-    <BuildExternal Include="..\..\..\RTCW\RTCW_BuildInterface.bld">
-      <Filter>_Interface</Filter>
-    </BuildExternal>
   </ItemGroup>
 </Project>

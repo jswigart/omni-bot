@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __OMNICOLOR_H__
 #define __OMNICOLOR_H__
@@ -80,6 +82,25 @@ private:
 		obuint8		m_RGBA[4];
 		obint32		m_RGBAi;
 	} cdata;
+};
+
+namespace COLOR
+{
+	const obColor RED			= obColor(255, 0, 0);
+	const obColor GREEN			= obColor(0, 255, 0);
+	const obColor BLUE			= obColor(0, 0, 255);
+	const obColor BLACK			= obColor(0, 0, 0);
+	const obColor WHITE			= obColor(255, 255, 255);
+	const obColor MAGENTA		= obColor(255, 0, 255);
+	const obColor GREY			= obColor(127, 127, 127);
+	const obColor LIGHT_GREY	= obColor(211, 211, 211);
+	const obColor ORANGE		= obColor(255, 127, 0);
+	const obColor YELLOW		= obColor(255, 255, 0);
+	const obColor CYAN			= obColor(0, 255, 255);
+	const obColor PINK			= obColor(255, 20, 147);
+	const obColor BROWN			= obColor(165, 42, 42);
+	const obColor AQUAMARINE	= obColor(127, 255, 212);
+	const obColor LAVENDER		= obColor(230, 230, 250);
 };
 
 #endif

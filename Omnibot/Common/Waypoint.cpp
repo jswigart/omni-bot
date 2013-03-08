@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "Waypoint.h"
 #include "NavigationFlags.h"
@@ -36,7 +35,7 @@ Waypoint::Waypoint(const Vector3f &_pos, float _radius, const Vector3f &_face)
 }
 
 Waypoint::~Waypoint()
-{	
+{
 }
 
 void Waypoint::Reset()
@@ -177,9 +176,9 @@ void Waypoint::AssignNewUID()
 	m_UID = m_NextUID++;
 }
 
-const Vector3f &Waypoint::GetFacing() const 
-{ 
-	return m_Facing; 
+const Vector3f &Waypoint::GetFacing() const
+{
+	return m_Facing;
 }
 
 bool Waypoint::IsConnectedTo(const Waypoint *_wp) const
@@ -230,13 +229,13 @@ void Waypoint::PostLoad()
 	m_OnPathThrough = 0;
 	m_OnPathThroughParam = 0;
 
-	String s = GetPropertyMap().GetProperty("paththrough");
+	std::string s = GetPropertyMap().GetProperty("paththrough");
 	if(s.size()>1)
 	{
 		StringVector sv;
 		Utils::Tokenize(s," :",sv);
 		if(sv.size()>1)
-			m_OnPathThroughParam = Utils::MakeHash32(sv[1]); 
+			m_OnPathThroughParam = Utils::MakeHash32(sv[1]);
 		if(!sv.empty())
 			m_OnPathThrough = Utils::MakeHash32(sv[0]);
 	}

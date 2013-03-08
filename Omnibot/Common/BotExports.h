@@ -1,14 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 // Title: BotExports
 //		In order for the game to call functions from the bot, we must export
-//		the functions to the game itself and allow it to call them. 
+//		the functions to the game itself and allow it to call them.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BOTEXPORTS_H__
 #define __BOTEXPORTS_H__
@@ -23,7 +25,7 @@
 #ifdef WIN32
 #define OMNIBOT_API __declspec(dllexport)
 #else
-#define OMNIBOT_API 
+#define OMNIBOT_API
 #endif
 
 // Typedef for the only exported bot function.
@@ -34,7 +36,7 @@ typedef eomnibot_error (*pfnGetFunctionsFromDLL)(Bot_EngineFuncs_t *_pBotFuncs, 
 //	This gets rid of name mangling
 //	Wrapped in #ifdef because the game SDK might be in pure C
 #ifdef __cplusplus
-extern "C" 
+extern "C"
 {
 #endif
 	// function: ExportBotFunctionsFromDLL

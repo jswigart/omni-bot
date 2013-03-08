@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // about: WOLF definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __MC_EVENTS_H__
 #define __MC_EVENTS_H__
@@ -125,7 +127,7 @@ typedef enum
 
 // typedef: MC_PlayerClass
 //		The available classes for this gametype
-typedef enum 
+typedef enum
 {
 	MC_CLASS_NULL = 0,
 	MC_CLASS_DEFAULT,
@@ -315,6 +317,5 @@ typedef enum
 
 	MC_UPGRADE_MAX
 } MC_WeaponUpgrades;
-
 
 #endif

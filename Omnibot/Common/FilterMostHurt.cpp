@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -28,7 +28,7 @@ void FilterMostHurt::Reset()
 
 void FilterMostHurt::Check(int _index, const MemoryRecord &_record)
 {
-	if(m_MemorySpan==0) 
+	if(m_MemorySpan==0)
 		m_MemorySpan = m_Client->GetSensoryMemory()->GetMemorySpan();
 
 	if(_record.m_TargetInfo.m_EntityCategory.CheckFlag(ENT_CAT_STATIC) ||
@@ -53,7 +53,7 @@ void FilterMostHurt::Check(int _index, const MemoryRecord &_record)
 		{
 			if(_record.m_TargetInfo.m_EntityClass >= ANYPLAYERCLASS)
 				return;
-		} 
+		}
 		else if(!PassesFilter(_record.m_TargetInfo.m_EntityClass))
 			return;
 
@@ -80,6 +80,6 @@ void FilterMostHurt::Check(int _index, const MemoryRecord &_record)
 				m_MostHurtHealthPc = m_HealthPercent;
 				m_BestEntity = _record.GetEntity();
 			}
-		}		
+		}
 	}
 }

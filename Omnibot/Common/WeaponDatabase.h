@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __WEAPONDATABASE_H__
 #define __WEAPONDATABASE_H__
@@ -24,7 +26,7 @@ public:
 	WeaponPtr CopyWeapon(Client *_client, int _weaponId);
 	void CopyAllWeapons(Client *_client, WeaponList &_list);
 
-	String GetWeaponName(int _weaponId);
+	std::string GetWeaponName(int _weaponId);
 	WeaponPtr GetWeapon(int _weaponId);
 
 	void LoadWeaponDefinitions(bool _clearall);

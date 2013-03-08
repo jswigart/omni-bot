@@ -1,4 +1,4 @@
-
+#pragma once
 
 #ifndef _PLATFORMSPECIFICS_H_
 #define _PLATFORMSPECIFICS_H_

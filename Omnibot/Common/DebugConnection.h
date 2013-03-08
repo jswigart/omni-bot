@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: plastovicka $
 // $LastChangedDate: 2012-07-10 07:28:45 -0500 (Tue, 10 Jul 2012) $
 // $LastChangedRevision: 677 $
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __DEBUGCONNECTION_H__
 #define __DEBUGCONNECTION_H__
@@ -16,7 +18,7 @@
 
 #define SET_IF_DIFF( cachedMsg, msgDiff, newvalue, var ) \
 	if ( (cachedMsg).var() != (newvalue) ) {\
-		(msgDiff).set_##var( (newvalue) ); \
+	(msgDiff).set_##var( (newvalue) ); \
 	}
 
 namespace RemoteLib {

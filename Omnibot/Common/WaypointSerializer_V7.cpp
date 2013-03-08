@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -19,14 +19,14 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	// temporary structure for Reading in the connection indices since we
 	// can't set up the correct pointers till after the waypoints have all
 	// been Read in and created.
-	
+
 	typedef std::multimap<obuint32, WaypointConnection> WaypointConnections;
 	WaypointConnections connections;
 
 	Waypoint *pCurrentWp = NULL;
 
 	// Save the next GUID
-	CHECK_READ(_file.ReadInt32(Waypoint::m_NextUID));	
+	CHECK_READ(_file.ReadInt32(Waypoint::m_NextUID));
 
 	obuint32 iSize = (obuint32)_wpl.size();
 	for(obuint32 i = 0; i < iSize; ++i)
@@ -43,7 +43,7 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 		const NavFlags F_NAV_MOVABLE	= (NavFlags(1)<<23); // deprecated
 		pCurrentWp->m_NavigationFlags &= ~F_NAV_MOVABLE;
 		pCurrentWp->m_NavigationFlags &= ~F_NAV_BLOCKABLE;
-		
+
 		obuint8 iNumProperties = 0;
 		CHECK_READ(_file.ReadInt8(iNumProperties));
 		for(obuint8 p = 0; p < iNumProperties; ++p)
@@ -51,7 +51,7 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 			char strname[512] = {0};
 			char strvalue[512] = {0};
 
-			// Read the string length, and string
+			// Read the std::string length, and std::string
 			obuint8 iPropNameLength = 0;
 			CHECK_READ(_file.ReadInt8(iPropNameLength));
 			OBASSERT(iPropNameLength > 0, "Invalid Name Length");
@@ -106,14 +106,14 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	for(obuint32 i = 0; i < _wpl.size(); ++i)
 	{
 		WaypointConnections::iterator it;
-		for (it = connections.lower_bound(i); 
-			it != connections.upper_bound(i); 
-			++it) 
+		for (it = connections.lower_bound(i);
+			it != connections.upper_bound(i);
+			++it)
 		{
 			Waypoint::ConnectionInfo conn = { _wpl[it->second.m_Index], it->second.m_ConnectionFlags };
 			if(it->second.m_Index < _wpl.size())
 				_wpl[i]->m_Connections.push_back(conn);
-			else 
+			else
 				return false;
 		}
 	}
@@ -135,7 +135,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 		CHECK_WRITE(_file.Write(&pCurrentWp->m_Position, sizeof(pCurrentWp->m_Position)));
 		CHECK_WRITE(_file.WriteInt64(pCurrentWp->m_NavigationFlags));
 		CHECK_WRITE(_file.WriteString(pCurrentWp->m_WaypointName));
-		
+
 		// Write the number of properties.
 		if(pCurrentWp->GetPropertyMap().GetProperties().size() > std::numeric_limits<obuint8>::max())
 		{
@@ -147,10 +147,10 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 		PropertyMap::ValueMap::const_iterator pIt = pCurrentWp->GetPropertyMap().GetProperties().begin();
 		for( ; pIt != pCurrentWp->GetPropertyMap().GetProperties().end(); ++pIt)
 		{
-			const String &strName = pIt->first;
-			const String &strData = pIt->second;
-			
-			// Write the string length, and string
+			const std::string &strName = pIt->first;
+			const std::string &strData = pIt->second;
+
+			// Write the std::string length, and std::string
 			if(strName.length() > std::numeric_limits<obuint8>::max())
 			{
 				LOGERR("> 256 characters in property name");
@@ -159,8 +159,8 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 			obuint8 iPropNameLength = (obuint8)strName.length();
 			CHECK_WRITE(_file.WriteInt8(iPropNameLength));
 			CHECK_WRITE(_file.Write(strName.c_str(), sizeof(obuint8) * iPropNameLength));
-			
-			// Write the data string length, and string
+
+			// Write the data std::string length, and std::string
 			if(strData.length() > std::numeric_limits<obuint8>::max())
 			{
 				LOGERR("> 256 characters in property name");
@@ -185,7 +185,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 				continue;
 			++iNumConnections;
 		}
-		
+
 		// Write out the number of connections(unsigned char 1 byte, shouldn't be more than 255 connections)
 		CHECK_WRITE(_file.WriteInt8(iNumConnections));
 
@@ -211,7 +211,7 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 					break;
 				}
 			}
-			
+
 			if(!bFound)
 				return false;
 		}

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,6 +9,8 @@
 #include "ET_BaseStates.h"
 #include "ET_FilterClosest.h"
 #include "ET_InterfaceFuncs.h"
+
+#include "RenderBuffer.h"
 
 namespace AiState
 {
@@ -22,7 +24,7 @@ namespace AiState
 		SetAlwaysRecieveEvents(true);
 	}
 
-	void PlantMine::GetDebugString(StringStr &out)
+	void PlantMine::GetDebugString(std::stringstream &out)
 	{
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
@@ -36,8 +38,8 @@ namespace AiState
 	{
 		if(IsActive())
 		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 		}
 	}
 
@@ -46,7 +48,7 @@ namespace AiState
 	{
 		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
 			_final = false;
-		else 
+		else
 			_final = true;
 		return true;
 	}
@@ -85,7 +87,7 @@ namespace AiState
 
 		m_MapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_LANDMINE, Primary)) 
+		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_LANDMINE, Primary))
 		{
 			GoalManager::Query qry(0xf2dffa59 /* PLANTMINE */, GetClient());
 			GoalManager::GetInstance()->GetGoals(qry);
@@ -157,7 +159,7 @@ namespace AiState
 				//m_Client->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
 
 				// Not armed yet, keep trying.
-				if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) && 
+				if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) &&
 					EngineFuncs::EntityVelocity(m_LandMineEntity, m_LandMineVelocity))
 				{
 					GetClient()->PressButton(BOT_BUTTON_CROUCH);
@@ -169,10 +171,10 @@ namespace AiState
 					Vector3f vMineToMe = GetClient()->GetPosition() - m_LandMinePosition;
 					vMineToMe.Flatten();
 
-					/*Utils::DrawLine(m_LandMinePosition,
-						m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
-						COLOR::GREEN,
-						5.f);*/
+					/*RenderBuffer::AddLine(m_LandMinePosition,
+					m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
+					COLOR::GREEN,
+					5.f);*/
 
 					GetClient()->GetSteeringSystem()->SetTarget(
 						m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE);
@@ -184,10 +186,10 @@ namespace AiState
 			Vector3f vMineToMe = GetClient()->GetPosition() - m_MapGoal->GetPosition();
 			vMineToMe.Flatten();
 
-			/*Utils::DrawLine(m_MapGoal->GetPosition(),
-				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
-				COLOR::GREEN,
-				5.f);*/
+			/*RenderBuffer::AddLine(m_MapGoal->GetPosition(),
+			m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
+			COLOR::GREEN,
+			5.f);*/
 
 			GetClient()->GetSteeringSystem()->SetTarget(
 				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE);
@@ -205,7 +207,7 @@ namespace AiState
 			{
 				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
 			}
-		}		
+		}
 		return State_Busy;
 	}
 
@@ -221,7 +223,7 @@ namespace AiState
 					m_LandMineEntity = m->m_Projectile;
 				}
 				break;
-			}			
+			}
 		}
 	}
 
@@ -234,7 +236,7 @@ namespace AiState
 		LimitToWeapon().SetFlag(ET_WP_MORTAR);
 	}
 
-	void MobileMortar::GetDebugString(StringStr &out)
+	void MobileMortar::GetDebugString(std::stringstream &out)
 	{
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
@@ -248,7 +250,7 @@ namespace AiState
 	{
 		if(IsActive())
 		{
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
 		}
 	}
 
@@ -257,7 +259,7 @@ namespace AiState
 	{
 		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
 			_final = false;
-		else 
+		else
 			_final = true;
 		return true;
 	}
@@ -306,7 +308,7 @@ namespace AiState
 			return GetLastPriority();
 
 		/*if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
-			return 0.f;*/
+		return 0.f;*/
 
 		m_MapGoal.reset();
 
@@ -403,7 +405,7 @@ namespace AiState
 				if(!m_MortarAim[m_NumMortarAims].IsZero())
 				{
 					++m_NumMortarAims;
-				}		
+				}
 			}
 		}
 		std::random_shuffle(m_MortarAim, m_MortarAim + m_NumMortarAims);
@@ -423,7 +425,7 @@ namespace AiState
 		LimitToWeapon().SetFlag(ET_WP_BINOCULARS);
 	}
 
-	void CallArtillery::GetDebugString(StringStr &out)
+	void CallArtillery::GetDebugString(std::stringstream &out)
 	{
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
@@ -439,8 +441,8 @@ namespace AiState
 		{
 			if(m_MapGoal)
 			{
-				Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
-				Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
+				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 			}
 		}
 	}
@@ -450,7 +452,7 @@ namespace AiState
 	{
 		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 			_final = false;
-		else 
+		else
 			_final = true;
 		return true;
 	}
@@ -469,7 +471,7 @@ namespace AiState
 			if(mr)
 			{
 				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
+				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
 					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
 				m_FireTime = IGame::GetTime() + 1000;
 			}
@@ -513,18 +515,18 @@ namespace AiState
 		if(sensory)
 		{
 			sensory->QueryMemory(filter);
-			
+
 			if(filter.GetBestEntity().IsValid())
 			{
 				GoalManager::Query q(0xa411a092 /* MOVER */);
 				q.Ent(filter.GetBestEntity());
 				GoalManager::GetInstance()->GetGoals(q);
-				
+
 				if(!q.m_List.empty())
 				{
 					m_TargetEntity = filter.GetBestEntity();
 					return q.m_List.front()->GetDefaultPriority();
-				}				
+				}
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
@@ -597,11 +599,11 @@ namespace AiState
 		if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
 			m_FireTime = std::numeric_limits<int>::max();
 		else
-			m_FireTime = 0;			
+			m_FireTime = 0;
 
 		m_Fired = false;
 		m_ExpireTime = 0;
-		
+
 		if(m_MapGoal)
 		{
 			m_MapGoal->GetProperty("Stance",m_Stance);
@@ -615,7 +617,7 @@ namespace AiState
 			{
 				m_WatchFilter.reset(new ET_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
 			}
-			
+
 			m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
 			m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
 			m_WatchFilter->SetMaxDistance(100.f);
@@ -705,7 +707,7 @@ namespace AiState
 			}
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 
 	UseCabinet::UseCabinet()
@@ -715,9 +717,9 @@ namespace AiState
 	{
 	}
 
-	void UseCabinet::GetDebugString(StringStr &out)
+	void UseCabinet::GetDebugString(std::stringstream &out)
 	{
-		out << 
+		out <<
 			(m_MapGoal ? m_MapGoal->GetName() : "") <<
 			" (" << m_HealthPriority << "," << m_AmmoPriority << ")";
 	}
@@ -733,8 +735,8 @@ namespace AiState
 		{
 			if(m_MapGoal)
 			{
-				Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
-				Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
+				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 			}
 		}
 	}
@@ -744,7 +746,7 @@ namespace AiState
 	{
 		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 			_final = false;
-		else 
+		else
 			_final = true;
 		return true;
 	}
@@ -752,39 +754,39 @@ namespace AiState
 	// AimerUser functions.
 	/*bool UseHealthCabinet::GetAimPosition(Vector3f &_aimpos)
 	{
-		if(m_MapGoalTarget)
-		{
-			_aimpos = m_MapGoalTarget->GetPosition();
-		}
-		else if(m_TargetEntity.IsValid())
-		{
-			const float LOOKAHEAD_TIME = 5.0f;
-			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
-			if(mr)
-			{
-				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
-					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-				m_FireTime = IGame::GetTime() + 1000;
-			}
-		}
-		return true;
+	if(m_MapGoalTarget)
+	{
+	_aimpos = m_MapGoalTarget->GetPosition();
+	}
+	else if(m_TargetEntity.IsValid())
+	{
+	const float LOOKAHEAD_TIME = 5.0f;
+	const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
+	if(mr)
+	{
+	const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
+	_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
+	mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
+	m_FireTime = IGame::GetTime() + 1000;
+	}
+	}
+	return true;
 	}
 
 	void UseHealthCabinet::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
-		{
-			GetClient()->PressButton(BOT_BUTTON_AIM);
-			if(m_FireTime < IGame::GetTime())
-			{
-				if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
-				{
-					ws->FireWeapon();
-				}
-			}
-		}
+	FINDSTATE(ws, WeaponSystem, GetRootState());
+	if(ws && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
+	{
+	GetClient()->PressButton(BOT_BUTTON_AIM);
+	if(m_FireTime < IGame::GetTime())
+	{
+	if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
+	{
+	ws->FireWeapon();
+	}
+	}
+	}
 	}*/
 
 	obReal UseCabinet::GetPriority()
@@ -841,7 +843,7 @@ namespace AiState
 				m_HealthPriority = fHealthPriority;
 			}
 		}
-		
+
 		// don't bother if we need health more than ammo or if desire for ammo is too low
 		if(fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && m_AmmoType != -1)
 		{
@@ -883,7 +885,7 @@ namespace AiState
 	}
 
 	void UseCabinet::Enter()
-	{	
+	{
 		m_UseTime = 0;
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
 		if(!DidPathFail())
@@ -917,7 +919,7 @@ namespace AiState
 		OBASSERT(m_MapGoal,"No Map Goal!");
 
 		ET_CabinetData cData;
-		if(InterfaceFuncs::GetCabinetData(m_MapGoal->GetEntity(),cData) && 
+		if(InterfaceFuncs::GetCabinetData(m_MapGoal->GetEntity(),cData) &&
 			cData.m_CurrentAmount == 0)
 		{
 			BlackboardDelay(20.f, m_MapGoal->GetSerialNum());
@@ -981,7 +983,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_PLIERS);
 	//}
 
-	//void BuildConstruction::GetDebugString(StringStr &out)
+	//void BuildConstruction::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -990,8 +992,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineAABB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_ConstructionPos,COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_ConstructionPos,COLOR::GREEN,5.f);
 	//	}
 	//}
 
@@ -1000,7 +1002,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//	{
 	//		_skiplastpt = true;
 	//		_final = true;
@@ -1028,7 +1030,7 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
-	//	
+	//
 	//	m_MapGoal.reset();
 
 	//	GoalManager::Query qry(0xc39bf2a3 /* BUILD */, GetClient());
@@ -1060,7 +1062,7 @@ namespace AiState
 	//	m_MapGoal->GetProperty("Crouch",m_Crouch);
 	//	m_MapGoal->GetProperty("Prone",m_Prone);
 	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
-	//	
+	//
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
 
@@ -1114,7 +1116,7 @@ namespace AiState
 	//				Vector3f checkPos(m_ConstructionPos.x, m_ConstructionPos.y, GetClient()->GetEyePosition().z);
 
 	//				obTraceResult tr;
-	//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos, 
+	//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos,
 	//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
 
 	//				if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
@@ -1124,9 +1126,9 @@ namespace AiState
 	//				}
 
 	//				// do a trace to adjust position
-	//				EngineFuncs::TraceLine(tr, 
+	//				EngineFuncs::TraceLine(tr,
 	//					GetClient()->GetEyePosition(),
-	//					m_ConstructionPos, 
+	//					m_ConstructionPos,
 	//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
 
 	//				if (tr.m_Fraction != 1.0f)
@@ -1166,7 +1168,7 @@ namespace AiState
 	//	SetAlwaysRecieveEvents(true);
 	//}
 
-	//void PlantExplosive::GetDebugString(StringStr &out)
+	//void PlantExplosive::GetDebugString(std::stringstream &out)
 	//{
 	//	switch(m_GoalState)
 	//	{
@@ -1192,8 +1194,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineAABB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
@@ -1202,7 +1204,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -1273,7 +1275,7 @@ namespace AiState
 
 	//	m_MapGoal.reset();
 
-	//	if(InterfaceFuncs::IsWeaponCharged(GetClient(), weaponType, Primary)) 
+	//	if(InterfaceFuncs::IsWeaponCharged(GetClient(), weaponType, Primary))
 	//	{
 	//		{
 	//			GoalManager::Query qry(0xbbcae592 /* PLANT */, GetClient());
@@ -1312,7 +1314,7 @@ namespace AiState
 
 	//				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//					continue;
-	//				
+	//
 	//				if(!(qry.m_List[i]->GetGoalState() & targetType))
 	//					continue;
 
@@ -1325,9 +1327,9 @@ namespace AiState
 	//}
 
 	//void PlantExplosive::Enter()
-	//{		
+	//{
 	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
-	//	
+	//
 	//	// set position to base of construction
 	//	AABB aabb = m_MapGoal->GetWorldBounds();
 	//	aabb.CenterPoint(m_ExplosivePosition);
@@ -1398,12 +1400,12 @@ namespace AiState
 
 	//			/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//			{
-	//				Utils::OutlineAABB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 1.f);
+	//				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 1.f);
 
 	//				Vector3f vCenter;
 	//				m_MapGoal->GetWorldBounds().CenterPoint(vCenter);
-	//				Utils::DrawLine(m_Client->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
-	//				Utils::DrawLine(m_Client->GetPosition(), m_MapGoal->GetPosition(), COLOR::RED, 1.0f);
+	//				RenderBuffer::AddLine(m_Client->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
+	//				RenderBuffer::AddLine(m_Client->GetPosition(), m_MapGoal->GetPosition(), COLOR::RED, 1.0f);
 	//			}*/
 
 	//			const float fDistanceToTarget = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
@@ -1418,11 +1420,11 @@ namespace AiState
 	//					Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
 	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
-	//						Utils::DrawLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
+	//						RenderBuffer::AddLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 	//					}*/
 
 	//					obTraceResult tr;
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos, 
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
 	//					if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
 	//					{
@@ -1431,7 +1433,7 @@ namespace AiState
 	//					}
 
 	//					// do a trace to adjust position
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition, 
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
 	//					if (tr.m_Fraction != 1.0f)
 	//					{
@@ -1513,11 +1515,11 @@ namespace AiState
 	//					Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
 	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
-	//						Utils::DrawLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
+	//						RenderBuffer::AddLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 	//					}*/
 
 	//					obTraceResult tr;
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos, 
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
 	//					if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
 	//					{
@@ -1530,7 +1532,7 @@ namespace AiState
 	//					}
 
 	//					// do a trace to adjust position
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition, 
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
 	//					if (tr.m_Fraction != 1.0f)
 	//					{
@@ -1550,13 +1552,13 @@ namespace AiState
 	//	case ARM_EXPLOSIVE:
 	//	case RUNAWAY:
 	//		{
-	//			OBASSERT(m_ExplosiveEntity.IsValid(), "No Explosive Entity!");			
+	//			OBASSERT(m_ExplosiveEntity.IsValid(), "No Explosive Entity!");
 
 	//			// Generate a random goal.
 	//			FINDSTATEIF(FollowPath,GetRootState(),GotoRandomPt(this));
 	//			m_GoalState = DETONATE_EXPLOSIVE;
 	//			break;
-	//		}		
+	//		}
 	//	case DETONATE_EXPLOSIVE:
 	//		{
 	//			if(DidPathFail() || DidPathSucceed())
@@ -1585,7 +1587,7 @@ namespace AiState
 	//								ws->FireWeapon();
 	//						}
 
-	//						ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity);							
+	//						ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity);
 	//						if(eState == XPLO_INVALID)
 	//							return State_Finished;
 	//					}
@@ -1627,7 +1629,7 @@ namespace AiState
 	//					FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
 	//				}
 	//				break;
-	//			}			
+	//			}
 	//		}
 	//	}
 	//}
@@ -1661,7 +1663,7 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	//Flamethrower::Flamethrower() 
+	//Flamethrower::Flamethrower()
 	//	: StateChild("Flamethrower")
 	//	, FollowPathUser("Flamethrower")
 	//	, m_MinCampTime(2000)
@@ -1672,7 +1674,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_FLAMETHROWER);
 	//}
 
-	//void Flamethrower::GetDebugString(StringStr &out)
+	//void Flamethrower::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -1809,7 +1811,7 @@ namespace AiState
 
 	////////////////////////////////////////////////////////////////////////////
 
-	//Panzer::Panzer() 
+	//Panzer::Panzer()
 	//	: StateChild("Panzer")
 	//	, FollowPathUser("Panzer")
 	//	, m_MinCampTime(2000)
@@ -1820,7 +1822,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_PANZERFAUST);
 	//}
 
-	//void Panzer::GetDebugString(StringStr &out)
+	//void Panzer::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -1888,7 +1890,7 @@ namespace AiState
 
 	//	m_TargetZone.Restart(256.f);
 	//	m_ExpireTime = 0;
-	//	
+	//
 	//	m_MapGoal->GetProperty("Stance",m_Stance);
 	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
 	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
@@ -1973,7 +1975,7 @@ namespace AiState
 	//{
 	//}
 
-	//void MountMg42::GetDebugString(StringStr &out)
+	//void MountMg42::GetDebugString(std::stringstream &out)
 	//{
 	//	if(IsActive())
 	//	{
@@ -2007,8 +2009,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//		m_TargetZone.RenderDebug();
 	//	}
 	//}
@@ -2018,7 +2020,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -2040,7 +2042,7 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
-	//	
+	//
 	//	BitFlag64 entFlags;
 
 	//	GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
@@ -2194,7 +2196,7 @@ namespace AiState
 	//				{
 	//					m_AimPoint = m_MG42Position + m_ScanLeft * 1024.f;
 	//					break;
-	//				}						
+	//				}
 	//			case SCAN_RIGHT:
 	//				if(m_ScanRight != Vector3f::ZERO)
 	//				{
@@ -2265,7 +2267,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_MOBILE_MG42);
 	//}
 
-	//void MobileMg42::GetDebugString(StringStr &out)
+	//void MobileMg42::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -2274,7 +2276,7 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
 	//		m_TargetZone.RenderDebug();
 	//	}
 	//}
@@ -2284,7 +2286,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -2416,7 +2418,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_PLIERS);
 	//}
 
-	//void RepairMg42::GetDebugString(StringStr &out)
+	//void RepairMg42::GetDebugString(std::stringstream &out)
 	//{
 	//	if(IsActive())
 	//	{
@@ -2429,8 +2431,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
@@ -2439,7 +2441,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -2534,7 +2536,7 @@ namespace AiState
 	//{
 	//}
 
-	//void TakeCheckPoint::GetDebugString(StringStr &out)
+	//void TakeCheckPoint::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -2543,8 +2545,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
@@ -2553,7 +2555,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -2604,7 +2606,7 @@ namespace AiState
 	//	if(DidPathSucceed())
 	//	{
 	//		m_TargetPosition.z = GetClient()->GetPosition().z;
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);			
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);
 	//	}
 	//	return State_Busy;
 	//}
@@ -2619,7 +2621,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_SYRINGE);
 	//}
 
-	//void ReviveTeammate::GetDebugString(StringStr &out)
+	//void ReviveTeammate::GetDebugString(std::stringstream &out)
 	//{
 	//	switch(m_GoalState)
 	//	{
@@ -2639,9 +2641,9 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
 	//	}
 	//}
 
@@ -2650,7 +2652,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}
@@ -2839,12 +2841,12 @@ namespace AiState
 	//				}
 
 	//				break;
-	//			}				
+	//			}
 	//		case HEALING:
 	//			{
 	//				// cs: bb delay any time the goal needs interrupted here
 	//				// otherwise it's a loop of goto and then finish which causes them
-	//				// to just 'stick' to the target without doing anything useful 
+	//				// to just 'stick' to the target without doing anything useful
 
 	//				if(GetClient()->GetTargetingSystem()->HasTarget())
 	//				{
@@ -2890,7 +2892,7 @@ namespace AiState
 	//	LimitToWeapon().SetFlag(ET_WP_PLIERS);
 	//}
 
-	//void DefuseDynamite::GetDebugString(StringStr &out)
+	//void DefuseDynamite::GetDebugString(std::stringstream &out)
 	//{
 	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	//}
@@ -2899,8 +2901,8 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
@@ -2909,7 +2911,7 @@ namespace AiState
 	//{
 	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
-	//	else 
+	//	else
 	//		_final = true;
 	//	return true;
 	//}

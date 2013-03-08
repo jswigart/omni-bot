@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
@@ -12,10 +14,10 @@
 #include "EventReciever.h"
 #include "Base_Messages.h"
 #include "StateMachine.h"
-#include "DebugWindow.h"
 #include "NameManager.h"
 #include "BlackBoard.h"
 #include "FileSystem.h"
+#include "GoalManager.h"
 
 class BotItemSystem;
 namespace AiState
@@ -38,7 +40,7 @@ class gmFunctionObject;
 // class: Client
 class Client : public EventReciever
 {
-public:	
+public:
 	friend class gmBot;
 
 	typedef enum
@@ -52,7 +54,7 @@ public:
 
 	typedef enum
 	{
-		FL_DISABLED = 0,		
+		FL_DISABLED = 0,
 		FL_SHOOTINGDISABLED,
 		FL_SELECTBESTWEAPON_OFF,
 		FL_USINGMOUNTEDWEAPON,
@@ -64,7 +66,7 @@ public:
 
 	// struct: HoldButtons
 	//		Tracks time values that buttons should be held for.
-	class HoldButtons  
+	class HoldButtons
 	{
 	public:
 		enum		{ NumButtons = 64 };
@@ -108,12 +110,12 @@ public:
 	inline bool InFieldOfView(const Vector3f &_pos);
 
 	bool HasLineOfSightTo(const Vector3f &_pos, GameEntity _entity = GameEntity(), int customTraceMask = 0);
-	static bool HasLineOfSightTo(const Vector3f &_pos1, const Vector3f &_pos2, 
+	static bool HasLineOfSightTo(const Vector3f &_pos1, const Vector3f &_pos2,
 		GameEntity _ent = GameEntity(), int _ignoreent = -1, int customTraceMask = 0);
 
 	bool IsAllied(const GameEntity _ent) const;
 
-	Vector3f GetEyePosition();	
+	Vector3f GetEyePosition();
 
 	virtual bool CanGetPowerUp(obint32 _powerup) const;
 
@@ -147,7 +149,7 @@ public:
 	Vector3f ToWorldSpace(const Vector3f &_localpos);
 
 	void OutputDebug(MessageType _type, const char * _str);
-	
+
 	// Property Accessors
 
 	// todo: put error checking in here, not gmBot
@@ -178,7 +180,7 @@ public:
 	inline obReal GetArmorPercent() const;
 	inline float GetStepHeight() const					{ return m_StepHeight; }
 	inline float GetMaxSpeed() const					{ return m_MaxSpeed; }
-	
+
 	virtual void Init(int _gameid);
 	virtual void Update();
 	virtual void UpdateBotInput();
@@ -244,7 +246,7 @@ public:
 
 	virtual bool CanBotSnipe() { return false; }
 	virtual bool GetSniperWeapon(int &nonscoped, int &scoped) { nonscoped=0; scoped=0; return false; }
-	virtual bool GetSkills(gmMachine *machine, gmTableObject *tbl) { _UNUSED(machine); _UNUSED(tbl); return false;}
+	virtual bool GetSkills(gmMachine *machine, gmTableObject *tbl) { machine; tbl; return false;}
 
 	virtual float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) { return false; }
 
@@ -253,10 +255,10 @@ public:
 	State *GetStateRoot() { return m_StateRoot; }
 
 	void InitBehaviorTree();
-	bool AddScriptGoal(const String &_name);
+	bool AddScriptGoal(const std::string &_name);
 	void InitScriptGoals();
 	virtual void SetupBehaviorTree() {}
-	
+
 	int				m_DesiredTeam;
 	int				m_DesiredClass;
 
@@ -355,7 +357,7 @@ inline obReal Client::GetArmorPercent() const
 		(obReal)m_HealthArmor.m_CurrentArmor / (obReal)m_HealthArmor.m_MaxArmor : (obReal)1.0;
 }
 
-inline bool Client::InFieldOfView(const Vector3f &_pos) 
+inline bool Client::InFieldOfView(const Vector3f &_pos)
 {
 	Vector3f toTarget = _pos - GetEyePosition();
 	toTarget.Normalize();

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "FileDownloader.h"
 #include "NavigationManager.h"
@@ -25,12 +24,12 @@ typedef boost::system::error_code errorcode;
 
 struct FileVars
 {
-	String		_MapName;
-	String		_GameName;
+	std::string		_MapName;
+	std::string		_GameName;
 	int			_InterfaceNum;
 	obuint32	_MapCrc;
 
-	FileVars(const String &_map, const String &_game, int _interface)
+	FileVars(const std::string &_map, const std::string &_game, int _interface)
 		: _MapName(_map)
 		, _GameName(_game)
 		, _InterfaceNum(_interface)
@@ -54,11 +53,11 @@ public:
 		, mSocket(io_service)
 		, mQuery(q)
 	{
-		String DlServer = "www.omni-bot.de";
-		String DlScript = "/e107/e107_plugins/waypointer/wpstream.php";
+		std::string DlServer = "www.omni-bot.de";
+		std::string DlScript = "/e107/e107_plugins/waypointer/wpstream.php";
 
 		//////////////////////////////////////////////////////////////////////////
-		String DlServerOverride, DlScriptOverride;
+		std::string DlServerOverride, DlScriptOverride;
 		Options::GetValue("Downloader","Server",DlServerOverride);
 		Options::GetValue("Downloader","Script",DlScriptOverride);
 		if(!DlServerOverride.empty())
@@ -67,10 +66,10 @@ public:
 			DlScript = DlScriptOverride;
 		//////////////////////////////////////////////////////////////////////////
 
-		String sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
+		std::string sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
 		mQuery._MapCrc = FileSystem::GetFileCrc(sFilePath);
 
-		StringStr script,args;
+		std::stringstream script,args;
 		args << "?m=" << mQuery._MapName
 			<< "&g=" << mQuery._GameName
 			<< "&i=" << mQuery._InterfaceNum
@@ -79,7 +78,7 @@ public:
 		script << DlScript << args.str();
 
 		EngineFuncs::ConsoleError(va("Attempting Download wpstream.php%s",args.str().c_str()));
-		
+
 		// Form the request. We specify the "Connection: close" header so that the
 		// server will close the socket after transmitting the response. This will
 		// allow us to treat all data up until the EOF as the content.
@@ -111,7 +110,7 @@ private:
 				mSocket.async_connect(endpoint,
 					boost::bind(&DownloadFile::handle_connect, this,
 					boost::asio::placeholders::error, ++endpoint_iterator));
-			}		
+			}
 			catch (std::exception* e)
 			{
 				LOGCRIT(e->what());
@@ -217,7 +216,7 @@ private:
 			{
 				//mError << header << "\n";
 			}
-			
+
 			// Write whatever content we already have to output.
 			if (mResponse.size() > 0)
 				mContent << &mResponse;
@@ -251,7 +250,7 @@ private:
 			const int size = mContent.str().length();
 			if(size > 0)
 			{
-				String sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
+				std::string sFilePath = va("user/download/%s.zip",mQuery._MapName.c_str());
 
 				fs::path sFilePathReal = FileSystem::GetRealDir(sFilePath)/sFilePath;
 				if(FileSystem::UnMount(sFilePathReal))
@@ -264,11 +263,11 @@ private:
 					f.Write(mContent.str().c_str(),size);
 					f.Close();
 
-					EngineFuncs::ConsoleMessage(va("Downloaded %s, %s : crc 0x%08X", 
-						mQuery._MapName.c_str(), 
+					EngineFuncs::ConsoleMessage(va("Downloaded %s, %s : crc 0x%08X",
+						mQuery._MapName.c_str(),
 						Utils::FormatByteString(size).c_str(),
 						FileSystem::CalculateCrc(mContent.str().c_str(),size)));
-					
+
 					sFilePathReal = FileSystem::GetRealDir(sFilePath)/sFilePath;
 					if(FileSystem::Mount(sFilePathReal,"nav",FileSystem::MountFirst))
 						EngineFuncs::ConsoleMessage(va("Mounted Archive: %s", sFilePath.c_str()));
@@ -294,13 +293,13 @@ private:
 	boost::asio::streambuf	mRequest;
 	boost::asio::streambuf	mResponse;
 
-	StringStr				mContent;
+	std::stringstream				mContent;
 	FileVars				mQuery;
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-String	gGameAbbrev;
+std::string	gGameAbbrev;
 int		gNavFileVersion = 0;
 
 bool FileDownloader::Init()
@@ -356,20 +355,20 @@ struct AsIOThread
 			{
 				gReloadNavigation = true;
 			}
-		}		
+		}
 		catch (std::exception* e)
 		{
 			LOGCRIT(e->what());
 		}
 	}
-	AsIOThread(const String &_map, const String &_abbrev, const int _version, bool _load = false)
+	AsIOThread(const std::string &_map, const std::string &_abbrev, const int _version, bool _load = false)
 		: _Abbrev(_abbrev)
 		, _FileVersion(_version)
 		, _LoadWaypoints(_load)
 	{
 		_DownloadList.push_back(_map);
 	}
-	AsIOThread(const StringList &dlList, const String &_abbrev, const int _version, bool _load = false)
+	AsIOThread(const StringList &dlList, const std::string &_abbrev, const int _version, bool _load = false)
 		: _DownloadList(dlList)
 		, _Abbrev(_abbrev)
 		, _FileVersion(_version)
@@ -379,7 +378,7 @@ struct AsIOThread
 private:
 	StringList	_DownloadList;
 
-	const String	_Abbrev;
+	const std::string	_Abbrev;
 	const int		_FileVersion;
 
 	const bool		_LoadWaypoints;
@@ -392,7 +391,7 @@ private:
 TryMutex			gDlMapMutex;
 StringList			gDlMapList;
 
-bool FileDownloader::NavigationMissing(const String &_name)
+bool FileDownloader::NavigationMissing(const std::string &_name)
 {
 	bool DownloadMissingNavigation = false;
 	Options::GetValue("Downloader","DownloadMissingNav",DownloadMissingNavigation);
@@ -406,7 +405,7 @@ bool FileDownloader::NavigationMissing(const String &_name)
 	return false;
 }
 
-void FileDownloader::UpdateWaypoints(const String &_mapname, bool _load)
+void FileDownloader::UpdateWaypoints(const std::string &_mapname, bool _load)
 {
 	//g_MasterThreadGroup.create_thread(AsIOThread(_mapname,gGameAbbrev,gNavFileVersion,_load));
 }
@@ -419,7 +418,7 @@ void FileDownloader::UpdateAllWaypoints(bool _getnew)
 	FileSystem::FindAllFiles("nav/", navFiles, ".*.way");
 	for(obuint32 i = 0; i < navFiles.size(); ++i)
 	{
-		const String &mapname = fs::basename(navFiles[i]);
+		const std::string &mapname = fs::basename(navFiles[i]);
 		maplist.push_back(mapname);
 	}
 	g_MasterThreadGroup.create_thread(AsIOThread(maplist,gGameAbbrev,gNavFileVersion));

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __IGAME_H__
 #define __IGAME_H__
@@ -12,7 +14,6 @@
 #include "CommandReciever.h"
 #include "EventReciever.h"
 #include "PathPlannerWaypointInterface.h"
-#include "MessageManager.h"
 #include "Weapon.h"
 #include "Module.h"
 #include "Base_Messages.h"
@@ -48,13 +49,13 @@ struct EntityInstance
 //		This class provides common functionality for various game types.
 //		Specific games will derive from this class to expand and implement
 //		their required functionality.
-class IGame : 
-	public CommandReciever, 
+class IGame :
+	public CommandReciever,
 	public EventReciever,
 	public PathPlannerWaypointInterface // waypoint system specific callbacks
 {
 public:
-	struct GameVars 
+	struct GameVars
 	{
 		float	mPlayerHeight;
 		GameVars();
@@ -73,7 +74,7 @@ public:
 
 	virtual void ClientJoined(const Event_SystemClientConnected *_msg);
 	virtual void ClientLeft(const Event_SystemClientDisConnected *_msg);
-	
+
 	void UpdateTime();
 	static inline obint32 GetTime()				{ return m_GameMsec; };
 	static inline obReal GetTimeSecs()			{ return (float)m_GameMsec / 1000.f; };
@@ -84,7 +85,7 @@ public:
 	static inline void SetTime(obint32 _newtime){ m_GameMsec = _newtime; }
 	static inline obReal GetGravity()			{ return m_Gravity; }
 	static inline bool GetCheatsEnabled()		{ return m_CheatsEnabled; }
-	    
+
 	void DispatchEvent(int _dest, const MessageHelper &_message);
 	void DispatchGlobalEvent(const MessageHelper &_message);
 
@@ -104,10 +105,10 @@ public:
 
 	ClientPtr GetClientByGameId(int _gameId);
 	ClientPtr GetClientByIndex(int _index);
-	
+
 	virtual const char *FindClassName(obint32 _classId);
 	virtual int FindWeaponId(obint32 _classId);
-	
+
 	// Mod specific subclasses.
 	virtual GoalManager *GetGoalManager();
 	virtual Client *CreateGameClient() = 0;
@@ -117,7 +118,7 @@ public:
 	virtual void GetRoleEnumeration(const IntEnum *&_ptr, int &num);
 
 	virtual void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
-	
+
 	virtual void CheckServerSettings(bool managePlayers = true);
 
 	inline bool DrawBlockableTests()				{ return m_bDrawBlockableTests; }
@@ -126,7 +127,7 @@ public:
 
 	virtual ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 
-	virtual bool CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, StringStr &err);
+	virtual bool CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err);
 
 	static GameState GetGameState() { return m_GameState; }
 	static GameState GetLastGameState() { return m_LastGameState; }
@@ -136,7 +137,7 @@ public:
 	class EntityIterator
 	{
 	public:
-		friend class IGame;		
+		friend class IGame;
 		operator bool() const;
 		void Clear();
 		EntityInstance &GetEnt() { return m_Current; }
@@ -173,9 +174,9 @@ public:
 
 	IGame();
 	virtual ~IGame();
-protected:	
+protected:
 	ClientPtr			m_ClientList[Constants::MAX_PLAYERS];
-	
+
 	State				*m_StateRoot;
 
 	static int					m_MaxEntity;
@@ -235,7 +236,7 @@ protected:
 	bool UnhandledCommand(const StringVector &_args);
 	void cmdRevision(const StringVector &_args);
 	void cmdAddbot(const StringVector &_args);
-	void cmdKickbot(const StringVector &_args);	
+	void cmdKickbot(const StringVector &_args);
 	void cmdDebugBot(const StringVector &_args);
 	void cmdKickAll(const StringVector &_args);
 	void cmdBotDontShoot(const StringVector &_args);

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PATH_H__
 #define __PATH_H__
@@ -72,7 +74,7 @@ public:
 
 	float GetTotalLength() const;
 
-	void DebugRender(obColor _color = COLOR::GREEN, float _duration = 5.f);
+	void DebugRender(obColor _color = COLOR::GREEN);
 
 	Path();
 private:

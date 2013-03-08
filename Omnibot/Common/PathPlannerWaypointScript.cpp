@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerWaypoint.h"
 #include "NavigationManager.h"
@@ -139,7 +138,7 @@ void SetWaypointDataInTable(gmMachine *_machine, gmTableObject *_table, const Wa
 //
 // Parameters:
 //
-//		<string> - The name of the waypoint to get the info of.
+//		<std::string> - The name of the waypoint to get the info of.
 //		<table> - An empty table, the function will fill in position, facing, guid.
 //
 // Returns:
@@ -149,14 +148,14 @@ static int GM_CDECL gmfGetWaypointByName(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_STRING_PARAM(name, 0);
 	GM_CHECK_TABLE_PARAM(params, 1);
-	
+
 	gmMachine *pMachine = a_thread->GetMachine();
 	DisableGCInScope gcEn(pMachine);
 
 	bool bSuccess = false;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
-	{		
+	{
 		Waypoint *pWaypoint = pWp->GetWaypointByName(name);
 		if(pWaypoint)
 		{
@@ -193,7 +192,7 @@ static int GM_CDECL gmfGetWaypointByUID(gmThread *a_thread)
 	bool bSuccess = false;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
-	{		
+	{
 		Waypoint *pWaypoint = pWp->GetWaypointByGUID(guid);
 		if(pWaypoint)
 		{
@@ -227,7 +226,7 @@ static int GM_CDECL gmfConnectWaypoints(gmThread *a_thread)
 	bool bSuccess = false;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
-	{		
+	{
 		Waypoint *pWaypoint1 = pWp->GetWaypointByGUID(guid1);
 		Waypoint *pWaypoint2 = pWp->GetWaypointByGUID(guid2);
 		if(pWaypoint1 != NULL && pWaypoint2 != NULL)
@@ -262,7 +261,7 @@ static int GM_CDECL gmfSetRadius(gmThread *a_thread)
 	bool bSuccess = false;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
-	{		
+	{
 		Waypoint *pWaypoint1 = pWp->GetWaypointByGUID(guid1);
 		if(pWaypoint1)
 		{
@@ -284,8 +283,8 @@ static int GM_CDECL gmfSetRadius(gmThread *a_thread)
 //
 //		<int> - Guid of a waypoint.
 //		- OR -
-//		<string> - Name of the waypoint.
-//		<string> - The name of the flag to set.
+//		<std::string> - Name of the waypoint.
+//		<std::string> - The name of the flag to set.
 //		<int> - True to set, false to clear.
 //
 // Returns:
@@ -302,12 +301,12 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		{
 			GM_CHECK_INT_PARAM(guid, 0);
 			pWaypoint = pWp->GetWaypointByGUID(guid);
-		} 
+		}
 		else if(a_thread->ParamType(0) == GM_STRING)
 		{
 			GM_CHECK_STRING_PARAM(name, 0);
 			pWaypoint = pWp->GetWaypointByName(name);
-		}		
+		}
 	}
 	else
 	{
@@ -320,7 +319,7 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		GM_EXCEPTION_MSG("Invalid Waypoint specified in param 0");
 		return GM_EXCEPTION;
 	}
-		
+
 	GM_CHECK_STRING_PARAM(flagname, 1);
 	GM_CHECK_INT_PARAM(enable, 2);
 
@@ -335,14 +334,14 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		pWaypoint->AddFlag(flag);
 	else
 		pWaypoint->RemoveFlag(flag);
-	
+
 	if(!pWaypoint->IsAnyFlagOn(F_NAV_TEAM_ALL))
 	{
 		if(pWaypoint->IsFlagOn(F_NAV_TEAMONLY))
 		{
 			pWaypoint->RemoveFlag(F_NAV_TEAMONLY);
 		}
-	} 
+	}
 	else
 	{
 		// At least one of them is on, so make sure the teamonly flag is set.
@@ -364,9 +363,9 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 //
 //		<int> - Guid of a waypoint.
 //		- OR -
-//		<string> - Name of the waypoint.
-//		<string> - The name of the flag to set.
-//		<string> - Property value to set.
+//		<std::string> - Name of the waypoint.
+//		<std::string> - The name of the flag to set.
+//		<std::string> - Property value to set.
 //
 // Returns:
 //		None
@@ -382,12 +381,12 @@ static int GM_CDECL gmfSetWaypointProperty(gmThread *a_thread)
 		{
 			GM_CHECK_INT_PARAM(guid, 0);
 			pWaypoint = pWp->GetWaypointByGUID(guid);
-		} 
+		}
 		else if(a_thread->ParamType(0) == GM_STRING)
 		{
 			GM_CHECK_STRING_PARAM(name, 0);
 			pWaypoint = pWp->GetWaypointByName(name);
-		}		
+		}
 	}
 	else
 	{
@@ -433,33 +432,33 @@ extern float g_fPathLevelOffset;
 //
 // Parameters:
 //
-//		<string> - The name of the category to set a color for.
+//		<std::string> - The name of the category to set a color for.
 //		<int> - The color to use for this type.
 //
 // Returns:
 //		None
 static int GM_CDECL gmfWaypointColor(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(2);	
+	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_STRING_PARAM(wptype, 0);
-	GM_CHECK_INT_PARAM(c, 1);	
+	GM_CHECK_INT_PARAM(c, 1);
 
 	obColor color(c);
 
 	StringVector v;
 	v.push_back("waypoint_color");
 	v.push_back(wptype);
-	v.push_back((String)va("%d", color.r()));
-	v.push_back((String)va("%d", color.g()));
-	v.push_back((String)va("%d", color.b()));
-	v.push_back((String)va("%d", color.a()));
+	v.push_back((std::string)va("%d", color.r()));
+	v.push_back((std::string)va("%d", color.g()));
+	v.push_back((std::string)va("%d", color.b()));
+	v.push_back((std::string)va("%d", color.a()));
 	CommandReciever::DispatchCommand(v);
 	return GM_OK;
 }
 
 static int GM_CDECL gmfGetAllWaypoints(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_TABLE_PARAM(tbl, 0);
 
 	PathPlannerWaypoint *pWp = GetWpPlanner();
@@ -482,8 +481,8 @@ static int GM_CDECL gmfGetAllWaypoints(gmThread *a_thread)
 
 static int GM_CDECL gmfGetAllSelectedWaypoints(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(1);	
-	GM_CHECK_TABLE_PARAM(tbl, 0);	
+	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_TABLE_PARAM(tbl, 0);
 
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
@@ -505,28 +504,28 @@ static int GM_CDECL gmfGetAllSelectedWaypoints(gmThread *a_thread)
 
 static int GM_CDECL gmfWaypointSave(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);	
-	GM_STRING_PARAM(wpname,0,0);	
+	GM_CHECK_NUM_PARAMS(0);
+	GM_STRING_PARAM(wpname,0,0);
 
 	PathPlannerWaypoint *obj = NULL;
 	if(gmBind2::GetThisGMType<PathPlannerWaypoint>(a_thread, obj)==GM_EXCEPTION)
 		return GM_EXCEPTION;
 
-	String strFile = wpname ? wpname : g_EngineFuncs->GetMapName();
+	std::string strFile = wpname ? wpname : g_EngineFuncs->GetMapName();
 	a_thread->PushInt(obj->Save(strFile)?1:0);
 	return GM_OK;
 }
 
 static int GM_CDECL gmfWaypointLoad(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);	
-	GM_STRING_PARAM(wpname,0,0);	
+	GM_CHECK_NUM_PARAMS(0);
+	GM_STRING_PARAM(wpname,0,0);
 
 	PathPlannerWaypoint *obj = NULL;
 	if(gmBind2::GetThisGMType<PathPlannerWaypoint>(a_thread, obj)==GM_EXCEPTION)
 		return GM_EXCEPTION;
 
-	String strFile = wpname ? wpname : g_EngineFuncs->GetMapName();
+	std::string strFile = wpname ? wpname : g_EngineFuncs->GetMapName();
 	a_thread->PushInt(obj->Load(strFile)?1:0);
 	return GM_OK;
 }
@@ -550,7 +549,7 @@ void PathPlannerWaypoint::RegisterScriptFunctions(gmMachine *a_machine)
 		.func(gmfWaypointSave,"Save")
 		.func(gmfWaypointLoad,"Load")
 		.func((bool (PathPlannerWaypoint::*)())&PathPlannerWaypoint::IsViewOn,"IsWaypointViewOn")
-		.func((bool (PathPlannerWaypoint::*)(int, const String &))&PathPlannerWaypoint::SetWaypointName,"SetWaypointName")
+		.func((bool (PathPlannerWaypoint::*)(int, const std::string &))&PathPlannerWaypoint::SetWaypointName,"SetWaypointName")
 		.var(&g_fTopWaypointOffset,"TopWaypointOffset")
 		.var(&g_fBottomWaypointOffset,"BottomWaypointOffset")
 		.var(&g_fTopPathOffset,"TopPathOffset")

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "NameManager.h"
 
@@ -20,20 +19,20 @@ public:
 	{
 	}
 private:
-	String		m_Name;
+	std::string		m_Name;
 	obint32		m_DesiredClassId;
 	obint32		m_DesiredTeamId;
 };
 //////////////////////////////////////////////////////////////////////////
 
-NameReference::NameReference(const String &_name, const String &_profile) :
+NameReference::NameReference(const std::string &_name, const std::string &_profile) :
 	m_Name(_name),
 	m_ProfileName(_profile)
 {
 }
 
 NameReference::~NameReference()
-{	
+{
 }
 
 NameManager *NameManager::m_Instance = NULL;
@@ -50,7 +49,7 @@ void NameManager::DeleteInstance()
 	OB_DELETE(m_Instance);
 }
 
-bool NameManager::AddName(const String &_name, const String &_profile)
+bool NameManager::AddName(const std::string &_name, const std::string &_profile)
 {
 	NamesMap::const_iterator cIt = m_NamesMap.find(_name);
 	if(cIt == m_NamesMap.end())
@@ -62,31 +61,31 @@ bool NameManager::AddName(const String &_name, const String &_profile)
 	return false;
 }
 
-void NameManager::DeleteName(const String &_name)
+void NameManager::DeleteName(const std::string &_name)
 {
 	NamesMap::iterator it = m_NamesMap.find(_name);
 	if(it != m_NamesMap.end())
 		m_NamesMap.erase(it);
 }
 
-const String NameManager::GetProfileForName(const String &_name) const
+const std::string NameManager::GetProfileForName(const std::string &_name) const
 {
 	NamesMap::const_iterator cIt = m_NamesMap.find(_name);
 	if(cIt != m_NamesMap.end())
 	{
 		return cIt->second->GetProfileName();
 	}
-	return String();
+	return std::string();
 }
 
-const String NameManager::GetProfileForClass(const int _class) const
+const std::string NameManager::GetProfileForClass(const int _class) const
 {
 	DefaultProfileMap::const_iterator it = m_ProfileMap.find(_class);
 	if(it != m_ProfileMap.end())
 	{
 		return it->second;
 	}
-	return String();
+	return std::string();
 }
 
 void NameManager::ClearNames()
@@ -94,7 +93,7 @@ void NameManager::ClearNames()
 	m_NamesMap.clear();
 }
 
-NamePtr NameManager::GetName(const String &_preferred)
+NamePtr NameManager::GetName(const std::string &_preferred)
 {
 	if(!_preferred.empty())
 	{
@@ -102,7 +101,7 @@ NamePtr NameManager::GetName(const String &_preferred)
 		if(it != m_NamesMap.end())
 			return it->second;
 		return NamePtr(new NameReference(_preferred));
-	}	
+	}
 
 	StringVector lst;
 	NamesMap::iterator it = m_NamesMap.begin(),
@@ -122,7 +121,7 @@ NamePtr NameManager::GetName(const String &_preferred)
 	return NamePtr();
 }
 
-void NameManager::SetProfileForClass(const int _class, const String &_name)
+void NameManager::SetProfileForClass(const int _class, const std::string &_name)
 {
 	m_ProfileMap.insert(std::make_pair(_class, _name));
 	const char *clsname = Utils::FindClassName(_class);
@@ -150,7 +149,7 @@ ScriptManager::GetInstance()->ExecuteFile("scripts/weapons/weapon_defaults.gm", 
 if((*cIt).leaf() == "weapon_defaults.gm")
 continue;
 
-LOG((Format("Loading Weapon Definition: %1%") % (*cIt).string()).str());		
+LOG((Format("Loading Weapon Definition: %1%") % (*cIt).string()).str());
 if(ScriptManager::GetInstance()->ExecuteFile(*cIt, iThreadId, &varThis))
 {
 if(wpn->GetWeaponID() != 0 && wpn->GetWeaponNameHash())

@@ -64,7 +64,6 @@
 
 namespace KEYVALUEINI
 {
-
 #ifdef _WIN32
 #pragma warning(disable:4996) // Disabling stupid .NET deprecated warning.
 #endif
@@ -226,7 +225,6 @@ namespace KEYVALUEINI
 			return ret;
 		}
 
-
 		int  flush()
 		{
 			int ret = 0;
@@ -236,7 +234,6 @@ namespace KEYVALUEINI
 			}
 			return ret;
 		}
-
 
 		int seek(long loc,int mode)
 		{
@@ -320,7 +317,6 @@ namespace KEYVALUEINI
 			return ret;
 		}
 
-
 		FILE 	*mFph;
 		char  *mData;
 		int    mLen;
@@ -328,9 +324,7 @@ namespace KEYVALUEINI
 		bool   mRead;
 		char   mName[512];
 		bool   mMyAlloc;
-
 	};
-
 
 	FILE_INTERFACE * fi_fopen(const char *fname,CHECK_PARAM_VALID const char *spec,void *mem=0,int len=0)
 	{
@@ -408,7 +402,6 @@ namespace KEYVALUEINI
 		}
 		return ret;
 	}
-
 
 	int        fi_fseek(FILE_INTERFACE *fph,int loc,int mode)
 	{
@@ -593,8 +586,7 @@ namespace KEYVALUEINI
 			mHard[c] = ST_HARD;
 		}
 
-
-		void SetCommentSymbol(unsigned char c) // comment character, treated as 'end of string'
+		void SetCommentSymbol(unsigned char c) // comment character, treated as 'end of std::string'
 		{
 			mHard[c] = ST_COMMENT;
 		}
@@ -603,7 +595,6 @@ namespace KEYVALUEINI
 		{
 			mHard[c] = ST_DATA;
 		}
-
 
 		void DefaultSymbols(); // set up default symbols for hard seperator and comment symbol of the '#' character.
 
@@ -621,11 +612,9 @@ namespace KEYVALUEINI
 			mQuoteChar = c;
 		}
 
-
 		inline bool IsComment(unsigned char c) const;
 
 	private:
-
 
 		inline char * AddHard(int &argc,const char **argv,char *foo);
 		inline bool   IsHard(unsigned char c);
@@ -731,7 +720,6 @@ namespace KEYVALUEINI
 		return false;
 	}
 
-
 	bool InPlaceParser::IsComment(unsigned char c) const
 	{
 		if ( mHard[c] == ST_COMMENT ) return true;
@@ -750,8 +738,7 @@ namespace KEYVALUEINI
 		if ( IsComment(*foo) )  // if the leading character is a comment symbol.
 			return 0;
 
-
-		if ( !EOS(*foo) )  // if we are not at the end of string then..
+		if ( !EOS(*foo) )  // if we are not at the end of std::string then..
 		{
 			argv[argc++] = foo;  // this is the key
 			foo++;
@@ -816,7 +803,6 @@ namespace KEYVALUEINI
 		char *foo   = mData;
 		char *begin = foo;
 
-
 		while ( *foo )
 		{
 			if ( *foo == 10 || *foo == 13 )
@@ -847,7 +833,6 @@ namespace KEYVALUEINI
 		return ret;
 	}
 
-
 	void InPlaceParser::DefaultSymbols()
 	{
 		SetHardSeparator(',');
@@ -860,12 +845,9 @@ namespace KEYVALUEINI
 		SetHardSeparator('}');
 		SetCommentSymbol('#');
 	}
-
-
 }; // END KEYVALUE INI NAMESPACE
 
 using namespace KEYVALUEINI;
-
 
 class KeyValue
 {
@@ -981,7 +963,6 @@ public:
 			fi_fprintf(fph,"\r\n");
 		}
 	}
-
 
 	bool  addKeyValue(const char *key,const char *value) // adds a key-value pair.  These pointers *must* be persistent for the lifetime of the INI file!
 	{
@@ -1159,18 +1140,18 @@ public:
 
 	/*bool save(const char *fname) const
 	{
-		bool ret = false;
-		FILE_INTERFACE *fph = fi_fopen(fname,"wb");
-		if ( fph )
-		{
-			for (unsigned int i=0; i<mSections.size(); i++)
-			{
-				mSections[i]->save(fph);
-			}
-			fi_fclose(fph);
-			ret = true;
-		}
-		return ret;
+	bool ret = false;
+	FILE_INTERFACE *fph = fi_fopen(fname,"wb");
+	if ( fph )
+	{
+	for (unsigned int i=0; i<mSections.size(); i++)
+	{
+	mSections[i]->save(fph);
+	}
+	fi_fclose(fph);
+	ret = true;
+	}
+	return ret;
 	}*/
 
 	void * saveMem(unsigned int &len) const
@@ -1195,7 +1176,6 @@ public:
 		}
 		return ret;
 	}
-
 
 	KeyValueSection  *createKeyValueSection(const char *section_name,bool reset)  // creates, or locates and existing section for editing.  If reset it true, will erase previous contents of the section.
 	{
@@ -1228,8 +1208,6 @@ private:
 	KeyValueSectionVector mSections;
 	InPlaceParser         mData;
 };
-
-
 
 //KeyValueIni *loadKeyValueIni(const char *fname,unsigned int &sections)
 //{
@@ -1326,7 +1304,6 @@ void              releaseKeyValueIni(KeyValueIni *ini)
 	delete ini;
 }
 
-
 const char *    getSectionName(const KeyValueSection *section)
 {
 	const char *ret = 0;
@@ -1336,7 +1313,6 @@ const char *    getSectionName(const KeyValueSection *section)
 	}
 	return ret;
 }
-
 
 //bool  saveKeyValueIni(const KeyValueIni *ini,const char *fname)
 //{
@@ -1381,7 +1357,6 @@ bool  addKeyValue(KeyValueSection *section,const char *key,const char *value)
 	return ret;
 }
 
-
 KeyValueIni      *createKeyValueIni() // create an empty .INI file in memory for editing.
 {
 	KeyValueIni *ret = new KeyValueIni;
@@ -1398,7 +1373,6 @@ bool              releaseIniMem(void *mem)
 	}
 	return ret;
 }
-
 
 #define TEST_MAIN 0
 
@@ -1447,8 +1421,4 @@ void main(int argc,const char **argv) // test to see if INI files work.
 	}
 }
 
-
-
 #endif
-
-

@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TF_GAME_H__
 #define __TF_GAME_H__
@@ -26,7 +28,7 @@ public:
 	void Shutdown();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
-		
+
 	GoalManager *GetGoalManager();
 
 	const char *FindClassName(obint32 _classId);
@@ -36,7 +38,7 @@ public:
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
 	static obReal _GetDesirabilityFromTargetClass(int _grentype, int _class);
-	
+
 	// PathPlannerWaypointInterface
 	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw);
 
@@ -55,7 +57,6 @@ protected:
 	static const float TF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
 	static const float TF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
 private:
-
 };
 
 #endif

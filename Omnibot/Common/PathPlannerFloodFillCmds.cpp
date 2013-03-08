@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -13,6 +13,8 @@
 #include "IGame.h"
 #include "Client.h"
 #include "Timer.h"
+
+#include "RenderBuffer.h"
 
 using namespace std;
 
@@ -30,45 +32,45 @@ void PathPlannerFloodFill::InitCommands()
 {
 	PathPlannerBase::InitCommands();
 
-	SetEx("nav_save", "Save current navigation to disk", 
+	SetEx("nav_save", "Save current navigation to disk",
 		this, &PathPlannerFloodFill::cmdNavSave);
-	SetEx("nav_load", "Load last saved navigation from disk", 
+	SetEx("nav_load", "Load last saved navigation from disk",
 		this, &PathPlannerFloodFill::cmdNavLoad);
-	SetEx("nav_view", "Turn on/off navmesh visibility.", 
+	SetEx("nav_view", "Turn on/off navmesh visibility.",
 		this, &PathPlannerFloodFill::cmdNavView);
-	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.", 
+	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.",
 		this, &PathPlannerFloodFill::cmdNavViewConnections);
-	
+
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_enablestep", "Enable step by step generation process.", 
+	SetEx("nav_enablestep", "Enable step by step generation process.",
 		this, &PathPlannerFloodFill::cmdNavEnableStep);
-	SetEx("nav_step", "Step to the next nav process.", 
+	SetEx("nav_step", "Step to the next nav process.",
 		this, &PathPlannerFloodFill::cmdNavStep);
-	SetEx("nav_addfloodstart", "Adds a starting node for the flood fill.", 
+	SetEx("nav_addfloodstart", "Adds a starting node for the flood fill.",
 		this, &PathPlannerFloodFill::cmdAddFloodStart);
-	SetEx("nav_clearfloodstart", "Clear all flood fill starts.", 
+	SetEx("nav_clearfloodstart", "Clear all flood fill starts.",
 		this, &PathPlannerFloodFill::cmdClearFloodStarts);
-	SetEx("nav_savefloodstart", "Save all flood fill starts to <mapname>.navstarts.", 
+	SetEx("nav_savefloodstart", "Save all flood fill starts to <mapname>.navstarts.",
 		this, &PathPlannerFloodFill::cmdSaveFloodStarts);
-	SetEx("nav_loadfloodstart", "Load all flood fill starts from <mapname>.navstarts.", 
+	SetEx("nav_loadfloodstart", "Load all flood fill starts from <mapname>.navstarts.",
 		this, &PathPlannerFloodFill::cmdLoadFloodStarts);
-	SetEx("nav_floodfill", "Start the flood fill process.", 
+	SetEx("nav_floodfill", "Start the flood fill process.",
 		this, &PathPlannerFloodFill::cmdNavMeshFloodFill);
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.", 
+	SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.",
 		this, &PathPlannerFloodFill::cmdAutoBuildFeatures);
 
 	//////////////////////////////////////////////////////////////////////////
 
-	/*SetEx("nav_loadobj", "Loads navmesh from obj file.", 
-		this, &PathPlannerFloodFill::cmdLoadObj);
-	SetEx("nav_loadmap", "Loads navmesh from map file.", 
-		this, &PathPlannerFloodFill::cmdLoadMap);*/
+	/*SetEx("nav_loadobj", "Loads navmesh from obj file.",
+	this, &PathPlannerFloodFill::cmdLoadObj);
+	SetEx("nav_loadmap", "Loads navmesh from map file.",
+	this, &PathPlannerFloodFill::cmdLoadMap);*/
 
-	SetEx("nav_next", "Steps the current tool to the next operation.", 
+	SetEx("nav_next", "Steps the current tool to the next operation.",
 		this, &PathPlannerFloodFill::cmdNext);
-	
-	SetEx("sector_setproperty", "Sets a property of the current sector.", 
+
+	SetEx("sector_setproperty", "Sets a property of the current sector.",
 		this, &PathPlannerFloodFill::cmdSectorSetProperty);
 
 	/*REGISTER_STATE(PathPlannerFloodFill,NoOp);
@@ -97,15 +99,15 @@ void PathPlannerFloodFill::cmdNavLoad(const StringVector &_args)
 	if(Load(g_EngineFuncs->GetMapName()))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Nav.");
-	} 
+	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Nav.");
 }
 
 void PathPlannerFloodFill::cmdNavView(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_view enable[bool]",
 		"> enable: Enable nav rendering. true/false/on/off/1/0",
 	};
@@ -113,14 +115,14 @@ void PathPlannerFloodFill::cmdNavView(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableView( %s );",
+		(std::string)va("Nav.EnableView( %s );",
 		bEnable ? "true" : "false"));
 }
 
 void PathPlannerFloodFill::cmdNavViewConnections(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_viewconnections enable[bool]",
 		"> enable: Enable nav connection rendering. true/false/on/off/1/0",
 	};
@@ -128,7 +130,7 @@ void PathPlannerFloodFill::cmdNavViewConnections(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableViewConnection( %s );", 
+		(std::string)va("Nav.EnableViewConnection( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -137,8 +139,8 @@ void PathPlannerFloodFill::cmdNavEnableStep(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_enablestep enable[bool]",
 		"> enable: Enable step by step nav generation. true/false/on/off/1/0",
 	};
@@ -146,7 +148,7 @@ void PathPlannerFloodFill::cmdNavEnableStep(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableStep( %s );", 
+		(std::string)va("Nav.EnableStep( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -166,7 +168,7 @@ void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
 	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition)))
 	{
 		ScriptManager::GetInstance()->ExecuteStringLogged(
-			(String)va("Nav.AddFloodStart( Vector3(%f, %f, %f) );", 
+			(std::string)va("Nav.AddFloodStart( Vector3(%f, %f, %f) );",
 			vPosition.x, vPosition.y, vPosition.z));
 	}
 }
@@ -197,8 +199,8 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_floodfill gridradius[#] stepheight[#] jumpheight[#] characterheight[#] charactercrouchheight[#]",
 		"> gridradius: radius of the grid cell to test with",
 		"> stepheight: the height an entity can step before being blocked by an edge",
@@ -206,7 +208,7 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 		"> charactercrouchheight: the height the character",
 		"> characterheight: the height the character",
 	};
-	
+
 	PRINT_USAGE(strUsage);
 
 	OPTIONAL_FLOAT_PARAM(fGridRadius, 1, g_GridRadius);
@@ -214,11 +216,11 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 	OPTIONAL_FLOAT_PARAM(fJumpHeight, 3, g_CharacterJumpHeight);
 	OPTIONAL_FLOAT_PARAM(fCrouchHeight, 4, g_CharacterCrouchHeight);
 	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, g_CharacterHeight);
-	
+
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.FloodFill( %f, %f, %f, %f, %f );", 
-		fGridRadius, 
-		fStepHeight, 
+		(std::string)va("Nav.FloodFill( %f, %f, %f, %f, %f );",
+		fGridRadius,
+		fStepHeight,
 		fJumpHeight,
 		fCrouchHeight,
 		fCharacterHeight));
@@ -236,9 +238,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 	for(int i = 0; i < iNumFeatures; ++i)
 	{
-		const float fTime = 30.f;
-
-		Vector3f vPos(features[i].m_Position);		
+		Vector3f vPos(features[i].m_Position);
 		Vector3f vFace(features[i].m_Facing);
 		Vector3f vTarget(features[i].m_TargetPosition);
 
@@ -262,13 +262,13 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		Utils::DrawLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
+		RenderBuffer::AddLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN);
 		if(vPos != vTarget)
 		{
-			Utils::DrawLine(vPos, vTarget, COLOR::MAGENTA, fTime);
-			Utils::DrawLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
+			RenderBuffer::AddLine(vPos, vTarget, COLOR::MAGENTA);
+			RenderBuffer::AddLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED);
 		}
-		Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
+		RenderBuffer::AddAABB(features[i].m_Bounds, COLOR::GREEN);
 		//////////////////////////////////////////////////////////////////////////
 	}
 	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
@@ -276,8 +276,8 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 
 //void PathPlannerFloodFill::cmdLoadObj(const StringVector &_args)
 //{
-//	String s = "J:/CVS/decompilers/" + String(g_EngineFuncs->GetMapName()) + ".obj";
-//	String line;
+//	std::string s = "J:/CVS/decompilers/" + std::string(g_EngineFuncs->GetMapName()) + ".obj";
+//	std::string line;
 //	char trash;
 //
 //	m_PolyIndexList.clear();
@@ -298,7 +298,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //			{
 //				Vector3f v;
 //
-//				StringStr st;
+//				std::stringstream st;
 //				st << line;
 //				st >> trash >> v;
 //
@@ -321,8 +321,8 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //			if(line.compare(0,1,"f",0,1) == 0)
 //			{
 //				StringList tokens;
-//				String buffer;
-//				StringStr st;
+//				std::string buffer;
+//				std::stringstream st;
 //				st << line;
 //				while(st >> buffer)
 //					tokens.push_back(buffer);
@@ -333,11 +333,11 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //				StringList::iterator it = tokens.begin(), itEnd = tokens.end();
 //				for(; it != itEnd; ++it)
 //				{
-//					const String &token = (*it);
+//					const std::string &token = (*it);
 //					if(token == "f")
 //						continue;
 //
-//					StringStr st;
+//					std::stringstream st;
 //					st << token;
 //
 //					obuint32 c = std::count(token.begin(), token.end(), '/');
@@ -382,10 +382,10 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 
 //void PathPlannerFloodFill::cmdLoadMap(const StringVector &_args)
 //{
-//	//String s = "J:/CVS/decompilers/" + String(g_EngineFuncs->GetMapName()) + ".map";
-//	String s = "J:/CVS/decompilers/q4ctf1.map";
-//	
-//	String line, tmp;
+//	//std::string s = "J:/CVS/decompilers/" + std::string(g_EngineFuncs->GetMapName()) + ".map";
+//	std::string s = "J:/CVS/decompilers/q4ctf1.map";
+//
+//	std::string line, tmp;
 //	char trash;
 //	int versionnum = 3;
 //	//int bracket = 0;
@@ -417,7 +417,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //
 //			if(line.compare(0,7,"Version",0,7) == 0)
 //			{
-//				StringStr st;
+//				std::stringstream st;
 //				st << line;
 //				st >> tmp >> versionnum;
 //				continue;
@@ -427,7 +427,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //				continue;
 //
 //			int c = 0;
-//			while(line[c] == ' ') 
+//			while(line[c] == ' ')
 //				++c;
 //
 //			if(line.compare(0,11,"\"classname\"",0,11) == 0)
@@ -465,13 +465,13 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //
 //							Plane3f pl;
 //
-//							StringStr st;
+//							std::stringstream st;
 //							st << line;
 //							st >> trash >> pl >> trash;
 //							if(st.good())
 //								planes.push_back(pl);
 //						}
-//						
+//
 //						// contruct polys from the list
 //						obuint32 wp = 0;
 //						bool bDidSomething = true;
@@ -546,8 +546,8 @@ void PathPlannerFloodFill::cmdSectorSetProperty(const StringVector &_args)
 		return;
 	}
 
-	String propName = _args[1];
-	String propValue = _args[2];
+	std::string propName = _args[1];
+	std::string propValue = _args[2];
 
 	Vector3f vFacing, vPos;
 	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
@@ -559,8 +559,8 @@ void PathPlannerFloodFill::cmdSectorSetProperty(const StringVector &_args)
 	/*PathPlannerFloodFill::NavCollision nc = FindCollision(vPos, vFacing*2048.f);
 	if(!nc.DidHit() || nc.HitAttrib().Fields.Mirrored)
 	{
-		EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
-		return;
+	EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
+	return;
 	}*/
 
 	// TODO:
@@ -573,7 +573,7 @@ void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 	double dTimeTaken = 0.0f;
 	obint32 iNumSectors = 0;//(obint32)m_ActiveNavSectors.size();
 	obint32 iNumPaths = iNumSectors * iNumSectors;
-	
+
 	Timer tme;
 	tme.Reset();
 	for(obint32 w1 = 0; w1 < iNumSectors; ++w1)
@@ -582,16 +582,16 @@ void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 		{
 			/*const NavSector &pS1 = m_ActiveNavSectors[w1];
 			const NavSector &pS2 = m_ActiveNavSectors[w2];
-			
+
 			PlanPathToGoal(NULL,
-				pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
-				pS2.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
-				0);*/
+			pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
+			pS2.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
+			0);*/
 		}
 	}
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec", 
+	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec",
 		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f));
 }
 
@@ -615,25 +615,25 @@ void PathPlannerFloodFill::_BenchmarkGetNavPoint(const StringVector &_args)
 	tme.Reset();
 	for(obuint32 i = 0; i < iNumIterations; ++i)
 	{
-		for(obuint32 w1 = 0; w1 < iNumWaypoints; ++w1)
-		{
-			NavSector *pSector = m_ActiveNavSectors[w1];
+	for(obuint32 w1 = 0; w1 < iNumWaypoints; ++w1)
+	{
+	NavSector *pSector = m_ActiveNavSectors[w1];
 
-			Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
-			if(pClosest)
-				++iHits;
-			else
-				++iMisses;
-		}
+	Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
+	if(pClosest)
+	++iHits;
+	else
+	++iMisses;
+	}
 	}
 
 	dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second", 
-		iNumWaypoints * iNumIterations, 
-		iHits, 
-		iMisses, 
-		dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	*/
+	EngineFuncs::ConsoleMessage("_GetClosest() %d calls, %d hits, %d misses : avg %f per second",
+	iNumWaypoints * iNumIterations,
+	iHits,
+	iMisses,
+	dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	*/
 }
 
 void PathPlannerFloodFill::cmdNext(const StringVector &_args)

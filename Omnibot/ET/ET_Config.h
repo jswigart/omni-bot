@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: ET Config
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ET_CONFIG_H__
 #define __ET_CONFIG_H__
@@ -75,7 +77,7 @@ typedef enum eET_Msgs
 	ET_MSG_ISGUNMOUNTED,
 	ET_MSG_ISGUNREPAIRABLE,
 	ET_MSG_MOUNTEDMG42INFO,
-	
+
 	// weapon query stuff
 	ET_MSG_WPOVERHEATED,
 	//ET_MSG_WPGRENSPEED,
@@ -265,7 +267,7 @@ typedef enum eET_EntityFlags
 {
 	// bit: ET_ENT_FLAG_DISGUISED
 	//		This entity is disguised
-	ET_ENT_FLAG_DISGUISED = ENT_FLAG_FIRST_USER,	
+	ET_ENT_FLAG_DISGUISED = ENT_FLAG_FIRST_USER,
 	// bit: ET_ENT_MOUNTED
 	//		This entity is mounted on an mg42, tank, or aagun
 	ET_ENT_FLAG_MOUNTED,

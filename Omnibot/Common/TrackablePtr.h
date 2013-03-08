@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TRACKABLEPTR_H__
 #define __TRACKABLEPTR_H__
@@ -20,27 +22,27 @@ public:
 	typedef boost::shared_ptr<Type> ShPtr;
 	typedef boost::weak_ptr<Type> WPtr;
 
-	TrackablePtr() : 
-		m_TrackType(TrackType) 
-	{
-	}	
-	TrackablePtr(const TrackPtr &_ptr) : 
+	TrackablePtr() :
 		m_TrackType(TrackType)
 	{
-		*this = _ptr; 
 	}
-	~TrackablePtr() 
-	{ 
+	TrackablePtr(const TrackPtr &_ptr) :
+		m_TrackType(TrackType)
+	{
+		*this = _ptr;
+	}
+	~TrackablePtr()
+	{
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
-		}			
+			shPtr->DelReference(m_TrackType);
+		}
 	}
 
 	///////////////////////////
 	// Assignement operators //
-	///////////////////////////	
+	///////////////////////////
 
 	// Assigning a shared pointer
 	inline TrackPtr& operator=(ShPtr &_obj)
@@ -56,22 +58,22 @@ public:
 
 			if(shPtr)
 			{
-				shPtr->DelReference(m_TrackType); 
+				shPtr->DelReference(m_TrackType);
 			}
-		}		
-				
+		}
+
 		// Assign the new object
 		m_pObject = _obj;
-		
+
 		// Addref to increment the new objects reference counter.
 		if(!m_pObject.expired())
 		{
 			ShPtr shPtr = m_pObject.lock();
 			if(shPtr)
 			{
-				shPtr->AddReference(m_TrackType); 
+				shPtr->AddReference(m_TrackType);
 			}
-		}	
+		}
 		return *this;
 	}
 	// Assigning a shared pointer
@@ -85,7 +87,7 @@ public:
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
+			shPtr->DelReference(m_TrackType);
 		}
 
 		// Assign the new object
@@ -95,7 +97,7 @@ public:
 		ShPtr shPtr2 = m_pObject.lock();
 		if(shPtr2)
 		{
-			shPtr2->AddReference(m_TrackType); 
+			shPtr2->AddReference(m_TrackType);
 		}
 		return *m_pObject;
 	}
@@ -116,7 +118,7 @@ public:
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
+			shPtr->DelReference(m_TrackType);
 		}
 
 		// Clear the reference.
@@ -130,14 +132,14 @@ public:
 	// Access as a reference
 	/*inline Type& operator*() const
 	{
-		assert(m_pObject && "Tried to * on a NULL TrackablePtr");
-		return *m_pObject;
+	assert(m_pObject && "Tried to * on a NULL TrackablePtr");
+	return *m_pObject;
 	}*/
 	// Access as a pointer
 	/*inline Type* operator->() const
 	{
-		assert(m_pObject && "Tried to -> on a NULL TrackablePtr");
-		return m_pObject;
+	assert(m_pObject && "Tried to -> on a NULL TrackablePtr");
+	return m_pObject;
 	}*/
 
 	////////////////////////////////////

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -28,9 +28,9 @@ class Limbo : public StateChild
 {
 public:
 
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return GetClient()->HasEntityFlag(ETQW_ENT_FLAG_INLIMBO) ? 1.f : 0.f;		
+		return GetClient()->HasEntityFlag(ETQW_ENT_FLAG_INLIMBO) ? 1.f : 0.f;
 	}
 
 	void Exit()
@@ -38,13 +38,13 @@ public:
 		GetRootState()->OnSpawn();
 	}
 
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		// need to do something special here?
-		return State_Busy; 
+		return State_Busy;
 	}
 
-	Limbo() : StateChild("Limbo") 
+	Limbo() : StateChild("Limbo")
 	{
 	}
 protected:
@@ -53,25 +53,25 @@ protected:
 class Incapacitated : public StateChild
 {
 public:
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f; 
+		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
 		{
-			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
+			if(!InterfaceFuncs::IsMedicNear(GetClient()))
 			{
 				InterfaceFuncs::GoToLimbo(GetClient());
 			}
 		}
 		GetClient()->SetMovementVector(Vector3f::ZERO);
-		return State_Busy; 
+		return State_Busy;
 	}
 
-	Incapacitated() : StateChild("Incapacitated") 
+	Incapacitated() : StateChild("Incapacitated")
 	{
 	}
 protected:
@@ -103,7 +103,7 @@ void ETQW_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters
 	switch(_message.GetMessageId())
 	{
 		HANDLER(ETQW_EVENT_PRETRIGGER_MINE)
-		HANDLER(ETQW_EVENT_POSTTRIGGER_MINE)
+			HANDLER(ETQW_EVENT_POSTTRIGGER_MINE)
 		{
 			const Event_TriggerMine_ETQW *m = _message.Get<Event_TriggerMine_ETQW>();
 			_cb.AddEntity("mine_entity", m->m_MineEntity);
@@ -137,13 +137,13 @@ NavFlags ETQW_Client::GetTeamFlag(int _team)
 	case ETQW_TEAM_STROGG:
 		return F_NAV_TEAM1;
 	case ETQW_TEAM_GDF:
-		return F_NAV_TEAM2;	
+		return F_NAV_TEAM2;
 	default:
 		return defaultTeam;
 	}
 }
 
-void ETQW_Client::SendVoiceMacro(int _macroId) 
+void ETQW_Client::SendVoiceMacro(int _macroId)
 {
 	ETQW_VoiceMacros::SendVoiceMacro(this, _macroId);
 }
@@ -151,7 +151,7 @@ void ETQW_Client::SendVoiceMacro(int _macroId)
 int ETQW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 {
 	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-	
+
 	int iVoiceId = ETQW_VoiceMacros::GetVChatId(m->m_MacroString);
 	switch(iVoiceId)
 	{
@@ -175,7 +175,7 @@ int ETQW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ETQW_Evaluator_RequestGiveHealth(this, m->m_WhoSaidIt));
 				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
+				GetBrain()->AddGoalEvaluator(eval);*/
 			}
 			break;
 		}
@@ -186,7 +186,7 @@ int ETQW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ETQW_Evaluator_RequestGiveAmmo(this, m->m_WhoSaidIt));
 				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
+				GetBrain()->AddGoalEvaluator(eval);*/
 			}
 			break;
 		}
@@ -267,7 +267,7 @@ float ETQW_Client::GetAvoidRadius(int _class) const
 {
 	switch(_class)
 	{
-	//case ENT_CLASS_GENERIC_BUTTON:
+		//case ENT_CLASS_GENERIC_BUTTON:
 	case ENT_CLASS_GENERIC_HEALTH:
 	case ENT_CLASS_GENERIC_AMMO:
 	case ENT_CLASS_GENERIC_ARMOR:
@@ -296,7 +296,7 @@ bool ETQW_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::HasFlag(this);
 }
 
-bool ETQW_Client::CanBotSnipe() 
+bool ETQW_Client::CanBotSnipe()
 {
 	if(GetClass() == ETQW_CLASS_COVERTOPS)
 	{
@@ -334,7 +334,7 @@ bool ETQW_Client::GetSkills(gmMachine *machine, gmTableObject *tbl)
 	return false;
 }
 
-float ETQW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float ETQW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
 	if(_flag & F_ETQW_NAV_DISGUISE)
@@ -342,7 +342,7 @@ float ETQW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *
 		if(/*GetClass() == ETQW_CLASS_COVERTOPS && */HasEntityFlag(ETQW_ENT_FLAG_DISGUISED))
 			return 1.f;
 		return 0.f;
-	}	
+	}
 	return 0.f;
 }
 

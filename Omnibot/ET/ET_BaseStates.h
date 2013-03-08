@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ETBaseStates_H__
-#define __ETBaseStates_H__
+#pragma once
+
+#ifndef __ETBASESTATES_H__
+#define __ETBASESTATES_H__
 
 #include "StateMachine.h"
 
@@ -23,7 +25,7 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -57,7 +59,7 @@ namespace AiState
 	class MobileMortar : public StateChild, public FollowPathUser, public AimerUser
 	{
 	public:
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -96,7 +98,7 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -143,7 +145,7 @@ namespace AiState
 			Ammo,
 		};
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -181,7 +183,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -201,7 +203,7 @@ namespace AiState
 	//	Trackers		Tracker;
 	//	MapGoalPtr		m_MapGoal;
 	//	Vector3f		m_AimPosition;
-	//	
+	//
 	//	TrackTargetZone m_TargetZone;
 
 	//	int				m_MinCampTime;
@@ -217,7 +219,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -237,7 +239,7 @@ namespace AiState
 	//	Trackers		Tracker;
 	//	MapGoalPtr		m_MapGoal;
 	//	Vector3f		m_AimPosition;
-	//	
+	//
 	//	TrackTargetZone m_TargetZone;
 
 	//	int				m_MinCampTime;
@@ -251,7 +253,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -285,7 +287,7 @@ namespace AiState
 	//public:
 	//	typedef ET_SetDynamiteGoal Mg;
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -332,7 +334,7 @@ namespace AiState
 	//class MountMg42 : public StateChild, public FollowPathUser, public AimerUser
 	//{
 	//public:
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -378,7 +380,7 @@ namespace AiState
 
 	//	Vector3f			m_GunCenterArc;
 	//	Vector3f			m_CurrentMountedAngles;
-	//	
+	//
 	//	Vector3f			m_ScanLeft;
 	//	Vector3f			m_ScanRight;
 
@@ -405,7 +407,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -439,7 +441,7 @@ namespace AiState
 	//class RepairMg42 : public StateChild, public FollowPathUser, public AimerUser
 	//{
 	//public:
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -469,7 +471,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -499,7 +501,7 @@ namespace AiState
 	//		HEALING,
 	//	} GoalState;
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -534,7 +536,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();

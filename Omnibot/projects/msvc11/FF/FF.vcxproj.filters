@@ -39,6 +39,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FF\Jamfile" />
-    <None Include="..\..\..\FF\Omni-Bot_FF_TODO.txt" />
   </ItemGroup>
 </Project>

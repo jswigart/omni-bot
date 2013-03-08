@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\GameInterfaces\ETQW\game\omnibot\omnibot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>

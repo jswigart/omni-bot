@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TRIGGERMANAGER_H__
 #define __TRIGGERMANAGER_H__
@@ -30,11 +32,11 @@ class TriggerManager : public CommandReciever
 public:
 	// typedef: TriggerSignal
 	typedef std::map<GameEntity, MapGoalWPtr> TriggerMap;
-    
-	// typedef: ScriptCallback
-	typedef std::multimap<String, gmGCRoot<gmFunctionObject> > ScriptCallback;
 
-	void SetScriptCallback(const String &_name, gmGCRoot<gmFunctionObject> _func);
+	// typedef: ScriptCallback
+	typedef std::multimap<std::string, gmGCRoot<gmFunctionObject> > ScriptCallback;
+
+	void SetScriptCallback(const std::string &_name, gmGCRoot<gmFunctionObject> _func);
 
 	void HandleTrigger(const TriggerInfo &_triggerInfo);
 
@@ -44,11 +46,11 @@ public:
 	int AddTrigger(const Vector3f &_pos, float _radius, gmMachine *_m, gmTableObject *tbl);
 	int AddTrigger(const AABB &_aabb, gmMachine *_m, gmTableObject *tbl);
 	void DeleteTrigger(int _serial);
-	void DeleteTrigger(const String &_name);
+	void DeleteTrigger(const std::string &_name);
 	//////////////////////////////////////////////////////////////////////////
 
 	static TriggerManager *GetInstance();
-	static void DeleteInstance();	
+	static void DeleteInstance();
 protected:
 	ScriptCallback		m_ScriptCallbacks;
 
@@ -61,7 +63,7 @@ protected:
 
 	int		m_NextDrawTime;
 
-	String 	m_DebugTriggersExpr;
+	std::string 	m_DebugTriggersExpr;
 
 	bool	m_DebugTriggers;
 	bool	m_DrawTriggers;

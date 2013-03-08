@@ -1,17 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __EVENTRECIEVER_H__
 #define __EVENTRECIEVER_H__
 
 #include "Omni-Bot_BasicTypes.h"
 #include "MessageHelper.h"
-
 
 class CallbackParameters;
 
@@ -24,7 +25,7 @@ class EventReciever
 public:
 
 	void SendEvent(const MessageHelper &_message, obuint32 _targetState = 0);
-	
+
 	EventReciever();
 	virtual ~EventReciever();
 protected:

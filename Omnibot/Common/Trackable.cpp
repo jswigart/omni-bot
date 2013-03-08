@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "Trackable.h"
 
@@ -25,14 +24,14 @@ void Trackable::AddReference(obuint32 _type)
 
 void Trackable::DelReference(obuint32 _type)
 {
-	_CheckIndex(_type);	
+	_CheckIndex(_type);
 	--m_TrackList[_type];
 	OBASSERT(m_TrackList[_type] >= 0, "Counter got below 0!");
 }
 
 obuint32 Trackable::GetRefCount(obuint32 _type)
 {
-	_CheckIndex(_type);	
+	_CheckIndex(_type);
 	return m_TrackList[_type];
 }
 

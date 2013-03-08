@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef _CONCURRENT_QUEUE_H_
+#define _CONCURRENT_QUEUE_H_
+
 #include <queue>
 #include <boost/thread/condition_variable.hpp>
 
@@ -74,4 +77,4 @@ private:
 	boost::condition_variable	mConditionVar;
 };
 
-
+#endif

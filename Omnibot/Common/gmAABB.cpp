@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,9 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "gmAABB.h"
-
 #include "gmbinder2.h"
 #include "gmbinder2_class.h"
+
+#include "RenderBuffer.h"
 
 #define CHECK_THIS_AABB() \
 	AABB *pNative = gmAABB::GetThisObject( a_thread ); \
@@ -32,7 +33,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmAABB )
 	GMBIND_FUNCTION( "FindIntersection", gmfFindIntersection )
 	GMBIND_FUNCTION( "GetAxisLength", gmfGetAxisLength )
 	GMBIND_FUNCTION( "Render", gmfRenderAABB )
-GMBIND_FUNCTION_MAP_END();
+	GMBIND_FUNCTION_MAP_END();
 
 GMBIND_PROPERTY_MAP_BEGIN( gmAABB )
 	// var: Mins
@@ -41,7 +42,7 @@ GMBIND_PROPERTY_MAP_BEGIN( gmAABB )
 	// var: Maxs
 	//		<Vector3> - The Maxs of this AABB
 	GMBIND_PROPERTY( "Maxs", getMaxs, NULL/*setMaxs*/ )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -55,7 +56,7 @@ AABB *gmAABB::Constructor(gmThread *a_thread)
 	{
 		if(a_thread->GetNumParams() == 2)
 		{
-			if(a_thread->ParamType(0) == GM_VEC3 && 
+			if(a_thread->ParamType(0) == GM_VEC3 &&
 				a_thread->ParamType(1) == GM_VEC3)
 			{
 				a_thread->Param(0).GetVector(pNewAABB->m_Mins[0], pNewAABB->m_Mins[1], pNewAABB->m_Mins[2]);
@@ -97,7 +98,7 @@ void gmAABB::Destructor(AABB *_native)
 void gmAABB::AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen)
 {
 	AABB *aabb = gmAABB::GetNative(a_object);
-	_gmsnprintf(a_buffer, a_bufferLen, "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f", 
+	_gmsnprintf(a_buffer, a_bufferLen, "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
 		aabb->m_Mins[0],aabb->m_Mins[1],aabb->m_Mins[2],
 		aabb->m_Maxs[0],aabb->m_Maxs[1],aabb->m_Maxs[2]);
 }
@@ -117,7 +118,7 @@ int gmAABB::gmfCenterPoint(gmThread *a_thread)
 {
 	CHECK_THIS_AABB();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	Vector3f vCenter(Vector3f::ZERO);
 	pNative->CenterPoint(vCenter);
 	a_thread->PushVector(vCenter.x, vCenter.y, vCenter.z);
@@ -256,7 +257,7 @@ int gmAABB::gmfIntersects(gmThread *a_thread)
 {
 	CHECK_THIS_AABB();
 	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_GMBIND_PARAM(AABB*, gmAABB, aabb, 0);	
+	GM_CHECK_GMBIND_PARAM(AABB*, gmAABB, aabb, 0);
 	a_thread->PushInt(pNative->Intersects(*aabb) ? 1 : 0);
 	return GM_OK;
 }
@@ -276,7 +277,7 @@ int gmAABB::gmfContains(gmThread *a_thread)
 {
 	CHECK_THIS_AABB();
 	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_VECTOR_PARAM(v, 0);	
+	GM_CHECK_VECTOR_PARAM(v, 0);
 	a_thread->PushInt(pNative->Contains(Vector3f(v.x,v.y,v.z)) ? 1 : 0);
 	return GM_OK;
 }
@@ -292,19 +293,19 @@ int gmAABB::gmfContains(gmThread *a_thread)
 //
 // Returns:
 //		<AABB> - Box that represents overlapped region
-//		- OR - 
+//		- OR -
 //		null if the boxes don't intersect
 int gmAABB::gmfFindIntersection(gmThread *a_thread)
 {
 	CHECK_THIS_AABB();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_GMBIND_PARAM(AABB*, gmAABB, aabb, 0);
-	
+
 	AABB ov;
 	if(pNative->FindIntersection(*aabb, ov))
 		gmAABB::PushObject(a_thread, ov);
 	else
-		a_thread->PushNull();	
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -315,7 +316,7 @@ int gmAABB::gmfFindIntersection(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string - "x","y", or "z"
+//		std::string - "x","y", or "z"
 //
 // Returns:
 //		float - Length of requested axis
@@ -324,7 +325,7 @@ int gmAABB::gmfGetAxisLength(gmThread *a_thread)
 	CHECK_THIS_AABB();
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_STRING_PARAM(ax, 0);
-	
+
 	int iAxis = -1;
 
 	if(!_gmstricmp(ax, "x"))
@@ -349,8 +350,8 @@ int gmAABB::gmfRenderAABB(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(duration, 0);
 	GM_INT_PARAM(col,1,COLOR::MAGENTA.rgba());
-	
-	Utils::OutlineAABB(*pNative, obColor(col), duration);
+
+	RenderBuffer::AddAABB(*pNative, obColor(col));
 	return GM_OK;
 }
 
@@ -364,13 +365,13 @@ bool gmAABB::getMins( AABB *a_native, gmThread *a_thread, gmVariable *a_operands
 }
 
 bool gmAABB::setMins( AABB *a_native, gmThread *a_thread, gmVariable *a_operands )
-{	
+{
 	GM_ASSERT(a_operands[1].m_type == GM_VEC3);
 	if(a_operands[1].m_type == GM_VEC3)
 	{
 		a_operands[1].GetVector(a_native->m_Mins);
 		return true;
-	}	
+	}
 	return false;
 }
 
@@ -388,7 +389,7 @@ bool gmAABB::setMaxs( AABB *a_native, gmThread *a_thread, gmVariable *a_operands
 		a_operands[1].GetVector(a_native->m_Maxs);
 		return true;
 	}
-	return false;	
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -402,7 +403,7 @@ int Bounds_Constructor(gmThread *a_thread)
 	{
 		if(a_thread->GetNumParams() == 2)
 		{
-			if(a_thread->ParamType(0) == GM_VEC3 && 
+			if(a_thread->ParamType(0) == GM_VEC3 &&
 				a_thread->ParamType(1) == GM_VEC3)
 			{
 				a_thread->Param(0).GetVector(pNewAABB->mMins[0], pNewAABB->mMins[1], pNewAABB->mMins[2]);
@@ -443,7 +444,7 @@ int Bounds_Constructor(gmThread *a_thread)
 
 void Bounds_AsString(BoundingBox *a_var, char * a_buffer, int a_bufferSize)
 {
-	_gmsnprintf(a_buffer, a_bufferSize, 
+	_gmsnprintf(a_buffer, a_bufferSize,
 		"Bounds(%.3f,%.3f,%.3f,%.3f,%.3f,%.3f)",
 		a_var->mMins.x,a_var->mMins.y,a_var->mMins.z,
 		a_var->mMaxs.x,a_var->mMaxs.y,a_var->mMaxs.z);

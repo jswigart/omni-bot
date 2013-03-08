@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -48,7 +48,7 @@ const char *Omnibot_GetLibraryPath()
 
 //////////////////////////////////////////////////////////////////////////
 
-static const char *BOTERRORS[BOT_NUM_ERRORS] = 
+static const char *BOTERRORS[BOT_NUM_ERRORS] =
 {
 	"None",
 	"Bot Library not found",
@@ -61,9 +61,9 @@ static const char *BOTERRORS[BOT_NUM_ERRORS] =
 
 void Omnibot_strncpy(char *dest, const char *source, int count)
 {
-	// Only doing this because some engines(HL2), think it a good idea to fuck up the 
-	// defines of all basic string functions throughout the entire project.
-	while (count && (*dest++ = *source++)) /* copy string */
+	// Only doing this because some engines(HL2), think it a good idea to fuck up the
+	// defines of all basic std::string functions throughout the entire project.
+	while (count && (*dest++ = *source++)) /* copy std::string */
 		count--;
 
 	if (count) /* pad out with zeroes */
@@ -143,7 +143,7 @@ const char *OB_VA( const char* _msg, ...)
 
 	va_list list;
 	va_start(list, _msg);
-	_vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);	
+	_vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);
 	va_end(list);
 
 	iCurrentBuffer = (iCurrentBuffer+1)%iNumBuffers;
@@ -154,7 +154,7 @@ int OB_VA_OWNBUFFER(char *_buffer, int _buffersize, const char* _msg, ...)
 {
 	va_list list;
 	va_start(list, _msg);
-	const int ret = _vsnprintf(_buffer, _buffersize, _msg, list);	
+	const int ret = _vsnprintf(_buffer, _buffersize, _msg, list);
 	va_end(list);
 	return ret;
 }
@@ -164,15 +164,15 @@ static int StringCompareNoCase(const char *s1, const char *s2)
 	return _stricmp(s1,s2);
 }
 
-//////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////
 HINSTANCE g_BotLibrary = NULL;
 
 bool OB_ShowLastError(const char *context)
 {
 	LPVOID lpMsgBuf;
-	DWORD dw = GetLastError(); 
+	DWORD dw = GetLastError();
 	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL,
 		dw,
@@ -232,7 +232,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		{
 			r = BOT_ERROR_CANTGETBOTFUNCTIONS;
 			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
-		} 
+		}
 		else
 		{
 			r = pfnGetBotFuncs(&g_BotFunctions, sizeof(g_BotFunctions));
@@ -242,7 +242,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 				r = g_BotFunctions.pfnInitialize(g_InterfaceFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
-			
+
 			// cs: removed else so interface errors can be printed
 			if (r != BOT_ERROR_NONE)
 			{
@@ -291,19 +291,18 @@ const char *OB_VA(const char* _msg, ...)
 
 	va_list list;
 	va_start(list, _msg);
-	vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);	
+	vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);
 	va_end(list);
 
 	iCurrentBuffer = (iCurrentBuffer+1)%iNumBuffers;
 	return pNextBuffer;
 }
 
-
 int OB_VA_OWNBUFFER(char *_buffer, int _buffersize, CHECK_PRINTF_ARGS const char* _msg, ...)
 {
 	va_list list;
 	va_start(list, _msg);
-	const int ret = vsnprintf(_buffer, _buffersize, _msg, list);	
+	const int ret = vsnprintf(_buffer, _buffersize, _msg, list);
 	va_end(list);
 	return ret;
 }
@@ -319,7 +318,7 @@ static int StringCompareNoCase(const char *s1, const char *s2)
 #define NULL 0
 #endif
 
-//////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////
 void *g_BotLibrary = NULL;
 
 bool OB_ShowLastError(const char *context, const char *errormsg)
@@ -421,25 +420,25 @@ void KeyVals::Reset()
 	memset(m_String,0,sizeof(m_String));
 	memset(m_Value,0,sizeof(m_Value));
 }
-bool KeyVals::SetInt(const char *_key, int _val) 
-{
-	return SetKeyVal(_key,obUserData(_val)); 
-}
-bool KeyVals::SetFloat(const char *_key, float _val)
-{
-	return SetKeyVal(_key,obUserData(_val)); 
-}
-bool KeyVals::SetEntity(const char *_key, GameEntity _val) 
+bool KeyVals::SetInt(const char *_key, int _val)
 {
 	return SetKeyVal(_key,obUserData(_val));
 }
-bool KeyVals::SetVector(const char *_key, float _x,float _y,float _z) 
+bool KeyVals::SetFloat(const char *_key, float _val)
 {
-	return SetKeyVal(_key,obUserData(_x,_y,_z)); 
+	return SetKeyVal(_key,obUserData(_val));
+}
+bool KeyVals::SetEntity(const char *_key, GameEntity _val)
+{
+	return SetKeyVal(_key,obUserData(_val));
+}
+bool KeyVals::SetVector(const char *_key, float _x,float _y,float _z)
+{
+	return SetKeyVal(_key,obUserData(_x,_y,_z));
 }
 bool KeyVals::SetVector(const char *_key, const float *_v)
 {
-	return SetKeyVal(_key,obUserData(_v[0],_v[1],_v[2])); 
+	return SetKeyVal(_key,obUserData(_v[0],_v[1],_v[2]));
 }
 bool KeyVals::SetString(const char *_key, const char *_value)
 {
@@ -447,7 +446,7 @@ bool KeyVals::SetString(const char *_key, const char *_value)
 
 	for(int a = 0; a < MaxArgs; ++a)
 	{
-		// look for the first null string
+		// look for the first null std::string
 		if(m_String[a][0] == '\0')
 		{
 			Omnibot_strncpy(&m_String[a][0],_value,MaxStringLength-1);

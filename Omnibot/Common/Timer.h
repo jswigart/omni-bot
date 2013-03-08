@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TIMER_H__
 #define __TIMER_H__
@@ -21,15 +23,15 @@ public:
 
 	/*
 	Function: Reset
-	Description: Resets the timer to 0	
+	Description: Resets the timer to 0
 	*/
 	void Reset();
 
 	/*
 	Function: GetElapsedSeconds
-	Description:		
-	Returns: 
-		Returns the elapsed seconds since the timer was last reset.
+	Description:
+	Returns:
+	Returns the elapsed seconds since the timer was last reset.
 	*/
 	double GetElapsedSeconds();
 
@@ -38,7 +40,7 @@ protected:
 	obint64		mLastTimer;
 #else
 	clock_t		mLastTimer;
-#endif	
+#endif
 };
 
 class GameTimer

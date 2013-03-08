@@ -159,7 +159,7 @@ void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableView( %s );",
+		(std::string)va("Nav.EnableView( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -174,7 +174,7 @@ void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableViewConnection( %s );",
+		(std::string)va("Nav.EnableViewConnection( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -192,7 +192,7 @@ void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Nav.EnableStep( %s );",
+		(std::string)va("Nav.EnableStep( %s );",
 		bEnable ? "true" : "false"));
 }
 
@@ -243,13 +243,13 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 		//}
 
 		//////////////////////////////////////////////////////////////////////////
-		Utils::DrawLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
+		RenderBuffer::AddLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
 		if(vPos != vTarget)
 		{
-			Utils::DrawLine(vPos, vTarget, COLOR::MAGENTA, fTime);
-			Utils::DrawLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
+			RenderBuffer::AddLine(vPos, vTarget, COLOR::MAGENTA, fTime);
+			RenderBuffer::AddLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
 		}
-		Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
+		RenderBuffer::AddAABB(features[i].m_Bounds, COLOR::GREEN);
 		//////////////////////////////////////////////////////////////////////////
 	}
 	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
@@ -517,9 +517,9 @@ void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
 					{
 						if(!Utils::TestSegmentForOcclusion(overlap))
 						{
-							Utils::DrawLine(overlap.GetPosEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-							Utils::DrawLine(overlap.GetNegEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-							//Utils::DrawLine(sec2.GetPosEnd()+Vector3f(0,0,32),sec1.GetNegEnd()+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+							RenderBuffer::AddLine(overlap.GetPosEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+							RenderBuffer::AddLine(overlap.GetNegEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+							//RenderBuffer::AddLine(sec2.GetPosEnd()+Vector3f(0,0,32),sec1.GetNegEnd()+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
 
 							NavPortal navPortal;
 							navPortal.m_Segment = overlap;
@@ -606,8 +606,8 @@ void PathPlannerNavMesh::cmdSectorSetProperty(const StringVector &_args)
 		return;
 	}
 
-	String propName = _args[1];
-	String propValue = _args[2];
+	std::string propName = _args[1];
+	std::string propValue = _args[2];
 
 	Vector3f vFacing, vPos;
 	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
@@ -715,9 +715,9 @@ void PathPlannerNavMesh::cmdInfluenceMapSave(const StringVector &_args)
 {
 	if ( m_SpanMap != NULL )
 	{
-		const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + ".influence";
+		const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
 
-		String data;
+		std::string data;
 		if ( m_SpanMap->Serialize( data ) )
 		{
 			File f;
@@ -734,7 +734,7 @@ void PathPlannerNavMesh::cmdInfluenceMapLoad(const StringVector &_args)
 	if ( m_SpanMap == NULL )
 		m_SpanMap = new SpanMap();
 
-	const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + ".influence";
+	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
 
 	m_SpanMap->Clear();
 
@@ -745,7 +745,7 @@ void PathPlannerNavMesh::cmdInfluenceMapLoad(const StringVector &_args)
 		return;
 	}
 
-	String data;
+	std::string data;
 	if (!f.ReadWholeFile( data ) )
 	{
 		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ) );
@@ -1369,7 +1369,7 @@ STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
 		float spanHeight = 0.0f;
 		if ( TestForValidNode( spanPos, spanHeight ) && m_SpanMap->AddOpenSpan( spanPos, spanHeight ) )
 		{
-			//Utils::DrawRadius( spanPos, 16.0f, COLOR::GREEN, 0.1f );
+			//RenderBuffer::AddCircle( spanPos, 16.0f, COLOR::GREEN, 0.1f );
 
 			for ( int i = 0; i < stepdirs; ++i )
 			{

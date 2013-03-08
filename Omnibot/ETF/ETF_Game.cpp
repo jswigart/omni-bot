@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart $
 // $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
 // $LastChangedRevision: 32 $
@@ -76,12 +76,10 @@ const char *ETF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool ETF_Game::Init() 
+bool ETF_Game::Init()
 {
 	if(!TF_Game::Init())
 		return false;
-
-	SetRenderOverlayType(OVERLAY_OPENGL);
 
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ETF_Game::ETF_GetEntityClassTraceOffset);
@@ -91,7 +89,7 @@ bool ETF_Game::Init()
 	int threadId;
 	ScriptManager::GetInstance()->ExecuteFile("scripts/etf_autoexec.gm", threadId);
 
-	PathPlannerWaypoint::m_CallbackFlags = 
+	PathPlannerWaypoint::m_CallbackFlags =
 		F_TF_NAV_ROCKETJUMP |
 		F_TF_NAV_CONCJUMP;
 
@@ -121,7 +119,7 @@ void ETF_Game::InitScriptBinds(gmMachine *_machine)
 
 static IntEnum ETF_TeamEnum[] =
 {
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),	
+	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
 	IntEnum("NONE",ETF_TEAM_NONE),
 	IntEnum("RED",ETF_TEAM_RED),
 	IntEnum("BLUE",ETF_TEAM_BLUE),
@@ -132,7 +130,7 @@ static IntEnum ETF_TeamEnum[] =
 void ETF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(ETF_TeamEnum) / sizeof(ETF_TeamEnum[0]);
-	_ptr = ETF_TeamEnum;	
+	_ptr = ETF_TeamEnum;
 }
 
 void ETF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)

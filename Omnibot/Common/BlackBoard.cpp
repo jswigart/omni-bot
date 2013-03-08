@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "BlackBoard.h"
 #include "BlackBoardItems.h"
@@ -103,7 +102,7 @@ int BlackBoard::RemoveBBRecordByPoster(int _poster, int _type /*= bbk_All*/)
 	else
 	{
 		it = m_DB.lower_bound(_type);
-		itEnd = m_DB.upper_bound(_type);		
+		itEnd = m_DB.upper_bound(_type);
 	}
 
 	while(it != itEnd)
@@ -112,7 +111,7 @@ int BlackBoard::RemoveBBRecordByPoster(int _poster, int _type /*= bbk_All*/)
 		{
 			m_DB.erase(it++);
 			++iCount;
-		} 
+		}
 		else
 		{
 			++it;
@@ -136,7 +135,7 @@ int BlackBoard::RemoveBBRecordByTarget(int _target, int _type /*= bbk_All*/)
 	else
 	{
 		it = m_DB.lower_bound(_type);
-		itEnd = m_DB.upper_bound(_type);		
+		itEnd = m_DB.upper_bound(_type);
 	}
 
 	while(it != itEnd)
@@ -145,7 +144,7 @@ int BlackBoard::RemoveBBRecordByTarget(int _target, int _type /*= bbk_All*/)
 		{
 			m_DB.erase(it++);
 			++iCount;
-		} 
+		}
 		else
 		{
 			++it;
@@ -194,13 +193,13 @@ void BlackBoard::DumpBlackBoardContentsToGame(int _type /*= bbk_All*/)
 {
 	BlackBoardDatabase::iterator it = m_DB.begin();
 	BlackBoardDatabase::iterator itEnd = m_DB.end();
-	
+
 	EngineFuncs::ConsoleMessage("-= Global Blackboard =-");
 	for( ; it != itEnd; ++it)
 	{
 		if(it->first == bbk_All || it->first == _type)
 		{
-			EngineFuncs::ConsoleMessage(va("Type: %d, Poster: %d, Target: %d", 
+			EngineFuncs::ConsoleMessage(va("Type: %d, Poster: %d, Target: %d",
 				it->first, it->second->m_Owner, it->second->m_Target));
 		}
 	}
@@ -225,7 +224,7 @@ BBRecordPtr BlackBoard::AllocRecord(int _type)
 	case bbk_IsTaken:
 		ptr.reset(new bbIsTaken);
 		break;
-	
+
 		//////////////////////////////////////////////////////////////////////////
 	case bbk_All:
 	default:
@@ -254,7 +253,7 @@ static int GM_CDECL gmfPostRecord(gmThread *a_thread)
 	{
 		GM_EXCEPTION_MSG("Invalid Blackboard Item Type");
 		return GM_EXCEPTION;
-	}	
+	}
 	return GM_OK;
 }
 
@@ -281,7 +280,7 @@ static int GM_CDECL gmfGetRecords(gmThread *a_thread)
 		}
 		a_thread->PushTable(pRecords);
 	}
-	else 
+	else
 		a_thread->PushNull();
 	return GM_OK;
 }

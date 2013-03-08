@@ -1,13 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __MAPGOAL_H__
 #define __MAPGOAL_H__
+
+#include <boost/dynamic_bitset.hpp>
 
 #include "GoalManager.h"
 #include "ScriptManager.h"
@@ -15,19 +19,32 @@
 #include "TrackablePtr.h"
 #include "gmGCRoot.h"
 #include "gmbinder2.h"
-class Client;
 
+typedef boost::dynamic_bitset<obuint32> DynBitSet32;
+
+struct Destination
+{
+	Vector3f	m_Position;
+	float		m_Radius;
+
+	Destination() : m_Position(0.f,0.f,0.f), m_Radius(0.f) {}
+	Destination(const Vector3f &_pos, float _radius)
+		: m_Position(_pos)
+		, m_Radius(_radius)
+	{
+	}
+};
+
+typedef std::vector<Destination> DestinationVector;
+
+class Client;
 class GoalQueue;
 class gmMachine;
 class gmUserObject;
 
 // class: MapGoal
 //		removed from the triggermanager slots.
-#ifdef ENABLE_DEBUG_WINDOW
-class MapGoal : public Trackable, public PropertyBinding, public gcn::ActionListener
-#else
 class MapGoal : public Trackable, public PropertyBinding
-#endif
 {
 public:
 	//////////////////////////////////////////////////////////////////////////
@@ -62,7 +79,7 @@ public: \
 private: \
 	BitFlag64 m_##name; \
 public:
-//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 #define PROPERTY_INIT(name, def) m_##name = def;
 #define PROPERTY_PROPOGATE(name) m_##name =  _other->m_##name;
 	//////////////////////////////////////////////////////////////////////////
@@ -85,7 +102,7 @@ public:
 	PROPERTY_BOOL(RenderGoal);
 	PROPERTY_BOOL(RenderRoutes);
 	PROPERTY_BOOL(CreateOnLoad);
-	
+
 	enum DefaultDrawFlags
 	{
 		DrawName,
@@ -110,7 +127,7 @@ public:
 		NUM_TRACK_CATS
 	} TrackingCat;
 
-	enum FunctionCallback 
+	enum FunctionCallback
 	{
 		ON_INIT,
 		ON_UPDATE,
@@ -183,11 +200,11 @@ public:
 
 	// function: SetTagName
 	//		Sets the tag name of this goal
-	inline void SetTagName(const String &_name) { m_TagName = _name; }
+	inline void SetTagName(const std::string &_name) { m_TagName = _name; }
 
 	// function: GetTagName
 	//		Gets the tag name of this goal
-	inline const String &GetTagName() { return m_TagName; }
+	inline const std::string &GetTagName() { return m_TagName; }
 
 	// function: SetPosition
 	//		Sets the position of this goal
@@ -237,10 +254,10 @@ public:
 
 	// function: GetName
 	//		Gets the name of this goal
-	inline const String &GetName() const { return m_Name; }
+	inline const std::string &GetName() const { return m_Name; }
 
-	void SetGroupName(const String &_name) { m_GroupName = _name; }
-	const String &GetGroupName() const { return m_GroupName; }
+	void SetGroupName(const std::string &_name) { m_GroupName = _name; }
+	const std::string &GetGroupName() const { return m_GroupName; }
 
 	void SetRoleMask(BitFlag32 _i) { m_RoleMask = _i; }
 	BitFlag32 GetRoleMask() const { return m_RoleMask; }
@@ -255,9 +272,9 @@ public:
 
 	// function: GetGoalType
 	//		Gets the type identifier for this goal
-	inline const String GetGoalType() const { return m_GoalType; }
+	inline const std::string GetGoalType() const { return m_GoalType; }
 	inline obuint32 GetGoalTypeHash() const { return m_GoalTypeHash; }
-	
+
 	// function: SetNavFlags
 	//		Sets the navigation flags for this goal
 	inline void SetNavFlags(NavFlags _flags) { m_NavFlags = _flags; }
@@ -306,7 +323,7 @@ public:
 
 	Vector3f CalculateFarthestFacing();
 
-	static void SetPersistentPriorityForClass(const String &_exp, int _team, int _class, float _priority);
+	static void SetPersistentPriorityForClass(const std::string &_exp, int _team, int _class, float _priority);
 	void CheckForPersistentPriority();
 
 	// function: GetSerialNum
@@ -334,15 +351,15 @@ public:
 	void RenderDebug(bool _editing, bool _highlighted);
 	void RenderDefault();
 
-	void SetProperty(const String &_propname, const obUserData &_val);
+	void SetProperty(const std::string &_propname, const obUserData &_val);
 
 	struct ClassPriority
 	{
 		enum { MaxTeams=4,MaxClasses=10 };
 		obReal	Priorities[MaxTeams][MaxClasses];
-		
-		void GetPriorityText(String &_txtout) const;
-	};	
+
+		void GetPriorityText(std::string &_txtout) const;
+	};
 
 	void DrawRoute(int _color, float _duration);
 
@@ -365,7 +382,7 @@ public:
 	bool GetProperty(const char *_name, float &_var);
 	bool GetProperty(const char *_name, bool &_var);
 	bool GetProperty(const char *_name, int &_var);
-	bool GetProperty(const char *_name, String &_var);
+	bool GetProperty(const char *_name, std::string &_var);
 	bool GetProperty(const char *_name, Seconds &_var);
 
 	bool SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetable, ErrorObj &_err);
@@ -381,7 +398,7 @@ public:
 	void CopyFrom(MapGoal *_other);
 	bool LoadFromFile( const filePath & _file );
 
-	void SetProfilerZone(const String &_name);
+	void SetProfilerZone(const std::string &_name);
 
 	void CreateGuiFromBluePrint(gmMachine *a_machine, gmTableObject *a_schema);
 	void HudDisplay();
@@ -391,10 +408,6 @@ public:
 	int GetRange() const { return m_Range; };
 	void SetRange(int _range) { m_Range = _range; };
 
-#ifdef ENABLE_DEBUG_WINDOW
-	// action listener
-	void action(const gcn::ActionEvent& actionEvent);
-#endif
 	void CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema);
 
 #ifdef ENABLE_REMOTE_DEBUGGING
@@ -404,7 +417,7 @@ public:
 	MapGoal(const char *_goaltype);
 	~MapGoal();
 private:
-	String			m_GoalType;
+	std::string			m_GoalType;
 	obuint32		m_GoalTypeHash;
 
 	BitFlag32		m_AvailableTeams;
@@ -415,7 +428,7 @@ private:
 
 	GameEntity		m_Entity;
 	GameEntity		m_CurrentOwner;
-	
+
 	Vector3f		m_Position;
 	Vector3f		m_InterfacePosition; //cache the auto detected position
 	Matrix3f		m_Orientation;
@@ -432,12 +445,12 @@ private:
 	obint32			m_SerialNum;
 
 	NavFlags		m_NavFlags;
-	
+
 	Vector3List		m_LocalUsePoints;
 	DynBitSet32		m_RelativeUsePoints;
 
 	Routes			m_Routes;
-	
+
 	ClassPriority	m_ClassPriority;
 	obReal			m_DefaultPriority;
 	obReal			m_RolePriorityBonus;
@@ -466,9 +479,9 @@ private:
 
 	gmGCRoot<gmStringObject>	m_ExtraDebugText;
 
-	String		m_TagName;
-	String		m_Name;
-	String		m_GroupName;
+	std::string		m_TagName;
+	std::string		m_Name;
+	std::string		m_GroupName;
 
 	int			m_RandomUsePoint; // randomly select a usepoint to use?
 	int			m_Range;  // distance limited
@@ -523,4 +536,3 @@ struct Trackers
 obint32 GetMapGoalSerial();
 
 #endif
-

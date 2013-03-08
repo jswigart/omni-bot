@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -21,28 +21,28 @@ void PathPlannerRecast::InitCommands()
 {
 	PathPlannerBase::InitCommands();
 
-	SetEx("nav_save", "Save current navigation to disk", 
+	SetEx("nav_save", "Save current navigation to disk",
 		this, &PathPlannerRecast::cmdNavSave);
-	SetEx("nav_load", "Load last saved navigation from disk", 
+	SetEx("nav_load", "Load last saved navigation from disk",
 		this, &PathPlannerRecast::cmdNavLoad);
-	SetEx("nav_view", "Turn on/off navmesh visibility.", 
+	SetEx("nav_view", "Turn on/off navmesh visibility.",
 		this, &PathPlannerRecast::cmdNavView);
-	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.", 
+	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.",
 		this, &PathPlannerRecast::cmdNavViewConnections);
-	
+
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_addfloodseed", "Adds a starting node for the flood fill.", 
+	SetEx("nav_addfloodseed", "Adds a starting node for the flood fill.",
 		this, &PathPlannerRecast::cmdAddFloodSeed);
-	SetEx("nav_floodfill", "Adds a starting node for the flood fill.", 
+	SetEx("nav_floodfill", "Adds a starting node for the flood fill.",
 		this, &PathPlannerRecast::cmdFloodFill);
 
-	SetEx("nav_build", "Adds a starting node for the flood fill.", 
+	SetEx("nav_build", "Adds a starting node for the flood fill.",
 		this, &PathPlannerRecast::cmdBuildNav);
-		//////////////////////////////////////////////////////////////////////////
-	/*SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.", 
-		this, &PathPlannerRecast::cmdAutoBuildFeatures);*/
+	//////////////////////////////////////////////////////////////////////////
+	/*SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.",
+	this, &PathPlannerRecast::cmdAutoBuildFeatures);*/
 
-	SetEx("nav_createladder", "creates a ladder in the navigation system.", 
+	SetEx("nav_createladder", "creates a ladder in the navigation system.",
 		this, &PathPlannerRecast::cmdCreateLadder);
 }
 
@@ -67,15 +67,15 @@ void PathPlannerRecast::cmdNavLoad(const StringVector &_args)
 	if(Load(g_EngineFuncs->GetMapName()))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Nav.");
-	} 
+	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Nav.");
 }
 
 void PathPlannerRecast::cmdNavView(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_view enable[bool]",
 		"> enable: Enable nav rendering. true/false/on/off/1/0",
 	};
@@ -87,8 +87,8 @@ void PathPlannerRecast::cmdNavView(const StringVector &_args)
 
 void PathPlannerRecast::cmdNavViewConnections(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_viewconnections enable[bool]",
 		"> enable: Enable nav connection rendering. true/false/on/off/1/0",
 	};
@@ -120,7 +120,6 @@ void PathPlannerRecast::cmdFloodFill(const StringVector &_args)
 	{
 		FloodFill();
 	}
-
 }
 
 void PathPlannerRecast::cmdBuildNav(const StringVector &_args)
@@ -140,7 +139,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 	Vector3f vAimPt, vAimNormal;
 	if(Utils::GetLocalAimPoint(vAimPt, &vAimNormal, TR_MASK_FLOODFILL, &contents, &surface))
 	{
-		if(surface & SURFACE_LADDER) 
+		if(surface & SURFACE_LADDER)
 		{
 			const Vector3f vStartPt = vAimPt + vAimNormal * 16.f;
 			const Vector3f vSide = vAimNormal.Cross(Vector3f::UNIT_Z);
@@ -149,7 +148,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			const float TraceDist = 32.f;
 
 			obTraceResult tr;
-			
+
 			// find the width
 			Vector3f vDir[2] = { vSide, -vSide };
 			Vector3f vEdge[2] = { vStartPt,vStartPt };
@@ -170,7 +169,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			Vector3f vBottom = (vEdge[0]+vEdge[1]) * 0.5f;
 			Vector3f vTop = vBottom;
 
-			// find the bottom			
+			// find the bottom
 			while(1)
 			{
 				EngineFuncs::TraceLine(tr,vBottom,vBottom-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
@@ -199,8 +198,8 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			newLadder.top = vTop - vAimNormal * 32.f;
 			newLadder.bottom = vBottom + vAimNormal * 32.f;
 			newLadder.width = (vEdge[0]-vEdge[1]).Length();
-			
-			bool createLadder = true;			
+
+			bool createLadder = true;
 			for(obuint32 i = 0; i < ladders.size(); ++i)
 			{
 				if(ladders[i].OverLaps(newLadder))

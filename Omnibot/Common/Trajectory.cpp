@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -8,10 +8,11 @@
 
 #include "Trajectory.h"
 #include "IGame.h"
+#include "RenderBuffer.h"
 
 namespace Trajectory
 {
-	int Calculate( const Vector3f &_start, const Vector3f &_end, float _speed, float _gravity, AimTrajectory _bal[2] ) 
+	int Calculate( const Vector3f &_start, const Vector3f &_end, float _speed, float _gravity, AimTrajectory _bal[2] )
 	{
 		int n, i;
 		float x, y, a, b, c, d, sqrtd, inva, p[2];
@@ -32,7 +33,7 @@ namespace Trajectory
 		p[0] = ( - b + sqrtd ) * inva;
 		p[1] = ( - b - sqrtd ) * inva;
 		n = 0;
-		for ( i = 0; i < 2; i++ ) 
+		for ( i = 0; i < 2; i++ )
 		{
 			if ( p[i] <= 0.0f )
 				continue;
@@ -55,13 +56,13 @@ namespace Trajectory
 		return n;
 	}
 
-	float MaxHeightForTrajectory( const Vector3f &start, float zVel, float gravity ) 
+	float MaxHeightForTrajectory( const Vector3f &start, float zVel, float gravity )
 	{
 		float t = zVel / gravity;
 		return start.z - 0.5f * gravity * ( t * t );
 	}
 
-	float HeightForTrajectory( const Vector3f &start, float zVel, float gravity, float t ) 
+	float HeightForTrajectory( const Vector3f &start, float zVel, float gravity, float t )
 	{
 		return start.z - 0.5f * gravity * ( t * t );
 	}
@@ -84,13 +85,13 @@ namespace Trajectory
 	int TrajectorySim::FromTable(gmThread *a_thread, gmTableObject *a_table)
 	{
 		gmVariable v0 = a_table->Get(a_thread->GetMachine(),"Position");
-		if(!v0.GetVector(m_Position)) 
+		if(!v0.GetVector(m_Position))
 		{
 			GM_EXCEPTION_MSG("expected Position field in table");
 			return GM_EXCEPTION;
 		}
 		gmVariable v1 = a_table->Get(a_thread->GetMachine(),"Velocity");
-		if(!v1.GetVector(m_Velocity)) 
+		if(!v1.GetVector(m_Velocity))
 		{
 			GM_EXCEPTION_MSG("expected Velocity field in table");
 			return GM_EXCEPTION;
@@ -152,10 +153,10 @@ namespace Trajectory
 		for(float t = interval; t <= m_Duration;)
 		{
 			bool Hit = false;
-			if(m_TraceBounce && 
-				EngineFuncs::TraceLine(tr,vlast,pos,0,TR_MASK_SOLID,Utils::GetLocalGameId(),False) && 
+			if(m_TraceBounce &&
+				EngineFuncs::TraceLine(tr,vlast,pos,0,TR_MASK_SOLID,Utils::GetLocalGameId(),False) &&
 				tr.m_Fraction < 1.f)
-			{				
+			{
 				Hit = true;
 
 				//Vector3f ray = pos - vlast;
@@ -167,21 +168,20 @@ namespace Trajectory
 
 				// adjust the position with the rest of the bounce
 				float whatsleftT = (1.f - tr.m_Fraction);
-				pos = Vector3f(tr.m_Endpos) + (vel * whatsleftT) * interval;					
+				pos = Vector3f(tr.m_Endpos) + (vel * whatsleftT) * interval;
 
 				//t += interval * (interval * tr.m_Fraction);
 			}
 			else
 				pos += (vel * interval); // move the entire interval if it didnt hit anything
-		
-			t += interval;			
 
-			
+			t += interval;
+
 			vel.z += (IGame::GetGravity() * m_GravityMultiplier) * interval;
 
 			//////////////////////////////////////////////////////////////////////////
 
-			Utils::DrawLine(vlast,pos,_col,_time);
+			RenderBuffer::AddLine(vlast,pos,_col,_time);
 			vlast = pos;
 
 			m_StopPos = pos;

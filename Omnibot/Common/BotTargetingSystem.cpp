@@ -1,15 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "BotTargetingSystem.h"
 #include "Client.h"
 #include "FilterClosest.h"
+#include "RenderBuffer.h"
 
 namespace AiState
 {
@@ -27,13 +27,13 @@ namespace AiState
 		{
 			Vector3f vPos;
 			EngineFuncs::EntityPosition(m_CurrentTarget, vPos);
-			Utils::DrawLine(GetClient()->GetEyePosition(), vPos, COLOR::RED, IGame::GetDeltaTimeSecs());
+			RenderBuffer::AddLine(GetClient()->GetEyePosition(), vPos, COLOR::RED, IGame::GetDeltaTimeSecs());
 		}
 		if(m_LastTarget.IsValid())
 		{
 			Vector3f vPos;
 			EngineFuncs::EntityPosition(m_LastTarget, vPos);
-			Utils::DrawLine(GetClient()->GetEyePosition(), vPos, COLOR::ORANGE, IGame::GetDeltaTimeSecs());
+			RenderBuffer::AddLine(GetClient()->GetEyePosition(), vPos, COLOR::ORANGE, IGame::GetDeltaTimeSecs());
 		}
 	}
 
@@ -99,5 +99,4 @@ namespace AiState
 		}
 		return State_Busy;
 	}
-
 };

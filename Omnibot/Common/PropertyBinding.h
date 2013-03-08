@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __PROPERTYBINDING_H__
 #define __PROPERTYBINDING_H__
@@ -57,42 +59,42 @@ struct IntEnum
 	IntEnum(const char *_key = 0, int _val = 0) : m_Key(_key), m_Value(_val) {}
 };
 
-class PropertyBinding //: public gcn::ActionListener
+class PropertyBinding
 {
 public:
 	typedef boost::shared_ptr<Property> PropertyPtr;
 	typedef std::vector<PropertyPtr> PropertyList;
-	
-	void BindProperty(const String &_name, bool &_val, obuint32 _flags = 0);
-	void BindProperty(const String &_name, const char *&_val, obuint32 _flags = 0);
-	void BindProperty(const String &_name, String &_val, obuint32 _flags = 0);	
-	void BindProperty(const String &_name, Vector3f &_val, obuint32 _flags = Prop::PF_POSITION);
-	void BindProperty(const String &_name, Matrix3f &_val, obuint32 _flags = 0);
-	void BindProperty(const String &_name, int &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
-	void BindProperty(const String &_name, BitFlag32 &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
-	void BindProperty(const String &_name, float &_val, obuint32 _flags = 0);
-	void BindProperty(const String &_name, GameEntity &_val, obuint32 _flags = 0);
-	void BindProperty(const String &_name, AABB &_val, obuint32 _flags = 0);
+
+	void BindProperty(const std::string &_name, bool &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, const char *&_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, std::string &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, Vector3f &_val, obuint32 _flags = Prop::PF_POSITION);
+	void BindProperty(const std::string &_name, Matrix3f &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, int &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
+	void BindProperty(const std::string &_name, BitFlag32 &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
+	void BindProperty(const std::string &_name, float &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, GameEntity &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, AABB &_val, obuint32 _flags = 0);
 
 	template <typename T, typename Fn>
-	void BindFunction(const String _name, T *_src, Fn _fn)
+	void BindFunction(const std::string _name, T *_src, Fn _fn)
 	{
 		BindFunction(_name,CommandFunctorPtr(new Delegate0<T,Fn>(_src,_fn)));
 	}
-	void BindFunction(const String _name, CommandFunctorPtr _functor);
+	void BindFunction(const std::string _name, CommandFunctorPtr _functor);
 
-	bool GetProperty(const String &_name, bool &_val);
-	bool GetProperty(const String &_name, const char *&_val);
-	bool GetProperty(const String &_name, String &_val);	
-	bool GetProperty(const String &_name, Vector3f &_val);
-	bool GetProperty(const String &_name, int &_val);
-	bool GetProperty(const String &_name, float &_val);
-	bool GetProperty(const String &_name, GameEntity &_val);
-	bool GetProperty(const String &_name, AABB &_val);
+	bool GetProperty(const std::string &_name, bool &_val);
+	bool GetProperty(const std::string &_name, const char *&_val);
+	bool GetProperty(const std::string &_name, std::string &_val);
+	bool GetProperty(const std::string &_name, Vector3f &_val);
+	bool GetProperty(const std::string &_name, int &_val);
+	bool GetProperty(const std::string &_name, float &_val);
+	bool GetProperty(const std::string &_name, GameEntity &_val);
+	bool GetProperty(const std::string &_name, AABB &_val);
 
-	bool FromPropertyMap(const PropertyMap &_propmap, StringStr &errorOut);
-	bool FromScriptTable(gmMachine *_machine, gmTableObject *_tbl, StringStr &errorOut);
-	bool FromScriptVar(gmMachine *_machine, const char *_key, gmVariable &_var, StringStr &errorOut);
+	bool FromPropertyMap(const PropertyMap &_propmap, std::stringstream &errorOut);
+	bool FromScriptTable(gmMachine *_machine, gmTableObject *_tbl, std::stringstream &errorOut);
+	bool FromScriptVar(gmMachine *_machine, const char *_key, gmVariable &_var, std::stringstream &errorOut);
 
 #ifdef ENABLE_DEBUG_WINDOW
 	void DeAllocGui();
@@ -107,12 +109,10 @@ public:
 private:
 	PropertyList		m_PropertyList;
 
-	PropertyPtr Get(const String &_name);
+	PropertyPtr Get(const std::string &_name);
 };
 
 //////////////////////////////////////////////////////////////////////////
-
-
 
 //////////////////////////////////////////////////////////////////////////
 

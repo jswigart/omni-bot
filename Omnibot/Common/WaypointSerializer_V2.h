@@ -1,17 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __WAYPOINTSERIALIZER_V2_H__
 #define __WAYPOINTSERIALIZER_V2_H__
 
 #include "WaypointSerializerImp.h"
 
-// class: WaypointSerializer_V2 
+// class: WaypointSerializer_V2
 //		Implementation for waypoint file format version 2
 //		File format specifications:
 //		- Waypoint Header
@@ -37,7 +39,6 @@ public:
 protected:
 	virtual bool Load(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
 	virtual bool Save(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
-
 };
 
 #endif

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -51,7 +51,7 @@ namespace InterfaceFuncs
 		}
 		return NULL;
 	}
-	
+
 	bool IsWeaponOverheated(Client *_bot, RTCW_Weapon _weapon)
 	{
 		RTCW_WeaponOverheated data = { _weapon, False };

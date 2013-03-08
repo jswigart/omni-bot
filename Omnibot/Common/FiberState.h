@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart $
 // $LastChangedDate: 2010-12-17 00:53:18 -0600 (Fri, 17 Dec 2010) $
 // $LastChangedRevision: 276 $
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __FIBERSTATE_H__
 #define __FIBERSTATE_H__
@@ -23,7 +25,7 @@ namespace AiState
 		virtual void Exit() {}
 		virtual State::StateStatus Update(float fDt) { return State::State_Finished; }
 	};
-	
+
 	class StateFiber : public Fiber {
 	public:
 		enum funcType_t {
@@ -73,7 +75,7 @@ namespace AiState
 {
 	class FiberState : public State {
 	public:
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -84,7 +86,7 @@ namespace AiState
 		FiberState( ScriptState * state );
 	private:
 		ScriptState *	scriptState;
-		
+
 		StateFiber 		fiberGetPriority;
 		StateFiber 		fiberEnter;
 		StateFiber 		fiberExit;
@@ -93,4 +95,3 @@ namespace AiState
 };
 
 #endif
-

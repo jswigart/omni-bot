@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __NAVIGATIONMANAGER_H__
 #define __NAVIGATIONMANAGER_H__
@@ -15,7 +17,7 @@ class PathPlannerBase;
 class IGame;
 
 // class: Navigation Manager
-//		This class is responsible for creating and initializing the desired 
+//		This class is responsible for creating and initializing the desired
 //		path planner for the bot to use. Singleton for easy access.
 class NavigationManager
 {
@@ -34,7 +36,7 @@ public:
 	PathPlannerBase *GetCurrentPathPlanner();
 
 	static NavigationManager *GetInstance();
-	static void DeleteInstance();	
+	static void DeleteInstance();
 protected:
 
 	PathPlannerBase		*m_PathPlanner;
@@ -43,7 +45,6 @@ protected:
 	NavigationManager();
 	~NavigationManager();
 	NavigationManager &operator=(const NavigationManager&);
-
 };
 
 #endif

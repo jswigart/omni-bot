@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -8,7 +8,6 @@
 
 #include "RTCW_FilterClosest.h"
 #include "RTCW_InterfaceFuncs.h"
-//#include "RTCW_Goal_MountMG42.h"
 #include "RTCW_Client.h"
 
 #include "ScriptManager.h"
@@ -21,7 +20,7 @@ RTCW_FilterClosest::RTCW_FilterClosest(Client *_client, AiState::SensoryMemory::
 bool RTCW_FilterClosest::CheckEx(const MemoryRecord &_record)
 {
 	// Special consideration for some entity types.
-	switch(_record.m_TargetInfo.m_EntityClass) 
+	switch(_record.m_TargetInfo.m_EntityClass)
 	{
 	case RTCW_CLASSEX_MG42MOUNT:
 		{
@@ -33,7 +32,7 @@ bool RTCW_FilterClosest::CheckEx(const MemoryRecord &_record)
 	case RTCW_CLASSEX_BREAKABLE:
 		{
 			float fBreakableDist = static_cast<RTCW_Client*>(m_Client)->GetBreakableTargetDist();
-//			float fBreakableDist = 50.0f;
+			//			float fBreakableDist = 50.0f;
 			float fDistance = (m_Client->GetPosition() - _record.GetLastSensedPosition()).SquaredLength();
 			if(fDistance > (fBreakableDist * fBreakableDist))
 				return false;
@@ -43,4 +42,3 @@ bool RTCW_FilterClosest::CheckEx(const MemoryRecord &_record)
 
 	return true;
 }
-

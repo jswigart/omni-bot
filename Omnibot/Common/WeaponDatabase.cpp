@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -55,7 +55,7 @@ void WeaponDatabase::CopyAllWeapons(Client *_client, WeaponList &_list)
 	}
 }
 
-String WeaponDatabase::GetWeaponName(int _weaponId)
+std::string WeaponDatabase::GetWeaponName(int _weaponId)
 {
 	WeaponMap::const_iterator it = m_WeaponMap.find(_weaponId);
 	if(it != m_WeaponMap.end())
@@ -126,7 +126,7 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 		{
 			EngineFuncs::ConsoleMessage(va("File changed, reloading %s",wpn->GetScriptPath().c_str()));
 			LOG("Re-Loading Weapon Definition: "<<wpn->GetScriptPath().c_str());
-			
+
 			WeaponPtr newwpn(new Weapon);
 
 			if(newwpn->InitScriptSource(wpn->GetScriptPath()))
@@ -134,7 +134,7 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 				if(newwpn->GetWeaponID() != 0 && newwpn->GetWeaponNameHash())
 				{
 					(*it).second = newwpn;
-					
+
 					Event_RefreshWeapon d = { wpn->GetWeaponID() };
 					MessageHelper evt(MESSAGE_REFRESHWEAPON, &d, sizeof(d));
 					IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(evt);

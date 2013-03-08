@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -8,8 +8,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ET_MESSAGES_H__
-#define __ET_MESSAGES_H__
+#pragma once
+
+#ifndef __TF_MESSAGES_H__
+#define __TF_MESSAGES_H__
 
 #include "Omni-Bot_Color.h"
 #include "Base_Messages.h"

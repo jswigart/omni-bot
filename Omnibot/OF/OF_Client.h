@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __OF_CLIENT_H__
 #define __OF_CLIENT_H__
@@ -20,7 +22,6 @@ public:
 	void Init(int _gameid);
 
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to);
-	
 
 	NavFlags GetTeamFlag(int _team);
 

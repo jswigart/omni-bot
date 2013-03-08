@@ -1,6 +1,5 @@
 #include "RenderBuffer.h"
 #include "Utilities.h"
-#include "FileSystem.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -9,6 +8,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "glext.h"
+
+const float DEFAULT_TIME = 0.01f;
 
 struct VBOVert
 {
@@ -19,13 +20,19 @@ typedef std::vector<VBOVert> VBOVerts;
 
 struct VBO
 {
+	VBO()
+		: mBufferVertId( 0 )
+	{
+	}
+	~VBO()
+	{
+	}
+
 	GLuint		mBufferVertId;
 	GLenum		mType;
 	GLuint		mNumPrimitives;
 	GLuint		mNumVertsPerPrimitive;
 	VBOVerts	mVerts;
-
-	RenderBuffer::QuadList	mQuads; //temp
 };
 
 typedef std::map<obuint32,VBO> VBOMap;
@@ -79,7 +86,8 @@ RenderBuffer::LineList		RenderBuffer::mLineList;
 RenderBuffer::TriList		RenderBuffer::mTriList;
 RenderBuffer::QuadList		RenderBuffer::mQuadList;
 RenderBuffer::CircleList	RenderBuffer::mCircleList;
-RenderBuffer::StringList	RenderBuffer::mStringList;
+RenderBuffer::StringList3d	RenderBuffer::mStringList3d;
+RenderBuffer::StringList2d	RenderBuffer::mStringList2d;
 RenderBuffer::VBOList		RenderBuffer::mVBOList;
 
 void RenderBuffer::Init()
@@ -91,20 +99,20 @@ void RenderBuffer::Init()
 	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)wglGetProcAddress( "glDeleteBuffersARB" );
 
 	const int height = 16;
-	HFONT font = CreateFont(height,		
-		0,				
-		0,				
-		0,				
+	HFONT font = CreateFont(height,
+		0,
+		0,
+		0,
 		0, //m_bold? FW_BOLD : FW_NORMAL,
-		0, //m_italic? TRUE : FALSE,			
-		0, //m_underline? TRUE : FALSE,			
+		0, //m_italic? TRUE : FALSE,
+		0, //m_underline? TRUE : FALSE,
 		0, //m_strokeout? TRUE : FALSE,
-		ANSI_CHARSET,		
-		OUT_TT_PRECIS,		
-		CLIP_DEFAULT_PRECIS,	
-		ANTIALIASED_QUALITY,	
-		FF_DONTCARE|DEFAULT_PITCH,	
-		"Courier New" );		
+		ANSI_CHARSET,
+		OUT_TT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE|DEFAULT_PITCH,
+		"Courier New" );
 
 	HDC hDC = wglGetCurrentDC();
 
@@ -134,7 +142,8 @@ void RenderBuffer::BeginFrame()
 	mTriList.resize( 0 );
 	mQuadList.resize( 0 );
 	mCircleList.resize( 0 );
-	mStringList.resize( 0 );
+	mStringList2d.resize( 0 );
+	mStringList3d.resize( 0 );
 	mVBOList.resize( 0 );
 }
 
@@ -151,6 +160,17 @@ void RenderBuffer::AddPoints( const Vector3List & verts, obColor col, float size
 	for ( size_t i = 0; i < verts.size(); ++i )
 		AddPoint( verts[ i ], col, size );
 }
+void RenderBuffer::AddArrow( const Vector3f & v0, const Vector3f & v1, const obColor & col, float width )
+{
+	Line prim;
+	prim.v[0] = v0;
+	prim.v[1] = v1;
+	prim.c = col;
+	prim.lineWidth = width;
+	mLineList.push_back( prim );
+
+	// arrowheads todo
+}
 void RenderBuffer::AddLine( const Vector3f & v0, const Vector3f & v1, const obColor & col, float width )
 {
 	Line prim;
@@ -160,7 +180,19 @@ void RenderBuffer::AddLine( const Vector3f & v0, const Vector3f & v1, const obCo
 	prim.lineWidth = width;
 	mLineList.push_back( prim );
 }
+void RenderBuffer::AddLine( const Vector3List & v, const obColor & col, float width )
+{
+	Line prim;
+	prim.c = col;
+	prim.lineWidth = width;
 
+	for ( size_t i = 1; i < v.size(); ++i )
+	{
+		prim.v[0] = v[ i-1 ];
+		prim.v[1] = v[ i ];
+		mLineList.push_back( prim );
+	}
+}
 void RenderBuffer::AddTri( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const obColor & col )
 {
 	Triangle prim;
@@ -234,22 +266,115 @@ void RenderBuffer::AddCircle( const Vector3f & v, const obColor & col, float rad
 	mCircleList.push_back( prim );
 }
 
-void RenderBuffer::AddString( const Vector3f & v, const obColor & col, const char * str )
+void RenderBuffer::AddString3d( const Vector3f & v, const obColor & col, const char * str )
 {
-	Str prim;
+	Str3d prim;
 	prim.v = v;
 	prim.c = col;
 	prim.str = str;
-	mStringList.push_back( prim );
+	mStringList3d.push_back( prim );
+}
+
+void RenderBuffer::AddString2d( const Vector2f & v, const obColor & col, const char * str )
+{
+	Str2d prim;
+	prim.v = v;
+	prim.c = col;
+	prim.str = str;
+	mStringList2d.push_back( prim );
+}
+
+void RenderBuffer::AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/)
+{
+	if(g_EngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
+	{
+		if(_dir == AABB::DIR_ALL)
+		{
+			g_EngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
+			return;
+		}
+
+		Vector3f vVertex[8] = { Vector3f::ZERO };
+
+		vVertex[0] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
+		vVertex[1] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
+		vVertex[2] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
+		vVertex[3] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
+
+		vVertex[4] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
+		vVertex[5] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
+		vVertex[6] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
+		vVertex[7] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
+
+		// Top
+		if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
+		{
+			RenderBuffer::AddLine(vVertex[4], vVertex[5], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[5], vVertex[6], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[6], vVertex[7], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[7], vVertex[4], _color, DEFAULT_TIME);
+		}
+
+		// Bottom
+		if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
+		{
+			RenderBuffer::AddLine(vVertex[0], vVertex[1], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[1], vVertex[2], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[2], vVertex[3], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[3], vVertex[0], _color, DEFAULT_TIME);
+		}
+
+		// Sides
+		if(_dir == AABB::DIR_ALL)
+		{
+			RenderBuffer::AddLine(vVertex[4], vVertex[0], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[5], vVertex[1], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[6], vVertex[2], _color, DEFAULT_TIME);
+			RenderBuffer::AddLine(vVertex[7], vVertex[3], _color, DEFAULT_TIME);
+		}
+	}
+}
+
+void RenderBuffer::AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direction _dir)
+{
+	Vector3f vertices[8];
+	_obb.ComputeVertices(vertices);
+
+	// bottom
+	if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vertices[0], vertices[1], _color);
+		RenderBuffer::AddLine(vertices[1], vertices[2], _color);
+		RenderBuffer::AddLine(vertices[2], vertices[3], _color);
+		RenderBuffer::AddLine(vertices[3], vertices[0], _color);
+	}
+
+	// top
+	if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vertices[4], vertices[5], _color);
+		RenderBuffer::AddLine(vertices[5], vertices[6], _color);
+		RenderBuffer::AddLine(vertices[6], vertices[7], _color);
+		RenderBuffer::AddLine(vertices[7], vertices[4], _color);
+	}
+
+	//verts
+	if(_dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vertices[0], vertices[4], _color);
+		RenderBuffer::AddLine(vertices[1], vertices[5], _color);
+		RenderBuffer::AddLine(vertices[2], vertices[6], _color);
+		RenderBuffer::AddLine(vertices[3], vertices[7], _color);
+	}
 }
 
 //bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const TriList & primitives )
 //{
 //	static int nextBufferId = 0;
 //
-//	if ( glGenBuffersARB == NULL || 
-//		glBufferDataARB == NULL || 
-//		glBindBufferARB == NULL || 
+//	if ( glGenBuffersARB == NULL ||
+//		glBufferDataARB == NULL ||
+//		glBindBufferARB == NULL ||
 //		glDeleteBuffersARB == NULL )
 //		return false;
 //
@@ -281,7 +406,7 @@ void RenderBuffer::AddString( const Vector3f & v, const obColor & col, const cha
 //			VBOVert vert;
 //			vert.p[ 0 ] = q.v[ v ].x;
 //			vert.p[ 1 ] = q.v[ v ].y;
-//			vert.p[ 2 ] = q.v[ v ].z;			
+//			vert.p[ 2 ] = q.v[ v ].z;
 //			vert.c[ 0 ] = q.c.rF();
 //			vert.c[ 1 ] = q.c.gF();
 //			vert.c[ 2 ] = q.c.bF();
@@ -310,14 +435,14 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 {
 	static int nextBufferId = 0;
 
-	if ( glGenBuffersARB == NULL || 
-		glBufferDataARB == NULL || 
-		glBindBufferARB == NULL || 
+	if ( glGenBuffersARB == NULL ||
+		glBufferDataARB == NULL ||
+		glBindBufferARB == NULL ||
 		glDeleteBuffersARB == NULL )
 		return false;
 
 	CheckGLError( "StaticBufferCreate1" );
-	
+
 	StaticBufferDelete( bufferId );
 
 	if ( bufferId == 0 )
@@ -330,7 +455,7 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 	vb.mNumVertsPerPrimitive = 4;
 	vb.mNumPrimitives = primitives.size();
 	vb.mVerts.reserve( vb.mNumPrimitives * vb.mNumVertsPerPrimitive );
-	
+
 	//glGenBuffersARB( 1, &vb.mBufferVertId );
 
 	for ( size_t i = 0; i < primitives.size(); ++i )
@@ -341,13 +466,13 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 			VBOVert vert;
 			vert.p[ 0 ] = q.v[ v ].x;
 			vert.p[ 1 ] = q.v[ v ].y;
-			vert.p[ 2 ] = q.v[ v ].z;			
+			vert.p[ 2 ] = q.v[ v ].z;
 			vert.c[ 0 ] = q.c.rF();
 			vert.c[ 1 ] = q.c.gF();
 			vert.c[ 2 ] = q.c.bF();
 			vert.c[ 3 ] = q.c.aF();
 			vb.mVerts.push_back( vert );
-			
+
 			assert( InRangeT( vert.p[ 0 ], -30000.0f, 30000.0f ) );
 			assert( InRangeT( vert.p[ 1 ], -30000.0f, 30000.0f ) );
 			assert( InRangeT( vert.p[ 2 ], -30000.0f, 30000.0f ) );
@@ -360,7 +485,7 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 	}
 
 	/*const GLsizeiptr vertexBytes = sizeof(VBOVert) * verts.size();
-	
+
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferVertId );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &verts[ 0 ], GL_STATIC_DRAW_ARB );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );*/
@@ -385,6 +510,7 @@ void RenderBuffer::StaticBufferDelete( obuint32 bufferId )
 		vbos.erase( it );
 	}
 }
+
 void RenderBuffer::StaticBufferDraw( obuint32 bufferId )
 {
 	mVBOList.push_back( bufferId );
@@ -401,7 +527,7 @@ void RenderBuffer::RenderToOpenGL()
 
 	glPushAttrib( GL_ALL_ATTRIB_BITS );
 
-	glDisable( GL_TEXTURE_2D );
+	/*glDisable( GL_TEXTURE_2D );
 	glDisable( GL_LIGHTING );
 	glDisable( GL_CULL_FACE );
 	glDisable( GL_ALPHA_TEST );
@@ -411,148 +537,150 @@ void RenderBuffer::RenderToOpenGL()
 
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc( GL_LEQUAL );
+	glDepthFunc( GL_LEQUAL );*/
 
 	obColor col = COLOR::CYAN;
 	CheckColor( col, COLOR::WHITE );
 
-	if ( mPointList.size() > 0 )
-	{
-		float sz = 0.0;
-		CheckPointSize( sz, 1.0 );
+	//if ( mPointList.size() > 0 )
+	//{
+	//	float sz = 0.0;
+	//	CheckPointSize( sz, 1.0 );
 
-		glBegin( GL_POINTS );
-		for( size_t i = 0; i < mPointList.size(); ++i )
-		{
-			const Point & prim = mPointList[ i ];
-			CheckPointSize( sz, prim.pointSize );
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-		}
-		glEnd();
-	}
+	//	glBegin( GL_POINTS );
+	//	for( size_t i = 0; i < mPointList.size(); ++i )
+	//	{
+	//		const Point & prim = mPointList[ i ];
+	//		CheckPointSize( sz, prim.pointSize );
+	//		CheckColor( col, prim.c );
+	//		glVertex3fv( prim.v[0] );
+	//	}
+	//	glEnd();
+	//}
 
-	if ( mLineList.size() > 0 )
-	{
-		float sz = 0.0;
-		CheckLineWidth( sz, 1.0 );
+	//if ( mLineList.size() > 0 )
+	//{
+	//	float sz = 0.0;
+	//	CheckLineWidth( sz, 1.0 );
 
-		glBegin( GL_LINES );
-		for( size_t i = 0; i < mLineList.size(); ++i )
-		{
-			const Line & prim = mLineList[ i ];
-			CheckLineWidth( sz, prim.lineWidth );
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-			glVertex3fv( prim.v[1] );
-		}
-		glEnd();
-	}
+	//	glBegin( GL_LINES );
+	//	for( size_t i = 0; i < mLineList.size(); ++i )
+	//	{
+	//		const Line & prim = mLineList[ i ];
+	//		CheckLineWidth( sz, prim.lineWidth );
+	//		CheckColor( col, prim.c );
+	//		glVertex3fv( prim.v[0] );
+	//		glVertex3fv( prim.v[1] );
+	//	}
+	//	glEnd();
+	//}
 
-	if ( mTriList.size() > 0 )
-	{
-		glBegin( GL_TRIANGLES );
-		for( size_t i = 0; i < mTriList.size(); ++i )
-		{
-			const Triangle & prim = mTriList[ i ];
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-			glVertex3fv( prim.v[1] );
-			glVertex3fv( prim.v[2] );
-		}
-		glEnd();
-	}
+	//if ( mTriList.size() > 0 )
+	//{
+	//	glBegin( GL_TRIANGLES );
+	//	for( size_t i = 0; i < mTriList.size(); ++i )
+	//	{
+	//		const Triangle & prim = mTriList[ i ];
+	//		CheckColor( col, prim.c );
+	//		glVertex3fv( prim.v[0] );
+	//		glVertex3fv( prim.v[1] );
+	//		glVertex3fv( prim.v[2] );
+	//	}
+	//	glEnd();
+	//}
 
-	if ( mQuadList.size() > 0 )
-	{
-		glBegin( GL_QUADS );
-		for( size_t i = 0; i < mQuadList.size(); ++i )
-		{
-			const Quad & prim = mQuadList[ i ];
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-			glVertex3fv( prim.v[1] );
-			glVertex3fv( prim.v[2] );
-			glVertex3fv( prim.v[3] );
-		}
-		glEnd();
-	}
+	//if ( mQuadList.size() > 0 )
+	//{
+	//	glBegin( GL_QUADS );
+	//	for( size_t i = 0; i < mQuadList.size(); ++i )
+	//	{
+	//		const Quad & prim = mQuadList[ i ];
+	//		CheckColor( col, prim.c );
+	//		glVertex3fv( prim.v[0] );
+	//		glVertex3fv( prim.v[1] );
+	//		glVertex3fv( prim.v[2] );
+	//		glVertex3fv( prim.v[3] );
+	//	}
+	//	glEnd();
+	//}
 
-	if ( mCircleList.size() > 0 )
-	{
-		GLUquadric * q = gluNewQuadric();
-		gluQuadricDrawStyle( q, GLU_SILHOUETTE );
-		for( size_t i = 0; i < mCircleList.size(); ++i )
-		{
-			const Circle & prim = mCircleList[ i ];
-			CheckColor( col, prim.c );
-			gluDisk( q, 0, prim.radius, 12, 1 );
-		}
-		gluDeleteQuadric( q );
-	}
+	//if ( mCircleList.size() > 0 )
+	//{
+	//	GLUquadric * q = gluNewQuadric();
+	//	gluQuadricDrawStyle( q, GLU_SILHOUETTE );
+	//	for( size_t i = 0; i < mCircleList.size(); ++i )
+	//	{
+	//		const Circle & prim = mCircleList[ i ];
+	//		CheckColor( col, prim.c );
+	//		gluDisk( q, 0, prim.radius, 12, 1 );
+	//	}
+	//	gluDeleteQuadric( q );
+	//}
 
-	if ( mStringList.size() > 0 && textListBase != 0 )
-	{
-		static const float textScale = 5.0f;
-		static const float textDistance = 2048.0f;
+	//if ( mStringList.size() > 0 && textListBase != 0 )
+	//{
+	//	static const float textScale = 5.0f;
+	//	static const float textDistance = 2048.0f;
 
-		glPushMatrix();
-		glPushAttrib( GL_LIST_BIT ); // save the base list
-		glListBase( textListBase );
+	//	glPushMatrix();
+	//	glPushAttrib( GL_LIST_BIT ); // save the base list
+	//	glListBase( textListBase );
 
-		for( size_t i = 0; i < mStringList.size(); ++i )
-		{
-			const Str & prim = mStringList[ i ];
+	//	for( size_t i = 0; i < mStringList.size(); ++i )
+	//	{
+	//		const Str & prim = mStringList[ i ];
 
-			if ( ( vEyePos - prim.v ).Length() > textDistance )
-				continue;
+	//		if ( ( vEyePos - prim.v ).Length() > textDistance )
+	//			continue;
 
-			CheckColor( col, prim.c );
+	//		CheckColor( col, prim.c );
 
-			StringVector lines;
-			Utils::Tokenize( prim.str, "\n", lines );
+	//		StringVector lines;
+	//		Utils::Tokenize( prim.str, "\n", lines );
 
-			for ( size_t l = 0; l < lines.size(); ++l )
-			{
-				float lineWidth = 0.0f;
-				float lineHeight = 0.0f;
-				for ( size_t j = 0; j < lines[ l ].length(); ++j )
-				{
-					lineWidth += glyphMetrics[ lines[ l ][ j ] ].gmfCellIncX;
-					lineHeight = std::max( lineHeight, glyphMetrics[ lines[ l ][ j ] ].gmfBlackBoxY );
-				}
+	//		for ( size_t l = 0; l < lines.size(); ++l )
+	//		{
+	//			float lineWidth = 0.0f;
+	//			float lineHeight = 0.0f;
+	//			for ( size_t j = 0; j < lines[ l ].length(); ++j )
+	//			{
+	//				lineWidth += glyphMetrics[ lines[ l ][ j ] ].gmfCellIncX;
+	//				lineHeight = std::max( lineHeight, glyphMetrics[ lines[ l ][ j ] ].gmfBlackBoxY );
+	//			}
 
-				lineWidth *= textScale;
-				lineHeight *= textScale;
+	//			lineWidth *= textScale;
+	//			lineHeight *= textScale;
 
-				glPushMatrix();
+	//			glPushMatrix();
 
-				// calculate a bill board matrix so the text always faces the camera
-				Vector3f look = vEyePos - prim.v;
-				look.z = 0.0f;
-				look.Normalize();
-				Vector3f right = Vector3f::UNIT_Z.Cross( look );
+	//			// calculate a bill board matrix so the text always faces the camera
+	//			Vector3f look = vEyePos - prim.v;
+	//			look.z = 0.0f;
+	//			look.Normalize();
+	//			Vector3f right = Vector3f::UNIT_Z.Cross( look );
 
-				const GLfloat bb[16] =
-				{
-					right.x,	right.y,	right.z,	0.0f,
-					0.0f,		0.0f,		1.0f,		0.0f,
-					look.x,		look.y,		look.z,		0.0f,
-					prim.v.x,	prim.v.y,	prim.v.z,	1.0f
-				};
-				glMultMatrixf( bb );
-				glTranslatef( 
-					- lineWidth * 0.5f,
-					- (float)l * lineHeight, 
-					0.0f );
-				glScalef( textScale, textScale, textScale );
-				glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );
-				glPopMatrix();
-			}
-		}
-		glPopMatrix();
-		glPopAttrib(); // list base
-	}
+	//			const GLfloat bb[16] =
+	//			{
+	//				right.x,	right.y,	right.z,	0.0f,
+	//				0.0f,		0.0f,		1.0f,		0.0f,
+	//				look.x,		look.y,		look.z,		0.0f,
+	//				prim.v.x,	prim.v.y,	prim.v.z,	1.0f
+	//			};
+	//			glMultMatrixf( bb );
+	//			glTranslatef(
+	//				- lineWidth * 0.5f,
+	//				- (float)l * lineHeight,
+	//				0.0f );
+	//			glScalef( textScale, textScale, textScale );
+	//			glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );
+	//			glPopMatrix();
+	//		}
+	//	}
+	//	glPopMatrix();
+	//	glPopAttrib(); // list base
+	//}
+
+	//mStringList2d TODO
 
 	static bool renderVBOs = true;
 	if ( renderVBOs && mVBOList.size() > 0 )
@@ -577,20 +705,23 @@ void RenderBuffer::RenderToOpenGL()
 			{
 				glEnableClientState( GL_VERTEX_ARRAY );
 				glEnableClientState( GL_COLOR_ARRAY );
-				
+
 				//glBindBufferARB( GL_ARRAY_BUFFER_ARB, it->second.mBufferVertId );
-				
-				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), &it->second.mVerts[ 0 ].p );
-				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), &it->second.mVerts[ 0 ].c );
+
+				const GLvoid * vertPtr = &it->second.mVerts[ 0 ].p;
+				const GLvoid * colrPtr = &it->second.mVerts[ 0 ].c;
+
+				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), vertPtr );
+				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), colrPtr );
 
 				/*glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetP );
 				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetC );*/
-				
+
 				CheckGLError( "PreRender" );
 
 				// whole batch
 				glDrawArrays( it->second.mType, 0, it->second.mNumPrimitives * it->second.mNumVertsPerPrimitive );
-				
+
 				// unbind the buffer
 				//glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 
@@ -600,11 +731,9 @@ void RenderBuffer::RenderToOpenGL()
 				glDisableClientState( GL_COLOR_ARRAY );
 			}
 		}
-		
+
 		glPopClientAttrib();
-	}	
+	}
 
 	glPopAttrib();
-}	
-
-
+}

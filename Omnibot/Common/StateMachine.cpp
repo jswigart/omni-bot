@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -10,7 +10,6 @@
 #include "StateMachine.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
-#include "DebugWindow.h"
 #include "InterfaceFuncs.h"
 #include "BlackBoardItems.h"
 #include "gmCall.h"
@@ -58,7 +57,7 @@ void State::SetName(const char *_name)
 #endif
 }
 
-String State::GetName() const
+std::string State::GetName() const
 {
 	return Utils::HashToString(GetNameHash());
 }
@@ -72,7 +71,7 @@ void State::AppendState(State *_state)
 		State *pLastState = m_FirstChild;
 		while(pLastState && pLastState->m_Sibling)
 			pLastState = pLastState->m_Sibling;
-		
+
 		pLastState->m_Sibling = _state;
 	}
 	else
@@ -80,7 +79,7 @@ void State::AppendState(State *_state)
 		m_FirstChild = _state;
 	}
 
-	_state->m_Sibling = NULL;	
+	_state->m_Sibling = NULL;
 }
 
 bool State::AppendTo(const char * _name, State *_insertstate)
@@ -137,8 +136,8 @@ State *State::ReplaceState(const char * _name, State *_insertstate)
 	if(pReplaceState)
 	{
 		State *pLastState = NULL;
-		for(State *pState = pReplaceState->m_Parent->m_FirstChild; 
-			pState; 
+		for(State *pState = pReplaceState->m_Parent->m_FirstChild;
+			pState;
 			pState = pState->m_Sibling)
 		{
 			if(pState == pReplaceState)
@@ -214,8 +213,8 @@ bool State::InsertBefore(obuint32 _name, State *_insertstate)
 		else
 		{
 			bGood = false;
-			for(State *pS = pFoundState->m_Parent->m_FirstChild; 
-				pS; 
+			for(State *pS = pFoundState->m_Parent->m_FirstChild;
+				pS;
 				pS = pS->m_Sibling)
 			{
 				if(pS->m_Sibling == pFoundState)
@@ -237,10 +236,10 @@ State *State::RemoveState(const char * _name)
 	if(pDeleteState)
 	{
 		pDeleteState->InternalExit();
-			
+
 		State *pLastState = NULL;
-		for(State *pState = pDeleteState->m_Parent->m_FirstChild; 
-			pState; 
+		for(State *pState = pDeleteState->m_Parent->m_FirstChild;
+			pState;
 			pState = pState->m_Sibling)
 		{
 			if(pState == pDeleteState)
@@ -327,14 +326,14 @@ obReal State::InternalGetPriority()
 	{
 		const noSelectReason_t rsn = CanBeSelected();
 		SetSelectable( rsn == NoSelectReasonNone );
-		m_LastPriority = 
+		m_LastPriority =
 			!IsDisabled() //&&
-			/*IsSelectable() && 
+			/*IsSelectable() &&
 			!IsUserDisabled() &&*/
-			//(GetCurrentPriority()!=0.f) 
+			//(GetCurrentPriority()!=0.f)
 			? GetPriority() : 0.f;
 		m_LastPriorityTime = IGame::GetTime();
-	}	
+	}
 	return m_LastPriority;
 }
 
@@ -353,7 +352,7 @@ void State::InternalEnter()
 		DebugExpand(true);
 }
 
-void State::InternalExit() 
+void State::InternalExit()
 {
 	if(IsActive())
 	{
@@ -368,7 +367,7 @@ void State::InternalExit()
 		m_StateFlags.SetFlag(State_Active, false);
 
 		InternalParentExit();
-		Exit();	
+		Exit();
 
 		if(m_StateFlags.CheckFlag(State_DebugExpandOnActive))
 			DebugExpand(false);
@@ -425,17 +424,17 @@ void State::InternalProcessEvent(const MessageHelper &_message, CallbackParamete
 
 	/*switch(_message.GetMessageId())
 	{
-		HANDLER(SYSTEM_THREAD_CREATED)
-		{
-			const Event_SystemThreadCreated *m = _message.Get<Event_SystemThreadCreated>();
-			break;
-		}
-		HANDLER(SYSTEM_THREAD_DESTROYED)
-		{
-			const Event_SystemThreadDestroyed *m = _message.Get<Event_SystemThreadDestroyed>();
-			RemoveThreadReference(m->m_ThreadId);
-			break;
-		}
+	HANDLER(SYSTEM_THREAD_CREATED)
+	{
+	const Event_SystemThreadCreated *m = _message.Get<Event_SystemThreadCreated>();
+	break;
+	}
+	HANDLER(SYSTEM_THREAD_DESTROYED)
+	{
+	const Event_SystemThreadDestroyed *m = _message.Get<Event_SystemThreadDestroyed>();
+	RemoveThreadReference(m->m_ThreadId);
+	break;
+	}
 	}*/
 
 	// Attempt script callbacks.
@@ -448,7 +447,7 @@ void State::InternalProcessEvent(const MessageHelper &_message, CallbackParamete
 			OBASSERT(GetScriptObject(_cb.GetMachine()),"No Script Object!");
 			gmVariable varThis = gmVariable(GetScriptObject(_cb.GetMachine()));
 			int ThreadId = _cb.CallFunction(pFunc, varThis, !_cb.CallImmediate());
-			
+
 			// add it to the tracking list for management of its lifetime.
 			// don't add thread if AlwaysRecieveEvents=true, because events REVIVED, CHANGETEAM, DEATH would not be executed
 			if(ThreadId != GM_INVALID_THREAD && !AlwaysRecieveEvents())
@@ -566,19 +565,19 @@ void State::OnSpawn()
 			pState->OnSpawn();
 }
 
-void State::SetSelectable(bool _selectable) 
+void State::SetSelectable(bool _selectable)
 {
-	m_StateFlags.SetFlag(State_UnSelectable, !_selectable); 
+	m_StateFlags.SetFlag(State_UnSelectable, !_selectable);
 }
 
-void State::SetEnable(bool _enable, const char *_error) 
+void State::SetEnable(bool _enable, const char *_error)
 {
 	if(_error)
 	{
 		OBASSERT(0, _error);
 		LOGERR(_error);
 	}
-	m_StateFlags.SetFlag(State_UserDisabled, !_enable); 
+	m_StateFlags.SetFlag(State_UserDisabled, !_enable);
 }
 
 State::noSelectReason_t State::CanBeSelected()
@@ -597,7 +596,7 @@ State::noSelectReason_t State::CanBeSelected()
 		return NoSelectReason_OnlyNoEntFlag;
 	if(m_OnlyRole.AnyFlagSet() && !(m_OnlyRole & GetClient()->GetRoleMask()).AnyFlagSet())
 		return NoSelectReason_OnlyRole;
-	
+
 	if(m_OnlyWeapon.AnyFlagSet())
 	{
 		AiState::WeaponSystem *ws = GetClient()->GetWeaponSystem();
@@ -615,7 +614,7 @@ State::noSelectReason_t State::CanBeSelected()
 				if(w)
 				{
 					w->UpdateAmmo();
-					
+
 					if(w->OutOfAmmo()==InvalidFireMode)
 					{
 						bOutOfAmmo = false;
@@ -627,13 +626,13 @@ State::noSelectReason_t State::CanBeSelected()
 		if(bOutOfAmmo)
 			return NoSelectReason_OnlyWeaponNoAmmo;
 	}
-	
-	if(m_OnlyTargetClass.AnyFlagSet() || 
-		m_OnlyTargetTeam.AnyFlagSet() || 
-		m_OnlyTargetPowerUp.AnyFlagSet() || 
+
+	if(m_OnlyTargetClass.AnyFlagSet() ||
+		m_OnlyTargetTeam.AnyFlagSet() ||
+		m_OnlyTargetPowerUp.AnyFlagSet() ||
 		m_OnlyTargetEntFlag.AnyFlagSet() ||
-		m_OnlyTargetNoPowerUp.AnyFlagSet() || 
-		m_OnlyTargetNoEntFlag.AnyFlagSet() || 
+		m_OnlyTargetNoPowerUp.AnyFlagSet() ||
+		m_OnlyTargetNoEntFlag.AnyFlagSet() ||
 		m_OnlyTargetWeapon.AnyFlagSet())
 	{
 		AiState::TargetingSystem *ts = GetClient()->GetTargetingSystem();
@@ -762,7 +761,7 @@ void State::BlackboardDelay(float _delayseconds, int _targetId)
 	int n = GetClient()->GetBB().GetBBRecords(bbk_DelayGoal,delays,NumDelays);
 	for(int i = 0; i < n; ++i)
 	{
-		if(delays[i]->m_Target == _targetId && 
+		if(delays[i]->m_Target == _targetId &&
 			delays[i]->m_Owner == GetClient()->GetGameID())
 		{
 			delays[i]->m_ExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds(_delayseconds);
@@ -795,7 +794,7 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 	// Draw the title.
 	if(GetParent())
 	{
-		const char *prefix = "  ";	
+		const char *prefix = "  ";
 		if(m_FirstChild)
 			prefix = IsDebugExpanded() ? "- ": "+ ";
 
@@ -827,10 +826,10 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 		drawinfo.m_Graphics->fillRectangle(l);
 		drawinfo.m_Graphics->setColor(drawinfo.m_Widget->getForegroundColor());
 
-		StringStr s;
+		std::stringstream s;
 		GetDebugString(s);
 
-		drawinfo.m_Graphics->drawText((String)va("%s %s (%.2f) - %s:",
+		drawinfo.m_Graphics->drawText((std::string)va("%s %s (%.2f) - %s:",
 			prefix,GetName().c_str(),
 			GetLastPriority(),
 			s.str().c_str()),iX,iY);
@@ -843,7 +842,7 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 				pState->RenderDebugWindow(drawinfo.indent());
 		}
 		return;
-	}	
+	}
 
 	if(IsDebugExpanded() || !GetParent())
 	{
@@ -855,16 +854,16 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & cached, Remote::Behavior & update ) {
-	//String pth = va( "%s/%s", statePath, GetName().c_str() );
+	//std::string pth = va( "%s/%s", statePath, GetName().c_str() );
 
-	StringStr s;
+	std::stringstream s;
 	GetDebugString(s);
 	obColor renderColor = IsActive()||m_LastUpdateTime==IGame::GetTime() ? obColor( 0, 160, 0) : obColor(0,0,0);
 	if(m_StateFlags.CheckFlag(State_UnSelectable))
 		renderColor = obColor(255,255,255);
 	if(IsDisabled())
 		renderColor = obColor(255,0,0);
-		
+
 	SET_IF_DIFF( cached, update, GetName().c_str(), name );
 	SET_IF_DIFF( cached, update, (int)renderColor, color );
 	SET_IF_DIFF( cached, update, s.str().c_str(), info );
@@ -896,7 +895,7 @@ void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & ca
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSimultaneous::StateSimultaneous(const char * _name, const UpdateDelay &_ur) 
+StateSimultaneous::StateSimultaneous(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 {
 }
@@ -958,13 +957,13 @@ State::StateStatus StateSimultaneous::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StateFirstAvailable::StateFirstAvailable(const char * _name, const UpdateDelay &_ur) 
+StateFirstAvailable::StateFirstAvailable(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 	, m_CurrentState(0)
 {
 }
 
-void StateFirstAvailable::GetDebugString(StringStr &out)
+void StateFirstAvailable::GetDebugString(std::stringstream &out)
 {
 	if(m_CurrentState)
 		m_CurrentState->GetDebugString(out);
@@ -1043,13 +1042,13 @@ State::StateStatus StateFirstAvailable::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StatePrioritized::StatePrioritized(const char * _name, const UpdateDelay &_ur) 
+StatePrioritized::StatePrioritized(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 	, m_CurrentState(0)
 {
 }
 
-void StatePrioritized::GetDebugString(StringStr &out)
+void StatePrioritized::GetDebugString(std::stringstream &out)
 {
 	if(m_CurrentState)
 		m_CurrentState->GetDebugString(out);
@@ -1137,7 +1136,7 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		if ( m_CurrentState->GetLastPriority() >= fBestPriority ) {
 			pBestState = m_CurrentState;
 		}
-	}	
+	}
 
 	// Exit active states that are not our best
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
@@ -1175,13 +1174,13 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSequential::StateSequential(const char * _name, const UpdateDelay &_ur) 
+StateSequential::StateSequential(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 	, m_CurrentState(0)
 {
 }
 
-void StateSequential::GetDebugString(StringStr &out)
+void StateSequential::GetDebugString(std::stringstream &out)
 {
 	if(m_CurrentState)
 		m_CurrentState->GetDebugString(out);
@@ -1198,15 +1197,15 @@ State::StateStatus StateSequential::UpdateState(float fDt)
 {
 	/*if(m_CurrentState)
 	{
-		if(m_StateList.front()->IsActive())
-			return m_StateList.front()->InternalUpdateState();
+	if(m_StateList.front()->IsActive())
+	return m_StateList.front()->InternalUpdateState();
 	}*/
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSequentialLooping::StateSequentialLooping(const char * _name, const UpdateDelay &_ur) 
+StateSequentialLooping::StateSequentialLooping(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 {
 }
@@ -1218,7 +1217,7 @@ State::StateStatus StateSequentialLooping::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StateProbabilistic::StateProbabilistic(const char * _name, const UpdateDelay &_ur) 
+StateProbabilistic::StateProbabilistic(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 {
 }
@@ -1230,7 +1229,7 @@ State::StateStatus StateProbabilistic::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StateOneOff::StateOneOff(const char * _name, const UpdateDelay &_ur) 
+StateOneOff::StateOneOff(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 {
 }
@@ -1242,7 +1241,7 @@ State::StateStatus StateOneOff::UpdateState(float fDt)
 
 //////////////////////////////////////////////////////////////////////////
 
-StateChild::StateChild(const char * _name, const UpdateDelay &_ur) 
+StateChild::StateChild(const char * _name, const UpdateDelay &_ur)
 	: State(_name, _ur)
 {
 }

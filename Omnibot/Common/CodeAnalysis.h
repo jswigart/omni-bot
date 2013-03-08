@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef CODE_ANALYSIS_MACROS
 #define CODE_ANALYSIS_MACROS
 

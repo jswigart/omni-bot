@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef _SPANHEIGHTMAP_H_
 #define _SPANHEIGHTMAP_H_
 
@@ -20,11 +22,11 @@ public:
 		Span *			mNext;
 		float			mMax;
 		float			mMin;
-		
+
 		unsigned int	mIndex;
 		Data			mData;
 
-		Span() 
+		Span()
 			: mMin( 0.0f )
 			, mMax( 0.0f )
 			, mNext( NULL )
@@ -44,7 +46,7 @@ public:
 	class InfluenceMap
 	{
 	public:
-		InfluenceMap( const SpanHeightMap<Data> * map ) 
+		InfluenceMap( const SpanHeightMap<Data> * map )
 			: mSpanMap( map )
 		{
 			mInfluences.resize( map->mNumSpans, std::numeric_limits<float>::max() );
@@ -59,7 +61,6 @@ public:
 				: mSpanInfo( info )
 				, mSpanWeight( weight )
 			{
-
 			}
 		};
 		void Reset()
@@ -68,7 +69,7 @@ public:
 			mSearchFrontier.swap( empty );
 
 			mInfluences.assign( mInfluences.size(), std::numeric_limits<float>::max() );
-			
+
 			mMinValue = std::numeric_limits<float>::max();
 			mMaxValue = std::numeric_limits<float>::lowest();
 		}
@@ -102,9 +103,9 @@ public:
 				// returns true if the cell value changed
 				enum { MaxNeighbors = 16 };
 				SpanInfo neighbors[ MaxNeighbors ];
-				const int numNeighbors = mSpanMap->GetSpanNeighbors( 
+				const int numNeighbors = mSpanMap->GetSpanNeighbors(
 					s.mSpanInfo,
-					64.0f, 32.0f, 1024.0f, 
+					64.0f, 32.0f, 1024.0f,
 					neighbors, MaxNeighbors);
 
 				for ( int i = 0; i < numNeighbors; ++i )
@@ -132,7 +133,7 @@ public:
 		size_t CalculateMemUsage() const
 		{
 			size_t sz = sizeof(*this);
-			
+
 			sz += sizeof( float ) * mInfluences.capacity();
 
 			return sz;
@@ -153,7 +154,7 @@ public:
 	{
 		return y * mNumCellsX + x;
 	}
-	
+
 	bool AddOpenSpan( const Vector3f & pos, const float height )
 	{
 		const unsigned int ix = (unsigned int)( ( pos.x - mMin.x ) / mCellSize );
@@ -201,7 +202,7 @@ public:
 					cur->mMin = spanMin;
 				if (cur->mMax > spanMax)
 					cur->mMax = spanMax;
-				
+
 				// new span is already handled?
 				if (cur->mMin >= spanMin && cur->mMax <= spanMax)
 					return false;
@@ -215,7 +216,7 @@ public:
 			Span * s = new Span;
 			s->mMin = spanMin;
 			s->mMax = spanMax;
-			
+
 			s->mNext = prev->mNext;
 			prev->mNext = s;
 
@@ -231,7 +232,7 @@ public:
 	}
 
 	Span * GetSpanForPos( const Vector3f & p )
-	{		
+	{
 		const unsigned int ix = ( p.x - mMin.x ) / mCellSize;
 		const unsigned int iy = ( p.y - mMin.y ) / mCellSize;
 
@@ -250,13 +251,13 @@ public:
 	}
 
 	bool GetSpanInfoForPos( const Vector3f & p, SpanInfo & spanInfo ) const
-	{		
+	{
 		const unsigned int ix = (unsigned int)(( p.x - mMin.x ) / mCellSize);
 		const unsigned int iy = (unsigned int)(( p.y - mMin.y ) / mCellSize);
 
 		if ( ix >= mNumCellsX || iy >= mNumCellsY )
 			return false;
-		
+
 		Span * s = mSpans[ IDX( ix, iy ) ];
 		while ( s )
 		{
@@ -290,8 +291,8 @@ public:
 					if ( s->mMin < src.mSpan->mMax )
 					{
 						const float floordiff = s->mMin - src.mSpan->mMin;
-						if ( floordiff <= stepup && 
-							floordiff >= -stepdown && 
+						if ( floordiff <= stepup &&
+							floordiff >= -stepdown &&
 							( s->mMax - src.mSpan->mMin ) > height )
 						{
 							spans[numSpans].mSpan = s;
@@ -332,7 +333,7 @@ public:
 			}
 		}
 	}
-	
+
 	void Clear()
 	{
 		for ( unsigned int i = 0; i < mNumCellsX; ++i )
@@ -378,7 +379,7 @@ public:
 			return NULL;
 		return mSpans[ IDX( x, y ) ];
 	}
-	
+
 	struct RenderFunctor
 	{
 		virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio ) = 0;
@@ -399,8 +400,8 @@ public:
 				Span * s = mSpans[ IDX( i,j ) ];
 				while ( s )
 				{
-					spanPos.z = s->mMin;					
-					
+					spanPos.z = s->mMin;
+
 					const float influence = influenceMap ?
 						influenceMap->GetWeight( s->mIndex ) : 1.0f;
 
@@ -410,7 +411,7 @@ public:
 				}
 			}
 		}
-	}	
+	}
 	unsigned int IndexSpanNodes()
 	{
 		mNumSpans = 0;
@@ -423,7 +424,7 @@ public:
 				Span * s = mSpans[ IDX( i,j ) ];
 				while ( s )
 				{
-					s->mIndex = mNumSpans++;					
+					s->mIndex = mNumSpans++;
 					s = s->mNext;
 				}
 			}
@@ -457,7 +458,7 @@ public:
 		return sz;
 	}
 
-	bool Serialize( String & dataOut )
+	bool Serialize( std::string & dataOut )
 	{
 		bool result = false;
 
@@ -501,7 +502,7 @@ public:
 		return result;
 	}
 
-	bool DeSerialize( const String & dataIn )
+	bool DeSerialize( const std::string & dataIn )
 	{
 		bool result = false;
 
@@ -564,7 +565,7 @@ public:
 		return true;
 	}
 
-	SpanHeightMap() 
+	SpanHeightMap()
 		: mSpans( NULL )
 		, mMin( Vector3f::ZERO )
 		, mMax( Vector3f::ZERO )

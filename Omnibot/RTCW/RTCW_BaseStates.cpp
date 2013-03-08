@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -10,6 +10,7 @@
 #include "RTCW_FilterClosest.h"
 #include "RTCW_InterfaceFuncs.h"
 #include "WeaponDatabase.h"
+#include "RenderBuffer.h"
 
 namespace AiState
 {
@@ -26,7 +27,7 @@ namespace AiState
 		LimitToWeapon().SetFlag(RTCW_WP_BINOCULARS);
 	}
 
-	void CallArtillery::GetDebugString(StringStr &out)
+	void CallArtillery::GetDebugString(std::stringstream &out)
 	{
 		out << (m_MapGoal ? m_MapGoal->GetName() : "");
 	}
@@ -37,8 +38,8 @@ namespace AiState
 		{
 			if(m_MapGoal)
 			{
-				Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
-				Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
+				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
 			}
 		}
 	}
@@ -48,7 +49,7 @@ namespace AiState
 	{
 		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
 			_final = false;
-		else 
+		else
 			_final = true;
 		return true;
 	}
@@ -67,7 +68,7 @@ namespace AiState
 			if(mr)
 			{
 				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
+				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
 					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
 				m_FireTime = IGame::GetTime() + 1000;
 			}
@@ -191,11 +192,11 @@ namespace AiState
 		if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
 			m_FireTime = std::numeric_limits<int>::max();
 		else
-			m_FireTime = 0;			
+			m_FireTime = 0;
 
 		m_Fired = false;
 		m_ExpireTime = 0;
-		
+
 		if(m_MapGoal)
 		{
 			m_MapGoal->GetProperty("Stance",m_Stance);
@@ -209,7 +210,7 @@ namespace AiState
 			{
 				m_WatchFilter.reset(new RTCW_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
 			}
-			
+
 			m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
 			m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
 			m_WatchFilter->SetMaxDistance(100.f);
@@ -297,6 +298,6 @@ namespace AiState
 			}
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 };

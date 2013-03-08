@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerFloodFill.h"
 #include "NavigationManager.h"
@@ -220,14 +219,14 @@ int GM_CDECL gmfFloodFillFloodFill(gmThread *a_thread)
 		GM_CHECK_FLOAT_OR_INT_PARAM(fStepHeight, 1);
 		GM_CHECK_FLOAT_OR_INT_PARAM(fJumpHeight, 2);
 		GM_CHECK_FLOAT_OR_INT_PARAM(fCrouchHeight, 3);
-		GM_CHECK_FLOAT_OR_INT_PARAM(fCharacterHeight, 4);	
+		GM_CHECK_FLOAT_OR_INT_PARAM(fCharacterHeight, 4);
 
 		PathPlannerFloodFill::FloodFillOptions options;
 		options.m_GridRadius = fGridRadius;
 		options.m_CharacterStepHeight = fStepHeight;
 		options.m_CharacterJumpHeight = fJumpHeight;
 		options.m_CharacterCrouchHeight = fCrouchHeight;
-		options.m_CharacterHeight = fCharacterHeight;		
+		options.m_CharacterHeight = fCharacterHeight;
 		pPlanner->FloodFill(options);
 	}
 	return GM_OK;
@@ -236,11 +235,11 @@ int GM_CDECL gmfFloodFillFloodFill(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: Global Waypoint Pathplanner Functions
-static gmFunctionEntry s_floodfillLib[] = 
+static gmFunctionEntry s_floodfillLib[] =
 {
 	{"EnableView",			gmfFloodFillView},
 	{"EnableViewConnection",gmfFloodFillViewConnections},
-	
+
 	{"EnableStep",			gmfFloodFillEnableStep},
 	{"Step",				gmfFloodFillStep},
 
@@ -249,14 +248,14 @@ static gmFunctionEntry s_floodfillLib[] =
 
 	{"SaveFloodStarts",		gmfFloodFillSaveFloodStarts},
 	{"LoadFloodStarts",		gmfFloodFillLoadFloodStarts},
-	
+
 	{"FloodFill",			gmfFloodFillFloodFill},
 };
 
 void PathPlannerFloodFill::RegisterScriptFunctions(gmMachine *a_machine)
 {
 	a_machine->RegisterLibrary(
-		s_floodfillLib, 
-		sizeof(s_floodfillLib) / sizeof(s_floodfillLib[0]), 
+		s_floodfillLib,
+		sizeof(s_floodfillLib) / sizeof(s_floodfillLib[0]),
 		"Nav");
 }

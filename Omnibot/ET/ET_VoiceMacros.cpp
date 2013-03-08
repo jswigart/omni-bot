@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -88,7 +88,7 @@ const char *strVoiceMacros[] =
 	"GoodGame",
 
 	0,
-	
+
 	"FTMortar",
 	"FTHealSquad",
 	"FTHealMe",
@@ -116,7 +116,7 @@ const char *strVoiceMacros[] =
 	//"wm_sayPlayerClass",
 };
 
-namespace ET_VoiceChatAssertions 
+namespace ET_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
 	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_ET_VCHATS);
@@ -223,7 +223,7 @@ void ET_VoiceMacros::SendVoiceMacro(Client *_bot, int _msg)
 
 //////////////////////////////////////////////////////////////////////////
 
-//QM_MENU_START( "wm_nq_alt3" )	
+//QM_MENU_START( "wm_nq_alt3" )
 //QM_MENU_ITEM_TEAM( "1. Deploy Mortar",		exec "VoiceFireteamChat FTMortar";		close wm_nq_alt3, "1", 0)
 //QM_MENU_ITEM_TEAM( "2. Heal The Squad",		exec "VoiceFireteamChat FTHealSquad";		close wm_nq_alt3, "2", 1)
 //QM_MENU_ITEM_TEAM( "3. Heal Me",			exec "VoiceFireteamChat FTHealMe";		close wm_nq_alt3, "3", 2)

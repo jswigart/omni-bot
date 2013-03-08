@@ -1,14 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "FileSystem.h"
 
+#include "IGame.h"
+#include "IGameManager.h"
+#include "Logger.h"
 #include "physfs.h"
 
 extern "C"
@@ -16,9 +18,15 @@ extern "C"
 #include "7zCrc.h"
 };
 
+#if defined WIN32
+#define PATHDELIMITER ";"
+#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
+#define PATHDELIMITER ":"
+#endif
+
 bool g_FileSystemInitialized = false;
 
-namespace IOAssertions 
+namespace IOAssertions
 {
 	BOOST_STATIC_ASSERT(sizeof(float) == sizeof(obuint32));
 }
@@ -26,10 +34,10 @@ namespace IOAssertions
 struct FindInfo
 {
 	DirectoryList	&m_DirList;
-	String			m_Expression;
+	std::string			m_Expression;
 	bool			m_Recursive;
 
-	FindInfo(DirectoryList &_list, const String & _exp, bool recurse) :
+	FindInfo(DirectoryList &_list, const std::string & _exp, bool recurse) :
 		m_DirList(_list),
 		m_Expression(_exp),
 		m_Recursive(recurse)
@@ -64,7 +72,7 @@ void _FindAllCallback(void *data, const char *origdir, const char *filename)
 	}
 }
 
-void FileSystem::FindAllFiles(const String &_path, DirectoryList &_list, const String &_expression, bool recurse)
+void FileSystem::FindAllFiles(const std::string &_path, DirectoryList &_list, const std::string &_expression, bool recurse)
 {
 	FindInfo inf(_list, _expression, recurse);
 	PHYSFS_enumerateFilesCallback(_path.c_str(), _FindAllCallback, &inf);
@@ -76,13 +84,13 @@ bool FileSystem::InitFileSystem()
 {
 	PHYSFS_Version compiled;
 	PHYSFS_VERSION(&compiled);
-	LOG("Initializing PhysFS: Version " << 
+	LOG("Initializing PhysFS: Version " <<
 		(int)compiled.major << "." <<
 		(int)compiled.minor << "." <<
 		(int)compiled.patch);
-	
+
 	LOGFUNC;
-	fs::path basePath = Utils::GetBaseFolder();
+	fs::path basePath = GetBaseFolder();
 	LOG("Your base directory is: "<<basePath.string().c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
 	{
@@ -97,7 +105,7 @@ bool FileSystem::InitFileSystem()
 	PHYSFS_mount(globalMapGoalPath.string().c_str(), "scripts/mapgoals", 0);
 
 	LOG("Your user directory is: "<<PHYSFS_getUserDir());
-	fs::path modPath = Utils::GetModFolder();
+	fs::path modPath = GetModFolder();
 	LOG("Your mod directory is: %s"<<modPath.string().c_str());
 	if(!PHYSFS_mount(modPath.string().c_str(), NULL, 1))
 	{
@@ -106,7 +114,7 @@ bool FileSystem::InitFileSystem()
 		PHYSFS_deinit();
 		return false;
 	}
-	
+
 	fs::path globalGuiPath = basePath / "gui";
 	PHYSFS_mount(globalGuiPath.string().c_str(), "gui", 0);
 
@@ -125,11 +133,11 @@ bool FileSystem::InitFileSystem()
 
 //////////////////////////////////////////////////////////////////////////
 
-bool FileSystem::InitRawFileSystem(const String &folder)
+bool FileSystem::InitRawFileSystem(const std::string &folder)
 {
 	PHYSFS_Version compiled;
 	PHYSFS_VERSION(&compiled);
-	LOG("Initializing PhysFS: Version " << 
+	LOG("Initializing PhysFS: Version " <<
 		(int)compiled.major << "." <<
 		(int)compiled.minor << "." <<
 		(int)compiled.patch);
@@ -146,7 +154,7 @@ bool FileSystem::InitRawFileSystem(const String &folder)
 	PHYSFS_permitSymbolicLinks(1);
 
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	LogAvailableArchives();
 
 	CrcGenerateTable();
@@ -226,7 +234,7 @@ bool FileSystem::SetWriteDirectory(const fs::path &_dir)
 	const int len = wcstombs( buffer, _dir.native().c_str(), _dir.native().length() );
 
 	if(len == 0 || !PHYSFS_setWriteDir( buffer ))
-	//if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
+		//if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
 	{
 		LOG("PhysFS: Error Setting Write Directory: " << PHYSFS_getLastError());
 		return false;
@@ -269,7 +277,7 @@ bool FileSystem::FileDelete(const filePath &_file)
 
 //////////////////////////////////////////////////////////////////////////
 
-fs::path FileSystem::GetRealDir(const String &_file)
+fs::path FileSystem::GetRealDir(const std::string &_file)
 {
 	const char *pPath = PHYSFS_getRealDir(_file.c_str());
 
@@ -286,7 +294,7 @@ fs::path FileSystem::GetRealDir(const String &_file)
 
 //////////////////////////////////////////////////////////////////////////
 
-fs::path FileSystem::GetRealPath(const String &_file)
+fs::path FileSystem::GetRealPath(const std::string &_file)
 {
 	try
 	{
@@ -309,10 +317,10 @@ obuint32 FileSystem::CalculateCrc(const void *_data, obuint32 _size)
 	return crc;
 }
 
-obuint32 FileSystem::GetFileCrc(const String &_file)
+obuint32 FileSystem::GetFileCrc(const std::string &_file)
 {
 	obuint32 crc = 0;
-	
+
 	File f;
 	if(f.OpenForRead(_file.c_str(), File::Binary) && f.IsOpen())
 	{
@@ -336,15 +344,15 @@ obuint32 FileSystem::GetFileCrc(const String &_file)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool _SupportsArchiveType(const String &_extension)
+bool _SupportsArchiveType(const std::string &_extension)
 {
 	const PHYSFS_ArchiveInfo **rc = PHYSFS_supportedArchiveTypes();
 	if (*rc)
 	{
-		String strExt;
+		std::string strExt;
 		for(const PHYSFS_ArchiveInfo **i = rc; *i != NULL; i++)
 		{
-			strExt = String(".") + (*i)->extension;
+			strExt = std::string(".") + (*i)->extension;
 			if(!Utils::StringCompareNoCase(_extension, strExt))
 				return true;
 		}
@@ -356,7 +364,7 @@ bool _SupportsArchiveType(const String &_extension)
 struct MntFile
 {
 	fs::path	FilePath;
-	String		OrigDir;
+	std::string		OrigDir;
 };
 typedef std::vector<MntFile> MountFiles;
 //////////////////////////////////////////////////////////////////////////
@@ -417,8 +425,8 @@ void FileSystem::MountArchives(const char *_folder, const char *_mountpoint)
 			{
 				const char *pError = PHYSFS_getLastError();
 				SOFTASSERTALWAYS(0, "PhysFS: %s", pError ? pError : "Unknown Error");
-			}		
-		}		
+			}
+		}
 	}
 	catch(const std::exception & ex)
 	{
@@ -451,6 +459,129 @@ void FileSystem::EnumerateFiles(const char *_folder)
 	Utils::OutputDebug(kNormal, "--------------------\n");
 }
 
+fs::path FileSystem::GetBaseFolder()
+{
+	fs::path basePath;
+
+	// First try to get a path from the game.
+	const char *pPathOverride = g_EngineFuncs->GetBotPath();
+	try
+	{
+		fs::path pathOverride(pPathOverride, fs::native);
+		if(fs::exists(pathOverride) && !fs::is_directory(pathOverride))
+		{
+			basePath = fs::path(pPathOverride, fs::native);
+			basePath = basePath.branch_path();
+		}
+
+		if(basePath.empty())
+		{
+			basePath = FindFile(pathOverride.leaf());
+			basePath = basePath.branch_path();
+		}
+	}
+	catch(const std::exception & ex)
+	{
+		LOG("Bad Override Path: " << ex.what());
+	}
+	return basePath;
+}
+fs::path FileSystem::FindFile(const fs::path &_file)
+{
+	try
+	{
+		// Look for JUST the file in the current folder first.
+		if(fs::exists(_file.leaf()))
+			return _file.leaf();
+
+		// Look for the file using the full provided path, if it differs from just the filename
+		if((_file.string() != _file.leaf()) && fs::exists(_file))
+			return _file;
+
+		// Look in the system path for the file.
+		StringVector pathList;
+		const char* pPathVariable = getenv("OMNIBOTFOLDER");
+		if(pPathVariable)
+			Utils::Tokenize(pPathVariable, PATHDELIMITER, pathList);
+		pPathVariable = getenv("PATH");
+		if(pPathVariable)
+			Utils::Tokenize(pPathVariable, PATHDELIMITER, pathList);
+		StringVector::const_iterator it = pathList.begin();
+		for( ; it != pathList.end(); ++it)
+		{
+			try
+			{
+				// search for the just the file or the whole path
+				fs::path checkPath = fs::path(*it, fs::native) / fs::path(_file.leaf());
+				if(fs::exists(checkPath) && !fs::is_directory(checkPath))
+					return checkPath;
+
+				if (_file.string() != _file.leaf())
+				{
+					checkPath = fs::path(*it, fs::native) / fs::path(_file);
+					if(fs::exists(checkPath) && !fs::is_directory(checkPath))
+						return checkPath;
+				}
+			}
+			catch(const std::exception & ex)
+			{
+				const char *pErr = ex.what();
+				LOG("Filesystem Exception: " << pErr);
+			}
+		}
+	}
+	catch(const std::exception & ex)
+	{
+		const char *pErr = ex.what();
+		LOG("Filesystem Exception: " << pErr);
+	}
+
+	// Not found, give back an empty path.
+	return fs::path();
+}
+
+fs::path FileSystem::GetModFolder()
+{
+	fs::path navFolder = GetBaseFolder();
+
+	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	{
+		// Append the script subfolder
+		navFolder /= fs::path(pGame->GetModSubFolder(), fs::native);
+		return navFolder;
+	}
+
+	return fs::path();
+}
+
+fs::path FileSystem::GetNavFolder()
+{
+	fs::path navFolder = GetBaseFolder();
+
+	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	{
+		// Append the script subfolder
+		navFolder /= fs::path(pGame->GetNavSubfolder(), fs::native);
+		return navFolder;
+	}
+
+	return fs::path();
+}
+
+fs::path FileSystem::GetScriptFolder()
+{
+	fs::path scriptFolder = GetBaseFolder();
+
+	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	{
+		// Append the script subfolder
+		scriptFolder /= fs::path(pGame->GetScriptSubfolder(), fs::native);
+		return scriptFolder;
+	}
+
+	return fs::path();
+}
+
 //////////////////////////////////////////////////////////////////////////
 class File_Private
 {
@@ -477,14 +608,14 @@ bool File::OpenForWrite(const char *_name, FileMode _mode, bool _append /*= fals
 {
 	m_pFile->m_pPrivate = _append ? PHYSFS_openAppend(_name) : PHYSFS_openWrite(_name);
 	m_TextMode = _mode == Text;
-	return m_pFile->m_pPrivate != NULL;	
+	return m_pFile->m_pPrivate != NULL;
 }
 
 bool File::OpenForRead(const char *_name, FileMode _mode)
 {
 	m_pFile->m_pPrivate = PHYSFS_openRead(_name);
 	m_TextMode = _mode == Text;
-	return m_pFile->m_pPrivate != NULL;	
+	return m_pFile->m_pPrivate != NULL;
 }
 
 void File::Close()
@@ -507,9 +638,9 @@ bool File::WriteInt8(obuint8 i)
 	{
 		if(m_TextMode)
 		{
-			StringStr str;
+			std::stringstream str;
 			str << i;
-			String st;
+			std::string st;
 			str >> st;
 			st += " ";
 			return WriteString(st);
@@ -528,9 +659,9 @@ bool File::WriteInt16(obuint16 i)
 	{
 		if(m_TextMode)
 		{
-			StringStr str;
+			std::stringstream str;
 			str << i;
-			String st;
+			std::string st;
 			str >> st;
 			st += " ";
 			return WriteString(st);
@@ -549,9 +680,9 @@ bool File::WriteInt32(obuint32 i, bool spaceatend)
 	{
 		if(m_TextMode)
 		{
-			StringStr str;
+			std::stringstream str;
 			str << i;
-			String st;
+			std::string st;
 			str >> st;
 			if(spaceatend)
 				st += " ";
@@ -571,9 +702,9 @@ bool File::WriteInt64(obuint64 i, bool spaceatend)
 	{
 		if(m_TextMode)
 		{
-			StringStr str;
+			std::stringstream str;
 			str << i;
-			String st;
+			std::string st;
 			str >> st;
 			if(spaceatend)
 				st += " ";
@@ -593,9 +724,9 @@ bool File::WriteFloat(float f)
 	{
 		if(m_TextMode)
 		{
-			StringStr str;
+			std::stringstream str;
 			str << f;
-			String st;
+			std::string st;
 			str >> st;
 			st += " ";
 			return WriteString(st);
@@ -607,7 +738,7 @@ bool File::WriteFloat(float f)
 			return WriteInt32(tmp);
 		}
 	}
-	return false;	
+	return false;
 }
 
 obuint64 File::Write(const void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
@@ -615,7 +746,7 @@ obuint64 File::Write(const void *_buffer, obuint32 _size, obuint32 _numitems /*=
 	return m_pFile->m_pPrivate && _size != 0 ? PHYSFS_write(m_pFile->m_pPrivate, _buffer, _size, _numitems) : 0;
 }
 
-bool File::WriteString(const String &_str)
+bool File::WriteString(const std::string &_str)
 {
 	if(m_pFile->m_pPrivate)
 	{
@@ -644,7 +775,7 @@ void File::Printf(const char* _msg, ...)
 	va_list list;
 	va_start(list, _msg);
 #ifdef WIN32
-	_vsnprintf(buffer, 8192, _msg, list);	
+	_vsnprintf(buffer, 8192, _msg, list);
 #else
 	vsnprintf(buffer, 8192, _msg, list);
 #endif
@@ -666,7 +797,7 @@ bool File::ReadInt8(obuint8 &i)
 	{
 		if(m_TextMode)
 		{
-			String st;
+			std::string st;
 			return ReadString(st) && Utils::ConvertString<obuint8>(st, i);
 		}
 		else
@@ -683,7 +814,7 @@ bool File::ReadInt16(obuint16 &i)
 	{
 		if(m_TextMode)
 		{
-			String st;
+			std::string st;
 			return ReadString(st) && Utils::ConvertString<obuint16>(st, i);
 		}
 		else if(PHYSFS_readULE16(m_pFile->m_pPrivate, &i))
@@ -701,7 +832,7 @@ bool File::ReadInt32(obuint32 &i)
 	{
 		if(m_TextMode)
 		{
-			String st;
+			std::string st;
 			return ReadString(st) && Utils::ConvertString<obuint32>(st, i);
 		}
 		else if(PHYSFS_readULE32(m_pFile->m_pPrivate, &i))
@@ -719,7 +850,7 @@ bool File::ReadInt64(obuint64 &i)
 	{
 		if(m_TextMode)
 		{
-			String st;
+			std::string st;
 			return ReadString(st) && Utils::ConvertString<obuint64>(st, i);
 		}
 		else if(PHYSFS_readULE64(m_pFile->m_pPrivate, &i))
@@ -738,7 +869,7 @@ bool File::ReadFloat(float &f)
 		obuint32 tmp;
 		if(m_TextMode)
 		{
-			String st;
+			std::string st;
 			return ReadString(st) && Utils::ConvertString<float>(st, f);
 		}
 		else if(PHYSFS_readULE32(m_pFile->m_pPrivate, &tmp))
@@ -756,7 +887,7 @@ obint64 File::Read(void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
 	return m_pFile->m_pPrivate && _size != 0 ? PHYSFS_read(m_pFile->m_pPrivate, _buffer, _size, _numitems) : 0;
 }
 
-obuint64 File::ReadWholeFile(String &_readto)
+obuint64 File::ReadWholeFile(std::string &_readto)
 {
 	enum { BufferSize = 4096 };
 	char buffer[BufferSize] = {};
@@ -770,7 +901,7 @@ obuint64 File::ReadWholeFile(String &_readto)
 	return totalBytes;
 }
 
-bool File::ReadString(String &_str)
+bool File::ReadString(std::string &_str)
 {
 	if(m_pFile->m_pPrivate)
 	{
@@ -781,7 +912,7 @@ bool File::ReadString(String &_str)
 			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && !Utils::IsWhiteSpace(ch))
 				_str.push_back(ch);
 
-			// eat white space.			
+			// eat white space.
 			while(Read(&ch, sizeof(ch), 1)>0 && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
 			// go back by 1
 			Seek(Tell()-1);
@@ -796,14 +927,14 @@ bool File::ReadString(String &_str)
 				if(!Read(pBuffer.get(), len, 1)) return false;
 				pBuffer.get()[len] = 0;
 				_str = pBuffer.get();
-			}			
+			}
 		}
 		return true;
 	}
 	return false;
 }
 
-bool File::ReadLine(String &_str)
+bool File::ReadLine(std::string &_str)
 {
 	_str.resize(0);
 	if(m_pFile->m_pPrivate)
@@ -844,7 +975,7 @@ obint64 File::Tell()
 
 bool File::EndOfFile()
 {
-	return m_pFile->m_pPrivate ? (PHYSFS_eof(m_pFile->m_pPrivate)!=0) : true;	
+	return m_pFile->m_pPrivate ? (PHYSFS_eof(m_pFile->m_pPrivate)!=0) : true;
 }
 
 bool File::SetBuffer(obuint64 _size)
@@ -857,7 +988,7 @@ bool File::Flush()
 	return m_pFile->m_pPrivate ? (PHYSFS_flush(m_pFile->m_pPrivate)!=0) : false;
 }
 
-String File::GetLastError()
+std::string File::GetLastError()
 {
 	const char *pError = PHYSFS_getLastError();
 	return pError ? pError : "Unknown";

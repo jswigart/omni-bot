@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __WAYPOINTSERIALIZER_V1_H__
 #define __WAYPOINTSERIALIZER_V1_H__
@@ -35,7 +37,6 @@ public:
 protected:
 	virtual bool Load(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
 	virtual bool Save(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
-
 };
 
 #endif

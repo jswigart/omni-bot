@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __JABaseStates_H__
-#define __JABaseStates_H__
+#pragma once
+
+#ifndef __JABASESTATES_H__
+#define __JABASESTATES_H__
 
 #include "StateMachine.h"
 #include "Path.h"
@@ -21,7 +23,7 @@ namespace AiState
 	class ForceJump : public StateChild
 	{
 	public:
-		
+
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -38,7 +40,6 @@ namespace AiState
 		bool			m_IsOnGround : 1;
 	};
 	//////////////////////////////////////////////////////////////////////////
-
 };
 
 #endif

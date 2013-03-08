@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -8,7 +8,6 @@
 
 #include "RTCW_GoalManager.h"
 #include "RTCW_NavigationFlags.h"
-
 #include "PathPlannerWaypoint.h"
 
 RTCW_GoalManager::RTCW_GoalManager()
@@ -96,7 +95,7 @@ void RTCW_GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 	// NOTE: pay attention to MaxGoals / NumDefs!!
 
 	RegisterWaypointGoals(_wp,Definition,NumDefs);
-	
+
 	// Allow the base class to process it.
 	GoalManager::CheckWaypointForGoal(_wp, _used);
 }

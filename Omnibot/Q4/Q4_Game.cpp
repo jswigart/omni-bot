@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -13,10 +13,9 @@
 
 #include "gmQ4Binds.h"
 
+#include "PathPlannerBase.h"
 #include "FilterSensory.h"
 #include "ScriptManager.h"
-
-#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -74,10 +73,10 @@ const char *Q4_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID Q4_Game::GetDefaultNavigator() const 
+eNavigatorID Q4_Game::GetDefaultNavigator() const
 {
 	//return NAVID_RECAST;
-	return NAVID_WP; 
+	return NAVID_WP;
 }
 
 GoalManager *Q4_Game::GetGoalManager()
@@ -85,15 +84,8 @@ GoalManager *Q4_Game::GetGoalManager()
 	return new Q4_GoalManager;
 }
 
-bool Q4_Game::Init() 
+bool Q4_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_OPENGL);
-
-#ifdef ENABLE_DEBUG_WINDOW
-	extern bool RenderOverlayOpenGLUseViewer;
-	RenderOverlayOpenGLUseViewer = true;
-#endif
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(Q4_Game::Q4_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(Q4_Game::Q4_GetEntityClassAimOffset);
@@ -145,7 +137,7 @@ static IntEnum Q4_TeamEnum[] =
 void Q4_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(Q4_TeamEnum) / sizeof(Q4_TeamEnum[0]);
-	_ptr = Q4_TeamEnum;	
+	_ptr = Q4_TeamEnum;
 }
 
 static IntEnum Q4_WeaponEnum[] =
@@ -168,13 +160,13 @@ static IntEnum Q4_WeaponEnum[] =
 void Q4_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(Q4_WeaponEnum) / sizeof(Q4_WeaponEnum[0]);
-	_ptr = Q4_WeaponEnum;	
+	_ptr = Q4_WeaponEnum;
 }
 
 static IntEnum Q4_ClassEnum[] =
 {
 	IntEnum("PLAYER",				Q4_CLASS_PLAYER),
-	IntEnum("ANYPLAYER",			Q4_CLASS_ANY),	
+	IntEnum("ANYPLAYER",			Q4_CLASS_ANY),
 	IntEnum("GRENADE",			Q4_CLASSEX_GRENADE),
 	IntEnum("ROCKET",				Q4_CLASSEX_ROCKET),
 	IntEnum("NAIL",				Q4_CLASSEX_NAIL),
@@ -240,7 +232,7 @@ void Q4_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 
 	_table->Set(_machine, "IN_VEHICLE",			gmVariable(Q4_ENT_IN_VEHICLE));
 	_table->Set(_machine, "FLASHLIGHT_ON",		gmVariable(Q4_ENT_FLASHLIGHT_ON));
-	_table->Set(_machine, "IN_BUY_ZONE",		gmVariable(Q4_ENT_IN_BUY_ZONE));	
+	_table->Set(_machine, "IN_BUY_ZONE",		gmVariable(Q4_ENT_IN_BUY_ZONE));
 }
 
 void Q4_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)

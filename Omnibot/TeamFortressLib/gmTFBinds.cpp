@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -44,7 +44,7 @@
 static int GM_CDECL gmfGetSentry(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);	
+	GM_CHECK_NUM_PARAMS(0);
 	using namespace AiState;
 
 	FINDSTATE(sg, Sentry, native->GetStateRoot());
@@ -57,7 +57,7 @@ static int GM_CDECL gmfGetSentry(gmThread *a_thread)
 static int GM_CDECL gmfGetSentryLevel(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);	
+	GM_CHECK_NUM_PARAMS(0);
 	using namespace AiState;
 
 	FINDSTATE(sg, Sentry, native->GetStateRoot());
@@ -194,7 +194,7 @@ static int GM_CDECL gmfDisguiseOptions(gmThread *a_thread)
 
 	for(int c = TF_CLASS_SCOUT; c <= TF_CLASS_CIVILIAN; ++c)
 		pTeamTbl->Set(pMachine, c, gmVariable(disguiseOptions.m_Class[c] == True ? 1 : 0));
-	
+
 	pTbl->Set(pMachine, "team", gmVariable(pTeamTbl));
 	pTbl->Set(pMachine, "class", gmVariable(pClassTbl));
 	a_thread->PushTable(pTbl);
@@ -259,7 +259,7 @@ static int GM_CDECL gmfLockPlayerPosition(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_INT_PARAM(lock, 1);
-	
+
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 
@@ -267,7 +267,7 @@ static int GM_CDECL gmfLockPlayerPosition(gmThread *a_thread)
 	if(gameEnt.IsValid())
 	{
 		bSucceed = InterfaceFuncs::LockPlayerPosition(gameEnt, lock != 0 ? True : False);
-	}	
+	}
 	a_thread->PushInt(bSucceed ? 1 : 0);
 	return GM_OK;
 }
@@ -278,10 +278,10 @@ static int GM_CDECL gmfLockPlayerPosition(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to send the hint to
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to send the hint to
 //		int - Message id
-//		string - Text to display in the hud hint
+//		std::string - Text to display in the hud hint
 //
 // Returns:
 //		none
@@ -304,9 +304,9 @@ static int GM_CDECL gmfHudHint(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to send the menu to
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to send the menu to
-//		string - Text to display in the message
+//		std::string - Text to display in the message
 //
 // Returns:
 //		none
@@ -317,13 +317,13 @@ static int GM_CDECL gmfHudTextMsg(gmThread *a_thread)
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	GM_CHECK_STRING_PARAM(message, 1);
-	
+
 	TF_HudText hudtxt;
 	memset(&hudtxt, 0, sizeof(hudtxt));
 	hudtxt.m_MessageType = TF_HudText::MsgHudCenter;
 	hudtxt.m_TargetPlayer = gameEnt;
-	Utils::StringCopy(hudtxt.m_Message, message, sizeof(hudtxt.m_Message));	
-	
+	Utils::StringCopy(hudtxt.m_Message, message, sizeof(hudtxt.m_Message));
+
 	InterfaceFuncs::ShowHudText(hudtxt);
 	return GM_OK;
 }
@@ -334,11 +334,11 @@ static int GM_CDECL gmfHudTextMsg(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to send the menu to
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to send the menu to
-//		string - Text to display in the title bar
+//		std::string - Text to display in the title bar
 //		int - level of the message
-//		float - timeout 
+//		float - timeout
 //		color - the color of the message
 //
 // Returns:
@@ -354,13 +354,13 @@ static int GM_CDECL gmfHudAlert(gmThread *a_thread)
 	GM_CHECK_INT_PARAM(level, 2);
 	GM_CHECK_FLOAT_OR_INT_PARAM(timeout, 3);
 	GM_CHECK_INT_PARAM(color, 4);
-	
+
 	TF_HudMenu menuData;
 	memset(&menuData, 0, sizeof(menuData));
 
 	menuData.m_MenuType = TF_HudMenu::GuiAlert;
 	menuData.m_TargetPlayer = gameEnt;
-	Utils::StringCopy(menuData.m_Title, title, sizeof(menuData.m_Title));	
+	Utils::StringCopy(menuData.m_Title, title, sizeof(menuData.m_Title));
 	menuData.m_Level = level;
 	menuData.m_TimeOut = timeout;
 	menuData.m_Color = obColor(color);
@@ -375,11 +375,11 @@ static int GM_CDECL gmfHudAlert(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to send the menu to
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to send the menu to
-//		string - Text to display in the text box
+//		std::string - Text to display in the text box
 //		int - level of the message
-//		float - timeout 
+//		float - timeout
 //		color - the color of the message
 //
 // Returns:
@@ -402,7 +402,7 @@ static int GM_CDECL gmfHudTextBox(gmThread *a_thread)
 
 	menuData.m_MenuType = TF_HudMenu::GuiTextBox;
 	menuData.m_TargetPlayer = gameEnt;
-	Utils::StringCopy(menuData.m_Title, title, sizeof(menuData.m_Title));	
+	Utils::StringCopy(menuData.m_Title, title, sizeof(menuData.m_Title));
 	Utils::StringCopy(menuData.m_Message, body, sizeof(menuData.m_Message));
 	menuData.m_Level = level;
 	menuData.m_TimeOut = timeout;
@@ -417,13 +417,13 @@ static int GM_CDECL gmfHudTextBox(gmThread *a_thread)
 // Parameters:
 //
 //		<GameEntity> - The entity to send the menu to
-//		- OR - 
+//		- OR -
 //		<int> - The gameId to send the menu to
-//		string - Text to display in the title bar
-//		string - Text to display in caption area
-//		string - Text to display in menu body
+//		std::string - Text to display in the title bar
+//		std::string - Text to display in caption area
+//		std::string - Text to display in menu body
 //		int - level of the message
-//		float - timeout 
+//		float - timeout
 //		color - the color of the message
 //		table - table of options & commands
 //
@@ -432,7 +432,7 @@ static int GM_CDECL gmfHudTextBox(gmThread *a_thread)
 static int GM_CDECL gmfHudMenu(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(8);
-	
+
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 
@@ -455,7 +455,7 @@ static int GM_CDECL gmfHudMenu(gmThread *a_thread)
 	menuData.m_Level = level;
 	menuData.m_TimeOut = timeout;
 	menuData.m_Color = obColor(color);
-	
+
 	int iOption = 0;
 	for(int i = 0; i < 10; ++i)
 	{
@@ -466,7 +466,7 @@ static int GM_CDECL gmfHudMenu(gmThread *a_thread)
 			gmTableIterator tIt;
 			gmTableNode *pNode = pTbl->GetFirst(tIt);
 			if(pNode)
-			{				
+			{
 				gmStringObject *pOptionTxt = pNode->m_key.GetStringObjectSafe();
 				gmStringObject *pCommandTxt = pNode->m_value.GetStringObjectSafe();
 
@@ -486,28 +486,28 @@ static int GM_CDECL gmfHudMenu(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 // package: Team Fortress Bot Library Functions
-static gmFunctionEntry s_TFbotLib[] = 
-{ 
+static gmFunctionEntry s_TFbotLib[] =
+{
 	{"LockPlayerPosition",		gmfLockPlayerPosition},
 	{"HudHint",					gmfHudHint},
-	{"HudMessage",				gmfHudTextBox},	
-	{"HudAlert",				gmfHudAlert},	
-	{"HudMenu",					gmfHudMenu},	
-	{"HudTextMsg",				gmfHudTextMsg},	
+	{"HudMessage",				gmfHudTextBox},
+	{"HudAlert",				gmfHudAlert},
+	{"HudMenu",					gmfHudMenu},
+	{"HudTextMsg",				gmfHudTextMsg},
 };
 
 //////////////////////////////////////////////////////////////////////////
 // package: Team Fortress Bot Script Functions
 static gmFunctionEntry s_TFbotTypeLib[] =
-{	
+{
 	{"GetSentry",		gmfGetSentry},
 	{"GetSentryLevel",	gmfGetSentryLevel},
-	{"GetDispenser",	gmfGetDispenser},	
-	{"GetDetpack",		gmfGetDetpack},	
+	{"GetDispenser",	gmfGetDispenser},
+	{"GetDetpack",		gmfGetDetpack},
 	{"GetPipeCount",	gmfGetPipeCount},
 	{"EnableDisguise",	gmfEnableDisguise},
 	{"Disguise",		gmfDisguise},
-	{"DisguiseOptions",	gmfDisguiseOptions},	
+	{"DisguiseOptions",	gmfDisguiseOptions},
 	{"Cloak",			gmfCloak},
 };
 
@@ -515,7 +515,7 @@ bool gmBindTFLibrary(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_TFbotLib, sizeof(s_TFbotLib) / sizeof(s_TFbotLib[0]));
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_TFbotTypeLib, sizeof(s_TFbotTypeLib) / sizeof(s_TFbotTypeLib[0]));
 	return true;
 }

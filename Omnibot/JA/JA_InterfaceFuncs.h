@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __JA_INTERFACEFUNCS_H__
 #define __JA_INTERFACEFUNCS_H__
@@ -13,7 +15,7 @@
 #include "JA_Messages.h"
 
 namespace InterfaceFuncs
-{	
+{
 	int GetForce(Client *_bot);
 	int GetForceLevel(Client *_bot, int _force);
 	int GetForceKnown(Client *_bot);
@@ -44,7 +46,6 @@ namespace InterfaceFuncs
 	bool CanSnipe(Client *_bot);
 	bool GetCheckPointTeam(GameEntity _ent, int &_owningteam);
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint);*/
-	
 };
 
 #endif

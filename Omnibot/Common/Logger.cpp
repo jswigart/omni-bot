@@ -1,12 +1,12 @@
 // ---------------------------------------------------------------------------------------------------------------------------------
-//  _                                                  
-// | |                                                 
-// | | ___   __ _  __ _  ___ _ __      ___ _ __  _ __  
-// | |/ _ \ / _` |/ _` |/ _ \ '__|    / __| '_ \| '_ \ 
+//  _
+// | |
+// | | ___   __ _  __ _  ___ _ __      ___ _ __  _ __
+// | |/ _ \ / _` |/ _` |/ _ \ '__|    / __| '_ \| '_ \
 // | | (_) | (_| | (_| |  __/ |    _ | (__| |_) | |_) |
-// |_|\___/ \__, |\__, |\___|_|   (_) \___| .__/| .__/ 
-//           __/ | __/ |                  | |   | |    
-//          |___/ |___/                   |_|   |_|    
+// |_|\___/ \__, |\__, |\___|_|   (_) \___| .__/| .__/
+//           __/ | __/ |                  | |   | |
+//          |___/ |___/                   |_|   |_|
 //
 // Generic informational logging class
 //
@@ -58,12 +58,12 @@ Logger g_Logger;
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 std::string g_FileName = "omnibot.log"
-;
-Logger::Logger() : 
-	m_SourceLine(0), 
-	m_IndentCount(0), 
-	m_IndentChars(4), 
-	m_FileSizeLimit(-1), 
+	;
+Logger::Logger() :
+	m_SourceLine(0),
+	m_IndentCount(0),
+	m_IndentChars(4),
+	m_FileSizeLimit(-1),
 	m_LogMask(LOG_ALL),
 	m_OutMask(WRITE_TIMESTAMP),
 	m_LineCharsFlag(false)
@@ -82,7 +82,7 @@ bool Logger::LogStarted()
 
 void Logger::LimitFileSize()
 {
-	if (FileSizeLimit() < 0 || !m_LogFile.is_open()) 
+	if (FileSizeLimit() < 0 || !m_LogFile.is_open())
 		return;
 
 	if(m_LogFile.tellp() > FileSizeLimit())
@@ -96,7 +96,7 @@ void Logger::LimitFileSize()
 
 void Logger::Start(const std::string &_filename, const bool reset)
 {
-	if (LogStarted()) 
+	if (LogStarted())
 		return;
 
 	g_FileName = _filename;
@@ -108,7 +108,7 @@ void Logger::Start(const std::string &_filename, const bool reset)
 	// Start the log
 	LimitFileSize();
 	m_LogFile.open(g_FileName.c_str(), std::ios::out | (reset ? std::ios::trunc : std::ios::app));
-	if (!m_LogFile.is_open()) 
+	if (!m_LogFile.is_open())
 		return;
 
 	m_LogFile << "---------------- Log begins on " << ts << " ---------------" << std::endl;
@@ -118,7 +118,7 @@ void Logger::Start(const std::string &_filename, const bool reset)
 
 void Logger::Stop()
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	// Get the time
@@ -136,11 +136,11 @@ void Logger::Stop()
 
 void Logger::LogTex(const LogFlags logBits, const char *s)
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	// If the bits don't match the mask, then bail
-	if (!(logBits & LogMask())) 
+	if (!(logBits & LogMask()))
 		return;
 
 	LimitFileSize();
@@ -151,7 +151,7 @@ void Logger::LogTex(const LogFlags logBits, const char *s)
 
 void Logger::LogRaw(const std::string &s)
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	LimitFileSize();
@@ -162,15 +162,15 @@ void Logger::LogRaw(const std::string &s)
 
 void Logger::LogHex(const char *buffer, const unsigned int count, const LogFlags logBits)
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	// No input? No output
-	if (!buffer) 
+	if (!buffer)
 		return;
 
 	// If the bits don't match the mask, then bail
-	if (!(logBits & LogMask())) 
+	if (!(logBits & LogMask()))
 		return;
 
 	LimitFileSize();
@@ -221,15 +221,15 @@ void Logger::LogHex(const char *buffer, const unsigned int count, const LogFlags
 
 void Logger::Indent(const std::string &s, const LogFlags logBits)
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	// If the bits don't match the mask, then bail
-	if (!(logBits & LogMask())) 
+	if (!(logBits & LogMask()))
 		return;
 
 	// Log the output
-	if (LineCharsFlag())	
+	if (LineCharsFlag())
 	{
 		m_LogFile << HeaderString(logBits) << "\xDA\xC4\xC4" << s << std::endl;
 		m_LogFile << HeaderString(logBits) << "\xDA\xC4\xC4" << s << std::endl;
@@ -247,17 +247,17 @@ void Logger::Indent(const std::string &s, const LogFlags logBits)
 
 void Logger::Undent(const std::string &s, const LogFlags logBits)
 {
-	if (!LogStarted()) 
+	if (!LogStarted())
 		return;
 
 	// If the bits don't match the mask, then bail
-	if (!(logBits & LogMask())) 
+	if (!(logBits & LogMask()))
 		return;
 
 	// Undo the indentation
 
 	m_IndentCount -= m_IndentCount;
-	if (m_IndentCount < 0) 
+	if (m_IndentCount < 0)
 		m_IndentCount = 0;
 
 	// Log the output
@@ -278,7 +278,7 @@ const std::string &Logger::HeaderString(const LogFlags logBits) const
 	static std::string HeaderString;
 	HeaderString.resize(0);
 
-	// Get the string that represents the bits
+	// Get the std::string that represents the bits
 	switch(logBits)
 	{
 	case LOG_INDENT : HeaderString += "> "; break;
@@ -293,7 +293,7 @@ const std::string &Logger::HeaderString(const LogFlags logBits) const
 	default:          HeaderString += "  "; break;
 	}
 
-	// File string (strip out the path)
+	// File std::string (strip out the path)
 	char temp[1024] = {0};
 
 	if(m_OutMask & WRITE_FILE)
@@ -308,10 +308,10 @@ const std::string &Logger::HeaderString(const LogFlags logBits) const
 		sprintf(temp, "[%04d]", SourceLine());
 		HeaderString += temp;
 	}
-	
+
 	time_t	t = time(NULL);
 	struct	tm *tme = localtime(&t);
-	// Time string (specially formatted to save room)
+	// Time std::string (specially formatted to save room)
 	if(m_OutMask & WRITE_DATE)
 	{
 		sprintf(temp, "%02d/%02d ", tme->tm_mon + 1, tme->tm_mday);
@@ -335,7 +335,7 @@ const std::string &Logger::HeaderString(const LogFlags logBits) const
 	{
 		if (LineCharsFlag())
 			temp[count] = '\xB3';
-		else			
+		else
 			temp[count] = '|';
 		count += m_IndentChars;
 	}

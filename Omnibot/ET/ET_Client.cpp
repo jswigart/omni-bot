@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -25,20 +25,20 @@
 class Limbo : public StateSimultaneous
 {
 public:
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return GetClient()->HasEntityFlag(ET_ENT_FLAG_INLIMBO) ? 1.f : 0.f;		
+		return GetClient()->HasEntityFlag(ET_ENT_FLAG_INLIMBO) ? 1.f : 0.f;
 	}
 	void Exit()
 	{
 		GetRootState()->OnSpawn();
 	}
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		// need to do something special here?
-		return State_Busy; 
+		return State_Busy;
 	}
-	Limbo() : StateSimultaneous("Limbo") 
+	Limbo() : StateSimultaneous("Limbo")
 	{
 	}
 protected:
@@ -47,25 +47,25 @@ protected:
 class Incapacitated : public StateChild
 {
 public:
-	obReal GetPriority() 
+	obReal GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f; 
+		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Update(float fDt) 
+	State::StateStatus Update(float fDt)
 	{
 		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
 		{
-			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
+			if(!InterfaceFuncs::IsMedicNear(GetClient()))
 			{
 				InterfaceFuncs::GoToLimbo(GetClient());
 			}
 		}
 		GetClient()->SetMovementVector(Vector3f::ZERO);
-		return State_Busy; 
+		return State_Busy;
 	}
 
-	Incapacitated() : StateChild("Incapacitated") 
+	Incapacitated() : StateChild("Incapacitated")
 	{
 	}
 protected:
@@ -126,7 +126,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 	switch(_message.GetMessageId())
 	{
 		HANDLER(ET_EVENT_PRETRIGGER_MINE)
-		HANDLER(ET_EVENT_POSTTRIGGER_MINE)
+			HANDLER(ET_EVENT_POSTTRIGGER_MINE)
 		{
 			_cb.CallScript();
 			const Event_TriggerMine_ET *m = _message.Get<Event_TriggerMine_ET>();
@@ -151,7 +151,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 		HANDLER(ET_EVENT_FIRETEAM_CREATED)
 		{
 			_cb.CallScript();
-			const Event_FireTeamCreated *m = _message.Get<Event_FireTeamCreated>();		
+			const Event_FireTeamCreated *m = _message.Get<Event_FireTeamCreated>();
 			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
@@ -164,7 +164,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 		HANDLER(ET_EVENT_FIRETEAM_JOINED)
 		{
 			_cb.CallScript();
-			const Event_FireTeamJoined *m = _message.Get<Event_FireTeamJoined>();		
+			const Event_FireTeamJoined *m = _message.Get<Event_FireTeamJoined>();
 			_cb.AddEntity("teamleader",m->m_TeamLeader);
 			break;
 		}
@@ -177,21 +177,21 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 		HANDLER(ET_EVENT_FIRETEAM_INVITED)
 		{
 			_cb.CallScript();
-			const Event_FireTeamInvited *m = _message.Get<Event_FireTeamInvited>();		
+			const Event_FireTeamInvited *m = _message.Get<Event_FireTeamInvited>();
 			_cb.AddEntity("teamleader",m->m_TeamLeader);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_PROPOSAL)
 		{
 			_cb.CallScript();
-			const Event_FireTeamProposal *m = _message.Get<Event_FireTeamProposal>();		
+			const Event_FireTeamProposal *m = _message.Get<Event_FireTeamProposal>();
 			_cb.AddEntity("invitee",m->m_Invitee);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_WARNED)
 		{
 			_cb.CallScript();
-			const Event_FireTeamWarning *m = _message.Get<Event_FireTeamWarning>();		
+			const Event_FireTeamWarning *m = _message.Get<Event_FireTeamWarning>();
 			_cb.AddEntity("warnedby",m->m_WarnedBy);
 			break;
 		}
@@ -219,13 +219,13 @@ NavFlags ET_Client::GetTeamFlag(int _team)
 	case ET_TEAM_AXIS:
 		return F_NAV_TEAM1;
 	case ET_TEAM_ALLIES:
-		return F_NAV_TEAM2;	
+		return F_NAV_TEAM2;
 	default:
 		return defaultTeam;
 	}
 }
 
-void ET_Client::SendVoiceMacro(int _macroId) 
+void ET_Client::SendVoiceMacro(int _macroId)
 {
 	ET_VoiceMacros::SendVoiceMacro(this, _macroId);
 }
@@ -233,7 +233,7 @@ void ET_Client::SendVoiceMacro(int _macroId)
 int ET_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 {
 	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-	
+
 	int iVoiceId = ET_VoiceMacros::GetVChatId(m->m_MacroString);
 	switch(iVoiceId)
 	{
@@ -257,7 +257,7 @@ int ET_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ET_Evaluator_RequestGiveHealth(this, m->m_WhoSaidIt));
 				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
+				GetBrain()->AddGoalEvaluator(eval);*/
 			}
 			break;
 		}
@@ -268,7 +268,7 @@ int ET_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ET_Evaluator_RequestGiveAmmo(this, m->m_WhoSaidIt));
 				if(GetBrain())
-					GetBrain()->AddGoalEvaluator(eval);*/
+				GetBrain()->AddGoalEvaluator(eval);*/
 			}
 			break;
 		}
@@ -341,7 +341,7 @@ void ET_Client::ProcessGotoNode(const Path &_path)
 	}
 
 	if(pt.m_NavFlags & F_ET_NAV_STRAFE_L)
-	{		
+	{
 		PressButton(BOT_BUTTON_LSTRAFE);
 	}
 	else if(pt.m_NavFlags & F_ET_NAV_STRAFE_R)
@@ -367,7 +367,7 @@ float ET_Client::GetAvoidRadius(int _class) const
 
 	switch(_class)
 	{
-	//case ENT_CLASS_GENERIC_BUTTON:
+		//case ENT_CLASS_GENERIC_BUTTON:
 	case ENT_CLASS_GENERIC_HEALTH:
 	case ENT_CLASS_GENERIC_AMMO:
 	case ENT_CLASS_GENERIC_ARMOR:
@@ -394,10 +394,10 @@ bool ET_Client::IsFlagGrabbable(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::ItemCanBeGrabbed(this, _mapgoal->GetEntity());
 }
 
-bool ET_Client::CanBotSnipe() 
+bool ET_Client::CanBotSnipe()
 {
 	// Make sure we have a sniping weapon.
-	const int SniperWeapons[] = 
+	const int SniperWeapons[] =
 	{
 		ET_WP_FG42_SCOPE,
 		ET_WP_K43_SCOPE,
@@ -454,11 +454,10 @@ bool ET_Client::GetSkills(gmMachine *machine, gmTableObject *tbl)
 	return false;
 }
 
-float ET_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) 
+float ET_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
 {
 	using namespace AiState;
-	String gn;
-	
+
 	if(_flag & F_ET_NAV_DISGUISE)
 	{
 		if(HasEntityFlag(ET_ENT_FLAG_DISGUISED))
@@ -467,14 +466,14 @@ float ET_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to
 	}
 
 	if(_flag & F_ET_NAV_USEPATH)
-	{		
+	{
 		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
 		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
 		FINDSTATE(hl,HighLevel,this->GetStateRoot());
-		
+
 		if(hl != NULL && hl->GetActiveState())
 		{
-			gn = Utils::StringToLower(hl->GetActiveState()->GetName());
+			std::string gn = Utils::StringToLower(hl->GetActiveState()->GetName());
 			for(; cIt != pm.end(); ++cIt)
 			{
 				if ( gn == (*cIt).first && (*cIt).second == "true" )

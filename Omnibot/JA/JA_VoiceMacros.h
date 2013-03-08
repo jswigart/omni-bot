@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __JA_VOICEMACROS_H__
 #define __JA_VOICEMACROS_H__
@@ -18,7 +20,7 @@ typedef enum
 	VCHAT_ATTACK_POSITION,
 	VCHAT_ATTACK_PRIMARY,
 	VCHAT_ATTACK_SECONDARY,
-	VCHAT_DEFEND_GUNS,	
+	VCHAT_DEFEND_GUNS,
 	VCHAT_DEFEND_POSITION,
 	VCHAT_DEFEND_PRIMARY,
 	VCHAT_DEFEND_SECONDARY,

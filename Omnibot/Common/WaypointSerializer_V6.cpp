@@ -42,7 +42,7 @@ bool WaypointSerializer_V6::Load(File &_file, PathPlannerWaypoint::WaypointList 
 			char strname[512] = {0};
 			char strvalue[512] = {0};
 
-			// Read the string length, and string
+			// Read the std::string length, and std::string
 			obuint8 iPropNameLength = 0;
 			CHECK_READ(_file.ReadInt8(iPropNameLength));
 			OBASSERT(iPropNameLength > 0, "Invalid Name Length");
@@ -140,10 +140,10 @@ bool WaypointSerializer_V6::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	//	PropertyMap::const_iterator pIt = pCurrentWp->m_PropertyList.begin();
 	//	for( ; pIt != pCurrentWp->m_PropertyList.end(); ++pIt)
 	//	{
-	//		const String &strName = pIt->first;
-	//		const String &strData = pIt->second;
+	//		const std::string &strName = pIt->first;
+	//		const std::string &strData = pIt->second;
 	//		
-	//		// Write the string length, and string
+	//		// Write the std::string length, and std::string
 	//		if(strName.length() > std::numeric_limits<unsigned char>::max())
 	//		{
 	//			LOGERR("> 256 characters in property name");
@@ -153,7 +153,7 @@ bool WaypointSerializer_V6::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	//		CHECK_WRITE(_file.Write((char *)&iPropNameLength, sizeof(iPropNameLength)));
 	//		CHECK_WRITE(_file.Write((char *)strName.c_str(), sizeof(char) * iPropNameLength));
 	//		
-	//		// Write the data string length, and string
+	//		// Write the data std::string length, and std::string
 	//		if(strData.length() > std::numeric_limits<unsigned char>::max())
 	//		{
 	//			LOGERR("> 256 characters in property name");

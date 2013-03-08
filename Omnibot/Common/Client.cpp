@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "Client.h"
 #include "IGameManager.h"
@@ -18,6 +17,8 @@
 #include "MovementCaps.h"
 #include "InterfaceFuncs.h"
 #include "ScriptGoal.h"
+
+#include "RenderBuffer.h"
 
 #include "gmBot.h"
 #include "gmScriptGoal.h"
@@ -74,7 +75,7 @@ Client::Client()
 
 Client::~Client()
 {
-	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine(); 
+	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	if(m_ScriptObject)
 	{
 		pMachine->RemoveCPPOwnedGMObject(m_ScriptObject);
@@ -97,7 +98,7 @@ void Client::Update()
 	const Vector3f oldFacing = m_FacingVector;
 	const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
 
-	// update my locally properties with the one the game has for me.	
+	// update my locally properties with the one the game has for me.
 	EngineFuncs::EntityPosition(m_GameEntity, m_Position);
 	EngineFuncs::EntityWorldOBB(m_GameEntity, m_WorldBounds);
 	EngineFuncs::EntityGroundEntity(m_GameEntity, m_MoveEntity);
@@ -171,10 +172,10 @@ void Client::Update()
 					{
 						PressButton(i);
 					}
-				}		
+				}
 			}
 		}
-	}	
+	}
 
 	// Update my input with the engine
 	m_ClientInput.m_MoveDir[0]		= m_MoveVector.x;
@@ -191,7 +192,7 @@ void Client::Update()
 	}
 
 #ifdef _DEBUG
-	OBASSERT(m_FacingVector != Vector3f::ZERO, "Zero Facing Vector");	
+	OBASSERT(m_FacingVector != Vector3f::ZERO, "Zero Facing Vector");
 #endif
 
 	// Zero the button flags here, if we do it before the UpdateBotInput, any script
@@ -204,13 +205,12 @@ void Client::UpdateBotInput()
 	g_EngineFuncs->UpdateBotInput(m_GameID, m_ClientInput);
 }
 
-
 #ifdef ENABLE_REMOTE_DEBUGGING
 void Client::InternalSyncEntity( RemoteLib::DebugConnection * connection, Remote::Entity & cached, Remote::Entity & update ) {
 	SET_IF_DIFF( cached, update, GetFieldOfView(), fov );
 
 	/*if ( m_StateRoot != NULL ) {
-		m_StateRoot->Sync( connection, *cached.mutable_behaviors(), *update.mutable_behaviors() );	
+	m_StateRoot->Sync( connection, *cached.mutable_behaviors(), *update.mutable_behaviors() );
 	}*/
 }
 #endif
@@ -232,7 +232,7 @@ Vector3f Client::GetEyePosition()
 
 gmUserObject *Client::GetScriptObject()
 {
-	return m_ScriptObject; 
+	return m_ScriptObject;
 }
 
 gmVariable Client::GetScriptVariable()
@@ -259,12 +259,12 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 			ResetStuckTime();
 			ReleaseAllHeldButtons();
 			break;
-		}		
+		}
 		HANDLER(MESSAGE_DEATH)
 		{
 			const Event_Death *m = _message.Get<Event_Death>();
 			_cb.CallScript();
-			_cb.AddEntity("inflictor", m->m_WhoKilledMe);				
+			_cb.AddEntity("inflictor", m->m_WhoKilledMe);
 			_cb.AddString("meansofdeath", m->m_MeansOfDeath);
 			break;
 		}
@@ -289,7 +289,7 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 			_cb.AddEntity("victim", m->m_WhoIKilled);
 			_cb.AddString("meansofdeath", m->m_MeansOfDeath);
 			break;
-		}	
+		}
 		HANDLER(MESSAGE_CHANGETEAM)
 		{
 			const Event_ChangeTeam *m = _message.Get<Event_ChangeTeam>();
@@ -314,7 +314,7 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 			m;
 			if(IsDebugEnabled(BOT_DEBUG_FPINFO))
 			{
-				StringStr strOutString;
+				std::stringstream strOutString;
 
 				using namespace AiState;
 				FINDSTATE(hl,HighLevel,GetStateRoot());
@@ -337,24 +337,24 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 				const MemoryRecord *pTargetRecord = GetTargetingSystem()->GetCurrentTargetRecord();
 				if(pTargetRecord)
 				{
-					//strOutString << "Target: " << 
-					//	pTargetRecord->m_TargetInfo.m_DistanceTo << 
+					//strOutString << "Target: " <<
+					//	pTargetRecord->m_TargetInfo.m_DistanceTo <<
 					//	" units away." << std::endl;
-					strOutString  
-                               << "Target: "  
-                               << EngineFuncs::EntityName(pTargetRecord->GetEntity(),"<unknown>") 
-                               << " " 
-                               << pTargetRecord->m_TargetInfo.m_DistanceTo  
-                               << " units away." 
-                               << std::endl;
+					strOutString
+						<< "Target: "
+						<< EngineFuncs::EntityName(pTargetRecord->GetEntity(),"<unknown>")
+						<< " "
+						<< pTargetRecord->m_TargetInfo.m_DistanceTo
+						<< " units away."
+						<< std::endl;
 				}
 				else
 					strOutString << "No Target" << std::endl;
 
 				GetWeaponSystem()->GetSpectateMessage(strOutString);
-				//g_EngineFuncs->PrintScreenText(NULL, 
+				//g_EngineFuncs->PrintScreenText(NULL,
 				//	IGame::GetDeltaTimeSecs()*2.f, COLOR::WHITE, strOutString.str().c_str());
-				Utils::PrintText(Vector3f::ZERO, COLOR::WHITE, IGame::GetDeltaTimeSecs()*2.f, strOutString.str().c_str());
+				RenderBuffer::AddString2d( Vector2f(0.5f,0.5f), COLOR::WHITE, strOutString.str().c_str());
 			}
 			break;
 		}
@@ -405,7 +405,7 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 		HANDLER(MESSAGE_RESETWEAPONS)
 		{
 			_cb.CallScript();
-			GetWeaponSystem()->ClearWeapons();			
+			GetWeaponSystem()->ClearWeapons();
 			break;
 		}
 		HANDLER(MESSAGE_REFRESHALLWEAPONS)
@@ -487,10 +487,10 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 				GetSensoryMemory()->UpdateWithTouchSource(m->m_Inflictor);
 			}
 			break;
-		}	
+		}
 		HANDLER(PERCEPT_HEAR_GLOBALVOICEMACRO)
-		HANDLER(PERCEPT_HEAR_TEAMVOICEMACRO)
-		HANDLER(PERCEPT_HEAR_PRIVATEVOICEMACRO)
+			HANDLER(PERCEPT_HEAR_TEAMVOICEMACRO)
+			HANDLER(PERCEPT_HEAR_PRIVATEVOICEMACRO)
 		{
 			const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
 			if(m->m_WhoSaidIt != GetGameEntity()) // Ignore messages from myself.
@@ -511,9 +511,9 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 			break;
 		}
 		HANDLER(PERCEPT_HEAR_GLOBALCHATMSG)
-		HANDLER(PERCEPT_HEAR_TEAMCHATMSG)	
-		HANDLER(PERCEPT_HEAR_PRIVCHATMSG)
-		HANDLER(PERCEPT_HEAR_GROUPCHATMSG)
+			HANDLER(PERCEPT_HEAR_TEAMCHATMSG)
+			HANDLER(PERCEPT_HEAR_PRIVCHATMSG)
+			HANDLER(PERCEPT_HEAR_GROUPCHATMSG)
 		{
 			const Event_ChatMessage *m = _message.Get<Event_ChatMessage>();
 			if(m->m_WhoSaidIt != GetGameEntity()) // Ignore messages from myself.
@@ -547,7 +547,7 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 			_cb.AddInt("sensedclass", m->m_EntityClass);
 			_cb.AddEntity("sensedentity", m->m_Entity);
 			break;
-		}	
+		}
 	}
 }
 
@@ -563,7 +563,7 @@ void Client::Init(int _gameid)
 	if(const char *pName = g_EngineFuncs->GetEntityName(GetGameEntity()))
 		m_NameReference = NameManager::GetInstance()->GetName(pName);
 
-	// Only create these if they aren't already defined, 
+	// Only create these if they aren't already defined,
 	// the mod may override them with derived classes.
 
 	// Add this bot to the global script table.
@@ -576,7 +576,7 @@ void Client::Init(int _gameid)
 
 	LoadProfile(PROFILE_CUSTOM);
 
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	// Call any map callbacks.
 	gmCall call;
 	if(call.BeginGlobalFunction(pMachine, "OnBotJoin", gmVariable::s_null, true))
@@ -594,7 +594,7 @@ void Client::Shutdown()
 	IGameManager::GetInstance()->SyncRemoteDelete( GetGameEntity().AsInt() );
 #endif
 
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	// Call any map callbacks.
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	gmCall call;
@@ -645,16 +645,15 @@ bool Client::TurnTowardPosition(const Vector3f &_pos)
 	//{
 	//	float heading = 0.f, pitch = 0.f, radius = 0.f;
 	//	newFacing.ToSpherical(heading, pitch, radius);
-	//	
+	//
 	//	//Mathf::UnitCircleNormalize();
 	//}
-
 
 	if(newFacing == Vector3f::ZERO)
 		return false;
 	OBASSERT(m_FacingVector != Vector3f::ZERO, "Zero Facing Vector");
 
-	// See how close we are to 
+	// See how close we are to
 	float fDot = m_FacingVector.Dot(newFacing);
 
 	// Determine the angle between the 2 different facings.
@@ -688,7 +687,7 @@ bool Client::TurnTowardPosition(const Vector3f &_pos)
 	}
 	else
 	{
-		qPartial = qQuat;		
+		qPartial = qQuat;
 		m_FacingVector = newFacing;
 	}
 	assert(m_FacingVector != Vector3f::ZERO);
@@ -701,12 +700,12 @@ bool Client::HasLineOfSightTo(const Vector3f &_pos, GameEntity _entity, int cust
 	return HasLineOfSightTo(vStart, _pos, _entity, m_GameID, customTraceMask);
 }
 
-bool Client::HasLineOfSightTo(const Vector3f &_pos1, const Vector3f &_pos2, 
+bool Client::HasLineOfSightTo(const Vector3f &_pos1, const Vector3f &_pos2,
 							  GameEntity _ent, int _ignoreent, int customTraceMask)
 {
 	Prof(HasLineOfSightTo);
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr, _pos1, _pos2, 
+	EngineFuncs::TraceLine(tr, _pos1, _pos2,
 		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, True);
 	return (tr.m_Fraction == 1.0f) || ((_ent.IsValid()) && (tr.m_HitEntity == _ent));
 }
@@ -714,7 +713,7 @@ bool Client::HasLineOfSightTo(const Vector3f &_pos1, const Vector3f &_pos2,
 bool Client::MoveTo(const Vector3f &_pos, float _tolerance, MoveMode _m)
 {
 	GetSteeringSystem()->SetTarget(_pos, _tolerance, _m);
-	return ((_pos - GetPosition()).SquaredLength() <= (_tolerance * _tolerance));	
+	return ((_pos - GetPosition()).SquaredLength() <= (_tolerance * _tolerance));
 }
 
 void Client::EnableDebug(const int _flag, bool _enable)
@@ -740,15 +739,15 @@ void Client::EnableDebug(const int _flag, bool _enable)
 				m_DebugLog.WriteString(GetName());
 				m_DebugLog.WriteNewLine();
 			}
-		} 
+		}
 		else
 		{
-			m_DebugLog.Close();		
+			m_DebugLog.Close();
 		}
-	}	
+	}
 
-	EngineFuncs::ConsoleMessage(va("debugging for %s: %s.", 
-		GetName(), 
+	EngineFuncs::ConsoleMessage(va("debugging for %s: %s.",
+		GetName(),
 		IsDebugEnabled(_flag) ? "enabled" : "disabled"));
 }
 
@@ -774,9 +773,9 @@ void Client::OutputDebug(MessageType _type, const char * _str)
 
 void Client::LoadProfile(ProfileType _type)
 {
-	String strProfileName;
+	std::string strProfileName;
 
-	switch(_type) 
+	switch(_type)
 	{
 	case PROFILE_CUSTOM:
 		{
@@ -807,7 +806,7 @@ void Client::LoadProfile(ProfileType _type)
 				ScriptManager::GetInstance()->ExecuteFile(filePath("global_scripts/%s", strProfileName.c_str()), threadId, &thisVar))
 			{
 				DBG_MSG(BOT_DEBUG_SCRIPT, this, kNormal, va("Profile Loaded: %s", strProfileName.c_str()));
-			} 
+			}
 			else
 			{
 				DBG_MSG(BOT_DEBUG_SCRIPT, this, kError, va("Unable to load profile: %s", strProfileName.c_str()));
@@ -888,7 +887,7 @@ void Client::GameCommand(const char* _msg, ...)
 	va_list list;
 	va_start(list, _msg);
 #ifdef WIN32
-	_vsnprintf(buffer, iBufferSize, _msg, list);	
+	_vsnprintf(buffer, iBufferSize, _msg, list);
 #else
 	vsnprintf(buffer, iBufferSize, _msg, list);
 #endif
@@ -904,7 +903,7 @@ void Client::CheckTeamEvent()
 	{
 		// Update our team.
 		m_Team = iCurrentTeam;
-		
+
 		// Send a change team event.
 		Event_ChangeTeam d = { iCurrentTeam };
 		SendEvent(MessageHelper(MESSAGE_CHANGETEAM, &d, sizeof(d)));
@@ -917,7 +916,7 @@ void Client::CheckClassEvent()
 	if(iCurrentClass != m_Class)
 	{
 		m_Class = iCurrentClass;
-		
+
 		// Send a change class event.
 		Event_ChangeClass d = { iCurrentClass };
 		SendEvent(MessageHelper(MESSAGE_CHANGECLASS, &d, sizeof(d)));
@@ -935,7 +934,7 @@ void Client::HoldButton(const BitFlag64 &_buttons, int _mstime)
 	{
 		if(_buttons.CheckFlag(i))
 		{
-			m_HoldButtons.m_StopHoldTime[i] = 
+			m_HoldButtons.m_StopHoldTime[i] =
 				(_mstime > 0) ? IGame::GetTime() + _mstime : std::numeric_limits<int>::max();
 		}
 	}
@@ -1009,7 +1008,7 @@ void Client::InitBehaviorTree()
 	m_StateRoot->InitializeStates();
 }
 
-bool Client::AddScriptGoal(const String &_name)
+bool Client::AddScriptGoal(const std::string &_name)
 {
 	using namespace AiState;
 

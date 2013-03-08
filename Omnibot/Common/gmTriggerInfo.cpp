@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -31,7 +31,7 @@ GMBIND_PROPERTY_MAP_BEGIN( gmTriggerInfo )
 	GMBIND_PROPERTY( "Action", getAction, NULL )
 	GMBIND_PROPERTY( "Activator", getActivator, NULL )
 	GMBIND_PROPERTY( "Entity", getEntity, NULL )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor/Destructor

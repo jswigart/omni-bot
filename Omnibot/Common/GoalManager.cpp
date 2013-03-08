@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -30,12 +30,12 @@ class PriorityGreaterThan
 public:
 	bool operator()(MapGoalPtr _goal1, MapGoalPtr _goal2)
 	{
-		obReal fG1Priority = m_Client ? 
+		obReal fG1Priority = m_Client ?
 			_goal1->GetPriorityForClient(m_Client) :
 			_goal1->GetDefaultPriority();
 
-		obReal fG2Priority = m_Client ? 
-			_goal2->GetPriorityForClient(m_Client) : 
+		obReal fG2Priority = m_Client ?
+			_goal2->GetPriorityForClient(m_Client) :
 			_goal2->GetDefaultPriority();
 
 		return fG1Priority > fG2Priority;
@@ -44,8 +44,8 @@ public:
 	// functions for equal_range
 	bool operator()(const obReal _priority, MapGoalPtr _goal2)
 	{
-		obReal fG2Priority = m_Client ? 
-			_goal2->GetPriorityForClient(m_Client) : 
+		obReal fG2Priority = m_Client ?
+			_goal2->GetPriorityForClient(m_Client) :
 			_goal2->GetDefaultPriority();
 		return _priority == fG2Priority;
 	}
@@ -62,11 +62,11 @@ class PriorityLessThan
 public:
 	bool operator()(MapGoalPtr _goal1, MapGoalPtr _goal2)
 	{
-		obReal fG1Priority = m_Client ? 
+		obReal fG1Priority = m_Client ?
 			_goal1->GetPriorityForClient(m_Client) :
 			_goal1->GetDefaultPriority();
-		obReal fG2Priority = m_Client ? 
-			_goal2->GetPriorityForClient(m_Client) : 
+		obReal fG2Priority = m_Client ?
+			_goal2->GetPriorityForClient(m_Client) :
 			_goal2->GetDefaultPriority();
 
 		return fG1Priority < fG2Priority;
@@ -123,69 +123,69 @@ GoalManager::Query &GoalManager::Query::AddType(obuint32 _type)
 {
 	if (m_NumTypes < MaxGoalTypes)
 	{
-		m_GoalTypeList[m_NumTypes++] = _type; 
+		m_GoalTypeList[m_NumTypes++] = _type;
 	}
-	return *this; 
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::Team(int _team) 
+GoalManager::Query &GoalManager::Query::Team(int _team)
 {
-	m_Team = _team; 
-	return *this; 
+	m_Team = _team;
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::Bot(Client *_client) 
-{ 
+GoalManager::Query &GoalManager::Query::Bot(Client *_client)
+{
 	if(_client)
 	{
-		m_Client = _client; 
-		m_Team = _client->GetTeam(); 
+		m_Client = _client;
+		m_Team = _client->GetTeam();
 		m_RoleMask = _client->GetRoleMask();
 	}
-	return *this; 
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::TagName(const char *_tagname) 
+GoalManager::Query &GoalManager::Query::TagName(const char *_tagname)
 {
-	m_TagName = _tagname; 
-	return *this; 
+	m_TagName = _tagname;
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::Sort(SortType _sort) 
+GoalManager::Query &GoalManager::Query::Sort(SortType _sort)
 {
-	m_SortType = _sort; 
-	return *this; 
+	m_SortType = _sort;
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::Expression(const char *_exp) 
+GoalManager::Query &GoalManager::Query::Expression(const char *_exp)
 {
 	m_NameExp = _exp ? _exp : "";
-	return *this; 
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::Group(const char *_group) 
+GoalManager::Query &GoalManager::Query::Group(const char *_group)
 {
 	m_GroupExp = _group ? _group : "";
-	return *this; 
+	return *this;
 }
 
-GoalManager::Query &GoalManager::Query::RoleMask(obuint32 _i) 
+GoalManager::Query &GoalManager::Query::RoleMask(obuint32 _i)
 {
-	m_RoleMask = BitFlag32(_i); 
-	return *this; 
+	m_RoleMask = BitFlag32(_i);
+	return *this;
 }
 
 //GoalManager::Query &GoalManager::Query::WeaponReq(int *_weaponIds, int _numids)
 //{
 //	m_WeaponIds = _weaponIds;
 //	m_NumWeaponIds = _numids;
-//	return *this; 
+//	return *this;
 //}
 
 GoalManager::Query &GoalManager::Query::Ent(GameEntity _ent)
 {
 	m_Entity = _ent;
-	return *this; 
+	return *this;
 }
 
 GoalManager::Query &GoalManager::Query::CheckInRadius(const Vector3f & pos, float radius)
@@ -234,14 +234,14 @@ GoalManager::Query &GoalManager::Query::SkipInUse(bool _skip)
 	m_SkipInUse = _skip;
 	return *this;
 }
-bool GoalManager::Query::GetBest(MapGoalPtr &_mg) 
+bool GoalManager::Query::GetBest(MapGoalPtr &_mg)
 {
 	if(!m_List.empty())
 	{
 		_mg = m_List.front();
 		return true;
 	}
-	return false; 
+	return false;
 }
 
 void GoalManager::Query::DefaultGlobalQuery()
@@ -304,7 +304,7 @@ bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 		}
 	}
 
-	if(m_Team && !mg->IsAvailable(m_Team) && 
+	if(m_Team && !mg->IsAvailable(m_Team) &&
 		!(m_Client && mg->GetOwner() == m_Client->GetGameEntity()))
 		return false;
 
@@ -397,7 +397,7 @@ void GoalManager::Query::OnQueryFinish()
 					int index=0;
 					for(MapGoalList::iterator it = m_List.begin(); it != m_List.end(); it++)
 					{
-						list.push_back( IndexPriority(index++, 
+						list.push_back( IndexPriority(index++,
 							m_Client ? (*it)->GetPriorityForClient(m_Client) : (*it)->GetDefaultPriority()));
 					}
 
@@ -412,7 +412,7 @@ void GoalManager::Query::OnQueryFinish()
 						std::random_shuffle(it, upper);
 						it = upper;
 					}
-					
+
 					// Reorder goals list
 					MapGoalList newList;
 					newList.reserve(list.size());
@@ -421,7 +421,7 @@ void GoalManager::Query::OnQueryFinish()
 						newList.push_back(m_List[it->first]);
 					}
 					m_List.swap(newList);
-				}				
+				}
 				break;
 			}
 		case SORT_RANDOM_FULL:
@@ -462,7 +462,7 @@ const char *GoalManager::Query::QueryErrorString()
 GoalManager *GoalManager::m_Instance = 0;
 
 GoalManager::GoalManager()
-: m_EditMode(EditNone)
+	: m_EditMode(EditNone)
 {
 	m_Instance = this;
 }
@@ -506,36 +506,36 @@ void GoalManager::Reset()
 
 void GoalManager::InitCommands()
 {
-	SetEx("show_goals", "prints out the names of each goal", 
+	SetEx("show_goals", "prints out the names of each goal",
 		this, &GoalManager::cmdGoalShow);
-	SetEx("show_goalroutes", "prints route info for matching map goals", 
+	SetEx("show_goalroutes", "prints route info for matching map goals",
 		this, &GoalManager::cmdGoalShowRoutes);
-	SetEx("draw_goals", "draws debug information for all mapgoals", 
+	SetEx("draw_goals", "draws debug information for all mapgoals",
 		this, &GoalManager::cmdGoalDraw);
-	SetEx("draw_goalroutes", "draws debug routes", 
+	SetEx("draw_goalroutes", "draws debug routes",
 		this, &GoalManager::cmdGoalDrawRoutes);
 
-	SetEx("goal_edit", "Begins to edit a goal.", 
+	SetEx("goal_edit", "Begins to edit a goal.",
 		this, &GoalManager::cmdGoalEdit);
-	SetEx("goal_editx", "Begins to edit a goal.", 
+	SetEx("goal_editx", "Begins to edit a goal.",
 		this, &GoalManager::cmdGoalEditx);
-	SetEx("goal_help", "Lists all help text to the console.", 
+	SetEx("goal_help", "Lists all help text to the console.",
 		this, &GoalManager::cmdGoalHelp);
-	SetEx("goal_save", "Saves the goals to their own file.", 
+	SetEx("goal_save", "Saves the goals to their own file.",
 		this, &GoalManager::cmdGoalSave);
-	SetEx("goal_load", "Loads the goals from their own file.", 
+	SetEx("goal_load", "Loads the goals from their own file.",
 		this, &GoalManager::cmdGoalLoad);
-	SetEx("goal_create", "Creates a map goal of a provided type.", 
+	SetEx("goal_create", "Creates a map goal of a provided type.",
 		this, &GoalManager::cmdGoalCreate);
-	SetEx("goal_delete", "Deletes the currently selected goal.", 
+	SetEx("goal_delete", "Deletes the currently selected goal.",
 		this, &GoalManager::cmdGoalDelete);
-	SetEx("goal_finish", "Completes edits on the selected goal.", 
+	SetEx("goal_finish", "Completes edits on the selected goal.",
 		this, &GoalManager::cmdGoalFinish);
-	SetEx("goal_setproperty", "Sets the property of the goal.", 
+	SetEx("goal_setproperty", "Sets the property of the goal.",
 		this, &GoalManager::cmdGoalSetProperty);
-	SetEx("goal_removeall", "Removes all bot defined goals.", 
+	SetEx("goal_removeall", "Removes all bot defined goals.",
 		this, &GoalManager::cmdGoalRemoveAll);
-	SetEx("goal_move", "Toggle. Begins or ends moving a goal based on aim position.", 
+	SetEx("goal_move", "Toggle. Begins or ends moving a goal based on aim position.",
 		this, &GoalManager::cmdGoalMove);
 }
 
@@ -548,15 +548,15 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 {
 	File f;
 
-	String strFile, strExpression = ".*";
+	std::string strFile, strExpression = ".*";
 	bool bShowSubPriorities = false;
 	if(_args.size() > 3)
 	{
-		strFile = _args[3];		
+		strFile = _args[3];
 	}
 	if(_args.size() > 1)
 	{
-		strExpression = _args[1];		
+		strExpression = _args[1];
 	}
 	if(_args.size() > 2 && _args[2]=="p")
 	{
@@ -575,12 +575,12 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 	qry.NoFilters();
 	qry.Expression(strExpression.c_str());
 	GetGoals(qry);
-	
+
 	std::sort(qry.m_List.begin(), qry.m_List.end(), _GoalNameLT);
 
 	EngineFuncs::ConsoleMessage("- Goal List -");
 	int iCount = 1;
-	String txt;
+	std::string txt;
 	MapGoalList::iterator it = qry.m_List.begin();
 	for( ; it != qry.m_List.end(); ++it)
 	{
@@ -595,13 +595,13 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 			txt += (*it)->GetGroupName();
 		}
 
-		String role = Utils::BuildRoleName((*it)->GetRoleMask().GetRawFlags());
+		std::string role = Utils::BuildRoleName((*it)->GetRoleMask().GetRawFlags());
 		if(!role.empty())
 		{
 			txt += " role ";
 			txt += role;
 		}
-		
+
 		txt += " ";
 
 		for(int team = 1; team <= 4; ++team)
@@ -612,7 +612,7 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 		txt += va("%d", (*it)->GetSerialNum());
 		txt += " priority ";
 		txt += va("%.2f", (*it)->GetDefaultPriority());
-		
+
 		EngineFuncs::ConsoleMessage(txt.c_str());
 		if(bShowSubPriorities)
 		{
@@ -632,14 +632,14 @@ void GoalManager::cmdGoalShowRoutes(const StringVector &_args)
 {
 	File f;
 
-	String strFile, strExpression = ".*";
+	std::string strFile, strExpression = ".*";
 	if(_args.size() > 2)
 	{
-		strFile = _args[2];		
+		strFile = _args[2];
 	}
 	if(_args.size() > 1)
 	{
-		strExpression = _args[1];		
+		strExpression = _args[1];
 	}
 
 	// Open the file if a filename was provided.
@@ -658,7 +658,7 @@ void GoalManager::cmdGoalShowRoutes(const StringVector &_args)
 
 	EngineFuncs::ConsoleMessage("- Route List -");
 	int iCount = 1;
-	String txt;
+	std::string txt;
 	MapGoalList::iterator it = qry.m_List.begin();
 	for( ; it != qry.m_List.end(); ++it)
 	{
@@ -672,12 +672,12 @@ void GoalManager::cmdGoalShowRoutes(const StringVector &_args)
 			f.WriteString(pMsg);
 			f.WriteNewLine();
 		}
-		
+
 		int iNumRoutes = 1;
 		MapGoal::Routes::const_iterator rIt = (*it)->GetRoutes().begin(), rItEnd = (*it)->GetRoutes().end();
 		for(; rIt != rItEnd; ++rIt)
 		{
-			const char *pRoute = va("    %d: %s -> %s", iNumRoutes++, 
+			const char *pRoute = va("    %d: %s -> %s", iNumRoutes++,
 				rIt->m_Start->GetName().c_str(), rIt->m_End->GetName().c_str());
 
 			EngineFuncs::ConsoleMessage(pRoute);
@@ -709,7 +709,7 @@ void GoalManager::cmdGoalDraw(const StringVector &_args)
 
 			DrawGoals = true;
 			break;
-		}	
+		}
 		else if(Utils::StringToFalse(_args[1]))
 		{
 			DrawGoals = false;
@@ -719,7 +719,7 @@ void GoalManager::cmdGoalDraw(const StringVector &_args)
 		EngineFuncs::ConsoleMessage("syntax: draw_goals on/off <optional goal name expression>");
 		return;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 
 	int NumSet = 0;
@@ -732,7 +732,7 @@ void GoalManager::cmdGoalDraw(const StringVector &_args)
 				continue;
 			}
 		}
-		
+
 		(*it)->SetRenderGoal(DrawGoals);
 		++NumSet;
 	}
@@ -753,7 +753,7 @@ void GoalManager::cmdGoalDrawRoutes(const StringVector &_args)
 		{
 			DrawRoutes = true;
 			break;
-		}	
+		}
 		else if(Utils::StringToFalse(_args[1]))
 		{
 			DrawRoutes = false;
@@ -763,7 +763,7 @@ void GoalManager::cmdGoalDrawRoutes(const StringVector &_args)
 		EngineFuncs::ConsoleMessage("syntax: draw_goals on/off <optional goal name expression>");
 		return;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	int NumSet = 0;
 	for(MapGoalList::iterator it = m_MapGoalList.begin();
@@ -782,12 +782,12 @@ void GoalManager::cmdGoalDrawRoutes(const StringVector &_args)
 
 const char *MapGoalTable = "_MG";
 
-bool GoalManager::Save(const String &_map, ErrorObj &_err)
+bool GoalManager::Save(const std::string &_map, ErrorObj &_err)
 {
-	const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + "_goals.gm";
+	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + "_goals.gm";
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-	
+
 	if(!m_LoadedMapGoals)
 		m_LoadedMapGoals.Set(pMachine->AllocTableObject(),pMachine);
 
@@ -797,8 +797,8 @@ bool GoalManager::Save(const String &_map, ErrorObj &_err)
 	int GoalsSavedFailed = 0;
 	int GoalsSavedSkipped = 0;
 
-	for(MapGoalList::iterator it = m_MapGoalList.begin(); 
-		it != m_MapGoalList.end(); 
+	for(MapGoalList::iterator it = m_MapGoalList.begin();
+		it != m_MapGoalList.end();
 		++it)
 	{
 		if(!(*it)->GetDontSave())
@@ -826,7 +826,7 @@ bool GoalManager::Save(const String &_map, ErrorObj &_err)
 	return gmUtility::DumpTable(pMachine,outFile,MapGoalTable,m_LoadedMapGoals,gmUtility::DUMP_ALL);
 }
 
-bool GoalManager::Load(const String &_map, ErrorObj &_err)
+bool GoalManager::Load(const std::string &_map, ErrorObj &_err)
 {
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -875,8 +875,8 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 					gmTableObject *mgTbl = pNode->m_value.GetTableObjectSafe();
 					if(mgTbl)
 					{
-						const String goalName = mgTbl->Get(pMachine,"Name").GetCStringSafe("");
-						const String goalType = mgTbl->Get(pMachine,"GoalType").GetCStringSafe("");
+						const std::string goalName = mgTbl->Get(pMachine,"Name").GetCStringSafe("");
+						const std::string goalType = mgTbl->Get(pMachine,"GoalType").GetCStringSafe("");
 						if(!goalType.empty() && !goalName.empty())
 						{
 							// if the goal exists already
@@ -906,12 +906,11 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 											mgPtr->InternalInitEntityState();
 											AddGoal(mgPtr);
 											GoalsLoaded++;
-										} 
+										}
 										else
 										{
 											GoalsDeferred++;
 										}
-										
 									}
 									else
 									{
@@ -977,8 +976,8 @@ MapGoalPtr GoalManager::_GetGoalInRange(const Vector3f &_pos, float _radius, boo
 
 	MapGoalPtr nearest;
 
-	for(MapGoalList::iterator it = m_MapGoalList.begin(); 
-		it != m_MapGoalList.end(); 
+	for(MapGoalList::iterator it = m_MapGoalList.begin();
+		it != m_MapGoalList.end();
 		++it)
 	{
 		if(_onlydrawenabled && !(*it)->GetRenderGoal())
@@ -1019,7 +1018,7 @@ void GoalManager::_UpdateEditModes()
 }
 
 void GoalManager::cmdGoalEdit(const StringVector &_args)
-{	
+{
 	MapGoalPtr nearest;
 
 	Vector3f vPos;
@@ -1036,7 +1035,7 @@ void GoalManager::cmdGoalEdit(const StringVector &_args)
 }
 
 void GoalManager::cmdGoalEditx(const StringVector &_args)
-{	
+{
 	_SetActiveGoal(m_HighlightedGoal);
 	if(!m_ActiveGoal)
 	{
@@ -1045,7 +1044,7 @@ void GoalManager::cmdGoalEditx(const StringVector &_args)
 }
 
 void GoalManager::cmdGoalHelp(const StringVector &_args)
-{	
+{
 	if(m_ActiveGoal)
 		m_ActiveGoal->ShowHelp();
 }
@@ -1055,9 +1054,9 @@ void GoalManager::cmdGoalFinish(const StringVector &_args)
 }
 void GoalManager::cmdGoalCreate(const StringVector &_args)
 {
-	const char *strUsage[] = 
-	{ 
-		"goal_create goaltype[string]",
+	const char *strUsage[] =
+	{
+		"goal_create goaltype[std::string]",
 		"> goaltype: type name of goal to create",
 	};
 
@@ -1109,18 +1108,18 @@ void GoalManager::cmdGoalSetProperty(const StringVector &_args)
 		EngineFuncs::ConsoleError(va("Select a goal for edit by adding a new one or using goal_edit"));
 		return;
 	}
-	const char *strUsage[] = 
-	{ 
-		"goal_setproperty propertyname[string] propertyvalue[string]",
+	const char *strUsage[] =
+	{
+		"goal_setproperty propertyname[std::string] propertyvalue[std::string]",
 		"> propertyname: name of property to set",
 		"> propertyvalue: optional value of property to set, also accepts keywords",
 		"        <facing>, <position>, <aimpoint>, <aimnormal>",
 	};
 
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
-	const String &propname = _args[1];
-	String propval = _args.size()>2 ? _args[2] : "";
-	
+	const std::string &propname = _args[1];
+	std::string propval = _args.size()>2 ? _args[2] : "";
+
 	obUserData val(propval.c_str());
 
 	Vector3f v,v2;
@@ -1145,7 +1144,7 @@ void GoalManager::cmdGoalSetProperty(const StringVector &_args)
 		val = obUserData(v);
 	}
 
-	String oldName = m_ActiveGoal->GetName();
+	std::string oldName = m_ActiveGoal->GetName();
 	m_ActiveGoal->SetProperty(propname,val);
 
 	if ( m_LoadedMapGoals && oldName != m_ActiveGoal->GetName() ) {
@@ -1241,21 +1240,18 @@ void GoalManager::Update()
 	{
 		HighlightedGoal = _GetGoalInRange(AimPt,256.f,true);
 	}
-	
+
 	if(m_HighlightedGoal != HighlightedGoal)
 	{
 		if(HighlightedGoal)
 		{
-			RenderBuffer::AddCircle( 
+			RenderBuffer::AddCircle(
 				HighlightedGoal->GetPosition()+Vector3f(0,0,32.f),
 				COLOR::YELLOW,
 				HighlightedGoal->GetRadius() );
-		}		
+		}
 		m_HighlightedGoal = HighlightedGoal;
 	}
-#ifdef ENABLE_DEBUG_WINDOW
-	DW.Hud.SetActiveMapGoal(m_HighlightedGoal);
-#endif
 	//////////////////////////////////////////////////////////////////////////
 	MapGoalList::iterator it = m_MapGoalList.begin();
 	while(it != m_MapGoalList.end())
@@ -1290,9 +1286,9 @@ void GoalManager::Update()
 #ifdef ENABLE_REMOTE_DEBUGGING
 void GoalManager::Sync( RemoteLib::DebugConnection * connection ) {
 	for( MapGoalList::iterator it = m_MapGoalList.begin();
-		it != m_MapGoalList.end(); 
+		it != m_MapGoalList.end();
 		++it ) {
-		(*it)->Sync( connection );
+			(*it)->Sync( connection );
 	}
 }
 #endif
@@ -1338,7 +1334,7 @@ MapGoalPtr GoalManager::AddGoal(const MapGoalDef &_goaldef)
 		gmCall call;
 		if(call.BeginGlobalFunction(pMachine,"GetMapGoalUpgradeType"))
 		{
-			const String strLower = Utils::StringToLower(GoalType);
+			const std::string strLower = Utils::StringToLower(GoalType);
 			call.AddParamString(strLower.c_str());
 			call.End();
 
@@ -1471,8 +1467,8 @@ MapGoalPtr GoalManager::AddGoal(const MapGoalDef &_goaldef)
 		}
 		else
 		{
-			LOG("Goal Unable to Init: " << 
-				newGoal->GetGoalType() << ", tag: " << 
+			LOG("Goal Unable to Init: " <<
+				newGoal->GetGoalType() << ", tag: " <<
 				newGoal->GetTagName());
 		}
 	}
@@ -1496,11 +1492,11 @@ MapGoalPtr GoalManager::AddGoal(const MapGoalDef &_goaldef)
 
 void GoalManager::RemoveGoalByName(const char *_goalname)
 {
-	const String goalnm = _goalname;
+	const std::string goalnm = _goalname;
 	MapGoalList::iterator it = m_MapGoalList.begin();
 	while(it != m_MapGoalList.end())
 	{
-		const String temp = (*it)->GetName();
+		const std::string temp = (*it)->GetName();
 		if((*it)->GetName() == _goalname)
 		{
 			OnGoalDelete((*it));
@@ -1576,7 +1572,7 @@ void GoalManager::OnGoalDelete(const MapGoalPtr &_goal)
 		m_LoadedMapGoals->Set(pMachine,_goal->GetName().c_str(),gmVariable::s_null);
 }
 
-MapGoalPtr GoalManager::GetGoal(const String &_goalname)
+MapGoalPtr GoalManager::GetGoal(const std::string &_goalname)
 {
 	MapGoalPtr ptr;
 
@@ -1619,11 +1615,11 @@ void GoalManager::RegisterWaypointGoals(Waypoint *_wp, MapGoalDef *_def, int _nu
 	// Fill in the rest.
 	for(int i = 0; i < _num; ++i)
 	{
-		if ( !_wp->GetName().empty() )  
-		{ 
-			_def[i].Props.SetString("TagName",_wp->GetName().c_str()); 
+		if ( !_wp->GetName().empty() )
+		{
+			_def[i].Props.SetString("TagName",_wp->GetName().c_str());
 		}
-		else 
+		else
 		{
 			_def[i].Props.SetString("TagName",va("%d",_wp->GetUID()));
 		}
@@ -1656,7 +1652,7 @@ void GoalManager::CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used)
 
 	MapGoalDef Definition[MaxGoals];
 	int NumDefs = 0;
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	if(_wp->IsFlagOn(F_NAV_HEALTH) && !(_used & BitFlag64(F_NAV_HEALTH)).AnyFlagSet())
 	{
@@ -1737,7 +1733,7 @@ void GoalManager::GetGoals(Query &_qry)
 
 	//////////////////////////////////////////////////////////////////////////
 
-	String strTagName = _qry.m_TagName ? _qry.m_TagName : "";
+	std::string strTagName = _qry.m_TagName ? _qry.m_TagName : "";
 
 	_qry.OnQueryStart();
 	MapGoalList::iterator it = m_MapGoalList.begin(),

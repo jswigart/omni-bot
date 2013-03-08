@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __WAYPOINTSERIALIZER_V6_H__
 #define __WAYPOINTSERIALIZER_V6_H__
@@ -28,9 +30,9 @@
 
 //			+ write the number of custom properties *(1 byte)* (v4)
 //			- for _n_ custom properties
-//				+ write the property name length *(1 byte)* (v4)	
+//				+ write the property name length *(1 byte)* (v4)
 //				+ write the property name *(1 byte * length)* (v4)
-//				+ write the property value name length *(1 byte)* (v6)	
+//				+ write the property value name length *(1 byte)* (v6)
 //				+ write the property value name *(1 byte * length)* (v6)
 
 //			+ write (unsigned char) representing number of connections this wp has *(1 byte)* (v1)
@@ -49,7 +51,6 @@ public:
 protected:
 	virtual bool Load(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
 	virtual bool Save(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
-
 };
 
 #endif

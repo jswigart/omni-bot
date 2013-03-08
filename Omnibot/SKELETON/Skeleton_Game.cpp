@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,7 +9,7 @@
 #include "Skeleton_Game.h"
 #include "Skeleton_Client.h"
 
-#include "PathPlannerWaypoint.h"
+#include "PathPlannerBase.h"
 #include "ScriptManager.h"
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
@@ -58,7 +58,7 @@ const char *Skeleton_Game::GetScriptSubfolder() const
 	return "skeleton\\scripts\\";
 }
 
-bool Skeleton_Game::Init() 
+bool Skeleton_Game::Init()
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(Skeleton_Game::Skeleton_GetEntityClassTraceOffset);
@@ -89,12 +89,11 @@ static IntEnum Skel_TeamEnum[] =
 void Skeleton_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(Skel_TeamEnum) / sizeof(Skel_TeamEnum[0]);
-	_ptr = Skel_TeamEnum;	
+	_ptr = Skel_TeamEnum;
 }
 
 void Skeleton_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
-	
 }
 
 IntEnum g_SkeletonClassMappings[] =

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -42,7 +42,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (ETQW_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (ETQW_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -64,7 +64,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (ETQW_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (ETQW_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -84,7 +84,7 @@ static int GM_CDECL gmfGetReinforceTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushFloat(InterfaceFuncs::GetReinforceTime(native));
 	return GM_OK;
 }
@@ -140,9 +140,9 @@ static int GM_CDECL gmfChangeSpawnPoint(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
-{ 
+{
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon},
-	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon},	
+	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon},
 	{"GetReinforceTime",		gmfGetReinforceTime},
 	{"GetCursorHint",			gmfGetCurrentCursorHint},
 	{"ChangeSpawnPoint",		gmfChangeSpawnPoint},
@@ -152,7 +152,7 @@ void gmBindETQWBotLibrary(gmMachine *_machine)
 {
 	// Register the bot functions.
 	//_machine->RegisterLibrary(s_ExntendedBotLib, sizeof(s_ExntendedBotLib) / sizeof(s_ExntendedBotLib[0]));
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
 
 	// Register additional bot properties

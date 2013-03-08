@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __SCRIPTMANAGER_H__
 #define __SCRIPTMANAGER_H__
@@ -13,7 +15,6 @@ class Client;
 
 #include "gmMachine.h"
 #include "CommandReciever.h"
-#include "MessageManager.h"
 
 class gmUserObject;
 class gmStringObject;
@@ -22,7 +23,7 @@ class gmTableObject;
 //typedef MessageDepot<Event_SystemThreadDestroyed, 256, obuint64> ThreadDestroyDepot;
 //extern ThreadDestroyDepot g_ThreadDestroyedDepot;
 
-typedef std::vector< std::pair<String, int> > AutoCompleteList;
+typedef std::vector< std::pair<std::string, int> > AutoCompleteList;
 
 class ThreadScoper
 {
@@ -62,7 +63,7 @@ class ScriptManager : public CommandReciever
 #endif
 {
 public:
-	
+
 	void Init();
 	void Shutdown();
 	void Update();
@@ -70,13 +71,13 @@ public:
 	gmUserObject *AddBotToGlobalTable(Client *_client);
 	void RemoveFromGlobalTable(Client *_client);
 
-	bool ExecuteString(const String& _string, gmVariable* _this = NULL, bool _now = true);
-	bool ExecuteStringLogged(const String &_string);
+	bool ExecuteString(const std::string& _string, gmVariable* _this = NULL, bool _now = true);
+	bool ExecuteStringLogged(const std::string &_string);
 	bool ExecuteFile(const filePath& _file, int &_threadId, gmVariable* _this = NULL);
 
 	void ShowGMStats();
 
-	void GetAutoCompleteList(const String &_string, StringVector &_completions);
+	void GetAutoCompleteList(const std::string &_string, StringVector &_completions);
 
 	LiveUpdateKey RegisterLiveUpdate(const filePath &_file);
 
@@ -103,12 +104,12 @@ public:
 	static void DeleteInstance();
 	static bool IsInstantiated();
 protected:
-    gmMachine*	m_ScriptEngine;
+	gmMachine*	m_ScriptEngine;
 
 	bool		m_DebugScripts;
 
-    static void GM_CDECL ScriptSysCallback_Print(gmMachine* a_machine, const char* a_string);
-    static bool GM_CDECL ScriptSysCallback_Machine(gmMachine* a_machine, gmMachineCommand a_command, const void* a_context);
+	static void GM_CDECL ScriptSysCallback_Print(gmMachine* a_machine, const char* a_string);
+	static bool GM_CDECL ScriptSysCallback_Machine(gmMachine* a_machine, gmMachineCommand a_command, const void* a_context);
 
 	static ScriptManager* m_Instance;
 

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -31,9 +31,9 @@ GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 	GMBIND_FUNCTION( "LimitToNoClass", gmfLimitToNoClass )
 	GMBIND_FUNCTION( "LimitToTeam", gmfLimitToTeam )
 	GMBIND_FUNCTION( "LimitToPowerUp", gmfLimitToPowerUp )
-	GMBIND_FUNCTION( "LimitToNoPowerup", gmfLimitToNoPowerup )	
+	GMBIND_FUNCTION( "LimitToNoPowerup", gmfLimitToNoPowerup )
 	GMBIND_FUNCTION( "LimitToEntityFlag", gmfLimitToEntityFlag )
-	GMBIND_FUNCTION( "LimitToNoEntityFlag", gmfLimitToNoEntityFlag )	
+	GMBIND_FUNCTION( "LimitToNoEntityFlag", gmfLimitToNoEntityFlag )
 	GMBIND_FUNCTION( "LimitToWeapon", gmfLimitToWeapon )
 	GMBIND_FUNCTION( "LimitToRole", gmfLimitToRole )
 	GMBIND_FUNCTION( "LimitTo", gmfLimitTo )
@@ -43,9 +43,9 @@ GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 	GMBIND_FUNCTION( "LimitToTargetTeam", gmfLimitToTargetTeam )
 	GMBIND_FUNCTION( "LimitToTargetPowerUp", gmfLimitToTargetPowerUp )
 	GMBIND_FUNCTION( "LimitToTargetNoPowerUp", gmfLimitToTargetNoPowerUp )
-	GMBIND_FUNCTION( "LimitToTargetEntityFlag", gmfLimitToTargetEntityFlag )	
+	GMBIND_FUNCTION( "LimitToTargetEntityFlag", gmfLimitToTargetEntityFlag )
 	GMBIND_FUNCTION( "LimitToTargetNoEntityFlag", gmfLimitToTargetNoEntityFlag )
-	GMBIND_FUNCTION( "LimitToTargetWeapon", gmfLimitToTargetWeapon )	
+	GMBIND_FUNCTION( "LimitToTargetWeapon", gmfLimitToTargetWeapon )
 
 	GMBIND_FUNCTION( "IsActive", gmfIsActive )
 
@@ -69,7 +69,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 	GMBIND_FUNCTION( "UpdateWeaponRequest", gmfUpdateWeaponRequest )
 
 	GMBIND_FUNCTION( "BlockForWeaponChange", gmfBlockForWeaponChange )
-	GMBIND_FUNCTION( "BlockForWeaponFire", gmfBlockForWeaponFire )	
+	GMBIND_FUNCTION( "BlockForWeaponFire", gmfBlockForWeaponFire )
 	GMBIND_FUNCTION( "BlockForVoiceMacro", gmfBlockForVoiceMacro )
 
 	GMBIND_FUNCTION( "AddFinishCriteria", gmfAddFinishCriteria )
@@ -79,20 +79,20 @@ GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 	GMBIND_FUNCTION( "KillThread", gmfThreadKill )
 	GMBIND_FUNCTION( "Signal", gmfSignal )
 
-	GMBIND_FUNCTION( "QueryGoals", gmfQueryMapGoals )	
-	
-	GMBIND_FUNCTION( "WatchForMapGoalsInRadius", gmfWatchForMapGoalsInRadius )	
-	GMBIND_FUNCTION( "ClearWatchForMapGoalsInRadius", gmfClearWatchForMapGoalsInRadius )
-	GMBIND_FUNCTION( "WatchForEntityCategory", gmfWatchForEntityCategory )	
+	GMBIND_FUNCTION( "QueryGoals", gmfQueryMapGoals )
 
-	GMBIND_FUNCTION( "DelayGetPriority", gmfDelayGetPriority )	
+	GMBIND_FUNCTION( "WatchForMapGoalsInRadius", gmfWatchForMapGoalsInRadius )
+	GMBIND_FUNCTION( "ClearWatchForMapGoalsInRadius", gmfClearWatchForMapGoalsInRadius )
+	GMBIND_FUNCTION( "WatchForEntityCategory", gmfWatchForEntityCategory )
+
+	GMBIND_FUNCTION( "DelayGetPriority", gmfDelayGetPriority )
 
 	GMBIND_FUNCTION( "BlackboardDelay", gmfBlackboardDelay )
 	GMBIND_FUNCTION( "BlackboardIsDelayed", gmfBlackboardIsDelayed )
 
 	GMBIND_FUNCTION( "MarkInProgress", gmfMarkInProgress )
 	GMBIND_FUNCTION( "MarkInUse", gmfMarkInUse )
-GMBIND_FUNCTION_MAP_END();
+	GMBIND_FUNCTION_MAP_END();
 
 GMBIND_PROPERTY_MAP_BEGIN( gmScriptGoal )
 	GMBIND_PROPERTY( "Name", getName, setName )
@@ -101,7 +101,7 @@ GMBIND_PROPERTY_MAP_BEGIN( gmScriptGoal )
 	GMBIND_PROPERTY( "InsertAfter", getInsertAfter, setInsertAfter )
 	GMBIND_PROPERTY( "Disable", getDisable, setDisable )
 	GMBIND_PROPERTY( "AutoAdd", getAutoAdd, setAutoAdd )
-	
+
 	GMBIND_PROPERTY( "Initialize", getInitializeFunc, setInitializeFunc )
 	GMBIND_PROPERTY( "OnSpawn", getSpawnFunc, setSpawnFunc )
 	GMBIND_PROPERTY( "GetPriority", getPriorityFunc, setPriorityFunc )
@@ -121,20 +121,20 @@ GMBIND_PROPERTY_MAP_BEGIN( gmScriptGoal )
 	GMBIND_PROPERTY( "AutoFinishOnNoProgressSlots", getAutoFinishOnNoProgressSlots, setAutoFinishOnNoProgressSlots )
 	GMBIND_PROPERTY( "AutoFinishOnNoUseSlots", getAutoFinishOnNoUseSlots, setAutoFinishOnNoUseSlots )
 	GMBIND_PROPERTY( "SkipGetPriorityWhenActive", getSkipGetPriorityWhenActive, setSkipGetPriorityWhenActive )
-	
+
 	GMBIND_PROPERTY( "AlwaysRecieveEvents", getAlwaysRecieveEvents, setAlwaysRecieveEvents )
 
 	GMBIND_PROPERTY( "Events", getEvents, setEvents )
 	GMBIND_PROPERTY( "Commands", getCommands, setCommands )
 
 	GMBIND_PROPERTY( "DebugString", getDebugString, setDebugString )
-	GMBIND_PROPERTY( "Debug", getDebug, setDebug )	
+	GMBIND_PROPERTY( "Debug", getDebug, setDebug )
 
 	GMBIND_PROPERTY( "Bot", getBot, NULL )
 	GMBIND_PROPERTY( "MapGoal", getMapGoal, setMapGoal )
 
 	GMBIND_PROPERTY( "Priority", getScriptPriority, setScriptPriority )
-GMBIND_PROPERTY_MAP_END();
+	GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor/Destructor
@@ -159,7 +159,7 @@ void gmScriptGoal::AsStringCallback(AiState::ScriptGoal * a_object, char * a_buf
 {
 	if(a_object)
 	{
-		_gmsnprintf(a_buffer, a_bufferLen, 
+		_gmsnprintf(a_buffer, a_bufferLen,
 			"Behavior(%s, %s)",a_object->GetName().c_str(),  a_object->GetClient() ? a_object->GetClient()->GetName(true) : "");
 	}
 }
@@ -179,7 +179,7 @@ int gmScriptGoal::gmfLimitToClass(gmThread *a_thread)
 			native->LimitToClass().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToNoClass(gmThread *a_thread)
@@ -195,7 +195,7 @@ int gmScriptGoal::gmfLimitToNoClass(gmThread *a_thread)
 			native->LimitToClass().ClearFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTeam(gmThread *a_thread)
@@ -211,7 +211,7 @@ int gmScriptGoal::gmfLimitToTeam(gmThread *a_thread)
 			native->LimitToTeam().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToPowerUp(gmThread *a_thread)
@@ -227,7 +227,7 @@ int gmScriptGoal::gmfLimitToPowerUp(gmThread *a_thread)
 			native->LimitToPowerup().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToNoPowerup(gmThread *a_thread)
@@ -243,7 +243,7 @@ int gmScriptGoal::gmfLimitToNoPowerup(gmThread *a_thread)
 			native->LimitToNoPowerup().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToEntityFlag(gmThread *a_thread)
@@ -259,7 +259,7 @@ int gmScriptGoal::gmfLimitToEntityFlag(gmThread *a_thread)
 			native->LimitToEntFlag().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToNoEntityFlag(gmThread *a_thread)
@@ -275,7 +275,7 @@ int gmScriptGoal::gmfLimitToNoEntityFlag(gmThread *a_thread)
 			native->LimitToNoEntFlag().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToWeapon(gmThread *a_thread)
@@ -291,7 +291,7 @@ int gmScriptGoal::gmfLimitToWeapon(gmThread *a_thread)
 			native->LimitToWeapon().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToRole(gmThread *a_thread)
@@ -307,7 +307,7 @@ int gmScriptGoal::gmfLimitToRole(gmThread *a_thread)
 			native->LimitToRole().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitTo(gmThread *a_thread)
@@ -327,10 +327,10 @@ int gmScriptGoal::gmfLimitTo(gmThread *a_thread)
 	GM_INT_PARAM(activeonly,2,0);
 	if(native)
 	{
-		gmGCRoot<gmFunctionObject> func(fn,a_thread->GetMachine());		
-		native->LimitTo(*a_thread->GetThis(), func, Utils::SecondsToMilliseconds(dly),activeonly!=0);		
+		gmGCRoot<gmFunctionObject> func(fn,a_thread->GetMachine());
+		native->LimitTo(*a_thread->GetThis(), func, Utils::SecondsToMilliseconds(dly),activeonly!=0);
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToNoTarget(gmThread *a_thread)
@@ -342,7 +342,7 @@ int gmScriptGoal::gmfLimitToNoTarget(gmThread *a_thread)
 		// special case
 		native->LimitToTargetClass().SetFlag(0);
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetClass(gmThread *a_thread)
@@ -358,7 +358,7 @@ int gmScriptGoal::gmfLimitToTargetClass(gmThread *a_thread)
 			native->LimitToTargetClass().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetWeapon(gmThread *a_thread)
@@ -374,7 +374,7 @@ int gmScriptGoal::gmfLimitToTargetWeapon(gmThread *a_thread)
 			native->LimitToTargetWeapon().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetTeam(gmThread *a_thread)
@@ -390,7 +390,7 @@ int gmScriptGoal::gmfLimitToTargetTeam(gmThread *a_thread)
 			native->LimitToTargetTeam().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetPowerUp(gmThread *a_thread)
@@ -406,7 +406,7 @@ int gmScriptGoal::gmfLimitToTargetPowerUp(gmThread *a_thread)
 			native->LimitToTargetPowerup().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetNoPowerUp(gmThread *a_thread)
@@ -422,7 +422,7 @@ int gmScriptGoal::gmfLimitToTargetNoPowerUp(gmThread *a_thread)
 			native->LimitToTargetNoPowerup().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetEntityFlag(gmThread *a_thread)
@@ -438,7 +438,7 @@ int gmScriptGoal::gmfLimitToTargetEntityFlag(gmThread *a_thread)
 			native->LimitToTargetEntFlag().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfLimitToTargetNoEntityFlag(gmThread *a_thread)
@@ -454,7 +454,7 @@ int gmScriptGoal::gmfLimitToTargetNoEntityFlag(gmThread *a_thread)
 			native->LimitToTargetNoEntFlag().SetFlag(id);
 		}
 	}
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfFinished(gmThread *a_thread)
@@ -464,7 +464,7 @@ int gmScriptGoal::gmfFinished(gmThread *a_thread)
 
 	if(native)
 		native->SetFinished();
-	return GM_SYS_KILL; 
+	return GM_SYS_KILL;
 }
 
 int gmScriptGoal::gmfDidPathSucceed(gmThread *a_thread)
@@ -473,7 +473,7 @@ int gmScriptGoal::gmfDidPathSucceed(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	a_thread->PushInt(native->DidPathSucceed() ? 1 : 0);
-	return GM_SYS_KILL; 
+	return GM_SYS_KILL;
 }
 
 int gmScriptGoal::gmfDidPathFail(gmThread *a_thread)
@@ -482,7 +482,7 @@ int gmScriptGoal::gmfDidPathFail(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	a_thread->PushInt(native->DidPathFail() ? 1 : 0);
-	return GM_SYS_KILL; 
+	return GM_SYS_KILL;
 }
 
 int gmScriptGoal::gmfIsActive(gmThread *a_thread)
@@ -491,7 +491,7 @@ int gmScriptGoal::gmfIsActive(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	a_thread->PushInt(native->IsActive() ? 1 : 0);
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfGoto(gmThread *a_thread)
@@ -543,7 +543,7 @@ int gmScriptGoal::gmfGotoAsync(gmThread *a_thread)
 
 	bool b = native->Goto(Vector3f(v.x,v.y,v.z), opn);
 	a_thread->Push(gmVariable(b?1:0));
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfGotoRandom(gmThread *a_thread)
@@ -593,7 +593,7 @@ int gmScriptGoal::gmfGotoRandomAsync(gmThread *a_thread)
 
 	bool b = native->GotoRandom(opn);
 	a_thread->Push(gmVariable(b?1:0));
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfRouteTo(gmThread *a_thread)
@@ -606,7 +606,7 @@ int gmScriptGoal::gmfRouteTo(gmThread *a_thread)
 			a_thread->GetMachine()->GetTypeName(a_thread->ParamType(0)));
 		return GM_EXCEPTION;
 	}
-	
+
 	GM_FLOAT_OR_INT_PARAM(r,1,32.f);
 	GM_TABLE_PARAM(Options,2,NULL);
 
@@ -630,7 +630,7 @@ int gmScriptGoal::gmfRouteTo(gmThread *a_thread)
 			return GM_SYS_YIELD;
 	}
 	a_thread->Push(gmVariable(PATH_FAILED));
-	return GM_OK; 
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfStop(gmThread *a_thread)
@@ -752,7 +752,7 @@ int gmScriptGoal::gmfBlockForWeaponChange(gmThread *a_thread)
 		a_thread->Push(varSig);
 		return GM_OK;
 	}
-	
+
 	int res = a_thread->GetMachine()->Sys_Block(a_thread, 1, &varSig);
 	if(res == -1)
 		return GM_SYS_BLOCK;
@@ -779,7 +779,7 @@ int gmScriptGoal::gmfBlockForWeaponFire(gmThread *a_thread)
 int gmScriptGoal::gmfBlockForVoiceMacro(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	
+
 	int iNumMacros = 0;
 	gmVariable signals[128];
 	for(int i = 0; i < a_thread->GetNumParams(); ++i)
@@ -787,7 +787,7 @@ int gmScriptGoal::gmfBlockForVoiceMacro(gmThread *a_thread)
 		GM_CHECK_INT_PARAM(macroId,i);
 		signals[iNumMacros++]= gmVariable(Utils::MakeId32((obint16)PERCEPT_HEAR_VOICEMACRO, (obint16)macroId));
 	}
-	
+
 	int res = a_thread->GetMachine()->Sys_Block(a_thread, iNumMacros, signals);
 	if(res == -1)
 		return GM_SYS_BLOCK;
@@ -828,7 +828,7 @@ int gmScriptGoal::gmfThreadKill(gmThread *a_thread)
 		a_thread->PushInt(1);
 		return GM_SYS_KILL;
 	}
-	a_thread->PushInt(native->DeleteForkThread(id)?1:0);	
+	a_thread->PushInt(native->DeleteForkThread(id)?1:0);
 	return GM_OK;
 }
 
@@ -844,7 +844,7 @@ int gmScriptGoal::gmfDelayGetPriority(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_FLOAT_OR_INT_PARAM(dly,0);
-	native->DelayGetPriority(Utils::SecondsToMilliseconds(dly));	
+	native->DelayGetPriority(Utils::SecondsToMilliseconds(dly));
 	return GM_OK;
 }
 
@@ -874,7 +874,7 @@ int gmScriptGoal::gmfBlackboardDelay(gmThread *a_thread)
 		native->BlackboardDelay(time,a_thread->Param(1).GetInt());
 		return GM_OK;
 	}
-	
+
 	enum { BufferSize=1024 };
 	char buffer[BufferSize] = {};
 	GM_EXCEPTION_MSG("expecting %s, got %s",
@@ -887,7 +887,7 @@ int gmScriptGoal::gmfBlackboardIsDelayed(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_NUM_PARAMS(1);
-	
+
 	MapGoal *Mg = 0;
 	if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(0),Mg) && Mg)
 	{
@@ -908,7 +908,7 @@ int gmScriptGoal::gmfBlackboardIsDelayed(gmThread *a_thread)
 		a_thread->PushInt(native->BlackboardIsDelayed(a_thread->Param(0).GetInt())?1:0);
 		return GM_OK;
 	}
-	
+
 	enum { BufferSize=1024 };
 	char buffer[BufferSize] = {};
 	GM_EXCEPTION_MSG("expecting %s, got %s",
@@ -942,7 +942,7 @@ int gmScriptGoal::gmfMarkInProgress(gmThread *a_thread)
 		a_thread->PushInt(native->MarkInProgress(MapGoalPtr())?1:0);
 		return GM_OK;
 	}
-	
+
 	enum { BufferSize=1024 };
 	char buffer[BufferSize] = {};
 	GM_EXCEPTION_MSG("expecting %s, got %s",
@@ -984,13 +984,12 @@ int gmScriptGoal::gmfMarkInUse(gmThread *a_thread)
 	return GM_EXCEPTION;
 }
 
-
 int gmScriptGoal::gmfAddFinishCriteria(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-		
+
 	CheckCriteria c;
-	StringStr err;
+	std::stringstream err;
 	if(IGameManager::GetInstance()->GetGame()->CreateCriteria(a_thread,c,err))
 	{
 		a_thread->PushInt(native->AddFinishCriteria(c) ? 1 : 0);
@@ -1052,7 +1051,7 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 			}
 			break;
 		default:
-			GM_EXCEPTION_MSG("expecting param 1 as string or int or table, got %s", GM_THREAD_ARG->ParamTypeName(1));
+			GM_EXCEPTION_MSG("expecting param 1 as std::string or int or table, got %s", GM_THREAD_ARG->ParamTypeName(1));
 			return GM_EXCEPTION;
 		}
 	}
@@ -1064,7 +1063,7 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 	if(params)
 	{
 		qry.FromTable(a_thread->GetMachine(),params);
-	}	
+	}
 
 	if ( qry.GetError() != GoalManager::Query::QueryOk ) {
 		GM_EXCEPTION_MSG(qry.QueryErrorString());
@@ -1115,7 +1114,7 @@ int gmScriptGoal::gmfWatchForMapGoalsInRadius(gmThread *a_thread)
 	if(params)
 	{
 		qry.FromTable(a_thread->GetMachine(),params);
-	}	
+	}
 
 	if ( qry.GetError() != GoalManager::Query::QueryOk ) {
 		GM_EXCEPTION_MSG(qry.QueryErrorString());
@@ -1276,7 +1275,7 @@ bool gmScriptGoal::getInitializeFunc( ScriptGoal *a_native, gmThread *a_thread, 
 {
 	if(a_native->GetCallback(ScriptGoal::ON_INIT))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_INIT));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1293,7 +1292,7 @@ bool gmScriptGoal::getSpawnFunc( ScriptGoal *a_native, gmThread *a_thread, gmVar
 {
 	if(a_native->GetCallback(ScriptGoal::ON_SPAWN))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_SPAWN));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1310,7 +1309,7 @@ bool gmScriptGoal::getPriorityFunc( ScriptGoal *a_native, gmThread *a_thread, gm
 {
 	if(a_native->GetCallback(ScriptGoal::ON_GETPRIORITY))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_GETPRIORITY));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1327,7 +1326,7 @@ bool gmScriptGoal::getEnterFunc(AiState::ScriptGoal *a_native, gmThread *a_threa
 {
 	if(a_native->GetCallback(ScriptGoal::ON_ENTER))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_ENTER));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1344,7 +1343,7 @@ bool gmScriptGoal::getExitFunc(AiState::ScriptGoal *a_native, gmThread *a_thread
 {
 	if(a_native->GetCallback(ScriptGoal::ON_EXIT))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_EXIT));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1361,7 +1360,7 @@ bool gmScriptGoal::getUpdateFunc(AiState::ScriptGoal *a_native, gmThread *a_thre
 {
 	if(a_native->GetCallback(ScriptGoal::ON_UPDATE))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_UPDATE));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1378,7 +1377,7 @@ bool gmScriptGoal::getPathThroughFunc(AiState::ScriptGoal *a_native, gmThread *a
 {
 	if(a_native->GetCallback(ScriptGoal::ON_PATH_THROUGH))
 		a_operands[0].SetFunction(a_native->GetCallback(ScriptGoal::ON_PATH_THROUGH));
-	else 
+	else
 		a_operands[0].Nullify();
 	return true;
 }
@@ -1400,7 +1399,7 @@ bool gmScriptGoal::getAimVectorFunc(AiState::ScriptGoal *a_native, gmThread *a_t
 bool gmScriptGoal::setAimVectorFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
 	Vector3f v;
-	if(a_operands[1].IsVector() && a_operands[1].GetVector(v.x,v.y,v.z))	
+	if(a_operands[1].IsVector() && a_operands[1].GetVector(v.x,v.y,v.z))
 		a_native->SetAimVector(v);
 	return true;
 }
@@ -1413,7 +1412,7 @@ bool gmScriptGoal::getAimWeaponIdFunc(AiState::ScriptGoal *a_native, gmThread *a
 
 bool gmScriptGoal::setGetPriorityDelay(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsNumber())	
+	if(a_operands[1].IsNumber())
 		a_native->SetGetPriorityDelay(Utils::SecondsToMilliseconds(a_operands[1].GetFloatSafe()));
 	return true;
 }
@@ -1426,7 +1425,7 @@ bool gmScriptGoal::getGetPriorityDelay(AiState::ScriptGoal *a_native, gmThread *
 
 bool gmScriptGoal::setAimWeaponIdFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->SetAimWeaponId(a_operands[1].GetInt());
 	return true;
 }
@@ -1439,7 +1438,7 @@ bool gmScriptGoal::getAutoReleaseAim(AiState::ScriptGoal *a_native, gmThread *a_
 
 bool gmScriptGoal::setAutoReleaseAim(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoReleaseAim(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1452,7 +1451,7 @@ bool gmScriptGoal::getAutoReleaseWeapon(AiState::ScriptGoal *a_native, gmThread 
 
 bool gmScriptGoal::setAutoReleaseWeapon(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoReleaseWeapon(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1465,7 +1464,7 @@ bool gmScriptGoal::getAutoReleaseTrackers(AiState::ScriptGoal *a_native, gmThrea
 
 bool gmScriptGoal::setAutoReleaseTrackers(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoReleaseTracker(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1478,7 +1477,7 @@ bool gmScriptGoal::getAutoFinishOnUnavailable(AiState::ScriptGoal *a_native, gmT
 
 bool gmScriptGoal::setAutoFinishOnUnavailable(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoFinishOnUnAvailable(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1491,7 +1490,7 @@ bool gmScriptGoal::getAutoFinishOnNoProgressSlots(AiState::ScriptGoal *a_native,
 
 bool gmScriptGoal::setAutoFinishOnNoProgressSlots(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoFinishOnNoProgressSlots(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1504,7 +1503,7 @@ bool gmScriptGoal::getAutoFinishOnNoUseSlots(AiState::ScriptGoal *a_native, gmTh
 
 bool gmScriptGoal::setAutoFinishOnNoUseSlots(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->AutoFinishOnNoUseSlots(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1516,7 +1515,7 @@ bool gmScriptGoal::getSkipGetPriorityWhenActive(AiState::ScriptGoal *a_native, g
 }
 bool gmScriptGoal::setSkipGetPriorityWhenActive(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsInt())	
+	if(a_operands[1].IsInt())
 		a_native->SkipGetPriorityWhenActive(a_operands[1].GetInt()!=0);
 	return true;
 }
@@ -1528,7 +1527,7 @@ bool gmScriptGoal::getScriptPriority(AiState::ScriptGoal *a_native, gmThread *a_
 
 bool gmScriptGoal::setScriptPriority(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
-	if(a_operands[1].IsNumber())	
+	if(a_operands[1].IsNumber())
 		a_native->SetScriptPriority(a_operands[1].GetFloatSafe());
 	return true;
 }
@@ -1536,7 +1535,7 @@ bool gmScriptGoal::setScriptPriority(AiState::ScriptGoal *a_native, gmThread *a_
 //////////////////////////////////////////////////////////////////////////
 
 bool gmScriptGoal::getMapGoal(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	if(a_native->GetMapGoal())
 		a_operands[0].SetUser(a_native->GetMapGoal()->GetScriptObject(a_thread->GetMachine()));
 	else
@@ -1564,7 +1563,7 @@ bool gmScriptGoal::setMapGoal(AiState::ScriptGoal *a_native, gmThread *a_thread,
 }
 
 bool gmScriptGoal::getAlwaysRecieveEvents(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	a_operands[0].SetInt(a_native->AlwaysRecieveEvents()?1:0);
 	return true;
 }
@@ -1577,13 +1576,13 @@ bool gmScriptGoal::setAlwaysRecieveEvents(AiState::ScriptGoal *a_native, gmThrea
 }
 
 bool gmScriptGoal::getEvents(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	a_operands[0].SetTable(a_native->m_EventTable);
 	return true;
 }
 
 bool gmScriptGoal::setEvents(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	gmTableObject *pTbl = a_operands[1].GetTableObjectSafe();
 	if(pTbl)
 		a_native->m_EventTable.Set(pTbl, a_thread->GetMachine());
@@ -1591,13 +1590,13 @@ bool gmScriptGoal::setEvents(AiState::ScriptGoal *a_native, gmThread *a_thread, 
 }
 
 bool gmScriptGoal::getCommands(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	a_operands[0].SetTable(a_native->m_CommandTable);
 	return true;
 }
 
 bool gmScriptGoal::setCommands(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	gmTableObject *pTbl = a_operands[1].GetTableObjectSafe();
 	if(pTbl)
 		a_native->m_CommandTable.Set(pTbl, a_thread->GetMachine());
@@ -1605,7 +1604,7 @@ bool gmScriptGoal::setCommands(AiState::ScriptGoal *a_native, gmThread *a_thread
 }
 
 bool gmScriptGoal::getDebugString(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	if(a_native->DebugString())
 		a_operands[0].SetString(a_native->DebugString());
 	else
@@ -1614,7 +1613,7 @@ bool gmScriptGoal::getDebugString(AiState::ScriptGoal *a_native, gmThread *a_thr
 }
 
 bool gmScriptGoal::setDebugString(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	gmStringObject *pStr = a_operands[1].GetStringObjectSafe();
 	if(pStr)
 		a_native->DebugString().Set(pStr, a_thread->GetMachine());
@@ -1622,7 +1621,7 @@ bool gmScriptGoal::setDebugString(AiState::ScriptGoal *a_native, gmThread *a_thr
 }
 
 bool gmScriptGoal::getDebug(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	a_operands[0].SetInt(a_native->DebugDrawingEnabled());
 	return true;
 }
@@ -1634,7 +1633,7 @@ bool gmScriptGoal::setDebug(AiState::ScriptGoal *a_native, gmThread *a_thread, g
 }
 
 bool gmScriptGoal::getBot(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
-{	
+{
 	a_operands[0].SetUser(a_native->GetClient()->GetScriptObject());
 	return true;
 }

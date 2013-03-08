@@ -235,23 +235,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ResourceCompile Include="..\Common\Common.rc" />
   </ItemGroup>
   <ItemGroup>
-    <BuildExternal Include="..\..\..\MC\MC_BuildInterface.bld">
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ModularCombatSln)</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ModularCombatSln)</Solution>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">1</Config>
-      <Config Condition="'$(Configuration)|$(Platform)'=='Release|x64'">1</Config>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ModularCombatSln)</Solution>
-      <Solution Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ModularCombatSln)</Solution>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </BuildExternal>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="MC_BuildInterface.results" />
     <None Include="..\..\..\MC\Jamfile" />
-    <None Include="..\..\..\MC\Omni-Bot_MC_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\MC\MC_Client.h" />

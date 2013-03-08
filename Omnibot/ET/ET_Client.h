@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ET_CLIENT_H__
 #define __ET_CLIENT_H__
@@ -16,7 +18,7 @@
 //		Extended client class for Enemy-Territory.
 class ET_Client : public Client
 {
-public:	
+public:
 	friend void gmBindETBotLibrary(gmMachine *_machine);
 
 	void Init(int _gameid);
@@ -45,7 +47,7 @@ public:
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
 	void SetupBehaviorTree();
-	
+
 	ET_Client();
 	virtual ~ET_Client();
 protected:

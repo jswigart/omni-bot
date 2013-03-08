@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -10,13 +10,15 @@
 #include "JA_NavigationFlags.h"
 #include "JA_Client.h"
 
+#include "RenderBuffer.h"
+
 #include "BotBaseStates.h"
 #include "BotSteeringSystem.h"
 
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
-	ForceJump::ForceJump() 
+	ForceJump::ForceJump()
 		: StateChild("ForceJump")
 		, m_IsJumping(false)
 	{
@@ -33,7 +35,7 @@ namespace AiState
 	{
 		if(IsActive())
 		{
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_NextPt.m_Pt,COLOR::GREEN,IGame::GetDeltaTimeSecs()*2.f);
+			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_NextPt.m_Pt,COLOR::GREEN,IGame::GetDeltaTimeSecs()*2.f);
 		}
 	}
 
@@ -45,8 +47,8 @@ namespace AiState
 		FINDSTATE(fp,FollowPath,GetParent());
 		if(fp)
 		{
-			if(fp->IsMoving() && 
-				fp->GetCurrentPath().GetCurrentPt(m_NextPt) && 
+			if(fp->IsMoving() &&
+				fp->GetCurrentPath().GetCurrentPt(m_NextPt) &&
 				(m_NextPt.m_NavFlags & F_JA_NAV_FORCEJUMP))
 			{
 				return 1.f;
@@ -61,16 +63,16 @@ namespace AiState
 
 		const float fDistanceToPt = Length(vMyPos.As2d(), m_NextPt.m_Pt.As2d());
 		bool bInRadius = fDistanceToPt <= m_NextPt.m_Radius;
-		
+
 		FINDSTATEIF(SteeringSystem, GetRootState(), SetTarget(m_NextPt.m_Pt));
 
 		/*Trajectory::AimTrajectory traj[2];
 		int t = Trajectory::Calculate(
-			vMyPos, 
-			m_NextPt.m_Pt, 
-			GetClient()->GetMaxSpeed(), 
-			IGame::GetGravity(), 
-			traj);*/
+		vMyPos,
+		m_NextPt.m_Pt,
+		GetClient()->GetMaxSpeed(),
+		IGame::GetGravity(),
+		traj);*/
 
 		if(!m_IsJumping)
 		{

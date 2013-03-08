@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -71,10 +71,10 @@ void Path::Append(const Path &_path)
 	m_NumPts += _path.GetNumPts();
 }
 
-bool Path::GetCurrentPt(PathPoint &_pt) const 
+bool Path::GetCurrentPt(PathPoint &_pt) const
 {
-	if(m_NumPts > 0) 
-	{ 
+	if(m_NumPts > 0)
+	{
 		_pt = m_Pts[m_CurrentPt];
 		return true;
 	}
@@ -83,38 +83,38 @@ bool Path::GetCurrentPt(PathPoint &_pt) const
 
 bool Path::GetNextPt(PathPoint &_pt) const
 {
-	if(m_NumPts > 0 && m_CurrentPt+1 < m_NumPts) 
-	{ 
+	if(m_NumPts > 0 && m_CurrentPt+1 < m_NumPts)
+	{
 		_pt = m_Pts[m_CurrentPt+1];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetPreviousPt(PathPoint &_pt) const 
+bool Path::GetPreviousPt(PathPoint &_pt) const
 {
-	if(m_NumPts > 0 && m_CurrentPt > 0) 
-	{ 
+	if(m_NumPts > 0 && m_CurrentPt > 0)
+	{
 		_pt = m_Pts[m_CurrentPt-1];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetFirstPt(PathPoint &_pt) const 
+bool Path::GetFirstPt(PathPoint &_pt) const
 {
-	if(m_NumPts > 0) 
-	{ 
+	if(m_NumPts > 0)
+	{
 		_pt = m_Pts[0];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetLastPt(PathPoint &_pt) const 
+bool Path::GetLastPt(PathPoint &_pt) const
 {
-	if(m_NumPts > 0) 
-	{ 
+	if(m_NumPts > 0)
+	{
 		_pt = m_Pts[m_NumPts-1];
 		return true;
 	}
@@ -136,11 +136,11 @@ float Path::GetTotalLength() const
 	return m_Links[m_NumPts-1].m_Distance;
 }
 
-void Path::DebugRender(obColor _color, float _duration)
+void Path::DebugRender(obColor _color)
 {
 	for(obint32 i = 1; i < m_NumPts; ++i)
 	{
-		RenderBuffer::AddLine( m_Pts[i-1].m_Pt, m_Pts[i].m_Pt, _color, 2.0f );
+		RenderBuffer::AddLine( m_Pts[i-1].m_Pt, m_Pts[i].m_Pt, _color );
 	}
 }
 
@@ -182,11 +182,11 @@ Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLook
 		// calculate lookahead point
 		if(_outLookAhead && _lookAheadDistance > 0.f && (iStartPt != 0 || iEndPt != 0))
 		{
-			const float fCurrentDistanceOnPath = m_Links[iStartPt].m_Distance + 
+			const float fCurrentDistanceOnPath = m_Links[iStartPt].m_Distance +
 				(m_Links[iEndPt].m_Distance - m_Links[iStartPt].m_Distance) * fClosestRatioOnSeg;
 
 			const float fDesiredDistanceOnPath = fCurrentDistanceOnPath + _lookAheadDistance;
-			
+
 			bool bFound = false;
 			for(int i = iStartPt; i < m_NumPts-1; ++i)
 			{
@@ -197,9 +197,9 @@ Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLook
 					const float fT = fDistanceLeft / (m_Links[i+1].m_Distance - m_Links[i].m_Distance);
 					OBASSERT(fT >= 0.f && fT <= 1.f, "Bad Ratio");
 					*_outLookAhead = Interpolate(
-						m_Pts[i].m_Pt, 
-						m_Pts[i+1].m_Pt, 
-						ClampT(fT, 0.f, 1.f)); 
+						m_Pts[i].m_Pt,
+						m_Pts[i+1].m_Pt,
+						ClampT(fT, 0.f, 1.f));
 					bFound = true;
 					break;
 				}

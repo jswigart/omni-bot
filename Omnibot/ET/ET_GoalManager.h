@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ET_GOALMANAGER_H__
 #define __ET_GOALMANAGER_H__
@@ -13,7 +15,7 @@
 
 // class: ET_GoalManager
 //		The goal manager is responsible for keeping track of various goals,
-//		from flags to capture points. Bots can request goals from the goal 
+//		from flags to capture points. Bots can request goals from the goal
 //		manager and the goal manager can assign goals to the bot based on
 //		the needs of the game, and optionally the bot properties
 class ET_GoalManager : public GoalManager

@@ -1,3 +1,4 @@
+#pragma once
 
 #ifndef _MDUMP_H_
 #define _MDUMP_H_

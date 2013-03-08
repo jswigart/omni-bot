@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -9,19 +9,19 @@
 #include "MemoryRecord.h"
 #include "IGame.h"
 
-int MemoryRecord::GetTimeTargetHasBeenVisible() const 
+int MemoryRecord::GetTimeTargetHasBeenVisible() const
 {
-	return IsInFOV() ? IGame::GetTime() - GetTimeBecameVisible() : 0; 
+	return IsInFOV() ? IGame::GetTime() - GetTimeBecameVisible() : 0;
 }
 
-int MemoryRecord::GetTimeHasBeenOutOfView() const 
+int MemoryRecord::GetTimeHasBeenOutOfView() const
 {
-	return IGame::GetTime() - GetTimeLastVisible(); 
+	return IGame::GetTime() - GetTimeLastVisible();
 }
 
 void MemoryRecord::IgnoreAsTargetForTime(int _milliseconds)
 {
-	m_IgnoreForTargeting = IGame::GetTime() + _milliseconds; 
+	m_IgnoreForTargeting = IGame::GetTime() + _milliseconds;
 }
 
 bool MemoryRecord::ShouldIgnore() const
@@ -31,12 +31,12 @@ bool MemoryRecord::ShouldIgnore() const
 
 int MemoryRecord::GetAge() const
 {
-	return IGame::GetTime() - m_TimeLastUpdated; 
+	return IGame::GetTime() - m_TimeLastUpdated;
 }
 
-void MemoryRecord::MarkUpdated() 
+void MemoryRecord::MarkUpdated()
 {
-	m_TimeLastUpdated = IGame::GetTime(); 
+	m_TimeLastUpdated = IGame::GetTime();
 }
 
 Vector3f MemoryRecord::PredictPosition(float _time) const

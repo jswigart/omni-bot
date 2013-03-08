@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ETQW_CLIENT_H__
 #define __ETQW_CLIENT_H__
@@ -16,7 +18,7 @@
 //		Extended client class for Enemy-Territory.
 class ETQW_Client : public Client
 {
-public:	
+public:
 	friend void gmBindETQWBotLibrary(gmMachine *_machine);
 
 	void Init(int _gameid);

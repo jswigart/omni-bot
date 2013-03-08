@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -44,7 +44,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (ET_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon(native, (ET_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -66,7 +66,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(weaponId, 0);
 
-	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (ET_Weapon)weaponId);	
+	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon(native, (ET_Weapon)weaponId);
 	a_thread->PushInt(bSucess ? 1 : 0);
 	return GM_OK;
 }
@@ -86,7 +86,7 @@ static int GM_CDECL gmfGetReinforceTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushFloat(InterfaceFuncs::GetReinforceTime(native));
 	return GM_OK;
 }
@@ -326,7 +326,7 @@ int gmfSayFireTeam(gmThread *a_thread)
 static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	
+
 	a_thread->PushInt(InterfaceFuncs::GetGameType());
 	return GM_OK;
 }
@@ -337,7 +337,7 @@ static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 //		This function will set a game cvar
 //
 // Parameters:
-//	
+//
 //		char   - the cvar to set
 //		char   - the value of the cvar to be set
 //
@@ -399,7 +399,7 @@ static int GM_CDECL gmfSetCvar(gmThread *a_thread)
 //		This function will get the value of a game cvar
 //
 // Parameters:
-//	
+//
 //		char   - the cvar to get
 //
 //
@@ -439,7 +439,7 @@ static int GM_CDECL gmfGetCvar(gmThread *a_thread)
 
 // function: BotPush
 //		Set the bots push flag.
-//		
+//
 //
 // Parameters:
 //
@@ -461,7 +461,7 @@ static int GM_CDECL gmfDisableBotPush(gmThread *a_thread)
 
 // function: GetExplosiveState
 //		Return the state of the explosive; unarmed, armed, invalid.
-//		
+//
 //
 // Parameters:
 //
@@ -484,7 +484,7 @@ static int GM_CDECL gmfGetExplosiveState(gmThread *a_thread)
 
 // function: GetConstructableState
 //		Return the state of the constructible; built, not built, invalid.
-//		
+//
 //
 // Parameters:
 //
@@ -507,7 +507,7 @@ static int GM_CDECL gmfGetConstructableState(gmThread *a_thread)
 
 // function: GetDestroyableState
 //		Return the state of the destroyable; exploded, not exploded, invalid.
-//		
+//
 //
 // Parameters:
 //
@@ -530,7 +530,7 @@ static int GM_CDECL gmfGetDestroyableState(gmThread *a_thread)
 
 // function: IsWaitingForMedic
 //		Returns true if entity is waiting for a medic
-//		
+//
 //
 // Parameters:
 //
@@ -557,7 +557,7 @@ static int GM_CDECL gmfIsWaitingForMedic(gmThread *a_thread)
 
 // function: GetMG42Info
 //		Returns currently mounted mg42 info for the bot
-//		
+//
 //
 // Parameters:
 //
@@ -570,7 +570,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
-	
+
 	GM_CHECK_TABLE_PARAM(tbl,0);
 
 	DisableGCInScope gcEn(a_thread->GetMachine());
@@ -599,7 +599,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 
 // function: GetMountedPlayerOnMG42
 //		Returns entity currently mounted on the given mg42 entity
-//		
+//
 //
 // Parameters:
 //
@@ -610,7 +610,7 @@ static int gmfGetMG42Info(gmThread *a_thread)
 static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
@@ -633,7 +633,7 @@ static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 
 // function: IsMG42Repairable
 //		Returns whether or not the MG42 is repairable
-//		
+//
 //
 // Parameters:
 //
@@ -644,7 +644,7 @@ static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
 static int gmfIsMG42Repairable(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);	
+	GM_CHECK_NUM_PARAMS(1);
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
@@ -657,8 +657,8 @@ static int gmfIsMG42Repairable(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: TeamLandminesAvailable
-//		Returns number of landmines available to be planted 
-//		
+//		Returns number of landmines available to be planted
+//
 //
 // Parameters:
 //
@@ -679,7 +679,7 @@ static int gmfTeamLandminesAvailable(gmThread *a_thread)
 
 // function: GetCabinetData
 //		Returns table of data for the cabinet
-//		
+//
 //
 // Parameters:
 //
@@ -692,7 +692,7 @@ static int gmfGetCabinetData(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(2);
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	GM_CHECK_TABLE_PARAM(tbl,1);
 
 	DisableGCInScope gcEn(a_thread->GetMachine());
@@ -718,23 +718,23 @@ static int gmfGetCabinetData(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
-{ 
+{
 	{"ChangePrimaryWeapon",		gmfBotPickPrimaryWeapon, NULL},
-	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},	
+	{"ChangeSecondaryWeapon",	gmfBotPickSecondaryWeapon, NULL},
 	{"GetReinforceTime",		gmfGetReinforceTime, NULL},
 	{"GetCursorHint",			gmfGetCurrentCursorHint, NULL},
 	{"ChangeSpawnPoint",		gmfChangeSpawnPoint, NULL},
-	
+
 	{"IsInFireTeam",			gmfIsInFireTeam, NULL},
 	{"FireteamCreate",			gmfFireteamCreate, NULL},
 	{"FireteamDisband",			gmfFireteamDisband, NULL},
 	{"FireTeamLeave",			gmfFireTeamLeave, NULL},
 	{"FireTeamInvite",			gmfFireTeamInvite, NULL},
 	{"FireTeamApply",			gmfFireTeamApply, NULL},
-	{"FireTeamWarn",			gmfFireTeamWarn, NULL},	
+	{"FireTeamWarn",			gmfFireTeamWarn, NULL},
 	{"FireTeamKick",			gmfFireTeamKick, NULL},
 	{"FireTeamPropose",			gmfFireTeamPropose, NULL},
-		
+
 	{"FireTeamGetInfo",			gmfFireTeamGetInfo, NULL},
 
 	{"VoteYes",					gmfVoteYes, NULL},

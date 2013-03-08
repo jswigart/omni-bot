@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: RTCW Config
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __RTCW_CONFIG_H__
 #define __RTCW_CONFIG_H__
@@ -48,7 +50,7 @@ typedef enum eRTCW_Msgs
 	RTCW_MSG_ISGUNMOUNTED,
 	RTCW_MSG_ISGUNREPAIRABLE,
 	RTCW_MSG_MOUNTEDMG42INFO,
-	
+
 	// weapon query stuff
 	RTCW_MSG_WPOVERHEATED,
 	RTCW_MSG_PICKWEAPON,
@@ -92,7 +94,7 @@ typedef enum eRTCW_Weapons
 	RTCW_WP_GREN_ALLIES,		// 12	WP_GRENADE_PINEAPPLE
 	RTCW_WP_ROCKET_LAUNCHER,	// 13	equivalent american weapon to german panzerfaust
 	RTCW_WP_SNIPERRIFLE,		// 14
-	RTCW_WP_STEN,				// 15	
+	RTCW_WP_STEN,				// 15
 	RTCW_WP_SYRINGE,			// 16	WP_MEDIC_SYRINGE
 	RTCW_WP_AMMO_PACK,			// 17	WP_AMMO
 	RTCW_WP_ARTY,				// 18
@@ -263,10 +265,10 @@ typedef enum eConstructableState
 typedef enum eRTCW_Powerups
 {
 	RTCW_PWR_INVULNERABLE = PWR_FIRST_USER,
-	RTCW_PWR_FIRE,				
-	RTCW_PWR_ELECTRIC,			
-	RTCW_PWR_BREATHER,		
-	RTCW_PWR_NOFATIGUE,		
+	RTCW_PWR_FIRE,
+	RTCW_PWR_ELECTRIC,
+	RTCW_PWR_BREATHER,
+	RTCW_PWR_NOFATIGUE,
 	RTCW_PWR_REDFLAG,
 	RTCW_PWR_BLUEFLAG,
 	RTCW_PWR_BALL,

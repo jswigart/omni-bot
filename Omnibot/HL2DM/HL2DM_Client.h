@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __HL2DM_CLIENT_H__
 #define __HL2DM_CLIENT_H__
@@ -31,7 +33,6 @@ public:
 	HL2DM_Client();
 	virtual ~HL2DM_Client();
 protected:
-
 };
 
 #endif

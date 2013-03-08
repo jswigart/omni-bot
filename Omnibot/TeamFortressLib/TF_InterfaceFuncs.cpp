@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -18,7 +18,7 @@ namespace InterfaceFuncs
 		TF_PlayerPipeCount data = { 0, 0 };
 		MessageHelper msg(TF_MSG_PLAYERPIPECOUNT, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_NumPipes;	
+		return data.m_NumPipes;
 	}
 
 	void Disguise(Client *_bot, obint32 _team, obint32 _class)
@@ -43,7 +43,7 @@ namespace InterfaceFuncs
 
 	void GetDisguiseInfo(const BitFlag64 &_flags, int &_team, int &_class)
 	{
-		// Check team.	
+		// Check team.
 		_team = TF_TEAM_NONE;
 		for ( int i = 0; i < TF_TEAM_MAX; ++i )
 		{
@@ -53,7 +53,7 @@ namespace InterfaceFuncs
 				break;
 			}
 		}
-		
+
 		// Check class.
 		if(_flags.CheckFlag(TF_PWR_DISGUISE_SCOUT))
 			_class = TF_CLASS_SCOUT;
@@ -75,7 +75,7 @@ namespace InterfaceFuncs
 			_class = TF_CLASS_SPY;
 		else if(_flags.CheckFlag(TF_PWR_DISGUISE_CIVILIAN))
 			_class = TF_CLASS_CIVILIAN;
-		else 
+		else
 			_class = TF_CLASS_NONE;
 	}
 
@@ -141,7 +141,7 @@ namespace InterfaceFuncs
 	//{
 	//	static const TF_TeamPipeInfo s_NullInfo = {0,0,0};
 	//	if(InRangeT<int>(_team, TF_TEAM_NONE, TF_TEAM_MAX-1))
-	//	{		
+	//	{
 	//		MessageHelper msg(TF_MSG_TEAMPIPEINFO, &m_TeamPipeInfo[_team], sizeof(m_TeamPipeInfo[_team]));
 	//		g_EngineFuncs->InterfaceSendMessage(msg, NULL);
 	//		return &m_TeamPipeInfo[_team];

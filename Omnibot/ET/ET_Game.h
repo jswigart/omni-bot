@@ -1,11 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
 
 #ifndef __ET_GAME_H__
 #define __ET_GAME_H__
@@ -50,7 +51,7 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
-	
+
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
 

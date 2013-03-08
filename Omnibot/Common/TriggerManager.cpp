@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,11 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "TriggerManager.h"
+#include "gmCall.h"
+#include "gmTriggerInfo.h"
+
 #include "IGame.h"
 #include "ScriptManager.h"
 #include "FilterSensory.h"
-#include "gmCall.h"
-#include "gmTriggerInfo.h"
+#include "RenderBuffer.h"
 
 //////////////////////////////////////////////////////////////////////////
 class TriggerShape
@@ -22,7 +24,7 @@ public:
 		GameEntity	m_Entity;
 		int			m_TimeStamp;
 	};
-	enum 
+	enum
 	{
 		MaxEntCount=8,
 		MaxClassCount=8,
@@ -38,7 +40,7 @@ public:
 
 	virtual void UpdatePosition(const Vector3f &pos) = 0;
 	virtual bool Test(GameEntity e, const AABB &worldaabb) = 0;
-	
+
 	void SetOnEnter(gmGCRoot<gmFunctionObject> &_onenter)
 	{
 		m_OnEnterFunction = _onenter;
@@ -96,7 +98,7 @@ public:
 			{
 				call.AddParamEntity(_ent.AsInt());
 				call.End();
-				
+
 				int iRet = 0;
 				if(call.GetReturnedInt(iRet) && iRet==1)
 					m_DeleteMe = true;
@@ -168,7 +170,7 @@ public:
 					if(Test(ent.GetEnt().m_Entity,bounds))
 					{
 						FireTrigger(ent.GetEnt());
-						
+
 						if(DeleteMe())
 							return;
 					}
@@ -200,12 +202,12 @@ public:
 				AABB bounds;
 				if(EngineFuncs::EntityWorldAABB(m_InTrigger[i].m_Entity,bounds))
 				{
-					Utils::OutlineAABB(bounds,COLOR::ORANGE,2.f);
-					
+					RenderBuffer::AddAABB(bounds,COLOR::ORANGE);
+
 					Vector3f center;
 					bounds.CenterPoint( center );
-					String name = Utils::HashToString(GetNameHash());
-					Utils::PrintText( center, COLOR::ORANGE, 2.0f, "%s", name.c_str() );
+					std::string name = Utils::HashToString(GetNameHash());
+					RenderBuffer::AddString3d( center, COLOR::ORANGE, name.c_str() );
 				}
 			}
 		}
@@ -359,7 +361,7 @@ private:
 	int			m_UpdateDelay;
 
 	int			m_SerialNum;
-	
+
 	GameEntity	m_TriggerOnEntity[MaxEntCount];
 	int			m_TriggerOnClass[MaxClassCount];
 	BitFlag32	m_TriggerOnCategory;
@@ -390,12 +392,12 @@ public:
 	void RenderDebug()
 	{
 		TriggerShape::RenderDebug();
-		Utils::DrawRadius(m_Position,m_Radius,COLOR::GREEN,2.f);
+		RenderBuffer::AddCircle(m_Position,m_Radius,COLOR::GREEN);
 
-		String name = Utils::HashToString(GetNameHash());
-		Utils::PrintText( m_Position, COLOR::GREEN, 2.0f, "%s", name.c_str() );
+		std::string name = Utils::HashToString(GetNameHash());
+		RenderBuffer::AddString3d( m_Position, COLOR::GREEN, name.c_str() );
 	}
-	TriggerShapeSphere(const Vector3f &p, float r) 
+	TriggerShapeSphere(const Vector3f &p, float r)
 		: m_Position(p)
 		, m_Radius(r)
 	{
@@ -422,15 +424,15 @@ public:
 	void RenderDebug()
 	{
 		TriggerShape::RenderDebug();
-		Utils::OutlineAABB(m_Bounds,COLOR::GREEN,2.f);
+		RenderBuffer::AddAABB(m_Bounds,COLOR::GREEN);
 
 		Vector3f center;
 		m_Bounds.CenterPoint( center );
-		String name = Utils::HashToString(GetNameHash());
-		Utils::PrintText( center, COLOR::GREEN, 2.0f, "%s", name.c_str() );
+		std::string name = Utils::HashToString(GetNameHash());
+		RenderBuffer::AddString3d( center, COLOR::GREEN, name.c_str() );
 	}
 	TriggerShapeAABB(const AABB &aabb)
-		: m_Bounds(aabb) 
+		: m_Bounds(aabb)
 	{
 	}
 private:
@@ -474,7 +476,7 @@ void TriggerManager::DeleteTrigger(int _serial)
 	}
 }
 
-void TriggerManager::DeleteTrigger(const String &_name)
+void TriggerManager::DeleteTrigger(const std::string &_name)
 {
 	const obuint32 uiName = Utils::Hash32(_name.c_str());
 	ShapeList::iterator it = m_TriggerShapes.begin();
@@ -519,9 +521,9 @@ void TriggerManager::DeleteInstance()
 
 void TriggerManager::InitCommands()
 {
-	SetEx("debugtriggers", "Prints triggers to console", 
+	SetEx("debugtriggers", "Prints triggers to console",
 		this, &TriggerManager::cmdDebugTriggers);
-	SetEx("drawtriggers", "Renders any active trigger zones", 
+	SetEx("drawtriggers", "Renders any active trigger zones",
 		this, &TriggerManager::cmdDrawTriggers);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -535,7 +537,7 @@ void TriggerManager::cmdDrawTriggers(const StringVector &_args)
 	if(_args.size() >= 2)
 	{
 		if(!m_DrawTriggers && Utils::StringToTrue(_args[1]))
-			m_DrawTriggers = true;							
+			m_DrawTriggers = true;
 		else if(m_DrawTriggers && Utils::StringToFalse(_args[1]))
 			m_DrawTriggers = false;
 	}
@@ -572,25 +574,25 @@ void TriggerManager::cmdDebugTriggers(const StringVector &_args)
 		EngineFuncs::ConsoleMessage("Trigger Debug off.");
 }
 
-void TriggerManager::SetScriptCallback(const String &_name, gmGCRoot<gmFunctionObject> _func)
+void TriggerManager::SetScriptCallback(const std::string &_name, gmGCRoot<gmFunctionObject> _func)
 {
 	m_ScriptCallbacks.insert(std::make_pair(_name, _func));
 }
 
 void TriggerManager::HandleTrigger(const TriggerInfo &_triggerInfo)
 {
-	bool bScriptCallback = false;	
+	bool bScriptCallback = false;
 
-	//////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////
 	// Call any script callbacks.
 	if(_triggerInfo.m_TagName[0])
 	{
-		ScriptCallback::iterator it = m_ScriptCallbacks.lower_bound(_triggerInfo.m_TagName), 
+		ScriptCallback::iterator it = m_ScriptCallbacks.lower_bound(_triggerInfo.m_TagName),
 			itEnd = m_ScriptCallbacks.upper_bound(_triggerInfo.m_TagName);
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		DisableGCInScope gcEn(pMachine);
 
-		for( ; it != itEnd; ++it) 
+		for( ; it != itEnd; ++it)
 		{
 			gmCall call;
 			if(call.BeginFunction(pMachine, it->second, gmVariable::s_null, true, gmThread::Highest))
@@ -602,17 +604,17 @@ void TriggerManager::HandleTrigger(const TriggerInfo &_triggerInfo)
 				bScriptCallback = true;
 			}
 		}
-	}	
+	}
 
 	if(m_DebugTriggers)
 	{
 		if ( _triggerInfo.m_TagName[0] && Utils::RegexMatch(m_DebugTriggersExpr.c_str(), va("%s",_triggerInfo.m_TagName)) )
 		{
-			StringStr msg;
+			std::stringstream msg;
 			msg << "<" << (bScriptCallback ? "+++" : "---") << ">" << (_triggerInfo);
 			EngineFuncs::ConsoleMessage(msg.str().c_str());
 			LOG(msg.str().c_str());
-			
+
 			Utils::OutputDebug(kInfo, msg.str().c_str());
 		}
 	}

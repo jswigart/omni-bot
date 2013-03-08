@@ -1,25 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __STATE_H__
-#define __STATE_H__
+#pragma once
+
+#ifndef __STATEMACHINE_H__
+#define __STATEMACHINE_H__
 
 #include "IGame.h"
-#include "DebugWindow.h"
 
 class Client;
 class MessageHelper;
 class CallbackParameters;
-
-namespace gcn
-{
-	class Widget;
-};
+class MapGoal;
 
 class UpdateDelay
 {
@@ -103,18 +100,18 @@ public:
 	State *FindState(obuint32 _namehash);
 
 	virtual obReal GetPriority() { return (obReal)1.0; }
-	virtual bool OnPathThrough(const String &_s) { return false; }
+	virtual bool OnPathThrough(const std::string &_s) { return false; }
 	virtual void EndPathThrough() { }
 	inline obReal GetLastPriority() const { return m_LastPriority; }
 	inline void SetLastPriority(obReal _p) { m_LastPriority = _p; }
-	
+
 	State *GetParent() const { return m_Parent; }
 	State *GetRootState() const { return m_Root; }
 	State *GetFirstChild() const { return m_FirstChild; }
 	State *GetSibling() const { return m_Sibling; }
 
 	virtual State *GetActiveState() const { return NULL; }
-	
+
 	void RootUpdate();
 
 	virtual void Initialize() {}
@@ -157,7 +154,7 @@ public:
 	inline bool IsDisabled() const { return IsUserDisabled() || !IsSelectable(); }
 	inline bool IsScriptGoal() const { return m_StateFlags.CheckFlag(State_ScriptGoal); }
 	inline bool IsAutoAdd() const { return !m_StateFlags.CheckFlag(State_DontAutoAdd); }
-	
+
 	inline void SetScriptGoal(bool _b) { m_StateFlags.SetFlag(State_ScriptGoal, _b); }
 	inline void SetAutoAdd(bool _b) { m_StateFlags.SetFlag(State_DontAutoAdd, !_b); }
 	inline void SetUserDisabled(bool _b) { m_StateFlags.SetFlag(State_UserDisabled, _b); }
@@ -192,7 +189,7 @@ public:
 	bool IsRoot() { return !m_Parent && !m_Root; }
 	void FixRoot();
 
-	String GetName() const;
+	std::string GetName() const;
 	inline obuint32 GetNameHash() const { return m_NameHash; }
 
 	Client *GetClient() const { return m_Client; }
@@ -203,11 +200,11 @@ public:
 	BitFlag32 &LimitToRole() { return m_OnlyRole; }
 	BitFlag64 &LimitToPowerup() { return m_OnlyPowerUp; }
 	BitFlag64 &LimitToEntFlag() { return m_OnlyEntFlag; }
-	
+
 	BitFlag64 &LimitToNoEntFlag() { return m_OnlyNoEntFlag; }
 	BitFlag64 &LimitToNoPowerup() { return m_OnlyNoPowerUp; }
-	
-	BitFlag128 &LimitToWeapon() { return m_OnlyWeapon; }	
+
+	BitFlag128 &LimitToWeapon() { return m_OnlyWeapon; }
 
 	BitFlag32 &LimitToTargetClass() { return m_OnlyTargetClass; }
 	BitFlag32 &LimitToTargetTeam() { return m_OnlyTargetTeam; }
@@ -235,18 +232,14 @@ public:
 	bool StateCommand(const StringVector &_args);
 
 	virtual gmUserObject *GetScriptObject(gmMachine *_machine) { return NULL; }
-	
+
 	// Special case callbacks.
 	virtual void OnSpawn();
 
 	// Debug
 	virtual void RenderDebug() {}
-	virtual void GetDebugString(StringStr &out) {}
+	virtual void GetDebugString(std::stringstream &out) {}
 	virtual MapGoal *GetMapGoalPtr() { return NULL; }
-
-#ifdef ENABLE_DEBUG_WINDOW
-	virtual void RenderDebugWindow(gcn::DrawInfo drawinfo);
-#endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	virtual void Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & cached, Remote::Behavior & update );
@@ -262,7 +255,7 @@ public:
 		bool						m_OnlyWhenActive;
 		bool						m_Result;
 
-		LimitToCallback() 
+		LimitToCallback()
 			: m_LimitTo(0)
 			, m_NextCallback(0)
 			, m_Delay(0)
@@ -287,7 +280,7 @@ public:
 	State(const char * _name, const UpdateDelay &_ur = UpdateDelay(0));
 	virtual ~State();
 protected:
-	
+
 	obReal InternalGetPriority();
 	void InternalEnter();
 	virtual void InternalExit();
@@ -330,7 +323,7 @@ protected:
 	enum { MaxThreads = 128 };
 	int				m_NumThreads;
 	int				m_ThreadList[MaxThreads];
-	
+
 	gmGCRoot<gmTableObject>		m_EventTable;
 	gmGCRoot<gmTableObject>		m_CommandTable;
 	gmGCRoot<gmUserObject>		m_ScriptObject;
@@ -338,7 +331,7 @@ private:
 	void ClearThreadReference(int index);
 
 	Client			*m_Client;
-	
+
 	obint32			m_NextUpdate;
 	obint32			m_LastUpdateTime;
 	obReal			m_StateTime;
@@ -354,7 +347,7 @@ private:
 	obuint32		m_SyncCrc;
 
 #ifdef _DEBUG
-	String			m_DebugName;
+	std::string			m_DebugName;
 #endif
 
 	State();
@@ -385,7 +378,7 @@ class StateFirstAvailable : public State
 {
 public:
 
-	void GetDebugString(StringStr &out);
+	void GetDebugString(std::stringstream &out);
 
 	obReal GetPriority();
 	void InternalParentExit();
@@ -406,7 +399,7 @@ class StatePrioritized : public State
 {
 public:
 
-	void GetDebugString(StringStr &out);
+	void GetDebugString(std::stringstream &out);
 
 	obReal GetPriority();
 	void InternalParentExit();
@@ -423,14 +416,14 @@ private:
 //////////////////////////////////////////////////////////////////////////
 
 // class: StateSequential
-//		Run each child in order, skipping any that have priotity 0. 
+//		Run each child in order, skipping any that have priotity 0.
 //		When all children finish running, the parent state is finished.
 //		Fail if any children fail.
 class StateSequential : public State
 {
 public:
 
-	void GetDebugString(StringStr &out);
+	void GetDebugString(std::stringstream &out);
 
 	void Exit();
 	StateStatus UpdateState(float fDt);
@@ -446,7 +439,7 @@ private:
 //////////////////////////////////////////////////////////////////////////
 
 // class: StateSequentialLooping
-//		Run each child in order, skipping any that have priotity 0. 
+//		Run each child in order, skipping any that have priotity 0.
 //		When all children finish running, it starts over.
 class StateSequentialLooping : public State
 {

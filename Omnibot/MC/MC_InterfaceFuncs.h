@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __MC_INTERFACEFUNCS_H__
 #define __MC_INTERFACEFUNCS_H__
@@ -13,7 +15,7 @@
 #include "MC_Messages.h"
 
 namespace InterfaceFuncs
-{	
+{
 	bool GetPlayerStats(GameEntity _ent, MC_PlayerStats &stats);
 	bool GetModuleStats(GameEntity _ent, MC_ModuleStats &stats);
 	bool UpgradeModule(GameEntity _ent, int moduleId);

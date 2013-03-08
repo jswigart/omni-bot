@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __ET_VOICEMACROS_H__
 #define __ET_VOICEMACROS_H__
@@ -19,7 +21,7 @@ typedef enum
 	VCHAT_TEAM_PATHCLEARED,
 	VCHAT_TEAM_ENEMYWEAK,
 	VCHAT_TEAM_ALLCLEAR,
-	VCHAT_TEAM_INCOMING,	
+	VCHAT_TEAM_INCOMING,
 	VCHAT_TEAM_FIREINTHEHOLE,
 	VCHAT_TEAM_ONDEFENSE,
 	VCHAT_TEAM_ONOFFENSE,

@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "PathPlannerRecast.h"
 #include "NavigationManager.h"
@@ -129,7 +128,7 @@ int GM_CDECL gmfRecastFloodFill(gmThread *a_thread)
 		GM_CHECK_FLOAT_OR_INT_PARAM(fStepHeight, 1);
 		GM_CHECK_FLOAT_OR_INT_PARAM(fJumpHeight, 2);
 		GM_CHECK_FLOAT_OR_INT_PARAM(fCrouchHeight, 3);
-		GM_CHECK_FLOAT_OR_INT_PARAM(fCharacterHeight, 4);	
+		GM_CHECK_FLOAT_OR_INT_PARAM(fCharacterHeight, 4);
 
 		PathPlannerRecast::FloodFillOptions options;
 		options.m_GridRadius = fGridRadius;
@@ -145,21 +144,21 @@ int GM_CDECL gmfRecastFloodFill(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: Global Waypoint Pathplanner Functions
-static gmFunctionEntry s_recastLib[] = 
+static gmFunctionEntry s_recastLib[] =
 {
 	{"EnableView",			gmfRecastView},
 	{"EnableViewConnection",gmfRecastViewConnections},
-	
+
 	{"AddFloodSeed",		gmfRecastAddFloodSeed},
 	{"BuildNavMesh",		gmfRecastBuildNavMesh},
-	
+
 	{"FloodFill",			gmfRecastFloodFill},
 };
 
 void PathPlannerRecast::RegisterScriptFunctions(gmMachine *a_machine)
 {
 	a_machine->RegisterLibrary(
-		s_recastLib, 
-		sizeof(s_recastLib) / sizeof(s_recastLib[0]), 
+		s_recastLib,
+		sizeof(s_recastLib) / sizeof(s_recastLib[0]),
 		"Nav");
 }

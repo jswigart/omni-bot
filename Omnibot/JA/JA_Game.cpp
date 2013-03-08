@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -13,13 +13,14 @@
 #include "JA_InterfaceFuncs.h"
 #include "JA_Client.h"
 
+#include "RenderBuffer.h"
+
+#include "PathPlannerWaypoint.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
 
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
-
-#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -77,9 +78,9 @@ const char *JA_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool JA_Game::ReadyForDebugWindow() const 
-{ 
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING; 
+bool JA_Game::ReadyForDebugWindow() const
+{
+	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
 GoalManager *JA_Game::GetGoalManager()
@@ -87,10 +88,8 @@ GoalManager *JA_Game::GetGoalManager()
 	return new JA_GoalManager;
 }
 
-bool JA_Game::Init() 
+bool JA_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_OPENGL);
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(JA_Game::JA_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(JA_Game::JA_GetEntityClassAimOffset);
@@ -124,7 +123,7 @@ static IntEnum ET_TeamEnum[] =
 void JA_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(ET_TeamEnum) / sizeof(ET_TeamEnum[0]);
-	_ptr = ET_TeamEnum;	
+	_ptr = ET_TeamEnum;
 }
 
 static IntEnum JA_WeaponEnum[] =
@@ -151,7 +150,7 @@ static IntEnum JA_WeaponEnum[] =
 void JA_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(JA_WeaponEnum) / sizeof(JA_WeaponEnum[0]);
-	_ptr = JA_WeaponEnum;	
+	_ptr = JA_WeaponEnum;
 }
 
 static IntEnum JKJA_ClassEnum[] =
@@ -163,7 +162,7 @@ static IntEnum JKJA_ClassEnum[] =
 	IntEnum("JEDI",				JA_CLASS_JEDI),
 	IntEnum("DEMO",				JA_CLASS_DEMO),
 	IntEnum("HW",					JA_CLASS_HW),
-	IntEnum("ANYPLAYER",			JA_CLASS_ANY),	
+	IntEnum("ANYPLAYER",			JA_CLASS_ANY),
 	IntEnum("ROCKET",				JA_CLASSEX_ROCKET),
 	IntEnum("MINE",				JA_CLASSEX_MINE),
 	IntEnum("DETPACK",			JA_CLASSEX_DETPACK),
@@ -264,7 +263,7 @@ void JA_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 	if(!_addbot.m_Name[0])
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
-		String name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
+		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 		Utils::StringCopy(_addbot.m_Name, name.c_str(), sizeof(_addbot.m_Name));
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -293,14 +292,14 @@ void JA_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		if(cp->m_DesiredTeam == -1)
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectTeam");
 			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
 		if(cp->m_DesiredClass == -1)
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectClass");
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
@@ -384,10 +383,10 @@ void JA_Game::InitCommands()
 	IGame::InitCommands();
 }
 
-/*	
-	bounding boxes for ja
-	standing	(-15, -15, -24) x (15, 15, 40)
-	crouched	(-15, -15, -24) x (15, 15, 16)
+/*
+bounding boxes for ja
+standing	(-15, -15, -24) x (15, 15, 40)
+crouched	(-15, -15, -24) x (15, 15, 16)
 */
 const float JA_Game::JA_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -399,17 +398,17 @@ const float JA_Game::JA_GetEntityClassTraceOffset(const int _class, const BitFla
 	}
 	/*if (_class == JA_CLASSEX_NPC || _class == JA_CLASSEX_VEHICLE)
 	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
-			return 20.0f;
-		return 40.0f;
+	if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
+	return 20.0f;
+	return 40.0f;
 	}*/
 	return 0.0f;
 }
 
-/*	
-	bounding boxes for ja
-	standing	(-15, -15, -24) x (15, 15, 40)
-	crouched	(-15, -15, -24) x (15, 15, 16)
+/*
+bounding boxes for ja
+standing	(-15, -15, -24) x (15, 15, 40)
+crouched	(-15, -15, -24) x (15, 15, 16)
 */
 const float JA_Game::JA_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
 {
@@ -421,20 +420,20 @@ const float JA_Game::JA_GetEntityClassAimOffset(const int _class, const BitFlag6
 	}
 	/*if (_class == JA_CLASSEX_NPC || _class == JA_CLASSEX_VEHICLE)
 	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
-			return 12.8f;
-		return 32.0f;
+	if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
+	return 12.8f;
+	return 32.0f;
 	}*/
 	return 0.0f;
 }
 
 const float JA_Game::JA_GetEntityClassAvoidRadius(const int _class)
 {
-	switch(_class) 
+	switch(_class)
 	{
 	case JA_CLASSEX_MINE:
 		return 310.0f;
-	case JA_CLASSEX_DETPACK:		
+	case JA_CLASSEX_DETPACK:
 		return 300.0f;
 	case JA_CLASSEX_THERMAL:
 		return 180.0f;
@@ -468,7 +467,7 @@ void JA_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
-	}	
+	}
 }
 
 // PathPlannerWaypointInterface
@@ -489,7 +488,7 @@ PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const W
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE);
 		}
 
 		obTraceResult tr;
@@ -503,7 +502,7 @@ PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const W
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
 		obTraceResult tr;
@@ -513,7 +512,7 @@ PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const W
 
 	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
 	{
-		Utils::DrawLine(vStart, vEnd, 
+		RenderBuffer::AddLine(vStart, vEnd,
 			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
 	}
 

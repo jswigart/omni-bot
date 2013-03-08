@@ -1,14 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 // about: Exported function definitions
 //		In order for the game to call functions from the bot, we must export
-//		the functions to the game itself and allow it to call them. 
+//		the functions to the game itself and allow it to call them.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __OMNIBOT_H__
 #define __OMNIBOT_H__
@@ -20,7 +22,7 @@
 #include "IEngineInterface.h"
 
 // function: BotInitialise
-//		Initializes the bot library and sets the bot up with the callbacks to 
+//		Initializes the bot library and sets the bot up with the callbacks to
 //		the game in the form of function pointers to functions within the game.
 omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version);
 // function: BotShutdown

@@ -1,13 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __PATHQUERY_H__
 #define __PATHQUERY_H__
+
+#include "MapGoal.h"
 
 // class: PathQuery
 //		Represents a simple or complex path query for the path planner to search for any number of

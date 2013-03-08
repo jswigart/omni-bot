@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -198,14 +198,14 @@ namespace InterfaceFuncs
 			return "Paused";
 		default:
 			return "Invalid";
-		}	
+		}
 	}
 
 	obUserData GetEntityStat(const GameEntity _ent, const char *_statname)
 	{
 		Msg_EntityStat data;
 		Utils::StringCopy(data.m_StatName, _statname ? _statname : "", sizeof(data.m_StatName));
-		
+
 		MessageHelper msg(GEN_MSG_ENTITYSTAT, &data, sizeof(data));
 		InterfaceMsg(msg, _ent);
 		return data.m_Result;
@@ -328,7 +328,7 @@ namespace InterfaceFuncs
 		data.m_Position[0] = _pos1.x;
 		data.m_Position[1] = _pos1.y;
 		data.m_Position[2] = _pos1.z;
-		
+
 		data.m_Under[0] = _pos2.x;
 		data.m_Under[1] = _pos2.y;
 		data.m_Under[2] = _pos2.z;
@@ -336,6 +336,4 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg)) && data.m_Entity.IsValid();
 	}
-
-
 };

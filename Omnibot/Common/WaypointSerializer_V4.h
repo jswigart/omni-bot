@@ -1,17 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef __WAYPOINTSERIALIZER_V4_H__
 #define __WAYPOINTSERIALIZER_V4_H__
 
 #include "WaypointSerializerImp.h"
 
-// class: WaypointSerializer_V4 
+// class: WaypointSerializer_V4
 //		Implementation for waypoint file format version 4
 //		File format specifications:
 //		- Waypoint Header
@@ -26,7 +28,7 @@
 
 //			+ write the number of custom properties *(1 byte)* (v4)
 //			- for _n_ custom properties
-//				+ write the property name length *(1 byte)* (v4)	
+//				+ write the property name length *(1 byte)* (v4)
 //				+ write the property name *(1 byte * length)* (v4)
 //				+ write a <BotUserData> struct *()*(v4)
 
@@ -45,7 +47,6 @@ public:
 protected:
 	virtual bool Load(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
 	virtual bool Save(File &_file, PathPlannerWaypoint::WaypointList &_wpl);
-
 };
 
 #endif

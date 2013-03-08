@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -91,7 +91,7 @@ const char *strVoiceMacros[] =
 	//"wm_sayPlayerClass",
 };
 
-namespace ETQW_VoiceChatAssertions 
+namespace ETQW_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
 	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_ETQW_VCHATS);

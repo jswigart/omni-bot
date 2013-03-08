@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 static int GM_CDECL gmfGetLocation(gmThread *a_thread)
-{	
+{
 	Vector3f vPosition;
 	if(a_thread->GetNumParams() == 1)
 	{
@@ -52,8 +52,8 @@ static int GM_CDECL gmfGetLocation(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // package: D3 Global Functions
-static gmFunctionEntry s_ExtendedBotLib[] = 
-{ 
+static gmFunctionEntry s_ExtendedBotLib[] =
+{
 	// Function: GetLocation
 	//		Gets the location name for a point.
 	{"GetLocation",			gmfGetLocation},

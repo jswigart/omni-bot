@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: JA Config
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __JA_CONFIG_H__
 #define __JA_CONFIG_H__
@@ -32,10 +34,10 @@ typedef enum eJA_Events
 typedef enum eJA_Msgs
 {
 	JA_MSG_START = GEN_MSG_END,
-	
+
 	// misc query stuff
 	//JA_MSG_REINFORCETIME,
-	
+
 	// goal query stuff
 	JA_MSG_GHASFLAG,
 	JA_MSG_FORCEDATA,
@@ -246,7 +248,7 @@ typedef enum eJA_Powerups
 // enumerations: JA_Contents
 //		CONT_LIGHTSABER - Lightsaber blade entity.
 typedef enum eJA_Contents
-{	
+{
 	CONT_LIGHTSABER	= CONT_START_USER
 } JA_Contents;
 
@@ -259,7 +261,7 @@ typedef enum eJA_SurfaceFlags
 
 // enumerations: JA_ButtonFlags
 typedef enum eJA_ButtonFlags
-{	
+{
 	BOT_BUTTON_FORCEPOWER = BOT_BUTTON_FIRSTUSER,
 	BOT_BUTTON_FORCEGRIP,
 	BOT_BUTTON_FORCELIGHTNING,

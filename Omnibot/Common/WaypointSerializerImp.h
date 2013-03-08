@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __WAYPOINTSERIALIZERIMP_H__
 #define __WAYPOINTSERIALIZERIMP_H__
@@ -16,25 +18,25 @@
 
 // class: WaypointSerializerImp
 //		In order to support all the versions of waypoint file formats that
-//		could possibly be created, and retain backward compatibility, we're 
+//		could possibly be created, and retain backward compatibility, we're
 //		using a bridge pattern to allow any number of implementations of
 //		the waypoint formats, so that based on the version of the waypoint
-//		as determined in the waypoint header, the appropriate loading 
+//		as determined in the waypoint header, the appropriate loading
 //		routines can be created and used.
-//		
-//		When changes to the waypoint file format are made, simply derive 
+//
+//		When changes to the waypoint file format are made, simply derive
 //		another serializer from this class, and implement the functions.
-//		Then, simply expand the load function in the Pathplanner class 
+//		Then, simply expand the load function in the Pathplanner class
 //		to use the new implementation along with the new version number.
 class WaypointSerializerImp
 {
 public:
-	typedef struct 
+	typedef struct
 	{
 		unsigned int m_Index;
 		unsigned int m_ConnectionFlags;
 	} WaypointConnection;
-	
+
 	// function: Load
 	//		Load a waypoint from an IO Proxy
 	//

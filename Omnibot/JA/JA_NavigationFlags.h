@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // File: JA Navigation Flags
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __JA_NAVIGATIONFLAGS_H__
 #define __JA_NAVIGATIONFLAGS_H__
@@ -22,4 +24,3 @@ static const NavFlags F_JA_NAV_BUTTON1		= (F_NAV_NEXT<<5);
 static const NavFlags F_JA_NAV_FORCEJUMP		= (F_NAV_NEXT<<6);
 
 #endif
-

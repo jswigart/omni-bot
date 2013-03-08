@@ -1,11 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #include "NameManager.h"
 #include "ScriptManager.h"
@@ -20,7 +19,6 @@
 #include "BotSteeringSystem.h"
 #include "ScriptGoal.h"
 #include "PathPlannerBase.h"
-#include "ObstacleManager.h"
 #include "InterfaceFuncs.h"
 #include "IGameManager.h"
 #include "gmCall.h"
@@ -83,7 +81,7 @@ GoalManager *IGame::GetGoalManager()
 	return new GoalManager;
 }
 
-bool IGame::Init() 
+bool IGame::Init()
 {
 	GetGameVars(m_GameVars);
 
@@ -120,7 +118,7 @@ bool IGame::Init()
 	m_StateRoot->FixRoot();
 	m_StateRoot->InitializeStates();*/
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	return true;
 }
 
@@ -214,12 +212,12 @@ void IGame::InitScriptSupport()
 
 	// Init the buttons table.
 	gmTableObject *pButtonsTable = pMachine->AllocTableObject();
-	pMachine->GetGlobals()->Set(pMachine, "BTN", gmVariable(pButtonsTable));	
+	pMachine->GetGlobals()->Set(pMachine, "BTN", gmVariable(pButtonsTable));
 	InitScriptBotButtons(pMachine, pButtonsTable);
 
 	// Init the trace masks table.
 	gmTableObject *pTraceMasks = pMachine->AllocTableObject();
-	pMachine->GetGlobals()->Set(pMachine, "TRACE", gmVariable(pTraceMasks));	
+	pMachine->GetGlobals()->Set(pMachine, "TRACE", gmVariable(pTraceMasks));
 	InitScriptTraceMasks(pMachine, pTraceMasks);
 
 	// Register Voice queues.
@@ -319,7 +317,7 @@ static IntEnum Generic_RoleEnum[] =
 void IGame::GetRoleEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(Generic_RoleEnum) / sizeof(Generic_RoleEnum[0]);
-	_ptr = Generic_RoleEnum;	
+	_ptr = Generic_RoleEnum;
 }
 
 // package: Common Script Events
@@ -331,14 +329,14 @@ void IGame::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "START_GAME",		gmVariable(GAME_STARTGAME));
 	_table->Set(_machine, "END_GAME",		gmVariable(GAME_ENDGAME));
 	_table->Set(_machine, "NEW_ROUND",		gmVariable(GAME_NEWROUND));
-	_table->Set(_machine, "END_ROUND",		gmVariable(GAME_ENDROUND));	
+	_table->Set(_machine, "END_ROUND",		gmVariable(GAME_ENDROUND));
 	_table->Set(_machine, "GOAL_SUCCESS",	gmVariable(GOAL_SUCCESS));
 	_table->Set(_machine, "GOAL_FAILED",	gmVariable(GOAL_FAILED));
 	_table->Set(_machine, "GOAL_ABORTED",	gmVariable(GOAL_ABORTED));
 	_table->Set(_machine, "PATH_SUCCESS",	gmVariable(PATH_SUCCESS));
 	_table->Set(_machine, "PATH_FAILED",	gmVariable(PATH_FAILED));
-	_table->Set(_machine, "AIM_SUCCESS",	gmVariable(AIM_SUCCESS));	
-	_table->Set(_machine, "SCRIPTMSG",		gmVariable(MESSAGE_SCRIPTMSG));		
+	_table->Set(_machine, "AIM_SUCCESS",	gmVariable(AIM_SUCCESS));
+	_table->Set(_machine, "SCRIPTMSG",		gmVariable(MESSAGE_SCRIPTMSG));
 	_table->Set(_machine, "SPAWNED",		gmVariable(MESSAGE_SPAWN));
 	_table->Set(_machine, "CHANGETEAM",		gmVariable(MESSAGE_CHANGETEAM));
 	_table->Set(_machine, "CHANGECLASS",	gmVariable(MESSAGE_CHANGECLASS));
@@ -346,18 +344,18 @@ void IGame::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "INVALID_CLASS",	gmVariable(MESSAGE_INVALIDCLASS));
 	_table->Set(_machine, "DEATH",			gmVariable(MESSAGE_DEATH));
 	_table->Set(_machine, "HEALED",			gmVariable(MESSAGE_HEALED));
-	_table->Set(_machine, "REVIVED",		gmVariable(MESSAGE_REVIVED));	
+	_table->Set(_machine, "REVIVED",		gmVariable(MESSAGE_REVIVED));
 	_table->Set(_machine, "ADDWEAPON",		gmVariable(MESSAGE_ADDWEAPON));
 	_table->Set(_machine, "REMOVEWEAPON",	gmVariable(MESSAGE_REMOVEWEAPON));
 	_table->Set(_machine, "RESET_WEAPONS",	gmVariable(MESSAGE_RESETWEAPONS));
-	_table->Set(_machine, "REFRESH_WEAPON",	gmVariable(MESSAGE_REFRESHWEAPON));	
+	_table->Set(_machine, "REFRESH_WEAPON",	gmVariable(MESSAGE_REFRESHWEAPON));
 	_table->Set(_machine, "KILLEDSOMEONE",	gmVariable(MESSAGE_KILLEDSOMEONE));
 	_table->Set(_machine, "PROXIMITY_TRIGGER",gmVariable(MESSAGE_PROXIMITY_TRIGGER));
 	_table->Set(_machine, "ENT_ENTER_RADIUS",gmVariable(MESSAGE_ENT_ENTER_RADIUS));
 	_table->Set(_machine, "ENT_LEAVE_RADIUS",gmVariable(MESSAGE_ENT_LEAVE_RADIUS));
 	_table->Set(_machine, "MG_ENTER_RADIUS",gmVariable(MESSAGE_MG_ENTER_RADIUS));
 	_table->Set(_machine, "MG_LEAVE_RADIUS",gmVariable(MESSAGE_MG_LEAVE_RADIUS));
-	_table->Set(_machine, "PLAYER_USE",		gmVariable(PERCEPT_FEEL_PLAYER_USE));	
+	_table->Set(_machine, "PLAYER_USE",		gmVariable(PERCEPT_FEEL_PLAYER_USE));
 	_table->Set(_machine, "FEEL_PAIN",		gmVariable(PERCEPT_FEEL_PAIN));
 	_table->Set(_machine, "SENSE_ENTITY",	gmVariable(PERCEPT_SENSE_ENTITY));
 	_table->Set(_machine, "WEAPON_FIRE",	gmVariable(ACTION_WEAPON_FIRE));
@@ -368,8 +366,8 @@ void IGame::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "GLOBAL_CHAT_MSG",gmVariable(PERCEPT_HEAR_GLOBALCHATMSG));
 	_table->Set(_machine, "TEAM_CHAT_MSG",	gmVariable(PERCEPT_HEAR_TEAMCHATMSG));
 	_table->Set(_machine, "PRIV_CHAT_MSG",	gmVariable(PERCEPT_HEAR_PRIVCHATMSG));
-	_table->Set(_machine, "GROUP_CHAT_MSG",	gmVariable(PERCEPT_HEAR_GROUPCHATMSG));	
-	_table->Set(_machine, "HEAR_SOUND",		gmVariable(PERCEPT_HEAR_SOUND));	
+	_table->Set(_machine, "GROUP_CHAT_MSG",	gmVariable(PERCEPT_HEAR_GROUPCHATMSG));
+	_table->Set(_machine, "HEAR_SOUND",		gmVariable(PERCEPT_HEAR_SOUND));
 }
 
 void IGame::InitScriptCategories(gmMachine *_machine, gmTableObject *_table)
@@ -384,14 +382,14 @@ void IGame::InitScriptCategories(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "PICKUP_HEALTH",gmVariable(ENT_CAT_PICKUP_HEALTH));
 	_table->Set(_machine, "PICKUP_ENERGY",gmVariable(ENT_CAT_PICKUP_ENERGY));
 	_table->Set(_machine, "PICKUP_ARMOR",gmVariable(ENT_CAT_PICKUP_ARMOR));
-	
+
 	_table->Set(_machine, "TRIGGER",	gmVariable(ENT_CAT_TRIGGER));
 	_table->Set(_machine, "MOVER",		gmVariable(ENT_CAT_MOVER));
 	_table->Set(_machine, "AVOID",		gmVariable(ENT_CAT_AVOID));
-	_table->Set(_machine, "MOUNTED_WPN",gmVariable(ENT_CAT_MOUNTEDWEAPON));	
-	_table->Set(_machine, "MISC",		gmVariable(ENT_CAT_MISC));	
+	_table->Set(_machine, "MOUNTED_WPN",gmVariable(ENT_CAT_MOUNTEDWEAPON));
+	_table->Set(_machine, "MISC",		gmVariable(ENT_CAT_MISC));
 	_table->Set(_machine, "STATIC",		gmVariable(ENT_CAT_STATIC));
-	_table->Set(_machine, "PROP",		gmVariable(ENT_CAT_PROP));	
+	_table->Set(_machine, "PROP",		gmVariable(ENT_CAT_PROP));
 	_table->Set(_machine, "AUTODEFENSE",gmVariable(ENT_CAT_AUTODEFENSE));
 	_table->Set(_machine, "OBSTACLE",	gmVariable(ENT_CAT_OBSTACLE));
 }
@@ -402,14 +400,14 @@ IntEnum g_BaseClassMappings[] =
 	IntEnum("PLAYERSTART",		ENT_CLASS_GENERIC_PLAYERSTART),
 	IntEnum("BUTTON",			ENT_CLASS_GENERIC_BUTTON),
 	IntEnum("HEALTH",			ENT_CLASS_GENERIC_HEALTH),
-	IntEnum("ARMOR",			ENT_CLASS_GENERIC_ARMOR),	
+	IntEnum("ARMOR",			ENT_CLASS_GENERIC_ARMOR),
 	IntEnum("AMMO",				ENT_CLASS_GENERIC_AMMO),
 	IntEnum("LADDER",			ENT_CLASS_GENERIC_LADDER),
 	IntEnum("TELEPORTER",		ENT_CLASS_GENERIC_TELEPORTER),
 	IntEnum("LIFT",				ENT_CLASS_GENERIC_LIFT),
 	IntEnum("MOVER",			ENT_CLASS_GENERIC_MOVER),
 	IntEnum("EXPLODING_BARREL",	ENT_CLASS_EXPLODING_BARREL),
-	IntEnum("JUMPPAD",			ENT_CLASS_GENERIC_JUMPPAD),	
+	IntEnum("JUMPPAD",			ENT_CLASS_GENERIC_JUMPPAD),
 	IntEnum("JUMPPAD_TARGET",	ENT_CLASS_GENERIC_JUMPPAD_TARGET),
 	IntEnum("GOAL",				ENT_CLASS_GENERIC_GOAL),
 	IntEnum("WEAPON",			ENT_CLASS_GENERIC_WEAPON),
@@ -496,7 +494,7 @@ void IGame::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "TEAM2",		gmVariable(ENT_FLAG_TEAM2));
 	_table->Set(_machine, "TEAM3",		gmVariable(ENT_FLAG_TEAM3));
 	_table->Set(_machine, "TEAM4",		gmVariable(ENT_FLAG_TEAM4));
-	_table->Set(_machine, "VISTEST",	gmVariable(ENT_FLAG_VISTEST));	
+	_table->Set(_machine, "VISTEST",	gmVariable(ENT_FLAG_VISTEST));
 	_table->Set(_machine, "DISABLED",	gmVariable(ENT_FLAG_DISABLED));
 	_table->Set(_machine, "PRONE",		gmVariable(ENT_FLAG_PRONED));
 	_table->Set(_machine, "CROUCHED",	gmVariable(ENT_FLAG_CROUCHED));
@@ -505,16 +503,16 @@ void IGame::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "INWATER",	gmVariable(ENT_FLAG_INWATER));
 	_table->Set(_machine, "UNDERWATER",	gmVariable(ENT_FLAG_UNDERWATER));
 	_table->Set(_machine, "ZOOMING",	gmVariable(ENT_FLAG_ZOOMING));
-	_table->Set(_machine, "ON_LADDER",	gmVariable(ENT_FLAG_ONLADDER));	
+	_table->Set(_machine, "ON_LADDER",	gmVariable(ENT_FLAG_ONLADDER));
 	_table->Set(_machine, "ON_GROUND",	gmVariable(ENT_FLAG_ONGROUND));
 	_table->Set(_machine, "RELOADING",	gmVariable(ENT_FLAG_RELOADING));
-	_table->Set(_machine, "HUMANCONTROLLED",gmVariable(ENT_FLAG_HUMANCONTROLLED));	
+	_table->Set(_machine, "HUMANCONTROLLED",gmVariable(ENT_FLAG_HUMANCONTROLLED));
 	_table->Set(_machine, "IRONSIGHT",	gmVariable(ENT_FLAG_IRONSIGHT));
 	_table->Set(_machine, "ON_ICE",		gmVariable(ENT_FLAG_ON_ICE));
 	_table->Set(_machine, "IN_VEHICLE",	gmVariable(ENT_FLAG_INVEHICLE));
 	_table->Set(_machine, "FROZEN",		gmVariable(ENT_FLAG_FROZEN));
 	_table->Set(_machine, "TAUNTING",	gmVariable(ENT_FLAG_TAUNTING));
-	_table->Set(_machine, "AIMING",		gmVariable(ENT_FLAG_AIMING));	
+	_table->Set(_machine, "AIMING",		gmVariable(ENT_FLAG_AIMING));
 }
 
 void IGame::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
@@ -530,7 +528,7 @@ void IGame::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "CROUCH",		gmVariable(BOT_BUTTON_CROUCH));
 	_table->Set(_machine, "PRONE",		gmVariable(BOT_BUTTON_PRONE));
 	_table->Set(_machine, "WALK",		gmVariable(BOT_BUTTON_WALK));
-	_table->Set(_machine, "USE",		gmVariable(BOT_BUTTON_USE));	
+	_table->Set(_machine, "USE",		gmVariable(BOT_BUTTON_USE));
 	_table->Set(_machine, "FORWARD",	gmVariable(BOT_BUTTON_FWD));
 	_table->Set(_machine, "BACKWARD",	gmVariable(BOT_BUTTON_BACK));
 	_table->Set(_machine, "STRAFE_R",	gmVariable(BOT_BUTTON_RSTRAFE));
@@ -542,7 +540,7 @@ void IGame::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "LEAN_R",		gmVariable(BOT_BUTTON_LEANRIGHT));
 	_table->Set(_machine, "AIM",		gmVariable(BOT_BUTTON_AIM));
 	_table->Set(_machine, "RESPAWN",	gmVariable(BOT_BUTTON_RESPAWN));
-	_table->Set(_machine, "TAUNT",		gmVariable(BOT_BUTTON_TAUNT));	
+	_table->Set(_machine, "TAUNT",		gmVariable(BOT_BUTTON_TAUNT));
 }
 
 void IGame::InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table)
@@ -578,7 +576,7 @@ void IGame::InitScriptBlackboardKeys(gmMachine *_machine, gmTableObject *_table)
 {
 	_table->Set(_machine, "DELAY_GOAL",	gmVariable(bbk_DelayGoal));
 	_table->Set(_machine, "IS_TAKEN",	gmVariable(bbk_IsTaken));
-	_table->Set(_machine, "RUN_AWAY",	gmVariable(bbk_RunAway));	
+	_table->Set(_machine, "RUN_AWAY",	gmVariable(bbk_RunAway));
 }
 
 void IGame::InitDebugFlags(gmMachine *_machine, gmTableObject *_table)
@@ -588,14 +586,14 @@ void IGame::InitDebugFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "SCRIPT",		gmVariable(BOT_DEBUG_SCRIPT));
 	_table->Set(_machine, "PLANNER",	gmVariable(BOT_DEBUG_PLANNER));
 	_table->Set(_machine, "FAILED_PATHS",gmVariable(BOT_DEBUG_LOG_FAILED_PATHS));
-	
+
 	/*BOT_DEBUG_LOG = 0,
-		BOT_DEBUG_MOVEVEC,
-		BOT_DEBUG_SCRIPT,
-		BOT_DEBUG_FPINFO,
-		BOT_DEBUG_PLANNER,
-		BOT_DEBUG_EVENTS,
-		BOT_DEBUG_LOG_FAILED_PATHS,*/
+	BOT_DEBUG_MOVEVEC,
+	BOT_DEBUG_SCRIPT,
+	BOT_DEBUG_FPINFO,
+	BOT_DEBUG_PLANNER,
+	BOT_DEBUG_EVENTS,
+	BOT_DEBUG_LOG_FAILED_PATHS,*/
 }
 
 void IGame::InitBoneIds(gmMachine *_machine, gmTableObject *_table)
@@ -635,14 +633,14 @@ void IGame::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("ARMOR",		F_NAV_ARMOR);
 	_planner->RegisterNavFlag("AMMO",		F_NAV_AMMO);
 	//_planner->RegisterNavFlag("BLOCKABLE",	F_NAV_BLOCKABLE);
-	_planner->RegisterNavFlag("DYNAMIC",	F_NAV_DYNAMIC);	
+	_planner->RegisterNavFlag("DYNAMIC",	F_NAV_DYNAMIC);
 	_planner->RegisterNavFlag("INWATER",	F_NAV_INWATER);
 	_planner->RegisterNavFlag("UNDERWATER",	F_NAV_UNDERWATER);
-	//_planner->RegisterNavFlag("MOVABLE",	F_NAV_MOVABLE);	
-	_planner->RegisterNavFlag("DEFEND",		F_NAV_DEFEND);	
-	_planner->RegisterNavFlag("ATTACK",		F_NAV_ATTACK);	
+	//_planner->RegisterNavFlag("MOVABLE",	F_NAV_MOVABLE);
+	_planner->RegisterNavFlag("DEFEND",		F_NAV_DEFEND);
+	_planner->RegisterNavFlag("ATTACK",		F_NAV_ATTACK);
 	_planner->RegisterNavFlag("SCRIPT",		F_NAV_SCRIPT);
-	_planner->RegisterNavFlag("ROUTE",		F_NAV_ROUTEPT);	
+	_planner->RegisterNavFlag("ROUTE",		F_NAV_ROUTEPT);
 }
 
 void IGame::UpdateGame()
@@ -660,14 +658,11 @@ void IGame::UpdateGame()
 		m_PlayersChanged = false;
 	}
 
-
 	// Check if we're dead or alive so we know what update function to call.
 	if(m_StateRoot)
 	{
 		m_StateRoot->RootUpdate();
 	}
-
-	obstacleManager.Update();
 
 	// This is called often to update the state of the bots and perform their "thinking"
 	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
@@ -693,7 +688,6 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 	// draw the entities registered with the system
 	IGame::EntityIterator ent;
 	while( IGame::IterateEntity( ent ) ) {
-		
 		// make sure there's enough room for the entity at this index
 		if ( cached.entities().Capacity() <= ent.GetIndex() ) {
 			cached.mutable_entities()->Reserve( ent.GetIndex() + 1 );
@@ -713,7 +707,7 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 
 		Remote::Entity * cachedEntity = cached.mutable_entities( ent.GetIndex() );
 		Remote::Entity * entityUpdate = update.mutable_entities( ent.GetIndex() );
-		
+
 		entityUpdate->Clear();
 
 		SyncEntity( ent.GetEnt(), connection, *cachedEntity, *entityUpdate );
@@ -732,8 +726,8 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 			char buffer[ bufferSize ];
 			io::ArrayOutputStream arrayStream( buffer, bufferSize );
 			io::CodedOutputStream codedStream( &arrayStream );
-						
-			String serialized;
+
+			std::string serialized;
 
 			const Remote::PayloadFormat msgformat = Remote::PAYLOAD_TEXT;
 			if ( msgformat == Remote::PAYLOAD_TEXT ) {
@@ -741,14 +735,14 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 			} else {
 				entityUpdate->SerializeToString( &serialized );
 			}
-			
+
 			Remote::Packet packet;
 			packet.set_packettype( Remote::PACKET_ENTITY );
 			packet.set_payloadformat( msgformat );
 			packet.set_payloadsize( serialized.size() );
 			packet.set_payloaddata( serialized.c_str(), serialized.size() );
 
-			String serializedPacket;
+			std::string serializedPacket;
 			packet.SerializeToString( &serializedPacket );
 
 			codedStream.WriteVarint32( serializedPacket.size() );
@@ -769,18 +763,18 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 	// check for values that have changed
 	{
 		Vector3f entPosition = Vector3f::ZERO,
-				facingVector = Vector3f::ZERO,
-				rightVector = Vector3f::ZERO,
-				upVector = Vector3f::ZERO;
+			facingVector = Vector3f::ZERO,
+			rightVector = Vector3f::ZERO,
+			upVector = Vector3f::ZERO;
 
 		Msg_HealthArmor hlth;
 		EngineFuncs::EntityPosition( ent.m_Entity, entPosition );
 		const int entClass = InterfaceFuncs::GetEntityClass( ent.m_Entity );
 		const int entTeam = InterfaceFuncs::GetEntityTeam( ent.m_Entity );
-		const String entName = EngineFuncs::EntityName( ent.m_Entity );
+		const std::string entName = EngineFuncs::EntityName( ent.m_Entity );
 
 		EngineFuncs::EntityOrientation( ent.m_Entity, facingVector, rightVector, upVector );
-		
+
 		SET_IF_DIFF( cachedEntity, entityUpdate, entName.c_str(), name );
 		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.x, x );
 		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.y, y );
@@ -857,7 +851,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				const int index = m->m_Entity.GetIndex();
 
 				// special case don't replace existing entities with goal entities
-				if(m_GameEntities[index].m_Entity.IsValid() && 
+				if(m_GameEntities[index].m_Entity.IsValid() &&
 					m->m_EntityClass==ENT_CLASS_GENERIC_GOAL)
 				{
 					break;
@@ -865,7 +859,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 
 				if(m->m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE))
 				{
-					obstacleManager.AddObstacle( m->m_Entity );
+					//obstacleManager.AddObstacle( m->m_Entity );
 				}
 
 				m_GameEntities[index].m_Entity = m->m_Entity;
@@ -891,7 +885,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 			const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
 			if(m)
 			{
-				obstacleManager.RemoveObstacle(m->m_Entity);
+				//obstacleManager.RemoveObstacle(m->m_Entity);
 
 				int index = m->m_Entity.GetIndex();
 				if(m_GameEntities[index].m_Entity.IsValid())
@@ -952,7 +946,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 		{
 			const Event_ScriptSignal *m = _message.Get<Event_ScriptSignal>();
 			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-			
+
 			if(m->m_SignalName[0])
 				pMachine->Signal(gmVariable(pMachine->AllocStringObject(m->m_SignalName)),GM_INVALID_THREAD,GM_INVALID_THREAD);
 		}
@@ -960,7 +954,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 		{
 			/*const Event_Sound *m = _message.Get<Event_Sound>();
 			if(m)
-				g_SoundDepot.Post(*m);*/
+			g_SoundDepot.Post(*m);*/
 			break;
 		}
 	case GAME_ADD_ENTITY_CONNECTION:
@@ -1020,7 +1014,7 @@ void IGame::DispatchEvent(int _dest, const MessageHelper &_message)
 		ClientPtr cp = GetClientFromCorrectedGameId(_dest);
 		if(cp)
 		{
-			cp->SendEvent(_message);	
+			cp->SendEvent(_message);
 			return;
 		}
 		else
@@ -1058,7 +1052,7 @@ void IGame::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
-	}	
+	}
 }
 
 void IGame::ClientLeft(const Event_SystemClientDisConnected *_msg)
@@ -1085,7 +1079,7 @@ void IGame::CheckGameState()
 	case GAME_STATE_PLAYING:
 	case GAME_STATE_SUDDENDEATH:
 		StartGame();
-		break;		
+		break;
 	case GAME_STATE_INVALID:
 		EndGame();
 		break;
@@ -1115,7 +1109,7 @@ void IGame::EndGame()
 	EngineFuncs::ConsoleMessage("<EndGame>");
 }
 
-void IGame::NewRound() 
+void IGame::NewRound()
 {
 	EngineFuncs::ConsoleMessage("<NewRound>");
 }
@@ -1141,7 +1135,7 @@ void IGame::InitMapScript()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load(String(g_EngineFuncs->GetMapName()),err);
+	const bool goalsLoaded = GoalManager::GetInstance()->Load(std::string(g_EngineFuncs->GetMapName()),err);
 	err.PrintToConsole();
 
 	if(!goalsLoaded)
@@ -1218,7 +1212,7 @@ void IGame::CheckServerSettings(bool managePlayers)
 	{
 		pServerTbl = pM->AllocTableObject();
 		pM->GetGlobals()->Set(pM,"Server",gmVariable(pServerTbl));
-	}	
+	}
 	gmTableObject *pTeamsTbl = pServerTbl->Get(pM,"Team").GetTableObjectSafe();
 	if(!pTeamsTbl)
 	{
@@ -1229,7 +1223,7 @@ void IGame::CheckServerSettings(bool managePlayers)
 	pServerTbl->Set(pM,"NumPlayers",gmVariable(pi.GetNumPlayers()));
 	pServerTbl->Set(pM,"NumPlayersNoSpec",gmVariable(pi.GetNumPlayers() - pi.GetNumPlayers(OB_TEAM_SPECTATOR)));
 	pServerTbl->Set(pM,"NumBots",gmVariable(pi.GetNumPlayers(OB_TEAM_ALL,obPlayerInfo::Bot)));
-	pServerTbl->Set(pM,"MaxPlayers",gmVariable(pi.GetMaxPlayers()));	
+	pServerTbl->Set(pM,"MaxPlayers",gmVariable(pi.GetMaxPlayers()));
 	pServerTbl->Set(pM,"AvailableTeams",gmVariable(pi.GetAvailableTeams()));
 
 	for(int i = 0; i < obPlayerInfo::MaxTeams; ++i)
@@ -1261,27 +1255,27 @@ void IGame::CheckServerSettings(bool managePlayers)
 
 void IGame::InitCommands()
 {
-	SetEx("addbot", "Adds a bot to the game", 
+	SetEx("addbot", "Adds a bot to the game",
 		this, &IGame::cmdAddbot);
-	SetEx("kickbot", "Removes a bot from the game", 
-		this, &IGame::cmdKickbot);	
-	SetEx("kickall", "Kick all bots from the game", 
+	SetEx("kickbot", "Removes a bot from the game",
+		this, &IGame::cmdKickbot);
+	SetEx("kickall", "Kick all bots from the game",
 		this, &IGame::cmdKickAll);
-	SetEx("debugbot", "Enables debugging output on a specific bot", 
+	SetEx("debugbot", "Enables debugging output on a specific bot",
 		this, &IGame::cmdDebugBot);
-	SetEx("drawblocktests", "Enables drawing of blockable line tests", 
+	SetEx("drawblocktests", "Enables drawing of blockable line tests",
 		this, &IGame::cmdDrawBlockableTests);
-	SetEx("dontshoot", "Enables/disables all bot shooting ability.", 
+	SetEx("dontshoot", "Enables/disables all bot shooting ability.",
 		this, &IGame::cmdBotDontShoot);
-	SetEx("show_bb", "Shows the contents of the global blackboard.", 
+	SetEx("show_bb", "Shows the contents of the global blackboard.",
 		this, &IGame::cmdDumpBlackboard);
-	SetEx("reload_weapons", "Reloads the weapon database from script files on disc.", 
+	SetEx("reload_weapons", "Reloads the weapon database from script files on disc.",
 		this, &IGame::cmdReloadWeaponDatabase);
-	SetEx("show_bb", "Shows the contents of the global blackboard.", 
+	SetEx("show_bb", "Shows the contents of the global blackboard.",
 		this, &IGame::cmdDumpBlackboard);
-	SetEx("revision", "Shows the revision the bot dll was built from.", 
+	SetEx("revision", "Shows the revision the bot dll was built from.",
 		this, &IGame::cmdRevision);
-	SetEx("print_filesystem", "Prints files from file system.", 
+	SetEx("print_filesystem", "Prints files from file system.",
 		this, &IGame::cmdPrintFileSystem);
 }
 
@@ -1296,13 +1290,13 @@ bool IGame::UnhandledCommand(const StringVector &_args)
 			handled |= m_ClientList[i]->DistributeUnhandledCommand(_args);
 		}
 	}
-	return handled; 
+	return handled;
 }
 
 void IGame::cmdRevision(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessage(va("Omni-bot: Revision %s : %s", 
-		Revision::Number().c_str(), 
+	EngineFuncs::ConsoleMessage(va("Omni-bot: Revision %s : %s",
+		Revision::Number().c_str(),
 		Revision::Date().c_str()));
 }
 
@@ -1323,16 +1317,16 @@ void IGame::cmdBotDontShoot(const StringVector &_args)
 				if(m_ClientList[i])
 				{
 					m_ClientList[i]->SetUserFlag(Client::FL_SHOOTINGDISABLED, bDontShoot==True);
-					
-					EngineFuncs::ConsoleMessage(va("%s: shooting %s", 
-						m_ClientList[i]->GetName(), 
+
+					EngineFuncs::ConsoleMessage(va("%s: shooting %s",
+						m_ClientList[i]->GetName(),
 						bDontShoot?"disabled":"enabled"));
 				}
 			}
 		}
 		return;
 	}
-	
+
 	EngineFuncs::ConsoleError("Usage: bot dontshoot true/false/1/0/yes/no");
 }
 
@@ -1393,7 +1387,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 					else if(strDebugType == "fpinfo")
 						bot->EnableDebug(BOT_DEBUG_FPINFO, !bot->IsDebugEnabled(BOT_DEBUG_FPINFO));
 					else if(strDebugType == "failedpaths")
-						bot->EnableDebug(BOT_DEBUG_LOG_FAILED_PATHS, !bot->IsDebugEnabled(BOT_DEBUG_LOG_FAILED_PATHS));					
+						bot->EnableDebug(BOT_DEBUG_LOG_FAILED_PATHS, !bot->IsDebugEnabled(BOT_DEBUG_LOG_FAILED_PATHS));
 					else
 					{
 						if(bot->GetStateRoot())
@@ -1427,7 +1421,7 @@ void IGame::cmdKickAll(const StringVector &_args)
 		{
 			StringVector tl;
 			tl.push_back("kickbot");
-			tl.push_back((String)va("%i", m_ClientList[i]->GetGameID()));
+			tl.push_back((std::string)va("%i", m_ClientList[i]->GetGameID()));
 			CommandReciever::DispatchCommand(tl);
 		}
 	}
@@ -1444,8 +1438,8 @@ void IGame::cmdAddbot(const StringVector &_args)
 	int iTeam = -1; // -1 for autochoose in interface
 	int iClass = -1; // -1 for autochoose in interface
 
-	String profile;
-	String nextName;
+	std::string profile;
+	std::string nextName;
 
 	// Parse the command arguments
 	switch(_args.size())
@@ -1461,7 +1455,7 @@ void IGame::cmdAddbot(const StringVector &_args)
 	case 1:
 		break;
 	default:
-		EngineFuncs::ConsoleError("addbot team[1-2] class[1-5] name[string]");
+		EngineFuncs::ConsoleError("addbot team[1-2] class[1-5] name[std::string]");
 		return;
 	};
 
@@ -1491,10 +1485,10 @@ void IGame::cmdKickbot(const StringVector &_args)
 		InterfaceFuncs::Kickbot(b);
 		bDidSomething = true;
 	}
-	
+
 	if(!bDidSomething)
 	{
-		EngineFuncs::ConsoleError("kickbot [string/gameid] ...");
+		EngineFuncs::ConsoleError("kickbot [std::string/gameid] ...");
 	}
 }
 
@@ -1521,8 +1515,8 @@ void IGame::cmdDrawBlockableTests(const StringVector &_args)
 
 void IGame::cmdPrintFileSystem(const StringVector &_args)
 {
-	String pth = "";
-	String ex = ".*";
+	std::string pth = "";
+	std::string ex = ".*";
 
 	DirectoryList dlist;
 	FileSystem::FindAllFiles(pth, dlist, ex);
@@ -1531,7 +1525,7 @@ void IGame::cmdPrintFileSystem(const StringVector &_args)
 	EngineFuncs::ConsoleMessage(va("%d Files %s, in %s", dlist.size(), ex.c_str(), pth.c_str()));
 	for(obuint32 i = 0; i < dlist.size(); ++i)
 	{
-		EngineFuncs::ConsoleMessage(dlist[i].string().c_str());		
+		EngineFuncs::ConsoleMessage(dlist[i].string().c_str());
 	}
 	EngineFuncs::ConsoleMessage("------------------------------------");
 }
@@ -1548,7 +1542,7 @@ void IGame::AddBot(Msg_Addbot &_addbot, bool _createnow)
 	if(!_addbot.m_Name[0])
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
-		String name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
+		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 		Utils::StringCopy(_addbot.m_Name, name.c_str(), sizeof(_addbot.m_Name));
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -1577,14 +1571,14 @@ void IGame::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		if(cp->m_DesiredTeam == -1)
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectTeam");
 			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
 		if(cp->m_DesiredClass == -1)
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectClass");
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
@@ -1612,12 +1606,12 @@ ClientPtr IGame::GetClientByIndex(int _index)
 	return ClientPtr();
 }
 
-ClientPtr &IGame::GetClientFromCorrectedGameId(int _gameid) 
+ClientPtr &IGame::GetClientFromCorrectedGameId(int _gameid)
 {
-	return m_ClientList[_gameid]; 
+	return m_ClientList[_gameid];
 }
 
-bool IGame::CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, StringStr &err)
+bool IGame::CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err)
 {
 	_criteria = CheckCriteria();
 
@@ -1659,8 +1653,8 @@ bool IGame::CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, StringSt
 		NextArg++;
 	}
 	//////////////////////////////////////////////////////////////////////////
-	
-	const char *pExpression = _thread->Param(NextArg).GetCStringSafe(NULL);	
+
+	const char *pExpression = _thread->Param(NextArg).GetCStringSafe(NULL);
 	if(pExpression)
 	{
 		int NumExpectedOperands = 0;
@@ -1751,82 +1745,82 @@ bool IGame::CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, StringSt
 			OBASSERT(ExpectedArgTypes[i] != kTypeNone,"Invalid arg expectation");
 			switch(ExpectedArgTypes[i])
 			{
-				case kTypeInt:
-					{
-						if(!o.IsInt())
-							goto argError;
+			case kTypeInt:
+				{
+					if(!o.IsInt())
+						goto argError;
 
-						_criteria.m_Operand[i] = obUserData(o.GetInt());
-						break;
-					}
-				case kTypeFloat:
-					{
-						if(!o.IsFloat())
-							goto argError;
+					_criteria.m_Operand[i] = obUserData(o.GetInt());
+					break;
+				}
+			case kTypeFloat:
+				{
+					if(!o.IsFloat())
+						goto argError;
 
-						_criteria.m_Operand[i] = obUserData(o.GetFloat());
-						break;
-					}
-				case kTypeNum:
-					{
-						if(!o.IsNumber())
-							goto argError;
+					_criteria.m_Operand[i] = obUserData(o.GetFloat());
+					break;
+				}
+			case kTypeNum:
+				{
+					if(!o.IsNumber())
+						goto argError;
 
-						_criteria.m_Operand[i] = obUserData(o.GetFloatSafe());
-						break;
-					}
-				case kTypeVector:
-					{
-						if(!o.IsVector())
-							goto argError;
+					_criteria.m_Operand[i] = obUserData(o.GetFloatSafe());
+					break;
+				}
+			case kTypeVector:
+				{
+					if(!o.IsVector())
+						goto argError;
 
-						Vector3f v;
-						o.GetVector(v);
-						_criteria.m_Operand[i] = obUserData(v.x,v.y,v.z);
-						break;
-					}
-				case kTypeEntity:
-					{
-						if(!o.IsEntity())
-							goto argError;
+					Vector3f v;
+					o.GetVector(v);
+					_criteria.m_Operand[i] = obUserData(v.x,v.y,v.z);
+					break;
+				}
+			case kTypeEntity:
+				{
+					if(!o.IsEntity())
+						goto argError;
 
-						GameEntity e;
-						e.FromInt(o.GetEntity());
-						_criteria.m_Operand[i].SetEntity(e);
-						break;
-					}
-				case kTypeMapGoal:
+					GameEntity e;
+					e.FromInt(o.GetEntity());
+					_criteria.m_Operand[i].SetEntity(e);
+					break;
+				}
+			case kTypeMapGoal:
+				{
+					if(o.IsString())
 					{
-						if(o.IsString())
+						const char * goalName = o.GetCStringSafe(0);
+						MapGoalPtr mg = GoalManager::GetInstance()->GetGoal(goalName);
+						if(mg)
 						{
-							const char * goalName = o.GetCStringSafe(0);
-							MapGoalPtr mg = GoalManager::GetInstance()->GetGoal(goalName);
-							if(mg)
-							{
-								_criteria.m_Operand[i] = obUserData(mg->GetSerialNum());
-							}
-							else
-							{
-								err << "unknown map goal '" << goalName << "'" << std::endl;
-								return false;
-							}
+							_criteria.m_Operand[i] = obUserData(mg->GetSerialNum());
 						}
 						else
 						{
-							MapGoal *Mg = 0;
-							if(gmBind2::Class<MapGoal>::FromVar(_thread,o,Mg) && Mg)
-							{
-								_criteria.m_Operand[i] = Mg->GetSerialNum();
-								return true;
-							}
-							else
-								goto argError;
+							err << "unknown map goal '" << goalName << "'" << std::endl;
+							return false;
 						}
-						break;
 					}
-				default:
-					OBASSERT(false,"bad");
+					else
+					{
+						MapGoal *Mg = 0;
+						if(gmBind2::Class<MapGoal>::FromVar(_thread,o,Mg) && Mg)
+						{
+							_criteria.m_Operand[i] = Mg->GetSerialNum();
+							return true;
+						}
+						else
+							goto argError;
+					}
 					break;
+				}
+			default:
+				OBASSERT(false,"bad");
+				break;
 			}
 			continue;
 argError:
@@ -1861,7 +1855,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 	for(; cIt != cItEnd; ++cIt)
 	{
 		ScriptGoalPtr ptr(new AiState::ScriptGoal(""));
-		
+
 		int iThreadId;
 		gmUserObject *pUserObj = ptr->GetScriptObject(pMachine);
 		gmVariable varThis(pUserObj);
@@ -1952,7 +1946,7 @@ bool IGame::IterateEntity(IGame::EntityIterator &_it)
 			_it.m_Current = m_GameEntities[i];
 			_it.m_Index = i;
 			return true;
-		}			
+		}
 	}
 	return false;
 }

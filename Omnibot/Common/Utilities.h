@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __UTILS_H__
 #define __UTILS_H__
@@ -15,8 +17,8 @@
 #include "Trajectory.h"
 #include "gmGCRoot.h"
 
-#include <stdlib.h> //#include <malloc.h> 
-#define StackAlloc alloca 
+#include <stdlib.h> //#include <malloc.h>
+#define StackAlloc alloca
 
 class File;
 class Client;
@@ -43,6 +45,9 @@ namespace Priority
 };
 //////////////////////////////////////////////////////////////////////////
 
+typedef std::vector< std::string > StringVector;
+typedef std::list< std::string > StringList;
+
 // file: Utils
 //		Contains various utilities that may be useful throughout the bot.
 namespace Utils
@@ -57,10 +62,10 @@ namespace Utils
 	obint32 StringCompare(const char *_s1, const char *_s2);
 	obint32 StringCompareNoCase(const char *_s1, const char *_s2);
 
-	obint32 StringCompare(const String &_s1, const String &_s2);
-	obint32 StringCompareNoCase(const String &_s1, const String &_s2);
+	obint32 StringCompare(const std::string &_s1, const std::string &_s2);
+	obint32 StringCompareNoCase(const std::string &_s1, const std::string &_s2);
 
-	String StringToLower(const String &_s1);
+	std::string StringToLower(const std::string &_s1);
 
 	bool IsWhiteSpace(const char _ch);
 
@@ -78,12 +83,12 @@ namespace Utils
 		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f) * _face1.Length() * _face2.Length());
 	}
 
-	inline bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles) 
-	{ 
+	inline bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
+	{
 		Vector2f v1 = _face1;
 		Vector2f v2 = _face2;
 
-		float fFovInRadians = Mathf::DegToRad(_fovAngles); 
+		float fFovInRadians = Mathf::DegToRad(_fovAngles);
 		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
 	}
 
@@ -106,28 +111,13 @@ namespace Utils
 	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2) ;
 
 	// function: Tokenize
-	//		Splits a string into tokens using provided seperators. Stores in <StringVector>
-	void Tokenize(const String &_s, const String &_separators, StringVector &_tokens);
+	//		Splits a std::string into tokens using provided seperators. Stores in <StringVector>
+	void Tokenize(const std::string &_s, const std::string &_separators, StringVector &_tokens);
 
 	const char *VarArgs(CHECK_VALID_BYTES(_buffsize) char *_outbuffer, int _buffsize, CHECK_PRINTF_ARGS const char* _msg, ...);
 
 	void OutputDebugBasic(eMessageType _type, const char* _msg);
 	void OutputDebug(eMessageType _type, CHECK_PRINTF_ARGS const char* _msg, ...);
-
-	// function: FindFile
-	//		Finds a file in the PATH of the system.
-	fs::path FindFile(const fs::path &_file);
-
-	fs::path GetModFolder();
-	// function: GetNavFolder
-	//		Gets the absolute path to the users bot navigation folder
-	fs::path GetNavFolder();
-	// function: GetScriptFolder
-	//		Gets the absolute path to the users bot script folder
-	fs::path GetScriptFolder();
-	// function: GetBaseFolder
-	//		Gets the absolute path to the users bot folder
-	fs::path GetBaseFolder();
 
 	GameEntity GetLocalEntity();
 	int GetLocalGameId();
@@ -146,36 +136,24 @@ namespace Utils
 	obint32 MakeId32(const char *_st);
 	void SplitId32(obint32 id, obint16 &id1, obint16 &id2);
 
-	obuint32 MakeHash32(const String &_str, bool _log = true);
+	obuint32 MakeHash32(const std::string &_str, bool _log = true);
 	obuint32 Hash32(const char *_name);
 	obuint64 Hash64(const char *_name);
 
-	void AddHashedString(const String &_str);
-	String HashToString(obuint32 _hash);
+	void AddHashedString(const std::string &_str);
+	std::string HashToString(obuint32 _hash);
 
 	// function: FormatByteString
-	//		Formats a byte value into a readable string
+	//		Formats a byte value into a readable std::string
 	//		with a byte unit postfix, kB, MB, etc...
-	String FormatByteString(obuint64 _bytes);
+	std::string FormatByteString(obuint64 _bytes);
 
-	String FormatEntityString(GameEntity _e);
-	String FormatVectorString(const Vector3f &v);
-	String FormatMatrixString(const Matrix3f &m);
-
-	/*bool WriteDynamicBitsetToFile(File &_file, boost::dynamic_bitset<obuint64> &_bitset);
-	bool ReadDynamicBitsetFromFile(File &_file, boost::dynamic_bitset<obuint64> &_bitset);*/
+	std::string FormatEntityString(GameEntity _e);
+	std::string FormatVectorString(const Vector3f &v);
+	std::string FormatMatrixString(const Matrix3f &m);
 
 	void GetAABBBoundary(const AABB &_aabb, Vector3List &_list);
-	void OutlineAABB(const AABB &_aabb,  const obColor &_color, float _time, AABB::Direction _dir = AABB::DIR_ALL);
-	void OutlineOBB(const Box3f &_obb,  const obColor &_color, float _time, AABB::Direction _dir = AABB::DIR_ALL);
-	void DrawLine(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time);
-	void DrawArrow(const Vector3f &_start, const Vector3f &_end, obColor _color, float _time);
-	void DrawLine(const Vector3List &_list, obColor _color, float _time, float _vertheight = 0.f, obColor _vertcolor = COLOR::MAGENTA, bool _closed = false);
-	void DrawLine(const Vector3List &_vertices, const IndexList &_indices, obColor _color, float _time, float _vertheight = 0.f, obColor _vertcolor = COLOR::MAGENTA, bool _closed = false);
-	void DrawRadius(const Vector3f &_pos, float _radius, obColor _color, float _time);
-	void DrawPolygon(const Vector3List &_vertices, obColor _color, float _time, bool depthTest = true);
-	void PrintText(const Vector3f &_pos, obColor _color, float _duration, CHECK_PRINTF_ARGS const char *_msg, ...);
-	
+
 	bool ToLocalSpace(GameEntity _ent, const Vector3f &_worldpos, Vector3f &_out);
 	bool ToWorldSpace(GameEntity _ent, const Vector3f &_localpos, Vector3f &_out);
 
@@ -205,13 +183,13 @@ namespace Utils
 	// Returns:
 	//		Vector3 - A point along the targets current velocity to aim towards.
 	Vector3f PredictFuturePositionOfTarget(
-		const Vector3f &_mypos, 
+		const Vector3f &_mypos,
 		float _projectilespeed,
-		const Vector3f &_tgpos, 
+		const Vector3f &_tgpos,
 		const Vector3f &_tgvel);
 
 	Vector3f PredictFuturePositionOfTarget(
-		const Vector3f &_mypos, 
+		const Vector3f &_mypos,
 		float _projspeed,
 		const TargetInfo &_tg,
 		const Vector3f &_extravelocity,
@@ -227,12 +205,12 @@ namespace Utils
 
 	Vector3f ChangePitch(const Vector3f &fwd, float _pitchangle);
 
-	bool StringToTrue(const String &_str);
-	bool StringToFalse(const String &_str);
-	void StringTrimCharacters(String &_out, const String &_trim);
+	bool StringToTrue(const std::string &_str);
+	bool StringToFalse(const std::string &_str);
+	void StringTrimCharacters(std::string &_out, const std::string &_trim);
 
-	String GetTeamString(obint32 _team);
-	String GetClassString(obint32 _class);
+	std::string GetTeamString(obint32 _team);
+	std::string GetClassString(obint32 _class);
 
 	bool TeamExists(obint32 _team);
 	bool ClassExists(obint32 _class);
@@ -242,24 +220,24 @@ namespace Utils
 	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud);
 
 	template <typename T>
-	bool ConvertString(const String &_str, T &_var)
+	bool ConvertString(const std::string &_str, T &_var)
 	{
-		StringStr st;
+		std::stringstream st;
 		st << _str;
-		st >> _var;	
+		st >> _var;
 		return !st.fail();
 	}
 
 	template <typename T>
-	bool ConvertString(const T &_var, String &_str)
+	bool ConvertString(const T &_var, std::string &_str)
 	{
-		StringStr st;
+		std::stringstream st;
 		st << _var;
 		_str = st.str();
 		return !st.fail();
 	}
 
-	String FindOpenPlayerName();
+	std::string FindOpenPlayerName();
 
 	enum AssertMode
 	{
@@ -270,21 +248,21 @@ namespace Utils
 	bool SoftAssertFunction(AssertMode _mode, bool _bexp, const char* _exp, const char* _file, int _line, CHECK_PRINTF_ARGS const char *_msg, ...);
 
 	template <typename BidirectionalIterator, typename Predicate>
-	BidirectionalIterator unstable_remove_if(BidirectionalIterator first, BidirectionalIterator last, Predicate pred) 
+	BidirectionalIterator unstable_remove_if(BidirectionalIterator first, BidirectionalIterator last, Predicate pred)
 	{
 		BidirectionalIterator cursor = first;
-		while (cursor != last) 
+		while (cursor != last)
 		{
-			if (pred(*cursor)) 
+			if (pred(*cursor))
 			{
 				--last;
-				if (cursor != last) 
+				if (cursor != last)
 				{
 					using std::swap;
 					swap(*cursor, *last);
 				}
-			} 
-			else 
+			}
+			else
 			{
 				++cursor;
 			}
@@ -312,32 +290,32 @@ namespace Utils
 class PropertyMap
 {
 public:
-	typedef std::map<String, String> ValueMap;
+	typedef std::map<std::string, std::string> ValueMap;
 
-	bool AddProperty(const String &_name, const String &_data);
-	void DelProperty(const String &_name);
-	String GetProperty(const String &_name) const;
+	bool AddProperty(const std::string &_name, const std::string &_data);
+	void DelProperty(const std::string &_name);
+	std::string GetProperty(const std::string &_name) const;
 
 	obuint32 GetNumProperties() const { return (obuint32)m_Properties.size(); }
 
 	template <typename T>
-	bool AddPropertyT(const String &_name, T &_value)
+	bool AddPropertyT(const std::string &_name, T &_value)
 	{
-		String p;
+		std::string p;
 		return (Utils::ConvertString(_value, p) && AddProperty(_name, p));
 	}
 
 	template <typename T>
-	bool GetProperty(const String &_name, T &_value) const
+	bool GetProperty(const std::string &_name, T &_value) const
 	{
-		String p = GetProperty(_name);
+		std::string p = GetProperty(_name);
 		return (!p.empty() && Utils::ConvertString(p, _value));
 	}
 	/*template <>
-	bool GetProperty(const String &_name, String &_value) const
+	bool GetProperty(const std::string &_name, std::string &_value) const
 	{
-		_value = GetProperty(_name);
-		return !_value.empty();
+	_value = GetProperty(_name);
+	return !_value.empty();
 	}*/
 	void GetAsKeyVal(KeyVals &kv);
 
@@ -366,7 +344,7 @@ public:
 	const char * c_str() const { return buffer; }
 	operator const char *() const { return buffer; }
 
-	String FileName() const;
+	std::string FileName() const;
 
 	filePath();
 	filePath( const char* msg, ... );
@@ -383,50 +361,50 @@ std::ostream& operator <<(std::ostream& _o, const filePath& _filePath);
 
 // Templated helper functions.
 template<class Type>
-static inline Type MinT(const Type &_val1, const Type &_val2)       
-{  
+static inline Type MinT(const Type &_val1, const Type &_val2)
+{
 	return (_val1 < _val2) ? _val1 : _val2;
 }
 
 template<class Type>
-static inline Type MaxT(const Type &_val1, const Type &_val2)       
-{  
+static inline Type MaxT(const Type &_val1, const Type &_val2)
+{
 	return (_val1 > _val2) ? _val1 : _val2;
 }
 
 template<class Type>
-static inline Type ClampT(const Type &_val, const Type &_low, const Type &_high)       
-{  
-	return ((_val<_low ? _low : (_val>_high) ? _high : _val));      
+static inline Type ClampT(const Type &_val, const Type &_low, const Type &_high)
+{
+	return ((_val<_low ? _low : (_val>_high) ? _high : _val));
 }
 
 template<class Type>
-static inline Type InRangeT(const Type &_val, const Type &_low, const Type &_high)       
-{  
+static inline Type InRangeT(const Type &_val, const Type &_low, const Type &_high)
+{
 	return ((_val >= _low) && (_val <= _high));
 }
 
 template<class Type>
 static inline bool CheckBitT(const Type &_val, const Type &_bit)
-{  
+{
 	return ((_val & _bit) == _bit);
 }
 
 template<class Type>
 static inline void SetBitT(Type &_val, const Type &_bit)
-{  
+{
 	(_val |= _bit);
 }
 
 template<class Type>
 static inline void ClearBitT(Type &_val, const Type &_bit)
-{ 
+{
 	(_val &= ~_bit);
 }
 
 template<class Type>
 static inline void SwapT(Type &_1, Type &_2)
-{ 
+{
 	Type t = _1;
 	_1 = _2;
 	_2 = t;
@@ -448,23 +426,23 @@ class Options
 public:
 	static void Init();
 	static void Shutdown();
-	static bool LoadConfigFile(const String &_file);
-	static bool SaveConfigFile(const String &_file);
+	static bool LoadConfigFile(const std::string &_file);
+	static bool SaveConfigFile(const std::string &_file);
 
-	static bool SaveConfigFileIfChanged(const String &_file);
+	static bool SaveConfigFileIfChanged(const std::string &_file);
 
 	static const char *GetRawValue(const char *_section, const char *_key);
 
 	static bool GetValue(const char *_section, const char *_key, bool &_out);
 	static bool GetValue(const char *_section, const char *_key, int &_out);
 	static bool GetValue(const char *_section, const char *_key, float &_out);
-	static bool GetValue(const char *_section, const char *_key, String &_out);
+	static bool GetValue(const char *_section, const char *_key, std::string &_out);
 
 	static bool SetValue(const char *_section, const char *_key, bool _val, bool _overwrite = true);
 	static bool SetValue(const char *_section, const char *_key, int _val, bool _overwrite = true);
 	static bool SetValue(const char *_section, const char *_key, float _val, bool _overwrite = true);
 	static bool SetValue(const char *_section, const char *_key, const char *_val, bool _overwrite = true);
-	static bool SetValue(const char *_section, const char *_key, const String &_val, bool _overwrite = true);
+	static bool SetValue(const char *_section, const char *_key, const std::string &_val, bool _overwrite = true);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -506,8 +484,8 @@ class StringBuffer
 {
 public:
 
-	const char *AddUniqueString(const String & _str);
-	const char *Find(const String & _str);
+	const char *AddUniqueString(const std::string & _str);
+	const char *Find(const std::string & _str);
 
 	StringBuffer(obuint32 _maxStrings = 64, obuint32 _bufferSize = 1024);
 	~StringBuffer();

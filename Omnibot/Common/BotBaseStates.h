@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BotBaseStates_H__
-#define __BotBaseStates_H__
+#pragma once
+
+#ifndef __BOTBASESTATES_H__
+#define __BOTBASESTATES_H__
 
 #include "StateMachine.h"
 #include "Path.h"
@@ -104,7 +106,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update(float fDt);
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 
 		int GetAllRequests(AimRequest *_records, int _max);
 
@@ -153,16 +155,16 @@ namespace AiState
 		obuint32 GetFollowUserName() const { return m_UserName; }
 
 		void SetFollowUserName(obuint32 _name);
-		void SetFollowUserName(const String &_name);
+		void SetFollowUserName(const std::string &_name);
 
-		FollowPathUser(const String &_user);
+		FollowPathUser(const std::string &_user);
 		FollowPathUser(obuint32 _name);
 		virtual ~FollowPathUser() {}
 	private:
 		obuint32					m_UserName;
-		
+
 		int							m_CallingThread;
-	
+
 		int							m_DestinationIndex;
 
 		FailType					m_PathFailed : 3;
@@ -173,7 +175,7 @@ namespace AiState
 
 	class FollowPath : public StateChild, public AimerUser
 	{
-	public:				
+	public:
 		enum PathStatus
 		{
 			PathPending,
@@ -218,7 +220,7 @@ namespace AiState
 		StateStatus Update(float fDt);
 
 		const Path &GetCurrentPath() const { return m_CurrentPath; }
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		bool GetAimPosition(Vector3f &_aimpos);
@@ -228,7 +230,7 @@ namespace AiState
 
 		FollowPath();
 	private:
-		struct Query 
+		struct Query
 		{
 			FollowPathUser	*m_User;
 			DestinationVector	m_Destination;
@@ -255,7 +257,7 @@ namespace AiState
 		Vector3f	m_LookAheadPt;
 		int			m_LadderDirection;
 		obint32		m_JumpTime;
-		
+
 		obuint32	m_PassThroughState;
 		int			m_PathThroughPtIndex;
 
@@ -288,7 +290,7 @@ namespace AiState
 
 		GoalState GetGoalState() const { return m_GoalState; }
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -319,7 +321,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update(float fDt);
 
-		//void GetDebugString(StringStr &out);
+		//void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
@@ -339,7 +341,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -359,7 +361,7 @@ namespace AiState
 	//	Trackers		Tracker;
 	//	MapGoalPtr		m_MapGoal;
 	//	Vector3f		m_AimPosition;
-	//	
+	//
 	//	TrackTargetZone m_TargetZone;
 
 	//	Seconds			m_MinCampTime;
@@ -376,7 +378,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -558,7 +560,7 @@ namespace AiState
 	//{
 	//public:
 
-	//	void GetDebugString(StringStr &out);
+	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
 	//	obReal GetPriority();
@@ -616,13 +618,13 @@ namespace AiState
 
 			void Reset() { Done=true; }
 		};
-		
+
 		enum Status { Pending = 0, Done };
 
 		int AddDeferredCasts(const CastInput *_CastIn, int _NumCasts, const char *_UserName);
 		Status GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts);
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -637,7 +639,7 @@ namespace AiState
 		CastOutput	CastOutputs[MaxCasts];
 		int			GroupId[MaxCasts];
 		const char *UserName[MaxCasts];;
-		
+
 		int			CastReadPosition;
 		int			CastWritePosition;
 		int			GroupNext;
@@ -676,7 +678,7 @@ namespace AiState
 
 		//////////////////////////////////////////////////////////////////////////
 
-		void GetDebugString(StringStr &out);
+		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
 		obReal GetPriority();
@@ -706,7 +708,7 @@ namespace AiState
 			Node		*Destination;
 			obuint8		Cover : 4;
 			obuint8		Jump : 1;
-			
+
 			void Reset();
 		};
 		struct Node
@@ -728,7 +730,7 @@ namespace AiState
 
 			void Init(obint16 _X = 0, obint16 _Y = 0, float _Height = 0.f, bool _Open = false);
 		};
-		
+
 		Vector3f				_GetNodePosition(const Node &_Node);
 		FloodFiller::Node *		_NextOpenNode();
 		Node *					_NodeExists(obint16 _X, obint16 _Y, float _Height);
@@ -746,7 +748,6 @@ namespace AiState
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-
 };
 
 #endif

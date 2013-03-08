@@ -1,4 +1,3 @@
-
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -34,7 +33,7 @@ namespace RemoteLib
 
 		virtual bool sendData( int & bytesSent, const char * buf, int bytes ) = 0;
 		virtual bool rcvData( int & bytesRead, char * buf, const int bufSize ) = 0;
-		
+
 		virtual void setBufferSizes( int sendSize, int rcvSize ) = 0;
 		virtual bool setNonBlocking( bool enableNonBlocking ) = 0;
 
@@ -111,7 +110,6 @@ namespace RemoteLib
 			if ( socket != INVALID_SOCKET ) {
 				SOCKET acceptSocket = ::accept( socket, NULL, NULL );
 				if ( acceptSocket != INVALID_SOCKET ) {
-
 					TcpSocketWin32 * w32Socket = new TcpSocketWin32( acceptSocket );
 					w32Socket->socketError = TcpSocket::SocketOk;
 					socketOut.impl = w32Socket;
@@ -145,9 +143,9 @@ namespace RemoteLib
 				service.sin_family = AF_INET;
 				service.sin_addr.s_addr = inet_addr( ip );
 				service.sin_port = htons( port );
-				
+
 				const int res = ::connect( socket, (SOCKADDR*)&service, sizeof(service) );
-				
+
 				// already connected
 				const int errCode = WSAGetLastError();
 				if ( errCode == WSAEISCONN ) {
@@ -222,7 +220,7 @@ namespace RemoteLib
 			if ( socket ) {
 				setsockopt(socket,SOL_SOCKET,SO_RCVBUF,(char*)&rcvSize,sizeof(rcvSize));
 				setsockopt(socket,SOL_SOCKET,SO_SNDBUF,(char*)&sendSize,sizeof(sendSize));
-			}			
+			}
 		}
 
 		bool setNonBlocking( bool enableNonBlocking ) {
@@ -246,13 +244,13 @@ namespace RemoteLib
 			return NULL;
 		}
 
-		TcpSocketWin32( SOCKET sock = INVALID_SOCKET ) 
+		TcpSocketWin32( SOCKET sock = INVALID_SOCKET )
 			: socketError( TcpSocket::SocketDisconnected )
 			, socket( sock )
 			, nonBlocking( false )
 			, bufferSizeSend( DefaultSendBufferSize )
 			, bufferSizeRcv( DefaultRecvBufferSize ) {
-			peerIp[0] = 0;
+				peerIp[0] = 0;
 		}
 
 		~TcpSocketWin32() {
@@ -312,7 +310,7 @@ namespace RemoteLib
 		delete impl;
 		impl = NULL;
 	}
-	
+
 	// server functions
 	bool TcpSocket::listen( unsigned short port ) {
 		return impl && impl->listen( port );
@@ -392,6 +390,4 @@ namespace RemoteLib
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-
-	
 };

@@ -1,10 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
-//
-// title: Path Planner Interface
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -12,17 +10,19 @@
 #include "FileSystem.h"
 #include "IGame.h"
 
+#include "RenderBuffer.h"
+
 void PathPlannerBase::InitCommands()
 {
-	SetEx("nav_logfailedpath", "Saves info about failed path attempts for debugging.", 
+	SetEx("nav_logfailedpath", "Saves info about failed path attempts for debugging.",
 		this, &PathPlannerBase::cmdLogFailedPaths);
-	SetEx("nav_showfailedpath", "Render a failed path by its index.", 
+	SetEx("nav_showfailedpath", "Render a failed path by its index.",
 		this, &PathPlannerBase::cmdShowFailedPaths);
-	SetEx("nav_benchmarkpathfinder", "Render a failed path by its index.", 
+	SetEx("nav_benchmarkpathfinder", "Render a failed path by its index.",
 		this, &PathPlannerBase::cmdBenchmarkPathFind);
-	SetEx("nav_benchmarkgetnavpoint", "Render a failed path by its index.", 
+	SetEx("nav_benchmarkgetnavpoint", "Render a failed path by its index.",
 		this, &PathPlannerBase::cmdBenchmarkGetNavPoint);
-	SetEx("nav_resaveall", "Re-save all nav files to the newest file format..", 
+	SetEx("nav_resaveall", "Re-save all nav files to the newest file format..",
 		this, &PathPlannerBase::cmdResaveNav);
 }
 
@@ -31,8 +31,8 @@ void PathPlannerBase::cmdLogFailedPaths(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_logfailedpath enable[bool]"
 		"> enable: Enable failed path logging. true/false/on/off/1/0",
 	};
@@ -50,8 +50,8 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const char *strUsage[] = 
-	{ 
+	const char *strUsage[] =
+	{
 		"nav_showfailedpath #"
 		"> #: Index of path to toggle rendering.",
 		"> enable: Enable nav rendering. true/false/on/off/1/0",
@@ -70,7 +70,7 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 		{
 			FailedPath &fp = (*it);
 			EngineFuncs::ConsoleMessage(
-				va("%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s", 
+				va("%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s",
 				iIndex,
 				fp.m_Start.x, fp.m_Start.y, fp.m_Start.z,
 				fp.m_End.x, fp.m_End.y, fp.m_End.z,
@@ -130,7 +130,7 @@ void PathPlannerBase::cmdResaveNav(const StringVector &_args)
 	FileSystem::FindAllFiles("nav/", wpFiles, va( ".*%s", _GetNavFileExtension().c_str() ).c_str() );
 	for(obuint32 i = 0; i < wpFiles.size(); ++i)
 	{
-		const String &mapname = fs::basename(wpFiles[i]);
+		const std::string &mapname = fs::basename(wpFiles[i]);
 
 		bool bGood = false;
 		if(Load(mapname))
@@ -140,12 +140,11 @@ void PathPlannerBase::cmdResaveNav(const StringVector &_args)
 		}
 
 		EngineFuncs::ConsoleMessage(va("Resaving %s, %s", mapname.c_str(),bGood?"success":"failed"));
-	}	
+	}
 
 	// reload current map wps
-	Load(String(g_EngineFuncs->GetMapName()));
+	Load(std::string(g_EngineFuncs->GetMapName()));
 }
-
 
 void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end)
 {
@@ -155,7 +154,7 @@ void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end
 	fp.m_NextRenderTime = 0;
 	fp.m_Render = false;
 	m_FailedPathList.push_back(fp);
-	EngineFuncs::ConsoleMessage(va("Added failed path to log, view with nav_showfailedpath %d", 
+	EngineFuncs::ConsoleMessage(va("Added failed path to log, view with nav_showfailedpath %d",
 		m_FailedPathList.size()));
 }
 
@@ -182,14 +181,14 @@ void PathPlannerBase::RenderFailedPaths()
 				AABB aabb;
 				Vector3f pos;
 				GameEntity ge = Utils::GetLocalEntity();
-				if(ge.IsValid() && 
-					EngineFuncs::EntityPosition(ge, pos) && 
+				if(ge.IsValid() &&
+					EngineFuncs::EntityPosition(ge, pos) &&
 					EngineFuncs::EntityWorldAABB(ge, aabb))
 				{
 					aabb.UnTranslate(pos);
 
-					Utils::OutlineAABB(aabb.TranslateCopy(fp.m_Start), COLOR::GREEN, 5000);
-					Utils::OutlineAABB(aabb.TranslateCopy(fp.m_End), COLOR::RED, 5000);
+					RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_Start), COLOR::GREEN);
+					RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_End), COLOR::RED);
 					fp.m_NextRenderTime = IGame::GetTime() + 5000;
 				}
 			}

@@ -1,17 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "BotSensoryMemory.h"
 #include "IGameManager.h"
 #include "ScriptManager.h"
 #include "FilterSensory.h"
 #include "InterfaceFuncs.h"
+#include "RenderBuffer.h"
 
 namespace AiState
 {
@@ -47,7 +47,7 @@ namespace AiState
 		return iNum;
 	}
 
-	void SensoryMemory::GetDebugString(StringStr &out)
+	void SensoryMemory::GetDebugString(std::stringstream &out)
 	{
 		int iNumRecords = 0;
 		for(int i = 0; i < NumRecords; ++i)
@@ -75,20 +75,19 @@ namespace AiState
 
 					obColor col = r.IsShootable()?COLOR::GREEN:COLOR::RED;
 
-					if(r.m_TargetInfo.m_EntityFlags.CheckFlag(ENT_FLAG_DEAD) || 
+					if(r.m_TargetInfo.m_EntityFlags.CheckFlag(ENT_FLAG_DEAD) ||
 						r.m_TargetInfo.m_EntityFlags.CheckFlag(ENT_FLAG_DISABLED))
 						col = COLOR::BLACK;
 
-					Utils::OutlineAABB(box, col, IGame::GetDeltaTimeSecs() * 3.f);
+					RenderBuffer::AddAABB(box, col);
 
 					Vector3f vCenter;
 					box.CenterPoint(vCenter);
 
 					const char *ClassName = Utils::FindClassName(m_Records[i].m_TargetInfo.m_EntityClass);
-					Utils::PrintText(
+					RenderBuffer::AddString3d(
 						vCenter,
 						COLOR::WHITE,
-						IGame::GetDeltaTimeSecs() * 3.f,
 						ClassName?ClassName:"<unknown>");
 				}
 			}
@@ -133,7 +132,7 @@ namespace AiState
 		Prof(UpdateEntities);
 
 		bool bFoundEntity = false;
-		
+
 		GameEntity selfEntity = GetClient()->GetGameEntity();
 
 		IGame::EntityIterator ent;
@@ -153,8 +152,8 @@ namespace AiState
 			obint32 iFreeRecord = -1;
 			bFoundEntity = false;
 
-			const int iStartIndex = 
-				ent.GetEnt().m_EntityClass < FilterSensory::ANYPLAYERCLASS || 
+			const int iStartIndex =
+				ent.GetEnt().m_EntityClass < FilterSensory::ANYPLAYERCLASS ||
 				ent.GetEnt().m_EntityClass == ENT_CLASS_GENERIC_SPECTATOR ? 0 : 64;
 
 			for(int i = iStartIndex; i < NumRecords; ++i)
@@ -268,7 +267,7 @@ namespace AiState
 		Prof(UpdateRecord);
 
 		if(_record.GetAge() <= 0)
-			return true;			
+			return true;
 
 		_record.MarkUpdated();
 
@@ -288,12 +287,12 @@ namespace AiState
 		BitFlag64 bfPersistantFlags = bfPersistantMask&ti.m_EntityFlags;
 		//////////////////////////////////////////////////////////////////////////
 
-		// clear targeting info 
-		if(ti.m_EntityFlags.CheckFlag(ENT_FLAG_DEAD) || ti.m_EntityFlags.CheckFlag(ENT_FLAG_DISABLED)) 
-		{ 
-			_record.m_IsShootable		= false; 
-			_record.m_InFOV				= false; 
-			_record.m_TimeLastSensed	= -1; 
+		// clear targeting info
+		if(ti.m_EntityFlags.CheckFlag(ENT_FLAG_DEAD) || ti.m_EntityFlags.CheckFlag(ENT_FLAG_DISABLED))
+		{
+			_record.m_IsShootable		= false;
+			_record.m_InFOV				= false;
+			_record.m_TimeLastSensed	= -1;
 		}
 
 		// Update data that changes.
@@ -316,8 +315,8 @@ namespace AiState
 		if(m_pfnGetTraceOffset)
 			vTracePosition.z += m_pfnGetTraceOffset(ti.m_EntityClass, ti.m_EntityFlags);
 
-		if(bIsStatic || 
-			(GetClient()->IsWithinViewDistance(vTracePosition) && 
+		if(bIsStatic ||
+			(GetClient()->IsWithinViewDistance(vTracePosition) &&
 			GetClient()->InFieldOfView(vTracePosition)))
 		{
 			const float DistanceToEntity = Length(vTracePosition, GetClient()->GetEyePosition());
@@ -327,12 +326,12 @@ namespace AiState
 
 			if(DebugDrawingEnabled() && m_DebugFlags.CheckFlag(Dbg_ShowPerception))
 			{
-				Utils::DrawLine(GetClient()->GetEyePosition(),vTracePosition,COLOR::YELLOW,0.2f);
+				RenderBuffer::AddLine(GetClient()->GetEyePosition(),vTracePosition,COLOR::YELLOW,0.2f);
 			}
 
-			if(bIsStatic || 
+			if(bIsStatic ||
 				(DistanceToEntity < EntityViewDistance &&
-				(!ti.m_EntityFlags.CheckFlag(ENT_FLAG_VISTEST) || 
+				(!ti.m_EntityFlags.CheckFlag(ENT_FLAG_VISTEST) ||
 				GetClient()->HasLineOfSightTo(vTracePosition, ent))))
 			{
 				//const bool bNewlySeen = (IGame::GetTime() - _record.GetTimeLastSensed()) > m_MemorySpan;
@@ -343,7 +342,7 @@ namespace AiState
 					//const bool bWasShootable = _record.m_IsShootable;
 					//const bool bWasInFov = _record.m_InFOV;
 
-					_record.m_IsShootable = false;					
+					_record.m_IsShootable = false;
 					if(bShootable)
 					{
 						if(!GetClient()->HasLineOfSightTo(vTracePosition, ent))
@@ -376,7 +375,7 @@ namespace AiState
 
 				if(DebugDrawingEnabled() && m_DebugFlags.CheckFlag(Dbg_ShowPerception))
 				{
-					Utils::DrawLine(GetClient()->GetEyePosition(),ti.m_LastPosition,COLOR::YELLOW,0.2f);
+					RenderBuffer::AddLine(GetClient()->GetEyePosition(),ti.m_LastPosition,COLOR::YELLOW,0.2f);
 				}
 
 				_record.m_TargetInfo.m_DistanceTo = Length(ti.m_LastPosition, GetClient()->GetEyePosition());
@@ -395,12 +394,12 @@ namespace AiState
 
 				/*if(bNewlySeen)
 				{
-					Event_EntitySensed d;
-					d.m_EntityClass = ti.m_EntityClass;
-					d.m_Entity = ent;
-					GetClient()->SendEvent(MessageHelper(PERCEPT_SENSE_ENTITY, &d, sizeof(d)));
+				Event_EntitySensed d;
+				d.m_EntityClass = ti.m_EntityClass;
+				d.m_Entity = ent;
+				GetClient()->SendEvent(MessageHelper(PERCEPT_SENSE_ENTITY, &d, sizeof(d)));
 				}*/
-			} 
+			}
 			else
 			{
 				// restore the old flags
@@ -438,7 +437,7 @@ namespace AiState
 		return NULL;
 	}
 
-	int SensoryMemory::CheckTargetsInRadius(const Vector3f &_pos, float _radius, 
+	int SensoryMemory::CheckTargetsInRadius(const Vector3f &_pos, float _radius,
 		SensoryMemory::Type _type, const BitFlag64 &_category)
 	{
 		int iNumInRadius = 0;
@@ -562,7 +561,7 @@ namespace AiState
 						if(m_Records[i].m_TargetInfo.m_DistanceTo <= radius && m_Records[i].GetTimeLastSensed() >= 0)
 						{
 							ents[numRecords++] = m_Records[i].GetEntity();
-						}					
+						}
 					}
 				}
 			}
@@ -584,7 +583,7 @@ namespace AiState
 	State::StateStatus SensoryMemory::Update(float fDt)
 	{
 		Prof(SensoryMemory_Update);
-		
+
 		UpdateEntities();
 		UpdateSight();
 		//UpdateSound();

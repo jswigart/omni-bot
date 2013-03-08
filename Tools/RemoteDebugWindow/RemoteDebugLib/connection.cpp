@@ -8,7 +8,7 @@ namespace RemoteLib
 	static const int ConnectionBufferSize = 1024 * 1024 * 4;
 	static const int ConnectionRetryInterval = 3000;
 
-	enum { 
+	enum {
 		RcvBufferSize	= 1024*1024*2,
 		SendBufferSize	= 1024 * 64,
 	};
@@ -17,7 +17,7 @@ namespace RemoteLib
 		socket.swap( sock );
 
 		internalInit( "", port );
-		
+
 		const char * peerName = socket.getPeerName();
 		strcpy_s( ipAddress, peerName ? peerName : "" );
 
@@ -107,9 +107,9 @@ namespace RemoteLib
 		: maxConnections( maxConn )
 		, connections( 0 )
 		, skipSocketShutdown( false ) {
-		setMaxConnections( maxConn );
+			setMaxConnections( maxConn );
 	}
-	
+
 	ConnectionManager::~ConnectionManager() {
 		destroyConnections();
 		delete [] connections;
@@ -123,7 +123,7 @@ namespace RemoteLib
 
 		maxConnections = maxConn;
 		if ( maxConnections > 0 ) {
-			connections = new Connection *[ maxConnections ];		
+			connections = new Connection *[ maxConnections ];
 			for( unsigned short i = 0; i < maxConnections; ++i ) {
 				connections[ i ] = NULL;
 			}
@@ -228,9 +228,9 @@ namespace RemoteLib
 
 	void ConnectionManagerServer::shutdown() {
 		server.destroy();
-		ConnectionManager::shutdown();		
+		ConnectionManager::shutdown();
 	}
-	
+
 	void ConnectionManagerServer::updateConnections( ConnectionCallbacks * cb ) {
 		for( int i = 0; i < maxConnections; ++i ) {
 			if ( connections[ i ] == NULL ) {

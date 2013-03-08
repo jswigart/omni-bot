@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -17,10 +17,11 @@
 #include "gmCall.h"
 
 #include "BotBaseStates.h"
+#include "PathPlannerWaypoint.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
-#include "PathPlannerWaypoint.h"
+#include "RenderBuffer.h"
 
 IGame *CreateGameInstance()
 {
@@ -78,14 +79,14 @@ const char *RTCW_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID RTCW_Game::GetDefaultNavigator() const 
+eNavigatorID RTCW_Game::GetDefaultNavigator() const
 {
-	return NAVID_WP; 
+	return NAVID_WP;
 }
 
-bool RTCW_Game::ReadyForDebugWindow() const 
-{ 
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING; 
+bool RTCW_Game::ReadyForDebugWindow() const
+{
+	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
 GoalManager *RTCW_Game::GetGoalManager()
@@ -93,10 +94,8 @@ GoalManager *RTCW_Game::GetGoalManager()
 	return new RTCW_GoalManager;
 }
 
-bool RTCW_Game::Init() 
+bool RTCW_Game::Init()
 {
-	SetRenderOverlayType(OVERLAY_OPENGL);
-
 	AiState::FollowPath::m_OldLadderStyle = false;
 
 	// Set the sensory systems callback for getting aim offsets for entity types.
@@ -140,7 +139,7 @@ static IntEnum RTCW_TeamEnum[] =
 void RTCW_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(RTCW_TeamEnum) / sizeof(RTCW_TeamEnum[0]);
-	_ptr = RTCW_TeamEnum;	
+	_ptr = RTCW_TeamEnum;
 }
 
 static IntEnum RTCW_WeaponEnum[] =
@@ -179,7 +178,7 @@ static IntEnum RTCW_WeaponEnum[] =
 void RTCW_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
 	num = sizeof(RTCW_WeaponEnum) / sizeof(RTCW_WeaponEnum[0]);
-	_ptr = RTCW_WeaponEnum;	
+	_ptr = RTCW_WeaponEnum;
 }
 
 static IntEnum g_RTCWClassMappings[] =
@@ -187,8 +186,8 @@ static IntEnum g_RTCWClassMappings[] =
 	IntEnum("SOLDIER",			RTCW_CLASS_SOLDIER),
 	IntEnum("MEDIC",			RTCW_CLASS_MEDIC),
 	IntEnum("ENGINEER",			RTCW_CLASS_ENGINEER),
-	IntEnum("LIEUTENANT",		RTCW_CLASS_LIEUTENANT),	
-	IntEnum("ANYPLAYER",		RTCW_CLASS_ANY),	
+	IntEnum("LIEUTENANT",		RTCW_CLASS_LIEUTENANT),
+	IntEnum("ANYPLAYER",		RTCW_CLASS_ANY),
 	IntEnum("MG42MOUNT",		RTCW_CLASSEX_MG42MOUNT),
 	IntEnum("DYNAMITE_ENT",		RTCW_CLASSEX_DYNAMITE),
 	IntEnum("VEHICLE",			RTCW_CLASSEX_VEHICLE),
@@ -310,7 +309,7 @@ void RTCW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 	if(!_addbot.m_Name[0])
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
-		String name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
+		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 		Utils::StringCopy(_addbot.m_Name, name.c_str(), sizeof(_addbot.m_Name));
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -339,14 +338,14 @@ void RTCW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		if(cp->m_DesiredTeam == -1)
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectTeam");
 			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
 		if(cp->m_DesiredClass == -1)
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-				cp.get(), 
+				cp.get(),
 				"SelectClass");
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
@@ -378,7 +377,7 @@ void RTCW_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table
 	IGame::InitScriptEntityFlags(_machine, _table);
 
 	_table->Set(_machine, "MNT_MG42",		gmVariable(RTCW_ENT_FLAG_MNT_MG42));
-	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(RTCW_ENT_FLAG_CARRYINGGOAL));	
+	_table->Set(_machine, "CARRYINGGOAL",	gmVariable(RTCW_ENT_FLAG_CARRYINGGOAL));
 	_table->Set(_machine, "LIMBO",			gmVariable(RTCW_ENT_FLAG_INLIMBO));
 	_table->Set(_machine, "MOUNTABLE",		gmVariable(RTCW_ENT_FLAG_ISMOUNTABLE));
 	_table->Set(_machine, "POISONED",		gmVariable(RTCW_ENT_FLAG_POISONED));
@@ -410,14 +409,14 @@ void RTCW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("WALL",			F_RTCW_NAV_WALL);
 	_planner->RegisterNavFlag("BRIDGE",			F_RTCW_NAV_BRIDGE);
 
-	_planner->RegisterNavFlag("SPRINT",			F_RTCW_NAV_SPRINT);	
+	_planner->RegisterNavFlag("SPRINT",			F_RTCW_NAV_SPRINT);
 
 	_planner->RegisterNavFlag("WATERBLOCKABLE", F_RTCW_NAV_WATERBLOCKABLE);
 
-	_planner->RegisterNavFlag("CAPPOINT",		F_RTCW_NAV_CAPPOINT);	
+	_planner->RegisterNavFlag("CAPPOINT",		F_RTCW_NAV_CAPPOINT);
 
-	_planner->RegisterNavFlag("ARTY_SPOT",		F_RTCW_NAV_ARTSPOT);	
-	_planner->RegisterNavFlag("ARTY_TARGET_S",	F_RTCW_NAV_ARTYTARGET_S);	
+	_planner->RegisterNavFlag("ARTY_SPOT",		F_RTCW_NAV_ARTSPOT);
+	_planner->RegisterNavFlag("ARTY_TARGET_S",	F_RTCW_NAV_ARTYTARGET_S);
 	_planner->RegisterNavFlag("ARTY_TARGET_D",	F_RTCW_NAV_ARTYTARGET_D);
 	_planner->RegisterNavFlag("STRAFE_L",		F_RTCW_NAV_STRAFE_L);
 	_planner->RegisterNavFlag("STRAFE_R",		F_RTCW_NAV_STRAFE_R);
@@ -469,7 +468,7 @@ const float RTCW_Game::RTCW_GetEntityClassTraceOffset(const int _class, const Bi
 
 	switch(_class)
 	{
-	case RTCW_CLASSEX_DYNAMITE:	
+	case RTCW_CLASSEX_DYNAMITE:
 	case RTCW_CLASSEX_CORPSE:
 		return 2.0f;
 	}
@@ -492,9 +491,9 @@ const float RTCW_Game::RTCW_GetEntityClassAimOffset(const int _class, const BitF
 
 const float RTCW_Game::RTCW_GetEntityClassAvoidRadius(const int _class)
 {
-	switch(_class) 
+	switch(_class)
 	{
-	case RTCW_CLASSEX_DYNAMITE:		
+	case RTCW_CLASSEX_DYNAMITE:
 		return 400.0f;
 		break;
 	}
@@ -537,7 +536,7 @@ void RTCW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
-	}	
+	}
 }
 
 void RTCW_Game::StartGame()
@@ -551,7 +550,7 @@ void RTCW_Game::StartGame()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load(String(g_EngineFuncs->GetMapName()),err);
+	const bool goalsLoaded = GoalManager::GetInstance()->Load(std::string(g_EngineFuncs->GetMapName()),err);
 	err.PrintToConsole();
 
 	if(!goalsLoaded)
@@ -559,7 +558,7 @@ void RTCW_Game::StartGame()
 		// register nav system goals
 		IGameManager::GetInstance()->GetNavSystem()->RegisterGameGoals();
 	}
-	
+
 	GoalManager::GetInstance()->InitGameGoals();
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
@@ -617,7 +616,7 @@ PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
 		obTraceResult tr;
@@ -632,7 +631,7 @@ PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
 		obTraceResult tr;
@@ -647,16 +646,16 @@ PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const
 
 		if(bRender)
 		{
-			Utils::DrawLine(vStart, vEnd, COLOR::ORANGE, 2.f);
+			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
 		}
 
-		int iContents = g_EngineFuncs->GetPointContents(vStart);		
+		int iContents = g_EngineFuncs->GetPointContents(vStart);
 		res = (iContents & CONT_WATER) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
 	}
 
 	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
 	{
-		Utils::DrawLine(vStart, vEnd, 
+		RenderBuffer::AddLine(vStart, vEnd,
 			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
 	}
 

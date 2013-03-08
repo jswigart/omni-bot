@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -84,7 +84,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 				gmTableObject *pParamTable = m_Machine->AllocTableObject();
 				if(_args.size() > 1)
 				{
-					for(obuint32 i = 1; i < _args.size(); ++i) 
+					for(obuint32 i = 1; i < _args.size(); ++i)
 					{
 						char *endPtr;
 						const char *startPtr = _args[i].c_str();
@@ -168,7 +168,7 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 	return false;
 }
 
-void CommandReciever::Set(const String _name, const String _info, CommandFunctorPtr _func)
+void CommandReciever::Set(const std::string _name, const std::string _info, CommandFunctorPtr _func)
 {
 	CommandMap::iterator it = m_CommandMap.find(_name);
 	if(it != m_CommandMap.end())
@@ -181,7 +181,7 @@ void CommandReciever::Set(const String _name, const String _info, CommandFunctor
 	}
 }
 
-void CommandReciever::Alias(const String _name,const String _existingname)
+void CommandReciever::Alias(const std::string _name,const std::string _existingname)
 {
 	CommandMap::iterator it = m_CommandMap.find(_existingname);
 	if(it != m_CommandMap.end())
@@ -190,7 +190,7 @@ void CommandReciever::Alias(const String _name,const String _existingname)
 	}
 }
 
-void CommandReciever::Remove(const String _name)
+void CommandReciever::Remove(const std::string _name)
 {
 	CommandMap::iterator it = m_CommandMap.find(_name);
 	if(it != m_CommandMap.end())

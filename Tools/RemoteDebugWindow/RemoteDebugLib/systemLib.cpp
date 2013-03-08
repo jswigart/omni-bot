@@ -29,7 +29,7 @@ namespace RemoteLib
 
 		void formatByteString( uint32 _bytes, char * str, int maxSize )
 		{
-			static const char * byteUnits[] = 
+			static const char * byteUnits[] =
 			{
 				" bytes",
 				" KB",

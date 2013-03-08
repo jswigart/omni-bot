@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __BLACKBOARD_H__
 #define __BLACKBOARD_H__
@@ -16,7 +18,7 @@ class bbItem;
 typedef boost::shared_ptr<bbItem> BBRecordPtr;
 
 // class: Blackboard
-//		The blackboard acts as an area where various information can be 
+//		The blackboard acts as an area where various information can be
 //		posted and later retrieved. It is a high level storage area for all
 //		kinds of information.
 class BlackBoard
@@ -25,7 +27,7 @@ public:
 
 	static int MakeKey();
 	static BBRecordPtr AllocRecord(int _type);
-	
+
 	//////////////////////////////////////////////////////////////////////////
 
 	bool PostBBRecord(BBRecordPtr _item);
@@ -49,8 +51,8 @@ public:
 protected:
 
 	// typedef: BlackBoardDatabase
-	//	std::multimap provides easy means to store information by 
-	//	<BlackBoard_Key>. By using a multi-map it supports more than 
+	//	std::multimap provides easy means to store information by
+	//	<BlackBoard_Key>. By using a multi-map it supports more than
 	//	one entry per key.
 	typedef std::multimap<int, BBRecordPtr> BlackBoardDatabase;
 

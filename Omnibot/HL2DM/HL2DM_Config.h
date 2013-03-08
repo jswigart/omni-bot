@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // about: HL2DM definitions
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __HL2DM_EVENTS_H__
 #define __HL2DM_EVENTS_H__
@@ -25,7 +27,7 @@ typedef enum eHL2DM_Version
 typedef enum
 {
 	HL2DM_MESSAGE_BEGIN = EVENT_NUM_EVENTS,
-	
+
 	HL2DM_MESSAGE_END
 } HL2DM_Events;
 
@@ -39,7 +41,7 @@ typedef enum
 
 // typedef: HL2DM_PlayerClass_enum
 //		The available classes for this gametype
-typedef enum 
+typedef enum
 {
 	HL2DM_CLASS_NULL = 0,
 	HL2DM_CLASS_PLAYER,
@@ -60,9 +62,9 @@ typedef enum
 	HL2DM_WP_GRAVGUN,
 	HL2DM_WP_STUNSTICK,
 	HL2DM_WP_PISTOL,
-	HL2DM_WP_REVOLVER, 
+	HL2DM_WP_REVOLVER,
 	HL2DM_WP_SMG,
-	HL2DM_WP_PULSERIFLE, 
+	HL2DM_WP_PULSERIFLE,
 	HL2DM_WP_SHOTGUN,
 	HL2DM_WP_CROSSBOW,
 	HL2DM_WP_GRENADE,
@@ -70,7 +72,6 @@ typedef enum
 	HL2DM_WP_SLAM,
 	HL2DM_WP_MAX
 } HL2DM_Weapon;
-
 
 // typedef: HL2DM_Team
 //		The available teams for this gametype

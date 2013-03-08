@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -7,6 +7,8 @@
 // Title: TF Config
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
 
 #ifndef __TF_EVENTS_H__
 #define __TF_EVENTS_H__
@@ -35,11 +37,11 @@
 //		TF_BOT_BUTTON_SABOTAGE_SENTRY - Detonate enemy dispenser.
 //		TF_BOT_BUTTON_SABOTAGE_DISPENSER - Detonate enemy dispenser.
 typedef enum eTF_ButtonFlags
-{	
+{
 	TF_BOT_BUTTON_GREN1 = BOT_BUTTON_FIRSTUSER,
-	TF_BOT_BUTTON_GREN2,	
+	TF_BOT_BUTTON_GREN2,
 	TF_BOT_BUTTON_DROPITEM,
-	TF_BOT_BUTTON_DROPAMMO,	
+	TF_BOT_BUTTON_DROPAMMO,
 	TF_BOT_BUTTON_BUILDSENTRY,
 	TF_BOT_BUTTON_BUILDDISPENSER,
 	TF_BOT_BUTTON_BUILD_TELE_ENTRANCE,
@@ -180,7 +182,7 @@ typedef enum eTF_EntityClass
 //		TF_ENT_FLAG_BUILDINPROGRESS - Entity is currently being built.
 typedef enum eTF_EntityFlags
 {
-	TF_ENT_FLAG_SAVEME = ENT_FLAG_FIRST_USER,	
+	TF_ENT_FLAG_SAVEME = ENT_FLAG_FIRST_USER,
 	TF_ENT_FLAG_ARMORME,
 	TF_ENT_FLAG_BURNING,
 	TF_ENT_FLAG_TRANQED,
@@ -238,7 +240,7 @@ typedef enum eTF_Powerups
 	TF_PWR_DISGUISE_ENGINEER,
 	TF_PWR_DISGUISE_SPY,
 	TF_PWR_DISGUISE_CIVILIAN,
-	
+
 	// Other powerups
 	TF_PWR_CLOAKED,
 } TF_Powerups;
@@ -306,7 +308,7 @@ typedef enum eTF_Weapon
 	TF_WP_GRENADE_GAS,
 	TF_WP_GRENADE_CALTROPS,
 	TF_WP_GRENADE_NAPALM,
-	
+
 	TF_WP_DETPACK,
 
 	// THIS MUST STAY LAST
@@ -422,18 +424,18 @@ typedef enum eTF_Events
 
 	// HW-Guy
 	TF_MSG_HWGUY_START,
-	// Game Events	
+	// Game Events
 	// Internal Events
 	TF_MSG_HWGUY_END,
 
 	// Pyro
 	TF_MSG_PYRO_START,
-	// Game Events	
+	// Game Events
 	// Internal Events
 	TF_MSG_PYRO_END,
 
 	// Spy
-	TF_MSG_SPY_START,	
+	TF_MSG_SPY_START,
 	// Game Events
 	TF_MSG_DISGUISING,
 	TF_MSG_DISGUISED,
@@ -474,7 +476,7 @@ typedef enum eTF_Events
 	// Game Events
 	TF_MSG_DISPENSER_NOTENOUGHAMMO,
 	TF_MSG_DISPENSER_ALREADYBUILT,
-	TF_MSG_DISPENSER_CANTBUILD,			
+	TF_MSG_DISPENSER_CANTBUILD,
 	TF_MSG_DISPENSER_BUILDING,
 	TF_MSG_DISPENSER_BUILT,
 	TF_MSG_DISPENSER_BUILDCANCEL,
@@ -506,7 +508,7 @@ typedef enum eTF_Events
 
 	// Civilian
 	TF_MSG_CIVILIAN_START,
-	// Game Events	
+	// Game Events
 	// Internal Events
 	TF_MSG_CIVILIAN_END,
 
@@ -517,7 +519,7 @@ typedef enum eTF_Events
 typedef enum eTF_SoundType
 {
 	TF_SND_RADAR = SND_MAX_SOUNDS,
-	
+
 	// THIS MUST BE LAST
 	TF_SND_MAX_SOUNDS
 } TF_SoundType;
