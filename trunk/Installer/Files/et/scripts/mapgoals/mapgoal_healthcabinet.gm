@@ -45,7 +45,7 @@ this.Render = function()
 
 		this.RenderDefault();
 
-		sleep(2);
+		yield();
 	}
 };
 

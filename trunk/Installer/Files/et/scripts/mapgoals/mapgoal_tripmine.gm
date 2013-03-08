@@ -112,7 +112,7 @@ this.Render = function()
 			DrawArrow(aimLine,this.AimPosition,COLOR.YELLOW,2);
 		}
 
-		sleep(2);
+		yield();
 	}
 };
 

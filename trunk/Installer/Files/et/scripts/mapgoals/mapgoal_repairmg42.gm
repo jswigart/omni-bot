@@ -47,7 +47,7 @@ this.Render = function(editMode)
 
 		this.RenderDefault();
 
-		sleep(2);
+		yield();
 	}
 };
 

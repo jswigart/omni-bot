@@ -500,8 +500,7 @@ void TriggerManager::DeleteTrigger(const std::string &_name)
 TriggerManager *TriggerManager::m_Instance = 0;
 
 TriggerManager::TriggerManager()
-	: m_NextDrawTime(0)
-	, m_DebugTriggers(false)
+	: m_DebugTriggers(false)
 	, m_DrawTriggers(false)
 {
 	InitCommands();
@@ -636,7 +635,7 @@ void TriggerManager::Update()
 	unsigned int x = 0;
 	for(; x < m_TriggerShapes.size(); )
 	{
-		if(m_DrawTriggers && m_NextDrawTime < IGame::GetTime())
+		if(m_DrawTriggers)
 			m_TriggerShapes[ x ]->RenderDebug();
 
 		m_TriggerShapes[ x ]->Update();
@@ -649,9 +648,6 @@ void TriggerManager::Update()
 
 		++x;
 	}
-
-	if(m_NextDrawTime < IGame::GetTime())
-		m_NextDrawTime = IGame::GetTime() + 2000;
 }
 
 //////////////////////////////////////////////////////////////////////////

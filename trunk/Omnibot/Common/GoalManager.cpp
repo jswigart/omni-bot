@@ -692,8 +692,6 @@ void GoalManager::cmdGoalShowRoutes(const StringVector &_args)
 	EngineFuncs::ConsoleMessage("- End Route List -");
 }
 
-int NextDrawTime = 0;
-
 void GoalManager::cmdGoalDraw(const StringVector &_args)
 {
 	const char *pExpression = 0;
@@ -705,8 +703,6 @@ void GoalManager::cmdGoalDraw(const StringVector &_args)
 	case 2:
 		if(Utils::StringToTrue(_args[1]))
 		{
-			NextDrawTime = 0; // reset draw throttle timer
-
 			DrawGoals = true;
 			break;
 		}
@@ -1274,11 +1270,6 @@ void GoalManager::Update()
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////
-
-	if(IGame::GetTime() > NextDrawTime)
-	{
-		NextDrawTime = IGame::GetTime() + 2000;
-	}
 
 	_UpdateEditModes();
 }
