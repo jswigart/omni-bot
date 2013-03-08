@@ -1308,3 +1308,33 @@ char *Sys_DefaultInstallPath( void ) {
 	return Sys_Cwd();
 }
 
+HINSTANCE omnibotHandle = NULL;
+typedef void (*pfnOmnibotRenderOGL)();
+pfnOmnibotRenderOGL gOmnibotRenderFunc = 0;
+
+void	Sys_OmnibotLoad()
+{
+	const char * omnibotLibrary = Cvar_VariableString( "omnibot_library" );
+	if ( omnibotLibrary != NULL )
+	{
+		omnibotHandle = LoadLibrary( omnibotLibrary );
+		if ( omnibotHandle )
+		{
+			gOmnibotRenderFunc = (pfnOmnibotRenderOGL)GetProcAddress( omnibotHandle, "RenderOpenGL" );
+		}
+	}
+}
+
+void	Sys_OmnibotUnLoad()
+{
+	FreeLibrary( omnibotHandle );
+	omnibotHandle = NULL;
+}
+
+void	Sys_OmnibotRender()
+{
+	if ( gOmnibotRenderFunc )
+	{
+		gOmnibotRenderFunc();
+	}	
+}
