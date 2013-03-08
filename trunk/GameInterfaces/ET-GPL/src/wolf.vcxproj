@@ -122,7 +122,6 @@ nmake /f Makefile.vc6 CFG=debug
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>dinput8.lib;winmm.lib;wsock32.lib;Iphlpapi.lib;curl-7.12.2\lib\libcurld.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>D:\Games\ETF\ET.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -136,8 +135,8 @@ nmake /f Makefile.vc6 CFG=debug
       </DataExecutionPrevention>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy "$(TargetPath)" "D:\Games\WET\ETOMNI.exe"
+copy "$(TargetPath)" "D:\Games\ETF\ETOMNI.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Dedicated|Win32'">
@@ -183,6 +182,10 @@ nmake /f Makefile.vc6 CFG=debug
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "D:\Games\WET\ETOMNI.exe"
+copy "$(TargetPath)" "D:\Games\ETF\ETOMNI.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
@@ -241,6 +244,10 @@ nmake /f Makefile.vc6 CFG=release
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "D:\Games\WET\ETOMNI.exe"
+copy "$(TargetPath)" "D:\Games\ETF\ETOMNI.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Dedicated|Win32'">
     <Midl>
@@ -285,6 +292,10 @@ nmake /f Makefile.vc6 CFG=release
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "D:\Games\WET\ETOMNI.exe"
+copy "$(TargetPath)" "D:\Games\ETF\ETOMNI.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client\cl_cgame.c">
