@@ -147,11 +147,20 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 		GameEntity ge = Utils::GetLocalEntity();
 		if(ge.IsValid())
 		{
-			std::string flagString = va("Waypoint %d, Radius %.2f, UID %d\n",
+			std::string flagString = va("Waypoint %d, Radius %.2f, UID %d",
 				m_SelectedWaypoint, pWaypoint->GetRadius(), pWaypoint->GetUID()).c_str();
 
 			if(!pWaypoint->m_WaypointName.empty())
-				flagString += "Name: " + pWaypoint->m_WaypointName + "\n";
+				flagString += "\nName: " + pWaypoint->m_WaypointName;
+
+			const PropertyMap::ValueMap &pm = pWaypoint->GetPropertyMap().GetProperties();
+			PropertyMap::ValueMap::const_iterator cIt = pm.begin();
+			for(; cIt != pm.end(); ++cIt)
+			{
+				flagString += va("\n%s %s", (*cIt).first.c_str(), (*cIt).second.c_str());
+			}
+
+			flagString += "\n";
 
 			FlagMap::const_iterator flagIt = m_WaypointFlags.begin();
 			for( ; flagIt != m_WaypointFlags.end(); ++flagIt)
@@ -161,13 +170,6 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 					flagString += flagIt->first;
 					flagString += ", ";
 				}
-			}
-
-			const PropertyMap::ValueMap &pm = pWaypoint->GetPropertyMap().GetProperties();
-			PropertyMap::ValueMap::const_iterator cIt = pm.begin();
-			for(; cIt != pm.end(); ++cIt)
-			{
-				flagString += va("\n%s %s", (*cIt).first.c_str(), (*cIt).second.c_str());
 			}
 
 			if(!flagString.empty())
