@@ -21,14 +21,14 @@ typedef std::vector<VBOVert> VBOVerts;
 struct VBO
 {
 	VBO()
-		: mBufferVertId( 0 )
+		: mBufferId( 0 )
 	{
 	}
 	~VBO()
 	{
 	}
 
-	GLuint		mBufferVertId;
+	GLuint		mBufferId;
 	GLenum		mType;
 	GLuint		mNumPrimitives;
 	GLuint		mNumVertsPerPrimitive;
@@ -78,7 +78,7 @@ static void CheckGLError( const char * msg )
 {
 	GLenum err = GL_NO_ERROR;
 	while ( ( err = glGetError() ) != GL_NO_ERROR )
-		OutputDebugString( va( "OpenGL Error(%d) - %d", msg, err ) );
+		OutputDebugString( va( "OpenGL Error(%s) - %d\n", msg, err ) );
 }
 
 RenderBuffer::PointList		RenderBuffer::mPointList;
@@ -392,7 +392,7 @@ void RenderBuffer::AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direct
 //	vb.mNumVertsPerPrimitive = 3;
 //	vb.mNumPrimitives = primitives.size();
 //
-//	glGenBuffersARB( 1, &vb.mBufferVertId );
+//	glGenBuffersARB( 1, &vb.mBufferId );
 //
 //	std::vector<VBOVert> verts( vb.mNumPrimitives * vb.mNumVertsPerPrimitive * 4 );
 //
@@ -418,7 +418,7 @@ void RenderBuffer::AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direct
 //
 //	const GLsizeiptr vertexBytes = sizeof(VBOVert) * verts.size();
 //
-//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferVertId );
+//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
 //	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &verts[ 0 ], GL_STATIC_DRAW_ARB );
 //
 //	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
@@ -448,15 +448,13 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 	if ( bufferId == 0 )
 		bufferId = ++nextBufferId;
 
-	//glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
+	glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
 
 	VBO vb;
 	vb.mType = GL_QUADS;
 	vb.mNumVertsPerPrimitive = 4;
 	vb.mNumPrimitives = primitives.size();
 	vb.mVerts.reserve( vb.mNumPrimitives * vb.mNumVertsPerPrimitive );
-
-	//glGenBuffersARB( 1, &vb.mBufferVertId );
 
 	for ( size_t i = 0; i < primitives.size(); ++i )
 	{
@@ -484,17 +482,18 @@ bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & pri
 		}
 	}
 
-	/*const GLsizeiptr vertexBytes = sizeof(VBOVert) * verts.size();
+	const GLsizeiptr vertexBytes = sizeof(VBOVert) * vb.mVerts.size();
 
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferVertId );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &verts[ 0 ], GL_STATIC_DRAW_ARB );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );*/
+	glGenBuffersARB( 1, &vb.mBufferId );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &vb.mVerts[ 0 ], GL_STATIC_DRAW_ARB );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 
 	CheckGLError( "StaticBufferCreate2" );
 
 	vbos.insert( std::make_pair( bufferId, vb ) );
 
-	//glPopClientAttrib();
+	glPopClientAttrib();
 	return true;
 }
 
@@ -506,7 +505,7 @@ void RenderBuffer::StaticBufferDelete( obuint32 bufferId )
 	VBOMap::iterator it = vbos.find( bufferId );
 	if ( it != vbos.end() )
 	{
-		glDeleteBuffersARB( 1, &it->second.mBufferVertId );
+		glDeleteBuffersARB( 1, &it->second.mBufferId );
 		vbos.erase( it );
 	}
 }
@@ -711,8 +710,8 @@ void RenderBuffer::RenderToOpenGL()
 		glDisableClientState(GL_FOG_COORD_ARRAY);
 		glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 
-		/*const size_t offsetP = offsetof( VBOVert, p );
-		const size_t offsetC = offsetof( VBOVert, c );*/
+		const size_t offsetP = offsetof( VBOVert, p );
+		const size_t offsetC = offsetof( VBOVert, c );
 
 		for ( size_t i = 0; i < mVBOList.size(); ++i )
 		{
@@ -722,24 +721,48 @@ void RenderBuffer::RenderToOpenGL()
 				glEnableClientState( GL_VERTEX_ARRAY );
 				glEnableClientState( GL_COLOR_ARRAY );
 
-				//glBindBufferARB( GL_ARRAY_BUFFER_ARB, it->second.mBufferVertId );
-
-				const GLvoid * vertPtr = &it->second.mVerts[ 0 ].p;
-				const GLvoid * colrPtr = &it->second.mVerts[ 0 ].c;
-
-				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), vertPtr );
-				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), colrPtr );
-
-				/*glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetP );
-				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetC );*/
+				glBindBufferARB( GL_ARRAY_BUFFER_ARB, it->second.mBufferId );
 
 				CheckGLError( "PreRender" );
 
+				/*const GLvoid * vertPtr = &it->second.mVerts[ 0 ].p;
+				const GLvoid * colrPtr = &it->second.mVerts[ 0 ].c;
+				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), vertPtr );
+				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), colrPtr );*/
+
+				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetP );
+				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetC );
+				
+				CheckGLError( "PreRender" );
+
+				///////////////////////////////////////
+				/*GLint arrayBind, colorBind, vertexBind,
+					normalBind, elementBind, textureBind,
+					indexBind, edgeflagBind,
+					color2Bind, fogBind;
+				glGetIntegerv( GL_ARRAY_BUFFER_BINDING, &arrayBind );
+				glGetIntegerv( GL_COLOR_ARRAY_BUFFER_BINDING, &colorBind );
+				glGetIntegerv( GL_VERTEX_ARRAY_BUFFER_BINDING, &vertexBind );
+				glGetIntegerv( GL_NORMAL_ARRAY_BUFFER_BINDING, &normalBind );
+				glGetIntegerv( GL_ELEMENT_ARRAY_BUFFER_BINDING, &elementBind );
+				glGetIntegerv( GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING, &textureBind );
+				glGetIntegerv( GL_INDEX_ARRAY_BUFFER_BINDING, &indexBind );
+				glGetIntegerv( GL_EDGE_FLAG_ARRAY_BUFFER_BINDING, &edgeflagBind );
+				glGetIntegerv( GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING, &color2Bind );
+				glGetIntegerv( GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING, &fogBind );
+
+				OutputDebugString( va( "bind: %d %d %d %d %d %d %d %d %d %d\n",
+					arrayBind, colorBind, vertexBind,
+					normalBind, elementBind, textureBind,
+					indexBind, edgeflagBind,
+					color2Bind, fogBind ) );*/
+				///////////////////////////////////////
+				
 				// whole batch
 				glDrawArrays( it->second.mType, 0, it->second.mNumPrimitives * it->second.mNumVertsPerPrimitive );
 
 				// unbind the buffer
-				//glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+				glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 
 				CheckGLError( "PostRender" );
 
