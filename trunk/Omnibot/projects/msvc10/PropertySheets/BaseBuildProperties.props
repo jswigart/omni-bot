@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir>..\build\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>..\build\$(ProjectName)\$(Configuration)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(BOOST);$(Dependencies)\iprof;$(Dependencies)\wildmagic;$(Dependencies)\gmsrc_ex\src\3rdParty\mathlib;$(Dependencies)\gmsrc_ex\src\3rdParty\gmbinder2;$(Dependencies)\gmsrc_ex\src\gm;$(Dependencies)\gmsrc_ex\src\binds;$(Dependencies)\gmsrc_ex\src\platform\win32msvc;$(Dependencies)\VisualLeakDetector\include;$(Dependencies)\sqlite3;$(Dependencies)\Recast\Recast\Include;$(Dependencies)\Recast\Detour\Include;$(Dependencies)\Recast\DebugUtils\Include;$(Dependencies)\Opcode;$(Dependencies)\clipper\cpp;$(Dependencies)\polypartition\src;$(REMOTEDEBUGLIB);$(PROTO_BUFF)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;NOWINRES;NOSERVICE;NOMCX;NOIME;NOMINMAX;DETOURS_X86;_WIN32_WINNT=0x0501;_USE_32BIT_TIME_T;BAN_OPCODE_AUTOLINK;ICE_NO_DLL;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnablePREfast>true</EnablePREfast>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName)_$(ConfigurationName).pdb</ProgramDatabaseFile>
+    </Link>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <Link>
+      <MapFileName>$(TargetDir)$(TargetName)_$(ConfigurationName).map</MapFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+</Project>
